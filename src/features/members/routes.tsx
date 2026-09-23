@@ -53,9 +53,10 @@ export function memberRoutes() {
           shared. The old owner-private CollectionsPage this replaced has since
           been deleted. */}
       <Route path={routes.collections} element={<SavedListsPage />} />
-      {/* A saved list somebody shared. Public by design, matching the
-          backend's `@Public()` GET /saved-lists/:token: the token is the only
-          credential, so someone without an account can open the link. */}
+      {/* A saved list somebody shared. Members-only by product decision:
+          `/lists/*` is in GATED_PATTERNS and the backend's
+          GET /saved-lists/:token sits behind ActiveMemberGuard, so the reader
+          needs a signed-in account and the token picks which list they see. */}
       <Route
         path={`${routes.sharedSavedList}/:token`}
         element={<SavedListSharedPage />}

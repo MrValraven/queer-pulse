@@ -28,6 +28,10 @@ import type {
   AccessibilitySlug,
   ListingAccessibilityView,
 } from "../listBusiness/listingAccessibility.data";
+import type {
+  ListingMenu,
+  ListingPricingMode,
+} from "../listBusiness/listingMenu.data";
 import type { ListingServiceOffering } from "../listBusiness/listingServices.data";
 
 /** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
@@ -295,6 +299,11 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   /** What the business sells and what it costs, in the owner's own words
    * ("from 25 EUR", "sliding scale"). Empty when it prices nothing. */
   services?: ListingServiceOffering[];
+  /** Which priced list the public page shows. Absent reads as `"services"`. */
+  pricingMode?: ListingPricingMode;
+  /** The menu, with `file.url` already resolved to a fetchable URL. Absent
+   * when the listing has none. */
+  menu?: ListingMenu;
   /** The listing's agreement to the affirming baseline. True on every listing
    * by definition, so it is never a distinguishing badge and never a filter. */
   affirmingBaseline?: AffirmingBaselineView;

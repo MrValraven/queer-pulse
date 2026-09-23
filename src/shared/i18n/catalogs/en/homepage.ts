@@ -520,7 +520,7 @@ export const homepage: Catalog = {
   "housingExplainer.pillars.door.body":
     "An open board gets copied onto listing sites and mined by people running deposit scams, so the rooms and the flatmate profiles ask you to be a member first. Our plain guide to spotting a scam and knowing your rights as a tenant in Portugal sits behind the same door.",
   "housingExplainer.note":
-    "Housing co-ops are the one part you can read right now: <coop>see who is organising a home together</coop>.",
+    "The housing co-ops, where members organise a home together, sit behind the same door.",
   "housingExplainer.requestInviteCta": "Request an invite",
   "housingExplainer.signInCta": "I'm already a member",
   "housing.tabRoom": "The room",
@@ -664,7 +664,7 @@ export const homepage: Catalog = {
     "One profile tends to become the version of you that's easiest to explain. The rest gets left out.",
   "subprofiles.everywhereElse": "Everywhere else",
   "subprofiles.onQueerPulse": "On QueerPulse",
-  "subprofiles.proofCrampRoles": "drag performer · ceramicist · music critic",
+  "subprofiles.proofCrampRoles": "drag performer · yoga teacher · poet",
   "subprofiles.pickerLabel": "Choose a side to preview",
   "subprofiles.oneAccount": "One account",
   "subprofiles.stage.lede":
@@ -705,56 +705,56 @@ export const homepage: Catalog = {
     "Speaking as yourself: the product design career, the one every network already knows about.",
   "subprofiles.personas.main.laneLabel": "product design",
 
-  "subprofiles.personas.mara.role": "Drag performer",
-  "subprofiles.personas.mara.sub": "Anjos · performing since 2018",
-  "subprofiles.personas.mara.cta": "Book a show",
-  "subprofiles.personas.mara.bio":
+  "subprofiles.personas.drag.role": "Drag performer",
+  "subprofiles.personas.drag.sub": "Anjos · performing since 2018",
+  "subprofiles.personas.drag.cta": "Book a show",
+  "subprofiles.personas.drag.bio":
     "Performing at Anjos since 2018, with a public rate card and travels for festivals.",
-  "subprofiles.personas.mara.meta.0": "Two shows a month",
-  "subprofiles.personas.mara.meta.1": "Rate card public",
-  "subprofiles.personas.mara.meta.2": "Travels for festivals",
-  "subprofiles.personas.mara.tiles.0.label": "Show photo",
-  "subprofiles.personas.mara.tiles.1.label": "Show photo",
-  "subprofiles.personas.mara.tiles.2.label": "Tour poster",
-  "subprofiles.personas.mara.foot":
+  "subprofiles.personas.drag.meta.0": "Two shows a month",
+  "subprofiles.personas.drag.meta.1": "Rate card public",
+  "subprofiles.personas.drag.meta.2": "Travels for festivals",
+  "subprofiles.personas.drag.tiles.0.label": "Show look",
+  "subprofiles.personas.drag.tiles.1.label": "Show look",
+  "subprofiles.personas.drag.tiles.2.label": "Festival season",
+  "subprofiles.personas.drag.foot":
     "Everything they need to know about Sofia's work as a performer, without the rest of her profile getting in the way.",
-  "subprofiles.personas.mara.note":
-    "Speaking as Mara: bookers get the shows, the photos and the fee. The product design CV stays off this page.",
-  "subprofiles.personas.mara.laneLabel": "drag",
+  "subprofiles.personas.drag.note":
+    "Speaking as Sophie: bookers get the shows, the photos and the fee. The product design CV stays off this page.",
+  "subprofiles.personas.drag.laneLabel": "drag",
 
-  "subprofiles.personas.atelier.role": "Ceramics studio, two people",
-  "subprofiles.personas.atelier.sub": "Graça · commissions and wholesale",
-  "subprofiles.personas.atelier.cta": "Commission a piece",
-  "subprofiles.personas.atelier.bio":
-    "Two-person ceramics studio in Graça, taking commissions and wholesale orders.",
-  "subprofiles.personas.atelier.meta.0": "Commissions open",
-  "subprofiles.personas.atelier.meta.1": "Wholesale list",
-  "subprofiles.personas.atelier.meta.2": "Saturday workshops",
-  "subprofiles.personas.atelier.tiles.0.label": "Finished piece",
-  "subprofiles.personas.atelier.tiles.1.label": "Finished piece",
-  "subprofiles.personas.atelier.tiles.2.label": "The studio",
-  "subprofiles.personas.atelier.foot":
-    "Credited to the atelier: a shared front page two people can run.",
-  "subprofiles.personas.atelier.note":
-    "Speaking as the studio: buyers and galleries see the work and the pricing, credited to the atelier instead of to you.",
-  "subprofiles.personas.atelier.laneLabel": "ceramics",
+  "subprofiles.personas.yoga.role": "Yoga teacher",
+  "subprofiles.personas.yoga.sub": "Graça · hatha and yin since 2020",
+  "subprofiles.personas.yoga.cta": "Book a class",
+  "subprofiles.personas.yoga.bio":
+    "Small hatha and yin classes in Graça, with a riverside retreat twice a year.",
+  "subprofiles.personas.yoga.meta.0": "Tuesdays & Thursdays",
+  "subprofiles.personas.yoga.meta.1": "Drop-ins welcome",
+  "subprofiles.personas.yoga.meta.2": "Queer-led retreats",
+  "subprofiles.personas.yoga.tiles.0.label": "Park class",
+  "subprofiles.personas.yoga.tiles.1.label": "The studio",
+  "subprofiles.personas.yoga.tiles.2.label": "Riverside retreat",
+  "subprofiles.personas.yoga.foot":
+    "Sofia's teaching side: class times, the studio and the next retreat, linked back to her name.",
+  "subprofiles.personas.yoga.note":
+    "Speaking as a teacher: students get the schedule and the next retreat. The drag bookings and the design work have pages of their own.",
+  "subprofiles.personas.yoga.laneLabel": "yoga",
 
-  "subprofiles.personas.byline.role": "Music criticism",
-  "subprofiles.personas.byline.sub": "Bylines in three magazines since 2021",
-  "subprofiles.personas.byline.cta": "Read the clips",
-  "subprofiles.personas.byline.bio":
-    "Music critic with bylines in three magazines, covering clubbing and diaspora.",
-  "subprofiles.personas.byline.meta.0": "Beat: club & diaspora",
-  "subprofiles.personas.byline.meta.1": "Pitch note on file",
-  "subprofiles.personas.byline.meta.2": "Commissions from €180",
-  "subprofiles.personas.byline.tiles.0.label": "Feature",
-  "subprofiles.personas.byline.tiles.1.label": "Album review",
-  "subprofiles.personas.byline.tiles.2.label": "Interview",
-  "subprofiles.personas.byline.foot":
-    "A pen name with a portfolio. The clips speak for themselves, no day job attached.",
-  "subprofiles.personas.byline.note":
-    "Speaking as the byline: editors see the clips and the beat you cover, with your day job kept out of the way.",
-  "subprofiles.personas.byline.laneLabel": "music writing",
+  "subprofiles.personas.poetry.role": "Poet",
+  "subprofiles.personas.poetry.sub": "Two chapbooks · readings around Lisbon",
+  "subprofiles.personas.poetry.cta": "Read the poems",
+  "subprofiles.personas.poetry.bio":
+    "Poems about bodies, cities and leaving home, plus the dates of her next readings.",
+  "subprofiles.personas.poetry.meta.0": "Monthly open mic",
+  "subprofiles.personas.poetry.meta.1": "Two chapbooks",
+  "subprofiles.personas.poetry.meta.2": "Open to reading invites",
+  "subprofiles.personas.poetry.tiles.0.label": "New poem",
+  "subprofiles.personas.poetry.tiles.1.label": "Chapbook",
+  "subprofiles.personas.poetry.tiles.2.label": "Drafts",
+  "subprofiles.personas.poetry.foot":
+    "Sofia's pen name, kept off her main profile and shared only with people she knows.",
+  "subprofiles.personas.poetry.note":
+    "Speaking as S. Marques: people she knows read the poems and find the next reading. Colleagues never stumble on them.",
+  "subprofiles.personas.poetry.laneLabel": "poetry",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk in where you <em>already belong.</em>",

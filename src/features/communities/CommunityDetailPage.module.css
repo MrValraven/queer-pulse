@@ -209,6 +209,23 @@
   max-width: 52ch;
   line-height: 1.65;
 }
+/* A reading group's current book, tucked under the tagline it extends: the
+   tagline's bottom gap tightens to the small gap token while this line follows
+   it, and the line itself carries the 20px gap on to the meta row. */
+.heroSub:has(+ .heroReading) {
+  margin-bottom: var(--gap-sm);
+}
+.heroReading {
+  margin: 0 0 20px;
+  max-width: 52ch;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.58);
+}
+.heroReading strong {
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.92);
+}
 .heroMeta {
   display: flex;
   gap: 6px;

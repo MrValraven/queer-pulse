@@ -534,7 +534,7 @@ export const homepage: Catalog = {
   "housingExplainer.pillars.door.body":
     "Um quadro aberto é copiado para sites de anúncios e vasculhado por quem faz burlas com depósitos, por isso os quartos e os perfis de colegas de casa pedem-te que sejas membro primeiro. O nosso guia claro para detetar uma burla e conhecer os teus direitos enquanto inquilino em Portugal está atrás da mesma porta.",
   "housingExplainer.note":
-    "As cooperativas de habitação são a única parte que já podes ler: <coop>vê quem está a organizar casa em conjunto</coop>.",
+    "As cooperativas de habitação, onde pessoas da comunidade organizam casa em conjunto, estão atrás da mesma porta.",
   "housingExplainer.requestInviteCta": "Pedir um convite",
   "housingExplainer.signInCta": "Já faço parte",
   "housing.tabRoom": "O quarto",
@@ -679,8 +679,7 @@ export const homepage: Catalog = {
     "Um único perfil tende a tornar-se na versão de ti mais fácil de explicar. O resto fica de fora.",
   "subprofiles.everywhereElse": "Em qualquer outro lado",
   "subprofiles.onQueerPulse": "Na QueerPulse",
-  "subprofiles.proofCrampRoles":
-    "artista de drag · ceramista · crítica musical",
+  "subprofiles.proofCrampRoles": "artista de drag · professora de yoga · poeta",
   "subprofiles.pickerLabel": "Escolhe um lado para pré-visualizar",
   "subprofiles.oneAccount": "Uma conta",
   "subprofiles.stage.lede":
@@ -703,7 +702,7 @@ export const homepage: Catalog = {
 
   // Ver nota equivalente em en/homepage.ts: os quatro perfis de exemplo são
   // a mesma exceção intencional. Os nomes próprios mantêm-se em
-  // personasShowcase.data.ts, fora do catálogo — nomes não se traduzem.
+  // personasShowcase.data.ts, fora do catálogo: nomes não se traduzem.
   "subprofiles.personas.main.role": "Designer de produto",
   "subprofiles.personas.main.sub": "Fintech, há seis anos · Arroios",
   "subprofiles.personas.main.cta": "Ver o trabalho",
@@ -721,56 +720,56 @@ export const homepage: Catalog = {
     "A falar como tu própria: a carreira em design de produto, a que todas as redes já conhecem.",
   "subprofiles.personas.main.laneLabel": "design de produto",
 
-  "subprofiles.personas.mara.role": "Artista de drag",
-  "subprofiles.personas.mara.sub": "Anjos · a atuar desde 2018",
-  "subprofiles.personas.mara.cta": "Marcar um espetáculo",
-  "subprofiles.personas.mara.bio":
+  "subprofiles.personas.drag.role": "Artista de drag",
+  "subprofiles.personas.drag.sub": "Anjos · a atuar desde 2018",
+  "subprofiles.personas.drag.cta": "Marcar um espetáculo",
+  "subprofiles.personas.drag.bio":
     "Espetáculos nos Anjos desde 2018, com cachet público e disponibilidade para festivais.",
-  "subprofiles.personas.mara.meta.0": "Dois espetáculos por mês",
-  "subprofiles.personas.mara.meta.1": "Tabela de preços pública",
-  "subprofiles.personas.mara.meta.2": "Viaja para festivais",
-  "subprofiles.personas.mara.tiles.0.label": "Foto do espetáculo",
-  "subprofiles.personas.mara.tiles.1.label": "Foto do espetáculo",
-  "subprofiles.personas.mara.tiles.2.label": "Cartaz da tour",
-  "subprofiles.personas.mara.foot":
+  "subprofiles.personas.drag.meta.0": "Dois espetáculos por mês",
+  "subprofiles.personas.drag.meta.1": "Tabela de preços pública",
+  "subprofiles.personas.drag.meta.2": "Viaja para festivais",
+  "subprofiles.personas.drag.tiles.0.label": "Look de palco",
+  "subprofiles.personas.drag.tiles.1.label": "Look de palco",
+  "subprofiles.personas.drag.tiles.2.label": "Época de festivais",
+  "subprofiles.personas.drag.foot":
     "Tudo o que precisam de saber sobre o trabalho da Sofia como artista, sem o resto do perfil dela pelo meio.",
-  "subprofiles.personas.mara.note":
-    "A falar como Mara: quem contrata vê os espetáculos, as fotos e o cachet. O currículo de design de produto fica fora desta página.",
-  "subprofiles.personas.mara.laneLabel": "drag",
+  "subprofiles.personas.drag.note":
+    "A falar como Sophie: quem contrata vê os espetáculos, as fotos e o cachet. O currículo de design de produto fica fora desta página.",
+  "subprofiles.personas.drag.laneLabel": "drag",
 
-  "subprofiles.personas.atelier.role": "Estúdio de cerâmica, duas pessoas",
-  "subprofiles.personas.atelier.sub": "Graça · encomendas e venda por grosso",
-  "subprofiles.personas.atelier.cta": "Encomendar uma peça",
-  "subprofiles.personas.atelier.bio":
-    "Ateliê de cerâmica na Graça gerido por duas pessoas, com encomendas e venda por grosso.",
-  "subprofiles.personas.atelier.meta.0": "Encomendas abertas",
-  "subprofiles.personas.atelier.meta.1": "Lista de venda por grosso",
-  "subprofiles.personas.atelier.meta.2": "Workshops aos sábados",
-  "subprofiles.personas.atelier.tiles.0.label": "Peça acabada",
-  "subprofiles.personas.atelier.tiles.1.label": "Peça acabada",
-  "subprofiles.personas.atelier.tiles.2.label": "O estúdio",
-  "subprofiles.personas.atelier.foot":
-    "Creditado ao ateliê: uma página inicial partilhada que duas pessoas podem gerir.",
-  "subprofiles.personas.atelier.note":
-    "A falar como o estúdio: compradores e galerias veem o trabalho e os preços, creditados ao ateliê em vez de a ti.",
-  "subprofiles.personas.atelier.laneLabel": "cerâmica",
+  "subprofiles.personas.yoga.role": "Professora de yoga",
+  "subprofiles.personas.yoga.sub": "Graça · hatha e yin desde 2020",
+  "subprofiles.personas.yoga.cta": "Marcar uma aula",
+  "subprofiles.personas.yoga.bio":
+    "Aulas pequenas de hatha e yin na Graça, com um retiro junto ao rio duas vezes por ano.",
+  "subprofiles.personas.yoga.meta.0": "Terças e quintas",
+  "subprofiles.personas.yoga.meta.1": "Aulas avulsas bem-vindas",
+  "subprofiles.personas.yoga.meta.2": "Retiros queer",
+  "subprofiles.personas.yoga.tiles.0.label": "Aula no parque",
+  "subprofiles.personas.yoga.tiles.1.label": "O estúdio",
+  "subprofiles.personas.yoga.tiles.2.label": "Retiro junto ao rio",
+  "subprofiles.personas.yoga.foot":
+    "O lado da Sofia que dá aulas: horários, o estúdio e o próximo retiro, ligados ao nome dela.",
+  "subprofiles.personas.yoga.note":
+    "A falar como professora: quem pratica vê os horários e o próximo retiro. As marcações de drag e o trabalho de design têm páginas próprias.",
+  "subprofiles.personas.yoga.laneLabel": "yoga",
 
-  "subprofiles.personas.byline.role": "Crítica musical",
-  "subprofiles.personas.byline.sub": "Assinaturas em três revistas desde 2021",
-  "subprofiles.personas.byline.cta": "Ler os artigos",
-  "subprofiles.personas.byline.bio":
-    "Crítica musical com assinaturas em três revistas, focada em clubbing e diáspora.",
-  "subprofiles.personas.byline.meta.0": "Área: clubbing e diáspora",
-  "subprofiles.personas.byline.meta.1": "Nota de proposta disponível",
-  "subprofiles.personas.byline.meta.2": "Encomendas a partir de 180 €",
-  "subprofiles.personas.byline.tiles.0.label": "Reportagem",
-  "subprofiles.personas.byline.tiles.1.label": "Crítica de álbum",
-  "subprofiles.personas.byline.tiles.2.label": "Entrevista",
-  "subprofiles.personas.byline.foot":
-    "Um pseudónimo com portefólio. Os artigos falam por si, sem o trabalho do dia a dia associado.",
-  "subprofiles.personas.byline.note":
-    "A falar como o pseudónimo: quem edita vê os artigos e a área que cobres, com o teu trabalho do dia a dia fora disso.",
-  "subprofiles.personas.byline.laneLabel": "crítica musical",
+  "subprofiles.personas.poetry.role": "Poeta",
+  "subprofiles.personas.poetry.sub": "Duas plaquetes · leituras por Lisboa",
+  "subprofiles.personas.poetry.cta": "Ler os poemas",
+  "subprofiles.personas.poetry.bio":
+    "Poemas sobre corpos, cidades e sair de casa, e as datas das próximas leituras.",
+  "subprofiles.personas.poetry.meta.0": "Open mic todos os meses",
+  "subprofiles.personas.poetry.meta.1": "Duas plaquetes",
+  "subprofiles.personas.poetry.meta.2": "Aceita convites para leituras",
+  "subprofiles.personas.poetry.tiles.0.label": "Poema novo",
+  "subprofiles.personas.poetry.tiles.1.label": "Plaquete",
+  "subprofiles.personas.poetry.tiles.2.label": "Rascunhos",
+  "subprofiles.personas.poetry.foot":
+    "O pseudónimo da Sofia, fora do perfil principal e partilhado só com quem ela conhece.",
+  "subprofiles.personas.poetry.note":
+    "A falar como S. Marques: quem ela conhece lê os poemas e sabe onde é a próxima leitura. Colegas de trabalho nunca dão com eles.",
+  "subprofiles.personas.poetry.laneLabel": "poesia",
 
   // ── Outro (chamada final) ──────────────────────────────────────────────────
   "outro.title": "Entra onde <em>já pertences.</em>",

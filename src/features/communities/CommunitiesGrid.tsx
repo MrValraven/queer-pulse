@@ -3,6 +3,7 @@ import {
   Button,
   FadeIn,
   LoadErrorState,
+  SectionHead,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
@@ -12,6 +13,7 @@ import { FeaturedCommunityCard } from "./FeaturedCommunityCard";
 import { SuggestedCommunitiesSection } from "./SuggestedCommunitiesSection";
 import { CommunitiesDiscoverEmptyState } from "./CommunitiesDiscoverEmptyState";
 import type { DiscoverCommunities } from "./useDiscoverCommunities";
+import { useSuggestedBand } from "./useSuggestedBand";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunitiesPage.module.css";
 
@@ -31,7 +33,7 @@ function CommunityCardSkeleton() {
 }
 
 /**
- * The communities card grid — shared verbatim by both `/communities` tabs. The
+ * The communities card grid, shared verbatim by both `/communities` tabs. The
  * `discover` state driving it is owned by `CommunitiesHubPage` and shared with
  * the toolbar in the page header, which is where the search, Refine drawer and
  * chip row live. Its `scope` is the only difference between the two tabs:
@@ -39,7 +41,7 @@ function CommunityCardSkeleton() {
  * memberships (see `useDiscoverCommunities`). Renders bare, with no page
  * background or `.wrap` of its own, so each tab's body can place it.
  *
- * `beforeGrid` is a slot above the cards — the "My communities" tab drops its
+ * `beforeGrid` is a slot above the cards: the "My communities" tab drops its
  * weekly digest in there.
  *
  * `isPending` lets the host hold the grid on its skeletons past its own
@@ -61,6 +63,21 @@ export function CommunitiesGrid({
   const { isMember } = useCommunityMembership();
   const { demoMode, featured, scope } = discover;
   const isShowingSkeletons = discover.isShowingSkeletons || isPending;
+  const suggestedBand = useSuggestedBand(featured?.slug);
+  const isShowingSuggested =
+    scope === "discover" &&
+    !discover.hasActiveRefinement &&
+    suggestedBand.isShowingBand;
+  const suggestedSlugs = new Set(
+    suggestedBand.communities.map((community) => community.slug),
+  );
+  const browseItems = isShowingSuggested
+    ? discover.gridItems.filter(
+        (community) => !community.slug || !suggestedSlugs.has(community.slug),
+      )
+    : discover.gridItems;
+  const isShowingBrowseHead =
+    isShowingSuggested && !isShowingSkeletons && browseItems.length > 0;
 
   /** Demo reads the session membership store; live trusts the card's own DTO. */
   const isJoined = (
@@ -89,7 +106,12 @@ export function CommunitiesGrid({
           narrowing the directory, same rule as the featured card: a
           connection-ranked band is not an answer to a search they typed. The
           section renders nothing when the list is empty, so most viewers see
-          no change here at all. */}
+          no change here at all. While the band is showing, the browse grid
+          drops every suggested community (`useSuggestedBand` is the shared
+          list), so each community appears once on the page, and the grid
+          gets its own heading so it reads as the rest of the directory. The
+          section stays mounted even once the band empties, because its join
+          modal outlives the card that opened it. */}
       {scope === "discover" && !discover.hasActiveRefinement && (
         <SuggestedCommunitiesSection excludeSlug={featured?.slug} />
       )}
@@ -110,26 +132,34 @@ export function CommunitiesGrid({
           setTagIds={discover.setTagIds}
         />
       ) : (
-        <div className={styles.grid}>
-          {isShowingSkeletons
-            ? Array.from({ length: 6 }).map((_, index) => (
-                <CommunityCardSkeleton key={index} />
-              ))
-            : discover.gridItems.map((community, index) => (
-                // Keyed by slug: two communities may legitimately share a
-                // name, and a name can be edited under React's feet.
-                <FadeIn
-                  key={community.slug ?? community.href}
-                  delay={Math.min(index, 8) * 60}
-                >
-                  <CommunityCard
-                    community={community}
-                    joined={isJoined(community.slug, community.myRole)}
-                    onJoin={discover.setJoining}
-                  />
-                </FadeIn>
-              ))}
-        </div>
+        <>
+          {isShowingBrowseHead && (
+            <SectionHead
+              className={styles.browseHead}
+              title={t("communities:discover.browse.heading")}
+            />
+          )}
+          <div className={styles.grid}>
+            {isShowingSkeletons
+              ? Array.from({ length: 6 }).map((_, index) => (
+                  <CommunityCardSkeleton key={index} />
+                ))
+              : browseItems.map((community, index) => (
+                  // Keyed by slug: two communities may legitimately share a
+                  // name, and a name can be edited under React's feet.
+                  <FadeIn
+                    key={community.slug ?? community.href}
+                    delay={Math.min(index, 8) * 60}
+                  >
+                    <CommunityCard
+                      community={community}
+                      joined={isJoined(community.slug, community.myRole)}
+                      onJoin={discover.setJoining}
+                    />
+                  </FadeIn>
+                ))}
+          </div>
+        </>
       )}
 
       {!isShowingSkeletons && discover.hasNextPage && (

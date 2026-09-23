@@ -12,6 +12,7 @@ import {
 import { ProfileMovedNote } from "../members/ProfileMovedNote";
 import { useMovedPersonaAddressRedirect } from "./useMovedPersonaRedirect";
 import { PersonaMovedNote } from "./PersonaMovedNote";
+import { RehomedPersonaNote } from "./RehomedPersonaNote";
 import { SubprofilePageBody } from "./SubprofilePageBody";
 import { SubprofilePageStates } from "./SubprofilePageStates";
 import { SubprofilePageSkeleton } from "./SubprofilePageSkeleton";
@@ -247,6 +248,7 @@ export function SubprofilePage() {
           first-hand visit and a reload show nothing. See `PersonaMovedNote`. */}
       <PersonaMovedNote />
       <ProfileMovedNote />
+      <RehomedPersonaNote />
 
       {isOwnerDraftPreview && (
         <SubprofileDraftBanner

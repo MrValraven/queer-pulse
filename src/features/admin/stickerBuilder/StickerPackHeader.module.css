@@ -1,0 +1,258 @@
+/* The pack workspace header: identity on the left (cover, editable name,
+   meta, status explainer), the one status action and the overflow menu on
+   the right. Wraps the action row under the identity when space runs out. */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 20px 22px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+}
+
+.identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+/* ── Cover thumbnail ── */
+.thumbnail {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 6px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+  overflow: hidden;
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.thumbnailPlaceholder {
+  font-size: var(--text-22);
+  color: var(--ink-40);
+}
+
+/* ── Name, meta, explainer ── */
+.titleBlock {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-26);
+  font-weight: 400;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-heading);
+  color: var(--text-strong);
+}
+
+/* A plain <button> styled as the heading itself, so the name stays the
+   title of the page while being the control that edits it. The
+   negative inline margin lines the text up with the meta row while the
+   hover wash still gets a little room either side. */
+.titleButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  margin-inline: -8px;
+  padding: 2px 8px;
+  border: none;
+  border-radius: var(--radius-10);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: text;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+/* The title stays the page's visual heading on desktop; a coarse pointer
+   gets the 44px floor so the rename control is safe to tap. */
+@media (pointer: coarse) {
+  .titleButton {
+    min-height: 44px;
+  }
+}
+
+.titleText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.titleEditIcon {
+  flex: none;
+  font-size: var(--text-16);
+  color: var(--ink-40);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .titleButton:hover {
+    background: rgba(var(--ink-rgb), 0.05);
+  }
+
+  .titleButton:hover .titleEditIcon {
+    color: var(--accent-text);
+  }
+}
+
+.titleButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.titleButton:focus-visible .titleEditIcon {
+  color: var(--accent-text);
+}
+
+.titleEditor {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.titleInput {
+  width: min(100%, 32rem);
+  margin-inline: -8px;
+  padding: 2px 8px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-26);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-heading);
+  accent-color: var(--accent);
+}
+
+.titleInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.titleHint {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* The slug is a machine value that ends up in links. It stays in the UI
+   face (the product ships no monospace) and reads as a quiet secondary
+   token: a soft tinted pill in the muted text colour. */
+.slug {
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.05);
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.separator {
+  flex: none;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.explainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 2px 0 0;
+  font-size: var(--text-13-5);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+.explainerIcon {
+  flex: none;
+  margin-top: 3px;
+  font-size: var(--text-14);
+  color: var(--ink-40);
+}
+
+.header[data-status="published"] .explainerIcon {
+  color: var(--jade-ink);
+}
+
+/* ── Status action and overflow menu ── */
+.actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex: none;
+}
+
+.actionStack {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+}
+
+.blockedReason {
+  margin: 0;
+  max-width: 14rem;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  text-align: right;
+  color: var(--ink-60);
+}
+
+@media (--md) {
+  .header {
+    padding: 16px;
+  }
+
+  .title,
+  .titleInput {
+    font-size: var(--text-22);
+  }
+
+  .actions {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+
+  .actionStack {
+    justify-items: start;
+  }
+
+  .blockedReason {
+    text-align: left;
+  }
+}

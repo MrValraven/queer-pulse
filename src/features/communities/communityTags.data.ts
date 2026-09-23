@@ -112,6 +112,16 @@ export const COMMUNITY_TAG_IDS: Set<string> = new Set(
   COMMUNITY_TAGS.map((tag) => tag.id),
 );
 
+/**
+ * The curated tag that makes a community a reading group. A reading group is
+ * an ordinary community, so it inherits a roster, join requests, posts,
+ * moderation and a detail page the moment it exists. The reading-group
+ * directory is a filter over the existing `GET /communities?tags=book-club`
+ * endpoint, and a group created through the ordinary community flow shows up
+ * there too. The tag also gates the optional "Now reading" field.
+ */
+export const READING_GROUP_TAG = "book-club";
+
 /** An owner/mod may pick at most this many tags when editing a community —
  *  keeps the pill row on every card variant readable rather than a wall of chips. */
 export const MAX_COMMUNITY_TAGS = 8;

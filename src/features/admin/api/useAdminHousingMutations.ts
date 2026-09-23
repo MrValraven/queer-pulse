@@ -15,14 +15,15 @@ import {
 } from "./useAdminHousingCoops";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 
-/** Public housing key (`economy/api/useHousingCoops.ts`) — invalidated too so
- *  the member-facing directory reflects admin edits without a manual refresh. */
+/** Member-facing housing key (`economy/api/useHousingCoops.ts`), invalidated
+ *  too so the member-facing directory reflects admin edits without a manual
+ *  refresh. */
 const HOUSING_COOPS_KEY = "housing-coops";
 
 /**
  * Admin creates a new housing coop. No-op in demo mode (there's nothing to
  * persist to and the admin panel's demo state is intentionally empty); live
- * mode POSTs and invalidates both the admin list and the public directory.
+ * mode POSTs and invalidates both the admin list and the member-facing directory.
  */
 export function useCreateCoop() {
   const { demoMode } = useDemoMode();

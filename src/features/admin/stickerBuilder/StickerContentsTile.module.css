@@ -1,0 +1,140 @@
+/* One sticker tile in the "In this pack" grid. The grid's gap is --gap-sm
+   (StickerPackContents.module.css), and the drop indicator below is centred
+   in that gap, so the two must move together. */
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.tile[data-draggable="true"] {
+  cursor: grab;
+}
+
+.tile[data-draggable="true"]:active {
+  cursor: grabbing;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile[data-draggable="true"]:hover {
+    border-color: var(--line-2);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+
+  .tile[data-draggable="true"]:hover {
+    transform: none;
+  }
+}
+
+/* The tile in flight stays in place as a faint ghost, so the gap it will
+   leave is visible while the browser's drag image follows the pointer. */
+.tile[data-dragging="true"] {
+  opacity: 0.4;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Drop indicator: a coral bar centred in the grid gap on the side the
+   dragged sticker will land. */
+.tile[data-drop]::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+  pointer-events: none;
+}
+
+.tile[data-drop="before"]::after {
+  left: calc(var(--gap-sm) / -2 - 2px);
+}
+
+.tile[data-drop="after"]::after {
+  right: calc(var(--gap-sm) / -2 - 2px);
+}
+
+.art {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-12);
+  background-color: var(--paper);
+  background-image: conic-gradient(
+    var(--wash) 25%,
+    transparent 0 50%,
+    var(--wash) 0 75%,
+    transparent 0
+  );
+  background-size: 16px 16px;
+}
+
+.image {
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.coverBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  box-shadow: var(--shadow-e2);
+}
+
+.label {
+  margin: 0;
+  min-height: calc(2 * 1.3em);
+  padding: 0 2px;
+  color: var(--ink);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.menuSlot {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}

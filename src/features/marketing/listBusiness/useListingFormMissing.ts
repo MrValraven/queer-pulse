@@ -10,6 +10,12 @@ import {
   type ListingDraft,
   type MissingField,
 } from "./listBusiness.data";
+import {
+  emptyMenuDraft,
+  isMenuLinkValid,
+  menuValid,
+  pricingModeOf,
+} from "./listingMenu.data";
 import { servicesValid } from "./listingServices.data";
 
 /** A still-missing item + the DOM anchor its chip jumps to. Holds the
@@ -67,11 +73,18 @@ export function useListingFormMissing(
       add(s1, "marketing:listBusiness.missing.price", ANCHOR.price);
     if (!draft.blurb.trim())
       add(s1, "marketing:listBusiness.missing.blurb", ANCHOR.blurb);
-    // Services are optional, so this only fires when a row the owner STARTED
-    // is still missing its name or its price — the same "finish what you began"
-    // shape the socials chip has, never a demand for a price list.
-    if (!servicesValid(draft.services ?? []))
+    // Only the VISIBLE priced list can hold the save back. Both are optional,
+    // so these fire only for something the owner started and left half done.
+    const pricingMode = pricingModeOf(draft);
+    if (pricingMode === "services" && !servicesValid(draft.services ?? []))
       add(s1, "marketing:listBusiness.missing.services", ANCHOR.services);
+    if (pricingMode === "menu" && !menuValid(draft.menu ?? emptyMenuDraft()))
+      add(s1, "marketing:listBusiness.missing.menu", ANCHOR.services);
+    if (
+      pricingMode === "menu" &&
+      !isMenuLinkValid((draft.menu ?? emptyMenuDraft()).link)
+    )
+      add(s1, "marketing:listBusiness.missing.menuLink", ANCHOR.services);
 
     const s2: MissingField[] = [];
     if (isClaim && !draft.tagline.trim())

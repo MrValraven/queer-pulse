@@ -6,6 +6,7 @@ import {
 } from "../../../shared/api/client";
 import type {
   AdminStickerPackResponse,
+  AdminStickerResponse,
   StickerResponse,
 } from "../../../shared/contracts/contracts";
 
@@ -52,9 +53,37 @@ export interface AddStickerBody {
 }
 
 /** POST /admin/sticker-packs/:packId/stickers: adds a rendered sticker to a
- *  pack. */
+ *  pack. The backend answers with the member-facing sticker shape (no
+ *  template or order fields); read the refetched pack list for those. */
 export const addSticker = (packId: string, body: AddStickerBody) =>
   apiPost<StickerResponse>(`/admin/sticker-packs/${packId}/stickers`, body);
+
+export interface UpdateStickerBody {
+  label?: string;
+  keywords?: { en: string[]; pt: string[] };
+  /** A redrawn artwork replaces the file, size, source and template params
+   *  together, so the sticker keeps its id, order and cover status. */
+  artwork?: {
+    storageKey: string;
+    width: number;
+    height: number;
+    svgSource: string;
+    templateId: string;
+    templateParams: Record<string, unknown>;
+  };
+}
+
+/** PATCH /admin/sticker-packs/:packId/stickers/:stickerId: relabels,
+ *  rewords, or redraws one sticker in place. */
+export const updateSticker = (
+  packId: string,
+  stickerId: string,
+  body: UpdateStickerBody,
+) =>
+  apiPatch<AdminStickerResponse>(
+    `/admin/sticker-packs/${packId}/stickers/${stickerId}`,
+    body,
+  );
 
 /** DELETE /admin/sticker-packs/:packId/stickers/:stickerId: removes one
  *  sticker from a pack. */
@@ -68,3 +97,10 @@ export const reorderStickers = (packId: string, stickerIds: string[]) =>
     `/admin/sticker-packs/${packId}/stickers/reorder`,
     { stickerIds },
   );
+
+/** DELETE /admin/sticker-packs/:packId: deletes a draft pack. The backend
+ *  checks the pack's current status and answers 409 for any pack that is
+ *  published or archived right now; archiving withdraws those. A pack moved
+ *  back to draft can be deleted, even if members used it while it was live. */
+export const deleteStickerPack = (packId: string) =>
+  apiDelete<void>(`/admin/sticker-packs/${packId}`);

@@ -135,12 +135,19 @@
   width: 2.963em; /* 40 / 13.5 */
   height: 2.963em;
   border-radius: var(--radius-badge);
+  overflow: hidden;
   flex: none;
   display: grid;
   place-items: center;
   font-family: var(--sans);
   font-size: var(--text-13-5);
   font-weight: 700;
+}
+.pvwAv img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .pvwRole {
   display: block;

@@ -1,0 +1,128 @@
+/* The host's "more" menu in the gathering page header. The panel matches
+   `ProfileSettingsMenu`'s overflow menu (paper, hairline, e3 shadow, 44px
+   items) so the app's owner menus read as one family. */
+
+/* Portalled to `document.body` and placed by `useAnchoredPopover`, so
+   `position` and the offsets come from that hook's inline style. This class
+   carries the look, the entrance and a layers token that outranks the page's
+   sticky sidebar. */
+.panel {
+  position: fixed;
+  z-index: var(--z-popover-portal);
+  min-width: 210px;
+  max-width: calc(100vw - 2 * var(--gap-sm));
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
+  transform-origin: top right;
+  animation: qpMenuIn var(--dur-fast) var(--ease);
+}
+
+/* Opened upward because there was no room below: grow from the edge nearest
+   the trigger, so the entrance still reads as coming out of the button. */
+.panelFlipped {
+  composes: panel;
+  transform-origin: bottom right;
+}
+
+/* Carried for the single commit before the first measurement lands. Also
+   `fixed`, so an unplaced panel never takes flow space at the end of
+   `<body>`. */
+.panelUnplaced {
+  composes: panel;
+  top: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+/* Says whose tools these are, the job the old strip's label did, as a quiet
+   eyebrow above the items. */
+.label {
+  padding: 8px 12px 4px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.itemIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--ink-60);
+}
+
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+
+/* Delete is the one action here that cannot be taken back, so it alone
+   carries the danger colour, text and icon both. */
+.itemDanger {
+  composes: item;
+}
+.itemDanger,
+.itemDanger .itemIcon {
+  color: var(--danger);
+}
+
+@media (hover: hover) {
+  .itemDanger:hover {
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}
+
+/* A cancel or delete already in flight. `aria-disabled` keeps the item
+   focusable so the arrow keys still walk the same list. */
+.item[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .item[aria-disabled="true"]:hover {
+    background: transparent;
+  }
+}
+
+.separator {
+  height: 1px;
+  margin: 5px 4px;
+  background: var(--line);
+}
+
+/* Local copy of the shared keyframe in src/styles/tokens/effects.css. CSS
+   Modules hashes every animation name it sees here, so a keyframe used from a
+   module has to be declared in that module (see Select.module.css). */
+@keyframes qpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

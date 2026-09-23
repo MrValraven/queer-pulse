@@ -96,6 +96,9 @@ export const communities: Catalog = {
   "discover.suggested.heading": "Suggested for you",
   "discover.suggested.subtitle":
     "Communities where people you are connected to have already landed.",
+  // Heads the browse grid only while the band above it is showing, so the
+  // grid never reads as more suggestions.
+  "discover.browse.heading": "More communities",
 
   // ── Community card / join CTA labels ───────────────────────────────────────
   // Shared by the discover grid and the community-detail hero.
@@ -1151,6 +1154,7 @@ export const communities: Catalog = {
   "detail.modtools.history.field.type": "Type",
   "detail.modtools.history.field.whoFor": "Who it is for",
   "detail.modtools.history.field.tagline": "Tagline",
+  "detail.modtools.history.field.nowReading": "Now reading",
   "detail.modtools.history.field.accessTier": "Who can join",
   "detail.modtools.history.field.rosterVisible": "Roster visible",
   "detail.modtools.history.field.features": "Features",
@@ -1753,6 +1757,7 @@ export const communities: Catalog = {
   "detail.founded": "Founded {date}",
   "detail.foundedRecently": "Founded recently",
   "detail.foundedJustNow": "Founded just now",
+  "detail.nowReading": "Now reading: <strong>{book}</strong>",
   "detail.cadenceDefault": "Finding its rhythm",
   "detail.nextEvent.soonChip": "soon",
   "detail.nextEvent.tbaTitle": "Next gathering to be announced",
@@ -1780,6 +1785,10 @@ export const communities: Catalog = {
   "edit.cancel": "Cancel",
   "edit.field.name": "Name",
   "edit.field.tagline": "Tagline",
+  "edit.field.nowReading": "Now reading",
+  "edit.field.nowReadingHint":
+    "The book the group is reading right now. Change it when you move on to the next one.",
+  "edit.field.nowReadingPlaceholder": "e.g. Giovanni's Room by James Baldwin",
   // PRD-146. The community mark and the welcome note. Both were accepted by
   // create and update and rendered by the welcome card, and no surface had a
   // field for either, so neither could ever be set. `mark` rather than

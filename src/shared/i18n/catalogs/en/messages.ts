@@ -890,6 +890,10 @@ export const messages: Catalog = {
   "share.kind.directory": "place",
   "share.kind.gathering": "gathering",
   "share.kind.generic": "thing",
+  "share.previewLabel": "Preview",
+  "share.previewTo": "To",
+  "share.previewEmptyRecipients": "Pick someone to send this to",
+  "share.previewTime": "now",
   "search.loadErrorBody":
     "The search didn't come back. This one is on us. Try again in a moment.",
   "newMessage.strangersSearching": "Looking for that member…",

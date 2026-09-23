@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDebouncedValue } from "../../../shared/hooks";
@@ -24,7 +24,11 @@ export interface SearchDataResult {
   recents: string[];
   /** True only when logged out in live mode — the UI shows a sign-in prompt instead of results. */
   signInRequired: boolean;
-  /** True while a live search request is in flight. */
+  /**
+   * True while live results for the current input are not in yet: the
+   * debounce has not caught up with the typed query, or the request for it is
+   * in flight. Rows still in `data` meanwhile answer the previous query.
+   */
   loading: boolean;
   /**
    * True when the live search request failed. A failed request must be
@@ -76,6 +80,8 @@ export function useSearchData(
     // Forward react-query's own cancellation signal into the fetch — a fast
     // retype (new `debounced` → new queryKey) cancels the previous
     // keystroke's request at the network layer, not just in the query cache.
+    // The rows travel with the query they answered, so a placeholder page
+    // (below) can still be told apart from the current query's answer.
     queryFn: async ({ signal }) => {
       const response = await searchApi(
         debounced,
@@ -83,8 +89,14 @@ export function useSearchData(
         signal,
         liveType ? SEE_ALL_LIMIT : undefined,
       );
-      return response.results.map(resultToSearchItem);
+      return {
+        query: debounced,
+        items: response.results.map(resultToSearchItem),
+      };
     },
+    // Keep the previous query's rows on screen while the next key fetches, so
+    // typing never blanks the list into an empty state.
+    placeholderData: keepPreviousData,
   });
 
   // Curated topic (hashtag) rows for the live palette's no-query browse
@@ -143,18 +155,26 @@ export function useSearchData(
         ...PAGE_SEARCH_ITEMS,
         ...(topicsQuery.data ?? []).map(topicResponseToSearchItem),
       ];
+  // Each server row carries the query it answered in `kw`, so the palette's
+  // client-side name/sub/kw filter never hides a server match on a field the
+  // client cannot see. That is the ANSWERED query: a placeholder row from the
+  // previous query must still earn its place against the current input on its
+  // own fields. A row can therefore show while typing and drop out once the
+  // server answers the new query.
+  const answeredQuery = searchQuery.data?.query ?? "";
   const serverHits = needle
-    ? (searchQuery.data ?? []).map((item) => ({
+    ? (searchQuery.data?.items ?? []).map((item) => ({
         ...item,
-        kw: `${item.kw} ${debounced}`,
+        kw: `${item.kw} ${answeredQuery}`,
       }))
     : [];
+  const isAwaitingDebounce = needle !== debounced;
 
   return {
     data: [...staticHits, ...serverHits],
     recents: readRecents(),
     signInRequired: false,
-    loading: searchQuery.isFetching,
+    loading: Boolean(needle) && (isAwaitingDebounce || searchQuery.isFetching),
     // Gated on `needle` as well as the query's own flag: while the debounce
     // catches up with a just-cleared input, the failed keystroke's query entry
     // is still the active one, and the browse view must not wear its error.

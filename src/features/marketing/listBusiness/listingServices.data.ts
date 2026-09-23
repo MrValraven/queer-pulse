@@ -87,6 +87,14 @@ export function servicesValid(
   return rows.every((row) => serviceRowProblem(row) === null);
 }
 
+/** Only the rows with nothing missing. Used when services are the HIDDEN
+ *  list, so a half-filled row the owner cannot see never blocks a save. */
+export function completeServiceRows(
+  rows: readonly ListingServiceRow[],
+): ListingServiceRow[] {
+  return rows.filter((row) => serviceRowProblem(row) === null);
+}
+
 /** The wire shape: blank rows dropped, values trimmed, client keys stripped. */
 export function servicesForPayload(
   rows: readonly ListingServiceRow[],

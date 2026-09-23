@@ -120,7 +120,6 @@ export const gatherings: Catalog = {
   // GatheringPage
   "gathering.badge.event": "Evento QueerPulse",
   "gathering.badge.gathering": "Convívio da comunidade",
-  "gathering.seeAllCta": "Ver todos os convívios",
   "gathering.spotsRemainingLabel": "vagas restantes",
   "gathering.spotsUrgencyNote": "Não percas tempo se isto te chamar",
   "gathering.locationNote":
@@ -1907,6 +1906,19 @@ export const gatherings: Catalog = {
   "hostBar.deleteGoneToast": "Esse convívio já não existe.",
   "hostBar.deleteFailedToast":
     "Não foi possível eliminar o convívio. Tenta outra vez daqui a pouco.",
+  // As ações de quem organiza ficam num botão "mais" no cabeçalho da página
+  // (GatheringHostMenu); estas chaves dão nome a esse botão.
+  "hostBar.menuAria": "Ferramentas para organizar {title}",
+  "hostBar.menuTooltip": "Ferramentas de organização",
+
+  // ── Barra de ícones do cabeçalho (GatheringHeaderToolbar) ─────────────────
+  // Guardar, adicionar ao calendário e partilhar, junto ao tipo de convívio,
+  // para que o RSVP seja o único botão em destaque.
+  "headerToolbar.aria": "Ações do convívio",
+  "headerToolbar.shareCta": "Partilhar",
+  "headerToolbar.shareCopiedToast": "Link copiado",
+  "headerToolbar.shareCopyFailedToast":
+    "O teu navegador não nos deixou copiar. Aqui fica o link: {url}",
 
   // ── Painel "Cuidar de quem vem" (GatheringTakingCare.tsx) ─────────────────
   // Regras da casa, avisos de conteúdo e temas, como quem organiza os definiu.

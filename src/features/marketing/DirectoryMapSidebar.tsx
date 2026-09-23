@@ -46,6 +46,9 @@ interface Props extends DirectoryMapViewState {
   onRetry?: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
+  /** Replaces the default in-flow column class, e.g. with the panel that
+   *  floats over the map. */
+  className?: string;
 }
 
 /** The map view's parish-grouped sidebar: heading + count, a clear-filter
@@ -71,6 +74,7 @@ export function DirectoryMapSidebar({
   onRetry,
   hasActiveFilters,
   onClearFilters,
+  className = s.sidebar,
 }: Props) {
   const { t } = useTranslation();
 
@@ -94,7 +98,7 @@ export function DirectoryMapSidebar({
   );
 
   return (
-    <aside className={s.sidebar} ref={sidebarRef}>
+    <aside className={className} ref={sidebarRef}>
       <div className={s.sbTop}>
         <div>
           <div className={s.sbHeading}>

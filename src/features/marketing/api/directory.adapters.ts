@@ -11,6 +11,11 @@ import {
   normalizeAccessibilityAnswers,
   type AccessibilityAnswerMap,
 } from "../listBusiness/listingAccessibility.data";
+import {
+  emptyMenu,
+  menuForDisplay,
+  pricingModeOf,
+} from "../listBusiness/listingMenu.data";
 import { servicesForPayload } from "../listBusiness/listingServices.data";
 import type {
   CoverPhotoView,
@@ -209,6 +214,8 @@ export function detailDtoToPlace(
     // absent block as "this listing has said nothing" rather than as a "no".
     accessibility: dto.accessibility,
     services: dto.services ?? [],
+    pricingMode: dto.pricingMode ?? "services",
+    menu: dto.menu ?? emptyMenu(),
     affirmingBaseline: dto.affirmingBaseline,
     queerOwnedVerification: dto.queerOwnedVerification,
     hoursType: dto.hoursType,
@@ -399,6 +406,8 @@ export function submittedToPlace(
       note: listing.accessibility?.note?.trim() || null,
     },
     services: servicesForPayload(listing.services ?? []),
+    pricingMode: pricingModeOf(listing),
+    menu: menuForDisplay(listing.menu),
     // Every listing agrees to the baseline in order to exist, this one
     // included; the wizard's own agreement is what created it.
     affirmingBaseline: { isAccepted: true, acceptedAt: null },

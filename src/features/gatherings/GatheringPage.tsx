@@ -19,6 +19,7 @@ import { MeetTheTable } from "./table/MeetTheTable";
 import { GatheringSidebar } from "./GatheringSidebar";
 import { GatheringHeroActions } from "./GatheringHeroActions";
 import { GatheringHostBar } from "./GatheringHostBar";
+import { GatheringHeaderToolbar } from "./GatheringHeaderToolbar";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
@@ -41,7 +42,7 @@ import styles from "./GatheringPage.module.css";
 
 /**
  * The gathering's loading / not-found frame. Live has no gathering until the
- * fetch resolves — a skeleton while loading, then a real "not found" state if
+ * fetch resolves: a skeleton while loading, then a real "not found" state if
  * the slug resolves to nothing. Demo always resolves, so this is live-only.
  */
 function GatheringUnavailable({ loading }: { loading: boolean }) {
@@ -89,7 +90,7 @@ export function GatheringPage() {
   const { demoMode } = useDemoMode();
   const simLoading = useSimulatedLoad();
   const { data, isLoading } = useEvent(param);
-  // NEVER fall back to the mock registry in live — that leaked demo gatherings
+  // NEVER fall back to the mock registry in live: that leaked demo gatherings
   // into production. Demo resolves the route param against the mock; live uses
   // only the fetched event (null until it resolves, or if the slug 404s).
   const gathering = demoMode
@@ -106,7 +107,7 @@ export function GatheringPage() {
  *
  * Split from the loader above for one reason: the hero's RSVP button and the
  * sidebar's RSVP panel are two views of ONE decision, so they have to share one
- * `useGatheringRsvp` — and a hook cannot live above the loader's "not found"
+ * `useGatheringRsvp`, and a hook cannot live above the loader's "not found"
  * early return, which has no gathering to give it. Two independent copies (what
  * this page shipped with) meant the hero could read "Cancel RSVP" while the
  * sidebar beside it still offered "Reserve a seat".
@@ -156,18 +157,39 @@ function GatheringDetailBody({
     <PageShell>
       <div className={styles.page}>
         <div className="wrap">
-          <div className={styles.back}>
-            <Link to={routes.calendar} className={styles.backLink}>
-              <FiArrowLeft aria-hidden />{" "}
-              {t("gatherings:common.backToGatherings")}
-            </Link>
-          </div>
-
           <div className={styles.grid}>
             <div>
+              {/* The main column's header bar: the way back on the left, the
+                  icon toolbar on the right. It lives inside the column so the
+                  icons stay over the content they act on, and on a phone they
+                  share the back link's line instead of wrapping under the
+                  type row. */}
+              <div className={styles.headerBar}>
+                <Link to={routes.calendar} className={styles.backLink}>
+                  <FiArrowLeft aria-hidden />{" "}
+                  {t("gatherings:common.backToGatherings")}
+                </Link>
+                <GatheringHeaderToolbar
+                  gathering={gathering}
+                  routeParam={routeParam}
+                  isCalendarAvailable={rsvp.canRsvp}
+                  hostMenu={
+                    // Live-only by construction: `viewerIsOrganizer` comes
+                    // from the server's `isOrganizer` and the demo registry
+                    // never sets it, so no demo persona ever sees edit,
+                    // cancel or delete.
+                    gathering.viewerIsOrganizer ? (
+                      <GatheringHostBar
+                        gathering={gathering}
+                        routeParam={routeParam}
+                      />
+                    ) : undefined
+                  }
+                />
+              </div>
               <div className={styles.typeRow}>
-                {/* The stored value is a catalog key or the host's own words,
-                    never a label. `formatLabel` resolves the first, leaves the
+                {/* The stored value is a catalog key or the host's own words.
+                    `formatLabel` resolves the first, leaves the
                     second alone, and gives an unset gathering the generic word
                     in the reader's own language. */}
                 <span className={styles.type}>
@@ -212,28 +234,11 @@ function GatheringDetailBody({
                 </span>
               </div>
               <p className={styles.body}>{gathering.body}</p>
-              <GatheringHeroActions
-                gathering={gathering}
-                routeParam={routeParam}
-                rsvp={rsvp}
-              />
-
-              {/* The host's own strip. It sits under the member actions in a
-                  quieter register, so the RSVP keeps the page's first call on
-                  a reader's attention. `viewerIsOrganizer` comes from the
-                  server's `isOrganizer` and the demo registry never sets it,
-                  so this is live-only by construction: no demo gathering can
-                  put a demo persona in front of edit / cancel / delete. */}
-              {gathering.viewerIsOrganizer && (
-                <GatheringHostBar
-                  gathering={gathering}
-                  routeParam={routeParam}
-                />
-              )}
+              <GatheringHeroActions gathering={gathering} rsvp={rsvp} />
 
               <GoingAttendeesPreview gathering={gathering} />
 
-              {/* LOC-04/06/08 — announcements, where it actually is, the six
+              {/* LOC-04/06/08: announcements, where it actually is, the six
                   accessibility answers, and "tell someone where I'm going".
                   Live only: the demo registry carries none of that data. */}
               <GatheringDetailPanels

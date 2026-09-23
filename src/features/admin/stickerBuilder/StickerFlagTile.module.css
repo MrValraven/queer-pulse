@@ -1,0 +1,230 @@
+/* One flag tile in the sticker builder grid, a listbox option: the art, a
+   corner tick that shows the selection, a run status mark, and a caption with
+   the flag's name and its pack badge. The whole tile is the pointer target. */
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 10px;
+  border-radius: var(--radius-14);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+/* A click or tap anywhere flips the flag and previews it. `manipulation`
+   drops the double-tap zoom wait, and `user-select: none` keeps a quick
+   double click from selecting the name. */
+.tileSelectable {
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.tileSelected {
+  border-color: var(--line-2);
+}
+
+/* The flag in the hero preview. An accent edge plus a soft ring, so it reads
+   as "looking at this one" and stays distinct from the selection tick. */
+.tileFocused {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-strong);
+}
+
+.tileFailed {
+  border-color: rgba(var(--danger-rgb), 0.55);
+}
+
+.stage {
+  position: relative;
+}
+
+.art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 6px;
+  border: none;
+  border-radius: var(--radius-10);
+  background: var(--wash);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .tileSelectable:hover .art {
+    background: rgba(var(--line-rgb), 0.09);
+  }
+
+  .tileSelectable:hover .check {
+    border-color: var(--accent-fill);
+  }
+}
+
+/* The tile is the grid's one focus stop, so the ring sits on the whole tile. On the previewed tile
+   the accent ring stays under the cream one. */
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.tileFocused:focus-visible {
+  box-shadow: var(--ring-cream), var(--ring-accent-strong);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    filter var(--dur-fast) var(--ease);
+}
+
+/* An unselected flag steps back: the art dims and desaturates, while the
+   name keeps a readable ink so the tile still scans as a choice. */
+.tileUnselected .canvas {
+  opacity: 0.42;
+  filter: saturate(0.35);
+}
+
+.check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  background: var(--paper);
+  color: rgb(var(--cream-rgb));
+  font-size: var(--text-15);
+  box-shadow: var(--shadow-e1);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.tileSelected .check {
+  border-color: var(--accent-fill);
+  background: var(--accent-fill);
+}
+
+/* The caption under the art: the name, then the pack badge on its own line,
+   both centred. */
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Holds one badge line even when the badge is absent, so a tile keeps its
+   height as the selection changes. */
+.badgeSlot {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  min-height: calc(var(--text-11) * 1.35 + 4px);
+}
+
+/* The badge sits in the caption with the full tile width to use, so "Will
+   replace" and "Vai substituir" read in full; a tile too narrow even for
+   that wraps the words instead of cutting them. */
+.badge {
+  max-width: 100%;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+}
+
+/* Each tint is layered over an opaque paper fill so the text contrast holds
+   on the tile surface in both themes. */
+.badgeNew {
+  background:
+    linear-gradient(rgba(var(--jade-rgb), 0.12), rgba(var(--jade-rgb), 0.12)),
+    var(--paper);
+  color: var(--jade-ink);
+}
+
+.badgeInPack {
+  background:
+    linear-gradient(rgba(var(--line-rgb), 0.08), rgba(var(--line-rgb), 0.08)),
+    var(--paper);
+  color: var(--text-strong);
+}
+
+.badgeWillReplace {
+  background:
+    linear-gradient(rgba(var(--amber-rgb), 0.22), rgba(var(--amber-rgb), 0.22)),
+    var(--paper);
+  color: var(--amber-ink);
+}
+
+.runMark {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--paper);
+  font-size: var(--text-16);
+  box-shadow: var(--shadow-e1);
+  pointer-events: none;
+}
+
+.runMarkSubtle {
+  color: var(--ink-60);
+}
+
+.runMarkRunning {
+  color: var(--accent-text);
+}
+
+.runMarkDone {
+  color: var(--jade-ink);
+}
+
+.runMarkFailed {
+  color: var(--danger);
+}
+
+.name {
+  max-width: 100%;
+  padding-inline: 2px;
+  font-size: var(--text-13);
+  line-height: 1.3;
+  color: var(--ink-60);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tileSelected .name {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .art,
+  .canvas,
+  .check {
+    transition: none;
+  }
+}

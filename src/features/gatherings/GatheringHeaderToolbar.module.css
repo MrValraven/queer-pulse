@@ -1,0 +1,18 @@
+/* The header's icon row. `margin-left: auto` pushes it to the right end of the
+   flex type row it sits in; when that row wraps on a phone, the toolbar drops
+   to its own line and still hugs the right edge. The buttons keep the quiet
+   icon variant's 44px tap target, so the gap between them stays small. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Saved reads as active: the filled bookmark takes the jade ink, which also
+   flips to its lighter partner in dark mode. The colour is set on the svg so it
+   survives the icon variant's hover rule, which recolours the button itself. */
+.saveButton[aria-pressed="true"] svg {
+  color: var(--jade-ink);
+}

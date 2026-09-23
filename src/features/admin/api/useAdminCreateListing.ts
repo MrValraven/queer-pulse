@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { listingDtoToPending } from "../../marketing/listBusiness/api/listings.adapters";
 import { BLANK_OWNER_PERSONAL_FIELDS } from "../../marketing/listBusiness/ownerPersonalFields";
+import { toMenuDraft } from "../../marketing/listBusiness/listingMenu.data";
 import { toServiceRows } from "../../marketing/listBusiness/listingServices.data";
 import {
   slugify,
@@ -43,6 +44,7 @@ function demoCreatedListing({
     // client-only React key every editable row needs. Adopt them back, the
     // same way `listingDtoToPending` does on the live path.
     services: toServiceRows(business.services),
+    menu: toMenuDraft(business.menu),
     // The listing exists, so the affirming baseline applies to it. Whoever
     // accepts the handover agrees to it in their own name.
     affirmingBaselineAccepted: true,

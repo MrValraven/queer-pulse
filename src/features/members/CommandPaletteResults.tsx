@@ -1,4 +1,9 @@
-import { Avatar, LoadErrorState } from "../../shared/components/ui";
+import {
+  Avatar,
+  LoadErrorState,
+  SkeletonAvatar,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -6,10 +11,14 @@ import { memberRowAvatar } from "./searchAvatar";
 import { TYPE_ICON, TYPE_LABEL_KEY, type SearchItem } from "./search.data";
 import styles from "./CommandPalette.module.css";
 
+/** Placeholder rows drawn while the first live answer for a query is pending. */
+const SKELETON_ROW_KEYS = ["first", "second", "third"];
+
 /** The recents chips + the keyboard-navigable results list for the palette. */
 export function CommandPaletteResults({
   q,
   hasFailed,
+  isLoading,
   onRetry,
   recents,
   setQuery,
@@ -22,6 +31,9 @@ export function CommandPaletteResults({
   /** The live GET /search failed. Shows the retryable error panel in place of
    *  the results list, so an outage is never read as "no matches" (DES-23). */
   hasFailed: boolean;
+  /** Live results for the current input are still pending. With no rows to
+   *  show yet, skeleton rows stand in for the "no matches" line. */
+  isLoading: boolean;
   /** Re-runs the failed search. */
   onRetry: () => void;
   recents: string[];
@@ -67,8 +79,28 @@ export function CommandPaletteResults({
         </div>
       )}
 
-      <ul className={styles.results} id="qp-cmd-results" role="listbox">
-        {results.length === 0 && (
+      <p className="visuallyHidden" role="status" aria-live="polite">
+        {isLoading ? t("members:commandPalette.searching") : ""}
+      </p>
+
+      <ul
+        className={styles.results}
+        id="qp-cmd-results"
+        role="listbox"
+        aria-busy={isLoading}
+      >
+        {isLoading &&
+          results.length === 0 &&
+          SKELETON_ROW_KEYS.map((rowKey) => (
+            <li key={rowKey} className={styles.skeletonRow} aria-hidden>
+              <SkeletonAvatar size={34} />
+              <div className={styles.skeletonBody}>
+                <SkeletonLine width="40%" height={14} />
+                <SkeletonLine width="65%" height={12} />
+              </div>
+            </li>
+          ))}
+        {!isLoading && results.length === 0 && (
           <li className={styles.noResults}>
             {t("members:commandPalette.noMatches")}
           </li>

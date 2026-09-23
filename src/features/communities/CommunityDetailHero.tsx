@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiMail } from "react-icons/fi";
 import { FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Person } from "./communityDetails";
@@ -81,6 +82,11 @@ export function CommunityDetailHero({
   // slug still gets a working report path.
   const { slug: routeSlug } = useParams<{ slug: string }>();
   const communitySlug = community.slug ?? routeSlug;
+  // A group named after its book (the backfill sets now_reading = name) would
+  // repeat the H1, so the line shows only when the book adds something.
+  const nowReading = detail.nowReading?.trim() ?? "";
+  const shouldShowNowReading =
+    nowReading !== "" && nowReading !== community.name.trim();
   return (
     <header
       className={styles.hero}
@@ -124,6 +130,15 @@ export function CommunityDetailHero({
           <FeatureHelp id="community.detail" />
         </div>
         <p className={styles.heroSub}>{community.description}</p>
+        {shouldShowNowReading && (
+          <p className={styles.heroReading}>
+            <Translation
+              i18nKey="communities:detail.nowReading"
+              components={{ strong: <strong /> }}
+              values={{ book: nowReading }}
+            />
+          </p>
+        )}
         {isInvited && (
           <p className={styles.inviteBanner}>
             <FiMail aria-hidden /> {t("communities:detail.invite.banner")}

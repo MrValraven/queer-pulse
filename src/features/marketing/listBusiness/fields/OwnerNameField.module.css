@@ -1,0 +1,51 @@
+/* The owner-name field: FormField plus the "use a different name" toggle,
+   wrapped so the pair stays one grid child of `.twoCol`. */
+
+.nameField {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.nameField > * {
+  width: 100%;
+}
+
+/* The account-name input reads as settled and read-only. Scoped above
+   FormField's (0,1,1) `.field input` and its (0,2,1) focus rule so the muted
+   look survives a click or keyboard focus. */
+.nameField input[readonly],
+.nameField input[readonly]:focus {
+  color: var(--ink-60);
+  background: var(--wash);
+  border-color: var(--line-2);
+  cursor: default;
+}
+
+.nameField > .sourceToggle {
+  width: auto;
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 2px 0;
+  border-radius: var(--radius-4);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-text);
+  text-align: left;
+  cursor: pointer;
+  text-underline-offset: 3px;
+}
+
+.nameField > .sourceToggle:hover {
+  text-decoration: underline;
+}
+
+.nameField > .sourceToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

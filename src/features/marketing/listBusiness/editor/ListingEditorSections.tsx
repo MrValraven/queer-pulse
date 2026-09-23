@@ -3,6 +3,7 @@ import { VerifiedBadgeEditNotice } from "../../EditListingStatusHeader";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { CoManagerRoleFields } from "../coManagers/CoManagerRoleFields";
 import { ListingCoManagersSection } from "../coManagers/ListingCoManagersSection";
+import { pricingModeOf } from "../listingMenu.data";
 import type { ListingForm } from "../useListingForm";
 import { BasicsFields } from "../fields/BasicsFields";
 import { StoryFields } from "../fields/StoryFields";
@@ -14,10 +15,13 @@ import { AffirmingBaselineNotice } from "../fields/AffirmingBaselineAgreement";
 import { ListingHoursExceptions } from "../ListingHoursExceptions";
 import { ListingEditorSection } from "./ListingEditorSection";
 import { ListingAccessibilityFields } from "./ListingAccessibilityFields";
-import { ListingServicesFields } from "./ListingServicesFields";
+import { ListingPricingFields } from "./ListingPricingFields";
 import { ListingDirectoryVisibilitySection } from "./ListingDirectoryVisibilitySection";
 import { ListingOperatingStateSection } from "./ListingOperatingStateSection";
-import { editorSectionByKeyFor } from "./listingEditor.data";
+import {
+  editorSectionByKeyFor,
+  pricingSectionDefinition,
+} from "./listingEditor.data";
 
 /**
  * Every field of the listing on one page, grouped under its section heading.
@@ -27,8 +31,8 @@ import { editorSectionByKeyFor } from "./listingEditor.data";
  * chrome around those components, this supplies section chrome.
  *
  * Several blocks are owner-only and have no wizard counterpart: the dated
- * hours exceptions (slotted under the weekly grid), the priced services and
- * accessibility answers (both easier to get right once the place is listed
+ * hours exceptions (slotted under the weekly grid), the priced services or
+ * menu and accessibility answers (both easier to get right once the place is listed
  * than mid-submission), and the trading + directory-visibility controls, which
  * report on a business that already exists.
  *
@@ -76,8 +80,13 @@ export function ListingEditorSections({
         <StoryFields form={form} />
       </ListingEditorSection>
 
-      <ListingEditorSection section={section.services}>
-        <ListingServicesFields form={form} />
+      <ListingEditorSection
+        section={pricingSectionDefinition(
+          section.services,
+          pricingModeOf(form.draft),
+        )}
+      >
+        <ListingPricingFields form={form} />
       </ListingEditorSection>
 
       <ListingEditorSection section={section.practical}>

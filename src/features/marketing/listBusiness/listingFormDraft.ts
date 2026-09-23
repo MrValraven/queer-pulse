@@ -1,5 +1,6 @@
 import { emptyHours, witLine, type ListingDraft } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
+import { emptyMenuDraft } from "./listingMenu.data";
 
 /** A brand-new draft's accessibility block: all six questions unanswered and
  *  no note. Unanswered is a real state, never a hidden "no". */
@@ -34,6 +35,8 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     goodFor: [],
     accessibility: emptyAccessibilityDraft(),
     services: [],
+    pricingMode: "services",
+    menu: emptyMenuDraft(),
     langs: [],
     online: false,
     address: "",

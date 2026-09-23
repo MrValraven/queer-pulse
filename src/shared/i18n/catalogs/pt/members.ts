@@ -1076,6 +1076,7 @@ export const members: Catalog = {
   "commandPalette.signInBody":
     "Inicia sessão para pesquisar em toda a QueerPulse.",
   "commandPalette.noMatches": "Sem resultados. Tenta outra palavra.",
+  "commandPalette.searching": "A pesquisar…",
   "commandPalette.seeAllResults":
     "Ver todos os resultados para “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Abrir pesquisa completa",
@@ -1363,9 +1364,6 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.magazine": "Peças publicadas na revista",
   "badges.xpBreakdown.sources.magazineDesc":
     "Uma peça tua publicada na revista.",
-  "badges.xpBreakdown.sources.answers": "Perguntas respondidas no diretório",
-  "badges.xpBreakdown.sources.answersDesc":
-    "Responderes a uma pergunta na ficha de um espaço do diretório.",
   "badges.xpBreakdown.sources.resources": "Recursos aprovados",
   "badges.xpBreakdown.sources.resourcesDesc":
     "Um recurso que sugeriste e que foi aprovado.",
@@ -1994,19 +1992,19 @@ export const members: Catalog = {
   "savedLists.share.private.body":
     "Só tu a vês. Se quiseres passá-la a alguém, podes criar um link.",
   "savedLists.share.private.warning":
-    "Qualquer pessoa com o link consegue abrir esta lista. Não há palavra-passe nem início de sessão, por isso o link é a chave: envia-o só a quem confias com ele.",
+    "Qualquer pessoa com o link e uma conta na QueerPulse consegue abrir esta lista. Envia-o só a quem confias.",
   "savedLists.share.private.cta": "Criar link de partilha",
-  "savedLists.share.points.noAccount":
-    "Não precisam de conta na QueerPulse para a ler.",
+  "savedLists.share.points.accountRequired":
+    "Precisam de uma conta na QueerPulse e de ter sessão iniciada para a abrir.",
   "savedLists.share.points.anonymous":
     "Veem o nome da lista e o que está nela. Não veem o teu nome, o teu perfil nem a tua foto.",
   "savedLists.share.points.revocable":
     "Podes desligar o link a qualquer momento. Todas as cópias dele deixam de funcionar de imediato.",
 
   "savedLists.share.live.heading":
-    "Qualquer pessoa com este link consegue abri-lo",
+    "Os membros com este link conseguem abrir a lista",
   "savedLists.share.live.body":
-    "O link funciona sem conta. Mostra o nome da lista e o que está nela, e nada sobre ti.",
+    "O link só funciona para membros com sessão iniciada. Mostra o nome da lista e o que está nela, e nada sobre ti.",
   "savedLists.share.live.fieldLabel": "Link de partilha desta lista",
   "savedLists.share.live.copy": "Copiar",
   "savedLists.share.live.copied": "Copiado",

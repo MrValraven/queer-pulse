@@ -195,10 +195,10 @@ export const routes = {
   cinema: "/cinema",
   codeOfConduct: "/about/governance/code-of-conduct",
   collections: "/account/collections",
-  /** Public per-token page a shared saved list resolves to (`/lists/:token`,
-   *  declared in `members/routes.tsx`). Deliberately NOT under `/account`: the
-   *  backend's shared read is `@Public()`, so someone without an account has to
-   *  be able to open the link. Never in the sitemap. */
+  /** Members-only per-token page a shared saved list resolves to
+   *  (`/lists/:token`, declared in `members/routes.tsx`). Gated in
+   *  `GATED_PATTERNS` and by `ActiveMemberGuard` on the backend read, so a
+   *  signed-out reader goes through sign-in with `?next=`. Never in the sitemap. */
   sharedSavedList: "/lists",
   comingOut: "/coming-out",
   communities: "/communities",

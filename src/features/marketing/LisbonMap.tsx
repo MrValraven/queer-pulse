@@ -1,7 +1,9 @@
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useMemo } from "react";
+import { useMemo, type RefObject } from "react";
+import { createPortal } from "react-dom";
+import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useLisbonMap } from "./useLisbonMap";
+import { useLisbonMap, type MapPanelEdge } from "./useLisbonMap";
 import { MapLoading } from "./MapLoading";
 import { TYPE_LABEL_KEYS } from "./map.data";
 import { LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
@@ -16,6 +18,13 @@ interface LisbonMapProps {
   counts: Record<string, number>;
   onSelectFreguesia: (name: string) => void;
   onSelectVenue: (venueId: string) => void;
+  /** The list panel floating over the map; the camera keeps clear of it. */
+  panelRef?: RefObject<HTMLElement | null>;
+  /** The map edge that panel covers right now, or null when it sits outside. */
+  panelEdge?: MapPanelEdge | null;
+  /** Full screen state and switch. When given, a button joins the zoom
+   *  controls. */
+  fullscreen?: { isFullscreen: boolean; onToggle: () => void };
 }
 
 export function LisbonMap({
@@ -26,6 +35,9 @@ export function LisbonMap({
   counts,
   onSelectFreguesia,
   onSelectVenue,
+  panelRef,
+  panelEdge = null,
+  fullscreen,
 }: LisbonMapProps) {
   const { t } = useTranslation();
   const markerLabels = useMemo<MarkerLabels>(
@@ -41,7 +53,7 @@ export function LisbonMap({
     [t],
   );
 
-  const { containerRef, failed, ready } = useLisbonMap({
+  const { containerRef, failed, ready, fullscreenControlHost } = useLisbonMap({
     venues,
     selectedFreguesia: freguesia,
     selectedVenueId,
@@ -50,17 +62,48 @@ export function LisbonMap({
     markerLabels,
     onSelectFreguesia,
     onSelectVenue,
+    panelRef,
+    panelEdge,
+    hasFullscreenControl: fullscreen !== undefined,
   });
 
+  const fullscreenLabel = fullscreen?.isFullscreen
+    ? t("marketing:map.fullscreen.exit")
+    : t("marketing:map.fullscreen.enter");
+
   return (
-    <div className={s.mapPanel}>
-      <div ref={containerRef} className={s.mapCanvas} aria-hidden={failed} />
+    <div className={s.stageMap}>
+      <div
+        ref={containerRef}
+        className={s.stageMapCanvas}
+        aria-hidden={failed}
+      />
       {!failed && <MapLoading ready={ready} />}
       {failed && (
         <div className={s.mapError} role="status">
           {t("marketing:map.mapError")}
         </div>
       )}
+      {/* The control slot lives inside maplibre's own control corner, so the
+          button inherits the zoom group's chrome and stacking. */}
+      {fullscreen &&
+        fullscreenControlHost &&
+        createPortal(
+          <button
+            type="button"
+            className={s.fullscreenButton}
+            onClick={fullscreen.onToggle}
+            aria-label={fullscreenLabel}
+            title={fullscreenLabel}
+          >
+            {fullscreen.isFullscreen ? (
+              <FiMinimize2 aria-hidden size={15} />
+            ) : (
+              <FiMaximize2 aria-hidden size={15} />
+            )}
+          </button>,
+          fullscreenControlHost,
+        )}
     </div>
   );
 }

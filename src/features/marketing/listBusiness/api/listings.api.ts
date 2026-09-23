@@ -16,6 +16,7 @@ import type {
   AccessibilityAnswerMap,
   ListingAccessibilityView,
 } from "../listingAccessibility.data";
+import type { ListingMenu, ListingMenuPayload } from "../listingMenu.data";
 import type { ListingServiceOffering } from "../listingServices.data";
 import type {
   AffirmingBaselineView,
@@ -41,6 +42,7 @@ export interface UpdateListingDto extends Omit<
   ListingDraft,
   | "accessibility"
   | "services"
+  | "menu"
   | "affirmingBaselineAccepted"
   // Draft-only: who the signed-in member is to this listing. It decides
   // which payload is built, and is never part of one.
@@ -48,6 +50,10 @@ export interface UpdateListingDto extends Omit<
 > {
   accessibility?: { answers: AccessibilityAnswerMap; note: string };
   services?: ListingServiceOffering[];
+  // `contentType` is server-authoritative (see `ListingMenuPayload`): the
+  // request body's file carries only `url`/`fileName`, or the strict
+  // `forbidNonWhitelisted` pipe 400s the whole save.
+  menu?: ListingMenuPayload;
 }
 
 /**
@@ -78,10 +84,14 @@ export interface CreateListingDto extends UpdateListingDto {
  */
 export interface ListingDTO extends Omit<
   UpdateListingDto,
-  "photos" | "accessibility"
+  "photos" | "accessibility" | "menu"
 > {
   ref: string;
   slug: string;
+  // Unlike the request body's `ListingMenuPayload`, the response carries the
+  // full `ListingMenuFile` (`contentType` included): the server reads it back
+  // from storage and the page uses it to label a PDF apart from a photo.
+  menu?: ListingMenu;
   status: ListingStatus;
   submittedBy: MemberRefDTO | null;
   /** ISO 8601 timestamp. */

@@ -564,6 +564,7 @@ export const shared: Catalog = {
   "mediaRef.event-cover": "Evento",
   "mediaRef.group-avatar": "Grupo de conversa",
   "mediaRef.listing": "Estabelecimento",
+  "mediaRef.listing-menu": "Menu do estabelecimento",
   "mediaRef.persona-avatar": "Persona",
   "mediaRef.persona-cover": "Persona",
   "mediaRef.persona-item": "Persona",

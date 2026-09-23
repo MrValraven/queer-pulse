@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { emptyHours, hoursForPayload } from "./listBusiness.data";
+import { draftToDto } from "./draftToDto";
 import { dtoToDraft } from "./dtoToDraft";
 import type { ListingDTO } from "./api/listings.api";
 
@@ -109,5 +110,108 @@ describe("hoursForPayload", () => {
     for (const day of Object.values(payload)) {
       expect(day.intervals).toEqual([]);
     }
+  });
+});
+
+describe("menu round trip", () => {
+  it("adopts a menu with ids and sends it back without them", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        cats: ["food"],
+        pricingMode: "menu",
+        menu: {
+          sections: [
+            {
+              title: "Coffee",
+              items: [
+                {
+                  name: "Bica",
+                  price: "0.90 EUR",
+                  description: "",
+                  dietary: ["vegan"],
+                },
+              ],
+            },
+          ],
+          file: null,
+          link: "",
+        },
+      }),
+    );
+    expect(draft.pricingMode).toBe("menu");
+    expect(draft.menu?.sections[0]?.items[0]?.id).toBeTruthy();
+    const payload = draftToDto(draft);
+    expect(payload.menu).toEqual({
+      sections: [
+        {
+          title: "Coffee",
+          items: [
+            {
+              name: "Bica",
+              price: "0.90 EUR",
+              description: "",
+              dietary: ["vegan"],
+            },
+          ],
+        },
+      ],
+      file: null,
+      link: "",
+    });
+  });
+
+  it("sends a file's url and fileName back without its contentType", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        cats: ["food"],
+        pricingMode: "menu",
+        menu: {
+          sections: [],
+          file: {
+            url: "https://api.test/files/listing-menus/a/b.pdf",
+            contentType: "application/pdf",
+            fileName: "Menu.pdf",
+          },
+          link: "",
+        },
+      }),
+    );
+    const payload = draftToDto(draft);
+    expect(payload.menu?.file).toEqual({
+      url: "https://api.test/files/listing-menus/a/b.pdf",
+      fileName: "Menu.pdf",
+    });
+  });
+
+  it("defaults a DTO with no mode from its category", () => {
+    expect(dtoToDraft(makeDto({ cats: ["food"] })).pricingMode).toBe("menu");
+  });
+
+  it("round-trips a legacy DTO with no menu and no pricingMode at all", () => {
+    const legacyDto = makeDto({ cats: ["food"] }) as unknown as Record<
+      string,
+      unknown
+    >;
+    delete legacyDto.menu;
+    delete legacyDto.pricingMode;
+
+    const draft = dtoToDraft(legacyDto as unknown as ListingDTO);
+    expect(() => draftToDto(draft)).not.toThrow();
+
+    const payload = draftToDto(draft);
+    expect(payload.pricingMode).toBe("menu");
+    expect(payload.menu).toEqual({ sections: [], file: null, link: "" });
+  });
+
+  it("drops half-filled rows from the hidden list only", () => {
+    const draft = dtoToDraft(makeDto({ cats: ["food"], pricingMode: "menu" }));
+    draft.services = [
+      { id: "a", name: "Tasting", price: "", note: "" },
+      { id: "b", name: "Workshop", price: "20 EUR", note: "" },
+    ];
+    const payload = draftToDto(draft);
+    expect(payload.services).toEqual([
+      { name: "Workshop", price: "20 EUR", note: "" },
+    ]);
   });
 });

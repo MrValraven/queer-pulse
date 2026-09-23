@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMovedHandleRedirect } from "../members/useMovedHandleRedirect";
 import { ApiError } from "../../shared/api/client";
-import { personaPath } from "../../app/routeMap";
+import { nestedPersonaPath, personaPath } from "../../app/routeMap";
 
 /**
  * Router state the forwarding navigation carries to the destination, so the
@@ -61,6 +61,72 @@ function pathWithHandleReplaced(
   const handleIndex = segments.indexOf(fromHandle);
   if (handleIndex === -1) return personaPath(toHandle);
   segments[handleIndex] = toHandle;
+  return segments.join("/");
+}
+
+/** The nested address a `/members/:ownerSlug/:slug` persona now lives at, once
+ *  the creator role that address depends on has moved to someone else. */
+export interface RehomedPersonaTarget {
+  ownerSlug: string;
+  slug: string;
+}
+
+/**
+ * The persona's current nested address, when the server says the one
+ * requested has been rehomed.
+ *
+ * `SubprofileMembershipService.transferCreatorWithin` moves the creator role
+ * on a shared persona to the longest-standing remaining co-owner whenever the
+ * creator leaves, is erased, or was already gone before the repair migration
+ * ran. `/members/:ownerSlug/:slug` is keyed on the CREATOR's slug plus the
+ * persona's own slug, and both can change in that move: the owner segment
+ * because the creator is now someone else, the persona segment because a slug
+ * collision under the new creator forces a suffix. The public read answers a
+ * request for the old pair with HTTP 404 carrying
+ * `{ code: "PERSONA_REHOMED", message, ownerSlug, slug }` naming the current
+ * pair (see `SubprofilePublicReadService`'s public-read fallbacks). The
+ * unlinked `/p/:handle` address is unaffected by any of this; a persona keeps
+ * its global handle across a creator change, which is exactly why
+ * `movedPersonaHandleFromError` above answers a different question.
+ */
+export function rehomedNestedPersonaFromError(
+  error: unknown,
+): RehomedPersonaTarget | null {
+  if (!(error instanceof ApiError) || error.status !== 404) return null;
+  const body = error.data as
+    { code?: string; ownerSlug?: string; slug?: string } | null | undefined;
+  if (body?.code !== "PERSONA_REHOMED") return null;
+  const ownerSlug =
+    typeof body.ownerSlug === "string" ? body.ownerSlug.trim() : "";
+  const slug = typeof body.slug === "string" ? body.slug.trim() : "";
+  if (ownerSlug.length === 0 || slug.length === 0) return null;
+  return { ownerSlug, slug };
+}
+
+/**
+ * Rebuild the current path against the persona's new owner slug AND its new
+ * own slug together, keeping every other segment.
+ *
+ * Anchors the persona-slug replacement on the position right after the owner
+ * segment rather than searching for it independently: the route is always
+ * `/members/:ownerSlug/:slug`, and a bare `indexOf` could land on an unrelated
+ * segment elsewhere in the path that happens to equal the old slug.
+ */
+function pathWithNestedPersonaReplaced(
+  pathname: string,
+  fromOwnerSlug: string,
+  fromSlug: string,
+  toOwnerSlug: string,
+  toSlug: string,
+): string {
+  const segments = pathname.split("/");
+  const ownerIndex = segments.indexOf(fromOwnerSlug);
+  const slugIndex = ownerIndex === -1 ? -1 : ownerIndex + 1;
+  if (ownerIndex === -1 || segments[slugIndex] !== fromSlug) {
+    return nestedPersonaPath(toOwnerSlug, toSlug);
+  }
+  segments[ownerIndex] = toOwnerSlug;
+  segments[slugIndex] = toSlug;
   return segments.join("/");
 }
 
@@ -126,26 +192,140 @@ export function useMovedPersonaRedirect(
 }
 
 /**
- * Both forwardings the public persona page can be handed, in the order it needs
- * them. Returns whether a forwarding navigation is in flight, for either.
+ * Router state the rehoming navigation carries to the destination, so the
+ * persona page that lands there can say the visitor arrived through an old
+ * nested address. Read it with `useLocation().state`.
  *
- * `SubprofilePage` serves two addresses and each moves for its own reason, so
- * both hooks run on every render and each stays inert unless the payload is the
- * one it reads.
+ * Its own shape rather than either existing navigation state above: this
+ * forwarding replaces both segments of `/members/:ownerSlug/:slug` at once, so
+ * the destination page needs both old values to describe what happened, and
+ * neither `MovedPersonaNavigationState` nor `MovedHandleNavigationState` carry
+ * more than one.
+ */
+export interface RehomedPersonaNavigationState {
+  /** The owner slug segment the visitor actually followed. */
+  rehomedFromOwnerSlug?: string;
+  /** The persona slug segment the visitor actually followed. */
+  rehomedFromSlug?: string;
+}
+
+/**
+ * Forward a nested persona page opened at the address its creator role has
+ * since moved away from.
+ *
+ * `/members/:ownerSlug/:slug` is keyed on who created the persona, and a
+ * creator role can now move without anyone touching a link: the creator
+ * leaves, is erased, or the repair migration catches a persona whose creator
+ * was already gone. Every printed card and pasted link still names the old
+ * pair, and until this forwarding exists it would die on a "no such persona"
+ * wall the moment the transfer happened. This turns the server's rehomed
+ * payload into a `replace` navigation, so the dead pair leaves the history
+ * stack and Back never returns to a wall.
+ *
+ * Returns whether a forwarding navigation is in flight. **Callers must render
+ * a waiting state on `true` and must check it before their not-found
+ * screen**: `navigate` can only run from an effect, so without that check the
+ * wall would paint for one frame on the way through, which is the whole
+ * failure this exists to remove.
+ *
+ * Demo mode has no server and no creator-transfer ledger, so it can never
+ * produce this response and is gated out here rather than at the call site.
+ */
+export function useRehomedPersonaRedirect(
+  currentOwnerSlug: string | undefined,
+  currentSlug: string | undefined,
+  error: unknown,
+): boolean {
+  const { demoMode } = useDemoMode();
+  const navigate = useNavigate();
+  const { pathname, search, hash } = useLocation();
+
+  const target = demoMode ? null : rehomedNestedPersonaFromError(error);
+  const targetOwnerSlug = target?.ownerSlug ?? null;
+  const targetSlug = target?.slug ?? null;
+  // A payload naming the pair we are already on would navigate to itself,
+  // fail identically, and loop. Both segments are checked together: a
+  // transfer that only forced a slug suffix still has to forward even when
+  // the owner segment already matches, and the reverse holds just as well.
+  const isRedirecting = Boolean(
+    targetOwnerSlug &&
+    targetSlug &&
+    currentOwnerSlug &&
+    currentSlug &&
+    (targetOwnerSlug !== currentOwnerSlug || targetSlug !== currentSlug),
+  );
+
+  useEffect(() => {
+    if (
+      !isRedirecting ||
+      !targetOwnerSlug ||
+      !targetSlug ||
+      !currentOwnerSlug ||
+      !currentSlug
+    )
+      return;
+    const destination =
+      pathWithNestedPersonaReplaced(
+        pathname,
+        currentOwnerSlug,
+        currentSlug,
+        targetOwnerSlug,
+        targetSlug,
+      ) +
+      search +
+      hash;
+    void navigate(destination, {
+      replace: true,
+      state: {
+        rehomedFromOwnerSlug: currentOwnerSlug,
+        rehomedFromSlug: currentSlug,
+      } satisfies RehomedPersonaNavigationState,
+    });
+  }, [
+    isRedirecting,
+    targetOwnerSlug,
+    targetSlug,
+    currentOwnerSlug,
+    currentSlug,
+    pathname,
+    search,
+    hash,
+    navigate,
+  ]);
+
+  return isRedirecting;
+}
+
+/**
+ * Every forwarding the public persona page can be handed, in the order it
+ * needs them. Returns whether a forwarding navigation is in flight, for any.
+ *
+ * `SubprofilePage` serves two addresses and each can move for more than one
+ * reason, so every hook below runs on every render and each stays inert
+ * unless the payload is the one it reads.
  *
  * `/p/:handle` moves when the PERSONA is re-addressed. Nothing on that page
  * names a member, so it uses the persona hook above.
  *
- * `/members/:slug/:subslug` moves when its OWNER renames, while the persona
- * itself never moved at all. That is a username change, so it reuses the member
- * hook verbatim: the hook swaps the owner segment and leaves the persona
- * segment where it was, which is exactly the rebuild this path needs.
+ * `/members/:slug/:subslug` moves for two different reasons that need two
+ * different rebuilds:
+ * - its OWNER renames, while the persona itself never moved at all. That is a
+ *   username change, so it reuses the member hook verbatim: the hook swaps
+ *   the owner segment and leaves the persona segment where it was.
+ * - the persona's CREATOR role transfers to another member, which can move
+ *   both segments at once (a new owner slug, and possibly a suffixed persona
+ *   slug). `useRehomedPersonaRedirect` reads the nested route's own `subslug`
+ *   param directly rather than taking it as a fourth argument here: it is
+ *   this page's other address entirely, and `currentHandle` /
+ *   `currentOwnerSlug` above already each name one end of the two addresses
+ *   this hook serves.
  */
 export function useMovedPersonaAddressRedirect(
   currentHandle: string | undefined,
   currentOwnerSlug: string | undefined,
   error: unknown,
 ): boolean {
+  const { subslug: currentPersonaSlug } = useParams();
   const isRedirectingToMovedHandle = useMovedPersonaRedirect(
     currentHandle,
     error,
@@ -154,5 +334,14 @@ export function useMovedPersonaAddressRedirect(
     currentOwnerSlug,
     error,
   );
-  return isRedirectingToMovedHandle || isRedirectingToMovedOwner;
+  const isRedirectingToRehomedPersona = useRehomedPersonaRedirect(
+    currentOwnerSlug,
+    currentPersonaSlug,
+    error,
+  );
+  return (
+    isRedirectingToMovedHandle ||
+    isRedirectingToMovedOwner ||
+    isRedirectingToRehomedPersona
+  );
 }

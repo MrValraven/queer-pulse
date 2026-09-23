@@ -12,8 +12,14 @@ export class ImageProcessingError extends Error {
   readonly i18nKey: string;
   readonly values?: TranslateOptions;
 
-  constructor(i18nKey: string, values?: TranslateOptions) {
-    super(i18nKey);
+  /** `options.cause` keeps the underlying failure (for example the presign
+   *  `ApiError`) reachable for callers that branch on its status. */
+  constructor(
+    i18nKey: string,
+    values?: TranslateOptions,
+    options?: ErrorOptions,
+  ) {
+    super(i18nKey, options);
     this.name = "ImageProcessingError";
     this.i18nKey = i18nKey;
     this.values = values;
@@ -91,6 +97,11 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // A listing's menu when it is a photo of the board. No minimum size: a
+  // phone photo of a chalkboard is fine. Mirrors the backend's 10 MB cap
+  // (`listing-menu` in `upload-kinds.ts`). A PDF menu never enters this image
+  // pipeline; `useUploadListingMenuFile` sends it as-is.
+  "listing-menu": { maxBytes: 10 * MB, maxLabel: "10 MB" },
   // A community's cover banner — full-bleed hero on the homepage featured card,
   // same constraints as a story cover (min 1200 × 600px, under 10 MB).
   "community-cover": {
@@ -187,6 +198,8 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "work-image": 1600,
   "story-cover": 2560,
   "listing-photo": 2560,
+  // Menu text has to stay readable, so the wide-hero cap.
+  "listing-menu": 2560,
   "community-cover": 2560,
   // The same full-bleed 2:1 banner as a community cover.
   "event-cover": 2560,
@@ -678,6 +691,8 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // locks to 1:1 exactly like a member or group avatar.
   "community-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
   "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  // A menu photo is never reframed.
+  "listing-menu": { aspect: "free", aspectLabel: "free", allowFreeform: true },
   "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
   "gathering-photo": {
     aspect: "free",

@@ -95,6 +95,7 @@ export const communities: Catalog = {
   "discover.suggested.heading": "Sugestões para ti",
   "discover.suggested.subtitle":
     "Comunidades onde já estão pessoas com quem tens ligação.",
+  "discover.browse.heading": "Mais comunidades",
 
   // ── Cartão de comunidade / textos do botão de entrada ─────────────────────
   "card.join.public": "Junta-te",
@@ -1122,6 +1123,7 @@ export const communities: Catalog = {
   "detail.modtools.history.field.type": "Tipo",
   "detail.modtools.history.field.whoFor": "Para quem é",
   "detail.modtools.history.field.tagline": "Frase de apresentação",
+  "detail.modtools.history.field.nowReading": "A ler agora",
   "detail.modtools.history.field.accessTier": "Quem pode entrar",
   "detail.modtools.history.field.rosterVisible": "Lista de pessoas visível",
   "detail.modtools.history.field.features": "Funcionalidades",
@@ -1731,6 +1733,7 @@ export const communities: Catalog = {
   "detail.founded": "Fundada em {date}",
   "detail.foundedRecently": "Fundada recentemente",
   "detail.foundedJustNow": "Fundada agora mesmo",
+  "detail.nowReading": "A ler agora: <strong>{book}</strong>",
   "detail.cadenceDefault": "A encontrar o seu ritmo",
   "detail.nextEvent.soonChip": "em breve",
   "detail.nextEvent.tbaTitle": "Próximo convívio a anunciar",
@@ -1759,6 +1762,11 @@ export const communities: Catalog = {
   "edit.cancel": "Cancelar",
   "edit.field.name": "Nome",
   "edit.field.tagline": "Frase de assinatura",
+  "edit.field.nowReading": "A ler agora",
+  "edit.field.nowReadingHint":
+    "O livro que o grupo está a ler agora. Muda-o quando passarem ao próximo.",
+  "edit.field.nowReadingPlaceholder":
+    "ex.: O Quarto de Giovanni, de James Baldwin",
   // PRD-146. The community mark and the welcome note. Both were accepted by
   // create and update and rendered by the welcome card, and no surface had a
   // field for either, so neither could ever be set. `mark` rather than

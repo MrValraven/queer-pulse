@@ -1088,6 +1088,7 @@ export const members: Catalog = {
   "commandPalette.placeholder": "Search members, gatherings, communities…",
   "commandPalette.signInBody": "Sign in to search across QueerPulse.",
   "commandPalette.noMatches": "No matches. Try another word.",
+  "commandPalette.searching": "Searching…",
   "commandPalette.seeAllResults": "See all results for “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Open full search",
 
@@ -1379,9 +1380,6 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.magazine": "Magazine pieces published",
   "badges.xpBreakdown.sources.magazineDesc":
     "A piece of yours published in the magazine.",
-  "badges.xpBreakdown.sources.answers": "Directory questions answered",
-  "badges.xpBreakdown.sources.answersDesc":
-    "Answering a question on a directory listing.",
   "badges.xpBreakdown.sources.resources": "Resources approved",
   "badges.xpBreakdown.sources.resourcesDesc":
     "A resource you suggested that was approved.",
@@ -1958,8 +1956,8 @@ export const members: Catalog = {
 
   // --- Saved lists (SOC-12) -------------------------------------------------
   // Collections became saved lists so a list can be handed to somebody. The
-  // copy below is deliberate about one thing above all: a share link is public,
-  // and the member reads that sentence before a link exists.
+  // copy below is deliberate about one thing above all: who can open a share
+  // link, and the member reads that sentence before a link exists.
   "savedLists.header.eyebrow": "Your saves",
   "savedLists.header.title": "Lists worth <em>passing on</em>",
   "savedLists.header.lead":
@@ -2023,18 +2021,18 @@ export const members: Catalog = {
   "savedLists.share.private.body":
     "Only you can see it. If you want to hand it to someone, you can create a link.",
   "savedLists.share.private.warning":
-    "Anyone who has the link can open this list. There is no password and no sign-in, so treat the link itself as the key and only send it to people you trust with it.",
+    "Anyone who has the link and a QueerPulse account can open this list. Only send it to people you trust with it.",
   "savedLists.share.private.cta": "Create a share link",
-  "savedLists.share.points.noAccount":
-    "They do not need a QueerPulse account to read it.",
+  "savedLists.share.points.accountRequired":
+    "They need a QueerPulse account and have to be signed in to open it.",
   "savedLists.share.points.anonymous":
     "They see the list name and what is in it. They do not see your name, your profile or your photo.",
   "savedLists.share.points.revocable":
     "You can turn the link off at any time. Every copy of it stops working straight away.",
 
-  "savedLists.share.live.heading": "Anyone with this link can open it",
+  "savedLists.share.live.heading": "Members with this link can open it",
   "savedLists.share.live.body":
-    "The link works without an account. It shows the list name and what is in it, and nothing about you.",
+    "The link only works for signed-in members. It shows the list name and what is in it, and nothing about you.",
   "savedLists.share.live.fieldLabel": "Share link for this list",
   "savedLists.share.live.copy": "Copy",
   "savedLists.share.live.copied": "Copied",

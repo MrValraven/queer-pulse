@@ -226,6 +226,12 @@
   margin-bottom: 20px;
 }
 
+/* "More communities" over the browse grid, shown only while the suggested
+   band sits above it. Same gap the band leaves between its head and cards. */
+.browseHead {
+  margin-bottom: 24px;
+}
+
 /* Always three across: every non-featured card sits in a track that is exactly
    a third of the row, so the grid keeps its rhythm instead of reflowing to 4+
    columns on wide screens. minmax(0, 1fr) makes that third both the min and the

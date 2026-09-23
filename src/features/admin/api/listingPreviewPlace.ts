@@ -5,6 +5,10 @@ import type {
   Tint,
 } from "../../marketing/directoryPlaces";
 import { normalizeAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
+import {
+  menuForDisplay,
+  pricingModeOf,
+} from "../../marketing/listBusiness/listingMenu.data";
 
 // ── Ported from backend `listing-response.ts` so the moderator preview renders
 //    exactly what `GET /directory/:slug` would once the listing is live. Keep
@@ -184,6 +188,8 @@ export function listingDtoToPreviewPlace(
         price: service.price.trim(),
         note: service.note.trim(),
       })),
+    pricingMode: pricingModeOf(dto),
+    menu: menuForDisplay(dto.menu),
     hoursType: hoursTypeForCategory(category),
     hoursNote: dto.hoursNote,
     owner: {

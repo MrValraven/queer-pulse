@@ -1,0 +1,30 @@
+/* The publish bar's dock, stuck to the bottom of the viewport. The bar owns
+   its inner padding; the dock is only placement and surface. Tokens only.
+
+   On wider screens it floats a small gap above the viewport edge, so content
+   scrolling past never shows through its rounded bottom corners. On phones
+   it sits on the edge with square bottom corners, like any bottom bar, and
+   the bar pads itself clear of the home indicator. */
+.publishDock {
+  position: sticky;
+  bottom: var(--gap-xs);
+  z-index: var(--z-sticky);
+  min-width: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-e3);
+}
+
+/* Phones: the dock never takes more than half the screen; a long failure
+   list scrolls inside it and the scroll stays in the dock. */
+@media (--lg) {
+  .publishDock {
+    bottom: 0;
+    max-height: 50svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+}

@@ -761,7 +761,7 @@ export const community: Catalog = {
     "Ainda não foi criado nenhum grupo. Sê o primeiro: propõe um aqui em baixo e junta a tua gente à volta de um livro.",
   "readingGroups.outro.title": "Os livros constroem <em>comunidade.</em>",
   "readingGroups.outro.sub":
-    "Os grupos de leitura da QueerPulse existem desde 2024. Alguns tornaram-se amizades, outros colaborações, dois tornaram-se bandas.",
+    "Os grupos de leitura da QueerPulse são um lugar para ler em conjunto, falar sobre o que fica contigo e conhecer pessoas com quem talvez nunca te tivesses cruzado.",
   "readingGroups.outro.cta": "Junta-te à rede",
   "readingGroups.joinedWaitlistToast":
     "Estás em #{position} na lista de espera para {name}",
@@ -782,10 +782,13 @@ export const community: Catalog = {
 
   "readingGroups.listGroup.heading": "Cria o <em>teu próprio grupo.</em>",
   "readingGroups.listGroup.lead":
-    "Escolhe um livro. Diz quantas pessoas queres. Diz onde e quando. Nós publicamos aqui e ligamos-te a pessoas da comunidade que querem ler a mesma coisa.",
+    "Dá um nome ao teu grupo, se quiseres, e escolhe o primeiro livro. Diz quantas pessoas queres e nós publicamos aqui e ligamos-te a pessoas da comunidade que querem ler a mesma coisa.",
   "readingGroups.listGroup.leadLive":
-    "Escolhe um livro. Diz quantas pessoas queres. Envia-nos e voltamos a falar contigo sobre começar o grupo e encontrar os teus leitores.",
-  "readingGroups.listGroup.bookLabel": "Título do livro e autor/a",
+    "Dá um nome ao teu grupo, se quiseres, escolhe o primeiro livro e diz quantas pessoas queres. Envia-nos e voltamos a falar contigo sobre começar o grupo e encontrar quem vai ler contigo.",
+  "readingGroups.listGroup.clubLabel": "Nome do grupo",
+  "readingGroups.listGroup.optional": "opcional",
+  "readingGroups.listGroup.clubPlaceholder": "ex.: Clube de Fantasia QPOC",
+  "readingGroups.listGroup.bookLabel": "Primeiro livro",
   "readingGroups.listGroup.bookPlaceholder":
     "ex.: O Quarto de Giovanni, de James Baldwin",
   "readingGroups.listGroup.whyLabel": "Porquê este livro?",
@@ -806,14 +809,14 @@ export const community: Catalog = {
     "Proposta recebida. Entramos em contacto",
   "readingGroups.listGroup.proposalHeading": "Proposta <em>recebida.</em>",
   "readingGroups.listGroup.proposalBody":
-    "Temos a tua proposta para <strong>{book}</strong>. Ainda não há nada publicado no diretório: alguém vai lê-la e falar contigo sobre começar o grupo.",
+    "Temos a tua proposta para <strong>{name}</strong>. Ainda não há nada publicado no diretório: alguém vai lê-la e falar contigo sobre começar o grupo.",
   "readingGroups.listGroup.proposeAnotherCta": "Propor outro grupo",
   "readingGroups.listGroup.errorToast":
     "Não foi possível publicar o teu grupo. Tenta novamente.",
   "readingGroups.listGroup.successHeading":
     "O teu grupo está <em>publicado.</em>",
   "readingGroups.listGroup.successBody":
-    "<strong>{book}</strong> já está visível no topo do diretório. Vamos começar a ligar-te a pessoas que querem ler a mesma coisa.",
+    "<strong>{name}</strong> já está visível no topo do diretório. Vamos começar a ligar-te a pessoas que querem ler a mesma coisa.",
   "readingGroups.listGroup.newGroupDesc":
     "Um grupo de leitura novo, acabado de publicar. As pessoas vão ser associadas em breve.",
   "readingGroups.listGroup.listAnotherCta": "Publicar outro grupo",

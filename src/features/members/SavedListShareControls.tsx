@@ -1,6 +1,6 @@
 import {
   FiAlertTriangle,
-  FiGlobe,
+  FiUsers,
   FiLink2,
   FiLock,
   FiSlash,
@@ -15,11 +15,12 @@ import styles from "./SavedListShareControls.module.css";
 /**
  * The off state: what a link would mean, said before one exists.
  *
- * The backend's shared read is `@Public()`. Anyone holding the URL can open it
- * with no account, which is the point (a friend who has just moved to the city
- * may not have one yet) and is also the risk, because a list of queer venues is
- * a record of where a person goes. So the panel says all of it plainly, and the
- * link only comes into existence when the member presses the button.
+ * Opening a shared list needs a QueerPulse account by product decision: the
+ * backend's shared read sits behind `ActiveMemberGuard` and `/lists/*` is in
+ * `GATED_PATTERNS`. Any signed-in member holding the URL can still open it, and
+ * that is the risk, because a list of queer venues is a record of where a
+ * person goes. So the panel says all of it plainly, and the link only comes
+ * into existence when the member presses the button.
  */
 function SavedListSharePrivate({
   onShare,
@@ -44,7 +45,7 @@ function SavedListSharePrivate({
         {t("members:savedLists.share.private.warning")}
       </p>
       <ul className={styles.points}>
-        <li>{t("members:savedLists.share.points.noAccount")}</li>
+        <li>{t("members:savedLists.share.points.accountRequired")}</li>
         <li>{t("members:savedLists.share.points.anonymous")}</li>
         <li>{t("members:savedLists.share.points.revocable")}</li>
       </ul>
@@ -82,7 +83,7 @@ function SavedListShareLive({
   return (
     <section className={`${styles.panel} ${styles.shared}`}>
       <h3 className={styles.head}>
-        <FiGlobe aria-hidden />
+        <FiUsers aria-hidden />
         {t("members:savedLists.share.live.heading")}
       </h3>
       <p className={styles.body}>{t("members:savedLists.share.live.body")}</p>

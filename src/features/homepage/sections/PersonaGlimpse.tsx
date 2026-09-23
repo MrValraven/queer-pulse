@@ -2,6 +2,7 @@ import { AnimatePresence, m } from "motion/react";
 import { ImageSlot } from "../../../shared/components/ui";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import type { PersonaProfile } from "./personasShowcase.data";
+import { PersonaAvatar } from "./PersonaAvatar";
 import styles from "./PersonasShowcase.module.css";
 
 const avTintClass: Record<string, string | undefined> = {
@@ -45,9 +46,12 @@ export function PersonaGlimpse({ persona }: { persona: PersonaProfile }) {
           </div>
           <div className={styles.pvwBody}>
             <div className={styles.pvwId}>
-              <span className={`${styles.pvwAv} ${avTintClass[persona.tint]}`}>
-                {persona.initials}
-              </span>
+              <PersonaAvatar
+                initials={persona.initials}
+                avatarUrl={persona.avatarUrl}
+                sizePx={40}
+                className={`${styles.pvwAv} ${avTintClass[persona.tint] ?? ""}`}
+              />
               <div>
                 <span className={styles.pvwRole}>{persona.role}</span>
                 <span className={styles.pvwSub}>{persona.sub}</span>

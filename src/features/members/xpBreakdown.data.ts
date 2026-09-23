@@ -15,7 +15,6 @@ import {
   FiTool,
   FiHome,
   FiBookOpen,
-  FiMessageCircle,
   FiLifeBuoy,
 } from "react-icons/fi";
 
@@ -105,11 +104,6 @@ export const XP_SOURCE_META: Record<string, XpSourceMeta> = {
     labelKey: "members:badges.xpBreakdown.sources.magazine",
     descKey: "members:badges.xpBreakdown.sources.magazineDesc",
     icon: FiBookOpen,
-  },
-  answers: {
-    labelKey: "members:badges.xpBreakdown.sources.answers",
-    descKey: "members:badges.xpBreakdown.sources.answersDesc",
-    icon: FiMessageCircle,
   },
   resources: {
     labelKey: "members:badges.xpBreakdown.sources.resources",

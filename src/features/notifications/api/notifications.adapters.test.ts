@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FiRepeat } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import type { TFunction } from "../../../shared/i18n/types";
 import { createFormatters } from "../../../shared/i18n/format";
@@ -296,5 +297,35 @@ describe("notificationDtoToView: report source hrefs", () => {
       fmt,
     );
     expect(view.sourceHref).toBe(routes.adminModeration);
+  });
+});
+
+/**
+ * Phase 2 persona creator handoff. The row carries no actor and no deep link,
+ * so its destination and glyph come from the type alone. Every recipient is a
+ * member of the persona, so the personas dashboard lists it for all of them,
+ * the successor included.
+ */
+describe("notificationDtoToView: subprofile_creator_changed", () => {
+  const handoff = () =>
+    notificationDtoToView(
+      dto({
+        type: "subprofile_creator_changed",
+        payload: {
+          subprofileName: "Fio Solto",
+          newCreatorName: "Beatriz Lopes",
+          isYou: true,
+        },
+      }),
+      t,
+      fmt,
+    );
+
+  it("opens the personas dashboard", () => {
+    expect(handoff().sourceHref).toBe(routes.subprofilesDashboard);
+  });
+
+  it("renders the repeat glyph the demo row uses", () => {
+    expect(handoff().icon?.Glyph).toBe(FiRepeat);
   });
 });

@@ -119,7 +119,6 @@ export const gatherings: Catalog = {
   // GatheringPage
   "gathering.badge.event": "QueerPulse event",
   "gathering.badge.gathering": "Member gathering",
-  "gathering.seeAllCta": "See all gatherings",
   "gathering.spotsRemainingLabel": "spots remaining",
   "gathering.spotsUrgencyNote": "Move quickly if this speaks to you",
   "gathering.locationNote":
@@ -1897,6 +1896,19 @@ export const gatherings: Catalog = {
   "hostBar.deleteGoneToast": "That gathering is already gone.",
   "hostBar.deleteFailedToast":
     "The gathering couldn't be deleted. Try again in a moment.",
+  // The host's actions now sit behind one "more" button in the page header
+  // (GatheringHostMenu); these name that button.
+  "hostBar.menuAria": "Host tools for {title}",
+  "hostBar.menuTooltip": "Host tools",
+
+  // ── Header icon toolbar (GatheringHeaderToolbar) ──────────────────────────
+  // Save, add to calendar and share, moved up beside the type label so the
+  // RSVP is the one button in the hero.
+  "headerToolbar.aria": "Gathering actions",
+  "headerToolbar.shareCta": "Share",
+  "headerToolbar.shareCopiedToast": "Link copied",
+  "headerToolbar.shareCopyFailedToast":
+    "Your browser wouldn't let us copy that. Here is the link: {url}",
 
   // ── Taking care panel (GatheringTakingCare.tsx) ───────────────────────────
   // House rules, content notes and themes, as a host set them in chapter 5.

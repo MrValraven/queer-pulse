@@ -19,6 +19,7 @@ export type MediaReferenceType =
   | "event-cover" // Event.coverImageUrl
   | "group-avatar" // Conversation.avatarUrl
   | "listing" // Listing.photos.*
+  | "listing-menu" // Listing.menu.file.url
   | "persona-avatar" // Subprofile.avatarUrl
   | "persona-cover" // Subprofile.coverUrl
   | "persona-item" // SubprofileItem.imageUrl
@@ -70,7 +71,9 @@ export function mediaReferenceLabelKey(type: MediaReferenceType): string {
  * - `event-cover` → gathering detail `/gatherings/:slug`; `event-photo` →
  *   its photo album `/gatherings/:slug/photos`
  *   (`src/features/gatherings/routes.tsx`).
- * - `listing` → the local directory's real `businessPath(slug)` builder.
+ * - `listing` / `listing-menu` → the local directory's real
+ *   `businessPath(slug)` builder; a menu file resolves to the same listing
+ *   page as its photos.
  * - `persona-avatar` / `persona-cover` / `persona-item` → the standalone
  *   persona route via `personaPath(slug)` (`/p/:handle`).
  * - `cinema-cover` → the live catalogue deep-links a title by id, not slug
@@ -112,6 +115,7 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     case "event-photo":
       return slug ? `${gatheringPath(slug)}/photos` : null;
     case "listing":
+    case "listing-menu":
       return slug ? businessPath(slug) : null;
     case "persona-avatar":
     case "persona-cover":

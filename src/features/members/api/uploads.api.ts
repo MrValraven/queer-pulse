@@ -25,6 +25,7 @@ export type UploadKind =
   | "gathering-photo"
   | "group-avatar"
   | "listing-photo"
+  | "listing-menu"
   | "community-cover"
   | "community-avatar"
   | "event-cover"

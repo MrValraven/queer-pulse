@@ -1,13 +1,26 @@
-/* The "Suggested for you" band on the Discover directory. Mirrors
-   SimilarCommunitiesSection's spacing and card grid so the two secondary
-   community bands read as the same object in different places. */
+/* The "Suggested for you" band on the Discover directory. Its card grid
+   matches the Discover browse grid below it (`.grid` in
+   CommunitiesPage.module.css): three equal tracks, so a lone suggestion is the
+   same width as the cards under it and the two grids line up. */
 .section {
   margin: 8px 0 36px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  grid-auto-rows: 1fr;
   margin-top: 24px;
+}
+/* Pin each card to its track and stretch it to the row height. */
+.grid > * {
+  min-width: 0;
+  height: 100%;
+}
+/* Single column on narrow phones, same as the browse grid. */
+@media (--sm) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }

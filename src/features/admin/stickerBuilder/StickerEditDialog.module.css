@@ -1,0 +1,70 @@
+/* The edit-sticker dialog: the art for context, then the name and the two
+   keyword fields, each keyword field followed by chips of what will save. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.preview {
+  align-self: center;
+  width: 112px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-16);
+  background-color: var(--paper);
+  background-image: conic-gradient(
+    var(--wash) 25%,
+    transparent 0 50%,
+    var(--wash) 0 75%,
+    transparent 0
+  );
+  background-size: 16px 16px;
+}
+
+.previewImage {
+  width: 84%;
+  height: 84%;
+  object-fit: contain;
+}
+
+.keywordGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+/* The chips sit tight under their field, and the group carries the
+   spacing to the next field. */
+.keywordGroup > :first-child {
+  margin-bottom: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  max-width: 100%;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--wash);
+  color: var(--ink);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.chip[data-invalid="true"] {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}

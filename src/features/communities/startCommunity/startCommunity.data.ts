@@ -20,6 +20,10 @@ export const TOTAL_STEPS = 9;
  */
 export const MAX_WELCOME_MESSAGE_LENGTH = 2000;
 
+/** Character cap on `CommunityDraft.nowReading`, mirroring the backend's
+ *  `@MaxLength(200)` on `CreateCommunityDto.nowReading`. */
+export const MAX_NOW_READING_LENGTH = 200;
+
 export type TintKey = "coral" | "jade" | "plum";
 
 /** A person helping run the space (owner or co-steward). */
@@ -55,6 +59,9 @@ export interface CommunityDraft {
    *  renders no welcome card. Plain text, capped at
    *  `MAX_WELCOME_MESSAGE_LENGTH` to match the backend's own validator. */
   welcomeMessage: string;
+  /** The book a reading group is on right now; "" means none. Edited from
+   *  `EditCommunityModal` while the community carries the `book-club` tag. */
+  nowReading: string;
   /** Chapter 6 — feeling */
   tint: TintKey;
   /** Optional cover image — a `community-cover` storage key (or resolved URL

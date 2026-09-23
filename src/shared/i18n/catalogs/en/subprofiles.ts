@@ -93,6 +93,11 @@ export const subprofiles: Catalog = {
   "page.moved.announcement": "Forwarded from @{oldHandle} to @{handle}.",
   "page.moved.ariaLabel": "Forwarded from an old handle",
   "page.moved.dismiss": "Dismiss this note",
+  "page.rehomed.body":
+    "You followed an old link to this persona. It has a new address, so we brought you here.",
+  "page.rehomed.announcement": "Forwarded to this persona's new address.",
+  "page.rehomed.ariaLabel": "Forwarded to a new persona address",
+  "page.rehomed.dismiss": "Dismiss this note",
 
   "directory.narrowedNote":
     "Profession, tags and availability narrow the personas loaded so far. Show more to search wider.",
@@ -377,6 +382,8 @@ export const subprofiles: Catalog = {
     "Shown on your main profile as another persona of yours. People can see the two are the same person.",
   "link.help.unlinked":
     "Stands on its own. Nothing here points back to your main profile, so you can keep this work separate from the rest of your life. It earns a public handle once it passes the completeness check.",
+  "link.creatorOnlyHint":
+    "Only the creator can link this persona to their profile, because it would show their name.",
 
   // Gig-state / work-state chips (ItemRow, stage + studio/workshop skins) and
   // dietary-mark legend (Table skin) — persisted `gigState`/`workState`
@@ -1157,6 +1164,8 @@ export const subprofiles: Catalog = {
   "owners.leaveModalTitle": "Leave this persona?",
   "owners.leaveModalBody":
     "You'll lose the ability to edit it. The other co-owners keep everything as it is.",
+  "owners.leaveModalBodyCreator":
+    "You'll lose editing access. The co-owner who's been here longest becomes the creator and can change its address or visibility, or delete it.",
   "owners.leaveModalKeep": "Stay",
   "owners.leaveModalConfirm": "Leave",
   "owners.leaveModalLeaving": "Leaving…",
@@ -1687,11 +1696,13 @@ export const subprofiles: Catalog = {
   "publishPanel.deleteCopy":
     "Deleting this persona removes it, and everything on it, for good.",
   "publishPanel.deleteCta": "Delete this persona",
-  // The co-owner branch of the danger zone. The creator keeps deleteCopy.
+  // Danger zone copy. A co-owner gets leaveCopy; the creator gets deleteCopy, plus creatorLeaveCopy when others share the persona.
   // Offers the action that applies rather than explaining a permission, so
   // it does not read as a scolding. CTA beside it is `owners.leaveCta`.
   "publishPanel.leaveCopy":
     "You co-own this persona. Deleting it stays with the member who created it, and you can step away whenever you like: the others keep everything as it is.",
+  "publishPanel.creatorLeaveCopy":
+    "Prefer to keep it going? Leaving hands it to the co-owner who's been here longest, who can then change its address or visibility, or delete it.",
 
   // Publish-checklist meter (PublishChecklist) — the `.meter` progress bar
   // alongside the pass/fail rows above.

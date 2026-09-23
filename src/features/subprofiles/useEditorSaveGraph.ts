@@ -269,14 +269,16 @@ export function useEditorSaveGraph(
       return;
     }
     // Client-error responses name the actual problem — a 400 names an offending
-    // collaborator/affiliation entry, a 409 a taken address/handle, a 422 an
-    // unmet publish rule. Surface that message when a single area failed; for
-    // multi-area failures (or opaque 5xx) fall back to listing the areas.
+    // collaborator/affiliation entry, a 403 a permission the viewer lacks (e.g.
+    // only the persona's creator may link it), a 409 a taken address/handle, a
+    // 422 an unmet publish rule. Surface that message when a single area
+    // failed; for multi-area failures (or opaque 5xx) fall back to listing the
+    // areas.
     const rejection = results.find((result) => result.status === "rejected");
     const detail =
       failed.length === 1 &&
       rejection?.reason instanceof ApiError &&
-      [400, 409, 422].includes(rejection.reason.status)
+      [400, 403, 409, 422].includes(rejection.reason.status)
         ? rejection.reason.message
         : null;
     showToast(

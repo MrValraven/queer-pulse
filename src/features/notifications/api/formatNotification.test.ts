@@ -501,3 +501,79 @@ describe("formatNotification: listing co-manager and owner offer", () => {
     expect(out.text).toContain("type.listing_co_manager_invite.nameFallback");
   });
 });
+
+/**
+ * Phase 2 persona creator handoff (T8). A sibling top-level describe, the
+ * same rationale as the blocks above: it stays under the per-function line
+ * budget.
+ *
+ * `subprofile_creator_changed` is deliberately absent from the `KINDS` sweep
+ * above, the same way `persona_update` and `subprofile_credit` are: like
+ * those two, its flat copy interpolates a payload field
+ * (`subprofileName`/`newCreatorName`) with no defensive fallback (the backend
+ * always writes both, and no older row shape exists to degrade for), so
+ * calling it with `{}` would only leave an unresolved `{subprofileName}` on
+ * screen. Real payloads are used here
+ * instead.
+ */
+describe("formatNotification: subprofile_creator_changed", () => {
+  const payload = {
+    subprofileName: "Nightform",
+    newCreatorName: "Ana Ribeiro",
+  };
+
+  it("names the new creator for every other remaining member", () => {
+    const result = formatNotification(
+      "subprofile_creator_changed",
+      { ...payload, isYou: false },
+      t,
+    );
+    expect(result.text).toBe("Ana Ribeiro is now the creator of Nightform.");
+    expect(result.meta).toBe("Persona ownership");
+    expect(result.category).toBe("community");
+    expect(result.kind).toBe("subprofile_creator_changed");
+  });
+
+  it("addresses the successor in the second person", () => {
+    const result = formatNotification(
+      "subprofile_creator_changed",
+      { ...payload, isYou: true },
+      t,
+    );
+    expect(result.text).toBe("You're now the creator of Nightform.");
+    // `newCreatorName` is the recipient here, so the successor's own copy
+    // speaks to them directly and leaves their name out.
+    expect(result.text).not.toContain("Ana Ribeiro");
+  });
+
+  it("defaults to the 'someone else' variant when isYou is absent", () => {
+    const result = formatNotification("subprofile_creator_changed", payload, t);
+    expect(result.text).toBe("Ana Ribeiro is now the creator of Nightform.");
+  });
+
+  it("never throws and stays on the community tab with an empty payload", () => {
+    const result = formatNotification("subprofile_creator_changed", {}, t);
+    expect(result.category).toBe("community");
+    expect(result.kind).toBe("subprofile_creator_changed");
+    expect(result.text.trim()).not.toBe("");
+  });
+
+  it("resolves both variants in Portuguese", () => {
+    const someoneElse = formatNotification(
+      "subprofile_creator_changed",
+      { ...payload, isYou: false },
+      makeT("pt"),
+    );
+    expect(someoneElse.text).toBe(
+      "Ana Ribeiro passou a ser responsável por Nightform.",
+    );
+    expect(someoneElse.meta).toBe("Responsável pela persona");
+
+    const successor = formatNotification(
+      "subprofile_creator_changed",
+      { ...payload, isYou: true },
+      makeT("pt"),
+    );
+    expect(successor.text).toBe("Passaste a ser responsável por Nightform.");
+  });
+});

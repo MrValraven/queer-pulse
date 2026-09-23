@@ -66,6 +66,170 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "reading-groups-get-their-own-names",
+        category: "feature",
+        date: "23 Sep 2026",
+        ...entryKeys("reading-groups-get-their-own-names"),
+      },
+      {
+        id: "housing-coops-members-only",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("housing-coops-members-only"),
+      },
+      {
+        id: "document-upload-thumbnails",
+        category: "fix",
+        date: "23 Sep 2026",
+        ...entryKeys("document-upload-thumbnails"),
+      },
+      {
+        id: "progress-and-intersex-stickers",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("progress-and-intersex-stickers"),
+      },
+      {
+        id: "persona-linking-creator-only",
+        category: "fix",
+        date: "23 Sep 2026",
+        ...entryKeys("persona-linking-creator-only"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-creator-handoff",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("persona-creator-handoff"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "gathering-page-header-toolbar",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("gathering-page-header-toolbar"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "listing-menus",
+        category: "feature",
+        date: "23 Sep 2026",
+        ...entryKeys("listing-menus"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "owner-name-from-account",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("owner-name-from-account"),
+      },
+      {
+        id: "search-shows-loading-state",
+        category: "fix",
+        date: "23 Sep 2026",
+        ...entryKeys("search-shows-loading-state"),
+        tag: {
+          labelKey: "marketing:changelog.tag.search",
+          to: routes.search,
+        },
+      },
+      {
+        id: "listing-role-dropdown",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("listing-role-dropdown"),
+      },
+      {
+        id: "shared-lists-members-only",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("shared-lists-members-only"),
+        tag: {
+          labelKey: "marketing:changelog.tag.saved",
+          to: routes.collections,
+        },
+      },
+      {
+        id: "sticker-pack-builder-redesign",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("sticker-pack-builder-redesign"),
+      },
+      {
+        id: "listings-reachable-through-co-managers",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("listings-reachable-through-co-managers"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "business-chat-clear-is-personal",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("business-chat-clear-is-personal"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "listing-answers-earn-no-points",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("listing-answers-earn-no-points"),
+      },
+      {
+        id: "share-to-chat-shows-a-preview",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("share-to-chat-shows-a-preview"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "moderator-band-reaches-the-top",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("moderator-band-reaches-the-top"),
+      },
+      {
+        id: "suggested-communities-no-duplicates",
+        category: "fix",
+        date: "23 Sep 2026",
+        ...entryKeys("suggested-communities-no-duplicates"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "directory-map-full-screen",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("directory-map-full-screen"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "pages-stay-in-one-language",
         category: "fix",
         date: "22 Sep 2026",

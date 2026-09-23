@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import maplibregl, {
+  type ControlPosition,
   type FitBoundsOptions,
   type LngLatBoundsLike,
   type Map as MapLibreMap,
@@ -9,6 +10,9 @@ import { buildWarmStyle } from "./siteMapStyle";
 interface UseBaseMapOptions {
   bounds: LngLatBoundsLike;
   fitBoundsOptions?: FitBoundsOptions;
+  /** Corner for the zoom controls. Defaults to "top-right"; a caller whose
+   * right edge is covered (a panel floating over the map) moves them. */
+  controlsPosition?: ControlPosition;
   /** "idle" waits for the basemap to fully paint before revealing: use when
    * the caller stages a drop-in animation on first render. "load" reveals as
    * soon as the style is ready, no animation to protect against. */
@@ -76,6 +80,7 @@ function watchPixelRatio(map: MapLibreMap): () => void {
 export function useBaseMap({
   bounds,
   fitBoundsOptions,
+  controlsPosition = "top-right",
   revealOn,
   onLoad,
   onReveal,
@@ -118,7 +123,7 @@ export function useBaseMap({
         stopPixelRatioWatch = watchPixelRatio(map);
         map.addControl(
           new maplibregl.NavigationControl({ showCompass: false }),
-          "top-right",
+          controlsPosition,
         );
 
         // Safety net covering both "load never fires" and, for idle-reveal
@@ -150,8 +155,9 @@ export function useBaseMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-    // Create-once: bounds/fitBoundsOptions/revealOn are fixed per map
-    // instance; reactive updates are handled by the caller's own effects.
+    // Create-once: bounds/fitBoundsOptions/controlsPosition/revealOn are fixed
+    // per map instance; reactive updates are handled by the caller's own
+    // effects.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -1,6 +1,8 @@
 import { useState, type FocusEvent } from "react";
+import { FiLock } from "react-icons/fi";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
@@ -12,9 +14,13 @@ import { UsernameField } from "../settings/UsernameField";
 import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { AddressChangeWarningModal } from "./AddressChangeWarningModal";
-import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
+import {
+  usePersonaCreatorSlug,
+  usePersonaIsCreator,
+} from "./usePersonaCreatorSlug";
 import {
   handleStateLine,
+  linkChoiceLockState,
   pathFor,
   warningPathsForPending,
   type PendingAddressChange,
@@ -54,6 +60,12 @@ export function SubprofileLinkFields({
   const ownerSlug = creatorSlug ?? "…";
   const isPublished = subprofile.status === "published";
 
+  // Only the creator may link an unlinked persona, see `linkChoiceLockState`.
+  // Reads the same members query opened above, so this costs no extra request.
+  const isCreator = usePersonaIsCreator(subprofile.id, subprofile.memberCount);
+  const { locked: linkChoiceLocked, showHint: showLinkLockHint } =
+    linkChoiceLockState(isCreator, subprofile.linkVisibility === "unlinked");
+
   const [pending, setPending] = useState<PendingAddressChange | null>(null);
   // Once an already-published edit is confirmed, further keystrokes in the
   // same field don't re-prompt on every blur until the next save moves the
@@ -70,6 +82,7 @@ export function SubprofileLinkFields({
   }
 
   function selectLink(target: LinkVisibility) {
+    if (target === "linked" && linkChoiceLocked) return;
     if (target === editor.link) return;
     if (isPublished) {
       setPending({ kind: "switchMode", target });
@@ -130,43 +143,15 @@ export function SubprofileLinkFields({
 
   return (
     <>
-      <div className="choices">
-        <button
-          type="button"
-          className="choice"
-          aria-pressed={editor.link === "linked"}
-          onClick={() => selectLink("linked")}
-        >
-          <b>{t(LINK_TO_LABEL_KEY.linked)}</b>
-          <p>{t(LINK_HELP_KEY.linked)}</p>
-          <code>
-            {pathFor("linked", ownerSlug, editor.slug, editor.handle)}
-          </code>
-          <p className="handlestate idle">
-            {t("subprofiles:newModal.linkedAddressNote")}
-          </p>
-        </button>
-        <button
-          type="button"
-          className="choice"
-          aria-pressed={editor.link === "unlinked"}
-          onClick={() => selectLink("unlinked")}
-        >
-          <b>{t(LINK_TO_LABEL_KEY.unlinked)}</b>
-          <p>{t(LINK_HELP_KEY.unlinked)}</p>
-          <code>
-            {pathFor("unlinked", ownerSlug, editor.slug, editor.handle)}
-          </code>
-          <p className="handlestate idle">
-            {t("subprofiles:newModal.standaloneNote")}
-          </p>
-          {handleNote && (
-            <p className={`handlestate ${handleNote.tone}`}>
-              {handleNote.message}
-            </p>
-          )}
-        </button>
-      </div>
+      <LinkChoiceCards
+        editor={editor}
+        ownerSlug={ownerSlug}
+        linkChoiceLocked={linkChoiceLocked}
+        showLinkLockHint={showLinkLockHint}
+        handleNote={handleNote}
+        onSelect={selectLink}
+        t={t}
+      />
 
       {editor.link === "linked" ? (
         <FormField label={t("subprofiles:metaForm.addressLabel")}>
@@ -230,5 +215,72 @@ export function SubprofileLinkFields({
         />
       )}
     </>
+  );
+}
+
+/** The linked/unlinked `.choice` card pair. Split out of `SubprofileLinkFields`
+ *  to keep that pane under the line cap; `linkChoiceLocked`/`showLinkLockHint`
+ *  come from `linkChoiceLockState` (see there for the product rule they
+ *  encode). */
+function LinkChoiceCards({
+  editor,
+  ownerSlug,
+  linkChoiceLocked,
+  showLinkLockHint,
+  handleNote,
+  onSelect,
+  t,
+}: {
+  editor: SubprofileMetaEditor;
+  ownerSlug: string;
+  linkChoiceLocked: boolean;
+  showLinkLockHint: boolean;
+  handleNote: ReturnType<typeof handleStateLine>;
+  onSelect: (target: LinkVisibility) => void;
+  t: TFunction;
+}) {
+  return (
+    <div className="choices">
+      <button
+        type="button"
+        className="choice"
+        aria-pressed={editor.link === "linked"}
+        disabled={linkChoiceLocked}
+        onClick={() => onSelect("linked")}
+      >
+        <b>{t(LINK_TO_LABEL_KEY.linked)}</b>
+        <p>{t(LINK_HELP_KEY.linked)}</p>
+        <code>{pathFor("linked", ownerSlug, editor.slug, editor.handle)}</code>
+        <p className="handlestate idle">
+          {t("subprofiles:newModal.linkedAddressNote")}
+        </p>
+        {showLinkLockHint && (
+          <p className="choiceLockHint">
+            <FiLock aria-hidden />
+            {t("subprofiles:link.creatorOnlyHint")}
+          </p>
+        )}
+      </button>
+      <button
+        type="button"
+        className="choice"
+        aria-pressed={editor.link === "unlinked"}
+        onClick={() => onSelect("unlinked")}
+      >
+        <b>{t(LINK_TO_LABEL_KEY.unlinked)}</b>
+        <p>{t(LINK_HELP_KEY.unlinked)}</p>
+        <code>
+          {pathFor("unlinked", ownerSlug, editor.slug, editor.handle)}
+        </code>
+        <p className="handlestate idle">
+          {t("subprofiles:newModal.standaloneNote")}
+        </p>
+        {handleNote && (
+          <p className={`handlestate ${handleNote.tone}`}>
+            {handleNote.message}
+          </p>
+        )}
+      </button>
+    </div>
   );
 }

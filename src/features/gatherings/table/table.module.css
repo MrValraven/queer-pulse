@@ -1,4 +1,4 @@
-/* "Meet the table" — a top-down view of who's sitting where at a supper club.
+/* "Meet the table": a top-down view of who's sitting where at a supper club.
    Extracted from the (deleted) checkout flow; read-only, so the seat-pick /
    "you" / visibility-toggle rules are intentionally gone. */
 
@@ -7,6 +7,10 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-18);
   padding: 20px 22px 8px;
+  /* Its own gap from whatever sits above it, the way GoingAttendeesPreview
+     (28px) and GatheringDetailPanels do, since on a gathering with neither it
+     otherwise lands flush under the RSVP button. */
+  margin-top: 28px;
   margin-bottom: 16px;
 }
 .co-tc-head {
@@ -237,7 +241,7 @@ button.tbl-setting {
   border-color: rgba(var(--line-rgb), 0.18);
 }
 
-/* Open setting — an empty place */
+/* Open setting: an empty place */
 .tbl-seat.open .tbl-plate {
   border-style: dashed;
   border-color: rgba(var(--line-rgb), 0.22);
@@ -304,7 +308,7 @@ button.tbl-setting {
 .tbl-card.above {
   bottom: calc(100% + 10px);
 }
-/* Horizontal alignment — edge seats open inward so the card never clips. */
+/* Horizontal alignment: edge seats open inward so the card never clips. */
 .tbl-card.start {
   left: 0;
   transform: none;

@@ -624,6 +624,11 @@ export const notifications: Catalog = {
   "type.persona_update.text_other":
     "{subprofileName} publicou {count} trabalhos novos.",
   "type.persona_update.meta": "Persona que segues",
+  "type.subprofile_creator_changed.text":
+    "{newCreatorName} passou a ser responsável por {subprofileName}.",
+  "type.subprofile_creator_changed.textYou":
+    "Passaste a ser responsável por {subprofileName}.",
+  "type.subprofile_creator_changed.meta": "Responsável pela persona",
 
   // Enviada quando o motor de XP/crachás credita um membro ao ultrapassar um
   // nível. Do sistema (sem autor); {level}/{name} vêm do payload.

@@ -10,9 +10,10 @@ import {
   vi,
 } from "vitest";
 import type { ReactNode } from "react";
+import { http, HttpResponse } from "msw";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
-import { API } from "../../../test/msw/handlers";
+import { API, API_V1 } from "../../../test/msw/handlers";
 import type { PublicSubprofileArgs } from "./usePublicSubprofile";
 
 /**
@@ -50,6 +51,10 @@ async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
   const { usePublicSubprofile } = await import("./usePublicSubprofile");
+  // Imported after the reset so its `instanceof ApiError` check runs against
+  // the same `shared/api/client` instance the freshly loaded hook throws from.
+  const { rehomedNestedPersonaFromError } =
+    await import("../useMovedPersonaRedirect");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   const client = new QueryClient({
@@ -60,7 +65,7 @@ async function loadLive() {
       <DemoModeProvider>{children}</DemoModeProvider>
     </QueryClientProvider>
   );
-  return { usePublicSubprofile, wrapper };
+  return { usePublicSubprofile, rehomedNestedPersonaFromError, wrapper };
 }
 
 async function resolve(args: PublicSubprofileArgs) {
@@ -119,5 +124,66 @@ describe("usePublicSubprofile (live mode via MSW, nested single-item route)", ()
       subslug: "does-not-exist",
     });
     expect(outcome).toEqual({ state: "not-found" });
+  });
+});
+
+/**
+ * Phase 2 (T6): the nested route's other 404 shape, fired when the persona's
+ * creator role transferred to another member, so `(ownerSlug, subslug)` no
+ * longer resolves and the public read names where it now does. `state:
+ * "moved"` is the whole point: collapsing it into `state: "not-found"` would
+ * strand the visitor on the dead pair instead of forwarding them (see
+ * `isMovedError` in `usePublicSubprofile.ts`).
+ */
+describe("usePublicSubprofile (live mode via MSW, PERSONA_REHOMED forward)", () => {
+  it("maps a 404 PERSONA_REHOMED body on the nested route to state:moved, naming the current pair", async () => {
+    server.use(
+      http.get(`${API_V1}/profiles/:slug/subprofiles/:subslug`, () =>
+        HttpResponse.json(
+          {
+            code: "PERSONA_REHOMED",
+            message: "Subprofile not found",
+            ownerSlug: "mara",
+            slug: "engineering-2",
+          },
+          { status: 404 },
+        ),
+      ),
+    );
+    const { usePublicSubprofile, rehomedNestedPersonaFromError, wrapper } =
+      await loadLive();
+    const { result } = renderHook(
+      () => usePublicSubprofile({ ownerSlug: "rui", subslug: "engineering" }),
+      { wrapper },
+    );
+    await waitFor(() => expect(result.current.state).not.toBe("loading"));
+    const outcome = result.current;
+    expect(outcome.state).toBe("moved");
+    if (outcome.state === "moved") {
+      expect(rehomedNestedPersonaFromError(outcome.error)).toEqual({
+        ownerSlug: "mara",
+        slug: "engineering-2",
+      });
+    }
+  });
+
+  it("never retries a PERSONA_REHOMED 404 (one request only)", async () => {
+    let requestCount = 0;
+    server.use(
+      http.get(`${API_V1}/profiles/:slug/subprofiles/:subslug`, () => {
+        requestCount += 1;
+        return HttpResponse.json(
+          {
+            code: "PERSONA_REHOMED",
+            message: "Subprofile not found",
+            ownerSlug: "mara",
+            slug: "engineering",
+          },
+          { status: 404 },
+        );
+      }),
+    );
+    await resolve({ ownerSlug: "rui", subslug: "engineering" });
+    expect(requestCount).toBe(1);
   });
 });

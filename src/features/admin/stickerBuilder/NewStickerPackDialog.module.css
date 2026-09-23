@@ -1,0 +1,20 @@
+/* New pack dialog: the pack name, then the slug that follows it. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The shared field scaffold ends every field with a bottom margin; the last
+   one sits on the dialog's own body padding instead. */
+.form > :last-child {
+  margin-bottom: 0;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+}

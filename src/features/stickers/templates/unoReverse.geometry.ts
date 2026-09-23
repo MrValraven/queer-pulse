@@ -1,4 +1,4 @@
-import { flagBandSpans } from "../../../shared/data/flagStripes.data";
+import { flagBodyPrimitives } from "./flagArt";
 import type { PathCommand, Primitive } from "./primitives";
 import {
   STICKER_CANVAS_SIZE,
@@ -128,10 +128,11 @@ function placedGlyph(
  * The Uno reverse card for one flag, as primitives in a
  * `STICKER_CANVAS_SIZE` square.
  *
- * Painted back to front: the card body in the frame colour, the flag bands,
- * the tilted oval, the centre glyph, and the two corner glyphs. The bands and
- * the oval are each clipped to the inner rounded rect, which keeps the oval's
- * rotated extent from bulging into the frame at any angle or frame width.
+ * Painted back to front: the card body in the frame colour, the flag's own
+ * design (bands, or the Progress chevron, or the Intersex ring), the tilted
+ * oval, the centre glyph, and the two corner glyphs. The flag and the oval
+ * are each clipped to the inner rounded rect, which keeps the oval's rotated
+ * extent from bulging into the frame at any angle or frame width.
  */
 export function unoReverseGeometry(params: UnoReverseParams): Primitive[] {
   const innerX = UNO_CARD_X + params.frameWidth;
@@ -142,16 +143,12 @@ export function unoReverseGeometry(params: UnoReverseParams): Primitive[] {
   const centerX = UNO_CARD_X + UNO_CARD_WIDTH / 2;
   const centerY = UNO_CARD_Y + UNO_CARD_HEIGHT / 2;
 
-  const bands = flagBandSpans(params.flagId).map((band) => ({
-    type: "rect" as const,
+  const flagBody = flagBodyPrimitives(params.flagId, {
     x: innerX,
-    y: innerY + band.start * innerHeight,
-    // A hairline overlap stops a seam of the card body showing between two
-    // bands when the canvas rounds their edges to different device pixels.
-    height: (band.end - band.start) * innerHeight + 0.5,
+    y: innerY,
     width: innerWidth,
-    fill: band.color,
-  }));
+    height: innerHeight,
+  });
 
   const centerGlyphScale = (innerWidth * 0.8) / GLYPH_BOX;
   const cornerGlyphScale = centerGlyphScale * params.cornerArrowScale;
@@ -176,7 +173,7 @@ export function unoReverseGeometry(params: UnoReverseParams): Primitive[] {
         height: innerHeight,
         radius: innerRadius,
       },
-      children: bands,
+      children: flagBody,
     },
     {
       type: "group",

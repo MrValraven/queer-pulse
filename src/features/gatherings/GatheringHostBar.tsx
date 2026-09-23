@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiEdit2, FiSettings, FiSlash, FiTool, FiTrash2 } from "react-icons/fi";
-import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { EditDetailsModal } from "./EditDetailsModal";
@@ -17,86 +16,16 @@ import {
   type GatheringState,
 } from "./manageGatheringState";
 import { dateToDatetimeValue } from "./manageGatheringDates";
-import {
-  gatheringCancelledPath,
-  manageGatheringPath,
-  type GatheringDetail,
-} from "./data";
+import { gatheringCancelledPath, type GatheringDetail } from "./data";
 import type { SeriesScope, UpdateEventDto } from "./api/events.api";
 import { useAttendees } from "./api/useAttendees";
 import { useCancelEvent, useUpdateEvent } from "./api/useEventMutations";
 import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
-import styles from "./GatheringHostBar.module.css";
+import { GatheringHostMenu } from "./GatheringHostMenu";
 
 /**
- * The strip itself: a label saying whose controls these are, then the four
- * actions. Presentational, so every decision about what an action MEANS stays
- * in `GatheringHostBar` below with the mutations and the modals.
- */
-function GatheringHostActionRow({
-  slug,
-  isCancelled,
-  isCancelPending,
-  isDeletePending,
-  onEdit,
-  onCancel,
-  onDelete,
-}: {
-  slug: string;
-  /** The gathering has already been called off. */
-  isCancelled: boolean;
-  isCancelPending: boolean;
-  isDeletePending: boolean;
-  onEdit: () => void;
-  onCancel: () => void;
-  onDelete: () => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.bar}>
-      <span className={styles.label}>
-        <span className={styles.labelIcon} aria-hidden>
-          <FiTool />
-        </span>
-        {t("gatherings:hostBar.label")}
-      </span>
-      <div className={styles.actions}>
-        <Button size="sm" variant="ghost" onClick={onEdit}>
-          <FiEdit2 aria-hidden /> {t("gatherings:hostBar.editCta")}
-        </Button>
-        {/* The way through to attendees, announcements and the day-of
-            dashboard, kept quiet: the in-place actions are what a host
-            standing on this page usually wants. */}
-        <Button size="sm" variant="ghost" to={manageGatheringPath(slug)}>
-          <FiSettings aria-hidden /> {t("gatherings:hostBar.manageCta")}
-        </Button>
-        {/* A gathering already called off has nothing left to cancel, and the
-            banner above this bar already says so. */}
-        {!isCancelled && (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={onCancel}
-            disabled={isCancelPending}
-          >
-            <FiSlash aria-hidden /> {t("gatherings:hostBar.cancelCta")}
-          </Button>
-        )}
-        <Button
-          size="sm"
-          variant="danger"
-          onClick={onDelete}
-          disabled={isDeletePending}
-        >
-          <FiTrash2 aria-hidden /> {t("gatherings:hostBar.deleteCta")}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-/**
- * The host's action strip on the public gathering page.
+ * The host's tools on the public gathering page: a "more" menu in the page
+ * header (`GatheringHostMenu`) plus the modals and confirms its actions open.
  *
  * A host standing on their own gathering could see everything a guest sees and
  * do none of it. The page already knew who they were (`viewerIsOrganizer`,
@@ -105,6 +34,9 @@ function GatheringHostActionRow({
  * cancel and delete now act IN PLACE, on the page the host is already looking
  * at, and Manage carries them through to attendees, announcements and the
  * day-of dashboard when they want the rest of it.
+ *
+ * They first shipped as a strip of four full-size buttons that competed with
+ * the RSVP for attention; one icon button in the header keeps them a tap away.
  *
  * Edit and cancel run on the manage dashboard's own layer (`liveInitialState`
  * / `applyEditDraft` / `buildEditPatch`, `EditDetailsModal`,
@@ -135,7 +67,7 @@ export function GatheringHostBar({
   // detail DTO's `spots` line is seats LEFT rather than a head count. This is
   // the manage dashboard's own query under the same key, so a host who goes on
   // to Manage pays for it once, and it only runs for an organizer because the
-  // whole bar only mounts for one.
+  // whole host menu only mounts for one.
   const { data: attendees } = useAttendees(gathering.slug);
   const attendeeCount = attendees?.goingCount ?? 0;
 
@@ -200,8 +132,9 @@ export function GatheringHostBar({
 
   return (
     <>
-      <GatheringHostActionRow
+      <GatheringHostMenu
         slug={gathering.slug}
+        title={gathering.title}
         isCancelled={gathering.cancelled === true}
         isCancelPending={cancelEvent.isPending}
         isDeletePending={isDeletePending}

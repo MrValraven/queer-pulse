@@ -28,6 +28,15 @@ import { listSubprofileMembers, type MemberDTO } from "./api/subprofiles.api";
  * Returns `undefined` while the answer isn't known (still loading, or the call
  * failed). Callers must NOT fall back to the viewer's slug in that window: a
  * wrong link is worse than a moment's wait.
+ *
+ * Invariant this relies on: a persona's creator is always one of its members.
+ * The backend enforces this at every point a creator could otherwise be left
+ * behind: `SubprofileMembershipService.leave` transfers creator status to the
+ * longest-standing remaining co-owner in the same transaction as the exit,
+ * account erasure hands over first, and a one-time repair migration fixed any
+ * persona that predates that rule. So the `memberCount <= 1` branch above
+ * never has to ask: a persona with exactly one member has no one else it
+ * could be, and that member is always the creator.
  */
 export function usePersonaCreatorSlug(
   id: string | undefined,

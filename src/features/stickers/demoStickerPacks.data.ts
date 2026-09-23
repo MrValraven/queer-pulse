@@ -13,7 +13,7 @@ export const DEMO_STICKER_PACKS: StickerPackResponse[] = [
     id: "demo-sticker-pack-uno-reverse",
     slug: "uno-reverse",
     name: "Uno reverse",
-    description: "Every striped pride flag, drawn as an Uno reverse card.",
+    description: "Every pride flag, drawn as an Uno reverse card.",
     coverStickerId: "demo-sticker-uno-reverse-rainbow",
     stickers: [
       {
@@ -26,6 +26,18 @@ export const DEMO_STICKER_PACKS: StickerPackResponse[] = [
         keywords: {
           en: ["rainbow", "uno", "reverse"],
           pt: ["rainbow", "uno", "reverso"],
+        },
+      },
+      {
+        id: "demo-sticker-uno-reverse-progress",
+        slug: "uno-reverse-progress",
+        label: "Progress Pride reverse",
+        url: "/stickers/uno-reverse/progress.png",
+        width: 512,
+        height: 512,
+        keywords: {
+          en: ["progress", "uno", "reverse"],
+          pt: ["progress", "uno", "reverso"],
         },
       },
       {
@@ -146,6 +158,18 @@ export const DEMO_STICKER_PACKS: StickerPackResponse[] = [
         keywords: {
           en: ["agender", "uno", "reverse"],
           pt: ["agender", "uno", "reverso"],
+        },
+      },
+      {
+        id: "demo-sticker-uno-reverse-intersex",
+        slug: "uno-reverse-intersex",
+        label: "Intersex reverse",
+        url: "/stickers/uno-reverse/intersex.png",
+        width: 512,
+        height: 512,
+        keywords: {
+          en: ["intersex", "uno", "reverse"],
+          pt: ["intersex", "uno", "reverso"],
         },
       },
     ],

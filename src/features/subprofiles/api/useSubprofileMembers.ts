@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { currentUserSlug } from "../../members/data/members";
 import {
   leaveSubprofile,
   listSubprofileMembers,
@@ -53,6 +54,12 @@ export function useSubprofileMembers(id: string | undefined) {
     mutationFn: async () => {
       if (!id) throw new Error("Subprofile id required");
       if (!demoMode) return leaveSubprofile(id);
+      // Demo has one signed-in identity, so a demo Leave is always this
+      // member leaving. Mutates the mock roster (moving `isCreator` to the
+      // longest-standing remaining co-owner when the leaver held it) so the
+      // invalidation below re-reads a roster that actually reflects the exit.
+      const { mockLeavePersona } = await import("../data/subprofiles.data");
+      mockLeavePersona(id, currentUserSlug);
       return { ok: true };
     },
     onSuccess: invalidateAfterMembershipChange,

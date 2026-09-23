@@ -1246,15 +1246,27 @@ export interface StickerPackResponse {
   stickers: StickerResponse[];
 }
 
+/** Mirrors the admin sticker shape from the backend's admin `sticker-packs`
+ *  module (`POST/PATCH /admin/sticker-packs/:packId/stickers`): the public
+ *  sticker plus the template it was drawn with and its position in the pack,
+ *  so the builder can tell which flag a sticker came from and redraw it. */
+export interface AdminStickerResponse extends StickerResponse {
+  templateId: string;
+  templateParams: Record<string, unknown>;
+  sortOrder: number;
+}
+
 /** Mirrors the admin sticker pack response from the backend's admin
  *  `sticker-packs` module (`GET/POST/PATCH /admin/sticker-packs`): the same
- *  pack shape plus the moderation/ordering fields only the builder needs. */
-export interface AdminStickerPackResponse extends StickerPackResponse {
+ *  pack shape plus the moderation/ordering fields only the builder needs,
+ *  with every sticker in its admin shape. */
+export type AdminStickerPackResponse = Omit<StickerPackResponse, "stickers"> & {
   status: "draft" | "published" | "archived";
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
-}
+  stickers: AdminStickerResponse[];
+};
 
 // --- Search ---
 

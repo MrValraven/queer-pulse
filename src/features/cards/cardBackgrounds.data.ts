@@ -15,13 +15,17 @@
  *
  * Ids are a closed set shared with the backend's `BACKGROUND_PRESETS`.
  *
- * The bands themselves live in `flagStripes.data.ts` as machine-readable
- * colour data; this file folds them into the CSS gradient strings a card
- * face renders, because a canvas renderer (the sticker templates) cannot
- * parse a gradient string and needs the raw bands instead.
+ * Every colour lives in `flagStripes.data.ts` as machine-readable data: the
+ * striped flags' bands, the Progress chevron's five colours, and the
+ * Intersex field and ring. This file only folds them into the CSS gradient
+ * strings a card face renders. A canvas renderer (the sticker templates)
+ * cannot parse a gradient string, so it reads the same data directly, and
+ * the card and the sticker can never disagree about a colour.
  */
 
 import {
+  INTERSEX_COLORS,
+  PROGRESS_CHEVRON_COLORS,
   STRIPED_FLAG_IDS,
   flagStripesOf,
   stripeGradient,
@@ -40,16 +44,28 @@ export interface CardBackgroundPreset {
   background: string;
 }
 
+/** Each chevron band's share of the gradient line, in percent. */
+const CHEVRON_BAND_PERCENT = 5.5;
+
 /**
  * The Progress chevron's five bands. Measured from the arrow's POINT outward,
  * because each half-layer's gradient axis starts at the card's left edge on
  * the centre line, which is where the point sits: white at the point, then
  * pink, light blue, brown, and black on the outside, then transparent so the
- * six-stripe ground shows through the rest.
+ * six-stripe ground shows through the rest. The registry lists the colours
+ * outermost first, so they are read in reverse. The first stop is a bare `0`
+ * and every product of 5.5 is exact in floating point, which keeps this
+ * string byte-identical to the literal it replaced.
  */
 const CHEVRON_BANDS =
-  "#ffffff 0 5.5%, #f5a9b8 5.5% 11%, #5bcefa 11% 16.5%, " +
-  "#613915 16.5% 22%, #000000 22% 27.5%, transparent 27.5%";
+  [...PROGRESS_CHEVRON_COLORS]
+    .reverse()
+    .map((color, index) => {
+      const start = index === 0 ? "0" : `${index * CHEVRON_BAND_PERCENT}%`;
+      return `${color} ${start} ${(index + 1) * CHEVRON_BAND_PERCENT}%`;
+    })
+    .join(", ") +
+  `, transparent ${PROGRESS_CHEVRON_COLORS.length * CHEVRON_BAND_PERCENT}%`;
 
 /** The label key every preset carries, derived so a new flag cannot be added
  *  to the registry with a mismatched key. */
@@ -86,8 +102,8 @@ export const CARD_BACKGROUND_PRESETS: CardBackgroundPreset[] = [
     // are fractions of that: a ring whose outer diameter is ~38% of the
     // card's height, matching the flag's own proportions.
     `radial-gradient(circle closest-side at 50% 50%, ` +
-      `transparent 0 30%, #7902aa 30% 38%, transparent 38%), ` +
-      `linear-gradient(#ffd800, #ffd800)`,
+      `transparent 0 30%, ${INTERSEX_COLORS.ring} 30% 38%, transparent 38%), ` +
+      `linear-gradient(${INTERSEX_COLORS.field}, ${INTERSEX_COLORS.field})`,
   ),
 ];
 

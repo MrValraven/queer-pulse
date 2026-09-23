@@ -1119,6 +1119,7 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.format.Online": "Online",
   "adminReadingGroupProposals.format.Either": "Either",
   "adminReadingGroupProposals.row.by": "Proposed by {name}",
+  "adminReadingGroupProposals.row.firstBook": "First book: {book}",
   "adminReadingGroupProposals.row.maxPeople": "up to {count} people",
   "adminReadingGroupProposals.row.sent": "Sent {date}",
   "adminReadingGroupProposals.status.pending": "Pending",
@@ -2230,6 +2231,7 @@ export const admin: Catalog = {
   "communities.governanceLog.meta.field.type": "Type",
   "communities.governanceLog.meta.field.whoFor": "Who it is for",
   "communities.governanceLog.meta.field.tagline": "Tagline",
+  "communities.governanceLog.meta.field.nowReading": "Now reading",
   "communities.governanceLog.meta.field.accessTier": "Who can join",
   "communities.governanceLog.meta.field.rosterVisible": "Roster visible",
   "communities.governanceLog.meta.field.features": "Features",
@@ -6254,18 +6256,14 @@ export const admin: Catalog = {
   "officialMessages.status.failed": "Stopped",
 
   // Sticker pack builder (AdminStickerPacksPage, src/features/admin/stickerBuilder/)
-  "stickerPacks.title": "Sticker packs · <em>the builder</em>",
-  "stickerPacks.eyebrow": "Sticker pack builder",
+  "stickerPacks.title": "Sticker <em>packs</em>",
   "stickerPacks.sub":
-    "Build a pack from a template, then publish it to every member.",
+    "Make stickers from a template, then publish the pack when it's ready.",
 
   "stickerPacks.rail.heading": "Packs",
   "stickerPacks.rail.newCta": "New pack",
   "stickerPacks.rail.newName": "Pack name",
   "stickerPacks.rail.newSlug": "Slug",
-  "stickerPacks.rail.empty": "No packs yet",
-  "stickerPacks.rail.loadError": "Couldn't load the packs. Try again",
-  "stickerPacks.rail.demoOnly": "Sticker packs are live-mode only",
 
   "stickerPacks.status.draft": "Draft",
   "stickerPacks.status.published": "Published",
@@ -6275,38 +6273,279 @@ export const admin: Catalog = {
   "stickerPacks.controls.selectAll": "Select all",
   "stickerPacks.controls.clear": "Clear",
   "stickerPacks.controls.frameColor": "Frame colour",
-  "stickerPacks.controls.frameWidth": "Frame thickness",
-  "stickerPacks.controls.ringAngle": "Oval tilt",
-  "stickerPacks.controls.ringStroke": "Oval thickness",
   "stickerPacks.controls.cornerArrows": "Corner arrows",
-  "stickerPacks.controls.cornerArrowScale": "Corner arrow size",
 
-  "stickerPacks.preview.empty": "Pick a flag to see a preview",
-
-  "stickerPacks.publish.publishCta": "Generate and publish",
-  "stickerPacks.publish.publishing": "Publishing…",
-  "stickerPacks.publish.needsPack":
-    "Create a pack or pick one from the list to publish into",
-  "stickerPacks.publish.needsFlags": "Pick at least one flag to publish",
-  "stickerPacks.publish.progress": "Publishing {done} of {total}…",
-  "stickerPacks.publish.failure": "These flags did not upload: {flags}",
   "stickerPacks.publish.stickerLabel": "{flag} reverse",
 
-  "stickerPacks.detail.heading": "Inside {name}",
-  "stickerPacks.detail.empty": "No stickers in this pack yet",
-  "stickerPacks.detail.statusLabel": "Status",
-  "stickerPacks.detail.setCover": "Use as cover",
-  "stickerPacks.detail.deleteSticker": "Remove",
   "stickerPacks.detail.publishBlocked": "Add at least one sticker first",
 
   "stickerPacks.toast.packCreated": "Pack created",
-  "stickerPacks.toast.statusUpdated": "Pack status updated",
-  "stickerPacks.toast.stickerDeleted": "Sticker removed",
 
   "stickerPacks.errors.create": "Couldn't create the pack",
   "stickerPacks.errors.updateStatus": "Couldn't update the pack",
   "stickerPacks.errors.setCover": "Couldn't set the cover",
   "stickerPacks.errors.deleteSticker": "Couldn't remove the sticker",
+  "stickerPacks.publish.retrying": "Retrying…",
+  "stickerPacks.contents.hintTouch":
+    "Use a sticker's menu to move it. Members see stickers in this order.",
+  "stickerPacks.page.error.retry": "Try again",
+  "stickerPacks.page.error.retrying": "Trying again…",
+  "stickerPacks.publish.mode.legendShort": "{count} already in pack",
+  "stickerPacks.publish.failures.show": "Show what failed",
+  "stickerPacks.publish.failures.hide": "Hide what failed",
+  "stickerPacks.publish.running.addToPack":
+    "Adding {current} of {total} to {pack}",
+  "stickerPacks.publish.running.updateInPack":
+    "Updating {current} of {total} in {pack}",
+  "stickerPacks.publish.goToPack": "Go to {pack}",
+  "stickerPacks.controls.templateDefaults": "Template defaults",
+  "stickerPacks.header.menu.runLocked":
+    "Wait for the stickers to finish saving before you archive or delete this pack.",
+  "stickerPacks.flags.keyboardHint":
+    "Use the arrow keys to move between flags. Press Space to add a flag or leave it out, and Enter to preview it without changing what you publish.",
+  "stickerPacks.rail.stickerCount_one": "{count} sticker",
+  "stickerPacks.rail.stickerCount_other": "{count} stickers",
+  "stickerPacks.rail.emptyDescription": "No packs yet.",
+  "stickerPacks.newPack.title": "New pack",
+  "stickerPacks.newPack.sub":
+    "It starts as a draft. Members see it only once you publish it.",
+  "stickerPacks.newPack.namePlaceholder": "e.g. Pride flags",
+  "stickerPacks.newPack.nameRequired": "Give the pack a name",
+  "stickerPacks.newPack.slugAuto": "From the name",
+  "stickerPacks.newPack.slugHint":
+    "Lowercase words joined by hyphens. Used in links.",
+  "stickerPacks.newPack.slugInvalid":
+    "Use lowercase letters and numbers joined by single hyphens, 2 to 64 characters",
+  "stickerPacks.newPack.slugTaken": "That slug is already used by another pack",
+  "stickerPacks.newPack.slugRequired": "Type a slug for this pack",
+  "stickerPacks.newPack.submit": "Create pack",
+  "stickerPacks.newPack.creating": "Creating…",
+  "stickerPacks.header.stickerCount_one": "{count} sticker",
+  "stickerPacks.header.stickerCount_other": "{count} stickers",
+  "stickerPacks.header.explainer.draft":
+    "Members can't see this pack yet. Publish it when it's ready.",
+  "stickerPacks.header.explainer.published":
+    "Live. Every member can send these stickers.",
+  "stickerPacks.header.explainer.archived":
+    "Withdrawn. Members can no longer pick it; sent stickers stay in chats.",
+  "stickerPacks.header.renameLabel": "Rename {name}",
+  "stickerPacks.header.nameInputLabel": "Pack name",
+  "stickerPacks.header.renameHint": "Enter to save, Esc to cancel",
+  "stickerPacks.header.action.publish": "Publish pack",
+  "stickerPacks.header.action.unpublish": "Unpublish",
+  "stickerPacks.header.action.restore": "Restore as draft",
+  "stickerPacks.header.publishConfirm.title": "Publish {name}?",
+  "stickerPacks.header.publishConfirm.body_one":
+    "Its sticker shows up in every member's sticker picker straight away.",
+  "stickerPacks.header.publishConfirm.body_other":
+    "All {count} stickers show up in every member's sticker picker straight away.",
+  "stickerPacks.header.unpublishConfirm.title": "Unpublish {name}?",
+  "stickerPacks.header.unpublishConfirm.body":
+    "It leaves every member's sticker picker and goes back to draft. Stickers already sent stay in chats, and you can publish it again at any time.",
+  "stickerPacks.header.restoreConfirm.title": "Restore {name} as a draft?",
+  "stickerPacks.header.restoreConfirm.body":
+    "It stays hidden from members until you publish it again. In the meantime you can add, edit and reorder its stickers.",
+  "stickerPacks.header.menu.triggerLabel": "More actions for {name}",
+  "stickerPacks.header.menu.archive": "Archive pack",
+  "stickerPacks.header.menu.delete": "Delete pack",
+  "stickerPacks.header.archiveConfirm.title": "Archive {name}?",
+  "stickerPacks.header.archiveConfirm.body":
+    "Members won't be able to pick it. Stickers already sent stay in chats, and you can restore it as a draft later.",
+  "stickerPacks.header.deleteConfirm.title": "Delete {name}?",
+  "stickerPacks.header.deleteConfirm.body_one":
+    "The pack and its {count} sticker are deleted for good. This can't be undone.",
+  "stickerPacks.header.deleteConfirm.body_other":
+    "The pack and its {count} stickers are deleted for good. This can't be undone.",
+  "stickerPacks.header.deleteConfirm.bodyEmpty":
+    "The pack is deleted for good. This can't be undone.",
+  "stickerPacks.contents.hint":
+    "Drag to reorder. Members see stickers in this order.",
+  "stickerPacks.contents.savingOrder": "Saving the new order…",
+  "stickerPacks.contents.addCta": "Add stickers",
+  "stickerPacks.contents.noCover":
+    "This pack has no cover yet. Pick one from a sticker's menu.",
+  "stickerPacks.contents.listLabel": "Stickers in {name}",
+  "stickerPacks.contents.coverBadge": "Cover",
+  "stickerPacks.contents.moved":
+    "Moved {label} to position {position} of {total}",
+  "stickerPacks.contents.emptyTitle": "No stickers in this pack yet",
+  "stickerPacks.contents.emptyBody":
+    "Generate them from the template in the Add stickers tab.",
+  "stickerPacks.contents.menu.trigger": "Actions for {label}",
+  "stickerPacks.contents.menu.setCover": "Set as cover",
+  "stickerPacks.contents.menu.edit": "Edit name and keywords",
+  "stickerPacks.contents.menu.moveEarlier": "Move earlier",
+  "stickerPacks.contents.menu.moveLater": "Move later",
+  "stickerPacks.contents.menu.remove": "Remove",
+  "stickerPacks.contents.remove.title": "Remove {label}?",
+  "stickerPacks.contents.remove.body":
+    "Members who already sent it keep it in their chats.",
+  "stickerPacks.contents.remove.coverNote":
+    "It is this pack's cover, so the pack has no cover until you pick another one.",
+  "stickerPacks.contents.remove.confirm": "Remove",
+  "stickerPacks.editSticker.title": "Edit sticker",
+  "stickerPacks.editSticker.label": "Name",
+  "stickerPacks.editSticker.keywords.en": "English keywords",
+  "stickerPacks.editSticker.keywords.pt": "Portuguese keywords",
+  "stickerPacks.editSticker.keywordsHelper":
+    "Separate them with commas. Search matches these words. Up to 24, each up to 40 characters.",
+  "stickerPacks.editSticker.errors.labelRequired": "Give the sticker a name",
+  "stickerPacks.editSticker.errors.labelTooLong":
+    "Keep the name to 80 characters or fewer",
+  "stickerPacks.editSticker.errors.keywordTooLong":
+    "Shorten these to 40 characters or fewer: {keywords}",
+  "stickerPacks.editSticker.errors.tooManyKeywords":
+    "Keep it to 24 keywords. This list has {total}.",
+  "stickerPacks.editSticker.save": "Save changes",
+  "stickerPacks.editSticker.saving": "Saving…",
+  "stickerPacks.controls.heading": "Style",
+  "stickerPacks.controls.templateName": "Uno reverse",
+  "stickerPacks.controls.templateDescription":
+    "Reverse-card sticker in each flag's colours",
+  "stickerPacks.controls.usePackStyle": "Use this pack's style",
+  "stickerPacks.controls.packStyleApplied": "Matches this pack's style",
+  "stickerPacks.controls.sectionCard": "Card",
+  "stickerPacks.controls.sectionOval": "Oval",
+  "stickerPacks.controls.sectionArrows": "Arrows",
+  "stickerPacks.controls.borderWidth": "Border width",
+  "stickerPacks.controls.ovalAngle": "Oval angle",
+  "stickerPacks.controls.ovalLine": "Oval line",
+  "stickerPacks.controls.arrowSize": "Arrow size",
+  "stickerPacks.controls.resetField": "Reset {field}",
+  "stickerPacks.controls.exactValue": "{field}, exact value",
+  "stickerPacks.color.hexLabel": "{field}, hex code",
+  "stickerPacks.color.hexInvalid": "Use a hex code like #f6f2e8 or #fff.",
+  "stickerPacks.color.presetsLabel": "Preset colours",
+  "stickerPacks.color.preset.cream": "Cream",
+  "stickerPacks.color.preset.white": "White",
+  "stickerPacks.color.preset.ink": "Ink",
+  "stickerPacks.color.preset.coral": "Coral",
+  "stickerPacks.color.fadesLight_one":
+    "This colour fades into the light stripes of {flags}. The oval may be hard to see.",
+  "stickerPacks.color.fadesLight_other":
+    "This colour fades into the light stripes of {flags}. The oval may be hard to see.",
+  "stickerPacks.color.fadesDark_one":
+    "This colour fades into the dark stripes of {flags}. The oval may be hard to see.",
+  "stickerPacks.color.fadesDark_other":
+    "This colour fades into the dark stripes of {flags}. The oval may be hard to see.",
+  "stickerPacks.color.fadesMid_one":
+    "This colour is too close to some stripes of {flags}. The oval may be hard to see.",
+  "stickerPacks.color.fadesMid_other":
+    "This colour is too close to some stripes of {flags}. The oval may be hard to see.",
+  "stickerPacks.color.moreFlags_one": "{count} more",
+  "stickerPacks.color.moreFlags_other": "{count} more",
+  "stickerPacks.flags.heading": "Flags",
+  "stickerPacks.flags.selectedCount_one": "{count} of {total} selected",
+  "stickerPacks.flags.selectedCount_other": "{count} of {total} selected",
+  "stickerPacks.flags.selectMissing": "Select missing only",
+  "stickerPacks.flags.hint":
+    "Every flag starts in this run. Select one to leave it out or add it back, and the preview shows the last one you selected.",
+  "stickerPacks.flags.badge.new": "New",
+  "stickerPacks.flags.badge.inPack": "In pack",
+  "stickerPacks.flags.badge.willReplace": "Will replace",
+  "stickerPacks.flags.run.queued": "{flag}: waiting",
+  "stickerPacks.flags.run.running": "{flag}: adding",
+  "stickerPacks.flags.run.done": "{flag}: added",
+  "stickerPacks.flags.run.failed": "{flag}: failed",
+  "stickerPacks.flags.run.cancelled": "{flag}: cancelled",
+  "stickerPacks.preview.heading": "Preview",
+  "stickerPacks.preview.noFlagTitle": "No flag picked",
+  "stickerPacks.preview.pickFlag": "Pick a flag to preview it",
+  "stickerPacks.preview.backdropLabel": "Preview background",
+  "stickerPacks.preview.backdrop.light": "Light",
+  "stickerPacks.preview.backdrop.dark": "Dark",
+  "stickerPacks.preview.backdrop.checker": "Transparent",
+  "stickerPacks.preview.inChat": "In a chat",
+  "stickerPacks.preview.chatBubble": "You're the most dramatic person I know",
+  "stickerPacks.preview.download": "Download PNG",
+  "stickerPacks.preview.downloadError": "Couldn't make the PNG. Try again",
+  "stickerPacks.publish.regionLabel": "Add to pack",
+  "stickerPacks.publish.cta.idle": "Add stickers",
+  "stickerPacks.publish.cta.add_one": "Add {count} sticker to {pack}",
+  "stickerPacks.publish.cta.add_other": "Add {count} stickers to {pack}",
+  "stickerPacks.publish.cta.update_one": "Update {count} sticker in {pack}",
+  "stickerPacks.publish.cta.update_other": "Update {count} stickers in {pack}",
+  "stickerPacks.publish.cta.addAndUpdate":
+    "Add {added} and update {replaced} in {pack}",
+  "stickerPacks.publish.statusHelper.draft":
+    "Members see these after you publish the pack.",
+  "stickerPacks.publish.statusHelper.published":
+    "These go live for members straight away.",
+  "stickerPacks.publish.statusHelper.archived":
+    "This pack is archived. Members won't see these.",
+  "stickerPacks.publish.blocked.noPack":
+    "Pick a pack or create one to add stickers to.",
+  "stickerPacks.publish.blocked.noFlags": "Pick at least one flag to add.",
+  "stickerPacks.publish.blocked.allSkipped":
+    "Every selected flag is already in this pack. Choose Replace existing to update their art.",
+  "stickerPacks.publish.mode.legend_one":
+    "{count} selected flag is already in this pack",
+  "stickerPacks.publish.mode.legend_other":
+    "{count} selected flags are already in this pack",
+  "stickerPacks.publish.mode.addMissing": "Add missing only",
+  "stickerPacks.publish.mode.replace": "Replace existing",
+  "stickerPacks.publish.running.add": "Adding {current} of {total}",
+  "stickerPacks.publish.running.update": "Updating {current} of {total}",
+  "stickerPacks.publish.progressLabel": "Progress",
+  "stickerPacks.publish.cancel": "Cancel",
+  "stickerPacks.publish.stopping": "Stopping after this one",
+  "stickerPacks.publish.stopped": "Stopped after {done} of {total}.",
+  "stickerPacks.publish.result.added_one": "{count} sticker added to {pack}",
+  "stickerPacks.publish.result.added_other": "{count} stickers added to {pack}",
+  "stickerPacks.publish.result.updated_one":
+    "{count} sticker updated in {pack}",
+  "stickerPacks.publish.result.updated_other":
+    "{count} stickers updated in {pack}",
+  "stickerPacks.publish.result.addedAndUpdated":
+    "Added {added} and updated {replaced} in {pack}",
+  "stickerPacks.publish.result.none": "Nothing changed in {pack}",
+  "stickerPacks.publish.failures.title_one": "{count} sticker didn't make it",
+  "stickerPacks.publish.failures.title_other":
+    "{count} stickers didn't make it",
+  "stickerPacks.publish.failureReason.conflict": "Already in this pack",
+  "stickerPacks.publish.failureReason.rate-limit":
+    "Too many uploads at once. Wait a minute, then retry",
+  "stickerPacks.publish.failureReason.upload": "The image didn't upload",
+  "stickerPacks.publish.failureReason.unknown": "Something went wrong",
+  "stickerPacks.publish.viewPack": "View pack",
+  "stickerPacks.publish.publishPackNow": "Publish pack now",
+  "stickerPacks.publish.retryFailed": "Retry {count} failed",
+  "stickerPacks.publish.dismiss": "Dismiss",
+  "stickerPacks.review.title": "Review before adding",
+  "stickerPacks.review.adding_one": "Adding {count} new",
+  "stickerPacks.review.adding_other": "Adding {count} new",
+  "stickerPacks.review.replacing_one": "Replacing {count}",
+  "stickerPacks.review.replacing_other": "Replacing {count}",
+  "stickerPacks.review.replacingNote_one": "(its order, name and cover stay)",
+  "stickerPacks.review.replacingNote_other":
+    "(their order, names and cover stay)",
+  "stickerPacks.review.skipping_one": "Skipping {count} already in the pack",
+  "stickerPacks.review.skipping_other": "Skipping {count} already in the pack",
+  "stickerPacks.review.target": "Into {pack} ({status})",
+  "stickerPacks.review.replacingTag": "(replacing)",
+  "stickerPacks.page.title": "Sticker packs",
+  "stickerPacks.page.empty.title": "Start your first pack",
+  "stickerPacks.page.empty.body":
+    "A pack holds stickers members can send in chat. It starts as a draft, so members see it only once you publish it.",
+  "stickerPacks.page.demo.title": "The builder works in live mode",
+  "stickerPacks.page.demo.body":
+    "Packs and stickers are saved through the live API, so switch to live mode to build them.",
+  "stickerPacks.page.error.title": "The packs didn't load",
+  "stickerPacks.page.error.body": "Check your connection, then try again.",
+  "stickerPacks.tabs.label": "Work on {name}",
+  "stickerPacks.tabs.add": "Add stickers",
+  "stickerPacks.tabs.contents": "In this pack",
+  "stickerPacks.toast.renamed": "Renamed to {name}",
+  "stickerPacks.toast.status.published": "{name} is live",
+  "stickerPacks.toast.status.draft": "{name} is a draft again",
+  "stickerPacks.toast.status.archived": "{name} is archived",
+  "stickerPacks.toast.packDeleted": "{name} deleted",
+  "stickerPacks.toast.stickerRemoved": "{label} removed",
+  "stickerPacks.toast.stickerUpdated": "{label} saved",
+  "stickerPacks.errors.rename": "Couldn't rename the pack",
+  "stickerPacks.errors.deletePack": "Couldn't delete the pack",
+  "stickerPacks.errors.reorder": "Couldn't save the new order",
+  "stickerPacks.errors.updateSticker": "Couldn't save the sticker",
 
   // ── Admin-authored directory listings (`/admin/listings/new`) ─────────────
   // Staff writing up a place that has not joined QueerPulse yet. The listing

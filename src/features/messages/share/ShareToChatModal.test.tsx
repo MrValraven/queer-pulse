@@ -42,6 +42,13 @@ vi.mock("./useSendToConversations", () => ({
   useSendToConversations: () => ({ sendToMany }),
 }));
 
+// The preview column unfurls the shared link; that hook needs the demo-mode
+// and query providers this suite doesn't mount, and no test reads the card.
+vi.mock("../api/useLinkPreview", () => ({
+  useLinkPreview: () => ({ data: undefined, isLoading: false }),
+  hasPreviewContent: () => false,
+}));
+
 const FAKE_CATALOG: Record<string, string> = {
   "messages:share.modalTitle": "Send in a message",
   "messages:share.searchPlaceholder": "Search conversations",

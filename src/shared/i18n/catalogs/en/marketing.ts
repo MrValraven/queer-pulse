@@ -1706,8 +1706,13 @@ export const marketing: Catalog = {
   "listBusiness.step4.relAria": "Your connection",
   "listBusiness.step4.ownerNameLabel": "Your name",
   "listBusiness.step4.ownerNamePlaceholder": "e.g. Sandra Lopes",
+  "listBusiness.step4.ownerNameFromAccount": "The name on your account.",
+  "listBusiness.step4.ownerNameCustomHelper":
+    "Shown on the listing instead of your account name.",
+  "listBusiness.step4.ownerNameUseCustom": "Use a different name",
+  "listBusiness.step4.ownerNameUseAccount": "Use my account name",
   "listBusiness.step4.ownerRoleLabel": "Your role",
-  "listBusiness.step4.ownerRolePlaceholder": "e.g. Owner & baker",
+  "listBusiness.step4.ownerRolePlaceholder": "Choose your role",
   "listBusiness.step4.ownerBioLabel": "A line or two about you (optional)",
   "listBusiness.step4.ownerBioPlaceholder":
     "We took over a 60-year-old pastelaria in 2019 and rebuilt it around one rule: everyone's welcome, exactly as they are.",
@@ -1730,6 +1735,14 @@ export const marketing: Catalog = {
   "listBusiness.step4.consent":
     "You're in control of what's public. <b>Contact details you leave blank stay off the listing.</b> Want your name kept private? Pick “role only” or “anonymous” above. That's completely fine.",
   // Relationship options
+  "listBusiness.ownerRole.owner": "Owner",
+  "listBusiness.ownerRole.coOwner": "Co-owner",
+  "listBusiness.ownerRole.founder": "Founder",
+  "listBusiness.ownerRole.coFounder": "Co-founder",
+  "listBusiness.ownerRole.manager": "Manager",
+  "listBusiness.ownerRole.headChef": "Head chef",
+  "listBusiness.ownerRole.host": "Host",
+  "listBusiness.ownerRole.teamMember": "Team member",
   "listBusiness.rel.own.label": "I own or co-own it",
   "listBusiness.rel.own.desc": "You're the proprietor.",
   "listBusiness.rel.run.label": "I manage or help run it",
@@ -1853,6 +1866,10 @@ export const marketing: Catalog = {
   "listBusiness.missing.alt": "alt text for your photos",
   "listBusiness.missing.consent": "both confirmations",
   "listBusiness.missing.services": "a name and a price on every service",
+  "listBusiness.missing.menu":
+    "a name and a price on every menu item, and a name on every section",
+  "listBusiness.missing.menuLink":
+    "a web address for your menu link that works",
   "listBusiness.missing.affirmingBaseline": "the affirming baseline",
   // Live preview column
   "listBusiness.preview.head": "Live preview · updates as you type",
@@ -1924,6 +1941,7 @@ export const marketing: Catalog = {
     "The listing page as visitors will see it. Nothing here is saved until you press save. The block about the person behind the business is blank in this preview and filled in on the real page.",
 
   "listBusiness.editor.section.services": "What it costs",
+  "listBusiness.editor.section.menu": "Menu",
   "listBusiness.editor.section.accessibility": "Getting in",
   "listBusiness.editor.section.tradingAndVisibility": "Trading and visibility",
   "listBusiness.editor.section.whoCanEdit": "Who can edit",
@@ -2069,6 +2087,80 @@ export const marketing: Catalog = {
   "listBusiness.services.moveUp": "Move {name} up",
   "listBusiness.services.moveDown": "Move {name} down",
   "listBusiness.services.remove": "Remove {name}",
+
+  // ── Services or a menu, owner side.
+  "listBusiness.pricing.modeLabel": "What your page shows",
+  "listBusiness.pricing.mode.services": "Services",
+  "listBusiness.pricing.mode.menu": "Menu",
+  "listBusiness.pricing.keptHint":
+    "Whatever you typed in the other one stays saved. Only one shows on your page at a time.",
+
+  // ── The menu, owner side.
+  "listBusiness.menu.intro":
+    "What you serve and what it costs. Group it the way your menu reads: drinks, small plates, brunch. Prices are your own words, so '4 EUR / 7 EUR' and 'market price' both work.",
+  "listBusiness.menu.empty":
+    "No sections yet. Add one for each part of your menu, like drinks or brunch.",
+  "listBusiness.menu.addSectionCta": "Add a section",
+  "listBusiness.menu.addSectionHint":
+    "Optional. You can also skip the typing and add your menu as a file or a link below.",
+  "listBusiness.menu.sectionCeilingHint":
+    "That is the limit of {count} sections.",
+  "listBusiness.menu.itemCeilingHint":
+    "That is the limit of {count} items across the whole menu. The rest can go in your menu file.",
+  "listBusiness.menu.sectionTitleLabel": "Section name",
+  "listBusiness.menu.sectionTitlePlaceholder": "Drinks",
+  "listBusiness.menu.sectionTitleError": "Give this section a name.",
+  "listBusiness.menu.unnamedSection": "section {position}",
+  "listBusiness.menu.moveSectionUp": "Move {name} up",
+  "listBusiness.menu.moveSectionDown": "Move {name} down",
+  "listBusiness.menu.removeSection": "Remove {name}",
+  "listBusiness.menu.removeSectionConfirmTitle": "Remove {name}?",
+  "listBusiness.menu.removeSectionConfirmBody":
+    "This removes the section and everything listed in it.",
+  "listBusiness.menu.removeSectionConfirmCta": "Remove section",
+  "listBusiness.menu.addItemCta": "Add an item",
+  "listBusiness.menu.itemNameLabel": "What it is",
+  "listBusiness.menu.itemNamePlaceholder": "Flat white",
+  "listBusiness.menu.itemNameError":
+    "Give this item a name, or clear the price to remove it.",
+  "listBusiness.menu.itemPriceLabel": "What it costs",
+  "listBusiness.menu.itemPricePlaceholder": "2.50 EUR, oat milk +0.40",
+  "listBusiness.menu.itemPriceError":
+    "Say what it costs. Anything true works: a number, two sizes, or market price.",
+  "listBusiness.menu.itemDescriptionLabel": "One line of detail",
+  "listBusiness.menu.itemDescriptionHint": "Optional.",
+  "listBusiness.menu.itemDescriptionPlaceholder":
+    "Double shot, whole or oat milk",
+  "listBusiness.menu.unnamedItem": "item {position}",
+  "listBusiness.menu.moveItemUp": "Move {name} up",
+  "listBusiness.menu.moveItemDown": "Move {name} down",
+  "listBusiness.menu.removeItem": "Remove {name}",
+  "listBusiness.menu.dietaryLabel": "Always true of this item",
+  "listBusiness.menu.dietaryHint":
+    "Only tick what is always true. 'Gluten-free on request' belongs in the line of detail.",
+  "listBusiness.menu.dietary.vegan": "Vegan",
+  "listBusiness.menu.dietary.vegetarian": "Vegetarian",
+  "listBusiness.menu.dietary.glutenFree": "Gluten-free",
+  "listBusiness.menu.dietary.alcoholFree": "Alcohol-free",
+  "listBusiness.menu.fileHeading": "Your full menu",
+  "listBusiness.menu.fileHint":
+    "Got a menu PDF or a photo of the board? Add it here, and people can open the full thing.",
+  "listBusiness.menu.fileAddCta": "Add a PDF or photo",
+  "listBusiness.menu.fileReplaceCta": "Replace",
+  "listBusiness.menu.fileRemoveCta": "Remove",
+  "listBusiness.menu.fileUploading": "Uploading",
+  "listBusiness.menu.fileError.type":
+    "That file type will not work. Use a PDF, JPG, PNG or WebP.",
+  "listBusiness.menu.fileError.size":
+    "That file is over {max}. Try a smaller PDF or a photo.",
+  "listBusiness.menu.fileError.upload":
+    "The upload did not go through. Try again.",
+  "listBusiness.menu.linkLabel": "Menu on your own site",
+  "listBusiness.menu.linkHint":
+    "Optional. A link to the menu you already keep up to date.",
+  "listBusiness.menu.linkPlaceholder": "https://yoursite.pt/menu",
+  "listBusiness.menu.linkError":
+    "That does not look like a web address. Try something like yoursite.pt/menu.",
 
   // ── The owner's pause. A different question from the trading state above
   //    it: this is about whether the LISTING is shown, and it says nothing
@@ -2267,6 +2359,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-23.headline":
+    "A full-screen directory map, and a live preview when you share into chat.",
   "changelog.releases.2026-09-22.headline":
     "You can reply as your business, and communities can open spaces.",
   "changelog.releases.2026-09-20.headline":
@@ -2390,7 +2484,93 @@ export const marketing: Catalog = {
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
+  // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.persona-linking-creator-only.title":
+    "Only a persona's creator can link it to their profile",
+  "changelog.entries.persona-linking-creator-only.body":
+    "Co-owners can still edit everything else, since linking puts the creator's name on the persona.",
+  "changelog.entries.persona-creator-handoff.title":
+    "Co-owners take over a persona when its creator leaves",
+  "changelog.entries.persona-creator-handoff.body":
+    "The longest-standing co-owner becomes the creator, and old links to the persona forward to its new address.",
+  "changelog.entries.gathering-page-header-toolbar.title":
+    "Tidier actions on a gathering page",
+  "changelog.entries.gathering-page-header-toolbar.body":
+    "Save, calendar and share are icons beside the title, and hosts find edit, cancel and delete in one menu.",
+  "changelog.entries.document-upload-thumbnails.title":
+    "Your uploaded PDFs show a proper tile",
+  "changelog.entries.document-upload-thumbnails.body":
+    "In My uploads, menus and chat documents now show a file tile labelled with their type.",
+  "changelog.entries.listing-menus.title":
+    "Menus for bars, cafés and restaurants",
+  "changelog.entries.listing-menus.body":
+    "Food and nightlife listings can now show a sectioned menu with dietary labels, plus a PDF or a link to the full thing.",
+  // Shared saved lists become members-only, 23 Sep 2026.
+  "changelog.entries.owner-name-from-account.title":
+    "Your name on a listing comes from your account",
+  "changelog.entries.owner-name-from-account.body":
+    "It follows your account name, and “Use a different name” lets you show another one.",
+  "changelog.entries.search-shows-loading-state.title":
+    "Search shows when it is still looking",
+  "changelog.entries.search-shows-loading-state.body":
+    "Placeholder rows appear while a search runs, and “No matches” shows only after the answer comes back.",
+  "changelog.entries.listing-role-dropdown.title":
+    "Pick your role on a listing from a list",
+  "changelog.entries.listing-role-dropdown.body":
+    "Owner, co-founder, manager, head chef and more; a role saved earlier as free text stays selectable.",
+  "changelog.entries.shared-lists-members-only.title":
+    "Shared lists open for members only",
+  "changelog.entries.shared-lists-members-only.body":
+    "A share link now asks the reader to sign in, and every item on the list links through to its page.",
+  // Reading groups get their own names, 23 Sep 2026.
+  "changelog.entries.reading-groups-get-their-own-names.title":
+    "Reading groups get their own names",
+  "changelog.entries.reading-groups-get-their-own-names.body":
+    "Name your group when you propose it, and its owners can change the book it is reading now.",
+  // Housing co-ops become members-only, 23 Sep 2026.
+  "changelog.entries.housing-coops-members-only.title":
+    "Housing co-ops are now for members",
+  "changelog.entries.housing-coops-members-only.body":
+    "The co-op directory and the ask-to-join form now sit behind the same sign-in as the rest of housing.",
+  // Progress Pride and Intersex sticker art, 23 Sep 2026.
+  "changelog.entries.progress-and-intersex-stickers.title":
+    "Progress Pride and Intersex stickers",
+  "changelog.entries.progress-and-intersex-stickers.body":
+    "Uno reverse stickers now include the Progress Pride chevron and the Intersex ring.",
+  // Sticker pack builder redesign, 23 Sep 2026.
+  "changelog.entries.sticker-pack-builder-redesign.title":
+    "The sticker pack builder is clearer and safer",
+  "changelog.entries.sticker-pack-builder-redesign.body":
+    "Admins pick flags as tiles, preview them in a chat, review before adding, and replace or reorder stickers.",
   // Section 4 (Communities), 6 Sep 2026.
+  "changelog.entries.listings-reachable-through-co-managers.title":
+    "Co-managers keep a listing reachable without its owner",
+  "changelog.entries.listings-reachable-through-co-managers.body":
+    "When a listing owner is suspended or their account is gone, active co-managers still receive new enquiries.",
+  "changelog.entries.business-chat-clear-is-personal.title":
+    "Clearing a business chat only affects you",
+  "changelog.entries.business-chat-clear-is-personal.body":
+    "Colleagues keep the full history, and your own quotes, pins and downloads keep working.",
+  "changelog.entries.listing-answers-earn-no-points.title":
+    "Answering listing questions no longer earns points",
+  "changelog.entries.listing-answers-earn-no-points.body":
+    "Only a listing's own team or moderators can answer, and points you already earned stay yours.",
+  "changelog.entries.share-to-chat-shows-a-preview.title":
+    "Sharing into a message shows a live preview",
+  "changelog.entries.share-to-chat-shows-a-preview.body":
+    "The wider share window puts your picks beside the bubble they'll get, link card and note included.",
+  "changelog.entries.moderator-band-reaches-the-top.title":
+    "The moderator band runs to the top of the page",
+  "changelog.entries.moderator-band-reaches-the-top.body":
+    "On a listing, the plum moderator band now fills the strip behind the nav as well.",
+  "changelog.entries.suggested-communities-no-duplicates.title":
+    "Suggested communities no longer repeat in the list",
+  "changelog.entries.suggested-communities-no-duplicates.body":
+    "Each community shows once on Discover, and the rest of the list now has its own heading.",
+  "changelog.entries.directory-map-full-screen.title":
+    "The directory map goes full screen",
+  "changelog.entries.directory-map-full-screen.body":
+    "The list of places now floats over the map, and full screen brings both along.",
   "changelog.entries.pages-stay-in-one-language.title":
     "Pages stay in one language",
   "changelog.entries.pages-stay-in-one-language.body":
@@ -7075,6 +7255,16 @@ export const marketing: Catalog = {
   "directory.detail.services.subNamed":
     "Prices as {name} wrote them. Ask if you need a quote for something specific.",
 
+  // ── The menu, public side.
+  "directory.detail.menu.title": "The <em>menu.</em>",
+  "directory.detail.menu.sub": "What they serve and what it costs.",
+  "directory.detail.menu.subNamed": "What {name} serves and what it costs.",
+  "directory.detail.menu.dietarySummary": "Labels on this menu: {labels}",
+  "directory.detail.menu.jumpLabel": "Jump to a section",
+  "directory.detail.menu.fileCta.pdf": "See the full menu (PDF)",
+  "directory.detail.menu.fileCta.image": "See the full menu (photo)",
+  "directory.detail.menu.linkCta": "Menu on their site",
+
   // ── Evidence behind the verified queer-owned badge, phrased as the sibling
   //    of the safe-space block's own verifier + re-checked date line.
   "directory.detail.queerOwned.byOnDate":
@@ -7890,6 +8080,8 @@ export const marketing: Catalog = {
   "map.sidebar.backToAll": "All places",
   "map.sidebar.empty": "No places match these filters.",
   "map.jumpToList": "View the list · {count}",
+  "map.fullscreen.enter": "Full screen",
+  "map.fullscreen.exit": "Exit full screen",
   "map.venueCard.beenCount_one": "<b>{count}</b> person been here",
   "map.venueCard.beenCount_other": "<b>{count}</b> people been here",
   "map.venueCard.beenThere": "Been there",

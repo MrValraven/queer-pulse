@@ -4,10 +4,27 @@
    below. */
 
 .band {
+  position: relative;
   background: var(--plum);
   /* The band's fill is locked plum in both themes, so its type is written
      against the cream channels. */
   color: rgba(var(--cream-rgb), 1);
+}
+
+/* The band is the first thing in <main>, so the nav band `main[data-page-main]`
+   reserves above it (base.css) would otherwise show a cream stripe behind the
+   floating pill. Paint that strip plum too, so the pill sits on the same ground
+   as the band. `--nav-band-visible` is zero in the sidebar rail and mobile app
+   bar layouts, so the strip collapses there on its own. */
+.band::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: var(--nav-band-visible);
+  background: var(--plum);
+  pointer-events: none;
 }
 
 .inner {

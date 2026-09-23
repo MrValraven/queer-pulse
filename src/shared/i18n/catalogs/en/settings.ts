@@ -578,6 +578,7 @@ export const settings: Catalog = {
   "uploads.kind.gathering-photo": "Event photo",
   "uploads.kind.group-avatar": "Group photo",
   "uploads.kind.listing-photo": "Listing photo",
+  "uploads.kind.listing-menu": "Listing menu",
   "uploads.kind.community-cover": "Community banner",
   "uploads.kind.community-avatar": "Community logo",
   "uploads.kind.event-cover": "Gathering cover",

@@ -21,6 +21,7 @@ import type { TFunction } from "../../../shared/i18n/types";
 import { leadingInitials } from "../../../shared/lib/initials";
 import { LOCAL_CATEGORIES, categoryLabel } from "../localCategories";
 import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
+import type { ListingMenuDraft, ListingPricingMode } from "./listingMenu.data";
 import type { ListingServiceRow } from "./listingServices.data";
 
 export const TOTAL_STEPS = 6;
@@ -215,6 +216,24 @@ export const VIS: OptionRow[] = [
     labelKey: "marketing:listBusiness.vis.anon.label",
     descKey: "marketing:listBusiness.vis.anon.desc",
   },
+];
+
+/**
+ * The choices offered for `ownerRole`, the role printed beside the name on the
+ * public listing. The field stores the translated LABEL, because the API and
+ * every render site treat `ownerRole` as ready-to-print text and listings
+ * saved before the dropdown hold free text ("Worker co-op"). `OwnerRoleField`
+ * keeps such a value selectable, so editing an older listing never wipes it.
+ */
+export const OWNER_ROLE_LABEL_KEYS: readonly string[] = [
+  "marketing:listBusiness.ownerRole.owner",
+  "marketing:listBusiness.ownerRole.coOwner",
+  "marketing:listBusiness.ownerRole.founder",
+  "marketing:listBusiness.ownerRole.coFounder",
+  "marketing:listBusiness.ownerRole.manager",
+  "marketing:listBusiness.ownerRole.headChef",
+  "marketing:listBusiness.ownerRole.host",
+  "marketing:listBusiness.ownerRole.teamMember",
 ];
 
 export interface DayDef {
@@ -456,6 +475,11 @@ export interface ListingDraft {
   /** What the business sells and what it costs. Each row carries a client-only
    *  `id` for React keys, stripped by `servicesForPayload` before it is sent. */
   services?: ListingServiceRow[];
+  /** Which priced list the public page shows. Absent on drafts saved before
+   *  menus existed; read it through `pricingModeOf`. */
+  pricingMode?: ListingPricingMode;
+  /** The menu in its editable shape (client ids on every row). */
+  menu?: ListingMenuDraft;
   langs: string[];
   /** Online-only business — no physical location. When true the wizard skips
    *  the address/pin (and neighbourhood) requirements and the listing carries
@@ -800,6 +824,10 @@ const RE = {
   web: /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i,
   phone: /^[+()\d][\d\s().-]{5,}$/,
 };
+
+/** Shared with `listingMenu.data.ts`'s `isMenuLinkValid`, so a menu link is
+ *  held to the exact same "domain-ish, protocol optional" shape as `social.website`. */
+export const WEBSITE_URL_RE = RE.web;
 
 export interface SocialValidity {
   instagram: boolean;

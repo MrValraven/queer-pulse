@@ -19,6 +19,7 @@ import {
   toAbsoluteShareUrl,
   type ShareableKind,
 } from "./shareToChat.helpers";
+import { ShareToChatPreview } from "./ShareToChatPreview";
 import styles from "./ShareToChatModal.module.css";
 
 const MAX_RECIPIENTS = 5;
@@ -43,6 +44,10 @@ export interface ShareToChatModalProps {
  * Personal threads only, whatever mailbox is active on `/messages`: a share
  * send carries no identity, so the server would refuse one into a business
  * thread.
+ *
+ * Two columns on desktop: the picker and note on the left, and on the right a
+ * live preview of the bubble as it will land (`ShareToChatPreview`), fed the
+ * same body Send posts so the two cannot disagree.
  */
 export function ShareToChatModal({
   url,
@@ -84,6 +89,16 @@ export function ShareToChatModal({
       })),
     [shareable, t],
   );
+  // Picked conversations in pick order (a Set keeps insertion order), for the
+  // preview's "To" line.
+  const recipients = useMemo(
+    () =>
+      [...selected].flatMap((conversationId) =>
+        shareable.filter((conversation) => conversation.id === conversationId),
+      ),
+    [selected, shareable],
+  );
+  const shareBody = buildShareBody(note, toAbsoluteShareUrl(url));
 
   function toggle(id: string) {
     setSelected((current) => {
@@ -98,12 +113,11 @@ export function ShareToChatModal({
     if (selected.size === 0 || isSending) return;
     setIsSending(true);
     const targetIds = [...selected];
-    const body = buildShareBody(note, toAbsoluteShareUrl(url));
-    const results = await sendToMany(targetIds, body);
+    const results = await sendToMany(targetIds, shareBody);
     setIsSending(false);
     const sentIds = results
       .filter((result) => result.ok)
-      .map((r) => r.conversationId);
+      .map((result) => result.conversationId);
     const failed = shareable.filter(
       (conversation) =>
         targetIds.includes(conversation.id) &&
@@ -165,6 +179,7 @@ export function ShareToChatModal({
       eyebrow={title}
       sub={t("messages:share.modalSub", { cap: MAX_RECIPIENTS })}
       onClose={onClose}
+      className={styles.dialog}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
@@ -185,37 +200,46 @@ export function ShareToChatModal({
       <p className={styles.srOnly} aria-live="polite">
         {t("messages:share.selectedCount", { count: selected.size })}
       </p>
-      <MemberSelectList
-        people={people}
-        selected={selected}
-        onToggle={toggle}
-        cap={MAX_RECIPIENTS}
-        searchPlaceholder={t("messages:share.searchPlaceholder")}
-        searchAriaLabel={t("messages:share.searchAriaLabel")}
-      />
-      {selected.size >= MAX_RECIPIENTS && (
-        <p className={styles.capNote}>
-          {t("messages:share.capReached", { cap: MAX_RECIPIENTS })}
-        </p>
-      )}
-      <label className={styles.noteLabel} htmlFor="share-to-chat-note">
-        {t("messages:share.noteLabel")}
-      </label>
-      <textarea
-        id="share-to-chat-note"
-        className={styles.noteField}
-        rows={2}
-        maxLength={MAX_NOTE_LENGTH}
-        placeholder={t("messages:share.notePlaceholder", { kind: kindLabel })}
-        value={note}
-        onChange={(event) => setNote(event.target.value)}
-      />
-      <span className={styles.noteCounter}>
-        {t("messages:share.noteCounter", {
-          count: note.length,
-          max: MAX_NOTE_LENGTH,
-        })}
-      </span>
+      <div className={styles.layout}>
+        <div className={styles.pickerColumn}>
+          <MemberSelectList
+            people={people}
+            selected={selected}
+            onToggle={toggle}
+            cap={MAX_RECIPIENTS}
+            searchPlaceholder={t("messages:share.searchPlaceholder")}
+            searchAriaLabel={t("messages:share.searchAriaLabel")}
+          />
+          {selected.size >= MAX_RECIPIENTS && (
+            <p className={styles.capNote}>
+              {t("messages:share.capReached", { cap: MAX_RECIPIENTS })}
+            </p>
+          )}
+          <label className={styles.noteLabel} htmlFor="share-to-chat-note">
+            {t("messages:share.noteLabel")}
+          </label>
+          <textarea
+            id="share-to-chat-note"
+            className={styles.noteField}
+            rows={2}
+            maxLength={MAX_NOTE_LENGTH}
+            placeholder={t("messages:share.notePlaceholder", {
+              kind: kindLabel,
+            })}
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+          />
+          <span className={styles.noteCounter}>
+            {t("messages:share.noteCounter", {
+              count: note.length,
+              max: MAX_NOTE_LENGTH,
+            })}
+          </span>
+        </div>
+        <div className={styles.previewColumn}>
+          <ShareToChatPreview recipients={recipients} body={shareBody} />
+        </div>
+      </div>
     </Modal>
   );
 }

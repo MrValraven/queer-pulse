@@ -1752,8 +1752,13 @@ export const marketing: Catalog = {
   "listBusiness.step4.relAria": "A tua ligação",
   "listBusiness.step4.ownerNameLabel": "O teu nome",
   "listBusiness.step4.ownerNamePlaceholder": "ex.: Sandra Lopes",
+  "listBusiness.step4.ownerNameFromAccount": "O nome da tua conta.",
+  "listBusiness.step4.ownerNameCustomHelper":
+    "Aparece no anúncio em vez do nome da tua conta.",
+  "listBusiness.step4.ownerNameUseCustom": "Usar outro nome",
+  "listBusiness.step4.ownerNameUseAccount": "Usar o nome da minha conta",
   "listBusiness.step4.ownerRoleLabel": "O teu papel",
-  "listBusiness.step4.ownerRolePlaceholder": "ex.: Dona e padeira",
+  "listBusiness.step4.ownerRolePlaceholder": "Escolhe o teu papel",
   "listBusiness.step4.ownerBioLabel": "Uma linha ou duas sobre ti (opcional)",
   "listBusiness.step4.ownerBioPlaceholder":
     "Pegámos numa pastelaria com 60 anos em 2019 e reconstruímo-la à volta de uma regra: toda a gente é bem-vinda, exatamente como é.",
@@ -1775,6 +1780,14 @@ export const marketing: Catalog = {
   "listBusiness.step4.consent":
     "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima. Não há problema nenhum.",
   // Opções de ligação
+  "listBusiness.ownerRole.owner": "Dono/a",
+  "listBusiness.ownerRole.coOwner": "Codono/a",
+  "listBusiness.ownerRole.founder": "Fundador/a",
+  "listBusiness.ownerRole.coFounder": "Cofundador/a",
+  "listBusiness.ownerRole.manager": "Gerente",
+  "listBusiness.ownerRole.headChef": "Chef",
+  "listBusiness.ownerRole.host": "Anfitrião/ã",
+  "listBusiness.ownerRole.teamMember": "Membro da equipa",
   "listBusiness.rel.own.label": "Sou dono ou codono",
   "listBusiness.rel.own.desc": "És quem tem a propriedade.",
   "listBusiness.rel.run.label": "Faço a gestão ou ajudo a gerir",
@@ -1900,6 +1913,10 @@ export const marketing: Catalog = {
   "listBusiness.missing.alt": "texto alternativo para as tuas fotos",
   "listBusiness.missing.consent": "as duas confirmações",
   "listBusiness.missing.services": "um nome e um preço em cada serviço",
+  "listBusiness.missing.menu":
+    "um nome e um preço em cada item do menu, e um nome em cada secção",
+  "listBusiness.missing.menuLink":
+    "um endereço web que funcione no link do teu menu",
   "listBusiness.missing.affirmingBaseline": "o compromisso afirmativo",
   // Coluna de pré-visualização ao vivo
   "listBusiness.preview.head":
@@ -1974,6 +1991,7 @@ export const marketing: Catalog = {
     "A página do anúncio como quem visita a vai ver. Nada fica guardado até carregares em guardar. O bloco sobre a pessoa por trás do negócio aparece vazio nesta pré-visualização e preenchido na página real.",
 
   "listBusiness.editor.section.services": "Quanto custa",
+  "listBusiness.editor.section.menu": "Menu",
   "listBusiness.editor.section.accessibility": "Como se entra",
   "listBusiness.editor.section.tradingAndVisibility":
     "Atividade e visibilidade",
@@ -2122,6 +2140,79 @@ export const marketing: Catalog = {
   "listBusiness.services.moveUp": "Mover {name} para cima",
   "listBusiness.services.moveDown": "Mover {name} para baixo",
   "listBusiness.services.remove": "Remover {name}",
+
+  // ── Serviços ou menu, do lado de quem gere.
+  "listBusiness.pricing.modeLabel": "O que a tua página mostra",
+  "listBusiness.pricing.mode.services": "Serviços",
+  "listBusiness.pricing.mode.menu": "Menu",
+  "listBusiness.pricing.keptHint":
+    "O que escreveste na outra opção fica guardado. Só uma aparece na tua página de cada vez.",
+
+  // ── O menu, do lado de quem gere.
+  "listBusiness.menu.intro":
+    "O que serves e quanto custa. Agrupa como o teu menu se lê: bebidas, petiscos, brunch. Os preços são nas tuas palavras, por isso '4 EUR / 7 EUR' e 'preço do dia' funcionam os dois.",
+  "listBusiness.menu.empty":
+    "Ainda sem secções. Junta uma para cada parte do teu menu, como bebidas ou brunch.",
+  "listBusiness.menu.addSectionCta": "Adicionar secção",
+  "listBusiness.menu.addSectionHint":
+    "Opcional. Também podes saltar a escrita e juntar o teu menu como ficheiro ou link aqui em baixo.",
+  "listBusiness.menu.sectionCeilingHint":
+    "Chegaste ao limite de {count} secções.",
+  "listBusiness.menu.itemCeilingHint":
+    "Chegaste ao limite de {count} itens no menu todo. O resto pode ir no ficheiro do menu.",
+  "listBusiness.menu.sectionTitleLabel": "Nome da secção",
+  "listBusiness.menu.sectionTitlePlaceholder": "Bebidas",
+  "listBusiness.menu.sectionTitleError": "Dá um nome a esta secção.",
+  "listBusiness.menu.unnamedSection": "secção {position}",
+  "listBusiness.menu.moveSectionUp": "Subir {name}",
+  "listBusiness.menu.moveSectionDown": "Descer {name}",
+  "listBusiness.menu.removeSection": "Remover {name}",
+  "listBusiness.menu.removeSectionConfirmTitle": "Remover {name}?",
+  "listBusiness.menu.removeSectionConfirmBody":
+    "Isto remove a secção e tudo o que está nela.",
+  "listBusiness.menu.removeSectionConfirmCta": "Remover secção",
+  "listBusiness.menu.addItemCta": "Adicionar item",
+  "listBusiness.menu.itemNameLabel": "O que é",
+  "listBusiness.menu.itemNamePlaceholder": "Galão",
+  "listBusiness.menu.itemNameError":
+    "Dá um nome a este item, ou apaga o preço para o remover.",
+  "listBusiness.menu.itemPriceLabel": "Quanto custa",
+  "listBusiness.menu.itemPricePlaceholder": "1,80 EUR, bebida vegetal +0,40",
+  "listBusiness.menu.itemPriceError":
+    "Diz quanto custa. Vale tudo o que for verdade: um número, dois tamanhos ou preço do dia.",
+  "listBusiness.menu.itemDescriptionLabel": "Uma linha de detalhe",
+  "listBusiness.menu.itemDescriptionHint": "Opcional.",
+  "listBusiness.menu.itemDescriptionPlaceholder":
+    "Dose dupla, leite gordo ou de aveia",
+  "listBusiness.menu.unnamedItem": "item {position}",
+  "listBusiness.menu.moveItemUp": "Subir {name}",
+  "listBusiness.menu.moveItemDown": "Descer {name}",
+  "listBusiness.menu.removeItem": "Remover {name}",
+  "listBusiness.menu.dietaryLabel": "Sempre verdade neste item",
+  "listBusiness.menu.dietaryHint":
+    "Marca só o que é sempre verdade. 'Sem glúten a pedido' vai na linha de detalhe.",
+  "listBusiness.menu.dietary.vegan": "Vegano",
+  "listBusiness.menu.dietary.vegetarian": "Vegetariano",
+  "listBusiness.menu.dietary.glutenFree": "Sem glúten",
+  "listBusiness.menu.dietary.alcoholFree": "Sem álcool",
+  "listBusiness.menu.fileHeading": "O teu menu completo",
+  "listBusiness.menu.fileHint":
+    "Tens o menu em PDF ou uma foto do quadro? Junta aqui, e as pessoas podem abrir tudo.",
+  "listBusiness.menu.fileAddCta": "Adicionar PDF ou foto",
+  "listBusiness.menu.fileReplaceCta": "Substituir",
+  "listBusiness.menu.fileRemoveCta": "Remover",
+  "listBusiness.menu.fileUploading": "A carregar",
+  "listBusiness.menu.fileError.type":
+    "Esse tipo de ficheiro não funciona. Usa PDF, JPG, PNG ou WebP.",
+  "listBusiness.menu.fileError.size":
+    "Esse ficheiro passa dos {max}. Experimenta um PDF mais pequeno ou uma foto.",
+  "listBusiness.menu.fileError.upload": "O envio não passou. Tenta outra vez.",
+  "listBusiness.menu.linkLabel": "Menu no teu site",
+  "listBusiness.menu.linkHint":
+    "Opcional. Um link para o menu que já manténs atualizado.",
+  "listBusiness.menu.linkPlaceholder": "https://oteusite.pt/menu",
+  "listBusiness.menu.linkError":
+    "Isso não parece um endereço web. Experimenta algo como oteusite.pt/menu.",
 
   // ── A pausa de quem gere. Uma pergunta diferente do estado de atividade
   //    acima: isto é sobre se o ANÚNCIO aparece, e não diz nada sobre se o
@@ -2328,6 +2419,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-23.headline":
+    "O mapa do diretório em ecrã inteiro e uma pré-visualização ao partilhar no chat.",
   "changelog.releases.2026-09-22.headline":
     "Já podes responder como o teu negócio, e as comunidades podem abrir espaços.",
   "changelog.releases.2026-09-20.headline":
@@ -2451,7 +2544,93 @@ export const marketing: Catalog = {
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
+  // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.persona-linking-creator-only.title":
+    "Só quem criou uma persona a pode ligar ao seu perfil",
+  "changelog.entries.persona-linking-creator-only.body":
+    "Quem partilha a persona continua a editar o resto, porque ligar mostra o nome de quem a criou.",
+  "changelog.entries.persona-creator-handoff.title":
+    "Quem partilha uma persona fica com ela quando quem a criou sai",
+  "changelog.entries.persona-creator-handoff.body":
+    "Quem partilha a persona há mais tempo passa a ser responsável, e as ligações antigas levam ao novo endereço.",
+  "changelog.entries.gathering-page-header-toolbar.title":
+    "Ações mais arrumadas na página de um convívio",
+  "changelog.entries.gathering-page-header-toolbar.body":
+    "Guardar, calendário e partilhar são ícones junto ao título, e quem organiza tem editar, cancelar e eliminar num só menu.",
+  "changelog.entries.document-upload-thumbnails.title":
+    "Os teus PDFs carregados mostram um bloco próprio",
+  "changelog.entries.document-upload-thumbnails.body":
+    "Em As minhas imagens, menus e documentos das conversas mostram agora um bloco de ficheiro com o tipo.",
+  "changelog.entries.listing-menus.title":
+    "Menus para bares, cafés e restaurantes",
+  "changelog.entries.listing-menus.body":
+    "Os espaços de comida e noite já podem mostrar um menu por secções com etiquetas alimentares, e ainda um PDF ou um link para o menu completo.",
+  // Listas guardadas partilhadas passam a ser só para membros, 23 Set 2026.
+  "changelog.entries.owner-name-from-account.title":
+    "O teu nome num espaço vem da tua conta",
+  "changelog.entries.owner-name-from-account.body":
+    "Acompanha o nome da tua conta, e “Usar outro nome” deixa-te mostrar outro.",
+  "changelog.entries.search-shows-loading-state.title":
+    "A pesquisa mostra quando ainda está a procurar",
+  "changelog.entries.search-shows-loading-state.body":
+    "Aparecem linhas provisórias enquanto a pesquisa corre, e “Sem resultados” só surge depois da resposta.",
+  "changelog.entries.listing-role-dropdown.title":
+    "Escolhe o teu papel num espaço a partir de uma lista",
+  "changelog.entries.listing-role-dropdown.body":
+    "Dono/a, cofundador/a, gerente, chef e mais; um papel escrito antes à mão continua disponível.",
+  "changelog.entries.shared-lists-members-only.title":
+    "Listas partilhadas só abrem para membros",
+  "changelog.entries.shared-lists-members-only.body":
+    "Um link de partilha pede agora para iniciares sessão, e cada item da lista abre a sua própria página.",
+  // Os grupos de leitura ganham nome próprio, 23 Set 2026.
+  "changelog.entries.reading-groups-get-their-own-names.title":
+    "Os grupos de leitura ganham nome próprio",
+  "changelog.entries.reading-groups-get-their-own-names.body":
+    "Dá um nome ao teu grupo quando o propões, e quem o gere pode mudar o livro que estão a ler agora.",
+  // Cooperativas de habitação passam a ser só para membros, 23 Set 2026.
+  "changelog.entries.housing-coops-members-only.title":
+    "As cooperativas de habitação passam a ser só para membros",
+  "changelog.entries.housing-coops-members-only.body":
+    "A lista de cooperativas e o pedido para entrar ficam atrás da mesma porta que o resto da habitação.",
+  // Stickers Progress Pride e Intersexo, 23 Set 2026.
+  "changelog.entries.progress-and-intersex-stickers.title":
+    "Stickers Progress Pride e Intersexo",
+  "changelog.entries.progress-and-intersex-stickers.body":
+    "Os stickers Uno reverse já incluem a divisa da Progress Pride e o anel da bandeira Intersexo.",
+  // Redesenho do construtor de packs de stickers, 23 Set 2026.
+  "changelog.entries.sticker-pack-builder-redesign.title":
+    "O construtor de packs de stickers ficou mais claro e seguro",
+  "changelog.entries.sticker-pack-builder-redesign.body":
+    "A equipa escolhe bandeiras em mosaico, vê-as num chat, revê antes de adicionar e substitui ou reordena stickers.",
   // Seccao 4 (Comunidades), 6 Set 2026.
+  "changelog.entries.listings-reachable-through-co-managers.title":
+    "Os cogestores mantêm um espaço contactável sem quem o criou",
+  "changelog.entries.listings-reachable-through-co-managers.body":
+    "Se quem criou o espaço for suspenso ou apagar a conta, os cogestores ativos continuam a receber novos contactos.",
+  "changelog.entries.business-chat-clear-is-personal.title":
+    "Limpar uma conversa do negócio só te afeta a ti",
+  "changelog.entries.business-chat-clear-is-personal.body":
+    "Os colegas mantêm o histórico todo, e as tuas citações, fixações e transferências continuam a funcionar.",
+  "changelog.entries.listing-answers-earn-no-points.title":
+    "Responder a perguntas de espaços deixa de dar pontos",
+  "changelog.entries.listing-answers-earn-no-points.body":
+    "Só a equipa do espaço ou a moderação pode responder, e os pontos que já ganhaste ficam contigo.",
+  "changelog.entries.share-to-chat-shows-a-preview.title":
+    "Partilhar numa mensagem mostra uma pré-visualização",
+  "changelog.entries.share-to-chat-shows-a-preview.body":
+    "A janela de partilha, mais larga, mostra ao lado a mensagem que vão receber, com cartão e nota.",
+  "changelog.entries.moderator-band-reaches-the-top.title":
+    "A faixa de moderação vai até ao topo da página",
+  "changelog.entries.moderator-band-reaches-the-top.body":
+    "Numa ficha, a faixa de moderação cor de ameixa preenche agora também o espaço atrás da navegação.",
+  "changelog.entries.suggested-communities-no-duplicates.title":
+    "As comunidades sugeridas já não se repetem na lista",
+  "changelog.entries.suggested-communities-no-duplicates.body":
+    "Cada comunidade aparece uma só vez em Descobrir, e o resto da lista tem agora o seu próprio título.",
+  "changelog.entries.directory-map-full-screen.title":
+    "O mapa do diretório passa a ecrã inteiro",
+  "changelog.entries.directory-map-full-screen.body":
+    "A lista de sítios flutua agora sobre o mapa, e o ecrã inteiro leva os dois.",
   "changelog.entries.pages-stay-in-one-language.title":
     "As páginas ficam numa só língua",
   "changelog.entries.pages-stay-in-one-language.body":
@@ -7178,6 +7357,16 @@ export const marketing: Catalog = {
   "directory.detail.services.subNamed":
     "Preços tal como {name} os escreveu. Pergunta se precisares de um orçamento para algo específico.",
 
+  // ── O menu, do lado público.
+  "directory.detail.menu.title": "O <em>menu.</em>",
+  "directory.detail.menu.sub": "O que servem e quanto custa.",
+  "directory.detail.menu.subNamed": "O que {name} serve e quanto custa.",
+  "directory.detail.menu.dietarySummary": "Etiquetas neste menu: {labels}",
+  "directory.detail.menu.jumpLabel": "Saltar para uma secção",
+  "directory.detail.menu.fileCta.pdf": "Ver o menu completo (PDF)",
+  "directory.detail.menu.fileCta.image": "Ver o menu completo (foto)",
+  "directory.detail.menu.linkCta": "Menu no site do espaço",
+
   // ── A prova por trás do selo de negócio queer verificado, escrita como
   //    irmã da linha de verificação do espaço seguro ao lado.
   "directory.detail.queerOwned.byOnDate":
@@ -8001,6 +8190,8 @@ export const marketing: Catalog = {
   "map.sidebar.backToAll": "Todos os locais",
   "map.sidebar.empty": "Nenhum espaço corresponde a estes filtros.",
   "map.jumpToList": "Ver a lista · {count}",
+  "map.fullscreen.enter": "Ecrã inteiro",
+  "map.fullscreen.exit": "Sair do ecrã inteiro",
   "map.venueCard.beenCount_one": "<b>{count}</b> pessoa já esteve aqui",
   "map.venueCard.beenCount_other": "<b>{count}</b> pessoas já estiveram aqui",
   "map.venueCard.beenThere": "Já estiveste aqui",

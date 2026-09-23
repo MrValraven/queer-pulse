@@ -35,7 +35,6 @@ const demoXpBreakdown: XpBreakdownItem[] = [
   { key: "volunteering", units: 2, cap: 12, perUnit: 120, xp: 240 },
   { key: "hosting", units: 1, cap: 8, perUnit: 100, xp: 100 },
   { key: "magazine", units: 1, cap: 6, perUnit: 150, xp: 150 },
-  { key: "answers", units: 3, cap: 12, perUnit: 25, xp: 75 },
   { key: "resources", units: 0, cap: 5, perUnit: 60, xp: 0 },
   {
     key: "badges",

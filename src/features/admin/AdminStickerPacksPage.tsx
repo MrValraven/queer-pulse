@@ -1,61 +1,58 @@
-import { useState } from "react";
-import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { useAdminStickerPacks } from "../stickers/api/useAdminStickerPacks";
-import { UNO_REVERSE_DEFAULTS } from "../stickers/templates/unoReverse.params";
 import { StickerPackRail } from "./stickerBuilder/StickerPackRail";
-import { StickerPackDetailPane } from "./stickerBuilder/StickerPackDetailPane";
-import { StickerTemplateControls } from "./stickerBuilder/StickerTemplateControls";
-import { StickerPreviewGrid } from "./stickerBuilder/StickerPreviewGrid";
-import { StickerPublishPanel } from "./stickerBuilder/StickerPublishPanel";
+import {
+  StickerBuilderWorkspace,
+  StickerWorkspacePlaceholder,
+} from "./stickerBuilder/StickerBuilderWorkspace";
+import { useStickerBuilderState } from "./stickerBuilder/useStickerBuilderState";
 import { useStickerPackActions } from "./stickerBuilder/useStickerPackActions";
 import { useStickerPublish } from "./stickerBuilder/useStickerPublish";
 import styles from "./stickerBuilder/stickerBuilder.module.css";
 
 /**
- * The sticker pack builder (`/admin/sticker-packs`): pick pride flags, tune
- * the Uno-reverse-card template, see every flag's live preview, and publish
- * a whole pack of stickers in one pass. Admin-only, riding the blanket
- * `/admin/*` gate in `authGate.ts`.
+ * The sticker pack builder (`/admin/sticker-packs`): pick a pack in the rail,
+ * then work on it in the workspace beside it. Style the Uno reverse template,
+ * tick the flags, check the live preview, and add every sticker to the pack
+ * in one run; the "In this pack" tab reorders, relabels and removes them.
+ * Admin-only, riding the blanket `/admin/*` gate in `authGate.ts`.
  */
 export function AdminStickerPacksPage() {
   const { t } = useTranslation();
-  const { packs, isLoading, isError, error, isDemo } = useAdminStickerPacks();
-
-  const [selectedPackId, setSelectedPackId] = useState<string | null>(null);
-  const [selectedFlagIds, setSelectedFlagIds] = useState<string[]>([]);
-  const [params, setParams] = useState(UNO_REVERSE_DEFAULTS);
-
-  const selectedPack = packs.find((pack) => pack.id === selectedPackId) ?? null;
-  const { publish, progress, failedFlagIds, isPublishing } =
-    useStickerPublish(selectedPackId);
-  const {
-    handleCreatePack,
-    handleSetStatus,
-    handleSetCover,
-    handleDeleteSticker,
-    isCreatingPack,
-    isMutatingPack,
-  } = useStickerPackActions({ selectedPack, onPackCreated: setSelectedPackId });
+  const { packs, isLoading, isError, isFetching, error, isDemo, refetch } =
+    useAdminStickerPacks();
+  const publisher = useStickerPublish();
+  const state = useStickerBuilderState({
+    packs,
+    // A finished run stays up when the admin lands on its own pack ("View
+    // pack" from another pack), so its failures and follow-ups survive the
+    // switch. Any other switch dismisses it (a no-op while it still runs).
+    onPackChange: (nextPackId) => {
+      if (nextPackId === null || nextPackId !== publisher.run?.packId) {
+        publisher.dismiss();
+      }
+    },
+  });
+  const { selectPack, setActiveTab } = state;
+  const actions = useStickerPackActions({
+    selectedPack: state.selectedPack,
+    // A new pack is empty, so the admin lands where stickers get made.
+    onPackCreated: (packId) => {
+      selectPack(packId);
+      setActiveTab("add");
+    },
+    onPackDeleted: state.clearPack,
+  });
 
   const isForbidden =
     isError && error instanceof ApiError && error.status === 403;
-
-  async function handlePublish() {
-    if (!selectedPack) return;
-    const flagLabelsById: Record<string, string> = {};
-    for (const flagId of selectedFlagIds) {
-      flagLabelsById[flagId] = t("admin:stickerPacks.publish.stickerLabel", {
-        flag: t(`cards:flag.${flagId}`),
-      });
-    }
-    await publish(selectedFlagIds, params, flagLabelsById);
-  }
+  // A failed load keeps its error status while "Try again" refetches, so
+  // the fetch itself is what says a retry is in flight.
+  const isRetrying = isError && isFetching;
 
   return (
     <AdminShell
@@ -70,66 +67,49 @@ export function AdminStickerPacksPage() {
       ]}
       isFullBleed
     >
-      <FadeIn>
-        <AdminPageHeader
-          eyebrow={t("admin:stickerPacks.eyebrow")}
-          title={
-            <Translation
-              i18nKey="admin:stickerPacks.title"
-              components={{ em: <em /> }}
+      <div className={styles.page}>
+        <header className={styles.head}>
+          <h1 className={styles.title}>{t("admin:stickerPacks.page.title")}</h1>
+          <p className={styles.sub}>{t("admin:stickerPacks.sub")}</p>
+        </header>
+
+        <div className={styles.layout}>
+          <div className={styles.railColumn}>
+            <StickerPackRail
+              packs={packs}
+              isLoading={isLoading}
+              isError={isError}
+              isForbidden={isForbidden}
+              isDemo={isDemo}
+              selectedPackId={state.selectedPack?.id ?? null}
+              onSelectPack={selectPack}
+              onCreatePack={actions.handleCreatePack}
+              isCreatingPack={actions.isCreatingPack}
             />
-          }
-          sub={t("admin:stickerPacks.sub")}
-        />
-      </FadeIn>
+          </div>
 
-      <div className={styles.builderGrid}>
-        <div className={styles.paneRail}>
-          <StickerPackRail
-            packs={packs}
-            isLoading={isLoading}
-            isError={isError}
-            isForbidden={isForbidden}
-            isDemo={isDemo}
-            selectedPackId={selectedPackId}
-            onSelectPack={setSelectedPackId}
-            onCreatePack={handleCreatePack}
-            isCreatingPack={isCreatingPack}
-          />
-          {selectedPack && (
-            <StickerPackDetailPane
-              pack={selectedPack}
-              onDeleteSticker={handleDeleteSticker}
-              onSetCover={handleSetCover}
-              onSetStatus={handleSetStatus}
-              isMutatingPack={isMutatingPack}
-            />
-          )}
-        </div>
-
-        <div className={styles.paneControls}>
-          <StickerTemplateControls
-            params={params}
-            onParamsChange={setParams}
-            selectedFlagIds={selectedFlagIds}
-            onSelectedFlagIdsChange={setSelectedFlagIds}
-          />
-        </div>
-
-        <div className={styles.panePreview}>
-          <StickerPreviewGrid
-            selectedFlagIds={selectedFlagIds}
-            params={params}
-          />
-
-          <StickerPublishPanel
-            isPackSelected={selectedPack !== null}
-            hasSelectedFlags={selectedFlagIds.length > 0}
-            isPublishing={isPublishing}
-            progress={progress}
-            failedFlagIds={failedFlagIds}
-            onPublish={() => void handlePublish()}
-          />
+          <div className={styles.workspaceColumn}>
+            {state.selectedPack && !isDemo ? (
+              <StickerBuilderWorkspace
+                pack={state.selectedPack}
+                state={state}
+                actions={actions}
+                publisher={publisher}
+              />
+            ) : (
+              <StickerWorkspacePlaceholder
+                packs={packs}
+                isLoading={isLoading}
+                isError={isError}
+                isForbidden={isForbidden}
+                isDemo={isDemo}
+                isRetrying={isRetrying}
+                onRetry={() => void refetch()}
+                isCreatingPack={actions.isCreatingPack}
+                onCreatePack={actions.handleCreatePack}
+              />
+            )}
+          </div>
         </div>
       </div>
     </AdminShell>

@@ -72,11 +72,22 @@ export function AdminReadingGroupProposalRow({
     <div className={styles.row}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
-          <span className={styles.rowName}>{proposal.book}</span>
+          <span className={styles.rowName}>
+            {proposal.clubName ?? proposal.book}
+          </span>
           <AdminChip tone={FORMAT_TONE[proposal.format]} dot>
             {t(`admin:adminReadingGroupProposals.format.${proposal.format}`)}
           </AdminChip>
         </div>
+        {/* A named club leads with its name, so the book it opens with moves
+            to its own line and stays in view for the decision. */}
+        {proposal.clubName && (
+          <div className={styles.rowSubject}>
+            {t("admin:adminReadingGroupProposals.row.firstBook", {
+              book: proposal.book,
+            })}
+          </div>
+        )}
         <div className={styles.rowMeta}>
           {t("admin:adminReadingGroupProposals.row.by", { name: memberName })}
           {" · "}

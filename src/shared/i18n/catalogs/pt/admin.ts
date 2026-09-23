@@ -1120,6 +1120,7 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.format.Online": "Online",
   "adminReadingGroupProposals.format.Either": "Qualquer",
   "adminReadingGroupProposals.row.by": "Proposto por {name}",
+  "adminReadingGroupProposals.row.firstBook": "Primeiro livro: {book}",
   "adminReadingGroupProposals.row.maxPeople": "até {count} pessoas",
   "adminReadingGroupProposals.row.sent": "Enviado {date}",
   "adminReadingGroupProposals.status.pending": "Pendente",
@@ -2208,6 +2209,7 @@ export const admin: Catalog = {
   "communities.governanceLog.meta.field.type": "Tipo",
   "communities.governanceLog.meta.field.whoFor": "Para quem é",
   "communities.governanceLog.meta.field.tagline": "Frase de apresentação",
+  "communities.governanceLog.meta.field.nowReading": "A ler agora",
   "communities.governanceLog.meta.field.accessTier": "Quem pode entrar",
   "communities.governanceLog.meta.field.rosterVisible": "Quadro visível",
   "communities.governanceLog.meta.field.features": "Funcionalidades",
@@ -6255,19 +6257,14 @@ export const admin: Catalog = {
   "officialMessages.status.failed": "Interrompido",
 
   // Criador de packs de stickers (AdminStickerPacksPage, src/features/admin/stickerBuilder/)
-  "stickerPacks.title": "Packs de stickers · <em>o criador</em>",
-  "stickerPacks.eyebrow": "Criador de packs de stickers",
+  "stickerPacks.title": "<em>Packs</em> de stickers",
   "stickerPacks.sub":
-    "Cria um pack a partir de um modelo e depois publica-o para todos os membros.",
+    "Cria stickers a partir de um modelo e publica o pack quando estiver pronto.",
 
   "stickerPacks.rail.heading": "Packs",
   "stickerPacks.rail.newCta": "Novo pack",
   "stickerPacks.rail.newName": "Nome do pack",
   "stickerPacks.rail.newSlug": "Slug",
-  "stickerPacks.rail.empty": "Ainda sem packs",
-  "stickerPacks.rail.loadError":
-    "Não foi possível carregar os packs. Tenta de novo",
-  "stickerPacks.rail.demoOnly": "Packs de stickers só existem no modo ao vivo",
 
   "stickerPacks.status.draft": "Rascunho",
   "stickerPacks.status.published": "Publicado",
@@ -6277,41 +6274,286 @@ export const admin: Catalog = {
   "stickerPacks.controls.selectAll": "Selecionar tudo",
   "stickerPacks.controls.clear": "Limpar",
   "stickerPacks.controls.frameColor": "Cor da moldura",
-  "stickerPacks.controls.frameWidth": "Espessura da moldura",
-  "stickerPacks.controls.ringAngle": "Inclinação do oval",
-  "stickerPacks.controls.ringStroke": "Espessura do oval",
   "stickerPacks.controls.cornerArrows": "Setas nos cantos",
-  "stickerPacks.controls.cornerArrowScale": "Tamanho da seta do canto",
 
-  "stickerPacks.preview.empty":
-    "Escolhe uma bandeira para ver uma pré-visualização",
-
-  "stickerPacks.publish.publishCta": "Gerar e publicar",
-  "stickerPacks.publish.publishing": "A publicar…",
-  "stickerPacks.publish.needsPack":
-    "Cria um pack ou escolhe um da lista para publicar",
-  "stickerPacks.publish.needsFlags":
-    "Escolhe pelo menos uma bandeira para publicar",
-  "stickerPacks.publish.progress": "A publicar {done} de {total}…",
-  "stickerPacks.publish.failure": "Estas bandeiras não foram enviadas: {flags}",
   "stickerPacks.publish.stickerLabel": "{flag} reverse",
 
-  "stickerPacks.detail.heading": "Dentro de {name}",
-  "stickerPacks.detail.empty": "Ainda não há stickers neste pack",
-  "stickerPacks.detail.statusLabel": "Estado",
-  "stickerPacks.detail.setCover": "Usar como capa",
-  "stickerPacks.detail.deleteSticker": "Remover",
   "stickerPacks.detail.publishBlocked":
     "Adiciona pelo menos um sticker primeiro",
 
   "stickerPacks.toast.packCreated": "Pack criado",
-  "stickerPacks.toast.statusUpdated": "Estado do pack atualizado",
-  "stickerPacks.toast.stickerDeleted": "Sticker removido",
 
   "stickerPacks.errors.create": "Não foi possível criar o pack",
   "stickerPacks.errors.updateStatus": "Não foi possível atualizar o pack",
   "stickerPacks.errors.setCover": "Não foi possível definir a capa",
   "stickerPacks.errors.deleteSticker": "Não foi possível remover o sticker",
+  "stickerPacks.publish.retrying": "A tentar de novo…",
+  "stickerPacks.contents.hintTouch":
+    "Usa o menu de um sticker para o mudar de lugar. Os membros veem os stickers por esta ordem.",
+  "stickerPacks.page.error.retry": "Tentar de novo",
+  "stickerPacks.page.error.retrying": "A tentar de novo…",
+  "stickerPacks.publish.mode.legendShort": "{count} já no pack",
+  "stickerPacks.publish.failures.show": "Ver o que falhou",
+  "stickerPacks.publish.failures.hide": "Esconder o que falhou",
+  "stickerPacks.publish.running.addToPack":
+    "A adicionar {current} de {total} a {pack}",
+  "stickerPacks.publish.running.updateInPack":
+    "A atualizar {current} de {total} em {pack}",
+  "stickerPacks.publish.goToPack": "Ir para {pack}",
+  "stickerPacks.controls.templateDefaults": "Valores do modelo",
+  "stickerPacks.header.menu.runLocked":
+    "Espera que os stickers acabem de ser guardados antes de arquivares ou apagares este pack.",
+  "stickerPacks.flags.keyboardHint":
+    "Usa as setas para te moveres entre as bandeiras. Carrega em Espaço para incluíres ou tirares uma bandeira, e em Enter para a pré-visualizares sem mudares o que publicas.",
+  "stickerPacks.rail.stickerCount_one": "{count} sticker",
+  "stickerPacks.rail.stickerCount_other": "{count} stickers",
+  "stickerPacks.rail.emptyDescription": "Ainda não há packs.",
+  "stickerPacks.newPack.title": "Novo pack",
+  "stickerPacks.newPack.sub":
+    "Começa como rascunho. Os membros só o veem quando o publicares.",
+  "stickerPacks.newPack.namePlaceholder": "ex.: Bandeiras do orgulho",
+  "stickerPacks.newPack.nameRequired": "Dá um nome ao pack",
+  "stickerPacks.newPack.slugAuto": "A partir do nome",
+  "stickerPacks.newPack.slugHint":
+    "Palavras em minúsculas ligadas por hífenes. Usado nos links.",
+  "stickerPacks.newPack.slugInvalid":
+    "Usa letras minúsculas e números ligados por hífenes simples, de 2 a 64 caracteres",
+  "stickerPacks.newPack.slugTaken": "Esse slug já é usado por outro pack",
+  "stickerPacks.newPack.slugRequired": "Escreve um slug para este pack",
+  "stickerPacks.newPack.submit": "Criar pack",
+  "stickerPacks.newPack.creating": "A criar…",
+  "stickerPacks.header.stickerCount_one": "{count} sticker",
+  "stickerPacks.header.stickerCount_other": "{count} stickers",
+  "stickerPacks.header.explainer.draft":
+    "Os membros ainda não veem este pack. Publica-o quando estiver pronto.",
+  "stickerPacks.header.explainer.published":
+    "Ativo. Todos os membros podem enviar estes stickers.",
+  "stickerPacks.header.explainer.archived":
+    "Retirado. Os membros já não o podem escolher; os stickers enviados ficam nas conversas.",
+  "stickerPacks.header.renameLabel": "Mudar o nome de {name}",
+  "stickerPacks.header.nameInputLabel": "Nome do pack",
+  "stickerPacks.header.renameHint": "Enter para guardar, Esc para cancelar",
+  "stickerPacks.header.action.publish": "Publicar pack",
+  "stickerPacks.header.action.unpublish": "Despublicar",
+  "stickerPacks.header.action.restore": "Repor como rascunho",
+  "stickerPacks.header.publishConfirm.title": "Publicar {name}?",
+  "stickerPacks.header.publishConfirm.body_one":
+    "O sticker aparece logo no seletor de stickers de todos os membros.",
+  "stickerPacks.header.publishConfirm.body_other":
+    "Os {count} stickers aparecem logo no seletor de stickers de todos os membros.",
+  "stickerPacks.header.unpublishConfirm.title": "Despublicar {name}?",
+  "stickerPacks.header.unpublishConfirm.body":
+    "Sai do seletor de stickers de todos os membros e volta a rascunho. Os stickers já enviados ficam nas conversas, e podes voltar a publicá-lo quando quiseres.",
+  "stickerPacks.header.restoreConfirm.title": "Repor {name} como rascunho?",
+  "stickerPacks.header.restoreConfirm.body":
+    "Continua escondido dos membros até o voltares a publicar. Entretanto, podes adicionar, editar e reordenar os stickers.",
+  "stickerPacks.header.menu.triggerLabel": "Mais ações para {name}",
+  "stickerPacks.header.menu.archive": "Arquivar pack",
+  "stickerPacks.header.menu.delete": "Apagar pack",
+  "stickerPacks.header.archiveConfirm.title": "Arquivar {name}?",
+  "stickerPacks.header.archiveConfirm.body":
+    "Os membros deixam de o poder escolher. Os stickers já enviados ficam nas conversas, e podes repô-lo como rascunho mais tarde.",
+  "stickerPacks.header.deleteConfirm.title": "Apagar {name}?",
+  "stickerPacks.header.deleteConfirm.body_one":
+    "O pack e o seu {count} sticker são apagados para sempre. Não dá para desfazer.",
+  "stickerPacks.header.deleteConfirm.body_other":
+    "O pack e os seus {count} stickers são apagados para sempre. Não dá para desfazer.",
+  "stickerPacks.header.deleteConfirm.bodyEmpty":
+    "O pack é apagado para sempre. Não dá para desfazer.",
+  "stickerPacks.contents.hint":
+    "Arrasta para reordenar. Os membros veem os stickers por esta ordem.",
+  "stickerPacks.contents.savingOrder": "A guardar a nova ordem…",
+  "stickerPacks.contents.addCta": "Adicionar stickers",
+  "stickerPacks.contents.noCover":
+    "Este pack ainda não tem capa. Escolhe uma no menu de um sticker.",
+  "stickerPacks.contents.listLabel": "Stickers em {name}",
+  "stickerPacks.contents.coverBadge": "Capa",
+  "stickerPacks.contents.moved":
+    "{label} passou para a posição {position} de {total}",
+  "stickerPacks.contents.emptyTitle": "Ainda não há stickers neste pack",
+  "stickerPacks.contents.emptyBody":
+    "Gera-os a partir do modelo no separador Adicionar stickers.",
+  "stickerPacks.contents.menu.trigger": "Ações para {label}",
+  "stickerPacks.contents.menu.setCover": "Definir como capa",
+  "stickerPacks.contents.menu.edit": "Editar nome e palavras-chave",
+  "stickerPacks.contents.menu.moveEarlier": "Mover para antes",
+  "stickerPacks.contents.menu.moveLater": "Mover para depois",
+  "stickerPacks.contents.menu.remove": "Remover",
+  "stickerPacks.contents.remove.title": "Remover {label}?",
+  "stickerPacks.contents.remove.body":
+    "Os membros que já o enviaram continuam a tê-lo nas conversas.",
+  "stickerPacks.contents.remove.coverNote":
+    "É a capa deste pack, por isso o pack fica sem capa até escolheres outra.",
+  "stickerPacks.contents.remove.confirm": "Remover",
+  "stickerPacks.editSticker.title": "Editar sticker",
+  "stickerPacks.editSticker.label": "Nome",
+  "stickerPacks.editSticker.keywords.en": "Palavras-chave em inglês",
+  "stickerPacks.editSticker.keywords.pt": "Palavras-chave em português",
+  "stickerPacks.editSticker.keywordsHelper":
+    "Separa-as com vírgulas. A pesquisa encontra estas palavras. Até 24, cada uma com até 40 caracteres.",
+  "stickerPacks.editSticker.errors.labelRequired": "Dá um nome ao sticker",
+  "stickerPacks.editSticker.errors.labelTooLong":
+    "Mantém o nome com 80 caracteres ou menos",
+  "stickerPacks.editSticker.errors.keywordTooLong":
+    "Encurta estas para 40 caracteres ou menos: {keywords}",
+  "stickerPacks.editSticker.errors.tooManyKeywords":
+    "Fica-te pelas 24 palavras-chave. Esta lista tem {total}.",
+  "stickerPacks.editSticker.save": "Guardar alterações",
+  "stickerPacks.editSticker.saving": "A guardar…",
+  "stickerPacks.controls.heading": "Estilo",
+  "stickerPacks.controls.templateName": "Uno reverse",
+  "stickerPacks.controls.templateDescription":
+    "Sticker de carta reverse nas cores de cada bandeira",
+  "stickerPacks.controls.usePackStyle": "Usar o estilo deste pack",
+  "stickerPacks.controls.packStyleApplied": "Igual ao estilo deste pack",
+  "stickerPacks.controls.sectionCard": "Carta",
+  "stickerPacks.controls.sectionOval": "Oval",
+  "stickerPacks.controls.sectionArrows": "Setas",
+  "stickerPacks.controls.borderWidth": "Largura da borda",
+  "stickerPacks.controls.ovalAngle": "Ângulo do oval",
+  "stickerPacks.controls.ovalLine": "Linha do oval",
+  "stickerPacks.controls.arrowSize": "Tamanho das setas",
+  "stickerPacks.controls.resetField": "Repor {field}",
+  "stickerPacks.controls.exactValue": "{field}, valor exato",
+  "stickerPacks.color.hexLabel": "{field}, código hex",
+  "stickerPacks.color.hexInvalid": "Usa um código hex como #f6f2e8 ou #fff.",
+  "stickerPacks.color.presetsLabel": "Cores predefinidas",
+  "stickerPacks.color.preset.cream": "Creme",
+  "stickerPacks.color.preset.white": "Branco",
+  "stickerPacks.color.preset.ink": "Preto",
+  "stickerPacks.color.preset.coral": "Coral",
+  "stickerPacks.color.fadesLight_one":
+    "Esta cor confunde-se com as riscas claras da bandeira {flags}. O oval pode ficar difícil de ver.",
+  "stickerPacks.color.fadesLight_other":
+    "Esta cor confunde-se com as riscas claras das bandeiras {flags}. O oval pode ficar difícil de ver.",
+  "stickerPacks.color.fadesDark_one":
+    "Esta cor confunde-se com as riscas escuras da bandeira {flags}. O oval pode ficar difícil de ver.",
+  "stickerPacks.color.fadesDark_other":
+    "Esta cor confunde-se com as riscas escuras das bandeiras {flags}. O oval pode ficar difícil de ver.",
+  "stickerPacks.color.fadesMid_one":
+    "Esta cor é demasiado parecida com algumas riscas da bandeira {flags}. O oval pode ficar difícil de ver.",
+  "stickerPacks.color.fadesMid_other":
+    "Esta cor é demasiado parecida com algumas riscas das bandeiras {flags}. O oval pode ficar difícil de ver.",
+  "stickerPacks.color.moreFlags_one": "mais {count}",
+  "stickerPacks.color.moreFlags_other": "mais {count}",
+  "stickerPacks.flags.heading": "Bandeiras",
+  "stickerPacks.flags.selectedCount_one": "{count} de {total} selecionada",
+  "stickerPacks.flags.selectedCount_other": "{count} de {total} selecionadas",
+  "stickerPacks.flags.selectMissing": "Selecionar só as que faltam",
+  "stickerPacks.flags.hint":
+    "Todas as bandeiras começam incluídas. Seleciona uma para a tirares ou voltares a pôr, e a pré-visualização mostra a última que selecionaste.",
+  "stickerPacks.flags.badge.new": "Novo",
+  "stickerPacks.flags.badge.inPack": "No pack",
+  "stickerPacks.flags.badge.willReplace": "Vai substituir",
+  "stickerPacks.flags.run.queued": "{flag}: em espera",
+  "stickerPacks.flags.run.running": "{flag}: a adicionar",
+  "stickerPacks.flags.run.done": "{flag}: adicionado",
+  "stickerPacks.flags.run.failed": "{flag}: falhou",
+  "stickerPacks.flags.run.cancelled": "{flag}: cancelado",
+  "stickerPacks.preview.heading": "Pré-visualização",
+  "stickerPacks.preview.noFlagTitle": "Nenhuma bandeira escolhida",
+  "stickerPacks.preview.pickFlag":
+    "Escolhe uma bandeira para a pré-visualizares",
+  "stickerPacks.preview.backdropLabel": "Fundo da pré-visualização",
+  "stickerPacks.preview.backdrop.light": "Claro",
+  "stickerPacks.preview.backdrop.dark": "Escuro",
+  "stickerPacks.preview.backdrop.checker": "Transparente",
+  "stickerPacks.preview.inChat": "Numa conversa",
+  "stickerPacks.preview.chatBubble": "És a pessoa mais dramática que conheço",
+  "stickerPacks.preview.download": "Descarregar PNG",
+  "stickerPacks.preview.downloadError":
+    "Não foi possível criar o PNG. Tenta de novo",
+  "stickerPacks.publish.regionLabel": "Adicionar ao pack",
+  "stickerPacks.publish.cta.idle": "Adicionar stickers",
+  "stickerPacks.publish.cta.add_one": "Adicionar {count} sticker a {pack}",
+  "stickerPacks.publish.cta.add_other": "Adicionar {count} stickers a {pack}",
+  "stickerPacks.publish.cta.update_one": "Atualizar {count} sticker em {pack}",
+  "stickerPacks.publish.cta.update_other":
+    "Atualizar {count} stickers em {pack}",
+  "stickerPacks.publish.cta.addAndUpdate":
+    "Adicionar {added} e atualizar {replaced} em {pack}",
+  "stickerPacks.publish.statusHelper.draft":
+    "Os membros veem-nos depois de publicares o pack.",
+  "stickerPacks.publish.statusHelper.published":
+    "Ficam logo disponíveis para os membros.",
+  "stickerPacks.publish.statusHelper.archived":
+    "Este pack está arquivado. Os membros não os vão ver.",
+  "stickerPacks.publish.blocked.noPack":
+    "Escolhe um pack ou cria um para lhe adicionares stickers.",
+  "stickerPacks.publish.blocked.noFlags":
+    "Escolhe pelo menos uma bandeira para adicionar.",
+  "stickerPacks.publish.blocked.allSkipped":
+    "Todas as bandeiras escolhidas já estão neste pack. Escolhe Substituir as existentes para atualizar a arte.",
+  "stickerPacks.publish.mode.legend_one":
+    "{count} bandeira escolhida já está neste pack",
+  "stickerPacks.publish.mode.legend_other":
+    "{count} bandeiras escolhidas já estão neste pack",
+  "stickerPacks.publish.mode.addMissing": "Adicionar só as que faltam",
+  "stickerPacks.publish.mode.replace": "Substituir as existentes",
+  "stickerPacks.publish.running.add": "A adicionar {current} de {total}",
+  "stickerPacks.publish.running.update": "A atualizar {current} de {total}",
+  "stickerPacks.publish.progressLabel": "Progresso",
+  "stickerPacks.publish.cancel": "Cancelar",
+  "stickerPacks.publish.stopping": "A parar depois deste",
+  "stickerPacks.publish.stopped": "Paraste depois de {done} de {total}.",
+  "stickerPacks.publish.result.added_one":
+    "{count} sticker adicionado a {pack}",
+  "stickerPacks.publish.result.added_other":
+    "{count} stickers adicionados a {pack}",
+  "stickerPacks.publish.result.updated_one":
+    "{count} sticker atualizado em {pack}",
+  "stickerPacks.publish.result.updated_other":
+    "{count} stickers atualizados em {pack}",
+  "stickerPacks.publish.result.addedAndUpdated":
+    "Adicionaste {added} e atualizaste {replaced} em {pack}",
+  "stickerPacks.publish.result.none": "Nada mudou em {pack}",
+  "stickerPacks.publish.failures.title_one": "{count} sticker não entrou",
+  "stickerPacks.publish.failures.title_other": "{count} stickers não entraram",
+  "stickerPacks.publish.failureReason.conflict": "Já está neste pack",
+  "stickerPacks.publish.failureReason.rate-limit":
+    "Demasiados envios de uma vez. Espera um minuto e tenta de novo",
+  "stickerPacks.publish.failureReason.upload": "A imagem não foi enviada",
+  "stickerPacks.publish.failureReason.unknown": "Algo correu mal",
+  "stickerPacks.publish.viewPack": "Ver pack",
+  "stickerPacks.publish.publishPackNow": "Publicar o pack agora",
+  "stickerPacks.publish.retryFailed": "Tentar de novo ({count})",
+  "stickerPacks.publish.dismiss": "Fechar",
+  "stickerPacks.review.title": "Revê antes de adicionar",
+  "stickerPacks.review.adding_one": "Adicionar {count} novo",
+  "stickerPacks.review.adding_other": "Adicionar {count} novos",
+  "stickerPacks.review.replacing_one": "Substituir {count}",
+  "stickerPacks.review.replacing_other": "Substituir {count}",
+  "stickerPacks.review.replacingNote_one":
+    "(a ordem, o nome e a capa mantêm-se)",
+  "stickerPacks.review.replacingNote_other":
+    "(a ordem, os nomes e a capa mantêm-se)",
+  "stickerPacks.review.skipping_one": "Ignorar {count} que já está no pack",
+  "stickerPacks.review.skipping_other": "Ignorar {count} que já estão no pack",
+  "stickerPacks.review.target": "Para {pack} ({status})",
+  "stickerPacks.review.replacingTag": "(a substituir)",
+  "stickerPacks.page.title": "Packs de stickers",
+  "stickerPacks.page.empty.title": "Cria o teu primeiro pack",
+  "stickerPacks.page.empty.body":
+    "Um pack junta stickers que os membros podem enviar no chat. Começa como rascunho, por isso os membros só o veem quando o publicares.",
+  "stickerPacks.page.demo.title": "O criador funciona no modo ao vivo",
+  "stickerPacks.page.demo.body":
+    "Os packs e os stickers são guardados através da API ao vivo, por isso muda para o modo ao vivo para os criares.",
+  "stickerPacks.page.error.title": "Os packs não carregaram",
+  "stickerPacks.page.error.body": "Verifica a ligação e tenta de novo.",
+  "stickerPacks.tabs.label": "Trabalhar em {name}",
+  "stickerPacks.tabs.add": "Adicionar stickers",
+  "stickerPacks.tabs.contents": "Neste pack",
+  "stickerPacks.toast.renamed": "Nome alterado para {name}",
+  "stickerPacks.toast.status.published": "{name} está publicado",
+  "stickerPacks.toast.status.draft": "{name} voltou a ser rascunho",
+  "stickerPacks.toast.status.archived": "{name} foi arquivado",
+  "stickerPacks.toast.packDeleted": "{name} apagado",
+  "stickerPacks.toast.stickerRemoved": "{label} removido",
+  "stickerPacks.toast.stickerUpdated": "{label} guardado",
+  "stickerPacks.errors.rename": "Não foi possível mudar o nome do pack",
+  "stickerPacks.errors.deletePack": "Não foi possível apagar o pack",
+  "stickerPacks.errors.reorder": "Não foi possível guardar a nova ordem",
+  "stickerPacks.errors.updateSticker": "Não foi possível guardar o sticker",
 
   // ── Espaços do diretório escritos pela equipa (`/admin/listings/new`) ─────
   // A equipa escreve sobre um espaço que ainda não se juntou à QueerPulse. O

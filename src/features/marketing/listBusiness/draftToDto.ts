@@ -5,7 +5,15 @@ import {
   type OwnerPersonalField,
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
-import { servicesForPayload } from "./listingServices.data";
+import {
+  emptyMenuDraft,
+  menuForPayload,
+  pricingModeOf,
+} from "./listingMenu.data";
+import {
+  completeServiceRows,
+  servicesForPayload,
+} from "./listingServices.data";
 import { stripOwnerPersonalFields } from "./ownerPersonalFields";
 import type {
   CoManagerUpdateListingDto,
@@ -31,6 +39,25 @@ import type {
  * editor's own state deliberately does not. Services get the same treatment:
  * blank rows are dropped and the client-only React key is stripped.
  */
+
+/**
+ * Both priced lists. The visible one goes as typed (its problems block the
+ * save through the missing-fields list). The hidden one loses any half-filled
+ * rows, which the owner cannot see and so cannot fix.
+ */
+function pricingPayload(draft: ListingDraft) {
+  const pricingMode = pricingModeOf(draft);
+  const serviceRows = draft.services ?? [];
+  return {
+    pricingMode,
+    services: servicesForPayload(
+      pricingMode === "menu" ? completeServiceRows(serviceRows) : serviceRows,
+    ),
+    menu: menuForPayload(draft.menu ?? emptyMenuDraft(), {
+      shouldDropIncomplete: pricingMode !== "menu",
+    }),
+  };
+}
 
 /**
  * Everything about the BUSINESS: the payload a co-manager is allowed to send,
@@ -68,7 +95,7 @@ export function businessPayload(
       answers: accessibility.answers,
       note: accessibility.note.trim(),
     },
-    services: servicesForPayload(draft.services ?? []),
+    ...pricingPayload(draft),
     langs: draft.langs,
     online: draft.online,
     // An online-only listing carries no location: never ship a stale address or

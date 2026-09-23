@@ -120,9 +120,9 @@ export const unshareSavedList = (listId: string) =>
 /**
  * `GET /saved-lists/:token` — the read behind a share link.
  *
- * PUBLIC AND UNAUTHENTICATED on the backend (`@Public()` on
- * `SharedSavedListController`), by design: the point is sending it to a friend
- * who has just moved to the city and may not have an account. Anyone holding
+ * MEMBERS-ONLY by product decision: the backend guards it with
+ * `ActiveMemberGuard`, and `/lists/*` is in the frontend's `GATED_PATTERNS`, so
+ * the reader needs a QueerPulse account and a live session. Any member holding
  * the link can read it. The sharing UI has to say that before a link is made.
  *
  * A revoked, malformed, or never-real token all answer 404 with the same

@@ -1,4 +1,5 @@
 import { ANCHOR } from "../listBusiness.data";
+import type { ListingPricingMode } from "../listingMenu.data";
 
 /**
  * One section of the single-screen owner editor: the DOM id its jump link
@@ -179,4 +180,31 @@ export function editorSectionByKeyFor(
   return isCoManagerView
     ? CO_MANAGER_EDITOR_SECTION_BY_KEY
     : LISTING_EDITOR_SECTION_BY_KEY;
+}
+
+const MENU_SECTION_LABEL_KEY = "marketing:listBusiness.editor.section.menu";
+
+/** The pricing section as this listing shows it: titled "Menu" in menu mode.
+ *  Same id and anchors either way, so jump links and missing badges hold. */
+export function pricingSectionDefinition(
+  section: ListingEditorSectionDefinition,
+  pricingMode: ListingPricingMode,
+): ListingEditorSectionDefinition {
+  return pricingMode === "menu"
+    ? { ...section, labelKey: MENU_SECTION_LABEL_KEY }
+    : section;
+}
+
+/** The nav's section list with the pricing section titled for the mode.
+ *  Returns the same array in services mode to keep the scroll-spy stable. */
+export function withPricingModeLabel(
+  sections: ListingEditorSectionDefinition[],
+  pricingMode: ListingPricingMode,
+): ListingEditorSectionDefinition[] {
+  if (pricingMode !== "menu") return sections;
+  return sections.map((section) =>
+    section.key === "services"
+      ? pricingSectionDefinition(section, pricingMode)
+      : section,
+  );
 }

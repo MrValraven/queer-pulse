@@ -9,6 +9,10 @@ import {
   type PhotoKey,
 } from "./listBusiness/listBusiness.data";
 import type { ListingAccessibilityView } from "./listBusiness/listingAccessibility.data";
+import type {
+  ListingMenu,
+  ListingPricingMode,
+} from "./listBusiness/listingMenu.data";
 import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
 
 export type Tint = "coral" | "jade" | "plum";
@@ -236,6 +240,10 @@ export interface DirectoryPlace {
   /** What the business sells and what it costs, in the owner's own words.
    * Absent/empty when it prices nothing; the `pills` price band is unchanged. */
   services?: ListingServiceOffering[];
+  /** Which priced list the page shows. Absent means services. */
+  pricingMode?: ListingPricingMode;
+  /** The menu, with `file.url` already resolved. Absent when there is none. */
+  menu?: ListingMenu;
   /** The listing's agreement to the affirming baseline. Carried so the record
    * is complete; the page states the commitment for the whole directory rather
    * than reading this per listing. */
@@ -899,6 +907,64 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     social: { phone: "+351 21 886 1234" },
     address: "R. do Capelão 18 · Mouraria",
+    pricingMode: "menu",
+    menu: {
+      sections: [
+        {
+          title: "Coffee",
+          items: [
+            {
+              name: "Bica",
+              price: "0.90 EUR",
+              description: "",
+              dietary: ["vegan", "alcoholFree"],
+            },
+            {
+              name: "Galão",
+              price: "1.60 EUR",
+              description: "Whole or oat milk",
+              dietary: ["vegetarian"],
+            },
+          ],
+        },
+        {
+          title: "Pastries",
+          items: [
+            {
+              name: "Pastel de nata",
+              price: "1.30 EUR",
+              description: "Warm from the oven until noon",
+              dietary: ["vegetarian"],
+            },
+            {
+              name: "Orange cake",
+              price: "2.20 EUR",
+              description: "",
+              dietary: ["vegan", "glutenFree"],
+            },
+          ],
+        },
+        {
+          title: "Something stronger",
+          items: [
+            {
+              name: "Ginjinha",
+              price: "1.50 EUR",
+              description: "Sour cherry liqueur, in a chocolate cup on Fridays",
+              dietary: [],
+            },
+            {
+              name: "Fresh orange juice",
+              price: "2.50 EUR",
+              description: "",
+              dietary: ["vegan", "alcoholFree"],
+            },
+          ],
+        },
+      ],
+      file: null,
+      link: "",
+    },
     reviews: [
       {
         id: "cafe-mouraria-velha-review-1",

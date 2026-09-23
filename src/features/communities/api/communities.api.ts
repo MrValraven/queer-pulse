@@ -47,6 +47,10 @@ export interface CommunityCardDTO {
    *  a cached card from a build that predates the field reads as "no avatar"
    *  rather than as a type error. */
   avatarImageUrl?: string | null;
+  /** The book a reading group (tag `book-club`) is on right now, or null when
+   *  the community has none set. Optional because the demo fixtures omit it
+   *  and an older backend never sends it. */
+  nowReading?: string | null;
 }
 /**
  * `GET /communities/:slug/gate`: everything a signed-in non-member may see of
@@ -283,6 +287,9 @@ export interface CreateCommunityDto {
    *  2000 chars, stripped of markup at the write boundary; "" / null clears
    *  it. Optional; omit to leave unchanged on PATCH. */
   welcomeMessage?: string | null;
+  /** The book a reading group is on right now. Plain text, max 200 chars;
+   *  "" / null clears it. Optional; omit to leave unchanged on PATCH. */
+  nowReading?: string | null;
   handle: string; // desired slug
   stewards?: string[]; // member slugs → seeded as "mod"
   invites?: string[]; // ⚠ accepted but NOT persisted yet

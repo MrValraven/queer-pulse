@@ -665,6 +665,11 @@ export const notifications: Catalog = {
   "type.persona_update.text_other":
     "{subprofileName} published {count} new pieces of work.",
   "type.persona_update.meta": "Persona you follow",
+  "type.subprofile_creator_changed.text":
+    "{newCreatorName} is now the creator of {subprofileName}.",
+  "type.subprofile_creator_changed.textYou":
+    "You're now the creator of {subprofileName}.",
+  "type.subprofile_creator_changed.meta": "Persona ownership",
 
   // Sent when the XP/badge awarding engine credits a member across a level
   // threshold. System-driven (no actor); {level}/{name} come from the payload.

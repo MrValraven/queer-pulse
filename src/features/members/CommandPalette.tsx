@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { FiSearch, FiCornerDownLeft, FiX } from "react-icons/fi";
+import { Spinner } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks/useScrollLock";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -70,6 +71,7 @@ export function CommandPalette() {
     data: searchData,
     recents,
     signInRequired,
+    loading: isSearchLoading,
     isError: hasSearchFailed,
     refetch: retrySearch,
   } = useSearchData(query);
@@ -141,7 +143,15 @@ export function CommandPalette() {
         aria-label={t("members:commandPalette.ariaLabel")}
       >
         <div className={styles.inputRow}>
-          <FiSearch aria-hidden className={styles.inputIcon} />
+          {/* The spinner takes the search icon's 1em slot while live results
+              are pending, so the input never shifts. */}
+          {isSearchLoading ? (
+            <span className={`${styles.inputIcon} ${styles.inputSpinnerSlot}`}>
+              <Spinner />
+            </span>
+          ) : (
+            <FiSearch aria-hidden className={styles.inputIcon} />
+          )}
           <input
             ref={inputRef}
             className={styles.input}
@@ -191,6 +201,7 @@ export function CommandPalette() {
           <CommandPaletteResults
             q={q}
             hasFailed={hasSearchFailed}
+            isLoading={isSearchLoading}
             onRetry={retrySearch}
             recents={recents}
             setQuery={setQuery}

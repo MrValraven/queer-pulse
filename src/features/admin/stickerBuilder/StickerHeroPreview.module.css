@@ -1,0 +1,222 @@
+/* The builder's hero preview: a header (flag name, backdrop switch, PNG
+   download) over one surface that holds the large sticker and a mock chat
+   showing it at its real size. The surface carries the chosen backdrop. */
+
+.hero {
+  container: sticker-hero / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Backdrop surface ── */
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  color: var(--ink);
+}
+
+.surfaceLight,
+.surfaceDark {
+  background: var(--cream);
+}
+
+/* The classic transparency checkerboard, so the sticker's clear margins
+   around the card read as clear. */
+.surfaceChecker {
+  background:
+    repeating-conic-gradient(
+        rgba(var(--line-rgb), 0.1) 0% 25%,
+        transparent 0% 50%
+      )
+      0 0 / 20px 20px,
+    var(--paper);
+}
+
+/* The base rules are the stacked layout, which only a phone-width container
+   (under 340px) ever gets. It is kept compact, about 415px from the top of
+   the surface to the bottom of the chat strip, so the style controls right
+   under the hero stay in view with the sticker they redraw. */
+.stage {
+  display: grid;
+  place-items: center;
+  padding: 16px 12px;
+}
+
+.heroCanvas {
+  display: block;
+  width: min(200px, 100%);
+  aspect-ratio: 1;
+  height: auto;
+}
+
+/* ── In a chat ── */
+
+/* Stacked, the chat is one short strip: the bubble and the sticker reply sit
+   on the same line, so the strip is only as tall as the 8rem sticker. */
+.chat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "caption caption"
+    "bubble sticker";
+  align-items: start;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.chatCaption {
+  grid-area: caption;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* Mirrors a received bubble in MessagesPage.module.css (`.bubble` plus
+   `.received`, last in its run) so the sticker sits beside real chat chrome.
+   It wraps inside its chat track, as a received bubble does. */
+.bubble {
+  grid-area: bubble;
+  justify-self: start;
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-20);
+  border-end-start-radius: var(--radius-7);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: 1.42;
+  box-shadow: var(--shadow-card);
+  overflow-wrap: break-word;
+}
+
+/* The real chat size, as `.stickerImage` in MessagesPage.module.css. The
+   reply sits on the sender's side, as a sticker answer would. */
+.chatSticker {
+  grid-area: sticker;
+  align-self: end;
+  justify-self: end;
+  display: block;
+  width: 8rem;
+  height: 8rem;
+}
+
+/* Once the surface has room, the stage and the chat mock sit side by side
+   instead of stacking, so the flag grid below the hero does not need a full
+   stage-plus-chat height to reach the top of the fold. 340px is the
+   narrowest hero column in the two-column Add tab (a 680px workspace less
+   the 320px controls track and the 20px gap).
+
+   The chat gets a fixed 10rem track: the 8rem sticker plus 12px of padding
+   each side and the 1px divider, with the bubble wrapping inside it. The
+   stage takes the rest, so the hero canvas is the column width less 178px
+   (2px of surface border, the 160px chat, 16px of stage padding): 162px at
+   the 340px threshold, 236px at 414px, and its 240px cap from 418px up. It
+   is always clearly larger than the 128px chat sticker.
+
+   Declared after the base `.stage`/`.heroCanvas`/`.chat` rules above so
+   these overrides win at equal specificity. */
+@container sticker-hero (min-width: 340px) {
+  .surface {
+    flex-direction: row;
+  }
+
+  .stage {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 24px 8px;
+  }
+
+  .heroCanvas {
+    width: min(240px, 100%);
+  }
+
+  .chat {
+    flex: 0 0 10rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "caption"
+      "bubble"
+      "sticker";
+    align-content: start;
+    padding: 14px 12px 16px;
+    border-top: none;
+    border-inline-start: 1px solid var(--line);
+  }
+}
+
+/* ── No flag ── */
+
+/* Grows so the notice fills the surface in the row layout as well. */
+.empty {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 240px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: var(--text-24);
+  color: var(--ink-60);
+}
+
+.emptyText {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}

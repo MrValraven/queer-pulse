@@ -12,8 +12,9 @@ import {
   FEATURE_OPTIONS,
   MAX_WELCOME_MESSAGE_LENGTH,
 } from "./startCommunity/startCommunity.data";
-import { MAX_COMMUNITY_TAGS } from "./communityTags.data";
+import { MAX_COMMUNITY_TAGS, READING_GROUP_TAG } from "./communityTags.data";
 import { CommunityTagPicker } from "./CommunityTagPicker";
+import { EditCommunityNowReadingField } from "./EditCommunityNowReadingField";
 import { SuggestCommunityTagModal } from "./SuggestCommunityTagModal";
 import {
   editableToDraft,
@@ -315,6 +316,12 @@ function EditCommunityFields({
           onChange={(event) => set({ tagline: event.target.value })}
         />
       </FormField>
+
+      <EditCommunityNowReadingField
+        value={draft.nowReading}
+        onChange={(nowReading) => set({ nowReading })}
+        isVisible={draft.tags.includes(READING_GROUP_TAG)}
+      />
 
       <FormField
         label={t("communities:edit.field.cover")}

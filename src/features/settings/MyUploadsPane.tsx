@@ -10,7 +10,8 @@ import {
   type MediaReference,
 } from "../../shared/media/mediaReferences";
 import { useMyMedia, useDeleteMyMedia } from "./api/useMyMedia";
-import { resolveMyMediaUrl, type MyMediaItem } from "./api/myMedia.api";
+import type { MyMediaItem } from "./api/myMedia.api";
+import { MyUploadThumb } from "./MyUploadThumb";
 import styles from "./MyUploadsPane.module.css";
 
 export function MyUploadsPane() {
@@ -132,12 +133,7 @@ function MyUploadCard({
   const { t } = useTranslation();
   return (
     <li className={styles.card}>
-      <img
-        className={styles.thumb}
-        src={resolveMyMediaUrl(item.fileUrl)}
-        alt=""
-        loading="lazy"
-      />
+      <MyUploadThumb item={item} />
       <div className={styles.meta}>
         <span className={styles.kind}>
           {t(`settings:uploads.kind.${item.kind}`)}

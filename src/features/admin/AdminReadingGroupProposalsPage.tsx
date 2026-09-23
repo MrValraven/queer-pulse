@@ -227,7 +227,7 @@ export function AdminReadingGroupProposalsPage() {
 
       {declining && (
         <AdminReadingGroupDeclineModal
-          book={declining.book}
+          book={declining.clubName ?? declining.book}
           isPending={pending}
           onSubmit={(reason) => runDecision(declining.id, "decline", reason)}
           onClose={() => setDeclining(null)}

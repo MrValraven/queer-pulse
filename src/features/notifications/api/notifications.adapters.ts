@@ -9,6 +9,7 @@ import {
   FiCheckCircle,
   FiFlag,
   FiInbox,
+  FiRepeat,
   FiShield,
   FiUserX,
   FiUsers,
@@ -99,6 +100,19 @@ function intakeIconFor(
 ): { Glyph: IconType; background: string } | undefined {
   if (kind !== "intake_reviewed") return undefined;
   return { Glyph: FiInbox, background: KIND_ICON_BACKGROUND.platform };
+}
+
+/**
+ * The icon a persona creator handoff renders with, or `undefined` for every
+ * other kind. A repeat arrow for a role that moved on to someone else, the
+ * same glyph the demo row in `notificationsListActivity.data.tsx` uses, so a
+ * handoff looks alike in both modes.
+ */
+function personaHandoffIconFor(
+  kind: NotificationKind | null,
+): { Glyph: IconType; background: string } | undefined {
+  if (kind !== "subprofile_creator_changed") return undefined;
+  return { Glyph: FiRepeat, background: KIND_ICON_BACKGROUND.community };
 }
 
 function reportIconFor(
@@ -351,6 +365,10 @@ export function notificationDtoToView(
   const intakeIcon = intakeIconFor(kind);
   if (intakeIcon) view.icon = intakeIcon;
 
+  // Same placement, same reason: a persona creator handoff sets no actor.
+  const personaHandoffIcon = personaHandoffIconFor(kind);
+  if (personaHandoffIcon) view.icon = personaHandoffIcon;
+
   // Same placement, same reason as the three overrides above: a queue-health
   // alert has no actor by design (it is duty mail about the state of the work,
   // and an actor would run the recipients' own block and mute lists over an
@@ -527,6 +545,13 @@ function sourceHrefFromPayload(
   // deep links other consoles already use (e.g. `?tab=health` above) and is
   // read by `MessagesThreadList`'s own one-shot deep-link effect.
   if (type === "group_invite") return `${routes.messages}?tab=requests`;
+  // Phase 2 persona creator handoff. The row has no actor and no deep link, so
+  // without this it is dead text, and for the successor it is the one moment
+  // a link to their new creator controls matters. Every recipient is still a
+  // member of the persona, so their own personas dashboard lists it.
+  if (type === "subprofile_creator_changed") {
+    return routes.subprofilesDashboard;
+  }
   // TS-04. `payload.source` is `"moderation"`, and the destination is the
   // console's own queue-health tab: the alert is about the state of the work,
   // so it opens the reading rather than one of the queues it summarises.

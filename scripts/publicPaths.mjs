@@ -48,6 +48,8 @@ export const GATED_PATTERNS = [
   // `/messages/join/:token` is a child route; mirrors authGate.ts.
   "/messages/*",
   "/notifications",
+  // Shared saved lists are members-only by product decision. Mirrors authGate.ts.
+  "/lists/*",
   "/communities",
   "/communities/*",
   "/community/*",
@@ -120,9 +122,6 @@ const PUBLIC_EXCEPTIONS = [
   "/studio/help",
   "/studio/press",
   "/studio/end-card",
-  // Housing co-ops stay public even though the rest of /local/housing/* is gated.
-  "/local/housing/coop",
-  "/local/housing/coop/*",
 ];
 
 /** matchPath-equivalent for our patterns: exact, or `/base/*` prefix. */

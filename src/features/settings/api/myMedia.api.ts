@@ -15,6 +15,7 @@ export type MyMediaKind =
   | "gathering-photo"
   | "group-avatar"
   | "listing-photo"
+  | "listing-menu"
   | "community-cover"
   | "community-avatar"
   | "event-cover"
@@ -62,4 +63,18 @@ export async function deleteMyMedia(key: string): Promise<void> {
  *  ("/files/<key>") and get the API origin; demo items are already absolute. */
 export function resolveMyMediaUrl(fileUrl: string): string {
   return /^https?:\/\//.test(fileUrl) ? fileUrl : `${API_BASE_URL}${fileUrl}`;
+}
+
+const DOCUMENT_EXTENSIONS = ["pdf", "csv", "txt", "xlsx"];
+
+/** The uppercase document extension for a storage key ("PDF", "CSV", "TXT",
+ *  "XLSX"), or null when the key doesn't end in one of those. Keyed off the
+ *  extension: a `listing-menu` upload can be a photo, so the `kind` alone
+ *  can't tell a document from an image. */
+export function documentExtensionOf(key: string): string | null {
+  const lowerCaseKey = key.toLowerCase();
+  const matchedExtension = DOCUMENT_EXTENSIONS.find((extension) =>
+    lowerCaseKey.endsWith(`.${extension}`),
+  );
+  return matchedExtension ? matchedExtension.toUpperCase() : null;
 }

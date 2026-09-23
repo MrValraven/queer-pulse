@@ -95,6 +95,9 @@ export interface CommunityDetail {
    *  communities without enriched "living" data), which has no `living`
    *  object to read the flag from. Blocks new forum posts/replies. */
   frozen?: boolean;
+  /** The book a reading group is on right now, shown in the hero under the
+   *  tagline. Absent or null when the community has none set. */
+  nowReading?: string | null;
 }
 
 export { COMMUNITY_DETAILS };

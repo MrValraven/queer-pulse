@@ -366,6 +366,9 @@ export function useUpdateCommunity() {
       void queryClient.invalidateQueries({
         queryKey: ["community-preferences", slug],
       });
+      // The reading-group directory card shows the group's name and current
+      // book, and a tag edit can add or drop the group from that list.
+      void queryClient.invalidateQueries({ queryKey: ["reading-groups"] });
     },
   });
 }

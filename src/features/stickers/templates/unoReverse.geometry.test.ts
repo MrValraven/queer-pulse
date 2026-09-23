@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { flagStripesOf } from "../../../shared/data/flagStripes.data";
-import type { Primitive } from "./primitives";
+import {
+  INTERSEX_COLORS,
+  PROGRESS_CHEVRON_COLORS,
+  STRIPED_FLAG_IDS,
+  flagStripesOf,
+} from "../../../shared/data/flagStripes.data";
+import type {
+  GroupPrimitive,
+  PathCommand,
+  PathPrimitive,
+  Primitive,
+  RectPrimitive,
+} from "./primitives";
 import { unoReverseGeometry } from "./unoReverse.geometry";
 import {
   STICKER_CANVAS_SIZE,
@@ -98,9 +109,31 @@ function pointsOf(
   return points;
 }
 
+/** The clip group holding the flag's own design, which is the first clipped
+ *  group the geometry paints. */
+function flagGroupOf(primitives: Primitive[]): GroupPrimitive {
+  const flagGroup = primitives.find(
+    (primitive): primitive is GroupPrimitive =>
+      primitive.type === "group" && primitive.clipRect !== undefined,
+  );
+  if (!flagGroup) {
+    throw new Error("unoReverseGeometry did not return a clipped flag group");
+  }
+  return flagGroup;
+}
+
 describe("unoReverseGeometry", () => {
-  it("paints one band per stripe for every flag it offers", () => {
-    for (const flagId of UNO_REVERSE_FLAG_IDS) {
+  it("offers every card flag in the picker order", () => {
+    expect(UNO_REVERSE_FLAG_IDS).toEqual([
+      "rainbow",
+      "progress",
+      ...STRIPED_FLAG_IDS.filter((flagId) => flagId !== "rainbow"),
+      "intersex",
+    ]);
+  });
+
+  it("paints one band per stripe for every striped flag", () => {
+    for (const flagId of STRIPED_FLAG_IDS) {
       const primitives = unoReverseGeometry({
         ...UNO_REVERSE_DEFAULTS,
         flagId,
@@ -178,9 +211,101 @@ describe("unoReverseGeometry", () => {
     expect(withArrows).toHaveLength(withoutArrows.length + 2);
   });
 
+  it("paints the Progress chevron as five nested polygons over the rainbow", () => {
+    const flagGroup = flagGroupOf(
+      unoReverseGeometry({ ...UNO_REVERSE_DEFAULTS, flagId: "progress" }),
+    );
+    const clipRect = flagGroup.clipRect;
+    if (!clipRect) throw new Error("the flag group has no clip");
+    const ground = flagGroup.children.filter(
+      (primitive): primitive is RectPrimitive => primitive.type === "rect",
+    );
+    expect(ground.map((primitive) => primitive.fill)).toEqual(
+      flagStripesOf("rainbow").map((band) => band.color),
+    );
+
+    const chevron = flagGroup.children.filter(
+      (primitive): primitive is PathPrimitive => primitive.type === "path",
+    );
+    // Back to front: the black outer triangle first, the white one last.
+    expect(chevron.map((primitive) => primitive.fill)).toEqual(
+      PROGRESS_CHEVRON_COLORS,
+    );
+    const firstChevronBand = chevron[0];
+    if (!firstChevronBand) throw new Error("the chevron has no bands");
+    expect(flagGroup.children.indexOf(firstChevronBand)).toBe(ground.length);
+
+    const centerY = clipRect.y + clipRect.height / 2;
+    const apexDistances = chevron.map((primitive) => {
+      const points = primitive.commands.filter(
+        (command): command is Exclude<PathCommand, { type: "close" }> =>
+          command.type !== "close",
+      );
+      expect(points).toHaveLength(3);
+      const [top, apex, bottom] = points;
+      if (!top || !apex || !bottom) throw new Error("a chevron lost a point");
+      // Both ends sit on the hoist, the apex on the vertical centre line,
+      // and each arm runs at 45 degrees.
+      expect(top.x).toBeCloseTo(clipRect.x);
+      expect(bottom.x).toBeCloseTo(clipRect.x);
+      expect(apex.y).toBeCloseTo(centerY);
+      const apexDistance = apex.x - clipRect.x;
+      expect(centerY - top.y).toBeCloseTo(apexDistance);
+      expect(bottom.y - centerY).toBeCloseTo(apexDistance);
+      return apexDistance;
+    });
+
+    // The outer apex lands near the middle of the card's width.
+    const outerApexShare = (apexDistances[0] ?? 0) / clipRect.width;
+    expect(outerApexShare).toBeGreaterThanOrEqual(0.45);
+    expect(outerApexShare).toBeLessThanOrEqual(0.55);
+    // Equal steps between the nested triangles make the bands parallel and
+    // of one width, and the white triangle keeps one step of its own.
+    const step = (apexDistances[0] ?? 0) / apexDistances.length;
+    apexDistances.forEach((apexDistance, index) => {
+      expect(apexDistance).toBeCloseTo(step * (apexDistances.length - index));
+    });
+  });
+
+  it("paints the Intersex flag as a centred purple ring on a yellow field", () => {
+    const flagGroup = flagGroupOf(
+      unoReverseGeometry({ ...UNO_REVERSE_DEFAULTS, flagId: "intersex" }),
+    );
+    const clipRect = flagGroup.clipRect;
+    if (!clipRect) throw new Error("the flag group has no clip");
+    const [field, ring] = flagGroup.children;
+    expect(flagGroup.children).toHaveLength(2);
+    if (field?.type !== "rect" || ring?.type !== "ellipse") {
+      throw new Error("expected a field rect and a ring ellipse");
+    }
+    expect(field.fill).toBe(INTERSEX_COLORS.field);
+    expect(field).toMatchObject({
+      x: clipRect.x,
+      y: clipRect.y,
+      width: clipRect.width,
+      height: clipRect.height,
+    });
+
+    expect(ring.fill).toBeUndefined();
+    expect(ring.stroke).toBe(INTERSEX_COLORS.ring);
+    expect(ring.radiusX).toBe(ring.radiusY);
+    expect(ring.centerX).toBeCloseTo(clipRect.x + clipRect.width / 2);
+    expect(ring.centerY).toBeCloseTo(clipRect.y + clipRect.height / 2);
+    const strokeWidth = ring.strokeWidth ?? 0;
+    const outerDiameterShare =
+      (ring.radiusX * 2 + strokeWidth) / clipRect.width;
+    // The ring rounds the centre glyph's arrow tips and stays inside the
+    // flag with room to spare on either side.
+    expect(outerDiameterShare).toBeGreaterThanOrEqual(0.72);
+    expect(outerDiameterShare).toBeLessThanOrEqual(0.8);
+    const thicknessShare = strokeWidth / (ring.radiusX * 2 + strokeWidth);
+    expect(thicknessShare).toBeGreaterThanOrEqual(0.13);
+    expect(thicknessShare).toBeLessThanOrEqual(0.17);
+  });
+
   it("rejects a flag it cannot paint", () => {
     expect(() =>
-      unoReverseGeometry({ ...UNO_REVERSE_DEFAULTS, flagId: "progress" }),
-    ).toThrow("Unknown flag id");
+      unoReverseGeometry({ ...UNO_REVERSE_DEFAULTS, flagId: "not-a-flag" }),
+    ).toThrow("Unknown flag id: not-a-flag");
   });
 });

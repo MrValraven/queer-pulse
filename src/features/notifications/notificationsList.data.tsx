@@ -44,10 +44,10 @@ function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
  * around an interpolated name/title, and the relative "time ago" labels are
  * computed through `fmt.relativeTime`/`fmt.date` rather than hand-rolled.
  *
- * Ids 4, 5, 6, 7 live in `buildUnreadActivityNotifications`
+ * Ids 4, 5, 6, 7, 18 live in `buildUnreadActivityNotifications`
  * (`notificationsListActivity.data.tsx`), split out to keep this function
  * under the per-function line limit. The two halves are spread together
- * below: ids 2, 3, 13, 14, 15, 16 here, then 4 through 7.
+ * below: ids 2, 3, 13, 14, 15, 16 here, then 4, 5, 6, 7, 18.
  */
 function buildUnreadNotifications(
   t: TFunction,
@@ -390,9 +390,10 @@ function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
 
 /**
  * Composes the demo feed from its two order-preserving sections — the unread
- * rows (ids 2-7, 13, 14, 15, 16) followed by the already-read rows (ids 8, 9,
- * 11, 12). Splitting the builder by read-state keeps each section small. (Ids 1 and 10
- * were private-message rows, removed when the "messages" category was retired.)
+ * rows (ids 2-7, 13, 14, 15, 16, 18) followed by the already-read rows (ids 8,
+ * 9, 11, 12). Splitting the builder by read-state keeps each section small.
+ * (Ids 1 and 10 were private-message rows, removed when the "messages"
+ * category was retired.)
  */
 export function buildNotifications(
   t: TFunction,
@@ -406,4 +407,4 @@ export function buildNotifications(
 
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
-export const DEMO_UNREAD_IDS = [2, 3, 13, 14, 15, 16, 4, 5, 6, 7];
+export const DEMO_UNREAD_IDS = [2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18];

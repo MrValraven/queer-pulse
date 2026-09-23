@@ -1,0 +1,157 @@
+/* The pack workspace: header, tab row, then the active tab's panel. The Add
+   tab splits into a style column and a preview column once the workspace
+   itself is wide enough (a container query, so a collapsed admin sidebar or a
+   stacked pack list both win the split back), with the publish bar docked to
+   the bottom of the viewport. Tokens only. */
+
+.workspace {
+  /* The sticky offset comes from the page (`--sticker-sticky-top` on
+     stickerBuilder.module.css .page), shared with the rail. */
+  /* Room the docked publish bar takes at the bottom of the viewport, kept
+     free under the sticky style column. StickerPublishDock measures the
+     dock's height plus its own floating bottom offset and writes the sum
+     here; this is only the first-paint guess. */
+  --workspace-dock-reserve: 104px;
+
+  container: sticker-workspace / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.tabRow {
+  min-width: 0;
+  scroll-margin-top: var(--sticker-sticky-top);
+}
+
+/* The underline runs the full width of the workspace, under both tabs. */
+.tabRow .tabs {
+  display: flex;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* The panel takes focus so a screen-reader user can reach it straight from
+   the tab row; a click inside it should not ring the whole workspace. */
+.panel:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Add tab ── */
+
+/* The DOM order is preview, style, flags ("look, adjust, choose"), so on one
+   column every slider change happens right under the sticker it redraws.
+   Grid areas put the style column on the left once there is room, without
+   CSS `order`, so the tab order always matches what is on screen. */
+.addColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "hero"
+    "controls"
+    "flags";
+  gap: 20px;
+  align-items: start;
+}
+
+.heroArea {
+  grid-area: hero;
+  min-width: 0;
+}
+
+.controlsColumn {
+  grid-area: controls;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.flagsArea {
+  grid-area: flags;
+  min-width: 0;
+}
+
+@container sticker-workspace (min-width: 680px) {
+  /* The style column spans both rows so it can stay sticky beside the whole
+     preview; the flag row takes any height the column adds. */
+  .addColumns {
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "controls hero"
+      "controls flags";
+  }
+
+  /* The style panel stays in reach while the admin scrolls the flag grid. On
+     a short viewport it scrolls inside itself above the docked bar, so no
+     control is ever stranded out of reach. */
+  .controlsColumn {
+    position: sticky;
+    top: var(--sticker-sticky-top);
+    max-height: calc(
+      100dvh - var(--sticker-sticky-top) - var(--workspace-dock-reserve) -
+        var(--gap-sm)
+    );
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+
+/* ── Placeholder states ── */
+
+.placeholder {
+  min-height: 360px;
+  justify-content: center;
+}
+
+.skeleton {
+  container: sticker-workspace / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.skeletonHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+}
+
+.skeletonText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.skeletonColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+@container sticker-workspace (min-width: 680px) {
+  .skeletonColumns {
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+  }
+}

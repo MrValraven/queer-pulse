@@ -108,7 +108,7 @@ function putOnce(
   });
 }
 
-async function putWithRetry(
+export async function putWithRetry(
   url: string,
   file: File,
   contentType: string,

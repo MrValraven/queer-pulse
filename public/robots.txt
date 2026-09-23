@@ -39,6 +39,8 @@ Disallow: /reading-groups
 Disallow: /family
 Disallow: /messages
 Disallow: /notifications
+# Shared saved lists (/lists/:token) are members-only.
+Disallow: /lists
 Disallow: /mentions
 Disallow: /notification-deep-link
 Disallow: /communities
@@ -89,9 +91,6 @@ Disallow: /resources/therapists
 Disallow: /local/map
 Disallow: /local/venue
 Disallow: /local/housing
-# ...except the housing co-ops, which authGate keeps public (their backend
-# browse is @Public). A longer Allow beats a shorter Disallow.
-Allow: /local/housing/coop
 Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /cinema/watch
@@ -169,6 +168,8 @@ Disallow: /reading-groups
 Disallow: /family
 Disallow: /messages
 Disallow: /notifications
+# Shared saved lists (/lists/:token) are members-only.
+Disallow: /lists
 Disallow: /mentions
 Disallow: /notification-deep-link
 Disallow: /communities
@@ -209,9 +210,6 @@ Disallow: /resources/therapists
 Disallow: /local/map
 Disallow: /local/venue
 Disallow: /local/housing
-# ...except the housing co-ops, which authGate keeps public (their backend
-# browse is @Public). A longer Allow beats a shorter Disallow.
-Allow: /local/housing/coop
 Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /magazine

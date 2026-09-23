@@ -1,0 +1,236 @@
+/* Publish bar, inner layout only: status column on the left, actions on the
+   right. The page owns the sticky placement, surface, top border and shadow;
+   this file owns the padding and everything inside. Tokens only. */
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  padding: 14px 20px;
+}
+
+/* The bar takes focus only programmatically, as a landing spot when the
+   button that held focus disappears between phases. It is a container, so
+   the global ring around the whole strip would read as a stray selection. */
+.bar:focus,
+.bar:focus-visible {
+  outline: none;
+}
+
+.status {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.statusLine {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.lineWithIcon {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--ink-60);
+}
+
+.lineIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+}
+
+.result {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.result .lineIcon {
+  color: var(--ink-40);
+}
+
+.result .iconSuccess {
+  color: var(--jade-ink);
+}
+
+/* The flag in flight, set off from the count by a hairline divider. */
+.currentFlag {
+  margin-inline-start: 4px;
+  padding-inline-start: 8px;
+  border-inline-start: 1px solid var(--line-2);
+  font-weight: 400;
+  color: var(--ink-60);
+}
+
+/* Progress: a slim track under the "Adding 4 of 11" line. The fill spans
+   the track and scales along the inline axis, so each step animates on the
+   compositor. The track's rounding and clip give the fill its shape. */
+.progressTrack {
+  position: relative;
+  height: 6px;
+  max-width: 420px;
+  border-radius: var(--radius-pill);
+  background: var(--line);
+  overflow: hidden;
+}
+
+.progressFill {
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease);
+}
+
+.progressFill:dir(rtl) {
+  transform-origin: right center;
+}
+
+/* Failures: one tinted block, one row per reason. */
+.failures {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--danger-rgb), 0.24);
+  border-radius: var(--radius-badge);
+  background: rgba(var(--danger-rgb), 0.06);
+}
+
+.failuresTitle {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--danger);
+}
+
+/* The disclosure only exists on phones; wider screens always list the
+   failures, so the toggle stays out of the way there. */
+.failures .failuresToggle {
+  display: none;
+  align-self: flex-start;
+  margin-inline-start: 23px;
+}
+
+.failuresToggleIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.failuresToggle[aria-expanded="true"] .failuresToggleIcon {
+  transform: rotate(180deg);
+}
+
+.failureGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0 0 0 23px;
+  list-style: none;
+}
+
+.failureGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+}
+
+.failureFlags {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.failureReason {
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+
+/* The CTA carries the pack name, which can be long: let it wrap inside the
+   pill so the bar keeps to the workspace width. */
+.actions .cta {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* Phones: keep the dock short and clear of the home indicator. */
+@media (--lg) {
+  .bar {
+    padding: 12px 16px;
+    padding-block-end: max(12px, env(safe-area-inset-bottom));
+  }
+
+  /* The idle "who sees this" helper stays in the live region for screen
+     readers but takes no room; the review dialog repeats it on screen before
+     anything happens. A blocked reason always shows. */
+  .statusLine[data-helper-only="true"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* With nothing else in the status column it has no height, so the row gap
+     above the CTA would be empty space. */
+  .bar:has(> .status > .statusLine[data-helper-only="true"]:only-child) {
+    row-gap: 0;
+  }
+
+  .failures .failuresToggle {
+    display: inline-flex;
+  }
+
+  .failureGroups[data-expanded="false"] {
+    display: none;
+  }
+
+  .actions {
+    width: 100%;
+    margin-inline-start: 0;
+  }
+
+  .actions .cta {
+    flex: 1 1 auto;
+  }
+}
+
+@media (pointer: coarse) {
+  .failures .failuresToggle {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressFill,
+  .failuresToggleIcon {
+    transition: none;
+  }
+}

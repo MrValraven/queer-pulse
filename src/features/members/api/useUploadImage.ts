@@ -231,7 +231,7 @@ export function useUploadImage(kind: UploadKind) {
       } catch (err) {
         logError(err, { scope: "useUploadImage", kind });
         if (err instanceof ImageProcessingError) throw err;
-        throw new ImageProcessingError(RETRY_KEY);
+        throw new ImageProcessingError(RETRY_KEY, undefined, { cause: err });
       }
 
       // Persist the crop, best-effort, AFTER the upload itself has already

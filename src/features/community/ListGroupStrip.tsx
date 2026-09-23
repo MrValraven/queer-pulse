@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
 import { Button, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -7,113 +6,39 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useCreateReadingGroupProposal } from "./api/useCreateReadingGroupProposal";
 import type { ReadingGroupProposalFormat } from "./api/community.api";
-import { type Format, type Group } from "./readingGroups.data";
+import type { Group } from "./readingGroups.data";
+import { buildDemoGroup } from "./listGroup.demo";
+import { ListGroupSuccess } from "./ListGroupSuccess";
+import { ListGroupTextRow } from "./ListGroupTextRow";
 import styles from "./ReadingGroupsPage.module.css";
 
-// option value stays canonical English — it's compared (`formatField ===
+const KEY_PREFIX = "community:readingGroups.listGroup.";
+
+// option value stays canonical English: it's compared (`formatField ===
 // "Online"`) and sent to the API; only the visible label is translated.
 const FORMAT_OPTIONS: { value: string; labelKey: string }[] = [
-  {
-    value: "In-person",
-    labelKey: "community:readingGroups.listGroup.formatOption.inPerson",
-  },
-  {
-    value: "Online",
-    labelKey: "community:readingGroups.listGroup.formatOption.online",
-  },
-  {
-    value: "Either",
-    labelKey: "community:readingGroups.listGroup.formatOption.either",
-  },
+  { value: "In-person", labelKey: `${KEY_PREFIX}formatOption.inPerson` },
+  { value: "Online", labelKey: `${KEY_PREFIX}formatOption.online` },
+  { value: "Either", labelKey: `${KEY_PREFIX}formatOption.either` },
 ];
 
 const MAX_PEOPLE_OPTIONS = ["4", "6", "8"];
 
-/** Build the prototype's instant directory card. Demo mode only: `where`,
- *  `frequency`, `spots` and `language` are invented here, so a live proposal
- *  must never be rendered through this (the server stores a proposal for
- *  review and knows none of those facts). */
-function buildDemoGroup(
-  book: string,
-  whyField: string,
-  formatField: string,
-  maxField: string,
-  t: (key: string) => string,
-): Group {
-  // "Title — Author" → split into book + author where possible.
-  const [titlePart, authorPart] = book.split(/\s+[—-]\s+/);
-  const groupFormat: Format = formatField === "Online" ? "online" : "irl";
-  return {
-    id: `mine-${Date.now()}`,
-    genre: "fiction",
-    format: groupFormat,
-    book: titlePart?.trim() || book,
-    author:
-      authorPart?.trim() ||
-      t("community:readingGroups.listGroup.defaultAuthor"),
-    spine: (titlePart?.trim() || book).charAt(0).toUpperCase(),
-    spineColor: "var(--violet)",
-    name: t("community:readingGroups.listGroup.defaultName"),
-    description:
-      whyField.trim() || t("community:readingGroups.listGroup.newGroupDesc"),
-    where: t(
-      groupFormat === "online"
-        ? "community:readingGroups.listGroup.defaultWhereOnline"
-        : "community:readingGroups.listGroup.defaultWhereIrl",
-    ),
-    frequency: t("community:readingGroups.listGroup.defaultFrequency"),
-    spots: Math.max(1, parseInt(maxField, 10) - 1),
-    language: t("community:readingGroups.listGroup.defaultLang"),
-  };
-}
-
-/** The plum-panel confirmation. Demo says the group is listed, because the
- *  prototype really does put a card at the top of the directory. Live says the
- *  proposal was received, because that is all the API stored. */
-function ListGroupSuccess({
-  book,
-  isDemo,
-  onReset,
-}: {
-  book: string;
-  isDemo: boolean;
-  onReset: () => void;
-}) {
-  const { t } = useTranslation();
-  const prefix = "community:readingGroups.listGroup.";
-  return (
-    <div className={styles.ssSuccess}>
-      <span className={styles.ssSuccessIcon} aria-hidden>
-        <FiCheck />
-      </span>
-      <div className={styles.ssSuccessTitle}>
-        <Translation
-          i18nKey={`${prefix}${isDemo ? "successHeading" : "proposalHeading"}`}
-          components={{ em: <em /> }}
-        />
-      </div>
-      <p className={styles.ssSuccessBody}>
-        <Translation
-          i18nKey={`${prefix}${isDemo ? "successBody" : "proposalBody"}`}
-          components={{ strong: <strong /> }}
-          values={{ book }}
-        />
-      </p>
-      <Button variant="ghost-dark" onClick={onReset}>
-        {t(`${prefix}${isDemo ? "listAnotherCta" : "proposeAnotherCta"}`)}
-      </Button>
-    </div>
-  );
-}
+// The backend caps both the group name and the book at 200 characters.
+const MAX_GROUP_NAME_LENGTH = 200;
+const MAX_BOOK_LENGTH = 200;
 
 /** The "Start your own group" panel: a real form with a plum-panel success
  *  state.
  *
  *  Submits `POST /reading-groups/proposals` in live mode (see
  *  `useCreateReadingGroupProposal`), where the backend stores a proposal for
- *  review and nothing appears in the directory — so live neither calls
+ *  review and nothing appears in the directory, so live neither calls
  *  `onListed` nor claims the group is live. Demo mode keeps the prototype's
- *  instant simulated listing and hands the new card back via `onListed`. */
+ *  instant simulated listing and hands the new card back via `onListed`.
+ *
+ *  The club name is optional. Left blank, the group is named after its first
+ *  book, the way every reading group was named before clubs had names. */
 export function ListGroupStrip({
   onListed,
 }: {
@@ -122,21 +47,25 @@ export function ListGroupStrip({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
+  const [clubField, setClubField] = useState("");
   const [bookField, setBookField] = useState("");
   const [whyField, setWhyField] = useState("");
   const [formatField, setFormatField] = useState("In-person");
   const [maxField, setMaxField] = useState("6");
-  const [submittedBook, setSubmittedBook] = useState<string | null>(null);
+  const [submittedName, setSubmittedName] = useState<string | null>(null);
   const mutation = useCreateReadingGroupProposal();
 
-  function listGroup(e: React.FormEvent) {
-    e.preventDefault();
+  function listGroup(event: React.FormEvent) {
+    event.preventDefault();
     const book = bookField.trim();
     if (!book) return;
+    // The success panel names the group: its typed name, else its first book.
+    const displayName = clubField.trim() || book;
 
     mutation.mutate(
       {
         book,
+        clubName: clubField.trim() || undefined,
         why: whyField.trim() || undefined,
         format: formatField as ReadingGroupProposalFormat,
         maxPeople: parseInt(maxField, 10),
@@ -144,22 +73,29 @@ export function ListGroupStrip({
       {
         onSuccess: () => {
           if (demoMode) {
-            onListed(buildDemoGroup(book, whyField, formatField, maxField, t));
+            onListed(
+              buildDemoGroup(
+                {
+                  book,
+                  clubName: clubField,
+                  why: whyField,
+                  format: formatField,
+                  maxPeople: maxField,
+                },
+                t,
+              ),
+            );
           }
-          setSubmittedBook(book);
+          setSubmittedName(displayName);
+          setClubField("");
           setBookField("");
           setWhyField("");
           showToast(
-            t(
-              demoMode
-                ? "community:readingGroups.listGroup.successToast"
-                : "community:readingGroups.listGroup.proposalToast",
-            ),
+            t(`${KEY_PREFIX}${demoMode ? "successToast" : "proposalToast"}`),
             "success",
           );
         },
-        onError: () =>
-          showToast(t("community:readingGroups.listGroup.errorToast"), "error"),
+        onError: () => showToast(t(`${KEY_PREFIX}errorToast`), "error"),
       },
     );
   }
@@ -179,65 +115,50 @@ export function ListGroupStrip({
       <div className={styles.ssText}>
         <h3>
           <Translation
-            i18nKey="community:readingGroups.listGroup.heading"
+            i18nKey={`${KEY_PREFIX}heading`}
             components={{ em: <em /> }}
           />
         </h3>
-        <p>
-          {t(
-            demoMode
-              ? "community:readingGroups.listGroup.lead"
-              : "community:readingGroups.listGroup.leadLive",
-          )}
-        </p>
+        <p>{t(`${KEY_PREFIX}${demoMode ? "lead" : "leadLive"}`)}</p>
       </div>
-      {submittedBook ? (
+      {submittedName ? (
         <ListGroupSuccess
-          book={submittedBook}
+          name={submittedName}
           isDemo={demoMode}
-          onReset={() => setSubmittedBook(null)}
+          onReset={() => setSubmittedName(null)}
         />
       ) : (
         <form className={styles.ssForm} onSubmit={listGroup}>
-          <div className={styles.ssRow}>
-            <label className={styles.ssLabel} htmlFor="ss-book">
-              {t("community:readingGroups.listGroup.bookLabel")}
-            </label>
-            <input
-              id="ss-book"
-              className={styles.ssInput}
-              type="text"
-              autoComplete="off"
-              enterKeyHint="next"
-              placeholder={t(
-                "community:readingGroups.listGroup.bookPlaceholder",
-              )}
-              value={bookField}
-              onChange={(e) => setBookField(e.target.value)}
-              required
-            />
-          </div>
-          <div className={styles.ssRow}>
-            <label className={styles.ssLabel} htmlFor="ss-why">
-              {t("community:readingGroups.listGroup.whyLabel")}
-            </label>
-            <input
-              id="ss-why"
-              className={styles.ssInput}
-              type="text"
-              autoComplete="off"
-              enterKeyHint="next"
-              placeholder={t(
-                "community:readingGroups.listGroup.whyPlaceholder",
-              )}
-              value={whyField}
-              onChange={(e) => setWhyField(e.target.value)}
-            />
-          </div>
+          <ListGroupTextRow
+            id="ss-club"
+            label={t(`${KEY_PREFIX}clubLabel`)}
+            placeholder={t(`${KEY_PREFIX}clubPlaceholder`)}
+            value={clubField}
+            onChange={setClubField}
+            maxLength={MAX_GROUP_NAME_LENGTH}
+            isOptional
+          />
+          <ListGroupTextRow
+            id="ss-book"
+            label={t(`${KEY_PREFIX}bookLabel`)}
+            placeholder={t(`${KEY_PREFIX}bookPlaceholder`)}
+            value={bookField}
+            onChange={setBookField}
+            maxLength={MAX_BOOK_LENGTH}
+            isRequired
+          />
+          <ListGroupTextRow
+            id="ss-why"
+            label={t(`${KEY_PREFIX}whyLabel`)}
+            placeholder={t(`${KEY_PREFIX}whyPlaceholder`)}
+            value={whyField}
+            onChange={setWhyField}
+            isOptional
+          />
           <div className={styles.ssRow2}>
             <div className={styles.ssRow}>
               <label className={styles.ssLabel} htmlFor="ss-format">
-                {t("community:readingGroups.listGroup.formatLabel")}
+                {t(`${KEY_PREFIX}formatLabel`)}
               </label>
               <Select
                 id="ss-format"
@@ -251,7 +172,7 @@ export function ListGroupStrip({
             </div>
             <div className={styles.ssRow}>
               <label className={styles.ssLabel} htmlFor="ss-max">
-                {t("community:readingGroups.listGroup.maxLabel")}
+                {t(`${KEY_PREFIX}maxLabel`)}
               </label>
               <Select
                 id="ss-max"
@@ -269,7 +190,7 @@ export function ListGroupStrip({
             className={styles.ssSubmit}
             disabled={!bookField.trim() || mutation.isPending}
           >
-            {t(`community:readingGroups.listGroup.${submitKey}`)}
+            {t(`${KEY_PREFIX}${submitKey}`)}
           </Button>
         </form>
       )}

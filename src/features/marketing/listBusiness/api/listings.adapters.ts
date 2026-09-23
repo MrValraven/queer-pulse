@@ -1,5 +1,6 @@
 import type { PendingListing, PhotoKey } from "../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../listingAccessibility.data";
+import { pricingModeOf, toMenuDraft } from "../listingMenu.data";
 import { toServiceRows } from "../listingServices.data";
 import { ownerPersonalFieldsFrom } from "../ownerPersonalFields";
 import type { ManagedListingDTO } from "./listings.api";
@@ -41,6 +42,11 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
     // client-only key its React list needs.
     accessibility: normalizeAccessibilityDraft(dto.accessibility),
     services: toServiceRows(dto.services),
+    pricingMode: pricingModeOf({
+      pricingMode: dto.pricingMode,
+      cats: dto.cats,
+    }),
+    menu: toMenuDraft(dto.menu),
     // The listing exists, so its submitter agreed. Nothing can un-agree.
     affirmingBaselineAccepted: true,
   };

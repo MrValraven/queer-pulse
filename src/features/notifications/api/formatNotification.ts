@@ -152,6 +152,21 @@ export type NotificationKind =
   // persona; it stays icon-based and speaks in the persona's own name. The
   // copy is CLDR-pluralised on `newItemCount`, mirrored onto `count` below.
   | "persona_update"
+  // Phase 2 persona creator handoff, T8. Sent to EVERY remaining member of a
+  // persona whose creator just changed (mirrors the backend
+  // `notifications_type_enum` value `NotificationType.SubprofileCreatorChanged`
+  // and the `SUBPROFILE_CREATOR_CHANGED` event `SubprofileMembershipService`
+  // emits after the transfer transaction commits, from `leave()` when a
+  // creator with co-owners leaves and from `handOverCreatedPersonasFor` on
+  // account erasure). Carries no actor: the row never names the member who
+  // left, only the persona and its new creator. Payload: `{ subprofileName,
+  // newCreatorName, isYou }`. `isYou` is a boolean, so it never survives
+  // `interpolationTokens` (which copies strings/numbers only), so it instead
+  // picks between two whole `.text` keys (`textYou` for the successor's own
+  // row, `text` for everyone else's), the one kind in this file whose copy
+  // branches this way rather than through a nested `type.<kind>.<variant>`
+  // key, because the two audiences share ONE `.meta` line.
+  | "subprofile_creator_changed"
   // Sent to a safe space's listing owner when a member vouches for it (mirrors
   // the backend `notifications_type_enum` value added in
   // `AddSafeSpaceVouchNotificationType1787500000000`, emitted from
@@ -636,6 +651,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // New work from a persona you follow is somebody else's activity you asked
   // to hear about — the community tab, same as subprofile_credit.
   persona_update: "community",
+  // A persona's creator changing hands is activity inside a persona's own
+  // membership, the same tab as subprofile_credit/persona_update.
+  subprofile_creator_changed: "community",
   // A member vouching for your safe space is community activity, same tab as
   // vouch_received.
   safe_space_vouch: "community",
@@ -1777,6 +1795,27 @@ export function formatNotification(
       meta: t("admin:queueArrival.meta"),
       category: "platform",
       kind: "admin_queue_item",
+    };
+  }
+  // T8 (Phase 2 persona creator handoff). The third and last kind whose copy
+  // needs a hand-computed key rather than the `key =` chain below: the payload
+  // carries `isYou` (a boolean, so it never survives `interpolationTokens`,
+  // which copies scalar string/number entries only), and it picks between two
+  // DIFFERENT `.text` keys that share one flat `.meta` line. Every branch
+  // computed through `key` further down instead shares one full nested key
+  // (`<kind>.<variant>`) across both `.text` and `.meta`. Returns early rather
+  // than forcing that shape onto a two-audience row that doesn't fit it.
+  if (type === "subprofile_creator_changed") {
+    const isYou = (payload as { isYou?: unknown } | null)?.isYou === true;
+    const tokens = interpolationTokens(payload);
+    return {
+      text: t(
+        `notifications:type.subprofile_creator_changed.${isYou ? "textYou" : "text"}`,
+        tokens,
+      ),
+      meta: t("notifications:type.subprofile_creator_changed.meta", tokens),
+      category: "community",
+      kind: "subprofile_creator_changed",
     };
   }
   let key: string;

@@ -6,6 +6,7 @@ import {
   type PhotoKey,
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
+import { pricingModeOf, toMenuDraft } from "./listingMenu.data";
 import { toServiceRows } from "./listingServices.data";
 import type { ManagedListingDTO } from "./api/listings.api";
 import { ownerPersonalFieldsFrom } from "./ownerPersonalFields";
@@ -49,6 +50,11 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     // reorder or a removal from the middle of the list.
     accessibility: normalizeAccessibilityDraft(dto.accessibility),
     services: toServiceRows(dto.services),
+    pricingMode: pricingModeOf({
+      pricingMode: dto.pricingMode,
+      cats: dto.cats,
+    }),
+    menu: toMenuDraft(dto.menu),
     langs: dto.langs,
     // Legacy rows predate the flag; treat a missing value as a physical listing.
     online: dto.online ?? false,

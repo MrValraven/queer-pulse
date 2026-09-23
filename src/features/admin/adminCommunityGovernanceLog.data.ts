@@ -82,6 +82,8 @@ export const GOVERNANCE_FIELD_KEYS: Record<string, string> = {
   type: "communities.governanceLog.meta.field.type",
   whoFor: "communities.governanceLog.meta.field.whoFor",
   tagline: "communities.governanceLog.meta.field.tagline",
+  // The book a reading group is on right now; changes each time it moves on.
+  nowReading: "communities.governanceLog.meta.field.nowReading",
   accessTier: "communities.governanceLog.meta.field.accessTier",
   rosterVisible: "communities.governanceLog.meta.field.rosterVisible",
   features: "communities.governanceLog.meta.field.features",

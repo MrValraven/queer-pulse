@@ -1,4 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import type {
+  ControlPosition,
+  IControl,
+  Map as MapLibreMap,
+  PaddingOptions,
+} from "maplibre-gl";
+import { usePrefersReducedMotion } from "../../shared/hooks";
 import { GREATER_LISBON_BOUNDS } from "../../shared/components/map/siteMapStyle";
 import { useBaseMap } from "../../shared/components/map/useBaseMap";
 import {
@@ -26,6 +33,64 @@ interface UseLisbonMapOptions {
    *  the caller's decision to make. */
   onSelectFreguesia: (name: string) => void;
   onSelectVenue: (venueId: string) => void;
+  /** The list panel floating over the map, if any. The camera keeps pins,
+   *  parish fits and the city view clear of it. */
+  panelRef?: RefObject<HTMLElement | null>;
+  /** Which map edge that panel covers right now: "right" for the desktop
+   *  column, "bottom" for the full screen sheet on a phone, null while the
+   *  list sits outside the map. */
+  panelEdge?: MapPanelEdge | null;
+  /** Adds an empty control slot under the zoom buttons for the caller to
+   *  portal a full screen button into (see `fullscreenControlHost`). */
+  hasFullscreenControl?: boolean;
+}
+
+export type MapPanelEdge = "right" | "bottom";
+
+// The panel owns the right side of the map, so the zoom buttons and the full
+// screen button stack in the opposite corner.
+const CONTROLS_POSITION: ControlPosition = "top-left";
+
+// Never let the panel claim more than this share of the map: past it the
+// camera has no room to fit anything and maplibre refuses the fit outright.
+const MAX_PANEL_PADDING_SHARE = 0.6;
+
+const NO_PADDING: PaddingOptions = { top: 0, right: 0, bottom: 0, left: 0 };
+
+/** The camera padding that keeps the visible map out from under the panel:
+ *  the distance from the panel's inner edge to the map's matching edge, which
+ *  is the panel's size plus its inset in one measurement. */
+function measurePanelPadding(
+  container: HTMLElement | null,
+  panel: HTMLElement | null,
+  edge: MapPanelEdge | null,
+): PaddingOptions {
+  if (!container || !panel || !edge) return NO_PADDING;
+  const containerRect = container.getBoundingClientRect();
+  const panelRect = panel.getBoundingClientRect();
+  if (edge === "right") {
+    const covered = containerRect.right - panelRect.left;
+    const limit = containerRect.width * MAX_PANEL_PADDING_SHARE;
+    return {
+      ...NO_PADDING,
+      right: Math.round(Math.min(Math.max(covered, 0), limit)),
+    };
+  }
+  const covered = containerRect.bottom - panelRect.top;
+  const limit = containerRect.height * MAX_PANEL_PADDING_SHARE;
+  return {
+    ...NO_PADDING,
+    bottom: Math.round(Math.min(Math.max(covered, 0), limit)),
+  };
+}
+
+function isSamePadding(first: PaddingOptions, second: PaddingOptions) {
+  return (
+    first.top === second.top &&
+    first.right === second.right &&
+    first.bottom === second.bottom &&
+    first.left === second.left
+  );
 }
 
 export function useLisbonMap({
@@ -37,9 +102,16 @@ export function useLisbonMap({
   markerLabels,
   onSelectFreguesia,
   onSelectVenue,
+  panelRef,
+  panelEdge = null,
+  hasFullscreenControl = false,
 }: UseLisbonMapOptions) {
   const overlayRef = useRef<FreguesiaOverlay | null>(null);
   const markerManagerRef = useRef<VenueMarkerManager | null>(null);
+  const fullscreenControlRef = useRef<IControl | null>(null);
+  const [fullscreenControlHost, setFullscreenControlHost] =
+    useState<HTMLElement | null>(null);
+  const shouldReduceMotion = usePrefersReducedMotion();
 
   // Latest values without re-creating the map; read from the onLoad/onReveal
   // callbacks (closed over the hook's first render) and from click handlers
@@ -51,6 +123,7 @@ export function useLisbonMap({
   const markerLabelsRef = useRef(markerLabels);
   const selectFreguesiaRef = useRef(onSelectFreguesia);
   const selectVenueRef = useRef(onSelectVenue);
+  const panelEdgeRef = useRef(panelEdge);
   useEffect(() => {
     venuesRef.current = venues;
     selectedFreguesiaRef.current = selectedFreguesia;
@@ -59,13 +132,31 @@ export function useLisbonMap({
     markerLabelsRef.current = markerLabels;
     selectFreguesiaRef.current = onSelectFreguesia;
     selectVenueRef.current = onSelectVenue;
+    panelEdgeRef.current = panelEdge;
   });
 
   const { containerRef, mapRef, ready, failed } = useBaseMap({
     bounds: GREATER_LISBON_BOUNDS,
     fitBoundsOptions: { padding: 24 },
+    controlsPosition: CONTROLS_POSITION,
     revealOn: "idle",
     onLoad: (map) => {
+      // The constructor framed the city before any padding existed, so the
+      // panel would sit over its right third. Pad first, then re-frame with no
+      // animation: the map is still hidden until "idle", so the first frame
+      // anyone sees is already clear of the panel.
+      const initialPadding = measurePanelPadding(
+        containerRef.current,
+        panelRef?.current ?? null,
+        panelEdgeRef.current,
+      );
+      if (!isSamePadding(initialPadding, NO_PADDING)) {
+        map.setPadding(initialPadding);
+        map.fitBounds(GREATER_LISBON_BOUNDS, { padding: 24, duration: 0 });
+      }
+
+      if (hasFullscreenControl) addFullscreenControl(map);
+
       overlayRef.current = createFreguesiaOverlay(map, {
         counts,
         selected: new Set(
@@ -100,8 +191,74 @@ export function useLisbonMap({
       overlayRef.current = null;
       markerManagerRef.current?.clear();
       markerManagerRef.current = null;
+      if (fullscreenControlRef.current) {
+        mapRef.current?.removeControl(fullscreenControlRef.current);
+        fullscreenControlRef.current = null;
+      }
+      setFullscreenControlHost(null);
     },
   });
+
+  // A bare maplibre control group under the zoom buttons, in the same corner
+  // and with the same chrome. It stays empty here: the component portals a
+  // real React button into it, so the label and icon follow i18n and state.
+  function addFullscreenControl(map: MapLibreMap) {
+    const host = document.createElement("div");
+    host.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    const control: IControl = {
+      onAdd: () => host,
+      onRemove: () => host.remove(),
+    };
+    map.addControl(control, CONTROLS_POSITION);
+    fullscreenControlRef.current = control;
+    setFullscreenControlHost(host);
+  }
+
+  // Keep the camera padding equal to what the panel covers. Every camera move
+  // below then lands in the visible part of the map: easeTo centres on the
+  // padded middle, and maplibre ADDS a fitBounds `padding` to this one (the
+  // fit subtracts both from the viewport), so the 24/56px margins there stay
+  // a margin inside the visible area. Re-measured whenever the panel or the
+  // map changes size: entering full screen, the phone sheet growing or
+  // shrinking with its content, a window resize.
+  useEffect(() => {
+    const map = mapRef.current;
+    const container = containerRef.current;
+    if (!map || !container || !ready) return;
+    const panel = panelRef?.current ?? null;
+    let isDisposed = false;
+    let isWaitingForMoveEnd = false;
+
+    function syncPadding() {
+      if (isDisposed || !map) return;
+      const nextPadding = measurePanelPadding(container, panel, panelEdge);
+      if (isSamePadding(map.getPadding(), nextPadding)) return;
+      // Changing padding mid-flight would cut a pin ease or parish fit short.
+      // Let it land, then pad from where it ended.
+      if (map.isMoving()) {
+        if (isWaitingForMoveEnd) return;
+        isWaitingForMoveEnd = true;
+        void map.once("moveend", () => {
+          isWaitingForMoveEnd = false;
+          syncPadding();
+        });
+        return;
+      }
+      map.easeTo({
+        padding: nextPadding,
+        duration: shouldReduceMotion ? 0 : 300,
+      });
+    }
+
+    syncPadding();
+    const observer = new ResizeObserver(syncPadding);
+    observer.observe(container);
+    if (panel) observer.observe(panel);
+    return () => {
+      isDisposed = true;
+      observer.disconnect();
+    };
+  }, [ready, panelEdge, panelRef, shouldReduceMotion, mapRef, containerRef]);
 
   // Re-render the venue pins for the current filter. Depends on `ready` so a
   // filter change made *during* map load (when this bails early) is
@@ -168,5 +325,5 @@ export function useLisbonMap({
     markerManagerRef.current?.setSelected(selectedVenueId);
   }, [selectedVenueId, ready]);
 
-  return { containerRef, failed, ready };
+  return { containerRef, failed, ready, fullscreenControlHost };
 }

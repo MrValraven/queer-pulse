@@ -1,0 +1,85 @@
+/* The builder's flag grid: a toolbar (heading, count, bulk selections), a
+   one-line hint, then every flag as a tile. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.titleBlock {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.count {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Two columns on the narrowest phones, so a 375px screen never scrolls
+   sideways and each tile keeps a usable size. */
+@media (max-width: 400px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+/* The listbox's keyboard instructions, read by screen readers only. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

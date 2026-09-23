@@ -525,6 +525,112 @@
   display: none;
 }
 
+/* ── Directory map view (DirectoryMapView.tsx) ──
+   The map spans the content width and the list floats over its right edge.
+   `.stage` wraps both so full screen takes the list along; it carries
+   `data-fullscreen` in either full screen mode (the Fullscreen API or the
+   fixed overlay fallback, see useMapFullscreen.ts). These classes are separate
+   from .body/.mapPanel/.mapCanvas/.sidebar above, which the housing map and
+   the location picker still use for the side-by-side layout. */
+.directoryMapBody {
+  padding: 32px 0 var(--section-y-80);
+}
+.stage {
+  position: relative;
+}
+.stage[data-fullscreen="true"] {
+  /* Nothing of the page may show through around the map. */
+  background: var(--cream);
+}
+.stage[data-fullscreen-mode="native"] {
+  height: 100%;
+}
+.stage[data-fullscreen-mode="fallback"] {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+}
+.stageMap {
+  /* MapLoading and .mapError lay themselves over this box. */
+  position: relative;
+  /* cream tinted with plum for the map panel surface */
+  background: color-mix(in srgb, var(--cream) 88%, var(--plum));
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-18);
+  overflow: hidden;
+  /* Same entrance as .mapPanel: switching List to Map re-creates the MapLibre
+     instance, and this makes that read as a reveal. Reduced motion snaps to
+     the end state via the global net in effects.css. */
+  animation: qpMapIn var(--dur-slow) var(--ease-out) both;
+}
+/* Width and height only, so maplibre's own `.maplibregl-map` positioning on
+   this element can win the load-order tie without breaking anything. The
+   height leaves the nav chrome and a little air in view. */
+.stageMapCanvas {
+  width: 100%;
+  height: clamp(560px, calc(100svh - var(--sticky-top) - 48px), 860px);
+}
+:global([data-theme="dark"]) .stageMapCanvas {
+  filter: saturate(0.92) brightness(0.82);
+}
+.stage[data-fullscreen="true"] .stageMap {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.stage[data-fullscreen="true"] .stageMapCanvas {
+  height: 100%;
+}
+/* The list, floating over the map's right edge with its own scroll. Its
+   measured width plus inset becomes the camera's right padding (useLisbonMap),
+   so pins and parish fits land in the part of the map left visible. */
+.floatingPanel {
+  position: absolute;
+  inset-block: 12px;
+  inset-inline-end: 12px;
+  z-index: var(--z-raised);
+  width: 380px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Keep the scrollbar off the cards, as in .sidebar. */
+  scrollbar-gutter: stable;
+  padding: 0 10px 14px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e3);
+  animation: qpMapIn var(--dur-slow) var(--ease-out) both;
+}
+:global([data-theme="dark"]) .floatingPanel {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+/* Heading, count and the clear chip stay in view while the cards scroll. */
+.floatingPanel .sbTop {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-raised);
+  margin-bottom: 4px;
+  padding: 16px 0 12px;
+  background: var(--paper);
+}
+/* maplibre parks its attribution in the bottom-right corner, which the list
+   covers. The bottom-left corner is free, so the credit moves there. */
+.stage :global(.maplibregl-ctrl-bottom-right) {
+  right: auto;
+  left: 0;
+}
+/* The full screen button portalled into the zoom group's control slot
+   (LisbonMap.tsx). maplibre frames and sizes it through
+   `.maplibregl-ctrl-group button`; the doubled class outranks that selector
+   for the two things changed here, centring the icon and its colour. */
+.fullscreenButton.fullscreenButton {
+  display: grid;
+  place-items: center;
+  /* css-scale-allow: non-flipping-text. maplibre paints the control group
+     white in both themes, so the icon stays dark like the zoom glyphs. */
+  color: var(--plum);
+}
+
 @media (--compact) {
   .body {
     grid-template-columns: 1fr;
@@ -568,4 +674,80 @@
 
 :global([data-theme="dark"]) .vc {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* Directory map view on a phone: the map stacks above the list in page flow,
+   as the side-by-side layout did, with the jump-to-list button between them.
+   Full screen turns the list into a sheet over the bottom of the map. */
+@media (--compact) {
+  .stage {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .stageMapCanvas {
+    height: clamp(300px, 56svh, 460px);
+  }
+  .floatingPanel {
+    position: static;
+    z-index: auto;
+    width: auto;
+    overflow: visible;
+    overscroll-behavior: auto;
+    scrollbar-gutter: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+  }
+  .floatingPanel .sbTop {
+    position: static;
+    margin-bottom: 16px;
+    padding: 0;
+    background: none;
+  }
+  /* The list sits outside the map here, so the credit goes back to its own
+     corner. */
+  .stage :global(.maplibregl-ctrl-bottom-right) {
+    right: 0;
+    left: auto;
+  }
+
+  .stage[data-fullscreen="true"] .jumpToList {
+    display: none;
+  }
+  /* The sheet's measured height becomes the camera's bottom padding
+     (useLisbonMap), so a tapped pin settles above it. */
+  .stage[data-fullscreen="true"] .floatingPanel {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: var(--z-raised);
+    max-height: 45svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 16px calc(16px + env(safe-area-inset-bottom));
+    background: var(--paper);
+    border: 1px solid rgba(var(--line-rgb), 0.09);
+    border-bottom: 0;
+    border-radius: var(--radius-18) var(--radius-18) 0 0;
+    box-shadow: var(--shadow-e4);
+  }
+  .stage[data-fullscreen="true"] .floatingPanel .sbTop {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-raised);
+    margin-bottom: 4px;
+    padding: 16px 0 12px;
+    background: var(--paper);
+  }
+  /* The sheet covers the bottom edge; the top-right corner is free. The
+     credit is capped short of the zoom column on the left so a phone-width
+     line wraps beside the buttons instead of running over them. */
+  .stage[data-fullscreen="true"] :global(.maplibregl-ctrl-bottom-right) {
+    top: 0;
+    bottom: auto;
+    max-width: calc(100% - 56px);
+  }
 }

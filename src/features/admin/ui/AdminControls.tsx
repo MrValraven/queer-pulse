@@ -56,14 +56,19 @@ export function AdminToggle({
   onChange,
   label,
   disabled = false,
+  id,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
   disabled?: boolean;
+  /** Lets a visible `<label htmlFor>` name the switch and toggle it on
+   *  click; a call site that labels it that way can omit `label`. */
+  id?: string;
 }) {
   return (
     <button
+      id={id}
       type="button"
       role="switch"
       aria-checked={checked}

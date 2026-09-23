@@ -1,19 +1,10 @@
 import type { CommunityCardDTO } from "../communities/api/communities.api";
+import { READING_GROUP_TAG } from "../communities/communityTags.data";
 import { SPINE_COLORS, type Format, type Group } from "./readingGroups.data";
 
-/**
- * The curated community tag that MAKES a community a reading group.
- *
- * A reading group is a community, not a table of its own. That is what lets a
- * group inherit a roster, join requests, posts, moderation and a detail page
- * the moment it exists, instead of growing a second, thinner copy of all five
- * next to the real ones. `book-club` is already in the platform's curated
- * `COMMUNITY_TAGS` vocabulary, so the directory is a filter over an endpoint
- * that already exists (`GET /communities?tags=book-club`) rather than a new
- * one, and a group created through the ordinary community flow shows up here
- * too without anybody wiring it.
- */
-export const READING_GROUP_TAG = "book-club";
+/** Re-exported so reading-group callers keep one import site; the constant
+ *  and its rationale live beside the tag vocabulary. */
+export { READING_GROUP_TAG };
 
 /** The two curated tags a group carries to say where it meets. */
 const IN_PERSON_TAG = "in-person-meetups";
@@ -53,7 +44,8 @@ function spineColorForSlug(slug: string): string {
  * with plausible defaults is the ephemeral prototype this replaced.
  */
 export function communityCardToReadingGroup(card: CommunityCardDTO): Group {
-  const book = card.name;
+  const nowReading = card.nowReading?.trim() || null;
+  const book = nowReading ?? card.name;
   return {
     id: card.slug,
     communitySlug: card.slug,
@@ -63,9 +55,9 @@ export function communityCardToReadingGroup(card: CommunityCardDTO): Group {
     author: null,
     spine: book.trim().charAt(0).toUpperCase() || "?",
     spineColor: spineColorForSlug(card.slug),
-    // The group's own name would only repeat the book it is named after, so
-    // the card shows the book once and leaves this empty.
-    name: null,
+    // A group named after its book shows the book once. A named club shows
+    // its own name under the book it is reading now.
+    name: nowReading !== null && nowReading !== card.name ? card.name : null,
     description: card.tagline,
     where: null,
     frequency: null,

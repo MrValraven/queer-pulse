@@ -3,7 +3,10 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { ApiError } from "../../../shared/api/client";
 import { movedProfileSlugFromError } from "../../members/useMovedHandleRedirect";
-import { movedPersonaHandleFromError } from "../useMovedPersonaRedirect";
+import {
+  movedPersonaHandleFromError,
+  rehomedNestedPersonaFromError,
+} from "../useMovedPersonaRedirect";
 import {
   getProfileSubprofiles,
   getSubprofileByHandle,
@@ -52,12 +55,15 @@ export type PublicSubprofileResult =
    *  `not-found` told a visitor that a persona which exists does not (DES-22),
    *  and told its owner their page had vanished. `retry` re-runs the read. */
   | { state: "error"; retry: () => void }
-  /** PRD-204. The address exists, at a different one. The server answered a
-   *  handle (or an owner slug) released by a rename and still inside its
-   *  reclaim cooldown, and named where it now leads. The raw `ApiError` is
-   *  handed on because the two forwarding shapes name different things
-   *  (`PERSONA_MOVED` a persona handle, `PROFILE_MOVED` a member username) and
-   *  the page reads whichever one its own route can act on. */
+  /** PRD-204 / Phase 2. The address exists, at a different one. The server
+   *  answered a handle (or an owner slug) released by a rename and still
+   *  inside its reclaim cooldown, or a nested address whose persona's creator
+   *  role has since transferred to another member, and named where it now
+   *  leads. The raw `ApiError` is handed on because the three forwarding
+   *  shapes name different things (`PERSONA_MOVED` a persona handle,
+   *  `PROFILE_MOVED` a member username, `PERSONA_REHOMED` a persona's whole
+   *  nested pair) and the page reads whichever one its own route can act
+   *  on. */
   | { state: "moved"; error: unknown };
 
 /** `PublicSubprofileResult` minus the `loading` branch — what the react-query
@@ -84,16 +90,20 @@ function restrictedStateFromError(err: unknown): RestrictedState | undefined {
   return undefined;
 }
 
-/** Whether a failure is one of PRD-204's forwarding payloads — a persona
- *  handle, or the owner username a nested persona hangs off, released by a
- *  rename and still inside its reclaim cooldown. Both arrive as a 404 carrying
- *  a `code`, and both have to reach the page as an ERROR rather than as an
- *  outcome: the whole point is to forward, and reporting an absence is the one
- *  answer that is wrong. */
+/** Whether a failure is one of the public read's forwarding payloads: PRD-204's
+ *  moved persona handle, PRD-204's moved owner username a nested persona
+ *  hangs off (both released by a rename and still inside their reclaim
+ *  cooldown), or Phase 2's rehomed nested address (the persona's creator role
+ *  transferred to another member, moving one or both of
+ *  `/members/:ownerSlug/:slug`'s own segments). All three arrive as a 404
+ *  carrying a `code`, and all three have to reach the page as an ERROR rather
+ *  than as an outcome: the whole point is to forward, and reporting an
+ *  absence is the one answer that is wrong. */
 function isMovedError(err: unknown): boolean {
   return (
     movedPersonaHandleFromError(err) !== null ||
-    movedProfileSlugFromError(err) !== null
+    movedProfileSlugFromError(err) !== null ||
+    rehomedNestedPersonaFromError(err) !== null
   );
 }
 

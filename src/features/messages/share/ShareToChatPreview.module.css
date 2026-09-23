@@ -1,0 +1,140 @@
+/* Right-hand column of the share modal: recipients plus a miniature of the
+   sent bubble. The bubble styling is local on purpose (see the JSDoc on
+   ShareToChatPreview.tsx), and the wallpaper layer copies the one in
+   WallpaperModal.module.css so the member's own pattern shows behind it. */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  background: rgba(var(--plum-rgb), 0.035);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+}
+
+.label {
+  margin: 0;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* ── To line ──────────────────────────────────────────────────────────────── */
+.toRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 28px;
+}
+.toLabel {
+  flex: none;
+  padding-top: 5px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.toEmpty {
+  padding-top: 5px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 160px;
+  padding: 3px 9px 3px 3px;
+  background: rgba(var(--jade-rgb), 0.1);
+  border-radius: var(--radius-pill);
+}
+.chipName {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Mini chat surface ────────────────────────────────────────────────────── */
+.surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 220px;
+  padding: 16px 14px;
+  background-color: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  --chat-pattern-scale: 0.475;
+}
+.surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--chat-pattern-on, 0);
+  background-color: rgba(var(--line-rgb), var(--chat-pattern-alpha));
+  -webkit-mask-image: var(--chat-pattern-mask, none);
+  mask-image: var(--chat-pattern-mask, none);
+  -webkit-mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
+  mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+
+/* One sent bubble with its tail corner, like the last bubble of a run. */
+.bubble {
+  position: relative;
+  z-index: 1;
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  max-width: min(100%, 300px);
+  padding: 6px;
+  background: var(--plum);
+  border-radius: var(--radius-18);
+  border-end-end-radius: var(--radius-7);
+  box-shadow: var(--shadow-e2);
+  /* Matches the real `.sent` bubble: the fill is plum in both themes, so the
+     type comes from the cream channels that stay light, and inline links
+     read the same AA-safe coral `linkify.module.css` uses on plum. */
+  color: rgba(var(--cream-rgb), 0.97);
+  --chat-link-ink: var(--accent-soft);
+}
+.text {
+  padding: 2px 8px 0;
+  font-size: var(--text-13-5);
+  line-height: 1.42;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.time {
+  align-self: flex-end;
+  padding: 2px 6px 0;
+  font-size: var(--text-10-5);
+  color: rgba(var(--cream-rgb), 0.7);
+}

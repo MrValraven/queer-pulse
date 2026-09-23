@@ -1,17 +1,20 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FiSlash } from "react-icons/fi";
-import { PageShell } from "../../shared/components/layout";
+import { AppShell } from "../../shared/components/layout";
 import { Spinner } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isSavedItemUnavailable } from "../../app/providers/useSaved";
+import { linkToPath } from "../../app/routeMap";
 import type { SavedItemDTO } from "./api/saved.api";
 import { useSharedSavedList } from "./api/SavedLists.queries";
 import { SavedUnavailableNote } from "./SavedUnavailableNote";
 import styles from "./SavedListSharedPage.module.css";
 
-/** One item on the shared list. Read-only and inert: a recipient may not have
- *  an account, so nothing here links into the member surface.
+/** One item on the shared list. Every reader is a signed-in member, so an item
+ *  the API reports openable links to its own page, the same rule the owner's
+ *  `SavedListItemRow` follows. The API resolves `href` through the reader's
+ *  eyes and sends `null` for anything they cannot open.
  *
  *  An item the API reports unavailable says so (PRD-169). This page is the case
  *  that hurt most: somebody sent a list to a friend, and a subject that has
@@ -19,6 +22,7 @@ import styles from "./SavedListSharedPage.module.css";
  *  remove hint here, because the reader owns nothing on this page. */
 function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
   const isUnavailable = isSavedItemUnavailable(item);
+  const canOpen = !isUnavailable && Boolean(item.href);
 
   return (
     <li
@@ -28,7 +32,13 @@ function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
         {item.kind.slice(0, 3).toUpperCase()}
       </span>
       <span>
-        <span className={styles.rowTitle}>{item.title}</span>
+        {canOpen && item.href ? (
+          <Link to={linkToPath(item.href)} className={styles.rowTitle}>
+            {item.title}
+          </Link>
+        ) : (
+          <span className={styles.rowTitle}>{item.title}</span>
+        )}
         {item.meta && <span className={styles.rowMeta}>{item.meta}</span>}
         {item.description && (
           <span className={styles.rowBlurb}>{item.description}</span>
@@ -58,21 +68,21 @@ function SharedSavedListGone() {
 }
 
 /**
- * A saved list somebody shared, read by whoever holds the link.
+ * A saved list somebody shared, read by a signed-in member who holds the link.
  *
- * OUTSIDE THE WALLED GARDEN, deliberately, and matching what the backend
- * already does: `SharedSavedListController` is `@Public()`, so the token is the
- * one and only credential. The point is a friend who has just moved to the city
- * and does not have an account yet. `/lists/:token` is therefore not in
- * `GATED_PATTERNS`, and this page uses the marketing `PageShell` rather than
- * `AppShell` so it renders for a signed-out reader.
+ * Members-only by product decision: opening a shared list always needs a
+ * QueerPulse account. `/lists/*` is in `GATED_PATTERNS`, so a signed-out
+ * visitor is sent to sign-in with a `?next=` back to this link, and the backend
+ * read `GET /saved-lists/:token` sits behind `ActiveMemberGuard`. The token
+ * decides WHICH list a signed-in member sees. The page renders in `AppShell`
+ * like the rest of the member surface.
  *
  * It shows the list's name and its items and NOTHING about who made it. That
  * mirrors `SharedSavedListDTO`, which carries no owner id, slug, name, or
- * avatar: the recipient was given the places, not the person. If the member
- * wants their friend to know the list is theirs, they say so in the message
- * they send with the link, which is a disclosure they make rather than one this
- * page makes for them.
+ * avatar: the recipient was given the places and nothing about the person. If
+ * the member wants their friend to know the list is theirs, they say so in the
+ * message they send with the link, which is a disclosure they make rather than
+ * one this page makes for them.
  *
  * `noIndex` because a link that is meant for one person has no business in a
  * search index, the same reason `CardVerifyPage` carries it.
@@ -93,7 +103,7 @@ export function SavedListSharedPage() {
   );
 
   return (
-    <PageShell>
+    <AppShell>
       <PageMeta title={t("members:savedLists.shared.metaTitle")} noIndex />
       <div className={styles.page}>
         <article className={styles.panel}>
@@ -131,6 +141,6 @@ export function SavedListSharedPage() {
           )}
         </article>
       </div>
-    </PageShell>
+    </AppShell>
   );
 }

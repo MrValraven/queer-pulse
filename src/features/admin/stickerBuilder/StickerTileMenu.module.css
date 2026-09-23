@@ -1,0 +1,160 @@
+/* A sticker tile's kebab and its menu. The trigger floats over the corner of
+   the sticker art, so it carries its own paper disc to stay legible on the
+   checkerboard and on any sticker colour behind it. */
+
+.wrap {
+  position: relative;
+}
+
+.trigger {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--ink-60);
+  font-size: var(--text-16);
+  cursor: pointer;
+  box-shadow: var(--shadow-e2);
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+/* Grow the tap target to the 44px floor without growing the disc. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+}
+
+.trigger[aria-expanded="true"] {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Portalled to `document.body` and placed by `useAnchoredPopover`, so
+   `position` and the offsets come from that hook's inline style; this class
+   only carries the fallback for the single commit before the first
+   measurement lands (`.menuUnplaced`), the look, and a layers token that
+   outranks the sticky publish dock. */
+.menu {
+  position: fixed;
+  z-index: var(--z-popover-portal);
+  min-width: 212px;
+  max-width: calc(100vw - 2 * var(--gap-sm));
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  box-shadow: var(--shadow-e3);
+}
+
+.menuFlipped {
+  transform-origin: bottom right;
+}
+
+/* Carried for the single commit before the first measurement lands. Also
+   `fixed`, so an unplaced panel never takes flow space at the end of
+   `<body>`. Transparent and inert to the pointer, but still focusable:
+   `visibility: hidden` refuses focus, and on a first open React can run the
+   focus effect while the panel is still in this state. */
+.menuUnplaced {
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+/* The menu stays visually compact on desktop; a coarse pointer gets the
+   44px floor so a stack of items is safe to tap in a row. */
+@media (pointer: coarse) {
+  .item {
+    min-height: 44px;
+  }
+}
+
+.itemIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--ink-60);
+  font-size: var(--text-15);
+}
+
+.item:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background: var(--wash);
+  }
+}
+
+.itemDanger,
+.itemDanger .itemIcon {
+  color: var(--danger);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .itemDanger:hover {
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}
+
+/* A move at an end of the pack, or anything waiting on a save in flight.
+   `aria-disabled` keeps the item focusable so the list keeps its shape.
+   Dimmed by opacity: --ink-40 sits too close to body ink to read as off. */
+.item[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item[aria-disabled="true"]:hover {
+    background: transparent;
+  }
+}
+
+.separator {
+  height: 1px;
+  margin: 5px 4px;
+  background: var(--line);
+}

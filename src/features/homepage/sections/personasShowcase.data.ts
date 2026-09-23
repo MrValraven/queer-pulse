@@ -8,7 +8,7 @@
  * plain literals here since names aren't localized. */
 import type { TFunction } from "../../../shared/i18n/types";
 
-export type PersonaKey = "main" | "mara" | "atelier" | "byline";
+export type PersonaKey = "main" | "drag" | "yoga" | "poetry";
 
 export type PersonaTint = "plum" | "acc" | "jade" | "mute";
 
@@ -28,8 +28,11 @@ export interface PersonaTile {
 export interface PersonaProfile {
   key: PersonaKey;
   initials: string;
+  /** Unsplash photo for the avatar. `rect` pre-crops the source around the
+   *  face, so the small square stays readable; PersonaAvatar adds the size. */
+  avatarUrl: string;
   name: string;
-  /** Mara's name renders in small caps letterspacing, matching a drag stage name. */
+  /** Sophie's name renders in small caps letterspacing, matching a drag stage name. */
   nameCaps?: boolean;
   tint: PersonaTint;
   visibility: PersonaVisibility;
@@ -40,9 +43,9 @@ export interface PersonaProfile {
   /** One-line bio shown on the persona's glimpse card. */
   bio: string;
   meta: string[];
-  /** Reused from ../../subprofiles/data/subprofiles.data.ts — the closest
-   *  existing persona of each kind in the app's own demo fixtures, rather
-   *  than new stock photos. */
+  /** Unsplash photos picked for each side. Portrait shots pass crop=faces
+   *  and a height that matches the tile shape, so the thin strips keep
+   *  faces in frame. */
   tiles: PersonaTile[];
   foot: string;
   /** The "speaking as…" quote shown at the foot of the stage's audience panel. */
@@ -56,6 +59,9 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
     main: {
       key: "main",
       initials: "SM",
+      // The speaker from Sofia's conference talk tile.
+      avatarUrl:
+        "https://images.unsplash.com/photo-1715610258704-e8f9f5710fe0?rect=2277,1504,1103,1103",
       name: "Sofia Marques",
       tint: "plum",
       visibility: "open",
@@ -70,163 +76,168 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
         t("homepage:subprofiles.personas.main.meta.2"),
       ],
       tiles: [
-        // Rui Marçal (developer persona) cover photo.
+        // Hand-drawn app wireframes with an orange pen.
         {
           label: t("homepage:subprofiles.personas.main.tiles.0.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=800&h=280&auto=format&fit=crop",
         },
-        // GRAIN's "Held" portfolio piece.
+        // Wireframe open on a tablet beside a coffee mug.
         {
           label: t("homepage:subprofiles.personas.main.tiles.1.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1597534458220-9fb4969f2df5?q=80&w=800&h=280&auto=format&fit=crop",
         },
-        // Terceiro Piso's gallery room (Held, Again exhibition).
+        // Woman speaking into a mic in front of a seated audience.
         {
           label: t("homepage:subprofiles.personas.main.tiles.2.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1715610258704-e8f9f5710fe0?q=80&w=1200&h=200&auto=format&fit=crop&crop=faces",
         },
       ],
       foot: t("homepage:subprofiles.personas.main.foot"),
       note: t("homepage:subprofiles.personas.main.note"),
       laneLabel: t("homepage:subprofiles.personas.main.laneLabel"),
     },
-    mara: {
-      key: "mara",
-      initials: "MV",
-      name: "Mara Vulgar",
+    drag: {
+      key: "drag",
+      initials: "SS",
+      // The purple-headdress queen from Sophie's first show tile.
+      avatarUrl:
+        "https://images.unsplash.com/photo-1531756012882-a68c4e97ac98?rect=1183,898,1469,1469",
+      name: "Sophie Stication",
       nameCaps: true,
       tint: "acc",
       visibility: "open",
       link: "linked",
-      role: t("homepage:subprofiles.personas.mara.role"),
-      sub: t("homepage:subprofiles.personas.mara.sub"),
-      cta: t("homepage:subprofiles.personas.mara.cta"),
-      bio: t("homepage:subprofiles.personas.mara.bio"),
+      role: t("homepage:subprofiles.personas.drag.role"),
+      sub: t("homepage:subprofiles.personas.drag.sub"),
+      cta: t("homepage:subprofiles.personas.drag.cta"),
+      bio: t("homepage:subprofiles.personas.drag.bio"),
       meta: [
-        t("homepage:subprofiles.personas.mara.meta.0"),
-        t("homepage:subprofiles.personas.mara.meta.1"),
-        t("homepage:subprofiles.personas.mara.meta.2"),
+        t("homepage:subprofiles.personas.drag.meta.0"),
+        t("homepage:subprofiles.personas.drag.meta.1"),
+        t("homepage:subprofiles.personas.drag.meta.2"),
       ],
       tiles: [
-        // Vanda Diesel (drag persona) cover photo.
+        // Drag queen in a purple sculpted headdress.
         {
-          label: t("homepage:subprofiles.personas.mara.tiles.0.label"),
+          label: t("homepage:subprofiles.personas.drag.tiles.0.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1531756012882-a68c4e97ac98?q=80&w=800&h=280&auto=format&fit=crop&crop=faces",
         },
-        // Vanda Diesel's "Motorbike Madonna" look.
+        // Drag queen in gold eye makeup, low stage light.
         {
-          label: t("homepage:subprofiles.personas.mara.tiles.1.label"),
+          label: t("homepage:subprofiles.personas.drag.tiles.1.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1593536604657-c7087cdc9c9c?q=80&w=800&h=280&auto=format&fit=crop&crop=faces",
         },
-        // Vanda Diesel's "First Communion" look.
+        // Two queens laughing at an outdoor festival.
         {
-          label: t("homepage:subprofiles.personas.mara.tiles.2.label"),
+          label: t("homepage:subprofiles.personas.drag.tiles.2.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1554349618-7fe63db620c2?q=80&w=1200&h=200&auto=format&fit=crop&crop=faces",
         },
       ],
-      foot: t("homepage:subprofiles.personas.mara.foot"),
-      note: t("homepage:subprofiles.personas.mara.note"),
-      laneLabel: t("homepage:subprofiles.personas.mara.laneLabel"),
+      foot: t("homepage:subprofiles.personas.drag.foot"),
+      note: t("homepage:subprofiles.personas.drag.note"),
+      laneLabel: t("homepage:subprofiles.personas.drag.laneLabel"),
     },
-    atelier: {
-      key: "atelier",
-      initials: "AV",
-      name: "Atelier Vinte",
+    yoga: {
+      key: "yoga",
+      initials: "YS",
+      // The teal rolled mat from the studio tile: the teaching side leads
+      // with the practice, so no second face stands in for Sofia.
+      avatarUrl:
+        "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?rect=2232,1371,783,783",
+      name: "Yoga com Sofia",
       tint: "jade",
       visibility: "open",
-      link: "standalone",
-      role: t("homepage:subprofiles.personas.atelier.role"),
-      sub: t("homepage:subprofiles.personas.atelier.sub"),
-      cta: t("homepage:subprofiles.personas.atelier.cta"),
-      bio: t("homepage:subprofiles.personas.atelier.bio"),
+      link: "linked",
+      role: t("homepage:subprofiles.personas.yoga.role"),
+      sub: t("homepage:subprofiles.personas.yoga.sub"),
+      cta: t("homepage:subprofiles.personas.yoga.cta"),
+      bio: t("homepage:subprofiles.personas.yoga.bio"),
       meta: [
-        t("homepage:subprofiles.personas.atelier.meta.0"),
-        t("homepage:subprofiles.personas.atelier.meta.1"),
-        t("homepage:subprofiles.personas.atelier.meta.2"),
+        t("homepage:subprofiles.personas.yoga.meta.0"),
+        t("homepage:subprofiles.personas.yoga.meta.1"),
+        t("homepage:subprofiles.personas.yoga.meta.2"),
       ],
       tiles: [
-        // SANTA CRUEL (fashion designer persona) "PENITENTE" collection.
+        // Outdoor class in a garden, arms raised.
         {
-          label: t("homepage:subprofiles.personas.atelier.tiles.0.label"),
+          label: t("homepage:subprofiles.personas.yoga.tiles.0.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1758797315487-b3b225dff7d8?q=80&w=800&h=280&auto=format&fit=crop",
         },
-        // SANTA CRUEL's "IRMÃ" collection.
+        // Rolled mats on a studio shelf. No solo portrait here: any single
+        // face on this side would read as someone other than Sofia.
         {
-          label: t("homepage:subprofiles.personas.atelier.tiles.1.label"),
+          label: t("homepage:subprofiles.personas.yoga.tiles.1.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?q=80&w=800&h=280&auto=format&fit=crop",
         },
-        // SANTA CRUEL's "PRIMEIRA COMUNHÃO" collection.
+        // Class on a wooden deck by the river.
         {
-          label: t("homepage:subprofiles.personas.atelier.tiles.2.label"),
+          label: t("homepage:subprofiles.personas.yoga.tiles.2.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1644612105654-b6b0a941ecde?q=80&w=1200&h=200&auto=format&fit=crop",
         },
       ],
-      foot: t("homepage:subprofiles.personas.atelier.foot"),
-      note: t("homepage:subprofiles.personas.atelier.note"),
-      laneLabel: t("homepage:subprofiles.personas.atelier.laneLabel"),
+      foot: t("homepage:subprofiles.personas.yoga.foot"),
+      note: t("homepage:subprofiles.personas.yoga.note"),
+      laneLabel: t("homepage:subprofiles.personas.yoga.laneLabel"),
     },
-    byline: {
-      key: "byline",
-      initials: "RD",
-      name: "R. Duarte",
+    poetry: {
+      key: "poetry",
+      initials: "SM",
+      // A pen name gets a pen: this side of Sofia keeps her face out of it.
+      avatarUrl: "https://images.unsplash.com/photo-1455390582262-044cdead277a",
+      name: "S. Marques",
       tint: "mute",
       visibility: "network",
       link: "standalone",
-      role: t("homepage:subprofiles.personas.byline.role"),
-      sub: t("homepage:subprofiles.personas.byline.sub"),
-      cta: t("homepage:subprofiles.personas.byline.cta"),
-      bio: t("homepage:subprofiles.personas.byline.bio"),
+      role: t("homepage:subprofiles.personas.poetry.role"),
+      sub: t("homepage:subprofiles.personas.poetry.sub"),
+      cta: t("homepage:subprofiles.personas.poetry.cta"),
+      bio: t("homepage:subprofiles.personas.poetry.bio"),
       meta: [
-        t("homepage:subprofiles.personas.byline.meta.0"),
-        t("homepage:subprofiles.personas.byline.meta.1"),
-        t("homepage:subprofiles.personas.byline.meta.2"),
+        t("homepage:subprofiles.personas.poetry.meta.0"),
+        t("homepage:subprofiles.personas.poetry.meta.1"),
+        t("homepage:subprofiles.personas.poetry.meta.2"),
       ],
       tiles: [
-        // NIGHTFORM's "Threshold EP" release art.
+        // A typed poem held up on a sheet of paper.
         {
-          label: t("homepage:subprofiles.personas.byline.tiles.0.label"),
+          label: t("homepage:subprofiles.personas.poetry.tiles.0.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1503775387537-3258ef9f1af9?q=80&w=800&h=280&auto=format&fit=crop",
         },
-        // NIGHTFORM's "Static Bloom" release art.
+        // Red roses across an open poetry book.
         {
-          label: t("homepage:subprofiles.personas.byline.tiles.1.label"),
+          label: t("homepage:subprofiles.personas.poetry.tiles.1.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1513094116080-a9255c930d1a?q=80&w=800&h=280&auto=format&fit=crop",
         },
-        // NIGHTFORM (musician persona) cover photo.
+        // Lilacs beside a handwritten page and a fountain pen.
         {
-          label: t("homepage:subprofiles.personas.byline.tiles.2.label"),
+          label: t("homepage:subprofiles.personas.poetry.tiles.2.label"),
           imageUrl:
-            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1529251333259-d36cccaf22ea?q=80&w=1200&h=200&auto=format&fit=crop",
         },
       ],
-      foot: t("homepage:subprofiles.personas.byline.foot"),
-      note: t("homepage:subprofiles.personas.byline.note"),
-      laneLabel: t("homepage:subprofiles.personas.byline.laneLabel"),
+      foot: t("homepage:subprofiles.personas.poetry.foot"),
+      note: t("homepage:subprofiles.personas.poetry.note"),
+      laneLabel: t("homepage:subprofiles.personas.poetry.laneLabel"),
     },
   };
 }
 
 /** Main profile first, then the personas. Drives the stage's persona rail and
  * the showcase's auto-rotation. */
-export const PERSONA_ORDER: PersonaKey[] = [
-  "main",
-  "mara",
-  "atelier",
-  "byline",
-];
+export const PERSONA_ORDER: PersonaKey[] = ["main", "drag", "yoga", "poetry"];
 
-export const DEFAULT_PERSONA_KEY: PersonaKey = "mara";
+export const DEFAULT_PERSONA_KEY: PersonaKey = "drag";
 
 /** Props the stage layout takes. The showcase owns the selection and the
  * rotation, so the layout only renders them and reports clicks. */

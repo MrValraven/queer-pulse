@@ -3,14 +3,17 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type {
   AddStickerBody,
   CreateStickerPackBody,
+  UpdateStickerBody,
   UpdateStickerPackBody,
 } from "./adminStickers.api";
 import {
   addSticker,
   createStickerPack,
+  deleteStickerPack,
   getAdminStickerPacks,
   removeSticker,
   reorderStickers,
+  updateSticker,
   updateStickerPack,
 } from "./adminStickers.api";
 
@@ -39,10 +42,24 @@ export function useAdminStickerPacks() {
   };
 }
 
+/** The member catalogue `useStickerPacks` reads (every demo-mode variant). */
+const MEMBER_STICKER_CATALOGUE_KEY = ["sticker-packs"];
+
+/**
+ * Refreshes the admin pack list and marks the member catalogue stale, so an
+ * admin checking a publish or a redrawn sticker in their own chat sees it
+ * without a reload. Only the admin list's refetch is returned (and awaited
+ * by `mutateAsync`): the builder waits for its own list, and has no reason
+ * to wait for a composer's catalogue.
+ */
 function useInvalidateAdminStickerPacks() {
   const queryClient = useQueryClient();
-  return () =>
-    queryClient.invalidateQueries({ queryKey: ADMIN_STICKER_PACKS_KEY });
+  return () => {
+    void queryClient.invalidateQueries({
+      queryKey: MEMBER_STICKER_CATALOGUE_KEY,
+    });
+    return queryClient.invalidateQueries({ queryKey: ADMIN_STICKER_PACKS_KEY });
+  };
 }
 
 /** Creates a new draft pack; invalidates the pack list on success. */
@@ -112,6 +129,35 @@ export function useReorderStickers() {
       packId: string;
       stickerIds: string[];
     }) => reorderStickers(packId, stickerIds),
+    onSuccess: invalidate,
+  });
+}
+
+/** Relabels, rewords, or redraws one sticker in place; invalidates the pack
+ *  list on success. */
+export function useUpdateSticker() {
+  const invalidate = useInvalidateAdminStickerPacks();
+
+  return useMutation({
+    mutationFn: ({
+      packId,
+      stickerId,
+      body,
+    }: {
+      packId: string;
+      stickerId: string;
+      body: UpdateStickerBody;
+    }) => updateSticker(packId, stickerId, body),
+    onSuccess: invalidate,
+  });
+}
+
+/** Deletes a draft pack; invalidates the pack list on success. */
+export function useDeleteStickerPack() {
+  const invalidate = useInvalidateAdminStickerPacks();
+
+  return useMutation({
+    mutationFn: (packId: string) => deleteStickerPack(packId),
     onSuccess: invalidate,
   });
 }

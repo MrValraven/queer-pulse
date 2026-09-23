@@ -101,6 +101,7 @@ export const GOVERNANCE_FIELD_LABEL_KEYS: Record<string, string> = {
   coverImageUrl: "communities:detail.modtools.history.field.coverImageUrl",
   avatarImageUrl: "communities:detail.modtools.history.field.avatarImageUrl",
   welcomeMessage: "communities:detail.modtools.history.field.welcomeMessage",
+  nowReading: "communities:detail.modtools.history.field.nowReading",
   isPubliclyListed: "communities:detail.modtools.history.field.publiclyListed",
   languages: "communities:detail.modtools.history.field.languages",
   city: "communities:detail.modtools.history.field.city",

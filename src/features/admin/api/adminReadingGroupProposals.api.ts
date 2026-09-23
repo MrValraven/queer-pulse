@@ -25,7 +25,11 @@ export interface AdminReadingGroupProposalDTO {
   id: string;
   /** The member who proposed the group (null if their profile is gone). */
   member: AdminPersonDTO | null;
-  /** "Book title & author" as free text. */
+  /** The name the member gave their club (for example "QPOC Fantasy Club"),
+   *  or null when they left it blank and the group takes its first book's
+   *  title as its name. */
+  clubName: string | null;
+  /** The club's first book ("Book title & author") as free text. */
   book: string;
   /** The optional "Why this book?" note, if any. */
   why: string | null;

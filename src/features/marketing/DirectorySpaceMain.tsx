@@ -3,6 +3,7 @@ import { DirectoryHoursSection } from "./DirectoryHoursSection";
 import { DirectoryVisitSection } from "./DirectoryVisitSection";
 import { DirectoryAboutSection } from "./DirectoryAboutSection";
 import { DirectoryServicesSection } from "./DirectoryServicesSection";
+import { DirectoryMenuSection } from "./DirectoryMenuSection";
 import { DirectoryAccessSection } from "./DirectoryAccessSection";
 import { DirectoryQuestionsSection } from "./DirectoryQuestionsSection";
 import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
@@ -59,7 +60,11 @@ export function DirectorySpaceMain({
         ownerRef={ownerRef}
       />
       <DirectoryAboutSection place={place} />
-      <DirectoryServicesSection place={place} />
+      {place.pricingMode === "menu" ? (
+        <DirectoryMenuSection place={place} />
+      ) : (
+        <DirectoryServicesSection place={place} />
+      )}
       <DirectoryAccessSection place={place} />
       <DirectoryQuestionsSection
         place={place}

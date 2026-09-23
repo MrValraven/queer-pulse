@@ -23,6 +23,7 @@ import type {
   SpaceCardModel,
 } from "../community.model";
 import type { CommunityDraft } from "../startCommunity/startCommunity.data";
+import { READING_GROUP_TAG } from "../communityTags.data";
 import type {
   AccessTier,
   CommunityCardDTO,
@@ -236,6 +237,7 @@ export function detailDtoToDetail(
       replies: [],
     },
     frozen: dto.frozen ?? false,
+    nowReading: dto.nowReading ?? null,
   };
 }
 
@@ -502,6 +504,9 @@ export function draftToCreateDto(draft: CommunityDraft): CreateCommunityDto {
     // greeting" to the backend, and it normalises either to null on write.
     avatarImageUrl: draft.avatarImageUrl || null,
     welcomeMessage: draft.welcomeMessage.trim() || null,
+    // Only a reading group names a book, so every other founding leaves the
+    // field out of the payload entirely.
+    ...(draft.nowReading.trim() ? { nowReading: draft.nowReading.trim() } : {}),
     handle: draft.handle.trim(),
     stewards: draft.stewards
       .filter((s) => s.role !== "owner" && s.key !== "owner")
@@ -541,6 +546,9 @@ export interface EditableCommunityFields {
    *  The detail DTO serves it to owner/co-owner/mod only, which is exactly the
    *  audience that can open this form. */
   welcomeMessage: string;
+  /** The book a reading group is on right now (or "" for none). The edit
+   *  modal shows it only while the community carries the `book-club` tag. */
+  nowReading: string;
 }
 
 /** Live seed: the authoritative current values straight off the detail DTO. */
@@ -561,6 +569,7 @@ export function dtoToEditable(
     tags: dto.tags ?? [],
     avatarImageUrl: dto.avatarImageUrl ?? "",
     welcomeMessage: dto.welcomeMessage ?? "",
+    nowReading: dto.nowReading ?? "",
   };
 }
 
@@ -604,6 +613,8 @@ export function applyDetailOverride(
     tags: patch.type !== undefined ? [badge] : detail.tags,
     about: patch.purpose !== undefined ? [patch.purpose] : detail.about,
     whoFor: patch.whoFor !== undefined ? [patch.whoFor] : detail.whoFor,
+    nowReading:
+      patch.nowReading !== undefined ? patch.nowReading : detail.nowReading,
   };
 }
 
@@ -649,6 +660,7 @@ export function editableToDraft(
     coverImageUrl: editable.coverImageUrl,
     avatarImageUrl: editable.avatarImageUrl,
     welcomeMessage: editable.welcomeMessage,
+    nowReading: editable.nowReading,
     tagline: editable.tagline,
     invites: [],
     handle: "",
@@ -759,6 +771,12 @@ export function draftToUpdateDto(draft: CommunityDraft): UpdateCommunityDto {
     // "" clears the greeting; the backend strips the value to plain text on
     // write, so what is sent here is the member's words verbatim.
     welcomeMessage: draft.welcomeMessage.trim() || null,
+    // "" clears the book, the same contract as the greeting above. The book
+    // belongs to the reading-group tag, so taking `book-club` off the draft
+    // clears it as well.
+    nowReading: draft.tags.includes(READING_GROUP_TAG)
+      ? draft.nowReading.trim() || null
+      : null,
     tags: draft.tags,
   };
 }

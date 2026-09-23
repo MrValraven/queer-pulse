@@ -8,6 +8,7 @@ import {
   type PersonaProfile,
   type PersonaTint,
 } from "./personasShowcase.data";
+import { PersonaAvatar } from "./PersonaAvatar";
 import sharedStyles from "./PersonasShowcase.module.css";
 import styles from "./PersonasStage.module.css";
 
@@ -91,12 +92,12 @@ export function PersonaStageRail({
                     aria-hidden="true"
                   />
                 )}
-                <span
+                <PersonaAvatar
+                  initials={persona.initials}
+                  avatarUrl={persona.avatarUrl}
+                  sizePx={32}
                   className={`${styles.railAvatar} ${avatarTintClass[persona.tint] ?? ""}`}
-                  aria-hidden="true"
-                >
-                  {persona.initials}
-                </span>
+                />
                 <span className={styles.railText}>
                   <span className={styles.railName}>{persona.name}</span>
                   <span className={styles.railLane}>{persona.laneLabel}</span>

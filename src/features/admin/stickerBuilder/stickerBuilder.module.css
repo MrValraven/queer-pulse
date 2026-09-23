@@ -1,294 +1,84 @@
-/* Sticker pack builder: three-pane layout (pack rail, template controls,
-   preview grid + publish) shared across AdminStickerPacksPage and its
-   stickerBuilder/* sub-components. */
+/* Sticker pack builder, PAGE LAYOUT ONLY (AdminStickerPacksPage): a compact
+   title line, then the pack rail beside the pack workspace. Every component
+   under stickerBuilder/ owns its own module; nothing else imports this file.
+   Tokens only. */
 
-.builderGrid {
+.page {
+  /* Clears the admin shell's sticky top bar (38px buttons, 14px padding each
+     side and a hairline) with a little air. The one sticky offset for the
+     whole builder: the rail and the workspace (its sticky style column and
+     the tab row's scroll margin) both read it. */
+  --sticker-sticky-top: 84px;
+
+  /* The rail's placement follows the space the page really has (a collapsed
+     admin sidebar gives it more), the same way the workspace's own split
+     does, so the two breakpoints never disagree. */
+  container: sticker-page / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* The breadcrumb already names the page, so the title line stays small and
+   the pack name is the one large title in the workspace. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+.sub {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Narrow first: the rail stacks above the workspace at full width. */
+.layout {
   display: grid;
-  grid-template-columns: 300px 340px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
   align-items: start;
 }
 
-@media (max-width: 1100px) {
-  .builderGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.paneRail,
-.paneControls,
-.panePreview {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* ── Pack rail ─────────────────────────────────────────────────────────── */
-
-.rail {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-panel);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.railHeading {
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  font-weight: 400;
-  color: var(--text-strong);
-  margin: 0;
-}
-
-.railNotice {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  margin: 0;
-}
-
-.railList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.railRow {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--radius-badge);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  background: var(--cream);
-  color: var(--text-strong);
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  cursor: pointer;
-  transition: border-color 0.15s var(--ease);
-}
-
-.railRow:hover {
-  border-color: rgba(var(--accent-rgb), 0.4);
-}
-
-.railRowSelected {
-  border-color: var(--accent);
-  box-shadow: var(--ring-accent-soft);
-}
-
-.railRowName {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.createForm {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-/* ── Pack detail pane ──────────────────────────────────────────────────── */
-
-.detailPane {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-panel);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.detailHeading {
-  font-family: var(--serif);
-  font-size: var(--text-16);
-  font-weight: 400;
-  color: var(--text-strong);
-  margin: 0;
-}
-
-.statusRow {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.detailEmpty {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  margin: 0;
-}
-
-.stickerList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.stickerRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px;
-  border-radius: var(--radius-badge);
-  background: var(--cream);
-}
-
-.stickerThumb {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  border-radius: var(--radius-tag);
-  background: rgba(var(--line-rgb), 0.05);
-}
-
-.stickerLabel {
-  flex: 1;
+.railColumn {
   min-width: 0;
-  font-size: var(--text-13);
-  color: var(--text-strong);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.coverOption {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-12);
-  color: var(--ink-60);
-  white-space: nowrap;
+.workspaceColumn {
+  min-width: 0;
 }
 
-/* ── Template controls ─────────────────────────────────────────────────── */
+/* From 984px of page width the rail (280) and a 680px workspace (the Add
+   tab's two-column split) fit side by side with the 24px gap. The pack list
+   then stays in reach while the workspace scrolls; a long list scrolls
+   inside itself. */
+@container sticker-page (min-width: 984px) {
+  .layout {
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 24px;
+  }
 
-.controlsPanel {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-panel);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.flagFieldset {
-  border: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.flagLegend {
-  font-size: var(--text-12);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-  padding: 0;
-}
-
-.flagActions {
-  display: flex;
-  gap: 8px;
-}
-
-.flagGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 12px;
-}
-
-.flagOption {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-13);
-  color: var(--text-strong);
-}
-
-/* ── Preview grid ──────────────────────────────────────────────────────── */
-
-.previewEmpty {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-}
-
-.previewGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 16px;
-}
-
-.previewTile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.previewCanvas {
-  width: 96px;
-  height: 96px;
-  border-radius: var(--radius-badge);
-  background: rgba(var(--line-rgb), 0.05);
-}
-
-.previewLabel {
-  font-size: var(--text-11);
-  color: var(--ink-60);
-  text-align: center;
-}
-
-/* ── Publish panel ─────────────────────────────────────────────────────── */
-
-.publishRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.progressNote {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  margin: 0;
-}
-
-.blockedNote {
-  margin: 8px 0 0;
-  font-size: var(--text-13);
-  color: var(--ink-60);
-}
-
-.failureNotice {
-  margin: 10px 0 0;
-  padding: 10px 12px;
-  border-radius: var(--radius-badge);
-  background: rgba(var(--danger-rgb), 0.08);
-  color: var(--danger-ink);
-  font-size: var(--text-13);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .railRow {
-    transition: none;
+  .railColumn {
+    position: sticky;
+    top: var(--sticker-sticky-top);
+    max-height: calc(100dvh - var(--sticker-sticky-top) - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
   }
 }

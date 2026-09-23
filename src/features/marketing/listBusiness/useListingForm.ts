@@ -11,7 +11,9 @@ import {
   type PhotoKey,
 } from "./listBusiness.data";
 import { blankDraft, type ListingSeed } from "./listingFormDraft";
+import { applyCategoryPricingDefault } from "./listingMenu.data";
 import { useAccessibilitySetters } from "./useAccessibilitySetters";
+import { useMenuSetters } from "./useMenuSetters";
 import { useServiceSetters } from "./useServiceSetters";
 
 export type { ListingSeed } from "./listingFormDraft";
@@ -50,11 +52,13 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   // beside each other in their own module.
   const accessibilitySetters = useAccessibilitySetters(setDraft);
   const serviceSetters = useServiceSetters(setDraft);
+  const menuSetters = useMenuSetters(setDraft);
   const hoursSetters = useListingHoursSetters(setDraft);
 
-  /** Patch one or more top-level fields. */
+  /** Patch one or more top-level fields. A categories change can re-default
+   *  the priced list (see `applyCategoryPricingDefault`). */
   const set = useCallback((patch: Partial<ListingDraft>) => {
-    setDraft((d) => ({ ...d, ...patch }));
+    setDraft((d) => applyCategoryPricingDefault(d, { ...d, ...patch }));
   }, []);
 
   const reset = useCallback(
@@ -78,9 +82,12 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   const toggleCat = useCallback((cat: string) => {
     setDraft((d) => {
       if (d.cats.includes(cat))
-        return { ...d, cats: d.cats.filter((c) => c !== cat) };
+        return applyCategoryPricingDefault(d, {
+          ...d,
+          cats: d.cats.filter((c) => c !== cat),
+        });
       if (d.cats.length >= 2) return d; // cap at 2
-      return { ...d, cats: [...d.cats, cat] };
+      return applyCategoryPricingDefault(d, { ...d, cats: [...d.cats, cat] });
     });
   }, []);
 
@@ -173,6 +180,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     ...hoursSetters,
     ...accessibilitySetters,
     ...serviceSetters,
+    ...menuSetters,
     ...hoursExceptionSetters,
     setSocial,
     setPhoto,

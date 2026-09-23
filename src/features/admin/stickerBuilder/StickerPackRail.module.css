@@ -1,0 +1,274 @@
+/* Pack rail: the list of every sticker pack, one pressable row each, with the
+   New pack action beside the heading.
+
+   The rail is its own size container. Beside the workspace it is a narrow
+   column (a 280px track leaves about 254px of content box), and the list is
+   vertical. When the page stacks it full width (a phone gives at least about
+   298px from 360px up), the list turns into a horizontal strip of pack chips,
+   so eight packs no longer push the builder below the first screen. */
+
+.rail {
+  container: sticker-rail / inline-size;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+  padding: 16px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 6px;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.headingCount {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.newButton {
+  flex: none;
+}
+
+/* ── Rows ─────────────────────────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  min-width: 0;
+}
+
+.row {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--text-strong);
+  font-family: var(--sans);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--line-rgb), 0.05);
+  }
+}
+
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Selected: a raised card with a coral edge down its leading side. */
+.rowSelected,
+.row.rowSelected:hover {
+  background: var(--paper);
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-e2);
+}
+
+.rowSelected::before {
+  content: "";
+  position: absolute;
+  inset-block: 10px;
+  inset-inline-start: -1px;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+.row.rowSelected:focus-visible {
+  box-shadow: var(--ring-cream), var(--shadow-e2);
+}
+
+.thumbnail {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-10);
+  background: rgba(var(--line-rgb), 0.06);
+  overflow: hidden;
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.thumbnailIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-60);
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rowName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rowCount {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Loading, empty ───────────────────────────────────────────────────── */
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+}
+
+.skeletonText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* No packs yet: one quiet line; the workspace carries the call to action. */
+.emptyLine {
+  margin: 0;
+  padding: 0 6px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* ── Stacked: a horizontal strip of pack chips ───────────────────────────── */
+
+@container sticker-rail (min-width: 280px) {
+  /* The padding gives the selected chip's shadow and the focus ring room
+     inside the scroller; the negative margin keeps the strip aligned with
+     the heading. */
+  .list {
+    flex-direction: row;
+    gap: 8px;
+    margin: -6px -8px -8px;
+    padding: 6px 8px 8px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 8px;
+    scrollbar-width: thin;
+  }
+
+  .item,
+  .skeletonRow {
+    flex: 0 0 min(240px, 72%);
+    scroll-snap-align: start;
+  }
+
+  .row,
+  .skeletonRow {
+    gap: 10px;
+    padding: 6px 10px;
+  }
+
+  /* Unselected chips keep a hairline so each reads as its own control. */
+  .row:not(.rowSelected) {
+    border-color: rgba(var(--line-rgb), 0.09);
+  }
+
+  .thumbnail {
+    width: 32px;
+    height: 32px;
+  }
+
+  .rowMeta {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .skeletonList {
+    flex-direction: row;
+    gap: 8px;
+    overflow: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .list {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (pointer: coarse) {
+  .head .newButton,
+  .row {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

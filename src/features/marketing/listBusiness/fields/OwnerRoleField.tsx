@@ -1,12 +1,12 @@
-import { FormField } from "../../../../shared/components/ui";
+import { FormField, Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { ANCHOR } from "../listBusiness.data";
+import { ANCHOR, OWNER_ROLE_LABEL_KEYS } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
 import styles from "../ListBusinessPage.module.css";
 
 /**
  * The role printed beside the name on the public listing ("Founder", "Head
- * chef", "Co-owner").
+ * chef", "Co-owner"), picked from `OWNER_ROLE_LABEL_KEYS`.
  *
  * Its own file because it belongs to the BUSINESS rather than to the owner as
  * a person, which makes it the one field of the "About you" block a co-manager
@@ -29,6 +29,15 @@ export function OwnerRoleField({
   const { t } = useTranslation();
   const { draft, set } = form;
 
+  const roleLabels = OWNER_ROLE_LABEL_KEYS.map((key) => t(key));
+  // A value saved as free text before the dropdown existed, or in the other
+  // language, stays on the list so reopening the listing keeps it.
+  const isSavedValueOffList =
+    draft.ownerRole !== "" && !roleLabels.includes(draft.ownerRole);
+  const options = (
+    isSavedValueOffList ? [draft.ownerRole, ...roleLabels] : roleLabels
+  ).map((label) => ({ value: label, label }));
+
   return (
     <FormField
       className={styles.lbField}
@@ -37,12 +46,12 @@ export function OwnerRoleField({
       helper={helperKey ? t(helperKey) : undefined}
       required
     >
-      <input
-        type="text"
-        maxLength={40}
+      <Select
+        options={options}
+        searchable={false}
         placeholder={t("marketing:listBusiness.step4.ownerRolePlaceholder")}
-        value={draft.ownerRole}
-        onChange={(event) => set({ ownerRole: event.target.value })}
+        value={draft.ownerRole || null}
+        onChange={(value) => set({ ownerRole: value ?? "" })}
       />
     </FormField>
   );

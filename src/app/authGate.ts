@@ -72,6 +72,8 @@ const GATED_PATTERNS: string[] = [
   // wildcard the join link would be reachable while signed out.
   "/messages/*",
   "/notifications",
+  // Shared saved lists (/lists/:token) are members-only by product decision.
+  "/lists/*",
   // Communities
   "/communities",
   "/communities/*",
@@ -132,9 +134,9 @@ const GATED_PATTERNS: string[] = [
   "/local/map",
   "/local/venue",
   "/local/venue/*",
-  // Housing board + listing detail + flatmates tab are member-only (backend
-  // browse is ActiveMemberGuard); the co-ops surface stays public — see
-  // PUBLIC_EXCEPTIONS below.
+  // Housing board, listing detail, flatmates tab and co-ops are all
+  // member-only. The `/*` splat covers every descendant, `/local/housing/coop`
+  // and `/local/housing/coop/*` included.
   "/local/housing",
   "/local/housing/*",
   "/business-directory",
@@ -175,10 +177,6 @@ const PUBLIC_EXCEPTIONS: string[] = [
   "/studio/help",
   "/studio/press",
   "/studio/end-card",
-  // Housing co-ops stay public (their backend browse is @Public), even though
-  // the rest of /local/housing/* is gated above.
-  "/local/housing/coop",
-  "/local/housing/coop/*",
 ];
 
 function matchesAny(pathname: string, patterns: string[]): boolean {

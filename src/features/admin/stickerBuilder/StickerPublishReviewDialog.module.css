@@ -1,0 +1,135 @@
+/* Review-before-adding dialog: the add / replace / skip tally, the target
+   pack card, and the affected flags as chips. Also styles PackStatusNote,
+   which the publish bar reuses. Tokens only. */
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text-strong);
+}
+
+.lineMuted {
+  color: var(--ink-60);
+  font-weight: 500;
+}
+
+.lineIcon {
+  flex: none;
+  box-sizing: content-box;
+  width: 14px;
+  height: 14px;
+  padding: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--wash);
+  color: var(--text-strong);
+}
+
+.lineMuted .lineIcon {
+  color: var(--ink-40);
+}
+
+.lineNote {
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.target {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+.targetLine {
+  margin: 0;
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.flags {
+  margin-top: 20px;
+}
+
+.flagsHeading {
+  margin: 0 0 8px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.flagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: var(--text-13);
+  color: var(--text-strong);
+}
+
+.flagChipIcon {
+  width: 12px;
+  height: 12px;
+  color: var(--accent-text);
+}
+
+/* PackStatusNote, shared with the publish bar. */
+.statusNote {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.statusIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+}
+
+.toneDraft .statusIcon {
+  color: var(--amber-ink);
+}
+
+.tonePublished .statusIcon {
+  color: var(--jade-ink);
+}
+
+.toneArchived .statusIcon {
+  color: var(--ink-40);
+}

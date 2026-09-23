@@ -1,0 +1,175 @@
+/* Frame colour: swatch (native picker underneath), hex box, preset dots,
+   then an inline error and the stripe-contrast warning. The swatch paint
+   arrives from the component as `--swatch-color`, so no artwork colour is
+   written here. */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The visible swatch. The native colour input fills it at zero opacity, so a
+   click anywhere on the swatch opens the picker and the input keeps its
+   label and keyboard focus. */
+.swatch {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-10);
+  background: var(--swatch-color);
+  /* The edge a cream or white swatch needs to show on a paper panel. */
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  cursor: pointer;
+}
+
+.swatch:has(:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.colorInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.hexInput {
+  width: 96px;
+  height: 36px;
+  padding: 0 10px;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  font-variant-numeric: tabular-nums;
+  text-transform: lowercase;
+  color: var(--ink);
+  background: var(--cream);
+  /* A control boundary needs 3:1 (WCAG 1.4.11); 0.5 is the FormField value. */
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-10);
+}
+
+.hexInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  background: var(--paper);
+}
+
+.hexInput[aria-invalid="true"] {
+  border-color: var(--accent-ink);
+}
+
+.presets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* A 26px dot; `data-tap-target` grows its hit area to 44px. */
+.preset {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  background: var(--swatch-color);
+  /* The check sits on a light swatch; `.presetDark` flips it. The swatch is
+     artwork colour and does not flip with the theme, so neither does this. */
+  color: var(--ink-surface);
+  font-size: var(--text-14);
+  cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease);
+}
+
+/* Pure white on purpose: --paper flips dark in dark mode, and this check
+   sits on a fixed near-black swatch in both themes. */
+.presetDark {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.presetSelected {
+  box-shadow: var(--ring-accent-strong);
+  border-color: var(--accent);
+}
+
+.preset:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+/* The live region stays in the tree (a hidden region is not announced);
+   when empty it cancels the field's row gap so it takes no space. */
+.warningRegion:empty {
+  margin-top: -6px;
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--amber-rgb), 0.14);
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.warningIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--amber-ink);
+}
+
+/* On touch the swatch and the hex box reach 44px; desktop keeps 36px so the
+   panel fits a laptop viewport. The presets already grow their hit area
+   through `data-tap-target`. */
+@media (pointer: coarse) {
+  .swatch {
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+  }
+
+  .hexInput {
+    min-height: var(--tap-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preset {
+    transition: none;
+  }
+}

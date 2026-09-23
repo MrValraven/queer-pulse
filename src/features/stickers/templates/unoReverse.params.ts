@@ -17,7 +17,7 @@ export const UNO_CARD_RADIUS = 28;
 export const UNO_ARROW_OUTLINE = "#1b1b1b";
 
 export interface UnoReverseParams {
-  /** A key into `FLAG_STRIPES`. */
+  /** One of `UNO_REVERSE_FLAG_IDS`. */
   flagId: string;
   /** The card's border, the oval, and the arrows all take this colour. */
   frameColor: string;
@@ -41,7 +41,13 @@ export const UNO_REVERSE_DEFAULTS: UnoReverseParams = {
   cornerArrowScale: 0.4,
 };
 
-/** The flags this template can paint. Every striped flag qualifies; the
- *  Progress chevron and the Intersex ring are drawn shapes rather than bands,
- *  so they are out until the template grows a chevron primitive. */
-export const UNO_REVERSE_FLAG_IDS: readonly string[] = STRIPED_FLAG_IDS;
+/** The flags this template can paint, in the membership card picker's
+ *  order: the rainbow, the Progress chevron, the other striped flags in
+ *  registry order, then the Intersex ring. The striped ids are read from the
+ *  registry, so a new striped flag joins the template on its own. */
+export const UNO_REVERSE_FLAG_IDS: readonly string[] = [
+  "rainbow",
+  "progress",
+  ...STRIPED_FLAG_IDS.filter((flagId) => flagId !== "rainbow"),
+  "intersex",
+];

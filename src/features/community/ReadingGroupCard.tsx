@@ -55,6 +55,9 @@ export function ReadingGroupCard({
   const detailPath = group.communitySlug
     ? communityPath(group.communitySlug)
     : null;
+  // The link carries the club name when there is one, so a screen reader hears
+  // the name of the page it lands on. An unnamed group links its book instead.
+  const isNameLinked = Boolean(detailPath && group.name);
   const formatClass =
     group.format === "online" ? styles.gmOnline : styles.gmIrl;
 
@@ -69,7 +72,7 @@ export function ReadingGroupCard({
         </div>
         <div className={styles.gcBookInfo}>
           <div className={styles.gcBookTitle}>
-            {detailPath ? (
+            {detailPath && !isNameLinked ? (
               <Link to={detailPath}>{group.book}</Link>
             ) : (
               group.book
@@ -92,7 +95,15 @@ export function ReadingGroupCard({
         </div>
       </div>
       <div className={styles.gcBody}>
-        {group.name && <div className={styles.gcName}>{group.name}</div>}
+        {group.name && (
+          <div className={styles.gcName}>
+            {detailPath && isNameLinked ? (
+              <Link to={detailPath}>{group.name}</Link>
+            ) : (
+              group.name
+            )}
+          </div>
+        )}
         {group.description && (
           <div className={styles.gcDesc}>{group.description}</div>
         )}

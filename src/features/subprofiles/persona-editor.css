@@ -812,13 +812,19 @@
   transition: all var(--dur-base) var(--ease);
 }
 @media (hover: hover) {
-  .choice:hover {
+  .choice:not(:disabled):hover {
     border-color: var(--line-2);
   }
 }
 .choice[aria-pressed="true"] {
   border-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.05);
+}
+/* Locked while the persona is unlinked and this viewer isn't its creator, or
+   creator status is still resolving. See `linkChoiceLockState`. */
+.choice:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 .choice b {
   font-family: var(--serif);
@@ -837,6 +843,13 @@
   padding: 3px 7px;
   border-radius: var(--radius-6);
   align-self: flex-start;
+}
+.choiceLockHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
 }
 
 /* ── item drawer (Task 5 — SubprofileItemDrawer) ─────────────────────────

@@ -13,6 +13,26 @@ export type PendingAddressChange =
       previous: string;
     };
 
+/** Whether the "linked" choice card is locked for this viewer, and whether to
+ *  explain why. Only the persona's CREATOR may switch a currently-unlinked
+ *  persona to linked (linking shows the creator's name); co-owners keep every
+ *  other edit on this pane, and an already-linked persona is never locked
+ *  here (unlinking stays open to every owner, unchanged).
+ *
+ *  `isCreator === undefined` means the members query is still resolving:
+ *  `locked` stays true through that window so the choice never flashes
+ *  enabled and then gets taken away, but `showHint` waits for a CONFIRMED
+ *  non-creator answer before explaining why. */
+export function linkChoiceLockState(
+  isCreator: boolean | undefined,
+  isCurrentlyUnlinked: boolean,
+): { locked: boolean; showHint: boolean } {
+  return {
+    locked: isCurrentlyUnlinked && isCreator !== true,
+    showHint: isCurrentlyUnlinked && isCreator === false,
+  };
+}
+
 /** The public path this persona lives at under a given link mode. */
 export function pathFor(
   mode: LinkVisibility,

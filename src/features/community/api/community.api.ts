@@ -13,6 +13,9 @@ export type ReadingGroupProposalFormat = "In-person" | "Online" | "Either";
 
 export interface CreateReadingGroupProposalDto {
   book: string;
+  /** The club's own name. Omitted when blank: the group is then named after
+   *  its first book. */
+  clubName?: string;
   why?: string;
   format: ReadingGroupProposalFormat;
   maxPeople: number;
@@ -21,6 +24,7 @@ export interface CreateReadingGroupProposalDto {
 export interface ReadingGroupProposalResponseDTO {
   id: string;
   book: string;
+  clubName: string | null;
   why: string | null;
   format: ReadingGroupProposalFormat;
   maxPeople: number;

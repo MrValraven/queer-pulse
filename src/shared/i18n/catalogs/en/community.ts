@@ -735,7 +735,7 @@ export const community: Catalog = {
     "No groups have been listed yet. Be the first: propose one below and gather your people around a book.",
   "readingGroups.outro.title": "Books build <em>community.</em>",
   "readingGroups.outro.sub":
-    "QueerPulse reading groups have been running since 2024. Some have turned into friendships, some into collaborations, two into bands.",
+    "QueerPulse reading groups are a place to read together, talk about the things that stay with you, and meet people you might not have crossed paths with otherwise.",
   "readingGroups.outro.cta": "Join the network",
   "readingGroups.joinedWaitlistToast":
     "You're #{position} on the waitlist for {name}",
@@ -756,10 +756,13 @@ export const community: Catalog = {
 
   "readingGroups.listGroup.heading": "Start your <em>own group.</em>",
   "readingGroups.listGroup.lead":
-    "Pick a book. Say how many people you want. Say where and when. We will list it here and match you with members who want to read the same thing.",
+    "Name your group if you like, then pick its first book. Say how many people you want and we will list it here and match you with members who want to read the same thing.",
   "readingGroups.listGroup.leadLive":
-    "Pick a book. Say how many people you want. Send it to us and we'll come back to you about starting the group and finding your readers.",
-  "readingGroups.listGroup.bookLabel": "Book title & author",
+    "Name your group if you like, then pick its first book and say how many people you want. Send it to us and we'll come back to you about starting the group and finding your readers.",
+  "readingGroups.listGroup.clubLabel": "Group name",
+  "readingGroups.listGroup.optional": "optional",
+  "readingGroups.listGroup.clubPlaceholder": "e.g. QPOC Fantasy Club",
+  "readingGroups.listGroup.bookLabel": "First book",
   "readingGroups.listGroup.bookPlaceholder":
     "e.g. Giovanni's Room by James Baldwin",
   "readingGroups.listGroup.whyLabel": "Why this book?",
@@ -780,13 +783,13 @@ export const community: Catalog = {
     "Proposal received. We'll be in touch",
   "readingGroups.listGroup.proposalHeading": "Proposal <em>received.</em>",
   "readingGroups.listGroup.proposalBody":
-    "We have your proposal for <strong>{book}</strong>. Nothing is listed in the directory yet: someone will read it and come back to you about starting the group.",
+    "We have your proposal for <strong>{name}</strong>. Nothing is listed in the directory yet: someone will read it and come back to you about starting the group.",
   "readingGroups.listGroup.proposeAnotherCta": "Propose another group",
   "readingGroups.listGroup.errorToast":
     "Couldn't list your group. Please try again.",
   "readingGroups.listGroup.successHeading": "Your group is <em>listed.</em>",
   "readingGroups.listGroup.successBody":
-    "<strong>{book}</strong> is live at the top of the directory. We'll start matching you with members who want to read the same thing.",
+    "<strong>{name}</strong> is live at the top of the directory. We'll start matching you with members who want to read the same thing.",
   "readingGroups.listGroup.newGroupDesc":
     "A new reading group, just listed. Members will be matched soon.",
   "readingGroups.listGroup.listAnotherCta": "List another group",

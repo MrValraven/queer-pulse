@@ -9,10 +9,11 @@
  * `cardBackgrounds.data.ts`: these are the flags' own published colours, they
  * are content, and they must never shift with the theme.
  *
- * Only flags whose design IS horizontal bands live here. The Progress chevron
- * and the Intersex ring are drawn shapes; `cardBackgrounds.data.ts` keeps
- * their own definitions, and Progress reuses `FLAG_STRIPES.rainbow` for the
- * six-stripe ground it sits on.
+ * `FLAG_STRIPES` holds only flags whose design IS horizontal bands. The
+ * Progress chevron and the Intersex ring are drawn shapes, so their colours
+ * live below as `PROGRESS_CHEVRON_COLORS` and `INTERSEX_COLORS`, the one
+ * source both the card gradients and the sticker art read. Progress reuses
+ * `FLAG_STRIPES.rainbow` for the six-stripe ground it sits on.
  *
  * `weight` is omitted on a flag whose bands are equal, which is most of them.
  * That absence is load-bearing: `stripeGradient` reproduces the exact stop
@@ -100,6 +101,23 @@ export const FLAG_STRIPES: Readonly<Record<string, readonly FlagStripe[]>> = {
 
 /** Every flag this registry can paint as bands, in registry order. */
 export const STRIPED_FLAG_IDS: readonly string[] = Object.keys(FLAG_STRIPES);
+
+/** The Progress Pride chevron's five bands, OUTERMOST first: black, brown,
+ *  light blue, pink, and the white triangle at the hoist. Outermost first is
+ *  the order a painter lays them down, each nested inside the last. */
+export const PROGRESS_CHEVRON_COLORS: readonly string[] = [
+  "#000000",
+  "#613915",
+  "#5bcefa",
+  "#f5a9b8",
+  "#ffffff",
+];
+
+/** The Intersex flag: a purple ring on a yellow field. */
+export const INTERSEX_COLORS = {
+  field: "#ffd800",
+  ring: "#7902aa",
+} as const;
 
 /**
  * Fold bands into a complete CSS `background` gradient.

@@ -76,6 +76,13 @@ export const subprofiles: Catalog = {
   "page.moved.announcement": "Encaminhado de @{oldHandle} para @{handle}.",
   "page.moved.ariaLabel": "Encaminhado a partir de um identificador antigo",
   "page.moved.dismiss": "Dispensar esta nota",
+  "page.rehomed.body":
+    "Seguiste uma ligação antiga para esta persona. Tem um endereço novo, por isso trouxemos-te até aqui.",
+  "page.rehomed.announcement":
+    "Encaminhámos-te para o novo endereço desta persona.",
+  "page.rehomed.ariaLabel":
+    "Aviso de encaminhamento para um novo endereço da persona",
+  "page.rehomed.dismiss": "Dispensar esta nota",
 
   "directory.narrowedNote":
     "Profissão, etiquetas e disponibilidade filtram as personas já carregadas. Mostra mais para procurar mais longe.",
@@ -362,6 +369,8 @@ export const subprofiles: Catalog = {
     "Aparece no teu perfil principal como outra persona tua. As pessoas conseguem ver que é a mesma pessoa.",
   "link.help.unlinked":
     "Existe por si só. Nada aqui aponta de volta ao teu perfil principal, por isso podes manter este trabalho à parte do resto da tua vida. Ganha um identificador público assim que passa a verificação de completude.",
+  "link.creatorOnlyHint":
+    "Só quem criou esta persona a pode ligar ao seu perfil, porque passaria a mostrar o nome dessa pessoa.",
 
   // Chips de estado de concerto/projeto (ItemRow, skins stage + studio/workshop)
   // e legenda de marcas dietéticas (skin Table) — campos persistidos
@@ -1155,7 +1164,7 @@ export const subprofiles: Catalog = {
   // Painel de responsáveis conjuntos (SubprofileOwnersPanel, no editor)
   "owners.title": "Responsáveis conjuntos",
   "owners.note": "Todas as pessoas aqui podem editar esta persona em conjunto.",
-  "owners.creatorTag": "Criadora",
+  "owners.creatorTag": "Responsável principal",
   "owners.youTag": "Tu",
   "owners.pendingHeading": "Convites pendentes",
   "owners.inviteCta": "Convidar um responsável",
@@ -1167,6 +1176,8 @@ export const subprofiles: Catalog = {
   "owners.leaveModalTitle": "Sair desta persona?",
   "owners.leaveModalBody":
     "Vais perder a capacidade de a editar. Os outros responsáveis mantêm tudo como está.",
+  "owners.leaveModalBodyCreator":
+    "Deixas de a poder editar. Quem partilha a persona há mais tempo passa a ser responsável por ela e pode mudar o endereço ou a visibilidade, ou eliminá-la.",
   "owners.leaveModalKeep": "Ficar",
   "owners.leaveModalConfirm": "Sair",
   "owners.leaveModalLeaving": "A sair…",
@@ -1718,9 +1729,11 @@ export const subprofiles: Catalog = {
   "publishPanel.deleteCopy":
     "Eliminar esta persona remove-a, e tudo o que está nela, para sempre.",
   "publishPanel.deleteCta": "Eliminar esta persona",
-  // Ramo de quem copossui a persona. Quem a criou mantem deleteCopy.
+  // Zona de perigo. Quem copossui recebe leaveCopy; quem criou recebe deleteCopy, e também creatorLeaveCopy quando outras pessoas partilham a persona.
   "publishPanel.leaveCopy":
     "Partilhas esta persona. Eliminá-la fica a cargo de quem a criou, e podes sair quando quiseres: os outros mantêm tudo como está.",
+  "publishPanel.creatorLeaveCopy":
+    "Preferes que continue? Ao sair, a persona passa para quem a partilha há mais tempo, que pode mudar o endereço ou a visibilidade, ou eliminá-la.",
 
   // Medidor da lista de verificação (PublishChecklist) — a barra `.meter`
   // ao lado das linhas de passa/falha acima.

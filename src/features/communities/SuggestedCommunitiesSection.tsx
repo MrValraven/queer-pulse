@@ -6,7 +6,7 @@ import { useCommunityMembership } from "../../app/providers/useCommunityMembersh
 import type { Community } from "../homepage/data/types";
 import { CommunityCard } from "./CommunityCard";
 import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
-import { useSuggestedCommunities } from "./api/useSuggestedCommunities";
+import { useSuggestedBand } from "./useSuggestedBand";
 import styles from "./SuggestedCommunitiesSection.module.css";
 
 /**
@@ -52,8 +52,10 @@ function landingSpotFor(element: HTMLElement | null): HTMLElement | null {
  * it but does not serialize it), so no card claims a number.
  *
  * `excludeSlug` is the featured community, which the grid already promotes
- * directly above this band. A suggestion is never a second copy of the card
- * the viewer is already looking at.
+ * directly above this band, and `useSuggestedBand` drops it from the list, so
+ * every suggestion is a card the viewer has not seen yet. The browse grid
+ * below drops the same suggested communities (see `CommunitiesGrid`), so each
+ * community appears once on the page.
  */
 export function SuggestedCommunitiesSection({
   excludeSlug,
@@ -63,15 +65,10 @@ export function SuggestedCommunitiesSection({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { isMember } = useCommunityMembership();
-  const { communities, isLoading } = useSuggestedCommunities();
+  const { communities, isShowingBand } = useSuggestedBand(excludeSlug);
   const [joining, setJoining] = useState<Community | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const landingSpotRef = useRef<HTMLElement | null>(null);
-
-  const shown = excludeSlug
-    ? communities.filter((community) => community.slug !== excludeSlug)
-    : communities;
-  const isShowingBand = !isLoading && shown.length > 0;
 
   const handleJoin = (community: Community) => {
     landingSpotRef.current = landingSpotFor(sectionRef.current);
@@ -100,7 +97,7 @@ export function SuggestedCommunitiesSection({
             subtitle={t("communities:discover.suggested.subtitle")}
           />
           <div className={styles.grid}>
-            {shown.map((community, index) => (
+            {communities.map((community, index) => (
               <FadeIn key={community.slug} delay={Math.min(index, 8) * 60}>
                 <CommunityCard
                   community={community}

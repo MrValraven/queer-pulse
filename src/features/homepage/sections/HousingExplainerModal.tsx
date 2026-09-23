@@ -1,5 +1,4 @@
 import { FiArrowRight, FiX } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import { Button } from "../../../shared/components/ui";
 import { ModalSheet } from "../../../shared/components/ui/Modal";
 import { Translation } from "../../../shared/i18n/Translation";
@@ -15,10 +14,9 @@ import styles from "./ExplainerModal.module.css";
  * visitor to the sign-in page. Rendered only while open (owns no state itself),
  * so `ModalSheet` runs its scroll-lock/focus-trap once per open.
  *
- * The note links to the housing co-ops page, the one housing surface that is
- * genuinely readable without an account (`/local/housing/coop` is a
- * PUBLIC_EXCEPTIONS entry in `authGate.ts`), so the modal ends on something the
- * visitor can do now rather than only on a door.
+ * The closing note mentions the housing co-ops, which are members-only like the
+ * rest of `/local/housing/*` (covered by the `/local/housing/*` entry in
+ * `GATED_PATTERNS` in `authGate.ts`), so the modal ends on the door itself.
  */
 export function HousingExplainerModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -63,20 +61,7 @@ export function HousingExplainerModal({ onClose }: { onClose: () => void }) {
           ))}
         </ul>
 
-        <p className={styles.note}>
-          <Translation
-            i18nKey="homepage:housingExplainer.note"
-            components={{
-              coop: (
-                <Link
-                  to={routes.housingCoop}
-                  className={styles.noteLink}
-                  onClick={onClose}
-                />
-              ),
-            }}
-          />
-        </p>
+        <p className={styles.note}>{t("homepage:housingExplainer.note")}</p>
 
         <div className={styles.actions}>
           <Button size="lg" to={requestInvitePath("housing_explainer")}>

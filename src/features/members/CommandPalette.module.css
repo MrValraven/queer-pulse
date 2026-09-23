@@ -41,6 +41,14 @@
   flex-shrink: 0;
 }
 
+/* Same 1em box the FiSearch glyph fills, centring the smaller spinner ring. */
+.inputSpinnerSlot {
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+}
+
 .input {
   flex: 1;
   border: none;
@@ -145,6 +153,23 @@
   padding: 22px 14px;
   text-align: center;
   color: var(--ink-60);
+}
+
+/* Placeholder rows while live results are pending: the same padding, gap and
+   34px leading slot as .row, so the real rows land without a jump. */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.skeletonBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
 }
 
 .comingSoon {

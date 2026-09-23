@@ -60,7 +60,7 @@ const PACK_ID = "demo-sticker-pack-uno-reverse";
 const PACK_SLUG = "uno-reverse";
 const PACK_NAME = "Uno reverse";
 const PACK_DESCRIPTION =
-  "Every striped pride flag, drawn as an Uno reverse card.";
+  "Every pride flag, drawn as an Uno reverse card.";
 
 /* -------------------------------------------------------------- geometry */
 

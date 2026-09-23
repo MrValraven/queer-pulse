@@ -1,0 +1,128 @@
+/* The builder's style panel: heading row naming the template, then three
+   control groups (card, oval, arrows) split by hairlines. Spacing is
+   deliberately tight: the whole panel, contrast warning included, fits a
+   ~720px tall column at desktop so the sticky column never scrolls. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+/* ── Template name ──
+   A static line beside the heading: a thumbnail and the name, with no tint,
+   accent edge or check, since there is only one template to show. */
+
+.template {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+}
+
+.templateThumb {
+  flex: none;
+  display: block;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-8);
+  background: var(--cream);
+}
+
+.templateName {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Both style-panel actions ("Template defaults", "Use this pack's style")
+   sit in one row under the title line and wrap onto their own lines,
+   with consistent gap, when the sticky column is too narrow for both. */
+.styleActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Control groups ── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 44px tall on every pointer: the label fills the row and toggles the
+   switch, so the whole row is one comfortable target. */
+.switchRow {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  min-height: var(--tap-min);
+}
+
+.switchRow > :last-child {
+  align-self: center;
+}
+
+.switchLabel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  cursor: pointer;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink);
+}

@@ -129,6 +129,9 @@ function demoEditableFields(
     // edits live in the session store, exactly like the cover above).
     avatarImageUrl: "",
     welcomeMessage: "",
+    // The demo fixtures name no book, so this starts empty too unless a
+    // detail view-model carries one.
+    nowReading: detail.nowReading ?? "",
   };
   if (!override) return base;
   return {
@@ -145,6 +148,11 @@ function demoEditableFields(
     tags: override.tags ?? base.tags,
     avatarImageUrl: override.avatarImageUrl ?? base.avatarImageUrl,
     welcomeMessage: override.welcomeMessage ?? base.welcomeMessage,
+    // An explicit null is a cleared book, so it reads as an empty field.
+    nowReading:
+      override.nowReading !== undefined
+        ? (override.nowReading ?? "")
+        : base.nowReading,
   };
 }
 

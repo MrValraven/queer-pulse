@@ -1,4 +1,4 @@
-import { FiBookOpen, FiClock } from "react-icons/fi";
+import { FiBookOpen, FiClock, FiRepeat } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
 import { Translation } from "../../shared/i18n/Translation";
@@ -23,11 +23,10 @@ function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
 }
 
 /**
- * The back half of the unread demo feed (ids 4, 5, 6, 7), split out of
+ * The back half of the unread demo feed (ids 4, 5, 6, 7, 18), split out of
  * `buildUnreadNotifications` in `notificationsList.data.tsx` to keep that
  * function under the per-function line limit. Order-preserving: the caller
- * spreads this after ids 2, 3, 13 so the feed still reads id2..id7 top to
- * bottom, matching `DEMO_UNREAD_IDS`.
+ * spreads this after ids 2, 3, 13, 14, 15, 16, matching `DEMO_UNREAD_IDS`.
  */
 export function buildUnreadActivityNotifications(
   t: TFunction,
@@ -136,6 +135,40 @@ export function buildUnreadActivityNotifications(
       meta: t("notifications:list.7.meta"),
       time: fmt.relativeTime(-2, "day"),
       createdAtIso: agoIso(2, "day"),
+    },
+    {
+      // The demo counterpart of the live `subprofile_creator_changed` row
+      // (Phase 2 persona creator handoff, T8). Sent to every remaining member
+      // of a persona when its creator changes: the previous creator left (or
+      // their account was erased) while co-owners remained, and the role
+      // transferred to the longest-standing remaining one. This row shows the
+      // OTHER members' variant (`isYou: false`, the flat `.text` copy naming
+      // the new creator); the successor's own `.textYou` row is not
+      // separately demoed, the same way `persona_update` in
+      // `notificationsList.data.tsx` doesn't demo every branch of its own
+      // copy either.
+      //
+      // NEVER NAMES WHO LEFT. The live payload has no field for the departing
+      // member at all (`{ subprofileName, newCreatorName, isYou }`), so this
+      // row cannot say who the persona used to belong to and does not try.
+      //
+      // The persona name appears nowhere else in the demo feed: this row only
+      // reaches members, so reusing a persona the feed presents as one the
+      // viewer follows would contradict it. The row opens the personas
+      // dashboard, the same destination `sourceHrefFromPayload` gives the live
+      // row.
+      id: 18,
+      type: "community",
+      unread: true,
+      icon: { Glyph: FiRepeat, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.subprofile_creator_changed.text", {
+        subprofileName: "Fio Solto",
+        newCreatorName: "Beatriz Lopes",
+      }),
+      meta: t("notifications:type.subprofile_creator_changed.meta"),
+      time: fmt.relativeTime(-6, "hour"),
+      createdAtIso: agoIso(6, "hour"),
+      sourceHref: routes.subprofilesDashboard,
     },
   ];
 }

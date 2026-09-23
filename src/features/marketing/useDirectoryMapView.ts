@@ -24,7 +24,17 @@ function localPlaceToMarker(place: LocalPlace): VenueMarkerData {
  * map/sidebar split, parish (freguesia) grouping/filtering, pin↔card
  * selection sync, and the "I've been here" tally. Kept out of the component
  * so its JSX stays focused. */
-export function useDirectoryMapView(places: LocalPlace[]) {
+export function useDirectoryMapView(
+  places: LocalPlace[],
+  {
+    isFullscreen = false,
+  }: {
+    /** The map stage is full screen. On a phone the list is then a sheet over
+     *  the map with its own scroll, so a pin tap scrolls the sheet and leaves
+     *  the page alone. */
+    isFullscreen?: boolean;
+  } = {},
+) {
   // The map+sidebar split collapses at 880px (wider than the app mobile
   // cutover) so the map keeps usable width next to the list; off the ladder.
   const isMobile = useMediaQuery(mediaMax(880));
@@ -109,7 +119,9 @@ export function useDirectoryMapView(places: LocalPlace[]) {
   }, []);
   // Tapping a map pin hands the sidebar over to that one place: the parish
   // filter steps aside, since the pin itself is the answer, and the card
-  // opens. On mobile the list sits below the map, so bring it into view too.
+  // opens. On mobile the list sits below the map, so bring it into view too;
+  // in full screen it is the sheet over the map, and its top is where the
+  // place now is.
   const selectPlace = useCallback(
     (placeId: string) => {
       setSelectedFreguesia(null);
@@ -117,12 +129,16 @@ export function useDirectoryMapView(places: LocalPlace[]) {
       setExpandedId(placeId);
       if (!isMobile) return;
       requestAnimationFrame(() => {
+        if (isFullscreen) {
+          sidebarRef.current?.scrollTo({ top: 0, behavior: scrollBehavior });
+          return;
+        }
         cardRefs.current
           .get(placeId)
           ?.scrollIntoView({ behavior: scrollBehavior, block: "center" });
       });
     },
-    [isMobile, scrollBehavior],
+    [isMobile, isFullscreen, scrollBehavior],
   );
   function clearFocus() {
     setFocusedId(null);
@@ -139,6 +155,7 @@ export function useDirectoryMapView(places: LocalPlace[]) {
   }
 
   return {
+    isMobile,
     sidebarRef,
     cardRefs,
     selectedFreguesia,

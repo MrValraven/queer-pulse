@@ -10,6 +10,7 @@ import {
   type OwnerVisibility,
 } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
+import { OwnerNameField } from "./OwnerNameField";
 import { OwnerRoleField } from "./OwnerRoleField";
 import { RadioStack } from "./RadioStack";
 import styles from "../ListBusinessPage.module.css";
@@ -55,20 +56,7 @@ export function OwnerFields({
       </FormField>
 
       <div className={styles.twoCol}>
-        <FormField
-          className={styles.lbField}
-          id={ANCHOR.ownerName}
-          label={t("marketing:listBusiness.step4.ownerNameLabel")}
-          required
-        >
-          <input
-            type="text"
-            maxLength={50}
-            placeholder={t("marketing:listBusiness.step4.ownerNamePlaceholder")}
-            value={draft.ownerName}
-            onChange={(e) => set({ ownerName: e.target.value })}
-          />
-        </FormField>
+        <OwnerNameField form={form} userName={userName} />
         <OwnerRoleField form={form} />
       </div>
 

@@ -2714,6 +2714,11 @@ export function toOwnerDto(sp: DemoSubprofile): SubprofileDTO {
     followerCount: sp.followerCount,
     affiliations: sp.affiliations,
     skinData: sp.skinData ?? null,
+    // The backend counts the creator plus accepted co-owners. Demo models
+    // co-ownership on one persona only, so its headcount is the live roster
+    // (which a demo Leave shrinks); every other demo persona is solo-owned.
+    memberCount:
+      sp.id === DEMO_CO_OWNED_SUBPROFILE_ID ? demoCoOwnedMembers.length : 1,
   };
 }
 
@@ -2803,16 +2808,27 @@ export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
   };
 }
 
+/** Whether the demo viewer still belongs to `sp`. Every demo persona the
+ *  viewer owns is theirs for good, except the co-owned one, which they stop
+ *  belonging to once a demo Leave drops them from its roster. Mirrors the
+ *  backend, where `/subprofiles/mine` and `/subprofiles/:id` both read the
+ *  caller's membership. */
+function isDemoViewerMemberOf(sp: DemoSubprofile): boolean {
+  if (sp.id !== DEMO_CO_OWNED_SUBPROFILE_ID) return true;
+  return demoCoOwnedMembers.some((member) => member.userId === currentUserSlug);
+}
+
 /** The current owner's personas (all statuses) — for GET /subprofiles/mine. */
 export const mockMineSubprofiles = (): SubprofileDTO[] =>
-  DEMO_SUBPROFILES.filter((s) => s.ownerSlug === currentUserSlug).map(
-    toOwnerDto,
-  );
+  DEMO_SUBPROFILES.filter(
+    (s) => s.ownerSlug === currentUserSlug && isDemoViewerMemberOf(s),
+  ).map(toOwnerDto);
 
-/** Owner fetch by id — for GET /subprofiles/:id. */
+/** Owner fetch by id, for GET /subprofiles/:id. A persona the demo viewer
+ *  has left resolves to `null`, the same as the backend's owner-scoped read. */
 export const mockSubprofileById = (id: string): SubprofileDTO | null => {
   const sp = DEMO_SUBPROFILES.find((s) => s.id === id);
-  return sp ? toOwnerDto(sp) : null;
+  return sp && isDemoViewerMemberOf(sp) ? toOwnerDto(sp) : null;
 };
 
 /** Resolve a persona by its non-identifying endorse-route id (published only) —
@@ -3077,14 +3093,70 @@ const CO_OWNER_MEMBER: MemberDTO = {
   isCreator: false,
 };
 
+/** Mutable demo-only roster for `DEMO_CO_OWNED_SUBPROFILE_ID`, seeded from the
+ *  two fixtures above. `mockPersonaMembers` and `mockLeavePersona` are its only
+ *  reader/writer: a demo Leave has to be visible on the next members fetch (the
+ *  mutation's own cache invalidation re-runs `mockPersonaMembers`), so the
+ *  registry can't stay a fresh array literal built on every call. */
+let demoCoOwnedMembers: MemberDTO[] = [CURRENT_USER_MEMBER, CO_OWNER_MEMBER];
+
 /** GET /subprofiles/:id/members mock. The designated co-owned example returns
- *  both the creator and the accepted co-owner; every other persona returns the
- *  current demo user as sole creator. */
+ *  its current roster (which `mockLeavePersona` may have mutated); every other
+ *  persona returns the current demo user as sole creator. */
 export function mockPersonaMembers(id: string): MemberDTO[] {
   if (id === DEMO_CO_OWNED_SUBPROFILE_ID) {
-    return [CURRENT_USER_MEMBER, CO_OWNER_MEMBER];
+    return demoCoOwnedMembers;
   }
   return [CURRENT_USER_MEMBER];
+}
+
+/**
+ * Demo-only stand-in for the backend's creator-transfer-on-leave rule
+ * (`SubprofileMembershipService.leave` + `pickSuccessorWithin`): removes
+ * `leavingUserId` from `DEMO_CO_OWNED_SUBPROFILE_ID`'s roster and, when they
+ * were the creator, promotes the longest-standing remaining member (earliest
+ * `joinedAt`) in their place. The backend's real rule prefers the
+ * longest-standing ACTIVE member and only falls back to longest-standing
+ * overall when no remaining member is active; every demo member is always
+ * active, so sorting by `joinedAt` alone reproduces the same outcome here.
+ *
+ * Every other persona id is a no-op (demo only models co-ownership on the one
+ * designated persona). Mutates `demoCoOwnedMembers` in place so the members
+ * query, re-run after the leave mutation invalidates it, reads the new roster.
+ */
+export function mockLeavePersona(
+  subprofileId: string,
+  leavingUserId: string,
+): MemberDTO[] {
+  if (subprofileId !== DEMO_CO_OWNED_SUBPROFILE_ID) {
+    return mockPersonaMembers(subprofileId);
+  }
+  const leaving = demoCoOwnedMembers.find(
+    (member) => member.userId === leavingUserId,
+  );
+  const remaining = demoCoOwnedMembers.filter(
+    (member) => member.userId !== leavingUserId,
+  );
+  if (leaving?.isCreator && remaining.length > 0) {
+    const [successor, ...rest] = [...remaining].sort((a, b) =>
+      a.joinedAt.localeCompare(b.joinedAt),
+    );
+    // `remaining.length > 0` guarantees a first element; narrow explicitly
+    // (rather than assert it) since `noUncheckedIndexedAccess` still types
+    // a sorted array's destructured head as possibly undefined.
+    demoCoOwnedMembers = successor
+      ? [{ ...successor, isCreator: true }, ...rest]
+      : remaining;
+  } else {
+    demoCoOwnedMembers = remaining;
+  }
+  return demoCoOwnedMembers;
+}
+
+/** Test-only reset for `demoCoOwnedMembers`, so a spec that exercises
+ *  `mockLeavePersona` doesn't leak mutated module state into the next one. */
+export function resetDemoPersonaMembersForTests(): void {
+  demoCoOwnedMembers = [CURRENT_USER_MEMBER, CO_OWNER_MEMBER];
 }
 
 /** GET /subprofiles/:id/invites mock. The designated co-owned example has one
