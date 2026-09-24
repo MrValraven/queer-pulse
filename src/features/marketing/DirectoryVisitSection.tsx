@@ -1,8 +1,7 @@
-import { FiArrowLeft, FiArrowRight, FiHeart } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { useRef } from "react";
+import { FiArrowRight, FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import {
   operatingStateOf,
   type DirectoryPlace,
@@ -15,12 +14,15 @@ import {
 } from "./DirectoryPlaceLocation";
 import { DirectoryContactRows } from "./DirectoryContactRows";
 import { DirectoryMessageBusiness } from "./DirectoryMessageBusiness";
+import { DirectoryVisitCardProvider } from "./DirectoryVisitCardProvider";
+import { useOptionalDirectoryVisitCard } from "./directoryVisitCardContext";
+import { useCarryVisitCardFocus } from "./visitCardFocusCarry";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
   place: DirectoryPlace;
-  /** Moderation preview: the "back to directory" link doesn't render, matching
-   *  how the rest of the page's navigation is inert there. */
+  /** Moderation preview: threaded to `DirectoryMessageBusiness`, which renders
+   *  nothing there, so the card stays read-only. */
   preview?: boolean;
   /** The viewer's own ref for this listing, present only when they own it.
    * Threaded solely so `DirectoryMessageBusiness` can skip its member-gated
@@ -30,30 +32,47 @@ interface Props {
 }
 
 /**
- * "Where it is": the second question a member asks, right after "is it open".
+ * "Where it is": the map, the address, every contact route and the primary
+ * call to action, in one card.
  *
- * This is the old aside contact card, moved into the main column and given a
- * heading. It was the single most useful block on the page and it was sitting
- * in a rail that a phone reader only reaches after the entire review list. The
- * map, the address, every contact route and the primary call to action now sit
- * one screen below the hours, where somebody deciding where to go tonight can
- * actually find them.
+ * It has two homes, and exactly one is mounted at a time (the card carries a
+ * live map). Wherever the body grid is two columns it opens the rail
+ * (`DirectorySpaceAside`), level with the start of the main column, where the
+ * practical answers sit beside the listing from the first screen. Where
+ * the grid is one column (phones, the moderation drawer) it sits in the main
+ * column right after the hours (`DirectorySpaceMain`), where somebody deciding
+ * where to go tonight meets it one screen in. The card is built to read at
+ * both widths: its own container query gives the map a taller band only when
+ * the card is wide. What has to survive a move (an enquiry draft, a reported
+ * cap, keyboard focus) lives in `DirectoryVisitCardProvider` above both
+ * columns.
  *
- * They now sit in ONE card rather than two loose flex columns. The old pair
- * left a 200px square map with its address orphaned underneath, and a details
- * column that — for a listing with no phone, site or Instagram — held nothing
- * but a saved-count and a full-width "back to directory" button, floating in
- * the middle of the page with no edge to belong to. The card gives the map and
- * the details one shared border, pins the saved-count and the real call to
- * action to the foot of the details column, and demotes "back to directory" to
- * a quiet link below the card, which is what a navigation escape hatch is.
+ * Map and details share ONE card. The old pair of loose flex columns left a
+ * 200px square map with its address orphaned underneath, and a details column
+ * that, for a listing with no phone, site or Instagram, held nothing but a
+ * saved-count floating in the middle of the page. The card gives the map and
+ * the details one shared border and pins the saved-count and the real call to
+ * action to the foot of the details column. Getting back to the directory is
+ * the breadcrumb's job at the top of the page, so the card carries no link of
+ * its own for it.
  */
-export function DirectoryVisitSection({
-  place,
-  preview = false,
-  ownerRef,
-}: Props) {
+export function DirectoryVisitSection(props: Props) {
+  // `DirectorySpaceView` provides the state owner for the whole page. A caller
+  // that renders a column on its own (a test) gets one scoped to this card.
+  const hasStateOwner = useOptionalDirectoryVisitCard() !== null;
+  if (hasStateOwner) return <DirectoryVisitCard {...props} />;
+  return (
+    <DirectoryVisitCardProvider place={props.place}>
+      <DirectoryVisitCard {...props} />
+    </DirectoryVisitCardProvider>
+  );
+}
+
+function DirectoryVisitCard({ place, preview = false, ownerRef }: Props) {
   const { t } = useTranslation();
+  const cardRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useCarryVisitCardFocus(cardRef, headingRef, `.${s.visitMap}`);
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
 
   // A closed business's inbox is not somewhere to write to (see
@@ -67,16 +86,16 @@ export function DirectoryVisitSection({
   const hasSavedSignal = place.savedCount != null && place.savedCount > 0;
 
   return (
-    <section className={s.sec}>
+    <section ref={cardRef} className={s.sec}>
       <div className={s.secHead}>
-        <h2>{t("marketing:directory.detail.visitTitle")}</h2>
+        {/* Focusable from script only: the fallback target when focus sat in
+            the map as the card changed column (see visitCardFocusCarry). */}
+        <h2 ref={headingRef} tabIndex={-1}>
+          {t("marketing:directory.detail.visitTitle")}
+        </h2>
       </div>
       <div className={s.visitShell}>
-        <div
-          className={
-            place.online ? `${s.visitCard} ${s.visitCardOnline}` : s.visitCard
-          }
-        >
+        <div className={s.visitCard}>
           {!place.online && <DirectoryPlaceMap place={place} />}
           <div className={s.visitBody}>
             {place.online ? (
@@ -132,12 +151,6 @@ export function DirectoryVisitSection({
           </div>
         </div>
       </div>
-      {!preview && (
-        <Link to={routes.directory} className={s.visitBack}>
-          <FiArrowLeft aria-hidden />
-          {t("marketing:directory.detail.backToDirectory")}
-        </Link>
-      )}
     </section>
   );
 }

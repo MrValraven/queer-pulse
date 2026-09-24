@@ -1,69 +1,27 @@
-import { useRef, type KeyboardEvent } from "react";
+import { useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   SkinBlockControl,
   SkinItemFieldDescriptor,
 } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
-import { SkinItemFieldInput } from "./SkinSelectControl";
+import { SkinRefinedItemFieldInput } from "./SkinRefinedSelectFields";
 import {
   SkinListFrame,
   SkinListGrip,
   SkinListRowTools,
   SkinListRow,
 } from "./SkinListParts";
+import { SkinEntryTitle } from "./SkinEntryTitle";
 import { useSkinListRows } from "./useSkinListRows";
-import { useAutoGrowFallback } from "./useAutoGrowTextarea";
+import { refinedExample } from "./refinedFieldSurface";
 import styles from "./SkinListControls.module.css";
 
 type Entry = Record<string, string>;
 
-const LINE_BREAKS = /\r?\n/g;
-/** The entry's title: a one-row textarea that wraps and grows, so a long
- *  question is never cut off. It stays a single line of text: Enter moves
- *  on to the entry's next field, and pasted line breaks become spaces. */
-function SkinEntryTitle({
-  value,
-  label,
-  placeholder,
-  onChange,
-  onEnter,
-}: {
-  value: string;
-  label: string;
-  placeholder: string;
-  onChange: (value: string) => void;
-  onEnter: () => void;
-}) {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  useAutoGrowFallback(textareaRef, value);
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key !== "Enter" || event.nativeEvent.isComposing) return;
-    event.preventDefault();
-    onEnter();
-  };
-
-  return (
-    <textarea
-      ref={textareaRef}
-      className={styles.entryTitle}
-      rows={1}
-      value={value}
-      placeholder={placeholder}
-      aria-label={label}
-      aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown"
-      onKeyDown={handleKeyDown}
-      onChange={(event) =>
-        onChange(event.target.value.replace(LINE_BREAKS, " "))
-      }
-    />
-  );
-}
-
-/** One numbered entry: the numeral and grip on the left, the first item
- *  field as a borderless title, the remaining fields labelled below it, and
- *  the tools top right. */
+/** One numbered entry: the numeral, grip and tools on one line, the first
+ *  item field as the entry's title at full width below them, and the
+ *  remaining fields labelled under the title. */
 function SkinEntryRow({
   entry,
   index,
@@ -89,6 +47,11 @@ function SkinEntryRow({
 }) {
   const { t } = useTranslation();
   const titleLabel = t(titleField.labelKey);
+  // An example gets the "e.g." prefix; the label fallback stays plain, since
+  // it names the field.
+  const titlePlaceholder = titleField.placeholderKey
+    ? refinedExample(t, t(titleField.placeholderKey))
+    : titleLabel;
   const fieldsRef = useRef<HTMLDivElement | null>(null);
   const focusFirstDetailField = () =>
     fieldsRef.current
@@ -98,10 +61,7 @@ function SkinEntryRow({
   return (
     <SkinListRow className={styles.entryRow} isDragging={isDragging}>
       <div className={styles.entryLead}>
-        <span
-          className={`${styles.numeral} ${styles.entryNumeral}`}
-          aria-hidden
-        >
+        <span className={styles.numeral} aria-hidden>
           {index + 1}
         </span>
         <SkinListGrip onPointerDown={onGripPointerDown} />
@@ -112,16 +72,14 @@ function SkinEntryRow({
           label: titleLabel,
           index: index + 1,
         })}
-        placeholder={
-          titleField.placeholderKey ? t(titleField.placeholderKey) : titleLabel
-        }
+        placeholder={titlePlaceholder}
         onChange={(value) => onChange({ ...entry, [titleField.key]: value })}
         onEnter={focusFirstDetailField}
       />
       {detailFields.length > 0 && (
         <div ref={fieldsRef} className={styles.entryFields}>
           {detailFields.map((field) => (
-            <SkinItemFieldInput
+            <SkinRefinedItemFieldInput
               key={field.key}
               field={field}
               value={entry[field.key] ?? ""}

@@ -1997,6 +1997,81 @@ export const marketing: Catalog = {
     "Atividade e visibilidade",
   "listBusiness.editor.section.whoCanEdit": "Quem pode editar",
   "listBusiness.editor.section.roleOnListing": "Função mostrada na página",
+  "listBusiness.editor.section.dangerZone": "Zona de perigo",
+  "listBusiness.editor.dangerZone.body":
+    "Eliminar este anúncio é permanente. Se preferires afastar-te, podes escondê-lo ou marcá-lo como fechado, ambas as opções em Atividade e visibilidade, mais acima.",
+  "listBusiness.editor.dangerZone.deleteCta": "Eliminar este anúncio",
+  "listBusiness.editor.dangerZone.deletedToast": "Anúncio eliminado: {name}.",
+  "listBusiness.deleteFlow.title": "Eliminar {name}?",
+  "listBusiness.deleteFlow.stepOf": "Passo {step} de {total}",
+  "listBusiness.deleteFlow.losses.heading": "O que desaparece",
+  "listBusiness.deleteFlow.losses.intro.owner":
+    "Eliminar o teu anúncio remove-o de vez, com tudo o que lhe está associado.",
+  "listBusiness.deleteFlow.losses.intro.moderator":
+    "Eliminar o anúncio de outra pessoa remove-o de vez, com tudo o que lhe está associado:",
+  "listBusiness.deleteFlow.losses.reviews":
+    "As avaliações e as respostas a elas",
+  "listBusiness.deleteFlow.losses.questions":
+    "As perguntas e respostas públicas",
+  "listBusiness.deleteFlow.losses.enquiries":
+    "A caixa de entrada do negócio: pedidos de contacto e todas as conversas lá dentro",
+  "listBusiness.deleteFlow.losses.coManagers": "O acesso dos cogestores",
+  "listBusiness.deleteFlow.losses.offers":
+    "Ofertas de posse pendentes e sugestões de edição",
+  "listBusiness.deleteFlow.losses.photos": "As fotos",
+  "listBusiness.deleteFlow.losses.publicPage": "A página pública e o link dela",
+  "listBusiness.deleteFlow.losses.gatheringsStay":
+    "Os encontros ligados ficam, mas sem o local associado.",
+  "listBusiness.deleteFlow.losses.noUndo.owner":
+    "Não há forma de desfazer e não fica nenhuma cópia.",
+  "listBusiness.deleteFlow.losses.noUndo.moderator":
+    "Não há forma de desfazer.",
+  "listBusiness.deleteFlow.gentler.heading":
+    "Talvez algo mais suave sirva melhor",
+  "listBusiness.deleteFlow.gentler.hide.button":
+    "Esconder em Atividade e visibilidade",
+  "listBusiness.deleteFlow.gentler.hide.detail":
+    "Tira-o do diretório. Fica tudo guardado e podes trazê-lo de volta quando quiseres.",
+  "listBusiness.deleteFlow.gentler.closed.button":
+    "Marcar como fechado em Atividade e visibilidade",
+  "listBusiness.deleteFlow.gentler.closed.detail":
+    "Continua visível, marcado como fechado de vez, para as pessoas deixarem de aparecer à porta.",
+  "listBusiness.deleteFlow.acknowledge.heading": "Confirma que percebeste",
+  "listBusiness.deleteFlow.acknowledge.intro":
+    "Tudo isto acontece no momento em que eliminas.",
+  "listBusiness.deleteFlow.acknowledge.permanent":
+    "Isto é permanente e não pode ser desfeito.",
+  "listBusiness.deleteFlow.acknowledge.reviewsAndEnquiries":
+    "As avaliações e os pedidos de contacto são eliminados com ele.",
+  "listBusiness.deleteFlow.acknowledge.coManagers":
+    "Os cogestores perdem o acesso.",
+  "listBusiness.deleteFlow.acknowledge.ownerMessage":
+    "A pessoa dona do anúncio recebe uma mensagem com o meu motivo.",
+  "listBusiness.deleteFlow.reason.heading":
+    "Explica o motivo à pessoa dona do anúncio",
+  "listBusiness.deleteFlow.reason.intro":
+    "A pessoa dona do anúncio recebe isto numa mensagem direta. Escreve de forma clara e específica, para que perceba o que aconteceu.",
+  "listBusiness.deleteFlow.reason.label": "Motivo da remoção",
+  "listBusiness.deleteFlow.reason.placeholder":
+    "O que estava errado neste anúncio?",
+  "listBusiness.deleteFlow.confirmName.heading":
+    "Escreve o nome para confirmar",
+  "listBusiness.deleteFlow.confirmName.intro":
+    "Para o eliminar, escreve o nome do anúncio exatamente como aparece:",
+  "listBusiness.deleteFlow.confirmName.label": "Nome do anúncio",
+  "listBusiness.deleteFlow.confirmName.helper": "As maiúsculas contam.",
+  "listBusiness.deleteFlow.error":
+    "Não foi possível eliminar o anúncio. Tenta outra vez daqui a pouco.",
+  "listBusiness.deleteFlow.hint.acknowledge":
+    "Marca as três caixas para continuar.",
+  "listBusiness.deleteFlow.hint.reason": "Escreve um motivo para continuar.",
+  "listBusiness.deleteFlow.hint.confirmName":
+    "Eliminar de vez fica disponível quando o nome corresponder.",
+  "listBusiness.deleteFlow.actions.cancel": "Cancelar",
+  "listBusiness.deleteFlow.actions.back": "Voltar",
+  "listBusiness.deleteFlow.actions.continue": "Continuar",
+  "listBusiness.deleteFlow.actions.delete": "Eliminar de vez",
+  "listBusiness.deleteFlow.actions.deleting": "A eliminar…",
 
   // ── Cogestão. Quem mais pode editar uma página, e o convite que os leva lá.
   //    Só para membros: nada disto chega à página pública.
@@ -2614,6 +2689,54 @@ export const marketing: Catalog = {
     "Terapeutas podem editar qualquer parte da página a partir da própria página",
   "changelog.entries.therapist-page-edit-links.body":
     "Um lápis ao lado de cada secção abre o editor mesmo no campo que o altera.",
+  "changelog.entries.listing-page-essentials-first.title":
+    "As páginas dos locais mostram primeiro o essencial",
+  "changelog.entries.listing-page-essentials-first.body":
+    "A descrição fica logo abaixo do nome, o mapa passa para a coluna lateral e os formulários abrem com um toque.",
+  "changelog.entries.editor-savebar-above-tab-bar.title":
+    "A barra de gravação do editor fica visível no telemóvel",
+  "changelog.entries.editor-savebar-above-tab-bar.body":
+    "Agora fica acima da barra de separadores, por isso Guardar todas as alterações está sempre à mão.",
+  "changelog.entries.therapist-editor-refined-fields.title":
+    "Campos mais calmos e claros no editor da página de terapeuta",
+  "changelog.entries.therapist-editor-refined-fields.body":
+    "Os exemplos leem-se como exemplos, a citação mostra o destaque coral enquanto escreves e as listas curtas pedem um toque.",
+  "changelog.entries.listing-page-alignment.title":
+    "Os anúncios alinham de ponta a ponta",
+  "changelog.entries.listing-page-alignment.body":
+    "O trilho de navegação, o cabeçalho, o horário, o mapa e os sítios perto partilham agora as mesmas margens em cada anúncio.",
+  "changelog.entries.directory-map-full-width.title":
+    "Direções e um mapa mais largo nos anúncios",
+  "changelog.entries.directory-map-full-width.body":
+    "Leva-me lá e Copiar morada ficam por baixo da morada completa, e o mapa ocupa o cartão inteiro.",
+  "changelog.entries.save-and-leave-editor.title":
+    "Guarda as tuas edições ao sair",
+  "changelog.entries.save-and-leave-editor.body":
+    "Personas, definições, o teu perfil, peças da revista e anúncios oferecem Guardar e sair antes de saíres.",
+  "changelog.entries.trade-and-service-professions.title":
+    "Escolhe ofícios e serviços como o teu trabalho",
+  "changelog.entries.trade-and-service-professions.body":
+    "Seis novas áreas, de Beleza a Transportes, trazem opções como Barbearia, Eletricidade e Apoio domiciliário.",
+  "changelog.entries.therapist-topics-inline-editor.title":
+    "Mais fácil dizer em que ajudas, como terapeuta",
+  "changelog.entries.therapist-topics-inline-editor.body":
+    "Os temas e as suas linhas escrevem-se em Como trabalhas, dispostos tal como aparecem na tua página.",
+  "changelog.entries.page-change-scroll-flash.title":
+    "Mudar de página já não faz piscar o topo da anterior",
+  "changelog.entries.page-change-scroll-flash.body":
+    "A página que deixas desvanece exatamente onde estavas a ler enquanto a próxima carrega.",
+  "changelog.entries.listing-delete-danger-zone.title":
+    "Elimina anúncios do diretório com segurança, passo a passo",
+  "changelog.entries.listing-delete-danger-zone.body":
+    "Antes de um anúncio desaparecer, vês o que se perde, marcas três confirmações e escreves o nome.",
+  "changelog.entries.email-template-masthead-design.title":
+    "Os modelos de email ganham um cabeçalho ameixa da marca",
+  "changelog.entries.email-template-masthead-design.body":
+    "Palavras do título em itálico coral, um botão maior e um rodapé ameixa, pensados para ler bem no telemóvel.",
+  "changelog.entries.persona-editor-rail-collapse.title":
+    "Recolhe a barra lateral do editor de personas",
+  "changelog.entries.persona-editor-rail-collapse.body":
+    "Um botão recolhe a lista de secções, com suavidade, numa faixa de ícones com o nome ao passar o rato, e guarda a tua escolha.",
   "changelog.entries.email-template-list-preview.title":
     "Pré-visualiza modelos de email a partir da lista",
   "changelog.entries.email-template-list-preview.body":
@@ -2625,7 +2748,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-preview-desktop.title":
     "Vê a tua persona no computador enquanto editas",
   "changelog.entries.persona-preview-desktop.body":
-    "A pré-visualização ao vivo alterna entre largura de telemóvel e de portátil, e alarga na vista de computador.",
+    "A pré-visualização ao vivo abre na largura do teu dispositivo e alterna entre telemóvel e portátil.",
   "changelog.entries.studio-teaser-page.title":
     "O Studio ganha um teaser enquanto é construído",
   "changelog.entries.studio-teaser-page.body":
@@ -2651,7 +2774,7 @@ export const marketing: Catalog = {
   "changelog.entries.therapist-page-editor-chapters.body":
     "Seis capítulos pela ordem da página, com etiquetas, campos em euros, linhas compactas e pré-visualização ao vivo.",
   "changelog.entries.therapist-lived-languages-select.title":
-    "Terapeutas escolhem experiência vivida e línguas de uma lista",
+    "Terapeutas escolhem línguas, métodos e com quem trabalham a partir de listas",
   "changelog.entries.therapist-lived-languages-select.body":
     "Marca várias numa só lista, acrescenta as tuas palavras, e a página mostra-as na língua de quem lê.",
   "changelog.entries.therapist-persona-profile.title":
@@ -7299,7 +7422,6 @@ export const marketing: Catalog = {
   "directory.detail.reviewsCount": "· {count} avaliações",
   "directory.detail.newBadge": "Novo",
   "directory.detail.onlineBusiness": "Só online",
-  "directory.detail.whatItIsTitle": "O que <em>é, na prática.</em>",
   "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
   "directory.detail.goodForSub": "Como {name} descreve.",
   "directory.detail.hoursTitle": "Horário",
@@ -7309,6 +7431,9 @@ export const marketing: Catalog = {
   "directory.detail.closedNow": "Encerrado",
   "directory.detail.closingSoon": "Fecha às {time}",
   "directory.detail.formerAddress": "Morada anterior",
+  "directory.detail.takeMeThere": "Leva-me lá",
+  "directory.detail.copyAddress": "Copiar morada",
+  "directory.detail.addressCopied": "Morada copiada",
   "directory.detail.operating.temporarily_closed.title":
     "Temporariamente fechado",
   "directory.detail.operating.temporarily_closed.lead":
@@ -7362,6 +7487,7 @@ export const marketing: Catalog = {
     "Inicia sessão para avaliar este espaço.",
   "directory.detail.review.signInCta": "Iniciar sessão",
   "directory.detail.review.cancel": "Cancelar",
+  "directory.detail.review.leaveCta": "Deixa uma avaliação",
   "directory.detail.review.editCta": "Editar",
   "directory.detail.review.editTitle": "Editar a tua avaliação",
   "directory.detail.review.saveEdit": "Guardar alterações",
@@ -7491,7 +7617,6 @@ export const marketing: Catalog = {
   "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visitar o site",
   "directory.detail.getInTouch": "Entrar em contacto",
-  "directory.detail.backToDirectory": "Voltar ao diretório",
   "directory.detail.claimsFiledLink": "Ver os pedidos que enviaste",
   "directory.detail.loader.ariaLabel": "A abrir este espaço",
   "directory.detail.loader.title": "A abrir este espaço",
@@ -7542,6 +7667,8 @@ export const marketing: Catalog = {
   "directory.detail.questions.askHint":
     "Toda a gente que lê esta ficha vê a tua pergunta e a resposta.",
   "directory.detail.questions.askCta": "Perguntar",
+  "directory.detail.questions.askToggle": "Faz uma pergunta",
+  "directory.detail.questions.askCancel": "Cancelar",
   "directory.detail.questions.asking": "A enviar…",
   "directory.detail.questions.successToast": "A tua pergunta está publicada.",
   "directory.detail.questions.errorGeneric":

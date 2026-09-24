@@ -17,8 +17,9 @@ import s from "./DirectorySpacePage.module.css";
  * carried on.
  *
  * Extracted out of `DirectorySpaceAside` when the practical answers moved into
- * the main column, so the rows themselves are unchanged and have exactly one
- * definition.
+ * the main column, so the rows have exactly one definition. They render
+ * inside `DirectoryVisitSection`, which opens the rail again on a two-column
+ * page and sits in the main column on a one-column one.
  */
 export function DirectoryContactRows({ place }: { place: DirectoryPlace }) {
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";

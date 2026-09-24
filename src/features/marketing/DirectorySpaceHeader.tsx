@@ -32,14 +32,19 @@ const OWNERSHIP_PILL_KEYS: Record<OwnershipBadgeState, string> = {
 
 /**
  * The listing's identity block, now the FIRST thing on the page (above the
- * gallery): eyebrow → name → tagline → a single consolidated meta row carrying
- * every at-a-glance signal (verified/friendly badge, the place's own pills, and
- * either the rating or a "New" chip). The primary actions (Directions / Share /
- * Save) sit inline on the right, aligned with the name, instead of floating in
- * a disconnected card. Extracted out of `DirectorySpaceMain` so the two-column
- * body below can start straight into the content sections. A compact "Run by"
- * byline closes the identity block, where the sticky rail's "Who runs it" card
- * used to carry the same attribution.
+ * gallery): eyebrow → name → tagline → a single consolidated meta row
+ * carrying every at-a-glance signal (verified/friendly badge, the place's own
+ * pills, and either the rating or a "New" chip) → the queer-owned provenance
+ * → the "Run by" byline. The primary actions (Directions / Share / Save) sit
+ * inline on the right, aligned with the name, instead of floating in a
+ * disconnected card. The owner's own description spans the full width of the
+ * header, under both the identity column and the actions, closing the header
+ * as its body copy right before the gallery. On a phone, where the action
+ * row wraps below the identity column, this keeps that row near the top of
+ * the screen, with the description following it. Extracted out of
+ * `DirectorySpaceMain` so the two-column body below can start straight into
+ * the content sections. Putting the badges and rating right under the
+ * tagline keeps them within a thumb's reach of the name on a phone.
  */
 export function DirectorySpaceHeader({ place, preview = false }: Props) {
   const { t } = useTranslation();
@@ -109,6 +114,19 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
           <div className={s.spaceHeadActions}>
             <DirectoryActionBar place={place} preview={preview} />
           </div>
+          {/* The owner's own description, untitled: a full-width last child of
+              the header, so it never pushes the action row down with it. On a
+              phone the row still wraps below the identity column, landing
+              right after the byline, and the description runs underneath
+              everything, closing the header as the place's own body copy
+              right before the gallery. */}
+          {place.whatItIs.length > 0 && (
+            <div className={s.description}>
+              {place.whatItIs.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
+          )}
         </header>
       </div>
     </div>

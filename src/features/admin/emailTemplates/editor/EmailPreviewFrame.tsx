@@ -1,7 +1,6 @@
 import { useDeferredValue, useState } from "react";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { AdminSeg } from "../../ui";
-import { EmailDesignSwitch } from "./EmailDesignSwitch";
 import styles from "./emailTemplateEditor.module.css";
 
 /**
@@ -19,26 +18,23 @@ export function EmailPreviewFrame({ html }: { html: string }) {
         <h3 id="email-preview-heading" className={styles.previewTitle}>
           {t("admin:emailTemplates.preview.label")}
         </h3>
-        <div className={styles.previewControls}>
-          <EmailDesignSwitch />
-          <AdminSeg
-            ariaLabelledby="email-preview-heading"
-            value={width}
-            onChange={(value) =>
-              setWidth(value === "mobile" ? "mobile" : "desktop")
-            }
-            options={[
-              {
-                value: "desktop",
-                label: t("admin:emailTemplates.preview.desktop"),
-              },
-              {
-                value: "mobile",
-                label: t("admin:emailTemplates.preview.mobile"),
-              },
-            ]}
-          />
-        </div>
+        <AdminSeg
+          ariaLabelledby="email-preview-heading"
+          value={width}
+          onChange={(value) =>
+            setWidth(value === "mobile" ? "mobile" : "desktop")
+          }
+          options={[
+            {
+              value: "desktop",
+              label: t("admin:emailTemplates.preview.desktop"),
+            },
+            {
+              value: "mobile",
+              label: t("admin:emailTemplates.preview.mobile"),
+            },
+          ]}
+        />
       </div>
       <div className={styles.previewStage}>
         <iframe

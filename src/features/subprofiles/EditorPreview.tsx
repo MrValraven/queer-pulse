@@ -19,11 +19,7 @@ import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { PreviewDeviceToggle } from "./PreviewDeviceToggle";
-import {
-  PREVIEW_LAYOUT_WIDTH,
-  usePreviewFit,
-  type PreviewDevice,
-} from "./usePreviewFit";
+import { usePreviewFit, type PreviewDevice } from "./usePreviewFit";
 
 /** No-op — the tree is fully inert in `mode="preview"` (Task 3), so these
  *  handlers exist only to satisfy `SubprofilePageBody`'s prop contract and
@@ -170,13 +166,11 @@ export function EditorPreview({
         )}
       </div>
       <div className="ed-prev-scroll" ref={scrollRef}>
-        {/* `usePreviewFit` writes the frame's `zoom` onto the element itself,
-            so the style object below carries only the layout width. */}
-        <div
-          ref={frameRef}
-          className="ed-prev-frame"
-          style={{ width: PREVIEW_LAYOUT_WIDTH[device] }}
-        >
+        {/* `usePreviewFit` writes the frame's layout width and `zoom` onto
+            the element itself and stamps the device swap's phase on the
+            scroller, so the fade, the glide and the width change of a
+            Mobile / Desktop switch add no render of the page tree. */}
+        <div ref={frameRef} className="ed-prev-frame">
           <SubprofilePageBody
             data={data}
             skin={skin}

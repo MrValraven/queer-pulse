@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -7,11 +6,7 @@ import type {
   SkinSelectOption,
 } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
-import {
-  IS_FIELD_SIZING_SUPPORTED,
-  useAutoGrowFallback,
-} from "./useAutoGrowTextarea";
-import listStyles from "./SkinListControls.module.css";
+import { SkinAutoGrowTextarea } from "./SkinAutoGrowTextarea";
 
 /** Resolve a descriptor's option list into `Select` options. */
 function useSelectOptions(options: SkinSelectOption[] | undefined) {
@@ -22,18 +17,19 @@ function useSelectOptions(options: SkinSelectOption[] | undefined) {
   }));
 }
 
+interface SkinSelectControlProps {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+}
+
 /**
  * A `select` control of an object block (e.g. `therapist.status`). Stores the
  * chosen option's string value at the control's dot-path. While nothing is
  * stored it shows `defaultValue`, the same value the public page assumes.
+ * The generic page-blocks editor renders it in the FormField design; no
+ * therapist chapter declares a `select`.
  */
-export function SkinSelectControl({
-  control,
-  editor,
-}: {
-  control: SkinBlockControl;
-  editor: SubprofileSkinBlocksEditor;
-}) {
+export function SkinSelectControl({ control, editor }: SkinSelectControlProps) {
   const { t } = useTranslation();
   const options = useSelectOptions(control.options);
   const raw = editor.getValue(control.path);
@@ -56,50 +52,21 @@ export function SkinSelectControl({
   );
 }
 
-/** A multi-line item field (an FAQ answer, a step's body, a note) that
- *  grows with its text from a three-row minimum, so nothing is clipped.
- *  It forwards FormField's injected `id` and `aria-*` onto the textarea. */
-function SkinAutoGrowTextarea({
-  value,
-  placeholder,
-  onChange,
-  ...wiring
-}: {
+interface SkinItemFieldInputProps {
+  field: SkinItemFieldDescriptor;
   value: string;
-  placeholder?: string;
   onChange: (value: string) => void;
-  id?: string;
-  "aria-describedby"?: string;
-  "aria-invalid"?: boolean | "true" | "false";
-  "aria-required"?: boolean | "true" | "false";
-}) {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  useAutoGrowFallback(textareaRef, value);
-  return (
-    <textarea
-      {...wiring}
-      ref={textareaRef}
-      className={listStyles.autoGrowTextarea}
-      rows={IS_FIELD_SIZING_SUPPORTED ? undefined : 3}
-      value={value}
-      placeholder={placeholder}
-      onChange={(event) => onChange(event.target.value)}
-    />
-  );
 }
-SkinAutoGrowTextarea.formFieldControl = true;
 
-/** One field of an `objectList` entry: a select when the descriptor lists
- *  `options`, else a single-line input or a textarea. */
+/** One field of an `objectList` entry in the generic page-blocks editor: a
+ *  select when the descriptor lists `options`, else a single-line input or
+ *  a textarea, each in a FormField. The therapist chapters' entries use
+ *  `SkinRefinedItemFieldInput`. */
 export function SkinItemFieldInput({
   field,
   value,
   onChange,
-}: {
-  field: SkinItemFieldDescriptor;
-  value: string;
-  onChange: (value: string) => void;
-}) {
+}: SkinItemFieldInputProps) {
   const { t } = useTranslation();
   const options = useSelectOptions(field.options);
   const placeholder = field.placeholderKey

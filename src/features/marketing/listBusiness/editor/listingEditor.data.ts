@@ -20,7 +20,8 @@ export type ListingEditorSectionKey =
   | "photos"
   | "aboutYou"
   | "coManagers"
-  | "permissions";
+  | "permissions"
+  | "dangerZone";
 
 export interface ListingEditorSectionDefinition {
   key: ListingEditorSectionKey;
@@ -33,7 +34,8 @@ export interface ListingEditorSectionDefinition {
  * Ordered for someone hunting one field: what the place IS first (name, category, area, price, one-liner),
  * then how it reads, then what it costs, then where and when to find it, then
  * who can get in, then whether it is trading and showing, then pictures, then
- * the person behind it, and last the permissions that rarely change.
+ * the person behind it, then the permissions that rarely change, and at the
+ * very end, for the owner alone, the one action that cannot be taken back.
  */
 export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
   {
@@ -120,6 +122,14 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     labelKey: "marketing:listBusiness.editor.section.permissions",
     anchors: [ANCHOR.consent],
   },
+  {
+    key: "dangerZone",
+    id: "lb-editor-danger-zone",
+    labelKey: "marketing:listBusiness.editor.section.dangerZone",
+    // One button that opens its own confirmation, so nothing here is ever a
+    // field the save bar is waiting on.
+    anchors: [],
+  },
 ];
 
 /** Section ids in render order. Module-level so the scroll-spy observer can
@@ -141,7 +151,9 @@ export const LISTING_EDITOR_SECTION_BY_KEY = Object.fromEntries(
  * role shown on the listing, because the owner's own details are not a
  * co-manager's to see, so it is titled for what it actually contains and its
  * outstanding-field anchors shrink to that one field. "Permissions" becomes
- * read-only, so it can never be outstanding either.
+ * read-only, so it can never be outstanding either. The danger zone is the one
+ * block that does disappear: deleting a listing is the owner's alone, and the
+ * API refuses a co-manager's `DELETE /listings/:ref`.
  *
  * Module-level, like the list above, so the jump nav and the scroll-spy both
  * keep a stable array identity across renders.
@@ -156,14 +168,25 @@ const CO_MANAGER_SECTION_OVERRIDES: Partial<
   permissions: { anchors: [] },
 };
 
-export const CO_MANAGER_EDITOR_SECTIONS: ListingEditorSectionDefinition[] =
+const OWNER_ONLY_SECTION_KEYS: ReadonlySet<ListingEditorSectionKey> = new Set([
+  "dangerZone",
+]);
+
+const CO_MANAGER_SECTION_DEFINITIONS: ListingEditorSectionDefinition[] =
   LISTING_EDITOR_SECTIONS.map((section) => ({
     ...section,
     ...CO_MANAGER_SECTION_OVERRIDES[section.key],
   }));
 
+export const CO_MANAGER_EDITOR_SECTIONS: ListingEditorSectionDefinition[] =
+  CO_MANAGER_SECTION_DEFINITIONS.filter(
+    (section) => !OWNER_ONLY_SECTION_KEYS.has(section.key),
+  );
+
+/** Keyed from the UNFILTERED list, so every key the type promises is really
+ *  there. Whether an owner-only block renders is decided where it renders. */
 const CO_MANAGER_EDITOR_SECTION_BY_KEY = Object.fromEntries(
-  CO_MANAGER_EDITOR_SECTIONS.map((section) => [section.key, section]),
+  CO_MANAGER_SECTION_DEFINITIONS.map((section) => [section.key, section]),
 ) as Record<ListingEditorSectionKey, ListingEditorSectionDefinition>;
 
 /** The section list to render and to jump between, for this member's role. */

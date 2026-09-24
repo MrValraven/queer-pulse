@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import type { EditorPaneKey } from "./editorRail.data";
+import type { EditorPaneKey, SectionInPageBlocks } from "./editorRail.data";
+import { CHAPTER_PARAM, FIELD_PARAM } from "./editorFieldDeepLink.data";
 
 /** Which pane the editor is showing. */
 const PANE_PARAM = "pane";
@@ -16,6 +17,22 @@ export interface EditorPaneState {
   isPickerOpen: boolean;
   openPicker: () => void;
   closePicker: () => void;
+  /** The search string an older `?pane=section:<name>` link is replaced
+   *  with, when that section now lives in Page blocks. Null otherwise. */
+  movedPaneSearch: string | null;
+}
+
+/** The address of a section's chapter and field in Page blocks, keeping the
+ *  URL's other params. */
+function pageBlocksSearch(
+  searchParams: URLSearchParams,
+  target: SectionInPageBlocks,
+): string {
+  const next = new URLSearchParams(searchParams);
+  next.set(PANE_PARAM, "skinBlocks");
+  next.set(CHAPTER_PARAM, target.chapter);
+  next.set(FIELD_PARAM, target.field);
+  return `?${next.toString()}`;
 }
 
 /**
@@ -36,8 +53,15 @@ export interface EditorPaneState {
  * closes the sheet before it touches the pane history. Picking a pane from the
  * open sheet REPLACES that entry instead of pushing a second one, which keeps
  * one Back press per pane the owner actually visited.
+ *
+ * A section edited inside Page blocks (`sectionsInPageBlocks`) has no pane of
+ * its own. An older link to it yields `movedPaneSearch`, which the shell swaps
+ * in with a history REPLACE, so the owner lands on that chapter and field.
  */
-export function useEditorPane(paneKeys: EditorPaneKey[]): EditorPaneState {
+export function useEditorPane(
+  paneKeys: EditorPaneKey[],
+  sectionsInBlocks: ReadonlyMap<string, SectionInPageBlocks>,
+): EditorPaneState {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   // Whether THIS session pushed the open-sheet entry. False when the sheet is
@@ -51,6 +75,12 @@ export function useEditorPane(paneKeys: EditorPaneKey[]): EditorPaneState {
   const activePane = isKnownPane(requestedPane)
     ? requestedPane
     : (paneKeys[0] ?? "identity");
+
+  const movedTarget =
+    requestedPane === null ? undefined : sectionsInBlocks.get(requestedPane);
+  const movedPaneSearch = movedTarget
+    ? pageBlocksSearch(searchParams, movedTarget)
+    : null;
 
   const isPickerOpen = searchParams.get(PICKER_PARAM) === "1";
 
@@ -109,5 +139,6 @@ export function useEditorPane(paneKeys: EditorPaneKey[]): EditorPaneState {
     isPickerOpen,
     openPicker,
     closePicker,
+    movedPaneSearch,
   };
 }

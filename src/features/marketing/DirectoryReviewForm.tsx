@@ -18,8 +18,28 @@ import s from "./DirectorySpacePage.module.css";
  * flow so writing and rewriting a review offer the same stars, words and
  * photo. A `resetKey` remounts the composer after a successful post, which
  * clears it back to empty.
+ *
+ * Mounted inside `DirectoryReviewFormDisclosure` (rendered by
+ * `DirectoryReviewsSection`), which owns the open/closed state and stays
+ * mounted while collapsed (hidden via the `hidden` attribute rather than
+ * unmounted) so an in-progress draft survives a collapse. `onCancel` and
+ * `onPosted` let that parent return the panel to its collapsed state; both
+ * are optional so the component still works wherever it is rendered always
+ * open, without a collapse affordance.
  */
-export function DirectoryReviewForm({ slug }: { slug: string }) {
+export function DirectoryReviewForm({
+  slug,
+  onCancel,
+  onPosted,
+}: {
+  slug: string;
+  /** Present only when the caller offers a way to dismiss the form without
+   *  posting; threaded straight to the composer's own Cancel button. */
+  onCancel?: () => void;
+  /** Called once a post succeeds, after the success toast is queued, so the
+   *  caller can collapse the panel and move focus. */
+  onPosted?: () => void;
+}) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { showToast } = useToast();
@@ -44,6 +64,7 @@ export function DirectoryReviewForm({ slug }: { slug: string }) {
       submitLabel={t("marketing:directory.detail.review.submit")}
       pendingLabel={t("marketing:directory.detail.review.submitting")}
       isPending={submitReview.isPending}
+      onCancel={onCancel}
       onSubmit={(values) =>
         submitReview.mutate(values, {
           onSuccess: () => {
@@ -52,6 +73,7 @@ export function DirectoryReviewForm({ slug }: { slug: string }) {
               t("marketing:directory.detail.review.successToast"),
               "success",
             );
+            onPosted?.();
           },
           onError: () =>
             showToast(

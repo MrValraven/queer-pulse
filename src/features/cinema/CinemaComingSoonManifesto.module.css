@@ -29,8 +29,8 @@
 
 .inner {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(40px, 6vw, 96px);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(32px, 4vw, 64px);
   align-items: start;
   max-width: 1180px;
   margin: 0 auto;

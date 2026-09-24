@@ -1,4 +1,4 @@
-/* "Message this business" — the one contact route on a listing that stays
+/* "Message this business": the one contact route on a listing that stays
    inside QueerPulse. It sits with the phone, website and email rows in the
    visit card and keeps their hairline rhythm, so it reads as one more way to
    reach the place rather than as a banner bolted underneath them. */
@@ -18,8 +18,13 @@
 
 /* What happens when they press it: the message becomes a direct message from
    their own account, and a reply may need a connection. Both are said here,
-   before the composer opens, and again inside it. */
-.note {
+   before the composer opens, and again inside it.
+
+   This line and the three below it are scoped under `.block` for weight: the
+   visit card sits inside a page section, whose `.sec p` rule (the owner's
+   long-form prose styling, specificity 0,1,1) otherwise outranks a single class
+   and sets these quiet 12.5px lines in 16px body ink. */
+.block > .note {
   margin: 0;
   font-size: var(--text-12-5);
   line-height: 1.55;
@@ -28,7 +33,7 @@
 
 /* The reason an owner cannot be written to. Rendered rather than swallowed: a
    missing button with no explanation reads as a bug. */
-.unavailable {
+.block > .unavailable {
   margin: 0;
   font-size: var(--text-12-5);
   line-height: 1.55;
@@ -37,7 +42,7 @@
 
 /* A cap the member has already hit. Coral, because it is the answer to a press
    they just made, and it stays next to the disabled trigger. */
-.capped {
+.block > .capped {
   margin: 0;
   font-size: var(--text-12-5);
   line-height: 1.55;
@@ -51,7 +56,8 @@
   text-decoration: underline;
 }
 
-.signIn {
+.block > .signIn {
+  margin: 0;
   font-size: var(--text-12-5);
   line-height: 1.55;
   color: var(--ink-60);

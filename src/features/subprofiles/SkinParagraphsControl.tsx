@@ -10,10 +10,15 @@ import {
 } from "./SkinListParts";
 import { useSkinListRows } from "./useSkinListRows";
 import { useAutoGrowFallback } from "./useAutoGrowTextarea";
+import {
+  refinedSurfaceClassName,
+  useRefinedPlaceholder,
+} from "./refinedFieldSurface";
 import styles from "./SkinListControls.module.css";
+import refinedStyles from "./SkinRefinedList.module.css";
 
-/** One paragraph: the coral numeral with the grip beside it, an
- *  auto-growing textarea, and the tools top right. */
+/** One paragraph: the coral numeral with the grip beside it and the tools
+ *  on one line, with the auto-growing textarea at full width below. */
 function SkinParagraphRow({
   text,
   index,
@@ -53,7 +58,7 @@ function SkinParagraphRow({
       <textarea
         ref={textareaRef}
         aria-label={paragraphLabel}
-        className={styles.paragraphText}
+        className={`${refinedSurfaceClassName({ isMultiline: true, isEmpty: text.trim() === "" })} ${refinedStyles.paragraphText}`}
         rows={3}
         value={text}
         placeholder={placeholder}
@@ -85,15 +90,12 @@ export function SkinParagraphsControl({
   editor: SubprofileSkinBlocksEditor;
   isLabelHidden?: boolean;
 }) {
-  const { t } = useTranslation();
   const rows = useSkinListRows<string>({
     editor,
     path: control.path,
     createItem: () => "",
   });
-  const placeholder = control.placeholderKey
-    ? t(control.placeholderKey)
-    : undefined;
+  const placeholder = useRefinedPlaceholder(control.placeholderKey);
 
   return (
     <SkinListFrame

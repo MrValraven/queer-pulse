@@ -1,0 +1,155 @@
+/* The list controls and entry item fields of the chaptered skin editor. The
+   input surface itself comes from SkinRefinedField.module.css
+   (`refinedSurfaceClassName`); these rules only fit it into each row.
+   Surface rules sit at (0,2,0), so a rule here that changes one of their
+   properties is scoped at (0,2,1) or higher. */
+
+/* ── Pairs: the column labels in the header row, in sentence case, one step
+   quieter than the control's own label (a stacked row's captions take the
+   label style, below). ─────────────────────────────────────────────────── */
+.columnLabel {
+  font-size: var(--text-13);
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-60);
+}
+
+/* ── Pairs: stack each row once a column is too narrow for its value ───────
+   A column needs about 156px: the longest demo value ("80 min · couples",
+   about 124px at 16px) plus 28px padding and the 1px border on each side.
+   The fixed columns take 86px (grip 24, remove 32, three 10px gaps), or 102px
+   on a coarse pointer (28 and 44), so two values fit from 398px (414px on
+   touch). Below 26rem the row stacks at any viewport: the grip and remove
+   button share a top row, so both fields take the full list width and line
+   up with the other fields in the card. Each caption takes the refined label
+   style, and a money amount keeps a field of 10rem, close to the size of
+   the other money fields, so the amount stays near its caption. The
+   container is set only on a list that holds pair rows. */
+.list:has(.pairRow) {
+  container: skin-pairs / inline-size;
+}
+@container skin-pairs (max-width: 26rem) {
+  .pairsHead.pairsHead {
+    display: none;
+  }
+  .pairRow.pairRow {
+    grid-template-columns: var(--pair-grip-column) minmax(0, 1fr) var(
+        --pair-tool-column
+      );
+    grid-template-areas:
+      "grip . remove"
+      "first first first"
+      "second second second";
+    row-gap: 8px;
+    padding: 10px 0;
+  }
+  .pairRow .pairFirst,
+  .pairRow .pairSecond {
+    gap: 8px;
+  }
+  .money.money {
+    max-width: 10rem;
+  }
+  .pairGrip {
+    grid-area: grip;
+  }
+  .pairFirst {
+    grid-area: first;
+  }
+  .pairSecond {
+    grid-area: second;
+  }
+  .pairRemove {
+    grid-area: remove;
+  }
+  /* Same as the field label (SkinRefinedField.module.css). Doubled to
+     out-rank .columnLabel, which the caption also carries. */
+  .pairCaption.pairCaption {
+    display: block;
+    font-size: var(--text-14);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+}
+
+/* ── Paragraphs: a three-line writing field that grows with its text ─────── */
+textarea.paragraphText.paragraphText {
+  grid-area: text;
+  /* Three lines of 1.5 plus the vertical padding and the 1px border. */
+  min-height: calc(3 * 1.5em + 24px);
+  overflow-wrap: anywhere;
+}
+@supports (field-sizing: content) {
+  textarea.paragraphText.paragraphText {
+    field-sizing: content;
+  }
+}
+
+/* ── Entries: the title field keeps its weight, so it still reads as the
+   entry's heading; it is a one-row field that wraps and grows ─────────── */
+.entryTitle {
+  grid-area: title;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+@supports (field-sizing: content) {
+  .entryTitle {
+    field-sizing: content;
+  }
+}
+.entryTitle::placeholder {
+  font-weight: 400;
+}
+
+/* One labelled field under an entry's title (an answer, a note, a kind). */
+.itemField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 16px;
+}
+.itemLabel {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+textarea.autoGrow.autoGrow {
+  min-height: calc(3 * 1.5em + 24px);
+  overflow-wrap: anywhere;
+}
+@supports (field-sizing: content) {
+  textarea.autoGrow.autoGrow {
+    field-sizing: content;
+  }
+}
+
+/* ── Money in a pair row: MoneyInput keeps its shell and the € suffix; its
+   input is the refined surface (passed as `inputClassName`). The digits sit
+   right-aligned against the €, with tabular figures. (0,3,0) out-ranks the
+   surface's padding. ────────────────────────────────────────────────── */
+.money .moneyInput.moneyInput {
+  min-width: 0;
+  padding-right: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Select trigger: paper with the refined 1px boundary. `> button` (0,1,1)
+   out-ranks the trigger's own rule (0,1,0) and leaves its focus-visible and
+   open states (0,2,0) as they are. ─────────────────────────────────────── */
+.select > button {
+  background: var(--paper);
+  border-width: 1px;
+}
+@media (hover: hover) {
+  .select > button:hover {
+    border-color: var(--line-strong);
+  }
+}

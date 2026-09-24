@@ -45,10 +45,19 @@ function isRendered(element: Element): boolean {
   return element.getClientRects().length > 0;
 }
 
-/** The control a jump focuses: the first empty text entry (a chip field's add
- *  box, a list's blank row), else the first text entry, else the first
- *  focusable control. */
+/** A control that names itself the jump's landing spot, for a field whose
+ *  first button would change the value (a toggle chip). */
+const EXPLICIT_TARGET_SELECTOR = "[data-jump-target]";
+
+/** The control a jump focuses: a rendered `[data-jump-target]` when the field
+ *  marks one, else the first empty text entry (a chip field's add box, a
+ *  list's blank row), else the first text entry, else the first focusable
+ *  control. */
 function pickFocusTarget(anchor: HTMLElement): HTMLElement | null {
+  const explicitTarget = [
+    ...anchor.querySelectorAll<HTMLElement>(EXPLICIT_TARGET_SELECTOR),
+  ].find(isRendered);
+  if (explicitTarget) return explicitTarget;
   const textEntries = [
     ...anchor.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
       TEXT_ENTRY_SELECTOR,
@@ -174,10 +183,11 @@ export interface EditorFieldTarget {
  *
  * Honours `prefers-reduced-motion`: an instant jump instead of a glide (the
  * flash keyframes are disabled in CSS under the same query, leaving a static
- * ring). Focus moves to the field's own control where there is one (its text
- * entry first, see `pickFocusTarget`), so the jump works for keyboard and
- * screen-reader users too and is more than a visual scroll. The scroll clears
- * the sticky chrome (see `scrollIntoBand`), so the focused control is visible.
+ * ring). Focus moves to the field's own control where there is one (a marked
+ * `[data-jump-target]`, else its text entry, see `pickFocusTarget`), so the
+ * jump works for keyboard and screen-reader users too and is more than a
+ * visual scroll. The scroll clears the sticky chrome (see `scrollIntoBand`),
+ * so the focused control is visible.
  */
 export function useEditorFieldJump(): (target: EditorFieldTarget) => void {
   const { activePane, goToPane } = useSubprofileEditorNav();

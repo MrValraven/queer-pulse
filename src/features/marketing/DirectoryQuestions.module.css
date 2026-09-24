@@ -4,12 +4,25 @@
    block; the section frame itself still comes from that page module's `.sec`. */
 
 /* ── Ask composer ─────────────────────────────────────────────────────────── */
+/* The collapsed default: a single pill toggle sitting under the question
+   list (or its empty-state hint), so a fresh listing never opens on a large
+   empty form. Reveals `.askForm` (or `.signIn`) in place on click. The
+   margin sits on this wrapping block, not the `<Button>` itself: a button is
+   inline-flex, so margins on it never collapse with its neighbors and the
+   gap above ends up taller than intended. 16px sits above the toggle from
+   the content before it; the section's own closing space (and the hairline
+   before the next section) follows this block directly, so it carries no
+   margin of its own below. */
+.askToggle {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
 .askForm {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 20px 22px;
-  margin-bottom: 18px;
+  margin-top: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-16);
@@ -52,6 +65,13 @@
   line-height: 1.5;
   color: var(--ink-40);
 }
+/* Cancel sits beside the submit button rather than opposite the hint, so the
+   two actions read as one group. */
+.askFootActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 /* The refusal, where the member is looking. Icon-free but colour-plus-text:
    the words carry the meaning on their own. */
 .askError {
@@ -61,7 +81,7 @@
 }
 .signIn {
   padding: 16px 18px;
-  margin-bottom: 18px;
+  margin-top: 18px;
   font-size: var(--text-14);
   color: var(--ink-40);
   background: var(--paper);
@@ -76,7 +96,7 @@
    not ask themselves questions. */
 .ownerNote {
   padding: 14px 18px;
-  margin-bottom: 18px;
+  margin-top: 18px;
   font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-60);
@@ -256,11 +276,15 @@
 }
 
 /* ── Empty state + paging ─────────────────────────────────────────────────── */
+/* The section's single empty-state line when there are no questions yet. It
+   carries no margin of its own below; the page module's shared `.sec p` rule
+   supplies the bottom margin, which the toggle's own 16px top margin then
+   collapses with. */
 .empty {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  padding: 18px 4px;
+  padding: 18px 4px 0;
   font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-40);

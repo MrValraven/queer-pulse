@@ -68,26 +68,18 @@ export function DirectoryQuestionsSection({
           components={{ em: <em /> }}
         />
       </h2>
-      <p className={s.subLine}>
-        {t(
-          questions.length === 0
-            ? "marketing:directory.detail.questions.emptySub"
-            : "marketing:directory.detail.questions.sub",
-          { count: total },
-        )}
-      </p>
+      {questions.length > 0 && (
+        <p className={s.subLine}>
+          {t("marketing:directory.detail.questions.sub", { count: total })}
+        </p>
+      )}
 
-      {/* The moderation preview shows the questions and answers, never the
-          compose affordances, matching the review form above it. */}
-      {!preview &&
-        (ownerRef ? (
-          <p className={q.ownerNote}>
-            {t("marketing:directory.detail.questions.ownerNote")}
-          </p>
-        ) : (
-          <DirectoryQuestionAskForm slug={place.slug} />
-        ))}
-
+      {/* Content first: the question cards, or the empty-state hint when
+          there are none, read before the ask affordance below them so a
+          fresh listing does not open on a large empty form. With zero
+          questions the hint below is the section's only empty-state line;
+          the "Nobody has asked anything here yet." sub line above is skipped
+          so the section does not say the same thing twice. */}
       {questions.length === 0 ? (
         <p className={q.empty}>
           <FiHelpCircle aria-hidden />
@@ -133,6 +125,20 @@ export function DirectoryQuestionsSection({
           {t("marketing:directory.detail.questions.loadError")}
         </p>
       )}
+
+      {/* The moderation preview shows only the questions and answers; compose
+          affordances stay off, matching the review form in the reviews
+          section below. The ask affordance itself is collapsed to a toggle
+          button by default (see `DirectoryQuestionAskForm`), so it stays
+          quiet under the content above it. */}
+      {!preview &&
+        (ownerRef ? (
+          <p className={q.ownerNote}>
+            {t("marketing:directory.detail.questions.ownerNote")}
+          </p>
+        ) : (
+          <DirectoryQuestionAskForm slug={place.slug} />
+        ))}
     </section>
   );
 }

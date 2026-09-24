@@ -1465,15 +1465,9 @@ export const admin: Catalog = {
     "This listing has no member to contact. There's no one to send a question to.",
   "adminListings.view.queue": "Submissions",
   "adminListings.view.editSuggestions": "Edit suggestions",
-  "adminListings.remove.cta": "Remove",
+  "adminListings.remove.cta": "Delete",
   "adminListings.actions.moreAriaLabel": "More actions for {name}",
-  "adminListings.remove.confirm.title": "Remove {name}?",
-  "adminListings.remove.confirm.body":
-    "This permanently deletes the listing and can't be undone. The submitter won't be notified.",
-  "adminListings.remove.confirm.liveWarning":
-    "This listing is live. Removing it also takes it off the public directory immediately.",
-  "adminListings.remove.confirm.confirmCta": "Remove listing",
-  "adminListings.remove.toast.removed": "{name} was removed.",
+  "adminListings.remove.toast.removed": "{name} was deleted.",
   "adminListings.loadMoreCta": "Load more",
   "adminListings.selectAll.ariaLabel": "Select all visible listings",
   "adminListings.selectAll.label": "Select all visible",
@@ -1503,9 +1497,6 @@ export const admin: Catalog = {
   "adminListings.bulk.confirmRemove.reasonPlaceholder":
     "Add a note for the record…",
   "adminListings.bulk.confirmRemove.confirmCta": "Remove listings",
-  "adminListings.remove.confirm.reasonLabel": "Reason (optional)",
-  "adminListings.remove.confirm.reasonPlaceholder":
-    "Add a note for the record…",
   "adminListings.sendBack.confirm.title": "Send {name} back to review?",
   "adminListings.sendBack.confirm.body":
     "{name} moves back into the review queue. Add a quick note if it helps the next pass.",

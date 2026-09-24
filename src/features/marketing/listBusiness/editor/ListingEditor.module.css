@@ -60,6 +60,11 @@
     background var(--dur-fast, 0.16s) var(--ease),
     color var(--dur-fast, 0.16s) var(--ease);
 }
+/* The Danger zone's entry reads as the warning it leads to. Declared before
+   the hover and current rules so both still take over. */
+.navItemDanger {
+  color: var(--accent-text);
+}
 .navItem:hover {
   background: rgba(var(--plum-rgb), 0.05);
   color: var(--text-strong);
@@ -162,6 +167,32 @@
   letter-spacing: -0.012em;
   color: var(--text-strong);
   margin: 0 0 20px;
+}
+
+/* ── Danger zone ──────────────────────────────────────────────────────────
+   The owner's delete, banded in the same tinted accent border as the app's
+   other danger zones (communities, personas) so it reads as the same kind of
+   place wherever it turns up.
+   ────────────────────────────────────────────────────────────────────── */
+
+.dangerZone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  background: rgba(var(--accent-rgb), 0.03);
+}
+.dangerCopy {
+  flex: 1 1 260px;
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
 }
 
 /* ── Save bar ───────────────────────────────────────────────────────────── */

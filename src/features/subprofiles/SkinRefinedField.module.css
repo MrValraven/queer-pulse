@@ -1,0 +1,180 @@
+/* The refined field frame (SkinRefinedField) and its input surface, for the
+   chaptered skin editor under `?fields=refined`. Read top to bottom the way
+   the owner does: label, then the hint, then the control. Nothing here
+   applies in the current design, which keeps FormField. */
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Label on the left, the fill check beside it, an optional aside (a length
+   guide, a count) pushed to the right. */
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.labelLead {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.label {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+}
+.labelAside {
+  margin-left: auto;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The small jade check a field earns when it fills while the owner watches.
+   It fades in and stays for the visit; a field that loads filled has none. */
+.fillCheck {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--jade-ink);
+  animation: fillCheckIn 0.2s var(--ease);
+}
+
+/* The hint sits under the label and above the control, so it is read before
+   typing. A private helper leads with a lock and reads as a promise. */
+.helper {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.helperPrivate {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.helperIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 0.2em;
+}
+
+.control {
+  margin-top: 8px;
+  min-width: 0;
+}
+/* Nothing visible above (a hidden label and no helper or aside): the hint
+   or the control opens the frame. */
+.helper.flush,
+.control.flush {
+  margin-top: 0;
+}
+.footer {
+  margin-top: 6px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── input surface ─────────────────────────────────────────────────────────
+   Every rule is scoped at (0,2,0) (`.surface` plus its kind class) so it
+   out-ranks a descendant rule such as FormField's `.field input` (0,1,1).
+   A filled field sits on paper; an empty one (the chapter slot says so) is
+   recessed into cream and lifts to paper on focus. The 0.5 border keeps the
+   3:1 boundary WCAG 1.4.11 asks of a control; do not go lighter. */
+.surface:is(.input, .textarea) {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 14px;
+  font-family: var(--sans);
+  /* 16px at least, so iOS Safari never zooms the page on focus. */
+  font-size: var(--text-16);
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  outline: none;
+  transition:
+    border-color 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+.surface.textarea {
+  resize: none;
+}
+.surface.empty:not(:focus) {
+  background: var(--cream);
+}
+@media (hover: hover) {
+  .surface:is(.input, .textarea):hover {
+    border-color: var(--line-strong);
+  }
+}
+.surface:is(.input, .textarea):focus {
+  border-color: var(--line-strong);
+  background: var(--paper);
+  box-shadow: var(--ring-plum-soft);
+}
+/* Text fields follow FormField's accepted text-field pattern. */
+.surface:is(.input, .textarea):focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft), var(--ring-cream);
+}
+/* An example reads as an example: italic and faint, where a value is never
+   italic. The copy carries an "e.g." prefix too (`refinedExample`). */
+.surface:is(.input, .textarea)::placeholder {
+  font-style: italic;
+  color: var(--ink-40);
+  opacity: 1;
+}
+.surface:is(.input, .textarea):disabled {
+  color: var(--ink-40);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.surface:is(.input, .textarea)[aria-invalid="true"] {
+  border-color: var(--accent-ink);
+}
+/* Sized to a short value (a registration number, a price). */
+.surface.narrow {
+  width: min(14rem, 100%);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes fillCheckIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface:is(.input, .textarea) {
+    transition: none;
+  }
+  .fillCheck {
+    animation: none;
+  }
+}

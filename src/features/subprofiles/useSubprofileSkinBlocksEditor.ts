@@ -8,6 +8,8 @@ import {
   type SkinChapterDescriptor,
   type SkinControlKind,
 } from "./skinBlockFields.data";
+import type { SectionRowMap } from "./useEditorRowsState";
+import { nonBlankLines } from "./sectionItemsNormalize";
 
 /** Working copy of the persona's editable `SkinData` blocks, keyed by their
  *  top-level `SkinData` key (`booker`, `chair`, `beforeYouSit`, …). Values are
@@ -27,7 +29,9 @@ export interface SubprofileSkinBlocksEditor {
   /** The chapters of the pane, each one screen picked by `?chapter=`. Empty
    *  for kinds without a chaptered editor. */
   chapters: SkinChapterDescriptor[];
-  /** Read the current value at a `SkinData` dot-path (`"chair.rate"`). */
+  /** Read the current value at a `SkinData` dot-path (`"chair.rate"`). A
+   *  `section:<name>` path reads that section's draft rows as
+   *  `{ title, description }` pairs, so the chapter fill counts them. */
   getValue: (path: string) => unknown;
   /** Read the last-saved value at a `SkinData` dot-path, so the save graph
    *  can tell whether a single field (`"therapist.status"`) changed. */
@@ -152,6 +156,23 @@ function isEmptyBlockValue(blockKey: string, value: unknown): boolean {
   );
 }
 
+/** The path prefix of a `sectionItems` control (`section:specialisms`). */
+const SECTION_PATH_PREFIX = "section:";
+
+/** A section's draft rows as their visible text only (heading and lines),
+ *  keeping only the rows with at least one non-blank line. Picking a starter
+ *  topic writes just its heading, so the control counts as filled once a
+ *  topic holds a written line. */
+function sectionItemsValue(
+  sectionRows: SectionRowMap,
+  path: string,
+): Array<{ title: string; description: string }> {
+  const rows = sectionRows[path.slice(SECTION_PATH_PREFIX.length)] ?? [];
+  return rows
+    .filter(({ description }) => nonBlankLines(description).length > 0)
+    .map(({ title, description }) => ({ title, description }));
+}
+
 /** The value at a `SkinData` dot-path (`"chair.rate"`, `"openSlots"`) in a
  *  draft or baseline. Paths go one level deep, under a block. */
 function readPath(source: SkinBlocksDraft, path: string): unknown {
@@ -228,10 +249,12 @@ function seedDraft(
  * `markSaved`, a `dirty` diff that never depends on a refetch, and a
  * `buildSkinBlocks()` the save graph folds into the single meta PATCH.
  * `coverBleed` is deliberately NOT owned here: it stays on the meta editor,
- * and the save graph merges both into one `skinData` object.
+ * and the save graph merges both into one `skinData` object. `sectionRows`
+ * (owned by `useEditorRowsState`) is read only, for `section:<name>` paths.
  */
 export function useSubprofileSkinBlocksEditor(
   subprofile: SubprofileView,
+  sectionRows: SectionRowMap,
 ): SubprofileSkinBlocksEditor {
   const [descriptors] = useState<SkinBlockDescriptor[]>(() =>
     skinBlocksForKind(subprofile.kind),
@@ -253,7 +276,10 @@ export function useSubprofileSkinBlocksEditor(
     {},
   );
 
-  const getValue = (path: string): unknown => readPath(draft, path);
+  const getValue = (path: string): unknown =>
+    path.startsWith(SECTION_PATH_PREFIX)
+      ? sectionItemsValue(sectionRows, path)
+      : readPath(draft, path);
   const getBaselineValue = (path: string): unknown => readPath(baseline, path);
 
   function setValue(path: string, value: unknown): void {

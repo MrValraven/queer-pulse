@@ -4,6 +4,8 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type FocusEvent,
+  type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
 } from "react";
@@ -13,6 +15,11 @@ import styles from "./Tooltip.module.css";
 export interface TooltipProps {
   label: string;
   placement?: "top" | "bottom" | "right";
+  /** Keeps the wrapper mounted but never reveals the bubble. For a trigger
+   * that needs its label only in some states (a rail's icon strip): toggling
+   * this, rather than dropping the wrapper, keeps the trigger from remounting,
+   * so its CSS transitions run and it keeps focus. */
+  isDisabled?: boolean;
   children: ReactNode;
 }
 
@@ -35,12 +42,19 @@ export interface TooltipProps {
 export function Tooltip({
   label,
   placement = "bottom",
+  isDisabled = false,
   children,
 }: TooltipProps) {
   return placement === "right" ? (
-    <FloatingTooltip label={label}>{children}</FloatingTooltip>
+    <FloatingTooltip label={label} isDisabled={isDisabled}>
+      {children}
+    </FloatingTooltip>
   ) : (
-    <AnchoredTooltip label={label} placement={placement}>
+    <AnchoredTooltip
+      label={label}
+      placement={placement}
+      isDisabled={isDisabled}
+    >
       {children}
     </AnchoredTooltip>
   );
@@ -95,10 +109,12 @@ function measureViewportShift(wrap: HTMLElement, bubble: HTMLElement): number {
 function AnchoredTooltip({
   label,
   placement,
+  isDisabled,
   children,
 }: {
   label: string;
   placement: "top" | "bottom";
+  isDisabled: boolean;
   children: ReactNode;
 }) {
   const [touchOpen, setTouchOpen] = useState(false);
@@ -154,16 +170,22 @@ function AnchoredTooltip({
       onFocus={keepInViewport}
     >
       {children}
-      <span
-        ref={bubbleRef}
-        role="tooltip"
-        aria-hidden
-        className={[styles.bubble, styles[placement], touchOpen && styles.open]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {label}
-      </span>
+      {!isDisabled && (
+        <span
+          ref={bubbleRef}
+          role="tooltip"
+          aria-hidden
+          className={[
+            styles.bubble,
+            styles[placement],
+            touchOpen && styles.open,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {label}
+        </span>
+      )}
     </span>
   );
 }
@@ -184,11 +206,43 @@ const FLOATING_GAP = 10;
  * right side has room before the bubble has been measured. */
 const BUBBLE_MAX_WIDTH = 240;
 
+/**
+ * True when the focused element came by its focus from the keyboard (or a
+ * switch), judged by the browser's own `:focus-visible` heuristic. A browser
+ * that cannot parse the selector throws, and then every focus counts, so the
+ * keyboard path still reveals the label there.
+ */
+function isKeyboardFocus(focusedElement: EventTarget): boolean {
+  if (!(focusedElement instanceof Element)) return true;
+  try {
+    return focusedElement.matches(":focus-visible");
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * The same reveal paths as AnchoredTooltip, driven from state here because the
+ * bubble lives in a portal and CSS on the trigger cannot reach it:
+ * - hover: mouse only, shown on pointer enter and hidden on pointer leave
+ * - focus: keyboard / switch users only. The trigger's `:focus-visible` is
+ *   checked on focus, so the focus a mouse click leaves behind never holds a
+ *   bubble open once the pointer has gone.
+ * - tap: touch/pen users get the same brief, auto-dismissing reveal
+ *
+ * The rect is measured once per reveal, so anything that may move or relabel
+ * the trigger hides the bubble until the next reveal: a mouse press (a rail
+ * collapse toggle jumps as the rail animates, and the pointer sitting still
+ * would otherwise leave the bubble at the old spot with the new label),
+ * Enter or Space on the focused trigger, a scroll and a resize.
+ */
 function FloatingTooltip({
   label,
+  isDisabled,
   children,
 }: {
   label: string;
+  isDisabled: boolean;
   children: ReactNode;
 }) {
   const [anchor, setAnchor] = useState<TooltipAnchor | null>(null);
@@ -208,6 +262,7 @@ function FloatingTooltip({
   }, []);
 
   const show = useCallback(() => {
+    if (isDisabled) return;
     const rect = wrapRef.current?.getBoundingClientRect();
     if (!rect) return;
     // A rail pinned to the right edge of the page has no room beside it, so the
@@ -220,7 +275,7 @@ function FloatingTooltip({
       right: isFlipped ? window.innerWidth - rect.left + FLOATING_GAP : "auto",
       isFlipped,
     });
-  }, []);
+  }, [isDisabled]);
 
   // The rect is measured once, at reveal. Scrolling the rail (or the window)
   // would leave the bubble pointing at nothing, so any scroll dismisses it
@@ -246,8 +301,28 @@ function FloatingTooltip({
     dismissTimerRef.current = setTimeout(() => setAnchor(null), 2200);
   };
 
+  // A mouse press may move or relabel the trigger under a still pointer, so it
+  // hides the bubble; the next pointer enter or keyboard focus measures afresh.
+  const handlePointerDown = (pointerEvent: PointerEvent<HTMLSpanElement>) => {
+    if (pointerEvent.pointerType === "mouse") hide();
+    revealOnTouch(pointerEvent);
+  };
+
+  const showOnKeyboardFocus = (focusEvent: FocusEvent<HTMLSpanElement>) => {
+    if (isKeyboardFocus(focusEvent.target)) show();
+  };
+
+  // Enter and Space activate the trigger, which may move or relabel it just
+  // like a mouse press, so the bubble hides until the next focus or hover.
+  const hideOnActivationKey = (
+    keyboardEvent: KeyboardEvent<HTMLSpanElement>,
+  ) => {
+    if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") hide();
+  };
+
   return (
     <>
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- onKeyDown only listens to keys bubbling up from the wrapped trigger so the bubble can hide on activation; this wrapper is not an interactive control and the trigger owns its own focus, role and keys. */}
       <span
         ref={wrapRef}
         className={styles.wrap}
@@ -255,13 +330,15 @@ function FloatingTooltip({
           if (pointerEvent.pointerType === "mouse") show();
         }}
         onPointerLeave={hide}
-        onPointerDown={revealOnTouch}
-        onFocus={show}
+        onPointerDown={handlePointerDown}
+        onFocus={showOnKeyboardFocus}
         onBlur={hide}
+        onKeyDown={hideOnActivationKey}
       >
         {children}
       </span>
       {anchor !== null &&
+        !isDisabled &&
         createPortal(
           <span
             role="tooltip"

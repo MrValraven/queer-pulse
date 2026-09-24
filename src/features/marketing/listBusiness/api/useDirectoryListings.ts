@@ -23,7 +23,7 @@ import { useAllMyListings } from "./useListings";
  */
 export function useDirectoryListings() {
   const { demoMode } = useDemoMode();
-  const { local, withdrawn, addListing, withdrawListing } =
+  const { local, withdrawn, addListing, withdrawListing, deleteListing } =
     useDirectoryListingsActions();
   const myListingsQuery = useAllMyListings();
   const { items: serverItems } = myListingsQuery.data ?? {
@@ -60,6 +60,8 @@ export function useDirectoryListings() {
     submitted,
     addListing,
     withdrawListing,
+    /** Awaited permanent delete for `ListingDeleteFlow`; rejects on failure. */
+    deleteListing,
     /** True when the server read of the member's own listings failed (DES-22).
      *  A grid that branches on `submitted.length === 0` alone tells an owner
      *  they have no places when the request merely failed. */

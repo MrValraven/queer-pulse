@@ -15,6 +15,7 @@ import { AffirmingBaselineNotice } from "../fields/AffirmingBaselineAgreement";
 import { ListingHoursExceptions } from "../ListingHoursExceptions";
 import { ListingEditorSection } from "./ListingEditorSection";
 import { ListingAccessibilityFields } from "./ListingAccessibilityFields";
+import { ListingDangerZoneSection } from "./ListingDangerZoneSection";
 import { ListingPricingFields } from "./ListingPricingFields";
 import { ListingDirectoryVisibilitySection } from "./ListingDirectoryVisibilitySection";
 import { ListingOperatingStateSection } from "./ListingOperatingStateSection";
@@ -40,7 +41,9 @@ import {
  * own personal data, which the API neither sends them nor accepts from them,
  * so they get the role field and a line explaining the rest; and the two
  * permissions in the last section are the owner's grant, so they are read-only
- * there. Everything else about the business is identical for both roles.
+ * there. The owner alone gets a last block, the Danger zone, because only the
+ * owner can delete a listing. Everything else about the business is identical
+ * for both roles.
  *
  * Trading state and directory visibility share ONE section on purpose. They
  * are different questions with similar-sounding answers ("we are shut for
@@ -53,6 +56,7 @@ export function ListingEditorSections({
   listing,
   userName,
   uploadPhoto,
+  onConfirmDelete,
 }: {
   form: ListingForm;
   listing: ManagedListingDTO;
@@ -61,6 +65,9 @@ export function ListingEditorSections({
     file: File,
     options?: { crop?: CropRect },
   ) => Promise<{ key: string; previewUrl: string }>;
+  /** The Danger zone's delete: resolves once the server has deleted the
+   *  listing, rejects on failure. */
+  onConfirmDelete: () => Promise<void>;
 }) {
   /** True only for a listing that actually carries the moderator-granted
    *  "verified queer-owned" badge, which the name, the owned/friendly badge
@@ -137,6 +144,15 @@ export function ListingEditorSections({
             identity, so a co-manager neither sees nor sends them. */}
         {!isCoManagerView && <ConsentChecks form={form} />}
       </ListingEditorSection>
+
+      {!isCoManagerView && (
+        <ListingEditorSection section={section.dangerZone}>
+          <ListingDangerZoneSection
+            listingName={listing.name}
+            onConfirmDelete={onConfirmDelete}
+          />
+        </ListingEditorSection>
+      )}
     </>
   );
 }

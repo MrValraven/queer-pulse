@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useProfileData } from "../../../../app/providers/useProfile";
 import { usePrefersReducedMotion } from "../../../../shared/hooks/usePrefersReducedMotion";
 import { useUploadImage } from "../../../members/api/useUploadImage";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { dtoToDraft } from "../dtoToDraft";
-import { flashField, resolveListing422 } from "../listing422";
 import { pricingModeOf } from "../listingMenu.data";
 import { SendingPanel } from "../ListBusinessChrome";
-import { useEditListingSave, useEditUnsavedGuard } from "../useEditListingSave";
+import { useEditUnsavedGuard } from "../useEditListingSave";
 import { useListingForm } from "../useListingForm";
 import {
   editorSectionsFor,
@@ -17,7 +16,10 @@ import {
 import { flattenEditorMissing } from "./listingEditorMissing";
 import { jumpToEditorSection } from "./jumpToEditorSection";
 import { useActiveEditorSection } from "./useActiveEditorSection";
+import { useDeleteListingExit } from "./useDeleteListingExit";
+import { useEditorHashLanding } from "./useEditorHashLanding";
 import { useListingEditorAutosave } from "./useListingEditorAutosave";
+import { useListingEditorSave } from "./useListingEditorSave";
 import { ListingEditorNotices } from "./ListingEditorNotices";
 import { ListingEditorPreviewModal } from "./ListingEditorPreviewModal";
 import { ListingEditorSaveBar } from "./ListingEditorSaveBar";
@@ -35,9 +37,8 @@ import styles from "./ListingEditor.module.css";
  * and one set of validation rules behind them.
  *
  * It serves both roles. A CO-MANAGER gets the same page minus the owner's own
- * personal fields and minus the delete, offered instead on the account
- * profile's places grid. The role is said plainly at the top, because
- * otherwise somebody else's business reads exactly like your own.
+ * personal fields and the owner-only Danger zone. The role is said plainly at
+ * the top, because otherwise somebody else's business reads exactly like yours.
  */
 export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const { profile } = useProfileData();
@@ -58,20 +59,12 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
     [listing.managementRole, pricingMode],
   );
   const uploadPhoto = useUploadImage("listing-photo");
-  const editSave = useEditListingSave({
-    editRef: listing.ref,
-    editSlug: listing.slug,
-    editStatus: listing.status,
-  });
-
-  const [isSaving, setIsSaving] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const activeSectionId = useActiveEditorSection(LISTING_EDITOR_SECTION_IDS);
+  useEditorHashLanding(sections, prefersReducedMotion);
 
   // Every still-unfilled required field, in page order: `useListingForm`
-  // still gates step by step, read here as one list since the page is now
-  // one screen.
+  // gates step by step, read here as one list since the page is one screen.
   const missing = useMemo(
     () => flattenEditorMissing(form.missing),
     [form.missing],
@@ -80,10 +73,8 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
     () => JSON.stringify(draft) !== JSON.stringify(initialDraft),
     [draft, initialDraft],
   );
-  useEditUnsavedGuard(true, draft, initialDraft, !isSaving);
-
   // A long edit had one exit before this: save everything or lose it. This
-  // local copy is per listing and member, offered only, never replacing the server's.
+  // local copy is per listing and member, and only ever offered for restore.
   const autosave = useListingEditorAutosave({
     listingRef: listing.ref,
     draft,
@@ -93,46 +84,24 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   // Bound once so the restore handler can't read a null between the guard
   // and the click.
   const { restorable } = autosave;
-
-  // Guard against setState after unmount mid-save. Reset on setup so
-  // StrictMode's mount to remount cycle never leaves the ref stuck at false.
-  const isMountedRef = useRef(true);
-  useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
-  const save = async () => {
-    if (missing.length > 0) return;
-    setServerError(null);
-    setIsSaving(true);
-    try {
-      // Clear the local copy the moment the edit is genuinely on the server:
-      // holding it any longer would offer to "restore" what is now published.
-      autosave.clearAutosave();
-      await editSave.saveEdit(draft);
-    } catch (error) {
-      if (!isMountedRef.current) return;
-      setIsSaving(false);
-      // A validation error (400/422) names the offending field: surface the
-      // server's message and flash that field, all the routing one screen
-      // needs.
-      const target = resolveListing422(error);
-      if (target) {
-        setServerError(target.message);
-        form.setRejectedPhotoSlots(target.photoSlots);
-        window.setTimeout(
-          () => flashField(target.anchor, pageStyles.fieldFlash),
-          80,
-        );
-        return;
-      }
-      // Anything else is a plain save failure.
-      editSave.showSaveError();
-    }
-  };
+  const deleteExit = useDeleteListingExit(listing, autosave.clearAutosave);
+  const { isSaving, serverError, dismissServerError, save, saveAndLeave } =
+    useListingEditorSave({
+      listing,
+      form,
+      missing,
+      clearAutosave: autosave.clearAutosave,
+    });
+  const isLeaving = isSaving || deleteExit.hasDeleted;
+  // "Save and leave" is offered only when the save bar's Save would go
+  // through: every required field is filled (the guard adds the form phase).
+  useEditUnsavedGuard(
+    true,
+    draft,
+    initialDraft,
+    !isLeaving,
+    missing.length === 0 ? saveAndLeave : undefined,
+  );
 
   if (isSaving) {
     return (
@@ -155,7 +124,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
           }}
           onDiscardRestorable={autosave.discardRestorable}
           serverError={serverError}
-          onDismissServerError={() => setServerError(null)}
+          onDismissServerError={dismissServerError}
         />
 
         <div className={styles.layout}>
@@ -174,6 +143,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
               listing={listing}
               userName={userName}
               uploadPhoto={uploadPhoto}
+              onConfirmDelete={deleteExit.confirmDelete}
             />
             <ListingEditorSaveBar
               missing={missing}

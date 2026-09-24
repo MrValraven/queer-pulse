@@ -14,14 +14,14 @@ import styles from "./AdminListingsPage.module.css";
 /**
  * The one moderation-action cluster shared by the row and the drawer footer
  * (kills the row/drawer duplication and the inconsistent disabled-state
- * coverage the two used to have independently — see the
+ * coverage the two used to have independently; see the
  * admin-listings-overhaul design doc). Driven entirely by
  * `useListingModeration`, whose unified `isPending` disables every button
  * here together. "Publish live" is the visually dominant action while the
  * listing isn't live yet; the destructive Remove lives inside an accessible
- * `⋯` overflow menu, never a bare inline button next to the safe actions.
+ * `⋯` overflow menu, away from the safe actions in the button row.
  *
- * Renders an unwrapped button group — the row places it inside its own
+ * Renders an unwrapped button group: the row places it inside its own
  * `.rowActions` flex container alongside "View & preview"; the drawer passes
  * it straight as the `Modal` `footer`, which already lays out its children in
  * a flex row. `variant` keeps the row's buttons at the row's explicit `"md"`
@@ -43,7 +43,7 @@ export function ListingModerationActions({
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [sendingBack, setSendingBack] = useState(false);
   const moderation = useListingModeration(row, {
-    // `remove`/`sendBack` both resolve through this — close whichever local
+    // `remove`/`sendBack` both resolve through this: close whichever local
     // confirm dialog is open so a moderator on a status tab that keeps
     // showing the row after the move (e.g. "All") doesn't see a stale,
     // re-enabled confirm dialog sitting open over it. Harmless no-op the rest
@@ -144,8 +144,7 @@ export function ListingModerationActions({
       {confirmingRemove && (
         <RemoveListingConfirmModal
           row={row}
-          pending={moderation.isPending}
-          onConfirm={(reason) => moderation.remove(reason)}
+          onConfirm={moderation.remove}
           onClose={() => setConfirmingRemove(false)}
         />
       )}
@@ -163,7 +162,7 @@ export function ListingModerationActions({
 
 /** Keyboard- and click-outside-accessible `⋯` menu holding the destructive
  *  Remove action, kept out of the primary button row (APG menu-button
- *  pattern — modeled on `AdminRoleSwitcher`). */
+ *  pattern, modeled on `AdminRoleSwitcher`). */
 function OverflowMenu({
   ariaLabel,
   disabled,
@@ -210,7 +209,7 @@ function OverflowMenu({
       ref={containerRef}
       onBlur={(event) => {
         // Tabbing away moves focus somewhere React's synthetic `onBlur`
-        // (native `focusout`, which bubbles) reports as `relatedTarget` —
+        // (native `focusout`, which bubbles) reports as `relatedTarget`, so
         // close unless that target is still inside the menu.
         if (open && !containerRef.current?.contains(event.relatedTarget)) {
           setOpen(false);

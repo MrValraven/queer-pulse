@@ -930,20 +930,24 @@ const SOFIA_NEVES: DemoSubprofile = {
     },
     // Two `LIVED_OPTIONS` ids and one entry in Sofia's own words.
     lived: ["queer", "nonMonogamy", "Has been in therapy"],
-    contexts: ["Kink & BDSM", "Sex work", "Ex-religious", "Poly families"],
+    // Four `CONTEXT_OPTIONS` ids and one entry in Sofia's own words.
+    contexts: [
+      "kink",
+      "sexWork",
+      "exReligious",
+      "polyFamilies",
+      "Queer nightlife",
+    ],
+    // Option ids from `MODALITY_OPTIONS` and `WORKING_STYLE_OPTIONS`; the
+    // page shows their labels.
     modalities: [
-      "Person-centred",
-      "ACT",
-      "EMDR",
-      "Affirmative practice",
-      "Trauma-informed",
+      "personCentred",
+      "act",
+      "emdr",
+      "affirmative",
+      "traumaInformed",
     ],
-    workingStyle: [
-      "Leans structured",
-      "Mostly talk-based",
-      "Gentle and direct in equal measure",
-      "Leans long-term",
-    ],
+    workingStyle: ["structured", "talkBased", "gentleDirect", "longTerm"],
     notFor: [
       "You want a therapist who stays neutral about queerness. I don't.",
       "You need weekly sessions under 30€. I have 4 places at that level and they're usually taken.",
@@ -955,11 +959,8 @@ const SOFIA_NEVES: DemoSubprofile = {
       "No crisis support: I reply within 2 days",
       "Referral letters only for my own clients",
     ],
-    whoFor: [
-      "Adults 18+",
-      "Individuals",
-      "Couples and relationships of any shape",
-    ],
+    // Option ids from `WHO_FOR_OPTIONS`; the page shows their labels.
+    whoFor: ["adults", "individuals", "couples", "relationships"],
     therapyFees: {
       standard: "60",
       slidingMin: "30",

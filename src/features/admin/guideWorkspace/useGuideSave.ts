@@ -30,8 +30,10 @@ export interface GuideConflict {
 }
 
 export interface GuideSaveState {
-  save: () => Promise<void>;
-  saveMineAnyway: () => Promise<void>;
+  /** Resolves true once the draft is saved (or had nothing to send), false
+   *  on validation issues, a conflict, a failure, or a save already running. */
+  save: () => Promise<boolean>;
+  saveMineAnyway: () => Promise<boolean>;
   loadTheirs: () => void;
   isSaving: boolean;
   issues: GuideValidationIssue[];
@@ -87,15 +89,15 @@ export function useGuideSave({
     onSaved();
   }
 
-  async function runSave(expectedUpdatedAt?: string) {
-    if (isSavingRef.current) return;
+  async function runSave(expectedUpdatedAt?: string): Promise<boolean> {
+    if (isSavingRef.current) return false;
     isSavingRef.current = true;
     try {
       const { draft, cleanDraft, baseline, isNew } = workspace;
       const chip = chipForDraft(draft, baseline?.meta ?? null);
       const nextIssues = validateGuideDraft(draft, { isNew, chip });
       setIssues(nextIssues);
-      if (nextIssues.length > 0) return;
+      if (nextIssues.length > 0) return false;
 
       if (isNew) {
         try {
@@ -106,7 +108,7 @@ export function useGuideSave({
             workspace.markSaved(draft, null);
             finishSave(false);
             showToast(t("admin:guideWorkspace.toast.demoNotSaved"), "info");
-            return;
+            return true;
           }
           workspace.markSaved(draft, created);
           showToast(
@@ -114,22 +116,23 @@ export function useGuideSave({
             "info",
           );
           onCreated(created);
+          return true;
         } catch (error) {
           if (isConflict(error)) {
             setIssues([{ code: "slugTaken", targetId: guideFieldId("slug") }]);
-            return;
+            return false;
           }
           reportError(error);
+          return false;
         }
-        return;
       }
 
-      if (!baseline) return;
+      if (!baseline) return false;
       const body = draftToWriteBody(draft, cleanDraft, baseline.meta);
       if (Object.keys(body).length === 0) {
         workspace.markSaved(draft, null);
         finishSave(false);
-        return;
+        return true;
       }
       const sentFields = changedDraftFields(draft, cleanDraft);
       try {
@@ -157,10 +160,11 @@ export function useGuideSave({
               }),
           "info",
         );
+        return true;
       } catch (error) {
         if (!isConflict(error)) {
           reportError(error);
-          return;
+          return false;
         }
         try {
           setConflict({
@@ -169,6 +173,7 @@ export function useGuideSave({
         } catch (refetchError) {
           reportError(refetchError);
         }
+        return false;
       }
     } finally {
       isSavingRef.current = false;

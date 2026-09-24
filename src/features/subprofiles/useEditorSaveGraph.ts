@@ -16,6 +16,9 @@ import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor
 import type { EditorRowsState } from "./useEditorRowsState";
 import { CAPACITY_OPTIONS } from "./skins/therapist/therapistHero.data";
 import type { SocialRow } from "./subprofileEditorContext";
+import { sectionsInPageBlocks } from "./editorRail.data";
+import { normalizeSectionItemRows } from "./sectionItemsNormalize";
+import type { SubprofileEditorRow } from "./subprofileSectionEditorRows";
 import {
   diffMeta,
   diffRows,
@@ -46,11 +49,39 @@ const filledSocials = (rows: SocialRow[]) =>
 const filledAffiliations = (rows: AffiliationRow[]) =>
   rows.filter((row) => row.targetSlug.trim());
 
+/** The sections this kind edits inline through a `sectionItems` control (a
+ *  therapist's specialisms). */
+const inlineEditedSections = (kind: SubprofileView["kind"]): Set<string> =>
+  new Set(
+    Array.from(sectionsInPageBlocks(kind).values(), (entry) => entry.section),
+  );
+
+// Like the filled lists above, for a section edited inline: its editor can
+// hold a blank topic or a trailing empty line, so the diff and the save both
+// read the normalised rows. Every other section is diffed and sent exactly as
+// the draft holds it.
+const savedSectionRows = (
+  section: string,
+  sectionRowList: SubprofileEditorRow[],
+  inlineSections: Set<string>,
+) =>
+  inlineSections.has(section)
+    ? normalizeSectionItemRows(sectionRowList)
+    : sectionRowList;
+
 const hasRowChange = (counts: RowDiffCounts) =>
   counts.added > 0 ||
   counts.removed > 0 ||
   counts.edited > 0 ||
   counts.reordered;
+
+/** One dirty area's mutation inside `saveAll`, and the baseline advance that
+ *  runs only on its success. */
+type SaveTask = {
+  labelKey: string;
+  run: () => Promise<unknown>;
+  commit: () => void;
+};
 
 export interface EditorSaveGraph {
   /** Live, itemized list of every unsaved change across all areas. */
@@ -58,7 +89,10 @@ export interface EditorSaveGraph {
   dirty: boolean;
   canSave: boolean;
   saving: boolean;
-  saveAll: () => Promise<void>;
+  /** Resolves true once nothing is left unsaved: every area saved, or there
+   *  was nothing to save. False when a gate stopped the save or any area
+   *  failed (the leave dialog's "Save and leave" then keeps the visitor here). */
+  saveAll: () => Promise<boolean>;
 }
 
 /**
@@ -159,11 +193,17 @@ export function useEditorSaveGraph(
   const pending: PendingChange[] = [];
   pending.push(...diffMeta(meta.metaSnapshot(), meta.baselineSnapshot()));
   pending.push(...skinChangesToPending(skinBlocks.changes));
+  const inlineSections = inlineEditedSections(subprofile.kind);
+  const sectionDiff = (section: string) =>
+    diffRows(
+      savedSectionRows(section, sectionRows[section] ?? [], inlineSections),
+      savedSectionRows(section, sectionBaseline[section] ?? [], inlineSections),
+    );
   for (const section of Object.keys(sectionRows)) {
     const change = rowDiffToChange(
       { kind: "section", section },
       sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
-      diffRows(sectionRows[section] ?? [], sectionBaseline[section] ?? []),
+      sectionDiff(section),
     );
     if (change) pending.push(change);
   }
@@ -199,20 +239,15 @@ export function useEditorSaveGraph(
     replaceSocials.isPending ||
     replaceAffiliations.isPending;
 
-  async function saveAll() {
-    if (saving || !dirty) return;
-    if (meta.nameMissing || meta.handleBlocked) return;
+  async function saveAll(): Promise<boolean> {
+    if (saving) return false;
+    if (!dirty) return true;
+    if (meta.nameMissing || meta.handleBlocked) return false;
     if (meta.ctaMismatch) {
       showToast(t("subprofiles:metaForm.ctaMismatch"), "error");
-      return;
+      return false;
     }
     const changedCount = pending.length;
-
-    type SaveTask = {
-      labelKey: string;
-      run: () => Promise<unknown>;
-      commit: () => void;
-    };
     const tasks: SaveTask[] = [];
 
     // The persona PATCH carries meta fields AND the whole `skinData` column
@@ -252,20 +287,21 @@ export function useEditorSaveGraph(
     }
     for (const section of Object.keys(sectionRows)) {
       const sectionRowsForKey = sectionRows[section] ?? [];
-      if (
-        !hasRowChange(
-          diffRows(sectionRowsForKey, sectionBaseline[section] ?? []),
-        )
-      )
-        continue;
+      if (!hasRowChange(sectionDiff(section))) continue;
+      const items = itemsToInputDto(
+        savedSectionRows(section, sectionRowsForKey, inlineSections),
+      );
       tasks.push({
         labelKey: sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
         run: () =>
           replaceSection.mutateAsync({
             id: subprofile.id,
             section: section as SubprofileSection,
-            items: itemsToInputDto(sectionRowsForKey),
+            items,
           }),
+        // The baseline takes the draft as it stands (a blank topic or trailing
+        // line included). The diff normalises both sides the same way, so the
+        // section reads clean after the save.
         commit: () =>
           setSectionBaseline((current) => ({
             ...current,
@@ -316,7 +352,7 @@ export function useEditorSaveGraph(
         commit: () => setAffiliationBaseline(affiliationRows),
       });
     }
-    if (!tasks.length) return;
+    if (!tasks.length) return true;
 
     const results = await Promise.allSettled(tasks.map((task) => task.run()));
     const failed: string[] = [];
@@ -330,7 +366,7 @@ export function useEditorSaveGraph(
         t("subprofiles:pending.savedToast", { count: changedCount }),
         "success",
       );
-      return;
+      return true;
     }
     // Client-error responses name the actual problem: a 400 names an offending
     // collaborator/affiliation entry, a 403 a permission the viewer lacks (e.g.
@@ -350,6 +386,7 @@ export function useEditorSaveGraph(
         t("subprofiles:pending.saveError", { areas: failed.join(", ") }),
       "error",
     );
+    return false;
   }
 
   return { pending, dirty, canSave, saving, saveAll };

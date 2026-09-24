@@ -5,17 +5,10 @@ import {
   FiCircle,
   FiSquare,
 } from "react-icons/fi";
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
-import { choiceSelection, type ChoiceOptionLabel } from "./skinChoiceSelection";
+import { useSkinChoiceChips, type ChoiceChipItem } from "./useSkinChoiceChips";
 import styles from "./SkinChoiceChipsControl.module.css";
-
-const LEGACY_HELPER_KEY =
-  "subprofiles:skinBlock.therapist.therapyFees.legacyChoiceHelper";
-const LEGACY_TEXT_HELPER_KEY =
-  "subprofiles:skinBlock.therapist.therapyFees.legacyTextHelper";
-const CLEAR_HINT_KEY = "subprofiles:skinBlock.choiceClearHint";
 
 /** The always-present indicator, by input type then selected state, so a
  *  chip keeps its width when picked and single and multi groups look apart. */
@@ -24,10 +17,10 @@ const INDICATOR = {
   checkbox: { on: FiCheckSquare, off: FiSquare },
 };
 
-/** One chip: a fixed option or, with `isExtra`, a stored value that is no
- *  option (an earlier answer), shown exactly as stored. */
-interface ChoiceChipItem extends ChoiceOptionLabel {
-  isExtra: boolean;
+interface SkinChoiceChipsControlProps {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+  isLabelHidden?: boolean;
 }
 
 /** One toggle chip: a visually hidden radio or checkbox inside its label, so
@@ -91,69 +84,31 @@ function ChoiceChip({
  * chip, kept first, until it is unticked. With `legacyTextPath`, the older
  * free-text answer at that path is quoted under the chips while none is
  * ticked, and the first tick clears it ("Discard all" restores it).
+ *
+ * This design (square-cornered chips on cream) serves the generic page
+ * blocks editor. The therapist chapter editor renders
+ * `SkinChoiceChipsRefined` instead; both read `useSkinChoiceChips`, so only
+ * the markup differs.
  */
 export function SkinChoiceChipsControl({
   control,
   editor,
   isLabelHidden = false,
-}: {
-  control: SkinBlockControl;
-  editor: SubprofileSkinBlocksEditor;
-  isLabelHidden?: boolean;
-}) {
-  const { t } = useTranslation();
+}: SkinChoiceChipsControlProps) {
   const groupName = useId();
   const helperId = `${groupName}-helper`;
   const legacyHelperId = `${groupName}-legacy`;
   const clearHintId = `${groupName}-clear`;
-  const isMulti = control.kind === "multiChoice";
-  const options: ChoiceOptionLabel[] = (control.options ?? []).map(
-    (option) => ({ value: option.value, label: t(option.labelKey) }),
-  );
-  const optionValues = options.map((option) => option.value);
-  const { selectedValues, extraValues } = choiceSelection(
-    editor.getValue(control.path),
+  const {
     isMulti,
-    options,
-  );
-  const legacyStored = control.legacyTextPath
-    ? editor.getValue(control.legacyTextPath)
-    : undefined;
-  const legacyText =
-    typeof legacyStored === "string" ? legacyStored.trim() : "";
-  const items: ChoiceChipItem[] = [
-    ...extraValues.map((value) => ({ value, label: value, isExtra: true })),
-    ...options.map((option) => ({ ...option, isExtra: false })),
-  ];
-
-  function toggle(value: string, isClearing: boolean): void {
-    if (!isMulti) {
-      editor.setValue(control.path, isClearing ? "" : value);
-      return;
-    }
-    const next = selectedValues.includes(value)
-      ? selectedValues.filter((entry) => entry !== value)
-      : [...selectedValues, value];
-    // The first tick supersedes the older free text, so it stops lingering
-    // in storage (the public page ignores it once methods exist).
-    if (control.legacyTextPath && legacyText && selectedValues.length === 0) {
-      editor.setValue(control.legacyTextPath, "");
-    }
-    editor.setValue(control.path, [
-      ...next.filter((entry) => !optionValues.includes(entry)),
-      ...optionValues.filter((optionValue) => next.includes(optionValue)),
-    ]);
-  }
-
-  const helper = control.helperKey ? t(control.helperKey) : undefined;
-  // One note about an older answer: the extra chip of a `choice`, or the
-  // free text at `legacyTextPath` while nothing is ticked.
-  const legacyNote =
-    !isMulti && extraValues.length > 0
-      ? t(LEGACY_HELPER_KEY)
-      : legacyText && selectedValues.length === 0
-        ? t(LEGACY_TEXT_HELPER_KEY, { text: legacyText })
-        : "";
+    items,
+    selectedValues,
+    toggle,
+    label,
+    helper,
+    legacyNote,
+    clearHint,
+  } = useSkinChoiceChips(control, editor);
   const describedBy =
     [helper && helperId, legacyNote && legacyHelperId, !isMulti && clearHintId]
       .filter(Boolean)
@@ -162,7 +117,7 @@ export function SkinChoiceChipsControl({
   return (
     <fieldset className={styles.fieldset} aria-describedby={describedBy}>
       <legend className={isLabelHidden ? "visuallyHidden" : styles.legend}>
-        {t(control.labelKey)}
+        {label}
       </legend>
       <div className={styles.chips}>
         {items.map((item) => (
@@ -189,7 +144,7 @@ export function SkinChoiceChipsControl({
       )}
       {!isMulti && (
         <span id={clearHintId} hidden>
-          {t(CLEAR_HINT_KEY)}
+          {clearHint}
         </span>
       )}
     </fieldset>

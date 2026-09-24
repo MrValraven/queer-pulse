@@ -69,11 +69,19 @@ export interface TherapistView {
   /** Stored entries: `LIVED_OPTIONS` ids or the therapist's own words.
    *  Render each with `pickDisplayText` (`therapistPickOptions.ts`). */
   lived: string[];
+  /** Stored entries: `CONTEXT_OPTIONS` ids or the therapist's own words.
+   *  Render each with `pickDisplayText` (`therapistPickOptions.ts`). */
   contexts: string[];
+  /** Stored entries: `MODALITY_OPTIONS` ids or the therapist's own words.
+   *  Render each with `pickDisplayText` (`therapistPickOptions.ts`). */
   modalities: string[];
+  /** Stored entries: `WORKING_STYLE_OPTIONS` ids or the therapist's own
+   *  words. Render each with `pickDisplayText` (`therapistPickOptions.ts`). */
   workingStyle: string[];
   notFor: string[];
   boundaries: string[];
+  /** Stored entries: `WHO_FOR_OPTIONS` ids or the therapist's own words.
+   *  Render each with `pickDisplayText` (`therapistPickOptions.ts`). */
   whoFor: string[];
   approach: string[];
   firstSession: { title: string; body: string }[];

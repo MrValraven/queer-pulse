@@ -12,8 +12,12 @@ import {
   type FeeChoiceField,
 } from "./skins/therapist/therapistFeeOptions";
 import {
+  CONTEXT_OPTIONS,
   LANGUAGE_OPTIONS,
   LIVED_OPTIONS,
+  MODALITY_OPTIONS,
+  WHO_FOR_OPTIONS,
+  WORKING_STYLE_OPTIONS,
 } from "./skins/therapist/therapistPickOptions";
 
 /**
@@ -26,7 +30,8 @@ import {
  * `multiSelect` for `therapist.languages` reads the older comma string and
  * writes a `string[]` on the first edit. `THERAPIST_BLOCKS` below is derived
  * from these chapters (one block per first path segment) and keeps feeding the
- * draft, the save graph and the pending-changes list.
+ * draft, the save graph and the pending-changes list. The `sectionItems`
+ * control edits the `specialisms` section's rows and derives no block.
  *
  * Only type imports from `skinBlockFields.data.ts`: that module imports the
  * runtime values here, and a runtime import back would form a cycle. The pick
@@ -150,6 +155,24 @@ function chipsControl(
   };
 }
 
+/** A whole-block `string[]` picked from fixed `options`, with room for the
+ *  therapist's own words. Picks are stored by option id; anything typed is
+ *  stored as written. */
+function pickControl(
+  blockKey: string,
+  options: SkinSelectOption[],
+): SkinBlockControl {
+  return {
+    path: blockKey,
+    kind: "multiSelect",
+    labelKey: therapistKey(blockKey, "title"),
+    placeholderKey: therapistKey(blockKey, "placeholder"),
+    options,
+    allowsCustom: true,
+    customPlaceholderKey: therapistKey(blockKey, "customPlaceholder"),
+  };
+}
+
 /** A label/value item field pair under `skinBlock.therapist.<block>.*`. */
 function therapistPairFields(
   blockKey: string,
@@ -209,10 +232,12 @@ const BASICS_CHAPTER: SkinChapterDescriptor = {
         }),
         therapistFactControl("registration", {
           placeholderKey: therapistPlaceholder("therapist", "registration"),
+          size: "narrow",
         }),
         therapistFactControl("quote", {
           kind: "textarea",
           helperKey: therapistKey("therapist", "quoteHelper"),
+          placeholderKey: therapistPlaceholder("therapist", "quote"),
           hasEmphasisPreview: true,
         }),
         {
@@ -221,7 +246,18 @@ const BASICS_CHAPTER: SkinChapterDescriptor = {
           labelKey: therapistKey("lived", "title"),
           placeholderKey: therapistKey("lived", "placeholder"),
           helperKey: therapistKey("lived", "helper"),
+          helperTone: "private",
           options: LIVED_OPTIONS,
+          featuredValues: [
+            "trans",
+            "nonBinary",
+            "lesbian",
+            "gay",
+            "bisexual",
+            "queer",
+            "neurodivergent",
+            "migrant",
+          ],
           allowsCustom: true,
           customPlaceholderKey: therapistKey("lived", "customPlaceholder"),
         },
@@ -229,6 +265,7 @@ const BASICS_CHAPTER: SkinChapterDescriptor = {
           kind: "multiSelect",
           placeholderKey: therapistPlaceholder("therapist", "languages"),
           options: LANGUAGE_OPTIONS,
+          featuredValues: ["pt", "en", "es", "fr", "lgp"],
           allowsCustom: true,
           customPlaceholderKey: therapistKey(
             "therapist",
@@ -258,11 +295,29 @@ const APPROACH_CHAPTER: SkinChapterDescriptor = {
     },
     {
       titleKey: groupKey("methods"),
-      controls: [chipsControl("modalities"), chipsControl("workingStyle")],
+      controls: [
+        pickControl("modalities", MODALITY_OPTIONS),
+        pickControl("workingStyle", WORKING_STYLE_OPTIONS),
+      ],
+    },
+    {
+      titleKey: groupKey("helpsWith"),
+      helperKey: groupKey("helpsWithHelper"),
+      controls: [
+        {
+          path: "section:specialisms",
+          kind: "sectionItems",
+          section: "specialisms",
+          labelKey: groupKey("helpsWith"),
+        },
+      ],
     },
     {
       titleKey: groupKey("whoFor"),
-      controls: [chipsControl("whoFor"), chipsControl("contexts")],
+      controls: [
+        pickControl("whoFor", WHO_FOR_OPTIONS),
+        pickControl("contexts", CONTEXT_OPTIONS),
+      ],
     },
     {
       titleKey: groupKey("expectations"),
@@ -294,6 +349,7 @@ const FEES_CHAPTER: SkinChapterDescriptor = {
     {
       titleKey: groupKey("sliding"),
       layout: "row",
+      joinerKey: joinerKey("to"),
       check: "ascending",
       checkMessageKey: checkKey("ascending"),
       controls: [
@@ -643,7 +699,8 @@ export const THERAPIST_CHAPTERS: SkinChapterDescriptor[] = [
 
 /** One block per first path segment, in first-appearance order across the
  *  chapters, each holding that block's controls. Feeds the draft, the save
- *  graph and the pending-changes list. */
+ *  graph and the pending-changes list. A `sectionItems` control saves with its
+ *  section's rows, so it is left out. */
 export function therapistBlocksFromChapters(
   chapters: SkinChapterDescriptor[] = THERAPIST_CHAPTERS,
 ): SkinBlockDescriptor[] {
@@ -651,6 +708,7 @@ export function therapistBlocksFromChapters(
   for (const chapter of chapters) {
     for (const group of chapter.groups) {
       for (const control of group.controls) {
+        if (control.kind === "sectionItems") continue;
         const blockKey = control.path.split(".")[0]!;
         const block = blocksByKey.get(blockKey) ?? {
           blockKey,

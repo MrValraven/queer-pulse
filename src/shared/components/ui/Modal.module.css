@@ -148,7 +148,9 @@
     position: relative;
     max-width: none;
     height: auto;
-    max-height: 92svh;
+    /* The scrim already pads by the keyboard inset, so subtract it here too
+       or an open keyboard pushes the head and close button off the top. */
+    max-height: calc(92svh - var(--keyboard-inset, 0px));
     border-radius: var(--radius-card) var(--radius-card) 0 0;
     animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
   }

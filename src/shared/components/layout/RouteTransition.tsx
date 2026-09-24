@@ -4,8 +4,16 @@ import {
   m,
   PresenceContext,
   useIsPresent,
+  type Transition,
+  type Variants,
 } from "motion/react";
-import type { ReactNode } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
@@ -60,6 +68,72 @@ function RouteTransitionPlane({
   );
 }
 
+/**
+ * One plane of the transition: the animated `m.div` itself, as a component so
+ * it can read its own presence and reach its own DOM node.
+ *
+ * `popLayout` pins the leaving plane with `position: absolute` at its place in
+ * the DOCUMENT, and then ScrollManager scrolls the window for the page that is
+ * arriving (to the top, or to a remembered offset on Back). The ghost moved
+ * with the document, so a member reading 1500px down the feed saw the TOP of
+ * the feed, a part of the page they were not looking at, flash up at nearly
+ * full opacity as it faded. During its exit the plane now counters every
+ * window scroll with an equal `margin-top`, so it fades out exactly where it
+ * sat on screen. Margin, because motion owns this element's `transform` (the
+ * mobile slide) and popLayout owns its `top`.
+ *
+ * `ref` is PopChild's: it measures the plane the moment it starts to leave.
+ */
+function RoutePlane({
+  ref,
+  variants,
+  transition,
+  children,
+}: {
+  ref?: Ref<HTMLDivElement>;
+  variants: Variants;
+  transition: Transition;
+  children: ReactNode;
+}) {
+  const isPresent = useIsPresent();
+  const planeRef = useRef<HTMLDivElement | null>(null);
+  const attachPlane = useCallback(
+    (node: HTMLDivElement | null) => {
+      planeRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  useLayoutEffect(() => {
+    const plane = planeRef.current;
+    if (isPresent || !plane) return;
+    // Read in the layout phase of the commit that starts the exit, before
+    // ScrollManager's passive effect moves the window for the new page.
+    const exitScrollY = window.scrollY;
+    const holdInPlace = () => {
+      plane.style.marginTop = `${window.scrollY - exitScrollY}px`;
+    };
+    window.addEventListener("scroll", holdInPlace, { passive: true });
+    return () => window.removeEventListener("scroll", holdInPlace);
+  }, [isPresent]);
+
+  return (
+    <m.div
+      ref={attachPlane}
+      variants={variants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={transition}
+      style={{ minHeight: "100%" }}
+    >
+      {children}
+    </m.div>
+  );
+}
+
 export function RouteTransition({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { pathname } = location;
@@ -84,22 +158,18 @@ export function RouteTransition({ children }: { children: ReactNode }) {
 
   return (
     <AnimatePresence mode="popLayout" initial={false}>
-      <m.div
+      <RoutePlane
         key={topSegment(pathname)}
         variants={variants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
         transition={{
           duration: reducedMotion ? 0 : DURATION,
           ease: [0.22, 1, 0.36, 1],
         }}
-        style={{ minHeight: "100%" }}
       >
         <RouteTransitionPlane location={location}>
           {children}
         </RouteTransitionPlane>
-      </m.div>
+      </RoutePlane>
     </AnimatePresence>
   );
 }

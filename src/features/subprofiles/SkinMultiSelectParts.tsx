@@ -1,76 +1,16 @@
-import {
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type RefObject,
-} from "react";
-import { FiCheckSquare, FiPlus, FiSquare, FiX } from "react-icons/fi";
+import { useId, useState, type KeyboardEvent, type RefObject } from "react";
+import { FiCheckSquare, FiPlus, FiSquare } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { cx } from "../../shared/lib/cx";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { MultiSelectEntry } from "./skinMultiSelectValue";
 import type { SkinMultiSelect } from "./useSkinMultiSelect";
 import styles from "./SkinMultiSelectControl.module.css";
 
-const REMOVE_KEY = "subprofiles:skinControl.multiSelect.remove";
 const ADD_OWN_KEY = "subprofiles:skinControl.multiSelect.addOwn";
 const ADD_KEY = "subprofiles:skinControl.multiSelect.add";
 const DONE_KEY = "subprofiles:skinControl.multiSelect.done";
-
-const classNames = (...names: (string | false | undefined)[]): string =>
-  names.filter(Boolean).join(" ");
-
-/**
- * The chosen entries under the trigger, in stored order, each a plum chip
- * with a remove button (the owner's own words dashed and italic). Removing
- * one moves focus to the next chip's remove button, else the previous one,
- * else the trigger, so keyboard focus never drops to the page.
- */
-export function MultiSelectChips({
-  select,
-  labelId,
-  triggerRef,
-}: {
-  select: SkinMultiSelect;
-  labelId: string;
-  triggerRef: RefObject<HTMLButtonElement | null>;
-}) {
-  const { t } = useTranslation();
-  const listRef = useRef<HTMLUListElement>(null);
-  if (select.entries.length === 0) return null;
-
-  function removeAt(index: number, value: string): void {
-    const buttons = Array.from(
-      listRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? [],
-    );
-    const nextFocus =
-      buttons[index + 1] ?? buttons[index - 1] ?? triggerRef.current;
-    select.removeChip(value);
-    nextFocus?.focus();
-  }
-
-  return (
-    <ul ref={listRef} className={styles.chips} aria-labelledby={labelId}>
-      {select.entries.map((entry, index) => (
-        <li
-          key={entry.value}
-          className={classNames(styles.chip, entry.isCustom && styles.custom)}
-        >
-          <span className={styles.chipText}>{entry.label}</span>
-          <button
-            type="button"
-            className={styles.chipRemove}
-            aria-label={t(REMOVE_KEY, { label: entry.label })}
-            onClick={() => removeAt(index, entry.value)}
-          >
-            <FiX size={14} aria-hidden />
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 /** One checkbox row: a visually hidden native checkbox inside its label, so
  *  Space and the screen-reader state come from the input. The square
@@ -87,7 +27,7 @@ function OptionRow({
   const Indicator = isChecked ? FiCheckSquare : FiSquare;
   return (
     <label
-      className={classNames(
+      className={cx(
         styles.option,
         isChecked && styles.optionChecked,
         row.isCustom && styles.custom,
@@ -156,16 +96,18 @@ export function MultiSelectPanel({
 
   return (
     <div ref={panelRef} id={panelId} className={styles.panel}>
-      <div role="group" aria-labelledby={labelId} className={styles.options}>
-        {rows.map((row) => (
-          <OptionRow
-            key={row.value}
-            row={row}
-            isChecked={select.isChosen(row.value)}
-            onToggle={() => select.toggle(row.value)}
-          />
-        ))}
-      </div>
+      {rows.length > 0 && (
+        <div role="group" aria-labelledby={labelId} className={styles.options}>
+          {rows.map((row) => (
+            <OptionRow
+              key={row.value}
+              row={row}
+              isChecked={select.isChosen(row.value)}
+              onToggle={() => select.toggle(row.value)}
+            />
+          ))}
+        </div>
+      )}
       {control.allowsCustom && (
         <div className={styles.customRow}>
           <label htmlFor={customInputId} className={styles.customLabel}>

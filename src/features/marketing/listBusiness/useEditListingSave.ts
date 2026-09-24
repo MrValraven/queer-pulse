@@ -24,7 +24,8 @@ interface EditListingSaveOptions {
  * now public.
  *
  * `saveEdit` throws on failure so the caller can put the form back on screen
- * and show its own recovery UI.
+ * and show its own recovery UI. `shouldNavigate: false` keeps the toast and
+ * skips the navigation, for a save whose exit someone else completes.
  */
 export function useEditListingSave({
   editRef,
@@ -36,7 +37,10 @@ export function useEditListingSave({
   const { showToast } = useToast();
   const updateListingMutation = useUpdateListing();
 
-  const saveEdit = async (draft: ListingDraft) => {
+  const saveEdit = async (
+    draft: ListingDraft,
+    { shouldNavigate = true }: { shouldNavigate?: boolean } = {},
+  ) => {
     await updateListingMutation.mutateAsync({ ref: editRef as string, draft });
     const isAwaitingModerator =
       editStatus === "review" || editStatus === "question";
@@ -48,6 +52,8 @@ export function useEditListingSave({
       ),
       "success",
     );
+    // "Save and leave" passes false: the unsaved-changes guard owns that exit.
+    if (!shouldNavigate) return;
     if (editStatus === "live" && editSlug) {
       void navigate(`${routes.directory}/${editSlug}`);
     } else {
@@ -61,14 +67,21 @@ export function useEditListingSave({
   return { saveEdit, showSaveError };
 }
 
-/** Warns before losing unsaved edits — armed only while editing, the draft
- *  differs from what loaded, and the wizard is on the "form" phase (not
- *  mid-send or already navigating away after a successful save). */
+/** Warns before losing unsaved edits. Armed only while editing, the draft
+ *  differs from what loaded, and the page is still in its "form" phase: the
+ *  caller passes false mid-send and while it navigates away after a
+ *  successful save or delete, since nothing unsaved is lost then.
+ *
+ *  `onSaveAndLeave` adds "Save and leave" to the dialog. The caller passes it
+ *  only while its Save button would go through (no required field missing),
+ *  and it is offered only while editing on the form phase, so mid-send the
+ *  dialog never offers a second save. */
 export function useEditUnsavedGuard(
   isEdit: boolean,
   draft: ListingDraft,
   initialDraft: ListingDraft | undefined,
   isFormPhase: boolean,
+  onSaveAndLeave?: () => Promise<boolean>,
 ) {
   const { t } = useTranslation();
   const isDirty =
@@ -78,5 +91,6 @@ export function useEditUnsavedGuard(
   useUnsavedChangesGuard({
     active: isDirty && isFormPhase,
     confirmMessage: t("marketing:listBusiness.edit.discardConfirm"),
+    onSaveAndLeave: isEdit && isFormPhase ? onSaveAndLeave : undefined,
   });
 }

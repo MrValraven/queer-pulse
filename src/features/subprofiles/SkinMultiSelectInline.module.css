@@ -1,0 +1,162 @@
+/* SkinMultiSelectInline: the multiSelect field. The featured options sit in
+   one row of toggle chips, tapped once; what else is chosen follows as
+   pressed chips, and a trailing chip opens the checklist panel in flow (its
+   rules live in SkinMultiSelectControl.module.css). */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* The row gap matches the hit area's reach (4px above and below a 36px
+   chip), so neighbouring rows of chips never overlap their targets. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* A 36px pill on paper; the invisible ::after below lifts the hit area to
+   --tap-min without growing the chip. One chip with the choice chips
+   (SkinChoiceChipsRefined.module.css): keep the padding, icon size, pressed
+   colours and dark hover edge the same in both files. */
+.chip,
+.action {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 36px;
+  margin: 0;
+  padding: 6px 14px 6px 12px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  /* One weight in both states, so pressing a chip never changes its width. */
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.chip::after,
+.action::after {
+  content: "";
+  position: absolute;
+  inset: calc((100% - var(--tap-min)) / 2) 0;
+}
+
+/* Pressed: plum fill, cream type and a check, so the state never rests on
+   colour alone. */
+.chipPressed {
+  color: rgb(var(--cream-rgb));
+  background: var(--plum);
+  border-color: var(--plum);
+}
+
+/* Plum barely separates from the dark page, so there the pressed chip takes
+   a coral tint and a soft coral edge. */
+:global([data-theme="dark"]) .chipPressed {
+  background: rgba(var(--accent-rgb), 0.18);
+  border-color: var(--accent-soft);
+}
+
+/* The owner's own words: dashed and italic, as an older answer among the
+   choice chips. The dashes are cream on the pressed fill, a touch stronger in dark. */
+.chipPressed.chipCustom {
+  border-style: dashed;
+  border-color: rgba(var(--cream-rgb), 0.6);
+}
+
+:global([data-theme="dark"]) .chipPressed.chipCustom {
+  border-color: rgba(var(--cream-rgb), 0.7);
+}
+
+.chipCustom .chipText {
+  font-style: italic;
+}
+
+.chipText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.chipIcon,
+.actionIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* An unpressed chip's plus reads quieter than its label. */
+.chip:not(.chipPressed) .chipIcon,
+.actionIcon {
+  color: var(--ink-60);
+}
+
+.chipRemoveIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-right: -3px;
+  opacity: 0.8;
+}
+
+/* The trailing action: the same outline as an unpressed chip, with quieter
+   type. Open, it reads "Close" with a chevron up and the panel sits below. */
+.action {
+  color: var(--ink-60);
+}
+
+.action[aria-expanded="true"] {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--wash);
+}
+
+@media (hover: hover) {
+  .chip:not(.chipPressed):hover,
+  .action:hover {
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+
+  /* --line-strong alone is faint on the dark page. */
+  :global([data-theme="dark"]) .chip:not(.chipPressed):hover,
+  :global([data-theme="dark"]) .action:hover {
+    border-color: rgba(var(--line-rgb), 0.8);
+  }
+
+  .chipPressed:hover .chipRemoveIcon {
+    opacity: 1;
+  }
+}
+
+.chip:focus-visible,
+.action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.panelSlot {
+  margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .action {
+    transition: none;
+  }
+}

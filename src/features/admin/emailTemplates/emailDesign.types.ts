@@ -1,14 +1,5 @@
 import type { Language } from "../../../shared/i18n/types";
 
-/** The visual designs the email renderer can dress a block-built email in. */
-export type EmailDesign = "current" | "masthead" | "letter";
-
-export const EMAIL_DESIGNS: readonly EmailDesign[] = [
-  "current",
-  "masthead",
-  "letter",
-];
-
 /** Every style value the block renderer reads. Email clients cannot read CSS
  *  custom properties, so colours are literal hex. */
 export interface EmailDesignTheme {

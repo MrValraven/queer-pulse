@@ -11,9 +11,9 @@ import {
   isControlVisible,
   numericValue,
 } from "./skinChapterFill";
-import { skinFieldAnchorId } from "./skinFieldAnchor";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
-import { SkinChapterControl } from "./SkinChapterControl";
+import { SkinChapterCardHeadingRow } from "./SkinChapterCardCount";
+import { ControlSlot, EmptyMark } from "./SkinChapterControlSlot";
 import editorStyles from "./SubprofileEditor.module.css";
 import styles from "./SkinChapterEditor.module.css";
 
@@ -62,55 +62,6 @@ function isLabelHiddenFor(
   return headingKey !== undefined && control.labelKey === headingKey;
 }
 
-/** The quiet "still empty" mark: an amber dot in the card's left gutter, and
- *  "(empty)" for screen readers. */
-function EmptyMark() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <span className={styles.emptyDot} aria-hidden />
-      <span className="visuallyHidden">
-        {t("subprofiles:skinChapter.empty")}
-      </span>
-    </>
-  );
-}
-
-/** One control in its wrapper: the jump target (`skinFieldAnchorId`), the
- *  empty mark before its label (the card heading carries it when the label is
- *  hidden) and, for a `showWhen` control, the fade-in as it appears. */
-function ControlSlot({
-  control,
-  editor,
-  headingKey,
-  extraClassName,
-}: {
-  control: SkinBlockControl;
-  editor: SubprofileSkinBlocksEditor;
-  headingKey: string | undefined;
-  extraClassName?: string;
-}) {
-  const isLabelHidden = isLabelHiddenFor(control, headingKey);
-  const isMarkedEmpty = !isLabelHidden && !isControlFilled(control, editor);
-  const className = [
-    styles.slot,
-    control.showWhen ? styles.revealed : "",
-    extraClassName ?? "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-  return (
-    <div id={skinFieldAnchorId(control.path)} className={className}>
-      {isMarkedEmpty && <EmptyMark />}
-      <SkinChapterControl
-        control={control}
-        editor={editor}
-        isLabelHidden={isLabelHidden}
-      />
-    </div>
-  );
-}
-
 /** One group's controls inside a card: stacked, or side by side
  *  (`layout: "row"`) with the joiner word between them. */
 function GroupBody({
@@ -138,7 +89,7 @@ function GroupBody({
             key={control.path}
             control={control}
             editor={editor}
-            headingKey={headingKey}
+            isLabelHidden={isLabelHiddenFor(control, headingKey)}
           />
         ))}
       </>
@@ -147,7 +98,6 @@ function GroupBody({
 
   return (
     <div className={styles.rowGroup}>
-      {helper}
       <div className={styles.row}>
         {visibleControls.map((control, index) => (
           <Fragment key={control.path}>
@@ -157,12 +107,13 @@ function GroupBody({
             <ControlSlot
               control={control}
               editor={editor}
-              headingKey={headingKey}
+              isLabelHidden={isLabelHiddenFor(control, headingKey)}
               extraClassName={styles.rowControl}
             />
           </Fragment>
         ))}
       </div>
+      {helper}
       {group.check && <RowCheckWarning group={group} editor={editor} />}
     </div>
   );
@@ -172,9 +123,10 @@ function GroupBody({
  * One card of a chapter: the first group's serif heading and helper, then
  * that group's controls and those of any untitled groups folded in after it
  * (the sliding scale's range, places and rules read as one card). A control
- * whose label repeats the heading drops its own label. Each visible control
- * still empty gets a quiet amber mark. Controls hidden by `showWhen` are left
- * out, and fade in when they appear.
+ * whose label repeats the heading drops its own label. The heading carries
+ * the card's fill count, and each visible control still empty says "(empty)"
+ * to screen readers. Controls hidden by `showWhen` are left out, and fade in
+ * when they appear.
  */
 export function SkinChapterGroupCard({
   groups,
@@ -203,15 +155,24 @@ export function SkinChapterGroupCard({
         !isControlFilled(control, editor),
     ),
   );
+  const heading = headGroup.titleKey && (
+    <h4 className={`${editorStyles.cardTitle} ${styles.cardHeading}`}>
+      {isHeadingMarkedEmpty && <EmptyMark />}
+      {t(headGroup.titleKey)}
+    </h4>
+  );
 
   return (
     <section className={`${editorStyles.card} ${styles.card}`}>
-      {headGroup.titleKey && (
-        <h4 className={`${editorStyles.cardTitle} ${styles.cardHeading}`}>
-          {isHeadingMarkedEmpty && <EmptyMark />}
-          {t(headGroup.titleKey)}
-        </h4>
-      )}
+      {heading ? (
+        <SkinChapterCardHeadingRow
+          heading={heading}
+          controls={shownGroups.flatMap(
+            ({ visibleControls }) => visibleControls,
+          )}
+          editor={editor}
+        />
+      ) : null}
       {headGroup.helperKey && headGroup.titleKey && (
         <p className={editorStyles.cardNote}>{t(headGroup.helperKey)}</p>
       )}

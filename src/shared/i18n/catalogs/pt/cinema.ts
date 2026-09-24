@@ -1184,7 +1184,7 @@ export const cinema: Catalog = {
   // públicas) e nunca cita um número que não conseguimos provar.
   "comingSoon.metaTitle": "Cinema QueerPulse: em breve",
   "comingSoon.hero.eyebrow": "Cinema QueerPulse",
-  "comingSoon.hero.title": "As luzes estão <em>a apagar-se</em>.",
+  "comingSoon.hero.title": "As nossas histórias, <em>no grande ecrã</em>.",
   "comingSoon.hero.lede":
     "Estamos a construir um cinema para os filmes queer feitos perto de nós: curtas, documentários e primeiras longas, escolhidos por quem os adora e pensado para pôr quem realiza em primeiro lugar.",
   "comingSoon.hero.status":
@@ -1192,6 +1192,14 @@ export const cinema: Catalog = {
   "comingSoon.preview.eyebrow": "Uma primeira espreitadela",
   "comingSoon.preview.title": "Como <em>vai ser</em>",
   "comingSoon.preview.reelLabel": "Bobina {number}",
+  "comingSoon.preview.plate.seasons.kicker": "Temporada um",
+  "comingSoon.preview.plate.seasons.title": "Escolha da curadoria",
+  "comingSoon.preview.plate.local.scene": "Cena",
+  "comingSoon.preview.plate.local.take": "Take",
+  "comingSoon.preview.plate.local.note": "Filmado aqui ao lado",
+  "comingSoon.preview.plate.open.captions": "CC",
+  "comingSoon.preview.plate.open.audioDescription": "AD",
+  "comingSoon.preview.plate.open.subtitle": "[risos baixinhos na sala ao lado]",
   "comingSoon.preview.seasons.title": "Temporadas com um olhar próprio",
   "comingSoon.preview.seasons.body":
     "Os filmes chegam em temporadas, cada uma escolhida e apresentada por uma pessoa curadora queer que te conta porque é que importa.",

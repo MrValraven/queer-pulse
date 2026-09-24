@@ -1,0 +1,121 @@
+/* SkinChoiceChipsRefined (therapist chapter editor): fixed choices as pill
+   chips in the chip language the multiSelect speaks. Picked: plum fill, cream
+   type, a leading check. Not picked: paper, a 1px outline, ink type. The
+   chip is 36px tall to the eye and 44px to the finger. It is one chip with
+   the multiSelect's (SkinMultiSelectInline.module.css): keep the padding,
+   icon size, picked colours and dark hover edge the same in both files. */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* The label is the chip; its radio or checkbox is visually hidden inside,
+   and `position: relative` keeps that input from scrolling the page on focus
+   (and anchors the hit area below). */
+.chip {
+  --chip-height: 36px;
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: var(--chip-height);
+  padding: 6px 14px 6px 12px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  line-height: 1.3;
+  /* One weight in both states, so picking a chip never changes its width. */
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+/* An invisible --tap-min hit area over the 36px chip. The 8px row gap
+   leaves room for it, so neighbouring rows never overlap. */
+.chip::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--chip-height) - var(--tap-min)) / 2) 0;
+}
+
+.chipSelected {
+  color: rgb(var(--cream-rgb));
+  background: var(--plum);
+  border-color: var(--plum);
+}
+
+@media (hover: hover) {
+  .chip:not(.chipSelected):hover {
+    border-color: var(--line-strong);
+  }
+
+  /* --line-strong alone is faint on the dark page. */
+  :global([data-theme="dark"]) .chip:not(.chipSelected):hover {
+    border-color: rgba(var(--line-rgb), 0.8);
+  }
+}
+
+/* Plum barely separates from the dark page, so there the picked chip takes
+   a coral tint and a soft coral edge. */
+:global([data-theme="dark"]) .chipSelected {
+  background: rgba(var(--accent-rgb), 0.18);
+  border-color: var(--accent-soft);
+}
+
+/* An earlier answer that is no option: dashed and italic, so it reads as
+   the owner's own words. It is always picked, so the dashes are cream on
+   the picked fill, a touch stronger in dark. */
+.chipSelected.chipLegacy {
+  border-style: dashed;
+  border-color: rgba(var(--cream-rgb), 0.6);
+}
+
+:global([data-theme="dark"]) .chipSelected.chipLegacy {
+  border-color: rgba(var(--cream-rgb), 0.7);
+}
+
+.chipLegacy .chipText {
+  font-style: italic;
+}
+
+.chip:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Once picked, a circled check (single choice) or a check (multi choice);
+   before that a quieter circle or plus at 60% ink. */
+.indicator {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.chip:not(.chipSelected) .indicator {
+  color: var(--ink-60);
+}
+
+/* A long stored text (an older answer) wraps inside the chip. */
+.chipText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

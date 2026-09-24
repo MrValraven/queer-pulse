@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -25,7 +26,8 @@ export interface UseDeckEditorActionsArgs {
   /** An existing deck was updated — marks the snapshot the server confirmed
    *  clean. Takes the snapshot rather than reading current state, because an
    *  autosave resolves after the writer has typed on: only the content that
-   *  actually reached the server may be marked saved. */
+   *  actually reached the server may be marked saved. Also the one callback
+   *  a "Save and leave" create fires, in place of `onCreated`. */
   onSaved: (savedDraft: DeckDraft) => void;
   /** The deck's `publishedAt` after an explicit publish/schedule/unpublish
    *  (`null` once it is back to draft). */
@@ -67,6 +69,10 @@ export function useDeckEditorActions({
   const deleteDeck = useDeleteDeck();
   const convertDeck = useConvertDeckToArticle();
   const isSaving = createDeck.isPending || updateDeck.isPending;
+  // The settling promise of the `saveDraft` write on the wire, so "Save and
+  // leave" lets it land before sending its own. The PATCH is a whole-row
+  // replace, and an older write landing last would win.
+  const inFlightWriteRef = useRef<Promise<void> | null>(null);
 
   /**
    * The one write both the Save button and the autosave loop go through
@@ -78,22 +84,64 @@ export function useDeckEditorActions({
    */
   async function saveDraft(snapshot: DeckDraft): Promise<void> {
     if (!id) return;
-    await updateDeck.mutateAsync({ id, dto: draftToCreateDto(snapshot) });
+    const write = updateDeck.mutateAsync({
+      id,
+      dto: draftToCreateDto(snapshot),
+    });
+    const settledWrite = write.then(
+      () => undefined,
+      () => undefined,
+    );
+    inFlightWriteRef.current = settledWrite;
+    try {
+      await write;
+    } finally {
+      if (inFlightWriteRef.current === settledWrite)
+        inFlightWriteRef.current = null;
+    }
     onSaved(snapshot);
   }
 
-  async function handleSave() {
+  /**
+   * The Save button's write, creating the deck on its first save, with the
+   * toast either way. Resolves true once the server has the whole draft.
+   *
+   * `isLeaving` is "Save and leave": the leave guard navigates the moment
+   * this resolves true, so a brand-new deck is only marked clean. Moving the
+   * URL to `?id=<id>` through `onCreated` would queue a deferred `navigate()`
+   * of its own, racing the one the visitor asked for.
+   */
+  async function saveWholeDraft(isLeaving: boolean): Promise<boolean> {
     try {
       if (id) {
         await saveDraft(draft);
       } else {
         const created = await createDeck.mutateAsync(draftToCreateDto(draft));
-        onCreated(created.id);
+        if (isLeaving) onSaved(draft);
+        else onCreated(created.id);
       }
       showToast(t("magazine:deck.editor.saved"), "success");
+      return true;
     } catch {
       showToast(t("magazine:deck.editor.saveError"), "error");
+      return false;
     }
+  }
+
+  /**
+   * "Save and leave" in the app-wide leave dialog: the plain draft save
+   * alone, since publishing stays an explicit act. A write already on the
+   * wire (an autosave, or a Save click) lands first, then the whole current
+   * draft is sent after it.
+   */
+  async function saveBeforeLeaving(): Promise<boolean> {
+    let pendingWrite = inFlightWriteRef.current;
+    while (pendingWrite) {
+      await pendingWrite;
+      const nextWrite = inFlightWriteRef.current;
+      pendingWrite = nextWrite === pendingWrite ? null : nextWrite;
+    }
+    return saveWholeDraft(true);
   }
 
   /**
@@ -185,7 +233,8 @@ export function useDeckEditorActions({
 
   return {
     saveDraft,
-    handleSave: () => void handleSave(),
+    handleSave: () => void saveWholeDraft(false),
+    saveBeforeLeaving,
     handlePublish: (
       publishStatus: DeckPublishStatus,
       scheduledAt: string | null,
@@ -193,6 +242,7 @@ export function useDeckEditorActions({
     handleDelete: () => void handleDelete(),
     handleConvert: () => void handleConvert(),
     isSaving,
+    isCreatePending: createDeck.isPending,
     isPublishPending: publishDeck.isPending,
     isDeletePending: deleteDeck.isPending,
     isConvertPending: convertDeck.isPending,

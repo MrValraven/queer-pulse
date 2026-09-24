@@ -9,7 +9,6 @@ import { sampleValuesFor } from "./emailTemplatePurposes";
 import { EmailPreviewFrame } from "./editor/EmailPreviewFrame";
 import { EmailTemplateLocaleTabs } from "./EmailTemplateLocaleTabs";
 import { renderEmail } from "./renderEmail";
-import { useEmailDesign } from "./useEmailDesign";
 import styles from "./AdminEmailTemplates.module.css";
 
 interface AdminEmailTemplatePreviewModalProps {
@@ -35,10 +34,9 @@ export function AdminEmailTemplatePreviewModal({
     locale === "pt" && template.locales.pt
       ? template.locales.pt
       : template.locales.en;
-  const [emailDesign] = useEmailDesign();
   const renderedEmail = useMemo(
-    () => renderEmail(content, sampleValuesFor(locale), locale, emailDesign),
-    [content, locale, emailDesign],
+    () => renderEmail(content, sampleValuesFor(locale), locale),
+    [content, locale],
   );
 
   return (

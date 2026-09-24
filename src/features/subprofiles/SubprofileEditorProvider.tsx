@@ -36,8 +36,13 @@ export function SubprofileEditorProvider({
 }) {
   const { t } = useTranslation();
   const meta = useSubprofileMetaEditor(subprofile);
-  const skinBlocks = useSubprofileSkinBlocksEditor(subprofile);
   const rows = useEditorRowsState(subprofile);
+  // Reads the section rows too, so a chapter's `section:<name>` control
+  // (therapist topics) counts toward its chapter's fill.
+  const skinBlocks = useSubprofileSkinBlocksEditor(
+    subprofile,
+    rows.sectionRows,
+  );
   const { pending, dirty, canSave, saving, saveAll } = useEditorSaveGraph(
     subprofile,
     meta,
@@ -48,6 +53,8 @@ export function SubprofileEditorProvider({
   useUnsavedChangesGuard({
     active: dirty && !saving,
     confirmMessage: t("subprofiles:metaForm.leaveConfirm"),
+    // Offered only while the savebar's Save would be enabled.
+    onSaveAndLeave: canSave ? saveAll : undefined,
     guardBackButton: true,
     // `?pane=` switches keep this provider (and the whole draft) mounted.
     shouldAllowQueryChanges: true,

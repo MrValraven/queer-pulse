@@ -588,17 +588,26 @@ export interface SkinData {
    *  from `LIVED_OPTIONS` (`skins/therapist/therapistPickOptions.ts`) or the
    *  therapist's own words, shown as stored. */
   lived?: string[] | null;
-  /** Therapist layout: "also speaks the language of" context chips. */
+  /** Therapist layout: "also speaks the language of" context chips. Each
+   *  entry is an option id from `CONTEXT_OPTIONS`
+   *  (`skins/therapist/therapistPickOptions.ts`) or the therapist's own words,
+   *  shown as stored. */
   contexts?: string[] | null;
-  /** Therapist layout: approach chips (Person-centred, ACT, EMDR ...). */
+  /** Therapist layout: approach chips. Each entry is an option id from
+   *  `MODALITY_OPTIONS` ("personCentred", "act", "emdr" ...) or the
+   *  therapist's own words, shown as stored. */
   modalities?: string[] | null;
-  /** Therapist layout: working-style chips as written ("Leans open"). */
+  /** Therapist layout: working-style chips. Each entry is an option id from
+   *  `WORKING_STYLE_OPTIONS` ("structured", "talkBased" ...) or the
+   *  therapist's own words, shown as stored. */
   workingStyle?: string[] | null;
   /** Therapist layout: the "probably not for you if" list. */
   notFor?: string[] | null;
   /** Therapist layout: things the therapist does not do, as chips. */
   boundaries?: string[] | null;
-  /** Therapist layout: who the practice serves ("Adults 18+", "Couples"). */
+  /** Therapist layout: who the practice serves. Each entry is an option id
+   *  from `WHO_FOR_OPTIONS` ("adults", "couples" ...) or the therapist's own
+   *  words, shown as stored. */
   whoFor?: string[] | null;
   /** Therapist layout: fees, sliding scale and the small print. */
   therapyFees?: TherapyFees | null;

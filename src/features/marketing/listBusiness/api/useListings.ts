@@ -75,10 +75,15 @@ export function useAllMyListings() {
 }
 
 /**
- * Create / withdraw mutations for directory listings. Each branches on
- * `demoMode`: demo is a no-op (the provider keeps its optimistic local state),
- * and live calls the API then invalidates the ["listings"] tree so the
+ * Create / withdraw / delete mutations for directory listings. Each branches
+ * on `demoMode`: demo is a no-op (the provider keeps its optimistic local
+ * state), and live calls the API then invalidates the ["listings"] tree so the
  * useMyListings query refetches. Demo mode never touches the network.
+ *
+ * `withdrawListing` and `deleteListing` hit the same DELETE /listings/:ref.
+ * Withdraw is fire-and-forget (its callers move on at once and the global
+ * error toast reports a failure); delete is awaited by `ListingDeleteFlow`,
+ * which shows its own inline error, so it silences the global toast.
  */
 export function useListingMutations() {
   const { demoMode } = useDemoMode();
@@ -114,9 +119,34 @@ export function useListingMutations() {
     },
   });
 
+  const deleteListingMutation = useMutation<void, Error, string>({
+    // ListingDeleteFlow awaits this and keeps its dialog open with an inline
+    // error on failure, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async (ref) => {
+      if (demoMode) return;
+      await deleteListing(ref);
+    },
+    onSuccess: (_emptyResponse, ref) => {
+      if (demoMode) return;
+      // Invalidate the ["listings"] tree except the deleted listing's own
+      // detail entry. Refetching it would 404, and removing it outright made
+      // the fading editor page rebuild the query (a skeleton plus a 404 GET)
+      // on its way out. Left alone, the stale entry ages out through gc.
+      void queryClient.invalidateQueries({
+        queryKey: ["listings"],
+        predicate: (query) =>
+          !(query.queryKey[1] === "detail" && query.queryKey[2] === ref),
+      });
+      // A deleted live listing leaves the public directory and map too.
+      void queryClient.invalidateQueries({ queryKey: [DIRECTORY_KEY] });
+    },
+  });
+
   return {
     createListing: createListingMutation,
     withdrawListing: withdrawListingMutation,
+    deleteListing: deleteListingMutation,
   };
 }
 

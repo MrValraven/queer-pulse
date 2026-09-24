@@ -172,19 +172,6 @@
   color: var(--ink);
 }
 
-.previewControls,
-.designSwitch {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.designSwitchLabel {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-}
-
 .previewStage {
   display: flex;
   justify-content: center;

@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { useRef, useState, type RefObject } from "react";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryListingsActions } from "../../app/providers/useDirectoryListingsActions";
 import { useRoster } from "../communities/api/useRoster";
 import { TransferOwnershipModal } from "../communities/TransferOwnershipModal";
+import { ListingDeleteFlow } from "../marketing/listBusiness/delete/ListingDeleteFlow";
 import type {
   AccountDependencyCommunity,
   AccountDependencyListing,
@@ -49,50 +50,81 @@ function CommunityDependencyRow({
 }
 
 /**
- * One live listing blocking erasure. Unlike a community, a listing has NO
- * ownership-transfer capability on the backend (`ListingsController` exposes
- * create/update/withdraw only), so the available action is "Close listing"
- * (`DELETE /listings/:ref`, the same `withdrawListing` mutator the owner view
- * of `PlacesSection` uses).
+ * After a listing row's successful delete, moves focus onto whatever
+ * `resolveTarget` returns. The row unmounts together with the Delete button
+ * the flow would restore focus to, which leaves focus on the body. Waits two
+ * frames so React has committed the row removal and the dialog's own focus
+ * restore has run first, and does nothing unless focus has genuinely dropped
+ * to the body. Same guard as `focusListingQueueHeadingAfterRemove` in the
+ * admin listings queue. `preventScroll` keeps the viewport where it was.
  */
-function ListingDependencyRow({
+function focusAfterListingRowRemoved(resolveTarget: () => HTMLElement | null) {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const activeElement = document.activeElement;
+      if (activeElement && activeElement !== document.body) return;
+      resolveTarget()?.focus({ preventScroll: true });
+    });
+  });
+}
+
+/**
+ * One live listing blocking erasure. A listing has NO ownership-transfer
+ * capability on the backend, so its remedy is a permanent delete
+ * (`DELETE /listings/:ref`) through the shared `ListingDeleteFlow`, the same
+ * multi-step confirmation every other listing delete goes through, backed by
+ * the awaited `deleteListing`.
+ *
+ * The flow's gentler exits (hide it, mark it closed) are left out on purpose:
+ * `useAccountDependencies` counts every listing whose status is live, so
+ * neither of them would unblock erasure.
+ *
+ * `onDeleted` runs after a confirmed delete, once the toast is up. The row
+ * disappears as soon as the listings overlay drops the ref, so the caller
+ * owns where focus lands next.
+ */
+export function ListingDependencyRow({
   listing,
+  onDeleted,
 }: {
   listing: AccountDependencyListing;
+  onDeleted?: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { withdrawListing } = useDirectoryListingsActions();
-  const [isConfirming, setConfirming] = useState(false);
+  const { deleteListing } = useDirectoryListingsActions();
+  const [isDeleteFlowOpen, setIsDeleteFlowOpen] = useState(false);
 
   return (
     <>
       <li className={styles.dependencyRow}>
         <span>{listing.name}</span>
-        <Button variant="ghost" size="sm" onClick={() => setConfirming(true)}>
-          {t("members:profile.accountData.stepAway.dependency.closeCta")}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsDeleteFlowOpen(true)}
+        >
+          {t("members:profile.accountData.stepAway.dependency.deleteCta")}
         </Button>
       </li>
-      <ConfirmDialog
-        open={isConfirming}
-        onClose={() => setConfirming(false)}
-        onConfirm={() => {
-          withdrawListing(listing.ref);
-          setConfirming(false);
-          showToast(
-            t("members:profile.accountData.stepAway.dependency.closedToast"),
-            "info",
-          );
-        }}
-        title={t(
-          "members:profile.accountData.stepAway.dependency.closeConfirm.title",
-          { name: listing.name },
-        )}
-        description={t(
-          "members:profile.accountData.stepAway.dependency.closeConfirm.body",
-        )}
-        tone="destructive"
-      />
+      {isDeleteFlowOpen && (
+        <ListingDeleteFlow
+          listingName={listing.name}
+          variant="owner"
+          // A rejection propagates so the flow stays open on its last step
+          // with the inline error.
+          onConfirmDelete={async () => {
+            await deleteListing(listing.ref);
+            showToast(
+              t("members:places.deletedNamed", { name: listing.name }),
+              "success",
+            );
+            setIsDeleteFlowOpen(false);
+            onDeleted?.();
+          }}
+          onClose={() => setIsDeleteFlowOpen(false)}
+        />
+      )}
     </>
   );
 }
@@ -108,18 +140,32 @@ function ListingDependencyRow({
  *
  * The copy stays in the `members:` namespace it was written in, so the strings
  * a member may already have read do not change under them.
+ *
+ * After a listing delete, focus goes to this gate's container while other
+ * blockers remain. When that listing was the last one, the gate renders
+ * nothing, so focus goes to `fallbackFocusRef` (the page title).
  */
 export function AccountDependencyGate({
   communities,
   listings,
+  fallbackFocusRef,
 }: {
   communities: AccountDependencyCommunity[];
   listings: AccountDependencyListing[];
+  /** A stable, focusable element outside the gate (tabIndex -1), used once
+   *  the gate itself has unmounted. */
+  fallbackFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const { t } = useTranslation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const focusStableTargetAfterDelete = () =>
+    focusAfterListingRowRemoved(
+      () => containerRef.current ?? fallbackFocusRef?.current ?? null,
+    );
+
   if (communities.length === 0 && listings.length === 0) return null;
   return (
-    <div className={styles.block}>
+    <div ref={containerRef} tabIndex={-1} className={styles.block}>
       <p className={styles.dependencyIntro}>
         {t("members:profile.accountData.stepAway.erase.blockedByDependencies")}
       </p>
@@ -136,7 +182,11 @@ export function AccountDependencyGate({
       {listings.length > 0 && (
         <ul className={styles.dependencyList}>
           {listings.map((listing) => (
-            <ListingDependencyRow key={listing.ref} listing={listing} />
+            <ListingDependencyRow
+              key={listing.ref}
+              listing={listing}
+              onDeleted={focusStableTargetAfterDelete}
+            />
           ))}
         </ul>
       )}

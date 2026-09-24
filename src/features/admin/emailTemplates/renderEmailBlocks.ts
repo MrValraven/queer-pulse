@@ -1,4 +1,4 @@
-import type { EmailDesignSpec, EmailDesignTheme } from "./emailDesign.types";
+import { EMAIL_DESIGN } from "./emailDesign";
 import type { EmailBlock } from "./emailTemplate.types";
 import type { EmailFillValues } from "./emailTemplatePurposes";
 import {
@@ -13,6 +13,9 @@ import { htmlToPlainText } from "./htmlToPlainText";
 
 type EmailHeadingBlock = Extract<EmailBlock, { type: "heading" }>;
 
+const { theme } = EMAIL_DESIGN;
+const SANS = `font-family:${theme.fonts.sans};`;
+
 function filledHtml(text: string, values: EmailFillValues): string {
   return fillPlaceholders(escapeHtml(text), values, true);
 }
@@ -24,11 +27,10 @@ function clampWidth(width: number): number {
 function headingToHtml(
   block: EmailHeadingBlock,
   values: EmailFillValues,
-  theme: EmailDesignTheme,
 ): string {
   const tag = block.level === 1 ? "h1" : "h2";
   const size = theme.headingSizePx[block.level];
-  // "0" emits nothing, so a design without tracking keeps its markup lean.
+  // "0" emits no declaration, which keeps untracked headings lean.
   const letterSpacing =
     theme.headingLetterSpacing === "0"
       ? ""
@@ -39,23 +41,20 @@ function headingToHtml(
 export function blockToHtml(
   block: EmailBlock,
   values: EmailFillValues,
-  design: EmailDesignSpec,
 ): string {
-  const { theme } = design;
-  const sans = `font-family:${theme.fonts.sans};`;
   switch (block.type) {
     case "heading":
-      return headingToHtml(block, values, theme);
+      return headingToHtml(block, values);
     case "paragraph":
-      return `<p style="margin:0 0 ${theme.blockGapPx}px;${sans}font-size:${theme.bodySizePx}px;line-height:${theme.bodyLineHeight};color:${theme.colors.ink};">${inlineMarkupToHtml(block.text, values, theme.colors.link)}</p>`;
+      return `<p style="margin:0 0 ${theme.blockGapPx}px;${SANS}font-size:${theme.bodySizePx}px;line-height:${theme.bodyLineHeight};color:${theme.colors.ink};">${inlineMarkupToHtml(block.text, values, theme.colors.link)}</p>`;
     case "button":
-      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:${theme.buttonMarginCss};"><tr><td style="border-radius:${theme.buttonRadiusPx}px;background:${theme.colors.buttonFill};"><a href="${filledHtml(block.href, values)}" style="display:inline-block;padding:${theme.buttonPaddingCss};${sans}font-size:${theme.buttonFontSizePx}px;font-weight:600;line-height:1;color:${theme.colors.buttonText};text-decoration:none;border-radius:${theme.buttonRadiusPx}px;">${filledHtml(block.label, values)}</a></td></tr></table>`;
+      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:${theme.buttonMarginCss};"><tr><td style="border-radius:${theme.buttonRadiusPx}px;background:${theme.colors.buttonFill};"><a href="${filledHtml(block.href, values)}" style="display:inline-block;padding:${theme.buttonPaddingCss};${SANS}font-size:${theme.buttonFontSizePx}px;font-weight:600;line-height:1;color:${theme.colors.buttonText};text-decoration:none;border-radius:${theme.buttonRadiusPx}px;">${filledHtml(block.label, values)}</a></td></tr></table>`;
     case "image": {
       const width = clampWidth(block.width);
       return `<img src="${filledHtml(block.src, values)}" alt="${filledHtml(block.alt, values)}" width="${width}" style="display:block;width:100%;max-width:${width}px;height:auto;border:0;margin:0 0 ${theme.blockGapPx}px;">`;
     }
     case "divider":
-      return design.dividerHtml;
+      return EMAIL_DESIGN.dividerHtml;
     case "spacer": {
       const height = theme.spacerPx[block.size];
       return `<div style="height:${height}px;line-height:${height}px;font-size:1px;">&nbsp;</div>`;

@@ -131,7 +131,15 @@ export function DirectoryReviewComposer({
             aria-checked={value === stars}
             onMouseEnter={() => setHoveredStars(value)}
             onMouseLeave={handleStarExit}
-            onFocus={() => setHoveredStars(value)}
+            onFocus={(event) => {
+              // Preview only a keyboard focus. A disclosure opening onto the
+              // checked (or first) star moves focus here too, and previewing
+              // that programmatic focus would paint a star before anyone
+              // touched the picker.
+              if (event.currentTarget.matches(":focus-visible")) {
+                setHoveredStars(value);
+              }
+            }}
             onBlur={handleStarExit}
             onClick={() => setStars(value)}
           >

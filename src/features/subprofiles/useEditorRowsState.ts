@@ -6,6 +6,7 @@ import {
   type SetStateAction,
 } from "react";
 import type { SubprofileView } from "./api/subprofiles.adapters";
+import { sectionsInPageBlocks } from "./editorRail.data";
 import {
   withUid,
   type SubprofileEditorRow,
@@ -133,16 +134,17 @@ export function useEditorRowsState(
     [],
   );
 
-  const sectionLabelKeys = useMemo(
-    () =>
-      Object.fromEntries(
-        subprofile.sections.map((section) => [
-          section.section,
-          section.labelKey,
-        ]),
-      ) as Record<string, string>,
-    [subprofile.sections],
-  );
+  // A section edited inside Page blocks (a therapist's specialisms) is named
+  // by its control there ("What you help with").
+  const sectionLabelKeys = useMemo(() => {
+    const labelKeys = Object.fromEntries(
+      subprofile.sections.map((section) => [section.section, section.labelKey]),
+    ) as Record<string, string>;
+    for (const inBlocks of sectionsInPageBlocks(subprofile.kind).values()) {
+      labelKeys[inBlocks.section] = inBlocks.labelKey;
+    }
+    return labelKeys;
+  }, [subprofile.sections, subprofile.kind]);
 
   const resetRows = useCallback(() => {
     setSectionRowsState(sectionBaseline);

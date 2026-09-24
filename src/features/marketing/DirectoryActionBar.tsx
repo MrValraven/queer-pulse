@@ -18,7 +18,7 @@ import {
   operatingStateOf,
   type DirectoryPlace,
 } from "./directoryPlaces";
-import { placeCoordinates } from "./businessCoords";
+import { directionsHref } from "./businessCoords";
 import { useShareToChat } from "../messages/share/useShareToChat";
 import { ShareToChatModal } from "../messages/share/ShareToChatModal";
 import s from "./DirectorySpacePage.module.css";
@@ -27,14 +27,6 @@ interface Props {
   place: DirectoryPlace;
   /** Moderation preview: the row is decorative context only. */
   preview?: boolean;
-}
-
-/** Same coords fallback order the map card and the nearby strip use. */
-function directionsHref(place: DirectoryPlace, demoMode: boolean): string {
-  const coords = placeCoordinates(place, demoMode);
-  return coords
-    ? `https://www.google.com/maps/dir/?api=1&destination=${coords.latitude},${coords.longitude}`
-    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.address)}`;
 }
 
 /**
@@ -67,9 +59,9 @@ function directionsHref(place: DirectoryPlace, demoMode: boolean): string {
  * (`DirectorySpaceView`) to show what a listing looks like live. None of
  * these actions make sense against a not-yet-approved listing (nowhere to
  * navigate to reliably, nothing to save), and the moderator is not their
- * audience anyway, same as the aside's own "back to directory" CTA. We return
- * `null` outright. An empty slot reads as "these actions do not apply here",
- * while a row of dead buttons would invite clicking.
+ * audience anyway. We return `null` outright. An empty slot reads as "these
+ * actions do not apply here", while a row of dead buttons would invite
+ * clicking.
  */
 export function DirectoryActionBar({ place, preview = false }: Props) {
   const { t } = useTranslation();

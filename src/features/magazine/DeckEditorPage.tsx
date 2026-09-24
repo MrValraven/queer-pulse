@@ -65,22 +65,15 @@ export function DeckEditorPage() {
 
   const dirty = !draftsEqual(draft, lastSaved);
 
-  // Armed only while there are real unsaved edits. `deferNavigateTo` relies
-  // on this effect re-running (and uninstalling its history-navigator patch)
-  // before the deferred `navigate()` fires, so a save-then-navigate never
-  // throws up a stale "leave without saving?" prompt.
-  useUnsavedChangesGuard({
-    active: dirty,
-    confirmMessage: t("magazine:deck.editor.leaveConfirm"),
-  });
-
   const {
     saveDraft,
     handleSave,
+    saveBeforeLeaving,
     handlePublish,
     handleDelete,
     handleConvert,
     isSaving,
+    isCreatePending,
     isPublishPending,
     isDeletePending,
     isConvertPending,
@@ -117,6 +110,20 @@ export function DeckEditorPage() {
     draft,
     lastSaved,
     saveDraft,
+  });
+
+  // Armed only while there are real unsaved edits. `deferNavigateTo` relies
+  // on this effect re-running (and uninstalling its history-navigator patch)
+  // before the deferred `navigate()` fires, so a save-then-navigate never
+  // throws up a stale "leave without saving?" prompt. "Save and leave" runs
+  // only the plain draft save and leaves the navigating to the guard. It is
+  // offered unless a create, publish, delete or convert is already in flight.
+  const isDeckActionPending =
+    isCreatePending || isPublishPending || isDeletePending || isConvertPending;
+  useUnsavedChangesGuard({
+    active: dirty,
+    confirmMessage: t("magazine:deck.editor.leaveConfirm"),
+    onSaveAndLeave: isDeckActionPending ? undefined : saveBeforeLeaving,
   });
 
   // Which issue would ship this deck, for the rail's "With issue" timing.

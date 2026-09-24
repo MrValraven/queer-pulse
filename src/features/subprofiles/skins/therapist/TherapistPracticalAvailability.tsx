@@ -101,7 +101,6 @@ export function AvailabilityCell({ view }: { view: TherapistView }) {
     <PracticalCell
       icon={FiCalendar}
       title={t("subprofiles:therapist.practical.availability.title")}
-      className={styles.availabilityCell}
     >
       <PracticalEditLink target={THERAPIST_EDIT_TARGETS.availability} />
       <div className={styles.availabilityBody}>

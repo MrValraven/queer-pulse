@@ -49,7 +49,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  padding: 0 8px;
+  padding: 0;
   list-style: none;
   font-size: var(--text-13);
   font-weight: 600;
@@ -380,13 +380,14 @@
 .page {
   max-width: var(--maxw-nav);
   margin: 0 auto;
-  padding: 36px 28px var(--section-y-80);
+  padding: 36px 16px var(--section-y-80);
   /* Query container so the two-column body responds to the width it actually
-     has, not the viewport. Without this the layout breaks when embedded in a
-     narrow-but-desktop context (the admin moderation preview drawer): the
-     viewport media queries below never fire, so the `1fr 340px` grid stays
-     two-column, the aside overflows, and the feature chips collapse to one
-     glyph per line. The container query mirrors the same collapse for that case. */
+     has, which can be far less than the viewport. Without this the layout
+     breaks when embedded in a narrow-but-desktop context (the admin
+     moderation preview drawer): the viewport media queries below never fire,
+     so the `1fr 340px` grid stays two-column, the aside overflows, and the
+     feature chips collapse to one glyph per line. The container query
+     mirrors the same collapse for that case. */
   container: directorySpace / inline-size;
 }
 .grid {
@@ -400,19 +401,35 @@
     grid-template-columns: 1fr;
   }
 }
-/* Collapse once the body's own available width — not the viewport — drops below
-   the point where `1fr 340px` still leaves the main column room to read. */
+/* Collapse once the body's own available width (the container, whatever the
+   viewport) drops below the point where `1fr 340px` still leaves the main
+   column room to read. `useDirectoryVisitPlacement` reads the same 760px and
+   the `--mobile` query above to decide which column mounts the visit card, so
+   a change to either threshold has to be made there too. */
 @container directorySpace (max-width: 760px) {
   .grid {
     grid-template-columns: 1fr;
   }
 }
+/* A safety net for an empty rail. On a two-column page the visit card opens
+   the rail, so it always has content; the rail comes out empty only in a
+   one-column layout (an owner, or the moderation drawer, with no upcoming
+   gatherings), where this keeps a blank track from ever reappearing and hides
+   the empty box so it adds no gap. */
+.grid:has(> .side:empty) {
+  grid-template-columns: 1fr;
+}
+.side:empty {
+  display: none;
+}
 
 /* ── Identity header (full-width, above the gallery) ─────────────────────────
    Name/eyebrow/tagline/meta on the left; the primary actions inline on the
-   right, aligned to the top of the name. The actions are one compact row of
-   icon buttons at every size (see `.actionBar`); on narrow viewports the
-   header simply wraps and that row drops below the identity column. */
+   right, aligned to the top of the name; the owner's description spans the
+   full width underneath both. The actions are one compact row of icon
+   buttons at every size (see `.actionBar`); on narrow viewports the header
+   simply wraps and that row drops below the identity column, with the
+   description always last regardless. */
 .identity {
   padding-top: 8px;
 }
@@ -436,17 +453,22 @@
 }
 /* Both columns start at the same y (`.spaceHead` is `align-items: flex-start`),
    which would leave the icon row level with the eyebrow, floating above the
-   name. 36px lands its optical centre on the name instead, derived as:
-   the eyebrow's line box is 11px (`--text-11`) at the 1.55 body line height,
-   so 17px, plus its own 14px `margin-bottom`, which puts the h1's first line
-   box 31px down. That box is one `font-size` tall (`line-height: 1`), and
-   wherever this row sits side by side the name is at or near its 4rem cap, so
-   64px, centring 32px into the box (63px from the top). Fraunces caps sit high
-   inside a `line-height: 1` box, which reserves descender room the name mostly
-   does not use, so the optical centre is about 5px above that, at 58px. A 44px
-   button centres 22px into its own box, so the row starts at 58 - 22 = 36px.
-   Scoped above the wrap point: once the row drops below the identity column,
-   the flex row's own gap is the only spacing it needs. */
+   name, whenever the row sits beside the identity column. 36px lands its
+   optical centre on the name, derived as: the eyebrow's line box is 11px
+   (`--text-11`) at the 1.55 body line height, so 17px, plus its own 14px
+   `margin-bottom`, which puts the h1's first line box 31px down. That box is
+   one `font-size` tall (`line-height: 1`), and wherever this row sits side by
+   side the name is at or near its 4rem cap, so 64px, centring 32px into the
+   box (63px from the top). Fraunces caps sit high inside a `line-height: 1`
+   box, which reserves descender room the name mostly does not use, so the
+   optical centre is about 5px above that, at 58px. A 44px button centres 22px
+   into its own box, so the row starts at 58 - 22 = 36px. Scoped to the
+   app-wide `--mobile-up` cutover (860px), which holds steady across the
+   whole range of the row's width: `DirectoryActionBar` renders 2 to 5
+   buttons depending on the listing and the viewer, so the row's own wrap
+   point moves with that count. Below the threshold the row has already
+   dropped to its own line, where the flex row's own gap is the only spacing
+   it needs. */
 @media (--mobile-up) {
   .spaceHeadActions {
     margin-top: 36px;
@@ -482,6 +504,31 @@
   margin-bottom: 22px;
   max-width: 55ch;
 }
+/* The owner's description, untitled: a full-width last child of `.spaceHead`
+   (`flex-basis: 100%`), sitting under both the identity column and the
+   action row, so it closes the whole header as the place's own closing body
+   copy right before the gallery and stays clear of the action row on a
+   phone. The `.spaceHead` flex `gap` already opens a full gap above this
+   line (the same gap it puts between the identity column and the actions),
+   so the small top margin here only fine-tunes that spacing. `.provenance`
+   and `.ownerByline` above sit inside a plain flow column with no gap of
+   their own, which is why their own top margins carry the full space. The
+   header's own `padding-bottom: 24px` supplies the gap under it, so a
+   bottom margin here would double up. */
+.description {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  max-width: 62ch;
+}
+.description p {
+  font-size: var(--text-16);
+  color: var(--ink);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.description p + p {
+  margin-top: 0.75em;
+}
 /* One consolidated at-a-glance row: badge + the place's own pills + rating (or
    the "New" chip). Everything a visitor needs to size up the place, together. */
 .metaRow {
@@ -494,7 +541,11 @@
   font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
-  background: rgba(var(--plum-rgb), 0.06);
+  /* `--line-rgb` flips to cream in dark mode, so the pill keeps a visible
+     fill there at similar strength to the light-mode plum. `.verified`,
+     `.ownedPill`, and `.friendlyPill` each set their own `background` below
+     and still override this one. */
+  background: rgba(var(--line-rgb), 0.06);
   border-radius: var(--radius-8);
   padding: 5px 11px;
   display: inline-flex;
@@ -988,7 +1039,9 @@
   flex: 1;
   height: 8px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.07);
+  /* --line-rgb equals --plum-rgb in light mode (same strength here) and
+     flips to cream in dark mode, so the empty track stays visible there. */
+  background: rgba(var(--line-rgb), 0.07);
   overflow: hidden;
 }
 .ratingDistFill {
@@ -1249,12 +1302,55 @@
   gap: 8px;
 }
 
+/* The visit card opens the rail (map, address, contact routes, call to
+   action), and it runs taller than a laptop viewport on its own, so it stays
+   in flow: a sticky box taller than the viewport would pin its top and hide
+   its own foot. The shorter block under it (`.sideSticky`, wrapping
+   `DirectoryAsideExtras` and `DirectoryAsideFooter`) fits under every tested
+   viewport height, so it pins instead (see `.sideStickyPinned` below),
+   keeping "Upcoming here" and the report/suggest/claim links in reach while
+   the reader is still in the main column. */
 .side {
-  position: sticky;
-  top: 90px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  /* The grid's align-items: flex-start would otherwise size this to its own
+     content, leaving the sticky block below no room to travel. Stretching it
+     to the row's full height (the main column's) gives `.sideStickyPinned`
+     somewhere to pin to. A single-column layout has only one item in the
+     row, so this has no visible effect there. */
+  align-self: stretch;
+}
+/* The visit card heads the rail with the same serif heading as the main
+   column's sections, so the two columns start level. No extra margin here:
+   `.side`'s own 14px gap spaces it from whatever follows, the same gap every
+   other rail card shares, so the column reads as one even rhythm. */
+.side > .sec {
+  margin-bottom: 0;
+}
+/* Groups `DirectoryAsideExtras`' cards with `DirectoryAsideFooter` so they
+   share one flex column and the same 14px rhythm as the rest of the rail. */
+.sideSticky {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* Pins the block while the body grid is two columns (the `visitPlacement ===
+   "rail"` case in DirectorySpaceAside). The max-height plus scroll keeps it
+   from ever pinning taller than the viewport: on a short window it scrolls
+   inside itself, so its last link stays reachable. The inline padding plus
+   matching negative margin give the report button and claim link's focus
+   rings room to paint before the scroll box's forced overflow-x clips them,
+   with the card's own edges landing back where they sat without it. */
+.sideStickyPinned {
+  position: sticky;
+  top: 90px;
+  max-height: calc(100dvh - 90px - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding-inline: 4px;
+  margin-inline: -4px;
 }
 
 /* ── Primary action row (Directions / Call / Share / Send / Save) ────────────
@@ -1329,10 +1425,10 @@
   color: var(--ink-40);
   margin-bottom: 14px;
 }
-/* The map slot inside the visit card: fills whatever cell the card gives it
-   (full height beside the details on a wide card, a 16/9 band above them when
-   the card is narrow). `position: relative` is what `LocationMiniMap`'s
-   absolutely-placed canvas and the placeholder's `.pin` both anchor to. */
+/* The map slot inside the visit card: a full-width band across the top of the
+   card, with the details underneath. `position: relative` is what
+   `LocationMiniMap`'s absolutely-placed canvas and the placeholder's `.pin`
+   both anchor to. */
 .visitMap {
   position: relative;
   overflow: hidden;
@@ -1362,6 +1458,22 @@
   font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
+}
+/* The street line leads; neighbourhood and city sit quieter under it. */
+.addrStreet {
+  display: block;
+  color: var(--text-strong);
+  font-size: var(--text-15);
+  font-weight: 600;
+}
+.addrArea {
+  display: block;
+}
+.addrActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 .addrName {
   display: block;
@@ -1489,9 +1601,13 @@
 }
 
 /* ── "Run by …" byline ───────────────────────────────────────────────────────
-   One compact row closing the identity block, where the sticky rail's "Who
-   runs it" card used to carry the same attribution. Wraps rather than
-   overflowing: the role is free text an owner typed, so it can be long. */
+   One compact row near the end of the identity block, where the rail's
+   "Who runs it" card used to carry the same attribution. On wider
+   viewports it sits directly above the owner's description; on a phone the
+   action row lands between this row and the description. The row wraps to
+   a second line to stay clear of overflow, and a single "· item" pair wraps
+   inside its own column width once the role alone fills a line: the role is
+   free text an owner typed, up to 120 characters. */
 .ownerByline {
   display: flex;
   align-items: center;
@@ -1505,6 +1621,17 @@
 .ownerBylineName {
   min-width: 0;
   color: var(--ink-60);
+}
+/* Each `· item` pair (the role, and the QueerPulse/member state) as one flex
+   child with its separator glued to it, so a line break moves the whole pair
+   together, keeping the "·" with the word that follows it. `min-width: 0`
+   lets a pair that alone is wider than the column wrap inside itself once
+   it runs out of room, so a long role stays inside the column. */
+.ownerBylineItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 .ownerBylineLink {
   font-weight: 600;
@@ -1641,6 +1768,23 @@
 }
 
 /* ── Write-a-review form ──────────────────────────────────────────────────── */
+/* The disclosure trigger that reveals `.reviewForm` below: an intrinsic-width
+   pill, left-aligned like the page's other ghost buttons. The margin sits on
+   this wrapping block, not the `<Button>` itself: a button is inline-flex, so
+   margins on it never collapse with its neighbors and the gap grows past the
+   value written here. 16px sits above it, grouping it with the rating
+   summary it belongs to; 28px sits below it, opening more air before the
+   sort row that follows. */
+.reviewToggle {
+  margin-top: 16px;
+  margin-bottom: 28px;
+}
+/* Live only, never a preview (the toggle itself does not render there): drop
+   the rating card's own bottom margin to match the toggle's 16px top margin,
+   so the two collapse to that value instead of the card's larger one. */
+.ratingDist:has(+ .reviewToggle) {
+  margin-bottom: 16px;
+}
 .reviewForm {
   display: flex;
   flex-direction: column;
@@ -1809,6 +1953,14 @@
   padding-top: 32px;
   margin-top: 8px;
 }
+/* A listing with no badge at all renders a banner that resolves to nothing
+   and none of the gated content below it, so the section itself has no
+   children once the live badge state loads. Without this the divider and
+   padding above still drew, leaving an empty bordered band between the
+   reviews and the house-rule card. */
+.trustSection:empty {
+  display: none;
+}
 
 /* Quiet footnote under the trust block: the badge here is the same standard
    applied everywhere, with a way out to the full explanation. */
@@ -1835,7 +1987,7 @@
 .related {
   max-width: var(--maxw-nav);
   margin: 0 auto;
-  padding: 28px 28px var(--section-y-64);
+  padding: 28px 16px var(--section-y-64);
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .relatedTitle {
@@ -1862,17 +2014,12 @@
   }
 }
 
-/* ── "Where it is" section (main column) ─────────────────────────────────────
-   The old aside contact card, re-laid-out for the wider main column: the map
-   and address sit beside the contact rows and call to action on anything with
-   room, and stack on a phone. Flex rather than a media query so it responds to
-   the column it lands in, including the narrow admin preview drawer. */
 /* ── "Where it is" ──────────────────────────────────────────────────────────
-   One card: the map flush against its left edge, every detail beside it. It
-   used to be two loose flex columns — a 200px map with the address stranded
-   underneath, and a details column holding a saved-count and a full-width
-   "back to directory" button with nothing else to anchor them. The card gives
-   the two halves one shared edge and a single background.
+   One card: the map runs the full width of its top edge, every detail below
+   it. The card gives the two parts one shared edge and a single background.
+   It opens the 340px rail on a two-column page and sits in the main column
+   on a one-column one, so nothing here assumes a width: the address buttons
+   and contact rows wrap, and only the map band responds to the card's size.
 
    The shell exists purely to carry the container: an element cannot query the
    container it establishes, and the card itself is what has to respond. */
@@ -1887,20 +2034,34 @@
   border-radius: var(--radius-18);
   overflow: hidden;
 }
+/* A wider card gets a taller band, so the map keeps a readable proportion
+   instead of turning into a thin strip. */
 @container directoryVisit (min-width: 480px) {
-  .visitCard {
-    grid-template-columns: minmax(0, 264px) minmax(0, 1fr);
-    align-items: stretch;
-  }
-  /* Side by side the seam runs vertically, so the map's divider turns with it. */
   .visitMap {
-    border-bottom: none;
-    border-right: 1px solid rgba(var(--line-rgb), 0.09);
+    min-height: 260px;
   }
 }
-/* An online-only listing has no map, so the details take the whole card. */
-.visitCardOnline {
-  grid-template-columns: 1fr;
+/* A narrow card (the 340px rail, a phone) is tightest here: the tighter
+   padding below, plus `padding-inline: 12px` on the two buttons, gives "Take
+   me there" and "Copy address" the room to share one row at 340px, keeping
+   the coral "Visit website" action underneath them the strongest call to
+   action. `flex: 1 1 auto` sizes each button to its own label. At 320px,
+   where the pair is too wide for that, `.addrActions`'s own `flex-wrap: wrap`
+   moves the second button to its own row, so each label stays inside its
+   button's border. A lone button (a former address, or no street to copy)
+   keeps its own width and its normal wrapping. */
+@container directoryVisit (max-width: 479px) {
+  .visitBody {
+    padding: 18px 16px;
+  }
+  .visitBody .addrActions > * {
+    flex: 1 1 auto;
+    padding-inline: 12px;
+  }
+  .visitBody .addrActions > :only-child {
+    flex: 0 1 auto;
+    white-space: normal;
+  }
 }
 .visitBody {
   display: flex;
@@ -1925,29 +2086,6 @@
 .visitFoot > .savedSignal + .cta {
   margin-top: 12px;
 }
-/* Getting back to the directory is navigation, not a call to action: a quiet
-   link under the card, where the breadcrumb's counterpart belongs, instead of
-   a full-width button competing with "Visit website". */
-.visitBack {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 16px;
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  color: var(--ink-60);
-  text-decoration: none;
-}
-.visitBack svg {
-  width: 15px;
-  height: 15px;
-}
-@media (hover: hover) {
-  .visitBack:hover {
-    color: var(--accent-ink);
-  }
-}
-
 /* ── "Access & languages" section (main column) ─────────────────────────────
    Reuses the .contactRow presentation the two lines already had, minus the
    leading hairline on the first one. */
@@ -1967,7 +2105,7 @@
 .nearby {
   max-width: var(--maxw-nav);
   margin: 0 auto;
-  padding: 28px 28px 12px;
+  padding: 28px 16px 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .nearbySub {

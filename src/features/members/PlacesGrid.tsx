@@ -22,8 +22,9 @@ export function PlacesGrid({
   /** Owner view plus live mode plus a real ref: edit and delete address it. */
   canManage: (entry: MemberPlace) => boolean;
   /** Absent for a place this member cannot delete, which includes every place
-   *  they only co-manage: removing a listing stays with its owner. */
-  onRemove: (entry: MemberPlace) => (() => void) | undefined;
+   *  they only co-manage: removing a listing stays with its owner. The handler
+   *  awaits the server delete, resolving on success and rejecting on failure. */
+  onRemove: (entry: MemberPlace) => (() => Promise<void>) | undefined;
 }) {
   return (
     <div className={styles.grid}>

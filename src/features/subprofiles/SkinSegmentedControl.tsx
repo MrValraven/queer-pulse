@@ -1,11 +1,11 @@
 import {
-  FormField,
   SegmentedControl,
   type SegmentOption,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl, SkinOptionTone } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import { SkinRefinedField } from "./SkinRefinedField";
 import styles from "./SkinScalarControls.module.css";
 
 const TONE_CLASS: Record<SkinOptionTone, string | undefined> = {
@@ -49,7 +49,8 @@ function ToneDot({
  * public page assumes. An option's value may be "" (the "not said" answer),
  * which works as both a key and a value here. Under 480px the tray fills
  * the row (see `.segmented` in the CSS module); long sets stack one option per row
- * (see STACK_MIN_OPTIONS).
+ * (see STACK_MIN_OPTIONS). The label and hint sit in the field frame, where
+ * the frame's label names the group and its hint describes it.
  */
 export function SkinSegmentedControl({
   control,
@@ -61,7 +62,6 @@ export function SkinSegmentedControl({
   isLabelHidden?: boolean;
 }) {
   const { t } = useTranslation();
-  const label = t(control.labelKey);
   const stored = editor.getValue(control.path);
   const value =
     typeof stored === "string" ? stored : (control.defaultValue ?? "");
@@ -80,24 +80,35 @@ export function SkinSegmentedControl({
         typeof segment.label === "string" &&
         segment.label.length > STACK_LABEL_LENGTH,
     );
-
+  // The outer group takes its name from the frame's label and its
+  // description from the hint, so the tray inside stays unnamed.
   return (
-    <FormField
-      label={isLabelHidden ? undefined : label}
+    <SkinRefinedField
+      label={t(control.labelKey)}
+      isLabelHidden={isLabelHidden}
+      labelMode="span"
       helper={control.helperKey ? t(control.helperKey) : undefined}
+      helperTone={control.helperTone}
     >
-      <SegmentedControl
-        options={segments}
-        value={value}
-        onChange={(next) => {
-          // The shared control reports a tap on the active option too.
-          // Writing it over an unset value would mark the page dirty (and
-          // change the status on save), so a repeat tap does nothing.
-          if (next !== value) editor.setValue(control.path, next);
-        }}
-        label={label}
-        className={isStacked ? styles.segmentedStacked : styles.segmented}
-      />
-    </FormField>
+      {(field) => (
+        <div
+          role="group"
+          aria-labelledby={field.labelId}
+          aria-describedby={field.describedBy}
+        >
+          <SegmentedControl
+            options={segments}
+            value={value}
+            onChange={(next) => {
+              // The shared control reports a tap on the active option too.
+              // Writing it over an unset value would mark the page dirty (and
+              // change the status on save), so a repeat tap does nothing.
+              if (next !== value) editor.setValue(control.path, next);
+            }}
+            className={isStacked ? styles.segmentedStacked : styles.segmented}
+          />
+        </div>
+      )}
+    </SkinRefinedField>
   );
 }

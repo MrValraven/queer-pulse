@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { useDebouncedValue } from "../../../../shared/hooks";
-import {
-  isArticleDraftConflict,
-  type ArticleBlock,
-  type ArticleDraftDto,
-  type UpdateArticleDraftDto,
+import type {
+  ArticleBlock,
+  ArticleDraftDto,
+  UpdateArticleDraftDto,
 } from "../../api/pieces.api";
 import { snapshotsEqual, type DraftSnapshot } from "./articleDraftSnapshot";
 import { htmlToPlainText } from "../../../../shared/components/richText/plainText";
 import { useArticleBlockOps } from "./useArticleBlockOps";
+import { useArticleDraftWrites } from "./useArticleDraftWrites";
 
 /** Rejection reason `saveNow` throws once the draft has conflicted. Never
  *  shown to anyone: callers branch on `hasSaveConflict` for the copy, and
@@ -45,22 +45,6 @@ function toSeededSnapshot(draft: ArticleDraftDto): DraftSnapshot {
 }
 
 /**
- * The PATCH body for one write: the whole snapshot plus the article `version`
- * this editor last read, declared as the precondition (ENG-111). Built in one
- * place so the three write paths (the debounced autosave, the pagehide flush
- * and the explicit `saveNow`) can never disagree about what they declare.
- * `null` means the draft has not been seeded yet, in which case there is no
- * version to claim and the server falls back to its in-request guard alone.
- */
-function toSavePayload(
-  pending: DraftSnapshot,
-  baseVersion: number | null,
-): UpdateArticleDraftDto {
-  if (baseVersion === null) return { ...pending };
-  return { ...pending, expectedVersion: baseVersion };
-}
-
-/**
  * Owns every autosaved field on the article editor (title, standfirst,
  * blocks, section, tags, role, and the SEO fields) plus the seed-from-server
  * and ~1.2s-debounced-autosave machinery, split out of `ArticleEditorPage`
@@ -71,8 +55,9 @@ function toSavePayload(
  * Seeding runs synchronously during render (see the inline comment below on
  * why an effect-based seed would leave `RichText`'s contentEditable blank on
  * first mount), so this hook can only be called from a component body, same
- * as any other hook. Its only I/O is `save.mutate` and, out of a conflict,
- * the `reloadArticle` re-read it is handed.
+ * as any other hook. Its only I/O is the `save` mutation (sent through
+ * `useArticleDraftWrites`) and, out of a conflict, the `reloadArticle` re-read
+ * it is handed.
  *
  * SAVED-STATE CONTRACT (the three bugs this shape exists to prevent):
  *  1. `lastSavedSnapshot` only ever advances when the server confirms a write.
@@ -174,37 +159,28 @@ export function useArticleEditorDraftState(
   const isDirty =
     lastSavedSnapshot !== null && !snapshotsEqual(snapshot, lastSavedSnapshot);
 
-  // What a PATCH is currently carrying, so a save that resolves while a newer
-  // one is already in flight can't make this effect fire that newer snapshot
-  // a second time. Written and read only from effects/handlers, never render.
-  const inFlightSnapshotRef = useRef<DraftSnapshot | null>(null);
+  // The write bookkeeping and "Save and leave" (see `useArticleDraftWrites`).
+  const {
+    inFlightSnapshotRef,
+    confirmedWriteRef,
+    writeSnapshot,
+    saveBeforeLeaving,
+    forgetSnapshotInFlight,
+  } = useArticleDraftWrites({
+    save,
+    snapshot,
+    lastSavedSnapshot,
+    baseVersion,
+    hasSaveConflict,
+    setLastSavedSnapshot,
+    setBaseVersion,
+    setHasSaveConflict,
+  });
 
-  /**
-   * The one fire-and-forget write, shared by the debounced autosave and the
-   * pagehide flush (`saveNow` awaits its own, so it settles inline).
-   *
-   * Only a confirmed write advances the saved marker: on failure the snapshot
-   * stays dirty, so the next edit (or an explicit retry via `saveNow`) sends
-   * this content again instead of dropping it. A confirmed write also
-   * advances the concurrency baseline from the row the server hands back;
-   * demo mode resolves to `null` (no server, no row to move), so the baseline
-   * stays where the fixture put it. A 409 is the one failure that must never
-   * be retried, since the retry would carry the same stale
-   * `expectedVersion`, so it latches the conflict and stops every write path.
-   */
-  function sendSnapshot(pending: DraftSnapshot): void {
-    inFlightSnapshotRef.current = pending;
-    save.mutate(toSavePayload(pending, baseVersion), {
-      onSuccess: (saved) => {
-        inFlightSnapshotRef.current = null;
-        if (saved) setBaseVersion(saved.version);
-        setLastSavedSnapshot(pending);
-      },
-      onError: (error) => {
-        inFlightSnapshotRef.current = null;
-        if (isArticleDraftConflict(error)) setHasSaveConflict(true);
-      },
-    });
+  /** The fire-and-forget write, shared by the debounced autosave and the
+   *  pagehide flush (`saveNow` awaits its own, so it settles inline). */
+  function sendSnapshot(pending: DraftSnapshot, version: number | null): void {
+    void writeSnapshot(pending, version);
   }
 
   useEffect(() => {
@@ -217,17 +193,22 @@ export function useArticleEditorDraftState(
       snapshotsEqual(debouncedSnapshot, lastSavedSnapshot)
     )
       return;
+    // The live draft is already saved: `saveNow` or "Save and leave" sent it
+    // while the debounce still held an older snapshot, and sending that older
+    // one now would roll the draft back to it.
+    if (snapshotsEqual(snapshot, lastSavedSnapshot)) return;
     // One autosave at a time. Overlapping PATCHes both declared the version
     // read BEFORE either resolved, so the second one 409'd against this same
     // editor's own first save. The queued snapshot is not dropped: the
     // in-flight save resolving advances `lastSavedSnapshot`, which re-runs
     // this effect with the fresh version.
     if (inFlightSnapshotRef.current !== null) return;
-    sendSnapshot(debouncedSnapshot);
+    sendSnapshot(debouncedSnapshot, baseVersion);
     // `save` is a fresh useMutation object every render, and `sendSnapshot` is
     // a plain function recreated with it. Only the debounced snapshot, the
     // saved marker, the concurrency baseline and the conflict latch should
-    // re-trigger this autosave effect.
+    // re-trigger this autosave effect. The live `snapshot` is only read here:
+    // as a trigger it would resend a failed save on every keystroke.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSnapshot, lastSavedSnapshot, baseVersion, hasSaveConflict]);
 
@@ -242,7 +223,10 @@ export function useArticleEditorDraftState(
       // somebody else has since saved.
       if (hasSaveConflict) return;
       const pending = snapshot;
-      if (!lastSavedSnapshot || snapshotsEqual(pending, lastSavedSnapshot))
+      // Read from the ref, which runs ahead of render state (see
+      // `confirmedWriteRef` in `useArticleDraftWrites`).
+      const confirmed = confirmedWriteRef.current;
+      if (!confirmed.snapshot || snapshotsEqual(pending, confirmed.snapshot))
         return;
       const inFlight = inFlightSnapshotRef.current;
       if (inFlight && snapshotsEqual(pending, inFlight)) return;
@@ -250,7 +234,7 @@ export function useArticleEditorDraftState(
       // component stays mounted, so the flush goes through the same write
       // path that settles its own bookkeeping rather than assuming this
       // editor is on the way out.
-      sendSnapshot(pending);
+      sendSnapshot(pending, confirmed.version);
     };
   });
 
@@ -271,8 +255,9 @@ export function useArticleEditorDraftState(
    * it (rejecting if it doesn't). Used before publishing, so the readiness
    * re-check server-side sees what the writer is looking at, and by the
    * header's retry after a failed autosave. A no-op when nothing is dirty. */
-  // `useCallback` rather than a bare function so the ref bookkeeping below
-  // sits in a callback the compiler knows never runs during render.
+  // `useCallback` rather than a bare function so the ref bookkeeping inside
+  // `writeSnapshot` sits in a callback the compiler knows never runs during
+  // render.
   const saveNow = useCallback(async (): Promise<void> => {
     // Rejecting rather than resolving is deliberate: `useArticlePublishHandler`
     // awaits this before publishing, and a conflicted draft must abort the
@@ -281,18 +266,15 @@ export function useArticleEditorDraftState(
     const pending = snapshot;
     if (!lastSavedSnapshot || snapshotsEqual(pending, lastSavedSnapshot))
       return;
-    inFlightSnapshotRef.current = pending;
-    try {
-      const saved = await save.mutateAsync(toSavePayload(pending, baseVersion));
-      if (saved) setBaseVersion(saved.version);
-      setLastSavedSnapshot(pending);
-    } catch (error) {
-      if (isArticleDraftConflict(error)) setHasSaveConflict(true);
-      throw error;
-    } finally {
-      inFlightSnapshotRef.current = null;
-    }
-  }, [snapshot, lastSavedSnapshot, save, baseVersion, hasSaveConflict]);
+    const settledWrite = await writeSnapshot(pending, baseVersion);
+    if (!settledWrite.isSaved) throw settledWrite.error;
+  }, [
+    snapshot,
+    lastSavedSnapshot,
+    baseVersion,
+    hasSaveConflict,
+    writeSnapshot,
+  ]);
 
   // Seeds local state from `article` the moment its `pieceId` differs from
   // what's already seeded — React's own documented pattern for adjusting
@@ -352,7 +334,7 @@ export function useArticleEditorDraftState(
   async function reloadFromServer(): Promise<void> {
     const fresh = await reloadArticle();
     if (!fresh) return;
-    inFlightSnapshotRef.current = null;
+    forgetSnapshotInFlight();
     seedFromServerDraft(fresh);
     setHasSaveConflict(false);
     // `RichText` seeds its contentEditable once on mount, so the reloaded
@@ -424,6 +406,7 @@ export function useArticleEditorDraftState(
     applyVersionRestore,
     isDirty,
     saveNow,
+    saveBeforeLeaving,
     restoreGeneration,
     /** ENG-111. True once a write has been refused as out of date. While it
      *  is set the editor writes nothing at all, so the page must block

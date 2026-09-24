@@ -6,7 +6,7 @@ import type { DirectoryPlace } from "./directoryPlaces";
 import { DirectoryRatingDistribution } from "./DirectoryRatingDistribution";
 import { DirectoryReviewCard } from "./DirectoryReviewCard";
 import { DirectoryReviewControls } from "./DirectoryReviewControls";
-import { DirectoryReviewForm } from "./DirectoryReviewForm";
+import { DirectoryReviewFormDisclosure } from "./DirectoryReviewFormDisclosure";
 import type {
   ReviewContentFilter,
   ReviewSort,
@@ -49,9 +49,11 @@ interface Props {
 
 /**
  * The directory detail page's "Member reviews" section: the rating
- * distribution, the write-a-review form, and every review row (each rendered
- * by `DirectoryReviewCard`, which owns the review's own dates, photo, helpful
- * vote, report control, author edit and owner reply).
+ * distribution, a "Leave a review" button that reveals the write-a-review
+ * form in place, then every review row (each rendered by `DirectoryReviewCard`,
+ * which owns the review's own dates, photo, helpful vote, report control,
+ * author edit and owner reply). The form stays behind the button so the
+ * summary and the reviews people came to read lead the section.
  */
 export function DirectoryReviewsSection({
   place,
@@ -122,7 +124,7 @@ export function DirectoryReviewsSection({
           rating={place.rating}
         />
       )}
-      {!preview && <DirectoryReviewForm slug={place.slug} />}
+      {!preview && <DirectoryReviewFormDisclosure slug={place.slug} />}
       {showControls && (
         <DirectoryReviewControls
           sort={sort}

@@ -151,6 +151,12 @@ export const DISCIPLINES: FilterOption[] = [
   { id: "curation", labelKey: "members:directory.discipline.curation" },
   { id: "food", labelKey: "members:directory.discipline.food" },
   { id: "craft", labelKey: "members:directory.discipline.craft" },
+  { id: "beauty", labelKey: "members:directory.discipline.beauty" },
+  { id: "trades", labelKey: "members:directory.discipline.trades" },
+  { id: "care", labelKey: "members:directory.discipline.care" },
+  { id: "wellness", labelKey: "members:directory.discipline.wellness" },
+  { id: "retail", labelKey: "members:directory.discipline.retail" },
+  { id: "transport", labelKey: "members:directory.discipline.transport" },
   { id: "science", labelKey: "members:directory.discipline.science" },
 ];
 
@@ -349,6 +355,8 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "supperClubHost",
       labelKey: "members:directory.profession.supperClubHost",
     },
+    { id: "bartender", labelKey: "members:directory.profession.bartender" },
+    { id: "waiter", labelKey: "members:directory.profession.waiter" },
   ],
   craft: [
     { id: "ceramicist", labelKey: "members:directory.profession.ceramicist" },
@@ -356,6 +364,94 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     {
       id: "textileArtist",
       labelKey: "members:directory.profession.textileArtist",
+    },
+  ],
+  beauty: [
+    { id: "barber", labelKey: "members:directory.profession.barber" },
+    { id: "hairdresser", labelKey: "members:directory.profession.hairdresser" },
+    {
+      id: "makeupArtist",
+      labelKey: "members:directory.profession.makeupArtist",
+    },
+    {
+      id: "nailTechnician",
+      labelKey: "members:directory.profession.nailTechnician",
+    },
+    { id: "beautician", labelKey: "members:directory.profession.beautician" },
+    {
+      id: "tattooArtist",
+      labelKey: "members:directory.profession.tattooArtist",
+    },
+    { id: "piercer", labelKey: "members:directory.profession.piercer" },
+  ],
+  trades: [
+    { id: "electrician", labelKey: "members:directory.profession.electrician" },
+    { id: "plumber", labelKey: "members:directory.profession.plumber" },
+    { id: "carpenter", labelKey: "members:directory.profession.carpenter" },
+    { id: "mechanic", labelKey: "members:directory.profession.mechanic" },
+    {
+      id: "painterDecorator",
+      labelKey: "members:directory.profession.painterDecorator",
+    },
+    {
+      id: "constructionWorker",
+      labelKey: "members:directory.profession.constructionWorker",
+    },
+    { id: "gardener", labelKey: "members:directory.profession.gardener" },
+  ],
+  care: [
+    {
+      id: "homeCareWorker",
+      labelKey: "members:directory.profession.homeCareWorker",
+    },
+    {
+      id: "childcareWorker",
+      labelKey: "members:directory.profession.childcareWorker",
+    },
+    {
+      id: "disabilitySupportWorker",
+      labelKey: "members:directory.profession.disabilitySupportWorker",
+    },
+  ],
+  wellness: [
+    {
+      id: "personalTrainer",
+      labelKey: "members:directory.profession.personalTrainer",
+    },
+    { id: "yogaTeacher", labelKey: "members:directory.profession.yogaTeacher" },
+    {
+      id: "massageTherapist",
+      labelKey: "members:directory.profession.massageTherapist",
+    },
+  ],
+  retail: [
+    {
+      id: "shopAssistant",
+      labelKey: "members:directory.profession.shopAssistant",
+    },
+    {
+      id: "receptionist",
+      labelKey: "members:directory.profession.receptionist",
+    },
+    { id: "cleaner", labelKey: "members:directory.profession.cleaner" },
+    {
+      id: "securityGuard",
+      labelKey: "members:directory.profession.securityGuard",
+    },
+    {
+      id: "customerSupport",
+      labelKey: "members:directory.profession.customerSupport",
+    },
+  ],
+  transport: [
+    { id: "driver", labelKey: "members:directory.profession.driver" },
+    {
+      id: "deliveryRider",
+      labelKey: "members:directory.profession.deliveryRider",
+    },
+    {
+      id: "warehouseWorker",
+      labelKey: "members:directory.profession.warehouseWorker",
     },
   ],
   science: [

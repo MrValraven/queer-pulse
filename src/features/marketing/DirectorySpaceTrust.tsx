@@ -32,7 +32,7 @@ import s from "./DirectorySpacePage.module.css";
  * the same one `SafeSpaceDetailPage`'s `VerifiedView` uses for the identical
  * arrangement.
  *
- * Two different gates, and keeping them apart is the point:
+ * Three different gates, and keeping them apart is the point:
  *
  * - The BANNER always renders. It is `SafeSpaceBadgeStatus`, which reads the
  *   live per-slug state and shows nothing at all for a place with no badge, so
@@ -40,13 +40,20 @@ import s from "./DirectorySpacePage.module.css";
  *   suspended badge gets to say it is on hold. Gating that on
  *   `safeSpaceStatus === "verified"` would leave the last-known verified
  *   narrative on screen with nothing to qualify it.
- * - The STATIC narrative below it (promises, vouches, the aside) renders only
- *   for a listing that carries a badge at all: `"verified"` or `"suspended"`.
- *   A suspended badge is a real grant on hold, so the promises the place made
- *   and the vouches members wrote are still a true record and stay, under a
- *   banner that has already said the badge is not currently speaking. A
- *   never-reviewed listing used to print empty "What you can rely on here" and
+ * - The STATIC narrative (promises, vouches, the aside) renders for a listing
+ *   that carries a badge at all: `"verified"` or `"suspended"`. A suspended
+ *   badge is a real grant on hold, so the promises the place made and the
+ *   vouches members wrote are still a true record and stay, under a banner
+ *   that has already said the badge is not currently speaking. A never-
+ *   reviewed listing used to print empty "What you can rely on here" and
  *   "Where" headings with nothing under them.
+ * - The "how it works" line, nested inside that same block, renders only when
+ *   `safeSpaceStatus === "verified"`. It asserts the space meets the same
+ *   criteria as every verified space, and that claim is only true today for a
+ *   live badge: a suspended badge is that same grant currently on hold, and a
+ *   listing with no badge record was never held to the bar it describes.
+ *   Nesting it inside the badge-record block keeps it reading as part of the
+ *   badge's own story.
  */
 export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
@@ -78,26 +85,30 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
       />
 
       {hasBadgeRecord && (
-        <div className={safetyStyles.grid}>
-          <div>
-            <SafeSpacePromisesList promises={place.safeSpacePromises ?? []} />
-            <SafeSpaceVouchesList
-              vouches={vouches}
-              onAddVouch={() => setVouchOpen(true)}
-            />
+        <>
+          <div className={safetyStyles.grid}>
+            <div>
+              <SafeSpacePromisesList promises={place.safeSpacePromises ?? []} />
+              <SafeSpaceVouchesList
+                vouches={vouches}
+                onAddVouch={() => setVouchOpen(true)}
+              />
+            </div>
+
+            <SafeSpaceVerifiedAside space={asideData} showBackLink={false} />
           </div>
 
-          <SafeSpaceVerifiedAside space={asideData} showBackLink={false} />
-        </div>
+          {place.safeSpaceStatus === "verified" && (
+            <p className={s.trustHowLine}>
+              {t("marketing:directory.detail.trust.howLine")}{" "}
+              <Link className={s.trustHowLink} to={routes.safeSpaces}>
+                {t("marketing:directory.detail.trust.howLink")}{" "}
+                <FiArrowRight aria-hidden />
+              </Link>
+            </p>
+          )}
+        </>
       )}
-
-      <p className={s.trustHowLine}>
-        {t("marketing:directory.detail.trust.howLine")}{" "}
-        <Link className={s.trustHowLink} to={routes.safeSpaces}>
-          {t("marketing:directory.detail.trust.howLink")}{" "}
-          <FiArrowRight aria-hidden />
-        </Link>
-      </p>
 
       {vouchOpen && (
         <VouchModal

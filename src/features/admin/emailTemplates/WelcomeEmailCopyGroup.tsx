@@ -9,7 +9,6 @@ import { AdminSeg } from "../ui";
 import { useModEmailTemplates } from "./api/emailTemplateHooks";
 import { copyPlainText, copyRichEmail } from "./copyEmail";
 import { renderEmail } from "./renderEmail";
-import { useEmailDesign } from "./useEmailDesign";
 import { welcomeEmailValues } from "./welcomeEmailValues";
 import styles from "./WelcomeEmailCopyGroup.module.css";
 
@@ -28,8 +27,6 @@ export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
   });
   const [chosenTemplateId, setChosenTemplateId] = useState<string | null>(null);
   const [chosenLanguage, setChosenLanguage] = useState<Language | null>(null);
-  // Copies the design a reviewer previewed via `?emailDesign=`; default otherwise.
-  const [emailDesign] = useEmailDesign();
 
   const template =
     templates?.find((candidate) => candidate.id === chosenTemplateId) ??
@@ -44,7 +41,6 @@ export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
     content,
     welcomeEmailValues(item, emailLanguage),
     emailLanguage,
-    emailDesign,
   );
   const languageLabelId = `welcome-email-language-${item.id}`;
   const templateSelectId = `welcome-email-template-${item.id}`;

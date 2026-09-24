@@ -8,6 +8,11 @@ import {
 } from "./TherapistSection";
 import type { TherapistView } from "./therapistView";
 import { THERAPIST_EDIT_TARGETS } from "./therapistEditLinks.data";
+import {
+  MODALITY_OPTIONS,
+  pickDisplayText,
+  WORKING_STYLE_OPTIONS,
+} from "./therapistPickOptions";
 import styles from "./TherapistSections.module.css";
 
 /** "How Sofia works": approach paragraphs and modality chips, then the
@@ -39,7 +44,7 @@ export function TherapistApproach({ view }: { view: TherapistView }) {
         <TherapistChipRow>
           {view.modalities.map((modality, modalityIndex) => (
             <TherapistChip key={`${modality}-${modalityIndex}`}>
-              {modality}
+              {pickDisplayText(MODALITY_OPTIONS, modality, t)}
             </TherapistChip>
           ))}
         </TherapistChipRow>
@@ -52,7 +57,7 @@ export function TherapistApproach({ view }: { view: TherapistView }) {
           <TherapistChipRow>
             {view.workingStyle.map((style, styleIndex) => (
               <TherapistChip key={`${style}-${styleIndex}`} tone="hi" hasCheck>
-                {style}
+                {pickDisplayText(WORKING_STYLE_OPTIONS, style, t)}
               </TherapistChip>
             ))}
           </TherapistChipRow>

@@ -24,6 +24,7 @@ import {
   type AdminListingsHeaderValue,
 } from "./AdminListingsHeader";
 import { useAdminListings } from "./api/useAdminListings";
+import { LISTING_QUEUE_HEADING_ID } from "./listingQueueFocus";
 import {
   LISTING_BULK_ACTION_CAP,
   type AdminListingsStatusFilter,
@@ -39,14 +40,14 @@ const VIEWS: ViewTab[] = ["queue", "editSuggestions", "claims"];
  * Moderator queue for member-submitted directory listings: filter by review
  * status and move a listing review → quick question → live (or back). Every
  * status/remove/ask action goes through `useListingModeration`, which
- * patches the shared `[admin-listings]` cache directly — so this page reads
+ * patches the shared `[admin-listings]` cache directly, so this page reads
  * `rows` straight from the query with no local override/removed-refs state.
  *
  * `filter` drives the server-side `status` param (rather than a client-side
  * filter over one unfiltered fetch), so each tab is its own paginated,
  * counted query. `q`/`sort` are driven by `<AdminListingsHeader>`, which owns
  * the search/sort/status controls as a single controlled `value`/`onChange`
- * pair — this page just holds the three primitives it patches.
+ * pair; this page just holds the three primitives it patches.
  */
 export function AdminListingsPage() {
   const { t } = useTranslation();
@@ -86,13 +87,13 @@ export function AdminListingsPage() {
     setSort(next.sort);
     setAnimateRowEntrance(false);
     // A ref selected under one filter/search/sort combination stops meaning
-    // anything once the moderator switches to another — e.g. a row picked
-    // while on "In review" no longer applies once they jump to "Live".
+    // anything once the moderator switches to another (e.g. a row picked
+    // while on "In review" no longer applies once they jump to "Live").
     setSelectedRefs(new Set());
   }
 
   // Mirrors the backend's per-request cap (`LISTING_BULK_ACTION_CAP`) so a
-  // moderator can't select past what a single bulk request can carry —
+  // moderator can't select past what a single bulk request can carry,
   // enforced here (the state itself never exceeds it) and surfaced to the
   // row/select-all checkboxes below so unselected ones disable at the cap.
   const atSelectionCap = selectedRefs.size >= LISTING_BULK_ACTION_CAP;
@@ -110,7 +111,7 @@ export function AdminListingsPage() {
   }
 
   /** Selects every currently-visible row (up to the bulk-action cap), or
-   *  deselects them all if every one is already selected — the same
+   *  deselects them all if every one is already selected, with the same
    *  "select all visible" semantics as `DraftsTabs`'s select-all. Rows
    *  outside the current filter/page are left untouched either way. */
   function toggleSelectAll() {
@@ -149,6 +150,7 @@ export function AdminListingsPage() {
     >
       <FadeIn>
         <AdminPageHeader
+          titleId={LISTING_QUEUE_HEADING_ID}
           eyebrow={t("admin:adminListings.header.eyebrow")}
           title={
             <>
@@ -189,9 +191,9 @@ export function AdminListingsPage() {
             {isLoading ? (
               <ListingRowsSkeleton />
             ) : isError && rows.length === 0 ? (
-              // A failed fetch must read as an outage, not a false "queue is
-              // empty" — `EmptyQueueState`'s plum success panel is reserved
-              // for a genuinely empty queue after a successful fetch.
+              // A failed fetch must read as an outage. `EmptyQueueState`'s
+              // plum "queue is empty" success panel is reserved for a
+              // genuinely empty queue after a successful fetch.
               <ListingQueueErrorState onRetry={() => void refetch()} />
             ) : (
               <>
@@ -242,10 +244,11 @@ export function AdminListingsPage() {
   );
 }
 
-/** Branded, retryable error state — mirrors `QueueErrorPane` in
+/** Branded, retryable error state, mirroring `QueueErrorPane` in
  *  `AdminModerationPanes.tsx`. A failed live fetch must read as an outage a
- *  moderator can recover from, never as a false "nothing to review". Demo
- *  mode never errors, so this only ever fires against the real API. */
+ *  moderator can recover from; the "nothing to review" state is kept for a
+ *  genuinely empty queue. Demo mode never errors, so this only ever fires
+ *  against the real API. */
 function ListingQueueErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
   return (

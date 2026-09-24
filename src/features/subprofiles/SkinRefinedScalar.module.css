@@ -1,0 +1,56 @@
+/* Text, money and count controls of the chaptered therapist editor. The
+   input surface itself comes from SkinRefinedField.module.css, where every
+   rule is scoped at (0,2,0); the rules here add what each control needs on
+   top of it and out-rank it only where they must. */
+
+/* ── Text fields ─────────────────────────────────────────────────────────── */
+/* A one-row wrapping field and a paragraph grow with their content.
+   Browsers without `field-sizing` get the same growth from
+   useAutoGrowFallback. The one-row field rests at the 48px of a single-line
+   input: the same padding, line height and border. */
+.textFrame textarea.growing {
+  field-sizing: content;
+  overflow-y: hidden;
+}
+
+/* A paragraph rests at three rows: 16px type at a 1.5 line height, plus the
+   surface's 11px padding and 1px border on each side. (0,2,1) out-ranks the
+   surface's 48px floor. */
+.textFrame textarea.paragraph {
+  min-height: calc(4.5em + 24px);
+}
+
+/* A value the page would drop: the border goes amber, focused or not.
+   (0,3,1) out-ranks the surface's coral invalid, hover and focus borders. */
+.textFrame .textControl:is(input, textarea)[aria-invalid="true"] {
+  border-color: var(--amber-ink);
+}
+
+/* The warning under the field, in the frame's footer. */
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--amber-ink);
+}
+
+.warningIcon {
+  flex: none;
+  margin-top: 0.2em;
+}
+
+/* ── Money and count ─────────────────────────────────────────────────────── */
+/* The digits sit on the field surface. The shell keeps its fixed width and
+   the € suffix (SkinScalarControls). */
+.amountShell .amountInput {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The € follows the amount, as on the public page ("60 €"): the digits sit
+   right-aligned against it. (0,3,0) out-ranks the surface's padding. */
+.amountShell .amountInput.moneyInput {
+  padding-right: 32px;
+  text-align: right;
+}

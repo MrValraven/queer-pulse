@@ -6,6 +6,7 @@ import {
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinChipEditEnd } from "./useSkinChipKeyboard";
+import type { SkinChipsField } from "./useSkinChipsField";
 import styles from "./SkinChipsControl.module.css";
 
 /** A chip opened for editing: an input that grows with its text. The hidden
@@ -130,4 +131,31 @@ export function SkinChip({
       )}
     </div>
   );
+}
+
+/** Every chip of a `chips` field, wired to its keyboard, drag and list.
+ *  Rendered inside the field's `role="list"` element. */
+export function SkinChipItems({ field }: { field: SkinChipsField }) {
+  const { list, keyboard, drag } = field;
+  return list.entries.map((text, index) => {
+    const key = list.keys[index]!;
+    return (
+      <SkinChip
+        key={key}
+        text={text}
+        isEditing={keyboard.editingKey === key}
+        isDragging={drag.draggingIndex === index}
+        isFlashing={list.flashingKey === key}
+        keysHintId={field.ids.chipHintId}
+        chipRef={keyboard.registerChip(key)}
+        onPointerDown={drag.chipPressHandlers(index).onPointerDown}
+        onKeyDown={(event) => keyboard.onChipKeyDown(index, event)}
+        onStartEditing={() => keyboard.startEditing(key)}
+        onFinishEditing={(value, how) =>
+          keyboard.finishEditing(index, value, how)
+        }
+        onRemove={() => list.removeAt(index)}
+      />
+    );
+  });
 }

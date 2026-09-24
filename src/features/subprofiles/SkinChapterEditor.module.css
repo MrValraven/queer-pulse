@@ -178,14 +178,45 @@
 .card {
   min-width: 0;
 }
-/* Room for the empty mark in the heading's left gutter. */
+/* Holds the visually hidden empty mark within the heading's own box. */
 .cardHeading {
   position: relative;
 }
-/* A heading sits clear of the first field, matching `.cardHead`'s spacing.
-   A helper note under the heading brings its own bottom margin instead. */
-.cardHeading + .stack {
+/* The heading with its quiet fill count at the right end of the row. The
+   heading takes the free width and wraps; the count keeps its size and stays
+   level with the heading's first line (a flex item's baseline is its first
+   line's). */
+.cardHeadingRow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px var(--gap-sm);
+}
+.cardHeadingRow > .cardHeading {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* The heading row sits clear of the first field, matching `.cardHead`'s
+   spacing. A helper note under the heading brings its own bottom margin
+   instead. */
+.cardHeadingRow + .stack {
   margin-top: var(--gap-grid);
+}
+.cardCount {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-12);
+  line-height: 1.25;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.cardCountDone {
+  color: var(--jade-ink);
 }
 .stack {
   display: grid;
@@ -200,40 +231,34 @@
 .slot > :last-child {
   margin-bottom: 0;
 }
-
-/* The quiet "still empty" mark: an amber dot in the card's left gutter, level
-   with the field's label (or the card heading when the label is hidden). */
-.emptyDot {
-  position: absolute;
-  top: 5px;
-  left: -13px;
-  width: 7px;
-  height: 7px;
-  border-radius: var(--radius-avatar);
-  background: var(--amber);
-}
-.cardHeading .emptyDot {
-  top: 0.45em;
-}
 .revealed {
   animation: chapterFadeIn var(--dur-base) var(--ease);
 }
 
-/* An untitled group folded into the card above opens with its own helper. */
+/* An untitled group folded into the card above brings its own helper: above
+   stacked controls, under a row. */
 .continuationNote {
   margin: 0;
   font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
-.rowGroup > .continuationNote {
-  margin-bottom: var(--gap-xs);
+/* Under a row the note is spaced like the field frame's footer, so each
+   field's label comes first. */
+.row + .continuationNote {
+  margin: 6px 0 0;
 }
 
-/* Two controls side by side with a joiner word ("40 € to 65 €"). Each slot is
-   as wide as its input (`min-content`), so a longer label wraps above it, and
-   the row aligns to the bottom: the inputs share one line however many lines
-   the labels above them take. Slots shrink on a narrow phone. */
+/* Two controls side by side with a joiner word ("40 € to 65 €"). Each slot
+   takes its natural width, the wider of its fixed-width input and its label,
+   and the row aligns to the bottom: the inputs share one line however many
+   lines the labels above them take. Slots shrink on a narrow phone, where a
+   label wraps between words. */
+/* A grid item of `.stack`: without this it grows to the row's full width and
+   the boxes spill past the card instead of shrinking. */
+.rowGroup {
+  min-width: 0;
+}
 .row {
   display: flex;
   align-items: flex-end;
@@ -241,7 +266,6 @@
 }
 .rowControl {
   flex: 0 1 auto;
-  width: min-content;
   min-width: 0;
 }
 /* Small phones: both boxes share the row equally and shrink with it. */
@@ -251,9 +275,9 @@
     width: auto;
   }
 }
-/* The joiner copies the number input's box (`.numberShell .numberInput` in
-   SkinScalarControls.module.css: 16px type, 11px padding, 1.5px border, a
-   44px floor), so bottom-aligned in the row its text centres on the inputs. */
+/* The joiner sits in a box shaped like a number input (16px type, 11px
+   padding, 1.5px border, a 44px floor), so bottom-aligned in the row its text
+   lines up with the inputs' figures. */
 .joiner {
   flex: none;
   display: flex;

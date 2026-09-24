@@ -8,6 +8,10 @@ import {
   SkinListRow,
 } from "./SkinListParts";
 import { useSkinListRows } from "./useSkinListRows";
+import {
+  refinedSurfaceClassName,
+  useRefinedPlaceholder,
+} from "./refinedFieldSurface";
 import styles from "./SkinListControls.module.css";
 
 /**
@@ -31,10 +35,8 @@ export function SkinLinesControl({
     path: control.path,
     createItem: () => "",
   });
+  const placeholder = useRefinedPlaceholder(control.placeholderKey);
   const label = t(control.labelKey);
-  const placeholder = control.placeholderKey
-    ? t(control.placeholderKey)
-    : undefined;
 
   return (
     <SkinListFrame
@@ -54,7 +56,9 @@ export function SkinLinesControl({
         >
           <SkinListGrip {...rows.gripHandlers(index)} />
           <input
-            className={styles.pairInput}
+            className={refinedSurfaceClassName({
+              isEmpty: typeof line !== "string" || line.trim() === "",
+            })}
             value={typeof line === "string" ? line : ""}
             placeholder={placeholder}
             aria-label={t("subprofiles:skinBlock.lineLabel", {

@@ -1145,7 +1145,7 @@ export const cinema: Catalog = {
   "comingSoon.description":
     "Our cinema for queer film made close by is still being built. Nothing is streaming and nothing is on sale yet. We'll announce it here when the doors open.",
   "comingSoon.hero.eyebrow": "QueerPulse Cinema",
-  "comingSoon.hero.title": "The lights are <em>going down</em>.",
+  "comingSoon.hero.title": "Our stories, <em>on the big screen</em>.",
   "comingSoon.hero.lede":
     "We're building a cinema for queer film made close by: shorts, documentaries and first features, chosen by people who love them and designed so the filmmaker comes first.",
   "comingSoon.hero.status":
@@ -1153,6 +1153,15 @@ export const cinema: Catalog = {
   "comingSoon.preview.eyebrow": "A first look",
   "comingSoon.preview.title": "What it will <em>be like</em>",
   "comingSoon.preview.reelLabel": "Reel {number}",
+  "comingSoon.preview.plate.seasons.kicker": "Season one",
+  "comingSoon.preview.plate.seasons.title": "Curator's pick",
+  "comingSoon.preview.plate.local.scene": "Scene",
+  "comingSoon.preview.plate.local.take": "Take",
+  "comingSoon.preview.plate.local.note": "Shot down the road",
+  "comingSoon.preview.plate.open.captions": "CC",
+  "comingSoon.preview.plate.open.audioDescription": "AD",
+  "comingSoon.preview.plate.open.subtitle":
+    "[soft laughter from the next room]",
   "comingSoon.preview.seasons.title": "Seasons with a point of view",
   "comingSoon.preview.seasons.body":
     "Films arrive in curated seasons, each one picked and introduced by a queer curator who can tell you why it matters.",
@@ -1166,7 +1175,7 @@ export const cinema: Catalog = {
   "comingSoon.why.quote":
     "Our stories land differently when <em>we tell them</em>.",
   "comingSoon.why.p1":
-    "Queer films made by queer people catch what an outside camera misses: the in-jokes, the silences, the places we actually meet. They are how a lot of us first saw ourselves on a screen.",
+    "Queer films made by queer people catch what an outside camera misses: the inside jokes, the silences, the places we actually meet. They are how a lot of us first saw ourselves on a screen.",
   "comingSoon.why.p2":
     "Most small films get a festival screening or two and then disappear. They rarely find a home where they keep being seen, or where anything comes back to the people who made them.",
   "comingSoon.why.p3":

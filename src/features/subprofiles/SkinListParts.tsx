@@ -1,21 +1,15 @@
-import {
-  useId,
-  type PointerEvent as ReactPointerEvent,
-  type ReactNode,
-  type Ref,
-  type RefObject,
+import type {
+  PointerEvent as ReactPointerEvent,
+  ReactNode,
+  RefObject,
 } from "react";
-import {
-  FiArrowDown,
-  FiArrowUp,
-  FiMoreVertical,
-  FiPlus,
-  FiX,
-} from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiArrowDown, FiArrowUp, FiMoreVertical, FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
+import { SkinListAddButton } from "./SkinListAddButton";
+import { SkinRefinedField } from "./SkinRefinedField";
 import styles from "./SkinListControls.module.css";
+import refinedStyles from "./SkinRefinedList.module.css";
 
 /** One row: the kind's own layout plus the shared hairline, lifted while it
  *  is held under the pointer. The data attribute lets `useSkinListRows` find
@@ -41,22 +35,7 @@ export function SkinListRow({
   );
 }
 
-/**
- * The frame every list control shares: a group labelled by the control's
- * label (visible unless the group card heading already says it) and
- * described by its helper, the rows, and the add button under them.
- */
-export function SkinListFrame({
-  control,
-  isLabelHidden,
-  itemCount,
-  containerRef,
-  addButtonRef,
-  onAdd,
-  defaultAddLabelKey = "subprofiles:skinBlock.addItem",
-  header,
-  children,
-}: {
+export interface SkinListFrameProps {
   control: SkinBlockControl;
   isLabelHidden: boolean;
   itemCount: number;
@@ -68,63 +47,54 @@ export function SkinListFrame({
   defaultAddLabelKey?: string;
   header?: ReactNode;
   children: ReactNode;
-}) {
-  const { t } = useTranslation();
-  const labelId = useId();
-  const helperId = useId();
-  const label = t(control.labelKey);
-
-  return (
-    <div
-      className={styles.list}
-      role="group"
-      aria-label={isLabelHidden ? label : undefined}
-      aria-labelledby={isLabelHidden ? undefined : labelId}
-      aria-describedby={control.helperKey ? helperId : undefined}
-    >
-      {!isLabelHidden && (
-        <span id={labelId} className={styles.controlLabel}>
-          {label}
-        </span>
-      )}
-      {control.helperKey && (
-        <span id={helperId} className={styles.helper}>
-          {t(control.helperKey)}
-        </span>
-      )}
-      {itemCount > 0 && header}
-      <div className={styles.rows} ref={containerRef}>
-        {children}
-      </div>
-      <SkinListAddButton
-        label={t(control.addLabelKey ?? defaultAddLabelKey)}
-        onAdd={onAdd}
-        buttonRef={addButtonRef}
-      />
-    </div>
-  );
 }
 
-function SkinListAddButton({
-  label,
+/**
+ * The frame every list control shares: the control's label and helper come
+ * from `SkinRefinedField` (sentence case, the hint above the rows), and the
+ * rows sit in a group named by that label through `aria-labelledby`, with
+ * the add button under them.
+ */
+export function SkinListFrame({
+  control,
+  isLabelHidden,
+  itemCount,
+  containerRef,
+  addButtonRef,
   onAdd,
-  buttonRef,
-}: {
-  label: string;
-  onAdd: () => void;
-  buttonRef: Ref<HTMLButtonElement>;
-}) {
+  defaultAddLabelKey = "subprofiles:skinBlock.addItem",
+  header,
+  children,
+}: SkinListFrameProps) {
+  const { t } = useTranslation();
+
   return (
-    <Button
-      ref={buttonRef}
-      variant="ghost"
-      size="sm"
-      className={styles.addButton}
-      onClick={onAdd}
+    <SkinRefinedField
+      label={t(control.labelKey)}
+      isLabelHidden={isLabelHidden}
+      labelMode="span"
+      helper={control.helperKey ? t(control.helperKey) : undefined}
+      helperTone={control.helperTone}
     >
-      <FiPlus size={15} aria-hidden />
-      {label}
-    </Button>
+      {(field) => (
+        <div
+          className={`${styles.list} ${refinedStyles.list}`}
+          role="group"
+          aria-labelledby={field.labelId}
+          aria-describedby={field.describedBy}
+        >
+          {itemCount > 0 && header}
+          <div className={styles.rows} ref={containerRef}>
+            {children}
+          </div>
+          <SkinListAddButton
+            label={t(control.addLabelKey ?? defaultAddLabelKey)}
+            onAdd={onAdd}
+            buttonRef={addButtonRef}
+          />
+        </div>
+      )}
+    </SkinRefinedField>
   );
 }
 

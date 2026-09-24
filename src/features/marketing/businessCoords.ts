@@ -51,3 +51,17 @@ export function placeCoordinates(
   }
   return demoMode ? (BUSINESS_COORDS[place.slug] ?? null) : null;
 }
+
+/** A Google Maps directions link to the place: its pin when it has one (same
+ * fallback order as `placeCoordinates`), otherwise its street address. Shared
+ * by the header's Directions icon and the "Take me there" link in the visit
+ * card, so both always send the visitor to the same spot. */
+export function directionsHref(
+  place: DirectoryPlace,
+  demoMode: boolean,
+): string {
+  const coords = placeCoordinates(place, demoMode);
+  return coords
+    ? `https://www.google.com/maps/dir/?api=1&destination=${coords.latitude},${coords.longitude}`
+    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.address)}`;
+}

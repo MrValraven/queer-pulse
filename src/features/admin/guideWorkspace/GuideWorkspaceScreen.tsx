@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { routes } from "../../../app/routeMap";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
-import { useUnsavedChangesGuard } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AdminResourceGuideDTO } from "../api/adminResourceGuides.api";
 import { adminResourceGuideKey } from "../api/useAdminResourceGuides";
@@ -27,6 +24,7 @@ import {
 import { GuideWorkspaceLinks } from "./GuideWorkspaceLinks";
 import { GuideWorkspacePreview } from "./GuideWorkspacePreview";
 import { useGuideDraftRecovery } from "./useGuideDraftRecovery";
+import { useGuideLeaveGuard } from "./useGuideLeaveGuard";
 import { useGuideSave, useSaveShortcut } from "./useGuideSave";
 import { useGuideWorkspace } from "./useGuideWorkspace";
 import { useGuideWorkspaceView } from "./useGuideWorkspaceView";
@@ -42,7 +40,6 @@ export function GuideWorkspaceScreen({
   breadcrumb: { label: string; to?: string }[];
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { demoMode } = useDemoMode();
   const workspace = useGuideWorkspace(guide);
@@ -74,20 +71,11 @@ export function GuideWorkspaceScreen({
   useSaveShortcut(() => {
     if (!saving.isSaving) void saving.save();
   });
-  useUnsavedChangesGuard({
-    active: workspace.isDirty,
-    confirmMessage: t("admin:guideWorkspace.leaveConfirm"),
-    guardBackButton: true,
+  useGuideLeaveGuard({
+    isDirty: workspace.isDirty,
+    saving,
+    createdGuideId,
   });
-
-  // No leave prompt on the /new to /edit/:id move: the guard's own effect is
-  // declared earlier, so it re-runs first in this commit with the clean draft.
-  useEffect(() => {
-    if (!createdGuideId || workspace.isDirty) return;
-    void navigate(`${routes.adminResourceGuideEdit}/${createdGuideId}`, {
-      replace: true,
-    });
-  }, [createdGuideId, workspace.isDirty, navigate]);
 
   const sections = language === "en" ? draft.sections : draft.sectionsPt;
   const englishSections = language === "pt" ? draft.sections : null;

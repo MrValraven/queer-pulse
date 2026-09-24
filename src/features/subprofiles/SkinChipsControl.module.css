@@ -1,74 +1,7 @@
-/* SkinChipsControl: a string list edited as chips inside one input-like
-   field. The label, helper and field chrome mirror FormField.module.css so
-   the control sits in a column of ordinary fields without standing out. */
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-bottom: 16px;
-  min-width: 0;
-}
-
-.label {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
-.helper {
-  margin: 0;
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  line-height: 1.5;
-}
-
-/* The field itself: the same height, border, radius, ground and focus
-   treatment as a FormField text input. One line of chips (34px, 40px on
-   touch) fits inside the 48px and stays vertically centred. */
-.box {
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  min-height: 48px;
-  padding: 5px 8px;
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: var(--radius-12);
-  cursor: text;
-  transition:
-    border-color 0.22s var(--ease),
-    box-shadow 0.22s var(--ease),
-    background 0.22s var(--ease);
-}
-
-.box:focus-within {
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-plum-soft);
-  background: var(--paper);
-}
-
-/* Keyboard focus in the add input rings the whole field, the way a text
-   input's own focus-visible ring would. */
-.box:has(.addInput:focus-visible) {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-.boxDragging {
-  cursor: grabbing;
-}
-
-/* The list box steps out of layout so its chips and the add input share one
-   wrapping line. */
-.list {
-  display: contents;
-}
+/* SkinChipsControl: a string list edited as chips (SkinChip) in a wrapping
+   row above the add input (SkinChipsRefined). The base chip rules come
+   first; the `.refinedList` rules at the end set the row and the chips'
+   final look inside it. */
 
 .chip {
   display: inline-flex;
@@ -209,42 +142,7 @@
   outline: none;
 }
 
-.addInput {
-  flex: 1 1 120px;
-  min-width: 0;
-  min-height: 34px;
-  padding: 4px 6px;
-  font-family: var(--sans);
-  /* >=16px so iOS Safari never zooms the viewport on focus. */
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: none;
-  border: 0;
-  outline: none;
-}
-
-.addInput:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
-
-.addInput::placeholder {
-  color: var(--ink-40);
-}
-
-.hint {
-  margin: 0;
-  font-size: var(--text-12);
-  line-height: 1.5;
-  color: var(--ink-40);
-}
-
 @media (pointer: coarse) {
-  .box {
-    padding-top: 2px;
-    padding-bottom: 2px;
-  }
-
   .chip {
     min-height: 40px;
   }
@@ -271,12 +169,90 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .box,
   .chip {
     transition: none;
   }
 
   .chipDragging {
     transform: none;
+  }
+}
+
+/* ── The entry row (SkinChipsRefined) ─────────────────────────────────────
+   The entries sit in their own wrapping row above the add input, which takes
+   the refined surface. Each entry is a paper chip with an outline and ink
+   type: the owner's own words. The plum fill belongs to chips picked from a
+   list of options (choice, multiChoice, multiSelect). */
+.refinedList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* No entries yet: the add input opens the field. */
+.refinedList:empty {
+  display: none;
+}
+
+.refinedListDragging {
+  cursor: grabbing;
+}
+
+.refinedList .chip {
+  min-height: 36px;
+  padding: 2px 4px 2px 14px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper);
+  /* The 0.5 outline keeps the chip's 3:1 edge on the paper card; both
+     tokens flip in dark mode, so the edge holds there too. The remove
+     cross keeps the base `.chipRemove` ink-60 and its hover wash. */
+  border-color: rgba(var(--line-rgb), 0.5);
+}
+
+@media (hover: hover) {
+  .refinedList .chip:not(.chipEditing, .chipFlash, .chipDragging):hover {
+    border-color: var(--line-strong);
+  }
+
+  /* --line-strong alone is faint on the dark page. */
+  :global([data-theme="dark"])
+    .refinedList
+    .chip:not(.chipEditing, .chipFlash, .chipDragging):hover {
+    border-color: rgba(var(--line-rgb), 0.8);
+  }
+}
+
+/* Open for editing: the strong edge marks the chip as a field in use. */
+.refinedList .chipEditing {
+  padding-right: 14px;
+  border-color: var(--line-strong);
+}
+
+/* Lifted while dragged: the shadow from `.chipDragging` carries it. */
+.refinedList .chipDragging {
+  border-color: var(--line-strong);
+}
+
+/* The plum-based lift shadow and --line-strong both fade on the dark page,
+   so an edited or dragged chip takes a firmer edge there. */
+:global([data-theme="dark"]) .refinedList .chipEditing,
+:global([data-theme="dark"]) .refinedList .chipDragging {
+  border-color: rgba(var(--line-rgb), 0.8);
+}
+
+/* The entry a duplicate points at: the base `.chipFlash` coral tint and
+   edge, restated to win over `.refinedList .chip`, so it still reads with
+   motion turned off. */
+.refinedList .chipFlash {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+@media (pointer: coarse) {
+  .refinedList .chip {
+    min-height: 40px;
   }
 }

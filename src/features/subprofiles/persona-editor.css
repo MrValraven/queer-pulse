@@ -58,6 +58,22 @@
   transform: translateX(20px);
   pointer-events: none;
 }
+/* Rail folded to its icon strip (`data-rail`, set by the shell from the
+   owner's saved choice). Every rule that sizes the grid gets a collapsed
+   twin that swaps ONLY the first track to 60px and keeps the track count, so
+   the fold animates on the same `grid-template-columns` transition as the
+   preview. 60px, less the rail's 8px inline padding and 1px border, leaves a
+   43px button: room for a centred 16px icon, and for the Publish entry's
+   36px readiness ring (see the collapsed `.ed-rail` rules below).
+   Specificity climbs one attribute per state: 0,2,0 here beats the base
+   `.ed`, and the preview-off twin at 0,3,0 beats both `.ed[data-preview=
+   "off"]` and this base twin, which it would otherwise tie with. */
+.ed[data-rail="collapsed"] {
+  grid-template-columns: 60px minmax(0, 1fr) minmax(360px, 0.85fr);
+}
+.ed[data-preview="off"][data-rail="collapsed"] {
+  grid-template-columns: 60px minmax(0, 1fr) minmax(0px, 0fr);
+}
 /* Desktop preview: the pane keeps a 460px floor, roughly what it gets in Mobile
    mode, and the dock takes the rest so the laptop-width page, zoomed down to
    fit, stays readable. Still three tracks, so the grid animates the swap;
@@ -68,6 +84,11 @@
 @media (min-width: 1180px) {
   .ed[data-preview="on"][data-preview-device="desktop"] {
     grid-template-columns: 230px minmax(460px, 1fr) minmax(360px, 1.1fr);
+  }
+  /* Folded rail beside the Desktop dock. 0,4,0 out-ranks both the rule above
+     (0,3,0) and the base collapsed rule (0,2,0). */
+  .ed[data-preview="on"][data-preview-device="desktop"][data-rail="collapsed"] {
+    grid-template-columns: 60px minmax(460px, 1fr) minmax(360px, 1.1fr);
   }
 }
 /* Tablet: the docked preview no longer fits alongside the rail + pane at a
@@ -89,6 +110,15 @@
   .ed[data-preview="off"],
   .ed[data-preview="on"][data-preview-device="desktop"] {
     grid-template-columns: 210px minmax(0, 1fr);
+  }
+  /* The folded rail here: two tracks like the rule above, so 210px to 60px
+     still animates. Each selector matches the specificity of the collapsed
+     rule it has to beat (0,2,0 base, 0,3,0 preview off, 0,4,0 Desktop dock)
+     and wins the tie by coming later in the file. */
+  .ed[data-rail="collapsed"],
+  .ed[data-preview="off"][data-rail="collapsed"],
+  .ed[data-preview="on"][data-preview-device="desktop"][data-rail="collapsed"] {
+    grid-template-columns: 60px minmax(0, 1fr);
   }
   .ed .ed-preview {
     display: none;
@@ -119,11 +149,18 @@
 
    Same specificity guard as above: the selector list repeats
    `[data-preview="off"]` so it can't lose the cascade to the desktop rule,
-   and repeats the Desktop dock rule for its higher 0,3,0 specificity. */
+   and repeats the Desktop dock rule for its higher 0,3,0 specificity. It
+   repeats all three collapsed-rail selectors as well (up to 0,4,0): a folded
+   rail is still a hidden rail here, and the one column has to win whatever
+   the owner last chose on a wider screen. Last in the file, so every tie in
+   specificity goes to this rule. */
 @media (max-width: 760px) {
   .ed,
   .ed[data-preview="off"],
-  .ed[data-preview="on"][data-preview-device="desktop"] {
+  .ed[data-preview="on"][data-preview-device="desktop"],
+  .ed[data-rail="collapsed"],
+  .ed[data-preview="off"][data-rail="collapsed"],
+  .ed[data-preview="on"][data-preview-device="desktop"][data-rail="collapsed"] {
     grid-template-columns: 1fr;
   }
   .ed .ed-rail {
@@ -333,37 +370,35 @@
      exceeds the viewport height below the nav. */
   max-height: calc(100vh - 96px);
   overflow-y: auto;
+  /* The labels are `nowrap`, and on expand they return at once while the
+     column is still growing from its icon width. Clipping that overhang keeps a
+     sideways scrollbar from flashing for the length of the transition. */
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 2px;
   padding: 24px 14px 24px 0;
   border-right: 1px solid var(--line);
+  /* Every part of the fold runs on the grid column's duration and curve, so
+     the strip moves as one piece (see the collapsed rules below). */
+  transition: padding var(--dur-slow) var(--ease);
 }
-/* Rail head: "‹ Your personas" back to the dashboard (design's rail-top link).
-   Muted until hover, sits above the first group with a little breathing room. */
-.ed-rail .rail-back {
+/* The rail's top row holds only the collapse toggle, pinned to the row's end
+   in both states, so it rides the column's edge as it narrows. The way back
+   to the dashboard sits above the page title instead. */
+.ed-rail .rail-top {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 12px 12px;
-  font-size: var(--text-13-5);
-  font-weight: 500;
-  color: var(--ink-40);
-  white-space: nowrap;
-  transition: color var(--dur-fast) var(--ease);
-}
-.ed-rail .rail-back svg {
-  flex: none;
-}
-@media (hover: hover) {
-  .ed-rail .rail-back:hover {
-    color: var(--ink);
-  }
+  justify-content: flex-end;
+  padding-bottom: 8px;
 }
 .ed-rail button {
   display: flex;
   align-items: center;
   gap: 10px;
+  /* Full width in both states: each entry sits inside its tooltip's
+     inline-flex wrapper, which would otherwise shrink it to its content. */
+  width: 100%;
   padding: 9px 12px;
   border-radius: var(--radius-10);
   /* This repo has no global <button> reset (the convention is the <Button>
@@ -379,7 +414,20 @@
   color: var(--ink-60);
   text-align: left;
   white-space: nowrap;
-  transition: all var(--dur-fast) var(--ease);
+  /* The labels stay in flow on the icon strip (faded, see `.rail-label`);
+     clip them at the pill's edge rather than letting them spill. */
+  overflow: hidden;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    padding var(--dur-slow) var(--ease);
+}
+/* On the icon strip the faded `nowrap` label still overflows the 43px button,
+   and flex takes that shortfall from whatever can shrink: a bare SVG's
+   automatic minimum is 0, so the icon itself would squash to nothing. */
+.ed-rail button > svg,
+.ed-rail button > .ring {
+  flex: none;
 }
 @media (hover: hover) {
   .ed-rail button:hover {
@@ -391,6 +439,15 @@
   background: var(--plum);
   color: rgb(var(--cream-rgb));
   font-weight: 600;
+}
+/* Plum does not flip, so on the dark paper the active pill all but vanishes,
+   and on the icon strip it is the only mark of the open pane. The active row
+   inverts instead: the light text colour becomes the fill and the paper colour
+   becomes the ink, both of which follow the theme. */
+[data-theme="dark"] .ed-rail button[aria-current="page"],
+[data-theme="dark"] .ed-rail button[aria-current="page"]:hover {
+  background: var(--text-strong);
+  color: var(--paper);
 }
 .ed-rail .rail-n {
   margin-left: auto;
@@ -404,6 +461,105 @@
   color: var(--ink-40);
   padding: 16px 12px 6px;
   font-weight: 700;
+  /* One line always, so the heading never wraps taller as the column narrows.
+     Positioned for the icon strip's hairline. */
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: var(--lh-body);
+  transition:
+    padding var(--dur-slow) var(--ease),
+    line-height var(--dur-slow) var(--ease);
+}
+/* The icon strip's group divider, faded in where the heading text was. */
+.ed-rail .rail-head::before {
+  content: "";
+  position: absolute;
+  inset-inline: 4px;
+  top: 50%;
+  border-top: 1px solid var(--line);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+/* Labels, headings and badges. On expand they wait for the column to open
+   part of the way, then fade in, so no text is shown cut off at a narrow
+   width. On collapse (the rule below) they fade out quickly, before the
+   column has closed far. */
+.ed-rail .rail-label {
+  transition: opacity var(--dur-base) var(--ease) calc(var(--dur-slow) * 0.4);
+}
+/* The collapse toggle: icon-only in both states and muted so it stays quieter
+   than the pane entries. Shares the `.ed-rail button` reset and hover wash
+   above. */
+.ed-rail .rail-toggle {
+  flex: none;
+  /* A fixed width, not the entries' 100%, so it keeps to the row's end and
+     can grow to the strip's full width (the collapsed rule) by animating. */
+  width: 32px;
+  justify-content: center;
+  padding: 8px;
+  color: var(--ink-40);
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    width var(--dur-slow) var(--ease);
+}
+/* One chevron that turns around, rather than two icons that swap. */
+.ed-rail .rail-toggle svg {
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+/* ── collapsed rail (`.ed[data-rail="collapsed"]`) ─────────────────────────
+   The icon strip. Labels, group headings and badges stay in the markup and in
+   flow (EditorRail), faded to nothing and clipped, so these rules change only
+   lengths, opacities and a rotation: all of them animate alongside the grid
+   column. Nothing may flip `justify-content`, `display` or `flex-direction`
+   here, since those snap and would throw the icons across the still-wide
+   column on the first frame. The ≤760px rule hides the rail outright, and
+   nothing here sets `display` on it, so that rule keeps winning.
+   The strip's content is 60px less the 1px border and 8px padding each side:
+   43px. Left padding centres a glyph in it, so the icons slide the few px
+   from their wide-rail spot to the centre while the column narrows. */
+.ed[data-rail="collapsed"] .ed-rail {
+  padding: 24px 8px;
+  /* Below about 650px of viewport the strip scrolls, and a classic
+     always-visible scrollbar (Windows) would take 12px of its 60px and push
+     every icon off-centre. Hide the bar and keep the scrolling. */
+  scrollbar-width: none;
+}
+.ed[data-rail="collapsed"] .ed-rail::-webkit-scrollbar {
+  display: none;
+}
+.ed[data-rail="collapsed"] .ed-rail .rail-label {
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+/* (43 - 16) / 2 for the 16px icons. */
+.ed[data-rail="collapsed"] .ed-rail button {
+  padding: 10px 0 10px 13.5px;
+}
+/* (43 - 36) / 2 for the Publish entry's 36px readiness ring. */
+.ed[data-rail="collapsed"] .ed-rail button:has(> .ring) {
+  padding-left: 3.5px;
+}
+/* The toggle widens to the whole strip, so its chevron centres like every
+   entry below it, and turns to point the way the rail will open. Its own
+   padding restated, since the entry rule above matches it too. */
+.ed[data-rail="collapsed"] .ed-rail .rail-toggle {
+  width: 43px;
+  padding: 8px;
+}
+.ed[data-rail="collapsed"] .ed-rail .rail-toggle svg {
+  transform: rotate(180deg);
+}
+/* The group heading shrinks to a 12px band (the text line folds to zero
+   height) and its hairline fades in, so the rows below glide up. */
+.ed[data-rail="collapsed"] .ed-rail .rail-head {
+  padding: 6px 4px;
+  line-height: 0;
+}
+.ed[data-rail="collapsed"] .ed-rail .rail-head::before {
+  opacity: 1;
 }
 
 .ed-main {
@@ -455,7 +611,13 @@
    correct and visible; nothing is left mid-animation or hidden. */
 @media (prefers-reduced-motion: reduce) {
   .ed,
-  .ed-preview {
+  .ed-preview,
+  .ed-rail,
+  .ed-rail button,
+  .ed-rail .rail-toggle svg,
+  .ed-rail .rail-head,
+  .ed-rail .rail-head::before,
+  .ed-rail .rail-label {
     transition: none;
   }
   .ed[data-preview="off"] .ed-preview {
@@ -463,6 +625,16 @@
   }
   .ed-main > div:not(.savebar) {
     animation: none;
+  }
+  /* The preview's device swap goes up at once, with no fade and no rise.
+     `usePreviewFit` already skips its phases under reduced motion; this
+     covers a swap already running when the setting flips. The `.ed` prefix
+     lifts both selectors past the frame and swap rules further down, which
+     would otherwise win on specificity or on coming later. */
+  .ed .ed-prev-frame,
+  .ed .ed-prev-scroll[data-device-swap] .ed-prev-frame {
+    transition: none;
+    transform: none;
   }
 }
 .ed-grid {
@@ -526,7 +698,21 @@
 .ed-prev-scroll {
   flex: 1;
   overflow: auto;
+  /* Reserve the scrollbar's lane even when the page fits. `usePreviewFit`
+     zooms the frame to this box's width, so a classic scrollbar that came and
+     went with the overflow fed back into the zoom: the scrollbar narrowed the
+     box, the smaller zoom made the page fit, the scrollbar left, the zoom
+     grew back, and the Desktop preview jumped between the two every frame.
+     Overlay scrollbars take no space, so this changes nothing there. */
+  scrollbar-gutter: stable;
   padding: 14px;
+}
+/* A device swap holds the zoom while the dock glides, so for a moment the
+   frame can be wider than the dock: the old laptop layout in a narrowing
+   dock, or the new width under the old zoom. Clipping sideways for the length
+   of the swap keeps a horizontal scrollbar from flashing in and out. */
+.ed-prev-scroll[data-device-swap] {
+  overflow-x: hidden;
 }
 /* The frame's inline `width` is the chosen device's layout width and its
    inline `zoom` shrinks that real persona page tree to fit the dock
@@ -536,16 +722,43 @@
    phone lays out at a true 390px (`FRAME_BORDER_TOTAL` in `usePreviewFit`). */
 .ed-prev-frame {
   box-sizing: content-box;
-  /* The global reduced-motion rule shortens every transition to 0.01ms, which
-     would still animate the inline `width` for one painted frame while the new
-     zoom is already applied. The frame has nothing to animate. */
-  transition-property: none;
+  /* Only opacity and transform animate, for the device swap below: both run
+     on the compositor and never relayout the page tree. The inline `width`
+     and `zoom` stay off this list. The global reduced-motion rule shortens
+     every transition to 0.01ms, which would still animate the width for one
+     painted frame against a zoom already applied. The base timing is the
+     swap's entrance. */
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+  /* The frame is as tall as the whole page, so the rise scales from the top
+     edge, the part of the page the dock shows. */
+  transform-origin: top center;
   margin-inline: auto;
   border-radius: var(--radius-16);
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--cream);
   box-shadow: var(--shadow-e3);
+}
+/* Mobile / Desktop swap, phased by `usePreviewFit` through `data-device-swap`
+   on the scroller. `leaving` fades the old layout out quickly. `settling`
+   keeps it hidden while the frame takes the new width and the dock glides:
+   `content-visibility: hidden` skips layout and paint of the whole page tree
+   meanwhile, and the transform drops to the rise's start at once (only
+   opacity keeps its transition, to finish the fade). `entering` has no rule
+   of its own: the frame returns to its base opacity and transform over the
+   base transition, a fade and small rise at the final zoom. */
+.ed-prev-scroll[data-device-swap="leaving"] .ed-prev-frame,
+.ed-prev-scroll[data-device-swap="settling"] .ed-prev-frame {
+  opacity: 0;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-in);
+}
+.ed-prev-scroll[data-device-swap="settling"] .ed-prev-frame {
+  transform: translateY(12px) scale(0.98);
+  transition-property: opacity;
+  content-visibility: hidden;
 }
 
 /* ── section pane: collapsed item-row list (Task 5) ──────────────────── */
@@ -643,7 +856,8 @@
 /* ── savebar (Task 4 — EditorSavebar) ────────────────────────────────── */
 .savebar {
   position: sticky;
-  bottom: 0;
+  /* Clears the mobile bottom tab bar; collapses to 0px on desktop, where the tab bar is hidden. */
+  bottom: var(--bottom-inset);
   margin-top: 26px;
   display: flex;
   align-items: center;

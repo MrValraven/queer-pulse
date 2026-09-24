@@ -1,4 +1,4 @@
-import type { SubprofileKind } from "./api/subprofiles.api";
+import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 import { skinFor, type SkinFamily } from "./subprofile-skins";
 import {
   THERAPIST_BLOCKS,
@@ -53,6 +53,10 @@ import {
  *    with `allowsCustom`, the owner's own trimmed entries. An older
  *    comma-separated string reads as its parts, and a stored option label
  *    counts as that option (lived experience, languages).
+ *  - `sectionItems`: the items of a persona section (`section`), each a
+ *    heading plus one line per topic (what a therapist helps with). Its
+ *    `path` is `"section:<name>"`; it saves with the section's own rows and
+ *    derives no `SkinData` block.
  *
  * All copy is i18n KEYS resolved by the pane via `t(...)`; the intended EN
  * strings live in the build's `b2-i18n-keys.json` (catalogs updated separately).
@@ -75,7 +79,8 @@ export type SkinControlKind =
   | "lines"
   | "choice"
   | "multiChoice"
-  | "multiSelect";
+  | "multiSelect"
+  | "sectionItems";
 
 /** A status dot shown before a `segmented` option's label. */
 export type SkinOptionTone = "jade" | "amber" | "muted";
@@ -150,6 +155,16 @@ export interface SkinBlockControl {
   /** `multiSelect` with `allowsCustom`: placeholder of the "Add your own"
    *  input ("Another language"). */
   customPlaceholderKey?: string;
+  /** Chapter editor only: the field is sized to a short value. */
+  size?: "narrow";
+  /** Chapter editor only: the helper is a privacy promise and leads with a
+   *  lock. */
+  helperTone?: "private";
+  /** Chapter `multiSelect` only: option values shown as inline toggle chips;
+   *  the rest stay in the full list. */
+  featuredValues?: string[];
+  /** `sectionItems` only: the persona section whose items this control edits. */
+  section?: SubprofileSection;
 }
 
 /** One card of a chapter: an optional heading and helper over its controls. */
@@ -523,7 +538,8 @@ export function skinBlocksForKind(kind: SubprofileKind): SkinBlockDescriptor[] {
 }
 
 /** Kinds whose "Page blocks" pane is split into chapters (`?chapter=`). Every
- *  control in a kind's chapters also sits in its `SKIN_BLOCKS_BY_KIND` table. */
+ *  control in a kind's chapters also sits in its `SKIN_BLOCKS_BY_KIND` table,
+ *  except a `sectionItems` control, which saves with its section. */
 const SKIN_CHAPTERS_BY_KIND: Partial<
   Record<SubprofileKind, SkinChapterDescriptor[]>
 > = {

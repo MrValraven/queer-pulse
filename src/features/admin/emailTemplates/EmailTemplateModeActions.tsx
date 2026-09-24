@@ -11,7 +11,6 @@ import { switchToBlocks, switchToHtml } from "./emailTemplateDraft";
 import { copyPlainText, copyRichEmail } from "./copyEmail";
 import { EmailHtmlEditor } from "./editor/EmailHtmlEditor";
 import { renderEmail } from "./renderEmail";
-import { useEmailDesign } from "./useEmailDesign";
 import styles from "./AdminEmailTemplates.module.css";
 
 type OpenDialog = "viewHtml" | "editAsHtml" | "backToBlocks" | null;
@@ -32,15 +31,13 @@ export function EmailTemplateModeActions({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [openDialog, setOpenDialog] = useState<OpenDialog>(null);
-  const [emailDesign] = useEmailDesign();
   const isBlocks = content.mode === "blocks";
   // Tokens stay literal ({} values) so the HTML still carries its placeholders.
-  const generatedHtml = () =>
-    renderEmail(content, {}, locale, emailDesign).html;
+  const generatedHtml = () => renderEmail(content, {}, locale).html;
 
   async function copySample() {
     const outcome = await copyRichEmail(
-      renderEmail(content, sampleValuesFor(locale), locale, emailDesign),
+      renderEmail(content, sampleValuesFor(locale), locale),
     );
     showToast(
       t(
@@ -65,13 +62,9 @@ export function EmailTemplateModeActions({
   }
 
   function confirm() {
-    // The chosen design, so the converted HTML is what the preview showed.
     if (openDialog === "editAsHtml")
       onUpdate((current) =>
-        switchToHtml(
-          current,
-          renderEmail(current, {}, locale, emailDesign).html,
-        ),
+        switchToHtml(current, renderEmail(current, {}, locale).html),
       );
     if (openDialog === "backToBlocks") onUpdate(switchToBlocks);
     setOpenDialog(null);

@@ -1,8 +1,13 @@
 import { useMemo, useState } from "react";
-import { useMediaQuery } from "../../shared/hooks";
+import { Navigate } from "react-router-dom";
+import { useLocalStorage, useMediaQuery } from "../../shared/hooks";
 import { mediaMax, mediaMin } from "../../shared/theme/breakpoints";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import { buildEditorRailGroups, type EditorPaneKey } from "./editorRail.data";
+import {
+  buildEditorRailGroups,
+  sectionsInPageBlocks,
+  type EditorPaneKey,
+} from "./editorRail.data";
 import { SubprofileEditorProvider } from "./SubprofileEditorProvider";
 import { EditorRail } from "./EditorRail";
 import { EditorPaneSwitcher } from "./EditorPaneSwitcher";
@@ -31,6 +36,15 @@ const RAIL_HIDDEN_QUERY = mediaMax("lg");
 /** At or above this the Desktop dock fits beside the rail and pane. Must match
  *  the `@media (min-width: 1180px)` Desktop dock rule in `persona-editor.css`. */
 const DESKTOP_PREVIEW_QUERY = mediaMin(1180);
+
+/** Whether the rail is folded to its icon strip. Persisted per device, the same
+ *  way `AdminShell` keeps its rail: an owner who traded rail width for pane
+ *  width wants it that way on every persona they open. */
+const RAIL_COLLAPSED_KEY = "qp.personaEditorRail.collapsed";
+
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
 
 /**
  * The `.ed` grid interior — rail, routed pane + savebar, and docked preview —
@@ -62,18 +76,28 @@ const DESKTOP_PREVIEW_QUERY = mediaMin(1180);
  */
 export function SubprofileEditorShell({
   subprofile,
-  backTo,
 }: {
   subprofile: SubprofileView;
-  backTo: string;
 }) {
   const [previewOpen, setPreviewOpen] = useState(true);
-  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>("mobile");
+  // `null` until the owner picks one on the switch.
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice | null>(
+    null,
+  );
+  const [isRailCollapsed, setIsRailCollapsed] = useLocalStorage<boolean>(
+    RAIL_COLLAPSED_KEY,
+    false,
+    isBoolean,
+  );
   const isRailHidden = useMediaQuery(RAIL_HIDDEN_QUERY);
   const canPreviewDesktop = useMediaQuery(DESKTOP_PREVIEW_QUERY);
-  // Below the Desktop cut the switch is hidden and the dock shows Mobile; the
-  // owner's choice is kept, so widening the window brings Desktop back.
-  const effectiveDevice = canPreviewDesktop ? previewDevice : "mobile";
+  // Until the owner picks, the dock previews the device they are on: Desktop
+  // on a wide screen, Mobile below the Desktop cut. Below the cut the switch is
+  // hidden and the dock shows Mobile; a picked device is kept, so widening the
+  // window brings it back.
+  const effectiveDevice = canPreviewDesktop
+    ? (previewDevice ?? "desktop")
+    : "mobile";
 
   const groups = useMemo(() => buildEditorRailGroups(subprofile), [subprofile]);
   // Flattened rail order — what `?pane=` is validated against, and the order
@@ -85,13 +109,23 @@ export function SubprofileEditorShell({
       ),
     [groups],
   );
-  const pane = useEditorPane(paneKeys);
+  const sectionsInBlocks = useMemo(
+    () => sectionsInPageBlocks(subprofile.kind),
+    [subprofile.kind],
+  );
+  const pane = useEditorPane(paneKeys, sectionsInBlocks);
   // Memoized: a fresh object every render would re-render every nav consumer
   // on each keystroke in the editor, and remount nothing usefully.
   const navValue = useMemo(
     () => ({ activePane: pane.activePane, goToPane: pane.selectPane }),
     [pane.activePane, pane.selectPane],
   );
+
+  // An older link to a section that now lives in Page blocks: swap the URL
+  // before the editor mounts, so `EditorFieldDeepLink` reads the new `?field=`.
+  if (pane.movedPaneSearch) {
+    return <Navigate replace to={{ search: pane.movedPaneSearch }} />;
+  }
 
   return (
     <SubprofileEditorNavContext.Provider value={navValue}>
@@ -102,12 +136,16 @@ export function SubprofileEditorShell({
           className="ed"
           data-preview={previewOpen ? "on" : "off"}
           data-preview-device={effectiveDevice}
+          data-rail={isRailCollapsed ? "collapsed" : "expanded"}
         >
           <EditorRail
             groups={groups}
             activePane={pane.activePane}
-            backTo={backTo}
+            isCollapsed={isRailCollapsed}
             onSelect={pane.selectPane}
+            onToggleCollapse={() =>
+              setIsRailCollapsed((isCollapsed) => !isCollapsed)
+            }
           />
 
           <div className="ed-main">

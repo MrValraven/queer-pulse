@@ -2,8 +2,9 @@ import type { TFunction } from "../../../../shared/i18n/types";
 import type { SkinSelectOption } from "../../skinBlockFields.data";
 
 /**
- * The fixed choices behind the therapist's "Lived experience" and "Languages"
- * multi-selects. Each picked choice is stored by its id; the editor and the
+ * The fixed choices behind the therapist's six multi-selects: "Lived
+ * experience", "Languages", "Modalities", "Working style", "Who it's for" and
+ * "Contexts". Each picked choice is stored by its id; the editor and the
  * public page both translate it through the same label key. Anything else in
  * the stored list is the therapist's own words (or an answer saved before the
  * list existed) and shows exactly as stored.
@@ -58,6 +59,78 @@ const LANGUAGE_IDS = [
   "lgp",
 ];
 
+const MODALITY_IDS = [
+  "personCentred",
+  "cbt",
+  "act",
+  "dbt",
+  "emdr",
+  "psychodynamic",
+  "psychoanalytic",
+  "systemic",
+  "gestalt",
+  "existential",
+  "narrative",
+  "compassionFocused",
+  "schema",
+  "emotionallyFocused",
+  "ifs",
+  "somatic",
+  "mindfulness",
+  "integrative",
+  "artTherapy",
+  "sexTherapy",
+  "affirmative",
+  "traumaInformed",
+];
+
+const WORKING_STYLE_IDS = [
+  "structured",
+  "exploratory",
+  "talkBased",
+  "bodyBased",
+  "creative",
+  "gentleDirect",
+  "collaborative",
+  "betweenSessions",
+  "shortTerm",
+  "longTerm",
+];
+
+const WHO_FOR_IDS = [
+  "adults",
+  "youngAdults",
+  "teens",
+  "olderAdults",
+  "individuals",
+  "couples",
+  "relationships",
+  "families",
+  "parents",
+  "groups",
+];
+
+const CONTEXT_IDS = [
+  "kink",
+  "sexWork",
+  "nonMonogamy",
+  "polyFamilies",
+  "chemsex",
+  "hiv",
+  "transition",
+  "comingOut",
+  "aceAro",
+  "intersex",
+  "exReligious",
+  "migration",
+  "neurodivergence",
+  "disability",
+  "chronicIllness",
+  "recovery",
+  "bodyImage",
+  "queerParenthood",
+];
+
 export const LIVED_OPTIONS: SkinSelectOption[] = LIVED_IDS.map((id) => ({
   value: id,
   labelKey: `subprofiles:therapist.livedOption.${id}`,
@@ -66,6 +139,28 @@ export const LIVED_OPTIONS: SkinSelectOption[] = LIVED_IDS.map((id) => ({
 export const LANGUAGE_OPTIONS: SkinSelectOption[] = LANGUAGE_IDS.map((id) => ({
   value: id,
   labelKey: `subprofiles:therapist.languageOption.${id}`,
+}));
+
+export const MODALITY_OPTIONS: SkinSelectOption[] = MODALITY_IDS.map((id) => ({
+  value: id,
+  labelKey: `subprofiles:therapist.modalityOption.${id}`,
+}));
+
+export const WORKING_STYLE_OPTIONS: SkinSelectOption[] = WORKING_STYLE_IDS.map(
+  (id) => ({
+    value: id,
+    labelKey: `subprofiles:therapist.workingStyleOption.${id}`,
+  }),
+);
+
+export const WHO_FOR_OPTIONS: SkinSelectOption[] = WHO_FOR_IDS.map((id) => ({
+  value: id,
+  labelKey: `subprofiles:therapist.whoForOption.${id}`,
+}));
+
+export const CONTEXT_OPTIONS: SkinSelectOption[] = CONTEXT_IDS.map((id) => ({
+  value: id,
+  labelKey: `subprofiles:therapist.contextOption.${id}`,
 }));
 
 /** The label key of a stored entry when it is one of `options`' ids, or

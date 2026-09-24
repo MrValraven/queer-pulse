@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useArticleDraft } from "./api/useArticleDraft";
 import { useArticleMutations } from "./api/useArticleMutations";
 import { usePieceMutations } from "./api/usePieceMutations";
@@ -25,6 +24,7 @@ import {
 import type { EditorMode } from "./desk/editor/editorMode";
 import { useArticleEditorDraftState } from "./desk/editor/useArticleEditorDraftState";
 import { useBlockRemovalUndo } from "./desk/editor/useBlockRemovalUndo";
+import { useArticleEditorLeaveGuard } from "./desk/editor/useArticleEditorLeaveGuard";
 import { useArticlePublishHandler } from "./desk/editor/useArticlePublishHandler";
 import {
   countArticleWords,
@@ -104,14 +104,9 @@ export function ArticleEditorPage() {
     setSelectedId,
   );
 
-  // Autosave covers the pauses; this covers the window between the last
-  // keystroke and the debounce firing (plus a save still in flight), which
-  // used to be lost without warning to Back, a palette jump or a tab close.
-  useUnsavedChangesGuard({
-    active: draft.isDirty || save.isPending,
-    confirmMessage: t("magazine:write.header.leaveConfirm"),
-    guardBackButton: true,
-  });
+  // Guards leaving with unsaved edits, and offers "Save and leave" (a flush of
+  // the pending autosave) while no 409 conflict is latched.
+  useArticleEditorLeaveGuard(draft, save.isPending);
 
   if (isLoading) return <ArticleEditorStatus variant="loading" />;
   if (isError || !article) return <ArticleEditorStatus variant="not-found" />;

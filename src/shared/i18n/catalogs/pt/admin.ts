@@ -1461,15 +1461,9 @@ export const admin: Catalog = {
     "Esta página não tem nenhum membro associado. Não há a quem enviar a pergunta.",
   "adminListings.view.queue": "Submissões",
   "adminListings.view.editSuggestions": "Sugestões de edição",
-  "adminListings.remove.cta": "Remover",
+  "adminListings.remove.cta": "Eliminar",
   "adminListings.actions.moreAriaLabel": "Mais ações para {name}",
-  "adminListings.remove.confirm.title": "Remover {name}?",
-  "adminListings.remove.confirm.body":
-    "Isto elimina a listagem permanentemente e não pode ser desfeito. Quem submeteu não será notificado.",
-  "adminListings.remove.confirm.liveWarning":
-    "Esta listagem está live. Removê-la também a retira imediatamente do diretório público.",
-  "adminListings.remove.confirm.confirmCta": "Remover listagem",
-  "adminListings.remove.toast.removed": "{name} foi removido.",
+  "adminListings.remove.toast.removed": "Anúncio eliminado: {name}.",
   "adminListings.loadMoreCta": "Carregar mais",
   "adminListings.selectAll.ariaLabel": "Selecionar todas as listagens visíveis",
   "adminListings.selectAll.label": "Selecionar todos os visíveis",
@@ -1502,9 +1496,6 @@ export const admin: Catalog = {
   "adminListings.bulk.confirmRemove.reasonPlaceholder":
     "Adiciona uma nota para o registo…",
   "adminListings.bulk.confirmRemove.confirmCta": "Remover listagens",
-  "adminListings.remove.confirm.reasonLabel": "Motivo (opcional)",
-  "adminListings.remove.confirm.reasonPlaceholder":
-    "Adiciona uma nota para o registo…",
   "adminListings.sendBack.confirm.title": "Devolver {name} a revisão?",
   "adminListings.sendBack.confirm.body":
     "{name} volta para a fila de revisão. Adiciona uma nota rápida se ajudar na próxima passagem.",

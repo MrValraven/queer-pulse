@@ -15,35 +15,22 @@ const Dash = () => (
 );
 
 /**
- * "What it is" and "What this place offers": the owner's description of the
- * business, and the amenity list they set at submission.
+ * "What this place offers": the amenity list the owner set at submission. The
+ * owner's description used to sit here under its own title; it now reads
+ * untitled in the identity header (see `DirectorySpaceHeader`).
  *
- * Third in the main column, under the hours and the practical block: by the
- * time a member is reading prose they have already established that the place
- * is open and reachable. Extracted out of `DirectorySpaceMain` so that
- * component is a plain running order and nothing else.
+ * First in the main column, directly under the gallery: the description in the
+ * header ends right above the photos, and this list is its continuation, so
+ * the hours and the map card come after it and no longer split the owner's
+ * account in two. Extracted out of `DirectorySpaceMain` so that component is a
+ * plain running order and nothing else.
  */
 export function DirectoryAboutSection({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
-  const hasWhatItIs = place.whatItIs.length > 0;
   const hasGoodFor = place.goodFor.length > 0;
 
   return (
     <>
-      {hasWhatItIs && (
-        <section className={s.sec}>
-          <h2>
-            <Translation
-              i18nKey="marketing:directory.detail.whatItIsTitle"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          {place.whatItIs.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </section>
-      )}
-
       {hasGoodFor && (
         <section className={s.sec}>
           {/* Owner-attributed at every review count. These tags are set once

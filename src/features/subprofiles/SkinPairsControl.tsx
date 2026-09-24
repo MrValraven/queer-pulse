@@ -1,4 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { cx } from "../../shared/lib/cx";
 import type {
   SkinBlockControl,
   SkinItemFieldDescriptor,
@@ -12,12 +13,15 @@ import {
   SkinListRow,
 } from "./SkinListParts";
 import { useSkinListRows } from "./useSkinListRows";
+import { refinedExample, refinedSurfaceClassName } from "./refinedFieldSurface";
 import styles from "./SkinListControls.module.css";
+import refinedStyles from "./SkinRefinedList.module.css";
 
 type PairEntry = Record<string, string>;
 
 /** One cell of a pair row: a compact input (a euro amount for `isMoney`),
- *  plus the column label as a caption once the row stacks on a phone. */
+ *  plus the column label as a caption once the row stacks (on a phone, or
+ *  in a card too narrow for two values side by side). */
 function SkinPairCell({
   field,
   value,
@@ -32,23 +36,29 @@ function SkinPairCell({
   onChange: (value: string) => void;
 }) {
   const { t } = useTranslation();
+  const isEmpty = value.trim() === "";
   const columnLabel = t(field.labelKey);
   const ariaLabel = t("subprofiles:skinBlock.lineLabel", {
     label: columnLabel,
     index: rowNumber,
   });
   const placeholder = field.placeholderKey
-    ? t(field.placeholderKey)
+    ? refinedExample(t, t(field.placeholderKey))
     : undefined;
+  const surfaceClassName = refinedSurfaceClassName({ isEmpty });
 
   return (
     <div className={`${styles.pairCell} ${className}`}>
-      <span className={styles.pairCaption} aria-hidden>
+      <span
+        className={`${styles.pairCaption} ${refinedStyles.columnLabel} ${refinedStyles.pairCaption}`}
+        aria-hidden
+      >
         {columnLabel}
       </span>
       {field.isMoney ? (
         <MoneyInput
-          className={styles.pairMoney}
+          className={`${styles.pairMoney} ${refinedStyles.money}`}
+          inputClassName={`${surfaceClassName} ${refinedStyles.moneyInput}`}
           value={value}
           placeholder={placeholder}
           aria-label={ariaLabel}
@@ -56,7 +66,7 @@ function SkinPairCell({
         />
       ) : (
         <input
-          className={styles.pairInput}
+          className={surfaceClassName}
           value={value}
           placeholder={placeholder}
           aria-label={ariaLabel}
@@ -72,7 +82,8 @@ function SkinPairCell({
  * A `pairs` list (session lengths, reimbursement, hours) as a compact table:
  * the two column labels once in a header, then one row per entry with a drag
  * grip, the two inputs and a remove button. Rows reorder by drag, or with Alt
- * and an arrow key from either input. On a phone each row stacks its inputs.
+ * and an arrow key from either input. Each row stacks its inputs on a phone,
+ * and in a card too narrow for two values side by side.
  */
 export function SkinPairsControl({
   control,
@@ -95,11 +106,17 @@ export function SkinPairsControl({
   });
   if (!firstField || !secondField) return null;
 
+  // Each part pairs its layout class with the one that stacks the row in a
+  // narrow card (SkinRefinedList.module.css).
   const header = (
-    <div className={styles.pairsHead} aria-hidden>
+    <div className={cx(styles.pairsHead, refinedStyles.pairsHead)} aria-hidden>
       <span />
-      <span className={styles.columnLabel}>{t(firstField.labelKey)}</span>
-      <span className={styles.columnLabel}>{t(secondField.labelKey)}</span>
+      <span className={refinedStyles.columnLabel}>
+        {t(firstField.labelKey)}
+      </span>
+      <span className={refinedStyles.columnLabel}>
+        {t(secondField.labelKey)}
+      </span>
       <span />
     </div>
   );
@@ -117,11 +134,11 @@ export function SkinPairsControl({
       {rows.items.map((entry, index) => (
         <SkinListRow
           key={rows.rowKeys[index]}
-          className={styles.pairRow}
+          className={cx(styles.pairRow, refinedStyles.pairRow)}
           isDragging={rows.draggingIndex === index}
         >
           <SkinListGrip
-            className={styles.pairGrip}
+            className={cx(styles.pairGrip, refinedStyles.pairGrip)}
             {...rows.gripHandlers(index)}
           />
           {[firstField, secondField].map((field, fieldIndex) => (
@@ -131,7 +148,9 @@ export function SkinPairsControl({
               value={entry[field.key] ?? ""}
               rowNumber={index + 1}
               className={
-                fieldIndex === 0 ? styles.pairFirst : styles.pairSecond
+                fieldIndex === 0
+                  ? cx(styles.pairFirst, refinedStyles.pairFirst)
+                  : cx(styles.pairSecond, refinedStyles.pairSecond)
               }
               onChange={(value) =>
                 rows.update(index, { ...entry, [field.key]: value })
@@ -139,7 +158,7 @@ export function SkinPairsControl({
             />
           ))}
           <SkinListRemoveButton
-            className={styles.pairRemove}
+            className={cx(styles.pairRemove, refinedStyles.pairRemove)}
             rowLabel={t(control.labelKey)}
             rowNumber={index + 1}
             onRemove={() => rows.remove(index)}

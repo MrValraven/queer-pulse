@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiAlertCircle } from "react-icons/fi";
-import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
-import { useDirectoryListingsActions } from "../../app/providers/useDirectoryListingsActions";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -10,6 +9,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { logError } from "../../shared/observability/logger";
 import { useRoster } from "../communities/api/useRoster";
 import { TransferOwnershipModal } from "../communities/TransferOwnershipModal";
+import { ListingDependencyRow } from "../settings/AccountDependencyGate";
 import type { DeletionRequest } from "../settings/api/account.api";
 import {
   useCancelDeletion,
@@ -27,7 +27,7 @@ import { StepAwayDialogs, type ConfirmKind } from "./StepAwayDialogs";
 import styles from "./AccountData.module.css";
 
 /** Already-pending deletion request banner, shown in place of the step-away
- *  actions — mirrors `DeleteAccountSections`' `DeletePendingBanner`. */
+ *  actions. Mirrors `DeleteAccountSections`' `DeletePendingBanner`. */
 function PendingDeletionBanner({
   request,
   onCancel,
@@ -66,7 +66,7 @@ function PendingDeletionBanner({
 }
 
 /** The owned-community / live-listing rows blocking "Erase me", each with its
- *  own real remedy — grouped separately so the main component stays under
+ *  own real remedy, grouped separately so the main component stays under
  *  the file's line budget. */
 function DependencyList({
   communities,
@@ -105,9 +105,9 @@ function DependencyList({
 /**
  * One owned community blocking erasure. Its only out is a real ownership
  * transfer (`POST /communities/:slug/transfer`, the same
- * `TransferOwnershipModal` the community danger zone uses) — a community
+ * `TransferOwnershipModal` the community danger zone uses). A community
  * requires an owner and there's no anonymous-owner state, so this is a real
- * precondition, not just informational copy. The roster only loads once the
+ * precondition that blocks erasure. The roster only loads once the
  * modal is actually opened (`useRoster` is disabled until `slug` is set).
  */
 function CommunityDependencyRow({
@@ -140,64 +140,12 @@ function CommunityDependencyRow({
 }
 
 /**
- * One live listing blocking erasure. Unlike a community, a listing has NO
- * ownership-transfer capability on the backend — `ListingsController` exposes
- * create/update/withdraw only, never a transfer route — so the only available
- * action is "Close listing" (`DELETE /listings/:ref`, the same
- * `withdrawListing` mutator `PlacesSection`'s owner-delete button uses), not
- * "Transfer or close" as the source design's copy has it. This is a real,
- * permanent scope gap versus that design, not an oversight — flagged here for
- * the maintainer rather than silently downgraded.
- */
-function ListingDependencyRow({
-  listing,
-}: {
-  listing: AccountDependencyListing;
-}) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { withdrawListing } = useDirectoryListingsActions();
-  const [confirming, setConfirming] = useState(false);
-
-  return (
-    <>
-      <li className={styles.dependencyRow}>
-        <span>{listing.name}</span>
-        <Button variant="ghost" size="sm" onClick={() => setConfirming(true)}>
-          {t("members:profile.accountData.stepAway.dependency.closeCta")}
-        </Button>
-      </li>
-      <ConfirmDialog
-        open={confirming}
-        onClose={() => setConfirming(false)}
-        onConfirm={() => {
-          withdrawListing(listing.ref);
-          setConfirming(false);
-          showToast(
-            t("members:profile.accountData.stepAway.dependency.closedToast"),
-            "info",
-          );
-        }}
-        title={t(
-          "members:profile.accountData.stepAway.dependency.closeConfirm.title",
-          { name: listing.name },
-        )}
-        description={t(
-          "members:profile.accountData.stepAway.dependency.closeConfirm.body",
-        )}
-        tone="destructive"
-      />
-    </>
-  );
-}
-
-/**
  * "Hide me" (deactivate, reversible) / "Erase me" (deletion-request, gated).
- * Each action sits behind a `ConfirmDialog`. "Erase me" is DISABLED — not
- * hidden — while `useAccountDependencies` still reports any owned communities
- * or live listings, wired to that hook's live result (never a hardcoded
- * flag): a community can't exist without an owner, so this precondition is
- * real, and each dependency row below carries its own real remedy.
+ * Each action sits behind a `ConfirmDialog`. "Erase me" stays visible and
+ * DISABLED while `useAccountDependencies` still reports any owned communities
+ * or live listings, wired to that hook's live result: a community can't
+ * exist without an owner, so this precondition is real, and each dependency
+ * row below carries its own real remedy.
  */
 export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
   const { t } = useTranslation();
@@ -217,7 +165,7 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
   const [cancelling, setCancelling] = useState(false);
 
   // On mount, surface any already-pending deletion request instead of the
-  // step-away actions — mirrors `DeleteAccountSection`'s equivalent check.
+  // step-away actions. Mirrors `DeleteAccountSection`'s equivalent check.
   useEffect(() => {
     let active = true;
     getDeletionRequest()
@@ -254,7 +202,7 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
     }
   }
 
-  // No password is collected or sent — auth is OAuth-only, so there is
+  // No password is collected or sent: auth is OAuth-only, so there is
   // nothing to verify one against. The real step-up is a Google OAuth round
   // trip (`beginReauth`, see `useReauthToken.ts`): if no fresh token is
   // cached yet, this redirects away instead of proceeding, and the member

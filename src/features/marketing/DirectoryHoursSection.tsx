@@ -109,9 +109,16 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
           <HoursStatusChip place={place} venueNow={venueNow} />
         )}
       </div>
-      {/* Optional on the listing — an empty <p> here left a stray 18px gap
-          under every heading that had no note to carry. */}
-      {place.hoursNote && <p className={s.subLine}>{place.hoursNote}</p>}
+      {/* Optional on the listing, and skipped for an appointment-only
+          listing specifically: `place.hoursNote` prints again verbatim as
+          the structured card row below (the apptNote block, next to the
+          freshness stamp), so a lead paragraph here would say it twice.
+          Every other state has nothing under the heading that repeats it,
+          which is also why an empty <p> here used to leave a stray 18px
+          gap under every heading that had no note to carry. */}
+      {place.hoursNote && !isAppointmentOnly && (
+        <p className={s.subLine}>{place.hoursNote}</p>
+      )}
       {isTemporarilyClosed && (
         <p className={s.hoursStateNote}>
           {t(

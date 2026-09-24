@@ -41,7 +41,11 @@ export function ListingEditorSectionNav({
             <li key={section.id}>
               <button
                 type="button"
-                className={[styles.navItem, isActive && styles.navItemOn]
+                className={[
+                  styles.navItem,
+                  section.key === "dangerZone" && styles.navItemDanger,
+                  isActive && styles.navItemOn,
+                ]
                   .filter(Boolean)
                   .join(" ")}
                 aria-current={isActive ? "true" : undefined}

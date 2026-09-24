@@ -4,19 +4,14 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  /* Two columns at most: each track is at least half the row (minus the
+     12px gap), so the four narrow cells (sessions, fees, small print,
+     availability) sit two by two, and drop to one column under 472px. */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(max(230px, calc((100% - 12px) / 2)), 1fr)
+  );
   gap: 12px;
-  container: practical-grid / inline-size;
-}
-
-/* Four narrow cells come first (sessions, fees, small print,
-   availability). With 230px columns and 12px gaps the grid holds three
-   columns from 714px (3 x 230 + 2 x 12) to 955px, which leaves
-   availability alone on its row: let it take the whole row there. */
-@container practical-grid (min-width: 714px) and (max-width: 955px) {
-  .availabilityCell {
-    grid-column: 1 / -1;
-  }
 }
 
 /* ── Cell ── */

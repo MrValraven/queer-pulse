@@ -24,6 +24,11 @@ export function EditProfilePage() {
   const cancelEditingRef = useRef(cancelEditing);
   // Tracks that this page is the one that opened the edit session.
   const openedRef = useRef(false);
+  // Set once "Save and leave" has saved. The leave that follows then skips the
+  // Discard-style rollback, whose `cancelEditing` was captured before the save
+  // and would reset the shared draft to the pre-save profile. The next edit
+  // clears it.
+  const hasSavedForLeaveRef = useRef(false);
 
   const hasUnsavedChanges = changed.size > 0;
 
@@ -60,13 +65,21 @@ export function EditProfilePage() {
     active: hasUnsavedChanges,
     confirmMessage: t("settings:editProfile.leaveConfirm"),
     onConfirmLeave: () => {
+      if (hasSavedForLeaveRef.current) {
+        hasSavedForLeaveRef.current = false;
+        return;
+      }
       cancelEditing();
       setChanged(new Set());
       setSavedSections(null);
     },
+    // "Save and leave" is offered whenever the save bar's Save button is
+    // enabled, i.e. while no save is already in flight.
+    onSaveAndLeave: isSaving ? undefined : saveAndLeave,
   });
 
   function markChanged(section: ProfileSection) {
+    hasSavedForLeaveRef.current = false;
     setChanged((prev) => {
       const next = new Set(prev);
       next.add(section);
@@ -75,14 +88,29 @@ export function EditProfilePage() {
     setSavedSections(null);
   }
 
-  async function handleSave() {
+  // The one save routine behind both the save bar and "Save and leave". True
+  // only when the profile saved; the unmount cleanup below clears the timer.
+  async function handleSave(): Promise<boolean> {
     const sections = [...changed];
-    const ok = await save();
-    if (!ok) return; // provider.saveError surfaces in the save bar
+    const isSaved = await save();
+    if (!isSaved) return false; // provider.saveError surfaces in the save bar
     setSavedSections(sections);
     setChanged(new Set());
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setSavedSections(null), 6000);
+    return true;
+  }
+
+  async function saveAndLeave(): Promise<boolean> {
+    const isSaved = await handleSave();
+    if (isSaved) {
+      hasSavedForLeaveRef.current = true;
+      // `save` already closed the provider session. Forgetting it here stops
+      // the unmount cleanup from running a `cancelEditing` captured before the
+      // save; if the page renders again first, the effect above reopens one.
+      openedRef.current = false;
+    }
+    return isSaved;
   }
 
   function handleDiscard() {

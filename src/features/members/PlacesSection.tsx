@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -37,10 +38,23 @@ export function PlacesSection({
   const { showToast } = useToast();
   const {
     submitted,
-    withdrawListing,
+    deleteListing,
     isError: hasOwnListingsFetchFailed,
     refetch: refetchOwnListings,
   } = useDirectoryListings();
+  // A successful delete unmounts the card that held the Delete button, so the
+  // flow's focus restore has nowhere to land and focus drops to <body>. Each
+  // delete bumps this count, and the effect below then focuses the heading, or
+  // the section itself when that was the last place and the heading is gone.
+  // It runs after the commit that removed the card, so nothing takes it back.
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [deletedCount, setDeletedCount] = useState(0);
+  useEffect(() => {
+    if (deletedCount === 0) return;
+    // preventScroll: a mouse user stays where they were in the grid.
+    (headingRef.current ?? sectionRef.current)?.focus({ preventScroll: true });
+  }, [deletedCount]);
   // Visitor source: demo → static registry, live → GET /directory/by-member/:slug.
   const visitorListings = useMemberListings(memberSlug);
   const visitorPlaces = visitorListings.places;
@@ -97,18 +111,30 @@ export function PlacesSection({
   const canManage = (entry: MemberPlace) => Boolean(entry.ref) && !demoMode;
   // Deleting a listing stays with its owner, so a co-managed place is offered
   // no delete at all rather than one that would be refused.
+  //
+  // The handler awaits the server. The toast waits for its answer, and a
+  // failure is rethrown so the delete flow stays open with its inline error.
   const removeHandler = (entry: MemberPlace) => {
     if (!canManage(entry) || entry.managementRole === "co_manager") {
       return undefined;
     }
-    return () => {
-      withdrawListing(entry.ref as string);
-      showToast(t("members:places.deleted"), "info");
+    return async () => {
+      await deleteListing(entry.ref as string);
+      showToast(
+        t("members:places.deletedNamed", { name: entry.place.name }),
+        "success",
+      );
+      setDeletedCount((previousCount) => previousCount + 1);
     };
   };
 
   return (
-    <section id="places" className={`${styles.section} wrap`}>
+    <section
+      id="places"
+      ref={sectionRef}
+      tabIndex={-1}
+      className={`${styles.section} wrap`}
+    >
       {/* Ownership above co-management: being handed a business is the heavier
           ask of the two, so it is answered first. */}
       {isSelf && <OwnerOfferInbox />}
@@ -139,7 +165,7 @@ export function PlacesSection({
       ) : (
         <>
           <div className={styles.head}>
-            <h2 className={styles.title}>
+            <h2 ref={headingRef} tabIndex={-1} className={styles.title}>
               {isSelf ? (
                 <Translation
                   i18nKey="members:places.selfTitle"

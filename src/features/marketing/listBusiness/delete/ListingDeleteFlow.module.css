@@ -1,0 +1,191 @@
+/* ListingDeleteFlow: body and footer spacing inside the shared Modal. The
+   dialog chrome (scrim, head, scroll, bottom sheet on mobile) is Modal's own.
+   Tokens only. */
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-block: 4px 8px;
+}
+
+.stepHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-18);
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+.lead {
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* What goes */
+.lossList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 14px;
+  list-style: none;
+  /* color-mix on --danger, which flips in dark mode; --danger-rgb stays on
+     the light-theme channels there, so an rgba() tint would vanish. */
+  border: 1px solid color-mix(in srgb, var(--danger) 22%, transparent);
+  border-radius: var(--radius-14);
+  background: color-mix(in srgb, var(--danger) 4%, transparent);
+}
+
+.lossItem,
+.keptNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.keptNote {
+  margin: 0;
+  color: var(--ink-60);
+}
+
+.lossIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--ink-60);
+}
+
+.noUndo {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+/* Gentler exits (owner only) */
+.gentler {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--wash);
+}
+
+.gentlerHeading {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.gentlerOption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* Button is nowrap by default; these labels are long enough (PT) to overflow
+   a 320px screen, so they wrap and stay inside the box. */
+.gentlerOption .gentlerButton {
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.3;
+  text-align: start;
+}
+
+.gentlerDetail {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Acknowledge */
+.checkGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.checkGroup > .lead {
+  margin-bottom: 2px;
+}
+
+.checkRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.checkRow:has(.checkbox:checked) {
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+.checkbox {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--danger);
+  cursor: pointer;
+}
+
+/* Reason (moderator only) */
+.counter {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+/* Type the name */
+.nameToType {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-10);
+  background: var(--wash);
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-strong);
+  /* Keep doubled or trailing spaces visible: the match is exact, so a name
+     with two spaces must look like it has two. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Footer */
+.footHint {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.footPrimary {
+  margin-inline-start: auto;
+}

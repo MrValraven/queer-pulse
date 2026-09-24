@@ -59,6 +59,7 @@ export function useDeckAutosave({
   // function and the CURRENT draft rather than whatever was current when
   // they last ran (or, for the flush, when its listener was registered).
   const saveDraftRef = useRef(saveDraft);
+  const latestDraftRef = useRef(draft);
   const flushRef = useRef<() => void>(() => {});
 
   // Declared FIRST on purpose: effects run in declaration order within a
@@ -67,6 +68,7 @@ export function useDeckAutosave({
   // render, which is what "latest value" means here.
   useEffect(() => {
     saveDraftRef.current = saveDraft;
+    latestDraftRef.current = draft;
     flushRef.current = () => {
       if (!deckId) return;
       const pendingDraft = draft;
@@ -83,6 +85,10 @@ export function useDeckAutosave({
   useEffect(() => {
     if (!deckId) return;
     if (draftsEqual(debouncedDraft, lastSaved)) return;
+    // The live draft is already saved: the Save button or "Save and leave"
+    // sent it while the debounce still held an older draft, and sending that
+    // older one now would roll the deck back to it.
+    if (draftsEqual(latestDraftRef.current, lastSaved)) return;
     const inFlightDraft = inFlightDraftRef.current;
     if (inFlightDraft && draftsEqual(debouncedDraft, inFlightDraft)) return;
     inFlightDraftRef.current = debouncedDraft;

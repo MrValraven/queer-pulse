@@ -8,6 +8,11 @@ import {
 import type { SpecialtyTone, TherapistView } from "./therapistView";
 import { THERAPIST_EDIT_TARGETS } from "./therapistEditLinks.data";
 import { TherapistEditLink } from "./TherapistEditLink";
+import {
+  CONTEXT_OPTIONS,
+  pickDisplayText,
+  WHO_FOR_OPTIONS,
+} from "./therapistPickOptions";
 import styles from "./TherapistSections.module.css";
 
 const BULLET_CLASS: Record<SpecialtyTone, string | undefined> = {
@@ -27,8 +32,9 @@ export function TherapistSpecialties({ view }: { view: TherapistView }) {
     view.whoFor.length > 0 ||
     view.contexts.length > 0;
   if (!hasContent) return null;
-  // Who-for and contexts live in the editor's Approach chapter, apart from
-  // the specialty groups: one link for them, on whichever shows first.
+  // Who-for and contexts share a card in the editor's Approach chapter, the
+  // one after the specialty groups: one link for them, on whichever shows
+  // first.
   const audienceEditLink = (
     <TherapistEditLink
       target={THERAPIST_EDIT_TARGETS.whoFor}
@@ -78,7 +84,7 @@ export function TherapistSpecialties({ view }: { view: TherapistView }) {
               tone="hi"
               hasCheck
             >
-              {audience}
+              {pickDisplayText(WHO_FOR_OPTIONS, audience, t)}
             </TherapistChip>
           ))}
           {audienceEditLink}
@@ -92,7 +98,7 @@ export function TherapistSpecialties({ view }: { view: TherapistView }) {
           <TherapistChipRow>
             {view.contexts.map((context, contextIndex) => (
               <TherapistChip key={`${context}-${contextIndex}`}>
-                {context}
+                {pickDisplayText(CONTEXT_OPTIONS, context, t)}
               </TherapistChip>
             ))}
             {view.whoFor.length === 0 && audienceEditLink}

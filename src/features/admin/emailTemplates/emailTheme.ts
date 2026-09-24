@@ -1,7 +1,7 @@
 import type { Language } from "../../../shared/i18n/types";
 
-/** Shared by every email design. Colours and type live in each design file
- *  (`emailDesignCurrent.ts` and its siblings). */
+/** The brand name in the email's chrome. Colours and type live in
+ *  `emailDesign.ts`. */
 export const EMAIL_WORDMARK = "QueerPulse";
 
 /** The public site, for links inside an email's own chrome (footers). Fixed on

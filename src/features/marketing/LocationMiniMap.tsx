@@ -28,8 +28,8 @@ const PIN_CLASS = s.pickerPin ?? "";
  * card. Reuses the warm-recoloured Lisbon style (shared/components/map/siteMapStyle.ts) and the
  * picker pin, so it matches every other map in the app. Interactive (drag +
  * zoom buttons) but with scroll-zoom off, so it never traps the page scroll
- * while the detail sidebar is sticky. The pin is fixed — this shows a location,
- * it doesn't set one (that's LocationPickerMap's job).
+ * as a reader scrolls past it. The pin is fixed: this shows a location, and
+ * setting one is LocationPickerMap's job.
  */
 export function LocationMiniMap({
   latitude,

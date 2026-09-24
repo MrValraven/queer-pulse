@@ -363,6 +363,7 @@ export const shared: Catalog = {
   "leaveConfirm.title": "Sair sem guardar?",
   "leaveConfirm.leave": "Sair",
   "leaveConfirm.stay": "Continuar a editar",
+  "leaveConfirm.saveAndLeave": "Guardar e sair",
 
   // SaveButton — visible/aria label for the bookmark toggle
   "saveButton.save": "Guardar",

@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FormEvent,
 } from "react";
@@ -84,6 +85,9 @@ export function DeleteAccountSection({
   const [flowOpen, setFlowOpen] = useState(false);
   const [pending, setPending] = useState<DeletionRequest | null>(null);
   const [cancelling, setCancelling] = useState(false);
+  // Where focus lands after the dependency gate deletes its last listing
+  // blocker and unmounts with it.
+  const pageTitleRef = useRef<HTMLHeadingElement>(null);
 
   // Erasure strands anything only this member can hand over. Fail closed:
   // while the two sources are still resolving, treat erasure as blocked rather
@@ -177,7 +181,7 @@ export function DeleteAccountSection({
 
   return (
     <>
-      <h1 className={styles.pageTitle}>
+      <h1 ref={pageTitleRef} tabIndex={-1} className={styles.pageTitle}>
         <Translation
           i18nKey="settings:deleteAccount.page.title"
           components={{ em: <em /> }}
@@ -216,6 +220,7 @@ export function DeleteAccountSection({
         <AccountDependencyGate
           communities={dependencies.communities}
           listings={dependencies.listings}
+          fallbackFocusRef={pageTitleRef}
         />
       )}
 

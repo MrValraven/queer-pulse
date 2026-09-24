@@ -38,7 +38,7 @@
 
 /* The body of a live listing is one big link to its directory page, mirroring
    the directory card. `display: contents` keeps the card's own flex column and
-   the photo's negative-margin bleed intact — the anchor draws no box of its
+   the photo's negative-margin bleed intact. The anchor draws no box of its
    own, it only carries the click target. */
 .bodyLink {
   display: contents;
@@ -46,7 +46,7 @@
   text-decoration: none;
 }
 /* A listing still in review has no public page to open, so its card isn't
-   clickable — drop the directory card's pointer cursor and hover lift rather
+   clickable. Drop the directory card's pointer cursor and hover lift rather
    than promise a click that goes nowhere. The class is doubled to outrank
    `.card:hover` from `DirectoryPage.module.css` regardless of the order the
    two CSS modules land in the bundle. */
@@ -197,24 +197,19 @@
     color: var(--danger-ink);
   }
 }
-/* Inline "delete this listing?" confirm — replaces the owner bar while armed. */
-.confirm {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.07);
-}
-.confirmText {
-  font-size: var(--text-13);
-  color: var(--text-strong);
-  margin: 0;
-  flex: 1 1 200px;
-}
-.confirmActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* The owner actions are drawn as bare 13px text, about 18px tall, which is
+   too small for a thumb, and Delete now opens the delete flow. On touch each
+   action grows to the --tap-min floor. The text stays centred in the taller
+   box, so the row keeps its shared baseline and a mouse user sees no change.
+   The link is inline, so it becomes an inline flex box to take a min-height. */
+@media (pointer: coarse) {
+  .quickEditBtn,
+  .deleteBtn {
+    min-height: var(--tap-min);
+  }
+  .editLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
 }

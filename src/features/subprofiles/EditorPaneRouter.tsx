@@ -6,7 +6,11 @@ import {
   KIND_PANE_LEDE_KEY,
   PANE_HEADER,
 } from "./editorPaneHeaders.data";
-import { sectionPaneKey, type EditorPaneKey } from "./editorRail.data";
+import {
+  sectionPaneKey,
+  sectionsInPageBlocks,
+  type EditorPaneKey,
+} from "./editorRail.data";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SubprofileIdentityFields } from "./SubprofileIdentityFields";
 import { SubprofilePresenceFields } from "./SubprofilePresenceFields";
@@ -58,7 +62,13 @@ export function EditorPaneRouter({
     KIND_PANE_LEDE_KEY[subprofile.kind]?.[pane] ??
     header?.ledeKey ??
     CONTENT_PANE_LEDE_KEY;
-  const activeSection = subprofile.sections.find(
+  // A section edited inside Page blocks (a therapist's specialisms) gets no
+  // pane of its own here.
+  const sectionsInBlocks = sectionsInPageBlocks(subprofile.kind);
+  const paneSections = subprofile.sections.filter(
+    (section) => !sectionsInBlocks.has(sectionPaneKey(section.section)),
+  );
+  const activeSection = paneSections.find(
     (section) => sectionPaneKey(section.section) === pane,
   );
 
@@ -141,7 +151,7 @@ export function EditorPaneRouter({
         <SubprofileSkinBlocksEditor />
       </div>
 
-      {subprofile.sections.map((section) => (
+      {paneSections.map((section) => (
         <div
           key={section.section}
           hidden={pane !== sectionPaneKey(section.section)}

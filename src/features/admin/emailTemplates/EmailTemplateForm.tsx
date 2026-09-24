@@ -49,16 +49,23 @@ export function EmailTemplateForm({
   const createTemplate = useCreateEmailTemplate();
   const updateTemplate = useUpdateEmailTemplate();
   const isSaving = createTemplate.isPending || updateTemplate.isPending;
+  // Set while "Save and leave" runs and kept once it succeeds: the visitor
+  // asked to go somewhere else, so the redirect to a newly created template's
+  // URL would race the guard's own navigation and could strand them here.
+  // Cleared again when the save fails and they stay.
+  const isLeavingAfterSaveRef = useRef(false);
 
   useUnsavedChangesGuard({
     active: isDirty,
     confirmMessage: t("admin:emailTemplates.editor.leaveConfirm"),
+    // Offered whenever the Save button is enabled, i.e. no save in flight.
+    onSaveAndLeave: isSaving ? undefined : saveAndLeave,
   });
 
   // Declared AFTER the guard: its effect disarms first once the save clears
   // `isDirty`, so moving to the new template's URL never prompts.
   useEffect(() => {
-    if (createdId && !isDirty) {
+    if (createdId && !isDirty && !isLeavingAfterSaveRef.current) {
       void navigate(`${routes.adminEmailTemplateEdit}/${createdId}`, {
         replace: true,
       });
@@ -72,15 +79,29 @@ export function EmailTemplateForm({
     if (saved && saved.id !== templateId) setCreatedId(saved.id);
   }
 
-  function save(shouldCreateNew = false) {
+  /** Saves the draft (as a new template when asked) and resolves whether it
+   *  landed. A failure fills the error banner and resolves false. */
+  async function save(shouldCreateNew = false): Promise<boolean> {
     const body = toWriteBody(draft);
-    const callbacks = {
-      onSuccess: handleSaved,
-      onError: (error: unknown) => setSaveError(classifySaveError(error)),
-    };
-    if (templateId && !shouldCreateNew)
-      updateTemplate.mutate({ id: templateId, body }, callbacks);
-    else createTemplate.mutate(body, callbacks);
+    let saved: EmailTemplateAdminDTO | undefined;
+    try {
+      saved =
+        templateId && !shouldCreateNew
+          ? await updateTemplate.mutateAsync({ id: templateId, body })
+          : await createTemplate.mutateAsync(body);
+    } catch (error) {
+      setSaveError(classifySaveError(error));
+      return false;
+    }
+    handleSaved(saved);
+    return true;
+  }
+
+  async function saveAndLeave(): Promise<boolean> {
+    isLeavingAfterSaveRef.current = true;
+    const isSaved = await save();
+    if (!isSaved) isLeavingAfterSaveRef.current = false;
+    return isSaved;
   }
 
   const content = draft.locales[activeLocale];
@@ -90,7 +111,7 @@ export function EmailTemplateForm({
       {saveError && (
         <EmailTemplateSaveErrorBanner
           error={saveError}
-          onSaveAsNew={() => save(true)}
+          onSaveAsNew={() => void save(true)}
         />
       )}
       <EmailTemplateMetaFields draft={draft} onChange={draftState.setMeta} />
@@ -137,7 +158,7 @@ export function EmailTemplateForm({
           variant="primary"
           size="md"
           disabled={isSaving}
-          onClick={() => save()}
+          onClick={() => void save()}
         >
           {t(
             isSaving

@@ -66,6 +66,86 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "listing-page-essentials-first",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("listing-page-essentials-first"),
+      },
+      {
+        id: "editor-savebar-above-tab-bar",
+        category: "fix",
+        date: "24 Sep 2026",
+        ...entryKeys("editor-savebar-above-tab-bar"),
+      },
+      {
+        id: "therapist-editor-refined-fields",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("therapist-editor-refined-fields"),
+      },
+      {
+        id: "listing-page-alignment",
+        category: "fix",
+        date: "24 Sep 2026",
+        ...entryKeys("listing-page-alignment"),
+      },
+      {
+        id: "directory-map-full-width",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("directory-map-full-width"),
+      },
+      {
+        id: "save-and-leave-editor",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("save-and-leave-editor"),
+      },
+      {
+        id: "trade-and-service-professions",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("trade-and-service-professions"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "therapist-topics-inline-editor",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("therapist-topics-inline-editor"),
+      },
+      {
+        id: "page-change-scroll-flash",
+        category: "fix",
+        date: "24 Sep 2026",
+        ...entryKeys("page-change-scroll-flash"),
+      },
+      {
+        id: "listing-delete-danger-zone",
+        category: "feature",
+        date: "24 Sep 2026",
+        ...entryKeys("listing-delete-danger-zone"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "email-template-masthead-design",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("email-template-masthead-design"),
+      },
+      {
+        id: "persona-editor-rail-collapse",
+        category: "improvement",
+        date: "24 Sep 2026",
+        ...entryKeys("persona-editor-rail-collapse"),
+      },
+      {
         id: "therapist-lived-languages-select",
         category: "improvement",
         date: "24 Sep 2026",

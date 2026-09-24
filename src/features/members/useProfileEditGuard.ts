@@ -1,4 +1,5 @@
 import { useEffect, useRef, type RefObject } from "react";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
@@ -6,7 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
  * Guards the profile editor against losing unsaved changes:
  *  - in-app navigation and hard unload (tab close / refresh) come from the
  *    shared `useUnsavedChangesGuard`, which prompts through the app's leave
- *    dialog,
+ *    dialog and offers "Save and leave" through the provider's `save`,
  *  - restores focus to the Edit CTA when leaving edit mode.
  */
 export function useProfileEditGuard({
@@ -26,6 +27,21 @@ export function useProfileEditGuard({
   scrollBeforeEdit: RefObject<number | null>;
 }) {
   const { t } = useTranslation();
+  const { save, isSaving } = useProfileEdit();
+  // Set once "Save and leave" has saved. The leave that follows then skips
+  // `cancelEditing`, which was captured before the save and would reset the
+  // shared draft to the pre-save profile, where the next "takes effect right
+  // away" toggle (useDeferredDraftSave) would persist it. A new edit session
+  // clears it (see the effect below).
+  const hasSavedForLeaveRef = useRef(false);
+
+  const saveAndLeave = async (): Promise<boolean> => {
+    // `save` validates, persists and closes the edit session; on failure it
+    // sets `saveError`, which the sticky save bar shows once the dialog closes.
+    const isSaved = await save();
+    if (isSaved) hasSavedForLeaveRef.current = true;
+    return isSaved;
+  };
 
   // In-app push/replace while dirty asks through the app's leave dialog and
   // runs `cancelEditing` before navigating on Leave; tab close / refresh gets
@@ -33,7 +49,17 @@ export function useProfileEditGuard({
   useUnsavedChangesGuard({
     active: isEditing && isDirty,
     confirmMessage: t("members:profileEdit.discardConfirm"),
-    onConfirmLeave: cancelEditing,
+    onConfirmLeave: () => {
+      if (hasSavedForLeaveRef.current) {
+        hasSavedForLeaveRef.current = false;
+        return;
+      }
+      cancelEditing();
+    },
+    // "Save and leave" is offered whenever the edit bar's Save button is
+    // enabled. That button also needs a dirty draft, which `active` already
+    // requires, so the one extra condition is no save in flight.
+    onSaveAndLeave: isSaving ? undefined : saveAndLeave,
   });
 
   // Leaving edit mode (save, discard, "Go back") puts the member back exactly
@@ -54,6 +80,7 @@ export function useProfileEditGuard({
   // the member never chose to be looking at.
   const wasEditing = useRef(false);
   useEffect(() => {
+    if (isEditing) hasSavedForLeaveRef.current = false;
     if (wasEditing.current && !isEditing) {
       document.getElementById("profileEditCta")?.focus({ preventScroll: true });
       const offset = scrollBeforeEdit.current;

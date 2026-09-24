@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMessageCircle } from "react-icons/fi";
 import { Button, LoadErrorState } from "../../shared/components/ui";
@@ -12,7 +11,7 @@ import type {
   ListingContactUnavailableReason,
   ListingEnquiryLimitReason,
 } from "./api/listingEnquiries.api";
-import { DirectoryEnquiryModal } from "./DirectoryEnquiryModal";
+import { useDirectoryVisitCard } from "./directoryVisitCardContext";
 import styles from "./DirectoryMessageBusiness.module.css";
 
 interface Props {
@@ -106,6 +105,11 @@ function formatClearsIn(clearsAt: string, fmt: Formatters): string | null {
  * route's own throttle, which this read cannot see at all. So the 429 is still
  * handled, and the reason it carries is still remembered for the rest of the
  * visit. The read closes the door early; it is not trusted to be the only lock.
+ *
+ * The composer, and the 429's reason, live in `DirectoryVisitCardProvider`:
+ * this block sits in the visit card, which changes column when the page
+ * crosses the two-column threshold, and the draft a member is typing has to
+ * survive that move.
  */
 export function DirectoryMessageBusiness({
   place,
@@ -115,10 +119,11 @@ export function DirectoryMessageBusiness({
   const { t } = useTranslation();
   const fmt = useFormat();
   const { user } = useAuth();
-  const [isComposerOpen, setIsComposerOpen] = useState(false);
-  // The backend's own sentence from a 429 in this visit. Outranks the read's
-  // hint below, because it is the newer and more specific answer.
-  const [capReason, setCapReason] = useState<string | null>(null);
+  // `capReason` is the backend's own sentence from a 429 in this visit. It
+  // outranks the read's hint below, because it is the newer and more specific
+  // answer.
+  const { capReason, openComposer, enquiryTriggerRef } =
+    useDirectoryVisitCard();
 
   const isEnabled = !preview && !ownerRef && Boolean(user);
   const { contact, isLoading, isError, refetch } = useListingContact({
@@ -207,9 +212,10 @@ export function DirectoryMessageBusiness({
   return (
     <div className={styles.block}>
       <Button
+        ref={enquiryTriggerRef}
         variant="ghost"
         className={styles.messageBtn}
-        onClick={() => setIsComposerOpen(true)}
+        onClick={() => openComposer(contact.followUpAwaitsReply)}
         disabled={capNotice !== null}
       >
         <FiMessageCircle aria-hidden />
@@ -229,15 +235,6 @@ export function DirectoryMessageBusiness({
         <Link className={styles.threadLink} to={existingThreadHref}>
           {t("marketing:directory.detail.enquiry.existingThreadCta")}
         </Link>
-      )}
-      {isComposerOpen && (
-        <DirectoryEnquiryModal
-          slug={place.slug}
-          placeName={place.name}
-          followUpAwaitsReply={contact.followUpAwaitsReply}
-          onClose={() => setIsComposerOpen(false)}
-          onCapReached={setCapReason}
-        />
       )}
     </div>
   );

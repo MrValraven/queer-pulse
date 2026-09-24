@@ -15,7 +15,6 @@ import { EmailPreviewFrame } from "./editor/EmailPreviewFrame";
 import { EmailTextField } from "./editor/EmailTextField";
 import { EmailTemplateModeActions } from "./EmailTemplateModeActions";
 import { renderEmail } from "./renderEmail";
-import { useEmailDesign } from "./useEmailDesign";
 import styles from "./AdminEmailTemplates.module.css";
 
 interface EmailTemplateLocalePaneProps {
@@ -38,11 +37,9 @@ export function EmailTemplateLocalePane({
   onInsertToken,
 }: EmailTemplateLocalePaneProps) {
   const { t } = useTranslation();
-  const [emailDesign] = useEmailDesign();
   const previewHtml = useMemo(
-    () =>
-      renderEmail(content, sampleValuesFor(locale), locale, emailDesign).html,
-    [content, locale, emailDesign],
+    () => renderEmail(content, sampleValuesFor(locale), locale).html,
+    [content, locale],
   );
   const unknownTokens = unknownTokensIn(content, purpose);
   const onBlocksChange = (update: (blocks: EmailBlock[]) => EmailBlock[]) =>

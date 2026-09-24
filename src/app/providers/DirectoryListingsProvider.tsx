@@ -23,6 +23,10 @@ import { DirectoryListingsContext } from "./useDirectoryListingsActions";
  * `features/marketing/listBusiness/api/useDirectoryListings.ts`, so the
  * request fires when a reader mounts rather than on every route.
  *
+ * Two ways to remove a listing: `withdrawListing` is fire-and-forget and hides
+ * the ref at once; `deleteListing` (the multi-step `ListingDeleteFlow`) awaits
+ * the server and hides the ref only after it confirms, rejecting on failure.
+ *
  * The overlay stays app-wide deliberately: `addListing` is called on
  * /local/directory/list and `submitted` is read on /account/profile. Scope
  * this state to either route and a listing submitted on one stops appearing
@@ -34,14 +38,20 @@ export function DirectoryListingsProvider({
   children: ReactNode;
 }) {
   const { demoMode } = useDemoMode();
-  const { createListing, withdrawListing: withdrawMutation } =
-    useListingMutations();
+  const {
+    createListing,
+    withdrawListing: withdrawMutation,
+    deleteListing: deleteMutation,
+  } = useListingMutations();
+  // `mutateAsync` is stable across renders, so the callback below keeps its
+  // identity while the mutation's own status changes.
+  const { mutateAsync: deleteListingOnServer } = deleteMutation;
 
   // Demo: the full store. Live: session-local optimistic additions only.
   const [local, setLocal] = useState<PendingListing[]>([]);
   const [seq, setSeq] = useState(7);
-  // Live: refs withdrawn this session, so a server row disappears immediately
-  // (before the invalidated GET /listings/mine refetch lands).
+  // Live: refs withdrawn or deleted this session, so a server row disappears
+  // immediately (before the invalidated GET /listings/mine refetch lands).
   const [withdrawn, setWithdrawn] = useState<Set<string>>(() => new Set());
 
   const addListing = useCallback(
@@ -87,9 +97,25 @@ export function DirectoryListingsProvider({
     [demoMode, withdrawMutation],
   );
 
+  // Awaited, unlike withdrawListing: the ref is hidden only once the server
+  // confirms, so a failed delete leaves the listing in place and the rejection
+  // reaches the caller's own error UI.
+  const deleteListing = useCallback(
+    async (ref: string): Promise<void> => {
+      if (!demoMode) {
+        await deleteListingOnServer(ref);
+        setWithdrawn((previousRefs) => new Set(previousRefs).add(ref));
+      }
+      setLocal((previousListings) =>
+        previousListings.filter((listing) => listing.ref !== ref),
+      );
+    },
+    [demoMode, deleteListingOnServer],
+  );
+
   const value = useMemo(
-    () => ({ local, withdrawn, addListing, withdrawListing }),
-    [local, withdrawn, addListing, withdrawListing],
+    () => ({ local, withdrawn, addListing, withdrawListing, deleteListing }),
+    [local, withdrawn, addListing, withdrawListing, deleteListing],
   );
 
   return (

@@ -48,6 +48,10 @@ export interface ConfirmDialogProps {
    *  lands on (`OpenExternalConfirmDialog`'s "Go back"). Every other caller
    *  omits this and keeps the ordinary "first focusable" default. */
   initialFocus?: "cancel";
+  /** An optional third action, rendered as a primary button after Confirm and
+   *  disabled while `loading` (the leave dialog's "Save and leave"). Every
+   *  other caller omits it and keeps the two-button footer. */
+  extraAction?: { label: ReactNode; onClick: () => void };
 }
 
 /**
@@ -55,10 +59,10 @@ export interface ConfirmDialogProps {
  * click-out, focus-trap and focus-restore all come from `Modal`. Consolidates
  * the per-feature confirm modals (forum delete, admin remove/bulk-remove/
  * send-back, delete-conversation): title + optional description/children, an
- * optional reason textarea, and a Cancel + Confirm footer. The confirm button
- * takes the `danger` variant when `tone="destructive"`, and stays disabled
- * while `loading` or while a `required` reason is short of its
- * `minLength` (empty, by default).
+ * optional reason textarea, and a Cancel + Confirm footer (plus an optional
+ * `extraAction` after Confirm). The confirm button takes the `danger` variant
+ * when `tone="destructive"`, and stays disabled while `loading` or while a
+ * `required` reason is short of its `minLength` (empty, by default).
  *
  * Mount only while open (the caller gates on `open`, and `Modal`'s a11y setup
  * runs per open) — this component also returns `null` when closed as a guard.
@@ -76,6 +80,7 @@ export function ConfirmDialog({
   reason,
   children,
   initialFocus,
+  extraAction,
 }: ConfirmDialogProps) {
   const { t } = useTranslation();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
@@ -109,6 +114,15 @@ export function ConfirmDialog({
           >
             {confirmLabel ?? t("shared:confirmDialog.confirm")}
           </Button>
+          {extraAction && (
+            <Button
+              variant="primary"
+              onClick={extraAction.onClick}
+              disabled={loading}
+            >
+              {extraAction.label}
+            </Button>
+          )}
         </>
       }
     >

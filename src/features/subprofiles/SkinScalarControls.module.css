@@ -1,10 +1,6 @@
-/* Scalar controls of the chaptered therapist editor: the euro and count
-   inputs, the status segmented control and the text field's quote preview.
-
-   Specificity note: FormField styles any nested input with `.field input`
-   (0,1,1), which would stretch these compact inputs to full width. Every
-   input rule here is scoped as `.numberShell .numberInput` (0,2,0) so it wins
-   whether or not the input sits inside a FormField. */
+/* Scalar controls of the chaptered therapist editor: the shells of the euro
+   and count inputs (the inputs themselves draw on the field surface; see
+   SkinRefinedScalar.module.css) and the status segmented control. */
 
 /* ── Money and count inputs ──────────────────────────────────────────────── */
 .numberShell {
@@ -15,14 +11,16 @@
   max-width: 100%;
 }
 
-/* Shrink below their natural width so two money boxes and a joiner fit a
-   ~300px card on a 390px phone. */
+/* A fixed width, so a row of these sizes itself from the boxes (a
+   percentage here resolves to nothing inside a shrink-to-fit row and the
+   boxes collapse). `.numberShell`'s max-width still lets two money boxes and
+   a joiner shrink into a ~300px card on a 390px phone. */
 .moneyShell {
-  width: min(9rem, 100%);
+  width: 9rem;
 }
 
 .countShell {
-  width: min(6rem, 100%);
+  width: 6rem;
 }
 
 /* The € follows the amount, as on the public page ("60 €"): the digits sit
@@ -37,48 +35,6 @@
   font-size: var(--text-16);
   color: var(--ink-60);
   pointer-events: none;
-}
-
-/* One field height across the pane: the 48px box of FormField's inputs. */
-.numberShell .numberInput {
-  width: 100%;
-  min-width: 0;
-  height: 48px;
-  padding: 0 14px;
-  font-family: var(--sans);
-  /* >=16px so iOS Safari never zooms the viewport on focus. */
-  font-size: var(--text-16);
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: var(--radius-12);
-  outline: none;
-  transition:
-    border-color 0.22s var(--ease),
-    box-shadow 0.22s var(--ease),
-    background 0.22s var(--ease);
-}
-
-.moneyShell .numberInput {
-  padding-right: 32px;
-  text-align: right;
-}
-
-.numberShell .numberInput:focus {
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-plum-soft);
-  background: var(--paper);
-}
-
-.numberShell .numberInput:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-.numberShell .numberInput[aria-invalid="true"] {
-  border-color: var(--accent-ink);
 }
 
 /* ── Segmented status control ────────────────────────────────────────────── */
@@ -166,91 +122,7 @@ div.segmentedStacked {
   outline: 3px solid rgba(var(--amber-rgb), 0.25);
 }
 
-/* ── Text field and its quote preview ────────────────────────────────────── */
-/* Grows with its content; three rows at rest (16px type at a 1.6 line
-   height, plus padding and border). Browsers without `field-sizing` get the
-   same growth from useAutoGrowFallback. */
-.textField .autoGrow {
-  field-sizing: content;
-  min-height: calc(4.8em + 29px);
-  overflow-y: hidden;
-}
-
-/* An `isWrapping` text field: at rest the same 48px box as a single-line
-   input, growing a line at a time as a long value wraps. */
-.textField .wrapping {
-  field-sizing: content;
-  min-height: 48px;
-  padding: 11px 15px;
-  line-height: 1.4;
-  overflow-y: hidden;
-}
-
-.textField input.control {
-  height: 48px;
-}
-
-.preview {
-  margin: 12px 0 16px;
-  padding: 12px 14px;
-  border-radius: var(--radius-12);
-  background: rgba(var(--accent-rgb), 0.06);
-}
-
-.previewEyebrow {
-  margin: 0 0 4px;
-  font-size: var(--text-11);
-  font-weight: 600;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
-.previewQuote {
-  max-width: 52ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  font-weight: 300;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--text-strong);
-  text-wrap: pretty;
-  overflow-wrap: anywhere;
-}
-
-.previewQuote em {
-  font-style: italic;
-  color: var(--accent-ink);
-}
-
-:global([data-theme="dark"]) .previewQuote em {
-  color: var(--accent-soft);
-}
-
-/* A value the page would drop: the border and the line under the field go
-   amber. `.textField .control` out-specifies FormField's coral invalid
-   border. */
-.textField .control[aria-invalid="true"] {
-  border-color: var(--amber-ink);
-}
-
-.fieldWarning {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  margin-top: 4px;
-  font-weight: 600;
-  color: var(--amber-ink);
-}
-
-.fieldWarningIcon {
-  flex: none;
-  margin-top: 2px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .numberShell .numberInput,
   .toneDot {
     transition: none;
   }

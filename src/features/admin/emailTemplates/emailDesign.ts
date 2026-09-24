@@ -4,8 +4,8 @@ import { escapeHtml } from "./emailInlineMarkup";
 import { EMAIL_FOOTER, EMAIL_SITE_URL, EMAIL_WORDMARK } from "./emailTheme";
 
 /**
- * The Masthead design: the site's plum-panel pattern carried into email. A
- * plum band with the live-text wordmark tops a paper card, the body sits on
+ * The email design: the site's plum-panel pattern carried into email. A plum
+ * masthead with the live-text wordmark tops a paper card, the body sits on
  * paper with a large Fraunces headline, and a plum-deep band closes the card.
  *
  * Email clients cannot read CSS custom properties, so every colour is a hex
@@ -17,7 +17,7 @@ import { EMAIL_FOOTER, EMAIL_SITE_URL, EMAIL_WORDMARK } from "./emailTheme";
  * 22, 34. The 32px gutter reads as generous at 600px and still leaves a
  * 287px measure on a 375px phone, so no media query is needed.
  */
-const MASTHEAD_THEME: EmailDesignTheme = {
+const DESIGN_THEME: EmailDesignTheme = {
   colors: {
     page: "#f7f3ee", // --cream
     card: "#ffffff", // --paper
@@ -49,7 +49,7 @@ const MASTHEAD_THEME: EmailDesignTheme = {
 };
 
 /** Chrome colours the block theme does not name. */
-const MASTHEAD_CHROME = {
+const CHROME_COLORS = {
   plum: "#2d1b3d", // --plum
   plumDeep: "#241430", // --plum-deep
   coral: "#e8775a", // --accent, a fill only (the pulse dot, a divider dot)
@@ -89,7 +89,7 @@ function wordmarkTextHtml(sizePx: number): string {
   const italicPart = hasItalicPart
     ? `<em style="font-style:italic;">${escapeHtml(WORDMARK_ITALIC_PART)}</em>`
     : "";
-  return `<span style="font-family:${MASTHEAD_THEME.fonts.serif};font-size:${sizePx}px;line-height:1;font-weight:600;letter-spacing:-0.01em;color:${MASTHEAD_CHROME.cream};">${escapeHtml(romanPart)}${italicPart}</span>`;
+  return `<span style="font-family:${DESIGN_THEME.fonts.serif};font-size:${sizePx}px;line-height:1;font-weight:600;letter-spacing:-0.01em;color:${CHROME_COLORS.cream};">${escapeHtml(romanPart)}${italicPart}</span>`;
 }
 
 /** The logo in live text: the coral pulse dot, a gap, then the wordmark. */
@@ -100,7 +100,7 @@ function lockupHtml(
 ): string {
   return [
     '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>',
-    `<td valign="middle" style="padding:2px 0 0;">${dotHtml(MASTHEAD_CHROME.coral, dotSizePx)}</td>`,
+    `<td valign="middle" style="padding:2px 0 0;">${dotHtml(CHROME_COLORS.coral, dotSizePx)}</td>`,
     `<td width="${gapPx}" style="width:${gapPx}px;font-size:0;line-height:0;">&nbsp;</td>`,
     `<td valign="middle">${wordmarkTextHtml(wordmarkSizePx)}</td>`,
     "</tr></table>",
@@ -108,24 +108,24 @@ function lockupHtml(
 }
 
 function mastheadRowHtml(): string {
-  const { plum } = MASTHEAD_CHROME;
+  const { plum } = CHROME_COLORS;
   return `<tr><td bgcolor="${plum}" style="padding:32px ${CARD_GUTTER_PX}px;background:${plum};border-radius:${CARD_RADIUS_PX}px ${CARD_RADIUS_PX}px 0 0;">${lockupHtml(10, 12, 26)}</td></tr>`;
 }
 
 /** Bottom padding is lighter because the last block brings its own gap. */
 function bodyRowHtml(bodyHtml: string): string {
-  const { colors, fonts } = MASTHEAD_THEME;
+  const { colors, fonts } = DESIGN_THEME;
   return `<tr><td bgcolor="${colors.card}" style="padding:48px ${CARD_GUTTER_PX}px 28px;background:${colors.card};font-family:${fonts.sans};color:${colors.ink};">${bodyHtml}</td></tr>`;
 }
 
 function footerLinkHtml(): string {
   const siteLabel = EMAIL_SITE_URL.replace(/^https?:\/\//, "");
-  return `<a href="${escapeHtml(EMAIL_SITE_URL)}" style="color:${MASTHEAD_CHROME.accentSoft};text-decoration:none;font-weight:600;">${escapeHtml(siteLabel)}</a>`;
+  return `<a href="${escapeHtml(EMAIL_SITE_URL)}" style="color:${CHROME_COLORS.accentSoft};text-decoration:none;font-weight:600;">${escapeHtml(siteLabel)}</a>`;
 }
 
 function footerRowHtml(language: Language): string {
-  const { plumDeep, creamMuted } = MASTHEAD_CHROME;
-  const textStyle = `font-family:${MASTHEAD_THEME.fonts.sans};font-size:13px;line-height:1.6;color:${creamMuted};`;
+  const { plumDeep, creamMuted } = CHROME_COLORS;
+  const textStyle = `font-family:${DESIGN_THEME.fonts.sans};font-size:13px;line-height:1.6;color:${creamMuted};`;
   return [
     `<tr><td bgcolor="${plumDeep}" style="padding:32px ${CARD_GUTTER_PX}px;background:${plumDeep};border-radius:0 0 ${CARD_RADIUS_PX}px ${CARD_RADIUS_PX}px;">`,
     lockupHtml(7, 8, 16),
@@ -136,7 +136,7 @@ function footerRowHtml(language: Language): string {
 }
 
 function cardHtml(bodyHtml: string, language: Language): string {
-  const { card } = MASTHEAD_THEME.colors;
+  const { card } = DESIGN_THEME.colors;
   return [
     `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="${card}" style="width:100%;max-width:600px;background:${card};border-radius:${CARD_RADIUS_PX}px;">`,
     mastheadRowHtml(),
@@ -148,12 +148,12 @@ function cardHtml(bodyHtml: string, language: Language): string {
 
 /** A centred 600px card on cream that goes fluid on phones. Table layout and
  *  inline styles only, so it survives a paste into Gmail, Outlook and Mail. */
-function wrapMastheadShell(
+function wrapInEmailShell(
   bodyHtml: string,
   subject: string,
   language: Language,
 ): string {
-  const { page } = MASTHEAD_THEME.colors;
+  const { page } = DESIGN_THEME.colors;
   return [
     "<!doctype html>",
     `<html lang="${language}">`,
@@ -174,9 +174,9 @@ function dividerDotsHtml(): string {
   const gapCell =
     '<td width="10" style="width:10px;font-size:0;line-height:0;">&nbsp;</td>';
   const dotColors = [
-    MASTHEAD_CHROME.plum,
-    MASTHEAD_CHROME.coral,
-    MASTHEAD_CHROME.jade,
+    CHROME_COLORS.plum,
+    CHROME_COLORS.coral,
+    CHROME_COLORS.jade,
   ];
   const dotCells = dotColors.map((color) => colorCellHtml(color, 6, 6, "50%"));
   return [
@@ -186,8 +186,8 @@ function dividerDotsHtml(): string {
   ].join("");
 }
 
-export const EMAIL_DESIGN_MASTHEAD: EmailDesignSpec = {
-  theme: MASTHEAD_THEME,
-  wrapShell: wrapMastheadShell,
+export const EMAIL_DESIGN: EmailDesignSpec = {
+  theme: DESIGN_THEME,
+  wrapShell: wrapInEmailShell,
   dividerHtml: dividerDotsHtml(),
 };

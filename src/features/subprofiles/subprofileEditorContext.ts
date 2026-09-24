@@ -56,8 +56,9 @@ export interface SubprofileEditorContextValue {
   saving: boolean;
   /** `dirty` and the meta fields pass their validation gates. */
   canSave: boolean;
-  /** Commit every dirty area in one fan-out; toasts a summary. */
-  saveAll: () => Promise<void>;
+  /** Commit every dirty area in one fan-out; toasts a summary. Resolves true
+   *  once nothing is left unsaved, false when a gate or any area failed. */
+  saveAll: () => Promise<boolean>;
   /** Reset every area back to its loaded baseline. */
   discardAll: () => void;
   /** Explicit escape hatch from the editor's normal seed-once row state:

@@ -12,7 +12,7 @@ export const DEMO_LATENCY_MS = 400;
 
 /** The suffix appended to every demo log line so a reader knows the "mutation"
  *  never touched the network. Kept in one place so the wording stays uniform. */
-const DEMO_LOG_SUFFIX = " (demo — no network)";
+const DEMO_LOG_SUFFIX = " (demo, no network)";
 
 export interface DemoAwareMutationFnConfig<Variables, Data> {
   /** Whether the app is in demo mode (`useDemoMode().demoMode`). */
@@ -20,7 +20,7 @@ export interface DemoAwareMutationFnConfig<Variables, Data> {
   /** How long the simulated demo round-trip sleeps. Defaults to
    *  {@link DEMO_LATENCY_MS}; pass `0` to resolve synchronously. */
   demoLatencyMs?: number;
-  /** Synthesizes the demo result from the variables — the value the mutation
+  /** Synthesizes the demo result from the variables: the value the mutation
    *  resolves with when there is no network (e.g. `{ ...row, status }`). */
   demoResult: (variables: Variables) => Data | Promise<Data>;
   /** The real network call, run only in live mode. */
@@ -34,7 +34,7 @@ export interface DemoAwareMutationFnConfig<Variables, Data> {
 
 /**
  * Collapses the `mutationFn` boilerplate every dual-mode admin mutation repeats:
- * in demo mode, sleep out {@link DEMO_LATENCY_MS}, log a `"... (demo — no
+ * in demo mode, sleep out {@link DEMO_LATENCY_MS}, log a `"... (demo, no
  * network)"` line, and return a synthesized result; in live mode, call the real
  * API. Returns the async `mutationFn` to hand to `useMutation` (or use
  * {@link useDemoAwareMutation}, which also gates the settle callbacks).
@@ -79,7 +79,7 @@ export interface DemoAwareMutationOptions<Data, Error, Variables, Context>
   extends
     Omit<UseMutationOptions<Data, Error, Variables, Context>, "mutationFn">,
     DemoAwareMutationFnConfig<Variables, Data> {
-  /** Runs on success in LIVE mode only — where the `invalidateQueries` that demo
+  /** Runs on success in LIVE mode only: where the `invalidateQueries` that demo
    *  mode skips belongs (its fixture never goes stale, so there is nothing to
    *  reconcile). Fires after any `onSuccess`. */
   onLiveSuccess?: UseMutationOptions<
@@ -90,7 +90,7 @@ export interface DemoAwareMutationOptions<Data, Error, Variables, Context>
   >["onSuccess"];
   /** Runs on error in LIVE mode only. Fires after any `onError`. */
   onLiveError?: UseMutationOptions<Data, Error, Variables, Context>["onError"];
-  /** Runs on settle in LIVE mode only — the live-gated place for
+  /** Runs on settle in LIVE mode only: the live-gated place for
    *  `invalidateQueries` when a mutation reconciles via `onSettled`
    *  (e.g. `useModAction`). Fires after any `onSettled`. */
   onLiveSettled?: UseMutationOptions<
@@ -108,11 +108,12 @@ export interface DemoAwareMutationOptions<Data, Error, Variables, Context>
  * before `invalidateQueries`.
  *
  * `onMutate`/`onError`/`onSuccess`/`onSettled` still run in BOTH modes (the
- * optimistic cache patch is demo mode's source of truth, so it must not be
- * skipped) — pass them as usual. Put the live-only invalidation in
+ * cache patch is demo mode's source of truth, so it must run there too), so
+ * pass them as usual. Put the live-only invalidation in
  * `onLiveSuccess`/`onLiveSettled`/`onLiveError` instead.
  *
- * `useSetListingStatus` and the near-identical `useRemoveListing` express as:
+ * `useSetListingStatus` (optimistic) and `useRemoveListing` (waits for the
+ * server) express as:
  * ```ts
  * // useSetListingStatus
  * return useDemoAwareMutation<
@@ -134,15 +135,18 @@ export interface DemoAwareMutationOptions<Data, Error, Variables, Context>
  *   },
  * });
  *
- * // useRemoveListing — identical shape, void data:
- * return useDemoAwareMutation<void, Error, RemoveListingVars, RemoveListingContext>({
+ * // useRemoveListing: void data, and a hard delete, so the row leaves the
+ * // cache only once the server confirms. No context and no rollback; its
+ * // caller shows the failure inline, so the global error toast is silenced.
+ * return useDemoAwareMutation<void, Error, RemoveListingVars>({
  *   demoMode,
+ *   meta: { silentError: true },
  *   demoResult: () => undefined,
  *   live: ({ row, reason }) => deleteListingAsModerator(row.ref, reason),
  *   logLabel: "admin.listing.remove",
  *   logContext: ({ row, reason }) => ({ ref: row.ref, reason }),
- *   onMutate: async ({ row }) => { ...optimistic drop, both modes... },
- *   onError: (_error, { row }, context) => { ...rollback, both modes... },
+ *   onMutate: async () => { ...cancelQueries, both modes... },
+ *   onSuccess: (_data, { row }) => { ...demo registry + drop the row, both modes... },
  *   onLiveSuccess: (_data, { row }) => {
  *     void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
  *     void queryClient.invalidateQueries({

@@ -8,8 +8,9 @@ export type TherapistEditChapter =
 /**
  * Where an owner's "Edit" link lands in the persona editor. `pane` becomes
  * `?pane=`, `chapter` becomes `?chapter=` (Page blocks only) and `field` becomes
- * `?field=`: the skinData dot path ("therapist.quote") or an identity or
- * presence field name ("avatar", "ctaLabel"). The editor ignores a `field` it
+ * `?field=`: the skinData dot path ("therapist.quote"), a section control's
+ * path ("section:specialisms") or an identity or presence field name
+ * ("avatar", "ctaLabel"). The editor ignores a `field` it
  * cannot jump to yet, so the link still opens the right pane and chapter.
  */
 export type TherapistEditTarget =
@@ -18,7 +19,6 @@ export type TherapistEditTarget =
       pane:
         | "identity"
         | "presence"
-        | "section:specialisms"
         | "section:credentials"
         | "section:gallery"
         | "publish";
@@ -54,7 +54,7 @@ export const THERAPIST_EDIT_TARGETS = {
   contactLinks: blocks("contact", "therapist.email"),
   // Sections
   approach: blocks("approach", "approach"),
-  specialties: { pane: "section:specialisms" },
+  specialties: blocks("approach", "section:specialisms"),
   credentials: { pane: "section:credentials" },
   gallery: { pane: "section:gallery" },
   whoFor: blocks("approach", "whoFor"),
@@ -80,7 +80,7 @@ export const COMPLETENESS_EDIT_TARGETS: Record<
   portrait: { pane: "identity", field: "avatar" },
   quote: blocks("basics", "therapist.quote"),
   approach: blocks("approach", "approach"),
-  specialties: { pane: "section:specialisms" },
+  specialties: blocks("approach", "section:specialisms"),
   fees: blocks("fees"),
   availability: blocks("availability", "availabilitySummary.headline"),
   faq: blocks("contact", "faq"),
@@ -111,6 +111,7 @@ const FIELD_ARIA_KEYS: Record<string, string> = {
   "therapyFees.firstContact": `${ARIA}.firstContact`,
   approach: `${ARIA}.approach`,
   whoFor: `${ARIA}.whoFor`,
+  "section:specialisms": `${ARIA}.specialties`,
   firstSession: `${ARIA}.firstSession`,
   "availabilitySummary.headline": `${ARIA}.availability`,
   feeSchedule: `${ARIA}.sessions`,
@@ -132,7 +133,6 @@ const SCOPE_ARIA_KEYS: Record<string, string> = {
   contact: `${ARIA}.contact`,
   identity: `${ARIA}.identity`,
   presence: `${ARIA}.presence`,
-  "section:specialisms": `${ARIA}.specialties`,
   "section:credentials": `${ARIA}.credentials`,
   "section:gallery": `${ARIA}.gallery`,
   publish: `${ARIA}.publish`,

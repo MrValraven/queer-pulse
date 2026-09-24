@@ -875,7 +875,7 @@ export const APPEALS: Appeal[] = [
       category: "coral",
     },
     argument:
-      '"That thread was three close friends roasting each other. We do it constantly. Whoever reported it doesn\'t know us. I get how it looked from outside, but muting me for a week feels heavy for an in-joke. Ask Théo or Sofia, they were there."',
+      '"That thread was three close friends roasting each other. We do it constantly. Whoever reported it doesn\'t know us. I get how it looked from outside, but muting me for a week feels heavy for an inside joke. Ask Théo or Sofia, they were there."',
     supporters: [
       { initials: "TM", name: "Théo M.", tone: "violet" },
       { initials: "SA", name: "Sofia A.", tone: "jade" },

@@ -1,60 +1,43 @@
 import { useId, type ReactNode } from "react";
-import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import {
+  nextAmount,
+  readStored,
+  toDisplayAmount,
+  toWholeDigits,
+} from "./skinDigits";
+import { SkinRefinedField } from "./SkinRefinedField";
+import { useRefinedPlaceholder } from "./refinedFieldSurface";
 import styles from "./SkinScalarControls.module.css";
+import refinedStyles from "./SkinRefinedScalar.module.css";
 
-/** Props shared by the euro and count inputs. The trailing `aria-*` trio is
- *  what FormField injects once a control opts in via `formFieldControl`. */
+/** Props shared by the euro and count inputs. */
 interface NumberInputProps {
   value: string;
   onChange: (value: string) => void;
   id?: string;
   placeholder?: string;
   "aria-label"?: string;
+  /** On the shell that holds the input and the suffix. */
   className?: string;
+  /** On the input: the field surface it draws on. */
+  inputClassName?: string;
   "aria-describedby"?: string;
-  "aria-invalid"?: boolean | "true" | "false";
-  "aria-required"?: boolean | "true" | "false";
 }
 
-const NON_DIGITS = /\D/g;
-const NON_AMOUNT_CHARACTERS = /[^\d.,]/g;
-/** Digits with at most one decimal separator (, or .) and two decimals. */
-const AMOUNT_PATTERN = /^\d*(?:[.,]\d{0,2})?$/;
 /** A label that already names the currency ("Standard fee (euros)"). */
 const NAMES_CURRENCY = /euro|€/i;
 
-/** Only whole digits: "12 places" becomes "12". */
-function toWholeDigits(typed: string): string {
-  return typed.replace(NON_DIGITS, "");
-}
-
-/** Strip a legacy stored amount to its number for display: "65€" reads
- *  "65", "60.00" stays "60.00". Nothing is written back until an edit. */
-function toDisplayAmount(stored: string): string {
-  return stored.replace(NON_AMOUNT_CHARACTERS, "");
-}
-
-/** The next amount after an edit, or null to refuse it. Stray characters
- *  ("65€") are dropped; a second separator or a third decimal is refused
- *  whole, so digits on either side of a separator never merge. A deletion
- *  is always accepted, so a legacy value that breaks the pattern can still
- *  be cleared. */
-function nextAmount(typed: string, previous: string): string | null {
-  const cleaned = typed.replace(NON_AMOUNT_CHARACTERS, "");
-  if (AMOUNT_PATTERN.test(cleaned)) return cleaned;
-  return cleaned.length < previous.length ? cleaned : null;
-}
-
-/** The shared input: a compact 48px box with an optional suffix drawn
+/** The shared input: a fixed-width shell with an optional suffix drawn
  *  inside its right edge. `toValue` turns what was typed into the value to
  *  store, or null to keep the current one. */
 function AmountInput({
   value,
   onChange,
   className,
+  inputClassName,
   shellClassName,
   suffix,
   inputMode,
@@ -76,7 +59,7 @@ function AmountInput({
     >
       <input
         {...inputProps}
-        className={styles.numberInput}
+        className={inputClassName}
         type="text"
         inputMode={inputMode}
         autoComplete="off"
@@ -138,7 +121,6 @@ export function MoneyInput({
     </AmountInput>
   );
 }
-MoneyInput.formFieldControl = true;
 
 /** A whole number (places, people waiting) in a compact box. */
 export function CountInput(props: NumberInputProps) {
@@ -151,7 +133,6 @@ export function CountInput(props: NumberInputProps) {
     />
   );
 }
-CountInput.formFieldControl = true;
 
 interface SkinScalarControlProps {
   control: SkinBlockControl;
@@ -159,20 +140,14 @@ interface SkinScalarControlProps {
   isLabelHidden?: boolean;
 }
 
-/** The stored string at a control's path ("" while empty). A number from
- *  older data is read as its decimal text. */
-function readStored(editor: SubprofileSkinBlocksEditor, path: string): string {
-  const stored = editor.getValue(path);
-  if (typeof stored === "string") return stored;
-  if (typeof stored === "number" && Number.isFinite(stored)) {
-    return String(stored);
-  }
-  return "";
-}
-
-/** FormField wrapper shared by the money and count controls. With the label
- *  hidden (the group heading already says it), the input carries it as its
- *  accessible name. */
+/**
+ * The frame shared by the money and count controls: the label and its hint
+ * above, the digits on the field surface. The shell keeps its fixed width
+ * and the € suffix, so a row of two ("40 € to 65 €") still sizes itself from
+ * the boxes and lines their bottoms up. With the label hidden, the frame's
+ * visually hidden label names the input, and the money input describes its
+ * currency as it does beside a visible label.
+ */
 function SkinDigitsControl({
   control,
   editor,
@@ -180,22 +155,34 @@ function SkinDigitsControl({
   Input,
 }: SkinScalarControlProps & { Input: typeof MoneyInput }) {
   const { t } = useTranslation();
-  const label = t(control.labelKey);
+  const placeholder = useRefinedPlaceholder(control.placeholderKey);
+  const isMoney = control.kind === "money";
 
   return (
-    <FormField
-      label={isLabelHidden ? undefined : label}
+    <SkinRefinedField
+      label={t(control.labelKey)}
+      isLabelHidden={isLabelHidden}
       helper={control.helperKey ? t(control.helperKey) : undefined}
+      helperTone={control.helperTone}
     >
-      <Input
-        value={readStored(editor, control.path)}
-        onChange={(next) => editor.setValue(control.path, next)}
-        placeholder={
-          control.placeholderKey ? t(control.placeholderKey) : undefined
-        }
-        aria-label={isLabelHidden ? label : undefined}
-      />
-    </FormField>
+      {(field) => (
+        <Input
+          id={field.controlId}
+          aria-describedby={field.describedBy}
+          value={readStored(editor, control.path)}
+          onChange={(next) => editor.setValue(control.path, next)}
+          placeholder={placeholder}
+          className={refinedStyles.amountShell}
+          inputClassName={[
+            field.inputClassName,
+            refinedStyles.amountInput,
+            isMoney ? refinedStyles.moneyInput : null,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        />
+      )}
+    </SkinRefinedField>
   );
 }
 

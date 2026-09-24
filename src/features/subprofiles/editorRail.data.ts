@@ -1,17 +1,17 @@
 import type { IconType } from "react-icons";
 import {
+  FiAtSign,
   FiCheckCircle,
   FiGlobe,
-  FiImage,
   FiLayout,
   FiMapPin,
   FiUser,
   FiUsers,
 } from "react-icons/fi";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import type { SubprofileSection } from "./api/subprofiles.api";
+import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
-import { hasSkinBlocks } from "./skinBlockFields.data";
+import { hasSkinBlocks, skinChaptersForKind } from "./skinBlockFields.data";
 
 /**
  * Every rail-selectable pane. `identity`/`presence`/`address` are three
@@ -35,6 +35,43 @@ export type EditorPaneKey =
 
 export const sectionPaneKey = (section: SubprofileSection): EditorPaneKey =>
   `section:${section}`;
+
+/** A section edited inside the Page blocks chapters: where it opens, and the
+ *  label its pending changes carry (the control's own label). */
+export interface SectionInPageBlocks {
+  section: SubprofileSection;
+  chapter: string;
+  field: string;
+  labelKey: string;
+}
+
+/**
+ * The sections a kind edits inside its Page blocks chapters, through a
+ * `sectionItems` control (a therapist's specialisms, in "How you work"), keyed
+ * by their `section:<name>` pane key and read from the kind's chapters. They
+ * get no Content rail entry or pane of their own, an older link to that pane
+ * opens the chapter and field (`useEditorPane`), and their pending changes
+ * carry the control's label (`useEditorRowsState`).
+ */
+export function sectionsInPageBlocks(
+  kind: SubprofileKind,
+): Map<string, SectionInPageBlocks> {
+  const sectionsInBlocks = new Map<string, SectionInPageBlocks>();
+  for (const chapter of skinChaptersForKind(kind)) {
+    for (const group of chapter.groups) {
+      for (const control of group.controls) {
+        if (control.kind !== "sectionItems" || !control.section) continue;
+        sectionsInBlocks.set(sectionPaneKey(control.section), {
+          section: control.section,
+          chapter: chapter.key,
+          field: control.path,
+          labelKey: control.labelKey,
+        });
+      }
+    }
+  }
+  return sectionsInBlocks;
+}
 
 export interface EditorRailEntry {
   key: EditorPaneKey;
@@ -68,6 +105,7 @@ export function buildEditorRailGroups(
   subprofile: SubprofileView,
 ): EditorRailGroup[] {
   const readiness = estimateDraftReadiness(subprofile);
+  const sectionsInBlocks = sectionsInPageBlocks(subprofile.kind);
 
   return [
     {
@@ -81,7 +119,7 @@ export function buildEditorRailGroups(
         {
           key: "presence",
           labelKey: "subprofiles:editorRail.presence",
-          icon: FiImage,
+          icon: FiAtSign,
         },
         {
           key: "address",
@@ -103,12 +141,16 @@ export function buildEditorRailGroups(
     },
     {
       headingKey: "subprofiles:editorRail.content",
-      entries: subprofile.sections.map((section) => ({
-        key: sectionPaneKey(section.section),
-        labelKey: section.labelKey,
-        icon: section.icon,
-        badge: String(section.items.length),
-      })),
+      entries: subprofile.sections
+        .filter(
+          (section) => !sectionsInBlocks.has(sectionPaneKey(section.section)),
+        )
+        .map((section) => ({
+          key: sectionPaneKey(section.section),
+          labelKey: section.labelKey,
+          icon: section.icon,
+          badge: String(section.items.length),
+        })),
     },
     {
       headingKey: "subprofiles:editorRail.people",

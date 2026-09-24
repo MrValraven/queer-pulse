@@ -1,0 +1,45 @@
+/* Global `.ring` styles for SideReadinessRing, imported by the component
+   itself so every surface that renders it (the dashboard's SideCard and the
+   editor rail's "Get it live" entry) gets them, whichever route loads first. */
+
+/* ── draft-readiness ring (Phase 2 Task 1 — SideReadinessRing) ──────────
+   36px conic-gradient percentage ring: `--p` drives how much of the circle
+   is filled with `--accent`, and the inner `<i>` punches a `--paper` hole
+   showing the bare number (never a glyph — see `icons-not-glyphs`). Sits in
+   the `.side-top` corner as the draft card's readiness indicator. */
+@property --p {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+.ring {
+  --p: 0;
+  width: 3.273em; /* 36 / 11 */
+  height: 3.273em;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--text-strong);
+  background: conic-gradient(
+    var(--accent-ink) calc(var(--p) * 1%),
+    var(--line-2) 0
+  );
+}
+/* Animate the conic fill up from 0 on mount (the inline `--p` overrides the
+   `.ring` default of 0, and @property makes `--p` interpolable). */
+@media (prefers-reduced-motion: no-preference) {
+  .ring {
+    transition: --p 0.5s var(--ease);
+  }
+}
+.ring i {
+  width: 2.545em; /* 28 / 11, inherited from .ring */
+  height: 2.545em;
+  border-radius: 50%;
+  background: var(--paper);
+  display: grid;
+  place-items: center;
+  font-style: normal;
+}

@@ -1946,6 +1946,77 @@ export const marketing: Catalog = {
   "listBusiness.editor.section.tradingAndVisibility": "Trading and visibility",
   "listBusiness.editor.section.whoCanEdit": "Who can edit",
   "listBusiness.editor.section.roleOnListing": "Role shown on the listing",
+  "listBusiness.editor.section.dangerZone": "Danger zone",
+  "listBusiness.editor.dangerZone.body":
+    "Deleting this listing is permanent. If you'd rather step back, you can hide it or mark it closed instead, both under Trading and visibility above.",
+  "listBusiness.editor.dangerZone.deleteCta": "Delete this listing",
+  "listBusiness.editor.dangerZone.deletedToast": "{name} was deleted.",
+  "listBusiness.deleteFlow.title": "Delete {name}?",
+  "listBusiness.deleteFlow.stepOf": "Step {step} of {total}",
+  "listBusiness.deleteFlow.losses.heading": "What goes",
+  "listBusiness.deleteFlow.losses.intro.owner":
+    "Deleting your listing removes it for good, along with everything attached to it.",
+  "listBusiness.deleteFlow.losses.intro.moderator":
+    "Deleting the owner's listing removes it for good, along with everything attached to it:",
+  "listBusiness.deleteFlow.losses.reviews":
+    "Its reviews and the replies to them",
+  "listBusiness.deleteFlow.losses.questions":
+    "Its public questions and answers",
+  "listBusiness.deleteFlow.losses.enquiries":
+    "The business inbox: enquiries and every conversation in it",
+  "listBusiness.deleteFlow.losses.coManagers": "Co-managers' access",
+  "listBusiness.deleteFlow.losses.offers":
+    "Pending ownership offers and edit suggestions",
+  "listBusiness.deleteFlow.losses.photos": "Its photos",
+  "listBusiness.deleteFlow.losses.publicPage": "The public page and its link",
+  "listBusiness.deleteFlow.losses.gatheringsStay":
+    "Linked gatherings stay, without the place attached.",
+  "listBusiness.deleteFlow.losses.noUndo.owner":
+    "There is no undo, and no copy is kept.",
+  "listBusiness.deleteFlow.losses.noUndo.moderator": "There is no undo.",
+  "listBusiness.deleteFlow.gentler.heading":
+    "Something gentler might fit better",
+  "listBusiness.deleteFlow.gentler.hide.button":
+    "Hide it in Trading and visibility",
+  "listBusiness.deleteFlow.gentler.hide.detail":
+    "Takes it off the directory. Everything is kept, and you can bring it back any time.",
+  "listBusiness.deleteFlow.gentler.closed.button":
+    "Mark it closed in Trading and visibility",
+  "listBusiness.deleteFlow.gentler.closed.detail":
+    "It stays visible, marked as permanently closed, so people stop turning up.",
+  "listBusiness.deleteFlow.acknowledge.heading": "Confirm you understand",
+  "listBusiness.deleteFlow.acknowledge.intro":
+    "Each of these happens the moment you delete.",
+  "listBusiness.deleteFlow.acknowledge.permanent":
+    "This is permanent and cannot be undone.",
+  "listBusiness.deleteFlow.acknowledge.reviewsAndEnquiries":
+    "Its reviews and enquiries are deleted with it.",
+  "listBusiness.deleteFlow.acknowledge.coManagers":
+    "Co-managers lose their access.",
+  "listBusiness.deleteFlow.acknowledge.ownerMessage":
+    "The owner gets a message with my reason.",
+  "listBusiness.deleteFlow.reason.heading": "Tell the owner why",
+  "listBusiness.deleteFlow.reason.intro":
+    "The owner receives this as a direct message. Keep it clear and specific so they know what happened.",
+  "listBusiness.deleteFlow.reason.label": "Reason for removal",
+  "listBusiness.deleteFlow.reason.placeholder":
+    "What was wrong with this listing?",
+  "listBusiness.deleteFlow.confirmName.heading": "Type the name to confirm",
+  "listBusiness.deleteFlow.confirmName.intro":
+    "To delete it, type the listing's name exactly as shown:",
+  "listBusiness.deleteFlow.confirmName.label": "Listing name",
+  "listBusiness.deleteFlow.confirmName.helper": "Capital letters count.",
+  "listBusiness.deleteFlow.error":
+    "The listing couldn't be deleted. Try again in a moment.",
+  "listBusiness.deleteFlow.hint.acknowledge": "Tick all three to continue.",
+  "listBusiness.deleteFlow.hint.reason": "Write a reason to continue.",
+  "listBusiness.deleteFlow.hint.confirmName":
+    "Delete permanently unlocks once the name matches.",
+  "listBusiness.deleteFlow.actions.cancel": "Cancel",
+  "listBusiness.deleteFlow.actions.back": "Back",
+  "listBusiness.deleteFlow.actions.continue": "Continue",
+  "listBusiness.deleteFlow.actions.delete": "Delete permanently",
+  "listBusiness.deleteFlow.actions.deleting": "Deleting…",
 
   // ── Co-managers. Who else can edit a listing, and the invitation that puts
   //    them there. Member-facing only: none of this reaches the public page.
@@ -2554,6 +2625,54 @@ export const marketing: Catalog = {
     "Therapists can edit any part of their page from the page itself",
   "changelog.entries.therapist-page-edit-links.body":
     "A pencil beside each section opens the editor right at the field that changes it.",
+  "changelog.entries.listing-page-essentials-first.title":
+    "Listing pages put the essentials first",
+  "changelog.entries.listing-page-essentials-first.body":
+    "The description sits under the name, the map moves to the side column, and the forms open on a tap.",
+  "changelog.entries.editor-savebar-above-tab-bar.title":
+    "The editor's save bar stays visible on phones",
+  "changelog.entries.editor-savebar-above-tab-bar.body":
+    "It now sits above the bottom tab bar, so Save all changes is always in reach.",
+  "changelog.entries.therapist-editor-refined-fields.title":
+    "Calmer, clearer fields in the therapist page editor",
+  "changelog.entries.therapist-editor-refined-fields.body":
+    "Examples read as examples, your quote shows its coral emphasis as you type, and short lists take one tap.",
+  "changelog.entries.listing-page-alignment.title":
+    "Listing pages line up edge to edge",
+  "changelog.entries.listing-page-alignment.body":
+    "The breadcrumb, header, hours, map and nearby places now share one left and right edge on every listing.",
+  "changelog.entries.directory-map-full-width.title":
+    "Directions and a wider map on listings",
+  "changelog.entries.directory-map-full-width.body":
+    "Take me there and Copy address sit under the full address, and the map spans the whole card.",
+  "changelog.entries.save-and-leave-editor.title":
+    "Save your edits on the way out",
+  "changelog.entries.save-and-leave-editor.body":
+    "Personas, settings, your profile, magazine pieces and listings offer Save and leave before you go.",
+  "changelog.entries.trade-and-service-professions.title":
+    "Pick trades and service jobs as your work",
+  "changelog.entries.trade-and-service-professions.body":
+    "Six new fields, from Hair & Beauty to Transport, list jobs like Barber, Electrician and Home Care Worker.",
+  "changelog.entries.therapist-topics-inline-editor.title":
+    "Easier to say what you help with as a therapist",
+  "changelog.entries.therapist-topics-inline-editor.body":
+    "Topics and their lines are written inline in How you work, laid out the way your page shows them.",
+  "changelog.entries.page-change-scroll-flash.title":
+    "Changing pages no longer flashes the top of the one you left",
+  "changelog.entries.page-change-scroll-flash.body":
+    "The page you leave now fades out right where you were reading while the next one loads.",
+  "changelog.entries.listing-delete-danger-zone.title":
+    "Delete directory listings safely, with a step-by-step check",
+  "changelog.entries.listing-delete-danger-zone.body":
+    "Owners and moderators see what goes, tick three boxes and type the name before a listing is gone.",
+  "changelog.entries.email-template-masthead-design.title":
+    "Email templates get a branded plum masthead",
+  "changelog.entries.email-template-masthead-design.body":
+    "Coral-italic headline words, a bigger button and a plum footer, set to read well on phones too.",
+  "changelog.entries.persona-editor-rail-collapse.title":
+    "Fold the persona editor's sidebar to icons",
+  "changelog.entries.persona-editor-rail-collapse.body":
+    "A toggle glides the section list down to an icon strip with labels on hover, and the editor keeps your choice.",
   "changelog.entries.email-template-list-preview.title":
     "Preview email templates from the library list",
   "changelog.entries.email-template-list-preview.body":
@@ -2565,7 +2684,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-preview-desktop.title":
     "See your persona on desktop while you edit",
   "changelog.entries.persona-preview-desktop.body":
-    "The live preview switches between phone and laptop width, and widens for the desktop view.",
+    "The live preview opens at the width of the device you are on and switches between phone and laptop.",
   "changelog.entries.studio-teaser-page.title":
     "Studio gets a teaser while it's being built",
   "changelog.entries.studio-teaser-page.body":
@@ -2591,7 +2710,7 @@ export const marketing: Catalog = {
   "changelog.entries.therapist-page-editor-chapters.body":
     "Six chapters in page order, with chips, euro fields, compact rows and a live preview as you type.",
   "changelog.entries.therapist-lived-languages-select.title":
-    "Therapists pick lived experience and languages from a list",
+    "Therapists pick languages, methods and who they work with from lists",
   "changelog.entries.therapist-lived-languages-select.body":
     "Tick several in one dropdown, add your own words, and the page shows them in the reader's language.",
   "changelog.entries.therapist-persona-profile.title":
@@ -7206,7 +7325,6 @@ export const marketing: Catalog = {
   "directory.detail.reviewsCount": "· {count} reviews",
   "directory.detail.newBadge": "New",
   "directory.detail.onlineBusiness": "Online only",
-  "directory.detail.whatItIsTitle": "What it <em>actually is.</em>",
   "directory.detail.offersTitle": "What this place <em>offers</em>",
   "directory.detail.goodForSub": "As {name} describes it.",
   "directory.detail.hoursTitle": "Hours",
@@ -7216,6 +7334,9 @@ export const marketing: Catalog = {
   "directory.detail.closedNow": "Closed",
   "directory.detail.closingSoon": "Closing at {time}",
   "directory.detail.formerAddress": "Former address",
+  "directory.detail.takeMeThere": "Take me there",
+  "directory.detail.copyAddress": "Copy address",
+  "directory.detail.addressCopied": "Address copied",
   "directory.detail.operating.temporarily_closed.title": "Temporarily closed",
   "directory.detail.operating.temporarily_closed.lead":
     "This place is not open at the moment. The hours below are its usual ones, for when it comes back.",
@@ -7264,6 +7385,7 @@ export const marketing: Catalog = {
     "Sign in to leave a review of this space.",
   "directory.detail.review.signInCta": "Sign in",
   "directory.detail.review.cancel": "Cancel",
+  "directory.detail.review.leaveCta": "Leave a review",
   "directory.detail.review.editCta": "Edit",
   "directory.detail.review.editTitle": "Edit your review",
   "directory.detail.review.saveEdit": "Save changes",
@@ -7387,7 +7509,6 @@ export const marketing: Catalog = {
   "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visit website",
   "directory.detail.getInTouch": "Get in touch",
-  "directory.detail.backToDirectory": "Back to directory",
   "directory.detail.claimsFiledLink": "See the claims you've filed",
   "directory.detail.loader.ariaLabel": "Opening this place",
   "directory.detail.loader.title": "Opening this place",
@@ -7437,6 +7558,8 @@ export const marketing: Catalog = {
   "directory.detail.questions.askHint":
     "Everyone reading this listing can see your question and the answer.",
   "directory.detail.questions.askCta": "Ask",
+  "directory.detail.questions.askToggle": "Ask a question",
+  "directory.detail.questions.askCancel": "Cancel",
   "directory.detail.questions.asking": "Sending…",
   "directory.detail.questions.successToast": "Your question is up.",
   "directory.detail.questions.errorGeneric":

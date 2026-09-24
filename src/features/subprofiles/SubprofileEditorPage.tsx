@@ -100,14 +100,14 @@ export function SubprofileEditorPage() {
       <div className={styles.page}>
         <div className="wrap">
           <div className={styles.container}>
-            {/* Mobile only (CSS). The rail's own "‹ Your personas" head goes
-                with the rail at 760px, so the way back to the dashboard moves
-                up here rather than disappearing. */}
-            <Link to={DASHBOARD} className={styles.mobileBack}>
-              <FiChevronLeft size={16} aria-hidden />
-              {t("subprofiles:editorRail.backLink")}
-            </Link>
             <div className={styles.header}>
+              {/* Leads the title row at every width. It is the editor's only
+                  way back to the dashboard: the rail has no back link, so
+                  collapsing the rail cannot hide it. */}
+              <Link to={DASHBOARD} className={styles.backLink}>
+                <FiChevronLeft size={16} aria-hidden />
+                {t("subprofiles:editorRail.backLink")}
+              </Link>
               <h1 className={styles.headTitle}>
                 {subprofile.displayName || t("subprofiles:mine.untitled")}
               </h1>
@@ -131,7 +131,6 @@ export function SubprofileEditorPage() {
               <SubprofileEditorShell
                 key={subprofile.id}
                 subprofile={subprofile}
-                backTo={DASHBOARD}
               />
             </div>
           </div>

@@ -1,10 +1,17 @@
-import { useCallback, useContext, useEffect, useRef } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  type RefObject,
+} from "react";
 import {
   UNSAFE_NavigationContext,
   parsePath,
   type Path,
 } from "react-router-dom";
 import { useLeaveConfirm } from "../components/feedback/useLeaveConfirm";
+import type { LeaveRequestOptions } from "../components/feedback/leaveConfirmContext";
 
 interface UnsavedChangesGuardOptions {
   /** When true, in-app navigation and tab-close are guarded. */
@@ -17,6 +24,14 @@ interface UnsavedChangesGuardOptions {
   confirmMessage: string;
   /** Called once the user confirms they want to leave (e.g. to clear dirty state). */
   onConfirmLeave?: () => void;
+  /**
+   * When set, the leave dialog also offers "Save and leave", which runs this
+   * and completes the navigation once it resolves true. Resolve true only when
+   * the save fully succeeded; false keeps the visitor on the page. Pass it only
+   * while a save is possible (the editor's own Save button is enabled). Read
+   * through a ref at click time, so a fresh function each render is fine.
+   */
+  onSaveAndLeave?: () => Promise<boolean>;
   /**
    * Also guard the browser Back button (`popstate`), which the push/replace
    * monkey-patch below can't see. Opt-in (default `false`) so existing
@@ -151,6 +166,22 @@ function performStampedStep(step: QueryStep): void {
 }
 
 /**
+ * The dialog options for one prompt, built when the prompt opens. "Save and
+ * leave" is offered only when the caller had a save handler at that moment,
+ * and its wrapper reads the ref again at click time so the handler from the
+ * latest render runs. A handler gone by the click counts as a failed save.
+ */
+function leaveOptionsFrom(
+  onSaveAndLeaveRef: RefObject<(() => Promise<boolean>) | undefined>,
+): LeaveRequestOptions {
+  if (!onSaveAndLeaveRef.current) return {};
+  return {
+    onSaveAndLeave: () =>
+      onSaveAndLeaveRef.current?.() ?? Promise.resolve(false),
+  };
+}
+
+/**
  * The leave dialog, guarded against stale answers. Each prompt takes a fresh
  * token; `askToLeave` resolves to `null` once its token is no longer current
  * or the hook has unmounted, and unmounting with a prompt open closes the
@@ -166,14 +197,18 @@ function useStaleSafeLeavePrompt() {
   /**
    * Opens the leave dialog. Resolves to the visitor's answer, or to `null` when
    * the prompt went stale (superseded, dismissed, or the hook unmounted), in
-   * which case the caller must do nothing at all.
+   * which case the caller must do nothing at all. `options` pass straight
+   * through to the dialog (the optional "Save and leave").
    */
   const askToLeave = useCallback(
-    async (message: string): Promise<boolean | null> => {
+    async (
+      message: string,
+      options?: LeaveRequestOptions,
+    ): Promise<boolean | null> => {
       promptTokenRef.current += 1;
       const promptToken = promptTokenRef.current;
       isPromptOpenRef.current = true;
-      const shouldLeave = await requestLeave(message);
+      const shouldLeave = await requestLeave(message, options);
       const isStale =
         !isMountedRef.current || promptToken !== promptTokenRef.current;
       if (isStale) return null;
@@ -321,6 +356,7 @@ export function useUnsavedChangesGuard({
   active,
   confirmMessage,
   onConfirmLeave,
+  onSaveAndLeave,
   guardBackButton = false,
   shouldAllowQueryChanges = false,
 }: UnsavedChangesGuardOptions): void {
@@ -339,6 +375,11 @@ export function useUnsavedChangesGuard({
   const pendingStepRef = useRef<QueryStep | null>(null);
   // Set while our own extra `back()` for a Back between panes is in flight.
   const isSteppingBackRef = useRef(false);
+
+  // The caller's save handler, a fresh function most renders. Kept in a ref
+  // (synced with the other latest-value refs below) so it never re-runs the
+  // navigator patch or the popstate listener; both prompts read it on open.
+  const onSaveAndLeaveRef = useRef(onSaveAndLeave);
 
   const pushSentinel = useCallback(() => {
     sentinelIdRef.current = `unsaved-guard-${(nextSentinelId += 1)}`;
@@ -422,7 +463,8 @@ export function useUnsavedChangesGuard({
         leave(originalMethods[methodName], args);
         return;
       }
-      void askToLeave(confirmMessage).then((shouldLeave) => {
+      const leaveOptions = leaveOptionsFrom(onSaveAndLeaveRef);
+      void askToLeave(confirmMessage, leaveOptions).then((shouldLeave) => {
         if (!shouldLeave) return;
         onConfirmLeave?.();
         leave(originalMethods[methodName], args);
@@ -467,6 +509,7 @@ export function useUnsavedChangesGuard({
     activeRef.current = active;
     confirmMessageRef.current = confirmMessage;
     onConfirmLeaveRef.current = onConfirmLeave;
+    onSaveAndLeaveRef.current = onSaveAndLeave;
   });
 
   // Arm the sentinel the FIRST time the guard goes active this mount, so a Back
@@ -542,19 +585,22 @@ export function useUnsavedChangesGuard({
         window.history.back();
         return;
       }
-      void askToLeave(confirmMessageRef.current).then((shouldLeave) => {
-        if (shouldLeave === null) return;
-        if (shouldLeave) {
-          onConfirmLeaveRef.current?.();
-          armedRef.current = false;
-          window.removeEventListener("popstate", onPopState);
-          // Consume the actual navigation the user asked for (past the sentinel).
-          window.history.back();
-        } else {
-          // Cancel: re-arm so the next Back is caught too.
-          pushSentinel();
-        }
-      });
+      const leaveOptions = leaveOptionsFrom(onSaveAndLeaveRef);
+      void askToLeave(confirmMessageRef.current, leaveOptions).then(
+        (shouldLeave) => {
+          if (shouldLeave === null) return;
+          if (shouldLeave) {
+            onConfirmLeaveRef.current?.();
+            armedRef.current = false;
+            window.removeEventListener("popstate", onPopState);
+            // Consume the actual navigation the user asked for (past the sentinel).
+            window.history.back();
+          } else {
+            // Cancel: re-arm so the next Back is caught too.
+            pushSentinel();
+          }
+        },
+      );
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);

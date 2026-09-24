@@ -13,9 +13,10 @@ interface Props {
 /**
  * "Run by …": a single compact byline row under the listing's identity block,
  * and the demoted successor to the "Who runs it" card that used to fill the
- * sticky right rail with a 52px avatar, a bio and its own buttons. Who runs the
- * place is context for the listing, so it reads as one line beside the name it
- * describes, and the rail stays sticky for what actually changes a plan.
+ * right rail with a 52px avatar, a bio and its own buttons. Who runs the place
+ * is context for the listing, so it reads as one line beside the name it
+ * describes, and the rail keeps its room for what actually changes a plan:
+ * where the place is and how to reach it.
  *
  * The claim paths that card also carried now live in `DirectoryAsideFooter`,
  * next to `DirectoryContestControl`.
@@ -70,26 +71,28 @@ export function DirectoryOwnerByline({ place }: Props) {
         />
       </span>
       {hasRole && (
-        <>
+        <span className={s.ownerBylineItem}>
           <span aria-hidden>·</span>
           <span>{owner.role}</span>
-        </>
+        </span>
       )}
-      <span aria-hidden>·</span>
       {/* The person who runs this place either has a QueerPulse account or
           does not. The second case is not an endorsement: nobody vouched for
           anything, a member simply put the listing here. The line says that
           and nothing more, so the platform's real vouching system keeps the
           only claim to the word. */}
-      <span className={s.ownerBylineState}>
-        {owner.inQueerPulse && (
-          <span className={s.ownerBylineDot} aria-hidden />
-        )}
-        {t(
-          owner.inQueerPulse
-            ? "marketing:directory.detail.onQueerPulse"
-            : "marketing:directory.detail.addedByMember",
-        )}
+      <span className={s.ownerBylineItem}>
+        <span aria-hidden>·</span>
+        <span className={s.ownerBylineState}>
+          {owner.inQueerPulse && (
+            <span className={s.ownerBylineDot} aria-hidden />
+          )}
+          {t(
+            owner.inQueerPulse
+              ? "marketing:directory.detail.onQueerPulse"
+              : "marketing:directory.detail.addedByMember",
+          )}
+        </span>
       </span>
     </div>
   );

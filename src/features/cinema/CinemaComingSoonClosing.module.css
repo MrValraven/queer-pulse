@@ -138,7 +138,10 @@
    behind it. The second selector outranks the shared hover rule, so a
    focused button that is also hovered keeps its halo. */
 .actions .primaryAction:focus-visible,
-.actions .primaryAction:focus-visible:hover:not(:disabled):not([aria-disabled="true"]) {
+.actions
+  .primaryAction:focus-visible:hover:not(:disabled):not(
+    [aria-disabled="true"]
+  ) {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream), var(--shadow-accent);
