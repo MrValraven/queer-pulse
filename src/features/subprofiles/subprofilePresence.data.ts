@@ -67,6 +67,17 @@ export const AVAILABILITY_OPTIONS: {
   { value: "not_available", labelKey: "subprofiles:availability.notAvailable" },
 ];
 
+/** Therapist personas: the same availability values, read in the words of
+ *  their page's status pill (the capacity switch keeps the two in step). */
+export const THERAPIST_AVAILABILITY_LABEL_KEYS: Record<
+  AvailabilityKey,
+  string
+> = {
+  open_to_collabs: "subprofiles:therapist.hero.status.open",
+  booking: "subprofiles:therapist.hero.status.waitPlain",
+  not_available: "subprofiles:therapist.hero.status.closed",
+};
+
 /** `.pill` colour modifier per availability state, for the dashboard
  *  `SideCard`'s compact avail pill (a `.pill`-shaped alternative to
  *  `SubprofileAvailability`'s dot+label, sized for the card's tight footer

@@ -1,0 +1,351 @@
+/* Therapist profile sidebar cards (design classes .tp-sb, .tp-sb-t, .tp-sb-m,
+   .tp-sb-btns, .tp-links, .tp-quiet, .tp-sim, .tp-coi). The aside's sticky
+   placement lives in TherapistBody.module.css. */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* One column (the .pp container at 1080 and below): the cards tile side by
+   side instead of stretching to the full reading width. */
+@container (max-width: 1080px) {
+  .sidebar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    align-items: start;
+  }
+}
+
+/* ── Card ── */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  padding: 20px;
+  box-shadow: var(--shadow-e1);
+  min-width: 0;
+}
+
+/* The eyebrow is the card's h2, dressed as a label. */
+.label {
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+.body {
+  margin: 4px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.label + .body,
+.headRow + .body {
+  margin-top: 0;
+}
+
+/* ── Owner edit links ── */
+
+/* A card eyebrow with the owner's Edit link at its end. */
+.headRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.headRow > .label {
+  margin: 0;
+}
+
+/* The contact title with the owner's Edit link beside it. */
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.titleRow > .title {
+  flex: 1;
+  min-width: 0;
+}
+
+/* An inert contact button with the owner's pencil beside it. */
+.editableRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+}
+
+.editableRow .rowEdit {
+  align-self: stretch;
+  min-width: 32px;
+  margin: 0;
+}
+
+@media (pointer: coarse) {
+  .editableRow .rowEdit {
+    min-width: 44px;
+  }
+}
+
+/* The pencil takes width from the button, so a long address wraps inside
+   its pill (after the "@" first) and shows in full, as it does for a
+   visitor. */
+.editableRow .fullButton {
+  padding-inline: 14px;
+  line-height: 1.3;
+  text-align: center;
+  white-space: normal;
+}
+
+.editableRow .buttonText {
+  overflow-wrap: anywhere;
+}
+
+/* The owner's "Add …" links for contact buttons not set yet. */
+.addLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 10px 0 0 -4px;
+}
+
+/* Wrapped rows of full-height finger targets must not overlap. */
+@media (pointer: coarse) {
+  .addLinks {
+    gap: 0 12px;
+  }
+
+  .addLinks > a {
+    margin-block: 0;
+  }
+}
+
+.quiet {
+  margin: 12px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+
+.quiet a,
+.inertLink {
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.quiet a:hover {
+  color: var(--accent-ink);
+}
+
+/* ── Contact buttons ── */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.buttons .fullButton,
+.messageSlot > button {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+}
+
+.fullButton svg,
+.messageSlot > button svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.buttonText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* IdentityContactButton's own note, sign-in prompt and thread link. */
+.messageSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.messageSlot > p {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* On wide screens the hero already carries the "lands in their mailbox"
+   note next to the same button, so the sidebar drops its copy. Phones keep
+   it: there the hero button is hidden and the action bar has no note.
+   Sign-in, unavailable and limit texts (no button) always stay. */
+@media (--mobile-up) {
+  .messageSlot:has(> button) > p {
+    display: none;
+  }
+}
+
+.messageSlot > a {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Also worth a look ── */
+.similarList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.similarList > li {
+  border-bottom: 1px solid var(--line);
+}
+
+.similarList > li:last-child {
+  border-bottom: none;
+}
+
+.similarRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+}
+
+.similarText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.similarName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.similarLine {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.similarRow:hover .similarName {
+  color: var(--accent-ink);
+}
+
+.similarStatus {
+  margin-left: auto;
+  flex: none;
+  font-size: var(--text-11);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.statusOpen {
+  color: var(--jade-ink);
+}
+
+.statusFull {
+  color: var(--accent-ink);
+}
+
+/* ── Report / share rows ── */
+.links {
+  display: flex;
+  flex-direction: column;
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 500;
+  text-align: left;
+  color: var(--text-strong);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.linkRow:last-child {
+  border-bottom: none;
+}
+
+.linkRow:hover:not(:disabled) {
+  color: var(--accent-ink);
+}
+
+.linkRow:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.linkIcon {
+  flex: none;
+  color: var(--ink-40);
+}
+
+.linkHint {
+  margin-left: auto;
+  font-size: var(--text-12-5);
+  font-weight: 400;
+  color: var(--ink-40);
+}
+
+.linkRow:focus-visible,
+.similarRow:focus-visible {
+  border-radius: var(--radius-10);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .linkRow,
+  .similarName {
+    transition: color var(--dur-base) var(--ease);
+  }
+}

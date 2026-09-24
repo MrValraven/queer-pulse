@@ -1,0 +1,451 @@
+/* Therapist profile: main-column section bodies (approach, specialties,
+   first session, vouches, FAQ, referrals). Design classes .tp-p, .tp-notfor,
+   .tp-groups, .tp-steps, .tp-vhead / .tp-vouch / .tp-vfoot, .tp-faq,
+   .tp-refs and .tp-comp. The card, eyebrow, chips and notes come from
+   therapistShared.module.css through the shared components. */
+
+/* ── Approach ── */
+.paragraph {
+  margin: 0;
+  max-width: 66ch;
+  font-size: var(--text-body);
+  line-height: 1.68;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.paragraph + .paragraph {
+  margin-top: 10px;
+}
+
+.notForList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notForItem {
+  display: flex;
+  gap: 10px;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.notForIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  stroke-width: 2.6;
+  color: var(--accent-ink);
+}
+
+/* ── Specialties ── */
+.groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px 28px;
+}
+
+.groupHeading {
+  margin: 0 0 8px;
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.groupItem {
+  display: flex;
+  gap: 10px;
+  font-size: var(--text-14-5);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.bullet {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 9px;
+  border-radius: var(--radius-avatar);
+  background: var(--accent);
+}
+
+.bulletJade {
+  background: var(--jade);
+}
+
+.bulletViolet {
+  background: var(--violet);
+}
+
+/* ── First session ── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-16);
+  background: rgba(var(--plum-rgb), 0.035);
+}
+
+:global([data-theme="dark"]) .step {
+  background: rgba(var(--cream-rgb), 0.05);
+}
+
+:global([data-contrast="high"]) .step {
+  border: 1px solid var(--line);
+}
+
+/* Exactly four steps: 4 across when the list is at least 842px wide (four
+   200px tracks and three 14px gaps), otherwise 2 across, so they never break
+   3 + 1. The middle clamp term is huge below 842px, which pins the track
+   minimum to half the width (2 columns), and negative at or above it, which
+   drops the minimum back to 200px (4 columns). Under 414px the half-width
+   bound falls below 200px and the list stacks to one column. */
+.steps:has(> li:nth-child(4):last-child) {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(200px, (842px - 100%) * 999, (100% - 14px) / 2), 1fr)
+  );
+}
+
+.stepNumber {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-avatar);
+  /* Plum disc with light type; both tokens flip, so dark mode gets a
+     light disc with dark type. */
+  background: var(--text-strong);
+  color: var(--paper);
+  font-size: var(--text-12-5);
+  font-weight: 700;
+}
+
+.stepTitle {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stepBody {
+  margin: 3px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* ── Vouches ── */
+.vouchHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.faces {
+  display: flex;
+  align-items: center;
+}
+
+.face {
+  box-shadow: var(--ring-paper);
+  border-radius: var(--radius-avatar);
+}
+
+.face + .face {
+  margin-left: -8px;
+}
+
+.vouchCount {
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.vouchCountLead {
+  display: block;
+  font-size: var(--text-15-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.vouchEmpty {
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.vouchList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vouchCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-18);
+  background: linear-gradient(rgba(var(--jade-rgb), 0.04), transparent 60%);
+}
+
+.vouchQuote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 300;
+  line-height: 1.38;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  text-wrap: pretty;
+}
+
+.vouchWho {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  align-self: flex-start;
+  border-radius: var(--radius-tag);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.vouchName {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+}
+
+a.vouchWho:hover .vouchName {
+  color: var(--accent-ink);
+}
+
+.vouchFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.vouchFootText {
+  flex: 1;
+  min-width: 220px;
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+.vouchFootActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.vouchWho:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── FAQ ── */
+.faq {
+  display: flex;
+  flex-direction: column;
+}
+
+.faqItem {
+  border-top: 1px solid var(--line);
+}
+
+.faqItem:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.faqSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  list-style: none;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.faqSummary::-webkit-details-marker {
+  display: none;
+}
+
+.faqSummary:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.faqIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-40);
+  transition: transform 0.25s var(--ease);
+}
+
+.faqItem[open] .faqIcon {
+  transform: rotate(45deg);
+}
+
+.faqAnswer {
+  max-width: 64ch;
+  margin: 0;
+  padding: 0 0 16px;
+  font-size: var(--text-14-5);
+  line-height: 1.65;
+  color: var(--ink-60);
+}
+
+/* ── Referrals ── */
+.referralList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.referral {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.referral:last-child {
+  border-bottom: none;
+}
+
+.referralName {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.referralNote {
+  margin: 2px 0 0;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.alongside {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alongsideItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.035);
+}
+
+:global([data-theme="dark"]) .alongsideItem {
+  background: rgba(var(--cream-rgb), 0.05);
+}
+
+.alongsideKind {
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+/* Dark --violet is 4.06:1 on the dark tile; mixing in 15% cream lifts it to
+   5.08:1 at this small bold size. */
+:global([data-theme="dark"]) .alongsideKind {
+  color: color-mix(in srgb, var(--violet) 85%, rgb(var(--cream-rgb)));
+}
+
+.alongsideName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.alongsideNote {
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Touch targets: at least 44px tall on coarse pointers. The doubled class
+   outranks the shared Button's 40px `sm` floor whatever the load order. */
+@media (pointer: coarse) {
+  .vouchWho {
+    min-height: 44px;
+  }
+
+  .vouchButton.vouchButton {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faqIcon {
+    transition: none;
+  }
+}

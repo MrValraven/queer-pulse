@@ -5,7 +5,7 @@ import styles from "./SubprofileShowcase.module.css";
 
 /**
  * The switch list's header row: a generic "More personas" label for a visitor,
- * or (self view) a live persona count plus an "Add another persona" link to
+ * or (self view) a live persona count plus an "Manage your personas" link to
  * the dashboard. Extracted from `SubprofileSwitchList` to keep it under the
  * 200-line cap.
  */
@@ -16,7 +16,7 @@ export function SubprofileSwitchHeader({
 }: {
   count: number;
   isSelf: boolean;
-  /** Self view only: whether the "Add another persona" link belongs here at
+  /** Self view only: whether the "Manage your personas" link belongs here at
    *  all. `false` while the owner is editing their own profile — the editor
    *  is a form about *this* profile with unsaved changes in it, so a link
    *  off to the personas dashboard has no place in it (see
@@ -38,7 +38,7 @@ export function SubprofileSwitchHeader({
           to={routes.subprofilesDashboard}
           className={styles.addAnother}
         >
-          {t("subprofiles:alsoAs.addAnother")}
+          {t("subprofiles:alsoAs.manage")}
         </Button>
       )}
     </div>

@@ -16,6 +16,9 @@ import type {
   SkinItemFieldDescriptor,
 } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import { SkinItemFieldInput, SkinSelectControl } from "./SkinSelectControl";
+import { SkinChoiceChipsControl } from "./SkinChoiceChipsControl";
+import { SkinChapterEditor } from "./SkinChapterEditor";
 import { deriveCalendar } from "./skins/practiceAvailability";
 import { useWeekdayLetters } from "./useWeekdayLetters";
 import { usePositionalRowKeys } from "./usePositionalRowKeys";
@@ -40,7 +43,10 @@ function SkinTextControl({
     : undefined;
 
   return (
-    <FormField label={t(control.labelKey)}>
+    <FormField
+      label={t(control.labelKey)}
+      helper={control.helperKey ? t(control.helperKey) : undefined}
+    >
       {control.kind === "textarea" ? (
         <textarea
           value={value}
@@ -63,12 +69,14 @@ function SkinTextControl({
 }
 
 /** An ordered `string[]` list: add / remove / reorder single-line entries. */
-function SkinStringListControl({
+export function SkinStringListControl({
   control,
   editor,
+  isLabelHidden = false,
 }: {
   control: SkinBlockControl;
   editor: SubprofileSkinBlocksEditor;
+  isLabelHidden?: boolean;
 }) {
   const { t } = useTranslation();
   const lines = (editor.getValue(control.path) as string[] | undefined) ?? [];
@@ -97,7 +105,7 @@ function SkinStringListControl({
 
   return (
     <div className={styles.itemsWrap}>
-      <span className={styles.itemNum}>{label}</span>
+      {!isLabelHidden && <span className={styles.itemNum}>{label}</span>}
       <div className={styles.lineList} ref={containerRef}>
         {lines.map((line, index) => (
           <div
@@ -174,9 +182,11 @@ function SkinStringListControl({
 function SkinObjectListControl({
   control,
   editor,
+  isLabelHidden = false,
 }: {
   control: SkinBlockControl;
   editor: SubprofileSkinBlocksEditor;
+  isLabelHidden?: boolean;
 }) {
   const { t } = useTranslation();
   const itemFields = control.itemFields ?? [];
@@ -214,7 +224,7 @@ function SkinObjectListControl({
 
   return (
     <div className={styles.itemsWrap}>
-      <span className={styles.itemNum}>{label}</span>
+      {!isLabelHidden && <span className={styles.itemNum}>{label}</span>}
       {entries.map((entry, index) => (
         <div key={rowKeys.keys[index]} className={styles.itemCard}>
           <div className={styles.itemHead}>
@@ -251,29 +261,12 @@ function SkinObjectListControl({
             </div>
           </div>
           {itemFields.map((field: SkinItemFieldDescriptor) => (
-            <FormField key={field.key} label={t(field.labelKey)}>
-              {field.multiline ? (
-                <textarea
-                  value={entry[field.key] ?? ""}
-                  placeholder={
-                    field.placeholderKey ? t(field.placeholderKey) : undefined
-                  }
-                  onChange={(event) =>
-                    patchField(index, field.key, event.target.value)
-                  }
-                />
-              ) : (
-                <input
-                  value={entry[field.key] ?? ""}
-                  placeholder={
-                    field.placeholderKey ? t(field.placeholderKey) : undefined
-                  }
-                  onChange={(event) =>
-                    patchField(index, field.key, event.target.value)
-                  }
-                />
-              )}
-            </FormField>
+            <SkinItemFieldInput
+              key={field.key}
+              field={field}
+              value={entry[field.key] ?? ""}
+              onChange={(value) => patchField(index, field.key, value)}
+            />
           ))}
         </div>
       ))}
@@ -398,24 +391,52 @@ function SkinGridControl({
 function SkinBlockControlField({
   control,
   editor,
+  isLabelHidden,
 }: {
   control: SkinBlockControl;
   editor: SubprofileSkinBlocksEditor;
+  isLabelHidden: boolean;
 }) {
   if (control.kind === "stringList") {
-    return <SkinStringListControl control={control} editor={editor} />;
+    return (
+      <SkinStringListControl
+        control={control}
+        editor={editor}
+        isLabelHidden={isLabelHidden}
+      />
+    );
   }
   if (control.kind === "objectList") {
-    return <SkinObjectListControl control={control} editor={editor} />;
+    return (
+      <SkinObjectListControl
+        control={control}
+        editor={editor}
+        isLabelHidden={isLabelHidden}
+      />
+    );
   }
   if (control.kind === "grid") {
     return <SkinGridControl control={control} editor={editor} />;
   }
+  if (control.kind === "select") {
+    return <SkinSelectControl control={control} editor={editor} />;
+  }
+  if (control.kind === "choice" || control.kind === "multiChoice") {
+    return (
+      <SkinChoiceChipsControl
+        control={control}
+        editor={editor}
+        isLabelHidden={isLabelHidden}
+      />
+    );
+  }
   return <SkinTextControl control={control} editor={editor} />;
 }
 
-/** One `SkinData` block as a card: its heading (only when it groups more than
- *  one control) plus each labelled control. */
+/** One `SkinData` block as a card: its heading (when it groups more than one
+ *  control, or carries a helper) plus each labelled control. A helper always
+ *  sits between the heading and the fields, and a list whose own label would
+ *  repeat the heading drops that label. */
 function SkinBlockCard({
   block,
   editor,
@@ -424,11 +445,13 @@ function SkinBlockCard({
   editor: SubprofileSkinBlocksEditor;
 }) {
   const { t } = useTranslation();
-  const showHeading = block.controls.length > 1;
+  const isHeadingShown = block.controls.length > 1 || Boolean(block.helperKey);
 
   return (
     <section className={styles.card}>
-      {showHeading && <h3 className={styles.cardTitle}>{t(block.titleKey)}</h3>}
+      {isHeadingShown && (
+        <h3 className={styles.cardTitle}>{t(block.titleKey)}</h3>
+      )}
       {block.helperKey && (
         <p className={styles.cardNote}>{t(block.helperKey)}</p>
       )}
@@ -437,6 +460,7 @@ function SkinBlockCard({
           key={control.path}
           control={control}
           editor={editor}
+          isLabelHidden={isHeadingShown && control.labelKey === block.titleKey}
         />
       ))}
     </section>
@@ -445,8 +469,9 @@ function SkinBlockCard({
 
 /**
  * The "Page blocks" pane: renders the persona's editable `SkinData` blocks (its
- * derived skin family only) as labelled inputs / list editors. Controlled by
- * `useSubprofileSkinBlocksEditor` off the shared editor context — no local save;
+ * kind's own table, else its skin family's) as labelled inputs / list editors.
+ * Controlled by `useSubprofileSkinBlocksEditor` off the shared editor context,
+ * with no local save;
  * edits ride the single global "Save all" (folded into the meta `skinData`
  * PATCH). Only mounted for families that have editable blocks (rail-gated), but
  * renders nothing gracefully if it ever mounts for one that doesn't.
@@ -454,6 +479,11 @@ function SkinBlockCard({
 export function SubprofileSkinBlocksEditor() {
   const { skinBlocks } = useSubprofileEditorContext();
   if (!skinBlocks.hasBlocks) return null;
+  // Kinds with chapters (therapist) get the chaptered editor; every other
+  // family keeps the card list below.
+  if (skinBlocks.chapters.length > 0) {
+    return <SkinChapterEditor editor={skinBlocks} />;
+  }
 
   return (
     <div className="ed-grid">

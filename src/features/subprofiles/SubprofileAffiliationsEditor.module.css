@@ -1,10 +1,56 @@
 /* Layout for SubprofileAffiliationsEditor / SubprofileAffiliationRow. Tokens
    only; the row card, remove button, add button, etc. all come from the
-   shared `SubprofileEditor.module.css` cluster — this only adds the
-   type+role two-up layout specific to one affiliation row. */
+   shared `SubprofileEditor.module.css` cluster. This only adds the
+   type+role two-up layout specific to one affiliation row, the target
+   picker's width and empty-state hint, and the pane-level options alert. */
+
+/* Paired with the shared `.itemsWrap`, a grid item of `.ed-grid` that keeps
+   `min-width: auto`: without this a long picked event name sets the column's
+   minimum width and pushes the row cards past the pane on a phone. */
+.itemsWrapFit {
+  min-width: 0;
+}
 
 .metaRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
+}
+
+/* The picker's FormField, so its Select can shrink below its value's width
+   and truncate the picked name with an ellipsis. */
+.pickerField {
+  min-width: 0;
+}
+
+/* SubprofileAffiliationTargetPicker's empty state: no eligible community or
+   event for the row's type yet, with a link to go find one. Same type ramp as
+   the editor's `.emptySection` so it reads as a quiet note. */
+.pickerHint {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.pickerHint a {
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+/* One alert above the rows when the eligible targets failed to load, with a
+   retry button. Same type ramp as the hint, in the error colour. */
+.optionsAlert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--accent-text);
+  line-height: 1.55;
+  margin: 0;
 }

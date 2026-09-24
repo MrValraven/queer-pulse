@@ -33,6 +33,11 @@ export function linkChoiceLockState(
   };
 }
 
+/** Everything in a linked persona's path before its own slug. */
+export function linkedPathPrefix(ownerSlug: string): string {
+  return `/members/${ownerSlug}/`;
+}
+
 /** The public path this persona lives at under a given link mode. */
 export function pathFor(
   mode: LinkVisibility,
@@ -41,8 +46,26 @@ export function pathFor(
   handleValue: string,
 ): string {
   return mode === "linked"
-    ? `/members/${ownerSlug}/${slugValue || "…"}`
+    ? `${linkedPathPrefix(ownerSlug)}${slugValue || "…"}`
     : `/p/${handleValue || "…"}`;
+}
+
+/** A slug as it is being typed, already in the form the URL will carry:
+ *  lowercase, accents folded, anything else collapsed to one hyphen. A
+ *  trailing hyphen survives so "my-" can still become "my-page";
+ *  `finishSlug` drops it once the field is left. */
+export function typingSlug(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+/, "");
+}
+
+/** The settled slug: `typingSlug` without a dangling trailing hyphen. */
+export function finishSlug(value: string): string {
+  return typingSlug(value).replace(/-+$/, "");
 }
 
 /** The live `.handlestate` line for the unlinked choice card — reuses the

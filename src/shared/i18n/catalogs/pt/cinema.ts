@@ -1179,11 +1179,42 @@ export const cinema: Catalog = {
   // ── Página "ainda não lançado" em modo live (CinemaComingSoon, CON-03) ─────
   // Aparece em TODAS as rotas /cinema/* quando o modo demo está desligado. O
   // cinema tem `launchedFeatures.cinema.launched = false`, por isso nada é
-  // transmitido nem vendido — esta página nunca pode repetir a oferta.
+  // transmitido nem vendido. O teaser descreve só a intenção: nunca repete a
+  // oferta (sem preços, sem partilha de receita, sem subscrições, sem contas
+  // públicas) e nunca cita um número que não conseguimos provar.
   "comingSoon.metaTitle": "Cinema QueerPulse: em breve",
-  "comingSoon.title": "O cinema ainda não abriu",
+  "comingSoon.hero.eyebrow": "Cinema QueerPulse",
+  "comingSoon.hero.title": "As luzes estão <em>a apagar-se</em>.",
+  "comingSoon.hero.lede":
+    "Estamos a construir um cinema para os filmes queer feitos perto de nós: curtas, documentários e primeiras longas, escolhidos por quem os adora e pensado para pôr quem realiza em primeiro lugar.",
+  "comingSoon.hero.status":
+    "Ainda não abriu. Nenhum filme está disponível e nada está à venda.",
+  "comingSoon.preview.eyebrow": "Uma primeira espreitadela",
+  "comingSoon.preview.title": "Como <em>vai ser</em>",
+  "comingSoon.preview.reelLabel": "Bobina {number}",
+  "comingSoon.preview.seasons.title": "Temporadas com um olhar próprio",
+  "comingSoon.preview.seasons.body":
+    "Os filmes chegam em temporadas, cada uma escolhida e apresentada por uma pessoa curadora queer que te conta porque é que importa.",
+  "comingSoon.preview.local.title": "Feito perto de nós",
+  "comingSoon.preview.local.body":
+    "Curtas, documentários, filmes musicais e primeiras longas de quem realiza nas nossas comunidades. O plano é que quem realiza mantenha os direitos dos seus filmes e os possa mostrar noutros sítios também.",
+  "comingSoon.preview.open.title": "Aberto a quem vê",
+  "comingSoon.preview.open.body":
+    "Legendas e audiodescrição fazem parte do plano desde o início, para que mais gente possa ver cada filme do programa.",
+  "comingSoon.why.eyebrow": "Porque importa",
+  "comingSoon.why.quote":
+    "As nossas histórias chegam de outra forma quando <em>somos nós a contá-las</em>.",
+  "comingSoon.why.p1":
+    "Os filmes queer feitos por pessoas queer apanham o que uma câmara de fora não vê: as piadas internas, os silêncios, os sítios onde nos encontramos de verdade. Foi assim que muita gente se viu num ecrã pela primeira vez.",
+  "comingSoon.why.p2":
+    "A maioria dos filmes pequenos passa num festival ou dois e depois desaparece. Raramente encontram uma casa onde continuem a ser vistos, ou onde alguma coisa volte para quem os fez.",
+  "comingSoon.why.p3":
+    "Ver trabalho local, partilhá-lo e falar sobre ele é o que permite a quem realiza fazer o próximo filme. É para isso que este cinema existe.",
+  "comingSoon.closing.title": "As portas abrem <em>quando estiver pronto</em>.",
+  "comingSoon.closing.body":
+    "Vamos anunciar a abertura aqui mesmo. Até lá, a revista é o melhor sítio para acompanhar o que andamos a fazer.",
   "comingSoon.description":
-    "O nosso cinema em cooperativa ainda está a ser construído: a programação, as subscrições e a partilha de receita com quem realiza chegam tudo ao mesmo tempo. Não há nada à venda nem nenhum filme disponível. Anunciamos aqui quando as portas abrirem.",
+    "O nosso cinema para filmes queer feitos perto de nós ainda está a ser construído. Ainda não há filmes disponíveis nem nada à venda. Anunciamos aqui quando as portas abrirem.",
   "comingSoon.magazineCta": "Ler a revista",
   "comingSoon.backHome": "Voltar ao início",
 };

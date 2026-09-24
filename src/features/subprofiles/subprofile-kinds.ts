@@ -42,6 +42,7 @@ import type {
   SubprofileKind,
   SubprofileSection,
 } from "./api/subprofiles.api";
+import type { Language } from "../../shared/i18n/types";
 
 // ── Kinds & sections config (contract C1 — verbatim, mirrored on the backend) ─
 
@@ -1015,6 +1016,135 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
 };
 
 /**
+ * Static copy of the Portuguese `subprofiles:kind.*` labels
+ * (src/shared/i18n/catalogs/pt/subprofiles.ts). Keep it in sync with those
+ * keys: `personaTitleName.test.ts` checks every entry against the catalog.
+ *
+ * The persisted default name is always English (`KIND_LABELS`), but the create
+ * form suggests "por ex. {kind}" with the translated label, so a member
+ * creating a persona in Portuguese can type "Terapia" or "Poesia" as its name.
+ * `isBareProfessionName` needs these labels to recognise that as the bare
+ * profession too. They live here as a plain map because `subprofiles` is a
+ * lazily loaded catalog chunk: importing it would pull the whole Portuguese
+ * namespace into every bundle that reads this module, and this module runs
+ * outside React where `t` is unavailable.
+ */
+const PT_KIND_LABELS: Record<SubprofileKind, string> = {
+  developer: "Programação",
+  writer: "Escrita",
+  musician: "Música",
+  visual_artist: "Arte visual",
+  filmmaker: "Realização",
+  designer: "Design",
+  maker: "Maker",
+  drag: "Arte drag",
+  dj: "DJ",
+  dancer: "Dança",
+  performer: "Performance",
+  photographer: "Fotografia",
+  videomaker: "Videografia",
+  chef: "Cozinha",
+  mixologist: "Coquetelaria",
+  therapist: "Terapia",
+  astrologer: "Astrologia",
+  generic: "Generalista",
+  comedian: "Comédia",
+  vocalist: "Canto",
+  burlesque: "Burlesco",
+  circus: "Circo e aéreo",
+  spoken_word: "Spoken word",
+  host: "Apresentação",
+  voguer: "Ballroom e vogue",
+  pole_dancer: "Pole dance",
+  illustrator: "Ilustração",
+  tattoo_artist: "Tatuagem",
+  animator: "Animação",
+  comic_artist: "Banda desenhada",
+  game_designer: "Videojogos",
+  artist_3d: "Arte 3D",
+  printmaker: "Gravura",
+  journalist: "Jornalismo",
+  poet: "Poesia",
+  editor: "Edição",
+  screenwriter: "Argumento",
+  translator: "Tradução",
+  zinester: "Fanzines",
+  academic: "Investigação",
+  ceramicist: "Cerâmica",
+  jeweler: "Joalharia",
+  textile_artist: "Têxteis",
+  woodworker: "Madeira",
+  florist: "Floricultura",
+  data_scientist: "Dados",
+  coach: "Coaching",
+  bodyworker: "Massagem",
+  yoga_teacher: "Yoga e movimento",
+  nutritionist: "Nutrição",
+  doula: "Doula",
+  personal_trainer: "Treino pessoal",
+  sex_educator: "Educação sexual",
+  peer_support: "Apoio entre pares",
+  baker: "Pastelaria e pão",
+  barista: "Barista",
+  brewer: "Cerveja e destilados",
+  sommelier: "Escanção",
+  caterer: "Catering",
+  hair_stylist: "Cabelo",
+  barber: "Barbearia",
+  makeup_artist: "Maquilhagem",
+  nail_artist: "Unhas",
+  esthetician: "Estética",
+  piercer: "Piercing",
+  fashion_designer: "Moda",
+  stylist: "Styling",
+  model: "Modelo",
+  costume_designer: "Guarda-roupa",
+  curator: "Curadoria",
+  gallerist: "Galeria",
+  art_dealer: "Comércio de arte",
+  archivist: "Arquivo",
+  conservator: "Conservação",
+  registrar: "Gestão de coleções",
+  exhibition_designer: "Design expositivo",
+  art_critic: "Crítica de arte",
+  docent: "Mediação",
+  preparator: "Montagem",
+  historian: "História",
+  art_historian: "História da arte",
+  oral_historian: "História oral",
+  genealogist: "Genealogia",
+  heritage: "Património",
+  archival_researcher: "Pesquisa em arquivo",
+  memory_keeper: "Memória cultural",
+  organizer: "Organização",
+  activist: "Ativismo",
+  event_producer: "Produção de eventos",
+  promoter: "Promoção",
+  teacher: "Ensino",
+  facilitator: "Facilitação",
+  tutor: "Explicações",
+  lecturer: "Docência universitária",
+};
+
+/** Every supported UI language's kind label, so adding a language to
+ *  `Language` fails to compile until its labels are listed here. */
+const KIND_LABELS_BY_LANGUAGE: Record<
+  Language,
+  Record<SubprofileKind, string>
+> = { en: KIND_LABELS, pt: PT_KIND_LABELS };
+
+/** Fold a name for comparison: trimmed, inner whitespace collapsed, lowercase,
+ *  and accents stripped, so "  ASTROLOGIA " and "Astrologia" compare equal. */
+function foldProfessionName(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/\p{Mark}/gu, "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+/**
  * The name to address a persona by in "backing {name}'s work" copy (the endorse
  * modal). A persona created without a display name defaults to its profession
  * (`KIND_LABELS[kind]`, e.g. "Dancer"), so "Endorse Dancer" / "backing Dancer's
@@ -1043,10 +1173,13 @@ export function personaAddressName({
  * Is this persona still carrying the profession as its name? A persona created
  * without a display name persists `KIND_LABELS[kind]` as its `displayName`
  * (see that constant's doc), so "Poet" / "Developer" are the auto-filled
- * default rather than a name anyone chose. Compared case-insensitively because
- * the stored value is user-editable and an owner may have retyped it in a
- * different case. Shared by `personaAddressName` and `personaTitleName`, which
- * do different things with the same signal.
+ * default rather than a name anyone chose. The kind's label in every supported
+ * UI language counts too (`KIND_LABELS_BY_LANGUAGE`), since the create form
+ * suggests the translated label as an example name. Compared through
+ * `foldProfessionName` (case, accents and surrounding whitespace ignored)
+ * because the stored value is user-editable and an owner may have retyped it.
+ * Shared by `personaAddressName`, `personaTitleName` and
+ * `personaNameBesideCraft`, which do different things with the same signal.
  */
 export function isBareProfessionName({
   displayName,
@@ -1055,7 +1188,10 @@ export function isBareProfessionName({
   displayName: string;
   kind: SubprofileKind;
 }): boolean {
-  return displayName.trim().toLowerCase() === KIND_LABELS[kind].toLowerCase();
+  const foldedName = foldProfessionName(displayName);
+  return Object.values(KIND_LABELS_BY_LANGUAGE).some(
+    (labels) => foldProfessionName(labels[kind]) === foldedName,
+  );
 }
 
 /**

@@ -1,10 +1,13 @@
-/* Reorder chrome for the personas dashboard's two card groups.
+/* Reorder chrome for the personas dashboard's two groups, in both the Cards
+   and the List view.
 
    The card grid vocabulary itself (`.sides`, `.side`, `.side-acts`,
-   `.new-side`) stays global in persona-dashboard.css — it is shared with the
+   `.new-side`) stays global in persona-dashboard.css: it is shared with the
    loading and empty states and with the design prototype. This module only
-   covers the genuinely new local pieces: the per-card reorder toolbar, the
-   picked-up state, the group headings, and the not-shown group's card foot. */
+   covers the genuinely new local pieces: the group headings (with the
+   Cards / List switch), the per-card reorder toolbar and its inline row
+   version, the picked-up state, the List view's row stack and dashed "new
+   persona" row, and the not-shown group's card and row feet. */
 
 /* One titled group of cards ("On your profile" / "Not shown on your profile").
    The dashboard used to be a single unlabelled grid, so the first group needs
@@ -18,6 +21,17 @@
   flex-direction: column;
   gap: 4px;
   margin-bottom: var(--gap-sm);
+}
+
+/* The group title and the Cards / List switch share one line, title left and
+   switch right, and wrap onto two lines when the head gets too narrow for
+   both. The hint stays below, in the column above. */
+.groupTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs) var(--gap-sm);
 }
 
 .groupTitle {
@@ -34,8 +48,8 @@
 }
 
 /* Nothing is listed on the profile yet, while the member still owns drafts or
-   standalone personas — so this is a note about an empty GROUP, never the
-   dashboard's first-run state (`EmptySides` owns that). */
+   standalone personas. This note is about an empty GROUP; the dashboard's
+   first-run state belongs to `EmptySides`. */
 .emptyGroup {
   font-size: var(--text-14);
   color: var(--ink-40);
@@ -47,6 +61,84 @@
    track sizing, so it still lands on the card grid's rhythm. */
 .newTileRow {
   margin-top: var(--gap-grid);
+}
+
+/* The List view's container: one full-width row per persona. It replaces
+   `.sides` as the drag container in that view, and a single column is a
+   layout the drag hook's nearest-centre test already handles. */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  /* `SideRow`'s leading column, sized to `.reorderInline`: grip 20 + ordinal
+     32 + chevron 26 + two 2px gaps is 82px, so 84px leaves it room. The
+     not-shown group has no leading column, so neither value reaches it. */
+  --row-lead-w: 5.25rem;
+}
+/* Touch: grip 40 + ordinal 32 + chevron 40 + two 2px gaps is 116px. The name
+   column's floor drops by 20px to pay for most of that, so a row just above
+   each of `SideRow`'s breakpoints (880px and 680px) still fits its columns. */
+@media (pointer: coarse) {
+  .rows {
+    --row-lead-w: 7.25rem;
+    --row-identity-min: 12.75rem;
+  }
+}
+
+/* The not-shown group's rows carry a reason and a link in the footer column,
+   which needs more room than four actions, so that column is wider for every
+   row in the group. `SideRow` reads `--row-foot-w` at its grid and each row inherits it
+   from here, which keeps the group's columns lined up with each other. */
+.notShownRows {
+  --row-foot-w: 21rem;
+}
+
+/* The List view's "new persona" affordance: the dashed `.new-side` tile
+   flattened to a row, outside `.rows` for the same positional reason the tile
+   sits outside `.sides`. A raw <button>, so the native chrome is zeroed here. */
+.newRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  width: 100%;
+  /* The height and radius of a `SideRow`, so the dashed row reads as the next
+     slot in the stack. */
+  min-height: 78px;
+  margin-top: var(--gap-sm);
+  padding: 0 var(--gap-sm);
+  border: 1.5px dashed var(--line-2);
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+.newRow b {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 400;
+}
+@media (hover: hover) {
+  .newRow:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.04);
+  }
+}
+.newRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (prefers-reduced-motion: reduce) {
+  .newRow {
+    transition: none;
+  }
 }
 
 /* One grid cell: the reorder toolbar on its own row above the card, with the
@@ -70,6 +162,24 @@
   cursor: grabbing;
 }
 
+/* One List-view row's slot in the drag container. The row itself (`SideRow`)
+   carries the reorder controls at its start, so this wrapper only exists to
+   stay the ONE element per persona the drag hook counts. It shares the row's
+   radius so the picked-up ring below follows the row's corners. */
+.rowShell {
+  min-width: 0;
+  border-radius: var(--radius-badge);
+}
+
+/* A picked-up row is marked on this shell, which this module owns outright.
+   The row inside it keeps its hover shadow in another stylesheet, where a
+   rule from here would tie on specificity and win or lose by load order.
+   A soft accent ring plus the raised shadow, since a flat row lifted by
+   shadow alone barely separates from its neighbours. */
+.rowShell.dragging {
+  box-shadow: var(--ring-accent-soft), var(--shadow-e2);
+}
+
 .reorderBar {
   display: flex;
   align-items: center;
@@ -78,6 +188,150 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: var(--paper);
+}
+
+/* `RowReorderControls`, at the start of a List-view row: grip, ordinal and a
+   stack of chevrons, no pill border or fill (the row is already the surface).
+   Every piece has a fixed inline size, so the avatars after it start on one
+   line down the stack whatever the position number is. */
+.reorderInline {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+
+/* The drag grip, dimmed at rest on a pointer that can hover and brought up
+   when the row is hovered or holds focus. Touch has no hover, so there it
+   always shows at full strength. */
+.rowGrip {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 20px;
+  block-size: 36px;
+  border-radius: var(--radius-8);
+  color: var(--ink-40);
+  font-size: var(--text-18);
+  cursor: grab;
+  touch-action: none;
+  flex: none;
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.rowGrip:active {
+  cursor: grabbing;
+}
+@media (hover: hover) and (pointer: fine) {
+  .rowGrip {
+    opacity: 0.45;
+  }
+  .rowShell:hover .rowGrip,
+  .rowShell:focus-within .rowGrip,
+  .dragging .rowGrip {
+    opacity: 1;
+    color: var(--ink-60);
+  }
+}
+
+/* The visible position: a serif figure, zero-padded ("01"), in a fixed box. */
+.ordinal {
+  flex: none;
+  inline-size: 1.6em;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ink-40);
+}
+
+.moveStack {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+
+/* A raw <button> (no global reset in this repo), so the native chrome is
+   zeroed. Borderless until hovered, then the same accent wash as the row's
+   action icons. */
+.moveChevron {
+  display: grid;
+  place-items: center;
+  inline-size: 26px;
+  block-size: 24px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-7);
+  background: none;
+  color: var(--ink-40);
+  font-size: var(--text-16);
+  cursor: pointer;
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .moveChevron:hover:not(:disabled) {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.1);
+  }
+}
+.moveChevron:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.moveChevron:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Touch: every control reaches the 40px floor, the grip included, and the
+   chevrons stay stacked. */
+@media (pointer: coarse) {
+  .rowGrip {
+    inline-size: 40px;
+    block-size: 40px;
+  }
+  .moveChevron {
+    inline-size: 40px;
+    block-size: 40px;
+  }
+}
+
+/* A narrow row (the `SideRow` article is the nearest size container) moves
+   these controls onto its bottom bar, where the chevrons sit side by side. */
+@container (max-width: 680px) {
+  .moveStack {
+    flex-direction: row;
+    gap: 2px;
+  }
+  .moveChevron {
+    inline-size: 36px;
+    block-size: 36px;
+  }
+  .ordinal {
+    inline-size: 1.3em;
+  }
+}
+@container (max-width: 680px) {
+  @media (pointer: coarse) {
+    .moveChevron {
+      inline-size: 40px;
+      block-size: 40px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowGrip,
+  .moveChevron {
+    transition: none;
+  }
 }
 
 /* Pointer drag handle (`useGridDragReorder`), `aria-hidden` in the markup:
@@ -107,7 +361,7 @@
   white-space: nowrap;
 }
 
-/* No global <button> reset in this repo — zero the native chrome, else every
+/* No global <button> reset in this repo, so zero the native chrome, else every
    move button shows a grey box (same note as `.iact` in persona-editor.css). */
 .moveBtn {
   width: 28px;
@@ -156,4 +410,38 @@
 .notShownReason {
   font-size: var(--text-13);
   color: var(--ink-60);
+}
+
+/* The not-shown row's foot, in the row's footer column: the reason as a calm
+   line or two, right-aligned against the one link that resolves it. The
+   reason is capped so it never takes the width the name needs, and on a
+   narrow row (where the foot gets a line of its own) it sits left of the
+   link across the row. */
+.notShownRowFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+.notShownRowFoot > .notShownReason {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-inline-size: 24ch;
+  font-size: var(--text-12-5);
+  line-height: 1.35;
+  text-align: end;
+}
+.notShownRowFoot > :last-child {
+  flex: none;
+}
+@container (max-width: 680px) {
+  .notShownRowFoot {
+    justify-content: space-between;
+  }
+  .notShownRowFoot > .notShownReason {
+    flex: 1 1 auto;
+    max-inline-size: none;
+    text-align: start;
+  }
 }

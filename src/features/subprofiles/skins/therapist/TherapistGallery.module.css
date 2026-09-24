@@ -1,0 +1,118 @@
+/* Therapist profile: "A look inside", the gallery grid (TherapistGallery).
+   Six columns underneath so every count lays out cleanly: from three photos
+   the first leads at two thirds wide and two rows tall, the next two stack
+   beside it, and the rest share the row below. Phones show two across under
+   a full-width lead. Every cell has its shape before its photo loads: small
+   cells carry an aspect ratio, the lead fills the rows they set, and the
+   photo sits absolutely inside, so it can never resize its cell. */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cell {
+  position: relative;
+  grid-column: span 2;
+  aspect-ratio: 4 / 3;
+  min-width: 0;
+}
+
+.grid[data-count="1"] > .cell {
+  grid-column: span 6;
+  aspect-ratio: 16 / 9;
+}
+
+.grid[data-count="2"] > .cell {
+  grid-column: span 3;
+}
+
+.grid:not([data-count="1"], [data-count="2"]) > .cell:first-child {
+  grid-column: span 4;
+  grid-row: span 2;
+  aspect-ratio: auto;
+}
+
+.grid[data-count="4"] > .cell:nth-child(4) {
+  grid-column: span 6;
+  aspect-ratio: 21 / 9;
+}
+
+.grid[data-count="5"] > .cell:nth-child(n + 4) {
+  grid-column: span 3;
+  aspect-ratio: 3 / 2;
+}
+
+.tile {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-16);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+.button {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  cursor: zoom-in;
+}
+
+.button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button {
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+
+  .button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-e2);
+  }
+
+  .button:focus-visible:hover {
+    box-shadow: var(--ring-cream), var(--shadow-e2);
+  }
+}
+
+@media (--mobile) {
+  .grid {
+    gap: 8px;
+  }
+
+  .cell,
+  .grid[data-count="2"] > .cell,
+  .grid[data-count="5"] > .cell:nth-child(n + 4) {
+    grid-column: span 3;
+    aspect-ratio: 1;
+  }
+
+  .grid:not([data-count="2"]) > .cell:first-child {
+    grid-column: span 6;
+    grid-row: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* Four or six photos leave one alone on the last row: it goes full
+     width instead of leaving a hole beside it. */
+  .grid[data-count="4"] > .cell:last-child,
+  .grid[data-count="6"] > .cell:last-child {
+    grid-column: span 6;
+    aspect-ratio: 21 / 9;
+  }
+
+  .tile {
+    border-radius: var(--radius-14);
+  }
+}

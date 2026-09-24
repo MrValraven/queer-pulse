@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { mailboxDisplayName } from "./mailboxLabels";
+import { mailboxDisplayName, mailboxInitials } from "./mailboxLabels";
 import { MailboxSwitcherSheet } from "./MailboxSwitcherSheet";
 import styles from "./MailboxSwitcher.module.css";
 
@@ -10,6 +10,9 @@ import styles from "./MailboxSwitcher.module.css";
  * The header control that names the active mailbox and opens the sheet of
  * every mailbox the member answers for. It sits in the header lead after the
  * wordmark link, as its own button. A member with one mailbox sees nothing.
+ *
+ * On mobile the trigger shows the mailbox's initials in place of its name,
+ * so the wordmark and the compose buttons keep their room.
  *
  * The accent dot tells a sighted member that another mailbox has unread
  * threads; the button's label says the same to a screen reader.
@@ -64,6 +67,9 @@ export function MailboxSwitcher({
         onClick={() => setIsOpen(true)}
       >
         <span className={styles.triggerName}>{activeName}</span>
+        <span className={styles.triggerInitials}>
+          {mailboxInitials(activeName)}
+        </span>
         {hasUnreadElsewhere && (
           <span className={styles.unreadDot} aria-hidden />
         )}

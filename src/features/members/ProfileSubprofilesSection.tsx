@@ -22,7 +22,7 @@ import styles from "./ProfileSubprofilesSection.module.css";
  * The personas render as a featured-hero + switch list ({@link SubprofileShowcase})
  * that collapses into a filterable index once there are many. Public view with
  * none → renders nothing. Self view's dashboard link lives in the switch
- * list's own header ("Add another persona" — `SubprofileSwitchHeader`), so
+ * list's own header ("Manage your personas" — `SubprofileSwitchHeader`), so
  * this section doesn't repeat a second link to the same destination. When
  * empty, shows a gentle prompt to create one.
  */
@@ -35,7 +35,7 @@ export function ProfileSubprofilesSection({
   ownerSlug: string;
   isSelf: boolean;
   /** Whether the owner is offered a path to create a persona from here (the
-   *  showcase's "Add another persona" link, and the empty-state prompt).
+   *  showcase's "Manage your personas" link, and the empty-state prompt).
    *  `false` while the owner is editing their own profile: creating a persona
    *  navigates away to the personas dashboard, which is the wrong offer to
    *  make inside a form holding unsaved changes. With no personas to show,

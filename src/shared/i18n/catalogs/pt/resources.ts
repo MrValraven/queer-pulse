@@ -563,6 +563,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.filterLabel": "Filtrar",
   "mentalHealth.therapists.allLanguages": "Todos os idiomas",
   "mentalHealth.therapists.accepting": "A aceitar",
+  "mentalHealth.therapists.notTaking": "Sem vagas para novas pessoas",
   "mentalHealth.therapists.waitlist": "Lista de espera",
   "mentalHealth.therapists.viewProfileAriaLabel": "Ver o perfil de {name}",
   "mentalHealth.therapists.viewProfileCta": "Ver perfil",

@@ -1,12 +1,12 @@
-import { useContext, useEffect, useRef, type RefObject } from "react";
-import { UNSAFE_NavigationContext } from "react-router-dom";
+import { useEffect, useRef, type RefObject } from "react";
+import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
 /**
  * Guards the profile editor against losing unsaved changes:
- *  - blocks in-app navigation (wrapping the router navigator under a plain
- *    <BrowserRouter>, since useBlocker needs a data router),
- *  - warns on hard unload (tab close / refresh),
+ *  - in-app navigation and hard unload (tab close / refresh) come from the
+ *    shared `useUnsavedChangesGuard`, which prompts through the app's leave
+ *    dialog,
  *  - restores focus to the Edit CTA when leaving edit mode.
  */
 export function useProfileEditGuard({
@@ -27,58 +27,14 @@ export function useProfileEditGuard({
 }) {
   const { t } = useTranslation();
 
-  // Block in-app navigation away from a dirty edit; confirm before discarding.
-  // The app mounts a plain <BrowserRouter> (not a data router), so react-router's
-  // useBlocker isn't available — instead we wrap the router's navigator so a
-  // push/replace mid-edit prompts first. (Hard unloads are covered separately below.)
-  const { navigator } = useContext(UNSAFE_NavigationContext);
-  const guardActive = isEditing && isDirty;
-  useEffect(() => {
-    if (!guardActive) return;
-    // View push/replace as reassignable function properties (not the interface's
-    // bound methods) so we can wrap then restore them — the cast also sidesteps
-    // the unbound-method / readonly-assignment lint on those method signatures.
-    const historyNavigator = navigator as unknown as {
-      push: (...args: unknown[]) => void;
-      replace: (...args: unknown[]) => void;
-    };
-    const originalPush = historyNavigator.push;
-    const originalReplace = historyNavigator.replace;
-    const confirmLeave = () => {
-      if (!window.confirm(t("members:profileEdit.discardConfirm")))
-        return false;
-      cancelEditing();
-      return true;
-    };
-    // Intentionally wrap + later restore the router navigator. This mutates a
-    // value from useContext, which react-hooks/immutability forbids — but that's
-    // the whole technique: UNSAFE_NavigationContext is React Router's sanctioned
-    // escape hatch for blocking navigation under a plain <BrowserRouter>, and the
-    // compiler can't model the wrap/restore. Scope the disable to this region.
-    /* eslint-disable react-hooks/immutability */
-    historyNavigator.push = (...args) => {
-      if (confirmLeave()) originalPush.apply(historyNavigator, args);
-    };
-    historyNavigator.replace = (...args) => {
-      if (confirmLeave()) originalReplace.apply(historyNavigator, args);
-    };
-    return () => {
-      historyNavigator.push = originalPush;
-      historyNavigator.replace = originalReplace;
-    };
-    /* eslint-enable react-hooks/immutability */
-  }, [guardActive, navigator, cancelEditing, t]);
-
-  // Warn on hard unload (tab close / refresh) while there are unsaved edits.
-  useEffect(() => {
-    if (!(isEditing && isDirty)) return;
-    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warnBeforeUnload);
-    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
-  }, [isEditing, isDirty]);
+  // In-app push/replace while dirty asks through the app's leave dialog and
+  // runs `cancelEditing` before navigating on Leave; tab close / refresh gets
+  // the browser's own warning. The Back button stays unguarded here.
+  useUnsavedChangesGuard({
+    active: isEditing && isDirty,
+    confirmMessage: t("members:profileEdit.discardConfirm"),
+    onConfirmLeave: cancelEditing,
+  });
 
   // Leaving edit mode (save, discard, "Go back") puts the member back exactly
   // where they were standing when they opened the editor, and restores focus to

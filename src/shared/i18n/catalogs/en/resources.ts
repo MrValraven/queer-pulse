@@ -557,6 +557,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.filterLabel": "Filter",
   "mentalHealth.therapists.allLanguages": "All languages",
   "mentalHealth.therapists.accepting": "Accepting",
+  "mentalHealth.therapists.notTaking": "Not taking new clients",
   "mentalHealth.therapists.waitlist": "Waitlist",
   "mentalHealth.therapists.viewProfileAriaLabel": "View {name}'s profile",
   "mentalHealth.therapists.viewProfileCta": "View profile",

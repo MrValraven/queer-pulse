@@ -51,7 +51,7 @@
   width: 100%;
 }
 
-/* "Add another persona", shown under a lone hero in self view (there's no
+/* "Manage your personas", shown under a lone hero in self view (there's no
    switch-list header to host it next to — see `.addAnother` below for the
    equivalent when a switch list exists). */
 .soloAddAnother {
@@ -402,7 +402,7 @@ a.featuredStripLink:focus-visible {
   min-width: 0;
 }
 
-/* Header row: the count/label on the left, self view's "Add another persona"
+/* Header row: the count/label on the left, self view's "Manage your personas"
    link on the right — wraps rather than clipping on narrow split columns. */
 .switchHeadRow {
   display: flex;

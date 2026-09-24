@@ -299,6 +299,8 @@ export const communities: Catalog = {
   "detail.share.cta": "Share",
   "detail.share.ariaLabel": "Share {name}",
   "detail.share.copiedToast": "Link copied to your clipboard.",
+  "detail.share.copyLink": "Copy link",
+  "detail.share.nativeShare": "Share to an app",
   // PRD-140. Holding an invitation: the hero offers the door instead of a
   // request, and declining is the member's own act that nobody is told about.
   "detail.invite.banner": "You have been invited to this community.",

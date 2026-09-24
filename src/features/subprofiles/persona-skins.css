@@ -241,17 +241,18 @@
    reserved band is visible in the current nav layout": the sidebar rail
    cancels the padding outright and the mobile app bar covers what is left,
    so both reduce it to zero (see the note above) and this collapses with
-   them. Gated on `data-cover-rise` for the reason the rise itself is: only
-   the real page-mounted persona sits flush under the floating pill. The
-   editor's docked preview and the mobile preview render this same tree
-   inside a card, where a strip above it would spill onto whatever sits
-   there, as it would onto the owner's draft banner.
+   them. Gated on `data-nav-band` for the reason the rise is gated: only the
+   real page-mounted persona sits flush under the floating pill. The editor's
+   docked preview and the mobile preview render this same tree inside a card,
+   where a strip above it would spill onto whatever sits there. It stays on
+   for the owner's draft, whose banner renders inside `.pp` (`.pp-lead`
+   below) on this same ground.
 
    base.css does this job from the other side for a plum `PageHero`
    (`main[data-page-main]:has(header[data-plum])`). That can't be reused
    here: the ground lives on `.pp` and custom properties do not cascade
    upward, so `main` cannot read it. */
-.pp[data-cover-rise="true"]::before {
+.pp[data-nav-band="true"]::before {
   content: "";
   position: absolute;
   left: 0;
@@ -260,6 +261,13 @@
   height: var(--pp-cover-rise);
   background-color: inherit;
   pointer-events: none;
+}
+
+/* The owner's draft banner, first inside `.pp` so it sits on the skin's
+   ground. `flow-root` keeps the banner's top margin inside `.pp`: collapsed
+   through it, that margin would open a cream gap under the nav-band strip. */
+.pp-lead {
+  display: flow-root;
 }
 
 .pp-hero {
@@ -837,7 +845,10 @@ button.pp-row {
     transform: none;
   }
 }
-@media (--sm) {
+/* Sized against `.pp` (a size container) so the editor's phone-width preview
+   gets the phone gallery on a wide screen too. On the public page `.pp` spans
+   about the viewport, so this fires at the same 560px as the `--sm` cut. */
+@container (max-width: 560px) {
   .pp-gallery {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
@@ -2047,6 +2058,19 @@ button.pp-row {
   .pp[data-skin="practice"] .pp-practice-side {
     position: static;
   }
+}
+
+/* Therapist kind: its own layout (skins/therapist/TherapistBody) takes the
+   site's full content width for the hero card and the 322px sidebar, and
+   it shows an uploaded cover image in the thin practice band instead of
+   hiding it. With no cover, SubprofilePageBody skips the band altogether.
+   Placed after the practice rules above, which match with equal
+   specificity. */
+.pp[data-kind="therapist"] .wrap {
+  max-width: var(--maxw);
+}
+.pp[data-kind="therapist"] .pp-cover .ph {
+  display: flex;
 }
 
 /* ═══════════ TABLE — a printed menu card ═══════════
@@ -4933,10 +4957,11 @@ button.pp-row {
   z-index: 2;
   mix-blend-mode: soft-light;
 }
-.pp[data-skin="gallery"] a {
+/* `.pp-lead` holds the draft banner's own buttons, which keep their colours. */
+.pp[data-skin="gallery"] a:not(.pp-lead a) {
   color: var(--gl-ox);
 }
-.pp[data-skin="gallery"] a:hover {
+.pp[data-skin="gallery"] a:not(.pp-lead a):hover {
   color: var(--ink);
 }
 .pp[data-skin="gallery"] .pp-cover {

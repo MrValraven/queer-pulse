@@ -42,8 +42,37 @@ export function usePersonaCreatorSlug(
   id: string | undefined,
   memberCount: number,
 ): string | undefined {
-  const { demoMode } = useDemoMode();
   const { profile } = useProfileData();
+  const creator = useSharedPersonaCreator(id, memberCount);
+  if (memberCount <= 1) return profile.slug;
+  return creator?.slug;
+}
+
+/**
+ * The full name of a persona's **creator**, the name the public page carries as
+ * `ownerName` for a linked persona. Owner-side previews pass it through so a
+ * persona still named after its kind ("Therapist") is addressed by the
+ * creator's first name, as it is live. Same resolution and cache entry as
+ * `usePersonaCreatorSlug`; `undefined` while a shared persona's members load.
+ */
+export function usePersonaCreatorName(
+  id: string | undefined,
+  memberCount: number,
+): string | undefined {
+  const { profile } = useProfileData();
+  const creator = useSharedPersonaCreator(id, memberCount);
+  if (memberCount <= 1) return `${profile.first} ${profile.last}`.trim();
+  return creator?.name;
+}
+
+/** The creator's member row for a shared persona (`memberCount > 1`), read
+ *  under the exact key `useSubprofileMembers` uses. `undefined` for a solo
+ *  persona (no request is made) and while loading or after a failure. */
+function useSharedPersonaCreator(
+  id: string | undefined,
+  memberCount: number,
+): MemberDTO | undefined {
+  const { demoMode } = useDemoMode();
   const isShared = memberCount > 1;
 
   const query = useQuery<MemberDTO[]>({
@@ -59,8 +88,8 @@ export function usePersonaCreatorSlug(
     },
   });
 
-  if (!isShared) return profile.slug;
-  return query.data?.find((member) => member.isCreator)?.slug;
+  if (!isShared) return undefined;
+  return query.data?.find((member) => member.isCreator);
 }
 
 /**

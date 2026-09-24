@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ImageUploadField } from "./ImageUploadField";
 import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import { MIN_BIO } from "./subprofileEditor.data";
+import { useEditorPersonaKind } from "./useEditorPersonaKind";
 
 interface SubprofileIdentityFieldsProps {
   avatarUrl: string;
@@ -28,7 +29,9 @@ interface SubprofileIdentityFieldsProps {
  * bio (with a live count against the 80-char publish minimum). Renders the
  * editor's "Identity" rail pane body, fed by `useSubprofileMetaEditor`'s
  * state (via `EditorPaneRouter`). Purely controlled — the parent owns state
- * and the PATCH.
+ * and the PATCH. A therapist's tagline and bio get their own helper copy:
+ * the tagline sits beside the name in the hero, and the bio's first paragraph
+ * stands in for the hero quote until one is written in Page blocks.
  */
 export function SubprofileIdentityFields({
   avatarUrl,
@@ -44,6 +47,7 @@ export function SubprofileIdentityFields({
   onBioChange,
 }: SubprofileIdentityFieldsProps) {
   const { t } = useTranslation();
+  const isTherapist = useEditorPersonaKind() === "therapist";
 
   // The bio's 80-char floor is a publish MINIMUM, not a cap — frame the counter
   // as "how many more to publish" and count trimmed length (whitespace padding
@@ -89,12 +93,21 @@ export function SubprofileIdentityFields({
       </FormField>
 
       <FormField
+        id={FIELD_ANCHOR_ID.tagline}
         label={t("subprofiles:metaForm.taglineLabel")}
-        helper={t("subprofiles:metaForm.taglineHelper")}
+        helper={t(
+          isTherapist
+            ? "subprofiles:editorTherapist.taglineHelper"
+            : "subprofiles:metaForm.taglineHelper",
+        )}
       >
         <input
           value={tagline}
-          placeholder={t("subprofiles:metaForm.taglinePlaceholder")}
+          placeholder={t(
+            isTherapist
+              ? "subprofiles:editorTherapist.taglinePlaceholder"
+              : "subprofiles:metaForm.taglinePlaceholder",
+          )}
           onChange={(event) => onTaglineChange(event.target.value)}
         />
       </FormField>
@@ -111,7 +124,11 @@ export function SubprofileIdentityFields({
         id={FIELD_ANCHOR_ID.bio}
         label={t("subprofiles:metaForm.bioLabel")}
         labelAside={bioAside}
-        helper={t("subprofiles:metaForm.bioHelper")}
+        helper={t(
+          isTherapist
+            ? "subprofiles:editorTherapist.bioHelper"
+            : "subprofiles:metaForm.bioHelper",
+        )}
       >
         <MentionTextarea
           value={bio}

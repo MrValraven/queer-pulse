@@ -1,0 +1,176 @@
+/* The narrow List-view row's "Actions" menu button (`PersonaRowActionsMenu`)
+   and its menu (`PersonaRowActionsPopover`).
+
+   The menu is PORTALLED to <body> and positioned `fixed` against the
+   trigger's measured rect, the same way the magazine desk's row menu is: the
+   row is a rounded paper surface inside a list, and an in-flow dropdown would
+   be clipped or stacked under the rows below it. */
+
+.wrap {
+  display: inline-flex;
+}
+
+/* An outlined ghost pill: label, then a chevron that turns over while the
+   menu is open. Doubled so it outranks `Button`'s own `.sm` whatever order
+   the stylesheets load in. 40px on a fine pointer, 44px on touch. */
+.wrap .trigger.trigger {
+  min-height: 40px;
+  padding: 0 10px 0 12px;
+  gap: 4px;
+  font-size: var(--text-13);
+  touch-action: manipulation;
+}
+.wrap .trigger.trigger[aria-expanded="true"] {
+  border-color: var(--line-strong);
+  background: var(--wash);
+}
+@media (pointer: coarse) {
+  .wrap .trigger.trigger {
+    min-height: 44px;
+  }
+}
+
+.chevron {
+  font-size: var(--text-15);
+  transition: transform var(--dur-fast) var(--ease);
+}
+[aria-expanded="true"] > .chevron {
+  transform: rotate(180deg);
+}
+
+/* Portalled: `fixed` against the viewport at the coordinates the placement
+   hook measures, on the portalled-popover layer so it clears the app nav and
+   the bottom tab bar. The width follows the items; the note below never
+   widens it (see `.note`). */
+.popover {
+  position: fixed;
+  z-index: var(--z-popover-portal);
+  min-width: 13.5rem;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-e3);
+  animation: personaRowMenuIn var(--dur-fast) var(--ease);
+}
+
+@keyframes personaRowMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.entry {
+  display: block;
+}
+
+.rule {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--line);
+}
+
+/* A raw <button> (no global reset in this repo), so the native chrome is
+   zeroed. The focused item carries the wash for every input, since focus
+   moved here by script shows no `:focus-visible` ring after a tap. */
+.item,
+.itemDanger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-10);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 500;
+  text-align: start;
+  cursor: pointer;
+}
+.itemDanger {
+  color: var(--danger);
+}
+.item > svg,
+.itemDanger > svg {
+  flex: none;
+  font-size: var(--text-16);
+}
+.item > svg {
+  color: var(--ink-60);
+}
+
+.item:focus,
+.itemDanger:focus {
+  outline: none;
+  background: var(--wash);
+}
+.itemDanger:focus {
+  background: rgba(var(--danger-rgb), 0.08);
+}
+.item:focus-visible,
+.itemDanger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .item:hover:not([aria-disabled="true"]) {
+    background: var(--wash);
+  }
+  .itemDanger:hover {
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}
+
+/* Listed but inert (no public address yet): the dimming and pointer every
+   disabled `Button` uses, so it reads as the same state. */
+.item[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (pointer: coarse) {
+  .item,
+  .itemDanger {
+    min-height: 44px;
+  }
+}
+
+.itemLabel {
+  white-space: nowrap;
+}
+
+/* Why View and Share are inert, right under them. A zero inline size with a
+   full minimum lets the line wrap to the width the items set, so a long
+   sentence never stretches the menu. */
+.note {
+  inline-size: 0;
+  min-inline-size: 100%;
+  margin: 2px 0 4px;
+  padding: 0 12px;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    animation: none;
+  }
+  .chevron {
+    transition: none;
+  }
+}

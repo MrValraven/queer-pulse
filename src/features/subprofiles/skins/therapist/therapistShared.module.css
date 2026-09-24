@@ -1,0 +1,156 @@
+/* Therapist profile: shared section card, eyebrow, heading, sub-block, note
+   and chip styles (design classes .tp-sec / .tp-lab / .tp-h2 / .tp-sub /
+   .tp-note / .tp-chip). Colours come from tokens that flip in dark mode. */
+
+/* ── Section card ── */
+.section {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-e1);
+  min-width: 0;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* The eyebrow and heading shrink before the aside (a stamp, the owner's
+   "Edit" link) drops under them. */
+.headMain {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.headAside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.label {
+  margin: 0 0 8px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.heading {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-24);
+  letter-spacing: -0.018em;
+  line-height: 1.1;
+  color: var(--text-strong);
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+:global([data-theme="dark"]) .heading em {
+  color: var(--accent-soft);
+}
+
+/* ── Sub-block: hairline + its own eyebrow ── */
+.sub {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.sub > .label {
+  margin-bottom: 10px;
+}
+
+/* An eyebrow with the owner's "Edit" link at its end. */
+.labelWithEdit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.note {
+  margin: 14px 0 0;
+  font-size: var(--text-caption);
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+
+/* ── Chips ── */
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sub > .label + .chipRow {
+  margin-top: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+  background: rgba(var(--line-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-pill);
+}
+
+:global([data-theme="dark"]) .chip {
+  background: rgba(var(--line-rgb), 0.07);
+  border-color: rgba(var(--line-rgb), 0.1);
+}
+
+/* Light mode: plain --accent-ink on the 10% coral tint over paper is 3.81:1,
+   under AA for 13px text. 85% accent-ink mixed with --ink reaches 4.74:1. */
+.chipHi,
+:global([data-theme="dark"]) .chipHi {
+  color: color-mix(in srgb, var(--accent-ink) 85%, var(--ink));
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: rgba(var(--accent-rgb), 0.22);
+}
+
+/* Dark mode: --accent-ink is --accent there, 5.47:1 on the tint over dark
+   paper. Mixing with the light dark-mode --ink would only muddy it. */
+:global([data-theme="dark"]) .chipHi {
+  color: var(--accent-ink);
+}
+
+.chipSm {
+  padding: 5px 10px;
+  font-size: var(--text-12);
+  color: var(--text-strong);
+  background: rgba(var(--line-rgb), 0.06);
+}
+
+.chipIcon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.6;
+}
+
+@media (--mobile) {
+  .section {
+    padding: 20px;
+  }
+}

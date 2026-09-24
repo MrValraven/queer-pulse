@@ -27,7 +27,7 @@ import styles from "./SubprofileShowcase.module.css";
  * `isSelf`/`ownerMetaBySlug` mirror the desktop split path exactly (same
  * props, same source in `SubprofileShowcase`) so a signed-in owner gets the
  * same Edit control, status/visibility badges, disabled Follow/Endorse
- * (`isOwnerViewing`), and "Add another persona" affordance on a phone that they
+ * (`isOwnerViewing`), and "Manage your personas" affordance on a phone that they
  * get on desktop — the owner invariant is not viewport-scoped.
  */
 export function SubprofileShowcaseMobile({
@@ -45,7 +45,7 @@ export function SubprofileShowcaseMobile({
    *  controls even when `viewerIsMember` is true (live mode). Mirrors the
    *  desktop `SubprofileShowcase` prop. */
   previewing?: boolean;
-  /** Self view only: whether "Add another persona" is offered. `false` while
+  /** Self view only: whether "Manage your personas" is offered. `false` while
    *  the owner is editing their profile. Mirrors the desktop
    *  `SubprofileShowcase` prop. */
   canAddPersona?: boolean;
@@ -67,7 +67,7 @@ export function SubprofileShowcaseMobile({
         to={routes.subprofilesDashboard}
         className={styles.soloAddAnother}
       >
-        {t("subprofiles:alsoAs.addAnother")}
+        {t("subprofiles:alsoAs.manage")}
       </Button>
     ) : null;
 

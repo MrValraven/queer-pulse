@@ -96,7 +96,7 @@ export const shared: Catalog = {
   "consent.storage.readingPlace.purpose":
     "Recent searches, where you stopped reading an article, and checklists you've worked through.",
   "consent.storage.panelLayout.purpose":
-    "Which filters and side panels you left open or collapsed.",
+    "Which filters and side panels you left open or collapsed, and whether you see your personas as cards or a list.",
   "consent.storage.calculators.purpose":
     "The figures you type into the rate board, IVA tracker and set-aside planner. They stay on your device; we never receive them.",
   "consent.storage.previewMode.purpose":
@@ -387,6 +387,11 @@ export const shared: Catalog = {
   // ConfirmDialog — default footer actions (callers usually pass their own)
   "confirmDialog.cancel": "Cancel",
   "confirmDialog.confirm": "Confirm",
+
+  // LeaveConfirmProvider: the unsaved-changes dialog shown before navigating away
+  "leaveConfirm.title": "Leave without saving?",
+  "leaveConfirm.leave": "Leave",
+  "leaveConfirm.stay": "Keep editing",
 
   // SaveButton — visible/aria label for the bookmark toggle
   "saveButton.save": "Save",

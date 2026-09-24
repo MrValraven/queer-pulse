@@ -1,0 +1,79 @@
+/* The linked persona's address field: the FormField control look, with the
+   fixed host + /members/<creator>/ prefix inside the box before the slug. */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.inputWrap {
+  display: flex;
+  align-items: center;
+  background: var(--cream);
+  /* Same 3:1 boundary as the shared FormField control (WCAG 1.4.11). */
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  padding-inline-start: 15px;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+
+.inputWrap:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+  background: var(--paper);
+}
+
+/* The keyboard ring belongs to the whole box. Left on the inner input, the
+   global :focus-visible ring drew a second, smaller box inside this one,
+   cutting across the prefix and the border. So the input drops it and the
+   wrapper restates the full two-tone triple. */
+.inputWrap:has(.input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.input:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* rtl on the outer span puts the ellipsis at the start; the inner ltr span
+   keeps the slashes in reading order. */
+.prefix {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: rtl;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink-60);
+}
+
+.input {
+  flex: 1 1 8ch;
+  min-width: 8ch;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  padding: 13px 15px 13px 0;
+  outline: none;
+}

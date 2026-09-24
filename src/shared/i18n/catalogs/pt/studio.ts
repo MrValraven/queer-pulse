@@ -1788,13 +1788,46 @@ export const studio: Catalog = {
   "offAir.hero.replayingToast": "A repetir {title}",
   "offAir.hero.paidOutSuffix": "{amount} pagos · repete quando quiseres",
 
-  // ── Marcador de posição em modo live (StudioComingSoonPage) ────────────────
-  // Aparece em todas as rotas /studio/* quando o modo demo está desligado —
-  // o Studio ainda não tem backend e não pode mostrar valores inventados.
-  "comingSoon.title": "O Studio ainda está a <em>afinar</em>",
+  // ── Teaser em modo live (StudioComingSoonPage e as suas quatro cenas) ─────
+  // Aparece em todas as rotas /studio/* quando o modo demo está desligado. O
+  // Studio ainda não tem backend e não pode mostrar valores inventados. Nenhuma
+  // destas linhas fala de preços, divisões ou planos de subscrição.
+  "comingSoon.metaTitle": "Studio QueerPulse: em breve",
   "comingSoon.description":
-    "A nossa plataforma de música em cooperativa (páginas de artistas, sessões ao vivo, pagamentos e o fundo de solidariedade) ainda não abriu ao público. Estamos a construí-la à vista de todes e chega aqui em breve.",
-  "comingSoon.readMagazine": "Ler a revista",
+    "A nossa plataforma de música em cooperativa para artistas queer perto de ti ainda está a ser construída. Nada está a tocar e nada está à venda. Anunciamos aqui quando entrarmos no ar.",
+  "comingSoon.hero.eyebrow": "Studio QueerPulse",
+  "comingSoon.hero.onAir": "No ar",
+  "comingSoon.hero.title": "Os microfones estão <em>a aquecer</em>.",
+  "comingSoon.hero.lede":
+    "Estamos a construir uma casa para a música queer feita perto de nós: artistas com páginas próprias, sets ao vivo de palcos locais e uma plataforma gerida em conjunto por quem a usa.",
+  "comingSoon.hero.status":
+    "Ainda não abriu. Nada está a tocar e nada está à venda.",
+  "comingSoon.preview.eyebrow": "Uma primeira audição",
+  "comingSoon.preview.title": "Como <em>vai soar</em>",
+  "comingSoon.preview.sideLabel": "Lado A",
+  "comingSoon.preview.trackLabel": "Faixa A{number}",
+  "comingSoon.preview.artists.title": "Artistas à frente",
+  "comingSoon.preview.artists.body":
+    "Cada artista tem uma página própria para os seus discos, a sua história e os seus concertos. O plano é que quem faz a música mantenha os seus masters e possa lançar noutros sítios também.",
+  "comingSoon.preview.live.title": "Ao vivo, aqui perto",
+  "comingSoon.preview.live.body":
+    "Sets gravados em noites locais, open mics e palcos pequenos, para ouvires a cena à tua volta, incluindo as noites que perdeste.",
+  "comingSoon.preview.together.title": "De quem toca e de quem ouve",
+  "comingSoon.preview.together.body":
+    "O plano é uma cooperativa, com artistas e ouvintes a decidir em conjunto o que toca e para onde vai o dinheiro. Legendas e transcrições dos sets ao vivo fazem parte disto desde o início.",
+  "comingSoon.why.eyebrow": "Porque importa",
+  "comingSoon.why.quote":
+    "Uma cena soa a si própria quando <em>somos nós a gravar</em>.",
+  "comingSoon.why.p1":
+    "A música queer feita por pessoas queer traz o que um ouvido de fora não apanha: as noites de clube, os coros, as demos gravadas no quarto, as canções que ajudaram tanta gente a aguentar. Para muita gente, foi o primeiro sítio onde se ouviu.",
+  "comingSoon.why.p2":
+    "A maioria de quem faz música em pequena escala toca meia dúzia de concertos, publica numa plataforma feita para outra gente e perde-se no algoritmo. Muito pouco do que faz lhe volta às mãos.",
+  "comingSoon.why.p3":
+    "Ouvir artistas locais, partilhar as suas faixas e aparecer nos seus concertos é o que lhes permite fazer o próximo disco. É para isso que este Studio existe.",
+  "comingSoon.closing.title": "Entramos no ar <em>quando estiver pronto</em>.",
+  "comingSoon.closing.body":
+    "Vamos anunciar a primeira emissão aqui mesmo. Até lá, a revista é o melhor sítio para acompanhar o que andamos a fazer.",
+  "comingSoon.magazineCta": "Ler a revista",
   "comingSoon.backHome": "Voltar ao início",
 
   // ── sweep no-literal-string: legendas reutilizáveis do ImageSlot ─────────

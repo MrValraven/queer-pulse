@@ -22,6 +22,7 @@ import { NudgesProvider } from "./providers/NudgesProvider";
 import { RealtimeProvider } from "../shared/api/realtime";
 import { I18nProvider } from "./providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
+import { LeaveConfirmProvider } from "../shared/components/feedback/LeaveConfirmProvider";
 import { ReauthCompletionProvider } from "./providers/ReauthCompletionProvider";
 import { PlatformLockProvider } from "./providers/PlatformLockProvider";
 import { ConnectProvider } from "./providers/ConnectProvider";
@@ -134,6 +135,10 @@ const RootProviders = composeProviders([
   NavDrawerProvider,
   I18nProvider,
   ToastProvider,
+  // The "leave without saving?" dialog that useUnsavedChangesGuard awaits in
+  // place of window.confirm. Needs I18nProvider above it (the dialog calls
+  // `t()`), and sits above the router so every routed editor can reach it.
+  LeaveConfirmProvider,
   // Picks up a completed step-up reauth OAuth round trip (see
   // useReauthToken.ts) and toasts the outcome. Needs I18nProvider (t()) and
   // ToastProvider (useToast()) above it, both satisfied here.

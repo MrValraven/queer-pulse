@@ -1,0 +1,74 @@
+/* The sidebar's social links card: labelled icon rows in the same rhythm
+   as the Report / Share rows (TherapistSidebar.module.css .linkRow). */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list > li {
+  border-bottom: 1px solid var(--line);
+}
+
+.list > li:last-child {
+  border-bottom: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 0;
+  font-size: var(--text-14);
+  color: var(--text-strong);
+  text-decoration: none;
+}
+
+/* A real link shown inert (visitor, owner, preview), dimmed like the
+   disabled contact buttons. */
+.inertRow {
+  opacity: 0.55;
+}
+
+.icon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: var(--ink-40);
+}
+
+.platform {
+  flex: none;
+  font-weight: 500;
+}
+
+.value {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .liveRow:hover .platform {
+    color: var(--accent-ink);
+  }
+}
+
+.liveRow:focus-visible {
+  border-radius: var(--radius-10);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .platform {
+    transition: color var(--dur-base) var(--ease);
+  }
+}

@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 import type {
   AffiliationDTO,
   AffiliationInputDTO,
+  AffiliationOptionDTO,
   CreateSubprofileDTO,
   SocialLinkDTO,
   SubprofileDTO,
@@ -73,6 +74,47 @@ function buildReplacedSectionItems(
     workState: item.workState ?? null,
     structured: item.structured ?? null,
   }));
+}
+
+/** Fixture for `GET /subprofiles/:id/affiliation-options`: the targets a
+ *  persona may link. Mirrors the backend order (communities alphabetical, then
+ *  events newest start first). It is the persona's own saved links plus one
+ *  extra of each type, so an editor test sees its current links selectable
+ *  alongside a fresh choice. Pulled out of `subprofileHandlers` to keep that
+ *  function under the repo's line cap. */
+function affiliationOptionsFixture(
+  saved: AffiliationDTO[],
+): AffiliationOptionDTO[] {
+  const savedOptions: AffiliationOptionDTO[] = saved.map((affiliation) => ({
+    targetType: affiliation.targetType,
+    targetSlug: affiliation.targetSlug,
+    name: affiliation.name,
+    imageUrl: affiliation.imageUrl,
+    startsAt:
+      affiliation.targetType === "event" ? "2026-07-03T21:00:00.000Z" : null,
+  }));
+  const extraCommunity: AffiliationOptionDTO = {
+    targetType: "community",
+    targetSlug: "queer-runners",
+    name: "Queer Runners Lisboa",
+    imageUrl: null,
+    startsAt: null,
+  };
+  const communities = [
+    ...savedOptions.filter((option) => option.targetType === "community"),
+    extraCommunity,
+  ].sort((left, right) => left.name.localeCompare(right.name));
+  const events: AffiliationOptionDTO[] = [
+    ...savedOptions.filter((option) => option.targetType === "event"),
+    {
+      targetType: "event",
+      targetSlug: "trans-joy-picnic",
+      name: "Trans Joy Picnic",
+      imageUrl: null,
+      startsAt: "2026-06-30T16:30:00.000Z",
+    },
+  ];
+  return [...communities, ...events];
 }
 
 /** Build the freshly-created draft DTO for the `POST /subprofiles` echo, mirroring
@@ -263,6 +305,11 @@ export function subprofileHandlers(api: string) {
         });
       },
     ),
+    http.get(`${api}/subprofiles/:id/affiliation-options`, ({ params }) => {
+      const current = mockSubprofileById(String(params.id));
+      if (!current) return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json(affiliationOptionsFixture(current.affiliations));
+    }),
     http.post(`${api}/subprofiles/:id/publish`, ({ params }) => {
       const current = mockSubprofileById(String(params.id));
       if (!current) return new HttpResponse(null, { status: 404 });

@@ -1,0 +1,434 @@
+/* Opening scene of the Studio teaser. The island around it
+   (StudioComingSoonPage) paints the plum ground and pulls itself up under the
+   floating nav, so the hero adds that same `--nav-band-visible` back as top
+   padding, on the same curve as Cinema's hero. The ON AIR lamp is the first
+   row of the copy column, so it always sits a fixed step above the eyebrow
+   and the top padding is what keeps it clear of the nav.
+
+   72svh with a short bottom pad keeps the scene tall without an empty floor.
+   The top pad is shallow so the lamp's row costs the scene little height and
+   the tracklist's heading sits near the fold as a cue to scroll. */
+.hero {
+  position: relative;
+  min-height: 72vh;
+  min-height: 72svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(
+      var(--nav-band-visible) +
+        clamp(var(--section-y-48), 10vh, var(--section-y-112))
+    )
+    clamp(20px, 5vw, 48px) clamp(40px, 8vh, var(--section-y-80));
+  overflow: clip;
+}
+
+/* ── The booth: the decorative wall behind the copy, holding the vignette ── */
+.booth {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ── The ON AIR lamp: the first row of the copy column ── */
+/* Holds the lamp and its halo together in the flow, a fixed 28px above the
+   eyebrow, so the pair moves with the copy wherever the scene centres it. */
+.lampFixture {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 28px;
+  pointer-events: none;
+}
+
+/* The warm spill the lamp throws on the wall around it, centred on the lamp.
+   It comes first in the fixture, so the lamp paints over it. It sits in its
+   own box, so its flicker is a plain opacity change on a gradient, with no
+   blur to recompute on each frame. */
+.lampHalo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 150px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    rgba(var(--accent-rgb), 0.26) 0%,
+    rgba(var(--accent-rgb), 0.08) 55%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+/* The lamp itself: a small glass box with the words etched in, still unlit.
+   Its valve warms behind the glass (::before), which is what keeps the lamp
+   dim because the studio is not on air yet. The lettering itself runs near
+   full strength so the word stays legible on the plum. */
+.lamp {
+  position: relative;
+  isolation: isolate;
+  padding: 7px calc(16px - 0.28em) 7px 16px;
+  border: 1px solid rgba(var(--accent-rgb), 0.34);
+  border-radius: var(--radius-6);
+  background: rgba(var(--accent-rgb), 0.06);
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(var(--accent-rgb), 0.9);
+  text-shadow: 0 0 12px rgba(var(--accent-rgb), 0.4);
+}
+
+/* The valve: a coral glow filling the glass from the middle out. */
+.lamp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    rgba(var(--accent-rgb), 0.34) 0%,
+    rgba(var(--accent-rgb), 0.1) 70%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+/* A hairline bezel just inside the frame, so the box reads as a fitting on
+   the wall. */
+.lamp::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(var(--accent-rgb), 0.16);
+  border-radius: var(--radius-4);
+}
+
+/* Darkens the corners like a control room after hours, then melts the bottom
+   edge into the island's plum so the next section starts on flat ground. The
+   plum fade is the TOP background layer: it reaches solid var(--plum) at the
+   hero's last row, so the hero ends on exactly the island's colour and no
+   seam shows where the tracklist begins. `rgba(0, 0, 0, …)` is the allowed
+   photographic wash. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, transparent 62%, var(--plum) 100%),
+    radial-gradient(
+      ellipse 120% 90% at 50% 38%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.34) 100%
+    );
+}
+
+/* ── Copy ── */
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  /* Cream keeps the small caps above 4.5:1 on the plum; the mic icon carries
+     the coral. */
+  color: rgba(var(--cream-rgb), 0.86);
+}
+.eyebrowIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--accent);
+}
+
+/* Holds the headline and the meter behind it, so the meter is sized to the
+   headline at every width and wraps with it. */
+.titleStage {
+  position: relative;
+  width: 100%;
+  margin: 24px 0 0;
+}
+
+/* ── The level meter: a row of thin jade bars behind the headline ── */
+/* It reaches out to the hero's own edges and runs taller than the headline,
+   then fades out on both sides with a mask so it never ends on a hard bar.
+   The whole row sits at a low opacity, set once, so the cream type in front
+   keeps its contrast. */
+.meter {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: calc(-1 * clamp(20px, 5vw, 48px));
+  right: calc(-1 * clamp(20px, 5vw, 48px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(12px, 3vw, 40px);
+  opacity: 0.34;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--plum) 22%,
+    var(--plum) 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--plum) 22%,
+    var(--plum) 78%,
+    transparent 100%
+  );
+}
+
+/* The zero line the bars stand on, faint and full width. */
+.meter::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(var(--jade-rgb), 0.7);
+}
+
+/* Each bar mirrors around the zero line, brightest at the middle and soft at
+   both tips. Its resting height comes from `--bar-level`, set inline. */
+.bar {
+  position: relative;
+  width: 3px;
+  height: calc(var(--bar-level) * 100%);
+  flex: none;
+  border-radius: var(--radius-2);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(var(--jade-rgb), 0.7) 28%,
+    var(--jade-light) 50%,
+    rgba(var(--jade-rgb), 0.7) 72%,
+    transparent 100%
+  );
+  transform-origin: 50% 50%;
+}
+@media (--md) {
+  .bar {
+    width: 2px;
+  }
+}
+
+.title {
+  position: relative;
+  margin: 0 auto;
+  max-width: 100%;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-hero);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: rgba(var(--cream-rgb), 0.96);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+/* The pool of light the headline sits in: warm at the centre, cooling to
+   jade at its rim, sized to the headline itself. `closest-side` fades the
+   ellipse to nothing exactly at the pool's edges. z-index -1 puts it behind
+   the meter and the letters, still inside `.inner`, above the booth. */
+.title::before {
+  content: "";
+  position: absolute;
+  inset: -70% -14%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    rgba(var(--accent-rgb), 0.16) 0%,
+    rgba(var(--jade-rgb), 0.1) 52%,
+    transparent 100%
+  );
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  /* The first warmth in the room. */
+  text-shadow: 0 0 40px rgba(var(--accent-rgb), 0.35);
+}
+
+/* Sits on the meter's glow, so it runs a little brighter than the island's
+   usual secondary text to keep its contrast. */
+.lede {
+  margin: 28px 0 0;
+  max-width: 620px;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: rgba(var(--cream-rgb), 0.78);
+  text-wrap: pretty;
+}
+@media (--wide-up) {
+  .lede {
+    font-size: var(--text-subhead);
+  }
+}
+
+/* The "opening soon" marker: a quiet pill with a live dot. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  margin: 36px 0 0;
+  padding: 9px 18px 9px 14px;
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.62);
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba(var(--cream-rgb), 0.92);
+  text-align: left;
+}
+
+/* Short laptop screens (1366x768 and the like). The lamp's row makes this
+   hero about 60px taller than Cinema's, and a two-line headline (the PT copy)
+   then pushes the tracklist heading under the fold. Tighter vertical padding
+   and a smaller lamp gap keep that heading peeking up as a cue to scroll. */
+@media (--wide-up) and (max-height: 820px) {
+  .hero {
+    padding-top: calc(var(--nav-band-visible) + clamp(24px, 4vh, 40px));
+    padding-bottom: 32px;
+  }
+  .lampFixture {
+    margin-bottom: 20px;
+  }
+}
+
+.pulseDot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+  flex: none;
+}
+.pulseDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+}
+
+/* Motion lives only here. With reduced motion (OS setting, or the in-app
+   toggle, which base.css answers globally) none of it runs, and the rules
+   above are the static frame: the lamp half warm, every bar at its resting
+   level, the pool at full strength. Everything below moves only transform
+   and opacity. */
+@media (prefers-reduced-motion: no-preference) {
+  .lampHalo,
+  .lamp::before {
+    animation: valveWarm 9s var(--ease) infinite;
+  }
+  .bar {
+    animation: meterBreathe 3s var(--ease) infinite alternate;
+    animation-delay: calc(var(--bar-index) * -0.23s);
+  }
+  .bar:nth-child(3n) {
+    animation-duration: 3.6s;
+  }
+  .bar:nth-child(3n + 1) {
+    animation-duration: 2.6s;
+  }
+  .title::before {
+    animation: poolBreathe 9s var(--ease) infinite alternate;
+  }
+  .pulseDot::after {
+    animation: statusPing 6s var(--ease) infinite;
+  }
+}
+
+/* The valve catching: a slow climb with two stutters, then it sinks back
+   before it ever fully lights. */
+@keyframes valveWarm {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  22% {
+    opacity: 0.46;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  28% {
+    opacity: 0.52;
+  }
+  56% {
+    opacity: 0.66;
+  }
+  59% {
+    opacity: 0.44;
+  }
+  62% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0.56;
+  }
+}
+
+@keyframes meterBreathe {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.66);
+  }
+}
+
+@keyframes poolBreathe {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes statusPing {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  30%,
+  100% {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}

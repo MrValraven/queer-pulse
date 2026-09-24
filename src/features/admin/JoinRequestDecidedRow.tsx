@@ -12,13 +12,14 @@ import { useReissueJoinRequestInvite } from "./api/useReissueJoinRequestInvite";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
 import { AdminAvatar, AdminChip } from "./ui";
+import { WelcomeEmailCopyGroup } from "./emailTemplates/WelcomeEmailCopyGroup";
 import rowStyles from "./AdminSubmissionList.module.css";
 import styles from "./AdminVerifyDecided.module.css";
 
 /** Turn a reissue failure into an honest, no-blame line. The backend 403s a
  *  caller without the moderator role, 404s a request with no invite on it, and
  *  409s an invite that cannot be re-minted (already used, revoked, or still
- *  valid) — each gets its own message; anything else falls through. */
+ *  valid): each gets its own message; anything else falls through. */
 function reissueErrorMessage(error: unknown, t: TFunction): string {
   const status = error instanceof ApiError ? error.status : 0;
   switch (status) {
@@ -33,7 +34,7 @@ function reissueErrorMessage(error: unknown, t: TFunction): string {
   }
 }
 
-/** "20 Jun 2026" — the absolute dates a history row is read for. */
+/** "20 Jun 2026": the absolute dates a history row is read for. */
 function shortDate(value: string | null, format: (at: Date) => string) {
   if (!value) return null;
   const at = new Date(value);
@@ -136,6 +137,7 @@ export function JoinRequestDecidedRow({ item }: { item: JoinRequestView }) {
                 errorToast={t("admin:members.verify.copyFailed")}
               />
             )}
+            <WelcomeEmailCopyGroup item={item} />
             {inviteState.isReissuable && (
               <Button
                 variant="ghost"

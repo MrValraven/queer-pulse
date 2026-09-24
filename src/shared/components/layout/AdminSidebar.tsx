@@ -209,7 +209,7 @@ export function AdminSidebar({
 
       <MaybeTooltip label={backLabel} isOn={isCollapsed}>
         <Link
-          to={routes.homepage}
+          to={routes.feed}
           className={[
             styles.backToPlatform,
             isCollapsed && styles.backToPlatformIcon,

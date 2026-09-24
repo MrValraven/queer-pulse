@@ -5,13 +5,18 @@ import {
   Select,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { AffiliationInputDTO } from "./api/subprofiles.api";
+import type {
+  AffiliationInputDTO,
+  AffiliationOptionDTO,
+} from "./api/subprofiles.api";
 import {
   AFFILIATION_ROLE_KEYS,
   AFFILIATION_TARGET_TYPES,
   rolesForTargetType,
   type AffiliationTargetType,
 } from "./affiliations.data";
+import { affiliationOptionsForRow } from "./api/useAffiliationOptions";
+import { SubprofileAffiliationTargetPicker } from "./SubprofileAffiliationTargetPicker";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileAffiliationsEditor.module.css";
 
@@ -20,22 +25,36 @@ export type AffiliationRow = AffiliationInputDTO & { _uid: string };
 interface SubprofileAffiliationRowProps {
   row: AffiliationRow;
   index: number;
+  /** Every target the persona may link (both types), from `useAffiliationOptions`. */
+  options: readonly AffiliationOptionDTO[];
+  isOptionsLoading: boolean;
+  hasOptionsError: boolean;
+  /** `type:slug` keys the OTHER rows already link. */
+  takenKeys: ReadonlySet<string>;
   onChange: (patch: Partial<AffiliationInputDTO>) => void;
   onRemove: () => void;
 }
 
 /**
- * One owner-edited affiliation: a type toggle (event/community), the target's
- * slug (the backend validates existence/visibility on save — this is just a
- * plain field, not a live-resolved picker, since neither `useEvents()` nor
- * `useCommunities()` exposes a stable slug in demo mode), and a role select
- * scoped to the current type. Extracted from `SubprofileAffiliationsEditor` to
- * keep both components under the 200-line cap; mirrors the same field-split
- * pattern `SubprofileItemDrawerFields` uses for the item drawer.
+ * One owner-edited affiliation: a type toggle (event/community), a role select
+ * scoped to that type, and a picker of the targets the persona may link
+ * (`SubprofileAffiliationTargetPicker`): only communities its owners are
+ * members of and events they're going to, minus targets another row already
+ * links. Changing the type clears the picked target and resets the role, since
+ * both belong to the old type. Once the options have loaded, a row with nothing
+ * left to pick and no saved target disables its role select too, since there
+ * is nothing for the role to describe. The backend enforces the same
+ * eligibility on save. Extracted from `SubprofileAffiliationsEditor` to keep
+ * both components under the 200-line cap; mirrors the same field-split pattern
+ * `SubprofileItemDrawerFields` uses for the item drawer.
  */
 export function SubprofileAffiliationRow({
   row,
   index,
+  options,
+  isOptionsLoading,
+  hasOptionsError,
+  takenKeys,
   onChange,
   onRemove,
 }: SubprofileAffiliationRowProps) {
@@ -45,10 +64,22 @@ export function SubprofileAffiliationRow({
     value: type,
     label: t(`subprofiles:affiliation.type.${type}`),
   }));
+  const hasEligibleTargets =
+    affiliationOptionsForRow(options, row.targetType, takenKeys).eligibleOptions
+      .length > 0;
+  const isRoleDisabled =
+    !isOptionsLoading &&
+    !hasOptionsError &&
+    !hasEligibleTargets &&
+    row.targetSlug === "";
 
   function changeType(nextType: AffiliationTargetType) {
     const nextRoles = rolesForTargetType(nextType);
-    onChange({ targetType: nextType, role: nextRoles[0] ?? "" });
+    onChange({
+      targetType: nextType,
+      targetSlug: "",
+      role: nextRoles[0] ?? "",
+    });
   }
 
   return (
@@ -89,20 +120,20 @@ export function SubprofileAffiliationRow({
             })}
             value={row.role}
             onChange={(value) => onChange({ role: value ?? "" })}
+            disabled={isRoleDisabled}
           />
         </FormField>
       </div>
 
-      <FormField
-        label={t("subprofiles:affiliationsEditor.slugLabel")}
-        helper={t("subprofiles:affiliationsEditor.slugHelper")}
-      >
-        <input
-          value={row.targetSlug}
-          placeholder={t("subprofiles:affiliationsEditor.slugPlaceholder")}
-          onChange={(event) => onChange({ targetSlug: event.target.value })}
-        />
-      </FormField>
+      <SubprofileAffiliationTargetPicker
+        targetType={row.targetType}
+        targetSlug={row.targetSlug}
+        options={options}
+        isLoading={isOptionsLoading}
+        hasError={hasOptionsError}
+        takenKeys={takenKeys}
+        onChange={(targetSlug) => onChange({ targetSlug })}
+      />
     </article>
   );
 }

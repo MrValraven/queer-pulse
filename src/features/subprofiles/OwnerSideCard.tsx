@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -11,6 +11,8 @@ import {
 import { LeavePersonaModal } from "./LeavePersonaModal";
 import { SideCard } from "./SideCard";
 import { SideCardFooter, type PersonaDangerAction } from "./SideCardFooter";
+import { SideRow } from "./SideRow";
+import type { PersonaDashboardView } from "./usePersonaDashboardView";
 import {
   usePersonaCreatorSlug,
   usePersonaIsCreator,
@@ -37,15 +39,26 @@ export interface PersonaShareTarget {
  * answer rather than guessing. Delete is creator-only server-side, so a
  * co-owner gets Leave in its place (`usePersonaIsCreator`, which reuses the
  * same members query and so costs no extra request).
+ *
+ * `layout` picks the presenter: the `SideCard` tile in the Cards view, or a
+ * `SideRow` in the List view, with the footer in its compact row variant.
+ * Everything above the presenter (address, creator, leave) is shared, so View
+ * and Share resolve the creator's address the same way in both views.
+ * `leading` only applies to a row, where it renders at the row's start (the
+ * dashboard puts the reorder controls there).
  */
 export function OwnerSideCard({
   view,
   onShare,
   onDelete,
+  layout = "cards",
+  leading,
 }: {
   view: SubprofileView;
   onShare: (target: PersonaShareTarget) => void;
   onDelete: () => void;
+  layout?: PersonaDashboardView;
+  leading?: ReactNode;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -71,28 +84,36 @@ export function OwnerSideCard({
     run(address);
   }
 
+  const isRow = layout === "list";
+  const footer = (
+    <SideCardFooter
+      address={address}
+      danger={danger}
+      variant={isRow ? "row" : "card"}
+      personaName={
+        isRow ? view.displayName || t("subprofiles:mine.untitled") : undefined
+      }
+      onEdit={() => void navigate(subprofileEditPath(view.id))}
+      onOpen={() =>
+        withResolvedAddress((resolved) => void navigate(resolved.path))
+      }
+      onShare={() =>
+        withResolvedAddress((resolved) =>
+          onShare({ view, shareUrl: resolved.shareUrl }),
+        )
+      }
+      onDelete={onDelete}
+      onLeave={() => setLeaving(true)}
+    />
+  );
+
   return (
     <>
-      <SideCard
-        view={view}
-        footer={
-          <SideCardFooter
-            address={address}
-            danger={danger}
-            onEdit={() => void navigate(subprofileEditPath(view.id))}
-            onOpen={() =>
-              withResolvedAddress((resolved) => void navigate(resolved.path))
-            }
-            onShare={() =>
-              withResolvedAddress((resolved) =>
-                onShare({ view, shareUrl: resolved.shareUrl }),
-              )
-            }
-            onDelete={onDelete}
-            onLeave={() => setLeaving(true)}
-          />
-        }
-      />
+      {isRow ? (
+        <SideRow view={view} leading={leading} footer={footer} />
+      ) : (
+        <SideCard view={view} footer={footer} />
+      )}
 
       {leaving && (
         <LeavePersonaModal

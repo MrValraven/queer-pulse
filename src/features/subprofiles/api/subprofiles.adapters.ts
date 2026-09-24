@@ -321,7 +321,12 @@ export function publicSubprofileToView(
 export function ownerViewToShowcaseView(
   view: SubprofileView,
   selfOwnerSlug: string,
+  creatorName?: string,
 ): PublicSubprofileView {
+  // `ownerName` follows the public DTO's rule: present only for a linked
+  // persona, so a preview never names the owner of an unlinked one.
+  const isLinkedWithName =
+    view.linkVisibility === "linked" && creatorName !== undefined;
   return {
     id: view.id,
     kind: view.kind,
@@ -341,6 +346,7 @@ export function ownerViewToShowcaseView(
     linkVisibility: view.linkVisibility,
     status: view.status,
     ownerSlug: selfOwnerSlug,
+    ...(isLinkedWithName ? { ownerName: creatorName } : {}),
     sections: view.sections,
     featured: view.featured,
     affiliations: view.affiliations,

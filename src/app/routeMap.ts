@@ -111,6 +111,12 @@ export const routes = {
    *  MOD_ACCESSIBLE_ADMIN_PATTERNS. */
   adminStickerPacks: "/admin/sticker-packs",
   adminInvites: "/admin/invites",
+  /** The email template library: emails staff copy and send by hand. `/edit/`
+   *  keeps the dynamic id clear of the static `new` segment, the same shape as
+   *  `adminResourceGuideEdit`. Admin-only via the blanket `/admin/*` gate. */
+  adminEmailTemplates: "/admin/email-templates",
+  adminEmailTemplateNew: "/admin/email-templates/new",
+  adminEmailTemplateEdit: "/admin/email-templates/edit",
   adminGovernance: "/admin/governance",
   adminRoadmap: "/admin/roadmap",
   adminHousingCoops: "/admin/housing",

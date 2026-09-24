@@ -1187,10 +1187,6 @@ export const gatherings: Catalog = {
   "manage.actions.editDetails": "Edit details",
   "manage.actions.messageAttendees": "Message attendees",
   "manage.actions.dayOfDashboard": "Day-of dashboard",
-  "manage.cancelConfirm_one":
-    "Cancel {title}? All {count} attendee will be notified.",
-  "manage.cancelConfirm_other":
-    "Cancel {title}? All {count} attendees will be notified.",
   "manage.linkCopiedToast": "Link copied!",
   "manage.linkCopyFailedToast":
     "We couldn't reach your clipboard. Copy the link from the share card instead.",

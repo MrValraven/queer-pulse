@@ -1,0 +1,299 @@
+/* The chaptered skin editor (SkinChapterEditor): a map of all six chapters,
+   then one chapter of group cards with Back / Next underneath. The cards
+   themselves reuse `.card`/`.cardTitle`/`.cardNote` from
+   SubprofileEditor.module.css. */
+
+.editor {
+  max-width: 620px;
+}
+
+/* Zero-height marker directly above the chapter map, the `.ed-switch-anchor`
+   idiom: a chapter switch scrolls it back into view below the sticky chrome.
+   `--sticky-top` is the fixed nav for the current nav layout, and
+   `--chapter-strip-offset` is the mobile pane switcher's measured height (set
+   by `useSwitchBarOffset` below 760px, where `.ed-switch` is stuck at
+   `--sticky-top`), 0 elsewhere. */
+.anchor {
+  scroll-margin-top: calc(
+    var(--sticky-top) + var(--chapter-strip-offset, 0px) + var(--gap-xs)
+  );
+}
+
+/* ── chapter map ─────────────────────────────────────────────────────────── */
+.strip {
+  margin-bottom: var(--gap-lg);
+}
+
+/* Three columns at every width, so all six chapters show in two rows. */
+.stripList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.stripList > li {
+  display: flex;
+  min-width: 0;
+}
+
+.chip {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 0;
+  min-height: var(--tap-min);
+  padding: 10px 12px 11px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  background: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  color: var(--ink-60);
+  text-align: left;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--wash);
+    color: var(--ink);
+  }
+}
+/* Same treatment as the active rail row (`.ed-rail button[aria-current]`). */
+.chip[aria-current="step"],
+.chip[aria-current="step"]:hover {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: rgb(var(--cream-rgb));
+}
+.chipHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.numeral {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+}
+/* Wraps onto as many lines as it needs; a word too long for a narrow cell
+   hyphenates (the page carries its `lang`) before it would ever clip. */
+.chipTitle {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.25;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+.chipFill {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-12);
+  line-height: 1.25;
+  opacity: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+.chipDone {
+  color: var(--jade-ink);
+  opacity: 1;
+}
+.chip[aria-current="step"] .chipDone {
+  color: var(--jade-soft);
+}
+/* Plum barely separates from the dark page, so the active tile's own 1px
+   border turns into a coral ring there. */
+:global([data-theme="dark"]) .chip[aria-current="step"] {
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+@media (--sm) {
+  .stripList {
+    gap: 6px;
+  }
+  .chip {
+    padding: 9px 9px 10px;
+  }
+  .chipTitle {
+    font-size: var(--text-13);
+  }
+}
+
+/* ── chapter ─────────────────────────────────────────────────────────────── */
+.chapter {
+  animation: chapterFadeIn var(--dur-base) var(--ease);
+}
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.chapterTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-28);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.chapterLede {
+  margin: 8px 0 var(--gap-grid);
+  max-width: 58ch;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+/* One column that may shrink below its content: a card never pushes the page
+   wider than a 390px phone. */
+.groups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-lg);
+}
+.footerNext {
+  margin-left: auto;
+}
+
+/* ── group card ──────────────────────────────────────────────────────────── */
+/* Control spacing is the stack's gap alone: a control's own trailing margin
+   (FormField's `.field`) is zeroed so text fields and list editors space
+   alike, and the card's padding closes the last one. */
+.card {
+  min-width: 0;
+}
+/* Room for the empty mark in the heading's left gutter. */
+.cardHeading {
+  position: relative;
+}
+/* A heading sits clear of the first field, matching `.cardHead`'s spacing.
+   A helper note under the heading brings its own bottom margin instead. */
+.cardHeading + .stack {
+  margin-top: var(--gap-grid);
+}
+.stack {
+  display: grid;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+.slot {
+  position: relative;
+  min-width: 0;
+}
+/* The control is always the slot's last child (the empty mark comes first). */
+.slot > :last-child {
+  margin-bottom: 0;
+}
+
+/* The quiet "still empty" mark: an amber dot in the card's left gutter, level
+   with the field's label (or the card heading when the label is hidden). */
+.emptyDot {
+  position: absolute;
+  top: 5px;
+  left: -13px;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-avatar);
+  background: var(--amber);
+}
+.cardHeading .emptyDot {
+  top: 0.45em;
+}
+.revealed {
+  animation: chapterFadeIn var(--dur-base) var(--ease);
+}
+
+/* An untitled group folded into the card above opens with its own helper. */
+.continuationNote {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.rowGroup > .continuationNote {
+  margin-bottom: var(--gap-xs);
+}
+
+/* Two controls side by side with a joiner word ("40 € to 65 €"). Each slot is
+   as wide as its input (`min-content`), so a longer label wraps above it, and
+   the row aligns to the bottom: the inputs share one line however many lines
+   the labels above them take. Slots shrink on a narrow phone. */
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-sm);
+}
+.rowControl {
+  flex: 0 1 auto;
+  width: min-content;
+  min-width: 0;
+}
+/* Small phones: both boxes share the row equally and shrink with it. */
+@media (--xs) {
+  .rowControl {
+    flex: 1 1 0;
+    width: auto;
+  }
+}
+/* The joiner copies the number input's box (`.numberShell .numberInput` in
+   SkinScalarControls.module.css: 16px type, 11px padding, 1.5px border, a
+   44px floor), so bottom-aligned in the row its text centres on the inputs. */
+.joiner {
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding: 11px 0;
+  border: 1.5px solid transparent;
+  font-size: var(--text-16);
+  line-height: normal;
+  color: var(--ink-60);
+}
+.checkWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: var(--gap-xs) 0 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--amber-ink);
+}
+.checkWarning svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+@keyframes chapterFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+  .chapter,
+  .revealed {
+    animation: none;
+  }
+}

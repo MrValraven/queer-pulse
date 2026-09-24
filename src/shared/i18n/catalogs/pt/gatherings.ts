@@ -1206,10 +1206,6 @@ export const gatherings: Catalog = {
   "manage.actions.editDetails": "Editar detalhes",
   "manage.actions.messageAttendees": "Enviar mensagem às pessoas",
   "manage.actions.dayOfDashboard": "Painel do dia",
-  "manage.cancelConfirm_one":
-    "Cancelar {title}? {count} pessoa vai ser avisada.",
-  "manage.cancelConfirm_other":
-    "Cancelar {title}? {count} pessoas vão ser avisadas.",
   "manage.linkCopiedToast": "Link copiado!",
   "manage.linkCopyFailedToast":
     "Não conseguimos aceder à área de transferência. Copia o link a partir do cartão de partilha.",

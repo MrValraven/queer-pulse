@@ -39,6 +39,24 @@
   white-space: nowrap;
 }
 
+.triggerInitials {
+  display: none;
+  flex: none;
+  letter-spacing: 0.02em;
+}
+
+/* Mobile: the full name crowded the wordmark into a wrap, so the trigger
+   shows initials. The button's aria-label still carries the full name. */
+@media (--mobile) {
+  .triggerName {
+    display: none;
+  }
+
+  .triggerInitials {
+    display: inline;
+  }
+}
+
 .triggerChevron {
   flex: none;
   width: 16px;

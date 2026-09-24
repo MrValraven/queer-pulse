@@ -145,12 +145,14 @@ export interface SocialLink {
   /** Kept in English (brand names / a common borrowed term) — no catalog key. */
   label: string;
   href: string;
-  icon: "instagram" | "youtube" | "mastodon" | "newsletter";
+  icon: "instagram" | "email";
 }
-/** Prototype: links point at `#`; real handles would replace them. */
+/** Only channels we actually run; add one here once its account exists. */
 export const SOCIAL_LINKS: SocialLink[] = [
-  { label: "Instagram", href: "#", icon: "instagram" },
-  { label: "YouTube", href: "#", icon: "youtube" },
-  { label: "Mastodon", href: "#", icon: "mastodon" },
-  { label: "Newsletter", href: "#", icon: "newsletter" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/thequeerpulse",
+    icon: "instagram",
+  },
+  { label: "Email", href: "mailto:hello@queerpulse.com", icon: "email" },
 ];

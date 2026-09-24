@@ -3,37 +3,37 @@
   /* nav band reserved by shell (base.css); this is only breathing room */
   padding: 16px 0 var(--section-y-56);
   position: relative;
-  overflow: hidden;
+  /* Sideways only, so nothing can widen the page. The bottom edge stays open
+     for the Share menu (`CommunityShareMenu`), which hangs below the action
+     row past the 56px bottom padding. */
+  overflow-x: clip;
 }
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -10%;
-  right: -5%;
-  width: 440px;
-  height: 440px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--accent-rgb), 0.12),
-    transparent 62%
-  );
-  pointer-events: none;
-}
+/* The two glows fill the hero exactly and paint their circles as positioned
+   gradients, so they never spill past its edges and the hero needs no
+   `overflow: hidden` to contain them. Each gradient reproduces the earlier
+   offset square: a 440px circle hanging 10% above and 5% right of the hero,
+   and a 300px one 15% below and 3% left of it. The radius is the square's
+   farthest-corner reach (half its side times root 2). */
+.hero::before,
 .hero::after {
   content: "";
   position: absolute;
-  bottom: -15%;
-  left: -3%;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
+  inset: 0;
+  pointer-events: none;
+}
+.hero::before {
   background: radial-gradient(
-    circle,
+    circle 311px at calc(105% - 220px) calc(220px - 10%),
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
+}
+.hero::after {
+  background: radial-gradient(
+    circle 212px at calc(150px - 3%) calc(115% - 150px),
     rgba(var(--jade-rgb), 0.1),
     transparent 62%
   );
-  pointer-events: none;
 }
 .heroInner {
   position: relative;

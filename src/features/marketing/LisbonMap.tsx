@@ -23,8 +23,13 @@ interface LisbonMapProps {
   /** The map edge that panel covers right now, or null when it sits outside. */
   panelEdge?: MapPanelEdge | null;
   /** Full screen state and switch. When given, a button joins the zoom
-   *  controls. */
-  fullscreen?: { isFullscreen: boolean; onToggle: () => void };
+   *  controls. `redrawHandleRef` receives the map's synchronous redraw (see
+   *  useLisbonMap). */
+  fullscreen?: {
+    isFullscreen: boolean;
+    onToggle: () => void;
+    redrawHandleRef?: RefObject<(() => void) | null>;
+  };
 }
 
 export function LisbonMap({
@@ -65,6 +70,7 @@ export function LisbonMap({
     panelRef,
     panelEdge,
     hasFullscreenControl: fullscreen !== undefined,
+    redrawHandleRef: fullscreen?.redrawHandleRef,
   });
 
   const fullscreenLabel = fullscreen?.isFullscreen

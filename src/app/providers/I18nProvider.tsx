@@ -36,7 +36,7 @@ const EMPTY_LOADED_NAMESPACES: Partial<Record<Namespace, Catalog>> = {};
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(detectLanguage);
 
-  // Non-shell namespaces load lazily for BOTH languages now (EN mirrors PT —
+  // Non-shell namespaces load lazily for BOTH languages now (EN mirrors PT;
   // see catalogs/index.ts). The resolved catalogs live here, per language, so
   // resolving one bumps a real dependency of `t` and re-renders consumers with
   // the now-available strings.
@@ -53,10 +53,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   >({ en: {}, pt: {} });
 
   // Namespaces requested during render but not yet fetched, keyed by language.
-  // `t` runs mid-render (in consumers), so it can only queue work here; the
-  // effect below drains the queue after commit, where kicking off imports is
-  // safe. `requestedNamespaces` dedupes so a given language/namespace pair is
-  // fetched at most once regardless of re-renders.
+  // `t` runs mid-render (in consumers), so it only queues work here and
+  // schedules `drainPendingNamespaces` on a microtask, which runs once the
+  // current render work has yielded. The drain cannot wait for this provider's
+  // own commit: a lazily mounted route renders its consumers without the
+  // provider ever re-rendering, so a commit-bound drain left their namespace
+  // queued forever (blank PT headings on a cold load). `requestedNamespaces`
+  // dedupes so a given language/namespace pair is fetched at most once
+  // regardless of re-renders.
   const pendingNamespaces = useRef<Record<Language, Set<Namespace>>>({
     en: new Set(),
     pt: new Set(),
@@ -65,92 +69,13 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     en: new Set(),
     pt: new Set(),
   });
+  const isDrainScheduled = useRef(false);
 
-  useEffect(() => {
-    safeStorage.set(STORAGE_KEY, language);
-    document.documentElement.lang = language;
-    // Mirror the active language into IndexedDB for the service worker's push
-    // handler (see pushLang.ts) — runs on boot (initial state) and every
-    // switch, same as the localStorage write above. Best-effort/fire-and-
-    // forget: a failure here must never block rendering or the language
-    // switch it's piggybacking on.
-    void writePushLang(language);
-  }, [language]);
-
-  const setLanguage = useCallback(
-    (next: Language) => setLanguageState(next),
-    [],
-  );
-
-  /**
-   * Resolve the currently-loaded catalog for `language`/`namespace` — the real
-   * one if it's a shell namespace or has already loaded, `undefined` if it's
-   * lazy and still pending. Queues a fetch for a still-pending namespace
-   * (deduped) so the caller never has to remember to.
-   */
-  const catalogForQueueing = useCallback(
-    (
-      namespaceLanguage: Language,
-      namespace: Namespace,
-    ): Catalog | undefined => {
-      if (!isLazyNamespace(namespaceLanguage, namespace)) {
-        return catalogs[namespaceLanguage][namespace];
-      }
-      const loaded = loadedNamespaces[namespaceLanguage][namespace];
-      if (loaded !== undefined) return loaded;
-      if (!requestedNamespaces.current[namespaceLanguage].has(namespace)) {
-        requestedNamespaces.current[namespaceLanguage].add(namespace);
-        pendingNamespaces.current[namespaceLanguage].add(namespace);
-      }
-      return undefined;
-    },
-    [loadedNamespaces],
-  );
-
-  const t = useCallback<TFunction>(
-    (key: string, options?: TranslateOptions) => {
-      const { namespace, path } = parseKey(key);
-      const ns = namespace as Namespace;
-
-      // Resolve against the active language first, queueing its chunk if it
-      // hasn't arrived yet.
-      const activeCatalog = catalogForQueueing(language, ns);
-      const active = resolveEntry(
-        activeCatalog,
-        path,
-        intlLocale(language),
-        options,
-      );
-      if (active !== undefined) return active;
-
-      // One language at a time: while the active language's chunk is still in
-      // flight, render nothing for this key instead of an English stand-in.
-      // The chunk's arrival re-renders consumers with the real string.
-      const isActivePending =
-        language !== "en" &&
-        activeCatalog === undefined &&
-        failedNamespaces[language][ns] !== true;
-      if (isActivePending) return "";
-
-      // EN is the universal fallback. Queue it too — this is the fix that
-      // makes lazy EN safe: a PT (or any non-EN) miss now kicks off BOTH the
-      // active namespace's fetch AND its EN fallback's fetch in the same
-      // pass, instead of assuming EN is already synchronously bundled.
-      const enCatalog =
-        language === "en" ? activeCatalog : catalogForQueueing("en", ns);
-      const fallback = resolveEntry(enCatalog, path, "en", options);
-      if (fallback !== undefined) return fallback;
-
-      logWarn("i18n: missing translation key", { key, language });
-      return key;
-    },
-    [language, catalogForQueueing, failedNamespaces],
-  );
-
-  // Drain the fetch queue after every commit. Namespaces queued by `t` during
-  // this render are fetched here; each resolution records the catalog, which
-  // re-renders consumers with the now-available strings.
-  useEffect(() => {
+  // Fetch every queued namespace; each resolution records the catalog, which
+  // re-renders consumers with the now-available strings. Reads only refs and
+  // state setters, so its identity is stable.
+  const drainPendingNamespaces = useCallback(() => {
+    isDrainScheduled.current = false;
     for (const namespaceLanguage of LANGUAGES) {
       const queue = pendingNamespaces.current[namespaceLanguage];
       if (queue.size === 0) continue;
@@ -192,12 +117,97 @@ export function I18nProvider({ children }: { children: ReactNode }) {
           });
       }
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    safeStorage.set(STORAGE_KEY, language);
+    document.documentElement.lang = language;
+    // Mirror the active language into IndexedDB for the service worker's push
+    // handler (see pushLang.ts). It runs on boot (initial state) and every
+    // switch, same as the localStorage write above. Best-effort/fire-and-
+    // forget: a failure here must never block rendering or the language
+    // switch it's piggybacking on.
+    void writePushLang(language);
+  }, [language]);
+
+  const setLanguage = useCallback(
+    (next: Language) => setLanguageState(next),
+    [],
+  );
+
+  /**
+   * Resolve the currently-loaded catalog for `language`/`namespace`: the real
+   * one if it's a shell namespace or has already loaded, `undefined` if it's
+   * lazy and still pending. Queues a fetch for a still-pending namespace
+   * (deduped) so the caller never has to remember to.
+   */
+  const catalogForQueueing = useCallback(
+    (
+      namespaceLanguage: Language,
+      namespace: Namespace,
+    ): Catalog | undefined => {
+      if (!isLazyNamespace(namespaceLanguage, namespace)) {
+        return catalogs[namespaceLanguage][namespace];
+      }
+      const loaded = loadedNamespaces[namespaceLanguage][namespace];
+      if (loaded !== undefined) return loaded;
+      if (!requestedNamespaces.current[namespaceLanguage].has(namespace)) {
+        requestedNamespaces.current[namespaceLanguage].add(namespace);
+        pendingNamespaces.current[namespaceLanguage].add(namespace);
+        if (!isDrainScheduled.current) {
+          isDrainScheduled.current = true;
+          queueMicrotask(drainPendingNamespaces);
+        }
+      }
+      return undefined;
+    },
+    [loadedNamespaces, drainPendingNamespaces],
+  );
+
+  const t = useCallback<TFunction>(
+    (key: string, options?: TranslateOptions) => {
+      const { namespace, path } = parseKey(key);
+      const ns = namespace as Namespace;
+
+      // Resolve against the active language first, queueing its chunk if it
+      // hasn't arrived yet.
+      const activeCatalog = catalogForQueueing(language, ns);
+      const active = resolveEntry(
+        activeCatalog,
+        path,
+        intlLocale(language),
+        options,
+      );
+      if (active !== undefined) return active;
+
+      // One language at a time: while the active language's chunk is still in
+      // flight, render nothing for this key instead of an English stand-in.
+      // The chunk's arrival re-renders consumers with the real string.
+      const isActivePending =
+        language !== "en" &&
+        activeCatalog === undefined &&
+        failedNamespaces[language][ns] !== true;
+      if (isActivePending) return "";
+
+      // EN is the universal fallback. Queue it too; this is the fix that
+      // makes lazy EN safe: a PT (or any non-EN) miss now kicks off BOTH the
+      // active namespace's fetch AND its EN fallback's fetch in the same
+      // pass, instead of assuming EN is already synchronously bundled.
+      const enCatalog =
+        language === "en" ? activeCatalog : catalogForQueueing("en", ns);
+      const fallback = resolveEntry(enCatalog, path, "en", options);
+      if (fallback !== undefined) return fallback;
+
+      logWarn("i18n: missing translation key", { key, language });
+      return key;
+    },
+    [language, catalogForQueueing, failedNamespaces],
+  );
 
   // Background-prefetch every lazy EN namespace once, after first paint. EN is
   // the fallback for every key in every language, so warming it in idle time
-  // (never blocking initial render — that's what keeps it out of the entry
-  // chunk) means the common case is that EN is already resident by the time a
+  // (it waits for idle time so initial render stays fast, which keeps it
+  // out of the entry chunk) means the common case is that EN is already resident by the time a
   // route actually needs it, closing the one-render raw-key-flash window the
   // `t()` queue-on-demand path alone would otherwise leave on a very first,
   // very fast navigation. `requestIdleCallback` isn't in Safari; the
@@ -234,9 +244,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
           });
       }
     });
-    // Runs once per mount — this is a background warmup, not a per-render
-    // effect; `loadedNamespaces`/`requestedNamespaces` are read for their
-    // current values inside the idle callback, not tracked as dependencies.
+    // Runs once per mount as a background warmup. The idle callback reads
+    // `loadedNamespaces`/`requestedNamespaces` for their current values, so
+    // neither is listed as a dependency.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

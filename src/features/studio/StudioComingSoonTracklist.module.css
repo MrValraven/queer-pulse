@@ -1,0 +1,503 @@
+/* "What it will sound like": Side A of a record pulled halfway out of its
+   sleeve. The root island owns the plum ground and the tape hiss, so this
+   section only paints the vinyl, the sleeve and the cover art on its back. */
+
+.section {
+  --tracklist-gutter: clamp(20px, 5vw, 48px);
+  /* A static waveform: thirty rounded bars rising and falling. The SVG is a
+     mask stencil only, so it carries no colour of its own. */
+  --waveform: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Crect x='1' y='17' width='2' height='6' rx='1'/%3E%3Crect x='5' y='15' width='2' height='10' rx='1'/%3E%3Crect x='9' y='12' width='2' height='16' rx='1'/%3E%3Crect x='13' y='14' width='2' height='12' rx='1'/%3E%3Crect x='17' y='9' width='2' height='22' rx='1'/%3E%3Crect x='21' y='5' width='2' height='30' rx='1'/%3E%3Crect x='25' y='11' width='2' height='18' rx='1'/%3E%3Crect x='29' y='7' width='2' height='26' rx='1'/%3E%3Crect x='33' y='2' width='2' height='36' rx='1'/%3E%3Crect x='37' y='6' width='2' height='28' rx='1'/%3E%3Crect x='41' y='10' width='2' height='20' rx='1'/%3E%3Crect x='45' y='4' width='2' height='32' rx='1'/%3E%3Crect x='49' y='8' width='2' height='24' rx='1'/%3E%3Crect x='53' y='13' width='2' height='14' rx='1'/%3E%3Crect x='57' y='10' width='2' height='20' rx='1'/%3E%3Crect x='61' y='3' width='2' height='34' rx='1'/%3E%3Crect x='65' y='7' width='2' height='26' rx='1'/%3E%3Crect x='69' y='11' width='2' height='18' rx='1'/%3E%3Crect x='73' y='5' width='2' height='30' rx='1'/%3E%3Crect x='77' y='9' width='2' height='22' rx='1'/%3E%3Crect x='81' y='14' width='2' height='12' rx='1'/%3E%3Crect x='85' y='11' width='2' height='18' rx='1'/%3E%3Crect x='89' y='7' width='2' height='26' rx='1'/%3E%3Crect x='93' y='12' width='2' height='16' rx='1'/%3E%3Crect x='97' y='15' width='2' height='10' rx='1'/%3E%3Crect x='101' y='13' width='2' height='14' rx='1'/%3E%3Crect x='105' y='16' width='2' height='8' rx='1'/%3E%3Crect x='109' y='14' width='2' height='12' rx='1'/%3E%3Crect x='113' y='17' width='2' height='6' rx='1'/%3E%3Crect x='117' y='18' width='2' height='4' rx='1'/%3E%3C/svg%3E");
+
+  position: relative;
+  padding-top: clamp(40px, 6vh, var(--section-y-72));
+  padding-bottom: clamp(24px, 4vh, var(--section-y-48));
+  overflow-x: clip;
+}
+
+.head {
+  max-width: 1180px;
+  margin: 0 auto clamp(32px, 5vw, 56px);
+  padding-inline: var(--tracklist-gutter);
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* One step below the manifesto's pull line, which is the page's centre. */
+.title {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 400;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: rgba(var(--cream-rgb), 0.94);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Record and sleeve share one grid row. The record is wider than its own
+   column, so its right edge slides in behind the sleeve. --tuck-x and
+   --tuck-y say how far back into the sleeve it starts before it scrolls out,
+   and --tuck-direction which side of the disc falls into the sleeve's shade. */
+.stage {
+  --tuck-x: 26%;
+  --tuck-y: 0%;
+  --tuck-direction: 90deg;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: var(--tracklist-gutter);
+}
+
+.turntable {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  width: 132%;
+  aspect-ratio: 1;
+}
+
+/* A low coral halo behind the vinyl, as if a stage light caught its edge. */
+.turntable::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  z-index: -1;
+  border-radius: var(--radius-avatar);
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--accent-rgb), 0.16),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* Light that stays put while the disc turns under it: two glints across the
+   grooves, and the shade where the vinyl disappears into the sleeve. */
+.turntable::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-avatar);
+  background:
+    linear-gradient(
+      var(--tuck-direction),
+      transparent 50%,
+      rgba(0, 0, 0, 0.5) 88%
+    ),
+    conic-gradient(
+      from 200deg,
+      transparent 0deg,
+      rgba(var(--cream-rgb), 0.1) 18deg,
+      transparent 44deg,
+      transparent 180deg,
+      rgba(var(--cream-rgb), 0.07) 198deg,
+      transparent 224deg
+    );
+  pointer-events: none;
+}
+
+/* The vinyl. Fine grooves over near-black, three bands of music split by
+   smooth gaps (one per track), a run-out ring round the label and a lit rim.
+   A faint uneven shimmer turns with the disc, so the spin reads. Its ramp
+   ends on the colour it starts with, so the sweep wraps without a seam. */
+.disc {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-avatar);
+  background:
+    radial-gradient(
+      closest-side,
+      transparent 0 36%,
+      rgba(0, 0, 0, 0.62) 36% 40%,
+      transparent 40% 58%,
+      rgba(0, 0, 0, 0.62) 58% 59.6%,
+      transparent 59.6% 77%,
+      rgba(0, 0, 0, 0.62) 77% 78.6%,
+      transparent 78.6% 95%,
+      rgba(0, 0, 0, 0.5) 95% 99%,
+      rgba(var(--cream-rgb), 0.16) 99.4%,
+      transparent 100%
+    ),
+    repeating-radial-gradient(
+      circle,
+      transparent 0 2px,
+      rgba(var(--cream-rgb), 0.05) 2px 3px
+    ),
+    conic-gradient(
+      rgba(var(--cream-rgb), 0.05),
+      transparent 12%,
+      transparent 45%,
+      rgba(var(--accent-rgb), 0.07) 52%,
+      transparent 60%,
+      transparent 88%,
+      rgba(var(--cream-rgb), 0.05)
+    ),
+    linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+  background-color: var(--plum);
+}
+
+/* The centre label: a coral paper disc with a warm highlight, a pressed ring
+   near its edge and the spindle hole punched through to the plum. */
+.discLabel {
+  position: absolute;
+  inset: 32%;
+  border-radius: var(--radius-avatar);
+  background:
+    radial-gradient(
+      circle closest-side,
+      var(--plum) 0 7%,
+      rgba(0, 0, 0, 0.24) 8% 11%,
+      transparent 12% 84%,
+      rgba(0, 0, 0, 0.16) 85% 87%,
+      transparent 88%
+    ),
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(var(--amber-rgb), 0.36),
+      transparent 60%
+    ),
+    var(--accent);
+}
+
+/* Printed above the spindle hole, as on a real label. The coral fill stays
+   light in both themes, so the ink stays plum. */
+.discLabelText {
+  position: absolute;
+  top: 20%;
+  inset-inline: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: var(--ls-heading);
+  text-align: center;
+  /* css-scale-allow: non-flipping-text */
+  color: rgba(var(--plum-rgb), 0.88);
+}
+
+/* The back of the sleeve: an opaque card over the record, so the vinyl
+   vanishes behind it. A faint ring worn in by the record inside it and a
+   coral wash in one corner, like a printed sleeve under stage light. */
+.sleeve {
+  --art-size: clamp(84px, 9vw, 124px);
+
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  grid-row: 1;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: var(--radius-4);
+  background:
+    radial-gradient(
+      circle closest-side,
+      transparent 0 92%,
+      rgba(var(--cream-rgb), 0.04) 93% 95%,
+      transparent 96%
+    ),
+    radial-gradient(
+      60% 50% at 100% 0%,
+      rgba(var(--accent-rgb), 0.12),
+      transparent 70%
+    ),
+    linear-gradient(rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.34));
+  background-color: var(--plum);
+}
+
+.tracks {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One row per track: cover art on the left, the words beside it. */
+.track {
+  display: grid;
+  grid-template-columns: var(--art-size) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "art meta"
+    "art body";
+  column-gap: clamp(18px, 2.4vw, 28px);
+  padding-block: clamp(18px, 2.2vw, 26px);
+}
+
+.track:first-child {
+  padding-top: 0;
+}
+
+.track:last-child {
+  padding-bottom: 0;
+}
+
+.track + .track {
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
+}
+
+/* The cover: a tint per track so the three read as one side. The motif sits
+   on ::before and a printed sheen on ::after lies over everything. */
+.art {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  grid-area: art;
+  align-self: start;
+  aspect-ratio: 1;
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-4);
+}
+
+.art::before,
+.art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.art::after {
+  background:
+    linear-gradient(135deg, rgba(var(--cream-rgb), 0.18), transparent 40%),
+    radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.28));
+}
+
+/* Track one, coral: a low amber sun over a coral sleeve, the waveform
+   printed across it in plum ink. */
+.track:nth-child(1) .art {
+  background:
+    radial-gradient(
+      circle at 74% 24%,
+      rgba(var(--amber-rgb), 0.9) 0 9%,
+      rgba(var(--amber-rgb), 0.3) 10%,
+      transparent 34%
+    ),
+    linear-gradient(160deg, var(--accent) 20%, rgba(var(--rose-rgb), 0.85));
+}
+
+.track:nth-child(1) .art::before {
+  background: rgba(var(--plum-rgb), 0.78);
+  -webkit-mask: var(--waveform) 50% 72% / 80% auto no-repeat;
+  mask: var(--waveform) 50% 72% / 80% auto no-repeat;
+}
+
+/* Track two, jade: a record peeking in from the corner of a jade night, its
+   pale label catching the light. */
+.track:nth-child(2) .art {
+  background:
+    radial-gradient(
+      ellipse 90% 60% at 20% 0%,
+      rgba(var(--jade-rgb), 0.55),
+      transparent 70%
+    ),
+    linear-gradient(180deg, rgba(var(--jade-rgb), 0.3), rgba(0, 0, 0, 0.5)),
+    rgba(var(--jade-rgb), 0.24);
+}
+
+.track:nth-child(2) .art::before {
+  inset: auto -38% -38% auto;
+  width: 96%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-avatar);
+  background:
+    radial-gradient(
+      circle closest-side,
+      var(--jade-light) 0 20%,
+      rgba(0, 0, 0, 0.6) 21% 26%,
+      transparent 27%
+    ),
+    repeating-radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.78) 0 2px,
+      rgba(var(--jade-rgb), 0.55) 2px 3px
+    );
+}
+
+/* Track three, cream and plum: two printed title bars on a cream sleeve and
+   a plum record rising from the bottom edge, its coral label just clear. */
+.track:nth-child(3) .art {
+  background:
+    linear-gradient(rgba(var(--plum-rgb), 0.85), rgba(var(--plum-rgb), 0.85))
+      16% 18% / 46% 5px no-repeat,
+    linear-gradient(rgba(var(--plum-rgb), 0.6), rgba(var(--plum-rgb), 0.6))
+      16% 28% / 28% 5px no-repeat,
+    rgba(var(--cream-rgb), 0.88);
+}
+
+.track:nth-child(3) .art::before {
+  inset: auto 12% -24%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-avatar);
+  background:
+    radial-gradient(circle closest-side, var(--accent) 0 22%, transparent 23%),
+    repeating-radial-gradient(
+      circle,
+      rgba(var(--plum-rgb), 0.95) 0 2px,
+      rgba(var(--plum-rgb), 0.72) 2px 3px
+    );
+}
+
+.meta {
+  grid-area: meta;
+}
+
+.trackLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--cream-rgb), 0.66);
+}
+
+.trackTitle {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: var(--ls-heading);
+  color: rgba(var(--cream-rgb), 0.94);
+}
+
+.trackBody {
+  grid-area: body;
+  max-width: 54ch;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--cream-rgb), 0.66);
+  text-wrap: pretty;
+}
+
+/* Below 880px the two columns get cramped, so the record rises out of the
+   top edge of the sleeve instead, centred above the tracklist. */
+@media (--compact) {
+  .stage {
+    --record-size: min(64vw, 360px);
+    --tuck-x: 0%;
+    --tuck-y: 22%;
+    --tuck-direction: 180deg;
+
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .turntable {
+    justify-self: center;
+    width: var(--record-size);
+  }
+
+  .discLabelText {
+    font-size: var(--text-14);
+  }
+
+  .sleeve {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: calc(var(--record-size) * -0.3);
+  }
+}
+
+/* Phones: a smaller cover beside the label and title, and the body runs the
+   full width of the sleeve so it keeps a readable measure down to 320px. */
+@media (--sm) {
+  .sleeve {
+    --art-size: 64px;
+  }
+
+  .discLabelText {
+    font-size: var(--text-12);
+  }
+
+  .track {
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "art meta"
+      "body body";
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  .trackTitle {
+    margin-bottom: 0;
+    font-size: var(--text-20);
+  }
+
+  .trackBody {
+    margin-top: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .disc {
+    animation: recordSpin 24s linear infinite;
+  }
+
+  /* The record slides out of its sleeve and each track cues up as the
+     section scrolls into view. Every row runs on its own view timeline, so
+     the rows arrive one after another and each is fully in by the time it
+     clears the bottom edge of the viewport. Browsers without scroll-driven
+     animation simply show the finished layout. */
+  @supports (animation-timeline: view()) {
+    .turntable {
+      animation: recordSlideOut linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+
+    .track {
+      animation: trackCue linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@keyframes recordSpin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes recordSlideOut {
+  from {
+    transform: translate3d(var(--tuck-x), var(--tuck-y), 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes trackCue {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

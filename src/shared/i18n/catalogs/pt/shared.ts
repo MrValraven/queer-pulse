@@ -88,7 +88,7 @@ export const shared: Catalog = {
   "consent.storage.readingPlace.purpose":
     "Pesquisas recentes, onde paraste de ler um artigo e listas de verificação que percorreste.",
   "consent.storage.panelLayout.purpose":
-    "Que filtros e painéis laterais deixaste abertos ou fechados.",
+    "Que filtros e painéis laterais deixaste abertos ou fechados, e se vês as tuas personas em cartões ou numa lista.",
   "consent.storage.calculators.purpose":
     "Os valores que escreves na tabela de tarifas, no registo de IVA e no planeador de reservas. Ficam no teu dispositivo; nunca os recebemos.",
   "consent.storage.previewMode.purpose":
@@ -358,6 +358,11 @@ export const shared: Catalog = {
   // ConfirmDialog — default footer actions (callers usually pass their own)
   "confirmDialog.cancel": "Cancelar",
   "confirmDialog.confirm": "Confirmar",
+
+  // LeaveConfirmProvider: the unsaved-changes dialog shown before navigating away
+  "leaveConfirm.title": "Sair sem guardar?",
+  "leaveConfirm.leave": "Sair",
+  "leaveConfirm.stay": "Continuar a editar",
 
   // SaveButton — visible/aria label for the bookmark toggle
   "saveButton.save": "Guardar",

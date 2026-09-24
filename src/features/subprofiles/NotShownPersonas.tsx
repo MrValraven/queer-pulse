@@ -4,6 +4,8 @@ import { subprofileEditPath } from "../../app/routeMap";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { notShownOnProfileReason } from "./mySubprofiles.data";
 import { SideCard } from "./SideCard";
+import { SideRow } from "./SideRow";
+import type { PersonaDashboardView } from "./usePersonaDashboardView";
 import styles from "./MySubprofilesOrder.module.css";
 
 /**
@@ -15,15 +17,23 @@ import styles from "./MySubprofilesOrder.module.css";
  * them in the reorder grid would offer positions that change nothing. What
  * each one gets instead is the reason it is here and the one link that
  * resolves it, deep-linked to the editor pane where that work happens
- * (`?pane=publish` for a draft, `?pane=address` for a standalone persona — the
+ * (`?pane=publish` for a draft, `?pane=address` for a standalone persona; the
  * same `?pane=` the editor reads in `useEditorPane`).
  *
- * The card itself is the ordinary dashboard `SideCard`, with the reason and
- * link in the slot the owner actions occupy on the grid above.
+ * Each persona is the ordinary dashboard `SideCard` (Cards view) or `SideRow`
+ * (List view), with the reason and link in the slot the owner actions occupy
+ * in the group above: stacked under a card, inline at the end of a row.
  */
-export function NotShownPersonas({ personas }: { personas: SubprofileView[] }) {
+export function NotShownPersonas({
+  personas,
+  layout = "cards",
+}: {
+  personas: SubprofileView[];
+  layout?: PersonaDashboardView;
+}) {
   const { t } = useTranslation();
   if (personas.length === 0) return null;
+  const isList = layout === "list";
 
   return (
     <section className={styles.group}>
@@ -34,24 +44,43 @@ export function NotShownPersonas({ personas }: { personas: SubprofileView[] }) {
         <p className={styles.groupHint}>{t("subprofiles:mine.notShown.sub")}</p>
       </div>
 
-      <div className="sides">
+      <div
+        className={isList ? `${styles.rows} ${styles.notShownRows}` : "sides"}
+      >
         {personas.map((persona) => {
           const { reasonKey, actionKey, pane } =
             notShownOnProfileReason(persona);
-          return (
+          const reason = (
+            <p className={styles.notShownReason}>{t(reasonKey)}</p>
+          );
+          const resolveLink = (
+            <Button
+              variant="ghost"
+              size="sm"
+              to={`${subprofileEditPath(persona.id)}?pane=${pane}`}
+            >
+              {t(actionKey)}
+            </Button>
+          );
+          return isList ? (
+            <SideRow
+              key={persona.id}
+              view={persona}
+              footer={
+                <div className={styles.notShownRowFoot}>
+                  {reason}
+                  {resolveLink}
+                </div>
+              }
+            />
+          ) : (
             <SideCard
               key={persona.id}
               view={persona}
               footer={
                 <div className={`side-acts ${styles.notShownFoot}`}>
-                  <p className={styles.notShownReason}>{t(reasonKey)}</p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    to={`${subprofileEditPath(persona.id)}?pane=${pane}`}
-                  >
-                    {t(actionKey)}
-                  </Button>
+                  {reason}
+                  {resolveLink}
                 </div>
               }
             />

@@ -149,6 +149,8 @@
   text-decoration: none;
 }
 .tpBrandName {
+  /* The wordmark never breaks mid-word when the head row runs short. */
+  white-space: nowrap;
   font-family: var(--serif);
   font-size: var(--text-22);
   font-weight: 500;

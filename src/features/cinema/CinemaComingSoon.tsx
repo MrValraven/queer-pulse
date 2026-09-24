@@ -1,18 +1,27 @@
-import { FiFilm } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
-import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { CinemaComingSoonClosing } from "./CinemaComingSoonClosing";
+import { CinemaComingSoonFilmStrip } from "./CinemaComingSoonFilmStrip";
+import { CinemaComingSoonHero } from "./CinemaComingSoonHero";
+import { CinemaComingSoonManifesto } from "./CinemaComingSoonManifesto";
 import styles from "./CinemaComingSoon.module.css";
 
 /**
- * Live-mode placeholder for the WHOLE Cinema domain. The backend ships
+ * Live-mode teaser for the WHOLE Cinema domain. The backend ships
  * `launchedFeatures.cinema = { launched: false }`, so every `/cinema/*` call
  * 404s, no film can be streamed and no membership can be bought. Meanwhile the
  * demo pages advertise EUR 7/month and EUR 20/month tiers, a public ledger and
  * a 142-film catalogue that do not exist. So when demo mode is OFF every
  * `/cinema/*` route resolves here instead (see `cinemaRoutes`). CON-03.
+ *
+ * The page is one full-bleed, permanently dark "island" in four scenes: a
+ * projector-lit hero, a strip of film frames showing what the cinema will be
+ * like, a manifesto on why local queer filmmakers matter, and a marquee
+ * closing that points to the magazine. The island owns the plum ground and a
+ * film-grain overlay across all four. It describes the idea only: no price,
+ * revenue split, membership or ledger appears anywhere on it, because none of
+ * them exist yet.
  *
  * Deliberately uses the marketing `PageShell` rather than `CinemaShell`: the
  * cinema frame carries a "Sustain from EUR 7/mo" button and a footer full of
@@ -31,20 +40,11 @@ export function CinemaComingSoon() {
         description={t("cinema:comingSoon.description")}
         noIndex
       />
-      <div className={styles.wrap}>
-        <EmptyState
-          icon={<FiFilm aria-hidden />}
-          title={t("cinema:comingSoon.title")}
-          description={t("cinema:comingSoon.description")}
-          action={{
-            label: t("cinema:comingSoon.magazineCta"),
-            to: routes.magazine,
-          }}
-          secondaryAction={{
-            label: t("cinema:comingSoon.backHome"),
-            to: routes.homepage,
-          }}
-        />
+      <div className={styles.island}>
+        <CinemaComingSoonHero />
+        <CinemaComingSoonFilmStrip />
+        <CinemaComingSoonManifesto />
+        <CinemaComingSoonClosing />
       </div>
     </PageShell>
   );

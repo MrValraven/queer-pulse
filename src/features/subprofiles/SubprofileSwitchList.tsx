@@ -57,10 +57,10 @@ export function SubprofileSwitchList({
    *  `aria-labelledby` so the two stay in lockstep. */
   tabId: (slug: string) => string;
   /** Self view: the header shows a count ("4 personas") instead of the generic
-   *  "More personas" label, gains an "Add another persona" link, and each row
+   *  "More personas" label, gains an "Manage your personas" link, and each row
    *  shows its status/visibility. `false` on the public path (the default). */
   isSelf?: boolean;
-  /** Self view only: whether the header carries "Add another persona".
+  /** Self view only: whether the header carries "Manage your personas".
    *  `false` while the owner is editing their profile. */
   canAddPersona?: boolean;
   /** Per-persona owner-only metadata (status/visibility), keyed by slug —

@@ -1,0 +1,520 @@
+/* Therapist profile: "The practical bits" (design classes .tp-prac,
+   .tp-cell, .tp-slots, .tp-calc-*, .tp-opts, .tp-live, .tp-slot,
+   .tp-queue, .tp-qbar, .tp-travel, .tp-acc). */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  container: practical-grid / inline-size;
+}
+
+/* Four narrow cells come first (sessions, fees, small print,
+   availability). With 230px columns and 12px gaps the grid holds three
+   columns from 714px (3 x 230 + 2 x 12) to 955px, which leaves
+   availability alone on its row: let it take the whole row there. */
+@container practical-grid (min-width: 714px) and (max-width: 955px) {
+  .availabilityCell {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Cell ── */
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px 18px;
+  /* Rows and the calculator stack when the cell itself is narrow, at any
+     page width (the grid's column count varies with the page wrap). */
+  container: practical-cell / inline-size;
+  background: rgba(var(--line-rgb), 0.035);
+  border-radius: var(--radius-16);
+}
+
+:global([data-theme="dark"]) .cell {
+  background: rgba(var(--line-rgb), 0.05);
+}
+
+@media (prefers-contrast: more) {
+  .cell {
+    border: 1px solid var(--line);
+  }
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+/* ── The owner's "Edit" link, in the cell's top corner level with the
+   title. Cells that take no extra child get it through `.editSlot`, a
+   wrapper that is the grid item in their place (owner mode only). ── */
+.cell,
+.editSlot {
+  position: relative;
+}
+
+.editSlot {
+  display: grid;
+  min-width: 0;
+}
+
+.cellEdit {
+  position: absolute;
+  top: 13px;
+  right: 12px;
+  z-index: 1;
+}
+
+.cell:has(> .cellEdit) > .cellTitle,
+.editSlot > .cell > .cellTitle {
+  padding-right: 52px;
+}
+
+.cellTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.cellIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.big {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+
+.big small {
+  margin-left: 4px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  letter-spacing: 0;
+  color: var(--ink-60);
+}
+
+/* ── Label / value rows ── */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px 0 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.row dt,
+.row dd {
+  margin: 0;
+}
+
+/* The label keeps its natural width up to just over half the row, so short
+   labels stay on one line and the value wraps instead. A long owner-typed
+   label wraps between words inside that cap. */
+.row dt {
+  flex: none;
+  max-width: 55%;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.row dd {
+  min-width: 0;
+  overflow-wrap: break-word;
+  text-align: right;
+  color: var(--ink-60);
+}
+
+/* Too narrow for a long label beside its value: label above value. */
+@container practical-cell (max-width: 210px) {
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .row dd {
+    text-align: left;
+  }
+}
+
+.soloLine {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.missing {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+.hint {
+  margin: 4px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+.hint b {
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--jade-ink);
+}
+
+.okIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.6;
+  color: var(--jade);
+}
+
+/* ── Sliding-scale places ── */
+.places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.place,
+.placeTaken {
+  width: 22px;
+  height: 6px;
+  border-radius: var(--radius-3);
+  background: rgba(var(--jade-rgb), 0.22);
+}
+
+.placeTaken {
+  background: var(--jade);
+}
+
+/* ── Availability: open slots and the waitlist ── */
+.availabilityBody,
+.availabilityFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Spanning a whole row: facts on the left, slots or waitlist on the right. */
+@container practical-cell (min-width: 520px) {
+  .availabilityBody {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  .availabilityBody > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .availabilityBody > .live {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 28px;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+}
+
+.live {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.liveLabel {
+  margin: 0 0 2px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.slots {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+}
+
+.slotIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--jade);
+}
+
+.queue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.queueText {
+  margin: 0;
+  padding-bottom: 4px;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.queueBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.queueSquare,
+.queueSquareYou {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-4);
+  background: rgba(var(--accent-rgb), 0.22);
+}
+
+.queueSquareYou {
+  background: var(--accent);
+  box-shadow: var(--ring-accent-strong);
+}
+
+/* ── Cost calculator ── */
+.calcRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+}
+
+.options {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 3px;
+  background: rgba(var(--line-rgb), 0.06);
+  /* Reads as a pill on one line and stays a tidy rounded track wrapped. */
+  border-radius: var(--radius-20);
+}
+
+:global([data-theme="dark"]) .options {
+  background: rgba(var(--line-rgb), 0.1);
+}
+
+.option {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.option:hover {
+  color: var(--ink);
+}
+
+.option[aria-pressed="true"] {
+  color: var(--text-strong);
+  background: var(--paper);
+  box-shadow: var(--shadow-e2);
+}
+
+.option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (pointer: coarse) {
+  .option {
+    min-height: 44px;
+  }
+}
+
+/* Narrow calculator: label above, options across the full width. */
+@container practical-cell (max-width: 440px) {
+  .calcRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .options {
+    display: flex;
+  }
+
+  .option {
+    flex: 1 1 auto;
+  }
+}
+
+.calcOut {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 22px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.calcTotal {
+  margin: 0;
+}
+
+.calcTotalLabel {
+  display: block;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.calcBig {
+  display: block;
+  font-family: var(--serif);
+  font-size: var(--text-34);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+
+.calcDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding: 4px 0 0;
+  list-style: none;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* ── Getting there / accessibility ── */
+.travel,
+.access {
+  display: grid;
+  gap: 8px 18px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.travel {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.access {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.travel li,
+.access li {
+  display: flex;
+  gap: 10px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.travelIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  color: var(--ink-40);
+}
+
+.accessIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  stroke-width: 2.6;
+  color: var(--jade);
+}
+
+.access li.accessMissing {
+  color: var(--ink-60);
+}
+
+.accessMissing .accessIcon {
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none;
+  }
+}

@@ -1,5 +1,6 @@
 import type {
   LinkVisibility,
+  SubprofileKind,
   SubprofileSection,
   Visibility,
 } from "./api/subprofiles.api";
@@ -124,5 +125,40 @@ export const FIELD_META: Record<
   tags: {
     labelKey: "subprofiles:field.tags.label",
     placeholderKey: "subprofiles:field.tags.placeholder",
+  },
+};
+
+/** One base field's copy in the item drawer, overriding `FIELD_META`'s. */
+export interface ItemFieldCopy {
+  labelKey?: string;
+  placeholderKey?: string;
+  helperKey?: string;
+}
+
+/**
+ * Item drawer copy for a section whose items the kind's page renders in its
+ * own shape. A therapist's specialisms are groups on the page: the title is
+ * the group heading and each description line is one bullet.
+ */
+export const KIND_SECTION_FIELD_COPY: Partial<
+  Record<
+    SubprofileKind,
+    Partial<Record<SubprofileSection, Record<string, ItemFieldCopy>>>
+  >
+> = {
+  therapist: {
+    specialisms: {
+      title: {
+        labelKey: "subprofiles:editorTherapist.specialisms.titleLabel",
+        placeholderKey:
+          "subprofiles:editorTherapist.specialisms.titlePlaceholder",
+      },
+      description: {
+        labelKey: "subprofiles:editorTherapist.specialisms.descriptionLabel",
+        placeholderKey:
+          "subprofiles:editorTherapist.specialisms.descriptionPlaceholder",
+        helperKey: "subprofiles:editorTherapist.specialisms.descriptionHelper",
+      },
+    },
   },
 };

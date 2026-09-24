@@ -47,7 +47,7 @@ export function SubprofileShowcase({
   personas: PublicSubprofileView[];
   ownerSlug: string;
   /** Self view: renders owner controls (Edit) on the hero, status/visibility
-   *  badges, and an "Add another persona" affordance. `false` on the public
+   *  badges, and an "Manage your personas" affordance. `false` on the public
    *  path (the default) — this component never fetches or infers ownership
    *  itself, it only renders what the caller tells it to. */
   isSelf?: boolean;
@@ -56,7 +56,7 @@ export function SubprofileShowcase({
    *  (which it stays in live mode, since the server can't see the client-only
    *  preview toggle). Without this, Edit survives the preview. */
   previewing?: boolean;
-  /** Self view only: whether the "Add another persona" affordance is offered
+  /** Self view only: whether the "Manage your personas" affordance is offered
    *  (the switch-list header's link, or the lone-persona button under the
    *  hero). `false` while the owner is editing their own profile — creating a
    *  persona means leaving the editor, so the profile editor hides the path
@@ -183,7 +183,7 @@ export function SubprofileShowcase({
           ownerMetaBySlug={ownerMetaBySlug}
         />
       ) : (
-        // A lone persona has no switch list to host "Add another persona" next
+        // A lone persona has no switch list to host "Manage your personas" next
         // to — render it directly under the capped-width hero instead.
         isSelf &&
         canAddPersona && (
@@ -193,7 +193,7 @@ export function SubprofileShowcase({
             to={routes.subprofilesDashboard}
             className={styles.soloAddAnother}
           >
-            {t("subprofiles:alsoAs.addAnother")}
+            {t("subprofiles:alsoAs.manage")}
           </Button>
         )
       )}

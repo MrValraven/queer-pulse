@@ -1,0 +1,226 @@
+/* "Why it matters": a very large Fraunces pull line on the left, the
+   argument in a readable column on the right. The root island owns the plum
+   ground; this section adds only a faint coral glow behind the quote and a
+   recorded waveform under it. */
+
+.section {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(var(--section-y-64), 10vh, var(--section-y-120)) 0;
+  overflow-x: clip;
+}
+
+/* Decorative orb, low opacity, sitting behind the pull line. */
+.section::before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: -12%;
+  z-index: -1;
+  width: min(70vw, 760px);
+  aspect-ratio: 1;
+  border-radius: var(--radius-avatar);
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--accent-rgb), 0.14),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+.eyebrow {
+  margin: 0 0 clamp(20px, 2.4vw, 32px);
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.quoteWrap {
+  position: relative;
+}
+
+/* An oversized microphone standing where an opening quote mark would, set in
+   its own row directly above the line it opens, clear of every line of type.
+   Sized by box, so no font-size literal is needed. */
+.micMark {
+  /* The icon's arc starts about 4.4 units into a 24-unit box once its stroke
+     is counted; the negative start margin pulls that inset back so the mic
+     aligns with the quote. */
+  --mic-mark-size: clamp(40px, 5.4vw, 80px);
+
+  display: block;
+  width: var(--mic-mark-size);
+  height: var(--mic-mark-size);
+  margin: 0 0 clamp(8px, 1.2vw, 16px) calc(var(--mic-mark-size) * -0.18);
+  color: rgba(var(--accent-rgb), 0.55);
+  pointer-events: none;
+}
+
+.micMark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  stroke-width: 1.25;
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: rgba(var(--cream-rgb), 0.94);
+  text-wrap: balance;
+}
+
+.quote em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+/* A faint take of the pull line, as a recorder would draw it: 48 bars of
+   varying height across a hairline zero axis. The mask is an SVG stencil of
+   the bars and the axis (the axis at a lower alpha so it sits back), and the
+   gradient behind it fades the take from coral into the plum. The mask
+   stretches with the box, so the take always spans the column's width. */
+.waveform {
+  display: block;
+  width: min(100%, 440px);
+  height: clamp(22px, 2.6vw, 32px);
+  margin-top: clamp(20px, 2.6vw, 32px);
+  background: linear-gradient(
+    to right,
+    rgba(var(--accent-rgb), 0.55),
+    rgba(var(--cream-rgb), 0.2) 55%,
+    rgba(var(--cream-rgb), 0.04)
+  );
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 284 32' preserveAspectRatio='none'><path fill-opacity='.4' d='M0 15.5h284v1H0z'/><path d='M0 14h2v4h-2zM6 11h2v10h-2zM12 11h2v10h-2zM18 12h2v8h-2zM24 14h2v4h-2zM30 11h2v10h-2zM36 12h2v8h-2zM42 15h2v2h-2zM48 15h2v2h-2zM54 13h2v6h-2zM60 15h2v2h-2zM66 8h2v16h-2zM72 7h2v18h-2zM78 10h2v12h-2zM84 13h2v6h-2zM90 9h2v14h-2zM96 5h2v22h-2zM102 11h2v10h-2zM108 13h2v6h-2zM114 15h2v2h-2zM120 12h2v8h-2zM126 12h2v8h-2zM132 7h2v18h-2zM138 11h2v10h-2zM144 14h2v4h-2zM150 10h2v12h-2zM156 3h2v26h-2zM162 6h2v20h-2zM168 13h2v6h-2zM174 15h2v2h-2zM180 11h2v10h-2zM186 12h2v8h-2zM192 12h2v8h-2zM198 12h2v8h-2zM204 14h2v4h-2zM210 12h2v8h-2zM216 7h2v18h-2zM222 6h2v20h-2zM228 13h2v6h-2zM234 14h2v4h-2zM240 12h2v8h-2zM246 10h2v12h-2zM252 14h2v4h-2zM258 14h2v4h-2zM264 15h2v2h-2zM270 14h2v4h-2zM276 13h2v6h-2zM282 12h2v8h-2z'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 284 32' preserveAspectRatio='none'><path fill-opacity='.4' d='M0 15.5h284v1H0z'/><path d='M0 14h2v4h-2zM6 11h2v10h-2zM12 11h2v10h-2zM18 12h2v8h-2zM24 14h2v4h-2zM30 11h2v10h-2zM36 12h2v8h-2zM42 15h2v2h-2zM48 15h2v2h-2zM54 13h2v6h-2zM60 15h2v2h-2zM66 8h2v16h-2zM72 7h2v18h-2zM78 10h2v12h-2zM84 13h2v6h-2zM90 9h2v14h-2zM96 5h2v22h-2zM102 11h2v10h-2zM108 13h2v6h-2zM114 15h2v2h-2zM120 12h2v8h-2zM126 12h2v8h-2zM132 7h2v18h-2zM138 11h2v10h-2zM144 14h2v4h-2zM150 10h2v12h-2zM156 3h2v26h-2zM162 6h2v20h-2zM168 13h2v6h-2zM174 15h2v2h-2zM180 11h2v10h-2zM186 12h2v8h-2zM192 12h2v8h-2zM198 12h2v8h-2zM204 14h2v4h-2zM210 12h2v8h-2zM216 7h2v18h-2zM222 6h2v20h-2zM228 13h2v6h-2zM234 14h2v4h-2zM240 12h2v8h-2zM246 10h2v12h-2zM252 14h2v4h-2zM258 14h2v4h-2zM264 15h2v2h-2zM270 14h2v4h-2zM276 13h2v6h-2zM282 12h2v8h-2z'/></svg>");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* The argument: a hairline down its left edge with a short coral segment at
+   the top, dropped so its first line meets the quote's first line and the
+   two columns read as a spread. */
+.textColumn {
+  position: relative;
+  max-width: 62ch;
+  margin-top: clamp(0px, 10vw, 144px);
+  padding-left: clamp(24px, 3vw, 40px);
+  border-left: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+
+.textColumn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 2px;
+  height: 64px;
+  background: var(--accent);
+  transform-origin: top;
+}
+
+.paragraph {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: rgba(var(--cream-rgb), 0.66);
+  text-wrap: pretty;
+}
+
+.paragraph + .paragraph {
+  margin-top: 1.2em;
+}
+
+.paragraph:first-child {
+  font-size: var(--text-19);
+  color: rgba(var(--cream-rgb), 0.9);
+}
+
+/* Tablet and below: one column, quote first, then the argument. */
+@media (--wide) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .textColumn {
+    margin-top: 0;
+  }
+}
+
+/* Motion is opt-in: under `prefers-reduced-motion: reduce` none of these
+   rules apply and every layer simply rests in place. The waveform draws in
+   from the left as the section scrolls into view, then stays still. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .quoteWrap,
+    .textColumn {
+      animation: manifestoRise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+
+    .waveform {
+      animation: manifestoTake linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
+
+    .textColumn::before {
+      animation: manifestoRule linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 40%;
+    }
+  }
+}
+
+@keyframes manifestoRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes manifestoTake {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes manifestoRule {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}

@@ -1,0 +1,223 @@
+/* Email template library and editor pages. */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.rowLabel {
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowChips,
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.editLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+}
+
+/* The Preview button wears the Edit link's look; this resets the button. */
+.previewButton {
+  composes: editLink;
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.editLink:focus-visible,
+.previewButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.notice,
+.ptMissing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  background: var(--cream);
+  border-radius: var(--radius-14);
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.metaLabel {
+  flex: 1 1 280px;
+}
+
+.metaGroup,
+.localeTabs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metaGroupLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.metaHint {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.previewNote {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.previewSubject {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-10);
+}
+
+.input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.workspaceEditor {
+  min-width: 0;
+}
+
+.tokenWarnings {
+  margin: 0;
+  padding: 10px 14px 10px 28px;
+  font-size: var(--text-13);
+  color: var(--accent-text);
+  background: rgba(var(--accent-rgb), 0.08);
+  border-radius: var(--radius-10);
+}
+
+.errorBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px 16px;
+  font-size: var(--text-14);
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: var(--radius-14);
+}
+
+.errorTitle {
+  margin: 0;
+  font-weight: 600;
+}
+
+.errorList {
+  margin: 0;
+  padding-left: 18px;
+  font-family: var(--mono);
+  font-size: var(--text-12-5);
+}
+
+.saveBar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialogBody {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}

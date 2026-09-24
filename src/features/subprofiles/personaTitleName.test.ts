@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { subprofiles as subprofilesPt } from "../../shared/i18n/catalogs/pt/subprofiles";
+import type { SubprofileKind } from "./api/subprofiles.api";
 import {
   isBareProfessionName,
+  KIND_LABEL_KEYS,
   personaAddressName,
   personaNameBesideCraft,
   personaTitleName,
@@ -35,6 +38,58 @@ describe("isBareProfessionName", () => {
       false,
     );
   });
+
+  it("recognises the Portuguese kind label the create form suggests", () => {
+    // In Portuguese the name field's placeholder reads "por ex. Terapia".
+    expect(
+      isBareProfessionName({ displayName: "Terapia", kind: "therapist" }),
+    ).toBe(true);
+    expect(isBareProfessionName({ displayName: "Poesia", kind: "poet" })).toBe(
+      true,
+    );
+  });
+
+  it("ignores accents, case and extra whitespace in either language", () => {
+    expect(
+      isBareProfessionName({
+        displayName: "  PROGRAMACAO ",
+        kind: "developer",
+      }),
+    ).toBe(true);
+    expect(
+      isBareProfessionName({
+        displayName: "docencia   universitaria",
+        kind: "lecturer",
+      }),
+    ).toBe(true);
+  });
+
+  it("matches a Portuguese label only for its own kind", () => {
+    expect(
+      isBareProfessionName({ displayName: "Poesia", kind: "dancer" }),
+    ).toBe(false);
+  });
+
+  it("is false for a Portuguese name the owner actually chose", () => {
+    expect(
+      isBareProfessionName({ displayName: "Casa da Poesia", kind: "poet" }),
+    ).toBe(false);
+  });
+
+  it("knows every kind's label in the Portuguese catalog", () => {
+    // Guards the static copy in subprofile-kinds.ts against catalog drift.
+    for (const [kind, labelKey] of Object.entries(KIND_LABEL_KEYS)) {
+      const catalogLabel = subprofilesPt[labelKey.replace("subprofiles:", "")];
+      expect(catalogLabel, labelKey).toBeTruthy();
+      expect(
+        isBareProfessionName({
+          displayName: catalogLabel ?? "",
+          kind: kind as SubprofileKind,
+        }),
+        labelKey,
+      ).toBe(true);
+    }
+  });
 });
 
 describe("personaTitleName", () => {
@@ -56,6 +111,16 @@ describe("personaTitleName", () => {
         ownerName: "Tiago Costa",
       }),
     ).toBe("Tiago Costa | Developer");
+  });
+
+  it("titles a Portuguese bare profession with the owner's name too", () => {
+    expect(
+      personaTitleName({
+        displayName: "Terapia",
+        kind: "therapist",
+        ownerName: "Inês Duarte",
+      }),
+    ).toBe("Inês Duarte | Therapist");
   });
 
   it("leaves a chosen name untouched even when the owner is known", () => {
@@ -140,5 +205,15 @@ describe("personaAddressName", () => {
         ownerName: "Tiago Costa",
       }),
     ).toBe("Tiago");
+  });
+
+  it("addresses a Portuguese bare profession by the owner's first name", () => {
+    expect(
+      personaAddressName({
+        displayName: "Astrologia",
+        kind: "astrologer",
+        ownerName: "Inês Duarte",
+      }),
+    ).toBe("Inês");
   });
 });

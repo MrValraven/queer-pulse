@@ -1,0 +1,484 @@
+/* "What it will be like": three stills on a strip of 35mm film.
+   The root island owns the plum ground and the grain, so this section only
+   paints the film base and the projected plates that sit on it. */
+
+.section {
+  --strip-gutter: clamp(20px, 5vw, 48px);
+  /* One 35mm perforation per tile: a rounded slot, wider than it is tall. The
+     SVG is a mask stencil only, so it carries no colour of its own. */
+  --sprocket-row: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='12'%3E%3Crect x='6' y='0.5' width='16' height='11' rx='2.5'/%3E%3C/svg%3E");
+  --sprocket-column: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='28'%3E%3Crect x='0.5' y='6' width='11' height='16' rx='2.5'/%3E%3C/svg%3E");
+
+  position: relative;
+  padding-top: clamp(40px, 6vh, var(--section-y-72));
+  padding-bottom: clamp(24px, 4vh, var(--section-y-48));
+  overflow-x: clip;
+}
+
+.head {
+  max-width: 1180px;
+  margin: 0 auto clamp(32px, 5vw, 56px);
+  padding-inline: var(--strip-gutter);
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* One step below the manifesto's pull line, which is the page's centre. */
+.title {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 400;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: rgba(var(--cream-rgb), 0.94);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Room above and below for the tilted base, so it never kisses the heading. */
+.stage {
+  padding-block: 32px;
+}
+
+/* The band lays out the frames. It runs 80px past both edges of the section
+   (the section clips it) while its frames start on the heading's left edge. */
+.band {
+  position: relative;
+  margin-inline: -80px;
+  padding: var(--section-y-56)
+    calc(80px + max(0px, (100% - 1180px) / 2) + var(--strip-gutter));
+}
+
+/* The film base carries the tilt and the drift on its own layer, so the
+   frames above it stay upright and their type renders crisp. */
+.filmBase {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--cream-rgb), 0.05),
+      transparent 16%,
+      transparent 84%,
+      rgba(var(--cream-rgb), 0.05)
+    ),
+    rgba(0, 0, 0, 0.42);
+  border-block: 1px solid rgba(var(--cream-rgb), 0.12);
+  transform: rotate(-1.4deg);
+  pointer-events: none;
+}
+
+/* Sprocket holes: a warm light shows through each one, brightest where the
+   projector beam crosses the middle of the band. */
+.filmBase::before,
+.filmBase::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--cream-rgb), 0.12),
+    rgba(var(--amber-rgb), 0.34) 50%,
+    rgba(var(--cream-rgb), 0.12)
+  );
+  -webkit-mask: var(--sprocket-row) 0 0 / 28px 12px round;
+  mask: var(--sprocket-row) 0 0 / 28px 12px round;
+}
+
+.filmBase::before {
+  top: 16px;
+}
+
+.filmBase::after {
+  bottom: 16px;
+}
+
+/* Positioned so it paints above the absolutely placed film base. */
+.frames {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+}
+
+/* The still: a scene projected in light, one tint per frame so the three
+   read as a sequence. Bloom and vignette sit between scene and numeral. */
+.plate {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 1.375;
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-4);
+}
+
+.plate::before,
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* The projector beam: a soft bloom from the top that flickers with motion. */
+.plate::before {
+  background: radial-gradient(
+    90% 70% at 50% 0%,
+    rgba(var(--cream-rgb), 0.16),
+    transparent 70%
+  );
+}
+
+.plate::after {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 52%,
+    rgba(0, 0, 0, 0.46) 100%
+  );
+}
+
+/* Frame one, coral: a low sun setting behind the horizon under a sky laid
+   down in bands, one season after another. */
+.frame:nth-child(1) .plate {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0 68%,
+      rgba(0, 0, 0, 0.5) 68%,
+      rgba(0, 0, 0, 0.72) 100%
+    ),
+    radial-gradient(
+      circle at 62% 68%,
+      rgba(var(--amber-rgb), 0.95) 0 8%,
+      rgba(var(--accent-rgb), 0.75) 9%,
+      rgba(var(--accent-rgb), 0.2) 28%,
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(var(--rose-rgb), 0.5) 0 20%,
+      rgba(var(--accent-rgb), 0.42) 21% 38%,
+      rgba(var(--accent-rgb), 0.58) 39% 54%,
+      rgba(var(--amber-rgb), 0.5) 55% 68%
+    ),
+    rgba(var(--accent-rgb), 0.2);
+}
+
+/* Frame two, jade: a neighbourhood skyline against a jade night, a pale
+   moon above it. */
+.frame:nth-child(2) .plate {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.66)) 0% 100% / 16% 34%
+      no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) 20% 100% / 12% 54%
+      no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)) 38% 100% / 17% 30%
+      no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)) 57% 100% / 9% 62%
+      no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.68)) 76% 100% / 19% 40%
+      no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) 100% 100% / 13% 50%
+      no-repeat,
+    radial-gradient(
+      circle at 74% 24%,
+      rgba(var(--cream-rgb), 0.85) 0 5%,
+      rgba(var(--jade-rgb), 0.35) 6%,
+      transparent 22%
+    ),
+    radial-gradient(
+      ellipse 90% 45% at 50% 100%,
+      rgba(var(--jade-rgb), 0.7),
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(var(--jade-rgb), 0.14),
+      rgba(var(--jade-rgb), 0.42)
+    );
+}
+
+/* Frame three, violet and amber: a doorway standing open, warm light
+   spilling out across the floor of a violet room. */
+.frame:nth-child(3) .plate {
+  background:
+    linear-gradient(
+        180deg,
+        rgba(var(--amber-rgb), 0.95),
+        rgba(var(--amber-rgb), 0.72)
+      )
+      50% 37.5% / 18% 52% no-repeat,
+    radial-gradient(
+      ellipse 32% 48% at 50% 44%,
+      rgba(var(--amber-rgb), 0.42),
+      transparent 72%
+    ),
+    conic-gradient(
+      from 150deg at 50% 70%,
+      transparent 0deg,
+      rgba(var(--amber-rgb), 0.34) 30deg,
+      transparent 60deg
+    ),
+    linear-gradient(180deg, transparent 70%, rgba(0, 0, 0, 0.42) 70%),
+    radial-gradient(
+      circle at 50% 44%,
+      rgba(var(--violet-rgb), 0.6),
+      rgba(var(--violet-rgb), 0.24) 62%
+    );
+}
+
+/* A leader numeral set large in Fraunces italic, low in the frame. */
+.plateNumeral {
+  position: absolute;
+  left: clamp(14px, 1.6vw, 22px);
+  bottom: 0;
+  font-family: var(--serif);
+  font-size: var(--text-hero);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: var(--ls-display);
+  color: rgba(var(--cream-rgb), 0.9);
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.4);
+}
+
+.caption {
+  padding: 18px 2px 0;
+}
+
+.reelLabel {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--cream-rgb), 0.66);
+}
+
+.frameTitle {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: var(--ls-heading);
+  color: rgba(var(--cream-rgb), 0.94);
+  text-wrap: balance;
+}
+
+.frameBody {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--cream-rgb), 0.66);
+  text-wrap: pretty;
+}
+
+/* Below 1100px three columns get cramped, so the strip stands upright on the
+   content column: perforations move to its left and right edges and each
+   frame becomes a row, plate beside caption. No breakpoint token sits here. */
+@media (max-width: 1100px) {
+  .stage {
+    padding-block: 0;
+  }
+
+  .band {
+    margin-inline: var(--strip-gutter);
+    padding: 18px 40px;
+  }
+
+  .filmBase {
+    border-block: 0;
+    border-inline: 1px solid rgba(var(--cream-rgb), 0.12);
+    transform: none;
+  }
+
+  .filmBase::before,
+  .filmBase::after {
+    inset: 0 auto;
+    width: 10px;
+    height: auto;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--cream-rgb), 0.12),
+      rgba(var(--amber-rgb), 0.34) 50%,
+      rgba(var(--cream-rgb), 0.12)
+    );
+    -webkit-mask: var(--sprocket-column) 0 0 / 10px 24px round;
+    mask: var(--sprocket-column) 0 0 / 10px 24px round;
+  }
+
+  .filmBase::before {
+    left: 14px;
+  }
+
+  .filmBase::after {
+    right: 14px;
+  }
+
+  .frames {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .frame {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(20px, 3vw, 32px);
+    align-items: center;
+  }
+
+  .caption {
+    padding: 0;
+  }
+}
+
+/* Phones: plate above caption, a wider plate, and slimmer film margins so
+   the text keeps a readable measure down to 320px. */
+@media (--md) {
+  .band {
+    padding: 14px 24px;
+  }
+
+  .filmBase::before,
+  .filmBase::after {
+    width: 9px;
+    -webkit-mask-size: 9px 22px;
+    mask-size: 9px 22px;
+  }
+
+  .filmBase::before {
+    left: 7px;
+  }
+
+  .filmBase::after {
+    right: 7px;
+  }
+
+  .frame {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .plate {
+    aspect-ratio: 16 / 9;
+  }
+
+  .caption {
+    padding: 14px 0 6px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .filmBase {
+    animation: stripDrift 26s var(--ease) infinite alternate;
+  }
+
+  .plate::before {
+    animation: projectorFlicker 7s linear infinite;
+  }
+
+  .frame:nth-child(2) .plate::before {
+    animation-delay: -2.4s;
+  }
+
+  .frame:nth-child(3) .plate::before {
+    animation-delay: -4.9s;
+  }
+
+  /* Each frame develops out of the dark as it scrolls into view. Browsers
+     without scroll-driven animation simply show the finished frame. */
+  @supports (animation-timeline: view()) {
+    .frame {
+      animation: frameDevelop linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 32%;
+    }
+  }
+}
+
+/* The slow drift only runs where the base lies across the page. This block
+   sits after the motion block on purpose, so it wins the cascade tie. */
+@media (max-width: 1100px) {
+  .filmBase {
+    animation: none;
+  }
+}
+
+/* The in-app "Reduce motion" setting. The global rule only shortens
+   durations, which cannot stop a scroll-driven animation, so every
+   animation here is switched off by name. */
+:global(html[data-reduce-motion="true"]) .filmBase,
+:global(html[data-reduce-motion="true"]) .plate::before,
+:global(html[data-reduce-motion="true"]) .frame {
+  animation: none;
+}
+
+@keyframes stripDrift {
+  from {
+    transform: rotate(-1.4deg) translate3d(-18px, 0, 0);
+  }
+  to {
+    transform: rotate(-1.4deg) translate3d(18px, 0, 0);
+  }
+}
+
+@keyframes projectorFlicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 1;
+  }
+  43% {
+    opacity: 0.6;
+  }
+  45% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.82;
+  }
+  73% {
+    opacity: 1;
+  }
+}
+
+@keyframes frameDevelop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1771,13 +1771,46 @@ export const studio: Catalog = {
   "offAir.hero.replayingToast": "Replaying {title}",
   "offAir.hero.paidOutSuffix": "{amount} paid out · replay any time",
 
-  // ── Live-mode placeholder (StudioComingSoonPage) ──────────────────────────
+  // ── Live-mode teaser (StudioComingSoonPage and its four scenes) ───────────
   // Shown for every /studio/* route when demo mode is off, since Studio has no
-  // backend yet and must not present invented payouts/figures as real.
-  "comingSoon.title": "The Studio is <em>still tuning up</em>",
+  // backend yet and must not present invented payouts/figures as real. None of
+  // these lines names a price, a split or a plan.
+  "comingSoon.metaTitle": "QueerPulse Studio: opening soon",
   "comingSoon.description":
-    "Our co-op music platform (artist pages, live sets, payouts and the solidarity fund) isn't open to the public yet. We're building it in the open and it'll land here soon.",
-  "comingSoon.readMagazine": "Read the magazine",
+    "Our co-op music platform for queer artists close by is still being built. Nothing is playing and nothing is on sale yet. We'll announce it here when we go live.",
+  "comingSoon.hero.eyebrow": "QueerPulse Studio",
+  "comingSoon.hero.onAir": "On air",
+  "comingSoon.hero.title": "The mics are <em>warming up</em>.",
+  "comingSoon.hero.lede":
+    "We're building a home for queer music made close by: artists with pages of their own, live sets from local stages, and a platform run together by the people who use it.",
+  "comingSoon.hero.status":
+    "Not open yet. Nothing is playing and nothing is on sale.",
+  "comingSoon.preview.eyebrow": "A first listen",
+  "comingSoon.preview.title": "What it will <em>sound like</em>",
+  "comingSoon.preview.sideLabel": "Side A",
+  "comingSoon.preview.trackLabel": "Track A{number}",
+  "comingSoon.preview.artists.title": "Artists up front",
+  "comingSoon.preview.artists.body":
+    "Every artist gets a page of their own for their records, their story and their shows. The plan is for artists to keep their masters and release anywhere else too.",
+  "comingSoon.preview.live.title": "Live from close by",
+  "comingSoon.preview.live.body":
+    "Sets recorded at local nights, open mics and small stages, so you can hear the scene around you, including the nights you missed.",
+  "comingSoon.preview.together.title": "Run by who plays and who listens",
+  "comingSoon.preview.together.body":
+    "The plan is a co-op, with artists and listeners deciding together what gets played and where the money goes. Captions and transcripts for live sets are part of it from the start.",
+  "comingSoon.why.eyebrow": "Why it matters",
+  "comingSoon.why.quote":
+    "A scene sounds like itself when <em>we press record</em>.",
+  "comingSoon.why.p1":
+    "Queer music made by queer people carries what an outside ear misses: the club nights, the choirs, the bedroom demos, the songs that got a lot of us through. For many of us it was the first place we heard ourselves.",
+  "comingSoon.why.p2":
+    "Most small artists play a handful of gigs, upload to a platform built for someone else and get lost in the algorithm. Very little of what they make comes back to them.",
+  "comingSoon.why.p3":
+    "Listening to local artists, sharing their tracks and turning up to their shows is how they get to make the next record. That's what this Studio is for.",
+  "comingSoon.closing.title": "We go live <em>when it's ready</em>.",
+  "comingSoon.closing.body":
+    "We'll announce the first broadcast right here. Until then, the magazine is the best place to follow what we're making.",
+  "comingSoon.magazineCta": "Read the magazine",
   "comingSoon.backHome": "Back to home",
 
   // ── no-literal-string sweep: reusable ImageSlot placeholder captions ─────

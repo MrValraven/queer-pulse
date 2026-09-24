@@ -1,0 +1,463 @@
+/* List controls of the chaptered therapist editor: pairs (a compact table),
+   lines (one-input rows), entries (a numbered list) and paragraphs (one
+   textarea each). The group card around them is the only card, so rows are
+   split by hairlines. Every text field here is 48px tall with a 1.5px border,
+   matching the FormField inputs elsewhere in the pane. */
+
+/* ── Shared frame ───────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+.controlLabel,
+.columnLabel,
+.pairCaption {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+/* Same as FormField's helper line. */
+.helper {
+  margin-top: -4px;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.row + .row {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+/* The row held under the pointer, lifted while the list reshuffles. */
+.rowDragging {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e2);
+}
+.addButton {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* ── Grip and tool buttons ──────────────────────────────────────────────── */
+.grip {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 32px;
+  border-radius: var(--radius-8);
+  color: var(--ink-40);
+  cursor: grab;
+  /* Claim the touch gesture so a drag reorders instead of scrolling. */
+  touch-action: none;
+}
+.grip:active {
+  cursor: grabbing;
+}
+.tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+/* Row tools rest slightly quieter and come up fully on row hover or focus.
+   The opacity sits on each button, so a disabled one keeps its own, clearly
+   fainter value in every state. */
+.tools .toolButton {
+  opacity: 0.72;
+}
+.row:hover .tools .toolButton,
+.row:focus-within .tools .toolButton {
+  opacity: 1;
+}
+.toolButton {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    opacity 0.2s var(--ease);
+}
+.toolButton:disabled,
+.row .tools .toolButton:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+@media (hover: hover) {
+  .toolButton:not(:disabled):hover {
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+    color: var(--ink);
+  }
+}
+.toolButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: none) {
+  .tools .toolButton:not(:disabled) {
+    opacity: 1;
+  }
+}
+@media (pointer: coarse) {
+  .toolButton {
+    width: var(--tap-min);
+    height: var(--tap-min);
+  }
+  .grip {
+    width: 28px;
+    height: var(--tap-min);
+  }
+}
+
+/* ── Pairs: a compact two-column table ──────────────────────────────────── */
+.pairsHead,
+.pairRow {
+  /* The grip and remove columns match the grip and tool button sizes, so the
+     header labels line up over their inputs. */
+  --pair-grip-column: 24px;
+  --pair-tool-column: 32px;
+  display: grid;
+  grid-template-columns:
+    var(--pair-grip-column) minmax(0, 1fr) minmax(0, 1fr)
+    var(--pair-tool-column);
+  column-gap: 10px;
+  align-items: center;
+}
+.pairRow {
+  padding: 6px 0;
+}
+.pairCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.pairCaption {
+  display: none;
+}
+.pairInput,
+.pairCell .pairMoney {
+  width: 100%;
+  min-width: 0;
+}
+/* MoneyInput inside a pair cell takes the same row height as its sibling
+   text input, so both columns line up. */
+.pairCell .pairMoney input {
+  min-height: 0;
+  height: 48px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.pairInput {
+  height: 48px;
+  padding: 0 15px;
+  font-family: var(--sans);
+  /* 16px also keeps iOS Safari from zooming the page on focus. */
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.pairInput::placeholder {
+  color: var(--ink-40);
+}
+.pairInput:focus {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.pairInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.pairRemove {
+  color: var(--ink-40);
+}
+@media (pointer: coarse) {
+  .pairsHead,
+  .pairRow,
+  .lineRow {
+    --pair-grip-column: 28px;
+    --pair-tool-column: var(--tap-min);
+  }
+}
+@media (--xs) {
+  .pairsHead {
+    display: none;
+  }
+  .pairRow {
+    grid-template-columns: var(--pair-grip-column) minmax(0, 1fr) var(
+        --pair-tool-column
+      );
+    grid-template-areas:
+      "grip first remove"
+      "grip second remove";
+    row-gap: 8px;
+    padding: 10px 0;
+  }
+  .pairRow > .pairGrip {
+    grid-area: grip;
+  }
+  .pairRow > .pairFirst {
+    grid-area: first;
+  }
+  .pairRow > .pairSecond {
+    grid-area: second;
+  }
+  .pairRow > .pairRemove {
+    grid-area: remove;
+  }
+  .pairCaption {
+    display: block;
+  }
+}
+
+/* ── Lines: the pair-row look with one input column ─────────────────────── */
+.lineRow {
+  --pair-grip-column: 24px;
+  --pair-tool-column: 32px;
+  display: grid;
+  grid-template-columns:
+    var(--pair-grip-column) minmax(0, 1fr)
+    var(--pair-tool-column);
+  column-gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+}
+
+/* ── Numerals shared by entries and paragraphs ──────────────────────────── */
+.numeral {
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--accent);
+}
+
+/* ── Entries: a numbered list with a title per entry ────────────────────── */
+.entryRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "lead title tools"
+    "lead fields fields";
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: start;
+  padding: var(--gap-sm) 0;
+}
+.entryLead {
+  grid-area: lead;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+/* Numeral and grip share one centre line: both are centred in the lead
+   column, the numeral as a full-width centred block. */
+.entryNumeral {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding-top: 4px;
+}
+/* A one-row textarea that grows with its text, so a long question wraps
+   instead of being cut off. Without field-sizing, the component sets its
+   height from scrollHeight. */
+.entryTitle {
+  grid-area: title;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 0;
+  font-family: var(--sans);
+  font-size: var(--text-18);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  resize: none;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  /* A resting dashed underline says "editable" without a box; it turns solid
+     on hover and focus. */
+  border-bottom: 1px dashed rgba(var(--line-rgb), 0.25);
+  border-radius: 0;
+  transition: border-color 0.2s var(--ease);
+}
+@supports (field-sizing: content) {
+  .entryTitle {
+    field-sizing: content;
+  }
+}
+.entryTitle::placeholder {
+  color: var(--ink-40);
+  font-weight: 500;
+}
+@media (hover: hover) {
+  .entryTitle:hover {
+    border-bottom-style: solid;
+    border-bottom-color: rgba(var(--line-rgb), 0.5);
+  }
+}
+.entryTitle:focus {
+  border-bottom-style: solid;
+  border-bottom-color: var(--line-strong);
+}
+.entryTitle:focus-visible {
+  border-radius: var(--radius-8);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.entryFields {
+  grid-area: fields;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.entryFields > *:last-child {
+  margin-bottom: 0;
+}
+.entryTools {
+  grid-area: tools;
+}
+@media (--xs) {
+  .entryRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "lead tools"
+      "title title"
+      "fields fields";
+    align-items: center;
+  }
+  .entryLead {
+    flex-direction: row;
+    gap: 6px;
+  }
+  .entryNumeral {
+    width: auto;
+    padding-top: 0;
+  }
+}
+
+/* ── Paragraphs: one auto-growing textarea each ─────────────────────────── */
+/* Numeral column like entries (numeral and grip side by side), the textarea
+   beside it and the tools top right; on a phone the textarea drops below. */
+.paragraphRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "lead text tools";
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: start;
+  padding: var(--gap-sm) 0;
+}
+.paragraphLead {
+  grid-area: lead;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  /* Centres the numeral on the textarea's first line. */
+  padding-top: 10px;
+}
+.paragraphTools {
+  grid-area: tools;
+  padding-top: 8px;
+}
+@media (--xs) {
+  .paragraphRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "lead tools"
+      "text text";
+    align-items: center;
+  }
+  .paragraphLead,
+  .paragraphTools {
+    padding-top: 0;
+  }
+}
+.paragraphText {
+  grid-area: text;
+  width: 100%;
+  min-width: 0;
+  /* Three lines of 1.6 plus the vertical padding and border. */
+  min-height: calc(3 * 1.6em + 27px);
+  padding: 12px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  resize: none;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+/* Without field-sizing, useAutoGrowFallback sets the height from the text. */
+@supports (field-sizing: content) {
+  .paragraphText {
+    field-sizing: content;
+  }
+}
+
+/* ── Multi-line item fields (SkinItemFieldInput) ────────────────────────── */
+/* Grows with its text from three rows. Doubled to out-specify FormField's
+   `.field textarea` min-height; its line height and 13px + 1.5px box stay. */
+.autoGrowTextarea.autoGrowTextarea {
+  min-height: calc(3 * 1.6em + 29px);
+  overflow-wrap: anywhere;
+}
+@supports (field-sizing: content) {
+  .autoGrowTextarea.autoGrowTextarea {
+    field-sizing: content;
+  }
+}
+.paragraphText::placeholder {
+  color: var(--ink-40);
+}
+.paragraphText:focus {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.paragraphText:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools,
+  .toolButton,
+  .pairInput,
+  .entryTitle,
+  .paragraphText {
+    transition: none;
+  }
+}

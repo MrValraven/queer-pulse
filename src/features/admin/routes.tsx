@@ -22,6 +22,14 @@ const AdminResponseTemplatesPage = lazyNamed(
   () => import("./AdminResponseTemplatesPage"),
   "AdminResponseTemplatesPage",
 );
+const AdminEmailTemplatesPage = lazyNamed(
+  () => import("./emailTemplates/AdminEmailTemplatesPage"),
+  "AdminEmailTemplatesPage",
+);
+const AdminEmailTemplateEditorPage = lazyNamed(
+  () => import("./emailTemplates/AdminEmailTemplateEditorPage"),
+  "AdminEmailTemplateEditorPage",
+);
 const AdminConcernsPage = lazyNamed(
   () => import("./AdminConcernsPage"),
   "AdminConcernsPage",
@@ -233,6 +241,18 @@ export function adminRoutes() {
       <Route
         path={routes.adminModResponseTemplates}
         element={<AdminResponseTemplatesPage />}
+      />
+      <Route
+        path={routes.adminEmailTemplates}
+        element={<AdminEmailTemplatesPage />}
+      />
+      <Route
+        path={routes.adminEmailTemplateNew}
+        element={<AdminEmailTemplateEditorPage />}
+      />
+      <Route
+        path={`${routes.adminEmailTemplateEdit}/:id`}
+        element={<AdminEmailTemplateEditorPage />}
       />
       <Route path={routes.adminConcerns} element={<AdminConcernsPage />} />
       <Route path={routes.adminIntakes} element={<AdminIntakesPage />} />

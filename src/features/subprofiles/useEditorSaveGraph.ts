@@ -2,6 +2,7 @@ import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
+  AvailabilityKey,
   SubprofileSection,
   UpdateSubprofileDTO,
 } from "./api/subprofiles.api";
@@ -13,6 +14,7 @@ import type { AffiliationRow } from "./SubprofileAffiliationRow";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import type { EditorRowsState } from "./useEditorRowsState";
+import { CAPACITY_OPTIONS } from "./skins/therapist/therapistHero.data";
 import type { SocialRow } from "./subprofileEditorContext";
 import {
   diffMeta,
@@ -36,7 +38,7 @@ const affiliationComparable = (row: AffiliationRow) => ({
   role: row.role,
 });
 
-// The save path drops blank rows, so the diff must too — otherwise clicking
+// The save path drops blank rows, so the diff must too. Otherwise clicking
 // "Add" (which appends an empty row) reads as an unsaved change and fires a
 // no-op PUT. Diff (and detect change) on the same filtered lists we send.
 const filledSocials = (rows: SocialRow[]) =>
@@ -57,6 +59,68 @@ export interface EditorSaveGraph {
   canSave: boolean;
   saving: boolean;
   saveAll: () => Promise<void>;
+}
+
+/**
+ * The persona-wide availability a therapist's status change implies (open to
+ * "open_to_collabs", wait to "booking", closed to "not_available"), the same
+ * pairing the owner bar saves, so the directory and the similar list follow
+ * the editor too. `null` when there is nothing to sync: another kind, an
+ * unchanged status, an availability that already matches, or an availability
+ * the owner picked in the presence fields in this same save. That explicit
+ * pick wins over the derived one.
+ */
+function availabilityForTherapistStatus(
+  subprofile: SubprofileView,
+  meta: SubprofileMetaEditor,
+  skinBlocks: SubprofileSkinBlocksEditor,
+): AvailabilityKey | null {
+  if (subprofile.kind !== "therapist") return null;
+  const status = skinBlocks.getValue("therapist.status");
+  if (status === skinBlocks.getBaselineValue("therapist.status")) return null;
+  const currentAvailability = meta.metaSnapshot().availability;
+  if (currentAvailability !== meta.baselineSnapshot().availability) return null;
+  const option = CAPACITY_OPTIONS.find(
+    (candidate) => candidate.status === status,
+  );
+  if (!option || option.availability === currentAvailability) return null;
+  return option.availability;
+}
+
+/**
+ * The meta half of the persona PATCH, captured at save time: the meta patch,
+ * any availability a therapist status change implies, and the commit that
+ * advances the meta baseline to exactly what was PATCHed (keys typed while the
+ * request is in flight stay dirty). A synced availability joins that baseline
+ * and the presence field, so a later meta save does not send the old value.
+ */
+function metaSaveParts(
+  subprofile: SubprofileView,
+  meta: SubprofileMetaEditor,
+  skinBlocks: SubprofileSkinBlocksEditor,
+) {
+  const metaPatch = meta.buildMetaPatch(); // null when no meta field changed
+  const syncedAvailability = availabilityForTherapistStatus(
+    subprofile,
+    meta,
+    skinBlocks,
+  );
+  const savedMetaSnapshot = syncedAvailability
+    ? { ...meta.metaSnapshot(), availability: syncedAvailability }
+    : meta.metaSnapshot();
+  return {
+    metaPatch,
+    dtoBase: {
+      ...(metaPatch ?? {}),
+      ...(syncedAvailability ? { availability: syncedAvailability } : {}),
+    } satisfies UpdateSubprofileDTO,
+    commitMeta: () => {
+      if (metaPatch || syncedAvailability) {
+        meta.markSaved(savedMetaSnapshot); // demo-safe baseline advance
+      }
+      if (syncedAvailability) meta.setAvailability(syncedAvailability);
+    },
+  };
 }
 
 /**
@@ -153,15 +217,19 @@ export function useEditorSaveGraph(
 
     // The persona PATCH carries meta fields AND the whole `skinData` column
     // (coverBleed + every editable skin block). The backend REPLACES `skin_data`
-    // wholesale, so we send ONE merged object — never a second concurrent
-    // skinData PATCH that would clobber the bleed flag. Fire this task when
+    // wholesale, so we send ONE merged object. A second concurrent skinData
+    // PATCH would clobber the bleed flag. Fire this task when
     // either the meta fields OR any skin block changed.
-    const metaPatch = meta.buildMetaPatch(); // null when no meta field changed
+    const { metaPatch, dtoBase, commitMeta } = metaSaveParts(
+      subprofile,
+      meta,
+      skinBlocks,
+    );
     const skinDirty = skinBlocks.dirty;
     const coverBleedChanged =
       meta.metaSnapshot().coverBleed !== meta.baselineSnapshot().coverBleed;
     if (metaPatch || skinDirty) {
-      const dto: UpdateSubprofileDTO = { ...(metaPatch ?? {}) };
+      const dto: UpdateSubprofileDTO = { ...dtoBase };
       // Attach the merged skinData only when a skin-relevant field changed, so a
       // pure identity/text edit doesn't needlessly rewrite the column. The merge
       // is authoritative: loaded skinData, then the current coverBleed, then the
@@ -173,15 +241,11 @@ export function useEditorSaveGraph(
           ...skinBlocks.buildSkinBlocks(),
         };
       }
-      // Snapshot the meta values NOW, alongside the patch we're about to send,
-      // so `markSaved` advances the baseline to exactly what was PATCHed — not
-      // to whatever the user has typed by the time the request resolves.
-      const savedMetaSnapshot = meta.metaSnapshot();
       tasks.push({
         labelKey: "subprofiles:pending.area.meta",
         run: () => update.mutateAsync({ id: subprofile.id, dto }),
         commit: () => {
-          if (metaPatch) meta.markSaved(savedMetaSnapshot); // demo-safe baseline advance
+          commitMeta();
           if (skinDirty) skinBlocks.markSaved();
         },
       });
@@ -268,7 +332,7 @@ export function useEditorSaveGraph(
       );
       return;
     }
-    // Client-error responses name the actual problem — a 400 names an offending
+    // Client-error responses name the actual problem: a 400 names an offending
     // collaborator/affiliation entry, a 403 a permission the viewer lacks (e.g.
     // only the persona's creator may link it), a 409 a taken address/handle, a
     // 422 an unmet publish rule. Surface that message when a single area

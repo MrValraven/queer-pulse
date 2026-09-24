@@ -19,6 +19,31 @@ export interface DragCardRect {
 }
 
 /**
+ * A card's box where the grid LAID IT OUT, with any in-flight transform taken
+ * back off.
+ *
+ * The cards glide between slots with motion's `layout` (position only, so the
+ * transform is a pure translate), and `getBoundingClientRect()` reports where
+ * a card is PAINTED mid-glide. Right after a swap the neighbour that just
+ * traded places is still painted in its old slot, under the pointer, so a
+ * painted-box test would pick it as nearest and step straight back, and the
+ * pair would flicker for the length of the glide. Measuring the laid-out box
+ * lets the swap decision see the order the grid already holds.
+ */
+function layoutRectOf(card: HTMLElement): DragCardRect {
+  const rect = card.getBoundingClientRect();
+  const transform = getComputedStyle(card).transform;
+  if (!transform || transform === "none") return rect;
+  const matrix = new DOMMatrixReadOnly(transform);
+  return {
+    left: rect.left - matrix.m41,
+    top: rect.top - matrix.m42,
+    width: rect.width,
+    height: rect.height,
+  };
+}
+
+/**
  * Where the dragged card should step to for this pointer position, or `null`
  * to stay where it is.
  *
@@ -113,7 +138,7 @@ export function useGridDragReorder(
         return;
       }
       const cards = Array.from(container.children) as HTMLElement[];
-      const cardRects = cards.map((card) => card.getBoundingClientRect());
+      const cardRects = cards.map(layoutRectOf);
 
       const to = nextGridNeighbourIndex(
         cardRects,

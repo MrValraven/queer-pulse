@@ -1,0 +1,250 @@
+/* Therapist profile owner bar (design classes .tp-owner, .tp-owner-h,
+   .tp-capseg, .tp-owner-g, .tp-owner-c, .tp-meter). A plum panel in both
+   themes, so its text uses the raw cream channel, which does not flip. */
+
+.bar {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 18px;
+  padding: 22px 24px;
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--plum);
+  border-radius: var(--radius-card);
+}
+
+/* Decorative jade orb. */
+.bar::after {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -90px;
+  width: 320px;
+  height: 320px;
+  border-radius: var(--radius-avatar);
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.35),
+    transparent 68%
+  );
+  pointer-events: none;
+}
+
+.head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.label,
+.cardLabel {
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.55);
+}
+
+.label {
+  margin: 0 0 8px;
+  letter-spacing: 0.11em;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--accent-soft);
+}
+
+/* ── Capacity segment ── */
+.capacity {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(var(--cream-rgb), 0.1);
+  border-radius: var(--radius-pill);
+}
+
+.capacityButton {
+  appearance: none;
+  padding: 8px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.65);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+/* Hover brightens an idle segment only: the pressed one keeps its plum
+   label on cream, and a saving one does not react. */
+@media (hover: hover) {
+  .capacityButton:not([aria-pressed="true"], [aria-disabled="true"]):hover {
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+
+/* css-scale-allow: non-flipping-text. The pressed segment is the raw cream
+   channel, light in both themes on a plum panel that never flips, so its
+   type stays plum in both themes too (--text-strong would turn it cream on
+   cream in dark mode). */
+.capacityButton[aria-pressed="true"] {
+  color: var(--plum-deep);
+  background: rgba(var(--cream-rgb), 1);
+}
+
+.capacityButton[aria-disabled="true"] {
+  cursor: progress;
+}
+
+.capacityButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Cards ── */
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  background: rgba(var(--cream-rgb), 0.07);
+  border-radius: var(--radius-16);
+}
+
+/* The draft card's marker, the coral dot the draft banner uses elsewhere. */
+.draftDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  vertical-align: 1px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.percent {
+  font-size: var(--text-15);
+}
+
+.meta {
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.65);
+}
+
+.meter {
+  height: 6px;
+  overflow: hidden;
+  background: rgba(var(--cream-rgb), 0.15);
+  border-radius: var(--radius-3);
+}
+
+.meterFill {
+  display: block;
+  height: 100%;
+  background: var(--jade);
+  border-radius: var(--radius-3);
+}
+
+.cardAction {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* Each missing piece opens the editor where it is filled in. */
+.missingLink {
+  color: rgba(var(--cream-rgb), 1);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--cream-rgb), 0.45);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-3);
+}
+
+@media (hover: hover) {
+  .missingLink:hover {
+    color: var(--accent-soft);
+    text-decoration-color: currentColor;
+  }
+}
+
+.missingLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A thumb needs a 44px target. */
+@media (pointer: coarse) {
+  /* `.card` lifts this over the shared Button's own small-size floor. */
+  .capacityButton,
+  .card .cardAction {
+    min-height: 44px;
+  }
+
+  /* The missing pieces become a row of soft chips. Each link is a 44px
+     target with its visible 32px pill drawn behind the text, so wrapped
+     rows can touch while the pills keep a gap. */
+  .missing {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 6px;
+  }
+
+  .missingSeparator {
+    display: none;
+  }
+
+  .missingLink {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    text-decoration: none;
+    border-radius: var(--radius-pill);
+  }
+
+  .missingLink::before {
+    content: "";
+    position: absolute;
+    inset: 6px 0;
+    z-index: -1;
+    background: rgba(var(--cream-rgb), 0.12);
+    border-radius: var(--radius-pill);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capacityButton {
+    transition: none;
+  }
+}

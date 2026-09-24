@@ -1,5 +1,9 @@
 import type { SubprofileKind } from "./api/subprofiles.api";
 import { skinFor, type SkinFamily } from "./subprofile-skins";
+import {
+  THERAPIST_BLOCKS,
+  THERAPIST_CHAPTERS,
+} from "./therapistEditorChapters.data";
 
 /**
  * Descriptor tables for the per-skin "Page blocks" editor pane
@@ -9,25 +13,80 @@ import { skinFor, type SkinFamily } from "./subprofile-skins";
  * reads/writes these through `useSubprofileSkinBlocksEditor`, and they save via
  * the single meta PATCH (folded into `skinData` in `useEditorSaveGraph`).
  *
- * A control's `path` is a dot-path into `SkinData` — either a whole top-level
+ * A control's `path` is a dot-path into `SkinData`: either a whole top-level
  * block (`"beforeYouSit"`, `"colophon"`) or a sub-field of one (`"chair.rate"`,
  * `"excerpt.lines"`). The block's `blockKey` (the first path segment) is the
  * diff/dirty granularity used by the pending-changes list.
  *
  * Control kinds:
- *  - `text`      — single-line `<input>` (sub-field of an object block).
- *  - `textarea`  — multi-line `<textarea>` (e.g. `colophon`, a gaps note).
- *  - `stringList`— an ordered `string[]` list editor (add/remove/reorder lines).
- *  - `objectList`— an ordered array of small objects, each with `itemFields`.
- *  - `grid`      — a 4×7 availability calendar editor (Practice skin only):
+ *  - `text`: single-line `<input>` (sub-field of an object block).
+ *  - `textarea`: multi-line `<textarea>` (e.g. `colophon`, a gaps note).
+ *  - `stringList`: an ordered `string[]` list editor (add/remove/reorder lines).
+ *  - `objectList`: an ordered array of small objects, each with `itemFields`.
+ *  - `grid`: a 4×7 availability calendar editor (Practice skin only):
  *    start date + slot time + 28 tap-to-cycle day cells.
+ *  - `select`: one choice from a fixed `options` list, stored as the
+ *    option's string value (an `objectList` item field's kind).
+ *
+ * Kinds used by the chaptered therapist editor (`therapistEditorChapters.data.ts`):
+ *  - `segmented`: the `select` choice as a segmented control, each option
+ *    optionally carrying a status `tone` dot (therapist status, online answer).
+ *  - `money`: a euro amount stored as a digit string with at most one decimal
+ *    separator ("65", "32,50"), shown with a € sign and a decimal keypad.
+ *  - `count`: a whole number stored as a digit string (places, people waiting).
+ *  - `chips`: a `string[]` edited as chips (type + Enter to add, reorder,
+ *    edit in place), for lists the public page shows as chips.
+ *  - `paragraphs`: a `string[]` edited as one textarea per paragraph.
+ *  - `pairs`: an object[] with exactly two `itemFields`, edited as compact
+ *    table rows (session lengths, reimbursement, hours).
+ *  - `entries`: an object[] edited as a numbered list whose first item field
+ *    reads as the entry's title (FAQ, first-session steps, referrals).
+ *  - `lines`: a `string[]` edited as compact one-line rows (address lines).
+ *  - `choice`: one of a fixed `options` list as a row of toggle chips, stored
+ *    as the option's string value ("" once cleared). A stored string that is
+ *    no option (older owner-typed text) shows as an extra chip until replaced
+ *    (session frequency, when receipts arrive, cancellation notice).
+ *  - `multiChoice`: several of a fixed `options` list as toggle chips, stored
+ *    as a `string[]` in the options' order (payment methods).
+ *  - `multiSelect`: several of a fixed `options` list picked from a dropdown
+ *    of checkboxes, stored as a `string[]` in pick order: option ids plus,
+ *    with `allowsCustom`, the owner's own trimmed entries. An older
+ *    comma-separated string reads as its parts, and a stored option label
+ *    counts as that option (lived experience, languages).
  *
  * All copy is i18n KEYS resolved by the pane via `t(...)`; the intended EN
  * strings live in the build's `b2-i18n-keys.json` (catalogs updated separately).
  */
 
 export type SkinControlKind =
-  "text" | "textarea" | "stringList" | "objectList" | "grid";
+  | "text"
+  | "textarea"
+  | "stringList"
+  | "objectList"
+  | "grid"
+  | "select"
+  | "segmented"
+  | "money"
+  | "count"
+  | "chips"
+  | "paragraphs"
+  | "pairs"
+  | "entries"
+  | "lines"
+  | "choice"
+  | "multiChoice"
+  | "multiSelect";
+
+/** A status dot shown before a `segmented` option's label. */
+export type SkinOptionTone = "jade" | "amber" | "muted";
+
+/** One choice of a `select`/`segmented` control or item field: the stored
+ *  value plus the i18n key of its visible label. */
+export interface SkinSelectOption {
+  value: string;
+  labelKey: string;
+  tone?: SkinOptionTone;
+}
 
 /** One field within an `objectList` entry (e.g. a first-session step's
  *  title/body, a referral's name/note). */
@@ -36,6 +95,18 @@ export interface SkinItemFieldDescriptor {
   labelKey: string;
   placeholderKey?: string;
   multiline?: boolean;
+  /** When set, the field renders as a select over these choices. */
+  options?: SkinSelectOption[];
+  /** `pairs` only: the value is a euro amount, shown with a € prefix. */
+  isMoney?: boolean;
+}
+
+/** Show a control only while another control's value is one of `values`
+ *  (the waitlist note only for status "wait"). A control with no stored value
+ *  counts as holding its own `defaultValue`. Hidden values stay stored. */
+export interface SkinShowWhen {
+  path: string;
+  values: string[];
 }
 
 export interface SkinBlockControl {
@@ -45,8 +116,64 @@ export interface SkinBlockControl {
   /** Visible label for this control (FormField label, or the list heading). */
   labelKey: string;
   placeholderKey?: string;
-  /** `objectList` only — the fields rendered for each entry. */
+  /** Optional helper line under a `text`/`textarea`/`select` control. */
+  helperKey?: string;
+  /** `objectList` only: the fields rendered for each entry. */
   itemFields?: SkinItemFieldDescriptor[];
+  /** `select`, `segmented`, `choice`, `multiChoice` and `multiSelect`: the
+   *  choices, in display order. */
+  options?: SkinSelectOption[];
+  /** `select` only: the choice shown while nothing is stored yet. It matches
+   *  what the public page assumes for a missing value. */
+  defaultValue?: string;
+  /** Chaptered editor only: render this control only under a condition (every
+   *  condition in an array must hold). */
+  showWhen?: SkinShowWhen | SkinShowWhen[];
+  /** `text` only: a one-line field that wraps long values onto more lines
+   *  (a `rows=1` textarea that never stores a newline). */
+  isWrapping?: boolean;
+  /** `textarea` only: show a live line under the field with `*word*` rendered
+   *  as the page's coral italic emphasis (the therapist hero quote). */
+  hasEmphasisPreview?: boolean;
+  /** List kinds only: label of the add button (defaults to "Add"). */
+  addLabelKey?: string;
+  /** `text` only: warn under the field when the value is one the public page
+   *  would drop (it only links a valid email / website). */
+  validate?: "email" | "url";
+  /** `multiChoice` only: a sibling text path holding the older free-text
+   *  answer this control replaces (`therapyFees.payment`). Shown under the
+   *  chips while none is ticked, and cleared by the first tick. */
+  legacyTextPath?: string;
+  /** `multiSelect` only: offer an "Add your own" input under the options, so
+   *  the owner can store an entry the list lacks. */
+  allowsCustom?: boolean;
+  /** `multiSelect` with `allowsCustom`: placeholder of the "Add your own"
+   *  input ("Another language"). */
+  customPlaceholderKey?: string;
+}
+
+/** One card of a chapter: an optional heading and helper over its controls. */
+export interface SkinChapterGroup {
+  titleKey?: string;
+  helperKey?: string;
+  /** `row`: the controls sit side by side, `joinerKey` between them
+   *  ("40 € to 65 €", "2 of 4 open"). Default `stack`. */
+  layout?: "stack" | "row";
+  joinerKey?: string;
+  /** A cross-field check on a two-control `row`, shown as a warning under
+   *  it: `ascending` (first ≤ second), `partOfWhole` (first ≤ second, read as
+   *  "open places can't exceed places"). Blank values never warn. */
+  check?: "ascending" | "partOfWhole";
+  checkMessageKey?: string;
+  controls: SkinBlockControl[];
+}
+
+/** One page of the chaptered editor, selected by `?chapter=<key>`. */
+export interface SkinChapterDescriptor {
+  key: string;
+  titleKey: string;
+  ledeKey: string;
+  groups: SkinChapterGroup[];
 }
 
 export interface SkinBlockDescriptor {
@@ -65,7 +192,12 @@ export interface SkinBlockDescriptor {
 function objectBlock(
   blockKey: string,
   titleKey: string,
-  fields: { key: string; labelKey: string; multiline?: boolean }[],
+  fields: {
+    key: string;
+    labelKey: string;
+    multiline?: boolean;
+    placeholderKey?: string;
+  }[],
 ): SkinBlockDescriptor {
   return {
     blockKey,
@@ -74,6 +206,7 @@ function objectBlock(
       path: `${blockKey}.${field.key}`,
       kind: field.multiline ? "textarea" : "text",
       labelKey: field.labelKey,
+      placeholderKey: field.placeholderKey,
     })),
   };
 }
@@ -175,6 +308,51 @@ const TABLE_BLOCKS: SkinBlockDescriptor[] = [
   },
 ];
 
+const PRACTICE_FIRST_SESSION_BLOCK = objectListBlock(
+  "firstSession",
+  title("practice", "firstSession"),
+  [
+    { key: "title", labelKey: label("practice", "firstSession", "stepTitle") },
+    {
+      key: "body",
+      labelKey: label("practice", "firstSession", "body"),
+      multiline: true,
+    },
+  ],
+);
+const PRACTICE_REFERRALS_BLOCK = objectListBlock(
+  "referrals",
+  title("practice", "referrals"),
+  [
+    { key: "name", labelKey: label("practice", "referrals", "name") },
+    {
+      key: "note",
+      labelKey: label("practice", "referrals", "note"),
+      multiline: true,
+    },
+  ],
+);
+const PRACTICE_APPROACH_BLOCK = stringListBlock(
+  "approach",
+  title("practice", "approach"),
+);
+const PRACTICE_VENUE_BLOCK: SkinBlockDescriptor = {
+  blockKey: "venue",
+  titleKey: title("practice", "venue"),
+  controls: [
+    {
+      path: "venue.name",
+      kind: "text",
+      labelKey: label("practice", "venue", "name"),
+    },
+    {
+      path: "venue.lines",
+      kind: "stringList",
+      labelKey: label("practice", "venue", "lines"),
+    },
+  ],
+};
+
 const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
   objectBlock("practical", title("practice", "practical"), [
     { key: "fee", labelKey: label("practice", "practical", "fee") },
@@ -184,45 +362,16 @@ const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
     { key: "mode", labelKey: label("practice", "practical", "mode") },
     { key: "next", labelKey: label("practice", "practical", "next") },
   ]),
-  objectListBlock("firstSession", title("practice", "firstSession"), [
-    { key: "title", labelKey: label("practice", "firstSession", "stepTitle") },
-    {
-      key: "body",
-      labelKey: label("practice", "firstSession", "body"),
-      multiline: true,
-    },
-  ]),
+  PRACTICE_FIRST_SESSION_BLOCK,
   stringListBlock("access", title("practice", "access")),
-  objectListBlock("referrals", title("practice", "referrals"), [
-    { key: "name", labelKey: label("practice", "referrals", "name") },
-    {
-      key: "note",
-      labelKey: label("practice", "referrals", "note"),
-      multiline: true,
-    },
-  ]),
-  stringListBlock("approach", title("practice", "approach")),
+  PRACTICE_REFERRALS_BLOCK,
+  PRACTICE_APPROACH_BLOCK,
   stringListBlock("training", title("practice", "training")),
   objectListBlock("feeSchedule", title("practice", "feeSchedule"), [
     { key: "label", labelKey: label("practice", "feeSchedule", "label") },
     { key: "value", labelKey: label("practice", "feeSchedule", "value") },
   ]),
-  {
-    blockKey: "venue",
-    titleKey: title("practice", "venue"),
-    controls: [
-      {
-        path: "venue.name",
-        kind: "text",
-        labelKey: label("practice", "venue", "name"),
-      },
-      {
-        path: "venue.lines",
-        kind: "stringList",
-        labelKey: label("practice", "venue", "lines"),
-      },
-    ],
-  },
+  PRACTICE_VENUE_BLOCK,
   {
     blockKey: "availability",
     titleKey: title("practice", "availability"),
@@ -331,9 +480,9 @@ const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
 /**
  * Editable `SkinData` blocks per family. `studio`/`workshop` have no
  * owner-editable persona-level block (their skins render only from section
- * items), so they are absent — a persona in those families shows no "Page
+ * items), so they are absent and a persona in those families shows no "Page
  * blocks" rail entry. The per-dish menu COURSES (`ItemStructured.courses`) are
- * item-structured, not `SkinData`, and are edited elsewhere — out of scope here.
+ * item-structured data edited elsewhere, so they are out of scope here.
  */
 export const SKIN_BLOCKS_BY_FAMILY: Partial<
   Record<SkinFamily, SkinBlockDescriptor[]>
@@ -351,12 +500,45 @@ export const SKIN_BLOCKS_BY_FAMILY: Partial<
   classroom: CLASSROOM_BLOCKS,
 };
 
-/** The editable skin blocks for a persona's kind (via its derived family). */
+/**
+ * Kinds with a page layout of their own carry their own block table, checked
+ * before the family lookup. A therapist renders the therapist layout, and its
+ * table is derived from the chaptered editor (`therapistEditorChapters.data.ts`);
+ * the other practice kinds keep `PRACTICE_BLOCKS`. The therapist table leaves
+ * out `practical`, `training` and the `availability` grid because that layout
+ * never reads them; any stored values stay in `skinData` untouched.
+ */
+const SKIN_BLOCKS_BY_KIND: Partial<
+  Record<SubprofileKind, SkinBlockDescriptor[]>
+> = {
+  therapist: THERAPIST_BLOCKS,
+};
+
+/** The editable skin blocks for a persona's kind: its own table when it has
+ *  one, else its derived family's. */
 export function skinBlocksForKind(kind: SubprofileKind): SkinBlockDescriptor[] {
-  return SKIN_BLOCKS_BY_FAMILY[skinFor(kind)] ?? [];
+  return (
+    SKIN_BLOCKS_BY_KIND[kind] ?? SKIN_BLOCKS_BY_FAMILY[skinFor(kind)] ?? []
+  );
 }
 
-/** Whether this persona's skin has any owner-editable `SkinData` block — gates
+/** Kinds whose "Page blocks" pane is split into chapters (`?chapter=`). Every
+ *  control in a kind's chapters also sits in its `SKIN_BLOCKS_BY_KIND` table. */
+const SKIN_CHAPTERS_BY_KIND: Partial<
+  Record<SubprofileKind, SkinChapterDescriptor[]>
+> = {
+  therapist: THERAPIST_CHAPTERS,
+};
+
+/** The chapters of a persona kind's "Page blocks" pane, or `[]` when the kind
+ *  keeps the single-scroll block editor. */
+export function skinChaptersForKind(
+  kind: SubprofileKind,
+): SkinChapterDescriptor[] {
+  return SKIN_CHAPTERS_BY_KIND[kind] ?? [];
+}
+
+/** Whether this persona's skin has any owner-editable `SkinData` block. Gates
  *  the "Page blocks" rail entry + pane. */
 export function hasSkinBlocks(kind: SubprofileKind): boolean {
   return skinBlocksForKind(kind).length > 0;

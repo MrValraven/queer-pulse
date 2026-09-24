@@ -43,6 +43,11 @@ interface UseLisbonMapOptions {
   /** Adds an empty control slot under the zoom buttons for the caller to
    *  portal a full screen button into (see `fullscreenControlHost`). */
   hasFullscreenControl?: boolean;
+  /** Filled with a function that resizes and redraws the map synchronously
+   *  while the map is ready, and null otherwise. Full screen calls it inside
+   *  its view transition update so the new state is captured at the new size
+   *  on the spot. */
+  redrawHandleRef?: RefObject<(() => void) | null>;
 }
 
 export type MapPanelEdge = "right" | "bottom";
@@ -105,6 +110,7 @@ export function useLisbonMap({
   panelRef,
   panelEdge = null,
   hasFullscreenControl = false,
+  redrawHandleRef,
 }: UseLisbonMapOptions) {
   const overlayRef = useRef<FreguesiaOverlay | null>(null);
   const markerManagerRef = useRef<VenueMarkerManager | null>(null);
@@ -198,6 +204,21 @@ export function useLisbonMap({
       setFullscreenControlHost(null);
     },
   });
+
+  // maplibre only resizes its canvas from its own ResizeObserver and paints on
+  // the next animation frame. The handle lets a caller that just changed the
+  // map's box resize and paint it right away instead.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!redrawHandleRef || !map || !ready) return;
+    redrawHandleRef.current = () => {
+      map.resize();
+      map.redraw();
+    };
+    return () => {
+      redrawHandleRef.current = null;
+    };
+  }, [ready, redrawHandleRef, mapRef]);
 
   // A bare maplibre control group under the zoom buttons, in the same corner
   // and with the same chrome. It stays empty here: the component portals a

@@ -1,0 +1,451 @@
+/* Opening scene of the Cinema teaser. The island around it (CinemaComingSoon)
+   paints the plum ground and pulls itself up under the floating nav, so the
+   hero adds that same `--nav-band-visible` back as top padding and the
+   projector's lens sits behind the nav pill, above the fold.
+
+   72svh with a short bottom pad keeps the scene tall without an empty floor:
+   on a 1366x768 laptop the film strip's heading shows above the fold as a
+   cue to scroll. The 560px cap stops tall portrait screens (a 768x1024
+   tablet) from stretching the scene into a band of empty plum. */
+.hero {
+  position: relative;
+  min-height: min(72vh, 560px);
+  min-height: min(72svh, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(
+      var(--nav-band-visible) +
+        clamp(var(--section-y-48), 10vh, var(--section-y-112))
+    )
+    clamp(20px, 5vw, 48px) clamp(40px, 8vh, var(--section-y-80));
+  overflow: clip;
+}
+
+/* ── The projection: every layer below is decorative ── */
+.projection {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The lamp itself: a hot, soft point where the beam leaves the projector. */
+.lens {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 240px;
+  height: 90px;
+  transform: translate(-50%, -40%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(var(--cream-rgb), 0.5) 0%,
+    rgba(var(--accent-rgb), 0.2) 38%,
+    transparent 70%
+  );
+  filter: var(--blur-md);
+}
+
+/* The cone. A conic gradient anchored at the element's top centre: 0deg of
+   the ramp starts at 154deg (left of straight down), peaks at 180deg and
+   closes at 206deg. The element is twice the hero's width so the cone never
+   runs out of box while it sweeps.
+
+   Both shafts rotate forever, so neither carries a `filter`: a blur on a
+   layer this wide would be recomputed on every frame. The softness lives in
+   the gradient stops instead. The mask sets how strong the light is at each
+   height: it builds from dim at the lamp to full strength through the upper
+   air of the scene, then eases back across the headline band so the coral
+   italic keeps 3:1 against the lit ground, and fades out well before the
+   bottom of the scene. */
+.beam,
+.beamCore {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  transform-origin: 50% 0;
+  -webkit-mask-image: var(--beam-mask);
+  mask-image: var(--beam-mask);
+}
+
+/* The mask lives on the hero as a custom property so the phone layout can
+   move the dip. There the headline wraps and its coral second line sits
+   higher in the scene and dead centre in the cone, so the light eases back
+   sooner and a little further. */
+.hero {
+  --beam-mask: linear-gradient(
+    to bottom,
+    rgba(var(--plum-rgb), 0.35) 0%,
+    var(--plum) 26%,
+    rgba(var(--plum-rgb), 0.38) 44%,
+    rgba(var(--plum-rgb), 0.34) 62%,
+    transparent 96%
+  );
+}
+@media (--md) {
+  .hero {
+    --beam-mask: linear-gradient(
+      to bottom,
+      rgba(var(--plum-rgb), 0.35) 0%,
+      var(--plum) 20%,
+      rgba(var(--plum-rgb), 0.3) 36%,
+      rgba(var(--plum-rgb), 0.28) 62%,
+      transparent 96%
+    );
+  }
+}
+
+/* The main cone keeps a crisp edge (a 1.5deg ramp in from nothing) so it
+   reads as a shaft of light, then swells to its peak down the middle. */
+.beam {
+  background: conic-gradient(
+    from 154deg at 50% 0%,
+    transparent 0deg,
+    rgba(var(--cream-rgb), 0.07) 1.5deg,
+    rgba(var(--cream-rgb), 0.11) 8deg,
+    rgba(var(--cream-rgb), 0.18) 17deg,
+    rgba(var(--cream-rgb), 0.22) 26deg,
+    rgba(var(--cream-rgb), 0.18) 35deg,
+    rgba(var(--cream-rgb), 0.11) 44deg,
+    rgba(var(--cream-rgb), 0.07) 50.5deg,
+    transparent 52deg
+  );
+}
+
+/* A narrower, warmer shaft inside the cone, so the light reads as tungsten.
+   Its long, gentle ramps are the bloom. */
+.beamCore {
+  background: conic-gradient(
+    from 168deg at 50% 0%,
+    transparent 0deg,
+    rgba(var(--accent-rgb), 0.05) 5deg,
+    rgba(var(--accent-rgb), 0.1) 12deg,
+    rgba(var(--accent-rgb), 0.05) 19deg,
+    transparent 24deg
+  );
+}
+
+.dust {
+  position: absolute;
+  inset: 0;
+}
+
+/* Motes only read as dust while they drift. Held still, they look like dead
+   pixels, so they leave with the motion (OS setting or the in-app toggle). */
+@media (prefers-reduced-motion: reduce) {
+  .dust {
+    display: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .dust {
+  display: none;
+}
+
+.mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(var(--cream-rgb), 0.75);
+  opacity: 0.3;
+}
+.mote:nth-child(1) {
+  top: 30%;
+  left: 47%;
+}
+.mote:nth-child(2) {
+  top: 44%;
+  left: 54%;
+  width: 2px;
+  height: 2px;
+}
+.mote:nth-child(3) {
+  top: 58%;
+  left: 43%;
+}
+.mote:nth-child(4) {
+  top: 64%;
+  left: 57%;
+  width: 2px;
+  height: 2px;
+}
+.mote:nth-child(5) {
+  top: 20%;
+  left: 51%;
+  width: 2px;
+  height: 2px;
+}
+.mote:nth-child(6) {
+  top: 72%;
+  left: 40%;
+}
+.mote:nth-child(7) {
+  top: 78%;
+  left: 61%;
+  width: 2px;
+  height: 2px;
+}
+
+/* Darkens the corners like a house with the lights down, then melts the
+   bottom edge into the island's plum so the next section starts on flat
+   ground. The plum fade is the TOP background layer: it reaches solid
+   var(--plum) at the hero's last row and covers the dark wash there, so the
+   hero ends on exactly the island's colour and no seam shows where the film
+   strip begins. It is also the projection's last layer, above the beam and
+   the motes. `rgba(0, 0, 0, …)` is the allowed photographic wash. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, transparent 62%, var(--plum) 100%),
+    radial-gradient(
+      ellipse 120% 90% at 50% 32%,
+      transparent 52%,
+      rgba(0, 0, 0, 0.32) 100%
+    );
+}
+
+/* ── Copy ── */
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  /* Cream, because the eyebrow sits in the middle of the beam, where coral
+     type at this size drops under 4.5:1. The film icon carries the coral. */
+  color: rgba(var(--cream-rgb), 0.86);
+}
+.eyebrowIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--accent);
+}
+
+.title {
+  position: relative;
+  margin: 24px 0 0;
+  max-width: 100%;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-hero);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: rgba(var(--cream-rgb), 0.96);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+/* Where the beam lands: a warm pool of light sized to the headline itself,
+   so the H1 sits in light at every width. `closest-side` fades the ellipse to
+   nothing exactly at the pool's edges. The bottom inset is short so the pool
+   stays behind the headline when it wraps to two or three lines on a phone
+   and never reaches under the lede. Its coral stop is kept low because the
+   coral italic sits right on top of it and needs 3:1 against the pool.
+   z-index -1 puts it behind the letters and still inside `.inner`, above the
+   projection. */
+.title::before {
+  content: "";
+  position: absolute;
+  inset: -60% -14% -20%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    rgba(var(--accent-rgb), 0.08) 0%,
+    rgba(var(--cream-rgb), 0.04) 52%,
+    transparent 100%
+  );
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Sits inside the beam, so it runs brighter than the island's usual
+   secondary text to keep 4.5:1 on the lit ground. */
+.lede {
+  margin: 28px 0 0;
+  max-width: 620px;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: rgba(var(--cream-rgb), 0.9);
+  text-wrap: pretty;
+}
+@media (--wide-up) {
+  .lede {
+    font-size: var(--text-subhead);
+  }
+}
+
+/* The "in production" marker: a quiet pill with a live dot. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  margin: 36px 0 0;
+  padding: 9px 18px 9px 14px;
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.62);
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba(var(--cream-rgb), 0.92);
+  text-align: left;
+}
+
+.pulseDot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+  flex: none;
+}
+.pulseDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .beam {
+    animation: beamSweep 14s var(--ease) infinite alternate;
+  }
+  .beamCore {
+    animation:
+      beamSweep 11s var(--ease) -4s infinite alternate,
+      beamFlicker 7s var(--ease) infinite;
+  }
+  .title::before {
+    animation: landingBreathe 9s var(--ease) infinite alternate;
+  }
+  .mote {
+    animation: moteDrift 12s var(--ease) infinite;
+  }
+  .mote:nth-child(2) {
+    animation-duration: 14s;
+    animation-delay: -3s;
+  }
+  .mote:nth-child(3) {
+    animation-duration: 10s;
+    animation-delay: -6s;
+  }
+  .mote:nth-child(4) {
+    animation-duration: 13s;
+    animation-delay: -9s;
+  }
+  .mote:nth-child(5) {
+    animation-duration: 11s;
+    animation-delay: -2s;
+  }
+  .mote:nth-child(6) {
+    animation-duration: 14s;
+    animation-delay: -7s;
+  }
+  .mote:nth-child(7) {
+    animation-duration: 12s;
+    animation-delay: -10s;
+  }
+  .pulseDot::after {
+    animation: statusPing 6s var(--ease) infinite;
+  }
+}
+
+@keyframes beamSweep {
+  from {
+    transform: rotate(-2.2deg);
+  }
+  to {
+    transform: rotate(2.2deg);
+  }
+}
+
+@keyframes beamFlicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.84;
+  }
+  43% {
+    opacity: 0.97;
+  }
+  46% {
+    opacity: 0.8;
+  }
+  49% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes landingBreathe {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes moteDrift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(14px, -64px, 0);
+  }
+}
+
+@keyframes statusPing {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  30%,
+  100% {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}

@@ -1,0 +1,254 @@
+/* Therapist profile page shell (design classes .tp-page, .tp-skip, .tp-back,
+   .tp-cols, .tp-main, .tp-side, .tp-mbar).
+
+   Breakpoints: the in-page layout uses CONTAINER queries against `.pp`
+   (persona-skins.css makes it an inline-size container), so the editor's
+   narrow docked preview gets the one-column layout too. The phone action bar
+   is portaled to <body>, outside that container, so it and the two rules
+   paired with it (bottom clearance here, the hero's hidden primary CTA) use
+   the viewport `--mobile` media query instead. */
+
+/* `main` already reserves the nav band, and a therapist page with no cover
+   image skips the cover band (SubprofilePageBody), so this is the design's
+   lead under the nav: 116px in the design, less the 80px band. */
+.page {
+  position: relative;
+  padding-top: 36px;
+}
+
+/* ── Skip link: visually hidden until keyboard focus ── */
+.skip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: var(--z-skip-link);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip:focus-visible {
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+  transform: translateX(-50%);
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  text-decoration: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  /* As SkipToContentLink: the halo first, so it paints over the shadow. */
+  box-shadow: var(--ring-cream), var(--shadow-e2);
+}
+
+/* With the phone bar mounted, the skip link points at the hero's contact
+   row on wide screens and at the bar on phones, where the hero hides its
+   message button. Only one of the two is ever in the tab order. */
+.skipPhone {
+  display: none;
+}
+
+@media (--mobile) {
+  .skipWide {
+    display: none;
+  }
+
+  .skipPhone {
+    display: block;
+  }
+}
+
+/* ── Back link ── */
+.back {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 9px;
+  margin-bottom: 18px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition:
+    gap 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+a.back:hover {
+  gap: 12px;
+  color: var(--text-strong);
+}
+
+a.back:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+/* A thumb needs a 44px target. */
+@media (pointer: coarse) {
+  .back {
+    min-height: 44px;
+    padding-block: 4px;
+  }
+}
+
+.backIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+
+/* ── Two columns: reading column + sticky sidebar ── */
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 322px;
+  gap: 34px;
+  align-items: start;
+  margin-top: 30px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.side {
+  position: sticky;
+  top: calc(var(--sticky-top) + 16px);
+  min-width: 0;
+}
+
+@container (max-width: 1080px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    position: static;
+  }
+}
+
+/* ── Phone action bar (portaled to <body>) ── */
+.mbar {
+  display: none;
+}
+
+@media (--mobile) {
+  /* Space under the last card so the fixed bar never covers it. */
+  .page[data-mobile-bar] {
+    padding-bottom: var(--section-y-88);
+  }
+
+  .mbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    /* `--bottom-inset` is the tab bar plus the home indicator (or just the
+       indicator where no tab bar shows). Sit on top of the tab bar, less the
+       indicator, and pad the indicator back in: under a tab bar that strip
+       of padding tucks beneath it (it stacks higher), and with no tab bar
+       it keeps the button clear of the home indicator. */
+    bottom: calc(var(--bottom-inset, 0px) - env(safe-area-inset-bottom, 0px));
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    /* `--cream` flips with the theme (the raw `--cream-rgb` does not). */
+    background: color-mix(in srgb, var(--cream) 86%, transparent);
+    -webkit-backdrop-filter: var(--blur-nav);
+    backdrop-filter: var(--blur-nav);
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* The name and status give way first: the message button keeps its full
+   label and the text beside it truncates. */
+.mbarWho {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.mbarName {
+  display: block;
+  overflow: hidden;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mbarStatus {
+  display: block;
+  overflow: hidden;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The contact control brings its own note and links. In a bar this small
+   only its button fits; with no button (signed out, unavailable, at the
+   limit) its short explanation stands in, clamped to two lines. */
+.mbarCta {
+  display: flex;
+  flex: none;
+  align-items: center;
+  max-width: 60%;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.mbarCta:has(> button) > :not(button) {
+  display: none;
+}
+
+/* The button shrinks with the bar and truncates its label rather than
+   pushing past the screen edge (long Portuguese labels at 320px). A block
+   box, so text-overflow applies; the icon stays inline beside the text. */
+.mbarCta > button {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  /* A block box has no align-items: 11px padding + 22px line + 11px is
+     the Button's 44px floor, so the label sits centred. */
+  line-height: 22px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The label already starts with a space after the icon. */
+.mbarCta > button > svg {
+  margin-right: 2px;
+  vertical-align: -0.125em;
+}
+
+.mbarCta > p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back {
+    transition: none;
+  }
+}

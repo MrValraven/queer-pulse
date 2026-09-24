@@ -21,6 +21,7 @@ import {
   type UpdateSubprofileDTO,
 } from "./subprofiles.api";
 import { KIND_LABELS, defaultSlugForKind, slugify } from "../subprofile-kinds";
+import { subprofileToView } from "./subprofiles.adapters";
 
 /** Thrown by the publish mutation when the completeness check fails. In demo mode
  *  it carries the locally-computed unmet codes; in live mode B3 reads the 422
@@ -197,7 +198,21 @@ export function useSubprofileMutations() {
       if (!current) throw new Error("Subprofile not found");
       return { ...current, ...dto };
     },
-    onSuccess: (_data, { id }) => invalidateOwned(id),
+    onSuccess: (data, { id }) => {
+      // The PATCH answers with the whole owner view (the same shape GET
+      // returns), so write it straight into this persona's owner-editor
+      // query. An editor mounted later (the owner moving from the page's
+      // capacity switch to the editor, say) then seeds from the saved
+      // `skinData` instead of a stale cached copy, and its next save
+      // cannot write the old values back. The editor seeds its drafts once
+      // on mount, so an open editor only sees a fresher `subprofile` here,
+      // as it already does after the refetch below.
+      queryClient.setQueryData(
+        ["subprofile", demoMode, id],
+        subprofileToView(data),
+      );
+      invalidateOwned(id);
+    },
   });
 
   const replaceSection = useMutation<

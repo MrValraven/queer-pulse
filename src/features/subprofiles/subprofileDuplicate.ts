@@ -4,6 +4,7 @@ import {
 } from "./api/subprofiles.adapters";
 import type {
   AffiliationInputDTO,
+  AffiliationOptionDTO,
   SocialLinkDTO,
   SubprofileItemInputDTO,
   SubprofileKind,
@@ -127,16 +128,58 @@ export interface DuplicateMutations {
       items: AffiliationInputDTO[];
     }) => Promise<unknown>;
   };
+  /** Live only: the targets the NEW draft may link
+   *  (`GET /subprofiles/:id/affiliation-options`). Omitted in demo, where the
+   *  replace accepts any target. */
+  listAffiliationOptions?: (id: string) => Promise<AffiliationOptionDTO[]>;
 }
 
-/** Apply a plan to a freshly-created draft. Each step is best-effort — one
+/** What a copy could not carry over, so the caller can tell the owner. */
+export interface DuplicateOutcome {
+  /** Source links the copier can't make (a co-owner's community or event),
+   *  left off before the save. Zero when the options couldn't load, since
+   *  then every link is sent and the replace decides. */
+  skippedAffiliationCount: number;
+  /** True when the replace itself was rejected, so none of the links that
+   *  were sent made it onto the copy. */
+  hasAffiliationSaveFailed: boolean;
+}
+
+/** The source links the new draft may carry. The backend rejects the whole
+ *  replace-all when the copier doesn't qualify for any one link (a co-owner's
+ *  membership), so keep only targets in the draft's options. If the options
+ *  can't load, try them all and let the replace decide. */
+async function linkableAffiliations(
+  createdId: string,
+  affiliations: AffiliationInputDTO[],
+  listAffiliationOptions: DuplicateMutations["listAffiliationOptions"],
+): Promise<AffiliationInputDTO[]> {
+  if (!listAffiliationOptions) return affiliations;
+  let options: AffiliationOptionDTO[];
+  try {
+    options = await listAffiliationOptions(createdId);
+  } catch {
+    return affiliations;
+  }
+  return affiliations.filter((affiliation) =>
+    options.some(
+      (option) =>
+        option.targetType === affiliation.targetType &&
+        option.targetSlug === affiliation.targetSlug,
+    ),
+  );
+}
+
+/** Apply a plan to a freshly-created draft. Each step is best-effort: one
  *  failure (taken slug already handled by caller, a bad section, affiliations)
- *  never strands the draft; the owner lands in the editor and finishes there. */
+ *  never strands the draft; the owner lands in the editor and finishes there.
+ *  Resolves with how many source links were skipped and whether the link
+ *  save failed, so the caller can tell the owner which one happened. */
 export async function applyDuplicatePlan(
   createdId: string,
   plan: DuplicatePlan,
   mutations: DuplicateMutations,
-): Promise<void> {
+): Promise<DuplicateOutcome> {
   if (plan.meta) {
     try {
       await mutations.update.mutateAsync({ id: createdId, dto: plan.meta });
@@ -165,14 +208,26 @@ export async function applyDuplicatePlan(
       /* that section stays empty; editable in the editor */
     }
   }
-  if (plan.affiliations && plan.affiliations.length) {
-    try {
-      await mutations.replaceAffiliations.mutateAsync({
-        id: createdId,
-        items: plan.affiliations,
-      });
-    } catch {
-      /* affiliations stay empty; editable in the editor */
-    }
+  if (!plan.affiliations || plan.affiliations.length === 0) {
+    return { skippedAffiliationCount: 0, hasAffiliationSaveFailed: false };
   }
+  const linkable = await linkableAffiliations(
+    createdId,
+    plan.affiliations,
+    mutations.listAffiliationOptions,
+  );
+  const skippedAffiliationCount = plan.affiliations.length - linkable.length;
+  if (linkable.length === 0) {
+    return { skippedAffiliationCount, hasAffiliationSaveFailed: false };
+  }
+  try {
+    await mutations.replaceAffiliations.mutateAsync({
+      id: createdId,
+      items: linkable,
+    });
+  } catch {
+    /* affiliations stay empty; editable in the editor */
+    return { skippedAffiliationCount, hasAffiliationSaveFailed: true };
+  }
+  return { skippedAffiliationCount, hasAffiliationSaveFailed: false };
 }

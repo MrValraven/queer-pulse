@@ -1,0 +1,183 @@
+/* Closing scene of the Cinema teaser. The island (CinemaComingSoon) owns the
+   plum ground and the grain; this section adds the last of the projector's
+   warmth and a marquee panel framed by two rows of dim bulbs. Its vertical
+   padding runs tighter than the manifesto's, so the page's rhythm closes in
+   toward the end. */
+.closing {
+  position: relative;
+  padding: clamp(var(--section-y-56), 9vh, var(--section-y-112))
+    clamp(20px, 5vw, 48px);
+}
+
+/* The beam's fade-out: a low warm pool behind the marquee. */
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 46% 62% at 50% 50%,
+    rgba(var(--accent-rgb), 0.1) 0%,
+    rgba(var(--cream-rgb), 0.03) 45%,
+    transparent 72%
+  );
+}
+
+.marquee {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(52px, 8vw, var(--section-y-80)) clamp(22px, 5vw, 56px);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: var(--radius-card);
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--cream-rgb), 0.045),
+    rgba(var(--cream-rgb), 0.01)
+  );
+  text-align: center;
+}
+
+/* ── Marquee bulbs ──
+   Two interleaved strings of lights on each edge. `::before` draws every
+   other bulb and `::after` the ones in between, offset by half a period, so
+   the two can dim in turn. The mask fades the strings out before the panel's
+   rounded corners. */
+.bulbs {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  height: 8px;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    var(--plum) 10%,
+    var(--plum) 90%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    var(--plum) 10%,
+    var(--plum) 90%,
+    transparent
+  );
+}
+.bulbsTop {
+  top: 16px;
+}
+.bulbsBottom {
+  bottom: 16px;
+}
+.bulbs::before,
+.bulbs::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(var(--cream-rgb), 0.9) 0 1.2px,
+    rgba(var(--accent-rgb), 0.4) 2px,
+    transparent 4px
+  );
+  background-size: 28px 8px;
+  background-repeat: repeat-x;
+}
+.bulbs::before {
+  background-position: 50% 0;
+}
+.bulbs::after {
+  background-position: calc(50% + 14px) 0;
+  opacity: 0.4;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-heading);
+  color: rgba(var(--cream-rgb), 0.96);
+  text-wrap: balance;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.body {
+  margin: 18px auto 0;
+  max-width: 520px;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: rgba(var(--cream-rgb), 0.66);
+  text-wrap: pretty;
+}
+
+.actions {
+  margin-top: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Scoped under `.actions` so these win over the shared Button rules whatever
+   order the two stylesheets load in. */
+.actions .action {
+  min-height: 48px;
+}
+
+/* The shared `.primary` rule sets `box-shadow: var(--shadow-accent)` after
+   the global `:focus-visible` rule at the same specificity, which drops the
+   cream halo from the two-tone focus ring and leaves only the dark coral
+   outline on plum. Restate the ring here, halo first, keeping the coral lift
+   behind it. The second selector outranks the shared hover rule, so a
+   focused button that is also hovered keeps its halo. */
+.actions .primaryAction:focus-visible,
+.actions .primaryAction:focus-visible:hover:not(:disabled):not([aria-disabled="true"]) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream), var(--shadow-accent);
+}
+
+@media (--xs) {
+  .actions .action {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bulbs::before,
+  .bulbs::after {
+    animation: bulbsDim 7s var(--ease) infinite alternate;
+  }
+  /* Half a full cycle behind, so the two strings dim in turn. */
+  .bulbs::after {
+    animation-delay: -7s;
+  }
+  .glow {
+    animation: glowBreathe 10s var(--ease) infinite alternate;
+  }
+}
+
+@keyframes bulbsDim {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+
+@keyframes glowBreathe {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}

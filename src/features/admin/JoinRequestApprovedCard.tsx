@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
 import { inviteFullUrlFor, inviteUrlFor } from "../../shared/lib/inviteUrl";
+import { WelcomeEmailCopyGroup } from "./emailTemplates/WelcomeEmailCopyGroup";
 import styles from "./AdminMembersPage.module.css";
 import decidedStyles from "./AdminVerifyDecided.module.css";
 
@@ -15,7 +16,8 @@ import decidedStyles from "./AdminVerifyDecided.module.css";
  * Handing that link over is the reviewer's job. QueerPulse has no email
  * delivery and never will, so approval puts nothing in the applicant's inbox,
  * which is why their email address is repeated right next to the link they
- * need to send it to.
+ * need to send it to. The welcome email template below copies that link
+ * inside a ready-made email.
  *
  * The link is not open-ended: an approval invite lapses seven days after it is
  * minted, so the card says how long is left. This card is also transient (it
@@ -24,17 +26,17 @@ import decidedStyles from "./AdminVerifyDecided.module.css";
  */
 export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
   const { t } = useTranslation();
-  // The backend returns a code, never a URL — composing the link is the
+  // The backend returns a code only. Composing it into a URL is the
   // client's job, and it goes through the one shared builder.
   const url = item.inviteCode ? inviteFullUrlFor(item.inviteCode) : null;
   // How long the reviewer has to hand it over, in the same words the Decided
-  // tab uses — one helper, so the two surfaces can never disagree.
+  // tab uses: one helper, so the two surfaces stay in agreement.
   const inviteState = joinRequestInviteState(item, t);
 
   return (
     <div className={`${styles.queueCard} ${styles.queueCardApproved}`}>
       <div className={styles.queueHead}>
-        {/* Initials only — same reason as the pending card: the applicant
+        {/* Initials only, same reason as the pending card: the applicant
             has no avatar of their own, and the demo portrait registry keys off
             the name they submitted. */}
         <AdminAvatar initials={item.initials} tone={item.tone} size="md" />
@@ -83,6 +85,8 @@ export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
           {t("admin:members.verify.noInviteCode")}
         </p>
       )}
+
+      <WelcomeEmailCopyGroup item={item} />
     </div>
   );
 }

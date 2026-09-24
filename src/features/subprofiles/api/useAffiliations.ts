@@ -4,30 +4,33 @@ import {
   replaceAffiliations,
   type AffiliationDTO,
   type AffiliationInputDTO,
+  type AffiliationOptionDTO,
   type SubprofileDTO,
 } from "./subprofiles.api";
 
-/** Re-resolve an owner-edited affiliation input against the persona's
- *  currently-known (already-resolved) affiliations, so edits/reorders/removals
- *  keep their real `name`/`imageUrl` in demo mode. A genuinely new entry (not
- *  present before) falls back to its raw slug as a placeholder name — real
- *  resolution against the mock event/community registries is wired by the
- *  entity picker (Task C2) and the mock backfill (Task B2), not this hook. */
+/** Resolve an owner-edited affiliation input to its display `name`/`imageUrl`
+ *  in demo mode. A newly picked target resolves from the picker's options (the
+ *  cached `useAffiliationOptions` lists), then from the persona's
+ *  already-resolved affiliations (edits, reorders, removals), and only as a
+ *  last resort from its raw slug. */
 function demoResolveAffiliation(
   item: AffiliationInputDTO,
-  known: AffiliationDTO[],
+  pickerOptions: readonly AffiliationOptionDTO[],
+  known: readonly AffiliationDTO[],
 ): AffiliationDTO {
-  const existing = known.find(
-    (affiliation) =>
-      affiliation.targetType === item.targetType &&
-      affiliation.targetSlug === item.targetSlug,
-  );
+  const isSameTarget = (candidate: {
+    targetType: string;
+    targetSlug: string;
+  }) =>
+    candidate.targetType === item.targetType &&
+    candidate.targetSlug === item.targetSlug;
+  const resolved = pickerOptions.find(isSameTarget) ?? known.find(isSameTarget);
   return {
     targetType: item.targetType,
     targetSlug: item.targetSlug,
     role: item.role,
-    name: existing?.name ?? item.targetSlug,
-    imageUrl: existing?.imageUrl ?? null,
+    name: resolved?.name ?? item.targetSlug,
+    imageUrl: resolved?.imageUrl ?? null,
   };
 }
 
@@ -64,10 +67,20 @@ export function useAffiliations(subprofileId: string) {
       const { mockSubprofileById } = await import("../data/subprofiles.data");
       const current = mockSubprofileById(subprofileId);
       if (!current) throw new Error("Subprofile not found");
+      // Prefix match: the options key's 4th element (demo community key) varies.
+      const pickerOptions = queryClient
+        .getQueriesData<AffiliationOptionDTO[]>({
+          queryKey: ["subprofileAffiliationOptions", true, subprofileId],
+        })
+        .flatMap(([, cachedOptions]) => cachedOptions ?? []);
       return {
         ...current,
         affiliations: items.map((item) =>
-          demoResolveAffiliation(item, current.affiliations ?? []),
+          demoResolveAffiliation(
+            item,
+            pickerOptions,
+            current.affiliations ?? [],
+          ),
         ),
       };
     },

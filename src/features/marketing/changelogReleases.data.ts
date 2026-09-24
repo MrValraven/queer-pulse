@@ -8,6 +8,14 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "24 Sep 2026": {
+      // Ten entries this day, so three highlights; the feature comes first.
+      highlights: [
+        "therapist-persona-profile",
+        "persona-part-of-real-links",
+        "smooth-directory-map-expand",
+      ],
+    },
     "23 Sep 2026": {
       // Twenty entries this day, so the rule in the file header asks for
       // curated highlights; the feature comes first.

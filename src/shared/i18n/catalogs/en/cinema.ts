@@ -1138,11 +1138,42 @@ export const cinema: Catalog = {
   // ── Live-mode not-launched page (CinemaComingSoon, CON-03) ────────────────
   // Shown for EVERY /cinema/* route when demo mode is off. Cinema ships with
   // `launchedFeatures.cinema.launched = false`, so nothing streams and no
-  // membership can be bought — this page must never re-state the offer.
+  // membership can be bought. The teaser describes intent only: it must never
+  // re-state the offer (no prices, no revenue split, no membership, no ledger)
+  // and never cite a statistic we cannot source.
   "comingSoon.metaTitle": "QueerPulse Cinema: opening soon",
-  "comingSoon.title": "The cinema hasn't opened yet",
   "comingSoon.description":
-    "Our co-op cinema is still being built: the programme, the memberships and the filmmaker revenue split all land together. Nothing is on sale and no film is streaming yet. We'll announce it here when the doors open.",
+    "Our cinema for queer film made close by is still being built. Nothing is streaming and nothing is on sale yet. We'll announce it here when the doors open.",
+  "comingSoon.hero.eyebrow": "QueerPulse Cinema",
+  "comingSoon.hero.title": "The lights are <em>going down</em>.",
+  "comingSoon.hero.lede":
+    "We're building a cinema for queer film made close by: shorts, documentaries and first features, chosen by people who love them and designed so the filmmaker comes first.",
+  "comingSoon.hero.status":
+    "Not open yet. Nothing is streaming and nothing is on sale.",
+  "comingSoon.preview.eyebrow": "A first look",
+  "comingSoon.preview.title": "What it will <em>be like</em>",
+  "comingSoon.preview.reelLabel": "Reel {number}",
+  "comingSoon.preview.seasons.title": "Seasons with a point of view",
+  "comingSoon.preview.seasons.body":
+    "Films arrive in curated seasons, each one picked and introduced by a queer curator who can tell you why it matters.",
+  "comingSoon.preview.local.title": "Made close to home",
+  "comingSoon.preview.local.body":
+    "Shorts, documentaries, music films and first features from filmmakers in our own communities. The plan is for filmmakers to keep the rights to their films and show them anywhere else too.",
+  "comingSoon.preview.open.title": "Open to everyone watching",
+  "comingSoon.preview.open.body":
+    "Captions and audio description are part of the plan from the start, so more of us can watch every film on the programme.",
+  "comingSoon.why.eyebrow": "Why it matters",
+  "comingSoon.why.quote":
+    "Our stories land differently when <em>we tell them</em>.",
+  "comingSoon.why.p1":
+    "Queer films made by queer people catch what an outside camera misses: the in-jokes, the silences, the places we actually meet. They are how a lot of us first saw ourselves on a screen.",
+  "comingSoon.why.p2":
+    "Most small films get a festival screening or two and then disappear. They rarely find a home where they keep being seen, or where anything comes back to the people who made them.",
+  "comingSoon.why.p3":
+    "Watching local work, sharing it and talking about it is how a filmmaker gets to make the next one. That's what this cinema is for.",
+  "comingSoon.closing.title": "Doors open <em>when it's ready</em>.",
+  "comingSoon.closing.body":
+    "We'll announce the opening right here. Until then, the magazine is the best place to follow what we're making.",
   "comingSoon.magazineCta": "Read the magazine",
   "comingSoon.backHome": "Back to home",
 };

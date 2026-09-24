@@ -7,6 +7,7 @@ import {
 } from "../../features/members/api/useUpdateProfileLists";
 import type { ProfileDTO } from "../../features/members/api/members.api";
 import { reasonFor } from "../../shared/api/errorMessage";
+import { useLeaveConfirm } from "../../shared/components/feedback/useLeaveConfirm";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { mergeSavedProfile } from "./profileSeed";
 import {
@@ -50,6 +51,7 @@ export function useProfileDraftState({
   isProfileReady,
 }: DraftStateInput): { profile: Member; edit: ProfileEditValue } {
   const { t } = useTranslation();
+  const { requestLeave } = useLeaveConfirm();
   const [profile, setProfile] = useState<Member>(seed);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<ProfileDraft>(() => toDraft(seed));
@@ -181,10 +183,16 @@ export function useProfileDraftState({
   );
 
   const requestCancel = useCallback(() => {
-    if (isDirty && !window.confirm(t("members:profileEdit.discardConfirm")))
+    if (!isDirty) {
+      cancelEditing();
       return;
-    cancelEditing();
-  }, [isDirty, cancelEditing, t]);
+    }
+    void requestLeave(t("members:profileEdit.discardConfirm")).then(
+      (shouldLeave) => {
+        if (shouldLeave) cancelEditing();
+      },
+    );
+  }, [isDirty, cancelEditing, requestLeave, t]);
 
   const edit = useMemo<ProfileEditValue>(
     () => ({

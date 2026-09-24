@@ -34,12 +34,25 @@ import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
+import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import {
   PAGE_STATE_COPY,
   type PersonaPageState,
 } from "./subprofilePageStates.data";
 
 type PeopleModalMode = "followers" | "endorsements";
+
+/** The owner's draft banner, handed to `SubprofilePageBody` as its `lead`.
+ *  A therapist's owner bar carries the draft state and Publish itself. */
+function draftBannerFor(data: PublicSubprofileView, mode: PersonaViewMode) {
+  if (data.kind === "therapist" && mode === "owner") return null;
+  return (
+    <SubprofileDraftBanner
+      subprofileId={data.id}
+      {...estimateDraftReadiness(data)}
+    />
+  );
+}
 
 /** The Shared Contract's `RestrictedState` ("members_only", underscore) maps
  *  1:1 onto `SubprofilePageStates`' pre-existing `PersonaPageState` keys
@@ -250,21 +263,14 @@ export function SubprofilePage() {
       <ProfileMovedNote />
       <RehomedPersonaNote />
 
-      {isOwnerDraftPreview && (
-        <SubprofileDraftBanner
-          subprofileId={data.id}
-          {...estimateDraftReadiness(data)}
-        />
-      )}
-
       <SubprofilePageBody
         data={data}
         skin={skin}
         mode={mode}
-        // The banner runs to the very top of the page, under the floating pill
-        // nav — except when the owner's draft banner sits above it, which the
-        // rise would otherwise slide up over.
+        // No cover rise under the owner's draft banner, which leads the page.
         coverRise={!isOwnerDraftPreview}
+        navBand
+        lead={isOwnerDraftPreview && draftBannerFor(data, mode)}
         skinVars={skinStyle}
         onAction={handleAction}
         onOpenWorkAt={lightbox.openAt}

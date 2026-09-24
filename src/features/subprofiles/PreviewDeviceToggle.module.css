@@ -1,0 +1,82 @@
+/* The Mobile / Desktop switch in the editor's docked preview bar. The same
+   vocabulary as PersonaViewToggle: a pill track on `--paper` with the hairline
+   border, the pressed option filled plum. Icon-only, since the bar is narrow.
+   The declarations are repeated here on purpose: the repo has no cross-module
+   `composes: … from` dependency yet (see Ownership.module.css). */
+
+.deviceToggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+}
+
+/* Raw <button>: there is no global reset, so every piece of native chrome is
+   zeroed here. */
+.deviceChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 32px plus the group's 3px padding and 1px border on each side makes the
+     switch 40px tall, level with the "Open live" button beside it. */
+  min-height: 32px;
+  margin: 0;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  line-height: 1;
+  cursor: pointer;
+  appearance: none;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .deviceChip:hover {
+    color: var(--ink);
+  }
+}
+
+.deviceChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.deviceChipOn,
+.deviceChipOn:hover {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+/* Plum does not flip, so on the dark paper a plum fill all but vanishes. The
+   pressed option inverts instead: the light text colour becomes the fill and
+   the paper colour becomes the ink, both of which follow the theme. */
+:global([data-theme="dark"]) .deviceChipOn,
+:global([data-theme="dark"]) .deviceChipOn:hover {
+  background: var(--text-strong);
+  color: var(--paper);
+}
+
+/* Touch: each option reaches the 40px floor. */
+@media (pointer: coarse) {
+  .deviceChip {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deviceChip {
+    transition: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import type { IconType } from "react-icons";
-import { FiInstagram, FiYoutube, FiAtSign, FiMail } from "react-icons/fi";
+import { FiInstagram, FiMail } from "react-icons/fi";
 import { MdAccessible } from "react-icons/md";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
@@ -20,9 +20,7 @@ const LINK_ICONS: Record<NonNullable<FooterLink["icon"]>, IconType> = {
 };
 const SOCIAL_ICONS: Record<(typeof SOCIAL_LINKS)[number]["icon"], IconType> = {
   instagram: FiInstagram,
-  youtube: FiYoutube,
-  mastodon: FiAtSign,
-  newsletter: FiMail,
+  email: FiMail,
 };
 
 function Wordmark({ to }: { to: string }) {
@@ -69,11 +67,16 @@ export function Footer() {
             <div className={styles.social}>
               {SOCIAL_LINKS.map((social) => {
                 const Icon = SOCIAL_ICONS[social.icon];
+                const isExternal = social.href.startsWith("http");
                 return (
                   <a
                     key={social.icon}
                     href={social.href}
                     aria-label={social.label}
+                    {...(isExternal && {
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                    })}
                   >
                     <Icon aria-hidden />
                   </a>

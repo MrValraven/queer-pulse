@@ -69,6 +69,9 @@ interface IdentityContactButtonProps {
    *  `SubprofileHeroActions`) can still record its own "message" action
    *  without owning the composer's open state itself. */
   onOpen?: () => void;
+  /** Button text in place of the default "Send a message", for a host that
+   *  names the person (the therapist sidebar's "Message Sofia"). */
+  label?: string;
 }
 
 /**
@@ -88,6 +91,7 @@ export function IdentityContactButton({
   name,
   buttonVariant,
   onOpen,
+  label,
 }: IdentityContactButtonProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -183,7 +187,8 @@ export function IdentityContactButton({
           onOpen?.();
         }}
       >
-        <FiMessageCircle aria-hidden /> {t("messages:mailbox.contact.cta")}
+        <FiMessageCircle aria-hidden />{" "}
+        {label ?? t("messages:mailbox.contact.cta")}
       </Button>
       <p>
         {t("messages:mailbox.contact.note", { name })}

@@ -1,3 +1,4 @@
+import type { SubprofileKind } from "./api/subprofiles.api";
 import type { EditorPaneKey } from "./editorRail.data";
 
 export interface PaneHeaderCopy {
@@ -53,3 +54,17 @@ export const PANE_HEADER: Partial<Record<EditorPaneKey, PaneHeaderCopy>> = {
 
 /** Shared lede shown above every per-section Content pane. */
 export const CONTENT_PANE_LEDE_KEY = "subprofiles:editorPane.content.lede";
+
+/**
+ * Per-kind lede overrides for a pane, read before `PANE_HEADER`. A kind whose
+ * "Page blocks" pane is chaptered (therapist) says so in its lede; every other
+ * kind keeps the shared copy.
+ */
+export const KIND_PANE_LEDE_KEY: Partial<
+  Record<SubprofileKind, Partial<Record<EditorPaneKey, string>>>
+> = {
+  therapist: {
+    skinBlocks: "subprofiles:editorPane.skinBlocks.ledeTherapist",
+    presence: "subprofiles:editorPane.presence.ledeTherapist",
+  },
+};

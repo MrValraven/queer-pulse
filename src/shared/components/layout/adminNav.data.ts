@@ -236,6 +236,13 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiMail,
       },
       {
+        // The email template library. Beside Invites because its first use is
+        // the welcome email a reviewer copies after approving a request.
+        labelKey: "admin:emailTemplates.navLabel",
+        to: routes.adminEmailTemplates,
+        icon: FiFileText,
+      },
+      {
         labelKey: "shared:adminNav.items.staff",
         to: routes.adminStaff,
         icon: FiKey,

@@ -6,7 +6,9 @@ import {
   CREDENTIAL_PHOTO_SECTIONS,
   FIELD_META,
   ITEM_LINKS_SECTIONS,
+  KIND_SECTION_FIELD_COPY,
 } from "./subprofileEditor.data";
+import { useEditorPersonaKind } from "./useEditorPersonaKind";
 import { ImageUploadField } from "./ImageUploadField";
 import styles from "./SubprofileEditor.module.css";
 import { CollaboratorSelect } from "./CollaboratorSelect";
@@ -141,6 +143,12 @@ export function SubprofileItemDrawerFields({
   // A certificate or diploma photo is public on the persona page and often
   // shows a legal name or an ID number, so its field says so up front.
   const isCredentialPhoto = CREDENTIAL_PHOTO_SECTIONS.has(draft.section);
+  // Kind-specific wording for a section the kind's page renders its own way
+  // (a therapist's specialisms: heading plus one bullet per line).
+  const kind = useEditorPersonaKind();
+  const fieldCopy = kind
+    ? KIND_SECTION_FIELD_COPY[kind]?.[draft.section]
+    : undefined;
 
   return (
     <>
@@ -168,22 +176,26 @@ export function SubprofileItemDrawerFields({
         const meta = FIELD_META[field];
         if (!meta) return null;
         const value = (draft[field] as string) ?? "";
+        const copy = fieldCopy?.[field];
+        const labelKey = copy?.labelKey ?? meta.labelKey;
+        const placeholderKey = copy?.placeholderKey ?? meta.placeholderKey;
         return (
           <FormField
             key={field}
-            label={t(meta.labelKey)}
+            label={t(labelKey)}
+            helper={copy?.helperKey ? t(copy.helperKey) : undefined}
             required={field === "title"}
           >
             {meta.multiline ? (
               <textarea
                 value={value}
-                placeholder={t(meta.placeholderKey)}
+                placeholder={t(placeholderKey)}
                 onChange={(e) => onPatch({ [field]: e.target.value })}
               />
             ) : meta.inputType === "month" ? (
               <DatePicker
                 mode="month"
-                label={t(meta.labelKey)}
+                label={t(labelKey)}
                 value={toMonthValue(value) || null}
                 onChange={(monthValue) =>
                   onPatch({ [field]: monthValue ?? "" })
@@ -192,7 +204,7 @@ export function SubprofileItemDrawerFields({
             ) : (
               <input
                 value={value}
-                placeholder={t(meta.placeholderKey)}
+                placeholder={t(placeholderKey)}
                 onChange={(e) => onPatch({ [field]: e.target.value })}
               />
             )}

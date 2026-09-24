@@ -130,6 +130,7 @@ export const subprofiles: Catalog = {
   "alsoAs.announce": "Now showing {name}",
   "alsoAs.featuredEyebrow": "Featured",
   "alsoAs.addAnother": "Add another persona",
+  "alsoAs.manage": "Manage your personas",
   "alsoAs.edit": "Edit",
   "alsoAs.expandCard": "Show details",
   "alsoAs.filterLabel": "Filter by craft",
@@ -517,7 +518,7 @@ export const subprofiles: Catalog = {
   // "Move earlier" on every card with nothing to tell them apart.
   "mine.order.groupTitle": "On your profile",
   "mine.order.groupHint":
-    "Drag a card, or use the arrows, to set the order these appear on your profile.",
+    "Drag a persona, or use the arrows, to set the order these appear on your profile.",
   "mine.order.dragToReorder": "Drag to reorder",
   "mine.order.position": "{position} of {total}",
   "mine.order.moveEarlier": "Move {name} earlier",
@@ -525,6 +526,23 @@ export const subprofiles: Catalog = {
   "mine.order.emptyGroup":
     "Nothing is on your profile yet. Publish a persona and tie it to your profile to list it here.",
   "mine.order.saveError": "We couldn't save that order. Try again.",
+
+  // Cards / List switch on the dashboard (PersonaViewToggle), and the named
+  // icon-only actions on a list row (SideCardFooter's row variant).
+  "mine.view.label": "Show personas as",
+  "mine.view.cards": "Cards",
+  "mine.view.list": "List",
+  "mine.rowEditNamed": "Edit {name}",
+  "mine.rowViewNamed": "View {name}",
+  "mine.rowShareNamed": "Share {name}",
+  "mine.rowDeleteNamed": "Delete {name}",
+  "mine.rowLeaveNamed": "Leave {name}",
+  "mine.rowActions": "Actions",
+  "mine.rowActionsFor": "Actions for {name}",
+  "mine.stat.endorsements_one": "endorsement",
+  "mine.stat.endorsements_other": "endorsements",
+  "mine.stat.followers_one": "follower",
+  "mine.stat.followers_other": "followers",
 
   // Personas the profile doesn't list (NotShownPersonas). One reason and one
   // link each, deep-linked to the editor pane where that work happens.
@@ -1136,17 +1154,32 @@ export const subprofiles: Catalog = {
 
   "affiliationsEditor.title": "Part of",
   "affiliationsEditor.note":
-    "Link this persona to the events and communities you're part of.",
+    "Link this persona to communities you're in and events you're going to.",
   "affiliationsEditor.empty":
     "Nothing linked yet. Add an event or community below.",
   "affiliationsEditor.itemNumber": "Item {n}",
   "affiliationsEditor.remove": "Remove",
   "affiliationsEditor.typeLabel": "Type",
   "affiliationsEditor.roleLabel": "Role",
-  "affiliationsEditor.slugLabel": "Event or community address",
-  "affiliationsEditor.slugPlaceholder": "e.g. queer-book-club",
-  "affiliationsEditor.slugHelper":
-    "We'll check it matches a real event or community when you save.",
+  "affiliationsEditor.targetLabel.event": "Event",
+  "affiliationsEditor.targetLabel.community": "Community",
+  "affiliationsEditor.targetPlaceholder.event": "Choose an event",
+  "affiliationsEditor.targetPlaceholder.community": "Choose a community",
+  "affiliationsEditor.optionsLoading": "Loading your events and communities…",
+  "affiliationsEditor.optionsError":
+    "We couldn't load your events and communities.",
+  "affiliationsEditor.optionsUnavailable": "Not available right now",
+  "affiliationsEditor.retry": "Try again",
+  "affiliationsEditor.noOptions.community":
+    "You're not in any communities yet.",
+  "affiliationsEditor.noOptions.event": "You're not going to any events yet.",
+  "affiliationsEditor.allLinked.community":
+    "You've linked every community you're in.",
+  "affiliationsEditor.allLinked.event":
+    "You've linked every event you're going to.",
+  "affiliationsEditor.browse.community": "Browse communities",
+  "affiliationsEditor.browse.event": "Browse gatherings",
+  "affiliationsEditor.eventOptionLabel": "{name} ({date})",
   "affiliationsEditor.add": "Add a link",
   "affiliationsEditor.capHint": "That's the most links you can add.",
 
@@ -1551,6 +1584,10 @@ export const subprofiles: Catalog = {
   // inside the editor shell.
   "editorPreview.label": "Live preview",
   "editorPreview.openLive": "Open live",
+  // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
+  "editorPreview.device.label": "Preview size",
+  "editorPreview.device.mobile": "Mobile",
+  "editorPreview.device.desktop": "Desktop",
 
   // Sticky savebar (EditorSavebar) — owns only the preview toggle; every
   // pane still saves with its own button (see the component's doc comment).
@@ -1752,9 +1789,689 @@ export const subprofiles: Catalog = {
     "That address is taken. Pick another on the Address tab.",
   "newModal.toastHandleClaimFailed":
     "That handle got taken just now. We've kept this linked to your profile for the moment. You can claim a new address from the editor.",
+  "newModal.toastAffiliationsDropped_one":
+    '1 "Part of" link didn\'t carry over. Only your own communities and events come with a copy.',
+  "newModal.toastAffiliationsDropped_other":
+    '{count} "Part of" links didn\'t carry over. Only your own communities and events come with a copy.',
+  "newModal.toastAffiliationsSaveFailed":
+    'We couldn\'t copy the "Part of" links. Add them from the editor.',
   "invite.loadMore": "Show more connections",
   "invite.loadingMore": "Loading…",
 
   "editorSavebar.mobilePreview": "Preview",
   "mobilePreview.ariaLabel": "Live preview of your persona page",
+
+  // Therapist profile (t1)
+  "therapist.completeness.portrait": "Portrait",
+  "therapist.completeness.quote": "Pull quote",
+  "therapist.completeness.approach": "Approach",
+  "therapist.completeness.specialties": "Specialties",
+  "therapist.completeness.fees": "Fees",
+  "therapist.completeness.availability": "Availability",
+  "therapist.completeness.faq": "Questions people ask",
+  "therapist.completeness.firstSession": "First session",
+  "therapist.completeness.access": "Accessibility",
+  // Therapist profile (t3)
+  "therapist.approach.label": "How {name} works",
+  "therapist.approach.heading": "Approach",
+  "therapist.approach.styleLabel": "Working style, in {name}'s words",
+  "therapist.approach.notForLabel": "Probably not for you if",
+  "therapist.approach.notForNote":
+    "Written by {name}. Honest self-exclusion saves everyone a first session.",
+  "therapist.approach.boundariesLabel": "What {name} doesn't do",
+  "therapist.specialties.label": "What {name} can help with",
+  "therapist.specialties.heading": "Specialties, and *who* the door is open to",
+  "therapist.specialties.contextsLabel": "Also speaks the language of",
+  "therapist.specialties.contextsNote":
+    "Marked by {name}. Contexts {name} knows from the inside or has worked in for years.",
+  "therapist.firstSession.labelFifty": "The first 50 minutes",
+  "therapist.firstSession.label": "The first session",
+  "therapist.firstSession.heading": "What *actually* happens",
+  "therapist.vouches.label": "Community vouches",
+  "therapist.vouches.heading": "People who have *actually* worked with {name}",
+  "therapist.vouches.count_one": "Vouched for by {count} member",
+  "therapist.vouches.count_other": "Vouched for by {count} members",
+  "therapist.vouches.quiet_one": "{count} vouched without a note",
+  "therapist.vouches.quiet_other": "{count} vouched without a note",
+  "therapist.vouches.notes_one": "{count} left a note",
+  "therapist.vouches.notes_other": "{count} left a note",
+  "therapist.vouches.breakdown": "{quiet}, {notes}.",
+  "therapist.vouches.empty":
+    "No vouches yet. Members who have worked with {name} can add the first one.",
+  "therapist.vouches.footer":
+    "Seen {name} yourself? Your vouch shows your name, and adding a note is up to you. Vouches are never paid for.",
+  "therapist.vouches.cta": "Vouch for {name}",
+  "therapist.vouches.vouched": "You vouched",
+  "therapist.faq.label": "Questions {name} gets asked",
+  "therapist.faq.heading": "Answered *before* you have to ask",
+  "therapist.referrals.label": "Care beyond one person",
+  "therapist.referrals.heading": "Who else is *in the picture*",
+  "therapist.referrals.recommendsLabel": "If {name} is full, {name} recommends",
+  "therapist.referrals.note": "Chosen by {name}. Nobody pays to be here.",
+  "therapist.referrals.alongsideLabel": "Works alongside",
+  "therapist.referrals.kind.psychiatrist": "Psychiatrist",
+  "therapist.referrals.kind.group": "Group",
+  "therapist.referrals.kind.community": "Community",
+  "therapist.referrals.kind.clinic": "Clinic",
+  "therapist.referrals.kind.therapist": "Therapist",
+  // Therapist profile (t4)
+  "therapist.practical.label": "The practical bits",
+  "therapist.practical.heading": "Money, time and *getting in the door*",
+  "therapist.practical.amount": "{amount}€",
+  "therapist.practical.range": "{low}–{high}€",
+  "therapist.practical.sessions.title": "Sessions",
+  "therapist.practical.sessions.modeBoth": "in person or online",
+  "therapist.practical.sessions.modeOnline": "online only",
+  "therapist.practical.sessions.modeInPerson": "in person",
+  "therapist.practical.sessions.frequency": "How often",
+  "therapist.practical.sessions.inPerson": "In person",
+  "therapist.practical.sessions.online": "Online",
+  "therapist.practical.sessions.onlineVideo": "Video",
+  "therapist.practical.sessions.onlineNo": "Not offered",
+  "therapist.practical.sessions.onlineUnknown": "Not said",
+  "therapist.practical.fees.title": "Fees",
+  "therapist.practical.fees.perSession": "per session",
+  "therapist.practical.fees.sliding": "Sliding scale",
+  "therapist.practical.fees.placesOpen_one":
+    "{open} of {places} sliding-scale places open",
+  "therapist.practical.fees.placesOpen_other":
+    "{open} of {places} sliding-scale places open",
+  "therapist.practical.fees.placesFull":
+    "Sliding-scale places are full right now",
+  "therapist.practical.fees.rulesLabel": "How the sliding scale works:",
+  "therapist.practical.fees.missing": "Not shared yet.",
+  "therapist.practical.smallPrint.title":
+    "Insurance, receipts & the small print",
+  "therapist.practical.smallPrint.receiptTime": "Receipts",
+  "therapist.practical.smallPrint.payment": "Payment",
+  "therapist.practical.smallPrint.cancellation": "Cancelling",
+  "therapist.practical.smallPrint.unknown":
+    "Unknown. Ask when you make contact.",
+  "therapist.practical.availability.title": "Availability",
+  "therapist.practical.availability.untilFirst": "to a first session",
+  "therapist.practical.availability.slotsLabel": "Next open slots",
+  "therapist.practical.availability.slotsNote":
+    "{name} updates these by hand. Mention one in your message.",
+  "therapist.practical.availability.waitlistLabel": "Waitlist right now",
+  "therapist.practical.availability.waiting": "waiting",
+  "therapist.practical.availability.position":
+    "You'd be about number {position} in line",
+  "therapist.practical.availability.positionMoves":
+    "You'd be about number {position} in line · moves {moves}",
+  "therapist.practical.availability.waitNote":
+    "An estimate from {name}. You can stay on other waitlists.",
+  "therapist.practical.availability.missing": "Not shared yet.",
+  "therapist.practical.calculator.title": "What you'd actually pay",
+  "therapist.practical.calculator.sessionsLabel": "Sessions a month",
+  "therapist.practical.calculator.insurerLabel": "Reimbursed by",
+  "therapist.practical.calculator.noInsurance": "No insurance",
+  "therapist.practical.calculator.perMonth": "Per month",
+  "therapist.practical.calculator.gross": "{sessions} × {fee}€ = {gross}€",
+  "therapist.practical.calculator.reimbursed":
+    "− {sessions} × ~{amount}€ back from {insurer}",
+  "therapist.practical.calculator.noReimbursement": "No reimbursement",
+  "therapist.practical.calculator.sliding":
+    "Sliding scale would bring it to {low}–{net}€",
+  "therapist.practical.calculator.hint":
+    'Reimbursement amounts are typical and depend on your plan. Check your insurer\'s table for "psicologia clínica".',
+  "therapist.practical.travel.title": "Getting there",
+  "therapist.practical.travel.metro": "Metro:",
+  "therapist.practical.travel.bus": "Bus:",
+  "therapist.practical.travel.bike": "Bike:",
+  "therapist.practical.travel.entrance": "Entrance:",
+  "therapist.practical.access.title": "Accessibility",
+  "therapist.practical.access.offered": "Offered:",
+  "therapist.practical.access.missing": "Not offered:",
+  // Therapist profile (t5)
+  "therapist.side.contact.label": "Getting in touch",
+  "therapist.side.contact.title.open": "Get in touch",
+  "therapist.side.contact.title.wait": "Waitlist, {waitNote}",
+  "therapist.side.contact.title.waitBare": "Waitlist",
+  "therapist.side.contact.title.closed": "Not taking new clients right now",
+  "therapist.side.contact.body.open":
+    "A short call to see if it fits, with no commitment. Most people book a first session from there.",
+  "therapist.side.contact.body.wait":
+    "Message {name} to join the waitlist. You can stay on other waitlists meanwhile.",
+  "therapist.side.contact.body.closed":
+    "{name} can still answer a question, and the referrals on this page take new people.",
+  "therapist.side.contact.body.closedBare":
+    "{name} can still answer a question.",
+  "therapist.side.contact.message": "Message {name}",
+  "therapist.side.contact.introCall": "Book the free intro call",
+  "therapist.side.contact.emailAria": "Email {name} at {email}",
+  "therapist.side.contact.websiteAria":
+    "{name}'s website, {website} (opens in a new tab)",
+  "therapist.side.contact.crisis": "In a crisis, <a>go here instead</a>.",
+  "therapist.side.goodToKnow.label": "Good to know",
+  "therapist.side.similar.label": "Also worth a look",
+  "therapist.side.similar.open": "Open",
+  "therapist.side.similar.full": "Full",
+  "therapist.side.similar.note":
+    "Other therapists listed on QueerPulse. Nobody pays to appear here.",
+  "therapist.side.links.report": "Report a concern",
+  "therapist.side.links.reportHint": "Private",
+  "therapist.side.links.share": "Share this page",
+  // Therapist profile (t6)
+  "skinBlock.therapist.therapist.title": "Core facts",
+  "skinBlock.therapist.therapist.status": "Status",
+  "skinBlock.therapist.therapist.status_open": "Taking new clients",
+  "skinBlock.therapist.therapist.status_wait": "Waitlist",
+  "skinBlock.therapist.therapist.status_closed": "Not taking new clients",
+  "skinBlock.therapist.therapist.waitNote": "Waitlist note",
+  "skinBlock.therapist.therapist.waitNotePlaceholder": "About 6 weeks",
+  "skinBlock.therapist.therapist.waitNoteHelper":
+    "Shown while your status is Waitlist.",
+  "skinBlock.therapist.therapist.jobTitle": "Professional title",
+  "skinBlock.therapist.therapist.jobTitlePlaceholder":
+    "Clinical psychologist and psychotherapist",
+  "skinBlock.therapist.therapist.registration": "Registration number",
+  "skinBlock.therapist.therapist.registrationPlaceholder": "OPP 21044",
+  "skinBlock.therapist.therapist.quote": "Quote",
+  "skinBlock.therapist.therapist.quoteHelper":
+    "Wrap a word in *asterisks* to set it in coral italics.",
+  "skinBlock.therapist.therapist.languages": "Languages",
+  "skinBlock.therapist.therapist.languagesPlaceholder": "Choose languages",
+  "skinBlock.therapist.therapist.where": "Where",
+  "skinBlock.therapist.therapist.wherePlaceholder":
+    "Arroios, Lisbon · and online",
+  "skinBlock.therapist.therapist.online": "Online sessions",
+  "skinBlock.therapist.therapist.online_yes": "Yes",
+  "skinBlock.therapist.therapist.online_no": "No",
+  "skinBlock.therapist.therapist.online_unsaid": "Not said",
+  "skinBlock.therapist.therapist.timezone": "Time zone note",
+  "skinBlock.therapist.therapist.timezonePlaceholder":
+    "Portugal time (WET/WEST)",
+  "skinBlock.therapist.therapist.email": "Email",
+  "skinBlock.therapist.therapist.website": "Website",
+  "skinBlock.therapist.therapist.goodToKnow": "Good to know",
+  "skinBlock.therapist.therapist.goodToKnowHelper":
+    "Anything a client should know before booking, such as a conflict of interest.",
+  "skinBlock.therapist.lived.title": "Lived experience",
+  "skinBlock.therapist.lived.helper":
+    "Pick from the list or add your own words. Share only what you want on the page.",
+  "skinBlock.therapist.contexts.title": "Also speaks the language of",
+  "skinBlock.therapist.modalities.title": "Modalities",
+  "skinBlock.therapist.workingStyle.title": "Working style",
+  "skinBlock.therapist.notFor.title": "Probably not for you if",
+  "skinBlock.therapist.boundaries.title": "Boundaries",
+  "skinBlock.therapist.whoFor.title": "Who you work with",
+  "skinBlock.therapist.therapyFees.title": "Fees",
+  "skinBlock.therapist.therapyFees.standard": "Standard fee (euros)",
+  "skinBlock.therapist.therapyFees.standardPlaceholder": "65",
+  "skinBlock.therapist.therapyFees.slidingMin": "Sliding scale from (euros)",
+  "skinBlock.therapist.therapyFees.slidingMinPlaceholder": "40",
+  "skinBlock.therapist.therapyFees.slidingMax": "Sliding scale up to (euros)",
+  "skinBlock.therapist.therapyFees.slidingMaxPlaceholder": "65",
+  "skinBlock.therapist.therapyFees.slidingPlaces":
+    "Sliding-scale places in total",
+  "skinBlock.therapist.therapyFees.slidingPlacesPlaceholder": "4",
+  "skinBlock.therapist.therapyFees.slidingOpen":
+    "Sliding-scale places open now",
+  "skinBlock.therapist.therapyFees.slidingOpenPlaceholder": "2",
+  "skinBlock.therapist.therapyFees.slidingRules": "How the sliding scale works",
+  "skinBlock.therapist.therapyFees.slidingRulesPlaceholder":
+    "You ask, and I say yes if a place is free.",
+  "skinBlock.therapist.therapyFees.firstContact": "First contact",
+  "skinBlock.therapist.therapyFees.firstContactPlaceholder":
+    "First 20-minute call is free",
+  "skinBlock.therapist.therapyFees.frequency": "How often",
+  "skinBlock.therapist.therapyFees.frequencyPlaceholder":
+    "Weekly or fortnightly, your call",
+  "skinBlock.therapist.therapyFees.receipts": "Receipts",
+  "skinBlock.therapist.therapyFees.receiptsPlaceholder":
+    "Receipts for ADSE, Médis and Multicare reimbursement",
+  "skinBlock.therapist.therapyFees.receiptTime": "When receipts arrive",
+  "skinBlock.therapist.therapyFees.receiptTimePlaceholder":
+    "Receipt by email within 48 hours",
+  "skinBlock.therapist.therapyFees.payment": "Payment",
+  "skinBlock.therapist.therapyFees.paymentPlaceholder":
+    "MB Way, transfer or card",
+  "skinBlock.therapist.therapyFees.cancellation":
+    "Anything else about cancelling",
+  "skinBlock.therapist.therapyFees.cancellationPlaceholder":
+    "Sessions missed through illness are never charged.",
+  "skinBlock.therapist.therapyFees.legacyChoiceHelper":
+    "The first option is your earlier answer, as you typed it. Pick another to replace it.",
+  "skinBlock.therapist.therapyFees.legacyTextHelper":
+    "Your earlier answer: “{text}”. Tick the methods you take to replace it.",
+  "skinBlock.therapist.therapyFees.paymentMethods": "Payment methods",
+  "skinBlock.therapist.therapyFees.paymentMethodsHelper":
+    "Tick every method you take.",
+  "skinBlock.therapist.therapyFees.cancellationNotice": "Cancellation notice",
+  "skinBlock.therapist.therapyFees.frequency_weekly": "Weekly",
+  "skinBlock.therapist.therapyFees.frequency_fortnightly": "Fortnightly",
+  "skinBlock.therapist.therapyFees.frequency_weeklyOrFortnightly":
+    "Weekly or fortnightly",
+  "skinBlock.therapist.therapyFees.frequency_monthly": "Monthly",
+  "skinBlock.therapist.therapyFees.frequency_flexible":
+    "Flexible, we'll decide together",
+  "skinBlock.therapist.therapyFees.paymentMethods_mbway": "MB WAY",
+  "skinBlock.therapist.therapyFees.paymentMethods_transfer": "Bank transfer",
+  "skinBlock.therapist.therapyFees.paymentMethods_multibanco":
+    "Multibanco reference",
+  "skinBlock.therapist.therapyFees.paymentMethods_card": "Card",
+  "skinBlock.therapist.therapyFees.paymentMethods_cash": "Cash",
+  "skinBlock.therapist.therapyFees.paymentMethods_paypal": "PayPal",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_mbway": "MB WAY",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_transfer":
+    "bank transfer",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_multibanco":
+    "Multibanco reference",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_card": "card",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_cash": "cash",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_paypal": "PayPal",
+  "skinBlock.therapist.therapyFees.receiptTime_atSession": "At the session",
+  "skinBlock.therapist.therapyFees.receiptTime_sameDay": "The same day",
+  "skinBlock.therapist.therapyFees.receiptTime_within48h": "Within 48 hours",
+  "skinBlock.therapist.therapyFees.receiptTime_endOfMonth":
+    "At the end of the month",
+  "skinBlock.therapist.therapyFees.receiptTime_onRequest": "On request",
+  "skinBlock.therapist.therapyFees.cancellationNotice_24h": "24 hours' notice",
+  "skinBlock.therapist.therapyFees.cancellationNotice_48h": "48 hours' notice",
+  "skinBlock.therapist.therapyFees.cancellationNotice_72h": "72 hours' notice",
+  "skinBlock.therapist.therapyFees.cancellationNotice_none":
+    "Any time, free of charge",
+  "skinBlock.choiceClearHint": "Choose the selected option again to clear it.",
+  "skinBlock.therapist.feeSchedule.title": "Session lengths",
+  "skinBlock.therapist.feeSchedule.labelPlaceholder": "50 min",
+  "skinBlock.therapist.feeSchedule.valuePlaceholder": "65€",
+  "skinBlock.therapist.reimbursement.title": "Reimbursement",
+  "skinBlock.therapist.reimbursement.helper":
+    "Insurer, and roughly how many euros come back per session.",
+  "skinBlock.therapist.reimbursement.label": "Insurer",
+  "skinBlock.therapist.reimbursement.labelPlaceholder": "ADSE",
+  "skinBlock.therapist.reimbursement.value": "Euros back per session",
+  "skinBlock.therapist.reimbursement.valuePlaceholder": "25",
+  "skinBlock.therapist.availabilitySummary.title": "Availability summary",
+  "skinBlock.therapist.availabilitySummary.headline": "Time to a first session",
+  "skinBlock.therapist.availabilitySummary.headlinePlaceholder":
+    "Within 2 weeks",
+  "skinBlock.therapist.availabilitySummary.waiting":
+    "People on your waitlist (leave empty with no waitlist)",
+  "skinBlock.therapist.availabilitySummary.waitingPlaceholder": "11",
+  "skinBlock.therapist.availabilitySummary.waitMoves":
+    "How fast the waitlist moves",
+  "skinBlock.therapist.availabilitySummary.waitMovesPlaceholder":
+    "About 2 people a fortnight",
+  "skinBlock.therapist.hours.title": "Hours",
+  "skinBlock.therapist.hours.label": "Days",
+  "skinBlock.therapist.hours.labelPlaceholder": "Weekdays",
+  "skinBlock.therapist.hours.value": "Hours",
+  "skinBlock.therapist.hours.valuePlaceholder": "17:00-21:00",
+  "skinBlock.therapist.openSlots.title": "Open slots",
+  "skinBlock.therapist.openSlots.helper":
+    "One slot per line, written the way you want it shown, e.g. Tue 30 Sep, 18:00.",
+  "skinBlock.therapist.travel.title": "Getting there",
+  "skinBlock.therapist.travel.metro": "Metro",
+  "skinBlock.therapist.travel.metroPlaceholder":
+    "Anjos (green line), 4 min, step-free",
+  "skinBlock.therapist.travel.bus": "Bus",
+  "skinBlock.therapist.travel.busPlaceholder":
+    "708, 730 and 735 stop at Largo do Intendente",
+  "skinBlock.therapist.travel.bike": "Bike",
+  "skinBlock.therapist.travel.bikePlaceholder":
+    "Racks outside the pharmacy next door",
+  "skinBlock.therapist.travel.entrance": "Finding the door",
+  "skinBlock.therapist.travel.entrancePlaceholder":
+    "Blue door on a quiet side street",
+  "skinBlock.therapist.access.title": "Accessibility offered",
+  "skinBlock.therapist.accessMissing.title": "Accessibility not offered",
+  "skinBlock.therapist.faq.title": "Questions people ask",
+  "skinBlock.therapist.faq.question": "Question",
+  "skinBlock.therapist.faq.answer": "Answer",
+  "skinBlock.therapist.worksAlongside.title": "Works alongside",
+  "skinBlock.therapist.worksAlongside.kind": "Kind",
+  "skinBlock.therapist.worksAlongside.kindPlaceholder": "Choose a kind",
+  "skinBlock.therapist.worksAlongside.kind_psychiatrist": "Psychiatrist",
+  "skinBlock.therapist.worksAlongside.kind_group": "Group",
+  "skinBlock.therapist.worksAlongside.kind_community": "Community",
+  "skinBlock.therapist.worksAlongside.kind_clinic": "Clinic",
+  "skinBlock.therapist.worksAlongside.kind_therapist": "Therapist",
+  "skinBlock.therapist.worksAlongside.name": "Name",
+  "skinBlock.therapist.worksAlongside.note": "Note",
+
+  // Therapist profile (t2)
+  "therapist.body.skipToContact": "Skip to contact options",
+  "therapist.body.back": "All therapists",
+  "therapist.body.sideLabel": "Contact and more about {name}",
+  "therapist.hero.status.open": "Accepting new clients",
+  "therapist.hero.status.wait": "Waitlist · {note}",
+  "therapist.hero.status.waitPlain": "Waitlist",
+  "therapist.hero.status.closed": "Not taking new clients",
+  "therapist.hero.lived": "Lived experience, in {name}'s words",
+  "therapist.hero.facts.languages": "Languages",
+  "therapist.hero.facts.where": "Where",
+  "therapist.hero.facts.fees": "Fees",
+  "therapist.hero.facts.insurance": "Insurance",
+  "therapist.hero.facts.feesSliding": "{standard}€ · sliding {min}–{max}€",
+  "therapist.hero.facts.feesStandard": "{standard}€",
+  "therapist.hero.facts.notShared": "Not shared yet",
+  "therapist.hero.facts.unknown": "Unknown",
+  "therapist.hero.message": "Message {name}",
+  "therapist.hero.bookCall": "Book the free call",
+  "therapist.hero.email": "Email",
+  "therapist.hero.hint":
+    "Messages go through QueerPulse first. {name} only sees your profile name until you say more.",
+  "therapist.owner.label": "Your page, {name}",
+  "therapist.owner.heading":
+    "This is what members see. *Only you* see this bar.",
+  "therapist.owner.capacityLabel": "Taking new clients",
+  "therapist.owner.capacitySaved.open":
+    "Members now see: Accepting new clients",
+  "therapist.owner.capacitySaved.wait": "Members now see: Waitlist",
+  "therapist.owner.capacitySaved.closed":
+    "Members now see: Not taking new clients",
+  "therapist.owner.capacityError": "That didn't save. Try again in a moment.",
+  "therapist.owner.completeness": "Profile completeness",
+  "therapist.owner.percent": "{percent}%",
+  "therapist.owner.complete": "Everything is filled in.",
+  "therapist.owner.edit": "Edit your page",
+  "therapist.owner.draftLabel": "Draft",
+  "therapist.owner.draftBody": "Nobody else can open this address yet.",
+  "therapist.owner.visitorLabel": "See it as a visitor",
+  "therapist.owner.visitorBody":
+    "Read your page the way a member finds it, with this bar out of the way.",
+
+  // Therapist profile (f2a)
+  "therapist.mobile.message": "Message",
+  "therapist.mobile.label": "Contact {name}",
+  // Therapist profile (f3)
+  "therapist.vouches.breakdownOne": "{clause}.",
+  // Therapist profile (f4)
+  "therapist.practical.availability.closed": "Not taking new clients right now",
+  // Therapist profile (f5)
+  "therapist.side.contact.body.openNoCall":
+    "Send {name} a message with a question, or to find a time for a first session.",
+  "therapist.side.similar.wait": "Waitlist",
+
+  // Therapist profile (g2b)
+  "therapist.hero.facts.feesFrom": "from {amount}€",
+  // Therapist profile (g4)
+  "therapist.practical.fees.from": "from {amount}€",
+  "therapist.practical.fees.scheduleHint":
+    "Each session length has its own price, listed under Sessions.",
+  "therapist.practical.availability.waitOnly": "On a waitlist right now",
+
+  // Therapist profile (h1)
+  "therapist.hero.facts.feesFromSliding":
+    "from {lowest}€ · sliding {min}–{max}€",
+  "therapist.hero.facts.feesSlidingOnly": "Sliding {min}–{max}€",
+  // Therapist editor chapters (pass 1)
+  "skinBlock.therapist.chapter.basics.title": "The basics",
+  "skinBlock.therapist.chapter.basics.lede":
+    "What people see first, at the top of your page.",
+  "skinBlock.therapist.chapter.approach.title": "How you work",
+  "skinBlock.therapist.chapter.approach.lede":
+    "Helps people tell whether you are the right fit for them.",
+  "skinBlock.therapist.chapter.fees.title": "Fees and insurance",
+  "skinBlock.therapist.chapter.fees.lede":
+    "What a session costs and what insurance gives back.",
+  "skinBlock.therapist.chapter.availability.title": "Availability",
+  "skinBlock.therapist.chapter.availability.lede":
+    "How soon someone can start with you.",
+  "skinBlock.therapist.chapter.where.title": "Where and access",
+  "skinBlock.therapist.chapter.where.lede":
+    "How people find you and what the space offers.",
+  "skinBlock.therapist.chapter.contact.title": "Contact and referrals",
+  "skinBlock.therapist.chapter.contact.lede":
+    "How to reach you, and who to try when you are full.",
+  "skinBlock.therapist.group.introduce": "How you introduce yourself",
+  "skinBlock.therapist.group.approach": "Approach",
+  "skinBlock.therapist.group.methods": "Methods and style",
+  "skinBlock.therapist.group.whoFor": "Who it's for",
+  "skinBlock.therapist.group.expectations": "Setting expectations",
+  "skinBlock.therapist.group.fee": "Your fee",
+  "skinBlock.therapist.group.sliding": "Sliding scale",
+  "skinBlock.therapist.group.insurance": "Insurance and receipts",
+  "skinBlock.therapist.group.policies": "Payment and policies",
+  "skinBlock.therapist.group.rightNow": "Right now",
+  "skinBlock.therapist.group.firstSession": "Your first session",
+  "skinBlock.therapist.group.whereYouWork": "Where you work",
+  "skinBlock.therapist.group.room": "The room",
+  "skinBlock.therapist.group.accessibility": "Accessibility",
+  "skinBlock.therapist.group.contact": "Contact",
+  "skinBlock.therapist.joiner.of": "of",
+  "skinBlock.therapist.check.ascending": "The lowest fee is above the highest",
+  "skinBlock.therapist.check.partOfWhole": "More places open than you offer",
+  "skinBlock.therapist.approach.add": "Add a paragraph",
+  "skinBlock.therapist.feeSchedule.add": "Add a session length",
+  "skinBlock.therapist.firstSession.add": "Add a step",
+  "skinBlock.therapist.faq.add": "Add a question",
+  "skinBlock.therapist.lived.placeholder": "Choose from the list",
+  "skinBlock.therapist.modalities.placeholder": "Person-centred",
+  "skinBlock.therapist.workingStyle.placeholder": "Mostly talk-based",
+  "skinBlock.therapist.whoFor.placeholder": "Adults 18+",
+  "skinBlock.therapist.contexts.placeholder": "Sex work",
+  "skinBlock.therapist.notFor.placeholder": "You want a quick fix",
+  "skinBlock.therapist.boundaries.placeholder": "No under-18s",
+  "skinBlock.therapist.openSlots.placeholder": "Tue 30 Sep, 18:00",
+  "skinBlock.therapist.access.placeholder": "Step-free entrance",
+  "skinBlock.therapist.accessMissing.placeholder": "Sign language (LGP)",
+  // Therapist lived experience and languages multi-selects
+  "skinBlock.therapist.lived.customPlaceholder": "Something not on the list",
+  "skinBlock.therapist.therapist.languagesCustomPlaceholder":
+    "Another language",
+  "skinControl.multiSelect.none": "Nothing chosen yet",
+  "skinControl.multiSelect.addOwn": "Add your own",
+  "skinControl.multiSelect.add": "Add",
+  "skinControl.multiSelect.remove": "Remove {label}",
+  "skinControl.multiSelect.added": "Added {label}",
+  "skinControl.multiSelect.removed": "Removed {label}",
+  "skinControl.multiSelect.alreadyChosen": "{label} is already chosen",
+  "skinControl.multiSelect.chosenCount_one": "{count} chosen",
+  "skinControl.multiSelect.chosenCount_other": "{count} chosen",
+  "skinControl.multiSelect.done": "Done",
+  "therapist.livedOption.trans": "Trans",
+  "therapist.livedOption.nonBinary": "Non-binary",
+  "therapist.livedOption.lesbian": "Lesbian",
+  "therapist.livedOption.gay": "Gay",
+  "therapist.livedOption.bisexual": "Bisexual",
+  "therapist.livedOption.queer": "Queer",
+  "therapist.livedOption.aceAro": "Asexual or aromantic",
+  "therapist.livedOption.intersex": "Intersex",
+  "therapist.livedOption.migrant": "Migrant or refugee",
+  "therapist.livedOption.racialised": "Racialised",
+  "therapist.livedOption.neurodivergent": "Neurodivergent",
+  "therapist.livedOption.disabled": "Disabled",
+  "therapist.livedOption.chronicIllness": "Chronic illness",
+  "therapist.livedOption.sexWork": "Sex work",
+  "therapist.livedOption.nonMonogamy": "Polyamory or non-monogamy",
+  "therapist.livedOption.recovery": "Recovery from addiction",
+  "therapist.livedOption.comingOutLater": "Coming out later in life",
+  "therapist.livedOption.parenting": "Parenting as an LGBTQIA+ person",
+  "therapist.languageOption.pt": "Portuguese",
+  "therapist.languageOption.en": "English",
+  "therapist.languageOption.es": "Spanish",
+  "therapist.languageOption.fr": "French",
+  "therapist.languageOption.de": "German",
+  "therapist.languageOption.it": "Italian",
+  "therapist.languageOption.nl": "Dutch",
+  "therapist.languageOption.ca": "Catalan",
+  "therapist.languageOption.ro": "Romanian",
+  "therapist.languageOption.pl": "Polish",
+  "therapist.languageOption.uk": "Ukrainian",
+  "therapist.languageOption.ru": "Russian",
+  "therapist.languageOption.ar": "Arabic",
+  "therapist.languageOption.fa": "Persian",
+  "therapist.languageOption.tr": "Turkish",
+  "therapist.languageOption.el": "Greek",
+  "therapist.languageOption.hi": "Hindi",
+  "therapist.languageOption.ne": "Nepali",
+  "therapist.languageOption.bn": "Bengali",
+  "therapist.languageOption.zh": "Mandarin Chinese",
+  "therapist.languageOption.ja": "Japanese",
+  "therapist.languageOption.ko": "Korean",
+  "therapist.languageOption.kea": "Cape Verdean Creole",
+  "therapist.languageOption.sv": "Swedish",
+  "therapist.languageOption.lgp": "Portuguese Sign Language (LGP)",
+  "skinControl.money.ariaLabel": "{label} (euros)",
+  "skinControl.money.currency": "Amount in euros",
+  "skinControl.emphasisPreview.eyebrow": "On your page",
+  // Therapist editor controls (pass 2)
+  "skinList.reorderHint": "Drag to reorder, or press Alt and an arrow key",
+  "skinList.paragraphNumber": "Paragraph {index}",
+  "skinChips.addAnother": "Add another",
+  "skinChips.addHint":
+    "Enter to add. Drag or press Alt or Option + arrow to reorder.",
+  "skinChips.chipHint":
+    "Enter to edit. Delete to remove. Alt or Option + arrow to move.",
+  "skinChips.editHint": "Enter to save. Escape to cancel.",
+  "skinChips.editLabel": "Edit {text}",
+  "skinChips.remove": "Remove {text}",
+  "skinChips.added": "Added {text}",
+  "skinChips.addedMany_one": "Added {count} item",
+  "skinChips.addedMany_other": "Added {count} items",
+  "skinChips.removed": "Removed {text}",
+  "skinChips.moved": "{text} moved to position {position} of {total}",
+  "skinChips.duplicate": "{text} is already on the list",
+  "editorPane.skinBlocks.ledeTherapist":
+    "Everything on your therapist page, in the order visitors read it. Work through it a chapter at a time.",
+  "skinChapter.navLabel": "Chapters",
+  "skinChapter.position": "Chapter {index} of {total}",
+  "skinChapter.chipLabel": "{title}, {status}",
+  "skinChapter.fillComplete": "all filled",
+  "skinChapter.back": "Back",
+  "skinChapter.next": "Next: {title}",
+  // Therapist editor labels and checks (pass 3)
+  "skinControl.validate.email":
+    "This doesn't look like an email address. Your page leaves it out until it does.",
+  "skinControl.validate.url":
+    "This doesn't look like a web address. Your page leaves it out until it does.",
+  "skinBlock.therapist.feeSchedule.label": "Length",
+  "skinBlock.therapist.feeSchedule.value": "Price",
+  "skinBlock.therapist.therapyFees.standardPerSession":
+    "Standard fee per session",
+  "skinBlock.therapist.therapyFees.standardHelper":
+    "Your page needs this for the cost calculator and reimbursement.",
+  "skinBlock.therapist.therapyFees.insuranceNote": "Insurance note",
+  "skinBlock.therapist.therapyFees.insuranceNoteHelper":
+    "Shown as Insurance at the top of your page.",
+  "skinBlock.therapist.therapyFees.firstContactHelper":
+    "Also the title of your contact card while you're taking new clients.",
+  "skinBlock.therapist.boundaries.label": "What you don't do",
+  "skinBlock.therapist.group.referrals": "If you're full, who you recommend",
+  "skinBlock.therapist.travel.entranceLabel": "Entrance",
+  "skinBlock.therapist.venue.name": "In person",
+  "skinBlock.therapist.venue.namePlaceholder": "Clínica do Intendente",
+  "skinBlock.therapist.venue.linesPlaceholder": "Rua de Angola 12, 2nd floor",
+  "skinBlock.therapist.therapist.timezoneHelper":
+    "Shown when you have no in-person place.",
+  "skinBlock.therapist.faq.questionPlaceholder": "Do you work with couples?",
+  "skinBlock.therapist.referrals.namePlaceholder": "Dr. Ana Sousa",
+
+  // Therapist profile (m1)
+  "therapist.edit.link": "Edit",
+  "therapist.edit.portrait": "Edit portrait",
+  "therapist.edit.whoFor": "Edit who you work with",
+  "therapist.edit.bookButton": "Edit booking button",
+  "therapist.edit.contactLinks": "Edit email and website",
+  "therapist.edit.aria.portrait": "Edit portrait",
+  "therapist.edit.aria.name": "Edit name and tagline",
+  "therapist.edit.aria.bio": "Edit bio",
+  "therapist.edit.aria.bookButton": "Edit booking button",
+  "therapist.edit.aria.status": "Edit status",
+  "therapist.edit.aria.role": "Edit title and registration",
+  "therapist.edit.aria.quote": "Edit quote",
+  "therapist.edit.aria.lived": "Edit lived experience",
+  "therapist.edit.aria.languages": "Edit languages",
+  "therapist.edit.aria.where": "Edit where you work",
+  "therapist.edit.aria.contactLinks": "Edit email and website",
+  "therapist.edit.aria.goodToKnow": "Edit good to know",
+  "therapist.edit.aria.fees": "Edit fees",
+  "therapist.edit.aria.receipts": "Edit receipts and insurance",
+  "therapist.edit.aria.firstContact": "Edit first contact",
+  "therapist.edit.aria.approach": "Edit how you work",
+  "therapist.edit.aria.whoFor": "Edit who you work with",
+  "therapist.edit.aria.firstSession": "Edit first session",
+  "therapist.edit.aria.sessions": "Edit session lengths and prices",
+  "therapist.edit.aria.calculator": "Edit reimbursement",
+  "therapist.edit.aria.travel": "Edit getting there",
+  "therapist.edit.aria.access": "Edit accessibility",
+  "therapist.edit.aria.faq": "Edit questions people ask",
+  "therapist.edit.aria.referrals": "Edit who you recommend",
+  "therapist.edit.aria.worksAlongside": "Edit who you work alongside",
+  "therapist.edit.aria.basics": "Edit the basics",
+  "therapist.edit.aria.availability": "Edit availability",
+  "therapist.edit.aria.whereChapter": "Edit where and access",
+  "therapist.edit.aria.contact": "Edit contact and referrals",
+  "therapist.edit.aria.identity": "Edit name, photo and bio",
+  "therapist.edit.aria.presence": "Edit button, links and accent",
+  "therapist.edit.aria.specialties": "Edit specialties",
+  "therapist.edit.aria.publish": "Edit publishing",
+  "therapist.edit.aria.page": "Edit your page",
+  "therapist.owner.missingLead": "Missing:",
+  "therapist.owner.missingItem": "Fill in: {item}",
+  "therapist.owner.capacityShort.open": "Accepting",
+  "therapist.owner.capacityShort.closed": "Not taking",
+  "therapist.owner.capacityShort.wait": "Waitlist",
+  // Therapist profile (m2)
+  "therapist.side.edit.waitNote": "Edit waitlist note",
+  "therapist.side.edit.email": "Edit email address",
+  "therapist.side.edit.website": "Edit website",
+  "therapist.side.edit.socialLinks": "Edit social links",
+  "therapist.side.add.booking": "Add a booking link",
+  "therapist.side.add.email": "Add an email address",
+  "therapist.side.add.website": "Add a website",
+  "therapist.side.social.label": "Find {name} elsewhere",
+  "therapist.side.social.add": "Add your links",
+  "therapist.side.add.goodToKnow": "Add a note people should know",
+
+  // Therapist profile (m3)
+  "editorTherapist.taglineHelper":
+    "One line on who you work with and where. It sits beside your name at the top of your page.",
+  "editorTherapist.taglinePlaceholder":
+    "e.g. Queer-affirming therapy in Lisbon and online",
+  "editorTherapist.bioHelper":
+    "Your first paragraph shows as the quote at the top of your page until you add a quote in Page blocks. At least 80 characters to publish a standalone persona. Type @ to mention a member, c/ a community, e/ an event or t/ a forum thread, and it becomes a link.",
+  "editorTherapist.coverHelper":
+    "Shows as a thin band across the top of your page, above your profile. Keep what matters in the middle of the frame, since the band trims the top and bottom.",
+  "editorTherapist.availabilityHelper":
+    "Follows your status in Page blocks: change the status there and this updates when you save.",
+  "editorTherapist.ctaHelper":
+    "This is the booking button at the top of your page and in the contact card, for example “Book the free call”. Add both a label and the link where clients book.",
+  "editorTherapist.ctaLabelPlaceholder": "Book the free call",
+  "editorTherapist.specialisms.titleLabel": "Group heading",
+  "editorTherapist.specialisms.titlePlaceholder":
+    "e.g. Identity and coming out",
+  "editorTherapist.specialisms.descriptionLabel": "Specialties",
+  "editorTherapist.specialisms.descriptionPlaceholder":
+    "e.g. Coming out at any age",
+  "editorTherapist.specialisms.descriptionHelper":
+    "One specialty per line. Each line becomes a bullet on your page.",
+  // Therapist editor review fixes (pass 4)
+  "skinBlock.therapist.venue.addLine": "Add a line",
+  "skinBlock.therapist.openSlots.chipHelper":
+    "Write each slot the way it should read on your page, like Tue 30 Sep · 18:00.",
+  "skinBlock.therapist.hours.valueTimes": "Times",
+  "skinBlock.therapist.reimbursement.valueBack": "Back per session",
+  "skinBlock.therapist.therapist.whereArea": "Area",
+  "skinBlock.therapist.therapist.whereAreaPlaceholder": "Arroios, Lisbon",
+  "skinBlock.therapist.therapyFees.placesHelperBoth":
+    "Fill in both to show sliding-scale places on your page.",
+  "skinBlock.therapist.therapyFees.placesOpen": "Places open",
+  "skinBlock.therapist.therapyFees.placesTotal": "Total",
+  "skinBlock.therapist.therapyFees.slidingLowest": "Lowest",
+  "skinBlock.therapist.therapyFees.slidingHighest": "Highest",
+  "skinBlock.therapist.hours.add": "Add hours",
+  "skinBlock.therapist.reimbursement.add": "Add an insurer",
+  "skinBlock.therapist.referrals.add": "Add a referral",
+  "skinBlock.therapist.worksAlongside.add": "Add a connection",
+  "skinChapter.toFill_one": "{count} to fill",
+  "skinChapter.toFill_other": "{count} to fill",
+  "skinChapter.empty": "(empty)",
+  "skinList.removeRow": "Remove {label} {index}",
+  "skinList.addLine": "Add a line",
+  "skinList.paragraph": "Paragraph",
+  "editorPane.presence.ledeTherapist":
+    "Cover image, accent colour, whether you're taking new clients, and the button people use to book with you.",
+  // Therapist page credentials and gallery
+  "therapist.credentials.label": "Training and registration",
+  "therapist.credentials.heading": "Where {name} *trained*",
+  "therapist.credentials.headingNameless": "Where the *training* comes from",
+  "therapist.gallery.label": "The practice",
+  "therapist.gallery.heading": "A look *inside*",
+  "therapist.gallery.alt": "Photo {number} of {name}'s practice",
+  "therapist.gallery.openAria": "{photo}. Open full-screen",
+  "therapist.edit.aria.credentials": "Edit training and registration",
+  "therapist.edit.aria.gallery": "Edit practice photos",
 };

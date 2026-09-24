@@ -8,11 +8,22 @@ import {
   type SubprofileView,
 } from "./api/subprofiles.adapters";
 import { personaPublicPathForOwnerOrNull } from "./personaLinks.data";
-import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
+import {
+  usePersonaCreatorName,
+  usePersonaCreatorSlug,
+} from "./usePersonaCreatorSlug";
 import { skinFor, SKIN_META } from "./subprofile-skins";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import type { SubprofileKind } from "./api/subprofiles.api";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
+import { PreviewDeviceToggle } from "./PreviewDeviceToggle";
+import {
+  PREVIEW_LAYOUT_WIDTH,
+  usePreviewFit,
+  type PreviewDevice,
+} from "./usePreviewFit";
 
 /** No-op — the tree is fully inert in `mode="preview"` (Task 3), so these
  *  handlers exist only to satisfy `SubprofilePageBody`'s prop contract and
@@ -20,6 +31,12 @@ import { useSubprofileEditorContext } from "./subprofileEditorContext";
 function noop() {}
 
 const PREVIEW_MODE: PersonaViewMode = "preview";
+
+/** Kinds that render their own layout instead of their skin family's (see
+ *  `SubprofilePageBody`), so the preview header names the kind itself: a
+ *  therapist reads "Therapist" where the family would say "Practice". */
+const KINDS_WITH_OWN_LAYOUT: ReadonlySet<SubprofileKind> =
+  new Set<SubprofileKind>(["therapist"]);
 
 /**
  * The docked live preview's contents — mounted as the direct children of the
@@ -35,13 +52,29 @@ const PREVIEW_MODE: PersonaViewMode = "preview";
  * (sections/gigs/social links, edited by their own panels with their own
  * local state) still comes straight from the saved `subprofile` and only
  * refreshes after those panels save.
+ *
+ * The frame lays the page out at the chosen device's real width and zooms it
+ * down to the dock (`usePreviewFit`), so Desktop shows the true laptop layout.
+ * The Mobile / Desktop switch shows only when the viewport has room for the
+ * wider Desktop dock (`canPreviewDesktop`, decided by the shell).
  */
-export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
+export function EditorPreview({
+  subprofile,
+  device,
+  canPreviewDesktop,
+  onDeviceChange,
+}: {
+  subprofile: SubprofileView;
+  device: PreviewDevice;
+  canPreviewDesktop: boolean;
+  onDeviceChange: (device: PreviewDevice) => void;
+}) {
   const { t } = useTranslation();
+  const { scrollRef, frameRef } = usePreviewFit(device);
   const { profile } = useProfileData();
   // The meta-editor state lives in the shared editor context now, so the docked
   // preview reads the same in-progress fields the panes write.
-  const { meta: editor } = useSubprofileEditorContext();
+  const { meta: editor, skinBlocks } = useSubprofileEditorContext();
 
   // Overlay the in-progress meta-editor fields onto the saved persona, coerced
   // back to the persisted view shape (empty string → null where the model is
@@ -67,9 +100,14 @@ export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
     visibility: editor.visibility,
     slug: editor.slug,
     handle: editor.handle || null,
-    // Overlay the in-progress bleed toggle onto the saved skinData so the
-    // preview's `data-cover-bleed` tracks the control live, before save.
-    skinData: { ...(subprofile.skinData ?? {}), coverBleed: editor.coverBleed },
+    // Overlay the in-progress Page blocks draft and bleed toggle onto the
+    // saved skinData, so skin-block edits and `data-cover-bleed` show here
+    // live, before save.
+    skinData: {
+      ...(subprofile.skinData ?? {}),
+      ...skinBlocks.buildSkinBlocks(),
+      coverBleed: editor.coverBleed,
+    },
   };
 
   // The owner half of a linked persona's address is the persona's CREATOR,
@@ -81,9 +119,20 @@ export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
     subprofile.id,
     subprofile.memberCount,
   );
+  const creatorName = usePersonaCreatorName(
+    subprofile.id,
+    subprofile.memberCount,
+  );
 
   const skin = skinFor(liveView.kind);
-  const data = ownerViewToShowcaseView(liveView, creatorSlug ?? profile.slug);
+  const layoutName = KINDS_WITH_OWN_LAYOUT.has(liveView.kind)
+    ? t(KIND_LABEL_KEYS[liveView.kind])
+    : SKIN_META[skin].name;
+  const data = ownerViewToShowcaseView(
+    liveView,
+    creatorSlug ?? profile.slug,
+    creatorName,
+  );
   const skinStyle = skinVars(liveView.accent ?? DEFAULT_ACCENT);
   // "Open live" always points at the SAVED persona's public URL: it opens what
   // is actually live, which unsaved slug/handle edits haven't changed yet, so
@@ -96,9 +145,17 @@ export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
   return (
     <>
       <div className="ed-prev-bar">
-        <span>
-          {t("subprofiles:editorPreview.label")} · {SKIN_META[skin].name}
+        <span className="ed-prev-label">
+          {/* A no-break space ends the lead: flex drops a plain one between
+              the two spans, and screen readers need the words apart. */}
+          <span className="ed-prev-label-lead">
+            {`${t("subprofiles:editorPreview.label")} ·\u00a0`}
+          </span>
+          <span className="ed-prev-label-layout">{layoutName}</span>
         </span>
+        {canPreviewDesktop && (
+          <PreviewDeviceToggle device={device} onChange={onDeviceChange} />
+        )}
         {liveHref && (
           <Button
             variant="ghost"
@@ -112,8 +169,14 @@ export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
           </Button>
         )}
       </div>
-      <div className="ed-prev-scroll">
-        <div className="ed-prev-frame zoom">
+      <div className="ed-prev-scroll" ref={scrollRef}>
+        {/* `usePreviewFit` writes the frame's `zoom` onto the element itself,
+            so the style object below carries only the layout width. */}
+        <div
+          ref={frameRef}
+          className="ed-prev-frame"
+          style={{ width: PREVIEW_LAYOUT_WIDTH[device] }}
+        >
           <SubprofilePageBody
             data={data}
             skin={skin}

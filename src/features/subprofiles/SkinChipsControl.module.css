@@ -1,0 +1,282 @@
+/* SkinChipsControl: a string list edited as chips inside one input-like
+   field. The label, helper and field chrome mirror FormField.module.css so
+   the control sits in a column of ordinary fields without standing out. */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.helper {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+
+/* The field itself: the same height, border, radius, ground and focus
+   treatment as a FormField text input. One line of chips (34px, 40px on
+   touch) fits inside the 48px and stays vertically centred. */
+.box {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 5px 8px;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  cursor: text;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+
+.box:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+  background: var(--paper);
+}
+
+/* Keyboard focus in the add input rings the whole field, the way a text
+   input's own focus-visible ring would. */
+.box:has(.addInput:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.boxDragging {
+  cursor: grabbing;
+}
+
+/* The list box steps out of layout so its chips and the add input share one
+   wrapping line. */
+.list {
+  display: contents;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 34px;
+  padding: 2px 3px 2px 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  /* A pill while the chip is one line; a very long entry that wraps keeps
+     soft, card-like corners. */
+  border-radius: var(--radius-18);
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+  /* Vertical swipes still scroll the page on phones; a sideways drag moves
+     the chip. See useSkinChipDrag. */
+  touch-action: pan-y;
+  user-select: none;
+  transition:
+    box-shadow 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease),
+    transform 0.18s var(--ease);
+}
+
+.chipText {
+  min-width: 0;
+  padding: 4px 2px;
+  font: inherit;
+  line-height: 1.35;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+/* The ring goes round the whole chip, so it follows the pill shape. */
+.chipText:focus-visible,
+.editInput:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.chip:has(.chipText:focus-visible),
+.chip:has(.editInput:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chipRemove {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-left: 2px;
+  color: var(--ink-60);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.chipRemove:hover {
+  color: var(--ink);
+  background: rgba(var(--line-rgb), 0.07);
+}
+
+.chipDragging {
+  position: relative;
+  z-index: 1;
+  cursor: grabbing;
+  border-color: rgba(var(--line-rgb), 0.2);
+  box-shadow: var(--shadow-e3);
+  transform: translateY(-2px);
+}
+
+.chipEditing {
+  padding-right: 12px;
+  border-color: var(--line-strong);
+}
+
+/* The existing chip a duplicate points at. The tint alone carries the
+   message, so it still reads with motion turned off. */
+.chipFlash {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chipFlash {
+    animation: chip-flash 0.45s var(--ease) 2;
+  }
+}
+
+@keyframes chip-flash {
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+/* Grows with its text: the hidden ::after twin sizes the grid cell and the
+   input fills it. */
+.editSizer {
+  display: inline-grid;
+  /* The track may shrink below the text's width, so a long entry scrolls
+     inside the input and the chip never outgrows the field. */
+  grid-template-columns: minmax(0, max-content);
+  max-width: 100%;
+  min-width: 2ch;
+}
+
+.editSizer::after {
+  content: attr(data-value) " ";
+  grid-area: 1 / 1;
+  visibility: hidden;
+  white-space: pre;
+  min-width: 0;
+  overflow: hidden;
+  font: inherit;
+  padding: 4px 2px;
+}
+
+.editInput {
+  grid-area: 1 / 1;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 2px;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  outline: none;
+}
+
+.addInput {
+  flex: 1 1 120px;
+  min-width: 0;
+  min-height: 34px;
+  padding: 4px 6px;
+  font-family: var(--sans);
+  /* >=16px so iOS Safari never zooms the viewport on focus. */
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: none;
+  border: 0;
+  outline: none;
+}
+
+.addInput:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.addInput::placeholder {
+  color: var(--ink-40);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+@media (pointer: coarse) {
+  .box {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  .chip {
+    min-height: 40px;
+  }
+
+  .chipRemove {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Invisible --tap-min hit area round the 36px button. It is square, so
+     one percentage inset works on both axes. Touch only, so on desktop the
+     chip text keeps every pixel beside the cross. */
+  .chipRemove::after {
+    content: "";
+    position: absolute;
+    inset: calc((100% - var(--tap-min)) / 2);
+    border-radius: var(--radius-pill);
+  }
+
+  /* >=16px while typing, so iOS Safari never zooms in on the edit input. */
+  .chipEditing {
+    font-size: var(--text-16);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box,
+  .chip {
+    transition: none;
+  }
+
+  .chipDragging {
+    transform: none;
+  }
+}

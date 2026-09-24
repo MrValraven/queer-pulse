@@ -1,7 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import { CONTENT_PANE_LEDE_KEY, PANE_HEADER } from "./editorPaneHeaders.data";
+import {
+  CONTENT_PANE_LEDE_KEY,
+  KIND_PANE_LEDE_KEY,
+  PANE_HEADER,
+} from "./editorPaneHeaders.data";
 import { sectionPaneKey, type EditorPaneKey } from "./editorRail.data";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SubprofileIdentityFields } from "./SubprofileIdentityFields";
@@ -50,6 +54,10 @@ export function EditorPaneRouter({
   const { t } = useTranslation();
   const { meta } = useSubprofileEditorContext();
   const header = PANE_HEADER[pane];
+  const ledeKey =
+    KIND_PANE_LEDE_KEY[subprofile.kind]?.[pane] ??
+    header?.ledeKey ??
+    CONTENT_PANE_LEDE_KEY;
   const activeSection = subprofile.sections.find(
     (section) => sectionPaneKey(section.section) === pane,
   );
@@ -81,9 +89,7 @@ export function EditorPaneRouter({
             ? t(activeSection.labelKey)
             : ""}
       </h2>
-      <p className="lede">
-        {header ? t(header.ledeKey) : t(CONTENT_PANE_LEDE_KEY)}
-      </p>
+      <p className="lede">{t(ledeKey)}</p>
 
       <div hidden={pane !== "identity"} className="ed-grid">
         <SubprofileIdentityFields

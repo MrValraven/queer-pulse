@@ -188,12 +188,128 @@ describe("applyDuplicatePlan", () => {
     // Must resolve (not reject) despite the meta step throwing…
     await expect(
       applyDuplicatePlan("new-id", plan, mutations),
-    ).resolves.toBeUndefined();
+    ).resolves.toEqual({
+      skippedAffiliationCount: 0,
+      hasAffiliationSaveFailed: false,
+    });
     // …and the later steps still run. One `replaceSection` call, matching the
     // plan's single non-empty section above.
     expect(mutations.replaceSocials.mutateAsync).toHaveBeenCalledTimes(1);
     expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(1);
     expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it("copies only the links the new draft may make and counts the rest", async () => {
+    const plan = buildDuplicatePlan(makeSourceView(), "full");
+    const mutations = makeMutations();
+    const listAffiliationOptions = vi.fn().mockResolvedValue([]);
+
+    const outcome = await applyDuplicatePlan("new-id", plan, {
+      ...mutations,
+      listAffiliationOptions,
+    });
+
+    expect(listAffiliationOptions).toHaveBeenCalledWith("new-id");
+    expect(mutations.replaceAffiliations.mutateAsync).not.toHaveBeenCalled();
+    expect(outcome).toEqual({
+      skippedAffiliationCount: 1,
+      hasAffiliationSaveFailed: false,
+    });
+  });
+
+  /** The full plan with a second link, a community the copier isn't in. */
+  function makeTwoLinkPlan() {
+    const plan = buildDuplicatePlan(makeSourceView(), "full");
+    return {
+      ...plan,
+      affiliations: [
+        ...(plan.affiliations ?? []),
+        {
+          targetType: "community" as const,
+          targetSlug: "co-owners-collective",
+          role: "member",
+        },
+      ],
+    };
+  }
+
+  it("keeps the links the draft may make and skips the others", async () => {
+    const plan = makeTwoLinkPlan();
+    const mutations = makeMutations();
+    const listAffiliationOptions = vi.fn().mockResolvedValue([
+      {
+        targetType: "event",
+        targetSlug: "queer-karaoke-night",
+        name: "Queer Karaoke Night",
+        imageUrl: null,
+        startsAt: "2026-07-03T20:00:00.000Z",
+      },
+    ]);
+
+    const outcome = await applyDuplicatePlan("new-id", plan, {
+      ...mutations,
+      listAffiliationOptions,
+    });
+
+    expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledWith({
+      id: "new-id",
+      items: [
+        {
+          targetType: "event",
+          targetSlug: "queer-karaoke-night",
+          role: "performing",
+        },
+      ],
+    });
+    expect(outcome).toEqual({
+      skippedAffiliationCount: 1,
+      hasAffiliationSaveFailed: false,
+    });
+  });
+
+  it("sends every link when the draft's options fail to load", async () => {
+    const plan = makeTwoLinkPlan();
+    const mutations = makeMutations();
+    const listAffiliationOptions = vi
+      .fn()
+      .mockRejectedValue(new Error("network down"));
+
+    const outcome = await applyDuplicatePlan("new-id", plan, {
+      ...mutations,
+      listAffiliationOptions,
+    });
+
+    expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledWith({
+      id: "new-id",
+      items: plan.affiliations,
+    });
+    expect(outcome).toEqual({
+      skippedAffiliationCount: 0,
+      hasAffiliationSaveFailed: false,
+    });
+  });
+
+  it("flags a failed link save apart from the skipped count", async () => {
+    const plan = makeTwoLinkPlan();
+    const mutations = makeMutations();
+    mutations.replaceAffiliations.mutateAsync.mockRejectedValueOnce(
+      new Error("not eligible"),
+    );
+    const listAffiliationOptions = vi
+      .fn()
+      .mockRejectedValue(new Error("network down"));
+
+    // Must resolve despite the replace throwing: the draft is never stranded.
+    const outcome = await applyDuplicatePlan("new-id", plan, {
+      ...mutations,
+      listAffiliationOptions,
+    });
+
+    expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledTimes(1);
+    expect(outcome).toEqual({
+      skippedAffiliationCount: 0,
+      hasAffiliationSaveFailed: true,
+    });
   });
 
   it("skips the meta + affiliations steps entirely for a content-only plan", async () => {

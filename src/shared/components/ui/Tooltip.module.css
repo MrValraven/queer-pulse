@@ -28,7 +28,11 @@
   text-wrap: balance;
   pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, 2px);
+  /* Centred on the trigger, plus --tooltip-shift: the sideways nudge
+     Tooltip.tsx measures on reveal so a bubble near a screen edge stays fully
+     on screen. Every state carries it, so hiding and showing only move the
+     bubble vertically. */
+  transform: translate(calc(-50% + var(--tooltip-shift, 0px)), 2px);
   transition:
     opacity var(--dur-fast, 0.12s) var(--ease-out, ease),
     transform var(--dur-fast, 0.12s) var(--ease-out, ease);
@@ -41,20 +45,25 @@
   bottom: calc(100% + 6px);
 }
 
-/* Hover is a pointer-fine affordance only — touch devices have no hover, so
+/* Hover is a pointer-fine affordance only; touch devices have no hover, so
    gating it here keeps the bubble from being hover-only. Focus (keyboard /
    switch) and the tap-driven .open state below cover everyone else. */
 @media (hover: hover) and (pointer: fine) {
   .wrap:hover .bubble {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translate(calc(-50% + var(--tooltip-shift, 0px)), 0);
   }
 }
 
-.wrap:focus-within .bubble,
+/* Keyboard focus only: `:focus-within` also matches the focus a mouse click
+   leaves on the button, so a bubble stayed open after the pointer had gone
+   (a reorder chevron whose row slid out from under the cursor kept its label
+   up until something else took focus). A click never shows `:focus-visible`,
+   and neither does focus a script hands back after one. */
+.wrap:has(:focus-visible) .bubble,
 .bubble.open {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translate(calc(-50% + var(--tooltip-shift, 0px)), 0);
 }
 
 @media (prefers-reduced-motion: reduce) {

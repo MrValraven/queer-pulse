@@ -2359,6 +2359,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-24.headline":
+    "Therapist personas get a full profile page, and the directory map grows into full screen.",
   "changelog.releases.2026-09-23.headline":
     "Owners can ask for spaces from mod tools, and the directory map goes full-screen.",
   "changelog.releases.2026-09-22.headline":
@@ -2523,6 +2525,91 @@ export const marketing: Catalog = {
   "changelog.entries.shared-lists-members-only.body":
     "A share link now asks the reader to sign in, and every item on the list links through to its page.",
   // Space requests, 23 Sep 2026.
+  "changelog.entries.portuguese-loads-on-first-visit.title":
+    "Portuguese pages show their text on the first visit",
+  "changelog.entries.portuguese-loads-on-first-visit.body":
+    "Opening a page in Portuguese no longer leaves headings and labels blank until you switch language.",
+  // Email template library, 24 Sep 2026.
+  "changelog.entries.email-template-library.title":
+    "Email templates in the admin dashboard",
+  "changelog.entries.email-template-library.body":
+    "Write welcome emails once, in English and Portuguese, and copy them filled in from an approved invite.",
+  "changelog.entries.persona-part-of-real-links.title":
+    'Persona "Part of" links only name places you belong',
+  "changelog.entries.persona-part-of-real-links.body":
+    "Pick from communities you're in and events you're going to, and a link drops off once you leave.",
+  "changelog.entries.persona-dashboard-list-view.title":
+    "See your personas as cards or a list",
+  "changelog.entries.persona-dashboard-list-view.body":
+    "A switch on your personas page shows compact rows you can still drag to reorder; your choice is remembered.",
+  "changelog.entries.persona-preview-owner-name.title":
+    "Persona previews use your name when the page is named after its kind",
+  "changelog.entries.persona-preview-owner-name.body":
+    "A linked page still named after its kind now shows your first name in the editor preview, as it does live.",
+  "changelog.entries.persona-address-preview.title":
+    "Persona address field shows the full link",
+  "changelog.entries.persona-address-preview.body":
+    "The site and your profile path sit before the slug, and what you type is tidied into the URL it becomes.",
+  "changelog.entries.therapist-page-edit-links.title":
+    "Therapists can edit any part of their page from the page itself",
+  "changelog.entries.therapist-page-edit-links.body":
+    "A pencil beside each section opens the editor right at the field that changes it.",
+  "changelog.entries.email-template-list-preview.title":
+    "Preview email templates from the library list",
+  "changelog.entries.email-template-list-preview.body":
+    "A window shows the filled-in subject and email with sample values, in English or Portuguese.",
+  "changelog.entries.editor-leave-dialog.title":
+    "Persona editor sections switch without a warning",
+  "changelog.entries.editor-leave-dialog.body":
+    "Unsaved changes stay with you across sections, and leaving the editor now asks in our own dialog.",
+  "changelog.entries.persona-preview-desktop.title":
+    "See your persona on desktop while you edit",
+  "changelog.entries.persona-preview-desktop.body":
+    "The live preview switches between phone and laptop width, and widens for the desktop view.",
+  "changelog.entries.studio-teaser-page.title":
+    "Studio gets a teaser while it's being built",
+  "changelog.entries.studio-teaser-page.body":
+    "A first listen to artist pages, local live sets and why backing queer musicians near you matters.",
+  "changelog.entries.persona-order-glide.title":
+    "Reordering your personas glides",
+  "changelog.entries.persona-order-glide.body":
+    "Drag a persona or press an arrow and every card slides smoothly into its new place.",
+  "changelog.entries.cinema-teaser-page.title":
+    "Cinema gets a teaser while it's being built",
+  "changelog.entries.cinema-teaser-page.body":
+    "A first look at the seasons, the local films and why backing queer filmmakers near you matters.",
+  "changelog.entries.therapist-fee-quick-picks.title":
+    "Therapist fees use quick picks",
+  "changelog.entries.therapist-fee-quick-picks.body":
+    "How often, payment, receipts and cancellation notice are now chips, shown in each reader's language.",
+  "changelog.entries.therapist-page-training-photos.title":
+    "Therapist pages show training and practice photos",
+  "changelog.entries.therapist-page-training-photos.body":
+    "Credentials list the issuer and year, and practice photos open full screen from a tidy grid.",
+  "changelog.entries.therapist-page-editor-chapters.title":
+    "A clearer editor for therapist pages",
+  "changelog.entries.therapist-page-editor-chapters.body":
+    "Six chapters in page order, with chips, euro fields, compact rows and a live preview as you type.",
+  "changelog.entries.therapist-lived-languages-select.title":
+    "Therapists pick lived experience and languages from a list",
+  "changelog.entries.therapist-lived-languages-select.body":
+    "Tick several in one dropdown, add your own words, and the page shows them in the reader's language.",
+  "changelog.entries.therapist-persona-profile.title":
+    "Therapist personas get their own profile page",
+  "changelog.entries.therapist-persona-profile.body":
+    "Fees, sliding scale, a cost calculator, availability, first session, vouches and FAQ, all on one page.",
+  "changelog.entries.compact-mailbox-switcher.title":
+    "Tidier messages header on phones",
+  "changelog.entries.compact-mailbox-switcher.body":
+    "The mailbox switcher shows initials on mobile, so the QueerPulse wordmark stays on one line.",
+  "changelog.entries.smooth-directory-map-expand.title":
+    "Directory map grows into full screen",
+  "changelog.entries.smooth-directory-map-expand.body":
+    "The map expands out of its place on the page to fill the window, and shrinks back when you close it.",
+  "changelog.entries.quieter-community-hero-actions.title":
+    "Quieter actions on community pages",
+  "changelog.entries.quieter-community-hero-actions.body":
+    "Save, Share, notifications and Report sit together as icons; Send in a message moved into the Share menu.",
   "changelog.entries.space-requests.title": "Ask for spaces from mod tools",
   "changelog.entries.space-requests.body":
     "Owners can ask the QueerPulse team to switch spaces on, and approval opens them straight away.",

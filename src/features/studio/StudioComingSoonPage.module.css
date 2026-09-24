@@ -1,5 +1,33 @@
-.wrap {
-  max-width: var(--maxw-text);
-  margin: 0 auto;
-  padding: clamp(64px, 12vh, 128px) 24px;
+/* The teaser's dark island: one full-bleed plum ground under all four scenes.
+   --plum and --cream-rgb do not flip with the theme, so the island stays dark
+   in both themes and its type is written against the cream channels.
+
+   `main[data-page-main]` reserves the floating nav's band as unpainted top
+   padding (base.css). The island pulls itself up by the visible part of that
+   band so the plum runs under the nav pill, and the hero adds the same amount
+   back as its own top padding. `--nav-band-visible` is zero in the sidebar
+   rail and mobile app bar layouts, so the pull collapses there on its own. */
+.island {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(-1 * var(--nav-band-visible));
+  overflow: clip;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 0.92);
+}
+
+/* Tape hiss across every scene. A desaturated fractal-noise tile at a low
+   opacity, kept well under the type's contrast. It is the island's last box,
+   so it lands above the scenes' own layers. It composites with plain opacity
+   on purpose: a blend mode on a box this tall makes the browser build one
+   offscreen surface for the whole island, which is costly to raster. */
+.island::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-raised);
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='grain'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23grain)'/></svg>");
+  background-size: 160px;
+  opacity: 0.05;
 }

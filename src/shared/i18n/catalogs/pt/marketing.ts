@@ -2419,6 +2419,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-24.headline":
+    "As personas de terapeuta ganham página completa e o mapa do diretório cresce até ecrã inteiro.",
   "changelog.releases.2026-09-23.headline":
     "Quem é dono já pode pedir espaços nas ferramentas de moderação, e o mapa do diretório passa a ecrã inteiro.",
   "changelog.releases.2026-09-22.headline":
@@ -2583,6 +2585,91 @@ export const marketing: Catalog = {
   "changelog.entries.shared-lists-members-only.body":
     "Um link de partilha pede agora para iniciares sessão, e cada item da lista abre a sua própria página.",
   // Pedidos de espaços, 23 Set 2026.
+  "changelog.entries.portuguese-loads-on-first-visit.title":
+    "As páginas em português mostram o texto logo na primeira visita",
+  "changelog.entries.portuguese-loads-on-first-visit.body":
+    "Abrir uma página em português já não deixa títulos e etiquetas em branco até mudares de idioma.",
+  // Biblioteca de modelos de email, 24 Set 2026.
+  "changelog.entries.email-template-library.title":
+    "Modelos de email no painel de administração",
+  "changelog.entries.email-template-library.body":
+    "Escreve os emails de boas-vindas uma vez, em inglês e português, e copia-os já preenchidos de um convite aprovado.",
+  "changelog.entries.persona-part-of-real-links.title":
+    'O "Parte de" da persona só liga sítios onde estás mesmo',
+  "changelog.entries.persona-part-of-real-links.body":
+    "Escolhe entre as comunidades de que fazes parte e os eventos a que vais, e o link sai quando deixas de estar.",
+  "changelog.entries.persona-dashboard-list-view.title":
+    "Vê as tuas personas em cartões ou numa lista",
+  "changelog.entries.persona-dashboard-list-view.body":
+    "Um botão na página das personas mostra linhas compactas que continuas a poder arrastar; a escolha fica guardada.",
+  "changelog.entries.persona-preview-owner-name.title":
+    "As pré-visualizações da persona usam o teu nome quando a página tem o nome da profissão",
+  "changelog.entries.persona-preview-owner-name.body":
+    "Uma página ligada que ainda tem o nome da profissão mostra o teu primeiro nome na pré-visualização, como ao vivo.",
+  "changelog.entries.persona-address-preview.title":
+    "O endereço da persona mostra o link completo",
+  "changelog.entries.persona-address-preview.body":
+    "O site e o caminho do teu perfil aparecem antes do endereço, e o que escreves fica logo no formato do URL.",
+  "changelog.entries.therapist-page-edit-links.title":
+    "Terapeutas podem editar qualquer parte da página a partir da própria página",
+  "changelog.entries.therapist-page-edit-links.body":
+    "Um lápis ao lado de cada secção abre o editor mesmo no campo que o altera.",
+  "changelog.entries.email-template-list-preview.title":
+    "Pré-visualiza modelos de email a partir da lista",
+  "changelog.entries.email-template-list-preview.body":
+    "Uma janela mostra o assunto e o email preenchidos com valores de exemplo, em inglês ou português.",
+  "changelog.entries.editor-leave-dialog.title":
+    "As secções do editor de persona mudam sem aviso",
+  "changelog.entries.editor-leave-dialog.body":
+    "As alterações por guardar seguem contigo entre secções, e sair do editor pergunta agora no nosso diálogo.",
+  "changelog.entries.persona-preview-desktop.title":
+    "Vê a tua persona no computador enquanto editas",
+  "changelog.entries.persona-preview-desktop.body":
+    "A pré-visualização ao vivo alterna entre largura de telemóvel e de portátil, e alarga na vista de computador.",
+  "changelog.entries.studio-teaser-page.title":
+    "O Studio ganha um teaser enquanto é construído",
+  "changelog.entries.studio-teaser-page.body":
+    "Uma primeira audição às páginas de artista, aos sets ao vivo locais e ao porquê de apoiar música queer perto de ti.",
+  "changelog.entries.persona-order-glide.title":
+    "Reordenar as tuas personas desliza",
+  "changelog.entries.persona-order-glide.body":
+    "Arrasta uma persona ou carrega numa seta e cada cartão desliza suavemente para o novo lugar.",
+  "changelog.entries.cinema-teaser-page.title":
+    "O cinema ganha um teaser enquanto é construído",
+  "changelog.entries.cinema-teaser-page.body":
+    "Uma primeira espreitadela às temporadas, aos filmes locais e ao porquê de apoiar quem faz cinema queer perto de ti.",
+  "changelog.entries.therapist-fee-quick-picks.title":
+    "Honorários de terapeuta com escolhas rápidas",
+  "changelog.entries.therapist-fee-quick-picks.body":
+    "Frequência, pagamento, recibos e antecedência para cancelar passam a ser opções, mostradas na língua de quem lê.",
+  "changelog.entries.therapist-page-training-photos.title":
+    "Páginas de terapeuta mostram formação e fotos do espaço",
+  "changelog.entries.therapist-page-training-photos.body":
+    "A formação mostra a entidade e o ano, e as fotos do espaço abrem em ecrã inteiro a partir de uma grelha.",
+  "changelog.entries.therapist-page-editor-chapters.title":
+    "Um editor mais claro para páginas de terapeuta",
+  "changelog.entries.therapist-page-editor-chapters.body":
+    "Seis capítulos pela ordem da página, com etiquetas, campos em euros, linhas compactas e pré-visualização ao vivo.",
+  "changelog.entries.therapist-lived-languages-select.title":
+    "Terapeutas escolhem experiência vivida e línguas de uma lista",
+  "changelog.entries.therapist-lived-languages-select.body":
+    "Marca várias numa só lista, acrescenta as tuas palavras, e a página mostra-as na língua de quem lê.",
+  "changelog.entries.therapist-persona-profile.title":
+    "Personas de terapeuta ganham página própria",
+  "changelog.entries.therapist-persona-profile.body":
+    "Preços, escala variável, calculadora de custos, disponibilidade, primeira sessão, recomendações e perguntas numa só página.",
+  "changelog.entries.compact-mailbox-switcher.title":
+    "Cabeçalho das mensagens mais arrumado no telemóvel",
+  "changelog.entries.compact-mailbox-switcher.body":
+    "O seletor de caixas de mensagens mostra as iniciais no telemóvel, e a marca QueerPulse fica numa só linha.",
+  "changelog.entries.smooth-directory-map-expand.title":
+    "O mapa do diretório cresce até ecrã inteiro",
+  "changelog.entries.smooth-directory-map-expand.body":
+    "O mapa expande-se a partir do sítio onde está na página até ocupar a janela, e encolhe de volta quando o fechas.",
+  "changelog.entries.quieter-community-hero-actions.title":
+    "Ações mais discretas nas comunidades",
+  "changelog.entries.quieter-community-hero-actions.body":
+    "Guardar, Partilhar, notificações e Denunciar ficam juntos como ícones; Enviar numa mensagem passou para o menu Partilhar.",
   "changelog.entries.space-requests.title":
     "Pede espaços nas ferramentas de moderação",
   "changelog.entries.space-requests.body":

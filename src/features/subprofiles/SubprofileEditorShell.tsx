@@ -1,14 +1,16 @@
 import { useMemo, useState } from "react";
 import { useMediaQuery } from "../../shared/hooks";
-import { mediaMax } from "../../shared/theme/breakpoints";
+import { mediaMax, mediaMin } from "../../shared/theme/breakpoints";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { buildEditorRailGroups, type EditorPaneKey } from "./editorRail.data";
 import { SubprofileEditorProvider } from "./SubprofileEditorProvider";
 import { EditorRail } from "./EditorRail";
 import { EditorPaneSwitcher } from "./EditorPaneSwitcher";
 import { EditorPaneRouter } from "./EditorPaneRouter";
+import { EditorFieldDeepLink } from "./EditorFieldDeepLink";
 import { EditorSavebar } from "./EditorSavebar";
 import { EditorPreview } from "./EditorPreview";
+import type { PreviewDevice } from "./usePreviewFit";
 import { SubprofileEditorNavContext } from "./subprofileEditorNav";
 import { useEditorPane } from "./useEditorPane";
 // The global `.ed*` editor-shell styles. Imported here (a lazy editor-only
@@ -26,6 +28,10 @@ import "./persona-editor.css";
  */
 const RAIL_HIDDEN_QUERY = mediaMax("lg");
 
+/** At or above this the Desktop dock fits beside the rail and pane. Must match
+ *  the `@media (min-width: 1180px)` Desktop dock rule in `persona-editor.css`. */
+const DESKTOP_PREVIEW_QUERY = mediaMin(1180);
+
 /**
  * The `.ed` grid interior — rail, routed pane + savebar, and docked preview —
  * for ONE persona. Mounted with `key={subprofile.id}` by `SubprofileEditorPage`
@@ -41,9 +47,10 @@ const RAIL_HIDDEN_QUERY = mediaMax("lg");
  * The active pane lives in the URL (`useEditorPane`), so the phone's Back
  * gesture steps back a pane instead of leaving the editor, and a pane survives
  * a refresh. `previewOpen` stays local state: it is a viewing preference, not
- * somewhere the owner navigated to. The rail groups are built ONCE here and
- * handed to both the rail and the mobile switcher, so the two navigations
- * cannot drift apart.
+ * somewhere the owner navigated to. `previewDevice` (the dock's Mobile /
+ * Desktop width) is the same kind of viewing preference. The rail groups are
+ * built ONCE here and handed to both the rail and the mobile switcher, so the
+ * two navigations cannot drift apart.
  *
  * That pane state is also published on `SubprofileEditorNavContext`, the one
  * seam that lets something rendered INSIDE a pane move the editor to another
@@ -61,7 +68,12 @@ export function SubprofileEditorShell({
   backTo: string;
 }) {
   const [previewOpen, setPreviewOpen] = useState(true);
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>("mobile");
   const isRailHidden = useMediaQuery(RAIL_HIDDEN_QUERY);
+  const canPreviewDesktop = useMediaQuery(DESKTOP_PREVIEW_QUERY);
+  // Below the Desktop cut the switch is hidden and the dock shows Mobile; the
+  // owner's choice is kept, so widening the window brings Desktop back.
+  const effectiveDevice = canPreviewDesktop ? previewDevice : "mobile";
 
   const groups = useMemo(() => buildEditorRailGroups(subprofile), [subprofile]);
   // Flattened rail order — what `?pane=` is validated against, and the order
@@ -86,7 +98,11 @@ export function SubprofileEditorShell({
       <SubprofileEditorProvider subprofile={subprofile}>
         {isRailHidden && <EditorPaneSwitcher groups={groups} pane={pane} />}
 
-        <div className="ed" data-preview={previewOpen ? "on" : "off"}>
+        <div
+          className="ed"
+          data-preview={previewOpen ? "on" : "off"}
+          data-preview-device={effectiveDevice}
+        >
           <EditorRail
             groups={groups}
             activePane={pane.activePane}
@@ -95,6 +111,7 @@ export function SubprofileEditorShell({
           />
 
           <div className="ed-main">
+            <EditorFieldDeepLink />
             <EditorPaneRouter pane={pane.activePane} subprofile={subprofile} />
             <EditorSavebar
               previewOpen={previewOpen}
@@ -109,7 +126,12 @@ export function SubprofileEditorShell({
             is truly gone to keyboard/AT users even though it's still in the DOM.
             The visual collapse itself is driven by `data-preview` in CSS. */}
           <div className="ed-preview" inert={!previewOpen}>
-            <EditorPreview subprofile={subprofile} />
+            <EditorPreview
+              subprofile={subprofile}
+              device={effectiveDevice}
+              canPreviewDesktop={canPreviewDesktop}
+              onDeviceChange={setPreviewDevice}
+            />
           </div>
         </div>
       </SubprofileEditorProvider>

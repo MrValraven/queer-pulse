@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useGridDragReorder } from "./useGridDragReorder";
 
@@ -14,6 +20,116 @@ function movedTo<T>(items: T[], from: number, to: number): T[] {
 
 const orderKeyOf = (personas: SubprofileView[]) =>
   personas.map((persona) => persona.id).join("|");
+
+/** Which of a persona's two move buttons was pressed, matching the buttons'
+ *  `data-move` attribute in `ReorderableSideCard`. */
+type MoveDirection = "earlier" | "later";
+
+interface MoveFocusTarget {
+  personaId: string;
+  direction: MoveDirection;
+}
+
+/** The persona's shell among the drag container's children, found by the
+ *  `data-persona-id` each `ReorderableSideCard` root carries. */
+function shellOf(
+  container: HTMLElement | null,
+  personaId: string,
+): HTMLElement | null {
+  if (!container) return null;
+  for (const child of Array.from(container.children)) {
+    if (child instanceof HTMLElement && child.dataset.personaId === personaId) {
+      return child;
+    }
+  }
+  return null;
+}
+
+/** True when `element` is one of this shell's move buttons and can hold focus. */
+function isUsableMoveButton(
+  shell: HTMLElement,
+  element: Element | null,
+): element is HTMLButtonElement {
+  return (
+    element instanceof HTMLButtonElement &&
+    element.dataset.move !== undefined &&
+    !element.disabled &&
+    shell.contains(element)
+  );
+}
+
+/** The button focus should land on: the same direction while it is still
+ *  enabled, otherwise the persona's other move button. */
+function moveButtonFor(shell: HTMLElement, target: MoveFocusTarget) {
+  const otherDirection = target.direction === "earlier" ? "later" : "earlier";
+  for (const direction of [target.direction, otherDirection]) {
+    const button = shell.querySelector(`button[data-move="${direction}"]`);
+    if (isUsableMoveButton(shell, button)) return button;
+  }
+  return null;
+}
+
+/**
+ * Hands keyboard focus back to the persona that just moved.
+ *
+ * A move reorders the list, and a focused node that React moves in the DOM
+ * can lose focus in some browsers. Reaching either end also disables the
+ * button that was pressed, and a disabled button drops focus to `<body>`.
+ * So each button move records `{ personaId, direction }`, and after every
+ * commit that renders a new order this puts focus back on that persona's
+ * button in the same direction, or on its other move button once the first
+ * one is disabled. The target outlives that first commit (while focus sits on
+ * that persona's move buttons or has dropped to `<body>`), so the optimistic
+ * order, the cache write and a server snap-back each get the same treatment.
+ *
+ * Any `pointerdown`, or focus arriving anywhere else, lets the target go.
+ * That is what keeps a pointer drag (which starts with a `pointerdown` on the
+ * grip) and a member who has moved on from ever having focus pulled back.
+ */
+function useMoveFocusReturn(
+  containerRef: RefObject<HTMLDivElement | null>,
+  orderedPersonas: SubprofileView[],
+) {
+  const focusTargetRef = useRef<MoveFocusTarget | null>(null);
+
+  useEffect(() => {
+    const release = (event: Event) => {
+      const target = focusTargetRef.current;
+      if (!target) return;
+      const shell = shellOf(containerRef.current, target.personaId);
+      const isStillOnMoveButton =
+        event.type === "focusin" &&
+        shell !== null &&
+        event.target instanceof Element &&
+        isUsableMoveButton(shell, event.target);
+      if (!isStillOnMoveButton) focusTargetRef.current = null;
+    };
+    document.addEventListener("pointerdown", release, true);
+    document.addEventListener("focusin", release);
+    return () => {
+      document.removeEventListener("pointerdown", release, true);
+      document.removeEventListener("focusin", release);
+    };
+  }, [containerRef]);
+
+  useLayoutEffect(() => {
+    const target = focusTargetRef.current;
+    if (!target) return;
+    const shell = shellOf(containerRef.current, target.personaId);
+    const button = shell ? moveButtonFor(shell, target) : null;
+    if (!shell || !button) {
+      focusTargetRef.current = null;
+      return;
+    }
+    // Focus that is still on one of this persona's live move buttons stays put.
+    if (isUsableMoveButton(shell, document.activeElement)) return;
+    button.focus();
+  }, [containerRef, orderedPersonas]);
+
+  return (target: MoveFocusTarget) => {
+    focusTargetRef.current = target;
+  };
+}
 
 /**
  * The working order of the personas listed on a member's profile while they
@@ -40,8 +156,8 @@ export function usePersonaProfileOrder(
 ) {
   const [orderedPersonas, setOrderedPersonas] = useState(personas);
   // The server order this hook last took as its starting point. Compared by
-  // value, not by array identity, so a parent re-render with an equivalent
-  // list never throws away a drag in progress.
+  // value (the joined ids), so a parent re-render with an equivalent list
+  // never throws away a drag in progress.
   const [seededOrderKey, setSeededOrderKey] = useState(() =>
     orderKeyOf(personas),
   );
@@ -58,7 +174,7 @@ export function usePersonaProfileOrder(
   // Remembering the last sent order looks equivalent and is not. A write is
   // optimistic, so a refused one rolls the cache back to the previous order
   // while the "last sent" value still names the arrangement that failed. The
-  // member, seeing their cards snap back, tries the same move again — and
+  // member, seeing their cards snap back, tries the same move again, and
   // that retry matches the remembered value exactly, so it would be skipped
   // as a no-op. The card would slide into place and nothing would be saved,
   // with no error to explain it, for as long as they kept attempting the one
@@ -73,7 +189,7 @@ export function usePersonaProfileOrder(
     (from, to) => setOrderedPersonas((current) => movedTo(current, from, to)),
   );
 
-  // Commit once the pointer is released, not once per neighbour crossed.
+  // Commit once per gesture, at the moment the pointer is released.
   const wasDraggingRef = useRef(false);
   useEffect(() => {
     const isDragging = draggingIndex !== null;
@@ -84,11 +200,22 @@ export function usePersonaProfileOrder(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggingIndex, orderedPersonas]);
 
-  /** The keyboard and assistive-tech path: one discrete move, committed now. */
+  const returnFocusAfterMove = useMoveFocusReturn(
+    containerRef,
+    orderedPersonas,
+  );
+
+  /** The keyboard and assistive-tech path: one discrete move, committed now,
+   *  with focus handed back to the moved persona's own move button. */
   const moveBy = (index: number, offset: number) => {
     const target = index + offset;
-    if (target < 0 || target >= orderedPersonas.length) return;
+    const movedPersona = orderedPersonas[index];
+    if (!movedPersona || target < 0 || target >= orderedPersonas.length) return;
     const next = movedTo(orderedPersonas, index, target);
+    returnFocusAfterMove({
+      personaId: movedPersona.id,
+      direction: offset < 0 ? "earlier" : "later",
+    });
     setOrderedPersonas(next);
     commit(next);
   };

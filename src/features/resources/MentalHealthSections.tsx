@@ -13,9 +13,19 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EXPERIENCES, SNS } from "./mentalHealth.data";
 import { useTherapistPersonas } from "./api/useTherapistPersonas";
-import type { TherapistCardVM } from "./therapistPersonaCard";
+import type {
+  TherapistCardCapacity,
+  TherapistCardVM,
+} from "./therapistPersonaCard";
 import { GuideRatingWidget } from "./GuideRatingWidget";
 import styles from "./MentalHealthPage.module.css";
+
+/** Card status label per capacity; a therapist who has not said shows none. */
+const CAPACITY_LABEL_KEYS: Record<TherapistCardCapacity, string> = {
+  open: "resources:mentalHealth.therapists.accepting",
+  wait: "resources:mentalHealth.therapists.waitlist",
+  closed: "resources:mentalHealth.therapists.notTaking",
+};
 
 export function TherapistSection() {
   const { t } = useTranslation();
@@ -123,19 +133,19 @@ export function TherapistSection() {
                       <div className={styles.tcName}>{therapist.name}</div>
                       <div className={styles.tcCreds}>{therapist.creds}</div>
                     </div>
-                    <span
-                      className={[
-                        styles.tcStatus,
-                        therapist.acceptingNew
-                          ? styles.tcStatusOpen
-                          : styles.tcStatusFull,
-                      ].join(" ")}
-                    >
-                      <span className={styles.tcStatusDot} />
-                      {therapist.acceptingNew
-                        ? t("resources:mentalHealth.therapists.accepting")
-                        : t("resources:mentalHealth.therapists.waitlist")}
-                    </span>
+                    {therapist.availability && (
+                      <span
+                        className={[
+                          styles.tcStatus,
+                          therapist.availability === "open"
+                            ? styles.tcStatusOpen
+                            : styles.tcStatusFull,
+                        ].join(" ")}
+                      >
+                        <span className={styles.tcStatusDot} />
+                        {t(CAPACITY_LABEL_KEYS[therapist.availability])}
+                      </span>
+                    )}
                   </div>
                   <div className={styles.tcTags}>
                     {therapist.langs.length > 0 &&

@@ -1,0 +1,58 @@
+/* The community hero's Share menu. The trigger is a shared <IconButton>, so it
+   carries no styles of its own here; the popover mirrors ModMemberMenu's. */
+
+.container {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+/* The trigger's tooltip drops below it at a higher layer than the menu, so
+   while the menu is open it would sit on top of the first item. The menu
+   already names both options, so the tooltip steps aside until it closes. */
+.open [role="tooltip"] {
+  visibility: hidden;
+}
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: var(--z-popover);
+  min-width: 220px;
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-13);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.itemIcon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-40);
+}
+.itemIcon svg {
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}

@@ -18,7 +18,9 @@ import {
   usePersonaCreatorSlug,
   usePersonaIsCreator,
 } from "./usePersonaCreatorSlug";
+import { PersonaAddressField } from "./PersonaAddressField";
 import {
+  finishSlug,
   handleStateLine,
   linkChoiceLockState,
   pathFor,
@@ -92,13 +94,16 @@ export function SubprofileLinkFields({
   }
 
   function handleSlugBlur() {
+    // Drop a dangling "-" left mid-typing, so the saved slug is the one shown.
+    const slug = finishSlug(editor.slug);
+    if (slug !== editor.slug) editor.setSlug(slug);
     if (!isPublished || acknowledged) return;
     if (editor.link !== subprofile.linkVisibility) return; // a mode switch is already gated above
-    if (editor.slug === subprofile.slug) return;
+    if (slug === subprofile.slug) return;
     setPending({
       kind: "editField",
       field: "slug",
-      value: editor.slug,
+      value: slug,
       previous: subprofile.slug,
     });
   }
@@ -154,22 +159,14 @@ export function SubprofileLinkFields({
       />
 
       {editor.link === "linked" ? (
-        <FormField label={t("subprofiles:metaForm.addressLabel")}>
-          <input
-            value={editor.slug}
-            placeholder={t("subprofiles:metaForm.addressPlaceholder")}
-            onChange={(event) => editor.setSlug(event.target.value)}
-            onBlur={handleSlugBlur}
-            // A URL slug: never auto-capitalise / auto-correct / spell-check it,
-            // and give the URL keyboard (with `/` + `.`). enterKeyHint "done"
-            // since it's the last edited field before the global save.
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            inputMode="url"
-            enterKeyHint="done"
-          />
-        </FormField>
+        <PersonaAddressField
+          label={t("subprofiles:metaForm.addressLabel")}
+          placeholder={t("subprofiles:metaForm.addressPlaceholder")}
+          ownerSlug={ownerSlug}
+          value={editor.slug}
+          onChange={editor.setSlug}
+          onBlur={handleSlugBlur}
+        />
       ) : (
         <div id={FIELD_ANCHOR_ID.handle} onBlur={handleHandleBlur}>
           <UsernameField

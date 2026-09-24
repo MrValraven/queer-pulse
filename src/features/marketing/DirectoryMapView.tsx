@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { FiArrowDown } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
@@ -31,8 +30,7 @@ export function DirectoryMapView({
   onClearFilters: () => void;
 }) {
   // The stage holds the map AND the list, so full screen takes both along.
-  const stageRef = useRef<HTMLDivElement | null>(null);
-  const fullscreen = useMapFullscreen(stageRef);
+  const fullscreen = useMapFullscreen();
   const state = useDirectoryMapView(places, {
     isFullscreen: fullscreen.isFullscreen,
   });
@@ -48,10 +46,8 @@ export function DirectoryMapView({
     <div className="wrap">
       <div className={s.directoryMapBody}>
         <div
-          ref={stageRef}
           className={s.stage}
           data-fullscreen={fullscreen.isFullscreen ? "true" : undefined}
-          data-fullscreen-mode={fullscreen.mode ?? undefined}
         >
           <LisbonMap
             venues={state.markers}
@@ -66,6 +62,7 @@ export function DirectoryMapView({
             fullscreen={{
               isFullscreen: fullscreen.isFullscreen,
               onToggle: fullscreen.toggle,
+              redrawHandleRef: fullscreen.redrawHandleRef,
             }}
           />
 

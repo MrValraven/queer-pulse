@@ -820,10 +820,12 @@ const CASA_CORVO: DemoSubprofile = {
   ],
 };
 
-/** Linked therapist persona — exercises the `practice` skin's
- *  `skinData.practical`/`firstSession`/`access`/`referrals` (Phase 0 demo
- *  coverage). Owned by Maria Ferreira, whose member profile already lists
- *  therapy-adjacent community offerings — a natural pairing, not invented. */
+/** Linked therapist persona: the demo coverage for the therapist layout
+ *  (`skins/therapist/`), so every therapist `skinData` key is filled here,
+ *  plus the older `practical` block the layout reads as a fallback. Owned by
+ *  Maria Ferreira, whose member profile already lists therapy-adjacent
+ *  community offerings. Status "open"; the waitlist state has no second
+ *  therapist persona to show it yet. */
 const SOFIA_NEVES: DemoSubprofile = {
   ownerSlug: "maria",
   ownerName: "Maria Ferreira",
@@ -845,14 +847,15 @@ const SOFIA_NEVES: DemoSubprofile = {
   visibility: "open",
   status: "published",
   position: 0,
-  endorsementCount: 0,
+  // 14 vouches in all; 3 members left a note (the `endorsers` below).
+  endorsementCount: 14,
   viewerEndorsed: false,
   followerCount: 9,
   viewerFollowing: false,
   skinData: {
     practical: {
-      fee: "€60 per session",
-      sliding: "€30 sliding scale, no questions asked",
+      fee: "60€ per session",
+      sliding: "30€ sliding scale, no questions asked",
       length: "50 minutes",
       languages: "English, Portuguese",
       mode: "In person in Anjos, or online",
@@ -860,31 +863,40 @@ const SOFIA_NEVES: DemoSubprofile = {
     },
     firstSession: [
       {
-        title: "You write, I answer within two days",
-        body: "A few lines about what brings you. No form, no intake questionnaire.",
+        title: "Before",
+        body: "A free 20-minute call. You ask, I answer, nobody commits.",
       },
       {
-        title: "A 20-minute call, free",
-        body: "We work out whether I'm the right person. If I'm not, I'll name two people who might be.",
+        title: "Minutes 0–10",
+        body: "Paperwork and consent, including exactly what I write down and what stays unwritten.",
       },
       {
-        title: "The first session",
-        body: "Fifty minutes. You set the pace and nothing is required of you.",
+        title: "Minutes 10–45",
+        body: "You talk, I listen and ask. Forms and scales only if you want them.",
+      },
+      {
+        title: "Last 5",
+        body: "We decide together whether to book again. Saying no is fine.",
       },
     ],
     access: [
       "Step-free entrance and lift",
       "Gender-neutral bathroom",
-      "Quiet street, no buzzer name",
-      "Fragrance-free room",
+      "Quiet waiting area",
+      "Sessions in writing on request",
+      "Fragrance-free consulting room",
     ],
+    accessMissing: ["Sign language (LGP)"],
     referrals: [
-      { name: "Dr. Marta Reis", note: "Clinical psychologist · Lisbon" },
-      { name: "Casa Trans Lisboa", note: "Community referral partner" },
+      {
+        name: "Dr. Marta Reis",
+        note: "Same approach, in Graça. She takes my overflow.",
+      },
+      { name: "Dr. Joana Lopes", note: "Online, evenings, good with anxiety." },
     ],
     approach: [
-      "I work relationally and at your pace. Nothing about your identity is a problem to be solved here.",
-      "Sessions draw on affirmative, trauma-informed and somatic work. We find what fits you rather than the other way round.",
+      "Person-centred at the core, with ACT and EMDR when something specific needs working through. Sessions are 50 minutes and we set the pace together.",
+      "Nothing about your identity is a problem to be solved here. I write gender-affirming referral letters after a first session, with no waiting period.",
     ],
     training: [
       "MSc Clinical Psychology, Universidade de Lisboa",
@@ -896,9 +908,140 @@ const SOFIA_NEVES: DemoSubprofile = {
       lines: ["Rua de Álvaro Coutinho", "1150-024 Lisboa"],
     },
     feeSchedule: [
-      { label: "Standard session", value: "€60" },
-      { label: "Sliding scale", value: "from €30" },
-      { label: "First 20-min call", value: "Free" },
+      { label: "50 min", value: "60€" },
+      { label: "80 min · couples", value: "90€" },
+    ],
+    therapist: {
+      status: "open",
+      waitNote: "",
+      title: "Clinical psychologist & psychotherapist",
+      registration: "OPP 21044",
+      quote:
+        "I'm a queer cis woman in a non-monogamous relationship, and I've sat on the other side of the couch too. You won't have to *explain the basics* to me.",
+      // Option ids from `LANGUAGE_OPTIONS`; the page shows their labels.
+      languages: ["pt", "en"],
+      where: "Anjos, Lisbon · and online",
+      online: "yes",
+      timezone: "",
+      email: "sofia@sofianeves.example",
+      website: "sofianeves.example",
+      goodToKnow:
+        "Sofia co-hosts the monthly Trans Health Q&A on QueerPulse. She holds no moderator role here and receives nothing for being listed.",
+    },
+    // Two `LIVED_OPTIONS` ids and one entry in Sofia's own words.
+    lived: ["queer", "nonMonogamy", "Has been in therapy"],
+    contexts: ["Kink & BDSM", "Sex work", "Ex-religious", "Poly families"],
+    modalities: [
+      "Person-centred",
+      "ACT",
+      "EMDR",
+      "Affirmative practice",
+      "Trauma-informed",
+    ],
+    workingStyle: [
+      "Leans structured",
+      "Mostly talk-based",
+      "Gentle and direct in equal measure",
+      "Leans long-term",
+    ],
+    notFor: [
+      "You want a therapist who stays neutral about queerness. I don't.",
+      "You need weekly sessions under 30€. I have 4 places at that level and they're usually taken.",
+      "You're looking for coaching or a quick fix. I work slower than that.",
+    ],
+    boundaries: [
+      "No court or custody reports",
+      "No under-18s",
+      "No crisis support: I reply within 2 days",
+      "Referral letters only for my own clients",
+    ],
+    whoFor: [
+      "Adults 18+",
+      "Individuals",
+      "Couples and relationships of any shape",
+    ],
+    therapyFees: {
+      standard: "60",
+      slidingMin: "30",
+      slidingMax: "60",
+      slidingPlaces: "4",
+      slidingOpen: "2",
+      slidingRules:
+        "You ask, I say yes if a place is free. No proof of income, ever.",
+      firstContact: "First 20-minute call is free",
+      frequency: "weeklyOrFortnightly",
+      receipts: "Receipts for ADSE, Médis and Multicare reimbursement",
+      receiptTime: "within48h",
+      paymentMethods: ["mbway", "transfer", "card"],
+      payment: "",
+      cancellationNotice: "24h",
+      cancellation:
+        "Less than that and the session is charged, unless you're ill.",
+    },
+    reimbursement: [
+      { label: "ADSE", value: "25" },
+      { label: "Médis", value: "30" },
+      { label: "Multicare", value: "28" },
+    ],
+    availabilitySummary: {
+      headline: "Within 2 weeks",
+      waiting: "",
+      waitMoves: "",
+    },
+    hours: [
+      { label: "Weekdays", value: "17:00–21:00" },
+      { label: "Saturdays", value: "09:00–13:00" },
+    ],
+    openSlots: ["Tue 29 Sep · 18:00", "Thu 1 Oct · 19:00", "Sat 3 Oct · 10:00"],
+    travel: {
+      metro: "Anjos (green line) · 4 min, step-free via Rua de Angola",
+      bus: "708, 730 and 735 stop at Largo do Intendente",
+      bike: "Racks outside the pharmacy next door",
+      entrance:
+        "Blue door on a quiet side street. No sign outside, on purpose.",
+    },
+    faq: [
+      {
+        question: "Do you write referral letters for hormones or surgery?",
+        answer:
+          "Yes, for my own clients, after a first session. Usually within a week.",
+      },
+      {
+        question: "Can I bring my partner(s)?",
+        answer:
+          "Yes. Couples and poly relationships book the 80-minute session.",
+      },
+      {
+        question: "What if I can't afford 60€?",
+        answer:
+          "Ask about a sliding-scale place. If they're full I'll say so and point you to someone.",
+      },
+      {
+        question: "Do you do sessions in English?",
+        answer: "Yes. My written summaries are in the language of the session.",
+      },
+      {
+        question: "Will you talk to my GP or psychiatrist?",
+        answer:
+          "Only if you ask me to, and only about what you agree in advance.",
+      },
+    ],
+    worksAlongside: [
+      {
+        kind: "psychiatrist",
+        name: "Dr. Helena Cruz",
+        note: "Psychiatrist Sofia works alongside for medication",
+      },
+      {
+        kind: "group",
+        name: "Trans Health Q&A",
+        note: "Monthly, co-hosted by Sofia on QueerPulse",
+      },
+      {
+        kind: "community",
+        name: "Queer Elders",
+        note: "Peer-support community, 38 members",
+      },
     ],
     availability: {
       startDate: "2026-03-02",
@@ -936,7 +1079,29 @@ const SOFIA_NEVES: DemoSubprofile = {
     },
   },
   affiliations: [],
-  endorsers: [],
+  endorsers: [
+    {
+      slug: "beatriz",
+      name: "Beatriz Pinto",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1747173790110-e53942765d2c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      note: "She asked my pronouns before my name, then never made it a thing again.",
+    },
+    {
+      slug: "kai",
+      name: "Kai Larsson",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800&auto=format&fit=crop",
+      note: "Two sessions and I had the letter. No hoops, no lecture about being sure.",
+    },
+    {
+      slug: "sofia-castano",
+      name: "Sofia Castaño",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?q=80&w=800&auto=format&fit=crop",
+      note: "The first therapist who took our open relationship as it is and got on with the actual work.",
+    },
+  ],
   items: [
     {
       id: "itm-specialisms-identity-coming-out",
@@ -944,7 +1109,8 @@ const SOFIA_NEVES: DemoSubprofile = {
       createdAt: "2025-03-29T20:33:00.000Z",
       title: "Identity & coming out",
       subtitle: null,
-      description: "Including later-in-life and second comings-out.",
+      description:
+        "Trans & non-binary care, including referral letters\nComing out at any age\nQuestioning, without needing a label",
       url: null,
       imageUrl: null,
       date: null,
@@ -954,12 +1120,13 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
-      id: "itm-specialisms-family-estrangement",
+      id: "itm-specialisms-relationships",
       section: "specialisms",
       createdAt: "2025-04-01T09:26:00.000Z",
-      title: "Family estrangement",
+      title: "Relationships",
       subtitle: null,
-      description: "Repair, boundaries, and grief that has no funeral.",
+      description:
+        "Non-monogamy and open relationships\nFamily estrangement and chosen family\nCouples and relationship therapy",
       url: null,
       imageUrl: null,
       date: null,
@@ -969,12 +1136,13 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
-      id: "itm-specialisms-transition-related-support",
+      id: "itm-specialisms-everything-else",
       section: "specialisms",
       createdAt: "2025-04-05T22:19:00.000Z",
-      title: "Transition-related support",
+      title: "Everything else",
       subtitle: null,
-      description: "Not gatekeeping. Not assessment. Support.",
+      description:
+        "Anxiety and panic\nReligious and cultural trauma\nBurnout and work stress",
       url: null,
       imageUrl: null,
       date: null,
@@ -1017,12 +1185,12 @@ const SOFIA_NEVES: DemoSubprofile = {
       id: "itm-gallery",
       section: "gallery",
       createdAt: "2025-04-15T13:58:00.000Z",
-      title: "",
+      title: "The consulting room",
       subtitle: null,
       description: null,
       url: null,
       imageUrl:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=800&auto=format&fit=crop",
       date: null,
       meta: null,
       tags: [],
@@ -1033,12 +1201,12 @@ const SOFIA_NEVES: DemoSubprofile = {
       id: "itm-gallery-2",
       section: "gallery",
       createdAt: "2025-04-20T02:51:00.000Z",
-      title: "",
+      title: "The armchair by the window",
       subtitle: null,
       description: null,
       url: null,
       imageUrl:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=600&auto=format&fit=crop",
       date: null,
       meta: null,
       tags: [],
@@ -1049,12 +1217,12 @@ const SOFIA_NEVES: DemoSubprofile = {
       id: "itm-gallery-3",
       section: "gallery",
       createdAt: "2025-04-22T15:44:00.000Z",
-      title: "",
+      title: "Tea while you wait",
       subtitle: null,
       description: null,
       url: null,
       imageUrl:
-        "https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=600&auto=format&fit=crop",
       date: null,
       meta: null,
       tags: [],

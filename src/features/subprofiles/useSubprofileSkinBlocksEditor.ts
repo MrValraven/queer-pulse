@@ -3,7 +3,10 @@ import type { SkinData } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
   skinBlocksForKind,
+  skinChaptersForKind,
   type SkinBlockDescriptor,
+  type SkinChapterDescriptor,
+  type SkinControlKind,
 } from "./skinBlockFields.data";
 
 /** Working copy of the persona's editable `SkinData` blocks, keyed by their
@@ -19,24 +22,31 @@ export interface SkinBlockChange {
 export interface SubprofileSkinBlocksEditor {
   /** The blocks this persona's skin can edit (empty for studio/workshop). */
   descriptors: SkinBlockDescriptor[];
-  /** `descriptors.length > 0` — gates the pane + rail entry. */
+  /** `descriptors.length > 0`. Gates the pane + rail entry. */
   hasBlocks: boolean;
+  /** The chapters of the pane, each one screen picked by `?chapter=`. Empty
+   *  for kinds without a chaptered editor. */
+  chapters: SkinChapterDescriptor[];
   /** Read the current value at a `SkinData` dot-path (`"chair.rate"`). */
   getValue: (path: string) => unknown;
+  /** Read the last-saved value at a `SkinData` dot-path, so the save graph
+   *  can tell whether a single field (`"therapist.status"`) changed. */
+  getBaselineValue: (path: string) => unknown;
   /** Write a value at a `SkinData` dot-path, preserving sibling sub-fields. */
   setValue: (path: string, value: unknown) => void;
   /** Any block diverged from the last-saved baseline. */
   dirty: boolean;
-  /** The blocks that changed since baseline — one entry per changed block, for
+  /** The blocks that changed since baseline, one entry per changed block, for
    *  the pending-changes list. */
   changes: SkinBlockChange[];
   /**
    * The current values of every editable block, as a `SkinData` subset. The
    * save graph spreads this onto the merged `skinData` it PATCHes (after the
    * loaded `skinData` + `coverBleed`), so exactly ONE request carries the whole
-   * column — never a second concurrent `skinData` PATCH that would clobber the
-   * bleed flag. Only the family's own keys are returned; every other block is
-   * preserved by the base spread.
+   * column. A second concurrent `skinData` PATCH would clobber the bleed
+   * flag. Only the family's own keys are returned; every other block is
+   * preserved by the base spread. A block this editor emptied comes back as
+   * `null`, so it overrides the stored value in that spread.
    */
   buildSkinBlocks: () => Partial<SkinData>;
   /** Advance the baseline to the current draft after a successful save, so
@@ -66,6 +76,21 @@ function normalizeList(value: unknown): unknown {
   );
 }
 
+/** Control kinds whose value is always an array. `multiSelect` stays out on
+ *  purpose: `therapist.languages` may still hold the older comma string until
+ *  its first edit, and listing it here would replace that stored text with
+ *  `[]` on any save of the block. */
+const LIST_CONTROL_KINDS = new Set<SkinControlKind>([
+  "stringList",
+  "objectList",
+  "chips",
+  "paragraphs",
+  "pairs",
+  "entries",
+  "lines",
+  "multiChoice",
+]);
+
 /** The list-typed sub-field names of an object block (e.g. `excerpt` →
  *  `["lines"]`, `menuMeta` → `["practical"]`), read from its
  *  `stringList`/`objectList` controls whose path is nested (`block.field`). A
@@ -74,12 +99,11 @@ function normalizeList(value: unknown): unknown {
  *  TableMenuHeader) and white-screens the page, which is exactly what a
  *  partially-filled block produces (e.g. an excerpt with only `from` typed).
  *  Whole-block list descriptors (path === blockKey) are handled by the
- *  empty-list drop in `buildSkinBlocks`, not here. */
+ *  empty-list drop in `buildSkinBlocks`. */
 function nestedListSubFields(descriptor: SkinBlockDescriptor): string[] {
   const subFields: string[] = [];
   for (const control of descriptor.controls) {
-    if (control.kind !== "stringList" && control.kind !== "objectList")
-      continue;
+    if (!LIST_CONTROL_KINDS.has(control.kind)) continue;
     const subKey = control.path.split(".")[1];
     if (subKey) subFields.push(subKey);
   }
@@ -104,17 +128,92 @@ function normalizeBlockValue(value: unknown): unknown {
   return value;
 }
 
+/** Whether a normalized block value carries nothing the page could show:
+ *  absent, a blank string, an empty list, an object whose every field is blank
+ *  or an empty list, or an availability grid without a start date (the skin
+ *  cannot place its cells). */
+function isEmptyBlockValue(blockKey: string, value: unknown): boolean {
+  if (value === undefined || value === null) return true;
+  if (typeof value === "string") return value.trim() === "";
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value !== "object") return false;
+  const object = value as Record<string, unknown>;
+  if (blockKey === "availability") {
+    return (
+      typeof object.startDate !== "string" || object.startDate.trim() === ""
+    );
+  }
+  return Object.values(object).every(
+    (field) =>
+      field === undefined ||
+      field === null ||
+      (typeof field === "string" && field.trim() === "") ||
+      (Array.isArray(field) && field.length === 0),
+  );
+}
+
+/** The value at a `SkinData` dot-path (`"chair.rate"`, `"openSlots"`) in a
+ *  draft or baseline. Paths go one level deep, under a block. */
+function readPath(source: SkinBlocksDraft, path: string): unknown {
+  const [blockKey, subKey] = path.split(".");
+  const blockValue = source[blockKey!];
+  if (!subKey) return blockValue;
+  if (blockValue && typeof blockValue === "object") {
+    return (blockValue as Record<string, unknown>)[subKey];
+  }
+  return undefined;
+}
+
+/** A block value as the server would hold it, for comparing a stored value
+ *  with the one recorded when this editor cleared the block. */
+const storedJson = (value: unknown): string =>
+  JSON.stringify(value === undefined ? null : value);
+
+/**
+ * Therapist blocks the public page still fills from the older `practical`
+ * block, because they were never written. Seeding them shows the owner the
+ * values their page already shows. Only an absent key (`undefined`) falls
+ * back: `null` means the owner cleared the block. Blank fields stay absent.
+ * Mirrors `seedFacts` in `skins/therapist/TherapistOwnerBar.tsx`.
+ */
+function legacyTherapistSeed(skinData: SkinData): SkinBlocksDraft {
+  const seed: SkinBlocksDraft = {};
+  const practical = skinData.practical;
+  if (!practical) return seed;
+  if (skinData.therapist === undefined) {
+    const languages = practical.languages?.trim() ?? "";
+    const mode = practical.mode?.trim() ?? "";
+    const facts: Record<string, string> = {};
+    if (languages) facts.languages = languages;
+    if (mode) facts.where = mode;
+    if (/online/i.test(mode)) facts.online = "yes";
+    if (Object.keys(facts).length > 0) seed.therapist = facts;
+  }
+  // The amount the page's `parseAmount` reads, with its separator as typed.
+  const feeAmount = practical.fee?.match(/\d+(?:[.,]\d+)?/)?.[0];
+  if (skinData.therapyFees === undefined && feeAmount) {
+    seed.therapyFees = { standard: feeAmount };
+  }
+  return seed;
+}
+
 /** Seed a draft from the loaded persona's `skinData`, limited to the blocks the
  *  family can edit. Absent blocks stay absent (never seeded as empty objects),
- *  so an untouched family sends nothing extra. */
+ *  so an untouched family sends nothing extra. A therapist also gets the
+ *  blocks its page reads from `practical` (`legacyTherapistSeed`); draft and
+ *  baseline both seed through here, so that starts clean. */
 function seedDraft(
   subprofile: SubprofileView,
   descriptors: SkinBlockDescriptor[],
 ): SkinBlocksDraft {
   const draft: SkinBlocksDraft = {};
   const skinData = subprofile.skinData ?? {};
+  const legacySeed =
+    subprofile.kind === "therapist" ? legacyTherapistSeed(skinData) : {};
   for (const descriptor of descriptors) {
-    const value = (skinData as Record<string, unknown>)[descriptor.blockKey];
+    const value =
+      (skinData as Record<string, unknown>)[descriptor.blockKey] ??
+      legacySeed[descriptor.blockKey];
     if (value !== undefined && value !== null) {
       draft[descriptor.blockKey] = clone(value);
     }
@@ -124,12 +223,12 @@ function seedDraft(
 
 /**
  * Owns the working copy + baseline of the persona's editable `SkinData` blocks
- * (only those for its derived skin family). Structurally the skin-block analogue
- * of `useSubprofileMetaEditor`: its own baseline advanced by `markSaved`, a
- * `dirty` diff that never depends on a refetch, and a `buildSkinBlocks()` the
- * save graph folds into the single meta PATCH. `coverBleed` is deliberately NOT
- * owned here — it stays on the meta editor; the save graph merges both into one
- * `skinData` object.
+ * (its kind's own table, else its skin family's). Structurally the skin-block
+ * analogue of `useSubprofileMetaEditor`: its own baseline advanced by
+ * `markSaved`, a `dirty` diff that never depends on a refetch, and a
+ * `buildSkinBlocks()` the save graph folds into the single meta PATCH.
+ * `coverBleed` is deliberately NOT owned here: it stays on the meta editor,
+ * and the save graph merges both into one `skinData` object.
  */
 export function useSubprofileSkinBlocksEditor(
   subprofile: SubprofileView,
@@ -137,24 +236,25 @@ export function useSubprofileSkinBlocksEditor(
   const [descriptors] = useState<SkinBlockDescriptor[]>(() =>
     skinBlocksForKind(subprofile.kind),
   );
+  const [chapters] = useState<SkinChapterDescriptor[]>(() =>
+    skinChaptersForKind(subprofile.kind),
+  );
   const [draft, setDraft] = useState<SkinBlocksDraft>(() =>
     seedDraft(subprofile, descriptors),
   );
   const [baseline, setBaseline] = useState<SkinBlocksDraft>(() =>
     seedDraft(subprofile, descriptors),
   );
+  // Blocks this editor's last save cleared, each mapped to the stored value
+  // the loaded persona still showed at that moment. Until the persona
+  // refetches, that stale value is spread back under the next save, so the
+  // block must be sent as `null` again.
+  const [pendingClears, setPendingClears] = useState<Record<string, string>>(
+    {},
+  );
 
-  function getValue(path: string): unknown {
-    const segments = path.split(".");
-    const blockKey = segments[0]!;
-    const subKey = segments[1];
-    const blockValue = draft[blockKey];
-    if (!subKey) return blockValue;
-    if (blockValue && typeof blockValue === "object") {
-      return (blockValue as Record<string, unknown>)[subKey];
-    }
-    return undefined;
-  }
+  const getValue = (path: string): unknown => readPath(draft, path);
+  const getBaselineValue = (path: string): unknown => readPath(baseline, path);
 
   function setValue(path: string, value: unknown): void {
     const segments = path.split(".");
@@ -179,7 +279,7 @@ export function useSubprofileSkinBlocksEditor(
         }
         return next;
       }
-      // Sub-field of an object block — preserve the sibling fields.
+      // Sub-field of an object block: preserve the sibling fields.
       const existing =
         current[blockKey] && typeof current[blockKey] === "object"
           ? (current[blockKey] as Record<string, unknown>)
@@ -189,7 +289,7 @@ export function useSubprofileSkinBlocksEditor(
     });
   }
 
-  // Per-block change detection against the last-saved baseline (JSON compare —
+  // Per-block change detection against the last-saved baseline (JSON compare;
   // block values are small plain data). Drives both `dirty` and the itemized
   // pending list.
   const changes: SkinBlockChange[] = [];
@@ -205,30 +305,56 @@ export function useSubprofileSkinBlocksEditor(
   }
   const dirty = changes.length > 0;
 
+  const hasContent = (blockKey: string, value: unknown): boolean =>
+    !isEmptyBlockValue(blockKey, normalizeBlockValue(value));
+  const isDraftEmpty = (blockKey: string): boolean =>
+    !hasContent(blockKey, draft[blockKey]);
+
+  /** Whether THIS editor emptied the block: its baseline (at mount or at the
+   *  last save) held content, or the last save cleared it and the loaded
+   *  persona still shows the very value that save removed. A block someone
+   *  else filled after this editor loaded matches neither, so it is kept. */
+  function wasClearedHere(blockKey: string): boolean {
+    if (hasContent(blockKey, baseline[blockKey])) return true;
+    const loaded = (subprofile.skinData ?? {}) as Record<string, unknown>;
+    return (
+      blockKey in pendingClears &&
+      pendingClears[blockKey] === storedJson(loaded[blockKey]) &&
+      hasContent(blockKey, loaded[blockKey])
+    );
+  }
+
   function buildSkinBlocks(): Partial<SkinData> {
     const built: SkinBlocksDraft = {};
     for (const descriptor of descriptors) {
       const value = clone(draft[descriptor.blockKey]);
-      if (value === undefined) continue;
-      const normalized = normalizeBlockValue(value);
+      const normalized =
+        value === undefined ? undefined : normalizeBlockValue(value);
+      // A block this editor emptied is sent as `null`. The save graph spreads
+      // the loaded `skinData` first, so leaving the key out would put the old
+      // stored value straight back. Blocks that never held anything here keep
+      // the paths below, so an untouched page sends nothing new.
+      if (
+        isEmptyBlockValue(descriptor.blockKey, normalized) &&
+        wasClearedHere(descriptor.blockKey)
+      ) {
+        built[descriptor.blockKey] = null;
+        continue;
+      }
+      if (normalized === undefined) continue;
       // The availability calendar with no start date is unusable (the skin
-      // renderer can't derive day numbers) — don't persist it half-filled.
-      if (descriptor.blockKey === "availability") {
-        const av = normalized as { startDate?: unknown } | null;
-        if (
-          !av ||
-          typeof av !== "object" ||
-          typeof av.startDate !== "string" ||
-          av.startDate.trim() === ""
-        ) {
-          continue;
-        }
+      // renderer can't derive day numbers), so a half-filled one is skipped.
+      if (
+        descriptor.blockKey === "availability" &&
+        isEmptyBlockValue(descriptor.blockKey, normalized)
+      ) {
+        continue;
       }
       // Drop a list block that normalized down to nothing, so an emptied list
       // doesn't persist as `[]`.
       if (Array.isArray(normalized) && normalized.length === 0) continue;
       // Guarantee every declared list sub-field of an object block persists as
-      // an array — a partially-filled block (an excerpt with `from` but no
+      // an array: a partially-filled block (an excerpt with `from` but no
       // `lines` yet) must never save a shape the skin renderers read `.length`
       // off. Preserves the scalar fields the owner has already typed.
       if (
@@ -247,6 +373,14 @@ export function useSubprofileSkinBlocksEditor(
   }
 
   function markSaved(): void {
+    const loaded = (subprofile.skinData ?? {}) as Record<string, unknown>;
+    const clears: Record<string, string> = {};
+    for (const { blockKey } of descriptors) {
+      if (isDraftEmpty(blockKey) && wasClearedHere(blockKey)) {
+        clears[blockKey] = storedJson(loaded[blockKey]);
+      }
+    }
+    setPendingClears(clears);
     setBaseline(clone(draft));
   }
 
@@ -257,7 +391,9 @@ export function useSubprofileSkinBlocksEditor(
   return {
     descriptors,
     hasBlocks: descriptors.length > 0,
+    chapters,
     getValue,
+    getBaselineValue,
     setValue,
     dirty,
     changes,

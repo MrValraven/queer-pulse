@@ -7,6 +7,7 @@ import {
   socialPlatform,
 } from "../../shared/social/socialPlatforms";
 import type { SubprofileView } from "./api/subprofiles.adapters";
+import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import {
   useSubprofileEditorContext,
   withSocialUid,
@@ -51,7 +52,7 @@ export function SubprofileSocialLinksEditor({
   });
 
   return (
-    <section className={sharedStyles.card}>
+    <section id={FIELD_ANCHOR_ID.socialLinks} className={sharedStyles.card}>
       <div className={sharedStyles.cardHead}>
         <span className={sharedStyles.cardIcon}>
           <FiLink size={20} aria-hidden />

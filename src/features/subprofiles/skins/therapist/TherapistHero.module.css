@@ -1,0 +1,457 @@
+/* Therapist profile hero (design classes .tp-hero, .tp-media, .tp-body,
+   .tp-badges, .tp-status, .tp-name, .tp-h1, .tp-pron, .tp-role, .tp-quote,
+   .tp-lived, .tp-facts, .tp-fact, .tp-act, .tp-hint). Layout breakpoints
+   are container queries against `.pp`; see TherapistBody.module.css. */
+
+.hero {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-28);
+  box-shadow: var(--shadow-e1);
+}
+
+/* ── Portrait, or big initials on the accent tint ── */
+/* The persona's accent (`--sk-tint`, set on `.pp` by skinVars) tints the
+   portrait column and colours the initials; coral stands in outside a
+   persona page. The initials mix the accent 45% into the ink, which flips
+   with the theme: every accent option reads at least 5.2:1 on its tint in
+   both themes (amber on light paper is the lowest). */
+.media {
+  --hero-tint: var(--sk-tint, var(--accent));
+  --hero-initials: color-mix(
+    in srgb,
+    var(--hero-tint) 45%,
+    rgb(var(--ink-rgb))
+  );
+
+  position: relative;
+  min-height: 340px;
+  background: color-mix(in srgb, var(--hero-tint) 10%, var(--paper));
+}
+
+.media .portrait {
+  position: absolute;
+  inset: 0;
+  border: none;
+  color: var(--hero-initials);
+  background: color-mix(in srgb, var(--hero-tint) 15%, transparent);
+}
+
+.face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.face > div {
+  color: var(--hero-initials);
+  background: color-mix(in srgb, var(--hero-tint) 15%, transparent);
+}
+
+/* The owner's "Edit portrait" link: a paper chip in the column's corner,
+   legible over any photo. */
+.media .mediaEdit {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 6px 10px;
+  color: var(--text-strong);
+  background: var(--paper);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-e2);
+}
+
+/* ── Text column ── */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(24px, 3cqw, 36px) clamp(24px, 3cqw, 40px);
+}
+
+.body p {
+  margin: 0;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* A long wait note wraps inside the pill on a phone. One line reads as a
+   pill (radius = half its height); two lines read as a soft tag. */
+.status {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 12px 6px 10px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+  border-radius: var(--radius-14);
+}
+
+/* The dot sits centred on the first line: (line height - dot) / 2. */
+.status::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-top: calc((1.4em - 7px) / 2);
+  border-radius: var(--radius-avatar);
+  background: currentColor;
+}
+
+.status[data-status="open"] {
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.14);
+}
+
+.status[data-status="open"]::before {
+  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.2);
+}
+
+/* Small bold text on a tint needs 4.5:1. --accent-ink reads 3.7:1 on the
+   coral tint; --accent-deep reads 5.2:1. */
+.status[data-status="wait"] {
+  color: var(--accent-deep);
+  background: rgba(var(--accent-rgb), 0.13);
+}
+
+:global([data-theme="dark"]) .status[data-status="wait"] {
+  color: var(--accent-soft);
+}
+
+.status[data-status="closed"] {
+  color: var(--violet);
+  background: rgba(var(--violet-rgb), 0.14);
+}
+
+/* Dark --violet reads 4.0:1 on its own tint; lifting it toward cream (whose
+   channels stay light in both themes) reads 6.2:1. */
+:global([data-theme="dark"]) .status[data-status="closed"] {
+  color: color-mix(in srgb, var(--violet) 70%, rgb(var(--cream-rgb)));
+}
+
+.name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+}
+
+.tagline {
+  font-size: var(--text-15);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+/* Title and registration. The separator dot sits in the column gap before
+   every item but the first; an item that wraps to a new line starts at the
+   left edge, so its dot falls outside the box and `overflow: hidden` clips
+   it. No line ever starts with a dot. */
+.role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 18px;
+  overflow: hidden;
+  font-size: var(--text-15-5);
+  color: var(--ink-60);
+}
+
+.roleItem {
+  position: relative;
+  min-width: 0;
+}
+
+.roleItem + .roleItem::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -10.5px;
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-avatar);
+  background: var(--ink-40);
+  transform: translateY(-50%);
+}
+
+.body .role {
+  margin-top: -6px;
+}
+
+.registration {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.registrationIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.4;
+  color: var(--jade);
+}
+
+/* ── Quote, or the bio's first paragraph ── */
+.quote {
+  max-width: 52ch;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 300;
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+  color: var(--text-strong);
+  text-wrap: pretty;
+}
+
+.quote em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+:global([data-theme="dark"]) .quote em {
+  color: var(--accent-soft);
+}
+
+.quoteMuted {
+  max-width: 60ch;
+  font-size: var(--text-17);
+  line-height: 1.55;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.lived {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.livedLabel {
+  margin-right: 4px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+/* ── Facts row ── */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px 22px;
+  margin: 0;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* The owner view has no contact row: no hairline under the facts. */
+.facts:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* Each fact is a dt/dd pair: the icon rides in the dt beside the label,
+   and the value lines up under the label. Every fact stretches to its
+   grid row's height; `align-content: start` packs label and value at the
+   top so the extra height does not spread between them and push labels
+   out of line with the neighbouring facts. */
+.fact {
+  display: grid;
+  grid-template-columns: 15px minmax(0, 1fr);
+  align-content: start;
+  column-gap: 10px;
+  min-width: 0;
+}
+
+.factLabel {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* The owner's pencil sits at the far end of the fact's label. */
+.factEdit {
+  margin-left: auto;
+}
+
+.factIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--ink-40);
+}
+
+.factIcon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.factValue {
+  grid-column: 2;
+  margin: 2px 0 0;
+  font-size: var(--text-14);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.factNa {
+  font-weight: 400;
+  color: var(--ink-40);
+}
+
+/* ── Contact row ── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+
+.actions > * {
+  max-width: 100%;
+}
+
+/* A long website address wraps inside its pill and stays in the card. */
+.actions .website {
+  line-height: 1.3;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The message control renders its button plus, at times, a line of text
+   (sign in, unavailable, at the limit) or a link to an open conversation.
+   Its children join the row; text and links take a full line. */
+.primary {
+  display: contents;
+}
+
+.primary > p,
+.primary > a {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* With the button present its own mailbox note repeats the hint below. */
+.primary:has(> button) > p {
+  display: none;
+}
+
+@media (--mobile) {
+  /* The phone action bar carries the message control instead. */
+  .primaryDesktopOnly {
+    display: none;
+  }
+}
+
+/* The "open conversation" link stands on its own line: a full tap target. */
+@media (pointer: coarse) {
+  .primary > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* The owner's links under their own contact row. */
+.ownerEdits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+}
+
+/* On a touch screen each link keeps its full 44px row, so stacked links
+   sit edge to edge without their targets overlapping. */
+@media (pointer: coarse) {
+  .ownerEdits {
+    gap: 0 16px;
+  }
+
+  .ownerEdits > a {
+    margin-block: 0;
+  }
+}
+
+/* An "Edit" link that ends a line of prose (the quote, the bio lead). */
+.inlineEdit {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.hint {
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+@container (max-width: 860px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .media {
+    min-height: 220px;
+  }
+
+  .facts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* The narrowest phones: one fact per line, so long values ("reimbursement")
+   wrap between words. */
+@container (max-width: 359px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Phone width: each button grows to fill its row, so the wrapped row reads
+   as tidy full-width lines. The more menu keeps its 44px circle and sits
+   beside Follow. */
+@container (max-width: 600px) {
+  .actions > :not(.primary, :global(.pp-moreMenu)),
+  .primary > button {
+    flex: 1 1 auto;
+  }
+}

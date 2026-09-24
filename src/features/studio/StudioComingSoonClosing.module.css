@@ -1,0 +1,380 @@
+/* Closing scene of the Studio teaser. The island (StudioComingSoonPage) owns
+   the plum ground and the grain; this section adds a soft glow and a mixing
+   desk at rest: a meter bridge of dim LEDs along its top edge and a bank of
+   channel faders along its foot, with the invitation set between them. Its
+   vertical padding runs tighter than the manifesto's, so the page's rhythm
+   closes in toward the end. */
+.closing {
+  position: relative;
+  padding: clamp(var(--section-y-56), 9vh, var(--section-y-112))
+    clamp(20px, 5vw, 48px);
+}
+
+/* The desk's backlight: a low pool of coral warmth with a jade edge. */
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 48% 64% at 50% 52%,
+    rgba(var(--accent-rgb), 0.1) 0%,
+    rgba(var(--jade-rgb), 0.07) 42%,
+    transparent 72%
+  );
+}
+
+/* The console: a panel a shade darker than the ground, with a brighter top
+   edge where the light catches it. */
+.console {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(22px, 3vw, 30px) clamp(18px, 5vw, 56px);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-top-color: rgba(var(--cream-rgb), 0.2);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(var(--cream-rgb), 0.05),
+      rgba(var(--cream-rgb), 0.012)
+    ),
+    var(--plum-deep);
+  text-align: center;
+}
+
+/* Four panel screws, one in each corner. */
+.console::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(var(--cream-rgb), 0.22) 0 1.5px,
+      rgba(var(--cream-rgb), 0.07) 2.5px,
+      transparent 3.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(var(--cream-rgb), 0.22) 0 1.5px,
+      rgba(var(--cream-rgb), 0.07) 2.5px,
+      transparent 3.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(var(--cream-rgb), 0.22) 0 1.5px,
+      rgba(var(--cream-rgb), 0.07) 2.5px,
+      transparent 3.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(var(--cream-rgb), 0.22) 0 1.5px,
+      rgba(var(--cream-rgb), 0.07) 2.5px,
+      transparent 3.5px
+    );
+  background-position:
+    0 0,
+    100% 0,
+    0 100%,
+    100% 100%;
+  background-size: 8px 8px;
+  background-repeat: no-repeat;
+}
+
+/* ── Channel strips ──
+   The meter bridge and the fader bank share one grid, so each meter sits
+   straight above its fader. The columns may narrow on the smallest phones
+   so the eight strips always fit inside the panel. */
+.strips {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(14px, 24px));
+  justify-content: center;
+  column-gap: clamp(6px, 3.2vw, 32px);
+}
+
+.bridge {
+  margin-bottom: clamp(28px, 4vw, 44px);
+  padding-bottom: clamp(14px, 2vw, 20px);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+}
+
+/* One meter: an unlit peak LED in coral over four jade ones. The peak sits
+   in the padding row and the jade column fills the content box beneath it,
+   so the two never overlap. `--meter-lit` (set per strip below) counts the
+   LEDs glowing faintly from the bottom. */
+.meter {
+  --led-pitch: 7px;
+
+  position: relative;
+  justify-self: center;
+  width: 6px;
+  height: calc(var(--led-pitch) * 5);
+  padding-top: var(--led-pitch);
+  box-sizing: border-box;
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(var(--accent-rgb), 0.3) 0 2px,
+      transparent 2.5px
+    ),
+    radial-gradient(circle, rgba(var(--jade-rgb), 0.3) 0 2px, transparent 2.5px);
+  background-size: 6px var(--led-pitch);
+  background-repeat: no-repeat, repeat-y;
+  background-position: top, bottom;
+  background-origin: border-box, content-box;
+  background-clip: border-box, content-box;
+}
+
+.meter::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: calc(var(--led-pitch) * var(--meter-lit, 1));
+  background-image: radial-gradient(
+    circle,
+    var(--jade-light) 0 1.5px,
+    rgba(var(--jade-rgb), 0.6) 2.2px,
+    transparent 3px
+  );
+  background-size: 6px var(--led-pitch);
+  background-repeat: repeat-y;
+  background-position: bottom;
+  opacity: 0.5;
+}
+
+.faders {
+  margin-top: clamp(32px, 4.4vw, 48px);
+  padding-top: clamp(16px, 2.4vw, 22px);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.08);
+}
+
+/* One channel: a dark slot down the middle with a scale of ticks either side
+   of it. The mask opens a gap in the ticks where the slot runs. */
+.channel {
+  position: relative;
+  height: clamp(84px, 11vw, 120px);
+}
+
+.channel::before {
+  content: "";
+  position: absolute;
+  inset: 6px 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(var(--cream-rgb), 0.14) 0 1px,
+    transparent 1px 10px
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    var(--plum) 0 28%,
+    transparent 28% 72%,
+    var(--plum) 72%
+  );
+  mask-image: linear-gradient(
+    to right,
+    var(--plum) 0 28%,
+    transparent 28% 72%,
+    var(--plum) 72%
+  );
+}
+
+.channel::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 calc(50% - 2px);
+  width: 4px;
+  border-radius: var(--radius-2);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* The fader cap, parked at its strip's resting height (`--fader-rest`) with
+   a bright index line across its middle. */
+.faderCap {
+  position: absolute;
+  z-index: 1;
+  top: var(--fader-rest, 50%);
+  left: 0;
+  right: 0;
+  height: 14px;
+  margin-top: -7px;
+  border: 1px solid rgba(var(--cream-rgb), 0.2);
+  border-radius: var(--radius-3);
+  background:
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 0.5px),
+      var(--cap-index, rgba(var(--cream-rgb), 0.75)) calc(50% - 0.5px)
+        calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(var(--cream-rgb), 0.34),
+      rgba(var(--cream-rgb), 0.12) 45%,
+      rgba(var(--cream-rgb), 0.2)
+    ),
+    var(--plum-deep);
+  box-shadow: var(--shadow-e2);
+}
+
+/* A mix at rest, strip by strip: fader height, lit LEDs and drift timing.
+   The last strip is the master bus, marked by a coral index line. */
+.strips > :nth-child(1) {
+  --fader-rest: 46%;
+  --meter-lit: 3;
+  --drift-duration: 13s;
+  --drift-delay: -2s;
+}
+.strips > :nth-child(2) {
+  --fader-rest: 58%;
+  --meter-lit: 2;
+  --drift-duration: 16s;
+  --drift-delay: -9s;
+}
+.strips > :nth-child(3) {
+  --fader-rest: 40%;
+  --meter-lit: 3;
+  --drift-duration: 12s;
+  --drift-delay: -5s;
+}
+.strips > :nth-child(4) {
+  --fader-rest: 64%;
+  --meter-lit: 1;
+  --drift-duration: 17s;
+  --drift-delay: -12s;
+}
+.strips > :nth-child(5) {
+  --fader-rest: 52%;
+  --meter-lit: 2;
+  --drift-duration: 14s;
+  --drift-delay: -3s;
+}
+.strips > :nth-child(6) {
+  --fader-rest: 68%;
+  --meter-lit: 1;
+  --drift-duration: 15s;
+  --drift-delay: -7s;
+}
+.strips > :nth-child(7) {
+  --fader-rest: 36%;
+  --meter-lit: 3;
+  --drift-duration: 13s;
+  --drift-delay: -10s;
+}
+.strips > :nth-child(8) {
+  --fader-rest: 30%;
+  --meter-lit: 2;
+  --drift-duration: 19s;
+  --drift-delay: -4s;
+  --cap-index: var(--accent);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-heading);
+  color: rgba(var(--cream-rgb), 0.96);
+  text-wrap: balance;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.body {
+  margin: 18px auto 0;
+  max-width: 520px;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: rgba(var(--cream-rgb), 0.66);
+  text-wrap: pretty;
+}
+
+.actions {
+  margin-top: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Scoped under `.actions` so these win over the shared Button rules whatever
+   order the two stylesheets load in. */
+.actions .action {
+  min-height: 48px;
+}
+
+/* The shared `.primary` rule sets `box-shadow: var(--shadow-accent)` after
+   the global `:focus-visible` rule at the same specificity, which drops the
+   cream halo from the two-tone focus ring and leaves only the dark coral
+   outline on plum. Restate the ring here, halo first, keeping the coral lift
+   behind it. The second selector outranks the shared hover rule, so a
+   focused button that is also hovered keeps its halo. */
+.actions .primaryAction:focus-visible,
+.actions
+  .primaryAction:focus-visible:hover:not(:disabled):not(
+    [aria-disabled="true"]
+  ) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream), var(--shadow-accent);
+}
+
+@media (--xs) {
+  .actions .action {
+    width: 100%;
+  }
+}
+
+/* Motion is opt-in: under `prefers-reduced-motion: reduce` none of these
+   rules apply, so the faders stay parked and the LEDs hold their level. */
+@media (prefers-reduced-motion: no-preference) {
+  .faderCap {
+    animation: faderDrift var(--drift-duration, 14s) ease-in-out infinite
+      alternate;
+    animation-delay: var(--drift-delay, 0s);
+  }
+  .meter::after {
+    animation: meterBreathe calc(var(--drift-duration, 14s) / 2) var(--ease)
+      infinite alternate;
+    animation-delay: var(--drift-delay, 0s);
+  }
+  .glow {
+    animation: glowBreathe 10s var(--ease) infinite alternate;
+  }
+}
+
+/* A few pixels either way: a desk someone just stepped away from. */
+@keyframes faderDrift {
+  from {
+    transform: translate3d(0, -3px, 0);
+  }
+  to {
+    transform: translate3d(0, 3px, 0);
+  }
+}
+
+@keyframes meterBreathe {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+@keyframes glowBreathe {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}

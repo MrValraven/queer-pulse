@@ -7,7 +7,11 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { subprofileEditPath } from "../../app/routeMap";
 import { handleFormatError } from "../../shared/handles";
-import type { LinkVisibility, SubprofileKind } from "./api/subprofiles.api";
+import {
+  getAffiliationOptions,
+  type LinkVisibility,
+  type SubprofileKind,
+} from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { itemsToInputDto } from "./api/subprofiles.adapters";
 import {
@@ -33,11 +37,15 @@ import {
  *  through the demo-aware hooks (dual-mode preserved). */
 type SubprofileMutations = ReturnType<typeof useSubprofileMutations>;
 
-/** The outcome of seeding: the new draft's id, plus whether an explicit
- *  standalone-handle claim failed (the draft still exists, just linked). */
+/** The outcome of seeding: the new draft's id, whether an explicit
+ *  standalone-handle claim failed (the draft still exists, just linked), how
+ *  many of a copied source's "Part of" links the copier couldn't make, and
+ *  whether saving the rest failed. */
 interface CreateAndSeedResult {
   id: string;
   handleClaimFailed: boolean;
+  skippedAffiliationCount: number;
+  hasAffiliationSaveFailed: boolean;
 }
 
 /** Create a draft, tie its address (linked default, or explicitly unlinked
@@ -55,6 +63,7 @@ async function createAndSeedSubprofile(args: {
   source: SubprofileView | null;
   copyMode: CopyMode;
   mutations: SubprofileMutations;
+  demoMode: boolean;
   t: TranslationApi["t"];
 }): Promise<CreateAndSeedResult> {
   const {
@@ -67,6 +76,7 @@ async function createAndSeedSubprofile(args: {
     source,
     copyMode,
     mutations,
+    demoMode,
     t,
   } = args;
   const {
@@ -102,16 +112,25 @@ async function createAndSeedSubprofile(args: {
     }
   }
 
+  let skippedAffiliationCount = 0;
+  let hasAffiliationSaveFailed = false;
   if (method === "copy" && source) {
     // Seed from the source persona: identity + links + items (+ affiliations in
-    // full mode). Each step is best-effort inside applyDuplicatePlan.
+    // full mode). Each step is best-effort inside applyDuplicatePlan. Live
+    // filters the links to the ones this member may make (a co-owner's
+    // community would sink the whole replace); demo accepts any target.
     const plan = buildDuplicatePlan(source, copyMode);
-    await applyDuplicatePlan(created.id, plan, {
+    const outcome = await applyDuplicatePlan(created.id, plan, {
       update,
       replaceSocials,
       replaceSection,
       replaceAffiliations,
+      listAffiliationOptions: demoMode
+        ? undefined
+        : (id) => getAffiliationOptions(id),
     });
+    skippedAffiliationCount = outcome.skippedAffiliationCount;
+    hasAffiliationSaveFailed = outcome.hasAffiliationSaveFailed;
   } else if (method === "template") {
     // Seed the kind's starter template: example items per section, then a
     // suggested tagline. Each piece is applied independently — a failure on one
@@ -138,7 +157,12 @@ async function createAndSeedSubprofile(args: {
     }
   }
   // blank: nothing to seed — the draft is created bare.
-  return { id: created.id, handleClaimFailed };
+  return {
+    id: created.id,
+    handleClaimFailed,
+    skippedAffiliationCount,
+    hasAffiliationSaveFailed,
+  };
 }
 
 /** Everything the two-step create wizard's UI reads and writes. Returned by
@@ -256,7 +280,12 @@ export function useNewSideForm(
     if (!effectiveKind || !step2Ready || submitting) return;
     setSubmitting(true);
     try {
-      const { id, handleClaimFailed } = await createAndSeedSubprofile({
+      const {
+        id,
+        handleClaimFailed,
+        skippedAffiliationCount,
+        hasAffiliationSaveFailed,
+      } = await createAndSeedSubprofile({
         kind: effectiveKind,
         displayName,
         method,
@@ -266,6 +295,7 @@ export function useNewSideForm(
         source,
         copyMode,
         mutations,
+        demoMode,
         t,
       });
       if (handleClaimFailed) {
@@ -274,6 +304,21 @@ export function useNewSideForm(
             handle: handleCandidate,
           }),
           "error",
+        );
+      }
+      // A failed save means none of the links made it, which the generic
+      // toast already covers; the skipped count only matters when it worked.
+      if (hasAffiliationSaveFailed) {
+        showToast(
+          t("subprofiles:newModal.toastAffiliationsSaveFailed"),
+          "warning",
+        );
+      } else if (skippedAffiliationCount > 0) {
+        showToast(
+          t("subprofiles:newModal.toastAffiliationsDropped", {
+            count: skippedAffiliationCount,
+          }),
+          "warning",
         );
       }
       onClose();

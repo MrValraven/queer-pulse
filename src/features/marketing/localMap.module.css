@@ -528,10 +528,10 @@
 /* ── Directory map view (DirectoryMapView.tsx) ──
    The map spans the content width and the list floats over its right edge.
    `.stage` wraps both so full screen takes the list along; it carries
-   `data-fullscreen` in either full screen mode (the Fullscreen API or the
-   fixed overlay fallback, see useMapFullscreen.ts). These classes are separate
-   from .body/.mapPanel/.mapCanvas/.sidebar above, which the housing map and
-   the location picker still use for the side-by-side layout. */
+   `data-fullscreen` while it is pinned over the whole browser window as a
+   fixed overlay (useMapFullscreen.ts). These classes are separate from
+   .body/.mapPanel/.mapCanvas/.sidebar above, which the housing map and the
+   location picker still use for the side-by-side layout. */
 .directoryMapBody {
   padding: 32px 0 var(--section-y-80);
 }
@@ -539,16 +539,11 @@
   position: relative;
 }
 .stage[data-fullscreen="true"] {
-  /* Nothing of the page may show through around the map. */
-  background: var(--cream);
-}
-.stage[data-fullscreen-mode="native"] {
-  height: 100%;
-}
-.stage[data-fullscreen-mode="fallback"] {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
+  /* Nothing of the page may show through around the map. */
+  background: var(--cream);
 }
 .stageMap {
   /* MapLoading and .mapError lay themselves over this box. */
@@ -618,6 +613,169 @@
 .stage :global(.maplibregl-ctrl-bottom-right) {
   right: auto;
   left: 0;
+}
+/* Full screen grows out of the map's place on the page and shrinks back into
+   it through a same-document view transition (useMapFullscreen.ts). The map
+   box and the list are named only while one runs, keyed off the attribute the
+   hook puts on <html>. The map box carries the name because on a phone the
+   stage also holds the jump button and the whole list. */
+:global(:root[data-directory-map-transition]) .stage .stageMap {
+  view-transition-name: directory-map-stage;
+}
+:global(:root[data-directory-map-transition]) .stage .floatingPanel {
+  view-transition-name: directory-map-panel;
+}
+/* One duration and easing for the map, the list and the page fading to the
+   cream backdrop, so all three move as a single container. */
+:root[data-directory-map-transition] {
+  --directory-map-transition-duration: calc(var(--dur-slow) + 50ms);
+}
+::view-transition-group(directory-map-stage),
+::view-transition-group(directory-map-panel) {
+  animation-duration: var(--directory-map-transition-duration);
+  animation-timing-function: var(--ease-in-out);
+}
+:root[data-directory-map-transition]::view-transition-old(root),
+:root[data-directory-map-transition]::view-transition-new(root) {
+  animation-duration: var(--directory-map-transition-duration);
+}
+
+/* The map captures draw at their own size, centred, and the growing box works
+   as a window onto them. maplibre keeps the camera centre on a resize, so the
+   middle of the full window map is the inline map. Growing shows only the
+   live new capture; shrinking keeps the full window capture and fades the
+   inline one in over the last stretch. */
+::view-transition-old(directory-map-stage),
+::view-transition-new(directory-map-stage) {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: none;
+  object-position: 50% 50%;
+  overflow: clip;
+  mix-blend-mode: normal;
+  animation: none;
+}
+:root[data-directory-map-transition="enter"]::view-transition-old(
+    directory-map-stage
+  ) {
+  opacity: 0;
+}
+:root[data-directory-map-transition="exit"]::view-transition-new(
+    directory-map-stage
+  ) {
+  animation: qpMapInlineReveal var(--directory-map-transition-duration) linear
+    both;
+}
+@keyframes qpMapInlineReveal {
+  0%,
+  55% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+/* The rounded corners square off as the map reaches the window edges and
+   round again on the way back. */
+::view-transition-image-pair(directory-map-stage) {
+  overflow: clip;
+}
+:root[data-directory-map-transition="enter"]::view-transition-image-pair(
+    directory-map-stage
+  ) {
+  animation: qpMapStageCornersSquare var(--directory-map-transition-duration)
+    var(--ease-in-out) both;
+}
+:root[data-directory-map-transition="exit"]::view-transition-image-pair(
+    directory-map-stage
+  ) {
+  animation: qpMapStageCornersSquare var(--directory-map-transition-duration)
+    var(--ease-in-out) reverse both;
+}
+@keyframes qpMapStageCornersSquare {
+  from {
+    border-radius: var(--radius-18);
+  }
+  to {
+    border-radius: 0;
+  }
+}
+
+/* The list shows one capture at a time, the taller one, pinned to the top
+   and clipped by its box, so it reads as the panel stretching. The pair draws
+   the panel's own corners and shadow, which the clip removes from the
+   capture. */
+::view-transition-image-pair(directory-map-panel) {
+  overflow: clip;
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e3);
+}
+::view-transition-old(directory-map-panel),
+::view-transition-new(directory-map-panel) {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: none;
+  object-position: 50% 0;
+  mix-blend-mode: normal;
+  animation: none;
+}
+:root[data-directory-map-transition="enter"]::view-transition-old(
+    directory-map-panel
+  ),
+:root[data-directory-map-transition="exit"]::view-transition-new(
+    directory-map-panel
+  ) {
+  opacity: 0;
+}
+/* On a phone the inline list and the full screen sheet are different things,
+   so only the sheet is named and it exists in one state alone: it slides up
+   on the way in and down on the way out, and the inline list rides the page
+   crossfade. */
+@media (--compact) {
+  :global(:root[data-directory-map-transition]) .stage .floatingPanel {
+    view-transition-name: none;
+  }
+  :global(:root[data-directory-map-transition])
+    .stage[data-fullscreen="true"]
+    .floatingPanel {
+    view-transition-name: directory-map-panel;
+  }
+  /* The sheet's own corners and shadow, as on .floatingPanel in full
+     screen below. */
+  ::view-transition-image-pair(directory-map-panel) {
+    border-radius: var(--radius-18) var(--radius-18) 0 0;
+    box-shadow: var(--shadow-e4);
+  }
+}
+:root[data-directory-map-transition="enter"]::view-transition-new(
+    directory-map-panel
+  ):only-child {
+  animation: qpMapSheetUp var(--directory-map-transition-duration)
+    var(--ease-out) both;
+}
+:root[data-directory-map-transition="exit"]::view-transition-old(
+    directory-map-panel
+  ):only-child {
+  animation: qpMapSheetDown var(--dur-base) var(--ease-in) both;
+}
+@keyframes qpMapSheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+/* Its own keyframe: a reversed animation also reverses its easing. */
+@keyframes qpMapSheetDown {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(100%);
+  }
 }
 /* The full screen button portalled into the zoom group's control slot
    (LisbonMap.tsx). maplibre frames and sizes it through

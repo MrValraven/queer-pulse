@@ -8,3 +8,100 @@
   font-size: var(--text-13);
   color: var(--ink-60);
 }
+
+/* ── row variant (`SideRowActions`, the List view) ──────────────────────
+   One outlined Edit, then borderless icon buttons that only show a soft wash
+   on hover, with the "no address yet" line just under the cluster. Kept off
+   the global `.side-acts` bar on purpose: that is the card's full-width
+   bordered foot.
+
+   Sizes are scoped through `.rowActs` and doubled so they outrank
+   `IconButton`'s own `.icon.sm` (two classes) and `Button`'s `.sm` whatever
+   order the stylesheets load in. 36px on a fine pointer, 40px on touch. */
+.rowFoot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rowActs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rowActs .rowEdit.rowEdit {
+  min-height: 36px;
+  margin-inline-end: 6px;
+  padding: 0 14px;
+  gap: 6px;
+  font-size: var(--text-13);
+}
+
+.rowActs .rowIcon.rowIcon,
+.rowIconSlot {
+  flex: none;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  font-size: var(--text-16);
+}
+.rowActs .rowIcon.rowIcon {
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .rowActs .rowIcon.rowIcon:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--accent-rgb), 0.1);
+    color: var(--accent-ink);
+  }
+  .rowActs .rowDanger.rowIcon:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--danger-rgb), 0.1);
+    color: var(--danger);
+  }
+}
+
+@media (pointer: coarse) {
+  .rowActs .rowEdit.rowEdit {
+    min-height: 40px;
+  }
+  .rowActs .rowIcon.rowIcon,
+  .rowIconSlot {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+}
+
+/* The narrow row's single "Actions" menu button (`PersonaRowActionsMenu`),
+   rendered beside the cluster and shown instead of it once the row is narrow
+   (the `SideRow` article is the nearest size container). The swap is
+   `display: none` both ways, which also drops the hidden set from the tab
+   order and the accessibility tree. The cluster's note goes with it: the menu
+   carries that reason under its own View and Share. */
+.rowMenu {
+  display: none;
+}
+@container (max-width: 680px) {
+  .rowActs,
+  .rowNote {
+    display: none;
+  }
+  .rowMenu {
+    display: inline-flex;
+  }
+}
+
+/* Sized to sit under the cluster without widening the row's action column
+   much: a couple of short lines, right-aligned with the buttons above. */
+.rowNote {
+  margin: 0;
+  max-width: 30ch;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  text-align: end;
+  color: var(--ink-60);
+}

@@ -49,6 +49,8 @@ export function SubprofileEditorProvider({
     active: dirty && !saving,
     confirmMessage: t("subprofiles:metaForm.leaveConfirm"),
     guardBackButton: true,
+    // `?pane=` switches keep this provider (and the whole draft) mounted.
+    shouldAllowQueryChanges: true,
   });
 
   const discardAll = useCallback(() => {

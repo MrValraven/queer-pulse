@@ -39,6 +39,7 @@ import { useEvent } from "./api/useEvent";
 import { useAttendees } from "./api/useAttendees";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
 import { dateToDatetimeValue } from "./manageGatheringDates";
+import { useCancelGatheringFlow } from "./useCancelGatheringFlow";
 import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
 import { useManageGatheringState } from "./useManageGatheringState";
 import styles from "./ManageGatheringPage.module.css";
@@ -183,26 +184,20 @@ function ManageGatheringMain({
     attendees,
   );
 
-  // MSG-10 — a gathering that's part of a series (real, live only —
+  const { requestCancel, cancelDialog } = useCancelGatheringFlow({
+    slug,
+    title: gatheringState.title,
+    attendeeCount,
+    cancelEvent,
+  });
+
+  // MSG-10: a gathering that's part of a series (real, live only, since
   // `gathering?.series` is always undefined in demo mode) asks this-vs-future
-  // instead of the plain confirm; a standalone gathering keeps the original
-  // single `window.confirm`.
+  // instead of the plain confirm; a standalone gathering opens the same
+  // `ConfirmDialog` the public page's host menu does (`useCancelGatheringFlow`).
   const cancelGathering = () => {
-    if (gathering?.series) {
-      setSeriesScopeModal("cancel");
-      return;
-    }
-    if (
-      window.confirm(
-        t("gatherings:manage.cancelConfirm", {
-          title: gatheringState.title,
-          count: attendeeCount,
-        }),
-      )
-    ) {
-      cancelEvent.mutate(undefined);
-      void navigate(gatheringCancelledPath(slug));
-    }
+    if (gathering?.series) setSeriesScopeModal("cancel");
+    else requestCancel();
   };
 
   // The host's answer to the `SeriesEditScopeModal` prompt — fires the
@@ -319,6 +314,7 @@ function ManageGatheringMain({
         attendeeCount={attendeeCount}
         onCloseMessage={() => setMessageOpen(false)}
       />
+      {cancelDialog}
       {deleteDialog}
     </PageShell>
   );

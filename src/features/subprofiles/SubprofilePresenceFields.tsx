@@ -8,15 +8,16 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { ImageUploadField } from "./ImageUploadField";
+import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
+import { SubprofilePresenceCtaFields } from "./SubprofilePresenceCtaFields";
 import {
   accentStyle,
   ACCENT_OPTIONS,
   AVAILABILITY_OPTIONS,
+  THERAPIST_AVAILABILITY_LABEL_KEYS,
 } from "./subprofilePresence.data";
 import styles from "./SubprofilePresenceFields.module.css";
-
-/** Mirrors the backend `MAX_CTA_LABEL` validator. */
-const MAX_CTA_LABEL = 40;
+import { useEditorPersonaKind } from "./useEditorPersonaKind";
 
 interface SubprofilePresenceFieldsProps {
   coverUrl: string;
@@ -45,7 +46,10 @@ interface SubprofilePresenceFieldsProps {
  * availability status, and an optional contact CTA (label + URL, saved
  * together). Renders the editor's "Presence" rail pane body, fed by
  * `useSubprofileMetaEditor`'s state (via `EditorPaneRouter`). Purely
- * controlled — the parent owns state and the PATCH.
+ * controlled: the parent owns state and the PATCH. For a therapist the cover
+ * is a thin band above the profile, the availability follows the status set
+ * in Page blocks, and the button is the "Book the free call" one, so those
+ * fields explain themselves in that kind's terms.
  */
 export function SubprofilePresenceFields({
   coverUrl,
@@ -65,27 +69,22 @@ export function SubprofilePresenceFields({
   ctaMismatch,
 }: SubprofilePresenceFieldsProps) {
   const { t } = useTranslation();
-
-  // Point the error at the half that's missing: a label with nowhere to go, or
-  // a link with no call to action.
-  const ctaLabelError =
-    ctaMismatch && !ctaLabel.trim()
-      ? t("subprofiles:metaForm.ctaLabelError")
-      : undefined;
-  const ctaUrlError =
-    ctaMismatch && !ctaUrl.trim()
-      ? t("subprofiles:metaForm.ctaUrlError")
-      : undefined;
+  const isTherapist = useEditorPersonaKind() === "therapist";
 
   return (
     <>
       <FormField
+        id={FIELD_ANCHOR_ID.cover}
         label={t("subprofiles:metaForm.coverLabel")}
         // State the banner's real shape up front. The reframe editor used to
         // frame these at the magazine cover's 2:1 while the page painted a far
         // wider strip, so members were being told one set of dimensions and
         // shown another.
-        helper={t("subprofiles:metaForm.coverHelper")}
+        helper={t(
+          isTherapist
+            ? "subprofiles:editorTherapist.coverHelper"
+            : "subprofiles:metaForm.coverHelper",
+        )}
       >
         <ImageUploadField
           value={coverUrl}
@@ -124,7 +123,10 @@ export function SubprofilePresenceFields({
         />
       </FormField>
 
-      <FormField label={t("subprofiles:metaForm.accentLabel")}>
+      <FormField
+        id={FIELD_ANCHOR_ID.accent}
+        label={t("subprofiles:metaForm.accentLabel")}
+      >
         <div
           className={styles.swatchRow}
           role="group"
@@ -150,13 +152,26 @@ export function SubprofilePresenceFields({
         </div>
       </FormField>
 
-      <FormField label={t("subprofiles:metaForm.availabilityLabel")}>
+      <FormField
+        id={FIELD_ANCHOR_ID.availability}
+        label={t("subprofiles:metaForm.availabilityLabel")}
+        helper={
+          isTherapist
+            ? t("subprofiles:editorTherapist.availabilityHelper")
+            : undefined
+        }
+      >
         <Select
           options={[
             { value: "", label: t("subprofiles:metaForm.availabilityUnset") },
             ...AVAILABILITY_OPTIONS.map((option) => ({
               value: option.value,
-              label: t(option.labelKey),
+              // Therapists read the same words as their page's status pill.
+              label: t(
+                isTherapist
+                  ? THERAPIST_AVAILABILITY_LABEL_KEYS[option.value]
+                  : option.labelKey,
+              ),
             })),
           ]}
           value={availability}
@@ -166,35 +181,14 @@ export function SubprofilePresenceFields({
         />
       </FormField>
 
-      <FormField
-        label={t("subprofiles:metaForm.ctaLabelLabel")}
-        helper={t("subprofiles:metaForm.ctaHelper")}
-        error={ctaLabelError}
-      >
-        <input
-          value={ctaLabel}
-          maxLength={MAX_CTA_LABEL}
-          placeholder={t("subprofiles:metaForm.ctaLabelPlaceholder")}
-          onChange={(event) => onCtaLabelChange(event.target.value)}
-        />
-      </FormField>
-
-      <FormField
-        label={t("subprofiles:metaForm.ctaUrlLabel")}
-        error={ctaUrlError}
-      >
-        <input
-          type="url"
-          inputMode="url"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          enterKeyHint="done"
-          value={ctaUrl}
-          placeholder={t("subprofiles:metaForm.ctaUrlPlaceholder")}
-          onChange={(event) => onCtaUrlChange(event.target.value)}
-        />
-      </FormField>
+      <SubprofilePresenceCtaFields
+        ctaLabel={ctaLabel}
+        onCtaLabelChange={onCtaLabelChange}
+        ctaUrl={ctaUrl}
+        onCtaUrlChange={onCtaUrlChange}
+        ctaMismatch={ctaMismatch}
+        isTherapist={isTherapist}
+      />
     </>
   );
 }

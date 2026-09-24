@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileCoverBand } from "./SubprofileCoverBand";
 import { SubprofileHero } from "./SubprofileHero";
@@ -10,6 +10,7 @@ import { PersonaRightsFooter } from "./rights/PersonaRightsFooter";
 import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
 import { PracticeBody } from "./skins/PracticeBody";
+import { TherapistBody } from "./skins/therapist/TherapistBody";
 // The global `.pp*` skin styles for the whole persona tree. Imported here (the
 // lazy renderer shared by the public page AND the editor preview) rather than
 // globally, so Vite folds ~its weight into the persona route chunk instead of
@@ -43,6 +44,8 @@ export function SubprofilePageBody({
   onOpenGalleryPhoto,
   onOpenPoem,
   coverRise = false,
+  navBand = false,
+  lead,
 }: {
   data: PublicSubprofileView;
   skin: SkinFamily;
@@ -59,6 +62,13 @@ export function SubprofilePageBody({
    *  this same tree inside a card, where pulling the cover out of its own box
    *  would just spill it over whatever sits above. Off unless asked. */
   coverRise?: boolean;
+  /** Paint the page's reserved nav band in the skin's ground, so no cream
+   *  stripe shows between the pill nav and the page. Same page-only rule as
+   *  `coverRise`, but kept on when the rise is off (the owner's draft). */
+  navBand?: boolean;
+  /** Rendered first inside `.pp`, so it sits on the skin's ground (the
+   *  owner's draft banner) rather than on the app's cream body. */
+  lead?: ReactNode;
 }) {
   const { t } = useTranslation();
   const rootRef = usePersonaMotion();
@@ -72,17 +82,37 @@ export function SubprofilePageBody({
     <article
       className="pp"
       data-skin={skin}
+      data-kind={data.kind}
       data-cover-bleed={
         data.coverUrl && data.skinData?.coverBleed ? "true" : undefined
       }
       data-cover-rise={coverRise ? "true" : undefined}
+      data-nav-band={navBand ? "true" : undefined}
       style={skinVars}
       ref={rootRef}
     >
-      <SubprofileCoverBand data={data} mode={mode} />
+      {lead && <div className="pp-lead">{lead}</div>}
+
+      {/* The therapist layout has no empty band to fill: without a cover
+          image the page starts right under the nav, as its design does. */}
+      {(data.kind !== "therapist" || Boolean(data.coverUrl)) && (
+        <SubprofileCoverBand data={data} mode={mode} />
+      )}
 
       <div className="wrap">
-        {skin === "practice" ? (
+        {/* The therapist kind has its own layout; the other practice kinds
+            keep PracticeBody. */}
+        {data.kind === "therapist" ? (
+          // Keyed on the persona, so state held for one therapist (a capacity
+          // the owner just saved) never carries over to the next.
+          <TherapistBody
+            key={data.id}
+            data={data}
+            mode={mode}
+            onAction={onAction}
+            onOpenGalleryPhoto={onOpenGalleryPhoto}
+          />
+        ) : skin === "practice" ? (
           <PracticeBody
             data={data}
             mode={mode}

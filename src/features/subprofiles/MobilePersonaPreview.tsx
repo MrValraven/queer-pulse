@@ -12,6 +12,7 @@ import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
+import { usePersonaCreatorName } from "./usePersonaCreatorSlug";
 import styles from "./MobilePersonaPreview.module.css";
 
 /** No-op — the tree is fully inert in `mode="preview"`, so these handlers only
@@ -39,7 +40,11 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
   const { id } = useParams();
   const { data: subprofile } = useSubprofile(id);
   const { profile } = useProfileData();
-  const { meta: editor } = useSubprofileEditorContext();
+  const { meta: editor, skinBlocks } = useSubprofileEditorContext();
+  const creatorName = usePersonaCreatorName(
+    subprofile?.id,
+    subprofile?.memberCount ?? 1,
+  );
 
   // Guard the (practically-impossible) cache miss: this only ever mounts from
   // inside the editor, where the persona is already loaded. Renders nothing
@@ -66,11 +71,15 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
     visibility: editor.visibility,
     slug: editor.slug,
     handle: editor.handle || null,
-    skinData: { ...(subprofile.skinData ?? {}), coverBleed: editor.coverBleed },
+    skinData: {
+      ...(subprofile.skinData ?? {}),
+      ...skinBlocks.buildSkinBlocks(),
+      coverBleed: editor.coverBleed,
+    },
   };
 
   const skin = skinFor(liveView.kind);
-  const data = ownerViewToShowcaseView(liveView, profile.slug);
+  const data = ownerViewToShowcaseView(liveView, profile.slug, creatorName);
   const skinStyle = skinVars(liveView.accent ?? DEFAULT_ACCENT);
 
   return (

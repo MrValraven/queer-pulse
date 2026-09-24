@@ -53,7 +53,8 @@ export function requirementsFor(
 }
 
 /**
- * DOM ids for the editor fields a checklist row can jump to, passed to
+ * DOM ids for the editor fields a checklist row or a `?field=` deep link
+ * (`editorFieldDeepLink.data.ts`) can jump to, passed to
  * `FormField`'s `id` (documented there as a scroll/anchor target) at each call
  * site. Held here so the row that navigates and the field that receives the
  * flash can't drift apart.
@@ -63,6 +64,13 @@ export const FIELD_ANCHOR_ID = {
   avatar: "persona-field-avatar",
   displayName: "persona-field-display-name",
   bio: "persona-field-bio",
+  tagline: "persona-field-tagline",
+  cover: "persona-field-cover",
+  accent: "persona-field-accent",
+  availability: "persona-field-availability",
+  ctaLabel: "persona-field-cta-label",
+  ctaUrl: "persona-field-cta-url",
+  socialLinks: "persona-field-social-links",
 } as const;
 
 export const PUBLISH_REQUIREMENTS: PublishRequirement[] = [

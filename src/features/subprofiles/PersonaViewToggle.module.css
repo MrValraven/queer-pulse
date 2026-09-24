@@ -1,0 +1,102 @@
+/* The Cards / List segmented control on the owner personas dashboard. Same
+   vocabulary as the flatmates and housing view toggles: a pill track on
+   `--paper` with the hairline border, the pressed option filled plum. */
+
+.viewToggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+}
+
+/* Raw <button>: there is no global reset, so every piece of native chrome is
+   zeroed here. */
+.viewChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .viewChip:hover {
+    color: var(--ink);
+  }
+}
+
+.viewChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.viewChipOn,
+.viewChipOn:hover {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+/* Plum does not flip, so on the dark paper a plum fill all but vanishes. The
+   pressed option inverts instead: the light text colour becomes the fill and
+   the paper colour becomes the ink, both of which follow the theme. */
+:global([data-theme="dark"]) .viewChipOn,
+:global([data-theme="dark"]) .viewChipOn:hover {
+  background: var(--text-strong);
+  color: var(--paper);
+}
+
+/* Touch: each option reaches the 40px floor. */
+@media (pointer: coarse) {
+  .viewChip {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* Narrow dashboard: icons only. The label is visually hidden (the same
+   technique as the global `.visuallyHidden` helper) so it still names the
+   button for assistive tech. Queries the page's `.dashboardContainer`. */
+@container (max-width: 420px) {
+  .viewChip {
+    padding: 0 10px;
+  }
+
+  .viewChipLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewChip {
+    transition: none;
+  }
+}

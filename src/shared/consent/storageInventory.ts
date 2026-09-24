@@ -267,13 +267,14 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "qp.governancePolicy.railCollapsed",
       "qp.governancePolicy.previewCollapsed",
       "qp.roadmap.filters",
+      "qp.personaDashboard.view",
     ],
     kind: "localStorage",
     category: "functional",
     purposeKey: `${NS}.panelLayout.purpose`,
     lifetimeKey: `${NS}.lifetime.untilCleared`,
     sourceHint:
-      "features/members/MemberDirectoryFilterPage.tsx, shared/components/layout/AdminShell.tsx, features/admin/*",
+      "features/members/MemberDirectoryFilterPage.tsx, shared/components/layout/AdminShell.tsx, features/admin/*, features/subprofiles/usePersonaDashboardView.ts",
   },
   {
     id: "calculators",
