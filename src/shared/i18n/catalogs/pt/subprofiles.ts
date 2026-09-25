@@ -1168,8 +1168,6 @@ export const subprofiles: Catalog = {
     "Liga esta persona às comunidades de que fazes parte e aos eventos a que vais.",
   "affiliationsEditor.empty":
     "Ainda nada ligado. Acrescenta um evento ou uma comunidade abaixo.",
-  "affiliationsEditor.itemNumber": "Item {n}",
-  "affiliationsEditor.remove": "Remover",
   "affiliationsEditor.typeLabel": "Tipo",
   "affiliationsEditor.roleLabel": "Função",
   "affiliationsEditor.targetLabel.event": "Evento",
@@ -1470,12 +1468,9 @@ export const subprofiles: Catalog = {
   "pending.area.skin": "Blocos da página",
   "pending.skinEdited": "Atualização em {field}",
   "skinBlock.addItem": "Adicionar",
-  "skinBlock.removeItem": "Remover",
   "skinBlock.moveUp": "Mover para cima",
   "skinBlock.moveDown": "Mover para baixo",
-  "skinBlock.dragToReorder": "Arraste para reordenar",
   "skinBlock.lineLabel": "{label} {index}",
-  "skinBlock.entryLabel": "Entrada {index}",
   "skinBlock.stage.booker.title": "Para quem contrata",
   "skinBlock.stage.booker.fee": "Cachê",
   "skinBlock.stage.booker.rider": "Rider técnico",
@@ -1573,9 +1568,10 @@ export const subprofiles: Catalog = {
   // Navegação lateral do editor (EditorRail, editorRail.data.ts) — os grupos
   // Este lado / Conteúdo / Pessoas / Publicar.
   "editorRail.navLabel": "Navegação do editor de persona",
-  "editorRail.backLink": "As tuas personas",
+  "editorRail.backLink": "Voltar às tuas personas",
   "editorRail.collapse": "Recolher barra lateral",
   "editorRail.expand": "Expandir barra lateral",
+  "editorRail.collapseShort": "Recolher",
   "editorRail.thisSide": "Esta persona",
   "editorRail.identity": "Identidade",
   "editorRail.presence": "Presença e contacto",
@@ -2097,6 +2093,8 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.therapyFees.paymentMethods_card": "Cartão",
   "skinBlock.therapist.therapyFees.paymentMethods_cash": "Dinheiro",
   "skinBlock.therapist.therapyFees.paymentMethods_paypal": "PayPal",
+  "skinBlock.therapist.therapyFees.paymentMethods_wise": "Wise",
+  "skinBlock.therapist.therapyFees.paymentMethods_revolut": "Revolut",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_mbway": "MB WAY",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_transfer":
     "transferência bancária",
@@ -2105,6 +2103,8 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.therapyFees.paymentMethodsInList_card": "cartão",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_cash": "dinheiro",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_paypal": "PayPal",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_wise": "Wise",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_revolut": "Revolut",
   "skinBlock.therapist.therapyFees.receiptTime_atSession": "Na sessão",
   "skinBlock.therapist.therapyFees.receiptTime_sameDay": "No próprio dia",
   "skinBlock.therapist.therapyFees.receiptTime_within48h":
@@ -2126,7 +2126,7 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.feeSchedule.valuePlaceholder": "65€",
   "skinBlock.therapist.reimbursement.title": "Reembolso",
   "skinBlock.therapist.reimbursement.helper":
-    "A seguradora e, mais ou menos, quantos euros são devolvidos por sessão.",
+    "Escolhe a tua seguradora da lista ou escreve outra, e mais ou menos quantos euros são devolvidos por sessão.",
   "skinBlock.therapist.reimbursement.label": "Seguradora",
   "skinBlock.therapist.reimbursement.labelPlaceholder": "ADSE",
   "skinBlock.therapist.reimbursement.value": "Euros devolvidos por sessão",
@@ -2295,7 +2295,8 @@ export const subprofiles: Catalog = {
     "O valor mais baixo está acima do mais alto",
   "skinBlock.therapist.check.partOfWhole":
     "Mais vagas abertas do que as que ofereces",
-  "skinBlock.therapist.approach.add": "Adicionar um parágrafo",
+  "skinBlock.therapist.approach.placeholder":
+    "Trabalho de forma relacional e ao teu ritmo. As primeiras sessões são sobre o que te traz cá e o que esperas que mude.",
   "skinBlock.therapist.feeSchedule.add": "Adicionar uma duração",
   "skinBlock.therapist.firstSession.add": "Adicionar um passo",
   "skinBlock.therapist.faq.add": "Adicionar uma pergunta",
@@ -2434,8 +2435,9 @@ export const subprofiles: Catalog = {
   "skinControl.money.currency": "Valor em euros",
   // Therapist editor controls (pass 2)
   "skinList.reorderHint":
-    "Arrasta para reordenar, ou carrega em Alt e numa seta",
-  "skinList.paragraphNumber": "Parágrafo {index}",
+    "Arrasta para reordenar, ou clica para ver opções. Alt ou Option + seta também move.",
+  "skinList.paragraphsHint":
+    "Deixa uma linha em branco para começar um novo parágrafo. **Negrito**, *itálico*, listas e links funcionam.",
   "skinChips.addAnother": "Adicionar outro",
   "skinChips.addHint":
     "Enter para adicionar. Arrasta ou carrega em Alt ou Option + seta para reordenar.",
@@ -2569,10 +2571,13 @@ export const subprofiles: Catalog = {
   "therapistTopics.removeTopic": "Remover {name}",
   "therapistTopics.removeTopicFallback": "este tema",
   "therapistTopics.removeLine": "Remover a linha {index} de {topic}",
-  "therapistTopics.moveUp": "Mover {name} para cima",
-  "therapistTopics.moveDown": "Mover {name} para baixo",
   "therapistTopics.emptyLead": "Dá nome à primeira coisa com que ajudas.",
-  "therapistTopics.enterHint": "Carrega em Enter para uma nova linha",
+  "therapistTopics.enterHint":
+    "Enter adiciona uma linha. Arrasta uma pega ou clica nela para mover uma linha, ou carrega em Alt ou Option + seta.",
+  "therapistTopics.enterHintTouch":
+    "Arrasta uma pega, ou toca nela, para mover uma linha ou um tema.",
+  "therapistTopics.gripTopicRow": "Tema",
+  "therapistTopics.gripLineRow": "{topic}, linha",
   "therapistTopics.suggestion.identity": "Identidade e sair do armário",
   "therapistTopics.suggestion.gender": "Género e transição",
   "therapistTopics.suggestion.relationships": "Relações e intimidade",
@@ -2598,6 +2603,57 @@ export const subprofiles: Catalog = {
   "therapistTopics.suggestionExample.work": "ex.: Assumires-te no trabalho",
   // Therapist editor review fixes (pass 4)
   "skinBlock.therapist.venue.addLine": "Adicionar uma linha",
+  "skinBlock.therapist.notFor.addLine": "Adicionar um motivo",
+  "skinBlock.therapist.boundaries.addLine": "Adicionar um limite",
+  "skinBlock.therapist.openSlots.addLine": "Adicionar uma vaga",
+  "skinBlock.therapist.access.addLine": "Adicionar algo que ofereces",
+  "skinBlock.therapist.accessMissing.addLine": "Adicionar algo em falta",
+  "skinList.linesHint":
+    "Enter adiciona uma linha. Arrasta uma pega ou clica nela para mover uma linha, ou carrega em Alt ou Option + seta.",
+  "skinList.gripLabel": "Mover {label} {index}",
+  "skinList.gripLabelNamed": "Mover {label}",
+  "skinList.moveMenu.up": "Mover para cima",
+  "skinList.moveMenu.down": "Mover para baixo",
+  "skinList.moveMenu.top": "Mover para o início",
+  "skinList.moveMenu.bottom": "Mover para o fim",
+  "skinList.linesHintTouch":
+    "Enter adiciona uma linha. Arrasta uma pega, ou toca nela, para mover uma linha.",
+  // Page editor lists as reorderable rows
+  "skinBlock.page.excerpt.linesPlaceholder":
+    "uma fronteira dobrada em cada vogal.",
+  "skinBlock.table.menuMeta.practicalPlaceholder": "14 lugares",
+  "skinBlock.table.menuMeta.addPractical": "Adicionar uma nota",
+  "skinBlock.practice.firstSession.add": "Adicionar um passo",
+  "skinBlock.practice.firstSession.stepTitlePlaceholder": "A primeira chamada",
+  "skinBlock.practice.firstSession.bodyPlaceholder":
+    "Uma chamada gratuita de 20 minutos. Tu perguntas, eu respondo, ninguém se compromete.",
+  "skinBlock.practice.access.placeholder": "Entrada sem degraus e elevador",
+  "skinBlock.practice.access.add": "Adicionar algo que ofereces",
+  "skinBlock.practice.referrals.add": "Adicionar uma recomendação",
+  "skinBlock.practice.referrals.namePlaceholder": "Marta Reis",
+  "skinBlock.practice.referrals.notePlaceholder":
+    "A mesma abordagem, na Graça. Recebe quem eu não consigo receber.",
+  "skinBlock.practice.approach.placeholder":
+    "Centrado na pessoa. Definimos o ritmo em conjunto.",
+  "skinBlock.practice.training.placeholder": "Formação de dois anos, Lisboa",
+  "skinBlock.practice.training.add": "Adicionar uma qualificação",
+  "skinBlock.practice.training.helper": "Da mais recente para a mais antiga.",
+  "skinBlock.practice.feeSchedule.add": "Adicionar um valor",
+  "skinBlock.practice.feeSchedule.labelPlaceholder": "50 min",
+  "skinBlock.practice.feeSchedule.valuePlaceholder": "60€",
+  "skinBlock.practice.venue.linesPlaceholder": "Rua de Álvaro Coutinho",
+  "skinBlock.chart.ethics.placeholder":
+    "Lê-o como um espelho de onde estás agora. O que vem a seguir fica contigo.",
+  "skinBlock.chart.ethics.add": "Adicionar um limite",
+  "skinBlock.chair.beforeYouSit.placeholder":
+    "Podes trazer alguém, a tua própria máquina, ou nada.",
+  "skinBlock.chair.beforeYouSit.add": "Adicionar uma nota",
+  "skinBlock.collective.principles.placeholder":
+    "Ninguém é entregue à polícia. Nunca.",
+  "skinBlock.collective.principles.add": "Adicionar um princípio",
+  "skinBlock.classroom.promises.placeholder":
+    "Nunca tens de ler em voz alta antes de quereres.",
+  "skinBlock.classroom.promises.add": "Adicionar uma promessa",
   "skinBlock.therapist.openSlots.chipHelper":
     "Escreve cada vaga como deve aparecer na tua página, por exemplo Ter 30 set · 18:00.",
   "skinBlock.therapist.hours.valueTimes": "Horário",
@@ -2621,6 +2677,7 @@ export const subprofiles: Catalog = {
   "skinChapter.cardDone": "Feito",
   "skinChapter.cardCountSpoken": "{filled} de {total} preenchidos",
   "skinControl.refined.example": "ex.: {example}",
+  "skinControl.suggest.show": "Mostrar a lista",
   "skinControl.refined.multiSelect.more": "Mais",
   "skinControl.refined.multiSelect.choose": "Escolhe",
   "skinControl.refined.close": "Fechar",
@@ -2633,8 +2690,8 @@ export const subprofiles: Catalog = {
   "skinControl.quote.lengthOver":
     "Passa dos {limit} caracteres. As citações curtas resultam melhor: uma ou duas linhas.",
   "skinList.removeRow": "Remover {label} {index}",
+  "skinList.removeRowNamed": "Remover {label}",
   "skinList.addLine": "Adicionar uma linha",
-  "skinList.paragraph": "Parágrafo",
   "editorPane.presence.ledeTherapist":
     "Imagem de capa, cor de destaque, se estás a aceitar novos clientes e o botão que as pessoas usam para marcar contigo.",
   // Therapist page credentials and gallery

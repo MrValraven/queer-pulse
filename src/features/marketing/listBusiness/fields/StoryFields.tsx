@@ -10,11 +10,14 @@ import {
   langLabel,
 } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
-import { StepStoryTagsField, StepStoryWhatItIsField } from "../StepStoryFields";
+import {
+  StepStoryDescriptionField,
+  StepStoryTagsField,
+} from "../StepStoryFields";
 import styles from "../ListBusinessPage.module.css";
 
 /**
- * The story field body: tagline, the "what it is" lines, free tags, the
+ * The story field body: tagline, the description, free tags, the
  * good-for accessibility list and spoken languages.
  *
  * Shared by the create wizard's step 2 pane (`StepStory`) and the owner
@@ -48,12 +51,13 @@ export function StoryFields({ form }: { form: ListingForm }) {
         />
       </FormField>
 
-      <StepStoryWhatItIsField form={form} />
+      <StepStoryDescriptionField form={form} />
 
       <StepStoryTagsField form={form} />
 
       <FormField
         className={styles.lbField}
+        id={ANCHOR.goodFor}
         label={t("marketing:listBusiness.step2.goodForLabel")}
         helper={t("marketing:listBusiness.step2.goodForHelper")}
       >
@@ -83,6 +87,7 @@ export function StoryFields({ form }: { form: ListingForm }) {
 
       <FormField
         className={styles.lbField}
+        id={ANCHOR.langs}
         label={t("marketing:listBusiness.step2.langsLabel")}
       >
         <div

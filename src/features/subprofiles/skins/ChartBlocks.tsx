@@ -56,8 +56,8 @@ export function ChartEthics({ persona }: { persona: SkinExtrasPersona }) {
     <section className="ethics">
       <h2>{t("subprofiles:skinExtras.chart.ethicsTitle")}</h2>
       <ul>
-        {ethics.map((line) => (
-          <li key={line}>{line}</li>
+        {ethics.map((line, index) => (
+          <li key={`${index}-${line}`}>{line}</li>
         ))}
       </ul>
     </section>

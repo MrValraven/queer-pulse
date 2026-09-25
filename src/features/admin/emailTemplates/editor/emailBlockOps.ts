@@ -1,10 +1,19 @@
-import type { EmailBlock, EmailBlockType } from "../emailTemplate.types";
+import type {
+  EmailBlock,
+  EmailBlockType,
+  EmailFeatureItem,
+} from "../emailTemplate.types";
 
 function newBlockId(): string {
   return typeof crypto !== "undefined" &&
     typeof crypto.randomUUID === "function"
     ? crypto.randomUUID()
     : `block-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+/** A blank feature list row, wearing the first icon until the admin picks. */
+export function createFeatureItem(): EmailFeatureItem {
+  return { icon: "communities", title: "", text: "" };
 }
 
 /** A fresh block with sensible starting content, so a new block previews as
@@ -26,7 +35,46 @@ export function createBlock(type: EmailBlockType): EmailBlock {
       return { id, type, size: "md" };
     case "html":
       return { id, type, html: "" };
+    case "hero":
+      return { id, type, eyebrow: "", headline: "", text: "" };
+    case "ticket":
+      return {
+        id,
+        type,
+        label: "",
+        title: "",
+        text: "",
+        buttonLabel: "",
+        href: "",
+      };
+    case "featureList":
+      return { id, type, items: [createFeatureItem()] };
+    case "signature":
+      return { id, type, name: "", role: "", note: "", photoUrl: "" };
   }
+}
+
+/** Moves one entry a step up or down; a move off either end returns the list
+ *  unchanged. Shared by blocks and feature list rows. */
+export function moveInList<Entry>(
+  entries: Entry[],
+  index: number,
+  delta: -1 | 1,
+): Entry[] {
+  const target = index + delta;
+  if (
+    index < 0 ||
+    index >= entries.length ||
+    target < 0 ||
+    target >= entries.length
+  ) {
+    return entries;
+  }
+  const reordered = [...entries];
+  const [moved] = reordered.splice(index, 1);
+  if (moved === undefined) return entries;
+  reordered.splice(target, 0, moved);
+  return reordered;
 }
 
 export function moveBlock(
@@ -34,20 +82,7 @@ export function moveBlock(
   index: number,
   delta: -1 | 1,
 ): EmailBlock[] {
-  const target = index + delta;
-  if (
-    index < 0 ||
-    index >= blocks.length ||
-    target < 0 ||
-    target >= blocks.length
-  ) {
-    return blocks;
-  }
-  const reordered = [...blocks];
-  const [moved] = reordered.splice(index, 1);
-  if (!moved) return blocks;
-  reordered.splice(target, 0, moved);
-  return reordered;
+  return moveInList(blocks, index, delta);
 }
 
 export function updateBlock(

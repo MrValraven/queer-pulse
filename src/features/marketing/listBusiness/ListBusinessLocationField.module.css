@@ -1,0 +1,8 @@
+/* The address, its locate and neighbourhood-pin helpers, the map link and the
+   pin map, grouped under one field anchor. Keeps the step body's own 22px
+   rhythm between them, since they are no longer its direct children. */
+.addressGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}

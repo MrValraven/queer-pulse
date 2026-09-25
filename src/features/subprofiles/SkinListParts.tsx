@@ -1,122 +1,77 @@
-import type {
-  PointerEvent as ReactPointerEvent,
-  ReactNode,
-  RefObject,
-} from "react";
-import { FiArrowDown, FiArrowUp, FiMoreVertical, FiX } from "react-icons/fi";
+import type { ReactNode } from "react";
+import { FiArrowDown, FiArrowUp, FiX } from "react-icons/fi";
+import { m } from "motion/react";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SkinBlockControl } from "./skinBlockFields.data";
-import { SkinListAddButton } from "./SkinListAddButton";
-import { SkinRefinedField } from "./SkinRefinedField";
+import { REORDER_EASE, reorderLayoutTransition } from "./reorderMotion";
 import styles from "./SkinListControls.module.css";
-import refinedStyles from "./SkinRefinedList.module.css";
+
+export {
+  SkinListFrame,
+  type SkinListFrameProps,
+  type SkinListKeyHint,
+} from "./SkinListFrame";
+export {
+  SkinListGrip,
+  type SkinListGripProps,
+  type SkinListGripReorder,
+} from "./SkinListGrip";
+
+/** A row the person just added eases in: a short fade and a small drop. */
+const ENTER_DURATION = 0.18;
+const ENTER_OFFSET = -4;
+const INSTANT = { duration: 0 } as const;
 
 /** One row: the kind's own layout plus the shared hairline, lifted while it
  *  is held under the pointer. The data attribute lets `useSkinListRows` find
- *  the row a focused control belongs to. */
+ *  the row a focused control belongs to.
+ *
+ *  A motion `layout="position"` row, so a drag or a keyboard or menu move
+ *  glides every row into its new slot. Position only: rows holding
+ *  auto-growing textareas change height as the person types, and a size
+ *  animation would stretch the text. The glide runs only when
+ *  `shouldGlide` (from `useSkinListRows().shouldRowsGlide`, true after a
+ *  move): after an insert or a remove the rows jump to their places, so a
+ *  new row never fades in over neighbours still gliding from their old
+ *  slots. The held row never glides either, since the drag engine moves it
+ *  itself. With `isEntering` (a row added by the add button, Enter or a
+ *  paste, from `useSkinListRows().isInsertedRow`) it also eases in on mount;
+ *  rows already there on the first render appear as they are. Instant under
+ *  reduced motion. */
 export function SkinListRow({
   className,
   isDragging,
+  isEntering = false,
+  shouldGlide = true,
   children,
 }: {
   className?: string;
   isDragging: boolean;
+  isEntering?: boolean;
+  shouldGlide?: boolean;
   children: ReactNode;
 }) {
+  const { reducedMotion } = useMotionPrefs();
   return (
-    <div
+    <m.div
       data-skin-list-row=""
       className={[styles.row, className, isDragging && styles.rowDragging]
         .filter(Boolean)
         .join(" ")}
+      layout="position"
+      initial={isEntering ? { opacity: 0, y: ENTER_OFFSET } : false}
+      animate={isEntering ? { opacity: 1, y: 0 } : undefined}
+      transition={{
+        duration: reducedMotion ? 0 : ENTER_DURATION,
+        ease: REORDER_EASE,
+        layout:
+          isDragging || !shouldGlide
+            ? INSTANT
+            : reorderLayoutTransition(reducedMotion),
+      }}
     >
       {children}
-    </div>
-  );
-}
-
-export interface SkinListFrameProps {
-  control: SkinBlockControl;
-  isLabelHidden: boolean;
-  itemCount: number;
-  /** From `useSkinListRows`: wraps only the rows, for drag and focus. */
-  containerRef: RefObject<HTMLDivElement | null>;
-  addButtonRef: RefObject<HTMLButtonElement | null>;
-  onAdd: () => void;
-  /** The add button's label when the control sets no `addLabelKey`. */
-  defaultAddLabelKey?: string;
-  header?: ReactNode;
-  children: ReactNode;
-}
-
-/**
- * The frame every list control shares: the control's label and helper come
- * from `SkinRefinedField` (sentence case, the hint above the rows), and the
- * rows sit in a group named by that label through `aria-labelledby`, with
- * the add button under them.
- */
-export function SkinListFrame({
-  control,
-  isLabelHidden,
-  itemCount,
-  containerRef,
-  addButtonRef,
-  onAdd,
-  defaultAddLabelKey = "subprofiles:skinBlock.addItem",
-  header,
-  children,
-}: SkinListFrameProps) {
-  const { t } = useTranslation();
-
-  return (
-    <SkinRefinedField
-      label={t(control.labelKey)}
-      isLabelHidden={isLabelHidden}
-      labelMode="span"
-      helper={control.helperKey ? t(control.helperKey) : undefined}
-      helperTone={control.helperTone}
-    >
-      {(field) => (
-        <div
-          className={`${styles.list} ${refinedStyles.list}`}
-          role="group"
-          aria-labelledby={field.labelId}
-          aria-describedby={field.describedBy}
-        >
-          {itemCount > 0 && header}
-          <div className={styles.rows} ref={containerRef}>
-            {children}
-          </div>
-          <SkinListAddButton
-            label={t(control.addLabelKey ?? defaultAddLabelKey)}
-            onAdd={onAdd}
-            buttonRef={addButtonRef}
-          />
-        </div>
-      )}
-    </SkinRefinedField>
-  );
-}
-
-/** The drag handle. Pointer only: keyboard reordering goes through the move
- *  buttons or Alt with an arrow key, so the grip stays out of the a11y tree. */
-export function SkinListGrip({
-  onPointerDown,
-  className,
-}: {
-  onPointerDown: (event: ReactPointerEvent) => void;
-  className?: string;
-}) {
-  const { t } = useTranslation();
-  return (
-    <span
-      className={[styles.grip, className].filter(Boolean).join(" ")}
-      aria-hidden
-      title={t("subprofiles:skinList.reorderHint")}
-      onPointerDown={onPointerDown}
-    >
-      <FiMoreVertical size={16} />
-    </span>
+    </m.div>
   );
 }
 
@@ -132,9 +87,13 @@ export function SkinListRemoveButton({
   onRemove,
   rowLabel,
   rowNumber,
+  isLabelUnique = false,
   className,
 }: SkinListRowName & {
   onRemove: () => void;
+  /** `rowLabel` names this row alone, so the name drops the row number
+   *  (matching `SkinListGrip`). */
+  isLabelUnique?: boolean;
   className?: string;
 }) {
   const { t } = useTranslation();
@@ -142,10 +101,14 @@ export function SkinListRemoveButton({
     <button
       type="button"
       className={[styles.toolButton, className].filter(Boolean).join(" ")}
-      aria-label={t("subprofiles:skinList.removeRow", {
-        label: rowLabel,
-        index: rowNumber,
-      })}
+      aria-label={
+        isLabelUnique
+          ? t("subprofiles:skinList.removeRowNamed", { label: rowLabel })
+          : t("subprofiles:skinList.removeRow", {
+              label: rowLabel,
+              index: rowNumber,
+            })
+      }
       onClick={onRemove}
     >
       <FiX size={16} aria-hidden />

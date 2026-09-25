@@ -3,55 +3,13 @@ import { AdminChip } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { formatRelative } from "../../shared/lib/date";
-import type { TFunction } from "../../shared/i18n/types";
 import { useListingHistory } from "./api/useListingHistory";
+import { actorName, eventLabel } from "./listingHistoryEventLabel";
 import type {
   ListingModerationEventDTO,
   ListingQuestionDTO,
 } from "./api/adminListings.api";
-import type { MemberRefDTO } from "../../shared/api/refs";
 import styles from "./AdminListingsPage.module.css";
-
-function actorName(actor: MemberRefDTO | null, t: TFunction): string {
-  if (!actor) return t("admin:adminListings.history.unknownActor");
-  return `${actor.firstName} ${actor.lastName}`.trim();
-}
-
-/** One line per event action — `fromStatus`/`toStatus` only apply to the two
- *  status-transition actions, so only those two interpolate `{from}`/`{to}`. */
-function eventLabel(event: ListingModerationEventDTO, t: TFunction): string {
-  const actor = actorName(event.actor, t);
-  const from = event.fromStatus
-    ? t(`admin:adminListings.status.${event.fromStatus}`)
-    : "";
-  const to = event.toStatus
-    ? t(`admin:adminListings.status.${event.toStatus}`)
-    : "";
-  switch (event.action) {
-    case "status_changed":
-      return t("admin:adminListings.history.event.statusChanged", {
-        actor,
-        from,
-        to,
-      });
-    case "bulk_status":
-      return t("admin:adminListings.history.event.bulkStatus", {
-        actor,
-        from,
-        to,
-      });
-    case "removed":
-      return t("admin:adminListings.history.event.removed", { actor });
-    case "question_asked":
-      return t("admin:adminListings.history.event.questionAsked", { actor });
-    case "answered":
-      return t("admin:adminListings.history.event.answered", { actor });
-    default: {
-      const exhaustiveCheck: never = event.action;
-      return exhaustiveCheck;
-    }
-  }
-}
 
 /**
  * The moderation audit trail + Q&A thread for one listing, read into the

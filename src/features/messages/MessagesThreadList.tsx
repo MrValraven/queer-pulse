@@ -3,7 +3,6 @@ import type { MailboxSummary } from "../../shared/api/mailboxViewer";
 import { useMessageRequestsCount } from "./api/useMessageRequestsCount";
 import { ConnectionStatusBanner } from "./ConnectionStatusBanner";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
-import { MailboxSettingsModal } from "./mailboxes/MailboxSettingsModal";
 import { MessagesRailFooter } from "./MessagesRailChrome";
 import { MessagesThreadListBody } from "./MessagesThreadListBody";
 import { MessagesThreadListHeader } from "./MessagesThreadListHeader";
@@ -102,15 +101,6 @@ export function MessagesThreadList({
 }: MessagesThreadListProps) {
   const { myHandle } = useMessageViewer();
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(null);
-  // Whose attribution settings are open, from the switcher's settings slot.
-  // The modal restores focus to what held it on open, the switcher trigger,
-  // which the switcher refocuses as its sheet closes.
-  const [settingsIdentityId, setSettingsIdentityId] = useState<string | null>(
-    null,
-  );
-  const settingsMailbox =
-    mailboxes.find((mailbox) => mailbox.identityId === settingsIdentityId) ??
-    null;
   const { activeTab, setActiveTab } = useInboxTab(activeMailbox);
   const requestsCount = useMessageRequestsCount();
   const searching = !loading && query.trim().length > 0;
@@ -150,7 +140,6 @@ export function MessagesThreadList({
         mailboxes={mailboxes}
         activeMailbox={activeMailbox}
         onSelectMailbox={onSelectMailbox}
-        onOpenMailboxSettings={setSettingsIdentityId}
       />
 
       {/* The reconnecting/offline strip: it otherwise only mounts inside the
@@ -214,12 +203,6 @@ export function MessagesThreadList({
             onDelete(confirmDelete.id);
             setConfirmDelete(null);
           }}
-        />
-      )}
-      {settingsMailbox && settingsMailbox.kind !== "profile" && (
-        <MailboxSettingsModal
-          mailbox={settingsMailbox}
-          onClose={() => setSettingsIdentityId(null)}
         />
       )}
     </div>

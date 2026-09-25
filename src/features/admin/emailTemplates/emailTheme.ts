@@ -1,7 +1,7 @@
 import type { Language } from "../../../shared/i18n/types";
 
 /** The brand name in the email's chrome. Colours and type live in
- *  `emailDesign.ts`. */
+ *  `design/emailPalette.ts`. */
 export const EMAIL_WORDMARK = "QueerPulse";
 
 /** The public site, for links inside an email's own chrome (footers). Fixed on
@@ -15,4 +15,11 @@ export const EMAIL_SITE_URL = "https://queerpulse.com";
 export const EMAIL_FOOTER: Record<Language, string> = {
   en: "You are getting this because you asked to join QueerPulse.",
   pt: "Recebes isto porque pediste para entrar no QueerPulse.",
+};
+
+/** The quiet line under an invite button, for clients that block the button
+ *  or strip its link. The raw URL follows it. */
+export const EMAIL_LINK_FALLBACK: Record<Language, string> = {
+  en: "Button not working? Paste this link into your browser:",
+  pt: "O botão não funciona? Cola este link no navegador:",
 };

@@ -1324,7 +1324,7 @@ export const members: Catalog = {
 
   "places.quickEdit.title": "Edição rápida",
   "places.quickEdit.sub": "Atualiza os dados principais de {name}.",
-  "places.quickEdit.blurbLabel": "Frase de apresentação",
+  "places.quickEdit.blurbLabel": "Descrição curta",
   "places.quickEdit.blurbHelper": "Mostrada por baixo do nome do teu anúncio.",
   "places.quickEdit.hoursNoteLabel": "Nota sobre o horário",
   "places.quickEdit.hoursNoteHelper":

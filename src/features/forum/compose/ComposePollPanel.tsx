@@ -1,5 +1,7 @@
 import { useId } from "react";
-import { FiPlus, FiX } from "react-icons/fi";
+import { AnimatePresence, m } from "motion/react";
+import { FiPlus } from "react-icons/fi";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -8,6 +10,7 @@ import {
   type ComposePoll,
   type PollCloses,
 } from "./composeThread.types";
+import { ComposePollOptionRow } from "./ComposePollOptionRow";
 import styles from "./ComposePollPanel.module.css";
 
 // ── The poll attached to an opening post ────────────────────────────────────
@@ -22,6 +25,13 @@ import styles from "./ComposePollPanel.module.css";
 
 /** The four deadlines a poll may carry, in the order they are offered. */
 const POLL_CLOSES_VALUES: readonly PollCloses[] = ["never", "3d", "1w", "2w"];
+
+/** The house curve for things that grow into place, as a cubic bezier. */
+const POLL_MOTION_EASE = [0.22, 0.68, 0.16, 1] as const;
+
+/** Must match `gap` on `.controls`: the limit note slides that gap in with
+ *  it, so the pills beside it glide over smoothly. */
+const CONTROLS_GAP_PX = 14;
 
 export interface ComposePollPanelProps {
   /** `id` of this panel. The "Add a poll" pill points `aria-controls` here. */
@@ -45,6 +55,7 @@ export function ComposePollPanel({
   onSetCloses,
 }: ComposePollPanelProps) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const headingId = useId();
   const closesLabelId = useId();
   const canRemoveOption = poll.options.length > COMPOSE_POLL_MIN_OPTIONS;
@@ -65,18 +76,23 @@ export function ComposePollPanel({
       </div>
 
       <ol className={styles.options}>
-        {poll.options.map((option, index) => (
-          <PollOptionRow
-            // Poll options have no id of their own and the member reorders
-            // nothing, so the position IS the identity here.
-            key={index}
-            index={index}
-            option={option}
-            canRemove={canRemoveOption}
-            onSetOption={onSetOption}
-            onRemoveOption={onRemoveOption}
-          />
-        ))}
+        {/* Rows grow in and fold away. Keys are positions, so a removal
+            always folds the LAST row while the text above it shifts up; that
+            keeps focus on the same remove button it was on before. */}
+        <AnimatePresence initial={false}>
+          {poll.options.map((option, index) => (
+            <ComposePollOptionRow
+              // Poll options have no id of their own and the member reorders
+              // nothing, so the position IS the identity here.
+              key={index}
+              index={index}
+              option={option}
+              canRemove={canRemoveOption}
+              onSetOption={onSetOption}
+              onRemoveOption={onRemoveOption}
+            />
+          ))}
+        </AnimatePresence>
       </ol>
 
       <div className={styles.controls}>
@@ -89,13 +105,33 @@ export function ComposePollPanel({
           <FiPlus aria-hidden />
           {t("forum:composePage.poll.addOption")}
         </button>
-        {!canAddOption && (
-          <span className={styles.limit}>
-            {t("forum:composePage.poll.maxReached", {
-              max: COMPOSE_POLL_MAX_OPTIONS,
-            })}
-          </span>
-        )}
+        <AnimatePresence initial={false}>
+          {!canAddOption && (
+            <m.span
+              key="limit"
+              className={styles.limit}
+              initial={{
+                opacity: 0,
+                width: 0,
+                marginInlineStart: -CONTROLS_GAP_PX,
+              }}
+              animate={{ opacity: 1, width: "auto", marginInlineStart: 0 }}
+              exit={{
+                opacity: 0,
+                width: 0,
+                marginInlineStart: -CONTROLS_GAP_PX,
+              }}
+              transition={{
+                duration: reducedMotion ? 0 : 0.25,
+                ease: POLL_MOTION_EASE,
+              }}
+            >
+              {t("forum:composePage.poll.maxReached", {
+                max: COMPOSE_POLL_MAX_OPTIONS,
+              })}
+            </m.span>
+          )}
+        </AnimatePresence>
         <label className={styles.checkLine}>
           <input
             type="checkbox"
@@ -124,53 +160,5 @@ export function ComposePollPanel({
         </span>
       </div>
     </section>
-  );
-}
-
-interface PollOptionRowProps {
-  index: number;
-  option: string;
-  canRemove: boolean;
-  onSetOption: (index: number, option: string) => void;
-  onRemoveOption: (index: number) => void;
-}
-
-function PollOptionRow({
-  index,
-  option,
-  canRemove,
-  onSetOption,
-  onRemoveOption,
-}: PollOptionRowProps) {
-  const { t } = useTranslation();
-  const optionName = t("forum:composePage.poll.optionLabel", {
-    number: index + 1,
-  });
-  return (
-    <li className={styles.optionRow}>
-      <span className={styles.optionNumber} aria-hidden>
-        {index + 1}
-      </span>
-      <input
-        type="text"
-        className={styles.optionInput}
-        value={option}
-        onChange={(event) => onSetOption(index, event.target.value)}
-        aria-label={optionName}
-        placeholder={optionName}
-        autoComplete="off"
-      />
-      <button
-        type="button"
-        className={styles.removeOption}
-        onClick={() => onRemoveOption(index)}
-        disabled={!canRemove}
-        aria-label={t("forum:composePage.poll.removeOption", {
-          number: index + 1,
-        })}
-      >
-        <FiX aria-hidden />
-      </button>
-    </li>
   );
 }

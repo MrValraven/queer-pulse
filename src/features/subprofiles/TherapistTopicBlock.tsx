@@ -1,9 +1,11 @@
 import { useId } from "react";
-import { FiArrowDown, FiArrowUp, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
+import { m } from "motion/react";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   appendLine,
+  blankLineBlockingEdit,
   lineMaxLength,
   removeLineAt,
   TOPIC_HEADING_MAX_LENGTH,
@@ -13,71 +15,32 @@ import {
   suggestionIdForHeading,
   therapistTopicSuggestionExampleKey,
 } from "./therapistTopicSuggestions.data";
+import { topicGripFocusKeys, useGripRowRef } from "./topicGrip";
+import { useReorderGlide } from "./useReorderGlide";
 import type { TherapistTopicsEditor } from "./useTherapistTopics";
 import { topicFocusKeys } from "./useTopicFocus";
 import { useTopicKeyboard } from "./useTopicKeyboard";
-import { TherapistTopicLine, TopicTextarea } from "./TherapistTopicLine";
+import { useTopicLineReorder } from "./useTopicLineReorder";
+import { MdDragIndicator } from "react-icons/md";
+import { SkinListGrip } from "./SkinListParts";
+import { TopicTextarea } from "./TherapistTopicLine";
+import { TherapistTopicLineRow } from "./TherapistTopicLineRow";
+import { TherapistTopicTools } from "./TherapistTopicTools";
 import listStyles from "./SkinListControls.module.css";
 import styles from "./TherapistTopicsControl.module.css";
-
-/** Move up, move down and remove for one topic: the list controls' tool
- *  buttons, named with the heading. They sit at the right end of the heading
- *  row, or beside "Add a line" where the heading needs the full width. */
-function TopicTools({
-  editor,
-  topicIndex,
-  uid,
-  name,
-}: {
-  editor: TherapistTopicsEditor;
-  topicIndex: number;
-  uid: string;
-  name: string;
-}) {
-  const { t } = useTranslation();
-  const { register } = editor.focus;
-  return (
-    <div className={`${listStyles.tools} ${styles.topicTools}`}>
-      <button
-        ref={register(topicFocusKeys.moveUp(uid))}
-        type="button"
-        className={listStyles.toolButton}
-        disabled={topicIndex === 0}
-        aria-label={t("subprofiles:therapistTopics.moveUp", { name })}
-        onClick={() => editor.moveTopic(topicIndex, -1)}
-      >
-        <FiArrowUp size={15} aria-hidden />
-      </button>
-      <button
-        ref={register(topicFocusKeys.moveDown(uid))}
-        type="button"
-        className={listStyles.toolButton}
-        disabled={topicIndex === editor.topics.length - 1}
-        aria-label={t("subprofiles:therapistTopics.moveDown", { name })}
-        onClick={() => editor.moveTopic(topicIndex, 1)}
-      >
-        <FiArrowDown size={15} aria-hidden />
-      </button>
-      <button
-        type="button"
-        className={listStyles.toolButton}
-        aria-label={t("subprofiles:therapistTopics.removeTopic", { name })}
-        onClick={() => editor.removeTopic(topicIndex)}
-      >
-        <FiTrash2 size={15} aria-hidden />
-      </button>
-    </div>
-  );
-}
 
 /**
  * One topic, laid out the way the page shows it: the heading in the page's
  * group-heading type, then its lines behind the topic's bullet colour, then
  * "Add a line" in the bullet column. No box of its own: topics are split by
- * the list's hairline. The Enter hint on the add row shows only while one
- * of this topic's lines has focus, and never on touch, where the key reads
- * "Next". A heading that names a suggestion gives the first line that
- * suggestion's example as its placeholder.
+ * the list's hairline. The topic and each line carry a grip in a column of
+ * their own (a tap on it opens its move menu), and both glide when they
+ * move (`useReorderGlide`). The row is drawn here, with `SkinListRow`'s
+ * classes, so its glide can follow the move counter. The key hint on the
+ * add row shows only while one of this topic's lines has focus; touch gets
+ * its own wording, since the key reads "Next" there. A heading that names a
+ * suggestion gives the first line that suggestion's example as its
+ * placeholder.
  */
 export function TherapistTopicBlock({
   editor,
@@ -90,7 +53,20 @@ export function TherapistTopicBlock({
   const hintId = useId();
   const isCoarsePointer = useMediaQuery("(pointer: coarse)");
   const keyboard = useTopicKeyboard(editor, topicIndex);
+  const isDragging = editor.topicDrag.draggingIndex === topicIndex;
+  const glide = useReorderGlide(isDragging, editor.moveCount);
+  const { listRef: linesListRef, ...lineReorder } = useTopicLineReorder(
+    editor,
+    topicIndex,
+    keyboard.onLineKeyDown,
+  );
   const topic = editor.topics[topicIndex];
+  const gripFocusKey = topicGripFocusKeys.topic(topic?.uid ?? "");
+  const rowRef = useGripRowRef(
+    editor.focus.register,
+    gripFocusKey,
+    styles.topicGrip,
+  );
   if (!topic) return null;
   const { uid, lines } = topic;
   const { register } = editor.focus;
@@ -109,24 +85,42 @@ export function TherapistTopicBlock({
   );
 
   const addLine = () => {
-    const lastIndex = lines.length - 1;
-    if (lines[lastIndex]?.trim() === "") {
-      editor.focus.focusNow([topicFocusKeys.line(uid, lastIndex)]);
+    const edit = appendLine(lines);
+    const blankIndex = blankLineBlockingEdit(lines, edit);
+    if (blankIndex !== null) {
+      editor.focus.focusNow([topicFocusKeys.line(uid, blankIndex)]);
       return;
     }
-    editor.applyLineEdit(topicIndex, appendLine(lines));
+    editor.applyLineEdit(topicIndex, edit);
   };
 
   return (
-    <div
+    <m.div
+      ref={rowRef}
+      data-skin-list-row=""
       className={[
         listStyles.row,
         styles.topic,
         topic.isArriving && styles.arriving,
+        isDragging && listStyles.rowDragging,
       ]
         .filter(Boolean)
         .join(" ")}
+      {...glide}
     >
+      <SkinListGrip
+        className={styles.topicGrip}
+        icon={MdDragIndicator}
+        {...editor.topicDrag.gripHandlers(topicIndex)}
+        reorder={{
+          rowLabel: heading || t("subprofiles:therapistTopics.gripTopicRow"),
+          isLabelUnique: Boolean(heading),
+          rowNumber: topicIndex + 1,
+          rowCount: editor.topics.length,
+          onMove: (toIndex) =>
+            editor.moveTopicTo(topicIndex, toIndex, [gripFocusKey]),
+        }}
+      />
       <TopicTextarea
         fieldRef={register(topicFocusKeys.heading(uid))}
         className={styles.headingInput}
@@ -140,32 +134,37 @@ export function TherapistTopicBlock({
         onKeyDown={keyboard.onHeadingKeyDown}
         onPaste={keyboard.onHeadingPaste}
       />
-      <TopicTools
+      <TherapistTopicTools
         editor={editor}
         topicIndex={topicIndex}
-        uid={uid}
         name={heading || t("subprofiles:therapistTopics.removeTopicFallback")}
       />
-      <ul className={styles.lines}>
+      <ul ref={linesListRef} className={styles.lines}>
         {lines.map((line, lineIndex) => (
-          <TherapistTopicLine
+          <TherapistTopicLineRow
             key={lineKeys[lineIndex]?.id ?? lineIndex}
             value={line}
             lineKey={lineKeys[lineIndex]}
             lineNumber={lineIndex + 1}
+            lineCount={lines.length}
             topicName={heading || topicLabel}
             tone={tone}
             maxLength={lineMaxLength(lines, lineIndex)}
             placeholder={lineIndex === 0 ? firstLinePlaceholder : undefined}
             isRemovable={!isLoneBlank}
-            hintId={isCoarsePointer ? undefined : hintId}
+            isDragging={lineReorder.draggingIndex === lineIndex}
+            moveCount={editor.moveCount}
+            hintId={hintId}
+            register={register}
             inputRef={register(topicFocusKeys.line(uid, lineIndex))}
             onChange={(value) => editor.setLine(topicIndex, lineIndex, value)}
-            onKeyDown={keyboard.onLineKeyDown(lineIndex)}
+            onKeyDown={lineReorder.onLineKeyDown(lineIndex)}
             onPaste={keyboard.onLinePaste(lineIndex)}
             onRemove={() =>
               editor.applyLineEdit(topicIndex, removeLineAt(lines, lineIndex))
             }
+            gripHandlers={lineReorder.gripHandlers(lineIndex)}
+            onMove={lineReorder.moveLineTo(lineIndex)}
           />
         ))}
       </ul>
@@ -175,9 +174,13 @@ export function TherapistTopicBlock({
           {t("subprofiles:therapistTopics.addLine")}
         </button>
         <span id={hintId} className={styles.enterHint} aria-hidden>
-          {t("subprofiles:therapistTopics.enterHint")}
+          {t(
+            isCoarsePointer
+              ? "subprofiles:therapistTopics.enterHintTouch"
+              : "subprofiles:therapistTopics.enterHint",
+          )}
         </span>
       </div>
-    </div>
+    </m.div>
   );
 }

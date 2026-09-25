@@ -4,7 +4,6 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
 import {
-  useCountUp,
   useLocalStorage,
   useMediaQuery,
   useSimulatedLoad,
@@ -81,15 +80,9 @@ export function MemberDirectoryFilterPage() {
 
   // The prototype's fake fetch delay is DEMO-ONLY. OR-ing it in unconditionally
   // meant every live visit sat on a skeleton for 600ms even when react-query
-  // already had the page cached, replaying the count-up and the FadeIn stagger
+  // already had the page cached, replaying the headline roll and the FadeIn stagger
   // and making a cached navigation feel slower than the network.
   const loading = isLoading || (demoMode && simLoading);
-
-  // Count the headline figure up from 1 once the skeleton clears — a quick
-  // settle that says "this is a real, countable population". Gating on `!loading`
-  // means the count animates in with the content instead of finishing unseen
-  // behind the skeleton. Reduced motion jumps to the total.
-  const countedTotal = useCountUp(totalMembers, { active: !loading, from: 1 });
 
   // Demo mode sorts the whole mock list in the browser; live mode renders the
   // server's order as-is — the API sorts across the full (paginated) directory,
@@ -178,10 +171,7 @@ export function MemberDirectoryFilterPage() {
         {loading ? (
           <MemberHeaderSkeleton />
         ) : (
-          <MemberDirectoryHeader
-            totalMembers={totalMembers}
-            countedTotal={countedTotal}
-          />
+          <MemberDirectoryHeader totalMembers={totalMembers} />
         )}
 
         <MemberDirectoryLayout

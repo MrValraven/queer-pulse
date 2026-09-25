@@ -1,34 +1,25 @@
-import { FiPlus, FiX } from "react-icons/fi";
-import { Select } from "../../shared/components/ui";
+import { useLayoutEffect, useRef } from "react";
+import { FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  SOCIAL_PLATFORMS,
-  socialHref,
-  socialPlatform,
-} from "../../shared/social/socialPlatforms";
 import type { SocialLinkDTO } from "./api/subprofiles.api";
 import { MAX_ITEM_LINKS } from "./subprofileEditor.data";
+import { SocialLinkEditorRow } from "./SocialLinkEditorRow";
+import { usePositionalRowKeys } from "./usePositionalRowKeys";
+import { useReorderableRows } from "./useReorderableRows";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileSocialLinksEditor.module.css";
 
-/** Every named platform is a brand noun and stays untranslated in every locale;
- *  only the generic "Other link" fallback is platform chrome — mirrors
- *  `SubprofileSocialLinksEditor`'s `platformLabel`. */
-function platformLabel(
-  key: string,
-  label: string,
-  t: (key: string) => string,
-): string {
-  return key === "other" ? t("subprofiles:socialEditor.other") : label;
-}
-
 /**
  * Controlled editor for an item's typed social links (e.g. a project's GitHub /
- * demo / docs). Each row is a platform select plus a handle/URL field with a
- * live `socialHref` preview, capped at `MAX_ITEM_LINKS`. Every edit calls
- * `onChange` with the whole next array — no local state, no save button; the
- * owning drawer persists it into the item's `structured.links`. Row markup
- * mirrors `SubprofileSocialLinksEditor` and reuses its CSS module.
+ * demo / docs). Each row (`SocialLinkEditorRow`) is a platform select plus a
+ * handle/URL field with a live `socialHref` preview, capped at
+ * `MAX_ITEM_LINKS`, and reorders by a grip drag, the grip's move menu, or Alt
+ * with an arrow key in the handle field. Every edit calls `onChange` with the
+ * whole next array: no local state, no save button; the owning drawer persists
+ * it into the item's `structured.links`, a jsonb array the backend stores and
+ * returns in order. A row added here eases in; rows it opened with do not.
+ * The links carry no id and are saved verbatim, so row keys live beside them
+ * (`usePositionalRowKeys`) and are permuted with every move and removal.
  */
 export function SubprofileItemLinksField({
   links,
@@ -39,80 +30,74 @@ export function SubprofileItemLinksField({
 }) {
   const { t } = useTranslation();
   const atMax = links.length >= MAX_ITEM_LINKS;
+  const rowKeys = usePositionalRowKeys(links.length);
+  const listLabel = t("subprofiles:itemLinks.label");
+  // The newest list, advanced synchronously by every write, so a second write
+  // fired before the re-render (a fast drag's next swap, an edit right after a
+  // move) builds on the first.
+  const latestLinksRef = useRef(links);
+  useLayoutEffect(() => {
+    latestLinksRef.current = links;
+  });
 
+  function write(next: SocialLinkDTO[]) {
+    latestLinksRef.current = next;
+    onChange(next);
+  }
   function patch(index: number, patchValue: Partial<SocialLinkDTO>) {
-    onChange(
-      links.map((link, linkIndex) =>
+    write(
+      latestLinksRef.current.map((link, linkIndex) =>
         linkIndex === index ? { ...link, ...patchValue } : link,
       ),
     );
   }
   function remove(index: number) {
-    onChange(links.filter((_, linkIndex) => linkIndex !== index));
+    rowKeys.removeAt(index);
+    write(latestLinksRef.current.filter((_, linkIndex) => linkIndex !== index));
   }
   function add() {
-    if (atMax) return;
-    onChange([...links, { platform: "website", urlOrHandle: "" }]);
+    const current = latestLinksRef.current;
+    if (current.length >= MAX_ITEM_LINKS) return;
+    rowKeys.insertAt(current.length);
+    write([...current, { platform: "website", urlOrHandle: "" }]);
   }
+  /** Lifts the row out and inserts it at `to`. The keys follow as a run of
+   *  neighbour swaps, which is the same permutation. */
+  function move(from: number, to: number) {
+    const current = latestLinksRef.current;
+    const isInRange = (index: number) => index >= 0 && index < current.length;
+    if (from === to || !isInRange(from) || !isInRange(to)) return;
+    const next = [...current];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved!);
+    const step = to > from ? 1 : -1;
+    for (let at = from; at !== to; at += step) rowKeys.swap(at, at + step);
+    write(next);
+  }
+
+  const { containerRef, draggingIndex, gripHandlers, moveCount, moveRow } =
+    useReorderableRows(move);
 
   return (
     <div className={styles.fieldWrap}>
-      <span className={styles.fieldLabel}>
-        {t("subprofiles:itemLinks.label")}
-      </span>
-      <div className={styles.linksEditor}>
-        {links.map((link, index) => {
-          const meta = socialPlatform(link.platform);
-          const Icon = meta.icon;
-          const href = socialHref(link.platform, link.urlOrHandle);
-          const label = platformLabel(meta.key, meta.label, t);
-          return (
-            <div key={index} className={styles.linkGroup}>
-              <div className={styles.linkRow}>
-                <span className={styles.linkIcon} aria-hidden>
-                  <Icon size={16} />
-                </span>
-                <Select
-                  className={styles.linkPlatform}
-                  size="sm"
-                  label={t("subprofiles:socialEditor.platformLabel")}
-                  options={SOCIAL_PLATFORMS.map((platformOption) => ({
-                    value: platformOption.key,
-                    label: platformLabel(
-                      platformOption.key,
-                      platformOption.label,
-                      t,
-                    ),
-                  }))}
-                  value={link.platform}
-                  onChange={(value) => patch(index, { platform: value ?? "" })}
-                />
-                <input
-                  className={`${styles.inlineInput} ${styles.linkInput}`}
-                  value={link.urlOrHandle}
-                  placeholder={meta.placeholder}
-                  aria-label={t("subprofiles:socialEditor.linkFor", {
-                    platform: label,
-                  })}
-                  onChange={(event) =>
-                    patch(index, { urlOrHandle: event.target.value })
-                  }
-                />
-                <button
-                  type="button"
-                  className={styles.linkRemove}
-                  aria-label={t("subprofiles:socialEditor.removeLinkFor", {
-                    platform: label,
-                  })}
-                  onClick={() => remove(index)}
-                >
-                  <FiX size={15} />
-                </button>
-              </div>
-              {href && <p className={styles.preview}>{href}</p>}
-            </div>
-          );
-        })}
+      <span className={styles.fieldLabel}>{listLabel}</span>
+      <div className={styles.linksEditor} ref={containerRef}>
+        {links.map((link, index) => (
+          <SocialLinkEditorRow
+            key={rowKeys.keys[index]}
+            link={link}
+            index={index}
+            rowCount={links.length}
+            listLabel={listLabel}
+            isDragging={draggingIndex === index}
+            isEntering={rowKeys.insertedKeys.has(rowKeys.keys[index] ?? "")}
+            moveCount={moveCount}
+            gripHandlers={gripHandlers(index)}
+            onMove={(toIndex) => moveRow(index, toIndex)}
+            onPatch={(patchValue) => patch(index, patchValue)}
+            onRemove={() => remove(index)}
+          />
+        ))}
       </div>
 
       <div>
@@ -134,6 +119,11 @@ export function SubprofileItemLinksField({
       <span className={styles.fieldHelper}>
         {t("subprofiles:itemLinks.helper")}
       </span>
+      {links.length > 1 && (
+        <span className={styles.fieldHelper}>
+          {t("subprofiles:skinList.reorderHint")}
+        </span>
+      )}
     </div>
   );
 }

@@ -1,9 +1,10 @@
 /* Row layouts of the chaptered therapist editor's list controls: pairs (a
-   compact table), lines (one-input rows), entries (a numbered list) and
-   paragraphs (one textarea each). The group card around them is the only
-   card, so rows are split by hairlines. The inputs themselves take the
-   refined surface (refinedFieldSurface.ts), and SkinRefinedList.module.css
-   fits it into each row. */
+   compact table), lines (one-input rows) and entries (a numbered list). The
+   paragraphs control is one field, styled in SkinRefinedList.module.css.
+   The group card around the rows is the only card, so rows are split by
+   hairlines. The inputs themselves take the refined surface
+   (refinedFieldSurface.ts), and SkinRefinedList.module.css fits it into
+   each row. */
 
 /* ── Shared frame ───────────────────────────────────────────────────────── */
 .list {
@@ -20,13 +21,36 @@
 .row + .row {
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
-/* The row held under the pointer, lifted while the list reshuffles. */
-.rowDragging {
+/* The drag engine moves the held row by inline `translate` and motion glides
+   rows by `transform`, both per frame. Under reduced motion base.css gives
+   every property a 0.01ms transition, which would paint each swap a frame
+   late, about a row's height off, so rows transition only their fill and
+   fade. */
+.row {
+  transition-property: background-color, border-color, box-shadow, opacity;
+}
+/* The row holding focus sits above its neighbours, so a row moved by the
+   keyboard or the grip menu glides over the row it swaps with. The card is
+   paper too, so the fill only shows while rows cross. */
+.row:focus-within {
   position: relative;
   z-index: 1;
   background: var(--paper);
+}
+/* The row held under the pointer, lifted while the list reshuffles, with
+   8px of inline room so the grip and remove button clear the shadow's edge.
+   The negative margin keeps its content where it was. (0,3,0) out-ranks the
+   row layouts' own padding. */
+.rowDragging {
+  position: relative;
+  z-index: 2;
+  background: var(--paper);
   border-radius: var(--radius-12);
   box-shadow: var(--shadow-e2);
+}
+.rows > .row.rowDragging {
+  padding-inline: 8px;
+  margin-inline: -8px;
 }
 .addButton {
   align-self: flex-start;
@@ -34,19 +58,45 @@
 }
 
 /* ── Grip and tool buttons ──────────────────────────────────────────────── */
+/* A span, or a button when the grip also opens the move menu
+   (SkinListGrip), so the native button chrome is zeroed. */
 .grip {
+  position: relative;
   display: inline-grid;
   place-items: center;
   width: 24px;
   height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--radius-8);
+  background: transparent;
   color: var(--ink-40);
+  font: inherit;
   cursor: grab;
   /* Claim the touch gesture so a drag reorders instead of scrolling. */
   touch-action: none;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 .grip:active {
   cursor: grabbing;
+}
+.grip[aria-expanded="true"] {
+  background: var(--wash);
+  color: var(--ink);
+}
+@media (hover: hover) {
+  button.grip:hover {
+    background: var(--wash);
+    color: var(--ink-60);
+  }
+}
+.grip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .tools {
   display: inline-flex;
@@ -109,6 +159,13 @@
     width: 28px;
     height: var(--tap-min);
   }
+  /* A 44px wide hit area around the 28px grip, reaching 10px out past the
+     row's edge and 6px into the column gap, so the field keeps its width. */
+  .grip::before {
+    content: "";
+    position: absolute;
+    inset: 0 -6px 0 -10px;
+  }
 }
 
 /* ── Pairs: a compact two-column table ──────────────────────────────────── */
@@ -154,12 +211,13 @@
 }
 @media (pointer: coarse) {
   .pairsHead,
-  .pairRow,
-  .lineRow {
+  .pairRow {
     --pair-grip-column: 28px;
     --pair-tool-column: var(--tap-min);
   }
 }
+/* On a phone each row stacks its two fields. A money pair keeps one line
+   here and stacks by its own list width (SkinRefinedList.module.css). */
 @media (--xs) {
   .pairsHead {
     display: none;
@@ -203,8 +261,60 @@
   align-items: center;
   padding: 6px 0;
 }
+/* After the base rule, which sets the same properties. */
+@media (pointer: coarse) {
+  .lineRow {
+    --pair-grip-column: 28px;
+    --pair-tool-column: var(--tap-min);
+  }
+}
+/* A wrapping line (`isWrapping`, SkinLineField): a one-row textarea at the
+   input's 48px that grows as a long sentence wraps (useAutoGrowFallback
+   where `field-sizing` is missing). The grip and remove button stay level
+   with its first line: (48px - their 32px) / 2 from the top. */
+.lineWrapping {
+  field-sizing: content;
+  overflow-y: hidden;
+  overflow-wrap: anywhere;
+}
+.lineRowWrapping {
+  align-items: start;
+}
+.lineRowWrapping > :not(.lineWrapping) {
+  margin-top: 8px;
+}
+@media (pointer: coarse) {
+  .lineRowWrapping > :not(.lineWrapping) {
+    margin-top: calc((48px - var(--tap-min)) / 2);
+  }
+}
 
-/* ── Numerals shared by entries and paragraphs ──────────────────────────── */
+/* On a phone the pair and line rows tighten: a 6px column gap and a 36px
+   remove column, whose button keeps a 44px wide hit area by reaching 4px
+   out on each side. The header shares the columns, since a money pair
+   keeps it on a phone. After the row rules and their coarse pointer columns,
+   so it wins over both. */
+@media (--xs) {
+  .pairsHead,
+  .pairRow,
+  .lineRow {
+    --pair-tool-column: 36px;
+    column-gap: 6px;
+  }
+  .pairRow > .pairRemove,
+  .lineRow > .pairRemove {
+    position: relative;
+    width: 36px;
+  }
+  .pairRow > .pairRemove::after,
+  .lineRow > .pairRemove::after {
+    content: "";
+    position: absolute;
+    inset: 0 -4px;
+  }
+}
+
+/* ── Numerals of the entries list ───────────────────────────────────────── */
 .numeral {
   font-family: var(--serif);
   font-size: var(--text-24);
@@ -248,30 +358,6 @@
   grid-area: tools;
 }
 
-/* ── Paragraphs: one auto-growing textarea each ─────────────────────────── */
-/* The numeral and grip side by side with the tools on the first line, the
-   textarea at full width below them. */
-.paragraphRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    "lead tools"
-    "text text";
-  column-gap: 12px;
-  row-gap: 8px;
-  align-items: center;
-  padding: var(--gap-sm) 0;
-}
-.paragraphLead {
-  grid-area: lead;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-.paragraphTools {
-  grid-area: tools;
-}
-
 /* ── Multi-line item fields of the generic page-blocks editor ───────────── */
 /* SkinItemFieldInput (SkinAutoGrowTextarea's default class). Grows with its
    text from three rows. Doubled to out-specify FormField's `.field textarea`
@@ -287,6 +373,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .grip,
   .tools,
   .toolButton {
     transition: none;

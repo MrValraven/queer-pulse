@@ -526,7 +526,22 @@
   line-height: 1.7;
   text-wrap: pretty;
 }
-.description p + p {
+.description li {
+  font-size: var(--text-16);
+  line-height: 1.7;
+}
+/* The description renders through MarkdownLite, whose blocks each carry
+   their own margins. Here they sit on one rhythm instead: no outer margins,
+   and the same gap between any two blocks. `:not(:first-child)` keeps the gap
+   above the reset below in specificity. */
+.description p,
+.description ul,
+.description ol,
+.description blockquote,
+.description h4 {
+  margin: 0;
+}
+.description > :not(:first-child) {
   margin-top: 0.75em;
 }
 /* One consolidated at-a-glance row: badge + the place's own pills + rating (or
@@ -1428,7 +1443,9 @@
 /* The map slot inside the visit card: a full-width band across the top of the
    card, with the details underneath. `position: relative` is what
    `LocationMiniMap`'s absolutely-placed canvas and the placeholder's `.pin`
-   both anchor to. */
+   both anchor to. In the rail, `useVisitMapReach` sets an inline height so the
+   card ends level with the hours card, and the `min-height` here stays the
+   floor. */
 .visitMap {
   position: relative;
   overflow: hidden;
@@ -1459,15 +1476,13 @@
   color: var(--ink-60);
   line-height: 1.55;
 }
-/* The street line leads; neighbourhood and city sit quieter under it. */
+/* The street line leads the card's details; the neighbourhood and city sit
+   above the card as the section's subline. */
 .addrStreet {
   display: block;
   color: var(--text-strong);
   font-size: var(--text-15);
   font-weight: 600;
-}
-.addrArea {
-  display: block;
 }
 .addrActions {
   display: flex;
@@ -1769,19 +1784,20 @@
 
 /* ── Write-a-review form ──────────────────────────────────────────────────── */
 /* The disclosure trigger that reveals `.reviewForm` below: an intrinsic-width
-   pill, left-aligned like the page's other ghost buttons. The margin sits on
-   this wrapping block, not the `<Button>` itself: a button is inline-flex, so
-   margins on it never collapse with its neighbors and the gap grows past the
-   value written here. 16px sits above it, grouping it with the rating
+   pill, left-aligned like the page's other ghost buttons. This wrapping
+   block carries the margin: a button is inline-flex, so a margin written
+   directly on it never collapses with its neighbors and the gap grows past
+   the value written here. 16px sits above it, grouping it with the rating
    summary it belongs to; 28px sits below it, opening more air before the
    sort row that follows. */
 .reviewToggle {
   margin-top: 16px;
   margin-bottom: 28px;
 }
-/* Live only, never a preview (the toggle itself does not render there): drop
-   the rating card's own bottom margin to match the toggle's 16px top margin,
-   so the two collapse to that value instead of the card's larger one. */
+/* The live page renders the toggle right after this card, so its bottom
+   margin is trimmed to the toggle's own 16px top margin here, letting the
+   two collapse to that value. A preview renders the questions and reviews
+   read-only with no toggle, so the card keeps its own margin there. */
 .ratingDist:has(+ .reviewToggle) {
   margin-bottom: 16px;
 }

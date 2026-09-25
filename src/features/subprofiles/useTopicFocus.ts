@@ -7,8 +7,6 @@ export type TopicCaret = "start" | "end" | number;
 export const topicFocusKeys = {
   heading: (uid: string) => `${uid}:heading`,
   line: (uid: string, lineIndex: number) => `${uid}:line:${lineIndex}`,
-  moveUp: (uid: string) => `${uid}:move-up`,
-  moveDown: (uid: string) => `${uid}:move-down`,
   addTopic: "add-topic",
 } as const;
 
@@ -43,7 +41,7 @@ function focusFirstUsable(
 }
 
 /**
- * The topic control's focus registry: every heading, line, move button and
+ * The topic control's focus registry: every heading, line, grip and
  * the "Add a topic" button registers under a key, and an edit asks for focus
  * by key. `requestFocus` waits for the re-render the edit causes (a layout
  * effect in the control, after every ref is attached), so a line created by

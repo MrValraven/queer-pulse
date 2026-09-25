@@ -5,6 +5,7 @@ import { useClipboard } from "../../shared/hooks/useClipboard";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isPlaceGone, type DirectoryPlace } from "./directoryPlaces";
 import { directionsHref, placeCoordinates } from "./businessCoords";
+import { placeAreaParts, placeStreetLine } from "./placeArea";
 import { LocationMiniMap } from "./LocationMiniMap";
 import { DirectoryMapPlaceholder } from "./DirectoryMapPlaceholder";
 import s from "./DirectorySpacePage.module.css";
@@ -46,10 +47,10 @@ export function DirectoryPlaceMap({ place }: { place: DirectoryPlace }) {
   );
 }
 
-/** The address cell: the street line, the neighbourhood and city under it,
- *  then the two things a visitor does with an address: get directions to it,
- *  or copy it to paste somewhere else. The venue's name is left out, since the
- *  page heading already says it. */
+/** The address cell: the street line, then the two things a visitor does with
+ *  an address: get directions to it, or copy it to paste somewhere else. The
+ *  neighbourhood and city head the section as its subline, and the venue's
+ *  name is left out, since the page heading already says it. */
 export function DirectoryPlaceAddress({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -62,21 +63,11 @@ export function DirectoryPlaceAddress({ place }: { place: DirectoryPlace }) {
   // `DirectoryActionBar`.
   const isFormerAddress = isPlaceGone(place);
 
-  // Some listings arrive with no real street address: often the venue name
-  // repeated into the field. Show the street line only when it is something
-  // other than the name.
-  const address = place.address?.trim() ?? "";
-  const hasStreet =
-    address !== "" && address.toLowerCase() !== place.name.trim().toLowerCase();
+  const address = placeStreetLine(place);
+  const hasStreet = address !== "";
 
-  // Neighbourhood and city complete the address, each only when the street
-  // line doesn't already carry it (demo addresses end in "· Graça").
-  const lowerStreet = hasStreet ? address.toLowerCase() : "";
-  const areaParts = [place.hood, place.city ?? "Lisbon"].filter(
-    (part): part is string =>
-      !!part?.trim() && !lowerStreet.includes(part.trim().toLowerCase()),
-  );
-  const fullAddress = [hasStreet ? address : null, ...areaParts]
+  // The copied address still carries the area, so it pastes complete.
+  const fullAddress = [hasStreet ? address : null, ...placeAreaParts(place)]
     .filter(Boolean)
     .join(", ");
 
@@ -92,9 +83,6 @@ export function DirectoryPlaceAddress({ place }: { place: DirectoryPlace }) {
         </span>
       )}
       {hasStreet && <span className={s.addrStreet}>{address}</span>}
-      {areaParts.length > 0 && (
-        <span className={s.addrArea}>{areaParts.join(" · ")}</span>
-      )}
       {(canGetDirections || hasStreet) && (
         <div className={s.addrActions}>
           {canGetDirections && (

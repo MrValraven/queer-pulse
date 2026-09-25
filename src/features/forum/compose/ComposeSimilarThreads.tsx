@@ -1,12 +1,14 @@
 import { useId } from "react";
-import { Link } from "react-router-dom";
-import { FiCheckCircle, FiCornerUpLeft, FiMessageCircle } from "react-icons/fi";
+import { AnimatePresence, m } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { SkeletonLine } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
-import { thread as threadPath } from "../../../app/routeMap";
 import { tokenize } from "./composeText";
+import { COMPOSE_EASE } from "./composeMotion";
+import { SimilarSlot, SimilarThreadRow } from "./ComposeSimilarThreadRow";
 import type { SimilarThread } from "./useSimilarThreads";
+import { useSettledResults } from "./useSimilarThreadsSettle";
 import styles from "./ComposeSimilarThreads.module.css";
 
 // ── "Already discussed?" ────────────────────────────────────────────────────
@@ -18,6 +20,10 @@ import styles from "./ComposeSimilarThreads.module.css";
 // its own line at full body size rather than a truncated whisper, because a
 // member who can see the answer from here never needs to open the thread at
 // all, and that is the whole point of the block.
+//
+// Results turn over on every debounce, so each state (invitation, loading,
+// nothing found, results) grows and folds through a slot, and inside the
+// list each thread grows and folds in the flow, carrying what sits below.
 
 /**
  * How many meaningful words a title needs before a search goes out. Mirrors
@@ -37,6 +43,8 @@ export interface ComposeSimilarThreadsProps {
   /** That thread's title, which is how the duplicate row is identified. */
   duplicateTitle: string | null;
   isLoading: boolean;
+  /** The title is searchable but its first search has not gone out yet. */
+  isAwaitingFirstSearch: boolean;
   /** Opens the "move my text there as a reply" flow. The modal lives
    *  elsewhere; this block only says which thread was picked. */
   onReplyInstead: (thread: SimilarThread) => void;
@@ -49,6 +57,7 @@ export function ComposeSimilarThreads({
   isDuplicate,
   duplicateTitle,
   isLoading,
+  isAwaitingFirstSearch,
   onReplyInstead,
   className,
 }: ComposeSimilarThreadsProps) {
@@ -57,7 +66,19 @@ export function ComposeSimilarThreads({
   const headingId = useId();
   const hasSearchableTitle =
     tokenize(title).length >= MIN_TITLE_TOKENS_FOR_SEARCH;
-  const hasThreads = threads.length > 0;
+  // Until the search hook has taken up a searchable title, its empty list is
+  // no answer yet, so the invitation stays up until a real answer lands.
+  const isFirstSearchPending = hasSearchableTitle && isAwaitingFirstSearch;
+  // A new search empties `threads` for as long as it is in flight. Holding the
+  // last answer through that window keeps the list from folding and growing
+  // back on every debounce; the swap happens once the new answer lands.
+  const visible = useSettledResults(
+    { threads, isDuplicate, duplicateTitle },
+    isLoading,
+  );
+  const hasThreads = visible.threads.length > 0;
+  const { reducedMotion } = useMotionPrefs();
+  const transition = { duration: reducedMotion ? 0 : 0.25, ease: COMPOSE_EASE };
 
   return (
     <section
@@ -66,128 +87,110 @@ export function ComposeSimilarThreads({
     >
       <h2 className={styles.heading} id={headingId}>
         <span>{t("forum:composePage.similar.heading")}</span>
-        {hasThreads && (
-          <span className={styles.count}>
-            {t("forum:composePage.similar.count", {
-              count: threads.length,
-              formatted: format.number(threads.length),
-            })}
-          </span>
-        )}
+        <AnimatePresence initial={false}>
+          {hasThreads && (
+            <m.span
+              key="count"
+              className={styles.count}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={transition}
+            >
+              {t("forum:composePage.similar.count", {
+                count: visible.threads.length,
+                formatted: format.number(visible.threads.length),
+              })}
+            </m.span>
+          )}
+        </AnimatePresence>
       </h2>
 
-      {!hasSearchableTitle && (
+      <SimilarSlot
+        isOpen={!hasSearchableTitle || (isFirstSearchPending && !hasThreads)}
+      >
         <p className={styles.note}>{t("forum:composePage.similar.prompt")}</p>
-      )}
+      </SimilarSlot>
 
-      {hasSearchableTitle && isLoading && !hasThreads && (
+      <SimilarSlot
+        isOpen={
+          hasSearchableTitle &&
+          !isFirstSearchPending &&
+          isLoading &&
+          !hasThreads
+        }
+      >
         <div className={styles.loading}>
           <SkeletonLine width="72%" />
           <SkeletonLine width="48%" />
         </div>
-      )}
+      </SimilarSlot>
 
-      {hasSearchableTitle && !isLoading && !hasThreads && (
+      <SimilarSlot
+        isOpen={
+          hasSearchableTitle &&
+          !isFirstSearchPending &&
+          !isLoading &&
+          !hasThreads
+        }
+      >
         <p className={styles.note}>{t("forum:composePage.similar.empty")}</p>
-      )}
+      </SimilarSlot>
 
-      {hasThreads && (
-        <>
-          <ul className={styles.list}>
-            {threads.map((similarThread) => (
-              <SimilarThreadRow
-                key={similarThread.id}
-                thread={similarThread}
-                isTheDuplicate={
-                  isDuplicate && duplicateTitle === similarThread.title
-                }
-                onReplyInstead={onReplyInstead}
-              />
-            ))}
-          </ul>
-          <p className={styles.why}>{t("forum:composePage.similar.why")}</p>
-        </>
-      )}
+      <SimilarSlot isOpen={hasThreads}>
+        <ul className={styles.list}>
+          <AnimatePresence initial={false}>
+            {visible.threads.map((similarThread) => {
+              const isTheDuplicate =
+                visible.isDuplicate &&
+                visible.duplicateTitle === similarThread.title;
+              return (
+                // The item animates its height and clips while it does; the
+                // gap to the row above is its padding, so it folds too.
+                <m.li
+                  key={similarThread.id}
+                  className={styles.item}
+                  initial={{ height: 0, opacity: 0, overflow: "hidden" }}
+                  animate={{
+                    height: "auto",
+                    opacity: 1,
+                    transitionEnd: { overflow: "visible" },
+                  }}
+                  exit={{ height: 0, opacity: 0, overflow: "hidden" }}
+                  transition={transition}
+                >
+                  <div
+                    className={[
+                      styles.row,
+                      isTheDuplicate && styles.rowDuplicate,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    <SimilarThreadRow
+                      thread={similarThread}
+                      isTheDuplicate={isTheDuplicate}
+                      onReplyInstead={onReplyInstead}
+                    />
+                  </div>
+                </m.li>
+              );
+            })}
+          </AnimatePresence>
+        </ul>
+        <p className={styles.why}>{t("forum:composePage.similar.why")}</p>
+      </SimilarSlot>
 
       {/* Polite and count-only: the row contents change on every debounce, and
           re-reading three titles into someone's ear mid-sentence is not help. */}
       <p className="visuallyHidden" role="status">
         {hasThreads
           ? t("forum:composePage.similar.announce", {
-              count: threads.length,
-              formatted: format.number(threads.length),
+              count: visible.threads.length,
+              formatted: format.number(visible.threads.length),
             })
           : ""}
       </p>
     </section>
-  );
-}
-
-function SimilarThreadRow({
-  thread,
-  isTheDuplicate,
-  onReplyInstead,
-}: {
-  thread: SimilarThread;
-  isTheDuplicate: boolean;
-  onReplyInstead: (thread: SimilarThread) => void;
-}) {
-  const { t } = useTranslation();
-  const format = useFormat();
-  return (
-    <li
-      className={[styles.row, isTheDuplicate && styles.rowDuplicate]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {isTheDuplicate && (
-        <p className={styles.duplicateFlag}>
-          {t("forum:composePage.similar.duplicateFlag")}
-        </p>
-      )}
-      <Link
-        to={threadPath(thread.slug ?? thread.id)}
-        className={styles.rowTitle}
-      >
-        {thread.title}
-      </Link>
-      <p className={styles.rowMeta}>
-        <FiMessageCircle aria-hidden="true" />
-        <span>
-          {t("forum:repliesCount", {
-            count: thread.replyCount,
-            formatted: format.number(thread.replyCount),
-          })}
-        </span>
-        <span className={styles.metaDot} aria-hidden="true" />
-        <span>{thread.postedLabel}</span>
-      </p>
-      {thread.hasAcceptedAnswer && (
-        <p className={styles.answer}>
-          <span className={styles.answerLabel}>
-            <FiCheckCircle aria-hidden="true" />
-            {t("forum:replies.acceptedBadge")}
-          </span>
-          {thread.acceptedAnswerExcerpt && (
-            <span className={styles.answerText}>
-              {thread.acceptedAnswerExcerpt}
-            </span>
-          )}
-        </p>
-      )}
-      <button
-        type="button"
-        className={styles.replyInstead}
-        onClick={() => onReplyInstead(thread)}
-      >
-        <FiCornerUpLeft aria-hidden="true" />
-        {t("forum:composePage.similar.replyInstead")}
-        <span className="visuallyHidden">
-          {t("forum:composePage.similar.replyInsteadContext", {
-            title: thread.title,
-          })}
-        </span>
-      </button>
-    </li>
   );
 }

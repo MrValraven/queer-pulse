@@ -1,20 +1,16 @@
-import { useId, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import { SkinRefinedField } from "./SkinRefinedField";
-import {
-  therapistTopicSuggestionKey,
-  unpickedSuggestionIds,
-  type TherapistTopicSuggestionId,
-} from "./therapistTopicSuggestions.data";
+import { unpickedSuggestionIds } from "./therapistTopicSuggestions.data";
 import { useTherapistTopics } from "./useTherapistTopics";
 import { topicFocusKeys } from "./useTopicFocus";
 import { TherapistTopicBlock } from "./TherapistTopicBlock";
+import { TherapistTopicSuggestions } from "./TherapistTopicSuggestions";
 import editorStyles from "./SubprofileEditor.module.css";
 import listStyles from "./SkinListControls.module.css";
-import refinedChipStyles from "./SkinMultiSelectInline.module.css";
 import styles from "./TherapistTopicsControl.module.css";
 
 /** The control's group in the chapter field frame, named by its label (kept
@@ -62,54 +58,6 @@ const SUGGESTIONS_TOPIC_LIMIT = 4;
  *  a quiet nudge under the list. The empty state shows them all. */
 const MORE_IDEAS_LIMIT = 4;
 
-/** Starter topics as quiet chips under "Add a topic", with a small lead: "Or
- *  start from one of these" while there are none, "More ideas" after. A chip
- *  adds a topic with that heading and puts the caret in its first line, so
- *  it leaves the row. They borrow the multiSelect's unpicked chips
- *  (SkinMultiSelectInline.module.css). */
-function TopicSuggestions({
-  suggestionIds,
-  leadKey,
-  isDisabled,
-  onPick,
-}: {
-  suggestionIds: readonly TherapistTopicSuggestionId[];
-  leadKey: string;
-  isDisabled: boolean;
-  onPick: (heading: string) => void;
-}) {
-  const { t } = useTranslation();
-  const leadId = useId();
-  return (
-    <div className={styles.suggestionsBlock}>
-      <p id={leadId} className={styles.suggestionsLead}>
-        {t(leadKey)}
-      </p>
-      <div
-        className={refinedChipStyles.row}
-        role="group"
-        aria-labelledby={leadId}
-      >
-        {suggestionIds.map((id) => {
-          const heading = t(therapistTopicSuggestionKey(id));
-          return (
-            <button
-              key={id}
-              type="button"
-              className={refinedChipStyles.chip}
-              disabled={isDisabled}
-              onClick={() => onPick(heading)}
-            >
-              <FiPlus aria-hidden className={refinedChipStyles.chipIcon} />
-              <span className={refinedChipStyles.chipText}>{heading}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 /**
  * "What you help with" for a therapist: the persona's `control.section` items
  * edited in place, drawn the way the page shows them. Each topic is a heading
@@ -117,6 +65,9 @@ function TopicSuggestions({
  * `description` the lines, one per line break. Rows live in the editor
  * context and save with the editor's "Save all", so there is no save button
  * here. Typing flows like a short document (see `useTopicKeyboard`).
+ * Topics and the lines inside each reorder by a grip (drag it, or tap it
+ * for a move menu), by Alt with an arrow key from their fields, or (topics)
+ * by the arrow buttons, and glide into place (see `useTopicReorder`).
  *
  * The inputs mirror the page. The frame (label and helper), the heading
  * underline and the suggestion chips share the chapter fields' look.
@@ -131,7 +82,9 @@ export function TherapistTopicsControl({
   const { t } = useTranslation();
   // `section` is set on every `sectionItems` control; the page reads its
   // topics from "specialisms", so that is the fallback.
-  const editor = useTherapistTopics(control.section ?? "specialisms");
+  const { topicListRef, ...editor } = useTherapistTopics(
+    control.section ?? "specialisms",
+  );
   const { topics, isAtCap } = editor;
   const isEmpty = topics.length === 0;
   const unpickedIds =
@@ -152,7 +105,9 @@ export function TherapistTopicsControl({
           {t("subprofiles:therapistTopics.emptyLead")}
         </p>
       ) : (
-        <div className={listStyles.rows}>
+        // Wraps only the topics: the topic drag's swap math reads its
+        // children, so nothing else may sit in here.
+        <div className={listStyles.rows} ref={topicListRef}>
           {topics.map((topic, topicIndex) => (
             <TherapistTopicBlock
               key={topic.uid}
@@ -174,7 +129,7 @@ export function TherapistTopicsControl({
         {t("subprofiles:therapistTopics.addTopic")}
       </Button>
       {suggestionIds.length > 0 && (
-        <TopicSuggestions
+        <TherapistTopicSuggestions
           suggestionIds={suggestionIds}
           leadKey={
             isEmpty

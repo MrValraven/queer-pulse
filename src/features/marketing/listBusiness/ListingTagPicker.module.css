@@ -1,0 +1,93 @@
+/* ListingTagPicker: the wizard's pick-only tag field. The search row keeps
+   ListBusinessPage.module.css's .tagInputWrap, the vocabulary chips reuse its
+   .chip / .chipOn (the "Good for" pills on the same step) and the "Older tags"
+   row reuses its .tagList / .tagPill. This file only lays them out. */
+
+/* Section labels ("Choose from what's available", "Older tags"). */
+.sectionLabel {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.availableHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 14px 0 10px;
+}
+.counter {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Groups stack; chips inside each group wrap. */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.groupHeading {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.chipWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* A compact .chip: icon and label on one line. */
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+}
+.tagChip svg {
+  flex: none;
+}
+.tagChip:not([aria-pressed="true"]) svg {
+  color: var(--ink-40);
+}
+.tagChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.noMatch {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* Tags an older listing carries from outside the vocabulary. */
+.legacy {
+  margin-top: 16px;
+}
+.legacyList {
+  margin-top: 8px;
+}
+
+/* Shown once the listing carries the most tags it can. */
+.capHint {
+  margin: 10px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+.capHint:empty {
+  display: none;
+}

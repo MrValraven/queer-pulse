@@ -1,8 +1,20 @@
+/* Carries the grid's measured height (set inline once measured) so a row
+   arriving or leaving eases the page below. It clips while it moves; the
+   tiles already clip their own corners, so nothing inside reaches its edge. */
+.gridFrame {
+  margin-top: 12px;
+  overflow: hidden;
+  transition: height var(--dur-base) var(--ease);
+}
+
+/* Positioned so a removed tile, lifted out of flow while it fades, stays
+   exactly where it was. */
 .grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
-  margin: 12px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -40,6 +52,23 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  transition: background var(--dur-base) var(--ease);
+}
+
+/* Remounted whenever the flag flips, so the new wording fades across while
+   the fill eases from coral to jade (or back). */
+.flagLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  animation: flagLabelIn var(--dur-base) var(--ease-out);
+}
+
+@keyframes flagLabelIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
 }
 
 .flagDone {
@@ -76,7 +105,14 @@
   color: rgba(var(--cream-rgb), 0.95);
   cursor: pointer;
   touch-action: manipulation;
-  transition: background 0.18s var(--ease);
+  transition:
+    background var(--dur-fast) var(--ease),
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.control:not(:disabled):active {
+  transform: scale(0.9);
 }
 
 .controlIcon {
@@ -119,6 +155,7 @@
 
 .alt::placeholder {
   color: var(--accent-ink);
+  transition: color var(--dur-base) var(--ease);
 }
 
 .altDone::placeholder {
@@ -131,7 +168,10 @@
 }
 
 /* ---- The attach control -------------------------------------------------- */
+/* Positioned so a status line fading out, lifted out of flow while the next
+   one fades in, stays beside the button. */
 .attachWrap {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;

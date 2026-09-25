@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { FiCalendar, FiPlus } from "react-icons/fi";
+import { FiCalendar } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { leadingInitials } from "../../shared/lib/initials";
 import { communityPath } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityEvent } from "./community.model";
@@ -108,13 +109,32 @@ export function CommunitiesHomeSidebar({
               <Link
                 key={community.slug}
                 to={communityPath(community.slug)}
-                className={styles.sbRow}
+                className={[styles.sbRow, styles.sbRowTop].join(" ")}
               >
-                <div className={[styles.sbIc, styles.sbIcSuggest].join(" ")}>
-                  <FiPlus aria-hidden />
+                {/* The community's own mark, else its initials, as the detail
+                    hero does. Decorative: the name sits right beside it. */}
+                <div
+                  className={[styles.sbIc, styles.sbIcSuggest].join(" ")}
+                  aria-hidden
+                >
+                  {community.avatarImageUrl ? (
+                    <img
+                      className={styles.sbIcImg}
+                      src={community.avatarImageUrl}
+                      alt=""
+                      width={36}
+                      height={36}
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    leadingInitials(community.name, { fallback: "•" })
+                  )}
                 </div>
                 <div className={styles.sbRowMain}>
                   <div className={styles.sbName}>{community.name}</div>
+                  {community.description && (
+                    <div className={styles.sbDesc}>{community.description}</div>
+                  )}
                   <div className={styles.sbMeta}>{community.count}</div>
                 </div>
               </Link>

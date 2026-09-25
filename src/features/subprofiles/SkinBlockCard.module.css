@@ -1,0 +1,55 @@
+/* A list control inside a block card of the generic page-blocks editor
+   (SkinBlockCard). The list controls are drawn in the chapter editor's
+   refined look; here they take the card's field language instead, so a card
+   reads as one column of FormFields: the uppercase label, the 1.5px border
+   and the cream ground (FormField.module.css, mirrored as
+   SkinChoiceChipsControl.module.css does). The list's own label stays for
+   assistive tech only and this wrapper draws the visible one. */
+
+.listField {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+/* FormField's label, and the same voice for the labels inside the rows: an
+   entry's field labels, the pairs' column heads and a stacked pair's
+   captions. Each selector out-ranks the refined rule it replaces
+   (SkinRefinedList.module.css), the caption's at (0,4,1) over its doubled
+   container rule. The caption is found by its `data-pair-caption` mark
+   (SkinPairCell), since a money or suggest cell wraps its input. */
+.listLabel,
+.listField label,
+.listField div[aria-hidden="true"] > span,
+.listField.listField.listField span[data-pair-caption] {
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* The list's hint and its footer (the key hint, the paragraphs hint) in
+   FormField's helper voice. SkinRefinedField ends their ids in `-helper`
+   and `-footer`; (0,2,0) out-ranks its `.helper` and `.footer`. */
+.listField [id$="-helper"],
+.listField [id$="-footer"] {
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+/* The row fields take FormField's surface. The refined surface sits at
+   (0,2,0) and its focus rules at (0,3,0); these sit at (0,2,1) and (0,3,1),
+   and leave focus, hover and the placeholder to the refined rules, which
+   already lift the field to paper with the plum glow. */
+.listField.listField :is(input, textarea) {
+  border-width: 1.5px;
+}
+.listField.listField :is(input, textarea):not(:focus) {
+  background: var(--cream);
+}

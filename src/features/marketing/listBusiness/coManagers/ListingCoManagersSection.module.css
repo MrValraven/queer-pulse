@@ -1,0 +1,8 @@
+/* Carries the live preview's field anchor around the whole "Who can edit"
+   section without adding a box: each child stays a direct flex item of the
+   editor's `.stepBody`, so the section keeps the same gap as every other.
+   Its `data-step-contents` attribute lets the step entrance animation in
+   ListBusinessPage.module.css reach those children through it. */
+.anchorWrap {
+  display: contents;
+}

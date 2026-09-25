@@ -1,10 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, m } from "motion/react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getThreads } from "../api/forum.api";
 import { threadToCard } from "../api/forum.adapters";
 import { THREADS, type Thread } from "../forum.data";
+import { COMPOSE_EASE } from "./composeMotion";
 import styles from "./ComposePrompts.module.css";
 
 // ── The empty composer's two ways in ────────────────────────────────────────
@@ -16,6 +20,10 @@ import styles from "./ComposePrompts.module.css";
 // sends the member somewhere their post is genuinely wanted. The second group
 // is the fixed sentence-starter list from the prototype, which is content
 // rather than data, so it lives here as catalog keys.
+//
+// The block folds away on the first keystroke and grows back if the draft is
+// emptied again, and the unanswered row grows in when its request lands, so
+// the title field below glides to its new place.
 
 /** How many unanswered threads the first row offers. */
 const UNANSWERED_PROMPT_COUNT = 3;
@@ -55,48 +63,77 @@ export function ComposePrompts({
   // has not started.
   const hasStarted = !!title.trim() || !!body.trim();
   const threadPrompts = useUnansweredThreadPrompts(!hasStarted);
-  if (hasStarted) return null;
+  const { reducedMotion } = useMotionPrefs();
 
+  // Collapse's own height + fade, plus the -8px pull-up under the kind chips,
+  // which animates with it: a margin left on a folded block would snap the
+  // title field by 8px in the frame the block unmounts.
   return (
-    <div className={styles.prompts}>
-      {threadPrompts.length > 0 && (
-        <>
-          <p className={styles.label}>
-            {t("forum:composePage.prompts.asking")}
-          </p>
-          <div className={styles.row}>
-            {threadPrompts.map((prompt) => (
-              <button
-                key={prompt.title}
-                type="button"
-                className={styles.prompt}
-                onClick={() => onPickPrompt(prompt.title)}
-              >
-                {prompt.title}
-                {prompt.replyCount === 0 && (
-                  <span className={styles.promptNote}>
-                    {t("forum:composePage.prompts.noReplies")}
-                  </span>
-                )}
-              </button>
-            ))}
+    <AnimatePresence initial={false}>
+      {!hasStarted && (
+        <m.div
+          key="prompts"
+          style={{ overflow: "hidden" }}
+          initial={{ height: 0, opacity: 0, marginTop: 0 }}
+          animate={{
+            height: "auto",
+            opacity: 1,
+            marginTop: -8,
+            transitionEnd: { overflow: "visible" },
+          }}
+          exit={{ height: 0, opacity: 0, marginTop: 0, overflow: "hidden" }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.28,
+            ease: COMPOSE_EASE,
+          }}
+        >
+          <div className={styles.prompts}>
+            <Collapse
+              isOpen={threadPrompts.length > 0}
+              className={styles.askingSlot}
+            >
+              <div className={styles.asking}>
+                <p className={styles.label}>
+                  {t("forum:composePage.prompts.asking")}
+                </p>
+                <div className={styles.row}>
+                  {threadPrompts.map((prompt) => (
+                    <button
+                      key={prompt.title}
+                      type="button"
+                      className={styles.prompt}
+                      onClick={() => onPickPrompt(prompt.title)}
+                    >
+                      {prompt.title}
+                      {prompt.replyCount === 0 && (
+                        <span className={styles.promptNote}>
+                          {t("forum:composePage.prompts.noReplies")}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </Collapse>
+            <p className={styles.label}>
+              {t("forum:composePage.prompts.startFrom")}
+            </p>
+            <div className={styles.row}>
+              {STARTER_KEYS.map((starterKey) => (
+                <button
+                  key={starterKey}
+                  type="button"
+                  className={styles.prompt}
+                  onClick={() => onPickPrompt(t(starterKey))}
+                >
+                  {t(starterKey)}
+                </button>
+              ))}
+            </div>
           </div>
-        </>
+        </m.div>
       )}
-      <p className={styles.label}>{t("forum:composePage.prompts.startFrom")}</p>
-      <div className={styles.row}>
-        {STARTER_KEYS.map((starterKey) => (
-          <button
-            key={starterKey}
-            type="button"
-            className={styles.prompt}
-            onClick={() => onPickPrompt(t(starterKey))}
-          >
-            {t(starterKey)}
-          </button>
-        ))}
-      </div>
-    </div>
+    </AnimatePresence>
   );
 }
 

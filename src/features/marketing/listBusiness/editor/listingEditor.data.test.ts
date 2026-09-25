@@ -41,6 +41,14 @@ describe("editorSectionsFor", () => {
     expect(sectionKeys).toHaveLength(LISTING_EDITOR_SECTIONS.length - 1);
   });
 
+  it("puts History just before the danger zone, and last for a co-manager", () => {
+    const ownerKeys = editorSectionsFor(false).map((section) => section.key);
+    const coManagerKeys = editorSectionsFor(true).map((section) => section.key);
+    expect(ownerKeys.slice(-2)).toEqual(["history", "dangerZone"]);
+    expect(coManagerKeys[coManagerKeys.length - 1]).toBe("history");
+    expect(editorSectionByKeyFor(false).history.id).toBe("lb-editor-history");
+  });
+
   it("keeps the trading section id the hash landing links to", () => {
     expect(editorSectionByKeyFor(false).trading.id).toBe("lb-editor-trading");
     expect(editorSectionByKeyFor(true).trading.id).toBe("lb-editor-trading");

@@ -1587,7 +1587,7 @@ export const marketing: Catalog = {
     "ex.: Propriedade partilhada entre mim (Sandra, ela/dela) e o Rui (ele/dele) desde 2019",
   "listBusiness.step1.priceLabel": "Mais ou menos, que preço?",
   "listBusiness.step1.priceAria": "Escalão de preço",
-  "listBusiness.step1.blurbLabel": "A frase única",
+  "listBusiness.step1.blurbLabel": "Descrição curta",
   "listBusiness.step1.blurbHelper":
     "É o texto do teu cartão no diretório. Uma frase, simples e calorosa.",
   "listBusiness.step1.blurbPlaceholder":
@@ -1608,19 +1608,22 @@ export const marketing: Catalog = {
     "Uma única linha, mostrada em grande e em itálico no topo da tua página. <em>Faz dela o coração do lugar.</em>",
   "listBusiness.step2.taglinePlaceholder":
     "Ninguém é tratado no género errado. A sala das traseiras é sempre tua.",
-  "listBusiness.step2.witLabel": "O que é, na prática",
-  "listBusiness.step2.witHelper":
-    "Duas a quatro linhas curtas. As coisas que gostarias que alguém soubesse ao entrar.",
-  "listBusiness.step2.witFirstPlaceholder":
-    "ex.: Galão, pastéis, dois pratos do dia",
-  "listBusiness.step2.witMorePlaceholder":
-    "Mais uma coisa que vale a pena saber",
-  "listBusiness.step2.witRemoveAria": "Remover linha",
-  "listBusiness.step2.witAdd": "Adicionar outra linha",
+  "listBusiness.step2.descriptionLabel": "Descrição",
+  "listBusiness.step2.descriptionHelper":
+    "O que alguém de fora devia saber antes de entrar. Usa a barra de ferramentas para negrito, listas e links.",
+  "listBusiness.step2.descriptionPlaceholder":
+    "ex.: Um café de bairro com galão, pastéis e dois pratos do dia.",
+  "listBusiness.step2.descriptionHint":
+    "Deixa uma linha em branco para começar um novo parágrafo.",
   "listBusiness.step2.tagsLabel":
     "Etiquetas: palavras por que as pessoas possam filtrar",
-  "listBusiness.step2.tagsPlaceholder": "ex.: Acessível a cadeiras de rodas",
-  "listBusiness.step2.tagsAddCta": "Adicionar",
+  "listBusiness.step2.tagsPlaceholder": "Procura etiquetas",
+  "listBusiness.step2.tagsAvailableLabel": "Escolhe entre as disponíveis",
+  "listBusiness.step2.tagsChosenCount": "{count} de 6 escolhidas",
+  "listBusiness.step2.tagsNoMatch": "Nenhuma etiqueta corresponde a “{query}”",
+  "listBusiness.step2.tagsLegacyLabel": "Etiquetas antigas",
+  "listBusiness.step2.tagsCapHint":
+    "Seis etiquetas é o máximo que um anúncio pode ter",
   "listBusiness.step2.tagRemoveAria": "Remover {tag}",
   "listBusiness.step2.goodForLabel": "Bom para… (marca o que for verdade)",
   "listBusiness.step2.goodForHelper":
@@ -1640,6 +1643,44 @@ export const marketing: Catalog = {
   "listBusiness.goodFor.hostsCommunityEvents": "Acolhe eventos da comunidade",
   "listBusiness.goodFor.budgetFriendly": "Amigo da carteira",
   "listBusiness.goodFor.accessibleBathroom": "Casa de banho acessível",
+  // Vocabulário de etiquetas: títulos dos grupos, depois uma chave por etiqueta
+  "listBusiness.tagGroup.visiting": "Como visitar",
+  "listBusiness.tagGroup.happening": "O que lá acontece",
+  "listBusiness.tagGroup.foodDrink": "Comida e bebida",
+  "listBusiness.tagGroup.pricing": "Preços",
+  "listBusiness.tagGroup.languages": "Idiomas",
+  "listBusiness.tag.byAppointment": "Por marcação",
+  "listBusiness.tag.bookingRecommended": "Reserva recomendada",
+  "listBusiness.tag.membersOnly": "Só para membros",
+  "listBusiness.tag.freeEntry": "Entrada livre",
+  "listBusiness.tag.dayPasses": "Passes diários",
+  "listBusiness.tag.memberships": "Planos de adesão",
+  "listBusiness.tag.classPacks": "Pacotes de aulas",
+  "listBusiness.tag.workshops": "Workshops",
+  "listBusiness.tag.classes": "Aulas",
+  "listBusiness.tag.liveMusic": "Música ao vivo",
+  "listBusiness.tag.djNights": "Noites com DJ",
+  "listBusiness.tag.dragShows": "Espetáculos drag",
+  "listBusiness.tag.exhibitions": "Exposições",
+  "listBusiness.tag.readingsAndTalks": "Leituras e conversas",
+  "listBusiness.tag.communityEvents": "Eventos da comunidade",
+  "listBusiness.tag.supportGroups": "Grupos de apoio",
+  "listBusiness.tag.spaceForHire": "Espaço para alugar",
+  "listBusiness.tag.veganOptions": "Opções veganas",
+  "listBusiness.tag.vegetarianOptions": "Opções vegetarianas",
+  "listBusiness.tag.glutenFreeOptions": "Opções sem glúten",
+  "listBusiness.tag.alcoholFreeOptions": "Opções sem álcool",
+  "listBusiness.tag.terrace": "Esplanada",
+  "listBusiness.tag.lateOpening": "Aberto até tarde",
+  "listBusiness.tag.genderNeutralPricing": "Preços sem distinção de género",
+  "listBusiness.tag.slidingScale": "Preço solidário",
+  "listBusiness.tag.payWhatYouCan": "Paga o que puderes",
+  "listBusiness.tag.studentDiscount": "Desconto para estudantes",
+  "listBusiness.tag.portugueseSpoken": "Fala-se português",
+  "listBusiness.tag.englishSpoken": "Fala-se inglês",
+  "listBusiness.tag.spanishSpoken": "Fala-se espanhol",
+  "listBusiness.tag.frenchSpoken": "Fala-se francês",
+  "listBusiness.tag.portugueseSignLanguage": "Língua Gestual Portuguesa",
   // Idiomas (os endónimos ficam iguais; só "Outro" e a glosa de LGP traduzem)
   "listBusiness.lang.portugues": "Português",
   "listBusiness.lang.english": "English",
@@ -1826,9 +1867,9 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.neighbourhood": "Bairro",
   "listBusiness.step5.row.ownership": "Propriedade",
   "listBusiness.step5.row.price": "Preço",
-  "listBusiness.step5.row.oneLiner": "Frase única",
+  "listBusiness.step5.row.oneLiner": "Descrição curta",
   "listBusiness.step5.row.tagline": "Lema",
-  "listBusiness.step5.row.whatItIs": "O que é",
+  "listBusiness.step5.row.whatItIs": "Descrição",
   "listBusiness.step5.row.tags": "Etiquetas",
   "listBusiness.step5.row.goodFor": "Bom para",
   "listBusiness.step5.row.languages": "Idiomas",
@@ -1895,9 +1936,9 @@ export const marketing: Catalog = {
   "listBusiness.missing.hood": "um bairro",
   "listBusiness.missing.badge": "quem o gere",
   "listBusiness.missing.price": "um escalão de preço",
-  "listBusiness.missing.blurb": "a frase única",
+  "listBusiness.missing.blurb": "a descrição curta",
   "listBusiness.missing.tagline": "um lema",
-  "listBusiness.missing.whatItIs": "o que é",
+  "listBusiness.missing.whatItIs": "uma descrição",
   "listBusiness.missing.address": "uma morada",
   "listBusiness.missing.pin": "um pino no mapa",
   "listBusiness.missing.hours": "o horário",
@@ -1928,7 +1969,7 @@ export const marketing: Catalog = {
     "O teu lugar vai aparecer aqui à medida que preencheres o formulário, exatamente como ficará na grelha do diretório.",
   "listBusiness.preview.placeholderTagline":
     "O teu lema torna-se a citação em destaque no topo da tua página.",
-  "listBusiness.preview.whatItIs": "O que é",
+  "listBusiness.preview.whatItIs": "Descrição",
   "listBusiness.preview.goodFor": "Bom para",
   "listBusiness.preview.languages": "Idiomas",
   "listBusiness.preview.hours": "Horário",
@@ -1939,11 +1980,127 @@ export const marketing: Catalog = {
     "Indica primeiro um nome para pré-visualizares a página completa",
   "listBusiness.preview.foot":
     "Isto é uma pré-visualização. O teu anúncio só fica no ar depois de a equipa da comunidade o rever.",
+  // Legendas dos campos da pré-visualização em direto (editor + assistente)
+  "listBusiness.livePreview.caption.idle":
+    "Toca ou clica num campo para veres onde aparece.",
+  "listBusiness.livePreview.caption.path":
+    "Isto diz à equipa de revisão como conheces o lugar. Fica fora do teu anúncio.",
+  "listBusiness.livePreview.caption.name":
+    "O nome do teu lugar aparece aqui, por baixo da foto do teu cartão.",
+  "listBusiness.livePreview.caption.cats":
+    "A tua primeira categoria aparece aqui, no teu cartão.",
+  "listBusiness.livePreview.caption.hood":
+    "O teu bairro aparece aqui, ao lado da categoria.",
+  "listBusiness.livePreview.caption.badge":
+    "O teu distintivo aparece aqui, na foto do teu cartão.",
+  "listBusiness.livePreview.caption.evidence":
+    "Só quem gere este anúncio e a equipa de revisão veem isto. Dá sentido ao distintivo.",
+  "listBusiness.livePreview.caption.price":
+    "O teu escalão de preço aparece aqui, na primeira etiqueta do cartão.",
+  "listBusiness.livePreview.caption.blurb":
+    "A tua descrição curta aparece aqui, no teu cartão do diretório.",
+  "listBusiness.livePreview.caption.tagline":
+    "O teu lema aparece aqui, em destaque no topo da tua página.",
+  "listBusiness.livePreview.caption.whatItIs":
+    "A tua descrição aparece aqui, na tua página.",
+  "listBusiness.livePreview.caption.tags":
+    "As tuas etiquetas aparecem aqui. O cartão leva três, com o preço incluído.",
+  "listBusiness.livePreview.caption.goodFor":
+    "O que marcares aparece aqui, na tua página.",
+  "listBusiness.livePreview.caption.langs":
+    "Os idiomas que falas aparecem aqui, na tua página.",
+  "listBusiness.livePreview.caption.address":
+    "A tua morada aparece na página completa, com um mapa. Abre-a para veres.",
+  "listBusiness.livePreview.caption.hours":
+    "O teu horário: aberto ou fechado no cartão, e a semana na tua página.",
+  "listBusiness.livePreview.caption.hoursExceptions":
+    "As datas especiais aparecem na página completa, e o cartão segue-as no dia.",
+  "listBusiness.livePreview.caption.social":
+    "Os teus links aparecem na tua página completa. Abre-a para veres onde.",
+  "listBusiness.livePreview.caption.photos":
+    "A tua foto de capa aparece aqui. As outras vão para a galeria da página.",
+  "listBusiness.livePreview.caption.rel":
+    "Só tu e a equipa de revisão veem isto. Ajuda-a a perceber o teu anúncio.",
+  "listBusiness.livePreview.caption.ownerName":
+    "O teu nome aparece aqui. Com o perfil ligado, o cartão mostra o teu primeiro nome.",
+  "listBusiness.livePreview.caption.ownerRole":
+    "O teu papel aparece aqui, ao lado do teu nome.",
+  "listBusiness.livePreview.caption.contactEmail":
+    "Só tu e a equipa de revisão veem isto. Fica fora do teu anúncio.",
+  "listBusiness.livePreview.caption.consent":
+    "Isto fica entre ti e a equipa de revisão. Mantém o anúncio honesto.",
+  "listBusiness.livePreview.caption.services":
+    "O que ofereces e quanto custa aparece na tua página completa.",
+  "listBusiness.livePreview.caption.accessibility":
+    'As respostas aparecem na página completa. As que são "sim" vão também ao cartão.',
+  "listBusiness.livePreview.caption.affirmingBaseline":
+    "Todos os anúncios fazem esta promessa, e a tua página completa di-lo.",
+  "listBusiness.livePreview.placeholder.whatItIs":
+    "A tua descrição vai aparecer aqui.",
+  "listBusiness.livePreview.placeholder.goodFor":
+    "O que marcares vai aparecer aqui.",
+  "listBusiness.livePreview.placeholder.languages":
+    "Os idiomas que escolheres vão aparecer aqui.",
+  "listBusiness.livePreview.placeholder.hours":
+    "Os teus dias e horas de abertura vão aparecer aqui.",
+  "listBusiness.livePreview.placeholder.owner":
+    "O teu nome e o teu papel vão aparecer aqui.",
+  "listBusiness.livePreview.caption.willShow":
+    "Isto aparece no teu cartão quando o anúncio tiver nome.",
+  "listBusiness.livePreview.caption.hoodOnline":
+    "O teu cartão diz Online aqui. O teu bairro aparece no topo da tua página.",
+  "listBusiness.livePreview.caption.online":
+    "Ligado, o cartão diz Online aqui. A tua página deixa de mostrar o mapa e o horário.",
+  "listBusiness.livePreview.caption.hoursNote":
+    "A tua nota aparece na página completa, junto ao horário.",
+  "listBusiness.livePreview.caption.ownerNameRoleMode":
+    "Neste modo, só tu e a equipa de revisão veem o teu nome. Quem visita vê o teu papel.",
+  "listBusiness.livePreview.caption.ownerNameAnon":
+    "Só tu e a equipa de revisão veem o teu nome. O anúncio não nomeia ninguém.",
+  "listBusiness.livePreview.caption.ownerRoleInPlace":
+    "O teu papel aparece aqui, no lugar do teu nome.",
+  "listBusiness.livePreview.caption.ownerRoleAnon":
+    "O anonimato tira o teu papel do anúncio. Quem o gere e a equipa de revisão veem-no.",
+  "listBusiness.livePreview.caption.ownerRoleCoManager":
+    "Este papel aparece aqui, a menos que quem é proprietário tenha escolhido o anonimato.",
+  "listBusiness.livePreview.caption.ownerBio":
+    "A tua página não mostra isto por agora. Fica guardado com o anúncio.",
+  "listBusiness.livePreview.caption.ownerVisibility":
+    "Isto define o que aparece aqui: nome e papel, só o papel, ou ninguém.",
+  "listBusiness.livePreview.caption.ownerVisibilityAnon":
+    "O anonimato tira-te do anúncio. A equipa de revisão continua a ver o teu nome.",
+  "listBusiness.livePreview.caption.linkProfile":
+    "O cartão mostra o teu primeiro nome, a etiqueta da comunidade e a foto, se visível.",
+  "listBusiness.livePreview.caption.linkProfileUnused":
+    "Isto só conta quando mostras o teu nome. Por agora, nada liga ao teu perfil.",
+  "listBusiness.livePreview.caption.pricingMode":
+    "A tua página completa mostra a lista que escolheres. A outra fica guardada.",
+  "listBusiness.livePreview.caption.operatingState":
+    "Uma mudança aparece aqui e na tua página. Fechado de vez sai das listas do diretório.",
+  "listBusiness.livePreview.caption.directoryVisibility":
+    "Pausar tira o teu cartão e a tua página do diretório até voltares a mostrá-los.",
+  "listBusiness.livePreview.caption.accessibilityCard":
+    'Até três respostas "sim" aparecem aqui. Todas aparecem na tua página completa.',
+  "listBusiness.livePreview.caption.coManagers":
+    "Só quem gere este anúncio e a equipa de revisão veem quem o pode editar.",
+  "listBusiness.livePreview.placeholder.ownerCoManaged":
+    "Na página real, o nome ou o papel da pessoa dona do anúncio aparece aqui, como ela escolheu partilhar.",
+  "listBusiness.livePreview.hours.dayRange": "de {from} a {to}",
+  "listBusiness.livePreview.hours.pair": "{first} e {second}",
+  "listBusiness.livePreview.hours.group": "{days}: {hours}",
+  "listBusiness.livePreview.caption.hoursOnline":
+    "O cartão continua a mostrar se está aberto. Online, a página deixa o horário de fora.",
+  "listBusiness.livePreview.caption.hoursNoteOnline":
+    "Online, a página deixa o horário de fora, por isso esta nota não aparece por agora.",
+  "listBusiness.livePreview.caption.hoursExceptionsOnline":
+    "O cartão segue as datas especiais no dia. Online, a tua página deixa-as de fora.",
+  "listBusiness.livePreview.placeholder.ownerRoleMode":
+    "O teu papel vai aparecer aqui.",
   // Modal de pré-visualização da página completa
   "listBusiness.fullPreview.eyebrow": "Pré-visualização da página completa",
   "listBusiness.fullPreview.sub":
     "É assim que o teu anúncio vai ficar no diretório depois de a equipa o aprovar.",
-  "listBusiness.fullPreview.whatItIs": "O que é",
+  "listBusiness.fullPreview.whatItIs": "Descrição",
   "listBusiness.fullPreview.goodFor": "Bom para",
   "listBusiness.fullPreview.goodToKnow": "Bom saber",
   "listBusiness.fullPreview.hours": "Horário de funcionamento",
@@ -1985,6 +2142,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.previewCta": "Pré-visualizar página",
   "listBusiness.editor.preview.eyebrow":
     "Pré-visualização, com as alterações por guardar",
+  "listBusiness.editor.preview.keepEditing": "Continuar a editar",
   "listBusiness.editor.preview.sub":
     "A página do teu anúncio como quem visita a vai ver. Nada fica guardado até carregares em guardar.",
   "listBusiness.editor.preview.subCoManager":
@@ -1998,6 +2156,103 @@ export const marketing: Catalog = {
   "listBusiness.editor.section.whoCanEdit": "Quem pode editar",
   "listBusiness.editor.section.roleOnListing": "Função mostrada na página",
   "listBusiness.editor.section.dangerZone": "Zona de perigo",
+  "listBusiness.editor.section.history": "Histórico",
+  "listBusiness.editor.history.intro":
+    "As alterações a este anúncio, das mais recentes para as mais antigas: o que tu e a tua equipa editaram e o que a moderação do QueerPulse fez.",
+  "listBusiness.editor.history.empty.title": "Ainda não há nada registado",
+  "listBusiness.editor.history.empty.description":
+    "As alterações a este anúncio vão aparecer aqui. As tuas edições e as da tua equipa ficam registadas assim que o anúncio estiver ativo.",
+  "listBusiness.editor.history.showOlder": "Mostrar mais antigas",
+  "listBusiness.editor.history.loadingOlder": "A carregar…",
+  "listBusiness.editor.history.olderError":
+    "Não conseguimos carregar as alterações mais antigas.",
+  "listBusiness.editor.history.moderatorNote":
+    "Alguém da moderação acrescentou uma nota sobre isto. Foi enviada nas Mensagens a quem era proprietário do anúncio na altura.",
+  "listBusiness.editor.history.actor.unknownTeamMember": "Alguém da equipa",
+  "listBusiness.editor.history.actor.previousTeam": "Alguém da equipa anterior",
+  "listBusiness.editor.history.actor.moderation": "A moderação do QueerPulse",
+  "listBusiness.editor.history.event.ownerEdited":
+    "<strong>{actor}</strong> alterou {fields}",
+  "listBusiness.editor.history.event.suggestionApplied":
+    "<strong>{actor}</strong> aplicou uma correção sugerida a {fields}",
+  "listBusiness.editor.history.event.directoryPaused":
+    "<strong>{actor}</strong> pausou o anúncio no diretório",
+  "listBusiness.editor.history.event.directoryResumed":
+    "<strong>{actor}</strong> voltou a mostrar o anúncio no diretório",
+  "listBusiness.editor.history.event.teamChanged":
+    "<strong>{actor}</strong> alterou quem pode editar este anúncio",
+  "listBusiness.editor.history.event.statusUpdated":
+    "<strong>{actor}</strong> atualizou o estado de análise do anúncio",
+  "listBusiness.editor.history.event.removed":
+    "<strong>{actor}</strong> removeu o anúncio",
+  "listBusiness.editor.history.event.questionAsked":
+    "<strong>{actor}</strong> fez uma pergunta",
+  "listBusiness.editor.history.event.answered": "A pergunta foi respondida",
+  "listBusiness.editor.history.event.ownershipTransferred":
+    "<strong>{actor}</strong> transferiu a propriedade deste anúncio",
+  "listBusiness.editor.history.event.staffCreated":
+    "<strong>{actor}</strong> criou este anúncio",
+  "listBusiness.editor.history.field.listingDetails": "os detalhes do anúncio",
+  "listBusiness.editor.history.field.path":
+    "se o anúncio é reivindicado ou sugerido",
+  "listBusiness.editor.history.field.name": "o nome do negócio",
+  "listBusiness.editor.history.field.cats": "as categorias",
+  "listBusiness.editor.history.field.hood": "o bairro",
+  "listBusiness.editor.history.field.city": "a cidade",
+  "listBusiness.editor.history.field.timezone": "o fuso horário",
+  "listBusiness.editor.history.field.badge":
+    "o selo Queer-owned ou LGBTQ+ friendly",
+  "listBusiness.editor.history.field.evidence": "as provas por trás do selo",
+  "listBusiness.editor.history.field.price": "o escalão de preço",
+  "listBusiness.editor.history.field.blurb": "a descrição curta",
+  "listBusiness.editor.history.field.tagline": "o lema",
+  "listBusiness.editor.history.field.whatItIs": "a descrição",
+  "listBusiness.editor.history.field.tags": "as etiquetas",
+  "listBusiness.editor.history.field.goodFor": "as etiquetas “bom para”",
+  "listBusiness.editor.history.field.accessibilityAnswers":
+    "as respostas sobre acessibilidade",
+  "listBusiness.editor.history.field.accessibilityNote":
+    "a nota sobre acessibilidade",
+  "listBusiness.editor.history.field.services": "os serviços e preços",
+  "listBusiness.editor.history.field.menu": "o menu",
+  "listBusiness.editor.history.field.pricingMode":
+    "se o anúncio mostra serviços ou um menu",
+  "listBusiness.editor.history.field.langs": "as línguas faladas",
+  "listBusiness.editor.history.field.online": "a opção só online",
+  "listBusiness.editor.history.field.address": "a morada",
+  "listBusiness.editor.history.field.mapPin": "o pino no mapa",
+  "listBusiness.editor.history.field.hours": "o horário",
+  "listBusiness.editor.history.field.hoursNote": "a nota sobre o horário",
+  "listBusiness.editor.history.field.hoursExceptions":
+    "o horário de feriados e datas especiais",
+  "listBusiness.editor.history.field.social": "os contactos e as redes sociais",
+  "listBusiness.editor.history.field.photoGallery": "as fotos",
+  "listBusiness.editor.history.field.rel": "a ligação ao negócio",
+  "listBusiness.editor.history.field.ownerName":
+    "o nome de quem é proprietário",
+  "listBusiness.editor.history.field.ownerRole": "a função mostrada no anúncio",
+  "listBusiness.editor.history.field.ownerBio": "a bio de quem é proprietário",
+  "listBusiness.editor.history.field.visibility":
+    "o que o anúncio mostra sobre quem é proprietário",
+  "listBusiness.editor.history.field.linkToProfile":
+    "a ligação ao perfil de quem é proprietário",
+  "listBusiness.editor.history.field.contactEmail": "o email de contacto",
+  "listBusiness.editor.history.field.consentOuting":
+    "a confirmação de anúncio público",
+  "listBusiness.editor.history.field.consentGuide": "a confirmação de exatidão",
+  "listBusiness.editor.history.event.coManagerAdded":
+    "<strong>{actor}</strong> juntou-se à equipa de cogestão",
+  "listBusiness.editor.history.loadingHistory": "A carregar o histórico…",
+  "listBusiness.editor.history.olderLoaded":
+    "Alterações mais antigas carregadas",
+  "listBusiness.editor.history.loadError.title":
+    "Não conseguimos carregar o <em>histórico</em>",
+  "listBusiness.editor.history.event.statusLive":
+    "<strong>{actor}</strong> publicou o anúncio",
+  "listBusiness.editor.history.event.statusReview":
+    "<strong>{actor}</strong> voltou a pôr o anúncio em análise",
+  "listBusiness.editor.history.event.statusQuestion":
+    "<strong>{actor}</strong> parou a análise para fazer uma pergunta",
   "listBusiness.editor.dangerZone.body":
     "Eliminar este anúncio é permanente. Se preferires afastar-te, podes escondê-lo ou marcá-lo como fechado, ambas as opções em Atividade e visibilidade, mais acima.",
   "listBusiness.editor.dangerZone.deleteCta": "Eliminar este anúncio",
@@ -2494,6 +2749,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-25.headline":
+    "Quatro categorias novas no fórum, links da QueerPulse na app e histórico de alterações nos anúncios.",
   "changelog.releases.2026-09-24.headline":
     "As personas de terapeuta ganham página completa e o mapa do diretório cresce até ecrã inteiro.",
   "changelog.releases.2026-09-23.headline":
@@ -2622,6 +2879,138 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.email-template-editor-save-and-back.title":
+    "Guardar um modelo de email espera por uma alteração, com volta",
+  "changelog.entries.email-template-editor-save-and-back.body":
+    "O editor de modelos ganha um botão Voltar junto a Guardar e uma ligação no topo para todos os modelos.",
+  "changelog.entries.listing-editor-save-needs-changes.title":
+    "Guardar na ficha só acende quando mudas alguma coisa",
+  "changelog.entries.listing-editor-save-needs-changes.body":
+    "No editor da ficha e na pré-visualização completa, Guardar só fica ativo quando há uma alteração por guardar.",
+  "changelog.entries.email-template-mail-client-preview.title":
+    "Os modelos de email pré-visualizam-se numa app de email simulada",
+  "changelog.entries.email-template-mail-client-preview.body":
+    "O editor ocupa a largura toda e o email aparece numa caixa de entrada ou num telemóvel sempre à vista.",
+  "changelog.entries.listing-preview-full-width.title":
+    "A pré-visualização do espaço abre em largura total, com botão de guardar",
+  "changelog.entries.listing-preview-full-width.body":
+    "A pré-visualização mostra a tua página com o layout real de computador e podes guardar a partir dela.",
+  "changelog.entries.location-maps-scroll-zoom.title":
+    "Os mapas de espaços e casas fazem zoom com a roda do rato",
+  "changelog.entries.location-maps-scroll-zoom.body":
+    "Com o cursor sobre o mapa, a roda do rato ou o trackpad aproximam e afastam.",
+  "changelog.entries.listing-description-rich-text.title":
+    "Os anúncios ganham um só campo de descrição com formatação",
+  "changelog.entries.listing-description-rich-text.body":
+    "Substitui as linhas curtas, e negrito, listas, citações e links aparecem como os escreveste na página pública.",
+  "changelog.entries.mailbox-settings-open-in-switcher.title":
+    "As definições da caixa abrem dentro do seletor",
+  "changelog.entries.mailbox-settings-open-in-switcher.body":
+    "A roda dentada troca a lista de caixas pelas definições na mesma janela, com uma seta para voltar.",
+  "changelog.entries.unpublished-personas-no-mailbox.title":
+    "As personas que nunca publicaste saem das tuas caixas",
+  "changelog.entries.unpublished-personas-no-mailbox.body":
+    "Uma persona em rascunho só ganha caixa depois de publicada; se a despublicares, mantém as conversas.",
+  "changelog.entries.directory-map-reaches-hours.title":
+    "Mapa maior nas fichas do diretório",
+  "changelog.entries.directory-map-reaches-hours.body":
+    'Em ecrãs largos, o mapa de "Onde fica" cresce até o cartão alinhar com o fim do horário.',
+  "changelog.entries.community-suggestions-show-mark.title":
+    "As sugestões de comunidades mostram o ícone e a descrição",
+  "changelog.entries.community-suggestions-show-mark.body":
+    'O cartão "Comunidades que podes gostar" mostra agora o ícone de cada uma e duas linhas da descrição.',
+  "changelog.entries.therapist-insurer-picker.title":
+    "Terapeutas escolhem as seguradoras de uma lista",
+  "changelog.entries.therapist-insurer-picker.body":
+    "Escreve umas letras para encontrar a ADSE, a Médis, a Multicare e mais 16, ou escreve outra que falte.",
+  "changelog.entries.inbox-row-menu-under-date.title":
+    "O menu da lista de conversas fica por baixo da hora",
+  "changelog.entries.inbox-row-menu-under-date.body":
+    "O botão do menu aparece por baixo da hora de cada conversa, e a data e os ícones ficam quietos quando passas o rato.",
+  "changelog.entries.page-editor-rows-glide.title":
+    "Reordena links, tópicos e todas as listas com suavidade",
+  "changelog.entries.page-editor-rows-glide.body":
+    "Redes sociais, Parte de, links e tópicos reordenam-se com arrasto ou Alt+seta, e as linhas deslizam para o lugar.",
+  "changelog.entries.therapist-expectations-as-rows.title":
+    "As listas do editor são agora linhas reordenáveis",
+  "changelog.entries.therapist-expectations-as-rows.body":
+    "Pílulas e listas antigas passaram a linhas. Enter adiciona uma linha, colar várias divide-as, arrasta para reordenar.",
+  "changelog.entries.therapist-approach-rich-text.title":
+    "Terapeutas escrevem a abordagem num só campo com formatação",
+  "changelog.entries.therapist-approach-rich-text.body":
+    "Negrito, itálico, listas e links já funcionam, e uma linha em branco começa um novo parágrafo na página.",
+  "changelog.entries.persona-preview-device-morph.title":
+    "A pré-visualização da persona transforma-se entre telemóvel e computador",
+  "changelog.entries.persona-preview-device-morph.body":
+    "O cartão da pré-visualização fica no ecrã e estica ou encolhe com o painel enquanto a página muda de layout.",
+  "changelog.entries.therapist-cost-rolling-total.title":
+    "O total do custo da terapia rola até ao novo preço",
+  "changelog.entries.therapist-cost-rolling-total.body":
+    "Os dígitos sobem quando o preço mensal aumenta e descem quando baixa, e ficam parados com movimento reduzido.",
+  "changelog.entries.email-template-editor-compact.title":
+    "O editor de modelos de email ficou mais compacto",
+  "changelog.entries.email-template-editor-compact.body":
+    "As definiÃ§Ãµes partilham uma linha, idioma e aÃ§Ãµes ficam numa sÃ³ barra, e a prÃ©-visualizaÃ§Ã£o comeÃ§a perto do topo.",
+  "changelog.entries.member-directory-counts-roll.title":
+    "As contagens do diretório de membros rolam até ao novo número",
+  "changelog.entries.member-directory-counts-roll.body":
+    "Filtrar faz a contagem de resultados rolar para cima ou para baixo, e o total do título rola quando abres a página.",
+  "changelog.entries.therapist-topics-one-blank-line.title":
+    "Os temas de terapeuta mantêm uma linha vazia de cada vez",
+  "changelog.entries.therapist-topics-one-blank-line.body":
+    '"Adicionar uma linha" e Enter levam-te agora à linha vazia que o tema já tem.',
+  "changelog.entries.persona-picker-chips-animate.title":
+    "Os seletores da persona animam enquanto escolhes",
+  "changelog.entries.persona-picker-chips-animate.body":
+    "As opções que escolhes deslizam para a fila de etiquetas acima, e a lista abre e fecha com suavidade.",
+  "changelog.entries.chat-list-row-seams.title":
+    "As linhas da lista de conversas voltam a encostar",
+  "changelog.entries.chat-list-row-seams.body":
+    "Já não aparecem riscos coloridos entre conversas, vindos das ações de deslizar escondidas.",
+  "changelog.entries.therapist-preview-animates-edits.title":
+    "A pré-visualização da tua página de terapeuta anima enquanto editas",
+  "changelog.entries.therapist-preview-animates-edits.body":
+    "As etiquetas aparecem, as linhas crescem no lugar e os blocos novos abrem-se, a par do editor ao lado.",
+  "changelog.entries.listing-editor-live-preview.title":
+    "Vê o teu anúncio a ganhar forma enquanto o editas",
+  "changelog.entries.listing-editor-live-preview.body":
+    "O teu cartão do diretório fica ao lado do formulário, e cada campo destaca onde aparece ou diz quem o vê.",
+  "changelog.entries.listing-change-history.title":
+    "Um histórico de alterações em cada anúncio",
+  "changelog.entries.listing-change-history.body":
+    "Quem gere o anúncio vê quem editou o quê e quando, e que correções a moderação aplicou.",
+  "changelog.entries.persona-editor-wider.title":
+    "O editor de personas usa o ecrã inteiro",
+  "changelog.entries.persona-editor-wider.body":
+    "Em ecrãs largos o editor estica até 1680px, com mais espaço para o formulário e a pré-visualização.",
+  "changelog.entries.inbox-row-menu-never-clipped.title":
+    "Os menus das conversas nas últimas linhas abrem por inteiro",
+  "changelog.entries.inbox-row-menu-never-clipped.body":
+    "Perto do fundo da caixa de entrada, o menu de opções de uma conversa abre para cima, com todas as opções à vista.",
+  "changelog.entries.forum-composer-smooth-motion.title":
+    "A página de nova publicação move-se com suavidade",
+  "changelog.entries.forum-composer-smooth-motion.body":
+    "Painéis, etiquetas, menus e janelas no editor do fórum agora abrem, fecham e trocam com um movimento suave.",
+  "changelog.entries.listing-tags-pick-existing.title":
+    "As etiquetas dos anúncios vêm de uma lista comum",
+  "changelog.entries.listing-tags-pick-existing.body":
+    "Escolhe até seis etiquetas agrupadas, como Música ao vivo ou Preço solidário, e todos os anúncios falam igual.",
+  "changelog.entries.forum-four-new-categories.title":
+    "Quatro categorias novas no fórum",
+  "changelog.entries.forum-four-new-categories.body":
+    "Convívio e Apresentações, Legal e Migração, Amor e Relações e Plataforma e Sugestões juntam-se ao fórum.",
+  "changelog.entries.persona-editor-back-button.title":
+    "Volta às tuas personas com um botão redondo",
+  "changelog.entries.persona-editor-back-button.body":
+    "Em ecrãs largos fica na margem, para o nome da persona alinhar com a barra lateral por baixo.",
+  "changelog.entries.inbox-header-fits-small-phones.title":
+    "O cabeçalho das Mensagens cabe em telemóveis pequenos",
+  "changelog.entries.inbox-header-fits-small-phones.body":
+    "Em ecrãs estreitos o símbolo do logótipo sai de cena para o nome e o seletor de caixa caberem inteiros.",
+  "changelog.entries.chat-app-links-stay-in-app.title":
+    "Links da QueerPulse abrem dentro da app",
+  "changelog.entries.chat-app-links-stay-in-app.body":
+    "Tocar num link num chat, post do fórum, artigo ou guia mantém-te na app instalada.",
   "changelog.entries.persona-linking-creator-only.title":
     "Só quem criou uma persona a pode ligar ao seu perfil",
   "changelog.entries.persona-linking-creator-only.body":

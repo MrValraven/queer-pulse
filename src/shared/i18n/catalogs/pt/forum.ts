@@ -29,6 +29,10 @@ export const forum: Catalog = {
   "cat.guides": "Guias e Recursos",
   "cat.jobs": "Trabalho e Competências",
   "cat.trans": "Trans e Não-binárie",
+  "cat.meetups": "Convívio e Apresentações",
+  "cat.legal": "Legal e Migração",
+  "cat.relationships": "Amor e Relações",
+  "cat.platform": "Plataforma e Sugestões",
 
   // ── As três pessoas moderadoras que publicam em nome do QueerPulse ───────
   "modRole.mariana": "moderação principal",
@@ -681,6 +685,13 @@ export const forum: Catalog = {
   "composePage.category.guides.description": "Manuais e índices vivos",
   "composePage.category.jobs.description": "Vagas, competências, ofícios",
   "composePage.category.trans.description": "Saúde, legal, comunidade",
+  "composePage.category.meetups.description": "Diz olá, encontra com quem ir",
+  "composePage.category.legal.description":
+    "Vistos, residência, mudança de nome, direitos",
+  "composePage.category.relationships.description":
+    "Namoro, relações, família, amizade",
+  "composePage.category.platform.description":
+    "Erros, ideias, como funciona o site",
   "composePage.category.fallbackDescription":
     "Um sítio para publicações sobre este tema",
   "composePage.category.suggestion": "Parece ser {category}",
@@ -767,7 +778,7 @@ export const forum: Catalog = {
   "composePage.postingAs.anonymousHint":
     "Os moderadores continuam a ver quem escreveu, para a conversa continuar segura.",
   "composePage.postingAs.anonymousElsewhere":
-    "Disponível em {categories}, onde um nome pode custar a casa ou os cuidados de saúde a alguém.",
+    "Disponível em {categories}, onde um nome pode custar a alguém a casa, os cuidados de saúde ou a segurança.",
   "composePage.postingAs.anonymousBlockedByOfficial":
     "Desliga a assinatura QueerPulse Official para publicares sem o teu nome.",
   "composePage.postingAs.coAuthorLabel": "Escreve com outra pessoa",

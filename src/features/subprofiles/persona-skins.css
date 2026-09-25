@@ -3446,14 +3446,45 @@ button.pp-row {
   letter-spacing: 0.02em;
   margin-bottom: 16px;
 }
+/* The approach is markdown-lite prose (shared MarkdownLite). These rules
+   out-specify its base block styles, so paragraphs keep the letterhead look
+   and lists, quotes and headings sit on the same 12px rhythm. */
 .pp[data-skin="practice"] .approach p {
   font-size: var(--text-16);
   line-height: 1.85;
   color: var(--ink);
   max-width: 60ch;
   margin-top: 12px;
+  margin-bottom: 0;
 }
-.pp[data-skin="practice"] .approach p:first-of-type {
+.pp[data-skin="practice"] .approach ul,
+.pp[data-skin="practice"] .approach ol,
+.pp[data-skin="practice"] .approach blockquote,
+.pp[data-skin="practice"] .approach h4 {
+  max-width: 60ch;
+  margin: 12px 0 0;
+}
+.pp[data-skin="practice"] .approach li {
+  font-size: var(--text-16);
+  line-height: 1.85;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.pp[data-skin="practice"] .approach li::marker {
+  color: var(--skin-practice-ink);
+}
+.pp[data-skin="practice"] .approach blockquote {
+  font-size: var(--text-16);
+  line-height: 1.85;
+  border-left-color: var(--skin-practice-ink);
+}
+.pp[data-skin="practice"] .approach h4 {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: var(--text-16);
+  color: var(--skin-practice-ink);
+}
+.pp[data-skin="practice"] .approach h2 + * {
   margin-top: 0;
 }
 .pp[data-skin="practice"] .training ul {

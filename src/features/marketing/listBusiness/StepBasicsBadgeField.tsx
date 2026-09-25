@@ -54,7 +54,7 @@ export function StepBasicsBadgeField({ form }: { form: ListingForm }) {
         />
       </FormField>
       {draft.badge === "owned" && (
-        <div className={styles.revealBlock}>
+        <div id={ANCHOR.evidence} className={styles.revealBlock}>
           <label>{t("marketing:listBusiness.step1.evidenceLabel")}</label>
           <p>{t("marketing:listBusiness.step1.evidenceHelp")}</p>
           <FormField>

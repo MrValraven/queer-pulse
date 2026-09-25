@@ -23,13 +23,91 @@
    touch). Below 26rem the row stacks at any viewport: the grip and remove
    button share a top row, so both fields take the full list width and line
    up with the other fields in the card. Each caption takes the refined label
-   style, and a money amount keeps a field of 10rem, close to the size of
-   the other money fields, so the amount stays near its caption. The
-   container is set only on a list that holds pair rows. */
+   style. The container is set only on a list that holds pair rows; a list
+   of money pairs takes its own container and threshold (below). */
 .list:has(.pairRow) {
   container: skin-pairs / inline-size;
 }
 @container skin-pairs (max-width: 26rem) {
+  .pairsHead.pairsHead {
+    display: none;
+  }
+  .pairRow.pairRow {
+    grid-template-columns: var(--pair-grip-column) minmax(0, 1fr) var(
+        --pair-tool-column
+      );
+    grid-template-areas:
+      "grip . remove"
+      "first first first"
+      "second second second";
+    row-gap: 8px;
+    padding: 10px 0;
+  }
+  .pairRow .pairFirst,
+  .pairRow .pairSecond {
+    gap: 8px;
+  }
+  .pairGrip {
+    grid-area: grip;
+  }
+  .pairFirst {
+    grid-area: first;
+  }
+  .pairSecond {
+    grid-area: second;
+  }
+  .pairRemove {
+    grid-area: remove;
+  }
+  /* Same as the field label (SkinRefinedField.module.css). Doubled to
+     out-rank .columnLabel, which the caption also carries. */
+  .pairCaption.pairCaption {
+    display: block;
+    font-size: var(--text-14);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+}
+
+/* ── Pairs with a money column (reimbursement): the first field takes the
+   free width and the amount a fixed 6rem column (96px): 14px left padding,
+   the 32px € padding and the 2px border leave 48px, room for "9999" in
+   tabular figures (about 38px at 16px). The header shares the template, so
+   its labels sit over their inputs. The areas carry the names the phone
+   rule (SkinListControls.module.css) places the cells by, so the row keeps
+   one line there as well; the header, caption and padding that rule changes
+   are set back here. The fixed columns take 86px on a fine pointer, plus
+   96px for the amount, so the narrowest one-line list (just over 20.5rem,
+   328px) leaves the insurer field 146px, and 130px on a coarse pointer
+   (198px fixed). Its text room is that less 14px left padding, the
+   chevron's 44px right padding and the 2px border: at least 86px on a fine
+   pointer and 70px on a coarse one (88px and 72px in the 330px desktop
+   list), so "e.g. ADSE" (about 69px at 16px) and "Multicare" (about 69px)
+   show in full. At 20.5rem and below the row stacks as the text pairs do,
+   and the amount keeps a field of 10rem, close to the size of the other
+   money fields, so it stays near its caption. The container rule follows
+   the one above, so it wins on a money list. ───────────────────────────── */
+.list:has(.pairsMoney) {
+  container: skin-pairs-money / inline-size;
+}
+.pairsMoney.pairsMoney {
+  --pair-money-column: 6rem;
+  display: grid;
+  grid-template-columns:
+    var(--pair-grip-column) minmax(0, 1fr) var(--pair-money-column)
+    var(--pair-tool-column);
+  grid-template-areas: "grip first second remove";
+}
+.pairRow.pairsMoney {
+  padding: 6px 0;
+}
+.pairsMoney .pairCaption {
+  display: none;
+}
+/* The stack of the text pairs above, at (0,2,0) and later in the file, so it
+   out-ranks the money row rules it replaces. */
+@container skin-pairs-money (max-width: 20.5rem) {
   .pairsHead.pairsHead {
     display: none;
   }
@@ -63,8 +141,6 @@
   .pairRemove {
     grid-area: remove;
   }
-  /* Same as the field label (SkinRefinedField.module.css). Doubled to
-     out-rank .columnLabel, which the caption also carries. */
   .pairCaption.pairCaption {
     display: block;
     font-size: var(--text-14);
@@ -74,11 +150,48 @@
   }
 }
 
-/* ── Paragraphs: a three-line writing field that grows with its text ─────── */
+/* ── Pairs: a type-ahead list (the insurer, SkinSuggestInput) spans the
+   whole row, grip to remove button, so a long name has room even where the
+   field's column is narrow (about 130px on touch in a 328px list). On one
+   line it takes a row of its own under the inputs. A stacked row places it
+   between the two fields, under the one it belongs to; the row takes the
+   extra template row only while the list is open, so a closed row keeps
+   its gaps. (0,3,0) out-ranks the stacked templates above. Only the money
+   pairs (reimbursement) carry a type-ahead, so only their container places
+   it; a text pair given `suggestions` would need the same rule under
+   skin-pairs (26rem). On a phone the row's 8px row gap
+   (SkinListControls.module.css) is the whole gap above the list. ─────── */
+.pairSuggest {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+}
+@media (--xs) {
+  .pairSuggest {
+    margin-top: 0;
+  }
+}
+@container skin-pairs-money (max-width: 20.5rem) {
+  .pairRow.pairRow:has(> .pairSuggest) {
+    grid-template-areas:
+      "grip . remove"
+      "first first first"
+      "suggest suggest suggest"
+      "second second second";
+  }
+  .pairRow .pairSuggest {
+    grid-area: suggest;
+    margin-top: 0;
+  }
+}
+
+/* ── Paragraphs: one markdown-lite field under the composer's toolbar, six
+   lines at rest, growing with its text ──────────────────────────────────── */
+.paragraphToolbar {
+  margin-bottom: var(--gap-xs);
+}
 textarea.paragraphText.paragraphText {
-  grid-area: text;
-  /* Three lines of 1.5 plus the vertical padding and the 1px border. */
-  min-height: calc(3 * 1.5em + 24px);
+  /* Six lines of 1.5 plus the vertical padding and the 1px border. */
+  min-height: calc(6 * 1.5em + 24px);
   overflow-wrap: anywhere;
 }
 @supports (field-sizing: content) {

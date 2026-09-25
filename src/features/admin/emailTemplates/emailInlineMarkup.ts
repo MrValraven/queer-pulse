@@ -39,6 +39,12 @@ export function fillPlaceholders(
   });
 }
 
+/** True when `text` still carries a `{token}`, e.g. an unfilled invite link
+ *  in the "Edit as HTML" render. */
+export function hasPlaceholderToken(text: string): boolean {
+  return new RegExp(PLACEHOLDER_PATTERN.source).test(text);
+}
+
 /** Paragraph mini-markup: `**bold**`, `*italic*`, `[label](url)`, newlines. The
  *  text is escaped FIRST, so only these four constructs become markup. */
 export function inlineMarkupToHtml(

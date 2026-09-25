@@ -19,6 +19,7 @@ import { ListingDangerZoneSection } from "./ListingDangerZoneSection";
 import { ListingPricingFields } from "./ListingPricingFields";
 import { ListingDirectoryVisibilitySection } from "./ListingDirectoryVisibilitySection";
 import { ListingOperatingStateSection } from "./ListingOperatingStateSection";
+import { ListingHistorySection } from "./history/ListingHistorySection";
 import {
   editorSectionByKeyFor,
   pricingSectionDefinition,
@@ -40,10 +41,10 @@ import {
  * Two blocks change shape for a CO-MANAGER. "About you" is mostly the owner's
  * own personal data, which the API neither sends them nor accepts from them,
  * so they get the role field and a line explaining the rest; and the two
- * permissions in the last section are the owner's grant, so they are read-only
- * there. The owner alone gets a last block, the Danger zone, because only the
- * owner can delete a listing. Everything else about the business is identical
- * for both roles.
+ * permissions are the owner's grant, so they are read-only there. Both roles
+ * read the same History of who changed what. The owner alone gets a last
+ * block, the Danger zone, because only the owner can delete a listing.
+ * Everything else about the business is identical for both roles.
  *
  * Trading state and directory visibility share ONE section on purpose. They
  * are different questions with similar-sounding answers ("we are shut for
@@ -143,6 +144,10 @@ export function ListingEditorSections({
         {/* The two permissions are the owner's own grant about their own
             identity, so a co-manager neither sees nor sends them. */}
         {!isCoManagerView && <ConsentChecks form={form} />}
+      </ListingEditorSection>
+
+      <ListingEditorSection section={section.history}>
+        <ListingHistorySection listingRef={listing.ref} />
       </ListingEditorSection>
 
       {!isCoManagerView && (

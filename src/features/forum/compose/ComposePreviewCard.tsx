@@ -1,13 +1,16 @@
 import { useId, useState } from "react";
-import { FiEye, FiLink2, FiUsers } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
-import type { TFunction } from "../../../shared/i18n/types";
 import { toPlainText } from "../../../shared/markdown";
-import { ForumCategoryBadge } from "../ForumCategoryBadge";
-import { ForumAvatar } from "../ForumAuthor";
-import { CONTENT_WARNINGS } from "./composeWarnings.data";
 import { firstLinkIn } from "./composeText";
+import { PreviewAudience, PreviewByline } from "./ComposePreviewByline";
+import {
+  LinkUnfurlPlaceholder,
+  PreviewBadges,
+  PreviewPhotos,
+  PreviewPoll,
+  PreviewSlot,
+} from "./ComposePreviewParts";
 import type {
   ComposeAudience,
   ComposePhoto,
@@ -25,6 +28,10 @@ import styles from "./ComposePreviewCard.module.css";
 // inventing plausible percentages, and a link shows an unfurl PLACEHOLDER
 // rather than a fabricated headline. A preview that guesses is a preview
 // nobody can trust.
+//
+// Sections that the draft adds or removes (badges, the reveal button, photos,
+// poll, link unfurl) grow and fold through `PreviewSlot`; text that changes on
+// every keystroke updates in place, so the card never jitters while typing.
 
 /** Longest excerpt the list shows before it cuts. */
 const EXCERPT_MAX_LENGTH = 220;
@@ -88,6 +95,9 @@ export function ComposePreviewCard({
   const hasCoverableExcerpt = contentWarnings.length > 0 && excerpt.length > 0;
   const isExcerptCovered = hasCoverableExcerpt && !isWarningRevealed;
   const linkHost = hostOf(firstLinkIn(body));
+  const hasBadges = !!category || tags.length > 0 || contentWarnings.length > 0;
+  const hasPollOptions =
+    !!poll && poll.options.some((option) => option.trim().length > 0);
 
   return (
     <section
@@ -99,12 +109,14 @@ export function ComposePreviewCard({
       </h2>
 
       <article className={styles.card}>
-        <PreviewBadges
-          category={category}
-          tags={tags}
-          contentWarnings={contentWarnings}
-          translate={t}
-        />
+        <PreviewSlot isOpen={hasBadges}>
+          <PreviewBadges
+            category={category}
+            tags={tags}
+            contentWarnings={contentWarnings}
+            translate={t}
+          />
+        </PreviewSlot>
 
         <p className={[styles.title, !title && styles.placeholder].join(" ")}>
           {title || t("forum:composePage.preview.titlePlaceholder")}
@@ -124,7 +136,7 @@ export function ComposePreviewCard({
           {excerpt || t("forum:composePage.preview.excerptPlaceholder")}
         </p>
 
-        {hasCoverableExcerpt && (
+        <PreviewSlot isOpen={hasCoverableExcerpt}>
           <button
             type="button"
             className={styles.reveal}
@@ -138,19 +150,15 @@ export function ComposePreviewCard({
                 : "forum:composePage.preview.showAnyway",
             )}
           </button>
-        )}
+        </PreviewSlot>
 
-        {photos.length > 0 && (
-          <ul className={styles.photos}>
-            {photos.map((photo) => (
-              <li key={photo.key} className={styles.photo}>
-                <img src={photo.previewUrl} alt={photo.alt} />
-              </li>
-            ))}
-          </ul>
-        )}
+        <PreviewSlot isOpen={photos.length > 0}>
+          <PreviewPhotos photos={photos} />
+        </PreviewSlot>
 
-        {poll && <PreviewPoll poll={poll} translate={t} />}
+        <PreviewSlot isOpen={hasPollOptions}>
+          {poll && <PreviewPoll poll={poll} translate={t} />}
+        </PreviewSlot>
 
         <PreviewByline
           isOfficial={isOfficial}
@@ -161,163 +169,18 @@ export function ComposePreviewCard({
           replyCount={format.number(0)}
         />
 
-        <p className={styles.audience}>
-          <FiUsers aria-hidden="true" />
-          {audienceLine(community, isCrossPosted, t, format.number)}
-        </p>
+        <PreviewAudience
+          community={community}
+          isCrossPosted={isCrossPosted}
+          translate={t}
+          formatNumber={format.number}
+        />
       </article>
 
-      {linkHost && <LinkUnfurlPlaceholder host={linkHost} translate={t} />}
+      <PreviewSlot isOpen={!!linkHost}>
+        {linkHost && <LinkUnfurlPlaceholder host={linkHost} translate={t} />}
+      </PreviewSlot>
     </section>
-  );
-}
-
-function PreviewBadges({
-  category,
-  tags,
-  contentWarnings,
-  translate,
-}: {
-  category: string | null;
-  tags: readonly string[];
-  contentWarnings: readonly string[];
-  translate: TFunction;
-}) {
-  if (!category && tags.length === 0 && contentWarnings.length === 0)
-    return null;
-  const warningLabels = contentWarnings
-    .map(
-      (id) =>
-        CONTENT_WARNINGS.find((warning) => warning.id === id)?.labelKey ?? null,
-    )
-    .filter((labelKey): labelKey is string => labelKey !== null)
-    .map((labelKey) => translate(labelKey));
-  return (
-    <div className={styles.badges}>
-      {category && <ForumCategoryBadge category={category} />}
-      {warningLabels.length > 0 && (
-        <span className={styles.warningPill}>
-          <FiEye aria-hidden="true" />
-          {translate("forum:composePage.preview.contentWarningPill", {
-            warnings: warningLabels.join(", "),
-          })}
-        </span>
-      )}
-      {tags.map((tag) => (
-        <span key={tag} className={styles.tag}>
-          #{tag}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function PreviewPoll({
-  poll,
-  translate,
-}: {
-  poll: ComposePoll;
-  translate: TFunction;
-}) {
-  const options = poll.options.filter((option) => option.trim().length > 0);
-  if (options.length === 0) return null;
-  return (
-    <div className={styles.poll}>
-      {options.map((option, optionIndex) => (
-        <p key={`${optionIndex}-${option}`} className={styles.pollBar}>
-          <span>{option}</span>
-        </p>
-      ))}
-      <p className={styles.pollNote}>
-        {translate(
-          poll.allowMultiple
-            ? "forum:composePage.preview.pollPickMany"
-            : "forum:composePage.preview.pollPickOne",
-        )}
-        <span className={styles.metaDot} aria-hidden="true" />
-        {translate("forum:composePage.preview.pollNoVotes")}
-      </p>
-    </div>
-  );
-}
-
-function PreviewByline({
-  isOfficial,
-  isAnonymous,
-  author,
-  coAuthorName,
-  translate,
-  replyCount,
-}: {
-  isOfficial: boolean;
-  isAnonymous: boolean;
-  author: ComposePreviewAuthor;
-  coAuthorName?: string;
-  translate: TFunction;
-  replyCount: string;
-}) {
-  // Official and anonymous are mutually exclusive, and the hook's setters are
-  // what enforce that; this only reflects whichever one is set.
-  const anonymousName = translate("forum:composePage.preview.anonymousName");
-  const person = isOfficial
-    ? {
-        // The institutional account wears the brand mark, so `ForumAvatar`
-        // never reaches for initials here.
-        initials: "",
-        name: translate("forum:composePage.preview.officialName"),
-        official: true,
-      }
-    : isAnonymous
-      ? { initials: anonymousName.slice(0, 1), name: anonymousName }
-      : { initials: author.initials, name: author.name, photo: author.photo };
-  return (
-    <p className={styles.byline}>
-      <ForumAvatar className={styles.bylineAvatar} person={person} />
-      <span className={styles.bylineName}>{person.name}</span>
-      {isOfficial && (
-        <span className={styles.bylineVia}>
-          {translate("forum:composePage.preview.officialVia", {
-            name: author.name,
-          })}
-        </span>
-      )}
-      {!isOfficial && !isAnonymous && coAuthorName && (
-        <span className={styles.bylineVia}>
-          {translate("forum:composePage.preview.withCoAuthor", {
-            name: coAuthorName,
-          })}
-        </span>
-      )}
-      <span className={styles.metaDot} aria-hidden="true" />
-      <span>{translate("forum:time.justNow")}</span>
-      <span className={styles.metaDot} aria-hidden="true" />
-      <span>
-        {translate("forum:repliesCount", { count: 0, formatted: replyCount })}
-      </span>
-    </p>
-  );
-}
-
-function LinkUnfurlPlaceholder({
-  host,
-  translate,
-}: {
-  host: string;
-  translate: TFunction;
-}) {
-  return (
-    <div className={styles.unfurl}>
-      <div className={styles.unfurlThumb} aria-hidden="true" />
-      <div className={styles.unfurlBody}>
-        <span className={styles.unfurlHost}>
-          <FiLink2 aria-hidden="true" />
-          {host}
-        </span>
-        <span className={styles.unfurlNote}>
-          {translate("forum:composePage.preview.linkUnfurlPlaceholder")}
-        </span>
-      </div>
-    </div>
   );
 }
 
@@ -329,27 +192,4 @@ function hostOf(link: string | null): string | null {
   } catch {
     return null;
   }
-}
-
-/** Who will be able to read this, said the way the published card says it. */
-function audienceLine(
-  community: ComposeAudience | null,
-  isCrossPosted: boolean,
-  translate: TFunction,
-  formatNumber: (value: number) => string,
-): string {
-  if (!community) return translate("forum:composePage.preview.seenByEveryone");
-  if (isCrossPosted)
-    return translate("forum:composePage.preview.seenByEveryoneAndCommunity", {
-      community: community.name,
-    });
-  if (community.memberCount === undefined)
-    return translate("forum:composePage.preview.seenByCommunity", {
-      community: community.name,
-    });
-  return translate("forum:composePage.preview.seenByCommunityMembers", {
-    count: community.memberCount,
-    formatted: formatNumber(community.memberCount),
-    community: community.name,
-  });
 }

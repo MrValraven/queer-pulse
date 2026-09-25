@@ -1,0 +1,127 @@
+/* SkinSuggestInput: a text input with a chevron at its right edge, and its
+   type-ahead list, which opens in flow and takes the look of the
+   multiSelect panel (SkinMultiSelectControl.module.css). */
+
+.field {
+  position: relative;
+  min-width: 0;
+}
+
+/* Room for the chevron. (0,3,0) out-ranks the refined surface's padding
+   (SkinRefinedField.module.css, 0,2,0). */
+.field .input.input {
+  padding-right: var(--tap-min);
+}
+
+/* A tap target the height of the input and --tap-min wide, over its right
+   padding. */
+.chevron {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  padding: 0;
+  color: var(--ink-60);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-12);
+  cursor: pointer;
+}
+
+.chevron svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.chevronOpen svg {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .chevron:hover {
+    color: var(--ink);
+  }
+}
+
+.chevron:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── List ──────────────────────────────────────────────────────────────── */
+/* Shows five and a half options, so the cut sixth row says the list
+   scrolls: each option is --tap-min tall plus the 2px gap, over the 8px top
+   padding and the two 1.5px borders. On touch it also stops at 40% of the
+   viewport, so the keyboard leaves some page in view. The padding leaves
+   room around the rows and for the active option's focus ring. */
+.list {
+  --suggest-list-max-height: calc(5.5 * (var(--tap-min) + 2px) + 11px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-height: var(--suggest-list-max-height);
+  padding: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+}
+
+@media (pointer: coarse) {
+  .list {
+    max-height: min(var(--suggest-list-max-height), 40svh);
+  }
+}
+
+.option {
+  box-sizing: border-box;
+  display: flex;
+  flex: none;
+  align-items: center;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 8px 10px;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: left;
+  overflow-wrap: anywhere;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-8);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .option:hover {
+    background: var(--wash);
+  }
+}
+
+/* The option the arrow keys reached (the input's aria-activedescendant).
+   Options never take focus, so the active one carries the focus ring
+   itself, beside the wash and weight. */
+.optionActive {
+  font-weight: 600;
+  background: var(--wash);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron svg,
+  .option {
+    transition: none;
+  }
+}

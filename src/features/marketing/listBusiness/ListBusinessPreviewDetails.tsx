@@ -1,5 +1,6 @@
 import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { MarkdownLite } from "../../../shared/markdown";
 import {
   DAYS,
   formatDayHours,
@@ -8,10 +9,11 @@ import {
   langLabel,
   type ListingDraft,
 } from "./listBusiness.data";
+import { listingTagLabel } from "./listingTags.data";
 import styles from "./ListBusinessPage.module.css";
 
 /**
- * The stacked detail sections of the full-page listing preview: what-it-is,
+ * The stacked detail sections of the full-page listing preview: description,
  * good-for, good-to-know, hours, find-it, and who-runs-it. Split out of
  * `ListBusinessFullPreview` so each component stays under the line limit.
  */
@@ -23,7 +25,10 @@ export function ListBusinessPreviewDetails({
   userName: string;
 }) {
   const { t } = useTranslation();
-  const whatItIsItems = draft.whatItIs.filter((item) => item.text.trim());
+  const description = draft.whatItIs
+    .map((paragraph) => paragraph.text)
+    .filter((text) => text.trim())
+    .join("\n\n");
   const openDays = DAYS.filter((day) => draft.hours[day.id]?.open);
   const showName = draft.visibility !== "anon" && draft.ownerName.trim();
   const social = [
@@ -38,14 +43,12 @@ export function ListBusinessPreviewDetails({
 
   return (
     <>
-      {whatItIsItems.length > 0 && (
+      {description && (
         <section className={styles.fpSec}>
           <h4>{t("marketing:listBusiness.fullPreview.whatItIs")}</h4>
-          <ul className={styles.pdWit}>
-            {whatItIsItems.map((item) => (
-              <li key={item.id}>{item.text}</li>
-            ))}
-          </ul>
+          <div className={styles.pdDescription}>
+            <MarkdownLite text={description} />
+          </div>
         </section>
       )}
 
@@ -70,7 +73,7 @@ export function ListBusinessPreviewDetails({
               <span key={`l-${language}`}>{langLabel(t, language)}</span>
             ))}
             {draft.tags.map((tag) => (
-              <span key={`t-${tag}`}>{tag}</span>
+              <span key={`t-${tag}`}>{listingTagLabel(t, tag)}</span>
             ))}
           </div>
         </section>

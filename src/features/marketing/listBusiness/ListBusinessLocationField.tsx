@@ -12,6 +12,7 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
+import locationStyles from "./ListBusinessLocationField.module.css";
 
 type MapLinkStatus = "idle" | "resolving" | "error" | "demoHint";
 /** State of the "Locate this address" flow, independent of the map-link flow:
@@ -53,7 +54,6 @@ function AddressLocateSection({
     <>
       <FormField
         className={styles.lbField}
-        id={ANCHOR.address}
         label={t("marketing:listBusiness.step3.addressLabel")}
         required
         helper={t("marketing:listBusiness.step3.addressHelper")}
@@ -269,7 +269,7 @@ export function ListBusinessLocationField({
 
   return (
     <>
-      <div className={styles.onlineToggleRow}>
+      <div id={ANCHOR.online} className={styles.onlineToggleRow}>
         <CheckLine
           checked={draft.online}
           onChange={(online) => set({ online })}
@@ -284,7 +284,10 @@ export function ListBusinessLocationField({
           <span>{t("marketing:listBusiness.step3.onlineOnly.note")}</span>
         </div>
       ) : (
-        <>
+        // One anchor over the address and every way to place its pin, so
+        // the missing-field chips land here and the live preview reads the
+        // map link and the pin map as the address field.
+        <div id={ANCHOR.address} className={locationStyles.addressGroup}>
           <AddressLocateSection
             address={draft.address}
             hood={draft.hood}
@@ -331,7 +334,7 @@ export function ListBusinessLocationField({
               )}
             </div>
           )}
-        </>
+        </div>
       )}
     </>
   );

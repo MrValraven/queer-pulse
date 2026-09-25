@@ -133,6 +133,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  container: inbox-head / inline-size;
 }
 .tpHeadActions {
   display: flex;
@@ -159,6 +160,16 @@
 .tpBrandName em {
   color: var(--accent);
   font-style: italic;
+}
+/* Back chevron, mark, wordmark, mailbox initials (with its unread dot) and
+   the two compose buttons need about 346px. Below that (phones narrower than
+   ~384px) the mark goes first, which frees 28px, so the wordmark and the
+   switcher keep their full size. A reply-only mailbox has no compose buttons
+   and keeps the mark. */
+@container inbox-head (max-width: 352px) {
+  .tpHeadRow:has(.tpHeadActions) .tpBrandMark {
+    display: none;
+  }
 }
 .tpBrand:focus-visible {
   outline: var(--focus-ring);
@@ -247,6 +258,26 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
+/* DES-188 revision: rows resolve in place over the skeleton they replace
+   (which already mirrors the row shape), so this is opacity only, no
+   translate and no per-row stagger. CSS modules can't reference a global
+   `@keyframes`, hence the local one here rather than reusing FadeIn's. */
+.threadRowFade {
+  animation: threadRowIn var(--dur-fast) var(--ease-out) both;
+}
+@keyframes threadRowIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .threadRowFade {
+    animation: none;
+  }
 }
 /* ENG-253: the inbox "load more" sentinel/footer below the row list
    (`MessagesThreadListLoadMore`), mirroring `ConversationMediaLoadMore`'s own
@@ -342,7 +373,6 @@
   background: var(--paper);
   transition:
     background var(--dur-fast) var(--ease),
-    padding-inline-end var(--dur-fast) var(--ease),
     transform 220ms var(--ease-out);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
   width: 100%;
@@ -359,27 +389,32 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .threadRow {
-    transition:
-      background var(--dur-fast) var(--ease),
-      padding-inline-end var(--dur-fast) var(--ease);
+    transition: background var(--dur-fast) var(--ease);
+  }
+  .trPreviewRow {
+    transition: padding-inline-end var(--dur-fast) var(--ease);
   }
 }
-/* Reserve room for the "⋯" trigger on hover/focus so it doesn't sit on top of
-   the timestamp/unread badge — no layout shift while the trigger is hidden. */
-.threadRowWrap:hover .threadRow,
-.threadRowWrap:focus-within .threadRow {
-  padding-inline-end: 44px;
+/* Reserve room on the PREVIEW LINE for the "⋯" trigger on hover/focus, which
+   sits under the timestamp (see `.rowMenu` below). Scoped to `.trPreviewRow`
+   so the date/pin/favourite indicator line above it never shifts; only the
+   preview text and unread badge/dot slide left to make room, which is
+   intended (WhatsApp Web does the same). */
+.threadRowWrap:hover .trPreviewRow,
+.threadRowWrap:focus-within .trPreviewRow {
+  padding-inline-end: 36px;
 }
 /* DES-187: on a touch device the "⋯" trigger is ALWAYS visible (see
    `.rowMenuTrigger`'s own `(hover: none)` rule below), never gated behind
    `:hover`/`:focus-within`, which touch never triggers. Without this, the
-   reservation above never applied there, so the timestamp/unread badge
-   painted straight under the kebab and a tap aimed at either opened the menu
-   instead of the thread. Permanent on touch; the hover-gated rule above still
-   governs pointer devices, where the trigger only appears on hover/focus. */
+   reservation above never applied there, so the preview text/unread badge
+   painted straight under the trigger and a tap aimed at either opened the
+   menu instead of the thread. Permanent on touch; the hover-gated rule above
+   still governs pointer devices, where the trigger only appears on hover/
+   focus. */
 @media (hover: none) {
-  .threadRow {
-    padding-inline-end: 44px;
+  .trPreviewRow {
+    padding-inline-end: 36px;
   }
 }
 /* Every interaction state keeps an OPAQUE base: the plum wash is composited
@@ -518,6 +553,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: padding-inline-end var(--dur-fast) var(--ease);
 }
 .trPreview {
   flex: 1;
@@ -2754,28 +2790,6 @@
 .threadRowWrap {
   position: relative;
 }
-/* While the ⋯ menu is open, the `.rowMenuPopover` hangs DOWN past its row into
-   the next row's box — and was painting BEHIND that next row, so the dropdown
-   looked invisible.
-
-   Each inbox row is wrapped in a `<FadeIn>` (see MessagesThreadListBody), whose
-   `.fadeIn` sets `will-change: transform`, making every row its OWN stacking
-   context. The popover's `z-index` therefore only competed inside its own row;
-   the next `FadeIn` (a later sibling, painted in DOM order) covered it. Raising
-   `.threadRowWrap` couldn't help — it's trapped inside that FadeIn context.
-
-   Fix at the FadeIn wrapper itself: when it contains an open popover, make it
-   `position: relative` + a positive `z-index`. A positioned positive-z element
-   paints in the topmost stacking step, above sibling FadeIns' stack-level-0
-   contexts regardless of DOM order — so the open row's dropdown paints over the
-   rows below it. Scoped to the open state so at-rest row layering is untouched.
-   (Reduced motion drops the will-change/stacking context, but the rule is
-   harmless there.) */
-.threadRowFade:has(.rowMenuPopover) {
-  position: relative;
-  z-index: 3;
-}
-
 /* Swipe-to-pin/favorite container (mobile, mirrors `.bubbleWrap`'s
    swipe-to-reply). Wraps ONLY the two affordance layers + the row `<button>`
    — `.rowMenu` below stays a direct child of `.threadRowWrap` so its own
@@ -2796,11 +2810,14 @@
    scale are written directly by `useThreadRowSwipe` per pointer frame — the
    baseline (invisible, `scale(0.5)`) inline style lives on the icon `<span>`
    itself in `ThreadRowSwipeAffordances.tsx`. Decorative (`aria-hidden`): the
-   ⋯ menu already covers the same actions for keyboard/AT users. */
+   ⋯ menu already covers the same actions for keyboard/AT users.
+   Inset 1px from the container's outer edges: the list sits at a fractional
+   y offset, so the row's anti-aliased edge pixels let a full-bleed layer
+   bleed through as a jade/coral seam between every row at rest. */
 .threadRowSwipeLeading,
 .threadRowSwipeTrailing {
   position: absolute;
-  inset-block: 0;
+  inset-block: 1px;
   z-index: 0;
   width: 108px;
   display: flex;
@@ -2810,13 +2827,13 @@
   pointer-events: none;
 }
 .threadRowSwipeLeading {
-  inset-inline-start: 0;
+  inset-inline-start: 1px;
   justify-content: flex-start;
   padding-inline-start: 22px;
   background: var(--jade);
 }
 .threadRowSwipeTrailing {
-  inset-inline-end: 0;
+  inset-inline-end: 1px;
   justify-content: flex-end;
   padding-inline-end: 22px;
   background: var(--accent);
@@ -2825,19 +2842,28 @@
   display: inline-flex;
 }
 
+/* Anchored to the SECOND line (the preview row), right edge flush with the
+   row's own 16px inline-end padding (the same right edge the timestamp above
+   it ends on), the way WhatsApp Web's row chevron sits. `bottom: 12px`
+   centres the 28px trigger on the preview line's vertical centre: the row's
+   own bottom padding is 13px, and the preview line's centre sits ~26px above
+   the row's bottom edge regardless of whether the row is one avatar-height
+   tall or taller (an archived/muted badge wrapping the name row), measured
+   against the real rendered rows. Still a sibling of the row `<button>`
+   (buttons can't nest), so this stays absolutely positioned within
+   `.threadRowWrap`. */
 .rowMenu {
   position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
+  bottom: 12px;
+  right: 16px;
   z-index: 2;
 }
 
 .rowMenuTrigger {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 28px;
+  height: 28px;
   border: none;
   border-radius: var(--radius-pill);
   background: transparent;
@@ -2861,6 +2887,18 @@
 @media (hover: hover) {
   .rowMenuTrigger:hover {
     background: rgba(var(--plum-rgb), 0.08);
+  }
+  /* `data-tap-target` (see base.css) grows the invisible hit area to the
+     global `--tap-min` (44px), which centres on this 28px trigger and would
+     reach up into the timestamp line above it on a mouse/trackpad device,
+     where hover already reveals the trigger and there's no thumb to size the
+     target for. Capped to 32px here, still clear of WCAG 2.5.8's 24px floor,
+     so the hit area grows past the visible circle without covering the date.
+     Touch keeps the full 44px (no override in the `(hover: none)` rule
+     below), the one case this component actually needs a thumb-sized hit
+     area for. */
+  .rowMenuTrigger {
+    --tap-min: 32px;
   }
 }
 
@@ -2891,6 +2929,31 @@
      rather than snapping on top of the next one. */
   transform-origin: top right;
   animation: rowMenuIn var(--dur-fast) var(--ease);
+}
+
+/* The thread row's copy (`ThreadRowMenu`) is portalled to `<body>` and placed
+   by `useAnchoredPopover`, whose inline `top`/`right` land on top of these.
+   Inside the scrolling thread list an absolute panel was clipped by the
+   list's own overflow on the last rows, and trapped under later rows'
+   entrance-animation stacking contexts. `ConversationMenuTrigger` and
+   `GroupMemberRowSafetyMenu` still use the absolute base above. */
+.rowMenuPopoverPortal {
+  position: fixed;
+  z-index: var(--z-popover-portal);
+}
+
+.rowMenuPopoverFlipped {
+  transform-origin: bottom right;
+}
+
+/* Carried for the single commit before the first measurement lands, so the
+   panel never paints parked in the corner. Transparent and inert to the
+   pointer, but still focusable (`visibility: hidden` would refuse focus). */
+.rowMenuPopoverUnplaced {
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes rowMenuIn {

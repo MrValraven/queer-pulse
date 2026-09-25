@@ -49,6 +49,7 @@ export function DirectoryCardAccess({ place }: { place: DirectoryPlace }) {
     <ul
       className={s.accessRow}
       aria-label={t("marketing:directory.card.access")}
+      data-preview-region="access"
     >
       {shown.map((question) => (
         <li key={question.slug} className={s.accessPill}>

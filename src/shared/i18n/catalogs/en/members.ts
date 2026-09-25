@@ -1332,7 +1332,7 @@ export const members: Catalog = {
 
   "places.quickEdit.title": "Quick edit",
   "places.quickEdit.sub": "Update the basics for {name}.",
-  "places.quickEdit.blurbLabel": "One-line blurb",
+  "places.quickEdit.blurbLabel": "Short description",
   "places.quickEdit.blurbHelper": "Shown under your listing's name.",
   "places.quickEdit.hoursNoteLabel": "Hours note",
   "places.quickEdit.hoursNoteHelper":

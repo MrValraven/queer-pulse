@@ -7,8 +7,11 @@ import {
   FiBookOpen,
   FiBriefcase,
   FiZap,
+  FiUsers,
+  FiHeart,
+  FiLifeBuoy,
 } from "react-icons/fi";
-import { LuPalette } from "react-icons/lu";
+import { LuPalette, LuScale } from "react-icons/lu";
 import { FaHandFist } from "react-icons/fa6";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { tintForSlug, initialsOf } from "../../shared/api/refs";
@@ -30,6 +33,10 @@ export const CATS: { id: string; nameKey: string; icon: IconType }[] = [
   { id: "guides", nameKey: "forum:cat.guides", icon: FiBookOpen },
   { id: "jobs", nameKey: "forum:cat.jobs", icon: FiBriefcase },
   { id: "trans", nameKey: "forum:cat.trans", icon: FiZap },
+  { id: "meetups", nameKey: "forum:cat.meetups", icon: FiUsers },
+  { id: "legal", nameKey: "forum:cat.legal", icon: LuScale },
+  { id: "relationships", nameKey: "forum:cat.relationships", icon: FiHeart },
+  { id: "platform", nameKey: "forum:cat.platform", icon: FiLifeBuoy },
 ];
 
 /**
@@ -53,6 +60,10 @@ export const CAT_TONE: Record<string, CategoryTone> = {
   guides: "jade",
   jobs: "coral",
   trans: "violet",
+  meetups: "jade",
+  legal: "violet",
+  relationships: "coral",
+  platform: "neutral",
 };
 
 /**
@@ -74,6 +85,10 @@ export const CAT_STYLE: Record<string, { color: string }> = {
   guides: { color: "var(--jade-ink)" },
   jobs: { color: "var(--accent-ink)" },
   trans: { color: "var(--violet)" },
+  meetups: { color: "var(--jade-ink)" },
+  legal: { color: "var(--violet)" },
+  relationships: { color: "var(--accent-ink)" },
+  platform: { color: "var(--text-strong)" },
 };
 
 /**

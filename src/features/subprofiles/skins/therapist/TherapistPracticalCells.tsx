@@ -1,14 +1,12 @@
 import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
-import { FiClock, FiShield } from "react-icons/fi";
-import type { Language, TFunction } from "../../../../shared/i18n/types";
+import { FiClock } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import {
-  feeChoiceInListKey,
-  matchFeeChoice,
-  resolveFeeChoice,
-} from "./therapistFeeOptions";
+import { resolveFeeChoice } from "./therapistFeeOptions";
 import type { TherapistView } from "./therapistView";
+import { RevealBlock, RevealList, RevealRow } from "./TherapistReveal";
+import { useRevealList } from "./revealKeys";
+import { useStableRowKeys } from "./useStableRowKeys";
 import styles from "./TherapistPractical.module.css";
 
 interface PracticalCellProps {
@@ -43,7 +41,14 @@ export function PracticalCell({
   );
 }
 
-/** A label/value line inside a cell's `<dl>`. */
+/** The gap between a `.rows` list's lines, in CSS pixels. */
+const ROWS_GAP = 2;
+/** A cell's own gap between its blocks (`.cell`, `.availabilityFacts`). */
+export const CELL_GAP = 4;
+
+/** A label/value line inside a cell's `<dl>`. As a direct child of
+ *  `RevealList` it grows in and folds away. Anywhere else it is a plain row:
+ *  a `RevealBlock` around it would otherwise fold it a second time. */
 export function PracticalRow({
   label,
   value,
@@ -51,11 +56,18 @@ export function PracticalRow({
   label: string;
   value: string;
 }) {
-  return (
-    <div className={styles.row}>
+  const isInRevealList = useRevealList() !== null;
+  const cells = (
+    <>
       <dt>{label}</dt>
       <dd>{value}</dd>
-    </div>
+    </>
+  );
+  if (!isInRevealList) return <div className={styles.row}>{cells}</div>;
+  return (
+    <RevealRow className={styles.row} parentGap={ROWS_GAP}>
+      {cells}
+    </RevealRow>
   );
 }
 
@@ -90,122 +102,57 @@ export function SessionsCell({ view }: { view: TherapistView }) {
   const venueText = view.venue
     ? [view.venue.name, ...view.venue.lines].filter(Boolean).join(", ")
     : "";
+  // Keyed by the typed label: a row keeps its key while the owner edits it.
+  const scheduleKeys = useStableRowKeys(
+    view.feeSchedule.map((line) => line.label),
+  );
   return (
     <PracticalCell
       icon={FiClock}
       title={t("subprofiles:therapist.practical.sessions.title")}
     >
-      {firstLength && (
+      <RevealBlock isShown={firstLength !== ""} parentGap={CELL_GAP}>
         <p className={styles.big}>
           {firstLength}
           {modeKey && <small>{t(modeKey)}</small>}
         </p>
-      )}
+      </RevealBlock>
       <dl className={styles.rows}>
-        {view.feeSchedule.map((line, index) => (
-          <PracticalRow
-            key={`${line.label}-${index}`}
-            label={line.label}
-            value={line.value}
-          />
-        ))}
-        {frequency && (
-          <PracticalRow
-            label={t("subprofiles:therapist.practical.sessions.frequency")}
-            value={frequency}
-          />
-        )}
-        {venueText && (
-          <PracticalRow
-            label={t("subprofiles:therapist.practical.sessions.inPerson")}
-            value={venueText}
-          />
-        )}
-        <PracticalRow
-          label={t("subprofiles:therapist.practical.sessions.online")}
-          value={t(ONLINE_ANSWER_KEY[view.online])}
-        />
-      </dl>
-      {view.isOnlineOnly && view.timezone && (
-        <p className={styles.hint}>{view.timezone}</p>
-      )}
-    </PracticalCell>
-  );
-}
-
-/** The chosen payment methods as one phrase in the reader's language ("MB
- *  WAY, bank transfer or card"). Known methods use their in-list label, other
- *  entries stay as stored, and only the phrase's first letter is capitalised.
- *  British English keeps the list free of an Oxford comma. Falls back to the
- *  older payment text. */
-function paymentText(
-  t: TFunction,
-  language: Language,
-  fees: TherapistView["fees"],
-): string {
-  const labels = (fees?.paymentMethods ?? [])
-    .map((method) => {
-      const choice = matchFeeChoice(t, "paymentMethods", method);
-      return choice ? t(feeChoiceInListKey(choice)) : method.trim();
-    })
-    .filter(Boolean);
-  if (labels.length === 0) return fees?.payment ?? "";
-  const locale = language === "pt" ? "pt-PT" : "en-GB";
-  const phrase = new Intl.ListFormat(locale, {
-    type: "disjunction",
-  }).format(labels);
-  return phrase.charAt(0).toLocaleUpperCase(locale) + phrase.slice(1);
-}
-
-/** The notice ("24 hours' notice") then the owner's note, as one line. A
- *  full stop joins them unless the notice already ends a sentence. */
-function cancellationText(t: TFunction, fees: TherapistView["fees"]): string {
-  const notice = resolveFeeChoice(
-    t,
-    "cancellationNotice",
-    fees?.cancellationNotice ?? "",
-  );
-  const note = fees?.cancellation ?? "";
-  if (!notice || !note) return notice || note;
-  const isSentenceEnded = /[.!?…]$/.test(notice);
-  return `${notice}${isSentenceEnded ? " " : ". "}${note}`;
-}
-
-export function SmallPrintCell({ view }: { view: TherapistView }) {
-  const { t, language } = useTranslation();
-  const fees = view.fees;
-  // Each key is also the row's heading key under `smallPrint.`.
-  const rows: { key: string; value: string }[] = [
-    {
-      key: "receiptTime",
-      value: resolveFeeChoice(t, "receiptTime", fees?.receiptTime ?? ""),
-    },
-    { key: "payment", value: paymentText(t, language, fees) },
-    { key: "cancellation", value: cancellationText(t, fees) },
-  ].filter((row) => row.value !== "");
-  const receipts = fees?.receipts ?? "";
-  return (
-    <PracticalCell
-      icon={FiShield}
-      title={t("subprofiles:therapist.practical.smallPrint.title")}
-    >
-      {!receipts && rows.length === 0 && (
-        <p className={styles.missing}>
-          {t("subprofiles:therapist.practical.smallPrint.unknown")}
-        </p>
-      )}
-      {receipts && <p className={styles.soloLine}>{receipts}</p>}
-      {rows.length > 0 && (
-        <dl className={styles.rows}>
-          {rows.map((row) => (
+        <RevealList>
+          {view.feeSchedule.map((line, index) => (
             <PracticalRow
-              key={row.key}
-              label={t(`subprofiles:therapist.practical.smallPrint.${row.key}`)}
-              value={row.value}
+              key={scheduleKeys[index]}
+              label={line.label}
+              value={line.value}
             />
           ))}
-        </dl>
-      )}
+          {frequency && (
+            <PracticalRow
+              key="frequency"
+              label={t("subprofiles:therapist.practical.sessions.frequency")}
+              value={frequency}
+            />
+          )}
+          {venueText && (
+            <PracticalRow
+              key="venue"
+              label={t("subprofiles:therapist.practical.sessions.inPerson")}
+              value={venueText}
+            />
+          )}
+          <PracticalRow
+            key="online"
+            label={t("subprofiles:therapist.practical.sessions.online")}
+            value={t(ONLINE_ANSWER_KEY[view.online])}
+          />
+        </RevealList>
+      </dl>
+      <RevealBlock
+        isShown={view.isOnlineOnly && view.timezone !== ""}
+        parentGap={CELL_GAP}
+      >
+        <p className={styles.hint}>{view.timezone}</p>
+      </RevealBlock>
     </PracticalCell>
   );
 }

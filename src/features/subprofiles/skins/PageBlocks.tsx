@@ -7,15 +7,15 @@ export function PageExcerpt({ persona }: { persona: SkinExtrasPersona }) {
   const { t } = useTranslation();
   const excerpt = persona.skinData?.excerpt;
   // `lines` is typed required, but the block editor persists partial objects
-  // (e.g. only `from` filled, `lines` never added), so guard the sub-field —
+  // (e.g. only `from` filled, `lines` never added), so guard the sub-field:
   // reading `.length` off an absent `lines` white-screened the whole page.
   if (!excerpt || !excerpt.lines || excerpt.lines.length === 0) return null;
 
   return (
     <div className="excerpt">
       <div className="excerpt-lines">
-        {excerpt.lines.map((line) => (
-          <span key={line}>{line}</span>
+        {excerpt.lines.map((line, index) => (
+          <span key={`${index}-${line}`}>{line}</span>
         ))}
       </div>
       <span className="excerpt-from">

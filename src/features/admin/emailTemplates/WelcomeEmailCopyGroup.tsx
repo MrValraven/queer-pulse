@@ -7,6 +7,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "../api/useJoinRequests";
 import { AdminSeg } from "../ui";
 import { useModEmailTemplates } from "./api/emailTemplateHooks";
+import { useEmailDesignVariant } from "./emailDesignVariant";
 import { copyPlainText, copyRichEmail } from "./copyEmail";
 import { renderEmail } from "./renderEmail";
 import { welcomeEmailValues } from "./welcomeEmailValues";
@@ -27,6 +28,7 @@ export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
   });
   const [chosenTemplateId, setChosenTemplateId] = useState<string | null>(null);
   const [chosenLanguage, setChosenLanguage] = useState<Language | null>(null);
+  const { variant } = useEmailDesignVariant();
 
   const template =
     templates?.find((candidate) => candidate.id === chosenTemplateId) ??
@@ -41,6 +43,7 @@ export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
     content,
     welcomeEmailValues(item, emailLanguage),
     emailLanguage,
+    { design: variant },
   );
   const languageLabelId = `welcome-email-language-${item.id}`;
   const templateSelectId = `welcome-email-template-${item.id}`;

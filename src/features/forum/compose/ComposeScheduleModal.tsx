@@ -59,6 +59,7 @@ export function ComposeScheduleModal({
             {t("forum:composePage.overlay.back")}
           </Button>
           <Button
+            className={styles.confirmButton}
             disabled={!canSchedule}
             onClick={() => {
               if (whenValue && canSchedule) onSchedule(whenValue);

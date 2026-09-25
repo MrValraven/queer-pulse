@@ -1,6 +1,8 @@
 import type { ClipboardEvent, KeyboardEvent } from "react";
 import {
+  blankLineBlockingEdit,
   hasLineBreak,
+  isBlankLine,
   mergeWithPrevious,
   pasteIntoLine,
   pasteUnderHeading,
@@ -47,7 +49,8 @@ function canLeaveField(field: HTMLTextAreaElement, direction: "up" | "down") {
 
 /**
  * Keyboard and paste for one topic, so its heading and lines read as one
- * short document: Enter opens the next line (splitting at the caret), Enter
+ * short document: Enter opens the next line (splitting at the caret, or
+ * going to the topic's blank line when it already has one), Enter
  * on an empty last line moves on to "Add a topic", Backspace at the start of
  * a line joins it to the line above (or leaves an empty first line for the
  * heading), the vertical arrows walk from line to line across topics once
@@ -75,7 +78,7 @@ export function useTopicKeyboard(
       event.altKey && (event.key === "ArrowUp" || event.key === "ArrowDown");
     if (isAltArrow) {
       event.preventDefault();
-      editor.moveTopic(topicIndex, event.key === "ArrowUp" ? -1 : 1, "heading");
+      editor.moveTopic(topicIndex, event.key === "ArrowUp" ? -1 : 1);
     } else if (event.key === "Enter") {
       event.preventDefault();
       if (isLineEnter(event)) focus.focusNow([lineKey(0)]);
@@ -123,12 +126,15 @@ export function useTopicKeyboard(
 
   const onEnter = (lineIndex: number, field: HTMLTextAreaElement) => {
     const isLastLine = lineIndex === lines.length - 1;
-    if (!isLastLine || field.value.trim() !== "") {
+    if (!isLastLine || !isBlankLine(field.value)) {
       const { start, end } = selectionOf(field);
-      editor.applyLineEdit(
-        topicIndex,
-        splitLineAt(lines, lineIndex, start, end),
-      );
+      const edit = splitLineAt(lines, lineIndex, start, end);
+      const blankIndex = blankLineBlockingEdit(lines, edit);
+      if (blankIndex !== null) {
+        focus.focusNow([lineKey(blankIndex)]);
+        return;
+      }
+      editor.applyLineEdit(topicIndex, edit);
       return;
     }
     // An empty last line: Enter moves on to "Add a topic" and the blank line

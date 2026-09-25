@@ -24,10 +24,11 @@ export function EmailPlaceholderChips({
     <div
       className={styles.chips}
       role="group"
-      aria-labelledby="email-placeholder-label"
+      aria-label={t("admin:emailTemplates.placeholders.label")}
     >
-      <span id="email-placeholder-label" className={styles.chipsLabel}>
-        {t("admin:emailTemplates.placeholders.label")}
+      {/* The short visible word; the group carries the full name. */}
+      <span className={styles.chipsLabel} aria-hidden>
+        {t("admin:emailTemplates.placeholders.shortLabel")}
       </span>
       {placeholders.length === 0 ? (
         <span className={styles.chipsEmpty}>

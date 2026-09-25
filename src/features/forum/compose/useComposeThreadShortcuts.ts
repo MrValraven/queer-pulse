@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { hasOpenModal } from "../../../shared/components/ui/modalStack";
 
 // ── The three page-level keys ───────────────────────────────────────────────
 // ⌘↵ publishes, `?` opens the reference, Escape leaves. Everything else the
@@ -39,11 +40,20 @@ export function useComposeThreadShortcuts({
   useEffect(() => {
     if (isSuspended) return;
     function onKeyDown(event: KeyboardEvent) {
+      // A sheet or dialog is on the modal stack, including one still fading
+      // out (the success panel stays mounted through its exit, and the rail
+      // sheet through its slide). Its own Escape answers; the page waits.
+      if (hasOpenModal()) return;
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
         event.preventDefault();
         onPublish();
         return;
       }
+      // A layer inside the page already answered this press (the publish
+      // menu closing on Escape), so it is spent. Checked after ⌘↵ on purpose:
+      // the title and tag boxes claim every Enter, and ⌘↵ still publishes
+      // from both.
+      if (event.defaultPrevented) return;
       if (event.key === "Escape") {
         event.preventDefault();
         onCancel();

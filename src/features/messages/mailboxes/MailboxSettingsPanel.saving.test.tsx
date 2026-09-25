@@ -48,11 +48,11 @@ afterEach(() => {
 });
 
 /** Live mode: re-import every module that reads `VITE_API_URL`, so the
- *  modal's hook sees the stubbed mode. */
-async function renderLiveModal() {
+ *  panel's hook sees the stubbed mode. */
+async function renderLivePanel() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { MailboxSettingsModal } = await import("./MailboxSettingsModal");
+  const { MailboxSettingsPanel } = await import("./MailboxSettingsPanel");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   const { I18nProvider } = await import("../../../app/providers/I18nProvider");
@@ -70,12 +70,12 @@ async function renderLiveModal() {
       </I18nProvider>
     </QueryClientProvider>
   );
-  render(<MailboxSettingsModal mailbox={cafe} onClose={() => {}} />, {
+  render(<MailboxSettingsPanel mailbox={cafe} />, {
     wrapper,
   });
 }
 
-describe("MailboxSettingsModal while a change saves (live)", () => {
+describe("MailboxSettingsPanel while a change saves (live)", () => {
   it("holds the pressed switch still until its write settles, and leaves the other one free", async () => {
     let finishWrite: (value: MailboxAttribution) => void = () => {};
     apiMocks.setMailboxStaffNames.mockReturnValue(
@@ -83,7 +83,7 @@ describe("MailboxSettingsModal while a change saves (live)", () => {
         finishWrite = resolve;
       }),
     );
-    await renderLiveModal();
+    await renderLivePanel();
     const ownerSwitch = await screen.findByRole("switch", {
       name: "Show who replied",
     });

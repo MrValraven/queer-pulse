@@ -28,11 +28,20 @@
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
   touch-action: manipulation;
+  transition:
+    background var(--dur-base) var(--ease),
+    opacity var(--dur-base) var(--ease);
 }
 
 .trigger svg {
   width: 15px;
   height: 15px;
+  transition: transform var(--dur-base) var(--ease);
+}
+
+/* The caret turns to point at the menu it opened, and back as it closes. */
+.trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
 }
 
 .trigger:disabled {
@@ -65,7 +74,13 @@
   border-radius: var(--radius-14);
   box-shadow: var(--shadow-e3);
   z-index: var(--z-popover);
-  animation: menuIn var(--dur-fast) var(--ease) both;
+  /* The open and close motion lives in ComposePublishMenuPanel; this only
+     pins where it grows from: the caret's corner, below and at the end. */
+  transform-origin: 100% 100%;
+}
+
+.menu:dir(rtl) {
+  transform-origin: 0 100%;
 }
 
 .item {
@@ -80,6 +95,13 @@
   cursor: pointer;
   color: var(--ink);
   touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.item:active {
+  transform: scale(0.98);
 }
 
 .item b {
@@ -107,21 +129,4 @@
   outline: var(--focus-ring);
   outline-offset: calc(var(--focus-ring-offset) * -1);
   background: rgba(var(--plum-rgb), 0.05);
-}
-
-@keyframes menuIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .menu {
-    animation: none;
-  }
 }

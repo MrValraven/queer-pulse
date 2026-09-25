@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useProfileData } from "../../../../app/providers/useProfile";
 import { usePrefersReducedMotion } from "../../../../shared/hooks/usePrefersReducedMotion";
 import { useUploadImage } from "../../../members/api/useUploadImage";
@@ -20,6 +20,7 @@ import { useDeleteListingExit } from "./useDeleteListingExit";
 import { useEditorHashLanding } from "./useEditorHashLanding";
 import { useListingEditorAutosave } from "./useListingEditorAutosave";
 import { useListingEditorSave } from "./useListingEditorSave";
+import { ListingEditorLivePreview } from "./ListingEditorLivePreview";
 import { ListingEditorNotices } from "./ListingEditorNotices";
 import { ListingEditorPreviewModal } from "./ListingEditorPreviewModal";
 import { ListingEditorSaveBar } from "./ListingEditorSaveBar";
@@ -62,6 +63,8 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const activeSectionId = useActiveEditorSection(LISTING_EDITOR_SECTION_IDS);
   useEditorHashLanding(sections, prefersReducedMotion);
+  // The fields column, so the live preview can outline where a field shows.
+  const fieldsRef = useRef<HTMLDivElement>(null);
 
   // Every still-unfilled required field, in page order: `useListingForm`
   // gates step by step, read here as one list since the page is one screen.
@@ -127,30 +130,40 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
           onDismissServerError={dismissServerError}
         />
 
-        <div className={styles.layout}>
-          <ListingEditorSectionNav
-            sections={sections}
-            activeSectionId={activeSectionId}
-            missing={missing}
-            onJump={(sectionId) =>
-              jumpToEditorSection(sectionId, prefersReducedMotion)
-            }
-          />
-
-          <div className={styles.main}>
-            <ListingEditorSections
-              form={form}
-              listing={listing}
-              userName={userName}
-              uploadPhoto={uploadPhoto}
-              onConfirmDelete={deleteExit.confirmDelete}
-            />
-            <ListingEditorSaveBar
+        <div className={styles.layoutFrame}>
+          <div className={styles.layout}>
+            <ListingEditorSectionNav
+              sections={sections}
+              activeSectionId={activeSectionId}
               missing={missing}
-              isDirty={isDirty}
-              isSaving={isSaving}
-              onPreview={() => setIsPreviewOpen(true)}
-              onSave={() => void save()}
+              onJump={(sectionId) =>
+                jumpToEditorSection(sectionId, prefersReducedMotion)
+              }
+            />
+
+            <div className={styles.main} ref={fieldsRef}>
+              <ListingEditorSections
+                form={form}
+                listing={listing}
+                userName={userName}
+                uploadPhoto={uploadPhoto}
+                onConfirmDelete={deleteExit.confirmDelete}
+              />
+              <ListingEditorSaveBar
+                missing={missing}
+                isDirty={isDirty}
+                isSaving={isSaving}
+                onPreview={() => setIsPreviewOpen(true)}
+                onSave={() => void save()}
+              />
+            </div>
+
+            <ListingEditorLivePreview
+              draft={draft}
+              photoPreviews={form.photoPreviews}
+              fieldsRef={fieldsRef}
+              prefersReducedMotion={prefersReducedMotion}
+              onOpenFullPreview={() => setIsPreviewOpen(true)}
             />
           </div>
         </div>
@@ -162,6 +175,15 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
           photoPreviews={form.photoPreviews}
           slug={listing.slug}
           isCoManagerView={listing.managementRole === "co_manager"}
+          missing={missing}
+          isDirty={isDirty}
+          isSaving={isSaving}
+          onSave={() => {
+            // Closed first, so a failed save lands on the form with its error
+            // notice and flashed field in view instead of under the preview.
+            setIsPreviewOpen(false);
+            void save();
+          }}
           onClose={() => setIsPreviewOpen(false)}
         />
       )}

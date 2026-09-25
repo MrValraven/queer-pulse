@@ -1,21 +1,18 @@
-import { useEffect, useId, useState } from "react";
+import { useId } from "react";
 import { createPortal } from "react-dom";
-import { FaWhatsapp } from "react-icons/fa6";
-import {
-  FiBookmark,
-  FiCheck,
-  FiLink,
-  FiRotateCcw,
-  FiUsers,
-} from "react-icons/fi";
+import { m, useIsPresent } from "motion/react";
+import { FiCheck } from "react-icons/fi";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button, Toggle, useDismiss } from "../../../shared/components/ui";
-import { useShareLink } from "../../../shared/hooks";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-// The one WhatsApp share-link builder in the app. It takes a title and a URL
-// and knows nothing about gatherings, so a second copy here would only be a
-// second place for the message shape to drift.
-import { whatsAppShareUrl } from "../../gatherings/shareKit/shareLinks";
+import { ComposeSuccessShareRow } from "./ComposeSuccessShareRow";
+import { ComposeUnpublishCountdown } from "./ComposeUnpublishCountdown";
+import {
+  successPanelVariants,
+  successScreenTransition,
+} from "./composeSuccessMotion";
+import { useUnpublishCountdown } from "./useUnpublishCountdown";
 import type { PublishMode } from "./composeThread.types";
 import styles from "./ComposeSuccessPanel.module.css";
 
@@ -74,7 +71,14 @@ export function ComposeSuccessPanel({
   onViewPost,
 }: ComposeSuccessPanelProps) {
   const { t } = useTranslation();
-  const panelRef = useDismiss<HTMLDivElement>(onDone);
+  const { reducedMotion } = useMotionPrefs();
+  // False while the panel fades out after a withdraw: no second clicks, and
+  // no Escape either, which would spend the draft the withdraw handed back.
+  const isPresent = useIsPresent();
+  const variants = successPanelVariants(reducedMotion);
+  const panelRef = useDismiss<HTMLDivElement>(() => {
+    if (isPresent) onDone();
+  });
   const titleId = useId();
 
   const isLive = mode === "now";
@@ -86,74 +90,90 @@ export function ComposeSuccessPanel({
 
   const audienceLabel =
     audienceName ?? t("forum:composePage.success.townSquare");
-  const titleKey = `forum:composePage.success.${TITLE_KEY_BY_MODE[mode]}`;
+  const titleKey = `forum:composePage.success.${KEYS_BY_MODE[mode].title}`;
   const bodyKey = isLive
     ? isWindowOpen
       ? "forum:composePage.success.nowBody"
       : "forum:composePage.success.nowBodyPermanent"
-    : `forum:composePage.success.${BODY_KEY_BY_MODE[mode]}`;
+    : `forum:composePage.success.${KEYS_BY_MODE[mode].body}`;
 
   return createPortal(
-    <div
+    <m.div
       ref={panelRef}
       tabIndex={-1}
       className={styles.screen}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
+      inert={!isPresent}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={successScreenTransition(reducedMotion)}
     >
-      <div className={styles.inner}>
-        <span className={styles.icon} aria-hidden>
+      <m.div
+        className={styles.inner}
+        initial="hidden"
+        animate="shown"
+        variants={variants.sequence}
+      >
+        <m.span className={styles.icon} aria-hidden variants={variants.mark}>
           <FiCheck />
-        </span>
-        <h2 id={titleId} className={styles.title}>
+        </m.span>
+        <m.h2 id={titleId} className={styles.title} variants={variants.part}>
           <Translation
             i18nKey={titleKey}
             components={{ em: <em /> }}
             values={{ audience: audienceLabel, when: scheduledFor ?? "" }}
           />
-        </h2>
-        {/* Polite, and it changes exactly once: when the window lapses. The
-            ticking number below is hidden from assistive tech so nobody is
-            read thirty separate seconds. */}
-        <p className={styles.body} role="status">
-          {t(bodyKey)}
-        </p>
+        </m.h2>
+        {/* Polite, and it changes exactly once: when the window lapses (the
+            keyed span fades that change in). The ticking number below is
+            hidden from assistive tech so nobody is read thirty seconds. */}
+        <m.p className={styles.body} role="status" variants={variants.part}>
+          <span key={bodyKey} className={styles.bodyText}>
+            {t(bodyKey)}
+          </span>
+        </m.p>
 
-        <div className={styles.card}>
+        <m.div className={styles.card} variants={variants.part}>
           <span className={styles.cardTitle}>{threadTitle}</span>
           <span className={styles.cardMeta}>
             {audienceLabel} · {t("forum:time.justNow")}
           </span>
-        </div>
-
-        {isWindowOpen && onUnpublish && (
-          <ComposeUnpublishCountdown
-            secondsLeft={secondsLeft}
-            totalSeconds={unpublishWindowSeconds}
-            onUnpublish={onUnpublish}
-          />
+        </m.div>
+        {onUnpublish && (
+          <m.div variants={variants.part}>
+            <ComposeUnpublishCountdown
+              isOpen={isWindowOpen}
+              secondsLeft={secondsLeft}
+              totalSeconds={unpublishWindowSeconds}
+              onUnpublish={onUnpublish}
+            />
+          </m.div>
         )}
 
         {isLive && (
-          <ComposeSuccessShareRow
-            threadTitle={threadTitle}
-            threadUrl={threadUrl ?? null}
-            onPinToProfile={onPinToProfile}
-            onPostToCommunity={onPostToCommunity}
-          />
+          <m.div className={styles.shareSlot} variants={variants.part}>
+            <ComposeSuccessShareRow
+              threadTitle={threadTitle}
+              threadUrl={threadUrl ?? null}
+              onPinToProfile={onPinToProfile}
+              onPostToCommunity={onPostToCommunity}
+            />
+          </m.div>
         )}
 
-        <div className={styles.follow}>
+        <m.div className={styles.follow} variants={variants.part}>
           <Toggle
             checked={isFollowingReplies}
             onChange={onFollowRepliesChange}
             label={t("forum:composePage.success.followReplies")}
           />
           <span>{t("forum:composePage.success.followReplies")}</span>
-        </div>
+        </m.div>
 
-        <div className={styles.actions}>
+        <m.div className={styles.actions} variants={variants.part}>
           <Button variant="ghost-dark" size="lg" onClick={onDone}>
             {t("forum:compose.done")}
           </Button>
@@ -162,140 +182,16 @@ export function ComposeSuccessPanel({
               {t("forum:composePage.success.viewPost")}
             </Button>
           )}
-        </div>
-      </div>
-    </div>,
+        </m.div>
+      </m.div>
+    </m.div>,
     document.body,
   );
 }
 
-const TITLE_KEY_BY_MODE: Record<PublishMode, string> = {
-  now: "nowTitle",
-  schedule: "scheduledTitle",
-  review: "reviewTitle",
+/** The title and body keys for each ending, under `composePage.success`. */
+const KEYS_BY_MODE: Record<PublishMode, { title: string; body: string }> = {
+  now: { title: "nowTitle", body: "nowBody" },
+  schedule: { title: "scheduledTitle", body: "scheduledBody" },
+  review: { title: "reviewTitle", body: "reviewBody" },
 };
-
-const BODY_KEY_BY_MODE: Record<PublishMode, string> = {
-  now: "nowBody",
-  schedule: "scheduledBody",
-  review: "reviewBody",
-};
-
-/**
- * Seconds left in the take-it-back window, measured against the wall clock so
- * a backgrounded tab (where timers are throttled) comes back telling the truth
- * instead of counting down from where it fell asleep.
- */
-function useUnpublishCountdown(
-  totalSeconds: number,
-  isActive: boolean,
-): number {
-  const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
-
-  useEffect(() => {
-    if (!isActive) return;
-    const startedAt = Date.now();
-    const timer = window.setInterval(() => {
-      const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
-      const remaining = Math.max(0, totalSeconds - elapsedSeconds);
-      setSecondsLeft(remaining);
-      if (remaining === 0) window.clearInterval(timer);
-    }, 250);
-    return () => window.clearInterval(timer);
-  }, [isActive, totalSeconds]);
-
-  return secondsLeft;
-}
-
-/** The Unpublish pill and the window draining behind it. */
-function ComposeUnpublishCountdown({
-  secondsLeft,
-  totalSeconds,
-  onUnpublish,
-}: {
-  secondsLeft: number;
-  totalSeconds: number;
-  onUnpublish: () => void;
-}) {
-  const { t } = useTranslation();
-  const minutes = Math.floor(secondsLeft / 60);
-  const seconds = String(secondsLeft % 60).padStart(2, "0");
-  const remainingRatio = totalSeconds > 0 ? secondsLeft / totalSeconds : 0;
-
-  return (
-    <button type="button" className={styles.unpublish} onClick={onUnpublish}>
-      <FiRotateCcw aria-hidden />
-      {t("forum:composePage.success.unpublish")}
-      <i aria-hidden>{`${minutes}:${seconds}`}</i>
-      <span
-        className={styles.unpublishTrack}
-        style={{ transform: `scaleX(${remainingRatio})` }}
-        aria-hidden
-      />
-    </button>
-  );
-}
-
-/** Copy the link, send it on, keep it, or take it somewhere else too. */
-function ComposeSuccessShareRow({
-  threadTitle,
-  threadUrl,
-  onPinToProfile,
-  onPostToCommunity,
-}: {
-  threadTitle: string;
-  threadUrl: string | null;
-  onPinToProfile?: () => void;
-  onPostToCommunity?: () => void;
-}) {
-  const { t } = useTranslation();
-  const { share } = useShareLink({
-    copied: t("forum:composePage.success.linkCopiedToast"),
-    failed: t("forum:composePage.success.linkCopyFailedToast"),
-  });
-
-  return (
-    <div
-      className={styles.share}
-      role="group"
-      aria-label={t("forum:composePage.success.shareLabel")}
-    >
-      {threadUrl && (
-        <Button
-          variant="ghost-dark"
-          size="sm"
-          onClick={() => void share(threadUrl)}
-        >
-          <FiLink aria-hidden /> {t("forum:composePage.success.copyLink")}
-        </Button>
-      )}
-      {threadUrl && (
-        <Button
-          variant="ghost-dark"
-          size="sm"
-          href={whatsAppShareUrl(threadTitle, threadUrl)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FaWhatsapp aria-hidden /> {t("forum:composePage.success.whatsApp")}
-          <span className="visuallyHidden">
-            {" "}
-            {t("forum:composePage.success.opensInNewTab")}
-          </span>
-        </Button>
-      )}
-      {onPinToProfile && (
-        <Button variant="ghost-dark" size="sm" onClick={onPinToProfile}>
-          <FiBookmark aria-hidden />{" "}
-          {t("forum:composePage.success.pinToProfile")}
-        </Button>
-      )}
-      {onPostToCommunity && (
-        <Button variant="ghost-dark" size="sm" onClick={onPostToCommunity}>
-          <FiUsers aria-hidden />{" "}
-          {t("forum:composePage.success.postToCommunity")}
-        </Button>
-      )}
-    </div>
-  );
-}

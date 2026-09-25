@@ -1,61 +1,33 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { usePositionalRowKeys } from "./usePositionalRowKeys";
 import { useRowDragReorder } from "./useRowDragReorder";
+import { useSkinListMoveKeys } from "./useSkinListMoveKeys";
+import type { SkinListGripReorder } from "./SkinListGrip";
+import {
+  focusedControlIndex,
+  indexAfterMove,
+  useSkinListFocusRequest,
+  type SkinListFocusRequest,
+  type SkinListFocusTarget,
+} from "./skinListFocus";
 
-/** Attribute on every row element (written `data-skin-list-row=""` in the
- *  controls), so a focused control can find its row. */
-export const SKIN_LIST_ROW_ATTRIBUTE = "data-skin-list-row";
-
-const ROW_CONTROLS = "input, textarea, button";
-const ROW_FIELDS = "input, textarea";
-
-/** Where focus lands once the list re-renders: a control inside a row (by its
- *  position among the row's inputs and buttons, or the row's first field), or
- *  the add button once the list is empty. */
-type FocusRequest =
-  | { rowIndex: number; controlIndex: number | "firstField" }
-  | { isAddButton: true };
-
-function isUsable(element: HTMLElement | undefined): element is HTMLElement {
-  return Boolean(element) && !element!.matches(":disabled");
-}
-
-/** Focus the control at `controlIndex` in `row`, or its nearest usable
- *  neighbour when that one is disabled (a move button at the list's edge). */
-function focusRowControl(row: Element, controlIndex: number | "firstField") {
-  if (controlIndex === "firstField") {
-    row.querySelector<HTMLElement>(ROW_FIELDS)?.focus();
-    return;
-  }
-  const controls = Array.from(row.querySelectorAll<HTMLElement>(ROW_CONTROLS));
-  const target = isUsable(controls[controlIndex])
-    ? controls[controlIndex]
-    : (controls.slice(controlIndex).find(isUsable) ??
-      controls.slice(0, controlIndex).reverse().find(isUsable));
-  target?.focus();
-}
-
-/** The position of the focused control inside row `rowIndex` of the list,
- *  or null when focus is anywhere else. */
-function focusedControlIndex(container: HTMLElement | null, rowIndex: number) {
-  const row = container?.children[rowIndex];
-  const active = document.activeElement;
-  if (!row || !(active instanceof HTMLElement) || !row.contains(active)) {
-    return null;
-  }
-  const index = Array.from(row.querySelectorAll(ROW_CONTROLS)).indexOf(active);
-  return index >= 0 ? index : null;
-}
+export { SKIN_LIST_ROW_ATTRIBUTE } from "./useSkinListMoveKeys";
 
 /**
- * Shared state for the chaptered editor's list controls (pairs, entries,
- * paragraphs): reads the array at `path`, keeps stable row keys beside it,
- * and offers add / update / move / remove with focus kept where the person
- * was working. Drag uses `useRowDragReorder` through a grip, and Alt with
- * ArrowUp or ArrowDown in any single-line input of a row moves that row.
- * `containerRef` must wrap only the rows, each carrying
- * `SKIN_LIST_ROW_ATTRIBUTE`.
+ * Shared state for the chaptered editor's list controls (lines, pairs,
+ * entries): reads the array at `path`, keeps stable row keys beside it, and
+ * offers add / insert / update / move / remove with focus kept where the
+ * person was working. `requestFocus` overrides where focus lands after the
+ * next render (a keyboard edit that removes a row, say). Rows move by drag
+ * through a grip (`useRowDragReorder`), by the grip's move menu
+ * (`reorderFor`), and with Alt and ArrowUp or ArrowDown in a row's
+ * single-line input (`useSkinListMoveKeys`). `containerRef` must wrap only
+ * the rows, each carrying `SKIN_LIST_ROW_ATTRIBUTE`.
+ *
+ * `shouldRowsGlide` is true while the newest change was a move: rows glide
+ * into their new slots only then, so a row added or removed never fades in
+ * over neighbours still gliding from their old places.
  */
 export function useSkinListRows<Item>({
   editor,
@@ -69,30 +41,48 @@ export function useSkinListRows<Item>({
   const raw = editor.getValue(path);
   const items: Item[] = Array.isArray(raw) ? (raw as Item[]) : [];
   const rowKeys = usePositionalRowKeys(items.length);
-  const focusRequestRef = useRef<FocusRequest | null>(null);
+  const [shouldRowsGlide, setShouldRowsGlide] = useState(false);
+  const focusRequestRef = useRef<SkinListFocusRequest | null>(null);
   // The newest list, advanced synchronously by each write, so a second swap
   // fired by a fast pointermove before the re-render builds on the first.
   const latestItemsRef = useRef(items);
   const moveRef = useRef<(from: number, to: number) => void>(() => {});
   const addButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  const commit = (next: Item[]) => {
+  const commit = (next: Item[], isMove = false) => {
     latestItemsRef.current = next;
+    setShouldRowsGlide(isMove);
     editor.setValue(path, next);
   };
   const drag = useRowDragReorder((from, to) => moveRef.current(from, to));
 
-  const move = (from: number, to: number) => {
+  /** Move the row at `from` to `to`; the rows between shift one place. */
+  const moveTo = (from: number, to: number) => {
     const current = latestItemsRef.current;
-    if (to < 0 || to >= current.length || from === to) return;
-    const controlIndex = focusedControlIndex(drag.containerRef.current, from);
-    if (controlIndex !== null) {
-      focusRequestRef.current = { rowIndex: to, controlIndex };
+    const isInRange = (index: number) => index >= 0 && index < current.length;
+    if (!isInRange(from) || !isInRange(to) || from === to) return;
+    // A request still waiting for its render means the DOM shows the list
+    // before the last move, so the landing row comes from the request.
+    const pending = focusRequestRef.current;
+    if (pending && "rowIndex" in pending) {
+      focusRequestRef.current = {
+        ...pending,
+        rowIndex: indexAfterMove(pending.rowIndex, from, to),
+      };
+    } else if (!pending) {
+      const controlIndex = focusedControlIndex(drag.containerRef.current, from);
+      if (controlIndex !== null) {
+        focusRequestRef.current = { rowIndex: to, controlIndex };
+      }
     }
     const next = [...current];
-    [next[from], next[to]] = [next[to]!, next[from]!];
-    rowKeys.swap(from, to);
-    commit(next);
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved!);
+    const step = to > from ? 1 : -1;
+    for (let index = from; index !== to; index += step) {
+      rowKeys.swap(index, index + step);
+    }
+    commit(next, true);
   };
 
   const remove = (index: number) => {
@@ -115,7 +105,39 @@ export function useSkinListRows<Item>({
       rowIndex: current.length,
       controlIndex: "firstField",
     };
+    rowKeys.insertAt(current.length);
     commit([...current, createItem()]);
+  };
+
+  /** Put `newItems` at `index`, and focus the last of them with the caret at
+   *  the end of its first field. */
+  const insert = (index: number, newItems: Item[]) => {
+    if (newItems.length === 0) return;
+    const current = latestItemsRef.current;
+    const position = Math.max(0, Math.min(index, current.length));
+    focusRequestRef.current = {
+      rowIndex: position + newItems.length - 1,
+      controlIndex: "firstField",
+      caret: "end",
+    };
+    rowKeys.insertAt(position, newItems.length);
+    commit([
+      ...current.slice(0, position),
+      ...newItems,
+      ...current.slice(position),
+    ]);
+  };
+
+  const requestFocus = (target: SkinListFocusTarget) => {
+    focusRequestRef.current =
+      "isAddButton" in target
+        ? target
+        : { ...target, controlIndex: "firstField" };
+  };
+
+  const isInsertedRow = (index: number) => {
+    const key = rowKeys.keys[index];
+    return key !== undefined && rowKeys.insertedKeys.has(key);
   };
 
   const update = (index: number, item: Item) =>
@@ -125,56 +147,28 @@ export function useSkinListRows<Item>({
       ),
     );
 
+  /** The grip's `reorder` prop for row `index`, whose move menu names the
+   *  row by `rowLabel` and its number. */
+  const reorderFor = (
+    index: number,
+    rowLabel: string,
+  ): SkinListGripReorder => ({
+    rowLabel,
+    rowNumber: index + 1,
+    rowCount: items.length,
+    onMove: (toIndex) => moveTo(index, toIndex),
+  });
+
   // Refresh before paint, so no pointermove or keydown after this render can
-  // reach an older `move` or list. The drag hook and the key listener below
-  // both bind once and call through `moveRef`.
+  // reach an older `move` or list. The drag hook and the key listener both
+  // bind once and call through `moveRef`.
   useLayoutEffect(() => {
     latestItemsRef.current = items;
-    moveRef.current = move;
+    moveRef.current = moveTo;
   });
-
-  useEffect(() => {
-    const container = drag.containerRef.current;
-    if (!container) return;
-    function handleKeyDown(event: KeyboardEvent) {
-      const isMoveKey = event.key === "ArrowUp" || event.key === "ArrowDown";
-      if (!isMoveKey || !event.altKey || event.ctrlKey || event.metaKey) return;
-      // Textareas keep Alt+Arrow for the caret (their rows have move
-      // buttons), unless one declares the shortcut, as the entry title does.
-      const target = event.target;
-      const isMoveTarget =
-        target instanceof HTMLInputElement ||
-        (target instanceof HTMLTextAreaElement &&
-          Boolean(
-            target.getAttribute("aria-keyshortcuts")?.includes("Alt+ArrowUp"),
-          ));
-      if (!isMoveTarget) return;
-      const row = target.closest(`[${SKIN_LIST_ROW_ATTRIBUTE}]`);
-      const rowIndex = row ? Array.from(container!.children).indexOf(row) : -1;
-      if (rowIndex < 0) return;
-      event.preventDefault();
-      moveRef.current(rowIndex, rowIndex + (event.key === "ArrowUp" ? -1 : 1));
-    }
-    container.addEventListener("keydown", handleKeyDown);
-    return () => container.removeEventListener("keydown", handleKeyDown);
-  }, [drag.containerRef]);
-
-  // Moving a row re-inserts its DOM node, which drops focus; a new or removed
-  // row also needs focus placed. Runs after every render and waits until the
-  // requested row exists.
-  useLayoutEffect(() => {
-    const request = focusRequestRef.current;
-    if (!request) return;
-    if ("isAddButton" in request) {
-      focusRequestRef.current = null;
-      addButtonRef.current?.focus();
-      return;
-    }
-    const row = drag.containerRef.current?.children[request.rowIndex];
-    if (!row) return;
-    focusRequestRef.current = null;
-    focusRowControl(row, request.controlIndex);
-  });
+  useSkinListMoveKeys(drag.containerRef, moveRef);
+  // Lands each `focusRequestRef` request once the list has re-rendered.
+  useSkinListFocusRequest(focusRequestRef, drag.containerRef, addButtonRef);
 
   return {
     items,
@@ -182,10 +176,16 @@ export function useSkinListRows<Item>({
     containerRef: drag.containerRef,
     draggingIndex: drag.draggingIndex,
     gripHandlers: drag.gripHandlers,
+    shouldRowsGlide,
     addButtonRef,
     add,
+    insert,
     update,
-    move,
+    move: moveTo,
+    moveTo,
     remove,
+    requestFocus,
+    isInsertedRow,
+    reorderFor,
   };
 }

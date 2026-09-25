@@ -1518,6 +1518,21 @@ export const admin: Catalog = {
   "adminListings.history.event.removed": "{actor} removed this listing.",
   "adminListings.history.event.questionAsked": "{actor} asked a question.",
   "adminListings.history.event.answered": "{actor} replied to a question.",
+  "adminListings.history.event.ownershipTransferred":
+    "{actor} approved an ownership transfer.",
+  "adminListings.history.event.ownerEdited": "{actor} edited the live listing.",
+  "adminListings.history.event.coManagerAdded":
+    "{actor} joined as a co-manager.",
+  "adminListings.history.event.coManagerRemoved":
+    "{actor} ended a co-manager seat.",
+  "adminListings.history.event.staffCreated":
+    "{actor} created this listing for the business.",
+  "adminListings.history.event.suggestionApplied":
+    "{actor} applied a suggested correction.",
+  "adminListings.history.event.directoryPaused":
+    "{actor} paused the listing in the directory.",
+  "adminListings.history.event.directoryResumed":
+    "{actor} showed the listing in the directory again.",
   "adminListings.history.askedBy": "Asked by {actor}",
   "adminListings.history.awaitingReply": "Awaiting reply",
 
@@ -6733,6 +6748,8 @@ export const admin: Catalog = {
   "emailTemplates.editor.newTitle": "New email <em>template</em>",
   "emailTemplates.editor.editTitle": "Edit <em>{label}</em>",
   "emailTemplates.editor.backToList": "All email templates",
+  "emailTemplates.editor.allTemplates": "all email templates",
+  "emailTemplates.editor.backCta": "Back",
   "emailTemplates.editor.labelField": "Name (staff only)",
   "emailTemplates.editor.purposeField": "Used for",
   "emailTemplates.editor.purposeHint":
@@ -6760,6 +6777,7 @@ export const admin: Catalog = {
   "emailTemplates.editor.unknownPlaceholder":
     "{token} is not a placeholder this template can use.",
   "emailTemplates.placeholders.label": "Insert a placeholder",
+  "emailTemplates.placeholders.shortLabel": "Insert",
   "emailTemplates.placeholders.none": "This purpose has no placeholders.",
   "emailTemplates.placeholders.name": "First name",
   "emailTemplates.placeholders.inviteLink": "Invite link",
@@ -6778,6 +6796,7 @@ export const admin: Catalog = {
   "emailTemplates.mode.backToBlocksConfirm": "Discard HTML",
   "emailTemplates.mode.htmlField": "Email HTML",
   "emailTemplates.mode.copySample": "Copy with sample values",
+  "emailTemplates.mode.copySampleShort": "Copy",
   "emailTemplates.blocks.addLabel": "Add a block",
   "emailTemplates.blocks.empty":
     "No blocks yet. Add a heading or a paragraph to start.",
@@ -6814,6 +6833,54 @@ export const admin: Catalog = {
   "emailTemplates.preview.desktop": "Desktop",
   "emailTemplates.preview.mobile": "Mobile",
   "emailTemplates.preview.sampleNote": "Placeholders show sample values.",
+  "emailTemplates.preview.inbox": "Inbox",
+  "emailTemplates.preview.toRecipient": "to {name}",
+  "emailTemplates.preview.noSubject": "(no subject)",
+  "emailTemplates.editor.preheaderField": "Preview text (optional)",
+  "emailTemplates.editor.preheaderHint":
+    "The grey line inboxes show after the subject.",
+  "emailTemplates.designSwitch.label": "Email design (temporary)",
+  "emailTemplates.designSwitch.shortLabel": "Design",
+  "emailTemplates.designSwitch.current": "Current",
+  "emailTemplates.designSwitch.stage": "Stage",
+  "emailTemplates.designSwitch.letter": "Letter",
+  "emailTemplates.blocks.type.hero": "Opening",
+  "emailTemplates.blocks.type.ticket": "Ticket",
+  "emailTemplates.blocks.type.featureList": "Feature list",
+  "emailTemplates.blocks.type.signature": "Signature",
+  "emailTemplates.blocks.featureRow": "Row {number}",
+  "emailTemplates.blocks.featureMoveUp": "Move row {number} up",
+  "emailTemplates.blocks.featureMoveDown": "Move row {number} down",
+  "emailTemplates.blocks.featureRemove": "Remove row {number}",
+  "emailTemplates.blocks.featureAdd": "Add a row",
+  "emailTemplates.blocks.featureIcon.communities": "Communities",
+  "emailTemplates.blocks.featureIcon.gatherings": "Gatherings",
+  "emailTemplates.blocks.featureIcon.directory": "Directory",
+  "emailTemplates.blocks.featureIcon.messages": "Messages",
+  "emailTemplates.blocks.featureIcon.magazine": "Magazine",
+  "emailTemplates.blocks.featureIcon.safety": "Safety",
+  "emailTemplates.blocks.field.heroEyebrow":
+    "Small line above the headline (optional)",
+  "emailTemplates.blocks.field.heroHeadline": "Headline",
+  "emailTemplates.blocks.field.headlineHint":
+    "Wrap a word in *asterisks* to set it in italics.",
+  "emailTemplates.blocks.field.heroText": "Text under the headline (optional)",
+  "emailTemplates.blocks.field.ticketLabel": "Small label",
+  "emailTemplates.blocks.field.ticketTitle": "Title",
+  "emailTemplates.blocks.field.ticketText": "Text (optional)",
+  "emailTemplates.blocks.field.featureIcon": "Icon",
+  "emailTemplates.blocks.field.featureTitle": "Title",
+  "emailTemplates.blocks.field.featureText": "Text",
+  "emailTemplates.blocks.field.signatureName": "Name",
+  "emailTemplates.blocks.field.signatureRole": "Role (optional)",
+  "emailTemplates.blocks.field.signatureNote": "Note (optional)",
+  "emailTemplates.blocks.field.signaturePhoto": "Photo address (optional)",
+  "emailTemplates.blocks.field.signaturePhotoHint":
+    "An https:// address of a square photo. Leave empty to show the QueerPulse mark.",
+  "emailTemplates.blocks.field.heroHint":
+    "Put it first to open the email with it.",
+  "emailTemplates.blocks.field.signatureLetterHint":
+    "In the Letter design, a signature with a photo also shows at the top as the sender.",
   "emailTemplates.copy.welcomeCta": "Copy welcome email",
   "emailTemplates.copy.subjectCta": "Copy subject",
   "emailTemplates.copy.languageLabel": "Email language",

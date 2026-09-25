@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type RefObject } from "react";
 import { FiCommand } from "react-icons/fi";
-import { IconButton } from "../../../shared/components/ui";
+import { Collapse, IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ComposeBlocksRow } from "./ComposeBlocksRow";
 import { ComposeBodyField } from "./ComposeBodyField";
@@ -26,6 +26,10 @@ import styles from "./ForumNewPostPage.module.css";
 // about the post: the two panels the blocks row discloses, and where the caret
 // goes when Enter leaves the title. Everything else is the page's, because the
 // overlays and the publish need it too.
+//
+// The three blocks that come and go under the body (photos, content warnings,
+// the poll) open and close through `Collapse`, so attaching one grows the card
+// smoothly and everything below it glides down.
 
 export interface ForumNewPostMainProps {
   page: ComposeThreadPage;
@@ -115,14 +119,14 @@ export function ForumNewPostMain({
           }
         />
 
-        {state.photos.length > 0 && (
+        <Collapse isOpen={state.photos.length > 0}>
           <ComposePhotoGrid
             photos={state.photos}
             onAltChange={photos.setAlt}
             onRemove={photos.remove}
             onMove={photos.move}
           />
-        )}
+        </Collapse>
 
         <ComposeBlocksRow
           isContentWarningPanelOpen={isWarningsPanelOpen}
@@ -135,25 +139,27 @@ export function ForumNewPostMain({
           pollPanelId={pollPanelId}
         />
 
-        {isWarningsPanelOpen && (
+        <Collapse isOpen={isWarningsPanelOpen}>
           <ComposeWarningsPanel
             id={warningsPanelId}
             selectedWarnings={state.contentWarnings}
             onToggleWarning={setters.toggleContentWarning}
           />
-        )}
+        </Collapse>
 
-        {state.poll && (
-          <ComposePollPanel
-            id={pollPanelId}
-            poll={state.poll}
-            onSetOption={setters.setPollOption}
-            onAddOption={setters.addPollOption}
-            onRemoveOption={setters.removePollOption}
-            onSetAllowMultiple={setters.setPollAllowMultiple}
-            onSetCloses={setters.setPollCloses}
-          />
-        )}
+        <Collapse isOpen={!!state.poll}>
+          {state.poll && (
+            <ComposePollPanel
+              id={pollPanelId}
+              poll={state.poll}
+              onSetOption={setters.setPollOption}
+              onAddOption={setters.addPollOption}
+              onRemoveOption={setters.removePollOption}
+              onSetAllowMultiple={setters.setPollAllowMultiple}
+              onSetCloses={setters.setPollCloses}
+            />
+          )}
+        </Collapse>
 
         <ComposeNudgeList
           nudges={page.nudges}

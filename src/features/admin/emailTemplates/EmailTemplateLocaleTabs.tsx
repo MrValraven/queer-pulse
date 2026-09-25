@@ -8,10 +8,14 @@ export function EmailTemplateLocaleTabs({
   active,
   onChange,
   isLocaleDirty,
+  isLabelHidden = false,
 }: {
   active: Language;
   onChange: (locale: Language) => void;
   isLocaleDirty: (locale: Language) => boolean;
+  /** Keeps the "Language" label for screen readers only, for the compact
+   *  editor toolbar where the language names speak for themselves. */
+  isLabelHidden?: boolean;
 }) {
   const { t } = useTranslation();
   const labelFor = (locale: Language) => {
@@ -22,7 +26,10 @@ export function EmailTemplateLocaleTabs({
   };
   return (
     <div className={styles.localeTabs}>
-      <span id="email-template-language" className={styles.metaGroupLabel}>
+      <span
+        id="email-template-language"
+        className={isLabelHidden ? "visuallyHidden" : styles.metaGroupLabel}
+      >
         {t("admin:emailTemplates.editor.languageLabel")}
       </span>
       <AdminSeg

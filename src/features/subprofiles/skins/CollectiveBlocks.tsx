@@ -36,8 +36,8 @@ export function Principles({ persona }: { persona: SkinExtrasPersona }) {
     <section className="principles">
       <h2>{t("subprofiles:skinExtras.collective.principlesTitle")}</h2>
       <ol>
-        {principles.map((line) => (
-          <li key={line}>{line}</li>
+        {principles.map((line, index) => (
+          <li key={`${index}-${line}`}>{line}</li>
         ))}
       </ol>
     </section>

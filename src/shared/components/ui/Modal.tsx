@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useDismiss, useScrimDismiss } from "./useDismiss";
+import { useFocusHandBack, useModalExit } from "./useModalExit";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
@@ -47,8 +48,12 @@ export function Modal({
   initialFocusRef,
 }: ModalProps) {
   const { t } = useTranslation();
-  const dialogRef = useDismiss(onClose, initialFocusRef);
-  const scrimProps = useScrimDismiss(onClose);
+  // Plays the exit when an AnimatePresence parent removes this dialog; a
+  // no-op everywhere else (see useModalExit).
+  const exit = useModalExit(onClose);
+  const dialogRef = useDismiss(exit.close, initialFocusRef);
+  useFocusHandBack(exit, dialogRef);
+  const scrimProps = useScrimDismiss(exit.close);
   const titleId = useId();
   // Portal to <body> so the fixed scrim is anchored to the viewport, never to a
   // transformed/contained ancestor. A `transform`, `filter`, `contain: paint`
@@ -59,14 +64,23 @@ export function Modal({
   // through <body> escapes all of them. React events still bubble via the React
   // tree, so onClose et al. work unchanged.
   return createPortal(
-    <div className={styles.scrim} role="presentation" {...scrimProps}>
+    <div
+      className={[styles.scrim, exit.isClosing && styles.scrimClosing]
+        .filter(Boolean)
+        .join(" ")}
+      role="presentation"
+      {...scrimProps}
+    >
       <div
         ref={dialogRef}
         tabIndex={-1}
+        inert={exit.isClosing}
+        onAnimationEnd={exit.handleExitAnimationEnd}
         className={[
           styles.modal,
           wide && styles.modalWide,
           full && styles.modalFull,
+          exit.isClosing && styles.modalClosing,
           className,
         ]
           .filter(Boolean)
@@ -86,7 +100,7 @@ export function Modal({
           <button
             type="button"
             className={styles.modalX}
-            onClick={onClose}
+            onClick={exit.close}
             aria-label={t("shared:modal.close")}
           >
             <FiX />
@@ -125,8 +139,10 @@ export function ModalSheet({
   children,
 }: ModalSheetProps) {
   const { t } = useTranslation();
-  const dialogRef = useDismiss(onClose);
-  const scrimProps = useScrimDismiss(onClose);
+  const exit = useModalExit(onClose);
+  const dialogRef = useDismiss(exit.close);
+  useFocusHandBack(exit, dialogRef);
+  const scrimProps = useScrimDismiss(exit.close);
   // Drag-to-dismiss for the mobile sheet. Touch-only (mouse is ignored so the
   // desktop centered dialog is untouched); a downward drag past the threshold
   // closes, anything shorter springs back. The transform is written directly to
@@ -151,7 +167,9 @@ export function ModalSheet({
     const dragDistance = event.clientY - dragStartYRef.current;
     dragStartYRef.current = null;
     if (dragDistance > 120) {
-      onClose();
+      // The exit slides on from where the finger let go (see sheetOut).
+      sheet.style.setProperty("--sheet-drag-offset", `${dragDistance}px`);
+      exit.close();
       return;
     }
     // Under threshold: spring back to rest instead of snapping instantly.
@@ -169,14 +187,23 @@ export function ModalSheet({
   // Portal to <body> for the same reason as <Modal> above: the fixed overlay
   // must anchor to the viewport, not to any transformed/contained ancestor.
   return createPortal(
-    <div className={styles.overlay} role="presentation" {...scrimProps}>
+    <div
+      className={[styles.overlay, exit.isClosing && styles.scrimClosing]
+        .filter(Boolean)
+        .join(" ")}
+      role="presentation"
+      {...scrimProps}
+    >
       <div
         ref={dialogRef}
         tabIndex={-1}
+        inert={exit.isClosing}
+        onAnimationEnd={exit.handleExitAnimationEnd}
         className={[
           styles.sheet,
           wide && styles.sheetWide,
           success && styles.sheetSuccess,
+          exit.isClosing && styles.sheetClosing,
           className,
         ]
           .filter(Boolean)
@@ -198,7 +225,7 @@ export function ModalSheet({
             <button
               type="button"
               className={styles.close}
-              onClick={onClose}
+              onClick={exit.close}
               aria-label={t("shared:modal.close")}
             >
               <FiX />
@@ -233,15 +260,31 @@ export function SideSheet({
   children,
 }: SideSheetProps) {
   const { t } = useTranslation();
-  const dialogRef = useDismiss(onClose);
-  const scrimProps = useScrimDismiss(onClose);
+  const exit = useModalExit(onClose);
+  const dialogRef = useDismiss(exit.close);
+  useFocusHandBack(exit, dialogRef);
+  const scrimProps = useScrimDismiss(exit.close);
   const titleId = useId();
   return createPortal(
-    <div className={styles.sideScrim} role="presentation" {...scrimProps}>
+    <div
+      className={[styles.sideScrim, exit.isClosing && styles.scrimClosing]
+        .filter(Boolean)
+        .join(" ")}
+      role="presentation"
+      {...scrimProps}
+    >
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className={[styles.sideSheet, className].filter(Boolean).join(" ")}
+        inert={exit.isClosing}
+        onAnimationEnd={exit.handleExitAnimationEnd}
+        className={[
+          styles.sideSheet,
+          exit.isClosing && styles.sheetClosing,
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -253,7 +296,7 @@ export function SideSheet({
           <button
             type="button"
             className={styles.modalX}
-            onClick={onClose}
+            onClick={exit.close}
             aria-label={t("shared:modal.close")}
           >
             <FiX />

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../../app/providers/authContext";
+import { ownerListingHistoryQueryKey } from "./useOwnerListingHistory";
 import {
   acceptCoManagerInvite,
   declineCoManagerInvite,
@@ -135,6 +136,11 @@ export function useRemoveCoManager(listingRef: string) {
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: rosterKey(listingRef) });
+      // Ending an active seat writes a `co_manager_removed` row, so the
+      // editor's History has a new line to show.
+      void queryClient.invalidateQueries({
+        queryKey: ownerListingHistoryQueryKey(demoMode, listingRef),
+      });
     },
   });
 }

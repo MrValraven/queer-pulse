@@ -1,15 +1,10 @@
 import { useId, useState } from "react";
 import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
-import {
-  Button,
-  LoadErrorState,
-  Modal,
-  Toggle,
-} from "../../../shared/components/ui";
+import { LoadErrorState, Toggle } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useMailboxAttribution } from "../api/useMailboxAttribution";
 import { mailboxDisplayName } from "./mailboxLabels";
-import styles from "./MailboxSettingsModal.module.css";
+import styles from "./MailboxSettingsPanel.module.css";
 
 /**
  * One switch with its title, help line and, when locked, the reason. The
@@ -66,19 +61,21 @@ function MailboxSettingRow({
 }
 
 /**
- * A business, persona or company mailbox's attribution settings, opened from
- * the switcher. The owner decides whether customers see the first name of
+ * A business, persona or company mailbox's attribution settings, shown inside
+ * the switcher sheet in place of the mailbox list. The sheet owns the heading
+ * and the way back. The owner decides whether customers see the first name of
  * whoever replied ("Ana from Café Lisboa"); each staff member may keep their
  * own name out. Only the owner's switch is owner-only, and an ownerless
  * listing keeps it locked for everyone. A persona moderation removed shows
- * both switches locked.
+ * both switches locked. The help line's example is signed with the member's
+ * own first name when the sheet knows it.
  */
-export function MailboxSettingsModal({
+export function MailboxSettingsPanel({
   mailbox,
-  onClose,
+  memberFirstName,
 }: {
   mailbox: MailboxSummary;
-  onClose: () => void;
+  memberFirstName?: string;
 }) {
   const { t } = useTranslation();
   const name = mailboxDisplayName(mailbox, t);
@@ -98,15 +95,7 @@ export function MailboxSettingsModal({
   >(null);
 
   return (
-    <Modal
-      title={t("messages:mailbox.settings.title", { name })}
-      onClose={onClose}
-      footer={
-        <Button variant="ghost" size="sm" onClick={onClose}>
-          {t("messages:mailbox.settings.close")}
-        </Button>
-      }
-    >
+    <>
       {isError && !attribution && (
         <LoadErrorState
           compact
@@ -126,6 +115,9 @@ export function MailboxSettingsModal({
               title={t("messages:mailbox.settings.showStaffNames")}
               description={t("messages:mailbox.settings.showStaffNamesHelp", {
                 name,
+                firstName:
+                  memberFirstName ||
+                  t("messages:mailbox.settings.exampleFirstName"),
               })}
               isChecked={attribution.shouldShowStaffNames}
               isLocked={isReadOnly || !attribution.isOwner}
@@ -154,6 +146,6 @@ export function MailboxSettingsModal({
           </div>
         </>
       )}
-    </Modal>
+    </>
   );
 }

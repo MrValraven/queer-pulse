@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { createPortal } from "react-dom";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { useAnchoredPopover } from "../../shared/components/ui/useAnchoredPopover";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   useConversationClaim,
@@ -14,7 +16,14 @@ import styles from "./MessagesPage.module.css";
 /** Row-level "⋯" menu, rendered as a SIBLING of the thread row `<button>`
  *  (never nested inside it) — see `.threadRowWrap` in MessagesPage.module.css.
  *  Pin/Favorite are CONVERSATION-scoped (a different concept from the existing
- *  message-level pin/star inside a thread). */
+ *  message-level pin/star inside a thread).
+ *
+ *  The dropdown is portalled to `<body>` and placed `fixed` by
+ *  `useAnchoredPopover`: the thread list is a scroll container, so an
+ *  absolutely-positioned panel on one of the last rows was clipped by the
+ *  list's own overflow. Placed in viewport coordinates it flips above the
+ *  trigger when there is no room below. Any scroll closes it, so it never
+ *  floats over the list footer after its row has scrolled away. */
 export function ThreadRowMenu({
   thread,
   isUnread,
@@ -51,6 +60,9 @@ export function ThreadRowMenu({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const placement = useAnchoredPopover(triggerRef, menuRef, open);
+  const isPlaced = placement !== null;
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const {
     claim,
@@ -83,23 +95,37 @@ export function ThreadRowMenu({
   useEffect(() => {
     if (!open) return;
     function onDocumentPointerDown(event: PointerEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
+      const target = event.target as Node;
+      // The panel is portalled out of `containerRef`, so an outside press has
+      // to miss both the trigger's wrapper and the panel itself.
+      if (containerRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
+    }
+    function onAnyScroll() {
+      // Hand focus back only when it sat in the panel, which is about to
+      // unmount and would otherwise drop focus to `<body>`.
+      if (menuRef.current?.contains(document.activeElement)) {
+        triggerRef.current?.focus({ preventScroll: true });
       }
+      setOpen(false);
     }
     document.addEventListener("pointerdown", onDocumentPointerDown);
+    // Capture phase: the thread list scrolls itself, and its scroll events
+    // never reach `window` by bubbling.
+    window.addEventListener("scroll", onAnyScroll, true);
     return () => {
       document.removeEventListener("pointerdown", onDocumentPointerDown);
+      window.removeEventListener("scroll", onAnyScroll, true);
     };
   }, [open]);
 
-  // APG menu-button contract: move focus into the menu when it opens.
+  // APG menu-button contract: move focus into the menu when it opens. Waits
+  // for placement so focus never lands on the panel for the one commit it is
+  // still unplaced; `preventScroll`, because a scroll now closes the menu.
   useEffect(() => {
-    if (open) itemRefs.current[0]?.focus();
-  }, [open]);
+    if (open && isPlaced) itemRefs.current[0]?.focus({ preventScroll: true });
+  }, [open, isPlaced]);
 
   const close = () => {
     setOpen(false);
@@ -115,7 +141,10 @@ export function ThreadRowMenu({
   };
 
   const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Escape") {
+    // Tab closes too: the portalled panel sits at the end of `<body>`, so a
+    // Tab from inside it would otherwise leave the page instead of moving on
+    // from the trigger.
+    if (event.key === "Escape" || event.key === "Tab") {
       event.preventDefault();
       close();
       return;
@@ -148,6 +177,7 @@ export function ThreadRowMenu({
       <button
         ref={triggerRef}
         type="button"
+        data-tap-target
         className={styles.rowMenuTrigger}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -159,37 +189,48 @@ export function ThreadRowMenu({
       >
         <FiMoreHorizontal aria-hidden />
       </button>
-      {open && (
-        <div
-          className={styles.rowMenuPopover}
-          role="menu"
-          tabIndex={-1}
-          onKeyDown={onMenuKeyDown}
-        >
-          {items.map((item, index) => (
-            <button
-              key={item.key}
-              ref={(node) => {
-                itemRefs.current[index] = node;
-              }}
-              type="button"
-              role="menuitem"
-              tabIndex={-1}
-              className={
-                item.danger ? styles.rowMenuItemDanger : styles.rowMenuItem
-              }
-              onClick={(event) => {
-                event.stopPropagation();
-                setOpen(false);
-                item.onSelect();
-              }}
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {open &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className={[
+              styles.rowMenuPopover,
+              styles.rowMenuPopoverPortal,
+              placement === null && styles.rowMenuPopoverUnplaced,
+              placement?.isFlipped && styles.rowMenuPopoverFlipped,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            style={placement?.style}
+            role="menu"
+            tabIndex={-1}
+            onKeyDown={onMenuKeyDown}
+          >
+            {items.map((item, index) => (
+              <button
+                key={item.key}
+                ref={(node) => {
+                  itemRefs.current[index] = node;
+                }}
+                type="button"
+                role="menuitem"
+                tabIndex={-1}
+                className={
+                  item.danger ? styles.rowMenuItemDanger : styles.rowMenuItem
+                }
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpen(false);
+                  item.onSelect();
+                }}
+              >
+                {item.icon}
+                {item.label}
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )}
       {/* The same take-over confirm the composer bar uses. */}
       <TakeOverConfirmDialog
         open={takeOverConfirm.isOpen}

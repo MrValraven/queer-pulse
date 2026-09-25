@@ -1,4 +1,4 @@
-import { emptyHours, witLine, type ListingDraft } from "./listBusiness.data";
+import { emptyHours, type ListingDraft } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { emptyMenuDraft } from "./listingMenu.data";
 
@@ -30,7 +30,8 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     price: "",
     blurb: "",
     tagline: "",
-    whatItIs: [witLine()],
+    // The description, one entry per paragraph: an empty field holds none.
+    whatItIs: [],
     tags: [],
     goodFor: [],
     accessibility: emptyAccessibilityDraft(),

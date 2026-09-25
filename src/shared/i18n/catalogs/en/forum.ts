@@ -23,6 +23,10 @@ export const forum: Catalog = {
   "cat.guides": "Guides & Resources",
   "cat.jobs": "Jobs & Skills",
   "cat.trans": "Trans & Non-Binary",
+  "cat.meetups": "Meetups & Introductions",
+  "cat.legal": "Legal & Migration",
+  "cat.relationships": "Love & Relationships",
+  "cat.platform": "Platform & Feedback",
 
   // ── The three moderators who post under the official QueerPulse account ─
   "modRole.mariana": "lead moderator",
@@ -674,6 +678,14 @@ export const forum: Catalog = {
   "composePage.category.guides.description": "How-tos and living indexes",
   "composePage.category.jobs.description": "Openings, skills, trades",
   "composePage.category.trans.description": "Healthcare, legal, community",
+  "composePage.category.meetups.description":
+    "Say hello, find people to go with",
+  "composePage.category.legal.description":
+    "Visas, residency, name changes, rights",
+  "composePage.category.relationships.description":
+    "Dating, partners, family, friendship",
+  "composePage.category.platform.description":
+    "Bugs, ideas, how the site works",
   "composePage.category.fallbackDescription": "A place for posts on this topic",
   "composePage.category.suggestion": "Sounds like {category}",
   "composePage.category.recentIn": "Recently in {category}",
@@ -755,7 +767,7 @@ export const forum: Catalog = {
   "composePage.postingAs.anonymousHint":
     "Moderators still see who wrote it, so the thread stays safe to moderate.",
   "composePage.postingAs.anonymousElsewhere":
-    "Offered in {categories}, where a name can cost someone their home or their care.",
+    "Offered in {categories}, where a name can cost someone their home, their care or their safety.",
   "composePage.postingAs.anonymousBlockedByOfficial":
     "Turn the QueerPulse Official byline off to post without your name.",
   "composePage.postingAs.coAuthorLabel": "Write it with someone",

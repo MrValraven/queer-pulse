@@ -1,11 +1,27 @@
 /* Two labelled rows of dashed starter pills, shown only on an empty composer.
-   The negative top margin pulls them up under the kind chips, which carry
-   their own 22px gap. */
+   An 8px pull-up tucks them under the kind chips, which carry their own 22px
+   gap; it lives on the animated wrapper in ComposePrompts.tsx so it can fold
+   away with the block. The space below is padding for the same reason: it is
+   part of the height that grows and folds. */
 .prompts {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin: -8px 0 20px;
+  padding-bottom: 20px;
+}
+
+/* The unanswered row grows in when its request lands. The column's 8px gap
+   cannot animate, so the slot cancels it and .asking carries it as padding
+   inside the height instead. */
+.askingSlot {
+  margin-bottom: -8px;
+}
+
+.asking {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 8px;
 }
 
 .label {
@@ -40,8 +56,13 @@
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.prompt:active {
+  transform: scale(0.97);
 }
 
 @media (hover: hover) {

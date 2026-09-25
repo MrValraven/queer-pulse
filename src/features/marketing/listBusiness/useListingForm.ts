@@ -10,6 +10,7 @@ import {
   type ListingPath,
   type PhotoKey,
 } from "./listBusiness.data";
+import { splitParagraphs } from "../../subprofiles/skinParagraphsText";
 import { blankDraft, type ListingSeed } from "./listingFormDraft";
 import { applyCategoryPricingDefault } from "./listingMenu.data";
 import { useAccessibilitySetters } from "./useAccessibilitySetters";
@@ -105,26 +106,18 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     });
   }, []);
 
-  /* what-it-is lines (1–4) */
-  const setWit = useCallback((i: number, v: string) => {
-    setDraft((d) => ({
-      ...d,
-      whatItIs: d.whatItIs.map((w, j) => (j === i ? { ...w, text: v } : w)),
+  /** The description, as the text its field holds: cut into paragraphs on
+   *  blank lines and stored one entry per paragraph. An entry keeps the id
+   *  already at its index, so React keys stay stable while the member types. */
+  const setDescription = useCallback((text: string) => {
+    const paragraphs = splitParagraphs(text);
+    setDraft((current) => ({
+      ...current,
+      whatItIs: paragraphs.map((paragraph, index) => {
+        const existing = current.whatItIs[index];
+        return existing ? { ...existing, text: paragraph } : witLine(paragraph);
+      }),
     }));
-  }, []);
-  const addWit = useCallback(() => {
-    setDraft((d) =>
-      d.whatItIs.length >= 4
-        ? d
-        : { ...d, whatItIs: [...d.whatItIs, witLine()] },
-    );
-  }, []);
-  const delWit = useCallback((i: number) => {
-    setDraft((d) =>
-      d.whatItIs.length <= 1
-        ? { ...d, whatItIs: [witLine()] }
-        : { ...d, whatItIs: d.whatItIs.filter((_, j) => j !== i) },
-    );
   }, []);
 
   /* tags (≤6) */
@@ -172,9 +165,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     toggleCat,
     pickBadge,
     toggleIn,
-    setWit,
-    addWit,
-    delWit,
+    setDescription,
     addTag,
     removeTag,
     ...hoursSetters,

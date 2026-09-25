@@ -62,6 +62,7 @@ export function OwnerFields({
 
       <FormField
         className={styles.lbField}
+        id={ANCHOR.ownerBio}
         label={t("marketing:listBusiness.step4.ownerBioLabel")}
         labelAside={`${draft.ownerBio.length} / 220`}
       >
@@ -75,6 +76,7 @@ export function OwnerFields({
 
       <FormField
         className={styles.lbField}
+        id={ANCHOR.ownerVisibility}
         label={t("marketing:listBusiness.step4.visLabel")}
         required
       >
@@ -88,6 +90,7 @@ export function OwnerFields({
 
       <FormField
         className={styles.lbField}
+        id={ANCHOR.linkProfile}
         label={t("marketing:listBusiness.step4.linkProfileLabel")}
       >
         <div className={styles.memToggle}>

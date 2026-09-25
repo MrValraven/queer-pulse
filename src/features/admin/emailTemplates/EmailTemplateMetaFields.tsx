@@ -52,7 +52,7 @@ export function EmailTemplateMetaFields({
           {t("admin:emailTemplates.editor.purposeHint")}
         </span>
       </div>
-      <div className={styles.metaGroup}>
+      <div className={`${styles.metaGroup} ${styles.metaToggle}`}>
         <label
           htmlFor="email-template-active"
           className={styles.metaGroupLabel}

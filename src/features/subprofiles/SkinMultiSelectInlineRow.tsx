@@ -1,13 +1,12 @@
 import { useRef, type RefObject } from "react";
-import { FiCheck, FiChevronUp, FiPlus, FiX } from "react-icons/fi";
+import { AnimatePresence, m } from "motion/react";
+import { FiChevronUp, FiPlus } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { cx } from "../../shared/lib/cx";
 import type { SkinBlockControl } from "./skinBlockFields.data";
-import {
-  multiSelectEntry,
-  type MultiSelectEntry,
-} from "./skinMultiSelectValue";
+import { multiSelectEntry } from "./skinMultiSelectValue";
 import type { SkinMultiSelect } from "./useSkinMultiSelect";
+import { InlineChipButton, type InlineChip } from "./SkinMultiSelectInlineChip";
 import styles from "./SkinMultiSelectInline.module.css";
 
 const ACTION_KEYS = {
@@ -20,11 +19,6 @@ const ACTION_KEYS = {
 const CLOSE_KEY = "subprofiles:skinControl.refined.close";
 
 type ActionKind = keyof typeof ACTION_KEYS;
-
-interface InlineChip extends MultiSelectEntry {
-  /** Declared in `featuredValues`: always shown, pressed or not. */
-  isFeatured: boolean;
-}
 
 /** The row's chips: the featured options in their declared order, then the
  *  chosen values off that list (other listed options first, then the owner's
@@ -62,42 +56,6 @@ function actionKindOf(
   return control.allowsCustom ? "addOwn" : null;
 }
 
-/** One toggle chip. A featured chip leads with a plus (off) or a check (on);
- *  a chosen chip off the featured list is always pressed and ends with a
- *  cross, since pressing it removes it. */
-function InlineChipButton({
-  chip,
-  isPressed,
-  onPress,
-}: {
-  chip: InlineChip;
-  isPressed: boolean;
-  onPress: () => void;
-}) {
-  const LeadIcon = isPressed ? FiCheck : FiPlus;
-  return (
-    <button
-      type="button"
-      data-inline-chip=""
-      aria-pressed={isPressed}
-      className={cx(
-        styles.chip,
-        isPressed && styles.chipPressed,
-        chip.isCustom && styles.chipCustom,
-      )}
-      onClick={onPress}
-    >
-      {chip.isFeatured && (
-        <LeadIcon aria-hidden focusable="false" className={styles.chipIcon} />
-      )}
-      <span className={styles.chipText}>{chip.label}</span>
-      {!chip.isFeatured && (
-        <FiX aria-hidden focusable="false" className={styles.chipRemoveIcon} />
-      )}
-    </button>
-  );
-}
-
 /**
  * The multiSelect's chip row: a group named by the field label and
  * described by its helper. Featured chips toggle in place (silent, as the
@@ -108,6 +66,11 @@ function InlineChipButton({
  * while open, reads "Close" with a chevron up; Escape or Done returns focus
  * to it. It is also the jump target (`data-jump-target`), so a jump to this
  * field lands on a control that leaves the value as it is.
+ *
+ * A chip that joins or leaves pops in or out, and the chips after it and the
+ * action chip glide over (`layout="position"`). The row is a `layoutRoot`, so
+ * that glide is measured inside the row: the panel opening or the page moving
+ * never flings a chip across the page.
  */
 export function MultiSelectInlineRow({
   select,
@@ -136,6 +99,11 @@ export function MultiSelectInlineRow({
     select.options.length,
   );
   const ActionIcon = select.isOpen ? FiChevronUp : FiPlus;
+  const { reducedMotion } = useMotionPrefs();
+  const chipTransition = {
+    duration: reducedMotion ? 0 : 0.2,
+    ease: [0.22, 0.68, 0.16, 1] as const,
+  };
 
   function removeAt(index: number, value: string): void {
     const chipButtons = Array.from(
@@ -150,27 +118,32 @@ export function MultiSelectInlineRow({
   }
 
   return (
-    <div
+    <m.div
       ref={rowRef}
+      layout="position"
+      layoutRoot
       role="group"
       aria-labelledby={labelId}
       aria-describedby={describedBy}
       className={styles.row}
     >
-      {chips.map((chip, index) => (
-        <InlineChipButton
-          key={chip.value}
-          chip={chip}
-          isPressed={chip.isFeatured ? select.isChosen(chip.value) : true}
-          onPress={() =>
-            chip.isFeatured
-              ? select.toggle(chip.value)
-              : removeAt(index, chip.value)
-          }
-        />
-      ))}
+      <AnimatePresence mode="popLayout" initial={false}>
+        {chips.map((chip, index) => (
+          <InlineChipButton
+            key={chip.value}
+            chip={chip}
+            isPressed={chip.isFeatured ? select.isChosen(chip.value) : true}
+            onPress={() =>
+              chip.isFeatured
+                ? select.toggle(chip.value)
+                : removeAt(index, chip.value)
+            }
+            transition={chipTransition}
+          />
+        ))}
+      </AnimatePresence>
       {actionKind && (
-        <button
+        <m.button
           type="button"
           ref={triggerRef}
           data-jump-target=""
@@ -178,6 +151,8 @@ export function MultiSelectInlineRow({
           aria-expanded={select.isOpen}
           aria-controls={select.isOpen ? panelId : undefined}
           onClick={select.toggleOpen}
+          layout="position"
+          transition={chipTransition}
         >
           <ActionIcon
             aria-hidden
@@ -185,8 +160,8 @@ export function MultiSelectInlineRow({
             className={styles.actionIcon}
           />
           <span>{t(select.isOpen ? CLOSE_KEY : ACTION_KEYS[actionKind])}</span>
-        </button>
+        </m.button>
       )}
-    </div>
+    </m.div>
   );
 }

@@ -9,10 +9,11 @@ import { SideReadinessRing } from "./SideReadinessRing";
 
 /**
  * The editor's grouped left nav — global `.ed-rail`/`.rail-head`/`.rail-n`
- * classes from `persona-editor.css` (Task 1), never a CSS module. It opens
- * with a `.rail-top` row holding the collapse toggle, then the grouped panes.
- * The way back to the dashboard sits above the page title
- * (`SubprofileEditorPage`). Plain `<button>`s per
+ * classes from `persona-editor.css` (Task 1), never a CSS module. It lists
+ * the grouped panes, then closes with a `.rail-foot` row under a hairline:
+ * the collapse toggle, drawn as a labelled row like the entries above it.
+ * The way back to the dashboard sits beside the page title, in the gutter on
+ * wide screens (`SubprofileEditorPage`). Plain `<button>`s per
  * entry give native keyboard operability (Tab + Enter/Space) for free; the
  * active entry gets `aria-current="page"`, which the CSS keys its solid-fill
  * active state off of. The Publish entry renders the draft-readiness `.ring`
@@ -60,18 +61,6 @@ export function EditorRail({
 
   return (
     <nav className="ed-rail" aria-label={t("subprofiles:editorRail.navLabel")}>
-      <div className="rail-top">
-        <Tooltip label={toggleLabel} placement="right">
-          <button
-            type="button"
-            className="rail-toggle"
-            aria-label={toggleLabel}
-            onClick={onToggleCollapse}
-          >
-            <FiChevronsLeft size={16} aria-hidden />
-          </button>
-        </Tooltip>
-      </div>
       {groups.map((group) => (
         <Fragment key={group.headingKey}>
           <p className="rail-head">
@@ -113,6 +102,25 @@ export function EditorRail({
           })}
         </Fragment>
       ))}
+      <div className="rail-foot">
+        <Tooltip
+          label={toggleLabel}
+          placement="right"
+          isDisabled={!isCollapsed}
+        >
+          <button
+            type="button"
+            className="rail-toggle"
+            aria-label={toggleLabel}
+            onClick={onToggleCollapse}
+          >
+            <FiChevronsLeft size={16} aria-hidden />
+            <span className="rail-label">
+              {t("subprofiles:editorRail.collapseShort")}
+            </span>
+          </button>
+        </Tooltip>
+      </div>
     </nav>
   );
 }

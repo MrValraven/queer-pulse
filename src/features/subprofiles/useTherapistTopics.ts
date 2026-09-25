@@ -4,7 +4,6 @@ import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { MAX_ITEMS_PER_SECTION } from "./subprofileEditor.data";
 import {
   emptyItem,
-  moveRow,
   withUid,
   type SubprofileEditorRow,
 } from "./subprofileSectionEditorRows";
@@ -18,14 +17,16 @@ import {
   useTopicFocus,
   type TopicCaret,
 } from "./useTopicFocus";
-import { useTopicLineKeys } from "./useTopicLineKeys";
+import { useOrderedTopicLineKeys } from "./useOrderedTopicLineKeys";
+import { useTopicReorder } from "./useTopicReorder";
 
 /** One topic as the control draws it. */
 export interface TherapistTopic {
   uid: string;
   heading: string;
   lines: string[];
-  /** Added in this session (fades in); topics present at load do not. */
+  /** Added in this session and not yet moved (fades in); topics present at
+   *  load do not. */
   isArriving: boolean;
 }
 
@@ -34,30 +35,40 @@ export interface TherapistTopic {
  * context. There is no local copy: every edit writes the rows straight back
  * through `setSectionRows`, and the editor's "Save all" commits them. Rows
  * keep the `emptyItem` shape, so the save graph sees ordinary section items;
- * `isFeatured` is never touched.
+ * `isFeatured` is never touched. Order is array order (see `useTopicReorder`).
  */
 export function useTherapistTopics(section: SubprofileSection) {
   const { sectionRows, setSectionRows } = useSubprofileEditorContext();
   const rows = sectionRows[section] ?? [];
   const focus = useTopicFocus();
-  const [loadedUids] = useState(() => new Set(rows.map((row) => row._uid)));
+  const [settledUids, setSettledUids] = useState(
+    () => new Set(rows.map((row) => row._uid)),
+  );
   const topics: TherapistTopic[] = rows.map((row) => ({
     uid: row._uid,
     heading: row.title,
     lines: descriptionToLines(row.description),
-    isArriving: !loadedUids.has(row._uid),
+    isArriving: !settledUids.has(row._uid),
   }));
-  const lineKeys = useTopicLineKeys(
+  const lineKeys = useOrderedTopicLineKeys(
     topics.map((topic) => ({ uid: topic.uid, lineCount: topic.lines.length })),
   );
+  const reorder = useTopicReorder({
+    rows,
+    writeRows: (next) => setSectionRows(section, next),
+    moveLineKeys: lineKeys.move,
+    settleTopics: (uids) => {
+      setSettledUids((previous) => new Set([...previous, ...uids]));
+      lineKeys.settleTopics(uids);
+    },
+  });
   const isAtCap = rows.length >= MAX_ITEMS_PER_SECTION;
 
   const writeRow = (
     topicIndex: number,
     patch: Partial<Pick<SubprofileEditorRow, "title" | "description">>,
   ) =>
-    setSectionRows(
-      section,
+    reorder.commitRows(
       rows.map((row, index) =>
         index === topicIndex ? { ...row, ...patch } : row,
       ),
@@ -108,7 +119,7 @@ export function useTherapistTopics(section: SubprofileSection) {
         ? topicFocusKeys.heading(row._uid)
         : topicFocusKeys.line(row._uid, 0),
     ]);
-    setSectionRows(section, [...rows, row]);
+    reorder.commitRows([...rows, row]);
   };
 
   /** Remove a topic. Focus moves to the next topic's heading, else the
@@ -121,34 +132,22 @@ export function useTherapistTopics(section: SubprofileSection) {
       ),
       topicFocusKeys.addTopic,
     ]);
-    setSectionRows(
-      section,
-      rows.filter((_, index) => index !== topicIndex),
-    );
+    reorder.commitRows(rows.filter((_, index) => index !== topicIndex));
   };
 
-  /** Swap a topic with its neighbour. Focus rides along: on the heading for
-   *  Alt+arrow, else on the pressed arrow, or the other one once the block
-   *  reaches an end. */
-  const moveTopic = (
-    topicIndex: number,
-    direction: -1 | 1,
-    focusTarget: "arrow" | "heading" = "arrow",
-  ) => {
-    const topic = topics[topicIndex];
-    const neighbour = topics[topicIndex + direction];
-    if (!topic || !neighbour) return;
-    const pressed = direction < 0 ? "moveUp" : "moveDown";
-    const other = direction < 0 ? "moveDown" : "moveUp";
-    focus.requestFocus(
-      focusTarget === "heading"
-        ? [topicFocusKeys.heading(topic.uid)]
-        : [
-            topicFocusKeys[pressed](topic.uid),
-            topicFocusKeys[other](topic.uid),
-          ],
-    );
-    setSectionRows(section, moveRow(rows, topic.uid, direction));
+  /** Swap a topic with its neighbour (Alt+arrow from its heading). The
+   *  heading keeps focus and its caret across the move. */
+  const moveTopic = (topicIndex: number, direction: -1 | 1) => {
+    if (!topics[topicIndex] || !topics[topicIndex + direction]) return;
+    reorder.moveTopicTo(topicIndex, topicIndex + direction);
+  };
+
+  /** Move a topic to any slot (its grip's move menu), handing focus to
+   *  `focusKeys` once it lands. */
+  const moveTopicTo = (from: number, to: number, focusKeys: string[]) => {
+    if (from === to || !topics[to]) return;
+    focus.requestFocus(focusKeys);
+    reorder.moveTopicTo(from, to);
   };
 
   return {
@@ -162,7 +161,18 @@ export function useTherapistTopics(section: SubprofileSection) {
     addTopic,
     removeTopic,
     moveTopic,
+    moveTopicTo,
+    moveLine: reorder.moveLine,
+    moveCount: reorder.moveCount,
+    topicDrag: reorder.topicDrag,
+    topicListRef: reorder.topicListRef,
   };
 }
 
-export type TherapistTopicsEditor = ReturnType<typeof useTherapistTopics>;
+/** What the topic blocks get. The list ref stays with the control, which
+ *  destructures it off before rendering (the React compiler lint reads an
+ *  object holding a ref as a ref). */
+export type TherapistTopicsEditor = Omit<
+  ReturnType<typeof useTherapistTopics>,
+  "topicListRef"
+>;

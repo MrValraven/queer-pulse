@@ -21,8 +21,8 @@ import s from "./DirectorySpacePage.module.css";
  *
  * Mounted inside `DirectoryReviewFormDisclosure` (rendered by
  * `DirectoryReviewsSection`), which owns the open/closed state and stays
- * mounted while collapsed (hidden via the `hidden` attribute rather than
- * unmounted) so an in-progress draft survives a collapse. `onCancel` and
+ * mounted while collapsed (hidden via the `hidden` attribute) so an
+ * in-progress draft survives a collapse. `onCancel` and
  * `onPosted` let that parent return the panel to its collapsed state; both
  * are optional so the component still works wherever it is rendered always
  * open, without a collapse affordance.

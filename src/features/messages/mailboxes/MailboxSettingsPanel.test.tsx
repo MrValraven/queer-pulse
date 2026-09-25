@@ -3,16 +3,16 @@ import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { DEMO_MAILBOX_SUMMARIES } from "../demoIdentities.data";
 import { MessagesThreadList } from "../MessagesThreadList";
-import { MailboxSettingsModal } from "./MailboxSettingsModal";
+import { MailboxSettingsPanel } from "./MailboxSettingsPanel";
 
 const cafe = DEMO_MAILBOX_SUMMARIES[1]!;
 const estudioNorte = DEMO_MAILBOX_SUMMARIES[3]!;
 
 const NOOP = () => {};
 
-describe("MailboxSettingsModal (demo)", () => {
+describe("MailboxSettingsPanel (demo)", () => {
   it("lets the owner switch staff names off", async () => {
-    render(<MailboxSettingsModal mailbox={cafe} onClose={() => {}} />, {
+    render(<MailboxSettingsPanel mailbox={cafe} />, {
       wrapper: TestProviders,
     });
     const ownerSwitch = await screen.findByRole("switch", {
@@ -27,7 +27,7 @@ describe("MailboxSettingsModal (demo)", () => {
   });
 
   it("locks both switches on a persona moderation removed", async () => {
-    render(<MailboxSettingsModal mailbox={estudioNorte} onClose={() => {}} />, {
+    render(<MailboxSettingsPanel mailbox={estudioNorte} />, {
       wrapper: TestProviders,
     });
     expect(
@@ -49,7 +49,7 @@ describe("MailboxSettingsModal (demo)", () => {
       identityId: "demo-identity-team-only",
       isOwner: false,
     };
-    render(<MailboxSettingsModal mailbox={teamMailbox} onClose={() => {}} />, {
+    render(<MailboxSettingsPanel mailbox={teamMailbox} />, {
       wrapper: TestProviders,
     });
     expect(
@@ -63,7 +63,7 @@ describe("MailboxSettingsModal (demo)", () => {
     ).toBeEnabled();
   });
 
-  it("opens from the switcher's settings slot and hands focus back to the switcher on close", async () => {
+  it("replaces the switcher's list inside the same sheet and returns to it with focus on the gear", async () => {
     render(
       <MessagesThreadList
         loading={false}
@@ -93,20 +93,24 @@ describe("MailboxSettingsModal (demo)", () => {
     });
     fireEvent.click(cafeSettings!);
     expect(
-      await screen.findByRole("dialog", {
+      await screen.findByRole("heading", {
         name: "Mailbox settings for Café Lisboa",
       }),
     ).toBeInTheDocument();
-    // The head's close icon and the footer button share the name; use the
-    // footer's.
-    fireEvent.click(screen.getAllByRole("button", { name: "Close" }).at(-1)!);
-    await waitFor(() =>
-      expect(
-        screen.queryByRole("dialog", {
-          name: "Mailbox settings for Café Lisboa",
-        }),
-      ).toBeNull(),
-    );
-    expect(trigger).toHaveFocus();
+    // The settings take the list's place in the one sheet.
+    expect(screen.getAllByRole("dialog")).toHaveLength(1);
+    const backButton = screen.getByRole("button", {
+      name: "Back to your mailboxes",
+    });
+    await waitFor(() => expect(backButton).toHaveFocus());
+
+    fireEvent.click(backButton);
+    expect(
+      await screen.findByRole("heading", { name: "Your mailboxes" }),
+    ).toBeInTheDocument();
+    const [cafeSettingsAgain] = screen.getAllByRole("button", {
+      name: "Mailbox settings",
+    });
+    await waitFor(() => expect(cafeSettingsAgain).toHaveFocus());
   });
 });

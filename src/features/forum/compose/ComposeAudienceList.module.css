@@ -52,14 +52,20 @@
   text-align: start;
   cursor: pointer;
   transition:
-    border-color var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease);
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .row:hover {
     border-color: var(--line-2);
   }
+}
+
+/* A wide row, so a lighter press than a chip's: enough to feel the tap. */
+.row:active {
+  transform: scale(0.985);
 }
 
 .row[aria-checked="true"] {
@@ -78,19 +84,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color var(--dur-fast) var(--ease);
+  transition: border-color var(--dur-base) var(--ease);
 }
 
 .row[aria-checked="true"] .radioDot {
   border-color: var(--line-strong);
 }
 
-.row[aria-checked="true"] .radioDot::after {
+/* The inner dot is always there and scales up on the chosen row, so moving
+   the choice shrinks one dot away as the other grows in. Each side carries
+   its own timing: the leaving dot goes quickly, and the arriving one grows
+   over the slower beat with both properties together, so the eye catches the
+   growth. */
+.radioDot::after {
   content: "";
   width: 9px;
   height: 9px;
   border-radius: var(--radius-avatar);
   background: var(--plum);
+  opacity: 0;
+  transform: scale(0.2);
+  transition:
+    transform var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+
+.row[aria-checked="true"] .radioDot::after {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
 }
 
 /* ── The town square's mark ────────────────────────────────────────────── */

@@ -1,0 +1,37 @@
+/* The head of one "Part of" card (SubprofileAffiliationRow): the link's type
+   as a small label, then the picked community or event by name, cut with an
+   ellipsis so the grip and the remove button keep their room at any width. */
+
+.headGrip,
+.headRemove {
+  flex-shrink: 0;
+}
+/* On a narrow card the name drops under the type label rather than shrink
+   to a letter or two. */
+.headTitle {
+  display: inline-flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+.headType {
+  flex: none;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.headName {
+  flex: 1 1 8ch;
+  min-width: 8ch;
+  overflow: hidden;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

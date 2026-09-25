@@ -57,6 +57,7 @@ export const FORUM_TAG_CATEGORIES: readonly ForumTagCategory[] = [
       "spaces",
       "events",
       "volunteering",
+      "dating",
       "family",
       "parenting",
       "elders",

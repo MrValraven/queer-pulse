@@ -78,37 +78,109 @@
   padding: 20px;
   font-size: var(--text-14);
   color: var(--ink-60);
-  background: var(--cream);
+  background: var(--paper);
+  border: 1px solid var(--line);
   border-radius: var(--radius-14);
 }
 
 .editor {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
+/* Name, Used for and Active share one row. Each field spans three shared rows
+   (label, control, hint) through subgrid, so the labels line up, the controls
+   line up on one line, and the purpose hint hangs under its own control. */
 .metaRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: minmax(200px, 440px) max-content max-content;
+  justify-content: start;
+  column-gap: 28px;
+  row-gap: 7px;
 }
 
-.metaLabel {
-  flex: 1 1 280px;
+.metaRow > * {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  justify-items: start;
+  align-items: end;
 }
 
-.metaGroup,
+/* FormField brings its own column flex and bottom margin. */
+.metaRow .metaLabel {
+  display: grid;
+  justify-items: stretch;
+  margin-bottom: 0;
+}
+
+/* The shared field input is sized for long forms; here it matches the height
+   of the segmented control beside it. */
+.metaRow .metaLabel input {
+  padding-block: 8px;
+}
+
+/* The switch is shorter than the other two controls, so it sits on their
+   middle line. */
+.metaRow .metaToggle {
+  align-items: center;
+}
+
+/* Segmented options keep each label on one line. */
+.metaRow button,
+.toolbar button {
+  white-space: nowrap;
+}
+
+/* The hint adds nothing to its column's width: the column is exactly as wide
+   as the segmented control, and the hint wraps under it. */
+.metaRow .metaHint {
+  width: 0;
+  min-width: 100%;
+}
+
+@media (--md) {
+  .metaRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+  }
+
+  .metaRow > *,
+  .metaRow .metaToggle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+  }
+
+  .metaRow .metaLabel {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: stretch;
+  }
+}
+
+/* Lets the purpose hint wrap once the row stacks on a phone. */
+.metaGroup {
+  min-width: 0;
+}
+
 .localeTabs {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 7px;
 }
 
+/* Mirrors the shared FormField label, so every field label on the page reads
+   the same. */
 .metaGroupLabel {
-  font-size: var(--text-12);
+  font-size: var(--text-11-5);
   font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   color: var(--ink-60);
 }
 
@@ -117,17 +189,41 @@
   color: var(--ink-60);
 }
 
+/* Language, placeholder chips and the HTML actions on one hairline band just
+   above the workspace. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-block: 8px;
+  border-block: 1px solid var(--line);
+}
+
+/* With a mouse the band's controls shrink to about 32px. Touch keeps the
+   shared tap-size floors. The selectors outrank the shared Button's own
+   `.button.sm` pair. */
+@media (pointer: fine) {
+  .toolbar .localeTabs button {
+    padding: 3px 10px;
+  }
+
+  .toolbar .modeActions {
+    gap: 4px;
+  }
+
+  .toolbar .modeActions > button {
+    min-height: 32px;
+    padding: 0 8px;
+    gap: 4px;
+    font-size: var(--text-12-5);
+  }
+}
+
 .previewNote {
   margin: 0;
   font-size: var(--text-12);
   color: var(--ink-60);
-}
-
-.previewSubject {
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--ink);
-  overflow-wrap: anywhere;
 }
 
 .input {
@@ -149,34 +245,76 @@
 .pane {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
+/* The preview modal's pane and frame take whatever height the full-size modal
+   body has. The 480px floor lets the body scroll on very short windows instead
+   of crushing the mail client, so the pane keeps its automatic min-height. */
+.previewModalPane {
+  flex: 1;
+}
+
+.previewModalFrame {
+  flex: 1;
+  min-height: 480px;
+}
+
+/* Right-aligned in the toolbar, and still right-aligned once it wraps onto a
+   line of its own. */
 .modeActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-left: auto;
 }
 
+/* The editor keeps a working column (340 to 440px) and the preview takes the
+   rest, so the mock mail client gets the bulk of the full-bleed page. */
 .workspace {
+  /* Clears the admin shell's sticky top bar (38px buttons, 14px padding each
+     side and a hairline) with a little air. */
+  --email-preview-sticky-top: 84px;
+
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(340px, min(36%, 440px)) minmax(0, 1fr);
   gap: 18px;
   align-items: start;
+}
+
+/* Sticks under the top bar and fills the screen height, so the preview stays
+   in view while a long block list scrolls past beside it. */
+.workspacePreview {
+  position: sticky;
+  top: var(--email-preview-sticky-top);
+  height: calc(100dvh - var(--email-preview-sticky-top) - 20px);
+  min-height: 560px;
+  min-width: 0;
 }
 
 @media (max-width: 1100px) {
   .workspace {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .workspacePreview {
+    position: static;
+    height: 720px;
+    min-height: 0;
+  }
 }
 
+/* Subject, preview text and the blocks. The fields carry FormField's own
+   bottom margin, which spaces this column. */
 .workspaceEditor {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
 .tokenWarnings {
-  margin: 0;
+  margin: 0 0 14px;
   padding: 10px 14px 10px 28px;
   font-size: var(--text-13);
   color: var(--accent-text);

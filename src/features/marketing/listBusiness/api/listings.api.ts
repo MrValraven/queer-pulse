@@ -285,6 +285,17 @@ export function getSimilarListings(
   );
 }
 
+/** One tag already in use on the platform, with how many listings carry it. */
+export interface DirectoryTagGroup {
+  id: string;
+  tags: string[];
+}
+
+/** GET /directory/tags: the curated tag vocabulary for the wizard's tag
+ *  picker, grouped and in display order. Public. */
+export const getDirectoryTags = () =>
+  apiGet<DirectoryTagGroup[]>("/directory/tags");
+
 /** GET /listings/mine?page= — the caller's own submitted listings. */
 export async function getMyListings(
   page = 1,

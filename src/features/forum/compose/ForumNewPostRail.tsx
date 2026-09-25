@@ -77,6 +77,7 @@ export function ForumNewPostRail({
           isDuplicate={page.similar.isDuplicate}
           duplicateTitle={page.similar.duplicateTitle}
           isLoading={page.similar.isLoading}
+          isAwaitingFirstSearch={page.similar.isAwaitingFirstSearch}
           onReplyInstead={onReplyInstead}
         />
       }

@@ -215,6 +215,25 @@ export function pasteUnderHeading(
   };
 }
 
+/** A line with nothing but whitespace, which the page drops. */
+export function isBlankLine(line: string): boolean {
+  return line.trim() === "";
+}
+
+/** Where a topic already holds a blank line when `edit` would open another,
+ *  else null. A topic keeps one blank line at a time, so a new line goes to
+ *  the blank one already there. */
+export function blankLineBlockingEdit(
+  lines: readonly string[],
+  edit: LineEdit,
+): number | null {
+  const blankIndex = lines.findIndex(isBlankLine);
+  if (blankIndex === -1) return null;
+  const blankCount = (list: readonly string[]) =>
+    list.filter(isBlankLine).length;
+  return blankCount(edit.lines) > blankCount(lines) ? blankIndex : null;
+}
+
 /** "Add a line": a blank line at the end, caret in it. */
 export function appendLine(lines: readonly string[]): LineEdit {
   return {

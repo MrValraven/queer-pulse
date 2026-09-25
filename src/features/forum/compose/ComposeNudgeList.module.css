@@ -7,13 +7,18 @@
    neutral note, --accent-rgb for the caution, --jade-rgb for the crisis row.
    All three flip with the theme, which a flat --plum wash would not. */
 
+/* All spacing is padding: the list sits inside a Collapse, and each item folds
+   in the flow, so space that lives inside a height grows and folds with it.
+   The list's top padding plus the first item's padding make the 14px gap
+   under the body. */
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-xs);
-  margin-top: 14px;
+  margin: 0;
   list-style: none;
-  padding: 0;
+  padding: calc(14px - var(--gap-xs)) 0 0;
+}
+
+.item {
+  padding-top: var(--gap-xs);
 }
 
 .row {
@@ -25,24 +30,6 @@
   font-size: var(--text-13);
   line-height: var(--lh-body);
   color: var(--ink);
-  animation: nudgeIn var(--dur-base) var(--ease) both;
-}
-
-@keyframes nudgeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .row {
-    animation: none;
-  }
 }
 
 .rowIcon {
@@ -125,7 +112,12 @@
   color: var(--ink);
   transition:
     border-color var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease);
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.helpline:active {
+  transform: scale(0.98);
 }
 
 .helplineName {
@@ -183,7 +175,14 @@
   background: none;
   color: var(--ink-40);
   cursor: pointer;
-  transition: color var(--dur-fast) var(--ease);
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.dismiss:active {
+  transform: scale(0.9);
 }
 
 @media (hover: hover) and (pointer: fine) {

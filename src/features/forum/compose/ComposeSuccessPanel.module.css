@@ -62,7 +62,7 @@
   display: grid;
   place-items: center;
   margin-bottom: 18px;
-  animation: iconPop var(--dur-base) var(--ease) 0.1s both;
+  /* Springs in from the panel's own motion variants (composeSuccessMotion). */
 }
 
 .icon svg {
@@ -91,6 +91,11 @@
   color: rgba(var(--cream-rgb), 0.74);
   max-width: 44ch;
   margin: 14px 0 0;
+}
+
+/* Keyed on the sentence, so the one change (the window lapsing) fades in. */
+.bodyText {
+  animation: successTextIn var(--dur-base) var(--ease-out) both;
 }
 
 /* ── The thread, as it now exists ────────────────────────────────────────── */
@@ -140,6 +145,14 @@
   cursor: pointer;
   touch-action: manipulation;
   white-space: nowrap;
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.unpublish:active {
+  transform: scale(0.97);
 }
 
 .unpublish svg {
@@ -180,6 +193,12 @@
 
 /* ── Share row ───────────────────────────────────────────────────────────── */
 
+/* The row's animated wrapper spans the column, so the buttons inside still
+   wrap and centre against the full width. */
+.shareSlot {
+  width: 100%;
+}
+
 .share {
   display: flex;
   flex-wrap: wrap;
@@ -209,22 +228,16 @@
   margin-top: 20px;
 }
 
-@keyframes iconPop {
+@keyframes successTextIn {
   from {
     opacity: 0;
-    transform: scale(0.82);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .icon {
-    animation: none;
-  }
-
   /* The countdown carries no motion at all here: the bar jumps to its new
      length and the digits simply change. */
   .unpublishTrack {

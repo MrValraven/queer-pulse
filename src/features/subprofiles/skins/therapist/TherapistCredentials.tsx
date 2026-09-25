@@ -9,7 +9,12 @@ import type { PersonaViewMode } from "../../personaSkinRender";
 import { TherapistSection } from "./TherapistSection";
 import type { TherapistView } from "./therapistView";
 import { THERAPIST_EDIT_TARGETS } from "./therapistEditLinks.data";
+import { RevealBlock, RevealList } from "./TherapistReveal";
+import { occurrenceKeys, useRowReveal } from "./revealKeys";
 import styles from "./TherapistCredentials.module.css";
+
+/** The reading column's flex gap (TherapistBody.module.css `.main`). */
+const COLUMN_GAP = 16;
 
 interface TherapistCredentialsProps {
   data: PublicSubprofileView;
@@ -22,7 +27,8 @@ interface TherapistCredentialsProps {
  * list. Title and issuer on the left, the date on the right (under the text
  * on phones), and the certificate photo when the owner added one. Every item
  * shows, as `SubprofileSections` shows them; this layout has no spotlight, so
- * a featured item stays in its list. `null` without items.
+ * a featured item stays in its list. Grows in with its first item and folds
+ * away with its last; a row added or removed in between grows or folds.
  */
 export function TherapistCredentials({
   data,
@@ -33,32 +39,38 @@ export function TherapistCredentials({
   const items =
     data.sections.find((section) => section.section === "credentials")?.items ??
     [];
-  if (items.length === 0) return null;
+  const itemKeys = occurrenceKeys(items.map((item) => item.id || item.title));
   const name = view.firstName;
 
   return (
-    <TherapistSection
-      label={t("subprofiles:therapist.credentials.label")}
-      heading={
-        name
-          ? t("subprofiles:therapist.credentials.heading", { name })
-          : t("subprofiles:therapist.credentials.headingNameless")
-      }
-      editTarget={THERAPIST_EDIT_TARGETS.credentials}
-    >
-      <ul className={styles.list}>
-        {items.map((item, itemIndex) => (
-          <CredentialRow
-            key={item.id || `${item.title}-${itemIndex}`}
-            item={item}
-            isInteractive={mode !== "preview"}
-          />
-        ))}
-      </ul>
-    </TherapistSection>
+    <RevealBlock isShown={items.length > 0} parentGap={COLUMN_GAP}>
+      <TherapistSection
+        label={t("subprofiles:therapist.credentials.label")}
+        heading={
+          name
+            ? t("subprofiles:therapist.credentials.heading", { name })
+            : t("subprofiles:therapist.credentials.headingNameless")
+        }
+        editTarget={THERAPIST_EDIT_TARGETS.credentials}
+      >
+        <ul className={styles.list}>
+          <RevealList>
+            {items.map((item, itemIndex) => (
+              <CredentialRow
+                key={itemKeys[itemIndex]}
+                item={item}
+                isInteractive={mode !== "preview"}
+              />
+            ))}
+          </RevealList>
+        </ul>
+      </TherapistSection>
+    </RevealBlock>
   );
 }
 
+/** One credential row. A row added by an edit grows in and a removed one
+ *  folds away (the list has no gap). A direct child of `RevealList`. */
 function CredentialRow({
   item,
   isInteractive,
@@ -68,8 +80,13 @@ function CredentialRow({
 }) {
   const { language } = useTranslation();
   const hasProof = Boolean(item.imageUrl);
+  const rowRef = useRowReveal<HTMLLIElement>(0);
   return (
-    <li className={styles.row} data-has-proof={hasProof || undefined}>
+    <li
+      ref={rowRef}
+      className={styles.row}
+      data-has-proof={hasProof || undefined}
+    >
       <div className={styles.text}>
         <p className={styles.title}>{item.title}</p>
         {item.subtitle && <p className={styles.issuer}>{item.subtitle}</p>}

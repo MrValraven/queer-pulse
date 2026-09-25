@@ -19,6 +19,7 @@ import {
   WHO_FOR_OPTIONS,
   WORKING_STYLE_OPTIONS,
 } from "./skins/therapist/therapistPickOptions";
+import { PORTUGUESE_INSURERS } from "./portugueseInsurers.data";
 
 /**
  * The therapist "Page blocks" editor, as six chapters that follow the public
@@ -141,14 +142,15 @@ function feeChoiceControl(
   };
 }
 
-/** A whole-block `string[]` edited as chips, labelled by the block heading. */
-function chipsControl(
+/** A whole-block `string[]` edited as reorderable one-line rows, for items
+ *  that read as sentences rather than tags. */
+function linesControl(
   blockKey: string,
   extra: Partial<SkinBlockControl> = {},
 ): SkinBlockControl {
   return {
     path: blockKey,
-    kind: "chips",
+    kind: "lines",
     labelKey: therapistKey(blockKey, "title"),
     placeholderKey: therapistKey(blockKey, "placeholder"),
     ...extra,
@@ -173,16 +175,19 @@ function pickControl(
   };
 }
 
-/** A label/value item field pair under `skinBlock.therapist.<block>.*`. */
+/** A label/value item field pair under `skinBlock.therapist.<block>.*`.
+ *  `valueExtra` and `labelExtra` customise the value and label fields. */
 function therapistPairFields(
   blockKey: string,
   valueExtra: Partial<SkinItemFieldDescriptor> = {},
+  labelExtra: Partial<SkinItemFieldDescriptor> = {},
 ): SkinItemFieldDescriptor[] {
   return [
     {
       key: "label",
       labelKey: therapistKey(blockKey, "label"),
       placeholderKey: therapistPlaceholder(blockKey, "label"),
+      ...labelExtra,
     },
     {
       key: "value",
@@ -289,7 +294,7 @@ const APPROACH_CHAPTER: SkinChapterDescriptor = {
           path: "approach",
           kind: "paragraphs",
           labelKey: groupKey("approach"),
-          addLabelKey: therapistKey("approach", "add"),
+          placeholderKey: therapistKey("approach", "placeholder"),
         },
       ],
     },
@@ -322,9 +327,14 @@ const APPROACH_CHAPTER: SkinChapterDescriptor = {
     {
       titleKey: groupKey("expectations"),
       controls: [
-        chipsControl("notFor"),
-        chipsControl("boundaries", {
+        linesControl("notFor", {
+          addLabelKey: therapistKey("notFor", "addLine"),
+          isWrapping: true,
+        }),
+        linesControl("boundaries", {
           labelKey: therapistKey("boundaries", "label"),
+          addLabelKey: therapistKey("boundaries", "addLine"),
+          isWrapping: true,
         }),
       ],
     },
@@ -419,10 +429,14 @@ const FEES_CHAPTER: SkinChapterDescriptor = {
           labelKey: groupKey("insurance"),
           helperKey: therapistKey("reimbursement", "helper"),
           addLabelKey: therapistKey("reimbursement", "add"),
-          itemFields: therapistPairFields("reimbursement", {
-            labelKey: therapistKey("reimbursement", "valueBack"),
-            isMoney: true,
-          }),
+          itemFields: therapistPairFields(
+            "reimbursement",
+            {
+              labelKey: therapistKey("reimbursement", "valueBack"),
+              isMoney: true,
+            },
+            { suggestions: PORTUGUESE_INSURERS },
+          ),
         },
         therapistFieldControl("therapyFees", "receipts", {
           labelKey: therapistKey("therapyFees", "insuranceNote"),
@@ -493,8 +507,9 @@ const AVAILABILITY_CHAPTER: SkinChapterDescriptor = {
     {
       titleKey: therapistKey("openSlots", "title"),
       controls: [
-        chipsControl("openSlots", {
+        linesControl("openSlots", {
           helperKey: therapistKey("openSlots", "chipHelper"),
+          addLabelKey: therapistKey("openSlots", "addLine"),
         }),
       ],
     },
@@ -586,7 +601,14 @@ const WHERE_CHAPTER: SkinChapterDescriptor = {
     },
     {
       titleKey: groupKey("accessibility"),
-      controls: [chipsControl("access"), chipsControl("accessMissing")],
+      controls: [
+        linesControl("access", {
+          addLabelKey: therapistKey("access", "addLine"),
+        }),
+        linesControl("accessMissing", {
+          addLabelKey: therapistKey("accessMissing", "addLine"),
+        }),
+      ],
     },
   ],
 };

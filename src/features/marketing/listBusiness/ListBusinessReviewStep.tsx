@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { FiShield } from "react-icons/fi";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { toPlainText } from "../../../shared/markdown";
 import type { TFunction } from "../../../shared/i18n/types";
 import {
   catLabel,
@@ -12,6 +13,7 @@ import {
   slugify,
   type ListingDraft,
 } from "./listBusiness.data";
+import { listingTagLabel } from "./listingTags.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
@@ -185,13 +187,13 @@ export function StepReview({
           {draft.tagline}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.whatItIs")}>
-          {draft.whatItIs
-            .map((w) => w.text.trim())
-            .filter(Boolean)
-            .join(" · ")}
+          {/* `toPlainText` keeps single `*` marks, so italics are unwrapped here. */}
+          {toPlainText(
+            draft.whatItIs.map((paragraph) => paragraph.text).join("\n\n"),
+          ).replace(/\*(\S[^*]*?)\*/g, "$1")}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.tags")}>
-          {draft.tags.join(", ")}
+          {draft.tags.map((tag) => listingTagLabel(t, tag)).join(", ")}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.goodFor")}>
           {draft.goodFor.map((g) => goodForLabel(t, g)).join(", ")}

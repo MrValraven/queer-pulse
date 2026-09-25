@@ -391,6 +391,57 @@
   }
 }
 
+/* ── Exit ──────────────────────────────────────────────────────────────────
+   Only reached when an AnimatePresence parent holds a closing dialog (see
+   useModalExit.ts). `forwards` keeps the last frame until the dialog is
+   removed, so it never blinks back in. The scrim stops catching clicks at
+   once, so the page behind is usable while the dialog leaves. */
+.scrim.scrimClosing,
+.overlay.scrimClosing {
+  pointer-events: none;
+  animation: scrimOut var(--dur-fast, 150ms) var(--ease-in) forwards;
+}
+.overlay.scrimClosing,
+.sideScrim.scrimClosing {
+  animation-duration: var(--dur-base, 250ms);
+}
+.modal.modalClosing {
+  animation: modalOut var(--dur-fast, 150ms) var(--ease-in) forwards;
+}
+.sheet.sheetClosing,
+.sideSheet.sheetClosing {
+  animation: sheetOut var(--dur-base, 250ms) var(--ease-in) forwards;
+}
+/* On mobile the centered dialog is a bottom sheet, so it leaves like one. */
+@media (max-width: 719.98px) {
+  .scrim.scrimClosing {
+    animation-duration: var(--dur-base, 250ms);
+  }
+  .modal.modalClosing {
+    animation: sheetOut var(--dur-base, 250ms) var(--ease-in) forwards;
+  }
+}
+
+/* The exits name only an end state, so each starts from the dialog's resting
+   style, which for a sheet let go mid-drag is its inline dragged offset. */
+@keyframes scrimOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes modalOut {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+@keyframes sheetOut {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--sheet-drag-offset, 0px) + 40px));
+  }
+}
+
 /* ── Dark theme ────────────────────────────────────────────────────────────
    `.modal`, `.sheet` and `.sideSheet` all sit on --cream, which flips to a
    near-black in dark mode. The plum tints below are the grabber and the close

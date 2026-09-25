@@ -21,6 +21,7 @@ export type ListingEditorSectionKey =
   | "aboutYou"
   | "coManagers"
   | "permissions"
+  | "history"
   | "dangerZone";
 
 export interface ListingEditorSectionDefinition {
@@ -34,8 +35,9 @@ export interface ListingEditorSectionDefinition {
  * Ordered for someone hunting one field: what the place IS first (name, category, area, price, one-liner),
  * then how it reads, then what it costs, then where and when to find it, then
  * who can get in, then whether it is trading and showing, then pictures, then
- * the person behind it, then the permissions that rarely change, and at the
- * very end, for the owner alone, the one action that cannot be taken back.
+ * the person behind it, then the permissions that rarely change, then the
+ * record of who changed what, and at the very end, for the owner alone, the
+ * one action that cannot be taken back.
  */
 export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
   {
@@ -121,6 +123,14 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     id: "lb-editor-permissions",
     labelKey: "marketing:listBusiness.editor.section.permissions",
     anchors: [ANCHOR.consent],
+  },
+  {
+    key: "history",
+    id: "lb-editor-history",
+    labelKey: "marketing:listBusiness.editor.section.history",
+    // A read-only record of past changes, so nothing here is ever a field the
+    // save bar is waiting on.
+    anchors: [],
   },
   {
     key: "dangerZone",

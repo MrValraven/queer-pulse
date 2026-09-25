@@ -21,13 +21,10 @@ export function MailboxSwitcher({
   mailboxes,
   active,
   onSelect,
-  onOpenSettings,
 }: {
   mailboxes: MailboxSummary[];
   active: MailboxSummary | null;
   onSelect: (identityId: string) => void;
-  /** Opens the settings of a business, persona or company mailbox. */
-  onOpenSettings?: (identityId: string) => void;
 }) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -83,14 +80,6 @@ export function MailboxSwitcher({
             setIsOpen(false);
             if (identityId !== active.identityId) onSelect(identityId);
           }}
-          onOpenSettings={
-            onOpenSettings
-              ? (identityId) => {
-                  setIsOpen(false);
-                  onOpenSettings(identityId);
-                }
-              : undefined
-          }
           onClose={() => setIsOpen(false)}
         />
       )}

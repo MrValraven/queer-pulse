@@ -10,8 +10,11 @@
 }
 
 /* The row gap matches the hit area's reach (4px above and below a 36px
-   chip), so neighbouring rows of chips never overlap their targets. */
+   chip), so neighbouring rows of chips never overlap their targets.
+   Positioned, because a chip on its way out is lifted out of the flow
+   (AnimatePresence "popLayout") and placed against this row while it fades. */
 .row {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;

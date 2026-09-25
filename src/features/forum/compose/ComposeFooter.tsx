@@ -1,7 +1,10 @@
+import { AnimatePresence, m } from "motion/react";
 import { FiAlertCircle, FiCheck } from "react-icons/fi";
-import { Button } from "../../../shared/components/ui";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { Button, Spinner } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { ForumDraftStatus } from "../useForumComposerDraft";
+import { ComposeDraftStatusLine } from "./ComposeDraftStatusLine";
 import { ComposePublishMenu } from "./ComposePublishMenu";
 import type { ComposeBlocker, PublishMode } from "./composeThread.types";
 import styles from "./ComposeFooter.module.css";
@@ -56,16 +59,26 @@ export function ComposeFooter({
         <kbd>↵</kbd>
         {t("forum:composePage.foot.shortcutHint")}
       </span>
-      <Button variant="ghost" onClick={onCancel}>
+      <Button
+        variant="ghost"
+        className={styles.cancelButton}
+        onClick={onCancel}
+      >
         {t("forum:compose.cancel")}
       </Button>
-      <span className={styles.publishGroup}>
+      <span className={styles.publishGroup} data-busy={isPublishing}>
         <Button
           className={styles.publishButton}
           disabled={!isPublishAllowed}
+          aria-busy={isPublishing}
           onClick={() => onPublish("now")}
         >
-          {t("forum:compose.publishCta")}
+          {/* The label only fades while the spinner sits over it, so the
+              button keeps its width and its accessible name throughout. */}
+          <span className={styles.publishLabel}>
+            {t("forum:compose.publishCta")}
+          </span>
+          <ComposePublishSpinner isVisible={isPublishing} />
         </Button>
         <ComposePublishMenu
           isDisabled={!isPublishAllowed}
@@ -76,35 +89,27 @@ export function ComposeFooter({
   );
 }
 
-/**
- * "Draft saved", with a dot that is jade once the text is safe on the server
- * and coral while a save is still in flight. Silent while there is nothing
- * true to say, which is what `idle` means.
- */
-function ComposeDraftStatusLine({ status }: { status: ForumDraftStatus }) {
-  const { t } = useTranslation();
-  if (status === "idle") {
-    return <span className={styles.saved} aria-hidden />;
-  }
-  const labelKey =
-    status === "saving"
-      ? "forum:draft.saving"
-      : status === "saved"
-        ? "forum:draft.saved"
-        : "forum:draft.restored";
+/** The spinner that fades in over the Publish label while a request is out. */
+function ComposePublishSpinner({ isVisible }: { isVisible: boolean }) {
+  const { reducedMotion } = useMotionPrefs();
   return (
-    <span
-      className={styles.saved}
-      role="status"
-      aria-label={t("forum:composePage.foot.statusLabel")}
-    >
-      <span
-        className={styles.savedDot}
-        data-state={status === "saving" ? "pending" : "settled"}
-        aria-hidden
-      />
-      {t(labelKey)}
-    </span>
+    <AnimatePresence initial={false}>
+      {isVisible && (
+        <m.span
+          key="spinner"
+          className={styles.publishSpinner}
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.6 }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.18,
+            ease: [0.22, 0.68, 0.16, 1],
+          }}
+        >
+          <Spinner />
+        </m.span>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -121,27 +126,39 @@ function ComposePublishHint({
   canPublish: boolean;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const firstBlocker = blockers[0];
+  const tone = firstBlocker ? "blocked" : canPublish ? "ready" : "pending";
+  const message = firstBlocker
+    ? t(firstBlocker.messageKey, firstBlocker.values)
+    : t(
+        canPublish
+          ? "forum:composePage.foot.ready"
+          : "forum:composePage.foot.notReady",
+      );
 
-  if (firstBlocker) {
-    return (
-      <span className={styles.hint} data-tone="blocked" role="status">
-        <FiAlertCircle aria-hidden />
-        {t(firstBlocker.messageKey, firstBlocker.values)}
-      </span>
-    );
-  }
-  if (canPublish) {
-    return (
-      <span className={styles.hint} data-tone="ready" role="status">
-        <FiCheck aria-hidden />
-        {t("forum:composePage.foot.ready")}
-      </span>
-    );
-  }
+  // The region itself never remounts; only the line inside it cross-fades.
+  // Keyed on the reason, so a count inside one reason updates in place and
+  // only a new reason fades.
   return (
-    <span className={styles.hint} data-tone="pending" role="status">
-      {t("forum:composePage.foot.notReady")}
+    <span className={styles.hint} data-tone={tone} role="status">
+      <AnimatePresence mode="wait" initial={false}>
+        <m.span
+          key={`${tone}:${firstBlocker?.messageKey ?? ""}`}
+          className={styles.hintLine}
+          initial={{ opacity: 0, y: 3 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -3 }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.14,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          {tone === "blocked" && <FiAlertCircle aria-hidden />}
+          {tone === "ready" && <FiCheck aria-hidden />}
+          {message}
+        </m.span>
+      </AnimatePresence>
     </span>
   );
 }

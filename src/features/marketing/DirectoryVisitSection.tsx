@@ -12,11 +12,13 @@ import {
   DirectoryPlaceMap,
   DirectoryPlaceOnline,
 } from "./DirectoryPlaceLocation";
+import { placeAreaParts } from "./placeArea";
 import { DirectoryContactRows } from "./DirectoryContactRows";
 import { DirectoryMessageBusiness } from "./DirectoryMessageBusiness";
 import { DirectoryVisitCardProvider } from "./DirectoryVisitCardProvider";
 import { useOptionalDirectoryVisitCard } from "./directoryVisitCardContext";
 import { useCarryVisitCardFocus } from "./visitCardFocusCarry";
+import { useVisitMapReach } from "./useVisitMapReach";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -29,6 +31,9 @@ interface Props {
    * contact read for an owner, who has "Edit this listing" rather than an
    * inbox of their own to write to. */
   ownerRef?: string;
+  /** Set by the rail only: stretches the map band so the card ends level with
+   *  the hours card beside it (see `useVisitMapReach`). */
+  shouldReachHoursEnd?: boolean;
 }
 
 /**
@@ -43,9 +48,15 @@ interface Props {
  * column right after the hours (`DirectorySpaceMain`), where somebody deciding
  * where to go tonight meets it one screen in. The card is built to read at
  * both widths: its own container query gives the map a taller band only when
- * the card is wide. What has to survive a move (an enquiry draft, a reported
+ * the card is wide. In the rail the map band also grows until the card ends
+ * level with the hours card beside it (`useVisitMapReach`), so the two columns
+ * close on one line. What has to survive a move (an enquiry draft, a reported
  * cap, keyboard focus) lives in `DirectoryVisitCardProvider` above both
  * columns.
+ *
+ * The area line (neighbourhood and city) sits under the heading as a subline,
+ * mirroring the main column's first section so the two columns' cards start
+ * level.
  *
  * Map and details share ONE card. The old pair of loose flex columns left a
  * 200px square map with its address orphaned underneath, and a details column
@@ -68,11 +79,17 @@ export function DirectoryVisitSection(props: Props) {
   );
 }
 
-function DirectoryVisitCard({ place, preview = false, ownerRef }: Props) {
+function DirectoryVisitCard({
+  place,
+  preview = false,
+  ownerRef,
+  shouldReachHoursEnd = false,
+}: Props) {
   const { t } = useTranslation();
   const cardRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useCarryVisitCardFocus(cardRef, headingRef, `.${s.visitMap}`);
+  useVisitMapReach(cardRef, shouldReachHoursEnd);
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
 
   // A closed business's inbox is not somewhere to write to (see
@@ -84,16 +101,26 @@ function DirectoryVisitCard({ place, preview = false, ownerRef }: Props) {
       ? "email"
       : null;
   const hasSavedSignal = place.savedCount != null && place.savedCount > 0;
+  const areaLine = place.online ? "" : placeAreaParts(place).join(" · ");
+
+  const heading = (
+    // Focusable from script only: the fallback target when focus sat in the
+    // map as the card changed column (see visitCardFocusCarry).
+    <h2 ref={headingRef} tabIndex={-1}>
+      {t("marketing:directory.detail.visitTitle")}
+    </h2>
+  );
 
   return (
     <section ref={cardRef} className={s.sec}>
-      <div className={s.secHead}>
-        {/* Focusable from script only: the fallback target when focus sat in
-            the map as the card changed column (see visitCardFocusCarry). */}
-        <h2 ref={headingRef} tabIndex={-1}>
-          {t("marketing:directory.detail.visitTitle")}
-        </h2>
-      </div>
+      {areaLine ? (
+        <>
+          {heading}
+          <p className={s.subLine}>{areaLine}</p>
+        </>
+      ) : (
+        <div className={s.secHead}>{heading}</div>
+      )}
       <div className={s.visitShell}>
         <div className={s.visitCard}>
           {!place.online && <DirectoryPlaceMap place={place} />}

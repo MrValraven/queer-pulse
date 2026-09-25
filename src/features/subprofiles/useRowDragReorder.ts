@@ -1,116 +1,112 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import {
+  createRowDragController,
+  type RowDragController,
+} from "./rowDragController";
+
+export {
+  ROW_DRAG_START_EVENT,
+  type RowDragStartDetail,
+} from "./rowDragGestureGuards";
 
 /**
- * Pointer-driven drag-to-reorder for a `.itemrow`-style list. The grip acts as
- * the handle: `onPointerDown` arms the drag, then each pointer move does a
- * single neighbour swap once the pointer crosses the next/previous row's
- * midpoint. One step per move keeps it jitter-free (no oscillation from
- * remeasuring a list that just reordered under the finger).
+ * Pointer-driven drag-to-reorder for a `.itemrow`-style list, with the grip as
+ * the handle.
  *
- * The move/end lifecycle is bound to `window`, NOT to the grip: relying on the
- * grip to receive `pointerup` is fragile once a row animates. When the section
- * editor's rows became motion `m.div`s with `layout`, motion's per-frame layout
- * re-projection during a drag would drop the grip's implicit pointer capture,
- * so the release `pointerup` landed elsewhere, the grip's handler never fired,
- * and the drag got STUCK — the row kept following the cursor after the button
- * was let go. Listening on `window` catches the release wherever it happens, so
- * a drag can never get stuck. A `buttons === 0` guard on move is a second belt:
- * if an up is ever missed entirely, the next move with no button ends the drag.
+ * A press on the grip only waits. It becomes a drag once the pointer travels
+ * more than 4px with a mouse, or 10px with a finger or pen, whose honest taps
+ * drift further; a press released before that is a tap, changes nothing, and
+ * the grip's own `click` fires as usual (so a grip can also be a button). As
+ * a press becomes a drag, the grip receives a bubbling `rowdragstart`
+ * (`ROW_DRAG_START_EVENT`, detail `{ index }`), so it can close a move menu
+ * the press may have left open. The
+ * one click that follows a real drag's release is swallowed, so a drag never
+ * counts as a press of the grip. A mouse press keeps the old `preventDefault`
+ * (no text selection, a focused field stays focused, the click still fires);
+ * touch and pen keep their native tap, and the grips' `touch-action: none`
+ * stops the page panning under a finger.
  *
- * This is the pointer path only — the up/down arrow buttons remain the
- * keyboard/assistive-tech path (the grip stays `aria-hidden`), so no drag
- * affordance is required to reorder. `containerRef` must wrap ONLY the rows,
+ * While dragging, the held row (`container.children[draggingIndex]`) follows
+ * the pointer through the CSS `translate` property, which composes with the
+ * `transform` motion owns for its layout glides. Swaps are one neighbour step
+ * at a time, taken when the held row's centre crosses a neighbour's midpoint
+ * as LAID OUT (motion's transform and our translate taken back off), so a
+ * neighbour still gliding away never pulls the row straight back. After each
+ * swap re-renders, the offset is recomputed for the row's new slot before
+ * paint, so it never visibly jumps. While held, the row's own CSS transitions
+ * skip `translate` (see `holdTranslateStill`), so no swap paints a frame of
+ * its old offset. The held row stops a little past the list's first and last
+ * slots. Near the top or bottom edge of the list's scroll surface (its
+ * nearest scrolling ancestor, else the window, inset by any fixed nav or
+ * sticky bar) the page scrolls itself, until the list's own end in that
+ * direction is in view. On release the row glides home over 180ms (instant
+ * under reduced motion); a cancel or unmount clears it at once.
+ *
+ * The move/end lifecycle is bound to `window`: motion's per-frame layout
+ * re-projection can drop the grip's pointer capture, and a release landing
+ * elsewhere once left a drag STUCK to the cursor. Listening on `window`
+ * catches the release wherever it happens, and a `buttons === 0` guard on
+ * move ends a drag whose release was missed entirely.
+ *
+ * This is the pointer path only; the up/down arrow buttons remain the
+ * keyboard and assistive-tech path. `containerRef` must wrap ONLY the rows,
  * in render order, since the swap math reads `container.children` directly.
  */
 export function useRowDragReorder(
   onReorder: (from: number, to: number) => void,
 ) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const draggingIndexRef = useRef<number | null>(null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  const controllerRef = useRef<RowDragController | null>(null);
   // Keep the latest callback (it closes over the current rows) reachable from
   // the window listeners below without re-binding them every render.
   const onReorderRef = useRef(onReorder);
-  useEffect(() => {
+  useLayoutEffect(() => {
     onReorderRef.current = onReorder;
   });
 
   useEffect(() => {
-    function move(event: PointerEvent) {
-      const from = draggingIndexRef.current;
-      const container = containerRef.current;
-      if (from === null || !container) return;
-      // Button released but we somehow missed the up entirely — end now so the
-      // row can't keep following the cursor.
-      if (event.buttons === 0) {
-        end();
-        return;
-      }
-      const rows = Array.from(container.children) as HTMLElement[];
-      const pointerY = event.clientY;
-
-      let to: number | null = null;
-      const next = rows[from + 1];
-      if (next) {
-        const rect = next.getBoundingClientRect();
-        if (pointerY > rect.top + rect.height / 2) to = from + 1;
-      }
-      if (to === null) {
-        const previous = rows[from - 1];
-        if (previous) {
-          const rect = previous.getBoundingClientRect();
-          if (pointerY < rect.top + rect.height / 2) to = from - 1;
-        }
-      }
-      if (to === null) return;
-
-      onReorderRef.current(from, to);
-      draggingIndexRef.current = to;
-      setDraggingIndex(to);
-    }
-
-    function end() {
-      if (draggingIndexRef.current === null) return;
-      draggingIndexRef.current = null;
-      setDraggingIndex(null);
-    }
-
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", end);
-    window.addEventListener("pointercancel", end);
+    const controller = createRowDragController({
+      readContainer: () => containerRef.current,
+      reorder: (from, to) => onReorderRef.current(from, to),
+      setDraggingIndex,
+    });
+    controllerRef.current = controller;
+    window.addEventListener("pointermove", controller.handlePointerMove);
+    window.addEventListener("pointerup", controller.handlePointerUp);
+    window.addEventListener("pointercancel", controller.handlePointerCancel);
     return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", end);
-      window.removeEventListener("pointercancel", end);
+      window.removeEventListener("pointermove", controller.handlePointerMove);
+      window.removeEventListener("pointerup", controller.handlePointerUp);
+      window.removeEventListener(
+        "pointercancel",
+        controller.handlePointerCancel,
+      );
+      controller.dispose();
+      controllerRef.current = null;
     };
   }, []);
 
-  function begin(index: number, event: ReactPointerEvent) {
-    // Primary button / touch contact / pen only — never right-click.
-    if (event.button !== 0) return;
-    event.preventDefault();
-    // Best-effort capture so touch keeps delivering moves even if the finger
-    // strays off the grip; the window listeners above own the lifecycle either
-    // way, so a lost capture can no longer strand the drag.
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    } catch {
-      // Ignore — window listeners cover us if capture can't be set.
+  // A swap just re-rendered the rows: re-place the held row in its new slot
+  // before paint, and let the next swap through.
+  useLayoutEffect(() => {
+    if (draggingIndex !== null) {
+      controllerRef.current?.syncAfterCommit(draggingIndex);
     }
-    draggingIndexRef.current = index;
-    setDraggingIndex(index);
-  }
+  }, [draggingIndex]);
 
   return {
     containerRef,
     draggingIndex,
     gripHandlers: (index: number) => ({
-      onPointerDown: (event: ReactPointerEvent) => begin(index, event),
+      onPointerDown: (event: ReactPointerEvent) =>
+        controllerRef.current?.press(index, event),
     }),
   };
 }

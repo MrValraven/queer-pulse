@@ -37,8 +37,8 @@ export function Promises({ persona }: { persona: SkinExtrasPersona }) {
     <section className="promises">
       <h2>{t("subprofiles:skinExtras.classroom.promisesTitle")}</h2>
       <ul>
-        {promises.map((line) => (
-          <li key={line}>
+        {promises.map((line, index) => (
+          <li key={`${index}-${line}`}>
             <FiCheck aria-hidden />
             {line}
           </li>

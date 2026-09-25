@@ -23,7 +23,8 @@
     background var(--dur-base) var(--ease),
     box-shadow var(--dur-base) var(--ease),
     color var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease);
+    border-color var(--dur-base) var(--ease),
+    opacity var(--dur-base) var(--ease);
 }
 
 .lg {
@@ -204,4 +205,12 @@
     border-color: rgba(var(--cream-rgb), 0.7);
     color: rgba(var(--cream-rgb), 1);
   }
+}
+
+/* Press feedback. Last in the file so it outranks the hover lift at equal
+   specificity: pressing drops the lift and sinks the button slightly, and the
+   fast duration keeps the tap feeling immediate. */
+.button:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+  transition-duration: var(--dur-fast);
 }

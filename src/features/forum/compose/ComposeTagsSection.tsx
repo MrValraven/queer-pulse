@@ -1,5 +1,8 @@
 import { useId, useState, type KeyboardEvent } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiPlus, FiX } from "react-icons/fi";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { COMPOSE_TAG_LIMIT } from "./composeThread.types";
 import styles from "./ComposeTagsSection.module.css";
@@ -19,6 +22,13 @@ import styles from "./ComposeTagsSection.module.css";
 // `TAG_SUGGESTIONS` the hook derives, and dresses itself as a modal field,
 // which is where its one remaining call site lives.
 // Four mismatches, one of them the behaviour that field exists for.
+//
+// Chips and suggestions pop in and out (`AnimatePresence`), and the ones
+// beside them slide over to close or open the gap (`layout`), so adding a tag
+// reads as the word moving into the box. The box and the suggestion row are
+// each a `layoutRoot` (which needs `layout` beside it to be measured), so
+// that glide is measured inside them: a section opening above moves them in
+// one piece and never sends a chip or the input flying across the page.
 
 /** The keys that commit whatever is in the input. */
 const COMMIT_KEYS = ["Enter", ",", "Tab"];
@@ -46,6 +56,18 @@ export function ComposeTagsSection({
   const inputHintId = useId();
   const [draft, setDraft] = useState("");
   const isAtLimit = tags.length >= COMPOSE_TAG_LIMIT;
+  const { reducedMotion } = useMotionPrefs();
+  const itemTransition = {
+    duration: reducedMotion ? 0 : 0.2,
+    ease: [0.22, 0.68, 0.16, 1] as const,
+  };
+  const itemMotion = {
+    layout: "position" as const,
+    initial: { opacity: 0, scale: 0.85 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.85 },
+    transition: itemTransition,
+  };
 
   function commitDraft() {
     if (!draft.trim()) return;
@@ -91,61 +113,83 @@ export function ComposeTagsSection({
         </span>
       </div>
 
-      <div className={styles.box}>
-        {tags.map((tag) => (
-          <span key={tag} className={styles.chip}>
-            #{tag}
-            <button
-              type="button"
-              className={styles.chipRemove}
-              onClick={() => onRemoveTag(tag)}
-              aria-label={t("forum:compose.removeTagAria", { tag })}
+      <m.div layout layoutRoot className={styles.box}>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {tags.map((tag) => (
+            <m.span key={tag} className={styles.chip} {...itemMotion}>
+              #{tag}
+              <button
+                type="button"
+                className={styles.chipRemove}
+                onClick={() => onRemoveTag(tag)}
+                aria-label={t("forum:compose.removeTagAria", { tag })}
+              >
+                <FiX aria-hidden />
+              </button>
+            </m.span>
+          ))}
+        </AnimatePresence>
+        {/* Neither side of this swap has an exit animation: the input leaves
+            at once, as it always has, so no keystroke can land in a field on
+            its way out. Each side only fades in, and not on first paint. */}
+        <AnimatePresence initial={false}>
+          {isAtLimit ? (
+            <m.span
+              key="full"
+              className={styles.full}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={itemTransition}
             >
-              <FiX aria-hidden />
-            </button>
-          </span>
-        ))}
-        {isAtLimit ? (
-          <span className={styles.full}>
-            {t("forum:composePage.tags.full", { max: COMPOSE_TAG_LIMIT })}
-          </span>
-        ) : (
-          <input
-            type="text"
-            className={styles.entry}
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            onKeyDown={onKeyDown}
-            onBlur={commitDraft}
-            placeholder={t("forum:composePage.tags.placeholder")}
-            aria-label={t("forum:composePage.tags.inputLabel")}
-            aria-describedby={inputHintId}
-            autoComplete="off"
-          />
-        )}
-      </div>
+              {t("forum:composePage.tags.full", { max: COMPOSE_TAG_LIMIT })}
+            </m.span>
+          ) : (
+            <m.input
+              key="entry"
+              layout="position"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={itemTransition}
+              type="text"
+              className={styles.entry}
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={onKeyDown}
+              onBlur={commitDraft}
+              placeholder={t("forum:composePage.tags.placeholder")}
+              aria-label={t("forum:composePage.tags.inputLabel")}
+              aria-describedby={inputHintId}
+              autoComplete="off"
+            />
+          )}
+        </AnimatePresence>
+      </m.div>
       <p id={inputHintId} className={styles.inputHint}>
         {t("forum:composePage.tags.inputHint", { max: COMPOSE_TAG_LIMIT })}
       </p>
 
-      {!isAtLimit && suggestedTags.length > 0 && (
-        <div className={styles.suggestions}>
+      <Collapse isOpen={!isAtLimit && suggestedTags.length > 0}>
+        <m.div layout layoutRoot className={styles.suggestions}>
           <span className={styles.suggestionsLabel}>
             {t("forum:composePage.tags.suggestLabel")}
           </span>
-          {suggestedTags.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className={styles.suggestion}
-              onClick={() => onAddTag(tag)}
-              aria-label={t("forum:compose.addTagAria", { tag })}
-            >
-              <FiPlus aria-hidden />#{tag}
-            </button>
-          ))}
-        </div>
-      )}
+          <AnimatePresence mode="popLayout" initial={false}>
+            {suggestedTags.map((tag) => (
+              <m.button
+                key={tag}
+                type="button"
+                className={styles.suggestion}
+                onClick={() => onAddTag(tag)}
+                aria-label={t("forum:compose.addTagAria", { tag })}
+                {...itemMotion}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FiPlus aria-hidden />#{tag}
+              </m.button>
+            ))}
+          </AnimatePresence>
+        </m.div>
+      </Collapse>
     </section>
   );
 }

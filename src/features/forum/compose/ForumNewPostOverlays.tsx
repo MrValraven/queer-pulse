@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import type { TFunction } from "../../../shared/i18n/types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
@@ -23,7 +24,15 @@ import type { ComposeThreadPageOverlays } from "./useComposeThreadPageOverlays";
 // The success panel is deliberately NOT part of the overlay machine: it is not
 // something the member opened, it is what happened, and it is driven by the
 // publish flow's own `published` result so it can never appear ahead of the
-// server confirming.
+// server confirming. It sits under `AnimatePresence` so a withdraw fades the
+// plum screen gently back off the composer.
+//
+// The cards sit under an `AnimatePresence` of their own, so each one leaves
+// with the shared `Modal` exit. `mode="wait"` lets one card finish leaving
+// before the next arrives (schedule, then review), so focus returns to the
+// composer before the next card takes it. On a publish the success screen
+// fades in over the leaving card, whose exit starts slow, so the two read as
+// one motion with no bare composer showing between them.
 
 export interface ForumNewPostOverlaysProps {
   page: ComposeThreadPage;
@@ -66,79 +75,99 @@ export function ForumNewPostOverlays({
   const { state } = page;
   const audienceName = audienceNameFor(state.communitySlug, communities, t);
 
-  if (published) {
-    return (
-      <ComposeSuccessPanel
-        mode={published.mode}
-        threadTitle={published.title}
-        audienceName={audienceName}
-        threadUrl={publishedUrl}
-        {...(published.scheduledAt
-          ? {
-              scheduledFor: `${format.date(new Date(published.scheduledAt))} · ${format.time(new Date(published.scheduledAt))}`,
-            }
-          : {})}
-        // Offered only while there is a live thread to take back down.
-        {...(published.isPublished ? { onUnpublish: onWithdraw } : {})}
-        isFollowingReplies={isFollowingReplies}
-        onFollowRepliesChange={onFollowRepliesChange}
-        onDone={onDone}
-        {...(published.isPublished && published.slug ? { onViewPost } : {})}
-      />
-    );
-  }
+  // Nothing the member opened stays up over the success screen.
+  const renderActiveModal = () => {
+    const { overlay } = overlays;
+    if (overlay === "confirmClose")
+      return (
+        <ComposeConfirmCloseModal
+          key="confirmClose"
+          draftSummary={draftSummaryOf(state.title, state.body)}
+          onDiscard={onDiscardDraft}
+          onKeepWriting={overlays.closeOverlay}
+          onKeepDraft={onKeepDraft}
+        />
+      );
 
-  if (overlays.overlay === "confirmClose")
-    return (
-      <ComposeConfirmCloseModal
-        draftSummary={draftSummaryOf(state.title, state.body)}
-        onDiscard={onDiscardDraft}
-        onKeepWriting={overlays.closeOverlay}
-        onKeepDraft={onKeepDraft}
-      />
-    );
+    if (overlay === "shortcuts")
+      return (
+        <ComposeShortcutsModal
+          key="shortcuts"
+          onClose={overlays.closeOverlay}
+        />
+      );
 
-  if (overlays.overlay === "shortcuts")
-    return <ComposeShortcutsModal onClose={overlays.closeOverlay} />;
+    if (overlay === "schedule")
+      return (
+        <ComposeScheduleModal
+          key="schedule"
+          initialValue={overlays.scheduledAtLocal}
+          onBack={overlays.closeOverlay}
+          onSchedule={overlays.confirmSchedule}
+        />
+      );
 
-  if (overlays.overlay === "schedule")
-    return (
-      <ComposeScheduleModal
-        initialValue={overlays.scheduledAtLocal}
-        onBack={overlays.closeOverlay}
-        onSchedule={overlays.confirmSchedule}
-      />
-    );
+    if (overlay === "review")
+      return (
+        <ComposeFirstPostReview
+          key="review"
+          title={state.title}
+          categoryName={categoryNameFor(state.category, t)}
+          audienceName={audienceName}
+          postingAs={postingAsLabel}
+          contentWarningLabels={state.contentWarnings.map((id) =>
+            warningLabelFor(id, t),
+          )}
+          photoCount={state.photos.length}
+          shouldSkipNextTime={overlays.shouldSkipReview}
+          onShouldSkipNextTimeChange={overlays.setShouldSkipReview}
+          onBack={overlays.closeOverlay}
+          onConfirm={overlays.confirmReview}
+        />
+      );
 
-  if (overlays.overlay === "review")
-    return (
-      <ComposeFirstPostReview
-        title={state.title}
-        categoryName={categoryNameFor(state.category, t)}
-        audienceName={audienceName}
-        postingAs={postingAsLabel}
-        contentWarningLabels={state.contentWarnings.map((id) =>
-          warningLabelFor(id, t),
+    if (overlay === "replyInstead" && overlays.replyTarget)
+      return (
+        <ComposeReplyInsteadModal
+          key="replyInstead"
+          threadTitle={overlays.replyTarget.title}
+          replyText={state.body}
+          onKeepOwnPost={overlays.closeOverlay}
+          onMoveAsReply={onMoveAsReply}
+        />
+      );
+    return null;
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {published && (
+          <ComposeSuccessPanel
+            key="success"
+            mode={published.mode}
+            threadTitle={published.title}
+            audienceName={audienceName}
+            threadUrl={publishedUrl}
+            {...(published.scheduledAt
+              ? {
+                  scheduledFor: `${format.date(new Date(published.scheduledAt))} · ${format.time(new Date(published.scheduledAt))}`,
+                }
+              : {})}
+            // Offered only while there is a live thread to take back down.
+            {...(published.isPublished ? { onUnpublish: onWithdraw } : {})}
+            isFollowingReplies={isFollowingReplies}
+            onFollowRepliesChange={onFollowRepliesChange}
+            onDone={onDone}
+            {...(published.isPublished && published.slug ? { onViewPost } : {})}
+          />
         )}
-        photoCount={state.photos.length}
-        shouldSkipNextTime={overlays.shouldSkipReview}
-        onShouldSkipNextTimeChange={overlays.setShouldSkipReview}
-        onBack={overlays.closeOverlay}
-        onConfirm={overlays.confirmReview}
-      />
-    );
-
-  if (overlays.overlay === "replyInstead" && overlays.replyTarget)
-    return (
-      <ComposeReplyInsteadModal
-        threadTitle={overlays.replyTarget.title}
-        replyText={state.body}
-        onKeepOwnPost={overlays.closeOverlay}
-        onMoveAsReply={onMoveAsReply}
-      />
-    );
-
-  return null;
+      </AnimatePresence>
+      <AnimatePresence mode="wait">
+        {!published && renderActiveModal()}
+      </AnimatePresence>
+    </>
+  );
 }
 
 /** The community's own name, or the town square's. */

@@ -21,8 +21,8 @@ interface Props {
  * The collapsible "Leave a review" affordance rendered by
  * `DirectoryReviewsSection`: a button that reveals `DirectoryReviewForm` in
  * place, so the rating summary and the reviews people came to read lead the
- * section instead of the form. Never rendered for a moderation preview; the
- * section decides that and simply omits this component there.
+ * section, with the form one tap away. The section omits this component
+ * for a moderation preview.
  *
  * The panel stays mounted while collapsed, hidden purely via the `hidden`
  * attribute, so a draft in progress in the composer survives a collapse.

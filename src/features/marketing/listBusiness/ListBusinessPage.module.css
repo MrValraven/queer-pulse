@@ -745,56 +745,6 @@
   transform: scale(1);
 }
 
-/* ===== What-it-is lines ===== */
-.witLine {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 9px;
-}
-.witLine input {
-  flex: 1;
-}
-.witDel {
-  width: 38px;
-  height: 42px;
-  flex: none;
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  background: var(--cream);
-  border-radius: var(--radius-10);
-  color: var(--ink-40);
-  cursor: pointer;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (hover: hover) {
-  .witDel:hover {
-    color: var(--accent-ink);
-    border-color: rgba(var(--accent-rgb), 0.4);
-  }
-}
-.witAdd {
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text-strong);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-@media (hover: hover) {
-  .witAdd:hover {
-    color: var(--accent-ink);
-  }
-}
-
 /* ===== Good-for grid (uses shared CheckLine) ===== */
 .gfGrid {
   display: grid;
@@ -1473,8 +1423,6 @@
 
 /* ===== Inputs shared inside steps (when not using FormField) ===== */
 /* ===== Keyboard focus rings for bare (non-Button) controls ===== */
-.witDel:focus-visible,
-.witAdd:focus-visible,
 .hoursToolBtn:focus-visible,
 .recapEdit:focus-visible,
 .tagPill:focus-visible,
@@ -1650,7 +1598,7 @@
 .pdSec:last-child {
   margin-bottom: 0;
 }
-.pdSec h5 {
+.pdSec h3 {
   font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -1658,26 +1606,37 @@
   color: var(--ink-40);
   margin-bottom: 9px;
 }
-.pdWit {
+/* The description in the preview column and the full preview: MarkdownLite
+   blocks at the preview's compact size, on one rhythm. */
+.pdDescription p,
+.pdDescription li {
   font-size: var(--text-13);
   color: var(--ink);
   line-height: 1.7;
-  list-style: none;
 }
-.pdWit li {
-  padding-left: 16px;
-  position: relative;
-  margin-bottom: 3px;
+.pdDescription p,
+.pdDescription ul,
+.pdDescription ol,
+.pdDescription blockquote,
+.pdDescription h4 {
+  margin: 0;
 }
-.pdWit li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 9px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
+.pdDescription li {
+  margin-bottom: 0;
+}
+.pdDescription > :not(:first-child) {
+  margin-top: 0.6em;
+}
+/* `.fpSec h4` styles the full preview's section labels; a heading the owner
+   wrote inside the description stays a body heading. */
+.fpSec .pdDescription h4 {
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-strong);
+  margin-bottom: 0;
 }
 .pdChips {
   display: flex;
@@ -2166,8 +2125,11 @@
   /* --- Staggered step entrance: each top-level element rises in sequence.
      Replays on every step change because the step (and thus .stepBody)
      remounts. Snappy: 260ms each, delays capped so a long step still
-     finishes fast. --- */
-  .stepBody > * {
+     finishes fast. A `display: contents` wrapper marked
+     `data-step-contents` (the editor's co-managers anchor) has no box to
+     animate, so its children rise instead. --- */
+  .stepBody > *,
+  .stepBody > [data-step-contents] > * {
     animation: lbFieldIn 260ms var(--ease-out) both;
   }
   .stepBody > *:nth-child(1) {
@@ -2213,19 +2175,15 @@
 
   /* --- Live preview: new nodes glide in as data is entered. React keeps
      existing nodes across keystrokes, so only freshly-mounted pieces animate
-     (new tags, chips, what-it-is lines, badges, sections). --- */
+     (new tags, chips, badges, sections). --- */
   .dirBadge,
   .pdChips span,
-  .pdWit li,
   .pdSec {
     animation: lbFieldIn 300ms var(--ease-out) both;
   }
 
-  /* --- Form-side "add" interactions: a new what-it-is line rises in, a new
-     tag pops in. Keyed by id, so only the freshly-added element animates. --- */
-  .witLine {
-    animation: lbFieldIn var(--dur-base) var(--ease-out) both;
-  }
+  /* --- Form-side "add" interactions: a new tag pops in. Keyed by id, so
+     only the freshly-added element animates. --- */
   .tagPill {
     animation: lbPopIn var(--dur-base) var(--ease-out) both;
   }

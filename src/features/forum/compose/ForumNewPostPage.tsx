@@ -85,9 +85,16 @@ export function ForumNewPostPage() {
   const reply = useReply(overlays.replyTarget?.slug);
   const { setFollowing } = useFollowThread();
 
+  // ⌘↵ answers to the same gate as the footer's Publish button: while that
+  // button is disabled, the shortcut does nothing.
+  const isPublishAllowed =
+    page.canPublish && flow.publishStatus !== "publishing";
+
   useComposeThreadShortcuts({
     isSuspended: overlays.overlay !== null || published !== null,
-    onPublish: () => overlays.requestPublish("now"),
+    onPublish: () => {
+      if (isPublishAllowed) overlays.requestPublish("now");
+    },
     onOpenShortcuts: overlays.openShortcuts,
     onCancel: overlays.requestCancel,
   });

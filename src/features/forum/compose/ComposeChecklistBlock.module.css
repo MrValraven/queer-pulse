@@ -31,13 +31,17 @@
   list-style: none;
 }
 
+/* Positioned so a hint fading out, lifted out of flow while the next tag
+   fades in, stays at the row's far edge. */
 .row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 9px;
   font-size: var(--text-13-5);
   line-height: var(--lh-body);
   color: var(--ink-60);
+  transition: color var(--dur-base) var(--ease);
 }
 
 /* Advice rather than a requirement, so it sits a tier back until it is met. */
@@ -73,6 +77,21 @@
 .rowDone .box {
   background: var(--jade);
   border-color: var(--jade);
+}
+
+/* The tick grows in with the jade fill and shrinks away if the row comes
+   undone, on the same beat as the box behind it. */
+.tick {
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+
+.rowDone .tick {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .label {

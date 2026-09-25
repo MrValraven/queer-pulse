@@ -1,5 +1,5 @@
 /**
- * A `[label, value]` definition list — the shared `<dl><div><dt/><dd/></div></dl>`
+ * A `[label, value]` definition list: the shared `<dl><div><dt/><dd/></div></dl>`
  * body behind the practice skin's session logistics (`PracticePractical`) and
  * the stage skin's booking details (`StageBooker`). Drops rows with an empty
  * value and renders nothing when none remain. The differing surrounding chrome
@@ -12,8 +12,8 @@ export function SkinDefList({ rows }: { rows: Array<[string, string]> }) {
 
   return (
     <dl>
-      {filled.map(([label, value]) => (
-        <div key={label}>
+      {filled.map(([label, value], index) => (
+        <div key={`${index}-${label}`}>
           <dt>{label}</dt>
           <dd>{value}</dd>
         </div>

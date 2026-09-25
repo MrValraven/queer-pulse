@@ -57,12 +57,19 @@
 }
 
 .tabs {
+  --tabs-gap: 6px;
   display: flex;
   align-items: stretch;
-  gap: 6px;
+  gap: var(--tabs-gap);
+}
+
+/* The sheet's copy of the row, the positioning context for its sliding wash. */
+.sheetTabs {
+  position: relative;
 }
 
 .tab {
+  position: relative;
   flex: 1 1 0;
   min-width: 0;
   display: inline-flex;
@@ -83,7 +90,12 @@
   touch-action: manipulation;
   transition:
     background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.tab:active {
+  transform: scale(0.97);
 }
 
 .tab svg {
@@ -93,10 +105,32 @@
 }
 
 /* The pane the sheet is showing. Filled AND pressed, so the state is carried
-   by more than its wash. */
+   by more than its wash. The wash itself is `.tabIndicator`, one element that
+   glides from tab to tab. */
 .tab[aria-pressed="true"] {
-  background: rgba(var(--plum-rgb), 0.08);
   border-color: rgba(var(--line-rgb), 0.3);
+}
+
+.tabIndicator {
+  /* One slot per tab: a tab's width plus the gap after it, so a translate of
+     100% lands exactly on the next tab. The tabs are `flex: 1 1 0`, so every
+     slot is the same size. It sits over the tabs (their paper is opaque) and
+     lets every tap through to them. */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: calc((100% + var(--tabs-gap)) / var(--pane-count));
+  pointer-events: none;
+}
+
+.tabIndicator::before {
+  content: "";
+  position: absolute;
+  inset: 0 var(--tabs-gap) 0 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.08);
 }
 
 .tabCount {
@@ -121,7 +155,6 @@
   background: var(--scrim-soft);
   backdrop-filter: var(--blur-sm);
   -webkit-backdrop-filter: var(--blur-sm);
-  animation: railScrimIn var(--dur-fast) var(--ease) both;
 }
 
 .sheet {
@@ -136,7 +169,6 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-20) var(--radius-20) 0 0;
   box-shadow: var(--shadow-e4);
-  animation: railSheetIn var(--dur-base) var(--ease) both;
 }
 
 /* The visible bar is 38×4; the element around it is 72×22 so the drag can be
@@ -181,6 +213,13 @@
   font-size: var(--text-16);
   cursor: pointer;
   touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.close:active {
+  transform: scale(0.94);
 }
 
 /* Drawn at 34px, tapped at 44. */
@@ -202,21 +241,15 @@
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   padding-bottom: 4px;
 }
 
-@keyframes railScrimIn {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes railSheetIn {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
+/* The pane in view. Carries the gap the body used to, since it is now the
+   one element that fades in when the tab changes. */
+.sheetPane {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 @media (max-width: 1023px) {
@@ -255,10 +288,5 @@
 @media (prefers-reduced-motion: reduce) {
   .tab {
     transition: none;
-  }
-
-  .scrim,
-  .sheet {
-    animation: none;
   }
 }

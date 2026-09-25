@@ -1,6 +1,7 @@
-import { useId } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { FiCheck, FiSettings } from "react-icons/fi";
 import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
+import { useMeasuredContentHeight } from "../../../shared/components/layout/useMeasuredContentHeight";
 import { Avatar, ModalSheet } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -8,18 +9,19 @@ import {
   mailboxDisplayName,
   mailboxInitials,
 } from "./mailboxLabels";
+import { MailboxSwitcherSettingsView } from "./MailboxSwitcherSettingsView";
 import styles from "./MailboxSwitcher.module.css";
 
 function MailboxSwitcherRow({
   mailbox,
   isActive,
   onSelect,
-  onOpenSettings,
+  onShowSettings,
 }: {
   mailbox: MailboxSummary;
   isActive: boolean;
   onSelect: (identityId: string) => void;
-  onOpenSettings?: (identityId: string) => void;
+  onShowSettings: (identityId: string) => void;
 }) {
   const { t } = useTranslation();
   const nameId = useId();
@@ -76,14 +78,15 @@ function MailboxSwitcherRow({
           </span>
         )}
       </button>
-      {onOpenSettings && !isProfile && (
+      {!isProfile && (
         <button
           type="button"
           className={styles.settingsButton}
           aria-label={t("messages:mailbox.switcher.settings")}
           aria-describedby={nameId}
           title={t("messages:mailbox.switcher.settings")}
-          onClick={() => onOpenSettings(mailbox.identityId)}
+          data-identity-id={mailbox.identityId}
+          onClick={() => onShowSettings(mailbox.identityId)}
         >
           <FiSettings aria-hidden />
         </button>
@@ -92,38 +95,114 @@ function MailboxSwitcherRow({
   );
 }
 
-/** The sheet listing every mailbox the member answers for, profile first. */
+/**
+ * The sheet listing every mailbox the member answers for, profile first. A
+ * row's gear swaps the list for that mailbox's settings inside the same
+ * sheet; back returns to the list with focus on the gear that opened them.
+ */
 export function MailboxSwitcherSheet({
   mailboxes,
   activeIdentityId,
   onSelect,
-  onOpenSettings,
   onClose,
 }: {
   mailboxes: MailboxSummary[];
   activeIdentityId: string;
   onSelect: (identityId: string) => void;
-  onOpenSettings?: (identityId: string) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const [settingsIdentityId, setSettingsIdentityId] = useState<string | null>(
+    null,
+  );
+  // The list only plays the entrance once it comes back from settings, so
+  // the first open rides the sheet's own rise alone.
+  const [hasOpenedSettings, setHasOpenedSettings] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  // The frame carries the views' measured height, so swapping between the
+  // list and a taller or shorter settings view eases the sheet to its new size.
+  const { contentRef, contentHeight, isTransitionEnabled } =
+    useMeasuredContentHeight<HTMLDivElement>();
+  const returnFocusIdentityIdRef = useRef<string | null>(null);
+  const settingsMailbox =
+    mailboxes.find(
+      (mailbox) =>
+        mailbox.identityId === settingsIdentityId && mailbox.kind !== "profile",
+    ) ?? null;
+  const isSettingsView = settingsMailbox !== null;
+  // The member's first name, from their personal mailbox, the same word the
+  // server signs their replies with.
+  const memberFirstName = mailboxes
+    .find((mailbox) => mailbox.kind === "profile")
+    ?.displayName?.trim()
+    .split(/\s+/)[0];
+
+  // Back to the list: focus the gear that opened the settings.
+  useEffect(() => {
+    const identityId = returnFocusIdentityIdRef.current;
+    if (isSettingsView || !identityId) return;
+    returnFocusIdentityIdRef.current = null;
+    const gearButtons =
+      listRef.current?.querySelectorAll<HTMLElement>("[data-identity-id]") ??
+      [];
+    Array.from(gearButtons)
+      .find((gearButton) => gearButton.dataset.identityId === identityId)
+      ?.focus();
+  }, [isSettingsView]);
+
+  const listTitle = t("messages:mailbox.switcher.title");
+  const sheetLabel = settingsMailbox
+    ? t("messages:mailbox.settings.title", {
+        name: mailboxDisplayName(settingsMailbox, t),
+      })
+    : listTitle;
+
   return (
-    <ModalSheet
-      onClose={onClose}
-      ariaLabel={t("messages:mailbox.switcher.title")}
-    >
-      <h2 className={styles.title}>{t("messages:mailbox.switcher.title")}</h2>
-      <ul className={styles.list}>
-        {mailboxes.map((mailbox) => (
-          <MailboxSwitcherRow
-            key={mailbox.identityId}
-            mailbox={mailbox}
-            isActive={mailbox.identityId === activeIdentityId}
-            onSelect={onSelect}
-            onOpenSettings={onOpenSettings}
-          />
-        ))}
-      </ul>
+    <ModalSheet onClose={onClose} ariaLabel={sheetLabel}>
+      <div
+        className={[
+          styles.sizeFrame,
+          isTransitionEnabled && styles.sizeFrameSized,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        style={
+          isTransitionEnabled && contentHeight !== null
+            ? { height: contentHeight }
+            : undefined
+        }
+      >
+        <div ref={contentRef} className={styles.sizeContent}>
+          {settingsMailbox ? (
+            <MailboxSwitcherSettingsView
+              mailbox={settingsMailbox}
+              memberFirstName={memberFirstName}
+              onBack={() => {
+                returnFocusIdentityIdRef.current = settingsMailbox.identityId;
+                setSettingsIdentityId(null);
+              }}
+            />
+          ) : (
+            <div className={hasOpenedSettings ? styles.view : undefined}>
+              <h2 className={styles.title}>{listTitle}</h2>
+              <ul ref={listRef} className={styles.list}>
+                {mailboxes.map((mailbox) => (
+                  <MailboxSwitcherRow
+                    key={mailbox.identityId}
+                    mailbox={mailbox}
+                    isActive={mailbox.identityId === activeIdentityId}
+                    onSelect={onSelect}
+                    onShowSettings={(identityId) => {
+                      setHasOpenedSettings(true);
+                      setSettingsIdentityId(identityId);
+                    }}
+                  />
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
     </ModalSheet>
   );
 }

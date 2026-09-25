@@ -47,6 +47,15 @@
   border-color: rgba(var(--violet-rgb), 0.25);
 }
 
+/* Avatar plus name, as one piece so an identity switch fades them
+   together. Laid out exactly as the two sat in the row before. */
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
 .avatar {
   flex: none;
   display: grid;
@@ -125,6 +134,7 @@
   border: 0;
   min-inline-size: 0;
   display: inline-flex;
+  transition: opacity var(--dur-base) var(--ease);
 }
 
 .guard:disabled {
@@ -134,11 +144,18 @@
 
 /* ── Co-author ───────────────────────────────────────────────────────────── */
 
+/* The co-author picker rides a Collapse. The block's 8px gap cannot animate,
+   so the slot cancels it here and .coAuthor carries it as extra top padding
+   (6px of its own plus the 8px), which grows and folds with the height. */
+.coAuthorSlot {
+  margin-top: -8px;
+}
+
 .coAuthor {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  padding: 6px 4px 0;
+  padding: 14px 4px 0;
 }
 
 .coAuthorPicker {
@@ -163,7 +180,12 @@
   cursor: pointer;
   transition:
     border-color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease);
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.coAuthorChip:active {
+  transform: scale(0.97);
 }
 
 /* Grows the tap area to 44px without moving the chip's ink. */

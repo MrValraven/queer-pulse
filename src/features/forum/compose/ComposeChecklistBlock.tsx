@@ -1,5 +1,7 @@
 import { useId } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiCheck } from "react-icons/fi";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -74,12 +76,19 @@ function ChecklistRow({
   item: ComposeChecklistItem;
   translate: TFunction;
 }) {
+  const { reducedMotion } = useMotionPrefs();
   // The hint is what is still missing, so it belongs on an unfinished row
   // only: "17 more characters" beside a ticked row is a contradiction.
   const hint =
     !item.isDone && item.hintKey
       ? translate(item.hintKey, item.hintValues)
       : null;
+  const fadeMotion = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: reducedMotion ? 0 : 0.2 },
+  };
   return (
     <li
       className={[
@@ -94,7 +103,9 @@ function ChecklistRow({
           for anyone who cannot separate the two colours. The hidden text
           below says the same thing for a screen reader. */}
       <span className={styles.box} aria-hidden="true">
-        {item.isDone && <FiCheck />}
+        {/* Always rendered, so the tick can scale in and out with the fill
+            on the same beat. `.rowDone` is what shows it. */}
+        <FiCheck className={styles.tick} />
       </span>
       <span className={styles.label}>{translate(item.labelKey)}</span>
       <span className="visuallyHidden">
@@ -104,12 +115,22 @@ function ChecklistRow({
             : "forum:composePage.checklist.stateToDo",
         )}
       </span>
-      {hint && <span className={styles.hint}>{hint}</span>}
-      {!hint && !item.isRequired && (
-        <span className={styles.optional}>
-          {translate("forum:composePage.section.optional")}
-        </span>
-      )}
+      {/* The countdown and the "optional" tag fade in and out; `popLayout`
+          lets one leave while the other arrives in the same spot. The hint
+          keeps its key while it counts, so a keystroke only changes its
+          number. */}
+      <AnimatePresence mode="popLayout" initial={false}>
+        {hint && (
+          <m.span key="hint" className={styles.hint} {...fadeMotion}>
+            {hint}
+          </m.span>
+        )}
+        {!hint && !item.isRequired && (
+          <m.span key="optional" className={styles.optional} {...fadeMotion}>
+            {translate("forum:composePage.section.optional")}
+          </m.span>
+        )}
+      </AnimatePresence>
     </li>
   );
 }

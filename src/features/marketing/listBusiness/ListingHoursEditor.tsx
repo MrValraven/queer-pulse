@@ -26,7 +26,9 @@ export function ListingHoursEditor({ form }: { form: ListingForm }) {
         {t("marketing:listBusiness.step3.hoursHeading")}
       </h3>
       <div className={pageStyles.hoursSection}>
-        <div className={pageStyles.hoursTools}>
+        {/* Its own anchor for the live preview: `ANCHOR.hours` stays on the
+            grid, so a "still needed" chip keeps landing on the days. */}
+        <div id={ANCHOR.hoursTools} className={pageStyles.hoursTools}>
           <span
             className={[
               pageStyles.openNow,
@@ -101,6 +103,7 @@ export function ListingHoursEditor({ form }: { form: ListingForm }) {
 
       <FormField
         className={pageStyles.lbField}
+        id={ANCHOR.hoursNote}
         label={t("marketing:listBusiness.step3.hoursNoteLabel")}
       >
         <input

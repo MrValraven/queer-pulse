@@ -1,85 +1,60 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { ComposeBodyToolbar } from "../forum/compose/ComposeBodyChrome";
+import {
+  applyComposeMarkdownCommand,
+  COMPOSE_LINK_HREF_STUB,
+  type ComposeMarkdownCommandId,
+  type ComposeMarkdownPlaceholders,
+} from "../forum/compose/composeMarkdownCommands";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
-import {
-  SkinListFrame,
-  SkinListGrip,
-  SkinListRowTools,
-  SkinListRow,
-} from "./SkinListParts";
-import { useSkinListRows } from "./useSkinListRows";
+import { SkinRefinedField } from "./SkinRefinedField";
 import { useAutoGrowFallback } from "./useAutoGrowTextarea";
 import {
   refinedSurfaceClassName,
   useRefinedPlaceholder,
 } from "./refinedFieldSurface";
-import styles from "./SkinListControls.module.css";
+import {
+  haveSameParagraphs,
+  joinParagraphs,
+  splitParagraphs,
+} from "./skinParagraphsText";
 import refinedStyles from "./SkinRefinedList.module.css";
 
-/** One paragraph: the coral numeral with the grip beside it and the tools
- *  on one line, with the auto-growing textarea at full width below. */
-function SkinParagraphRow({
-  text,
-  index,
-  count,
-  placeholder,
-  isDragging,
-  onGripPointerDown,
-  onChange,
-  onMove,
-  onRemove,
-}: {
-  text: string;
-  index: number;
-  count: number;
-  placeholder?: string;
-  isDragging: boolean;
-  onGripPointerDown: Parameters<typeof SkinListGrip>[0]["onPointerDown"];
-  onChange: (text: string) => void;
-  onMove: (from: number, to: number) => void;
-  onRemove: () => void;
-}) {
-  const { t } = useTranslation();
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  useAutoGrowFallback(textareaRef, text);
-  const paragraphLabel = t("subprofiles:skinList.paragraphNumber", {
-    index: index + 1,
-  });
-
-  return (
-    <SkinListRow className={styles.paragraphRow} isDragging={isDragging}>
-      <div className={styles.paragraphLead}>
-        <span className={styles.numeral} aria-hidden>
-          {index + 1}
-        </span>
-        <SkinListGrip onPointerDown={onGripPointerDown} />
-      </div>
-      <textarea
-        ref={textareaRef}
-        aria-label={paragraphLabel}
-        className={`${refinedSurfaceClassName({ isMultiline: true, isEmpty: text.trim() === "" })} ${refinedStyles.paragraphText}`}
-        rows={3}
-        value={text}
-        placeholder={placeholder}
-        onChange={(event) => onChange(event.target.value)}
-      />
-      <SkinListRowTools
-        className={styles.paragraphTools}
-        index={index}
-        count={count}
-        onMove={onMove}
-        onRemove={onRemove}
-        rowLabel={t("subprofiles:skinList.paragraph")}
-      />
-    </SkinListRow>
-  );
+/**
+ * The field's own text, held locally because cutting it into paragraphs and
+ * joining them again is lossy: a blank line typed ahead of a new paragraph,
+ * or three newlines in a row, would vanish under the caret. Each edit sends
+ * the paragraphs to the editor. The text is reseeded from the editor only
+ * when the stored paragraphs change to something this text does not already
+ * hold (a discard or a reset from outside). The stored value is tracked in
+ * state and compared during render (the React "derived state" idiom), so no
+ * effect runs and no stale frame paints.
+ */
+function useParagraphsText(editor: SubprofileSkinBlocksEditor, path: string) {
+  const stored = editor.getValue(path);
+  const [text, setText] = useState(() => joinParagraphs(stored));
+  const [seenStored, setSeenStored] = useState(stored);
+  if (seenStored !== stored) {
+    setSeenStored(stored);
+    const storedParagraphs = splitParagraphs(joinParagraphs(stored));
+    if (!haveSameParagraphs(storedParagraphs, splitParagraphs(text))) {
+      setText(joinParagraphs(stored));
+    }
+  }
+  const changeText = (next: string) => {
+    setText(next);
+    editor.setValue(path, splitParagraphs(next));
+  };
+  return { text, changeText };
 }
 
 /**
- * A `paragraphs` list (the therapist's approach) as one auto-growing
- * textarea per paragraph, split by hairlines inside the group card. Blank
- * paragraphs may stay while editing; the save drops them.
+ * A `paragraphs` control (the therapist's approach) as one markdown-lite
+ * field with the forum composer's formatting toolbar and its Cmd or Ctrl
+ * with B and I shortcuts. A blank line starts a new paragraph; the stored
+ * value stays one string per paragraph. The hint under the field says so.
  */
 export function SkinParagraphsControl({
   control,
@@ -90,36 +65,93 @@ export function SkinParagraphsControl({
   editor: SubprofileSkinBlocksEditor;
   isLabelHidden?: boolean;
 }) {
-  const rows = useSkinListRows<string>({
-    editor,
-    path: control.path,
-    createItem: () => "",
-  });
+  const { t } = useTranslation();
+  const { text, changeText } = useParagraphsText(editor, control.path);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const placeholder = useRefinedPlaceholder(control.placeholderKey);
+  useAutoGrowFallback(textareaRef, text);
+  // Where the caret belongs once the new text has rendered. A command cannot
+  // set it directly: its value has not reached the DOM when it runs.
+  const pendingSelectionRef = useRef<{ start: number; end: number } | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const pending = pendingSelectionRef.current;
+    const textarea = textareaRef.current;
+    if (!pending || !textarea) return;
+    pendingSelectionRef.current = null;
+    textarea.focus();
+    textarea.setSelectionRange(pending.start, pending.end);
+  }, [text]);
+
+  const placeholders: ComposeMarkdownPlaceholders = {
+    text: t("forum:composePage.body.placeholderText"),
+    heading: t("forum:composePage.body.placeholderHeading"),
+    linkText: t("forum:composePage.body.placeholderLinkText"),
+    linkHref: COMPOSE_LINK_HREF_STUB,
+  };
+
+  function runCommand(commandId: ComposeMarkdownCommandId) {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const next = applyComposeMarkdownCommand(
+      commandId,
+      {
+        value: textarea.value,
+        selectionStart: textarea.selectionStart,
+        selectionEnd: textarea.selectionEnd,
+      },
+      placeholders,
+    );
+    pendingSelectionRef.current = {
+      start: next.selectionStart,
+      end: next.selectionEnd,
+    };
+    changeText(next.value);
+  }
+
+  function handleShortcut(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (!event.metaKey && !event.ctrlKey) return;
+    const key = event.key.toLowerCase();
+    if (key !== "b" && key !== "i") return;
+    event.preventDefault();
+    runCommand(key === "b" ? "bold" : "italic");
+  }
+
+  const label = t(control.labelKey);
+  const isEmpty = text.trim() === "";
 
   return (
-    <SkinListFrame
-      control={control}
+    <SkinRefinedField
+      label={label}
       isLabelHidden={isLabelHidden}
-      itemCount={rows.items.length}
-      containerRef={rows.containerRef}
-      addButtonRef={rows.addButtonRef}
-      onAdd={rows.add}
+      helper={control.helperKey ? t(control.helperKey) : undefined}
+      helperTone={control.helperTone}
+      footer={t("subprofiles:skinList.paragraphsHint")}
     >
-      {rows.items.map((text, index) => (
-        <SkinParagraphRow
-          key={rows.rowKeys[index]}
-          text={typeof text === "string" ? text : ""}
-          index={index}
-          count={rows.items.length}
-          placeholder={placeholder}
-          isDragging={rows.draggingIndex === index}
-          onGripPointerDown={rows.gripHandlers(index).onPointerDown}
-          onChange={(next) => rows.update(index, next)}
-          onMove={rows.move}
-          onRemove={() => rows.remove(index)}
-        />
-      ))}
-    </SkinListFrame>
+      {(field) => (
+        <>
+          <div className={refinedStyles.paragraphToolbar}>
+            <ComposeBodyToolbar isDisabled={false} onCommand={runCommand} />
+          </div>
+          <textarea
+            ref={textareaRef}
+            id={field.controlId}
+            aria-label={label}
+            aria-describedby={
+              [field.describedBy, field.footerId].filter(Boolean).join(" ") ||
+              undefined
+            }
+            className={`${refinedSurfaceClassName({ isMultiline: true, isEmpty })} ${refinedStyles.paragraphText}`}
+            rows={6}
+            value={text}
+            placeholder={placeholder}
+            onChange={(event) => changeText(event.target.value)}
+            onKeyDown={handleShortcut}
+          />
+        </>
+      )}
+    </SkinRefinedField>
   );
 }

@@ -9,6 +9,7 @@ import type {
   ManagedListingDTO,
 } from "../api/listings.api";
 import { useSetOperatingState } from "../api/useListingOwnerState";
+import { ANCHOR } from "../listBusiness.data";
 import { ListingOperatingStateFields } from "./ListingOperatingStateFields";
 import { ListingPermanentClosureDialog } from "./ListingPermanentClosureDialog";
 import { OPERATING_STATE_LABEL_KEYS } from "./listingOperatingState.data";
@@ -107,7 +108,7 @@ export function ListingOperatingStateSection({
   };
 
   return (
-    <div className={styles.block}>
+    <div id={ANCHOR.operatingState} className={styles.block}>
       <p className={styles.currently}>
         <span className={styles.currentlyLabel}>
           {t("marketing:listBusiness.trading.currently")}

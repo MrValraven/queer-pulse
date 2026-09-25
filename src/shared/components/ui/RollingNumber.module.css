@@ -1,0 +1,44 @@
+/* RollingNumber: inherits font, size, colour and line-height from its
+   parent; only the figure widths and the digit windows are its own. */
+
+.root {
+  position: relative;
+  display: inline-flex;
+  /* Top-aligned so the flex baseline never adds height to the line box:
+     the number occupies exactly one line, like the plain text it replaces. */
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+  white-space: pre;
+}
+
+.glyphs {
+  display: inline-flex;
+}
+
+/* One character slot. Its width animates when it is added or removed. */
+.cell {
+  display: inline-flex;
+  min-width: 0;
+  white-space: pre;
+}
+
+/* Only while the width animates, so a steady serif figure keeps its side
+   bearings. */
+.cellClipped {
+  overflow-x: clip;
+}
+
+/* A one-line window: the entering and exiting glyphs share one grid cell,
+   so the width is one tabular figure and the height one line, and anything
+   rolled past the edge is clipped. */
+.digit {
+  display: inline-grid;
+  height: 1lh;
+  /* Clip only vertically, so a serif figure's side bearing is never shaved. */
+  overflow-x: visible;
+  overflow-y: clip;
+}
+
+.digitGlyph {
+  grid-area: 1 / 1;
+}

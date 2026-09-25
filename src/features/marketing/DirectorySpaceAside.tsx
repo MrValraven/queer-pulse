@@ -73,6 +73,7 @@ export function DirectorySpaceAside({
           place={place}
           preview={preview}
           ownerRef={ownerRef}
+          shouldReachHoursEnd
         />
       )}
       {hasStickyContent && (

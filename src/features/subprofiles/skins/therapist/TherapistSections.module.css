@@ -5,17 +5,93 @@
    therapistShared.module.css through the shared components. */
 
 /* ── Approach ── */
-.paragraph {
+/* The approach is markdown-lite prose rendered by the shared MarkdownLite.
+   These host rules (a class plus an element) out-specify its single-class base
+   styles, so a plain paragraph keeps the page's body look and the other blocks
+   follow the therapist page's type: accent-ink markers and links, and a serif
+   heading and quote in the same voice as the section headings and vouches. */
+.approachBody p,
+.approachBody ul,
+.approachBody ol,
+.approachBody blockquote,
+.approachBody h4 {
   margin: 0;
   max-width: 66ch;
+}
+
+.approachBody p,
+.approachBody li {
   font-size: var(--text-body);
   line-height: 1.68;
   color: var(--ink);
   text-wrap: pretty;
 }
 
-.paragraph + .paragraph {
+.approachBody > * + :is(p, ul, ol, blockquote) {
   margin-top: 10px;
+}
+
+.approachBody > * + h4 {
+  margin-top: 18px;
+}
+
+.approachBody ul,
+.approachBody ol {
+  padding-left: 20px;
+}
+
+.approachBody li {
+  margin: 0;
+}
+
+.approachBody li + li {
+  margin-top: 4px;
+}
+
+.approachBody li::marker {
+  color: var(--accent-ink);
+}
+
+.approachBody h4 {
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+.approachBody > h4 + * {
+  margin-top: 6px;
+}
+
+.approachBody blockquote {
+  padding: 2px 0 2px 14px;
+  border-left: 2px solid var(--accent);
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--text-strong);
+  text-wrap: pretty;
+}
+
+.approachBody strong {
+  font-weight: 600;
+}
+
+.approachBody a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-tag);
+}
+
+.approachBody a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .notForList {
@@ -293,17 +369,17 @@ a.vouchWho:hover .vouchName {
 }
 
 /* ── FAQ ── */
+/* The closing hairline belongs to the list, so it stays put while the last
+   question folds away (a leaving row is still the last child until it
+   unmounts). */
 .faq {
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid var(--line);
 }
 
 .faqItem {
   border-top: 1px solid var(--line);
-}
-
-.faqItem:last-child {
-  border-bottom: 1px solid var(--line);
 }
 
 .faqSummary {
@@ -364,11 +440,12 @@ a.vouchWho:hover .vouchName {
   align-items: center;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid var(--line);
 }
 
-.referral:last-child {
-  border-bottom: none;
+/* The hairline sits on top of every row after the first, so a row folding
+   away at the end takes its own line with it. */
+.referral + .referral {
+  border-top: 1px solid var(--line);
 }
 
 .referralName {

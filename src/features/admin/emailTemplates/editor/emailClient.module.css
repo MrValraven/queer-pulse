@@ -1,0 +1,356 @@
+/* The mock mail app around the email preview: a desktop mail window and a
+   phone. Everything here is chrome drawn with app tokens, so it follows the
+   app theme; the email inside the iframe is its own document and keeps its own
+   colours. Tokens only. */
+
+/* ── Shared message pieces ─────────────────────────────────────────────── */
+.messageHead {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 22px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.subject {
+  margin: 0;
+  font-size: var(--text-22);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.subjectEmpty {
+  font-weight: 400;
+  color: var(--ink-60);
+}
+
+.subjectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* The preheader, where no inbox row shows it: always on the phone, and in a
+   desktop window too narrow for the inbox column. */
+.headSnippet {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sender {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--accent-fill);
+  border-radius: var(--radius-avatar);
+}
+
+.senderText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.senderName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.recipient,
+.time {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.time {
+  flex: none;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* The email itself. The iframe fills what is left of the window and scrolls
+   inside itself; the ground behind it is what shows while it paints. */
+.messageBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  background: var(--cream);
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--paper);
+  border: 0;
+}
+
+/* ── Desktop mail window ───────────────────────────────────────────────── */
+.window {
+  container: mail-window / inline-size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e2);
+}
+
+.titleBar {
+  display: flex;
+  gap: 7px;
+  padding: 11px 14px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+}
+
+.windowDot {
+  width: 11px;
+  height: 11px;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+}
+
+.windowDot:nth-child(2) {
+  background: var(--amber);
+}
+
+.windowDot:nth-child(3) {
+  background: var(--jade);
+}
+
+.windowBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* The inbox column only appears once the window has room for it beside a
+   600px email. */
+.messageList {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  width: 224px;
+  flex: none;
+  padding: 14px 10px;
+  background: var(--wash);
+  border-right: 1px solid var(--line);
+}
+
+@container mail-window (min-width: 840px) {
+  .messageList {
+    display: flex;
+  }
+
+  .headSnippet {
+    display: none;
+  }
+}
+
+.listLabel {
+  padding: 0 8px 4px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.listRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border-radius: var(--radius-10);
+}
+
+.listRowSelected {
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.listRowTop {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.listRowTop .time {
+  font-weight: 400;
+}
+
+.listSubject,
+.listSnippet {
+  overflow: hidden;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The subject reads darker than the grey preheader snippet under it. */
+.listSubject {
+  color: var(--ink);
+}
+
+.skeletonBar {
+  height: 8px;
+  width: 85%;
+  background: rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-pill);
+}
+
+.skeletonBar:first-child {
+  width: 45%;
+}
+
+.skeletonBar:last-child {
+  width: 65%;
+}
+
+.message {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 14px;
+  color: var(--ink-60);
+  border-bottom: 1px solid var(--line);
+}
+
+.toolIcon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+}
+
+.toolIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.toolGap {
+  width: 12px;
+}
+
+.toolIcon:last-child {
+  margin-left: auto;
+}
+
+@container mail-window (max-width: 520px) {
+  .messageHead {
+    padding: 14px 14px 12px;
+  }
+
+  .subject {
+    font-size: var(--text-18);
+  }
+}
+
+/* ── Phone ─────────────────────────────────────────────────────────────── */
+.phoneStage {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  min-width: 0;
+}
+
+/* A 375px screen inside a 10px bezel, shrinking with a narrow column. The
+   bezel is near-black in both themes, as the hardware would be. */
+.phone {
+  display: flex;
+  width: min(100%, 395px);
+  height: min(100%, 780px);
+  padding: 10px;
+  background: var(--ink-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-30);
+  box-shadow: var(--shadow-e3);
+}
+
+.phoneScreen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--paper);
+  border-radius: var(--radius-22);
+}
+
+.statusBar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 20px 4px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.statusBar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.statusBar .statusTime {
+  margin-right: auto;
+}
+
+.phoneNav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 12px;
+  font-size: var(--text-15);
+  color: var(--accent-text);
+}
+
+.phoneNav svg {
+  width: 22px;
+  height: 22px;
+}
+
+.phone .messageHead {
+  gap: 12px;
+  padding: 6px 16px 12px;
+}
+
+.phone .subject {
+  font-size: var(--text-18);
+}

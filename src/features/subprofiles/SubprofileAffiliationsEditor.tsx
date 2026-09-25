@@ -13,9 +13,12 @@ import {
   withAffiliationUid,
 } from "./subprofileEditorContext";
 import { useEditorRowList } from "./useEditorRowList";
+import { useReorderableRows } from "./useReorderableRows";
 import { MAX_AFFILIATIONS, rolesForTargetType } from "./affiliations.data";
+import { ReorderRow } from "./ReorderRow";
 import { SubprofileAffiliationRow } from "./SubprofileAffiliationRow";
 import sharedStyles from "./SubprofileEditor.module.css";
+import reorderStyles from "./ReorderRow.module.css";
 import styles from "./SubprofileAffiliationsEditor.module.css";
 
 const emptyRow = (): AffiliationInputDTO => ({
@@ -25,10 +28,12 @@ const emptyRow = (): AffiliationInputDTO => ({
 });
 
 /**
- * Owner editor for a persona's event/community links ("Part of"): add/remove
- * rows, each a type toggle + a role scoped to that type + a picker of eligible
- * targets (`SubprofileAffiliationRow`), capped at `MAX_AFFILIATIONS`. The
- * eligible targets load once here (`useAffiliationOptions`): communities the
+ * Owner editor for a persona's event/community links ("Part of"): add, remove
+ * and reorder rows (a grip drag, or the grip's move menu, which also takes Alt
+ * with an arrow key), each a type toggle + a role scoped to that type + a
+ * picker of eligible targets (`SubprofileAffiliationRow`), capped at
+ * `MAX_AFFILIATIONS`. The eligible targets load once here
+ * (`useAffiliationOptions`): communities the
  * signed-in owner is a member of and events they're going to, plus the
  * persona's saved links (a co-owner's or one past the options cap), so every
  * saved link shows selected in both modes. If they fail to load, one alert
@@ -38,7 +43,8 @@ const emptyRow = (): AffiliationInputDTO => ({
  * The server validates existence, visibility, block-filtering and that same
  * membership rule on save. Rows are CONTROLLED by `SubprofileEditorContext`
  * (`affiliationRows`/`setAffiliationRows`): no local state and no Save button;
- * the global savebar's `saveAll()` PUTs the whole list and surfaces any
+ * the global savebar's `saveAll()` PUTs the whole list in row order (stored as
+ * each link's `position`, which the page lists them by) and surfaces any
  * rejection (which names the offending entry) as an error toast. Mirrors
  * `SubprofileSocialLinksEditor`'s add/remove UX. It has no outer card or title
  * of its own: the editor's pane router (`EditorPaneRouter`) already renders the
@@ -67,7 +73,7 @@ export function SubprofileAffiliationsEditor({
   const isOptionsLoading = optionsQuery.isPending;
   const hasOptionsError = optionsQuery.isError && !optionsQuery.data;
 
-  const { patch, remove, add, atMax } = useEditorRowList(
+  const { patch, remove, add, move, atMax, isAddedRow } = useEditorRowList(
     rows,
     setAffiliationRows,
     {
@@ -75,6 +81,8 @@ export function SubprofileAffiliationsEditor({
       makeEmpty: () => withAffiliationUid(emptyRow()),
     },
   );
+  const { containerRef, draggingIndex, gripHandlers, moveCount, moveRow } =
+    useReorderableRows(move);
 
   /** The targets every OTHER row already links, so a row can't pick them. */
   function takenKeysExcept(rowUid: string): Set<string> {
@@ -109,19 +117,34 @@ export function SubprofileAffiliationsEditor({
         </p>
       )}
 
-      <div className={`${sharedStyles.itemsWrap} ${styles.itemsWrapFit}`}>
+      <div
+        className={`${sharedStyles.itemsWrap} ${styles.itemsWrapFit}`}
+        ref={containerRef}
+      >
         {rows.map((row, index) => (
-          <SubprofileAffiliationRow
+          <ReorderRow
             key={row._uid}
-            row={row}
-            index={index}
-            options={options}
-            isOptionsLoading={isOptionsLoading}
-            hasOptionsError={hasOptionsError}
-            takenKeys={takenKeysExcept(row._uid)}
-            onChange={(patchValue) => patch(row._uid, patchValue)}
-            onRemove={() => remove(row._uid)}
-          />
+            className={
+              draggingIndex === index ? reorderStyles.cardDragging : undefined
+            }
+            isDragging={draggingIndex === index}
+            isEntering={isAddedRow(row._uid)}
+            moveCount={moveCount}
+          >
+            <SubprofileAffiliationRow
+              row={row}
+              index={index}
+              rowCount={rows.length}
+              options={options}
+              isOptionsLoading={isOptionsLoading}
+              hasOptionsError={hasOptionsError}
+              takenKeys={takenKeysExcept(row._uid)}
+              gripHandlers={gripHandlers(index)}
+              onMove={(to) => moveRow(index, to)}
+              onChange={(patchValue) => patch(row._uid, patchValue)}
+              onRemove={() => remove(row._uid)}
+            />
+          </ReorderRow>
         ))}
       </div>
 

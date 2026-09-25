@@ -26,9 +26,9 @@ const PIN_CLASS = s.pickerPin ?? "";
  * Read-only single-pin map for a place's exact location — the real basemap
  * counterpart to the decorative SVG that used to sit on the directory detail
  * card. Reuses the warm-recoloured Lisbon style (shared/components/map/siteMapStyle.ts) and the
- * picker pin, so it matches every other map in the app. Interactive (drag +
- * zoom buttons) but with scroll-zoom off, so it never traps the page scroll
- * as a reader scrolls past it. The pin is fixed: this shows a location, and
+ * picker pin, so it matches every other map in the app. Fully interactive:
+ * drag, the zoom buttons, and the scroll wheel or trackpad zoom while the
+ * pointer is over the map. The pin is fixed: this shows a location, and
  * setting one is LocationPickerMap's job.
  */
 export function LocationMiniMap({
@@ -58,7 +58,6 @@ export function LocationMiniMap({
         style,
         center,
         zoom: 15.5,
-        scrollZoom: false,
         attributionControl: { compact: true },
       });
       mapRef.current = map;

@@ -3,8 +3,10 @@
    themselves reuse `.card`/`.cardTitle`/`.cardNote` from
    SubprofileEditor.module.css. */
 
+/* Fills the pane like `.ed-grid` (persona-editor.css): the pane column sets
+   the width, so the chapter cards meet the docked preview's edge. */
 .editor {
-  max-width: 620px;
+  min-width: 0;
 }
 
 /* Zero-height marker directly above the chapter map, the `.ed-switch-anchor`

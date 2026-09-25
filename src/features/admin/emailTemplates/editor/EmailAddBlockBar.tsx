@@ -4,9 +4,13 @@ import type { EmailBlockType } from "../emailTemplate.types";
 import styles from "./emailTemplateEditor.module.css";
 
 const BLOCK_TYPES: EmailBlockType[] = [
+  "hero",
   "heading",
   "paragraph",
   "button",
+  "ticket",
+  "featureList",
+  "signature",
   "image",
   "divider",
   "spacer",

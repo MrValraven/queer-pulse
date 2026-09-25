@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useInAppAnchorClick } from "../links/useInAppLinkRouting";
 import { MentionText } from "../mentions/MentionText";
 import {
   isSafeHref,
@@ -90,16 +91,7 @@ function SpanRun({ spans }: { spans: MarkdownSpan[] }) {
 function SpanView({ span }: { span: MarkdownSpan }) {
   if (span.type === "link") {
     if (!isSafeHref(span.href)) return <MentionText text={span.text} />;
-    return (
-      <a
-        className={styles.link}
-        href={span.href}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {span.text}
-      </a>
-    );
+    return <MarkdownLink href={span.href} text={span.text} />;
   }
   if (span.type === "strong") {
     return (
@@ -116,4 +108,23 @@ function SpanView({ span }: { span: MarkdownSpan }) {
     );
   }
   return <MentionText text={span.text} />;
+}
+
+/** A link run as its anchor. Its own component so it can call
+ *  {@link useInAppAnchorClick}: an installed PWA hands `target="_blank"` to
+ *  the system browser, so a plain click on a link back into QueerPulse
+ *  routes in-app and every other link opens as before. */
+function MarkdownLink({ href, text }: { href: string; text: string }) {
+  const handleAnchorClick = useInAppAnchorClick();
+  return (
+    <a
+      className={styles.link}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={handleAnchorClick}
+    >
+      {text}
+    </a>
+  );
 }

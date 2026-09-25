@@ -1,19 +1,17 @@
 import {
   useId,
-  useMemo,
   useRef,
   useState,
   type FocusEvent,
   type MouseEvent,
 } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { FiCompass } from "react-icons/fi";
-import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useRovingRadioGroup } from "../../../shared/hooks/useRovingRadioGroup";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { getThreads } from "../api/forum.api";
-import { THREADS } from "../forum.data";
 import { COMPOSE_CATEGORIES } from "./composeCategories.data";
+import { ComposeCategoryHead } from "./ComposeCategoryHead";
+import { ComposeCategoryPopover } from "./ComposeCategoryPopover";
+import { measurePopoverPosition } from "./composePopoverPosition";
+import { useCategoryRecentTitles } from "./useComposeCategoryRecents";
 import styles from "./ComposeCategoryGrid.module.css";
 
 // ── "Where does it go?" ─────────────────────────────────────────────────────
@@ -30,16 +28,6 @@ import styles from "./ComposeCategoryGrid.module.css";
 // printed in the card itself, the popover is `aria-hidden` and
 // `pointer-events: none`, and the threads it names are all on the forum. So
 // nothing is only reachable by hovering, and there is no focus to trap.
-
-/** How many titles the popover shows per category. */
-const RECENT_TITLES_PER_CATEGORY = 2;
-
-/** Width of the popover, in px. Mirrored in the stylesheet; kept here so the
- *  left-edge clamp can keep it inside the grid. */
-const POPOVER_WIDTH = 250;
-
-/** Gap between a card's bottom edge and the popover under it, in px. */
-const POPOVER_OFFSET = 6;
 
 /** The popover's position plus which category raised it. */
 interface CategoryPreview {
@@ -86,14 +74,11 @@ export function ComposeCategoryGrid({
     event: MouseEvent<HTMLButtonElement> | FocusEvent<HTMLButtonElement>,
     categoryId: string,
   ) {
-    const card = event.currentTarget;
     const gridWrap = gridWrapRef.current;
     if (!gridWrap) return;
-    const rightmost = Math.max(0, gridWrap.clientWidth - POPOVER_WIDTH);
     setPreview({
       categoryId,
-      left: Math.min(card.offsetLeft, rightmost),
-      top: card.offsetTop + card.offsetHeight + POPOVER_OFFSET,
+      ...measurePopoverPosition(event.currentTarget, gridWrap),
     });
   }
 
@@ -114,26 +99,12 @@ export function ComposeCategoryGrid({
 
   return (
     <section className={styles.section} aria-labelledby={headingId}>
-      <div className={styles.head}>
-        <h2 id={headingId} className={styles.title}>
-          {t("forum:composePage.section.category.title")}
-        </h2>
-        <p id={hintId} className={styles.hint}>
-          {t("forum:composePage.section.category.hint")}
-        </p>
-        {suggestion && (
-          <button
-            type="button"
-            className={styles.suggestion}
-            onClick={() => onChange(suggestion.id)}
-          >
-            <FiCompass aria-hidden />
-            {t("forum:composePage.category.suggestion", {
-              category: t(suggestion.nameKey),
-            })}
-          </button>
-        )}
-      </div>
+      <ComposeCategoryHead
+        headingId={headingId}
+        hintId={hintId}
+        suggestion={suggestion}
+        onChoose={onChange}
+      />
 
       {/* The pointer-leave lives on the wrapper rather than on the
           radiogroup: an element carrying an interactive role and a mouse
@@ -179,72 +150,19 @@ export function ComposeCategoryGrid({
             );
           })}
         </div>
-        {preview && previewCategory && previewTitles.length > 0 && (
-          <div
-            className={styles.popover}
-            style={{ left: preview.left, top: preview.top }}
-            aria-hidden
-          >
-            <span className={styles.popoverLabel}>
-              {t("forum:composePage.category.recentIn", {
-                category: t(previewCategory.nameKey),
-              })}
-            </span>
-            {previewTitles.map((title) => (
-              <span key={title} className={styles.popoverTitle}>
-                {title}
-              </span>
-            ))}
-          </div>
-        )}
+        <ComposeCategoryPopover
+          placement={
+            preview && previewCategory && previewTitles.length > 0
+              ? {
+                  left: preview.left,
+                  top: preview.top,
+                  categoryName: t(previewCategory.nameKey),
+                  titles: previewTitles,
+                }
+              : null
+          }
+        />
       </div>
     </section>
   );
-}
-
-/** A thread reduced to the two fields the popover reads. */
-interface RecentThread {
-  title: string;
-  category: string;
-}
-
-/**
- * Two recent titles per category, fetched ONCE for the whole grid.
- *
- * One `new`-sorted page covers every category, so this is a single request
- * rather than one per card on hover. It lives under its own query key, never
- * `["forum-threads", …]`, which the publish mutation invalidates: a decorative
- * popover must not make publishing refetch the forum list behind the composer.
- *
- * Demo mode reads the same `THREADS` corpus the forum list renders, so the
- * prototype still shows real titles with no API.
- */
-function useCategoryRecentTitles(): Map<string, string[]> {
-  const { demoMode } = useDemoMode();
-  const query = useQuery<RecentThread[]>({
-    queryKey: ["forum-compose-category-recents", demoMode],
-    queryFn: async () => {
-      if (demoMode)
-        return THREADS.map((thread) => ({
-          title: thread.title,
-          category: thread.category,
-        }));
-      const page = await getThreads(undefined, undefined, { sort: "new" });
-      return page.data.map((dto) => ({
-        title: dto.title,
-        category: dto.category,
-      }));
-    },
-  });
-
-  return useMemo(() => {
-    const byCategory = new Map<string, string[]>();
-    for (const thread of query.data ?? []) {
-      const titles = byCategory.get(thread.category) ?? [];
-      if (titles.length >= RECENT_TITLES_PER_CATEGORY) continue;
-      titles.push(thread.title);
-      byCategory.set(thread.category, titles);
-    }
-    return byCategory;
-  }, [query.data]);
 }

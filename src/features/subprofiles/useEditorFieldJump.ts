@@ -12,7 +12,7 @@ const FLASH_MS = 1500;
 const FLASH_CLASS = "ed-field-flash";
 
 /** Breathing room between the sticky chrome and a jumped-to field's edge. */
-const CHROME_GAP_PX = 12;
+export const CHROME_GAP_PX = 12;
 
 /** Frames to wait for the target pane to be laid out after a pane switch
  *  (about half a second at 60Hz) before landing anyway. */
@@ -74,7 +74,7 @@ function pickFocusTarget(anchor: HTMLElement): HTMLElement | null {
  *  measured at jump time: the app nav band (`--sticky-top`, which already
  *  follows the nav layout) plus the phone pane switcher `.ed-switch` stuck
  *  under it, and the editor savebar pinned to the bottom. */
-function measureStickyChrome(): { top: number; bottom: number } {
+export function measureStickyChrome(): { top: number; bottom: number } {
   const probe = document.createElement("div");
   probe.style.cssText =
     "position: absolute; top: 0; visibility: hidden; height: var(--sticky-top)";

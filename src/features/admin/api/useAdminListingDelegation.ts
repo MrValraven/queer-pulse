@@ -22,6 +22,7 @@ import {
   type ListingOwnerOfferDTO,
 } from "./adminListingDelegation.api";
 import { useDemoAwareMutation } from "./demoAwareMutation";
+import { listingHistoryQueryKey } from "./useListingHistory";
 
 /** Cache key root for one listing's delegation picture. */
 export const ADMIN_LISTING_DELEGATION_KEY = "admin-listing-delegation";
@@ -193,7 +194,12 @@ export function useInviteListingCoManager(listingRef: string) {
   });
 }
 
-/** Take a seat back, accepted or still unanswered. */
+/** Take a seat back, accepted or still unanswered. Revoking an accepted seat
+ *  also writes a `co_manager_removed` moderation-history row (live mode), so
+ *  `onLiveSuccess` invalidates `listingHistoryQueryKey` alongside the
+ *  delegation key: `ListingHistoryPanel` sits in the same preview drawer as
+ *  this action and would otherwise stay stale on the just-written row until
+ *  the drawer's next unrelated refetch. Mirrors `useSetListingStatus`. */
 export function useRevokeListingCoManager(listingRef: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -222,6 +228,9 @@ export function useRevokeListingCoManager(listingRef: string) {
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: adminListingDelegationKey(listingRef, false),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: listingHistoryQueryKey(listingRef, false),
       });
     },
   });

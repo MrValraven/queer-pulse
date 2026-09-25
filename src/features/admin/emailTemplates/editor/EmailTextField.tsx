@@ -13,6 +13,8 @@ interface EmailTextFieldProps {
   maxLength: number;
   hint?: string;
   isMultiline?: boolean;
+  /** Visible lines of a multiline field. */
+  rows?: number;
   inputMode?: "text" | "url";
 }
 
@@ -30,6 +32,7 @@ export function EmailTextField({
   maxLength,
   hint,
   isMultiline = false,
+  rows = 4,
   inputMode = "text",
 }: EmailTextFieldProps) {
   const elementRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
@@ -73,7 +76,7 @@ export function EmailTextField({
   return (
     <FormField label={label} helper={hint}>
       {isMultiline ? (
-        <textarea {...sharedProps} rows={4} />
+        <textarea {...sharedProps} rows={rows} />
       ) : (
         <input {...sharedProps} type={inputMode === "url" ? "url" : "text"} />
       )}

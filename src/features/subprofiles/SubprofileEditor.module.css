@@ -8,12 +8,11 @@
   padding: 28px 0 clamp(48px, 6vw, 96px);
 }
 
-/* Holds only the back link and the page header. Spans the full `wrap` width
-   and left-aligns so both sit directly above the editor shell's left rail. The
-   12px start inset matches the rail's nav item inset (`.ed-rail button` in
-   persona-editor.css) so the back link and title line up with the rail items
-   directly beneath them. The tight gap keeps the back link reading as a small
-   label over the title. */
+/* Holds only the page header. Spans the full `wrap` width and left-aligns so
+   it sits directly above the editor shell's left rail. The 12px start inset
+   matches the rail's nav item inset (`.ed-rail button` in persona-editor.css);
+   on the editor page the back button pulls back out of it to sit on the rail
+   icons' centre line (see `.backSlot` below). */
 .container {
   width: 100%;
   padding-inline-start: 12px;
@@ -23,47 +22,94 @@
 }
 
 /* Wraps the Editor A `.ed-shell` (Task 4): full `wrap`-width, unlike the
-   760px-capped `.container` above (still used for the narrower back-link +
-   title header). Just spacing — the shell's own width/columns come from
+   760px-capped `.container` above (still used for the narrower title
+   header). Just spacing: the shell's own width/columns come from
    `persona-editor.css`. */
 .shellWrap {
   margin-top: 28px;
 }
 
-/* "‹ Your personas", shown at every width at the start of the title row. It is
-   the editor's only way back to the dashboard: the rail carries no back link,
-   so collapsing or hiding the rail never takes it away. A hairline on its right
-   sets it apart from the title, the way a breadcrumb step reads. */
-.backLink {
+/* Sits on the page's global `wrap` element. The editor is three columns
+   (rail, pane, docked preview), so it takes the wider `--maxw-editor` cap
+   in place of the shared `--maxw`. The class is doubled (0,2,0) so it beats
+   `.wrap` no matter which stylesheet loads last. */
+.wideWrap.wideWrap {
+  max-width: var(--maxw-editor);
+}
+
+/* The round chevron button beside the title, shown at every width. It is the
+   editor's only way back to the dashboard: the rail carries no back link, so
+   collapsing or hiding the rail never takes it away. Its slot is the header's
+   flex item (the Tooltip wraps the link in its own inline-flex span, so the
+   offset goes on this slot around it). Inline before the title, with the
+   header's normal gap. */
+.backSlot {
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding-inline-end: 12px;
-  border-right: 1px solid var(--line);
-  font-size: var(--text-14);
+  flex: none;
+}
+/* Wherever the rail shows, the button's centre sits on the rail icons' centre
+   line, measured from the rail's left edge (`.ed-rail` rules in
+   persona-editor.css). Open rail: no rail padding + 12px button padding puts
+   the 16px icon's centre at 20px. Folded rail: 8px rail padding + 13.5px
+   button padding puts it at 29.5px. The 36px button therefore starts at 2px
+   or 11.5px, less the `.container`'s own 12px inset. The fold is read off the
+   rail's `data-rail` with `:has()`, and the offset animates on the grid
+   column's duration and curve so the button moves with the icons. 761px is
+   where the rail appears (the `@media (max-width: 760px)` rule in
+   persona-editor.css hides it). */
+@media (min-width: 761px) {
+  .backSlot {
+    margin-inline-start: -10px;
+    transition: margin-inline-start var(--dur-slow) var(--ease);
+  }
+  .page:has([data-rail="collapsed"]) .backSlot {
+    margin-inline-start: -0.5px;
+  }
+}
+@media (min-width: 761px) and (prefers-reduced-motion: reduce) {
+  .backSlot {
+    transition: none;
+  }
+}
+.backButton {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: transparent;
   color: var(--ink-60);
   text-decoration: none;
-  width: fit-content;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+/* Grows the hit area to 44px without growing the visible circle. */
+.backButton::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--radius-pill);
 }
 @media (hover: hover) {
-  .backLink:hover {
+  .backButton:hover {
+    background: var(--wash);
     color: var(--ink);
   }
 }
-.backLink:focus-visible {
+.backButton:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
-  border-radius: var(--radius-6);
-}
-.backLink svg {
-  flex: none;
 }
 
 /* ── Page header ─────────────────────────────────────────────────────────── */
-/* Single row, everything clustered to the left: the back link, the title,
+/* Single row, everything clustered to the left: the back button, the title,
    then the kind + status badges hugging its right. The title takes only the width it needs
-   (`flex: 0 1 auto`, not `1 1`) so the badges sit right beside it instead of
+   (`flex: 0 1 auto`) so the badges sit right beside it instead of
    being flung to the far edge on a short name like "Poet". */
 .header {
   display: flex;
@@ -93,8 +139,8 @@
   align-items: center;
 }
 /* Phones: the page header, the sticky pane switcher and the pane's own h2 all
-   stack above the first field. The header is the one with the least to say —
-   the persona is already named in the title — so it gives up its breathing
+   stack above the first field. The header is the one with the least to say
+   (the persona is already named in the title), so it gives up its breathing
    room and the title drops a step down the scale. */
 @media (max-width: 760px) {
   .page {
@@ -273,123 +319,6 @@
   margin: 0 0 4px;
 }
 
-/* ── String-line editor (mirrors the poem body editor's row mechanism) ────── */
-.lineList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
-}
-.lineRow {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 8px;
-  align-items: center;
-  padding: 4px 6px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-12);
-  background: var(--cream);
-  transition: border-color 0.2s var(--ease);
-}
-.lineRow:focus-within {
-  border-color: var(--accent);
-}
-/* The row currently held under the pointer via the grip — lifted above its
-   neighbours so it reads as "picked up" while the list reshuffles. */
-.lineRowDragging {
-  position: relative;
-  z-index: 1;
-  border-color: var(--line-strong);
-  box-shadow: var(--shadow-e2);
-}
-.lineGrip {
-  display: inline-grid;
-  place-items: center;
-  width: 22px;
-  height: 32px;
-  color: var(--ink-40);
-  cursor: grab;
-  /* Claim the touch gesture so a drag reorders instead of scrolling the page. */
-  touch-action: none;
-}
-.lineGrip:active {
-  cursor: grabbing;
-}
-.lineInput {
-  min-width: 0;
-  border: none;
-  background: transparent;
-  padding: 8px 4px;
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  color: var(--ink);
-}
-.lineInput:focus {
-  outline: none;
-}
-.lineOps {
-  display: inline-flex;
-  gap: 2px;
-}
-.lineOps button {
-  display: inline-grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: var(--radius-8);
-  background: transparent;
-  color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
-}
-.lineOps button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-@media (hover: hover) {
-  .lineOps button:not(:disabled):hover {
-    background: color-mix(in srgb, var(--ink) 8%, transparent);
-    color: var(--ink);
-  }
-}
-.lineOps button:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-.lineAddBar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.lineAddBar button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  border: 1.5px dashed color-mix(in srgb, var(--accent) 40%, transparent);
-  border-radius: var(--radius-14);
-  padding: 9px 16px;
-  cursor: pointer;
-  transition: background 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .lineAddBar button:hover {
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
-  }
-}
-.lineAddBar button:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
 /* ── Item editor ─────────────────────────────────────────────────────────── */
 .itemCard {
   background: color-mix(in srgb, var(--plum) 2.5%, var(--cream));
@@ -413,29 +342,39 @@
 .itemTools {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
 }
+/* Move buttons, borderless like the list rows' `.toolButton`
+   (SkinListControls.module.css), 44px on a coarse pointer. */
 .toolBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-grid;
+  place-items: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-9);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  background: var(--paper);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-8);
+  background: transparent;
   color: var(--ink-60);
   cursor: pointer;
-  transition: border-color 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 .toolBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+  opacity: 0.3;
+  cursor: default;
 }
 @media (hover: hover) {
   .toolBtn:not(:disabled):hover {
-    border-color: var(--line-strong);
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
     color: var(--ink);
+  }
+}
+@media (pointer: coarse) {
+  .toolBtn {
+    width: var(--tap-min);
+    height: var(--tap-min);
   }
 }
 .toolBtn:focus-visible {

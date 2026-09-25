@@ -20,6 +20,8 @@ export const PAYMENT_METHOD_VALUES = [
   "card",
   "cash",
   "paypal",
+  "wise",
+  "revolut",
 ] as const;
 
 export const RECEIPT_TIME_VALUES = [

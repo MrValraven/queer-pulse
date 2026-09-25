@@ -679,6 +679,7 @@ export const messages: Catalog = {
   "mailbox.switcher.unreadCount": "{count} por ler",
   "mailbox.switcher.current": "Caixa atual",
   "mailbox.switcher.settings": "Definições da caixa",
+  "mailbox.switcher.back": "Voltar às tuas caixas de mensagens",
   "mailbox.kind.profile": "Pessoal",
   "mailbox.kind.listing": "Ficha do diretório",
   "mailbox.kind.subprofile": "Persona",
@@ -732,7 +733,8 @@ export const messages: Catalog = {
   "mailbox.settings.title": "Definições da caixa de mensagens de {name}",
   "mailbox.settings.showStaffNames": "Mostrar quem respondeu",
   "mailbox.settings.showStaffNamesHelp":
-    "Os clientes veem um primeiro nome junto a cada resposta, como “Ana, de {name}”. Apelidos e perfis ficam escondidos.",
+    "Os clientes veem um primeiro nome junto a cada resposta, como “{firstName}, de {name}”. Apelidos e perfis ficam escondidos.",
+  "mailbox.settings.exampleFirstName": "Ana",
   "mailbox.settings.ownerOnly": "Só quem é titular pode mudar isto.",
   "mailbox.settings.readOnly":
     "A moderação removeu {name}, por isso estas definições não podem mudar.",
@@ -743,7 +745,6 @@ export const messages: Catalog = {
   "mailbox.settings.error": "Não ficou guardado. Tenta outra vez.",
   "mailbox.settings.loadError":
     "Estas definições não carregaram. Tenta outra vez.",
-  "mailbox.settings.close": "Fechar",
   "mailbox.block.action": "Bloquear {name}",
   "mailbox.block.unblockAction": "Desbloquear {name}",
   "mailbox.block.confirmTitle": "Bloquear {name}?",

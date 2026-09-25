@@ -21,8 +21,8 @@ import {
  * Control kinds:
  *  - `text`: single-line `<input>` (sub-field of an object block).
  *  - `textarea`: multi-line `<textarea>` (e.g. `colophon`, a gaps note).
- *  - `stringList`: an ordered `string[]` list editor (add/remove/reorder lines).
- *  - `objectList`: an ordered array of small objects, each with `itemFields`.
+ *  - `stringList` / `objectList`: older names for `lines` / `entries`, still
+ *    routed to those controls. No table declares them any more.
  *  - `grid`: a 4×7 availability calendar editor (Practice skin only):
  *    start date + slot time + 28 tap-to-cycle day cells.
  *  - `select`: one choice from a fixed `options` list, stored as the
@@ -36,9 +36,14 @@ import {
  *  - `count`: a whole number stored as a digit string (places, people waiting).
  *  - `chips`: a `string[]` edited as chips (type + Enter to add, reorder,
  *    edit in place), for lists the public page shows as chips.
- *  - `paragraphs`: a `string[]` edited as one textarea per paragraph.
+ *  - `paragraphs`: a `string[]` edited as one markdown-lite textarea with
+ *    the forum composer's formatting toolbar. The field shows the paragraphs
+ *    with a blank line between them, and every edit cuts the text back into
+ *    paragraphs on blank lines (skinParagraphsText.ts), so single line breaks
+ *    and lists stay inside their paragraph.
  *  - `pairs`: an object[] with exactly two `itemFields`, edited as compact
- *    table rows (session lengths, reimbursement, hours).
+ *    table rows (session lengths, reimbursement, hours). A text field with
+ *    `suggestions` offers them in a type-ahead list (insurers).
  *  - `entries`: an object[] edited as a numbered list whose first item field
  *    reads as the entry's title (FAQ, first-session steps, referrals).
  *  - `lines`: a `string[]` edited as compact one-line rows (address lines).
@@ -93,7 +98,7 @@ export interface SkinSelectOption {
   tone?: SkinOptionTone;
 }
 
-/** One field within an `objectList` entry (e.g. a first-session step's
+/** One field within a `pairs` or `entries` item (e.g. a first-session step's
  *  title/body, a referral's name/note). */
 export interface SkinItemFieldDescriptor {
   key: string;
@@ -104,6 +109,9 @@ export interface SkinItemFieldDescriptor {
   options?: SkinSelectOption[];
   /** `pairs` only: the value is a euro amount, shown with a € prefix. */
   isMoney?: boolean;
+  /** `pairs` only: names offered in a type-ahead list under the input;
+   *  typed text is still stored as written. */
+  suggestions?: readonly string[];
 }
 
 /** Show a control only while another control's value is one of `values`
@@ -123,7 +131,7 @@ export interface SkinBlockControl {
   placeholderKey?: string;
   /** Optional helper line under a `text`/`textarea`/`select` control. */
   helperKey?: string;
-  /** `objectList` only: the fields rendered for each entry. */
+  /** `pairs` and `entries`: the fields rendered for each item. */
   itemFields?: SkinItemFieldDescriptor[];
   /** `select`, `segmented`, `choice`, `multiChoice` and `multiSelect`: the
    *  choices, in display order. */
@@ -134,8 +142,8 @@ export interface SkinBlockControl {
   /** Chaptered editor only: render this control only under a condition (every
    *  condition in an array must hold). */
   showWhen?: SkinShowWhen | SkinShowWhen[];
-  /** `text` only: a one-line field that wraps long values onto more lines
-   *  (a `rows=1` textarea that never stores a newline). */
+  /** `text` and `lines`: a one-line field that wraps long values onto more
+   *  lines (a `rows=1` textarea that never stores a newline). */
   isWrapping?: boolean;
   /** `textarea` only: show a live line under the field with `*word*` rendered
    *  as the page's coral italic emphasis (the therapist hero quote). */
@@ -226,37 +234,75 @@ function objectBlock(
   };
 }
 
-/** A whole-block `string[]` list: one `stringList` control at the block root. */
-function stringListBlock(
-  blockKey: string,
-  titleKey: string,
-): SkinBlockDescriptor {
-  return {
-    blockKey,
-    titleKey,
-    controls: [{ path: blockKey, kind: "stringList", labelKey: titleKey }],
-  };
-}
-
-/** A whole-block object array: one `objectList` control at the block root. */
-function objectListBlock(
-  blockKey: string,
-  titleKey: string,
-  itemFields: SkinItemFieldDescriptor[],
-): SkinBlockDescriptor {
-  return {
-    blockKey,
-    titleKey,
-    controls: [
-      { path: blockKey, kind: "objectList", labelKey: titleKey, itemFields },
-    ],
-  };
-}
-
 const label = (family: SkinFamily, block: string, field: string): string =>
   `subprofiles:skinBlock.${family}.${block}.${field}`;
 const title = (family: SkinFamily, block: string): string =>
   `subprofiles:skinBlock.${family}.${block}.title`;
+
+/** A whole-block `string[]` as reorderable one-line rows, its example and
+ *  add label keyed `skinBlock.<family>.<block>.placeholder` and `.add`. */
+function linesBlock(
+  family: SkinFamily,
+  blockKey: string,
+  extra: Partial<SkinBlockControl> = {},
+): SkinBlockDescriptor {
+  const titleKey = title(family, blockKey);
+  return {
+    blockKey,
+    titleKey,
+    controls: [
+      {
+        path: blockKey,
+        kind: "lines",
+        labelKey: titleKey,
+        placeholderKey: label(family, blockKey, "placeholder"),
+        addLabelKey: label(family, blockKey, "add"),
+        ...extra,
+      },
+    ],
+  };
+}
+
+/** A whole-block object array as `entries` (a title plus details) or `pairs`
+ *  (two short fields) rows, its add label keyed `skinBlock.<family>.<block>.add`. */
+function objectListBlock(
+  family: SkinFamily,
+  blockKey: string,
+  kind: "entries" | "pairs",
+  itemFields: SkinItemFieldDescriptor[],
+): SkinBlockDescriptor {
+  const titleKey = title(family, blockKey);
+  return {
+    blockKey,
+    titleKey,
+    controls: [
+      {
+        path: blockKey,
+        kind,
+        labelKey: titleKey,
+        addLabelKey: label(family, blockKey, "add"),
+        itemFields,
+      },
+    ],
+  };
+}
+
+/** An object-list item field with its example keyed
+ *  `skinBlock.<family>.<block>.<field>Placeholder`. */
+function itemField(
+  family: SkinFamily,
+  block: string,
+  key: string,
+  labelField: string = key,
+  multiline?: boolean,
+): SkinItemFieldDescriptor {
+  return {
+    key,
+    labelKey: label(family, block, labelField),
+    placeholderKey: label(family, block, `${labelField}Placeholder`),
+    ...(multiline ? { multiline } : {}),
+  };
+}
 
 // ── Per-family block tables ─────────────────────────────────────────────────
 
@@ -281,8 +327,10 @@ const PAGE_BLOCKS: SkinBlockDescriptor[] = [
       },
       {
         path: "excerpt.lines",
-        kind: "stringList",
+        kind: "lines",
         labelKey: label("page", "excerpt", "lines"),
+        placeholderKey: label("page", "excerpt", "linesPlaceholder"),
+        isWrapping: true,
       },
     ],
   },
@@ -316,41 +364,47 @@ const TABLE_BLOCKS: SkinBlockDescriptor[] = [
       },
       {
         path: "menuMeta.practical",
-        kind: "stringList",
+        kind: "lines",
         labelKey: label("table", "menuMeta", "practical"),
+        placeholderKey: label("table", "menuMeta", "practicalPlaceholder"),
+        addLabelKey: label("table", "menuMeta", "addPractical"),
       },
     ],
   },
 ];
 
 const PRACTICE_FIRST_SESSION_BLOCK = objectListBlock(
+  "practice",
   "firstSession",
-  title("practice", "firstSession"),
+  "entries",
   [
-    { key: "title", labelKey: label("practice", "firstSession", "stepTitle") },
-    {
-      key: "body",
-      labelKey: label("practice", "firstSession", "body"),
-      multiline: true,
-    },
+    itemField("practice", "firstSession", "title", "stepTitle"),
+    itemField("practice", "firstSession", "body", "body", true),
   ],
 );
 const PRACTICE_REFERRALS_BLOCK = objectListBlock(
+  "practice",
   "referrals",
-  title("practice", "referrals"),
+  "entries",
   [
-    { key: "name", labelKey: label("practice", "referrals", "name") },
-    {
-      key: "note",
-      labelKey: label("practice", "referrals", "note"),
-      multiline: true,
-    },
+    itemField("practice", "referrals", "name"),
+    itemField("practice", "referrals", "note", "note", true),
   ],
 );
-const PRACTICE_APPROACH_BLOCK = stringListBlock(
-  "approach",
-  title("practice", "approach"),
-);
+/** The public page renders the approach as paragraphs (markdown-lite, one
+ *  entry per paragraph), so it is edited as one paragraphs field. */
+const PRACTICE_APPROACH_BLOCK: SkinBlockDescriptor = {
+  blockKey: "approach",
+  titleKey: title("practice", "approach"),
+  controls: [
+    {
+      path: "approach",
+      kind: "paragraphs",
+      labelKey: title("practice", "approach"),
+      placeholderKey: label("practice", "approach", "placeholder"),
+    },
+  ],
+};
 const PRACTICE_VENUE_BLOCK: SkinBlockDescriptor = {
   blockKey: "venue",
   titleKey: title("practice", "venue"),
@@ -362,8 +416,9 @@ const PRACTICE_VENUE_BLOCK: SkinBlockDescriptor = {
     },
     {
       path: "venue.lines",
-      kind: "stringList",
+      kind: "lines",
       labelKey: label("practice", "venue", "lines"),
+      placeholderKey: label("practice", "venue", "linesPlaceholder"),
     },
   ],
 };
@@ -378,13 +433,16 @@ const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
     { key: "next", labelKey: label("practice", "practical", "next") },
   ]),
   PRACTICE_FIRST_SESSION_BLOCK,
-  stringListBlock("access", title("practice", "access")),
+  linesBlock("practice", "access"),
   PRACTICE_REFERRALS_BLOCK,
   PRACTICE_APPROACH_BLOCK,
-  stringListBlock("training", title("practice", "training")),
-  objectListBlock("feeSchedule", title("practice", "feeSchedule"), [
-    { key: "label", labelKey: label("practice", "feeSchedule", "label") },
-    { key: "value", labelKey: label("practice", "feeSchedule", "value") },
+  linesBlock("practice", "training", {
+    isWrapping: true,
+    helperKey: label("practice", "training", "helper"),
+  }),
+  objectListBlock("practice", "feeSchedule", "pairs", [
+    itemField("practice", "feeSchedule", "label"),
+    itemField("practice", "feeSchedule", "value"),
   ]),
   PRACTICE_VENUE_BLOCK,
   {
@@ -416,7 +474,7 @@ const CHART_BLOCKS: SkinBlockDescriptor[] = [
       multiline: true,
     },
   ]),
-  stringListBlock("ethics", title("chart", "ethics")),
+  linesBlock("chart", "ethics", { isWrapping: true }),
 ];
 
 const CHAIR_BLOCKS: SkinBlockDescriptor[] = [
@@ -426,7 +484,7 @@ const CHAIR_BLOCKS: SkinBlockDescriptor[] = [
     { key: "where", labelKey: label("chair", "chair", "where") },
     { key: "quiet", labelKey: label("chair", "chair", "quiet") },
   ]),
-  stringListBlock("beforeYouSit", title("chair", "beforeYouSit")),
+  linesBlock("chair", "beforeYouSit", { isWrapping: true }),
 ];
 
 const RUNWAY_BLOCKS: SkinBlockDescriptor[] = [
@@ -474,7 +532,7 @@ const COLLECTIVE_BLOCKS: SkinBlockDescriptor[] = [
     { key: "when", labelKey: label("collective", "nextAction", "when") },
     { key: "where", labelKey: label("collective", "nextAction", "where") },
   ]),
-  stringListBlock("principles", title("collective", "principles")),
+  linesBlock("collective", "principles", { isWrapping: true }),
 ];
 
 const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
@@ -489,7 +547,7 @@ const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
       multiline: true,
     },
   ]),
-  stringListBlock("promises", title("classroom", "promises")),
+  linesBlock("classroom", "promises", { isWrapping: true }),
 ];
 
 /**

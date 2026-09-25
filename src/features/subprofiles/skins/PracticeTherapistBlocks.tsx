@@ -1,13 +1,15 @@
 import { Avatar } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { MarkdownLite } from "../../../shared/markdown";
 import type { EndorserDTO } from "../api/subprofiles.api";
 import type { SkinExtrasPersona } from "../SubprofileSkinExtras";
 import { SkinDefList } from "./SkinDefList";
 import { deriveCalendar } from "./practiceAvailability";
 import { useWeekdayLetters } from "../useWeekdayLetters";
 
-/** Practice skin (therapist): how the therapist works, one prose paragraph
- *  per entry (`skinData.approach`). `null` when the persona hasn't set any. */
+/** Practice skin (therapist): how the therapist works, as markdown-lite prose
+ *  (`skinData.approach`, one block per entry, joined on blank lines) rendered
+ *  through the shared MarkdownLite. `null` when the persona hasn't set any. */
 export function PracticeApproach({ persona }: { persona: SkinExtrasPersona }) {
   const { t } = useTranslation();
   const approach = persona.skinData?.approach;
@@ -16,9 +18,7 @@ export function PracticeApproach({ persona }: { persona: SkinExtrasPersona }) {
   return (
     <div className="approach">
       <h2>{t("subprofiles:skinExtras.practice.approachTitle")}</h2>
-      {approach.map((paragraph) => (
-        <p key={paragraph}>{paragraph}</p>
-      ))}
+      <MarkdownLite text={approach.join("\n\n")} />
     </div>
   );
 }
@@ -34,8 +34,8 @@ export function PracticeTraining({ persona }: { persona: SkinExtrasPersona }) {
     <div className="training">
       <h2>{t("subprofiles:skinExtras.practice.trainingTitle")}</h2>
       <ul>
-        {training.map((item) => (
-          <li key={item}>{item}</li>
+        {training.map((item, index) => (
+          <li key={`${index}-${item}`}>{item}</li>
         ))}
       </ul>
     </div>
@@ -57,7 +57,7 @@ export function PracticeFees({ persona }: { persona: SkinExtrasPersona }) {
   );
 }
 
-/** Practice skin (therapist): where they practise (`skinData.venue`) — a
+/** Practice skin (therapist): where they practise (`skinData.venue`): a
  *  name plus address lines. `null` when the persona hasn't set one. */
 export function PracticeVenue({ persona }: { persona: SkinExtrasPersona }) {
   const { t } = useTranslation();
@@ -68,8 +68,8 @@ export function PracticeVenue({ persona }: { persona: SkinExtrasPersona }) {
     <div className="venue">
       <h2>{t("subprofiles:skinExtras.practice.venueTitle")}</h2>
       <p className="venue-name">{venue.name}</p>
-      {venue.lines.map((line) => (
-        <div className="venue-line" key={line}>
+      {venue.lines.map((line, index) => (
+        <div className="venue-line" key={`${index}-${line}`}>
           {line}
         </div>
       ))}

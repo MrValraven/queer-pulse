@@ -1,42 +1,29 @@
-import { FiLink, FiPlus, FiX } from "react-icons/fi";
-import { FadeIn, Select } from "../../shared/components/ui";
+import { FiLink, FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  SOCIAL_PLATFORMS,
-  socialHref,
-  socialPlatform,
-} from "../../shared/social/socialPlatforms";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import {
   useSubprofileEditorContext,
   withSocialUid,
 } from "./subprofileEditorContext";
+import { SocialLinkEditorRow } from "./SocialLinkEditorRow";
 import { useEditorRowList } from "./useEditorRowList";
+import { useReorderableRows } from "./useReorderableRows";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileSocialLinksEditor.module.css";
 
 /** Mirrors the backend `MAX_SOCIAL_LINKS` validator. */
 const MAX_SOCIAL_LINKS = 20;
 
-/** Every named platform is a brand noun and stays untranslated in every
- *  locale; only the generic "Other link" fallback is platform chrome —
- *  mirrors `members/SocialLinksEditor`'s `platformLabel`. */
-function platformLabel(
-  key: string,
-  label: string,
-  t: (key: string) => string,
-): string {
-  return key === "other" ? t("subprofiles:socialEditor.other") : label;
-}
-
 /**
- * Owner editor for a persona's social links: add/remove rows, each a platform
- * select plus a handle/URL field with a live icon + resolved-href preview via
- * `socialHref`, capped at `MAX_SOCIAL_LINKS`. Rows are CONTROLLED by
- * `SubprofileEditorContext` (`socialRows`/`setSocialRows`) — no local state
- * and no Save button; the global savebar's `saveAll()` PUTs the whole list.
- * Mirrors `members/SocialLinksEditor`'s add/remove UX.
+ * Owner editor for a persona's social links: add, remove and reorder rows
+ * (`SocialLinkEditorRow`: a grip drag, the grip's move menu, or Alt with an
+ * arrow key in the handle field), each a platform select plus a handle/URL field with a live icon +
+ * resolved-href preview via `socialHref`, capped at `MAX_SOCIAL_LINKS`. Rows
+ * are CONTROLLED by `SubprofileEditorContext` (`socialRows`/`setSocialRows`):
+ * no local state and no Save button; the global savebar's `saveAll()` PUTs
+ * the whole list in row order, which the backend stores as each link's
+ * `position`. Mirrors `members/SocialLinksEditor`'s add/remove UX.
  */
 export function SubprofileSocialLinksEditor({
   subprofile: _subprofile,
@@ -46,10 +33,17 @@ export function SubprofileSocialLinksEditor({
   const { t } = useTranslation();
   const { socialRows: rows, setSocialRows } = useSubprofileEditorContext();
 
-  const { patch, remove, add, atMax } = useEditorRowList(rows, setSocialRows, {
-    max: MAX_SOCIAL_LINKS,
-    makeEmpty: () => withSocialUid({ platform: "website", urlOrHandle: "" }),
-  });
+  const { patch, remove, add, move, atMax, isAddedRow } = useEditorRowList(
+    rows,
+    setSocialRows,
+    {
+      max: MAX_SOCIAL_LINKS,
+      makeEmpty: () => withSocialUid({ platform: "website", urlOrHandle: "" }),
+    },
+  );
+  const { containerRef, draggingIndex, gripHandlers, moveCount, moveRow } =
+    useReorderableRows(move);
+  const listLabel = t("subprofiles:socialEditor.title");
 
   return (
     <section id={FIELD_ANCHOR_ID.socialLinks} className={sharedStyles.card}>
@@ -57,66 +51,26 @@ export function SubprofileSocialLinksEditor({
         <span className={sharedStyles.cardIcon}>
           <FiLink size={20} aria-hidden />
         </span>
-        <h2 className={sharedStyles.cardTitle}>
-          {t("subprofiles:socialEditor.title")}
-        </h2>
+        <h2 className={sharedStyles.cardTitle}>{listLabel}</h2>
       </div>
 
-      <div className={styles.linksEditor}>
-        {rows.map((row) => {
-          const meta = socialPlatform(row.platform);
-          const Icon = meta.icon;
-          const href = socialHref(row.platform, row.urlOrHandle);
-          const label = platformLabel(meta.key, meta.label, t);
-          return (
-            <FadeIn key={row._uid} className={styles.linkGroup}>
-              <div className={styles.linkRow}>
-                <span className={styles.linkIcon} aria-hidden>
-                  <Icon size={16} />
-                </span>
-                <Select
-                  className={styles.linkPlatform}
-                  size="sm"
-                  label={t("subprofiles:socialEditor.platformLabel")}
-                  options={SOCIAL_PLATFORMS.map((platformOption) => ({
-                    value: platformOption.key,
-                    label: platformLabel(
-                      platformOption.key,
-                      platformOption.label,
-                      t,
-                    ),
-                  }))}
-                  value={row.platform}
-                  onChange={(value) =>
-                    patch(row._uid, { platform: value ?? "" })
-                  }
-                />
-                <input
-                  className={`${styles.inlineInput} ${styles.linkInput}`}
-                  value={row.urlOrHandle}
-                  placeholder={meta.placeholder}
-                  aria-label={t("subprofiles:socialEditor.linkFor", {
-                    platform: label,
-                  })}
-                  onChange={(event) =>
-                    patch(row._uid, { urlOrHandle: event.target.value })
-                  }
-                />
-                <button
-                  type="button"
-                  className={styles.linkRemove}
-                  aria-label={t("subprofiles:socialEditor.removeLinkFor", {
-                    platform: label,
-                  })}
-                  onClick={() => remove(row._uid)}
-                >
-                  <FiX size={15} />
-                </button>
-              </div>
-              {href && <p className={styles.preview}>{href}</p>}
-            </FadeIn>
-          );
-        })}
+      <div className={styles.linksEditor} ref={containerRef}>
+        {rows.map((row, index) => (
+          <SocialLinkEditorRow
+            key={row._uid}
+            link={row}
+            index={index}
+            rowCount={rows.length}
+            listLabel={listLabel}
+            isDragging={draggingIndex === index}
+            isEntering={isAddedRow(row._uid)}
+            moveCount={moveCount}
+            gripHandlers={gripHandlers(index)}
+            onMove={(toIndex) => moveRow(index, toIndex)}
+            onPatch={(patchValue) => patch(row._uid, patchValue)}
+            onRemove={() => remove(row._uid)}
+          />
+        ))}
       </div>
 
       <div className={sharedStyles.sectionFoot}>

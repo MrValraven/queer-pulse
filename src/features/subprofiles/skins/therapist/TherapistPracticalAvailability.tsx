@@ -2,28 +2,46 @@ import { FiCalendar } from "react-icons/fi";
 import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { MAX_QUEUE_SQUARES } from "./therapistPractical.data";
-import { PracticalCell, PracticalRow } from "./TherapistPracticalCells";
+import {
+  CELL_GAP,
+  PracticalCell,
+  PracticalRow,
+} from "./TherapistPracticalCells";
 import { PracticalEditLink } from "./TherapistPracticalEdit";
 import { THERAPIST_EDIT_TARGETS } from "./therapistEditLinks.data";
+import { RevealBlock, RevealList, RevealListItem } from "./TherapistReveal";
+import { useStableRowKeys } from "./useStableRowKeys";
 import type { TherapistView } from "./therapistView";
 import styles from "./TherapistPractical.module.css";
 
-/** Owner-typed open slots, shown as display chips. Nothing books from here:
- *  the note asks people to mention a slot in their message. */
+/** The open slots' column gap (`.slots`), in CSS pixels. */
+const SLOTS_GAP = 6;
+
+/** Owner-typed open slots, shown as display chips, one per line: an added
+ *  slot grows in and a removed one folds away. Nothing books from here: the
+ *  note asks people to mention a slot in their message. */
 function OpenSlots({ slots, name }: { slots: string[]; name: string }) {
   const { t } = useTranslation();
+  // A slot keeps its key while the owner edits it.
+  const slotKeys = useStableRowKeys(slots);
   return (
     <div className={styles.live}>
       <p className={styles.liveLabel}>
         {t("subprofiles:therapist.practical.availability.slotsLabel")}
       </p>
       <ul className={styles.slots}>
-        {slots.map((slot, index) => (
-          <li key={`${slot}-${index}`} className={styles.slot}>
-            <FiCalendar className={styles.slotIcon} aria-hidden="true" />
-            {slot}
-          </li>
-        ))}
+        <RevealList>
+          {slots.map((slot, index) => (
+            <RevealListItem
+              key={slotKeys[index]}
+              className={styles.slot}
+              parentGap={SLOTS_GAP}
+            >
+              <FiCalendar className={styles.slotIcon} aria-hidden="true" />
+              {slot}
+            </RevealListItem>
+          ))}
+        </RevealList>
       </ul>
       <p className={styles.hint}>
         {t("subprofiles:therapist.practical.availability.slotsNote", { name })}
@@ -88,7 +106,10 @@ function Waitlist({ waiting, moves, name }: WaitlistProps) {
 
 /** Availability follows the status: open shows the time to a first session
  *  and the open slots; wait shows the waitlist (or a plain waitlist line
- *  without a count); closed says so. Hours show in every status. */
+ *  without a count); closed says so. Hours show in every status. Each fact
+ *  grows in and folds away on its own. The slots or waitlist panel does too,
+ *  as one block: a status change swaps its contents in place, so the panel
+ *  never shows both while one folds (they sit side by side in a wide cell). */
 export function AvailabilityCell({ view }: { view: TherapistView }) {
   const { t } = useTranslation();
   const { hours, openSlots, waiting, status } = view;
@@ -96,7 +117,10 @@ export function AvailabilityCell({ view }: { view: TherapistView }) {
   const isWaiting = status === "wait";
   const headline = isOpen ? view.availabilityHeadline : "";
   const hasOpenSlots = isOpen && openSlots.length > 0;
+  const hasWaitCount = isWaiting && waiting !== null;
   const hasAnything = headline !== "" || hours.length > 0 || hasOpenSlots;
+  // Keyed by the typed label: a row keeps its key while the owner edits it.
+  const hourKeys = useStableRowKeys(hours.map((line) => line.label));
   return (
     <PracticalCell
       icon={FiCalendar}
@@ -105,52 +129,68 @@ export function AvailabilityCell({ view }: { view: TherapistView }) {
       <PracticalEditLink target={THERAPIST_EDIT_TARGETS.availability} />
       <div className={styles.availabilityBody}>
         <div className={styles.availabilityFacts}>
-          {status === "closed" && (
+          <RevealBlock isShown={status === "closed"} parentGap={CELL_GAP}>
             <p className={styles.missing}>
               {t("subprofiles:therapist.practical.availability.closed")}
             </p>
-          )}
-          {isWaiting && waiting === null && (
+          </RevealBlock>
+          <RevealBlock
+            isShown={isWaiting && waiting === null}
+            parentGap={CELL_GAP}
+          >
             <p className={styles.missing}>
               {t("subprofiles:therapist.practical.availability.waitOnly")}
             </p>
-          )}
-          {isWaiting && waiting === null && view.waitNote && (
+          </RevealBlock>
+          <RevealBlock
+            isShown={isWaiting && waiting === null && view.waitNote !== ""}
+            parentGap={CELL_GAP}
+          >
             <p className={styles.hint}>{view.waitNote}</p>
-          )}
-          {isOpen && !hasAnything && (
+          </RevealBlock>
+          <RevealBlock isShown={isOpen && !hasAnything} parentGap={CELL_GAP}>
             <p className={styles.missing}>
               {t("subprofiles:therapist.practical.availability.missing")}
             </p>
-          )}
-          {headline && (
+          </RevealBlock>
+          <RevealBlock isShown={headline !== ""} parentGap={CELL_GAP}>
             <p className={styles.big}>
               {headline}
               <small>
                 {t("subprofiles:therapist.practical.availability.untilFirst")}
               </small>
             </p>
-          )}
-          {hours.length > 0 && (
+          </RevealBlock>
+          <RevealBlock isShown={hours.length > 0} parentGap={CELL_GAP}>
             <dl className={styles.rows}>
-              {hours.map((line, index) => (
-                <PracticalRow
-                  key={`${line.label}-${index}`}
-                  label={line.label}
-                  value={line.value}
-                />
-              ))}
+              <RevealList>
+                {hours.map((line, index) => (
+                  <PracticalRow
+                    key={hourKeys[index]}
+                    label={line.label}
+                    value={line.value}
+                  />
+                ))}
+              </RevealList>
             </dl>
-          )}
+          </RevealBlock>
         </div>
-        {hasOpenSlots && <OpenSlots slots={openSlots} name={view.firstName} />}
-        {isWaiting && waiting !== null && (
-          <Waitlist
-            waiting={waiting}
-            moves={view.waitMoves}
-            name={view.firstName}
-          />
-        )}
+        <RevealBlock
+          isShown={hasOpenSlots || hasWaitCount}
+          className={styles.liveSlot}
+          parentGap={CELL_GAP}
+        >
+          {hasOpenSlots && (
+            <OpenSlots slots={openSlots} name={view.firstName} />
+          )}
+          {isWaiting && waiting !== null && (
+            <Waitlist
+              waiting={waiting}
+              moves={view.waitMoves}
+              name={view.firstName}
+            />
+          )}
+        </RevealBlock>
       </div>
     </PracticalCell>
   );

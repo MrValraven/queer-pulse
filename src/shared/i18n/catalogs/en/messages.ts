@@ -677,6 +677,7 @@ export const messages: Catalog = {
   "mailbox.switcher.unreadCount": "{count} unread",
   "mailbox.switcher.current": "Current mailbox",
   "mailbox.switcher.settings": "Mailbox settings",
+  "mailbox.switcher.back": "Back to your mailboxes",
   "mailbox.kind.profile": "Personal",
   "mailbox.kind.listing": "Directory listing",
   "mailbox.kind.subprofile": "Persona",
@@ -730,7 +731,8 @@ export const messages: Catalog = {
   "mailbox.settings.title": "Mailbox settings for {name}",
   "mailbox.settings.showStaffNames": "Show who replied",
   "mailbox.settings.showStaffNamesHelp":
-    "Customers see a first name beside each reply, like “Ana from {name}”. Surnames and profiles stay hidden.",
+    "Customers see a first name beside each reply, like “{firstName} from {name}”. Surnames and profiles stay hidden.",
+  "mailbox.settings.exampleFirstName": "Ana",
   "mailbox.settings.ownerOnly": "Only the owner can change this.",
   "mailbox.settings.readOnly":
     "Moderation removed {name}, so these settings can't change.",
@@ -740,7 +742,6 @@ export const messages: Catalog = {
   "mailbox.settings.saved": "Saved",
   "mailbox.settings.error": "That didn't save. Try again.",
   "mailbox.settings.loadError": "These settings didn't load. Try again.",
-  "mailbox.settings.close": "Close",
   "mailbox.block.action": "Block {name}",
   "mailbox.block.unblockAction": "Unblock {name}",
   "mailbox.block.confirmTitle": "Block {name}?",

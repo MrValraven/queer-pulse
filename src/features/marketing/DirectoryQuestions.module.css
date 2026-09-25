@@ -6,13 +6,13 @@
 /* ── Ask composer ─────────────────────────────────────────────────────────── */
 /* The collapsed default: a single pill toggle sitting under the question
    list (or its empty-state hint), so a fresh listing never opens on a large
-   empty form. Reveals `.askForm` (or `.signIn`) in place on click. The
-   margin sits on this wrapping block, not the `<Button>` itself: a button is
-   inline-flex, so margins on it never collapse with its neighbors and the
-   gap above ends up taller than intended. 16px sits above the toggle from
-   the content before it; the section's own closing space (and the hairline
-   before the next section) follows this block directly, so it carries no
-   margin of its own below. */
+   empty form. Reveals `.askForm` (or `.signIn`) in place on click. This
+   wrapping block carries the margin: a button is inline-flex, so a margin
+   written directly on it stays clear of its neighbors and the gap above ends
+   up taller than intended. 16px sits above the toggle from the content
+   before it; the section's own closing space (and the hairline before the
+   next section) follows this block directly, so it carries no margin of its
+   own below. */
 .askToggle {
   margin-top: 16px;
   margin-bottom: 0;
@@ -65,8 +65,8 @@
   line-height: 1.5;
   color: var(--ink-40);
 }
-/* Cancel sits beside the submit button rather than opposite the hint, so the
-   two actions read as one group. */
+/* Cancel sits right beside the submit button, so the two actions read as one
+   group. */
 .askFootActions {
   display: flex;
   align-items: center;

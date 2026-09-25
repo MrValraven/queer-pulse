@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiSearch, FiSliders, FiUsers, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
@@ -12,6 +12,7 @@ import {
   Select,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -62,16 +63,28 @@ export function MemberHeaderSkeleton() {
   );
 }
 
-/** The counted-population headline. */
+/** The figure the headline rolls up from when it first appears. */
+const HEADLINE_ROLL_FROM = 1;
+
+/** The counted-population headline. The figure rolls like the therapist cost
+ *  calculator's total: it mounts at 1 and rolls to the real count on the next
+ *  frame, so the reveal and every later change share one motion. Reduced
+ *  motion mounts at the real count. */
 export function MemberDirectoryHeader({
   totalMembers,
-  countedTotal,
 }: {
   totalMembers: number;
-  countedTotal: number;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { reducedMotion: isReducedMotion } = useMotionPrefs();
+  const [shownTotal, setShownTotal] = useState(() =>
+    isReducedMotion ? totalMembers : Math.min(HEADLINE_ROLL_FROM, totalMembers),
+  );
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setShownTotal(totalMembers));
+    return () => cancelAnimationFrame(frame);
+  }, [totalMembers]);
   return (
     <FadeIn as="header" className={styles.head}>
       <div className={styles.eyebrow}>{t("members:directory.eyebrow")}</div>
@@ -82,7 +95,10 @@ export function MemberDirectoryHeader({
             className={styles.tally}
             style={{ minWidth: `${fmt.number(totalMembers).length}ch` }}
           >
-            {fmt.number(countedTotal)}
+            <RollingNumber
+              value={fmt.number(shownTotal)}
+              numericValue={shownTotal}
+            />
           </span>{" "}
           {t("members:directory.memberCountSuffix", { count: totalMembers })}
         </em>{" "}
@@ -171,7 +187,12 @@ export function MemberResultsColumn({
         <div className={styles.count} aria-live="polite" aria-atomic="true">
           {t("members:directory.showingPrefix")}{" "}
           <b>
-            <em>{fmt.number(filteredCount)}</em>
+            <em>
+              <RollingNumber
+                value={fmt.number(filteredCount)}
+                numericValue={filteredCount}
+              />
+            </em>
           </b>{" "}
           {t("members:directory.showingOf")} {fmt.number(totalMembers)}{" "}
           {t("members:directory.memberCountLabel", { count: totalMembers })}

@@ -20,6 +20,7 @@ export function AdminModal({
   onClose,
   footer,
   wide = false,
+  isFullSize = false,
   children,
 }: {
   eyebrow?: ReactNode;
@@ -27,13 +28,15 @@ export function AdminModal({
   onClose: () => void;
   footer?: ReactNode;
   wide?: boolean;
+  /** Near full-viewport dialog whose body stretches its content to the footer. */
+  isFullSize?: boolean;
   children: ReactNode;
 }) {
   useScrollLock();
   const { t } = useTranslation();
   // Stable per-instance id so this dialog can register itself on the shared
   // modal stack (see `shared/components/ui/modalStack`) and only act on
-  // Escape while topmost — see `Modal`'s `useDismiss` for the same fix.
+  // Escape while topmost. `Modal`'s `useDismiss` carries the same fix.
   const modalId = useId();
 
   useEffect(() => {
@@ -65,7 +68,11 @@ export function AdminModal({
       }}
     >
       <div
-        className={[styles.modal, wide && styles.modalWide]
+        className={[
+          styles.modal,
+          wide && styles.modalWide,
+          isFullSize && styles.modalFull,
+        ]
           .filter(Boolean)
           .join(" ")}
         role="dialog"

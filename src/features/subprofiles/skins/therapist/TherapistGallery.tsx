@@ -1,3 +1,5 @@
+import { useState, type ReactNode } from "react";
+import { m } from "motion/react";
 import { ImageSlot } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type {
@@ -8,6 +10,8 @@ import type { PersonaViewMode } from "../../personaSkinRender";
 import { TherapistSection } from "./TherapistSection";
 import type { TherapistView } from "./therapistView";
 import { THERAPIST_EDIT_TARGETS } from "./therapistEditLinks.data";
+import { RevealBlock } from "./TherapistReveal";
+import { occurrenceKeys, useRevealTransition } from "./revealKeys";
 import styles from "./TherapistGallery.module.css";
 
 /** The same cap `SubprofileSections` renders and `getGalleryWorks` gives
@@ -17,6 +21,8 @@ const MAX_VISIBLE_PHOTOS = 6;
  *  main column, the others one third. */
 const LEAD_SRC_SIZE = 960;
 const TILE_SRC_SIZE = 560;
+/** The reading column's gap (`.main` in TherapistBody.module.css). */
+const MAIN_COLUMN_GAP = 16;
 
 interface TherapistGalleryProps {
   data: PublicSubprofileView;
@@ -30,7 +36,8 @@ interface TherapistGalleryProps {
  * photos the first one leads, large, with two beside it; phones show two
  * across, up to six (the lightbox reaches no further). Tiles open the
  * page's gallery lightbox, except in the editor preview, where they are
- * plain images. `null` without photos.
+ * plain images. The section grows in with the first photo and folds away
+ * with the last.
  */
 export function TherapistGallery({
   data,
@@ -44,32 +51,71 @@ export function TherapistGallery({
   const photos = (
     data.sections.find((section) => section.section === "gallery")?.items ?? []
   ).filter((item) => item.imageUrl);
-  if (photos.length === 0) return null;
   const visiblePhotos = photos.slice(0, MAX_VISIBLE_PHOTOS);
+  const photoKeys = occurrenceKeys(visiblePhotos.map((item) => item.id));
+  // The photos on screen at the first render show as is; one added later
+  // pops in.
+  const [firstRenderKeys] = useState(() => new Set(photoKeys));
   const onOpen =
     mode !== "preview" && onOpenGalleryPhoto ? onOpenGalleryPhoto : undefined;
   const name = view.firstName || data.displayName;
 
   return (
-    <TherapistSection
-      label={t("subprofiles:therapist.gallery.label")}
-      heading={t("subprofiles:therapist.gallery.heading")}
-      editTarget={THERAPIST_EDIT_TARGETS.gallery}
+    <RevealBlock isShown={photos.length > 0} parentGap={MAIN_COLUMN_GAP}>
+      <TherapistSection
+        label={t("subprofiles:therapist.gallery.label")}
+        heading={t("subprofiles:therapist.gallery.heading")}
+        editTarget={THERAPIST_EDIT_TARGETS.gallery}
+      >
+        <ul className={styles.grid} data-count={visiblePhotos.length}>
+          {visiblePhotos.map((item, photoIndex) => {
+            const photoKey = photoKeys[photoIndex] ?? item.id;
+            return (
+              <GalleryCell
+                key={photoKey}
+                isAdded={!firstRenderKeys.has(photoKey)}
+              >
+                <GalleryTile
+                  item={item}
+                  number={photoIndex + 1}
+                  name={name}
+                  isLead={photoIndex === 0 && visiblePhotos.length >= 3}
+                  onOpen={onOpen}
+                />
+              </GalleryCell>
+            );
+          })}
+        </ul>
+      </TherapistSection>
+    </RevealBlock>
+  );
+}
+
+const POP_HIDDEN = { opacity: 0, scale: 0.85 };
+const POP_SHOWN = { opacity: 1, scale: 1 };
+
+/** One grid cell. A photo added after the first render pops in (fade and
+ *  scale, as `RevealPop` does). A removed photo leaves at once, with no
+ *  AnimatePresence to hold it: the cells take their spans from `data-count`
+ *  and `:nth-child`, so a cell kept while it faded would lay the grid out for
+ *  a count it no longer has. */
+function GalleryCell({
+  isAdded,
+  children,
+}: {
+  isAdded: boolean;
+  children: ReactNode;
+}) {
+  const transition = useRevealTransition();
+  return (
+    <m.li
+      className={styles.cell}
+      initial={isAdded ? POP_HIDDEN : false}
+      animate={POP_SHOWN}
+      transition={transition}
     >
-      <ul className={styles.grid} data-count={visiblePhotos.length}>
-        {visiblePhotos.map((item, photoIndex) => (
-          <li key={`${item.imageUrl}::${photoIndex}`} className={styles.cell}>
-            <GalleryTile
-              item={item}
-              number={photoIndex + 1}
-              name={name}
-              isLead={photoIndex === 0 && visiblePhotos.length >= 3}
-              onOpen={onOpen}
-            />
-          </li>
-        ))}
-      </ul>
-    </TherapistSection>
+      {children}
+    </m.li>
   );
 }
 

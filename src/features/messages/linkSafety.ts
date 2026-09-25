@@ -1,4 +1,5 @@
 // src/features/messages/linkSafety.ts
+import { isQueerPulseHost } from "../../shared/links/inAppLinks";
 
 /**
  * Why a link earned a second look before opening it (PRD-371). A link can
@@ -45,21 +46,10 @@ const SHORTENER_HOSTS = new Set([
 ]);
 
 // QueerPulse's own hosts are never suspicious, whatever else about them would
-// otherwise trip a check below (mirrors `linkify.tsx`'s own
-// `QUEERPULSE_HOSTS` — duplicated rather than imported so this module stays a
-// standalone, dependency-free unit callers can test in isolation; keep the
-// two in sync if either changes). `window.location.host` additionally covers
-// wherever the app is actually being served (a preview deploy, a LAN address,
-// a dev server), same reasoning as `linkify.tsx`'s `isExternalHref`.
-const QUEERPULSE_HOSTS = new Set(["queerpulse.com", "www.queerpulse.com"]);
-
-function isQueerPulseHost(host: string): boolean {
-  const lower = host.toLowerCase();
-  const servedHost =
-    typeof window === "undefined" ? "" : window.location.host.toLowerCase();
-  if (servedHost !== "" && lower === servedHost) return true;
-  return QUEERPULSE_HOSTS.has(lower);
-}
+// otherwise trip a check below. The host list and the served-host match live
+// in the shared `isQueerPulseHost` (`src/shared/links/inAppLinks.ts`), which
+// in-app link routing uses too; `linkify.tsx` keeps its own copy of the list
+// for `isExternalHref`, so keep the two in sync if either changes.
 
 const IPV4_RE = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
 

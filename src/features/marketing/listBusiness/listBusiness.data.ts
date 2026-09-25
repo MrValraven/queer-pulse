@@ -49,30 +49,48 @@ export const NEXT_LABEL_KEYS = [
 /* ---------- Field anchors ----------
    Stable DOM ids for each required field, so a "what's still needed" chip
    can scroll + focus the exact field it names. Shared by the form (which
-   builds the missing list) and the steps (which render the anchors). */
+   builds the missing list) and the steps (which render the anchors). The
+   listing editor's live preview also keys its field highlight off these, so
+   optional fields and the controls that change what the listing shows
+   (visibility, profile link, online only, trading, pause, pricing mode,
+   co-managers) carry one too. */
 export const ANCHOR = {
   path: "lb-path",
   name: "lb-name",
   cats: "lb-cats",
   hood: "lb-hood",
   badge: "lb-badge",
+  evidence: "lb-evidence",
   price: "lb-price",
   blurb: "lb-blurb",
   tagline: "lb-tagline",
   whatItIs: "lb-what-it-is",
+  tags: "lb-tags",
+  goodFor: "lb-good-for",
+  langs: "lb-langs",
   address: "lb-address",
+  online: "lb-online",
   hours: "lb-hours",
+  hoursTools: "lb-hours-tools",
+  hoursNote: "lb-hours-note",
   hoursExceptions: "lb-hours-exceptions",
   social: "lb-social",
   photos: "lb-photos",
   rel: "lb-rel",
   ownerName: "lb-owner-name",
   ownerRole: "lb-owner-role",
+  ownerBio: "lb-owner-bio",
+  ownerVisibility: "lb-owner-visibility",
+  linkProfile: "lb-link-profile",
   contactEmail: "lb-contact-email",
   consent: "lb-consent",
+  pricingMode: "lb-pricing-mode",
   services: "lb-services",
+  operatingState: "lb-operating-state",
+  directoryVisibility: "lb-directory-visibility",
   accessibility: "lb-accessibility",
   affirmingBaseline: "lb-affirming-baseline",
+  coManagers: "lb-co-managers",
 } as const;
 
 /** A still-unfilled required field: its label key + the anchor to jump to. */
@@ -407,7 +425,9 @@ export const OWNER_PERSONAL_FIELDS = [
 
 export type OwnerPersonalField = (typeof OWNER_PERSONAL_FIELDS)[number];
 
-/** A single "what it actually is" line, with a stable id for React keys. */
+/** One paragraph of the listing's description, as markdown-lite (it may keep
+ *  single line breaks, so a `- a\n- b` list stays one paragraph), with a
+ *  stable id for React keys. */
 export interface WitLine {
   id: string;
   text: string;
@@ -463,7 +483,7 @@ export interface ListingDraft {
   price: string; // PRICES id
   blurb: string; // one-liner, <=140
   tagline: string;
-  whatItIs: WitLine[]; // 2-4 lines
+  whatItIs: WitLine[]; // the description, one entry per paragraph (1-20)
   tags: string[]; // <=6
   /** Atmosphere tags only (GOODFOR ids). Access claims live in `accessibility`,
    *  which can answer no; these are all positive claims. */

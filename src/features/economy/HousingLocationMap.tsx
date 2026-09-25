@@ -65,7 +65,6 @@ export function HousingLocationMap({
         style,
         center,
         zoom: exact ? EXACT_ZOOM : AREA_ZOOM,
-        scrollZoom: false,
         attributionControl: { compact: true },
       });
       mapRef.current = map;

@@ -1,0 +1,134 @@
+/* ── History ────────────────────────────────────────────────────────────────
+   Who changed what on this listing, newest first. Read-only and quiet: it is
+   a record to check against, so it stays in the page's own ink with no accent
+   anywhere. The actor's name carries the weight, the icon says what kind of
+   actor it was (a person, a person in a dashed ring for a past team, a shield
+   for moderation), and a moderator's note is one muted line under its row. */
+
+.intro {
+  font-size: var(--text-14);
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 66ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  container: history / inline-size;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-block: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.row:first-child {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+
+/* Who acted, as an icon. The tint rides --line-rgb so the circle still reads
+   on the dark ground. */
+.rowIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 30px;
+  block-size: 30px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink-60);
+}
+.rowIcon svg {
+  inline-size: 15px;
+  block-size: 15px;
+}
+/* Someone who is no longer on the team. */
+.rowIconPrevious {
+  background: transparent;
+  border: 1px dashed rgba(var(--line-rgb), 0.35);
+}
+
+.rowBody {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  padding-block-start: 5px;
+}
+
+.sentence {
+  flex: 1 1 16rem;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink);
+  text-wrap: pretty;
+  /* A platform-written reason can carry a long unbroken token. */
+  overflow-wrap: anywhere;
+}
+.actor {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* In a narrow list every row drops its time under the sentence at once,
+   so the column never mixes the two layouts. */
+@container history (max-width: 420px) {
+  .sentence {
+    flex-basis: 100%;
+  }
+}
+
+.time {
+  flex: none;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.note {
+  flex: 1 1 100%;
+  margin: 2px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.skeleton {
+  display: grid;
+  gap: 16px;
+}
+
+/* "Show older", and the inline retry when an older page fails to load. The
+   rows already on screen stay put either way. */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+.footerError {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink);
+}
+.footerError svg {
+  flex: none;
+  color: var(--danger);
+}

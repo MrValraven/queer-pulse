@@ -5,6 +5,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import type { Language } from "../../../shared/i18n/types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminModal } from "../ui";
+import { useEmailDesignVariant } from "./emailDesignVariant";
 import type { EmailLocaleContent } from "./emailTemplate.types";
 import { sampleValuesFor } from "./emailTemplatePurposes";
 import { switchToBlocks, switchToHtml } from "./emailTemplateDraft";
@@ -32,12 +33,17 @@ export function EmailTemplateModeActions({
   const { showToast } = useToast();
   const [openDialog, setOpenDialog] = useState<OpenDialog>(null);
   const isBlocks = content.mode === "blocks";
+  // Exported HTML keeps the default asset origin, the public site, so its
+  // images still load once the email leaves this page.
+  const { variant } = useEmailDesignVariant();
+  const renderOptions = { design: variant };
   // Tokens stay literal ({} values) so the HTML still carries its placeholders.
-  const generatedHtml = () => renderEmail(content, {}, locale).html;
+  const generatedHtml = () =>
+    renderEmail(content, {}, locale, renderOptions).html;
 
   async function copySample() {
     const outcome = await copyRichEmail(
-      renderEmail(content, sampleValuesFor(locale), locale),
+      renderEmail(content, sampleValuesFor(locale), locale, renderOptions),
     );
     showToast(
       t(
@@ -64,7 +70,10 @@ export function EmailTemplateModeActions({
   function confirm() {
     if (openDialog === "editAsHtml")
       onUpdate((current) =>
-        switchToHtml(current, renderEmail(current, {}, locale).html),
+        switchToHtml(
+          current,
+          renderEmail(current, {}, locale, renderOptions).html,
+        ),
       );
     if (openDialog === "backToBlocks") onUpdate(switchToBlocks);
     setOpenDialog(null);
@@ -75,7 +84,7 @@ export function EmailTemplateModeActions({
       {isBlocks && (
         <Button
           variant="ghost"
-          size="md"
+          size="sm"
           onClick={() => setOpenDialog("viewHtml")}
         >
           <FiEye aria-hidden /> {t("admin:emailTemplates.mode.viewHtml")}
@@ -83,7 +92,7 @@ export function EmailTemplateModeActions({
       )}
       <Button
         variant="ghost"
-        size="md"
+        size="sm"
         onClick={() => setOpenDialog(isBlocks ? "editAsHtml" : "backToBlocks")}
       >
         {isBlocks ? <FiCode aria-hidden /> : <FiLayers aria-hidden />}{" "}
@@ -93,8 +102,14 @@ export function EmailTemplateModeActions({
             : "admin:emailTemplates.mode.backToBlocks",
         )}
       </Button>
-      <Button variant="ghost" size="md" onClick={() => void copySample()}>
-        <FiCopy aria-hidden /> {t("admin:emailTemplates.mode.copySample")}
+      <Button
+        variant="ghost"
+        size="sm"
+        aria-label={t("admin:emailTemplates.mode.copySample")}
+        title={t("admin:emailTemplates.mode.copySample")}
+        onClick={() => void copySample()}
+      >
+        <FiCopy aria-hidden /> {t("admin:emailTemplates.mode.copySampleShort")}
       </Button>
 
       {openDialog === "viewHtml" && (

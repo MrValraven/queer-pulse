@@ -8,6 +8,14 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "25 Sep 2026": {
+      // Thirty-one entries this day, so three highlights; the features come first.
+      highlights: [
+        "forum-four-new-categories",
+        "listing-change-history",
+        "chat-app-links-stay-in-app",
+      ],
+    },
     "24 Sep 2026": {
       // Eleven entries this day, so three highlights; the feature comes first.
       highlights: [

@@ -48,6 +48,7 @@
   font-size: var(--text-12-5);
   line-height: 1.45;
   color: var(--ink-60);
+  transition: color var(--dur-base) var(--ease);
 }
 
 /* A tip that is confirming rather than correcting reads in jade. */
@@ -60,6 +61,7 @@
   font-size: var(--text-12);
   font-variant-numeric: tabular-nums;
   color: var(--ink-40);
+  transition: color var(--dur-base) var(--ease);
 }
 
 .counterWarn {

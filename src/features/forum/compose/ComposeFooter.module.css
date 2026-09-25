@@ -23,11 +23,16 @@
   background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: var(--blur-md);
   -webkit-backdrop-filter: var(--blur-md);
+  /* The rows below answer to the footer's own width: it sits beside the rail
+     on a desktop and fills the card on a tablet, so the viewport says little
+     about how much room the buttons actually have. */
+  container: compose-foot / inline-size;
 }
 
-/* Pushes the hint and the actions to the right edge. */
+/* Idle while the hint shares the row (the hint's own auto margin does the
+   pushing there); it pushes the actions right once the hint moves above. */
 .spacer {
-  flex: 1 1 auto;
+  flex: none;
 }
 
 /* ── Autosave status ─────────────────────────────────────────────────────── */
@@ -42,6 +47,15 @@
   /* Reserves the row's height while the status is still silent, so the whole
      footer does not jump the first time a save lands. */
   min-height: 18px;
+  /* Gives way last, and only by an ellipsis, when the row is truly tight. */
+  flex: 0 1 auto;
+  min-width: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+/* Silent, but already holding its width: the first reading only fades in. */
+.saved[data-idle="true"] {
+  opacity: 0;
 }
 
 .savedDot {
@@ -51,6 +65,25 @@
   flex: none;
   background: var(--jade);
   transition: background var(--dur-base) var(--ease);
+}
+
+/* Every reading sits in the same cell, so the slot is as wide as the longest
+   one in the current language and a swap never moves its neighbours. */
+.savedSlot {
+  display: grid;
+  min-width: 0;
+}
+
+.savedText {
+  grid-area: 1 / 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  visibility: hidden;
+}
+
+.savedText[data-shown="true"] {
+  visibility: visible;
 }
 
 /* Coral while the text is still travelling; jade once the server holds it. */
@@ -63,14 +96,28 @@
 .hint {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: flex-end;
   font-size: var(--text-12-5);
   line-height: var(--lh-body);
   color: var(--ink-60);
-  /* Long blocker sentences wrap inside the footer instead of pushing the
-     buttons off the right edge. */
+  /* A zero basis, so the hint takes whatever the buttons leave and never
+     pushes one of them onto a second row. Long blocker sentences wrap inside
+     it start-aligned, so the icon stays beside the first word of its text. */
+  flex: 1 1 0;
   min-width: 0;
   max-width: 44ch;
+  /* Past its measure, the leftover room goes to its start edge, so the hint
+     and the actions still hold the right edge. */
+  margin-inline-start: auto;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+/* The line inside the region, which cross-fades when the reason changes. */
+.hintLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
 .hint svg {
@@ -118,6 +165,30 @@
      halves guessing at 44px separately. */
   align-items: stretch;
   position: relative;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+/* The two halves press in together, so the split button still reads as one
+   control under the thumb. Presses inside the open menu do not count. */
+.publishGroup:has(
+  > .publishButton:active:not(:disabled),
+  > * > [aria-haspopup="menu"]:active:not(:disabled)
+) {
+  transform: scale(0.97);
+}
+
+/* The group already sinks as one; <Button>'s own press scale on the Publish
+   half would sink it a second time and open a seam against the caret. Beats
+   that rule's (0,4,0). */
+.publishGroup .publishButton:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: none;
+}
+
+/* While the post is sending, both halves keep their full colour and the
+   spinner and the cursor say to wait. */
+.publishGroup[data-busy="true"] button:disabled {
+  opacity: 1;
+  cursor: progress;
 }
 
 /* Square off the edge the caret sits against, so the two halves read as one
@@ -125,9 +196,49 @@
    so it out-specifies <Button>'s own `border-radius` shorthand whichever way
    the two stylesheets land in the bundle. */
 .publishGroup .publishButton {
+  position: relative;
   border-start-end-radius: 0;
   border-end-end-radius: 0;
   padding-inline-end: 16px;
+  /* <Button>'s own list, plus opacity, so the button fades smoothly as it
+     turns ready or held. */
+  transition:
+    transform var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    opacity var(--dur-base) var(--ease);
+}
+
+.publishLabel {
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.publishButton[aria-busy="true"] .publishLabel {
+  opacity: 0;
+}
+
+/* Centred over the label it replaces, so the button never changes width. */
+.publishSpinner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.foot .cancelButton {
+  transition:
+    transform var(--dur-fast) var(--ease),
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+
+/* Out-specifies <Button>'s own hover lift, which would otherwise win the tie
+   whichever way the two stylesheets land in the bundle. */
+.foot .cancelButton:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
 }
 
 /* ── Narrow ──────────────────────────────────────────────────────────────── */
@@ -135,25 +246,36 @@
 /* The hint and the shortcut are both nice-to-have next to a Publish button
    that has to stay in the thumb arc. The shortcut goes first: there is no
    ⌘ key on a phone. */
-@media (max-width: 1040px) {
+@container compose-foot (max-width: 680px) {
   .shortcut {
     display: none;
   }
 }
 
-@media (--wide) {
-  .foot {
-    padding: 12px 16px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
-    border-radius: 0 0 var(--radius-18) var(--radius-18);
-  }
-
-  /* On a phone the status line and the hint each take the full width above
-     the actions, so neither is squeezed to two characters. */
-  .saved,
+/* Too tight for the hint to read beside the buttons: it takes a row of its
+   own above them, and the status, Cancel and Publish share the row below. */
+@container compose-foot (max-width: 560px) {
   .hint {
+    order: -1;
     flex: 1 0 100%;
     max-width: none;
+    margin-inline-start: 0;
+    justify-content: flex-start;
+    text-align: start;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+/* A phone: the status and the hint each take the full width above the
+   actions, so neither is squeezed to two characters, and Publish holds the
+   right edge even when it has to drop below Cancel. */
+@container compose-foot (max-width: 400px) {
+  .saved {
+    order: -2;
+    flex: 1 0 100%;
   }
 
   .spacer {
@@ -165,7 +287,21 @@
   }
 }
 
+@media (--wide) {
+  .foot {
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    border-radius: 0 0 var(--radius-18) var(--radius-18);
+  }
+
+  /* A touch-first width: the ⌘ hint has no key to point at. */
+  .shortcut {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .saved,
   .savedDot {
     transition: none;
   }

@@ -1,4 +1,5 @@
 import type {
+  EmailBlock,
   EmailLocaleContent,
   EmailTemplateAdminDTO,
   EmailTemplateWriteBody,
@@ -81,6 +82,38 @@ export function isSameContent(first: unknown, second: unknown): boolean {
   return JSON.stringify(first) === JSON.stringify(second);
 }
 
+/** Every admin-written string in one block that may carry a `{token}`. */
+function blockTexts(block: EmailBlock): string[] {
+  switch (block.type) {
+    case "heading":
+    case "paragraph":
+      return [block.text];
+    case "button":
+      return [block.label, block.href];
+    case "image":
+      return [block.alt];
+    case "html":
+      return [block.html];
+    case "hero":
+      return [block.eyebrow, block.headline, block.text];
+    case "ticket":
+      return [
+        block.label,
+        block.title,
+        block.text,
+        block.buttonLabel,
+        block.href,
+      ];
+    case "featureList":
+      return block.items.flatMap((item) => [item.title, item.text]);
+    case "signature":
+      return [block.name, block.role, block.note, block.photoUrl];
+    case "divider":
+    case "spacer":
+      return [];
+  }
+}
+
 /** Tokens the purpose does not allow anywhere in one language, for the inline
  *  warning the editor shows before the backend would refuse the save. */
 export function unknownTokensIn(
@@ -89,14 +122,9 @@ export function unknownTokensIn(
 ): string[] {
   const texts = [
     content.subject,
+    content.preheader ?? "",
     content.mode === "html" ? (content.html ?? "") : "",
   ];
-  for (const block of content.blocks) {
-    if (block.type === "heading" || block.type === "paragraph")
-      texts.push(block.text);
-    if (block.type === "button") texts.push(block.label, block.href);
-    if (block.type === "image") texts.push(block.alt);
-    if (block.type === "html") texts.push(block.html);
-  }
+  for (const block of content.blocks) texts.push(...blockTexts(block));
   return unknownPlaceholders(texts.join("\n"), purpose);
 }

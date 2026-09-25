@@ -11,6 +11,7 @@ import {
   SkinListGrip,
   SkinListRowTools,
   SkinListRow,
+  type SkinListGripReorder,
 } from "./SkinListParts";
 import { SkinEntryTitle } from "./SkinEntryTitle";
 import { useSkinListRows } from "./useSkinListRows";
@@ -21,7 +22,8 @@ type Entry = Record<string, string>;
 
 /** One numbered entry: the numeral, grip and tools on one line, the first
  *  item field as the entry's title at full width below them, and the
- *  remaining fields labelled under the title. */
+ *  remaining fields labelled under the title. The title's example shows
+ *  only with `isExampleShown`; otherwise the title names its field. */
 function SkinEntryRow({
   entry,
   index,
@@ -29,6 +31,10 @@ function SkinEntryRow({
   titleField,
   detailFields,
   isDragging,
+  isEntering,
+  shouldGlide,
+  isExampleShown,
+  reorder,
   onGripPointerDown,
   onChange,
   onMove,
@@ -40,6 +46,12 @@ function SkinEntryRow({
   titleField: SkinItemFieldDescriptor;
   detailFields: SkinItemFieldDescriptor[];
   isDragging: boolean;
+  /** A row just added, which eases in (`SkinListRow`). */
+  isEntering: boolean;
+  /** Glide into a new slot (`SkinListRow`), true after a move. */
+  shouldGlide: boolean;
+  isExampleShown: boolean;
+  reorder: SkinListGripReorder;
   onGripPointerDown: Parameters<typeof SkinListGrip>[0]["onPointerDown"];
   onChange: (entry: Entry) => void;
   onMove: (from: number, to: number) => void;
@@ -49,9 +61,10 @@ function SkinEntryRow({
   const titleLabel = t(titleField.labelKey);
   // An example gets the "e.g." prefix; the label fallback stays plain, since
   // it names the field.
-  const titlePlaceholder = titleField.placeholderKey
-    ? refinedExample(t, t(titleField.placeholderKey))
-    : titleLabel;
+  const titlePlaceholder =
+    isExampleShown && titleField.placeholderKey
+      ? refinedExample(t, t(titleField.placeholderKey))
+      : titleLabel;
   const fieldsRef = useRef<HTMLDivElement | null>(null);
   const focusFirstDetailField = () =>
     fieldsRef.current
@@ -59,12 +72,17 @@ function SkinEntryRow({
       ?.focus();
 
   return (
-    <SkinListRow className={styles.entryRow} isDragging={isDragging}>
+    <SkinListRow
+      className={styles.entryRow}
+      isDragging={isDragging}
+      isEntering={isEntering}
+      shouldGlide={shouldGlide}
+    >
       <div className={styles.entryLead}>
         <span className={styles.numeral} aria-hidden>
           {index + 1}
         </span>
-        <SkinListGrip onPointerDown={onGripPointerDown} />
+        <SkinListGrip onPointerDown={onGripPointerDown} reorder={reorder} />
       </div>
       <SkinEntryTitle
         value={entry[titleField.key] ?? ""}
@@ -94,7 +112,7 @@ function SkinEntryRow({
         count={count}
         onMove={onMove}
         onRemove={onRemove}
-        rowLabel={titleLabel}
+        rowLabel={reorder.rowLabel}
       />
     </SkinListRow>
   );
@@ -104,6 +122,8 @@ function SkinEntryRow({
  * An `entries` list (FAQ, first-session steps, referrals) as a numbered
  * list inside the group card, entries split by hairlines. The first item
  * field reads as each entry's title; the rest sit below with small labels.
+ * The title's example shows on the first entry only, while no entry has a
+ * title, so it never repeats beside a real one.
  */
 export function SkinEntriesControl({
   control,
@@ -114,6 +134,7 @@ export function SkinEntriesControl({
   editor: SubprofileSkinBlocksEditor;
   isLabelHidden?: boolean;
 }) {
+  const { t } = useTranslation();
   const itemFields = control.itemFields ?? [];
   const [titleField, ...detailFields] = itemFields;
   const rows = useSkinListRows<Entry>({
@@ -123,6 +144,12 @@ export function SkinEntriesControl({
       Object.fromEntries(itemFields.map((field) => [field.key, ""])),
   });
   if (!titleField) return null;
+  // The grip names the list ("Move Referrals 2"), since the title field's
+  // label ("Name") says nothing about which list the row is in.
+  const listLabel = t(control.labelKey);
+  const hasAnyTitle = rows.items.some(
+    (entry) => String(entry[titleField.key] ?? "").trim() !== "",
+  );
 
   return (
     <SkinListFrame
@@ -142,6 +169,10 @@ export function SkinEntriesControl({
           titleField={titleField}
           detailFields={detailFields}
           isDragging={rows.draggingIndex === index}
+          isEntering={rows.isInsertedRow(index)}
+          shouldGlide={rows.shouldRowsGlide}
+          isExampleShown={index === 0 && !hasAnyTitle}
+          reorder={rows.reorderFor(index, listLabel)}
           onGripPointerDown={rows.gripHandlers(index).onPointerDown}
           onChange={(next) => rows.update(index, next)}
           onMove={rows.move}

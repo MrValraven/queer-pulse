@@ -421,16 +421,53 @@ const DEMO_MODERATOR: MemberRefDTO = {
   avatarUrl: null,
 };
 
+/** The demo owner behind `QPL-2026-0007`'s owner-authored history rows below
+ *  (the directory pause/resume). Reuses the listing's own
+ *  `submitterName`/`submitterSlug` rather than inventing a second persona. */
+const DEMO_OWNER: MemberRefDTO = {
+  slug: "tiago",
+  firstName: "Tiago",
+  lastName: "Costa",
+  avatarUrl: null,
+};
+
+/** The demo owner behind `QPL-2026-0005`'s `owner_edited` row below. A
+ *  separate persona from `DEMO_OWNER` because the backend only ever writes
+ *  `owner_edited` for a LIVE listing (`listings.service.ts` `update()`), and
+ *  `QPL-2026-0005` (Café Aurora) is the one demo listing that's actually
+ *  live; reuses that listing's own `submitterName`/`submitterSlug`. */
+const DEMO_LIVE_LISTING_OWNER: MemberRefDTO = {
+  slug: "rui",
+  firstName: "Rui",
+  lastName: "Tavares",
+  avatarUrl: null,
+};
+
+/** The demo co-manager behind `QPL-2026-0007`'s `co_manager_added`/
+ *  `co_manager_removed` rows below. A seat granted and later ended is the one
+ *  narrative both actions need to appear together in. */
+const DEMO_CO_MANAGER: MemberRefDTO = {
+  slug: "marta",
+  firstName: "Marta",
+  lastName: "Silva",
+  avatarUrl: null,
+};
+
 /**
  * Demo-only moderation history + Q&A thread, keyed by listing `ref` — the
- * fixture `useListingHistory` reads in demo mode. Deliberately populated for
- * only two of the three demo listings: `QPL-2026-0007` shows a full
- * round-trip (asked → answered → sent back with a reason), `QPL-2026-0006`
- * shows a question still awaiting the submitter's reply. `QPL-2026-0005`
- * (already live, nothing eventful behind it) has no entry, so
- * `useListingHistory` falls back to an empty history for it — exercising
- * `ListingHistoryPanel`'s empty state honestly instead of needing a fourth
- * throwaway listing.
+ * fixture `useListingHistory` reads in demo mode, populated across all three
+ * demo listings. `QPL-2026-0007` shows a full round-trip (asked → answered →
+ * sent back with a reason) plus one row for every action `ListingHistoryPanel`
+ * covers beyond the original five that its status permits (`staff_created`
+ * through `suggestion_applied`, oldest first ahead of the question/status
+ * pair). `QPL-2026-0006` shows a question still awaiting the submitter's
+ * reply. `QPL-2026-0005` (the one demo listing that's actually `live`) carries
+ * the one row `QPL-2026-0007` cannot honestly carry: `owner_edited`, which the
+ * backend only ever writes for a live listing (`listings.service.ts`
+ * `update()`; see `DEMO_LIVE_LISTING_OWNER` above). With all three fixtures
+ * now eventful, `ListingHistoryPanel`'s empty state is exercised by any ref
+ * with no entry here (`getDemoListingHistory`'s fallback below) rather than by
+ * one of the three queue rows.
  */
 export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
   "QPL-2026-0007": {
@@ -453,6 +490,70 @@ export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
         reason: null,
         actor: DEMO_MODERATOR,
         createdAt: "2026-07-28T14:00:00.000Z",
+      },
+      {
+        id: "evt-0007-9",
+        action: "suggestion_applied",
+        fromStatus: null,
+        toStatus: null,
+        reason:
+          "A moderator applied a suggested correction to the phone number.",
+        actor: DEMO_MODERATOR,
+        createdAt: "2026-07-25T11:20:00.000Z",
+      },
+      {
+        id: "evt-0007-8",
+        action: "co_manager_removed",
+        fromStatus: null,
+        toStatus: null,
+        reason: "Marta Silva was removed as a co-manager of this listing.",
+        actor: DEMO_OWNER,
+        createdAt: "2026-07-24T09:45:00.000Z",
+      },
+      {
+        id: "evt-0007-7",
+        action: "directory_resumed",
+        fromStatus: null,
+        toStatus: null,
+        reason: null,
+        actor: DEMO_OWNER,
+        createdAt: "2026-07-23T18:10:00.000Z",
+      },
+      {
+        id: "evt-0007-6",
+        action: "directory_paused",
+        fromStatus: null,
+        toStatus: null,
+        reason: null,
+        actor: DEMO_OWNER,
+        createdAt: "2026-07-23T08:30:00.000Z",
+      },
+      {
+        id: "evt-0007-5",
+        action: "co_manager_added",
+        fromStatus: null,
+        toStatus: null,
+        reason: "Marta Silva accepted an invitation to co-manage this listing.",
+        actor: DEMO_CO_MANAGER,
+        createdAt: "2026-07-22T13:00:00.000Z",
+      },
+      {
+        id: "evt-0007-3",
+        action: "ownership_transferred",
+        fromStatus: null,
+        toStatus: null,
+        reason: "Claimed by Tiago Costa as the business owner.",
+        actor: DEMO_MODERATOR,
+        createdAt: "2026-07-21T10:00:00.000Z",
+      },
+      {
+        id: "evt-0007-0",
+        action: "staff_created",
+        fromStatus: null,
+        toStatus: null,
+        reason: null,
+        actor: DEMO_MODERATOR,
+        createdAt: "2026-07-20T09:00:00.000Z",
       },
     ],
     questions: [
@@ -488,6 +589,21 @@ export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
         createdAt: "2026-07-27T15:10:00.000Z",
       },
     ],
+  },
+  "QPL-2026-0005": {
+    events: [
+      {
+        id: "evt-0005-1",
+        action: "owner_edited",
+        fromStatus: null,
+        toStatus: null,
+        reason:
+          "The owner edited this live listing and changed the opening hours, the address. The listing stayed live: once a listing is approved it does not need another approval to publish.",
+        actor: DEMO_LIVE_LISTING_OWNER,
+        createdAt: "2026-07-26T12:00:00.000Z",
+      },
+    ],
+    questions: [],
   },
 };
 

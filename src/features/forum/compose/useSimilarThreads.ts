@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
@@ -65,6 +65,9 @@ export interface SimilarThreadsResult {
   /** The title of that thread, for the blocker message. */
   duplicateTitle: string | null;
   isLoading: boolean;
+  /** True while the typed title is long enough to search but the debounce
+   *  has not sent it yet, so an empty `threads` is no answer yet. */
+  isAwaitingFirstSearch: boolean;
 }
 
 /**
@@ -93,12 +96,17 @@ export function useSimilarThreads(title: string): SimilarThreadsResult {
 
   const trimmedTitle = debouncedTitle.trim();
   const isSearchable = tokenize(trimmedTitle).length >= MIN_TITLE_TOKENS;
+  const isAwaitingFirstSearch =
+    !isSearchable && tokenize(title.trim()).length >= MIN_TITLE_TOKENS;
 
   const query = useQuery<Thread[]>({
     // Its OWN key namespace. Never `["forum-threads", …]`, which publishing
     // invalidates.
     queryKey: ["forum-compose-similar", demoMode, language, trimmedTitle],
     enabled: isSearchable,
+    // The last answer stays on screen while the next debounce is in flight, so
+    // the list and the rail tab count hold steady as the member types.
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       if (demoMode) return searchDemoThreads(trimmedTitle);
       const page = await getThreads(undefined, undefined, {
@@ -116,6 +124,7 @@ export function useSimilarThreads(title: string): SimilarThreadsResult {
         isDuplicate: false,
         duplicateTitle: null,
         isLoading: false,
+        isAwaitingFirstSearch,
       };
     const found = (query.data ?? []).slice(0, MAX_HITS).map(toSimilarThread);
     const duplicate = duplicateOf(trimmedTitle, found);
@@ -124,8 +133,15 @@ export function useSimilarThreads(title: string): SimilarThreadsResult {
       isDuplicate: !!duplicate,
       duplicateTitle: duplicate?.title ?? null,
       isLoading: query.isLoading,
+      isAwaitingFirstSearch: false,
     };
-  }, [isSearchable, query.data, query.isLoading, trimmedTitle]);
+  }, [
+    isAwaitingFirstSearch,
+    isSearchable,
+    query.data,
+    query.isLoading,
+    trimmedTitle,
+  ]);
 }
 
 /**

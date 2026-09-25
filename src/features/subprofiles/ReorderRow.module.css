@@ -1,0 +1,36 @@
+/* Reorder chrome for the persona editor's link rows and "Part of" cards
+   (`SocialLinkEditorRow`, `SubprofileAffiliationRow`). The held row lifts
+   above its neighbours while the list reshuffles, as `SkinListRow` does. */
+
+/* Every row. The drag sets `translate` on it and motion sets `transform`, both
+   each frame, so neither may transition: base.css's reduced-motion rule gives
+   every element's default `transition: all` a duration, which painted the
+   held row one frame behind its new slot on each swap. */
+.row {
+  transition-property: none;
+}
+
+.linkDragging {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e2);
+}
+
+.cardDragging {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-e2);
+}
+
+/* The grip and the card's title, in the card head. It takes the room the
+   head's tools leave, so the title truncates before anything else gives. */
+.headLead {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}

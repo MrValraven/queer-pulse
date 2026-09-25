@@ -7,6 +7,7 @@ import {
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ManagedListingDTO } from "../api/listings.api";
+import { ANCHOR } from "../listBusiness.data";
 import {
   useListingCoManagers,
   useRemoveCoManager,
@@ -16,6 +17,7 @@ import { CoManagerInvitePanel } from "./CoManagerInvitePanel";
 import { CoManagerRosterRow } from "./CoManagerRosterRow";
 import { CoManagerStepDown } from "./CoManagerStepDown";
 import styles from "./CoManagers.module.css";
+import sectionStyles from "./ListingCoManagersSection.module.css";
 
 /**
  * "Who can edit" inside the listing editor.
@@ -58,7 +60,12 @@ export function ListingCoManagersSection({
   };
 
   return (
-    <>
+    // A box-less wrapper (see its module) for the live preview's field anchor.
+    <div
+      id={ANCHOR.coManagers}
+      className={sectionStyles.anchorWrap}
+      data-step-contents=""
+    >
       <p className={styles.intro}>
         {t(
           isCoManagerView
@@ -110,6 +117,6 @@ export function ListingCoManagersSection({
           ownerSlug={listing.submittedBy?.slug}
         />
       )}
-    </>
+    </div>
   );
 }

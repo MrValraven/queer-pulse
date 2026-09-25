@@ -1,5 +1,6 @@
 import { SegmentedControl } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { ANCHOR } from "../listBusiness.data";
 import { pricingModeOf, type ListingPricingMode } from "../listingMenu.data";
 import type { ListingForm } from "../useListingForm";
 import { ListingMenuFields } from "./ListingMenuFields";
@@ -16,7 +17,7 @@ export function ListingPricingFields({ form }: { form: ListingForm }) {
 
   return (
     <>
-      <div className={styles.modeRow}>
+      <div id={ANCHOR.pricingMode} className={styles.modeRow}>
         <SegmentedControl
           label={t("marketing:listBusiness.pricing.modeLabel")}
           options={[

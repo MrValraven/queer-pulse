@@ -43,6 +43,57 @@ describe("emailTemplateDraft", () => {
     expect(body.locales.pt).toBeNull();
   });
 
+  it("scans the preheader and every text of the newer blocks", () => {
+    const withNewBlocks: EmailLocaleContent = {
+      subject: "Hello",
+      preheader: "Until {expiresOn}",
+      mode: "blocks",
+      html: null,
+      blocks: [
+        {
+          id: "hero",
+          type: "hero",
+          eyebrow: "",
+          headline: "Welcome, *{name}*",
+          text: "",
+        },
+        {
+          id: "ticket",
+          type: "ticket",
+          label: "Invite",
+          title: "Valid",
+          text: "",
+          buttonLabel: "Join",
+          href: "{inviteLink}",
+        },
+        {
+          id: "features",
+          type: "featureList",
+          items: [{ icon: "communities", title: "{unknownTitle}", text: "" }],
+        },
+        {
+          id: "signature",
+          type: "signature",
+          name: "Team",
+          role: "",
+          note: "{unknownNote}",
+          photoUrl: "",
+        },
+      ],
+    };
+    expect(unknownTokensIn(withNewBlocks, "invite_approved")).toEqual([
+      "unknownTitle",
+      "unknownNote",
+    ]);
+    expect(unknownTokensIn(withNewBlocks, "general")).toEqual([
+      "expiresOn",
+      "name",
+      "inviteLink",
+      "unknownTitle",
+      "unknownNote",
+    ]);
+  });
+
   it("flags tokens a general template cannot use", () => {
     expect(unknownTokensIn(english, "general")).toEqual(["name", "inviteLink"]);
     expect(unknownTokensIn(english, "invite_approved")).toEqual([]);

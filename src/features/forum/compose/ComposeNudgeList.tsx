@@ -1,6 +1,10 @@
 import type { IconType } from "react-icons";
 import { FiAlertTriangle, FiHeart, FiInfo, FiX } from "react-icons/fi";
+import { AnimatePresence, m } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { COMPOSE_EASE } from "./composeMotion";
 import type {
   ComposeHelpline,
   ComposeNudge,
@@ -19,6 +23,10 @@ import styles from "./ComposeNudgeList.module.css";
 // purpose: it is the crisis row, the one somebody in real trouble reads, so it
 // gets jade (the colour this app uses for care), a heart, and helplines as
 // large tappable rows. It must never read as an error about their writing.
+//
+// Rows arrive and resolve while the member types, so none of them may jolt
+// the page: the list grows open and folds shut as a whole, and each row grows
+// and folds in the flow, so everything below moves with it at the same pace.
 
 const TONE_ICON: Record<ComposeNudgeTone, IconType> = {
   neutral: FiInfo,
@@ -51,22 +59,43 @@ export function ComposeNudgeList({
   onAcknowledgeDoxxing,
 }: ComposeNudgeListProps) {
   const { t } = useTranslation();
-  if (nudges.length === 0) return null;
+  const { reducedMotion } = useMotionPrefs();
+  const duration = reducedMotion ? 0 : 0.25;
   return (
-    <ul
-      className={styles.list}
-      aria-label={t("forum:composePage.nudge.listLabel")}
-    >
-      {nudges.map((nudge) => (
-        <ComposeNudgeRow
-          key={nudge.id}
-          nudge={nudge}
-          onDismiss={onDismiss}
-          isDoxxingAcknowledged={isDoxxingAcknowledged}
-          onAcknowledgeDoxxing={onAcknowledgeDoxxing}
-        />
-      ))}
-    </ul>
+    <Collapse isOpen={nudges.length > 0}>
+      <ul
+        className={styles.list}
+        aria-label={t("forum:composePage.nudge.listLabel")}
+      >
+        <AnimatePresence initial={false}>
+          {nudges.map((nudge) => (
+            // The item animates its height and clips while it does; the row
+            // spacing is its padding, so the gap folds with it.
+            <m.li
+              key={nudge.id}
+              className={styles.item}
+              initial={{ height: 0, opacity: 0, overflow: "hidden" }}
+              animate={{
+                height: "auto",
+                opacity: 1,
+                transitionEnd: { overflow: "visible" },
+              }}
+              exit={{ height: 0, opacity: 0, overflow: "hidden" }}
+              transition={{ duration, ease: COMPOSE_EASE }}
+            >
+              <div className={`${styles.row} ${TONE_CLASS[nudge.tone]}`}>
+                <ComposeNudgeRow
+                  nudge={nudge}
+                  onDismiss={onDismiss}
+                  isDoxxingAcknowledged={isDoxxingAcknowledged}
+                  onAcknowledgeDoxxing={onAcknowledgeDoxxing}
+                />
+              </div>
+            </m.li>
+          ))}
+        </AnimatePresence>
+      </ul>
+    </Collapse>
   );
 }
 
@@ -85,8 +114,10 @@ function ComposeNudgeRow({
 }: ComposeNudgeRowProps) {
   const { t } = useTranslation();
   const ToneIcon = TONE_ICON[nudge.tone];
+  // The animated <li> and the tinted row box live in `ComposeNudgeList`;
+  // this is what sits inside them.
   return (
-    <li className={`${styles.row} ${TONE_CLASS[nudge.tone]}`}>
+    <>
       <ToneIcon className={styles.rowIcon} aria-hidden />
       <div className={styles.rowBody}>
         <p className={styles.rowText}>
@@ -118,7 +149,7 @@ function ComposeNudgeRow({
           <FiX aria-hidden />
         </button>
       )}
-    </li>
+    </>
   );
 }
 

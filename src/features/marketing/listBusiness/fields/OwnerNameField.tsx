@@ -19,8 +19,10 @@ import styles from "./OwnerNameField.module.css";
  * account name at all (the admin console passes an empty one) the field is a
  * plain editable input with no toggle.
  *
- * `ANCHOR.ownerName` stays on the FormField wrapper in every mode: the
- * missing-field jump and the server's 422 routing both scroll to it.
+ * `ANCHOR.ownerName` sits on the outermost wrapper in every mode: the
+ * missing-field jump and the server's 422 routing both scroll to it, and the
+ * live preview then treats the "use my account name" button as part of the
+ * name field.
  */
 export function OwnerNameField({
   form,
@@ -106,10 +108,9 @@ export function OwnerNameField({
   };
 
   return (
-    <div className={styles.nameField}>
+    <div id={ANCHOR.ownerName} className={styles.nameField}>
       <FormField
         className={pageStyles.lbField}
-        id={ANCHOR.ownerName}
         label={label}
         required
         helper={t(

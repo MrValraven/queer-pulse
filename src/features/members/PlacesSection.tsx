@@ -70,11 +70,19 @@ export function PlacesSection({
   // also returns the listings they were invited to help run. A co-managed one
   // belongs to somebody else, so it matches neither the submitter test nor the
   // link-to-profile one and needs its own clause.
+  //
+  // An "anon" or "role" listing hides the owner's identity on the public
+  // strip too (GET /directory/by-member/:slug, backend's `listByMemberSlug`
+  // / `ownerIdentity`), so the owner's own profile list excludes them the
+  // same way, showing a place only under a name the listing actually reveals.
   const mine: MemberPlace[] = submitted
     .filter(
       (listing) =>
         listing.managementRole === "co_manager" ||
-        (listing.submittedBy === memberSlug && listing.linkToProfile),
+        (listing.submittedBy === memberSlug &&
+          listing.linkToProfile &&
+          listing.visibility !== "anon" &&
+          listing.visibility !== "role"),
     )
     .map((listing) => ({
       key: listing.ref,

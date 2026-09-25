@@ -376,7 +376,9 @@ export function submittedToPlace(
     name: listing.name,
     cat: listing.cats[0] ?? "",
     hood: listing.hood,
-    owned: listing.linkToProfile,
+    // The badge follows the submitter's badge choice, as the backend card does;
+    // `linkToProfile` only says whether their member profile is linked.
+    owned: listing.badge === "owned",
     // A freshly self-submitted listing has never been through moderator
     // review, so it's never pre-verified.
     queerOwnedVerified: false,

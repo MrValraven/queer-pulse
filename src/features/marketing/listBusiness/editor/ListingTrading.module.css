@@ -33,22 +33,20 @@
 /* ── The four state cards ────────────────────────────────────── */
 
 .stateGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-@media (max-width: 760px) {
-  .stateGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.stateCard {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 14px;
+  gap: 8px;
+}
+
+/* One state per row: the icon on the left, the label and its
+   description stacked beside it. */
+.stateCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  row-gap: 2px;
+  padding: 12px 14px;
   text-align: left;
   border: 1px solid rgba(var(--line-rgb), 0.11);
   border-radius: var(--radius-badge);
@@ -71,7 +69,9 @@
 }
 
 .stateIcon {
+  grid-row: span 2;
   display: inline-flex;
+  margin-top: 1px;
   font-size: var(--text-17);
   color: var(--jade);
 }

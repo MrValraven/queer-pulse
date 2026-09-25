@@ -47,7 +47,7 @@ export function ListingEditorSaveBar({
           <Button
             variant="primary"
             onClick={onSave}
-            disabled={isBlocked || isSaving}
+            disabled={!isDirty || isBlocked || isSaving}
             title={
               isBlocked
                 ? t("marketing:listBusiness.paneActions.blockedTitle")

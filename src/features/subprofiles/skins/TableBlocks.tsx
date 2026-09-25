@@ -17,8 +17,8 @@ export function TableMenuHeader({ persona }: { persona: SkinExtrasPersona }) {
       <span className="menuhead-no">{meta.no}</span>
       <span className="menuhead-when">{meta.when}</span>
       {/* `practical` is typed required, but the block editor persists partial
-          objects (only `no`/`when` filled) — guard the sub-field so reading
-          `.length` off an absent list can't white-screen the page. */}
+          objects (only `no`/`when` filled), so guard the sub-field: reading
+          `.length` off an absent list would white-screen the page. */}
       {(meta.practical?.length ?? 0) > 0 && (
         <span className="menuhead-practical">
           {meta.practical?.join(" · ")}
@@ -51,11 +51,11 @@ export function TableMenuCard({
     <div className="menucard">
       <h2>{featured.title}</h2>
       {line && <p className="menucard-line">{line}</p>}
-      {courses.map((course) => (
-        <div className="course" key={course.n}>
+      {courses.map((course, courseIndex) => (
+        <div className="course" key={`${courseIndex}-${course.n}`}>
           <span className="course-name">{course.name}</span>
-          {course.dishes.map((dish) => (
-            <div className="dish" key={`${dish.title}|${dish.note ?? ""}`}>
+          {course.dishes.map((dish, dishIndex) => (
+            <div className="dish" key={`${dishIndex}-${dish.title}`}>
               <b>
                 {dish.title}
                 {dish.marks && dish.marks.length > 0 && (

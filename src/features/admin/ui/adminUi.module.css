@@ -185,7 +185,7 @@
   background: rgba(var(--amber-rgb), 0.2);
   color: var(--amber-ink);
 }
-/* "Needs attention" status tone (e.g. a listing waiting in review) — same
+/* "Needs attention" status tone (e.g. a listing waiting in review). Same
    amber tokens as `.chip_amber`, kept as its own semantic name so status
    consumers read `warn` rather than a raw colour. */
 .chip_warn {
@@ -214,7 +214,7 @@
   color: var(--ink-60);
 }
 
-/* ── Category label (ax-cat — stronger than a chip) ─────────────────────── */
+/* ── Category label (ax-cat, stronger than a chip) ──────────────────────── */
 .cat {
   display: inline-flex;
   align-items: center;
@@ -355,8 +355,8 @@
   padding-block-start: max(0px, env(safe-area-inset-top));
   padding-block-end: max(0px, env(safe-area-inset-bottom));
   background: var(--cream);
-  /* Left-cast (negative x-offset), not the elevation scale's vertical-only
-     shadows: the panel is anchored to the right edge, so its shadow has to
+  /* Left-cast (negative x-offset) where the elevation scale is vertical-only:
+     the panel is anchored to the right edge, so its shadow has to
      fall leftward across the page it's covering. Kept literal. */
   box-shadow: -24px 0 60px -30px rgba(0, 0, 0, 0.5);
   animation: adminDrawerIn 0.32s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
@@ -454,6 +454,18 @@
 .modalWide {
   max-width: 680px;
 }
+/* For surfaces that need the whole viewport, e.g. the email template preview.
+   The scrim's 24px padding on each side accounts for the 48px. The body turns
+   into a flex column so its content can stretch down to the footer. */
+.modalFull {
+  max-width: 1320px;
+  height: calc(100dvh - 48px);
+  max-height: none;
+}
+.modalFull .modalBody {
+  display: flex;
+  flex-direction: column;
+}
 /* Bottom sheet on mobile (matches the shared Modal + the app's dominant mobile
    pattern); reverts to a centered dialog at ≥720px. */
 @media (max-width: 719.98px) {
@@ -463,12 +475,17 @@
     padding-block-end: var(--keyboard-inset, 0px);
   }
   .modal,
-  .modalWide {
+  .modalWide,
+  .modalFull {
     position: relative;
     max-width: none;
-    /* svh, not vh, so the sheet never runs under the mobile address bar. */
+    /* svh keeps the sheet clear of the mobile address bar. */
     max-height: 92svh;
     border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+  /* The full-size dialog stays a full-height sheet on phones. */
+  .modalFull {
+    height: 92svh;
   }
   .modal::before {
     content: "";
@@ -642,7 +659,7 @@
   height: 20px;
   border-radius: 50%;
   background: var(--paper);
-  /* A small control's own drop shadow, not page elevation: kept literal. */
+  /* A small control's own drop shadow, outside page elevation: kept literal. */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s var(--ease);
 }

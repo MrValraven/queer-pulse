@@ -1,10 +1,12 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MarkdownLite } from "../../shared/markdown";
 import {
   ownershipBadgeOf,
   type DirectoryPlace,
   type OwnershipBadgeState,
 } from "./directoryPlaces";
 import { categoryLabel } from "./localCategories";
+import { listingTagLabel } from "./listBusiness/listingTags.data";
 import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectoryQueerOwnedProvenance } from "./DirectoryQueerOwnedProvenance";
@@ -36,8 +38,7 @@ const OWNERSHIP_PILL_KEYS: Record<OwnershipBadgeState, string> = {
  * carrying every at-a-glance signal (verified/friendly badge, the place's own
  * pills, and either the rating or a "New" chip) → the queer-owned provenance
  * → the "Run by" byline. The primary actions (Directions / Share / Save) sit
- * inline on the right, aligned with the name, instead of floating in a
- * disconnected card. The owner's own description spans the full width of the
+ * inline on the right, aligned with the name, as part of the header itself. The owner's own description spans the full width of the
  * header, under both the identity column and the actions, closing the header
  * as its body copy right before the gallery. On a phone, where the action
  * row wraps below the identity column, this keeps that row near the top of
@@ -81,7 +82,7 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
               </span>
               {place.pills.map((pill) => (
                 <span key={pill} className={s.pill}>
-                  {pill}
+                  {listingTagLabel(t, pill)}
                 </span>
               ))}
               {hasReviews ? (
@@ -114,7 +115,8 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
           <div className={s.spaceHeadActions}>
             <DirectoryActionBar place={place} preview={preview} />
           </div>
-          {/* The owner's own description, untitled: a full-width last child of
+          {/* The owner's own description (markdown-lite, one entry per
+              paragraph), untitled: a full-width last child of
               the header, so it never pushes the action row down with it. On a
               phone the row still wraps below the identity column, landing
               right after the byline, and the description runs underneath
@@ -122,9 +124,7 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
               right before the gallery. */}
           {place.whatItIs.length > 0 && (
             <div className={s.description}>
-              {place.whatItIs.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
+              <MarkdownLite text={place.whatItIs.join("\n\n")} />
             </div>
           )}
         </header>

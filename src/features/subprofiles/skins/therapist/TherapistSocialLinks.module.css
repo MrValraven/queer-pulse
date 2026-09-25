@@ -7,12 +7,11 @@
   list-style: none;
 }
 
-.list > li {
-  border-bottom: 1px solid var(--line);
-}
-
-.list > li:last-child {
-  border-bottom: none;
+/* The hairline sits on top of every row after the first, so a row folding
+   away at the end takes its own line with it (a leaving row is still the
+   last child until it unmounts). */
+.list > li + li {
+  border-top: 1px solid var(--line);
 }
 
 .row {

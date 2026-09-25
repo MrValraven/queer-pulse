@@ -9,6 +9,7 @@ import {
 } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { PoemBlock, PoemLine } from "../api/subprofiles.api";
+import { ReorderRow } from "../ReorderRow";
 import { newBreak, newNote, newStanza } from "./poemBlocks";
 import { PoemRichLine, type PoemRichLineHandle } from "./PoemRichLine";
 import styles from "./PoemBodyEditor.module.css";
@@ -19,6 +20,8 @@ export interface PoemBlockListProps {
   containerRef: RefCallback<HTMLDivElement>;
   /** Index currently being dragged, or null. */
   draggingIndex: number | null;
+  /** Bumped by every move, so the blocks glide on moves only. */
+  moveCount: number;
   /** Pointer handlers for one row's drag grip. */
   gripHandlers: (index: number) => {
     onPointerDown: (event: ReactPointerEvent) => void;
@@ -38,11 +41,17 @@ export interface PoemBlockListProps {
  * add bar under them. Every edit is a callback up to `PoemBodyEditor`, which
  * owns the block model; this file owns only the markup and the per-row labels.
  * Split out to keep both components under the repo's 200-line cap.
+ *
+ * Each block is a `ReorderRow` (motion `layout="position"`), so a drag or a
+ * move button glides the blocks into their new slots without stretching a
+ * stanza's text; the held block itself moves at once. `PoemBodyEditor` keeps
+ * focus (and a stanza's caret) through every move.
  */
 export function PoemBlockList({
   blocks,
   containerRef,
   draggingIndex,
+  moveCount,
   gripHandlers,
   registerRichLine,
   onPatchLines,
@@ -55,7 +64,7 @@ export function PoemBlockList({
   const { t } = useTranslation();
 
   const stanzaTotal = blocks.filter((block) => block.kind === "stanza").length;
-  // Precomputed once per render, outside the JSX-producing map below — a
+  // Precomputed once per render, outside the JSX-producing map below: a
   // running counter mutated *inside* that map (and read back the same
   // iteration via `blockAriaLabel`) is a render-purity violation the
   // react-compiler lint flags, since it can't prove the mutation/read pair
@@ -87,14 +96,15 @@ export function PoemBlockList({
       <div className={styles.blocks} ref={containerRef}>
         {blocks.map((block, index) => {
           const isBreak = block.kind === "break";
+          const isDragging = draggingIndex === index;
           return (
-            <div
+            <ReorderRow
               key={block.id}
               className={
-                draggingIndex === index
-                  ? `${styles.block} ${styles.dragging}`
-                  : styles.block
+                isDragging ? `${styles.block} ${styles.dragging}` : styles.block
               }
+              isDragging={isDragging}
+              moveCount={moveCount}
               data-kind={block.kind}
               role={isBreak ? "separator" : undefined}
               aria-label={isBreak ? blockAriaLabel(block) : undefined}
@@ -154,7 +164,7 @@ export function PoemBlockList({
                   <FiTrash2 aria-hidden />
                 </button>
               </div>
-            </div>
+            </ReorderRow>
           );
         })}
       </div>

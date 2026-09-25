@@ -13,6 +13,12 @@ export interface PositionalRowKeys {
   swap: (from: number, to: number) => void;
   /** Drop one row's key, alongside removing that row from the data. */
   removeAt: (index: number) => void;
+  /** Mint `count` keys at `index`, alongside inserting that many rows there
+   *  (an append is `insertAt(length)`). */
+  insertAt: (index: number, count?: number) => void;
+  /** Keys minted by `insertAt`, so a row the person added can ease in while
+   *  rows present on the first render, or reseeded from the server, do not. */
+  insertedKeys: ReadonlySet<string>;
 }
 
 /**
@@ -26,12 +32,15 @@ export interface PositionalRowKeys {
  * Keying those rows by array index while supporting drag-reorder meant React
  * kept each DOM node in place and rewrote its value: reordering while an input
  * was focused left the caret sitting in a box that had silently become a
- * different row. `swap`/`removeAt` must be called alongside the matching data
- * change; a row appended or a list replaced from the server is reconciled by
+ * different row. `swap`/`removeAt`/`insertAt` must be called alongside the
+ * matching data change; a list replaced from the server is reconciled by
  * length on the next render.
  */
 export function usePositionalRowKeys(length: number): PositionalRowKeys {
   const [storedKeys, setKeys] = useState<string[]>(() => makeKeys(length));
+  const [insertedKeys, setInsertedKeys] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
 
   // Adjust-while-rendering (the repo's snap pattern) so a row added, or a list
   // reseeded from the server, has its keys ready on this same paint. The
@@ -65,5 +74,20 @@ export function usePositionalRowKeys(length: number): PositionalRowKeys {
     setKeys((previous) => previous.filter((_, at) => at !== index));
   }, []);
 
-  return { keys, swap, removeAt };
+  // The keys are minted here, outside the updaters, so both stay pure.
+  const insertAt = useCallback((index: number, count = 1) => {
+    if (count < 1) return;
+    const minted = makeKeys(count);
+    setKeys((previous) => {
+      const position = Math.max(0, Math.min(index, previous.length));
+      return [
+        ...previous.slice(0, position),
+        ...minted,
+        ...previous.slice(position),
+      ];
+    });
+    setInsertedKeys((previous) => new Set([...previous, ...minted]));
+  }, []);
+
+  return { keys, swap, removeAt, insertAt, insertedKeys };
 }

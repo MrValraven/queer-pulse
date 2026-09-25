@@ -179,8 +179,10 @@
   color: var(--ink-60);
 }
 
+/* A block-level flex box, as its cell's flex column made it anyway, so it
+   lays out the same inside a RevealBlock. */
 .ok {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
   margin: 4px 0 0;
@@ -238,7 +240,9 @@
     min-width: 0;
   }
 
-  .availabilityBody > .live {
+  /* The panel sits in a RevealBlock (`.liveSlot`), so it grows in and
+     folds away with the owner's edits. */
+  .availabilityBody > .liveSlot .live {
     margin-top: 0;
     padding-top: 0;
     padding-left: 28px;

@@ -12,15 +12,15 @@ import { SkinQuoteControl } from "./SkinQuoteControl";
 import { SkinSegmentedControl } from "./SkinSegmentedControl";
 import { SkinSelectControl } from "./SkinSelectControl";
 import { SkinTextFieldControl } from "./SkinTextFieldControl";
-import { SkinStringListControl } from "./SubprofileSkinBlocksEditor";
 import { TherapistTopicsControl } from "./TherapistTopicsControl";
 
 /**
  * One control of the chaptered skin editor, picked by its `kind`. Every
  * control is fully controlled by `editor` and saves with the global "Save
- * all". `grid` and `objectList` never appear in a chapter, so they render
- * nothing here. The quote (a text control with `hasEmphasisPreview`) gets its
- * own writing surface. Choice chips render `SkinChoiceChipsRefined` directly:
+ * all". The older `stringList` and `objectList` names route to `lines` and
+ * `entries`, as in the blocks editor. `grid` never appears in a chapter, so
+ * it renders nothing here. The quote (a text control with
+ * `hasEmphasisPreview`) gets its own writing surface. Choice chips render `SkinChoiceChipsRefined` directly:
  * `SkinChoiceChipsControl` and `SkinSelectControl` keep the older look for
  * the generic blocks editor (SubprofileSkinBlocksEditor), and no chapter
  * declares a `select`.
@@ -45,6 +45,7 @@ export function SkinChapterControl({
     case "pairs":
       return <SkinPairsControl {...props} />;
     case "entries":
+    case "objectList":
       return <SkinEntriesControl {...props} />;
     case "paragraphs":
       return <SkinParagraphsControl {...props} />;
@@ -66,9 +67,8 @@ export function SkinChapterControl({
     case "select":
       return <SkinSelectControl control={control} editor={editor} />;
     case "lines":
-      return <SkinLinesControl {...props} />;
     case "stringList":
-      return <SkinStringListControl {...props} />;
+      return <SkinLinesControl {...props} />;
     // Edits the persona section's rows through the editor context.
     case "sectionItems":
       return (
@@ -78,7 +78,6 @@ export function SkinChapterControl({
         />
       );
     case "grid":
-    case "objectList":
       return null;
   }
 }

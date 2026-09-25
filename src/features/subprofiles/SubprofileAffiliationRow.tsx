@@ -1,4 +1,4 @@
-import { FiTrash2 } from "react-icons/fi";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   FormField,
   SegmentedControl,
@@ -16,21 +16,31 @@ import {
   type AffiliationTargetType,
 } from "./affiliations.data";
 import { affiliationOptionsForRow } from "./api/useAffiliationOptions";
+import { SkinListGrip, SkinListRemoveButton } from "./SkinListParts";
 import { SubprofileAffiliationTargetPicker } from "./SubprofileAffiliationTargetPicker";
+import reorderStyles from "./ReorderRow.module.css";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileAffiliationsEditor.module.css";
+import headStyles from "./SubprofileAffiliationRow.module.css";
 
 export type AffiliationRow = AffiliationInputDTO & { _uid: string };
 
 interface SubprofileAffiliationRowProps {
   row: AffiliationRow;
   index: number;
+  /** How many rows the list holds, for the grip's move menu. */
+  rowCount: number;
   /** Every target the persona may link (both types), from `useAffiliationOptions`. */
   options: readonly AffiliationOptionDTO[];
   isOptionsLoading: boolean;
   hasOptionsError: boolean;
   /** `type:slug` keys the OTHER rows already link. */
   takenKeys: ReadonlySet<string>;
+  /** From `useReorderableRows`: turns the grip into the drag handle. */
+  gripHandlers: { onPointerDown: (event: ReactPointerEvent) => void };
+  /** Move this row to slot `to` (any slot, from the grip's menu), keeping
+   *  focus. */
+  onMove: (to: number) => void;
   onChange: (patch: Partial<AffiliationInputDTO>) => void;
   onRemove: () => void;
 }
@@ -44,22 +54,38 @@ interface SubprofileAffiliationRowProps {
  * both belong to the old type. Once the options have loaded, a row with nothing
  * left to pick and no saved target disables its role select too, since there
  * is nothing for the role to describe. The backend enforces the same
- * eligibility on save. Extracted from `SubprofileAffiliationsEditor` to keep
- * both components under the 200-line cap; mirrors the same field-split pattern
- * `SubprofileItemDrawerFields` uses for the item drawer.
+ * eligibility on save. The head names the card by its type and the picked
+ * target, and carries a drag grip that is also a move menu button (up, down,
+ * to top, to bottom, and Alt with an arrow key) plus an icon-only remove
+ * button. Rendered inside a `ReorderRow`, which glides it.
  */
 export function SubprofileAffiliationRow({
   row,
   index,
+  rowCount,
   options,
   isOptionsLoading,
   hasOptionsError,
   takenKeys,
+  gripHandlers,
+  onMove,
   onChange,
   onRemove,
 }: SubprofileAffiliationRowProps) {
   const { t } = useTranslation();
   const roles = rolesForTargetType(row.targetType);
+  const typeLabel = t(`subprofiles:affiliation.type.${row.targetType}`);
+  const targetName =
+    row.targetSlug === ""
+      ? undefined
+      : options.find(
+          (option) =>
+            option.targetType === row.targetType &&
+            option.targetSlug === row.targetSlug,
+        )?.name;
+  // Names the card in the grip's and remove button's labels ("Remove Event
+  // Pride March 2"), by its type and, once picked, its target.
+  const rowLabel = targetName ? `${typeLabel} ${targetName}` : typeLabel;
   const typeChoices = AFFILIATION_TARGET_TYPES.map((type) => ({
     value: type,
     label: t(`subprofiles:affiliation.type.${type}`),
@@ -85,24 +111,39 @@ export function SubprofileAffiliationRow({
   return (
     <article className={sharedStyles.itemCard}>
       <div className={sharedStyles.itemHead}>
-        <span className={sharedStyles.itemNum}>
-          {t("subprofiles:affiliationsEditor.itemNumber", { n: index + 1 })}
+        <span className={reorderStyles.headLead}>
+          <SkinListGrip
+            className={headStyles.headGrip}
+            onPointerDown={gripHandlers.onPointerDown}
+            reorder={{
+              rowLabel,
+              isLabelUnique: Boolean(targetName),
+              rowNumber: index + 1,
+              rowCount,
+              onMove,
+            }}
+          />
+          <span className={headStyles.headTitle}>
+            <span className={headStyles.headType}>{typeLabel}</span>
+            {targetName && (
+              <span className={headStyles.headName}>{targetName}</span>
+            )}
+          </span>
         </span>
-        <button
-          type="button"
-          className={sharedStyles.removeBtn}
-          onClick={onRemove}
-        >
-          <FiTrash2 size={14} aria-hidden />{" "}
-          {t("subprofiles:affiliationsEditor.remove")}
-        </button>
+        <SkinListRemoveButton
+          className={headStyles.headRemove}
+          rowLabel={rowLabel}
+          rowNumber={index + 1}
+          isLabelUnique={Boolean(targetName)}
+          onRemove={onRemove}
+        />
       </div>
 
       <div className={styles.metaRow}>
         <FormField label={t("subprofiles:affiliationsEditor.typeLabel")}>
           <SegmentedControl
             options={typeChoices.map((choice) => choice.label)}
-            value={t(`subprofiles:affiliation.type.${row.targetType}`)}
+            value={typeLabel}
             onChange={(value) => {
               const match = typeChoices.find(
                 (choice) => choice.label === value,

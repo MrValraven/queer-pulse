@@ -1,8 +1,11 @@
 import { useId, useMemo } from "react";
-import { Toggle } from "../../../shared/components/ui";
+import { AnimatePresence, m } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { Collapse, Toggle } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Language } from "../../../shared/i18n/types";
-import { ForumAvatar } from "../ForumAuthor";
+import { swapFadeProps } from "./composeSwapFade";
+import { CoAuthorPicker, PostingAsIdentity } from "./ComposePostingAsParts";
 import {
   ANONYMOUS_CATEGORIES,
   COMPOSE_CATEGORIES,
@@ -17,6 +20,10 @@ import styles from "./ComposePostingAs.module.css";
 // setters already enforce that: turning one on turns the other off. This block
 // REFLECTS that rather than re-deriving it, so there is exactly one place in
 // the app where the rule lives.
+//
+// Every switch here changes the byline, so every switch is shown moving: the
+// row's wash eases between tones, the identity fades out and back in, the
+// hint fades to its new sentence and the co-author picker folds away and back.
 
 export interface ComposePostingAsAuthor {
   name: string;
@@ -63,13 +70,12 @@ export function ComposePostingAs({
 }: ComposePostingAsProps) {
   const { t, language } = useTranslation();
   const headingId = useId();
-  const coAuthorLabelId = useId();
+  const { reducedMotion } = useMotionPrefs();
 
   const isCategoryAnonymous =
     category !== null && ANONYMOUS_CATEGORIES.includes(category);
   const isAnonymousOffered = isCategoryAnonymous && !isOfficial;
   const anonymousCategoryNames = useAnonymousCategoryNames(language);
-  const person = bylinePerson(author, isOfficial, isAnonymous, t);
 
   const anonymousHint = isOfficial
     ? t("forum:composePage.postingAs.anonymousBlockedByOfficial")
@@ -97,19 +103,11 @@ export function ComposePostingAs({
           .filter(Boolean)
           .join(" ")}
       >
-        <ForumAvatar className={styles.avatar} person={person} />
-        <span className={styles.authorText}>
-          <span className={styles.authorName}>{person.name}</span>
-          <span className={styles.authorSub}>
-            {isOfficial
-              ? t("forum:composePage.postingAs.officialSub", {
-                  name: author.name,
-                })
-              : isAnonymous
-                ? t("forum:composePage.postingAs.anonymousSub")
-                : t("forum:composePage.postingAs.yourNameSub")}
-          </span>
-        </span>
+        <PostingAsIdentity
+          author={author}
+          isOfficial={isOfficial}
+          isAnonymous={isAnonymous}
+        />
         {canPostAsOfficial && (
           <Toggle
             checked={isOfficial}
@@ -125,7 +123,17 @@ export function ComposePostingAs({
           <span className={styles.optionLabel}>
             {t("forum:composePage.postingAs.anonymousLabel")}
           </span>
-          <span className={styles.optionHint}>{anonymousHint}</span>
+          {/* Keyed by the sentence, so the old hint fades out and the new
+              one fades in where it stood. */}
+          <AnimatePresence initial={false} mode="wait">
+            <m.span
+              key={anonymousHint}
+              className={styles.optionHint}
+              {...swapFadeProps(reducedMotion)}
+            >
+              {anonymousHint}
+            </m.span>
+          </AnimatePresence>
         </span>
         {/* A real `<fieldset disabled>`, so the switch inside it is natively
             disabled: out of the tab order, deaf to clicks, and announced as
@@ -141,78 +149,17 @@ export function ComposePostingAs({
         </fieldset>
       </div>
 
-      {!isAnonymous && (
-        <div className={styles.coAuthor}>
-          <span className={styles.optionText}>
-            <span className={styles.optionLabel} id={coAuthorLabelId}>
-              {t("forum:composePage.postingAs.coAuthorLabel")}
-            </span>
-            <span className={styles.optionHint}>
-              {t("forum:composePage.postingAs.coAuthorHint")}
-            </span>
-          </span>
-          {coAuthorOptions.length === 0 ? (
-            <p className={styles.optionHint}>
-              {t("forum:composePage.postingAs.coAuthorEmpty")}
-            </p>
-          ) : (
-            <div
-              className={styles.coAuthorPicker}
-              aria-labelledby={coAuthorLabelId}
-              role="group"
-            >
-              {coAuthorOptions.map((option) => {
-                const isPicked = option.slug === coAuthorSlug;
-                return (
-                  <button
-                    key={option.slug}
-                    type="button"
-                    className={styles.coAuthorChip}
-                    aria-pressed={isPicked}
-                    onClick={() =>
-                      onCoAuthorChange(isPicked ? null : option.slug)
-                    }
-                  >
-                    <ForumAvatar
-                      className={styles.coAuthorAvatar}
-                      person={{
-                        initials: option.initials,
-                        name: option.name,
-                        photo: option.photo,
-                      }}
-                    />
-                    {option.name}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
+      {/* Folds away while posting anonymously and grows back when the name
+          returns. */}
+      <Collapse isOpen={!isAnonymous} className={styles.coAuthorSlot}>
+        <CoAuthorPicker
+          coAuthorSlug={coAuthorSlug}
+          coAuthorOptions={coAuthorOptions}
+          onCoAuthorChange={onCoAuthorChange}
+        />
+      </Collapse>
     </section>
   );
-}
-
-/** The identity the row shows: the institutional account, an unnamed member,
- *  or the member themselves. */
-function bylinePerson(
-  author: ComposePostingAsAuthor,
-  isOfficial: boolean,
-  isAnonymous: boolean,
-  translate: (key: string) => string,
-) {
-  if (isOfficial)
-    return {
-      // The institutional account wears the brand mark instead of letters.
-      initials: "",
-      name: translate("forum:composePage.preview.officialName"),
-      official: true,
-    };
-  if (isAnonymous) {
-    const name = translate("forum:composePage.preview.anonymousName");
-    return { initials: name.slice(0, 1), name };
-  }
-  return { initials: author.initials, name: author.name, photo: author.photo };
 }
 
 /**

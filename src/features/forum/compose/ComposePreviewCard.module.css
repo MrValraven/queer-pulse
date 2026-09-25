@@ -6,9 +6,27 @@
    keeps glancing back at. */
 
 .block {
+  --slot-gap: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--slot-gap);
+}
+
+/* ── Slots: sections that come and go ─────────────────────────────────────
+   A section the draft can add or remove rides a Collapse. Its parent spaces
+   children with `gap`, and a gap does not animate: it would snap in the frame
+   the slot mounts and snap out the frame it unmounts. So the slot cancels its
+   own gap with a negative margin and carries the same space as padding
+   inside, where it grows and shrinks with the height. Each parent says how
+   big its gap is through --slot-gap. */
+.slot {
+  margin-top: calc(-1 * var(--slot-gap));
+}
+
+.slotInner {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--slot-gap);
 }
 
 .heading {
@@ -21,9 +39,10 @@
 }
 
 .card {
+  --slot-gap: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--slot-gap);
   padding: 16px 16px 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -39,6 +58,11 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
+}
+
+/* Holds the category badge so it can scale in like the chips beside it. */
+.badgeHolder {
+  display: inline-flex;
 }
 
 .warningPill {
@@ -79,6 +103,7 @@
   line-height: var(--lh-title);
   color: var(--text-strong);
   overflow-wrap: anywhere;
+  transition: color var(--dur-base) var(--ease);
 }
 
 .excerpt {
@@ -91,6 +116,10 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* The blur eases on and off, so revealing a covered excerpt reads as the words surfacing. */
+  transition:
+    color var(--dur-base) var(--ease),
+    filter var(--dur-slow) var(--ease-out);
 }
 
 /* Nothing typed yet. Lighter and italic, so an empty field never reads as
@@ -120,11 +149,19 @@
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition:
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.reveal:active {
+  transform: scale(0.97);
 }
 
 /* ── Photo strip ─────────────────────────────────────────────────────────── */
 
 .photos {
+  position: relative;
   display: flex;
   gap: 4px;
   margin: 2px 0 0;
@@ -148,9 +185,10 @@
 /* ── Poll ────────────────────────────────────────────────────────────────── */
 
 .poll {
+  --slot-gap: 5px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--slot-gap);
   margin-top: 2px;
 }
 
@@ -186,6 +224,29 @@
   margin-top: 2px;
   font-size: var(--text-12);
   color: var(--ink-60);
+}
+
+/* One grid cell that an outgoing and an incoming identity (or audience
+   sentence) share while they swap, so the cell keeps the old one's size
+   until it leaves and nothing beside it moves. */
+.swapStack {
+  display: inline-grid;
+  min-width: 0;
+}
+
+.swapStack > * {
+  grid-area: 1 / 1;
+}
+
+/* Avatar, name and "via" line, kept together so an identity switch can
+   fade them as one. */
+.bylineWho,
+.bylineMeta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
 }
 
 .bylineAvatar {

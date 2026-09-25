@@ -7,6 +7,7 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { relativeAgo } from "../../../../shared/lib/relativeAgo";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { useSetDirectoryVisibility } from "../api/useListingOwnerState";
+import { ANCHOR } from "../listBusiness.data";
 import { VISIBILITY_KEPT_KEYS } from "./listingVisibility.data";
 import styles from "./ListingVisibility.module.css";
 
@@ -67,7 +68,7 @@ export function ListingDirectoryVisibilitySection({
   };
 
   return (
-    <div className={styles.block}>
+    <div id={ANCHOR.directoryVisibility} className={styles.block}>
       <h3 className={styles.heading}>
         {t("marketing:listBusiness.visibility.heading")}
       </h3>

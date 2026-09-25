@@ -1,5 +1,8 @@
 import { useId, useState, type ReactNode } from "react";
 import { FiSliders } from "react-icons/fi";
+import { m } from "motion/react";
+import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { RollingNumber } from "../../../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import {
@@ -64,6 +67,17 @@ export function TherapistCostCalculator({ view }: { view: TherapistView }) {
   const [insurerIndex, setInsurerIndex] = useState<number>(
     view.reimbursement.length > 0 ? 0 : NO_INSURANCE_INDEX,
   );
+  // Flips on the first pick, so the detail lines fade on change only.
+  const [hasChangedSelection, setHasChangedSelection] = useState(false);
+  const { reducedMotion: isReducedMotion } = useMotionPrefs();
+  const selectSessions = (option: number) => {
+    setSessionsPerMonth(option);
+    setHasChangedSelection(true);
+  };
+  const selectInsurer = (index: number) => {
+    setInsurerIndex(index);
+    setHasChangedSelection(true);
+  };
 
   const { standardFee, reimbursement, slidingRange } = view;
   if (standardFee === null) return null;
@@ -78,6 +92,7 @@ export function TherapistCostCalculator({ view }: { view: TherapistView }) {
   });
   const sessions = format.number(sessionsPerMonth);
   const net = formatAmount(cost.net);
+  const shouldFadeDetail = hasChangedSelection && !isReducedMotion;
 
   return (
     <PracticalCell
@@ -93,7 +108,7 @@ export function TherapistCostCalculator({ view }: { view: TherapistView }) {
           <Option
             key={option}
             isPressed={option === sessionsPerMonth}
-            onSelect={() => setSessionsPerMonth(option)}
+            onSelect={() => selectSessions(option)}
           >
             {format.number(option)}
           </Option>
@@ -107,14 +122,14 @@ export function TherapistCostCalculator({ view }: { view: TherapistView }) {
             <Option
               key={`${row.label}-${index}`}
               isPressed={index === insurerIndex}
-              onSelect={() => setInsurerIndex(index)}
+              onSelect={() => selectInsurer(index)}
             >
               {row.label}
             </Option>
           ))}
           <Option
             isPressed={insurer === null}
-            onSelect={() => setInsurerIndex(NO_INSURANCE_INDEX)}
+            onSelect={() => selectInsurer(NO_INSURANCE_INDEX)}
           >
             {t("subprofiles:therapist.practical.calculator.noInsurance")}
           </Option>
@@ -126,10 +141,21 @@ export function TherapistCostCalculator({ view }: { view: TherapistView }) {
             {t("subprofiles:therapist.practical.calculator.perMonth")}
           </span>
           <span className={styles.calcBig}>
-            {t("subprofiles:therapist.practical.amount", { amount: net })}
+            <RollingNumber
+              value={t("subprofiles:therapist.practical.amount", {
+                amount: net,
+              })}
+              numericValue={cost.net}
+            />
           </span>
         </p>
-        <ul className={styles.calcDetail}>
+        <m.ul
+          key={`${sessionsPerMonth}-${insurerIndex}`}
+          className={styles.calcDetail}
+          initial={shouldFadeDetail ? { opacity: 0 } : false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+        >
           <li>
             {t("subprofiles:therapist.practical.calculator.gross", {
               sessions,
@@ -154,7 +180,7 @@ export function TherapistCostCalculator({ view }: { view: TherapistView }) {
               })}
             </li>
           )}
-        </ul>
+        </m.ul>
       </div>
       <p className={styles.hint}>
         {t("subprofiles:therapist.practical.calculator.hint")}

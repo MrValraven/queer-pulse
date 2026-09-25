@@ -1,17 +1,13 @@
 import type { ChangeEvent, RefObject } from "react";
-import {
-  FiCheck,
-  FiChevronLeft,
-  FiChevronRight,
-  FiImage,
-  FiX,
-} from "react-icons/fi";
+import { AnimatePresence, m, type Transition } from "motion/react";
+import { FiImage } from "react-icons/fi";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { useMeasuredContentHeight } from "../../../shared/components/layout/useMeasuredContentHeight";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  COMPOSE_ALT_MAX_LENGTH,
-  type ComposePhoto,
-} from "./composeThread.types";
+import type { ComposePhoto } from "./composeThread.types";
+import { ComposePhotoTile } from "./ComposePhotoTile";
+import { useKeyedPhotoHandlers } from "./useKeyedPhotoHandlers";
 import styles from "./ComposePhotoGrid.module.css";
 
 // ── Up to four staged photos, each with its description ─────────────────────
@@ -25,6 +21,15 @@ import styles from "./ComposePhotoGrid.module.css";
 /** The file types the picker accepts. Matches the upload pipeline. */
 const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp,image/gif";
 
+/** The house spring curve (`--ease`), as the cubic bezier motion expects. */
+const PHOTO_MOTION_EASE = [0.22, 0.68, 0.16, 1] as const;
+
+/** A tile or a status line settles in over this long; zero under reduced
+ *  motion, so it simply appears. */
+function photoTransition(isReducedMotion: boolean): Transition {
+  return { duration: isReducedMotion ? 0 : 0.26, ease: PHOTO_MOTION_EASE };
+}
+
 export interface ComposePhotoGridProps {
   /** The staged photos, in display order. */
   photos: readonly ComposePhoto[];
@@ -36,113 +41,62 @@ export interface ComposePhotoGridProps {
   onMove: (index: number, direction: -1 | 1) => void;
 }
 
-export function ComposePhotoGrid({
+export function ComposePhotoGrid(props: ComposePhotoGridProps) {
+  if (props.photos.length === 0) return null;
+  return <ComposePhotoGridList {...props} />;
+}
+
+/** The grid proper. Its own component so the height measurement starts when
+ *  the first photo lands, when there is a grid to measure. */
+function ComposePhotoGridList({
   photos,
   onAltChange,
   onRemove,
   onMove,
 }: ComposePhotoGridProps) {
   const { t } = useTranslation();
-  if (photos.length === 0) return null;
+  const { reducedMotion } = useMotionPrefs();
+  const { contentRef, contentHeight, isTransitionEnabled } =
+    useMeasuredContentHeight<HTMLUListElement>();
+  const keyedHandlers = useKeyedPhotoHandlers(photos, {
+    onAltChange,
+    onRemove,
+    onMove,
+  });
 
+  // A new tile scales up into its cell, a removed one shrinks away while
+  // `popLayout` lifts it out of the grid, and `layout` glides the others into
+  // their new cells, which is also what a reorder looks like. The list is the
+  // `layoutRoot`, so the tiles glide only when a sibling comes, goes or swaps;
+  // a taller title above moves the whole grid in one piece. The frame
+  // carries the grid's measured height, so gaining or losing a row eases
+  // the content below into its new place.
   return (
-    <ul
-      className={styles.grid}
-      aria-label={t("forum:composePage.photo.gridLabel")}
+    <div
+      className={styles.gridFrame}
+      style={isTransitionEnabled ? { height: contentHeight ?? undefined } : {}}
     >
-      {photos.map((photo, index) => (
-        <ComposePhotoTile
-          key={photo.key}
-          photo={photo}
-          index={index}
-          total={photos.length}
-          onAltChange={onAltChange}
-          onRemove={onRemove}
-          onMove={onMove}
-        />
-      ))}
-    </ul>
-  );
-}
-
-/** One staged photo: the preview, its reorder/remove controls, its alt flag
- *  and the description field that clears the flag. */
-function ComposePhotoTile({
-  photo,
-  index,
-  total,
-  onAltChange,
-  onRemove,
-  onMove,
-}: {
-  photo: ComposePhoto;
-  index: number;
-  total: number;
-  onAltChange: (index: number, alt: string) => void;
-  onRemove: (index: number) => void;
-  onMove: (index: number, direction: -1 | 1) => void;
-}) {
-  const { t } = useTranslation();
-  const hasAlt = !!photo.alt.trim();
-  // 1-based, because every label naming this tile is read by a person.
-  const position = index + 1;
-  const labelValues = { position, total };
-
-  return (
-    <li className={styles.tile}>
-      {/* Decorative here: the description the member is writing sits directly
-          below, and repeating it as this preview's alt would read it twice. */}
-      <img className={styles.preview} src={photo.previewUrl} alt="" />
-      <span
-        className={[styles.flag, hasAlt && styles.flagDone]
-          .filter(Boolean)
-          .join(" ")}
+      <m.ul
+        ref={contentRef}
+        layout
+        layoutRoot
+        className={styles.grid}
+        aria-label={t("forum:composePage.photo.gridLabel")}
       >
-        {hasAlt && <FiCheck className={styles.flagIcon} aria-hidden />}
-        {hasAlt
-          ? t("forum:composePage.photo.altDone")
-          : t("forum:composePage.photo.altNeeded")}
-      </span>
-      <div className={styles.controls}>
-        <button
-          type="button"
-          className={styles.control}
-          disabled={index === 0}
-          aria-label={t("forum:composePage.photo.moveEarlier", labelValues)}
-          onClick={() => onMove(index, -1)}
-        >
-          <FiChevronLeft className={styles.controlIcon} aria-hidden />
-        </button>
-        <button
-          type="button"
-          className={styles.control}
-          disabled={index === total - 1}
-          aria-label={t("forum:composePage.photo.moveLater", labelValues)}
-          onClick={() => onMove(index, 1)}
-        >
-          <FiChevronRight className={styles.controlIcon} aria-hidden />
-        </button>
-        <button
-          type="button"
-          className={styles.control}
-          aria-label={t("forum:composePage.photo.remove", labelValues)}
-          onClick={() => onRemove(index)}
-        >
-          <FiX className={styles.controlIcon} aria-hidden />
-        </button>
-      </div>
-      <input
-        type="text"
-        className={[styles.alt, hasAlt && styles.altDone]
-          .filter(Boolean)
-          .join(" ")}
-        value={photo.alt}
-        maxLength={COMPOSE_ALT_MAX_LENGTH}
-        placeholder={t("forum:composePage.photo.altPlaceholder")}
-        aria-label={t("forum:composePage.photo.altLabel", labelValues)}
-        onChange={(event) => onAltChange(index, event.target.value)}
-      />
-    </li>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {photos.map((photo, index) => (
+            <ComposePhotoTile
+              key={photo.key}
+              photo={photo}
+              index={index}
+              total={photos.length}
+              transition={photoTransition(reducedMotion)}
+              {...keyedHandlers}
+            />
+          ))}
+        </AnimatePresence>
+      </m.ul>
+    </div>
   );
 }
 
@@ -176,6 +130,15 @@ export function ComposePhotoAttach({
   error,
 }: ComposePhotoAttachProps) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  // Each status line fades in beside the button and out again; `popLayout`
+  // lets "uploading" and "limit reached" cross-fade in the same spot.
+  const statusMotion = {
+    initial: { opacity: 0, x: -4 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -4 },
+    transition: photoTransition(reducedMotion),
+  };
 
   function handlePick(event: ChangeEvent<HTMLInputElement>) {
     onAddFiles(event.target.files);
@@ -202,21 +165,33 @@ export function ComposePhotoAttach({
         aria-label={t("forum:composePage.photo.inputLabel")}
         onChange={handlePick}
       />
-      {isUploading && (
-        <span className={styles.attachNote} aria-live="polite">
-          {t("forum:composePage.photo.uploading")}
-        </span>
-      )}
-      {hasReachedLimit && !isUploading && (
-        <span className={styles.attachNote}>
-          {t("forum:composePage.photo.limitReached")}
-        </span>
-      )}
-      {error && (
-        <span className={styles.attachError} role="alert">
-          {error}
-        </span>
-      )}
+      <AnimatePresence mode="popLayout" initial={false}>
+        {isUploading && (
+          <m.span
+            key="uploading"
+            className={styles.attachNote}
+            aria-live="polite"
+            {...statusMotion}
+          >
+            {t("forum:composePage.photo.uploading")}
+          </m.span>
+        )}
+        {hasReachedLimit && !isUploading && (
+          <m.span key="limit" className={styles.attachNote} {...statusMotion}>
+            {t("forum:composePage.photo.limitReached")}
+          </m.span>
+        )}
+        {error && (
+          <m.span
+            key="error"
+            className={styles.attachError}
+            role="alert"
+            {...statusMotion}
+          >
+            {error}
+          </m.span>
+        )}
+      </AnimatePresence>
     </span>
   );
 }

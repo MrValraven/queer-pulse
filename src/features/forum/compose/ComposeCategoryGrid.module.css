@@ -94,8 +94,14 @@
   text-align: start;
   cursor: pointer;
   transition:
-    background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.card:active {
+  transform: scale(0.97);
 }
 
 .cardTitle {
@@ -105,6 +111,7 @@
   font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
+  transition: color var(--dur-base) var(--ease);
 }
 
 .cardIcon {
@@ -117,6 +124,7 @@
   font-size: var(--text-12);
   color: var(--ink-60);
   line-height: 1.35;
+  transition: color var(--dur-base) var(--ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -163,24 +171,6 @@
   /* Decorative and never a focus target: the pointer passes straight through
      it, so it can never sit between the cursor and a card. */
   pointer-events: none;
-  animation: popoverIn var(--dur-fast) var(--ease) both;
-}
-
-@keyframes popoverIn {
-  from {
-    opacity: 0;
-    transform: translateY(-3px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .popover {
-    animation: none;
-  }
 }
 
 /* A touch screen has no hover, and a popover that only ever appears under a

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
+import { RevealList, RevealPop } from "./TherapistReveal";
 import styles from "./therapistShared.module.css";
 
 export type TherapistChipTone = "plain" | "hi" | "sm";
@@ -18,6 +19,9 @@ interface TherapistChipProps {
   children: ReactNode;
 }
 
+/** One chip. Inside a `TherapistChipRow` (or any `RevealList`) a chip added
+ *  by an edit pops in and a removed one pops out, as the editor's chips do;
+ *  key it with `occurrenceKeys`. Anywhere else it renders still. */
 export function TherapistChip({
   tone = "plain",
   hasCheck = false,
@@ -25,10 +29,10 @@ export function TherapistChip({
 }: TherapistChipProps) {
   const className = [styles.chip, TONE_CLASS[tone]].filter(Boolean).join(" ");
   return (
-    <span className={className}>
+    <RevealPop className={className}>
       {hasCheck && <FiCheck className={styles.chipIcon} aria-hidden="true" />}
       {children}
-    </span>
+    </RevealPop>
   );
 }
 
@@ -38,11 +42,16 @@ interface TherapistChipRowProps {
   className?: string;
 }
 
-/** Wrapping row of chips. */
+/** Wrapping row of chips. Its children sit in a `RevealList`, so each chip
+ *  must be a keyed direct child (an unkeyed trailing edit link is fine). */
 export function TherapistChipRow({
   children,
   className,
 }: TherapistChipRowProps) {
   const rowClassName = [styles.chipRow, className].filter(Boolean).join(" ");
-  return <div className={rowClassName}>{children}</div>;
+  return (
+    <div className={rowClassName}>
+      <RevealList>{children}</RevealList>
+    </div>
+  );
 }

@@ -43,8 +43,8 @@ export function PracticeFirstSession({
     <div className="firstsession">
       <h2>{t("subprofiles:skinExtras.practice.firstSessionTitle")}</h2>
       <ol>
-        {steps.map((step) => (
-          <li key={`${step.title}|${step.body}`}>
+        {steps.map((step, index) => (
+          <li key={`${index}-${step.title}`}>
             <b>{step.title}</b>
             <p>{step.body}</p>
           </li>
@@ -65,8 +65,8 @@ export function PracticeAccess({ persona }: { persona: SkinExtrasPersona }) {
     <div className="access">
       <h2>{t("subprofiles:skinExtras.practice.accessTitle")}</h2>
       <ul>
-        {access.map((line) => (
-          <li key={line}>
+        {access.map((line, index) => (
+          <li key={`${index}-${line}`}>
             <FiCheck aria-hidden />
             {line}
           </li>
@@ -78,14 +78,13 @@ export function PracticeAccess({ persona }: { persona: SkinExtrasPersona }) {
 
 /**
  * The practice skin's foot fixture: referred-by credits (`skinData.
- * referrals`) plus a fixed "we don't collect public testimonials" note — a
- * deliberate professional-boundary choice, not a placeholder. Unlike the
- * other blocks here, this ALWAYS renders content for a practice persona (it
- * isn't part of the `SubprofileSkinExtras` slot switch): the page's foot
- * swaps it in for endorsers on `skin==="practice"` — see
- * `phase1-design/structure-notes.md`'s page tree — so the disclaimer must
- * show even with zero referrals. Rendered directly by the foot (Task 5), not
- * dispatched through the slot switch.
+ * referrals`) plus a fixed "we don't collect public testimonials" note, a
+ * deliberate professional-boundary choice. Unlike the other blocks here,
+ * this ALWAYS renders content for a practice persona (it isn't part of the
+ * `SubprofileSkinExtras` slot switch): the page's foot swaps it in for
+ * endorsers on `skin==="practice"` (see `phase1-design/structure-notes.md`'s
+ * page tree), so the disclaimer must show even with zero referrals. The foot
+ * renders it directly (Task 5), outside the slot switch.
  */
 export function PracticeReferrals({ persona }: { persona: SkinExtrasPersona }) {
   const { t } = useTranslation();
@@ -93,8 +92,8 @@ export function PracticeReferrals({ persona }: { persona: SkinExtrasPersona }) {
 
   return (
     <div className="referrals">
-      {referrals.map((referral) => (
-        <div className="ref" key={`${referral.name}|${referral.note}`}>
+      {referrals.map((referral, index) => (
+        <div className="ref" key={`${index}-${referral.name}`}>
           <b>{referral.name}</b>
           <small>{referral.note}</small>
         </div>

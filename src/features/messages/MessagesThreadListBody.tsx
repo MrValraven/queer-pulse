@@ -1,6 +1,6 @@
 import { FiMessageCircle } from "react-icons/fi";
 import type { MailboxSummary } from "../../shared/api/mailboxViewer";
-import { EmptyState, FadeIn, LoadErrorState } from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InboxLoadErrorStrip } from "./InboxLoadErrorStrip";
 import { mailboxDisplayName } from "./mailboxes/mailboxLabels";
@@ -199,13 +199,8 @@ export function MessagesThreadListBody({
           screen reader inside actual `ul`/`li` semantics. */}
       {!loading && !searching && visibleThreads.length > 0 && (
         <ul className={styles.threadRowList}>
-          {visibleThreads.map((thread, index) => (
-            <FadeIn
-              as="li"
-              key={thread.id}
-              delay={Math.min(index, 8) * 60}
-              className={styles.threadRowFade}
-            >
+          {visibleThreads.map((thread) => (
+            <li key={thread.id} className={styles.threadRowFade}>
               <MessagesThreadRow
                 thread={thread}
                 activeId={activeId}
@@ -216,7 +211,7 @@ export function MessagesThreadListBody({
                 onMarkThreadRead={onMarkThreadRead}
                 onMarkThreadUnread={onMarkThreadUnread}
               />
-            </FadeIn>
+            </li>
           ))}
         </ul>
       )}

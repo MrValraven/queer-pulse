@@ -10,6 +10,8 @@ import type { SocialLinkDTO } from "../../api/subprofiles.api";
 import type { PersonaViewMode } from "../../personaSkinRender";
 import { TherapistEditLink } from "./TherapistEditLink";
 import type { TherapistEditTarget } from "./therapistEditLinks.data";
+import { RevealBlock, RevealList, RevealListItem } from "./TherapistReveal";
+import { occurrenceKeys } from "./revealKeys";
 import sidebarStyles from "./TherapistSidebar.module.css";
 import styles from "./TherapistSocialLinks.module.css";
 
@@ -17,6 +19,9 @@ const SOCIAL_EDIT: TherapistEditTarget = {
   pane: "presence",
   field: "socialLinks",
 };
+
+/** The sidebar's flex gap (TherapistSidebar.module.css `.sidebar`). */
+const SIDEBAR_GAP = 16;
 
 interface TherapistSocialLinksProps {
   links: SocialLinkDTO[];
@@ -67,7 +72,9 @@ function SocialLinkRow({
  * `visitor`, `owner` and `preview` show the same rows as plain text, and a
  * value that cannot be a link (a Mastodon address) always reads as text.
  * Renders nothing without links, except for the owner, who gets a quiet
- * "Add your links" edit link instead.
+ * "Add your links" edit link instead. The card grows in with its first link
+ * and folds away with its last, and a link added or removed in between
+ * grows or folds its row.
  */
 export function TherapistSocialLinks({
   links,
@@ -78,35 +85,40 @@ export function TherapistSocialLinks({
   const headingId = useId();
   const items = links.filter((link) => link.urlOrHandle.trim());
   const isOwner = mode === "owner";
-  if (items.length === 0 && !isOwner) return null;
+  // Keyed by platform alone, so a handle edit keeps its row in place.
+  const linkKeys = occurrenceKeys(items.map((link) => link.platform));
 
   return (
-    <section className={sidebarStyles.card} aria-labelledby={headingId}>
-      <div className={sidebarStyles.headRow}>
-        <h2 id={headingId} className={sidebarStyles.label}>
-          {t("subprofiles:therapist.side.social.label", { name })}
-        </h2>
-        {items.length > 0 && (
+    <RevealBlock isShown={items.length > 0 || isOwner} parentGap={SIDEBAR_GAP}>
+      <section className={sidebarStyles.card} aria-labelledby={headingId}>
+        <div className={sidebarStyles.headRow}>
+          <h2 id={headingId} className={sidebarStyles.label}>
+            {t("subprofiles:therapist.side.social.label", { name })}
+          </h2>
+          {items.length > 0 && (
+            <TherapistEditLink
+              target={SOCIAL_EDIT}
+              ariaLabel={t("subprofiles:therapist.side.edit.socialLinks")}
+            />
+          )}
+        </div>
+        {items.length > 0 ? (
+          <ul className={styles.list}>
+            <RevealList>
+              {items.map((link, index) => (
+                <RevealListItem key={linkKeys[index]}>
+                  <SocialLinkRow link={link} isLive={mode === "public"} />
+                </RevealListItem>
+              ))}
+            </RevealList>
+          </ul>
+        ) : (
           <TherapistEditLink
             target={SOCIAL_EDIT}
-            ariaLabel={t("subprofiles:therapist.side.edit.socialLinks")}
+            label={t("subprofiles:therapist.side.social.add")}
           />
         )}
-      </div>
-      {items.length > 0 ? (
-        <ul className={styles.list}>
-          {items.map((link, index) => (
-            <li key={`${link.platform}-${index}`}>
-              <SocialLinkRow link={link} isLive={mode === "public"} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <TherapistEditLink
-          target={SOCIAL_EDIT}
-          label={t("subprofiles:therapist.side.social.add")}
-        />
-      )}
-    </section>
+      </section>
+    </RevealBlock>
   );
 }

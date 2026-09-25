@@ -1,5 +1,6 @@
 import { useId } from "react";
 import {
+  Collapse,
   FilterChips,
   SegmentedControl,
   Select,
@@ -9,8 +10,10 @@ import {
   CLOSE_AFTER_CATEGORIES,
   NEIGHBOURHOOD_CATEGORIES,
 } from "./composeCategories.data";
+import { detectLanguage } from "./composeDetectLanguage";
 import { NEIGHBOURHOODS } from "./composeNeighbourhoods.data";
 import type { CloseAfter, PostLanguage } from "./composeThread.types";
+import { ComposeSwapText } from "./ComposeSwapText";
 import styles from "./ComposeDetailsSection.module.css";
 
 // ── The optional details ────────────────────────────────────────────────────
@@ -23,6 +26,10 @@ import styles from "./ComposeDetailsSection.module.css";
 // in `useComposeThreadState` drops the fields its new category does not offer,
 // on the one write path that can invalidate them. This file only decides what
 // to draw.
+//
+// Every one of those appearances goes through `Collapse`: the section and each
+// row open and close with a height and fade, because they come and go as the
+// member types and picks a category, and a jump there moves the whole column.
 
 /** The three language choices offered. `auto` is the fourth state and is what
  *  "none of these is pressed" means. */
@@ -82,7 +89,7 @@ export function ComposeDetailsSection({
     !!category && NEIGHBOURHOOD_CATEGORIES.includes(category);
   const showsCloseAfter =
     hasPoll || (!!category && CLOSE_AFTER_CATEGORIES.includes(category));
-  if (!showsLanguage && !showsNeighbourhood && !showsCloseAfter) return null;
+  const showsSection = showsLanguage || showsNeighbourhood || showsCloseAfter;
 
   const detected = language === "auto" ? detectLanguage(body) : null;
   const closeAfterChoices = hasPoll
@@ -90,118 +97,99 @@ export function ComposeDetailsSection({
     : CLOSE_AFTER_CHOICES;
 
   return (
-    <section className={styles.section} aria-labelledby={headingId}>
-      <div className={styles.head}>
-        <h2 id={headingId} className={styles.title}>
-          {t("forum:composePage.section.details.title")}
-        </h2>
-        <span className={styles.optional}>
-          {t("forum:composePage.section.optional")}
-        </span>
-        <p className={styles.hint}>
-          {t("forum:composePage.section.details.hint")}
-        </p>
-      </div>
-
-      {showsLanguage && (
-        <div className={styles.row}>
-          <span id={languageLabelId} className={styles.rowLabel}>
-            {t("forum:composePage.details.language")}
+    <Collapse isOpen={showsSection}>
+      <section className={styles.section} aria-labelledby={headingId}>
+        <div className={styles.head}>
+          <h2 id={headingId} className={styles.title}>
+            {t("forum:composePage.section.details.title")}
+          </h2>
+          <span className={styles.optional}>
+            {t("forum:composePage.section.optional")}
           </span>
-          <SegmentedControl
-            options={LANGUAGE_CHOICES.map((choice) => ({
-              value: choice,
-              label: t(`forum:composePage.details.language.${choice}`),
-            }))}
-            value={language}
-            // Pressing the chosen one again hands the decision back to the
-            // page, which is the escape hatch a three-way control with a
-            // hidden fourth state needs.
-            onChange={(value) =>
-              onChangeLanguage(
-                value === language ? "auto" : (value as PostLanguage),
-              )
-            }
-            label={t("forum:composePage.details.language")}
-          />
-          {detected && (
-            <span className={styles.rowHint}>
-              {t("forum:composePage.details.languageDetected", {
-                language: t(`forum:composePage.details.language.${detected}`),
-              })}
+          <p className={styles.hint}>
+            {t("forum:composePage.section.details.hint")}
+          </p>
+        </div>
+
+        <Collapse isOpen={showsLanguage}>
+          <div className={styles.row}>
+            <span id={languageLabelId} className={styles.rowLabel}>
+              {t("forum:composePage.details.language")}
             </span>
-          )}
-        </div>
-      )}
+            <SegmentedControl
+              options={LANGUAGE_CHOICES.map((choice) => ({
+                value: choice,
+                label: t(`forum:composePage.details.language.${choice}`),
+              }))}
+              value={language}
+              // Pressing the chosen one again hands the decision back to the
+              // page, which is the escape hatch a three-way control with a
+              // hidden fourth state needs.
+              onChange={(value) =>
+                onChangeLanguage(
+                  value === language ? "auto" : (value as PostLanguage),
+                )
+              }
+              label={t("forum:composePage.details.language")}
+            />
+            <ComposeSwapText
+              swapKey={detected ?? ""}
+              className={styles.rowHint}
+            >
+              {detected &&
+                t("forum:composePage.details.languageDetected", {
+                  language: t(`forum:composePage.details.language.${detected}`),
+                })}
+            </ComposeSwapText>
+          </div>
+        </Collapse>
 
-      {showsNeighbourhood && (
-        <div className={styles.row}>
-          <span id={neighbourhoodLabelId} className={styles.rowLabel}>
-            {t("forum:composePage.details.neighbourhood")}
-          </span>
-          <FilterChips
-            options={NEIGHBOURHOODS.map((place) => ({
-              value: place.id,
-              label:
-                place.name ?? (place.labelKey ? t(place.labelKey) : place.id),
-            }))}
-            value={neighbourhood ?? ""}
-            onChange={(value) =>
-              onChangeNeighbourhood(value === neighbourhood ? null : value)
-            }
-            labelledBy={neighbourhoodLabelId}
-          />
-          <span className={styles.rowNote}>
-            {t("forum:composePage.details.neighbourhoodHint")}
-          </span>
-        </div>
-      )}
+        <Collapse isOpen={showsNeighbourhood}>
+          <div className={styles.row}>
+            <span id={neighbourhoodLabelId} className={styles.rowLabel}>
+              {t("forum:composePage.details.neighbourhood")}
+            </span>
+            <FilterChips
+              options={NEIGHBOURHOODS.map((place) => ({
+                value: place.id,
+                label:
+                  place.name ?? (place.labelKey ? t(place.labelKey) : place.id),
+              }))}
+              value={neighbourhood ?? ""}
+              onChange={(value) =>
+                onChangeNeighbourhood(value === neighbourhood ? null : value)
+              }
+              labelledBy={neighbourhoodLabelId}
+            />
+            <span className={styles.rowNote}>
+              {t("forum:composePage.details.neighbourhoodHint")}
+            </span>
+          </div>
+        </Collapse>
 
-      {showsCloseAfter && (
-        <div className={styles.row}>
-          <span id={closeAfterLabelId} className={styles.rowLabel}>
-            {t("forum:composePage.details.closeAfter")}
-          </span>
-          <Select
-            size="sm"
-            labelledBy={closeAfterLabelId}
-            value={closeAfter}
-            onChange={(value) =>
-              onChangeCloseAfter((value as CloseAfter | null) ?? "never")
-            }
-            options={closeAfterChoices.map((choice) => ({
-              value: choice,
-              label: t(`forum:composePage.closeAfter.${choice}`),
-            }))}
-          />
-          <span className={styles.rowNote}>
-            {t("forum:composePage.details.closeAfterHint")}
-          </span>
-        </div>
-      )}
-    </section>
+        <Collapse isOpen={showsCloseAfter}>
+          <div className={styles.row}>
+            <span id={closeAfterLabelId} className={styles.rowLabel}>
+              {t("forum:composePage.details.closeAfter")}
+            </span>
+            <Select
+              size="sm"
+              labelledBy={closeAfterLabelId}
+              value={closeAfter}
+              onChange={(value) =>
+                onChangeCloseAfter((value as CloseAfter | null) ?? "never")
+              }
+              options={closeAfterChoices.map((choice) => ({
+                value: choice,
+                label: t(`forum:composePage.closeAfter.${choice}`),
+              }))}
+            />
+            <span className={styles.rowNote}>
+              {t("forum:composePage.details.closeAfterHint")}
+            </span>
+          </div>
+        </Collapse>
+      </section>
+    </Collapse>
   );
-}
-
-/**
- * Which language the draft reads as, or null when it is too short or too even
- * to call.
- *
- * Two word lists rather than a library: they are the prototype's, tuned across
- * the two languages this community actually writes in, and the answer only
- * feeds a hint the member can overrule with one tap. A tie returns null, so
- * the hint stays quiet on a post that really is written in both.
- */
-const PORTUGUESE_WORDS =
-  /\b(que|não|uma|para|com|é|está|também|alguém|onde|quando|porque|obrigad[oa]|sim|muito|aqui|isso|isto|já|vou|tenho|preciso|procuro|casa|quarto)\b/gi;
-const ENGLISH_WORDS =
-  /\b(the|and|for|with|that|this|have|anyone|looking|need|know|where|when|because|thanks|room|flat|does|would)\b/gi;
-
-function detectLanguage(body: string): "pt" | "en" | null {
-  // `String.match` with a global regex resets `lastIndex` itself, so these two
-  // module-level regexes are safe to reuse across calls.
-  const portugueseHits = body.match(PORTUGUESE_WORDS)?.length ?? 0;
-  const englishHits = body.match(ENGLISH_WORDS)?.length ?? 0;
-  if (portugueseHits === englishHits) return null;
-  return portugueseHits > englishHits ? "pt" : "en";
 }

@@ -2,7 +2,12 @@ import { FiAlertTriangle, FiChevronLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
-import { Badge, EmptyState, Spinner } from "../../shared/components/ui";
+import {
+  Badge,
+  EmptyState,
+  Spinner,
+  Tooltip,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { useSubprofile } from "./api/useSubprofile";
@@ -94,20 +99,29 @@ export function SubprofileEditorPage() {
   }
 
   const status = STATUS_BADGE[subprofile.status];
+  const backLabel = t("subprofiles:editorRail.backLink");
 
   return (
     <AppShell>
       <div className={styles.page}>
-        <div className="wrap">
+        <div className={`wrap ${styles.wideWrap}`}>
           <div className={styles.container}>
             <div className={styles.header}>
-              {/* Leads the title row at every width. It is the editor's only
-                  way back to the dashboard: the rail has no back link, so
-                  collapsing the rail cannot hide it. */}
-              <Link to={DASHBOARD} className={styles.backLink}>
-                <FiChevronLeft size={16} aria-hidden />
-                {t("subprofiles:editorRail.backLink")}
-              </Link>
+              {/* A round button beside the title at every width, hung in the
+                  page gutter on wide screens so the title lines up with the
+                  rail. It is the editor's only way back to the dashboard: the
+                  rail has no back link, so collapsing the rail cannot hide it. */}
+              <span className={styles.backSlot}>
+                <Tooltip label={backLabel} placement="bottom">
+                  <Link
+                    to={DASHBOARD}
+                    className={styles.backButton}
+                    aria-label={backLabel}
+                  >
+                    <FiChevronLeft size={18} aria-hidden />
+                  </Link>
+                </Tooltip>
+              </span>
               <h1 className={styles.headTitle}>
                 {subprofile.displayName || t("subprofiles:mine.untitled")}
               </h1>

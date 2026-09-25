@@ -3,7 +3,10 @@ import { routes } from "../../../app/routeMap";
 import { Button } from "../../../shared/components/ui";
 import type { Language } from "../../../shared/i18n/types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { appOrigin } from "../../../shared/lib/inviteUrl";
 import { AdminModal } from "../ui";
+import { useEmailDesignVariant } from "./emailDesignVariant";
+import { fillPlaceholders } from "./emailInlineMarkup";
 import type { EmailTemplateAdminDTO } from "./emailTemplate.types";
 import { sampleValuesFor } from "./emailTemplatePurposes";
 import { EmailPreviewFrame } from "./editor/EmailPreviewFrame";
@@ -34,14 +37,24 @@ export function AdminEmailTemplatePreviewModal({
     locale === "pt" && template.locales.pt
       ? template.locales.pt
       : template.locales.en;
+  const sampleValues = useMemo(() => sampleValuesFor(locale), [locale]);
+  const { variant } = useEmailDesignVariant();
   const renderedEmail = useMemo(
-    () => renderEmail(content, sampleValuesFor(locale), locale),
-    [content, locale],
+    () =>
+      renderEmail(content, sampleValues, locale, {
+        design: variant,
+        assetOrigin: appOrigin(),
+      }),
+    [content, sampleValues, locale, variant],
   );
+  const previewPreheader =
+    content.mode === "blocks"
+      ? fillPlaceholders(content.preheader ?? "", sampleValues, false)
+      : "";
 
   return (
     <AdminModal
-      wide
+      isFullSize
       title={template.label}
       onClose={onClose}
       footer={
@@ -58,24 +71,29 @@ export function AdminEmailTemplatePreviewModal({
         </>
       }
     >
-      <div className={styles.pane}>
-        {hasPortuguese && (
-          <EmailTemplateLocaleTabs
-            active={locale}
-            onChange={setLocale}
-            isLocaleDirty={() => false}
-          />
-        )}
-        <div className={styles.metaGroup}>
-          <span className={styles.metaGroupLabel}>
-            {t("admin:emailTemplates.editor.subjectField")}
-          </span>
-          <span className={styles.previewSubject}>{renderedEmail.subject}</span>
-        </div>
+      <div className={`${styles.pane} ${styles.previewModalPane}`}>
         <p className={styles.previewNote}>
           {t("admin:emailTemplates.preview.sampleNote")}
         </p>
-        <EmailPreviewFrame html={renderedEmail.html} />
+        <div className={styles.previewModalFrame}>
+          <EmailPreviewFrame
+            html={renderedEmail.html}
+            subject={renderedEmail.subject}
+            preheader={previewPreheader}
+            recipientName={sampleValues.name ?? ""}
+            shouldFillHeight
+            headerAside={
+              hasPortuguese && (
+                <EmailTemplateLocaleTabs
+                  active={locale}
+                  onChange={setLocale}
+                  isLocaleDirty={() => false}
+                  isLabelHidden
+                />
+              )
+            }
+          />
+        </div>
       </div>
     </AdminModal>
   );

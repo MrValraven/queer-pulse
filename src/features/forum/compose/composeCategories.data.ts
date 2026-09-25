@@ -69,6 +69,26 @@ const CATEGORY_DETAILS: Record<string, ComposeCategoryDetail> = {
     keyword:
       /\b(trans|hrt|name change|non-binary|nonbinary|gender|binder|género)/i,
   },
+  meetups: {
+    descriptionKey: "forum:composePage.category.meetups.description",
+    keyword:
+      /\b(hello|new here|just moved|intro|meet ?up|anyone going|who's going|coffee|olá|alguém vai|convívio)/i,
+  },
+  legal: {
+    descriptionKey: "forum:composePage.category.legal.description",
+    keyword:
+      /\b(visa|residen|permit|aima|nif|lawyer|legal|asylum|immigra|migra|passport|advogad|visto|autorização)/i,
+  },
+  relationships: {
+    descriptionKey: "forum:composePage.category.relationships.description",
+    keyword:
+      /\b(dating|partner|boyfriend|girlfriend|relationship|breakup|break up|polyam|namor|family|parent|friendship)/i,
+  },
+  platform: {
+    descriptionKey: "forum:composePage.category.platform.description",
+    keyword:
+      /\b(bug|feature request|feedback|the app|the site|login|password|notification|moderation|erro|sugestão)/i,
+  },
 };
 
 /**
@@ -131,17 +151,23 @@ export const TAG_SUGGESTIONS: Record<string, readonly string[]> = {
   guides: ["guide", "resources", "checklist"],
   jobs: ["jobs", "hiring", "freelance"],
   trans: ["trans", "healthcare", "legal", "hrt"],
+  meetups: ["welcome", "intros", "meetups", "lisbon"],
+  legal: ["legal", "migration", "rights"],
+  relationships: ["dating", "family", "parenting"],
+  platform: ["feedback", "help", "platform"],
 };
 
 /**
- * Where posting without a name is offered. These are the three categories
+ * Where posting without a name is offered. These are the five categories
  * where saying a true thing under your own name can cost a member their
- * housing, their healthcare or their safety.
+ * housing, their healthcare, their residency status or their safety.
  */
 export const ANONYMOUS_CATEGORIES: readonly string[] = [
   "health",
   "housing",
   "trans",
+  "legal",
+  "relationships",
 ];
 
 /** Where a neighbourhood is worth asking for: the answer changes by area. */
@@ -149,6 +175,7 @@ export const NEIGHBOURHOOD_CATEGORIES: readonly string[] = [
   "housing",
   "jobs",
   "arts",
+  "meetups",
 ];
 
 /**

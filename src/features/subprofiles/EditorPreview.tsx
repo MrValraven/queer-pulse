@@ -49,8 +49,10 @@ const KINDS_WITH_OWN_LAYOUT: ReadonlySet<SubprofileKind> =
  * local state) still comes straight from the saved `subprofile` and only
  * refreshes after those panels save.
  *
- * The frame lays the page out at the chosen device's real width and zooms it
+ * The page lays itself out at the chosen device's real width and is zoomed
  * down to the dock (`usePreviewFit`), so Desktop shows the true laptop layout.
+ * It sits in a card (the frame) that hugs it, and on a device switch the card
+ * morphs between the phone's and the laptop's outline.
  * The Mobile / Desktop switch shows only when the viewport has room for the
  * wider Desktop dock (`canPreviewDesktop`, decided by the shell).
  */
@@ -66,7 +68,7 @@ export function EditorPreview({
   onDeviceChange: (device: PreviewDevice) => void;
 }) {
   const { t } = useTranslation();
-  const { scrollRef, frameRef } = usePreviewFit(device);
+  const { scrollRef, frameRef, pageRef } = usePreviewFit(device);
   const { profile } = useProfileData();
   // The meta-editor state lives in the shared editor context now, so the docked
   // preview reads the same in-progress fields the panes write.
@@ -166,22 +168,25 @@ export function EditorPreview({
         )}
       </div>
       <div className="ed-prev-scroll" ref={scrollRef}>
-        {/* `usePreviewFit` writes the frame's layout width and `zoom` onto
-            the element itself and stamps the device swap's phase on the
-            scroller, so the fade, the glide and the width change of a
-            Mobile / Desktop switch add no render of the page tree. */}
+        {/* `usePreviewFit` writes the page's layout width and `zoom` onto
+            `.ed-prev-page`, morphs the card's width during a device swap,
+            and stamps the swap's phase on the scroller, so the fade, the
+            morph and the width change of a Mobile / Desktop switch add no
+            render of the page tree. */}
         <div ref={frameRef} className="ed-prev-frame">
-          <SubprofilePageBody
-            data={data}
-            skin={skin}
-            mode={PREVIEW_MODE}
-            skinVars={skinStyle}
-            onAction={noop}
-            onOpenWorkAt={noop}
-            onOpenWorkItem={noop}
-            onOpenGalleryPhoto={noop}
-            onOpenPoem={noop}
-          />
+          <div ref={pageRef} className="ed-prev-page">
+            <SubprofilePageBody
+              data={data}
+              skin={skin}
+              mode={PREVIEW_MODE}
+              skinVars={skinStyle}
+              onAction={noop}
+              onOpenWorkAt={noop}
+              onOpenWorkItem={noop}
+              onOpenGalleryPhoto={noop}
+              onOpenPoem={noop}
+            />
+          </div>
         </div>
       </div>
     </>

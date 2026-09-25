@@ -6,6 +6,7 @@ import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { DirectoryCardAccess } from "./DirectoryCardAccess";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
 import { categoryLabel } from "./localCategories";
+import { listingTagLabel } from "./listBusiness/listingTags.data";
 import {
   openStatus,
   operatingStateOf,
@@ -37,7 +38,10 @@ function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
 
   if (operatingState !== "open") {
     return (
-      <span className={`${s.status} ${s.statusFlag}`}>
+      <span
+        className={`${s.status} ${s.statusFlag}`}
+        data-preview-region="status"
+      >
         <span className={s.statusDot} />
         {t(`marketing:directory.card.state.${operatingState}`)}
       </span>
@@ -53,7 +57,7 @@ function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
 
   if (status.state === "closed") {
     return (
-      <span className={s.status}>
+      <span className={s.status} data-preview-region="status">
         <span className={s.statusDot} />
         {t("marketing:directory.card.closedNow")}
       </span>
@@ -65,7 +69,7 @@ function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
   const closesAt = status.closesAt;
   const isClosingSoon = status.isClosingSoon && closesAt !== null;
   return (
-    <span className={s.status}>
+    <span className={s.status} data-preview-region="status">
       <span
         className={`${s.statusDot} ${isClosingSoon ? s.statusClosingSoon : s.statusOpen}`}
       />
@@ -100,7 +104,7 @@ function DirectoryCardBadges({ place }: { place: DirectoryPlace }) {
 
   return (
     <span className={s.photoBadges}>
-      <span className={s.photoBadgeDark}>
+      <span className={s.photoBadgeDark} data-preview-region="badge">
         {ownership === "verified" && (
           <FiCheck className={s.photoBadgeCheck} aria-hidden />
         )}
@@ -157,9 +161,12 @@ export function LocalBusinessCardBody({
 }) {
   const { t } = useTranslation();
 
+  // The `data-preview-region` attributes exist for the listing editor's live
+  // preview highlight (see listBusiness/preview/listingPreviewRegions.data.ts).
+  // "chrome" marks the parts no field fills, so they dim with the rest.
   return (
     <>
-      <div className={s.photoWrap}>
+      <div className={s.photoWrap} data-preview-region="photo">
         <ImageSlot
           src={place.photos?.wide ?? undefined}
           alt={place.alt?.wide ?? place.name}
@@ -187,6 +194,7 @@ export function LocalBusinessCardBody({
                 { name: place.name },
               )}
               className={`${s.saveBtn} ${saveControl.saved ? s.saveBtnOn : ""}`}
+              data-preview-region="chrome"
               onClick={saveControl.onSave}
               onKeyDown={(event) =>
                 activateOnKey(event, () => saveControl.onSave(event))
@@ -198,7 +206,11 @@ export function LocalBusinessCardBody({
               />
             </span>
           ) : (
-            <span className={s.saveBtn} aria-hidden>
+            <span
+              className={s.saveBtn}
+              aria-hidden
+              data-preview-region="chrome"
+            >
               <FiBookmark aria-hidden fill="none" />
             </span>
           ))}
@@ -207,25 +219,29 @@ export function LocalBusinessCardBody({
       </div>
 
       <div className={s.nameRow}>
-        <div className={s.name}>{place.name}</div>
+        <div className={s.name} data-preview-region="name">
+          {place.name}
+        </div>
         {showRating && (
-          <div className={s.rating}>
+          <div className={s.rating} data-preview-region="chrome">
             <Stars value={Number(place.rating.score)} size={12} />
             <span>({place.rating.count})</span>
           </div>
         )}
       </div>
-      <div className={s.metaRow}>
+      <div className={s.metaRow} data-preview-region="meta">
         <span className={s.catPill}>{categoryLabel(t, place.cat)}</span>
         <span className={s.hoodText}>
           {place.online ? t("marketing:directory.card.online") : place.hood}
         </span>
       </div>
-      <div className={s.desc}>{place.desc}</div>
-      <div className={s.pillsRow}>
+      <div className={s.desc} data-preview-region="desc">
+        {place.desc}
+      </div>
+      <div className={s.pillsRow} data-preview-region="pills">
         {place.pills.slice(0, 3).map((pill) => (
           <span key={pill} className={s.pill}>
-            {pill}
+            {listingTagLabel(t, pill)}
           </span>
         ))}
         {place.member && (
@@ -242,7 +258,7 @@ export function LocalBusinessCardBody({
             one beside it, which read as a person the card was refusing to
             name. */}
         {showHost && place.owner.first !== "" && (
-          <span className={s.host}>
+          <span className={s.host} data-preview-region="host">
             {/* The member's real photo when they have one and chose to show
                 it (the server redacts it exactly as it redacts the name);
                 initials over their tint otherwise. No `name`/`alt`: their
@@ -258,7 +274,7 @@ export function LocalBusinessCardBody({
           </span>
         )}
         {visitSlot ?? (
-          <span className={s.visit}>
+          <span className={s.visit} data-preview-region="chrome">
             {t("marketing:directory.card.visit")} <FiArrowRight aria-hidden />
           </span>
         )}

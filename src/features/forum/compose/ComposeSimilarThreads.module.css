@@ -8,9 +8,26 @@
    would scan as a list of links; three breathing ones scan as three answers. */
 
 .block {
+  --slot-gap: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--slot-gap);
+}
+
+/* ── Slots: states and parts that come and go ─────────────────────────────
+   Each rides a Collapse. The parent's `gap` would snap in the frame a slot
+   mounts and out the frame it unmounts, so the slot cancels its own gap with
+   a negative margin and carries the same space as padding inside, where it
+   grows and folds with the height. --slot-gap says how big that gap is. */
+.slot {
+  margin-top: calc(-1 * var(--slot-gap));
+}
+
+.slotInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--slot-gap);
+  padding-top: var(--slot-gap);
 }
 
 .heading {
@@ -51,25 +68,33 @@
   padding: 4px 0;
 }
 
+/* Each item folds in the flow, so the space between rows is the item's own
+   top padding, where it grows and folds with the height. The list lifts by
+   the same amount so the first row sits where the slot puts it. */
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
+  --row-gap: 8px;
+  margin: calc(-1 * var(--row-gap)) 0 0;
   padding: 0;
   list-style: none;
 }
 
+.item {
+  padding-top: var(--row-gap);
+}
+
 .row {
+  --slot-gap: 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--slot-gap);
   padding: 12px 13px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-12);
   box-shadow: var(--shadow-e1);
-  transition: border-color var(--dur-base) var(--ease);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 
 /* The one that would be refused as a repeat. Outlined in accent AND labelled
@@ -177,7 +202,12 @@
   cursor: pointer;
   transition:
     border-color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease);
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.replyInstead:active {
+  transform: scale(0.97);
 }
 
 .replyInstead svg {

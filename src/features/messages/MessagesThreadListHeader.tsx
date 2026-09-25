@@ -37,7 +37,6 @@ export function MessagesThreadListHeader({
   mailboxes,
   activeMailbox,
   onSelectMailbox,
-  onOpenMailboxSettings,
 }: {
   query: string;
   onQueryChange: (value: string) => void;
@@ -62,9 +61,6 @@ export function MessagesThreadListHeader({
   /** The active mailbox, null until the mailboxes load. */
   activeMailbox: MailboxSummary | null;
   onSelectMailbox: (identityId: string) => void;
-  /** Opens a business, persona or company mailbox's settings from the
-   *  switcher's settings slot. */
-  onOpenMailboxSettings: (identityId: string) => void;
 }) {
   const { t } = useTranslation();
   const isBusinessMailbox = !!activeMailbox && activeMailbox.kind !== "profile";
@@ -74,8 +70,13 @@ export function MessagesThreadListHeader({
         <div className={styles.tpHeadLead}>
           {showBackButton && <MessagesBackButton />}
           <Link to={routes.feed} className={styles.tpBrand}>
-            {/* Decorative: the wordmark beside it already names the link. */}
-            <BrandMark state="compact" size={20} />
+            {/* Decorative: the wordmark beside it already names the link.
+                Hidden on narrow phones (see `.tpBrandMark`). */}
+            <BrandMark
+              state="compact"
+              size={20}
+              className={styles.tpBrandMark}
+            />
             <span className={styles.tpBrandName}>
               <Translation
                 i18nKey="shared:brand.wordmark"
@@ -87,7 +88,6 @@ export function MessagesThreadListHeader({
             mailboxes={mailboxes}
             active={activeMailbox}
             onSelect={onSelectMailbox}
-            onOpenSettings={onOpenMailboxSettings}
           />
         </div>
         {!isBusinessMailbox && (

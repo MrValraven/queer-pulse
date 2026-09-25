@@ -29,7 +29,7 @@ const MAX_QUESTION_LENGTH = 500;
  *
  * Member-gated, exactly like leaving a review and saving a listing: a
  * logged-out visitor reads every question and answer on the page and, on
- * opening the toggle, gets a sign-in route rather than the compose form.
+ * opening the toggle, gets a sign-in route to the compose form.
  *
  * A refusal is shown where the member is looking, in their own words where the
  * backend gave any: the throttle answers 429 with a plain quota reason (how

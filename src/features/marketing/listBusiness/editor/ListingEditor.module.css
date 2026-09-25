@@ -4,6 +4,12 @@
    travels with the reader.
    =========================================================================== */
 
+/* The column count follows the editor's OWN width through a container query:
+   the sidebar nav mode narrows the content without changing the viewport, so
+   a media query would squeeze three columns into a space that fits two. */
+.layoutFrame {
+  container: listing-editor / inline-size;
+}
 .layout {
   display: grid;
   grid-template-columns: 210px minmax(0, 1fr);
@@ -14,6 +20,50 @@
   .layout {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+}
+
+/* ── Live preview column ─────────────────────────────────────────────────
+   Hidden until the container query below makes room. It sits beside the
+   fields column, so the sticky save bar (inside `.main`) never overlaps it;
+   the bottom padding only keeps the full-preview button clear of the
+   viewport edge when the column scrolls on its own.
+   ────────────────────────────────────────────────────────────────────── */
+
+.livePreview {
+  display: none;
+  position: sticky;
+  /* 8px higher than the jump nav, which the 8px top padding gives back, so
+     the head line sits level with the nav's label both at rest and stuck. */
+  top: calc(var(--nav-band) + 4px);
+  max-height: calc(100dvh - var(--nav-band) - 16px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--line-rgb), 0.2) transparent;
+  /* `overflow-y: auto` clips on every side, and a focus ring reaches 6px past
+     its button (3px outline at 3px offset). The 8px padding keeps that ring
+     and the field outline inside the clip; the matching negative margin
+     cancels it, so the content still lines up with the 300px track and the
+     22px gap absorbs the overhang. The pinned caption bar
+     (`.captionBar[data-sticky]` in ListingLivePreview.module.css) offsets
+     itself by the same 8px, so change both together. */
+  padding: 8px 8px 24px;
+  margin: -8px -8px 0;
+}
+.livePreviewHead {
+  margin-top: 0;
+}
+/* Declared after both base rules so it overrides them. At 1120px of editor
+   width (a 1440px screen in sidebar nav mode) the fields column keeps 576px
+   beside the 200px jump nav and the 300px live preview, and the hours rows'
+   time inputs need about 570px to stay on one line. */
+@container listing-editor (min-width: 1120px) {
+  .layout {
+    grid-template-columns: 200px minmax(0, 1fr) 300px;
+    gap: var(--gap-grid);
+  }
+  .livePreview {
+    display: block;
   }
 }
 
@@ -91,6 +141,20 @@
   font-weight: 700;
   line-height: 1.636em;
   text-align: center;
+}
+
+/* In the three-column layout the rail is 200px, so its items give the label
+   4px more room, and the rare label that still does not fit (the co-manager's
+   "Role shown on the listing", or one beside a missing-count badge) wraps to
+   a second line where it would otherwise lose its end to the ellipsis.
+   Declared after the base rules above so it overrides them. */
+@container listing-editor (min-width: 1120px) {
+  .navItem {
+    padding-inline: 10px;
+  }
+  .navItemLabel {
+    white-space: normal;
+  }
 }
 
 /* On narrow screens the rail becomes a self-contained horizontal scroller
@@ -235,6 +299,12 @@
   overflow: hidden;
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--cream);
+}
+/* Pushes the footer's two buttons to the right edge, like the save bar. */
+.previewFootState {
+  margin-right: auto;
+  font-size: var(--text-13);
+  color: var(--ink-60);
 }
 
 /* ── Unsaved local copy ───────────────────────────────────────────────────

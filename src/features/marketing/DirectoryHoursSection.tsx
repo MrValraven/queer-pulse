@@ -130,7 +130,7 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
           override it, and the stamp saying who last vouched for any of it.
           Those three used to be a narrow table with two loose blocks trailing
           below it, which read as three unrelated things. */}
-      <div className={s.hoursCard}>
+      <div className={s.hoursCard} data-hours-card="">
         {isAppointmentOnly ? (
           <div className={s.apptNote}>
             <div className={s.featureIc}>

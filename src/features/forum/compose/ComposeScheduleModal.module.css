@@ -9,3 +9,16 @@
 .footSpacer {
   flex: 1 1 auto;
 }
+
+/* Schedule turns on and off as the chosen moment becomes valid or not, so it
+   fades smoothly between the two. This is <Button>'s own list plus
+   opacity; the doubled class out-specifies <Button>'s single one whichever
+   way the two stylesheets land in the bundle. */
+.confirmButton.confirmButton {
+  transition:
+    transform var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    opacity var(--dur-base) var(--ease);
+}

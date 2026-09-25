@@ -1157,8 +1157,6 @@ export const subprofiles: Catalog = {
     "Link this persona to communities you're in and events you're going to.",
   "affiliationsEditor.empty":
     "Nothing linked yet. Add an event or community below.",
-  "affiliationsEditor.itemNumber": "Item {n}",
-  "affiliationsEditor.remove": "Remove",
   "affiliationsEditor.typeLabel": "Type",
   "affiliationsEditor.roleLabel": "Role",
   "affiliationsEditor.targetLabel.event": "Event",
@@ -1445,12 +1443,9 @@ export const subprofiles: Catalog = {
   "pending.area.skin": "Page blocks",
   "pending.skinEdited": "{field} updated",
   "skinBlock.addItem": "Add",
-  "skinBlock.removeItem": "Remove",
   "skinBlock.moveUp": "Move up",
   "skinBlock.moveDown": "Move down",
-  "skinBlock.dragToReorder": "Drag to reorder",
   "skinBlock.lineLabel": "{label} {index}",
-  "skinBlock.entryLabel": "Entry {index}",
   "skinBlock.stage.booker.title": "For bookers",
   "skinBlock.stage.booker.fee": "Fee",
   "skinBlock.stage.booker.rider": "Rider",
@@ -1547,9 +1542,10 @@ export const subprofiles: Catalog = {
   // Editor rail (EditorRail, editorRail.data.ts) — Phase 3's grouped left
   // nav: This side / Content / People / Publish.
   "editorRail.navLabel": "Persona editor navigation",
-  "editorRail.backLink": "Your personas",
+  "editorRail.backLink": "Back to your personas",
   "editorRail.collapse": "Collapse sidebar",
   "editorRail.expand": "Expand sidebar",
+  "editorRail.collapseShort": "Collapse",
   "editorRail.thisSide": "This persona",
   "editorRail.identity": "Identity",
   "editorRail.presence": "Presence & contact",
@@ -2056,6 +2052,8 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.therapyFees.paymentMethods_card": "Card",
   "skinBlock.therapist.therapyFees.paymentMethods_cash": "Cash",
   "skinBlock.therapist.therapyFees.paymentMethods_paypal": "PayPal",
+  "skinBlock.therapist.therapyFees.paymentMethods_wise": "Wise",
+  "skinBlock.therapist.therapyFees.paymentMethods_revolut": "Revolut",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_mbway": "MB WAY",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_transfer":
     "bank transfer",
@@ -2064,6 +2062,8 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.therapyFees.paymentMethodsInList_card": "card",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_cash": "cash",
   "skinBlock.therapist.therapyFees.paymentMethodsInList_paypal": "PayPal",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_wise": "Wise",
+  "skinBlock.therapist.therapyFees.paymentMethodsInList_revolut": "Revolut",
   "skinBlock.therapist.therapyFees.receiptTime_atSession": "At the session",
   "skinBlock.therapist.therapyFees.receiptTime_sameDay": "The same day",
   "skinBlock.therapist.therapyFees.receiptTime_within48h": "Within 48 hours",
@@ -2081,7 +2081,7 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.feeSchedule.valuePlaceholder": "65€",
   "skinBlock.therapist.reimbursement.title": "Reimbursement",
   "skinBlock.therapist.reimbursement.helper":
-    "Insurer, and roughly how many euros come back per session.",
+    "Pick your insurer from the list or type your own, and roughly how many euros come back per session.",
   "skinBlock.therapist.reimbursement.label": "Insurer",
   "skinBlock.therapist.reimbursement.labelPlaceholder": "ADSE",
   "skinBlock.therapist.reimbursement.value": "Euros back per session",
@@ -2241,7 +2241,8 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.joiner.to": "to",
   "skinBlock.therapist.check.ascending": "The lowest fee is above the highest",
   "skinBlock.therapist.check.partOfWhole": "More places open than you offer",
-  "skinBlock.therapist.approach.add": "Add a paragraph",
+  "skinBlock.therapist.approach.placeholder":
+    "I work relationally and at your pace. Our first sessions are about what brings you in and what you hope will change.",
   "skinBlock.therapist.feeSchedule.add": "Add a session length",
   "skinBlock.therapist.firstSession.add": "Add a step",
   "skinBlock.therapist.faq.add": "Add a question",
@@ -2377,8 +2378,10 @@ export const subprofiles: Catalog = {
   "skinControl.money.ariaLabel": "{label} (euros)",
   "skinControl.money.currency": "Amount in euros",
   // Therapist editor controls (pass 2)
-  "skinList.reorderHint": "Drag to reorder, or press Alt and an arrow key",
-  "skinList.paragraphNumber": "Paragraph {index}",
+  "skinList.reorderHint":
+    "Drag to reorder, or click for move options. Alt or Option + arrow also moves it.",
+  "skinList.paragraphsHint":
+    "Leave a blank line to start a new paragraph. **Bold**, *italic*, lists and links all work.",
   "skinChips.addAnother": "Add another",
   "skinChips.addHint":
     "Enter to add. Drag or press Alt or Option + arrow to reorder.",
@@ -2511,10 +2514,13 @@ export const subprofiles: Catalog = {
   "therapistTopics.removeTopic": "Remove {name}",
   "therapistTopics.removeTopicFallback": "this topic",
   "therapistTopics.removeLine": "Remove line {index} of {topic}",
-  "therapistTopics.moveUp": "Move {name} up",
-  "therapistTopics.moveDown": "Move {name} down",
   "therapistTopics.emptyLead": "Name the first thing you help with.",
-  "therapistTopics.enterHint": "Press Enter for a new line",
+  "therapistTopics.enterHint":
+    "Enter adds a line. Drag a handle or click it to move a line, or press Alt or Option + arrow.",
+  "therapistTopics.enterHintTouch":
+    "Drag a handle, or tap it, to move a line or topic.",
+  "therapistTopics.gripTopicRow": "Topic",
+  "therapistTopics.gripLineRow": "{topic}, line",
   "therapistTopics.suggestion.identity": "Identity and coming out",
   "therapistTopics.suggestion.gender": "Gender and transition",
   "therapistTopics.suggestion.relationships": "Relationships and intimacy",
@@ -2541,6 +2547,58 @@ export const subprofiles: Catalog = {
   "therapistTopics.suggestionExample.work": "e.g. Being out at work",
   // Therapist editor review fixes (pass 4)
   "skinBlock.therapist.venue.addLine": "Add a line",
+  "skinBlock.therapist.notFor.addLine": "Add a reason",
+  "skinBlock.therapist.boundaries.addLine": "Add a boundary",
+  "skinBlock.therapist.openSlots.addLine": "Add a slot",
+  "skinBlock.therapist.access.addLine": "Add something you offer",
+  "skinBlock.therapist.accessMissing.addLine": "Add something missing",
+  "skinList.linesHint":
+    "Enter adds a line. Drag a handle or click it to move a line, or press Alt or Option + arrow.",
+  "skinList.gripLabel": "Move {label} {index}",
+  "skinList.gripLabelNamed": "Move {label}",
+  "skinList.moveMenu.up": "Move up",
+  "skinList.moveMenu.down": "Move down",
+  "skinList.moveMenu.top": "Move to top",
+  "skinList.moveMenu.bottom": "Move to bottom",
+  "skinList.linesHintTouch":
+    "Return adds a line. Drag a handle, or tap it, to move a line.",
+  // Page editor lists as reorderable rows
+  "skinBlock.page.excerpt.linesPlaceholder":
+    "a border folded into every vowel.",
+  "skinBlock.table.menuMeta.practicalPlaceholder": "14 seats",
+  "skinBlock.table.menuMeta.addPractical": "Add a note",
+  "skinBlock.practice.firstSession.add": "Add a step",
+  "skinBlock.practice.firstSession.stepTitlePlaceholder": "The first call",
+  "skinBlock.practice.firstSession.bodyPlaceholder":
+    "A free 20-minute call. You ask, I answer, nobody commits.",
+  "skinBlock.practice.access.placeholder": "Step-free entrance and lift",
+  "skinBlock.practice.access.add": "Add something you offer",
+  "skinBlock.practice.referrals.add": "Add a referral",
+  "skinBlock.practice.referrals.namePlaceholder": "Marta Reis",
+  "skinBlock.practice.referrals.notePlaceholder":
+    "Same approach, in Graça. She takes my overflow.",
+  "skinBlock.practice.approach.placeholder":
+    "Person-centred at the core. We set the pace together.",
+  "skinBlock.practice.training.placeholder":
+    "Two-year practitioner training, Lisbon",
+  "skinBlock.practice.training.add": "Add a qualification",
+  "skinBlock.practice.training.helper": "Most recent first.",
+  "skinBlock.practice.feeSchedule.add": "Add a fee",
+  "skinBlock.practice.feeSchedule.labelPlaceholder": "50 min",
+  "skinBlock.practice.feeSchedule.valuePlaceholder": "60€",
+  "skinBlock.practice.venue.linesPlaceholder": "Rua de Álvaro Coutinho",
+  "skinBlock.chart.ethics.placeholder":
+    "Read as a mirror for where you are now. I leave what happens next to you.",
+  "skinBlock.chart.ethics.add": "Add a boundary",
+  "skinBlock.chair.beforeYouSit.placeholder":
+    "You can bring a friend, or your own clippers, or nothing at all.",
+  "skinBlock.chair.beforeYouSit.add": "Add a note",
+  "skinBlock.collective.principles.placeholder":
+    "Nobody is handed to the police. Ever.",
+  "skinBlock.collective.principles.add": "Add a principle",
+  "skinBlock.classroom.promises.placeholder":
+    "You are never made to read out loud before you want to.",
+  "skinBlock.classroom.promises.add": "Add a promise",
   "skinBlock.therapist.openSlots.chipHelper":
     "Write each slot the way it should read on your page, like Tue 30 Sep · 18:00.",
   "skinBlock.therapist.hours.valueTimes": "Times",
@@ -2564,6 +2622,7 @@ export const subprofiles: Catalog = {
   "skinChapter.cardDone": "Done",
   "skinChapter.cardCountSpoken": "{filled} of {total} filled",
   "skinControl.refined.example": "e.g. {example}",
+  "skinControl.suggest.show": "Show the list",
   "skinControl.refined.multiSelect.more": "More",
   "skinControl.refined.multiSelect.choose": "Choose",
   "skinControl.refined.close": "Close",
@@ -2575,8 +2634,8 @@ export const subprofiles: Catalog = {
   "skinControl.quote.lengthOver":
     "That's over {limit} characters. Short quotes land best: one or two lines.",
   "skinList.removeRow": "Remove {label} {index}",
+  "skinList.removeRowNamed": "Remove {label}",
   "skinList.addLine": "Add a line",
-  "skinList.paragraph": "Paragraph",
   "editorPane.presence.ledeTherapist":
     "Cover image, accent colour, whether you're taking new clients, and the button people use to book with you.",
   // Therapist page credentials and gallery

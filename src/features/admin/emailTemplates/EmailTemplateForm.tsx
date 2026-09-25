@@ -10,7 +10,10 @@ import {
   useCreateEmailTemplate,
   useUpdateEmailTemplate,
 } from "./api/emailTemplateHooks";
-import type { EmailTemplateAdminDTO } from "./emailTemplate.types";
+import type {
+  EmailLocaleContent,
+  EmailTemplateAdminDTO,
+} from "./emailTemplate.types";
 import {
   draftFromTemplate,
   toWriteBody,
@@ -22,9 +25,9 @@ import {
 } from "./emailTemplateSaveError";
 import type { ActiveField } from "./editor/activeField";
 import { EmailTemplateLocalePane } from "./EmailTemplateLocalePane";
-import { EmailTemplateLocaleTabs } from "./EmailTemplateLocaleTabs";
 import { EmailTemplateMetaFields } from "./EmailTemplateMetaFields";
 import { EmailTemplateSaveErrorBanner } from "./EmailTemplateSaveErrorBanner";
+import { EmailTemplateToolbar } from "./EmailTemplateToolbar";
 import { useEmailTemplateDraft } from "./useEmailTemplateDraft";
 import styles from "./AdminEmailTemplates.module.css";
 
@@ -58,6 +61,9 @@ export function EmailTemplateForm({
   useUnsavedChangesGuard({
     active: isDirty,
     confirmMessage: t("admin:emailTemplates.editor.leaveConfirm"),
+    // The `?emailDesign=` switch changes only the query, and the draft stays
+    // mounted through it, so it must not ask to leave.
+    shouldAllowQueryChanges: true,
     // Offered whenever the Save button is enabled, i.e. no save in flight.
     onSaveAndLeave: isSaving ? undefined : saveAndLeave,
   });
@@ -105,6 +111,9 @@ export function EmailTemplateForm({
   }
 
   const content = draft.locales[activeLocale];
+  const updateActiveLocale = (
+    update: (current: EmailLocaleContent) => EmailLocaleContent,
+  ) => draftState.updateLocale(activeLocale, update);
 
   return (
     <div className={styles.editor}>
@@ -115,10 +124,14 @@ export function EmailTemplateForm({
         />
       )}
       <EmailTemplateMetaFields draft={draft} onChange={draftState.setMeta} />
-      <EmailTemplateLocaleTabs
-        active={activeLocale}
-        onChange={setActiveLocale}
+      <EmailTemplateToolbar
+        locale={activeLocale}
+        onLocaleChange={setActiveLocale}
         isLocaleDirty={draftState.isLocaleDirty}
+        purpose={draft.purpose}
+        content={content}
+        onUpdate={updateActiveLocale}
+        onInsertToken={(token) => activeFieldRef.current?.insert(token)}
       />
       {content ? (
         <EmailTemplateLocalePane
@@ -126,11 +139,10 @@ export function EmailTemplateForm({
           locale={activeLocale}
           purpose={draft.purpose}
           content={content}
-          onUpdate={(update) => draftState.updateLocale(activeLocale, update)}
+          onUpdate={updateActiveLocale}
           onFocusField={(field) => {
             activeFieldRef.current = field;
           }}
-          onInsertToken={(token) => activeFieldRef.current?.insert(token)}
         />
       ) : (
         <div className={styles.ptMissing}>
@@ -154,10 +166,13 @@ export function EmailTemplateForm({
             {t("admin:emailTemplates.editor.ptRemove")}
           </Button>
         )}
+        <Button variant="ghost" size="md" to={routes.adminEmailTemplates}>
+          {t("admin:emailTemplates.editor.backCta")}
+        </Button>
         <Button
           variant="primary"
           size="md"
-          disabled={isSaving}
+          disabled={isSaving || !isDirty}
           onClick={() => void save()}
         >
           {t(

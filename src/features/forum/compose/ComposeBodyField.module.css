@@ -34,8 +34,14 @@
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease);
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.tool:not(:disabled):active {
+  transform: scale(0.94);
 }
 
 .toolIcon {
@@ -91,6 +97,9 @@
   font-size: var(--text-17);
   line-height: 1.65;
   color: var(--ink);
+  /* Block, so no inline baseline gap sits under the box and the Write pane
+     is exactly as tall as the preview's 220px. */
+  display: block;
 }
 
 .bodyInput::placeholder {
@@ -101,6 +110,36 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+/* Write | Preview swap. Both panes stay mounted: the showing one sets the
+   height, and the hidden one lies over it out of flow, so the rows below
+   never move. The raw markdown and the rendered preview sit a few pixels
+   apart, so overlapping them reads as doubled text: the outgoing pane fades
+   out quickly first, and the incoming one fades up once it has gone.
+   `visibility` flips to hidden only once the fade out ends, which also drops
+   the hidden pane from the accessibility tree. */
+.panes {
+  position: relative;
+  --pane-fade-out: calc(var(--dur-fast) * 0.6);
+}
+
+.pane {
+  transition:
+    opacity var(--dur-fast) var(--ease-out) var(--pane-fade-out),
+    visibility 0s;
+}
+
+.paneHidden {
+  transition:
+    opacity var(--pane-fade-out) var(--ease-in),
+    visibility 0s linear var(--pane-fade-out);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* The preview stands in the same box as the input, so switching tabs does not
@@ -136,8 +175,13 @@
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.scaffold:active {
+  transform: scale(0.97);
 }
 
 .scaffoldIcon {
@@ -182,7 +226,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .tool,
-  .scaffold {
+  .scaffold,
+  .pane,
+  .paneHidden {
     transition: none;
   }
 }

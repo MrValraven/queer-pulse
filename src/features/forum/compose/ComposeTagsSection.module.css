@@ -47,7 +47,10 @@
 
 /* ── The box ───────────────────────────────────────────────────────────── */
 
+/* Positioned, because a chip on its way out is lifted out of the flow
+   (AnimatePresence "popLayout") and placed against this box while it fades. */
 .box {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -65,6 +68,7 @@
 }
 
 .chip {
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -87,7 +91,10 @@
   background: none;
   color: var(--ink-40);
   cursor: pointer;
-  transition: color var(--dur-fast) var(--ease);
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -95,6 +102,10 @@
     color: var(--accent-ink);
     background: rgba(var(--accent-rgb), 0.12);
   }
+}
+
+.chipRemove:active {
+  transform: scale(0.9);
 }
 
 .entry {
@@ -128,6 +139,7 @@
 /* ── Suggestions ───────────────────────────────────────────────────────── */
 
 .suggestions {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -145,6 +157,9 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  /* popLayout lifts a leaving chip out of the row at its old width; keeping
+     the tag on one line stops it rewrapping mid-word as it fades. */
+  white-space: nowrap;
   min-height: 30px;
   padding: 5px 11px;
   border: 1px dashed var(--line-2);
@@ -155,9 +170,8 @@
   font-weight: 600;
   color: var(--text-strong);
   cursor: pointer;
-  transition:
-    border-style var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease);
+  /* The dashed-to-solid edge on hover cannot be eased; the fill carries it. */
+  transition: background var(--dur-fast) var(--ease);
 }
 
 @media (hover: hover) and (pointer: fine) {

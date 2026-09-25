@@ -1,0 +1,73 @@
+/* The listing description: formatting toolbar, textarea and paragraph hint
+   drawn as ONE control. The box wears the border, fill and focus states every
+   other input in the wizard wears (FormField's `.field textarea`), and the
+   textarea inside it goes bare. */
+.box {
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+
+.box:focus-within {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
+/* Keyboard focus sits in the textarea; the ring goes around the whole box so
+   the toolbar reads as part of the same control. */
+.box:has(.input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.box:has(.input[aria-invalid="true"]) {
+  border-color: var(--accent-ink);
+}
+
+.toolbar {
+  padding: calc(var(--gap-xs) / 2);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
+}
+
+/* Out-specifies FormField's `.field textarea` (0,1,1) and its focus states
+   (0,2,1), which would draw a second border inside the box. FormField's
+   padding, type and colour still apply. */
+.box textarea.input,
+.box textarea.input:focus,
+.box textarea.input:focus-visible {
+  display: block;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  /* Six lines at FormField's 1.6 line height, plus its vertical padding. */
+  min-height: calc(6 * 1.6em + 26px);
+  overflow-wrap: anywhere;
+}
+
+@supports (field-sizing: content) {
+  .box textarea.input {
+    field-sizing: content;
+  }
+}
+
+.hint {
+  margin: 0;
+  padding: calc(var(--gap-xs) / 2) var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box {
+    transition: none;
+  }
+}

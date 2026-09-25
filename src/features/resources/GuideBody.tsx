@@ -1,5 +1,6 @@
 import { createElement, type CSSProperties, type ReactNode } from "react";
 import { Reveal } from "../../shared/components/ui";
+import { useInAppLinkRegion } from "../../shared/links/useInAppLinkRouting";
 import { sanitizeArticleHtml } from "../../shared/components/richText/sanitizeArticleHtml";
 import type { GuideBlock, GuideSection } from "./api/resources.api";
 import styles from "./resources.module.css";
@@ -83,11 +84,17 @@ function GuideReveal({
 /** A block's content: its sanitized inline html when it has some, its plain
  *  text otherwise. Subheadings are always plain. */
 function BlockText({ block }: { block: GuideBlock }) {
+  // `sanitizeArticleHtml` forces `target="_blank"` on every link, which an
+  // installed PWA hands to the system browser. The ref routes a plain click
+  // on a link into QueerPulse inside the app. Called before the early return
+  // so the hook order stays stable.
+  const inAppLinkRegionRef = useInAppLinkRegion<HTMLSpanElement>();
   if (block.html === undefined || block.kind === "subheading") {
     return <>{block.text}</>;
   }
   return (
     <span
+      ref={inAppLinkRegionRef}
       className={styles.richInline}
       dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(block.html) }}
     />

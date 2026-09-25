@@ -5,9 +5,16 @@ import {
   TherapistSection,
   TherapistSubBlock,
 } from "./TherapistSection";
-import type { SpecialtyTone, TherapistView } from "./therapistView";
+import type {
+  SpecialtyTone,
+  TherapistSpecialtyGroup,
+  TherapistView,
+} from "./therapistView";
 import { THERAPIST_EDIT_TARGETS } from "./therapistEditLinks.data";
 import { TherapistEditLink } from "./TherapistEditLink";
+import { RevealBlock, RevealList, RevealListItem } from "./TherapistReveal";
+import { occurrenceKeys } from "./revealKeys";
+import { useStableRowKeys } from "./useStableRowKeys";
 import {
   CONTEXT_OPTIONS,
   pickDisplayText,
@@ -21,9 +28,17 @@ const BULLET_CLASS: Record<SpecialtyTone, string | undefined> = {
   violet: styles.bulletViolet,
 };
 
+/** The reading column's gap (`.main` in TherapistBody.module.css). */
+const COLUMN_GAP = 16;
+/** `.groupList`'s gap in TherapistSections.module.css. */
+const BULLET_GAP = 6;
+
 /** "What Sofia can help with": specialty groups (from the persona's
  *  `specialisms` items), who-for chips, and the contexts the therapist
- *  knows from the inside. `null` when none of the three is set. */
+ *  knows from the inside. An edit grows a block in or folds it away (the
+ *  whole section too, once none of the three is set), and bullets and chips
+ *  animate one by one. The groups sit in a multi-column grid, where a cell
+ *  cannot glide, so a whole group appears and goes as is. */
 export function TherapistSpecialties({ view }: { view: TherapistView }) {
   const { t } = useTranslation();
   const name = view.firstName;
@@ -31,7 +46,13 @@ export function TherapistSpecialties({ view }: { view: TherapistView }) {
     view.specialtyGroups.length > 0 ||
     view.whoFor.length > 0 ||
     view.contexts.length > 0;
-  if (!hasContent) return null;
+  // Headings and bullets are typed live, so a cell or bullet keeps its key
+  // while the owner edits it.
+  const groupKeys = useStableRowKeys(
+    view.specialtyGroups.map((group) => group.heading),
+  );
+  const audienceKeys = occurrenceKeys(view.whoFor);
+  const contextKeys = occurrenceKeys(view.contexts);
   // Who-for and contexts share a card in the editor's Approach chapter, the
   // one after the specialty groups: one link for them, on whichever shows
   // first.
@@ -43,71 +64,83 @@ export function TherapistSpecialties({ view }: { view: TherapistView }) {
   );
 
   return (
-    <TherapistSection
-      label={t("subprofiles:therapist.specialties.label", { name })}
-      heading={t("subprofiles:therapist.specialties.heading")}
-      editTarget={THERAPIST_EDIT_TARGETS.specialties}
-    >
-      {view.specialtyGroups.length > 0 && (
-        <div className={styles.groups}>
-          {view.specialtyGroups.map((group, groupIndex) => (
-            <div key={`${group.heading}-${groupIndex}`}>
-              {group.heading !== "" && (
-                <h3 className={styles.groupHeading}>{group.heading}</h3>
-              )}
-              <ul className={styles.groupList}>
-                {group.bullets.map((bullet, bulletIndex) => (
-                  <li
-                    key={`${bullet}-${bulletIndex}`}
-                    className={styles.groupItem}
-                  >
-                    <span
-                      className={[styles.bullet, BULLET_CLASS[group.tone]]
-                        .filter(Boolean)
-                        .join(" ")}
-                      aria-hidden="true"
-                    />
-                    <span>{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+    <RevealBlock isShown={hasContent} parentGap={COLUMN_GAP}>
+      <TherapistSection
+        label={t("subprofiles:therapist.specialties.label", { name })}
+        heading={t("subprofiles:therapist.specialties.heading")}
+        editTarget={THERAPIST_EDIT_TARGETS.specialties}
+      >
+        <RevealBlock isShown={view.specialtyGroups.length > 0}>
+          <div className={styles.groups}>
+            {view.specialtyGroups.map((group, groupIndex) => (
+              <SpecialtyGroup key={groupKeys[groupIndex]} group={group} />
+            ))}
+          </div>
+        </RevealBlock>
 
-      {view.whoFor.length > 0 && (
-        <TherapistChipRow>
-          {view.whoFor.map((audience, audienceIndex) => (
-            <TherapistChip
-              key={`${audience}-${audienceIndex}`}
-              tone="hi"
-              hasCheck
-            >
-              {pickDisplayText(WHO_FOR_OPTIONS, audience, t)}
-            </TherapistChip>
-          ))}
-          {audienceEditLink}
-        </TherapistChipRow>
-      )}
-
-      {view.contexts.length > 0 && (
-        <TherapistSubBlock
-          label={t("subprofiles:therapist.specialties.contextsLabel")}
-        >
+        <RevealBlock isShown={view.whoFor.length > 0}>
           <TherapistChipRow>
-            {view.contexts.map((context, contextIndex) => (
-              <TherapistChip key={`${context}-${contextIndex}`}>
-                {pickDisplayText(CONTEXT_OPTIONS, context, t)}
+            {view.whoFor.map((audience, audienceIndex) => (
+              <TherapistChip
+                key={audienceKeys[audienceIndex]}
+                tone="hi"
+                hasCheck
+              >
+                {pickDisplayText(WHO_FOR_OPTIONS, audience, t)}
               </TherapistChip>
             ))}
-            {view.whoFor.length === 0 && audienceEditLink}
+            {audienceEditLink}
           </TherapistChipRow>
-          <TherapistNote>
-            {t("subprofiles:therapist.specialties.contextsNote", { name })}
-          </TherapistNote>
-        </TherapistSubBlock>
+        </RevealBlock>
+
+        <RevealBlock isShown={view.contexts.length > 0}>
+          <TherapistSubBlock
+            label={t("subprofiles:therapist.specialties.contextsLabel")}
+          >
+            <TherapistChipRow>
+              {view.contexts.map((context, contextIndex) => (
+                <TherapistChip key={contextKeys[contextIndex]}>
+                  {pickDisplayText(CONTEXT_OPTIONS, context, t)}
+                </TherapistChip>
+              ))}
+              {view.whoFor.length === 0 && audienceEditLink}
+            </TherapistChipRow>
+            <TherapistNote>
+              {t("subprofiles:therapist.specialties.contextsNote", { name })}
+            </TherapistNote>
+          </TherapistSubBlock>
+        </RevealBlock>
+      </TherapistSection>
+    </RevealBlock>
+  );
+}
+
+/** One grid cell: the group's heading over its bullets. A bullet an edit
+ *  adds grows in and a removed one folds away. */
+function SpecialtyGroup({ group }: { group: TherapistSpecialtyGroup }) {
+  const bulletKeys = useStableRowKeys(group.bullets);
+  const bulletClassName = [styles.bullet, BULLET_CLASS[group.tone]]
+    .filter(Boolean)
+    .join(" ");
+  return (
+    <div>
+      {group.heading !== "" && (
+        <h3 className={styles.groupHeading}>{group.heading}</h3>
       )}
-    </TherapistSection>
+      <ul className={styles.groupList}>
+        <RevealList>
+          {group.bullets.map((bullet, bulletIndex) => (
+            <RevealListItem
+              key={bulletKeys[bulletIndex]}
+              className={styles.groupItem}
+              parentGap={BULLET_GAP}
+            >
+              <span className={bulletClassName} aria-hidden="true" />
+              <span>{bullet}</span>
+            </RevealListItem>
+          ))}
+        </RevealList>
+      </ul>
+    </div>
   );
 }

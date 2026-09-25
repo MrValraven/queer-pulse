@@ -35,8 +35,8 @@ export function BeforeYouSit({ persona }: { persona: SkinExtrasPersona }) {
     <section className="beforesit">
       <h2>{t("subprofiles:skinExtras.chair.beforeYouSitTitle")}</h2>
       <ul>
-        {lines.map((line) => (
-          <li key={line}>{line}</li>
+        {lines.map((line, index) => (
+          <li key={`${index}-${line}`}>{line}</li>
         ))}
       </ul>
     </section>

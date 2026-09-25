@@ -6,8 +6,10 @@ import {
   type FocusEvent,
   type KeyboardEvent,
 } from "react";
+import { AnimatePresence } from "motion/react";
 import { FiChevronDown } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { ComposePublishMenuPanel } from "./ComposePublishMenuPanel";
 import type { PublishMode } from "./composeThread.types";
 import styles from "./ComposePublishMenu.module.css";
 
@@ -81,7 +83,10 @@ export function ComposePublishMenu({
 
   const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
+      // The menu is the layer this Escape belongs to: it closes the menu and
+      // stops here, so the page's own Escape (leave) never sees it.
       event.preventDefault();
+      event.stopPropagation();
       closeAndRestoreFocus();
       return;
     }
@@ -122,7 +127,12 @@ export function ComposePublishMenu({
     setOpen(false);
   };
 
-  const chooseMode = (mode: PublishMode) => () => {
+  // Focus goes back to the caret BEFORE the choice runs: the schedule or
+  // review dialog it may open records the focused element as its opener, and
+  // the row focused now is gone once the menu unmounts, so Back would drop
+  // focus on <body>.
+  const chooseMode = (mode: PublishMode) => {
+    triggerRef.current?.focus();
     setOpen(false);
     onSelect(mode);
   };
@@ -147,31 +157,19 @@ export function ComposePublishMenu({
       >
         <FiChevronDown aria-hidden />
       </button>
-      {isOpen && (
-        <div
-          id={menuId}
-          ref={menuRef}
-          role="menu"
-          tabIndex={-1}
-          aria-labelledby={triggerId}
-          className={styles.menu}
-          onKeyDown={onMenuKeyDown}
-        >
-          {PUBLISH_MODES.map((mode) => (
-            <button
-              key={mode}
-              type="button"
-              role="menuitem"
-              tabIndex={-1}
-              className={styles.item}
-              onClick={chooseMode(mode)}
-            >
-              <b>{t(`forum:composePage.publishMenu.${mode}.label`)}</b>
-              <small>{t(`forum:composePage.publishMenu.${mode}.sub`)}</small>
-            </button>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <ComposePublishMenuPanel
+            key="menu"
+            menuId={menuId}
+            triggerId={triggerId}
+            menuRef={menuRef}
+            modes={PUBLISH_MODES}
+            onKeyDown={onMenuKeyDown}
+            onChoose={chooseMode}
+          />
+        )}
+      </AnimatePresence>
     </span>
   );
 }

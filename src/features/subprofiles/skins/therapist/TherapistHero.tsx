@@ -8,6 +8,8 @@ import type { PersonaAction, PersonaViewMode } from "../../personaSkinRender";
 import type { TherapistView } from "./therapistView";
 import { renderEmphasis } from "./renderEmphasis";
 import { TherapistChip } from "./TherapistChip";
+import { RevealList } from "./TherapistReveal";
+import { occurrenceKeys } from "./revealKeys";
 import { TherapistHeroFacts, TherapistStatusPill } from "./TherapistHeroFacts";
 import { TherapistHeroActions } from "./TherapistHeroActions";
 import { TherapistHeroMedia } from "./TherapistHeroMedia";
@@ -59,6 +61,7 @@ export function TherapistHero({
   });
   const bioLead = view.quote ? "" : firstParagraph(data.bio);
   const hasRoleLine = view.title !== "" || view.registration !== "";
+  const livedKeys = occurrenceKeys(view.lived);
 
   return (
     <div className={styles.hero}>
@@ -121,11 +124,13 @@ export function TherapistHero({
                 name: view.firstName || data.displayName,
               })}
             </span>
-            {view.lived.map((entry, index) => (
-              <TherapistChip key={`${index}-${entry}`} tone="sm">
-                {pickDisplayText(LIVED_OPTIONS, entry, t)}
-              </TherapistChip>
-            ))}
+            <RevealList>
+              {view.lived.map((entry, index) => (
+                <TherapistChip key={livedKeys[index]} tone="sm">
+                  {pickDisplayText(LIVED_OPTIONS, entry, t)}
+                </TherapistChip>
+              ))}
+            </RevealList>
             <TherapistEditLink target={THERAPIST_EDIT_TARGETS.lived} />
           </div>
         )}

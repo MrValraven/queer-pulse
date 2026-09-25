@@ -52,4 +52,22 @@ describe("EmailTextField", () => {
     expect(onChangeAfterRerender.mock.calls[0]?.[0]).toContain("{name}");
     expect(onChangeAtFirstRender).not.toHaveBeenCalled();
   });
+
+  it("opens a multiline field at four lines unless told otherwise", () => {
+    const sharedProps = {
+      label: "Text",
+      value: "",
+      onChange: vi.fn(),
+      onFocusField: vi.fn(),
+      maxLength: 300,
+      isMultiline: true,
+    };
+    render(<EmailTextField {...sharedProps} id="default-rows" />);
+    render(<EmailTextField {...sharedProps} id="two-rows" rows={2} />);
+    expect(document.getElementById("default-rows")).toHaveAttribute(
+      "rows",
+      "4",
+    );
+    expect(document.getElementById("two-rows")).toHaveAttribute("rows", "2");
+  });
 });

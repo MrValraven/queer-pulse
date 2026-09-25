@@ -3,6 +3,7 @@ import type { EmailBlock } from "../emailTemplate.types";
 import {
   createBlock,
   moveBlock,
+  moveInList,
   removeBlock,
   updateBlock,
   withFreshIds,
@@ -43,6 +44,40 @@ describe("emailBlockOps", () => {
     const second = createBlock("image");
     expect(first.id).not.toBe(second.id);
     expect(first).toMatchObject({ type: "image", width: 600 });
+  });
+
+  it("starts the new block types blank, with one feature list row", () => {
+    expect(createBlock("hero")).toMatchObject({
+      type: "hero",
+      eyebrow: "",
+      headline: "",
+      text: "",
+    });
+    expect(createBlock("ticket")).toMatchObject({
+      type: "ticket",
+      label: "",
+      title: "",
+      text: "",
+      buttonLabel: "",
+      href: "",
+    });
+    expect(createBlock("signature")).toMatchObject({
+      type: "signature",
+      name: "",
+      role: "",
+      note: "",
+      photoUrl: "",
+    });
+    expect(createBlock("featureList")).toMatchObject({
+      type: "featureList",
+      items: [{ icon: "communities", title: "", text: "" }],
+    });
+  });
+
+  it("moves feature list rows the same way as blocks", () => {
+    expect(moveInList(["x", "y", "z"], 2, -1)).toEqual(["x", "z", "y"]);
+    const rows = ["x", "y"];
+    expect(moveInList(rows, 1, 1)).toBe(rows);
   });
 
   it("copies blocks with fresh ids and the same content", () => {

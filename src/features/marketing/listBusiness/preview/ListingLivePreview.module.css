@@ -1,0 +1,156 @@
+/* ===== Live preview body: field caption + highlight =====
+   The body root carries `data-highlight` (space-separated regions) while the
+   focused or hovered field has at least one of its spots drawn right now
+   (see `highlightedRegionsFor`). Every `[data-preview-region]` inside it
+   (card and excerpt) then dims, and the named ones get an accent outline.
+   No attribute (a private or full-page field, or a spot not on screen yet)
+   means nothing is dimmed and the caption alone says where it shows. */
+
+.body {
+  min-width: 0;
+}
+
+/* The caller's head line (when it passes one) and the caption, in one box so
+   a column that scrolls on its own can keep both in view. The bottom padding
+   replaces the caption's margin, so the gap under it is part of the bar. */
+.captionBar {
+  padding-bottom: 10px;
+}
+.captionBar .caption {
+  margin-bottom: 0;
+}
+/* The editor's column scrolls, and revealing a low excerpt block would carry
+   the caption out of view with the card. Pinned instead: -8px cancels the
+   column's 8px top padding (sticky offsets start inside it), the negative
+   inline margins widen the bar over the side padding so outlines passing
+   under it stay hidden, and the page colour lets content slide under it in
+   both themes. The matching top margin/padding pair cancels that same 8px
+   again on the vertical axis, so the pinned bar lines up with the jump
+   nav's "Jump to" label. */
+.captionBar[data-sticky] {
+  position: sticky;
+  top: -8px;
+  z-index: var(--z-raised);
+  margin-top: -8px;
+  padding-top: 8px;
+  margin-inline: -8px;
+  padding-inline: 8px;
+  background: var(--cream);
+}
+
+/* Reserves two lines so the card below does not jump as captions change. A
+   third line would leave a blank row under most captions and make the pinned
+   bar cover more of the column, so the longest ones are kept short instead. */
+.caption {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-height: calc(2 * 1.45em);
+  margin: 0 0 10px;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.captionIcon {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--ink-40);
+}
+.caption[data-kind="preview"] .captionIcon {
+  color: var(--accent);
+}
+
+/* No outline style until highlighted: a transparent solid outline would
+   still paint in forced-colours mode.
+   `animation-fill-mode: backwards` keeps the excerpt blocks' entrance
+   animation (`.pdSec` in ListBusinessPage.module.css) but drops its forwards
+   fill, which otherwise pins them at full opacity over the dim below. */
+.body [data-preview-region] {
+  outline-color: transparent;
+  outline-offset: 3px;
+  animation-fill-mode: backwards;
+  transition:
+    opacity 150ms var(--ease),
+    outline-color 150ms var(--ease);
+}
+/* Outlines follow `border-radius`, so the regions that have none get a small
+   one to sit softly on the rounded cards. The pills, badge and photo keep
+   their own; the tagline and owner block keep square corners because a
+   radius would bend their divider borders. */
+.body [data-preview-region="name"],
+.body [data-preview-region="meta"],
+.body [data-preview-region="desc"],
+.body [data-preview-region="pills"],
+.body [data-preview-region="access"],
+.body [data-preview-region="status"],
+.body [data-preview-region="host"],
+.body [data-preview-region="whatItIs"],
+.body [data-preview-region="goodFor"],
+.body [data-preview-region="languages"],
+.body [data-preview-region="hours"] {
+  border-radius: var(--radius-4);
+}
+/* The photo runs edge to edge in the card, so its outline sits inside it
+   where a scrolling column cannot clip it. */
+.body [data-preview-region="photo"] {
+  outline-offset: -2px;
+}
+
+.body[data-highlight] [data-preview-region] {
+  opacity: 0.5;
+}
+
+.body[data-highlight~="photo"] [data-preview-region="photo"],
+.body[data-highlight~="badge"] [data-preview-region="badge"],
+.body[data-highlight~="name"] [data-preview-region="name"],
+.body[data-highlight~="meta"] [data-preview-region="meta"],
+.body[data-highlight~="desc"] [data-preview-region="desc"],
+.body[data-highlight~="pills"] [data-preview-region="pills"],
+.body[data-highlight~="access"] [data-preview-region="access"],
+.body[data-highlight~="status"] [data-preview-region="status"],
+.body[data-highlight~="host"] [data-preview-region="host"],
+.body[data-highlight~="tagline"] [data-preview-region="tagline"],
+.body[data-highlight~="whatItIs"] [data-preview-region="whatItIs"],
+.body[data-highlight~="goodFor"] [data-preview-region="goodFor"],
+.body[data-highlight~="languages"] [data-preview-region="languages"],
+.body[data-highlight~="hours"] [data-preview-region="hours"],
+.body[data-highlight~="owner"] [data-preview-region="owner"] {
+  opacity: 1;
+  outline: 2px solid var(--accent);
+}
+/* Matches the photo's own top corners so the inset outline follows them. */
+.body[data-highlight~="photo"] [data-preview-region="photo"] {
+  border-radius: var(--radius-18) var(--radius-18) 0 0;
+}
+
+/* Regions can nest (the badge, bookmark and "Add cover photo" button sit
+   inside the photo). A nested region takes its parent's dim once instead of
+   compounding it, and a highlighted badge keeps the photo around it at full
+   strength so the badge is not dimmed through its parent. The "chrome" parts
+   inside the photo (never a field's spot) then dim on their own. */
+.body[data-highlight] [data-preview-region] [data-preview-region] {
+  opacity: 1;
+}
+.body[data-highlight~="badge"] [data-preview-region="photo"] {
+  opacity: 1;
+}
+.body[data-highlight~="badge"]
+  [data-preview-region="photo"]
+  [data-preview-region="chrome"] {
+  opacity: 0.5;
+}
+
+/* An empty excerpt block drawn only while its field is highlighted. */
+.placeholderLine {
+  margin: 0;
+  font-size: var(--text-12-5);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body [data-preview-region] {
+    transition: none;
+  }
+}

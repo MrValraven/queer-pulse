@@ -28,8 +28,16 @@
   container-type: inline-size;
 }
 .ed {
+  /* The docked preview's width, sized from the OPEN rail's 230px whatever the
+     rail is doing. Folding the rail then hands every pixel it frees to the
+     pane, and the preview holds still. This is the width the old
+     `minmax(0, 1fr) minmax(360px, 0.85fr)` split gave the preview beside the
+     open rail: 0.85 of 1.85 shares of the width left after it. `100cqi` is
+     the `.ed-shell` container's width, which `.ed` fills. It is a length, so
+     it animates to the hidden state's `0px` below. */
+  --ed-preview-width: max(360px, calc((100cqi - 230px) * 0.85 / 1.85));
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr) minmax(360px, 0.85fr);
+  grid-template-columns: 230px minmax(0, 1fr) var(--ed-preview-width);
   gap: 0;
   align-items: start;
   /* Task 4: replaced the prototype's own qnav-footprint literal (100vh-90px)
@@ -46,12 +54,13 @@
   transition: grid-template-columns var(--dur-slow) var(--ease);
 }
 /* Preview hidden: collapse the third column to nothing (same 3-track shape,
-   so the grid animates). The panel is NOT `display: none` — it stays in flow
+   so the grid animates; `0px` is a length like the open track's, where an
+   `fr` would snap). The panel is NOT `display: none` — it stays in flow
    at zero width, clipped by its own `overflow: hidden`, and fades/slides out
    via the `.ed-preview` rules below, so the exit is animated rather than a pop.
    Keyboard/AT reachability is handled by the `inert` attribute in the shell. */
 .ed[data-preview="off"] {
-  grid-template-columns: 230px minmax(0, 1fr) minmax(0px, 0fr);
+  grid-template-columns: 230px minmax(0, 1fr) 0px;
 }
 .ed[data-preview="off"] .ed-preview {
   opacity: 0;
@@ -69,10 +78,10 @@
    `.ed`, and the preview-off twin at 0,3,0 beats both `.ed[data-preview=
    "off"]` and this base twin, which it would otherwise tie with. */
 .ed[data-rail="collapsed"] {
-  grid-template-columns: 60px minmax(0, 1fr) minmax(360px, 0.85fr);
+  grid-template-columns: 60px minmax(0, 1fr) var(--ed-preview-width);
 }
 .ed[data-preview="off"][data-rail="collapsed"] {
-  grid-template-columns: 60px minmax(0, 1fr) minmax(0px, 0fr);
+  grid-template-columns: 60px minmax(0, 1fr) 0px;
 }
 /* Desktop preview: the pane keeps a 460px floor, roughly what it gets in Mobile
    mode, and the dock takes the rest so the laptop-width page, zoomed down to
@@ -82,13 +91,21 @@
    match `DESKTOP_PREVIEW_QUERY` in `SubprofileEditorShell`, which hides the
    Mobile / Desktop switch and falls back to Mobile at the same width. */
 @media (min-width: 1180px) {
+  /* The preview's width again comes from the open rail: 1.1 of 2.1 shares of
+     what is left after it, as the old `minmax(460px, 1fr) minmax(360px,
+     1.1fr)` split gave, capped so the pane keeps its 460px floor beside the
+     open rail (230 + 460 = 690). */
   .ed[data-preview="on"][data-preview-device="desktop"] {
-    grid-template-columns: 230px minmax(460px, 1fr) minmax(360px, 1.1fr);
+    --ed-preview-width: max(
+      360px,
+      min(calc((100cqi - 230px) * 1.1 / 2.1), calc(100cqi - 690px))
+    );
+    grid-template-columns: 230px minmax(460px, 1fr) var(--ed-preview-width);
   }
   /* Folded rail beside the Desktop dock. 0,4,0 out-ranks both the rule above
      (0,3,0) and the base collapsed rule (0,2,0). */
   .ed[data-preview="on"][data-preview-device="desktop"][data-rail="collapsed"] {
-    grid-template-columns: 60px minmax(460px, 1fr) minmax(360px, 1.1fr);
+    grid-template-columns: 60px minmax(460px, 1fr) var(--ed-preview-width);
   }
 }
 /* Tablet: the docked preview no longer fits alongside the rail + pane at a
@@ -383,15 +400,6 @@
      the strip moves as one piece (see the collapsed rules below). */
   transition: padding var(--dur-slow) var(--ease);
 }
-/* The rail's top row holds only the collapse toggle, pinned to the row's end
-   in both states, so it rides the column's edge as it narrows. The way back
-   to the dashboard sits above the page title instead. */
-.ed-rail .rail-top {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 8px;
-}
 .ed-rail button {
   display: flex;
   align-items: center;
@@ -488,21 +496,24 @@
 .ed-rail .rail-label {
   transition: opacity var(--dur-base) var(--ease) calc(var(--dur-slow) * 0.4);
 }
-/* The collapse toggle: icon-only in both states and muted so it stays quieter
-   than the pane entries. Shares the `.ed-rail button` reset and hover wash
-   above. */
+/* The rail's last row, set apart from "Get it live" by a hairline that stays
+   on the icon strip too. A column flex box, so the toggle's inline-flex
+   tooltip wrapper stretches to the full width, as the entries' wrappers do
+   in the rail itself. The way back to the dashboard sits beside the page
+   title. */
+.ed-rail .rail-foot {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+/* The collapse toggle: a labelled row that takes the entries' width, padding,
+   transitions and hover wash from `.ed-rail button` above, muted so it stays
+   quieter than the panes. On the icon strip the entries' padding centres its
+   chevron like every other icon. */
 .ed-rail .rail-toggle {
-  flex: none;
-  /* A fixed width, not the entries' 100%, so it keeps to the row's end and
-     can grow to the strip's full width (the collapsed rule) by animating. */
-  width: 32px;
-  justify-content: center;
-  padding: 8px;
   color: var(--ink-40);
-  transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease),
-    width var(--dur-slow) var(--ease);
 }
 /* One chevron that turns around, rather than two icons that swap. */
 .ed-rail .rail-toggle svg {
@@ -542,13 +553,7 @@
 .ed[data-rail="collapsed"] .ed-rail button:has(> .ring) {
   padding-left: 3.5px;
 }
-/* The toggle widens to the whole strip, so its chevron centres like every
-   entry below it, and turns to point the way the rail will open. Its own
-   padding restated, since the entry rule above matches it too. */
-.ed[data-rail="collapsed"] .ed-rail .rail-toggle {
-  width: 43px;
-  padding: 8px;
-}
+/* The toggle's chevron turns to point the way the rail will open. */
 .ed[data-rail="collapsed"] .ed-rail .rail-toggle svg {
   transform: rotate(180deg);
 }
@@ -560,6 +565,14 @@
 }
 .ed[data-rail="collapsed"] .ed-rail .rail-head::before {
   opacity: 1;
+}
+/* The first group has nothing above it to divide from, so its heading folds
+   away entirely and the first icon starts at the top of the strip. */
+.ed[data-rail="collapsed"] .ed-rail > .rail-head:first-child {
+  padding-block: 0;
+}
+.ed[data-rail="collapsed"] .ed-rail > .rail-head:first-child::before {
+  opacity: 0;
 }
 
 .ed-main {
@@ -627,20 +640,63 @@
     animation: none;
   }
   /* The preview's device swap goes up at once, with no fade and no rise.
-     `usePreviewFit` already skips its phases under reduced motion; this
-     covers a swap already running when the setting flips. The `.ed` prefix
-     lifts both selectors past the frame and swap rules further down, which
-     would otherwise win on specificity or on coming later. */
-  .ed .ed-prev-frame,
-  .ed .ed-prev-scroll[data-device-swap] .ed-prev-frame {
+     `usePreviewFit` already skips its phases and the card morph under
+     reduced motion; this covers a swap already running when the setting
+     flips. The `.ed` prefix lifts both selectors past the page and swap
+     rules further down, which would otherwise win on specificity or on
+     coming later. */
+  .ed .ed-prev-page,
+  .ed .ed-prev-scroll[data-device-swap] .ed-prev-page {
     transition: none;
     transform: none;
   }
 }
+/* Reduced motion, from the OS or the in-app toggle: the global rule in
+   `base.css` shortens every transition to 0.01ms, and the persona page's
+   own elements keep `transition-property: all`. A new zoom or layout width
+   (a device swap, a resize, a rail fold) then started some 1,300 of those
+   at once, and each painted its old value for one frame: the new page showed
+   in the old device's layout for about 80ms. Inside the preview nothing
+   transitions at all. Both selectors carry `!important` to outrank the
+   global rule, which has it too. */
+@media (prefers-reduced-motion: reduce) {
+  .ed .ed-prev-page *,
+  .ed .ed-prev-page *::before,
+  .ed .ed-prev-page *::after {
+    transition: none !important;
+  }
+}
+html[data-reduce-motion="true"] .ed .ed-prev-page *,
+html[data-reduce-motion="true"] .ed .ed-prev-page *::before,
+html[data-reduce-motion="true"] .ed .ed-prev-page *::after {
+  transition: none !important;
+}
+/* The in-app "Reduce motion" toggle's twin of the grid and preview rules in
+   the media block above. The global rule only shortens the grid's glide to
+   0.01ms, which still painted one frame of the old columns: the new device
+   showed in the old dock's width for a frame. */
+html[data-reduce-motion="true"] .ed,
+html[data-reduce-motion="true"] .ed-preview {
+  transition: none;
+}
+html[data-reduce-motion="true"] .ed[data-preview="off"] .ed-preview {
+  transform: none;
+}
+html[data-reduce-motion="true"] .ed .ed-prev-page,
+html[data-reduce-motion="true"]
+  .ed
+  .ed-prev-scroll[data-device-swap]
+  .ed-prev-page {
+  transition: none;
+  transform: none;
+}
+/* No width cap: the pane column already has its bounds (the editor wrap's
+   max width, less the rail and the docked preview), and folding the rail
+   hands its space to the pane, so a cap here would only leave a dead gap
+   before the preview. */
 .ed-grid {
   display: grid;
   gap: 18px;
-  max-width: 620px;
 }
 .ed-2 {
   display: grid;
@@ -707,21 +763,45 @@
   scrollbar-gutter: stable;
   padding: 14px;
 }
-/* A device swap holds the zoom while the dock glides, so for a moment the
-   frame can be wider than the dock: the old laptop layout in a narrowing
-   dock, or the new width under the old zoom. Clipping sideways for the length
-   of the swap keeps a horizontal scrollbar from flashing in and out. */
+/* A device swap morphs the card against the width the dock's observer last
+   recorded, which trails a narrowing dock by a frame, so the card can stand
+   a pixel or two wider than the dock for a moment. Clipping sideways for the
+   length of the swap keeps a horizontal scrollbar from flashing in and out. */
 .ed-prev-scroll[data-device-swap] {
   overflow-x: hidden;
 }
-/* The frame's inline `width` is the chosen device's layout width and its
-   inline `zoom` shrinks that real persona page tree to fit the dock
-   (`usePreviewFit`), so there is no second, drifting layout. Centred so a
-   capped phone frame sits in the middle of a wide dock. `content-box` keeps
-   that width for the page itself: the 1px border sits outside it, so a 390px
-   phone lays out at a true 390px (`FRAME_BORDER_TOTAL` in `usePreviewFit`). */
+/* The card: the preview's border, radius, shadow and cream ground. At rest
+   it hugs the zoomed page (`fit-content`), centred so a capped phone sits in
+   the middle of a wide dock. During a device swap `usePreviewFit` writes an
+   inline `width` and `height` here and morphs the width between the two
+   devices' outlines while the page inside keeps its own size. `content-box`
+   keeps those inline pixels for the content: the 1px border sits outside
+   them (`FRAME_BORDER_TOTAL` in `previewCardMorph`). The page is centred
+   with `unsafe center`, so an old page wider than a shrinking card spills
+   out evenly on both sides and the clip trims it symmetrically. A browser
+   without the keyword keeps the plain `center` above it, which flexbox
+   already overflows on both sides. */
 .ed-prev-frame {
   box-sizing: content-box;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  justify-content: unsafe center;
+  align-items: flex-start;
+  margin-inline: auto;
+  border-radius: var(--radius-16);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  box-shadow: var(--shadow-e3);
+}
+/* The page: its inline `width` is the chosen device's layout width and its
+   inline `zoom` shrinks that real persona page tree to fit the dock
+   (`usePreviewFit`), so there is no second, drifting layout. A 390px phone
+   lays out at a true 390px. `flex: none` keeps that width when the card
+   around it is narrower mid-swap. */
+.ed-prev-page {
+  flex: none;
   /* Only opacity and transform animate, for the device swap below: both run
      on the compositor and never relayout the page tree. The inline `width`
      and `zoom` stay off this list. The global reduced-motion rule shortens
@@ -731,31 +811,27 @@
   transition-property: opacity, transform;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease-out);
-  /* The frame is as tall as the whole page, so the rise scales from the top
-     edge, the part of the page the dock shows. */
+  /* The page is as tall as the whole persona, so the rise scales from the
+     top edge, the part of the page the dock shows. */
   transform-origin: top center;
-  margin-inline: auto;
-  border-radius: var(--radius-16);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  background: var(--cream);
-  box-shadow: var(--shadow-e3);
 }
 /* Mobile / Desktop swap, phased by `usePreviewFit` through `data-device-swap`
-   on the scroller. `leaving` fades the old layout out quickly. `settling`
-   keeps it hidden while the frame takes the new width and the dock glides:
-   `content-visibility: hidden` skips layout and paint of the whole page tree
-   meanwhile, and the transform drops to the rise's start at once (only
-   opacity keeps its transition, to finish the fade). `entering` has no rule
-   of its own: the frame returns to its base opacity and transform over the
-   base transition, a fade and small rise at the final zoom. */
-.ed-prev-scroll[data-device-swap="leaving"] .ed-prev-frame,
-.ed-prev-scroll[data-device-swap="settling"] .ed-prev-frame {
+   on the scroller. The card stays in view throughout and only its outline
+   moves; these rules fade the page inside it. `leaving` fades the old page
+   out quickly while the card starts to morph. `settling` keeps it hidden
+   while the page takes the new width and the card finishes following the
+   dock: `content-visibility: hidden` skips layout and paint of the whole
+   page tree meanwhile, and the transform drops to the rise's start at once
+   (only opacity keeps its transition, to finish the fade). `entering` has no
+   rule of its own: the page returns to its base opacity and transform over
+   the base transition, a fade and small rise at the final zoom. */
+.ed-prev-scroll[data-device-swap="leaving"] .ed-prev-page,
+.ed-prev-scroll[data-device-swap="settling"] .ed-prev-page {
   opacity: 0;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease-in);
 }
-.ed-prev-scroll[data-device-swap="settling"] .ed-prev-frame {
+.ed-prev-scroll[data-device-swap="settling"] .ed-prev-page {
   transform: translateY(12px) scale(0.98);
   transition-property: opacity;
   content-visibility: hidden;

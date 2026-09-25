@@ -4,6 +4,8 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { ComposeTitleTip } from "./composeChecklist";
 import { COMPOSE_KIND_FALLBACK, composeKindById } from "./composeKinds.data";
 import { COMPOSE_TITLE_MAX_LENGTH, type PostKind } from "./composeThread.types";
+import { ComposeHeightFrame } from "./ComposeHeightFrame";
+import { ComposeSwapText } from "./ComposeSwapText";
 import styles from "./ComposeTitleField.module.css";
 
 // ── The title, as a serif line rather than a form field ─────────────────────
@@ -71,22 +73,28 @@ export function ComposeTitleField({
 
   return (
     <div className={styles.titleField}>
-      <textarea
-        ref={ref}
-        className={styles.titleInput}
-        rows={1}
-        value={title}
-        // The cap also lives in `setTitle`, so a paste is bounded either way.
-        maxLength={COMPOSE_TITLE_MAX_LENGTH}
-        placeholder={t(placeholderKey)}
-        aria-label={t("forum:composePage.title.ariaLabel")}
-        autoComplete="off"
-        onKeyDown={handleKeyDown}
-        // A pasted newline would leave an unreachable second line behind.
-        onChange={(event) =>
-          onTitleChange(event.target.value.replace(/\n/g, " "))
-        }
-      />
+      {/* An empty title is sized by its placeholder, which changes with the
+          kind and can need a second line, so the frame eases that change.
+          Once the member types, a new line lands at once: the first letter
+          (length 1) still eases the placeholder's height away. */}
+      <ComposeHeightFrame isAnimated={title.length <= 1}>
+        <textarea
+          ref={ref}
+          className={styles.titleInput}
+          rows={1}
+          value={title}
+          // The cap also lives in `setTitle`, so a paste is bounded either way.
+          maxLength={COMPOSE_TITLE_MAX_LENGTH}
+          placeholder={t(placeholderKey)}
+          aria-label={t("forum:composePage.title.ariaLabel")}
+          autoComplete="off"
+          onKeyDown={handleKeyDown}
+          // A pasted newline would leave an unreachable second line behind.
+          onChange={(event) =>
+            onTitleChange(event.target.value.replace(/\n/g, " "))
+          }
+        />
+      </ComposeHeightFrame>
       <div className={styles.titleRow}>
         <span
           className={[styles.tip, titleTip.isPositive && styles.tipPositive]
@@ -94,7 +102,9 @@ export function ComposeTitleField({
             .join(" ")}
           aria-live="polite"
         >
-          {titleTip.messageKey ? t(titleTip.messageKey) : ""}
+          <ComposeSwapText swapKey={titleTip.messageKey ?? ""}>
+            {titleTip.messageKey ? t(titleTip.messageKey) : ""}
+          </ComposeSwapText>
         </span>
         <span
           className={[styles.counter, isNearCap && styles.counterWarn]

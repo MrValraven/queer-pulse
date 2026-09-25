@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
 import { ApiError } from "../../../shared/api/client";
-import { SkeletonLine } from "../../../shared/components/ui";
+import { HubBackLink, SkeletonLine } from "../../../shared/components/ui";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -49,7 +49,12 @@ export function AdminEmailTemplateEditorPage() {
           to: routes.adminEmailTemplates,
         },
       ]}
+      isFullBleed
     >
+      <HubBackLink
+        to={routes.adminEmailTemplates}
+        label={t("admin:emailTemplates.editor.allTemplates")}
+      />
       <AdminPageHeader
         eyebrow={t("admin:emailTemplates.eyebrow")}
         title={title}

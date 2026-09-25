@@ -1,11 +1,11 @@
-/* Row layout for SubprofileSocialLinksEditor. Tokens only; mirrors the
+/* Row layout for SocialLinkEditorRow (SubprofileSocialLinksEditor and
+   SubprofileItemLinksField). Tokens only; mirrors the
    main-profile social editor (members/ProfileEdit.module.css). */
 
 /* Inline field scaffold for `SubprofileItemLinksField` (per-item links inside
-   the item drawer). Deliberately NOT `<FormField>`: FormField's `.field select`
-   / `.field input` descendant rules out-specify this module's `.linkSelect` /
-   `.inlineInput` and blow the platform picker up to full width. Mirrors the
-   neighbouring `CollaboratorSelect` label/helper instead. */
+   the item drawer). It skips `<FormField>` on purpose: FormField's
+   `.field input` descendant rule out-specifies this module's `.inlineInput`.
+   Mirrors the neighbouring `CollaboratorSelect` label/helper instead. */
 .fieldWrap {
   display: flex;
   flex-direction: column;
@@ -26,22 +26,24 @@
   line-height: 1.5;
 }
 
+/* The rows regroup on the list's own width: the same row sits in the wide
+   persona card and in the narrow item drawer, at every viewport. */
 .linksEditor {
+  container: link-rows / inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
 }
 
+/* One grid per row: grip, icon, platform select, handle/URL field and
+   remove. The select column has a fixed width, so the field and the remove
+   button line up from row to row, and the preview sits under the select
+   whatever the grip's width. */
 .linkGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.linkRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto 140px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
+  gap: 4px 8px;
 }
 
 .linkIcon {
@@ -50,37 +52,15 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  flex: none;
   border-radius: var(--radius-10);
   background: var(--wash);
   color: var(--accent-text);
 }
 
-.linkSelect {
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  color: var(--ink);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-12);
-  background: var(--paper);
-  padding: 8px 10px;
-  cursor: pointer;
-  flex: none;
-  transition: border-color 0.2s var(--ease);
-}
-.linkSelect:focus {
-  outline: none;
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-accent-soft);
-}
-
-/* Layout-only slot for the shared <Select> primitive that replaced the native
-   platform picker. It brings its own trigger styling, so this only reproduces
-   the flex sizing (and the responsive reflow order below) `.linkSelect` gave
-   the native control. */
+/* Layout-only slot for the shared <Select> primitive, whose trigger fills
+   the grid column it is given. */
 .linkPlatform {
-  flex: none;
+  min-width: 0;
 }
 
 .inlineInput {
@@ -112,9 +92,11 @@
   box-shadow: var(--ring-accent-soft);
 }
 
+/* The height of the platform select's `size="sm"` trigger, so the two line
+   up in the row. */
 .linkInput {
-  flex: 1 1 auto;
   min-width: 0;
+  min-height: 40px;
 }
 
 .linkRemove {
@@ -123,7 +105,6 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  flex: none;
   border: none;
   border-radius: 50%;
   background: transparent;
@@ -146,46 +127,34 @@
 }
 
 .preview {
+  grid-column: 3 / -1;
   font-size: var(--text-12);
   color: var(--ink-40);
   margin: 0;
-  padding-left: 42px;
   overflow-wrap: anywhere;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .linkSelect,
   .inlineInput,
   .linkRemove {
     transition: none;
   }
 }
 
-/* Below 560px the platform select + handle input no longer fit one row
-   comfortably. Regroup into two lines — chrome (icon, select, remove) on top,
-   the full-width handle/URL field below — via `order`, no DOM change needed. */
-@media (--sm) {
-  .linkRow {
-    flex-wrap: wrap;
+/* Below 440px of list width the select and the field no longer fit one line.
+   Regroup into two: grip, icon, select and remove on top, the full-width
+   handle/URL field below, with no DOM change. */
+@container link-rows (max-width: 440px) {
+  .linkGroup {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
     row-gap: var(--gap-xs);
   }
-  .linkIcon {
-    order: 1;
-  }
-  .linkSelect,
-  .linkPlatform {
-    order: 2;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
   .linkRemove {
-    order: 3;
+    grid-column: 4;
+    grid-row: 1;
   }
-  .linkInput {
-    order: 4;
-    flex: 1 1 100%;
-  }
+  .linkInput,
   .preview {
-    padding-left: 0;
+    grid-column: 1 / -1;
   }
 }

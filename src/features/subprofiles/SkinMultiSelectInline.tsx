@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from "react";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
@@ -12,7 +13,8 @@ import styles from "./SkinMultiSelectInline.module.css";
  * The `multiSelect` field's markup: the field frame's label and helper, then
  * a row of toggle chips (the featured options, then what else is chosen),
  * and a trailing chip that opens the checklist panel in flow under the row,
- * listing the options beyond the featured ones. Every edit goes through
+ * listing the options beyond the featured ones. The panel opens and closes
+ * with a height and fade (`Collapse`). Every edit goes through
  * `useSkinMultiSelect`, so the stored value keeps its shape.
  *
  * The wrapper is the hook's root: a pointer down anywhere in the row, the
@@ -81,7 +83,7 @@ export function SkinMultiSelectInline({
               panelId={panelId}
               triggerRef={triggerRef}
             />
-            {select.isOpen && (
+            <Collapse isOpen={select.isOpen}>
               <div className={styles.panelSlot}>
                 <MultiSelectPanel
                   select={panelSelect}
@@ -91,7 +93,7 @@ export function SkinMultiSelectInline({
                   labelId={field.labelId}
                 />
               </div>
-            )}
+            </Collapse>
           </>
         )}
       </SkinRefinedField>

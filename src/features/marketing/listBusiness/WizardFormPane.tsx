@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { NEXT_LABEL_KEYS, type ListingDraft } from "./listBusiness.data";
@@ -39,6 +40,8 @@ export function WizardFormPane({
   ) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
+  // The form column, so the preview can outline where the current field shows.
+  const formColumnRef = useRef<HTMLDivElement>(null);
   const nextLabel = t(
     NEXT_LABEL_KEYS[step] ?? "marketing:listBusiness.next.continue",
   );
@@ -46,7 +49,7 @@ export function WizardFormPane({
   return (
     <div className={styles.page}>
       <div className={styles.grid}>
-        <div>
+        <div ref={formColumnRef}>
           <WizardChrome step={step} savedAt={savedAt} onJump={goToStep} />
           {/* Keyed by step so the pane remounts on navigation, replaying
               the staggered entrance of each .stepBody child. */}
@@ -88,6 +91,7 @@ export function WizardFormPane({
           draft={draft}
           userName={userName}
           photoPreviews={form.photoPreviews}
+          formColumnRef={formColumnRef}
           onAddPhoto={() => goToStep(4)}
         />
       </div>

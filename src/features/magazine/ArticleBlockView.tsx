@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useInAppLinkRegion } from "../../shared/links/useInAppLinkRouting";
 import type { ArticleBlock, ArticleImageTint } from "./api/pieces.api";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
 import type { ImageSlotTint } from "../../shared/components/ui/ImageSlot";
@@ -47,12 +48,18 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
     () => (rawQuestion !== undefined ? sanitizeArticleHtml(rawQuestion) : ""),
     [rawQuestion],
   );
+  // `sanitizeArticleHtml` forces `target="_blank"` on every link, which an
+  // installed PWA hands to the system browser. This ref, passed to every
+  // element carrying sanitized HTML, routes a plain click on a link into
+  // QueerPulse inside the app.
+  const inAppLinkRegionRef = useInAppLinkRegion<HTMLElement>();
 
   switch (block.kind) {
     case "paragraph":
       return (
         <p
           className={block.lead ? `${styles.p} ${styles.lead}` : styles.p}
+          ref={inAppLinkRegionRef}
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       );
@@ -64,6 +71,7 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
         <h2
           id={articleHeadingAnchorId(block.id)}
           className={styles.h}
+          ref={inAppLinkRegionRef}
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       );
@@ -72,6 +80,7 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
       return (
         <blockquote
           className={styles.pull}
+          ref={inAppLinkRegionRef}
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       );
@@ -79,7 +88,10 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
     case "quote":
       return (
         <blockquote className={styles.quote}>
-          <p dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
+          <p
+            ref={inAppLinkRegionRef}
+            dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+          />
           {/* DES-100: the cite is the speaker's name on its own. The
               house copy rule bans the em dash, and a hardcoded one here put a
               glyph in front of every attributed quote in the magazine. */}
@@ -101,7 +113,10 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
           {(block.caption || block.credit) && (
             <figcaption className={styles.figCaption}>
               {block.caption && (
-                <span dangerouslySetInnerHTML={{ __html: sanitizedCaption }} />
+                <span
+                  ref={inAppLinkRegionRef}
+                  dangerouslySetInnerHTML={{ __html: sanitizedCaption }}
+                />
               )}
               {block.credit && (
                 <span className={styles.credit}>{block.credit}</span>
@@ -116,6 +131,7 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
         <div className={styles.qa}>
           <p
             className={styles.q}
+            ref={inAppLinkRegionRef}
             dangerouslySetInnerHTML={{ __html: sanitizedQuestion }}
           />
           <div className={styles.a}>
@@ -128,6 +144,7 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
               {block.who && <div className={styles.who}>{block.who}</div>}
               <p
                 className={styles.answer}
+                ref={inAppLinkRegionRef}
                 dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
               />
             </div>

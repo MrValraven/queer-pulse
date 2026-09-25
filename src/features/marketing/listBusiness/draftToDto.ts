@@ -88,7 +88,9 @@ export function businessPayload(
     price: draft.price,
     blurb: draft.blurb.trim(),
     tagline: draft.tagline.trim(),
-    whatItIs: draft.whatItIs,
+    // Paragraphs of the description. The editor never stores a blank one,
+    // but a draft saved before it did may still carry an empty line.
+    whatItIs: draft.whatItIs.filter((paragraph) => paragraph.text.trim()),
     tags: draft.tags,
     goodFor: draft.goodFor,
     accessibility: {

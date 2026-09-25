@@ -203,12 +203,29 @@ export const bulkRemoveListings = (refs: string[], reason?: string) =>
   });
 
 /** What happened, in a listing's own words — one row per moderation event.
- *  Mirrors the backend's `ListingModerationEventDTO`. `fromStatus`/`toStatus`
- *  are `null` for an action that isn't itself a status transition (e.g.
- *  `question_asked`, `answered`). `actor` is `null` for an action attributed
- *  to no longer resolvable account (deleted/anonymised moderator). */
+ *  Mirrors the backend's `ListingModerationEventDTO`, and its 13 values mirror
+ *  every member of the backend's `ListingModerationAction` enum
+ *  (`listing-moderation-event.entity.ts`) so a new action added there fails
+ *  this union's consumers (`eventLabel`'s exhaustive switch in
+ *  `listingHistoryEventLabel.ts`) at compile time instead of rendering as a
+ *  raw string in the admin drawer. `fromStatus`/`toStatus` are `null` for an
+ *  action that isn't itself a status transition (e.g. `question_asked`,
+ *  `answered`). `actor` is `null` for an action attributed to no longer
+ *  resolvable account (deleted/anonymised moderator or owner). */
 export type ListingModerationAction =
-  "status_changed" | "removed" | "question_asked" | "answered" | "bulk_status";
+  | "status_changed"
+  | "removed"
+  | "question_asked"
+  | "answered"
+  | "bulk_status"
+  | "ownership_transferred"
+  | "owner_edited"
+  | "co_manager_added"
+  | "co_manager_removed"
+  | "staff_created"
+  | "suggestion_applied"
+  | "directory_paused"
+  | "directory_resumed";
 
 export interface ListingModerationEventDTO {
   id: string;

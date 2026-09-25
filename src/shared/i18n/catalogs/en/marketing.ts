@@ -1546,7 +1546,7 @@ export const marketing: Catalog = {
     "e.g. Co-owned by me (Sandra, she/her) and Rui (he/him) since 2019",
   "listBusiness.step1.priceLabel": "Roughly the price?",
   "listBusiness.step1.priceAria": "Price band",
-  "listBusiness.step1.blurbLabel": "The one-liner",
+  "listBusiness.step1.blurbLabel": "Short description",
   "listBusiness.step1.blurbHelper":
     "This is the blurb on your directory card. One sentence, plain and warm.",
   "listBusiness.step1.blurbPlaceholder":
@@ -1567,17 +1567,20 @@ export const marketing: Catalog = {
     "A single line shown big and italic at the top of your page. <em>Make it the heart of the place.</em>",
   "listBusiness.step2.taglinePlaceholder":
     "Nobody gets misgendered. The back room is always yours.",
-  "listBusiness.step2.witLabel": "What it actually is",
-  "listBusiness.step2.witHelper":
-    "Two to four short lines. The things you'd want a stranger to know walking in.",
-  "listBusiness.step2.witFirstPlaceholder":
-    "e.g. Galão, pastéis, two daily specials",
-  "listBusiness.step2.witMorePlaceholder": "One more thing worth knowing",
-  "listBusiness.step2.witRemoveAria": "Remove line",
-  "listBusiness.step2.witAdd": "Add another line",
+  "listBusiness.step2.descriptionLabel": "Description",
+  "listBusiness.step2.descriptionHelper":
+    "What a stranger should know before walking in. Use the toolbar for bold, lists and links.",
+  "listBusiness.step2.descriptionPlaceholder":
+    "e.g. A neighbourhood café with galão, pastéis and two daily specials.",
+  "listBusiness.step2.descriptionHint":
+    "Leave a blank line to start a new paragraph.",
   "listBusiness.step2.tagsLabel": "Tags: a few words people might filter by",
-  "listBusiness.step2.tagsPlaceholder": "e.g. Wheelchair-accessible",
-  "listBusiness.step2.tagsAddCta": "Add",
+  "listBusiness.step2.tagsPlaceholder": "Search tags",
+  "listBusiness.step2.tagsAvailableLabel": "Choose from what's available",
+  "listBusiness.step2.tagsChosenCount": "{count} of 6 chosen",
+  "listBusiness.step2.tagsNoMatch": "No tag matches “{query}”",
+  "listBusiness.step2.tagsLegacyLabel": "Older tags",
+  "listBusiness.step2.tagsCapHint": "Six tags is the most a listing can have",
   "listBusiness.step2.tagRemoveAria": "Remove {tag}",
   "listBusiness.step2.goodForLabel": "Good for… (tick what's true)",
   "listBusiness.step2.goodForHelper":
@@ -1596,6 +1599,44 @@ export const marketing: Catalog = {
   "listBusiness.goodFor.hostsCommunityEvents": "Hosts community events",
   "listBusiness.goodFor.budgetFriendly": "Budget-friendly",
   "listBusiness.goodFor.accessibleBathroom": "Accessible bathroom",
+  // Listing tag vocabulary: group headings, then one key per tag
+  "listBusiness.tagGroup.visiting": "How to visit",
+  "listBusiness.tagGroup.happening": "What happens there",
+  "listBusiness.tagGroup.foodDrink": "Food and drink",
+  "listBusiness.tagGroup.pricing": "Pricing",
+  "listBusiness.tagGroup.languages": "Languages",
+  "listBusiness.tag.byAppointment": "By appointment",
+  "listBusiness.tag.bookingRecommended": "Booking recommended",
+  "listBusiness.tag.membersOnly": "Members only",
+  "listBusiness.tag.freeEntry": "Free entry",
+  "listBusiness.tag.dayPasses": "Day passes",
+  "listBusiness.tag.memberships": "Memberships",
+  "listBusiness.tag.classPacks": "Class packs",
+  "listBusiness.tag.workshops": "Workshops",
+  "listBusiness.tag.classes": "Classes",
+  "listBusiness.tag.liveMusic": "Live music",
+  "listBusiness.tag.djNights": "DJ nights",
+  "listBusiness.tag.dragShows": "Drag shows",
+  "listBusiness.tag.exhibitions": "Exhibitions",
+  "listBusiness.tag.readingsAndTalks": "Readings and talks",
+  "listBusiness.tag.communityEvents": "Community events",
+  "listBusiness.tag.supportGroups": "Support groups",
+  "listBusiness.tag.spaceForHire": "Space for hire",
+  "listBusiness.tag.veganOptions": "Vegan options",
+  "listBusiness.tag.vegetarianOptions": "Vegetarian options",
+  "listBusiness.tag.glutenFreeOptions": "Gluten-free options",
+  "listBusiness.tag.alcoholFreeOptions": "Alcohol-free options",
+  "listBusiness.tag.terrace": "Terrace",
+  "listBusiness.tag.lateOpening": "Late opening",
+  "listBusiness.tag.genderNeutralPricing": "Gender-neutral pricing",
+  "listBusiness.tag.slidingScale": "Sliding scale",
+  "listBusiness.tag.payWhatYouCan": "Pay what you can",
+  "listBusiness.tag.studentDiscount": "Student discount",
+  "listBusiness.tag.portugueseSpoken": "Portuguese spoken",
+  "listBusiness.tag.englishSpoken": "English spoken",
+  "listBusiness.tag.spanishSpoken": "Spanish spoken",
+  "listBusiness.tag.frenchSpoken": "French spoken",
+  "listBusiness.tag.portugueseSignLanguage": "Portuguese Sign Language",
   // Languages (endonyms stay as-is; only "Other" and the LGP gloss translate)
   "listBusiness.lang.portugues": "Português",
   "listBusiness.lang.english": "English",
@@ -1780,9 +1821,9 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.neighbourhood": "Neighbourhood",
   "listBusiness.step5.row.ownership": "Ownership",
   "listBusiness.step5.row.price": "Price",
-  "listBusiness.step5.row.oneLiner": "One-liner",
+  "listBusiness.step5.row.oneLiner": "Short description",
   "listBusiness.step5.row.tagline": "Tagline",
-  "listBusiness.step5.row.whatItIs": "What it is",
+  "listBusiness.step5.row.whatItIs": "Description",
   "listBusiness.step5.row.tags": "Tags",
   "listBusiness.step5.row.goodFor": "Good for",
   "listBusiness.step5.row.languages": "Languages",
@@ -1849,9 +1890,9 @@ export const marketing: Catalog = {
   "listBusiness.missing.hood": "a neighbourhood",
   "listBusiness.missing.badge": "who runs it",
   "listBusiness.missing.price": "a price band",
-  "listBusiness.missing.blurb": "the one-liner",
+  "listBusiness.missing.blurb": "the short description",
   "listBusiness.missing.tagline": "a tagline",
-  "listBusiness.missing.whatItIs": "what it is",
+  "listBusiness.missing.whatItIs": "a description",
   "listBusiness.missing.address": "an address",
   "listBusiness.missing.pin": "a map pin",
   "listBusiness.missing.hours": "opening hours",
@@ -1880,7 +1921,7 @@ export const marketing: Catalog = {
     "Your place will appear here as you fill in the form, exactly as it'll look in the directory grid.",
   "listBusiness.preview.placeholderTagline":
     "Your tagline becomes the pull-quote at the top of your page.",
-  "listBusiness.preview.whatItIs": "What it is",
+  "listBusiness.preview.whatItIs": "Description",
   "listBusiness.preview.goodFor": "Good for",
   "listBusiness.preview.languages": "Languages",
   "listBusiness.preview.hours": "Hours",
@@ -1891,11 +1932,127 @@ export const marketing: Catalog = {
     "Add a name first to preview the full page",
   "listBusiness.preview.foot":
     "This is a preview. Your listing goes live only after the community team reviews it.",
+  // Live preview field captions (editor + wizard)
+  "listBusiness.livePreview.caption.idle":
+    "Tap or click any field to see where it shows.",
+  "listBusiness.livePreview.caption.path":
+    "This tells the review team how you know the place. It stays off your listing.",
+  "listBusiness.livePreview.caption.name":
+    "Your place's name shows here, under the photo on your card.",
+  "listBusiness.livePreview.caption.cats":
+    "Your first category shows here, on your card.",
+  "listBusiness.livePreview.caption.hood":
+    "Your neighbourhood shows here, beside your category.",
+  "listBusiness.livePreview.caption.badge":
+    "Your badge shows here, on your card's photo.",
+  "listBusiness.livePreview.caption.evidence":
+    "Only this listing's managers and the review team see this. It backs up the badge.",
+  "listBusiness.livePreview.caption.price":
+    "Your price band shows here, as the first pill on your card.",
+  "listBusiness.livePreview.caption.blurb":
+    "Your short description shows here, on your directory card.",
+  "listBusiness.livePreview.caption.tagline":
+    "Your tagline shows here, as the pull-quote at the top of your page.",
+  "listBusiness.livePreview.caption.whatItIs":
+    "Your description shows here, on your page.",
+  "listBusiness.livePreview.caption.tags":
+    "Your tags show here. The card fits three pills, price included.",
+  "listBusiness.livePreview.caption.goodFor":
+    "What you tick shows here, on your page.",
+  "listBusiness.livePreview.caption.langs":
+    "The languages you speak show here, on your page.",
+  "listBusiness.livePreview.caption.address":
+    "Your address shows on your full page, with a map. Open it to see where.",
+  "listBusiness.livePreview.caption.hours":
+    "Your hours: the open or closed line on your card, and the week on your page.",
+  "listBusiness.livePreview.caption.hoursExceptions":
+    "Special dates show on your full page, and your card follows them on the day.",
+  "listBusiness.livePreview.caption.social":
+    "Your links show on your full page. Open it to see where.",
+  "listBusiness.livePreview.caption.photos":
+    "Your cover photo shows here. The others fill the gallery on your full page.",
+  "listBusiness.livePreview.caption.rel":
+    "Only you and the review team see this. It helps them read your listing.",
+  "listBusiness.livePreview.caption.ownerName":
+    "Your name shows here. With your profile linked, your card shows your first name.",
+  "listBusiness.livePreview.caption.ownerRole":
+    "Your role shows here, beside your name.",
+  "listBusiness.livePreview.caption.contactEmail":
+    "Only you and the review team see this. It stays off your listing.",
+  "listBusiness.livePreview.caption.consent":
+    "These stay between you and the review team. They keep the listing honest.",
+  "listBusiness.livePreview.caption.services":
+    "What you offer and what it costs show on your full page.",
+  "listBusiness.livePreview.caption.accessibility":
+    "All answers show on your full page. Yes answers also show on your card.",
+  "listBusiness.livePreview.caption.affirmingBaseline":
+    "Every listing makes this promise, and your full page says so.",
+  "listBusiness.livePreview.placeholder.whatItIs":
+    "Your description will show here.",
+  "listBusiness.livePreview.placeholder.goodFor":
+    "What you tick will show here.",
+  "listBusiness.livePreview.placeholder.languages":
+    "The languages you pick will show here.",
+  "listBusiness.livePreview.placeholder.hours":
+    "Your open days and hours will show here.",
+  "listBusiness.livePreview.placeholder.owner":
+    "Your name and role will show here.",
+  "listBusiness.livePreview.caption.willShow":
+    "This shows on your card once your listing has a name.",
+  "listBusiness.livePreview.caption.hoodOnline":
+    "Your card says Online here. Your page shows the neighbourhood at the top.",
+  "listBusiness.livePreview.caption.online":
+    "When on, your card says Online here. Your page leaves out the map and the hours.",
+  "listBusiness.livePreview.caption.hoursNote":
+    "Your note shows on your full page, with your opening hours.",
+  "listBusiness.livePreview.caption.ownerNameRoleMode":
+    "In this mode only you and the review team see your name. Visitors see your role.",
+  "listBusiness.livePreview.caption.ownerNameAnon":
+    "Only you and the review team see your name. Your listing names no one.",
+  "listBusiness.livePreview.caption.ownerRoleInPlace":
+    "Your role shows here, in place of your name.",
+  "listBusiness.livePreview.caption.ownerRoleAnon":
+    "Anonymous mode hides your role. Managers and the review team still see it.",
+  "listBusiness.livePreview.caption.ownerRoleCoManager":
+    "This role shows here, unless the owner chose to stay anonymous.",
+  "listBusiness.livePreview.caption.ownerBio":
+    "Your page doesn't show this at the moment. It stays saved with the listing.",
+  "listBusiness.livePreview.caption.ownerVisibility":
+    "This sets what shows here: your name and role, your role alone, or no one.",
+  "listBusiness.livePreview.caption.ownerVisibilityAnon":
+    "Anonymous keeps you off your listing. The review team still sees your name.",
+  "listBusiness.livePreview.caption.linkProfile":
+    "Your card gets your first name, a Member-run pill and your photo, if you show it.",
+  "listBusiness.livePreview.caption.linkProfileUnused":
+    "This only counts when you show your name. For now nothing links to your profile.",
+  "listBusiness.livePreview.caption.pricingMode":
+    "Your full page shows the list you pick here. The other one stays saved.",
+  "listBusiness.livePreview.caption.operatingState":
+    "Any change shows here and on your page. Closed for good leaves the directory lists.",
+  "listBusiness.livePreview.caption.directoryVisibility":
+    "Pausing takes your card and your page out of the directory until you show it again.",
+  "listBusiness.livePreview.caption.accessibilityCard":
+    "Up to three of your yes answers show here. All answers show on your full page.",
+  "listBusiness.livePreview.caption.coManagers":
+    "Only this listing's managers and the review team see who can edit it.",
+  "listBusiness.livePreview.placeholder.ownerCoManaged":
+    "On the real page, the owner's name or role shows here, as they chose to share it.",
+  "listBusiness.livePreview.hours.dayRange": "{from} to {to}",
+  "listBusiness.livePreview.hours.pair": "{first} and {second}",
+  "listBusiness.livePreview.hours.group": "{days}: {hours}",
+  "listBusiness.livePreview.caption.hoursOnline":
+    "Your card still shows open or closed. Online, your page leaves the hours out.",
+  "listBusiness.livePreview.caption.hoursNoteOnline":
+    "Online, your page leaves the hours out, so this note doesn't show right now.",
+  "listBusiness.livePreview.caption.hoursExceptionsOnline":
+    "Your card follows special dates on the day. Online, your page leaves them out.",
+  "listBusiness.livePreview.placeholder.ownerRoleMode":
+    "Your role will show here.",
   // Full-page preview modal
   "listBusiness.fullPreview.eyebrow": "Full-page preview",
   "listBusiness.fullPreview.sub":
     "This is how your listing will look in the directory once the team approves it.",
-  "listBusiness.fullPreview.whatItIs": "What it is",
+  "listBusiness.fullPreview.whatItIs": "Description",
   "listBusiness.fullPreview.goodFor": "Good for",
   "listBusiness.fullPreview.goodToKnow": "Good to know",
   "listBusiness.fullPreview.hours": "Opening hours",
@@ -1935,6 +2092,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.previewCta": "Preview page",
   "listBusiness.editor.preview.eyebrow":
     "Preview, including your unsaved edits",
+  "listBusiness.editor.preview.keepEditing": "Keep editing",
   "listBusiness.editor.preview.sub":
     "Your listing page as visitors will see it. Nothing here is saved until you press save.",
   "listBusiness.editor.preview.subCoManager":
@@ -1947,6 +2105,100 @@ export const marketing: Catalog = {
   "listBusiness.editor.section.whoCanEdit": "Who can edit",
   "listBusiness.editor.section.roleOnListing": "Role shown on the listing",
   "listBusiness.editor.section.dangerZone": "Danger zone",
+  "listBusiness.editor.section.history": "History",
+  "listBusiness.editor.history.intro":
+    "Changes to this listing, newest first: what you and your team edited, and what QueerPulse moderation did.",
+  "listBusiness.editor.history.empty.title": "Nothing recorded yet",
+  "listBusiness.editor.history.empty.description":
+    "Changes to this listing will show up here. Edits you and your team make are recorded once the listing is live.",
+  "listBusiness.editor.history.showOlder": "Show older",
+  "listBusiness.editor.history.loadingOlder": "Loading…",
+  "listBusiness.editor.history.olderError": "We couldn't load older changes.",
+  "listBusiness.editor.history.moderatorNote":
+    "A moderator added a note about this. It went to the listing's owner at the time, in Messages.",
+  "listBusiness.editor.history.actor.unknownTeamMember": "A team member",
+  "listBusiness.editor.history.actor.previousTeam": "A previous team member",
+  "listBusiness.editor.history.actor.moderation": "QueerPulse moderation",
+  "listBusiness.editor.history.event.ownerEdited":
+    "<strong>{actor}</strong> changed {fields}",
+  "listBusiness.editor.history.event.suggestionApplied":
+    "<strong>{actor}</strong> applied a suggested correction to {fields}",
+  "listBusiness.editor.history.event.directoryPaused":
+    "<strong>{actor}</strong> paused the listing in the directory",
+  "listBusiness.editor.history.event.directoryResumed":
+    "<strong>{actor}</strong> showed the listing in the directory again",
+  "listBusiness.editor.history.event.teamChanged":
+    "<strong>{actor}</strong> changed who can edit this listing",
+  "listBusiness.editor.history.event.statusUpdated":
+    "<strong>{actor}</strong> updated the listing's review status",
+  "listBusiness.editor.history.event.removed":
+    "<strong>{actor}</strong> removed the listing",
+  "listBusiness.editor.history.event.questionAsked":
+    "<strong>{actor}</strong> asked a question",
+  "listBusiness.editor.history.event.answered": "The question was answered",
+  "listBusiness.editor.history.event.ownershipTransferred":
+    "<strong>{actor}</strong> transferred ownership of this listing",
+  "listBusiness.editor.history.event.staffCreated":
+    "<strong>{actor}</strong> created this listing",
+  "listBusiness.editor.history.field.listingDetails": "the listing details",
+  "listBusiness.editor.history.field.path":
+    "whether the listing is claimed or suggested",
+  "listBusiness.editor.history.field.name": "the business name",
+  "listBusiness.editor.history.field.cats": "the categories",
+  "listBusiness.editor.history.field.hood": "the neighbourhood",
+  "listBusiness.editor.history.field.city": "the city",
+  "listBusiness.editor.history.field.timezone": "the timezone",
+  "listBusiness.editor.history.field.badge": "the ownership badge",
+  "listBusiness.editor.history.field.evidence": "the evidence behind the badge",
+  "listBusiness.editor.history.field.price": "the price band",
+  "listBusiness.editor.history.field.blurb": "the short description",
+  "listBusiness.editor.history.field.tagline": "the tagline",
+  "listBusiness.editor.history.field.whatItIs": "the description",
+  "listBusiness.editor.history.field.tags": "the tags",
+  "listBusiness.editor.history.field.goodFor": "the “good for” tags",
+  "listBusiness.editor.history.field.accessibilityAnswers":
+    "the accessibility answers",
+  "listBusiness.editor.history.field.accessibilityNote":
+    "the accessibility note",
+  "listBusiness.editor.history.field.services": "the services and prices",
+  "listBusiness.editor.history.field.menu": "the menu",
+  "listBusiness.editor.history.field.pricingMode":
+    "whether the listing shows services or a menu",
+  "listBusiness.editor.history.field.langs": "the languages spoken",
+  "listBusiness.editor.history.field.online": "the online-only setting",
+  "listBusiness.editor.history.field.address": "the address",
+  "listBusiness.editor.history.field.mapPin": "the map pin",
+  "listBusiness.editor.history.field.hours": "the opening hours",
+  "listBusiness.editor.history.field.hoursNote": "the opening-hours note",
+  "listBusiness.editor.history.field.hoursExceptions":
+    "the holiday and special-date hours",
+  "listBusiness.editor.history.field.social": "the contact and social links",
+  "listBusiness.editor.history.field.photoGallery": "the photos",
+  "listBusiness.editor.history.field.rel": "the connection to the business",
+  "listBusiness.editor.history.field.ownerName": "the owner's name",
+  "listBusiness.editor.history.field.ownerRole":
+    "the role shown on the listing",
+  "listBusiness.editor.history.field.ownerBio": "the owner's bio",
+  "listBusiness.editor.history.field.visibility":
+    "what the listing shows about the owner",
+  "listBusiness.editor.history.field.linkToProfile":
+    "the link to the owner's profile",
+  "listBusiness.editor.history.field.contactEmail": "the contact email",
+  "listBusiness.editor.history.field.consentOuting":
+    "the public-listing confirmation",
+  "listBusiness.editor.history.field.consentGuide": "the accuracy confirmation",
+  "listBusiness.editor.history.event.coManagerAdded":
+    "<strong>{actor}</strong> joined the team as a co-manager",
+  "listBusiness.editor.history.loadingHistory": "Loading history…",
+  "listBusiness.editor.history.olderLoaded": "Older changes loaded",
+  "listBusiness.editor.history.loadError.title":
+    "We couldn't load the <em>history</em>",
+  "listBusiness.editor.history.event.statusLive":
+    "<strong>{actor}</strong> published the listing",
+  "listBusiness.editor.history.event.statusReview":
+    "<strong>{actor}</strong> sent the listing back for review",
+  "listBusiness.editor.history.event.statusQuestion":
+    "<strong>{actor}</strong> paused the review to ask a question",
   "listBusiness.editor.dangerZone.body":
     "Deleting this listing is permanent. If you'd rather step back, you can hide it or mark it closed instead, both under Trading and visibility above.",
   "listBusiness.editor.dangerZone.deleteCta": "Delete this listing",
@@ -2430,6 +2682,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-25.headline":
+    "Four new forum categories, in-app QueerPulse links, and a change history for listings.",
   "changelog.releases.2026-09-24.headline":
     "Therapist personas get a full profile page, and the directory map grows into full screen.",
   "changelog.releases.2026-09-23.headline":
@@ -2558,6 +2812,138 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.email-template-editor-save-and-back.title":
+    "Email template Save waits for a change, with a way back",
+  "changelog.entries.email-template-editor-save-and-back.body":
+    "The template editor gains a Back button beside Save and a link above to return to all templates.",
+  "changelog.entries.listing-editor-save-needs-changes.title":
+    "Listing Save stays off until you change something",
+  "changelog.entries.listing-editor-save-needs-changes.body":
+    "In the listing editor and its full preview, Save switches on once an edit is actually waiting.",
+  "changelog.entries.email-template-mail-client-preview.title":
+    "Email templates preview inside a mock mail app",
+  "changelog.entries.email-template-mail-client-preview.body":
+    "The editor goes full width and the email sits in a desktop inbox or a phone that stays in view.",
+  "changelog.entries.listing-preview-full-width.title":
+    "Listing preview opens full width, with a save button",
+  "changelog.entries.listing-preview-full-width.body":
+    "The editor preview shows your page in its real desktop layout, and you can save straight from it.",
+  "changelog.entries.location-maps-scroll-zoom.title":
+    "Place and housing maps zoom with the scroll wheel",
+  "changelog.entries.location-maps-scroll-zoom.body":
+    "With the pointer over the map, a wheel or trackpad scroll zooms in and out.",
+  "changelog.entries.listing-description-rich-text.title":
+    "Listings get one formatted description field",
+  "changelog.entries.listing-description-rich-text.body":
+    "It replaces the short lines, and bold, lists, quotes and links show as written on the public page.",
+  "changelog.entries.mailbox-settings-open-in-switcher.title":
+    "Mailbox settings open inside the switcher",
+  "changelog.entries.mailbox-settings-open-in-switcher.body":
+    "The gear swaps the mailbox list for its settings in the same sheet, with a back arrow to the list.",
+  "changelog.entries.unpublished-personas-no-mailbox.title":
+    "Personas you never published leave your mailboxes",
+  "changelog.entries.unpublished-personas-no-mailbox.body":
+    "A draft persona only gets an inbox once published; one unpublished later keeps its conversations.",
+  "changelog.entries.directory-map-reaches-hours.title":
+    "Bigger map on directory listings",
+  "changelog.entries.directory-map-reaches-hours.body":
+    'On wide screens the "Where it is" map grows until the card lines up with the bottom of the hours.',
+  "changelog.entries.community-suggestions-show-mark.title":
+    "Community suggestions show each community's icon and blurb",
+  "changelog.entries.community-suggestions-show-mark.body":
+    'The "Communities you might like" card now shows each one\'s mark and a two-line description.',
+  "changelog.entries.therapist-insurer-picker.title":
+    "Therapists pick their insurers from a list",
+  "changelog.entries.therapist-insurer-picker.body":
+    "Type a few letters to find ADSE, Médis, Multicare and 16 more, or write in any insurer the list lacks.",
+  "changelog.entries.inbox-row-menu-under-date.title":
+    "Chat list menu sits under the time",
+  "changelog.entries.inbox-row-menu-under-date.body":
+    "The menu button appears under each chat's time, so the date and icons stay put as you hover a row.",
+  "changelog.entries.page-editor-rows-glide.title":
+    "Reorder links, topics and every list smoothly",
+  "changelog.entries.page-editor-rows-glide.body":
+    "Social links, Part of, item links and topics reorder by drag or Alt+arrow, and rows glide into place.",
+  "changelog.entries.therapist-expectations-as-rows.title":
+    "Page editor lists are now reorderable rows",
+  "changelog.entries.therapist-expectations-as-rows.body":
+    "Pills and older lists became rows. Enter adds a line, pasting several lines splits them, drag to reorder.",
+  "changelog.entries.therapist-approach-rich-text.title":
+    "Therapists write their approach in one formatted field",
+  "changelog.entries.therapist-approach-rich-text.body":
+    "Bold, italics, lists and links now work, and a blank line starts a new paragraph on the page.",
+  "changelog.entries.persona-preview-device-morph.title":
+    "The persona preview morphs between phone and computer",
+  "changelog.entries.persona-preview-device-morph.body":
+    "The preview card stays on screen and stretches or shrinks with the dock while the page fades between layouts.",
+  "changelog.entries.therapist-cost-rolling-total.title":
+    "The therapist cost total rolls to its new price",
+  "changelog.entries.therapist-cost-rolling-total.body":
+    "Its digits roll up when the monthly price rises and down when it falls, and stay still with reduced motion.",
+  "changelog.entries.email-template-editor-compact.title":
+    "The email template editor is more compact",
+  "changelog.entries.email-template-editor-compact.body":
+    "Settings share one row, language and actions share one toolbar, and the live preview starts near the top.",
+  "changelog.entries.member-directory-counts-roll.title":
+    "The member directory counts roll to their new number",
+  "changelog.entries.member-directory-counts-roll.body":
+    "Filtering rolls the Showing count up or down, and the headline total rolls in when the page opens.",
+  "changelog.entries.therapist-topics-one-blank-line.title":
+    "Therapist topics keep one empty line at a time",
+  "changelog.entries.therapist-topics-one-blank-line.body":
+    '"Add a line" and Enter now take you to the empty line a topic already has.',
+  "changelog.entries.persona-picker-chips-animate.title":
+    "Persona pickers animate as you choose",
+  "changelog.entries.persona-picker-chips-animate.body":
+    "Picked options slide into the chip row above, and the checklist opens and closes smoothly.",
+  "changelog.entries.chat-list-row-seams.title":
+    "Chat list rows sit flush again",
+  "changelog.entries.chat-list-row-seams.body":
+    "The coloured lines peeking out between conversations, from the hidden swipe actions, are gone.",
+  "changelog.entries.therapist-preview-animates-edits.title":
+    "Your therapist page preview animates as you edit",
+  "changelog.entries.therapist-preview-animates-edits.body":
+    "Chips pop in, lines grow into place, and new blocks slide open, matching the editor beside it.",
+  "changelog.entries.listing-editor-live-preview.title":
+    "See your listing take shape as you edit it",
+  "changelog.entries.listing-editor-live-preview.body":
+    "Your directory card sits beside the form, and each field outlines where it shows or says who sees it.",
+  "changelog.entries.listing-change-history.title":
+    "A change history for every listing",
+  "changelog.entries.listing-change-history.body":
+    "Owners and co-managers see who edited what and when, and which fixes moderation applied.",
+  "changelog.entries.persona-editor-wider.title":
+    "The persona editor uses the whole screen",
+  "changelog.entries.persona-editor-wider.body":
+    "On wide screens the editor now stretches to 1680px, giving the form and the live preview more room.",
+  "changelog.entries.inbox-row-menu-never-clipped.title":
+    "Chat menus on the last rows open in full",
+  "changelog.entries.inbox-row-menu-never-clipped.body":
+    "Near the bottom of your inbox, the chat options menu now opens upward with every option in view.",
+  "changelog.entries.forum-composer-smooth-motion.title":
+    "The new-post page moves smoothly",
+  "changelog.entries.forum-composer-smooth-motion.body":
+    "Panels, chips, tags, menus and dialogs in the forum composer now open, close and swap with gentle motion.",
+  "changelog.entries.listing-tags-pick-existing.title":
+    "Listing tags come from one shared list",
+  "changelog.entries.listing-tags-pick-existing.body":
+    "Choose up to six from grouped tags like Live music or Sliding scale, so every listing speaks the same words.",
+  "changelog.entries.forum-four-new-categories.title":
+    "Four new forum categories",
+  "changelog.entries.forum-four-new-categories.body":
+    "Meetups & Introductions, Legal & Migration, Love & Relationships and Platform & Feedback join the forum.",
+  "changelog.entries.persona-editor-back-button.title":
+    "Head back to your personas from a round button",
+  "changelog.entries.persona-editor-back-button.body":
+    "On wide screens it sits in the margin, so the persona's name lines up with the sidebar below.",
+  "changelog.entries.inbox-header-fits-small-phones.title":
+    "The Messages header fits on small phones",
+  "changelog.entries.inbox-header-fits-small-phones.body":
+    "On narrow screens the logo mark steps aside so the wordmark and mailbox switcher stay whole.",
+  "changelog.entries.chat-app-links-stay-in-app.title":
+    "QueerPulse links open inside the app",
+  "changelog.entries.chat-app-links-stay-in-app.body":
+    "Tapping one in a chat, forum post, article or guide keeps you in the installed app.",
   "changelog.entries.persona-linking-creator-only.title":
     "Only a persona's creator can link it to their profile",
   "changelog.entries.persona-linking-creator-only.body":

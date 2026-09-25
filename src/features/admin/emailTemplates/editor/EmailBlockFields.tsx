@@ -2,7 +2,10 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { AdminSeg } from "../../ui";
 import type { EmailBlock } from "../emailTemplate.types";
 import type { FocusFieldHandler } from "./activeField";
+import { EmailFeatureListFields } from "./EmailFeatureListFields";
+import { EmailHeroFields, EmailTicketFields } from "./EmailHeroTicketFields";
 import { EmailHtmlEditor } from "./EmailHtmlEditor";
+import { EmailSignatureFields } from "./EmailSignatureFields";
 import { EmailTextField } from "./EmailTextField";
 import styles from "./emailTemplateEditor.module.css";
 
@@ -23,8 +26,17 @@ export function EmailBlockFields({
   const { t } = useTranslation();
   const field = (key: string) => t(`admin:emailTemplates.blocks.field.${key}`);
   const textProps = { onFocusField };
+  const blockProps = { fieldId, onChange, onFocusField };
 
   switch (block.type) {
+    case "hero":
+      return <EmailHeroFields {...blockProps} block={block} />;
+    case "ticket":
+      return <EmailTicketFields {...blockProps} block={block} />;
+    case "featureList":
+      return <EmailFeatureListFields {...blockProps} block={block} />;
+    case "signature":
+      return <EmailSignatureFields {...blockProps} block={block} />;
     case "heading":
       return (
         <div className={styles.fieldStack}>
