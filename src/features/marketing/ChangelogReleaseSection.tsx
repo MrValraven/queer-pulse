@@ -1,4 +1,5 @@
 import { FiChevronDown } from "react-icons/fi";
+import { Collapse } from "../../shared/components/ui/Collapse";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ChangelogEntryRow } from "./ChangelogEntryRow";
 import {
@@ -96,7 +97,7 @@ export function ChangelogReleaseSection({
         </div>
       )}
 
-      {isOpen && (
+      <Collapse isOpen={isOpen}>
         <div id={panelId} className={styles.releasePanel}>
           {release.groups.map((group) => (
             <div className={styles.group} key={group.category}>
@@ -115,7 +116,7 @@ export function ChangelogReleaseSection({
             </div>
           ))}
         </div>
-      )}
+      </Collapse>
     </section>
   );
 }

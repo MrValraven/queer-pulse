@@ -94,7 +94,7 @@ const SUGGESTED_KEY = (demoMode: boolean, limit: number) =>
  * because a suggestion that lingers after "no thanks" reads as a bug. The
  * server write is what makes it stick across devices and sessions.
  */
-export function useSuggestedPeople(limit = 6) {
+export function useSuggestedPeople(limit = 4) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const queryKey = SUGGESTED_KEY(demoMode, limit);

@@ -2986,6 +2986,14 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.changelog-releases-open-smoothly.title":
+    "Os dias do registo de alterações abrem com suavidade",
+  "changelog.entries.changelog-releases-open-smoothly.body":
+    "Ao abrires um dia no registo de alterações, a lista completa desliza para o lugar sem saltar.",
+  "changelog.entries.people-you-might-know-one-row.title":
+    "Pessoas que talvez conheças cabe numa só linha",
+  "changelog.entries.people-you-might-know-one-row.body":
+    "Quatro sugestões lado a lado acima do feed, a deslizar para o lado em ecrãs estreitos, para o feed ficar à vista.",
   "changelog.entries.housing-map-like-directory.title":
     "O mapa da habitação funciona agora como o mapa do diretório",
   "changelog.entries.housing-map-like-directory.body":

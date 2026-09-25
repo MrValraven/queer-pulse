@@ -49,7 +49,8 @@ function StripSkeleton({ count }: { count: number }) {
  * dismissed member keeps every bit of reach they had.
  */
 export function SuggestedPeopleStrip({
-  limit = 6,
+  /** Four fills exactly one row of the grid; see SuggestedPeople.module.css. */
+  limit = 4,
   /** `true` on the connections empty state, where the strip IS the content
    *  and hiding it would leave a blank page. */
   isPersistent = false,
@@ -74,7 +75,7 @@ export function SuggestedPeopleStrip({
           <FiUserPlus aria-hidden className={styles.headIcon} />
           <h2 className={styles.title}>{t("connect:suggested.heading")}</h2>
         </div>
-        <StripSkeleton count={Math.min(limit, 4)} />
+        <StripSkeleton count={limit} />
       </section>
     );
   }

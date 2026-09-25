@@ -2913,6 +2913,14 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.changelog-releases-open-smoothly.title":
+    "Changelog days open smoothly",
+  "changelog.entries.changelog-releases-open-smoothly.body":
+    "Opening a day on the Changelog now slides its full list into place instead of jumping.",
+  "changelog.entries.people-you-might-know-one-row.title":
+    "People you might know fits on one row",
+  "changelog.entries.people-you-might-know-one-row.body":
+    "Four suggestions side by side above the feed, swiping sideways on narrow screens, so the feed stays in view.",
   "changelog.entries.housing-map-like-directory.title":
     "The housing map now works like the directory map",
   "changelog.entries.housing-map-like-directory.body":

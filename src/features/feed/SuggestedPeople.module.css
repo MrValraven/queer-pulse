@@ -8,6 +8,9 @@
   padding: 18px;
   margin-bottom: 18px;
   background: rgba(var(--plum-rgb), 0.03);
+  /* The grid picks its layout from the strip's own width, so it reads the same
+     wherever the strip is mounted (feed column, connections empty state). */
+  container: suggested-strip / inline-size;
 }
 
 .head {
@@ -67,7 +70,9 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  /* One row, always: the strip fetches four people and gives each a quarter,
+     so a fifth card can never wrap into a second row and push the feed down. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -158,12 +163,13 @@
   text-decoration: underline;
 }
 
-/* On a phone the strip stays a nudge. Stacking six cards down the page would
-   bury the feed under people the member never asked to see, so the grid
+/* When the strip is too narrow for four readable cards (a phone, or a tablet
+   with the sidebar open) it stays a nudge. Stacking the cards down the page
+   would bury the feed under people the member never asked to see, so the grid
    becomes one swipeable row inside the panel, sized so the edge of the next
    card always shows, which is the affordance. The scroller stays within the
    strip's padding, so the panel border still closes around it. */
-@media (max-width: 640px) {
+@container suggested-strip (max-width: 640px) {
   .grid {
     display: flex;
     grid-template-columns: none;
