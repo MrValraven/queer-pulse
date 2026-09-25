@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useTablistKeys } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DRAFT_TABS, type DraftCategory } from "./drafts.data";
 import styles from "./DraftsPage.module.css";
@@ -25,6 +28,7 @@ export function DraftsTabs({
   totalCount: number;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   // Arrow/Home/End across the category strip, with a roving tabIndex so Tab
   // enters and leaves it in one press (APG tablist contract).
   const { tabProps } = useTablistKeys(DRAFT_TABS.length, (index) => {
@@ -54,7 +58,12 @@ export function DraftsTabs({
             {...tabProps(index, category === tab.key)}
           >
             {t(tab.labelKey)}{" "}
-            <span className={styles.tabCount}>{counts[tab.key]}</span>
+            <span className={styles.tabCount}>
+              <RollingNumber
+                value={fmt.number(counts[tab.key])}
+                numericValue={counts[tab.key]}
+              />
+            </span>
           </button>
         ))}
       </div>
@@ -70,10 +79,26 @@ export function DraftsTabs({
         />
         <span>{t("members:drafts.selectAll")}</span>
         <span className={styles.visCount}>
-          {t("members:drafts.visibleCount", {
-            visible: visibleCount,
-            count: totalCount,
-          })}
+          {/* The category tabs move the visible figure; deleting drafts
+              moves both. */}
+          <Translation
+            i18nKey="members:drafts.visibleCount"
+            values={{ visible: visibleCount, count: totalCount }}
+            slots={{
+              visible: (
+                <RollingNumber
+                  value={fmt.number(visibleCount)}
+                  numericValue={visibleCount}
+                />
+              ),
+              count: (
+                <RollingNumber
+                  value={fmt.number(totalCount)}
+                  numericValue={totalCount}
+                />
+              ),
+            }}
+          />
         </span>
       </div>
     </>

@@ -27,7 +27,7 @@ export interface ListingQueueRow {
   createdAt: string;
   /** The listing, for the moderation preview drawer. As narrow as what the
    *  queue served: a `directory_moderator` grant holder's copy carries no
-   *  owner contact email and no outing/guide consent decisions. */
+   *  outing/guide consent decisions. */
   detail: ModeratedListingDTO;
 }
 
@@ -82,13 +82,13 @@ export interface ListingQueueCounts {
 /**
  * The listing shape the moderation queue actually serves. A reader holding the
  * `directory_moderator` staff grant without the Moderator/Admin tier gets the
- * business without the owner as a person: no contact email, and neither outing
- * consent decision. Modelled as an `Omit` rather than three optional fields so
- * a component cannot read one by accident, following `CoManagerUpdateListingDto`.
+ * business without the owner as a person: neither outing consent decision.
+ * Modelled as an `Omit` rather than two optional fields so a component cannot
+ * read one by accident, following `CoManagerUpdateListingDto`.
  */
 export type ModeratedListingDTO = Omit<
   ListingDTO,
-  "contactEmail" | "consentOuting" | "consentGuide"
+  "consentOuting" | "consentGuide"
 >;
 
 /** `GET /admin/listings/queue` response envelope. */

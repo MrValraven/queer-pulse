@@ -368,6 +368,9 @@ export const messages: Catalog = {
   // screen-reader label is chrome, translated here.
   "linkPreview.aria": "Link preview: {title}",
   "linkPreview.ariaGeneric": "Link preview from {site}",
+  // MessageLinkCard's place branch (a shared directory link): the card body
+  // reuses the directory grid's own copy; only this accessible name is new.
+  "linkPreview.placeAria": "Open {name} on QueerPulse",
 
   // Pinned-messages banner (ConversationPinnedBanner) + in-bubble indicators
   "pinned.bannerLabel": "Pinned message",

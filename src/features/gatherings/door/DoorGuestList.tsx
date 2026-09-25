@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { FiUsers } from "react-icons/fi";
 import { Button, EmptyState } from "../../../shared/components/ui";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../../shared/i18n/format";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AttendeeRow } from "../api/events.adapters";
 import { DoorGuestRow } from "./DoorGuestRow";
@@ -47,6 +50,7 @@ export function DoorGuestList({
   customRsvpQuestion?: string | null;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [filter, setFilter] = useState<DoorFilter>("all");
   const [query, setQuery] = useState("");
 
@@ -69,27 +73,21 @@ export function DoorGuestList({
     });
   }, [attendees, activeFilter, query]);
 
-  const filterTabs: [DoorFilter, string][] = [
-    [
-      "all",
-      t("gatherings:dashboard.guestList.filterAll", {
-        count: attendees.length,
-      }),
-    ],
+  // Each chip: its filter, its label key and the count that label carries.
+  const filterTabs: [DoorFilter, string, number][] = [
+    ["all", "gatherings:dashboard.guestList.filterAll", attendees.length],
   ];
   if (checkedInCount !== null) {
     filterTabs.push(
       [
         "arrived",
-        t("gatherings:dashboard.guestList.filterCheckedIn", {
-          count: checkedInCount,
-        }),
+        "gatherings:dashboard.guestList.filterCheckedIn",
+        checkedInCount,
       ],
       [
         "expected",
-        t("gatherings:dashboard.guestList.filterPending", {
-          count: Math.max(0, attendees.length - checkedInCount),
-        }),
+        "gatherings:dashboard.guestList.filterPending",
+        Math.max(0, attendees.length - checkedInCount),
       ],
     );
   }
@@ -101,7 +99,7 @@ export function DoorGuestList({
       </div>
       <div className={styles.cardBody}>
         <div className={styles.filterBar}>
-          {filterTabs.map(([id, label]) => (
+          {filterTabs.map(([id, labelKey, count]) => (
             <button
               key={id}
               type="button"
@@ -114,7 +112,18 @@ export function DoorGuestList({
                 .join(" ")}
               onClick={() => setFilter(id)}
             >
-              {label}
+              <Translation
+                i18nKey={labelKey}
+                values={{ count }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(count)}
+                      numericValue={count}
+                    />
+                  ),
+                }}
+              />
             </button>
           ))}
         </div>

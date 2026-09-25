@@ -9,6 +9,8 @@ import {
   PullToRefresh,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { MentionsPanel } from "./MentionsPanel";
 import { NotificationItem } from "./NotificationItem";
@@ -23,6 +25,7 @@ import styles from "./NotificationsPage.module.css";
 
 export function NotificationsPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const queryClient = useQueryClient();
   const {
     items: notifications,
@@ -103,7 +106,12 @@ export function NotificationsPage() {
               {t("notifications:page.title")}
               <FeatureHelp id="notifications.hub" />
               {unreadCount > 0 && (
-                <span className={styles.badge}>{unreadCount}</span>
+                <span className={styles.badge}>
+                  <RollingNumber
+                    value={fmt.number(unreadCount)}
+                    numericValue={unreadCount}
+                  />
+                </span>
               )}
             </div>
             {!onMentions && (

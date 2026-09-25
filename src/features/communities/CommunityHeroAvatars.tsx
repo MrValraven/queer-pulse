@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Person, Tint } from "./communityDetails";
 import { photoOf } from "./communityPeople";
@@ -25,8 +27,9 @@ export function CommunityHeroAvatars({
   memberNum: number;
   hasCount: boolean;
 }) {
-  const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
+  const moreCount = memberNum - 5;
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <div className={styles.avStrip}>
@@ -73,7 +76,18 @@ export function CommunityHeroAvatars({
       </div>
       {hasCount && memberNum > 5 && (
         <span className={styles.stripNote}>
-          {t("communities:detail.hero.andMore", { count: memberNum - 5 })}
+          <Translation
+            i18nKey="communities:detail.hero.andMore"
+            values={{ count: moreCount }}
+            slots={{
+              count: (
+                <RollingNumber
+                  value={fmt.number(moreCount)}
+                  numericValue={moreCount}
+                />
+              ),
+            }}
+          />
         </span>
       )}
     </div>

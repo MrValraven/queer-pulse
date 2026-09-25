@@ -5,6 +5,9 @@ import {
   Modal,
   type MemberSelectPerson,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
@@ -46,6 +49,7 @@ interface NewGroupModalProps {
  */
 export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { isBlocked } = useSocial();
   const staffMap = useStaffMap();
   const [title, setTitle] = useState("");
@@ -100,6 +104,15 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
 
   const canCreate = title.trim().length > 0 && selected.size > 0;
 
+  // One figure for the CTA and the cap hint; each mount rolls on its own. The
+  // CTA wraps its sentence in a span so the button's flex gap stays outside it.
+  const selectedCountFigure = (
+    <RollingNumber
+      value={fmt.number(selected.size)}
+      numericValue={selected.size}
+    />
+  );
+
   function create() {
     const picks: GroupMemberPick[] = [...selected]
       .map((slug) => bySlug.get(slug))
@@ -120,7 +133,13 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
       onClose={onClose}
       footer={
         <Button variant="primary" disabled={!canCreate} onClick={create}>
-          {t("messages:group.createCta", { count: selected.size })}
+          <span>
+            <Translation
+              i18nKey="messages:group.createCta"
+              values={{ count: selected.size }}
+              slots={{ count: selectedCountFigure }}
+            />
+          </span>
         </Button>
       }
     >
@@ -142,12 +161,15 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
           .filter(Boolean)
           .join(" ")}
         aria-live="polite"
+        aria-atomic="true"
       >
-        {selected.size > 0 &&
-          t("messages:group.selectedOfCap", {
-            selected: selected.size,
-            max: cap,
-          })}
+        {selected.size > 0 && (
+          <Translation
+            i18nKey="messages:group.selectedOfCap"
+            values={{ selected: selected.size, max: cap }}
+            slots={{ selected: selectedCountFigure }}
+          />
+        )}
         {isAtCap && ` ${t("messages:group.capReachedExtra")}`}
       </p>
       <MemberSelectList

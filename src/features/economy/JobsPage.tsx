@@ -17,6 +17,7 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -146,6 +147,20 @@ function JobCard({ job }: { job: Job }) {
         </span>
       </div>
     </Link>
+  );
+}
+
+/** "Show all (N more)": the hidden count rolls as the category changes. */
+function ShowAllCount({ count }: { count: number }) {
+  const fmt = useFormat();
+  return (
+    <Translation
+      i18nKey="economy:jobs.safetyBanner.showAllCount"
+      values={{ count }}
+      slots={{
+        count: <RollingNumber value={fmt.number(count)} numericValue={count} />,
+      }}
+    />
   );
 }
 
@@ -297,13 +312,13 @@ export function JobsPage() {
                 className={styles.sbToggle}
                 onClick={() => setShowAll((s) => !s)}
               >
-                {showAll
-                  ? t("economy:jobs.safetyBanner.showVerified")
-                  : hiddenCount
-                    ? t("economy:jobs.safetyBanner.showAllCount", {
-                        count: hiddenCount,
-                      })
-                    : t("economy:jobs.safetyBanner.showAll")}
+                {showAll ? (
+                  t("economy:jobs.safetyBanner.showVerified")
+                ) : hiddenCount ? (
+                  <ShowAllCount count={hiddenCount} />
+                ) : (
+                  t("economy:jobs.safetyBanner.showAll")
+                )}
               </button>
             </div>
           )}

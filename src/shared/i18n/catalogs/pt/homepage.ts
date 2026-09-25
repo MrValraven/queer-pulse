@@ -46,7 +46,7 @@ export const homepage: Catalog = {
   "manifesto.safetyCta": "Como mantemos isto seguro",
   "manifesto.assurance.vouched.title": "Convite ou voto de confiança",
   "manifesto.assurance.vouched.description":
-    "Cada pessoa entra através de uma ligação de confiança ou de um pedido de convite analisado, ajudando-nos a construir uma comunidade onde há sempre uma razão para se estar.",
+    "Cada pessoa entra através de um voto de confiança ou de um pedido de convite analisado, ajudando-nos a construir uma comunidade onde há sempre uma razão para se estar.",
   "manifesto.assurance.safeSpaces.title": "Espaços seguros onde já estivemos",
   "manifesto.assurance.safeSpaces.description":
     "A nossa equipa visita os locais em pessoa e mantém a informação atualizada, para poderes descobrir sítios que a comunidade já foi mesmo conferir.",
@@ -102,10 +102,10 @@ export const homepage: Catalog = {
     "Alguém te envia um convite e põe o nome dela nele. Esse nome fica no teu perfil, por isso ninguém aqui é um completo desconhecido.",
   "painPoints.network.modal.b.title": "O que ganhas com isto",
   "painPoints.network.modal.b.body":
-    "Antes de mandares mensagem a alguém, vês como estão ligados: quem deu a cara por essa pessoa e quem já conhecem os dois.",
+    "Antes de mandares mensagem a alguém, vês como estão ligados: quem lhe deu um voto de confiança e quem já conhecem os dois.",
   "painPoints.network.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.network.modal.c.body":
-    "A habitação, os convívios e o diretório assentam nisto. Dar a tua morada a alguém é outra decisão quando um membro em quem confias deu a cara por essa pessoa.",
+    "A habitação, os convívios e o diretório assentam nisto. Dar a tua morada a alguém é outra decisão quando um membro em quem confias deu um voto de confiança a essa pessoa.",
 
   "painPoints.directory.label": "O diretório de negócios",
   "painPoints.directory.question":
@@ -451,6 +451,7 @@ export const homepage: Catalog = {
   "communities.sub":
     "Pesquisa ou filtra a lista e depois abre qualquer comunidade para a veres por inteiro: o que é, o que faz, quem está lá dentro, e o que desbloqueias ao entrar.",
   "communities.howCommunitiesWorkCta": "Como funcionam as comunidades",
+  "communities.viewCommunityCta": "Ver comunidade",
   "communities.resultCount.all": "<b>{count}</b> comunidades",
   "communities.resultCount.shown": "<b>{count}</b> de {total} comunidades",
 
@@ -585,7 +586,7 @@ export const homepage: Catalog = {
     "da mediana de um quarto em Arroios (520 €). Mostramos-te isso antes de perguntares.",
   "housing.listings.a.household.name": "Vera, Tó e mais uma pessoa",
   "housing.listings.a.household.sub":
-    "Recomendada por 3 pessoas da comunidade. Aqui desde 2024.",
+    "Com votos de confiança de 3 pessoas da comunidade. Aqui desde 2024.",
   "housing.listings.a.signals.0.lead": "Casa trans-afirmativa.",
   "housing.listings.a.signals.0.rest": "Partilhado por quem lá vive.",
   "housing.listings.a.signals.1.lead":
@@ -625,7 +626,7 @@ export const homepage: Catalog = {
   "housing.listings.b.price.rest":
     "de um estúdio na Graça (420 €). Mobilado, despesas divididas com o apartamento de baixo.",
   "housing.listings.b.household.sub":
-    "Recomendada por 5 pessoas da comunidade. Aqui desde 2023.",
+    "Com votos de confiança de 5 pessoas da comunidade. Aqui desde 2023.",
   "housing.listings.b.signals.0.lead":
     "Subarrendamento com consentimento escrito do senhorio.",
   "housing.listings.b.signals.0.rest": "A documentação está no anúncio.",
@@ -690,7 +691,7 @@ export const homepage: Catalog = {
     "Qualquer pessoa da comunidade o pode encontrar.",
   "subprofiles.visibility.network": "A tua rede",
   "subprofiles.visibility.networkHelp":
-    "Só as pessoas com quem tens ligação o podem ver.",
+    "Só as pessoas com quem tens conexão o podem ver.",
   "subprofiles.link.main": "Perfil principal",
   "subprofiles.link.mainHelp": "O perfil por que as pessoas já te conhecem.",
   "subprofiles.link.linked": "Ligado ao teu nome",

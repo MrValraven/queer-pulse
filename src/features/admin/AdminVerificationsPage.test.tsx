@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { readableTextIs } from "../../test/readableText";
 import { TestProviders } from "../../test/TestProviders";
 import { AdminVerificationsPage } from "./AdminVerificationsPage";
 import { ADMIN_VERIFICATIONS_DEMO } from "./adminVerifications.data";
@@ -336,7 +337,9 @@ describe("AdminVerificationsPage — Task 4: row selection + bulk actions + keyb
     );
 
     const bar = await screen.findByRole("region", { name: "Bulk actions" });
-    expect(bar).toHaveTextContent("1 selected");
+    expect(
+      within(bar).getByText(readableTextIs("1 selected")),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Clear" }));
     expect(

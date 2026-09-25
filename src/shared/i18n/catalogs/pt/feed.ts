@@ -20,7 +20,7 @@ export const feed: Catalog = {
   // ── Etiquetas dos separadores (o id canónico mantém-se em inglês) ───────
   "tab.all": "Tudo",
   "tab.communities": "Comunidades",
-  "tab.connections": "Ligações",
+  "tab.connections": "Conexões",
   "tab.gatherings": "Convívios",
   "tab.people": "Pessoas",
   "tab.posts": "Publicações",
@@ -43,14 +43,14 @@ export const feed: Catalog = {
   "tab.communities.error.description":
     "O pulso das tuas comunidades não chegou. Tenta novamente daqui a pouco.",
 
-  "tab.connections.empty.title": "Ainda nada das tuas ligações",
+  "tab.connections.empty.title": "Ainda nada das tuas conexões",
   "tab.connections.empty.description":
     "Assim que te ligares a pessoas aqui, o que publicarem ou organizarem aparece nesta aba.",
   "tab.connections.empty.action": "Encontrar pessoas para te ligares",
   "tab.connections.error.title":
-    "Não foi possível carregar o feed das tuas ligações",
+    "Não foi possível carregar o feed das tuas conexões",
   "tab.connections.error.description":
-    "Não conseguimos chegar à atividade das tuas ligações. Tenta outra vez.",
+    "Não conseguimos chegar à atividade das tuas conexões. Tenta outra vez.",
 
   "tab.gatherings.empty.title": "Ainda nada marcado",
   "tab.gatherings.empty.description":
@@ -130,12 +130,12 @@ export const feed: Catalog = {
 
   "moderation.blockConfirm.title": "Bloqueaste <em>{name}</em>",
   "moderation.blockConfirm.body":
-    "Já não te pode enviar mensagens, ver o teu perfil, ou encontrar-te aqui{reportNote}. Podes desfazer isto a qualquer momento nas tuas ligações.",
+    "Já não te pode enviar mensagens, ver o teu perfil, ou encontrar-te aqui{reportNote}. Podes desfazer isto a qualquer momento nas tuas conexões.",
   "moderation.blockConfirm.alsoReported":
     ", e a nossa equipa de segurança já tem a tua denúncia",
   "moderation.blockDialog.title": "Bloquear {name}?",
   "moderation.blockDialog.sub":
-    "Não vai poder enviar-te mensagens, ver o teu perfil, ou encontrar-te, e qualquer ligação entre vocês será removida. Isto funciona nos dois sentidos.",
+    "Não vai poder enviar-te mensagens, ver o teu perfil, ou encontrar-te, e qualquer conexão entre vocês será removida. Isto funciona nos dois sentidos.",
   "moderation.blockDialog.alsoReportLabel":
     "Denunciar também {name} à nossa equipa de segurança",
   "moderation.blockDialog.submitCta": "Bloquear {name}",
@@ -170,10 +170,10 @@ export const feed: Catalog = {
   "sidebar.newThisWeekHeading": "Novidades esta semana",
   "sidebar.newMembersEmpty": "Ainda não há pessoas novas para mostrar.",
   "sidebar.browseMembers": "Ver todas as pessoas",
-  "sidebar.connectionsHeading": "As tuas ligações",
+  "sidebar.connectionsHeading": "As tuas conexões",
   "sidebar.connectionsEmpty": "Ainda não te ligaste a ninguém.",
-  "sidebar.connectionsCount_one": "{count} ligação",
-  "sidebar.connectionsCount_other": "{count} ligações",
+  "sidebar.connectionsCount_one": "{count} conexão",
+  "sidebar.connectionsCount_other": "{count} conexões",
   "sidebar.manage": "Gerir",
 
   // ── Chrome dos cartões redesenhados (eyebrows, ações, provas/estatísticas) ─
@@ -210,7 +210,7 @@ export const feed: Catalog = {
 
   // ── Porque este item está no feed (SOC-04) ──────────────────────────────
   "reason.membership": "Fazes parte de {subject}",
-  "reason.connection": "De {subject}, nas tuas ligações",
+  "reason.connection": "De {subject}, nas tuas conexões",
   "reason.topic": "Segues {subject}",
   "reason.recent": "Novo em toda a QueerPulse",
 

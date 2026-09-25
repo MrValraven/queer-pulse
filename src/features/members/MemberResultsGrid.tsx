@@ -1,78 +1,139 @@
-import { useEffect, useMemo, useState } from "react";
-import { FadeIn } from "../../shared/components/ui";
-import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useLayoutEffect, useRef } from "react";
+import {
+  LayoutGroup,
+  m,
+  visualElementStore,
+  type Transition,
+} from "motion/react";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { MemberResultCard } from "./MemberFilterCards";
 import type { MemberCard } from "./memberDirectoryFilter.data";
 import { useMemberDirectoryVirtualizer } from "./useMemberDirectoryVirtualizer";
+import {
+  useShuffledMembers,
+  type EnterFrom,
+  type MemberGhost,
+} from "./useShuffledMembers";
+import { SHUFFLE_SPRING } from "./shuffleMotion";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
-/** Keep in sync with `--dur-fast` (`src/styles/tokens/effects.css`): how long the
- *  old results fade out before the new set swaps in. Short on purpose, long
- *  enough to read as a deliberate "results updated" beat rather than a wait. */
-const FILTER_CROSSFADE_MS = 150;
+/** Outside a shuffle window any layout move snaps into place, so a virtualizer
+ *  correction or content shifting above the grid never starts a glide. */
+const INSTANT_LAYOUT: Transition = { duration: 0 };
+/** Leavers clear out quickly on an ease-in while survivors are still gliding. */
+const GHOST_TRANSITION: Transition = { duration: 0.18, ease: [0.4, 0, 1, 1] };
+/** First load only: each column starts this many seconds after the one to
+ *  its left. Later result-set changes run with no delay. */
+const FIRST_LOAD_COLUMN_DELAY_SECONDS = 0.06;
+const SETTLED = { opacity: 1, scale: 1 };
+const GHOST_EXIT = { opacity: 0, scale: 0.96 };
 
 /**
- * When the filtered result set changes, cross-fade rather than hard-swap: dip
- * the whole grid to transparent, swap the members underneath (which also hides
- * the virtualizer's height/measurement reflow), then re-run the staggered
- * `FadeIn` entrance on the incoming cards via a bumped `generation`.
- *
- * Without this the grid pops: `FadeIn` is a mount-only entrance with no exit, so
- * removed cards vanish instantly and cards that survive a filter keep their key
- * and never re-animate. Rapid toggles always settle on the latest set (each
- * change restarts the fade); toggling back to the current set cancels cleanly
- * via the effect cleanup. Reduced motion skips the delay and swaps immediately
- * (FadeIn already no-ops there).
+ * Leaving cards, fading out where they stood (measured by
+ * `useShuffledMembers` just before the swap). Rendered before the rows in DOM
+ * order, so gliding survivors paint over the ghosts with no z-index. Each
+ * ghost is removed once its fade completes, or as soon as its member
+ * re-enters (the new card then starts from the ghost's current look).
  */
-function useCrossfadedMembers(members: MemberCard[]) {
-  const signature = useMemo(
-    () => members.map((member) => member.slug).join("|"),
-    [members],
+function MemberGhostLayer({
+  ghosts,
+  onGhostFaded,
+}: {
+  ghosts: MemberGhost[];
+  onGhostFaded: (ghostKey: string) => void;
+}) {
+  return (
+    <div className={styles.mGridGhostLayer}>
+      {ghosts.map((ghost) => (
+        <m.div
+          key={ghost.key}
+          data-ghost-slug={ghost.member.slug}
+          aria-hidden
+          inert
+          className={styles.mGridGhost}
+          style={{
+            left: ghost.left,
+            top: ghost.top,
+            width: ghost.width,
+            height: ghost.height,
+          }}
+          initial={{ opacity: ghost.opacity, scale: ghost.scale }}
+          animate={GHOST_EXIT}
+          transition={GHOST_TRANSITION}
+          onAnimationComplete={() => onGhostFaded(ghost.key)}
+        >
+          <MemberResultCard member={ghost.member} />
+        </m.div>
+      ))}
+    </div>
   );
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const [displayed, setDisplayed] = useState({
-    members,
-    signature,
-    generation: 0,
-  });
-  const [fading, setFading] = useState(false);
+}
 
-  useEffect(() => {
-    // Steady state (or a toggle that landed back on the current set): nothing to
-    // animate. No setState on this path, so unrelated re-renders stay cheap.
-    if (signature === displayed.signature) return;
+/**
+ * One grid item, in two motion layers so the `.mCard` inside keeps its own
+ * CSS hover lift and `transform` transition.
+ *
+ * The outer wrapper only glides. Its shared `layoutId` lets a survivor that
+ * lands in a different row element glide from its old box.
+ * `layoutDependency` limits layout measuring to result-set changes, and the
+ * layout transition springs only inside the shuffle window.
+ *
+ * Motion 11.18 has no `layoutCrossfade` prop, and every projection node
+ * defaults to `crossfade: true`. When a remounted card's layout stack still
+ * holds another member, that makes the new node's opacity restart from 0
+ * (`mixValues`: `mix(0, lead, easeCrossfadeIn)`). The layout effect turns
+ * `crossfade` off on this node through motion's public `visualElementStore`.
+ *
+ * Opacity and scale live on the inner fade layer, which the handoff never
+ * touches. Entering cards grow in from `enterFrom`, and every other card
+ * mounts settled.
+ */
+function ShuffleCard({
+  member,
+  enterFrom,
+  delaySeconds,
+  changeId,
+  isShuffleWindowOpen,
+  shouldReduceMotion,
+}: {
+  member: MemberCard;
+  enterFrom: EnterFrom | undefined;
+  delaySeconds: number;
+  changeId: number;
+  isShuffleWindowOpen: boolean;
+  shouldReduceMotion: boolean;
+}) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const wrapper = wrapperRef.current;
+    const projection = wrapper
+      ? visualElementStore.get(wrapper)?.projection
+      : undefined;
+    projection?.setOptions({ crossfade: false });
+  }, []);
 
-    const swap = () =>
-      setDisplayed((prev) => ({
-        members,
-        signature,
-        generation: prev.generation + 1,
-      }));
-
-    if (prefersReducedMotion) {
-      swap();
-      return;
-    }
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional exit-animation sync: dim the always-mounted grid the moment the result set changes, then the setTimeout below defers the swap + un-dim by one FILTER_CROSSFADE_MS beat. The timed cross-fade cannot be derived during render.
-    setFading(true);
-    const timer = window.setTimeout(() => {
-      swap();
-      setFading(false);
-    }, FILTER_CROSSFADE_MS);
-    // Runs on the next real change, on unmount, and crucially on a toggle-back
-    // mid-fade: cancel the pending swap and un-dim so we are never left dimmed.
-    return () => {
-      window.clearTimeout(timer);
-      setFading(false);
-    };
-  }, [signature, displayed.signature, members, prefersReducedMotion]);
-
-  return {
-    members: displayed.members,
-    generation: displayed.generation,
-    fading,
-  };
+  return (
+    <m.div
+      ref={wrapperRef}
+      data-member-slug={member.slug}
+      className={styles.mGridCard}
+      layoutId={shouldReduceMotion ? undefined : member.slug}
+      layout={shouldReduceMotion ? false : "position"}
+      layoutDependency={changeId}
+      transition={{
+        layout: isShuffleWindowOpen ? SHUFFLE_SPRING : INSTANT_LAYOUT,
+      }}
+    >
+      <m.div
+        className={styles.mGridCardFade}
+        initial={enterFrom && !shouldReduceMotion ? enterFrom : false}
+        animate={SETTLED}
+        transition={{ ...SHUFFLE_SPRING, delay: delaySeconds }}
+      >
+        <MemberResultCard member={member} />
+      </m.div>
+    </m.div>
+  );
 }
 
 /**
@@ -81,56 +142,84 @@ function useCrossfadedMembers(members: MemberCard[]) {
  * Extracted from `MemberDirectorySections.tsx` so that file stays under the
  * 200-line single-component limit and the virtualizer's row-measurement
  * plumbing lives in one small, focused place.
+ *
+ * A result-set change shuffles the grid in the same frame (see
+ * `useShuffledMembers`): survivors glide, newcomers grow in, leavers fade as
+ * ghosts. The component owns the container ref so the shuffle hook and the
+ * virtualizer both read the same node.
  */
 export function MemberResultsGrid({
   members: incoming,
 }: {
   members: MemberCard[];
 }) {
-  const { members, generation, fading } = useCrossfadedMembers(incoming);
-  const { containerRef, columnCount, rows, rowVirtualizer } =
-    useMemberDirectoryVirtualizer(members);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { reducedMotion } = useMotionPrefs();
+  const {
+    members,
+    enteringFrom,
+    changeId,
+    isShuffleWindowOpen,
+    shouldSuspendScrollAdjustment,
+    ghosts,
+    removeGhost,
+    isFirstLoad,
+  } = useShuffledMembers(incoming, containerRef);
+  const { columnCount, rows, rowVirtualizer } = useMemberDirectoryVirtualizer(
+    members,
+    containerRef,
+    shouldSuspendScrollAdjustment,
+  );
 
   return (
-    <div
-      ref={containerRef}
-      className={[styles.mGridSizer, fading && styles.mGridFading]
-        .filter(Boolean)
-        .join(" ")}
-      style={{ height: rowVirtualizer.getTotalSize() }}
-    >
-      {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-        const row = rows[virtualRow.index];
-        if (!row) return null;
-        return (
-          <div
-            key={virtualRow.key}
-            ref={rowVirtualizer.measureElement}
-            data-index={virtualRow.index}
-            className={styles.mGridRow}
-            style={{
-              gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
-              transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
-            }}
-          >
-            {row.map((member, columnIndex) => (
-              // Stagger within the row only (not the row's absolute position
-              // in the full result set) — a freshly-mounted row scrolled into
-              // view should read as its own small reveal, not replay a huge
-              // index-based delay accumulated from every row above it.
-              // `generation` in the key forces every visible card to replay its
-              // entrance after a filter change, so the whole grid re-staggers in
-              // together rather than only the rows whose membership changed.
-              <FadeIn
-                key={`${generation}:${member.slug}`}
-                delay={columnIndex * 85}
-              >
-                <MemberResultCard member={member} />
-              </FadeIn>
-            ))}
-          </div>
-        );
-      })}
-    </div>
+    <LayoutGroup id="member-results">
+      <div
+        ref={containerRef}
+        className={[
+          styles.mGridSizer,
+          isShuffleWindowOpen && styles.mGridSizerShuffling,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        style={{ height: rowVirtualizer.getTotalSize() }}
+      >
+        <MemberGhostLayer ghosts={ghosts} onGhostFaded={removeGhost} />
+        {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+          const row = rows[virtualRow.index];
+          if (!row) return null;
+          return (
+            <div
+              key={virtualRow.key}
+              ref={rowVirtualizer.measureElement}
+              data-index={virtualRow.index}
+              className={styles.mGridRow}
+              style={{
+                gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+                transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
+              }}
+            >
+              {row.map((member, columnIndex) => (
+                // The first-load cascade staggers within the row only. The
+                // reduced-motion flag is in the key so flipping it remounts
+                // the card (motion registers a layoutId only on mount).
+                <ShuffleCard
+                  key={`${member.slug}:${String(reducedMotion)}`}
+                  member={member}
+                  enterFrom={enteringFrom.get(member.slug)}
+                  delaySeconds={
+                    isFirstLoad
+                      ? columnIndex * FIRST_LOAD_COLUMN_DELAY_SECONDS
+                      : 0
+                  }
+                  changeId={changeId}
+                  isShuffleWindowOpen={isShuffleWindowOpen}
+                  shouldReduceMotion={reducedMotion}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </LayoutGroup>
   );
 }

@@ -6,8 +6,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isEmojiOnly } from "./messageRuns";
 import { firstLinkUrl, renderWithLinks } from "./linkify";
-import { hasPreviewContent, useLinkPreview } from "./api/useLinkPreview";
-import { LinkPreview } from "./LinkPreview";
+import { resolveChatPlaceLink } from "./chatPlaceLink";
+import { useMessageLinkCard } from "./api/useMessageLinkCard";
+import { MessageLinkCard } from "./MessageLinkCard";
+import { PlaceShareBubble } from "./PlaceShareBubble";
+import { AttachmentCaption } from "./AttachmentCaption";
 import { MessageMeta, type MetaStatus } from "./MessageSendStatus";
 import { useBubbleMetaAlign } from "./useBubbleMetaAlign";
 import {
@@ -199,40 +202,6 @@ export function MessageBubbleBody({
   );
 }
 
-/** The optional caption riding alongside an image/gif or document attachment
- *  (WhatsApp-style: staged with the file in the composer, typed once, sent
- *  as ONE message — see `GifAttachment.caption`/`DocumentAttachment.caption`).
- *  Rendered exactly the way an ordinary text bubble renders its body — the
- *  same `MentionText`/`renderWithLinks` treatment, never a plain string — so
- *  an @mention or a URL in a caption behaves exactly like one anywhere else.
- *  Renders nothing at all when the sender wrote no caption, never an empty
- *  panel. Split out purely to keep `MessageBubbleBody` from growing further;
- *  it owns no state of its own. */
-function AttachmentCaption({
-  caption,
-  isSent,
-  id,
-}: {
-  caption: string | undefined;
-  isSent: boolean;
-  id: string;
-}) {
-  if (!caption) return null;
-  return (
-    <div
-      id={id}
-      className={[
-        styles.attachmentCaption,
-        isSent
-          ? styles.attachmentCaptionSent
-          : styles.attachmentCaptionReceived,
-      ].join(" ")}
-    >
-      <MentionText text={caption} renderText={renderWithLinks} />
-    </div>
-  );
-}
-
 /** The `kind:"document"` bubble (PRD-226): the file-card, or — for a restored
  *  outbox entry whose blob was stripped — the neutral "unavailable" stand-in,
  *  plus its optional caption. Split out of `MessageBubbleBody` purely to keep
@@ -419,18 +388,24 @@ function ImageOrGifBubble({
   );
 }
 
-/** The ordinary text bubble: the coloured surface, the link-unfurl panel (when
- *  the body contains a link), the body text, and — on a run's last bubble —
- *  the meta floated into its bottom-right (or, for a card-only bubble, tucked
- *  below the panel instead — see the `shouldRenderText` gate below).
+/** The ordinary text bubble: the coloured surface, the link card (when the
+ *  body contains a link: the ordinary OpenGraph unfurl, see `MessageLinkCard`;
+ *  a resolved QueerPulse place link instead hands off to `PlaceShareBubble`
+ *  below, which renders the card on its own with no coloured surface around
+ *  it), the body text, and, on a run's last bubble, the meta floated into its
+ *  bottom-right (or, for a card-only bubble, tucked below the card instead;
+ *  see the `shouldRenderText` gate below).
  *
  *  Its own component (not inlined in `MessageBubbleBody`) because it is the one
  *  body that MEASURES itself: `useBubbleMetaAlign` reads the laid-out line
  *  count to decide whether the time sits centred on a single text line or
  *  tucked flush into a multi-line bubble's corner, and the hook belongs with
  *  the branch that actually mounts the two nodes it reads. It also owns the
- *  unfurl: `useLinkPreview` needs the message text to find a link in, so the
- *  hook call lives here rather than upstream in `MessageBubble`. */
+ *  card resolution: `useMessageLinkCard` needs the message text to find a
+ *  link in, so the hook call lives here rather than upstream in
+ *  `MessageBubble`. Every hook below runs unconditionally, ahead of the
+ *  `PlaceShareBubble` early return, so hook order never depends on what the
+ *  link resolves to. */
 function TextBubble({
   message,
   index,
@@ -479,8 +454,11 @@ function TextBubble({
       inboundSafetySignals.includes("externalPayment") ||
       inboundSafetySignals.includes("offPlatform"));
   const previewUrl = firstLinkUrl(message.text);
-  const { data: previewData, isLoading: isPreviewLoading } =
-    useLinkPreview(previewUrl);
+  const linkCard = useMessageLinkCard(previewUrl);
+  // The place-name link `renderWithLinks` swaps `previewUrl` for, once the
+  // card resolved as a real directory place (never for the ordinary OG
+  // unfurl case); see `resolveChatPlaceLink`'s own doc.
+  const placeLink = resolveChatPlaceLink(previewUrl, linkCard);
   // "Link-only": the whole message, trimmed, IS the matched link — nothing
   // else to read. Compared against the raw (un-normalized) text too, since
   // `firstLinkUrl` upgrades a bare `www.` host to an `https://` href and a
@@ -490,17 +468,41 @@ function TextBubble({
   const isLinkOnlyMessage =
     !!previewUrl &&
     (trimmedText === previewUrl || `https://${trimmedText}` === previewUrl);
-  // Only drop the text once the preview has genuinely resolved to something —
+  // Only drop the text once the card has genuinely resolved to something:
   // never mid-flight (the link would vanish with nothing to replace it yet)
   // and never for an empty/failed unfurl (the link stays the only content).
-  const isPreviewResolved = !isPreviewLoading && hasPreviewContent(previewData);
+  const isPreviewResolved = !linkCard.isLoading && linkCard.hasContent;
   const shouldRenderText = !(isLinkOnlyMessage && isPreviewResolved);
+  // Below this point `placeLink` only ever renders inside `PlaceShareBubble`
+  // (a resolved place link never reaches the `.bubble` JSX further down), so
+  // the align signal only needs `message.text`: an edit is the only thing
+  // that can reflow this bubble's own text line.
   const metaAlign = useBubbleMetaAlign({
     bubbleRef,
     textRef,
     enabled: shouldRenderText,
     signal: message.text,
   });
+  // A resolved QueerPulse place link renders card-first, WhatsApp-photo-style:
+  // the card on its own, the note (if any) in a caption bubble below it,
+  // instead of tucked inside this coloured bubble surface. Every hook above
+  // has already run, so this early return never disturbs hook order.
+  if (placeLink) {
+    return (
+      <PlaceShareBubble
+        message={message}
+        isSent={isSent}
+        metaStatus={metaStatus}
+        contentLabelId={contentLabelId}
+        forwardedNode={forwardedNode}
+        replyQuoteNode={replyQuoteNode}
+        linkCard={linkCard}
+        placeLink={placeLink}
+        shouldRenderText={shouldRenderText}
+        showInboundSafetyCaution={showInboundSafetyCaution}
+      />
+    );
+  }
   return (
     <div
       className={[
@@ -519,19 +521,17 @@ function TextBubble({
       {forwardedNode}
       {replyQuoteNode}
       {previewUrl && (
-        <LinkPreview
-          url={previewUrl}
-          data={previewData}
-          isLoading={isPreviewLoading}
-          isSent={isSent}
-        />
+        <MessageLinkCard url={previewUrl} state={linkCard} isSent={isSent} />
       )}
       {shouldRenderText ? (
         // Inline wrapper (no styles of its own) so the body's line boxes are
         // measurable on their own — `getClientRects()` on it is the line count
         // the floating meta's vertical position depends on.
         <span ref={textRef} id={contentLabelId}>
-          <MentionText text={message.text} renderText={renderWithLinks} />
+          <MentionText
+            text={message.text}
+            renderText={(value) => renderWithLinks(value, placeLink)}
+          />
         </span>
       ) : (
         // A link-only message whose unfurl card replaced the text still needs

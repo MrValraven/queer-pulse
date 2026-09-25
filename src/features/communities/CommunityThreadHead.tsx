@@ -1,5 +1,8 @@
 import { FiChevronUp, FiMessageCircle } from "react-icons/fi";
 import { Button, IconButton } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "../forum/PostActionsMenu";
@@ -63,6 +66,7 @@ export function CommunityThreadHead({
   onReportOp: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const communityTime = useCommunityTime();
   const voteCount =
     data.votes +
@@ -82,7 +86,12 @@ export function CommunityThreadHead({
         >
           <FiChevronUp aria-hidden />
         </IconButton>
-        <span className={styles.vnum}>{voteCount}</span>
+        <span className={styles.vnum}>
+          <RollingNumber
+            value={fmt.number(voteCount)}
+            numericValue={voteCount}
+          />
+        </span>
       </div>
       <div className={styles.thMain}>
         {opPinned && !opDeleted && (
@@ -113,7 +122,18 @@ export function CommunityThreadHead({
           )}
           <span className={styles.thReplies}>
             <FiMessageCircle />{" "}
-            {t("communities:detail.thread.replies", { count: data.replyCount })}
+            <Translation
+              i18nKey="communities:detail.thread.replies"
+              values={{ count: data.replyCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(data.replyCount)}
+                    numericValue={data.replyCount}
+                  />
+                ),
+              }}
+            />
           </span>
           <span className={styles.opMenu}>
             <PostActionsMenu

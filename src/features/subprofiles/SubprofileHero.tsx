@@ -7,6 +7,8 @@ import {
   FeatureHelp,
 } from "../../shared/components/ui";
 import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
@@ -21,6 +23,34 @@ import { SubprofileHeroActions } from "./SubprofileHeroActions";
 import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
+
+/** A follower or endorsement count in the meta line; rolls when the viewer
+ *  follows or endorses. */
+function PersonaMetaCount({
+  i18nKey,
+  count,
+}: {
+  i18nKey: string;
+  count: number;
+}) {
+  const fmt = useFormat();
+  // One span: on narrow heroes the count button is inline-flex
+  // (persona-skins.css), and a bare sentence would split into flex items
+  // that drop the space after the number.
+  return (
+    <span>
+      <Translation
+        i18nKey={i18nKey}
+        values={{ count }}
+        slots={{
+          count: (
+            <RollingNumber value={fmt.number(count)} numericValue={count} />
+          ),
+        }}
+      />
+    </span>
+  );
+}
 
 /**
  * The persona page's `.pp-hero` — avatar, name, tagline, social row, actions
@@ -75,6 +105,18 @@ export function SubprofileHero({
     ownerName: view.ownerName,
   });
 
+  const endorsementLabel = (
+    <PersonaMetaCount
+      i18nKey="subprofiles:hero.endorse.count"
+      count={view.endorsementCount}
+    />
+  );
+  const followerLabel = (
+    <PersonaMetaCount
+      i18nKey="subprofiles:hero.follow.count"
+      count={view.followerCount}
+    />
+  );
   const avatar = (
     <Avatar
       className="pp-av"
@@ -141,16 +183,10 @@ export function SubprofileHero({
                   interactive ? () => onAction("people:endorsers") : undefined
                 }
               >
-                {t("subprofiles:hero.endorse.count", {
-                  count: view.endorsementCount,
-                })}
+                {endorsementLabel}
               </button>
             ) : (
-              <span>
-                {t("subprofiles:hero.endorse.count", {
-                  count: view.endorsementCount,
-                })}
-              </span>
+              <span>{endorsementLabel}</span>
             )}
             {view.followerCount > 0 ? (
               <button
@@ -161,16 +197,10 @@ export function SubprofileHero({
                   interactive ? () => onAction("people:followers") : undefined
                 }
               >
-                {t("subprofiles:hero.follow.count", {
-                  count: view.followerCount,
-                })}
+                {followerLabel}
               </button>
             ) : (
-              <span>
-                {t("subprofiles:hero.follow.count", {
-                  count: view.followerCount,
-                })}
-              </span>
+              <span>{followerLabel}</span>
             )}
             {linkedToOwner && interactive ? (
               <Link

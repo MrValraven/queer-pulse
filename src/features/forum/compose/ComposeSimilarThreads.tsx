@@ -6,6 +6,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { tokenize } from "./composeText";
 import { COMPOSE_EASE } from "./composeMotion";
+import { ComposeSimilarCount } from "./ComposeSimilarCount";
 import { SimilarSlot, SimilarThreadRow } from "./ComposeSimilarThreadRow";
 import type { SimilarThread } from "./useSimilarThreads";
 import { useSettledResults } from "./useSimilarThreadsSettle";
@@ -87,23 +88,10 @@ export function ComposeSimilarThreads({
     >
       <h2 className={styles.heading} id={headingId}>
         <span>{t("forum:composePage.similar.heading")}</span>
-        <AnimatePresence initial={false}>
-          {hasThreads && (
-            <m.span
-              key="count"
-              className={styles.count}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={transition}
-            >
-              {t("forum:composePage.similar.count", {
-                count: visible.threads.length,
-                formatted: format.number(visible.threads.length),
-              })}
-            </m.span>
-          )}
-        </AnimatePresence>
+        <ComposeSimilarCount
+          count={visible.threads.length}
+          transition={transition}
+        />
       </h2>
 
       <SimilarSlot

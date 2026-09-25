@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
 import { Modal, SearchInput } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { NetworkGroup } from "./api/profileNetwork.types";
 import { NetworkPersonRow } from "./NetworkPersonRow";
@@ -29,6 +32,7 @@ export function NetworkListModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const meta = NETWORK_GROUP_META[group.key];
   const [query, setQuery] = useState("");
 
@@ -46,7 +50,20 @@ export function NetworkListModal({
   return (
     <Modal
       title={t(meta.titleKey)}
-      sub={t("members:network.modalSub", { count: filtered.length })}
+      sub={
+        <Translation
+          i18nKey="members:network.modalSub"
+          values={{ count: filtered.length }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={fmt.number(filtered.length)}
+                numericValue={filtered.length}
+              />
+            ),
+          }}
+        />
+      }
       onClose={onClose}
     >
       <div className={styles.searchBar}>

@@ -1,4 +1,7 @@
 import { useEffect, useRef } from "react";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { JOIN_REQUEST_BULK_ACTION_CAP } from "../auth/api/joinRequest.api";
 import queueStyles from "./AdminMembersPage.module.css";
@@ -30,6 +33,7 @@ export function JoinRequestSelectAllRow({
   onToggleAll: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const checkboxRef = useRef<HTMLInputElement>(null);
   const isAllSelected =
     visibleCount > 0 && selectedVisibleCount === visibleCount;
@@ -57,7 +61,22 @@ export function JoinRequestSelectAllRow({
         onChange={onToggleAll}
         aria-label={label}
       />
-      <span className={styles.selectAllLabel}>{label}</span>
+      {/* The input's aria-label keeps the plain sentence; the visible copy
+          rolls its count as rows leave the queue. */}
+      <span className={styles.selectAllLabel}>
+        <Translation
+          i18nKey="admin:members.verify.bulk.selectAll.label"
+          values={{ count: visibleCount }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={fmt.number(visibleCount)}
+                numericValue={visibleCount}
+              />
+            ),
+          }}
+        />
+      </span>
       {isAtCap && (
         <span className={styles.selectAllNote}>
           {t("admin:members.verify.bulk.capReached", {

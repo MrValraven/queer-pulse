@@ -12,7 +12,6 @@ function emptyAccessibilityDraft() {
  *  Only applied when building a BLANK draft — never over an edit/resumed one. */
 export interface ListingSeed {
   ownerName?: string;
-  contactEmail?: string;
   ownerBio?: string;
 }
 
@@ -56,7 +55,6 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     ownerBio: seed?.ownerBio ?? "",
     visibility: "public",
     linkToProfile: true,
-    contactEmail: seed?.contactEmail ?? "",
     consentOuting: false,
     consentGuide: false,
     // Agreeing is the condition of listing at all, so a fresh draft starts

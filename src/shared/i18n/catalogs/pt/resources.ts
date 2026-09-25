@@ -207,12 +207,12 @@ export const resources: Catalog = {
   "safety.visibility.title": "Como funciona a <em>visibilidade</em>",
   "safety.visibility.body":
     "Cada pessoa escolhe o seu próprio nível de visibilidade. É uma parte central de como existes na rede, e funciona como um regulador gradual que podes ajustar quando quiseres.",
-  "safety.visibility.open.title": "Aberto a ligações",
+  "safety.visibility.open.title": "Aberto a conexões",
   "safety.visibility.open.body":
     "O teu perfil é visível a todas as pessoas participantes. Qualquer pessoa na rede pode contactar-te diretamente. Podes mudar isto a qualquer momento, sem qualquer penalização por dares um passo atrás.",
   "safety.visibility.network.title": "Só rede",
   "safety.visibility.network.body":
-    "O teu perfil é visível às pessoas participantes, mas o contacto direto exige uma ligação partilhada. És contactável, mas com uma camada extra de conforto.",
+    "O teu perfil é visível às pessoas participantes, mas o contacto direto exige uma conexão partilhada. És contactável, mas com uma camada extra de conforto.",
   "safety.visibility.private.title": "Privado",
   "safety.visibility.private.body":
     "O teu perfil só é visível à equipa e a quem te deu um voto de confiança. Apareces na contagem da rede mas não na navegação. A definição certa se saíste do armário há pouco tempo, estás numa situação sensível, ou simplesmente ainda não estás pronte. Não é preciso dar explicações. Nunca partilhamos a tua participação para fora da QueerPulse sem o teu consentimento explícito.",

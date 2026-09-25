@@ -1022,6 +1022,9 @@ export const marketing: Catalog = {
   "communitiesAbout.outro.title": "Your people are already here.",
   "communitiesAbout.outro.sub":
     "Request an invite and we'll point you to the communities that feel like home.",
+  "communitiesAbout.outro.subSignedIn":
+    "Browse them and join the ones that feel like home.",
+  "communitiesAbout.outro.viewCommunitiesCta": "View communities",
 
   // ── Privacy Policy ─────────────────────────────────────────────────────
   "privacy.meta.title": "QueerPulse Privacy Policy: what we collect and why",
@@ -1679,16 +1682,20 @@ export const marketing: Catalog = {
   "listBusiness.step3.usePlaceName": "Use “{place}” as the address",
   "listBusiness.step3.mapAria": "Map: drag the pin to set the exact spot.",
   "listBusiness.step3.hoursHeading": "Opening hours *",
-  "listBusiness.step3.hasOpenHours": "Has open hours",
-  "listBusiness.step3.allClosed": "All closed",
+  "listBusiness.step3.hoursHint":
+    "Turn a day on to set its hours. Add a second window for a lunch break.",
   "listBusiness.step3.copyMonday": "Copy Monday to all days",
   "listBusiness.step3.markAllClosed": "Mark all closed",
   "listBusiness.step3.open": "Open",
   "listBusiness.step3.closed": "Closed",
   "listBusiness.step3.opensAria": "{day} opens",
   "listBusiness.step3.closesAria": "{day} closes",
-  "listBusiness.step3.addHours": "+ Split (lunch break)",
+  "listBusiness.step3.dayOpenAria": "Open on {day}",
+  "listBusiness.step3.addHoursAria": "Add a second window on {day}",
+  "listBusiness.step3.addHoursTip": "Add a break",
   "listBusiness.step3.removeHoursAria": "Remove second window on {day}",
+  "listBusiness.step3.removeFirstHoursAria": "Remove first window on {day}",
+  "listBusiness.step3.removeSecondWindow": "Remove second window",
   "listBusiness.step3.nextDay": "next day",
   "listBusiness.step3.hoursWarning":
     "Check these times: a window is blank, zero-length, or overlaps.",
@@ -1766,11 +1773,6 @@ export const marketing: Catalog = {
     "Puts a familiar, verified face on the listing. You're signed in as {name}.",
   "listBusiness.step4.linkProfileToggleLabel": "Link to member profile",
   "listBusiness.step4.loopHeading": "Staying in the loop",
-  "listBusiness.step4.contactEmailLabel": "Your contact email",
-  "listBusiness.step4.contactEmailHelper":
-    "For you, the submitter, kept private, never shown on the listing.",
-  "listBusiness.step4.contactEmailPlaceholder":
-    "So we can reach you about this listing",
   "listBusiness.step4.notifyNote":
     "A QueerPulse notification tells you when your listing goes live, and the team's questions arrive as a QueerPulse message.",
   "listBusiness.step4.consent":
@@ -1903,7 +1905,6 @@ export const marketing: Catalog = {
   "listBusiness.missing.rel": "your connection",
   "listBusiness.missing.ownerName": "your name",
   "listBusiness.missing.ownerRole": "your role",
-  "listBusiness.missing.contactEmail": "a contact email",
   "listBusiness.missing.alt": "alt text for your photos",
   "listBusiness.missing.consent": "both confirmations",
   "listBusiness.missing.services": "a name and a price on every service",
@@ -1977,8 +1978,6 @@ export const marketing: Catalog = {
     "Your name shows here. With your profile linked, your card shows your first name.",
   "listBusiness.livePreview.caption.ownerRole":
     "Your role shows here, beside your name.",
-  "listBusiness.livePreview.caption.contactEmail":
-    "Only you and the review team see this. It stays off your listing.",
   "listBusiness.livePreview.caption.consent":
     "These stay between you and the review team. They keep the listing honest.",
   "listBusiness.livePreview.caption.services":
@@ -2547,6 +2546,108 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.discardCta": "Discard them",
   "listBusiness.editor.restore.justNow": "a moment ago",
   "listBusiness.editor.restore.unknownWhen": "an earlier session",
+  // Restore review: the diff a saved local copy would bring back, per area.
+  "listBusiness.editor.restore.review.title":
+    "Bring back your unsaved changes?",
+  "listBusiness.editor.restore.review.sub":
+    "Saved on this device {when}. Tick the areas you want back.",
+  "listBusiness.editor.restore.review.selectAll": "Select all",
+  "listBusiness.editor.restore.review.clearAll": "Clear all",
+  "listBusiness.editor.restore.review.changeCount_one": "{count} change",
+  "listBusiness.editor.restore.review.changeCount_other": "{count} changes",
+  "listBusiness.editor.restore.review.areaKept":
+    "Left out: this area stays as it is now, and its saved changes are dropped from this device.",
+  "listBusiness.editor.restore.review.legend.now": "On screen now",
+  "listBusiness.editor.restore.review.legend.back": "Comes back",
+  "listBusiness.editor.restore.review.legend.spoken":
+    "Removed means on screen now; added means it comes back.",
+  "listBusiness.editor.restore.review.removedPrefix": "removed:",
+  "listBusiness.editor.restore.review.addedPrefix": "added:",
+  "listBusiness.editor.restore.review.empty": "empty",
+  "listBusiness.editor.restore.review.choiceChange":
+    "{before} changes to {after}",
+  "listBusiness.editor.restore.review.status.added": "Added",
+  "listBusiness.editor.restore.review.status.removed": "Removed",
+  "listBusiness.editor.restore.review.status.changed": "Changed",
+  "listBusiness.editor.restore.review.paragraph": "Paragraph {position}",
+  "listBusiness.editor.restore.review.keepCta": "Keep what's here",
+  "listBusiness.editor.restore.review.confirmAll": "Bring them all back",
+  "listBusiness.editor.restore.review.confirmNone":
+    "Tick an area to bring it back",
+  "listBusiness.editor.restore.review.confirmSome_one":
+    "Bring back {count} area",
+  "listBusiness.editor.restore.review.confirmSome_other":
+    "Bring back {count} areas",
+  "listBusiness.editor.restore.review.emptyState":
+    "Nothing here differs from what's on screen now.",
+  "listBusiness.editor.restore.review.discardCta": "Discard the saved copy",
+  "listBusiness.editor.restore.review.closeCta": "Close",
+  "listBusiness.editor.restore.diff.field.name": "Business name",
+  "listBusiness.editor.restore.diff.field.cats": "Categories",
+  "listBusiness.editor.restore.diff.field.catsOrder":
+    "Category order (the first is the main one)",
+  "listBusiness.editor.restore.diff.field.hood": "Neighbourhood",
+  "listBusiness.editor.restore.diff.field.badge": "Who runs it",
+  "listBusiness.editor.restore.diff.field.evidence": "How it is queer-owned",
+  "listBusiness.editor.restore.diff.field.price": "Price band",
+  "listBusiness.editor.restore.diff.field.blurb": "Short description",
+  "listBusiness.editor.restore.diff.field.tagline": "Tagline",
+  "listBusiness.editor.restore.diff.field.whatItIs": "Description",
+  "listBusiness.editor.restore.diff.field.tags": "Tags",
+  "listBusiness.editor.restore.diff.field.goodFor": "Good for",
+  "listBusiness.editor.restore.diff.field.langs": "Languages spoken",
+  "listBusiness.editor.restore.diff.field.services": "Services and prices",
+  "listBusiness.editor.restore.diff.field.pricingMode": "What your page shows",
+  "listBusiness.editor.restore.diff.field.menu": "Menu",
+  "listBusiness.editor.restore.diff.field.online": "Online only",
+  "listBusiness.editor.restore.diff.field.address": "Address",
+  "listBusiness.editor.restore.diff.field.mapPin": "Map pin",
+  "listBusiness.editor.restore.diff.field.hours": "Opening hours",
+  "listBusiness.editor.restore.diff.field.hoursNote": "Hours note",
+  "listBusiness.editor.restore.diff.field.hoursExceptions":
+    "Holiday and special-date hours",
+  "listBusiness.editor.restore.diff.field.social": "Contact links",
+  "listBusiness.editor.restore.diff.field.instagram": "Instagram",
+  "listBusiness.editor.restore.diff.field.website": "Website",
+  "listBusiness.editor.restore.diff.field.email": "Email",
+  "listBusiness.editor.restore.diff.field.phone": "Phone",
+  "listBusiness.editor.restore.diff.field.accessibility":
+    "Accessibility answers",
+  "listBusiness.editor.restore.diff.field.photos": "Photos",
+  "listBusiness.editor.restore.diff.field.rel": "Your connection to the place",
+  "listBusiness.editor.restore.diff.field.ownerName": "Your name",
+  "listBusiness.editor.restore.diff.field.ownerRole":
+    "Role shown on the listing",
+  "listBusiness.editor.restore.diff.field.ownerBio": "About you",
+  "listBusiness.editor.restore.diff.field.visibility": "Who can see your name",
+  "listBusiness.editor.restore.diff.field.linkToProfile":
+    "Link to your member profile",
+  "listBusiness.editor.restore.diff.field.consentOuting":
+    "Public listing confirmation",
+  "listBusiness.editor.restore.diff.field.consentGuide":
+    "Accuracy confirmation",
+  "listBusiness.editor.restore.diff.value.yes": "Yes",
+  "listBusiness.editor.restore.diff.value.no": "No",
+  "listBusiness.editor.restore.diff.value.onScreen": "As it is on screen now",
+  "listBusiness.editor.restore.diff.value.savedCopy": "As in your saved copy",
+  "listBusiness.editor.restore.diff.pin.none": "Not on the map",
+  "listBusiness.editor.restore.diff.pin.exact": "Pinned at the address",
+  "listBusiness.editor.restore.diff.pin.approximate":
+    "Pinned near the neighbourhood",
+  "listBusiness.editor.restore.diff.pin.moved": "Pinned in a different spot",
+  "listBusiness.editor.restore.diff.hours.interval": "{from} to {to}",
+  "listBusiness.editor.restore.diff.hours.openNoTimes":
+    "Open, times not set yet",
+  "listBusiness.editor.restore.diff.hours.timeNotSet": "(time not set)",
+  "listBusiness.editor.restore.diff.field.mainCategory": "Main category",
+  "listBusiness.editor.restore.diff.row.untitled": "Untitled",
+  "listBusiness.editor.restore.diff.row.exceptionWithNote": "{date} · {note}",
+  "listBusiness.editor.restore.diff.row.menuItem": "{section}: {item}",
+  "listBusiness.editor.restore.diff.row.otherChange": "Some details differ",
+  "listBusiness.editor.restore.diff.photo.wide": "Wide shot",
+  "listBusiness.editor.restore.diff.photo.d1": "Detail 1",
+  "listBusiness.editor.restore.diff.photo.d2": "Detail 2",
+  "listBusiness.editor.restore.diff.photo.vibe": "People and vibe",
 
   // ── Operating state: the business's own report about itself. Setting it
   //    never moves the moderation status and never triggers a re-review.
@@ -2884,10 +2985,10 @@ export const marketing: Catalog = {
     "The email template editor is more compact",
   "changelog.entries.email-template-editor-compact.body":
     "Settings share one row, language and actions share one toolbar, and the live preview starts near the top.",
-  "changelog.entries.member-directory-counts-roll.title":
-    "The member directory counts roll to their new number",
-  "changelog.entries.member-directory-counts-roll.body":
-    "Filtering rolls the Showing count up or down, and the headline total rolls in when the page opens.",
+  "changelog.entries.numbers-roll-everywhere.title":
+    "Numbers roll to their new value across the app",
+  "changelog.entries.numbers-roll-everywhere.body":
+    "Calculators, votes, reactions, unread badges, filter counts and result totals roll up or down as they change.",
   "changelog.entries.therapist-topics-one-blank-line.title":
     "Therapist topics keep one empty line at a time",
   "changelog.entries.therapist-topics-one-blank-line.body":
@@ -2896,6 +2997,37 @@ export const marketing: Catalog = {
     "Persona pickers animate as you choose",
   "changelog.entries.persona-picker-chips-animate.body":
     "Picked options slide into the chip row above, and the checklist opens and closes smoothly.",
+  "changelog.entries.members-results-shuffle.title":
+    "Member results shuffle into place when you filter",
+  "changelog.entries.members-results-shuffle.body":
+    "Cards that still match glide to their new spot, new ones grow in, and the grid never blanks out.",
+  "changelog.entries.listing-restore-review.title":
+    "Review unsaved listing changes before you bring them back",
+  "changelog.entries.listing-restore-review.body":
+    "A diff groups every change by area, and you tick which areas come back.",
+  "changelog.entries.listing-hours-roomier.title":
+    "Roomier opening hours in the listing editor",
+  "changelog.entries.listing-hours-roomier.body":
+    "Each day gets a switch and its own row, and a + adds a lunch break without crowding the week.",
+  "changelog.entries.listing-form-no-contact-email.title":
+    "Listing a business no longer asks for your email",
+  "changelog.entries.listing-form-no-contact-email.body":
+    "The team reaches you through QueerPulse notifications and messages, so we stopped storing a separate address.",
+  "changelog.entries.listing-danger-zone-on-demand.title":
+    "Listing delete stays tucked away until you ask for it",
+  "changelog.entries.listing-danger-zone-on-demand.body":
+    "The Danger zone opens from its sidebar link and folds away again when you jump to another section.",
+  "changelog.entries.shared-places-show-place-card.title":
+    "Places shared in chat show their place card",
+  "changelog.entries.shared-places-show-place-card.body":
+    "A directory link in a message shows the photo, rating and area, in the bubble and the share preview.",
+  "changelog.entries.homepage-community-card-opens-community.title":
+    "Community buttons take members straight in",
+  "changelog.entries.homepage-community-card-opens-community.body":
+    "Signed in, the featured card and the communities explainer both link you to the communities.",
+  "changelog.entries.account-menu-clear-labels.title": "Clearer account menu",
+  "changelog.entries.account-menu-clear-labels.body":
+    "Your personas and Invite someone now say what they are, and no menu label gets cut off.",
   "changelog.entries.chat-list-row-seams.title":
     "Chat list rows sit flush again",
   "changelog.entries.chat-list-row-seams.body":

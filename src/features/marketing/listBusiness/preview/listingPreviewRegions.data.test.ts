@@ -142,9 +142,7 @@ describe("placementForAnchor", () => {
       regions: ["desc"],
       captionKey: `${CAPTION_PREFIX}blurb`,
     });
-    expect(placementForAnchor(ANCHOR.contactEmail, draft)?.kind).toBe(
-      "private",
-    );
+    expect(placementForAnchor(ANCHOR.rel, draft)?.kind).toBe("private");
   });
 });
 
@@ -503,10 +501,7 @@ describe("highlightedRegionsFor", () => {
   it("outlines nothing for a private or full-page field", () => {
     const draft = draftWith({ name: "Livraria Rosa" });
     expect(
-      highlightedRegionsFor(
-        placementForAnchor(ANCHOR.contactEmail, draft),
-        draft,
-      ),
+      highlightedRegionsFor(placementForAnchor(ANCHOR.rel, draft), draft),
     ).toEqual([]);
     expect(
       highlightedRegionsFor(placementForAnchor(ANCHOR.address, draft), draft),

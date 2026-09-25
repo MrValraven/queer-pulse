@@ -64,7 +64,7 @@ function pricingPayload(draft: ListingDraft) {
  * and the bulk of the owner's.
  *
  * Its return type is `CoManagerUpdateListingDto`, which is `UpdateListingDto`
- * with the eight owner-personal keys removed. Because this returns an object
+ * with the seven owner-personal keys removed. Because this returns an object
  * literal, TypeScript's excess-property check makes adding one of those keys
  * back here a compile error, so the co-manager's body cannot silently regain a
  * field the API answers 403 to.
@@ -118,7 +118,7 @@ export function businessPayload(
   };
 }
 
-/** The owner's own eight fields. Only ever spread into an OWNER's payload. */
+/** The owner's own seven fields. Only ever spread into an OWNER's payload. */
 function ownerPersonalPayload(
   draft: ListingDraft,
 ): Pick<UpdateListingDto, OwnerPersonalField> {
@@ -128,7 +128,6 @@ function ownerPersonalPayload(
     ownerBio: draft.ownerBio.trim(),
     visibility: draft.visibility,
     linkToProfile: draft.linkToProfile,
-    contactEmail: draft.contactEmail.trim(),
     consentOuting: draft.consentOuting,
     consentGuide: draft.consentGuide,
   };
@@ -162,7 +161,7 @@ export function draftToDto(draft: ListingDraft): CreateListingDto {
  * A CO-MANAGER's save gets `businessPayload` alone, run through
  * `stripOwnerPersonalFields` on the way out. The allow-list is what makes the
  * body correct; the strip is what makes it guaranteed, including against a
- * future edit that spreads a whole draft in here. One of those eight keys in
+ * future edit that spreads a whole draft in here. One of those seven keys in
  * the body 403s the whole save.
  */
 export function draftToUpdateDto(

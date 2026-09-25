@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiX } from "react-icons/fi";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { BudgetRow } from "./microGrants.data";
@@ -78,7 +79,7 @@ export function BudgetStep({
             .filter(Boolean)
             .join(" ")}
         >
-          €{total.toFixed(0)}
+          <RollingNumber value={`€${total.toFixed(0)}`} numericValue={total} />
         </span>
       </div>
       <div className={styles.hint}>

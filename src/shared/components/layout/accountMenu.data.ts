@@ -34,6 +34,12 @@ export type AccountItem = {
    */
   badge?: ReactNode;
   /**
+   * Optional one-line description shown under the label, for rows whose name
+   * alone does not say what they hold. A row that carries one spans the full
+   * desktop grid width so the hint has room to read.
+   */
+  hintKey?: string;
+  /**
    * Only show this row in live mode. Set on surfaces that track a real member's
    * account state (e.g. Getting started), which have nothing to show in the demo
    * sandbox — the panel/sheet drop the row when `demoMode` is on.
@@ -53,7 +59,8 @@ export type AccountItem = {
 /**
  * The canonical account links, grouped by type. Each inner array renders as its
  * own two-column sub-grid in the desktop menu, separated by a divider, so the
- * clusters read as categories (people & what's on · career & content · support).
+ * clusters read as categories (people & what's on · personas & invites ·
+ * career & content · support).
  * Saved and Settings are NOT here — they live as icon actions in the menu header
  * (see HEADER_ACTIONS). Labels are bare nouns.
  */
@@ -86,27 +93,15 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       icon: FiUser,
     },
     {
-      labelKey: "shared:accountMenu.items.personas",
-      to: routes.subprofilesDashboard,
-      icon: FiLayers,
-    },
-    {
       labelKey: "shared:accountMenu.items.connections",
       to: routes.connections,
       icon: FiUserPlus,
     },
-    // ACQ-08 — the member-minted invite flow used to hang off a single button
-    // in the Connections page header, so unspent invites expired unseen. It
-    // sits right after Connections: this is the "people" cluster, and inviting
-    // someone is the same move as connecting, one step earlier. NOT `liveOnly`
-    // — `inviteQuota.data.ts` gives the demo sandbox a real allowance to show.
-    // The trailing count comes from `useInviteQuotaBadge`.
     {
-      labelKey: "shared:accountMenu.items.invite",
-      to: routes.invite,
-      icon: FiKey,
+      labelKey: "shared:accountMenu.items.communities",
+      to: routes.communities,
+      icon: FiUsers,
     },
-    { labelKey: "nav:communities", to: routes.communities, icon: FiUsers },
     {
       labelKey: "shared:accountMenu.items.events",
       to: routes.events,
@@ -116,6 +111,31 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       labelKey: "shared:accountMenu.items.cards",
       to: routes.myCards,
       icon: FiCreditCard,
+    },
+  ],
+  // Described rows. Personas and Invite someone are the two names members
+  // could not place from the label alone, and their trailing counts said
+  // nothing about what they count, so each carries a `hintKey` and spans the
+  // full grid width. They sit directly under the People cluster they belong to.
+  [
+    {
+      labelKey: "shared:accountMenu.items.personas",
+      to: routes.subprofilesDashboard,
+      icon: FiLayers,
+      hintKey: "shared:accountMenu.hints.personas",
+    },
+    // ACQ-08: the member-minted invite flow used to hang off a single button
+    // in the Connections page header, so unspent invites expired unseen. It
+    // now sits in this described group right under the People cluster:
+    // inviting someone is the same move as connecting, one step earlier. It
+    // stays visible in demo mode because `inviteQuota.data.ts` gives the
+    // sandbox a real allowance to show. The trailing count comes from
+    // `useInviteQuotaBadge`.
+    {
+      labelKey: "shared:accountMenu.items.invite",
+      to: routes.invite,
+      icon: FiKey,
+      hintKey: "shared:accountMenu.hints.invite",
     },
   ],
   // Career & content. Applications now lives inside the Work hub rather than

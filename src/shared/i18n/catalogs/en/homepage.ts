@@ -436,6 +436,7 @@ export const homepage: Catalog = {
   "communities.sub":
     "Search or filter the list, then open any community to see it in full: what it is, what it does, who's inside, and what you unlock by joining.",
   "communities.howCommunitiesWorkCta": "How communities work",
+  "communities.viewCommunityCta": "View community",
   "communities.resultCount.all": "<b>{count}</b> communities",
   "communities.resultCount.shown": "<b>{count}</b> of {total} communities",
 

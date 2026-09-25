@@ -48,6 +48,27 @@ function stubDiscover(
   } as DiscoverCommunities;
 }
 
+/** The text a reader gets from an element: the `aria-hidden` odometer glyphs
+ *  left out, the visually hidden copy of the number kept. */
+function readableText(element: Element): string {
+  const copy = element.cloneNode(true) as Element;
+  copy
+    .querySelectorAll('[aria-hidden="true"]')
+    .forEach((hiddenNode) => hiddenNode.remove());
+  return copy.textContent ?? "";
+}
+
+/** Matches the innermost element whose readable text is `expected`, so a
+ *  sentence split around a RollingNumber still counts as one piece of text. */
+function readableTextIs(expected: string) {
+  return (_content: string, element: Element | null) =>
+    element !== null &&
+    readableText(element) === expected &&
+    Array.from(element.children).every(
+      (child) => readableText(child) !== expected,
+    );
+}
+
 function renderToolbar(overrides: Partial<DiscoverCommunities> = {}) {
   return render(
     <TestProviders>
@@ -87,8 +108,9 @@ describe("CommunitiesToolbar", () => {
     // and the polite live region still announces it (a live region only speaks
     // on change, so visible text cannot replace it). So this filters the
     // announcement out and asserts the VISIBLE one, which is what this test is
-    // about — the announcement has its own test above.
-    const counts = await screen.findAllByText("1 community");
+    // about; the announcement has its own test above. The visible number is a
+    // RollingNumber, so the match reads the sentence the way a reader gets it.
+    const counts = await screen.findAllByText(readableTextIs("1 community"));
     const live = container.querySelector('[aria-live="polite"]');
     const visibleCounts = counts.filter((node) => !live?.contains(node));
     expect(visibleCounts).toHaveLength(1);

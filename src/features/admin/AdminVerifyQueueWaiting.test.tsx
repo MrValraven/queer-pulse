@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { readableTextIs } from "../../test/readableText";
 import { TestProviders } from "../../test/TestProviders";
 import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
 import { makeJoinRequestRow } from "./joinRequestTestRow";
@@ -83,12 +84,14 @@ describe("AdminVerifyQueueWaiting selection", () => {
     expect(
       await screen.findByRole("region", { name: "Bulk actions" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("1 selected")).toBeInTheDocument();
+    expect(screen.getByText(readableTextIs("1 selected"))).toBeInTheDocument();
 
     await user.click(
       screen.getByRole("checkbox", { name: "Select Ana Ferreira's request" }),
     );
-    expect(await screen.findByText("2 selected")).toBeInTheDocument();
+    expect(
+      await screen.findByText(readableTextIs("2 selected")),
+    ).toBeInTheDocument();
   });
 
   it("takes the whole visible page with select-all, and gives it back again", async () => {
@@ -100,7 +103,9 @@ describe("AdminVerifyQueueWaiting selection", () => {
     });
     await user.click(selectAll);
 
-    expect(await screen.findByText("2 selected")).toBeInTheDocument();
+    expect(
+      await screen.findByText(readableTextIs("2 selected")),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("checkbox", { name: "Select Kai Mendes's request" }),
     ).toBeChecked();

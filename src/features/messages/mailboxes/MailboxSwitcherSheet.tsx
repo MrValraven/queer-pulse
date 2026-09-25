@@ -3,6 +3,9 @@ import { FiCheck, FiSettings } from "react-icons/fi";
 import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
 import { useMeasuredContentHeight } from "../../../shared/components/layout/useMeasuredContentHeight";
 import { Avatar, ModalSheet } from "../../../shared/components/ui";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../../shared/i18n/format";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   MAILBOX_KIND_LABEL_KEYS,
@@ -24,6 +27,7 @@ function MailboxSwitcherRow({
   onShowSettings: (identityId: string) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const nameId = useId();
   const name = mailboxDisplayName(mailbox, t);
   const isProfile = mailbox.kind === "profile";
@@ -61,9 +65,18 @@ function MailboxSwitcherRow({
               )}
               {mailbox.unreadCount > 0 && (
                 <span className={styles.unreadCount}>
-                  {t("messages:mailbox.switcher.unreadCount", {
-                    count: mailbox.unreadCount,
-                  })}
+                  <Translation
+                    i18nKey="messages:mailbox.switcher.unreadCount"
+                    values={{ count: mailbox.unreadCount }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(mailbox.unreadCount)}
+                          numericValue={mailbox.unreadCount}
+                        />
+                      ),
+                    }}
+                  />
                 </span>
               )}
             </span>

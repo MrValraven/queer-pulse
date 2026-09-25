@@ -2,6 +2,7 @@ import { FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { type LineItem, lineTotal, emptyLine } from "./invoice.data";
 import styles from "./InvoiceGeneratorPage.module.css";
 
@@ -80,7 +81,12 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
             onChange={(e) => patch(l.id, { unit: num(e.target.value) })}
           />
 
-          <span className={styles.lineTotal}>{fmt.currency(lineTotal(l))}</span>
+          <span className={styles.lineTotal}>
+            <RollingNumber
+              value={fmt.currency(lineTotal(l))}
+              numericValue={lineTotal(l)}
+            />
+          </span>
 
           <button
             type="button"

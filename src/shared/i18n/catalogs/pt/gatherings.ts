@@ -905,7 +905,7 @@ export const gatherings: Catalog = {
   "create.v2.who.cohostsResultsLabel": "Pessoas da tua rede",
   "create.v2.who.cohostsNoMatch": "Ninguém com esse nome na tua rede.",
   "create.v2.who.cohostsNoConnections":
-    "As tuas ligações aparecem aqui assim que tiveres algumas.",
+    "As tuas conexões aparecem aqui assim que tiveres algumas.",
   "create.v2.who.cohostsLoading": "A carregar a tua rede…",
   "create.v2.who.cohostsLoadError": "A tua rede não carregou.",
   "create.v2.who.cohostsPickedLabel": "Coanfitriões que escolheste",
@@ -1019,11 +1019,11 @@ export const gatherings: Catalog = {
   "audienceScope.members.label": "Público",
   "audienceScope.members.helper":
     "Qualquer pessoa na QueerPulse pode encontrar isto e confirmar presença.",
-  "audienceScope.extendedNetwork.label": "Ligações das tuas ligações",
+  "audienceScope.extendedNetwork.label": "Conexões das tuas conexões",
   "audienceScope.extendedNetwork.helper":
-    "Pessoas que as tuas ligações conhecem podem encontrar isto: apenas amigos de amigos.",
+    "Pessoas que as tuas conexões conhecem podem encontrar isto: apenas amigos de amigos.",
   "audienceScope.network.label": "Só a rede",
-  "audienceScope.network.helper": "Só pessoas com quem já tens uma ligação.",
+  "audienceScope.network.helper": "Só pessoas com quem já tens uma conexão.",
   "audienceScope.community.label": "Membros da comunidade",
   "audienceScope.community.helper":
     "Só membros da comunidade onde estás a publicar.",
@@ -1370,9 +1370,9 @@ export const gatherings: Catalog = {
   "manage.invite.sub":
     "Escolhe as pessoas que gostavas de ter neste convívio. Vão receber um convite caloroso que podem aceitar ou não, sem pressão.",
   "manage.invite.searchLabel": "Procurar pessoas para convidar",
-  "manage.invite.loadingPeople": "A procurar as pessoas com quem tens ligação.",
+  "manage.invite.loadingPeople": "A procurar as pessoas com quem tens conexão.",
   "manage.invite.noConnections":
-    "Podes convidar as pessoas com quem tens ligação. Assim que tiveres ligações, aparecem aqui.",
+    "Podes convidar as pessoas com quem tens conexão. Assim que tiveres conexões, aparecem aqui.",
   "manage.invite.noneSelected": "Ainda não escolheste ninguém",
   "manage.invite.selectedCount_one": "Selecionaste <b>{count}</b>",
   "manage.invite.selectedCount_other": "Selecionaste <b>{count}</b>",
@@ -1694,11 +1694,11 @@ export const gatherings: Catalog = {
   "sharePlans.eyebrow": "Só entre vocês",
   "sharePlans.title": "Diz a alguém <em>onde vais estar</em>",
   "sharePlans.sub":
-    "Escolhe uma das tuas ligações. Recebe como mensagem normal, que ficam ambas a poder reler.",
-  "sharePlans.searchLabel": "Procurar nas tuas ligações",
-  "sharePlans.loadingConnections": "A procurar as tuas ligações…",
+    "Escolhe uma das tuas conexões. Recebe como mensagem normal, que ficam ambas a poder reler.",
+  "sharePlans.searchLabel": "Procurar nas tuas conexões",
+  "sharePlans.loadingConnections": "A procurar as tuas conexões…",
   "sharePlans.noConnections":
-    "Ainda não tens ligações. Liga-te a alguém e essa pessoa aparece aqui.",
+    "Ainda não tens conexões. Liga-te a alguém e essa pessoa aparece aqui.",
   "sharePlans.messageLabel": "O que essa pessoa vai receber",
   "sharePlans.messageHint": "Muda o texto como quiseres antes de enviar.",
   "sharePlans.sendCta": "Enviar",
@@ -1843,7 +1843,7 @@ export const gatherings: Catalog = {
   "rsvpDetails.customAnswerPlaceholder": "A tua resposta",
   "rsvpDetails.whoSeesLabel": "Quem pode ver isto",
   "rsvpDetails.visibility.everyone": "Toda a gente que vai",
-  "rsvpDetails.visibility.connections": "As minhas ligações",
+  "rsvpDetails.visibility.connections": "As minhas conexões",
   "rsvpDetails.visibility.justMe": "Só quem organiza",
   "rsvpDetails.privacyNote":
     "Quem organiza vê sempre o que escreves aqui, independentemente da escolha acima.",

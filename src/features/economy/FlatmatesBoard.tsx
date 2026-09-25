@@ -6,10 +6,12 @@ import {
   LoadErrorState,
   Outro,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   budgetCeilingFor,
@@ -26,6 +28,7 @@ import styles from "./FlatmatesPage.module.css";
 
 export function FlatmatesBoard() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const [type, setType] = useState<ListingType | "all">("all");
   const [neighbourhood, setNeighbourhood] = useState("all");
@@ -151,7 +154,18 @@ export function FlatmatesBoard() {
           {!boardEmpty && (
             <div className={styles.top}>
               <div className={styles.count}>
-                {t("economy:flatmates.count", { count: filtered.length })}{" "}
+                <Translation
+                  i18nKey="economy:flatmates.count"
+                  values={{ count: filtered.length }}
+                  slots={{
+                    count: (
+                      <RollingNumber
+                        value={fmt.number(filtered.length)}
+                        numericValue={filtered.length}
+                      />
+                    ),
+                  }}
+                />{" "}
                 <FeatureHelp id="housing.flatmates" />
               </div>
               <div className={styles.topActions}>

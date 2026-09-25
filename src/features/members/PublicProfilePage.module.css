@@ -261,7 +261,8 @@
   font-style: italic;
   color: var(--accent);
 }
-.stat span {
+/* Direct child only: the rolling figure in `b` is built from spans too. */
+.stat > span {
   font-size: var(--text-12-5);
   color: var(--ink-60);
 }

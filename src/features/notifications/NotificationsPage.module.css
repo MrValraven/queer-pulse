@@ -32,6 +32,13 @@
   padding: 3px 9px;
   margin-left: 10px;
   vertical-align: middle;
+  /* A flex box so the rolling count centres inside the pill instead of
+     top-aligning to the display-size title line. */
+  display: inline-flex;
+  align-items: center;
+  /* The inline span it replaced painted the font's content box; a flex box
+     sizes to its line-height, so this restores the pill's old height. */
+  line-height: 1.25;
 }
 .actions {
   display: flex;

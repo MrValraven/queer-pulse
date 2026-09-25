@@ -1,5 +1,7 @@
 import { useId, type ReactNode } from "react";
 import { FiChevronDown } from "react-icons/fi";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 interface FilterSectionProps {
@@ -25,6 +27,7 @@ export function FilterSection({
   children,
 }: FilterSectionProps) {
   const bodyId = useId();
+  const fmt = useFormat();
   return (
     <div className={styles.filterCard}>
       <button
@@ -38,7 +41,12 @@ export function FilterSection({
           {title}
         </span>
         {activeCount > 0 && (
-          <span className={styles.sectionCount}>{activeCount}</span>
+          <span className={styles.sectionCount}>
+            <RollingNumber
+              value={fmt.number(activeCount)}
+              numericValue={activeCount}
+            />
+          </span>
         )}
         <span
           className={[styles.sectionChevron, open && styles.sectionChevronOpen]

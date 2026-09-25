@@ -14,6 +14,8 @@ import type { IconType } from "react-icons";
 import type { Reaction, ReactionKey } from "./community.model";
 import type { AccessTier, CommunityRole } from "./membership.types";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunityBadges.module.css";
 
@@ -125,6 +127,7 @@ export function ReactionBar({
   readOnly?: boolean;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.reactions}>
       {reactions.map((r) => {
@@ -133,11 +136,14 @@ export function ReactionBar({
           label: t(REACTION_LABEL_KEY[r.key]),
           count: r.count,
         });
+        const countFigure = (
+          <RollingNumber value={fmt.number(r.count)} numericValue={r.count} />
+        );
         if (readOnly) {
           return (
             <span key={r.key} className={styles.pill} aria-label={label}>
               <Icon aria-hidden />
-              {r.count}
+              {countFigure}
             </span>
           );
         }
@@ -154,7 +160,7 @@ export function ReactionBar({
             onClick={() => onReact?.(r.key)}
           >
             <Icon aria-hidden />
-            {r.count}
+            {countFigure}
           </Button>
         );
       })}

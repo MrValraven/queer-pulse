@@ -18,7 +18,7 @@ import { normalizeCategory } from "../localCategories";
  * (ref/slug/status/submittedBy/createdAt) never ride along into the PATCH body
  * (the backend rejects unknown fields). Photos are coerced null to "".
  *
- * The owner's eight personal fields come through `ownerPersonalFieldsFrom`,
+ * The owner's seven personal fields come through `ownerPersonalFieldsFrom`,
  * which reads them when the caller owns the listing and blanks them when they
  * only co-manage it (where they never arrived in the first place). The blanks
  * are inert: `managementRole` travels on the draft, and `draftToUpdateDto`
@@ -75,7 +75,7 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     // The role printed on the public listing belongs to the business, so it
     // arrives for a co-manager too and stays editable by them.
     ownerRole: dto.ownerRole,
-    // The owner's own eight fields, or inert blanks when this member only
+    // The owner's own seven fields, or inert blanks when this member only
     // co-manages the listing and never received them.
     ...ownerPersonalFieldsFrom(dto),
     // The listing exists, so the baseline was agreed to when it was created.

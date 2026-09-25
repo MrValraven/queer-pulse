@@ -95,7 +95,7 @@ export const auth: Catalog = {
   "invite.eyebrow": "Convida alguém a entrar",
   "invite.title": "Traz alguém <em>para aqui</em>",
   "invite.sub":
-    "Provavelmente conheces alguém que se sentiria em casa aqui. Convida essa pessoa a juntar-se ao QueerPulse e avaliza-a pelo caminho.",
+    "Provavelmente conheces alguém que se sentiria em casa aqui. Convida essa pessoa a juntar-se ao QueerPulse e dá-lhe um voto de confiança pelo caminho.",
   "invite.quota.available_one": "{count} convite disponível este mês",
   "invite.quota.available_other": "{count} convites disponíveis este mês",
   "invite.quota.none": "Sem convites disponíveis este mês",
@@ -106,12 +106,12 @@ export const auth: Catalog = {
   "invite.compose.recipientEmail.label": "Para quem é",
   "invite.compose.recipientEmail.placeholder": "pessoa@exemplo.com",
   "invite.compose.recipientEmail.help":
-    "Quem usar este convite entra com o teu aval registado e fica ligade a ti desde o primeiro dia. Se preencheres um endereço, só quem iniciar sessão com essa conta Google o pode usar, por isso um link reencaminhado ou fotografado não deixa entrar mais ninguém; se deixares em branco, qualquer pessoa com o link o pode usar.",
+    "Quem usar este convite entra com o teu voto de confiança registado e fica ligade a ti desde o primeiro dia. Se preencheres um endereço, só quem iniciar sessão com essa conta Google o pode usar, por isso um link reencaminhado ou fotografado não deixa entrar mais ninguém; se deixares em branco, qualquer pessoa com o link o pode usar.",
   "invite.compose.recipientEmail.noSend":
     "Preencher isto não envia nada para esse endereço. O link continua a ser partilhado por ti.",
   "invite.compose.recipientEmail.invalid":
     "Isto não parece um endereço de email. Verifica ou deixa o campo vazio.",
-  "invite.compose.vouch.label": "O teu aval",
+  "invite.compose.vouch.label": "O teu voto de confiança",
   "invite.compose.vouch.placeholder":
     "Porque é que devia entrar? Uma ou duas frases já ajudam bastante.",
   "invite.compose.note.label": "Nota pessoal",
@@ -126,9 +126,9 @@ export const auth: Catalog = {
     "Já usaste todos os convites da tua quota deste mês. Volta a encher quando o mês reiniciar.",
   "invite.link.formNote": "Este link funciona uma vez, para uma pessoa.",
   "invite.link.defaultVouch":
-    "Alguém da comunidade acha que devias estar aqui. QueerPulse: uma rede queer avalizada em Lisboa, construída sobre confiança.",
+    "Alguém da comunidade acha que devias estar aqui. QueerPulse: uma rede queer em Lisboa, construída sobre votos de confiança.",
   "invite.link.shareMessage":
-    "{senderFirst} convidou-te para o QueerPulse, uma comunidade queer discreta e avalizada. O teu convite pessoal: {url}",
+    "{senderFirst} convidou-te para o QueerPulse, uma comunidade queer discreta, construída sobre votos de confiança. O teu convite pessoal: {url}",
 
   "invite.ready.headline": "O teu convite está <em>pronto</em>",
   "invite.ready.sub":
@@ -204,7 +204,7 @@ export const auth: Catalog = {
   "adultsOnly.ariaLabel": "Porque o QueerPulse é só para adultos",
   "adultsOnly.title": "Porque o QueerPulse é <em>só para adultos</em>",
   "adultsOnly.body1":
-    "O QueerPulse está aberto a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada para a comunidade.",
+    "O QueerPulse está aberto a qualquer pessoa com 18 anos ou mais que seja convidada ou entre na comunidade com um voto de confiança.",
   "adultsOnly.body2":
     "Mantemos o espaço só para adultos por uma razão. Muito do que acontece aqui são conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos. Não é adequado para menores, e misturar os dois poria a segurança de toda a gente em risco. As pessoas com menos de 18 também merecem comunidade queer; este só ainda não é o espaço para isso.",
   "adultsOnly.reassure": "Não precisas de identificação. Confiamos em ti.",
@@ -275,7 +275,7 @@ export const auth: Catalog = {
   "requestInvite.eyebrow": "Pedir um convite",
   "requestInvite.title": "Pede para <em>entrar.</em>",
   "requestInvite.sub":
-    "O QueerPulse cresce através de confiança. A forma mais certa de entrar é uma pessoa que já cá está avalizar-te, por isso se conheces alguém aqui, pede-lhe. Se não conheces, conta-nos um pouco sobre ti e tratamos do resto.",
+    "O QueerPulse cresce através de confiança. A forma mais certa de entrar é receberes um voto de confiança de uma pessoa que já cá está, por isso se conheces alguém aqui, pede-lhe. Se não conheces, conta-nos um pouco sobre ti e tratamos do resto.",
   "requestInvite.alreadyMember": "Já fazes parte? Entrar",
   "requestInvite.checkStatusLink": "Já pediste? Consulta o teu pedido",
   "requestInvite.field.name.label": "O teu nome",
@@ -297,7 +297,7 @@ export const auth: Catalog = {
   "requestInvite.field.mutual.label":
     "Email de um membro <optional>(opcional)</optional>",
   "requestInvite.field.mutual.helper":
-    "O email de um membro que possa avalizar-te. É como o encontramos, e a forma mais rápida de entrar.",
+    "O email de um membro que te possa dar um voto de confiança. É como o encontramos, e a forma mais rápida de entrar.",
   "requestInvite.field.mutual.placeholder": "membro@exemplo.com",
   "requestInvite.field.mutual.error":
     "Introduz um email válido, ou deixa em branco.",
@@ -336,9 +336,10 @@ export const auth: Catalog = {
   "requestInvite.whatNext.readsIt.title": "Uma pessoa real lê-o",
   "requestInvite.whatNext.readsIt.body":
     "Uma pessoa da comunidade vê cada pedido, à mão. É por isso que pode demorar alguns dias.",
-  "requestInvite.whatNext.connection.title": "Procuramos uma ligação",
+  "requestInvite.whatNext.connection.title":
+    "Procuramos quem te dê um voto de confiança",
   "requestInvite.whatNext.connection.body":
-    "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Partilhar o email dessa pessoa ajuda-nos a encontrá-la.",
+    "Se já houver alguém aqui que te possa dar um voto de confiança, essa é a forma mais certa de entrar. Partilhar o email dessa pessoa ajuda-nos a encontrá-la.",
   // Substitui o antigo passo `hearBack`, que prometia uma mensagem que nenhum
   // serviço de email existe para enviar e depois dizia a quem não tem contactos
   // cá dentro que o silêncio significava desistir. Agora o mecanismo é real:
@@ -551,7 +552,7 @@ export const auth: Catalog = {
   "joinRequestStatus.declineReason.underage":
     "O QueerPulse é 18+ por agora. Isso tem que ver com a lei e com manter espaços de adultos como espaços de adultos, e não diz nada sobre ti.",
   "joinRequestStatus.declineReason.implausible":
-    "Quem reviu não conseguiu situar o suficiente do que escreveste para ficar segure, e um formulário curto dá muito pouco por onde pegar. Se alguém que já cá está te conhece, pede-lhe que te avalize, e podes escrever-nos entretanto.",
+    "Quem reviu não conseguiu situar o suficiente do que escreveste para ficar segure, e um formulário curto dá muito pouco por onde pegar. Se alguém que já cá está te conhece, pede-lhe que te dê um voto de confiança, e podes escrever-nos entretanto.",
   "joinRequestStatus.declineReason.safety_concern":
     "Algo no pedido levantou uma questão de segurança para as pessoas que já cá estão, por isso travámos. Se quiseres falar sobre isso, escreve-nos e uma pessoa vai ler.",
   "joinRequestStatus.declineReason.other":
@@ -700,7 +701,7 @@ export const auth: Catalog = {
     "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.intent.community": "Comunidade",
   "onboarding.intent.gatherings": "Convívios e eventos",
-  "onboarding.intent.professional": "Ligações profissionais",
+  "onboarding.intent.professional": "Conexões profissionais",
   "onboarding.intent.dating": "Namoro",
   "onboarding.intent.friendship": "Amizade",
   "onboarding.intent.resources": "Recursos e apoio",
@@ -801,16 +802,17 @@ export const auth: Catalog = {
     "Dá a um lado teu o seu próprio espaço: o teu nome de DJ, a tua arte, a tua escrita.",
   "gettingStarted.steps.persona.done": "A tua persona já tem o seu cantinho.",
   "gettingStarted.steps.persona.cta": "Criar uma persona",
-  "gettingStarted.steps.vouch.title": "Avaliza alguém",
+  "gettingStarted.steps.vouch.title": "Dá um voto de confiança a alguém",
   "gettingStarted.steps.vouch.desc":
-    "Avaliza alguém em quem confias. É assim que a rede se mantém genuína.",
+    "Dá um voto de confiança a alguém em quem confias. É assim que a rede se mantém genuína.",
   "gettingStarted.steps.vouch.done":
-    "Avalizaste. Obrigade por manteres tudo genuíno.",
-  "gettingStarted.steps.vouch.cta": "Encontrar alguém para avalizar",
+    "Deste um voto de confiança. Obrigade por manteres tudo genuíno.",
+  "gettingStarted.steps.vouch.cta":
+    "Encontrar alguém a quem dar um voto de confiança",
   "gettingStarted.steps.connect.title": "Liga-te a alguém",
   "gettingStarted.steps.connect.desc":
     "Fala com alguém que gostavas de conhecer. Ligares-te abre as mensagens.",
-  "gettingStarted.steps.connect.done": "Fizeste a tua primeira ligação.",
+  "gettingStarted.steps.connect.done": "Fizeste a tua primeira conexão.",
   "gettingStarted.steps.connect.cta": "Ver membros",
   "gettingStarted.steps.post.title": "Publica pela primeira vez",
   "gettingStarted.steps.post.desc":

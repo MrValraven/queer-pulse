@@ -66,6 +66,60 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "numbers-roll-everywhere",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("numbers-roll-everywhere"),
+      },
+      {
+        id: "members-results-shuffle",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("members-results-shuffle"),
+      },
+      {
+        id: "listing-restore-review",
+        category: "feature",
+        date: "25 Sep 2026",
+        ...entryKeys("listing-restore-review"),
+      },
+      {
+        id: "listing-hours-roomier",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("listing-hours-roomier"),
+      },
+      {
+        id: "listing-form-no-contact-email",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("listing-form-no-contact-email"),
+      },
+      {
+        id: "listing-danger-zone-on-demand",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("listing-danger-zone-on-demand"),
+      },
+      {
+        id: "shared-places-show-place-card",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("shared-places-show-place-card"),
+      },
+      {
+        id: "homepage-community-card-opens-community",
+        category: "fix",
+        date: "25 Sep 2026",
+        ...entryKeys("homepage-community-card-opens-community"),
+      },
+      {
+        id: "account-menu-clear-labels",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("account-menu-clear-labels"),
+      },
+      {
         id: "chat-list-row-seams",
         category: "fix",
         date: "25 Sep 2026",
@@ -94,12 +148,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "25 Sep 2026",
         ...entryKeys("email-template-editor-compact"),
-      },
-      {
-        id: "member-directory-counts-roll",
-        category: "improvement",
-        date: "25 Sep 2026",
-        ...entryKeys("member-directory-counts-roll"),
       },
       {
         id: "therapist-topics-one-blank-line",

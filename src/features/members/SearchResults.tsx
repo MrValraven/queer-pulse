@@ -5,6 +5,8 @@ import {
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../app/routeMap";
@@ -169,6 +171,7 @@ function HitsView({
   onSelectTab: (type: ResultType) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const hits = searchData.filter((d) => {
     const isMatch = `${d.name} ${d.sub} ${d.kw}`.toLowerCase().includes(q);
     return isMatch && (tab === "all" || d.t === tab);
@@ -198,6 +201,14 @@ function HitsView({
         i18nKey="members:search.resultCount"
         components={{ b: <b /> }}
         values={{ count: hits.length, query: query.trim() }}
+        slots={{
+          count: (
+            <RollingNumber
+              value={fmt.number(hits.length)}
+              numericValue={hits.length}
+            />
+          ),
+        }}
       />
     </div>
   );

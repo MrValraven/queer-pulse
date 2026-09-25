@@ -290,10 +290,10 @@ let browser;
 
 try {
   browser = await chromium.launch();
-  // reducedMotion: "reduce" makes useCountUp jump straight to its target
-  // instead of animating over 1100ms — without it, pages like /about/cities
-  // serialise mid-animation and ship "0 members, 0 gatherings, 0 safe spaces"
-  // as their indexed content. It also settles every other reveal animation.
+  // reducedMotion: "reduce" makes RollingNumber show its final figure at once.
+  // Without it, pages like /about/cities could serialise mid-roll and ship
+  // "0 members, 0 gatherings, 0 safe spaces" as their indexed content. It also
+  // settles every other reveal animation.
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
   for (const publicPath of allPublicPaths) {

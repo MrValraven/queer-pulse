@@ -1052,6 +1052,17 @@ html[data-reduce-motion="true"]
   flex: none;
   color: var(--ink-60);
 }
+/* A rolling pending count (`PendingCountLabel`, in the summary line and the
+   Save-all button). The generic `.savebar span` rule would give the figure's
+   inner spans `flex: 1`, the status size and the muted colour; these keep the
+   defaults so the digits match the surrounding text and roll at their own
+   width. */
+.savebar .savebar-count,
+.savebar .savebar-count span {
+  flex: initial;
+  font-size: inherit;
+  color: inherit;
+}
 /* Expanded on a phone, the list still can't be allowed to reclaim the height
    the collapse just bought — cap it lower than the 132px desktop scroller.
    AFTER `.savebar-list` above: same specificity, so source order decides. */

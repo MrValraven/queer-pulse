@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar, Button, ExpandableText } from "../../shared/components/ui";
-import { useCountUp } from "../../shared/hooks";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { Translation } from "../../shared/i18n/Translation";
@@ -16,7 +16,7 @@ import type { PublicCard } from "./publicProfile.data";
 import type { PublicContributions } from "./currentUserPublic.data";
 import styles from "./PublicProfilePage.module.css";
 
-/** Splits e.g. "1.4k" → { num: 1.4, suffix: "k" } for animating the leading number. */
+/** Splits e.g. "1.4k" → { num: 1.4, suffix: "k" } for rolling the leading number. */
 function parseStat(value: string): {
   num: number;
   suffix: string;
@@ -30,7 +30,8 @@ function parseStat(value: string): {
   return { num: parseFloat(match[1]!), suffix: match[2]!, decimals };
 }
 
-/** Animated public stat (counts up the leading number, respects reduced motion via useCountUp).
+/** Animated public stat: the leading number rolls up from zero on mount and the
+ *  suffix stays put (RollingNumber handles reduced motion).
  *  `labelKey` is a catalog key — the stat caption is platform chrome (a small,
  *  platform-defined set of stat types), not the fictional member's own words. */
 export function Stat({
@@ -44,12 +45,18 @@ export function Stat({
 }) {
   const { t } = useTranslation();
   const { num, suffix, decimals } = parseStat(value);
-  const animatable = Number.isFinite(num);
-  const scale = Math.pow(10, decimals);
-  const counted = useCountUp(animatable ? Math.round(num * scale) : 0);
-  const display = animatable
-    ? `${(counted / scale).toFixed(decimals)}${suffix}`
-    : value;
+  const display = Number.isFinite(num) ? (
+    <RollingNumber
+      value={value}
+      numericValue={num}
+      revealFrom={{
+        value: `${(0).toFixed(decimals)}${suffix}`,
+        numericValue: 0,
+      }}
+    />
+  ) : (
+    value
+  );
   return (
     <div className={styles.stat}>
       <b>{em ? <em>{display}</em> : display}</b>

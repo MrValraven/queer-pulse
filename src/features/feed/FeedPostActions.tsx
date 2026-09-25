@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { FiHeart, FiMessageCircle, FiInfo } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFeedPostActions } from "./api/useFeedPostActions";
 import type { FeedReason } from "./api/feed.api";
@@ -60,6 +63,7 @@ export function FeedPostActions({
   myReaction?: string | null;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const { react, reply, isReplying } = useFeedPostActions();
 
@@ -105,9 +109,25 @@ export function FeedPostActions({
         onClick={toggleReaction}
       >
         <FiHeart aria-hidden />{" "}
-        {shownReactionCount > 0
-          ? t("feed:action.countMeIn", { count: shownReactionCount })
-          : t("feed:action.react")}
+        {shownReactionCount > 0 ? (
+          // One span, so the button's flex gap never splits the sentence.
+          <span>
+            <Translation
+              i18nKey="feed:action.countMeIn"
+              values={{ count: shownReactionCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(shownReactionCount)}
+                    numericValue={shownReactionCount}
+                  />
+                ),
+              }}
+            />
+          </span>
+        ) : (
+          t("feed:action.react")
+        )}
       </Button>
       <Button
         variant="ghost"
@@ -117,9 +137,24 @@ export function FeedPostActions({
         onClick={() => setIsComposerOpen((open) => !open)}
       >
         <FiMessageCircle aria-hidden />{" "}
-        {shownReplyCount > 0
-          ? t("feed:post.replyCount", { count: shownReplyCount })
-          : t("feed:action.reply")}
+        {shownReplyCount > 0 ? (
+          <span>
+            <Translation
+              i18nKey="feed:post.replyCount"
+              values={{ count: shownReplyCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(shownReplyCount)}
+                    numericValue={shownReplyCount}
+                  />
+                ),
+              }}
+            />
+          </span>
+        ) : (
+          t("feed:action.reply")
+        )}
       </Button>
       {isComposerOpen && (
         <div className={styles.inlineComposer}>

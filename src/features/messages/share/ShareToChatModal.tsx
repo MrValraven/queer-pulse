@@ -38,8 +38,11 @@ export interface ShareToChatModalProps {
  * groups, from the same `["conversations"]` cache the inbox reads), a filter
  * box, up to 5 recipients, an optional note, and Send. Sending posts one
  * idempotent message per picked conversation (`useSendToConversations`) whose
- * body is the note plus the absolute URL; the existing link-preview pipeline
- * unfurls it on the recipient's side, so the URL itself carries the title.
+ * body is the note plus the absolute URL; the existing link-card pipeline
+ * (`useMessageLinkCard`/`MessageLinkCard`) renders it on the recipient's
+ * side, whichever kind it resolves to (the real directory place card for a
+ * shared QueerPulse place link, the ordinary OpenGraph unfurl for anything
+ * else), so the URL itself carries the title either way.
  *
  * Personal threads only, whatever mailbox is active on `/messages`: a share
  * send carries no identity, so the server would refuse one into a business

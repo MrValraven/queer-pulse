@@ -1,5 +1,8 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Button, Modal, SearchInput } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
@@ -45,6 +48,7 @@ export function ForwardPickerModal({
   onClose,
 }: ForwardPickerModalProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { isBlocked } = useSocial();
   const staffMap = useStaffMap();
   const [query, setQuery] = useState("");
@@ -128,9 +132,25 @@ export function ForwardPickerModal({
           disabled={selectedCount === 0 || isSending}
           onClick={handleSend}
         >
-          {selectedCount === 0
-            ? t("messages:forward.sendCtaEmpty")
-            : t("messages:forward.sendCta", { count: selectedCount })}
+          {selectedCount === 0 ? (
+            t("messages:forward.sendCtaEmpty")
+          ) : (
+            // One span keeps the sentence a single flex item in the button.
+            <span>
+              <Translation
+                i18nKey="messages:forward.sendCta"
+                values={{ count: selectedCount }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(selectedCount)}
+                      numericValue={selectedCount}
+                    />
+                  ),
+                }}
+              />
+            </span>
+          )}
         </Button>
       }
     >

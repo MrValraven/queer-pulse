@@ -9,7 +9,7 @@ export const subprofiles: Catalog = {
   // Directory (SubprofileDirectoryPage)
   "directory.eyebrow": "Directory · personas",
   "directory.subtitle":
-    "Pseudonymous professional personas from across the community. No ranking, no algorithm. Just the work.",
+    "Discover the work people are making across the community, from professional projects to creative work and everything in between.",
   // A linked persona is titled by its owner on the card ("Ana Silva | Poet"),
   // so the term reaches that name too — looking somebody up by the name you
   // know them under is the directory's most obvious question. Only LINKED

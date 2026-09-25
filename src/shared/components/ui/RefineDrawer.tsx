@@ -1,7 +1,9 @@
 import { useId, type ReactNode, type HTMLAttributes } from "react";
 import { FiChevronDown, FiSliders } from "react-icons/fi";
+import { useFormat } from "../../i18n/format";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./RefineDrawer.module.css";
+import { RollingNumber } from "./RollingNumber";
 
 /**
  * The "Refine" pill that opens the drawer.
@@ -25,6 +27,7 @@ export function RefineToggle({
   className?: string;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <button
@@ -38,7 +41,10 @@ export function RefineToggle({
       {t("shared:refine.label")}
       {activeCount > 0 && (
         <span className={styles.count} aria-hidden>
-          {activeCount}
+          <RollingNumber
+            value={fmt.number(activeCount)}
+            numericValue={activeCount}
+          />
         </span>
       )}
       <span

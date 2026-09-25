@@ -1,4 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
+import { useAuth } from "../../app/providers/authContext";
+import { routes } from "../../app/routeMap";
 import { Button, Eyebrow } from "../../shared/components/ui";
 import { ModalSheet } from "../../shared/components/ui/Modal";
 import { Translation } from "../../shared/i18n/Translation";
@@ -11,12 +13,13 @@ import styles from "./HowCommunitiesWorkModal.module.css";
  * "How communities work" explainer, opened from CTAs on the homepage and the
  * communities hub instead of navigating to a standalone page. Built to fit one
  * desktop screen without scrolling: a one-line lede, the three-step journey
- * side by side, and the invite CTA. It goes wider than the default sheet (see
+ * side by side, and the invite CTA (a link to the hub once signed in). It goes wider than the default sheet (see
  * `.sheet` in the module) so the steps can sit in a row instead of stacking. Rendered only while open (owns no state itself), so
  * `ModalSheet` runs its scroll-lock/focus-trap once per open.
  */
 export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
   return (
     <ModalSheet
       onClose={onClose}
@@ -57,12 +60,25 @@ export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
             {t("marketing:communitiesAbout.outro.title")}
           </p>
           <p className={styles.outroSub}>
-            {t("marketing:communitiesAbout.outro.sub")}
+            {t(
+              loggedIn
+                ? "marketing:communitiesAbout.outro.subSignedIn"
+                : "marketing:communitiesAbout.outro.sub",
+            )}
           </p>
         </div>
-        <Button size="lg" to={requestInvitePath("communities_about")}>
-          {t("nav:requestInvite")} <FiArrowRight aria-hidden />
-        </Button>
+        {loggedIn ? (
+          // Closes too: opened from the hub itself, the link lands on the
+          // page already underneath and would leave the sheet standing.
+          <Button size="lg" to={routes.communities} onClick={onClose}>
+            {t("marketing:communitiesAbout.outro.viewCommunitiesCta")}{" "}
+            <FiArrowRight aria-hidden />
+          </Button>
+        ) : (
+          <Button size="lg" to={requestInvitePath("communities_about")}>
+            {t("nav:requestInvite")} <FiArrowRight aria-hidden />
+          </Button>
+        )}
       </div>
     </ModalSheet>
   );

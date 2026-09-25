@@ -34,6 +34,7 @@ import {
   RoleLinks,
   AccountMenuControls,
   AccountLanguageRow,
+  AccountItemLabel,
 } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
@@ -284,7 +285,10 @@ function AccountSheetBody({
                     onClick={onNavigate}
                   >
                     <ItemIcon aria-hidden className={menu.itemIcon} />
-                    <span className={menu.itemLabel}>{t(item.labelKey)}</span>
+                    <AccountItemLabel
+                      labelKey={item.labelKey}
+                      hintKey={item.hintKey}
+                    />
                     {badge && <span className={menu.badgeSlot}>{badge}</span>}
                   </Link>
                 );

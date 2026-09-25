@@ -8,6 +8,8 @@ import {
   FiZap,
 } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   BuildingItem,
@@ -133,6 +135,7 @@ export interface PlannedCardProps {
 
 export function PlannedCard({ item, column = "planned" }: PlannedCardProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const myVotes = useMyRoadmapVotes();
   const { demoMode, vote: castVote } = useRoadmapVote();
@@ -184,7 +187,10 @@ export function PlannedCard({ item, column = "planned" }: PlannedCardProps) {
           aria-pressed={voted}
           disabled={voted}
         >
-          <FiArrowUp aria-hidden /> <span>{count}</span>{" "}
+          <FiArrowUp aria-hidden />{" "}
+          <span>
+            <RollingNumber value={fmt.number(count)} numericValue={count} />
+          </span>{" "}
           {t("marketing:roadmap.card.votesSuffix")}
         </button>
       </div>

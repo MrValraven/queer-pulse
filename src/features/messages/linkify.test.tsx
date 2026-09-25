@@ -1,6 +1,12 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import { formatLinkLabel, isExternalHref, renderWithLinks } from "./linkify";
+import {
+  formatLinkLabel,
+  isExternalHref,
+  renderWithLinks,
+  type ChatPlaceLinkInfo,
+} from "./linkify";
 
 describe("renderWithLinks", () => {
   it("wraps an http URL in a safe anchor", () => {
@@ -116,5 +122,75 @@ describe("formatLinkLabel", () => {
 
   it("returns a malformed match unchanged instead of throwing", () => {
     expect(formatLinkLabel("not a url")).toBe("not a url");
+  });
+});
+
+describe("renderWithLinks with a placeLink", () => {
+  const PLACE_URL = "https://localhost:5173/local/directory/cafe-do-tiago";
+  const placeLink: ChatPlaceLinkInfo = {
+    url: PLACE_URL,
+    name: "Cafe do Tiago",
+    to: "/local/directory/cafe-do-tiago",
+  };
+
+  function renderInRouter(text: string) {
+    return render(
+      <MemoryRouter>
+        <div data-testid="body">{renderWithLinks(text, placeLink)}</div>
+      </MemoryRouter>,
+    );
+  }
+
+  it("swaps a trailing place URL for the place-name link, joined by an en dash", () => {
+    renderInRouter(`bue slay este sitio\n${PLACE_URL}`);
+    const link = screen.getByRole("link", { name: "Cafe do Tiago" });
+    expect(link).toHaveAttribute("href", "/local/directory/cafe-do-tiago");
+    // One run, no raw URL, no stray newline from the note/URL line break, and
+    // exactly the en dash (never an em dash) between the note and the link.
+    expect(screen.getByTestId("body").textContent).toBe(
+      "bue slay este sitio – Cafe do Tiago",
+    );
+    expect(screen.queryByText(PLACE_URL, { exact: false })).toBeNull();
+  });
+
+  it("renders only the place-name link, with no dash, when the URL is the whole message", () => {
+    renderInRouter(PLACE_URL);
+    expect(
+      screen.getByRole("link", { name: "Cafe do Tiago" }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("body").textContent).toBe("Cafe do Tiago");
+  });
+
+  it("swaps only the URL token in place, with no dash, when text follows it", () => {
+    renderInRouter(`Check out ${PLACE_URL} it's great`);
+    expect(
+      screen.getByRole("link", { name: "Cafe do Tiago" }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("body").textContent).toBe(
+      "Check out Cafe do Tiago it's great",
+    );
+  });
+
+  it("leaves a different URL in the same message linkified as usual", () => {
+    renderInRouter(`See https://example.com and also\n${PLACE_URL}`);
+    const links = screen.getAllByRole("link");
+    const otherLink = links.find(
+      (link) => link.getAttribute("href") === "https://example.com",
+    );
+    expect(otherLink).toBeDefined();
+    const placeAnchor = links.find(
+      (link) => link.getAttribute("href") === "/local/directory/cafe-do-tiago",
+    );
+    expect(placeAnchor?.textContent).toBe("Cafe do Tiago");
+    const text = screen.getByTestId("body").textContent ?? "";
+    expect(text).toContain(" – Cafe do Tiago");
+    expect(text).not.toContain(PLACE_URL);
+  });
+
+  it("drops a newline that separates the note from the URL", () => {
+    renderInRouter(`hey check this place out\n\n${PLACE_URL}`);
+    expect(screen.getByTestId("body").textContent).toBe(
+      "hey check this place out – Cafe do Tiago",
+    );
   });
 });

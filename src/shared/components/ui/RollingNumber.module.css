@@ -1,24 +1,41 @@
 /* RollingNumber: inherits font, size, colour and line-height from its
-   parent; only the figure widths and the digit windows are its own. */
+   parent; only the figure widths and the digit windows are its own.
 
+   Every box here is inline or inline-block. A flex, grid or positioned box
+   would count as a block: Chromium then pads the accessible name with spaces
+   ("All ( 2 )") and copying a sentence puts a line break around each
+   character. */
+
+/* `white-space: pre` also keeps the number on one line: no break between
+   its cells. */
 .root {
-  position: relative;
-  display: inline-flex;
-  /* Top-aligned so the flex baseline never adds height to the line box:
-     the number occupies exactly one line, like the plain text it replaces. */
-  vertical-align: top;
   font-variant-numeric: tabular-nums;
   white-space: pre;
 }
 
-.glyphs {
-  display: inline-flex;
+/* The text copy of the value: in the line (so the accessible name and a
+   copied sentence read it as part of the text around it) at zero size, so it
+   takes no room. `!important` so a call site's `X span` rule cannot give it a
+   size, and zero spacing so inherited letter or word spacing adds no width. */
+.textCopy {
+  font-size: 0 !important;
+  line-height: 0 !important;
+  letter-spacing: 0 !important;
+  word-spacing: 0 !important;
 }
 
-/* One character slot. Its width animates when it is added or removed. */
+/* Each glyph draws its character as generated content, which a copy leaves
+   out in every engine (Safari copies unselectable text too), so a copied
+   sentence carries the number once, from the text copy. */
+.drawnCharacter::before {
+  content: attr(data-character);
+}
+
+/* One character slot on the text baseline, like the plain text it replaces.
+   Its width animates when it is added or removed. */
 .cell {
-  display: inline-flex;
-  min-width: 0;
+  display: inline-block;
+  vertical-align: baseline;
   white-space: pre;
 }
 
@@ -28,17 +45,41 @@
   overflow-x: clip;
 }
 
-/* A one-line window: the entering and exiting glyphs share one grid cell,
-   so the width is one tabular figure and the height one line, and anything
-   rolled past the edge is clipped. */
+/* A one-line window: the newest glyph (always the last child) stays in flow
+   and sets the width (one tabular figure) and the height (one line); the
+   leaving ones stack over it while they roll out. The clip path cuts off
+   anything rolled past the top or bottom edge. Overflow stays visible: with
+   `overflow-y: clip`, WebKit takes an inline-block's baseline from its
+   bottom edge. */
 .digit {
-  display: inline-grid;
-  height: 1lh;
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
   /* Clip only vertically, so a serif figure's side bearing is never shaved. */
-  overflow-x: visible;
-  overflow-y: clip;
+  clip-path: inset(0 -0.5em);
 }
 
 .digitGlyph {
-  grid-area: 1 / 1;
+  display: inline-block;
+}
+
+.digitGlyph:not(:last-child) {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+/* Paper shows the settled value as plain text: one run in reading order in
+   the PDF text layer, with no positioned glyph windows to reorder it. */
+@media print {
+  .glyphs {
+    display: none;
+  }
+
+  .textCopy {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    word-spacing: inherit !important;
+  }
 }

@@ -3,8 +3,10 @@ import { FiArrowRight } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CinemaShell } from "./CinemaShell";
@@ -30,6 +32,7 @@ export function CinemaCollectionsPage() {
 
 function DemoCinemaCollectionsPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad();
   const [active, setActive] = useState("All");
 
@@ -65,11 +68,29 @@ function DemoCinemaCollectionsPage() {
                 {t(COLLECTION_FILTER_LABEL_KEYS[f] ?? f)}
               </button>
             ))}
-            <span className={styles.sbRight} aria-live="polite">
-              {t("cinema:collectionsIndex.summary", {
-                count: visible.length,
-                filmTotal,
-              })}
+            <span
+              className={styles.sbRight}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <Translation
+                i18nKey="cinema:collectionsIndex.summary"
+                values={{ count: visible.length, filmTotal }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(visible.length)}
+                      numericValue={visible.length}
+                    />
+                  ),
+                  filmTotal: (
+                    <RollingNumber
+                      value={fmt.number(filmTotal)}
+                      numericValue={filmTotal}
+                    />
+                  ),
+                }}
+              />
             </span>
           </div>
 

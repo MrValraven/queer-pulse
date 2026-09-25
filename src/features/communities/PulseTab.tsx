@@ -9,6 +9,9 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDebouncedValue, useSimulatedLoad } from "../../shared/hooks";
@@ -291,6 +294,7 @@ function PulseSearchResults({
   postProps: Parameters<typeof PulseFeedPost>[0]["postProps"];
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   if (search.isLoading) return <PulseFeedSkeleton />;
 
@@ -319,9 +323,18 @@ function PulseSearchResults({
   return (
     <>
       <p className={styles.searchCount} role="status">
-        {t("communities:detail.pulse.search.resultCount", {
-          count: search.matches.length,
-        })}
+        <Translation
+          i18nKey="communities:detail.pulse.search.resultCount"
+          values={{ count: search.matches.length }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={fmt.number(search.matches.length)}
+                numericValue={search.matches.length}
+              />
+            ),
+          }}
+        />
       </p>
       {search.matches.map((post) => (
         <FadeIn key={post.id} className={styles.rowFade}>

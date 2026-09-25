@@ -265,6 +265,12 @@
   letter-spacing: -0.01em;
 }
 
+/* Keeps a rolling figure glued to the unit that follows it, so a line break
+   at narrow widths cannot land between the number and its "%". */
+.unitPair {
+  white-space: nowrap;
+}
+
 .note {
   display: flex;
   align-items: flex-start;

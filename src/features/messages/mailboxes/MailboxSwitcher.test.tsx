@@ -21,7 +21,11 @@ describe("MailboxSwitcher", () => {
     );
     fireEvent.click(await screen.findByRole("button", { name: /Tiago Costa/ }));
     expect(await screen.findByText("Café Lisboa")).toBeInTheDocument();
-    expect(screen.getByText("2 unread")).toBeInTheDocument();
+    // The count rolls, so its text is split across nodes; the row's
+    // accessible name reads it whole.
+    expect(
+      screen.getByRole("button", { name: /2 unread/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Read only")).toBeInTheDocument();
   });
 

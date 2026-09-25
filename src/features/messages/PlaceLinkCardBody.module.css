@@ -1,0 +1,21 @@
+/* The place card rendered on its own above a chat bubble's caption line (or
+   the "Send in a message" preview column). `LocalBusinessCardBody` assumes
+   its outer container carries the directory grid's own `.card` geometry
+   (photo bleeds via a negative margin sized to that card's own padding, the
+   photo's own corners are hardcoded to match its radius), so this class
+   stays layered ALONGSIDE `DirectoryPage.module.css`'s `.card` and only adds
+   what a chat surface needs on top: a sensible width clamp (a bubble/preview
+   column is roughly 300–400px, always narrower than a grid cell's fluid
+   third).
+   `width: min(320px, 100%)`, not `width: 100%`: this card is the single cell
+   of its parent's `display: table` (`.attachmentGroup`, see that class's own
+   comment) or an equivalently shrink-to-fit box, and a bare percentage width
+   has nothing definite to resolve against there, so it collapses to zero
+   instead of the 320px cap. No bottom margin of its own: the caption bubble
+   directly under it already opens with its own top margin
+   (`.attachmentCaption`'s `margin-block-start`), and a link-only card's turn
+   to be the last thing in the bubble is spaced by the meta line below it
+   instead. */
+.wrap {
+  width: min(320px, 100%);
+}

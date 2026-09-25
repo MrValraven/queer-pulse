@@ -7,6 +7,8 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Reply } from "./forum.data";
 import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
@@ -275,6 +277,7 @@ function ReplyActionsRow({
   onQuote?: (reply: Reply) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.replyActions}>
       <button
@@ -290,7 +293,11 @@ function ReplyActionsRow({
       >
         {/* Raw server count — the vote mutation patches `reactions` in place,
             so a local `+1` here would double-count. */}
-        <FiHeart aria-hidden="true" /> {reply.reactions}
+        <FiHeart aria-hidden="true" />{" "}
+        <RollingNumber
+          value={fmt.number(reply.reactions)}
+          numericValue={reply.reactions}
+        />
       </button>
       {onReply && (
         <button

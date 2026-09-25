@@ -2,6 +2,8 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { FiArrowLeft, FiMinus, FiPlus, FiX } from "react-icons/fi";
 import { Button, FormField, useDismiss } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PrintOrderModal.module.css";
@@ -18,6 +20,7 @@ const ISSUE_LABEL = "Issue 09 · On Health";
  */
 export function PrintOrderModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [stage, setStage] = useState<Stage>("compose");
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState("");
@@ -27,6 +30,10 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
   const dialogRef = useDismiss(onClose);
 
   const total = 12 * quantity;
+  // The stepper, the total and the order button all follow the quantity.
+  const totalFigure = (
+    <RollingNumber value={fmt.number(total)} numericValue={total} />
+  );
   const valid = /\S+@\S+\.\S+/.test(email);
 
   const placeOrder = () => {
@@ -121,7 +128,10 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                   <FiMinus aria-hidden />
                 </button>
                 <span className={styles.qtyVal} aria-live="polite">
-                  {quantity}
+                  <RollingNumber
+                    value={fmt.number(quantity)}
+                    numericValue={quantity}
+                  />
                 </span>
                 <button
                   type="button"
@@ -135,7 +145,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 </button>
               </div>
               <span className={styles.total}>
-                €<b>{total}</b>
+                €<b>{totalFigure}</b>
               </span>
             </div>
 
@@ -170,9 +180,18 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 disabled={!valid || stage === "placing"}
                 aria-busy={stage === "placing"}
               >
-                {stage === "placing"
-                  ? t("magazine:printOrder.placingCta")
-                  : t("magazine:printOrder.placeCta", { total })}
+                {stage === "placing" ? (
+                  t("magazine:printOrder.placingCta")
+                ) : (
+                  // One span keeps the label a single flex item, so the
+                  // button's gap never opens beside the rolling total.
+                  <span>
+                    <Translation
+                      i18nKey="magazine:printOrder.placeCta"
+                      slots={{ total: totalFigure }}
+                    />
+                  </span>
+                )}
               </Button>
             </div>
           </div>

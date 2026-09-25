@@ -12,6 +12,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { relativeAgo } from "../../shared/lib/relativeAgo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { routes } from "../../app/routeMap";
 import {
   MENTION_TAB_DEFS,
@@ -296,9 +298,18 @@ export function MentionsPanel() {
           {unreadCount > 0 ? (
             <>
               <b>
-                {t("notifications:mentions.unreadSummary", {
-                  count: unreadCount,
-                })}
+                <Translation
+                  i18nKey="notifications:mentions.unreadSummary"
+                  values={{ count: unreadCount }}
+                  slots={{
+                    count: (
+                      <RollingNumber
+                        value={fmt.number(unreadCount)}
+                        numericValue={unreadCount}
+                      />
+                    ),
+                  }}
+                />
               </b>{" "}
               {oldestUnreadIso
                 ? t("notifications:mentions.oldestFrom", {

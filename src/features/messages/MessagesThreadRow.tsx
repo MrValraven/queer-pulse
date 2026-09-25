@@ -3,6 +3,8 @@ import { Avatar } from "../../shared/components/ui";
 import { useIsOnline } from "../../shared/api/realtime";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import {
   useToggleArchive,
@@ -71,6 +73,7 @@ function MessagesThreadRowImpl({
   onMarkThreadUnread,
 }: MessagesThreadRowProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const isUnread = isThreadUnread(thread, activeId, readIds);
   const isCurrentlyOpen = thread.id === activeId;
   const presenceOnline = useIsOnline(thread.otherParticipantId);
@@ -226,7 +229,12 @@ function MessagesThreadRowImpl({
               {isUnread &&
                 (thread.unreadCount && thread.unreadCount > 0 ? (
                   <span className={styles.unreadBadge}>
-                    <span aria-hidden="true">{thread.unreadCount}</span>
+                    <span aria-hidden="true">
+                      <RollingNumber
+                        value={fmt.number(thread.unreadCount)}
+                        numericValue={thread.unreadCount}
+                      />
+                    </span>
                     <span className="visuallyHidden">
                       {t("messages:thread.unreadCountAria", {
                         count: thread.unreadCount,

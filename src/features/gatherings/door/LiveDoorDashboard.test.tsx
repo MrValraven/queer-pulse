@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { ApiError } from "../../../shared/api/client";
@@ -159,6 +165,16 @@ async function findClosedNotice() {
   return notice as HTMLElement;
 }
 
+/** RollingNumber draws a count twice: per-digit glyphs under `aria-hidden`
+ *  and one spoken copy of the whole value. Text queries match the spoken copy. */
+const SPOKEN_TEXT = { ignore: '[aria-hidden="true"] *, script, style' };
+
+/** The headline tile the "Checked in" caption sits in. The guest list's
+ *  "Checked in (n)" chip carries the same count, so queries scope to here. */
+function checkedInTile() {
+  return screen.getByText("Checked in").parentElement as HTMLElement;
+}
+
 function renderDoor(checkedInCount: number | null) {
   eventState.gathering = GATHERING;
   rosterState.roster = roster(checkedInCount);
@@ -174,7 +190,9 @@ describe("LiveDoorDashboard checked-in tile", () => {
     renderDoor(18);
 
     expect(await screen.findByText("Checked in")).toBeInTheDocument();
-    expect(screen.getByText("18")).toBeInTheDocument();
+    expect(
+      within(checkedInTile()).getByText("18", SPOKEN_TEXT),
+    ).toBeInTheDocument();
     expect(screen.queryByText(NOT_KEPT_NOTE)).not.toBeInTheDocument();
   });
 
@@ -183,7 +201,9 @@ describe("LiveDoorDashboard checked-in tile", () => {
 
     expect(await screen.findByText("Checked in")).toBeInTheDocument();
     // Zero is a count, and the door must keep saying so.
-    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(
+      within(checkedInTile()).getByText("0", SPOKEN_TEXT),
+    ).toBeInTheDocument();
     expect(screen.queryByText("No longer kept")).not.toBeInTheDocument();
     expect(screen.queryByText(NOT_KEPT_NOTE)).not.toBeInTheDocument();
   });
@@ -193,7 +213,7 @@ describe("LiveDoorDashboard checked-in tile", () => {
 
     expect(await screen.findByText("No longer kept")).toBeInTheDocument();
     // Not a zero, and not a blank where a number used to be.
-    expect(screen.queryByText("0")).not.toBeInTheDocument();
+    expect(screen.queryByText("0", SPOKEN_TEXT)).not.toBeInTheDocument();
   });
 
   it("explains the retention choice in plain words next to the tile", async () => {

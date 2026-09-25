@@ -6,6 +6,9 @@ import {
   FiExternalLink,
 } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { CATEGORIES, type Guide } from "../resources/library.data";
@@ -46,6 +49,7 @@ export function ResourceFilterBar({
   resultCount: number;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <div className={s.bar}>
@@ -83,7 +87,18 @@ export function ResourceFilterBar({
             </button>
           ))}
           <div className={s.count}>
-            {t("marketing:resourceLibrary.results", { count: resultCount })}
+            <Translation
+              i18nKey="marketing:resourceLibrary.results"
+              values={{ count: resultCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(resultCount)}
+                    numericValue={resultCount}
+                  />
+                ),
+              }}
+            />
           </div>
         </div>
       </div>

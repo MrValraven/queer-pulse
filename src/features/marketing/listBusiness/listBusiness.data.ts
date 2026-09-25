@@ -82,7 +82,6 @@ export const ANCHOR = {
   ownerBio: "lb-owner-bio",
   ownerVisibility: "lb-owner-visibility",
   linkProfile: "lb-link-profile",
-  contactEmail: "lb-contact-email",
   consent: "lb-consent",
   pricingMode: "lb-pricing-mode",
   services: "lb-services",
@@ -401,7 +400,7 @@ export type OwnerVisibility = "public" | "role" | "anon";
 export type ManagementRole = "owner" | "co_manager";
 
 /**
- * The eight fields that belong to the OWNER as a person rather than to the
+ * The seven fields that belong to the OWNER as a person rather than to the
  * business. A co-manager never receives them (the API leaves the keys out of
  * its response entirely) and a PATCH carrying any of them is refused with a
  * 403, so this list is the single place the client names them: the payload
@@ -418,7 +417,6 @@ export const OWNER_PERSONAL_FIELDS = [
   "ownerBio",
   "visibility",
   "linkToProfile",
-  "contactEmail",
   "consentOuting",
   "consentGuide",
 ] as const;
@@ -530,7 +528,6 @@ export interface ListingDraft {
   ownerBio: string;
   visibility: OwnerVisibility; // VIS id
   linkToProfile: boolean;
-  contactEmail: string;
   consentOuting: boolean;
   consentGuide: boolean;
   /** The submitter agrees to the LGBTQ+ affirming baseline. Required to be
@@ -870,10 +867,6 @@ export function validateSocials(s: ListingDraft["social"]): SocialValidity {
 export function allSocialsValid(s: ListingDraft["social"]): boolean {
   const v = validateSocials(s);
   return v.website && v.email && v.phone;
-}
-
-export function emailValid(v: string): boolean {
-  return RE.email.test(v.trim());
 }
 
 /**

@@ -411,7 +411,8 @@ export const admin: Catalog = {
   "members.verify.source.queer_101": "Queer 101",
   "members.verify.source.magazine": "Revista",
   "members.verify.source.status": "Página de estado",
-  "members.verify.source.gathering_vouch": "Apelo de recomendação de encontro",
+  "members.verify.source.gathering_vouch":
+    "Apelo a votos de confiança num encontro",
   "members.verify.source.family": "Página Família",
   "members.verify.source.reading_groups": "Grupos de leitura",
   "members.verify.source.direct": "Abriu a página de pedido diretamente",
@@ -989,7 +990,7 @@ export const admin: Catalog = {
   "adminInvites.header.eyebrow": "Confiança e segurança",
   "adminInvites.header.title": "Todos os <em>convites</em>",
   "adminInvites.header.sub":
-    "Todo o grafo de convites vouched: quem enviou o quê, quem aceitou, e o que ainda está aberto. Filtra por estado para auditar as ligações da rede.",
+    "Todo o grafo de convites com voto de confiança: quem enviou o quê, quem aceitou, e o que ainda está aberto. Filtra por estado para auditar as ligações da rede.",
   "adminInvites.empty": "Nenhum convite corresponde a este filtro ainda.",
   "adminInvites.loadError.title": "Os convites não carregaram",
   "adminInvites.loadError.body":
@@ -1028,7 +1029,7 @@ export const admin: Catalog = {
   "adminInvites.drawer.expiresLabel": "Expira",
   "adminInvites.drawer.dateTime": "{date} às {time}",
   "adminInvites.drawer.inviteMessageLabel": "Mensagem do convite",
-  "adminInvites.drawer.vouchMessageLabel": "Mensagem de recomendação",
+  "adminInvites.drawer.vouchMessageLabel": "Mensagem do voto de confiança",
   "adminInvites.quota.manageCta": "Gerir quotas de convites",
   "adminInvites.quota.modalEyebrow": "Limites de recursos",
   "adminInvites.quota.modalTitle": "Quotas de convites",
@@ -2830,8 +2831,8 @@ export const admin: Catalog = {
   "vouchGraph.modal.searchPlaceholder": "Encontrar uma pessoa…",
   "vouchGraph.modal.searchAriaLabel": "Encontrar uma pessoa",
   "vouchGraph.modal.replayCta": "Rever",
-  "vouchGraph.modal.replayStart": "Antes de qualquer ligação",
-  "vouchGraph.modal.timeCutAriaLabel": "Linha do tempo das ligações",
+  "vouchGraph.modal.replayStart": "Antes de qualquer voto de confiança",
+  "vouchGraph.modal.timeCutAriaLabel": "Linha do tempo dos votos de confiança",
   "vouchGraph.modal.verifyToast": "Verificámos {name}.",
   "vouchGraph.modal.verifyFailedToast":
     "Não foi possível guardar. Verifica a ligação e tenta de novo.",
@@ -2928,9 +2929,9 @@ export const admin: Catalog = {
   "vouchGraph.canvas.resetLayout": "Repor disposição",
 
   "vouchGraph.preview.ariaLabel_one":
-    "Rede de confiança de {name}: {count} ligação de voto de confiança direta",
+    "Rede de confiança de {name}: {count} voto de confiança direto",
   "vouchGraph.preview.ariaLabel_other":
-    "Rede de confiança de {name}: {count} ligações de voto de confiança diretas",
+    "Rede de confiança de {name}: {count} votos de confiança diretos",
   "vouchGraph.preview.legend.inbound": "Confiam nesta pessoa",
   "vouchGraph.preview.legend.outbound": "Esta pessoa dá votos de confiança",
   "vouchGraph.preview.legend.mutual": "Mútuo",
@@ -3260,8 +3261,8 @@ export const admin: Catalog = {
   "housingGroups.requests.empty":
     "Nada à tua espera. Todos os pedidos foram analisados.",
   "housingGroups.requests.unknownGroup": "Grupo desconhecido",
-  "housingGroups.requests.mutuals_one": "{count} ligação em comum",
-  "housingGroups.requests.mutuals_other": "{count} ligações em comum",
+  "housingGroups.requests.mutuals_one": "{count} conexão em comum",
+  "housingGroups.requests.mutuals_other": "{count} conexões em comum",
   "housingGroups.requests.declineCta": "Recusar",
   "housingGroups.requests.approveCta": "Aprovar",
   "housingGroups.requests.error": "Não foi possível guardar essa decisão",
@@ -5221,7 +5222,7 @@ export const admin: Catalog = {
   "invites.banEvasion.reasons.inviterRemoved":
     "Convidada por um membro que foi ele próprio removido",
   "invites.banEvasion.reasons.referenceOfRemoved":
-    "Indica como referência alguém que abonou por uma conta removida",
+    "Indica como referência alguém que deu um voto de confiança a uma conta removida",
   "invites.banEvasion.reasons.referenceRemoved":
     "Indica como referência alguém que foi ele próprio removido",
   "invites.banEvasion.reasons.signInIdentifier":
@@ -6224,7 +6225,7 @@ export const admin: Catalog = {
   "featureUsage.feature.community": "Programas comunitários",
   "featureUsage.feature.partners": "Parceiros",
   "featureUsage.feature.volunteering": "Voluntariado",
-  "featureUsage.feature.connections": "Ligações",
+  "featureUsage.feature.connections": "Conexões",
   "featureUsage.feature.messaging": "Mensagens",
   "featureUsage.feature.listings": "Anúncios de negócios",
   "featureUsage.feature.housing": "Cooperativas de habitação",

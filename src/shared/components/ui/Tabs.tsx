@@ -1,5 +1,7 @@
 import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
+import { useFormat } from "../../i18n/format";
 import { useTranslation } from "../../i18n/useTranslation";
+import { RollingNumber } from "./RollingNumber";
 import styles from "./Tabs.module.css";
 import { tabIds } from "./tabIds";
 
@@ -59,6 +61,7 @@ export function Tabs({
   label?: string;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const fallbackId = useId();
   const prefix = idPrefix ?? fallbackId;
@@ -165,7 +168,12 @@ export function Tabs({
             {tab.icon}
             {!isIconOnly && tab.label}
             {tab.count ? (
-              <span className={styles.tabCount}>{tab.count}</span>
+              <span className={styles.tabCount}>
+                <RollingNumber
+                  value={fmt.number(tab.count)}
+                  numericValue={tab.count}
+                />
+              </span>
             ) : null}
             {isIconOnly && (
               <span role="tooltip" aria-hidden className={styles.tabTip}>

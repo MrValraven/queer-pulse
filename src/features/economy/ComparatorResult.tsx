@@ -2,6 +2,7 @@ import { FiAlertCircle, FiBriefcase, FiCheck, FiUser } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import {
   estimateSalariedNet,
   estimateTakeHome,
@@ -30,6 +31,12 @@ const safeNumber = (raw: string): number => {
 
 const ratePct = (r: TakeHome) => Math.round(r.effectiveRate * 1000) / 10;
 
+/** A currency figure that rolls as the gross or the options change. */
+function RollingCurrency({ amount }: { amount: number }) {
+  const fmt = useFormat();
+  return <RollingNumber value={fmt.currency(amount)} numericValue={amount} />;
+}
+
 interface ColumnProps {
   label: string;
   icon: React.ReactNode;
@@ -40,6 +47,7 @@ interface ColumnProps {
 function ResultColumn({ label, icon, result, highlight }: ColumnProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const effectiveRate = ratePct(result);
   return (
     <div className={`${styles.col} ${highlight ? styles.colHi : ""}`}>
       <p className={styles.colLabel}>
@@ -48,23 +56,40 @@ function ResultColumn({ label, icon, result, highlight }: ColumnProps) {
         </span>
         {label}
       </p>
-      <p className={styles.colNet}>{fmt.currency(result.net)}</p>
+      <p className={styles.colNet}>
+        <RollingCurrency amount={result.net} />
+      </p>
       <p className={styles.colMonthly}>
-        ≈ <strong>{fmt.currency(result.net / 12)}</strong>{" "}
+        ≈{" "}
+        <strong>
+          <RollingCurrency amount={result.net / 12} />
+        </strong>{" "}
         {t("economy:comparator.result.perMonth")}
       </p>
       <dl className={styles.colBreakdown}>
         <div className={styles.colRow}>
           <dt>{t("economy:comparator.result.segurancaSocial")}</dt>
-          <dd>−{fmt.currency(result.ss)}</dd>
+          <dd>
+            −<RollingCurrency amount={result.ss} />
+          </dd>
         </div>
         <div className={styles.colRow}>
           <dt>{t("economy:comparator.result.irs")}</dt>
-          <dd>−{fmt.currency(result.irs)}</dd>
+          <dd>
+            −<RollingCurrency amount={result.irs} />
+          </dd>
         </div>
         <div className={styles.colRow}>
           <dt>{t("economy:comparator.result.effectiveRate")}</dt>
-          <dd>{ratePct(result)}%</dd>
+          <dd>
+            <span className={styles.unitPair}>
+              <RollingNumber
+                value={fmt.number(effectiveRate)}
+                numericValue={effectiveRate}
+              />
+              %
+            </span>
+          </dd>
         </div>
       </dl>
     </div>
@@ -127,19 +152,21 @@ export function ComparatorResult({
                 : "economy:comparator.result.summaryLess"
             }
             components={{ em: <em /> }}
-            values={{ amount: fmt.currency(diffAbs) }}
+            slots={{ amount: <RollingCurrency amount={diffAbs} /> }}
           />
         </p>
         <p className={styles.diffSub}>
-          {t(
-            freelanceMore
-              ? "economy:comparator.result.subMore"
-              : "economy:comparator.result.subLess",
-            {
-              gross: fmt.currency(grossNum),
-              monthly: fmt.currency(diffAbs / 12),
-            },
-          )}
+          <Translation
+            i18nKey={
+              freelanceMore
+                ? "economy:comparator.result.subMore"
+                : "economy:comparator.result.subLess"
+            }
+            // The gross echoes what is being typed, so only the monthly
+            // figure rolls.
+            values={{ gross: fmt.currency(grossNum) }}
+            slots={{ monthly: <RollingCurrency amount={diffAbs / 12} /> }}
+          />
         </p>
       </div>
 

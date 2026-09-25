@@ -322,7 +322,7 @@ export const safety: Catalog = {
   "blockMute.duration.thirtyDays": "30 dias",
   "blockMute.choose.blockTitle": "Bloquear {name}",
   "blockMute.choose.blockDesc":
-    "Esta pessoa não pode ver o teu perfil, enviar-te mensagem, nem ver-te na pesquisa. Não é possível estabelecer ligação entre as duas contas.",
+    "Esta pessoa não pode ver o teu perfil, enviar-te mensagem, nem ver-te na pesquisa. Não é possível estabelecer conexão entre as duas contas.",
   "blockMute.choose.blockNote":
     "<strong>Nota:</strong> Se partilharem comunidades, {name} vai continuar a aparecer nas listas de pessoas, mas não vai conseguir interagir diretamente contigo.",
   "blockMute.choose.continueCta": "Continuar",
@@ -380,7 +380,7 @@ export const safety: Catalog = {
     "Retiraste o teu voto de confiança a {name}.",
   "blockModal.title": "Bloquear {name}?",
   "blockModal.body":
-    "Bloquear corta qualquer ligação entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer ligação com o outro. Podes desbloquear mais tarde.",
+    "Bloquear corta qualquer conexão entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer conexão com o outro. Podes desbloquear mais tarde.",
   "blockModal.reportCheckbox": "Denunciar também {name} à equipa de moderação",
   "blockModal.reasonCodeLabel": "O que aconteceu?",
   "blockModal.reasonCodeHelper":
@@ -1200,5 +1200,5 @@ export const safety: Catalog = {
   "blockMute.blocked.manageFollowUpToast":
     "Podes gerir {name} e todas as pessoas que bloqueaste quando quiseres.",
   "blockMute.blocked.unblockedNoConnectionToast":
-    "Desbloqueaste {name}. Não tinham ligação antes, por isso envia um pedido se quiseres voltar a enviar mensagens.",
+    "Desbloqueaste {name}. Não tinham conexão antes, por isso envia um pedido se quiseres voltar a enviar mensagens.",
 };

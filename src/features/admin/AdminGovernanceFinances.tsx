@@ -7,7 +7,7 @@ import {
   StatGrid,
   StatTile,
 } from "../../shared/components/ui";
-import { useCountUp } from "../../shared/hooks/useCountUp";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -34,13 +34,13 @@ function ledgerColorAt(index: number) {
 }
 
 /**
- * One headline figure on the Finances tab. `value` is the count-up target and
- * `kind` decides how it is written, so no call site hand-rolls a `€` prefix:
+ * One headline figure on the Finances tab. `value` is the figure the tile rolls
+ * to and `kind` decides how it is written, so no call site hand-rolls a `€` prefix:
  * pt-PT suffixes the symbol with a space ("2 200 €") and `Intl` knows that.
  */
 interface FinanceStatTile {
   labelKey: string;
-  /** Numeric count-up target. */
+  /** The figure the tile rolls up to. */
   value: number;
   kind: "currency" | "percent";
   /** Highlight the number in jade (e.g. the surplus). */
@@ -52,9 +52,8 @@ interface FinanceStatTile {
   source?: FinanceMetricSource;
 }
 
-/** Headline tiles round to whole euros: `useCountUp` steps through integers,
- *  so animating cents would flicker a meaningless ",00" through the whole
- *  count. The exact figures, cents included, are in the ledger below. */
+/** Headline tiles round to whole euros, so the roll moves only the euro
+ *  digits. The exact figures, cents included, are in the ledger below. */
 const STAT_CURRENCY: Intl.NumberFormatOptions = { maximumFractionDigits: 0 };
 
 function buildFinanceStats(latest: AdminFinanceLatest): FinanceStatTile[] {
@@ -237,7 +236,12 @@ function FinanceStatCard({
   const { demoMode } = useDemoMode();
   const { labelKey, value, kind, isJadeHighlighted, footKey, footValues } =
     stat;
-  const countValue = useCountUp(value, { durationMs: 1200 });
+  // Headline tiles show whole units (see STAT_CURRENCY).
+  const wholeValue = Math.round(value);
+  const formatFigure = (figure: number) =>
+    kind === "currency"
+      ? fmt.currency(figure, "EUR", STAT_CURRENCY)
+      : fmt.number(figure);
   const showPlaceholder = !demoMode && !isVerified(stat.source);
 
   return (
@@ -257,14 +261,12 @@ function FinanceStatCard({
               .filter(Boolean)
               .join(" ")}
           >
-            {kind === "currency" ? (
-              fmt.currency(countValue, "EUR", STAT_CURRENCY)
-            ) : (
-              <>
-                {fmt.number(countValue)}
-                <small>%</small>
-              </>
-            )}
+            <RollingNumber
+              value={formatFigure(wholeValue)}
+              numericValue={wholeValue}
+              revealFrom={{ value: formatFigure(0), numericValue: 0 }}
+            />
+            {kind === "percent" && <small>%</small>}
           </span>
         )
       }
@@ -403,7 +405,7 @@ function LiveMrrPanel({
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
-  const mrr = useCountUp(latest.mrr, { durationMs: 1400 });
+  const mrr = Math.round(latest.mrr);
   // Only verified, enabled expense lines appear here — this panel reads as
   // authoritative ("live"), so it never surfaces an unreviewed placeholder.
   const breakdown = enabledLines(latest.expense)
@@ -427,7 +429,14 @@ function LiveMrrPanel({
         </button>
       ) : (
         <div className={styles.panelNum}>
-          {fmt.currency(mrr, "EUR", STAT_CURRENCY)}
+          <RollingNumber
+            value={fmt.currency(mrr, "EUR", STAT_CURRENCY)}
+            numericValue={mrr}
+            revealFrom={{
+              value: fmt.currency(0, "EUR", STAT_CURRENCY),
+              numericValue: 0,
+            }}
+          />
         </div>
       )}
       <p className={styles.panelLead}>

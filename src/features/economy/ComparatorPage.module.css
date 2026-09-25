@@ -167,6 +167,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Keeps a rolling figure glued to the unit that follows it, so a line break
+   at narrow widths cannot land between the number and its "%". */
+.unitPair {
+  white-space: nowrap;
+}
+
 /* ── Net-difference plum panel ───────────────────────────────────────────── */
 .diffPanel {
   background: var(--plum);

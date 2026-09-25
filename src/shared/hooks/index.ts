@@ -6,7 +6,6 @@ export {
 } from "./useIncrementalList";
 export { useSimulatedLoad } from "./useSimulatedLoad";
 export { useScrolled } from "./useScrolled";
-export { useCountUp } from "./useCountUp";
 export { useMediaQuery } from "./useMediaQuery";
 export { useDebouncedValue } from "./useDebouncedValue";
 export { usePrefersReducedMotion } from "./usePrefersReducedMotion";

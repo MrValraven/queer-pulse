@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { FiCheck, FiSend, FiUsers } from "react-icons/fi";
 import { MdQrCodeScanner } from "react-icons/md";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -89,9 +90,18 @@ export function CheckInColumn({
             <div className={styles.searchResult}>
               {scanMatches.length > 0 ? (
                 <span className={styles.searchMatch}>
-                  {t("gatherings:dashboard.checkin.matchCount", {
-                    count: scanMatches.length,
-                  })}
+                  <Translation
+                    i18nKey="gatherings:dashboard.checkin.matchCount"
+                    values={{ count: scanMatches.length }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(scanMatches.length)}
+                          numericValue={scanMatches.length}
+                        />
+                      ),
+                    }}
+                  />
                 </span>
               ) : (
                 <span className={styles.searchNone}>
@@ -167,20 +177,14 @@ export function GuestListCard({
     [guests, filter, query],
   );
 
+  // Each chip: its filter, its label key and the count that label carries.
   const filterTabs = [
-    [
-      "all",
-      t("gatherings:dashboard.guestList.filterAll", { count: guests.length }),
-    ],
-    [
-      "in",
-      t("gatherings:dashboard.guestList.filterCheckedIn", { count: checkedIn }),
-    ],
+    ["all", "gatherings:dashboard.guestList.filterAll", guests.length],
+    ["in", "gatherings:dashboard.guestList.filterCheckedIn", checkedIn],
     [
       "pending",
-      t("gatherings:dashboard.guestList.filterPending", {
-        count: guests.length - checkedIn,
-      }),
+      "gatherings:dashboard.guestList.filterPending",
+      guests.length - checkedIn,
     ],
   ] as const;
 
@@ -191,7 +195,7 @@ export function GuestListCard({
       </div>
       <div className={styles.cardBody}>
         <div className={styles.filterBar}>
-          {filterTabs.map(([id, label]) => (
+          {filterTabs.map(([id, labelKey, count]) => (
             <button
               key={id}
               type="button"
@@ -200,7 +204,18 @@ export function GuestListCard({
                 .join(" ")}
               onClick={() => setFilter(id)}
             >
-              {label}
+              <Translation
+                i18nKey={labelKey}
+                values={{ count }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(count)}
+                      numericValue={count}
+                    />
+                  ),
+                }}
+              />
             </button>
           ))}
         </div>

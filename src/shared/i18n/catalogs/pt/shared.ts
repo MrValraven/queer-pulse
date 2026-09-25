@@ -82,7 +82,7 @@ export const shared: Catalog = {
   "consent.storage.outbox.purpose":
     "Mensagens que enviaste sem ligação, guardadas aqui até chegarem ao servidor, mais as tuas definições de cada conversa.",
   "consent.storage.yourLists.purpose":
-    "Os teus itens guardados, ligações, apoios e tema de perfil, em cache para aparecerem de imediato. Associados à tua conta num dispositivo partilhado.",
+    "Os teus itens guardados, conexões, votos de confiança e tema de perfil, em cache para aparecerem de imediato. Associados à tua conta num dispositivo partilhado.",
   "consent.storage.dismissals.purpose":
     "Que avisos, faixas e sugestões já fechaste, para não voltarmos a mostrá-los.",
   "consent.storage.readingPlace.purpose":
@@ -135,16 +135,19 @@ export const shared: Catalog = {
 
   // AccountMenu
   "accountMenu.items.profile": "Perfil",
-  "accountMenu.items.connections": "Ligações",
+  "accountMenu.items.connections": "Conexões",
   // ACQ-08 — o convite feito por quem já é membro, com a contagem de convites
   // por usar colada pelo `useInviteQuotaBadge`.
-  "accountMenu.items.invite": "Convidar alguém",
+  "accountMenu.items.invite": "Convidar",
   "accountMenu.items.messages": "Mensagens",
   "accountMenu.items.work": "Trabalho",
   // Descoberta de personas, Fase 5, Momento 3 — a linha "As tuas personas"
   // (badge via usePersonaBadge). Separado de `accountMenu.items.subprofiles`
   // acima, uma entrada pré-existente com outro texto.
-  "accountMenu.items.personas": "As tuas personas",
+  "accountMenu.items.personas": "Personas",
+  // O menu tem colunas estreitas, por isso usa um nome mais curto do que
+  // `nav:communities` ("Comunidades e Coletivos").
+  "accountMenu.items.communities": "Comunidades",
   "accountMenu.items.events": "Eventos",
   "accountMenu.items.cards": "Cartões",
   "accountMenu.items.drafts": "Rascunhos",
@@ -155,8 +158,10 @@ export const shared: Catalog = {
   "accountMenu.items.lightMode": "Modo claro",
   "accountMenu.items.gettingStarted": "Primeiros passos",
   "accountMenu.items.installApp": "Instalar a app",
-  "accountMenu.items.reports": "As tuas denúncias",
+  "accountMenu.items.reports": "Denúncias",
   "accountMenu.items.help": "Ajuda",
+  "accountMenu.hints.personas": "Perfis para o que fazes",
+  "accountMenu.hints.invite": "Os teus convites deste mês",
   "installAppModal.title": "Instalar a app",
   "installAppModal.sub":
     "Adiciona a QueerPulse ao teu ecrã principal em poucos toques. A mesma app, sem loja de aplicações.",

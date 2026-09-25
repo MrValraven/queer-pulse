@@ -5,7 +5,6 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useDirectoryListingsActions } from "../../../app/providers/useDirectoryListingsActions";
 import { useProfileData } from "../../../app/providers/useProfile";
-import { useAuth } from "../../../app/providers/authContext";
 import { useUploadImage } from "../../members/api/useUploadImage";
 import {
   TOTAL_STEPS,
@@ -95,11 +94,10 @@ export function ListingWizard({
   const { showToast } = useToast();
   const { addListing, withdrawListing } = useDirectoryListingsActions();
   // The authoring member: real user in live, mock persona in demo (item #3).
-  // Both reads stay unconditional, because hooks cannot be conditional. They
-  // are cheap context reads, and a console that supplies its own name, seed
-  // and submit ignores the values.
+  // The read stays unconditional, because hooks cannot be conditional. It is a
+  // cheap context read, and a console that supplies its own name, seed and
+  // submit ignores the values.
   const { profile } = useProfileData();
-  const { user } = useAuth();
   const memberName = `${profile.first} ${profile.last}`;
   const resolvedUserName = userName ?? memberName;
   const resolvedUserInitials = userInitials ?? profile.initials;
@@ -111,9 +109,8 @@ export function ListingWizard({
       seed ?? {
         ownerName: resolvedUserName.trim(),
         ownerBio: profile.bio ?? "",
-        contactEmail: user?.email ?? "",
       },
-    [seed, resolvedUserName, profile.bio, user?.email],
+    [seed, resolvedUserName, profile.bio],
   );
   const form = useListingForm(initialDraft, resolvedSeed);
   const { draft } = form;

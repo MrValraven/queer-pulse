@@ -1,5 +1,7 @@
 import { FiPlus } from "react-icons/fi";
 import { cx } from "../../../shared/lib/cx";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { SAVED_VIEWS, VIEW_TEST } from "../data/desk.copy";
 import type { Piece, SavedViewId } from "../data/desk.data";
@@ -21,6 +23,7 @@ export function SavedViews({
   onSave: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.views}>
       {SAVED_VIEWS.map((view) => {
@@ -33,7 +36,10 @@ export function SavedViews({
             aria-pressed={active === view.id}
             onClick={() => onToggle(view.id)}
           >
-            {t(view.labelKey)} <span>{count}</span>
+            {t(view.labelKey)}{" "}
+            <span>
+              <RollingNumber value={fmt.number(count)} numericValue={count} />
+            </span>
           </button>
         );
       })}

@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
+import { useFormat } from "../../i18n/format";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Tooltip } from "../ui";
+import { RollingNumber } from "../ui/RollingNumber";
 import type { AdminNavItem, AdminNavSection } from "./adminNav.data";
 import { pendingCount } from "./adminNavMatching";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
@@ -40,6 +42,7 @@ function NavCount({
   isCollapsed: boolean;
   suffix?: string;
 }) {
+  const fmt = useFormat();
   if (isCollapsed) {
     return (
       <span
@@ -62,7 +65,7 @@ function NavCount({
         isAlert ? styles.navCountAlert : styles.navCountWarn,
       ].join(" ")}
     >
-      {count}
+      <RollingNumber value={fmt.number(count)} numericValue={count} />
       {suffix && <span className="visuallyHidden"> {suffix}</span>}
     </span>
   );

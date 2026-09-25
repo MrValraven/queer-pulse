@@ -7,6 +7,9 @@ import {
   SkeletonLine,
   SuccessPanel,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileCard } from "./SubprofileCard";
 import { SubprofileDirectoryToolbar } from "./SubprofileDirectoryToolbar";
@@ -26,6 +29,7 @@ import styles from "./SubprofileDirectoryPage.module.css";
  */
 export function SubprofileDirectoryBrowse() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const directory = useSubprofileDirectoryFilters();
   const {
     isLoading,
@@ -85,10 +89,26 @@ export function SubprofileDirectoryBrowse() {
           </div>
           <div className={styles.pager}>
             <span className={styles.pagerCount}>
-              {t("subprofiles:directory.shownOfTotal", {
-                shown: shownCards.length,
-                total,
-              })}
+              {/* Show more and the filters move the shown figure; a new
+                  search term moves the server total. */}
+              <Translation
+                i18nKey="subprofiles:directory.shownOfTotal"
+                values={{ shown: shownCards.length, total }}
+                slots={{
+                  shown: (
+                    <RollingNumber
+                      value={fmt.number(shownCards.length)}
+                      numericValue={shownCards.length}
+                    />
+                  ),
+                  total: (
+                    <RollingNumber
+                      value={fmt.number(total)}
+                      numericValue={total}
+                    />
+                  ),
+                }}
+              />
             </span>
             {hasMore && (
               <Button

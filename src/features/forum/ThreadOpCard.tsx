@@ -4,6 +4,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Thread, type ThreadPoll } from "./forum.data";
 import { MarkdownLite } from "../../shared/markdown";
 import { FeatureHelp } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { ForumPostPhotos } from "./ForumPostPhotos";
 import { ForumLinkPreview } from "./ForumLinkPreview";
 import {
@@ -255,6 +257,7 @@ function OpFooterActions({
   onReport: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.opFooter}>
       <button
@@ -270,7 +273,8 @@ function OpFooterActions({
       >
         {/* Same icon as the reply like button (ThreadReplyItem), so the OP
             and its replies no longer carry two different heart glyphs. */}
-        <FiHeart aria-hidden="true" /> {upvotes}
+        <FiHeart aria-hidden="true" />{" "}
+        <RollingNumber value={fmt.number(upvotes)} numericValue={upvotes} />
       </button>
       <button
         type="button"

@@ -233,7 +233,6 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
         ? hidden("ownerVisibilityAnon")
         : preview("ownerVisibility", "owner", "host"),
     [ANCHOR.linkProfile]: linkProfilePlacement,
-    [ANCHOR.contactEmail]: hidden("contactEmail"),
     [ANCHOR.consent]: hidden("consent"),
     [ANCHOR.pricingMode]: fullPage("pricingMode"),
     [ANCHOR.services]: fullPage("services"),

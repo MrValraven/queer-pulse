@@ -1,16 +1,221 @@
 /* ===========================================================
-   Opening-hours editor (item #6) — split intervals + overnight.
-   New styles only; the shared hours classes (.hrow/.htg/.htimes…)
-   live in ListBusinessPage.module.css and are reused, not edited.
+   Opening-hours editor (item #6): the toolbar, the weekly day
+   card (ListingHoursDayRow) and the time-window lines
+   (ListingHoursIntervalRows, shared with the dated-exceptions
+   rows). Every hours rule lives here. The page stylesheet keeps
+   only the section heading (.groupH) and the toolbar-to-card
+   spacing (.hoursSection).
+
+   Measured parts: one small time picker is 135px, the en dash
+   about 9px, so an opening-closing pair is 294px with 8px gaps
+   and 286px with 4px gaps. A window action is 32px plus an 8px
+   gap. The container tiers at the end of the file are sized
+   from those numbers.
    =========================================================== */
 
-/* The third grid cell of a day row: stacks 1–2 interval rows, the
-   add-split button, and an inline validity warning. */
+/* ---------- Toolbar: hint + two quiet bulk actions ---------- */
+.tools {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 60ch;
+}
+
+.toolActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toolButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 0 13px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-strong);
+  font-family: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  cursor: pointer;
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.toolButton svg {
+  flex: none;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+@media (hover: hover) {
+  .toolButton:hover {
+    background-color: var(--wash);
+    border-color: rgba(var(--line-rgb), 0.24);
+  }
+}
+
+/* ---------- The week: one card, hairline-divided rows ---------- */
+.dayList {
+  /* Sized by its column (a flex item of .hoursSection), so inline-size
+     containment is safe here and the rows below can answer to the card's own
+     width. The card sits beside a section nav and a live preview on desktop,
+     so its width follows the editor layout around it. */
+  container: hours-days / inline-size;
+  /* The picker line height (DatePicker size="sm": its 38px clock button). The
+     day cell and the "Closed" label take it so their content centres on the
+     first time line, and toggling a day never changes the row height. */
+  --hours-line-height: 38px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.11);
+  border-radius: var(--radius-badge);
+  /* No overflow clip: the Tooltip bubble on the first row rises above the
+     card. The time picker popover is portalled, so nothing here can clip it. */
+}
+
+/* The week as one grid, so every row shares its columns and the times and the
+   trailing actions line up down the whole card whatever the locale:
+     16px | day (128-164px) | 16px | times | 8px | action (32px) | rest (16px+)
+   The outer tracks are the rows' side padding, kept in the grid so a row's
+   tint and hairline still run edge to edge. Each row is a subgrid spanning
+   every track. The times track takes the widest window line in the week (a
+   "next day" chip included) and gives way before overflowing, so the lines
+   wrap their chip instead. Wide layout needs 546px inside the card border,
+   hence the 550px narrow tier below. */
+.dayGrid {
+  display: grid;
+  grid-template-columns:
+    16px minmax(128px, 164px) 16px minmax(0, max-content) 8px 32px
+    minmax(16px, 1fr);
+  border-radius: inherit;
+}
+
+.dayRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: 8px;
+  align-items: start;
+  min-height: 60px;
+  padding-block: 12px;
+}
+.dayRow + .dayRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+/* A faint wash on closed days so open and closed scan apart at a glance, in
+   both themes (--line-rgb flips in dark mode). The outer rows borrow the
+   card's corner radius so the wash stays inside it. */
+.dayRowClosed {
+  background-color: rgba(var(--line-rgb), 0.03);
+}
+.dayRow:first-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+.dayRow:last-child {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+/* A <label> around the switch and the name, so a click on the name flips the
+   switch too. */
+.dayCell {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--hours-line-height);
+  min-width: 0;
+  cursor: pointer;
+}
+
+.dayName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  transition-property: color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.dayRowClosed .dayName {
+  color: var(--ink-60);
+}
+
+.closedLabel {
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  min-height: var(--hours-line-height);
+  font-size: var(--text-13);
+  color: var(--ink-40);
+}
+
+/* In the weekly grid the windows join the week's columns: the stack spans
+   times, gutter and action as a subgrid, and each line's two parts sit in
+   those tracks directly. */
+.dayRow > .stack {
+  grid-column: 4 / 7;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: 8px;
+}
+.dayRow .window {
+  display: contents;
+}
+.dayRow .windowTimes {
+  grid-column: 1;
+}
+.dayRow .windowActionSlot {
+  grid-column: 3;
+}
+.dayRow .warn,
+.dayRow .removeSecondWindow {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Time windows (ListingHoursIntervalRows) ---------- */
+
+/* Stacks the one or two window lines, the narrow-layout remove button and the
+   inline validity nudge. */
 .stack {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* One window: the times on the left, one trailing action slot on the right.
+   The times wrap inside their own group, so a "next day" chip drops below the
+   pickers when the line runs out of room. */
+.window {
+  display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
+}
+
+.windowTimes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.dash {
+  font-size: var(--text-13);
+  color: var(--ink-40);
 }
 
 /* A small, reassuring "spills past midnight" hint next to an overnight
@@ -26,44 +231,76 @@
   white-space: nowrap;
 }
 
-/* Remove-interval button — shown only when a day has two windows. */
-.remove {
+/* Holds the one action of a window line (a Tooltip-wrapped add, or a remove). */
+.windowActionSlot {
+  flex: none;
+  display: inline-flex;
+}
+
+/* The trailing slot: a round add button on a one-window day, a remove button
+   on each line of a two-window day. Same box, so the icons swap in place.
+   The top margin centres the 32px circle on the 38px picker line. */
+.windowAction {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 3px;
+  padding: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-60);
   font-size: var(--text-16);
-  line-height: 1;
-  color: var(--ink-40);
-  background: none;
-  border: none;
   cursor: pointer;
-  padding: 4px;
-  border-radius: var(--radius-6);
-  transition: color 0.2s var(--ease);
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
 }
 @media (hover: hover) {
-  .remove:hover {
+  .windowAction:hover {
+    color: var(--accent-ink);
+    background-color: rgba(var(--accent-rgb), 0.08);
+    border-color: rgba(var(--accent-rgb), 0.3);
+  }
+}
+
+/* "Remove second window": the narrow layout's labelled remove, under the last
+   window line of a two-window day. Hidden in the wide layout, where each line
+   carries its own round remove button. */
+.removeSecondWindow {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--ink-60);
+  font-family: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.removeSecondWindow svg {
+  flex: none;
+  font-size: var(--text-14);
+}
+@media (hover: hover) {
+  .removeSecondWindow:hover {
     color: var(--accent-ink);
   }
 }
 
-/* Add-a-second-window button ("+ Split (lunch break)"). */
-.add {
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 2px 0;
-  transition: color 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .add:hover {
-    color: var(--accent);
-  }
-}
-
-/* Gentle inline validity nudge — never a hard red alert. */
+/* Gentle inline validity nudge, never a hard red alert. */
 .warn {
+  align-self: flex-start;
   font-size: var(--text-12);
   line-height: 1.4;
   color: var(--accent-ink);
@@ -73,9 +310,186 @@
   margin: 0;
 }
 
+/* Touch targets: the toolbar pills and the text remove grow to 44px tall; the
+   round window action stays a 32px circle with a 44px tappable area. */
+@media (pointer: coarse) {
+  .toolButton,
+  .removeSecondWindow {
+    min-height: 44px;
+  }
+  .windowAction {
+    position: relative;
+  }
+  .windowAction::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+  }
+}
+
+/* ---------- Narrow day card ----------
+   Below 550px each row becomes a header line plus full-width window lines:
+     (switch) Monday                      (+)
+     [09:00 AM clk] - [06:00 PM clk]
+   The window wrappers step aside (`display: contents`) so their parts join
+   this row's grid: the times span both columns, flush with the switch. A
+   one-window day lifts its add button to the header line, where a closed day
+   shows its "Closed" label instead. A two-window day hides the round removes
+   and shows the labelled "Remove second window" under its last line, so no
+   lone x in the header reads as "remove this day". */
+@container hours-days (max-width: 550px) {
+  .dayGrid {
+    display: block;
+  }
+  .dayRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-inline: 12px;
+  }
+  .dayCell {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  .closedLabel {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .dayRow > .stack {
+    display: contents;
+  }
+  .dayRow .windowTimes,
+  .dayRow .warn {
+    grid-column: 1 / -1;
+  }
+  .dayRow .windowActionSlot {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .dayRow .stackPaired .windowActionSlot {
+    display: none;
+  }
+  .dayRow .stackPaired .removeSecondWindow {
+    display: inline-flex;
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+/* Phone-width card (the wizard at 360 to 390px viewports is 304px of content):
+   the rows give up some side padding and the pair tightens to 4px gaps, which
+   keeps pickers and dash on one line (286px in 288px). */
+@container hours-days (max-width: 320px) {
+  .dayRow {
+    padding-inline: 8px;
+  }
+  .dayRow .windowTimes {
+    column-gap: 4px;
+  }
+}
+
+/* Too narrow for the dash as well: it steps out and the opening picker's clock
+   button divides the two times (270px of pickers + 8px gap). */
+@container hours-days (max-width: 302px) {
+  .dayRow .windowTimes {
+    column-gap: 8px;
+  }
+  .dayRow .dash {
+    display: none;
+  }
+}
+
+/* The owner editor on a 360px phone (a 285px card): the smallest padding and
+   gap still hold a pair on one line (273px in 275px). */
+@container hours-days (max-width: 292px) {
+  .dayRow {
+    padding-inline: 4px;
+  }
+  .dayRow .windowTimes {
+    column-gap: 4px;
+  }
+}
+
+/* ---------- Narrow dated exceptions ----------
+   The exceptions list (ListingHoursExceptions.module.css `.list`) is the
+   `hours-exceptions` inline-size container. Under 460px its rows drop to 8px
+   side padding inside a 1px border, so a row's content is the list width
+   minus 18px. There a row mirrors the narrow day card: 4px gaps in the pair,
+   the round removes hidden on a two-window row with the labelled remove under
+   the last line, and a one-window row's add button stays on the window line
+   when it fits and wraps under the times when it does not. */
+@container hours-exceptions (max-width: 460px) {
+  .stack .window {
+    flex-wrap: wrap;
+  }
+  /* Sized by its content (flex-basis auto), so a line too narrow for the
+     pair plus the add button wraps the button under the times. */
+  .stack .windowTimes {
+    flex-basis: auto;
+    column-gap: 4px;
+  }
+  .stackPaired .windowActionSlot {
+    display: none;
+  }
+  .stackPaired .removeSecondWindow {
+    display: inline-flex;
+    align-self: flex-start;
+  }
+}
+
+/* Under 304px of list the pair with its dash (286px) no longer fits a row's
+   content, so the dash steps out and the pair keeps an 8px gap (278px). */
+@container hours-exceptions (max-width: 303px) {
+  .stack .dash {
+    display: none;
+  }
+  .stack .windowTimes {
+    column-gap: 8px;
+  }
+}
+
+/* Under 296px of list the pair tightens to a 4px gap (274px). */
+@container hours-exceptions (max-width: 295px) {
+  .stack .windowTimes {
+    column-gap: 4px;
+  }
+}
+
+/* ---------- Focus ---------- */
+.toolButton:focus-visible,
+.windowAction:focus-visible,
+.removeSecondWindow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ---------- Motion ---------- */
+
+/* Toggling a day (or "Mark all closed" / "Copy Monday") swaps its times cell
+   between the window lines and the "Closed" label at the same row height, and
+   adding a window mounts a second line. Whichever mounts fades in softly. The
+   fade sits on the window lines themselves, since the narrow layout turns
+   their wrappers into `display: contents` boxes that cannot animate. */
+@media (prefers-reduced-motion: no-preference) {
+  .windowTimes,
+  .removeSecondWindow,
+  .closedLabel {
+    animation: hoursFadeIn var(--dur-fast) var(--ease-out) both;
+  }
+}
+@keyframes hoursFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .remove,
-  .add {
+  .toolButton,
+  .dayName,
+  .windowAction,
+  .removeSecondWindow {
     transition: none;
   }
 }

@@ -23,15 +23,16 @@ export interface AdminListingOwnerOfferInput {
 /**
  * The admin create body, mirroring `AdminCreateListingDto` on the server.
  *
- * NINE keys are absent by construction, the same nine the server drops with
+ * EIGHT keys are absent by construction, the same eight the server drops with
  * `OmitType`: `affirmingBaselineAccepted`, `ownerName`, `ownerRole`,
- * `ownerBio`, `visibility`, `linkToProfile`, `contactEmail`, `consentOuting`
- * and `consentGuide`. Each belongs to whoever ends up holding the listing, and
- * an admin cannot answer any of them on a business's behalf.
+ * `ownerBio`, `visibility`, `linkToProfile`, `consentOuting` and
+ * `consentGuide`. Each belongs to whoever ends up holding the listing, and
+ * an admin cannot answer any of them on a business's behalf. The server also
+ * omits the retired `contactEmail`, which this client type no longer has.
  *
  * Omission is the enforcement. The global ValidationPipe runs `whitelist:
- * true` with `forbidNonWhitelisted: true`, so a body carrying one of the nine
- * is answered 400. A staff-authored draft still CARRIES all nine (the wizard
+ * true` with `forbidNonWhitelisted: true`, so a body carrying one of the eight
+ * is answered 400. A staff-authored draft still CARRIES all eight (the wizard
  * suppresses the inputs without changing the draft shape, and `blankDraft()`
  * fills `visibility` and `linkToProfile` regardless), which is why the body is
  * built by the allow-list in `adminDraftToDto` below and then run through a
@@ -54,7 +55,6 @@ export type AdminCreateListingDto = Omit<
   | "ownerBio"
   | "visibility"
   | "linkToProfile"
-  | "contactEmail"
   | "consentOuting"
   | "consentGuide"
   | "rel"
@@ -80,7 +80,7 @@ type AdminListingBusinessPayload = Omit<
 /**
  * Every key this body may not carry, named so it can be deleted by name.
  *
- * The eight owner-personal ones come from the canonical list, so this stays in
+ * The seven owner-personal ones come from the canonical list, so this stays in
  * step with it. Three more are named here: `affirmingBaselineAccepted`, which
  * `draftToDto` adds on the member create; `ownerRole`, which belongs to the
  * business (hence its absence from `OWNER_PERSONAL_FIELDS`) while the server's

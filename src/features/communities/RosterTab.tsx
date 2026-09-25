@@ -1,21 +1,24 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiMessageCircle } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
 import {
   Avatar,
   Button,
   LoadErrorState,
   SearchInput,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useMemberContact } from "../connect/useMemberContact";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { RosterMember } from "./community.model";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { photoOf } from "./communityPeople";
 import { alsoIn } from "./communityConnections";
 import { RoleBadge } from "./CommunityBadges";
+import { RosterMessageButton } from "./RosterMessageButton";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
@@ -25,35 +28,6 @@ const ROLE_ORDER: Record<RosterMember["role"], number> = {
   mod: 2,
   member: 3,
 };
-
-/**
- * The roster card's "Message" affordance — a `span role="button"` (no `<button>`
- * inside the profile `<Link>`, per the design rule). Extracted so
- * `useMemberContact` runs at a component top level rather than inside the
- * `shown.map` below, where a hook call would be illegal.
- */
-function RosterMessageButton({ member }: { member: RosterMember }) {
-  const { t } = useTranslation();
-  const { connected, contact } = useMemberContact(member.slug ?? "");
-  const reachOut = () =>
-    contact({ slug: member.slug ?? "", name: member.name });
-  return (
-    <span
-      role="button"
-      tabIndex={0}
-      className={styles.msgBtn}
-      onClick={reachOut}
-      onKeyDown={(e) =>
-        (e.key === "Enter" || e.key === " ") && (e.preventDefault(), reachOut())
-      }
-    >
-      <FiMessageCircle aria-hidden />{" "}
-      {connected
-        ? t("connect:contact.message")
-        : t("communities:detail.roster.messageCta")}
-    </span>
-  );
-}
 
 export function RosterTab({
   roster,
@@ -70,6 +44,7 @@ export function RosterTab({
   paging: PulsePaging;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const [q, setQ] = useState("");
 
@@ -161,10 +136,23 @@ export function RosterTab({
         ))}
       </div>
       <p className={detail.showing}>
-        {t("communities:detail.roster.showingOf", {
-          shown: shown.length,
-          count: total,
-        })}
+        {/* Search moves the shown figure; a join, leave or removal moves
+            the total. */}
+        <Translation
+          i18nKey="communities:detail.roster.showingOf"
+          values={{ shown: shown.length, count: total }}
+          slots={{
+            shown: (
+              <RollingNumber
+                value={fmt.number(shown.length)}
+                numericValue={shown.length}
+              />
+            ),
+            count: (
+              <RollingNumber value={fmt.number(total)} numericValue={total} />
+            ),
+          }}
+        />
       </p>
       {/* Search filters only the members loaded so far — flag it when more
           pages remain so a thin result isn't mistaken for the whole roster. */}

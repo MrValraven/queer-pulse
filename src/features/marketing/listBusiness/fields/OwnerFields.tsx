@@ -18,8 +18,8 @@ import styles from "../ListBusinessPage.module.css";
 /**
  * The "about you" field body: the member's connection to the place, the name
  * and role shown on the listing, how much of that identity is public, whether
- * the listing links to their profile, and the contact email moderation writes
- * to.
+ * the listing links to their profile, and a note on how the team reaches them
+ * (in-app notifications and messages).
  *
  * Shared by the create wizard's step 4 pane (`StepPhotosYou`) and the owner
  * editor's About-you section. Fragment, so each field stays a direct child of
@@ -110,29 +110,14 @@ export function OwnerFields({
         </div>
       </FormField>
 
-      <h3 className={styles.groupH}>
-        {t("marketing:listBusiness.step4.loopHeading")}
-      </h3>
-      <FormField
-        className={styles.lbField}
-        id={ANCHOR.contactEmail}
-        label={t("marketing:listBusiness.step4.contactEmailLabel")}
-        required
-        helper={t("marketing:listBusiness.step4.contactEmailHelper")}
-      >
-        <input
-          type="email"
-          placeholder={t(
-            "marketing:listBusiness.step4.contactEmailPlaceholder",
-          )}
-          value={draft.contactEmail}
-          onChange={(e) => set({ contactEmail: e.target.value })}
-        />
-      </FormField>
-
-      <p className={styles.hint}>
-        {t("marketing:listBusiness.step4.notifyNote")}
-      </p>
+      <div className={styles.loopSection}>
+        <h3 className={styles.groupH}>
+          {t("marketing:listBusiness.step4.loopHeading")}
+        </h3>
+        <p className={styles.hint}>
+          {t("marketing:listBusiness.step4.notifyNote")}
+        </p>
+      </div>
 
       <div className={styles.consent}>
         <FiShield size={17} aria-hidden />

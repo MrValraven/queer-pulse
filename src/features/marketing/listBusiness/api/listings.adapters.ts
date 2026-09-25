@@ -25,7 +25,7 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
   return {
     ...dto,
     // What the reader is to this listing, and (for a co-manager) inert blanks
-    // in place of the owner's eight personal fields, which never arrived.
+    // in place of the owner's seven personal fields, which never arrived.
     // `PendingListing` declares them all, and the card/preview adapters read
     // them, so they have to be present even when they mean nothing.
     ...ownerPersonalFieldsFrom(dto),

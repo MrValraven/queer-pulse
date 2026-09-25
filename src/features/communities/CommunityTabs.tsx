@@ -7,7 +7,10 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
@@ -96,6 +99,7 @@ export function MembersTab({
   loading?: boolean;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   return (
     <div>
@@ -155,12 +159,30 @@ export function MembersTab({
       </div>
       {!loading && (
         <p className={styles.showing}>
-          {hasCount
-            ? t("communities:detail.members.showingOf", {
-                shown: members.length,
-                count: memberNum,
-              })
-            : t("communities:detail.members.showingCore")}
+          {/* A join or leave refetches the roster and the count, so both
+              figures can move while the tab is open. */}
+          {hasCount ? (
+            <Translation
+              i18nKey="communities:detail.members.showingOf"
+              values={{ shown: members.length, count: memberNum }}
+              slots={{
+                shown: (
+                  <RollingNumber
+                    value={fmt.number(members.length)}
+                    numericValue={members.length}
+                  />
+                ),
+                count: (
+                  <RollingNumber
+                    value={fmt.number(memberNum)}
+                    numericValue={memberNum}
+                  />
+                ),
+              }}
+            />
+          ) : (
+            t("communities:detail.members.showingCore")
+          )}
         </p>
       )}
     </div>

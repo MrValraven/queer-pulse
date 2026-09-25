@@ -360,7 +360,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 0; /* let the label truncate instead of blowing out the track */
+  min-width: 0; /* let the label wrap instead of blowing out the track */
   padding: 9px 12px;
   border-radius: var(--radius-10);
   color: var(--ink);
@@ -373,11 +373,37 @@
     background: rgba(var(--plum-rgb), 0.06);
   }
 }
+/* Labels wrap onto a second line when a track is too narrow for them, so a
+   name like "Communities & Collectives" is always read in full. */
 .itemLabel {
   min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+}
+
+/* A described row (an item with a `hintKey`) takes the whole grid width, so
+   its label and hint read on one comfortable measure. */
+.itemWide {
+  grid-column: 1 / -1;
+}
+
+/* Label over hint, stacked. It takes the free space between the icon and the
+   badge slot, so the icon stays centred and the badge stays on the right. */
+.itemText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.itemHint {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+  font-size: var(--text-12);
+  font-weight: 400;
+  color: var(--ink-60);
 }
 
 /* Trailing badge slot (persona count / pending-invite dot, M3) — pinned to

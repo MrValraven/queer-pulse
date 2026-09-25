@@ -1,7 +1,9 @@
 // src/features/messages/ComposerDockContent.tsx
 import { useCallback, useRef } from "react";
 import { FiArrowDown } from "react-icons/fi";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { Composer } from "./Composer";
 import { useDemoReplyClaim } from "./api/useConversationClaim";
 import { ComposerMailboxBar } from "./mailboxes/ComposerMailboxBar";
@@ -81,7 +83,7 @@ export function ComposerDockContent({
   newMessagesCount,
   onJumpToLatest,
 }: ComposerDockContentProps) {
-  const { t } = useTranslation();
+  const fmt = useFormat();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const staging = useAttachmentStaging({
     conversationId: active.id,
@@ -117,9 +119,18 @@ export function ComposerDockContent({
           onClick={onJumpToLatest}
         >
           <span>
-            {t("messages:conversation.newMessagesCount", {
-              count: newMessagesCount,
-            })}
+            <Translation
+              i18nKey="messages:conversation.newMessagesCount"
+              values={{ count: newMessagesCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(newMessagesCount)}
+                    numericValue={newMessagesCount}
+                  />
+                ),
+              }}
+            />
           </span>
           <FiArrowDown aria-hidden />
         </button>

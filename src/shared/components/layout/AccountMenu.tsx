@@ -25,6 +25,7 @@ import {
   RoleLinks,
   AccountMenuControls,
   AccountLanguageRow,
+  AccountItemLabel,
 } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
@@ -237,17 +238,6 @@ function AccountMenuPanel({
 }) {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
-  const personaBadge = usePersonaBadge();
-  const gettingStartedBadge = useGettingStartedBadge();
-  const inviteQuotaBadge = useInviteQuotaBadge();
-  // Live counts can't live in the static ACCOUNT_GROUPS array, so each badge
-  // hook is attached to its row here, matched by `to` (see `AccountItem.badge`).
-  // `AccountSheet` keeps an identical map so the two surfaces never drift.
-  const badgeByRoute: Record<string, ReactNode> = {
-    [routes.subprofilesDashboard]: personaBadge,
-    [routes.gettingStarted]: gettingStartedBadge,
-    [routes.invite]: inviteQuotaBadge,
-  };
   const themeLabel = t(
     theme === "dark"
       ? "shared:accountMenu.items.lightMode"
@@ -324,42 +314,7 @@ function AccountMenuPanel({
       </div>
 
       <div className={styles.scroll}>
-        {ACCOUNT_GROUPS.map((group) =>
-          group.filter(
-            (item): item is AccountLinkItem =>
-              !item.action &&
-              (!item.liveOnly || !demoMode) &&
-              !isComingSoonLink(item.to),
-          ),
-        )
-          .filter((group) => group.length > 0)
-          .map((group, groupIndex) => (
-            <div key={group[0]?.to ?? groupIndex}>
-              {groupIndex > 0 && <div className={styles.divider} />}
-              <div className={styles.grid}>
-                {group.map((item) => {
-                  const Icon = item.icon;
-                  const badge = item.badge ?? badgeByRoute[item.to];
-                  return (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      className={styles.item}
-                      onClick={onClose}
-                    >
-                      <Icon aria-hidden className={styles.itemIcon} />
-                      <span className={styles.itemLabel}>
-                        {t(item.labelKey)}
-                      </span>
-                      {badge && (
-                        <span className={styles.badgeSlot}>{badge}</span>
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+        <AccountMenuLinkGroups demoMode={demoMode} onClose={onClose} />
         {role !== "member" && (
           <>
             <div className={styles.divider} />
@@ -401,4 +356,64 @@ function AccountMenuPanel({
       </div>
     </div>
   );
+}
+
+/** The member link groups in {@link AccountMenuPanel}'s scroll region, each a
+ * two-column sub-grid under a divider. Split out to keep the panel under the
+ * repo's 200-line-per-component limit. */
+function AccountMenuLinkGroups({
+  demoMode,
+  onClose,
+}: {
+  demoMode: boolean;
+  onClose: () => void;
+}) {
+  const personaBadge = usePersonaBadge();
+  const gettingStartedBadge = useGettingStartedBadge();
+  const inviteQuotaBadge = useInviteQuotaBadge();
+  // Live counts can't live in the static ACCOUNT_GROUPS array, so each badge
+  // hook is attached to its row here, matched by `to` (see `AccountItem.badge`).
+  // `AccountSheet` keeps an identical map so the two surfaces never drift.
+  const badgeByRoute: Record<string, ReactNode> = {
+    [routes.subprofilesDashboard]: personaBadge,
+    [routes.gettingStarted]: gettingStartedBadge,
+    [routes.invite]: inviteQuotaBadge,
+  };
+  return ACCOUNT_GROUPS.map((group) =>
+    group.filter(
+      (item): item is AccountLinkItem =>
+        !item.action &&
+        (!item.liveOnly || !demoMode) &&
+        !isComingSoonLink(item.to),
+    ),
+  )
+    .filter((group) => group.length > 0)
+    .map((group, groupIndex) => (
+      <div key={group[0]?.to ?? groupIndex}>
+        {groupIndex > 0 && <div className={styles.divider} />}
+        <div className={styles.grid}>
+          {group.map((item) => {
+            const Icon = item.icon;
+            const badge = item.badge ?? badgeByRoute[item.to];
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={[styles.item, item.hintKey && styles.itemWide]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={onClose}
+              >
+                <Icon aria-hidden className={styles.itemIcon} />
+                <AccountItemLabel
+                  labelKey={item.labelKey}
+                  hintKey={item.hintKey}
+                />
+                {badge && <span className={styles.badgeSlot}>{badge}</span>}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    ));
 }

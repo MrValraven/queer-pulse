@@ -2,6 +2,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { EmptyState } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
@@ -49,6 +52,7 @@ import styles from "./MagazineSearchPage.module.css";
  */
 export function MagazineSearchPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [searchParams, setSearchParams] = useSearchParams();
   const term = searchParams.get("q") ?? "";
   const tag = searchParams.get("tag") ?? "";
@@ -128,7 +132,18 @@ export function MagazineSearchPage() {
             )}
             {hasCriteria && !isLoading && !isError && total > 0 && (
               <p className={styles.count}>
-                {t("magazine:search.resultCount", { count: total })}
+                <Translation
+                  i18nKey="magazine:search.resultCount"
+                  values={{ count: total }}
+                  slots={{
+                    count: (
+                      <RollingNumber
+                        value={fmt.number(total)}
+                        numericValue={total}
+                      />
+                    ),
+                  }}
+                />
               </p>
             )}
           </div>

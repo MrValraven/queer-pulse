@@ -94,7 +94,7 @@ export const communities: Catalog = {
   // ── Faixa "Sugestões para ti" (SuggestedCommunitiesSection) ───────────────
   "discover.suggested.heading": "Sugestões para ti",
   "discover.suggested.subtitle":
-    "Comunidades onde já estão pessoas com quem tens ligação.",
+    "Comunidades onde já estão pessoas com quem tens conexão.",
   "discover.browse.heading": "Mais comunidades",
 
   // ── Cartão de comunidade / textos do botão de entrada ─────────────────────
@@ -477,9 +477,9 @@ export const communities: Catalog = {
   // totais, sem ordenação, sem recomendação.
   "detail.modtools.joinRequests.applicant.since": "No QueerPulse desde {date}",
   "detail.modtools.joinRequests.applicant.sharedConnections_one":
-    "{count} ligação em comum",
+    "{count} conexão em comum",
   "detail.modtools.joinRequests.applicant.sharedConnections_other":
-    "{count} ligações em comum",
+    "{count} conexões em comum",
   "detail.modtools.joinRequests.applicant.sharedCommunities_one":
     "{count} comunidade em comum",
   "detail.modtools.joinRequests.applicant.sharedCommunities_other":
@@ -949,15 +949,15 @@ export const communities: Catalog = {
   // ── Ferramentas de moderação · convidar pessoas ───────────────────────────
   "detail.modtools.invites.label": "Convidar pessoas",
   "detail.modtools.invites.intro":
-    "Escolhe pessoas com quem tens ligação e envia-lhes um convite para esta comunidade, até {max} de cada vez. Um convite é uma mensagem que podem aceitar ou deixar ficar. Entrar continua a ser decisão delas.",
-  "detail.modtools.invites.searchPlaceholder": "Procurar nas tuas ligações…",
+    "Escolhe pessoas com quem tens conexão e envia-lhes um convite para esta comunidade, até {max} de cada vez. Um convite é uma mensagem que podem aceitar ou deixar ficar. Entrar continua a ser decisão delas.",
+  "detail.modtools.invites.searchPlaceholder": "Procurar nas tuas conexões…",
   "detail.modtools.invites.selectedCount": "{selected} de {max} selecionadas",
   "detail.modtools.invites.sendCta": "Enviar convites",
   "detail.modtools.invites.errorToast":
     "Não foi possível enviar esses convites. Tenta novamente.",
   "detail.modtools.invites.empty.title": "Não há mais ninguém para convidar",
   "detail.modtools.invites.empty.description":
-    "Todas as pessoas com quem tens ligação já estão nesta comunidade.",
+    "Todas as pessoas com quem tens conexão já estão nesta comunidade.",
   "detail.modtools.invites.result.invited": "Convites enviados ({total})",
   "detail.modtools.invites.result.skipped": "Ignoradas ({total})",
   "detail.modtools.invites.result.skipRow": "{name}: {reason}",
@@ -1558,13 +1558,13 @@ export const communities: Catalog = {
   "start.running.addStewardModal.eyebrow": "Adicionar corresponsável",
   "start.running.addStewardModal.title": "Escolhe alguém a quem estás ligada",
   "start.running.addStewardModal.sub":
-    "As pessoas corresponsáveis só podem ser membros a quem já estás ligada. Pesquisa nas tuas ligações abaixo.",
-  "start.running.addStewardModal.searchLabel": "Pesquisar nas tuas ligações",
-  "start.running.addStewardModal.loadMore": "Mostrar mais ligações",
+    "As pessoas corresponsáveis só podem ser membros a quem já estás ligada. Pesquisa nas tuas conexões abaixo.",
+  "start.running.addStewardModal.searchLabel": "Pesquisar nas tuas conexões",
+  "start.running.addStewardModal.loadMore": "Mostrar mais conexões",
   "start.running.addStewardModal.searchPlaceholder":
     "Pesquisa por nome ou @slug…",
   "start.running.addStewardModal.empty":
-    "Podes adicionar pessoas corresponsáveis assim que estiveres ligada a outros membros. Vai a Ligações para aumentar o teu círculo primeiro.",
+    "Podes adicionar pessoas corresponsáveis assim que estiveres ligada a outros membros. Vai a Conexões para aumentar o teu círculo primeiro.",
   "start.running.insideHeading": "O que está incluído",
   "start.running.insideSub":
     "Ativa o que fizer sentido. Podes sempre adicionar mais depois de estares em funcionamento.",
@@ -1640,7 +1640,7 @@ export const communities: Catalog = {
     "Vão receber um convite caloroso quando abrires: sem pressão, sem spam.",
   "start.people.empty":
     "Ainda não estás em contacto com ninguém. Assim que te ligares a pessoas, poderás convidá-las aqui.",
-  "start.people.loadMore": "Mostrar mais ligações",
+  "start.people.loadMore": "Mostrar mais conexões",
   "start.people.seedNote":
     "Também podes partilhar o link da tua comunidade assim que abrir. É muitas vezes assim que as primeiras dez pessoas chegam de verdade.",
 

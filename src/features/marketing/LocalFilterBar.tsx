@@ -7,6 +7,9 @@ import {
 } from "../../shared/components/ui";
 import { useMediaQuery } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   LocalFilterFields,
@@ -44,6 +47,7 @@ export function LocalFilterBar({
   activeFiltersSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   // On phones the full filter set lives in a bottom sheet so the sticky bar
   // stays a compact one-row toolbar instead of eating 200–260px of viewport.
   const isMobile = useMediaQuery(mediaMax("mobile"));
@@ -86,7 +90,10 @@ export function LocalFilterBar({
                 {t("marketing:local.filter.filters")}
                 {activeFilterCount > 0 && (
                   <span className={s.filtersCount} aria-hidden>
-                    {activeFilterCount}
+                    <RollingNumber
+                      value={fmt.number(activeFilterCount)}
+                      numericValue={activeFilterCount}
+                    />
                   </span>
                 )}
               </button>
@@ -107,9 +114,22 @@ export function LocalFilterBar({
             <LocalFilterFields {...fields} variant="sheet" />
             <div className={s.sheetActions}>
               <Button variant="primary" onClick={() => setSheetOpen(false)}>
-                {t("marketing:local.filter.showResults", {
-                  count: resultCount,
-                })}
+                {/* One flex item, so the button's gap never splits the
+                    sentence around the rolling number. */}
+                <span>
+                  <Translation
+                    i18nKey="marketing:local.filter.showResults"
+                    values={{ count: resultCount }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(resultCount)}
+                          numericValue={resultCount}
+                        />
+                      ),
+                    }}
+                  />
+                </span>
               </Button>
             </div>
           </ModalSheet>

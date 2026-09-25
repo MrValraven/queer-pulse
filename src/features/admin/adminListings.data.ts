@@ -43,7 +43,6 @@ function demoListing(
     ownerBio: "",
     visibility: "public",
     linkToProfile: true,
-    contactEmail: "",
     operatingState: {
       state: "open",
       note: null,

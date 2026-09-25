@@ -65,7 +65,6 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   rel: { step: 4, anchor: ANCHOR.rel },
   ownerName: { step: 4, anchor: ANCHOR.ownerName },
   ownerRole: { step: 4, anchor: ANCHOR.ownerRole },
-  contactEmail: { step: 4, anchor: ANCHOR.contactEmail },
   photos: { step: 4, anchor: ANCHOR.photos },
   alt: { step: 4, anchor: ANCHOR.photos },
   // Step 5 — review / consents

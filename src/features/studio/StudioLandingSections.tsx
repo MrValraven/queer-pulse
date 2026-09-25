@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useScrollReveal, useCountUp } from "../../shared/hooks";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useScrollReveal } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -51,7 +52,6 @@ const LEDGER_CYCLE_COUNT = 5;
 
 export function StudioLandingCounter() {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
-  const total = useCountUp(PAYOUT_TOTAL, { active: isVisible });
   const { t } = useTranslation();
   const fmt = useFormat();
 
@@ -69,7 +69,15 @@ export function StudioLandingCounter() {
           />
         </h2>
         <div className={styles.bigN}>
-          €<em>{fmt.number(total)}</em>
+          €
+          <em>
+            <RollingNumber
+              value={fmt.number(PAYOUT_TOTAL)}
+              numericValue={PAYOUT_TOTAL}
+              revealFrom={{ value: fmt.number(0), numericValue: 0 }}
+              isRevealed={isVisible}
+            />
+          </em>
         </div>
         <p className={styles.counterSub}>
           {t("studio:landing.counter.sub", {

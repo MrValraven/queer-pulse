@@ -3,7 +3,10 @@ import {
   RefineToggle,
   SearchInput,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useRefineDrawer } from "../../shared/hooks";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileDirectoryRefinePanel } from "./SubprofileDirectoryRefinePanel";
 import { useSubprofileDirectoryActiveFilters } from "./useSubprofileDirectoryActiveFilters";
@@ -35,6 +38,7 @@ export function SubprofileDirectoryToolbar({
   isCountKnown: boolean;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const refine = useRefineDrawer("qp.subprofiles.refineOpen");
   const activeFilters = useSubprofileDirectoryActiveFilters(directory);
 
@@ -89,9 +93,20 @@ export function SubprofileDirectoryToolbar({
         filters={activeFilters}
         onClearFilters={directory.onClearFilters}
         trailing={
-          isCountKnown
-            ? t("subprofiles:directory.resultCount", { count: resultCount })
-            : null
+          isCountKnown ? (
+            <Translation
+              i18nKey="subprofiles:directory.resultCount"
+              values={{ count: resultCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(resultCount)}
+                    numericValue={resultCount}
+                  />
+                ),
+              }}
+            />
+          ) : null
         }
       />
 

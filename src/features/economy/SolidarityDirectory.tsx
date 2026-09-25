@@ -2,8 +2,10 @@ import { useState } from "react";
 import { FiHeart, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -55,6 +57,7 @@ function PractitionerContactButton({
 
 export function SolidarityDirectory() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState<Cat | "all">("all");
@@ -106,6 +109,14 @@ export function SolidarityDirectory() {
                 i18nKey="economy:solidarityDirectory.count"
                 components={{ b: <b /> }}
                 values={{ count: items.length }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(items.length)}
+                      numericValue={items.length}
+                    />
+                  ),
+                }}
               />
             </div>
           </div>

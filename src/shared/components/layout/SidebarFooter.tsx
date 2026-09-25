@@ -16,6 +16,8 @@ import { useTheme } from "../../../app/providers/themeContext";
 import { useUnreadMessages } from "../../../features/messages/api/useConversations";
 import { NotificationsBellMenu } from "../../../features/notifications/NotificationsBellMenu";
 import { useTranslation } from "../../i18n/useTranslation";
+import { useFormat } from "../../i18n/format";
+import { RollingNumber } from "../ui/RollingNumber";
 import { routes } from "../../../app/routeMap";
 import styles from "./Sidebar.module.css";
 
@@ -37,6 +39,7 @@ export function SidebarFooter({
   const { loggedIn } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { t } = useTranslation();
+  const fmt = useFormat();
   const unreadMessages = useUnreadMessages();
 
   return (
@@ -75,7 +78,12 @@ export function SidebarFooter({
           >
             <FiMessageSquare aria-hidden />
             {unreadMessages > 0 && (
-              <span className={styles.bellBadge}>{unreadMessages}</span>
+              <span className={styles.bellBadge}>
+                <RollingNumber
+                  value={fmt.number(unreadMessages)}
+                  numericValue={unreadMessages}
+                />
+              </span>
             )}
           </Link>
         )}

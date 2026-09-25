@@ -49,6 +49,22 @@ vi.mock("../api/useLinkPreview", () => ({
   hasPreviewContent: () => false,
 }));
 
+// `useMessageLinkCard` (the shared place-card/OG-card resolver) always calls
+// `useDirectoryPlace`, even for a non-place link, and only disables its own
+// fetch via `enabled`. That hook still reaches `useDemoMode`/`useAuth`/the
+// directory-listings context unconditionally, none of which this suite
+// mounts (none of its fixture URLs are place links, so the real hook would
+// never resolve a place anyway).
+vi.mock("../../marketing/api/useDirectory", () => ({
+  useDirectoryPlace: () => ({
+    place: undefined,
+    isLoading: false,
+    isError: false,
+    error: undefined,
+    refetch: vi.fn(),
+  }),
+}));
+
 const FAKE_CATALOG: Record<string, string> = {
   "messages:share.modalTitle": "Send in a message",
   "messages:share.searchPlaceholder": "Search conversations",

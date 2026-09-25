@@ -87,13 +87,13 @@ export const help: Catalog = {
     "Pesquisa ou filtra para encontrares um tópico que te interesse.\nAbre um tópico para leres as respostas e acrescentares a tua.\nCria uma nova publicação na caixa em baixo (só membros).",
   "community.forum.demo":
     'um tópico como "Encontro de junho: onde devíamos ir?" onde os membros dão as suas ideias.',
-  "connect.connections.title": "Ligações",
+  "connect.connections.title": "Conexões",
   "connect.connections.intro":
-    "Este é o teu centro de relações: todas as pessoas com quem estás ligado, além dos pedidos, recomendações e bloqueios à volta delas. É como acompanhas o teu círculo aqui.",
+    "Este é o teu centro de relações: todas as pessoas com quem estás ligado, além dos pedidos, votos de confiança e bloqueios à volta delas. É como acompanhas o teu círculo aqui.",
   "connect.connections.use":
-    "Muda de separador para veres ligações, pedidos recebidos e enviados, recomendações ou bloqueios.\nAceita ou recusa os pedidos à tua espera.\nEnvia mensagem a uma ligação ou convida alguém novo.",
+    "Muda de separador para veres conexões, pedidos recebidos e enviados, votos de confiança ou bloqueios.\nAceita ou recusa os pedidos à tua espera.\nEnvia mensagem a uma conexão ou convida alguém novo.",
   "connect.connections.demo":
-    "ligações como a Catarina, que te recomendou, aparecem ao lado de pedidos recebidos, como um do Daniel.",
+    "conexões como a Catarina, que te deu um voto de confiança, aparecem ao lado de pedidos recebidos, como um do Daniel.",
   "culture.hub.title": "Cultura",
   "culture.hub.intro":
     "A casa das artes e da noite queer: clubes de livros, cinema e música, encomendas abertas a artistas, uma montra de trabalho feito na comunidade e uma sala de rádio ao vivo. É onde a vida criativa da plataforma se junta.",
@@ -173,11 +173,11 @@ export const help: Catalog = {
     "a secção de finanças mostra para onde vão as contribuições dos membros, a par dos membros do conselho que orientam a plataforma.",
   "home.landing.title": "Boas-vindas",
   "home.landing.intro":
-    "Esta é a porta de entrada da QueerPulse: uma rede pequena, gerida pelos membros, para pessoas queer em Lisboa, onde cada membro entra por recomendação em vez de correr atrás de seguidores. A página inicial é a tua visita guiada ao que vais encontrar: pessoas, comunidades, encontros e apoio.",
+    "Esta é a porta de entrada da QueerPulse: uma rede pequena, gerida pelos membros, para pessoas queer em Lisboa, onde cada membro entra com um voto de confiança em vez de correr atrás de seguidores. A página inicial é a tua visita guiada ao que vais encontrar: pessoas, comunidades, encontros e apoio.",
   "home.landing.use":
     "Lê o destaque e desce a página para ver quem cá está e para que serve a rede.\nPede um convite para começar a tua adesão.\nExplora membros e comunidades para ganhares uma ideia antes de entrares.",
   "home.landing.demo":
-    'a página de entrada dá o tom com frases como "Uma rede queer, com raízes em Lisboa": uma rede por recomendação, de pessoas que conheces mesmo.',
+    'a página de entrada dá o tom com frases como "Uma rede queer, com raízes em Lisboa": uma rede construída sobre votos de confiança, de pessoas que conheces mesmo.',
   "housing.flatmates.title": "Colegas de casa",
   "housing.flatmates.intro":
     "Perfis de pessoas que procuram partilhar casa: tanto quem oferece um quarto como quem procura um. É uma forma mais tranquila de encontrar colegas de casa que combinam contigo, ainda antes de haver contrato.",
@@ -229,7 +229,7 @@ export const help: Catalog = {
     "os valores dizem-no com clareza: pequena por opção, sem economia de anúncios ou de dados, e o valor fica com a comunidade.",
   "members.hub.title": "Membros",
   "members.hub.intro":
-    "Este é o diretório da comunidade: toda a lista de membros num só sítio, para encontrares as pessoas que realmente queres conhecer. É aqui que a ligação começa.",
+    "Este é o diretório da comunidade: toda a lista de membros num só sítio, para encontrares as pessoas que realmente queres conhecer. É aqui que a conexão começa.",
   "members.hub.use":
     "Pesquisa ou percorre a grelha de membros.\nAbre os Filtros para afinar por identidade, bairro, área ou idioma.\nToca num cartão para ler o perfil de alguém e fazer contacto.",
   "members.hub.demo":
@@ -280,7 +280,7 @@ export const help: Catalog = {
   "safety.hub.intro":
     "Um diretório validado pela comunidade de locais que conquistaram o selo de espaço seguro, mais um registo honesto dos que o perderam. Ajuda-te a encontrar um sítio onde relaxar sendo quem és.",
   "safety.hub.use":
-    "Explora os espaços seguros verificados no diretório.\nAbre um local para ler as suas promessas, avaliações e recomendações.\nNomeia um espaço em que confias, ou sinaliza um que falhou à comunidade.",
+    "Explora os espaços seguros verificados no diretório.\nAbre um local para ler as suas promessas, avaliações e votos de confiança.\nNomeia um espaço em que confias, ou sinaliza um que falhou à comunidade.",
   "safety.hub.demo":
     "o registo mantém-se transparente, por isso um local que perdeu o selo, como o Purex, guarda uma nota a explicar porquê.",
   "settings.hub.title": "Definições",

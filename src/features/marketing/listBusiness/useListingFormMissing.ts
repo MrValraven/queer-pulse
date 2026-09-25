@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import {
   allSocialsValid,
   anyDayOpen,
-  emailValid,
   hoursExceptionsValid,
   hoursValid,
   ANCHOR,
@@ -125,17 +124,6 @@ export function useListingFormMissing(
       add(s4, "marketing:listBusiness.missing.ownerName", ANCHOR.ownerName);
     if (isClaim && !draft.ownerRole.trim())
       add(s4, "marketing:listBusiness.missing.ownerRole", ANCHOR.ownerRole);
-    if (
-      isClaim &&
-      isOwnerEditing &&
-      isOwnerAuthored &&
-      !emailValid(draft.contactEmail)
-    )
-      add(
-        s4,
-        "marketing:listBusiness.missing.contactEmail",
-        ANCHOR.contactEmail,
-      );
     // Accessibility: any photo that's present needs alt text, on both paths
     // (item #8). An empty slot never blocks.
     const photoNeedsAlt = PHOTO_KEYS.some(

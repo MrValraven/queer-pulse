@@ -14,6 +14,8 @@ import { useUnreadCount } from "../../../features/notifications/api/useUnreadCou
 import { NotificationsBellMenu } from "../../../features/notifications/NotificationsBellMenu";
 import { useUnreadMessages } from "../../../features/messages/api/useConversations";
 import { useTranslation } from "../../i18n/useTranslation";
+import { useFormat } from "../../i18n/format";
+import { RollingNumber } from "../ui/RollingNumber";
 import { MegaNav } from "./MegaNav";
 import { LandingNav } from "./LandingNav";
 import { NavBrand } from "./NavBrand";
@@ -53,6 +55,7 @@ function NotificationsBell({
   // wins when a page passes one (e.g. the Notifications page's own live count).
   const liveCount = useUnreadCount();
   const { t } = useTranslation();
+  const fmt = useFormat();
   const count = unreadCount ?? liveCount;
   const bellIcon = (
     <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
@@ -85,7 +88,11 @@ function NotificationsBell({
       aria-label={t("nav:notifications")}
     >
       {bellIcon}
-      {count > 0 && <span className={styles.bellBadge}>{count}</span>}
+      {count > 0 && (
+        <span className={styles.bellBadge}>
+          <RollingNumber value={fmt.number(count)} numericValue={count} />
+        </span>
+      )}
     </Link>
   );
 }
@@ -96,6 +103,7 @@ function MessagesLink() {
   // page has to thread a count down. Mirrors NotificationsBell exactly.
   const count = useUnreadMessages();
   const { t } = useTranslation();
+  const fmt = useFormat();
   // The badge is sighted-only (DES-191): the count rides along in the
   // accessible name too, so a blind member hears "Messages, 3 unread"
   // instead of just "Messages".
@@ -108,7 +116,11 @@ function MessagesLink() {
       }
     >
       <MessageIcon />
-      {count > 0 && <span className={styles.bellBadge}>{count}</span>}
+      {count > 0 && (
+        <span className={styles.bellBadge}>
+          <RollingNumber value={fmt.number(count)} numericValue={count} />
+        </span>
+      )}
     </Link>
   );
 }

@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
+import { useFormat } from "../../i18n/format";
 import styles from "./ChipSelect.module.css";
+import { RollingNumber } from "./RollingNumber";
 
 export interface ChipOption {
   value: string;
@@ -136,6 +138,7 @@ export function ChipSelect({
   maxSelected,
   id,
 }: ChipSelectProps) {
+  const fmt = useFormat();
   const isAtCap = maxSelected !== undefined && selected.size >= maxSelected;
   return (
     <div
@@ -172,7 +175,10 @@ export function ChipSelect({
             {o.label}
             {o.count !== undefined && (
               <span className={styles.chipCount} aria-hidden>
-                {o.count}
+                <RollingNumber
+                  value={fmt.number(o.count)}
+                  numericValue={o.count}
+                />
               </span>
             )}
           </button>

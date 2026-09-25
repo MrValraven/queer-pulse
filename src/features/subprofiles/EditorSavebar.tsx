@@ -1,11 +1,5 @@
 import { useId, useState, type CSSProperties } from "react";
-import {
-  FiChevronDown,
-  FiChevronUp,
-  FiEye,
-  FiEyeOff,
-  FiSmartphone,
-} from "react-icons/fi";
+import { FiEye, FiEyeOff, FiSmartphone } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useMediaQuery } from "../../shared/hooks";
 import { useVisualViewportInset } from "../../shared/hooks/useVisualViewportInset";
@@ -13,6 +7,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { PendingChangesList } from "./PendingChangesList";
 import { MobilePersonaPreview } from "./MobilePersonaPreview";
+import {
+  PendingCountLabel,
+  SavebarSummaryToggle,
+} from "./EditorSavebarSummary";
 
 /**
  * Sticky-bottom `.savebar` pill (global class, `persona-editor.css`), now the
@@ -136,20 +134,12 @@ export function EditorSavebar({
         <div className="savebar-changes">
           {isCompact ? (
             <>
-              <button
-                type="button"
-                className="savebar-summary"
-                aria-expanded={changesOpen}
-                aria-controls={changesListId}
-                onClick={() => setChangesOpen((open) => !open)}
-              >
-                {t("subprofiles:pending.summary", { count: pending.length })}
-                {changesOpen ? (
-                  <FiChevronUp size={16} aria-hidden />
-                ) : (
-                  <FiChevronDown size={16} aria-hidden />
-                )}
-              </button>
+              <SavebarSummaryToggle
+                count={pending.length}
+                isOpen={changesOpen}
+                listId={changesListId}
+                onToggle={() => setChangesOpen((open) => !open)}
+              />
               <div id={changesListId} hidden={!changesOpen}>
                 <PendingChangesList pending={pending} />
               </div>
@@ -184,9 +174,14 @@ export function EditorSavebar({
             onClick={() => void saveAll()}
             disabled={saving || !canSave}
           >
-            {saving
-              ? t("subprofiles:pending.saving")
-              : t("subprofiles:pending.saveAll", { count: pending.length })}
+            {saving ? (
+              t("subprofiles:pending.saving")
+            ) : (
+              <PendingCountLabel
+                i18nKey="subprofiles:pending.saveAll"
+                count={pending.length}
+              />
+            )}
           </Button>
         </div>
       </div>

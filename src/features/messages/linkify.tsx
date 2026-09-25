@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiExternalLink } from "react-icons/fi";
 import { messages as enMessages } from "../../shared/i18n/catalogs/en/messages";
 import { messages as ptMessages } from "../../shared/i18n/catalogs/pt/messages";
@@ -245,11 +246,119 @@ function ChatLinkAnchor({ href }: { href: string }) {
   );
 }
 
-/** Render `text` with URLs turned into safe new-tab anchors; plain text stays escaped. */
-export function renderWithLinks(text: string): ReactNode {
+/** What a shared QueerPulse directory place link swaps its URL for, passed as
+ *  `renderWithLinks`'s optional second argument, resolved by
+ *  `resolveChatPlaceLink` (chatPlaceLink.ts) from `useMessageLinkCard`, and
+ *  shared by `TextBubble` (MessageBubbleBody.tsx) and `ShareToChatPreview` so
+ *  the sent bubble and its live preview can never render this differently. */
+export interface ChatPlaceLinkInfo {
+  /** The exact URL this was resolved for: the same normalized form
+   *  `firstLinkUrl` produces (a bare `www.` host already has `https://`), so a
+   *  URL match found while splitting `text` can be compared to it with `===`.
+   *  Only a match equal to this URL is swapped; any other URL in the same
+   *  message renders through the ordinary `ChatLinkAnchor` path. */
+  url: string;
+  /** The resolved place's display name, the text the swapped link renders. */
+  name: string;
+  /** The in-app route to the place (`businessPath(place.slug)`). */
+  to: string;
+}
+
+/** One place-name link: an in-app route, styled like the raw-URL anchor it
+ *  replaces (`styles.chatLink`, the same class `ChatLinkAnchor` uses) so it
+ *  reads as a link on both a sent (plum) and received (paper) bubble, but with
+ *  no external-link icon and no new tab, since it never leaves the app. */
+function PlaceLinkAnchor({ to, name }: { to: string; name: string }) {
+  return (
+    <Link className={styles.chatLink} to={to}>
+      {name}
+    </Link>
+  );
+}
+
+/** URL-only linkification: turns every URL match in `text` into a safe
+ *  new-tab anchor, leaving everything else untouched. This is the entire body
+ *  `renderWithLinks` had before the place-link swap existed, and it stays the
+ *  no-placeLink path AND the renderer `renderWithLinks` reuses for the text
+ *  that precedes a swapped place link, so a second URL earlier in the same
+ *  message (a plain share link, say) still renders exactly as it always has. */
+function renderPlainLinks(text: string): ReactNode {
   const parts = text.split(URL_PATTERN);
   return parts.map((part, index) => {
     if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
+    const href = part.startsWith("www.") ? `https://${part}` : part;
+    return <ChatLinkAnchor key={index} href={href} />;
+  });
+}
+
+/**
+ * Render `text` with URLs turned into safe new-tab anchors; plain text stays
+ * escaped.
+ *
+ * With `placeLink` given and a URL matching `placeLink.url` present, that one
+ * URL is swapped for a `PlaceLinkAnchor` instead. Display-only: the STORED
+ * message text never changes, only what's rendered does. Two shapes:
+ *
+ *  - trailing: `placeLink.url` is the last thing in `text` (only whitespace,
+ *    if anything, follows it, which is what a note plus `buildShareBody`'s
+ *    `\n<url>` line produces). The text before it renders as usual (trimmed
+ *    of the trailing whitespace/newline that separated it from the URL, so
+ *    the newline never survives into the rendered run), then an en dash, then
+ *    the place-name link, all on one run.
+ *  - mid-text: something other than whitespace follows `placeLink.url`. Only
+ *    that URL token is swapped for the place-name link, in place, with no
+ *    dash; everything else in `text` renders exactly as it does today.
+ *
+ * A message with no match for `placeLink.url` at all (shouldn't happen:
+ * callers only pass a `placeLink` once its own `useMessageLinkCard` resolved
+ * against this same text's first link) falls back to the plain path rather
+ * than silently dropping content.
+ */
+export function renderWithLinks(
+  text: string,
+  placeLink?: ChatPlaceLinkInfo,
+): ReactNode {
+  if (!placeLink) return renderPlainLinks(text);
+
+  const parts = text.split(URL_PATTERN);
+  let targetIndex = -1;
+  for (let index = 1; index < parts.length; index += 2) {
+    const raw = parts[index] ?? "";
+    const href = raw.startsWith("www.") ? `https://${raw}` : raw;
+    if (href === placeLink.url) {
+      targetIndex = index;
+      break;
+    }
+  }
+  if (targetIndex === -1) return renderPlainLinks(text);
+
+  const isTrailingLink =
+    parts
+      .slice(targetIndex + 1)
+      .join("")
+      .trim() === "";
+
+  if (isTrailingLink) {
+    const precedingText = parts
+      .slice(0, targetIndex)
+      .join("")
+      .replace(/\s+$/, "");
+    return (
+      <>
+        {precedingText && renderPlainLinks(precedingText)}
+        {precedingText && " – "}
+        <PlaceLinkAnchor to={placeLink.to} name={placeLink.name} />
+      </>
+    );
+  }
+
+  return parts.map((part, index) => {
+    if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
+    if (index === targetIndex) {
+      return (
+        <PlaceLinkAnchor key={index} to={placeLink.to} name={placeLink.name} />
+      );
+    }
     const href = part.startsWith("www.") ? `https://${part}` : part;
     return <ChatLinkAnchor key={index} href={href} />;
   });

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiThumbsUp } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -38,6 +40,7 @@ export function DirectoryReviewHelpful({
   isReadOnly,
 }: Props) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { user } = useAuth();
   const { showToast } = useToast();
   const helpfulVote = useReviewHelpful(slug);
@@ -55,7 +58,9 @@ export function DirectoryReviewHelpful({
     <>
       <FiThumbsUp aria-hidden />
       {label}
-      <span className={s.helpfulCount}>{count}</span>
+      <span className={s.helpfulCount}>
+        <RollingNumber value={fmt.number(count)} numericValue={count} />
+      </span>
     </>
   );
 

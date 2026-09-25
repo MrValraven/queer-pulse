@@ -3,6 +3,15 @@ import type { Catalog, TranslateOptions } from "./types";
 const INTERPOLATION = /\{(\w+)\}/g;
 
 /**
+ * Private-use prefix for a slot override: `values[SLOT_VALUE_PREFIX + token]`
+ * fills `{token}` ahead of `values[token]`. `<Translation slots>` uses it to
+ * drop a marker where a React node goes while `values.count` stays the real
+ * number for plural selection. A `{token}` is `\w+`, so no catalog token or
+ * existing caller can reach this key by accident.
+ */
+export const SLOT_VALUE_PREFIX = "\uE000";
+
+/**
  * Split a `"namespace:path"` key. A key without a colon defaults to the
  * `common` namespace, so short shared keys stay ergonomic.
  */
@@ -28,7 +37,7 @@ export function interpolate(
 ): string {
   if (!values) return template;
   return template.replace(INTERPOLATION, (match, token: string) => {
-    const value = values[token];
+    const value = values[SLOT_VALUE_PREFIX + token] ?? values[token];
     return value === undefined ? match : String(value);
   });
 }

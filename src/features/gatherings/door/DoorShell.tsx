@@ -3,6 +3,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
 import { Footer } from "../../../shared/components/layout";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "../GatheringDashboardPage.module.css";
@@ -106,14 +107,26 @@ export function DoorShell({
               {renderGatheringTitle(title)}
             </div>
             <div className={styles.heroStats}>
-              {stats.map((stat) => (
-                <div key={stat.labelKey}>
-                  <div className={styles.hsN}>
-                    {stat.emphasis ? <em>{stat.value}</em> : stat.value}
+              {stats.map((stat) => {
+                // A count rolls as check-ins land; a phrase stays as written.
+                const figure =
+                  typeof stat.value === "number" ? (
+                    <RollingNumber
+                      value={fmt.number(stat.value)}
+                      numericValue={stat.value}
+                    />
+                  ) : (
+                    stat.value
+                  );
+                return (
+                  <div key={stat.labelKey}>
+                    <div className={styles.hsN}>
+                      {stat.emphasis ? <em>{figure}</em> : figure}
+                    </div>
+                    <div className={styles.hsL}>{t(stat.labelKey)}</div>
                   </div>
-                  <div className={styles.hsL}>{t(stat.labelKey)}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             {statsNote ? (
               <p className={styles.heroStatsNote}>{statsNote}</p>

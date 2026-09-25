@@ -64,7 +64,8 @@ Every page wraps itself in one of two frames (don't hand-roll nav/footer):
 
 - `components/ui` — design-system primitives with a barrel `index.ts` (`Button`, `Card`, `Tag`, `Avatar`, `ImageSlot`, `Eyebrow`, `SectionHead`, `VisibilityBadge`, `Skeleton`, `Reveal`).
 - `components/layout` — shells + nav/footer.
-- `hooks` — `useScrollLock`, `useScrolled`, `useScrollReveal`, `useCountUp`, `useMediaQuery`, `usePrefersReducedMotion`.
+- `hooks` — `useScrollLock`, `useScrolled`, `useScrollReveal`, `useMediaQuery`, `usePrefersReducedMotion`.
+- Numbers that change on screen animate with `RollingNumber` (`components/ui/RollingNumber.tsx`, `revealFrom` rolls one in on reveal); a count inside a catalog sentence goes through `<Translation slots>`.
 
 Self-contained modals own their state and call `useScrollLock()` unconditionally (they're only mounted when open). Self-contained tabs/sections own their local state to avoid prop drilling.
 

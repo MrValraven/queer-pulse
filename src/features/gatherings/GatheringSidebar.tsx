@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiLock, FiVideo } from "react-icons/fi";
 import { Avatar, type AvatarTint } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { initialsFromParts } from "../../shared/lib/initials";
@@ -111,7 +112,12 @@ export function GatheringSidebar({
 
       {spotsCount !== undefined ? (
         <div className={styles.spotsRow}>
-          <div className={styles.spotsNum}>{spotsCount}</div>
+          <div className={styles.spotsNum}>
+            <RollingNumber
+              value={fmt.number(spotsCount)}
+              numericValue={spotsCount}
+            />
+          </div>
           <div className={styles.spotsLbl}>
             {t("gatherings:gathering.spotsRemainingLabel")}
             <br />

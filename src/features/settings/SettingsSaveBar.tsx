@@ -1,6 +1,9 @@
 import { useId, useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { changeLabelKey } from "./settings.data";
 import styles from "./SettingsSaveBar.module.css";
@@ -26,6 +29,7 @@ export function SettingsSaveBar({
   onSave: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [expanded, setExpanded] = useState(false);
   const panelId = useId();
   const hasChanges = changedKeys.length > 0;
@@ -53,9 +57,22 @@ export function SettingsSaveBar({
             aria-controls={panelId}
             onClick={() => setExpanded((v) => !v)}
           >
-            {t("settings:page.saveBar.changesCount", {
-              count: changedKeys.length,
-            })}
+            {/* One span keeps the sentence a single flex item beside the
+                chevron, so the toggle's gap never lands inside it. */}
+            <span>
+              <Translation
+                i18nKey="settings:page.saveBar.changesCount"
+                values={{ count: changedKeys.length }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(changedKeys.length)}
+                      numericValue={changedKeys.length}
+                    />
+                  ),
+                }}
+              />
+            </span>
             {expanded ? (
               <FiChevronUp aria-hidden />
             ) : (

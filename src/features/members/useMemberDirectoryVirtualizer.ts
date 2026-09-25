@@ -1,10 +1,4 @@
-import {
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useLayoutEffect, useMemo, useState, type RefObject } from "react";
 import {
   useWindowVirtualizer,
   type Virtualizer,
@@ -13,26 +7,21 @@ import type { MemberCard } from "./memberDirectoryFilter.data";
 
 /** Mirrors `.mGrid`'s `repeat(auto-fill, minmax(280px, 1fr))` / `gap: 14px`
  *  (`MemberDirectoryFilterPage.module.css`) so the row grouping below produces
- *  exactly the column count that CSS grid would have laid out on its own —
+ *  exactly the column count that CSS grid would have laid out on its own;
  *  keep these two in sync if that rule ever changes. */
 const MIN_CARD_WIDTH_PX = 280;
 const GRID_GAP_PX = 14;
 /** Rough pre-measurement guess for one row's height (avatar + name + the
- *  two-line-reserved role + a tag row + the footer, per `.mCard`) —
+ *  two-line-reserved role + a tag row + the footer, per `.mCard`);
  *  `measureElement` (wired in `MemberResultsGrid`) corrects it to the real
  *  rendered height on first paint, same as
  *  `useMessageRowVirtualizer`'s `estimateRowHeight`. */
 const ESTIMATED_ROW_HEIGHT_PX = 236;
 
 export interface MemberDirectoryVirtualizerResult {
-  /** Attach to the grid's own wrapper. Both its measured width (column
-   *  count) and its position on the page (the virtualizer's `scrollMargin` —
-   *  the whole page, not a bounded box, is what scrolls here) are read off
-   *  this node. */
-  containerRef: RefObject<HTMLDivElement | null>;
   /** How many cards fit per row at the container's current width. */
   columnCount: number;
-  /** `members` grouped into `columnCount`-sized rows — one virtualized item
+  /** `members` grouped into `columnCount`-sized rows, one virtualized item
    *  per row, matching the CSS grid's own line-wrapping. */
   rows: MemberCard[][];
   rowVirtualizer: Virtualizer<Window, Element>;
@@ -42,22 +31,32 @@ export interface MemberDirectoryVirtualizerResult {
  * Windows the member-directory results grid so a fully-scrolled, heavily
  * filtered directory mounts only the rows near the viewport instead of every
  * card fetched so far (was `useIncrementalList`, which only capped the
- * *initial* mount — every revealed card stayed mounted forever once
+ * *initial* mount: every revealed card stayed mounted forever once
  * scrolled into view; see that hook's own doc comment).
  *
  * The grid is a normal part of the page's document flow (scrolled by the
- * window, not a bounded `overflow` box — `PullToRefresh` is deliberately used
+ * window, not a bounded `overflow` box; `PullToRefresh` is deliberately used
  * here without its `scrollable` prop, see that component's doc comment), so
  * this uses `useWindowVirtualizer` rather than `MessageArea`'s
  * bounded-container `useVirtualizer`, and groups cards into rows of
- * `columnCount` so one virtual item covers one grid row — the multi-column
+ * `columnCount` so one virtual item covers one grid row, the multi-column
  * shape `useMessageRowVirtualizer`'s single-column chat log doesn't have to
  * solve.
  */
 export function useMemberDirectoryVirtualizer(
   members: MemberCard[],
+  /** The grid's own wrapper, owned by the caller (`MemberResultsGrid`) so
+   *  `useShuffledMembers` can measure the same node. Both its measured width
+   *  (column count) and its position on the page (the virtualizer's
+   *  `scrollMargin`: the whole page is what scrolls here) are read off it. */
+  containerRef: RefObject<HTMLDivElement | null>,
+  /** True during a result-set shuffle (`useShuffledMembers`): a row
+   *  re-measured mid-shuffle then leaves the window scroll where it is, so the
+   *  gliding cards and fading ghosts keep their painted positions. It turns
+   *  true in the commit before the swap, ahead of the rows the swap commit
+   *  mounts and measures. */
+  shouldSuspendScrollAdjustment: boolean,
 ): MemberDirectoryVirtualizerResult {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [columnCount, setColumnCount] = useState(1);
   const [scrollMargin, setScrollMargin] = useState(0);
 
@@ -75,7 +74,7 @@ export function useMemberDirectoryVirtualizer(
     // Position, not just size, matters for `scrollMargin`: content ABOVE the
     // grid (the header skeleton swapping for the real header, the applied
     // filter chips row appearing/disappearing) shifts the grid down the page
-    // without the grid's own box ever resizing — so this is driven by a
+    // without the grid's own box ever resizing, so this is driven by a
     // `document.body` observer, not just the grid's own ResizeObserver below.
     const recomputeScrollMargin = () => {
       const top = node.getBoundingClientRect().top + window.scrollY;
@@ -96,7 +95,7 @@ export function useMemberDirectoryVirtualizer(
       positionObserver.disconnect();
       window.removeEventListener("resize", recomputeScrollMargin);
     };
-  }, []);
+  }, [containerRef]);
 
   const rows = useMemo(() => {
     const grouped: MemberCard[][] = [];
@@ -113,9 +112,18 @@ export function useMemberDirectoryVirtualizer(
     // down" doesn't outrun the mounted window and flash empty space.
     overscan: 4,
     scrollMargin,
-    getItemKey: (index) =>
-      rows[index]?.map((member) => member.slug).join("|") ?? index,
+    // Rows keep the default index keys: a row element and its measured
+    // height survive a result-set change, and cards move between rows by
+    // their own slug keys (the shuffle's shared `layoutId` covers that).
   });
 
-  return { containerRef, columnCount, rows, rowVirtualizer };
+  // TanStack Virtual exposes this predicate only as an instance field;
+  // `undefined` restores its default compensation.
+  useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability -- TanStack Virtual v3.17 exposes this predicate only as a public instance field (no option exists), and the instance is a stable object owned by useWindowVirtualizer.
+    rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange =
+      shouldSuspendScrollAdjustment ? () => false : undefined;
+  }, [rowVirtualizer, shouldSuspendScrollAdjustment]);
+
+  return { columnCount, rows, rowVirtualizer };
 }

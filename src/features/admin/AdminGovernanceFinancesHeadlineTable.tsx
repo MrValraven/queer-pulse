@@ -1,5 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import { AmountInput } from "./AdminGovernanceFinancesEditCells";
 import { rowClass } from "./adminGovernanceFinancesEditRow";
@@ -109,7 +110,10 @@ export function HeadlineTable({
               </td>
               <td data-label={columns.newValue}>
                 <output className={styles.surplusPreview}>
-                  {fmt.currency(surplusPreview, "EUR")}
+                  <RollingNumber
+                    value={fmt.currency(surplusPreview, "EUR")}
+                    numericValue={surplusPreview}
+                  />
                 </output>
               </td>
             </tr>

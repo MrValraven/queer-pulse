@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { QueueRow } from "./adminDashboard.data";
@@ -7,6 +9,7 @@ import styles from "./AdminDashboardPage.module.css";
 
 export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   // The rows are already ordered by triage urgency (safety → reports →
   // verifications → appeals). The old "Sorted by urgency" control was inert — it
@@ -35,7 +38,9 @@ export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
                   {t(subKey)} {subEmKey && <em>{t(subEmKey)}</em>}
                 </span>
               </span>
-              <span className={styles.qCount}>{count}</span>
+              <span className={styles.qCount}>
+                <RollingNumber value={fmt.number(count)} numericValue={count} />
+              </span>
               <FiArrowRight className={styles.qArrow} aria-hidden />
             </Link>
           ),

@@ -43,7 +43,8 @@ import {
  * so they get the role field and a line explaining the rest; and the two
  * permissions are the owner's grant, so they are read-only there. Both roles
  * read the same History of who changed what. The owner alone gets a last
- * block, the Danger zone, because only the owner can delete a listing.
+ * block, the Danger zone, because only the owner can delete a listing, and
+ * it renders only once its jump-nav entry is pressed.
  * Everything else about the business is identical for both roles.
  *
  * Trading state and directory visibility share ONE section on purpose. They
@@ -57,6 +58,7 @@ export function ListingEditorSections({
   listing,
   userName,
   uploadPhoto,
+  isDangerZoneOpen,
   onConfirmDelete,
 }: {
   form: ListingForm;
@@ -66,6 +68,8 @@ export function ListingEditorSections({
     file: File,
     options?: { crop?: CropRect },
   ) => Promise<{ key: string; previewUrl: string }>;
+  /** The Danger zone stays off the page until its jump-nav entry opens it. */
+  isDangerZoneOpen: boolean;
   /** The Danger zone's delete: resolves once the server has deleted the
    *  listing, rejects on failure. */
   onConfirmDelete: () => Promise<void>;
@@ -150,7 +154,7 @@ export function ListingEditorSections({
         <ListingHistorySection listingRef={listing.ref} />
       </ListingEditorSection>
 
-      {!isCoManagerView && (
+      {!isCoManagerView && isDangerZoneOpen && (
         <ListingEditorSection section={section.dangerZone}>
           <ListingDangerZoneSection
             listingName={listing.name}

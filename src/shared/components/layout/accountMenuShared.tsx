@@ -338,3 +338,29 @@ export function AccountMenuControls({
     </>
   );
 }
+
+/**
+ * The text of one account link row: the label, plus the row's one-line hint
+ * beneath it when the item carries a `hintKey`. Shared by the desktop
+ * {@link AccountMenu} grid and the mobile `AccountSheet` so both surfaces
+ * describe a row with the same markup. The hint is plain visible text inside
+ * the link, so it joins the link's accessible name on purpose.
+ */
+export function AccountItemLabel({
+  labelKey,
+  hintKey,
+}: {
+  labelKey: string;
+  hintKey?: string;
+}) {
+  const { t } = useTranslation();
+  if (!hintKey) {
+    return <span className={styles.itemLabel}>{t(labelKey)}</span>;
+  }
+  return (
+    <span className={styles.itemText}>
+      <span className={styles.itemLabel}>{t(labelKey)}</span>
+      <span className={styles.itemHint}>{t(hintKey)}</span>
+    </span>
+  );
+}

@@ -6,7 +6,7 @@ import {
   StatGrid,
   StatTile,
 } from "../../shared/components/ui";
-import { useCountUp } from "../../shared/hooks/useCountUp";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { StatCard } from "./adminDashboard.data";
@@ -60,24 +60,19 @@ function AdminStatCard({
     notMeasured,
     to,
   } = stat;
-  const target = decimal ? Math.round(value * 10) : value;
-  // Hold at the start value until the skeleton clears, then count up on
-  // reveal — an un-backed metric has nothing to count up to, so it never
-  // animates in the first place.
-  const countValue = useCountUp(target, {
-    active: !loading && !notMeasured,
-    durationMs: 1200,
-  });
+  // Whole numbers, or tenths for a one-decimal tile.
+  const target = decimal ? Math.round(value * 10) : Math.round(value);
   // `Intl` owns the unit mark and the space (if any) in front of it, so the
   // tile reads "3.2 hr" in en and "3,2 h" in pt without a catalog key. It is
-  // asked about the tile's real target rather than the mid-animation count, so
-  // a plural-sensitive mark settles on the form the finished number needs.
+  // asked about the tile's real value rather than the rolling figure, so a
+  // plural-sensitive mark settles on the form the finished number needs.
   const unitSuffix = unit ? fmt.unitSuffix(value, unit) : "";
-  const display = decimal
-    ? (countValue / 10).toFixed(1)
-    : comma
-      ? fmt.number(countValue)
-      : String(countValue);
+  const formatFigure = (figure: number) =>
+    decimal
+      ? (figure / 10).toFixed(1)
+      : comma
+        ? fmt.number(figure)
+        : String(figure);
   const TrendIcon = TREND_ICON[trend.dir];
 
   return (
@@ -101,9 +96,15 @@ function AdminStatCard({
             {t("admin:dashboard.notMeasuredYet")}
           </span>
         ) : (
+          // Mounts once the skeleton clears and rolls up from zero; an
+          // un-backed metric shows its placeholder, so it never rolls.
           <span className={styles.statNum}>
             {prefix}
-            {display}
+            <RollingNumber
+              value={formatFigure(target)}
+              numericValue={target}
+              revealFrom={{ value: formatFigure(0), numericValue: 0 }}
+            />
             {unitSuffix && <small>{unitSuffix}</small>}
           </span>
         )

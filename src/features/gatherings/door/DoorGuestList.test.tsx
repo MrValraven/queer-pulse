@@ -30,6 +30,12 @@ function attendee(slug: string, hasArrived: boolean): AttendeeRow {
 
 const ROSTER: AttendeeRow[] = [attendee("ari", true), attendee("bo", false)];
 
+/** A chip by its spoken label. The count inside is a RollingNumber, so the
+ *  chip's text is split across nodes; its accessible name reads it whole. */
+function findChip(name: string) {
+  return screen.findByRole("button", { name });
+}
+
 function renderList(
   checkedInCount: number | null,
   attendees = ROSTER,
@@ -56,10 +62,14 @@ describe("DoorGuestList arrival chips", () => {
   it("counts arrived and still-expected while check-ins are kept", async () => {
     renderList(1);
 
-    expect(await screen.findByText("All (2)")).toBeInTheDocument();
-    expect(screen.getByText("Checked in (1)")).toBeInTheDocument();
+    expect(await findChip("All (2)")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Checked in (1)" }),
+    ).toBeInTheDocument();
     // Derived by subtraction: two on the roster, one through the door.
-    expect(screen.getByText("Not yet (1)")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Not yet (1)" }),
+    ).toBeInTheDocument();
     expect(
       screen.queryByText(/no longer kept for past gatherings/i),
     ).not.toBeInTheDocument();
@@ -68,8 +78,10 @@ describe("DoorGuestList arrival chips", () => {
   it("keeps zero meaning zero: nobody has arrived yet", async () => {
     renderList(0, [attendee("ari", false), attendee("bo", false)]);
 
-    expect(await screen.findByText("Checked in (0)")).toBeInTheDocument();
-    expect(screen.getByText("Not yet (2)")).toBeInTheDocument();
+    expect(await findChip("Checked in (0)")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Not yet (2)" }),
+    ).toBeInTheDocument();
     // A real zero is a count, so nothing here says the record is gone.
     expect(
       screen.queryByText(/no longer kept for past gatherings/i),
@@ -80,11 +92,15 @@ describe("DoorGuestList arrival chips", () => {
     renderList(null);
 
     // The roster total is still a fact, so it stays.
-    expect(await screen.findByText("All (2)")).toBeInTheDocument();
+    expect(await findChip("All (2)")).toBeInTheDocument();
     // Neither derived number is knowable, so neither is offered. In
     // particular nothing renders as "(0)", "(NaN)" or an empty chip.
-    expect(screen.queryByText(/^Checked in \(/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/^Not yet \(/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Checked in \(/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^Not yet \(/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("explains in plain words why the arrival counts are absent", async () => {

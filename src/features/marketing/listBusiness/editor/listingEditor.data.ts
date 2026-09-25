@@ -103,12 +103,7 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     key: "aboutYou",
     id: "lb-editor-about-you",
     labelKey: "marketing:listBusiness.editor.section.aboutYou",
-    anchors: [
-      ANCHOR.rel,
-      ANCHOR.ownerName,
-      ANCHOR.ownerRole,
-      ANCHOR.contactEmail,
-    ],
+    anchors: [ANCHOR.rel, ANCHOR.ownerName, ANCHOR.ownerRole],
   },
   {
     key: "coManagers",

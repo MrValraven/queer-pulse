@@ -8,6 +8,8 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { fullName, memberProfiles } from "./data/memberProfiles";
@@ -68,6 +70,7 @@ function FilterCheckboxSection({
   onToggleOption: (id: string) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <FilterSection
       title={title}
@@ -123,7 +126,7 @@ function FilterCheckboxSection({
                   .join(" ")}
                 aria-hidden
               >
-                {count}
+                <RollingNumber value={fmt.number(count)} numericValue={count} />
               </span>
             )}
           </label>
@@ -316,16 +319,43 @@ export function FiltersSidebar({
       </FilterSection>
 
       {hasSomethingToClear && (
-        <div className={styles.clearRow}>
-          <button type="button" onClick={onClearAll}>
-            {t("members:directory.clearAllFiltersCta")}
-          </button>
-          <span>
-            {t("members:directory.appliedCount", { count: appliedCount })}
-          </span>
-        </div>
+        <ClearAllRow appliedCount={appliedCount} onClearAll={onClearAll} />
       )}
     </aside>
+  );
+}
+
+/** The sidebar's closing row: "Clear all" beside the applied-filter tally,
+ *  whose number rolls as filters are ticked and unticked. */
+function ClearAllRow({
+  appliedCount,
+  onClearAll,
+}: {
+  appliedCount: number;
+  onClearAll: () => void;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <div className={styles.clearRow}>
+      <button type="button" onClick={onClearAll}>
+        {t("members:directory.clearAllFiltersCta")}
+      </button>
+      <span>
+        <Translation
+          i18nKey="members:directory.appliedCount"
+          values={{ count: appliedCount }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={fmt.number(appliedCount)}
+                numericValue={appliedCount}
+              />
+            ),
+          }}
+        />
+      </span>
+    </div>
   );
 }
 

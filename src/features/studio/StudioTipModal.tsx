@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiCheck, FiArrowRight, FiX } from "react-icons/fi";
 import { Button, useDismiss } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -38,6 +39,8 @@ export function StudioTipModal({
 
   const value = custom ? Number(custom) : amount;
   const canSend = value > 0 && !Number.isNaN(value);
+  // The send button's amount rolls as a preset or a custom amount is picked.
+  const sendAmount = value || 0;
 
   function send() {
     if (!canSend) return;
@@ -154,9 +157,21 @@ export function StudioTipModal({
                 </>
               ) : (
                 <>
-                  {t("studio:tipModal.sendCta", {
-                    amount: fmt.currency(value || 0),
-                  })}{" "}
+                  {/* One span keeps the label a single flex item, so the
+                      button's gap never opens beside the rolling amount. */}
+                  <span>
+                    <Translation
+                      i18nKey="studio:tipModal.sendCta"
+                      slots={{
+                        amount: (
+                          <RollingNumber
+                            value={fmt.currency(sendAmount)}
+                            numericValue={sendAmount}
+                          />
+                        ),
+                      }}
+                    />
+                  </span>{" "}
                   <FiArrowRight aria-hidden />
                 </>
               )}

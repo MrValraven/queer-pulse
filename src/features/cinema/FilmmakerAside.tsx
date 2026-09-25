@@ -3,6 +3,7 @@ import type { RefObject } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -58,9 +59,21 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
             )
           }
         >
-          {t("cinema:filmmaker.aside.sendCta", {
-            amount: fmt.currency(amount),
-          })}
+          {/* One span keeps the label a single flex item, so the button's
+              gap never opens between the words and the rolling amount. */}
+          <span>
+            <Translation
+              i18nKey="cinema:filmmaker.aside.sendCta"
+              slots={{
+                amount: (
+                  <RollingNumber
+                    value={fmt.currency(amount)}
+                    numericValue={amount}
+                  />
+                ),
+              }}
+            />
+          </span>
         </Button>
         <div className={styles.tjNote}>
           <Translation

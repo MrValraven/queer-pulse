@@ -1,7 +1,9 @@
 import { useId, useState } from "react";
 import { FiClock, FiLock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ThreadPoll, ThreadPollOption } from "./forum.data";
 import styles from "./ThreadPollCard.module.css";
@@ -156,7 +158,6 @@ function PollOptionRow({
   /** Total selections, or null while the results are withheld. */
   total: number | null;
 }) {
-  const { t } = useTranslation();
   const format = useFormat();
   // Two conditions, both required: the server released the results AND this
   // option carries a real count. Either one missing means there is no number.
@@ -192,10 +193,19 @@ function PollOptionRow({
       <span className={styles.optionLabel}>{option.label}</span>
       {count !== null && (
         <span className={styles.optionCount}>
-          {t("forum:poll.optionVotes", {
-            count,
-            formatted: format.number(count),
-          })}
+          {/* Mounts with the released count (static); later changes roll. */}
+          <Translation
+            i18nKey="forum:poll.optionVotes"
+            values={{ count }}
+            slots={{
+              formatted: (
+                <RollingNumber
+                  value={format.number(count)}
+                  numericValue={count}
+                />
+              ),
+            }}
+          />
         </span>
       )}
     </label>
@@ -227,10 +237,18 @@ function PollFootnote({
       )}
       {total !== null && (
         <span>
-          {t("forum:poll.totalVotes", {
-            count: total,
-            formatted: formatNumber(total),
-          })}
+          <Translation
+            i18nKey="forum:poll.totalVotes"
+            values={{ count: total }}
+            slots={{
+              formatted: (
+                <RollingNumber
+                  value={formatNumber(total)}
+                  numericValue={total}
+                />
+              ),
+            }}
+          />
         </span>
       )}
       {poll.isClosed ? (

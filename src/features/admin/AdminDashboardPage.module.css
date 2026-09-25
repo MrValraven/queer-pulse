@@ -114,7 +114,10 @@
   height: 16px;
   color: var(--accent-ink);
 }
+/* Inline-block gives this span its own 30px line box, so the rolling figure
+   (top-aligned, one line tall) shares a baseline with the prefix and unit. */
 .statNum {
+  display: inline-block;
   font-family: var(--serif);
   font-size: var(--text-30);
   font-weight: 500;

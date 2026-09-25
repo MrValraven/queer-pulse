@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -248,6 +249,9 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
   }, [reduced]);
 
   const total = tips.reduce((sum, tip) => sum + tip.amount, 0);
+  const rollingTotal = (
+    <RollingNumber value={fmt.currency(total)} numericValue={total} />
+  );
 
   return (
     <div className={s.col}>
@@ -262,6 +266,7 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
               i18nKey="studio:broadcast.aside.tipsTab"
               components={{ em: <em /> }}
               values={{ amount: fmt.currency(total) }}
+              slots={{ amount: rollingTotal }}
             />
           </button>
           <button
@@ -309,7 +314,7 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
                   components={{ em: <em /> }}
                 />
               </div>
-              <div className={s.tipTotalV}>{fmt.currency(total)}</div>
+              <div className={s.tipTotalV}>{rollingTotal}</div>
             </div>
           </>
         ) : (

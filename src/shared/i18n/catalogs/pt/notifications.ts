@@ -14,12 +14,12 @@ export const notifications: Catalog = {
   "type.connection_request.text": "Alguém quer ligar-se a ti.",
   "type.connection_request.textNamed":
     "<profile>{name}</profile> quer ligar-se a ti.",
-  "type.connection_request.meta": "Pedido de ligação",
+  "type.connection_request.meta": "Pedido de conexão",
 
-  "type.connection_accepted.text": "O teu pedido de ligação foi aceite.",
+  "type.connection_accepted.text": "O teu pedido de conexão foi aceite.",
   "type.connection_accepted.textNamed":
-    "<profile>{name}</profile> aceitou o teu pedido de ligação.",
-  "type.connection_accepted.meta": "Ligação",
+    "<profile>{name}</profile> aceitou o teu pedido de conexão.",
+  "type.connection_accepted.meta": "Conexão",
 
   "type.vouch_received.text": "Alguém te deu um voto de confiança.",
   "type.vouch_received.textNamed":
@@ -795,8 +795,8 @@ export const notifications: Catalog = {
   "list.6.meta": "Grupo de leitura · Lembrete",
   "list.6.spots_one": "Ainda há {count} vaga aberta.",
   "list.6.spots_other": "Ainda há {count} vagas abertas.",
-  "list.7.text": "<strong>{name}</strong> aceitou o teu pedido de ligação.",
-  "list.7.meta": "Ligação",
+  "list.7.text": "<strong>{name}</strong> aceitou o teu pedido de conexão.",
+  "list.7.meta": "Conexão",
   "list.8.text":
     "Nova funcionalidade da plataforma: <strong>{feature}</strong> já suporta pacotes de serviços. Podes oferecer pacotes de várias sessões.",
   "list.8.meta": "Atualização da plataforma",

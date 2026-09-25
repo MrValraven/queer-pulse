@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, Reveal } from "../../../shared/components/ui";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../../shared/i18n/format";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useHowCommunitiesWorkModal } from "../../marketing/useHowCommunitiesWorkModal";
@@ -13,6 +15,7 @@ import styles from "./Communities.module.css";
 
 export function Communities() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { openModal, modalElement } = useHowCommunitiesWorkModal();
   const { state, patch, clear, visible, total, langOptions, hoodOptions } =
     useCommunityFilters();
@@ -83,6 +86,14 @@ export function Communities() {
               }
               values={{ count: shown, total }}
               components={{ b: <b /> }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(shown)}
+                    numericValue={shown}
+                  />
+                ),
+              }}
             />
           </p>
         </Reveal>

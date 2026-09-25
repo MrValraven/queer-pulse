@@ -1,5 +1,7 @@
 import { FiCheckCircle, FiClock, FiSlash } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RsvpStatus } from "./useGatheringRsvp";
@@ -133,6 +135,7 @@ export function RsvpConfirmedPanel({
   onMessageHost: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const isWaitlisted = status === "waitlisted";
   const isMaybe = status === "maybe";
 
@@ -142,6 +145,20 @@ export function RsvpConfirmedPanel({
       ? "gatherings:rsvpControl.maybeTitle"
       : "gatherings:rsvpControl.goingTitle";
 
+  const goingCountNote = (
+    <Translation
+      i18nKey="gatherings:rsvpControl.goingCount"
+      values={{ count: goingCount }}
+      slots={{
+        count: (
+          <RollingNumber
+            value={fmt.number(goingCount)}
+            numericValue={goingCount}
+          />
+        ),
+      }}
+    />
+  );
   const note = isWaitlisted
     ? waitlistPosition != null
       ? t("gatherings:rsvpControl.waitlistPosition", {
@@ -155,7 +172,7 @@ export function RsvpConfirmedPanel({
             : "gatherings:rsvpControl.maybeClosedNote",
         )
       : isCountVisible
-        ? t("gatherings:rsvpControl.goingCount", { count: goingCount })
+        ? goingCountNote
         : t("gatherings:rsvpControl.goingCountHidden");
 
   return (

@@ -4,6 +4,8 @@ import type {
   MessageReactionKey,
   ReactionSummary,
 } from "../../shared/contracts/contracts";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useReactionLabels } from "./useReactionLabels";
 import { useWhoReactedGesture } from "./useWhoReactedGesture";
@@ -36,6 +38,7 @@ function ReactionChip({
   onToggle: (key: MessageReactionKey, mine: boolean) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const labels = useReactionLabels();
   const [playEntrance] = useState(() => isNew);
   // "Love, 3 reactions, including yours" (or without the trailing clause when
@@ -66,7 +69,12 @@ function ReactionChip({
       onClick={() => onToggle(reaction.key, reaction.mine)}
     >
       <span aria-hidden>{REACTION_EMOJI[reaction.key]}</span>
-      <span>{reaction.count}</span>
+      <span>
+        <RollingNumber
+          value={fmt.number(reaction.count)}
+          numericValue={reaction.count}
+        />
+      </span>
     </button>
   );
 }

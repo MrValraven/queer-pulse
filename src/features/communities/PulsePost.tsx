@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FiCornerUpLeft } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ConfirmDeleteModal } from "../forum/ConfirmDeleteModal";
@@ -178,6 +181,7 @@ export function PulsePost({
   onReportReply?: (reply: PostReply) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const editing = usePulsePostState(post);
   const permissions = usePulsePostPermissions({
@@ -238,9 +242,26 @@ export function PulsePost({
     );
   };
 
-  const replyLabel = replyCount
-    ? t("communities:detail.pulse.replyLabel", { count: replyCount })
-    : t("communities:detail.pulse.replyAction");
+  // One span, so the flex gap of the button or pill never splits the sentence
+  // around the rolling count.
+  const replyLabel = replyCount ? (
+    <span>
+      <Translation
+        i18nKey="communities:detail.pulse.replyLabel"
+        values={{ count: replyCount }}
+        slots={{
+          count: (
+            <RollingNumber
+              value={fmt.number(replyCount)}
+              numericValue={replyCount}
+            />
+          ),
+        }}
+      />
+    </span>
+  ) : (
+    t("communities:detail.pulse.replyAction")
+  );
 
   return (
     <article

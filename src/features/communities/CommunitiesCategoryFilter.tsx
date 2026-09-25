@@ -1,5 +1,7 @@
 import { useId, type Dispatch, type SetStateAction } from "react";
 import { Button, RefineGroup } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CommunityType } from "../homepage/data/types";
 import type { DiscoverCategoryCounts } from "./useDiscoverCategoryCounts";
@@ -29,6 +31,7 @@ export function CommunitiesCategoryFilter({
   categoryCounts: DiscoverCategoryCounts;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const labelId = useId();
 
   return (
@@ -72,7 +75,12 @@ export function CommunitiesCategoryFilter({
             >
               {t(option.labelKey)}
               {count !== null && (
-                <span className={styles.chipCount}>{count}</span>
+                <span className={styles.chipCount}>
+                  <RollingNumber
+                    value={fmt.number(count)}
+                    numericValue={count}
+                  />
+                </span>
               )}
             </Button>
           );

@@ -5,13 +5,16 @@ import {
   MemberSelectList,
   type MemberSelectPerson,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
+import { InviteMembersSelectedCount } from "./InviteMembersSelectedCount";
 import { MEMBER_POOL } from "./manageCohosts.data";
 import { useInviteMembers } from "./api/useEventMutations";
 import styles from "./ManageCohosts.module.css";
@@ -30,6 +33,7 @@ export function InviteMembersModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const staffMap = useStaffMap();
   const { demoMode } = useDemoMode();
@@ -67,8 +71,6 @@ export function InviteMembersModal({
       staffBadgedRoles: staffMap[candidate.slug]?.badgedStaffRoles,
     }));
   }, [demoMode, connections, staffMap]);
-
-  const atCap = selected.size >= MAX_INVITES;
 
   const toggle = (memberSlug: string) => {
     setSelected((previous) => {
@@ -132,11 +134,25 @@ export function InviteMembersModal({
             onClick={send}
             disabled={selected.size === 0}
           >
-            {selected.size === 0
-              ? t("gatherings:manage.invite.sendDefaultCta")
-              : t("gatherings:manage.invite.sendCta", {
-                  count: selected.size,
-                })}
+            {selected.size === 0 ? (
+              t("gatherings:manage.invite.sendDefaultCta")
+            ) : (
+              // One span keeps the sentence a single flex item in the button.
+              <span>
+                <Translation
+                  i18nKey="gatherings:manage.invite.sendCta"
+                  values={{ count: selected.size }}
+                  slots={{
+                    count: (
+                      <RollingNumber
+                        value={fmt.number(selected.size)}
+                        numericValue={selected.size}
+                      />
+                    ),
+                  }}
+                />
+              </span>
+            )}
           </Button>
           <Button variant="ghost" onClick={onClose}>
             {t("gatherings:manage.cancelCta")}
@@ -159,26 +175,7 @@ export function InviteMembersModal({
       />
 
       <div className={styles.pickerFooter}>
-        <div className={styles.selCount}>
-          {selected.size === 0 ? (
-            t("gatherings:manage.invite.noneSelected")
-          ) : (
-            <>
-              <Translation
-                i18nKey="gatherings:manage.invite.selectedCount"
-                values={{ count: selected.size }}
-                components={{ b: <b /> }}
-              />
-              {atCap && (
-                <span className={styles.capWarn}>
-                  {t("gatherings:manage.invite.capWarning", {
-                    max: MAX_INVITES,
-                  })}
-                </span>
-              )}
-            </>
-          )}
-        </div>
+        <InviteMembersSelectedCount count={selected.size} max={MAX_INVITES} />
       </div>
     </Modal>
   );

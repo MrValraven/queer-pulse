@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS, MODES, type Mode } from "./barter.data";
 import { MY_BARTER_PROPOSALS_PATH } from "./barterProposals.paths";
@@ -31,6 +33,7 @@ export function BarterControls({
   total: number;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.controls}>
       <div className="wrap">
@@ -65,6 +68,14 @@ export function BarterControls({
               i18nKey="economy:barter.count"
               values={{ count: total }}
               components={{ b: <b /> }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(total)}
+                    numericValue={total}
+                  />
+                ),
+              }}
             />
           </span>
           {/* The way in to your own swaps and the proposals waiting on them.

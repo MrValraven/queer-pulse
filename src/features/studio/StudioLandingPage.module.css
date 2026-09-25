@@ -604,10 +604,16 @@
 .bigN {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(6.25rem, 14vw, 12.5rem);
+  /* Floor lowered from 6.25rem so the figure keeps its single line at 375px
+     (nowrap below); the old floor rendered wider than the section's content
+     box and forced a break onto the leading currency sign. The preferred
+     14vw is unchanged, so every width where it already cleared 6.25rem
+     (about 715px and up) renders exactly as before. */
+  font-size: clamp(3.5rem, 14vw, 12.5rem);
   color: var(--text);
   letter-spacing: -0.04em;
   line-height: 0.9;
+  white-space: nowrap;
 }
 .bigN em {
   font-style: italic;

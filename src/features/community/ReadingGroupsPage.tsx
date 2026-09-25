@@ -9,11 +9,13 @@ import {
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useReadingGroups } from "./api/useReadingGroups";
@@ -69,6 +71,20 @@ function ReadingGroupCardSkeleton() {
 function matchesFormat(group: Group, format: Format | "all"): boolean {
   if (format === "all") return true;
   return group.format === format || group.format === "either";
+}
+
+/** The filter bar's running total; the number rolls as the filters narrow. */
+function ReadingGroupsCount({ count }: { count: number }) {
+  const fmt = useFormat();
+  return (
+    <Translation
+      i18nKey="community:readingGroups.filterBar.count"
+      values={{ count }}
+      slots={{
+        count: <RollingNumber value={fmt.number(count)} numericValue={count} />,
+      }}
+    />
+  );
 }
 
 export function ReadingGroupsPage() {
@@ -201,9 +217,7 @@ export function ReadingGroupsPage() {
           />
           <div className={styles.fbSep} />
           <div className={styles.count}>
-            {t("community:readingGroups.filterBar.count", {
-              count: items.length,
-            })}
+            <ReadingGroupsCount count={items.length} />
           </div>
         </div>
       </div>

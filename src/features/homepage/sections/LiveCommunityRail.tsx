@@ -1,3 +1,6 @@
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../../shared/i18n/format";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CommunityType } from "../../communities/api/communities.api";
 import type { CommunitySpotlightView } from "./communitySpotlightView";
@@ -34,13 +37,27 @@ export function LiveCommunityRail({
   onClear,
 }: LiveRailProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <div className={styles.rail}>
       <div className={styles.railLab}>
-        {list.length
-          ? t("homepage:communities.rail.showingCount", { count: list.length })
-          : t("homepage:communities.rail.noMatches")}
+        {list.length ? (
+          <Translation
+            i18nKey="homepage:communities.rail.showingCount"
+            values={{ count: list.length }}
+            slots={{
+              count: (
+                <RollingNumber
+                  value={fmt.number(list.length)}
+                  numericValue={list.length}
+                />
+              ),
+            }}
+          />
+        ) : (
+          t("homepage:communities.rail.noMatches")
+        )}
       </div>
 
       {list.length === 0 ? (

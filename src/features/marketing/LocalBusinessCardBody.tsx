@@ -128,6 +128,7 @@ export function LocalBusinessCardBody({
   topRight,
   showRating = true,
   showHost = true,
+  shouldShowSave = true,
   visitSlot,
   photoTag,
 }: {
@@ -150,6 +151,11 @@ export function LocalBusinessCardBody({
   /** Drop the "run by <first>" avatar in the footer (default: shown). Both
    *  profile views already sit under that member's own name. */
   showHost?: boolean;
+  /** Drop the bookmark corner entirely, `saveControl`/static fallback alike
+   *  (default: shown). A save toggle makes no sense on the card a shared
+   *  place link renders as inside a chat bubble: there is nothing on that
+   *  surface to save it FROM. */
+  shouldShowSave?: boolean;
   /** Replaces the footer's "Visit →" call to action, so the owner grid can
    *  say "View listing →" (or "Awaiting review" while it's still pending). */
   visitSlot?: ReactNode;
@@ -181,39 +187,40 @@ export function LocalBusinessCardBody({
           }
         />
         <DirectoryCardBadges place={place} />
-        {topRight ??
-          (saveControl ? (
-            <span
-              role="button"
-              tabIndex={0}
-              aria-pressed={saveControl.saved}
-              aria-label={t(
-                saveControl.saved
-                  ? "marketing:directory.card.unsaveAriaLabel"
-                  : "marketing:directory.card.saveAriaLabel",
-                { name: place.name },
-              )}
-              className={`${s.saveBtn} ${saveControl.saved ? s.saveBtnOn : ""}`}
-              data-preview-region="chrome"
-              onClick={saveControl.onSave}
-              onKeyDown={(event) =>
-                activateOnKey(event, () => saveControl.onSave(event))
-              }
-            >
-              <FiBookmark
+        {shouldShowSave &&
+          (topRight ??
+            (saveControl ? (
+              <span
+                role="button"
+                tabIndex={0}
+                aria-pressed={saveControl.saved}
+                aria-label={t(
+                  saveControl.saved
+                    ? "marketing:directory.card.unsaveAriaLabel"
+                    : "marketing:directory.card.saveAriaLabel",
+                  { name: place.name },
+                )}
+                className={`${s.saveBtn} ${saveControl.saved ? s.saveBtnOn : ""}`}
+                data-preview-region="chrome"
+                onClick={saveControl.onSave}
+                onKeyDown={(event) =>
+                  activateOnKey(event, () => saveControl.onSave(event))
+                }
+              >
+                <FiBookmark
+                  aria-hidden
+                  fill={saveControl.saved ? "currentColor" : "none"}
+                />
+              </span>
+            ) : (
+              <span
+                className={s.saveBtn}
                 aria-hidden
-                fill={saveControl.saved ? "currentColor" : "none"}
-              />
-            </span>
-          ) : (
-            <span
-              className={s.saveBtn}
-              aria-hidden
-              data-preview-region="chrome"
-            >
-              <FiBookmark aria-hidden fill="none" />
-            </span>
-          ))}
+                data-preview-region="chrome"
+              >
+                <FiBookmark aria-hidden fill="none" />
+              </span>
+            )))}
         {photoTag && <span className={s.photoTag}>{photoTag}</span>}
         {photoOverlay}
       </div>

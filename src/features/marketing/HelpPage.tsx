@@ -14,6 +14,7 @@ import {
 } from "../../shared/seo";
 import { HELP_CATEGORIES } from "./help.data";
 import { HelpAnswerList, type HelpAnswerEntry } from "./HelpAnswerList";
+import { HelpSearchSummary } from "./HelpSearchSummary";
 import {
   searchHelpCategories,
   stripMarkupTags,
@@ -109,12 +110,9 @@ export function HelpPage() {
         >
           {/* Mounted in both states so the count is announced when it changes. */}
           <p className={s.searchStatus} role="status">
-            {isSearching
-              ? t("marketing:help.search.summary", {
-                  count: results.length,
-                  query: trimmedQuery,
-                })
-              : ""}
+            {isSearching && (
+              <HelpSearchSummary count={results.length} query={trimmedQuery} />
+            )}
           </p>
           {isSearching && (
             <button

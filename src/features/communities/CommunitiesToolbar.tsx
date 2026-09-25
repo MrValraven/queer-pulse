@@ -4,7 +4,10 @@ import {
   RefineToggle,
   SearchInput,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useRefineDrawer } from "../../shared/hooks";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CommunitiesTopTabs } from "./CommunitiesTopTabs";
@@ -44,6 +47,7 @@ export function CommunitiesToolbar({
   onChange: (next: TopTab) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const refine = useRefineDrawer("qp.communities.refineOpen");
   const activeFilters = useCommunitiesActiveFilters({
     searchInput: discover.searchInput,
@@ -134,9 +138,20 @@ export function CommunitiesToolbar({
         filters={activeFilters}
         onClearFilters={discover.resetRefinements}
         trailing={
-          isCountKnown
-            ? t("communities:discover.resline.count", { count: resultCount })
-            : null
+          isCountKnown ? (
+            <Translation
+              i18nKey="communities:discover.resline.count"
+              values={{ count: resultCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(resultCount)}
+                    numericValue={resultCount}
+                  />
+                ),
+              }}
+            />
+          ) : null
         }
       />
 

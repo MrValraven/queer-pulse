@@ -1,14 +1,24 @@
-import { FiX } from "react-icons/fi";
-import { DatePicker } from "../../../shared/components/ui";
+import { FiPlus, FiX } from "react-icons/fi";
+import { DatePicker, Tooltip } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { isOvernight, type HoursInterval } from "./listBusiness.data";
-import pageStyles from "./ListBusinessPage.module.css";
 import styles from "./ListingHoursEditor.module.css";
 
 /**
- * The opening-window controls for one open day: its one or two `from`–`to`
- * pickers, the "closes next day" hint, remove, and the add-a-second-window
- * button.
+ * The opening-window controls for one open day, one line per window (at most
+ * two, stacked 8px apart): the `from` picker, an en dash, the `to` picker, the
+ * "next day" chip when the window runs past midnight, and one trailing
+ * 32px action slot. With one window that slot holds a round add button (a
+ * second window models a lunch break); with two, each line holds its own
+ * remove button in the very same box, so the add and remove icons swap in
+ * place. The inline validity nudge sits under the lines.
+ *
+ * On a narrow card (container queries in the stylesheet) a two-window day
+ * hides the round removes and shows a labelled "Remove second window" button
+ * under its last line, which is rendered here always and hidden in the wide
+ * layout. A one-window weekly-grid row lifts its add button to the day's
+ * header line; a one-window exception row keeps it on the window line, or
+ * under the times when the line is full.
  *
  * Extracted from `ListingHoursEditor` so the weekly grid and the per-date
  * exceptions editor drive the SAME time controls. Two copies of a time picker
@@ -18,8 +28,8 @@ import styles from "./ListingHoursEditor.module.css";
  *
  * `rowLabel` is the thing the times belong to (a weekday name in the grid, a
  * date in the exceptions list) and is woven into every control's accessible
- * name, so a screen reader hears "Opens, Tuesday" rather than a page full of
- * identically named time fields.
+ * name, so a screen reader hears "Tuesday opens" and can tell every time
+ * field on the page apart.
  */
 export function ListingHoursIntervalRows({
   intervals,
@@ -39,53 +49,94 @@ export function ListingHoursIntervalRows({
   onRemoveInterval: (index: number) => void;
 }) {
   const { t } = useTranslation();
+  const hasTwoWindows = intervals.length === 2;
 
   return (
-    <div className={styles.stack}>
+    <div
+      className={[styles.stack, hasTwoWindows && styles.stackPaired]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {intervals.map((interval, index) => (
-        <div key={index} className={pageStyles.htimes}>
-          <DatePicker
-            mode="time"
-            size="sm"
-            label={t("marketing:listBusiness.step3.opensAria", {
-              day: rowLabel,
-            })}
-            value={interval.from || null}
-            onChange={(value) => onChangeInterval(index, { from: value ?? "" })}
-          />
-          <span className={pageStyles.dash}>–</span>
-          <DatePicker
-            mode="time"
-            size="sm"
-            label={t("marketing:listBusiness.step3.closesAria", {
-              day: rowLabel,
-            })}
-            value={interval.to || null}
-            onChange={(value) => onChangeInterval(index, { to: value ?? "" })}
-          />
-          {isOvernight(interval) && interval.from && interval.to && (
-            <span className={styles.nextDay}>
-              {t("marketing:listBusiness.step3.nextDay")}
-            </span>
-          )}
-          {intervals.length === 2 && (
-            <button
-              type="button"
-              className={styles.remove}
-              aria-label={t("marketing:listBusiness.step3.removeHoursAria", {
+        <div key={index} className={styles.window}>
+          <div className={styles.windowTimes}>
+            <DatePicker
+              mode="time"
+              size="sm"
+              label={t("marketing:listBusiness.step3.opensAria", {
                 day: rowLabel,
               })}
-              onClick={() => onRemoveInterval(index)}
-            >
-              <FiX aria-hidden />
-            </button>
-          )}
+              value={interval.from || null}
+              onChange={(value) =>
+                onChangeInterval(index, { from: value ?? "" })
+              }
+            />
+            <span className={styles.dash} aria-hidden>
+              –
+            </span>
+            <DatePicker
+              mode="time"
+              size="sm"
+              label={t("marketing:listBusiness.step3.closesAria", {
+                day: rowLabel,
+              })}
+              value={interval.to || null}
+              onChange={(value) => onChangeInterval(index, { to: value ?? "" })}
+            />
+            {isOvernight(interval) && interval.from && interval.to && (
+              <span className={styles.nextDay}>
+                {t("marketing:listBusiness.step3.nextDay")}
+              </span>
+            )}
+          </div>
+
+          <span className={styles.windowActionSlot}>
+            {hasTwoWindows ? (
+              <button
+                type="button"
+                className={styles.windowAction}
+                aria-label={t(
+                  index === 0
+                    ? "marketing:listBusiness.step3.removeFirstHoursAria"
+                    : "marketing:listBusiness.step3.removeHoursAria",
+                  { day: rowLabel },
+                )}
+                onClick={() => onRemoveInterval(index)}
+              >
+                <FiX aria-hidden />
+              </button>
+            ) : (
+              <Tooltip
+                label={t("marketing:listBusiness.step3.addHoursTip")}
+                placement="top"
+              >
+                <button
+                  type="button"
+                  className={styles.windowAction}
+                  aria-label={t("marketing:listBusiness.step3.addHoursAria", {
+                    day: rowLabel,
+                  })}
+                  onClick={onAddInterval}
+                >
+                  <FiPlus aria-hidden />
+                </button>
+              </Tooltip>
+            )}
+          </span>
         </div>
       ))}
 
-      {intervals.length < 2 && (
-        <button type="button" className={styles.add} onClick={onAddInterval}>
-          {t("marketing:listBusiness.step3.addHours")}
+      {hasTwoWindows && (
+        <button
+          type="button"
+          className={styles.removeSecondWindow}
+          aria-label={t("marketing:listBusiness.step3.removeHoursAria", {
+            day: rowLabel,
+          })}
+          onClick={() => onRemoveInterval(1)}
+        >
+          <FiX aria-hidden />
+          {t("marketing:listBusiness.step3.removeSecondWindow")}
         </button>
       )}
 

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiArrowUp } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -84,12 +86,14 @@ export interface TopIdeasProps {
 
 function IdeaRow({ idea }: { idea: IdeaItem }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const myVotes = useMyRoadmapVotes();
   const { demoMode, vote: castVote } = useRoadmapVote();
   const [justVoted, setJustVoted] = useState(false);
 
   const voted = justVoted || myVotes.has(idea.id);
+  const voteCount = idea.votes + (demoMode && justVoted ? 1 : 0);
 
   function vote() {
     if (voted) return;
@@ -112,7 +116,7 @@ function IdeaRow({ idea }: { idea: IdeaItem }) {
     <div className={styles.ideaRow}>
       <div className={styles.ideaText}>{idea.text}</div>
       <div className={styles.ideaVotes}>
-        {idea.votes + (demoMode && justVoted ? 1 : 0)}
+        <RollingNumber value={fmt.number(voteCount)} numericValue={voteCount} />
       </div>
       <button
         type="button"

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiMessageSquare } from "react-icons/fi";
 import { Button, EmptyState } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useIncrementalList } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -71,7 +72,15 @@ export function ReplySortBar({
   return (
     <div className={styles.replyBar}>
       <span className={styles.replyCount}>
-        {t("forum:repliesCount", { count, formatted: fmt.number(count) })}
+        <Translation
+          i18nKey="forum:repliesCount"
+          values={{ count }}
+          slots={{
+            formatted: (
+              <RollingNumber value={fmt.number(count)} numericValue={count} />
+            ),
+          }}
+        />
       </span>
       <div
         className={styles.replySort}

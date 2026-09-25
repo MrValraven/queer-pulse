@@ -1,9 +1,12 @@
 /* ===========================================================
    Dated overrides of the weekly opening-hours grid: closed on
    Christmas Eve, open late for Pride, shut for two weeks in
-   August. Owner-editor only. The time controls themselves are
-   the weekly grid's (ListingHoursIntervalRows), so nothing
-   here restyles them.
+   August. Owner-editor only. Each row is a small card in the
+   weekly card's family (same hairline, radius and paper), with
+   the weekly card's open switch in its header. The time
+   controls are the weekly grid's (ListingHoursIntervalRows);
+   their phone layout lives in ListingHoursEditor.module.css
+   and answers to the `hours-exceptions` container set here.
    =========================================================== */
 
 .block {
@@ -24,10 +27,14 @@
   padding: 12px 14px;
   border: 1px dashed rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-badge);
-  background: rgba(var(--plum-rgb), 0.02);
+  background: rgba(var(--line-rgb), 0.02);
 }
 
 .list {
+  /* Sized by .block's column, so inline-size containment is safe. The name is
+     global: ListingHoursEditor.module.css lays out the window lines under
+     `@container hours-exceptions` too. */
+  container: hours-exceptions / inline-size;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -37,48 +44,62 @@
 }
 
 .row {
+  /* The height of one picker line (DatePicker size="sm": its 38px calendar
+     button). The open switch and the remove button centre on it. */
+  --exception-line-height: 38px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 12px 16px;
   border: 1px solid rgba(var(--line-rgb), 0.11);
   border-radius: var(--radius-badge);
   background: var(--paper);
 }
 
-/* A date that has already gone by. Quieter, never removed on the
-   owner's behalf: it is still their record of what happened. */
+/* A date that has already gone by. Quieter, and kept until the owner clears
+   it: it is still their record of what happened. */
 .rowPast {
-  background: rgba(var(--plum-rgb), 0.03);
+  background: rgba(var(--line-rgb), 0.03);
   border-style: dashed;
 }
 
+/* ---------- Header: date, open switch, past tag | remove ---------- */
+
+/* The remove button owns the end of the line. Everything else wraps inside
+   .rowHeadMain, so on a phone the switch drops under the date while the
+   trash stays in the top corner. */
 .rowHead {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 8px;
 }
 
-.toggle {
-  flex: none;
-  padding: 6px 12px;
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--ink-60);
-  font-size: var(--text-12-5);
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
+.rowHeadMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
 }
-.toggleOpen {
-  background: rgba(var(--jade-rgb), 0.12);
-  border-color: rgba(var(--jade-rgb), 0.28);
-  color: var(--jade);
+
+.openControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--exception-line-height);
+}
+
+.openText {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--text-strong);
+  transition-property: color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.openTextOff {
+  color: var(--ink-60);
 }
 
 .pastTag {
@@ -87,38 +108,63 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-40);
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   border-radius: var(--radius-pill);
   padding: 3px 9px;
   white-space: nowrap;
 }
 
 .remove {
-  margin-left: auto;
+  flex: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: var(--exception-line-height);
+  height: var(--exception-line-height);
+  margin-inline-start: auto;
+  padding: 0;
   border: none;
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-9);
   background: none;
   color: var(--ink-40);
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    background 0.18s var(--ease);
+  transition-property: color, background-color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
 }
 @media (hover: hover) {
   .remove:hover {
     color: var(--accent-ink);
-    background: rgba(var(--accent-rgb), 0.08);
+    background-color: rgba(var(--accent-rgb), 0.08);
   }
 }
 
+/* ---------- The note ---------- */
+
+/* The FormField control look at the compact density of the pickers above it.
+   16px text so iOS Safari never zooms the page on focus. */
 .note {
   width: 100%;
+  min-height: 38px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-9);
+  outline: none;
+  transition-property: border-color, background-color, box-shadow;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.note::placeholder {
+  color: var(--ink-40);
+}
+.note:focus {
+  border-color: var(--line-strong);
+  background: var(--paper);
 }
 
 .problem {
@@ -131,6 +177,7 @@
   margin: 0;
 }
 
+/* ---------- Actions under the list ---------- */
 .actions {
   display: flex;
   align-items: center;
@@ -143,6 +190,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: inherit;
   font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--accent-ink);
@@ -150,7 +198,9 @@
   border: none;
   padding: 4px 0;
   cursor: pointer;
-  transition: color 0.18s var(--ease);
+  transition-property: color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
 }
 .add:disabled {
   color: var(--ink-40);
@@ -173,9 +223,55 @@
   color: var(--ink-40);
 }
 
+/* ---------- Focus ---------- */
+.remove:focus-visible,
+.note:focus-visible,
+.add:focus-visible,
+.clearPast:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ---------- Touch: 44px hit areas ---------- */
+@media (pointer: coarse) {
+  .remove {
+    position: relative;
+  }
+  .remove::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+  }
+  .add,
+  .clearPast {
+    min-height: 44px;
+  }
+}
+
+/* ---------- Phone-width card ---------- */
+
+/* At a 375px viewport a row is about 300px wide, which leaves about 270px
+   inside 16px side paddings for a 286px picker pair. Trimming the side
+   padding to 8px gives the window lines their room. */
+@container hours-exceptions (max-width: 460px) {
+  .row {
+    padding-inline: 8px;
+  }
+}
+
+/* A 360px phone: the time pair only fits with the day card's tightest
+   side padding. */
+@container hours-exceptions (max-width: 291px) {
+  .row {
+    padding-inline: 4px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .toggle,
+  .openText,
   .remove,
+  .note,
   .add,
   .clearPast {
     transition: none;

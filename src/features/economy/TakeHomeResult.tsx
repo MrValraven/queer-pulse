@@ -2,6 +2,7 @@ import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { estimateTakeHome, type TaxYear } from "./tax.calc";
 import {
   SIMPLIFIED_COEFFICIENTS,
@@ -53,6 +54,11 @@ export function TakeHomeResult({
     grossNum > 0
       ? Math.max(0, Math.min(100, (result.net / grossNum) * 100))
       : 0;
+  const keptPercent = Math.round(keptPct);
+  // Every figure recomputes as the form changes, so each one rolls.
+  const rollCurrency = (amount: number) => (
+    <RollingNumber value={fmt.currency(amount)} numericValue={amount} />
+  );
 
   return (
     <div className={styles.result}>
@@ -63,9 +69,9 @@ export function TakeHomeResult({
         <p className={styles.netLabel}>
           {t("economy:takeHome.result.netLabel")}
         </p>
-        <p className={styles.netValue}>{fmt.currency(result.net)}</p>
+        <p className={styles.netValue}>{rollCurrency(result.net)}</p>
         <p className={styles.netMonthly}>
-          ≈ <strong>{fmt.currency(result.net / 12)}</strong>{" "}
+          ≈ <strong>{rollCurrency(result.net / 12)}</strong>{" "}
           {t("economy:takeHome.result.perMonth")}
         </p>
 
@@ -73,7 +79,7 @@ export function TakeHomeResult({
           className={styles.bar}
           role="img"
           aria-label={t("economy:takeHome.result.barAriaLabel", {
-            percent: Math.round(keptPct),
+            percent: keptPercent,
           })}
         >
           <div
@@ -85,7 +91,20 @@ export function TakeHomeResult({
           <Translation
             i18nKey="economy:takeHome.result.keepCaption"
             components={{ em: <em /> }}
-            values={{ percent: Math.round(keptPct), rate: ratePct }}
+            slots={{
+              percent: (
+                <RollingNumber
+                  value={fmt.number(keptPercent)}
+                  numericValue={keptPercent}
+                />
+              ),
+              rate: (
+                <RollingNumber
+                  value={fmt.number(ratePct)}
+                  numericValue={ratePct}
+                />
+              ),
+            }}
           />
         </p>
       </div>
@@ -93,23 +112,24 @@ export function TakeHomeResult({
       <dl className={styles.breakdown}>
         <div className={styles.row}>
           <dt>{t("economy:takeHome.result.annualGross")}</dt>
+          {/* The gross echoes what is being typed, so it stays still. */}
           <dd>{fmt.currency(result.gross)}</dd>
         </div>
         <div className={`${styles.row} ${styles.deduct}`}>
           <dt>{t("economy:takeHome.result.segurancaSocial")}</dt>
-          <dd>−{fmt.currency(result.ss)}</dd>
+          <dd>−{rollCurrency(result.ss)}</dd>
         </div>
         <div className={`${styles.row} ${styles.subtotal}`}>
           <dt>{t("economy:takeHome.result.taxableIncome")}</dt>
-          <dd>{fmt.currency(result.taxable)}</dd>
+          <dd>{rollCurrency(result.taxable)}</dd>
         </div>
         <div className={`${styles.row} ${styles.deduct}`}>
           <dt>{t("economy:takeHome.result.irs")}</dt>
-          <dd>−{fmt.currency(result.irs)}</dd>
+          <dd>−{rollCurrency(result.irs)}</dd>
         </div>
         <div className={`${styles.row} ${styles.total}`}>
           <dt>{t("economy:takeHome.result.netTakeHome")}</dt>
-          <dd>{fmt.currency(result.net)}</dd>
+          <dd>{rollCurrency(result.net)}</dd>
         </div>
       </dl>
 

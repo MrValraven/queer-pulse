@@ -29,7 +29,7 @@ export const marketing: Catalog = {
   "about.why.p1":
     "A QueerPulse começou como uma frustração que tínhamos de resolver. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção e otimizadas para tempo de ecrã, indiferentes a se nos encontrávamos mesmo.",
   "about.why.p2":
-    "Por isso, um pequeno grupo (profissionais, organizadores, artistas) decidiu construir a alternativa: uma rede pensada para a confiança, onde o objetivo é a ligação.",
+    "Por isso, um pequeno grupo (profissionais, organizadores, artistas) decidiu construir a alternativa: uma rede pensada para a confiança, onde o objetivo é a conexão.",
   "about.why.p3": "Cresce mais devagar assim. Isso é o desenho.",
   "about.difference.eyebrow": "A diferença",
   "about.difference.title": "O que <em>não estamos a construir.</em>",
@@ -45,8 +45,9 @@ export const marketing: Catalog = {
   "about.contrast.us.feedIsYours":
     "O teu feed é exatamente as comunidades a que te juntaste",
   "about.contrast.us.vouched":
-    "Cada pessoa é avalizada por alguém que já está cá",
-  "about.contrast.us.growthPace": "O crescimento acompanha o ritmo dos avais",
+    "Cada pessoa entra com um voto de confiança de alguém que já está cá",
+  "about.contrast.us.growthPace":
+    "O crescimento acompanha o ritmo dos votos de confiança",
   "about.contrast.us.valueStays":
     "As contribuições financiam um fundo de apoio mútuo gerido pela comunidade",
   "about.beliefs.eyebrow": "No que acreditamos",
@@ -68,7 +69,7 @@ export const marketing: Catalog = {
     "Não vendemos atenção nem dados pessoais a anunciantes. Não há terceiros para quem estejamos a construir isto.",
   "about.values.accessNotEarned.title": "O acesso não se ganha a atuar",
   "about.values.accessNotEarned.body":
-    "Entras pela confiança: um aval, um convite.",
+    "Entras com um voto de confiança ou com um convite de alguém que já cá está.",
   "about.stand.eyebrow": "Onde nos posicionamos",
   "about.stand.title": "A libertação queer é <em>indivisível.</em>",
   "about.stand.p1":
@@ -679,8 +680,8 @@ export const marketing: Catalog = {
   "dsar.form.scopeLabel": "Que dados abrange isto?",
   "dsar.scopes.profile.b": "Perfil",
   "dsar.scopes.profile.s": "Nome, biografia, fotos, pronomes",
-  "dsar.scopes.connections.b": "Ligações",
-  "dsar.scopes.connections.s": "Avais, convites, a tua rede",
+  "dsar.scopes.connections.b": "Conexões",
+  "dsar.scopes.connections.s": "Votos de confiança, convites, a tua rede",
   "dsar.scopes.activity.b": "Atividade",
   "dsar.scopes.activity.s": "Publicações, comentários, confirmações, mensagens",
   "dsar.scopes.membership.b": "Adesão",
@@ -850,7 +851,7 @@ export const marketing: Catalog = {
   "help.category.technical.head": "<em>Técnico</em>",
   "help.qa.invite.q": "Como recebo um convite?",
   "help.qa.invite.a":
-    "Alguém que já está na QueerPulse <strong>avaliza-te</strong> e envia um convite, ou podes <strong>pedir um convite</strong> e associamos-te a alguém da comunidade.",
+    "Alguém que já está na QueerPulse <strong>dá-te um voto de confiança</strong> e envia um convite, ou podes <strong>pedir um convite</strong> e associamos-te a alguém da comunidade.",
   "help.qa.afterAccept.q": "O que acontece depois de aceitar um convite?",
   "help.qa.afterAccept.a":
     "Configuras o teu perfil e a tua conta fica ativa de imediato: sem período de espera.",
@@ -864,7 +865,7 @@ export const marketing: Catalog = {
     "Vai a <settingsLink>Definições</settingsLink> e depois a Perfil. As alterações aplicam-se em todo o lado de imediato.",
   "help.qa.privateProfile.q": "Posso tornar o meu perfil privado?",
   "help.qa.privateProfile.a":
-    "Sim, em <settingsLink>Definições</settingsLink> e depois Privacidade. Um perfil privado continua visível para as tuas ligações. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
+    "Sim, em <settingsLink>Definições</settingsLink> e depois Privacidade. Um perfil privado continua visível para as tuas conexões. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
   "help.qa.unknownSession.q":
     "Não reconheço um dispositivo nas minhas sessões ativas. E agora?",
   "help.qa.unknownSession.a":
@@ -875,7 +876,7 @@ export const marketing: Catalog = {
   "help.qa.levels.q":
     "O que significam os diferentes níveis de pessoa da comunidade?",
   "help.qa.levels.a":
-    "Os níveis refletem há quanto tempo foste avalizade na comunidade e a tua atividade. São um sinal de confiança, sem qualquer barreira de pagamento.",
+    "Os níveis refletem há quanto tempo entraste na comunidade com um voto de confiança e a tua atividade. São um sinal de confiança, sem qualquer barreira de pagamento.",
   "help.qa.rsvp.q": "Como funcionam as confirmações de presença?",
   "help.qa.rsvp.a":
     "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos convívios, por isso confirma cedo.",
@@ -904,9 +905,10 @@ export const marketing: Catalog = {
   "help.qa.invitesWork.q": "Quantos convites tenho?",
   "help.qa.invitesWork.a":
     "Cada pessoa começa com uma pequena reserva de convites que se renova com o tempo, consoante o crescimento da comunidade.",
-  "help.qa.vouching.q": "O que significa avalizar alguém, na prática?",
+  "help.qa.vouching.q":
+    "O que significa dar um voto de confiança a alguém, na prática?",
   "help.qa.vouching.a":
-    "Quando avalizas alguém, estás a dizer à comunidade que confias que essa pessoa deve estar aqui. É um sinal real, com peso.",
+    "Quando dás um voto de confiança a alguém, estás a dizer à comunidade que confias que essa pessoa deve estar aqui. É um sinal real, com peso.",
   "help.qa.perks.q": "O que ganho como Apoiante?",
   "help.qa.perks.a":
     "Acesso antecipado a eventos, um distintivo de apoiante, e a certeza de que a tua adesão mantém a plataforma sem anúncios.",
@@ -1031,7 +1033,7 @@ export const marketing: Catalog = {
     "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
   "pressKit.boiler.med.wc": "60 palavras · 424 carateres",
   "pressKit.boiler.med.text":
-    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa é avalizada por alguém que já está cá. Sem capital de risco por trás, a plataforma vive de mensalidades, doações e apoios, e publica uma revista para a sua comunidade.",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa entra com um voto de confiança de alguém que já está cá. Sem capital de risco por trás, a plataforma vive de mensalidades, doações e apoios, e publica uma revista para a sua comunidade.",
 
   // ── Explicador de Comunidades ──────────────────────────────────────────
   "communitiesAbout.meta.title": "Como funcionam as comunidades no QueerPulse",
@@ -1052,6 +1054,9 @@ export const marketing: Catalog = {
   "communitiesAbout.outro.title": "A tua gente já está aqui.",
   "communitiesAbout.outro.sub":
     "Pede um convite e mostramos-te as comunidades que parecem casa.",
+  "communitiesAbout.outro.subSignedIn":
+    "Explora-as e junta-te às que parecem casa.",
+  "communitiesAbout.outro.viewCommunitiesCta": "Ver comunidades",
 
   // ── Política de Privacidade ────────────────────────────────────────────
   "privacy.meta.title":
@@ -1082,7 +1087,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item2":
     "<strong>Informação de contacto</strong>: o teu email, que vem da tua conta Google e serve para iniciares sessão. A QueerPulse não envia email.",
   "privacy.whatWeCollect.account.item3":
-    "<strong>Dados de adesão</strong>: o teu escalão, data de entrada, quem te convidou e quem te avalizou.",
+    "<strong>Dados de adesão</strong>: o teu escalão, data de entrada, quem te convidou e quem te deu um voto de confiança.",
   "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
   "privacy.whatWeCollect.signInBody":
     "Inicias sessão com o <strong>Google</strong>. Não há uma palavra-passe QueerPulse separada para gerir. Quando o fazes, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
@@ -1122,7 +1127,7 @@ export const marketing: Catalog = {
   "privacy.howWeUse.item2":
     "Mostrar-te convívios, comunidades e conteúdo relevantes para ti",
   "privacy.howWeUse.item3":
-    "Entregar as tuas mensagens, notificações e as ligações que crias",
+    "Entregar as tuas mensagens, notificações e as conexões que crias",
   "privacy.howWeUse.item4":
     "Manter a plataforma segura: investigar denúncias, aplicar o Código de Conduta",
   "privacy.howWeUse.item5":
@@ -1142,7 +1147,7 @@ export const marketing: Catalog = {
     "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
   "privacy.retention.title": "Por quanto tempo guardamos",
   "privacy.retention.p1":
-    "O teu perfil, as tuas mensagens, as tuas publicações, as tuas ligações e os teus envios são guardados enquanto a tua conta estiver aberta. As tuas confirmações de presença também, para que um convívio a que foste continue no teu histórico e quem o organizou mantenha a sua contagem. O que desaparece sozinho são os detalhes de presença listados abaixo.",
+    "O teu perfil, as tuas mensagens, as tuas publicações, as tuas conexões e os teus envios são guardados enquanto a tua conta estiver aberta. As tuas confirmações de presença também, para que um convívio a que foste continue no teu histórico e quem o organizou mantenha a sua contagem. O que desaparece sozinho são os detalhes de presença listados abaixo.",
   "privacy.retention.clearsHeading": "Coisas que desaparecem sozinhas",
   "privacy.retention.p3":
     "Estas acontecem automaticamente, faças alguma coisa ou não:",
@@ -1277,7 +1282,7 @@ export const marketing: Catalog = {
     "Perguntas sobre estes termos? <strong>Contacta-nos quando quiseres.</strong>",
   "terms.eligibility.title": "Elegibilidade",
   "terms.eligibility.p1":
-    "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada pela comunidade.",
+    "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou entre na comunidade com um voto de confiança.",
   "terms.eligibility.why":
     "É só para adultos por uma razão: muito do que acontece aqui (conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos) não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que este ainda não é o espaço certo para isso.",
   "terms.eligibility.p2":
@@ -1408,7 +1413,7 @@ export const marketing: Catalog = {
     "130 palavras · para reportagens longas, secções “sobre”",
   "pressKit.boiler.long.wc": "130 palavras",
   "pressKit.boiler.long.text":
-    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa é avalizada por alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno; vive de mensalidades, doações e apoios que a mantêm independente. O dinheiro que passa pela QueerPulse fica dentro da comunidade de onde veio, e a plataforma já publica uma revista para os seus membros.",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa entra com um voto de confiança de alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno; vive de mensalidades, doações e apoios que a mantêm independente. O dinheiro que passa pela QueerPulse fica dentro da comunidade de onde veio, e a plataforma já publica uma revista para os seus membros.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
     "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral, exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
@@ -1724,16 +1729,21 @@ export const marketing: Catalog = {
   "listBusiness.step3.mapAria":
     "Mapa: arrasta o pino para definir o local exato.",
   "listBusiness.step3.hoursHeading": "Horário de funcionamento *",
-  "listBusiness.step3.hasOpenHours": "Tem horas de abertura",
-  "listBusiness.step3.allClosed": "Tudo fechado",
+  "listBusiness.step3.hoursHint":
+    "Ativa um dia para definir o horário. Junta um segundo período para a pausa de almoço.",
   "listBusiness.step3.copyMonday": "Copiar segunda-feira para todos os dias",
   "listBusiness.step3.markAllClosed": "Marcar tudo como fechado",
   "listBusiness.step3.open": "Aberto",
   "listBusiness.step3.closed": "Fechado",
   "listBusiness.step3.opensAria": "{day}: abertura",
   "listBusiness.step3.closesAria": "{day}: fecho",
-  "listBusiness.step3.addHours": "+ Dividir (pausa de almoço)",
+  "listBusiness.step3.dayOpenAria": "Aberto: {day}",
+  "listBusiness.step3.addHoursAria": "Adicionar segundo período em {day}",
+  "listBusiness.step3.addHoursTip": "Adicionar pausa",
   "listBusiness.step3.removeHoursAria": "Remover segundo período de {day}",
+  "listBusiness.step3.removeFirstHoursAria":
+    "Remover primeiro período de {day}",
+  "listBusiness.step3.removeSecondWindow": "Remover segundo período",
   "listBusiness.step3.nextDay": "dia seguinte",
   "listBusiness.step3.hoursWarning":
     "Verifica estes horários: um período está em branco, tem duração zero ou sobrepõe-se.",
@@ -1811,11 +1821,6 @@ export const marketing: Catalog = {
     "Põe um rosto familiar e verificado no anúncio. Tens sessão iniciada como {name}.",
   "listBusiness.step4.linkProfileToggleLabel": "Ligar ao perfil",
   "listBusiness.step4.loopHeading": "Manteres-te a par",
-  "listBusiness.step4.contactEmailLabel": "O teu email de contacto",
-  "listBusiness.step4.contactEmailHelper":
-    "Para ti, que submetes: fica privado, nunca aparece no anúncio.",
-  "listBusiness.step4.contactEmailPlaceholder":
-    "Para te podermos contactar sobre este anúncio",
   "listBusiness.step4.notifyNote":
     "Uma notificação da QueerPulse avisa-te quando o teu anúncio ficar no ar, e as perguntas da equipa chegam por mensagem na QueerPulse.",
   "listBusiness.step4.consent":
@@ -1888,7 +1893,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.online.email": "Email",
   "listBusiness.step5.online.phone": "Telefone",
   "listBusiness.step5.vouchLine":
-    "<b>Avalizado por ti, {name}.</b> O teu nome vai junto para a equipa saber que há alguém de confiança por trás disto. Depois de ficar no ar, outras pessoas podem juntar o seu aval.",
+    "<b>Com o teu voto de confiança, {name}.</b> O teu nome vai junto para a equipa saber que há alguém de confiança por trás disto. Depois de ficar no ar, outras pessoas podem juntar o seu voto de confiança.",
   "listBusiness.step5.beforeSendHeading": "Antes de enviares",
   "listBusiness.step5.consentOuting.title":
     "Percebo que este anúncio vai ser público e pesquisável.",
@@ -1950,7 +1955,6 @@ export const marketing: Catalog = {
   "listBusiness.missing.rel": "a tua ligação",
   "listBusiness.missing.ownerName": "o teu nome",
   "listBusiness.missing.ownerRole": "o teu papel",
-  "listBusiness.missing.contactEmail": "um email de contacto",
   "listBusiness.missing.alt": "texto alternativo para as tuas fotos",
   "listBusiness.missing.consent": "as duas confirmações",
   "listBusiness.missing.services": "um nome e um preço em cada serviço",
@@ -2025,8 +2029,6 @@ export const marketing: Catalog = {
     "O teu nome aparece aqui. Com o perfil ligado, o cartão mostra o teu primeiro nome.",
   "listBusiness.livePreview.caption.ownerRole":
     "O teu papel aparece aqui, ao lado do teu nome.",
-  "listBusiness.livePreview.caption.contactEmail":
-    "Só tu e a equipa de revisão veem isto. Fica fora do teu anúncio.",
   "listBusiness.livePreview.caption.consent":
     "Isto fica entre ti e a equipa de revisão. Mantém o anúncio honesto.",
   "listBusiness.livePreview.caption.services":
@@ -2607,6 +2609,111 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.discardCta": "Descartar",
   "listBusiness.editor.restore.justNow": "há instantes",
   "listBusiness.editor.restore.unknownWhen": "uma sessão anterior",
+  // Restore review: the diff a saved local copy would bring back, per area.
+  "listBusiness.editor.restore.review.title":
+    "Trazer de volta as alterações por guardar?",
+  "listBusiness.editor.restore.review.sub":
+    "Guardadas neste dispositivo {when}. Marca as áreas que queres de volta.",
+  "listBusiness.editor.restore.review.selectAll": "Marcar todas",
+  "listBusiness.editor.restore.review.clearAll": "Desmarcar todas",
+  "listBusiness.editor.restore.review.changeCount_one": "{count} alteração",
+  "listBusiness.editor.restore.review.changeCount_other": "{count} alterações",
+  "listBusiness.editor.restore.review.areaKept":
+    "Fica de fora: esta área mantém-se como está agora, e as alterações guardadas para ela são apagadas deste dispositivo.",
+  "listBusiness.editor.restore.review.legend.now": "No ecrã agora",
+  "listBusiness.editor.restore.review.legend.back": "Volta",
+  "listBusiness.editor.restore.review.legend.spoken":
+    "Removido é o que está agora no ecrã; adicionado é o que volta.",
+  "listBusiness.editor.restore.review.removedPrefix": "removido:",
+  "listBusiness.editor.restore.review.addedPrefix": "adicionado:",
+  "listBusiness.editor.restore.review.empty": "vazio",
+  "listBusiness.editor.restore.review.choiceChange": "{before} passa a {after}",
+  "listBusiness.editor.restore.review.status.added": "Adicionado",
+  "listBusiness.editor.restore.review.status.removed": "Removido",
+  "listBusiness.editor.restore.review.status.changed": "Alterado",
+  "listBusiness.editor.restore.review.paragraph": "Parágrafo {position}",
+  "listBusiness.editor.restore.review.keepCta": "Mantém o que está aqui",
+  "listBusiness.editor.restore.review.confirmAll": "Traz tudo de volta",
+  "listBusiness.editor.restore.review.confirmNone":
+    "Marca uma área para a trazer de volta",
+  "listBusiness.editor.restore.review.confirmSome_one":
+    "Traz de volta {count} área",
+  "listBusiness.editor.restore.review.confirmSome_other":
+    "Traz de volta {count} áreas",
+  "listBusiness.editor.restore.review.emptyState":
+    "Nada aqui difere do que está agora no ecrã.",
+  "listBusiness.editor.restore.review.discardCta": "Descarta a cópia guardada",
+  "listBusiness.editor.restore.review.closeCta": "Fechar",
+  "listBusiness.editor.restore.diff.field.name": "Nome do negócio",
+  "listBusiness.editor.restore.diff.field.cats": "Categorias",
+  "listBusiness.editor.restore.diff.field.catsOrder":
+    "Ordem das categorias (a primeira é a principal)",
+  "listBusiness.editor.restore.diff.field.hood": "Bairro",
+  "listBusiness.editor.restore.diff.field.badge": "Quem o gere",
+  "listBusiness.editor.restore.diff.field.evidence":
+    "Em que sentido é queer-owned",
+  "listBusiness.editor.restore.diff.field.price": "Escalão de preço",
+  "listBusiness.editor.restore.diff.field.blurb": "Descrição curta",
+  "listBusiness.editor.restore.diff.field.tagline": "Lema",
+  "listBusiness.editor.restore.diff.field.whatItIs": "Descrição",
+  "listBusiness.editor.restore.diff.field.tags": "Etiquetas",
+  "listBusiness.editor.restore.diff.field.goodFor": "Bom para",
+  "listBusiness.editor.restore.diff.field.langs": "Idiomas falados",
+  "listBusiness.editor.restore.diff.field.services": "Serviços e preços",
+  "listBusiness.editor.restore.diff.field.pricingMode":
+    "O que a tua página mostra",
+  "listBusiness.editor.restore.diff.field.menu": "Menu",
+  "listBusiness.editor.restore.diff.field.online": "Só online",
+  "listBusiness.editor.restore.diff.field.address": "Morada",
+  "listBusiness.editor.restore.diff.field.mapPin": "Marcador no mapa",
+  "listBusiness.editor.restore.diff.field.hours": "Horário de funcionamento",
+  "listBusiness.editor.restore.diff.field.hoursNote": "Nota sobre o horário",
+  "listBusiness.editor.restore.diff.field.hoursExceptions":
+    "Horário em feriados e datas especiais",
+  "listBusiness.editor.restore.diff.field.social": "Contactos e redes sociais",
+  "listBusiness.editor.restore.diff.field.instagram": "Instagram",
+  "listBusiness.editor.restore.diff.field.website": "Site",
+  "listBusiness.editor.restore.diff.field.email": "Email",
+  "listBusiness.editor.restore.diff.field.phone": "Telefone",
+  "listBusiness.editor.restore.diff.field.accessibility":
+    "Respostas de acessibilidade",
+  "listBusiness.editor.restore.diff.field.photos": "Fotos",
+  "listBusiness.editor.restore.diff.field.rel": "A tua ligação ao lugar",
+  "listBusiness.editor.restore.diff.field.ownerName": "O teu nome",
+  "listBusiness.editor.restore.diff.field.ownerRole":
+    "Função mostrada no anúncio",
+  "listBusiness.editor.restore.diff.field.ownerBio": "Sobre ti",
+  "listBusiness.editor.restore.diff.field.visibility":
+    "Quem pode ver o teu nome",
+  "listBusiness.editor.restore.diff.field.linkToProfile":
+    "Ligação ao teu perfil",
+  "listBusiness.editor.restore.diff.field.consentOuting":
+    "Confirmação de anúncio público",
+  "listBusiness.editor.restore.diff.field.consentGuide":
+    "Confirmação de exatidão",
+  "listBusiness.editor.restore.diff.value.yes": "Sim",
+  "listBusiness.editor.restore.diff.value.no": "Não",
+  "listBusiness.editor.restore.diff.value.onScreen": "Como está agora no ecrã",
+  "listBusiness.editor.restore.diff.value.savedCopy":
+    "Como está na tua cópia guardada",
+  "listBusiness.editor.restore.diff.pin.none": "Fora do mapa",
+  "listBusiness.editor.restore.diff.pin.exact": "Marcado na morada",
+  "listBusiness.editor.restore.diff.pin.approximate": "Marcado perto do bairro",
+  "listBusiness.editor.restore.diff.pin.moved": "Marcado noutro sítio",
+  "listBusiness.editor.restore.diff.hours.interval": "{from} às {to}",
+  "listBusiness.editor.restore.diff.hours.openNoTimes":
+    "Aberto, ainda sem horas definidas",
+  "listBusiness.editor.restore.diff.hours.timeNotSet": "(hora por definir)",
+  "listBusiness.editor.restore.diff.field.mainCategory": "Categoria principal",
+  "listBusiness.editor.restore.diff.row.untitled": "Sem nome",
+  "listBusiness.editor.restore.diff.row.exceptionWithNote": "{date} · {note}",
+  "listBusiness.editor.restore.diff.row.menuItem": "{section}: {item}",
+  "listBusiness.editor.restore.diff.row.otherChange":
+    "Alguns detalhes são diferentes",
+  "listBusiness.editor.restore.diff.photo.wide": "Plano geral",
+  "listBusiness.editor.restore.diff.photo.d1": "Detalhe 1",
+  "listBusiness.editor.restore.diff.photo.d2": "Detalhe 2",
+  "listBusiness.editor.restore.diff.photo.vibe": "Pessoas e ambiente",
 
   // ── Estado de funcionamento: o que o próprio negócio diz sobre si. Definir
   //    isto nunca mexe no estado de moderação nem obriga a nova revisão.
@@ -2822,7 +2929,7 @@ export const marketing: Catalog = {
   "changelog.releases.2026-08-10.headline":
     "As páginas de persona e a redação foram redesenhadas, e podes gerir tudo o que carregaste.",
   "changelog.releases.2026-08-09.headline":
-    "Dá o teu aval a um espaço seguro, e as definições e a edição do perfil ficam mais fáceis no telemóvel.",
+    "Dá o teu voto de confiança a um espaço seguro, e as definições e a edição do perfil ficam mais fáceis no telemóvel.",
   "changelog.releases.2026-08-05.headline":
     "Guarda eventos em coleções, segue os temas que te importam, e vê todas as menções num só sítio.",
   "changelog.releases.2026-08-04.headline":
@@ -2951,10 +3058,10 @@ export const marketing: Catalog = {
     "O editor de modelos de email ficou mais compacto",
   "changelog.entries.email-template-editor-compact.body":
     "As definiÃ§Ãµes partilham uma linha, idioma e aÃ§Ãµes ficam numa sÃ³ barra, e a prÃ©-visualizaÃ§Ã£o comeÃ§a perto do topo.",
-  "changelog.entries.member-directory-counts-roll.title":
-    "As contagens do diretório de membros rolam até ao novo número",
-  "changelog.entries.member-directory-counts-roll.body":
-    "Filtrar faz a contagem de resultados rolar para cima ou para baixo, e o total do título rola quando abres a página.",
+  "changelog.entries.numbers-roll-everywhere.title":
+    "Os números rolam até ao novo valor em toda a app",
+  "changelog.entries.numbers-roll-everywhere.body":
+    "Calculadoras, votos, reações, contadores de não lidas, filtros e totais de resultados sobem ou descem a rolar.",
   "changelog.entries.therapist-topics-one-blank-line.title":
     "Os temas de terapeuta mantêm uma linha vazia de cada vez",
   "changelog.entries.therapist-topics-one-blank-line.body":
@@ -2963,6 +3070,38 @@ export const marketing: Catalog = {
     "Os seletores da persona animam enquanto escolhes",
   "changelog.entries.persona-picker-chips-animate.body":
     "As opções que escolhes deslizam para a fila de etiquetas acima, e a lista abre e fecha com suavidade.",
+  "changelog.entries.members-results-shuffle.title":
+    "Os resultados de membros reorganizam-se quando filtras",
+  "changelog.entries.members-results-shuffle.body":
+    "Os cartões que continuam a corresponder deslizam para o novo lugar, os novos aparecem e a grelha nunca fica vazia.",
+  "changelog.entries.listing-restore-review.title":
+    "Revê as alterações por guardar antes de as trazeres de volta",
+  "changelog.entries.listing-restore-review.body":
+    "Uma comparação agrupa cada alteração por área, e marcas as áreas que voltam.",
+  "changelog.entries.listing-hours-roomier.title":
+    "Horário de funcionamento mais arejado no anúncio",
+  "changelog.entries.listing-hours-roomier.body":
+    "Cada dia tem um interruptor e uma linha própria, e o + junta uma pausa de almoço sem apertar a semana.",
+  "changelog.entries.listing-form-no-contact-email.title":
+    "Criar um anúncio já não pede o teu email",
+  "changelog.entries.listing-form-no-contact-email.body":
+    "A equipa fala contigo por notificações e mensagens do QueerPulse, por isso deixámos de guardar um endereço à parte.",
+  "changelog.entries.listing-danger-zone-on-demand.title":
+    "Apagar o anúncio fica guardado até o pedires",
+  "changelog.entries.listing-danger-zone-on-demand.body":
+    "A Zona de perigo abre pelo link na barra lateral e volta a fechar quando saltas para outra secção.",
+  "changelog.entries.shared-places-show-place-card.title":
+    "Os sítios partilhados no chat mostram o seu cartão",
+  "changelog.entries.shared-places-show-place-card.body":
+    "Um link do diretório numa mensagem mostra a foto, a avaliação e a zona, na bolha e na pré-visualização.",
+  "changelog.entries.homepage-community-card-opens-community.title":
+    "Os botões de comunidade levam-te direto lá dentro",
+  "changelog.entries.homepage-community-card-opens-community.body":
+    "Com sessão iniciada, o cartão em destaque e o explicador das comunidades levam-te às comunidades.",
+  "changelog.entries.account-menu-clear-labels.title":
+    "Menu da conta mais claro",
+  "changelog.entries.account-menu-clear-labels.body":
+    "Personas e Convidar dizem agora o que são, e nenhum nome do menu fica cortado.",
   "changelog.entries.chat-list-row-seams.title":
     "As linhas da lista de conversas voltam a encostar",
   "changelog.entries.chat-list-row-seams.body":
@@ -3169,7 +3308,7 @@ export const marketing: Catalog = {
   "changelog.entries.therapist-persona-profile.title":
     "Personas de terapeuta ganham página própria",
   "changelog.entries.therapist-persona-profile.body":
-    "Preços, escala variável, calculadora de custos, disponibilidade, primeira sessão, recomendações e perguntas numa só página.",
+    "Preços, escala variável, calculadora de custos, disponibilidade, primeira sessão, votos de confiança e perguntas numa só página.",
   "changelog.entries.compact-mailbox-switcher.title":
     "Cabeçalho das mensagens mais arrumado no telemóvel",
   "changelog.entries.compact-mailbox-switcher.body":
@@ -3253,9 +3392,9 @@ export const marketing: Catalog = {
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.body":
     "As imagens passam a pedir a resolução que o teu ecrã mostra, por isso carregam mais leves e ficam mais nítidas. Escolher e recortar uma foto foi refeito.",
   "changelog.entries.you-can-step-back-from-a-connection-without-blocking.title":
-    "Podes afastar-te de uma ligação sem bloquear",
+    "Podes afastar-te de uma conexão sem bloquear",
   "changelog.entries.you-can-step-back-from-a-connection-without-blocking.body":
-    "Terminar ligação no menu da ligação pede confirmação, não avisa a outra pessoa e as mensagens ficam na tua caixa de entrada.",
+    "Terminar conexão no menu da conexão pede confirmação, não avisa a outra pessoa e as mensagens ficam na tua caixa de entrada.",
   // ── Secção 10 (Recursos, sobre e cívico), 6 set 2026 ────────────────────
   "changelog.entries.help-centre-search.title": "Pesquisa no centro de ajuda",
   "changelog.entries.help-centre-search.body":
@@ -3393,7 +3532,7 @@ export const marketing: Catalog = {
   "changelog.entries.spot-a-risky-link-or-request.body":
     "Aparece um aviso quando uma mensagem te leva para outra app, pede um pagamento ou disfarça um link.",
   "changelog.entries.spot-a-risky-link-or-request.details":
-    "Quando uma mensagem empurra a conversa para o WhatsApp ou o Telegram, ou te pede dinheiro, aparece um aviso discreto para abrandares antes de responder. Os links levam o mesmo aviso quando se escondem atrás de um encurtador, de um domínio parecido com outro ou de um endereço em números. Os documentos de quem não tens ligação passam a ser transferidos em vez de abertos, e perguntam-te primeiro.",
+    "Quando uma mensagem empurra a conversa para o WhatsApp ou o Telegram, ou te pede dinheiro, aparece um aviso discreto para abrandares antes de responder. Os links levam o mesmo aviso quando se escondem atrás de um encurtador, de um domínio parecido com outro ou de um endereço em números. Os documentos de quem não tens conexão passam a ser transferidos em vez de abertos, e perguntam-te primeiro.",
   "changelog.entries.moderators-read-a-report-in-context.title":
     "A moderação lê uma denúncia com o contexto",
   "changelog.entries.moderators-read-a-report-in-context.body":
@@ -3407,7 +3546,7 @@ export const marketing: Catalog = {
   "changelog.entries.report-and-block-in-one-move.body":
     "Basta um motivo, podes denunciar de forma anónima e, ao bloquear, levar contigo as mensagens recentes.",
   "changelog.entries.report-and-block-in-one-move.details":
-    "Denunciar uma mensagem pede-te um motivo e mais nada, e no mesmo passo podes manter o anonimato ou bloquear a pessoa. Bloquear a partir de uma conversa propõe denunciar primeiro as mensagens recentes dessa pessoa, para que a moderação veja o que aconteceu. Só quem está na conversa pode denunciar as mensagens dela. Desfazer um bloqueio repõe a ligação que existia antes, e a conversa volta a funcionar.",
+    "Denunciar uma mensagem pede-te um motivo e mais nada, e no mesmo passo podes manter o anonimato ou bloquear a pessoa. Bloquear a partir de uma conversa propõe denunciar primeiro as mensagens recentes dessa pessoa, para que a moderação veja o que aconteceu. Só quem está na conversa pode denunciar as mensagens dela. Desfazer um bloqueio repõe a conexão que existia antes, e a conversa volta a funcionar.",
   "changelog.entries.a-deleted-message-can-still-be-reported.title":
     "Uma mensagem apagada continua a poder ser denunciada",
   "changelog.entries.a-deleted-message-can-still-be-reported.body":
@@ -3547,9 +3686,9 @@ export const marketing: Catalog = {
   "changelog.entries.chat-photo-viewer-whatsapp-layout.body":
     "O nome e a hora de quem enviou ficam no topo, ícones rápidos tratam de descarregar, responder, reencaminhar e destacar, e no computador uma tira de miniaturas deixa-te saltar para qualquer foto da conversa.",
   "changelog.entries.mutual-connections-show-real-faces.title":
-    "As ligações em comum mostram caras reais",
+    "As conexões em comum mostram caras reais",
   "changelog.entries.mutual-connections-show-real-faces.body":
-    "O cartão no perfil de um membro mostra agora a foto de cada ligação partilhada em vez das iniciais.",
+    "O cartão no perfil de um membro mostra agora a foto de cada conexão partilhada em vez das iniciais.",
   "changelog.entries.arrange-the-personas-on-your-profile.title":
     "Arruma as personas no teu perfil",
   "changelog.entries.arrange-the-personas-on-your-profile.body":
@@ -3579,7 +3718,7 @@ export const marketing: Catalog = {
   "changelog.entries.your-now-card-shows-what-your-openness-does.body":
     "A tua nota de limites vive aqui também, com olás por etiqueta e um empurrão para trocares as mais paradas.",
   "changelog.entries.your-now-card-shows-what-your-openness-does.details":
-    "O cartão passa a reunir o teu estado, a tua nota de limites e a tua disponibilidade num só sítio, atualizados juntos a partir de um único botão. Como dono do perfil, vês também quantos olás cada etiqueta recebeu nos últimos 90 dias e a quantos respondeste, um empurrão para trocares uma que ninguém bateu, e os estados que já deixaste para trás. Não há contagem de visualizações. Quem visita vê o mesmo cartão sem esses números, e continua a poder tocar numa etiqueta para te contactar com o motivo já preenchido. Cada número vem de pedidos de ligação que já existiam. Nada de novo sobre como usas a aplicação passa a ser registado.",
+    "O cartão passa a reunir o teu estado, a tua nota de limites e a tua disponibilidade num só sítio, atualizados juntos a partir de um único botão. Como dono do perfil, vês também quantos olás cada etiqueta recebeu nos últimos 90 dias e a quantos respondeste, um empurrão para trocares uma que ninguém bateu, e os estados que já deixaste para trás. Não há contagem de visualizações. Quem visita vê o mesmo cartão sem esses números, e continua a poder tocar numa etiqueta para te contactar com o motivo já preenchido. Cada número vem de pedidos de conexão que já existiam. Nada de novo sobre como usas a aplicação passa a ser registado.",
   "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.title":
     "A app instalada abre no teu mural, não num ecrã vazio",
   "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.body":
@@ -3597,7 +3736,7 @@ export const marketing: Catalog = {
   "changelog.entries.listing-photos-come-from-your-uploads.body":
     "Adiciona fotos à tua ficha de negócio carregando-as, para que cada imagem continue a funcionar e passe pelo mesmo recorte e verificação de tamanho.",
   "changelog.entries.accepting-a-connection-request-works-again.title":
-    "Aceitar um pedido de ligação volta a funcionar",
+    "Aceitar um pedido de conexão volta a funcionar",
   "changelog.entries.accepting-a-connection-request-works-again.body":
     "Desde 31 de agosto, aceitar dava erro e o pedido ficava à espera; já podes aceitar esses pedidos.",
   "changelog.entries.read-more-on-a-workshop-persona-keeps-your-place.title":
@@ -3789,7 +3928,7 @@ export const marketing: Catalog = {
   "changelog.entries.the-exact-address-once-you-connect.title":
     "A morada exata, assim que se ligam",
   "changelog.entries.the-exact-address-once-you-connect.body":
-    "Quem anuncia pode indicar a morada, visível só para ligações e visitas aceites; os outros continuam a ver o bairro.",
+    "Quem anuncia pode indicar a morada, visível só para conexões e visitas aceites; os outros continuam a ver o bairro.",
   "changelog.entries.an-answer-on-your-housing-application.title":
     "Uma resposta à tua candidatura de habitação",
   "changelog.entries.an-answer-on-your-housing-application.body":
@@ -3897,7 +4036,7 @@ export const marketing: Catalog = {
   "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.title":
     "Responder a um contacto sobre casa já não falha em silêncio",
   "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.body":
-    "Responder a um contacto sobre casa precisa de uma ligação; a conversa di-lo e oferece-te o pedido de ligação ali mesmo.",
+    "Responder a um contacto sobre casa precisa de uma conexão; a conversa di-lo e oferece-te o pedido de conexão ali mesmo.",
   "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.title":
     "Notificações que consegues limpar e que abrem o que dizem",
   "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.body":
@@ -3905,19 +4044,19 @@ export const marketing: Catalog = {
   "changelog.entries.hiding-your-photo-now-holds-everywhere.title":
     "Desligar a tua foto passa a valer em todo o lado",
   "changelog.entries.hiding-your-photo-now-holds-everywhere.body":
-    "Mostrar a tua foto passa por uma única verificação em mensagens, encontros, ligações, cartões de membro e página pública.",
+    "Mostrar a tua foto passa por uma única verificação em mensagens, encontros, conexões, cartões de membro e página pública.",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.title":
     "Quem bloqueaste já não te pode dar voto de confiança",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.body":
     "Bloquear recusa o voto de confiança, um voto existente deixa de contar e de aparecer no teu perfil, e desbloquear repõe-no.",
   "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.title":
-    "Uma lista de votos escondida já não se lê como nenhum voto",
+    "Uma lista de votos de confiança escondida já não se lê como nenhum voto",
   "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.body":
-    "Com a lista de votos privada, o cabeçalho do perfil mostra o número verdadeiro e diz que os nomes são privados.",
+    "Com a lista de votos de confiança privada, o cabeçalho do perfil mostra o número verdadeiro e diz que os nomes são privados.",
   "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.title":
     "Um perfil privado passa a dizê-lo em vez de parecer abandonado",
   "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.body":
-    "Um perfil privado, ou só para ligações, tem uma nota curta a dizer que foi escolha da pessoa e o que mudaria.",
+    "Um perfil privado, ou só para conexões, tem uma nota curta a dizer que foi escolha da pessoa e o que mudaria.",
   "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.title":
     "Esconderes-te passa a valer na fila Pessoas como tu",
   "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.body":
@@ -4059,7 +4198,7 @@ export const marketing: Catalog = {
   "changelog.entries.the-activity-switch-is-one-switch.body":
     "Mudas a atividade recente nas Definições ou no teu perfil e vale nos dois, e cada um diz-te como apareces agora.",
   "changelog.entries.answer-a-connection-request-where-you-read-it.title":
-    "Podes responder a um pedido de ligação onde o lês",
+    "Podes responder a um pedido de conexão onde o lês",
   "changelog.entries.answer-a-connection-request-where-you-read-it.body":
     "O perfil oferece aceitar, a notificação traz aceitar e recusar, e o que escreveste vai contigo para a conversa.",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.title":
@@ -4079,16 +4218,16 @@ export const marketing: Catalog = {
   "changelog.entries.losing-your-google-account-is-no-longer-final.body":
     "Um administrador pode religar a tua adesão a uma nova conta Google que já provou controlar o teu endereço.",
   "changelog.entries.vouching-has-a-front-door.title":
-    "Avalizar alguém passou a ter porta de entrada",
+    "Dar um voto de confiança a alguém passou a ter porta de entrada",
   "changelog.entries.vouching-has-a-front-door.body":
-    "A página de avalizar está no menu da tua conta e ao lado das tuas ligações, e o passo de início leva-te até lá.",
+    "A página dos votos de confiança está no menu da tua conta e ao lado das tuas conexões, e o passo de início leva-te até lá.",
   "changelog.entries.recognition-counts-people-not-volume.title":
     "O reconhecimento conta pessoas e não volume",
   "changelog.entries.recognition-counts-people-not-volume.body":
     "Os pontos vêm só de coisas em que outra pessoa participou; os distintivos que ganhas sozinho continuam teus e à vista.",
 
   "changelog.entries.declining-a-connection-request-now-holds.title":
-    "Recusar um pedido de ligação passa a valer",
+    "Recusar um pedido de conexão passa a valer",
   "changelog.entries.declining-a-connection-request-now-holds.body":
     "Um novo pedido tem de esperar, a espera cresce a cada recusa da mesma pessoa, e recusas suficientes impedem novos pedidos.",
 
@@ -4199,7 +4338,7 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Encontra o teu caminho",
   "changelog.tag.postVolunteer": "Publicar oportunidade",
   "changelog.tag.notifications": "Abrir as tuas notificações",
-  "changelog.tag.connections": "Abrir as tuas ligações",
+  "changelog.tag.connections": "Abrir as tuas conexões",
   "changelog.tag.trustNetwork": "Abrir a rede de confiança",
   "changelog.tag.invite": "Convidar alguém",
   "changelog.tag.imprint": "Ler o aviso legal",
@@ -4226,7 +4365,7 @@ export const marketing: Catalog = {
   "changelog.tag.appealOutcome": "Ver o estado do teu recurso",
   "changelog.tag.hateCrime": "Ler recursos sobre crimes de ódio",
   "changelog.tag.changemakers": "Ver os nossos Changemakers",
-  "changelog.tag.vouch": "Apadrinhar alguém",
+  "changelog.tag.vouch": "Dar um voto de confiança a alguém",
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
@@ -4668,7 +4807,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-join-review-context.title":
     "Ver um pedido de entrada mostra-te a pessoa",
   "changelog.entries.community-join-review-context.body":
-    "Os pedidos trazem pronomes, tempo na QueerPulse, ligações e comunidades em comum, e o nome ligado ao perfil.",
+    "Os pedidos trazem pronomes, tempo na QueerPulse, conexões e comunidades em comum, e o nome ligado ao perfil.",
   "changelog.entries.community-resources-shelf.title":
     "Uma prateleira a sério para os links da comunidade",
   "changelog.entries.community-resources-shelf.body":
@@ -4814,9 +4953,9 @@ export const marketing: Catalog = {
     "O topo volta a encostar à navegação, com título, uma linha sobre o espaço e o alternador Minhas comunidades e Descobrir.",
 
   "changelog.entries.community-tags-discovery.title":
-    "Descobre comunidades por etiquetas e ligações",
+    "Descobre comunidades por etiquetas e conexões",
   "changelog.entries.community-tags-discovery.body":
-    "A página mostra comunidades semelhantes por etiquetas em comum, e o Descobrir destaca onde as tuas ligações já estão.",
+    "A página mostra comunidades semelhantes por etiquetas em comum, e o Descobrir destaca onde as tuas conexões já estão.",
 
   "changelog.entries.community-tags.title":
     "As comunidades já podem ter etiquetas",
@@ -4880,7 +5019,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-safety-enforcement.title":
     "Definições de segurança da comunidade que passam a agir",
   "changelog.entries.community-safety-enforcement.body":
-    "Exige-se um segundo aval antes da entrada, e o congelamento automático pára publicações e entradas numa denúncia grave.",
+    "Exige-se um segundo voto de confiança antes da entrada, e o congelamento automático pára publicações e entradas numa denúncia grave.",
 
   "changelog.entries.community-settings-persist.title":
     "Definições da comunidade que guardam mesmo",
@@ -4935,9 +5074,9 @@ export const marketing: Catalog = {
     "A configuração tem passos opcionais para pronomes, uma bio curta e ativar notificações, e termina nos Primeiros passos.",
 
   "changelog.entries.getting-started-vouch-fix.title":
-    "Corrigido o passo “recomenda alguém” do Início Rápido",
+    "Corrigido o passo “Dá um voto de confiança a alguém” do Início Rápido",
   "changelog.entries.getting-started-vouch-fix.body":
-    "O passo só fica concluído depois de avalizares alguém; ser avalizade por um convite pessoal estava a marcá-lo por erro.",
+    "O passo só fica concluído depois de dares um voto de confiança a alguém; receber um voto de confiança por um convite pessoal estava a marcá-lo por erro.",
 
   "changelog.entries.admin-invite-quota-controls.title":
     "Administradores podem definir limites de convites por membro",
@@ -4950,14 +5089,14 @@ export const marketing: Catalog = {
     "Aprovar um pedido envia logo por email a ligação de convite; quem revê continua a poder copiá-la à mão como reserva.",
 
   "changelog.entries.join-request-mutual-member-field.title":
-    "Nomear alguém que te pode avalizar passa a ser um dado real",
+    "Nomear alguém que te pode dar um voto de confiança passa a ser um dado real",
   "changelog.entries.join-request-mutual-member-field.body":
-    "O campo “alguém que te pode avalizar” é enviado como campo próprio, para quem revê o poder associar diretamente.",
+    "O campo “alguém que te pode dar um voto de confiança” é enviado como campo próprio, para quem revê o poder associar diretamente.",
 
   "changelog.entries.post-opportunity-team-picker.title":
     "Publicar uma oportunidade já vem preenchido com os teus dados",
   "changelog.entries.post-opportunity-team-picker.body":
-    "Equipa e contacto preenche o teu identificador e o slug de parceiro; a equipa vem de um seletor das tuas ligações.",
+    "Equipa e contacto preenche o teu identificador e o slug de parceiro; a equipa vem de um seletor das tuas conexões.",
 
   "changelog.entries.side-quests-getting-started.title":
     "Missões secundárias assim que estiveres pronto",
@@ -4983,7 +5122,7 @@ export const marketing: Catalog = {
     "Um seletor oferece o Google Calendar ou um ficheiro .ics compatível com o Apple Calendar, o Outlook e a maioria das apps.",
   "changelog.entries.recognition-xp.title": "Ganha XP, níveis e crachás",
   "changelog.entries.recognition-xp.body":
-    "A lista de primeiros passos, comunidades, encontros e ligações dão experiência; acompanha na página de Crachás.",
+    "A lista de primeiros passos, comunidades, encontros e conexões dão experiência; acompanha na página de Crachás.",
 
   "changelog.entries.governance-editable-finances.title":
     "Valores financeiros editáveis, com indicação da origem de cada número",
@@ -5029,12 +5168,12 @@ export const marketing: Catalog = {
   "changelog.entries.admin-trust-network-cite-evidence.title":
     "Os admins podem citar provas a partir do grafo da rede de confiança",
   "changelog.entries.admin-trust-network-cite-evidence.body":
-    "“Citar” escreve uma nota real no histórico de auditoria do membro, a descrever a relação de aval citada.",
+    "“Citar” escreve uma nota real no histórico de auditoria do membro, a descrever a relação do voto de confiança citado.",
 
   "changelog.entries.admin-trust-network-ring-detection.title":
     "A deteção de anéis na rede de confiança é agora uma análise real de grafo",
   "changelog.entries.admin-trust-network-ring-detection.body":
-    "O aviso vem de grupos de contas novas que só se avalizam entre si, sem nenhum aval externo.",
+    "O aviso vem de grupos de contas novas que só dão votos de confiança umas às outras, sem nenhum voto de confiança vindo de fora.",
 
   "changelog.entries.admin-reporter-credibility.title":
     "A fila de moderação mostra agora o histórico de quem denuncia, além de quem foi denunciado",
@@ -5217,9 +5356,9 @@ export const marketing: Catalog = {
     "Alguns emblemas bloqueados não levavam a nada; ficam escondidos até haver uma forma real de os ganhar.",
 
   "changelog.entries.recognition-vouch-perk-copy.title":
-    'A descrição do benefício "Acesso a apadrinhamento" corresponde agora à realidade',
+    'A descrição do benefício "Poder dar votos de confiança" corresponde agora à realidade',
   "changelog.entries.recognition-vouch-perk-copy.body":
-    "Apadrinhar nunca teve requisito de nível, por isso a vitrine diz agora que qualquer membro ativo pode apadrinhar.",
+    "Dar votos de confiança nunca teve requisito de nível, por isso a vitrine diz agora que qualquer membro ativo pode dar votos de confiança.",
 
   "changelog.entries.recognition-visible-on-profiles.title":
     "Vê o nível e os emblemas de outros membros",
@@ -5227,9 +5366,9 @@ export const marketing: Catalog = {
     "O nível e os emblemas aparecem agora nos perfis de outros membros, para o reconhecimento ser um sinal visível entre membros.",
 
   "changelog.entries.vouch-daily-cap.title":
-    "Um limite diário de apadrinhamentos, para manter o sinal significativo",
+    "Um limite diário de votos de confiança, para manter o sinal significativo",
   "changelog.entries.vouch-daily-cap.body":
-    "Além do intervalo entre apadrinhamentos, um limite diário generoso mantém o peso do sinal ao longo do tempo.",
+    "Além do intervalo entre votos de confiança, um limite diário generoso mantém o peso do sinal ao longo do tempo.",
 
   "changelog.entries.magazine-article-publish-schedule.title":
     "Publicar e agendar artigos, agora a sério",
@@ -5338,14 +5477,14 @@ export const marketing: Catalog = {
     'Tópicos com hashtag aparecem ao lado de pessoas e comunidades, e categorias com mais resultados têm uma ligação "Ver tudo".',
 
   "changelog.entries.feed-connections-tab.title":
-    'Novo separador "Ligações" no teu feed',
+    'Novo separador "Conexões" no teu feed',
   "changelog.entries.feed-connections-tab.body":
-    "Publicações, tópicos do fórum e convívios das tuas ligações, tudo num só lugar na barra de separadores do feed.",
+    "Publicações, tópicos do fórum e convívios das tuas conexões, tudo num só lugar na barra de separadores do feed.",
 
   "changelog.entries.connections-report-now-files.title":
-    "Corrigido: denunciar uma ligação agora envia mesmo a denúncia",
+    "Corrigido: denunciar uma conexão agora envia mesmo a denúncia",
   "changelog.entries.connections-report-now-files.body":
-    "Denunciar, no menu de opções de uma ligação, abre o formulário habitual de motivo e detalhe e chega à equipa de moderação.",
+    "Denunciar, no menu de opções de uma conexão, abre o formulário habitual de motivo e detalhe e chega à equipa de moderação.",
 
   "changelog.entries.getting-started-xp-not-awarded-fix.title":
     "Corrigido: XP do Início Rápido não aparecia",
@@ -5374,15 +5513,15 @@ export const marketing: Catalog = {
   "changelog.entries.profile-hero-rail-redesign.title":
     "Hero e barra lateral do perfil redesenhados",
   "changelog.entries.profile-hero-rail-redesign.body":
-    "Os sinais de confiança, como verificado, equipa e avais, vêm com uma explicação simples, mais uma navegação por secções.",
+    "Os sinais de confiança, como verificado, equipa e votos de confiança, vêm com uma explicação simples, mais uma navegação por secções.",
   "changelog.entries.profile-rail-stats-redesign.title":
     "As tuas estatísticas de perfil, num relance",
   "changelog.entries.profile-rail-stats-redesign.body":
-    "As ligações e os votos de confiança aparecem como números identificados, e a privacidade passou para um menu junto a Editar.",
+    "As conexões e os votos de confiança aparecem como números identificados, e a privacidade passou para um menu junto a Editar.",
   "changelog.entries.profile-who-sees-what-controls.title":
     "Escolhe exatamente quem vê o quê no teu perfil",
   "changelog.entries.profile-who-sees-what-controls.body":
-    '"Quem vê o quê" reúne predefinições, interruptores para foto, bairro e avais, e esconder-te de pessoas específicas.',
+    '"Quem vê o quê" reúne predefinições, interruptores para foto, bairro e votos de confiança, e esconder-te de pessoas específicas.',
   "changelog.entries.profile-your-data-panel.title":
     'Um painel "Os teus dados" para a tua conta',
   "changelog.entries.profile-your-data-panel.body":
@@ -5443,9 +5582,9 @@ export const marketing: Catalog = {
   "changelog.entries.therapist-personas-directory.title":
     "Diretórios de terapeutas, com perfis reais",
   "changelog.entries.therapist-personas-directory.body":
-    "Cada perfil verificado pela comunidade mostra como a pessoa trabalha, valores, disponibilidade, onde atende e avais.",
+    "Cada perfil verificado pela comunidade mostra como a pessoa trabalha, valores, disponibilidade, onde atende e votos de confiança.",
   "changelog.entries.therapist-personas-directory.details":
-    "Os diretórios de terapeutas afirmativos mostram agora perfis reais, verificados pela comunidade: como cada pessoa trabalha, valores, disponibilidade, onde atende e avais. Os terapeutas geram o seu próprio perfil.",
+    "Os diretórios de terapeutas afirmativos mostram agora perfis reais, verificados pela comunidade: como cada pessoa trabalha, valores, disponibilidade, onde atende e votos de confiança. Os terapeutas geram o seu próprio perfil.",
 
   "changelog.entries.concern-intake-live.title":
     "Levanta uma preocupação, e nós vamos mesmo vê-la",
@@ -5465,7 +5604,7 @@ export const marketing: Catalog = {
   "changelog.entries.gathering-audience-scope.title":
     "Escolhe quem pode ver o teu convívio",
   "changelog.entries.gathering-audience-scope.body":
-    "Define até onde chega: toda a QueerPulse, quem as tuas ligações conhecem, as tuas ligações, uma comunidade ou só por convite.",
+    "Define até onde chega: toda a QueerPulse, quem as tuas conexões conhecem, as tuas conexões, uma comunidade ou só por convite.",
 
   "changelog.entries.unified-pronoun-picker.title":
     "Um seletor de pronomes consistente em todos os perfis",
@@ -5538,12 +5677,12 @@ export const marketing: Catalog = {
   "changelog.entries.vouch-multiple-relationships.title":
     "Diz todas as formas como conheces alguém",
   "changelog.entries.vouch-multiple-relationships.body":
-    "Um aval pode indicar todas as relações: amizade, colaboração, vizinhança, ou terem-se conhecido aqui.",
+    "Um voto de confiança pode indicar todas as relações: amizade, colaboração, vizinhança, ou terem-se conhecido aqui.",
 
   "changelog.entries.getting-started-checklist.title":
     "Uma lista suave para os teus primeiros passos",
   "changelog.entries.getting-started-checklist.body":
-    "Primeiros passos, no menu da conta, lista perfil, comunidade, aval e publicação, e cada passo assinala-se sozinho.",
+    "Primeiros passos, no menu da conta, lista perfil, comunidade, voto de confiança e publicação, e cada passo assinala-se sozinho.",
 
   "changelog.entries.onboarding-set-up-personas-after.title":
     "Um acolhimento mais calmo: cria personas depois de entrares",
@@ -5593,7 +5732,7 @@ export const marketing: Catalog = {
   "changelog.entries.invite-request-mutual-email.title":
     "Pedir para entrar passa a pedir o email de um membro",
   "changelog.entries.invite-request-mutual-email.body":
-    "Dá o email de alguém que conheces aqui e encontramos essa pessoa para te avalizar mais depressa; o campo continua opcional.",
+    "Dá o email de alguém que conheces aqui e encontramos essa pessoa para te dar um voto de confiança mais depressa; o campo continua opcional.",
 
   "changelog.entries.report-form-guide-split.title":
     "O formulário de denúncia e o guia de denúncias são agora páginas separadas",
@@ -5603,12 +5742,12 @@ export const marketing: Catalog = {
   "changelog.entries.safety-page-report-form.title":
     "Denunciar uma preocupação vai direto ao formulário",
   "changelog.entries.safety-page-report-form.body":
-    "A página de segurança liga ao formulário de denúncia na app, e a explicação dos avais corresponde a como a entrada funciona.",
+    "A página de segurança liga ao formulário de denúncia na app, e a explicação dos votos de confiança corresponde a como a entrada funciona.",
 
   "changelog.entries.public-profile-eligibility-live.title":
     "Perfis públicos que podes mesmo conquistar.",
   "changelog.entries.public-profile-eligibility-live.body":
-    "O progresso segue textos publicados, encontros que organizaste, avais, recomendações e o tempo que apareceste.",
+    "O progresso segue textos publicados, encontros que organizaste, votos de confiança, recomendações e o tempo que apareceste.",
 
   "changelog.entries.public-profile-eligibility-tracker.title":
     "Um caminho mais claro para o perfil público.",
@@ -5899,12 +6038,12 @@ export const marketing: Catalog = {
   "changelog.entries.network-modal-search.title":
     "Procura nas listas da tua rede",
   "changelog.entries.network-modal-search.body":
-    "As listas Ligações e Avalizaram-te têm uma caixa de procura, para uma lista longa se filtrar até um nome num instante.",
+    "As listas «Conexões» e «Votos de confiança que recebeste» têm uma caixa de procura, para uma lista longa se filtrar até um nome num instante.",
 
   "changelog.entries.profile-your-network.title":
     "Vê a tua rede no teu próprio perfil",
   "changelog.entries.profile-your-network.body":
-    "Uma linha privada A tua rede mostra as tuas ligações, quem avalizaste e quem te avalizou; toca num atalho para a lista.",
+    "Uma linha privada A tua rede mostra as tuas conexões, os votos de confiança que deste e os que recebeste; toca num atalho para a lista.",
 
   "changelog.entries.fix-page-top-nav-overlap.title":
     "O conteúdo das páginas já não fica escondido por baixo do menu do topo",
@@ -5961,7 +6100,7 @@ export const marketing: Catalog = {
     "Um avatar ou capa acabados de escolher aparecem logo na pré-visualização do editor, sem um quadrado indevido em volta.",
 
   "changelog.entries.fix-vouch-success-self-face.title":
-    "A confirmação do teu voto mostra agora a tua cara",
+    "A confirmação do teu voto de confiança mostra agora a tua cara",
   "changelog.entries.fix-vouch-success-self-face.body":
     "A confirmação podia mostrar um perfil de demonstração em vez do teu; passa a mostrar sempre o teu avatar e iniciais.",
 
@@ -6033,12 +6172,12 @@ export const marketing: Catalog = {
   "changelog.entries.tap-notification-to-profile.title":
     "Toca numa notificação para abrir o perfil",
   "changelog.entries.tap-notification-to-profile.body":
-    "Quando alguém aceita o teu convite ou ligação, toda a notificação abre o perfil; as mais específicas abrem onde apontam.",
+    "Quando alguém aceita o teu convite ou conexão, toda a notificação abre o perfil; as mais específicas abrem onde apontam.",
 
   "changelog.entries.more-push-notifications.title":
     "Mais do que te importa chega agora como notificação push",
   "changelog.entries.more-push-notifications.body":
-    "O push cobre pedidos de ligação, menções, respostas nas tuas conversas, avais e alterações a um evento a que vais.",
+    "O push cobre pedidos de conexão, menções, respostas nas tuas conversas, votos de confiança e alterações a um evento a que vais.",
 
   "changelog.entries.localized-push-notifications.title":
     "Notificações push no teu idioma",
@@ -6068,12 +6207,12 @@ export const marketing: Catalog = {
   "changelog.entries.trust-network-legend-withdrawn.title":
     "A legenda da rede de confiança já explica as linhas tracejadas",
   "changelog.entries.trust-network-legend-withdrawn.body":
-    "A legenda nomeia a linha tracejada vermelha como «Aval retirado», para reconheceres um aval retirado num relance.",
+    "A legenda nomeia a linha tracejada vermelha como «Voto de confiança retirado», para reconheceres um voto de confiança retirado num relance.",
 
   "changelog.entries.trust-network-replay-timeline.title":
     "A repetição da Rede de Confiança conta a história pessoa a pessoa",
   "changelog.entries.trust-network-replay-timeline.body":
-    "A repetição percorre uma ligação de cada vez, por ordem real, diz quem se ligou e quando, e acende a linha na lista lateral.",
+    "A repetição percorre um voto de confiança de cada vez, por ordem real, diz quem entrou e quando, e acende a linha na lista lateral.",
 
   "changelog.entries.pronouns-on-member-cards.title":
     "Cartões de novos membros mais completos no feed",
@@ -6098,7 +6237,7 @@ export const marketing: Catalog = {
   "changelog.entries.trust-network-mobile-graph-first.title":
     "A Rede de Confiança abre no grafo no telemóvel",
   "changelog.entries.trust-network-mobile-graph-first.body":
-    "Toca em alguém no grafo de ligações para deslizar os detalhes dos avais, e desliza para fora para voltares à vista completa.",
+    "Toca em alguém no grafo dos votos de confiança para deslizar os detalhes dos seus votos, e desliza para fora para voltares à vista completa.",
 
   "changelog.entries.magazine-article-versions.title":
     "Os rascunhos de artigos passam a guardar um histórico completo de versões",
@@ -6204,9 +6343,9 @@ export const marketing: Catalog = {
     "No telemóvel, o número de referência fica numa linha própria, por cima de uma linha com Editar, Eliminar e Ver anúncio.",
 
   "changelog.entries.vouch-for-a-safe-space.title":
-    "Deixa o teu testemunho por um espaço seguro",
+    "Dá o teu voto de confiança a um espaço seguro",
   "changelog.entries.vouch-for-a-safe-space.body":
-    "Junta o teu testemunho à página de espaço seguro de um sítio, com nota opcional e como conheces o lugar, ou de forma anónima.",
+    "Junta o teu voto de confiança à página de espaço seguro de um sítio, com nota opcional e como conheces o lugar, ou de forma anónima.",
 
   "changelog.entries.my-events-change-list-live.title":
     "Vê o que mudou nos Meus Eventos",
@@ -6236,7 +6375,7 @@ export const marketing: Catalog = {
   "changelog.entries.mobile-profile-header-refresh.title":
     "Um perfil mais limpo no telemóvel",
   "changelog.entries.mobile-profile-header-refresh.body":
-    "Foto e nome ao centro, uma linha de estatísticas mais folgada e botões mais arrumados para dizer olá e avalizar.",
+    "Foto e nome ao centro, uma linha de estatísticas mais folgada e botões mais arrumados para dizer olá e dar um voto de confiança.",
 
   "changelog.entries.profile-edit-save-bar-mobile.title":
     "Guardar o teu perfil no telemóvel passa a funcionar",
@@ -6329,7 +6468,7 @@ export const marketing: Catalog = {
   "changelog.entries.featured-homepage-consent-toggle.title":
     "Consente ser destacade na página inicial",
   "changelog.entries.featured-homepage-consent-toggle.body":
-    'Um interruptor nas definições de privacidade deixa a administração destacar-te; vem desligado e exige "Aberto a ligações".',
+    'Um interruptor nas definições de privacidade deixa a administração destacar-te; vem desligado e exige "Aberto a conexões".',
   "changelog.entries.featured-homepage-consent-toggle.tag":
     "Abrir as tuas definições de privacidade",
 
@@ -6485,12 +6624,12 @@ export const marketing: Catalog = {
   "changelog.entries.mobile-account-you-tab.title":
     "A tua conta, a um toque no telemóvel",
   "changelog.entries.mobile-account-you-tab.body":
-    "A tua foto na barra inferior abre uma folha com perfil, ligações, lugares guardados, candidaturas e definições.",
+    "A tua foto na barra inferior abre uma folha com perfil, conexões, lugares guardados, candidaturas e definições.",
 
   "changelog.entries.instagram-style-mobile-profile.title":
     "O teu perfil, redesenhado para o telemóvel",
   "changelog.entries.instagram-style-mobile-profile.body":
-    "Avatar compacto, uma linha de avais, comunidades e personas, uma faixa de destaques e secções por separadores que deslizas.",
+    "Avatar compacto, uma linha de votos de confiança, comunidades e personas, uma faixa de destaques e secções por separadores que deslizas.",
 
   "changelog.entries.forum-upvotes-tags-search.title":
     "O fórum cresceu: votos, etiquetas, pesquisa e tópicos que se podem fechar",
@@ -6600,11 +6739,11 @@ export const marketing: Catalog = {
   "changelog.entries.trust-network-replay-by-joins.title":
     "A repetição da rede de confiança segue as pessoas",
   "changelog.entries.trust-network-replay-by-joins.body":
-    "A Repetição avança pelos momentos de cada aval, com tempo igual para cada um, e mostra como a comunidade cresceu.",
+    "A Repetição avança pelos momentos de cada voto de confiança, com tempo igual para cada um, e mostra como a comunidade cresceu.",
   "changelog.entries.trust-network-invite-vs-vouch.title":
-    "Vê quem foi convidado e quem foi avalizado depois",
+    "Vê quem foi convidado e quem recebeu um voto de confiança depois",
   "changelog.entries.trust-network-invite-vs-vouch.body":
-    "As ligações de convite na rede de confiança do painel ganham uma cor própria, com legenda e etiquetas ao passar o rato.",
+    "As linhas de convite na rede de confiança do painel ganham uma cor própria, com legenda e etiquetas ao passar o rato.",
   "changelog.entries.chef-mixologist-therapist-personas.title":
     "Três novos tipos de persona: cozinha, coquetelaria e terapia",
   "changelog.entries.chef-mixologist-therapist-personas.body":
@@ -6612,9 +6751,9 @@ export const marketing: Catalog = {
   "changelog.entries.chef-mixologist-therapist-personas.details":
     "Já podes criar um subperfil de cozinha (menus e residências), de coquetelaria (cocktails e residências) ou de terapia (especialidades e credenciais), cada um com o seu modelo inicial e filtro no diretório.",
   "changelog.entries.connections-card-polish.title":
-    "Cartões de ligação mais arrumados",
+    "Cartões de conexão mais arrumados",
   "changelog.entries.connections-card-polish.body":
-    "A linha de pessoas em comum aparece corretamente, e a data de Ligação mostra o dia e a hora ao minuto.",
+    "A linha de pessoas em comum aparece corretamente, e a data de Conexão mostra o dia e a hora ao minuto.",
   "changelog.entries.lightbox-focus-a11y.title":
     "Gestão de foco mais limpa no visualizador de fotos",
   "changelog.entries.lightbox-focus-a11y.body":
@@ -6872,7 +7011,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.invite-state-page.title": "Página de convite mais clara",
   "changelog.entries.invite-state-page.body":
-    "Uma ligação de convite inválida mostra o convite, quem te avalizou, porque deixou de funcionar e o passo certo a seguir.",
+    "Uma ligação de convite inválida mostra o convite, quem te deu um voto de confiança, porque deixou de funcionar e o passo certo a seguir.",
 
   "changelog.entries.chat-shortcuts.title": "Atalhos de menção no chat",
   "changelog.entries.chat-shortcuts.body":
@@ -7429,9 +7568,9 @@ export const marketing: Catalog = {
     "ex.: 18 voluntários de sensibilização ativos este trimestre.",
   "postOpportunity.rich.teamLabel": "Membros da equipa",
   "postOpportunity.rich.teamHelper":
-    "Escolhe entre as tuas ligações ou as comunidades a que pertences.",
-  "postOpportunity.rich.teamPlaceholder": "Selecionar ligações ou comunidades",
-  "postOpportunity.rich.teamGroupConnections": "Ligações",
+    "Escolhe entre as tuas conexões ou as comunidades a que pertences.",
+  "postOpportunity.rich.teamPlaceholder": "Selecionar conexões ou comunidades",
+  "postOpportunity.rich.teamGroupConnections": "Conexões",
   "postOpportunity.rich.teamGroupCommunities": "Comunidades",
   "postOpportunity.rich.teamEmpty":
     "Ligue-se a pessoas ou junte-se a uma comunidade para as adicionar aqui.",
@@ -8965,20 +9104,20 @@ export const marketing: Catalog = {
   "constitution.art2.toc": "II · Pessoas-membro",
   "constitution.art2.title": "Pessoas-membro",
   "constitution.art2.clause1":
-    "É <strong>pessoa-membro</strong> qualquer indivíduo avalizado por uma pessoa-membro existente, que tenha concluído uma breve conversa de admissão com a equipa de moderação, e aceite o Código de Conduta.",
+    "É <strong>pessoa-membro</strong> qualquer indivíduo que tenha recebido um voto de confiança de uma pessoa-membro existente, concluído uma breve conversa de admissão com a equipa de moderação, e aceite o Código de Conduta.",
   "constitution.art2.clause2":
     "As pessoas-membro podem estar num de três escalões: <em>Solidariedade</em> (gratuito), <em>Membro</em> (36 €/ano), ou <em>Sustentador/a</em> (96 €/ano). Todos os escalões têm direitos de voto iguais.",
   "constitution.art2.clause3":
     "Nenhum estatuto de uma pessoa-membro (incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade) afeta os seus direitos de voto ou o tratamento em moderação.",
 
-  "constitution.art3.toc": "III · Aval",
-  "constitution.art3.title": "Aval",
+  "constitution.art3.toc": "III · Votos de confiança",
+  "constitution.art3.title": "Votos de confiança",
   "constitution.art3.clause1":
-    "Cada pessoa-membro existente pode avalizar até <strong>duas</strong> novas pessoas-membro por ano civil. O aval associa o nome de quem avaliza ao registo da nova pessoa-membro, permanentemente.",
+    "Cada pessoa-membro existente pode dar votos de confiança a <strong>duas</strong> novas pessoas-membro, no máximo, por ano civil. O voto de confiança associa o nome de quem o dá ao registo da nova pessoa-membro, permanentemente.",
   "constitution.art3.clause2":
-    "O limite de avales pode ser temporariamente elevado por voto da Assembleia até um máximo de quatro por pessoa-membro, durante um ano civil, em casos de lacunas identificadas na rede.",
+    "O limite de votos de confiança pode ser temporariamente elevado por voto da Assembleia até um máximo de quatro por pessoa-membro, durante um ano civil, em casos de lacunas identificadas na rede.",
   "constitution.art3.clause3":
-    "Uma pessoa-membro cujos três avales mais recentes tenham sido todos removidos ao abrigo do Artigo VIII perde o direito de avalizar durante doze meses.",
+    "Uma pessoa-membro cujos três votos de confiança mais recentes tenham sido todos removidos ao abrigo do Artigo VIII perde o direito de dar votos de confiança durante doze meses.",
 
   "constitution.art4.toc": "IV · Assembleia",
   "constitution.art4.title": "A <em>Assembleia</em> Anual",
@@ -9479,7 +9618,7 @@ export const marketing: Catalog = {
   "changelog.entries.communities-your-connections-already-joined.title":
     "Comunidades onde as tuas pessoas já estão",
   "changelog.entries.communities-your-connections-already-joined.body":
-    "A página das comunidades lista grupos onde as tuas ligações entraram sem ti, por ordem de quantas estão em cada um.",
+    "A página das comunidades lista grupos onde as tuas conexões entraram sem ti, por ordem de quantas estão em cada um.",
   "changelog.entries.follow-your-listing-claim.title":
     "Acompanha a reivindicação do teu anúncio do princípio ao fim",
   "changelog.entries.follow-your-listing-claim.body":
@@ -10348,7 +10487,7 @@ export const marketing: Catalog = {
   "changelog.entries.choose-who-can-add-you-to-a-group.body":
     "Os convites chegam aos Pedidos com Aceitar e Recusar, mais uma notificação e um push, e ninguém é readicionado em silêncio.",
   "changelog.entries.choose-who-can-add-you-to-a-group.details":
-    "Uma nova definição de privacidade deixa-te escolher entre as tuas ligações te poderem juntar direto a um grupo, ou exigir um convite em vez disso. Os convites chegam como um pedido que aceitas ou recusas, com uma notificação e um push nos dois casos, e ninguém que saiu ou foi removido de um grupo pode ser posto lá de volta em silêncio.",
+    "Uma nova definição de privacidade deixa-te escolher entre as tuas conexões te poderem juntar direto a um grupo, ou exigir um convite em vez disso. Os convites chegam como um pedido que aceitas ou recusas, com uma notificação e um push nos dois casos, e ninguém que saiu ou foi removido de um grupo pode ser posto lá de volta em silêncio.",
   "changelog.entries.end-a-group-or-hand-it-to-someone-else.title":
     "Termina um grupo, ou passa-o a outra pessoa",
   "changelog.entries.end-a-group-or-hand-it-to-someone-else.body":

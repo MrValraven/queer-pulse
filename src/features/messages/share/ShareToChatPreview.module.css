@@ -138,3 +138,49 @@
   font-size: var(--text-10-5);
   color: rgba(var(--cream-rgb), 0.7);
 }
+
+/* ── Resolved place share ──
+   Mirrors `PlaceShareBubble` (MessageBubbleBody.tsx / PlaceShareBubble.tsx):
+   the card stands on its own (its own `--paper` surface, no plum frame
+   around it), the note (if the sender wrote one) sits in a small plum
+   caption directly under it, and the send time reads below that on the
+   plain surface, not on a bubble fill, the same reasoning `MessageMeta`'s
+   `floating={false}` case uses for a photo/place bubble in the real thread.
+   `display: table` is the same "caption reads at exactly the card's own
+   width" trick `.attachmentGroup` uses (see that class's own comment in
+   MessagesPage.module.css) so this miniature can't drift from the real
+   bubble's proportions. `max-width: min(320px, 100%)` repeats the card's own
+   cap (`PlaceLinkCardBody.module.css`'s `.wrap`) as an absolute ceiling on
+   the whole group: without it, a note longer than the card's own max-content
+   width pulls the anonymous table wrapper wider than the card to fit it,
+   instead of wrapping under it. Lifted over the `.surface::after` pattern
+   layer the same way `.bubble` is, or the tiles paint across the card. */
+.placeGroup {
+  position: relative;
+  z-index: 1;
+  display: table;
+  align-self: flex-end;
+  max-width: min(320px, 100%);
+}
+.placeCaption {
+  display: table-caption;
+  caption-side: bottom;
+  margin-block-start: 2px;
+  padding: 6px 10px;
+  border-radius: var(--bubble-radius, var(--radius-18));
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 0.97);
+  --chat-link-ink: var(--accent-soft);
+  font-size: var(--text-13-5);
+  line-height: 1.42;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.placeTime {
+  align-self: flex-end;
+  padding: 2px 6px 0;
+  font-size: var(--text-10-5);
+  /* Sits on the plain `--cream` surface, not a plum fill, so it reads with
+     muted ink instead of `.time`'s cream-on-plum colour. */
+  color: var(--ink-40);
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, SectionHead } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,6 +16,7 @@ import styles from "./CinemaShortsPage.module.css";
 /** Recurring watch-party calendar with RSVP. */
 export function WatchParties({ notify }: { notify: (m: string) => void }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [rsvped, setRsvped] = useState<Set<number>>(new Set());
 
   const rsvp = (i: number, title: string) => {
@@ -69,7 +71,18 @@ export function WatchParties({ notify }: { notify: (m: string) => void }) {
               </div>
               <div className={styles.wcCta}>
                 <span className={styles.wcGoing}>
-                  {t("cinema:shorts.watchParties.goingCount", { count: going })}
+                  <Translation
+                    i18nKey="cinema:shorts.watchParties.goingCount"
+                    values={{ count: going }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(going)}
+                          numericValue={going}
+                        />
+                      ),
+                    }}
+                  />
                 </span>
                 <Button
                   variant={w.next ? "primary" : "ghost"}

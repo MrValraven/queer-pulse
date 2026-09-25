@@ -92,7 +92,7 @@ Reach for these before writing new motion. Don't hand-roll what these already do
 | Animate real content in on load (mount)     | `FadeIn` (`delay` for stagger, `as` polymorphic)   | `src/shared/components/ui`           |
 | Reveal a section as it scrolls into view    | `Reveal` / `useScrollReveal()`                     | `src/shared/components/ui` / `hooks` |
 | Respect reduced motion in JS                | `usePrefersReducedMotion()`                        | `src/shared/hooks`                   |
-| Count a number up                           | `useCountUp()`                                     | `src/shared/hooks`                   |
+| Animate a changing number (odometer roll)   | `RollingNumber` (`revealFrom` to roll in)          | `src/shared/components/ui`           |
 
 **Tokens (never hardcode timings/curves):** easing `--ease`, `--ease-out`, `--ease-in`, `--ease-std`; durations `--dur-fast` (150), `--dur-base` (250), `--dur-slow` (400), `--dur-reveal` (900). Shared keyframes live in `src/styles/tokens/effects.css`: `qpRevealIn`, `qpGridIn`, `qpPulse`, `qpShimmer`, `qpToastIn`/`qpToastOut`, `qpTabIn`. Reuse a keyframe before adding a new one; if you add one, name it `qp*` and put it in `effects.css`.
 

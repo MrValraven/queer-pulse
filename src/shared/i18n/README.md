@@ -69,6 +69,31 @@ matching element from `components` around each run's inner text; an unmapped
 tag renders its inner text rather than throwing. `values` (same shape as `t`'s
 second argument) still works for `{token}` interpolation and `count`.
 
+`slots` renders a `{token}` as a React node instead of text, in plain text or
+inside a tag run, with no catalog change. Use it for a live figure such as a
+`RollingNumber` count:
+
+```tsx
+<Translation
+  i18nKey="cinema:browse.results.showing" // "Showing <strong>{count} films</strong>"
+  components={{ strong: <strong /> }}
+  values={{ count: total }}
+  slots={{
+    count: <RollingNumber value={fmt.number(total)} numericValue={total} />,
+  }}
+/>
+```
+
+Plural selection still reads `values.count`, so pass the number there too.
+Under the hood each slot token interpolates to a private-use marker (through
+the `SLOT_VALUE_PREFIX` override key in `translate.ts`), which `Translation`
+swaps for the node; `values.count` stays the real number. A slot whose token
+is absent from the string renders nothing; a token with neither a slot nor a
+value stays visible as `{token}`, as before. Each slot occurrence is keyed by
+its position in the string, so if a plural form moves the token to another
+run or drops it (a PT `_one` such as "Um filme"), crossing that count
+remounts the node and it shows the new value without rolling.
+
 **A key whose catalog value contains tags REQUIRES `<Translation>`** — plain
 `t()` prints the angle brackets literally, e.g. `<em>80%</em> goes to…` on
 screen.
@@ -199,6 +224,7 @@ Full detail and the story behind each: `docs/i18n/sweep-agent-brief.md` §5.
 4. **A `ReactNode` field can't feed a `{token}` slot** — interpolation values
    are typed `string | number`. Add a plain-text sibling field (precedent:
    `members/collections.data.tsx`'s `plainName` beside its JSX `name`).
+   Inside a rendered sentence, `<Translation slots>` takes a node directly.
 5. **Never hardcode a locale.** Both `"en-GB"` and `"pt-PT"` turned up
    hardcoded in component code — the second one was silently breaking
    **English** users. Always go through `useFormat()` / `intlLocale(language)`.

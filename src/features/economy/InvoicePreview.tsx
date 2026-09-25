@@ -7,6 +7,8 @@ import {
 } from "./tax.constants";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { type LineItem, type InvoiceClient, lineTotal } from "./invoice.data";
 import styles from "./InvoiceGeneratorPage.module.css";
 
@@ -59,6 +61,10 @@ export function InvoicePreview(props: InvoicePreviewProps) {
   } = props;
 
   const effectiveIva = exempt53 ? 0 : ivaRate;
+  // Totals follow the line items and the IVA choice, so each one rolls.
+  const rollCurrency = (amount: number) => (
+    <RollingNumber value={fmt.currency(amount)} numericValue={amount} />
+  );
 
   const fmtDate = (iso: string) => {
     if (!iso) return t("economy:placeholder.notSet");
@@ -147,7 +153,7 @@ export function InvoicePreview(props: InvoicePreviewProps) {
                   {fmt.currency(l.unit || 0)}
                 </td>
                 <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                  {fmt.currency(lineTotal(l))}
+                  {rollCurrency(lineTotal(l))}
                 </td>
               </tr>
             ))}
@@ -158,17 +164,27 @@ export function InvoicePreview(props: InvoicePreviewProps) {
       <div className={styles.docTotals}>
         <div className={styles.docTotalRow}>
           <span>{t("economy:invoiceTool.preview.subtotal")}</span>
-          <span>{fmt.currency(subtotal)}</span>
+          <span>{rollCurrency(subtotal)}</span>
         </div>
         <div className={styles.docTotalRow}>
           <span>
-            {t("economy:invoiceTool.preview.ivaLabel", { rate: effectiveIva })}
+            <Translation
+              i18nKey="economy:invoiceTool.preview.ivaLabel"
+              slots={{
+                rate: (
+                  <RollingNumber
+                    value={fmt.number(effectiveIva)}
+                    numericValue={effectiveIva}
+                  />
+                ),
+              }}
+            />
           </span>
-          <span>{fmt.currency(ivaAmount)}</span>
+          <span>{rollCurrency(ivaAmount)}</span>
         </div>
         <div className={`${styles.docTotalRow} ${styles.docGrand}`}>
           <span>{t("economy:invoiceTool.preview.total")}</span>
-          <span>{fmt.currency(total)}</span>
+          <span>{rollCurrency(total)}</span>
         </div>
       </div>
 

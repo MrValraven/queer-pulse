@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useId } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiSearch, FiSliders, FiUsers, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
@@ -29,6 +29,7 @@ import { type SectionKey } from "./filterSectionKeys";
 import type { MemberDirectorySearch } from "./useMemberDirectoryQuery";
 import { FiltersSidebar, MemberResultSkeleton } from "./MemberFilterCards";
 import { MemberResultsGrid } from "./MemberResultsGrid";
+import { SHUFFLE_SPRING } from "./shuffleMotion";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Remove one value from whichever filter group a chip belongs to. */
@@ -52,6 +53,52 @@ function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
 
 /** Placeholder for the page header — mirrors the eyebrow / h1 / lead rhythm so
  *  the real header swaps in with no layout shift. */
+/* The slot opens its width (and swallows the button's 8px gap) while the
+   badge inside scales in, so the button grows smoothly instead of jumping
+   wider when the first filter lands. Children inherit the variant labels,
+   so the exit plays on both before AnimatePresence unmounts them. */
+const badgeSlotVariants = {
+  hidden: { width: 0, marginLeft: -8 },
+  shown: { width: "auto", marginLeft: 0 },
+};
+const badgeVariants = {
+  hidden: { opacity: 0, scale: 0.4 },
+  shown: { opacity: 1, scale: 1 },
+};
+
+function FiltersCountBadge({
+  count,
+  label,
+  reducedMotion,
+}: {
+  count: number;
+  label: string;
+  reducedMotion: boolean;
+}) {
+  return (
+    <AnimatePresence initial={false}>
+      {count > 0 && (
+        <m.span
+          key="count"
+          className={styles.filtersBtnCountSlot}
+          variants={badgeSlotVariants}
+          initial="hidden"
+          animate="shown"
+          exit="hidden"
+          transition={{
+            duration: reducedMotion ? 0 : 0.26,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          <m.span className={styles.filtersBtnCount} variants={badgeVariants}>
+            <RollingNumber value={label} numericValue={count} />
+          </m.span>
+        </m.span>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export function MemberHeaderSkeleton() {
   return (
     <div className={styles.head} aria-busy="true" aria-hidden="true">
@@ -66,10 +113,9 @@ export function MemberHeaderSkeleton() {
 /** The figure the headline rolls up from when it first appears. */
 const HEADLINE_ROLL_FROM = 1;
 
-/** The counted-population headline. The figure rolls like the therapist cost
- *  calculator's total: it mounts at 1 and rolls to the real count on the next
- *  frame, so the reveal and every later change share one motion. Reduced
- *  motion mounts at the real count. */
+/** The counted-population headline. The figure mounts at 1 and rolls up to
+ *  the real count, so the reveal and every later change share one motion.
+ *  Reduced motion shows the real count straight away. */
 export function MemberDirectoryHeader({
   totalMembers,
 }: {
@@ -77,14 +123,7 @@ export function MemberDirectoryHeader({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { reducedMotion: isReducedMotion } = useMotionPrefs();
-  const [shownTotal, setShownTotal] = useState(() =>
-    isReducedMotion ? totalMembers : Math.min(HEADLINE_ROLL_FROM, totalMembers),
-  );
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setShownTotal(totalMembers));
-    return () => cancelAnimationFrame(frame);
-  }, [totalMembers]);
+  const rollFrom = Math.min(HEADLINE_ROLL_FROM, totalMembers);
   return (
     <FadeIn as="header" className={styles.head}>
       <div className={styles.eyebrow}>{t("members:directory.eyebrow")}</div>
@@ -96,8 +135,12 @@ export function MemberDirectoryHeader({
             style={{ minWidth: `${fmt.number(totalMembers).length}ch` }}
           >
             <RollingNumber
-              value={fmt.number(shownTotal)}
-              numericValue={shownTotal}
+              value={fmt.number(totalMembers)}
+              numericValue={totalMembers}
+              revealFrom={{
+                value: fmt.number(rollFrom),
+                numericValue: rollFrom,
+              }}
             />
           </span>{" "}
           {t("members:directory.memberCountSuffix", { count: totalMembers })}
@@ -208,11 +251,11 @@ export function MemberResultsColumn({
             {!isMobile && panelOpen
               ? t("members:directory.hideFiltersCta")
               : t("members:directory.filtersCta")}
-            {chips.length > 0 && (
-              <span className={styles.filtersBtnCount}>
-                {fmt.number(chips.length)}
-              </span>
-            )}
+            <FiltersCountBadge
+              count={chips.length}
+              label={fmt.number(chips.length)}
+              reducedMotion={reducedMotion}
+            />
           </button>
           <div className={styles.sort}>
             <span id={sortLabelId} className={styles.sortLabel}>
@@ -233,38 +276,55 @@ export function MemberResultsColumn({
       </div>
 
       {/* Always mounted so a chip removed one at a time can play its exit
-          animation; `.appliedRow:empty` hides the row once the last exit
-          finishes. `initial={false}` keeps chips already applied on arrival
-          from animating in on mount — only chips added later do. */}
-      <div className={styles.appliedRow}>
-        <AnimatePresence initial={false}>
-          {chips.map((chip) => (
-            <m.span
-              key={`${chip.group}:${chip.value}`}
-              className={styles.applied}
-              layout={!reducedMotion}
-              initial={{ opacity: 0, scale: 0.86 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.86 }}
-              transition={{
-                duration: reducedMotion ? 0 : 0.22,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              {chip.label}
-              <button
-                type="button"
-                aria-label={t("members:directory.removeChipLabel", {
-                  label: chip.label,
-                })}
-                onClick={() => onApplyFilters(removeChip(filters, chip))}
+          animation. The wrapper springs its real height (bottom spacing
+          included) to 0 and back on the grid's shared SHUFFLE_SPRING, so
+          the results below flow with it; it clips only while moving, so chip
+          focus rings show. `initial={false}` keeps chips already applied on
+          arrival from animating in; only chips added later do. */}
+      <m.div
+        className={styles.appliedRowClip}
+        initial={false}
+        animate={
+          chips.length > 0
+            ? {
+                height: "auto",
+                overflow: "hidden",
+                transitionEnd: { overflow: "visible" },
+              }
+            : { height: 0, overflow: "hidden" }
+        }
+        transition={reducedMotion ? { duration: 0 } : SHUFFLE_SPRING}
+      >
+        <div className={styles.appliedRow}>
+          <AnimatePresence initial={false}>
+            {chips.map((chip) => (
+              <m.span
+                key={`${chip.group}:${chip.value}`}
+                className={styles.applied}
+                layout={!reducedMotion}
+                initial={{ opacity: 0, scale: 0.86 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.86 }}
+                transition={{
+                  duration: reducedMotion ? 0 : 0.22,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
               >
-                <FiX aria-hidden />
-              </button>
-            </m.span>
-          ))}
-        </AnimatePresence>
-      </div>
+                {chip.label}
+                <button
+                  type="button"
+                  aria-label={t("members:directory.removeChipLabel", {
+                    label: chip.label,
+                  })}
+                  onClick={() => onApplyFilters(removeChip(filters, chip))}
+                >
+                  <FiX aria-hidden />
+                </button>
+              </m.span>
+            ))}
+          </AnimatePresence>
+        </div>
+      </m.div>
 
       {loading ? (
         <div className={styles.mGrid}>
@@ -339,6 +399,7 @@ export function MemberFiltersSheet({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <ModalSheet
       onClose={onClose}
@@ -361,7 +422,21 @@ export function MemberFiltersSheet({
       />
       <div className={styles.sheetFoot}>
         <Button type="button" variant="primary" onClick={onClose}>
-          {t("members:directory.showResultsCta", { count: filteredCount })}
+          {/* One flex item, so the Button's gap never splits the sentence. */}
+          <span>
+            <Translation
+              i18nKey="members:directory.showResultsCta"
+              values={{ count: filteredCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(filteredCount)}
+                    numericValue={filteredCount}
+                  />
+                ),
+              }}
+            />
+          </span>
         </Button>
       </div>
     </ModalSheet>

@@ -183,7 +183,7 @@ export function useUpdateListing() {
       // Through the mapper, never raw: the PATCH body must normalise hours and
       // services, must NOT carry `affirmingBaselineAccepted` (the API rejects
       // it, because no edit can un-agree to the baseline), and must drop the
-      // owner's eight personal fields when the draft says this member only
+      // owner's seven personal fields when the draft says this member only
       // co-manages the listing (the API answers 403 to any of them, which
       // would fail the whole save).
       return updateListing(ref, draftToUpdateDto(draft));

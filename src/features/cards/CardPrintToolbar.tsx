@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { FiPrinter } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { modCardPrint } from "../../app/routeMap";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CardHoldersPanel.module.css";
 
@@ -28,6 +31,7 @@ export function CardPrintToolbar({
   onClearSelection: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const navigate = useNavigate();
   const selectedCount = selectedIds.length;
   const isAllSelected = selectedCount > 0 && selectedCount === activeCount;
@@ -52,7 +56,21 @@ export function CardPrintToolbar({
         }
       >
         <FiPrinter aria-hidden="true" />{" "}
-        {t("cards:holders.printSelected", { count: selectedCount })}
+        {/* One span keeps the sentence a single flex item in the button. */}
+        <span>
+          <Translation
+            i18nKey="cards:holders.printSelected"
+            values={{ count: selectedCount }}
+            slots={{
+              count: (
+                <RollingNumber
+                  value={fmt.number(selectedCount)}
+                  numericValue={selectedCount}
+                />
+              ),
+            }}
+          />
+        </span>
       </Button>
     </div>
   );

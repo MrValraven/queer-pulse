@@ -1,4 +1,7 @@
 import { BulkActionBar, Button } from "../../../shared/components/ui";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../../shared/i18n/format";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 
 export interface BulkAssignBarProps {
@@ -21,10 +24,21 @@ export function BulkAssignBar({
   onClear,
 }: BulkAssignBarProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <BulkActionBar
       count={count}
-      label={t("magazine:desk.bulkAssign.selected", { count })}
+      label={
+        <Translation
+          i18nKey="magazine:desk.bulkAssign.selected"
+          values={{ count }}
+          slots={{
+            count: (
+              <RollingNumber value={fmt.number(count)} numericValue={count} />
+            ),
+          }}
+        />
+      }
       ariaLabel={t("magazine:desk.bulkAssign.ariaLabel")}
       onClear={onClear}
       clearLabel={t("magazine:desk.bulkAssign.clearSelection")}

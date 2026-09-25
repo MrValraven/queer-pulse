@@ -157,6 +157,9 @@ export const shared: Catalog = {
   // usePersonaBadge). Separate from `accountMenu.items.subprofiles` above,
   // which is a pre-existing, differently-worded entry.
   "accountMenu.items.personas": "Your personas",
+  // The account menu's own name for Communities. PT needs a shorter label
+  // than `nav:communities` in the menu's narrow columns; EN keeps the nav's.
+  "accountMenu.items.communities": "Communities & Collectives",
   "accountMenu.items.events": "Events",
   "accountMenu.items.cards": "Cards",
   "accountMenu.items.drafts": "Drafts",
@@ -169,6 +172,8 @@ export const shared: Catalog = {
   "accountMenu.items.installApp": "Install the app",
   "accountMenu.items.reports": "Your reports",
   "accountMenu.items.help": "Help",
+  "accountMenu.hints.personas": "Profiles for the work you do",
+  "accountMenu.hints.invite": "Monthly invites to bring people in",
   "installAppModal.title": "Install the app",
   "installAppModal.sub":
     "Add QueerPulse to your home screen in a few taps. Same app, no app store.",

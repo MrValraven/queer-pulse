@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { TbPin, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
 import { FiBarChart2 } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { thread as threadPath } from "../../app/routeMap";
@@ -137,7 +138,12 @@ export function ForumThreadRow({
             >
               {isVoted ? <TbArrowBigUpFilled /> : <TbArrowBigUp />}
             </span>
-            <span className={styles.voteN}>{thread.upvotes}</span>
+            <span className={styles.voteN}>
+              <RollingNumber
+                value={fmt.number(thread.upvotes)}
+                numericValue={thread.upvotes}
+              />
+            </span>
           </button>
           <div>
             <ThreadRowBadges

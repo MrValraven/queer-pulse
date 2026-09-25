@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { readableTextIs } from "../../test/readableText";
 import { TestProviders } from "../../test/TestProviders";
 import { JoinRequestBulkActionBar } from "./JoinRequestBulkActionBar";
 import { makeJoinRequestRow } from "./joinRequestTestRow";
@@ -55,7 +56,9 @@ describe("JoinRequestBulkActionBar", () => {
   it("shows the selection count and the three decisions", async () => {
     renderBar();
 
-    expect(await screen.findByText("2 selected")).toBeInTheDocument();
+    expect(
+      await screen.findByText(readableTextIs("2 selected")),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("region", { name: "Bulk actions" }),
     ).toBeInTheDocument();

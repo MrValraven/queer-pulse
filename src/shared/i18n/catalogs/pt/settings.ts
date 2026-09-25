@@ -195,7 +195,7 @@ export const settings: Catalog = {
   "notifications.toast.saveErrorReason":
     "Não foi possível guardar essa definição de notificações: {reason}.",
   "notifications.section.gatherings": "Convívios",
-  "notifications.section.messagesConnections": "Mensagens e ligações",
+  "notifications.section.messagesConnections": "Mensagens e conexões",
   "notifications.section.communitiesBoard": "Comunidades e mural",
   "notifications.section.delivery": "Entrega",
 
@@ -218,12 +218,12 @@ export const settings: Catalog = {
   "notifications.volume.newMessages.title": "Nova mensagem",
   "notifications.volume.newMessages.desc":
     "Quando alguém te envia uma mensagem direta",
-  "notifications.volume.connections.title": "Pedidos de ligação",
+  "notifications.volume.connections.title": "Pedidos de conexão",
   "notifications.volume.connections.desc":
     "Quando alguém pede para se ligar, envia um olá com o pedido, ou aceita o teu",
-  "notifications.volume.vouches.title": "Abonações",
+  "notifications.volume.vouches.title": "Votos de confiança",
   "notifications.volume.vouches.desc":
-    "Quando alguém abona por ti, ou por um espaço que geres",
+    "Quando alguém te dá um voto de confiança, ou a um espaço que geres",
   "notifications.volume.invitations.title": "Convites e apresentações",
   "notifications.volume.invitations.desc":
     "Quando um convite que enviaste é aceite, alguém te apresenta, ou uma comunidade te convida",
@@ -343,7 +343,7 @@ export const settings: Catalog = {
   "data.section.personalisation": "Personalização",
   "data.searchPersonalisation.title": "Personalização da pesquisa",
   "data.searchPersonalisation.desc":
-    "Usa os teus interesses e ligações para melhorar as pessoas e convívios sugeridos. É uma preferência de produto que fica na tua conta, mantida à parte de qualquer monitorização.",
+    "Usa os teus interesses e conexões para melhorar as pessoas e convívios sugeridos. É uma preferência de produto que fica na tua conta, mantida à parte de qualquer monitorização.",
   "data.section.dangerZone": "Zona de perigo",
   "data.deactivate.title": "Desativar conta",
   "data.deactivate.desc":
@@ -363,11 +363,11 @@ export const settings: Catalog = {
   "visibility.sub":
     "Controla quem te consegue encontrar e contactar. Podes mudar isto a qualquer momento, sem perguntas.",
   "visibility.section.whoCanSee": "Quem pode ver o teu perfil",
-  "visibility.open.title": "Aberto a ligações",
+  "visibility.open.title": "Aberto a conexões",
   "visibility.open.desc":
     "Qualquer pessoa na rede pode ver o teu perfil e dizer olá",
   "visibility.network.title": "Só a rede",
-  "visibility.network.desc": "Visível para pessoas a duas ligações de ti",
+  "visibility.network.desc": "Visível para pessoas a duas conexões de ti",
   "visibility.private.title": "Manter discreto por agora",
   "visibility.private.desc":
     "Contacto quando for a altura certa. Perfil não visível na pesquisa.",
@@ -380,11 +380,11 @@ export const settings: Catalog = {
   "visibility.featuredConsent.description":
     "Membros públicos que deram o seu consentimento podem ser escolhidos para aparecer na página inicial de vez em quando. Podes desativar isto quando quiseres ficar fora dos destaques.",
   "visibility.featuredConsent.disabledHint":
-    'Define primeiro a tua visibilidade como "Aberto a ligações". Só perfis públicos podem ser destacados.',
+    'Define primeiro a tua visibilidade como "Aberto a conexões". Só perfis públicos podem ser destacados.',
   "visibility.newArrivals.title": "Mostrar-me em «Novidades»",
   "visibility.newArrivals.desc":
     "Diz à comunidade que te juntaste recentemente",
-  "visibility.suggestedConnections.title": "Aparecer em ligações sugeridas",
+  "visibility.suggestedConnections.title": "Aparecer em conexões sugeridas",
   "visibility.suggestedConnections.desc":
     "Permite à plataforma sugerir-te a pessoas com interesses em comum. Se desligares, continuas a ver sugestões e permaneces no diretório de membros.",
   "visibility.suggestedConnections.toastError":
@@ -403,11 +403,11 @@ export const settings: Catalog = {
   // ligação te coloca diretamente (`connections`, a predefinição) ou tem de te
   // convidar primeiro (`invite_only`).
   "visibility.groupAddPolicy.title": "Quem me pode adicionar a grupos",
-  "visibility.groupAddPolicy.connections.label": "As minhas ligações",
+  "visibility.groupAddPolicy.connections.label": "As minhas conexões",
   "visibility.groupAddPolicy.inviteOnly.label":
     "Ninguém, envia-me um convite em vez disso",
   "visibility.groupAddPolicy.explanation":
-    "Só as tuas ligações te podem adicionar a um grupo ou convidar-te para um.",
+    "Só as tuas conexões te podem adicionar a um grupo ou convidar-te para um.",
   "visibility.groupAddPolicy.toastError":
     "Não conseguimos guardar essa definição. Tenta novamente.",
 
@@ -423,7 +423,7 @@ export const settings: Catalog = {
     "Mostra quando estás a escrever uma resposta. Se desligares isto, também deixas de ver quando as outras pessoas estão a escrever.",
   "visibility.messagingPrivacy.presence.label": "Estado em linha",
   "visibility.messagingPrivacy.presence.help":
-    "Deixa as tuas ligações verem quando estás em linha. Se desligares isto, também deixas de ver quando elas estão em linha.",
+    "Deixa as tuas conexões verem quando estás em linha. Se desligares isto, também deixas de ver quando elas estão em linha.",
   "visibility.messagingPrivacy.whoCanMessage.title":
     "Quem me pode enviar mensagens",
   "visibility.messagingPrivacy.whoCanMessage.everyone.label":
@@ -435,9 +435,9 @@ export const settings: Catalog = {
   "visibility.messagingPrivacy.whoCanMessage.introduced.hint":
     "As novas mensagens precisam de alguém em comum que faça a apresentação primeiro.",
   "visibility.messagingPrivacy.whoCanMessage.connections.label":
-    "Só as minhas ligações",
+    "Só as minhas conexões",
   "visibility.messagingPrivacy.whoCanMessage.connections.hint":
-    "As novas mensagens e os pedidos de ligação ficam limitados a pessoas com quem já tens uma ligação. As perguntas sobre a tua habitação ou outros anúncios continuam a chegar-te.",
+    "As novas mensagens e os pedidos de conexão ficam limitados a pessoas com quem já tens uma conexão. As perguntas sobre a tua habitação ou outros anúncios continuam a chegar-te.",
   "visibility.messagingPrivacy.toastError":
     "Não conseguimos guardar isto. Verifica a tua ligação e tenta de novo.",
 
@@ -867,9 +867,9 @@ export const settings: Catalog = {
   "dataExport.type.events.label": "Eventos",
   "dataExport.type.events.sub":
     "Confirmações de presença, histórico de participação",
-  "dataExport.type.connections.label": "Ligações",
+  "dataExport.type.connections.label": "Conexões",
   "dataExport.type.connections.sub":
-    "Pessoas que segues ou com quem tens uma ligação",
+    "Pessoas que segues ou com quem tens uma conexão",
   "dataExport.type.activityLog.label": "Registo de atividade",
   "dataExport.type.activityLog.sub":
     "Histórico de início de sessão, sessões em dispositivos",
@@ -946,9 +946,9 @@ export const settings: Catalog = {
   "dataExport.accordion.events.title": "Eventos",
   "dataExport.accordion.events.body":
     "Eventos a que confirmaste presença, eventos que marcaste como tendo interesse, confirmação de participação quando aplicável, e quaisquer mensagens relacionadas com eventos.",
-  "dataExport.accordion.connections.title": "Ligações",
+  "dataExport.accordion.connections.title": "Conexões",
   "dataExport.accordion.connections.body":
-    "Uma lista das pessoas que segues, das pessoas que te seguem, e quaisquer relações de ligação explícitas. Não inclui os contactos de outras pessoas.",
+    "Uma lista das pessoas que segues, das pessoas que te seguem, e quaisquer relações de conexão explícitas. Não inclui os contactos de outras pessoas.",
   "dataExport.accordion.activitySessions.title": "Atividade e sessões",
   "dataExport.accordion.activitySessions.body":
     "Datas/horas de início de sessão, tipos de dispositivo (navegador/SO), endereços IP (apenas dos últimos 90 dias) e informação de sessões ativas. Não registamos o histórico de navegação dentro da plataforma.",
@@ -978,7 +978,7 @@ export const settings: Catalog = {
   "dataExport.tag.attendance": "presença",
   "dataExport.tag.interest": "interesse",
   "dataExport.tag.follows": "quem segues",
-  "dataExport.tag.connections": "ligações",
+  "dataExport.tag.connections": "conexões",
   "dataExport.tag.blockedList": "lista de bloqueados",
   "dataExport.tag.logins": "inícios de sessão",
   "dataExport.tag.deviceTypes": "tipos de dispositivo",

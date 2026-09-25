@@ -8,14 +8,10 @@ import { pricingModeOf } from "../listingMenu.data";
 import { SendingPanel } from "../ListBusinessChrome";
 import { useEditUnsavedGuard } from "../useEditListingSave";
 import { useListingForm } from "../useListingForm";
-import {
-  editorSectionsFor,
-  LISTING_EDITOR_SECTION_IDS,
-  withPricingModeLabel,
-} from "./listingEditor.data";
+import { editorSectionsFor, withPricingModeLabel } from "./listingEditor.data";
 import { flattenEditorMissing } from "./listingEditorMissing";
-import { jumpToEditorSection } from "./jumpToEditorSection";
 import { useActiveEditorSection } from "./useActiveEditorSection";
+import { useDangerZoneReveal } from "./useDangerZoneReveal";
 import { useDeleteListingExit } from "./useDeleteListingExit";
 import { useEditorHashLanding } from "./useEditorHashLanding";
 import { useListingEditorAutosave } from "./useListingEditorAutosave";
@@ -26,6 +22,7 @@ import { ListingEditorPreviewModal } from "./ListingEditorPreviewModal";
 import { ListingEditorSaveBar } from "./ListingEditorSaveBar";
 import { ListingEditorSections } from "./ListingEditorSections";
 import { ListingEditorSectionNav } from "./ListingEditorSectionNav";
+import { useRestoreReview } from "./restoreDiff/useRestoreReview";
 import pageStyles from "../ListBusinessPage.module.css";
 import styles from "./ListingEditor.module.css";
 
@@ -61,7 +58,9 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   );
   const uploadPhoto = useUploadImage("listing-photo");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const activeSectionId = useActiveEditorSection(LISTING_EDITOR_SECTION_IDS);
+  const { isDangerZoneOpen, spySectionIds, jumpToSection } =
+    useDangerZoneReveal(prefersReducedMotion);
+  const activeSectionId = useActiveEditorSection(spySectionIds);
   useEditorHashLanding(sections, prefersReducedMotion);
   // The fields column, so the live preview can outline where a field shows.
   const fieldsRef = useRef<HTMLDivElement>(null);
@@ -84,9 +83,14 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
     initialDraft,
     isDirty,
   });
-  // Bound once so the restore handler can't read a null between the guard
-  // and the click.
   const { restorable } = autosave;
+  // "Bring them back" opens a per-area review before the form changes.
+  const restoreReview = useRestoreReview({
+    form,
+    autosave,
+    sections,
+    prefersReducedMotion,
+  });
   const deleteExit = useDeleteListingExit(listing, autosave.clearAutosave);
   const { isSaving, serverError, dismissServerError, save, saveAndLeave } =
     useListingEditorSave({
@@ -120,11 +124,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
         <ListingEditorNotices
           listing={listing}
           restorable={restorable}
-          onRestore={() => {
-            if (!restorable) return;
-            form.reset(restorable.draft);
-            autosave.dismissRestorable();
-          }}
+          onRestore={restoreReview.open}
           onDiscardRestorable={autosave.discardRestorable}
           serverError={serverError}
           onDismissServerError={dismissServerError}
@@ -136,9 +136,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
               sections={sections}
               activeSectionId={activeSectionId}
               missing={missing}
-              onJump={(sectionId) =>
-                jumpToEditorSection(sectionId, prefersReducedMotion)
-              }
+              onJump={jumpToSection}
             />
 
             <div className={styles.main} ref={fieldsRef}>
@@ -147,6 +145,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
                 listing={listing}
                 userName={userName}
                 uploadPhoto={uploadPhoto}
+                isDangerZoneOpen={isDangerZoneOpen}
                 onConfirmDelete={deleteExit.confirmDelete}
               />
               <ListingEditorSaveBar
@@ -187,6 +186,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
           onClose={() => setIsPreviewOpen(false)}
         />
       )}
+      {restoreReview.modal}
     </div>
   );
 }

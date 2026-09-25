@@ -251,7 +251,7 @@ export const messages: Catalog = {
   // Nome de apresentação para uma conversa oficial/de sistema sem perfil
   // associado (messages.adapters.ts's conversationToView).
   "conversation.officialName": "Equipa QueerPulse",
-  "conversation.connectedSinceSuffix": " · Ligação desde {date}",
+  "conversation.connectedSinceSuffix": " · Conexão desde {date}",
   "conversation.viewProfile": "Ver perfil",
   "conversation.you": "Tu",
   // Pílula "saltar para o fim" com contagem (plural CLDR: _one / _other).
@@ -284,10 +284,10 @@ export const messages: Catalog = {
   // lados são recusadas até isso mudar. Aparece no lugar da caixa de escrita,
   // com a ação que resolve. O estado depende do pedido de ligação até agora.
   "conversation.connectionRequiredNotice":
-    "Para responderes aqui, precisas primeiro de uma ligação com {name}.",
-  "conversation.connectionRequiredSendCta": "Enviar pedido de ligação",
+    "Para responderes aqui, precisas primeiro de uma conexão com {name}.",
+  "conversation.connectionRequiredSendCta": "Enviar pedido de conexão",
   "conversation.connectionRequiredPendingNotice":
-    "O teu pedido de ligação a {name} continua à espera de resposta.",
+    "O teu pedido de conexão a {name} continua à espera de resposta.",
   "conversation.connectionRequiredIncomingNotice":
     "{name} quer ligar-se a ti. Aceita para continuarem esta conversa.",
   "conversation.connectionRequiredAcceptCta": "Aceitar e responder",
@@ -365,6 +365,7 @@ export const messages: Catalog = {
   // traduzido aqui.
   "linkPreview.aria": "Pré-visualização do link: {title}",
   "linkPreview.ariaGeneric": "Pré-visualização do link de {site}",
+  "linkPreview.placeAria": "Abrir {name} no QueerPulse",
 
   // Faixa de mensagens fixadas (ConversationPinnedBanner) + indicadores na bolha
   "pinned.bannerLabel": "Mensagem fixada",
@@ -424,17 +425,17 @@ export const messages: Catalog = {
   // Escolha de destinatário para nova mensagem (NewMessageModal)
   "newMessage.title": "Nova mensagem",
   "newMessage.sub":
-    "Escolhe uma ligação, ou procura alguém novo para contactar.",
-  "newMessage.searchPlaceholder": "Pesquisar ligações ou pessoas…",
-  "newMessage.searchAria": "Pesquisar ligações e membros",
-  "newMessage.loading": "A carregar as tuas ligações…",
-  "newMessage.none": "Ainda não tens ligações.",
-  "newMessage.empty": "Nenhuma ligação corresponde a “{query}”.",
+    "Escolhe uma conexão, ou procura alguém novo para contactar.",
+  "newMessage.searchPlaceholder": "Pesquisar conexões ou pessoas…",
+  "newMessage.searchAria": "Pesquisar conexões e membros",
+  "newMessage.loading": "A carregar as tuas conexões…",
+  "newMessage.none": "Ainda não tens conexões.",
+  "newMessage.empty": "Nenhuma conexão corresponde a “{query}”.",
   "newMessage.back": "Voltar",
   // Alternativa: membros encontrados que ainda NÃO são uma ligação aceite —
   // escolher um abre o compositor de pedido de mensagem em vez de uma conversa.
   "newMessage.sectionStrangers": "Contactar alguém novo",
-  "newMessage.strangerSub": "Ainda sem ligação",
+  "newMessage.strangerSub": "Ainda sem conexão",
 
   // Compositor de pedido de mensagem (MessageRequestComposer), o passo que o
   // NewMessageModal mostra para um membro escolhido que ainda não é uma
@@ -468,7 +469,7 @@ export const messages: Catalog = {
   "firstContact.sendingLabel": "A enviar…",
   "firstContact.charactersLeft": "Caracteres restantes: {remaining}",
   "firstContact.replyAccepts":
-    "Enviar uma resposta aceita o pedido de ligação de {name}.",
+    "Enviar uma resposta aceita o pedido de conexão de {name}.",
   "firstContact.replyPlaceholder": "Escreve a tua resposta a {name}…",
   "firstContact.replyAria": "A tua resposta",
   "firstContact.replySendCta": "Enviar e aceitar",
@@ -481,7 +482,7 @@ export const messages: Catalog = {
   "requests.loadErrorBody":
     "Não conseguimos carregar os teus pedidos de mensagem. Os que estiverem à tua espera continuam lá. Tenta outra vez daqui a pouco.",
   "requests.emptyDescription":
-    "Quando alguém sem ligação contigo te envia uma primeira mensagem, ela aparece aqui para aceitares ou recusares.",
+    "Quando alguém sem conexão contigo te envia uma primeira mensagem, ela aparece aqui para aceitares ou recusares.",
 
   // Conversas em grupo (#17) — escolha de criação (NewGroupModal), cabeçalho +
   // info do grupo (ConversationHeader / GroupInfoModal), aviso de saída.
@@ -492,7 +493,7 @@ export const messages: Catalog = {
   "group.newSub": "Dá um nome ao grupo e escolhe quem entra.",
   "group.namePlaceholder": "Nome do grupo",
   "group.nameAria": "Nome do grupo",
-  "group.searchPlaceholder": "Pesquisar ligações para adicionar…",
+  "group.searchPlaceholder": "Pesquisar conexões para adicionar…",
   "group.createCta": "Criar grupo ({count})",
   "group.info": "Informações do grupo",
   "group.infoTitle": "Informações do grupo",
@@ -933,9 +934,9 @@ export const messages: Catalog = {
   "request.error.pendingLimit":
     "Tens muitos pedidos ainda à espera de resposta. Quando alguns forem respondidos ou retirares alguns, podes enviar mais.",
   "request.error.paused":
-    "Os novos pedidos de mensagem estão em pausa na tua conta enquanto a equipa de moderação analisa uma situação. As conversas com as tuas ligações continuam como sempre.",
+    "Os novos pedidos de mensagem estão em pausa na tua conta enquanto a equipa de moderação analisa uma situação. As conversas com as tuas conexões continuam como sempre.",
   "request.error.recipientConnectionsOnly":
-    "{name} só está a aceitar mensagens das suas ligações neste momento.",
+    "{name} só está a aceitar mensagens das suas conexões neste momento.",
   "requests.replyCta": "Responder",
   "requests.inboundHeading": "Novos pedidos",
   "requests.outboundHeading": "Os teus pedidos enviados",

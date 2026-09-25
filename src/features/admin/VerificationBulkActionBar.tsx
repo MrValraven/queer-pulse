@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { describeError } from "../../shared/api/errorMessage";
 import { useBulkDecideVerificationRequests } from "./api/useAdminVerifications";
@@ -33,6 +36,7 @@ export function VerificationBulkActionBar({
   onClear: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { bulkDecide, pending } = useBulkDecideVerificationRequests();
   const [confirmingReject, setConfirmingReject] = useState(false);
@@ -96,7 +100,15 @@ export function VerificationBulkActionBar({
             a screen-reader user is told the bar appeared and hears the count
             update as it changes — same as the listings queue's bar. */}
         <span className={styles.bulkCount} role="status">
-          {t("admin:verifications.requests.bulk.selectedCount", { count })}
+          <Translation
+            i18nKey="admin:verifications.requests.bulk.selectedCount"
+            values={{ count }}
+            slots={{
+              count: (
+                <RollingNumber value={fmt.number(count)} numericValue={count} />
+              ),
+            }}
+          />
         </span>
         {count >= VERIFICATION_BULK_ACTION_CAP && (
           <span className={styles.bulkCapNote}>

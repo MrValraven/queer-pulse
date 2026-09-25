@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiFilm, FiX } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { SplitTitle, PosterSlot } from "./CinemaAtoms";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -272,11 +273,23 @@ function DemoCinemaBrowsePage() {
               )}
 
               <div className={styles.sortBar}>
-                <div className={styles.results} aria-live="polite">
+                <div
+                  className={styles.results}
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
                   <Translation
                     i18nKey="cinema:browse.results.showing"
                     values={{ count: visible.length }}
                     components={{ strong: <strong /> }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(visible.length)}
+                          numericValue={visible.length}
+                        />
+                      ),
+                    }}
                   />
                   {activeChips.length > 0
                     ? t("cinema:browse.results.matchingFilters")

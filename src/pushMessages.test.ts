@@ -37,7 +37,7 @@ describe("formatPushCopy", () => {
         "pt",
       ),
     ).toEqual({
-      title: "Novo pedido de ligação",
+      title: "Novo pedido de conexão",
       body: "Ana quer ligar-se a ti.",
     });
   });

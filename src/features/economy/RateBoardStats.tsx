@@ -1,6 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { RB_DISCLAIMER_KEY, type RateEntry } from "./rateBoard.data";
 import { median, min, max, percentile } from "./rateBoardStats.helpers";
 import styles from "./RateBoardPage.module.css";
@@ -33,6 +34,23 @@ function groupByRole(entries: RateEntry[]): RoleStat[] {
 
 /* ── presentation ───────────────────────────────────────────────────────── */
 
+/** A plain count that rolls as rates are added to the board. */
+function RollingCount({ count }: { count: number }) {
+  const fmt = useFormat();
+  return <RollingNumber value={fmt.number(count)} numericValue={count} />;
+}
+
+/** A pluralised "{count} rates" / "{count} roles" line with a rolling count. */
+function CountLabel({ i18nKey, count }: { i18nKey: string; count: number }) {
+  return (
+    <Translation
+      i18nKey={i18nKey}
+      values={{ count }}
+      slots={{ count: <RollingCount count={count} /> }}
+    />
+  );
+}
+
 interface RateBoardStatsProps {
   entries: RateEntry[];
   /** The user's own rate to compare, if entered (>0). */
@@ -48,6 +66,9 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
   const peakMedian = max(roleStats.map((r) => r.med)) || 1;
   const showCompare = compareRate > 0 && entries.length > 0;
   const pct = showCompare ? percentile(allRates, compareRate) : 0;
+  const rollCurrency = (amount: number) => (
+    <RollingNumber value={fmt.currency(amount)} numericValue={amount} />
+  );
 
   if (entries.length === 0) {
     return (
@@ -74,11 +95,18 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
         <span className={styles.overallLabel}>
           {t("economy:rateBoard.stats.communityMedian")}
         </span>
-        <span className={styles.overallVal}>{fmt.currency(overallMedian)}</span>
+        <span className={styles.overallVal}>{rollCurrency(overallMedian)}</span>
         <span className={styles.overallMeta}>
           {t("economy:rateBoard.stats.across")}{" "}
-          {t("economy:rateBoard.stats.rateCount", { count: entries.length })} ·{" "}
-          {t("economy:rateBoard.stats.roleCount", { count: roleStats.length })}
+          <CountLabel
+            i18nKey="economy:rateBoard.stats.rateCount"
+            count={entries.length}
+          />{" "}
+          ·{" "}
+          <CountLabel
+            i18nKey="economy:rateBoard.stats.roleCount"
+            count={roleStats.length}
+          />
         </span>
       </div>
 
@@ -90,12 +118,20 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
             })}
           </span>
           <span className={styles.pctVal}>
-            {t("economy:rateBoard.stats.percentileValue", { percentile: pct })}
+            <Translation
+              i18nKey="economy:rateBoard.stats.percentileValue"
+              slots={{ percentile: <RollingCount count={pct} /> }}
+            />
           </span>
           <span className={styles.pctMeta}>
-            {pct >= 50
-              ? t("economy:rateBoard.stats.aboveMost", { percent: pct })
-              : t("economy:rateBoard.stats.belowMost")}
+            {pct >= 50 ? (
+              <Translation
+                i18nKey="economy:rateBoard.stats.aboveMost"
+                slots={{ percent: <RollingCount count={pct} /> }}
+              />
+            ) : (
+              t("economy:rateBoard.stats.belowMost")
+            )}
           </span>
         </div>
       )}
@@ -107,7 +143,7 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
             <li key={r.role} className={styles.barRow}>
               <div className={styles.barTop}>
                 <span className={styles.barRole}>{r.role}</span>
-                <span className={styles.barMed}>{fmt.currency(r.med)}</span>
+                <span className={styles.barMed}>{rollCurrency(r.med)}</span>
               </div>
               <div className={styles.barTrack}>
                 <div
@@ -117,10 +153,13 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
               </div>
               <div className={styles.barMeta}>
                 <span>
-                  {t("economy:rateBoard.stats.rateCount", { count: r.count })}
+                  <CountLabel
+                    i18nKey="economy:rateBoard.stats.rateCount"
+                    count={r.count}
+                  />
                 </span>
                 <span>
-                  {fmt.currency(r.lo)} – {fmt.currency(r.hi)}
+                  {rollCurrency(r.lo)} – {rollCurrency(r.hi)}
                 </span>
               </div>
             </li>

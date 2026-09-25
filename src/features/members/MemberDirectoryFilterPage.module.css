@@ -473,6 +473,11 @@
 .filtersBtn svg {
   font-size: var(--text-15);
 }
+/* Animated width wrapper for the count badge; see FiltersCountBadge. */
+.filtersBtnCountSlot {
+  display: inline-flex;
+  overflow: hidden;
+}
 .filtersBtnCount {
   display: inline-flex;
   align-items: center;
@@ -509,9 +514,17 @@
   width: 100%;
 }
 
-/* Always rendered by MemberResultsColumn so the last chip can play its exit
-   animation before the row goes; `:empty` takes the row (and its margin) out
-   of flow once no chips are left. */
+/* The applied-chips row (`MemberResultsColumn`). Its wrapper springs its
+   height to 0 when the last chip leaves and back when the first arrives, so
+   content below moves with it. flow-root keeps the row's bottom margin
+   inside the wrapper's height at every overflow state, so the spring starts
+   from the full visual height. The row stays rendered so the last chip can
+   play its exit; `:empty` then drops it mid-spring (the exit ends at 0.22s
+   of the 0.4s collapse), under the wrapper's clipped inline height, so the
+   page below stays put. */
+.appliedRowClip {
+  display: flow-root;
+}
 .appliedRow {
   display: flex;
   flex-wrap: wrap;
@@ -557,30 +570,62 @@
 }
 /* The virtualized results grid (`MemberResultsGrid`): a position:relative
    sizer whose height is the virtualizer's running total, with each row
-   absolutely positioned inside it by its own `top` offset — only the rows
-   near the viewport actually mount, however long the filtered directory
-   gets. `.mGridRow`'s column count is set inline per-render (it tracks the
-   container's measured width, mirroring `.mGrid`'s own auto-fill behavior —
-   see `useMemberDirectoryVirtualizer`). */
+   absolutely positioned inside it by its own translateY offset, so only the
+   rows near the viewport mount, however long the filtered directory gets.
+   `.mGridRow`'s column count is set inline per-render (it tracks the
+   container's measured width, mirroring `.mGrid`'s own auto-fill behavior;
+   see `useMemberDirectoryVirtualizer`).
+
+   A result-set change "shuffles" the grid in the same frame (driven by motion
+   in `MemberResultsGrid` and `useShuffledMembers`): survivors glide to their
+   new slot on a spring, newcomers grow in, and leavers fade in place as
+   ghosts in `.mGridGhostLayer`, which sits before the rows in DOM order so
+   gliding cards paint over it. Motion animates only the `.mGridCard` wrapper
+   and its `.mGridCardFade` layer, so `.mCard` keeps its own hover lift
+   transition. When a change shrinks the results so far that the reader is
+   left looking at mostly empty space, the grid top scrolls back to just
+   under the fixed nav chrome, using `scroll-margin-top` (`gridScrollBack.ts`,
+   triggered from `useShuffledMembers`). */
 .mGridSizer {
   position: relative;
   width: 100%;
-  /* Cross-fade on filter change: the sizer dips to transparent for one quick
-     beat while `MemberResultsGrid` swaps the underlying set (which also masks
-     the virtualizer's height/measurement reflow), then the incoming cards
-     re-stagger in. Only `opacity` animates: cheap, no layout thrash. */
-  transition: opacity var(--dur-fast) var(--ease-in);
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-sm));
 }
-.mGridFading {
-  opacity: 0;
+/* During the shuffle window only: clip the grid at its bottom edge, so a
+   survivor gliding up from below the shrunken grid appears at the grid's
+   bottom edge, clear of the footer. The top and side insets reach out by
+   --gap-lg (32px), past everything a card paints outside its box: the 2px
+   hover lift, the --shadow-lift blur (18px past the sides) and the focus
+   ring (3px outline + 3px offset = 6px). At the bottom, the last row's 14px
+   padding holds the 6px ring. */
+.mGridSizerShuffling {
+  clip-path: inset(calc(-1 * var(--gap-lg)) calc(-1 * var(--gap-lg)) 0);
 }
-@media (prefers-reduced-motion: reduce) {
-  .mGridSizer {
-    transition: none;
-  }
-  .mGridFading {
-    opacity: 1;
-  }
+.mGridGhostLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Ghosts stay inside the grid box: they never extend the page's scrollable
+     height (which bounced the scroll when they unmounted) or paint over the
+     footer once the grid shrinks. A ghost outside the new box is clipped. */
+  overflow: clip;
+}
+.mGridGhost {
+  position: absolute;
+  pointer-events: none;
+  /* Motion drives opacity and transform inline; the reduced-motion rule in
+     base.css would otherwise transition them too. */
+  transition-property: none;
+}
+.mGridCard {
+  transition-property: none;
+}
+/* The card's grow-in layer inside `.mGridCard`: opacity and scale animate
+   here, while the outer wrapper carries only the layout glide. It fills the
+   grid cell so it scales about the same centre the ghost uses. */
+.mGridCardFade {
+  height: 100%;
+  transition-property: none;
 }
 .mGridRow {
   position: absolute;

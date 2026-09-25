@@ -10,12 +10,13 @@ import {
   Reveal,
   SubpageIndex,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useScrollReveal } from "../../shared/hooks/useScrollReveal";
-import { useCountUp } from "../../shared/hooks/useCountUp";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { GRANTS, FILTERS } from "./grants.data";
 import { GrantsResults, GrantsGuide } from "./GrantsSections";
 import { GrantsSidebar } from "./GrantsSidebar";
@@ -23,10 +24,17 @@ import styles from "./GrantsPage.module.css";
 
 function HeroStat({ target, label }: { target: number; label: string }) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
-  const value = useCountUp(target, { active: isVisible });
+  const fmt = useFormat();
   return (
     <div className={styles.stat} ref={ref}>
-      <b>{value}</b>
+      <b>
+        <RollingNumber
+          value={fmt.number(target)}
+          numericValue={target}
+          revealFrom={{ value: fmt.number(0), numericValue: 0 }}
+          isRevealed={isVisible}
+        />
+      </b>
       <span>{label}</span>
     </div>
   );

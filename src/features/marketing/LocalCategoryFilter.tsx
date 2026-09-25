@@ -1,5 +1,7 @@
 import { useId } from "react";
 import { FilterChips } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LOCAL_CATEGORIES, LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
 import { CATEGORY_ICON } from "./map.data";
@@ -24,13 +26,20 @@ export function LocalCategoryFilter({
   categoryCounts: Record<string, number>;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const categoryLabelId = useId();
 
-  const count = (value: string) => (
-    <span className={s.count} aria-hidden>
-      {categoryCounts[value] ?? 0}
-    </span>
-  );
+  const count = (value: string) => {
+    const categoryCount = categoryCounts[value] ?? 0;
+    return (
+      <span className={s.count} aria-hidden>
+        <RollingNumber
+          value={fmt.number(categoryCount)}
+          numericValue={categoryCount}
+        />
+      </span>
+    );
+  };
 
   const categoryChip = (categoryId: string, label: string) => {
     const Icon = CATEGORY_ICON[categoryId];

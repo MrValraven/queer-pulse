@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useScopedLocalStorage } from "../../../../app/providers/useScopedLocalStorage";
 import { useStorageScope } from "../../../../app/providers/useStorageScope";
 import type { ListingDraft } from "../listBusiness.data";
+import { comparableDraft } from "./restoreDiff/listingDraftComparable";
 
 /**
  * Local autosave for the OWNER EDITOR, deliberately separate from the create
@@ -48,10 +49,19 @@ function isStoredEditDraft(value: unknown): value is StoredEditDraft {
   );
 }
 
-/** Small, stable fingerprint of a draft. Only ever compared for equality, so a
- *  djb2 hash is plenty and keeps the stored payload from doubling in size. */
+/**
+ * Small, stable fingerprint of what a draft SAYS. Only ever compared for
+ * equality, so a djb2 hash is plenty and keeps the stored payload from
+ * doubling in size.
+ *
+ * Hashed from `comparableDraft`, which drops the client-only row ids. Those
+ * ids come from module counters and change on every mount, so hashing the raw
+ * draft made an unchanged listing look changed: it offered a restore banner
+ * with nothing in it, and claimed the server copy was "updated since" after
+ * every remount.
+ */
 function fingerprint(draft: ListingDraft): string {
-  const serialized = JSON.stringify(draft);
+  const serialized = JSON.stringify(comparableDraft(draft));
   let hash = 5381;
   for (let index = 0; index < serialized.length; index += 1) {
     hash = ((hash << 5) + hash + serialized.charCodeAt(index)) | 0;
@@ -100,7 +110,10 @@ export function useListingEditorAutosave({
       value === null || isStoredEditDraft(value),
   );
 
-  const serverFingerprint = fingerprint(initialDraft);
+  const serverFingerprint = useMemo(
+    () => fingerprint(initialDraft),
+    [initialDraft],
+  );
 
   /** The offer a stored copy is worth making, or null. A copy identical to
    *  what the server already has is not worth offering, and a copy from

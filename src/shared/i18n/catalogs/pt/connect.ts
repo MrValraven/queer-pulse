@@ -10,7 +10,7 @@ import type { Catalog } from "../../types";
  */
 export const connect: Catalog = {
   // Separadores (ConnectionsPage / ConnectionsTabs)
-  "tabs.all": "Todas as ligações",
+  "tabs.all": "Todas as conexões",
   "tabs.incoming": "Pedidos recebidos",
   "tabs.sent": "Enviados",
   "tabs.blocked": "Bloqueios",
@@ -23,10 +23,10 @@ export const connect: Catalog = {
     "O teu perfil principal não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
   "page.note":
-    "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te ligares primeiro? É para isso que servem as personas. As ligações são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
+    "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te ligares primeiro? É para isso que servem as personas. As conexões são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
   "page.loadMoreLoading": "A carregar…",
   "page.loadMore": "Carregar mais",
-  "page.loadError.title": "Não conseguimos carregar <em>as tuas ligações</em>",
+  "page.loadError.title": "Não conseguimos carregar <em>as tuas conexões</em>",
   "page.loadError.body":
     "Quem está ligado a ti continua lá. O pedido não chegou de volta, tenta outra vez daqui a pouco.",
 
@@ -44,11 +44,11 @@ export const connect: Catalog = {
   "moreMenu.unmute": "Deixar de silenciar {name}",
   // A vizinha discreta do Bloquear (PRD-200). "vocês" e "vossa" sao o plural
   // informal de "tu", que o portugues europeu nao escreve de outra forma.
-  "moreMenu.removeConnection": "Terminar a ligação com {name}",
-  "moreMenu.removeConfirm.title": "Queres terminar a tua ligação com {name}?",
+  "moreMenu.removeConnection": "Terminar a conexão com {name}",
+  "moreMenu.removeConfirm.title": "Queres terminar a tua conexão com {name}?",
   "moreMenu.removeConfirm.body":
-    "{name} não recebe qualquer aviso, e nada do que já disseram um ao outro é apagado. A vossa conversa continua na tua caixa de entrada, mas nenhum dos dois pode enviar mensagens novas enquanto não voltarem a estar ligados. Qualquer um de vocês pode pedir ligação outra vez quando quiser.",
-  "moreMenu.removeConfirm.action": "Terminar ligação",
+    "{name} não recebe qualquer aviso, e nada do que já disseram um ao outro é apagado. A vossa conversa continua na tua caixa de entrada, mas nenhum dos dois pode enviar mensagens novas enquanto não voltarem a estar ligados. Qualquer um de vocês pode pedir conexão outra vez quando quiser.",
+  "moreMenu.removeConfirm.action": "Terminar conexão",
   "moreMenu.toastRemoved": "Tu e {name} já não estão ligados.",
   "moreMenu.block": "Bloquear {name}",
   "moreMenu.unblock": "Desbloquear {name}",
@@ -60,7 +60,7 @@ export const connect: Catalog = {
   "moreMenu.toastUnblocked": "Desbloqueaste {name}",
   "moreMenu.blockConfirm.title": "Bloquear {name}?",
   "moreMenu.blockConfirm.body":
-    "Ao bloquear, a ligação é removida, {name} deixa de te poder enviar mensagens e as tuas atualizações deixam de aparecer. Podes reverter quando quiseres no separador Bloqueios.",
+    "Ao bloquear, a conexão é removida, {name} deixa de te poder enviar mensagens e as tuas atualizações deixam de aparecer. Podes reverter quando quiseres no separador Bloqueios.",
   "moreMenu.blockConfirm.action": "Bloquear",
 
   // Texto dos cartões (ConnectionCards)
@@ -69,7 +69,7 @@ export const connect: Catalog = {
   "card.viewProfile": "Ver perfil",
   "card.mutuals_one": "<b>{count}</b> pessoa em comum",
   "card.mutuals_other": "<b>{count}</b> pessoas em comum",
-  "card.connectedSince": "Ligação desde <b>{since}</b>",
+  "card.connectedSince": "Conexão desde <b>{since}</b>",
   "card.tagsMoreTitle": "Também: {list}",
   "card.noMutuals": "Sem pessoas em comum: revê com atenção",
   "card.sentAgo": "Enviado <b>{sentAgo}</b>",
@@ -100,12 +100,12 @@ export const connect: Catalog = {
 
   // Separador Todas as ligações (ConnectionsAllTab)
   "allTab.searchPlaceholder": "Pesquisar por nome, identificador ou ocupação",
-  "allTab.searchAria": "Pesquisar ligações",
+  "allTab.searchAria": "Pesquisar conexões",
   "allTab.sortLabel": "Ordenar",
   "allTab.sortRecentlyConnected": "Mais recentes",
   "allTab.sortAToZ": "A a Z",
   "allTab.sortClosestMutuals": "Mais em comum",
-  "allTab.emptyTitle": "Ainda sem ligações",
+  "allTab.emptyTitle": "Ainda sem conexões",
   "allTab.emptyDescription":
     "A tua rede começa com um simples olá. Conhece pessoas num convívio ou procura quem já conheces e liga-te depois de se terem encontrado.",
   "allTab.findMembers": "Encontrar pessoas",
@@ -113,7 +113,7 @@ export const connect: Catalog = {
   "allTab.emptySearchDescription":
     "Ainda ninguém na tua rede corresponde a essa pesquisa. Limpa-a para veres toda a gente outra vez.",
   "allTab.clearSearch": "Limpar pesquisa",
-  "allTab.loadMore": "Carregar mais ligações",
+  "allTab.loadMore": "Carregar mais conexões",
 
   // Estados vazios de pedidos recebidos / enviados / bloqueios (ConnectionsPanels)
   "panels.requestsEmptyTitle": "Sem pedidos por agora",
@@ -194,9 +194,9 @@ export const connect: Catalog = {
   // "Pediram-te primeiro" (ConnectIncomingPanel, PRD-03).
   "incoming.title": "{name} pediu-te <em>a ti</em> primeiro.",
   "incoming.body":
-    "{name} enviou-te um pedido de ligação e continua à espera. Se aceitares, podem trocar mensagens; se recusares, a pessoa só saberá que ficou sem resposta.",
+    "{name} enviou-te um pedido de conexão e continua à espera. Se aceitares, podem trocar mensagens; se recusares, a pessoa só saberá que ficou sem resposta.",
   "incoming.bodyWithDraft":
-    "{name} enviou-te um pedido de ligação e continua à espera. Se aceitares, o que acabaste de escrever segue para a conversa, pronto para reveres antes de enviar.",
+    "{name} enviou-te um pedido de conexão e continua à espera. Se aceitares, o que acabaste de escrever segue para a conversa, pronto para reveres antes de enviar.",
   "incoming.accept": "Aceitar",
   "incoming.acceptAndSend": "Aceitar e levar a minha mensagem",
   "incoming.decline": "Recusar com delicadeza",
@@ -225,16 +225,16 @@ export const connect: Catalog = {
   "notice.needsIntro.title":
     "{name} liga-se através de <em>apresentações.</em>",
   "notice.needsIntro.body":
-    "Chegam a novas pessoas através de quem já conhecem. Pede a uma ligação em comum para te apresentar.",
+    "Chegam a novas pessoas através de quem já conhecem. Pede a uma conexão em comum para te apresentar.",
   "notice.cannotConnect.title":
     "Não consegues contactar {name} <em>agora.</em>",
   "notice.cannotConnect.body": "Este contacto não está disponível de momento.",
   "notice.requestsPaused.title":
     "Os novos pedidos estão <em>em pausa</em> por agora.",
   "notice.requestsPaused.body":
-    "A equipa de moderação está a analisar uma situação na tua conta. Entretanto, as tuas ligações e conversas continuam como sempre.",
+    "A equipa de moderação está a analisar uma situação na tua conta. Entretanto, as tuas conexões e conversas continuam como sempre.",
   "notice.connectionsOnly.title":
-    "{name} só está a aceitar mensagens das <em>suas ligações</em> neste momento.",
+    "{name} só está a aceitar mensagens das <em>suas conexões</em> neste momento.",
   "notice.connectionsOnly.body": "Podes tentar noutra altura.",
   // Pessoas que talvez conheças (SOC-05). Cada sugestão traz o FACTO que a
   // explica. Redigido na 3.ª pessoa para evitar concordância de género
@@ -243,10 +243,10 @@ export const connect: Catalog = {
   // na língua em que foram escritos.
   "suggested.heading": "Pessoas que talvez conheças",
   "suggested.blurb":
-    "Cada uma partilha contigo uma comunidade, uma ligação ou um interesse.",
+    "Cada uma partilha contigo uma comunidade, uma conexão ou um interesse.",
   "suggested.reasonCommunity": "Também está em {name}",
-  "suggested.reasonMutuals_one": "{count} ligação em comum",
-  "suggested.reasonMutuals_other": "{count} ligações em comum",
+  "suggested.reasonMutuals_one": "{count} conexão em comum",
+  "suggested.reasonMutuals_other": "{count} conexões em comum",
   "suggested.reasonOpenTo": "Também tem disponibilidade para {label}",
   "suggested.reasonTag": "Também tem interesse em {label}",
   "suggested.reasonProfession": "Também trabalha em {label}",

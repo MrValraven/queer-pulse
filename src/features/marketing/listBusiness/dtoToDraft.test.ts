@@ -53,7 +53,6 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     ownerBio: "",
     visibility: "public",
     linkToProfile: true,
-    contactEmail: "",
     consentOuting: true,
     consentGuide: true,
     queerOwnedVerified: false,

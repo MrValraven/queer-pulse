@@ -13,6 +13,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
+import { useAuth } from "../../../app/providers/authContext";
 import { Button, ImageSlot, Tag, TagRow } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -135,6 +136,9 @@ function CommunityCard({
   onHowItWorksClick: () => void;
 }) {
   const { t } = useTranslation();
+  // Signed in, the card's action opens the community itself; the explainer
+  // is for visitors who cannot get in yet. Mirrors `HousingExplainerCta`.
+  const { loggedIn } = useAuth();
   const access = ACCESS[view.accessTier];
   const AccessIcon = access.icon;
   return (
@@ -230,10 +234,17 @@ function CommunityCard({
             </span>
           </div>
           <div className={spot.actions}>
-            <Button variant="primary" onClick={onHowItWorksClick}>
-              {t("homepage:communities.howCommunitiesWorkCta")}{" "}
-              <FiArrowRight aria-hidden />
-            </Button>
+            {loggedIn ? (
+              <Button variant="primary" to={view.to}>
+                {t("homepage:communities.viewCommunityCta")}{" "}
+                <FiArrowRight aria-hidden />
+              </Button>
+            ) : (
+              <Button variant="primary" onClick={onHowItWorksClick}>
+                {t("homepage:communities.howCommunitiesWorkCta")}{" "}
+                <FiArrowRight aria-hidden />
+              </Button>
+            )}
           </div>
         </div>
       </div>

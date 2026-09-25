@@ -2,6 +2,7 @@ import { FiAlertTriangle, FiCheckCircle } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import {
   IVA_EXEMPTION_OVERRUN,
   IVA_EXEMPTION_THRESHOLD,
@@ -52,13 +53,19 @@ export function IvaTrackerStatus({ entries }: IvaTrackerStatusProps) {
   const zone = zoneFor(total);
   const thresholdFmt = fmt.currency(IVA_EXEMPTION_THRESHOLD);
   const overrunFmt = fmt.currency(IVA_EXEMPTION_OVERRUN);
+  const headroom = Math.abs(remaining);
+  const usedPercent = Math.round(pct);
+  // The read-out follows the logged invoices, so each figure rolls.
+  const rollCurrency = (amount: number) => (
+    <RollingNumber value={fmt.currency(amount)} numericValue={amount} />
+  );
 
   return (
     <div className={`${styles.status} ${ZONE_CLASS[zone]}`}>
       <p className={styles.statusEyebrow}>
         {t("economy:ivaTracker.status.eyebrow")}
       </p>
-      <p className={styles.statusTotal}>{fmt.currency(total)}</p>
+      <p className={styles.statusTotal}>{rollCurrency(total)}</p>
 
       <div
         className={styles.barTrack}
@@ -78,7 +85,7 @@ export function IvaTrackerStatus({ entries }: IvaTrackerStatusProps) {
       <dl className={styles.metrics}>
         <div className={styles.metric}>
           <dt>{t("economy:ivaTracker.status.invoiced")}</dt>
-          <dd>{fmt.currency(total)}</dd>
+          <dd>{rollCurrency(total)}</dd>
         </div>
         <div className={styles.metric}>
           <dt>
@@ -86,11 +93,19 @@ export function IvaTrackerStatus({ entries }: IvaTrackerStatusProps) {
               ? t("economy:ivaTracker.status.headroomLeft")
               : t("economy:ivaTracker.status.overBy")}
           </dt>
-          <dd>{fmt.currency(Math.abs(remaining))}</dd>
+          <dd>{rollCurrency(headroom)}</dd>
         </div>
         <div className={styles.metric}>
           <dt>{t("economy:ivaTracker.status.thresholdUsed")}</dt>
-          <dd>{Math.round(pct)}%</dd>
+          <dd>
+            <span className={styles.unitPair}>
+              <RollingNumber
+                value={fmt.number(usedPercent, { useGrouping: false })}
+                numericValue={usedPercent}
+              />
+              %
+            </span>
+          </dd>
         </div>
       </dl>
 
@@ -105,10 +120,11 @@ export function IvaTrackerStatus({ entries }: IvaTrackerStatusProps) {
         <p className={styles.note}>
           <FiAlertTriangle aria-hidden className={styles.noteIconWarn} />
           <span>
-            {t("economy:ivaTracker.status.nearNote", {
-              remaining: fmt.currency(Math.max(0, remaining)),
-              threshold: thresholdFmt,
-            })}
+            <Translation
+              i18nKey="economy:ivaTracker.status.nearNote"
+              values={{ threshold: thresholdFmt }}
+              slots={{ remaining: rollCurrency(Math.max(0, remaining)) }}
+            />
           </span>
         </p>
       )}

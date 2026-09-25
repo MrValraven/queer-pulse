@@ -137,9 +137,9 @@ export const myevents: Catalog = {
   "card.soldOut": "Esgotado",
   "card.spotsOpen_one": "{count} vaga aberta",
   "card.spotsOpen_other": "{count} vagas abertas",
-  "card.friendsGoing_one": "{count} das tuas ligações vai",
-  "card.friendsGoing_other": "{count} das tuas ligações vão",
-  "card.friendsToast": "A mostrar ligações que vão…",
+  "card.friendsGoing_one": "{count} das tuas conexões vai",
+  "card.friendsGoing_other": "{count} das tuas conexões vão",
+  "card.friendsToast": "A mostrar conexões que vão…",
 
   // ── "Happening now / starts in" bar (myEvents.helpers.ts soonLabel) ───────
   "soon.happeningNow": "A acontecer agora",
@@ -411,7 +411,7 @@ export const myevents: Catalog = {
   "rsvpModal.customAnswerPlaceholder": "A tua resposta",
   "rsvpModal.whoSees": "Quem pode ver que vais?",
   "rsvpModal.visibility.everyone": "Todas as pessoas",
-  "rsvpModal.visibility.connections": "Ligações",
+  "rsvpModal.visibility.connections": "Conexões",
   "rsvpModal.visibility.justMe": "Só eu",
   "rsvpModal.attendQuietly": "Participar discretamente",
   "rsvpModal.attendQuietlyDesc":

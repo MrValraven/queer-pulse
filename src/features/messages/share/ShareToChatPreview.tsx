@@ -1,10 +1,11 @@
-import { useEffect, useId } from "react";
+import { useEffect, useId, useMemo } from "react";
 import { Avatar } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { hasPreviewContent, useLinkPreview } from "../api/useLinkPreview";
+import { useMessageLinkCard } from "../api/useMessageLinkCard";
 import type { Conversation } from "../data";
-import { LinkPreview } from "../LinkPreview";
+import { MessageLinkCard } from "../MessageLinkCard";
 import { firstLinkUrl, renderWithLinks } from "../linkify";
+import { resolveChatPlaceLink } from "../chatPlaceLink";
 import { useWallpaper } from "../wallpaper";
 import styles from "./ShareToChatPreview.module.css";
 
@@ -27,11 +28,16 @@ export interface ShareToChatPreviewProps {
  * the note is typed.
  *
  * The bubble mirrors `TextBubble`'s own rules (MessageBubbleBody.tsx) on the
- * same `useLinkPreview` + `LinkPreview` pair: a link-only body shows just the
- * unfurl card once it resolves, and a body with a note shows the card above
- * the note and the link. Styling is a local miniature, following
- * `WallpaperPreview`, so the real bubble classes (avatars, receipts, reaction
- * slots) stay out of this chunk.
+ * same `useMessageLinkCard` + `MessageLinkCard` pair: a link-only body shows
+ * just the card once it resolves (the real directory place card for a shared
+ * QueerPulse place link, the ordinary OpenGraph unfurl otherwise), and a body
+ * with a note shows the card above the note. A resolved place link mirrors
+ * `PlaceShareBubble` too: the card stands on its own with no plum frame
+ * around it, and the note (if any) sits in its own small caption bubble
+ * directly under it, styled like `.attachmentCaptionSent`; every other link
+ * keeps today's single plum bubble with the OG card and note together.
+ * Styling is a local miniature, following `WallpaperPreview`, so the real
+ * bubble classes (avatars, receipts, reaction slots) stay out of this chunk.
  *
  * The surface is `inert` because the card and the inline link are real
  * anchors: here they are a picture of the message, and a click or Tab stop on
@@ -54,13 +60,23 @@ export function ShareToChatPreview({
   }, []);
 
   const previewUrl = firstLinkUrl(body);
-  const { data: previewData, isLoading: isPreviewLoading } =
-    useLinkPreview(previewUrl);
+  const linkCard = useMessageLinkCard(previewUrl);
+  // Same swap `TextBubble` applies (MessageBubbleBody.tsx), through the same
+  // `resolveChatPlaceLink` helper, so a place share's live preview can never
+  // show the raw URL a moment before the real sent bubble drops it.
+  // `linkCard` itself is a fresh object every render (a React Query result);
+  // only its `placeSlug`/`place` fields decide what `resolveChatPlaceLink`
+  // returns.
+  const placeLink = useMemo(
+    () => resolveChatPlaceLink(previewUrl, linkCard),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [previewUrl, linkCard.placeSlug, linkCard.place],
+  );
   const trimmedBody = body.trim();
   const isLinkOnlyMessage =
     !!previewUrl &&
     (trimmedBody === previewUrl || `https://${trimmedBody}` === previewUrl);
-  const isPreviewResolved = !isPreviewLoading && hasPreviewContent(previewData);
+  const isPreviewResolved = !linkCard.isLoading && linkCard.hasContent;
   const shouldRenderText = !(isLinkOnlyMessage && isPreviewResolved);
 
   return (
@@ -96,20 +112,35 @@ export function ShareToChatPreview({
         data-wallpaper-pattern={wallpaper.pattern}
         inert
       >
-        <div className={styles.bubble}>
-          {previewUrl && (
-            <LinkPreview
-              url={previewUrl}
-              data={previewData}
-              isLoading={isPreviewLoading}
-              isSent
-            />
-          )}
-          {shouldRenderText && (
-            <span className={styles.text}>{renderWithLinks(body)}</span>
-          )}
-          <span className={styles.time}>{t("messages:share.previewTime")}</span>
-        </div>
+        {placeLink ? (
+          <>
+            <div className={styles.placeGroup}>
+              <MessageLinkCard url={placeLink.url} state={linkCard} isSent />
+              {shouldRenderText && (
+                <div className={styles.placeCaption}>
+                  {renderWithLinks(body, placeLink)}
+                </div>
+              )}
+            </div>
+            <span className={styles.placeTime}>
+              {t("messages:share.previewTime")}
+            </span>
+          </>
+        ) : (
+          <div className={styles.bubble}>
+            {previewUrl && (
+              <MessageLinkCard url={previewUrl} state={linkCard} isSent />
+            )}
+            {shouldRenderText && (
+              <span className={styles.text}>
+                {renderWithLinks(body, placeLink)}
+              </span>
+            )}
+            <span className={styles.time}>
+              {t("messages:share.previewTime")}
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );

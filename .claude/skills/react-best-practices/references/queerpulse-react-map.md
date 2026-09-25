@@ -51,7 +51,7 @@ Reach for these before writing an effect. Building a second scroll-lock / media-
 | `useMediaQuery` / `usePrefersReducedMotion`                  | Responsive + reduced-motion gates                                                                     |
 | `useDebouncedValue`                                          | Debounce a value (search)                                                                             |
 | `useLocalStorage`                                            | Persisted state (demo overrides)                                                                      |
-| `useCountUp` / `useSimulatedLoad`                            | Animated counters / simulated demo loading                                                            |
+| `useSimulatedLoad`                                           | Simulated demo loading (numbers animate with `RollingNumber` in `shared/components/ui`)               |
 | `useIncrementalList` (`IncrementalList`)                     | "Load more" pagination over an array                                                                  |
 | `useFocusOnMount`                                            | Move focus to an element on mount (dialogs, step changes)                                             |
 | `useUnsavedChangesGuard`                                     | Dirty-form navigation guard (edit flows)                                                              |

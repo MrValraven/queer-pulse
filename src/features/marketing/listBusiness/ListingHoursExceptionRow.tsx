@@ -1,5 +1,5 @@
 import { FiTrash2 } from "react-icons/fi";
-import { DatePicker } from "../../../shared/components/ui";
+import { DatePicker, Toggle } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   HOURS_EXCEPTION_NOTE_MAX,
@@ -25,8 +25,14 @@ export interface HoursExceptionRowHandlers {
  * One dated override of the weekly grid: which date, whether the place opens
  * at all that day, the windows if it does, and a short label.
  *
+ * The header line holds the date, the same open switch the weekly card uses
+ * (a `role="switch"` named "Open on <date>", with a static "Open" beside it
+ * that dims when the date is closed), a "Past" tag once the date has gone by,
+ * and the remove button pinned to its end. On a narrow card the first three
+ * wrap among themselves while the remove button keeps its corner.
+ *
  * The opening windows are the very same `ListingHoursIntervalRows` the weekly
- * grid uses, so an owner meets one time control on this panel rather than two.
+ * grid uses, so an owner meets one time control across the whole hours section.
  * `problem` is the client-side mirror of the server's rules, resolved by the
  * parent and rendered here beside the field it belongs to.
  */
@@ -38,13 +44,14 @@ export function ListingHoursExceptionRow({
 }: {
   entry: HoursException;
   problem: HoursExceptionProblem | null;
-  /** The date has already passed. Rendered quieter, never removed for them. */
+  /** The date has already passed. Rendered quieter and kept until the owner clears it. */
   isPast: boolean;
   handlers: HoursExceptionRowHandlers;
 }) {
   const { t } = useTranslation();
   const rowLabel =
     entry.date || t("marketing:listBusiness.hoursExceptions.untitledDate");
+  const isOpen = entry.open;
 
   return (
     <li
@@ -53,30 +60,37 @@ export function ListingHoursExceptionRow({
         .join(" ")}
     >
       <div className={styles.rowHead}>
-        <DatePicker
-          mode="date"
-          size="sm"
-          label={t("marketing:listBusiness.hoursExceptions.dateLabel")}
-          value={entry.date || null}
-          onChange={(value) => handlers.onChangeDate(value ?? "")}
-        />
-        <button
-          type="button"
-          aria-pressed={entry.open}
-          className={[styles.toggle, entry.open && styles.toggleOpen]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => handlers.onChangeOpen(!entry.open)}
-        >
-          {entry.open
-            ? t("marketing:listBusiness.step3.open")
-            : t("marketing:listBusiness.step3.closed")}
-        </button>
-        {isPast && (
-          <span className={styles.pastTag}>
-            {t("marketing:listBusiness.hoursExceptions.pastTag")}
+        <div className={styles.rowHeadMain}>
+          <DatePicker
+            mode="date"
+            size="sm"
+            label={t("marketing:listBusiness.hoursExceptions.dateLabel")}
+            value={entry.date || null}
+            onChange={(value) => handlers.onChangeDate(value ?? "")}
+          />
+          <span className={styles.openControl}>
+            <Toggle
+              checked={isOpen}
+              onChange={handlers.onChangeOpen}
+              label={t("marketing:listBusiness.step3.dayOpenAria", {
+                day: rowLabel,
+              })}
+            />
+            <span
+              className={[styles.openText, !isOpen && styles.openTextOff]
+                .filter(Boolean)
+                .join(" ")}
+              aria-hidden
+            >
+              {t("marketing:listBusiness.step3.open")}
+            </span>
           </span>
-        )}
+          {isPast && (
+            <span className={styles.pastTag}>
+              {t("marketing:listBusiness.hoursExceptions.pastTag")}
+            </span>
+          )}
+        </div>
         <button
           type="button"
           className={styles.remove}
@@ -89,7 +103,7 @@ export function ListingHoursExceptionRow({
         </button>
       </div>
 
-      {entry.open && (
+      {isOpen && (
         <ListingHoursIntervalRows
           intervals={entry.intervals}
           rowLabel={rowLabel}

@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { ChipSelect } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LISBON_HOUSING_NEIGHBOURHOODS } from "./housingNeighbourhoods";
 import styles from "./HousingNeighbourhoodPicker.module.css";
@@ -26,6 +29,7 @@ export function HousingNeighbourhoodPicker({
   onChange: (next: string[]) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -59,14 +63,26 @@ export function HousingNeighbourhoodPicker({
     onChange([...next]);
   };
 
+  const selectedCount = selected.length;
+  // Two or more areas read as a count, which rolls as areas are ticked.
+  const rollingCount = (
+    <RollingNumber
+      value={fmt.number(selectedCount)}
+      numericValue={selectedCount}
+    />
+  );
   const triggerLabel =
-    selected.length === 0
-      ? t("economy:housing.filterBar.areaAny")
-      : selected.length === 1
-        ? selected[0]
-        : t("economy:housing.filterBar.areaSelected", {
-            count: selected.length,
-          });
+    selectedCount === 0 ? (
+      t("economy:housing.filterBar.areaAny")
+    ) : selectedCount === 1 ? (
+      selected[0]
+    ) : (
+      <Translation
+        i18nKey="economy:housing.filterBar.areaSelected"
+        values={{ count: selectedCount }}
+        slots={{ count: rollingCount }}
+      />
+    );
 
   return (
     <div className={styles.wrap} ref={wrapRef}>
@@ -88,7 +104,7 @@ export function HousingNeighbourhoodPicker({
           {triggerLabel}
         </span>
         {selected.length > 1 && (
-          <span className={styles.count}>{selected.length}</span>
+          <span className={styles.count}>{rollingCount}</span>
         )}
         <FiChevronDown
           className={[styles.chev, open && styles.chevOpen]

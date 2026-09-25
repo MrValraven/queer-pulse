@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { FiUsers } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { initialsFromParts } from "../../shared/lib/initials";
@@ -50,6 +53,7 @@ export function GoingAttendeesPreview({
   gathering: GatheringDetail;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const preview = resolvePreview(gathering, demoMode);
   if (!preview || preview.attendees.length === 0) return null;
@@ -88,9 +92,18 @@ export function GoingAttendeesPreview({
         })}
         {moreCount > 0 && (
           <span className={styles.more}>
-            {t("gatherings:gathering.attendeesPreview.moreLabel", {
-              count: moreCount,
-            })}
+            <Translation
+              i18nKey="gatherings:gathering.attendeesPreview.moreLabel"
+              values={{ count: moreCount }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(moreCount)}
+                    numericValue={moreCount}
+                  />
+                ),
+              }}
+            />
           </span>
         )}
       </div>

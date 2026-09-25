@@ -12,6 +12,8 @@ import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { useOutsideDismiss } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useUnreadCount } from "./api/useUnreadCount";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import {
@@ -55,6 +57,7 @@ export function NotificationsBellMenu({
   badgeClassName?: string;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const serverUnreadCount = useUnreadCount();
   const unreadCount = unreadCountOverride ?? serverUnreadCount;
   const { key: locationKey } = useLocation();
@@ -125,7 +128,12 @@ export function NotificationsBellMenu({
       >
         {icon}
         {unreadCount > 0 && (
-          <span className={badgeClassName}>{unreadCount}</span>
+          <span className={badgeClassName}>
+            <RollingNumber
+              value={fmt.number(unreadCount)}
+              numericValue={unreadCount}
+            />
+          </span>
         )}
       </button>
       {isOpen &&

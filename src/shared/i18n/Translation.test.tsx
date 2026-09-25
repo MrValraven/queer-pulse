@@ -14,6 +14,10 @@ vi.mock("./catalogs", async (importOriginal) => {
   const fixture = {
     "fixture.richPlural_one": "<strong>{count}</strong> person is coming",
     "fixture.richPlural_other": "<strong>{count}</strong> people are coming",
+    "fixture.slotPlain": "Total so far: {total} members",
+    "fixture.slotTag_one": "Showing <strong>{count} film</strong>",
+    "fixture.slotTag_other": "Showing <strong>{count} films</strong>",
+    "fixture.slotPair": "{shown} of {total} shown",
   };
   return {
     ...actual,
@@ -29,6 +33,12 @@ vi.mock("./catalogs", async (importOriginal) => {
 
 function renderWithI18n(ui: React.ReactNode) {
   return render(<TestProviders>{ui}</TestProviders>);
+}
+
+/** Render inside a known wrapper so assertions read only the translated line. */
+function renderLine(ui: React.ReactNode): HTMLElement {
+  renderWithI18n(<p data-testid="line">{ui}</p>);
+  return screen.getByTestId("line");
 }
 
 describe("Translation", () => {
@@ -105,5 +115,108 @@ describe("Translation", () => {
       </>,
     );
     expect(screen.getAllByText("Once")).toHaveLength(2);
+  });
+
+  describe("slots", () => {
+    it("renders a slot node in plain text", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotPlain"
+          slots={{ total: <span data-testid="total-slot">42</span> }}
+        />,
+      );
+      expect(screen.getByTestId("total-slot")).toBeInTheDocument();
+      expect(line.textContent).toBe("Total so far: 42 members");
+    });
+
+    it("renders a slot node inside a tag run", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotTag"
+          components={{ strong: <strong /> }}
+          values={{ count: 5 }}
+          slots={{ count: <span data-testid="count-slot">5</span> }}
+        />,
+      );
+      const emphasis = line.querySelector("strong");
+      expect(emphasis).not.toBeNull();
+      expect(emphasis?.contains(screen.getByTestId("count-slot"))).toBe(true);
+      expect(emphasis?.textContent).toBe("5 films");
+    });
+
+    it("picks the one form from values.count with a count slot", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotTag"
+          components={{ strong: <strong /> }}
+          values={{ count: 1 }}
+          slots={{ count: <span data-testid="count-slot">1</span> }}
+        />,
+      );
+      expect(line.querySelector("strong")?.textContent).toBe("1 film");
+      expect(screen.getByTestId("count-slot")).toBeInTheDocument();
+    });
+
+    it("picks the other form from values.count with a count slot", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotTag"
+          components={{ strong: <strong /> }}
+          values={{ count: 12 }}
+          slots={{ count: <span data-testid="count-slot">12</span> }}
+        />,
+      );
+      expect(line.querySelector("strong")?.textContent).toBe("12 films");
+      expect(screen.getByTestId("count-slot")).toBeInTheDocument();
+    });
+
+    it("renders two slots in one string", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotPair"
+          slots={{
+            shown: <span data-testid="shown-slot">3</span>,
+            total: <span data-testid="total-slot">9</span>,
+          }}
+        />,
+      );
+      expect(screen.getByTestId("shown-slot")).toBeInTheDocument();
+      expect(screen.getByTestId("total-slot")).toBeInTheDocument();
+      expect(line.textContent).toBe("3 of 9 shown");
+    });
+
+    it("keeps a value token as text beside a slot", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotPair"
+          values={{ total: 9 }}
+          slots={{ shown: <span data-testid="shown-slot">3</span> }}
+        />,
+      );
+      expect(screen.getByTestId("shown-slot")).toBeInTheDocument();
+      expect(line.textContent).toBe("3 of 9 shown");
+    });
+
+    it("ignores a slot whose token is absent and leaves unknown tokens visible", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.slotPair"
+          slots={{ missing: <span data-testid="missing-slot">0</span> }}
+        />,
+      );
+      expect(screen.queryByTestId("missing-slot")).toBeNull();
+      expect(line.textContent).toBe("{shown} of {total} shown");
+    });
+
+    it("renders the same markup as before when no slots are passed", () => {
+      const line = renderLine(
+        <Translation
+          i18nKey="common:fixture.richPlural"
+          components={{ strong: <strong /> }}
+          values={{ count: 3 }}
+        />,
+      );
+      expect(line.innerHTML).toBe("<strong>3</strong> people are coming");
+    });
   });
 });

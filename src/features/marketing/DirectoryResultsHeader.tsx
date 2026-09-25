@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import s from "./DirectoryPage.module.css";
@@ -49,6 +51,10 @@ export function DirectoryResultsHeader({
   activeFiltersSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
+  const rollingCount = (count: number) => (
+    <RollingNumber value={fmt.number(count)} numericValue={count} />
+  );
   // A client-side filter has narrowed the loaded set AND there are pages the
   // browser has never seen. Count against what's loaded in that case, and name
   // the registry total separately, so the sentence stops implying that `shown`
@@ -59,7 +65,7 @@ export function DirectoryResultsHeader({
     <div className={s.resultsHeader}>
       <div className="wrap">
         <div className={s.resultsRow}>
-          <p className={s.count} aria-live="polite">
+          <p className={s.count} aria-live="polite" aria-atomic="true">
             {/* One inline child, so the count keeps its own spacing: the box
                 around it is a flex line (it centres the sentence against the
                 controls opposite), and a flex container would drop the spaces
@@ -90,17 +96,30 @@ export function DirectoryResultsHeader({
                       loaded: loadedCount,
                       count: isCountingLoadedOnly ? loadedCount : total,
                     }}
+                    slots={{
+                      shown: rollingCount(shown),
+                      total: rollingCount(total),
+                      loaded: rollingCount(loadedCount),
+                    }}
                   />
                   {isCountingLoadedOnly && (
                     <span className={s.countNote}>
                       {" · "}
-                      {t("marketing:directory.countLoadedTotal", { total })}
+                      <Translation
+                        i18nKey="marketing:directory.countLoadedTotal"
+                        values={{ total }}
+                        slots={{ total: rollingCount(total) }}
+                      />
                     </span>
                   )}
                   {view === "map" && shown !== mappableCount && (
                     <span className={s.countNote}>
                       {" · "}
-                      {t("marketing:directory.onMap", { count: mappableCount })}
+                      <Translation
+                        i18nKey="marketing:directory.onMap"
+                        values={{ count: mappableCount }}
+                        slots={{ count: rollingCount(mappableCount) }}
+                      />
                     </span>
                   )}
                 </>

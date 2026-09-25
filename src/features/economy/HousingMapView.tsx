@@ -2,7 +2,10 @@ import { useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowDown, FiHome } from "react-icons/fi";
 import { EmptyState } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { buildHousingClusters } from "./housingMapClusters";
@@ -29,6 +32,7 @@ export function HousingMapView({
   filtered: boolean;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const reducedMotion = usePrefersReducedMotion();
   const sidebarRef = useRef<HTMLElement | null>(null);
   const clusters = useMemo(() => buildHousingClusters(listings), [listings]);
@@ -53,7 +57,21 @@ export function HousingMapView({
           onClick={jumpToList}
         >
           <FiArrowDown aria-hidden />
-          {t("economy:housing.map.jumpToList", { count: listings.length })}
+          {/* One flex item, so the button's gap stays between icon and label. */}
+          <span>
+            <Translation
+              i18nKey="economy:housing.map.jumpToList"
+              values={{ count: listings.length }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(listings.length)}
+                    numericValue={listings.length}
+                  />
+                ),
+              }}
+            />
+          </span>
         </button>
 
         <aside className={mapStyles.sidebar} ref={sidebarRef}>
@@ -77,9 +95,18 @@ export function HousingMapView({
                 <div className={mapStyles.groupHead}>
                   {cluster.name}
                   {" · "}
-                  {t("economy:housing.map.count", {
-                    count: cluster.listings.length,
-                  })}
+                  <Translation
+                    i18nKey="economy:housing.map.count"
+                    values={{ count: cluster.listings.length }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(cluster.listings.length)}
+                          numericValue={cluster.listings.length}
+                        />
+                      ),
+                    }}
+                  />
                 </div>
                 {cluster.listings.map((listing) => (
                   <Link

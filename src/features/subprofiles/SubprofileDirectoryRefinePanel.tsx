@@ -6,6 +6,8 @@ import {
   RefinePanel,
   RefineSplit,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
@@ -29,6 +31,7 @@ export function SubprofileDirectoryRefinePanel({
   panelProps: { isOpen: boolean; isSettled: boolean; panelId: string };
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const availabilityLabelId = useId();
   const tagsLabelId = useId();
   const {
@@ -83,7 +86,10 @@ export function SubprofileDirectoryRefinePanel({
               <span className={styles.toggleDot} aria-hidden />
               {t("subprofiles:directory.openToCollabsChip")}
               <span className={styles.toggleCount} aria-hidden>
-                {openToCollabsCount}
+                <RollingNumber
+                  value={fmt.number(openToCollabsCount)}
+                  numericValue={openToCollabsCount}
+                />
               </span>
             </Button>
           </div>

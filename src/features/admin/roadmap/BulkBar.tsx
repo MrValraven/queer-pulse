@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Button, BulkActionBar, Select } from "../../../shared/components/ui";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useFormat } from "../../../shared/i18n/format";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { describeError } from "../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../api/useAdminRoadmapMutations";
@@ -44,6 +47,7 @@ const SUCCESS_TOAST_KEY: Record<RoadmapBulkAction, string> = {
  */
 export function BulkBar() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { selected, clear, count } = useRoadmapSelection();
   const { bulkItems, pending } = useAdminRoadmapMutations();
@@ -84,7 +88,17 @@ export function BulkBar() {
       <BulkActionBar
         variant="inline"
         count={count}
-        label={t("admin:roadmap.bulkBar.selectedLabel", { count })}
+        label={
+          <Translation
+            i18nKey="admin:roadmap.bulkBar.selectedLabel"
+            values={{ count }}
+            slots={{
+              count: (
+                <RollingNumber value={fmt.number(count)} numericValue={count} />
+              ),
+            }}
+          />
+        }
         ariaLabel={t("admin:roadmap.bulkBar.selectedLabel", { count })}
         onClear={clear}
         clearLabel={t("admin:roadmap.bulkBar.clear")}

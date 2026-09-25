@@ -6,6 +6,8 @@ import {
   RefineSplit,
   Select,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CommunitiesCategoryFilter } from "./CommunitiesCategoryFilter";
 import { CommunitiesTagsFilter } from "./CommunitiesTagsFilter";
@@ -131,6 +133,7 @@ function QuickFilterToggle({
   onToggle: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   // Nothing left to find under this toggle, so picking it could only empty the
   // grid. Never while it is already on, or it could not be switched back off.
   const isUnavailable = count === 0 && !isOn;
@@ -156,7 +159,7 @@ function QuickFilterToggle({
       {label}
       {count !== undefined && (
         <span className={styles.toggleCount} aria-hidden>
-          {count}
+          <RollingNumber value={fmt.number(count)} numericValue={count} />
         </span>
       )}
     </Button>

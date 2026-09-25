@@ -1,0 +1,16 @@
+/* A companion to the shared `.attachmentGroup` (MessagesPage.module.css):
+   `display: table` keeps the caption at the CARD's already-computed width in
+   the common case, but a caption whose own text is wider than the card's cap
+   still pulls the anonymous table wrapper wider to fit it (verified live: a
+   caption longer than the card's own max-content width stretched the whole
+   group past 320px instead of wrapping) — the shared class's `max-width:
+   100%` doesn't stop that, since 100% of a roomy bubble column is still far
+   more than 320px. `PlaceLinkCardBody`'s card is the one attachment in this
+   group with a KNOWN, fixed width cap, so this repeats that same
+   `min(320px, 100%)` formula as an absolute ceiling on the whole group: once
+   the box can't grow past it, the caption has nowhere left to go but wrap,
+   same as it would beside a card that was never wider than that in the first
+   place. */
+.group {
+  max-width: min(320px, 100%);
+}

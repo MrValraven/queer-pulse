@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { describeError } from "../../shared/api/errorMessage";
 import { useBulkListingAction } from "./api/useBulkListingAction";
@@ -26,6 +29,7 @@ export function BulkActionBar({
   onClear: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { bulkSetStatus, bulkRemove, isPending } = useBulkListingAction();
   const [confirmingRemove, setConfirmingRemove] = useState(false);
@@ -81,7 +85,15 @@ export function BulkActionBar({
             update as it changes — the bar itself is inserted with no focus
             move, so nothing else would announce it (WCAG 4.1.3). */}
         <span className={styles.bulkCount} role="status">
-          {t("admin:adminListings.bulk.selectedCount", { count })}
+          <Translation
+            i18nKey="admin:adminListings.bulk.selectedCount"
+            values={{ count }}
+            slots={{
+              count: (
+                <RollingNumber value={fmt.number(count)} numericValue={count} />
+              ),
+            }}
+          />
         </span>
         {count >= LISTING_BULK_ACTION_CAP && (
           <span className={styles.bulkCapNote}>

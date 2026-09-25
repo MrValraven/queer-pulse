@@ -1,6 +1,8 @@
 import { useId, useMemo, useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { COMMUNITY_TAGS } from "./communityTags.data";
 import styles from "./CommunitiesPage.module.css";
@@ -37,6 +39,7 @@ export function CommunitiesTagsFilter({
   tagCounts?: Record<string, number>;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const uid = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -89,7 +92,12 @@ export function CommunitiesTagsFilter({
       >
         {t("communities:discover.filter.tagsTitle")}
         {selectedTagIds.length > 0 && (
-          <span className={styles.chipCount}>{selectedTagIds.length}</span>
+          <span className={styles.chipCount}>
+            <RollingNumber
+              value={fmt.number(selectedTagIds.length)}
+              numericValue={selectedTagIds.length}
+            />
+          </span>
         )}
         {isOpen ? <FiChevronUp aria-hidden /> : <FiChevronDown aria-hidden />}
       </button>

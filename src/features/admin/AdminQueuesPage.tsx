@@ -13,6 +13,7 @@ import {
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -134,16 +135,21 @@ function QueuesVerdict({ totals }: { totals: AdminQueuesDTO["totals"] }) {
 function StatTile({
   label,
   value,
+  numericValue,
   note,
 }: {
   label: string;
   value: string;
+  /** The raw count behind `value`; the poll rolls the figure toward it. */
+  numericValue: number;
   note?: string;
 }) {
   return (
     <div className={styles.tile}>
       <span className={styles.tileLabel}>{label}</span>
-      <span className={styles.tileValue}>{value}</span>
+      <span className={styles.tileValue}>
+        <RollingNumber value={value} numericValue={numericValue} />
+      </span>
       {note && <span className={styles.tileNote}>{note}</span>}
     </div>
   );
@@ -163,10 +169,12 @@ function QueuesTotals({
       <StatTile
         label={t("admin:adminQueues.stat.waiting")}
         value={fmt.number(totals.waitingCount)}
+        numericValue={totals.waitingCount}
       />
       <StatTile
         label={t("admin:adminQueues.stat.queuesWithWork")}
         value={fmt.number(totals.queuesWithWorkCount)}
+        numericValue={totals.queuesWithWorkCount}
         note={t("admin:adminQueues.stat.queuesWithWorkNote", {
           total: fmt.number(queueCount),
         })}
@@ -175,6 +183,7 @@ function QueuesTotals({
         <StatTile
           label={t("admin:adminQueues.stat.untracked")}
           value={fmt.number(totals.uncountableQueueCount)}
+          numericValue={totals.uncountableQueueCount}
           note={t("admin:adminQueues.stat.untrackedNote")}
         />
       )}

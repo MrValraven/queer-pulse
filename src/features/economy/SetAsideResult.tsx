@@ -4,6 +4,7 @@ import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import type { PotEntry } from "./setAside.data";
 import styles from "./SetAsidePlannerPage.module.css";
 
@@ -29,6 +30,14 @@ export function SetAsideResult({
     return { logged: total, potOwed: total * frac };
   }, [pot, frac]);
 
+  // The figures follow the form and the pot, so each one rolls.
+  const rollCurrency = (amount: number) => (
+    <RollingNumber value={fmt.currency(amount)} numericValue={amount} />
+  );
+  const percentFigure = (
+    <RollingNumber value={fmt.number(setAsidePct)} numericValue={setAsidePct} />
+  );
+
   return (
     <div className={styles.result}>
       <div className={styles.panel}>
@@ -36,19 +45,22 @@ export function SetAsideResult({
         <p className={styles.panelKicker}>
           {t("economy:setAside.result.parkKicker")}
         </p>
-        <p className={styles.bigPct}>{setAsidePct}%</p>
+        <p className={styles.bigPct}>{percentFigure}%</p>
         <h2 className={styles.panelTitle}>
           <Translation
             i18nKey="economy:setAside.result.title"
             components={{ em: <em /> }}
-            values={{ percent: setAsidePct }}
+            slots={{ percent: percentFigure }}
           />
         </h2>
         <p className={styles.panelBody}>
-          {t("economy:setAside.result.body", {
-            gross: fmt.currency(gross),
-            monthly: fmt.currency(monthlyPark),
-          })}
+          <Translation
+            i18nKey="economy:setAside.result.body"
+            // The gross echoes what is being typed, so only the monthly
+            // figure rolls.
+            values={{ gross: fmt.currency(gross) }}
+            slots={{ monthly: rollCurrency(monthlyPark) }}
+          />
         </p>
       </div>
 
@@ -57,13 +69,13 @@ export function SetAsideResult({
           <span className={styles.statLabel}>
             {t("economy:setAside.result.parkPerMonth")}
           </span>
-          <span className={styles.statVal}>{fmt.currency(monthlyPark)}</span>
+          <span className={styles.statVal}>{rollCurrency(monthlyPark)}</span>
         </div>
         <div className={styles.stat}>
           <span className={styles.statLabel}>
             {t("economy:setAside.result.parkThisYear")}
           </span>
-          <span className={styles.statVal}>{fmt.currency(annualPark)}</span>
+          <span className={styles.statVal}>{rollCurrency(annualPark)}</span>
         </div>
       </div>
 
@@ -73,17 +85,30 @@ export function SetAsideResult({
             {t("economy:setAside.result.potLabel")}
           </span>
           <span className={styles.potCount}>
-            {t("economy:setAside.result.potCount", { count: pot.length })}
+            <Translation
+              i18nKey="economy:setAside.result.potCount"
+              values={{ count: pot.length }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(pot.length)}
+                    numericValue={pot.length}
+                  />
+                ),
+              }}
+            />
           </span>
         </div>
-        <p className={styles.potTotal}>{fmt.currency(potOwed)}</p>
+        <p className={styles.potTotal}>{rollCurrency(potOwed)}</p>
         <p className={styles.potSub}>
-          {pot.length === 0
-            ? t("economy:setAside.result.potEmpty")
-            : t("economy:setAside.result.potSub", {
-                percent: setAsidePct,
-                logged: fmt.currency(logged),
-              })}
+          {pot.length === 0 ? (
+            t("economy:setAside.result.potEmpty")
+          ) : (
+            <Translation
+              i18nKey="economy:setAside.result.potSub"
+              slots={{ percent: percentFigure, logged: rollCurrency(logged) }}
+            />
+          )}
         </p>
       </div>
 

@@ -106,7 +106,7 @@ export const members: Catalog = {
   "profile.loading": "A carregar o perfil…",
   "profile.blocked.title": "Este perfil não está disponível",
   "profile.blocked.description":
-    "Bloqueaste esta pessoa, por isso o perfil dela está escondido. Podes desbloqueá-la a partir das tuas ligações a qualquer momento.",
+    "Bloqueaste esta pessoa, por isso o perfil dela está escondido. Podes desbloqueá-la a partir das tuas conexões a qualquer momento.",
   "profile.blocked.manageAction": "Gerir pessoas bloqueadas",
   "profile.goBack": "Voltar atrás",
   "profile.notFound.title": "Este perfil não está aqui",
@@ -134,7 +134,7 @@ export const members: Catalog = {
   "profile.backTo.messages": "Voltar às mensagens",
   "profile.backTo.search": "Voltar à pesquisa",
   "profile.backTo.directory": "Voltar ao diretório",
-  "profile.backTo.connections": "Voltar às tuas ligações",
+  "profile.backTo.connections": "Voltar às tuas conexões",
   "profile.backTo.calendar": "Voltar ao calendário",
   "profile.backTo.changemakers": "Voltar aos Changemakers",
   "profile.previewBanner":
@@ -171,7 +171,7 @@ export const members: Catalog = {
     "Encaminhado a partir de um nome de utilizador antigo",
   "profile.moved.dismiss": "Dispensar esta nota",
   "profile.limited.ariaLabel": "Sobre este perfil",
-  "profile.limited.network.title": "{name} partilha mais com quem tem ligação",
+  "profile.limited.network.title": "{name} partilha mais com quem tem conexão",
   "profile.limited.network.body":
     "O resto deste perfil abre-se assim que ficarem ligados.",
   "profile.limited.private.title": "{name} mantém o perfil privado",
@@ -180,10 +180,10 @@ export const members: Catalog = {
   "profile.limited.generic.title": "Este perfil tem mais",
   "profile.limited.generic.body":
     "{name} partilha o resto com um círculo mais pequeno.",
-  "profile.limited.askToConnect": "Pedir ligação",
+  "profile.limited.askToConnect": "Pedir conexão",
   "profile.limited.answerRequest": "Responder ao pedido de {name}",
   "profile.limited.requestSent":
-    "Já pediste ligação. {name} vai ver o pedido da próxima vez que vier.",
+    "Já pediste conexão. {name} vai ver o pedido da próxima vez que vier.",
   "profile.hero.levelLabel": "Nível {number}",
   "profile.hero.badgesChip": "{earned} / {total} emblemas",
   "profile.hero.perksChip": "{count} vantagens",
@@ -438,7 +438,7 @@ export const members: Catalog = {
   "visibility.network": "Só para a rede",
   "visibility.private": "Privado",
   "visibility.hint.open": "Qualquer pessoa na QueerPulse pode dizer olá.",
-  "visibility.hint.network": "Só pessoas com quem já tens uma ligação.",
+  "visibility.hint.network": "Só pessoas com quem já tens uma conexão.",
   "visibility.hint.private": "É preciso pedir uma apresentação primeiro.",
 
   // ── Campos de edição de perfil (EditableProfileHero, profileEditControls) ──
@@ -701,11 +701,11 @@ export const members: Catalog = {
   "publicProfile.locked.postsBody":
     "A QueerPulse mantém o dia a dia da comunidade atrás de um início de sessão, para proteger as pessoas. Junta-te e o feed de {first} desbloqueia-se de imediato, incluindo a possibilidade de enviares mensagem a {first}.",
   "publicProfile.requestInviteArrow": "Pedir um convite",
-  "publicProfile.locked.connectionsHeading": "Ligações",
+  "publicProfile.locked.connectionsHeading": "Conexões",
   "publicProfile.locked.connectionsTitle":
     "Quem {first} conhece, <em>em privado.</em>",
   "publicProfile.locked.connectionsBody":
-    "Para proteger as redes das pessoas da comunidade, não mostramos listas de ligações publicamente. Entra para veres os teus contactos em comum com {first}.",
+    "Para proteger as redes das pessoas da comunidade, não mostramos listas de conexões publicamente. Entra para veres os teus contactos em comum com {first}.",
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
   "publicProfile.bottomCta.body":
     "A QueerPulse funciona por convite. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
@@ -755,7 +755,7 @@ export const members: Catalog = {
     "Não conseguimos guardar. A tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
   "publicProfile.control.checking.title": "A ver <em>onde estás</em>",
   "publicProfile.control.checking.body":
-    "Um momento. Estamos a somar as tuas contribuições, apadrinhamentos e tempo por aqui.",
+    "Um momento. Estamos a somar as tuas contribuições, votos de confiança e tempo por aqui.",
   "publicProfile.control.error.title": "Não conseguimos verificar agora",
   "publicProfile.control.error.body":
     "Algo impediu o carregamento do teu progresso. A culpa não é tua. Tenta outra vez daqui a pouco.",
@@ -777,7 +777,7 @@ export const members: Catalog = {
     "Publicar textos, organizar eventos abertos e personas",
   "publicProfile.eligibility.family.trust.label": "Confiança da comunidade",
   "publicProfile.eligibility.family.trust.hint":
-    "Apadrinhamentos, recomendações e ligações de outros membros",
+    "Votos de confiança, recomendações e conexões de outros membros",
   "publicProfile.eligibility.family.participation.label":
     "Participação constante",
   "publicProfile.eligibility.family.participation.hint":
@@ -793,7 +793,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.action.host":
     "Publica algo ou organiza um evento aberto",
   "publicProfile.eligibility.action.vouch":
-    "Pede a quem te conhece para te apadrinhar",
+    "Pede a quem te conhece que te dê um voto de confiança",
   "publicProfile.eligibility.action.attend": "Aparece a um encontro ou dois",
   "publicProfile.eligibility.action.points": "+{points}",
   "publicProfile.eligibility.family.amount": "{points} / {cap}",
@@ -1365,9 +1365,10 @@ export const members: Catalog = {
     "Entrares numa comunidade onde há outras pessoas.",
   "badges.xpBreakdown.sources.personas": "Personas publicadas",
   "badges.xpBreakdown.sources.personasDesc": "Publicares uma persona.",
-  "badges.xpBreakdown.sources.vouches": "Avais que deste",
-  "badges.xpBreakdown.sources.vouchesDesc": "Dares aval a outra pessoa.",
-  "badges.xpBreakdown.sources.connections": "Ligações feitas",
+  "badges.xpBreakdown.sources.vouches": "Votos de confiança que deste",
+  "badges.xpBreakdown.sources.vouchesDesc":
+    "Dares um voto de confiança a outra pessoa.",
+  "badges.xpBreakdown.sources.connections": "Conexões feitas",
   "badges.xpBreakdown.sources.connectionsDesc": "Ligares-te a outro membro.",
   "badges.xpBreakdown.sources.events": "Convívios em que participaste",
   "badges.xpBreakdown.sources.eventsDesc":
@@ -1580,12 +1581,12 @@ export const members: Catalog = {
   "badges.catalog.decade.name": "Aniversário",
   "badges.catalog.decade.locked": "Sê membro durante 1 ano",
   "badges.catalog.decade.earned": "Membro há 1 ano",
-  "badges.catalog.connector.name": "Elo de Ligação",
-  "badges.catalog.connector.locked": "Faz 10 ligações",
-  "badges.catalog.connector.earned": "10 ligações feitas",
-  "badges.catalog.vouch.name": "Aval",
-  "badges.catalog.vouch.locked": "Dá o teu aval a um novo membro",
-  "badges.catalog.vouch.earned": "Deste o teu aval a um novo membro",
+  "badges.catalog.connector.name": "Elo de Conexão",
+  "badges.catalog.connector.locked": "Faz 10 conexões",
+  "badges.catalog.connector.earned": "10 conexões feitas",
+  "badges.catalog.vouch.name": "Voto de confiança",
+  "badges.catalog.vouch.locked": "Dá um voto de confiança a um novo membro",
+  "badges.catalog.vouch.earned": "Deste um voto de confiança a um novo membro",
   "badges.catalog.threadStarter.name": "Início de Conversa",
   "badges.catalog.threadStarter.locked": "Começa uma conversa na comunidade",
   "badges.catalog.threadStarter.earned": "Começaste uma conversa na comunidade",
@@ -1668,9 +1669,9 @@ export const members: Catalog = {
     "Resgatado. O teu limite mensal de convites é maior a partir de agora",
   "perks.category.community": "Comunidade",
   "perks.category.membership": "Adesão",
-  "perks.catalog.vouchAccess.title": "Acesso a dar aval",
+  "perks.catalog.vouchAccess.title": "Poder dar votos de confiança",
   "perks.catalog.vouchAccess.desc":
-    "Poderes dar aval a outros membros, um sinal de confiança que os ajuda a destacar-se. Todos os membros ativos têm isto desde o primeiro dia.",
+    "Poderes dar votos de confiança a outros membros, um sinal de confiança que os ajuda a destacar-se. Todos os membros ativos têm isto desde o primeiro dia.",
   "perks.catalog.vouchAccess.autoLabel":
     "Disponível para todos os membros ativos",
   "perks.catalog.inviteQuotaLevel4.title": "Mais convites por mês",
@@ -1697,7 +1698,7 @@ export const members: Catalog = {
   // cima de uma linha negativa real. DES-141.
   "badges.ledger.integrity3Title": "Os pontos só são retirados num caso.",
   "badges.ledger.integrity3Body":
-    "As tuas edições e o que apagas nunca baixam o total: um aval retirado ou uma publicação que arrumaste deixam-no onde estava. Enquanto uma remoção decidida pela moderação estiver ativa na tua conta, o conteúdo removido deixa de contar, e os convites mensais extra que o teu nível dá vão com ele. Quando a decisão é levantada, a contagem seguinte repõe o que a tua atividade ainda sustenta.",
+    "As tuas edições e o que apagas nunca baixam o total: um voto de confiança retirado ou uma publicação que arrumaste deixam-no onde estava. Enquanto uma remoção decidida pela moderação estiver ativa na tua conta, o conteúdo removido deixa de contar, e os convites mensais extra que o teu nível dá vão com ele. Quando a decisão é levantada, a contagem seguinte repõe o que a tua atividade ainda sustenta.",
   "badges.ledger.integrity4Title": "Escolhes o que se vê.",
   "badges.ledger.integrity4Body":
     "Qualquer emblema que ganhes pode ser escondido do teu perfil, um a um. Um emblema escondido fica nesta página para ti.",
@@ -1758,7 +1759,7 @@ export const members: Catalog = {
 
   // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
   "network.title": "A tua rede",
-  "network.group.connected": "Ligações",
+  "network.group.connected": "Conexões",
   "network.group.vouchedGiven": "Votos de confiança que deste",
   "network.group.vouchedReceived": "Votos de confiança que recebeste",
   "network.row.connected": "ligade {time}",

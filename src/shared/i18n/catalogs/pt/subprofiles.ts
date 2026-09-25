@@ -5,7 +5,7 @@ export const subprofiles: Catalog = {
   // Diretório (SubprofileDirectoryPage)
   "directory.eyebrow": "Diretório · personas",
   "directory.subtitle":
-    "Personas profissionais pseudónimas de toda a comunidade. Sem rankings, sem algoritmo. Só o trabalho.",
+    "Descobre o trabalho que as pessoas andam a fazer em toda a comunidade, de projetos profissionais a trabalho criativo e tudo o que fica pelo meio.",
   "directory.searchPlaceholder": "Pesquisar personas ou responsáveis",
   "directory.searchAria":
     "Pesquisar personas por nome, descrição ou nome do responsável",
@@ -1229,8 +1229,8 @@ export const subprofiles: Catalog = {
   "invite.title": "Convidar um responsável",
   "invite.sub":
     "A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
-  "invite.searchPlaceholder": "Procura nas tuas ligações",
-  "invite.empty": "Não há mais ligações para convidar.",
+  "invite.searchPlaceholder": "Procura nas tuas conexões",
+  "invite.empty": "Não há mais conexões para convidar.",
   "invite.inviting": "A convidar…",
   "invite.toastSent":
     "Convite enviado. A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
@@ -1372,7 +1372,7 @@ export const subprofiles: Catalog = {
     "As sessões começam habitualmente às {time}",
   "skinExtras.practice.availabilityOpen": "Livre",
   "skinExtras.practice.availabilityFull": "Cheio",
-  "skinExtras.practice.vouchesTitle": "Recomendado pela comunidade",
+  "skinExtras.practice.vouchesTitle": "Com votos de confiança da comunidade",
 
   "skinExtras.chart.skyNowLabel": "O céu hoje",
   "skinExtras.chart.birthDataTitle": "O que preciso de ti",
@@ -1827,7 +1827,7 @@ export const subprofiles: Catalog = {
     '{count} links de "Parte de" não passaram para a cópia. Só passam as tuas comunidades e os teus eventos.',
   "newModal.toastAffiliationsSaveFailed":
     'Não conseguimos copiar os links de "Parte de". Acrescenta-os a partir do editor.',
-  "invite.loadMore": "Mostrar mais ligações",
+  "invite.loadMore": "Mostrar mais conexões",
   "invite.loadingMore": "A carregar…",
 
   "editorSavebar.mobilePreview": "Pré-visualizar",
@@ -1860,21 +1860,23 @@ export const subprofiles: Catalog = {
   "therapist.firstSession.labelFifty": "Os primeiros 50 minutos",
   "therapist.firstSession.label": "A primeira sessão",
   "therapist.firstSession.heading": "O que *realmente* acontece",
-  "therapist.vouches.label": "Recomendações da comunidade",
+  "therapist.vouches.label": "Votos de confiança da comunidade",
   "therapist.vouches.heading": "Pessoas que *realmente* trabalharam com {name}",
-  "therapist.vouches.count_one": "Com a recomendação de {count} membro",
-  "therapist.vouches.count_other": "Com a recomendação de {count} membros",
-  "therapist.vouches.quiet_one": "{count} recomendou sem deixar nota",
-  "therapist.vouches.quiet_other": "{count} recomendaram sem deixar nota",
+  "therapist.vouches.count_one": "Com o voto de confiança de {count} membro",
+  "therapist.vouches.count_other": "Com votos de confiança de {count} membros",
+  "therapist.vouches.quiet_one":
+    "{count} deu um voto de confiança sem deixar nota",
+  "therapist.vouches.quiet_other":
+    "{count} deram um voto de confiança sem deixar nota",
   "therapist.vouches.notes_one": "{count} deixou uma nota",
   "therapist.vouches.notes_other": "{count} deixaram uma nota",
   "therapist.vouches.breakdown": "{quiet}, {notes}.",
   "therapist.vouches.empty":
-    "Ainda sem recomendações. Quem já trabalhou com {name} pode deixar a primeira.",
+    "Ainda sem votos de confiança. Quem já trabalhou com {name} pode dar o primeiro.",
   "therapist.vouches.footer":
-    "Já trabalhaste com {name}? A tua recomendação mostra o teu nome e a nota fica ao teu critério. As recomendações nunca são pagas.",
-  "therapist.vouches.cta": "Recomendar {name}",
-  "therapist.vouches.vouched": "Recomendaste",
+    "Já trabalhaste com {name}? O teu voto de confiança mostra o teu nome e a nota fica ao teu critério. Os votos de confiança nunca são pagos.",
+  "therapist.vouches.cta": "Dar um voto de confiança a {name}",
+  "therapist.vouches.vouched": "Deste um voto de confiança",
   "therapist.faq.label": "Perguntas que fazem a {name}",
   "therapist.faq.heading": "Respondido *antes* de teres de perguntar",
   "therapist.referrals.label": "Cuidado para além de uma pessoa",

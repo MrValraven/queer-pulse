@@ -560,13 +560,13 @@ export const economy: Catalog = {
   "housing.landlords.heading":
     "Pessoas proprietárias <em>recomendadas pela comunidade</em>",
   "housing.landlords.subtitle":
-    "A comunidade já confirmou que estas pessoas proprietárias são queer-friendly, de confiança e justas. Não é uma garantia, faz sempre a tua própria verificação.",
+    "A comunidade já deu um voto de confiança a estas pessoas proprietárias como queer-friendly, fiáveis e justas. Não é uma garantia, faz sempre a tua própria verificação.",
   "housing.landlords.endorsedBadge": "Recomendação da comunidade",
   "housing.landlords.suggestCta": "Sugerir uma pessoa proprietária",
   "housing.landlords.emptyTitle":
     "Ainda sem pessoas proprietárias recomendadas",
   "housing.landlords.emptyBody":
-    "Sê a primeira pessoa a indicar alguém em quem confiaste, queer-friendly, de confiança e justa.",
+    "Sê a primeira pessoa a indicar alguém a quem darias um voto de confiança, queer-friendly, fiável e justa.",
 
   "housing.tipsHeading":
     "Habitação em Lisboa, <em>o que precisas de saber</em>",
@@ -3128,7 +3128,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s1.b1.2":
     "Vamos tornar os nossos espaços físicos e os nossos processos de decisão tão acessíveis quanto formos capazes, e vamos continuar a melhorá-los à medida que as necessidades dos nossos membros mudam.",
   "coopTemplate.doc.founding-values.s1.b1.3":
-    "Os novos membros entram através de [descreve aqui o vosso processo, um período experimental, um sistema de recomendação, uma votação de todo o grupo].",
+    "Os novos membros entram através de [descreve aqui o vosso processo, um período experimental, um sistema de votos de confiança, uma votação de todo o grupo].",
   "coopTemplate.doc.founding-values.s2.h": "Como decidimos em conjunto",
   "coopTemplate.doc.founding-values.s2.b0":
     "Escolhe um método antes de precisares de um sob pressão. Muitas cooperativas começam pelo consenso e acrescentam uma alternativa para quando o consenso emperra.",
@@ -3931,7 +3931,7 @@ export const economy: Catalog = {
   "joinGroup.namePlaceholder": "O nome por que te tratam",
   "joinGroup.relationshipLabel": "Como fazes parte da comunidade",
   "joinGroup.relationshipPlaceholder":
-    "Um amigo respondeu por mim, já fui a alguns encontros…",
+    "Um amigo deu-me um voto de confiança, já fui a alguns encontros…",
   "joinGroup.optional": "(opcional)",
   "joinGroup.disclaimer":
     "As tuas respostas são vistas apenas pela equipa do grupo, nunca publicadas.",

@@ -1,4 +1,7 @@
 import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { JoinRequestBulkDeclineModal } from "./JoinRequestBulkDeclineModal";
@@ -34,6 +37,7 @@ export function JoinRequestBulkActionBar({
   onOutcome: (succeededIds: string[], failedIds: string[]) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const ids = Array.from(selectedIds);
   const count = ids.length;
   const decision = useJoinRequestBulkDecision({ ids, onOutcome });
@@ -56,7 +60,15 @@ export function JoinRequestBulkActionBar({
         aria-label={t("admin:members.verify.bulk.ariaLabel")}
       >
         <span className={styles.bulkCount} role="status">
-          {t("admin:members.verify.bulk.selectedCount", { count })}
+          <Translation
+            i18nKey="admin:members.verify.bulk.selectedCount"
+            values={{ count }}
+            slots={{
+              count: (
+                <RollingNumber value={fmt.number(count)} numericValue={count} />
+              ),
+            }}
+          />
         </span>
         {count >= JOIN_REQUEST_BULK_ACTION_CAP && (
           <span className={styles.bulkCapNote}>
