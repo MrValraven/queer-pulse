@@ -437,9 +437,11 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: clamp(20px, 4vw, 48px);
+  /* The row gap stays tight: it sits above the description and, on a phone,
+     above the wrapped action row. The wide column gap only separates the
+     identity column from the actions. */
+  gap: 20px clamp(20px, 4vw, 48px);
   flex-wrap: wrap;
-  padding-bottom: 24px;
 }
 .spaceHeadIdentity {
   flex: 1 1 min(100%, 460px);
@@ -508,13 +510,12 @@
    (`flex-basis: 100%`), sitting under both the identity column and the
    action row, so it closes the whole header as the place's own closing body
    copy right before the gallery and stays clear of the action row on a
-   phone. The `.spaceHead` flex `gap` already opens a full gap above this
-   line (the same gap it puts between the identity column and the actions),
+   phone. The `.spaceHead` row gap already opens the space above this line,
    so the small top margin here only fine-tunes that spacing. `.provenance`
    and `.ownerByline` above sit inside a plain flow column with no gap of
    their own, which is why their own top margins carry the full space. The
-   header's own `padding-bottom: 24px` supplies the gap under it, so a
-   bottom margin here would double up. */
+   gallery cover below brings its own top padding, so neither the header nor
+   this block adds space underneath. */
 .description {
   flex-basis: 100%;
   margin: 4px 0 0;

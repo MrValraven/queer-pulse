@@ -19,6 +19,7 @@ import {
   FaPeopleGroup,
   FaMasksTheater,
   FaDumbbell,
+  FaHouse,
 } from "react-icons/fa6";
 
 export interface Venue {
@@ -570,6 +571,13 @@ export const CATEGORY_ICON: Record<string, IconType> = {
   tech: FiCpu,
   grooming: FiScissors,
   fitness: FaDumbbell,
+};
+/** The pin type the housing map draws, one pin per neighbourhood. */
+export const HOUSING_PIN_TYPE = "housing";
+/** Icons for pin types that only ever appear as map pins. Kept apart from
+ *  CATEGORY_ICON, which also feeds the directory's filter chips. */
+export const PIN_ONLY_ICON: Record<string, IconType> = {
+  [HOUSING_PIN_TYPE]: FaHouse,
 };
 export const VIBE_BG: Record<string, string> = {
   mixed: "rgba(45,27,61,.06)",

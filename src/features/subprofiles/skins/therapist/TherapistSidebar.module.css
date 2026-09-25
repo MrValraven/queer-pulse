@@ -188,7 +188,8 @@
   text-overflow: ellipsis;
 }
 
-/* IdentityContactButton's own note, sign-in prompt and thread link. */
+/* IdentityContactButton's sign-in, unavailable or limit text and thread
+   link. */
 .messageSlot {
   display: flex;
   flex-direction: column;
@@ -200,16 +201,6 @@
   font-size: var(--text-12-5);
   line-height: 1.55;
   color: var(--ink-60);
-}
-
-/* On wide screens the hero already carries the "lands in their mailbox"
-   note next to the same button, so the sidebar drops its copy. Phones keep
-   it: there the hero button is hidden and the action bar has no note.
-   Sign-in, unavailable and limit texts (no button) always stay. */
-@media (--mobile-up) {
-  .messageSlot:has(> button) > p {
-    display: none;
-  }
 }
 
 .messageSlot > a {

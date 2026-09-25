@@ -4,6 +4,9 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
+  /* The actions below size to this group: a ~300px queue card and the wide
+     Decided row share the component. */
+  container-type: inline-size;
 }
 
 .controls {
@@ -44,4 +47,22 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* In a narrow queue card three nowrap labels cannot share a line, so the row
+   wraps on purpose (the pending card's decision row does the same): the two
+   quiet actions split the first line and the copy takes a full line of its
+   own, wrapping its label if it has to. The wide Decided row stays on one
+   line. Two classes so these win over the Button's own nowrap. */
+@container (max-width: 520px) {
+  .actions .secondaryAction {
+    flex: 1 1 auto;
+  }
+
+  .actions .primaryAction {
+    flex: 1 0 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+  }
 }

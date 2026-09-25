@@ -765,8 +765,6 @@ export const messages: Catalog = {
   "mailbox.blocked.loadErrorTitle": "Esta lista não carregou",
   "mailbox.blocked.loadErrorBody": "Verifica a ligação e tenta outra vez.",
   "mailbox.contact.cta": "Enviar mensagem",
-  "mailbox.contact.note":
-    "Chega à caixa de mensagens de {name}, e só quem responde por {name} a pode ler.",
   "mailbox.contact.replyNote":
     "Podem responder-te já. Podes escrever mais assim que o fizerem.",
   "mailbox.contact.existingThreadCta": "Abrir a tua conversa",

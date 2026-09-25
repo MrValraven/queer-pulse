@@ -1,5 +1,5 @@
-import { lazy, Suspense, useMemo, useState } from "react";
-import { FiArrowRight, FiList, FiMap } from "react-icons/fi";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -19,12 +19,16 @@ import {
   MY_HOUSING_LISTINGS_PATH,
 } from "./housing.data";
 import { anyFilterActive, EMPTY_HOUSING_FILTERS } from "./housingFilters";
-import { useHousingFilterParams } from "./useHousingFilterParams";
+import {
+  useHousingFilterParams,
+  useHousingView,
+} from "./useHousingFilterParams";
 import { useHousingListings } from "./api/useHousingListings";
 import { useLandlords } from "./api/useLandlords";
 import { HousingFilterBar } from "./HousingFilterBar";
 import { HousingListingGrid } from "./HousingListingGrid";
 import { HousingSavedSearches } from "./HousingSavedSearches";
+import { HousingViewToggle } from "./HousingViewToggle";
 import { HousingLandlords, HousingTips } from "./HousingSections";
 import { ListSpaceModal } from "./ListSpaceModal";
 import { AffirmingBaselineNote } from "./AffirmingBaseline";
@@ -85,54 +89,27 @@ export function HousingBoard() {
 
   const setType = (type: string) => setFilters((prev) => ({ ...prev, type }));
 
-  const [view, setView] = useState<"list" | "map">("list");
+  // The view lives in the URL too (`?view=map`), like the local directory, so
+  // a map link opens on the map and a filter change keeps the member on it.
+  const [view, selectView] = useHousingView();
+  const isMapView = view === "map";
 
-  // Rendered here rather than inside the filter bar so its styling stays with
-  // the rest of the board's chrome; the bar only decides where on its control
-  // row it sits.
-  const viewSwitcher = (
-    <div
-      className={styles.viewToggle}
-      role="group"
-      aria-label={`${t("economy:housing.map.viewList")} / ${t("economy:housing.map.viewMap")}`}
-    >
-      <button
-        type="button"
-        className={[
-          styles.viewToggleBtn,
-          view === "list" && styles.viewToggleBtnOn,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        aria-pressed={view === "list"}
-        onClick={() => setView("list")}
-      >
-        <FiList aria-hidden /> {t("economy:housing.map.viewList")}
-      </button>
-      <button
-        type="button"
-        className={[
-          styles.viewToggleBtn,
-          view === "map" && styles.viewToggleBtnOn,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        aria-pressed={view === "map"}
-        onClick={() => setView("map")}
-      >
-        <FiMap aria-hidden /> {t("economy:housing.map.viewMap")}
-      </button>
-    </div>
-  );
-
-  const toggleNeighbourhood = (name: string) =>
-    setFilters((prev) => {
-      const current = prev.areas ?? [];
-      const next = current.includes(name)
-        ? current.filter((area) => area !== name)
-        : [...current, name];
-      return { ...prev, areas: next.length ? next : undefined };
-    });
+  // The map has no "Load more" of its own and wants every matching pin on
+  // screen, so keep pulling pages while it is active. The housing registry is
+  // bounded, so this stops once the server reports no more pages. A failed
+  // page stops it too (a failed `fetchNextPage` also sets `isError`), and the
+  // map sidebar's retry refetches every page.
+  useEffect(() => {
+    if (!isMapView || hasListingsError) return;
+    if (!hasNextPage || isFetchingNextPage) return;
+    void fetchNextPage();
+  }, [
+    isMapView,
+    hasListingsError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  ]);
 
   return (
     <>
@@ -179,12 +156,27 @@ export function HousingBoard() {
           <HousingFilterBar
             filters={filters}
             onChange={setFilters}
-            viewSlot={viewSwitcher}
+            viewSlot={
+              <HousingViewToggle view={view} onSelectView={selectView} />
+            }
           />
 
           <HousingSavedSearches onApply={setFilters} />
 
-          {hasListingsError && !loading ? (
+          {isMapView ? (
+            // The map stays up through a failed fetch; its sidebar carries the
+            // error, retry and loading states, like the directory's map.
+            <Suspense fallback={<MapLoadingPanel />}>
+              <HousingMapView
+                listings={visible}
+                loading={loading}
+                isError={hasListingsError}
+                onRetry={() => void refetchListings()}
+                hasActiveFilters={filtered}
+                onClearFilters={() => setFilters(EMPTY_HOUSING_FILTERS)}
+              />
+            </Suspense>
+          ) : hasListingsError && !loading ? (
             // The directory is this page's main content, so a failed fetch says
             // so instead of "nothing matches your filters" (DES-22).
             <LoadErrorState
@@ -192,7 +184,7 @@ export function HousingBoard() {
               description={t("economy:housing.loadError.description")}
               onRetry={() => void refetchListings()}
             />
-          ) : view === "list" ? (
+          ) : (
             <HousingListingGrid
               loading={loading}
               visible={visible}
@@ -200,19 +192,9 @@ export function HousingBoard() {
               onClearFilter={() => setFilters(EMPTY_HOUSING_FILTERS)}
               onListSpace={() => setListing(true)}
             />
-          ) : (
-            <Suspense fallback={<MapLoadingPanel />}>
-              <HousingMapView
-                listings={visible}
-                selectedAreas={filters.areas ?? []}
-                onToggleNeighbourhood={toggleNeighbourhood}
-                onClearFilters={() => setFilters(EMPTY_HOUSING_FILTERS)}
-                filtered={filtered}
-              />
-            </Suspense>
           )}
 
-          {!loading && hasNextPage && (
+          {!isMapView && !loading && hasNextPage && (
             <div className={styles.loadMoreRow}>
               <Button
                 type="button"

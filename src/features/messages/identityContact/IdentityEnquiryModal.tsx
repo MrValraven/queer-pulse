@@ -195,7 +195,11 @@ export function IdentityEnquiryModal({
         />
       }
       eyebrow={t("messages:mailbox.contact.eyebrow")}
-      sub={t("messages:mailbox.contact.sub", { name })}
+      sub={
+        followUpAwaitsReply
+          ? `${t("messages:mailbox.contact.sub", { name })} ${t("messages:mailbox.contact.replyNote")}`
+          : t("messages:mailbox.contact.sub", { name })
+      }
       onClose={onClose}
       footer={
         <>

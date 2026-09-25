@@ -1,10 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { appOrigin } from "../../../shared/lib/inviteUrl";
 import { TestProviders } from "../../../test/TestProviders";
 import { makeJoinRequestRow } from "../joinRequestTestRow";
 import type { EmailTemplateDTO } from "./emailTemplate.types";
-import type { RenderedEmail } from "./renderEmail";
+import { renderEmail, type RenderedEmail } from "./renderEmail";
+import { welcomeEmailValues } from "./welcomeEmailValues";
 import { WelcomeEmailCopyGroup } from "./WelcomeEmailCopyGroup";
 
 const showToast = vi.fn();
@@ -49,6 +51,11 @@ const approved = makeJoinRequestRow({
   inviteStatus: "valid",
   inviteExpiresAt: "2026-10-01T12:00:00Z",
 });
+
+/** The preview iframe, found by the title that names the applicant. */
+function previewFrameIn(dialog: HTMLElement) {
+  return within(dialog).getByTitle("Welcome email for Kai Mendes");
+}
 
 function renderGroup(item = approved) {
   render(
@@ -103,6 +110,60 @@ describe("WelcomeEmailCopyGroup", () => {
     expect(
       screen.queryByRole("button", { name: /copy welcome email/i }),
     ).toBeNull();
+  });
+
+  it("previews the email filled with the applicant's real details", async () => {
+    renderGroup();
+    await userEvent.click(
+      screen.getByRole("button", { name: /preview email/i }),
+    );
+    const dialog = screen.getByRole("dialog");
+    expect(
+      within(dialog).getByRole("heading", { name: /Kai Mendes/ }),
+    ).toBeInTheDocument();
+    expect(within(dialog).getAllByText(/Hi Kai/).length).toBeGreaterThan(0);
+    expect(dialog.textContent).not.toMatch(/Alex/);
+    const previewHtml = previewFrameIn(dialog).getAttribute("srcdoc") ?? "";
+    expect(previewHtml).toContain(
+      welcomeEmailValues(approved, "en").inviteLink,
+    );
+    expect(previewHtml).toMatch(/href="[^"]*ABC123"/);
+    expect(previewHtml).not.toMatch(/Alex/);
+    expect(previewHtml).not.toMatch(/SAMPLE/);
+  });
+
+  it("copies the same email from the preview as from the card", async () => {
+    renderGroup();
+    await userEvent.click(
+      screen.getByRole("button", { name: /copy welcome email/i }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /preview email/i }),
+    );
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: /copy email/i }),
+    );
+    expect(copyRichEmail).toHaveBeenCalledTimes(2);
+    const fromCard = copyRichEmail.mock.calls[0]?.[0];
+    const fromPreview = copyRichEmail.mock.calls[1]?.[0];
+    expect(fromPreview?.html).toBe(fromCard?.html);
+    expect(fromPreview?.subject).toBe(fromCard?.subject);
+    // The preview shows the same email, with hosted images from this app.
+    const expectedPreview = renderEmail(
+      englishOnly.locales.en,
+      welcomeEmailValues(approved, "en"),
+      "en",
+      { assetOrigin: appOrigin() },
+    );
+    expect(previewFrameIn(dialog).getAttribute("srcdoc")).toBe(
+      expectedPreview.html,
+    );
+    expect(showToast).toHaveBeenLastCalledWith(
+      expect.stringContaining("kai@example.test"),
+      "success",
+    );
+    expect(dialog).toBeInTheDocument();
   });
 
   it("renders nothing when no template is active", () => {

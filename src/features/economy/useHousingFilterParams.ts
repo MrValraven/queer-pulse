@@ -13,8 +13,11 @@ import {
 
 /** Query params the housing page owns for other reasons and this hook must
  * carry through untouched when it rewrites the filters (`tab` switches between
- * the Housing and Flatmates boards). */
-const PRESERVED_PARAM_KEYS = ["tab"];
+ * the Housing and Flatmates boards; `view` keeps a member on the map while they
+ * narrow it). */
+const PRESERVED_PARAM_KEYS = ["tab", "view"];
+
+export type HousingView = "list" | "map";
 
 /**
  * The housing board's filters, held in the URL instead of component state, with
@@ -58,4 +61,29 @@ export function useHousingFilterParams(): [
   );
 
   return [filters, setFilters];
+}
+
+/**
+ * The housing board's list/map view, held in the URL as `?view=map` (list is
+ * the default, so it carries no param) exactly like the local directory. A
+ * view switch pushes a history entry so Back returns to the other view, and it
+ * only touches `view`, so the filters and `tab` ride along unchanged.
+ */
+export function useHousingView(): [HousingView, (next: HousingView) => void] {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view: HousingView = searchParams.get("view") === "map" ? "map" : "list";
+
+  const selectView = useCallback(
+    (next: HousingView) => {
+      setSearchParams((previous) => {
+        const params = new URLSearchParams(previous);
+        if (next === "map") params.set("view", "map");
+        else params.delete("view");
+        return params;
+      });
+    },
+    [setSearchParams],
+  );
+
+  return [view, selectView];
 }

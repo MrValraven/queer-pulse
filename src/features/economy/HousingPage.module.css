@@ -616,27 +616,69 @@
   }
 }
 
-.mapListItem {
+/* The compact listing card in the map's floating panel (HousingMapCard). In
+   the family of the directory's map card (`.vc` in localMap.module.css): a
+   bordered paper card with its photo inset and rounded inside the padding. */
+.mapCard {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px;
-  border-radius: var(--radius-10);
-  color: var(--ink);
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  color: inherit;
   text-decoration: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
-
-.mapListItem:hover {
-  background: rgba(var(--plum-rgb), 0.05);
+@media (hover: hover) {
+  .mapCard:hover {
+    border-color: rgba(var(--line-rgb), 0.2);
+    box-shadow: var(--shadow-lift);
+  }
+  .mapCard:hover .mapCardTitle {
+    color: var(--accent-ink);
+  }
 }
-
-.mapListTitle {
-  font-weight: 600;
+.mapCard:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
-
-.mapListMeta {
-  font-size: var(--text-13);
-  color: rgba(var(--ink-rgb), 0.6);
+:global([data-theme="dark"]) .mapCard {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+.mapCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mapCardTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-17);
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.mapCardPrice {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-17);
+  color: var(--text-strong);
+}
+.mapCardPrice span {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  font-family: var(--sans);
 }
 
 .loadMoreRow {

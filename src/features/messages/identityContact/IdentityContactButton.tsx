@@ -80,11 +80,12 @@ interface IdentityContactButtonProps {
  * email address, and the one control shared by `SubprofileHeroActions` and
  * `CompanyCover`.
  *
- * Everything the contact read already knows is said BEFORE the composer
- * opens: whether anybody is on the other end at all and why not when nobody
- * is, that a reply can land straight away, and whether a counted cap would
- * refuse the next enquiry right now. That last one is why the composer never
- * opens onto a message that cannot be sent.
+ * What stops a message is said BEFORE the composer opens: whether anybody is
+ * on the other end at all and why not when nobody is, and whether a counted
+ * cap would refuse the next enquiry right now. That last one is why the
+ * composer never opens onto a message that cannot be sent. How the mailbox
+ * works (who reads it, the reply-first rule) lives in the composer's own
+ * subtitle, so the button sits in a host's action row with nothing trailing.
  */
 export function IdentityContactButton({
   target,
@@ -190,12 +191,6 @@ export function IdentityContactButton({
         <FiMessageCircle aria-hidden />{" "}
         {label ?? t("messages:mailbox.contact.cta")}
       </Button>
-      <p>
-        {t("messages:mailbox.contact.note", { name })}
-        {contact.followUpAwaitsReply
-          ? ` ${t("messages:mailbox.contact.replyNote")}`
-          : ""}
-      </p>
       {existingThreadHref && (
         <Link to={existingThreadHref}>
           {t("messages:mailbox.contact.existingThreadCta")}

@@ -102,13 +102,6 @@
   border-color: var(--jade);
 }
 
-.body {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 28px;
-  padding: 32px 0 var(--section-y-80);
-  align-items: start;
-}
 .mapPanel {
   position: sticky;
   /* Under the nav chrome. The filter bar above scrolls away with the page, so
@@ -529,9 +522,9 @@
    The map spans the content width and the list floats over its right edge.
    `.stage` wraps both so full screen takes the list along; it carries
    `data-fullscreen` while it is pinned over the whole browser window as a
-   fixed overlay (useMapFullscreen.ts). These classes are separate from
-   .body/.mapPanel/.mapCanvas/.sidebar above, which the housing map and the
-   location picker still use for the side-by-side layout. */
+   fixed overlay (useMapFullscreen.ts). The housing map (HousingMapView.tsx)
+   uses this same stage. These classes are separate from .mapPanel/.mapCanvas
+   above, which the location picker still uses. */
 .directoryMapBody {
   padding: 32px 0 var(--section-y-80);
 }
@@ -790,9 +783,6 @@
 }
 
 @media (--compact) {
-  .body {
-    grid-template-columns: 1fr;
-  }
   .mapPanel,
   .sidebar {
     position: static;

@@ -6883,6 +6883,11 @@ export const admin: Catalog = {
     "In the Letter design, a signature with a photo also shows at the top as the sender.",
   "emailTemplates.copy.welcomeCta": "Copy welcome email",
   "emailTemplates.copy.subjectCta": "Copy subject",
+  "emailTemplates.copy.previewCta": "Preview email",
+  "emailTemplates.copy.previewTitle": "Welcome email for {name}",
+  "emailTemplates.copy.previewNote":
+    "This is the email you will paste, with {name}'s details filled in.",
+  "emailTemplates.copy.copyEmailCta": "Copy email",
   "emailTemplates.copy.languageLabel": "Email language",
   "emailTemplates.copy.templateLabel": "Template",
   "emailTemplates.copy.copiedToast":

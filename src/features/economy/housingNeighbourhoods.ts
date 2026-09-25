@@ -38,11 +38,20 @@ const BY_KEY = new Map(
   ]),
 );
 
+/** The parish entry a name refers to, matched without regard to accents or
+ * case ("principe real" finds "Príncipe Real"), or null when the name is not a
+ * Lisbon parish. The entry's `name` is the exact spelling the map overlay uses. */
+export function findHousingNeighbourhood(
+  name: string,
+): HousingNeighbourhood | null {
+  return BY_KEY.get(normalizeName(name)) ?? null;
+}
+
 /** The centroid for a neighbourhood name, or null when we don't know it. */
 export function neighbourhoodCentroid(
   name: string,
 ): { latitude: number; longitude: number } | null {
-  const entry = BY_KEY.get(normalizeName(name));
+  const entry = findHousingNeighbourhood(name);
   return entry
     ? { latitude: entry.latitude, longitude: entry.longitude }
     : null;

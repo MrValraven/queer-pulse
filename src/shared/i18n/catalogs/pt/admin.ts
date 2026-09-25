@@ -6905,6 +6905,11 @@ export const admin: Catalog = {
     "No design Carta, uma assinatura com foto aparece também no topo, como remetente.",
   "emailTemplates.copy.welcomeCta": "Copiar email de boas-vindas",
   "emailTemplates.copy.subjectCta": "Copiar assunto",
+  "emailTemplates.copy.previewCta": "Pré-visualizar email",
+  "emailTemplates.copy.previewTitle": "Email de boas-vindas para {name}",
+  "emailTemplates.copy.previewNote":
+    "Este é o email que vais colar, já com os dados de {name}.",
+  "emailTemplates.copy.copyEmailCta": "Copiar email",
   "emailTemplates.copy.languageLabel": "Idioma do email",
   "emailTemplates.copy.templateLabel": "Modelo",
   "emailTemplates.copy.copiedToast":

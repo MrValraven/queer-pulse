@@ -201,7 +201,7 @@ a.back:focus-visible {
   text-overflow: ellipsis;
 }
 
-/* The contact control brings its own note and links. In a bar this small
+/* The contact control can bring a line of text and a link. In a bar this small
    only its button fits; with no button (signed out, unavailable, at the
    limit) its short explanation stands in, clamped to two lines. */
 .mbarCta {

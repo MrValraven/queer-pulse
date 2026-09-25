@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import maplibregl, { type Map as MapLibreMap, type Marker } from "maplibre-gl";
-import { CATEGORY_ICON, TYPE_ICON } from "./map.data";
+import { CATEGORY_ICON, PIN_ONLY_ICON, TYPE_ICON } from "./map.data";
 import s from "./venueMarker.module.css";
 
 // CSS-module class access is `string | undefined` (noUncheckedIndexedAccess);
@@ -41,12 +41,13 @@ const CLUSTER_RADIUS_PX = 44;
 const SELECTED_Z_INDEX = "5";
 
 // Pre-render each venue-type icon (react-icons) to static SVG markup once, so
-// markers can be built as plain DOM without a React root per marker.
+// markers can be built as plain DOM without a React root per marker. The
+// pin-only icons cover types that never reach the filter chips (the housing
+// map's neighbourhood pins).
 const ICON_SVG: Record<string, string> = Object.fromEntries(
-  Object.entries({ ...TYPE_ICON, ...CATEGORY_ICON }).map(([type, Icon]) => [
-    type,
-    renderToStaticMarkup(createElement(Icon)),
-  ]),
+  Object.entries({ ...TYPE_ICON, ...CATEGORY_ICON, ...PIN_ONLY_ICON }).map(
+    ([type, Icon]) => [type, renderToStaticMarkup(createElement(Icon))],
+  ),
 );
 
 function escapeHtml(value: string): string {
@@ -175,6 +176,52 @@ function createVenuePin(
   });
   wrapper.appendChild(button);
   return wrapper;
+}
+
+// A reused pin keeps its DOM (so no re-entrance animation), but the housing
+// map's pins carry a count in their address and aria-label that a filter can
+// change under the same id, and a language switch changes every label. Only
+// fields that differ are written, so the directory's unchanging pins cost
+// nothing.
+function refreshVenuePin(
+  wrapper: HTMLElement,
+  venue: VenueMarkerData,
+  ariaLabel: string,
+): void {
+  const button = wrapper.firstElementChild;
+  if (!(button instanceof HTMLElement)) return;
+  if (button.getAttribute("aria-label") !== ariaLabel) {
+    button.setAttribute("aria-label", ariaLabel);
+  }
+  if (button.dataset.category !== venue.type) {
+    button.dataset.category = venue.type;
+    // The icon is keyed by type too; its markup is the pre-rendered static SVG.
+    const iconElement = CLASS.pinIcon
+      ? button.getElementsByClassName(CLASS.pinIcon)[0]
+      : undefined;
+    if (iconElement) iconElement.innerHTML = ICON_SVG[venue.type] ?? "";
+  }
+  const nameElement = CLASS.pinName
+    ? button.getElementsByClassName(CLASS.pinName)[0]
+    : undefined;
+  if (nameElement && nameElement.textContent !== venue.name) {
+    nameElement.textContent = venue.name;
+  }
+  const addressElement = CLASS.pinAddress
+    ? button.getElementsByClassName(CLASS.pinAddress)[0]
+    : undefined;
+  if (addressElement && addressElement.textContent !== venue.address) {
+    addressElement.textContent = venue.address;
+  }
+}
+
+// A cluster's count is fixed by its key, but its label follows the language.
+function refreshCluster(wrapper: HTMLElement, ariaLabel: string): void {
+  const button = wrapper.firstElementChild;
+  if (!(button instanceof HTMLElement)) return;
+  if (button.getAttribute("aria-label") !== ariaLabel) {
+    button.setAttribute("aria-label", ariaLabel);
+  }
 }
 
 function createCluster(
@@ -309,12 +356,16 @@ export function createVenueMarkerManager(
       if (members.length === 1) {
         const key = `v:${anchor.id}`;
         next.add(key);
-        if (!markers.has(key)) {
+        const ariaLabel = getLabels().venuePin(anchor.name, anchor.type);
+        const existing = markers.get(key);
+        if (existing) {
+          refreshVenuePin(existing.getElement(), anchor, ariaLabel);
+        } else {
           const element = createVenuePin(
             anchor,
             () => onSelectVenue(anchor.id),
             anchor.id === selectedId,
-            getLabels().venuePin(anchor.name, anchor.type),
+            ariaLabel,
           );
           // Teardrop tip points at the coordinate; round clusters stay centred.
           const marker = new maplibregl.Marker({ element, anchor: "bottom" })
@@ -339,11 +390,15 @@ export function createVenueMarkerManager(
           .sort()
           .join(",")}`;
         next.add(key);
-        if (!markers.has(key)) {
+        const ariaLabel = getLabels().cluster(members.length);
+        const existing = markers.get(key);
+        if (existing) {
+          refreshCluster(existing.getElement(), ariaLabel);
+        } else {
           const element = createCluster(
             members.length,
             () => zoomToMembers(members),
-            getLabels().cluster(members.length),
+            ariaLabel,
           );
           markers.set(
             key,

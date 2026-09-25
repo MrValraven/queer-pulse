@@ -99,6 +99,11 @@
 .pin[data-category="fitness"] .pinHead {
   background: var(--cat-fitness);
 }
+/* Housing map neighbourhood pins. --accent-deep is a fixed brand coral that
+   does not flip in dark mode and carries the cream icon at 5.38:1. */
+.pin[data-category="housing"] .pinHead {
+  background: var(--accent-deep);
+}
 
 /* Name + street, revealed only when the pin is selected. Text sits on the fixed
    plum pill, so it uses stable light values (a documented map-marker exception,

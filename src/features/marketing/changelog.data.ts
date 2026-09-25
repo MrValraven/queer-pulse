@@ -66,6 +66,18 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "housing-map-like-directory",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("housing-map-like-directory"),
+      },
+      {
+        id: "welcome-email-preview",
+        category: "improvement",
+        date: "25 Sep 2026",
+        ...entryKeys("welcome-email-preview"),
+      },
+      {
         id: "numbers-roll-everywhere",
         category: "improvement",
         date: "25 Sep 2026",

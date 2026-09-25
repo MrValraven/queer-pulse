@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -76,7 +77,18 @@ export function useHousingListings(
     // changing a chip doesn't blank the board.
     placeholderData: keepPreviousData,
   });
-  const listings = query.data?.pages.flatMap((page) => page.items) ?? [];
-  const total = query.data?.pages[0]?.total ?? listings.length;
+  // Derived once per cached result: the map builds its pins, markers and
+  // parish labels from `listings`, so a fresh array on every render would
+  // rebuild all of them each time the board re-renders. Both modes read
+  // `query.data`, which react-query keeps referentially stable until the
+  // query key or a fetched page changes (demo's fixture page included).
+  const { data } = query;
+  const { listings, total } = useMemo(() => {
+    const flattened = data?.pages.flatMap((page) => page.items) ?? [];
+    return {
+      listings: flattened,
+      total: data?.pages[0]?.total ?? flattened.length,
+    };
+  }, [data]);
   return { ...query, listings, total };
 }

@@ -27,6 +27,10 @@ interface EmailPreviewFrameProps {
   /** Extra controls placed in the preview head, just before the Desktop and
    *  Mobile switch. The editor puts the temporary design switch here. */
   headerAside?: ReactNode;
+  /** The iframe's accessible name. Defaults to the sample-values wording the
+   *  editor and library modal need; a preview filled with real values names
+   *  the email itself. */
+  frameTitle?: string;
 }
 
 /**
@@ -43,6 +47,7 @@ export function EmailPreviewFrame({
   recipientName,
   shouldFillHeight = false,
   headerAside,
+  frameTitle,
 }: EmailPreviewFrameProps) {
   const { t, language } = useTranslation();
   const headingId = useId();
@@ -64,7 +69,7 @@ export function EmailPreviewFrame({
   };
   const frame = (
     <iframe
-      title={t("admin:emailTemplates.preview.frameTitle")}
+      title={frameTitle ?? t("admin:emailTemplates.preview.frameTitle")}
       sandbox=""
       srcDoc={deferredHtml}
       className={clientStyles.frame}

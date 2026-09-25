@@ -1,33 +1,41 @@
 import { useState } from "react";
-import { FiCopy, FiMail } from "react-icons/fi";
+import { FiCopy, FiEye, FiMail } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
-import { useToast } from "../../../shared/components/feedback/useToast";
 import type { Language } from "../../../shared/i18n/types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "../api/useJoinRequests";
 import { AdminSeg } from "../ui";
 import { useModEmailTemplates } from "./api/emailTemplateHooks";
 import { useEmailDesignVariant } from "./emailDesignVariant";
-import { copyPlainText, copyRichEmail } from "./copyEmail";
 import { renderEmail } from "./renderEmail";
+import { useWelcomeEmailCopy } from "./useWelcomeEmailCopy";
 import { welcomeEmailValues } from "./welcomeEmailValues";
+import { WelcomeEmailPreviewModal } from "./WelcomeEmailPreviewModal";
 import styles from "./WelcomeEmailCopyGroup.module.css";
 
 /**
  * Copies the filled-in welcome email for one approved applicant. QueerPulse
  * sends no email: this puts the email on the reviewer's clipboard, and the
- * toast tells them where to paste it. Hidden unless the invite still works
- * and an active `invite_approved` template exists.
+ * toast tells them where to paste it. "Preview email" shows the filled email
+ * first. Hidden unless the invite still works and an active `invite_approved`
+ * template exists.
  */
 export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
   const { t, language } = useTranslation();
-  const { showToast } = useToast();
+  const { copyBody, copySubject } = useWelcomeEmailCopy(item.email);
   const isUsable = Boolean(item.inviteCode) && item.inviteStatus === "valid";
   const { data: templates } = useModEmailTemplates("invite_approved", {
     isEnabled: isUsable,
   });
   const [chosenTemplateId, setChosenTemplateId] = useState<string | null>(null);
   const [chosenLanguage, setChosenLanguage] = useState<Language | null>(null);
+  // The preview remembers which invite it was opened for, so it cannot pop
+  // back open by itself after this invite dies and a new one is issued.
+  const [previewInviteCode, setPreviewInviteCode] = useState<string | null>(
+    null,
+  );
+  const isPreviewOpen =
+    previewInviteCode !== null && previewInviteCode === item.inviteCode;
   const { variant } = useEmailDesignVariant();
 
   const template =
@@ -47,31 +55,6 @@ export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
   );
   const languageLabelId = `welcome-email-language-${item.id}`;
   const templateSelectId = `welcome-email-template-${item.id}`;
-
-  async function copyBody() {
-    const outcome = await copyRichEmail(rendered);
-    if (outcome === "failed") {
-      showToast(t("admin:emailTemplates.copy.failedToast"), "error");
-      return;
-    }
-    const key = outcome === "rich" ? "copiedToast" : "copiedPlainToast";
-    showToast(
-      t(`admin:emailTemplates.copy.${key}`, { email: item.email }),
-      "success",
-    );
-  }
-
-  async function copySubject() {
-    const isCopied = await copyPlainText(rendered.subject);
-    showToast(
-      t(
-        isCopied
-          ? "admin:emailTemplates.copy.subjectCopiedToast"
-          : "admin:emailTemplates.copy.failedToast",
-      ),
-      isCopied ? "success" : "error",
-    );
-  }
 
   return (
     <div className={styles.group}>
@@ -117,13 +100,43 @@ export function WelcomeEmailCopyGroup({ item }: { item: JoinRequestView }) {
         </div>
       )}
       <div className={styles.actions}>
-        <Button variant="primary" size="md" onClick={() => void copyBody()}>
-          <FiMail aria-hidden /> {t("admin:emailTemplates.copy.welcomeCta")}
+        <Button
+          variant="ghost"
+          size="md"
+          className={styles.secondaryAction}
+          onClick={() => setPreviewInviteCode(item.inviteCode)}
+        >
+          <FiEye aria-hidden /> {t("admin:emailTemplates.copy.previewCta")}
         </Button>
-        <Button variant="ghost" size="md" onClick={() => void copySubject()}>
+        <Button
+          variant="ghost"
+          size="md"
+          className={styles.secondaryAction}
+          onClick={() => void copySubject(rendered)}
+        >
           <FiCopy aria-hidden /> {t("admin:emailTemplates.copy.subjectCta")}
         </Button>
+        <Button
+          variant="primary"
+          size="md"
+          className={styles.primaryAction}
+          onClick={() => void copyBody(rendered)}
+        >
+          <FiMail aria-hidden /> {t("admin:emailTemplates.copy.welcomeCta")}
+        </Button>
       </div>
+      {isPreviewOpen && (
+        <WelcomeEmailPreviewModal
+          item={item}
+          content={content}
+          emailLanguage={emailLanguage}
+          hasPortuguese={available.includes("pt")}
+          onLanguageChange={setChosenLanguage}
+          variant={variant}
+          emailToCopy={rendered}
+          onClose={() => setPreviewInviteCode(null)}
+        />
+      )}
     </div>
   );
 }

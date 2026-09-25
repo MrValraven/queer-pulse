@@ -30,6 +30,12 @@ interface LisbonMapProps {
     onToggle: () => void;
     redrawHandleRef?: RefObject<(() => void) | null>;
   };
+  /** Aria label builders for the pins and clusters. Replaces the directory's
+   *  venue wording when given. */
+  markerLabels?: MarkerLabels;
+  /** Where the parish names sit against their label points (see
+   *  useLisbonMap). "top" leaves room above each point for a pin. */
+  parishLabelAnchor?: "center" | "top";
 }
 
 export function LisbonMap({
@@ -43,9 +49,11 @@ export function LisbonMap({
   panelRef,
   panelEdge = null,
   fullscreen,
+  markerLabels: customMarkerLabels,
+  parishLabelAnchor,
 }: LisbonMapProps) {
   const { t } = useTranslation();
-  const markerLabels = useMemo<MarkerLabels>(
+  const defaultMarkerLabels = useMemo<MarkerLabels>(
     () => ({
       venuePin: (name, type) => {
         const typeKey =
@@ -57,6 +65,7 @@ export function LisbonMap({
     }),
     [t],
   );
+  const markerLabels = customMarkerLabels ?? defaultMarkerLabels;
 
   const { containerRef, failed, ready, fullscreenControlHost } = useLisbonMap({
     venues,
@@ -71,6 +80,7 @@ export function LisbonMap({
     panelEdge,
     hasFullscreenControl: fullscreen !== undefined,
     redrawHandleRef: fullscreen?.redrawHandleRef,
+    parishLabelAnchor,
   });
 
   const fullscreenLabel = fullscreen?.isFullscreen

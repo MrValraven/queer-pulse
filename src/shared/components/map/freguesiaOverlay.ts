@@ -2,6 +2,7 @@ import type { FeatureCollection, Point } from "geojson";
 import type {
   FilterSpecification,
   GeoJSONSource,
+  LayerSpecification,
   Map as MapLibreMap,
   MapLayerMouseEvent,
 } from "maplibre-gl";
@@ -19,11 +20,32 @@ interface CreateFreguesiaOverlayOptions {
   selected: Set<string>;
   onSelect: (name: string) => void;
   /** Drop the count line from a parish while it's selected. For callers that
-   *  draw pins inside the selected parish (the local directory map): the pins
-   *  are the tally, so a number beside them would only compete. Callers whose
-   *  map is nothing *but* counts (the housing map) leave this off. */
+   *  draw pins inside the selected parish (the local directory and housing
+   *  maps): the pins are the tally, so a number beside them would only
+   *  compete. Callers whose map is nothing *but* counts leave this off. */
   hideSelectedCount?: boolean;
+  /** Where the parish name + count sit against the parish's label point.
+   *  "center" (the default) centres them on it. "top" hangs them below it, for
+   *  callers that stand one pin per parish on that point (the housing map):
+   *  the pin's tip touches the point and its head fills the space above, and
+   *  the label starts far enough down to clear a cluster badge centred on the
+   *  same point, so neither covers the name. Read once, when the label layer
+   *  is added. */
+  labelAnchor?: "center" | "top";
 }
+
+type SymbolLayout = Extract<LayerSpecification, { type: "symbol" }>["layout"];
+
+// `labelAnchor: "top"` hangs the label from its top edge. The same point holds
+// either a pin's tip or, once neighbouring pins merge, the centre of a 34px
+// cluster badge whose lower half (17px) reaches below it. The offset is in ems
+// of the 12px label text: 1.6em is about 19px, which starts the name just below
+// that badge with a couple of pixels of air, and clears a pin tip with room to
+// spare.
+const TOP_ANCHOR_LAYOUT: SymbolLayout = {
+  "text-anchor": "top",
+  "text-offset": [0, 1.6],
+};
 
 function buildLabelCollection(
   counts: Record<string, number>,
@@ -120,6 +142,7 @@ export function createFreguesiaOverlay(
     selected,
     onSelect,
     hideSelectedCount = false,
+    labelAnchor = "center",
   }: CreateFreguesiaOverlayOptions,
 ): FreguesiaOverlay {
   // The label layer reads both the counts and the selection, and each arrives
@@ -212,6 +235,7 @@ export function createFreguesiaOverlay(
       "text-line-height": 1.3,
       "text-padding": 4,
       "symbol-sort-key": ["-", 0, ["get", "count"]],
+      ...(labelAnchor === "top" ? TOP_ANCHOR_LAYOUT : {}),
     },
     paint: {
       "text-color": BRAND.plum,

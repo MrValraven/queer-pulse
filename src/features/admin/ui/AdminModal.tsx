@@ -1,18 +1,16 @@
-import { useEffect, useId, type ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
-import { useScrollLock } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  pushModal,
-  popModal,
-  isTopmostModal,
-} from "../../../shared/components/ui/modalStack";
+import { useDismiss } from "../../../shared/components/ui";
 import styles from "./adminUi.module.css";
 
 /**
- * Centered modal dialog. Mount it only while open (parent renders it
- * conditionally) so `useScrollLock` runs unconditionally per repo convention.
+ * Centered modal dialog, named by its title. Mount it only while open (the
+ * parent renders it conditionally) so the dialog behaviour in `useDismiss`
+ * runs once per open: scroll lock, Escape while topmost on the shared modal
+ * stack, initial focus on the first control inside (the close button), a Tab
+ * trap, and focus restore to whatever opened it.
  */
 export function AdminModal({
   eyebrow,
@@ -32,28 +30,15 @@ export function AdminModal({
   isFullSize?: boolean;
   children: ReactNode;
 }) {
-  useScrollLock();
   const { t } = useTranslation();
-  // Stable per-instance id so this dialog can register itself on the shared
-  // modal stack (see `shared/components/ui/modalStack`) and only act on
-  // Escape while topmost. `Modal`'s `useDismiss` carries the same fix.
-  const modalId = useId();
+  // The shared dialog behaviour, the same hook AdminDrawer and the shared
+  // `Modal` use. It still registers on the modal stack, so a confirm opened
+  // from inside an AdminDrawer closes alone on one Escape press.
+  const dialogRef = useDismiss(onClose);
+  const titleId = useId();
 
-  useEffect(() => {
-    pushModal(modalId);
-    return () => popModal(modalId);
-  }, [modalId]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isTopmostModal(modalId)) onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose, modalId]);
-
-  // Portal to <body> so the fixed scrim is anchored to the viewport, never to a
-  // transformed/contained ancestor. A `transform`, `filter`, `contain: paint`
+  // Portal to <body> so the fixed scrim is anchored to the viewport itself.
+  // A `transform`, `filter`, `contain: paint`
   // or `content-visibility: auto` on any ancestor establishes a containing
   // block that would confine this `position: fixed` scrim to that ancestor's
   // box instead of the viewport. Rendering through <body> escapes all of them.
@@ -68,6 +53,8 @@ export function AdminModal({
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={[
           styles.modal,
           wide && styles.modalWide,
@@ -77,11 +64,14 @@ export function AdminModal({
           .join(" ")}
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
       >
         <div className={styles.modalHead}>
           <div className={styles.modalHeadTx}>
             {eyebrow && <div className={styles.modalEyebrow}>{eyebrow}</div>}
-            <h3 className={styles.modalTitle}>{title}</h3>
+            <h3 id={titleId} className={styles.modalTitle}>
+              {title}
+            </h3>
           </div>
           <button
             type="button"

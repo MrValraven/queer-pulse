@@ -48,6 +48,11 @@ interface UseLisbonMapOptions {
    *  its view transition update so the new state is captured at the new size
    *  on the spot. */
   redrawHandleRef?: RefObject<(() => void) | null>;
+  /** Where each parish's name + count sit against its label point (see
+   *  `labelAnchor` in freguesiaOverlay). "top" leaves room above the point
+   *  for a pin standing on it. Read once, when the overlay is created, so a
+   *  later change needs a remount. Defaults to "center". */
+  parishLabelAnchor?: "center" | "top";
 }
 
 export type MapPanelEdge = "right" | "bottom";
@@ -111,6 +116,7 @@ export function useLisbonMap({
   panelEdge = null,
   hasFullscreenControl = false,
   redrawHandleRef,
+  parishLabelAnchor = "center",
 }: UseLisbonMapOptions) {
   const overlayRef = useRef<FreguesiaOverlay | null>(null);
   const markerManagerRef = useRef<VenueMarkerManager | null>(null);
@@ -172,6 +178,7 @@ export function useLisbonMap({
         // Pins render for the selected parish only, so its count line would
         // just double up on them.
         hideSelectedCount: true,
+        labelAnchor: parishLabelAnchor,
       });
 
       const markerManager = createVenueMarkerManager(

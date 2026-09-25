@@ -2913,6 +2913,10 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.housing-map-like-directory.title":
+    "The housing map now works like the directory map",
+  "changelog.entries.housing-map-like-directory.body":
+    "One pin per neighbourhood, a floating list of homes, full screen, and a map view that stays in the link.",
   "changelog.entries.email-template-editor-save-and-back.title":
     "Email template Save waits for a change, with a way back",
   "changelog.entries.email-template-editor-save-and-back.body":
@@ -2985,6 +2989,10 @@ export const marketing: Catalog = {
     "The email template editor is more compact",
   "changelog.entries.email-template-editor-compact.body":
     "Settings share one row, language and actions share one toolbar, and the live preview starts near the top.",
+  "changelog.entries.welcome-email-preview.title":
+    "Preview the welcome email before you copy it",
+  "changelog.entries.welcome-email-preview.body":
+    "Approved join requests open the filled email with the applicant's name, invite link and expiry date.",
   "changelog.entries.numbers-roll-everywhere.title":
     "Numbers roll to their new value across the app",
   "changelog.entries.numbers-roll-everywhere.body":

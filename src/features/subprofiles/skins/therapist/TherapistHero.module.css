@@ -371,11 +371,6 @@
   color: var(--ink-60);
 }
 
-/* With the button present its own mailbox note repeats the hint below. */
-.primary:has(> button) > p {
-  display: none;
-}
-
 @media (--mobile) {
   /* The phone action bar carries the message control instead. */
   .primaryDesktopOnly {
