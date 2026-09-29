@@ -14,7 +14,6 @@ import {
   ProfileHeroOverflowMenu,
   type ProfileHeroMenuCallbacks,
 } from "./ProfileHeroOverflowMenu";
-import { ProfileHeroRecognition } from "./ProfileHeroRecognition";
 import { ProfileHeroToolbar } from "./ProfileHeroToolbar";
 import { ProfileNamePronunciation } from "./ProfileNamePronunciation";
 import { ProfileWorkRow } from "./ProfileWorkRow";
@@ -41,10 +40,10 @@ interface ProfileHeroMainProps extends ProfileHeroMenuCallbacks {
 
 /**
  * The profile hero's main column: eyebrow/visibility, name (+ pronunciation),
- * the staff shield beside the name, role/pronouns/ambassador tag, curator link, the recognition strip, bio (with
- * the EN/PT toggle), "here for" chips, the "works in" row, tags, social links,
- * the CTA row (say hello / vouch) and the vouch row. The owner
- * actions and the safety menu live in `ProfileHeroToolbar`, on the eyebrow's
+ * the staff shield beside the name, role/pronouns/ambassador tag, curator
+ * link, bio (with the EN/PT toggle), "here for" chips, the "works in" row,
+ * tags, social links, the CTA row (say hello / vouch) and the vouch row. The
+ * owner actions and the safety menu live in `ProfileHeroToolbar`, on the eyebrow's
  * line. `ProfileHero` (`ProfileSections.tsx`) composes it with `ProfileRail`
  * (the left column) and, for a visitor on someone else's profile,
  * `ProfileMutualsCard`.
@@ -63,7 +62,7 @@ export function ProfileHeroMain({
   // `ProfileRail`. `isSelf` folds in the visitor-preview gate: true only when
   // this really is your own profile AND you're not previewing it as a
   // visitor would see it; this is what gates the edit CTA, the public-
-  // profile badge, and the recognition strip. `self` on its own (ignoring
+  // profile badge. `self` on its own (ignoring
   // preview) gates things that must never show on your own profile at all,
   // preview or not: the safety menu and the mutuals row.
   const isSelf = Boolean(self) && !asVisitor;
@@ -117,7 +116,6 @@ export function ProfileHeroMain({
           {t("members:profile.hero.curatorLink")} <FiArrowRight aria-hidden />
         </Link>
       )}
-      <ProfileHeroRecognition isSelf={isSelf} slug={profile.slug} />
       <ProfileBioLanguageToggle profile={profile} />
       {profile.lookingFor &&
         profile.lookingFor.length > 0 &&

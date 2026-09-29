@@ -2933,6 +2933,14 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.admin-edit-ownerless-listing.title":
+    "Admins can edit an ownerless listing from its page",
+  "changelog.entries.admin-edit-ownerless-listing.body":
+    "The moderator band on a listing nobody runs yet now carries an Edit listing button for admins.",
+  "changelog.entries.profile-recognition-in-rail.title":
+    "Level and badges sit under the profile photo",
+  "changelog.entries.profile-recognition-in-rail.body":
+    "On desktop the level, badges and perks chips join the left column, above the trust signals.",
   "changelog.entries.update-ready-card.title":
     "A calmer card when an update is ready",
   "changelog.entries.update-ready-card.body":
@@ -8626,6 +8634,7 @@ export const marketing: Catalog = {
     "Safe-space badge suspended",
   "directory.detail.staffBand.safeSpace.removed": "Safe-space badge removed",
   "directory.detail.staffBand.dueForReReview": "Badge due for re-review",
+  "directory.detail.staffBand.editListing": "Edit listing",
   "directory.detail.staffBand.openInQueue": "Open in listings queue",
   "directory.detail.staffBand.safeSpaceReview": "Safe-space review",
 

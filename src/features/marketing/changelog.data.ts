@@ -66,6 +66,18 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "admin-edit-ownerless-listing",
+        category: "improvement",
+        date: "29 Sep 2026",
+        ...entryKeys("admin-edit-ownerless-listing"),
+      },
+      {
+        id: "profile-recognition-in-rail",
+        category: "improvement",
+        date: "29 Sep 2026",
+        ...entryKeys("profile-recognition-in-rail"),
+      },
+      {
         id: "update-ready-card",
         category: "improvement",
         date: "29 Sep 2026",

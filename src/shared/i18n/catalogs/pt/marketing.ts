@@ -3006,6 +3006,14 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.admin-edit-ownerless-listing.title":
+    "Admins editam um anúncio sem dono a partir da página dele",
+  "changelog.entries.admin-edit-ownerless-listing.body":
+    "A faixa de moderação num anúncio que ainda ninguém gere tem agora um botão Editar anúncio para admins.",
+  "changelog.entries.profile-recognition-in-rail.title":
+    "Nível e emblemas passam para baixo da foto do perfil",
+  "changelog.entries.profile-recognition-in-rail.body":
+    "No computador, nível, emblemas e vantagens vão para a coluna da esquerda, acima dos sinais de confiança.",
   "changelog.entries.update-ready-card.title":
     "Um cartão mais calmo quando há atualização",
   "changelog.entries.update-ready-card.body":
@@ -8745,6 +8753,7 @@ export const marketing: Catalog = {
     "Selo de espaço seguro removido",
   "directory.detail.staffBand.dueForReReview":
     "Selo a precisar de nova revisão",
+  "directory.detail.staffBand.editListing": "Editar anúncio",
   "directory.detail.staffBand.openInQueue": "Abrir na fila de anúncios",
   "directory.detail.staffBand.safeSpaceReview": "Revisão de espaço seguro",
 

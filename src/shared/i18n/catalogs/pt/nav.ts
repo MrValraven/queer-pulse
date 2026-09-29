@@ -21,11 +21,12 @@ export const nav: Catalog = {
   // Cartão de atualização (PwaUpdateCard). O título tem duas partes: a
   // segunda aparece em itálico coral.
   updateEyebrow: "Atualização pronta",
-  updateHeadline: "Versão nova,",
-  updateHeadlineAccent: "quando te der jeito.",
-  updateBody: "Há correções e melhorias desde que abriste o QueerPulse.",
+  updateHeadline: "Andámos ocupados.",
+  updateHeadlineAccent: "Vem ver o que há de novo",
+  updateBody:
+    "Juntámos algumas correções, melhorias e umas quantas novidades desde a última vez que abriste o QueerPulse.",
   updateWhatChanged: "O que mudou",
-  updateReload: "Recarregar agora",
+  updateReload: "Atualizar agora",
   updateLater: "Mais tarde",
   updating: "A atualizar…",
   updateDismiss: "Dispensar atualização",

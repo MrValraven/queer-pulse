@@ -1,6 +1,7 @@
 import {
   FiCheckCircle,
   FiClock,
+  FiEdit2,
   FiHash,
   FiPauseCircle,
   FiShield,
@@ -9,7 +10,10 @@ import {
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useHasStaffRole } from "../auth/api/useMyStaffRoles";
+import { adminListingEditPath } from "../admin/api/adminListingEdit.api";
 import type { DirectoryPlace } from "./directoryPlaces";
 import styles from "./DirectoryStaffBand.module.css";
 
@@ -39,8 +43,9 @@ function reportableSafeSpaceStatus(
 
 /**
  * Moderator chrome for a public listing page: the reference a moderation call
- * is keyed by, what the safe-space badge currently says, and the two consoles
- * that can act on either.
+ * is keyed by, what the safe-space badge currently says, the two consoles
+ * that can act on either, and (for admins on an ownerless listing) a direct
+ * link to the listing editor.
  *
  * It is deliberately absent inside the admin moderation drawer. That drawer IS
  * the moderator surface, so a band there would point at the console its reader
@@ -64,11 +69,19 @@ export function DirectoryStaffBand({
 function StaffBandForModerators({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const isDirectoryModerator = useHasStaffRole("directory_moderator");
+  const { role } = useAuth();
+  const { demoMode } = useDemoMode();
   if (!isDirectoryModerator) return null;
 
   const listingReference = place.ref;
   const safeSpaceStatus = reportableSafeSpaceStatus(place);
   const isBadgeDueForReReview = place.isBadgeDueForReReview === true;
+  // The edit route and its PATCH are Admin only, so a moderator without the
+  // admin role never sees the link. An owned listing is edited by its owner
+  // (the PATCH answers 409 LISTING_HAS_OWNER), so the link needs an ownerless
+  // listing too.
+  const isAdmin = demoMode || role === "admin";
+  const isEditableByAdmin = isAdmin && place.isUnclaimed === true;
 
   return (
     <section className={styles.band} aria-labelledby={LABEL_ID}>
@@ -87,6 +100,16 @@ function StaffBandForModerators({ place }: { place: DirectoryPlace }) {
         </div>
 
         <div className={styles.actions}>
+          {isEditableByAdmin && listingReference && (
+            <Button
+              variant="ghost-dark"
+              size="sm"
+              to={adminListingEditPath(listingReference)}
+            >
+              <FiEdit2 aria-hidden />
+              {t("marketing:directory.detail.staffBand.editListing")}
+            </Button>
+          )}
           {listingReference && (
             <Button
               variant="ghost-dark"

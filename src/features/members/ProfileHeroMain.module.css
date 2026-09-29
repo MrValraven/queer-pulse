@@ -91,12 +91,12 @@
 /* Quiet recognition strip: level/badges/perks chips on your own profile
    (interactive links), or level/badges only on another member's (COM-24:
    plain, non-interactive chips, since /badges and /perks are self-scoped
-   pages and perk state is owner-only). */
+   pages and perk state is owner-only). Rendered in `ProfileRail`, under the
+   meta line; the rail's own gap spaces it, so no margin here. */
 .heroRecog {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 18px;
 }
 .heroRecogChip {
   font-size: var(--text-12-5);

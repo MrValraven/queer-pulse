@@ -22,11 +22,12 @@ export const nav: Catalog = {
   // accent half is set in coral italics. The body stays generic because the
   // running build cannot know what the new one ships.
   updateEyebrow: "Update ready",
-  updateHeadline: "Fresh build,",
-  updateHeadlineAccent: "whenever you're ready.",
-  updateBody: "Fixes and improvements have landed since you opened QueerPulse.",
+  updateHeadline: "We've been busy.",
+  updateHeadlineAccent: "Come see what's new",
+  updateBody:
+    "We've added a few fixes, improvements, and some new things since you last opened QueerPulse.",
   updateWhatChanged: "What changed",
-  updateReload: "Reload now",
+  updateReload: "Update now",
   updateLater: "Later",
   updating: "Updating…",
   updateDismiss: "Dismiss update",

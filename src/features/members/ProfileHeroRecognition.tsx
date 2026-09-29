@@ -20,7 +20,8 @@ export function ProfileHeroRecognition({
 }
 
 /**
- * A quiet recognition strip that lives in the profile hero meta zone: three
+ * A quiet recognition strip that lives in the profile rail, under the
+ * portrait's location/member-since line (`ProfileRail`): three
  * small chips (level, badges, perks) that link through to your own badges/
  * perks pages. Deliberately subtle (no heading, no card), so it reads as
  * secondary hero meta rather than a headline section. Rendered only on your

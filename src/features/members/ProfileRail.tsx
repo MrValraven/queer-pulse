@@ -6,6 +6,7 @@ import { useProfileSubprofiles } from "../subprofiles/api/usePublicSubprofile";
 import { useSubprofiles } from "../subprofiles/api/useSubprofiles";
 import type { Member } from "./data/members";
 import { useMemberListings } from "./api/useMemberListings";
+import { ProfileHeroRecognition } from "./ProfileHeroRecognition";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import { ProfileTrustSignals } from "./ProfileTrustSignals";
@@ -24,8 +25,9 @@ interface ProfileRailProps {
 
 /**
  * The profile hero's left column: portrait, location/member-since meta,
- * trust signals, the owner's private network stats, and a desktop
- * section-jump nav. Composes `ProfileTrustSignals`/`ProfileNetworkStats`.
+ * the recognition strip (level/badges/perks), trust signals, and the owner's
+ * private network stats. Composes `ProfileHeroRecognition`/
+ * `ProfileTrustSignals`/`ProfileNetworkStats`.
  * The owner-only settings (who sees what / hide me / your data) live in
  * `ProfileSettingsMenu`, in the hero's `ctaRow` (`ProfileHeroMain.tsx`) —
  * they moved out of an always-visible rail card into a top-of-profile kebab
@@ -112,6 +114,8 @@ export function ProfileRail({
           )}
         </div>
       )}
+
+      <ProfileHeroRecognition isSelf={realSelf} slug={profile.slug} />
 
       {/* A real self's own network numbers (below) already include their
           vouch count, so showing both here would repeat the same fact twice
