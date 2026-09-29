@@ -35,9 +35,10 @@ export function useFeed(tab: FeedTab) {
   const query = useInfiniteQuery<FeedPage>({
     queryKey: ["feed", tab, demoMode, language],
     enabled: !demoMode,
-    // Keep the previous tab's data on screen while the new tab fetches, so
-    // switching tabs swaps content smoothly instead of flashing the skeleton
-    // (a fresh query key would otherwise report isLoading and blank the list).
+    // Keeps `isLoading` false while a newly selected tab fetches, so the page
+    // chrome doesn't treat a tab switch as a page load. The placeholder items
+    // belong to the PREVIOUS tab: callers must check `isPlaceholderData` and
+    // never render them as this tab's content.
     placeholderData: keepPreviousData,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {

@@ -3006,6 +3006,10 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.feed-tab-switch-no-stale-cards.title":
+    "Os separadores do feed deixam de mostrar de relance os cartões do separador anterior",
+  "changelog.entries.feed-tab-switch-no-stale-cards.body":
+    "Um separador que ainda está a carregar mostra agora espaços reservados até chegarem as publicações dele.",
   "changelog.entries.admin-edit-ownerless-listing.title":
     "Admins editam um anúncio sem dono a partir da página dele",
   "changelog.entries.admin-edit-ownerless-listing.body":

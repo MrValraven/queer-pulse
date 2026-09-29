@@ -66,6 +66,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "feed-tab-switch-no-stale-cards",
+        category: "fix",
+        date: "29 Sep 2026",
+        ...entryKeys("feed-tab-switch-no-stale-cards"),
+      },
+      {
         id: "admin-edit-ownerless-listing",
         category: "improvement",
         date: "29 Sep 2026",

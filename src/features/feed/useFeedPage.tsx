@@ -143,7 +143,14 @@ export function useFeedPage() {
     return () => clearTimeout(t);
   }, [demoMode]);
 
-  const loading = demoMode ? demoLoading : feed.isLoading;
+  // `feed.isPlaceholderData` is true while a freshly selected tab is still
+  // fetching and `keepPreviousData` is handing back the PREVIOUS tab's items.
+  // Rendering those re-played the old cards' entrance under the new tab before
+  // the real ones replaced them, so the list skeletons out instead. The page
+  // chrome (sidebar) keys off `feed.isLoading` alone and stays put.
+  const feedListLoading = feed.isLoading || feed.isPlaceholderData;
+  const loading = demoMode ? demoLoading : feedListLoading;
+  const pageLoading = demoMode ? demoLoading : feed.isLoading;
 
   // Cross-community aggregation: the latest pulse from communities you're in.
   const communityPulse: HubPost[] = Object.keys(memberships)
@@ -279,7 +286,7 @@ export function useFeedPage() {
     fetchNextPage: feed.fetchNextPage,
     isFetchingNextPage: feed.isFetchingNextPage,
     sidebarLoading:
-      loading ||
+      pageLoading ||
       (!demoMode &&
         (sidebarFeed.isLoading ||
           upcomingFeed.isLoading ||

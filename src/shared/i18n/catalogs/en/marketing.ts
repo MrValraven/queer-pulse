@@ -2933,6 +2933,10 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.feed-tab-switch-no-stale-cards.title":
+    "Feed tabs stop flashing the previous tab's cards",
+  "changelog.entries.feed-tab-switch-no-stale-cards.body":
+    "A tab that is still loading now shows placeholders until its own posts arrive.",
   "changelog.entries.admin-edit-ownerless-listing.title":
     "Admins can edit an ownerless listing from its page",
   "changelog.entries.admin-edit-ownerless-listing.body":
