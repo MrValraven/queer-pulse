@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
-import { PwaUpdatePill } from "./PwaUpdatePill";
+import { routes } from "../../../app/routeMap";
+import { useConsent } from "../../../app/providers/useConsent";
+import { PwaUpdateCard } from "./PwaUpdateCard";
 
 /**
  * How long an open session may go without asking the server whether a newer
@@ -10,13 +12,13 @@ import { PwaUpdatePill } from "./PwaUpdatePill";
  * cap that at once every 24 hours. An installed PWA that is never cold-started
  * (opened Monday, still open Wednesday) therefore keeps running an old build,
  * and its lazy route chunks are the ones a deploy stops serving: the member
- * gets `reloadForStaleChunk`'s hard reload mid-tap instead of the polite pill
+ * gets `reloadForStaleChunk`'s hard reload mid-tap instead of the polite card
  * the "prompt" strategy exists for.
  *
  * One hour is the balance: a deploy reaches long-lived sessions within the same
  * working hour, and 24 extra conditional requests a day per open tab is
  * nothing next to the app's normal traffic. Shorter buys no real freshness,
- * since the pill still waits on the member to accept.
+ * since the card still waits on the member to accept.
  */
 const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
 
@@ -27,10 +29,10 @@ const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
  * the user's say-so: auto-claiming mid-session can leave the running page
  * importing lazy chunks the new build no longer ships.
  *
- * The UI is a PERSISTENT pill (PwaUpdatePill), not a transient toast: a
+ * The UI is a PERSISTENT card (PwaUpdateCard) rather than a transient toast: a
  * service-worker update asks for a decision, and a 30-second toast that a user
  * happens not to see means they run a stale build until their next cold start.
- * The pill stays until the user reloads or dismisses it (dismissal is honoured
+ * The card stays until the user reloads or dismisses it (dismissal is honoured
  * until the next new build is detected).
  */
 export function PwaUpdatePrompt() {
@@ -46,10 +48,14 @@ export function PwaUpdatePrompt() {
     onRegisteredSW: (_swScriptUrl, registration) =>
       setSwRegistration(registration),
   });
-  // Dismissal hides the pill for the rest of this session; a cold start (or the
+  // Dismissal hides the card for the rest of this session; a cold start (or the
   // next genuinely new build after a reload) surfaces it again.
   const [dismissed, setDismissed] = useState(false);
   const [updating, setUpdating] = useState(false);
+  // The consent banner is also a fixed bottom decision, and on a phone it fills
+  // most of the screen. Showing both covered the banner's Reject button, so the
+  // card waits its turn until the visitor has chosen.
+  const { status: consentStatus } = useConsent();
   const lastCheckedAtRef = useRef(0);
 
   useEffect(() => {
@@ -59,7 +65,7 @@ export function PwaUpdatePrompt() {
     lastCheckedAtRef.current = Date.now();
 
     const checkForUpdate = () => {
-      // A hidden tab has nobody to show the pill to, and a check with no
+      // A hidden tab has nobody to show the card to, and a check with no
       // network is a guaranteed failure. Both just wait for the next chance.
       if (document.visibilityState !== "visible") return;
       if (!navigator.onLine) return;
@@ -89,14 +95,27 @@ export function PwaUpdatePrompt() {
     };
   }, [swRegistration]);
 
-  if (!needRefresh || dismissed) return null;
+  if (!needRefresh || dismissed || consentStatus === "unknown") return null;
+
+  const applyUpdate = () => {
+    setUpdating(true);
+    // Activating the waiting worker fires `controlling`, and the plugin answers
+    // with a plain `location.reload()` of whatever URL is current.
+    void updateServiceWorker(true);
+  };
 
   return (
-    <PwaUpdatePill
+    <PwaUpdateCard
       updating={updating}
-      onReload={() => {
-        setUpdating(true);
-        void updateServiceWorker(true);
+      onReload={applyUpdate}
+      onShowChanges={() => {
+        // Point the URL at the Changelog first, so that reload lands there on
+        // the NEW build. Navigating in-app instead would render this old
+        // build's Changelog, which cannot list what just shipped. pushState
+        // (over replaceState) keeps Back returning to the page they were on,
+        // and React Router ignores it, so nothing re-renders in between.
+        window.history.pushState(null, "", routes.changelog);
+        applyUpdate();
       }}
       onDismiss={() => setDismissed(true)}
     />

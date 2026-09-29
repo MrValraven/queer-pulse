@@ -3006,6 +3006,10 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.update-ready-card.title":
+    "Um cartão mais calmo quando há atualização",
+  "changelog.entries.update-ready-card.body":
+    "Fica no canto inferior direito, e O que mudou recarrega-te direto para esta página.",
   "changelog.entries.one-loader-on-first-load.title":
     "Um só ecrã de carregamento ao abrir",
   "changelog.entries.one-loader-on-first-load.body":

@@ -18,8 +18,16 @@ export const nav: Catalog = {
   you: "You",
   account: "Your account",
   primary: "Primary",
-  updateAvailable: "A new version of QueerPulse is ready.",
-  updateReload: "Reload",
+  // Update-ready card (PwaUpdateCard). The headline renders as two parts: the
+  // accent half is set in coral italics. The body stays generic because the
+  // running build cannot know what the new one ships.
+  updateEyebrow: "Update ready",
+  updateHeadline: "Fresh build,",
+  updateHeadlineAccent: "whenever you're ready.",
+  updateBody: "Fixes and improvements have landed since you opened QueerPulse.",
+  updateWhatChanged: "What changed",
+  updateReload: "Reload now",
+  updateLater: "Later",
   updating: "Updating…",
   updateDismiss: "Dismiss update",
 

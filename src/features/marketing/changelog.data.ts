@@ -66,6 +66,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "update-ready-card",
+        category: "improvement",
+        date: "29 Sep 2026",
+        ...entryKeys("update-ready-card"),
+      },
+      {
         id: "one-loader-on-first-load",
         category: "improvement",
         date: "29 Sep 2026",

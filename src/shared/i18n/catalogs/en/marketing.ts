@@ -2933,6 +2933,10 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.update-ready-card.title":
+    "A calmer card when an update is ready",
+  "changelog.entries.update-ready-card.body":
+    "It waits in the bottom-right corner, and What changed reloads you straight onto this page.",
   "changelog.entries.one-loader-on-first-load.title":
     "One loader while QueerPulse opens",
   "changelog.entries.one-loader-on-first-load.body":

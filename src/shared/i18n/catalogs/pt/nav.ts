@@ -18,8 +18,15 @@ export const nav: Catalog = {
   you: "Você",
   account: "A sua conta",
   primary: "Principal",
-  updateAvailable: "Está pronta uma nova versão do QueerPulse.",
-  updateReload: "Recarregar",
+  // Cartão de atualização (PwaUpdateCard). O título tem duas partes: a
+  // segunda aparece em itálico coral.
+  updateEyebrow: "Atualização pronta",
+  updateHeadline: "Versão nova,",
+  updateHeadlineAccent: "quando te der jeito.",
+  updateBody: "Há correções e melhorias desde que abriste o QueerPulse.",
+  updateWhatChanged: "O que mudou",
+  updateReload: "Recarregar agora",
+  updateLater: "Mais tarde",
   updating: "A atualizar…",
   updateDismiss: "Dispensar atualização",
 
