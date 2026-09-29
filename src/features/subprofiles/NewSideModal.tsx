@@ -106,8 +106,10 @@ export function NewSideModal({
             linkVisibility={form.linkVisibility}
             onChangeLinkVisibility={form.setLinkVisibility}
             ownerSlug={form.ownerSlug}
+            creatorSlugForChecks={form.creatorSlugForChecks}
             slug={form.slug}
             handle={form.handle}
+            isHandleKindName={form.isHandleKindName}
             t={t}
           />
         )}

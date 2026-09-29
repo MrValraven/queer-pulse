@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { FeatureHelp, ImageSlot } from "../../shared/components/ui";
+import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
@@ -41,7 +41,7 @@ export function MagazineCover() {
           <h1 className={styles.csTitle}>
             The city changed.
             <br />
-            <em>Did we?</em> <FeatureHelp id="magazine.hub" />
+            <em>Did we?</em>
           </h1>
           {/* eslint-enable local/no-literal-string */}
           <div className={styles.csByline}>

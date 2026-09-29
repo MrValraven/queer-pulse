@@ -59,10 +59,10 @@ export function SubprofileDeleteModal({
   const itemCount = subprofile.sections
     .filter((section) => isContentSection(section.section))
     .reduce((total, section) => total + section.items.length, 0);
+  // A published persona's handle is a live `/p/<handle>` address, linked or
+  // not: deleting the persona frees it either way.
   const releasesHandle =
-    subprofile.linkVisibility === "unlinked" &&
-    subprofile.status === "published" &&
-    Boolean(subprofile.handle);
+    subprofile.status === "published" && Boolean(subprofile.handle);
 
   async function confirmDelete() {
     try {

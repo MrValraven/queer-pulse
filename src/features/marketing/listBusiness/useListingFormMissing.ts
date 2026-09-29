@@ -16,10 +16,11 @@ import {
   pricingModeOf,
 } from "./listingMenu.data";
 import { servicesValid } from "./listingServices.data";
+import { isOwnerBlockHidden } from "./ownerBlock";
 
 /** A still-missing item + the DOM anchor its chip jumps to. Holds the
- * catalog key, not the resolved string, so the chip label follows the
- * active language without this hook needing `t`. */
+ * catalog key, so the chip label follows the active language without this
+ * hook needing `t`. */
 function add(list: MissingField[], labelKey: string, anchor: string) {
   list.push({ labelKey, anchor });
 }
@@ -30,8 +31,8 @@ function add(list: MissingField[], labelKey: string, anchor: string) {
  *
  * Requirements branch on the chosen path (item #2). A CLAIM (you own/run the
  * place) is held to the full bar. A SUGGEST (a regular recommending a place
- * they don't run) only has to give what a stranger can honestly know — name,
- * category, neighbourhood, where it is, and a one-line why — so the owner
+ * they don't run) only has to give what a stranger can honestly know: name,
+ * category, neighbourhood, where it is, and a one-line why. The owner
  * detail, hours, price, tagline and photos never block the submit. The
  * outing/guide consents gate both paths regardless.
  */
@@ -46,13 +47,15 @@ export function useListingFormMissing(
        is not among them: it describes the business, so it stays required. */
     const isOwnerEditing = draft.managementRole !== "co_manager";
     /* A STAFF-AUTHORED draft is written by an admin about a business that has
-       not joined yet. The owner block, the two consents and the affirming
-       baseline are all first- and second-person statements about the
-       submitter, so the admin form leaves them off the page and an admin is
-       never asked to answer them for somebody else. The owner supplies them
-       when they accept the handover. An absent flag means a member is
-       writing, which is every draft the wizard makes today. */
-    const isOwnerAuthored = !draft.isStaffAuthored;
+       not joined yet. A brand-new, still-unclaimed SUGGESTION draft is
+       written by a regular recommending a place they don't run. The owner
+       block, the two consents and the affirming baseline are all first- and
+       second-person statements about the submitter, so both forms leave them
+       off the page while there is nobody who can answer for the business
+       yet. `isOwnerBlockHidden` reads `managementRole` for this: once a
+       suggestion is claimed, the new owner or co-manager sees this section
+       and answers it themselves. */
+    const isOwnerAuthored = !isOwnerBlockHidden(draft);
 
     const s0: MissingField[] = [];
     if (!draft.path)
@@ -105,7 +108,7 @@ export function useListingFormMissing(
     if (!draft.online && !hoursValid(draft.hours))
       add(s3, "marketing:listBusiness.missing.hoursInvalid", ANCHOR.hours);
     // Dated overrides are optional, so this only fires when one that EXISTS is
-    // malformed — the same "fix the format" shape the socials chip has.
+    // malformed, the same "fix the format" shape the socials chip has.
     if (!hoursExceptionsValid(draft.hoursExceptions ?? []))
       add(
         s3,
@@ -113,7 +116,7 @@ export function useListingFormMissing(
         ANCHOR.hoursExceptions,
       );
     // Socials are optional; this only fires when a filled one is malformed, so
-    // the chip reads "fix the format", not "add socials" (item #10).
+    // the chip always reads "fix the format" (item #10).
     if (!allSocialsValid(draft.social))
       add(s3, "marketing:listBusiness.missing.socialFormat", ANCHOR.social);
 

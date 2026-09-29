@@ -4,7 +4,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn, FeatureHelp, SaveButton } from "../../shared/components/ui";
+import { FadeIn, SaveButton } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -147,9 +147,7 @@ export function HousingListingPage() {
                 )}
               />
             </div>
-            <h1 className={s.title}>
-              {listing.title} <FeatureHelp id="housing.listing" />
-            </h1>
+            <h1 className={s.title}>{listing.title}</h1>
             <div className={s.metaRow}>
               {listing.verified && (
                 <VerifiedListingBadge verified={listing.verified} />

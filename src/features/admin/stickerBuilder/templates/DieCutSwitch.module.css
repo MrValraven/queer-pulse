@@ -1,0 +1,23 @@
+/* 44px tall on every pointer: the label fills the row and toggles the
+   switch, so the whole row is one comfortable target. */
+.switchRow {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  min-height: var(--tap-min);
+}
+
+.switchRow > :last-child {
+  align-self: center;
+}
+
+.switchLabel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  cursor: pointer;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink);
+}

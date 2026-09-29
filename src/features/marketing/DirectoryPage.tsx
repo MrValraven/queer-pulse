@@ -1,12 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { FiPlus } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import {
-  ActiveFilters,
-  Button,
-  FeatureHelp,
-  Reveal,
-} from "../../shared/components/ui";
+import { ActiveFilters, Button, Reveal } from "../../shared/components/ui";
 import {
   useMediaQuery,
   useMyLocation,
@@ -24,11 +19,16 @@ import {
   useDirectoryFilterResults,
 } from "./useDirectoryFilters";
 import { LocalFilterBar } from "./LocalFilterBar";
+import {
+  LocalFilterFields,
+  type LocalFilterFieldsProps,
+} from "./LocalFilterFields";
 import { DirectoryNearMe } from "./DirectoryNearMe";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
 import { DirectoryListView } from "./DirectoryListView";
 import { DirectoryVerificationSection } from "./DirectoryVerificationSection";
-import { MapLoadingPanel } from "./MapLoading";
+import { DirectoryMapFallback } from "./DirectoryMapFallback";
+import { useMapFallbackShownAt } from "./useMapFallbackShownAt";
 import s from "./DirectoryPage.module.css";
 
 // Code-split the map view (pulls in maplibre-gl) so it stays off the entry
@@ -45,7 +45,7 @@ export function DirectoryPage() {
   const filterParams = useDirectoryFilterParams();
   const {
     view,
-    category,
+    categories,
     sort,
     vibes,
     safe,
@@ -53,7 +53,8 @@ export function DirectoryPage() {
     access,
     query,
     selectView,
-    setCategory,
+    toggleCategory,
+    clearCategories,
     setQuery,
     setSort,
     toggleVibe,
@@ -106,10 +107,32 @@ export function DirectoryPage() {
   // What is narrowing the list right now, as removable chips. Placed the same
   // way as `nearMe` above: on the search row on desktop, where it answers
   // "what's on?" without opening the drawer, and in the results header on
-  // phones, where the sticky bar has no room for a wrapping row.
-  const activeFilterChips = hasActiveFilters ? (
+  // phones, where the sticky bar has no room for a wrapping row. Mounted even
+  // with nothing active, so "Clear all" lets the row animate itself away.
+  const activeFilterChips = (
     <ActiveFilters filters={activeFilters} onClearFilters={clearFilters} />
-  ) : null;
+  );
+  // One set of field props for the page's bar and the full screen map's card,
+  // so both drive the same URL filters.
+  const filterFieldProps: LocalFilterFieldsProps = {
+    categories,
+    onToggleCategory: toggleCategory,
+    onClearCategories: clearCategories,
+    categoryCounts,
+    query,
+    onQueryChange: setQuery,
+    vibes,
+    onToggleVibe: toggleVibe,
+    safeOnly: safe === "verified",
+    onToggleSafeOnly: () => setSafe(safe !== "verified"),
+    openNow,
+    onToggleOpenNow: () => setOpenNow(!openNow),
+    access,
+    onToggleAccess: toggleAccess,
+    sort,
+    onSortChange: setSort,
+    isLocationOn: myLocation.coordinates !== null,
+  };
 
   // Map view has no scroll-driven "load more" of its own (unlike the list's
   // incremental reveal in `DirectoryListView`), and wants every matching pin
@@ -121,6 +144,7 @@ export function DirectoryPage() {
     if (!hasNextPage || isFetchingNextPage) return;
     fetchNextPage();
   }, [view, hasNextPage, isFetchingNextPage, fetchNextPage, places.length]);
+  const mapFallback = useMapFallbackShownAt(view === "map");
 
   return (
     <PageShell>
@@ -139,7 +163,6 @@ export function DirectoryPage() {
             components={{ em: <em /> }}
           />
         }
-        titleAction={<FeatureHelp id="local.directory" />}
         sub={t("marketing:directory.hero.sub")}
       >
         {/* The listing wizard was only reachable from the strip under every
@@ -156,22 +179,7 @@ export function DirectoryPage() {
       </PageHero>
 
       <LocalFilterBar
-        category={category}
-        onCategoryChange={setCategory}
-        categoryCounts={categoryCounts}
-        query={query}
-        onQueryChange={setQuery}
-        vibes={vibes}
-        onToggleVibe={toggleVibe}
-        safeOnly={safe === "verified"}
-        onToggleSafeOnly={() => setSafe(safe !== "verified")}
-        openNow={openNow}
-        onToggleOpenNow={() => setOpenNow(!openNow)}
-        access={access}
-        onToggleAccess={toggleAccess}
-        sort={sort}
-        onSortChange={setSort}
-        isLocationOn={myLocation.coordinates !== null}
+        {...filterFieldProps}
         view={view}
         onViewChange={selectView}
         activeFilterCount={activeFilters.length}
@@ -211,18 +219,27 @@ export function DirectoryPage() {
       ) : (
         <Suspense
           fallback={
-            <div className="wrap">
-              <MapLoadingPanel />
-            </div>
+            <DirectoryMapFallback onShown={mapFallback.recordFallbackShown} />
           }
         >
           <DirectoryMapView
+            fallbackShownAt={mapFallback.fallbackShownAt}
             places={filtered}
             loading={loading}
             isError={hasPlacesError}
             onRetry={refetchPlaces}
             hasActiveFilters={hasActiveFilters}
             onClearFilters={clearFilters}
+            fullscreenControls={
+              <LocalFilterFields
+                {...filterFieldProps}
+                variant="overlay"
+                nearMeSlot={
+                  <DirectoryNearMe location={myLocation} layout="inline" />
+                }
+                activeFiltersSlot={activeFilterChips}
+              />
+            }
           />
         </Suspense>
       )}

@@ -1,0 +1,153 @@
+/* Page blocks chapters as sub-rows under that pane's row (EditorPaneChapters).
+   The rows are plain <button>s inside `.ed-rail` / `.ed-panes`, whose global
+   `button` rules (0,1,1) would restyle them, so every row rule here is at
+   least two classes deep (0,2,0) and sets each property those rules set. */
+
+/* Folds with the rail: the grid track shrinks to nothing on the icon strip.
+   The clip layer has no padding or margin of its own, so it reaches a true 0;
+   the list inside it carries the room the focus ring needs, so a focused row
+   is never cut at the clip. */
+.fold {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  /* Expanding: wait for the column to open part of the way, as the rail's
+     labels do, so no title shows squeezed. */
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease),
+    opacity var(--dur-base) var(--ease) calc(var(--dur-slow) * 0.4);
+}
+.fold[data-folded="true"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+.clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The guide line sits under the pane icon's centre: the rail row's 12px
+   padding plus half its 16px icon. The list's own padding is the focus
+   ring's room (3px ring, 3px offset). */
+.list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+  margin: 0 0 0 20px;
+  padding: 6px 6px 6px 0;
+}
+.list::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: var(--line);
+}
+
+/* The numeral lines up with the pane labels above (20 + 6 + 11 = the rail
+   row's 12px padding, 16px icon and 10px gap). */
+.list .row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% - 6px);
+  min-height: 34px;
+  margin: 0 0 0 6px;
+  padding: 6px 10px 6px 11px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: var(--lh-title);
+  color: var(--ink-60);
+  text-align: left;
+  white-space: normal;
+  overflow: visible;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+/* A finger gets the full 40px; a mouse keeps the rail compact enough that
+   the therapist's six chapters fit a laptop screen without the rail
+   scrolling. */
+@media (pointer: coarse) {
+  .list .row {
+    min-height: 40px;
+  }
+}
+@media (hover: hover) {
+  .list .row:hover {
+    background: var(--wash);
+    color: var(--ink);
+  }
+}
+.numeral {
+  flex: none;
+  min-width: 12px;
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+.title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The chapter on screen: a quieter mark than the pane's solid pill above it,
+   a wash with strong type and a bar laid over the guide line. Both colours
+   follow the theme. */
+.list .row[aria-current="step"],
+.list .row[aria-current="step"]:hover {
+  background: var(--wash);
+  color: var(--text-strong);
+  font-weight: 600;
+}
+.list .row[aria-current="step"] .numeral {
+  color: var(--text-strong);
+}
+.list .row[aria-current="step"]::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: var(--radius-2);
+  background: var(--text-strong);
+}
+
+/* The sheet: thumb-sized rows, the line under the sheet's 17px icons and
+   the numeral under its labels (12px padding, 17px icon, 12px gap). */
+.fold[data-variant="sheet"] .list {
+  margin-left: 20px;
+}
+.fold[data-variant="sheet"] .row {
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px 10px 15px;
+  font-size: var(--text-14);
+}
+.fold[data-variant="sheet"] .row[aria-current="step"]::before {
+  top: 12px;
+  bottom: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fold,
+  .fold[data-folded="true"],
+  .list .row {
+    transition: none;
+  }
+}

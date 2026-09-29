@@ -8,6 +8,19 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "29 Sep 2026": {
+      // Twenty-eight entries this day, so three highlights; features first,
+      // the editor desk redesign leads as the largest build of the day.
+      highlights: [
+        "editor-desk-redesign",
+        "blip-and-tea-sticker-packs",
+        "meet-ping-404",
+      ],
+    },
+    "28 Sep 2026": {
+      // More than seven entries this day, so three highlights; features first.
+      highlights: ["go-together", "queerpulse-ambassadors", "quest-personas"],
+    },
     "25 Sep 2026": {
       // Thirty-one entries this day, so three highlights; the features come first.
       highlights: [

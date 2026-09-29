@@ -25,7 +25,7 @@ export function StepWelcome({
   // Who vouched + their words, stashed by the invite landing page from the real
   // `GET /invites/:code`. In demo mode we fall back to the mock inviter (Inês)
   // so the standalone prototype still tells a story; in LIVE mode we must never
-  // fabricate an inviter — an absent payload means we simply don't show one.
+  // fabricate an inviter; an absent payload means we simply don't show one.
   const [welcome] = useState(readInviteWelcome);
   const [hasPhotoFailed, setHasPhotoFailed] = useState(false);
   const firstName =
@@ -51,9 +51,13 @@ export function StepWelcome({
   const inviterInitials = inviter?.initials ?? demoInviter?.initials ?? "";
   const inviterPhoto = inviter?.photo ?? demoInviter?.photo;
   const inviterMeta = inviter
-    ? inviter.since
-      ? t("auth:onboarding.stepWelcome.memberSince", { since: inviter.since })
-      : t("auth:onboarding.stepWelcome.invitedYou")
+    ? inviter.isAmbassador
+      ? t("auth:onboarding.stepWelcome.invitedByAmbassador")
+      : inviter.since
+        ? t("auth:onboarding.stepWelcome.memberSince", {
+            since: inviter.since,
+          })
+        : t("auth:onboarding.stepWelcome.invitedYou")
     : demoInviter
       ? t("auth:onboarding.stepWelcome.memberSinceRole", {
           since: demoInviter.since,
@@ -68,21 +72,25 @@ export function StepWelcome({
 
   return (
     <>
-      <div className={styles.checkWrap}>
-        <svg viewBox="0 0 72 72" width={72} height={72}>
-          <circle className={styles.checkCircle} cx={36} cy={36} r={33} />
-          <path className={styles.checkMark} d="M22 36l10.5 11.5L50 24" />
-        </svg>
-      </div>
-      <div className={styles.eye}>
-        {stepLabel} · {t("auth:onboarding.stepWelcome.eyebrowSuffix")}
-      </div>
-      <div className={styles.h}>
-        <Translation
-          i18nKey="auth:onboarding.stepWelcome.heading"
-          components={{ em: <em /> }}
-          values={{ firstName }}
-        />
+      <div className={styles.welcomeHead}>
+        <div className={styles.checkWrap}>
+          <svg viewBox="0 0 72 72" width={60} height={60} aria-hidden>
+            <circle className={styles.checkCircle} cx={36} cy={36} r={35} />
+            <path className={styles.checkMark} d="M22 36l10.5 11.5L50 24" />
+          </svg>
+        </div>
+        <div>
+          <div className={styles.eye}>
+            {stepLabel} · {t("auth:onboarding.stepWelcome.eyebrowSuffix")}
+          </div>
+          <div className={styles.h}>
+            <Translation
+              i18nKey="auth:onboarding.stepWelcome.heading"
+              components={{ em: <em /> }}
+              values={{ firstName }}
+            />
+          </div>
+        </div>
       </div>
       {showVouch && (
         <div className={styles.vouchCard}>
@@ -115,10 +123,14 @@ export function StepWelcome({
       <div className={styles.p}>{t("auth:onboarding.stepWelcome.body2")}</div>
       <div className={styles.p}>{t("auth:onboarding.stepWelcome.body3")}</div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>{t("auth:onboarding.stepWelcome.cta")}</Button>
-        <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepWelcome.back")}
-        </button>
+        <div className={styles.navRow}>
+          <button type="button" className={styles.back} onClick={onBack}>
+            <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepWelcome.back")}
+          </button>
+          <Button onClick={onNext}>
+            {t("auth:onboarding.stepWelcome.cta")}
+          </Button>
+        </div>
       </div>
     </>
   );

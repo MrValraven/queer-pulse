@@ -39,8 +39,10 @@ export interface SkinListFrameProps {
  * The frame every list control shares: the control's label and helper come
  * from `SkinRefinedField` (sentence case, the hint above the rows), and the
  * rows sit in a group named by that label through `aria-labelledby`, with
- * the add button under them. A `keyHint` takes the frame's footer, as the
- * chips' key hint does, and shows only while focus is in the list.
+ * the add button under them. A retired list (`isRetired`) has no add
+ * button: its lines are on their way to another place. A `keyHint` takes
+ * the frame's footer, as the chips' key hint does, and shows only while
+ * focus is in the list.
  */
 export function SkinListFrame({
   control,
@@ -89,11 +91,13 @@ export function SkinListFrame({
           <div className={styles.rows} ref={containerRef}>
             {children}
           </div>
-          <SkinListAddButton
-            label={t(control.addLabelKey ?? defaultAddLabelKey)}
-            onAdd={onAdd}
-            buttonRef={addButtonRef}
-          />
+          {!control.isRetired && (
+            <SkinListAddButton
+              label={t(control.addLabelKey ?? defaultAddLabelKey)}
+              onAdd={onAdd}
+              buttonRef={addButtonRef}
+            />
+          )}
           {keyHint && (
             <span id={keyHint.id} hidden>
               {keyHint.text}

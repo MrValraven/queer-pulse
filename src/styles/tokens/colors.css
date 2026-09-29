@@ -40,6 +40,10 @@
   --cream-rgb:
     247, 243, 238; /* light-cream channels — NOT theme-switched: cream-on-plum stays light in dark mode */
   --paper: #ffffff; /* card surface */
+  /* The page background at 90%, for sticky bars that blur what scrolls
+     under them. Built on --cream (never --cream-rgb, which stays light), and
+     re-declared in the dark block so it follows the dark --cream there. */
+  --cream-translucent: color-mix(in srgb, var(--cream) 90%, transparent);
   --map-tint: #e8ecdf; /* map illustration placeholder */
 
   /* ── Jade (success / live / verified) ── */
@@ -68,6 +72,61 @@
      not part of the public palette. */
   --desk-violet: #5c3e92;
   --desk-violet-rgb: 92, 62, 146;
+
+  /* ── Desk tones (magazine editor desk: one job per colour) ──
+     Coral (--accent) stays the desk's primary action and nothing else. Each
+     tone below carries one state, as text, as an 8px dot (DeskToneDot) and
+     as a `-soft` wash behind that same text:
+       late     late pieces and over-capacity editors, and only those
+       you      the piece is waiting on you, your turn (a lifted plum, pushed
+                toward magenta so it reads apart from the violet stage steps)
+       writer   the piece is with its writer (amber family)
+       ready    ready, published, a new voice (jade family)
+       neutral  nothing waiting, no state to flag
+     Every tone clears 4.5:1 on --paper and --cream in both themes and over
+     its own -soft wash on --paper and --cream. The -soft washes are
+     color-mix()es of the tone, so they follow the dark values below. */
+  --desk-tone-late: #a3231d;
+  --desk-tone-you: #7a2e72;
+  --desk-tone-writer: #7a560c;
+  --desk-tone-ready: #376a52;
+  --desk-tone-neutral: var(--ink-60);
+  --desk-tone-late-soft: color-mix(
+    in srgb,
+    var(--desk-tone-late) 12%,
+    transparent
+  );
+  --desk-tone-you-soft: color-mix(
+    in srgb,
+    var(--desk-tone-you) 12%,
+    transparent
+  );
+  --desk-tone-writer-soft: color-mix(
+    in srgb,
+    var(--desk-tone-writer) 12%,
+    transparent
+  );
+  --desk-tone-ready-soft: color-mix(
+    in srgb,
+    var(--desk-tone-ready) 12%,
+    transparent
+  );
+  --desk-tone-neutral-soft: var(--wash);
+
+  /* ── Desk stage scale (the 8 pipeline stages, Commissioned to Published) ──
+     One scale for the stage pill, StageProgress, the board columns and the
+     rail's stacked bar. A calm walk from neutral ink (1) through the desk
+     violet (5) and a slate bridge (6) to jade (7 Ready, 8 Published). Each
+     step clears 4.5:1 as text on --paper and --cream in both themes, and over
+     a 12% wash of itself, so a pill can print its label in the step colour. */
+  --desk-stage-1: #5f5a66;
+  --desk-stage-2: #5a5372;
+  --desk-stage-3: #5b4b80;
+  --desk-stage-4: #5c448a;
+  --desk-stage-5: var(--desk-violet);
+  --desk-stage-6: #3f5d80;
+  --desk-stage-7: var(--desk-tone-ready);
+  --desk-stage-8: #2c5a45;
 
   /* ── Amber (warning / medium states) ── */
   --amber: #e8b44a;
@@ -183,6 +242,7 @@
 /* ── Dark mode overrides ── */
 [data-theme="dark"] {
   --cream: #0e0820;
+  --cream-translucent: color-mix(in srgb, var(--cream) 90%, transparent);
   --paper: #1a1030;
   --ink: rgba(247, 243, 238, 0.92);
   --ink-rgb: 247, 243, 238; /* light channels so rgba() faint text flips too */
@@ -210,4 +270,39 @@
   /* 0.32 was 2.71:1 on dark paper — under the 3:1 UI-component threshold.
      0.45 reaches 4.15:1. */
   --line-strong: rgba(247, 243, 238, 0.45);
+  /* Desk tones and stage scale lifted for the dark page. Every value clears
+     4.5:1 on dark --paper and --cream and over its own 12% wash. The -soft
+     washes, the neutral tone and stage 7 are var() aliases in the light
+     block and follow these values on their own. Late leans to a cool red
+     (hue 349, about 23 degrees from the dark coral accent at 12) so "late"
+     and the primary action stay apart: 6.63:1 on --paper, 7.17:1 on
+     --cream, 5.62:1 over its wash. The desk violet lifts to a lilac for the
+     Deck badge and mark: 9.26:1 on --paper, 7.11:1 over the badge's 14%
+     wash. "You" first moved from a pink (hue 310) to a lilac
+     beside the In review stage colour, which only traded one collision for
+     another: hue 269 sat 9 degrees from stage 3-5's own 259-263 cluster, so
+     the tone dot and the stage-progress dot on the same row read as one
+     colour again. Every stage step from 1 to 5 (hue 256-265)
+     plus 6 (hue 209) plus 7/8's jade (hue 150-152) rules out the whole
+     120-295 degree arc, and late (hue 349) plus the writer amber (hue 40)
+     rule out the two slivers on either side of it, leaving only a narrow
+     pink sliver next to late itself (the hue this token started from) or a
+     sage green clear of every
+     other desk tone and stage step. "You" is now that sage, at hue 88, at
+     least 47.7 degrees from every stage step, late and the writer amber:
+     11.35:1 on --paper, 12.26:1 on --cream, 8.90:1 over its wash on --paper,
+     9.94:1 over its wash on --cream. */
+  --desk-violet: #c4b0ea;
+  --desk-violet-rgb: 196, 176, 234;
+  --desk-tone-late: #ff6b86;
+  --desk-tone-you: #bad69a;
+  --desk-tone-writer: var(--amber);
+  --desk-tone-ready: var(--jade-ink);
+  --desk-stage-1: #b5b0bc;
+  --desk-stage-2: #b3abc8;
+  --desk-stage-3: #b6a6d8;
+  --desk-stage-4: #b69ee0;
+  --desk-stage-5: #b597e6;
+  --desk-stage-6: #94b6d6;
+  --desk-stage-8: var(--jade-light);
 }

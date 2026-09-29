@@ -5,6 +5,7 @@ import {
   isBadgedStaffRoleId,
   type BadgedStaffRoleId,
 } from "../../staff/badgedStaffRoles";
+import { Tooltip } from "./Tooltip";
 import styles from "./StaffBadge.module.css";
 
 /** A platform-level account tier that earns a badge. A subset of `MemberRole` —
@@ -21,8 +22,9 @@ export type StaffRole = "admin" | "moderator";
  */
 export type StaffBadgeRole = StaffRole | BadgedStaffRoleId;
 
-/** `lg` is the member's own profile hero; `sm` is everywhere else. */
-export type StaffBadgeSize = "sm" | "lg";
+/** `icon` is the shield beside the name on a member's profile hero; `lg` is
+ *  the labelled pill for larger contexts; `sm` is everywhere else. */
+export type StaffBadgeSize = "sm" | "lg" | "icon";
 
 const LONG_LABEL_KEY: Record<StaffRole, string> = {
   admin: "shared:staffBadge.admin.long",
@@ -42,9 +44,12 @@ const SHORT_LABEL_KEY: Record<StaffRole, string> = {
  * that browsers silently restructure. The name stays the link; this sits
  * beside it.
  *
- * Both sizes carry a VISIBLE label. The `title` only ever adds the long form,
- * never information found nowhere else — `title` does not fire on touch, so an
- * icon-only badge would tell phone users nothing.
+ * `sm` and `lg` carry a VISIBLE label, and their `title` only ever adds the
+ * long form, because `title` does not fire on touch. `icon` is the one
+ * icon-only size. It names itself through the shared `Tooltip`, which also
+ * reveals on a tap and on keyboard focus, and through the `aria-label` on a
+ * focusable, inert button, so touch, keyboard and screen-reader users all
+ * reach the label.
  *
  * It names an account tier (moderator, admin) or a single badged staff grant
  * (`shared/staff/badgedStaffRoles`). A person holding several grants gets one
@@ -75,6 +80,21 @@ export function StaffBadge({
   // Grants share one tone: they are peers of each other, and six tones next to
   // a name would read as a taxonomy the reader is expected to learn.
   const toneClass = isGrant ? styles.grant : styles[role];
+  if (size === "icon") {
+    return (
+      <Tooltip label={longLabel} placement="bottom">
+        <button
+          type="button"
+          className={[styles.icon, toneClass, className]
+            .filter(Boolean)
+            .join(" ")}
+          aria-label={longLabel}
+        >
+          <FiShield aria-hidden />
+        </button>
+      </Tooltip>
+    );
+  }
   return (
     <span
       className={[styles.badge, toneClass, styles[size], className]

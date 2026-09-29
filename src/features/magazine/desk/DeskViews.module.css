@@ -1,0 +1,100 @@
+/* Saved desk views: the active view's name on the Views trigger, the save
+   dialog's character count and the manage dialog's list. */
+
+/* A 60-character name would push the workbar onto a second line, so the
+   trigger shows the start of it; the menu lists the full name. */
+.viewName {
+  display: inline-block;
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus lands here after a delete removes the focused row. The ring shows
+   only for keyboard users, the ones who need to see where they are. */
+.listRegion:focus {
+  outline: none;
+}
+
+.listRegion:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* One view per line, separated by hairlines. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-height: var(--tap-min);
+  border-bottom: 1px solid var(--line);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.rowName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+  font-size: var(--text-14-5);
+  font-weight: 500;
+}
+
+.renameForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--gap-xs);
+  width: 100%;
+  padding-block: var(--gap-xs);
+}
+
+.renameField {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.renameActions {
+  display: flex;
+  gap: var(--gap-xs);
+}
+
+.empty {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-14-5);
+}
+
+/* On a phone the Views trigger drops to its bookmark icon so the workbar's
+   control row keeps its room; the label stays in the accessible name. */
+@media (max-width: 767px) {
+  .triggerLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}

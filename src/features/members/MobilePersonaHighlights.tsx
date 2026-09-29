@@ -4,6 +4,7 @@ import { Avatar } from "../../shared/components/ui";
 import { initialsFromName } from "../../shared/lib/initials";
 import { linkToPath, routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { personaHrefWithOwnerFallback } from "../subprofiles/personaLinks.data";
 import { useProfilePersonas } from "./useProfilePersonas";
 import styles from "./MobileProfile.module.css";
 
@@ -56,11 +57,7 @@ export function MobilePersonaHighlights({
       {personas.map((persona) => (
         <Link
           key={persona.slug}
-          to={
-            persona.handle
-              ? linkToPath(`/p/${persona.handle}`)
-              : `${routes.members}/${ownerSlug}/${persona.slug}`
-          }
+          to={linkToPath(personaHrefWithOwnerFallback(persona, ownerSlug))}
           className={styles.highlightItem}
           role="listitem"
         >

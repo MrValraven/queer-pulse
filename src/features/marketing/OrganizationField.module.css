@@ -1,0 +1,7 @@
+/* The mode choice and the control under it read as one field, so they sit
+   closer together than the gap FormField leaves between separate fields.
+   Two classes, so this wins over FormField's own `.field` margin whatever
+   order the two modules load in. */
+.field .modeRow {
+  margin-bottom: 10px;
+}

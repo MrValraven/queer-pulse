@@ -27,13 +27,13 @@ const OnboardingPage = lazyNamed(
   "OnboardingPage",
 );
 // The recipient's personal invite landing lives in the system feature, but it
-// belongs to the auth flow and shares its branded AuthLoader fallback.
+// belongs to the auth flow and shares its full-screen PageLoader fallback.
 const InviteLandingPage = lazyNamed(
   () => import("../system/InviteLandingPage"),
   "InviteLandingPage",
 );
 
-/** Auth & onboarding — each chunk loads behind the branded AuthLoader fallback. */
+/** Auth & onboarding: each chunk loads behind the full-screen PageLoader fallback. */
 export function authRoutes() {
   return (
     <>

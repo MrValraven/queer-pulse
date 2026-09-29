@@ -1285,4 +1285,9 @@ export const settings: Catalog = {
   "sessions.toast.signedOutEverywhere": "Signed out on every device",
   "sessions.toast.signedOutEverywhereError":
     "We could not sign you out everywhere just now. You are still signed in, so try again.",
+
+  // Go together.
+  "dataExport.type.goTogether.label": "Go together answers",
+  "dataExport.type.goTogether.sub":
+    "Your friendship questionnaire answers and host question replies",
 };

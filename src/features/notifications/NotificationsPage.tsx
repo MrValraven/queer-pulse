@@ -2,12 +2,7 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import {
-  Button,
-  Tabs,
-  FeatureHelp,
-  PullToRefresh,
-} from "../../shared/components/ui";
+import { Button, Tabs, PullToRefresh } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
@@ -104,7 +99,6 @@ export function NotificationsPage() {
           <div className={styles.header}>
             <div className={styles.title}>
               {t("notifications:page.title")}
-              <FeatureHelp id="notifications.hub" />
               {unreadCount > 0 && (
                 <span className={styles.badge}>
                   <RollingNumber

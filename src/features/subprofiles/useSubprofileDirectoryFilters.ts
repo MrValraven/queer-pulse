@@ -5,12 +5,16 @@ import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
 import { groupProfessionsByFamily } from "./subprofileDirectory.data";
 import {
   countByKind,
+  countByTableFormat,
+  countByTableVibe,
   countByTag,
   matchesKind,
   matchesOpenToCollabs,
+  matchesTable,
   matchesTags,
   topTags,
 } from "./subprofileDirectoryFacets";
+import { useQuestTableFacet } from "./useQuestTableFacet";
 
 const AVAILABLE_TAGS_CAP = 20;
 /** How long the search box waits after the last keystroke before its term
@@ -42,9 +46,11 @@ const SEARCH_DEBOUNCE_MS = 300;
  * request instead of the walk that used to drain up to twenty pages before a
  * card appeared.
  *
- * PROFESSION, TAGS AND OPEN-TO-COLLABS stay in the browser, because the
- * endpoint has no param for them (`kind` is single-valued against a
- * multi-select OR facet; there is no `tags` param) and returns no facet counts.
+ * PROFESSION, TAGS, OPEN-TO-COLLABS AND THE TABLE FACET stay in the browser,
+ * because the endpoint has no param for them (`kind` is single-valued against a
+ * multi-select OR facet; there is no `tags` or table param) and returns no
+ * facet counts. The table facet (`useQuestTableFacet`) is the Quest personas'
+ * "At the table" format and vibe, read off each card's `table` summary.
  * They therefore narrow the pages LOADED SO FAR, and `isNarrowedInBrowser`
  * says when that is happening so the page can tell the member rather than let
  * a partial answer read as the whole one.
@@ -60,6 +66,8 @@ export function useSubprofileDirectoryFilters() {
   const [query, setQuery] = useState("");
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [openToCollabs, setOpenToCollabs] = useState(false);
+  const table = useQuestTableFacet();
+  const { tableFormats, tableVibes, hasTableSelection } = table;
 
   const term = query.trim();
   // Only a settled term becomes a query key, so a fast typist fans out once
@@ -84,19 +92,21 @@ export function useSubprofileDirectoryFilters() {
     [cards],
   );
 
-  // Each facet is counted under the OTHER three, never under itself: counting
-  // professions under the profession selection would read every unpicked chip
-  // as 0 the moment one was picked, which is exactly backwards for an OR facet.
+  // Each facet is counted under the OTHER facets and leaves its own selection
+  // out: counting professions under the profession selection would read every
+  // unpicked chip as 0 the moment one was picked, which is exactly backwards
+  // for an OR facet.
   const professionCounts = useMemo(
     () =>
       countByKind(
         cards.filter(
           (card) =>
             matchesTags(card, activeTags) &&
-            matchesOpenToCollabs(card, openToCollabs),
+            matchesOpenToCollabs(card, openToCollabs) &&
+            matchesTable(card, tableFormats, tableVibes),
         ),
       ),
-    [cards, activeTags, openToCollabs],
+    [cards, activeTags, openToCollabs, tableFormats, tableVibes],
   );
   const tagCounts = useMemo(
     () =>
@@ -104,15 +114,17 @@ export function useSubprofileDirectoryFilters() {
         cards.filter(
           (card) =>
             matchesKind(card, kinds) &&
-            matchesOpenToCollabs(card, openToCollabs),
+            matchesOpenToCollabs(card, openToCollabs) &&
+            matchesTable(card, tableFormats, tableVibes),
         ),
       ),
-    [cards, kinds, openToCollabs],
+    [cards, kinds, openToCollabs, tableFormats, tableVibes],
   );
 
   // The availability pill is a facet too, so it carries the same live count as
-  // the chip rows and dims at 0. Counted under the professions and tags (and
-  // the server's search, which already shaped `cards`) but NOT under itself:
+  // the chip rows and dims at 0. Counted under the professions, tags and table
+  // facet (and the server's search, which already shaped `cards`) but NOT
+  // under itself:
   // with the toggle already on, counting under it would just restate the
   // grid's own size rather than answer "how many are open to collabs".
   const openToCollabsCount = useMemo(
@@ -121,9 +133,42 @@ export function useSubprofileDirectoryFilters() {
         (card) =>
           matchesKind(card, kinds) &&
           matchesTags(card, activeTags) &&
-          matchesOpenToCollabs(card, true),
+          matchesOpenToCollabs(card, true) &&
+          matchesTable(card, tableFormats, tableVibes),
       ).length,
-    [cards, kinds, activeTags],
+    [cards, kinds, activeTags, tableFormats, tableVibes],
+  );
+
+  // The table facets count under every OTHER facet. Formats are an OR facet,
+  // so they count without the format selection (like professions); vibes are
+  // an AND facet, so each vibe chip counts under the vibes already picked:
+  // the number says what adding that vibe would leave.
+  const hasTableData = useMemo(() => cards.some((card) => card.table), [cards]);
+  const tableFormatCounts = useMemo(
+    () =>
+      countByTableFormat(
+        cards.filter(
+          (card) =>
+            matchesKind(card, kinds) &&
+            matchesTags(card, activeTags) &&
+            matchesOpenToCollabs(card, openToCollabs) &&
+            matchesTable(card, [], tableVibes),
+        ),
+      ),
+    [cards, kinds, activeTags, openToCollabs, tableVibes],
+  );
+  const tableVibeCounts = useMemo(
+    () =>
+      countByTableVibe(
+        cards.filter(
+          (card) =>
+            matchesKind(card, kinds) &&
+            matchesTags(card, activeTags) &&
+            matchesOpenToCollabs(card, openToCollabs) &&
+            matchesTable(card, tableFormats, tableVibes),
+        ),
+      ),
+    [cards, kinds, activeTags, openToCollabs, tableFormats, tableVibes],
   );
 
   const visibleCards = useMemo(
@@ -132,17 +177,21 @@ export function useSubprofileDirectoryFilters() {
         (card) =>
           matchesKind(card, kinds) &&
           matchesTags(card, activeTags) &&
-          matchesOpenToCollabs(card, openToCollabs),
+          matchesOpenToCollabs(card, openToCollabs) &&
+          matchesTable(card, tableFormats, tableVibes),
       ),
-    [cards, kinds, activeTags, openToCollabs],
+    [cards, kinds, activeTags, openToCollabs, tableFormats, tableVibes],
   );
 
   // True while a facet the ENDPOINT cannot express is narrowing the grid. The
-  // page says so beside the count, because these three cut the pages already
+  // page says so beside the count, because these facets cut the pages already
   // loaded rather than the whole directory, and a count that looks total when
   // it is partial is worse than no count.
   const isNarrowedInBrowser =
-    kinds.length > 0 || activeTags.length > 0 || openToCollabs;
+    kinds.length > 0 ||
+    activeTags.length > 0 ||
+    openToCollabs ||
+    hasTableSelection;
 
   const onToggleKind = (kind: string) => {
     const next = kind as SubprofileKind;
@@ -168,6 +217,7 @@ export function useSubprofileDirectoryFilters() {
     setQuery("");
     setActiveTags([]);
     setOpenToCollabs(false);
+    table.clearTable();
   };
 
   return {
@@ -183,13 +233,23 @@ export function useSubprofileDirectoryFilters() {
     onToggleOpenToCollabs,
     setOpenToCollabs,
     openToCollabsCount,
+    tableFormats,
+    setTableFormats: table.setTableFormats,
+    onToggleTableFormat: table.onToggleTableFormat,
+    tableVibes,
+    setTableVibes: table.setTableVibes,
+    onToggleTableVibe: table.onToggleTableVibe,
+    tableFormatCounts,
+    tableVibeCounts,
+    /** True once a loaded persona carries an "At the table" summary; the
+     *  Refine drawer's table band stays hidden until then. */
+    hasTableData,
     professionGroups,
     professionCounts,
     availableTags,
     tagCounts,
     /** True while anything is narrowing the grid, the search term included. */
-    hasActiveRefinement:
-      kinds.length > 0 || activeTags.length > 0 || openToCollabs || term !== "",
+    hasActiveRefinement: isNarrowedInBrowser || term !== "",
     isNarrowedInBrowser,
     /** True while the FIRST page for the current term is in flight. */
     isLoading: directoryQuery.isLoading,

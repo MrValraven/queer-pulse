@@ -22,14 +22,17 @@ export interface NewIssueModalProps {
 }
 
 /**
- * Creates a magazine issue from the desk. Deliberately four fields: an issue
- * needs a number to be addressable and a title and theme to be recognisable
- * in the switcher. The publish date is the one optional field — editors open
- * a number long before they know when it runs, so an issue can be created
- * unscheduled and dated later (shipping stamps today's date if nobody ever
- * does). Cover art, coverlines, the running order and the digest all belong
- * to the issue-production page, and duplicating them here would give a
- * brand-new issue a ship checklist that already looks half-finished.
+ * Creates a magazine issue from the desk. An issue needs a number to be
+ * addressable and a title and theme to be recognisable in the switcher.
+ * Publish and close are the two optional dates: editors open a number long
+ * before they know when it runs or when copy stops, so an issue can be
+ * created unscheduled and dated later (shipping stamps today's date if
+ * nobody ever sets a publish date). A close date set here can only land on or
+ * before a publish date set here; the same rule holds once both live on the
+ * issue-production page. Cover art, coverlines, the running order and the
+ * digest all belong to the issue-production page, and duplicating them here
+ * would give a brand-new issue a ship checklist that already looks
+ * half-finished.
  */
 export function NewIssueModal({
   suggestedNumber,
@@ -42,14 +45,23 @@ export function NewIssueModal({
   const [title, setTitle] = useState("");
   const [theme, setTheme] = useState("");
   const [publishedOn, setPublishedOn] = useState("");
+  const [closesOn, setClosesOn] = useState("");
   const [numberError, setNumberError] = useState<string | null>(null);
+  const [closesError, setClosesError] = useState<string | null>(null);
 
   const isComplete =
     number.trim() !== "" && title.trim() !== "" && theme.trim() !== "";
 
   const submit = async () => {
     if (!isComplete || isSaving) return;
+    // Both are bare `YYYY-MM-DD` strings, so a plain string compare already
+    // orders them chronologically.
+    if (closesOn && publishedOn && closesOn > publishedOn) {
+      setClosesError(t("magazine:desk.closeDate.afterPublishError"));
+      return;
+    }
     setNumberError(null);
+    setClosesError(null);
     try {
       await onCreate({
         number: number.trim(),
@@ -58,6 +70,7 @@ export function NewIssueModal({
         // Omitted rather than sent as "": the backend stores an absent date as
         // NULL, and an empty string would fail its YYYY-MM-DD validation.
         ...(publishedOn ? { publishedOn } : {}),
+        ...(closesOn ? { closesOn } : {}),
       });
       onClose();
     } catch (error) {
@@ -98,23 +111,23 @@ export function NewIssueModal({
         </div>
       }
     >
+      <FormField
+        label={t("magazine:desk.newIssue.numberLabel")}
+        required
+        helper={t("magazine:desk.newIssue.numberHelper")}
+        error={numberError ?? undefined}
+      >
+        <input
+          type="text"
+          inputMode="numeric"
+          value={number}
+          onChange={(event) => {
+            setNumber(event.target.value);
+            setNumberError(null);
+          }}
+        />
+      </FormField>
       <div className={styles.row}>
-        <FormField
-          label={t("magazine:desk.newIssue.numberLabel")}
-          required
-          helper={t("magazine:desk.newIssue.numberHelper")}
-          error={numberError ?? undefined}
-        >
-          <input
-            type="text"
-            inputMode="numeric"
-            value={number}
-            onChange={(event) => {
-              setNumber(event.target.value);
-              setNumberError(null);
-            }}
-          />
-        </FormField>
         <FormField
           label={t("magazine:desk.newIssue.publishesLabel")}
           helper={t("magazine:desk.newIssue.publishesHelper")}
@@ -123,7 +136,27 @@ export function NewIssueModal({
             mode="date"
             label={t("magazine:desk.newIssue.publishesLabel")}
             value={publishedOn || null}
-            onChange={(value) => setPublishedOn(value ?? "")}
+            min={closesOn || undefined}
+            onChange={(value) => {
+              setPublishedOn(value ?? "");
+              setClosesError(null);
+            }}
+          />
+        </FormField>
+        <FormField
+          label={t("magazine:desk.newIssue.closesLabel")}
+          helper={t("magazine:desk.newIssue.closesHelper")}
+          error={closesError ?? undefined}
+        >
+          <DatePicker
+            mode="date"
+            label={t("magazine:desk.newIssue.closesLabel")}
+            value={closesOn || null}
+            max={publishedOn || undefined}
+            onChange={(value) => {
+              setClosesOn(value ?? "");
+              setClosesError(null);
+            }}
           />
         </FormField>
       </div>

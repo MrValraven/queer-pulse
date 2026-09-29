@@ -1911,15 +1911,6 @@
   color: var(--violet);
 }
 
-.stateWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: var(--section-y-80) 0;
-  color: var(--ink-60);
-}
-
 /* ===========================================================
    RESPONSIVE
    =========================================================== */

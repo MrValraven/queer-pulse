@@ -1,6 +1,7 @@
 // src/features/messages/ConversationTopSection.tsx
 import { useState } from "react";
 import type { MessageResponse } from "../../shared/contracts/contracts";
+import { GoTogetherChatBanner } from "../goTogether/group/GoTogetherChatBanner";
 import { ConnectionStatusBanner } from "./ConnectionStatusBanner";
 import { ConversationHeader } from "./ConversationHeader";
 import { ConversationPinnedBanner } from "./ConversationPinnedBanner";
@@ -21,7 +22,8 @@ interface ConversationTopSectionProps {
 /**
  * The conversation's top chrome: the header, the "search in this chat" modal
  * (its open state lives entirely here — nothing outside this section needs
- * it), the connection-status banner, and the pinned-messages banner. Split
+ * it), the Go together group banner (matched group chats only), the
+ * connection-status banner, and the pinned-messages banner. Split
  * out of `ConversationPanel` to keep it under the line cap.
  */
 export function ConversationTopSection({
@@ -46,6 +48,7 @@ export function ConversationTopSection({
         onOpenGroupInfo={onOpenGroupInfo}
         onOpenMediaGallery={onOpenMediaGallery}
       />
+      <GoTogetherChatBanner conversation={active} />
       {threadSearchOpen && (
         <ThreadSearchModal
           conversation={active}

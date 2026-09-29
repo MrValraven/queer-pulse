@@ -3,7 +3,6 @@ import {
   Button,
   FadeIn,
   EmptyState,
-  FeatureHelp,
   LoadErrorState,
   SearchInput,
   FilterChips,
@@ -136,7 +135,6 @@ export function DiscussionTab({
             onChange={setSearchTerm}
           />
         </div>
-        <FeatureHelp id="community.forum" />
       </div>
       <FilterChips
         className={styles.chips}

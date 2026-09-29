@@ -17,12 +17,18 @@ import {
 // instances.
 import { useUploadImage, type UploadResult } from "./useUploadImage";
 import * as uploadsApiStatic from "./uploads.api";
+import * as uploadProcessingStatic from "./uploadProcessing";
 
 /**
- * B6: `useUploadImage` persists a non-identity reframe crop after the live
+ * B6: for a kind that keeps its crop as metadata ("story-cover" below),
+ * `useUploadImage` persists a non-identity reframe crop after the live
  * upload PUT succeeds, via `saveCrop` in `uploads.api.ts` — but never lets a
  * crop-save failure block or fail the resolved `{ key, previewUrl }`, and
  * never persists the identity crop (the whole image, unreframed) at all.
+ *
+ * The avatar kinds bake the crop into the pixels instead
+ * (`bakesCropIntoPixels`): the crop is handed to `processImage`, `saveCrop`
+ * is skipped, and the resolved `crop` is `undefined` in both modes.
  *
  * `requestUpload` and `saveCrop` are mocked at the module boundary (both live
  * in `uploads.api.ts`, imported by name); `uploadProcessing`'s validate/decode
@@ -53,7 +59,7 @@ vi.mock("./uploads.api", async (importOriginal) => {
     requestUpload: vi.fn(() =>
       Promise.resolve({
         uploadUrl: "https://storage.example.test/upload-slot",
-        key: "avatars/test-key.webp",
+        key: "uploads/test-key.webp",
       }),
     ),
     saveCrop: vi.fn(() => Promise.resolve(undefined)),
@@ -96,6 +102,7 @@ async function loadLive() {
   const { useUploadImage: useUploadImageLive } =
     await import("./useUploadImage");
   const uploadsApi = await import("./uploads.api");
+  const uploadProcessing = await import("./uploadProcessing");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   const { I18nProvider } = await import("../../../app/providers/I18nProvider");
@@ -109,7 +116,12 @@ async function loadLive() {
       </I18nProvider>
     </QueryClientProvider>
   );
-  return { useUploadImage: useUploadImageLive, wrapper, uploadsApi };
+  return {
+    useUploadImage: useUploadImageLive,
+    wrapper,
+    uploadsApi,
+    uploadProcessing,
+  };
 }
 
 beforeEach(() => {
@@ -127,8 +139,9 @@ describe("useUploadImage (live mode) — crop persistence", () => {
       useUploadImage: useUploadImageLive,
       wrapper,
       uploadsApi,
+      uploadProcessing,
     } = await loadLive();
-    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+    const { result } = renderHook(() => useUploadImageLive("story-cover"), {
       wrapper,
     });
 
@@ -137,15 +150,21 @@ describe("useUploadImage (live mode) — crop persistence", () => {
       resolved = await result.current(testFile(), { crop: NON_IDENTITY_CROP });
     });
 
-    expect(resolved?.key).toBe("avatars/test-key.webp");
+    expect(resolved?.key).toBe("uploads/test-key.webp");
     expect(resolved?.crop).toEqual(NON_IDENTITY_CROP);
     await waitFor(() =>
       expect(uploadsApi.saveCrop).toHaveBeenCalledWith(
-        "avatars/test-key.webp",
+        "uploads/test-key.webp",
         NON_IDENTITY_CROP,
       ),
     );
     expect(uploadsApi.saveCrop).toHaveBeenCalledTimes(1);
+    // A metadata kind uploads the whole image: no crop reaches the pixels.
+    expect(uploadProcessing.processImage).toHaveBeenCalledWith(
+      expect.any(File),
+      "story-cover",
+      undefined,
+    );
   });
 
   it("does not call saveCrop for the identity crop", async () => {
@@ -154,7 +173,7 @@ describe("useUploadImage (live mode) — crop persistence", () => {
       wrapper,
       uploadsApi,
     } = await loadLive();
-    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+    const { result } = renderHook(() => useUploadImageLive("story-cover"), {
       wrapper,
     });
 
@@ -163,7 +182,7 @@ describe("useUploadImage (live mode) — crop persistence", () => {
       resolved = await result.current(testFile(), { crop: IDENTITY_CROP });
     });
 
-    expect(resolved?.key).toBe("avatars/test-key.webp");
+    expect(resolved?.key).toBe("uploads/test-key.webp");
     expect(uploadsApi.saveCrop).not.toHaveBeenCalled();
   });
 
@@ -173,7 +192,7 @@ describe("useUploadImage (live mode) — crop persistence", () => {
       wrapper,
       uploadsApi,
     } = await loadLive();
-    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+    const { result } = renderHook(() => useUploadImageLive("story-cover"), {
       wrapper,
     });
 
@@ -193,7 +212,7 @@ describe("useUploadImage (live mode) — crop persistence", () => {
     vi.mocked(uploadsApi.saveCrop).mockRejectedValue(
       new Error("crop-save-down"),
     );
-    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+    const { result } = renderHook(() => useUploadImageLive("story-cover"), {
       wrapper,
     });
 
@@ -203,16 +222,87 @@ describe("useUploadImage (live mode) — crop persistence", () => {
     });
 
     // The crop-save failure never surfaces as a rejected upload.
-    expect(resolved?.key).toBe("avatars/test-key.webp");
+    expect(resolved?.key).toBe("uploads/test-key.webp");
     expect(resolved?.previewUrl).toBeTruthy();
     // Initial attempt + exactly one retry, then swallowed.
     expect(uploadsApi.saveCrop).toHaveBeenCalledTimes(2);
   });
 });
 
+describe("useUploadImage (live mode): baked avatar crop", () => {
+  it("hands the crop to processImage and skips saveCrop for an avatar", async () => {
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+      uploadProcessing,
+    } = await loadLive();
+    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+      wrapper,
+    });
+
+    let resolved: UploadResult | undefined;
+    await act(async () => {
+      resolved = await result.current(testFile(), { crop: NON_IDENTITY_CROP });
+    });
+
+    expect(resolved?.key).toBe("uploads/test-key.webp");
+    // The uploaded pixels are already framed, so no crop travels back.
+    expect(resolved?.crop).toBeUndefined();
+    expect(uploadProcessing.processImage).toHaveBeenCalledWith(
+      expect.any(File),
+      "avatar",
+      NON_IDENTITY_CROP,
+    );
+    expect(uploadsApi.saveCrop).not.toHaveBeenCalled();
+  });
+
+  it("bakes the crop for the group and community avatar kinds too", async () => {
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+      uploadProcessing,
+    } = await loadLive();
+    const { result: groupResult } = renderHook(
+      () => useUploadImageLive("group-avatar"),
+      { wrapper },
+    );
+    const { result: communityResult } = renderHook(
+      () => useUploadImageLive("community-avatar"),
+      { wrapper },
+    );
+
+    let groupResolved: UploadResult | undefined;
+    let communityResolved: UploadResult | undefined;
+    await act(async () => {
+      groupResolved = await groupResult.current(testFile(), {
+        crop: NON_IDENTITY_CROP,
+      });
+      communityResolved = await communityResult.current(testFile(), {
+        crop: NON_IDENTITY_CROP,
+      });
+    });
+
+    expect(groupResolved?.crop).toBeUndefined();
+    expect(communityResolved?.crop).toBeUndefined();
+    expect(uploadProcessing.processImage).toHaveBeenCalledWith(
+      expect.any(File),
+      "group-avatar",
+      NON_IDENTITY_CROP,
+    );
+    expect(uploadProcessing.processImage).toHaveBeenCalledWith(
+      expect.any(File),
+      "community-avatar",
+      NON_IDENTITY_CROP,
+    );
+    expect(uploadsApi.saveCrop).not.toHaveBeenCalled();
+  });
+});
+
 describe("useUploadImage (demo mode) — crop echo", () => {
   it("echoes a non-identity crop back and never touches the network", async () => {
-    const { result } = renderHook(() => useUploadImage("avatar"), {
+    const { result } = renderHook(() => useUploadImage("story-cover"), {
       wrapper: TestProviders,
     });
 
@@ -231,7 +321,7 @@ describe("useUploadImage (demo mode) — crop echo", () => {
   });
 
   it("resolves with no crop when none was passed in", async () => {
-    const { result } = renderHook(() => useUploadImage("avatar"), {
+    const { result } = renderHook(() => useUploadImage("story-cover"), {
       wrapper: TestProviders,
     });
 
@@ -241,5 +331,25 @@ describe("useUploadImage (demo mode) — crop echo", () => {
     });
 
     expect(resolved?.crop).toBeUndefined();
+  });
+
+  it("bakes an avatar crop into the pixels and resolves with no crop", async () => {
+    const { result } = renderHook(() => useUploadImage("avatar"), {
+      wrapper: TestProviders,
+    });
+
+    let resolved: UploadResult | undefined;
+    await act(async () => {
+      resolved = await result.current(testFile(), { crop: NON_IDENTITY_CROP });
+    });
+
+    expect(resolved?.key).toBe(resolved?.previewUrl);
+    expect(resolved?.crop).toBeUndefined();
+    expect(uploadProcessingStatic.processImage).toHaveBeenCalledWith(
+      expect.any(File),
+      "avatar",
+      NON_IDENTITY_CROP,
+    );
+    expect(uploadsApiStatic.saveCrop).not.toHaveBeenCalled();
   });
 });

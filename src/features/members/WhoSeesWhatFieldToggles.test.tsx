@@ -3,15 +3,24 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TestProviders } from "../../test/TestProviders";
 import { createControlledProfileEdit } from "../../test/ControlledProfileEdit";
+import type { ProfileDraft } from "../../app/providers/useProfile";
 import { WhoSeesWhatFieldToggles } from "./WhoSeesWhatFieldToggles";
 
 const SAVE_ERROR_COPY = "Couldn't save that. Please try again.";
+// Not merged into the i18n catalog yet (that's the coordinator's job, off
+// SCRATCH/i18n-task-F3.md), so a missing key renders raw and the switch's
+// accessible name is the key itself until then. Mirrors the accepted stopgap
+// documented on `PRESET_META` in whoSeesWhat.data.ts.
+const AMBASSADOR_LABEL_KEY =
+  "members:profile.whoSeesWhat.fields.ambassador.label";
 
-function renderToggles() {
+function renderToggles(initialDraft: Partial<ProfileDraft> = {}) {
   const { handle, ControlledProfileEdit } = createControlledProfileEdit();
   render(
     <TestProviders>
-      <ControlledProfileEdit initialDraft={{ photoVisible: true }}>
+      <ControlledProfileEdit
+        initialDraft={{ photoVisible: true, ...initialDraft }}
+      >
         <WhoSeesWhatFieldToggles />
       </ControlledProfileEdit>
     </TestProviders>,
@@ -73,5 +82,36 @@ describe("WhoSeesWhatFieldToggles", () => {
     await waitFor(() => expect(handle.latestDraft.photoVisible).toBe(true));
     expect(photoSwitch).toHaveAttribute("aria-checked", "true");
     expect(await screen.findByText(SAVE_ERROR_COPY)).toBeInTheDocument();
+  });
+
+  it("hides the ambassador toggle when the draft has no ambassador standing", async () => {
+    renderToggles({ ambassador: null });
+
+    // Wait for the always-shown Photo switch first, confirming the namespace
+    // has finished its lazy load, so an absent ambassador switch reliably
+    // means the field was filtered out.
+    await findPhotoSwitch();
+
+    expect(
+      screen.queryByRole("switch", { name: AMBASSADOR_LABEL_KEY }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows the ambassador toggle, wired to isAmbassadorTagVisible, once the member has one", async () => {
+    const handle = renderToggles({
+      ambassador: { since: "2026-01-01T00:00:00.000Z", focusArea: "youth" },
+      isAmbassadorTagVisible: true,
+    });
+
+    const ambassadorSwitch = await screen.findByRole("switch", {
+      name: AMBASSADOR_LABEL_KEY,
+    });
+    expect(ambassadorSwitch).toHaveAttribute("aria-checked", "true");
+
+    await userEvent.click(ambassadorSwitch);
+
+    await waitFor(() => expect(handle.saveCalls).toHaveLength(1));
+    expect(handle.saveCalls[0]?.draft.isAmbassadorTagVisible).toBe(false);
+    expect(await screen.findByText("Saved.")).toBeInTheDocument();
   });
 });

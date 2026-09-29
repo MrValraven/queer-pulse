@@ -1,6 +1,10 @@
-import { ChipSelect, FormField, Select } from "../../shared/components/ui";
+import {
+  ChipSelect,
+  FormField,
+  RadioCardGroup,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { OrganizationPickerField } from "./OrganizationPickerField";
+import { OrganizationField } from "./OrganizationField";
 import type { Cause, Commit } from "./api/volunteering.api";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
 import { CAUSES, MAX_CAUSES } from "./causes.data";
@@ -9,7 +13,6 @@ import {
   COMMIT_OPTIONS,
   MAX_DESCRIPTION_LENGTH,
   MAX_LOCATION_LENGTH,
-  MAX_ORGANIZATION_LENGTH,
   MAX_ROLE_LENGTH,
   MAX_SKILL_LENGTH,
   MAX_SKILLS_COUNT,
@@ -35,38 +38,14 @@ export function PostOpportunityCoreFields({
         ? state.causes.filter((cause) => cause !== value)
         : [...state.causes, value],
     );
+  const leadCause = CAUSES.find((cause) => cause.value === state.causes[0]);
   return (
     <>
       <div className={styles.sectionHead}>
         {t("marketing:postOpportunity.core.basicsHeading")}
       </div>
 
-      <FormField
-        label={t("marketing:postOpportunity.core.orgLabel")}
-        required
-        error={errorFor("org")}
-        labelAside={`${state.org.length}/${MAX_ORGANIZATION_LENGTH}`}
-      >
-        <input
-          id={requiredFieldControlId("org")}
-          type="text"
-          value={state.org}
-          onChange={(e) => set("org", e.target.value)}
-          maxLength={MAX_ORGANIZATION_LENGTH}
-          placeholder={t("marketing:postOpportunity.core.orgPlaceholder")}
-        />
-      </FormField>
-
-      <OrganizationPickerField
-        value={{
-          partnerSlug: state.partnerSlug,
-          communitySlug: state.communitySlug,
-        }}
-        onChange={(next) => {
-          set("partnerSlug", next.partnerSlug);
-          set("communitySlug", next.communitySlug);
-        }}
-      />
+      <OrganizationField form={form} />
 
       <FormField
         label={t("marketing:postOpportunity.core.roleLabel")}
@@ -84,48 +63,40 @@ export function PostOpportunityCoreFields({
         />
       </FormField>
 
-      <div className={styles.row}>
-        <FormField
+      <FormField
+        label={t("marketing:postOpportunity.core.causeLabel")}
+        required
+        labelAside={`${state.causes.length}/${MAX_CAUSES}`}
+        helper={
+          leadCause
+            ? t("marketing:postOpportunity.core.causeHelperLead", {
+                max: MAX_CAUSES,
+                cause: t(leadCause.labelKey),
+              })
+            : t("marketing:postOpportunity.core.causeHelper", {
+                max: MAX_CAUSES,
+              })
+        }
+      >
+        {/* Chips rather than a dropdown: an opportunity may claim up to
+            three causes, and a picker that shows the whole taxonomy at once
+            is also what stops a poster settling for the first roughly-right
+            option in a list of thirteen. Full width so the chips wrap into
+            a few dense rows instead of one tall column. */}
+        <ChipSelect
+          id={CAUSE_PICKER_CONTROL_ID}
           label={t("marketing:postOpportunity.core.causeLabel")}
-          required
-          helper={t("marketing:postOpportunity.core.causeHelper", {
-            max: MAX_CAUSES,
-          })}
-        >
-          {/* Chips rather than a dropdown: an opportunity may claim up to
-              three causes, and a picker that shows the whole taxonomy at once
-              is also what stops a poster settling for the first roughly-right
-              option in a list of thirteen. */}
-          <ChipSelect
-            id={CAUSE_PICKER_CONTROL_ID}
-            label={t("marketing:postOpportunity.core.causeLabel")}
-            options={CAUSES.map((cause) => ({
-              value: cause.value,
-              label: t(cause.labelKey),
-            }))}
-            selected={new Set<string>(state.causes)}
-            maxSelected={MAX_CAUSES}
-            onToggle={(value) => toggleCause(value as Cause)}
-          />
-        </FormField>
+          options={CAUSES.map((cause) => ({
+            value: cause.value,
+            label: t(cause.labelKey),
+          }))}
+          selected={new Set<string>(state.causes)}
+          maxSelected={MAX_CAUSES}
+          onToggle={(value) => toggleCause(value as Cause)}
+        />
+      </FormField>
 
-        <FormField
-          label={t("marketing:postOpportunity.core.commitLabel")}
-          required
-          helper={t(
-            COMMIT_OPTIONS.find((c) => c.value === state.commit)?.hintKey ?? "",
-          )}
-        >
-          <Select
-            options={COMMIT_OPTIONS.map((commit) => ({
-              value: commit.value,
-              label: t(commit.labelKey),
-            }))}
-            value={state.commit}
-            onChange={(value) => set("commit", value as Commit)}
-          />
-        </FormField>
-      </div>
+      <CommitLevelField form={form} />
 
       <div className={styles.sectionHead}>
         {t("marketing:postOpportunity.core.timePlaceHeading")}
@@ -220,5 +191,38 @@ export function PostOpportunityCoreFields({
         />
       </FormField>
     </>
+  );
+}
+
+/** Commitment level as two side-by-side cards, each carrying its own hint. */
+function CommitLevelField({ form }: { form: PostOpportunityForm }) {
+  const { t } = useTranslation();
+  const { state, set } = form;
+  return (
+    <FormField label={t("marketing:postOpportunity.core.commitLabel")} required>
+      {/* Two tiers, so both sit on screen with their meaning attached
+        instead of hiding one hint behind a dropdown. */}
+      <RadioCardGroup<Commit>
+        className={styles.commitChoices}
+        optionClassName={styles.commitChoice}
+        checkedClassName={styles.commitChoiceOn}
+        ariaLabel={t("marketing:postOpportunity.core.commitLabel")}
+        value={state.commit}
+        onChange={(value) => set("commit", value)}
+        options={COMMIT_OPTIONS.map((commit) => ({
+          id: commit.value,
+          render: (
+            <>
+              <span className={styles.commitChoiceLabel}>
+                {t(commit.labelKey)}
+              </span>
+              <span className={styles.commitChoiceHint}>
+                {t(commit.hintKey)}
+              </span>
+            </>
+          ),
+        }))}
+      />
+    </FormField>
   );
 }

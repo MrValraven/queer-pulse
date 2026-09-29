@@ -290,7 +290,7 @@ export const safety: Catalog = {
   // System-filed by the listings pipeline, never offered to a member. Read
   // only by a moderator, on the queue row and in the report drawer.
   "reason.listingDispute": "Dispute or claim of a business listing",
-  "reason.listingOwnerNotify": "Owner outreach: friendly or suggested listing",
+  "reason.listingOwnerNotify": "Owner outreach: suggested listing",
   "reason.other": "Something else, explained in detail",
 
   // ── Safe-space BADGE flag copy ─────────────────────────────────────────

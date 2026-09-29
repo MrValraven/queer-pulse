@@ -106,6 +106,12 @@
   color: rgba(var(--cream-rgb), 1);
   box-shadow: var(--shadow-accent);
 }
+/* `.primary` ties the global :focus-visible on specificity and loads later, so
+   its glow used to replace the --ring-cream halo, leaving only the accent-deep
+   outline (2.65:1 on plum). Restate the halo under the glow. */
+.primary:focus-visible {
+  box-shadow: var(--ring-cream), var(--shadow-accent);
+}
 @media (hover: hover) {
   .primary:hover:not(:disabled):not([aria-disabled="true"]) {
     /* --accent-ink behind white is 4.21:1 — still under AA. --accent-deep is
@@ -138,7 +144,10 @@
 .ghostDark {
   background: transparent;
   color: rgba(var(--cream-rgb), 1);
-  border: 1.5px solid rgba(var(--cream-rgb), 0.32);
+  /* The border is the only boundary cue on a transparent fill, so it needs 3:1
+     (WCAG 1.4.11): 0.32 measured 2.69:1 on plum, 0.45 clears it (the same floor
+     as the dark-theme .ghost below). */
+  border: 1.5px solid rgba(var(--cream-rgb), 0.45);
 }
 @media (hover: hover) {
   .ghostDark:hover:not(:disabled):not([aria-disabled="true"]) {

@@ -5,10 +5,12 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import type { ChatMessage, Conversation } from "./data";
 import { realConversationId } from "./useMessagesController.helpers";
 import type { useMarkRead } from "./api/useMessageMutations";
 import type { useDeleteConversation } from "./api/useMessageActions";
+import { isThreadCacheBehindConversation } from "../../shared/api/messageCache";
 
 interface ThreadNavDeps {
   demoMode: boolean;
@@ -60,6 +62,7 @@ export function useMessageThreadNav({
    *  when a cross-inbox search result is picked, cleared by the panel once it
    *  has jumped (or given up). Null when no jump is pending. */
   const [jumpMessageId, setJumpMessageId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   // Once the server re-surfaces a locally-deleted thread (the other member
   // messaged again, so it's back in the fetched inbox), stop suppressing it —
@@ -104,7 +107,20 @@ export function useMessageThreadNav({
     // unread state actually changes after this point.
     if (!opened?.unread && !opened?.unreadCount) return;
     const realId = realConversationId(opened);
-    if (realId) markRead.mutate(realId);
+    if (!realId) return;
+    // If this tab's cached thread tail is behind what the list row already
+    // knows arrived (a dropped-socket gap never fetched into THIS thread's
+    // own cache), sending it as `upToMessageId` would under-report what's
+    // actually unread (see `isThreadCacheBehindConversation`'s own doc).
+    // Skip the stale POST here and let `useMarkReadOnInbound`'s heal path
+    // send the true watermark once page 0 refetches and the reader has
+    // genuinely caught up.
+    if (
+      isThreadCacheBehindConversation(queryClient, realId, opened.updatedAt)
+    ) {
+      return;
+    }
+    markRead.mutate(realId);
   }
 
   /** Open a conversation from a cross-inbox search result and, when the hit

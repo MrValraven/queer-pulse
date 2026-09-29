@@ -1,0 +1,251 @@
+/* GoTogetherFeedbackPage: the day-after "meet again?" prompt. One private,
+   editable read on each other group member, then one question for the group
+   as a whole. Kept calm and low-key on purpose: "Not for me" has to feel as
+   safe to tap as "Yes", so every option in a row keeps the same plain resting
+   style. The picked one uses the flow's shared selected look: accent border,
+   tinted surface and a leading check, with darker, heavier text. */
+
+.page {
+  max-width: var(--maxw-text);
+  margin: 0 auto;
+  padding: var(--gap-lg) var(--wrap-px) calc(var(--gap-lg) * 1.6);
+  display: grid;
+  gap: var(--gap-lg);
+}
+
+.header {
+  display: grid;
+  justify-items: start;
+  gap: var(--gap-xs);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  margin-block-start: calc(var(--gap-xs) * -1);
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-4);
+  touch-action: manipulation;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.backLink svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.backLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .backLink:hover {
+    color: var(--accent-text);
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-heading);
+  color: var(--ink);
+}
+
+.likingGap {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.privacyLine {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.list {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+/* ── One member row ────────────────────────────────────────────────────── */
+
+.row {
+  display: grid;
+  gap: var(--gap-sm);
+  padding: var(--card-pad);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+.rowOptions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-xs);
+}
+
+/* Radius-badge (the questionnaire's choice-card radius) keeps a label that
+   wraps to two lines at 375 (PT "Não é para mim") tidy inside its shape. */
+.rowOption,
+.clickOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: var(--tap-min);
+  padding: 10px 8px;
+  text-align: center;
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-badge);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+/* Selected: --accent-text passes AA on the tint in light (about 5.5:1) and
+   maps to --accent in dark. Weight and the check carry the state for anyone
+   who can't tell the hues apart. */
+.rowOptionOn,
+.clickOptionOn {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+  box-shadow: var(--ring-accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.optionTick {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.optionLabel {
+  min-width: 0;
+}
+
+/* Scoped under the group class so the house focus triple outranks the
+   shared RadioCardGroup ring whatever order the two modules load in. */
+.rowOptions .rowOption:focus-visible,
+.clickOptions .clickOption:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rowOption:not([data-checked]):hover,
+  .clickOption:not([data-checked]):hover {
+    border-color: var(--line-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowOption,
+  .clickOption {
+    transition: none;
+  }
+}
+
+.privateNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.privateNote svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  color: var(--ink-40);
+}
+
+/* ── Group questions ───────────────────────────────────────────────────── */
+
+.section {
+  display: grid;
+  gap: var(--gap-sm);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.clickOptions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-xs);
+}
+
+.goAgainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.goAgainText {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+.goAgainTitle {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.goAgainDescription {
+  max-width: 46ch;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── After Save: the region that takes focus ───────────────────────────── */
+
+/* Focus lands here programmatically (tabIndex -1) so a screen reader names
+   the outcome. It is never a keyboard stop, so it draws no ring. */
+.arrival {
+  outline: none;
+}

@@ -16,28 +16,30 @@ import type { Catalog } from "../../types";
  */
 export const system: Catalog = {
   // ── src/pages/NotFoundPage.tsx ────────────────────────────────────────────
-  "notFound.eyebrow": "Page not found",
-  "notFound.title.line1": "You've arrived",
-  "notFound.title.line2": "<em>somewhere else.</em>",
+  "notFound.eyebrow": "404 · Page not found",
+  "notFound.title": "Ping looked <em>everywhere</em>",
   "notFound.sub":
-    "The page you're looking for doesn't exist, has moved, or requires you to be logged in. It happens. Here are some places to go instead.",
+    "There's nothing at this address. The page may have moved, been taken down, or be for members who are signed in.",
+  "notFound.pathLabel": "Address",
+  "notFound.mascot": "Ping keeps the QueerPulse beat. Still searching.",
   "notFound.homeCta": "Go to homepage",
   "notFound.backCta": "Go back",
-  "notFound.linksTitle": "Or try one of these",
+  "notFound.searchLabel": "Search QueerPulse instead",
+  "notFound.searchPlaceholder": "Search the platform…",
+  "notFound.searchCta": "Search",
+  "notFound.linksTitle": "Popular places",
   "notFound.links.magazine.label": "Magazine",
-  "notFound.links.magazine.sub": "June 2026 issue",
+  "notFound.links.magazine.sub": "Essays, interviews and reviews",
   "notFound.links.gatherings.label": "Gatherings",
-  "notFound.links.gatherings.sub": "Upcoming events",
+  "notFound.links.gatherings.sub": "What's on this month",
   "notFound.links.readingGroups.label": "Reading groups",
-  "notFound.links.readingGroups.sub": "8 groups open",
+  "notFound.links.readingGroups.sub": "Read along with others",
   "notFound.links.forum.label": "Forum",
   "notFound.links.forum.sub": "Community discussion",
   "notFound.links.help.label": "Help & FAQ",
   "notFound.links.help.sub": "Get answers",
   "notFound.links.contact.label": "Contact us",
-  "notFound.links.contact.sub": "hello@queerpulse.com",
-  "notFound.searchPlaceholder": "Search the platform…",
-  "notFound.searchCta": "Search",
+  "notFound.links.contact.sub": "Tell us about a broken link",
 
   // ── src/pages/PlaceholderPage.tsx ─────────────────────────────────────────
   // `{title}` is derived from the URL slug (titleFromPath) — an unmapped route
@@ -183,15 +185,15 @@ export const system: Catalog = {
   "inviteLanding.loader.verifying": "Verifying your invite code…",
   "inviteLanding.loader.unsealing": "Unsealing {name}'s invitation…",
   "inviteLanding.loader.preparing": "Preparing your welcome…",
-  "inviteLanding.what.private.strong": "Private by design.",
-  "inviteLanding.what.private.rest":
-    "A space where you know who you're sharing it with, and where your privacy is always yours to control.",
-  "inviteLanding.what.noAds.strong": "Community comes first.",
-  "inviteLanding.what.noAds.rest":
-    "No ads competing for your attention and no algorithm deciding what you should see. QueerPulse is shaped around the people who use it.",
-  "inviteLanding.what.community.strong": "Built for real life.",
-  "inviteLanding.what.community.rest":
-    "Discover people, places, events, and opportunities that help you find your way into queer life in Lisbon.",
+  "inviteLanding.what.vouched.strong": "Vouched in.",
+  "inviteLanding.what.vouched.rest":
+    "Everyone here arrived through someone who already belongs, just as you're arriving now. That trust is what keeps QueerPulse a safe space.",
+  "inviteLanding.what.privacy.strong": "Yours to control.",
+  "inviteLanding.what.privacy.rest":
+    "Choose who sees your profile, photos, and activity. Direct messages are end-to-end encrypted.",
+  "inviteLanding.what.lisbon.strong": "Rooted in Lisbon.",
+  "inviteLanding.what.lisbon.rest":
+    "Find the people, communities, events, and opportunities shaping queer life in the city. No ads, and no algorithm deciding what you see.",
   "inviteLanding.sealed.eyebrow": "You've been personally invited",
   "inviteLanding.sealed.title": "<em>{name}</em> invited you.",
   "inviteLanding.sealed.sub_one":

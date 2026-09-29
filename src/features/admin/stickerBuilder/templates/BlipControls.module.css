@@ -1,0 +1,174 @@
+/* Blip's body fill: a two-option segmented radio group (the same look as the
+   publish mode control and the admin segmented control), then the colour
+   field or the flag select, then the face-contrast warning. Tokens only. */
+
+.fill {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* A floated legend stops being the fieldset's "rendered legend" (the one
+   drawn into the border), so it becomes an ordinary flex item and sits on
+   the same row as the segments, wrapping above them when space runs out. */
+.legend {
+  float: left;
+  padding: 0;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.segments {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--wash);
+  border: 1px solid var(--line);
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Visually hidden, still focusable and still in the radio group. */
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .segment:hover .pill {
+    color: var(--text-strong);
+  }
+}
+
+.input:checked + .pill {
+  background: var(--paper);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-e2);
+}
+
+.input:focus-visible + .pill {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Flag select ── */
+
+.selectField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.selectLabel {
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.select {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: var(--cream);
+  /* A control boundary needs 3:1 (WCAG 1.4.11); 0.5 is the FormField value. */
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-10);
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.select:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  background: var(--paper);
+}
+
+/* ── Face contrast warning ── */
+
+/* The live region stays in the tree (a hidden region is not announced);
+   when empty it cancels the section's row gap so it takes no space. */
+.warningRegion:empty {
+  margin-top: -8px;
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--amber-rgb), 0.14);
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.warningIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--amber-ink);
+}
+
+/* Touch: each option gets a centred tap-height hit strip, the same one the
+   shared segmented control uses, and the select reaches the same height. */
+@media (pointer: coarse) {
+  .segment::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: var(--tap-min);
+    transform: translateY(-50%);
+  }
+
+  .select {
+    min-height: var(--tap-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+}

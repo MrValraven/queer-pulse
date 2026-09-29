@@ -1,0 +1,710 @@
+/* Ping, the pulse mascot. A hairline orbit, a soft coral glow, three rings and
+   the coral core, all drawn in CSS and moved with transform and opacity only.
+   The root fills its box at 1:1; the caller sets the width.
+
+   Each mood's base styles are its resting still, which is also what reduced
+   motion shows. The motion lives in one block near the end, gated on both the
+   OS setting and the in-app toggle, so with it switched off nothing is ever
+   left at opacity 0 by accident. */
+
+.ping {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+/* A fixed hairline orbit gives the breathing rings something to fill. */
+.ping::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
+}
+
+/* Soft coral glow behind the core, dimmed in the broken pose. */
+.ping::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(var(--accent-rgb), 0.28) 0%,
+    rgba(var(--accent-rgb), 0.15) 35%,
+    rgba(var(--accent-rgb), 0.05) 65%,
+    transparent 100%
+  );
+  opacity: 0.35;
+}
+
+/* Rings rest collapsed and invisible at the core; each mood breathes them. */
+.ring {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 50%;
+  border: 1.5px solid rgba(var(--accent-rgb), 0.9);
+  transform: scale(0.26);
+  opacity: 0;
+}
+
+/* Searching mood only: the eye's pointer offset lives on this wrapper and the
+   look-around on the core inside it, so the two transforms compose. */
+.gaze {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* Ping's body is ONE light, the same in both moods: the core and its halo
+   in ::before are tuned as a single falloff, solid only at the very heart and
+   dimming continuously outward with no plateau or step, so there is never a
+   ball inside a ball. No highlights or glints: Ping is a glow. Every gradient
+   uses `closest-side`, so each fade ends at its own round edge (the default
+   farthest-corner size would be cut off mid-fade by the clip). */
+.core {
+  position: absolute;
+  inset: 37%;
+  z-index: 2;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--accent) 0%,
+    var(--accent) 26%,
+    rgba(var(--accent-rgb), 0.9) 40%,
+    rgba(var(--accent-rgb), 0.7) 55%,
+    rgba(var(--accent-rgb), 0.45) 70%,
+    rgba(var(--accent-rgb), 0.22) 85%,
+    rgba(var(--accent-rgb), 0) 100%
+  );
+}
+
+.core::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(var(--accent-rgb), 0.5) 0%,
+    rgba(var(--accent-rgb), 0.42) 14%,
+    rgba(var(--accent-rgb), 0.3) 23%,
+    rgba(var(--accent-rgb), 0.18) 34%,
+    rgba(var(--accent-rgb), 0.09) 48%,
+    rgba(var(--accent-rgb), 0.035) 66%,
+    transparent 88%
+  );
+  pointer-events: none;
+}
+
+/* ── Broken: no rings, a dim, sagging core ── */
+.broken .core {
+  transform: translate(0, 42%) scale(0.92, 0.6);
+  opacity: 0.55;
+}
+
+/* ── Searching: healthy and full, glow on ── */
+.searching::after {
+  opacity: 0.85;
+}
+
+/* Searching mood: the eye (core and its sonar rings) travels as one, so every
+   ping leaves from the coral core wherever it is looking. */
+.eyeTravel {
+  position: absolute;
+  inset: 0;
+}
+
+.searching .gaze {
+  transform: translate(var(--ping-gaze-x, 0px), var(--ping-gaze-y, 0px));
+  transition: transform 560ms var(--ease-out);
+}
+
+/* The reduced-motion still: two faint static rings around a centred eye. */
+@media (prefers-reduced-motion: reduce) {
+  .searching .ring:nth-child(1) {
+    transform: scale(0.52);
+    opacity: 0.22;
+  }
+
+  .searching .ring:nth-child(2) {
+    transform: scale(0.78);
+    opacity: 0.12;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .searching .ring:nth-child(1) {
+  transform: scale(0.52);
+  opacity: 0.22;
+}
+
+:global(html[data-reduce-motion="true"]) .searching .ring:nth-child(2) {
+  transform: scale(0.78);
+  opacity: 0.12;
+}
+
+/* ── Motion ── Only with no motion preference from the OS and the in-app
+   toggle off. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Broken, the story on one clock. 0 to 2.4s: two heartbeats, each sending
+     a ring out. 2.4s to 3.7s: the core glitches, flickers and sags, and the
+     third ring dies halfway. From 4.7s: every 8s it strains to power back up,
+     flickering harder as it rises, almost makes it, and crashes. Later
+     animations in a list win while active, so each phase takes over from the
+     one before it. */
+  :global(html:not([data-reduce-motion="true"])) .broken .core {
+    animation:
+      coreBeat 1.2s var(--ease-out) 2 both,
+      coreBreak 1.3s var(--ease-in-out) 2.4s 1 forwards,
+      coreRetry 8s var(--ease-in-out) 4.7s infinite;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .broken .ring {
+    animation: ringEmit 1.4s var(--ease-out) calc(var(--ring, 0) * 1.2s) 1 both;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .broken .ring:nth-child(3) {
+    animation:
+      ringStall 1.3s var(--ease-out) 2.4s 1 both,
+      ringFizzle 8s var(--ease-in-out) 4.7s infinite;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .broken::after {
+    animation:
+      glowBreak 3.7s linear 1 both,
+      glowRetry 8s var(--ease-in-out) 4.7s infinite;
+  }
+
+  /* Settled (a failed retry): the pulse is already down, and only keeps
+     trying. */
+  :global(html:not([data-reduce-motion="true"])) .broken.settled .core {
+    animation: coreRetry 8s var(--ease-in-out) 1.2s infinite;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .broken.settled .ring {
+    animation: none;
+  }
+
+  :global(html:not([data-reduce-motion="true"]))
+    .broken.settled
+    .ring:nth-child(3) {
+    animation: ringFizzle 8s var(--ease-in-out) 1.2s infinite;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .broken.settled::after {
+    animation: glowRetry 8s var(--ease-in-out) 1.2s infinite;
+  }
+
+  /* Searching, a 10s loop on one clock. 0.6s: glance left, 1.7s: ping.
+     2.8s: glance right, 4.3s: ping. 5.2s: back to centre, 5.8s: a curious
+     stretch and squash. 6.9s to 10s: a breathing rest. The second sonar ring
+     runs the first one's keyframes 2.6s later. */
+  :global(html:not([data-reduce-motion="true"])) .searching .eyeTravel {
+    animation: pingTravel 10s var(--ease-in-out) infinite both;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .searching .core {
+    animation: pingSquash 10s var(--ease-in-out) infinite both;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .searching .ring:nth-child(1) {
+    animation: pingSonar 10s var(--ease-in-out) infinite both;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .searching .ring:nth-child(2) {
+    animation: pingSonar 10s var(--ease-in-out) 2.6s infinite both;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .searching .ring:nth-child(3) {
+    animation: pingRipple 10s var(--ease-in-out) infinite both;
+  }
+
+  :global(html:not([data-reduce-motion="true"])) .searching::after {
+    animation: pingGlow 10s var(--ease-in-out) infinite both;
+  }
+
+  /* Following the cursor: the loop stands down, and restarts from its first
+     frame (centred, at rest) once the eye is home. */
+  :global(html:not([data-reduce-motion="true"]))
+    .searching[data-tracking="true"]
+    .eyeTravel,
+  :global(html:not([data-reduce-motion="true"]))
+    .searching[data-tracking="true"]
+    .core,
+  :global(html:not([data-reduce-motion="true"]))
+    .searching[data-tracking="true"]
+    .ring,
+  :global(html:not([data-reduce-motion="true"]))
+    .searching[data-tracking="true"]::after {
+    animation: none;
+  }
+}
+
+/* ── Broken keyframes ── */
+
+/* A lub-dub heartbeat, healthy and full. */
+@keyframes coreBeat {
+  0%,
+  50%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  12% {
+    transform: translate(0, 0) scale(1.12);
+  }
+  24% {
+    transform: translate(0, 0) scale(1);
+  }
+  36% {
+    transform: translate(0, 0) scale(1.06);
+  }
+}
+
+/* Glitch side to side, flicker like a dying bulb, then deflate and sag. */
+@keyframes coreBreak {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  8% {
+    transform: translate(-8%, 0) scale(1.05);
+  }
+  14% {
+    transform: translate(7%, 0) scale(1.02);
+    opacity: 0.4;
+  }
+  20% {
+    transform: translate(-5%, 0) scale(1);
+    opacity: 1;
+  }
+  26% {
+    transform: translate(4%, 0) scale(1);
+    opacity: 0.3;
+  }
+  32% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.95;
+  }
+  40% {
+    opacity: 0.35;
+  }
+  48% {
+    transform: translate(0, 4%) scale(0.98, 0.94);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0, 42%) scale(0.92, 0.6);
+    opacity: 0.55;
+  }
+}
+
+/* A wake-up attempt. It lies still, then powers up: it lifts, rounds out and
+   brightens, and the harder it strains the more it trembles and flickers,
+   until it is almost whole. Then it crashes: it flickers out, drops fast
+   (--ease-in from the peak), squashes on impact and settles back into the
+   broken pose. */
+@keyframes coreRetry {
+  0%,
+  40%,
+  82%,
+  100% {
+    transform: translate(0, 42%) scale(0.92, 0.6);
+    opacity: 0.55;
+  }
+  48% {
+    transform: translate(0, 30%) scale(0.93, 0.72);
+    opacity: 0.7;
+  }
+  54% {
+    transform: translate(0, 20%) scale(0.95, 0.8);
+    opacity: 0.85;
+  }
+  56% {
+    transform: translate(-1.5%, 18%) scale(0.95, 0.81);
+    opacity: 0.6;
+  }
+  58% {
+    transform: translate(1.5%, 15%) scale(0.96, 0.84);
+    opacity: 0.92;
+  }
+  60% {
+    transform: translate(-2%, 12%) scale(0.96, 0.86);
+    opacity: 0.55;
+  }
+  62% {
+    transform: translate(2%, 9%) scale(0.97, 0.89);
+    opacity: 0.95;
+  }
+  64% {
+    transform: translate(-2.5%, 6%) scale(0.97, 0.91);
+    opacity: 0.5;
+  }
+  66% {
+    transform: translate(0, 3%) scale(0.99, 0.96);
+    opacity: 1;
+  }
+  69% {
+    transform: translate(0, 2%) scale(1, 0.98);
+    opacity: 1;
+    animation-timing-function: var(--ease-in);
+  }
+  71% {
+    transform: translate(0, 14%) scale(0.98, 0.9);
+    opacity: 0.35;
+  }
+  72.5% {
+    transform: translate(0, 26%) scale(0.95, 0.78);
+    opacity: 0.8;
+  }
+  74% {
+    transform: translate(0, 48%) scale(1, 0.5);
+    opacity: 0.3;
+  }
+  78% {
+    transform: translate(0, 40%) scale(0.9, 0.63);
+    opacity: 0.5;
+  }
+}
+
+@keyframes ringEmit {
+  0% {
+    transform: scale(0.26);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* The last ring starts out, stutters and dies halfway. */
+@keyframes ringStall {
+  0% {
+    transform: scale(0.26);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(0.4);
+    opacity: 0.6;
+  }
+  32% {
+    transform: scale(0.43);
+    opacity: 0.12;
+  }
+  42% {
+    transform: scale(0.46);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* The faint ring the power-up builds, lost the moment it crashes. In step
+   with coreRetry. */
+@keyframes ringFizzle {
+  0%,
+  50%,
+  100% {
+    transform: scale(0.26);
+    opacity: 0;
+  }
+  66% {
+    transform: scale(0.44);
+    opacity: 0.4;
+  }
+  69% {
+    transform: scale(0.47);
+    opacity: 0.45;
+  }
+  72% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Full glow while it beats (0 to 2.4s of 3.7s), then flickers out. */
+@keyframes glowBreak {
+  0%,
+  65% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  74% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes glowRetry {
+  0%,
+  40%,
+  82%,
+  100% {
+    opacity: 0.35;
+  }
+  54% {
+    opacity: 0.6;
+  }
+  56% {
+    opacity: 0.4;
+  }
+  58% {
+    opacity: 0.7;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  62% {
+    opacity: 0.8;
+  }
+  64% {
+    opacity: 0.4;
+  }
+  66% {
+    opacity: 0.95;
+  }
+  69% {
+    opacity: 1;
+  }
+  71% {
+    opacity: 0.3;
+  }
+  72.5% {
+    opacity: 0.6;
+  }
+  74% {
+    opacity: 0.2;
+  }
+}
+
+/* ── Searching keyframes, all on the 10s clock ── */
+
+/* The look-around, split in two so the sonar rings can travel with the eye.
+   pingTravel moves the whole eye (core and rings together); its translate
+   percentages are Ping's own width, 0.26 times the old core-relative values,
+   so a glance is still 70% of the core sideways. pingSquash is the core's
+   squash and stretch on the same clock: it stretches along the way it
+   travels and squashes a touch as it arrives. */
+@keyframes pingTravel {
+  0%,
+  6% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-9.88%, 0);
+  }
+  14% {
+    transform: translate(-18.2%, 0);
+  }
+  17% {
+    transform: translate(-17.68%, -0.52%);
+  }
+  20% {
+    transform: translate(-17.42%, -0.26%);
+  }
+  28% {
+    transform: translate(-18.2%, 0.78%);
+  }
+  33% {
+    transform: translate(0, 0);
+  }
+  38% {
+    transform: translate(18.2%, 0);
+  }
+  41% {
+    transform: translate(17.68%, -0.52%);
+  }
+  43% {
+    transform: translate(17.42%, -0.26%);
+  }
+  46% {
+    transform: translate(17.42%, 0);
+  }
+  52% {
+    transform: translate(18.2%, 0.78%);
+  }
+  58% {
+    transform: translate(0, 0);
+  }
+  61% {
+    transform: translate(0, -4.68%);
+  }
+  64% {
+    transform: translate(0, 1.56%);
+  }
+  67% {
+    transform: translate(0, -0.52%);
+  }
+  69% {
+    transform: translate(0, 0);
+  }
+  78% {
+    transform: translate(0, 0);
+  }
+  87% {
+    transform: translate(0, 0);
+  }
+  95% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes pingSquash {
+  0%,
+  6% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.08, 0.94);
+  }
+  14% {
+    transform: scale(0.94, 1.05);
+  }
+  17% {
+    transform: scale(1.06);
+  }
+  20% {
+    transform: scale(1);
+  }
+  28% {
+    transform: scale(1);
+  }
+  33% {
+    transform: scale(1.08, 0.94);
+  }
+  38% {
+    transform: scale(0.94, 1.05);
+  }
+  41% {
+    transform: scale(1);
+  }
+  43% {
+    transform: scale(1.06);
+  }
+  46% {
+    transform: scale(1);
+  }
+  52% {
+    transform: scale(1);
+  }
+  58% {
+    transform: scale(1);
+  }
+  61% {
+    transform: scale(0.88, 1.16);
+  }
+  64% {
+    transform: scale(1.12, 0.88);
+  }
+  67% {
+    transform: scale(0.98, 1.02);
+  }
+  69% {
+    transform: scale(1);
+  }
+  78% {
+    transform: scale(1.045);
+  }
+  87% {
+    transform: scale(1);
+  }
+  95% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* One sonar ring from the eye: out fast, fading as it reaches the orbit. */
+@keyframes pingSonar {
+  0%,
+  17% {
+    transform: scale(0.26);
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  19% {
+    opacity: 0.9;
+  }
+  27% {
+    opacity: 0.5;
+  }
+  34% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  34.1%,
+  100% {
+    transform: scale(0.26);
+    opacity: 0;
+  }
+}
+
+/* A faint, slow ripple while Ping rests, out to the middle of the orbit. */
+@keyframes pingRipple {
+  0%,
+  74% {
+    transform: scale(0.26);
+    opacity: 0;
+  }
+  77% {
+    opacity: 0.3;
+  }
+  94% {
+    transform: scale(0.72);
+    opacity: 0;
+  }
+  94.1%,
+  100% {
+    transform: scale(0.26);
+    opacity: 0;
+  }
+}
+
+/* The glow brightens with each ping and breathes with the rest. */
+@keyframes pingGlow {
+  0%,
+  17%,
+  26%,
+  43%,
+  52%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  19%,
+  45% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  78% {
+    transform: scale(1.04);
+    opacity: 0.95;
+  }
+  87% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  95% {
+    transform: scale(1.03);
+    opacity: 0.92;
+  }
+}

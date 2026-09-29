@@ -62,7 +62,10 @@
 }
 
 /* Gather: satellites arrive along their own radial path and settle, bowl
-   first and tail last; the core beats once as the tail lands. Never rotates. */
+   first and tail last; the core beats once as the tail lands. Never rotates.
+   A host joins the cycle part-way through by setting `--gather-elapsed`
+   (PageLoader does, on a full-screen handoff); the satellites' inline delays
+   and the core's delay below both subtract it, and unset it is 0ms. */
 .arrive {
   animation: brandArrive 3200ms linear infinite;
 }
@@ -87,7 +90,8 @@
   }
 }
 .beatOnce {
-  animation: brandBeatOnce 3200ms cubic-bezier(0.33, 1, 0.68, 1) infinite;
+  animation: brandBeatOnce 3200ms cubic-bezier(0.33, 1, 0.68, 1)
+    calc(0ms - var(--gather-elapsed, 0ms)) infinite;
 }
 @keyframes brandBeatOnce {
   0%,

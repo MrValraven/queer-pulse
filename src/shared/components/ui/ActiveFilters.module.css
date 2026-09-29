@@ -2,7 +2,10 @@
    every filter bar that hides its controls behind a "Refine" drawer, so a
    closed drawer never hides what is on. */
 
+/* Positioned, because a chip on its way out (AnimatePresence popLayout) is
+   lifted out of the flow and placed against this row while it fades. */
 .row {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -38,6 +41,10 @@
   width: 13px;
   height: 13px;
   opacity: 0.7;
+}
+/* A chip fading out can no longer be pressed. */
+.chip[data-leaving] {
+  pointer-events: none;
 }
 /* Touch: extend the ~26px chip's hit area to the ≥44px minimum without growing
    the ink, so the remove-tap clears the WCAG/Apple/Material target floor. */
@@ -102,42 +109,4 @@
 .trailing::after {
   content: "\00b7";
   margin-inline-start: 8px;
-}
-
-/* Arrival. A chip you just added should read as something that landed in this
-   row, and the row itself as something that opened under the drawer, so every
-   direct child animates on mount. Per child rather than on `.row`: a chip added
-   to a row that is already standing plays on its own instead of restaging the
-   label, the count and "Clear all" alongside it. No stagger, for the same
-   reason: an nth-child delay would hold back the one chip a member just asked
-   for. Chips scale, the type around them only fades. */
-.row > :not(.chip) {
-  animation: activeFiltersTextIn 0.22s var(--ease-out) both;
-}
-.chip {
-  animation: activeFiltersChipIn 0.24s var(--ease-out) both;
-}
-@keyframes activeFiltersTextIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes activeFiltersChipIn {
-  from {
-    opacity: 0;
-    transform: scale(0.82);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .row > :not(.chip),
-  .chip {
-    animation: none;
-  }
 }

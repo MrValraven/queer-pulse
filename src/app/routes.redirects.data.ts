@@ -1,3 +1,4 @@
+import { writerTabHref } from "../features/magazine/writerTabs";
 import { routes } from "./routeMap";
 
 /**
@@ -37,7 +38,10 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/story-tomas", routes.storyTomas],
   ["/story-safety", routes.storySafety],
   ["/submit-story", routes.submitStory],
-  ["/pitches", routes.pitchTracker],
+  // The old member tracker at `/magazine/pitches` now lives in the writer
+  // workspace's Submissions tab. `/pitches` goes straight there in one hop.
+  [routes.pitchTracker, writerTabHref("submissions")],
+  ["/pitches", writerTabHref("submissions")],
   // Creatives showcase retired → create a creative subprofile instead.
   ["/creatives", routes.subprofilesDashboard],
   ["/culture", routes.culture],

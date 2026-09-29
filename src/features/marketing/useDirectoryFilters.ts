@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { MyLocationCoordinates } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
+import { LOCAL_CATEGORIES, LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
 import {
   filterLocalPlaces,
   sortLocalPlaces,
@@ -58,6 +58,41 @@ function toAccess(raw: string | null): AccessibilitySlug[] {
   return ACCESSIBILITY_QUESTION_SLUGS.filter((slug) => wanted.has(slug));
 }
 
+const CATEGORY_ID_SET: ReadonlySet<string> = new Set(LOCAL_CATEGORIES);
+
+/**
+ * Read `?cat=` into the chosen place types.
+ *
+ * Same rules as `toAccess`: an unknown id is dropped so a stale link falls
+ * back to every type, duplicates collapse, and the ids follow the chip order
+ * whatever order they were picked in, so `?cat=design,food` and
+ * `?cat=food,design` are one state. A single id (the detail page's
+ * `?cat=food` link) is simply a list of one.
+ */
+function toCategories(raw: string | null): string[] {
+  if (!raw) return [];
+  const wanted = new Set(
+    raw.split(",").filter((categoryId) => CATEGORY_ID_SET.has(categoryId)),
+  );
+  return LOCAL_CATEGORIES.filter((categoryId) => wanted.has(categoryId));
+}
+
+/** Read `?vibe=` into the chosen vibes, in the order they were picked. */
+function toVibes(raw: string | null): string[] {
+  return raw?.split(",").filter(Boolean) ?? [];
+}
+
+/** Write a list filter into the params, dropping the key when the list is
+ *  empty so the URL carries only the filters that are on. */
+function setListParam(
+  params: URLSearchParams,
+  key: string,
+  list: readonly string[],
+) {
+  if (list.length === 0) params.delete(key);
+  else params.set(key, list.join(","));
+}
+
 /**
  * The accessibility needs currently being filtered on, read straight from the
  * URL.
@@ -75,7 +110,9 @@ export function useAccessFilter(): AccessibilitySlug[] {
 
 export interface DirectoryFilterParams {
   view: "list" | "map";
-  category: string;
+  /** Place types to show, in chip order. Empty means every type; otherwise a
+   *  place matches when its type is any one of them. */
+  categories: string[];
   query: string;
   sort: LocalSort;
   vibes: string[];
@@ -85,7 +122,8 @@ export interface DirectoryFilterParams {
   /** Accessibility needs that must ALL be met, in canonical question order. */
   access: AccessibilitySlug[];
   selectView: (next: string) => void;
-  setCategory: (next: string) => void;
+  toggleCategory: (categoryId: string) => void;
+  clearCategories: () => void;
   setQuery: (next: string) => void;
   setSort: (next: string) => void;
   toggleVibe: (vibe: string) => void;
@@ -108,29 +146,39 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const view = searchParams.get("view") === "map" ? "map" : "list";
-  const category = searchParams.get("cat") ?? "all";
+  const rawCategories = searchParams.get("cat");
+  const categories = useMemo(
+    () => toCategories(rawCategories),
+    [rawCategories],
+  );
   const query = searchParams.get("q") ?? "";
   const sort = toSort(searchParams.get("sort"));
-  const vibes = useMemo(
-    () => searchParams.get("vibe")?.split(",").filter(Boolean) ?? [],
-    [searchParams],
-  );
+  const rawVibes = searchParams.get("vibe");
+  const vibes = useMemo(() => toVibes(rawVibes), [rawVibes]);
   const safe = searchParams.get("safe") === "verified" ? "verified" : null;
   const openNow = searchParams.get("open") === "now";
   const access = useAccessFilter();
 
+  // The params the last edit wrote, until a render reflects them. React
+  // Router's functional `setSearchParams` starts from the params of the last
+  // render, so two taps with no render between them (Food, then Nightlife)
+  // would both start from the same URL and the second would drop the first.
+  // Each edit starts from this instead.
+  const pendingParamsRef = useRef<URLSearchParams | null>(null);
+  useEffect(() => {
+    pendingParamsRef.current = null;
+  }, [searchParams]);
+
   const mutateParams = useCallback(
     (mutate: (params: URLSearchParams) => void, push = false) => {
-      setSearchParams(
-        (current) => {
-          const params = new URLSearchParams(current);
-          mutate(params);
-          return params;
-        },
-        { replace: !push },
+      const params = new URLSearchParams(
+        pendingParamsRef.current ?? searchParams,
       );
+      mutate(params);
+      pendingParamsRef.current = params;
+      setSearchParams(params, { replace: !push });
     },
-    [setSearchParams],
+    [searchParams, setSearchParams],
   );
 
   const setParam = useCallback(
@@ -150,8 +198,23 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
       }, true),
     [mutateParams],
   );
-  const setCategory = useCallback(
-    (next: string) => setParam("cat", next, next === "all"),
+  // The toggles read the list from the params being edited, which already
+  // hold any edit made since the last render.
+  const toggleCategory = useCallback(
+    (categoryId: string) =>
+      mutateParams((params) => {
+        const current = toCategories(params.get("cat"));
+        const next = current.includes(categoryId)
+          ? current.filter((entry) => entry !== categoryId)
+          : LOCAL_CATEGORIES.filter(
+              (entry) => entry === categoryId || current.includes(entry),
+            );
+        setListParam(params, "cat", next);
+      }),
+    [mutateParams],
+  );
+  const clearCategories = useCallback(
+    () => setParam("cat", "", true),
     [setParam],
   );
   const setQuery = useCallback(
@@ -163,13 +226,15 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     [setParam],
   );
   const toggleVibe = useCallback(
-    (vibe: string) => {
-      const next = vibes.includes(vibe)
-        ? vibes.filter((entry) => entry !== vibe)
-        : [...vibes, vibe];
-      setParam("vibe", next.join(","), next.length === 0);
-    },
-    [vibes, setParam],
+    (vibe: string) =>
+      mutateParams((params) => {
+        const current = toVibes(params.get("vibe"));
+        const next = current.includes(vibe)
+          ? current.filter((entry) => entry !== vibe)
+          : [...current, vibe];
+        setListParam(params, "vibe", next);
+      }),
+    [mutateParams],
   );
   const setSafe = useCallback(
     (next: boolean) => setParam("safe", "verified", !next),
@@ -180,15 +245,17 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     [setParam],
   );
   const toggleAccess = useCallback(
-    (slug: AccessibilitySlug) => {
-      const next = access.includes(slug)
-        ? access.filter((entry) => entry !== slug)
-        : ACCESSIBILITY_QUESTION_SLUGS.filter(
-            (entry) => entry === slug || access.includes(entry),
-          );
-      setParam("access", next.join(","), next.length === 0);
-    },
-    [access, setParam],
+    (slug: AccessibilitySlug) =>
+      mutateParams((params) => {
+        const current = toAccess(params.get("access"));
+        const next = current.includes(slug)
+          ? current.filter((entry) => entry !== slug)
+          : ACCESSIBILITY_QUESTION_SLUGS.filter(
+              (entry) => entry === slug || current.includes(entry),
+            );
+        setListParam(params, "access", next);
+      }),
+    [mutateParams],
   );
   const clearFilters = useCallback(
     () =>
@@ -205,7 +272,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
 
   return {
     view,
-    category,
+    categories,
     query,
     sort,
     vibes,
@@ -213,7 +280,8 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     openNow,
     access,
     selectView,
-    setCategory,
+    toggleCategory,
+    clearCategories,
     setQuery,
     setSort,
     toggleVibe,
@@ -230,7 +298,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
  * `useDirectoryFilterParams`. `query`/`safe`/`access` are ALSO applied here
  * (even though the network fetch already filtered by them server-side) purely
  * as a cheap, harmless no-op safety net, and so the demo fixture answers the
- * same filters with no backend at all. `category`/`vibe`/`open` are the three
+ * same filters with no backend at all. `cat`/`vibe`/`open` are the three
  * that genuinely only ever apply here client-side: the first two for the
  * reasons in that hook's doc comment, and `open` because the grid is CDN-cached
  * and a server-computed open state would go stale in the dangerous direction.
@@ -249,14 +317,14 @@ export function useDirectoryFilterResults(
 ) {
   const { t } = useTranslation();
   const {
-    category,
+    categories,
     query,
     vibes,
     safe,
     openNow,
     access,
     sort,
-    setCategory,
+    toggleCategory,
     toggleVibe,
     setSafe,
     setOpenNow,
@@ -268,7 +336,7 @@ export function useDirectoryFilterResults(
     () =>
       sortLocalPlaces(
         filterLocalPlaces(places, {
-          category,
+          categories,
           query,
           vibes,
           safe,
@@ -277,7 +345,7 @@ export function useDirectoryFilterResults(
         }),
         sort,
       ),
-    [places, category, query, vibes, safe, openNow, access, sort],
+    [places, categories, query, vibes, safe, openNow, access, sort],
   );
 
   // Distances are measured only over what is already on screen, and only once
@@ -313,14 +381,14 @@ export function useDirectoryFilterResults(
     return sortByDistance(matched, distanceById);
   }, [matched, distanceById, sort]);
 
-  // Chip counts reflect the query + vibe + safe filters but NOT the category,
-  // so each chip shows how many of the LOADED places it would surface right
-  // now — an honest count against what's been fetched so far, not
-  // necessarily the platform-wide grand total (see `useLocalPlaces`'s doc
+  // Chip counts reflect every other filter and leave the chosen place types
+  // out, so each chip shows how many of the LOADED places it would add right
+  // now. That is an honest count against what has been fetched so far, which
+  // can sit below the platform-wide grand total (see `useLocalPlaces`'s doc
   // comment on why category stays client-side over the loaded pages).
   const categoryCounts = useMemo(() => {
     const base = filterLocalPlaces(places, {
-      category: "all",
+      categories: [],
       query,
       vibes,
       safe,
@@ -341,13 +409,13 @@ export function useDirectoryFilterResults(
 
   const activeFilters = useMemo<ActiveFilter[]>(() => {
     const list: ActiveFilter[] = [];
-    if (category !== "all") {
+    categories.forEach((categoryId) => {
       list.push({
-        key: `cat:${category}`,
-        label: t(LOCAL_CATEGORY_LABEL_KEYS[category] ?? category),
-        onRemove: () => setCategory("all"),
+        key: `cat:${categoryId}`,
+        label: t(LOCAL_CATEGORY_LABEL_KEYS[categoryId] ?? categoryId),
+        onRemove: () => toggleCategory(categoryId),
       });
-    }
+    });
     vibes.forEach((vibe) => {
       list.push({
         key: `vibe:${vibe}`,
@@ -385,14 +453,14 @@ export function useDirectoryFilterResults(
     }
     return list;
   }, [
-    category,
+    categories,
     vibes,
     safe,
     openNow,
     access,
     query,
     t,
-    setCategory,
+    toggleCategory,
     toggleVibe,
     setSafe,
     setOpenNow,

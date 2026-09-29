@@ -1,4 +1,8 @@
 import type { TranslateOptions } from "../../../shared/i18n/types";
+import {
+  isIdentityCrop,
+  type CropRect,
+} from "../../../shared/components/ui/cropGeometry";
 import type { UploadContentType, UploadKind } from "./uploads.api";
 
 /**
@@ -625,16 +629,125 @@ async function stripMetadata(
 }
 
 /**
+ * Upload kinds whose reframe crop is cut into the uploaded pixels on the
+ * device instead of travelling as server-side crop metadata. These are the
+ * square-locked identity images (member, group chat and community avatars):
+ * they are drawn as a small circle or square by a great many renderers (chat
+ * bubbles, member cards, comments, the onboarding preview) that never receive
+ * crop metadata, so the framing the member chose has to live in the stored
+ * image itself for every one of them to show it.
+ */
+export const BAKED_CROP_KINDS: ReadonlySet<UploadKind> = new Set<UploadKind>([
+  "avatar",
+  "group-avatar",
+  "community-avatar",
+]);
+
+/** Whether `kind` bakes its reframe crop into the pixels (see `BAKED_CROP_KINDS`). */
+export function bakesCropIntoPixels(kind: UploadKind): boolean {
+  return BAKED_CROP_KINDS.has(kind);
+}
+
+/** A crop expressed in whole source pixels, ready for the 9-argument `drawImage`. */
+export interface CropPixelRect {
+  sourceX: number;
+  sourceY: number;
+  sourceWidth: number;
+  sourceHeight: number;
+}
+
+/**
+ * Convert a fractional `CropRect` (0-1 of the source as the reframer measured
+ * it, `naturalWidth`/`naturalHeight`) into whole pixels of an
+ * `imageWidth`x`imageHeight` image. The size is at least 1px and at most the
+ * image; when rounding pushes the rect past the right or bottom edge, the
+ * origin moves back so the rect keeps its size (and a square crop stays
+ * square) while still fitting inside the image.
+ */
+export function cropPixelRect(
+  crop: CropRect,
+  imageWidth: number,
+  imageHeight: number,
+): CropPixelRect {
+  const sourceWidth = Math.min(
+    imageWidth,
+    Math.max(1, Math.round(crop.width * imageWidth)),
+  );
+  const sourceHeight = Math.min(
+    imageHeight,
+    Math.max(1, Math.round(crop.height * imageHeight)),
+  );
+  const sourceX = Math.min(
+    Math.max(0, Math.round(crop.x * imageWidth)),
+    imageWidth - sourceWidth,
+  );
+  const sourceY = Math.min(
+    Math.max(0, Math.round(crop.y * imageHeight)),
+    imageHeight - sourceHeight,
+  );
+  return { sourceX, sourceY, sourceWidth, sourceHeight };
+}
+
+/**
+ * Cut `crop` out of `decoded` onto a fresh canvas, returned as a `Decoded` the
+ * normal `stripMetadata` path downscales and encodes. Its `cleanup` releases
+ * the canvas AND runs the original decode's cleanup. Any failure here is
+ * reported as `stripFailed` so a broken crop blocks the upload (fail closed,
+ * as in `stripMetadata`).
+ */
+function cropDecoded(decoded: Decoded, crop: CropRect): Decoded {
+  try {
+    const rect = cropPixelRect(crop, decoded.width, decoded.height);
+    const { canvas, ctx } = makeSmoothCanvas(
+      rect.sourceWidth,
+      rect.sourceHeight,
+    );
+    ctx.drawImage(
+      decoded.source,
+      rect.sourceX,
+      rect.sourceY,
+      rect.sourceWidth,
+      rect.sourceHeight,
+      0,
+      0,
+      rect.sourceWidth,
+      rect.sourceHeight,
+    );
+    return {
+      width: rect.sourceWidth,
+      height: rect.sourceHeight,
+      source: canvas,
+      cleanup: () => {
+        // A zero-sized canvas lets Safari free the backing store at once.
+        canvas.width = 0;
+        canvas.height = 0;
+        decoded.cleanup();
+      },
+    };
+  } catch {
+    throw new ImageProcessingError("members:upload.error.stripFailed");
+  }
+}
+
+/**
  * Validate dimensions and return an EXIF-stripped, longest-edge-capped
  * (`MAX_DIMENSION_PX`) `Blob` ready to upload. Runs in BOTH demo and live
  * mode, for every `UploadKind` (avatar, listing photo, gathering photo,
  * story cover, work image, group avatar) since they all funnel through here.
  * Throws a human message on a too-small image, an undecodable file, or an
  * image whose metadata can't be stripped (fail closed — see `stripMetadata`).
+ *
+ * When `crop` is passed for a `BAKED_CROP_KINDS` kind and is a real reframe
+ * (anything `isIdentityCrop` rejects), the crop is cut out of the decoded source first
+ * (`cropDecoded`), so the returned blob holds only the framed square. A GIF
+ * keeps its whole frame, since cropping it would flatten the animation. The
+ * minimum-size check reads the ORIGINAL image; the reframer already clamps
+ * the crop to the kind's minimum output.
  */
 export async function processImage(
   file: File,
   kind: UploadKind,
+  crop?: CropRect,
 ): Promise<Blob> {
   const limit = UPLOAD_LIMITS[kind];
   let decoded: Decoded;
@@ -643,6 +756,8 @@ export async function processImage(
   } catch {
     throw new ImageProcessingError("members:upload.error.decodeFailed");
   }
+  // Whatever is about to be encoded; its `cleanup` covers `decoded` too.
+  let prepared = decoded;
   try {
     if (
       (limit.minWidth && decoded.width < limit.minWidth) ||
@@ -653,9 +768,17 @@ export async function processImage(
         minHeight: limit.minHeight,
       });
     }
-    return await stripMetadata(file, decoded, kind);
+    if (
+      crop &&
+      bakesCropIntoPixels(kind) &&
+      file.type !== "image/gif" &&
+      !isIdentityCrop(crop)
+    ) {
+      prepared = cropDecoded(decoded, crop);
+    }
+    return await stripMetadata(file, prepared, kind);
   } finally {
-    decoded.cleanup();
+    prepared.cleanup();
   }
 }
 

@@ -482,9 +482,9 @@
 }
 .nearMeInline > .nearMeNote {
   grid-row: 2;
-  /* Spans the three controls to its right (near-me, "Refine", List/Map), which
-     is every column but the search field. */
-  grid-column: 2 / span 3;
+  /* Spans every column after the search field: near-me, "Refine" and List/Map
+     on the page's bar, near-me and "Refine" in the full screen map's card. */
+  grid-column: 2 / -1;
   /* The two columns it sits under are about as wide as the 34ch cap was for, so
      let the note use them: a refusal message is long, and capping it narrower
      than its own grid area only buys an extra wrapped line. */

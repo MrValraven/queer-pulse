@@ -24,6 +24,11 @@ export interface ListingQueueRow {
   status: ListingStatus;
   submitterName: string;
   submitterSlug: string;
+  /** Who suggested the place, when the row is a platform-held suggestion.
+   *  Empty string for anything else (a member submission, a house-authored
+   *  listing with no suggester). */
+  suggesterName: string;
+  suggesterSlug: string;
   createdAt: string;
   /** The listing, for the moderation preview drawer. As narrow as what the
    *  queue served: a `directory_moderator` grant holder's copy carries no
@@ -39,6 +44,7 @@ export function listingDtoToQueueRow(
   dto: ModeratedListingDTO,
 ): ListingQueueRow {
   const submitter = dto.submittedBy;
+  const suggester = dto.suggestedBy;
   return {
     ref: dto.ref,
     slug: dto.slug,
@@ -49,6 +55,10 @@ export function listingDtoToQueueRow(
       ? `${submitter.firstName} ${submitter.lastName}`.trim()
       : "",
     submitterSlug: submitter?.slug ?? "",
+    suggesterName: suggester
+      ? `${suggester.firstName} ${suggester.lastName}`.trim()
+      : "",
+    suggesterSlug: suggester?.slug ?? "",
     createdAt: dto.createdAt,
     detail: dto,
   };
@@ -203,7 +213,7 @@ export const bulkRemoveListings = (refs: string[], reason?: string) =>
   });
 
 /** What happened, in a listing's own words — one row per moderation event.
- *  Mirrors the backend's `ListingModerationEventDTO`, and its 13 values mirror
+ *  Mirrors the backend's `ListingModerationEventDTO`, and its 14 values mirror
  *  every member of the backend's `ListingModerationAction` enum
  *  (`listing-moderation-event.entity.ts`) so a new action added there fails
  *  this union's consumers (`eventLabel`'s exhaustive switch in
@@ -225,7 +235,8 @@ export type ListingModerationAction =
   | "staff_created"
   | "suggestion_applied"
   | "directory_paused"
-  | "directory_resumed";
+  | "directory_resumed"
+  | "staff_edited";
 
 export interface ListingModerationEventDTO {
   id: string;

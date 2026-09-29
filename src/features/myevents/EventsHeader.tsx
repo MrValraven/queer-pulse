@@ -1,4 +1,4 @@
-import { Button, FeatureHelp } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { EventsHubTabs } from "../gatherings/hub/EventsHubTabs";
@@ -29,9 +29,7 @@ export function EventsHeader({
       <div className="wrap">
         <div className={styles.row}>
           <div className={styles.identity}>
-            <h1 className={styles.title}>
-              {t("myevents:eventsHeader.title")} <FeatureHelp id="events.hub" />
-            </h1>
+            <h1 className={styles.title}>{t("myevents:eventsHeader.title")}</h1>
             <EventsTopTabs active={active} onChange={onChange} />
             {active === "discover" && (
               <EventsHubTabs active={view} onChange={setView} />

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { RouteFallback } from "../shared/components/feedback/RouteFallback";
-import { AuthLoader } from "../shared/components/feedback/AuthLoader";
+import { PageLoader } from "../shared/components/feedback/PageLoader";
 import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { lazyNamed } from "./routeHelpers";
 import { routes } from "./routeMap";
@@ -32,6 +32,7 @@ import { messagesRoutes } from "../features/messages/routes";
 import { notificationsRoutes } from "../features/notifications/routes";
 import { communitiesRoutes } from "../features/communities/routes";
 import { gatheringRoutes } from "../features/gatherings/routes";
+import { goTogetherRoutes } from "../features/goTogether/routes";
 import { myEventsRoutes } from "../features/myevents/routes";
 import { magazineRoutes } from "../features/magazine/routes";
 import { topicRoutes } from "../features/topics/routes";
@@ -84,7 +85,7 @@ export function AppRoutes() {
   // in flight. Its content still renders, so the fade shows the page leaving.
   const isExitingPlane = transitionScope ? !transitionScope.isPresent : false;
   const { demoMode } = useDemoMode();
-  // The Work & Economy surface isn't launched yet — bounce its routes to the
+  // The Work & Economy surface isn't launched yet, so bounce its routes to the
   // roadmap, where a "Coming soon" card lists what's landing. Decided before the
   // auth checks because it doesn't depend on a session (the roadmap is public),
   // and inert in local dev (isComingSoonPath is false there) so the area stays
@@ -93,12 +94,14 @@ export function AppRoutes() {
     return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
   }
   // While the live session is still being determined, hold gated routes on the
-  // branded loader — showing the page (or bouncing to sign-in) prematurely would
+  // branded loader: showing the page (or bouncing to sign-in) prematurely would
   // flash. Guest-only auth screens are held too, so a signed-in member reloading
   // one doesn't flash the sign-in form before the redirect. Public/marketing
-  // pages render immediately.
+  // pages render immediately. It is the same full-screen PageLoader the route
+  // Suspense fallback shows next, so the wait from session check to loaded
+  // chunk reads as one loader.
   if (checking && (isGatedPath(pathname) || isGuestOnlyPath(pathname))) {
-    return <AuthLoader />;
+    return <PageLoader size="screen" />;
   }
   if (gateRedirect) {
     return isExitingPlane ? null : <Navigate to={gateRedirect} replace />;
@@ -123,6 +126,7 @@ export function AppRoutes() {
           {notificationsRoutes()}
           {communitiesRoutes()}
           {gatheringRoutes(demoMode)}
+          {goTogetherRoutes()}
           {magazineRoutes()}
           {topicRoutes()}
           {cultureRoutes(demoMode)}

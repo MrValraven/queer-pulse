@@ -9,7 +9,9 @@ import {
 } from "react-icons/fi";
 import { Button, Modal } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { FlagPlanEntry, PackStatus } from "./stickerBuilder.types";
+import type { StickerTemplate } from "../../stickers/templates/templateDefinition";
+import { itemName } from "./stickerItems";
+import type { ItemPlanEntry, PackStatus } from "./stickerBuilder.types";
 import styles from "./StickerPublishReviewDialog.module.css";
 
 const STATUS_ICON: Record<PackStatus, IconType> = {
@@ -41,26 +43,29 @@ export function PackStatusNote({ status }: { status: PackStatus }) {
 
 /**
  * The last look before a run starts: what gets added, replaced and skipped,
- * which pack it lands in and who will see it, and the flags involved. Mount
- * it only while open, like every other `Modal`.
+ * which pack it lands in and who will see it, and the stickers involved.
+ * Mount it only while open, like every other `Modal`.
  */
 export function StickerPublishReviewDialog({
   packName,
   packStatus,
   plan,
+  template,
   confirmLabel,
   onConfirm,
   onClose,
 }: {
   packName: string;
   packStatus: PackStatus;
-  plan: FlagPlanEntry[];
+  plan: ItemPlanEntry[];
+  /** The template the plan's items belong to, so each one can name itself. */
+  template: StickerTemplate;
   /** The publish bar's own CTA label, so the button reads the same twice. */
   confirmLabel: string;
   onConfirm: () => void;
   onClose: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const addCount = plan.filter((entry) => entry.action === "add").length;
   const replaceCount = plan.filter(
     (entry) => entry.action === "replace",
@@ -132,15 +137,15 @@ export function StickerPublishReviewDialog({
 
       <div className={styles.flags}>
         <h4 className={styles.flagsHeading}>
-          {t("admin:stickerPacks.controls.flagsLegend")}
+          {t("admin:stickerPacks.controls.itemsLegend")}
         </h4>
         <ul className={styles.flagList}>
           {affectedEntries.map((entry) => (
-            <li key={entry.flagId} className={styles.flagChip}>
+            <li key={entry.itemId} className={styles.flagChip}>
               {entry.action === "replace" && (
                 <FiRefreshCw className={styles.flagChipIcon} aria-hidden />
               )}
-              {t(`cards:flag.${entry.flagId}`)}
+              {itemName(template, entry.itemId, language)}
               {entry.action === "replace" && (
                 <span className="visuallyHidden">
                   {" "}

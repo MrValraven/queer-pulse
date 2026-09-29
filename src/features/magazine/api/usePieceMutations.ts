@@ -13,10 +13,38 @@ import {
   type UpdatePieceDto,
 } from "./pieces.api";
 import { STAGE_LABEL_KEY } from "../desk/stageLabels";
-import { DEMO_PIECES } from "../data/desk.data";
+import { DEMO_PIECES, type Piece } from "../data/desk.data";
+import {
+  formatIsoDate,
+  todayPlain,
+} from "../../../shared/components/ui/plainDate";
+import { CURRENT_ISSUE_QUERY_KEY } from "./useCurrentIssue";
+import { DESK_ISSUES_QUERY_KEY } from "./useDeskIssues";
 
 /**
- * Editor desk piece mutations, dual-mode. Demo never touches the network —
+ * The demo fixture fields a piece PATCH changes on screen: its issue (so a
+ * reassignment hops tracks) and its due day (so "Set date" turns into a
+ * countdown). Demo has no backend to derive `late`, so it is read here the
+ * way the backend's `deriveLate` reads it: a due day before today, on a
+ * piece that is not yet Ready or Published. Demo leaves the stage as it is,
+ * so the piece's current stage decides.
+ */
+function demoPieceChanges(piece: Piece, body: UpdatePieceDto): Partial<Piece> {
+  const isFinished = piece.stage === "Ready" || piece.stage === "Published";
+  return {
+    ...(body.issueId !== undefined ? { issueId: body.issueId } : {}),
+    ...(body.dueOn !== undefined
+      ? {
+          due: body.dueOn,
+          dueDate: body.dueOn,
+          late: !isFinished && body.dueOn < formatIsoDate(todayPlain()),
+        }
+      : {}),
+  };
+}
+
+/**
+ * Editor desk piece mutations, dual-mode. Demo never touches the network:
  * each mutation resolves immediately with a toast describing what would have
  * happened. Live calls the matching `AdminMagazinePiecesController` endpoint,
  * then invalidates the desk's list/summary (and the single-piece query where
@@ -39,7 +67,14 @@ export function usePieceMutations() {
     }
   }
 
-  /** POST /magazine/admin/pieces — commission a new piece (from scratch or a pitch). */
+  /** An issue's slot figures (`filled`) count its pieces, so moving a piece
+   *  onto or off an issue refreshes the issue list and the current issue. */
+  function invalidateIssueFigures(): void {
+    void queryClient.invalidateQueries({ queryKey: [DESK_ISSUES_QUERY_KEY] });
+    void queryClient.invalidateQueries({ queryKey: [CURRENT_ISSUE_QUERY_KEY] });
+  }
+
+  /** POST /magazine/admin/pieces: commission a new piece (from scratch or a pitch). */
   const commission = useMutation<{ id: string }, Error, CreatePieceDto>({
     mutationFn: async (body) => {
       if (demoMode) {
@@ -51,7 +86,7 @@ export function usePieceMutations() {
     },
     onSuccess: () => {
       invalidateDesk();
-      // Commissioning from a pitch flips that pitch's status server-side —
+      // Commissioning from a pitch flips that pitch's status server-side;
       // keep the inbox in sync even when `pitchId` wasn't passed by the caller
       // this time (cheap: pitches list is small and rarely stale otherwise).
       void queryClient.invalidateQueries({ queryKey: ["magazine-pitches"] });
@@ -59,7 +94,7 @@ export function usePieceMutations() {
   });
 
   /**
-   * POST /magazine/admin/pieces — start a piece the editor writes themselves.
+   * POST /magazine/admin/pieces: start a piece the editor writes themselves.
    * Same endpoint as `commission`, different editorial act: the caller stamps
    * `writerId` equal to `editorId`, which the backend reads as "no brief goes
    * out", starting the piece at `drafting` and logging it as "started
@@ -80,7 +115,7 @@ export function usePieceMutations() {
     onSuccess: () => invalidateDesk(),
   });
 
-  /** PATCH /magazine/admin/pieces/:id — update any piece field. */
+  /** PATCH /magazine/admin/pieces/:id: update any piece field. */
   const updatePiece = useMutation<
     { id: string },
     Error,
@@ -89,30 +124,30 @@ export function usePieceMutations() {
     mutationFn: async ({ id, body }) => {
       if (demoMode) {
         // Demo never hits the network. Patch the in-memory piece so a track
-        // reassignment (an `issueId` change) hops tabs on the next refetch —
-        // replace the object (don't mutate in place) so react-query's
-        // structural sharing sees a fresh reference and re-renders. This
-        // mutation stays quiet on its own; the caller owns the toast
-        // (`onSuccess`), so a reassignment can show track-aware copy in both
-        // demo and live without double-toasting.
-        if (body.issueId !== undefined) {
-          const targetPiece = DEMO_PIECES.find((piece) => piece.id === id);
-          if (targetPiece) {
-            DEMO_PIECES[DEMO_PIECES.indexOf(targetPiece)] = {
-              ...targetPiece,
-              issueId: body.issueId,
-            };
-          }
+        // reassignment (an `issueId` change) hops tabs and a new due day
+        // shows on the next refetch. Replace the object (don't mutate in
+        // place) so react-query's structural sharing sees a fresh reference
+        // and re-renders. This mutation stays quiet on its own; the caller
+        // owns the toast (`onSuccess`), so a reassignment can show
+        // track-aware copy in both demo and live without double-toasting.
+        const targetIndex = DEMO_PIECES.findIndex((piece) => piece.id === id);
+        const targetPiece = DEMO_PIECES[targetIndex];
+        const changes = targetPiece ? demoPieceChanges(targetPiece, body) : {};
+        if (targetPiece && Object.keys(changes).length > 0) {
+          DEMO_PIECES[targetIndex] = { ...targetPiece, ...changes };
         }
         return { id };
       }
       const piece = await sendUpdatePiece(id, body);
       return { id: piece.id };
     },
-    onSuccess: (result) => invalidateDesk(result.id),
+    onSuccess: (result, { body }) => {
+      invalidateDesk(result.id);
+      if (body.issueId !== undefined) invalidateIssueFigures();
+    },
   });
 
-  /** PATCH /magazine/admin/pieces/:id — move a piece to a new pipeline stage. */
+  /** PATCH /magazine/admin/pieces/:id: move a piece to a new pipeline stage. */
   const moveStage = useMutation<
     { id: string },
     Error,
@@ -136,7 +171,7 @@ export function usePieceMutations() {
     onSuccess: (result) => invalidateDesk(result.id),
   });
 
-  /** PATCH /magazine/admin/pieces/:id — hand a piece off to a different editor/writer. */
+  /** PATCH /magazine/admin/pieces/:id: hand a piece off to a different editor/writer. */
   const assign = useMutation<
     { id: string },
     Error,
@@ -153,7 +188,7 @@ export function usePieceMutations() {
     onSuccess: (result) => invalidateDesk(result.id),
   });
 
-  /** PATCH /magazine/admin/pieces/assign-issue — move a whole selection onto
+  /** PATCH /magazine/admin/pieces/assign-issue: move a whole selection onto
    *  one issue (or detach it with `issueId: null`) in a single request.
    *
    *  Silent by contract (`meta.silentError`): the bulk bar owns the toast so
@@ -179,13 +214,16 @@ export function usePieceMutations() {
       }
       return sendAssignPiecesToIssue({ pieceIds, issueId });
     },
-    onSuccess: () => invalidateDesk(),
+    onSuccess: () => {
+      invalidateDesk();
+      invalidateIssueFigures();
+    },
   });
 
-  /** DELETE /magazine/admin/pieces/:id — remove a piece from the desk.
+  /** DELETE /magazine/admin/pieces/:id: remove a piece from the desk.
    *
    *  `silentError` because the caller (`useDeskModals.confirmDeletePiece`)
-   *  awaits this and reports both outcomes itself — it can tell the backend's
+   *  awaits this and reports both outcomes itself: it can tell the backend's
    *  409 ("unpublish it first") apart from a generic failure, which the global
    *  handler can only relay as the backend's untranslated English.
    *

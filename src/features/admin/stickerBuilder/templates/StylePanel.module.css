@@ -1,0 +1,61 @@
+/* The style panel frame every template shares: the heading, the action row,
+   then control groups split by hairlines. The panel shares the sticky style
+   column with the template picker above it (about 150px, plus the column's
+   20px gap). That column is capped at the viewport height between the sticky
+   top and the publish dock: about 720px at 1440x900, 620px at 1280x800 and
+   590px at 1366x768. When the panel runs taller, the column scrolls inside
+   itself. Spacing is deliberately tight so as much of the panel as possible
+   fits that budget before it scrolls. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+/* Both style-panel actions ("Template defaults", "Use this pack's style")
+   sit in one row under the heading and wrap onto their own lines, with
+   consistent gap, when the sticky column is too narrow for both. */
+.styleActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Control groups ── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

@@ -1,0 +1,88 @@
+/* The builder's item grid: a toolbar (heading, count, bulk selections), a
+   one-line hint, then every item the active template can paint as a tile. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.titleBlock {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.count {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* Dense tiles from 104px, 8px apart: four columns from a 440px column (the
+   1366 hero column is 444px), three in the 364px column at 1280. A tile is
+   its width plus about 50px of caption, so 22 Blip items take about 970px
+   at 1366, 1050px at 1440 and 1380px at 1280. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Three columns on the narrowest phones, so a 360px screen keeps the same
+   density with tiles about 100px wide, and never scrolls sideways. */
+@media (max-width: 400px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The listbox's keyboard instructions, read by screen readers only. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

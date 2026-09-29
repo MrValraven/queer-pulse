@@ -102,6 +102,8 @@ export interface GatheringFormSeed {
   rsvpQuestions: RsvpQuestions;
   customRsvpQuestion: string;
   allowWaitlist: boolean;
+  /** "Offer Go together". A copy starts with it off; absent reads as off. */
+  goTogetherEnabled?: boolean;
   /** The source's start clock as `"HH:MM"` in its own zone. Read only by
    *  "same as last time"; absent when the source had no readable start. */
   startTime?: string;
@@ -169,6 +171,8 @@ export interface GatheringDraftSnapshot {
   rsvpQuestions: RsvpQuestions;
   customRsvpQuestion: string;
   allowWaitlist: boolean;
+  /** Absent in a draft saved before the switch existed; restores as off. */
+  goTogetherEnabled?: boolean;
 }
 
 /** What the wizard may start out with, rather than empty.
@@ -771,6 +775,8 @@ function useGatheringCareState() {
   );
   const [customRsvpQuestion, setCustomRsvpQuestionValue] = useState("");
   const [allowWaitlist, setAllowWaitlist] = useState(true);
+  // Switched on for the new gathering after publish (`usePublishGathering`).
+  const [goTogetherEnabled, setGoTogetherEnabled] = useState(false);
 
   /** Pin or unpin a theme. A fourth pin does nothing: the card has room for
    *  three. */
@@ -855,6 +861,7 @@ function useGatheringCareState() {
       setRsvpCutoffValue(defaultRsvpCutoffForFamily(appliedFamily));
     }
     setAllowWaitlist(seed.allowWaitlist);
+    setGoTogetherEnabled(seed.goTogetherEnabled === true);
   };
 
   /** A saved draft's care fields. Themes are narrowed against the restored
@@ -878,6 +885,7 @@ function useGatheringCareState() {
     );
     setCustomRsvpQuestion(snapshot.customRsvpQuestion);
     setAllowWaitlist(snapshot.allowWaitlist !== false);
+    setGoTogetherEnabled(snapshot.goTogetherEnabled === true);
   };
 
   /** Has the host said anything here? A cutoff still on the family default
@@ -889,7 +897,8 @@ function useGatheringCareState() {
     customRsvpQuestion.trim().length > 0 ||
     Object.values(rsvpQuestions).some(Boolean) ||
     isRsvpCutoffTouched ||
-    !allowWaitlist;
+    !allowWaitlist ||
+    goTogetherEnabled;
 
   return {
     themes,
@@ -907,6 +916,8 @@ function useGatheringCareState() {
     setCustomRsvpQuestion,
     allowWaitlist,
     setAllowWaitlist,
+    goTogetherEnabled,
+    setGoTogetherEnabled,
     applyFamilyToCare,
     applyRsvpFormSeed,
     applyCareSeed,
@@ -1251,6 +1262,7 @@ function pickDraftSnapshot(
     rsvpQuestions: form.rsvpQuestions,
     customRsvpQuestion: form.customRsvpQuestion,
     allowWaitlist: form.allowWaitlist,
+    goTogetherEnabled: form.goTogetherEnabled,
   };
 }
 
@@ -1460,7 +1472,8 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     // `toggleContentNote`, `houseRules`, `setHouseRules`, `rsvpCutoff`,
     // `setRsvpCutoff`, `isRsvpCutoffTouched`, `rsvpQuestions`,
     // `toggleRsvpQuestion`, `customRsvpQuestion`, `setCustomRsvpQuestion`,
-    // `allowWaitlist` and `setAllowWaitlist`.
+    // `allowWaitlist`, `setAllowWaitlist`, `goTogetherEnabled` and
+    // `setGoTogetherEnabled`.
     ...careState,
     checks,
     allChecked,

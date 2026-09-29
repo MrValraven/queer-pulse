@@ -159,4 +159,14 @@ export const RICH_FIELDS_FOR_SECTION: Partial<
   cocktails: VISUAL_WORK_FIELDS,
   projects: PROJECT_FIELDS,
   open_source: PROJECT_FIELDS,
+  // Quest personas
+  sessions: GIG_FIELDS,
+  larps: GIG_FIELDS,
+  cons: GIG_FIELDS,
+  playthroughs: VISUAL_WORK_FIELDS,
+  minis: VISUAL_WORK_FIELDS,
+  maps: VISUAL_WORK_FIELDS,
+  dice: VISUAL_WORK_FIELDS,
+  streams: VISUAL_WORK_FIELDS,
+  mods: PROJECT_FIELDS,
 };

@@ -19,11 +19,12 @@ export interface PieceRowMenuPlacement {
  *
  * The popover is portaled to `<body>` and positioned `fixed` because it cannot
  * hang off the row in normal flow: `.pieces` in PiecesPipeline.module.css is
- * `overflow: hidden` (it's a rounded card), which clips an in-flow dropdown off
- * the lower rows entirely. Same reasoning as `Tooltip`'s `right` placement.
+ * `overflow: clip` (it rounds the table's corners), which clips an in-flow
+ * dropdown off the lower rows, and the sticky group headers would paint over
+ * it. Same reasoning as `Tooltip`'s `right` placement.
  *
- * Returns `null` until the first measure lands — the caller keeps that frame
- * unpainted rather than flashing the popover at the viewport corner.
+ * Returns `null` until the first measure lands; the caller keeps that frame
+ * unpainted, so the popover first appears in place beside its trigger.
  */
 export function usePieceRowMenuPlacement(
   triggerRef: RefObject<HTMLElement | null>,
@@ -34,7 +35,7 @@ export function usePieceRowMenuPlacement(
     null,
   );
   // The dismiss callback is read through a ref so the row doesn't have to
-  // memoize it: the listeners below subscribe once, never on every render.
+  // memoize it: the listeners below subscribe once, on mount.
   const onDismissRef = useRef(onDismiss);
   useEffect(() => {
     onDismissRef.current = onDismiss;
@@ -65,7 +66,7 @@ export function usePieceRowMenuPlacement(
     });
   }, [triggerRef, popoverRef]);
 
-  // Dismiss on an outside press, and on scroll/resize — both invalidate the
+  // Dismiss on an outside press, and on scroll/resize: both invalidate the
   // measured anchor, and a popover floating away from its own row is worse than
   // one that closes. The pointerdown test spans BOTH the trigger and the
   // portaled popover: treating a press on the trigger as "outside" would close

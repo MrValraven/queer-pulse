@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FiSlash } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Spinner } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isSavedItemUnavailable } from "../../app/providers/useSaved";
@@ -108,9 +108,10 @@ export function SavedListSharedPage() {
       <div className={styles.page}>
         <article className={styles.panel}>
           {isLoading ? (
-            <p className={styles.checking}>
-              <Spinner /> {t("members:savedLists.shared.loading")}
-            </p>
+            <PageLoader
+              size="section"
+              label={t("members:savedLists.shared.loading")}
+            />
           ) : isError || !sharedList ? (
             <SharedSavedListGone />
           ) : (

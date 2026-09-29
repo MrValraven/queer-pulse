@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, FeatureHelp, ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -34,7 +34,7 @@ export function CinemaMast() {
                 i18nKey="shared:brand.wordmark"
                 components={{ em: <em /> }}
               />{" "}
-              {t("cinema:brand.tag")} <FeatureHelp id="cinema.hub" />
+              {t("cinema:brand.tag")}
             </h1>
           </div>
           <div className={styles.mastMeta}>

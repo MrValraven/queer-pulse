@@ -1,20 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { FiAlertTriangle, FiArrowLeft, FiUserX } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, Spinner } from "../../shared/components/ui";
+import { EmptyState } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./ProfilePage.module.css";
 
-/** Spinner shown while a profile is loading. */
+/** Branded loader shown while a profile is loading. */
 export function ProfileLoadingState() {
   const { t } = useTranslation();
   return (
     <PageShell>
-      <div className={styles.stateWrap} role="status" aria-live="polite">
-        <Spinner />
-        <span>{t("members:profile.loading")}</span>
-      </div>
+      <PageLoader label={t("members:profile.loading")} />
     </PageShell>
   );
 }

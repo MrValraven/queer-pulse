@@ -60,20 +60,117 @@ function demoListing(
   };
 }
 
+/** The demo owner of `QPL-2026-0007`, its `submittedBy`, and the actor on its
+ *  owner-authored history rows below (the directory pause/resume). */
+const DEMO_OWNER: MemberRefDTO = {
+  slug: "tiago",
+  firstName: "Tiago",
+  lastName: "Costa",
+  avatarUrl: null,
+};
+
+/** The demo owner of `QPL-2026-0006`, the member whose claim on it the demo
+ *  claims queue shows as approved. */
+const DEMO_CASA_VIVA_OWNER: MemberRefDTO = {
+  slug: "ines",
+  firstName: "Inês",
+  lastName: "Marques",
+  avatarUrl: null,
+};
+
+/** The demo owner of `QPL-2026-0005`, and the actor on its `owner_edited` row
+ *  below. A separate persona from `DEMO_OWNER` because the backend only ever
+ *  writes `owner_edited` for a LIVE listing (`listings.service.ts`
+ *  `update()`), and `QPL-2026-0005` (Café Aurora) is the demo listing that's
+ *  actually live. */
+const DEMO_LIVE_LISTING_OWNER: MemberRefDTO = {
+  slug: "rui",
+  firstName: "Rui",
+  lastName: "Tavares",
+  avatarUrl: null,
+};
+
+/** The member who suggested `QPL-2026-0008`, the platform-held suggestion.
+ *  Reuses `devon` from `adminMembers.data.ts`. */
+const DEMO_SUGGESTER: MemberRefDTO = {
+  slug: "devon",
+  firstName: "Devon",
+  lastName: "Okoro",
+  avatarUrl: null,
+};
+
+/** The queue row's name fields, as `listingDtoToQueueRow` derives them from a
+ *  member reference. */
+function memberName(member: MemberRefDTO): string {
+  return `${member.firstName} ${member.lastName}`;
+}
+
 /** Demo-only moderation queue. Moderator/Admin endpoint 403s for anyone else,
- * so this fabricated data must never appear as platform truth in live mode. */
+ * so this fabricated data must never appear as platform truth in live mode.
+ *
+ * Every row's `submitterName`/`submitterSlug` and `suggesterName`/
+ * `suggesterSlug` come from the same member reference as its detail's
+ * `submittedBy`/`suggestedBy`, the way the live adapter builds them.
+ * `QPL-2026-0008` is the one listing QueerPulse holds: a member's suggestion
+ * nobody owns yet, so the drawer shows "Held by QueerPulse" and the edit
+ * page opens on it. */
 export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
+  {
+    ref: "QPL-2026-0008",
+    slug: "livraria-da-esquina",
+    name: "Livraria da Esquina",
+    hood: "Anjos",
+    status: "review",
+    submitterName: "",
+    submitterSlug: "",
+    suggesterName: memberName(DEMO_SUGGESTER),
+    suggesterSlug: DEMO_SUGGESTER.slug,
+    createdAt: "2026-07-29T16:45:00.000Z",
+    detail: demoListing({
+      ref: "QPL-2026-0008",
+      slug: "livraria-da-esquina",
+      name: "Livraria da Esquina",
+      hood: "Anjos",
+      status: "review",
+      createdAt: "2026-07-29T16:45:00.000Z",
+      path: "suggest",
+      badge: "friendly",
+      rel: "regular",
+      cats: ["culture"],
+      price: "€",
+      blurb:
+        "A second-hand bookshop in Anjos with a well-stocked queer shelf and a reading corner that nobody hurries you out of.",
+      tagline: "The corner bookshop with the queer shelf up front.",
+      whatItIs: [
+        {
+          id: "wit-l1",
+          text: "Livraria da Esquina is a small second-hand bookshop: poetry, zines, and a queer shelf the staff keep stocked and in order.",
+        },
+      ],
+      tags: ["Second-hand books", "Reading corner"],
+      goodFor: ["Browsing on a slow afternoon", "Finding queer poetry"],
+      hoursNote: "Open Tue to Sat, afternoons.",
+      address: "R. dos Anjos 71 · Anjos",
+      visibility: "public",
+      linkToProfile: false,
+      submittedBy: null,
+      suggestedBy: DEMO_SUGGESTER,
+    }),
+  },
   {
     ref: "QPL-2026-0007",
     slug: "maison-du-tiago",
     name: "Maison Du Tiago",
     hood: "Príncipe Real",
     status: "review",
-    submitterName: "Tiago Costa",
-    submitterSlug: "tiago",
+    submitterName: memberName(DEMO_OWNER),
+    submitterSlug: DEMO_OWNER.slug,
+    suggesterName: "",
+    suggesterSlug: "",
     createdAt: "2026-07-28T10:00:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0007",
+      submittedBy: DEMO_OWNER,
       slug: "maison-du-tiago",
       name: "Maison Du Tiago",
       hood: "Príncipe Real",
@@ -134,11 +231,14 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     name: "Casa Viva",
     hood: "Arroios",
     status: "question",
-    submitterName: "Inês Marques",
-    submitterSlug: "ines",
+    submitterName: memberName(DEMO_CASA_VIVA_OWNER),
+    submitterSlug: DEMO_CASA_VIVA_OWNER.slug,
+    suggesterName: "",
+    suggesterSlug: "",
     createdAt: "2026-07-27T14:30:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0006",
+      submittedBy: DEMO_CASA_VIVA_OWNER,
       slug: "casa-viva",
       name: "Casa Viva",
       hood: "Arroios",
@@ -199,11 +299,14 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     name: "Café Aurora",
     hood: "Graça",
     status: "live",
-    submitterName: "Rui Tavares",
-    submitterSlug: "rui",
+    submitterName: memberName(DEMO_LIVE_LISTING_OWNER),
+    submitterSlug: DEMO_LIVE_LISTING_OWNER.slug,
+    suggesterName: "",
+    suggesterSlug: "",
     createdAt: "2026-07-25T09:15:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0005",
+      submittedBy: DEMO_LIVE_LISTING_OWNER,
       slug: "cafe-aurora",
       name: "Café Aurora",
       hood: "Graça",
@@ -417,28 +520,6 @@ const DEMO_MODERATOR: MemberRefDTO = {
   slug: "sofia",
   firstName: "Sofia",
   lastName: "Almeida",
-  avatarUrl: null,
-};
-
-/** The demo owner behind `QPL-2026-0007`'s owner-authored history rows below
- *  (the directory pause/resume). Reuses the listing's own
- *  `submitterName`/`submitterSlug` rather than inventing a second persona. */
-const DEMO_OWNER: MemberRefDTO = {
-  slug: "tiago",
-  firstName: "Tiago",
-  lastName: "Costa",
-  avatarUrl: null,
-};
-
-/** The demo owner behind `QPL-2026-0005`'s `owner_edited` row below. A
- *  separate persona from `DEMO_OWNER` because the backend only ever writes
- *  `owner_edited` for a LIVE listing (`listings.service.ts` `update()`), and
- *  `QPL-2026-0005` (Café Aurora) is the one demo listing that's actually
- *  live; reuses that listing's own `submitterName`/`submitterSlug`. */
-const DEMO_LIVE_LISTING_OWNER: MemberRefDTO = {
-  slug: "rui",
-  firstName: "Rui",
-  lastName: "Tavares",
   avatarUrl: null,
 };
 

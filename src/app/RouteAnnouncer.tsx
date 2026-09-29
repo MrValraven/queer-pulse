@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { MAIN_CONTENT_ID } from "../shared/components/layout/SkipToContentLink";
 import { useTranslation } from "../shared/i18n/useTranslation";
 import { defaultMeta } from "../shared/seo/seo.data";
+import { findMainLandmark, watchForReplacedMain } from "./mainLandmarkFocus";
 
 /**
  * How long to wait for the incoming route to write its own document title
@@ -13,22 +13,13 @@ import { defaultMeta } from "../shared/seo/seo.data";
  */
 const TITLE_SETTLE_TIMEOUT_MS = 1500;
 
-/** The single `<main>` landmark the shells render, whichever shell is on screen. */
-function findMainLandmark(): HTMLElement | null {
-  return (
-    document.getElementById(MAIN_CONTENT_ID) ??
-    document.querySelector<HTMLElement>("main[data-page-main]") ??
-    document.querySelector<HTMLElement>("main")
-  );
-}
-
 /**
  * Best available human name for the page currently on screen, in priority
  * order:
  *
- * 1. `document.title` — the route's own `<PageMeta>` title, which is written
+ * 1. `document.title`: the route's own `<PageMeta>` title, which is written
  *    for humans and already localised.
- * 2. The main landmark's `<h1>` — gated routes (the feed, the local directory)
+ * 2. The main landmark's `<h1>`: gated routes (the feed, the local directory)
  *    deliberately render no `<PageMeta>`, so their title is still the neutral
  *    site default and the heading is the only thing that names the page.
  * 3. The generic fallback string, for a route with neither.
@@ -57,8 +48,8 @@ function resolvePageName(genericFallback: string): string {
  * position, and `RouteTransition` only animates.
  *
  * **Ordering against the document title.** The title is written by
- * `useDocumentMeta`, from an effect belonging to the routed page — a descendant
- * of this component's *later* sibling — and behind a `Suspense` boundary for
+ * `useDocumentMeta`, from an effect belonging to the routed page (a descendant
+ * of this component's *later* sibling) and behind a `Suspense` boundary for
  * every lazily-loaded route. So at the moment this effect runs, `document.title`
  * is still the OUTGOING page's. Reading it once would announce the page the
  * visitor just left. Instead we subscribe: a `MutationObserver` on `<head>`
@@ -69,12 +60,14 @@ function resolvePageName(genericFallback: string): string {
  *
  * **Ordering against `ScrollManager`.** Mounted immediately after it, so its
  * scroll work (top-of-page on a fresh navigation, the remembered offset on a
- * POP) is committed first — and the focus move here passes
+ * POP) is committed first, and the focus move here passes
  * `{ preventScroll: true }`, so it can never drag the viewport away from a
- * restored position. An in-page `#hash` target is left alone entirely.
+ * restored position. An in-page `#hash` target is left alone entirely. When the
+ * focused `<main>` is a loading skeleton's, `watchForReplacedMain` hands focus
+ * on to the page's own `<main>` once it replaces it.
  *
  * Never gated behind the reduce-motion / accessibility preferences: this is
- * orientation, not decoration.
+ * orientation, which every visitor needs.
  */
 export function RouteAnnouncer() {
   const location = useLocation();
@@ -127,6 +120,7 @@ export function RouteAnnouncer() {
     let titleObserver: MutationObserver | null = null;
     let deadlineTimeoutId = 0;
     let paintFrameId = 0;
+    let stopWatchingReplacedMain = (): void => {};
 
     const stopWatching = (): void => {
       titleObserver?.disconnect();
@@ -136,7 +130,7 @@ export function RouteAnnouncer() {
 
     const moveFocusToMainLandmark = (): void => {
       // An in-page anchor (`/guides#faq`) has its own target and ScrollManager
-      // has already jumped there — pulling focus up to <main> would undo it.
+      // has already jumped there, and pulling focus up to <main> would undo it.
       if (locationRef.current.hash) return;
       const activeElement = document.activeElement;
       if (
@@ -148,7 +142,12 @@ export function RouteAnnouncer() {
       }
       // preventScroll: focusing an element scrolls it into view by default,
       // which would fight the offset ScrollManager just restored on a POP.
-      findMainLandmark()?.focus({ preventScroll: true });
+      const mainLandmark = findMainLandmark();
+      mainLandmark?.focus({ preventScroll: true });
+      // A loading skeleton's `<main>` is about to be swapped for the page's.
+      if (mainLandmark && document.activeElement === mainLandmark) {
+        stopWatchingReplacedMain = watchForReplacedMain(mainLandmark);
+      }
     };
 
     const settle = (): void => {
@@ -179,13 +178,14 @@ export function RouteAnnouncer() {
       characterData: true,
     });
     // The route's component was already warm and wrote its title before this
-    // effect ran, so no mutation is coming — check once after paint.
+    // effect ran, so no mutation is coming: check once after paint.
     paintFrameId = window.requestAnimationFrame(settleIfTitleChanged);
     deadlineTimeoutId = window.setTimeout(settle, TITLE_SETTLE_TIMEOUT_MS);
 
     return () => {
       isSettled = true;
       stopWatching();
+      stopWatchingReplacedMain();
     };
   }, [pathname]);
 

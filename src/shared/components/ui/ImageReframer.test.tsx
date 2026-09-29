@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { TestProviders } from "../../../test/TestProviders";
 import ImageReframer from "./ImageReframer";
 import type { CropRect } from "./cropGeometry";
+import { panDeltaFromFrameDelta } from "./useFramePanPinch";
 
 /**
  * `ImageReframer` reads `t()` for its labels (aria-label, alt text, chip
@@ -51,5 +52,21 @@ describe("ImageReframer", () => {
     expect(onChange).toHaveBeenCalled();
     const lastRect = onChange.mock.calls.at(-1)![0];
     expect(lastRect.width).toBeLessThan(0.5); // zoomed in past the 1:1 base of a 2:1 source
+  });
+});
+
+describe("panDeltaFromFrameDelta", () => {
+  it("scales a frame drag so the image tracks the pointer", () => {
+    // A crop showing a quarter of the image has three quarters of travel, so
+    // dragging across the whole frame moves the pan by a third.
+    expect(panDeltaFromFrameDelta(1, 0.25)).toBeCloseTo(1 / 3);
+    // A crop showing three quarters of the image has a quarter of travel, so
+    // a drag of a third of the frame spends all of it.
+    expect(panDeltaFromFrameDelta(1 / 3, 0.75)).toBeCloseTo(1);
+  });
+
+  it("leaves the pan alone on an axis without travel", () => {
+    expect(panDeltaFromFrameDelta(0.4, 1)).toBe(0);
+    expect(panDeltaFromFrameDelta(0.4, null)).toBe(0);
   });
 });

@@ -1,78 +1,67 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { cx } from "../../shared/lib/cx";
-import { deskDateText } from "./magazineFormat";
 import { useWriterWorkspace } from "./api/useWriterWorkspace";
 import { useWriterMutations } from "./api/useWriterMutations";
 import type { WriterAssignmentDto } from "./api/writerWorkspace.api";
+import { cx } from "../../shared/lib/cx";
+import { WRITER_TAB_PARAM, parseWriterTab, type WriterTab } from "./writerTabs";
+import { WriterWorkspaceHeader } from "./desk/writer/WriterWorkspaceHeader";
+import { WriterWorkspaceTabs } from "./desk/writer/WriterWorkspaceTabs";
 import { WriterWorkTab } from "./desk/writer/WriterWorkTab";
 import { WriterPitchesTab } from "./desk/writer/WriterPitchesTab";
+import { WriterSubmissionsTab } from "./desk/writer/WriterSubmissionsTab";
 import { WriterPaymentsTab } from "./desk/writer/WriterPaymentsTab";
-import { AgreedTermsCard } from "./desk/writer/AgreedTermsCard";
-import { BylineSafetyCard } from "./desk/writer/BylineSafetyCard";
-import { EditorMessageCard } from "./desk/writer/EditorMessageCard";
+import { WriterWorkspaceRail } from "./desk/writer/WriterWorkspaceRail";
 import { FileDraftModal } from "./desk/writer/FileDraftModal";
 import { MessageEditorModal } from "./desk/writer/MessageEditorModal";
 import { BriefDetailModal } from "./desk/writer/BriefDetailModal";
 import styles from "./WriterWorkspacePage.module.css";
 
-type WriterTab = "work" | "pitches" | "payments";
-
-const TAB_LABEL_KEYS: Record<WriterTab, string> = {
-  work: "magazine:writer.tabs.work",
-  pitches: "magazine:writer.tabs.pitches",
-  payments: "magazine:writer.tabs.payments",
-};
-
-const TAB_IDS: WriterTab[] = ["work", "pitches", "payments"];
-
-/** A bare `yyyy-mm-dd`, which is what live `due` values are (`magazine_piece.due_on`
- *  is a Postgres `date`) — and what the demo fixture's free text ("4 Aug") is not. */
-const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-
 /**
- * The soonest deadline across the writer's open assignments, as its raw `due`
- * value. ISO values sort lexically, so live mode gets a real "next up"; the demo
- * fixture's free-text dates can't be ordered, so those fall back to the first
- * assignment that carries one. Returns `null` when nothing has a date set.
- */
-function nextDueValue(assignments: WriterAssignmentDto[]): string | null {
-  const dueValues = assignments
-    .map((assignment) => assignment.due)
-    .filter((due): due is string => Boolean(due));
-  const isoValues = dueValues
-    .filter((due) => ISO_DATE_PATTERN.test(due))
-    .sort();
-  return isoValues[0] ?? dueValues[0] ?? null;
-}
-
-/**
- * The signed-in writer's own workspace at `/magazine/writer` — assignments,
- * pitches, and payments, all scoped server-side to this writer (never other
- * contributors' data, see `magazine-writer.controller.ts`). Chrome mirrors
- * `PieceRecordPage` (`.ebar` heading bar, `.ework` tabs + `.erail` sidebar);
- * tab bodies and rail cards reuse `desk/pieceTabs.module.css`.
+ * The signed-in writer's own workspace at `/magazine/writer`: assignments,
+ * pitches, story submissions and payments. Chrome mirrors `PieceRecordPage`
+ * (`.ebar` heading bar, `.ework` tabs + `.erail` sidebar); tab bodies and rail
+ * cards reuse `desk/pieceTabs.module.css`.
  *
- * The `.ebar` names the surface and summarises the writer's open workload. It
- * deliberately does NOT restate who you are: the meganav already carries the
- * signed-in avatar and name a few pixels above, so a second identity block
- * would spend a sticky header on nothing.
+ * Assignments, pitches and payments come from the writer-workspace read, all
+ * scoped server-side to this writer (see `magazine-writer.controller.ts`). The
+ * Submissions tab (`WriterSubmissionsTab`, the member's own story submissions
+ * from `GET /magazine/submissions/mine`) fetches for itself and owns its
+ * loading and error states, yet the page's `isLoading` / `isError` gates on the
+ * writer-workspace read still hold every tab, Submissions included. That tab
+ * drops the assignment rail and caps its column at a reading width. The old
+ * tracker at `/magazine/pitches` redirects onto that tab: the active tab lives
+ * in the `?tab=` search param (`writerTabs.ts`), so it can be linked to.
  */
 export function WriterWorkspacePage() {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
   const { assignments, pitches, payments, isLoading, isError } =
     useWriterWorkspace();
   const { submitPitch, updateByline, fileDraft } = useWriterMutations();
-  const [tab, setTab] = useState<WriterTab>("work");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = parseWriterTab(searchParams.get(WRITER_TAB_PARAM));
+  // `replace` so switching tabs does not stack history entries, and the
+  // updater keeps any other params on the URL.
+  function selectTab(nextTab: WriterTab) {
+    setSearchParams(
+      (previous) => {
+        const nextParams = new URLSearchParams(previous);
+        nextParams.set(WRITER_TAB_PARAM, nextTab);
+        return nextParams;
+      },
+      { replace: true },
+    );
+  }
   const [filingAssignment, setFilingAssignment] =
     useState<WriterAssignmentDto | null>(null);
   const [messagingAssignment, setMessagingAssignment] =
     useState<WriterAssignmentDto | null>(null);
   const [briefAssignment, setBriefAssignment] =
     useState<WriterAssignmentDto | null>(null);
-  // The rail's active assignment — the "Your work" list marks one (defaulting
+  // The rail's active assignment: the "Your work" list marks one (defaulting
   // to the first), and the rail cards + byline picker read it, instead of
   // always acting on `assignments[0]`. Falls back to the first assignment if
   // nothing is selected yet, or the selected id no longer exists in the list
@@ -83,6 +72,8 @@ export function WriterWorkspacePage() {
   const activeAssignment =
     assignments.find((assignment) => assignment.id === activeAssignmentId) ??
     assignments[0];
+  // The rail describes an assignment; story submissions have none.
+  const hasRail = tab !== "submissions";
 
   if (isLoading) {
     return (
@@ -134,6 +125,8 @@ export function WriterWorkspacePage() {
             onSubmitPitch={(payload) => submitPitch.mutate(payload)}
           />
         );
+      case "submissions":
+        return <WriterSubmissionsTab />;
       case "payments":
         return <WriterPaymentsTab payments={payments} />;
       default:
@@ -141,72 +134,26 @@ export function WriterWorkspacePage() {
     }
   }
 
-  const nextDue = nextDueValue(assignments);
-  // "2 assignments open · next due 29 Aug", collapsing to a quiet line when the
-  // desk is clear. `deskDateText` is the same helper every assignment card uses,
-  // and it returns an unparseable value unchanged, so the demo fixture's
-  // "4 Aug" passes straight through.
-  const workloadSummary =
-    assignments.length === 0
-      ? t("magazine:writer.page.nothingOpen")
-      : [
-          t("magazine:writer.page.openCount", { count: assignments.length }),
-          nextDue
-            ? t("magazine:writer.page.nextDue", {
-                date: deskDateText(nextDue, language),
-              })
-            : null,
-        ]
-          .filter(Boolean)
-          .join(" · ");
-
   return (
     <AppShell>
       <div className={styles.page}>
-        <div className={styles.ebar}>
-          <div className={styles.title}>
-            <h1>{t("magazine:writer.page.heading")}</h1>
-            <span className={styles.titleSub}>{workloadSummary}</span>
-          </div>
-        </div>
+        <WriterWorkspaceHeader assignments={assignments} />
 
-        <div className={styles.ework}>
-          <div>
-            <nav
-              className={styles.tabs}
-              aria-label={t("magazine:writer.tabs.ariaLabel")}
-            >
-              {TAB_IDS.map((tabId) => (
-                <button
-                  key={tabId}
-                  type="button"
-                  className={cx(
-                    styles.tabButton,
-                    tab === tabId && styles.tabButtonActive,
-                  )}
-                  aria-current={tab === tabId}
-                  onClick={() => setTab(tabId)}
-                >
-                  {t(TAB_LABEL_KEYS[tabId])}
-                </button>
-              ))}
-            </nav>
+        <div className={cx(styles.ework, !hasRail && styles.eworkWithoutRail)}>
+          <div className={styles.eworkMain}>
+            <WriterWorkspaceTabs activeTab={tab} onSelectTab={selectTab} />
             {renderTabBody()}
           </div>
 
-          <aside className={styles.erail}>
-            <EditorMessageCard
+          {hasRail && (
+            <WriterWorkspaceRail
               assignment={activeAssignment}
               onOpenThread={setMessagingAssignment}
-            />
-            <AgreedTermsCard assignment={activeAssignment} />
-            <BylineSafetyCard
-              assignment={activeAssignment}
               onUpdateByline={(pieceId, byline) =>
                 updateByline.mutate({ pieceId, body: { byline } })
               }
             />
-          </aside>
+          )}
         </div>
       </div>
 
@@ -214,7 +161,7 @@ export function WriterWorkspacePage() {
         <FileDraftModal
           assignment={filingAssignment}
           onClose={() => setFilingAssignment(null)}
-          // `mutateAsync`, not `mutate`, and the promise is RETURNED: that is
+          // `mutateAsync`, with the promise RETURNED: that is
           // what lets the modal hold the writer's text on screen until the
           // filing lands and render the 409 conflict state instead of closing
           // over a failure. Returning nothing here would silently disable both.

@@ -287,6 +287,15 @@ export interface ProfileDTO extends MemberCardDTO {
    *  or `null` when not hidden. Owner-only — never sent to non-owner viewers
    *  (see backend `FullProfileResponse`'s `isOwner` conditional spread). */
   hiddenUntil?: string | null;
+  /** Whether this member's own Ambassador tag is visible to others (roster,
+   *  directory filter, invitee welcome line): the "Who sees what" sheet's
+   *  ambassador-only toggle. Optional here defensively (a backend older than
+   *  this build omits it), in which case it means visible (`true`). */
+  isAmbassadorTagVisible?: boolean;
+  /** This member's own active ambassador standing. Owner-only: `undefined`/
+   *  `null` on any non-owner viewer's fetch and for a member who currently
+   *  isn't an ambassador. */
+  ambassador?: { since: string; focusArea: string } | null;
 }
 
 export interface VoucherDTO {
@@ -323,6 +332,13 @@ export interface VouchersResponse {
 export function getMembers(
   params: {
     query?: string;
+    /** Field ids whose label matches the search term. Widens `query` (a
+     *  member matches the text OR works in one of these), and is unrelated to
+     *  the `disciplines` filter, which narrows. */
+    searchDisciplines?: string[];
+    /** Profession ids whose label matches the search term; widens `query`
+     *  the same way `searchDisciplines` does. */
+    searchProfessions?: string[];
     tags?: string[];
     identities?: string[];
     openTo?: string[];
@@ -330,8 +346,11 @@ export function getMembers(
     disciplines?: string[];
     professions?: string[];
     languages?: string[];
-    yearsFrom?: number;
-    yearsTo?: number;
+    /** The directory's "Ambassadors" switch → `?ambassador=1`. */
+    ambassador?: boolean;
+    /** Selected ambassador focus-area keys → `?focus=<csv>`. The backend
+     *  ignores this without `ambassador` also set (Task B6). */
+    focus?: string[];
     /** Server-side sort order; one of the `MemberSort` wire tokens
      *  (`recentlyJoined` | `recentlyActive` | `closestMutuals` | `aToZ` |
      *  `mostVouched`). */
@@ -341,6 +360,10 @@ export function getMembers(
 ) {
   const q = new URLSearchParams();
   if (params.query) q.set("query", params.query);
+  if (params.searchDisciplines?.length)
+    q.set("searchDisciplines", params.searchDisciplines.join(","));
+  if (params.searchProfessions?.length)
+    q.set("searchProfessions", params.searchProfessions.join(","));
   if (params.tags?.length) q.set("tags", params.tags.join(","));
   if (params.identities?.length)
     q.set("identities", params.identities.join(","));
@@ -351,9 +374,9 @@ export function getMembers(
   if (params.professions?.length)
     q.set("professions", params.professions.join(","));
   if (params.languages?.length) q.set("languages", params.languages.join(","));
-  if (params.yearsFrom !== undefined)
-    q.set("yearsFrom", String(params.yearsFrom));
-  if (params.yearsTo !== undefined) q.set("yearsTo", String(params.yearsTo));
+  if (params.ambassador) q.set("ambassador", "1");
+  if (params.ambassador && params.focus?.length)
+    q.set("focus", params.focus.join(","));
   if (params.sort) q.set("sort", params.sort);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
@@ -415,6 +438,10 @@ export interface UpdateProfileDTO {
   hoodVisible?: boolean;
   /** Member-controlled visibility toggle (backend `ProfileCard.vouchersVisible`). */
   vouchersVisible?: boolean;
+  /** Member-controlled visibility toggle for their own Ambassador tag. See
+   *  the read-side doc on `ProfileDTO.isAmbassadorTagVisible`. Only meaningful
+   *  while the member is an active ambassador; harmless otherwise. */
+  isAmbassadorTagVisible?: boolean;
   /** ISO 8601 timestamp until which the member has self-hidden their profile,
    *  or `null` to unhide. The profile rail's "Hide me for 24h" / "Bring me
    *  back" instant-save toggle. */

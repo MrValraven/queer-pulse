@@ -4,6 +4,7 @@ import {
   gatheringRecapPath,
   gatheringCancelledPath,
 } from "../gatherings/data";
+import { CRASH_PREVIEW_PATH, LOADER_PREVIEW_PATH } from "./routes";
 
 export interface SimFlow {
   /** Stable url-safe slug for /simulations/:id. */
@@ -305,6 +306,13 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.serverError,
       },
       {
+        id: "page-crash",
+        title: "A page crashes",
+        description:
+          "The full-page crash screen: the pulse beats twice, breaks, and keeps trying to power back up. Press Try again to watch it escalate to a reload.",
+        to: CRASH_PREVIEW_PATH,
+      },
+      {
         id: "install-the-app",
         title: "Install the app",
         description:
@@ -345,6 +353,27 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         description:
           "The seasonal variant of the launch screen, which the app picks up from the date on its own. Trans Day of Remembrance and Lisbon summer work the same way.",
         to: appLaunchPreviewPath({ holdMs: 1400, season: "pride" }),
+      },
+      {
+        id: "first-load",
+        title: "Opening a page for the first time",
+        description:
+          "What you see when you open QueerPulse fresh on a member page: the mark gathers into its Q under the wordmark while we check you are signed in and fetch the page, all in one unbroken loader, and then the feed arrives.",
+        to: firstLoadPreviewPath({ sessionMs: 1200, chunkMs: 1400 }),
+      },
+      {
+        id: "first-load-slow",
+        title: "Opening a page on a slow connection",
+        description:
+          "The same first load with long waits at both steps, so you can watch the mark keep gathering and the waves keep pulsing straight through the moment one step hands over to the next.",
+        to: firstLoadPreviewPath({ sessionMs: 2600, chunkMs: 3200 }),
+      },
+      {
+        id: "first-load-quick",
+        title: "Opening a page on a fast connection",
+        description:
+          "A near-instant sign-in check followed by a short page load: the loader still waits its brief beat before it first appears, then shows once and gives way to the feed without a flicker.",
+        to: firstLoadPreviewPath({ sessionMs: 120, chunkMs: 600 }),
       },
     ],
   },
@@ -388,4 +417,23 @@ export function appLaunchPreviewPath(options: {
   if (options.season) params.set("launchSeason", options.season);
   if (options.isOffline) params.set("launchOffline", "1");
   return `${routes.feed}?${params.toString()}`;
+}
+
+/**
+ * Build a first-load preview URL. A cold load of a gated route shows the
+ * session check's loader and then the route fallback's, which continues the
+ * same animation; demo mode skips the session check, so this preview page is
+ * the only way to watch that handoff. `sessionMs` and `chunkMs` set how long
+ * each stage holds before the page moves on to the feed
+ * (./FirstLoadPreview.tsx).
+ */
+export function firstLoadPreviewPath(options: {
+  sessionMs: number;
+  chunkMs: number;
+}): string {
+  const params = new URLSearchParams({
+    sessionMs: String(options.sessionMs),
+    chunkMs: String(options.chunkMs),
+  });
+  return `${LOADER_PREVIEW_PATH}?${params.toString()}`;
 }

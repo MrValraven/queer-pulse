@@ -288,6 +288,13 @@ export const notifications: Catalog = {
     "The QueerPulse team declined the request for spaces in {communityName}.",
   "type.community_space_request_declined.meta": "Space request declined",
   "type.community_space_request_declined.communityFallback": "your community",
+  "type.ambassador_granted.text":
+    "You're now a QueerPulse Ambassador. Welcome to the circle.",
+  "type.ambassador_granted.meta": "Ambassador · {focus}",
+  "type.ambassador_granted.metaFallback": "Ambassador",
+  "type.ambassador_revoked.text":
+    "Your QueerPulse Ambassador status has ended. Thank you for everything you brought.",
+  "type.ambassador_revoked.meta": "Ambassador",
   "type.community_report_filed.emergency.text":
     "An urgent report in {communityName} needs a decision within the hour.",
   "type.community_report_filed.emergency.meta": "Urgent report",
@@ -1022,4 +1029,39 @@ export const notifications: Catalog = {
   "type.listing_owner_offer.meta": "Ownership offer",
   "type.listing_co_manager_invite.listingNameFallback": "this listing",
   "type.listing_co_manager_invite.nameFallback": "Someone",
+  // The same four sentences with the actor as a profile link, used whenever
+  // the row resolves an actor (`PERSONALIZED_KINDS` in notifications.adapters).
+  "type.listing_co_manager_invite.textNamed":
+    "<profile>{name}</profile> invited you to help manage {listingName}.",
+  "type.listing_co_manager_invite_accepted.textNamed":
+    "<profile>{name}</profile> accepted your invite to co-manage {listingName}.",
+  "type.listing_co_manager_invite_declined.textNamed":
+    "<profile>{name}</profile> declined your invite to co-manage {listingName}.",
+  "type.listing_owner_offer.textNamed":
+    "<profile>{name}</profile> has offered you ownership of {listingName}.",
+
+  // Go together.
+  "type.go_together_group_ready.meta": "Go together group",
+  "type.go_together_group_ready.text": "Your group for {eventTitle} is ready",
+  "type.go_together_meet_again.meta": "Go together feedback",
+  "type.go_together_meet_again.text":
+    "Want to meet your group from {eventTitle} again?",
+  "type.go_together_member_left.meta": "Go together group",
+  "type.go_together_member_left.text":
+    "Someone left your group for {eventTitle}",
+  "type.go_together_mutual.meta": "New connection",
+  "type.go_together_mutual.text":
+    "You and someone from {eventTitle} both want to meet again",
+  "type.go_together_mutual.textNamed":
+    "You and <profile>{name}</profile> both want to meet again",
+  "type.go_together_pair_invite.meta": "Go together invite",
+  "type.go_together_pair_invite.text":
+    "Someone wants to go together to {eventTitle}",
+  "type.go_together_pair_invite.textNamed":
+    "<profile>{name}</profile> wants to go to {eventTitle} together",
+  "type.go_together_unmatched.meta": "Go together update",
+  "type.go_together_unmatched.text":
+    "We couldn't put together a group for {eventTitle} this time",
+  "type.go_together_unmatched.textFinal":
+    "We weren't able to place you in a group for {eventTitle}",
 };

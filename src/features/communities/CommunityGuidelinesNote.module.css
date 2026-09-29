@@ -1,0 +1,51 @@
+/* Same visual treatment as ModerationStanceNote (accent inline-start border,
+   paper background) but copied rather than imported: the two notes read
+   different audiences and should not end up sharing one stylesheet by
+   accident. Tokens only. */
+
+.note {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-12);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: var(--text-13);
+  color: var(--text-strong);
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+.icon {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+}
+/* Sentence case at a lighter weight than the outer `.secLbl` section label
+   (CommunityDetailPage.module.css, text-11/700/uppercase/ink-40) so the
+   nesting stays legible: this label is one level further in, naming a list
+   inside a list rather than a whole section. */
+.subLabel {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--ink-40);
+  margin: 10px 0 8px;
+  overflow-wrap: anywhere;
+}
+.empty {
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+  margin: 0;
+}
+
+:global([data-theme="dark"]) .note {
+  border-color: rgba(var(--cream-rgb), 0.1);
+  border-inline-start-color: var(--accent);
+}

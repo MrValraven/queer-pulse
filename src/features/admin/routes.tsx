@@ -86,6 +86,10 @@ const AdminListingNewPage = lazyNamed(
   () => import("./AdminListingNewPage"),
   "AdminListingNewPage",
 );
+const AdminListingEditPage = lazyNamed(
+  () => import("./AdminListingEditPage"),
+  "AdminListingEditPage",
+);
 const AdminMediaPage = lazyNamed(
   () => import("./AdminMediaPage"),
   "AdminMediaPage",
@@ -101,6 +105,10 @@ const AdminInvitesPage = lazyNamed(
 const AdminChangemakersPage = lazyNamed(
   () => import("./AdminChangemakersPage"),
   "AdminChangemakersPage",
+);
+const AdminAmbassadorsPage = lazyNamed(
+  () => import("./ambassadors/AdminAmbassadorsPage"),
+  "AdminAmbassadorsPage",
 );
 const AdminChangemakerNominationsPage = lazyNamed(
   () => import("./AdminChangemakerNominationsPage"),
@@ -207,6 +215,10 @@ const AdminGuideWorkspacePage = lazyNamed(
   () => import("./guideWorkspace/AdminGuideWorkspacePage"),
   "AdminGuideWorkspacePage",
 );
+const AdminGuidePreviewPage = lazyNamed(
+  () => import("./guidePreview/AdminGuidePreviewPage"),
+  "AdminGuidePreviewPage",
+);
 const AdminGlossaryPage = lazyNamed(
   () => import("./AdminGlossaryPage"),
   "AdminGlossaryPage",
@@ -288,6 +300,10 @@ export function adminRoutes() {
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
       <Route path={routes.adminListings} element={<AdminListingsPage />} />
       <Route path={routes.adminListingNew} element={<AdminListingNewPage />} />
+      <Route
+        path={routes.adminListingEdit}
+        element={<AdminListingEditPage />}
+      />
       <Route path={routes.adminMedia} element={<AdminMediaPage />} />
       <Route
         path={routes.adminStickerPacks}
@@ -297,6 +313,10 @@ export function adminRoutes() {
       <Route
         path={routes.adminChangemakers}
         element={<AdminChangemakersPage />}
+      />
+      <Route
+        path={routes.adminAmbassadors}
+        element={<AdminAmbassadorsPage />}
       />
       <Route
         path={routes.adminChangemakerNominations}
@@ -378,6 +398,10 @@ export function adminRoutes() {
       <Route
         path={`${routes.adminResourceGuideEdit}/:id`}
         element={<AdminGuideWorkspacePage />}
+      />
+      <Route
+        path={`${routes.adminResourceGuidePreview}/:id`}
+        element={<AdminGuidePreviewPage />}
       />
       {/* PRD-264. Nested under the guide console's path so `authGate`'s
           `${adminResourceGuides}/*` capability pattern already covers it. */}

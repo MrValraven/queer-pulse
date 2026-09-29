@@ -6,7 +6,6 @@ import {
   Button,
   EmptyState,
   FadeIn,
-  FeatureHelp,
   ModalSheet,
   SearchInput,
   Select,
@@ -19,6 +18,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import {
   SORTS,
   SORT_LABEL_KEY,
+  removeChip,
   type AppliedChip,
   type DirectoryFacetCounts,
   type FilterState,
@@ -31,25 +31,6 @@ import { FiltersSidebar, MemberResultSkeleton } from "./MemberFilterCards";
 import { MemberResultsGrid } from "./MemberResultsGrid";
 import { SHUFFLE_SPRING } from "./shuffleMotion";
 import styles from "./MemberDirectoryFilterPage.module.css";
-
-/** Remove one value from whichever filter group a chip belongs to. */
-function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
-  const drop = (values: string[]) => values.filter((v) => v !== chip.value);
-  switch (chip.group) {
-    case "openTo":
-      return { ...filters, openTo: drop(filters.openTo) };
-    case "hood":
-      return { ...filters, hoods: drop(filters.hoods) };
-    case "discipline":
-      return { ...filters, disciplines: drop(filters.disciplines) };
-    case "profession":
-      return { ...filters, professions: drop(filters.professions) };
-    case "identity":
-      return { ...filters, identities: drop(filters.identities) };
-    case "language":
-      return { ...filters, languages: drop(filters.languages) };
-  }
-}
 
 /** Placeholder for the page header — mirrors the eyebrow / h1 / lead rhythm so
  *  the real header swaps in with no layout shift. */
@@ -146,7 +127,6 @@ export function MemberDirectoryHeader({
           {t("members:directory.memberCountSuffix", { count: totalMembers })}
         </em>{" "}
         {t("members:directory.findSuffix")}
-        <FeatureHelp id="members.hub" />
       </h1>
       <p className={styles.lead}>
         <Translation

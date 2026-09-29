@@ -5,7 +5,6 @@ import {
   Button,
   EmptyState,
   FadeIn,
-  FeatureHelp,
   SegmentedControl,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -153,13 +152,10 @@ export function AdminListingsPage() {
           titleId={LISTING_QUEUE_HEADING_ID}
           eyebrow={t("admin:adminListings.header.eyebrow")}
           title={
-            <>
-              <Translation
-                i18nKey="admin:adminListings.header.title"
-                components={{ em: <em /> }}
-              />{" "}
-              <FeatureHelp id="admin.listings" />
-            </>
+            <Translation
+              i18nKey="admin:adminListings.header.title"
+              components={{ em: <em /> }}
+            />
           }
           sub={t("admin:adminListings.header.sub")}
         />

@@ -1,0 +1,18 @@
+/* The arriving page's fade on desktop and on a mobile tab switch. It sits on
+   the page's <main> inside the plane, so on a first visit the Suspense spinner
+   shows at once and the fade starts only when the real page mounts after its
+   chunk loads. A plain CSS animation so its clock starts when <main> is first
+   styled after the commit: a long commit cannot eat the start of the fade. No
+   fill mode, so when it ends the page simply sits at its natural opacity of 1
+   and nothing has to be cancelled. A page without `data-page-main` appears at
+   once. Reduced motion never gets this class (see RouteTransition.tsx), and
+   base.css neutralizes the duration anyway. */
+.enter :global([data-page-main]) {
+  animation: routePlaneEnter var(--dur-base) var(--ease-out);
+}
+
+@keyframes routePlaneEnter {
+  from {
+    opacity: 0;
+  }
+}

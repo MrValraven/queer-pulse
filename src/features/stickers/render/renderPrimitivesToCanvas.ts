@@ -1,8 +1,13 @@
-import type { Primitive } from "../templates/primitives";
+import type { Primitive, PathCommand } from "../templates/primitives";
 
 function applyPaint(
   context: CanvasRenderingContext2D,
-  primitive: { fill?: string; stroke?: string; strokeWidth?: number },
+  primitive: {
+    fill?: string;
+    stroke?: string;
+    strokeWidth?: number;
+    lineCap?: "round" | "butt";
+  },
 ): void {
   if (primitive.fill) {
     context.fillStyle = primitive.fill;
@@ -12,7 +17,20 @@ function applyPaint(
     context.strokeStyle = primitive.stroke;
     context.lineWidth = primitive.strokeWidth ?? 1;
     context.lineJoin = "round";
+    context.lineCap = primitive.lineCap ?? "butt";
     context.stroke();
+  }
+}
+
+function tracePath(
+  context: CanvasRenderingContext2D,
+  commands: PathCommand[],
+): void {
+  context.beginPath();
+  for (const command of commands) {
+    if (command.type === "moveTo") context.moveTo(command.x, command.y);
+    else if (command.type === "lineTo") context.lineTo(command.x, command.y);
+    else context.closePath();
   }
 }
 
@@ -72,13 +90,7 @@ export function renderPrimitivesToCanvas(
       continue;
     }
     if (primitive.type === "path") {
-      context.beginPath();
-      for (const command of primitive.commands) {
-        if (command.type === "moveTo") context.moveTo(command.x, command.y);
-        else if (command.type === "lineTo")
-          context.lineTo(command.x, command.y);
-        else context.closePath();
-      }
+      tracePath(context, primitive.commands);
       applyPaint(context, primitive);
       continue;
     }
@@ -101,6 +113,10 @@ export function renderPrimitivesToCanvas(
         primitive.clipRect.height,
         primitive.clipRect.radius,
       );
+      context.clip();
+    }
+    if (primitive.clipPath) {
+      tracePath(context, primitive.clipPath);
       context.clip();
     }
     renderPrimitivesToCanvas(context, primitive.children);

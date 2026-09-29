@@ -18,6 +18,7 @@ import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
 import { AffirmingBaselineAgreement } from "./fields/AffirmingBaselineAgreement";
+import { isOwnerBlockHidden } from "./ownerBlock";
 import styles from "./ListBusinessPage.module.css";
 
 function optionLabel(
@@ -104,6 +105,25 @@ function Group({
   );
 }
 
+/** Stands in for the withheld consent block on a member's own suggestion:
+ *  a person reviews it, and the platform holds it until the business claims
+ *  it. Styled like the submit note the consent block ends with. */
+function SuggestNote() {
+  return (
+    <div className={styles.submitNote}>
+      <span className={styles.ic}>
+        <FiShield size={15} />
+      </span>
+      <p>
+        <Translation
+          i18nKey="marketing:listBusiness.step5.suggestNote"
+          components={{ b: <b /> }}
+        />
+      </p>
+    </div>
+  );
+}
+
 export function StepReview({
   form,
   userName,
@@ -117,11 +137,15 @@ export function StepReview({
 }) {
   const { t } = useTranslation();
   const { draft } = form;
-  /* A staff-authored draft has no owner yet, so it has no name, no initials
-     and no visibility choice belonging to anybody. Every recap block below
-     that describes the submitter is withheld, the same way step 4's owner
-     block is. Whoever accepts the handover answers all of it then. */
-  const isOwnerAuthored = !draft.isStaffAuthored;
+  /* A staff-authored draft has no owner yet, and a suggestion's submitter is
+     not the business, so neither has a name, initials or visibility choice
+     belonging to anybody. Every recap block below that describes the
+     submitter is withheld, the same way step 4's owner block is. Whoever
+     accepts the handover answers all of it then. */
+  const isOwnerAuthored = !isOwnerBlockHidden(draft);
+  // A member suggestion gets a short note in place of the consent block
+  // above: nothing of theirs to consent about, but not silence either.
+  const isMemberSuggestion = draft.path === "suggest" && !draft.isStaffAuthored;
   return (
     <div className={styles.stepBody}>
       <PaneHeader
@@ -295,6 +319,7 @@ export function StepReview({
           </div>
         </>
       )}
+      {isMemberSuggestion && <SuggestNote />}
     </div>
   );
 }

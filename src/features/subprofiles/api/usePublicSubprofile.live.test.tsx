@@ -91,7 +91,7 @@ describe("usePublicSubprofile (live mode via MSW, by-handle)", () => {
   });
 
   it("maps a 403 {restrictedState:'members_only'} to state:restricted", async () => {
-    const outcome = await resolve({ handle: "afterhours-jordan" });
+    const outcome = await resolve({ handle: "afterhours-club" });
     expect(outcome).toEqual({
       state: "restricted",
       restricted: "members_only",

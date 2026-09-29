@@ -1,4 +1,6 @@
 import { useId } from "react";
+import { m } from "motion/react";
+import { useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { VIBES, VIBE_LABEL_KEYS } from "./map.data";
 import s from "./LocalFilterBar.module.css";
@@ -19,14 +21,23 @@ export function LocalVibeFilter({
 }) {
   const { t } = useTranslation();
   const vibeLabelId = useId();
+  // Inside the Refine drawer the chips glide to their new places as the
+  // drawer's content shifts; in the mobile sheet they stay still.
+  const glide = useRefineGlide();
 
   return (
-    <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
+    <m.div
+      {...glide.row}
+      className={s.vibeRow}
+      role="group"
+      aria-labelledby={vibeLabelId}
+    >
       <span className={s.vibeLabel} id={vibeLabelId}>
         {t("marketing:local.filter.vibeLabel")}
       </span>
       {VIBES.map((vibe) => (
-        <button
+        <m.button
+          {...glide.chip}
           type="button"
           key={vibe}
           aria-pressed={vibes.includes(vibe)}
@@ -36,13 +47,13 @@ export function LocalVibeFilter({
           onClick={() => onToggleVibe(vibe)}
         >
           {t(VIBE_LABEL_KEYS[vibe]!)}
-        </button>
+        </m.button>
       ))}
       {vibes.length > 0 && (
         <span className={s.vibeNote}>
           {t("marketing:local.filter.vibeVenueNote")}
         </span>
       )}
-    </div>
+    </m.div>
   );
 }

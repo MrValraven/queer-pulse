@@ -16,10 +16,11 @@ import styles from "./stickerBuilder/stickerBuilder.module.css";
 
 /**
  * The sticker pack builder (`/admin/sticker-packs`): pick a pack in the rail,
- * then work on it in the workspace beside it. Style the Uno reverse template,
- * tick the flags, check the live preview, and add every sticker to the pack
- * in one run; the "In this pack" tab reorders, relabels and removes them.
- * Admin-only, riding the blanket `/admin/*` gate in `authGate.ts`.
+ * then work on it in the workspace beside it. Choose a template (Uno
+ * reverse, Blip or Tea, shade and sparkle), style it, tick the items, check
+ * the live preview, and add every sticker to the pack in one run; the "In
+ * this pack" tab reorders, relabels and removes them. Admin-only, riding the
+ * blanket `/admin/*` gate in `authGate.ts`.
  */
 export function AdminStickerPacksPage() {
   const { t } = useTranslation();

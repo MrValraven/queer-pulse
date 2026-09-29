@@ -10,7 +10,7 @@ import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import styles from "./ListBusinessPage.module.css";
 
-/* ===== Step 0 — You & the place ===== */
+/* ===== Step 0: You & the place ===== */
 export function StepPath({
   form,
   userName,
@@ -78,13 +78,19 @@ export function StepPath({
       {/* "Signed in as {name}" tells the member which account the listing
           will hang off. A staff-authored draft belongs to the business it
           names, and its `userName` is empty, so the line would print an
-          empty bold about an account that owns nothing here. */}
+          empty bold about an account that owns nothing here. A member who is
+          suggesting gets the same line with different copy: the account is
+          theirs, but the listing will not be. */}
       {!draft.isStaffAuthored && (
         <div className={styles.consent}>
           <FiInfo size={17} aria-hidden />
           <p>
             <Translation
-              i18nKey="marketing:listBusiness.step0.signedInAs"
+              i18nKey={
+                draft.path === "suggest"
+                  ? "marketing:listBusiness.step0.signedInAsSuggest"
+                  : "marketing:listBusiness.step0.signedInAs"
+              }
               components={{ b: <b /> }}
               values={{ name: userName }}
             />

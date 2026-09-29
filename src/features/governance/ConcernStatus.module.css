@@ -142,13 +142,6 @@
   color: var(--ink-40);
   margin: 0;
 }
-.loading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: var(--text-14);
-  color: var(--ink-60);
-}
 
 :global([data-theme="dark"]) .state {
   border-color: rgba(var(--cream-rgb), 0.1);

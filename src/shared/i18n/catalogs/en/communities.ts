@@ -474,6 +474,11 @@ export const communities: Catalog = {
   "detail.modtools.insights.postCount": "Posts",
   "detail.modtools.insights.postsThisWeek": "Posts this week",
   "detail.modtools.insights.activeMembers": "Active this week",
+  "detail.modtools.guidelines.requests.head": "What {name} asks of members",
+  "detail.modtools.guidelines.reports.head":
+    "Measured against {name}'s shared values",
+  "detail.modtools.guidelines.empty":
+    "{name} hasn't written its shared values yet. The owner can add them from Edit community.",
   "detail.modtools.joinRequests.label": "People asking to join",
   "detail.modtools.joinRequests.empty.title": "No requests waiting",
   "detail.modtools.joinRequests.empty.description":

@@ -7,6 +7,7 @@ import { AdminChip } from "./ui";
 import { VouchGraphPreview, VouchGraphLegend } from "./VouchGraphPreview";
 import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
 import { AdminMemberStaffRoles } from "./AdminMemberStaffRoles";
+import { AdminMemberAmbassadorLine } from "./AdminMemberAmbassadorLine";
 import {
   SEALED_IDENTITY,
   type AdminMember,
@@ -42,6 +43,7 @@ export function RolesAndAccessSection({
         role={detail.role}
         staffRoles={detail.staffRoles}
       />
+      <AdminMemberAmbassadorLine slug={member.slug} />
     </section>
   );
 }

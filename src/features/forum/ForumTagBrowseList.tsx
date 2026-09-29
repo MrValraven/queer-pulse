@@ -19,7 +19,7 @@ export function ForumTagBrowseList({
   isAtCap,
   onToggle,
 }: {
-  tags: string[];
+  tags: readonly string[];
   isAtCap: boolean;
   onToggle: (tag: string) => void;
 }) {

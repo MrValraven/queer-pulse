@@ -1,0 +1,19 @@
+/* KV's own "warn" state. `pieceTabs.module.css`'s shared `.kv b.warn` rule
+   paints it in `--accent-ink`, coral as text: the same colour as the Write
+   button, used here to mean "over length". `pieceTabs.module.css`
+   is out of this task's reach (another session depends on its class names),
+   so the desk's own KV rows override the colour from this small colocated
+   module instead. An over-length word count is a writer-side fact, so it
+   takes the amber writer tone that already marks writer-side state
+   elsewhere; the late/red tone stays reserved for the peek's due date and
+   the board's late edge, both actual deadline lateness (the late
+   token on the word count read as though the piece were overdue itself;
+   plan section 7 keeps that token for late and over-cap only).
+
+   Doubled: `pieceTabs.module.css`'s own `.kv b`
+   (0,1,1: a class plus a bare `b` type selector) outranked the single-class
+   `.warn` here (0,1,0), so the override never painted anything; `.warn.warn`
+   raises this to (0,2,0). */
+.warn.warn {
+  color: var(--desk-tone-writer);
+}

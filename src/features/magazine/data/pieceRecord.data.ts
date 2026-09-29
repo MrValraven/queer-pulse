@@ -1,27 +1,33 @@
 /**
- * Piece-record demo data — ported verbatim (values unchanged, `<em>` stripped
+ * Piece-record demo data, ported verbatim (values unchanged, `<em>` stripped
  * from the title) from the DesignSync prototype's `MAG.RECORD` (`mag-data2.js`).
  * Mirrors the shape `usePieceRecord` returns in live mode
  * (`GET /magazine/admin/pieces/:id`), plus the FE-only `similar` list the
  * backend doesn't model (see `PieceRecordView` below).
  *
- * This is the SAME piece as `DEMO_PIECES` id `"p1"` in `desk.data.ts` — same
- * title/section/kind/byline/editor/stage/due/words — with the full
+ * This is the SAME piece as `DEMO_PIECES` id `"p1"` in `desk.data.ts`, same
+ * title/section/kind/byline/editor/stage/due/words, with the full
  * brief/care/payment/audit/letters/corrections detail the desk list doesn't
- * carry. `usePieceRecord` ignores the `:id` param in demo mode and always
- * returns this record (Phase 1/2 limitation, same as other demo detail hooks).
+ * carry: there is still only the one authored fixture, angle, care subjects,
+ * audit and all (Phase 1/2 limitation, same as other demo detail hooks).
+ * `demoRecordForPiece` below lets `usePieceRecord`'s demo branch vary two
+ * fields that WERE showing identically on every piece's peek regardless of
+ * which was open: the filed word count and the money status (the peek's
+ * sibling to the message thread's own duplication fix).
  */
 
 import type {
   CorrectionDto,
   LetterDto,
   PaymentDto,
+  PaymentStatus,
   PieceBrief,
   PieceCare,
   PieceEventEntryDto,
   PieceRecordDto,
   PublishGateItemDto,
 } from "../api/pieces.api";
+import type { Piece, PiecePaymentStatus } from "./desk.data";
 
 /** One row of the "we have run this before" list on the Brief tab. FE-only —
  *  the backend has no similar-pieces endpoint yet. */
@@ -299,6 +305,10 @@ export const DEMO_RECORD: PieceRecordView = {
   articleId: null,
   deckId: null,
   contentsBlurb: "",
+  // Five days in edit, the same as `DEMO_PIECES` p1 on the desk.
+  stageEnteredAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  // `PAYMENT` above is approved and unpaid.
+  paymentStatus: "owed",
   brief: BRIEF,
   care: CARE,
   audit: AUDIT,
@@ -308,3 +318,52 @@ export const DEMO_RECORD: PieceRecordView = {
   publishGate: PUBLISH_GATE,
   similar: SIMILAR,
 };
+
+/** Maps the desk list's coarse `PiecePaymentStatus` to the full record's
+ *  richer `PaymentStatus`, so a demo piece's money block can at least agree
+ *  with its own row instead of repeating `DEMO_RECORD`'s one authored
+ *  "Approved, unpaid" scenario on every piece. */
+const PAYMENT_STATUS_BY_PIECE_STATUS: Record<
+  PiecePaymentStatus,
+  PaymentStatus
+> = {
+  none: "agreed",
+  owed: "approved_unpaid",
+  paid: "paid",
+};
+
+/**
+ * `usePieceRecord`'s demo branch calls this with whichever `DEMO_PIECES` row
+ * matches the requested id, so the peek's "Filed at" word count and money
+ * status can differ per piece without a full per-piece record registry.
+ * `DEMO_RECORD`'s own piece (`"p1"`) keeps its authored record verbatim,
+ * over-length word count and all. Any other piece the desk fixture knows
+ * about gets a money status matching its own `paymentStatus` (independent
+ * of format: a slide deck has one too), and, when it has a `words` count (a
+ * deck's own length is a slide count instead, which the record has no field
+ * for), its own word count on target, in place of the shared 2800/3140 pair;
+ * there is no per-piece "filed over target" story to tell. An id the desk
+ * fixture does not know about keeps the plain `DEMO_RECORD`, since there is
+ * nothing truer to derive.
+ */
+export function demoRecordForPiece(piece: Piece | undefined): PieceRecordView {
+  if (!piece || piece.id === DEMO_RECORD.id) return DEMO_RECORD;
+  return {
+    ...DEMO_RECORD,
+    ...(piece.words !== undefined && {
+      words: piece.words,
+      // `brief` is `PieceBrief | null` on the type, same reason `payment`
+      // below is guarded: spreading a possibly-null value would silently
+      // widen every other `brief` field (`angle`, `wants`, …) to optional.
+      brief: DEMO_RECORD.brief && {
+        ...DEMO_RECORD.brief,
+        wordCount: piece.words,
+        filedWords: piece.words,
+      },
+    }),
+    payment: DEMO_RECORD.payment && {
+      ...DEMO_RECORD.payment,
+      status: PAYMENT_STATUS_BY_PIECE_STATUS[piece.paymentStatus ?? "none"],
+    },
+  };
+}

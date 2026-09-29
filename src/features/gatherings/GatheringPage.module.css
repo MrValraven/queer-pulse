@@ -20,18 +20,22 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 60px;
   align-items: start;
 }
 /* The main column's first line: the back link, and the icon toolbar pushed to
    the right by its own `margin-left: auto`. The toolbar's 44px tap targets set
    the row's height, so the gap under it is smaller than the 32px the back link
-   used to carry, which lands the type row about where it sat before. */
+   used to carry, which lands the type row about where it sat before. On a
+   narrow phone with long labels (PT) the toolbar wraps to its own line, still
+   pushed to the end, so the row never widens the column. */
 .headerBar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 4px 12px;
+  min-width: 0;
   margin-bottom: var(--gap-sm);
 }
 .typeRow {
@@ -425,7 +429,7 @@
     padding-top: 16px;
   }
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .cards {
     grid-template-columns: 1fr 1fr;

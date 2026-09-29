@@ -8,7 +8,7 @@ import {
   Select,
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { DeskTrack } from "./DeskTrackTabs";
+import type { DeskTrack } from "./deskTrack";
 import styles from "./DeskModals.module.css";
 
 export interface CommissionPayload {
@@ -79,10 +79,10 @@ export function CommissionModal({
   const [fee, setFee] = useState("");
   const hasNoSections = sections.length === 0;
 
-  // Without a selected issue there's nowhere to bind an issue piece, so a
-  // commission can only land unfiled.
+  // Without a selected issue there's nowhere to bind an issue piece, and the
+  // "everything" scope names no issue, so both pre-select Unassigned.
   const [track, setTrack] = useState<DeskTrack>(
-    hasCurrentIssue ? defaultTrack : "unassigned",
+    hasCurrentIssue && defaultTrack === "issue" ? "issue" : "unassigned",
   );
 
   const send = () => {

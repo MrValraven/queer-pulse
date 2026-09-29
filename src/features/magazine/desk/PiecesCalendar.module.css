@@ -1,0 +1,375 @@
+/* Editor desk: calendar layout (`PiecesCalendar`, `PiecesCalendarDay`,
+   `PiecesCalendarLanes`, `PiecesCalendarAgenda`). One framed grid of days
+   with hairlines between cells, and lanes above it for pieces that have no
+   day inside it. State colours come from `--desk-tone-*`; the close day's
+   rule and today's outline are ink, so only lateness reads loud. */
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* ── Meta: the dot legend and the publish-date marker ── */
+
+.calendarMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Same colour as the day cell's own `.publishMarker`, so the two agree. */
+.publishBanner {
+  font-weight: 600;
+  color: var(--desk-tone-ready);
+}
+
+/* ── Lanes above the grid ── */
+
+.lanes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.lane {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--desk-head-pad-y) var(--gap-xs);
+  min-width: 0;
+}
+
+.laneHeading {
+  margin: 0;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.laneChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--desk-head-pad-y);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.laneChips > li {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ── Grid ── */
+
+.gridFrame {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  /* `clip` rounds the corners without making a scroll container. */
+  overflow: clip;
+}
+
+.grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.caption {
+  caption-side: top;
+  padding: var(--desk-head-pad-y) var(--desk-chip-pad-x);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-12-5);
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  color: var(--ink-60);
+}
+
+.weekday {
+  padding: var(--desk-head-pad-y) var(--desk-chip-pad-x);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.day {
+  height: 104px;
+  padding: var(--desk-chip-pad-y);
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.day + .day {
+  border-left: 1px solid var(--line);
+}
+
+.dayHeading {
+  display: inline-block;
+  margin: 0;
+  padding: var(--desk-chip-pad-y);
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.dayPast .dayHeading {
+  color: var(--ink-40);
+}
+
+/* Days after the issue closes: shaded, so work parked there stands out. */
+.dayAfterClose {
+  background: var(--wash);
+}
+
+/* The close day's strong rule on its trailing edge. In a collapsed table the
+   wider border wins, so the next cell's hairline gives way to it. */
+.dayClose {
+  border-right: 2px solid var(--text-strong);
+}
+
+.dayToday {
+  outline: 2px solid var(--text-strong);
+  outline-offset: -2px;
+}
+
+.dayToday .dayHeading {
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.closeMarker,
+.publishMarker,
+.todayMarker {
+  display: inline-block;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+
+.publishMarker {
+  color: var(--desk-tone-ready);
+}
+
+.day .closeMarker,
+.day .publishMarker {
+  margin-left: var(--desk-chip-pad-y);
+}
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--desk-chip-pad-y);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Chip ── */
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: var(--desk-chip-pad-x);
+  width: 100%;
+  min-width: 0;
+  padding: var(--desk-chip-pad-y);
+  border: 0;
+  border-left: 2px solid transparent;
+  border-radius: var(--radius-4);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.laneChips .chip {
+  max-width: 260px;
+  padding: var(--desk-chip-pad-y) var(--desk-chip-pad-x);
+  border: 1px solid var(--line);
+  border-left-width: 2px;
+  background: var(--paper);
+}
+
+.agendaPiece .chip {
+  flex: 1;
+  min-height: var(--tap-min);
+  padding: var(--desk-chip-pad-y) var(--desk-chip-pad-x);
+}
+
+/* Declared after the lane and agenda variants so the tone edge wins there. */
+.chip.chipYourTurn {
+  border-left-color: var(--desk-tone-you);
+}
+
+/* Late outranks your turn: declared after it so its edge wins. */
+.chip.chipLate {
+  border-left-color: var(--desk-tone-late);
+  background: var(--desk-tone-late-soft);
+}
+
+.chipDot {
+  flex-shrink: 0;
+}
+
+.chipBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* A two-line clamp, where a single `nowrap` line used to cut every title to
+   about nine characters ("What we o…", inside a cell with room for
+   two or three lines). The full title still reaches a screen reader
+   (the button's own text content, unaffected by the visual clamp) and a
+   sighted pointer user (the chip's own `title` attribute, `PiecesCalendarDay`
+   above). */
+.chipTitle {
+  display: -webkit-box;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: var(--text-12-5);
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.agendaPiece .chipTitle {
+  font-size: var(--text-14-5);
+}
+
+.chipMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--desk-chip-pad-x);
+  font-size: var(--text-11);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.afterClose {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--desk-tone-late);
+}
+
+.more {
+  display: block;
+  padding: var(--desk-chip-pad-y);
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--wash);
+  }
+
+  .more:hover {
+    color: var(--text-strong);
+    text-decoration: underline;
+  }
+}
+
+.chip:focus-visible,
+.more:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Phone agenda ── */
+
+.agenda {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.agendaDay {
+  padding: var(--desk-row-pad-y) var(--desk-chip-pad-x);
+  border-bottom: 1px solid var(--line);
+}
+
+.agendaClose {
+  border-bottom: 2px solid var(--text-strong);
+}
+
+.agendaHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--desk-chip-pad-y) var(--desk-chip-pad-x);
+  margin: 0 0 var(--desk-chip-pad-x);
+  font-size: var(--text-13);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.agendaPieces {
+  display: flex;
+  flex-direction: column;
+  gap: var(--desk-chip-pad-y);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agendaPiece {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.agendaEmpty {
+  margin: 0;
+  padding: var(--desk-row-pad-y) 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

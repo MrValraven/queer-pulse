@@ -60,6 +60,9 @@ export const GATED_PATTERNS = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // The Go together questionnaire and feedback prompt. Mirrors authGate.ts.
+  "/go-together",
+  "/go-together/*",
   // `/forum/*` covers the full-page composer at `/forum/new`; the bare
   // "/forum" is an EXACT match in both matchers. Mirrors authGate.ts.
   "/forum",
@@ -82,10 +85,9 @@ export const GATED_PATTERNS = [
   // has no :param support, and no :slug path is ever emitted here — see the
   // "Dynamic :slug routes are excluded" note on QUIET_PUBLIC_PATHS. The
   // opportunity DETAIL page stays public either way.)
-  // The member's own pitch tracker. Member-only and nothing more — the
-  // `magazine_writer` capability gate that used to sit on top of it was removed
-  // in PRD-125, because the endpoint it reads
-  // (`GET /magazine/submissions/mine`) admits every active member.
+  // The old member pitch tracker, now a legacy redirect into the writer
+  // workspace's Submissions tab. Kept signed-in-only so a signed-out visitor
+  // goes to sign-in first; the `magazine_writer` gate applies on arrival.
   "/magazine/pitches",
   // Block & mute is account settings living under the public /safety prefix.
   "/safety/block-mute",

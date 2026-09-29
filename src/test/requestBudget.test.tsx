@@ -565,6 +565,12 @@ describe("request budget (live mode)", () => {
       // PlatformStaffRowDTO[]; an empty array means the mocked member
       // holds no staff role, which is all this test needs.
       http.get(`${API_V1}/platform/staff`, () => HttpResponse.json([])),
+      // With no staff badge to show, MemberStaffBadge mounts
+      // MemberAmbassadorTag, which reads useAmbassadorMap() →
+      // GET /platform/ambassadors (enabled when logged in). Response shape is
+      // PlatformAmbassadorRowDTO[]; an empty array means the mocked member is
+      // no ambassador, which is all this test needs.
+      http.get(`${API_V1}/platform/ambassadors`, () => HttpResponse.json([])),
     );
 
     const seen = await renderRouteLive("/account/profile");
@@ -601,6 +607,9 @@ describe("request budget (live mode)", () => {
     //     conflate the three)
     //   - ProfileHero → MemberStaffBadge → useStaffRole()/useStaffMap() →
     //     GET /platform/staff (self-view staff badge, confirmed intended)
+    //   - ProfileHero → MemberStaffBadge (no staff badge) →
+    //     MemberAmbassadorTag → useAmbassadorMap() → GET /platform/ambassadors
+    //     (the Ambassador tag, shown where the staff badge would be)
     //   - ProfileContent → NowSection (isSelf) → useNowInsights() →
     //     GET /profiles/me/now-insights. Owner-only (`enabled: isSelf`):
     //     powers the figures line above the Now card, rendered on load, not
@@ -642,6 +651,7 @@ describe("request budget (live mode)", () => {
         "/v1/me/recognition",
         "/v1/me/vouches/given",
         `/v1/members/${SLUG}/vouchers`,
+        "/v1/platform/ambassadors",
         "/v1/platform/staff",
         // NowSection (isSelf) → useNowInsights() → GET
         // /profiles/me/now-insights. Owner-only and eager: the figures it

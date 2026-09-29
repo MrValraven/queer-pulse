@@ -1,5 +1,8 @@
 import { useContext } from "react";
-import { I18nContext } from "../../app/providers/i18nContext";
+import {
+  I18nContext,
+  type TranslateInFunction,
+} from "../../app/providers/i18nContext";
 import type { Language, TFunction } from "./types";
 
 export interface Translation {
@@ -7,6 +10,11 @@ export interface Translation {
   setLanguage: (language: Language) => void;
   /** Translate a key, with optional `{token}` interpolation + `count` plurals. */
   t: TFunction;
+  /**
+   * Translate a key in a given language regardless of the site language, or
+   * `undefined` while that language's namespace loads or lacks the key.
+   */
+  translateIn: TranslateInFunction;
 }
 
 /**

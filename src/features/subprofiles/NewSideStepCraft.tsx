@@ -2,9 +2,11 @@ import type { Translation as TranslationApi } from "../../shared/i18n/useTransla
 import type { SubprofileKind } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
+  KIND_ICON_OVERRIDE,
   KIND_LABEL_KEYS,
   KIND_SECTIONS,
   SECTION_META,
+  kindIcon,
 } from "./subprofile-kinds";
 import { KIND_FAMILIES } from "./kindFamilies.data";
 import { StartMethodPicker, type StartMethod } from "./StartMethodPicker";
@@ -12,11 +14,6 @@ import { CopySourcePicker } from "./CopySourcePicker";
 import { CopyModePreview } from "./CopyModePreview";
 import type { CopyMode } from "./subprofileDuplicate";
 import styles from "./NewSideModal.module.css";
-
-/** The lead section's icon stands in for the whole kind in the picker. */
-function kindIcon(kind: SubprofileKind) {
-  return SECTION_META[KIND_SECTIONS[kind][0]!].icon;
-}
 
 /** "Shows, Looks" / "Shows & Looks" — a plain locale-neutral join (no i18n
  *  list-formatting helper exists in this repo's `t()`; see translate.ts). */
@@ -85,6 +82,12 @@ export function NewSideStepCraft({
               <div className={styles.kinds}>
                 {familyGroup.kinds.map((candidateKind) => {
                   const Icon = kindIcon(candidateKind);
+                  // A filled `gi` glyph (the icon overrides above) reads
+                  // heavier than the outline `fi` icons beside it at the same
+                  // nominal size, so it gets trimmed 1px to balance optically.
+                  const isFilledIcon = Boolean(
+                    KIND_ICON_OVERRIDE[candidateKind],
+                  );
                   const selected = kind === candidateKind;
                   return (
                     <button
@@ -96,7 +99,13 @@ export function NewSideStepCraft({
                         .join(" ")}
                       onClick={() => onChangeKind(candidateKind)}
                     >
-                      <Icon size={16} aria-hidden />
+                      <Icon
+                        size={16}
+                        aria-hidden
+                        className={
+                          isFilledIcon ? styles.kindIconFilled : undefined
+                        }
+                      />
                       {t(KIND_LABEL_KEYS[candidateKind])}
                     </button>
                   );

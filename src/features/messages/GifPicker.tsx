@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -29,6 +29,7 @@ export function GifPicker({ onPick }: GifPickerProps) {
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
   const scrollRootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const { results, loading, error, hasMore, loadMore } = useGifSearch(
     query,
     demoMode,
@@ -44,9 +45,42 @@ export function GifPicker({ onPick }: GifPickerProps) {
     if (!comingSoon) searchRef.current?.focus();
   }, [comingSoon]);
 
+  // Small phones (`--xs`, ≤480px, `src/styles/tokens/breakpoints.css`):
+  // `.panel`'s usual `position: absolute` anchor is `ComposerAttachButton`'s
+  // `.control` wrapper (the paperclip), and this panel's width ran past the
+  // screen's right edge from there. `.panel`'s `@media (--xs)` rule pins it
+  // to the viewport's own side margins instead; the one thing pure CSS can't
+  // supply is the vertical offset, since a fixed-position panel can no longer
+  // read `bottom: calc(100% + 16px)` off `.control`. Reading `.control`
+  // directly here (`.panel`'s own DOM `parentElement`, which stays reliable
+  // after `.panel` becomes `position: fixed`) reproduces that exact offset as
+  // a measured CSS variable, so a
+  // taller composer still lands the panel in the right spot on the next
+  // resize. Same pattern as `EmojiPicker.tsx`; see that file's own doc.
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    function pinToViewport() {
+      if (!panel) return;
+      const control = panel.parentElement;
+      const isNarrow = window.matchMedia("(max-width: 480px)").matches;
+      if (!isNarrow || !control) {
+        panel.style.removeProperty("--gif-picker-bottom");
+        return;
+      }
+      const controlTop = control.getBoundingClientRect().top;
+      const bottomOffset = Math.round(window.innerHeight - controlTop + 16);
+      panel.style.setProperty("--gif-picker-bottom", `${bottomOffset}px`);
+    }
+    pinToViewport();
+    window.addEventListener("resize", pinToViewport);
+    return () => window.removeEventListener("resize", pinToViewport);
+  }, []);
+
   if (comingSoon) {
     return (
       <div
+        ref={panelRef}
         className={styles.panel}
         role="dialog"
         aria-label={t("messages:gif.panelLabel")}
@@ -65,6 +99,7 @@ export function GifPicker({ onPick }: GifPickerProps) {
 
   return (
     <div
+      ref={panelRef}
       className={styles.panel}
       role="dialog"
       aria-label={t("messages:gif.panelLabel")}

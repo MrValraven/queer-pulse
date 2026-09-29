@@ -99,6 +99,87 @@
      remove buttons are drawn at 26 to 34px on purpose, so the fix is to grow
      the HIT AREA, not the ink: see the `tap-target` helper in base.css. */
   --tap-min: 44px;
+
+  /* ── Anchored menus (magazine desk `DeskMenu`) ──
+     One set of measures for every dropdown on the desk (scope switcher, New,
+     Filter, Sort, the bulk stage picker), so they read as one family.
+     --menu-edge is the viewport gutter the menu keeps on each side; it must
+     match EDGE_GAP in useDeskMenuPlacement.ts. */
+  --menu-pad: 6px;
+  --menu-item-pad-y: 8px;
+  --menu-item-pad-x: 10px;
+  --menu-item-gap: 10px;
+  --menu-min-sm: 180px;
+  --menu-min-md: 260px;
+  --menu-max: 340px;
+  --menu-edge: 16px;
+
+  /* ── Desk workbar (`DeskWorkbar.module.css`) ──
+     --workbar-ring-room is the padding (and matching negative margin) the
+     mobile control strip pays around its own horizontal scroller, so the
+     scroller's overflow doesn't clip a focused control's ring.
+     --workbar-badge-pad-x is the Filter menu's active-count badge's
+     horizontal padding. */
+  --workbar-ring-room: 6px;
+  --workbar-badge-pad-x: 6px;
+
+  /* ── Desk pipeline table (`PiecesPipeline`, `PieceRow`) ──
+     --desk-row-pad-y is a comfortable row's vertical padding (group headers
+     share it); compact density drops to --desk-row-pad-y-compact.
+     --desk-head-pad-y pads the column header row. --desk-chip-pad-* pad the
+     row's small inline marks ("New voice", "Set date").
+     --desk-group-header-room keeps a row that j/k scrolls into view clear of
+     the sticky group header above it. */
+  --desk-row-pad-y: 10px;
+  --desk-row-pad-y-compact: 2px;
+  --desk-head-pad-y: 8px;
+  --desk-chip-pad-y: 2px;
+  --desk-chip-pad-x: 8px;
+  --desk-group-header-room: 48px;
+
+  /* ── Desk rail (`desk/rail/*`, `desk/DeskView.module.css`) ──
+     --desk-rail-w is the rail's grid column from the --desk-split cutover
+     (1224px) to 1439px; --desk-rail-w-wide is its column from 1440px
+     (--desk-rail-wide). The pair keeps the pieces table at its middle
+     container step (660px and up) from 1224px and at its wide step (820px
+     and up) from 1440px. --desk-rail-row-pad-y pads the rail's one-line rows
+     (forecast rows, slot rows, legend toggles). */
+  --desk-rail-w: 260px;
+  --desk-rail-w-wide: 300px;
+  --desk-rail-row-pad-y: 4px;
+
+  /* ── Pitch triage overlay (`PitchTriage.module.css`) ──
+     --triage-ring-room keeps the overlay's first control clear of the dialog
+     body's scroll clip, so its focus ring shows whole. --triage-tag-pad-*
+     pad a pitch's topic tags (the inbox's tag size). --triage-kbd-pad-x pads
+     the key caps in the shortcut hints. --triage-row-pad-y is a list mode
+     row's vertical padding. --triage-gap-hair and --triage-gap-tight are the
+     two steps below --gap-xs (stepper buttons, tag rows, key hints).
+     --triage-exit-shift is how far an answered pitch slides as it fades;
+     --triage-enter-rise is how far the next one rises in. --triage-check-nudge
+     lines a list row's checkbox up with the first line of its title. */
+  --triage-ring-room: 4px;
+  --triage-tag-pad-y: 4px;
+  --triage-tag-pad-x: 9px;
+  --triage-kbd-pad-x: 6px;
+  --triage-row-pad-y: 12px;
+  --triage-gap-hair: 4px;
+  --triage-gap-tight: 6px;
+  --triage-exit-shift: 26px;
+  --triage-enter-rise: 6px;
+  --triage-check-nudge: 3px;
+
+  /* ── Magazine desk shell phone bar (`MagazineDeskShell.module.css`) ──
+     --desk-shell-bar-pad-y is the sticky phone bar's vertical padding and
+     --desk-shell-bar-rule its bottom rule. --desk-shell-bar-h is the bar's
+     whole height (its --tap-min menu button, the padding, the rule), which
+     the desk page reads so its sticky group headers and rail sit under it. */
+  --desk-shell-bar-pad-y: 12px;
+  --desk-shell-bar-rule: 1px;
+  --desk-shell-bar-h: calc(
+    var(--tap-min) + 2 * var(--desk-shell-bar-pad-y) +
+      var(--desk-shell-bar-rule)
+  );
 }
 
 /* ── Corner radius scale (numeric primitives) ───────────────────────────────

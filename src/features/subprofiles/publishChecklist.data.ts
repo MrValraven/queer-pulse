@@ -15,8 +15,8 @@ import type { EditorPaneKey } from "./editorRail.data";
  * matches (it no longer emits `not_enough_items`).
  *
  * i18n Pattern A: `titleKey`/`metKey`/`failKey` hold catalog keys, resolved by
- * `PublishChecklist.tsx` via `t()`. `codes` are fixed contract-C5 identifiers,
- * never displayed directly, so they stay as plain English ids.
+ * `PublishChecklist.tsx` via `t()`. `codes` are fixed contract-C5 identifiers
+ * that stay off screen, so they stay as plain English ids.
  */
 export interface PublishRequirement {
   key: string;
@@ -31,7 +31,7 @@ export interface PublishRequirement {
    * Where an unmet row's "take me there" lands: the rail pane to open, and the
    * `FIELD_ANCHOR_ID`s to scroll to and flash once it's painted. Usually one
    * field; `language` lists all three the server actually screens, since a 422
-   * says only THAT a blocked term is present, never where.
+   * says only THAT a blocked term is present, and leaves out where.
    */
   jump: { pane: EditorPaneKey; anchors: string[] };
 }
@@ -39,12 +39,12 @@ export interface PublishRequirement {
 /**
  * The requirements that apply to one persona, in display order.
  *
- * NONE of them apply to a LINKED persona: it nests under the owner's profile,
- * claims no handle, and is already covered by that profile, so the server's
- * `validatePublish` returns an empty list for it outright — it publishes on a
- * non-empty display name alone. Showing the rows anyway would invent four
- * requirements the server does not have, and gating the button on them would
- * refuse a publish the API would accept.
+ * NONE of them apply to a LINKED persona: the server derives its handle at
+ * publish when none is set, and the owner's profile already covers the rest,
+ * so the server's `validatePublish` returns an empty list for it. A linked
+ * persona has nothing to meet and publishes on a non-empty display name alone.
+ * Showing the rows anyway would invent requirements the server does not have,
+ * and gating the button on them would refuse a publish the API would accept.
  */
 export function requirementsFor(
   linkVisibility: "linked" | "unlinked",
@@ -78,11 +78,19 @@ export const PUBLISH_REQUIREMENTS: PublishRequirement[] = [
     key: "handle",
     titleKey: "subprofiles:checklist.reqHandleTitle",
     metKey: "subprofiles:checklist.reqHandleMet",
-    codes: ["handle_invalid", "handle_taken", "handle_reserved"],
+    codes: [
+      "handle_invalid",
+      "handle_taken",
+      "handle_reserved",
+      "handle_names_owner",
+      "handle_is_kind",
+    ],
     failKey: {
       handle_invalid: "subprofiles:checklist.reqHandleFailInvalid",
       handle_taken: "subprofiles:checklist.reqHandleFailTaken",
       handle_reserved: "subprofiles:checklist.reqHandleFailReserved",
+      handle_names_owner: "subprofiles:checklist.reqHandleFailNamesOwner",
+      handle_is_kind: "subprofiles:checklist.reqHandleFailIsKind",
     },
     jump: { pane: "address", anchors: [FIELD_ANCHOR_ID.handle] },
   },
@@ -123,7 +131,7 @@ export const PUBLISH_REQUIREMENTS: PublishRequirement[] = [
   },
 ];
 
-/** Content items (section ≠ links) currently on a persona — the count behind
+/** Content items (section ≠ links) currently on a persona: the count behind
  *  the optional `items` polish nudge. */
 export function contentItemCount(subprofile: SubprofileView): number {
   return subprofile.sections
@@ -132,7 +140,7 @@ export function contentItemCount(subprofile: SubprofileView): number {
 }
 
 /**
- * Optional "polish" nudges — never gate publishing, carry no contract-C5 `unmet`
+ * Optional "polish" nudges: they never gate publishing, carry no contract-C5 `unmet`
  * code, and never touch the backend. Each is derived client-side straight off
  * the loaded `SubprofileView` so the polish list can render instantly alongside
  * the (separate, blocking) `PUBLISH_REQUIREMENTS` checklist above.

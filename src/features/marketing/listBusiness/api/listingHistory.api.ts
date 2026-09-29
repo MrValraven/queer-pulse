@@ -25,7 +25,8 @@ export type OwnerListingHistoryAction =
   | "staff_created"
   | "suggestion_applied"
   | "directory_paused"
-  | "directory_resumed";
+  | "directory_resumed"
+  | "staff_edited";
 
 /** The moderation lifecycle a status row moves between. */
 export type OwnerListingHistoryStatus = "review" | "question" | "live";

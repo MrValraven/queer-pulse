@@ -11,8 +11,8 @@ import type { Catalog } from "../../types";
 export const shared: Catalog = {
   // Brand wordmark ("Queer" + italic "Pulse"), reused everywhere the mark
   // renders outside the main Navbar/Footer link text (Navbar/Footer/AppNav/
-  // AdminSidebar/Sidebar/SystemStateShell/AuthLoader/RoomLoader all render this
-  // exact mark). Never translated — the tag placeholder just carries the
+  // AdminSidebar/Sidebar/SystemStateShell/PageLoader/RoomLoader all render this
+  // exact mark). Never translated: the tag placeholder just carries the
   // italic styling.
   "appLaunch.ariaLabel": "Opening QueerPulse",
   "appLaunch.tagline": "A queer network, rooted in Lisbon",
@@ -106,11 +106,25 @@ export const shared: Catalog = {
   "consent.storage.monitoring.purpose":
     "Nothing at all while this is off. Turn it on and our error reporter (Sentry) loads and can store a diagnostic id. No session replay, no tracing, no ad or profiling data.",
 
-  // Feedback: AuthLoader / RouteFallback / ErrorFallback / RoomLoader
+  // Feedback: PageLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Something broke on our <em>end</em>",
-  "feedback.errorFallback.body":
-    "Nothing you did caused this, and nothing's lost. Try again, or head back home. We're already looking into it.",
+  "feedback.errorFallback.eyebrow": "Page error",
+  "feedback.errorFallback.lead":
+    "A fault in our code stopped this page from loading. It happens rarely, and it's ours to fix.",
+  "feedback.errorFallback.assure.safe.title": "Nothing you saved is lost",
+  "feedback.errorFallback.assure.safe.body":
+    "Posts, messages and anything else already sent to us are untouched.",
+  "feedback.errorFallback.assure.notYou.title": "You don't need to do anything",
+  "feedback.errorFallback.assure.notYou.body":
+    "We're already working on a fix.",
+  "feedback.errorFallback.assure.retry.title": "A second try usually works",
+  "feedback.errorFallback.assure.retry.body":
+    "Most glitches like this clear on a retry or a fresh load.",
   "feedback.errorFallback.tryAgain": "Try again",
+  "feedback.errorFallback.reload": "Reload the page",
+  "feedback.errorFallback.retryHint":
+    "That didn't clear it. If a reload doesn't either, head home and tell us what happened.",
+  "feedback.errorFallback.contact": "Tell us what happened",
   "feedback.errorFallback.reference": "Reference: {referenceId}",
 
   // LoadErrorState — the shared "we couldn't load this" panel. Distinct from
@@ -163,7 +177,6 @@ export const shared: Catalog = {
   "accountMenu.items.events": "Events",
   "accountMenu.items.cards": "Cards",
   "accountMenu.items.drafts": "Drafts",
-  "accountMenu.items.pitches": "Pitches",
   "accountMenu.items.saved": "Saved",
   "accountMenu.items.settings": "Settings",
   "accountMenu.items.darkMode": "Dark mode",
@@ -289,6 +302,7 @@ export const shared: Catalog = {
   "adminNav.items.media": "Uploaded images",
   "adminNav.items.invites": "Invites",
   "adminNav.items.changemakerNominations": "Nominations",
+  "adminNav.items.ambassadors": "Ambassadors",
   "adminNav.items.commissionInterests": "Commissions",
   "adminNav.items.readingGroupProposals": "Reading groups",
   "adminNav.items.guideFeedback": "Guide feedback",
@@ -431,6 +445,21 @@ export const shared: Catalog = {
   "staffBadge.grant.resourceCurator": "Resource Curator",
   "staffBadge.grant.editorial": "Editorial Team",
   "staffBadge.grant.communities": "Communities Team",
+  "ambassador.tag.short": "Ambassador",
+  "ambassador.tag.long": "QueerPulse Ambassador",
+  "ambassador.tag.meta": "Since {since} · {focus}",
+  "ambassador.focus.trans_health": "Trans health",
+  "ambassador.focus.sexual_health": "Sexual health",
+  "ambassador.focus.mental_health": "Mental health",
+  "ambassador.focus.housing": "Housing",
+  "ambassador.focus.nightlife_safety": "Nightlife safety",
+  "ambassador.focus.work_and_careers": "Work and careers",
+  "ambassador.focus.youth": "Youth",
+  "ambassador.focus.elders": "Elders",
+  "ambassador.focus.migrants_and_refugees": "Migrants and refugees",
+  "ambassador.focus.sport": "Sport",
+  "ambassador.focus.arts_and_culture": "Arts and culture",
+  "ambassador.focus.rights_and_activism": "Rights and activism",
 
   // ImageSlot
   "imageSlot.placeholder": "Image",
@@ -488,8 +517,8 @@ export const shared: Catalog = {
   "megaNav.lisbon.featurePublic.cta": "See how verification works",
   "megaNav.lisbon.col.discover.head": "Discover",
   // "Local Business directory" — keep this in sync with the global-search
-  // entry (search.data.ts), the FeatureHelp title (help.ts), and the PWA
-  // manifest shortcut (vite.config.ts), which all name the same page.
+  // entry (search.data.ts) and the PWA manifest shortcut (vite.config.ts),
+  // which all name the same page.
   "megaNav.lisbon.col.discover.businessDirectory": "Local Business directory",
   "megaNav.lisbon.col.discover.partners": "Partners",
   "megaNav.lisbon.col.livingHere.head": "Living here",
@@ -706,6 +735,9 @@ export const shared: Catalog = {
   "reframe.ratio.original": "Original",
   "reframe.ratio.square": "Square",
   "reframe.ratio.native": "Cover shape",
+  "reframe.preview.group": "How it will look",
+  "reframe.hintTouch": "Drag to move. Pinch to zoom.",
+  "reframe.hintPointer": "Drag to move. Scroll to zoom.",
 
   // announcement.*: sitewide admin-authored banner (AnnouncementBanner.tsx),
   // mounted in both AppShell and PageShell — shown to every visitor, signed

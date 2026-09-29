@@ -1,10 +1,9 @@
-/* Row-level "⋯" overflow menu for a piece in the desk pipeline.
+/* Row-level More menu for a piece in the desk pipeline.
  *
  * The popover is PORTALED to <body> and positioned `fixed` against the
- * trigger's measured rect. It cannot be an absolutely-positioned child of the
- * row: `.pieces` in PiecesPipeline.module.css sets `overflow: hidden` (it is a
- * rounded card), which would clip the dropdown off the bottom rows entirely.
- * Same reasoning as Tooltip's `right` placement — see its doc comment.
+ * trigger's measured rect. As a child of the row it would be clipped by the
+ * table's rounded corners (`overflow: clip` on `.pieces`) and would sit under
+ * the sticky group headers. Same reasoning as Tooltip's `right` placement.
  */
 
 .wrap {
@@ -12,18 +11,22 @@
   display: inline-flex;
 }
 
+/* A stacked (phone-width) row raises `--piece-row-more-size` to --tap-min
+   (PieceRow.module.css); the table keeps the compact 30px. */
 .trigger {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: var(--piece-row-more-size, 30px);
+  height: var(--piece-row-more-size, 30px);
   border: none;
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink);
   cursor: pointer;
   touch-action: manipulation;
-  transition: background var(--dur-fast) var(--ease);
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
 .trigger:hover,
@@ -31,14 +34,20 @@
   background: rgba(var(--plum-rgb), 0.08);
 }
 
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
 /* Portaled, so `position: fixed` against the viewport with the coordinates
    the component measures. Above the desk's own sticky chrome. */
 .popover {
   position: fixed;
-  min-width: 168px;
+  min-width: var(--menu-min-sm);
   width: max-content;
   max-width: min(280px, calc(100vw - 32px));
-  padding: 6px;
+  padding: var(--menu-pad);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-12);
   background: var(--paper);
@@ -69,9 +78,9 @@
 .item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--menu-item-gap);
   width: 100%;
-  padding: 9px 10px;
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
   border: none;
   border-radius: var(--radius-8);
   background: transparent;
@@ -89,4 +98,18 @@
 .item:hover,
 .itemDanger:hover {
   background: rgba(var(--plum-rgb), 0.06);
+}
+
+.item:focus-visible,
+.itemDanger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Sets Delete apart from the everyday items above it. */
+.separator {
+  height: 1px;
+  margin: var(--menu-pad) calc(-1 * var(--menu-pad));
+  background: var(--line);
 }

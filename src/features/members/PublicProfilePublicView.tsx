@@ -3,8 +3,8 @@ import {
   Button,
   ExpandableText,
   FadeIn,
-  FeatureHelp,
 } from "../../shared/components/ui";
+import { MemberAmbassadorTag } from "../../shared/ambassadors/MemberAmbassadorTag";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { useAuth } from "../../app/providers/authContext";
@@ -55,16 +55,17 @@ export function PublicProfilePublicView({
           <div className={styles.eyebrow}>
             {t("members:publicProfile.head.eyebrow", { slug: profile.slug })}
           </div>
-          <h1 className={styles.name}>
-            {profile.displayName} <FeatureHelp id="members.profile" />
-          </h1>
+          <div className={styles.nameRow}>
+            <h1 className={styles.name}>{profile.displayName}</h1>
+            <MemberStaffBadge slug={profile.slug} size="icon" />
+          </div>
           {profile.pronouns && (
             <div className={styles.pronouns}>
               <span className={styles.pron}>{profile.pronouns}</span>
             </div>
           )}
           <div className={styles.badgeRow}>
-            <MemberStaffBadge slug={profile.slug} size="lg" />
+            <MemberAmbassadorTag slug={profile.slug} size="lg" />
           </div>
           {profile.tagline && (
             <p className={styles.publicTagline}>{profile.tagline}</p>

@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { usePrefersReducedMotion } from "../../shared/hooks";
-import { SystemStateShell } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useInvite } from "../auth/api/useInvite";
 import { rememberInviteWelcome } from "../auth/api/pendingInvite";
 import { OnboardingPage } from "../auth/OnboardingPage";
-import { Under18Notice } from "../auth/Under18Notice";
 import { TermsModal } from "../marketing/TermsModal";
 import { PrivacyModal } from "../marketing/PrivacyModal";
 import { InviteExpiredPage } from "./InviteExpiredPage";
@@ -45,7 +43,7 @@ export function InviteLandingPage() {
   // hop into onboarding: the code (to redeem) and the welcome payload (inviter +
   // vouch), since the in-memory invite is gone after a full-page auth redirect.
   // An inviter who's no longer active never counts as joinable, even if the
-  // status is still `valid` — so we don't stash a join off a ghost.
+  // status is still `valid`, so we don't stash a join off a ghost.
   const validInvite =
     invite?.status === "valid" && invite.inviterActive !== false
       ? invite
@@ -60,6 +58,7 @@ export function InviteLandingPage() {
         initials: validInvite.inviter.initials,
         since: validInvite.inviter.since,
         photo: validInvite.inviter.photo,
+        isAmbassador: validInvite.inviter.isAmbassador,
       },
     });
   }, [validInvite]);
@@ -85,9 +84,9 @@ export function InviteLandingPage() {
   // While GET /invites/:code resolves the inviter.
   if (isLoading) return <InviteLoadingView />;
 
-  // Bad, used, expired or revoked code — or a valid code whose inviter is no
-  // longer active — → the tailored invite-state screen (reasonFromInvite picks
-  // the right copy, including the "inviter inactive" state).
+  // Bad, used, expired or revoked code, or a valid code whose inviter is no
+  // longer active, routes to the tailored invite-state screen (reasonFromInvite
+  // picks the right copy, including the "inviter inactive" state).
   if (
     isError ||
     !invite ||
@@ -98,26 +97,13 @@ export function InviteLandingPage() {
 
   if (joined) return <OnboardingPage />;
 
-  // Someone told us they're not 18 yet — the humane block, never a dead end.
-  // Under18Notice is a bare panel, so it needs the same frame the expired-invite
-  // state uses to sit correctly on the page.
-  if (under18)
-    return (
-      <SystemStateShell>
-        <Under18Notice
-          onBack={() => setUnder18(false)}
-          backLabel={t("system:inviteLanding.card.under18BackLabel")}
-        />
-      </SystemStateShell>
-    );
-
   function openInvitation() {
     setPhase(prefersReduced ? "invite" : "opening");
   }
 
   // "Register with Google" authenticates through the same OAuth call the sign-in
   // page uses. Live mode → a real /auth/google redirect carrying the invite code
-  // (so the backend redeems it during signup — a new Google user with no invite
+  // (so the backend redeems it during signup: a new Google user with no invite
   // is rejected), the 18+ attestation (likewise rejected without it), and a
   // redirect into /onboarding on return.
   function joinWithGoogle() {
@@ -130,7 +116,7 @@ export function InviteLandingPage() {
     }
     // Demo has no real Google and no network. This used to call the invite
     // accept endpoint, which never did anything here (its demo branch resolved
-    // ok without a request) and no longer exists — sign-up is now the single
+    // ok without a request) and no longer exists; sign-up is now the single
     // redemption point. Just reveal onboarding, as the prototype does.
     setJoined(true);
   }
@@ -147,7 +133,9 @@ export function InviteLandingPage() {
         onGoogle={joinWithGoogle}
         is18={is18}
         onIs18Change={setIs18}
+        isUnder18={under18}
         onUnder18={() => setUnder18(true)}
+        onUnder18Back={() => setUnder18(false)}
         onOpenTerms={() => setLegalModal("terms")}
         onOpenPrivacy={() => setLegalModal("privacy")}
       />

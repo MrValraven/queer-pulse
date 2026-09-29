@@ -3,6 +3,14 @@ import { Translation } from "../../shared/i18n/Translation";
 import { MAP_LOADING_DOTS, MAP_LOADING_STREETS } from "./mapLoading.data";
 import s from "./MapLoading.module.css";
 
+// A loader that replaces another one mid-animation (a lazy view's Suspense
+// fallback handing over to the view's own loader) resumes at the point that
+// one had reached. An ancestor sets `--map-loader-elapsed` to how
+// long the first loader has been on screen, and every delay moves back by it.
+function resumedDelay(delaySeconds: number): string {
+  return `calc(${delaySeconds}s - var(--map-loader-elapsed, 0ms))`;
+}
+
 /** In-panel "city lights" loader for the Lisbon map: a faint street web draws
  *  itself in while brand-coloured dots breathe at staggered offsets on its
  *  intersections — Lisbon waking up before the pins land. Covers the canvas
@@ -32,7 +40,7 @@ export function MapLoading({ ready }: { ready: boolean }) {
               points={street.points}
               pathLength={100}
               vectorEffect="non-scaling-stroke"
-              style={{ animationDelay: `${street.delay}s` }}
+              style={{ animationDelay: resumedDelay(street.delay) }}
             />
           ))}
         </svg>
@@ -47,7 +55,7 @@ export function MapLoading({ ready }: { ready: boolean }) {
                 insetInlineStart: dot.left,
                 "--light-size": `${dot.size}px`,
                 "--light-color": dot.color,
-                animationDelay: `${dot.delay}s`,
+                animationDelay: resumedDelay(dot.delay),
                 animationDuration: `${dot.duration}s`,
               } as CSSProperties
             }

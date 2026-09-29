@@ -17,7 +17,7 @@ export interface PassTemplate {
   bodyKey: string;
 }
 
-/** Starting points for the "Pass on a pitch" note — a human line beats a form rejection. */
+/** Starting points for the "Pass on a pitch" note: a human line lands warmer than a form rejection. */
 export const PASS_TEMPLATES: PassTemplate[] = [
   {
     id: "notus",
@@ -86,15 +86,29 @@ export interface ShortcutRow {
   keys: string;
   /** i18n key for what the chord does. */
   labelKey: string;
+  /** True for the keys that keep working while the single-key shortcuts are
+   *  switched off (`deskLetterShortcuts.ts`): the palette chord and `?`. */
+  isAlwaysOn?: boolean;
 }
 
 /** Chord / description pairs for the "Keyboard" reference modal. */
 export const SHORTCUTS: ShortcutRow[] = [
   { keys: "j / k", labelKey: "magazine:desk.modals.shortcuts.moveBetween" },
   { keys: "o", labelKey: "magazine:desk.modals.shortcuts.openFocused" },
+  { keys: "x", labelKey: "magazine:desk.modals.shortcuts.toggleSelect" },
   { keys: "c", labelKey: "magazine:desk.modals.shortcuts.chaseWriter" },
   { keys: "w", labelKey: "magazine:desk.modals.shortcuts.writeYourself" },
+  { keys: "p", labelKey: "magazine:desk.modals.shortcuts.openTriage" },
   { keys: "y / n", labelKey: "magazine:desk.modals.shortcuts.triageTopPitch" },
-  { keys: "⌘K", labelKey: "magazine:desk.modals.shortcuts.jumpAnywhere" },
-  { keys: "?", labelKey: "magazine:desk.modals.shortcuts.thisList" },
+  { keys: "/", labelKey: "magazine:desk.modals.shortcuts.focusSearch" },
+  {
+    keys: "⌘K",
+    labelKey: "magazine:desk.modals.shortcuts.jumpAnywhere",
+    isAlwaysOn: true,
+  },
+  {
+    keys: "?",
+    labelKey: "magazine:desk.modals.shortcuts.thisList",
+    isAlwaysOn: true,
+  },
 ];

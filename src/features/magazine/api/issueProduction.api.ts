@@ -88,6 +88,8 @@ export interface IssueSummaryDto {
   theme: string;
   /** `YYYY-MM-DD`, or `null` while the issue is still unscheduled. */
   publishedOn: string | null;
+  /** `YYYY-MM-DD` the issue stops taking copy, or `null` while unset. */
+  closesOn: string | null;
   filled: number;
   slots: number;
 }
@@ -105,6 +107,9 @@ export interface CreateIssueDto {
    *  before it is scheduled, and an omitted date leaves it unscheduled until
    *  someone sets one (or until shipping stamps today's date). */
   publishedOn?: string;
+  /** `YYYY-MM-DD` the issue stops taking copy. Optional for the same reason
+   *  as `publishedOn`. */
+  closesOn?: string;
   dek?: string;
 }
 

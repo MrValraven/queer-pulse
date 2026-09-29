@@ -3,7 +3,7 @@ import { ConfirmDialog } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AdminStickerPackResponse } from "../../../shared/contracts/contracts";
 import { StickerPublishBar } from "./StickerPublishBar";
-import { buildFlagPlan } from "./stickerFlags";
+import { buildItemPlan, stickerLabelFor } from "./stickerItems";
 import { summarizeRun, type useStickerPublish } from "./useStickerPublish";
 import type { StickerBuilderState } from "./useStickerBuilderState";
 import type { StickerPackActions } from "./useStickerPackActions";
@@ -49,8 +49,8 @@ function useDockReserve(dockRef: RefObject<HTMLDivElement | null>) {
 
 /**
  * Clears a finished run with no failures once the admin starts a second
- * pass (ticks a flag, restyles, or changes the mode), so the bar returns to
- * idle with its Add button instead of waiting for the dismiss X. A run with
+ * pass (ticks an item, restyles, or changes the mode), so the bar returns to
+ * idle with its Add button straight away, with no dismiss X to press. A run with
  * failures stays, so "Retry failed" never vanishes. A pack switch only
  * rebases the comparison: the builder resets the mode and style for the new
  * pack, and that is no edit of the admin's.
@@ -66,27 +66,27 @@ function useDismissFinishedRunOnEdit({
   publisher: StickerPublisher;
   failedCount: number;
 }) {
-  const { selectedFlagIds, params, mode } = state;
+  const { selectedItemIds, style, mode } = state;
   const { run, dismiss } = publisher;
-  const baselineRef = useRef({ packId, selectedFlagIds, params, mode });
+  const baselineRef = useRef({ packId, selectedItemIds, style, mode });
 
   useEffect(() => {
     const baseline = baselineRef.current;
-    baselineRef.current = { packId, selectedFlagIds, params, mode };
+    baselineRef.current = { packId, selectedItemIds, style, mode };
     if (baseline.packId !== packId) return;
     const isEdited =
-      baseline.selectedFlagIds !== selectedFlagIds ||
-      baseline.params !== params ||
+      baseline.selectedItemIds !== selectedItemIds ||
+      baseline.style !== style ||
       baseline.mode !== mode;
     if (!isEdited || !run || run.isRunning || failedCount > 0) return;
     dismiss();
-  }, [packId, selectedFlagIds, params, mode, run, failedCount, dismiss]);
+  }, [packId, selectedItemIds, style, mode, run, failedCount, dismiss]);
 }
 
 /**
  * The publish bar in its sticky dock at the bottom of the workspace, plus
  * what the bar's buttons set off: the run itself (with a translated label per
- * flag) and "Publish pack now", which confirms with the same dialog and copy
+ * item) and "Publish pack now", which confirms with the same dialog and copy
  * as the header's Publish action before the pack goes live.
  */
 export function StickerPublishDock({
@@ -102,12 +102,17 @@ export function StickerPublishDock({
   publisher: StickerPublisher;
   onViewPack: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
   const dockRef = useRef<HTMLDivElement>(null);
   const { run } = publisher;
   const summary = summarizeRun(run);
-  const plan = buildFlagPlan(state.selectedFlagIds, pack, state.mode);
+  const plan = buildItemPlan(
+    state.template,
+    state.selectedItemIds,
+    pack,
+    state.mode,
+  );
 
   useDockReserve(dockRef);
   useDismissFinishedRunOnEdit({
@@ -118,19 +123,22 @@ export function StickerPublishDock({
   });
 
   function handleConfirmRun() {
-    const labelsByFlagId: Record<string, string> = {};
+    const labelsByItemId: Record<string, string> = {};
     for (const entry of plan) {
-      labelsByFlagId[entry.flagId] = t(
-        "admin:stickerPacks.publish.stickerLabel",
-        { flag: t(`cards:flag.${entry.flagId}`) },
+      labelsByItemId[entry.itemId] = stickerLabelFor(
+        state.template,
+        entry.itemId,
+        t,
+        language,
       );
     }
     void publisher.start({
       pack,
+      template: state.template,
       plan,
       mode: state.mode,
-      params: state.params,
-      labelsByFlagId,
+      style: state.style,
+      labelsByItemId,
     });
   }
 
@@ -139,6 +147,7 @@ export function StickerPublishDock({
       <StickerPublishBar
         pack={pack}
         plan={plan}
+        template={state.template}
         mode={state.mode}
         onModeChange={state.setMode}
         run={run}

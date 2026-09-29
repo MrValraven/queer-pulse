@@ -4,6 +4,7 @@ import {
   lazy,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -198,6 +199,7 @@ export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
   const debouncedQuery = useDebouncedValue(query, 250);
   const normalizedQuery = normalizeEmojiQuery(debouncedQuery);
   const searchRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   // Which tab is showing. Holding this here (rather than in a caller) keeps
   // the tab a purely visual affordance: closing and reopening the popover
   // always lands back on Emoji, the same way the search field always clears.
@@ -212,6 +214,38 @@ export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
     // Stickers tab has no field of its own to steal focus from.
     if (activeTab === "emoji") searchRef.current?.focus();
   }, [activeTab]);
+
+  // Small phones (`--xs`, ≤480px, `src/styles/tokens/breakpoints.css`):
+  // `.panel`'s usual `position: absolute` anchor is `EmojiComposerButton`'s
+  // `.control` wrapper, which sits well inside the composer pill (after the
+  // paperclip, about 65px in on a phone), so this panel's own width ran past
+  // the screen's right edge from there. `.panel`'s `@media (--xs)` rule pins
+  // it to the real viewport's side margins instead; the one thing pure CSS
+  // can't supply is the vertical offset, since a fixed-position panel can no
+  // longer read `bottom: calc(100% + 16px)` off `.control`. Reading
+  // `.control` directly here (`.panel`'s own DOM `parentElement`, which stays
+  // reliable after `.panel` becomes `position: fixed`) reproduces that exact
+  // offset as a measured CSS variable, so a taller composer (a reply preview open, a grown draft)
+  // still lands the panel in the right spot on the next resize.
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    function pinToViewport() {
+      if (!panel) return;
+      const control = panel.parentElement;
+      const isNarrow = window.matchMedia("(max-width: 480px)").matches;
+      if (!isNarrow || !control) {
+        panel.style.removeProperty("--emoji-picker-bottom");
+        return;
+      }
+      const controlTop = control.getBoundingClientRect().top;
+      const bottomOffset = Math.round(window.innerHeight - controlTop + 16);
+      panel.style.setProperty("--emoji-picker-bottom", `${bottomOffset}px`);
+    }
+    pinToViewport();
+    window.addEventListener("resize", pinToViewport);
+    return () => window.removeEventListener("resize", pinToViewport);
+  }, []);
 
   // What the rail's tabs are built from: the real category list, derived
   // without any reference to the query, so searching never reshapes it.
@@ -261,6 +295,7 @@ export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
 
   return (
     <div
+      ref={panelRef}
       className={styles.panel}
       role="dialog"
       aria-label={t("messages:emoji.panelLabel")}

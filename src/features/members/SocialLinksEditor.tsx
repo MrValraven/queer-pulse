@@ -1,44 +1,10 @@
-import { FiPlus, FiX } from "react-icons/fi";
-import { FadeIn, Select } from "../../shared/components/ui";
+import { AnimatePresence } from "motion/react";
+import { FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
-import {
-  SOCIAL_PLATFORMS,
-  socialHref,
-  socialPlatform,
-} from "./socialLinks.data";
+import { SocialLinksEditorRow } from "./SocialLinksEditorRow";
 import { useRowKeys } from "./useRowKeys";
 import styles from "./ProfileEdit.module.css";
-
-/**
- * Advisory-only sniff test: a non-empty value is "fine" when it would resolve to
- * a real link for this platform. We defer to `socialHref` — the same builder
- * read-mode uses — so a bare handle like "mrvalraven" on a platform with an
- * `hrefPrefix` (Instagram, X, …) is correctly accepted, not flagged. The lone
- * extra allowance is an @-address on prefix-less platforms (e.g. a Mastodon
- * "@you@instance"), which read-mode renders as a plain, readable chip rather
- * than a link. Empty is never an error; this never blocks editing — it only
- * surfaces a hint.
- */
-function looksLikeLinkOrHandle(platform: string, value: string): boolean {
-  const trimmed = value.trim();
-  if (!trimmed) return true;
-  if (/\s/.test(trimmed)) return false;
-  if (socialHref(platform, trimmed)) return true;
-  return trimmed.startsWith("@");
-}
-
-/** Platform display label: every entry except the generic fallback is a
- *  proper platform name (Instagram, GitHub, …) and stays untranslated in
- *  every locale, like a brand noun. Only the generic "Other link" fallback
- *  is platform chrome. */
-function platformLabel(
-  key: string,
-  label: string,
-  t: (key: string) => string,
-): string {
-  return key === "other" ? t("members:social.other") : label;
-}
 
 /**
  * Edit-mode "Links" control: add / remove rows, each a platform select plus a
@@ -73,79 +39,24 @@ export function SocialLinksEditor({
 
   return (
     <div className={styles.linksEditor}>
-      {links.map((link, index) => {
-        const meta = socialPlatform(link.platform);
-        const Icon = meta.icon;
-        const rowKey = keys[index];
-        const isInvalid = !looksLikeLinkOrHandle(
-          link.platform,
-          link.urlOrHandle,
-        );
-        const errorId = `${rowKey}-error`;
-        return (
-          <FadeIn
-            key={rowKey}
-            className={styles.linkRow}
-            // Allow the advisory hint (below) to wrap onto its own line without
-            // shrinking the inputs — .linkRow is a non-wrapping flex row.
-            style={isInvalid ? { flexWrap: "wrap" } : undefined}
-          >
-            <span className={styles.linkIcon} aria-hidden>
-              <Icon size={16} />
-            </span>
-            <Select
-              label={t("members:social.platformLabel")}
-              options={SOCIAL_PLATFORMS.map((platform) => ({
-                value: platform.key,
-                label: platformLabel(platform.key, platform.label, t),
-              }))}
-              value={link.platform}
-              onChange={(value) =>
-                update(index, { platform: value ?? link.platform })
-              }
+      {/* A row added later grows in and a removed one folds away, so the rows
+          below and the add button glide into place. The rows present when
+          editing opens appear as they are. */}
+      <AnimatePresence initial={false}>
+        {links.map((link, index) => {
+          // `keys` moves in lockstep with `links`, so the fallback never shows.
+          const rowKey = keys[index] ?? `link-${index}`;
+          return (
+            <SocialLinksEditorRow
+              key={rowKey}
+              rowKey={rowKey}
+              link={link}
+              onUpdate={(patch) => update(index, patch)}
+              onRemove={() => remove(index)}
             />
-            <input
-              className={`${styles.inlineInput} ${styles.linkInput}`}
-              value={link.urlOrHandle}
-              placeholder={meta.placeholder}
-              aria-label={t("members:social.linkFor", {
-                platform: platformLabel(meta.key, meta.label, t),
-              })}
-              aria-invalid={isInvalid || undefined}
-              aria-describedby={isInvalid ? errorId : undefined}
-              onChange={(event) =>
-                update(index, { urlOrHandle: event.target.value })
-              }
-            />
-            <button
-              type="button"
-              className={styles.linkRemove}
-              aria-label={t("members:social.removeLinkFor", {
-                platform: platformLabel(meta.key, meta.label, t),
-              })}
-              onClick={() => remove(index)}
-            >
-              <FiX size={15} />
-            </button>
-            {isInvalid && (
-              <span
-                id={errorId}
-                role="alert"
-                // No CSS-module class for this advisory hint (module.css is owned
-                // elsewhere); tokens-only inline style mirrors `.saveError`.
-                style={{
-                  flexBasis: "100%",
-                  color: "var(--accent-ink)",
-                  fontSize: "12.5px",
-                  fontWeight: 600,
-                }}
-              >
-                {t("members:profileEdit.validation.invalidUrl")}
-              </span>
-            )}
-          </FadeIn>
-        );
-      })}
+          );
+        })}
+      </AnimatePresence>
       <button type="button" className={styles.addRowBtn} onClick={add}>
         <FiPlus size={15} aria-hidden /> {t("members:social.addLink")}
       </button>

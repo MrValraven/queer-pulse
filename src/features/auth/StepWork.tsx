@@ -107,16 +107,18 @@ function StepWorkForm({
         </p>
       )}
       <div className={styles.nav}>
-        <Button
-          onClick={() => void handleContinue()}
-          disabled={updateProfile.isPending}
-        >
-          {t("auth:onboarding.stepWork.continue")}
-        </Button>
+        <div className={styles.navRow}>
+          <button type="button" className={styles.back} onClick={onBack}>
+            <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepWork.back")}
+          </button>
+          <Button
+            onClick={() => void handleContinue()}
+            disabled={updateProfile.isPending}
+          >
+            {t("auth:onboarding.stepWork.continue")}
+          </Button>
+        </div>
         <SkipLink onSkip={onNext} label={t("auth:onboarding.stepWork.skip")} />
-        <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepWork.back")}
-        </button>
       </div>
     </>
   );

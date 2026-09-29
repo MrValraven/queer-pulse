@@ -19,10 +19,18 @@ interface UsernameFieldProps {
   /** Controlled value (without the leading `@`). */
   value: string;
   onChange: (value: string) => void;
-  /** The member's existing username/handle — never reads as "taken against self". */
+  /** The member's existing username or handle, which reads as "yours" when typed. */
   currentName?: string;
   label?: string;
   hint?: ReactNode;
+  /** A host-owned validation error (a rule the availability check cannot see).
+   *  When set it takes the status line, marks the input invalid and hides the
+   *  "looks free" verdict, so the field never reads as fine and wrong at once. */
+  error?: string;
+  /** The adornment before the input. Defaults to `@`. */
+  prefix?: ReactNode;
+  /** Defaults to the Settings username placeholder. */
+  placeholder?: string;
   /** Notified whenever availability changes, so a host can block its save. */
   onStatusChange?: (availability: HandleAvailability) => void;
 }
@@ -46,6 +54,9 @@ export function UsernameField({
   currentName,
   label,
   hint,
+  error,
+  prefix = "@",
+  placeholder,
   onStatusChange,
 }: UsernameFieldProps) {
   const { t } = useTranslation();
@@ -74,23 +85,26 @@ export function UsernameField({
     normalizeHandle(value) === normalizeHandle(currentName);
 
   let message: string | null = null;
-  if (status === "checking") message = t(USERNAME_CHECKING_KEY);
+  if (error) message = error;
+  else if (status === "checking") message = t(USERNAME_CHECKING_KEY);
   else if (status === "available")
     message = t(isSelf ? USERNAME_YOURS_KEY : USERNAME_FREE_KEY);
   else if (status === "unavailable" && reason)
     message = t(USERNAME_REASON_KEYS[reason]);
 
   const resolvedLabel = label ?? t("settings:usernameField.defaultLabel");
-  const invalid = status === "unavailable";
+  // A host error shows as the same red, invalid state an unavailable handle does.
+  const displayState: HandleStatus = error ? "unavailable" : status;
+  const isInvalid = displayState === "unavailable";
 
   return (
     <div className={styles.field}>
       <label className={styles.label} htmlFor={inputId}>
         {resolvedLabel}
       </label>
-      <div className={styles.inputWrap} data-state={status}>
+      <div className={styles.inputWrap} data-state={displayState}>
         <span className={styles.at} aria-hidden>
-          @
+          {prefix}
         </span>
         <input
           id={inputId}
@@ -100,10 +114,10 @@ export function UsernameField({
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          placeholder={t("settings:usernameField.placeholder")}
+          placeholder={placeholder ?? t("settings:usernameField.placeholder")}
           value={value}
           onChange={(e) => onChange(e.target.value.toLowerCase())}
-          aria-invalid={invalid || undefined}
+          aria-invalid={isInvalid || undefined}
           aria-describedby={statusId}
         />
       </div>
@@ -111,13 +125,15 @@ export function UsernameField({
       <p
         id={statusId}
         className={styles.status}
-        data-state={status}
+        data-state={displayState}
         role="status"
         aria-live="polite"
       >
         {message ? (
           <>
-            <span className={styles.statusIcon}>{STATUS_ICON[status]}</span>
+            <span className={styles.statusIcon}>
+              {STATUS_ICON[displayState]}
+            </span>
             {message}
           </>
         ) : hint ? (

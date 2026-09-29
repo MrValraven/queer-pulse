@@ -1,0 +1,356 @@
+/* ── Layout: the roster beside the grant and circle panels ──────────────
+   The Every Layout "sidebar" pattern: the aside keeps a 20rem basis and the
+   roster takes the rest until it would drop under 55% of the row, at which
+   point the aside wraps below it. No breakpoint needed, so it adapts to the
+   admin rail being open or collapsed. */
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--gap-grid);
+  margin-top: var(--gap-grid);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 999 1 0;
+  gap: var(--gap-sm);
+  min-inline-size: 55%;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 20rem;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* Below the sidebar cutover, the flex-wrap above stacks .main then .aside in
+   source order, so the grant form lands under the whole roster. Reorder the
+   aside first so granting stays reachable without scrolling past every row. */
+@media (--xs) {
+  .aside {
+    order: -1;
+  }
+}
+
+.tabs {
+  align-self: flex-start;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.emptyLine {
+  margin: 0;
+  padding: 18px 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+/* ── Row ─────────────────────────────────────────────────────────────── */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: 18px 20px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.rowIdentity {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rowNameBlock {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowName {
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.rowName:hover {
+  text-decoration: underline;
+}
+
+.rowSlug {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.rowChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 10px 20px;
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.factWide {
+  grid-column: 1 / -1;
+}
+
+.fact dt {
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.fact dd {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.overrideNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.12);
+  border-radius: var(--radius-14);
+}
+
+.overrideNote svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.rowActions {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.focusControl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: min(100%, 240px);
+}
+
+.focusCaption {
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 34px 10px 14px;
+  font: inherit;
+  /* >=16px so iOS Safari never zooms the viewport on focus, matching
+     FormField's control text size. */
+  font-size: var(--text-16);
+  color: var(--ink);
+  background-color: var(--cream);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-60) 50%),
+    linear-gradient(135deg, var(--ink-60) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) center,
+    calc(100% - 13px) center;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+  /* A form control's boundary is a UI component under WCAG 1.4.11 and needs
+     3:1; 0.28 measured 1.8:1, 0.5 reaches ~3.1:1. These are the same values
+     FormField uses, so the page has one select look. */
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-14);
+  cursor: pointer;
+  appearance: none;
+}
+
+.select:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.select:focus-visible,
+.pickedClear:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Side panels ─────────────────────────────────────────────────────── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.panelIcon {
+  flex: 0 0 auto;
+  color: var(--accent-text);
+}
+
+.panelHint {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.grantForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.pickerField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Matches FormField's `.label` (FormField.module.css) so the Member field
+   reads like the FOCUS AREA / REASON fields below it. */
+.fieldCaption {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.req {
+  /* --accent-ink is 3.81:1 on cream, which fails AA. --accent-text is 5.38:1. */
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+.picked {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+}
+
+.picked > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pickedClear {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-60);
+  font-size: var(--text-15);
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pickedClear:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+    color: var(--ink);
+  }
+}
+
+.formError {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+.formError svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.circleCount {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.circleActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Revoke modal ────────────────────────────────────────────────────── */
+.modalBody {
+  margin: 0 0 16px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink);
+}

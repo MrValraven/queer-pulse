@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
-import { Button, FadeIn, FeatureHelp, Outro } from "../../shared/components/ui";
+import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTablistKeys } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -43,8 +43,7 @@ export function CulturePage() {
             <Translation
               i18nKey="culture:hero.title"
               components={{ em: <em /> }}
-            />{" "}
-            <FeatureHelp id="culture.hub" />
+            />
           </h1>
           <p className={styles.lead}>{t("culture:hero.lead")}</p>
           <div className={styles.tabs} role="tablist">

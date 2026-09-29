@@ -1,9 +1,10 @@
 import { useLayoutEffect, useRef } from "react";
+import { AnimatePresence } from "motion/react";
 import { FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLinkDTO } from "./api/subprofiles.api";
 import { MAX_ITEM_LINKS } from "./subprofileEditor.data";
-import { SocialLinkEditorRow } from "./SocialLinkEditorRow";
+import { LINK_ROW_GAP, SocialLinkEditorRow } from "./SocialLinkEditorRow";
 import { usePositionalRowKeys } from "./usePositionalRowKeys";
 import { useReorderableRows } from "./useReorderableRows";
 import sharedStyles from "./SubprofileEditor.module.css";
@@ -82,22 +83,27 @@ export function SubprofileItemLinksField({
     <div className={styles.fieldWrap}>
       <span className={styles.fieldLabel}>{listLabel}</span>
       <div className={styles.linksEditor} ref={containerRef}>
-        {links.map((link, index) => (
-          <SocialLinkEditorRow
-            key={rowKeys.keys[index]}
-            link={link}
-            index={index}
-            rowCount={links.length}
-            listLabel={listLabel}
-            isDragging={draggingIndex === index}
-            isEntering={rowKeys.insertedKeys.has(rowKeys.keys[index] ?? "")}
-            moveCount={moveCount}
-            gripHandlers={gripHandlers(index)}
-            onMove={(toIndex) => moveRow(index, toIndex)}
-            onPatch={(patchValue) => patch(index, patchValue)}
-            onRemove={() => remove(index)}
-          />
-        ))}
+        {/* A row added later grows in and a removed one folds away, so the
+            rows below and the add button glide into place. */}
+        <AnimatePresence initial={false}>
+          {links.map((link, index) => (
+            <SocialLinkEditorRow
+              key={rowKeys.keys[index]}
+              link={link}
+              index={index}
+              rowCount={links.length}
+              listLabel={listLabel}
+              isDragging={draggingIndex === index}
+              isEntering={rowKeys.insertedKeys.has(rowKeys.keys[index] ?? "")}
+              foldGap={LINK_ROW_GAP}
+              moveCount={moveCount}
+              gripHandlers={gripHandlers(index)}
+              onMove={(toIndex) => moveRow(index, toIndex)}
+              onPatch={(patchValue) => patch(index, patchValue)}
+              onRemove={() => remove(index)}
+            />
+          ))}
+        </AnimatePresence>
       </div>
 
       <div>

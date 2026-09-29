@@ -24,6 +24,11 @@ export function useMapFullscreen() {
   const runningTransitionRef = useRef<ViewTransition | null>(null);
   // Filled by the map (useLisbonMap) with a synchronous resize and redraw.
   const redrawHandleRef = useRef<(() => void) | null>(null);
+  // The full screen button (LisbonMap portals it into the zoom controls). It
+  // stays mounted in both states, so focus lands back on it after leaving.
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+  // Set when leaving starts, cleared once focus is back on the button.
+  const shouldRestoreFocusRef = useRef(false);
 
   // The overlay covers the viewport, so the page underneath must not scroll
   // while it is up.
@@ -33,6 +38,7 @@ export function useMapFullscreen() {
     (shouldBeFullscreen: boolean) => {
       if (runningTransitionRef.current !== null) return;
       if (shouldBeFullscreen === isFullscreen) return;
+      shouldRestoreFocusRef.current = !shouldBeFullscreen;
       if (
         shouldReduceMotion ||
         typeof document.startViewTransition !== "function"
@@ -65,6 +71,18 @@ export function useMapFullscreen() {
     [isFullscreen, shouldReduceMotion],
   );
 
+  // Leaving takes the search card (and whatever inside it held focus) off the
+  // page, so focus goes back to the full screen button. The effect runs once
+  // React has committed the exit, the flushSync inside the view transition's
+  // update on the animated path and the plain state change otherwise, so the
+  // card is already gone. `preventScroll` keeps the page where the map shrank
+  // back to.
+  useEffect(() => {
+    if (isFullscreen || !shouldRestoreFocusRef.current) return;
+    shouldRestoreFocusRef.current = false;
+    toggleButtonRef.current?.focus({ preventScroll: true });
+  }, [isFullscreen]);
+
   // The overlay has no browser chrome of its own to leave through, so Escape
   // closes it, animated like the button.
   useEffect(() => {
@@ -85,5 +103,5 @@ export function useMapFullscreen() {
     [changeFullscreen, isFullscreen],
   );
 
-  return { isFullscreen, toggle, exit, redrawHandleRef };
+  return { isFullscreen, toggle, exit, redrawHandleRef, toggleButtonRef };
 }

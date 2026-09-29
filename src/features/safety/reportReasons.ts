@@ -107,8 +107,8 @@ export type ReasonCode =
   | "off_platform"
   // System-filed listing codes, NEVER member-selectable. `ListingsService`
   // sets them when it files through the reports pipeline: `listing_dispute`
-  // when somebody contests an unclaimed listing, `listing_owner_notify` for
-  // the owner-outreach task a friendly listing enqueues. They are deliberately
+  // when somebody contests a listing, `listing_owner_notify` for the
+  // owner-outreach task a suggested listing enqueues. They are deliberately
   // absent from every `SUBJECT_REASONS` entry, mirroring the backend, which
   // also keeps them out of the `REASON_CODES` list `POST /reports` validates
   // against. They are here because reports carrying them DO reach the
@@ -139,7 +139,7 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   // System-filed (see the `ReasonCode` union). Labelled so any code to label
   // lookup is total, never offered as a report option.
   listing_dispute: "Dispute or claim of a business listing",
-  listing_owner_notify: "Owner outreach: friendly or suggested listing",
+  listing_owner_notify: "Owner outreach: suggested listing",
   other: "Something else, explained in detail",
 };
 

@@ -6,8 +6,8 @@ export type StatusFilter = "all" | "verified" | "new";
 /**
  * The "All members" tab's own controls: name search plus the status filter
  * pills. Extracted from `AdminMembersPage` to keep that component under the
- * repo's 200-line limit; the page still owns the state so the roster query and
- * the client-side search read the same values.
+ * repo's 200-line limit; the page still owns the state and hands it to the
+ * roster query, which searches on the server.
  */
 export function AdminMembersSearchControls({
   search,

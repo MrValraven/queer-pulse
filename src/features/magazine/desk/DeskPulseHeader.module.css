@@ -1,0 +1,229 @@
+/* DeskPulseHeader and DeskPulseLine.
+ *
+ * The <h1> is first in the DOM (a screen reader meets the page's name before
+ * any control), and explicit grid rows put the scope row above it on screen.
+ * The pulse line auto-places into an implicit third row, so a header with no
+ * pulse line adds no empty row gap. The title holds no focusable element, so
+ * the tab order still runs top to bottom, left to right.
+ */
+
+/* One band step (--gap-sm) under the header, the same step the focus chips
+   and the workbar keep below themselves, so the four bands read as one
+   rhythm. */
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+}
+
+.title {
+  grid-row: 2;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-32);
+  font-weight: 400;
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--text-strong);
+}
+
+.topRow {
+  grid-row: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--gap-sm);
+  row-gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-left: auto;
+}
+
+/* ── Pulse line ── */
+
+.pulseBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+/* Facts are separated by a middle dot that must never open a line, however
+   the line wraps. Each
+   part draws its dot in a box of --pulse-dot-space before it and pulls
+   itself back over that box with a negative margin, while the column gap
+   pays the same space between parts. So every part's layout width is its
+   text alone, and the part that opens a line puts its dot left of the line,
+   where `overflow-x: clip` cuts it. The inline padding (cancelled by a
+   negative margin) is the focus ring's room, narrower than the dot's own
+   offset, so rings show whole and the dot stays cut. */
+.pulse {
+  --pulse-dot-space: 1.4em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--pulse-dot-space);
+  min-width: 0;
+  margin: 0 calc(-1 * var(--workbar-ring-room));
+  padding-inline: var(--workbar-ring-room);
+  overflow-x: clip;
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  line-height: var(--lh-title);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.part {
+  margin-inline-start: calc(-1 * var(--pulse-dot-space));
+}
+
+/* The middle dot is decoration: the empty alt text keeps a screen reader
+   from reading it out. */
+.part::before {
+  content: "\00B7" / "";
+  display: inline-block;
+  inline-size: var(--pulse-dot-space);
+  text-align: center;
+  color: var(--ink-60);
+  font-weight: 400;
+}
+
+/* The slot count as a door to the issue plan: text that reads like the rest
+   of the line, with a dotted underline as the only hint it opens something. */
+.planLink {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-4);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.planLink:hover {
+  color: var(--text-strong);
+  text-decoration-style: solid;
+}
+
+/* The button carries `data-tap-target` (base.css), a 44px hit area around
+   the 15px line. */
+
+.planLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* "Set close date": the pulse line's own quiet call to action, styled like
+   .planLink's link-like text button (an issue with no close date has no
+   count to link to, so it gets its own class rather than reusing that one). */
+.setCloseDate {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-4);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.setCloseDate:hover {
+  color: var(--text-strong);
+  text-decoration-style: solid;
+}
+
+.setCloseDate:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A closing-soon countdown keeps its late tone on hover; only the
+   underline firms up. */
+[data-closing-soon] .setCloseDate:hover {
+  color: inherit;
+}
+
+/* Saving: `aria-disabled` (the button keeps its focus while it waits). */
+.setCloseDate[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.late {
+  color: var(--desk-tone-late);
+  font-weight: 600;
+}
+
+/* The slot meter: a full-width hairline under the pulse line that doubles as
+   the header's bottom rule. */
+.meter {
+  position: relative;
+  height: 3px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--line-2);
+}
+
+.meterFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--text-strong);
+  transform-origin: left center;
+  transform: scaleX(var(--slot-share, 0));
+  transition-property: transform;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+
+/* A touch screen gets the full target on New without changing its look. */
+@media (pointer: coarse) {
+  .actions button {
+    min-height: var(--tap-min);
+  }
+}
+
+/* Phone: one line for the scope and New, then the title and the pulse
+   line. The close date gives way to "days left" (the same fact, relative),
+   so the pulse line stays one line in both languages. */
+@media (max-width: 600px) {
+  .header {
+    row-gap: 0;
+  }
+
+  /* The scope trigger: a zero basis keeps New on the same line however long
+     the issue's theme is; the label wraps inside the trigger instead. */
+  .topRow > :first-child {
+    flex: 1 1 0;
+  }
+
+  .closesPart {
+    display: none;
+  }
+
+  .part {
+    white-space: nowrap;
+  }
+}

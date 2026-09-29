@@ -247,6 +247,12 @@ export function profileToMember(dto: ProfileDTO): Member {
     // another member's profile and only carries a real value on the owner's
     // own fetch, matching `ProfileSettingsMenu`'s `resolvedProfile.hiddenUntil` read.
     hiddenUntil: dto.hiddenUntil,
+    // Same defensiveness as `photoVisible`/`vouchersVisible` above (backend
+    // default `true`), plus the owner-only standing itself. `ambassador` is
+    // the backend's own gate for who gets a value here; this just carries it
+    // through.
+    isAmbassadorTagVisible: dto.isAmbassadorTagVisible ?? true,
+    ambassador: dto.ambassador ?? null,
     // The band the BACKEND decided this viewer may see: it has already applied
     // the member's opt-out (with the owner exempted), so there is no gate to
     // re-apply here. See backend `visibleBand`.

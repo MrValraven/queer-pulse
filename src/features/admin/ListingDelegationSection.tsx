@@ -1,5 +1,13 @@
-import { LoadErrorState, SkeletonLine } from "../../shared/components/ui";
+import { Link } from "react-router-dom";
+import { FiEdit2 } from "react-icons/fi";
+import {
+  Button,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
+import { adminListingEditPath } from "./api/adminListingEdit.api";
 import { useAdminListingDelegation } from "./api/useAdminListingDelegation";
 import { ListingCoManagerRoster } from "./ListingCoManagerRoster";
 import { ListingOwnerOfferBlock } from "./ListingOwnerOfferBlock";
@@ -17,8 +25,8 @@ import styles from "./ListingDelegationSection.module.css";
  *
  * `ownerSlug` comes from the listing's `submittedBy`, which the backend maps
  * from `listing.owner_id`, so it is genuinely the owner. A `null` owner means
- * the house wrote the listing and still holds it, which is the state the
- * ownership offer exists for.
+ * the platform holds the listing: house-authored, a staff suggestion nobody
+ * has claimed yet, or an owner erased from a listing nobody re-claimed.
  *
  * The prop is spelled `listingRef`. A prop named `ref` trips the
  * `react-hooks/refs` compiler lint even holding a plain string, as
@@ -27,9 +35,18 @@ import styles from "./ListingDelegationSection.module.css";
 export function ListingDelegationSection({
   listingRef,
   ownerSlug,
+  suggesterSlug,
+  suggesterName,
 }: {
   listingRef: string;
   ownerSlug: string | null;
+  /** Who suggested the place, when a platform-held listing is a member's
+   *  suggestion. Optional so this component keeps building before every
+   *  caller passes it. */
+  suggesterSlug?: string | null;
+  /** The suggester's display name, shown in place of their slug when known.
+   *  Optional for the same reason as `suggesterSlug`. */
+  suggesterName?: string | null;
 }) {
   const { t } = useTranslation();
   const { delegation, isLoading, isError, refetch } =
@@ -51,16 +68,39 @@ export function ListingDelegationSection({
         ) : (
           <>
             <p className={styles.line}>
-              {t("admin:listingDelegation.owner.none")}
+              {t("admin:listingDelegation.owner.heldByPlatform")}
             </p>
-            {/* Say only what the panel can know. An erased owner leaves
-                `owner_id` null on a listing nobody at the house wrote, and
-                `createdByStaffId` is deliberately in no DTO, so the two cases
-                are indistinguishable from here. */}
             <p className={styles.meta}>
-              {t("admin:listingDelegation.owner.noneDetail")}
+              {t("admin:listingDelegation.owner.heldByPlatformDetail")}
             </p>
+            {/* Only a listing the platform holds is editable here
+                (`PATCH /admin/listings/:ref` is Admin only, like this whole
+                panel): once somebody owns it, its owner edits it. */}
+            <Button
+              variant="ghost"
+              to={adminListingEditPath(listingRef)}
+              className={styles.editAction}
+            >
+              <FiEdit2 aria-hidden /> {t("admin:adminListings.preview.editCta")}
+            </Button>
           </>
+        )}
+        {suggesterSlug && (
+          <p className={styles.meta}>
+            {/* The member's name renders through `adminListings.suggestedBy`
+                ("Suggested by {name}"); when only the slug is known, the line
+                falls back to the existing `@{slug}` key. Either way it links
+                to the suggester's profile. */}
+            <Link to={`${routes.members}/${suggesterSlug}`}>
+              {suggesterName
+                ? t("admin:adminListings.suggestedBy", {
+                    name: suggesterName,
+                  })
+                : t("admin:listingDelegation.owner.suggestedBy", {
+                    slug: suggesterSlug,
+                  })}
+            </Link>
+          </p>
         )}
       </div>
 

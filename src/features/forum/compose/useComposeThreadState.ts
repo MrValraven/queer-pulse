@@ -18,6 +18,7 @@ import {
   NEIGHBOURHOOD_CATEGORIES,
 } from "./composeCategories.data";
 import { KIND_DEFAULT_CATEGORY } from "./composeKinds.data";
+import { FORUM_TAG_OPTIONS } from "../forumTags.data";
 
 // ── The composer's fields, and the one way to change each of them ───────────
 // Photos are the one field NOT held here: they carry an upload in flight, an
@@ -231,7 +232,9 @@ function buildTagSetters(update: Update) {
     addTag: (raw: string) =>
       update((current) => {
         const tag = normalizeTag(raw);
-        if (!tag) return current;
+        // Only words from the curated vocabulary can be added. Tags already on
+        // a restored draft stay put; this guards new additions alone.
+        if (!FORUM_TAG_OPTIONS.includes(tag)) return current;
         if (current.tags.includes(tag)) return current;
         if (current.tags.length >= COMPOSE_TAG_LIMIT) return current;
         return { ...current, tags: [...current.tags, tag] };

@@ -15,15 +15,7 @@ export type TherapistEditChapter =
  */
 export type TherapistEditTarget =
   | { pane: "skinBlocks"; chapter: TherapistEditChapter; field?: string }
-  | {
-      pane:
-        | "identity"
-        | "presence"
-        | "section:credentials"
-        | "section:gallery"
-        | "publish";
-      field?: string;
-    };
+  | { pane: "identity" | "presence" | "publish"; field?: string };
 
 function blocks(
   chapter: TherapistEditChapter,
@@ -55,8 +47,8 @@ export const THERAPIST_EDIT_TARGETS = {
   // Sections
   approach: blocks("approach", "approach"),
   specialties: blocks("approach", "section:specialisms"),
-  credentials: { pane: "section:credentials" },
-  gallery: { pane: "section:gallery" },
+  credentials: blocks("approach", "section:credentials"),
+  gallery: blocks("where", "section:gallery"),
   whoFor: blocks("approach", "whoFor"),
   firstSession: blocks("availability", "firstSession"),
   faq: blocks("contact", "faq"),
@@ -112,6 +104,8 @@ const FIELD_ARIA_KEYS: Record<string, string> = {
   approach: `${ARIA}.approach`,
   whoFor: `${ARIA}.whoFor`,
   "section:specialisms": `${ARIA}.specialties`,
+  "section:credentials": `${ARIA}.credentials`,
+  "section:gallery": `${ARIA}.gallery`,
   firstSession: `${ARIA}.firstSession`,
   "availabilitySummary.headline": `${ARIA}.availability`,
   feeSchedule: `${ARIA}.sessions`,
@@ -133,8 +127,6 @@ const SCOPE_ARIA_KEYS: Record<string, string> = {
   contact: `${ARIA}.contact`,
   identity: `${ARIA}.identity`,
   presence: `${ARIA}.presence`,
-  "section:credentials": `${ARIA}.credentials`,
-  "section:gallery": `${ARIA}.gallery`,
   publish: `${ARIA}.publish`,
 };
 

@@ -1,4 +1,4 @@
-/* Reusable @username field — matches the FormField control styling so it reads
+/* Reusable @username field. Matches the FormField control styling so it reads
    as native, with a leading @ adornment and a live availability status line. */
 
 .field {
@@ -30,7 +30,11 @@
     background 0.22s var(--ease);
 }
 
+/* A multi-character prefix like `/p/` would otherwise shrink as a flex item
+   and wrap at its slashes. */
 .at {
+  flex-shrink: 0;
+  white-space: nowrap;
   font-family: var(--sans);
   font-size: var(--text-16);
   color: var(--ink-40);
@@ -53,6 +57,20 @@
   border-color: var(--line-strong);
   box-shadow: var(--ring-plum-soft);
   background: var(--paper);
+}
+
+/* One focus ring, drawn on the wrap so it hugs the whole control. The input's
+   own global halo would paint a second, smaller ring inside it. The wrap
+   restates the two-tone ring from tokens/effects.css. */
+.input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.inputWrap:has(.input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .inputWrap[data-state="available"] {

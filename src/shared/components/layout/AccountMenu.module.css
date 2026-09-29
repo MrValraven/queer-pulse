@@ -145,8 +145,26 @@
   }
 }
 
+/* The first name is capped so a long one cannot widen the top bar's right
+   cluster and push the wordmark under the MegaNav triggers. The budget follows
+   the fluid trigger gap in MegaNav.module.css: 46px keeps the full gap from
+   1024px to 1090px, the room then grows with the viewport, and 12ch is the
+   ceiling on wide screens. Only the ink is clipped: the whole name stays in
+   the DOM, so the button's accessible name keeps it. */
 .name {
+  min-width: 0;
+  max-width: min(12ch, max(46px, 100vw - 1044px));
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+/* The compact pill (up to --nav-compact) swaps the trigger row for one Menu
+   button, which leaves the right cluster plenty of room: only the wide-screen
+   ceiling applies there. */
+@media (--nav-compact) {
+  .name {
+    max-width: 12ch;
+  }
 }
 
 .chevron {

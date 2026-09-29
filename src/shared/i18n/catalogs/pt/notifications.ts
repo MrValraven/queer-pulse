@@ -256,6 +256,13 @@ export const notifications: Catalog = {
     "A equipa do QueerPulse recusou o pedido de espaços para {communityName}.",
   "type.community_space_request_declined.meta": "Pedido de espaços recusado",
   "type.community_space_request_declined.communityFallback": "a tua comunidade",
+  "type.ambassador_granted.text":
+    "Agora és pessoa embaixadora da QueerPulse. Boas-vindas ao círculo.",
+  "type.ambassador_granted.meta": "Pessoa embaixadora · {focus}",
+  "type.ambassador_granted.metaFallback": "Pessoa embaixadora",
+  "type.ambassador_revoked.text":
+    "O teu estatuto de pessoa embaixadora da QueerPulse terminou. Agradecemos tudo o que trouxeste.",
+  "type.ambassador_revoked.meta": "Pessoa embaixadora",
   "type.community_report_filed.emergency.text":
     "Uma denúncia urgente em {communityName} precisa de uma decisão dentro de uma hora.",
   "type.community_report_filed.emergency.meta": "Denúncia urgente",
@@ -979,4 +986,41 @@ export const notifications: Catalog = {
   "type.listing_owner_offer.meta": "Oferta de propriedade",
   "type.listing_co_manager_invite.listingNameFallback": "este espaço",
   "type.listing_co_manager_invite.nameFallback": "Alguém",
+  // As mesmas quatro frases com a pessoa como ligação ao perfil, usadas
+  // sempre que a linha resolve quem agiu (`PERSONALIZED_KINDS` em
+  // notifications.adapters).
+  "type.listing_co_manager_invite.textNamed":
+    "<profile>{name}</profile> convidou-te para ajudar a gerir {listingName}.",
+  "type.listing_co_manager_invite_accepted.textNamed":
+    "<profile>{name}</profile> aceitou o teu convite para cogerir {listingName}.",
+  "type.listing_co_manager_invite_declined.textNamed":
+    "<profile>{name}</profile> recusou o teu convite para cogerir {listingName}.",
+  "type.listing_owner_offer.textNamed":
+    "<profile>{name}</profile> ofereceu-te a propriedade de {listingName}.",
+
+  // Go together.
+  "type.go_together_group_ready.meta": "Grupo do Vamos juntes",
+  "type.go_together_group_ready.text":
+    "O teu grupo para {eventTitle} está pronto",
+  "type.go_together_meet_again.meta": "Feedback do Vamos juntes",
+  "type.go_together_meet_again.text":
+    "Queres voltar a encontrar o teu grupo de {eventTitle}?",
+  "type.go_together_member_left.meta": "Grupo do Vamos juntes",
+  "type.go_together_member_left.text":
+    "Alguém saiu do teu grupo para {eventTitle}",
+  "type.go_together_mutual.meta": "Nova conexão",
+  "type.go_together_mutual.text":
+    "Tu e outra pessoa do grupo de {eventTitle} querem voltar a encontrar-se",
+  "type.go_together_mutual.textNamed":
+    "Tu e <profile>{name}</profile> querem voltar a encontrar-se",
+  "type.go_together_pair_invite.meta": "Convite para ir juntes",
+  "type.go_together_pair_invite.text":
+    "Alguém quer ir juntes contigo a {eventTitle}",
+  "type.go_together_pair_invite.textNamed":
+    "<profile>{name}</profile> quer ir juntes contigo a {eventTitle}",
+  "type.go_together_unmatched.meta": "Atualização do Vamos juntes",
+  "type.go_together_unmatched.text":
+    "Desta vez não conseguimos juntar um grupo para {eventTitle}",
+  "type.go_together_unmatched.textFinal":
+    "Não foi possível juntar-te a um grupo para {eventTitle}",
 };

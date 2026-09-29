@@ -1,9 +1,10 @@
 /**
  * The desk's assign-to-issue workflow: which pieces the issue picker is open
- * for, the two selection toggles that keep the piece and pitch bulk bars from
- * colliding, and the submit that routes one piece vs. a batch to the right
- * endpoint. Lifted out of `EditorDashboardPage` so the page stays under the
- * 200-line component rule — mirrors `useDeskTracks` / `useDeskModals`.
+ * for, the piece selection toggles that clear pitch triage's own selection so
+ * the two bulk bars never both claim the bottom slot, and the submit that
+ * routes one piece vs. a batch to the right endpoint. Lifted out of
+ * `EditorDashboardPage` so the page stays under the 200-line component rule,
+ * mirroring `useDeskTracks` / `useDeskModals`.
  */
 
 import { useState } from "react";
@@ -24,10 +25,9 @@ export interface UseDeskAssignmentParams {
   pieceSelection: ReturnType<typeof useDeskPieceSelection>;
   /** `useDeskTracks.assignPieceToIssue`, for the single-piece path. */
   assignPieceToIssue: ReturnType<typeof useDeskTracks>["assignPieceToIssue"];
-  /** The pitch inbox's selection controls, cleared whenever a piece selection
-   *  starts — both bulk bars are fixed to the same bottom slot. */
+  /** The pitch triage overlay's own selection, cleared whenever a piece
+   *  selection starts, so the two bulk bars never both claim a bottom slot. */
   pitchSelection: {
-    toggleSelect: (pitchId: string) => void;
     clearSelected: () => void;
   };
   showToast: (message: string, type?: ToastType) => void;
@@ -56,11 +56,6 @@ export function useDeskAssignment({
     pieceSelection.toggleSelectAll();
   };
 
-  const togglePitchSelect = (pitchId: string) => {
-    pieceSelection.clearPieceSelection();
-    pitchSelection.toggleSelect(pitchId);
-  };
-
   const openForPiece = (piece: Piece) => setAssignTargets([piece]);
   const openForSelection = (visiblePieces: Piece[]) =>
     setAssignTargets(
@@ -74,11 +69,22 @@ export function useDeskAssignment({
     const targets = assignTargets ?? [];
     const [firstTarget] = targets;
     if (!firstTarget) return;
-    // One piece keeps the single-piece PATCH — it already owns its toast and
+    // One piece keeps the single-piece PATCH: it already owns its toast and
     // patches demo state. A real selection goes through the batch endpoint so
-    // the whole set lands or fails together.
+    // the whole set lands or fails together. When this one piece came from
+    // the bulk bar's own selection, clear it on success too, the way the
+    // batch path below always does.
     if (targets.length === 1) {
-      assignPieceToIssue(firstTarget, target);
+      const isFromSelection = pieceSelection.selectedPieceIds.includes(
+        firstTarget.id,
+      );
+      assignPieceToIssue(
+        firstTarget,
+        target,
+        isFromSelection
+          ? () => pieceSelection.clearPieceSelection()
+          : undefined,
+      );
       return;
     }
     pieceMutations.assignIssue.mutate(
@@ -115,6 +121,5 @@ export function useDeskAssignment({
     submit,
     togglePieceSelect,
     toggleAllPieceSelect,
-    togglePitchSelect,
   };
 }

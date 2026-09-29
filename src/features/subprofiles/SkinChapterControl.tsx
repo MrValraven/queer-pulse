@@ -1,5 +1,7 @@
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import { SectionListControl } from "./SectionListControl";
+import { SkinAvailabilityGrid } from "./SkinAvailabilityGrid";
 import { SkinChipsControl } from "./SkinChipsControl";
 import { SkinChoiceChipsRefined } from "./SkinChoiceChipsRefined";
 import { SkinEntriesControl } from "./SkinEntriesControl";
@@ -9,21 +11,25 @@ import { SkinCountControl, SkinMoneyControl } from "./SkinNumberControls";
 import { SkinPairsControl } from "./SkinPairsControl";
 import { SkinParagraphsControl } from "./SkinParagraphsControl";
 import { SkinQuoteControl } from "./SkinQuoteControl";
+import { SkinRetiredField } from "./SkinRetiredField";
 import { SkinSegmentedControl } from "./SkinSegmentedControl";
 import { SkinSelectControl } from "./SkinSelectControl";
 import { SkinTextFieldControl } from "./SkinTextFieldControl";
 import { TherapistTopicsControl } from "./TherapistTopicsControl";
+import { useShownRetiredControl } from "./useShownRetiredControl";
 
 /**
  * One control of the chaptered skin editor, picked by its `kind`. Every
  * control is fully controlled by `editor` and saves with the global "Save
  * all". The older `stringList` and `objectList` names route to `lines` and
- * `entries`, as in the blocks editor. `grid` never appears in a chapter, so
- * it renders nothing here. The quote (a text control with
- * `hasEmphasisPreview`) gets its own writing surface. Choice chips render `SkinChoiceChipsRefined` directly:
- * `SkinChoiceChipsControl` and `SkinSelectControl` keep the older look for
- * the generic blocks editor (SubprofileSkinBlocksEditor), and no chapter
- * declares a `select`.
+ * `entries`. `grid` renders the practice family's availability calendar, and
+ * `sectionList` a persona section's item list (`SectionListControl`), which
+ * saves with that section's rows. The quote (a text control with
+ * `hasEmphasisPreview`) gets its own writing surface. Choice chips render
+ * `SkinChoiceChipsRefined`. `SkinSelectControl` keeps its older look, and no
+ * chapter declares a `select` today. A retired control (`isRetired`) sits
+ * in `SkinRetiredField`, which adds Clear and, for a list with
+ * `moveToSection`, "Move to Credentials".
  */
 export function SkinChapterControl({
   control,
@@ -33,6 +39,34 @@ export function SkinChapterControl({
   control: SkinBlockControl;
   editor: SubprofileSkinBlocksEditor;
   isLabelHidden?: boolean;
+}) {
+  // `useShownRetiredControl` drops a retired list's stale "Move this into
+  // Credentials" helper when this persona lacks that section, the same case
+  // `SkinMoveToSectionAction` already hides its button for, so both agree.
+  const shownControl = useShownRetiredControl(control);
+  const field = (
+    <ControlByKind
+      control={shownControl}
+      editor={editor}
+      isLabelHidden={isLabelHidden}
+    />
+  );
+  if (!control.isRetired) return field;
+  return (
+    <SkinRetiredField control={shownControl} editor={editor}>
+      {field}
+    </SkinRetiredField>
+  );
+}
+
+function ControlByKind({
+  control,
+  editor,
+  isLabelHidden,
+}: {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+  isLabelHidden: boolean;
 }) {
   const props = { control, editor, isLabelHidden };
   const isTextKind = control.kind === "text" || control.kind === "textarea";
@@ -77,7 +111,11 @@ export function SkinChapterControl({
           isLabelHidden={isLabelHidden}
         />
       );
+    // The practice family's 28-day calendar.
     case "grid":
-      return null;
+      return <SkinAvailabilityGrid {...props} />;
+    // A persona section's item list, edited with the section editor.
+    case "sectionList":
+      return <SectionListControl control={control} />;
   }
 }

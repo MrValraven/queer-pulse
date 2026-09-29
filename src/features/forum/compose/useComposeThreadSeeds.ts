@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { COMPOSE_TITLE_MAX_LENGTH } from "./composeThread.types";
+import { FORUM_TAG_OPTIONS } from "../forumTags.data";
 import { normalizeTag } from "./useComposeThreadState";
 
 // ── What the link that opened the composer already knew ─────────────────────
@@ -49,10 +50,14 @@ export function useComposeThreadSeeds(): ComposeThreadSeeds {
   const community = searchParams.get(COMPOSE_COMMUNITY_PARAM);
 
   return useMemo(() => {
-    // Normalized through the composer's own rules rather than trusted: a tag
-    // arrives from a URL anyone can edit, and the tag box would refuse the
-    // same text typed by hand.
-    const seededTag = tag ? normalizeTag(tag) : "";
+    // Normalized through the composer's own rules and checked against the
+    // curated vocabulary: a tag arrives from a URL anyone can edit, and the
+    // tag box only accepts words from `FORUM_TAG_OPTIONS`. A word outside the
+    // list seeds nothing.
+    const normalizedTag = tag ? normalizeTag(tag) : "";
+    const seededTag = FORUM_TAG_OPTIONS.includes(normalizedTag)
+      ? normalizedTag
+      : "";
     return {
       ...(title
         ? { initialTitle: title.slice(0, COMPOSE_TITLE_MAX_LENGTH) }

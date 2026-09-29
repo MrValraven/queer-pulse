@@ -1,4 +1,10 @@
-import { useEffect, useRef, type KeyboardEvent, type RefObject } from "react";
+import {
+  Fragment,
+  useEffect,
+  useRef,
+  type KeyboardEvent,
+  type RefObject,
+} from "react";
 import { createPortal } from "react-dom";
 import { usePieceRowMenuPlacement } from "./usePieceRowMenuPlacement";
 import styles from "./PieceRowMenu.module.css";
@@ -6,13 +12,15 @@ import type { PieceRowMenuItem } from "./pieceRowMenuItems";
 
 export interface PieceRowMenuPopoverProps {
   items: PieceRowMenuItem[];
-  /** The ⋯ button this popover hangs off, for both anchoring and dismissal. */
+  /** The More button this popover hangs off, for both anchoring and dismissal. */
   triggerRef: RefObject<HTMLButtonElement | null>;
   /** Names the menu for screen readers, matching its trigger. */
   label: string;
-  /** Closes the menu. `restoreFocus` returns focus to the trigger, which is
-   *  right for Escape and wrong when a selected item opens a dialog of its
-   *  own — that dialog owns focus from there. */
+  /** Closes the menu. `restoreFocus` returns focus to the trigger before a
+   *  selected item runs, so a dialog the item opens records the trigger as
+   *  its own place to return focus to when it closes. Escape and Tab always
+   *  restore it; an outside press or a scroll/resize does not, since focus
+   *  has already moved somewhere else. */
   onClose: (restoreFocus: boolean) => void;
 }
 
@@ -21,8 +29,8 @@ export interface PieceRowMenuPopoverProps {
  * open, so every open measures fresh (see `usePieceRowMenuPlacement`).
  *
  * Implements the APG menu keyboard contract: focus enters the menu on open,
- * Arrow Up/Down rove, Home/End jump to the ends, Escape closes and hands focus
- * back to the trigger.
+ * Arrow Up/Down rove, Home/End jump to the ends, Escape and Tab close and
+ * hand focus back to the trigger.
  */
 export function PieceRowMenuPopover({
   items,
@@ -47,11 +55,15 @@ export function PieceRowMenuPopover({
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>): void {
-    // The desk row is a `role="button"` whose Enter handler opens the piece.
-    // React portals still bubble events through the React tree, so without this
-    // every key pressed in the menu would also reach that handler.
+    // React portals still bubble events through the React tree, and the desk's
+    // shortcuts listen on the window: without this, Arrow keys and letters
+    // pressed in the menu would also move the desk's current row.
     event.stopPropagation();
-    if (event.key === "Escape") {
+    if (event.key === "Escape" || event.key === "Tab") {
+      // Tab would otherwise walk out of the portaled menu while it stays
+      // open, since it never reaches a focusable element after the last
+      // item: closing here and returning focus to the trigger keeps the
+      // menu from lingering open behind whatever Tab would land on next.
       event.preventDefault();
       onClose(true);
       return;
@@ -90,32 +102,44 @@ export function PieceRowMenuPopover({
         left: placement?.left ?? 0,
         top: placement?.top ?? 0,
         transformOrigin: placement?.transformOrigin,
-        // Keep the pre-measure frame unpainted rather than flashing the menu
-        // at the viewport corner for a frame.
+        // The pre-measure frame stays unpainted, so the menu first appears
+        // in place beside its trigger.
         visibility: placement ? "visible" : "hidden",
       }}
       onKeyDown={handleKeyDown}
     >
-      {items.map((item, index) => (
-        <button
-          key={item.key}
-          ref={(node) => {
-            itemRefs.current[index] = node;
-          }}
-          type="button"
-          role="menuitem"
-          tabIndex={-1}
-          className={item.danger ? styles.itemDanger : styles.item}
-          onClick={(event) => {
-            event.stopPropagation();
-            onClose(false);
-            item.onSelect();
-          }}
-        >
-          {item.icon}
-          {item.label}
-        </button>
-      ))}
+      {items.map((item, index) => {
+        const Icon = item.icon;
+        return (
+          <Fragment key={item.key}>
+            {/* Outside the roving index: Arrow keys skip the rule. */}
+            {item.hasSeparatorBefore && (
+              <div role="separator" className={styles.separator} />
+            )}
+            <button
+              ref={(node) => {
+                itemRefs.current[index] = node;
+              }}
+              type="button"
+              role="menuitem"
+              tabIndex={-1}
+              className={item.danger ? styles.itemDanger : styles.item}
+              onClick={(event) => {
+                event.stopPropagation();
+                // Focus returns to the trigger before the item runs, so a
+                // dialog it opens (Chase, Hand off, Move issue, Delete)
+                // records the trigger as where focus goes back to when it
+                // closes, ahead of this menu item unmounting.
+                onClose(true);
+                item.onSelect();
+              }}
+            >
+              <Icon aria-hidden />
+              {item.label}
+            </button>
+          </Fragment>
+        );
+      })}
     </div>,
     document.body,
   );

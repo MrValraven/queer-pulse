@@ -7,6 +7,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { subprofileEditPath } from "../../app/routeMap";
 import { handleFormatError } from "../../shared/handles";
+import { handleIsKindName, handleNamesOwner } from "./personaHandle";
 import {
   getAffiliationOptions,
   type LinkVisibility,
@@ -185,8 +186,18 @@ export interface NewSideForm {
   sources: SubprofileView[];
   effectiveKind: SubprofileKind | null;
   ownerSlug: string;
+  /** Same source as `ownerSlug`, but `null` instead of the "you" display
+   *  fallback when no real slug is known yet. The names-owner check (here and
+   *  in `NewSideStepIdentity`) must skip entirely in that case: "you" would
+   *  otherwise false-flag any handle with a `-you-` segment, such as
+   *  "Thank You Next". */
+  creatorSlugForChecks: string | null;
   slug: string;
   handle: string;
+  /** True when the standalone handle candidate is only the persona's kind
+   *  name ("therapist", "terapia"). Standalone Create stays disabled then,
+   *  and `NewSideStepIdentity` asks for a name above. */
+  isHandleKindName: boolean;
   displayNamePlaceholder: string;
   step1Ready: boolean;
   step2Ready: boolean;
@@ -241,6 +252,9 @@ export function useNewSideForm(
     };
   }, [demoMode, sessionSlug]);
   const ownerSlug = sessionSlug ?? (demoMode ? (demoSlug ?? "you") : "you");
+  // Unlike `ownerSlug`, this stays `null` until a real slug resolves instead
+  // of falling back to the literal "you" (see `NewSideForm.creatorSlugForChecks`).
+  const creatorSlugForChecks = sessionSlug ?? (demoMode ? demoSlug : null);
 
   const source = sources.find((candidate) => candidate.id === sourceId) ?? null;
   const effectiveKind = method === "copy" ? (source?.kind ?? null) : kind;
@@ -259,9 +273,22 @@ export function useNewSideForm(
     slugify(effectiveDisplayName) ||
     (effectiveKind ? defaultSlugForKind(effectiveKind) : "");
   const handleCandidate = autoSlug;
+  // Standalone must also clear the same names-owner check the editor's
+  // publish checklist runs, so a display name that slugifies onto the
+  // creator's own profile slug ("Tiago Dev" -> tiago-dev for creator
+  // "tiago") never enables a Create the server would go on to refuse. Skipped
+  // entirely with no real creator slug yet, so it never false-flags on the
+  // "you" placeholder (a handle like "thank-you-next"). It also may not be
+  // only the kind name: an empty display name falls back to the kind label,
+  // which would otherwise hand a standalone Therapist `/p/therapist`.
+  const isHandleKindName =
+    effectiveKind !== null && handleIsKindName(handleCandidate, effectiveKind);
   const step2Ready =
     linkVisibility !== "unlinked" ||
-    handleFormatError(handleCandidate) === null;
+    (handleFormatError(handleCandidate) === null &&
+      !isHandleKindName &&
+      (creatorSlugForChecks === null ||
+        !handleNamesOwner(handleCandidate, creatorSlugForChecks)));
 
   const displayNamePlaceholder =
     method === "copy"
@@ -348,8 +375,10 @@ export function useNewSideForm(
     sources,
     effectiveKind,
     ownerSlug,
+    creatorSlugForChecks,
     slug: autoSlug,
     handle: handleCandidate,
+    isHandleKindName,
     displayNamePlaceholder,
     step1Ready,
     step2Ready,

@@ -292,6 +292,13 @@ export const magazine: Catalog = {
     "Fonte em todos os slides de estatística (opcional)",
   "deck.editor.publish.checklist.sourcePending":
     "Fonte em todos os slides de estatística (opcional, ainda nenhum)",
+
+  // ── useLinkedDeckPublish (o que recusa o ato de publicar de um deck ligado a uma peça) ──
+  "deck.editor.piecePublish.careGateToast":
+    "Retido pelo controlo de cuidado: {items}.",
+  "deck.editor.piecePublish.notReadyToast":
+    "Ainda não está pronto para publicar. {items}",
+
   "deck.editor.danger.title": "Zona de perigo",
   "deck.editor.danger.body":
     "Eliminar um deck remove-o de todos os sítios onde está ligado. Não é possível desfazer.",
@@ -318,6 +325,8 @@ export const magazine: Catalog = {
   "deck.editor.convertModal.body":
     "Os slides de texto e imagem passam diretamente para blocos de artigo, e cada estatística vira um bloco de estatísticas. Os slides interativos (antes/depois, revelar) não têm equivalente em artigo e serão descartados. Isto não pode ser desfeito.",
   "deck.editor.convertModal.cta": "Converter em artigo",
+  "deck.editor.convertModal.blockedPublishedToast":
+    "Despublica este deck antes de o converteres num artigo.",
 
   // ── Issue chrome — partilhado por IssueCover, IssueContents, IssuesPage ──
   "issue.backToAllIssues": "Todas as edições",
@@ -556,18 +565,9 @@ export const magazine: Catalog = {
   // ── EditorSideCards ────────────────────────────────────────────────────
 
   // ── EditorDecksSection ──────────────────────────────────────────────────
-  "editor.decks.title": "Decks interativos",
-  "editor.decks.countLabel": "{count} decks",
-  "editor.decks.columnTitle": "Título",
-  "editor.decks.columnSection": "Secção",
-  "editor.decks.columnStatus": "Estado",
-  "editor.decks.emptyTitle": "Ainda não há decks",
-  "editor.decks.emptyBody":
-    "Os decks interativos que criares aparecem aqui. Começa um e publica-o quando estiver pronto.",
-  "editor.decks.new": "Novo deck",
+  // A secção já não existe; o DeckEditorHeader ainda lê estas duas.
   "editor.decks.statusPublished": "Publicado",
   "editor.decks.statusDraft": "Rascunho",
-  "editor.decks.edit": "Editar",
 
   // ── EditorDashboardPage ────────────────────────────────────────────────
 
@@ -583,20 +583,13 @@ export const magazine: Catalog = {
   // — um id de fase que também serve de texto apresentado é um projeto maior
   // de indireção por chave, fora do âmbito desta ronda.
 
-  // ── DeskHeader ───────────────────────────────────────────────────────────
+  // ── Cabeçalho da redação (DeskPulseHeader, DeskScopeMenu) ────────────────
   "desk.header.layout.pipeline": "Fluxo",
   "desk.header.layout.board": "Quadro",
   "desk.header.layout.issuePlan": "Plano da edição",
   "desk.header.eyebrow": "Edição {number} · {theme}",
   "desk.header.title": "A redação",
-  "desk.header.meta": "Fecha a {closes} · publica a {publishes}",
-  "desk.header.daysLeft": "{days} dias",
-  "desk.header.toClose": "até fechar",
   "desk.header.slotsFilled": "{filled} de {slots} vagas preenchidas",
-  "desk.header.viewingAs": "A ver como",
-  "desk.header.viewingAsEditorAria": "Ver como esta pessoa editora",
-  "desk.header.commissionCta": "Encomendar",
-  "desk.header.writeCta": "Escrever",
 
   // ── Escrever (uma peça que a própria pessoa editora escreve) ─────────────
   "desk.write.untitledTitle": "Peça sem título",
@@ -615,18 +608,11 @@ export const magazine: Catalog = {
   "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
   "desk.header.layoutAria": "Esquema da redação",
   "desk.header.metaPublishesOnly": "Sai a {publishes}",
-  "desk.header.unassignedEyebrow": "Ainda sem edição",
-  "desk.header.unassignedMeta":
-    "Peças à espera de destino. Junta uma a uma edição quando souberes onde sai.",
 
-  // ── Seletor de edição + criação (cabeçalho da redação) ───────────────────
-  "desk.header.workingOn": "A trabalhar em",
-  "desk.header.workingOnAria": "Edição em que estás a trabalhar",
+  // ── Edições no menu de âmbito (DeskScopeMenu) ────────────────────────────
   "desk.header.issueOption": "Edição {number} · {title}",
-  "desk.header.newIssueCta": "Nova edição",
 
-  // ── DeskTrackTabs (Sem edição ⇄ Edição) ──────────────────────────────────
-  "desk.trackTabs.unassigned": "Sem edição",
+  // ── Rótulos do âmbito da edição (DeskScopeMenu) ──────────────────────────
   "desk.trackTabs.issue": "Edição {number}",
   "desk.trackTabs.issueNoNumber": "Edição",
 
@@ -669,40 +655,30 @@ export const magazine: Catalog = {
   "desk.newIssue.createdToast": "Edição {number} criada. Já estás nela.",
   "desk.newIssue.duplicateNumberError": "A edição {number} já existe.",
   "desk.newIssue.saveFailedError": "Não deu para guardar. Tenta outra vez.",
-
-  // ── NeedsStrip ───────────────────────────────────────────────────────────
-  "desk.needsStrip.lateDue": "Atrasada · prazo {due}",
-  "desk.needsStrip.waitingOnYou": "À tua espera",
-  "desk.needsStrip.chase": "Insistir",
-  "desk.needsStrip.pickUp": "Assumir",
-  "desk.needsStrip.open": "Abrir",
-
-  // ── DeskStats ────────────────────────────────────────────────────────────
-  "desk.stats.inFlight": "em curso",
-  "desk.stats.readyToLayOut": "prontas para paginar",
-  "desk.stats.behindSchedule": "atrasadas",
-  "desk.stats.pitchesWaiting": "propostas à espera",
+  "desk.newIssue.closesLabel": "Fecha a",
+  "desk.newIssue.closesHelper":
+    "Opcional. Deixa em aberto e define a data quando souberes até quando aceitas textos.",
+  "desk.closeDate.afterPublishError":
+    "A data de fecho tem de ser igual ou anterior à data de publicação.",
 
   // ── DeskToolbar ──────────────────────────────────────────────────────────
-  "desk.toolbar.searchPlaceholder": "Pesquisar peças, autoria, secções…",
   "desk.toolbar.searchAria": "Pesquisar",
   "desk.toolbar.formatAria": "Formato",
   "desk.toolbar.format.everything": "Tudo",
   "desk.toolbar.format.articles": "Artigos",
   "desk.toolbar.format.decks": "Decks",
-  "desk.toolbar.myQueue": "A minha fila",
   "desk.toolbar.sortAria": "Ordenar",
-  "desk.toolbar.sort.due": "Ordenar · prazo",
-  "desk.toolbar.sort.stage": "Ordenar · estado",
-  "desk.toolbar.sort.section": "Ordenar · secção",
-  "desk.toolbar.shortcuts": "Atalhos",
 
   // ── SavedViews ───────────────────────────────────────────────────────────
-  "desk.savedViews.saveThisView": "Guardar esta vista",
-  "desk.savedViews.lateOrAtRisk": "Atrasadas ou em risco",
-  "desk.savedViews.waitingOnArt": "À espera de imagens",
-  "desk.savedViews.needsSensitivityRead": "Precisa de leitura de sensibilidade",
-  "desk.savedViews.unpaidAfterFiling": "Por pagar depois da entrega",
+  "desk.savedViews.duplicateName": "Já tens uma vista guardada com este nome.",
+  "desk.savedViews.limitReached_one":
+    "Podes guardar até {count} vista. Apaga-a para guardares outra.",
+  "desk.savedViews.limitReached_other":
+    "Podes guardar até {count} vistas. Apaga uma para guardares outra.",
+  "desk.savedViews.saveFailed":
+    "Não foi possível guardar a vista. Tenta outra vez.",
+  "desk.savedViews.deleteFailed":
+    "Não foi possível apagar a vista. Tenta outra vez.",
 
   // ── PiecesPipeline ───────────────────────────────────────────────────────
   "desk.pipeline.emptyTitle": "A secretária está livre",
@@ -710,12 +686,16 @@ export const magazine: Catalog = {
   "desk.pipeline.columnPiece": "Peça",
   "desk.pipeline.columnStage": "Estado",
   "desk.pipeline.columnWaitingOn": "À espera de",
+  "desk.pipeline.columnWaitingOnShort": "À espera",
   "desk.pipeline.columnDue": "Prazo",
   "desk.pipeline.selectAllAria": "Selecionar todas as peças à vista",
+  "desk.pipeline.allClear": "Nada está à tua espera",
+  "desk.pipeline.groupAria_one": "{group}, {count} peça",
+  "desk.pipeline.groupAria_other": "{group}, {count} peças",
 
   // ── PieceRow ─────────────────────────────────────────────────────────────
   "desk.pieceRow.newVoice": "Voz nova",
-  "desk.pieceRow.writer": "Autor",
+  "desk.pieceRow.writer": "Quem escreve",
   "desk.pieceRow.you": "Tu",
   "desk.pieceRow.nobody": "Ninguém",
   "desk.pieceRow.edit": "Edição",
@@ -724,6 +704,16 @@ export const magazine: Catalog = {
   "desk.pieceRow.selectAria": "Selecionar {title}",
   "desk.pieceRow.moreAria": "Mais ações para {title}",
   "desk.pieceRow.delete": "Apagar peça",
+  "desk.pieceRow.noWriter": "Ainda sem autoria",
+  "desk.pieceRow.setDate": "Definir data",
+  "desk.pieceRow.noDue": "Sem prazo",
+  "desk.pieceRow.reader": "Quem lê",
+  "desk.pieceRow.editor": "Quem edita",
+  "desk.pieceRow.waitingOnAria": "À espera de: {who}",
+  "desk.pieceRow.waitingOnYouAria": "À tua espera",
+  // PieceDueDatePopover (o popup de prazo aberto a partir da linha)
+  "desk.pieceRow.setDateDialogLabel": "Escolhe um prazo",
+  "desk.pieceRow.dueSavedToast": "Prazo: {date}.",
 
   // ── Confirmação de eliminação (DeskModals -> DeletePieceDialog) ──────────
   // A descrição nomeia tudo o que o backend remove na mesma transação, mais a
@@ -741,6 +731,10 @@ export const magazine: Catalog = {
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Vazia",
   "desk.board.moveStageAria": "Mudar de estado",
+  "desk.board.overCap": "Acima de {cap}",
+  "desk.board.unpublishToMove": "Para a mover, despublica-a no registo da peça",
+  "desk.board.scrollPrevious": "Estados anteriores",
+  "desk.board.scrollNext": "Estados seguintes",
 
   // ── IssuePlan ────────────────────────────────────────────────────────────
   "desk.issuePlan.slotsFilled": "{filled} de {target} · {note}",
@@ -750,36 +744,19 @@ export const magazine: Catalog = {
   "desk.issuePlan.commissionFor": "Encomendar para {section}",
   "desk.issuePlan.slidesCount_one": "{count} slide no deck",
   "desk.issuePlan.slidesCount_other": "{count} slides no deck",
-  "desk.issuePlan.lateSuffix": " · atrasada",
-
-  // ── PitchInbox ───────────────────────────────────────────────────────────
-  "desk.pitchInbox.heading": "Caixa de propostas",
-  "desk.pitchInbox.countLabel_one": "{count} proposta",
-  "desk.pitchInbox.countLabel_other": "{count} propostas",
-  "desk.pitchInbox.emptyTitle": "Caixa vazia",
+  "desk.issuePlan.summary.full_one": "{count} secção completa",
+  "desk.issuePlan.summary.full_other": "{count} secções completas",
+  "desk.issuePlan.summary.gaps_one": "{count} com vagas",
+  "desk.issuePlan.summary.gaps_other": "{count} com vagas",
+  "desk.issuePlan.summary.filtered_one": "A mostrar {shown} de {count} peça",
+  "desk.issuePlan.summary.filtered_other": "A mostrar {shown} de {count} peças",
+  "desk.issuePlan.unfiledHeading": "Onde caberiam as peças sem edição",
 
   // ── PitchRow ─────────────────────────────────────────────────────────────
-  "desk.pitchRow.selectAria": "Selecionar {title}",
-  "desk.pitchRow.firstPitchSuffix": " · primeira proposta",
   "desk.pitchRow.betterAsDeck": "Melhor como deck",
-  "desk.pitchRow.commission": "Encomendar",
-  "desk.pitchRow.maybe": "Talvez",
-  "desk.pitchRow.pass": "Recusar",
-
-  // ── BulkTriageBar ────────────────────────────────────────────────────────
-  "desk.bulkTriage.selected_one": "{count} proposta selecionada",
-  "desk.bulkTriage.selected_other": "{count} propostas selecionadas",
-  "desk.bulkTriage.ariaLabel": "Triagem de propostas em lote",
-  "desk.bulkTriage.clearSelection": "Limpar seleção",
-  "desk.bulkTriage.maybe": "Talvez",
-  "desk.bulkTriage.passKindly": "Recusar com delicadeza",
 
   // ── Atribuição em lote a uma edição (linhas do fluxo) ────────────────────
-  "desk.bulkAssign.selected_one": "{count} peça selecionada",
-  "desk.bulkAssign.selected_other": "{count} peças selecionadas",
-  "desk.bulkAssign.ariaLabel": "Atribuir peças a uma edição em lote",
   "desk.bulkAssign.clearSelection": "Limpar seleção",
-  "desk.bulkAssign.assignToIssue": "Atribuir a uma edição…",
   "desk.bulkAssign.assignedToast_one":
     "{count} peça passou para a edição {number}.",
   "desk.bulkAssign.assignedToast_other":
@@ -790,10 +767,7 @@ export const magazine: Catalog = {
     "{count} peças voltaram para as peças sem edição.",
 
   // ── DeskSidebar ──────────────────────────────────────────────────────────
-  "desk.sidebar.issueStanding": "Como está a edição",
   "desk.sidebar.noPiecesYet": "Ainda não há peças no fluxo.",
-  "desk.sidebar.editorLoad": "Carga dos editores",
-  "desk.sidebar.noEditorsYet": "Ainda não há editores atribuídos.",
   "desk.sidebar.activity": "Atividade",
   "desk.sidebar.nothingHereYet": "Ainda não há nada aqui.",
   "desk.sidebar.someone": "Alguém",
@@ -807,6 +781,28 @@ export const magazine: Catalog = {
   "desk.states.errorBand":
     "Não conseguimos aceder ao fluxo. A mostrar os últimos dados que tínhamos.",
   "desk.states.tryAgain": "Tentar novamente",
+
+  // ── DeskNoMatchState (estado sem correspondências) ─────────────────────────
+  "desk.states.noMatchSearchTitle": "Nenhuma peça corresponde a “{query}”",
+  "desk.states.noMatchFilterTitle": "Nenhuma peça corresponde a estes filtros",
+  "desk.states.noMatchDescription_one":
+    "{count} peça fica escondida pela pesquisa e pelos filtros.",
+  "desk.states.noMatchDescription_other":
+    "{count} peças ficam escondidas pela pesquisa e pelos filtros.",
+  "desk.states.noMatchSearchDescription_one":
+    "{count} peça fica escondida por esta pesquisa.",
+  "desk.states.noMatchSearchDescription_other":
+    "{count} peças ficam escondidas por esta pesquisa.",
+  "desk.states.noMatchFiltersDescription_one":
+    "{count} peça fica escondida por estes filtros.",
+  "desk.states.noMatchFiltersDescription_other":
+    "{count} peças ficam escondidas por estes filtros.",
+  "desk.states.clearSearchAndFilters": "Limpar pesquisa e filtros",
+  "desk.states.clearFilters": "Limpar filtros",
+
+  // ── DeskShownCountStatus (região viva que anuncia a contagem assente de peças) ──
+  "desk.workArea.shownCount_one": "{count} peça à vista",
+  "desk.workArea.shownCount_other": "{count} peças à vista",
 
   // ── CommandPalette ───────────────────────────────────────────────────────
   "desk.palette.kindArticle": "Artigo",
@@ -827,6 +823,10 @@ export const magazine: Catalog = {
   "deskShell.nav.desk": "Redação",
   "deskShell.nav.issue": "Edição",
   "deskShell.nav.lifecycle": "Arquivo",
+  "deskShell.nav.yourTurnAria": "{count} à tua espera",
+  "deskShell.nav.daysToClose": "{days}d",
+  "deskShell.nav.daysToCloseAria_one": "{count} dia para fechar",
+  "deskShell.nav.daysToCloseAria_other": "{count} dias para fechar",
   "deskShell.openNow": "Abertos agora",
   "deskShell.writePiece": "Escrever",
   "deskShell.kbdHintSuffix": "para saltar · ? para atalhos",
@@ -848,6 +848,15 @@ export const magazine: Catalog = {
   "desk.modals.shortcuts.jumpAnywhere":
     "Saltar para qualquer lado, ou começar uma peça",
   "desk.modals.shortcuts.thisList": "Esta lista",
+  "desk.modals.shortcuts.toggleSelect": "Selecionar a peça em foco",
+  "desk.modals.shortcuts.openTriage": "Abrir a caixa de propostas",
+  "desk.modals.shortcuts.focusSearch": "Saltar para a pesquisa",
+  // DeskShortcutsSheet: um interruptor para desligar os atalhos de uma só
+  // tecla (por exemplo, quando a entrada por voz os dispararia sem querer).
+  "desk.modals.shortcuts.singleKeySwitch": "Atalhos de uma tecla",
+  "desk.modals.shortcuts.singleKeySwitchHint":
+    "Desliga-os se as teclas soltas te atrapalharem, por exemplo com entrada por voz. ? abre sempre esta lista.",
+  "desk.modals.shortcuts.offSuffix": "(desligado)",
 
   // ── CommissionModal ──────────────────────────────────────────────────────
   "desk.modals.commission.titleFromPitch": "Encomendar esta proposta",
@@ -900,6 +909,25 @@ export const magazine: Catalog = {
   "desk.modals.chase.body":
     "Um lembrete rápido e humano para manter as coisas a andar com calma.",
 
+  // ── Rascunho de insistência (chaseDraft.ts) ───────────────────────────────
+  // Um rascunho é `${greeting} ${body}`: uma saudação e depois um corpo que
+  // coloca uma das orações de prazo abaixo em {dueClause}.
+  "desk.chase.draft.greetingNamed": "Olá, {writer}!",
+  "desk.chase.draft.greetingAnonymous": "Olá!",
+  "desk.chase.draft.dueToday": "está marcada para hoje",
+  "desk.chase.draft.dueTomorrow": "está marcada para amanhã",
+  "desk.chase.draft.dueInDays_one": "está marcada para daqui a {count} dia",
+  "desk.chase.draft.dueInDays_other": "está marcada para daqui a {count} dias",
+  "desk.chase.draft.dueLate_one": "devia ter chegado há {count} dia",
+  "desk.chase.draft.dueLate_other": "devia ter chegado há {count} dias",
+  "desk.chase.draft.dueRaw": "está marcada para {text}",
+  "desk.chase.draft.dueLateRaw": "devia ter chegado a {text}",
+  "desk.chase.draft.dueSoon":
+    "Estou só a ver como vai «{title}». A entrega {dueClause}. Como está a correr?",
+  "desk.chase.draft.late": "A «{title}» {dueClause}. Podes dizer-me como está?",
+  "desk.chase.draft.noDate":
+    "Estou só a ver como vai «{title}». Como está a correr?",
+
   // ── HandoffModal ─────────────────────────────────────────────────────────
   "desk.modals.handoff.title": "Passar",
   "desk.modals.handoff.cta": "Passar",
@@ -938,15 +966,305 @@ export const magazine: Catalog = {
   "desk.pieceToast.movedToStage": "Movida para {stage}",
   "desk.pieceToast.handedOff": "Passada a outra pessoa",
   "desk.pieceToast.deleted": "Apagada",
+  "desk.pieceToast.deckStarted": "Deck criado",
   "desk.pitchToast.maybe": "Marcada como talvez",
   "desk.pitchToast.passed": "Proposta recusada",
   "desk.pitchToast.added": "Proposta adicionada",
 
+  // ── Chips de foco (DeskFocusBar, deskFocus.ts) ────────────────────────────
+  "desk.focus.yourTurn": "É a tua vez",
+  "desk.focus.late": "Atrasadas",
+  "desk.focus.withWriters": "Com quem escreve",
+  "desk.focus.needsArt": "Falta imagem",
+  "desk.focus.sensitivity": "Em leitura de sensibilidade",
+  "desk.focus.ready": "Prontas a publicar",
+  "desk.focus.unpaid": "Por pagar depois da entrega",
+  "desk.focus.mine": "Minhas",
+  "desk.focus.aria": "Focar a redação",
+  "desk.focus.none": "nenhuma",
+  "desk.focus.more": "+{count}",
+  "desk.focus.moreAria_one": "Mostrar mais {count} filtro",
+  "desk.focus.moreAria_other": "Mostrar mais {count} filtros",
+  "desk.focus.fewer": "Mostrar menos",
+  "desk.focus.clear": "Limpar",
+  "desk.focus.pitches": "Propostas",
+  "desk.focus.stalled": "Paradas",
+  "desk.focus.newVoices": "Vozes novas",
+  "desk.focus.atRisk": "Em risco",
+
+  // ── Próxima ação por peça (pieceNextAction.ts) ────────────────────────────
+  "desk.nextAction.chase": "Insistir",
+  "desk.nextAction.edit": "Editar",
+  "desk.nextAction.chaseReader": "Insistir com a pessoa leitora",
+  "desk.nextAction.chaseReaderShort": "Insistir",
+  "desk.nextAction.layOut": "Paginar",
+  "desk.nextAction.addToIssue": "Juntar a uma edição",
+  "desk.nextAction.addToIssueShort": "Juntar",
+  "desk.nextAction.publish": "Publicar",
+  "desk.nextAction.handOff": "Passar",
+
+  // ── Grupos do fluxo (pipelineGroups.ts) ───────────────────────────────────
+  "desk.groups.yourTurn": "É a tua vez",
+  "desk.groups.late": "Atrasadas",
+  "desk.groups.withWriters": "Com quem escreve",
+  "desk.groups.inProduction": "Em produção",
+  "desk.groups.ready": "Prontas",
+  "desk.groups.published": "Publicadas",
+  "desk.groups.inProgress": "Em curso",
+  "desk.groups.noSection": "Sem secção",
+  "desk.groups.moreUnder_one": "mais {count} em {group}",
+  "desk.groups.moreUnder_other": "mais {count} em {group}",
+
+  // ── Linha de prazo (deskDue.ts) ───────────────────────────────────────────
+  "desk.due.today": "Hoje",
+  "desk.due.tomorrow": "Amanhã",
+  "desk.due.inDays_one": "daqui a {count} dia",
+  "desk.due.inDays_other": "daqui a {count} dias",
+  "desk.due.daysLate_one": "{count} dia de atraso",
+  "desk.due.daysLate_other": "{count} dias de atraso",
+
+  // ── StageProgress ─────────────────────────────────────────────────────────
+  "desk.stageProgress.aria": "{stage}, etapa {step} de {total}",
+
+  // ── Tempo no estado (deskStageAge.ts, PieceRowStageAge) ───────────────────
+  "desk.stageAge.short": "{days}d neste estado",
+  "desk.stageAge.columnLabel": "Tempo neste estado",
+  "desk.stageAge.long_one": "{count} dia em {stage}",
+  "desk.stageAge.long_other": "{count} dias em {stage}",
+  "desk.stageAge.stalled_one": "Parada: {count} dia em {stage}",
+  "desk.stageAge.stalled_other": "Parada: {count} dias em {stage}",
+
+  // ── Menu de âmbito (DeskScopeMenu) ────────────────────────────────────────
+  "desk.scope.unfiled": "Sem edição",
+  "desk.scope.everything": "Tudo em curso",
+  "desk.scope.issuesHeading": "Edições",
+  "desk.scope.menuLabel": "O que a redação mostra",
+  "desk.scope.issuePieces_one": "{count} peça na redação",
+  "desk.scope.issuePieces_other": "{count} peças na redação",
+  "desk.scope.unfiledDescription_one": "{count} peça ainda sem edição",
+  "desk.scope.unfiledDescription_other": "{count} peças ainda sem edição",
+  "desk.scope.everythingDescription_one": "{count} peça em todas as edições",
+  "desk.scope.everythingDescription_other": "{count} peças em todas as edições",
+  "desk.scope.newIssue": "Começar uma nova edição",
+  "desk.scope.triggerPrefix": "Mudar o que a redação mostra:",
+
+  // ── Menu Novo (DeskNewMenu) ───────────────────────────────────────────────
+  "desk.newMenu.trigger": "Novo",
+  "desk.newMenu.writeArticle": "Escrever um artigo",
+  "desk.newMenu.buildDeck": "Montar um deck",
+  "desk.newMenu.commission": "Encomendar a quem escreve",
+  "desk.newMenu.newIssue": "Começar uma edição",
+
+  // ── Linha de pulso (DeskPulseLine, DeskIssuePulse) ────────────────────────
+  "desk.pulse.closes": "Fecha a {closes}",
+  "desk.pulse.daysLeft_one": "falta {count} dia",
+  "desk.pulse.daysLeft_other": "faltam {count} dias",
+  "desk.pulse.unfiledEmpty": "Todas as peças estão numa edição",
+  "desk.pulse.everything_one": "{count} peça em curso em {issues} edições",
+  "desk.pulse.everything_other": "{count} peças em curso em {issues} edições",
+  "desk.pulse.everythingOneIssue_one": "{count} peça em curso numa edição",
+  "desk.pulse.everythingOneIssue_other": "{count} peças em curso numa edição",
+  "desk.pulse.everythingEmpty": "Nada em curso",
+  "desk.pulse.inFlight_one": "{count} peça em curso",
+  "desk.pulse.inFlight_other": "{count} peças em curso",
+  "desk.pulse.filedInIssue": "{count} na Edição {number}",
+  "desk.pulse.filedInOneIssue": "{count} numa edição",
+  "desk.pulse.filedAcrossIssues": "{count} em {issues} edições",
+  "desk.pulse.unfiledPart": "{count} sem edição",
+  "desk.pulse.closesToday": "Fecha hoje",
+  "desk.pulse.closed": "Fechou a {closes}",
+  "desk.pulse.changeCloseDateAria": "Mudar a data de fecho",
+  "desk.pulse.openPlanAria": "Abrir o plano da edição",
+  "desk.pulse.setCloseDate": "Definir data de fecho",
+  "desk.pulse.setCloseDateDialogLabel": "Escolhe uma data de fecho",
+  "desk.pulse.closeDateSavedToast": "Fecha a {date}.",
+
+  // ── DeskWorkbar (pesquisa, vista, filtro, ordenação) ──────────────────────
+  "desk.workbar.searchPlaceholder": "Pesquisar peças, autoria, secções",
+  "desk.workbar.searchPlaceholderMedium": "Pesquisar peças",
+  "desk.workbar.searchPlaceholderShort": "Pesquisar",
+  "desk.workbar.layout.calendar": "Calendário",
+  "desk.workbar.layoutTrigger": "Esquema: {layout}",
+  "desk.workbar.shortcutsAria": "Atalhos de teclado",
+  "desk.workbar.filter.trigger": "Filtrar",
+  "desk.workbar.filter.triggerAria_one": "Filtrar, {count} ativo",
+  "desk.workbar.filter.triggerAria_other": "Filtrar, {count} ativos",
+  "desk.workbar.filter.menuLabel": "Filtrar peças",
+  "desk.workbar.filter.anyone": "Qualquer pessoa",
+  "desk.workbar.field.section": "Secção",
+  "desk.workbar.field.stage": "Estado",
+  "desk.workbar.field.editor": "Pessoa editora",
+  "desk.workbar.field.editorFormer": "Antiga pessoa editora",
+  "desk.workbar.sort.menuLabel": "Ordenar e agrupar",
+  "desk.workbar.sort.sortBy": "Ordenar por",
+  "desk.workbar.sort.due": "Prazo",
+  "desk.workbar.sort.groupBy": "Agrupar por",
+  "desk.workbar.sort.waitingOn": "À espera de",
+  "desk.workbar.sort.none": "Nenhum",
+  "desk.workbar.sort.density": "Densidade",
+  "desk.workbar.sort.comfortable": "Confortável",
+  "desk.workbar.sort.compact": "Compacta",
+  "desk.workbar.token": "{label}: {value}",
+
+  // ── DeskRail (estado da edição, propostas, equipa) ────────────────────────
+  "desk.rail.label": "Resumo da redação",
+  "desk.rail.health.title": "Estado da edição",
+  "desk.rail.health.byStage": "Peças por estado",
+  "desk.rail.health.slots": "Vagas",
+  "desk.rail.health.slotCount": "{filled} de {target}",
+  "desk.rail.health.newVoices_one":
+    "{fresh} de {total} peça de quem se estreia",
+  "desk.rail.health.newVoices_other":
+    "{fresh} de {total} peças de quem se estreia",
+  "desk.rail.health.lateRisk": "Peças em risco de falhar o fecho",
+  "desk.rail.health.showAllSections": "Mostrar todas as secções",
+  "desk.rail.health.showFewerSections": "Mostrar menos secções",
+  "desk.rail.pitches.title": "Propostas",
+  "desk.rail.pitches.empty": "Nenhuma proposta à espera",
+  "desk.rail.pitches.newVoice": "Voz nova",
+  "desk.rail.pitches.triageAll": "Triar todas",
+  "desk.rail.pitches.openTriage":
+    "Abrir a triagem de propostas, {count} à espera",
+  "desk.rail.team.title": "Equipa",
+  "desk.rail.team.loadAria": ", {load} de {cap} peças",
+  "desk.rail.team.overCapacitySuffix": ", acima da capacidade",
+  "desk.rail.team.viewingQueue": "A ver a fila de {name}",
+  "desk.rail.team.showEveryone": "Mostrar toda a gente",
+  "desk.rail.activity.seeAll": "Ver tudo ({count})",
+  "desk.rail.activity.showLess": "Mostrar menos",
+  // Previsão do fecho (rail/IssueForecast.tsx)
+  "desk.rail.forecast.onTrack": "No caminho para fechar a {date}",
+  "desk.rail.forecast.atRisk_one": "{count} peça pode falhar o fecho",
+  "desk.rail.forecast.atRisk_other": "{count} peças podem falhar o fecho",
+  "desk.rail.forecast.reasonLate": "Atrasada",
+  "desk.rail.forecast.reasonDueAfterClose": "Após o fecho",
+  "desk.rail.forecast.reasonNotEnoughTime": "Pouco tempo",
+  "desk.rail.forecast.more": "+{count} mais",
+  "desk.rail.forecast.showAtRisk_one":
+    "{count} peça pode falhar o fecho, mostrá-la na tabela",
+  "desk.rail.forecast.showAtRisk_other":
+    "{count} peças podem falhar o fecho, mostrá-las na tabela",
+  "desk.rail.forecast.fewer": "Mostrar menos",
+
+  // ── PitchTriage ───────────────────────────────────────────────────────────
+  "desk.triage.title": "Propostas",
+  "desk.triage.progress": "{current} de {total}",
+  "desk.triage.waiting_one": "{count} proposta à espera",
+  "desk.triage.waiting_other": "{count} propostas à espera",
+  "desk.triage.viewLabel": "Como mostrar as propostas",
+  "desk.triage.viewOneAtATime": "Uma de cada vez",
+  "desk.triage.viewList": "Lista",
+  "desk.triage.newVoice": "Voz nova",
+  "desk.triage.tagsLabel": "Temas",
+  "desk.triage.suggestedDeck": "Sugerida como deck",
+  "desk.triage.commission": "Encomendar",
+  "desk.triage.maybe": "Talvez",
+  "desk.triage.pass": "Recusar",
+  "desk.triage.previous": "Proposta anterior",
+  "desk.triage.next": "Proposta seguinte",
+  "desk.triage.shortcuts.label": "Atalhos de teclado:",
+  "desk.triage.shortcuts.maybe": "talvez",
+  "desk.triage.shortcuts.pass": "recusar",
+  "desk.triage.shortcuts.arrows": "Setas para a esquerda e para a direita",
+  "desk.triage.shortcuts.move": "navegar",
+  "desk.triage.listLabel": "Propostas à espera",
+  "desk.triage.bulkLabel": "Responder às propostas selecionadas",
+  "desk.triage.selected_one": "{count} selecionada",
+  "desk.triage.selected_other": "{count} selecionadas",
+  "desk.triage.selectHint": "Marca propostas para lhes responderes de uma vez",
+  "desk.triage.clearSelection": "Limpar seleção",
+  "desk.triage.doneTitle": "Todas as propostas respondidas",
+  "desk.triage.doneBody": "Quem enviou estas propostas já tem resposta.",
+  "desk.triage.close": "Fechar",
+  "desk.triage.emptyTitle": "Nenhuma proposta à espera",
+  "desk.triage.loading": "A carregar as propostas",
+
+  // ── PiecePeekPanel ────────────────────────────────────────────────────────
+  "desk.peek.openFullRecord": "Abrir ficha completa",
+  "desk.peek.previousAria": "Peça anterior",
+  "desk.peek.nextAria": "Peça seguinte",
+  "desk.peek.closeAria": "Fechar pré-visualização",
+  "desk.peek.recordErrorTitle": "Não foi possível carregar a ficha desta peça",
+  "desk.peek.threadHeading": "Últimas mensagens",
+
+  // ── DeskBulkBar ───────────────────────────────────────────────────────────
+  "desk.bulk.selected_one": "{count} selecionada",
+  "desk.bulk.selected_other": "{count} selecionadas",
+  "desk.bulk.ariaLabel": "Ações em lote sobre peças",
+  "desk.bulk.changeStage": "Mudar de estado",
+  "desk.bulk.chase_one": "Insistir {count}",
+  "desk.bulk.chase_other": "Insistir {count}",
+  "desk.bulk.stageChangedToast_one": "{count} peça movida para {stage}.",
+  "desk.bulk.stageChangedToast_other": "{count} peças movidas para {stage}.",
+  "desk.bulk.stageChangeFailedToast_one":
+    "{count} peça não mudou para {stage}.",
+  "desk.bulk.stageChangeFailedToast_other":
+    "{count} peças não mudaram para {stage}.",
+  "desk.bulk.chaseProgress": "Insistência {current} de {total}",
+  "desk.bulk.chaseSkip": "Saltar",
+  "desk.bulk.addToIssue": "Juntar a uma edição",
+  "desk.bulk.moveIssue": "Mudar de edição",
+  "desk.bulk.actions": "Ações",
+  "desk.bulk.selectAll": "Selecionar todas ({count})",
+  "desk.bulk.handOffOneAtATime": "Passa uma peça de cada vez",
+
+  // ── PresenceStack ─────────────────────────────────────────────────────────
+  "desk.presence.viewing": "{names} a ver",
+  "desk.presence.more": "+{count}",
+
+  // ── Montar um deck (useDeskBuildDeckAction) ───────────────────────────────
+  "desk.buildDeck.untitledTitle": "Deck sem título",
+
+  // ── PiecesCalendar ────────────────────────────────────────────────────────
+  "desk.calendar.caption": "Prazos, de {start} a {end}",
+  "desk.calendar.undated": "Ainda sem data: {count}",
+  "desk.calendar.earlier": "Prazo antes desta semana: {count}",
+  "desk.calendar.later": "Prazo depois de {date}: {count}",
+  "desk.calendar.closes": "Fecha",
+  "desk.calendar.publishes": "Publica",
+  "desk.calendar.afterClose": "Depois do fecho",
+  "desk.calendar.late": "Atrasada",
+  "desk.calendar.more": "+{count} mais",
+  "desk.calendar.fewer": "Mostrar menos",
+  "desk.calendar.emptyWeeks": "Nada tem prazo nestas semanas",
+  "desk.calendar.legendLabel": "Cores dos pontos",
+  "desk.calendar.legendWriter": "Quem escreve ou lê",
+  "desk.calendar.legendNeutral": "Quem edita ou ninguém",
+
+  // ── Vistas guardadas (DeskViewsMenu, DeskViewsSaveModal, DeskViewsManageModal) ──
+  "desk.views.trigger": "Vistas",
+  "desk.views.heading": "Vistas guardadas",
+  "desk.views.loading": "A carregar as vistas guardadas…",
+  "desk.views.empty": "Ainda não tens vistas guardadas",
+  "desk.views.emptyHint":
+    "Guarda os filtros e a ordenação que mais usas e volta a eles com um clique.",
+  "desk.views.save": "Guardar a vista atual…",
+  "desk.views.manage": "Gerir vistas…",
+  "desk.views.saveTitle": "Guardar esta vista",
+  "desk.views.saveSub":
+    "Guarda o âmbito, os filtros rápidos, os filtros, a ordenação e o agrupamento que tens agora no ecrã.",
+  "desk.views.nameLabel": "Nome",
+  "desk.views.namePlaceholder": "Peças longas",
+  "desk.views.saveCta": "Guardar vista",
+  "desk.views.saving": "A guardar…",
+  "desk.views.manageTitle": "As tuas vistas guardadas",
+  "desk.views.manageSub":
+    "Só tu as vês. Mudar o nome ou apagar uma vista deixa as tuas peças como estão.",
+  "desk.views.manageEmpty":
+    "Já não tens vistas guardadas. Guarda uma no menu Vistas.",
+  "desk.views.renameAria": "Mudar o nome de {name}",
+  "desk.views.deleteAria": "Apagar {name}",
+  "desk.views.renameLabel": "Novo nome para {name}",
+  "desk.views.renameSave": "Guardar",
+  "desk.views.done": "Concluído",
+  "desk.views.deleteTitle": "Apagar “{name}”?",
+  "desk.views.deleteBody":
+    "A vista desaparece de vez. As tuas peças e a redação ficam como estão.",
+  "desk.views.deleteConfirm": "Apagar vista",
+
   // ── DeskView ─────────────────────────────────────────────────────────────
 
   // ── EditorDashboardPage ──────────────────────────────────────────────────
-  "desk.page.savingViewsUnavailable":
-    "Ainda não é possível guardar vistas personalizadas.",
 
   // ══════════════════ Ficha da peça (Fase 2) ════════════════════════════════
   // Briefing/Cuidado/Dinheiro/Histórico/Depois. O conteúdo do registo (texto
@@ -1311,39 +1629,38 @@ export const magazine: Catalog = {
   // nesta ronda via label-key indirection. actions[].label continua por
   // traduzir (conteúdo/chrome misturado, com nomes/contagens embutidos).
 
-  // ── PitchTrackerHeader ─────────────────────────────────────────────────
-  "pitchTracker.header.eyebrow": "Revista · as tuas propostas",
-  "pitchTracker.header.title": "Onde cada proposta <em>realmente está.</em>",
-  "pitchTracker.header.newPitchCta": "+ Nova proposta",
+  // ── SubmissionsSummary ─────────────────────────────────────────────────
+  "pitchTracker.header.newPitchCta": "Submeter uma história",
   // A PRD-129 substituiu `pitchTracker.header.lead`, que interpolava três
   // números fixos do protótipo e prometia um prazo de resposta que nada mede.
   // Dois fragmentos com plural sobre contagens reais, mostrados por `Translation`.
   "pitchTracker.header.leadActive_one":
-    "{count} proposta com a redação neste momento",
+    "{count} submissão com a redação neste momento",
   "pitchTracker.header.leadActive_other":
-    "{count} propostas com a redação neste momento",
+    "{count} submissões com a redação neste momento",
   "pitchTracker.header.leadPublished_one":
     "<b>{count} publicada</b> desde sempre",
   "pitchTracker.header.leadPublished_other":
     "<b>{count} publicadas</b> desde sempre",
 
   // ── PitchTabs ──────────────────────────────────────────────────────────
-  "pitchTracker.tabs.ariaLabel": "Estado da proposta",
+  "pitchTracker.tabs.ariaLabel": "Estado da submissão",
   "pitchTracker.tabs.all": "Todas",
   "pitchTracker.tabs.review": "Em revisão",
   "pitchTracker.tabs.commissioned": "Encomendadas",
   "pitchTracker.tabs.published": "Publicadas",
   "pitchTracker.tabs.closed": "Fechadas",
 
-  // ── PitchTrackerPage ───────────────────────────────────────────────────
+  // ── WriterSubmissionsTab ───────────────────────────────────────────────
   "pitchTracker.page.emptyTitle": "Nada nesta vista.",
   "pitchTracker.page.emptyBody":
-    "Não há propostas aqui neste momento. Muda de separador, ou começa algo novo no botão Nova proposta acima.",
-  "pitchTracker.page.withdrawnToast": "Proposta retirada",
+    "Não há submissões aqui neste momento. Experimenta outro estado, ou submete uma história no botão acima.",
+  "pitchTracker.page.showAllCta": "Mostrar todas",
+  "pitchTracker.page.withdrawnToast": "Submissão retirada",
   "pitchTracker.page.undoCta": "Desfazer",
   "pitchTracker.page.stubToast": "{label}: brevemente neste protótipo",
   "pitchTracker.page.loadErrorTitle":
-    "Não conseguimos carregar as tuas propostas",
+    "Não conseguimos carregar as tuas submissões",
   "pitchTracker.page.loadErrorBody":
     "Tudo o que enviaste continua com a redação. Tenta novamente daqui a pouco.",
 
@@ -1353,15 +1670,15 @@ export const magazine: Catalog = {
   // diz isso e não oferece Desfazer. O caso "já decidida" é o 409 que a redação
   // devolve quando chegou lá primeiro, que é um desfecho real e não uma falha.
   "pitchTracker.card.withdrawCta": "Retirar",
-  "pitchTracker.withdraw.confirmTitle": "Retirar esta proposta?",
+  "pitchTracker.withdraw.confirmTitle": "Retirar esta submissão?",
   "pitchTracker.withdraw.confirmBody":
-    "A redação deixa de a ver e a proposta sai do teu acompanhamento. Não é possível anular, mas podes sempre voltar a propor a história.",
-  "pitchTracker.withdraw.confirmCta": "Retirar proposta",
-  "pitchTracker.withdraw.doneToast": "Proposta retirada.",
+    "A redação deixa de a ver e a submissão sai da tua lista. Não é possível anular, mas podes sempre voltar a submeter a história.",
+  "pitchTracker.withdraw.confirmCta": "Retirar submissão",
+  "pitchTracker.withdraw.doneToast": "Submissão retirada.",
   "pitchTracker.withdraw.decidedToast":
-    "A redação já respondeu a esta proposta, por isso já não pode ser retirada.",
+    "A redação já respondeu a esta submissão, por isso já não pode ser retirada.",
   "pitchTracker.withdraw.failedToast":
-    "Não conseguimos retirar essa proposta. Tenta novamente daqui a pouco.",
+    "Não conseguimos retirar essa submissão. Tenta novamente daqui a pouco.",
 
   // ── PitchCard ─────────────────────────────────────────────────────────
   // Autoria e texto da nota são palavras próprias de quem edita (conteúdo);
@@ -1758,6 +2075,16 @@ export const magazine: Catalog = {
   "issue.publishDate.savedToast": "Edição marcada para {date}.",
   "issue.publishDate.clearedToast":
     "Data removida. A edição ficou outra vez sem data.",
+  // Data de fecho (PublishDateCard): o último dia para entregar textos.
+  "issue.closeDate.heading": "Data de fecho",
+  "issue.closeDate.set": "Esta edição fecha a {date}.",
+  "issue.closeDate.unset":
+    "Ainda sem data de fecho. Define uma para a redação poder contar os dias.",
+  "issue.closeDate.save": "Guardar data",
+  "issue.closeDate.clear": "Limpar data",
+  "issue.closeDate.saving": "A guardar…",
+  "issue.closeDate.savedToast": "A edição fecha a {date}.",
+  "issue.closeDate.clearedToast": "Data de fecho removida.",
   "issue.pages.heading": "Páginas",
   "issue.pages.editorial": "Editorial",
   "issue.pages.total": "Total",
@@ -1883,8 +2210,27 @@ export const magazine: Catalog = {
   // ── WriterWorkspacePage ──────────────────────────────────────────────────
   "writer.tabs.work": "O teu trabalho",
   "writer.tabs.pitches": "As tuas propostas",
+  "writer.tabs.submissions": "As tuas submissões",
   "writer.tabs.payments": "Pagamentos",
   "writer.tabs.ariaLabel": "Separadores do espaço de trabalho",
+  // Estados mostrados a quem escreve. A redação segue o que o backend compunha
+  // em inglês (`magazine-writer-response.ts`); estas chaves eram lidas pelos
+  // separadores mas nunca tinham sido definidas.
+  "writer.work.stage.edit": "Com quem te edita",
+  "writer.work.stage.layout": "Em paginação",
+  "writer.pitches.state.waiting": "À espera de resposta",
+  "writer.pitches.state.maybe": "Em consideração",
+  "writer.pitches.state.passed": "Recusada",
+  "writer.pitches.deskNote": "Da redação: {note}",
+  "writer.pitches.state.commissioned": "Encomendada",
+  "writer.payments.state.notAgreed": "Ainda não acordado",
+  "writer.payments.state.paid": "Pago",
+  "writer.payments.state.paidOn": "Pago a {date}",
+  "writer.payments.state.approvedUnpaid": "Aprovado, por pagar",
+  "writer.payments.state.approvedUnpaidDue":
+    "Aprovado, por pagar: vence a {date}",
+  "writer.payments.state.agreed": "Acordado",
+  "writer.payments.state.agreedDue": "Acordado: vence a {date}",
   "writer.page.heading": "O teu espaço de trabalho",
   "writer.page.openCount_one": "{count} trabalho em aberto",
   "writer.page.openCount_other": "{count} trabalhos em aberto",
@@ -2028,6 +2374,10 @@ export const magazine: Catalog = {
   "pieceThread.composerPlaceholder": "Escreve uma mensagem…",
   "pieceThread.send": "Enviar",
   "pieceThread.sentToast": "Mensagem enviada.",
+  "pieceThread.showEarlier_one": "Mostrar {count} mensagem anterior",
+  "pieceThread.showEarlier_other": "Mostrar {count} mensagens anteriores",
+  "pieceThread.sendError":
+    "Não foi possível enviar. A tua mensagem continua aqui.",
 
   // ══════════════════ Candidatar a escrever ═══════════════════════════════
   "applyToWrite.intro.title": "Mostra-nos <em>o que sabes fazer.</em>",

@@ -22,6 +22,18 @@ function paintedOffsetYOf(element: HTMLElement): number {
 }
 
 /**
+ * The list's rows in order, without a row that is folding away: such a row is
+ * `inert` (`ReorderRow` with `foldGap`) and stays in the DOM only until its
+ * fold ends, so counting it would shift every index after it by one.
+ */
+export function liveRowsOf(container: Element): HTMLElement[] {
+  return Array.from(container.children).filter(
+    (row): row is HTMLElement =>
+      row instanceof HTMLElement && !row.hasAttribute("inert"),
+  );
+}
+
+/**
  * Where the list LAID OUT a row, in viewport coordinates, with every
  * in-flight translation taken back off. Measured through the box centre, so a
  * centred lift scale on the held row leaves the answer unchanged.

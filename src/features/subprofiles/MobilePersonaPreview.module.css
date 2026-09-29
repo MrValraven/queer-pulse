@@ -13,3 +13,52 @@
     margin: 4px -48px 0;
   }
 }
+
+/* <ModalSheet>'s Close, the sheet's only direct <button> child. As shipped it
+   is `position: absolute` with no stacking order, so the full-bleed cover
+   (painted later, and positioned) covered it at phone width: visible through
+   nothing, tappable nowhere, only Escape closed the sheet. Here it becomes a
+   sticky glass chip on its own layer: always painted above the persona tree,
+   and still in reach after the owner scrolls down the preview.
+
+   Sticky, so it takes a place in the flow: it follows the drag grabber, the
+   negative top margin lifts it back to the corner it had, and the negative
+   bottom margin hands its height back so the cover still starts where it
+   did (48px below the sheet top on phones). The inline-end margin pays back
+   the sheet's side padding (32px, then 48px from 720px, the same steps as
+   `.frame`) to keep the 18px inset. Browsers measure a sticky offset inside
+   the scroller's padding (44px on top), so `top: -26px` is what holds it
+   18px under the sheet's edge, and the shipped `right: 18px` would add a
+   second side inset, so it goes.
+
+   From 720px there is no grabber, so the chip sits closer to the sheet's
+   own top padding and its in-flow box is shorter than it is on phones. The
+   phone bottom margin (-36px) hands back more height than that shorter box
+   took, which pulls the cover up from 48px to 22px below the sheet top,
+   including in the 761-860px tablet band. -10px hands back only this box's
+   own height, so the cover keeps its 48px offset from 720px up. */
+.sheet > button {
+  position: sticky;
+  top: -26px;
+  right: auto;
+  z-index: var(--z-sticky);
+  margin: -13px -14px -36px auto;
+  background: color-mix(in srgb, var(--cream) 86%, transparent);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-e2);
+}
+:global([data-theme="dark"]) .sheet > button {
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+@media (hover: hover) {
+  .sheet > button:hover {
+    background: var(--cream);
+  }
+}
+@media (min-width: 720px) {
+  .sheet > button {
+    margin: -26px -30px -10px auto;
+  }
+}

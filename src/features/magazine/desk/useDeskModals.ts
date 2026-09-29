@@ -1,12 +1,12 @@
 /**
  * Owns the desk's single overlay slot (`DeskModal`) plus the id of whichever
- * piece/pitch it was opened from (the `DeskModal` variants only carry
- * display copy, not an id, so the id has to travel alongside separately),
- * and the mutation calls each overlay's submit resolves to.
+ * piece/pitch it was opened from (most `DeskModal` variants carry only
+ * display copy, so the id travels alongside them),
+ * and the mutation calls each overlay's submit resolves to. The bulk bar's
+ * chase queue runs through the same slot, one `ChaseModal` per piece.
  */
 
 import { useState } from "react";
-import { ApiError } from "../../../shared/api/client";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece, Pitch } from "../data/desk.data";
@@ -15,12 +15,12 @@ import type { usePitchMutations } from "../api/usePitchMutations";
 import type { DeskModal } from "./DeskModals";
 import type { CommissionPayload } from "./CommissionModal";
 import type { PassPayload } from "./PassModal";
+import { chaseModalFor, useChaseQueue } from "./useChaseQueue";
+import { deletePieceWithOutcome } from "./deskPieceDelete";
 
-/** The backend's one refusal to delete: the piece owns PUBLISHED content, and
- *  live content is never removed as a side effect of a desk cleanup. */
-function isPublishedConflict(error: unknown): boolean {
-  return error instanceof ApiError && error.status === 409;
-}
+type TriageBody = Parameters<
+  ReturnType<typeof usePitchMutations>["triage"]["mutateAsync"]
+>[0]["body"];
 
 export interface UseDeskModalsParams {
   /** Currently-viewing editor id, stamped as `editorId` on new commissions. */
@@ -30,6 +30,11 @@ export interface UseDeskModalsParams {
   currentIssueId: string;
   pieceMutations: ReturnType<typeof usePieceMutations>;
   pitchMutations: ReturnType<typeof usePitchMutations>;
+  /** Called once a pass note or a commission from a pitch has SUCCEEDED, so
+   *  the triage overlay can move on from that pitch (demo mode keeps serving
+   *  it). A failed request never calls it. Each answer waits on its own
+   *  request, so two answers in quick succession both report. */
+  onPitchAnswered?: (pitchId: string) => void;
 }
 
 export function useDeskModals({
@@ -37,92 +42,96 @@ export function useDeskModals({
   currentIssueId,
   pieceMutations,
   pitchMutations,
+  onPitchAnswered,
 }: UseDeskModalsParams) {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [modal, setModal] = useState<DeskModal>(null);
   const [contextId, setContextId] = useState<string | null>(null);
-  // The commissioning pitch's `suggest` hint (e.g. "deck"), so submitCommission
-  // can default the new piece's format to match instead of always "article".
+  // A pitch suggested as a deck is commissioned as a deck (else an article).
   const [sourcePitchFormat, setSourcePitchFormat] = useState<
     "deck" | undefined
   >(undefined);
+  const chase = useChaseQueue((step) => {
+    setModal(chaseModalFor(step));
+    setContextId(step.piece.id);
+  });
 
-  function close(): void {
-    setModal(null);
+  // Every non-chase overlay drops a chase queue, so a stale queue can never
+  // take over a later close.
+  function openFor(nextModal: DeskModal, id: string): void {
+    chase.stop();
+    setModal(nextModal);
+    setContextId(id);
+  }
+  function clearSlot(nextModal: DeskModal): void {
+    chase.stop();
+    setModal(nextModal);
     setContextId(null);
     setSourcePitchFormat(undefined);
+  }
+
+  /** X and Escape end the whole chase queue; Skip moves on (`skipChase`). */
+  function close(): void {
+    clearSlot(null);
+  }
+  function skipChase(): void {
+    if (!chase.advance()) clearSlot(null);
   }
   function openCommission(): void {
-    setModal({ kind: "commission" });
-    setContextId(null);
-    setSourcePitchFormat(undefined);
+    clearSlot({ kind: "commission" });
   }
   function openCommissionForSection(sectionName: string): void {
-    setModal({ kind: "commission", sectionName });
-    setContextId(null);
-    setSourcePitchFormat(undefined);
+    clearSlot({ kind: "commission", sectionName });
   }
   function openCommissionFromPitch(pitch: Pitch): void {
-    setModal({
-      kind: "commission",
-      pitch: { title: pitch.title, byline: pitch.byline, note: pitch.note },
-    });
-    setContextId(pitch.id);
+    const { title, byline, note } = pitch;
+    openFor({ kind: "commission", pitch: { title, byline, note } }, pitch.id);
     setSourcePitchFormat(pitch.suggest === "deck" ? "deck" : undefined);
   }
   function openPassFromPitch(pitch: Pitch): void {
-    setModal({ kind: "pass", pitch: { title: pitch.title } });
-    setContextId(pitch.id);
-  }
-  function openChase(piece: Piece): void {
-    // `id` rides on `modal.piece` itself here (see `DeskModal`'s doc comment)
-    // so `ChaseModal` can open the real `PieceThread` for it directly.
-    setModal({
-      kind: "chase",
-      piece: { id: piece.id, title: piece.title, byline: piece.byline },
-    });
-    setContextId(piece.id);
+    openFor({ kind: "pass", pitch: { title: pitch.title } }, pitch.id);
   }
   function openHandoff(piece: Piece): void {
-    setModal({ kind: "handoff", piece: { title: piece.title } });
-    setContextId(piece.id);
+    openFor({ kind: "handoff", piece: { title: piece.title } }, piece.id);
   }
   function openDeletePiece(piece: Piece): void {
-    setModal({ kind: "deletePiece", piece: { title: piece.title } });
-    setContextId(piece.id);
+    openFor({ kind: "deletePiece", piece: { title: piece.title } }, piece.id);
   }
   function openShortcuts(): void {
-    setModal({ kind: "shortcuts" });
+    clearSlot({ kind: "shortcuts" });
+  }
+  /** Answers a pitch through its OWN request (`mutateAsync`): a per-call
+   *  `onSuccess` fires only for the latest call on the mutation. A failure
+   *  is already toasted app-wide. */
+  function answerPitch(pitchId: string, body: TriageBody): void {
+    void pitchMutations.triage.mutateAsync({ id: pitchId, body }).then(
+      () => onPitchAnswered?.(pitchId),
+      () => undefined,
+    );
   }
 
   /** Commissioning from a pitch triages it; from scratch, creates a piece directly. */
   function submitCommission(payload: CommissionPayload): void {
-    // `editorId` must be a real user UUID; guard the window where the session
-    // (and thus `activeMe`) hasn't resolved yet rather than firing a request the
-    // backend rejects with "editorId must be a UUID".
+    // `editorId` must be a real user UUID, so wait out the window before the
+    // session (and `activeMe`) resolves. Same wording as Write's guard.
     if (!activeMe) {
-      // Same wording the Write action uses for the same window, so the two
-      // desk actions do not describe one unresolved session two ways.
       showToast(t("magazine:desk.write.editorNotReady"), "error");
       return;
     }
     if (modal?.kind === "commission" && modal.pitch && contextId) {
-      pitchMutations.triage.mutate({
-        id: contextId,
-        body: {
-          verdict: "commission",
-          editorId: activeMe,
-          section: payload.section,
-          dueOn: payload.dueDate || undefined,
-          wordTarget: payload.words ?? undefined,
-        },
+      answerPitch(contextId, {
+        verdict: "commission",
+        editorId: activeMe,
+        section: payload.section,
+        dueOn: payload.dueDate || undefined,
+        wordTarget: payload.words ?? undefined,
       });
       return;
     }
     const pitchTitle =
       modal?.kind === "commission" ? modal.pitch?.title : undefined;
-    // The commission form has no title field (Task 22) — fall back to the
+    // The commission form has no title field (Task 22): fall back to the
     // sourcing pitch's title, then the angle text, then a generic label.
     pieceMutations.commission.mutate({
       format: sourcePitchFormat ?? "article",
@@ -146,10 +155,7 @@ export function useDeskModals({
 
   function submitPass(payload: PassPayload): void {
     if (contextId) {
-      pitchMutations.triage.mutate({
-        id: contextId,
-        body: { verdict: "pass", passNote: payload.body },
-      });
+      answerPitch(contextId, { verdict: "pass", passNote: payload.body });
     }
   }
 
@@ -157,26 +163,16 @@ export function useDeskModals({
     if (contextId) pieceMutations.assign.mutate({ id: contextId, editorId });
   }
 
-  /** Deleting is the one desk action that cannot be undone, so it reports its
-   *  own outcome instead of leaving the dialog to close on an unstated result.
-   *  The 409 is caught here rather than left to the global error toast: the
-   *  backend's refusal is an untranslated English sentence, and "unpublish it
-   *  first" is the one error an editor can actually act on. */
+  /** See `deletePieceWithOutcome` for why delete reports its own result. */
   async function confirmDeletePiece(): Promise<void> {
     if (!contextId) return;
-    try {
-      await pieceMutations.remove.mutateAsync(contextId);
-      close();
-      showToast(t("magazine:desk.pieceToast.deleted"), "success");
-    } catch (error) {
-      close();
-      showToast(
-        isPublishedConflict(error)
-          ? t("magazine:desk.deletePiece.publishedError")
-          : t("magazine:desk.deletePiece.failed"),
-        "error",
-      );
-    }
+    await deletePieceWithOutcome({
+      pieceId: contextId,
+      remove: pieceMutations.remove.mutateAsync,
+      closeDialog: close,
+      showToast,
+      translate: t,
+    });
   }
 
   return {
@@ -186,7 +182,11 @@ export function useDeskModals({
     openCommissionForSection,
     openCommissionFromPitch,
     openPassFromPitch,
-    openChase,
+    openChase: chase.openChase,
+    /** The bulk bar's "Chase {count}": one `ChaseModal` per queued piece. */
+    openChaseQueue: chase.openChaseQueue,
+    /** Skip in a queued chase: moves on to the next writer. */
+    skipChase,
     openHandoff,
     openDeletePiece,
     openShortcuts,

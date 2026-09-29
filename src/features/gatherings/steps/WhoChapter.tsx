@@ -18,8 +18,8 @@ import styles from "./WhoChapter.module.css";
 
 /**
  * Chapter 3, "Who is it for?": capacity, language, cost, co-hosts, the
- * waitlist and attendee-count switches, when RSVPs close, the community it is
- * posted to and who can see it. Nothing here is required.
+ * waitlist, attendee-count and Go together switches, when RSVPs close, the
+ * community it is posted to and who can see it. Nothing here is required.
  */
 export function WhoChapter({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
@@ -63,6 +63,15 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
         description={t("gatherings:create.step3.attendeeCountHint")}
         isChecked={form.showAttendeeCount}
         onChange={form.setShowAttendeeCount}
+      />
+      {/* Switched on right after publish; the cutoff, questions and meeting
+          point live on the manage page. */}
+      <SwitchRow
+        variant="compact"
+        title={t("goTogether:host.create.title")}
+        description={t("goTogether:host.create.description")}
+        isChecked={form.goTogetherEnabled}
+        onChange={form.setGoTogetherEnabled}
       />
       <FieldRow>
         <Field

@@ -235,6 +235,15 @@ function ModToolsPane({
       />
     );
   }
+  // The community's own shared values, read against both queues below: what
+  // an applicant is asked to agree to, and what a report is measured against.
+  const guidelines = {
+    communityName,
+    rules: living.rules,
+    inheritedRules: living.inheritedRules,
+    parentName: living.parent?.name ?? null,
+  };
+
   if (section === "requests") {
     return (
       <ModJoinRequests
@@ -243,6 +252,7 @@ function ModToolsPane({
         total={actions.requestTotal}
         state={actions.requestsState}
         paging={actions.requestsPaging}
+        guidelines={guidelines}
         onResolve={actions.resolveRequest}
         isPending={actions.isRequestPending}
       />
@@ -254,6 +264,7 @@ function ModToolsPane({
         reports={actions.reports}
         slug={living.slug}
         state={actions.reportsState}
+        guidelines={guidelines}
         onRemove={(report) => setConfirming({ kind: "removeReport", report })}
         onDismiss={actions.dismissReportRow}
         onEscalate={actions.escalateReportRow}

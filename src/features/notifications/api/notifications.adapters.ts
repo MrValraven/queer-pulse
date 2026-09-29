@@ -268,6 +268,26 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // group's name is what makes the row worth reading. Its generic `.text`
   // carries both `{name}` (the adder, handed to `formatNotification` below)
   // and `{groupTitle}`, while the avatar and profile link still name the adder.
+  //
+  // The four listing co-management kinds always carry an actor (the owner on
+  // the invite, the member on the accept/decline, the offering admin on the
+  // offer). Their `textNamed` copy keeps `{listingName}`, which rides in on
+  // `actor.textValues`, so the row names the person as a bold profile link
+  // like every other person row and still says which listing it is about.
+  "listing_co_manager_invite",
+  "listing_co_manager_invite_accepted",
+  "listing_co_manager_invite_declined",
+  "listing_owner_offer",
+  // Go together (design spec 2026-09-28), coordinator fix round 0. Both
+  // always carry an actor: `go_together_pair_invite` names the partner who
+  // opted in as a pair, `go_together_mutual` names the other member who also
+  // answered "yes" to meeting again. Their `textNamed` copy keeps
+  // `{eventTitle}`, which rides in on `actor.textValues` the same way the
+  // four listing co-management kinds above keep `{listingName}`, so the row
+  // names the person as a bold profile link and still says which gathering
+  // or group it is about.
+  "go_together_pair_invite",
+  "go_together_mutual",
 ]);
 
 export function notificationDtoToView(
@@ -275,7 +295,7 @@ export function notificationDtoToView(
   t: TFunction,
   fmt: Formatters,
 ): Notification {
-  const { text, meta, category, kind } = formatNotification(
+  const { text, meta, category, kind, textValues } = formatNotification(
     dto.type,
     dto.payload,
     t,
@@ -329,13 +349,14 @@ export function notificationDtoToView(
         ? `mention.${entityKind}`
         : kind;
     view.actorSlug = dto.actor.slug;
+    const isPersonalized = Boolean(kind && PERSONALIZED_KINDS.has(kind));
     view.actor = {
       name,
       href,
-      textKey:
-        kind && PERSONALIZED_KINDS.has(kind)
-          ? `notifications:type.${namedKey}.textNamed`
-          : undefined,
+      textKey: isPersonalized
+        ? `notifications:type.${namedKey}.textNamed`
+        : undefined,
+      textValues: isPersonalized ? textValues : undefined,
     };
     view.avatar = {
       initials: actorInitials(dto.actor),
@@ -494,6 +515,48 @@ const RESOURCE_DIRECTORY_ROUTES: Record<string, string | undefined> = {
 };
 
 /**
+ * QueerPulse Go together (design spec 2026-09-28) deep links, all six kinds.
+ *
+ * `go_together_group_ready` opens the matched chat directly when one was
+ * created (`conversationId`), the same `?c=` deep link `group_added`
+ * resolves to; a chat that failed to create falls back to the gathering
+ * itself, which still tells the member which event the group is for.
+ *
+ * `go_together_meet_again` opens the feedback flow for that one group: the
+ * whole point of the row is the question waiting there.
+ *
+ * The other four kinds all point back at the gathering itself: a pair
+ * invite is answered from the event's own opt-in step, an unmatched or
+ * member-left row has nothing else to open, and a mutual "meet again" is
+ * read about from the event that produced the group.
+ */
+function goTogetherSourceHref(
+  type: string,
+  payload: Record<string, unknown> | null | undefined,
+): string | undefined {
+  if (type === "go_together_group_ready") {
+    const conversationId = payload?.conversationId;
+    if (typeof conversationId === "string" && conversationId) {
+      return `${routes.messages}?c=${encodeURIComponent(conversationId)}`;
+    }
+    const eventSlug = payload?.eventSlug;
+    return typeof eventSlug === "string" && eventSlug
+      ? gatheringPath(eventSlug)
+      : undefined;
+  }
+  if (type === "go_together_meet_again") {
+    const groupId = payload?.groupId;
+    return typeof groupId === "string" && groupId
+      ? `${routes.goTogetherFeedback}/${encodeURIComponent(groupId)}`
+      : undefined;
+  }
+  const eventSlug = payload?.eventSlug;
+  return typeof eventSlug === "string" && eventSlug
+    ? gatheringPath(eventSlug)
+    : undefined;
+}
+
+/**
  * Deep-link to the thread/discussion a notification originated from, built
  * from `payload.source` + its slug field: `thread(threadSlug)` for a forum
  * mention, and for a community one the POST'S OWN PERMALINK,
@@ -619,6 +682,22 @@ function sourceHrefFromPayload(
       ? `${communityPath(communitySlug)}?tab=modtools&mod=spaces`
       : undefined;
   }
+  // QueerPulse Ambassadors design, section 5.6: "Tapping the grant
+  // notification opens the circle community." Unlike the space-request pair
+  // above, this recipient is not being handed a console pane to act in, they
+  // were just added to a private community they cannot browse to on their
+  // own (the circle's tier is `private`, so it never appears in discover), so
+  // the destination is the community's own page rather than a mod-tools deep
+  // link. `ambassador_revoked` carries no payload at all and therefore never
+  // reaches this branch with a resolvable slug; it falls through to the
+  // final `undefined` below and the row stays text-only, which is correct:
+  // the member was already removed from the circle by the time they read it.
+  if (type === "ambassador_granted") {
+    const communitySlug = payload?.communitySlug;
+    return typeof communitySlug === "string" && communitySlug
+      ? communityPath(communitySlug)
+      : undefined;
+  }
   // PRD-121, the three desk rows that go to a piece's WRITER. Keyed on `type`
   // and placed above the generic branches for a reason that would otherwise
   // bite silently: all three carry `source: "magazine"`, and that value already
@@ -682,6 +761,13 @@ function sourceHrefFromPayload(
   // right destination for them.
   if (type === "listing_co_manager_invite" || type === "listing_owner_offer") {
     return `${routes.accountProfile}#places`;
+  }
+  // QueerPulse Go together (design spec 2026-09-28), all six kinds, every one
+  // of them prefixed `go_together_` and none other in this union sharing it.
+  // Pulled into its own function, `goTogetherSourceHref` above, to stay under
+  // the 200-line function cap; see its own comment for the per-kind reasoning.
+  if (type.startsWith("go_together_")) {
+    return goTogetherSourceHref(type, payload);
   }
   if (!payload) return undefined;
   if (payload.source === "forum") {

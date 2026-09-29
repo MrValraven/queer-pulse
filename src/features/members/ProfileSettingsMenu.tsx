@@ -7,14 +7,15 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { FiDownload, FiEye, FiEyeOff, FiMoreHorizontal } from "react-icons/fi";
+import { FiDownload, FiEye, FiEyeOff } from "react-icons/fi";
 import { MdQrCode2 } from "react-icons/md";
 import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Member } from "./data/members";
+import { ProfileMenuTrigger } from "./ProfileMenuTrigger";
 import styles from "./ProfileSettingsMenu.module.css";
 
-// Pulls in the `qrcode` package — lazy-load it so the profile page's main
+// Pulls in the `qrcode` package: lazy-load it so the profile page's main
 // bundle doesn't pay for that dependency on every visit, only when the menu
 // item is actually clicked (same reasoning as `SubprofileShareCard`'s lazy
 // import in `MySubprofilesPage`).
@@ -31,12 +32,13 @@ interface ProfileSettingsMenuProps {
 }
 
 /**
- * Overflow "profile settings" menu shown on your OWN profile hero — the
+ * Overflow "profile settings" menu shown on your OWN profile hero, the
  * self-view counterpart to `ProfileSafetyMenu` (which shows on everyone
- * else's, in the same `ctaRow`). Gathers the three owner-only actions that
- * used to live in an always-visible card in `ProfileRail` (now removed):
+ * else's, in the desktop hero toolbar and the phone action row). Gathers
+ * the three owner-only actions that used to live in an always-visible card
+ * in `ProfileRail` (now removed):
  * visibility ("Who sees what"), the 24h hide toggle, and the account-data
- * sheet — one top-of-profile menu instead of a permanent block taking up
+ * sheet: one top-of-profile menu instead of a permanent block taking up
  * rail space.
  *
  * Same APG menu-button contract as `ProfileSafetyMenu` (roving-tabindex
@@ -105,20 +107,17 @@ export function ProfileSettingsMenu({
     items[nextIndex]?.focus();
   };
 
+  const triggerLabel = t("members:profile.rail.settingsMenuAria");
+
   return (
     <div ref={containerRef} className={styles.container}>
-      <button
-        ref={triggerRef}
-        type="button"
-        className={styles.trigger}
-        aria-label={t("members:profile.rail.settingsMenuAria")}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={open ? menuId : undefined}
-        onClick={() => setOpen((value) => !value)}
-      >
-        <FiMoreHorizontal aria-hidden />
-      </button>
+      <ProfileMenuTrigger
+        triggerRef={triggerRef}
+        label={triggerLabel}
+        isOpen={open}
+        menuId={menuId}
+        onToggle={() => setOpen((value) => !value)}
+      />
 
       {open && (
         <div

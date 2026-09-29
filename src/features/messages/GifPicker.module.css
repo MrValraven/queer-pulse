@@ -32,6 +32,25 @@
     animation: none;
   }
 }
+/* Small phones (`--xs`, ≤480px): `.control`'s own offset inside the composer
+   pill (the paperclip trigger itself) put `left: 0`'s containing block far
+   enough from the screen's left edge that a 340px-wide panel could run past
+   the right edge or leave under 16px of margin. Pinning to the viewport's own
+   side margins instead guarantees a 16px gap on both sides at every phone
+   width. `--gif-picker-bottom` is set in `GifPicker.tsx` from `.control`'s
+   live position (this panel's `offsetParent`), reproducing the same spot
+   `bottom: calc(100% + 16px)` lands on above the trigger; the `16px` fallback
+   only covers the one frame before that effect runs. */
+@media (--xs) {
+  .panel {
+    position: fixed;
+    top: auto;
+    bottom: var(--gif-picker-bottom, 16px);
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
 .search {
   margin: 10px;
   padding: 9px 12px;

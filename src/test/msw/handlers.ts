@@ -8,6 +8,7 @@ import type { JobCardDTO } from "../../features/economy/api/jobs.api";
 import type { Paginated } from "../../shared/api/refs";
 import { subprofileHandlers } from "./subprofiles.handlers";
 import { handleHandlers } from "./handles.handlers";
+import { ambassadorHandlers } from "./ambassadors.handlers";
 
 /**
  * MSW handlers for the few LIVE-mode suites. They double as executable
@@ -116,4 +117,5 @@ export const handlers = [
   ),
   ...subprofileHandlers(API_V1),
   ...handleHandlers(API_V1),
+  ...ambassadorHandlers(API_V1),
 ];

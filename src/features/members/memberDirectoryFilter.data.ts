@@ -3,6 +3,14 @@ import { compareActivityBands, type ActivityBand } from "./activityBand";
 import { demoBandForSlug } from "./activityBand.data";
 import { OPEN_TO_PRESETS, openToPresetIds, type OpenToId } from "./openTo.data";
 import { LISBON_NEIGHBOURHOOD_NAMES } from "../../shared/geo/lisbonNeighbourhoods";
+import {
+  AMBASSADOR_FOCUS_AREAS,
+  AMBASSADOR_FOCUS_LABEL_KEY,
+  type AmbassadorFocusArea,
+} from "../../shared/ambassadors/ambassadorFocusAreas.data";
+import { DEMO_AMBASSADORS } from "../../shared/ambassadors/ambassadorRegistry.data";
+import { staffBadgeRolesFor } from "../../shared/staff/badgedStaffRoles";
+import { DEMO_STAFF } from "../../shared/staff/staffRegistry.data";
 
 export interface ChipOption {
   label: string;
@@ -137,27 +145,48 @@ export const DISCIPLINES: FilterOption[] = [
     labelKey: "members:directory.discipline.design",
     active: true,
   },
+  { id: "fashion", labelKey: "members:directory.discipline.fashion" },
   { id: "editorial", labelKey: "members:directory.discipline.editorial" },
   { id: "healthcare", labelKey: "members:directory.discipline.healthcare" },
   { id: "legal", labelKey: "members:directory.discipline.legal" },
   { id: "education", labelKey: "members:directory.discipline.education" },
   { id: "tech", labelKey: "members:directory.discipline.tech" },
+  { id: "engineering", labelKey: "members:directory.discipline.engineering" },
+  { id: "marketing", labelKey: "members:directory.discipline.marketing" },
+  { id: "operations", labelKey: "members:directory.discipline.operations" },
+  { id: "people", labelKey: "members:directory.discipline.people" },
+  { id: "finance", labelKey: "members:directory.discipline.finance" },
+  { id: "sales", labelKey: "members:directory.discipline.sales" },
+  { id: "ownBusiness", labelKey: "members:directory.discipline.ownBusiness" },
   { id: "photo", labelKey: "members:directory.discipline.photo" },
   { id: "film", labelKey: "members:directory.discipline.film" },
   { id: "performance", labelKey: "members:directory.discipline.performance" },
   { id: "music", labelKey: "members:directory.discipline.music" },
+  { id: "nightlife", labelKey: "members:directory.discipline.nightlife" },
   { id: "architecture", labelKey: "members:directory.discipline.architecture" },
   { id: "community", labelKey: "members:directory.discipline.community" },
+  {
+    id: "publicSector",
+    labelKey: "members:directory.discipline.publicSector",
+  },
   { id: "curation", labelKey: "members:directory.discipline.curation" },
   { id: "food", labelKey: "members:directory.discipline.food" },
+  { id: "hospitality", labelKey: "members:directory.discipline.hospitality" },
   { id: "craft", labelKey: "members:directory.discipline.craft" },
   { id: "beauty", labelKey: "members:directory.discipline.beauty" },
   { id: "trades", labelKey: "members:directory.discipline.trades" },
+  { id: "farming", labelKey: "members:directory.discipline.farming" },
   { id: "care", labelKey: "members:directory.discipline.care" },
+  { id: "animals", labelKey: "members:directory.discipline.animals" },
   { id: "wellness", labelKey: "members:directory.discipline.wellness" },
+  { id: "sport", labelKey: "members:directory.discipline.sport" },
   { id: "retail", labelKey: "members:directory.discipline.retail" },
   { id: "transport", labelKey: "members:directory.discipline.transport" },
   { id: "science", labelKey: "members:directory.discipline.science" },
+  { id: "games", labelKey: "members:directory.discipline.games" },
+  // Kept off the member directory; see `UNLISTED_DISCIPLINE_IDS` below for why.
+  { id: "adultWork", labelKey: "members:directory.discipline.adultWork" },
+  { id: "lifeStage", labelKey: "members:directory.discipline.lifeStage" },
 ];
 
 /** id → labelKey, for resolving a stored discipline id back to a display
@@ -177,6 +206,49 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     { id: "uxDesigner", labelKey: "members:directory.profession.uxDesigner" },
     { id: "illustrator", labelKey: "members:directory.profession.illustrator" },
     { id: "artDirector", labelKey: "members:directory.profession.artDirector" },
+    {
+      id: "productDesigner",
+      labelKey: "members:directory.profession.productDesigner",
+    },
+    { id: "webDesigner", labelKey: "members:directory.profession.webDesigner" },
+    {
+      id: "motionDesigner",
+      labelKey: "members:directory.profession.motionDesigner",
+    },
+    { id: "animator", labelKey: "members:directory.profession.animator" },
+    {
+      id: "comicArtist",
+      labelKey: "members:directory.profession.comicArtist",
+    },
+    {
+      id: "uxResearcher",
+      labelKey: "members:directory.profession.uxResearcher",
+    },
+  ],
+  fashion: [
+    {
+      id: "fashionDesigner",
+      labelKey: "members:directory.profession.fashionDesigner",
+    },
+    { id: "stylist", labelKey: "members:directory.profession.stylist" },
+    { id: "model", labelKey: "members:directory.profession.model" },
+    {
+      id: "costumeDesigner",
+      labelKey: "members:directory.profession.costumeDesigner",
+    },
+    { id: "tailor", labelKey: "members:directory.profession.tailor" },
+    {
+      id: "patternCutter",
+      labelKey: "members:directory.profession.patternCutter",
+    },
+    {
+      id: "fashionBuyer",
+      labelKey: "members:directory.profession.fashionBuyer",
+    },
+    {
+      id: "vintageReseller",
+      labelKey: "members:directory.profession.vintageReseller",
+    },
   ],
   editorial: [
     { id: "editor", labelKey: "members:directory.profession.editor" },
@@ -184,6 +256,14 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     { id: "copywriter", labelKey: "members:directory.profession.copywriter" },
     { id: "translator", labelKey: "members:directory.profession.translator" },
     { id: "poet", labelKey: "members:directory.profession.poet" },
+    { id: "podcaster", labelKey: "members:directory.profession.podcaster" },
+    { id: "author", labelKey: "members:directory.profession.author" },
+    {
+      id: "contentCreator",
+      labelKey: "members:directory.profession.contentCreator",
+    },
+    { id: "zinester", labelKey: "members:directory.profession.zinester" },
+    { id: "publisher", labelKey: "members:directory.profession.publisher" },
   ],
   healthcare: [
     { id: "therapist", labelKey: "members:directory.profession.therapist" },
@@ -205,6 +285,43 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "communityHealthWorker",
       labelKey: "members:directory.profession.communityHealthWorker",
     },
+    {
+      id: "psychiatrist",
+      labelKey: "members:directory.profession.psychiatrist",
+    },
+    {
+      id: "hospitalDoctor",
+      labelKey: "members:directory.profession.hospitalDoctor",
+    },
+    { id: "pharmacist", labelKey: "members:directory.profession.pharmacist" },
+    { id: "midwife", labelKey: "members:directory.profession.midwife" },
+    { id: "doula", labelKey: "members:directory.profession.doula" },
+    { id: "dentist", labelKey: "members:directory.profession.dentist" },
+    {
+      id: "occupationalTherapist",
+      labelKey: "members:directory.profession.occupationalTherapist",
+    },
+    {
+      id: "speechTherapist",
+      labelKey: "members:directory.profession.speechTherapist",
+    },
+    {
+      id: "nutritionist",
+      labelKey: "members:directory.profession.nutritionist",
+    },
+    {
+      id: "sexTherapist",
+      labelKey: "members:directory.profession.sexTherapist",
+    },
+    {
+      id: "sexualHealthWorker",
+      labelKey: "members:directory.profession.sexualHealthWorker",
+    },
+    {
+      id: "harmReductionWorker",
+      labelKey: "members:directory.profession.harmReductionWorker",
+    },
+    { id: "paramedic", labelKey: "members:directory.profession.paramedic" },
   ],
   legal: [
     {
@@ -220,6 +337,20 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "legalAdvocate",
       labelKey: "members:directory.profession.legalAdvocate",
     },
+    {
+      id: "humanRightsLawyer",
+      labelKey: "members:directory.profession.humanRightsLawyer",
+    },
+    {
+      id: "employmentLawyer",
+      labelKey: "members:directory.profession.employmentLawyer",
+    },
+    {
+      id: "criminalLawyer",
+      labelKey: "members:directory.profession.criminalLawyer",
+    },
+    { id: "notary", labelKey: "members:directory.profession.notary" },
+    { id: "mediator", labelKey: "members:directory.profession.mediator" },
   ],
   education: [
     { id: "teacher", labelKey: "members:directory.profession.teacher" },
@@ -229,6 +360,23 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     },
     { id: "researcher", labelKey: "members:directory.profession.researcher" },
     { id: "tutor", labelKey: "members:directory.profession.tutor" },
+    { id: "lecturer", labelKey: "members:directory.profession.lecturer" },
+    {
+      id: "sexEducator",
+      labelKey: "members:directory.profession.sexEducator",
+    },
+    {
+      id: "languageTeacher",
+      labelKey: "members:directory.profession.languageTeacher",
+    },
+    {
+      id: "earlyYearsEducator",
+      labelKey: "members:directory.profession.earlyYearsEducator",
+    },
+    {
+      id: "specialNeedsTeacher",
+      labelKey: "members:directory.profession.specialNeedsTeacher",
+    },
   ],
   tech: [
     {
@@ -247,6 +395,205 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "productManager",
       labelKey: "members:directory.profession.productManager",
     },
+    {
+      id: "frontendEngineer",
+      labelKey: "members:directory.profession.frontendEngineer",
+    },
+    {
+      id: "fullStackEngineer",
+      labelKey: "members:directory.profession.fullStackEngineer",
+    },
+    {
+      id: "mobileEngineer",
+      labelKey: "members:directory.profession.mobileEngineer",
+    },
+    {
+      id: "devOpsEngineer",
+      labelKey: "members:directory.profession.devOpsEngineer",
+    },
+    { id: "qaEngineer", labelKey: "members:directory.profession.qaEngineer" },
+    {
+      id: "securityEngineer",
+      labelKey: "members:directory.profession.securityEngineer",
+    },
+    {
+      id: "dataAnalyst",
+      labelKey: "members:directory.profession.dataAnalyst",
+    },
+    {
+      id: "machineLearningEngineer",
+      labelKey: "members:directory.profession.machineLearningEngineer",
+    },
+    { id: "itSupport", labelKey: "members:directory.profession.itSupport" },
+    {
+      id: "technicalWriter",
+      labelKey: "members:directory.profession.technicalWriter",
+    },
+  ],
+  engineering: [
+    {
+      id: "civilEngineer",
+      labelKey: "members:directory.profession.civilEngineer",
+    },
+    {
+      id: "mechanicalEngineer",
+      labelKey: "members:directory.profession.mechanicalEngineer",
+    },
+    {
+      id: "electricalEngineer",
+      labelKey: "members:directory.profession.electricalEngineer",
+    },
+    {
+      id: "environmentalEngineer",
+      labelKey: "members:directory.profession.environmentalEngineer",
+    },
+    {
+      id: "aerospaceEngineer",
+      labelKey: "members:directory.profession.aerospaceEngineer",
+    },
+    {
+      id: "biomedicalEngineer",
+      labelKey: "members:directory.profession.biomedicalEngineer",
+    },
+  ],
+  marketing: [
+    {
+      id: "marketingManager",
+      labelKey: "members:directory.profession.marketingManager",
+    },
+    {
+      id: "brandStrategist",
+      labelKey: "members:directory.profession.brandStrategist",
+    },
+    {
+      id: "socialMediaManager",
+      labelKey: "members:directory.profession.socialMediaManager",
+    },
+    {
+      id: "contentStrategist",
+      labelKey: "members:directory.profession.contentStrategist",
+    },
+    {
+      id: "prCommunications",
+      labelKey: "members:directory.profession.prCommunications",
+    },
+    {
+      id: "growthMarketer",
+      labelKey: "members:directory.profession.growthMarketer",
+    },
+    {
+      id: "communityManager",
+      labelKey: "members:directory.profession.communityManager",
+    },
+  ],
+  operations: [
+    {
+      id: "operationsManager",
+      labelKey: "members:directory.profession.operationsManager",
+    },
+    {
+      id: "projectManager",
+      labelKey: "members:directory.profession.projectManager",
+    },
+    {
+      id: "programmeCoordinator",
+      labelKey: "members:directory.profession.programmeCoordinator",
+    },
+    {
+      id: "officeManager",
+      labelKey: "members:directory.profession.officeManager",
+    },
+    {
+      id: "executiveAssistant",
+      labelKey: "members:directory.profession.executiveAssistant",
+    },
+    {
+      id: "eventOperations",
+      labelKey: "members:directory.profession.eventOperations",
+    },
+    {
+      id: "logisticsCoordinator",
+      labelKey: "members:directory.profession.logisticsCoordinator",
+    },
+  ],
+  people: [
+    {
+      id: "hrGeneralist",
+      labelKey: "members:directory.profession.hrGeneralist",
+    },
+    { id: "recruiter", labelKey: "members:directory.profession.recruiter" },
+    {
+      id: "hrBusinessPartner",
+      labelKey: "members:directory.profession.hrBusinessPartner",
+    },
+    {
+      id: "learningDevelopment",
+      labelKey: "members:directory.profession.learningDevelopment",
+    },
+    { id: "deiLead", labelKey: "members:directory.profession.deiLead" },
+    {
+      id: "payrollBenefits",
+      labelKey: "members:directory.profession.payrollBenefits",
+    },
+  ],
+  finance: [
+    { id: "accountant", labelKey: "members:directory.profession.accountant" },
+    {
+      id: "bookkeeper",
+      labelKey: "members:directory.profession.bookkeeper",
+    },
+    {
+      id: "financialAnalyst",
+      labelKey: "members:directory.profession.financialAnalyst",
+    },
+    {
+      id: "fundraiser",
+      labelKey: "members:directory.profession.fundraiser",
+    },
+    {
+      id: "financialAdviser",
+      labelKey: "members:directory.profession.financialAdviser",
+    },
+    { id: "taxAdviser", labelKey: "members:directory.profession.taxAdviser" },
+    { id: "auditor", labelKey: "members:directory.profession.auditor" },
+  ],
+  sales: [
+    {
+      id: "accountExecutive",
+      labelKey: "members:directory.profession.accountExecutive",
+    },
+    {
+      id: "businessDevelopment",
+      labelKey: "members:directory.profession.businessDevelopment",
+    },
+    {
+      id: "customerSuccessManager",
+      labelKey: "members:directory.profession.customerSuccessManager",
+    },
+    {
+      id: "salesRepresentative",
+      labelKey: "members:directory.profession.salesRepresentative",
+    },
+    { id: "estateAgent", labelKey: "members:directory.profession.estateAgent" },
+  ],
+  ownBusiness: [
+    { id: "founder", labelKey: "members:directory.profession.founder" },
+    {
+      id: "smallBusinessOwner",
+      labelKey: "members:directory.profession.smallBusinessOwner",
+    },
+    {
+      id: "freelancer",
+      labelKey: "members:directory.profession.freelancer",
+    },
+    {
+      id: "consultant",
+      labelKey: "members:directory.profession.consultant",
+    },
+    {
+      id: "coopMember",
+      labelKey: "members:directory.profession.coopMember",
+    },
   ],
   photo: [
     {
@@ -258,6 +605,14 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       labelKey: "members:directory.profession.photojournalist",
     },
     { id: "retoucher", labelKey: "members:directory.profession.retoucher" },
+    {
+      id: "eventPhotographer",
+      labelKey: "members:directory.profession.eventPhotographer",
+    },
+    {
+      id: "fashionPhotographer",
+      labelKey: "members:directory.profession.fashionPhotographer",
+    },
   ],
   film: [
     {
@@ -270,6 +625,18 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       labelKey: "members:directory.profession.cinematographer",
     },
     { id: "filmEditor", labelKey: "members:directory.profession.filmEditor" },
+    {
+      id: "screenwriter",
+      labelKey: "members:directory.profession.screenwriter",
+    },
+    {
+      id: "filmProducer",
+      labelKey: "members:directory.profession.filmProducer",
+    },
+    {
+      id: "videographer",
+      labelKey: "members:directory.profession.videographer",
+    },
   ],
   performance: [
     {
@@ -284,6 +651,35 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     {
       id: "performanceArtist",
       labelKey: "members:directory.profession.performanceArtist",
+    },
+    { id: "voiceActor", labelKey: "members:directory.profession.voiceActor" },
+    { id: "actor", labelKey: "members:directory.profession.actor" },
+    {
+      id: "dragPerformer",
+      labelKey: "members:directory.profession.dragPerformer",
+    },
+    { id: "comedian", labelKey: "members:directory.profession.comedian" },
+    {
+      id: "burlesquePerformer",
+      labelKey: "members:directory.profession.burlesquePerformer",
+    },
+    {
+      id: "circusArtist",
+      labelKey: "members:directory.profession.circusArtist",
+    },
+    { id: "hostEmcee", labelKey: "members:directory.profession.hostEmcee" },
+    { id: "voguer", labelKey: "members:directory.profession.voguer" },
+    {
+      id: "poleDancer",
+      labelKey: "members:directory.profession.poleDancer",
+    },
+    {
+      id: "spokenWordArtist",
+      labelKey: "members:directory.profession.spokenWordArtist",
+    },
+    {
+      id: "danceTeacher",
+      labelKey: "members:directory.profession.danceTeacher",
     },
   ],
   music: [
@@ -304,6 +700,41 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "musicIndustryAR",
       labelKey: "members:directory.profession.musicIndustryAR",
     },
+    { id: "singer", labelKey: "members:directory.profession.singer" },
+    {
+      id: "songwriter",
+      labelKey: "members:directory.profession.songwriter",
+    },
+    { id: "composer", labelKey: "members:directory.profession.composer" },
+    {
+      id: "musicTeacher",
+      labelKey: "members:directory.profession.musicTeacher",
+    },
+    {
+      id: "soundEngineer",
+      labelKey: "members:directory.profession.soundEngineer",
+    },
+  ],
+  nightlife: [
+    { id: "promoter", labelKey: "members:directory.profession.promoter" },
+    {
+      id: "eventProducer",
+      labelKey: "members:directory.profession.eventProducer",
+    },
+    {
+      id: "eventPlanner",
+      labelKey: "members:directory.profession.eventPlanner",
+    },
+    {
+      id: "venueManager",
+      labelKey: "members:directory.profession.venueManager",
+    },
+    { id: "doorHost", labelKey: "members:directory.profession.doorHost" },
+    {
+      id: "stageTechnician",
+      labelKey: "members:directory.profession.stageTechnician",
+    },
+    { id: "celebrant", labelKey: "members:directory.profession.celebrant" },
   ],
   architecture: [
     { id: "architect", labelKey: "members:directory.profession.architect" },
@@ -314,6 +745,10 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     {
       id: "interiorArchitect",
       labelKey: "members:directory.profession.interiorArchitect",
+    },
+    {
+      id: "landscapeArchitect",
+      labelKey: "members:directory.profession.landscapeArchitect",
     },
   ],
   community: [
@@ -338,6 +773,53 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       labelKey: "members:directory.profession.accessibilityAdvocate",
     },
     { id: "activist", labelKey: "members:directory.profession.activist" },
+    {
+      id: "communityCentreCoordinator",
+      labelKey: "members:directory.profession.communityCentreCoordinator",
+    },
+  ],
+  publicSector: [
+    {
+      id: "socialWorker",
+      labelKey: "members:directory.profession.socialWorker",
+    },
+    {
+      id: "youthWorker",
+      labelKey: "members:directory.profession.youthWorker",
+    },
+    {
+      id: "policyAdvisor",
+      labelKey: "members:directory.profession.policyAdvisor",
+    },
+    {
+      id: "civilServant",
+      labelKey: "members:directory.profession.civilServant",
+    },
+    {
+      id: "nonprofitDirector",
+      labelKey: "members:directory.profession.nonprofitDirector",
+    },
+    {
+      id: "ngoProgrammeLead",
+      labelKey: "members:directory.profession.ngoProgrammeLead",
+    },
+    {
+      id: "volunteerCoordinator",
+      labelKey: "members:directory.profession.volunteerCoordinator",
+    },
+    {
+      id: "electedOfficial",
+      labelKey: "members:directory.profession.electedOfficial",
+    },
+    { id: "diplomat", labelKey: "members:directory.profession.diplomat" },
+    {
+      id: "firefighter",
+      labelKey: "members:directory.profession.firefighter",
+    },
+    {
+      id: "policeOfficer",
+      labelKey: "members:directory.profession.policeOfficer",
+    },
   ],
   curation: [
     { id: "curator", labelKey: "members:directory.profession.curator" },
@@ -345,6 +827,21 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     {
       id: "galleryDirector",
       labelKey: "members:directory.profession.galleryDirector",
+    },
+    { id: "librarian", labelKey: "members:directory.profession.librarian" },
+    { id: "historian", labelKey: "members:directory.profession.historian" },
+    {
+      id: "conservator",
+      labelKey: "members:directory.profession.conservator",
+    },
+    { id: "artCritic", labelKey: "members:directory.profession.artCritic" },
+    {
+      id: "exhibitionDesigner",
+      labelKey: "members:directory.profession.exhibitionDesigner",
+    },
+    {
+      id: "museumEducator",
+      labelKey: "members:directory.profession.museumEducator",
     },
   ],
   food: [
@@ -357,6 +854,37 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     },
     { id: "bartender", labelKey: "members:directory.profession.bartender" },
     { id: "waiter", labelKey: "members:directory.profession.waiter" },
+    { id: "cook", labelKey: "members:directory.profession.cook" },
+    { id: "sommelier", labelKey: "members:directory.profession.sommelier" },
+    { id: "brewer", labelKey: "members:directory.profession.brewer" },
+    { id: "caterer", labelKey: "members:directory.profession.caterer" },
+    {
+      id: "restaurantManager",
+      labelKey: "members:directory.profession.restaurantManager",
+    },
+  ],
+  hospitality: [
+    {
+      id: "hotelManager",
+      labelKey: "members:directory.profession.hotelManager",
+    },
+    {
+      id: "frontDeskAgent",
+      labelKey: "members:directory.profession.frontDeskAgent",
+    },
+    {
+      id: "housekeeper",
+      labelKey: "members:directory.profession.housekeeper",
+    },
+    { id: "tourGuide", labelKey: "members:directory.profession.tourGuide" },
+    {
+      id: "travelAgent",
+      labelKey: "members:directory.profession.travelAgent",
+    },
+    {
+      id: "guesthouseHost",
+      labelKey: "members:directory.profession.guesthouseHost",
+    },
   ],
   craft: [
     { id: "ceramicist", labelKey: "members:directory.profession.ceramicist" },
@@ -364,6 +892,15 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     {
       id: "textileArtist",
       labelKey: "members:directory.profession.textileArtist",
+    },
+    { id: "jeweller", labelKey: "members:directory.profession.jeweller" },
+    {
+      id: "printmaker",
+      labelKey: "members:directory.profession.printmaker",
+    },
+    {
+      id: "leatherworker",
+      labelKey: "members:directory.profession.leatherworker",
     },
   ],
   beauty: [
@@ -383,6 +920,11 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       labelKey: "members:directory.profession.tattooArtist",
     },
     { id: "piercer", labelKey: "members:directory.profession.piercer" },
+    { id: "wigMaker", labelKey: "members:directory.profession.wigMaker" },
+    {
+      id: "lashBrowTechnician",
+      labelKey: "members:directory.profession.lashBrowTechnician",
+    },
   ],
   trades: [
     { id: "electrician", labelKey: "members:directory.profession.electrician" },
@@ -398,6 +940,21 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       labelKey: "members:directory.profession.constructionWorker",
     },
     { id: "gardener", labelKey: "members:directory.profession.gardener" },
+    { id: "welder", labelKey: "members:directory.profession.welder" },
+    { id: "tiler", labelKey: "members:directory.profession.tiler" },
+    {
+      id: "handyperson",
+      labelKey: "members:directory.profession.handyperson",
+    },
+  ],
+  farming: [
+    { id: "farmer", labelKey: "members:directory.profession.farmer" },
+    { id: "winemaker", labelKey: "members:directory.profession.winemaker" },
+    {
+      id: "permacultureDesigner",
+      labelKey: "members:directory.profession.permacultureDesigner",
+    },
+    { id: "beekeeper", labelKey: "members:directory.profession.beekeeper" },
   ],
   care: [
     {
@@ -412,6 +969,30 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "disabilitySupportWorker",
       labelKey: "members:directory.profession.disabilitySupportWorker",
     },
+    {
+      id: "funeralDirector",
+      labelKey: "members:directory.profession.funeralDirector",
+    },
+  ],
+  animals: [
+    { id: "vet", labelKey: "members:directory.profession.vet" },
+    { id: "vetNurse", labelKey: "members:directory.profession.vetNurse" },
+    {
+      id: "dogWalker",
+      labelKey: "members:directory.profession.dogWalker",
+    },
+    {
+      id: "petGroomer",
+      labelKey: "members:directory.profession.petGroomer",
+    },
+    {
+      id: "dogTrainer",
+      labelKey: "members:directory.profession.dogTrainer",
+    },
+    {
+      id: "animalShelterWorker",
+      labelKey: "members:directory.profession.animalShelterWorker",
+    },
   ],
   wellness: [
     {
@@ -422,6 +1003,35 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
     {
       id: "massageTherapist",
       labelKey: "members:directory.profession.massageTherapist",
+    },
+    { id: "lifeCoach", labelKey: "members:directory.profession.lifeCoach" },
+    {
+      id: "pilatesInstructor",
+      labelKey: "members:directory.profession.pilatesInstructor",
+    },
+    {
+      id: "meditationTeacher",
+      labelKey: "members:directory.profession.meditationTeacher",
+    },
+    {
+      id: "astrologer",
+      labelKey: "members:directory.profession.astrologer",
+    },
+  ],
+  sport: [
+    { id: "athlete", labelKey: "members:directory.profession.athlete" },
+    {
+      id: "sportsCoach",
+      labelKey: "members:directory.profession.sportsCoach",
+    },
+    { id: "referee", labelKey: "members:directory.profession.referee" },
+    {
+      id: "surfInstructor",
+      labelKey: "members:directory.profession.surfInstructor",
+    },
+    {
+      id: "climbingInstructor",
+      labelKey: "members:directory.profession.climbingInstructor",
     },
   ],
   retail: [
@@ -442,6 +1052,19 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "customerSupport",
       labelKey: "members:directory.profession.customerSupport",
     },
+    { id: "florist", labelKey: "members:directory.profession.florist" },
+    {
+      id: "bookseller",
+      labelKey: "members:directory.profession.bookseller",
+    },
+    {
+      id: "storeManager",
+      labelKey: "members:directory.profession.storeManager",
+    },
+    {
+      id: "visualMerchandiser",
+      labelKey: "members:directory.profession.visualMerchandiser",
+    },
   ],
   transport: [
     { id: "driver", labelKey: "members:directory.profession.driver" },
@@ -453,6 +1076,11 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "warehouseWorker",
       labelKey: "members:directory.profession.warehouseWorker",
     },
+    { id: "pilot", labelKey: "members:directory.profession.pilot" },
+    {
+      id: "flightAttendant",
+      labelKey: "members:directory.profession.flightAttendant",
+    },
   ],
   science: [
     { id: "biologist", labelKey: "members:directory.profession.biologist" },
@@ -461,6 +1089,122 @@ export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
       id: "labResearcher",
       labelKey: "members:directory.profession.labResearcher",
     },
+    { id: "chemist", labelKey: "members:directory.profession.chemist" },
+    { id: "physicist", labelKey: "members:directory.profession.physicist" },
+    {
+      id: "environmentalScientist",
+      labelKey: "members:directory.profession.environmentalScientist",
+    },
+    {
+      id: "mathematician",
+      labelKey: "members:directory.profession.mathematician",
+    },
+  ],
+  games: [
+    { id: "gameMaster", labelKey: "members:directory.profession.gameMaster" },
+    {
+      id: "ttrpgWriter",
+      labelKey: "members:directory.profession.ttrpgWriter",
+    },
+    {
+      id: "gameDesigner",
+      labelKey: "members:directory.profession.gameDesigner",
+    },
+    {
+      id: "boardGameReviewer",
+      labelKey: "members:directory.profession.boardGameReviewer",
+    },
+    {
+      id: "gameNightHost",
+      labelKey: "members:directory.profession.gameNightHost",
+    },
+    {
+      id: "larpOrganiser",
+      labelKey: "members:directory.profession.larpOrganiser",
+    },
+    {
+      id: "miniaturePainter",
+      labelKey: "members:directory.profession.miniaturePainter",
+    },
+    { id: "cosplayer", labelKey: "members:directory.profession.cosplayer" },
+    { id: "streamer", labelKey: "members:directory.profession.streamer" },
+    {
+      id: "tournamentOrganiser",
+      labelKey: "members:directory.profession.tournamentOrganiser",
+    },
+    {
+      id: "actualPlayPerformer",
+      labelKey: "members:directory.profession.actualPlayPerformer",
+    },
+    {
+      id: "fantasyCartographer",
+      labelKey: "members:directory.profession.fantasyCartographer",
+    },
+    { id: "diceMaker", labelKey: "members:directory.profession.diceMaker" },
+    {
+      id: "propMaker",
+      labelKey: "members:directory.profession.propMaker",
+    },
+    {
+      id: "puzzleDesigner",
+      labelKey: "members:directory.profession.puzzleDesigner",
+    },
+    {
+      id: "speedrunner",
+      labelKey: "members:directory.profession.speedrunner",
+    },
+    { id: "modder", labelKey: "members:directory.profession.modder" },
+    {
+      id: "fanficWriter",
+      labelKey: "members:directory.profession.fanficWriter",
+    },
+    {
+      id: "gameCritic",
+      labelKey: "members:directory.profession.gameCritic",
+    },
+  ],
+  // Kept off the member directory (see `UNLISTED_DISCIPLINE_IDS`): a member
+  // can pick sex work in the picker, and the directory filter, its counts,
+  // its applied chips and the text-search resolver all read the listed
+  // vocabulary only.
+  adultWork: [
+    { id: "sexWorker", labelKey: "members:directory.profession.sexWorker" },
+    {
+      id: "adultContentCreator",
+      labelKey: "members:directory.profession.adultContentCreator",
+    },
+    {
+      id: "camPerformer",
+      labelKey: "members:directory.profession.camPerformer",
+    },
+    {
+      id: "exoticDancer",
+      labelKey: "members:directory.profession.exoticDancer",
+    },
+    {
+      id: "professionalDominant",
+      labelKey: "members:directory.profession.professionalDominant",
+    },
+    {
+      id: "adultFilmPerformer",
+      labelKey: "members:directory.profession.adultFilmPerformer",
+    },
+  ],
+  lifeStage: [
+    { id: "student", labelKey: "members:directory.profession.student" },
+    {
+      id: "apprentice",
+      labelKey: "members:directory.profession.apprentice",
+    },
+    {
+      id: "betweenJobs",
+      labelKey: "members:directory.profession.betweenJobs",
+    },
+    {
+      id: "fullTimeCarer",
+      labelKey: "members:directory.profession.fullTimeCarer",
+    },
+    { id: "retired", labelKey: "members:directory.profession.retired" },
   ],
 };
 
@@ -483,6 +1227,38 @@ export const FIELD_BY_PROFESSION: Record<string, string> = Object.fromEntries(
   ),
 );
 
+/**
+ * Fields a member can pick in the "What do you do?" picker (onboarding, the
+ * profile editor, Settings) that the member directory must keep off its
+ * filter, its counts, its applied chips and the text-search resolver: the
+ * pick still shows on the member's own full profile. Listing sex work in the
+ * directory could out someone, so the directory reads the listed vocabulary
+ * only. The backend enforces the same rule server-side; these lists keep the
+ * UI honest by construction rather than by remembering to filter `adultWork`
+ * out at every call site.
+ */
+export const UNLISTED_DISCIPLINE_IDS: ReadonlySet<string> = new Set([
+  "adultWork",
+]);
+
+/** True when `id` names an unlisted field (see `UNLISTED_DISCIPLINE_IDS`). */
+export function isUnlistedDiscipline(id: string): boolean {
+  return UNLISTED_DISCIPLINE_IDS.has(id);
+}
+
+/** `DISCIPLINES` minus the unlisted fields: what the member directory's
+ *  filter, its counts and its applied chips are allowed to show. The picker
+ *  keeps reading the full `DISCIPLINES` list. */
+export const DIRECTORY_DISCIPLINES: FilterOption[] = DISCIPLINES.filter(
+  (discipline) => !isUnlistedDiscipline(discipline.id),
+);
+
+/** `ALL_PROFESSIONS` minus the professions of unlisted fields: the directory
+ *  counterpart to `DIRECTORY_DISCIPLINES`. */
+export const DIRECTORY_PROFESSIONS: FilterOption[] = ALL_PROFESSIONS.filter(
+  (profession) => !isUnlistedDiscipline(FIELD_BY_PROFESSION[profession.id]!),
+);
+
 /** The professions available to pick given the selected field ids.
  *  No field selected → everything; otherwise the union of those fields' pools. */
 export function professionsForFields(disciplineIds: string[]): FilterOption[] {
@@ -496,6 +1272,22 @@ export function professionsForFields(disciplineIds: string[]): FilterOption[] {
         out.push(profession);
       }
   return out;
+}
+
+/** Listed-only counterpart to `professionsForFields`, for the member
+ *  directory's filter. No field selected → the listed pool
+ *  (`DIRECTORY_PROFESSIONS`); otherwise the same union, always filtered down
+ *  to listed professions, dropping any profession whose field is unlisted
+ *  even when it was passed in directly. The picker keeps calling
+ *  `professionsForFields` so it still offers the unlisted field's own
+ *  professions on the member's own profile. */
+export function directoryProfessionsForFields(
+  disciplineIds: string[],
+): FilterOption[] {
+  if (!disciplineIds.length) return DIRECTORY_PROFESSIONS;
+  return professionsForFields(disciplineIds).filter(
+    (profession) => !isUnlistedDiscipline(FIELD_BY_PROFESSION[profession.id]!),
+  );
 }
 
 /** Self-declared identity vocabulary — same stored-id / rendered-label
@@ -549,6 +1341,11 @@ export interface DirectoryFacetCounts {
   disciplines: Record<string, number>;
   professions: Record<string, number>;
   languages: Record<string, number>;
+  /** Per-focus-area count, each ASSUMING `isAmbassadorsOnly` is on: there is no
+   *  separate "how many ambassadors total" figure (mirrors the backend's
+   *  per-focus `ambassador` facet, Task B6). Every other filter group still
+   *  applies, same "lift my own group" contract as the rest of this type. */
+  ambassador: Record<AmbassadorFocusArea, number>;
 }
 
 /** Which `FilterState` key a counted group narrows — the key lifted when
@@ -606,6 +1403,29 @@ export function directoryFacetCounts(
   );
   hoods[ALL_OF_LISBON] = population("hoods").length;
 
+  // Ambassador focus counts skip the `CountedGroup` tally helper: the group
+  // they lift spans two `FilterState` fields together (`isAmbassadorsOnly`,
+  // `ambassadorFocusAreas`), so force the switch on and the focus selection
+  // lifted, keep every other group as-is, then tally each ambassador's focus
+  // area within that population. Routing through `matchesFilters` also folds
+  // in its `wearsStaffBadgeInDemo` check, so a staff-badged demo ambassador
+  // (who shows only the staff badge on their card) is left out of these
+  // counts the same way they are left out of the filtered results.
+  const ambassadorPopulation = members.filter((member) =>
+    matchesFilters(member, {
+      ...filters,
+      isAmbassadorsOnly: true,
+      ambassadorFocusAreas: [],
+    }),
+  );
+  const ambassador: Record<AmbassadorFocusArea, number> = Object.fromEntries(
+    AMBASSADOR_FOCUS_AREAS.map((focusArea) => [focusArea, 0]),
+  ) as Record<AmbassadorFocusArea, number>;
+  for (const member of ambassadorPopulation) {
+    const identity = DEMO_AMBASSADORS[member.slug];
+    if (identity) ambassador[identity.focusArea] += 1;
+  }
+
   return {
     openTo: tally(
       "openTo",
@@ -620,14 +1440,18 @@ export function directoryFacetCounts(
     ),
     // Demo cards carry ONE discipline and ONE profession each (the live DTO
     // carries arrays); wrapping keeps both sides on the same tally.
+    // Counted over the LISTED vocabulary only: this mock filtering is a
+    // findable surface (the sidebar's own numbers), so an unlisted field
+    // (`adultWork`) must never show a count, an option row or a tally bucket
+    // here, same as it never shows a chip in `FilterProfessions.tsx`.
     disciplines: tally(
       "disciplines",
-      DISCIPLINES.map((o) => o.id),
+      DIRECTORY_DISCIPLINES.map((o) => o.id),
       (member) => [member.discipline],
     ),
     professions: tally(
       "professions",
-      Object.keys(FIELD_BY_PROFESSION),
+      DIRECTORY_PROFESSIONS.map((o) => o.id),
       (member) => [member.profession],
     ),
     languages: tally(
@@ -635,6 +1459,7 @@ export function directoryFacetCounts(
       LANGUAGES.map((o) => o.label),
       (member) => member.languages,
     ),
+    ambassador,
   };
 }
 
@@ -646,7 +1471,19 @@ export const LANGUAGES: ChipOption[] = [
   { label: "DE" },
 ];
 
-const DISCIPLINE_POOL = Object.keys(PROFESSIONS_BY_FIELD);
+// Now includes "games" (Task A6), the five business disciplines (Task
+// BIZ-FE) and the JOBS-FE expansion's ten new listed disciplines. Drawn from
+// `DIRECTORY_DISCIPLINES`, so a generated card with no `SLUG_FACETS` entry can
+// only ever land on a listed field, the same findability rule as the
+// sidebar's counts. `pick(DISCIPLINE_POOL, r)` below
+// only ever decides a member's facet when that member has no `SLUG_FACETS`
+// entry, and the demo tests (`memberDirectory.test.ts`) pin no discipline or
+// profession for any such member, so widening this pool changes no
+// test-visible value (re-verified for the JOBS-FE expansion: still no such
+// pin exists).
+const DISCIPLINE_POOL = DIRECTORY_DISCIPLINES.map(
+  (discipline) => discipline.id,
+);
 // `IDENTITY_OPTIONS` is a `FilterOption[]` (id + labelKey), not `Identity[]` —
 // the pool needs the stable *id*, not the option object itself (i18n sweep
 // §5.1: a stray `FilterOption[]` here would compare objects against string
@@ -975,7 +1812,14 @@ export const SORT_PARAM: Record<SortKey, string> = {
 export interface AppliedChip {
   label: string;
   group:
-    "openTo" | "hood" | "discipline" | "profession" | "language" | "identity";
+    | "openTo"
+    | "hood"
+    | "discipline"
+    | "profession"
+    | "language"
+    | "identity"
+    | "ambassador"
+    | "ambassadorFocus";
   value: string;
 }
 
@@ -987,8 +1831,11 @@ export interface FilterState {
   professions: string[];
   identities: string[];
   languages: string[];
-  yearsFrom: number;
-  yearsTo: number;
+  /** The "Ambassadors" switch. `ambassadorFocusAreas` is meaningless while
+   *  this is off and is cleared alongside it (see `appliedChips` / the
+   *  chip-removal in `MemberDirectorySections.tsx`). */
+  isAmbassadorsOnly: boolean;
+  ambassadorFocusAreas: AmbassadorFocusArea[];
 }
 
 export const DEFAULT_FILTERS: FilterState = {
@@ -998,8 +1845,8 @@ export const DEFAULT_FILTERS: FilterState = {
   professions: [],
   identities: [],
   languages: ["PT", "EN"],
-  yearsFrom: 0,
-  yearsTo: 9,
+  isAmbassadorsOnly: false,
+  ambassadorFocusAreas: [],
 };
 
 /** A truly empty filter set — what "Clear filters" resets to (the page opens on
@@ -1011,21 +1858,38 @@ export const EMPTY_FILTERS: FilterState = {
   professions: [],
   identities: [],
   languages: [],
-  yearsFrom: 0,
-  yearsTo: 9,
+  isAmbassadorsOnly: false,
+  ambassadorFocusAreas: [],
 };
 
-/** Drop any selected profession that no longer belongs to the selected fields.
- *  Keeps profession ⊆ field coherent after a field is removed. */
+/** Drop any selected profession that no longer belongs to the selected fields,
+ *  and drop any selected field or profession that is unlisted (see
+ *  `UNLISTED_DISCIPLINE_IDS`); `FilterState` must never carry `adultWork` or
+ *  one of its professions, whatever put it there. Keeps profession ⊆ field
+ *  coherent after a field is removed. */
 export function reconcileProfessions(f: FilterState): FilterState {
-  if (!f.disciplines.length) return f;
+  const disciplines = f.disciplines.filter((id) => !isUnlistedDiscipline(id));
   const allowed = new Set(
-    professionsForFields(f.disciplines).map((option) => option.id),
+    directoryProfessionsForFields(disciplines).map((option) => option.id),
   );
   const professions = f.professions.filter((p) => allowed.has(p));
-  return professions.length === f.professions.length
+  return disciplines.length === f.disciplines.length &&
+    professions.length === f.professions.length
     ? f
-    : { ...f, professions };
+    : { ...f, disciplines, professions };
+}
+
+/** Whether a member wears a staff badge in demo mode, by the same rule
+ *  `MemberStaffBadge` renders by: an account tier or a badged grant. Staff
+ *  wins over the Ambassador tag on the card (see `ambassadorRegistry.data.ts`),
+ *  so a demo ambassador who is also staff must drop out of the ambassador
+ *  filter and its counts too, or the directory shows a card with no Ambassador
+ *  tag among "Showing N" ambassador results. */
+function wearsStaffBadgeInDemo(slug: string): boolean {
+  const identity = DEMO_STAFF[slug];
+  return (
+    staffBadgeRolesFor(identity?.tier, identity?.badgedStaffRoles).length > 0
+  );
 }
 
 /** Does a member satisfy every active criterion? (AND across groups, OR within.) */
@@ -1049,7 +1913,15 @@ export function matchesFilters(m: MemberCard, f: FilterState): boolean {
     return false;
   if (f.languages.length && !f.languages.some((l) => m.languages.includes(l)))
     return false;
-  if (m.years < f.yearsFrom || m.years > f.yearsTo) return false;
+  if (f.isAmbassadorsOnly) {
+    const ambassador = DEMO_AMBASSADORS[m.slug];
+    if (!ambassador || wearsStaffBadgeInDemo(m.slug)) return false;
+    if (
+      f.ambassadorFocusAreas.length &&
+      !f.ambassadorFocusAreas.includes(ambassador.focusArea)
+    )
+      return false;
+  }
   return true;
 }
 
@@ -1104,24 +1976,30 @@ export function appliedChips(
       value,
     }),
   );
-  f.disciplines.forEach((value) =>
+  // Unlisted fields and professions (`adultWork` and its six professions) are
+  // skipped rather than resolved, whatever put them in `FilterState`; the
+  // directory must never render one as an applied chip, even a raw-id one.
+  f.disciplines.forEach((value) => {
+    if (isUnlistedDiscipline(value)) return;
     chips.push({
       label: DISCIPLINE_LABEL_KEY[value]
         ? t(DISCIPLINE_LABEL_KEY[value])
         : value,
       group: "discipline",
       value,
-    }),
-  );
-  f.professions.forEach((value) =>
+    });
+  });
+  f.professions.forEach((value) => {
+    const field = FIELD_BY_PROFESSION[value];
+    if (field && isUnlistedDiscipline(field)) return;
     chips.push({
       label: PROFESSION_LABEL_KEY[value]
         ? t(PROFESSION_LABEL_KEY[value])
         : value,
       group: "profession",
       value,
-    }),
-  );
+    });
+  });
   f.identities.forEach((value) =>
     chips.push({
       label: IDENTITY_LABEL_KEY[value] ? t(IDENTITY_LABEL_KEY[value]) : value,
@@ -1132,5 +2010,60 @@ export function appliedChips(
   f.languages.forEach((value) =>
     chips.push({ label: value, group: "language", value }),
   );
+  // One "Ambassadors" chip for the switch, then one per selected focus area.
+  // Removing the switch chip must clear the focus areas too (see
+  // `removeChip` below), so the two stay chips of different groups rather
+  // than one combined chip.
+  if (f.isAmbassadorsOnly) {
+    chips.push({
+      label: t("members:directory.filters.ambassadors.chipLabel"),
+      group: "ambassador",
+      value: "ambassador",
+    });
+    f.ambassadorFocusAreas.forEach((value) =>
+      chips.push({
+        label: t(AMBASSADOR_FOCUS_LABEL_KEY[value]),
+        group: "ambassadorFocus",
+        value,
+      }),
+    );
+  }
   return chips;
+}
+
+/** Remove one value from whichever filter group a chip belongs to. Used by
+ *  the applied-chip row (`MemberDirectorySections.tsx`); colocated with
+ *  `FilterState` rather than that component so a plain function export never
+ *  trips the `react-refresh/only-export-components` lint on a `.tsx` file. */
+export function removeChip(
+  filters: FilterState,
+  chip: AppliedChip,
+): FilterState {
+  const drop = (values: string[]) => values.filter((v) => v !== chip.value);
+  switch (chip.group) {
+    case "openTo":
+      return { ...filters, openTo: drop(filters.openTo) };
+    case "hood":
+      return { ...filters, hoods: drop(filters.hoods) };
+    case "discipline":
+      return { ...filters, disciplines: drop(filters.disciplines) };
+    case "profession":
+      return { ...filters, professions: drop(filters.professions) };
+    case "identity":
+      return { ...filters, identities: drop(filters.identities) };
+    case "language":
+      return { ...filters, languages: drop(filters.languages) };
+    // The switch chip carries both the switch and the focus selection: an
+    // "Ambassadors" chip with focus areas still active but the switch off
+    // would show a filter that no longer filters anything.
+    case "ambassador":
+      return { ...filters, isAmbassadorsOnly: false, ambassadorFocusAreas: [] };
+    case "ambassadorFocus":
+      return {
+        ...filters,
+        ambassadorFocusAreas: filters.ambassadorFocusAreas.filter(
+          (v) => v !== chip.value,
+        ),
+      };
+  }
 }

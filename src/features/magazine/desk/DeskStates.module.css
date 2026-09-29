@@ -1,30 +1,46 @@
-/* ── skeleton ── */
+/* ── skeleton: the page's four bands ── */
 .skeleton {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--gap-grid);
 }
 
-.statsRow {
+.skeletonHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.skeletonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Same tracks as the desk grid (DeskView.module.css): table beside the rail
+   (--desk-rail-w, --desk-rail-w-wide from --desk-rail-wide), one column at or
+   below --desk-split. */
+.skeletonWork {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) var(--desk-rail-w);
+  gap: var(--gap-sm);
+  align-items: start;
 }
 
-@media (--wide) {
-  .statsRow {
-    grid-template-columns: repeat(2, 1fr);
+@media (--desk-rail-wide) {
+  .skeletonWork {
+    grid-template-columns: minmax(0, 1fr) var(--desk-rail-w-wide);
+    gap: var(--gap-grid);
   }
 }
 
-.statCard {
-  padding: 18px;
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+@media (--desk-split) {
+  .skeletonWork {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-lg);
+  }
 }
 
 .table {
@@ -44,6 +60,27 @@
 
 .tableRow:last-child {
   border-bottom: none;
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* ── empty scope ── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap-xs);
 }
 
 /* ── error band ── */

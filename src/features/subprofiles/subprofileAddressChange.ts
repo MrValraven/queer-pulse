@@ -1,5 +1,5 @@
 import type { LinkVisibility } from "./api/subprofiles.api";
-import type { HandleAvailability } from "../settings/api/useHandleAvailability";
+import { linkedPersonaHandleCandidate } from "./personaHandle";
 
 /** What `SubprofileLinkFields` is holding a confirm/cancel decision on,
  *  surfaced through `AddressChangeWarningModal`. Kept out of the component
@@ -8,7 +8,7 @@ export type PendingAddressChange =
   | { kind: "switchMode"; target: LinkVisibility }
   | {
       kind: "editField";
-      field: "slug" | "handle";
+      field: "handle";
       value: string;
       previous: string;
     };
@@ -33,68 +33,27 @@ export function linkChoiceLockState(
   };
 }
 
-/** Everything in a linked persona's path before its own slug. */
-export function linkedPathPrefix(ownerSlug: string): string {
-  return `/members/${ownerSlug}/`;
-}
-
-/** The public path this persona lives at under a given link mode. */
+/** The public path a persona lives at under a given link mode. Every persona
+ *  lives at `/p/<handle>`; an empty linked handle previews the default the
+ *  server derives and stores on save, and an empty unlinked one shows a
+ *  placeholder until something is typed. */
 export function pathFor(
   mode: LinkVisibility,
   ownerSlug: string,
   slugValue: string,
   handleValue: string,
 ): string {
-  return mode === "linked"
-    ? `${linkedPathPrefix(ownerSlug)}${slugValue || "…"}`
-    : `/p/${handleValue || "…"}`;
+  if (handleValue) return `/p/${handleValue}`;
+  return mode === "linked" && ownerSlug !== "…"
+    ? `/p/${linkedPersonaHandleCandidate(ownerSlug, slugValue || "persona")}`
+    : "/p/…";
 }
 
-/** A slug as it is being typed, already in the form the URL will carry:
- *  lowercase, accents folded, anything else collapsed to one hyphen. A
- *  trailing hyphen survives so "my-" can still become "my-page";
- *  `finishSlug` drops it once the field is left. */
-export function typingSlug(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+/, "");
-}
-
-/** The settled slug: `typingSlug` without a dangling trailing hyphen. */
-export function finishSlug(value: string): string {
-  return typingSlug(value).replace(/-+$/, "");
-}
-
-/** The live `.handlestate` line for the unlinked choice card — reuses the
- *  Settings feature's existing availability copy (`checking`/taken-etc.
- *  reasons) rather than duplicating it under a new `subprofiles:` key. */
-export function handleStateLine(
-  status: HandleAvailability,
-  t: (key: string) => string,
-): { tone: "good" | "bad" | "idle"; message: string } | null {
-  if (status.status === "checking") {
-    return { tone: "idle", message: t("settings:usernameField.checking") };
-  }
-  if (status.status === "unavailable" && status.reason) {
-    return {
-      tone: "bad",
-      message: t(`settings:usernameField.reason.${status.reason}`),
-    };
-  }
-  if (status.status === "available") {
-    return {
-      tone: "good",
-      message: t("subprofiles:newModal.handleStateClaim"),
-    };
-  }
-  return null;
-}
-
-/** The old/new path pair + whether a global `@handle` is being released, for
- *  whichever kind of pending change is currently awaiting confirmation. */
+/** The old/new path pair for whichever pending change is awaiting
+ *  confirmation. Both kinds release the current handle: a link switch starts
+ *  from a fresh handle, and a handle edit gives up the old one. `newPath` is
+ *  null when the change lands on an unlinked persona with no handle yet: its
+ *  new address only exists once the owner chooses one. */
 export function warningPathsForPending(
   pending: PendingAddressChange,
   current: {
@@ -103,23 +62,22 @@ export function warningPathsForPending(
     slug: string;
     handle: string;
   },
-): { oldPath: string; newPath: string; releasesHandle: boolean } {
+): { oldPath: string; newPath: string | null; releasesHandle: boolean } {
   const { link, ownerSlug, slug, handle } = current;
-  if (pending.kind === "switchMode") {
-    return {
-      oldPath: pathFor(link, ownerSlug, slug, handle),
-      newPath: pathFor(pending.target, ownerSlug, slug, handle),
-      releasesHandle: link === "unlinked",
-    };
-  }
-  const isSlug = pending.field === "slug";
+  const isSwitch = pending.kind === "switchMode";
+  const targetLink = isSwitch ? pending.target : link;
+  const nextHandle = isSwitch ? "" : pending.value;
+  const isAwaitingHandle = targetLink === "unlinked" && !nextHandle;
   return {
-    oldPath: isSlug
-      ? pathFor("linked", ownerSlug, pending.previous, handle)
-      : pathFor("unlinked", ownerSlug, slug, pending.previous),
-    newPath: isSlug
-      ? pathFor("linked", ownerSlug, pending.value, handle)
-      : pathFor("unlinked", ownerSlug, slug, pending.value),
-    releasesHandle: !isSlug,
+    oldPath: pathFor(
+      link,
+      ownerSlug,
+      slug,
+      isSwitch ? handle : pending.previous,
+    ),
+    newPath: isAwaitingHandle
+      ? null
+      : pathFor(targetLink, ownerSlug, slug, nextHandle),
+    releasesHandle: true,
   };
 }

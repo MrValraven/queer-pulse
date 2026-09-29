@@ -1,23 +1,27 @@
 import { useId, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   ChipSelect,
   SkeletonAvatar,
   SkeletonLine,
+  Toggle,
 } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  AMBASSADOR_FOCUS_AREAS,
+  AMBASSADOR_FOCUS_LABEL_KEY,
+  type AmbassadorFocusArea,
+} from "../../shared/ambassadors/ambassadorFocusAreas.data";
 import { fullName, memberProfiles } from "./data/memberProfiles";
 import { directoryBlurb } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import {
-  EMPTY_FILTERS,
   HOOD_OPTIONS,
   IDENTITY_OPTIONS,
   LANGUAGES,
@@ -136,6 +140,87 @@ function FilterCheckboxSection({
   );
 }
 
+/** The "Ambassadors" filter card: one switch, plus the 12 focus-area chips as
+ *  a multi-select once it's on. Focus areas are meaningless while the switch
+ *  is off, so turning it off clears them (mirrors `removeChip`'s "ambassador"
+ *  case in `MemberDirectorySections.tsx`, which does the same from the
+ *  applied-chip row). */
+function AmbassadorFilterSection({
+  filters,
+  counts,
+  countsAreStale,
+  open,
+  onToggle,
+  onChange,
+}: {
+  filters: FilterState;
+  counts?: DirectoryFacetCounts;
+  countsAreStale: boolean;
+  open: boolean;
+  onToggle: () => void;
+  onChange: (next: FilterState) => void;
+}) {
+  const { t } = useTranslation();
+  const uid = useId();
+  const chipCount = useChipCount(counts?.ambassador);
+  return (
+    <FilterSection
+      title={t("members:directory.filters.ambassadors.title")}
+      headingId={`${uid}-ambassadors`}
+      open={open}
+      onToggle={onToggle}
+      activeCount={
+        filters.isAmbassadorsOnly ? 1 + filters.ambassadorFocusAreas.length : 0
+      }
+    >
+      <div className={styles.switchRow}>
+        <label htmlFor={`${uid}-switch`} className={styles.switchLabel}>
+          {t("members:directory.filters.ambassadors.switchLabel")}
+        </label>
+        <Toggle
+          id={`${uid}-switch`}
+          tone="coral"
+          checked={filters.isAmbassadorsOnly}
+          onChange={(checked) =>
+            onChange({
+              ...filters,
+              isAmbassadorsOnly: checked,
+              ambassadorFocusAreas: checked ? filters.ambassadorFocusAreas : [],
+            })
+          }
+          label={t("members:directory.filters.ambassadors.switchLabel")}
+        />
+      </div>
+      {filters.isAmbassadorsOnly && (
+        <>
+          <p id={`${uid}-focusCaption`} className={styles.focusCaption}>
+            {t("members:directory.filters.ambassadors.focusCaption")}
+          </p>
+          <ChipSelect
+            className={countsAreStale ? styles.chipsStale : undefined}
+            labelledBy={`${uid}-focusCaption`}
+            options={AMBASSADOR_FOCUS_AREAS.map((focusArea) => ({
+              value: focusArea,
+              label: t(AMBASSADOR_FOCUS_LABEL_KEY[focusArea]),
+              ...chipCount(focusArea, t(AMBASSADOR_FOCUS_LABEL_KEY[focusArea])),
+            }))}
+            selected={new Set(filters.ambassadorFocusAreas)}
+            onToggle={(value) =>
+              onChange({
+                ...filters,
+                ambassadorFocusAreas: toggle(
+                  filters.ambassadorFocusAreas,
+                  value,
+                ) as AmbassadorFocusArea[],
+              })
+            }
+          />
+        </>
+      )}
+    </FilterSection>
+  );
+}
+
 export function FiltersSidebar({
   filters,
   members,
@@ -184,15 +269,19 @@ export function FiltersSidebar({
   );
   const languageChipCount = useChipCount(counts?.languages);
   // Nothing selected means nothing to clear, so the row would offer a no-op
-  // beside a "0 applied" that reads as a count of something. The age range
-  // carries no chip of its own, so it is checked here rather than folded into
-  // `appliedCount`.
-  const hasSomethingToClear =
-    appliedCount > 0 ||
-    filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
-    filters.yearsTo !== EMPTY_FILTERS.yearsTo;
+  // beside a "0 applied" that reads as a count of something.
+  const hasSomethingToClear = appliedCount > 0;
   return (
     <aside className={inSheet ? styles.filtersSheet : styles.filters}>
+      <AmbassadorFilterSection
+        filters={filters}
+        counts={counts}
+        countsAreStale={countsAreStale}
+        open={sectionsOpen.ambassadors}
+        onToggle={() => onToggleSection("ambassadors")}
+        onChange={onChange}
+      />
+
       <FilterCheckboxSection
         title={t("members:directory.filter.openToTitle")}
         options={OPEN_TO_OPTIONS}
@@ -240,58 +329,6 @@ export function FiltersSidebar({
           onChange({ ...filters, identities: toggle(filters.identities, id) })
         }
       />
-
-      <FilterSection
-        title={t("members:directory.filter.ageTitle")}
-        open={sectionsOpen.age}
-        onToggle={() => onToggleSection("age")}
-        activeCount={
-          filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
-          filters.yearsTo !== EMPTY_FILTERS.yearsTo
-            ? 1
-            : 0
-        }
-      >
-        <div className={styles.range}>
-          <input
-            type="number"
-            placeholder={t("members:directory.filter.fromPlaceholder")}
-            aria-label={t("members:directory.filter.fromPlaceholder")}
-            min={0}
-            max={9}
-            value={filters.yearsFrom}
-            onChange={(e) =>
-              onChange({
-                ...filters,
-                yearsFrom: Math.max(0, Number(e.target.value) || 0),
-              })
-            }
-          />
-          <span className={styles.rangeArrow}>
-            <FiArrowRight aria-hidden />
-          </span>
-          <input
-            type="number"
-            placeholder={t("members:directory.filter.yearsPlaceholder")}
-            aria-label={t("members:directory.filter.yearsPlaceholder")}
-            min={0}
-            max={9}
-            value={filters.yearsTo}
-            onChange={(e) =>
-              onChange({
-                ...filters,
-                yearsTo: Math.max(0, Number(e.target.value) || 0),
-              })
-            }
-          />
-        </div>
-        <p className={styles.rangeNote}>
-          <Translation
-            i18nKey="members:directory.filter.ageNote"
-            components={{ em: <em /> }}
-          />
-        </p>
-      </FilterSection>
 
       <FilterSection
         title={t("members:directory.filter.languagesTitle")}

@@ -5,6 +5,7 @@ import { formatDate } from "../../../../shared/lib/date";
 import type { WriterPaymentDto } from "../../api/writerWorkspace.api";
 import { issueLabelText } from "../../magazineFormat";
 import pieceStyles from "../pieceTabs.module.css";
+import styles from "./writerCards.module.css";
 
 /**
  * A payment date with its year. The rest of the writer workspace uses
@@ -96,9 +97,9 @@ export function WriterPaymentsTab({ payments }: WriterPaymentsTabProps) {
         {payments.map((payment, index) => (
           <div
             key={`${payment.title}-${payment.issue ?? index}`}
-            className={pieceStyles.simrow}
+            className={`${pieceStyles.simrow} ${styles.wrappingRow}`}
           >
-            <div>
+            <div className={styles.rowText}>
               <b>{payment.title}</b>
               <div className={pieceStyles.tiny}>
                 {payment.issue
@@ -112,7 +113,10 @@ export function WriterPaymentsTab({ payments }: WriterPaymentsTabProps) {
               </div>
             </div>
             <span className={pieceStyles.spacer} />
-            <Badge tone={payment.status === "paid" ? "jade" : "amber"}>
+            <Badge
+              tone={payment.status === "paid" ? "jade" : "amber"}
+              className={styles.wrappingBadge}
+            >
               {paymentStateLabel(payment, t, language)}
             </Badge>
           </div>

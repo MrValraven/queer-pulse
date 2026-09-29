@@ -115,6 +115,7 @@ export function AccountMenu({
           className={styles.trigger}
           onClick={toggleMenu}
           aria-expanded={open}
+          title={name}
         >
           <Avatar
             initials={initials}

@@ -128,6 +128,18 @@
   font-style: italic;
   color: var(--accent);
 }
+/* The name and the staff shield share one line. The row takes over the h1's
+   bottom margin so the shield centres on the name's own box. */
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 6px;
+}
+.nameRow .name {
+  margin-bottom: 0;
+}
 .verified {
   display: inline-flex;
   align-items: center;

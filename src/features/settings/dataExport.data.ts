@@ -79,6 +79,12 @@ export const DATA_TYPES: DataType[] = [
     defaultChecked: false,
   },
   {
+    id: "goTogether",
+    labelKey: "settings:dataExport.type.goTogether.label",
+    subKey: "settings:dataExport.type.goTogether.sub",
+    defaultChecked: false,
+  },
+  {
     id: "magazine",
     labelKey: "settings:dataExport.type.magazine.label",
     subKey: "settings:dataExport.type.magazine.sub",

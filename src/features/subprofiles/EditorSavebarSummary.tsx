@@ -31,7 +31,9 @@ export function PendingCountLabel({
   );
 }
 
-/** Phone-only "{count} unsaved changes" line that reveals the itemized list. */
+/** The phone row's "{count} unsaved" toggle (`EditorSavebarPhone`), which
+ *  opens the itemized list under the row. The chevron points the way the list
+ *  will move: down to open it, up to fold it away. */
 export function SavebarSummaryToggle({
   count,
   isOpen,
@@ -51,7 +53,10 @@ export function SavebarSummaryToggle({
       aria-controls={listId}
       onClick={onToggle}
     >
-      <PendingCountLabel i18nKey="subprofiles:pending.summary" count={count} />
+      <PendingCountLabel
+        i18nKey="subprofiles:pending.compactSummary"
+        count={count}
+      />
       {isOpen ? (
         <FiChevronUp size={16} aria-hidden />
       ) : (

@@ -1,35 +1,58 @@
 /* The writer workspace chrome: `.ebar` heading bar, `.ework` two-column
-   grid (tabs + active tab body / `.erail` sidebar), `.tabs` nav. Mirrors
-   `PieceRecordPage.module.css` (same layout shape, different header content —
-   the surface name + open workload instead of a piece title/stage).
-   Card/KV/simrow/progress
+   grid (tabs + active tab body / `.erail` sidebar, one column on the
+   Submissions tab), `.tabs` nav. Mirrors `PieceRecordPage.module.css`: the
+   same layout shape, with the surface name + open workload in the header
+   where the piece record shows a title and stage. Card/KV/simrow/progress
    styles for the tab bodies live in `desk/pieceTabs.module.css`, shared with
    the piece-record tabs.
 */
 
 .page {
+  /* The two-column split below answers the width this page actually gets,
+     which the sidebar nav rail narrows by `--rail-w`, so it keys off a
+     container query on the page box. */
+  container: writer-workspace / inline-size;
+  /* The `.ebar`'s own height, spelled out from its parts (padding, the two
+     single-line title rows at `--lh-body`, their gap and the bottom
+     hairline) so the sticky `.erail` can park just below it and track text
+     zoom. Keep in step with the `.ebar` / `.title` rules. */
+  --ebar-padding-block: 12px;
+  --ebar-title-gap: 2px;
+  --ebar-height: calc(
+    2 * var(--ebar-padding-block) + var(--ebar-title-gap) + 1px +
+      var(--lh-body) * (var(--text-20) + var(--text-12-5))
+  );
+  /* The reading width the main column keeps on the Submissions tab, where
+     the rail is absent and the column would otherwise run the page width. */
+  --ework-reading-measure: 920px;
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 0 var(--section-y-80);
 }
 
+/* Parks under whatever fixed nav chrome the current nav layout has: the
+   floating pill's band, nothing in sidebar mode, the slim mobile app bar
+   (which slides away on scroll, so `top` eases along with it). The glass
+   mixes from `--cream`, which follows the theme (`--cream-rgb` keeps the
+   light channels in dark mode too), the same recipe as the dark Navbar. */
 .ebar {
   position: sticky;
-  top: 76px;
+  top: var(--sticky-top);
   z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 26px;
-  background: rgba(var(--cream-rgb), 0.9);
+  padding: var(--ebar-padding-block) 26px;
+  background: color-mix(in srgb, var(--cream) 90%, transparent);
   backdrop-filter: var(--blur-nav);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+  transition: top var(--dur-base) var(--ease);
 }
 
 .title {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--ebar-title-gap);
   min-width: 0;
 }
 
@@ -38,6 +61,7 @@
   font-family: var(--serif);
   font-size: var(--text-20);
   font-weight: 400;
+  line-height: var(--lh-body);
   color: var(--text-strong);
   white-space: nowrap;
   overflow: hidden;
@@ -46,6 +70,7 @@
 
 .titleSub {
   font-size: var(--text-12-5);
+  line-height: var(--lh-body);
   color: var(--ink-40);
   white-space: nowrap;
   overflow: hidden;
@@ -60,10 +85,11 @@
   padding: 30px 26px 0;
 }
 
-@media (max-width: 1100px) {
-  .ework {
-    grid-template-columns: 1fr;
-  }
+/* A grid item's default `min-width: auto` would let the tab row or a long
+   line widen the column past the viewport; the tab row scrolls inside its
+   own box instead. */
+.eworkMain {
+  min-width: 0;
 }
 
 .erail {
@@ -71,7 +97,26 @@
   flex-direction: column;
   gap: 14px;
   position: sticky;
-  top: 150px;
+  top: calc(var(--sticky-top) + var(--ebar-height) + var(--gap-sm));
+  transition: top var(--dur-base) var(--ease);
+}
+
+@container writer-workspace (max-width: 1100px) {
+  .ework {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked under the tab body, a sticky rail has nothing to stay beside. */
+  .erail {
+    position: static;
+  }
+}
+
+/* Submissions: one column, left aligned so the tab row and the tab body keep
+   the same left edge as on the other tabs and switching tabs moves nothing
+   sideways. More specific than `.ework`, so it holds inside the query too. */
+.ework.eworkWithoutRail {
+  grid-template-columns: minmax(0, var(--ework-reading-measure));
 }
 
 .tabs {
@@ -80,9 +125,12 @@
   margin-bottom: 16px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
 .tabButton {
+  flex-shrink: 0;
+  min-height: var(--tap-min);
   padding: 10px 14px;
   font-family: var(--sans);
   font-size: var(--text-14-5);
@@ -117,11 +165,6 @@
 
 @media (max-width: 700px) {
   .ebar {
-    top: 64px;
     flex-wrap: wrap;
-  }
-
-  .erail {
-    position: static;
   }
 }

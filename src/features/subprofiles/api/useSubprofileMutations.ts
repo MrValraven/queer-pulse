@@ -22,6 +22,29 @@ import {
 } from "./subprofiles.api";
 import { KIND_LABELS, defaultSlugForKind, slugify } from "../subprofile-kinds";
 import { subprofileToView } from "./subprofiles.adapters";
+import { linkedPersonaHandleCandidate } from "../personaHandle";
+import { currentUserSlug } from "../../members/data/demoCurrentUser";
+
+/** Mirrors the backend's draft-handle rule: a LINKED persona that is not
+ *  published and holds no handle gets `<creatorSlug>-<personaSlug>` stored on
+ *  its row as soon as it is saved (no registry claim until publish), so its
+ *  address is `/p/<handle>` from the start. Every other persona keeps the
+ *  handle it has. `creatorSlug` is `undefined` when the demo registry has no
+ *  row for this id, which leaves the handle untouched. */
+function withDerivedDraftHandle(
+  subprofile: SubprofileDTO,
+  creatorSlug: string | undefined,
+): SubprofileDTO {
+  const isHandlelessLinkedDraft =
+    subprofile.linkVisibility === "linked" &&
+    subprofile.status !== "published" &&
+    !subprofile.handle;
+  if (!isHandlelessLinkedDraft || !creatorSlug) return subprofile;
+  return {
+    ...subprofile,
+    handle: linkedPersonaHandleCandidate(creatorSlug, subprofile.slug),
+  };
+}
 
 /** Thrown by the publish mutation when the completeness check fails. In demo mode
  *  it carries the locally-computed unmet codes; in live mode B3 reads the 422
@@ -48,7 +71,9 @@ function uniqueSlug(base: string, taken: Set<string>): string {
  *  Mirrors the backend: the slug is derived server-side from the display name
  *  (falling back to the kind), so a persona can be created with nothing but a
  *  profession picked. Slug is de-duped against existing ones; a custom address
- *  is applied afterwards via the same PATCH the live path uses. */
+ *  is applied afterwards via the same PATCH the live path uses. A new persona
+ *  starts linked, so it carries its derived handle from the first response,
+ *  with the demo viewer as its creator. */
 function demoCreatedDto(
   dto: CreateSubprofileDTO,
   mockMineSubprofiles: () => SubprofileDTO[],
@@ -56,11 +81,12 @@ function demoCreatedDto(
   const displayName = dto.displayName?.trim() || KIND_LABELS[dto.kind];
   const base = slugify(displayName) || defaultSlugForKind(dto.kind);
   const taken = new Set(mockMineSubprofiles().map((sp) => sp.slug));
+  const slug = uniqueSlug(base || "persona", taken);
   return {
     id: `sp-demo-${Date.now()}`,
     kind: dto.kind,
-    slug: uniqueSlug(base || "persona", taken),
-    handle: null,
+    slug,
+    handle: linkedPersonaHandleCandidate(currentUserSlug, slug),
     displayName,
     avatarUrl: null,
     tagline: null,
@@ -193,10 +219,17 @@ export function useSubprofileMutations() {
     meta: { silentError: true },
     mutationFn: async ({ id, dto }) => {
       if (!demoMode) return updateSubprofile(id, dto);
-      const { mockSubprofileById } = await import("../data/subprofiles.data");
+      const { DEMO_SUBPROFILES, mockSubprofileById } =
+        await import("../data/subprofiles.data");
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
-      return { ...current, ...dto };
+      // A save that leaves a linked draft with no handle (a switch to linked,
+      // a cleared handle field) gets the derived default, as on the server.
+      // The creator's slug comes off the demo fixture, as in publish below.
+      const creatorSlug = DEMO_SUBPROFILES.find(
+        (subprofile) => subprofile.id === current.id,
+      )?.ownerSlug;
+      return withDerivedDraftHandle({ ...current, ...dto }, creatorSlug);
     },
     onSuccess: (data, { id }) => {
       // The PATCH answers with the whole owner view (the same shape GET
@@ -296,19 +329,26 @@ export function useSubprofileMutations() {
           throw err;
         }
       }
-      const { mockSubprofileById, validatePublishDemo } =
+      const { DEMO_SUBPROFILES, mockSubprofileById, validatePublishDemo } =
         await import("../data/subprofiles.data");
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
       const unmet = validatePublishDemo(current);
       if (unmet.length) throw new PublishUnmetError(unmet);
+      // A linked persona's default handle needs its CREATOR's profile slug,
+      // which the owner-full DTO above never carries; read it off the
+      // underlying demo fixture instead (mirrors the MSW publish handler).
+      const ownerSlug = DEMO_SUBPROFILES.find(
+        (subprofile) => subprofile.id === current.id,
+      )?.ownerSlug;
       return {
         ...current,
         status: "published",
         handle:
-          current.linkVisibility === "unlinked"
-            ? (current.handle ?? current.slug)
-            : null,
+          current.handle ??
+          (current.linkVisibility === "linked" && ownerSlug
+            ? linkedPersonaHandleCandidate(ownerSlug, current.slug)
+            : current.slug),
       };
     },
     onSuccess: (_data, id) => invalidateOwned(id),
@@ -322,10 +362,13 @@ export function useSubprofileMutations() {
       const { mockSubprofileById } = await import("../data/subprofiles.data");
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
+      // A linked persona keeps its handle as a draft, so its address stays
+      // `/p/<handle>`; an unlinked one gives its handle back (mirrors the
+      // backend).
       return {
         ...current,
         status: "draft",
-        handle: current.linkVisibility === "unlinked" ? null : current.handle,
+        handle: current.linkVisibility === "linked" ? current.handle : null,
       };
     },
     onSuccess: (_data, id) => invalidateOwned(id),

@@ -11,81 +11,119 @@ import {
   SkeletonLine,
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { DeskTrack } from "./deskTrack";
 import styles from "./DeskStates.module.css";
 
-const SKELETON_STAT_COUNT = 4;
-const SKELETON_ROW_COUNT = 5;
+const SKELETON_CHIP_COUNT = 5;
+const SKELETON_ROW_COUNT = 6;
+const SKELETON_RAIL_LINE_COUNT = 5;
 
 /**
- * Shimmer placeholder for the desk while pieces/pitches are still loading:
- * the 4-up stats row, then a handful of pipeline-table rows. Purely
- * decorative — `aria-hidden` so screen readers skip straight to the loaded
- * content once it arrives.
+ * Shimmer placeholder for the desk while pieces and pitches load, drawn in
+ * the page's own four bands (header, focus chips, workbar, then the table
+ * beside the rail) so nothing jumps when the real desk arrives. Purely
+ * decorative: `aria-hidden`, so screen readers go straight to the loaded
+ * content.
  */
 export function DeskSkeleton() {
   return (
     <div className={styles.skeleton} aria-hidden="true">
-      <div className={styles.statsRow}>
-        {Array.from({ length: SKELETON_STAT_COUNT }).map((_, statIndex) => (
-          <div className={styles.statCard} key={statIndex}>
-            <SkeletonLine height={34} width="55%" />
-            <SkeletonLine height={13} width="75%" />
-          </div>
+      <div className={styles.skeletonHeader}>
+        <SkeletonLine height={12} width="22%" />
+        <SkeletonLine height={32} width="30%" />
+        <SkeletonLine height={13} width="45%" />
+      </div>
+      <div className={styles.skeletonRow}>
+        {Array.from({ length: SKELETON_CHIP_COUNT }).map((_, chipIndex) => (
+          <SkeletonLine height={32} width={104} key={chipIndex} />
         ))}
       </div>
-      <div className={styles.table}>
-        {Array.from({ length: SKELETON_ROW_COUNT }).map((_, rowIndex) => (
-          <div className={styles.tableRow} key={rowIndex}>
-            <SkeletonLine height={16} width="55%" />
-            <SkeletonLine height={13} width="22%" />
-            <SkeletonLine height={13} width="16%" />
-          </div>
-        ))}
+      <div className={styles.skeletonRow}>
+        <SkeletonLine height={40} width="38%" />
+        <SkeletonLine height={36} width={200} />
+        <SkeletonLine height={36} width={88} />
+        <SkeletonLine height={36} width={88} />
+      </div>
+      <div className={styles.skeletonWork}>
+        <div className={styles.table}>
+          {Array.from({ length: SKELETON_ROW_COUNT }).map((_, rowIndex) => (
+            <div className={styles.tableRow} key={rowIndex}>
+              <SkeletonLine height={16} width="55%" />
+              <SkeletonLine height={13} width="30%" />
+            </div>
+          ))}
+        </div>
+        <div className={styles.rail}>
+          {Array.from({ length: SKELETON_RAIL_LINE_COUNT }).map(
+            (_, lineIndex) => (
+              <SkeletonLine
+                height={lineIndex === 0 ? 12 : 14}
+                width={lineIndex === 0 ? "40%" : "85%"}
+                key={lineIndex}
+              />
+            ),
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
 export interface DeskEmptyStateProps {
-  /** The current issue number, so the copy can say exactly which one is bare. */
+  /** The scope with nothing in it, so the title can say which. */
+  track: DeskTrack;
+  /** The selected issue's number, for the issue scope's title. */
   issueNumber: string;
   onWrite: () => void;
   onCommission: () => void;
 }
 
+/** The empty scope's title: the issue by number, or what the scope holds. */
+function emptyTitleKey(track: DeskTrack, issueNumber: string): string {
+  if (track === "issue" && issueNumber) {
+    return "magazine:desk.states.emptyIssueTitle";
+  }
+  return track === "unassigned"
+    ? "magazine:desk.pulse.unfiledEmpty"
+    : "magazine:desk.pulse.everythingEmpty";
+}
+
 /**
- * First-run / "the desk is clear" state: nothing has been filed yet for the
- * current issue. Two recovery actions, in the same order as the header:
- * write the first piece yourself, or commission it out.
+ * The table's place when the chosen scope holds no pieces at all (before
+ * any filter). Two ways to start, in the same order as the New menu: write
+ * the first piece yourself, or commission it out. Both are ghost buttons,
+ * so the shell's Write stays the one filled button on the page.
  */
 export function DeskEmptyState({
+  track,
   issueNumber,
   onWrite,
   onCommission,
 }: DeskEmptyStateProps) {
   const { t } = useTranslation();
   return (
-    <EmptyState
-      icon={<FiFileText aria-hidden />}
-      title={t("magazine:desk.states.emptyIssueTitle", { number: issueNumber })}
-      description={t("magazine:desk.states.emptyIssueDescription")}
-      action={{
-        label: (
-          <>
-            <FiEdit3 aria-hidden /> {t("magazine:desk.states.writePiece")}
-          </>
-        ),
-        onClick: onWrite,
-      }}
-      secondaryAction={{
-        label: (
-          <>
-            <FiPlus aria-hidden /> {t("magazine:desk.states.commissionPiece")}
-          </>
-        ),
-        onClick: onCommission,
-      }}
-    />
+    <div className={styles.empty}>
+      <EmptyState
+        icon={<FiFileText aria-hidden />}
+        title={t(emptyTitleKey(track, issueNumber), { number: issueNumber })}
+        description={
+          // "Every piece is in an issue" is good news, so the "nothing has
+          // been filed yet" line only belongs to the other scopes.
+          track === "unassigned"
+            ? undefined
+            : t("magazine:desk.states.emptyIssueDescription")
+        }
+        headingLevel={2}
+      />
+      <div className={styles.emptyActions}>
+        <Button variant="ghost" onClick={onWrite}>
+          <FiEdit3 aria-hidden /> {t("magazine:desk.states.writePiece")}
+        </Button>
+        <Button variant="ghost" onClick={onCommission}>
+          <FiPlus aria-hidden /> {t("magazine:desk.states.commissionPiece")}
+        </Button>
+      </div>
+    </div>
   );
 }
 
@@ -95,7 +133,7 @@ export interface DeskErrorBandProps {
 
 /**
  * Non-blocking inline error band shown above stale/cached data when the live
- * pipeline fetch failed — the desk stays usable, this just says so honestly.
+ * pipeline fetch failed. The desk stays usable; this just says so honestly.
  */
 export function DeskErrorBand({ onRetry }: DeskErrorBandProps) {
   const { t } = useTranslation();

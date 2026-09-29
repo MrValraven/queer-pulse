@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import { FiLink, FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
@@ -6,7 +7,7 @@ import {
   useSubprofileEditorContext,
   withSocialUid,
 } from "./subprofileEditorContext";
-import { SocialLinkEditorRow } from "./SocialLinkEditorRow";
+import { LINK_ROW_GAP, SocialLinkEditorRow } from "./SocialLinkEditorRow";
 import { useEditorRowList } from "./useEditorRowList";
 import { useReorderableRows } from "./useReorderableRows";
 import sharedStyles from "./SubprofileEditor.module.css";
@@ -55,22 +56,27 @@ export function SubprofileSocialLinksEditor({
       </div>
 
       <div className={styles.linksEditor} ref={containerRef}>
-        {rows.map((row, index) => (
-          <SocialLinkEditorRow
-            key={row._uid}
-            link={row}
-            index={index}
-            rowCount={rows.length}
-            listLabel={listLabel}
-            isDragging={draggingIndex === index}
-            isEntering={isAddedRow(row._uid)}
-            moveCount={moveCount}
-            gripHandlers={gripHandlers(index)}
-            onMove={(toIndex) => moveRow(index, toIndex)}
-            onPatch={(patchValue) => patch(row._uid, patchValue)}
-            onRemove={() => remove(row._uid)}
-          />
-        ))}
+        {/* A row added later grows in and a removed one folds away, so the
+            rows below and the add button glide into place. */}
+        <AnimatePresence initial={false}>
+          {rows.map((row, index) => (
+            <SocialLinkEditorRow
+              key={row._uid}
+              link={row}
+              index={index}
+              rowCount={rows.length}
+              listLabel={listLabel}
+              isDragging={draggingIndex === index}
+              isEntering={isAddedRow(row._uid)}
+              foldGap={LINK_ROW_GAP}
+              moveCount={moveCount}
+              gripHandlers={gripHandlers(index)}
+              onMove={(toIndex) => moveRow(index, toIndex)}
+              onPatch={(patchValue) => patch(row._uid, patchValue)}
+              onRemove={() => remove(row._uid)}
+            />
+          ))}
+        </AnimatePresence>
       </div>
 
       <div className={sharedStyles.sectionFoot}>

@@ -7,6 +7,8 @@ import styles from "./AdminGlossaryPage.module.css";
 
 export interface AdminGlossaryRowsProps {
   terms: AdminGlossaryTermDTO[];
+  /** Opens the term as readers see it on the public glossary. */
+  onPreview: (term: AdminGlossaryTermDTO) => void;
   onEdit: (term: AdminGlossaryTermDTO) => void;
   onReview: (term: AdminGlossaryTermDTO) => void;
   onDelete: (term: AdminGlossaryTermDTO) => void;
@@ -27,6 +29,7 @@ function todayIsoDate(): string {
  */
 export function AdminGlossaryRows({
   terms,
+  onPreview,
   onEdit,
   onReview,
   onDelete,
@@ -86,6 +89,9 @@ export function AdminGlossaryRows({
               </div>
             </div>
             <div className={styles.rowActions}>
+              <Button variant="ghost" size="sm" onClick={() => onPreview(term)}>
+                {t("admin:adminGlossary.preview.rowCta")}
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => onReview(term)}>
                 {t("admin:adminResourceGuides.row.reviewCta")}
               </Button>

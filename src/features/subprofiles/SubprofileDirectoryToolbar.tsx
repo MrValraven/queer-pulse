@@ -47,7 +47,9 @@ export function SubprofileDirectoryToolbar({
   const hiddenFilterCount =
     directory.kinds.length +
     directory.activeTags.length +
-    (directory.openToCollabs ? 1 : 0);
+    (directory.openToCollabs ? 1 : 0) +
+    directory.tableFormats.length +
+    directory.tableVibes.length;
 
   const resultCount = directory.visibleCards.length;
 

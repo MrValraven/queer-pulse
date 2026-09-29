@@ -24,6 +24,7 @@ import {
   type UpdateEventDto,
   type UpdateRsvpDetailsDto,
 } from "./events.api";
+import { goTogetherKeys } from "../../goTogether/api/goTogetherKeys";
 import { eventKeys } from "./eventKeys";
 import type { AttendeesResult } from "./useAttendees";
 import type { EventResult } from "./useEvent";
@@ -205,6 +206,9 @@ export function useRsvp(slug: string) {
         queryKey: eventKeys.attendees(slug, demoMode),
       });
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+      // The Go together card depends on the RSVP (only members going see it),
+      // so it refetches once the server has the new standing.
+      void queryClient.invalidateQueries({ queryKey: goTogetherKeys.cardRoot });
     },
   });
 }
@@ -243,6 +247,9 @@ export function useUnrsvp(slug: string) {
         queryKey: eventKeys.attendees(slug, demoMode),
       });
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+      // The Go together card depends on the RSVP (only members going see it),
+      // so it refetches once the server has the new standing.
+      void queryClient.invalidateQueries({ queryKey: goTogetherKeys.cardRoot });
     },
   });
 }

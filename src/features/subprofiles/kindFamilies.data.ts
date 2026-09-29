@@ -6,7 +6,7 @@ import { SKIN_OF, type SkinFamily } from "./subprofile-skins";
  * One craft family, grouped for the create-flow's "By craft" step 1 picker
  * (`.fams`/`.fam`/`.fam-head`/`.kinds` in the design). A member never picks a
  * family directly — it's implied by whichever kind they pick (`SKIN_OF`) —
- * this only groups the flat 17-kind list under a shared heading so the
+ * this only groups the flat kind list under a shared heading so the
  * picker reads as "what kind of page will this be" rather than a wall of
  * buttons. `subprofile-kinds.ts` stays the single source for the per-kind
  * data (sections/labels/slugs); this file is layered on top of it, not a
@@ -35,6 +35,7 @@ const FAMILY_ORDER: SkinFamily[] = [
   "history",
   "collective",
   "classroom",
+  "quest",
 ];
 
 const FAMILY_COPY_KEYS: Record<
@@ -92,6 +93,10 @@ const FAMILY_COPY_KEYS: Record<
   classroom: {
     labelKey: "subprofiles:family.classroom.label",
     noteKey: "subprofiles:family.classroom.note",
+  },
+  quest: {
+    labelKey: "subprofiles:family.quest.label",
+    noteKey: "subprofiles:family.quest.note",
   },
 };
 

@@ -1,0 +1,8 @@
+/* A retired field's actions (SkinRetiredField): "Move to Credentials" and
+   Clear, in a row under the field that wraps on a narrow card. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}

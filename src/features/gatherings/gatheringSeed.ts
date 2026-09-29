@@ -143,6 +143,8 @@ export function gatheringToFormSeed(
     rsvpQuestions: gathering.rsvpQuestions ?? DEFAULT_RSVP_QUESTIONS,
     customRsvpQuestion: gathering.customRsvpQuestion ?? "",
     allowWaitlist: gathering.allowWaitlist ?? true,
+    // Go together is set per gathering, so a copy starts with it off.
+    goTogetherEnabled: false,
     ...(startTime ? { startTime } : {}),
     ...(endTime ? { endTime } : {}),
   };

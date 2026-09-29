@@ -19,6 +19,7 @@ import {
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
 import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
+import { clearQuestionnaireDrafts } from "../../features/goTogether/questionnaire/questionnaireDraftStorage";
 import { logoutAndDetachPush } from "../../features/push/detachPushOnSignOut";
 import { purgeMessagingCache } from "../../shared/api/queryPersistence/messagingCachePersistence";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
@@ -170,6 +171,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // device starts clean. Only this explicit sign-out clears them: a session
     // that expires keeps its draft for the member's return (ruling F4).
     clearStoredGatheringDrafts();
+    // The same for an unsaved Go together questionnaire: its answers are
+    // sensitive, so the next member in this tab never inherits them.
+    clearQuestionnaireDrafts();
     if (demoMode) {
       setLoggedIn(false);
       return;

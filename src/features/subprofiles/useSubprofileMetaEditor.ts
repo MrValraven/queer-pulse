@@ -16,6 +16,7 @@ import {
   sameMetaSnapshot,
 } from "./subprofileMetaEditor.helpers";
 import { useServerMetaResync } from "./useServerMetaResync";
+import { handleIsKindName } from "./personaHandle";
 
 export interface SubprofileMetaEditor {
   displayName: string;
@@ -29,13 +30,13 @@ export interface SubprofileMetaEditor {
   /**
    * Local `blob:` URL for a freshly picked avatar/cover, or `null`. `avatarUrl`/
    * `coverUrl` hold the storage KEY once picked, which isn't fetchable, so these
-   * let the docked live preview render the pick instantly. Display-only — never
-   * part of `dirty` or the save payload.
+   * let the docked live preview render the pick instantly. Display-only: it
+   * stays out of `dirty` and the save payload.
    */
   avatarPreview: string | null;
   setAvatarPreview: (value: string | null) => void;
-  /** Saved reframe crop for the CURRENTLY COMMITTED `subprofile.avatarUrl` —
-   *  display-only, mirrors `avatarUrl` without a save-payload role (crop is
+  /** Saved reframe crop for the CURRENTLY COMMITTED `subprofile.avatarUrl`,
+   *  display-only: mirrors `avatarUrl` without a save-payload role (crop is
    *  persisted separately, keyed by the upload). `ImageUploadField` itself
    *  handles overlaying a FRESH pick's own crop internally, so there's no
    *  separate "preview crop" to thread through here. */
@@ -57,8 +58,8 @@ export interface SubprofileMetaEditor {
   /** Saved reframe crop for the CURRENTLY COMMITTED `subprofile.coverUrl`, and
    *  the crop of a freshly picked cover that hasn't been saved yet. Pair them
    *  the same way `coverPreview`/`coverUrl` pair: a fresh pick's crop wins
-   *  while it's showing. Display-only — the crop is persisted separately,
-   *  keyed by the upload, and never rides in the save payload. */
+   *  while it's showing. Display-only: the crop is persisted separately,
+   *  keyed by the upload, and stays out of the save payload. */
   coverCrop: CropRect | undefined;
   coverPreviewCrop: CropRect | undefined;
   coverBleed: boolean;
@@ -72,12 +73,18 @@ export interface SubprofileMetaEditor {
   ctaUrl: string;
   setCtaUrl: (value: string) => void;
   nameMissing: boolean;
+  /** Standalone with an empty handle: an unlinked persona has no derived
+   *  default, so its `/p/` address must be picked before it can save. */
+  isStandaloneHandleMissing: boolean;
+  /** The handle is only the persona's kind ("therapist" for a Therapist).
+   *  Both link kinds publish at `/p/`, so this blocks either one. */
+  isHandleKindName: boolean;
   handleBlocked: boolean;
   /** True when the CTA label and URL are out of sync (one set, one blank). */
   ctaMismatch: boolean;
   dirty: boolean;
   /**
-   * Builds the exact partial PATCH the old in-hook `save()` sent — every
+   * Builds the exact partial PATCH the old in-hook `save()` sent: every
    * always-present field plus the conditionally-included ones (avatar/cover/
    * slug/handle/coverBleed, only when actually changed). Pure: no mutation,
    * no toast. Returns `null` when nothing is dirty.
@@ -87,7 +94,7 @@ export interface SubprofileMetaEditor {
   metaSnapshot: () => MetaSnapshot;
   /** The loaded `subprofile`'s values, mapped to the same shape. */
   baselineSnapshot: () => MetaSnapshot;
-  /** Reset every field back to the editor's baseline (last-saved) — powers the
+  /** Reset every field back to the editor's baseline (last-saved). Powers the
    *  global editor's "Discard all". Clears the transient blob previews too. */
   reset: () => void;
   /**
@@ -105,7 +112,7 @@ export interface SubprofileMetaEditor {
 /**
  * The subprofile's meta editor state: identity (avatar/name/tagline/bio),
  * presence (cover/accent/availability/CTA), and link/visibility (linked vs.
- * standalone, who can see it) — everything the design's three "This side"
+ * standalone, who can see it): everything the design's three "This side"
  * rail panes (Identity/Presence/Address) jointly edit. Lifted out of the old
  * `SubprofileMetaForm` orchestrator so `EditorPaneRouter` can call this ONE
  * hook and hand its fields to three separately-routed panes while preserving
@@ -113,8 +120,8 @@ export interface SubprofileMetaEditor {
  * the loaded `subprofile`. Saving (the mutation, toast, and unsaved-changes
  * guard) is owned by the global editor provider, which reads `dirty`,
  * `buildMetaPatch()`, and the two snapshot getters from this hook instead of
- * calling a save function directly — switching rail panes never fragments
- * this into three saves, and one save button covers every pane.
+ * calling a save function directly. Switching rail panes keeps this one save,
+ * and one save button covers every pane.
  */
 export function useSubprofileMetaEditor(
   subprofile: SubprofileView,
@@ -141,7 +148,7 @@ export function useSubprofileMetaEditor(
   >(undefined);
   // One setter for the (url, crop) pair so the two can never drift apart: a
   // pick without a crop (a GIF, which bypasses the reframer) must CLEAR any
-  // crop left over from the previous pick, not inherit it.
+  // crop left over from the previous pick so it starts clean.
   const setCoverPreview = useCallback(
     (value: string | null, crop?: CropRect) => {
       setCoverPreviewUrl(value);
@@ -162,19 +169,19 @@ export function useSubprofileMetaEditor(
   // What the SERVER currently holds, in the same comparable shape.
   const serverMeta = metaSnapshotOf(subprofile);
 
-  // The editor's OWN baseline — what "saved" currently means. Seeded from the
+  // The editor's OWN baseline: what "saved" currently means. Seeded from the
   // loaded persona and advanced by `markSaved()` after a successful save. This
   // is why `dirty` must NOT depend on the post-save refetch: in demo mode the
   // refetch reverts to the unedited mock, and in live mode it returns the
-  // backend-RESOLVED image URL (not the storage key we sent) and trimmed text —
-  // so comparing local state to the refetched prop would leave the editor stuck
-  // dirty after a successful save. The list editors advance their own baseline
+  // backend-RESOLVED image URL (in place of the storage key we sent) and
+  // trimmed text, so comparing local state to the refetched prop would leave
+  // the editor stuck dirty after a successful save. The list editors advance their own baseline
   // the same way in `SubprofileEditorProvider`.
   const [baseline, setBaseline] = useState<MetaSnapshot>(() =>
     metaSnapshotOf(subprofile),
   );
 
-  // Current field state in the comparable flat shape — shared by the server
+  // Current field state in the comparable flat shape, shared by the server
   // resync below, `buildMetaPatch()`, and `metaSnapshot()`.
   const currentSnapshot: MetaSnapshot = {
     displayName,
@@ -194,9 +201,9 @@ export function useSubprofileMetaEditor(
   };
 
   // Adopt server-side changes to fields the member hasn't locally edited (see
-  // `useServerMetaResync` for why this exists — the unpublish/handle-null
-  // case). Runs during render, not an effect: the fresh values must be in
-  // place on this same paint.
+  // `useServerMetaResync` for why this exists: the unpublish/handle-null
+  // case). Runs during render so the fresh values are in place on this same
+  // paint; an effect would land them a frame late.
   useServerMetaResync(serverMeta, currentSnapshot, baseline, setBaseline, {
     setDisplayName,
     setTagline,
@@ -215,11 +222,19 @@ export function useSubprofileMetaEditor(
   });
 
   const nameMissing = displayName.trim().length === 0;
-  // A standalone (unlinked) handle shares the global namespace — don't let a
-  // known-taken/invalid one be saved; publish would reject it anyway.
+  // Both kinds claim their handle from the global namespace, so a
+  // known-taken/invalid one stays unsaved; publish would reject it anyway. An
+  // empty handle stays unblocked for a linked persona only: the server derives
+  // its default and stores it on save. A standalone persona has no default,
+  // so it must name its address, and neither kind may use the bare kind name.
+  const isStandaloneHandleMissing = link === "unlinked" && handle.trim() === "";
+  const isHandleKindName =
+    handle.trim() !== "" && handleIsKindName(handle, subprofile.kind);
   const handleBlocked =
-    link === "unlinked" && handleStatus.status === "unavailable";
-  // The CTA label and URL only make sense as a pair — a label with nowhere to
+    handleStatus.status === "unavailable" ||
+    isStandaloneHandleMissing ||
+    isHandleKindName;
+  // The CTA label and URL only make sense as a pair: a label with nowhere to
   // go, or a bare link with no call to action, is worse than neither.
   const ctaMismatch = Boolean(ctaLabel.trim()) !== Boolean(ctaUrl.trim());
 
@@ -232,7 +247,7 @@ export function useSubprofileMetaEditor(
 
   /**
    * Builds the same partial PATCH the old in-hook `save()` sent, from the
-   * current field state. Pure — no mutation, no toast, no navigation guard;
+   * current field state. Pure: no mutation, no toast, no navigation guard;
    * the provider owns those and calls this only once it has decided a save
    * should happen. Returns `null` when nothing is dirty (nothing to send).
    */
@@ -250,8 +265,8 @@ export function useSubprofileMetaEditor(
 
   // Restore every field to the editor's baseline (last-saved state), and drop
   // the transient blob previews so the docked preview snaps back. Powers
-  // "Discard all" — after saves, this returns to the saved values, not the
-  // original mount values.
+  // "Discard all". After saves, this returns to the latest saved values
+  // (the baseline moves forward on each save).
   function reset(): void {
     setDisplayName(baseline.displayName);
     setTagline(baseline.tagline);
@@ -274,9 +289,9 @@ export function useSubprofileMetaEditor(
 
   // Advance the baseline to the snapshot that was actually PATCHed (captured at
   // build time, passed in here), so `dirty` clears without waiting on (or being
-  // contradicted by) a refetch — while any keystrokes made during the in-flight
+  // contradicted by) a refetch, while any keystrokes made during the in-flight
   // save stay `dirty` rather than being folded into the baseline and lost.
-  // Called by the provider's meta save task on success — the exact analogue of
+  // Called by the provider's meta save task on success: the exact analogue of
   // the list editors advancing their row baselines to the rows they sent.
   function markSaved(snapshot: MetaSnapshot): void {
     setBaseline(snapshot);
@@ -321,6 +336,8 @@ export function useSubprofileMetaEditor(
     ctaUrl,
     setCtaUrl,
     nameMissing,
+    isStandaloneHandleMissing,
+    isHandleKindName,
     handleBlocked,
     ctaMismatch,
     dirty,

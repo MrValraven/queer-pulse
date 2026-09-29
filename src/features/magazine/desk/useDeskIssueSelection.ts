@@ -12,14 +12,19 @@
 
 import { useMemo } from "react";
 import type { SetURLSearchParams } from "react-router-dom";
+import { useFormat } from "../../../shared/i18n/format";
+import {
+  DESK_CALENDAR_DAY_FORMAT,
+  issueCalendarToView,
+} from "../api/pieces.adapters";
 import type { Issue, IssueSummary } from "../data/desk.data";
 
 export interface UseDeskIssueSelectionParams {
   /** Every issue, newest number first (`useDeskIssues`). */
   issues: IssueSummary[];
-  /** The backend's current-issue answer. Used as the DEFAULT selection, and
-   *  as the only source of the editorial calendar fields (`closes`/`daysLeft`),
-   *  which exist in demo mode alone. */
+  /** The backend's current-issue answer, used as the DEFAULT selection. The
+   *  calendar fields come from the selected row itself, which carries its own
+   *  `closesOn`/`publishedOn`. */
   currentIssue: Issue | null;
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
@@ -48,28 +53,23 @@ const BLANK_DESK_ISSUE: Issue = {
 };
 
 /**
- * Widens a switcher row into the desk header's `Issue` shape. The backend
- * models no editorial calendar, so `closes`/`daysLeft` are carried over only
- * from the current-issue lookup and only when it IS the selected issue —
- * blank otherwise, never fabricated. `publishes` is real whenever the issue has
- * a date, and blank while it is still unscheduled (the date is optional at
- * creation): the header hides the meta line rather than inventing one.
+ * Widens a switcher row into the desk header's `Issue` shape. Every row
+ * carries its own close and publish days, so any selected issue gets its real
+ * calendar, current or older. Either day may be unset (both are optional at
+ * creation): that half of the meta line is blank, and the header hides it.
  */
 function toDeskIssue(
   selectedIssue: IssueSummary | null,
-  currentIssue: Issue | null,
+  formatDay: (day: Date) => string,
 ): Issue {
   if (!selectedIssue) return BLANK_DESK_ISSUE;
-  const isCurrent = currentIssue?.number === selectedIssue.number;
   return {
     id: selectedIssue.id,
     number: selectedIssue.number,
     theme: selectedIssue.theme,
-    closes: isCurrent ? currentIssue.closes : "",
-    publishes: selectedIssue.publishedOn ?? "",
-    daysLeft: isCurrent ? currentIssue.daysLeft : 0,
     filled: selectedIssue.filled,
     slots: selectedIssue.slots,
+    ...issueCalendarToView(selectedIssue, formatDay, new Date()),
   };
 }
 
@@ -98,9 +98,13 @@ export function useDeskIssueSelection({
     return current ?? issues[0] ?? null;
   }, [issueParam, issues, currentIssue]);
 
+  const formatters = useFormat();
   const deskIssue = useMemo(
-    () => toDeskIssue(selectedIssue, currentIssue),
-    [selectedIssue, currentIssue],
+    () =>
+      toDeskIssue(selectedIssue, (day) =>
+        formatters.date(day, DESK_CALENDAR_DAY_FORMAT),
+      ),
+    [selectedIssue, formatters],
   );
 
   function selectIssue(issueNumber: string): void {

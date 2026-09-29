@@ -148,11 +148,3 @@ a.rowTitle:hover {
   max-width: 46ch;
   margin: 0 auto;
 }
-
-.checking {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: var(--text-13-5);
-  color: var(--ink-60);
-}

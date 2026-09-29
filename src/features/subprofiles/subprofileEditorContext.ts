@@ -37,6 +37,8 @@ export const withAffiliationUid = (
 });
 
 export interface SubprofileEditorContextValue {
+  /** The persona being edited, as loaded. */
+  subprofile: SubprofileView;
   /** The meta-field editor (identity/presence/address) — its own hook. */
   meta: SubprofileMetaEditor;
   /** The persona-level `SkinData` block editor ("Page blocks" pane). */

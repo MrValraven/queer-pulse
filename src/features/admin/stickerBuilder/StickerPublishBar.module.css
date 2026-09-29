@@ -50,6 +50,20 @@
   margin-top: 1px;
 }
 
+/* A folded reason: visually hidden, still in the live region and still the
+   CTA's description. */
+.bar:has([data-publish-mode-control]):not(
+    :has([data-publish-reason-toggle][aria-expanded="true"])
+  )
+  .statusLine[data-helper-only="false"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .result {
   font-weight: 600;
   color: var(--text-strong);
@@ -179,16 +193,26 @@
   line-height: 1.25;
 }
 
+/* The mode legend ("22 already in pack") says why the CTA is off, so the
+   full reason folds behind the info toggle beside the CTA and the dock keeps
+   to one row. The rule above hides the reason line until the toggle opens it.
+   Without the mode control the reason is short and always shows, so the
+   toggle stays out of the way. */
+.bar:not(:has([data-publish-mode-control])) [data-publish-reason-toggle] {
+  display: none;
+}
+
 /* Phones: keep the dock short and clear of the home indicator. */
 @media (--lg) {
   .bar {
-    padding: 12px 16px;
-    padding-block-end: max(12px, env(safe-area-inset-bottom));
+    row-gap: 8px;
+    padding: 10px 16px;
+    padding-block-end: max(10px, env(safe-area-inset-bottom));
   }
 
   /* The idle "who sees this" helper stays in the live region for screen
      readers but takes no room; the review dialog repeats it on screen before
-     anything happens. A blocked reason always shows. */
+     anything happens. */
   .statusLine[data-helper-only="true"] {
     position: absolute;
     width: 1px;
@@ -224,7 +248,7 @@
 
 @media (pointer: coarse) {
   .failures .failuresToggle {
-    min-height: 44px;
+    min-height: var(--tap-min);
   }
 }
 

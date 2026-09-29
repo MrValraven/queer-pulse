@@ -1,0 +1,239 @@
+/* Focus chip row: the desk's one clickable "what needs attention" strip,
+   replacing NeedsStrip + DeskStats + SavedViews. Desktop budget is a single
+   36px row that caps at 5 chips before collapsing behind "+N"; a phone
+   (below 768px, see the `--messages` note in tokens/breakpoints.css for why
+   that stays a literal) drops the cap in the component.
+
+   The row never runs past its column: whenever the chips are wider than the
+   bar, it scrolls sideways. Which widths call for that is read from the
+   bar's own width (the `desk-focus` container), so a tablet, a narrow
+   window and a phone all get the one scrolling row the moment the chips
+   stop fitting. */
+
+@property --focus-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --focus-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.frame {
+  container: desk-focus / inline-size;
+  min-width: 0;
+}
+
+/* `overflow-x: auto` computes `overflow-y` to auto too, so the bar pays the
+   workbar strip's ring room on every side (padding, cancelled by a negative
+   margin) and a focused chip's ring shows whole. */
+.bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: var(--gap-xs);
+  min-height: 36px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--workbar-ring-room);
+  scrollbar-width: thin;
+  padding: var(--workbar-ring-room);
+  margin: calc(-1 * var(--workbar-ring-room));
+}
+
+/* Set once the "+N" chip has expanded the row, or on a phone: every chip
+   renders, so a wide bar is free to wrap. A narrow bar keeps one scrolling
+   row (the container rule below). */
+.wrapping {
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+@container desk-focus (width < 800px) {
+  .wrapping {
+    flex-wrap: nowrap;
+  }
+}
+
+/* The edge that hides chips fades, and only while it hides some: the fade
+   widths ride the bar's own scroll position, so a row that fits (no scroll
+   timeline) draws no fade at all, and a row scrolled to its end fades only
+   its start. */
+@supports (animation-timeline: scroll()) {
+  .bar {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black var(--focus-fade-start),
+      black calc(100% - var(--focus-fade-end)),
+      transparent
+    );
+    animation: focusBarEdgeFade linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+
+@keyframes focusBarEdgeFade {
+  0% {
+    --focus-fade-start: 0px;
+    --focus-fade-end: var(--gap-lg);
+  }
+
+  8%,
+  92% {
+    --focus-fade-start: var(--gap-lg);
+    --focus-fade-end: var(--gap-lg);
+  }
+
+  100% {
+    --focus-fade-start: var(--gap-lg);
+    --focus-fade-end: 0px;
+  }
+}
+
+/* Without the shell sidebar (900px and below) the page runs edge to edge, so
+   the scroller bleeds into the page gutter: the next chip is cut by the
+   screen edge, half visible, instead of ending flush at the gutter. The
+   padding keeps the resting row where it was. A browser without scroll
+   timelines gets a fixed fade on the end edge, where the chips are hidden
+   at rest. */
+@media (--wide) {
+  .bar {
+    margin-inline: calc(-1 * var(--wrap-px));
+    padding-inline: var(--wrap-px);
+    scroll-padding-inline: var(--wrap-px);
+  }
+
+  @supports not (animation-timeline: scroll()) {
+    .bar {
+      mask-image: linear-gradient(
+        to right,
+        black calc(100% - var(--gap-lg)),
+        transparent
+      );
+    }
+  }
+}
+
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition:
+    background-color 150ms var(--ease),
+    border-color 150ms var(--ease),
+    color 150ms var(--ease);
+}
+
+/* A chip with nothing to show recedes, per the desk's "zeros recede" rule:
+   quieter text, no tone dot (the component only renders the dot when the
+   count is positive). */
+.chipMuted {
+  color: var(--ink-40);
+}
+
+/* Wins over .chipMuted: an active chip reads in its own tone even at a zero
+   count (a second filter can legitimately zero a first one's match), which
+   is also why it stays visible past the 5-chip cap. `--focus-tone`/
+   `--focus-tone-soft` are set inline per chip from `deskFocus.ts`'s tone. */
+.chipActive {
+  border-color: var(--focus-tone);
+  color: var(--focus-tone);
+  background: var(--focus-tone-soft);
+}
+
+/* The icon a chip wears in place of its tone dot (FOCUS_CHIP_ICONS): the
+   chip's own tone, at the size of a row's stage-age clock. */
+.chipIcon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  color: var(--focus-tone);
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+.more,
+.clear {
+  flex-shrink: 0;
+  padding: 8px 6px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: color 150ms var(--ease);
+}
+
+.more:hover,
+.clear:hover {
+  color: var(--text-strong);
+  text-decoration: underline;
+}
+
+.divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+}
+
+.chip:focus-visible,
+.more:focus-visible,
+.clear:focus-visible,
+.bar:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    border-color: var(--line-strong);
+    color: var(--text-strong);
+  }
+
+  .chipActive:hover {
+    border-color: var(--focus-tone);
+    color: var(--focus-tone);
+  }
+}
+
+/* A thumb gets the full 44px target on every chip. */
+@media (pointer: coarse) {
+  .chip,
+  .more,
+  .clear {
+    min-height: var(--tap-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .more,
+  .clear {
+    transition: none;
+  }
+}

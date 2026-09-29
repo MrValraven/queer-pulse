@@ -23,6 +23,9 @@ importers:
       '@fontsource-variable/fraunces':
         specifier: ^5.3.0
         version: 5.3.0
+      '@fontsource/alegreya-sc':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource/anton':
         specifier: ^5.3.0
         version: 5.3.0
@@ -30,6 +33,9 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       '@fontsource/bodoni-moda':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource/cinzel':
         specifier: ^5.3.0
         version: 5.3.0
       '@fontsource/cormorant':
@@ -1046,6 +1052,9 @@ packages:
   '@fontsource-variable/fraunces@5.3.0':
     resolution: {integrity: sha512-9BYGySn4AHEJdgp9Z28tQ3X+laJMEOITXkQarZXeloWQZDq5oOvXJ3kDA8c7MGIfpogIaZfjrQBqmda8POOCKA==}
 
+  '@fontsource/alegreya-sc@5.3.0':
+    resolution: {integrity: sha512-MksAO+rnvCMXBfrzcznuaoNtGgGwqORHhz5/UP0V4bHq0M9mL9EpOrW44ilAgI/yjzYtWoVlVjvvvEXPJI9PCw==}
+
   '@fontsource/anton@5.3.0':
     resolution: {integrity: sha512-OR1D5n124n2XRs66SbX7IjcOSptljEJE8FcDNnlni2y1/M6KpTx7cU2PIWzTSsBj4WFkHPw24On8qw3qkQZuTw==}
 
@@ -1054,6 +1063,9 @@ packages:
 
   '@fontsource/bodoni-moda@5.3.0':
     resolution: {integrity: sha512-Wt2XBCHivYxkTP3ydq/Ax+7VshwsOh/6ayA5om2t+yClCkGwLPj2Mi6OnyMANjyLcqDUWs4rlOHnc8SBLf6/pA==}
+
+  '@fontsource/cinzel@5.3.0':
+    resolution: {integrity: sha512-KEOYTsrRppW0uRIPWBDPrQgunCS6f8u4nzZxYRBfo9SCknKojLYjK7B0ZoVmJhyVLefz271ZQRF9EOpHZlfhRw==}
 
   '@fontsource/cormorant@5.3.0':
     resolution: {integrity: sha512-r2xrO2/35L+miyYFaERPRn3TGA8G83fKAR4wGG3s4WC5pLRZ7Cw3brDjr8tRwESCHXgB3r7jZqjfK2kLPv3zrQ==}
@@ -5213,11 +5225,15 @@ snapshots:
 
   '@fontsource-variable/fraunces@5.3.0': {}
 
+  '@fontsource/alegreya-sc@5.3.0': {}
+
   '@fontsource/anton@5.3.0': {}
 
   '@fontsource/archivo-black@5.3.0': {}
 
   '@fontsource/bodoni-moda@5.3.0': {}
+
+  '@fontsource/cinzel@5.3.0': {}
 
   '@fontsource/cormorant@5.3.0': {}
 

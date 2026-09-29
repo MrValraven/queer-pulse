@@ -1,6 +1,6 @@
 import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 
-/** The seven page families. A member never picks one — it is derived from `kind`. */
+/** The page families. A member never picks one: it is derived from `kind`. */
 export type SkinFamily =
   | "stage"
   | "studio"
@@ -14,7 +14,8 @@ export type SkinFamily =
   | "gallery"
   | "history"
   | "collective"
-  | "classroom";
+  | "classroom"
+  | "quest";
 
 /** kind → skin family. Total over SubprofileKind. Mirrors the design prototype's SKIN_OF. */
 export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
@@ -50,7 +51,7 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
   tattoo_artist: "studio",
   animator: "studio",
   comic_artist: "studio",
-  game_designer: "studio",
+  game_designer: "quest", // moved from studio (Quest personas)
   artist_3d: "studio",
   printmaker: "studio",
   // page (new kinds)
@@ -124,6 +125,28 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
   facilitator: "classroom",
   tutor: "classroom",
   lecturer: "classroom",
+  // Quest personas (+20): the quest family, plus two new stage kinds and
+  // two new page kinds.
+  game_master: "quest",
+  ttrpg_designer: "quest",
+  board_game_reviewer: "quest",
+  game_night_host: "quest",
+  larp_organizer: "quest",
+  miniature_painter: "quest",
+  cartographer: "quest",
+  dice_maker: "quest",
+  tournament_organizer: "quest",
+  actual_play: "quest",
+  streamer: "quest",
+  speedrunner: "quest",
+  modder: "quest",
+  cosplayer: "quest",
+  prop_maker: "quest",
+  puzzle_designer: "quest",
+  podcaster: "stage",
+  voice_actor: "stage",
+  fanfic_writer: "page",
+  game_critic: "page",
 };
 
 /** The page family for a persona kind. */
@@ -172,6 +195,12 @@ export const VISUAL_SECTIONS: readonly SubprofileSection[] = [
   "sketches",
   "available",
   "installations",
+  // Quest personas
+  "minis",
+  "maps",
+  "dice",
+  "playthroughs",
+  "streams",
 ];
 
 export interface SkinMeta {
@@ -192,7 +221,16 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     name: "Stage",
     face: "Anton",
     note: "Poster type, dark ground, marquee rules. For the crafts that happen in front of a room.",
-    kinds: ["Drag", "DJ", "Musician", "Dancer", "Performer", "Pole dancer"],
+    kinds: [
+      "Drag",
+      "DJ",
+      "Musician",
+      "Dancer",
+      "Performer",
+      "Pole dancer",
+      "Podcaster",
+      "Voice actor",
+    ],
   },
   studio: {
     name: "Studio",
@@ -210,7 +248,7 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     name: "Page",
     face: "Fraunces Light",
     note: "A book column. Wide measure, long line-height, quiet rules.",
-    kinds: ["Writer"],
+    kinds: ["Writer", "Fanfic writer", "Video game critic"],
   },
   workshop: {
     name: "Workshop",
@@ -292,5 +330,29 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     face: "Newsreader",
     note: "A board and a handout. Numbered weeks, plain promises, fees stated before you ask.",
     kinds: ["Teacher", "Workshop facilitator", "Tutor", "Lecturer"],
+  },
+  quest: {
+    name: "Quest",
+    face: "Cinzel + Alegreya SC",
+    note: "A character sheet or a hex map. Boxed stat panels, ruled fields, and the table's rules written down before anyone rolls.",
+    kinds: [
+      "Game master (DM/GM)",
+      "TTRPG writer",
+      "Game designer",
+      "Board game reviewer",
+      "Game night host",
+      "LARP organiser",
+      "Miniature painter",
+      "Fantasy map maker",
+      "Dice maker",
+      "Tournament organiser",
+      "Actual play performer",
+      "Streamer / VTuber",
+      "Speedrunner",
+      "Modder",
+      "Cosplayer",
+      "Prop and armour maker",
+      "Puzzle and escape room designer",
+    ],
   },
 };

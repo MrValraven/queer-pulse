@@ -5,6 +5,12 @@
   background: var(--cream);
 }
 
+/* The player root is the surface a gallery card grows into and shrinks back
+   out of, named only while a morph runs (simulationMorph.module.css). */
+:global(:root[data-simulation-morph]) .player {
+  view-transition-name: simulation-surface;
+}
+
 .bar {
   display: flex;
   align-items: center;

@@ -312,37 +312,6 @@
   margin-block-end: 6px;
 }
 
-.range {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.range input {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-8);
-  padding: 7px 10px;
-  outline: none;
-}
-.range input:focus {
-  border-color: var(--line-strong);
-}
-.range span {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-}
-/* The "from → to" separator between the two year inputs. Decorative only, so
-   it's an aria-hidden react-icons arrow rather than a bare "→" character,
-   which screen readers announce as "rightwards arrow". */
-.rangeArrow {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-}
 .rangeNote {
   font-size: var(--text-11-5);
   color: var(--ink-40);
@@ -351,6 +320,24 @@
 }
 .rangeNote em {
   font-style: italic;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.switchLabel {
+  font-size: var(--text-13);
+  color: var(--ink);
+  cursor: pointer;
+}
+.focusCaption {
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+  margin: 0 0 8px;
 }
 
 .clearRow {
@@ -687,8 +674,10 @@
 }
 .mName {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  row-gap: 4px;
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-17);

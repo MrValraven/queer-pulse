@@ -11,7 +11,6 @@ import { safeStorage } from "../../shared/storage/safeStorage";
 import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
 import { postCompleteOnboarding } from "./api/auth.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { FeatureHelp } from "../../shared/components/ui";
 import { StepIntro, StepNorms, StepDone } from "./OnboardingSteps";
 import { StepIntents } from "./StepIntents";
 import { StepWelcome } from "./StepWelcome";
@@ -139,10 +138,6 @@ export function OnboardingPage() {
           className={styles.progressFill}
           style={{ width: `${progress}%` }}
         />
-      </div>
-      <div className={styles.progressLabel}>
-        {stepLabel}
-        <FeatureHelp id="auth.onboarding" />
       </div>
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />

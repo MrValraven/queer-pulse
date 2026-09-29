@@ -9,8 +9,15 @@ import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { routes } from "../../app/routeMap";
 import type { InviteView } from "../../features/auth/api/useInvite";
 import { AgeAttestation } from "../auth/AgeAttestation";
+import { Under18Notice } from "../auth/Under18Notice";
 import { buildLoaderSteps, WHAT_ITEMS } from "./inviteLanding.data";
 import styles from "./InviteLandingPage.module.css";
+
+const AGE_ATTESTATION_ID = "invite-age-attestation";
+
+function focusOnMount(node: HTMLDivElement | null) {
+  node?.focus();
+}
 
 function InviterAvatar({
   view,
@@ -166,7 +173,9 @@ export function InviteCardView({
   onGoogle,
   is18,
   onIs18Change,
+  isUnder18,
   onUnder18,
+  onUnder18Back,
   onOpenTerms,
   onOpenPrivacy,
 }: {
@@ -175,13 +184,16 @@ export function InviteCardView({
   /** Whether the 18+ box is ticked — gates the Google button. */
   is18: boolean;
   onIs18Change: (value: boolean) => void;
+  /** Shows the under-18 notice in the card body instead of the sign-up controls. */
+  isUnder18: boolean;
   onUnder18: () => void;
+  onUnder18Back: () => void;
   onOpenTerms: () => void;
   onOpenPrivacy: () => void;
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} ${styles.cardRoot}`}>
       <div className={styles.card}>
         <div className={styles.header}>
           <Link to={routes.homepage} className={styles.brand}>
@@ -231,85 +243,108 @@ export function InviteCardView({
         )}
 
         <div className={styles.body}>
-          <div className={styles.whatList}>
-            {WHAT_ITEMS.map((item) => (
-              <div className={styles.whatItem} key={item.strongKey}>
-                <div className={styles.whatDot} aria-hidden />
-                <div className={styles.whatText}>
-                  <strong>{t(item.strongKey)}</strong>{" "}
-                  {t(item.restKey, { count: view.memberCount })}
+          {isUnder18 ? (
+            // Someone told us they're not 18 yet: the humane block, drawn flat
+            // on the card in place of the sign-up controls so it scrolls with
+            // the page. Focus moves onto it (which also scrolls it into view on
+            // a phone), since the link that opened it has just unmounted.
+            <div ref={focusOnMount} tabIndex={-1} className={styles.under18}>
+              <Under18Notice
+                onBack={() => {
+                  onUnder18Back();
+                  requestAnimationFrame(() =>
+                    document.getElementById(AGE_ATTESTATION_ID)?.focus(),
+                  );
+                }}
+                backLabel={t("system:inviteLanding.card.under18BackLabel")}
+                shouldFlatten
+              />
+            </div>
+          ) : (
+            <>
+              <div className={styles.whatList}>
+                {WHAT_ITEMS.map((item) => (
+                  <div className={styles.whatItem} key={item.strongKey}>
+                    <div className={styles.whatDot} aria-hidden />
+                    <div className={styles.whatText}>
+                      <strong>{t(item.strongKey)}</strong>{" "}
+                      {t(item.restKey, { count: view.memberCount })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.tokenBadge}>
+                <div>
+                  <div className={styles.tokenLabel}>
+                    {t("system:inviteLanding.card.tokenLabel")}
+                  </div>
+                  <div className={styles.tokenCode}>{view.code}</div>
+                </div>
+                <div className={styles.tokenExpiry}>
+                  {t("system:inviteLanding.card.validFor", {
+                    count: view.validForDays,
+                  })}
                 </div>
               </div>
-            ))}
-          </div>
 
-          <div className={styles.tokenBadge}>
-            <div>
-              <div className={styles.tokenLabel}>
-                {t("system:inviteLanding.card.tokenLabel")}
-              </div>
-              <div className={styles.tokenCode}>{view.code}</div>
-            </div>
-            <div className={styles.tokenExpiry}>
-              {t("system:inviteLanding.card.validFor", {
-                count: view.validForDays,
-              })}
-            </div>
-          </div>
+              {view.expiryLabel && (
+                <div className={styles.expiryRow}>
+                  <FiClock aria-hidden />
+                  {/* view.expiryLabel is formatted upstream by useInvite.ts
+                    (features/auth), outside this namespace's remit. */}
+                  <span>
+                    {t("system:inviteLanding.card.expires", {
+                      date: view.expiryLabel,
+                    })}
+                  </span>
+                </div>
+              )}
 
-          {view.expiryLabel && (
-            <div className={styles.expiryRow}>
-              <FiClock aria-hidden />
-              {/* view.expiryLabel is formatted upstream by useInvite.ts
-                  (features/auth), outside this namespace's remit. */}
-              <span>
-                {t("system:inviteLanding.card.expires", {
-                  date: view.expiryLabel,
-                })}
-              </span>
-            </div>
+              <AgeAttestation
+                id={AGE_ATTESTATION_ID}
+                confirmed={is18}
+                onConfirmedChange={onIs18Change}
+                onUnder18={onUnder18}
+              />
+
+              <button
+                type="button"
+                className={styles.google}
+                onClick={onGoogle}
+                disabled={!is18}
+                aria-disabled={!is18}
+              >
+                {/* Official Google "G" logo, via react-icons' <FcGoogle> — the
+                  same mark SignInPage uses. Its four brand fills are baked into
+                  the icon, which is what Google's branding guidelines require and
+                  what no design token could supply. Sized by `.google svg`. */}
+                <FcGoogle aria-hidden />
+                {t("system:inviteLanding.card.googleCta")}
+              </button>
+
+              <p className={styles.consentNote}>
+                <Translation
+                  i18nKey="system:inviteLanding.card.consent"
+                  components={{
+                    // eslint-disable-next-line jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
+                    termsLink: <button type="button" onClick={onOpenTerms} />,
+                    privacyLink: (
+                      // eslint-disable-next-line jsx-a11y/control-has-associated-label -- same as above.
+                      <button type="button" onClick={onOpenPrivacy} />
+                    ),
+                  }}
+                />
+              </p>
+
+              <p className={styles.alreadyMember}>
+                <Translation
+                  i18nKey="system:inviteLanding.card.alreadyMember"
+                  components={{ a: <Link to={routes.signIn} /> }}
+                />
+              </p>
+            </>
           )}
-
-          <AgeAttestation
-            id="invite-age-attestation"
-            confirmed={is18}
-            onConfirmedChange={onIs18Change}
-            onUnder18={onUnder18}
-          />
-
-          <button
-            type="button"
-            className={styles.google}
-            onClick={onGoogle}
-            disabled={!is18}
-            aria-disabled={!is18}
-          >
-            {/* Official Google "G" logo, via react-icons' <FcGoogle> — the
-                same mark SignInPage uses. Its four brand fills are baked into
-                the icon, which is what Google's branding guidelines require and
-                what no design token could supply. Sized by `.google svg`. */}
-            <FcGoogle aria-hidden />
-            {t("system:inviteLanding.card.googleCta")}
-          </button>
-
-          <p className={styles.consentNote}>
-            <Translation
-              i18nKey="system:inviteLanding.card.consent"
-              components={{
-                // eslint-disable-next-line jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
-                termsLink: <button type="button" onClick={onOpenTerms} />,
-                // eslint-disable-next-line jsx-a11y/control-has-associated-label -- same as above.
-                privacyLink: <button type="button" onClick={onOpenPrivacy} />,
-              }}
-            />
-          </p>
-
-          <p className={styles.alreadyMember}>
-            <Translation
-              i18nKey="system:inviteLanding.card.alreadyMember"
-              components={{ a: <Link to={routes.signIn} /> }}
-            />
-          </p>
         </div>
       </div>
 

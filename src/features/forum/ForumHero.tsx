@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, FeatureHelp } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -21,18 +21,12 @@ export function ForumHero({
       <div className="wrap">
         <div className={styles.heroRow}>
           <div>
-            {/* FeatureHelp beside the h1, not inside it, so it stays out of
-                the heading's accessible name and off the display type scale
-                (same pattern as CommunityDetailHero and PageHero). */}
-            <div className={styles.titleRow}>
-              <h1>
-                <Translation
-                  i18nKey="forum:hero.title"
-                  components={{ em: <em /> }}
-                />
-              </h1>
-              <FeatureHelp id="forum.hub" />
-            </div>
+            <h1>
+              <Translation
+                i18nKey="forum:hero.title"
+                components={{ em: <em /> }}
+              />
+            </h1>
             <p>
               {t("forum:hero.lead")}{" "}
               <Link to={routes.communities} className={styles.heroLink}>

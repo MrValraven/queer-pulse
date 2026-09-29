@@ -29,7 +29,7 @@ import {
   type TranslateOptions,
 } from "../../shared/i18n/types";
 import { logWarn } from "../../shared/observability/logger";
-import { I18nContext } from "./i18nContext";
+import { I18nContext, type TranslateInFunction } from "./i18nContext";
 
 const EMPTY_LOADED_NAMESPACES: Partial<Record<Namespace, Catalog>> = {};
 
@@ -204,6 +204,21 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [language, catalogForQueueing, failedNamespaces],
   );
 
+  // A key in a named language (a PT glossary card on an EN site). It reuses
+  // the same on-demand queue, so that language's namespace loads only when a
+  // caller actually asks for it; no EN stand-in, the caller falls back.
+  const translateIn = useCallback<TranslateInFunction>(
+    (targetLanguage, key, options) => {
+      const { namespace, path } = parseKey(key);
+      const catalog = catalogForQueueing(
+        targetLanguage,
+        namespace as Namespace,
+      );
+      return resolveEntry(catalog, path, intlLocale(targetLanguage), options);
+    },
+    [catalogForQueueing],
+  );
+
   // Background-prefetch every lazy EN namespace once, after first paint. EN is
   // the fallback for every key in every language, so warming it in idle time
   // (it waits for idle time so initial render stays fast, which keeps it
@@ -251,8 +266,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ language, setLanguage, t }),
-    [language, setLanguage, t],
+    () => ({ language, setLanguage, t, translateIn }),
+    [language, setLanguage, t, translateIn],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

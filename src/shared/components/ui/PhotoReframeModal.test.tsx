@@ -85,4 +85,39 @@ describe("PhotoReframeModal", () => {
     loadImage();
     expect(screen.getByRole("button", { name: /save/i })).toBeEnabled();
   });
+
+  // The heading matches the translated copy or, before the catalog entry
+  // lands, the raw echoed key `shared:reframe.preview.group`.
+  const shapePreviewHeading = /how it will look|reframe\.preview\.group/i;
+
+  it("shows the aria-hidden shape preview for a square avatar kind", () => {
+    render(
+      <PhotoReframeModal
+        file={new File(["x"], "p.jpg", { type: "image/jpeg" })}
+        kind="avatar"
+        onCancel={vi.fn()}
+        onConfirm={vi.fn()}
+      />,
+      { wrapper: TestProviders },
+    );
+    loadImage();
+
+    const heading = screen.getByText(shapePreviewHeading);
+    expect(heading.closest('[aria-hidden="true"]')).not.toBeNull();
+  });
+
+  it("leaves a cover kind without the shape preview", () => {
+    render(
+      <PhotoReframeModal
+        file={new File(["x"], "p.jpg", { type: "image/jpeg" })}
+        kind="story-cover"
+        onCancel={vi.fn()}
+        onConfirm={vi.fn()}
+      />,
+      { wrapper: TestProviders },
+    );
+    loadImage();
+
+    expect(screen.queryByText(shapePreviewHeading)).not.toBeInTheDocument();
+  });
 });

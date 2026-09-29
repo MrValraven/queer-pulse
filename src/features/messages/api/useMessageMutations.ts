@@ -356,10 +356,21 @@ export function useMarkRead() {
     },
     onSuccess: (readThrough, conversationId) => {
       if (demoMode || !readThrough) return;
-      patchConversationRead(queryClient, conversationId, readThrough);
+      const isFullyCovered = patchConversationRead(
+        queryClient,
+        conversationId,
+        readThrough,
+      );
       // Reading a thread clears its unread → refresh the cheap nav DM badge
       // (its own isolated key, so the list patch above doesn't touch it).
       void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
+      // A false `isFullyCovered` means this POST's watermark came from a
+      // stale cached thread tail (see `patchConversationRead`'s own doc), so
+      // the row was deliberately left unread; resync it with the server here
+      // so it doesn't stay stuck until some unrelated refetch happens to run.
+      if (!isFullyCovered) {
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
     },
   });
 }

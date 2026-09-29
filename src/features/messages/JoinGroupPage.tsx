@@ -2,11 +2,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiUsers } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import {
-  EmptyState,
-  LoadErrorState,
-  Spinner,
-} from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -114,9 +111,7 @@ export function JoinGroupPage() {
           // FALSE, since nothing is actually fetching yet), either way,
           // there is no data and no settled error, so the honest answer is
           // "still loading", not a blank page.
-          <div className={styles.loading} role="status" aria-live="polite">
-            <Spinner /> {t("messages:join.loading")}
-          </div>
+          <PageLoader size="section" label={t("messages:join.loading")} />
         )}
       </div>
     </AppShell>

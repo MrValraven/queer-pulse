@@ -1,12 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import {
-  EmptyState,
-  FeatureHelp,
-  SkeletonLine,
-  Tag,
-} from "../../shared/components/ui";
+import { EmptyState, SkeletonLine, Tag } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -23,6 +18,7 @@ import { GatheringHeaderToolbar } from "./GatheringHeaderToolbar";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
+import { GoTogetherCard } from "../goTogether/card/GoTogetherCard";
 import { GatheringDetailPanels } from "./GatheringDetailPanels";
 import { GatheringGoodToKnow } from "./GatheringGoodToKnow";
 import { GatheringTakingCare } from "./GatheringTakingCare";
@@ -207,9 +203,7 @@ function GatheringDetailBody({
                   )}
                 </Tag>
               </div>
-              <h1 className={styles.title}>
-                {gathering.title} <FeatureHelp id="events.detail" />
-              </h1>
+              <h1 className={styles.title}>{gathering.title}</h1>
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
@@ -237,6 +231,11 @@ function GatheringDetailBody({
               <GatheringHeroActions gathering={gathering} rsvp={rsvp} />
 
               <GoingAttendeesPreview gathering={gathering} />
+              {/* Go together reads the optimistic RSVP, so the card shows the
+                  moment a member says they're going (demo has no server). */}
+              <GoTogetherCard
+                gathering={{ ...gathering, myRsvpStatus: rsvp.status }}
+              />
 
               {/* LOC-04/06/08: announcements, where it actually is, the six
                   accessibility answers, and "tell someone where I'm going".

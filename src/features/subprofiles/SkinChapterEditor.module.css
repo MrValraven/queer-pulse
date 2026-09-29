@@ -1,4 +1,4 @@
-/* The chaptered skin editor (SkinChapterEditor): a map of all six chapters,
+/* The chaptered skin editor (SkinChapterEditor): a map of every chapter,
    then one chapter of group cards with Back / Next underneath. The cards
    themselves reuse `.card`/`.cardTitle`/`.cardNote` from
    SubprofileEditor.module.css. */
@@ -26,10 +26,13 @@
   margin-bottom: var(--gap-lg);
 }
 
-/* Three columns at every width, so all six chapters show in two rows. */
+/* Three chips per row on a six-column track, each spanning two. The last row
+   never holds a chip alone: two left over take half the row each, and one
+   left over pulls the chip before it down, so the last two rows hold two
+   each (four chapters read 2 + 2, seven read 3 + 2 + 2). */
 .stripList {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
   margin: 0;
   padding: 0;
@@ -37,7 +40,14 @@
 }
 .stripList > li {
   display: flex;
+  grid-column: span 2;
   min-width: 0;
+}
+.stripList > li:first-child:nth-last-child(2),
+.stripList > li:first-child:nth-last-child(3n + 2) ~ li:nth-last-child(-n + 2),
+.stripList > li:first-child:nth-last-child(4),
+.stripList > li:first-child:nth-last-child(3n + 4) ~ li:nth-last-child(-n + 4) {
+  grid-column: span 3;
 }
 
 .chip {
@@ -95,35 +105,98 @@
   hyphens: auto;
   overflow-wrap: anywhere;
 }
+/* Full strength `--ink-60` (4.69:1 on the page in light mode): the one line
+   that says what is left must stay readable at 12px. */
 .chipFill {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   font-size: var(--text-12);
   line-height: 1.25;
-  opacity: 0.8;
   font-variant-numeric: tabular-nums;
 }
 .chipDone {
   color: var(--jade-ink);
-  opacity: 1;
 }
 .chip[aria-current="step"] .chipDone {
   color: var(--jade-soft);
+}
+/* The phone row's stand-in for the status text, shown there alone. */
+.chipDot {
+  display: none;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 /* Plum barely separates from the dark page, so the active tile's own 1px
    border turns into a coral ring there. */
 :global([data-theme="dark"]) .chip[aria-current="step"] {
   border-color: rgba(var(--accent-rgb), 0.5);
 }
-@media (--sm) {
+
+/* Phones and small tablets (the editor's one-column layout): the map is one
+   row of compact chips that scrolls sideways, so the chapter starts close to
+   the top of the screen. The row runs out to both screen edges, past
+   `.ed-main`'s 20px padding at this width and the page gutter (the
+   `.ed-switch` bleed), and keeps 6px above and below for the focus ring,
+   which the scroll box would otherwise clip. The pane lede is hidden here
+   (below), so the map keeps its own space under the pane heading. */
+@media (--lg) {
+  .strip {
+    --chapter-row-bleed: calc(20px + var(--wrap-px));
+    margin: var(--gap-sm) 0;
+  }
   .stripList {
+    display: flex;
     gap: 6px;
+    margin: -6px calc(-1 * var(--chapter-row-bleed));
+    padding: 6px var(--chapter-row-bleed);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--chapter-row-bleed);
+    scrollbar-width: none;
+  }
+  .stripList::-webkit-scrollbar {
+    display: none;
+  }
+  .stripList > li {
+    flex: none;
+    scroll-snap-align: start;
   }
   .chip {
-    padding: 9px 9px 10px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+  }
+  /* Numeral, title, then the status mark, all on one line. */
+  .chipHead {
+    display: contents;
+  }
+  .numeral {
+    font-size: var(--text-18);
   }
   .chipTitle {
-    font-size: var(--text-13);
+    white-space: nowrap;
+    hyphens: manual;
+    overflow-wrap: normal;
+  }
+  .chipFill {
+    order: 1;
+  }
+  .chipFillText {
+    display: none;
+  }
+  .chipDot {
+    display: block;
+  }
+  /* The Page blocks pane's own lede says what every chapter lede says more
+     precisely, so on a phone it gives its lines to the chapter. */
+  :global(.ed-main):has(> div:not([hidden]) > .editor) > :global(.lede) {
+    display: none;
   }
 }
 

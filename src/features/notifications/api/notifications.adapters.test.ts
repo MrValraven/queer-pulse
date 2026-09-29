@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FiRepeat } from "react-icons/fi";
-import { routes } from "../../../app/routeMap";
+import { communityPath, routes } from "../../../app/routeMap";
 import type { TFunction } from "../../../shared/i18n/types";
 import { createFormatters } from "../../../shared/i18n/format";
 import { notificationDtoToView } from "./notifications.adapters";
@@ -327,5 +327,48 @@ describe("notificationDtoToView: subprofile_creator_changed", () => {
 
   it("renders the repeat glyph the demo row uses", () => {
     expect(handoff().icon?.Glyph).toBe(FiRepeat);
+  });
+});
+
+// QueerPulse Ambassadors design, section 5.6: "Tapping the grant notification
+// opens the circle community." A sibling top-level describe, the same reason
+// `message mention source href` above is one rather than nested: the main
+// `notificationDtoToView` block already sits at the 200-line
+// `max-lines-per-function` cap.
+describe("notificationDtoToView: ambassador source hrefs", () => {
+  it("ambassador_granted opens the ambassadors circle community", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "ambassador_granted",
+        payload: {
+          focusArea: "trans_health",
+          communitySlug: "queerpulse-ambassadors",
+        },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(communityPath("queerpulse-ambassadors"));
+  });
+
+  it("ambassador_granted builds no link at all without a community slug", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "ambassador_granted",
+        payload: { focusArea: "trans_health" },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBeUndefined();
+  });
+
+  it("ambassador_revoked has no link: the member was already removed from the circle", () => {
+    const view = notificationDtoToView(
+      dto({ type: "ambassador_revoked", payload: {} }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBeUndefined();
   });
 });

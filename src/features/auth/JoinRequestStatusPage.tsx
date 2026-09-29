@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Spinner } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AuthLayout } from "./AuthLayout";
 import {
@@ -27,7 +27,6 @@ import {
   StatusUnavailableState,
   UnderReviewState,
 } from "./JoinRequestStatusStates";
-import styles from "./JoinRequestStatus.module.css";
 
 /** The decided/undecided display states, from one DTO plus the refresh action
  *  the "your invite lapsed" screen needs. */
@@ -176,12 +175,12 @@ export function JoinRequestStatusPage() {
         // come back 400, since the endpoint allows 20 an hour.
         <CodeNotFoundState onTryAgain={askForAnotherCode} />
       ) : statusQuery.isPending ? (
-        // A live region: this page is often opened weeks later, and the
-        // answer must reach a screen reader without a focus change.
-        <div className={styles.loading} role="status">
-          <Spinner />
-          <p>{t("auth:joinRequestStatus.loading")}</p>
-        </div>
+        // PageLoader is a live region: this page is often opened weeks later,
+        // and the answer must reach a screen reader without a focus change.
+        <PageLoader
+          size="section"
+          label={t("auth:joinRequestStatus.loading")}
+        />
       ) : statusQuery.error ? (
         isUnresolvableStatusToken(statusQuery.error) ? (
           <CodeNotFoundState onTryAgain={askForAnotherCode} />

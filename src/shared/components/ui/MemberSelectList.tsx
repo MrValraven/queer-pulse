@@ -20,6 +20,16 @@ export interface MemberSelectListProps {
   onToggle: (slug: string) => void;
   /** Multi-select shows a checkbox and honours `cap`. Default true. */
   multiSelect?: boolean;
+  /**
+   * Single-select only: draw a radio-style selected indicator, plus the
+   * questionnaire's accent border and tint, on the chosen row. Opt-in and
+   * unset by default, because most single-select lists act on tap (add a
+   * cohost, pick a nominee) and never hold a selection, so a permanent, ever
+   * empty ring beside every row would misread as "choose, then confirm".
+   * Pass `"radio"` only from a list where a row stays chosen until the
+   * caller submits, such as the Go together partner picker.
+   */
+  selectedIndicator?: "radio";
   /** Slugs to hide entirely (e.g. already-added members, self). */
   excludeSlugs?: string[];
   /** Max selections; unselected rows disable once reached. */
@@ -29,8 +39,8 @@ export interface MemberSelectListProps {
   searchAriaLabel?: string;
   /**
    * Lift the search box out of this component, for a caller whose `people`
-   * come from a server search rather than a list it already holds. Pass both
-   * or neither: with `onSearchChange` set, the caller owns the query and this
+   * come from a server search that answers each query fresh. Pass both or
+   * neither: with `onSearchChange` set, the caller owns the query and this
    * stops filtering locally, since the results already answer the query.
    */
   searchQuery?: string;
@@ -43,7 +53,7 @@ export interface MemberSelectListProps {
 }
 
 /**
- * Searchable member picker — the SearchInput + member rows + toggle pattern
+ * Searchable member picker: the SearchInput + member rows + toggle pattern
  * generalized from the cohost picker (and shared by the new-message,
  * new-group, add-members and invite-co-owner flows). Composes the shared
  * `SearchInput` and `MemberIdentity`. Selection is controlled by the caller;
@@ -54,6 +64,7 @@ export function MemberSelectList({
   selected,
   onToggle,
   multiSelect = true,
+  selectedIndicator,
   excludeSlugs,
   cap,
   searchPlaceholder,
@@ -121,6 +132,8 @@ export function MemberSelectList({
           {visible.map((person) => {
             const isSelected = selected.has(person.slug);
             const disabled = atCap && !isSelected;
+            const showsRadioIndicator =
+              !multiSelect && selectedIndicator === "radio";
             return (
               <button
                 key={person.slug}
@@ -128,7 +141,13 @@ export function MemberSelectList({
                 role="option"
                 aria-selected={isSelected}
                 disabled={disabled}
-                className={[styles.row, isSelected && styles.rowSelected]
+                className={[
+                  styles.row,
+                  isSelected &&
+                    (showsRadioIndicator
+                      ? styles.rowSelectedRadio
+                      : styles.rowSelected),
+                ]
                   .filter(Boolean)
                   .join(" ")}
                 onClick={() => onToggle(person.slug)}
@@ -138,14 +157,18 @@ export function MemberSelectList({
                   secondary={person.pronouns}
                   size={38}
                 />
-                {multiSelect && (
+                {(multiSelect || showsRadioIndicator) && (
                   <span
-                    className={[styles.check, isSelected && styles.checkOn]
+                    className={[
+                      styles.check,
+                      multiSelect ? styles.checkBox : styles.checkRadio,
+                      isSelected && styles.checkOn,
+                    ]
                       .filter(Boolean)
                       .join(" ")}
                     aria-hidden
                   >
-                    {isSelected && <FiCheck />}
+                    {isSelected && multiSelect && <FiCheck />}
                   </span>
                 )}
               </button>

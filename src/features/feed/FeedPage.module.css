@@ -66,23 +66,21 @@
   flex-direction: column;
   gap: 10px;
 }
-/* The feed items lay out as a uniform responsive grid so every card (posts,
-   new members, saved links, recaps, community pulse, gatherings) packs
-   two-up at desktop feed-column width instead of each stretching the full
-   column and leaving dead space. `auto-fill` + `minmax` reflows intrinsically
-   to one column on a phone, with no device breakpoints. The empty/error and
-   pager rows opt out into a full-width row via .spanFull. */
+/* The feed cards (posts, new members, gatherings, threads, articles) pack as a
+   masonry: at desktop feed width two columns of at least 320px, each card
+   directly under the previous card in its column with a 14px gap, so a short
+   card leaves no hole beside a tall one. useMasonryLayout (via FeedMasonryGrid)
+   positions the cards with inline `position: absolute` + `top`/`left` and
+   gives this container an explicit height; the DOM stays in feed order.
+   Rows marked `data-masonry-full` (empty/error panels, the pager) span the full
+   width below the tallest column.
+   This rule is the one-column layout the hook hands back to on a phone (and
+   what renders without ResizeObserver): a plain column in normal flow with the
+   same gap, where every child is already full width. */
 .grid {
-  display: grid;
-  /* `min(320px, 100%)` clamps the column floor to the container on very narrow
-     phones, so the minimum can never push the track past the viewport and
-     spawn a horizontal scrollbar. */
-  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 14px;
-  align-items: start;
-}
-.spanFull {
-  grid-column: 1 / -1;
 }
 
 /* Feed hero banner: a small pill under the greeting summarizing recent

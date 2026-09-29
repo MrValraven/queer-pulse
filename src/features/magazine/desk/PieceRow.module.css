@@ -1,0 +1,618 @@
+/* Editor desk: one piece row of the pipeline table (`PieceRow.tsx`,
+   `PieceRowCells.tsx`, `PieceRowTitle.tsx`).
+   Each row is a subgrid of the table's `.table` grid, whose tracks
+   (`--piece-columns`) PiecesPipeline.module.css sets per table width, so the
+   column header and every row share one set of columns sized to the widest
+   cell. The caps on `.stageCell`, `.waitCell`, `.dueCell` and `.actionCell`
+   below bound how far a column grows. Density arrives as `data-density` on
+   the table.
+
+   The layout answers the TABLE's width, through the `desk-pieces` container
+   that `.pieces` declares, so it holds up beside the rail as well as on a
+   phone. Three steps, with the same widths in PiecesPipeline.module.css:
+     820px and up   every column, stage named beside its dots, time in stage
+                    under them
+     660 to 819px   stage named under its dots, time in stage on the meta
+                    line, tighter caps and gutters
+     under 660px    each row stacks: title, meta, then the stage line (with
+                    time in stage) and one line of who, when and what next
+   Row height: a comfortable row is 56px (a 38px content line: one title
+   line over one meta line, and the 32px next action), a compact row 44px
+   (one line, with no time in stage). */
+
+.row {
+  position: relative;
+  display: grid;
+  grid-column: 1 / -1;
+  /* Without subgrid the row keeps the table's own tracks (see
+     PiecesPipeline.module.css). */
+  grid-template-columns: var(--piece-columns);
+  grid-template-columns: subgrid;
+  align-items: center;
+  min-height: 56px;
+  /* No side padding: the table's gutter tracks give the row its inset. */
+  padding: var(--gap-xs) 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  /* Keeps a row brought into view by j/k clear of the sticky group header. */
+  scroll-margin-top: calc(
+    var(--desk-table-sticky-top, var(--sticky-top)) +
+      var(--desk-group-header-room)
+  );
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* The first track is the table's gutter; the cells flow on from here. */
+.select {
+  grid-column-start: 2;
+}
+
+/* A selected row keeps its tint when the pointer leaves, so a bulk
+   selection reads as one set. */
+.row:hover,
+.row[data-selected="true"],
+.row[data-open="true"] {
+  background: var(--wash);
+}
+
+/* The keyboard's current row and the row open in the peek panel get a plum
+   bar on the left edge (`--text-strong`: plum, lifted to cream in dark mode).
+   Coral stays reserved for the shell's one primary action. */
+.row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--text-strong);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.row[data-focus="true"]::before,
+.row[data-open="true"]::before {
+  opacity: 1;
+}
+
+/* ── Piece ── */
+
+/* The title, the meta line and an optional presence stack are named grid
+   areas, redrawn per density and width step, without the stack ever
+   existing twice in the DOM. The title's track is only as wide as its text
+   (and shrinks when the text is longer than the cell), so the presence stack
+   sits right after the last word. An area nothing is placed in (no viewers)
+   collapses its track to 0, so the grid never widens for it. */
+.pieceCell {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) auto minmax(0, 1fr);
+  grid-template-areas:
+    "title presence ."
+    "meta  meta     meta";
+  row-gap: 2px;
+  align-items: center;
+}
+
+.title {
+  grid-area: title;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-5);
+  background: none;
+  font-family: var(--serif);
+  font-size: var(--text-16-5);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-strong);
+  text-align: left;
+  cursor: pointer;
+}
+
+.titleText {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.title:focus-visible,
+.setDate:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.meta {
+  grid-area: meta;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.2;
+  color: var(--ink-60);
+  overflow: hidden;
+}
+
+.metaText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metaSeparator {
+  flex: none;
+  color: var(--ink-40);
+}
+
+.noWriter {
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+/* No vertical padding: the tag sits inside the meta line's 15px so a row
+   carrying it stays 56px tall. */
+.tagNew {
+  flex: none;
+  padding: 0 var(--desk-chip-pad-x);
+  border-radius: var(--radius-tag);
+  background: var(--desk-tone-ready-soft);
+  color: var(--desk-tone-ready);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Facts: stage, waiting on, due, next action ── */
+
+/* Each fact is its own grid cell in the table; a stacked row re-flows them
+   as one line. */
+.facts {
+  display: contents;
+}
+
+.stageCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  /* Caps the column: "Leitura de sensibilidade" trims before it squeezes
+     the title. */
+  max-width: 168px;
+}
+
+/* Capped at the cell, so a long stage name trims with an ellipsis instead of
+   running into the Waiting on column when it sits under the dots. */
+.stageCellTop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.stageLabel {
+  min-width: 0;
+  max-width: 100%;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Stage age: "5d in stage", or the writer/amber Stalled treatment ──
+   `.stageAgeWide` lives under the stage progress; `.stageAgeMeta` is the same
+   information rendered again at the end of the meta line
+   (`PieceRowStageAge.tsx`). At most one of the two is on screen at a time:
+   the wide step in comfortable density and the stacked step show the first
+   (on the phone it sits beside the stage name), the middle step shows the
+   second, and compact density shows neither above the stacked step, so a
+   screen reader hears it once at most. Under a day in stage it shows
+   nothing at all. */
+.stageAge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  font-size: var(--text-11-5);
+  line-height: 1.3;
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+
+/* A long translation trims inside the stage column. */
+.stageAgeText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stageAgeStalled {
+  color: var(--desk-tone-writer);
+  font-weight: 600;
+}
+
+.stageAgeIcon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.stageAgeWide {
+  composes: stageAge;
+}
+
+/* On the meta line it keeps its width, and the section and byline before
+   it trim first. */
+.stageAgeMeta {
+  composes: stageAge;
+  display: none;
+  flex: none;
+}
+
+.waitCell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  max-width: 120px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.waitText {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.waitCell[data-tone="you"] {
+  color: var(--desk-tone-you);
+  font-weight: 600;
+}
+
+.waitCell[data-tone="writer"] {
+  color: var(--desk-tone-writer);
+}
+
+/* One line: the column grows to fit "12 dias de atraso". The cap only
+   guards a free-text date from the source. */
+.dueCell {
+  min-width: 0;
+  max-width: 136px;
+  white-space: nowrap;
+  font-size: var(--text-12-5);
+  line-height: 1.3;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Only the text variants clip: the cell holding "Set date" never does, so
+   the button's focus ring and cream halo draw in full. */
+.dueText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Finished work: the stage name, muted, so the column still answers. */
+.dueFinished {
+  color: var(--ink-40);
+}
+
+.late {
+  color: var(--desk-tone-late);
+  font-weight: 600;
+}
+
+.setDate {
+  padding: var(--desk-chip-pad-y) 0;
+  border: none;
+  border-radius: var(--radius-5);
+  background: none;
+  font: inherit;
+  color: var(--ink-40);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.setDate:hover {
+  color: var(--text-strong);
+}
+
+/* Right-aligned, so the More trigger always sits one gap after the verb
+   and the column's spare width falls before it. */
+.actionCell {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+  max-width: 136px;
+}
+
+/* A quiet text button: the title leads the row, the verb follows it. The
+   column grows to the longest verb on screen; a label past the cell's cap
+   wraps inside the button, which stays within its column and clear of the
+   More trigger. Long labels have a short visible form
+   (`pieceNextActionShortLabelKey`). Scoped under `.row .actionCell` so it
+   outranks the Button's own size, `nowrap` and its dark-theme border. */
+.row .actionCell .nextAction {
+  max-width: 100%;
+  min-height: 32px;
+  padding: var(--desk-chip-pad-y) var(--desk-chip-pad-x);
+  font-size: var(--text-13);
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+/* The outline shows while the row is pointed at or holds focus, and stays
+   on for the editor's own turn, the one group whose verb should lead. */
+.row:not(:hover, :focus-within, [data-your-turn="true"])
+  .actionCell
+  .nextAction {
+  border-color: transparent;
+}
+
+.moreCell {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* A touch screen showing the full table (a tablet in landscape) gets the
+   phone card's tap targets: More, "Set date" and the verb grow to
+   --tap-min. The table's More track widens to match
+   (`--piece-more-track`, PiecesPipeline.module.css). */
+@media (pointer: coarse) {
+  .moreCell {
+    --piece-row-more-size: var(--tap-min);
+  }
+
+  .setDate {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+
+  .row .actionCell .nextAction {
+    min-height: var(--tap-min);
+  }
+}
+
+/* ── Compact density: title and meta share one line, 44px rows ── */
+
+[data-density="compact"] .row {
+  min-height: 44px;
+  padding-top: var(--desk-row-pad-y-compact);
+  padding-bottom: var(--desk-row-pad-y-compact);
+}
+
+/* One line only, and the meta line is too short to carry more: time in
+   stage steps out (the Stalled chip still finds stalled work). The stacked
+   phone row brings it back on its meta line. */
+[data-density="compact"] .stageAgeWide,
+[data-density="compact"] .stageAgeMeta {
+  display: none;
+}
+
+/* Title and meta share one line; an optional presence stack sits right
+   after the title, in its own column so it never eats into either's width
+   budget. The title takes up to 65% and gives back what it does not use. */
+[data-density="compact"] .pieceCell {
+  grid-template-columns: fit-content(65%) auto minmax(0, 1fr);
+  grid-template-areas: "title presence meta";
+  align-items: baseline;
+}
+
+[data-density="compact"] .meta {
+  margin-inline-start: var(--gap-xs);
+}
+
+/* ── Middle width: stage named under its dots, tighter gutters ── */
+
+@container desk-pieces (width < 820px) {
+  .stageCell {
+    max-width: 112px;
+  }
+
+  /* Dots over the name, so the narrower column still says which stage. */
+  .stageCellTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  /* The stage cell has room for two lines only: time in stage moves to the
+     meta line, which has the title's width to spare. */
+  .stageAgeWide {
+    display: none;
+  }
+
+  .stageAgeMeta {
+    display: inline-flex;
+  }
+
+  .waitCell {
+    gap: 5px;
+    font-size: var(--text-11-5);
+  }
+}
+
+/* ── Narrow: a stacked block per row ──
+   A phone card in three short lines:
+     [ ] Title (two lines at most) + presence      Verb  More
+         Meta, on its own at full width
+         Dots, stage name, time in stage          Due
+   The verb shares the title's line, beside More, and the due date sits
+   under it: stage, due and verb on one line of their own would need about
+   310px (EN) or 335px (PT) where the card has 283px at 375. Under the
+   waiting grouping the group header already names who holds each piece, so
+   "Waiting on" leaves the card (still read aloud); under any other grouping
+   it takes a line of its own. */
+
+@container desk-pieces (width < 660px) {
+  .row,
+  [data-density="compact"] .row {
+    grid-column: auto;
+    grid-template-columns: var(--tap-min) minmax(0, 1fr) auto var(--tap-min);
+    grid-template-areas:
+      "select piece action more"
+      ".      stage due    due"
+      ".      wait  wait   wait";
+    column-gap: var(--gap-xs);
+    row-gap: 4px;
+    align-items: start;
+    min-height: 0;
+    /* The select column is a full tap target, and its box centres in it,
+       so the row needs no left gutter of its own. */
+    padding: var(--gap-sm) var(--gap-xs) var(--gap-sm) 0;
+  }
+
+  [data-group-by="waiting"] .row {
+    grid-template-areas:
+      "select piece action more"
+      ".      stage due    due";
+  }
+
+  /* Tap targets: the checkbox, the verb and the More trigger grow to
+     --tap-min and shift up so their marks line up with the title's first
+     line, so none of them makes that line taller. */
+  .row .select {
+    grid-area: select;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    margin-top: calc((18px - var(--tap-min)) / 2);
+  }
+
+  .moreCell {
+    grid-area: more;
+    --piece-row-more-size: var(--tap-min);
+    margin-top: calc((18px - var(--tap-min)) / 2);
+  }
+
+  .actionCell {
+    grid-area: action;
+    margin-top: calc((18px - var(--tap-min)) / 2);
+  }
+
+  .row .actionCell .nextAction {
+    min-height: var(--tap-min);
+    white-space: nowrap;
+  }
+
+  /* Full width again regardless of density: the title (clamped to two
+     lines) with the presence stack after it, then the meta line alone. */
+  .pieceCell,
+  [data-density="compact"] .pieceCell {
+    grid-area: piece;
+    grid-template-columns: minmax(0, max-content) auto minmax(0, 1fr);
+    grid-template-areas:
+      "title presence ."
+      "meta  meta     meta";
+    align-items: start;
+    row-gap: 4px;
+  }
+
+  [data-density="compact"] .meta {
+    margin-inline-start: 0;
+  }
+
+  /* Two lines of title before it trims, since a stacked row is narrow. */
+  .titleText {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  /* The stage line: dots, name and time in stage side by side; time in
+     stage wraps under them when the line runs out. */
+  .stageCell {
+    grid-area: stage;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--gap-xs);
+    max-width: none;
+  }
+
+  .stageCellTop {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dueCell {
+    grid-area: due;
+    justify-self: end;
+    text-align: end;
+  }
+
+  .waitCell {
+    grid-area: wait;
+    max-width: none;
+  }
+
+  /* Said aloud, off screen: the group header above already shows it. */
+  [data-group-by="waiting"] .waitCell {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Time in stage rides on the stage line here (whatever the density),
+     which leaves the meta line its full width. */
+  .stageAgeWide,
+  [data-density="compact"] .stageAgeWide {
+    display: flex;
+  }
+
+  .stageAgeMeta,
+  [data-density="compact"] .stageAgeMeta {
+    display: none;
+  }
+
+  .setDate {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+}
+
+/* ── Presence: who else has this piece open (PieceRowTitle.tsx) ──
+   One element, placed by `grid-area: presence` into whichever `.pieceCell`
+   template above is active, so there is never a second copy of it in the
+   DOM to trip up a screen reader. Every template puts it right after the
+   title's last word, where it reads as "someone is in this piece". */
+.presence {
+  grid-area: presence;
+  margin-inline-start: 6px;
+}

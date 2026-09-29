@@ -1,7 +1,6 @@
 import { FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta } from "../../shared/seo/PageMeta";
@@ -75,9 +74,7 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
                   </Link>
                   <FiChevronRight className={s.crumbSep} aria-hidden />
                 </li>
-                <li aria-current="page">
-                  {place.name} <FeatureHelp id="local.directoryDetail" />
-                </li>
+                <li aria-current="page">{place.name}</li>
               </ol>
             </nav>
           </div>

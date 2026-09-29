@@ -1,5 +1,6 @@
 import { flagColorShares } from "../../stickers/templates/flagArt";
-import { sortFlagIds } from "./stickerFlags";
+import { UNO_REVERSE_TEMPLATE } from "../../stickers/templates/unoReverse.template";
+import { sortItemIds } from "./stickerItems";
 
 /**
  * Below this ratio the frame colour and a stripe blur together where the oval
@@ -98,14 +99,15 @@ function fadedShareOf(frameColor: string, flagId: string): number {
 }
 
 /**
- * The flags (canonical order) where the colours the frame colour fades into
- * cover at least `MIN_FADED_FLAG_SHARE` of the area.
+ * The flags (Uno reverse item order, unknown ids dropped) where the colours
+ * the frame colour fades into cover at least `MIN_FADED_FLAG_SHARE` of the
+ * area.
  */
 export function flagsFadingInto(
   frameColor: string,
   flagIds: readonly string[],
 ): string[] {
-  return sortFlagIds(flagIds).filter(
+  return sortItemIds(UNO_REVERSE_TEMPLATE, flagIds).filter(
     (flagId) =>
       fadedShareOf(frameColor, flagId) >=
       MIN_FADED_FLAG_SHARE - SHARE_ROUNDING_TOLERANCE,

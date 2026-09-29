@@ -1,0 +1,161 @@
+/* DeskMenu: the desk's shared dropdown (scope switcher, New, Filter, Sort,
+ * bulk stage picker).
+ *
+ * The menu is PORTALED to <body> and `fixed` at the coordinates
+ * useDeskMenuPlacement measures, for the clipping and stacking reasons given
+ * there. Every measure comes from the --menu-* tokens in tokens/spacing.css so
+ * all five menus read as one family.
+ */
+
+.menu {
+  position: fixed;
+  z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: min(var(--menu-max), calc(100vw - 2 * var(--menu-edge)));
+  max-height: calc(100dvh - 2 * var(--menu-edge));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--menu-pad);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  box-shadow: var(--shadow-e3);
+  outline: none;
+  /* The first commit, before placement lands, is transparent and inert.
+     Opacity keeps the items focusable, where `visibility: hidden` would not. The
+     placement hook reads `offsetWidth` in a layout effect, which flushes this
+     style, so the switch to `data-placed` below runs as a real transition. */
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.menu[data-placed] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.menuSm {
+  min-width: var(--menu-min-sm);
+}
+
+.menuMd {
+  min-width: var(--menu-min-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    transform: none;
+    transition-property: none;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--menu-item-gap);
+  width: 100%;
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-body-sm);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.itemDanger {
+  composes: item;
+  color: var(--danger);
+}
+
+/* Hover moves focus (see DeskMenuItemButton), so :focus is the one highlight
+   for pointer and keyboard alike. The ring shows for keyboard focus only. */
+.item:hover,
+.item:focus,
+.itemDanger:hover,
+.itemDanger:focus {
+  background: var(--wash);
+  outline: none;
+}
+
+.item:focus-visible,
+.itemDanger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.item[aria-disabled="true"] {
+  color: var(--ink-60);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+/* A thumb needs the full tap target; a mouse does not. */
+@media (pointer: coarse) {
+  .item {
+    min-height: var(--tap-min);
+  }
+}
+
+.lead {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+}
+
+.check {
+  color: var(--text-strong);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  overflow-wrap: anywhere;
+}
+
+.description {
+  color: var(--ink-60);
+  font-size: var(--text-12);
+  overflow-wrap: anywhere;
+}
+
+.shortcut {
+  flex: none;
+  color: var(--ink-60);
+  font-family: inherit;
+  font-size: var(--text-12);
+}
+
+.heading {
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x) var(--menu-pad);
+  color: var(--ink-60);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.separator {
+  flex: none;
+  height: 1px;
+  margin: var(--menu-pad) calc(-1 * var(--menu-pad));
+  background: var(--line);
+}

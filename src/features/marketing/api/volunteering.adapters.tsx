@@ -109,7 +109,7 @@ export function cardToOpportunity(
   return {
     slug: dto.slug,
     org: dto.org,
-    avatar: orgBadgeInitials(dto.org),
+    avatar: dto.partner?.logo || orgBadgeInitials(dto.org),
     background: tint.bg,
     color: tint.color,
     role: dto.role,
@@ -141,7 +141,11 @@ export function cardToOpportunity(
       ? { name: dto.partner.name, text: "", slug: dto.partner.slug }
       : null,
     community: dto.community
-      ? { name: dto.community.name, slug: dto.community.slug }
+      ? {
+          name: dto.community.name,
+          slug: dto.community.slug,
+          avatarUrl: dto.community.avatarUrl,
+        }
       : null,
   };
 }
@@ -210,6 +214,9 @@ export function opportunityToFormState(
 ): PostOpportunityState {
   return {
     org: opp.org,
+    // Link mode needs a slug to select: a mock partner card without one has
+    // nothing the picker could show, so it opens as typed text instead.
+    orgMode: opp.partner?.slug || opp.community?.slug ? "link" : "text",
     role: opp.role,
     causes: opp.causes,
     commit: opp.commit,
@@ -226,7 +233,10 @@ export function opportunityToFormState(
       .map((m) => m.slug)
       .filter((slug): slug is string => Boolean(slug)),
     partnerSlug: opp.partner?.slug ?? "",
-    communitySlug: opp.community?.slug ?? "",
+    // One side only: the backend rejects a save that carries both slugs, and
+    // a legacy row linked to both shows its partner in the picker, so the
+    // partner wins here too.
+    communitySlug: opp.partner?.slug ? "" : (opp.community?.slug ?? ""),
     handle: "",
     tasks: opp.tasks.length
       ? opp.tasks.map((t) => ({ title: t.title, description: t.description }))
@@ -282,7 +292,12 @@ export function applyFormStateToOpportunity(
   return {
     ...base,
     org: state.org,
-    avatar: orgBadgeInitials(state.org),
+    // `base.avatar` is the linked partner's logo, so it stays while that same
+    // partner is still picked; every other case goes back to initials.
+    avatar:
+      partnerOption && base.partner?.slug === partnerOption.slug
+        ? base.avatar
+        : orgBadgeInitials(state.org),
     role: state.role,
     causes: state.causes,
     commit: state.commit,
@@ -320,8 +335,18 @@ export function applyFormStateToOpportunity(
           slug: partnerOption.slug,
         }
       : null,
+    // Picker options carry no avatar, so a newly picked community keeps the
+    // current image only when it is the same one; any other badge falls back
+    // to its initials until the next fetch.
     community: communityOption
-      ? { name: communityOption.name, slug: communityOption.slug }
+      ? {
+          name: communityOption.name,
+          slug: communityOption.slug,
+          avatarUrl:
+            base.community?.slug === communityOption.slug
+              ? base.community.avatarUrl
+              : undefined,
+        }
       : null,
   };
 }

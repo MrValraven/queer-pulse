@@ -11,6 +11,7 @@ import {
   updateListing,
   type CreateListingDto,
   type ManagedListingDTO,
+  type SuggestListingDto,
 } from "./listings.api";
 import { listingDtoToPending } from "./listings.adapters";
 import { draftToUpdateDto } from "../draftToDto";
@@ -92,7 +93,7 @@ export function useListingMutations() {
   const createListingMutation = useMutation<
     PendingListing | null,
     Error,
-    CreateListingDto
+    CreateListingDto | SuggestListingDto
   >({
     // ListingWizard awaits addListing (→ this mutateAsync) and toasts its own
     // error in a catch, so silence the global duplicate.

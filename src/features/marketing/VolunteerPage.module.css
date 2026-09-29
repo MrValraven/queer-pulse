@@ -138,6 +138,14 @@
   font-weight: 500;
   font-size: var(--text-14);
   flex: none;
+  overflow: hidden;
+}
+.orgAvImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 .orgName {
   font-size: var(--text-14);

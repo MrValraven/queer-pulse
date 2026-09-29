@@ -37,17 +37,27 @@ const TEXT_ENTRY_SELECTOR = [
   .map((selector) => `${selector}:not(:disabled):not([readonly])`)
   .join(", ");
 
-/** Anything else that takes focus, for fields with nothing to type into. */
-const FOCUSABLE_SELECTOR =
-  "input, textarea, select, button, [contenteditable='true'], [tabindex]:not([tabindex='-1'])";
+/** Anything else that takes focus, for fields with nothing to type into. A
+ *  disabled control is skipped: `focus()` on it does nothing, and focus would
+ *  stay on the page body. */
+const FOCUSABLE_SELECTOR = [
+  "input:not(:disabled)",
+  "textarea:not(:disabled)",
+  "select:not(:disabled)",
+  "button:not(:disabled)",
+  "[contenteditable='true']",
+  "[tabindex]:not([tabindex='-1'])",
+].join(", ");
 
 function isRendered(element: Element): boolean {
   return element.getClientRects().length > 0;
 }
 
 /** A control that names itself the jump's landing spot, for a field whose
- *  first button would change the value (a toggle chip). */
-const EXPLICIT_TARGET_SELECTOR = "[data-jump-target]";
+ *  first button would change the value (a toggle chip, a list row's
+ *  spotlight star). A section list marks its Add button, or its first row's
+ *  Edit button when it has no Add (see `SubprofileSectionEditor`). */
+const EXPLICIT_TARGET_SELECTOR = "[data-jump-target]:not(:disabled)";
 
 /** The control a jump focuses: a rendered `[data-jump-target]` when the field
  *  marks one, else the first empty text entry (a chip field's add box, a
@@ -66,7 +76,10 @@ function pickFocusTarget(anchor: HTMLElement): HTMLElement | null {
   return (
     textEntries.find((control) => control.value === "") ??
     textEntries[0] ??
-    anchor.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+    [...anchor.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].find(
+      isRendered,
+    ) ??
+    null
   );
 }
 

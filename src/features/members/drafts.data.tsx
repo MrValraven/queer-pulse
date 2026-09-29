@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import type { IconType } from "react-icons";
+import { FiBriefcase, FiEdit3, FiFeather } from "react-icons/fi";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -67,34 +69,33 @@ export const DRAFT_ACTION_LABEL_KEY: Record<string, string> = {
   Edit: "members:drafts.action.edit",
 };
 
-/** Items in the "Start something" create menu on the drafts header. `badge`
- *  stays an untranslated short code — it mirrors the same visual short-code
- *  badges used for `Draft.kind` (POST/PITCH/JOB), a terse icon-like label
- *  rather than a sentence. `labelKey`/`subKey` are chrome, translated. */
+/** Items in the "Start something" create menu on the drafts header. `icon`
+ *  is a Feather glyph component and `tint` picks its tile colour;
+ *  `labelKey`/`subKey` are chrome, translated. */
 export const CREATE_ITEMS: {
-  badge: string;
-  tint: "jade" | "plum";
+  icon: IconType;
+  tint: "jade" | "accent" | "plum";
   labelKey: string;
   subKey: string;
   to: string;
 }[] = [
   {
-    badge: "POST",
+    icon: FiEdit3,
     tint: "jade",
     labelKey: "members:drafts.create.newPost.label",
     subKey: "members:drafts.create.newPost.sub",
     to: routes.communities,
   },
   {
-    badge: "PITCH",
-    tint: "plum",
+    icon: FiFeather,
+    tint: "accent",
     labelKey: "members:drafts.create.pitchStory.label",
     subKey: "members:drafts.create.pitchStory.sub",
     to: routes.submitStory,
   },
   {
-    badge: "JOB",
-    tint: "jade",
+    icon: FiBriefcase,
+    tint: "plum",
     labelKey: "members:drafts.create.startApplication.label",
     subKey: "members:drafts.create.startApplication.sub",
     to: routes.jobs,

@@ -1,0 +1,14 @@
+/* The profile hero's top-right icon row, on the eyebrow's line. Same
+   geometry as `GatheringHeaderToolbar.module.css`: `margin-left: auto` pushes
+   it to the right end of the eyebrow row, and if that row wraps it drops to
+   its own line and still hugs the right edge. The icon buttons keep their
+   44px tap target, so the gap between them stays small. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+  /* Lets the 44px targets overhang the row so it keeps the eyebrow's height. */
+  margin-block: -12px;
+}

@@ -17,20 +17,12 @@
   background: var(--accent);
   transition: width 0.4s var(--ease);
 }
-.progressLabel {
-  position: fixed;
-  top: max(14px, env(safe-area-inset-top));
-  right: 24px;
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--ink-40);
-  z-index: var(--z-sticky);
-}
+/* The brand sits at the top of the page and scrolls away with it; only the
+   progress bar stays pinned. `.root` is its positioning context. */
 .brand {
-  position: fixed;
+  position: absolute;
   top: max(22px, env(safe-area-inset-top));
   left: 28px;
-  z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   gap: 9px;
@@ -66,6 +58,20 @@
   box-shadow: var(--shadow-e4);
 }
 
+/* On phones the step sits flat on the cream page and the body scrolls. A card
+   filling the viewport, with cards inside it, read as a box to scroll inside.
+   The page's 20px gutter is the only inset; its 112px top still clears the
+   brand. */
+@media (--mobile) {
+  .card {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
 /* The card is a focus target only for step-transition focus management (it is
    programmatically focused, never a keyboard tab stop — tabIndex is -1), so it
    carries no visible ring; keyboard users still get :focus-visible rings on the
@@ -74,33 +80,21 @@
   outline: none;
 }
 
-/* Directional step transitions — forward slides in from the right, back from
-   the left, so moving through the flow feels spatial. */
-.cardFwd {
-  animation: qpStepFwd 0.45s var(--ease-out) both;
-}
+/* Step transitions fade only. A translate here (the card used to slide 38px,
+   each child rose 10px) makes the browser draw the text once as a bitmap and
+   move it by fractional pixels, so every step arrived blurry and only
+   sharpened when the animation ended. Opacity keeps text crisp throughout. */
+.cardFwd,
 .cardBack {
-  animation: qpStepBack 0.45s var(--ease-out) both;
+  animation: qpStepFade 0.45s var(--ease-out) both;
 }
 
-@keyframes qpStepFwd {
+@keyframes qpStepFade {
   from {
     opacity: 0;
-    transform: translateX(38px);
   }
   to {
     opacity: 1;
-    transform: none;
-  }
-}
-@keyframes qpStepBack {
-  from {
-    opacity: 0;
-    transform: translateX(-38px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -133,11 +127,9 @@
 @keyframes qpStepChild {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
@@ -181,10 +173,24 @@
   margin-bottom: 20px;
 }
 
+/* The welcome check sits beside the eyebrow and heading, centred on the pair,
+   so the step opens as one unit instead of an icon stacked over a title. */
+.welcomeHead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.welcomeHead .eye {
+  margin-bottom: 8px;
+}
+.welcomeHead .h {
+  margin-bottom: 0;
+}
 .checkWrap {
-  width: 72px;
-  height: 72px;
-  margin: 0 0 20px;
+  width: 60px;
+  height: 60px;
+  flex: none;
 }
 .checkCircle {
   stroke: var(--jade);
@@ -314,6 +320,12 @@
   border: 3px solid var(--paper);
   box-shadow: var(--shadow-e2);
   transition: transform 0.2s var(--ease);
+}
+/* Flat on phones: the ring matches the cream page the avatar now sits on. */
+@media (--mobile) {
+  .photoEdit {
+    border-color: var(--cream);
+  }
 }
 .photoEdit svg {
   width: 16px;
@@ -476,6 +488,13 @@
   background: var(--cream);
   border-radius: var(--radius-12);
 }
+/* Borderless, so on the flat phone layout it takes the paper fill to stay
+   visible against the cream page. */
+@media (--mobile) {
+  .normCard {
+    background: var(--paper);
+  }
+}
 .ncDot {
   width: 8px;
   height: 8px;
@@ -502,13 +521,10 @@
   margin-bottom: 22px;
 }
 .agreeRow.locked {
-  cursor: not-allowed;
+  cursor: pointer;
 }
 .agreeRow.locked input {
   opacity: 0.55;
-}
-.agreeRow.shake {
-  animation: qpShake var(--dur-slow) var(--ease-std);
 }
 .agreeRow input {
   margin-top: 3px;
@@ -680,39 +696,6 @@
   justify-content: center;
 }
 
-/* On phones, tall steps can push Continue below the fold. Pin the step nav to
-   the bottom of the viewport as the card scrolls, so the primary action stays
-   in the thumb arc. Full-bleed to the card edges with a paper backdrop so
-   content scrolls cleanly under it; safe-area padding clears the home
-   indicator. */
-@media (--mobile) {
-  .nav {
-    position: sticky;
-    bottom: 0;
-    z-index: var(--z-sticky);
-    margin-inline: -40px;
-    margin-block-end: -44px;
-    padding: 14px 40px max(14px, env(safe-area-inset-bottom));
-    background: var(--paper);
-    box-shadow: 0 -10px 24px -14px rgba(var(--plum-rgb), 0.22);
-  }
-}
-
-/* Same footprint as .nav, without the sticky-footer treatment — for steps
-   short enough that the CTA never risks the fold, so it just sits as part of
-   the card's normal flow instead of a pinned bar with its own shadow seam. */
-.navPlain {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 4px;
-}
-.navPlain :global(.btn),
-.navPlain > button {
-  width: 100%;
-  justify-content: center;
-}
-
 .back {
   display: inline-flex;
   align-items: center;
@@ -731,6 +714,24 @@
   .back:hover {
     color: var(--text-strong);
   }
+}
+
+/* Back and Continue share one row: Back keeps its natural width on the left
+   and Continue takes the rest. Skip, where a step has one, sits below the row
+   as its own full-width action. */
+.navRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.navRow > .back {
+  flex: none;
+  padding: 4px 14px;
+}
+.navRow > :not(.back) {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
 }
 
 /* A deliberate, clearly-styled skip affordance for non-critical steps —
@@ -813,26 +814,5 @@
   .checkCircle,
   .checkMark {
     stroke-dashoffset: 0;
-  }
-}
-
-/* ── Local copies of shared keyframes ──
-   CSS Modules rewrites every animation NAME it sees here into a file-scoped
-   hash, including names whose @keyframes lives in global effects.css. The
-   reference then resolves to nothing and the animation silently never runs,
-   with no error anywhere. A keyframe used from a module has to be declared in
-   that module. Keep these in step with src/styles/tokens/effects.css. */
-@keyframes qpShake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  20%,
-  60% {
-    transform: translateX(-4px);
-  }
-  40%,
-  80% {
-    transform: translateX(4px);
   }
 }

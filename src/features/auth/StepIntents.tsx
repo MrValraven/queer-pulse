@@ -188,19 +188,21 @@ function StepIntentsForm({
         </p>
       )}
       <div className={styles.nav}>
-        <Button
-          onClick={() => void handleContinue()}
-          disabled={!hasSelection || updateProfile.isPending}
-        >
-          {t("auth:onboarding.stepIntents.continue")}
-        </Button>
+        <div className={styles.navRow}>
+          <button type="button" className={styles.back} onClick={onBack}>
+            <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepIntents.back")}
+          </button>
+          <Button
+            onClick={() => void handleContinue()}
+            disabled={!hasSelection || updateProfile.isPending}
+          >
+            {t("auth:onboarding.stepIntents.continue")}
+          </Button>
+        </div>
         <SkipLink
           onSkip={onNext}
           label={t("auth:onboarding.stepIntents.skip")}
         />
-        <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepIntents.back")}
-        </button>
       </div>
     </>
   );

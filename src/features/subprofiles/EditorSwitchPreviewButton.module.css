@@ -1,0 +1,16 @@
+/* The preview eye at the end of the pane switcher. Its look comes from the
+   global `.ed-switch-step` (persona-editor.css); this only adds the hairline
+   that sets it apart from the Next arrow beside it, so the pair does not read
+   as two ways to move forward. */
+.previewButton {
+  position: relative;
+}
+.previewButton::before {
+  content: "";
+  position: absolute;
+  inset-block: 10px;
+  inset-inline-start: -5px;
+  width: 1px;
+  background: var(--line);
+  pointer-events: none;
+}

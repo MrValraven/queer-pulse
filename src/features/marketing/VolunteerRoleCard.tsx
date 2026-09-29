@@ -7,6 +7,11 @@ import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
 import { causeLabelKey } from "./causes.data";
 import s from "./VolunteerPage.module.css";
 
+/** The org badge's rendered edge, in CSS pixels. Mirrors `.orgAv`'s own size
+ *  in `VolunteerPage.module.css`; it is spelled onto the `<img>` as well so
+ *  the browser reserves the box before the file decodes. */
+const ORG_BADGE_PX = 40;
+
 export function VolunteerCardSkeleton() {
   // Mirrors the real .card: org row (40px avatar + name/cause), role, desc, meta pills, skills, foot.
   return (
@@ -51,20 +56,37 @@ export function VolunteerRoleCard({
   delay,
 }: VolunteerRoleCardProps) {
   const { t } = useTranslation();
+  const communityAvatarUrl = opportunity.community?.avatarUrl;
 
   return (
     <FadeIn delay={delay} style={{ height: "100%" }}>
       <div className={s.card} style={{ height: "100%" }}>
         <div className={s.org}>
-          <span
-            className={s.orgAv}
-            style={{
-              background: opportunity.background,
-              color: opportunity.color,
-            }}
-          >
-            {opportunity.avatar}
-          </span>
+          {communityAvatarUrl ? (
+            <span className={s.orgAv}>
+              {/* Decorative: the org name sits right beside the badge, so
+                  labelling the image would only say it twice. */}
+              <img
+                className={s.orgAvImg}
+                src={communityAvatarUrl}
+                alt=""
+                width={ORG_BADGE_PX}
+                height={ORG_BADGE_PX}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+              />
+            </span>
+          ) : (
+            <span
+              className={s.orgAv}
+              style={{
+                background: opportunity.background,
+                color: opportunity.color,
+              }}
+            >
+              {opportunity.avatar}
+            </span>
+          )}
           <div>
             <div className={s.orgName}>{opportunity.org}</div>
             {/* Joined with a middot rather than a comma so it reads as a set

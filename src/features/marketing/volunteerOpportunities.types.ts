@@ -18,6 +18,8 @@ export interface VolunteerOpportunity {
   slug: string;
   /* ---- card (Volunteer listing) ---- */
   org: string;
+  /** The badge's text mark: a linked partner's `logo`, else initials from
+   *  `org`. The card shows `community.avatarUrl` in its place when set. */
   avatar: string;
   background: string;
   color: string;
@@ -57,8 +59,8 @@ export interface VolunteerOpportunity {
    *  mock data omits it, so the card falls back to the generic partners hub. */
   partner: { name: string; text: ReactNode; slug?: string } | null;
   /* ---- community card (optional; mutually exclusive with `partner` in
-   *  practice — see `OrganizationPickerField`) ---- */
-  community: { name: string; slug?: string } | null;
+   *  practice, as `OrganizationField` explains) ---- */
+  community: { name: string; slug?: string; avatarUrl?: string | null } | null;
 }
 
 export const C = "var(--accent-ink)";

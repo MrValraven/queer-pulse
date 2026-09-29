@@ -33,6 +33,13 @@ export function ListingPreviewDrawer({
   // rail entries, and for the same reason: never offer a control the route
   // gate then bounces.
   const isAdmin = demoMode || role === "admin";
+  // A suggestion the platform holds has no submitter, so it names whoever
+  // suggested it before falling back to "unknown submitter".
+  const submitterLabel =
+    row.submitterName ||
+    (row.suggesterName
+      ? t("admin:adminListings.suggestedBy", { name: row.suggesterName })
+      : t("admin:adminListings.unknownSubmitter"));
 
   return (
     <Modal
@@ -40,8 +47,7 @@ export function ListingPreviewDrawer({
       className={styles.drawerModal}
       eyebrow={
         <>
-          {row.ref} ·{" "}
-          {row.submitterName || t("admin:adminListings.unknownSubmitter")} ·{" "}
+          {row.ref} · {submitterLabel} ·{" "}
           {fmt.date(new Date(row.createdAt), {
             day: "numeric",
             month: "short",
@@ -69,10 +75,14 @@ export function ListingPreviewDrawer({
         </div>
         <ListingHistoryPanel listingRef={row.ref} />
       </div>
+      {/* The delegation panel also carries "Edit listing" for a listing the
+          platform holds. */}
       {isAdmin && (
         <ListingDelegationSection
           listingRef={row.ref}
           ownerSlug={row.detail.submittedBy?.slug ?? null}
+          suggesterSlug={row.detail.suggestedBy?.slug ?? null}
+          suggesterName={row.suggesterName || null}
         />
       )}
     </Modal>

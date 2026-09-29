@@ -197,6 +197,8 @@ export function describeHistoryEvent(
       return catalog("ownershipTransferred");
     case "staff_created":
       return catalog("staffCreated");
+    case "staff_edited":
+      return catalog("staffEdited", { actor, fields: fields() });
     default: {
       const exhaustiveCheck: never = event.action;
       return exhaustiveCheck;

@@ -1,11 +1,12 @@
-/* Publish mode: a legend naming the overlap, then a two-option segmented
-   radio group matching the admin segmented control (AdminSeg). Tokens only. */
+/* Publish mode: a short legend naming the overlap, then a two-option
+   segmented radio group matching the admin segmented control (AdminSeg), on
+   one row so the dock stays short. Tokens only. */
 
 .control {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
+  gap: 6px 12px;
   margin: 0;
   padding: 0;
   border: none;
@@ -23,13 +24,8 @@
   color: var(--text-strong);
 }
 
-.legendShort {
-  display: none;
-}
-
 .segments {
   display: inline-flex;
-  flex-wrap: wrap;
   padding: 3px;
   gap: 2px;
   border-radius: var(--radius-pill);
@@ -37,11 +33,25 @@
   border: 1px solid var(--line);
 }
 
+/* Each label is a pill: the radio fills it, invisible, and the label shows
+   the checked and focus states. */
 .segment {
   position: relative;
   display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
 }
 
 /* Visually hidden, still focusable and still in the radio group. */
@@ -56,54 +66,62 @@
   accent-color: var(--accent);
 }
 
-.pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  color: var(--ink-60);
-  font-size: var(--text-13);
-  font-weight: 600;
-  white-space: nowrap;
-  transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease);
-}
-
 @media (hover: hover) {
-  .segment:hover .pill {
+  .segment:hover {
     color: var(--text-strong);
   }
 }
 
-.input:checked + .pill {
+.segment:has(> .input:checked) {
   background: var(--paper);
   color: var(--text-strong);
   box-shadow: var(--shadow-e2);
 }
 
-.input:focus-visible + .pill {
+.segment:has(> .input:focus-visible) {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
 
-/* Phones: the short legend, and slimmer pills so the control stays short in
-   the dock. The touch hit strip below keeps each option 44px tall. */
+.labelShort {
+  display: none;
+}
+
+/* Phones: short option labels and slimmer pills, so the legend and both
+   options share one row. The full label stays in the pill, visually hidden,
+   as the option's name. The touch hit strip below keeps each option 44px
+   tall. */
 @media (--lg) {
-  .legendFull {
-    display: none;
+  .control {
+    gap: 6px;
   }
 
-  .legendShort {
+  .labelFull {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .labelShort {
     display: inline;
   }
 
-  .pill {
-    min-height: 32px;
-    padding: 5px 12px;
+  .segment {
+    min-height: 30px;
+    padding: 4px 10px;
+  }
+}
+
+/* Phones up to 480px: one type step down keeps the legend and the longer PT
+   labels ("Só as que faltam") on one row down to a 360px screen. */
+@media (--xs) {
+  .legend,
+  .segment {
+    font-size: var(--text-12);
   }
 }
 
@@ -117,13 +135,13 @@
     position: absolute;
     inset-inline: 0;
     top: 50%;
-    height: 44px;
+    height: var(--tap-min);
     transform: translateY(-50%);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pill {
+  .segment {
     transition: none;
   }
 }

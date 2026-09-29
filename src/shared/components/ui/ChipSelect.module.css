@@ -8,6 +8,19 @@
   gap: 8px;
 }
 
+/* A presence-animated row (`isPresenceAnimated`). Positioned, because a chip
+   on its way out (AnimatePresence popLayout) is lifted out of the flow and
+   placed against this row while it fades. */
+.rowPresence {
+  position: relative;
+}
+
+/* A presence-animated chip on its way out ignores the pointer, so a click
+   meant for the chip gliding into its place never lands on it. */
+.chip[data-leaving] {
+  pointer-events: none;
+}
+
 .chip {
   position: relative;
   display: inline-flex;
@@ -31,6 +44,12 @@
 }
 /* Touch: chips stay visually compact (~32px) but get a centered ≥44px-tall
    hit strip. Vertical-only so wrapped chips in a row don't overlap taps. */
+/* base.css squares off every `:focus-visible` element to a small radius,
+   which would turn a focused pill into a rounded box. The ring itself stays
+   the global one. */
+.chip:focus-visible {
+  border-radius: var(--radius-pill);
+}
 @media (pointer: coarse) {
   .chip::before {
     content: "";
@@ -61,6 +80,26 @@
 .chip svg {
   width: 14px;
   height: 14px;
+}
+/* The tick's own box inside a Refine drawer, where it pops in (see
+   `useRefineGlide`). Inline-flex, because a plain inline span cannot take
+   the scale it eases in with. */
+.tick {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+/* A presence chip's tick (`PresenceChip`), which grows in: motion eases its
+   width open from nothing, so the chip widens in real layout and the chips
+   after it move with it. It clips the icon to that width and centres it, so
+   the icon opens out from its middle. Its transition list is empty, because
+   base.css gives every property a transition under reduced motion, and this
+   width is motion's to set. */
+.tickGrowing {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  overflow: hidden;
+  transition-property: none;
 }
 
 /* ── tone: jade active (light) ───────────────────────────────────────────── */
@@ -103,6 +142,15 @@
   .chip {
     transition: none;
   }
+}
+
+/* Touch-sized chips (opt-in via `size="touch"` on ChipSelect): the visible
+   pill itself grows to the house 44px minimum, giving the tap target a real
+   visible box on top of the coarse-pointer hit strip above. Horizontal
+   padding is unchanged; `align-items: center` on .chip centers the label in
+   the taller box. */
+.touch {
+  min-height: var(--tap-min);
 }
 
 /* ── availability counts ─────────────────────────────────────────────────── */

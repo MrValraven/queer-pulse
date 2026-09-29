@@ -1,0 +1,35 @@
+/* Quest persona skin palette. Lives in tokens/ so persona-skins.css only
+   references var().
+
+   One palette serves both Quest concepts behind `?questSkin=`: the character
+   sheet (parchment ground, stat-block panels) and the hex map (map ground,
+   inked lines). Every text role is measured against the ground it sits on;
+   the ratios in the comments are WCAG 2 contrast, light then dark.
+
+   `:root` shares its block with `[data-theme="light"]` for the same reason
+   tokens/colors.css does: a subtree that opts back into light inside a dark
+   document re-declares these values instead of inheriting the dark ones. */
+:root,
+[data-theme="light"] {
+  --skin-quest-ground: #f3ead6; /* parchment */
+  --skin-quest-ink: #2b2118; /* 13.2:1 on ground, 14.4:1 on panel */
+  --skin-quest-ink-rgb: 43, 33, 24;
+  --skin-quest-rule: #b89a6a; /* ruled lines and panel borders, decorative */
+  --skin-quest-accent: #7a2e1f; /* oxblood headings and checks, 7.8:1 */
+  --skin-quest-panel: #faf4e6; /* stat-block panel fill */
+  --skin-quest-map-ground: #e9e2cf;
+  --skin-quest-map-line: #8c7b5a; /* inked borders, 3.2:1 (the hex grid uses the ink token) */
+  --skin-quest-map-sea: #24505c; /* map labels and compass corners, 6.8:1 */
+}
+
+[data-theme="dark"] {
+  --skin-quest-ground: #1d1812;
+  --skin-quest-ink: #efe4cc; /* 14.0:1 on ground, 12.8:1 on panel */
+  --skin-quest-ink-rgb: 239, 228, 204;
+  --skin-quest-rule: #6f5c3d;
+  --skin-quest-accent: #e0937f; /* 7.3:1 on ground, 6.6:1 on panel */
+  --skin-quest-panel: #26201a;
+  --skin-quest-map-ground: #1a1712;
+  --skin-quest-map-line: #8a7853; /* 4.2:1 on the map ground */
+  --skin-quest-map-sea: #8fc3cf; /* 9.3:1 */
+}

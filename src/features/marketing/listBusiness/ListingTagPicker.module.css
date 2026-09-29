@@ -1,7 +1,8 @@
 /* ListingTagPicker: the wizard's pick-only tag field. The search row keeps
    ListBusinessPage.module.css's .tagInputWrap, the vocabulary chips reuse its
-   .chip / .chipOn (the "Good for" pills on the same step) and the "Older tags"
-   row reuses its .tagList / .tagPill. This file only lays them out. */
+   .chip / .chipOn (the "Good for" pills on the same step) and the "Older
+   tags" row uses the shared ChipList component. This file only lays them
+   out. */
 
 /* Section labels ("Choose from what's available", "Older tags"). */
 .sectionLabel {

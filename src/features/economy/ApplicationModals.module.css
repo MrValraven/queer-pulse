@@ -35,29 +35,58 @@
   animation: modalUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
   transition: background-color 0.45s var(--ease);
 }
-/* Drag-grabber — a REAL element (not a pseudo) so it can own the drag gesture.
-   ModalShell (ModalKit.tsx) renders it and wires drag-to-dismiss; the .close
-   button stays the keyboard/click path. Sticky so it rides the sheet's own
-   scroll; the negative top margin lifts it into the sheet's top padding. Hidden
-   on the centered desktop dialog. */
+/* This local .overlay/.modal/.grabber/.close block predates the shared
+   <ModalSheet> (see ../../shared/components/ui/Modal.module.css) and is no
+   longer rendered: ModalShell (ModalKit.tsx) now wraps <ModalSheet>, which
+   carries its own overlay/sheet/grabber/close chrome from that shared
+   stylesheet. Nothing in src/features/economy imports these four classes
+   today (checked every consumer of this file). Kept in sync with the same
+   scroll-under-the-handle fix ModalSheet received, in case this block is ever
+   revived or copied elsewhere; a cleanup pass could remove it outright.
+   Geometry: the sheet's top padding is 44px (36px under the --sm breakpoint,
+   overridden below); browsers measure a sticky offset from inside that
+   padding, so `top` pays it back on both the strip and the grabber. */
 .grabber {
   position: sticky;
-  top: 0;
-  z-index: 2;
+  top: -32px;
+  z-index: var(--z-sticky);
   width: 40px;
   height: 5px;
-  margin: -32px auto 14px;
+  margin: -10px auto 14px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   /* The sheet owns this vertical gesture; don't let it scroll the sheet body. */
   touch-action: none;
   cursor: grab;
 }
+/* The strip the drag handle sits on: painted with the sheet's own surface
+   (`background: inherit`, so .modalSuccess's plum recolor still matches) and
+   pinned to the top edge, so scrolled content slides under the strip and
+   never behind the bare handle. Excludes .modalSuccess, which has no
+   grabber. */
+.modal:not(.modalSuccess)::before {
+  content: "";
+  display: block;
+  position: sticky;
+  top: -44px;
+  z-index: var(--z-sticky);
+  height: 22px;
+  margin: -44px -48px 0;
+  background: inherit;
+}
+@media (max-width: 719.98px) {
+  .modal {
+    /* Keyboard focus and scroll-into-view stop below the strip, so a focused
+       control is never parked underneath it. */
+    scroll-padding-block-start: 22px;
+  }
+}
 @media (min-width: 720px) {
   .modal {
     border-radius: var(--radius-28);
   }
-  .grabber {
+  .grabber,
+  .modal:not(.modalSuccess)::before {
     display: none;
   }
 }
@@ -75,6 +104,14 @@
 @media (--sm) {
   .modal {
     padding: 36px 24px 32px;
+    scroll-padding-block-start: 14px;
+  }
+  /* Same strip, repaid against this breakpoint's smaller padding (36px top,
+     24px sides) instead of the default 44px/48px above. */
+  .modal:not(.modalSuccess)::before {
+    top: -36px;
+    height: 14px;
+    margin: -36px -24px 0;
   }
   .stats {
     grid-template-columns: repeat(2, 1fr);
@@ -87,6 +124,7 @@
   position: absolute;
   top: 18px;
   right: 18px;
+  z-index: var(--z-sticky);
   width: 2em;
   height: 2em;
   border-radius: 50%;

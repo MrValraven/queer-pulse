@@ -134,8 +134,9 @@ export function useEditorRowsState(
     [],
   );
 
-  // A section edited inside Page blocks (a therapist's specialisms) is named
-  // by its control there ("What you help with").
+  // A section edited inside Page blocks is named by its control there (a
+  // therapist's specialisms read "What you help with"; a `sectionList`
+  // control carries the section's own label).
   const sectionLabelKeys = useMemo(() => {
     const labelKeys = Object.fromEntries(
       subprofile.sections.map((section) => [section.section, section.labelKey]),

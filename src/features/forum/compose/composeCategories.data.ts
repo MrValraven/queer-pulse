@@ -141,17 +141,20 @@ export const SUGGESTABLE_CATEGORIES: readonly ComposeCategory[] =
  * rather than catalog keys: a tag is the literal string the thread is filed
  * under and the one the browse page matches on, so translating it would file
  * the same thread under two different tags in two languages.
+ *
+ * Every value must be a word in `FORUM_TAG_OPTIONS` (forumTags.data.ts), since
+ * the tag box only accepts those.
  */
 export const TAG_SUGGESTIONS: Record<string, readonly string[]> = {
-  general: ["welcome", "lisbon", "question"],
-  housing: ["housing", "flatshare", "fiador", "scams"],
-  health: ["health", "gp", "therapy", "sns"],
-  arts: ["film", "music", "exhibition", "zine"],
+  general: ["welcome", "intros", "help"],
+  housing: ["housing", "money", "legal", "safety"],
+  health: ["health", "healthcare", "therapy", "hiv"],
+  arts: ["film", "music", "art", "books"],
   activism: ["proposal", "vote", "fund", "grants"],
-  guides: ["guide", "resources", "checklist"],
-  jobs: ["jobs", "hiring", "freelance"],
+  guides: ["guide", "resources"],
+  jobs: ["jobs", "money", "study"],
   trans: ["trans", "healthcare", "legal", "hrt"],
-  meetups: ["welcome", "intros", "meetups", "lisbon"],
+  meetups: ["welcome", "intros", "meetups", "events"],
   legal: ["legal", "migration", "rights"],
   relationships: ["dating", "family", "parenting"],
   platform: ["feedback", "help", "platform"],

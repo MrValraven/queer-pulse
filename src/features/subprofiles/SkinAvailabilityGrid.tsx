@@ -10,13 +10,18 @@ import styles from "./SubprofileEditor.module.css";
 const AVAIL_CYCLE: PracticeAvailState[] = ["off", "open", "full"];
 
 /** The Practice skin's 4×7 availability calendar: a start date + slot time
- *  plus 28 tap-to-cycle day cells (free → full → no sessions). */
+ *  plus 28 tap-to-cycle day cells (free → full → no sessions). Inside a
+ *  chapter card whose heading already names the calendar, the calendar drops
+ *  its own title (`isLabelHidden`). */
 export function SkinAvailabilityGrid({
   control,
   editor,
+  isLabelHidden = false,
 }: {
   control: SkinBlockControl;
   editor: SubprofileSkinBlocksEditor;
+  /** The card heading repeats the calendar's title, so the title is left out. */
+  isLabelHidden?: boolean;
 }) {
   const { t } = useTranslation();
   const weekdayLetters = useWeekdayLetters();
@@ -45,7 +50,9 @@ export function SkinAvailabilityGrid({
 
   return (
     <div className={styles.availEditor}>
-      <h3 className={styles.cardTitle}>{t(control.labelKey)}</h3>
+      {!isLabelHidden && (
+        <h4 className={styles.cardTitle}>{t(control.labelKey)}</h4>
+      )}
       <FormField
         label={t("subprofiles:skinBlock.practice.availability.startDate")}
       >

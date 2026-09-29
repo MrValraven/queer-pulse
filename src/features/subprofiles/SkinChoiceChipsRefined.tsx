@@ -72,8 +72,7 @@ function RefinedChoiceChip({
  * language as the multiSelect chip row (plum and a check once picked, paper
  * and an outline before). The group is named by the frame's label through
  * `aria-labelledby`; the note about an older answer sits under the chips and
- * joins the description. Selection rules are `useSkinChoiceChips`, shared
- * with `SkinChoiceChipsControl`, the generic page blocks editor's design.
+ * joins the description. Selection rules are `useSkinChoiceChips`.
  */
 export function SkinChoiceChipsRefined({
   control,

@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FollowedPersonasPanel } from "./FollowedPersonasPanel";
@@ -63,8 +62,7 @@ export function SubprofileDirectoryPage() {
               <Translation
                 i18nKey="subprofiles:directory.title"
                 components={{ em: <em /> }}
-              />{" "}
-              <FeatureHelp id="subprofiles.hub" />
+              />
             </h1>
             <p className={styles.sub}>{t("subprofiles:directory.subtitle")}</p>
           </header>

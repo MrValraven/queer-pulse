@@ -20,6 +20,10 @@ export interface TooltipProps {
    * this, rather than dropping the wrapper, keeps the trigger from remounting,
    * so its CSS transitions run and it keeps focus. */
   isDisabled?: boolean;
+  /** Horizontal alignment for `top` / `bottom` (ignored by `right`). `"end"`
+   * lines the bubble's right edge up with the trigger's, for the last control
+   * against a clipping column edge, where a centred bubble would be cut off. */
+  align?: "center" | "end";
   children: ReactNode;
 }
 
@@ -43,6 +47,7 @@ export function Tooltip({
   label,
   placement = "bottom",
   isDisabled = false,
+  align = "center",
   children,
 }: TooltipProps) {
   return placement === "right" ? (
@@ -54,6 +59,7 @@ export function Tooltip({
       label={label}
       placement={placement}
       isDisabled={isDisabled}
+      isEndAligned={align === "end"}
     >
       {children}
     </AnchoredTooltip>
@@ -69,12 +75,19 @@ const VIEWPORT_EDGE_GAP = 8;
  * unshifted geometry (the trigger's rect plus the bubble's layout width) so the
  * answer never depends on a shift or transition already in flight, and divides
  * out any ancestor scale so the offset lands right inside a scaled preview.
+ * An end-aligned bubble starts from the trigger's right edge instead.
  */
-function measureViewportShift(wrap: HTMLElement, bubble: HTMLElement): number {
+function measureViewportShift(
+  wrap: HTMLElement,
+  bubble: HTMLElement,
+  isEndAligned: boolean,
+): number {
   const wrapRect = wrap.getBoundingClientRect();
   const scale = wrap.offsetWidth > 0 ? wrapRect.width / wrap.offsetWidth : 1;
   const bubbleWidth = bubble.offsetWidth * scale;
-  const naturalLeft = wrapRect.left + wrapRect.width / 2 - bubbleWidth / 2;
+  const naturalLeft = isEndAligned
+    ? wrapRect.right - bubbleWidth
+    : wrapRect.left + wrapRect.width / 2 - bubbleWidth / 2;
   const naturalRight = naturalLeft + bubbleWidth;
   const maxRight = document.documentElement.clientWidth - VIEWPORT_EDGE_GAP;
   let shift = 0;
@@ -110,11 +123,13 @@ function AnchoredTooltip({
   label,
   placement,
   isDisabled,
+  isEndAligned,
   children,
 }: {
   label: string;
   placement: "top" | "bottom";
   isDisabled: boolean;
+  isEndAligned: boolean;
   children: ReactNode;
 }) {
   const [touchOpen, setTouchOpen] = useState(false);
@@ -137,9 +152,9 @@ function AnchoredTooltip({
     const wrap = wrapRef.current;
     const bubble = bubbleRef.current;
     if (!wrap || !bubble) return;
-    const shift = measureViewportShift(wrap, bubble);
+    const shift = measureViewportShift(wrap, bubble, isEndAligned);
     bubble.style.setProperty("--tooltip-shift", `${shift}px`);
-  }, []);
+  }, [isEndAligned]);
 
   // A label that changes while showing (Mute becoming Unmute under the cursor)
   // changes the bubble's width, so an open bubble is measured again.
@@ -178,6 +193,7 @@ function AnchoredTooltip({
           className={[
             styles.bubble,
             styles[placement],
+            isEndAligned && styles.end,
             touchOpen && styles.open,
           ]
             .filter(Boolean)

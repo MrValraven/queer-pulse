@@ -3,11 +3,11 @@ import type { SkinData } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
   skinBlocksForKind,
-  skinChaptersForKind,
   type SkinBlockDescriptor,
   type SkinChapterDescriptor,
   type SkinControlKind,
 } from "./skinBlockFields.data";
+import { skinChaptersForKind } from "./skinChapters";
 import type { SectionRowMap } from "./useEditorRowsState";
 import { nonBlankLines } from "./sectionItemsNormalize";
 
@@ -22,17 +22,18 @@ export interface SkinBlockChange {
 }
 
 export interface SubprofileSkinBlocksEditor {
-  /** The blocks this persona's skin can edit (empty for studio/workshop). */
-  descriptors: SkinBlockDescriptor[];
-  /** `descriptors.length > 0`. Gates the pane + rail entry. */
+  /** `chapters.length > 0`. Gates the pane + rail entry. */
   hasBlocks: boolean;
-  /** The chapters of the pane, each one screen picked by `?chapter=`. Empty
-   *  for kinds without a chaptered editor. */
+  /** The chapters of the pane, each one screen picked by `?chapter=`: the
+   *  therapist's hand-written ones, derived ones for every other kind. */
   chapters: SkinChapterDescriptor[];
   /** Read the current value at a `SkinData` dot-path (`"chair.rate"`). A
    *  `section:<name>` path reads that section's draft rows as
    *  `{ title, description }` pairs, so the chapter fill counts them. */
   getValue: (path: string) => unknown;
+  /** How many draft rows a persona section holds, blank ones included (a
+   *  gallery photo has no title), for a `sectionList` chapter's fill. */
+  sectionRowCount: (section: string) => number;
   /** Read the last-saved value at a `SkinData` dot-path, so the save graph
    *  can tell whether a single field (`"therapist.status"`) changed. */
   getBaselineValue: (path: string) => unknown;
@@ -156,7 +157,8 @@ function isEmptyBlockValue(blockKey: string, value: unknown): boolean {
   );
 }
 
-/** The path prefix of a `sectionItems` control (`section:specialisms`). */
+/** The path prefix of a `sectionItems` or `sectionList` control
+ *  (`section:specialisms`). */
 const SECTION_PATH_PREFIX = "section:";
 
 /** A section's draft rows as their visible text only (heading and lines),
@@ -280,6 +282,8 @@ export function useSubprofileSkinBlocksEditor(
     path.startsWith(SECTION_PATH_PREFIX)
       ? sectionItemsValue(sectionRows, path)
       : readPath(draft, path);
+  const sectionRowCount = (section: string): number =>
+    sectionRows[section]?.length ?? 0;
   const getBaselineValue = (path: string): unknown => readPath(baseline, path);
 
   function setValue(path: string, value: unknown): void {
@@ -415,10 +419,10 @@ export function useSubprofileSkinBlocksEditor(
   }
 
   return {
-    descriptors,
-    hasBlocks: descriptors.length > 0,
+    hasBlocks: chapters.length > 0,
     chapters,
     getValue,
+    sectionRowCount,
     getBaselineValue,
     setValue,
     dirty,

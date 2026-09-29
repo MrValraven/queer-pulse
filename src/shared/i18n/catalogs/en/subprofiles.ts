@@ -34,6 +34,9 @@ export const subprofiles: Catalog = {
   "directory.refine.professionLabel": "Profession",
   "directory.refine.availabilityLabel": "Availability",
   "directory.refine.tagsLabel": "Tags",
+  "directory.refine.tableLabel": "At the table",
+  "directory.refine.tableFormatLabel": "Format",
+  "directory.refine.tableVibeLabel": "Vibe",
   // Whole accessible name for a counted chip: the badge itself is aria-hidden,
   // so "Poet 4" would be heard as a quantity of Poets.
   "directory.refine.optionWithCount_one": "{label}, {count} persona",
@@ -257,6 +260,26 @@ export const subprofiles: Catalog = {
   "kind.tutor": "Tutor",
   "kind.lecturer": "Lecturer",
   "kind.pole_dancer": "Pole dancer",
+  "kind.game_master": "Game master (DM/GM)",
+  "kind.ttrpg_designer": "TTRPG writer",
+  "kind.board_game_reviewer": "Board game reviewer",
+  "kind.game_night_host": "Game night host",
+  "kind.larp_organizer": "LARP organiser",
+  "kind.miniature_painter": "Miniature painter",
+  "kind.cartographer": "Fantasy map maker",
+  "kind.dice_maker": "Dice maker",
+  "kind.tournament_organizer": "Tournament organiser",
+  "kind.actual_play": "Actual play performer",
+  "kind.streamer": "Streamer / VTuber",
+  "kind.speedrunner": "Speedrunner",
+  "kind.modder": "Modder",
+  "kind.cosplayer": "Cosplayer",
+  "kind.prop_maker": "Prop and armour maker",
+  "kind.puzzle_designer": "Puzzle and escape room designer",
+  "kind.podcaster": "Podcaster",
+  "kind.voice_actor": "Voice actor",
+  "kind.fanfic_writer": "Fanfic writer",
+  "kind.game_critic": "Video game critic",
 
   // Section display labels — `section` is also persisted (SubprofileItemDTO.section).
   "section.projects": "Projects",
@@ -373,6 +396,22 @@ export const subprofiles: Catalog = {
   "section.roster": "Who plays",
   "section.courses": "Courses",
   "section.subjects": "Subjects",
+  "section.sessions": "Sessions",
+  "section.playthroughs": "Playthroughs",
+  "section.library": "Game library",
+  "section.larps": "LARPs",
+  "section.minis": "Minis",
+  "section.maps": "Maps",
+  "section.dice": "Dice",
+  "section.results": "Results",
+  "section.streams": "Streams",
+  "section.runs": "Runs",
+  "section.mods": "Mods",
+  "section.cons": "Conventions",
+  "section.puzzles": "Puzzles",
+  "section.episodes": "Episodes",
+  "section.roles": "Roles",
+  "section.works": "Works",
 
   // Status / link-visibility badges — also persisted fields.
   "status.draft": "Draft",
@@ -382,7 +421,7 @@ export const subprofiles: Catalog = {
   "link.help.linked":
     "Shown on your main profile as another persona of yours. People can see the two are the same person.",
   "link.help.unlinked":
-    "Stands on its own. Nothing here points back to your main profile, so you can keep this work separate from the rest of your life. It earns a public handle once it passes the completeness check.",
+    "Stands on its own. Nothing here points back to your main profile, so you can keep this work separate from the rest of your life. You choose its public handle.",
   "link.creatorOnlyHint":
     "Only the creator can link this persona to their profile, because it would show their name.",
 
@@ -458,6 +497,10 @@ export const subprofiles: Catalog = {
     "Someone already has that handle. Try another.",
   "checklist.reqHandleFailReserved":
     "That handle is reserved. Pick a different one.",
+  "checklist.reqHandleFailNamesOwner":
+    "This handle includes the creator's username, so it would show who runs this persona. Pick another.",
+  "checklist.reqHandleFailIsKind":
+    "That handle is only the persona type. Give it a name of its own.",
   "checklist.reqAvatarTitle": "A photo or image",
   "checklist.reqAvatarMet": "Your avatar helps people recognise this persona.",
   "checklist.reqAvatarFail":
@@ -600,9 +643,16 @@ export const subprofiles: Catalog = {
     "At least 80 characters to publish a standalone persona. Type @ to mention a member, c/ a community, e/ an event or t/ a forum thread, and it becomes a link.",
   "metaForm.bioPlaceholder": "A few sentences in your own words.",
   "metaForm.linkLabel": "Link to your main profile",
-  "metaForm.addressLabel": "Profile address",
-  "metaForm.addressPlaceholder": "e.g. engineering",
   "metaForm.handleLabel": "Handle",
+  "metaForm.addressFieldLabel": "Address",
+  "metaForm.standalonePlaceholder": "persona-name",
+  "metaForm.linkedHandleHint": "Leave it empty and we'll use {handle}.",
+  "metaForm.handleNamesOwner":
+    "This handle includes @{creator}, so it would show who runs this persona. Pick another.",
+  "metaForm.handleRequired":
+    "A standalone persona needs its own address. Give it a name.",
+  "metaForm.handleIsKind":
+    "“{handle}” is what this persona does. Give the address a name of its own.",
   "metaForm.visibilityLabel": "Who can see it",
 
   // Presence fields (SubprofilePresenceFields): cover, accent, availability, CTA
@@ -667,7 +717,12 @@ export const subprofiles: Catalog = {
 
   // Section editor (SubprofileSectionEditor)
   "sectionEditor.empty": "Nothing here yet. Add your first when you're ready.",
+  "sectionEditor.add": "Add",
   "sectionEditor.addTo": "Add to {section}",
+  "sectionEditor.removedAnnounce": "Removed {title}",
+  "sectionEditor.removedPhotoAnnounce": "Photo removed",
+  "sectionEditor.addedExamplesAnnounce_one": "Added {count} example",
+  "sectionEditor.addedExamplesAnnounce_other": "Added {count} examples",
   "sectionEditor.capHint": "That's the most you can add to one section.",
 
   // Publish panel (SubprofilePublishPanel)
@@ -719,11 +774,16 @@ export const subprofiles: Catalog = {
   "newModal.displayNamePlaceholderDefault": "How this persona is known",
   "newModal.displayNamePlaceholderExample": "e.g. {kind}",
   "newModal.linkChoiceLabel": "Linked to your profile, or its own address?",
-  "newModal.linkedAddressNote": "Always yours. Nothing to claim.",
+  "newModal.linkedAddressNote":
+    "Starts from @{creator} and this persona's name. You can change it below.",
+  "newModal.linkedAddressNoteCreate":
+    "Starts from @{creator} and this persona's name. You can change it later in Address.",
   "newModal.standaloneNote":
     "Its own address, with nothing pointing back to you. Yours to keep separate.",
   "newModal.handleStateClaim":
     "Yours if you publish first. Handles are first come, first served.",
+  "newModal.handleStateIsKind":
+    "Give this persona a name above. Its address can't be only the profession.",
   "newModal.toastError": "We couldn't start that one. Try again.",
 
   // Duplicate a persona — start-method picker (StartMethodPicker) and
@@ -780,6 +840,24 @@ export const subprofiles: Catalog = {
   "family.classroom.label": "Classroom",
   "family.classroom.note":
     "A board and a handout: numbered weeks, fees stated before you ask.",
+  "family.quest.label": "Quest",
+  "family.quest.note":
+    "Tabletop, streaming and fandom: the tables you run and the worlds you build.",
+  "quest.format.online": "Online",
+  "quest.format.in_person": "In person",
+  "quest.format.both": "Online and in person",
+  "quest.vibe.queer_led": "Queer-led",
+  "quest.vibe.trans_led": "Trans-led",
+  "quest.vibe.beginner_friendly": "Beginner-friendly",
+  "quest.vibe.adults_only": "18+",
+  "quest.vibe.neurodivergent_friendly": "Neurodivergent-friendly",
+  "quest.vibe.accessible_venue": "Accessible venue",
+  "quest.safety.session_zero": "Session zero",
+  "quest.safety.lines_and_veils": "Lines and veils",
+  "quest.safety.x_card": "X-card",
+  "quest.safety.open_door": "Open door",
+  "quest.safety.check_ins": "Check-ins",
+  "quest.safety.content_warnings": "Content warnings",
 
   // Starter templates (Phase 4a) — create-time picker (NewSideModal)
   // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
@@ -1386,6 +1464,12 @@ export const subprofiles: Catalog = {
   "skinExtras.classroom.where": "Where & when",
   "skinExtras.classroom.extras": "Also",
   "skinExtras.classroom.promisesTitle": "What you leave with",
+  "skinExtras.quest.title": "At the table",
+  "skinExtras.quest.format": "Format",
+  "skinExtras.quest.where": "Where",
+  "skinExtras.quest.systems": "Systems",
+  "skinExtras.quest.price": "Price",
+  "skinExtras.quest.safetyTitle": "Safety tools",
 
   // Rich poem editor + reader (poet kind, page skin) — structured stanza/
   // break/note blocks with inline italic/bold formatting.
@@ -1439,7 +1523,7 @@ export const subprofiles: Catalog = {
   "editorRail.skinBlocks": "Page blocks",
   "editorPane.skinBlocks.title": "Page blocks",
   "editorPane.skinBlocks.lede":
-    "The details unique to your page: booking terms, hours, what people should bring. These show on your public page.",
+    "Everything on your page, in the order visitors read it. Work through it a chapter at a time.",
   "pending.area.skin": "Page blocks",
   "pending.skinEdited": "{field} updated",
   "skinBlock.addItem": "Add",
@@ -1466,6 +1550,16 @@ export const subprofiles: Catalog = {
   "skinBlock.practice.practical.languages": "Languages",
   "skinBlock.practice.practical.mode": "Format",
   "skinBlock.practice.practical.next": "Next availability",
+  "skinBlock.practice.practical.feeRetiredHelper":
+    "Older field. Move this into Fees, then clear it.",
+  "skinBlock.practice.practical.slidingRetiredHelper":
+    "Older field. Move this into Fees, then clear it.",
+  "skinBlock.practice.practical.nextRetiredHelper":
+    "Older field. Move this into the availability calendar, then clear it.",
+  "skinBlock.practice.training.retiredHelper":
+    "Older field. Move this into Credentials, then clear it.",
+  "skinBlock.practice.training.retiredHelperTrainings":
+    "Older field. Move this into Trainings, then clear it.",
   "skinBlock.practice.firstSession.title": "What a first session looks like",
   "skinBlock.practice.firstSession.stepTitle": "Step title",
   "skinBlock.practice.firstSession.body": "What happens",
@@ -1589,7 +1683,7 @@ export const subprofiles: Catalog = {
 
   // Sticky savebar (EditorSavebar) — owns only the preview toggle; every
   // pane still saves with its own button (see the component's doc comment).
-  "editorSavebar.status": "Each section saves on its own",
+  "editorSavebar.status": "No unsaved changes",
   "editorSavebar.hidePreview": "Hide preview",
   "editorSavebar.showPreview": "Show preview",
 
@@ -1615,8 +1709,9 @@ export const subprofiles: Catalog = {
   "pending.saveError": "Couldn't save {areas}",
   "pending.heading": "Unsaved changes",
   // Phone savebar: the collapsed one-line stand-in for the itemized list.
-  "pending.summary_one": "{count} unsaved change",
-  "pending.summary_other": "{count} unsaved changes",
+  "pending.compactSummary": "{count} unsaved",
+  "pending.compactSave": "Save",
+  "pending.compactDiscard": "Discard",
   "pending.field.displayName": "Name",
   "pending.field.tagline": "Tagline",
   "pending.field.bio": "Bio",
@@ -1717,6 +1812,8 @@ export const subprofiles: Catalog = {
   "addressWarning.noticeTitle": "This address is live",
   "addressWarning.noticeBody":
     "People already have links to {from}. Once you confirm, this persona moves to {to}.",
+  "addressWarning.noticeBodyNewHandle":
+    "This persona leaves {from}. It gets its new address once you choose a handle.",
   "addressWarning.oldLinksDie": "Old links to {path} stop working",
   "addressWarning.handleReleased":
     "Your handle goes back into the pool. Anyone could claim it",
@@ -1785,6 +1882,10 @@ export const subprofiles: Catalog = {
     "This persona needs a name. Add it on the Identity tab.",
   "pending.blockedHandle":
     "That address is taken. Pick another on the Address tab.",
+  "pending.blockedHandleMissing":
+    "This persona needs an address. Add it on the Address tab.",
+  "pending.blockedHandleKind":
+    "The address needs a name of its own. Change it on the Address tab.",
   "newModal.toastHandleClaimFailed":
     "That handle got taken just now. We've kept this linked to your profile for the moment. You can claim a new address from the editor.",
   "newModal.toastAffiliationsDropped_one":
@@ -2225,6 +2326,12 @@ export const subprofiles: Catalog = {
   "skinBlock.therapist.group.helpsWith": "What you help with",
   "skinBlock.therapist.group.helpsWithHelper":
     "Each topic becomes a small heading on your page, with its lines listed underneath. Short lines read best.",
+  "skinBlock.therapist.group.credentials": "Training and registration",
+  "skinBlock.therapist.group.credentialsHelper":
+    "Degrees, registrations and trainings. The page lists them in this order.",
+  "skinBlock.therapist.group.gallery": "A look inside",
+  "skinBlock.therapist.group.galleryHelper":
+    "Up to six photos of your room and building.",
   "skinBlock.therapist.group.whoFor": "Who it's for",
   "skinBlock.therapist.group.expectations": "Setting expectations",
   "skinBlock.therapist.group.fee": "Your fee",
@@ -2599,6 +2706,20 @@ export const subprofiles: Catalog = {
   "skinBlock.classroom.promises.placeholder":
     "You are never made to read out loud before you want to.",
   "skinBlock.classroom.promises.add": "Add a promise",
+  "skinBlock.quest.atTheTable.title": "At the table",
+  "skinBlock.quest.atTheTable.helper":
+    "How your table runs, so players can find it by format and vibe.",
+  "skinBlock.quest.atTheTable.format": "Format",
+  "skinBlock.quest.atTheTable.where": "Where you play",
+  "skinBlock.quest.atTheTable.wherePlaceholder": "Lisbon, or Foundry + Discord",
+  "skinBlock.quest.atTheTable.systems": "Systems you run",
+  "skinBlock.quest.atTheTable.systemsPlaceholder": "D&D 5e",
+  "skinBlock.quest.atTheTable.systemsAdd": "Add a system",
+  "skinBlock.quest.atTheTable.safetyTools": "Safety tools",
+  "skinBlock.quest.atTheTable.vibe": "Table vibe",
+  "skinBlock.quest.atTheTable.price": "Price",
+  "skinBlock.quest.atTheTable.pricePlaceholder": "Free, or €15 per session",
+  "skinBlock.quest.atTheTable.note": "Anything else players should know",
   "skinBlock.therapist.openSlots.chipHelper":
     "Write each slot the way it should read on your page, like Tue 30 Sep · 18:00.",
   "skinBlock.therapist.hours.valueTimes": "Times",
@@ -2621,6 +2742,37 @@ export const subprofiles: Catalog = {
   "skinChapter.cardCount": "{filled} of {total}",
   "skinChapter.cardDone": "Done",
   "skinChapter.cardCountSpoken": "{filled} of {total} filled",
+  "skinRetired.clear": "Clear",
+  "skinRetired.clearLabel": "Clear {field}",
+  "skinRetired.moveTo": "Move to {place}",
+  "skinRetired.moved_one": "Moved {count} item to {place}.",
+  "skinRetired.moved_other": "Moved {count} items to {place}.",
+  "skinRetired.movedLeftOver_one": "{count} did not fit, so it stays here.",
+  "skinRetired.movedLeftOver_other": "{count} did not fit, so they stay here.",
+  "skinRetired.moveFull":
+    "{place} already holds {max} items, so nothing moved.",
+  "skinChapter.derived.fees.title": "Fees and times",
+  "skinChapter.derived.fees.lede":
+    "What a session costs, how sessions run and when someone can start.",
+  "skinChapter.derived.place.title": "Where and access",
+  "skinChapter.derived.place.lede":
+    "Where you practise, what the room is like and who refers people to you.",
+  "skinChapter.listEmpty": "Empty",
+  "skinChapter.itemCount_one": "{count} item",
+  "skinChapter.itemCount_other": "{count} items",
+  "skinChapter.photoCount_one": "{count} photo",
+  "skinChapter.photoCount_other": "{count} photos",
+  "skinChapter.derived.section.lede":
+    "These show on your page in this order. Star one to make it your spotlight.",
+  "skinChapter.derived.gallery.lede":
+    "Up to six photos, shown as a grid on your page.",
+  "skinChapter.derived.top.title": "Top of your page",
+  "skinChapter.derived.top.lede": "What visitors read first, above your work.",
+  "skinChapter.derived.end.title": "End of your page",
+  "skinChapter.derived.end.lede": "What closes your page, after your work.",
+  "skinChapter.derived.howYouWork.title": "How you work",
+  "skinChapter.derived.howYouWork.lede":
+    "Your approach, your background and what a first session looks like.",
   "skinControl.refined.example": "e.g. {example}",
   "skinControl.suggest.show": "Show the list",
   "skinControl.refined.multiSelect.more": "More",

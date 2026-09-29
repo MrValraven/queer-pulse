@@ -1,4 +1,6 @@
+import { AnimatePresence, m } from "motion/react";
 import { FiCheck } from "react-icons/fi";
+import { useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   ACCESSIBILITY_QUESTIONS,
@@ -38,6 +40,9 @@ export function LocalAccessFilter({
   onToggleAccess: (slug: AccessibilitySlug) => void;
 }) {
   const { t } = useTranslation();
+  // Inside the Refine drawer a ticked chip pops its tick in and its
+  // neighbours glide aside; in the mobile sheet the chips stay still.
+  const glide = useRefineGlide();
 
   return (
     <fieldset className={s.accessGroup}>
@@ -45,23 +50,30 @@ export function LocalAccessFilter({
         {t("marketing:local.filter.accessLabel")}
       </legend>
       <p className={s.accessNote}>{t("marketing:local.filter.accessNote")}</p>
-      <div className={s.accessChips}>
+      <m.div {...glide.row} className={s.accessChips}>
         {ACCESSIBILITY_QUESTIONS.map((question) => {
           const isOn = access.includes(question.slug);
           return (
-            <button
+            <m.button
+              {...glide.chip}
               key={question.slug}
               type="button"
               aria-pressed={isOn}
               className={[s.chip, isOn && s.chipOn].filter(Boolean).join(" ")}
               onClick={() => onToggleAccess(question.slug)}
             >
-              {isOn && <FiCheck aria-hidden />}
+              <AnimatePresence initial={false} mode="popLayout">
+                {isOn && (
+                  <m.span key="tick" className={s.tick} {...glide.tick}>
+                    <FiCheck aria-hidden />
+                  </m.span>
+                )}
+              </AnimatePresence>
               {t(question.labelKey)}
-            </button>
+            </m.button>
           );
         })}
-      </div>
+      </m.div>
     </fieldset>
   );
 }

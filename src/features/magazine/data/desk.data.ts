@@ -25,7 +25,9 @@ export type Stage =
 
 export type WaitOn = "writer" | "you" | "nobody";
 
-export type SavedViewId = "v-late" | "v-art" | "v-sens" | "v-pay";
+/** Where a piece's money stands, mirroring backend `PiecePaymentStatus`:
+ *  `none` (no payment recorded), `owed` (recorded and still unpaid), `paid`. */
+export type PiecePaymentStatus = "none" | "owed" | "paid";
 
 export interface Piece {
   id: string;
@@ -36,7 +38,13 @@ export interface Piece {
   byline: string;
   editorId: string;
   stage: Stage;
+  /** Display text for the due column: a date as the source wrote it, `""`
+   *  when none is set, or the `"ready"` sentinel for "nothing left to chase". */
   due: string;
+  /** The same due day as an ISO calendar date (`YYYY-MM-DD`), present only
+   *  when one is known. `describeDue` (`desk/deskDue.ts`) reads it to say
+   *  "in 3 days" or "2 days late". */
+  dueDate?: string;
   late?: boolean;
   words?: number;
   slides?: number;
@@ -55,6 +63,11 @@ export interface Piece {
   /** Editorial-track linkage (mirrors backend `MagazinePiece.issueId`):
    *  `null` = standalone platform highlight; a value = bound to that issue. */
   issueId: string | null;
+  /** ISO instant the piece entered its current stage, so the desk can say
+   *  how long it has sat there. */
+  stageEnteredAt?: string;
+  /** Where the piece's money stands; the "unpaid" focus reads `owed`. */
+  paymentStatus?: PiecePaymentStatus;
 }
 
 export interface Pitch {
@@ -65,6 +78,9 @@ export interface Pitch {
   fresh?: boolean;
   tags: string[];
   suggest?: "deck";
+  /** ISO instant the pitch arrived, so the inbox can say how long it has
+   *  waited for an answer. */
+  receivedAt?: string;
 }
 
 export interface Editor {
@@ -91,13 +107,58 @@ export interface Issue {
   id: string;
   number: string;
   theme: string;
+  /** Display text for the day the issue stops taking copy, `""` when unset. */
   closes: string;
+  /** Display text for the publish day, `""` while unscheduled. */
   publishes: string;
+  /** Whole days from today to `closesOn`, 0 once it has passed or when unset. */
   daysLeft: number;
   filled: number;
   slots: number;
+  /** The close day as an ISO calendar date (`YYYY-MM-DD`), or `null` while the
+   *  desk has set none. `closes` and `daysLeft` are derived from it. */
+  closesOn?: string | null;
+  /** The publish day as an ISO calendar date, or `null` while unscheduled. */
+  publishedOn?: string | null;
 }
 
+/** The August day the demo desk pretends is today. It sits after the two
+ *  pieces flagged `late` (2 and 4 Aug) and before the earliest one on time
+ *  (8 Aug), so the fixtures' flags and their due strings agree. */
+const DEMO_DUE_REFERENCE = Date.UTC(2026, 7, 5);
+
+const HOUR_IN_MS = 60 * 60 * 1000;
+
+/**
+ * An ISO due date for a demo piece whose display text says `dayOfAugust` Aug.
+ *
+ * The fixtures' dates are fixed, the viewer's clock is not, so a literal
+ * "2026-08-04" would read "55 days late" by the time anyone opens the demo.
+ * Instead each date keeps its distance from `DEMO_DUE_REFERENCE` and is
+ * re-anchored on the viewer's own today at load: "2 Aug" is always three
+ * days late and "12 Aug" always a week out, whenever the demo runs. A day
+ * past 31 rolls into September (32 is 1 Sep).
+ */
+function demoDueDate(dayOfAugust: number): string {
+  const now = new Date();
+  const todayUtc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const offsetMs = Date.UTC(2026, 7, dayOfAugust) - DEMO_DUE_REFERENCE;
+  return new Date(todayUtc + offsetMs).toISOString().slice(0, 10);
+}
+
+/** An ISO instant `hoursAgo` before the viewer's load time. Demo stage and
+ *  pitch timestamps use it so "in edit for 5 days" stays true whenever the
+ *  demo runs. */
+function demoHoursAgo(hoursAgo: number): string {
+  return new Date(Date.now() - hoursAgo * HOUR_IN_MS).toISOString();
+}
+
+/**
+ * The demo issue. `closes`, `publishes` and `daysLeft` are the prototype's
+ * display values; the desk hooks recompute all three from `closesOn` and
+ * `publishedOn`, which keep the prototype's spacing (close 9 days out, publish
+ * 18 days after that) re-anchored on the viewer's today.
+ */
 export const DEMO_ISSUE: Issue = {
   id: "demo-issue-14",
   number: "14",
@@ -107,6 +168,8 @@ export const DEMO_ISSUE: Issue = {
   daysLeft: 9,
   filled: 11,
   slots: 15,
+  closesOn: demoDueDate(14),
+  publishedOn: demoDueDate(32),
 };
 
 /**
@@ -115,9 +178,9 @@ export const DEMO_ISSUE: Issue = {
  * declared here rather than imported so this demo-data module keeps its
  * no-dependency shape — the two are interchangeable by structural typing.
  *
- * Distinct from `Issue` above: that one carries the desk header's editorial
- * calendar (`closes`/`publishes`/`daysLeft`), which the backend does not
- * model and therefore blanks out in live mode.
+ * Distinct from `Issue` above: that one carries the desk header's display
+ * calendar (`closes`/`publishes`/`daysLeft`), derived from this row's
+ * `closesOn`/`publishedOn` on render (`issueCalendarToView`).
  */
 export interface IssueSummary {
   id: string;
@@ -127,6 +190,8 @@ export interface IssueSummary {
   /** `null` while the issue is still unscheduled: the desk opens a number
    *  first and picks the publish date later. */
   publishedOn: string | null;
+  /** `YYYY-MM-DD` the issue stops taking copy, or `null` while unset. */
+  closesOn: string | null;
   filled: number;
   slots: number;
 }
@@ -147,7 +212,8 @@ export const DEMO_ISSUES: IssueSummary[] = [
     number: DEMO_ISSUE.number,
     title: "Aftercare",
     theme: DEMO_ISSUE.theme,
-    publishedOn: "2026-09-01",
+    publishedOn: DEMO_ISSUE.publishedOn ?? null,
+    closesOn: DEMO_ISSUE.closesOn ?? null,
     filled: DEMO_ISSUE.filled,
     slots: DEMO_ISSUE.slots,
   },
@@ -157,6 +223,7 @@ export const DEMO_ISSUES: IssueSummary[] = [
     title: "The long way round",
     theme: "Distance",
     publishedOn: "2026-06-01",
+    closesOn: "2026-05-11",
     filled: 14,
     slots: 15,
   },
@@ -166,6 +233,7 @@ export const DEMO_ISSUES: IssueSummary[] = [
     title: "Small rooms, loud rooms",
     theme: "Nightlife",
     publishedOn: "2026-03-01",
+    closesOn: "2026-02-09",
     filled: 15,
     slots: 15,
   },
@@ -190,6 +258,8 @@ export const DEMO_STAGES: Stage[] = [
 export const DEMO_PIECES: Piece[] = [
   {
     id: "p1",
+    stageEnteredAt: demoHoursAgo(120),
+    paymentStatus: "owed",
     title: "What we owe old friends",
     issueId: DEMO_ISSUE.id,
     format: "article",
@@ -199,6 +269,7 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "marta",
     stage: "Edit",
     due: "4 Aug",
+    dueDate: demoDueDate(4),
     late: true,
     words: 2800,
     art: "in",
@@ -207,6 +278,8 @@ export const DEMO_PIECES: Piece[] = [
   },
   {
     id: "p2",
+    stageEnteredAt: demoHoursAgo(190),
+    paymentStatus: "none",
     title: "The pharmacist who fills every prescription",
     issueId: DEMO_ISSUE.id,
     format: "article",
@@ -216,6 +289,7 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "sara",
     stage: "Drafting",
     due: "8 Aug",
+    dueDate: demoDueDate(8),
     words: 1200,
     art: "brief",
     wait: "writer",
@@ -223,6 +297,8 @@ export const DEMO_PIECES: Piece[] = [
   },
   {
     id: "p3",
+    stageEnteredAt: demoHoursAgo(40),
+    paymentStatus: "none",
     title: "Care work, undercounted",
     issueId: DEMO_ISSUE.id,
     format: "deck",
@@ -232,12 +308,15 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "sara",
     stage: "In review",
     due: "12 Aug",
+    dueDate: demoDueDate(12),
     slides: 9,
     art: "none",
     wait: "you",
   },
   {
     id: "p4",
+    stageEnteredAt: demoHoursAgo(90),
+    paymentStatus: "owed",
     title: "Dra. Mariza Câmara on the long wait",
     issueId: DEMO_ISSUE.id,
     format: "article",
@@ -247,11 +326,14 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "sara",
     stage: "Edit",
     due: "17 Aug",
+    dueDate: demoDueDate(17),
     words: 2000,
     art: "brief",
   },
   {
     id: "p5",
+    stageEnteredAt: demoHoursAgo(30),
+    paymentStatus: "owed",
     title: "On the bus to Faro",
     issueId: null,
     format: "article",
@@ -267,6 +349,8 @@ export const DEMO_PIECES: Piece[] = [
   },
   {
     id: "p6",
+    stageEnteredAt: demoHoursAgo(160),
+    paymentStatus: "none",
     title: "A reading list, by the therapist who wrote it",
     issueId: DEMO_ISSUE.id,
     format: "article",
@@ -276,6 +360,7 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "marta",
     stage: "Drafting",
     due: "15 Aug",
+    dueDate: demoDueDate(15),
     words: 1600,
     art: "na",
     wait: "writer",
@@ -283,6 +368,8 @@ export const DEMO_PIECES: Piece[] = [
   },
   {
     id: "p7",
+    stageEnteredAt: demoHoursAgo(400),
+    paymentStatus: "none",
     title: "Quick exit",
     issueId: DEMO_ISSUE.id,
     format: "article",
@@ -292,6 +379,7 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "marta",
     stage: "Commissioned",
     due: "2 Aug",
+    dueDate: demoDueDate(2),
     late: true,
     words: 800,
     art: "na",
@@ -300,6 +388,8 @@ export const DEMO_PIECES: Piece[] = [
   },
   {
     id: "p8",
+    stageEnteredAt: demoHoursAgo(20),
+    paymentStatus: "owed",
     title: "Nine rooms in Arroios",
     issueId: DEMO_ISSUE.id,
     format: "deck",
@@ -309,12 +399,16 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "marta",
     stage: "In review",
     due: "14 Aug",
+    dueDate: demoDueDate(14),
     slides: 12,
     art: "in",
     wait: "you",
   },
   {
     id: "p9",
+    // 18 minutes ago: the move `DEMO_ACTIVITY` opens with.
+    stageEnteredAt: demoHoursAgo(0.3),
+    paymentStatus: "none",
     title: "The chosen-family budget",
     issueId: DEMO_ISSUE.id,
     format: "deck",
@@ -324,12 +418,15 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "sara",
     stage: "Sensitivity read",
     due: "9 Aug",
+    dueDate: demoDueDate(9),
     slides: 7,
     art: "brief",
     wait: "you",
   },
   {
     id: "p10",
+    stageEnteredAt: demoHoursAgo(72),
+    paymentStatus: "paid",
     title: "Sick Woman Theory, revisited",
     issueId: null,
     format: "article",
@@ -339,11 +436,14 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "marta",
     stage: "Edit",
     due: "11 Aug",
+    dueDate: demoDueDate(11),
     words: 900,
     art: "in",
   },
   {
     id: "p11",
+    stageEnteredAt: demoHoursAgo(200),
+    paymentStatus: "none",
     title: "Notes from a waiting room",
     issueId: null,
     format: "article",
@@ -353,29 +453,56 @@ export const DEMO_PIECES: Piece[] = [
     editorId: "sara",
     stage: "Drafting",
     due: "19 Aug",
+    dueDate: demoDueDate(19),
     words: 1500,
     art: "none",
     fresh: true,
+    // A named writer drafting it: the desk waits on her, and chases her.
+    wait: "writer",
   },
   {
     id: "p12",
+    stageEnteredAt: demoHoursAgo(300),
+    paymentStatus: "none",
     title: "Take care",
     issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Last word",
     kind: "Column",
-    byline: "Marta Cruz",
+    // Commissioned with no writer yet: the one demo piece whose next action
+    // is Hand off, with "No writer yet" in its meta line.
+    byline: "",
     editorId: "marta",
     stage: "Commissioned",
     due: "20 Aug",
+    dueDate: demoDueDate(20),
     words: 500,
     art: "na",
+  },
+  {
+    // Published last week as a platform highlight. The fee is still owed,
+    // which is exactly the case the "unpaid" focus exists to catch.
+    id: "p13",
+    stageEnteredAt: demoHoursAgo(150),
+    paymentStatus: "owed",
+    title: "The last queer bookshop in Porto",
+    issueId: null,
+    format: "article",
+    section: "Features",
+    kind: "Report",
+    byline: "Leonor Batista",
+    editorId: "sara",
+    stage: "Published",
+    due: "ready",
+    words: 1400,
+    art: "in",
   },
 ];
 
 export const DEMO_PITCHES: Pitch[] = [
   {
     id: "q1",
+    receivedAt: demoHoursAgo(5),
     title: "The lesbian bar that became a bike shop",
     byline: "Inês Faria",
     note: "Oral history of Bar Sétimo, closed 2019. Three former owners already agreed to talk.",
@@ -384,6 +511,7 @@ export const DEMO_PITCHES: Pitch[] = [
   },
   {
     id: "q2",
+    receivedAt: demoHoursAgo(50),
     title: "What HRT costs, month by month",
     byline: "Kai Oliveira",
     note: "A year of receipts, annotated. Would need a data-viz deck rather than prose.",
@@ -392,6 +520,7 @@ export const DEMO_PITCHES: Pitch[] = [
   },
   {
     id: "q3",
+    receivedAt: demoHoursAgo(26),
     title: "My grandmother taught me to hem",
     byline: "Duarte Nogueira",
     note: "Essay on inherited craft and being the only out person at family lunch.",
@@ -400,6 +529,7 @@ export const DEMO_PITCHES: Pitch[] = [
   },
   {
     id: "q4",
+    receivedAt: demoHoursAgo(170),
     title: "Every queer sports club in the Área Metropolitana",
     byline: "Bea Santoro",
     note: "Service piece. Has a spreadsheet of 34 clubs, needs verification pass.",

@@ -2,12 +2,8 @@ import { FiAlertTriangle, FiChevronLeft } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
-import {
-  Badge,
-  EmptyState,
-  Spinner,
-  Tooltip,
-} from "../../shared/components/ui";
+import { Badge, EmptyState, Tooltip } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { useSubprofile } from "./api/useSubprofile";
@@ -36,10 +32,7 @@ export function SubprofileEditorPage() {
   if (isLoading) {
     return (
       <AppShell>
-        <div className={styles.stateWrap} role="status" aria-live="polite">
-          <Spinner />
-          <span>{t("subprofiles:editor.loading")}</span>
-        </div>
+        <PageLoader label={t("subprofiles:editor.loading")} />
       </AppShell>
     );
   }

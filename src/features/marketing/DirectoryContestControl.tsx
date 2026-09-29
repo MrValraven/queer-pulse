@@ -30,8 +30,10 @@ type Active = "menu" | "suggest" | "dispute" | "claim";
  * (`DirectoryClaimModal` → `POST /listings/:ref/claim`), reviewed by a
  * moderator, NOT a bounce into the "list your business" create wizard (that
  * would make a duplicate listing rather than claim the existing one). Critical
- * for a queer platform: a venue can be tagged "queer-friendly" via the suggest
- * path WITHOUT its knowledge, so it needs a way to contest or take ownership.
+ * for a queer platform: a member's suggestion can add a whole listing, "friendly"
+ * badge and all, WITHOUT the venue's knowledge, since the platform holds a
+ * suggested listing with no owner. The venue needs a way to contest it or
+ * take ownership.
  * Member-gated (dispute + claim both require an account; suggest-edit already
  * did) and hidden for owners.
  */

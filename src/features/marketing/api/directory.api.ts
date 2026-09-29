@@ -146,6 +146,11 @@ export interface DirectoryCardDTO {
    * `no`. Absent on older payloads and on the demo/session card sources, which
    * the card then reads as "this listing has said nothing at all". */
   accessibilityAnswers?: AccessibilityAnswerMap;
+  /** The card's pill row: the price band first when one is set, then the
+   * listing's tags, the same order the listing wizard's preview builds.
+   * Absent on older payloads and on the demo/session card sources, which the
+   * card then reads as an empty row. */
+  pills?: string[];
 }
 
 /**

@@ -173,6 +173,7 @@ span.navIcon svg {
 .main {
   padding: 40px 52px var(--section-y-104);
   max-width: 740px;
+  min-width: 0;
 }
 
 @media (--wide) {
@@ -376,43 +377,11 @@ span.navIcon svg {
   flex: 1;
 }
 
-.skillsDisplay {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+/* Spacing wrapper around the shared ChipList, which brings its own flex row
+   and chip gap but no margin of its own to separate it from the input row
+   above. */
+.skillChips {
   margin-top: 10px;
-}
-
-.skillTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-13);
-  font-weight: 500;
-  background: rgba(var(--plum-rgb), 0.06);
-  border-radius: var(--radius-8);
-  padding: 6px 12px;
-  color: var(--ink-60);
-}
-
-.skillTagRemove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--ink-40);
-  font-size: var(--text-14);
-  line-height: 1;
-  padding: 0;
-  transition: color 0.15s;
-}
-
-@media (hover: hover) {
-  .skillTagRemove:hover {
-    color: var(--accent-ink);
-  }
 }
 
 /* Visibility panel */

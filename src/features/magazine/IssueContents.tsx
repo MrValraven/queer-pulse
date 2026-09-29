@@ -169,7 +169,7 @@ function ContributorsSection() {
                     <Avatar initials={person.initials} tint="coral" size={38} />
                     <div>
                       <div className={styles.contribName}>
-                        {person.name}
+                        <span>{person.name}</span>
                         <MemberStaffBadge slug={writer?.slug} />
                       </div>
                       <div className={styles.contribRole}>{person.role}</div>

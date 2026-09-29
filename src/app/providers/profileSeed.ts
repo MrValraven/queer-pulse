@@ -147,6 +147,11 @@ export function mergeSavedProfile(
     photoVisible: draft.photoVisible,
     hoodVisible: draft.hoodVisible,
     vouchersVisible: draft.vouchersVisible,
+    // Same reasoning as the three switches above: not carried back on the
+    // PATCH response, so committed here from the draft directly. `ambassador`
+    // itself is never edited through this draft, so it needs no entry here:
+    // the `...prev` spread above already carries it forward unchanged.
+    isAmbassadorTagVisible: draft.isAmbassadorTagVisible,
     // The rail's 24h-hide toggle, same reasoning: the backend response does not
     // carry `hiddenUntil` back either, and `ProfileSettingsMenu` reads it off
     // the COMMITTED profile, so without this the menu label would never flip.

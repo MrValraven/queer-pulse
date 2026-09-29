@@ -11,14 +11,18 @@ import type { AdminStickerPackResponse } from "../../../shared/contracts/contrac
 import { Button, IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { TFunction } from "../../../shared/i18n/types";
+import { templateById } from "../../stickers/templates/registry";
+import type { StickerTemplate } from "../../stickers/templates/templateDefinition";
+import { itemName } from "./stickerItems";
 import type {
-  FlagPlanEntry,
+  ItemPlanEntry,
   PublishFailureReason,
   PublishMode,
   StickerPublishRun,
   StickerPublishSummary,
 } from "./stickerBuilder.types";
 import { StickerPublishModeControl } from "./StickerPublishModeControl";
+import { StickerPublishReasonToggle } from "./StickerPublishReasonToggle";
 import {
   PackStatusNote,
   StickerPublishReviewDialog,
@@ -36,10 +40,19 @@ function phaseOf(
   return summary.cancelledCount > 0 ? "cancelled" : "finished";
 }
 
+/** The template a run's items resolve against: the run's own template when it
+ *  is still registered, else the builder's current one. */
+function templateForRun(
+  run: StickerPublishRun,
+  template: StickerTemplate,
+): StickerTemplate {
+  return templateById(run.templateId) ?? template;
+}
+
 /** The CTA names exactly what the run will do, and to which pack. */
 function publishCtaLabel(
   t: TFunction,
-  plan: FlagPlanEntry[],
+  plan: ItemPlanEntry[],
   packName: string | null,
 ): string {
   const addCount = plan.filter((entry) => entry.action === "add").length;
@@ -71,12 +84,12 @@ function publishCtaLabel(
 function blockedReasonOf(
   t: TFunction,
   pack: AdminStickerPackResponse | null,
-  plan: FlagPlanEntry[],
+  plan: ItemPlanEntry[],
 ): string | null {
   if (!pack) return t("admin:stickerPacks.publish.blocked.noPack");
-  if (plan.length === 0) return t("admin:stickerPacks.publish.blocked.noFlags");
+  if (plan.length === 0) return t("admin:stickerPacks.publish.blocked.noItems");
   if (plan.every((entry) => entry.action === "skip")) {
-    return t("admin:stickerPacks.publish.blocked.allSkipped");
+    return t("admin:stickerPacks.publish.blocked.allSkippedItems");
   }
   return null;
 }
@@ -109,27 +122,29 @@ function resultSentence(
   return t("admin:stickerPacks.publish.result.none", { pack: packName });
 }
 
-/** The status line's content for a live run: "Adding 4 of 11" plus the flag
+/** The status line's content for a live run: "Adding 4 of 11" plus the item
  *  in flight. When the admin has moved to another pack, the line names the
  *  pack the run writes to, so the progress is never read as this pack's. */
 function RunningLine({
   run,
   summary,
   isOtherPack,
+  template,
 }: {
   run: StickerPublishRun;
   summary: StickerPublishSummary;
   isOtherPack: boolean;
+  template: StickerTemplate;
 }) {
-  const { t } = useTranslation();
-  const currentFlagId = run.flagIds.find(
-    (flagId) => run.stateByFlag[flagId]?.status === "running",
+  const { t, language } = useTranslation();
+  const currentItemId = run.itemIds.find(
+    (itemId) => run.stateByItem[itemId]?.status === "running",
   );
   const processedCount = summary.doneCount + summary.failedCount;
   const currentNumber = Math.min(processedCount + 1, summary.totalCount);
   const isUpdating =
-    currentFlagId !== undefined &&
-    run.actionByFlag[currentFlagId] === "replace";
+    currentItemId !== undefined &&
+    run.actionByItem[currentItemId] === "replace";
   const runningKey = isOtherPack
     ? isUpdating
       ? "updateInPack"
@@ -144,10 +159,10 @@ function RunningLine({
         total: summary.totalCount,
         pack: run.packName,
       })}
-      {currentFlagId && (
+      {currentItemId && (
         <span className={styles.currentFlag}>
           {" "}
-          {t(`cards:flag.${currentFlagId}`)}
+          {itemName(templateForRun(run, template), currentItemId, language)}
         </span>
       )}
     </>
@@ -161,30 +176,33 @@ const FAILURE_REASONS: readonly PublishFailureReason[] = [
   "unknown",
 ];
 
-/** Failed flags grouped by reason, so a rate limit that sank six flags reads
+/** Failed items grouped by reason, so a rate limit that sank six items reads
  *  as one line naming all six. */
 function FailureList({
   run,
   failedCount,
+  template,
 }: {
   run: StickerPublishRun;
   failedCount: number;
+  template: StickerTemplate;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const groupsId = useId();
+  const effectiveTemplate = templateForRun(run, template);
   // Phones only: the list folds behind a disclosure so the dock stays short.
   // Wider screens always show it, and the toggle is hidden there by CSS.
   const [isExpanded, setIsExpanded] = useState(false);
   const groups = FAILURE_REASONS.map((reason) => ({
     reason,
-    flagIds: run.flagIds.filter((flagId) => {
-      const flagState = run.stateByFlag[flagId];
+    itemIds: run.itemIds.filter((itemId) => {
+      const itemState = run.stateByItem[itemId];
       return (
-        flagState?.status === "failed" &&
-        (flagState.failureReason ?? "unknown") === reason
+        itemState?.status === "failed" &&
+        (itemState.failureReason ?? "unknown") === reason
       );
     }),
-  })).filter((group) => group.flagIds.length > 0);
+  })).filter((group) => group.itemIds.length > 0);
   // Only the failure message is the alert. The disclosure toggle and the list
   // sit outside the live region, so toggling them never re-announces it.
   return (
@@ -216,8 +234,8 @@ function FailureList({
         {groups.map((group) => (
           <li key={group.reason} className={styles.failureGroup}>
             <span className={styles.failureFlags}>
-              {group.flagIds
-                .map((flagId) => t(`cards:flag.${flagId}`))
+              {group.itemIds
+                .map((itemId) => itemName(effectiveTemplate, itemId, language))
                 .join(", ")}
             </span>
             <span className={styles.failureReason}>
@@ -237,12 +255,14 @@ function StatusLineContent({
   pack,
   run,
   summary,
+  template,
 }: {
   phase: BarPhase;
   blockedReason: string | null;
   pack: AdminStickerPackResponse | null;
   run: StickerPublishRun | null;
   summary: StickerPublishSummary;
+  template: StickerTemplate;
 }) {
   const { t } = useTranslation();
   if (phase === "idle") {
@@ -263,6 +283,7 @@ function StatusLineContent({
         run={run}
         summary={summary}
         isOtherPack={pack?.id !== run.packId}
+        template={template}
       />
     );
   }
@@ -393,6 +414,9 @@ function BarActions({
   const isRunForOtherPack = Boolean(run && pack?.id !== run.packId);
   return (
     <div className={styles.actions}>
+      {phase === "idle" && blockedReason && (
+        <StickerPublishReasonToggle reasonId={statusLineId} />
+      )}
       {phase === "idle" && (
         <Button
           variant="primary"
@@ -449,22 +473,25 @@ function BarActions({
  * - idle: the mode control (only when the selection overlaps the pack), a
  *   status-aware helper or the reason the CTA is off, and a CTA naming the
  *   exact counts and pack. The CTA opens the review dialog.
- * - running: "Adding 4 of 11" with the flag in flight, a progress bar, Cancel.
+ * - running: "Adding 4 of 11" with the item in flight, a progress bar, Cancel.
  *   Seen from another pack, the line names the run's pack and offers a way
  *   back to it.
  * - finished: what landed, any failures grouped by reason, and the follow-ups.
  * - cancelled: "Stopped after N of M." and a dismiss button. Re-running the
- *   same selection is safe because flags already in the pack are skipped.
+ *   same selection is safe because items already in the pack are skipped.
  *
  * One `role="status"` line carries the idle helper, the progress and the
  * result, so every change is announced from the same live region. On phones
  * the idle helper is visually hidden (the review dialog says it again before
  * anything happens) and the failure list folds behind a disclosure, so the
- * dock stays short.
+ * dock stays short. At every width, while the mode control shows, its legend
+ * already says why the CTA is off, so the blocked reason folds behind the
+ * info toggle beside the CTA (StickerPublishReasonToggle).
  */
 export function StickerPublishBar({
   pack,
   plan,
+  template,
   mode,
   onModeChange,
   run,
@@ -478,7 +505,12 @@ export function StickerPublishBar({
   onPublishPack,
 }: {
   pack: AdminStickerPackResponse | null;
-  plan: FlagPlanEntry[];
+  plan: ItemPlanEntry[];
+  /** The builder's current template, which names the plan's items in the
+   *  review dialog. A run's items resolve against the run's own template;
+   *  this one stands in only when `run.templateId` no longer resolves in the
+   *  registry. */
+  template: StickerTemplate;
   mode: PublishMode;
   onModeChange: (mode: PublishMode) => void;
   run: StickerPublishRun | null;
@@ -572,6 +604,7 @@ export function StickerPublishBar({
             pack={pack}
             run={run}
             summary={summary}
+            template={template}
           />
         </p>
         {phase === "running" && (
@@ -590,7 +623,11 @@ export function StickerPublishBar({
           </div>
         )}
         {hasFailureList && run && (
-          <FailureList run={run} failedCount={summary.failedCount} />
+          <FailureList
+            run={run}
+            failedCount={summary.failedCount}
+            template={template}
+          />
         )}
       </div>
 
@@ -618,6 +655,7 @@ export function StickerPublishBar({
           packName={pack.name}
           packStatus={pack.status}
           plan={plan}
+          template={template}
           confirmLabel={ctaLabel}
           onConfirm={handleConfirm}
           onClose={() => setIsReviewOpen(false)}

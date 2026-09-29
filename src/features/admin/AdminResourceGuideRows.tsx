@@ -22,7 +22,7 @@ const TODAY = () => new Date().toISOString().slice(0, 10);
  * One row per guide, leading with its freshness.
  *
  * The review state is the first thing on the row rather than a detail at the
- * end, because this list exists to answer "which guides are stale?" — a
+ * end, because this list exists to answer "which guides are stale?", a
  * question nobody on the team could answer at all before CON-09, since the
  * only freshness field was set by hand with a SQL statement.
  */
@@ -91,6 +91,13 @@ export function AdminResourceGuideRows({
               </div>
             </div>
             <div className={styles.rowActions}>
+              <Button
+                variant="ghost"
+                size="sm"
+                to={`${routes.adminResourceGuidePreview}/${guide.id}`}
+              >
+                {t("admin:guidePreview.row.previewCta")}
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => onReview(guide)}>
                 {t("admin:adminResourceGuides.row.reviewCta")}
               </Button>

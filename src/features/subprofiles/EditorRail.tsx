@@ -3,6 +3,7 @@ import { FiChevronsLeft } from "react-icons/fi";
 import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EditorPaneKey, EditorRailGroup } from "./editorRail.data";
+import { EditorPaneChapters } from "./EditorPaneChapters";
 import { estimateEditorReadiness } from "./subprofileDraftReadiness";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SideReadinessRing } from "./SideReadinessRing";
@@ -20,6 +21,10 @@ import { SideReadinessRing } from "./SideReadinessRing";
  * in place of an icon (the design's "Get it live" row). Hidden outright ≤760px
  * by the CSS's own `@media` rule, where `EditorPaneSwitcher` navigates instead
  * — nothing here needs to branch on viewport width.
+ *
+ * The Page blocks entry lists its chapters under it (`EditorPaneChapters`),
+ * always, so an owner sees where their Mixes or Gigs live before opening the
+ * pane; each sub-row opens the pane on that chapter in one history entry.
  *
  * `groups` is built once by `SubprofileEditorShell` and shared with the mobile
  * `EditorPaneSwitcher`, so the two navigations always offer the same entries in
@@ -46,7 +51,7 @@ export function EditorRail({
   groups: EditorRailGroup[];
   activePane: EditorPaneKey;
   isCollapsed: boolean;
-  onSelect: (pane: EditorPaneKey) => void;
+  onSelect: (pane: EditorPaneKey, chapterKey?: string) => void;
   onToggleCollapse: () => void;
 }) {
   const { t } = useTranslation();
@@ -73,31 +78,41 @@ export function EditorRail({
             // Only the Publish entry carries a `ring`; render the live count.
             const ring = entry.ring ? liveReadiness : null;
             return (
-              <Tooltip
-                key={entry.key}
-                label={label}
-                placement="right"
-                isDisabled={!isCollapsed}
-              >
-                <button
-                  type="button"
-                  aria-current={isActive ? "page" : undefined}
-                  onClick={() => onSelect(entry.key)}
+              <Fragment key={entry.key}>
+                <Tooltip
+                  label={label}
+                  placement="right"
+                  isDisabled={!isCollapsed}
                 >
-                  {ring ? (
-                    <SideReadinessRing
-                      readyCount={ring.readyCount}
-                      totalCount={ring.totalCount}
-                    />
-                  ) : (
-                    <Icon size={16} aria-hidden />
-                  )}
-                  <span className="rail-label">{label}</span>
-                  {entry.badge !== undefined && (
-                    <span className="rail-label rail-n">{entry.badge}</span>
-                  )}
-                </button>
-              </Tooltip>
+                  <button
+                    type="button"
+                    aria-current={isActive ? "page" : undefined}
+                    onClick={() => onSelect(entry.key)}
+                  >
+                    {ring ? (
+                      <SideReadinessRing
+                        readyCount={ring.readyCount}
+                        totalCount={ring.totalCount}
+                      />
+                    ) : (
+                      <Icon size={16} aria-hidden />
+                    )}
+                    <span className="rail-label">{label}</span>
+                    {entry.badge !== undefined && (
+                      <span className="rail-label rail-n">{entry.badge}</span>
+                    )}
+                  </button>
+                </Tooltip>
+                {entry.chapters && (
+                  <EditorPaneChapters
+                    chapters={entry.chapters}
+                    isPaneActive={isActive}
+                    variant="rail"
+                    isFolded={isCollapsed}
+                    onSelect={(chapterKey) => onSelect(entry.key, chapterKey)}
+                  />
+                )}
+              </Fragment>
             );
           })}
         </Fragment>

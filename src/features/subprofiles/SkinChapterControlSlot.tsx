@@ -6,6 +6,7 @@ import { skinFieldAnchorId } from "./skinFieldAnchor";
 import { SkinFieldSlotContext } from "./skinFieldSlotContext";
 import type { SkinFieldSlot } from "./skinFieldSlotContext";
 import { isControlValueValid } from "./skinTextCheck";
+import { useSectionListSection } from "./useSectionListSection";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { SkinChapterControl } from "./SkinChapterControl";
 import styles from "./SkinChapterEditor.module.css";
@@ -22,7 +23,9 @@ export function EmptyMark() {
 /** One control in its wrapper: the jump target (`skinFieldAnchorId`), the
  *  empty mark before its label (the card heading carries it when the label is
  *  hidden), the slot context the field frame (`SkinRefinedField`) reads its
- *  fill from and, for a `showWhen` control, the fade-in as it appears. */
+ *  fill from and, for a `showWhen` control, the fade-in as it appears. A
+ *  section list whose section the persona lacks renders nothing, so it gets
+ *  no empty mark either. */
 export function ControlSlot({
   control,
   editor,
@@ -42,7 +45,9 @@ export function ControlSlot({
     () => ({ isFilled, hasValue }),
     [isFilled, hasValue],
   );
-  const isMarkedEmpty = !isLabelHidden && !hasValue;
+  const listSection = useSectionListSection(control);
+  const isMissingSectionList = control.kind === "sectionList" && !listSection;
+  const isMarkedEmpty = !isLabelHidden && !hasValue && !isMissingSectionList;
   const className = [
     styles.slot,
     control.showWhen ? styles.revealed : "",

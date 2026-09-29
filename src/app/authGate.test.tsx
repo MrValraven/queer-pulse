@@ -62,14 +62,13 @@ describe("requiredCapability", () => {
     );
   });
 
-  // PRD-125. The member's own pitch tracker reads
-  // `GET /magazine/submissions/mine`, guarded by `ActiveMemberGuard` alone, and
-  // every member's account menu links to it. It used to sit behind
-  // `magazine_writer`, which bounced plain members onto the visitor homepage.
-  it("demands no capability on the member's own pitch tracker", () => {
+  // `/magazine/pitches` is a legacy redirect into the writer workspace's
+  // Submissions tab. The path itself carries no capability; the
+  // `magazine_writer` gate applies once the redirect lands on
+  // `/magazine/writer`.
+  it("demands no capability on the legacy tracker redirect", () => {
     expect(requiredCapability("/magazine/pitches")).toBeNull();
-    // Still closed to logged-out visitors, though: dropping the capability
-    // opened it to every MEMBER, never to the public.
+    // Signed-in only, so a logged-out visitor goes to sign-in first.
     expect(isGatedPath("/magazine/pitches")).toBe(true);
   });
 
@@ -178,12 +177,13 @@ describe("useAuthGateRedirect: /magazine/editor capability gate", () => {
 });
 
 /**
- * PRD-125. `/magazine/pitches` is the member's own submission tracker: the
- * account menu links every member to it and the endpoint it reads
- * (`GET /magazine/submissions/mine`) is `ActiveMemberGuard`ed. The gate has to
- * admit a plain member and still turn a logged-out visitor away.
+ * `/magazine/pitches` is a legacy redirect into the writer workspace's
+ * Submissions tab (`/magazine/writer?tab=submissions`). The gate lets a signed-in
+ * member through to the redirect, where the `magazine_writer` gate on
+ * `/magazine/writer` takes over, and sends a logged-out visitor to sign-in with
+ * the old path as `next`.
  */
-describe("useAuthGateRedirect: the member's own pitch tracker", () => {
+describe("useAuthGateRedirect: the legacy tracker redirect", () => {
   beforeEach(() => {
     loggedIn = true;
     role = "member";
@@ -191,7 +191,7 @@ describe("useAuthGateRedirect: the member's own pitch tracker", () => {
     demoMode = false;
   });
 
-  it("admits a plain member who holds no staff grant at all", () => {
+  it("lets a signed-in member with no staff grant through to the redirect", () => {
     const { result } = renderHook(() => useAuthGateRedirect(), {
       wrapper: wrapperAt("/magazine/pitches"),
     });

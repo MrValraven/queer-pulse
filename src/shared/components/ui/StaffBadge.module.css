@@ -55,3 +55,50 @@
   height: 16px;
   flex: none;
 }
+
+/* Icon-only: a round shield chip beside the name on the profile hero. It
+   carries no visible text; the Tooltip wrapped around it holds the label, and
+   the button exists so a keyboard can focus it and reveal that label. The
+   tone class supplies the background and colour. */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  /* Sized and seated to match the profile hero's "go public" star
+     (PublicProfileBadge.module.css), which shares the name row: the same
+     circle, and the same drop from the name's vertical centre toward its
+     baseline, scaled by --name-fs where the name row sets it. */
+  transform: translateY(calc(var(--name-fs, 40px) * 0.18));
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  cursor: default;
+}
+.icon.admin {
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+.icon.moderator {
+  border-color: rgba(var(--violet-rgb), 0.35);
+}
+.icon.grant {
+  border-color: rgba(var(--jade-rgb), 0.35);
+}
+.icon svg {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  /* A tinted shield inside the full-strength outline: the outline alone thinned
+     out beside the large display name, and a solid fill read too heavy. CSS
+     beats Feather's fill="none" attribute; fill-opacity leaves the stroke
+     untouched. */
+  fill: currentColor;
+  fill-opacity: 0.3;
+}
+.icon:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

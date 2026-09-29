@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   RefinePanel,
@@ -17,8 +17,10 @@ import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data
 import s from "./LocalFilterBar.module.css";
 
 export interface LocalFilterFieldsProps {
-  category: string;
-  onCategoryChange: (value: string) => void;
+  /** The chosen place types (`?cat=`), in chip order. Empty means every type. */
+  categories: string[];
+  onToggleCategory: (categoryId: string) => void;
+  onClearCategories: () => void;
   /** Live count per category id (+ "all"), reflecting the other active filters. */
   categoryCounts: Record<string, number>;
   query: string;
@@ -46,9 +48,10 @@ export interface LocalFilterFieldsProps {
   isLocationOn: boolean;
   /** The "use my location" control, which rides the search row between the
    *  field and "Refine" — ordering the results is a refinement, and that row is
-   *  where the other two live. Rendered by the `"bar"` variant only: the mobile
-   *  sheet is itself behind a tap, and distance is too central to bury there,
-   *  so on phones the Local page keeps it in the results header instead. */
+   *  where the other two live. Rendered by the `"bar"` and `"overlay"`
+   *  variants: the mobile sheet is itself behind a tap, and distance is too
+   *  central to bury there, so on phones the Local page keeps it in the
+   *  results header instead. */
   nearMeSlot?: ReactNode;
   /** The List/Map switcher, which rides the far end of the search row so every
    *  control that shapes the results sits on one line. Rendered by the `"bar"`
@@ -64,8 +67,15 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
    * one row tall. `"sheet"` is the mobile Filters sheet, which is itself
    * already a collapsed surface — nesting a second drawer inside it would put
    * the place types two taps deep, so there the groups render flat.
+   * `"overlay"` is the floating card inside the desktop full screen map: the
+   * bar's row minus the List/Map switcher, with a drawer state of its own.
    */
-  variant?: "bar" | "sheet";
+  variant?: "bar" | "sheet" | "overlay";
+  /** The active-filter chips and "Clear filters", placed straight under the
+   *  search row and above the drawer, so they stay in view while the drawer is
+   *  open. The full screen map card passes them; the page bar renders its own
+   *  chips after the whole set. */
+  activeFiltersSlot?: ReactNode;
 }
 
 /**
@@ -76,8 +86,9 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
  * diverge in behaviour.
  */
 export function LocalFilterFields({
-  category,
-  onCategoryChange,
+  categories,
+  onToggleCategory,
+  onClearCategories,
   categoryCounts,
   query,
   onQueryChange,
@@ -95,12 +106,18 @@ export function LocalFilterFields({
   nearMeSlot,
   viewSlot,
   variant = "bar",
+  activeFiltersSlot,
 }: LocalFilterFieldsVariantProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   // Every filter collapses behind one toggle so the bar stays a single row;
-  // the visitor's open/closed choice sticks per device.
-  const refine = useRefineDrawer("qp.local.refineOpen");
+  // the visitor's open/closed choice sticks per device. The map card keeps its
+  // own key, so entering full screen opens on a shut drawer and the map stays
+  // in view whatever the page's drawer was left at.
+  const isOverlay = variant === "overlay";
+  const refine = useRefineDrawer(
+    isOverlay ? "qp.local.mapRefineOpen" : "qp.local.refineOpen",
+  );
   // Vibe (Cozy/Loud/Chill) only ever has data on demo-only venues (`map.data`'s
   // `VENUES.vibe`) — a real business has no vibe-tag field at all (its
   // `photos.vibe` is an unrelated photo-caption slot, not a mood tag), so the
@@ -110,13 +127,30 @@ export function LocalFilterFields({
   // vibe-tag field exists on live businesses.
   const showVibeFilter = demoMode;
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.
-  // The place type counts too now that it lives inside the drawer.
+  // Every chosen place type counts as one filter, the same way each vibe and
+  // each access need does, so the badge matches the chips applied.
   const activeRefineCount =
     vibes.length +
     access.length +
+    categories.length +
     (safeOnly ? 1 : 0) +
-    (openNow ? 1 : 0) +
-    (category !== "all" ? 1 : 0);
+    (openNow ? 1 : 0);
+  // The field holds its own text. `query` lives in the URL, and the router
+  // commits a URL change inside a transition, so a field bound straight to it
+  // was reset to a stale value between fast keystrokes and dropped letters.
+  // A change made elsewhere ("Clear filters", a removed chip) still reaches
+  // the field: it is adopted during render, React's pattern for state that
+  // follows a prop (see `AdminCommunityDetail`).
+  const [searchText, setSearchText] = useState(query);
+  const [previousQuery, setPreviousQuery] = useState(query);
+  if (query !== previousQuery) {
+    setPreviousQuery(query);
+    setSearchText(query);
+  }
+  const changeSearchText = (next: string) => {
+    setSearchText(next);
+    onQueryChange(next);
+  };
 
   const search = (
     <div className={s.search}>
@@ -135,8 +169,16 @@ export function LocalFilterFields({
         type="text"
         aria-label={t("marketing:local.filter.searchPlaceholder")}
         placeholder={t("marketing:local.filter.searchPlaceholder")}
-        value={query}
-        onChange={(event) => onQueryChange(event.target.value)}
+        value={searchText}
+        onChange={(event) => changeSearchText(event.target.value)}
+        // Escape empties a filled field first. Claiming the key keeps the full
+        // screen map open (useMapFullscreen leaves on any Escape left
+        // unclaimed), so only an Escape in an empty field closes it.
+        onKeyDown={(event) => {
+          if (event.key !== "Escape" || searchText === "") return;
+          event.preventDefault();
+          changeSearchText("");
+        }}
       />
     </div>
   );
@@ -148,8 +190,9 @@ export function LocalFilterFields({
   const groups = (
     <>
       <LocalCategoryFilter
-        category={category}
-        onCategoryChange={onCategoryChange}
+        categories={categories}
+        onToggleCategory={onToggleCategory}
+        onClearCategories={onClearCategories}
         categoryCounts={categoryCounts}
       />
       {/* Ordering and the two one-tap narrowings share a band: all three are
@@ -186,13 +229,18 @@ export function LocalFilterFields({
 
   return (
     <>
-      <div className={s.barRow}>
+      <div className={isOverlay ? `${s.barRow} ${s.barRowOverlay}` : s.barRow}>
         {search}
         {nearMeSlot}
         <RefineToggle {...refine.toggleProps} activeCount={activeRefineCount} />
-        {viewSlot && <div className={s.viewSlot}>{viewSlot}</div>}
+        {viewSlot && !isOverlay && <div className={s.viewSlot}>{viewSlot}</div>}
       </div>
-      <RefinePanel {...refine.panelProps}>{groups}</RefinePanel>
+      {activeFiltersSlot}
+      {/* Inside the map's card the drawer sheds its own card, which would
+          double the border and narrow the bands. */}
+      <RefinePanel {...refine.panelProps} isFlat={isOverlay}>
+        {groups}
+      </RefinePanel>
     </>
   );
 }

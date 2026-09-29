@@ -73,6 +73,9 @@ export const routes = {
    *  stays out of MOD_ACCESSIBLE_ADMIN_PATTERNS. */
   adminOfficialMessages: "/admin/official-messages",
   adminChangemakers: "/admin/changemakers",
+  /** Grant, re-focus and revoke the QueerPulse Ambassador status. Admin or
+   *  the `partnerships` staff grant (see the partnerships block in authGate). */
+  adminAmbassadors: "/admin/ambassadors",
   adminChangemakerNominations: "/admin/changemaker-nominations",
   adminCommissionInterests: "/admin/commission-interests",
   adminReadingGroupProposals: "/admin/reading-group-proposals",
@@ -105,6 +108,10 @@ export const routes = {
   /** Admin-only. Backend: POST /admin/listings, `@StaffRoles()` with
    *  `@Roles(Admin)`, so a `directory_moderator` grant does NOT reach it. */
   adminListingNew: "/admin/listings/new",
+  /** Admin-only. Backend: GET /admin/listings/:ref/editable and PATCH
+   *  /admin/listings/:ref, both `@Roles(Admin)`. Edits a listing the platform
+   *  holds; the page shows a has-owner state once somebody owns it. */
+  adminListingEdit: "/admin/listings/:ref/edit",
   adminMedia: "/admin/media",
   /** The sticker pack builder. Admin-only: `AdminStickersController` is
    *  `@Roles(Admin)` alone, so this path is deliberately absent from
@@ -143,6 +150,10 @@ export const routes = {
    *  `${adminResourceGuides}/*` grant. */
   adminResourceGuideNew: "/admin/resource-guides/new",
   adminResourceGuideEdit: "/admin/resource-guides/edit",
+  /** One guide rendered as readers see it (`${adminResourceGuidePreview}/:id`),
+   *  review gate skipped, so an editor can read a guide before stamping it.
+   *  Inherits the same `${adminResourceGuides}/*` grant. */
+  adminResourceGuidePreview: "/admin/resource-guides/preview",
   adminResourceSuggestions: "/admin/resource-suggestions",
   adminCommunityTagRequests: "/admin/community-tag-requests",
   adminCommunitySpaceRequests: "/admin/community-space-requests",
@@ -277,6 +288,12 @@ export const routes = {
   /** One-time founder bootstrap. Public, and 404s from the API once used. */
   genesis: "/genesis",
   gatherings: "/gatherings",
+  /** The standalone friend-match questionnaire (F3): `?return=` sends the
+   *  member back to the gathering card that opened it. */
+  goTogetherQuestionnaire: "/go-together/questionnaire",
+  /** The day-after meet-again feedback prompt (F3), keyed on the formed
+   *  group: `${routes.goTogetherFeedback}/:groupId`. */
+  goTogetherFeedback: "/go-together/feedback",
   glossary: "/resources/glossary",
   governance: "/about/governance",
   /** PRD-261. Where someone who submitted a concern checks what happened to
@@ -422,8 +439,8 @@ export const routes = {
   submitStory: "/magazine/submit-story",
   magazineApplyToWrite: "/magazine/apply-to-write",
   // Subprofiles: the public persona directory + the owner's dashboard. Param
-  // routes (/p/:handle, /members/:slug/:subslug, the editor) are declared in
-  // routes.tsx and linked via the helpers below.
+  // routes (/p/:handle, the legacy /members/:slug/:subslug fallback, the
+  // editor) are declared in routes.tsx and linked via the helpers below.
   subprofiles: "/subprofiles",
   subprofilesDashboard: "/account/subprofiles",
   /** PRD-48 — one index of every "I submitted a thing and am waiting to hear"
@@ -540,8 +557,9 @@ export const businessPath = (slug: string) => `${routes.directory}/${slug}`;
 /** The owner editor for one subprofile (`/account/subprofiles/:id/edit`). */
 export const subprofileEditPath = (id: string) =>
   `/account/subprofiles/${id}/edit`;
-/** A standalone (unlinked) persona's public page by its global handle. */
+/** Any persona's public page by its handle. */
 export const personaPath = (handle: string) => `/p/${handle}`;
-/** A linked persona nested under its owner's main profile. */
+/** Legacy address of a linked persona; only built as a fallback for one with
+ *  no handle yet, and redirected to `/p/<handle>` when it has one. */
 export const nestedPersonaPath = (ownerSlug: string, slug: string) =>
   `/members/${ownerSlug}/${slug}`;

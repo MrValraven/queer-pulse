@@ -21,14 +21,10 @@ export interface MagazineNavItem {
  * here because neither page exists in this build; only Desk, Issue and the
  * archive are real, navigable surfaces.
  *
- * "Pitches" was dropped for the same reason, and PRD-125 is why it had to go.
- * It pointed at `routes.pitchTracker`, which is the MEMBER's own submission
- * tracker: a different surface, in `AppShell` rather than the desk shell, for
- * a different audience. While that route was staff-gated the mistake was
- * invisible; opening it to every member (which is correct, since the endpoint
- * behind it only ever required an active member) made it a rail item that
- * silently threw an editor out of the desk. It also collided by name with the
- * account menu's own "Pitches" entry, so the same word meant two surfaces.
+ * "Pitches" was dropped too (PRD-125). It pointed at `routes.pitchTracker`,
+ * the member's own submission tracker at the time: a different surface for a
+ * different audience, which silently threw an editor out of the desk. That
+ * path is now a legacy redirect into the writer workspace's Submissions tab.
  *
  * The editor's real pitch inbox is `PitchInbox`, rendered INLINE on the desk
  * itself (`desk/DeskView.tsx`), so it has no route to point at and nothing is

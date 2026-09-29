@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
-import {
-  Avatar,
-  ExpandableText,
-  FeatureHelp,
-} from "../../shared/components/ui";
+import { Avatar, ExpandableText } from "../../shared/components/ui";
 import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
@@ -146,12 +142,8 @@ export function SubprofileHero({
         )}
 
         <div className="pp-text">
-          {/* The FeatureHelp chip is a sibling of the `<h1>`, never a child, so
-              the heading's accessible name is exactly the display name.
-              `.pp-nameRow` keeps them on one line (persona-skins.css). */}
           <div className="pp-nameRow">
             <h1 className="pp-name">{titleName}</h1>
-            <FeatureHelp id="subprofiles.detail" />
           </div>
           {/* The craft chip labels the tagline, so `.pp-taglineRow` stacks the
               two under the name — eyebrow, then the sentence it introduces,

@@ -20,28 +20,30 @@ import type { Catalog } from "../../types";
  */
 export const system: Catalog = {
   // ── src/pages/NotFoundPage.tsx ────────────────────────────────────────────
-  "notFound.eyebrow": "Página não encontrada",
-  "notFound.title.line1": "Chegaste a",
-  "notFound.title.line2": "<em>outro lugar.</em>",
+  "notFound.eyebrow": "404 · Página não encontrada",
+  "notFound.title": "Ping procurou <em>por todo o lado</em>",
   "notFound.sub":
-    "A página que procuras não existe, mudou de sítio, ou exige que tenhas sessão iniciada. Acontece. Aqui tens alguns sítios para onde ir.",
+    "Não há nada neste endereço. A página pode ter mudado de sítio, ter sido removida ou ser só para quem tem sessão iniciada.",
+  "notFound.pathLabel": "Endereço",
+  "notFound.mascot": "Ping mantém o ritmo da QueerPulse. Continua à procura.",
   "notFound.homeCta": "Ir para a página inicial",
   "notFound.backCta": "Voltar",
-  "notFound.linksTitle": "Ou experimenta uma destas opções",
+  "notFound.searchLabel": "Procura na QueerPulse",
+  "notFound.searchPlaceholder": "Pesquisar na plataforma…",
+  "notFound.searchCta": "Pesquisar",
+  "notFound.linksTitle": "Sítios populares",
   "notFound.links.magazine.label": "Revista",
-  "notFound.links.magazine.sub": "Edição de junho de 2026",
+  "notFound.links.magazine.sub": "Ensaios, entrevistas e críticas",
   "notFound.links.gatherings.label": "Convívios",
-  "notFound.links.gatherings.sub": "Próximos eventos",
+  "notFound.links.gatherings.sub": "O que há este mês",
   "notFound.links.readingGroups.label": "Grupos de leitura",
-  "notFound.links.readingGroups.sub": "8 grupos abertos",
+  "notFound.links.readingGroups.sub": "Lê em conjunto com outras pessoas",
   "notFound.links.forum.label": "Fórum",
   "notFound.links.forum.sub": "Discussão da comunidade",
   "notFound.links.help.label": "Ajuda e perguntas frequentes",
   "notFound.links.help.sub": "Encontra respostas",
   "notFound.links.contact.label": "Contacta-nos",
-  "notFound.links.contact.sub": "hello@queerpulse.com",
-  "notFound.searchPlaceholder": "Pesquisar na plataforma…",
-  "notFound.searchCta": "Pesquisar",
+  "notFound.links.contact.sub": "Avisa-nos de um link partido",
 
   // ── src/pages/PlaceholderPage.tsx ─────────────────────────────────────────
   "placeholder.title": "{title} está <em>a caminho.</em>",
@@ -184,15 +186,15 @@ export const system: Catalog = {
   "inviteLanding.loader.verifying": "A verificar o teu código de convite…",
   "inviteLanding.loader.unsealing": "A abrir o convite de {name}…",
   "inviteLanding.loader.preparing": "A preparar as boas-vindas…",
-  "inviteLanding.what.private.strong": "Privado por natureza.",
-  "inviteLanding.what.private.rest":
-    "Um espaço onde sabes sempre com quem estás a partilhar, e onde a tua privacidade é sempre tua para controlar.",
-  "inviteLanding.what.noAds.strong": "A comunidade em primeiro lugar.",
-  "inviteLanding.what.noAds.rest":
-    "Sem anúncios a competir pela tua atenção nem algoritmos a decidir o que vês. A QueerPulse é moldada pelas pessoas que a usam.",
-  "inviteLanding.what.community.strong": "Feito para a vida real.",
-  "inviteLanding.what.community.rest":
-    "Descobre pessoas, lugares, eventos e oportunidades que te ajudam a encontrar o teu caminho na vida queer em Lisboa.",
+  "inviteLanding.what.vouched.strong": "Com voto de confiança.",
+  "inviteLanding.what.vouched.rest":
+    "Cada pessoa aqui entrou através de alguém que já cá estava, tal como tu estás a entrar agora. É essa confiança que faz da QueerPulse um espaço seguro.",
+  "inviteLanding.what.privacy.strong": "Tu é que decides.",
+  "inviteLanding.what.privacy.rest":
+    "Escolhe quem vê o teu perfil, fotografias e atividade. As mensagens diretas são encriptadas de ponta a ponta.",
+  "inviteLanding.what.lisbon.strong": "Com raízes em Lisboa.",
+  "inviteLanding.what.lisbon.rest":
+    "Encontra as pessoas, comunidades, eventos e oportunidades que dão forma à vida queer na cidade. Sem anúncios, e sem nenhum algoritmo a decidir o que vês.",
   "inviteLanding.sealed.eyebrow": "Recebeste um convite pessoal",
   "inviteLanding.sealed.title": "<em>{name}</em> convidou-te.",
   "inviteLanding.sealed.sub_one":

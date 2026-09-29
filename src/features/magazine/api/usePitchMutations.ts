@@ -54,9 +54,10 @@ const TRIAGE_TOAST_KEY: Record<TriagePitchDto["verdict"], string> = {
  *
  * `triage` and `createPitch` are the editor desk's inbox
  * (`AdminMagazinePiecesController`). `withdraw` is the MEMBER's own move on
- * their own pitch, from the tracker at `/magazine/pitches` (PRD-129) — it lives
- * here because it is a pitch mutation and shares the invalidation set, and it
- * is deliberately the only one of the three a plain member can reach.
+ * their own pitch, from the writer workspace's Submissions tab
+ * (`WriterSubmissionsTab`, PRD-129). It lives here because it is a pitch
+ * mutation and shares the invalidation set, and its endpoint is deliberately
+ * the only one of the three a plain member can reach.
  */
 export function usePitchMutations() {
   const { demoMode } = useDemoMode();
@@ -105,10 +106,11 @@ export function usePitchMutations() {
    * POST /magazine/submissions/:id/withdraw — the member pulls their own
    * story submission back before the desk answers it.
    *
-   * Demo mode resolves without a network call and lets `PitchTrackerPage` keep
-   * its local, undoable withdraw: the sandbox has no server to forget the row,
-   * so an undo there is honest. Live has no undo — the desk really does stop
-   * seeing it — which is why the page confirms first.
+   * Demo mode resolves without a network call and lets `WriterSubmissionsTab`
+   * (the writer workspace's Submissions tab) keep its local, undoable
+   * withdraw: the sandbox has no server to forget the row, so an undo there is
+   * honest. Live has no undo, since the desk really does stop seeing it, which
+   * is why the tab confirms first.
    *
    * Invalidates the tracker's own query. The editor inbox is invalidated too:
    * a commissioned submission has a `magazine_pitch` row behind it, so a

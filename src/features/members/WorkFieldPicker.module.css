@@ -1,6 +1,6 @@
 /* Default styling for the shared work picker's own sub-headings. Host surfaces
-   that already have a label style (the profile editor, Settings → Interests)
-   pass `headingClassName` and never see these. */
+   that already have a label style (the two profile editors) pass
+   `headingClassName` and never see these. */
 .head {
   font-size: var(--text-15);
   font-weight: 700;
@@ -22,4 +22,64 @@
   font-style: italic;
   margin: 0;
   max-width: 46ch;
+}
+
+/* The no-match line, right under the search box it answers. It folds open
+   inside the always-mounted live region, margin included, so the field
+   heading below glides down and back. */
+.noMatch {
+  margin: 0 0 10px;
+}
+
+/* The note about unlisted work, under the last role chip. A touch looser
+   than the 8px between chip rows, so it reads as a note on the whole list.
+   The gap sits inside the note's fold and opens and closes with it, and it
+   clears the role frame's 6px ring room, so the note's first line never
+   covers the chips above while it opens. */
+.unlistedNote {
+  margin-top: 10px;
+}
+
+/* Holds the role area's views. Positioned, because a view on its way out
+   (AnimatePresence popLayout) is lifted out of the flow and placed against
+   this box while the next one fades in over it. */
+.professionViews {
+  position: relative;
+}
+
+/* One view. flow-root holds its content's edge margins (the result list's
+   negative top margin) inside the view, so they never collapse up through
+   `.professionViews` and shift the view on its way out. */
+.professionView {
+  display: flow-root;
+}
+
+/* Search sits above the field heading; same gap as the member directory's
+   search field (`MemberDirectoryFilterPage.module.css`). */
+.searchField {
+  margin-bottom: 10px;
+}
+
+/* Grouped profession search results: each field's matches sit under their own
+   sub-heading. The gap between fields is looser than the label to chips gap
+   within a field, so proximity alone reads the groups. Each group carries the
+   gap above itself, inside the panel it folds open and closed in, so a group
+   leaving takes its gap with it; the list's negative margin takes back the
+   first group's. */
+.resultGroups {
+  --result-group-gap: 14px;
+  margin-top: calc(var(--result-group-gap) * -1);
+}
+
+.resultGroup {
+  margin-top: var(--result-group-gap);
+}
+
+.resultGroupLabel {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0 0 6px;
 }

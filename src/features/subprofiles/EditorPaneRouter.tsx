@@ -62,8 +62,8 @@ export function EditorPaneRouter({
     KIND_PANE_LEDE_KEY[subprofile.kind]?.[pane] ??
     header?.ledeKey ??
     CONTENT_PANE_LEDE_KEY;
-  // A section edited inside Page blocks (a therapist's specialisms) gets no
-  // pane of its own here.
+  // Every kind edits its sections inside Page blocks chapters, so a section
+  // found there gets no pane of its own here.
   const sectionsInBlocks = sectionsInPageBlocks(subprofile.kind);
   const paneSections = subprofile.sections.filter(
     (section) => !sectionsInBlocks.has(sectionPaneKey(section.section)),
@@ -144,9 +144,10 @@ export function EditorPaneRouter({
         <SubprofileLinkFields editor={meta} subprofile={subprofile} />
       </div>
 
-      {/* Only rendered when the persona's skin has editable SkinData blocks —
-          the rail entry is likewise skin-gated (`hasSkinBlocks`). Mounted like
-          every other pane so its in-progress edits survive rail navigation. */}
+      {/* Page blocks: every kind's chapters, its sections included. The rail
+          entry shows while the kind has chapters (`hasSkinBlocks`). Mounted
+          like every other pane so its in-progress edits survive rail
+          navigation. */}
       <div hidden={pane !== "skinBlocks"}>
         <SubprofileSkinBlocksEditor />
       </div>

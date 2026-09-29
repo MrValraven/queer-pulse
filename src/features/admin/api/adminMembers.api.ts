@@ -120,16 +120,20 @@ export interface AdminMemberDetailDTO {
   signInEmailMasked: string | null;
 }
 
-/** Paginated member grid for the admin panel, optionally filtered. Admin-only — 403s otherwise. */
+/** Paginated member grid for the admin panel, optionally filtered and
+ *  name-searched (`q`, matched server-side across every page). Admin-only —
+ *  403s otherwise. */
 export const getAdminMembers = (parameters: {
   page?: number;
   filter?: "all" | "verified" | "new";
+  q?: string;
 }) => {
   const searchParams = new URLSearchParams();
   if (parameters.page) searchParams.set("page", String(parameters.page));
   if (parameters.filter && parameters.filter !== "all") {
     searchParams.set("filter", parameters.filter);
   }
+  if (parameters.q) searchParams.set("q", parameters.q);
   const querySuffix = searchParams.toString();
   return apiGet<AdminMemberListDTO>(
     `/admin/members${querySuffix ? `?${querySuffix}` : ""}`,

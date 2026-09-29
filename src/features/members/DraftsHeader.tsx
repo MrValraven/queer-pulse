@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CREATE_ITEMS } from "./drafts.data";
 import styles from "./DraftsPage.module.css";
+
+const ICON_TINT_CLASS: Record<(typeof CREATE_ITEMS)[number]["tint"], string> = {
+  jade: styles.ciJade!,
+  accent: styles.ciAccent!,
+  plum: styles.ciPlum!,
+};
 
 /** Drafts page header: title block + a "Start something" create-menu dropdown. */
 export function DraftsHeader() {
@@ -70,25 +77,31 @@ export function DraftsHeader() {
 
         {open && (
           <div className={styles.createMenu} role="menu">
-            {CREATE_ITEMS.map((item) => (
-              <Link
-                key={item.labelKey}
-                to={item.to}
-                role="menuitem"
-                className={styles.createItem}
-                onClick={() => setOpen(false)}
-              >
-                <span
-                  className={`${styles.ci} ${item.tint === "jade" ? styles.ciJade : styles.ciPlum}`}
+            {CREATE_ITEMS.map((item) => {
+              const ItemIcon = item.icon;
+              return (
+                <Link
+                  key={item.labelKey}
+                  to={item.to}
+                  role="menuitem"
+                  className={styles.createItem}
+                  onClick={() => setOpen(false)}
                 >
-                  {item.badge}
-                </span>
-                <span>
-                  {t(item.labelKey)}
-                  <small>{t(item.subKey)}</small>
-                </span>
-              </Link>
-            ))}
+                  <span
+                    className={`${styles.ci} ${ICON_TINT_CLASS[item.tint]}`}
+                  >
+                    <ItemIcon aria-hidden />
+                  </span>
+                  <span className={styles.createText}>
+                    <span className={styles.createLabel}>
+                      {t(item.labelKey)}
+                    </span>
+                    <small>{t(item.subKey)}</small>
+                  </span>
+                  <FiArrowRight className={styles.createArrow} aria-hidden />
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

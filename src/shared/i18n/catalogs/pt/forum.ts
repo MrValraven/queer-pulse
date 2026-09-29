@@ -746,10 +746,6 @@ export const forum: Catalog = {
   "composePage.section.tags.title": "Etiquetas",
   "composePage.section.tags.hint": "Como as pessoas encontram isto mais tarde.",
   "composePage.tags.counter": "{count}/{max}",
-  "composePage.tags.placeholder": "Adiciona uma etiqueta e carrega Enter",
-  "composePage.tags.inputLabel": "Etiquetas",
-  "composePage.tags.inputHint":
-    "Até {max} etiquetas. Carrega Enter para adicionar uma.",
   "composePage.tags.full": "Já tens as {max} etiquetas.",
   "composePage.tags.suggestLabel": "Sugestões",
 

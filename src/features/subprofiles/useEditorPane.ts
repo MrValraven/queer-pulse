@@ -12,8 +12,10 @@ export interface EditorPaneState {
   activePane: EditorPaneKey;
   /** Ordered pane keys, flattened across the rail groups (prev/next order). */
   paneKeys: EditorPaneKey[];
-  /** Switch panes. Pushes history, so Back steps to the previous pane. */
-  selectPane: (pane: EditorPaneKey) => void;
+  /** Switch panes. Pushes history, so Back steps to the previous pane. A
+   *  `chapterKey` also opens that Page blocks chapter, in the same history
+   *  entry, so one click is one Back step. */
+  selectPane: (pane: EditorPaneKey, chapterKey?: string) => void;
   isPickerOpen: boolean;
   openPicker: () => void;
   closePicker: () => void;
@@ -43,11 +45,11 @@ function pageBlocksSearch(
  * phone's Back gesture steps back a pane instead of dumping the owner out of
  * the editor mid-edit. A pane survives a refresh. And a pane is linkable.
  *
- * `paneKeys` is the source of truth for what `?pane=` may hold: it comes from
- * the rail groups actually built for THIS persona, whose Content entries depend
- * on `sectionsForKind(kind)`. So a link carrying `?pane=section:shows` opened
- * against a persona with no Shows section falls back to the first pane rather
- * than rendering an empty one.
+ * `paneKeys` is the rail's panes, in order: the source of truth for what
+ * `?pane=` may hold. A `?pane=section:<name>` link to a section that has
+ * since moved into Page blocks redirects instead, via `movedPaneSearch`
+ * below. So a link carrying an unknown pane, `?pane=billing` say, falls back
+ * to the first pane rather than rendering an empty one.
  *
  * The mobile picker sheet rides the URL too (`?panes=1`, pushed), so Back
  * closes the sheet before it touches the pane history. Picking a pane from the
@@ -85,7 +87,7 @@ export function useEditorPane(
   const isPickerOpen = searchParams.get(PICKER_PARAM) === "1";
 
   const selectPane = useCallback(
-    (pane: EditorPaneKey) => {
+    (pane: EditorPaneKey, chapterKey?: string) => {
       // From the open sheet: swap the sheet's own entry for the pane's, so the
       // owner doesn't press Back twice to undo one choice. From the prev/next
       // arrows (sheet closed): push, so each pane is its own Back step.
@@ -95,6 +97,7 @@ export function useEditorPane(
         (previous) => {
           const next = new URLSearchParams(previous);
           next.set(PANE_PARAM, pane);
+          if (chapterKey) next.set(CHAPTER_PARAM, chapterKey);
           next.delete(PICKER_PARAM);
           return next;
         },

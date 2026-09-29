@@ -1,11 +1,12 @@
 import { useId, useState } from "react";
-import { nestedPersonaPath, routes } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   PublicSubprofileView,
   SubprofileOwnerMeta,
 } from "./api/subprofiles.adapters";
+import { personaHrefWithOwnerFallback } from "./personaLinks.data";
 import { SubprofileEditButton } from "./SubprofileEditButton";
 import { SubprofileFeatureCard } from "./SubprofileFeatureCard";
 import { SubprofileMobileRow } from "./SubprofileMobileRow";
@@ -83,16 +84,17 @@ export function SubprofileShowcaseMobile({
       <div className={styles.mobileAccordion}>
         <SubprofileFeatureCard
           persona={persona}
-          // Addressed by the persona's OWN `ownerSlug`, which the server
-          // resolves per persona to its CREATOR's profile slug. Same rule as
-          // the desktop path in `SubprofileShowcase`: a co-owned persona shows
-          // on every co-owner's profile while the nested route resolves
-          // `slug` + creator only, so building the link from whichever profile
-          // is being viewed 404s, and, where that co-owner has a persona of
-          // their own under the same slug, opens the OTHER persona. The
-          // `ownerSlug` prop stays as the fallback for the self view, whose
-          // owner list carries no per-persona owner.
-          href={nestedPersonaPath(persona.ownerSlug ?? ownerSlug, persona.slug)}
+          // The persona's own handle wins once it has one. Its nested
+          // fallback is addressed by the persona's OWN `ownerSlug`, which the
+          // server resolves per persona to its CREATOR's profile slug. Same
+          // rule as the desktop path in `SubprofileShowcase`: a co-owned
+          // persona shows on every co-owner's profile while the nested route
+          // resolves `slug` + creator only, so building the link from
+          // whichever profile is being viewed 404s, and, where that co-owner
+          // has a persona of their own under the same slug, opens the OTHER
+          // persona. The `ownerSlug` prop stays as the fallback for the self
+          // view, whose owner list carries no per-persona owner.
+          href={personaHrefWithOwnerFallback(persona, ownerSlug)}
           ownerControls={
             canEdit ? (
               <SubprofileEditButton subprofileId={meta?.id ?? persona.id} />
@@ -128,12 +130,9 @@ export function SubprofileShowcaseMobile({
           >
             <SubprofileFeatureCard
               persona={persona}
-              // Per-persona creator slug, same rule as the single-persona
-              // branch above and as the desktop hero.
-              href={nestedPersonaPath(
-                persona.ownerSlug ?? ownerSlug,
-                persona.slug,
-              )}
+              // Per-persona handle, else creator slug, same rule as the
+              // single-persona branch above and as the desktop hero.
+              href={personaHrefWithOwnerFallback(persona, ownerSlug)}
               ownerControls={
                 canEdit ? (
                   <SubprofileEditButton subprofileId={meta?.id ?? persona.id} />

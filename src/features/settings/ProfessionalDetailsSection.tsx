@@ -7,7 +7,7 @@ import { WorkFieldPicker } from "../members/WorkFieldPicker";
 import styles from "./InterestsPane.module.css";
 
 /**
- * Discipline, profession and languages — Settings → Interests. Unlike the
+ * Discipline, profession and languages in Settings → Interests. Unlike the
  * identity chips above, these are PUBLIC (shown on the member's profile and
  * searchable in the member directory's "What they do" / "Profession" /
  * "Languages" filters), so this section says so explicitly rather than
@@ -49,7 +49,6 @@ export function ProfessionalDetailsSection({
       <WorkFieldPicker
         discipline={draft.discipline}
         profession={draft.profession}
-        headingClassName={styles.subHead}
         onChange={(next) => {
           updateDraft(next);
           onChange();

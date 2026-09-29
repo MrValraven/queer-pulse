@@ -488,6 +488,21 @@ export const reissueJoinRequestInvite = (id: string) =>
     `/join-requests/${encodeURIComponent(id)}/invite/reissue`,
   );
 
+/**
+ * Pull the still-valid invite an approval handed out (Mod/Admin only),
+ * addressed by the JOIN REQUEST id. The link stops opening at once, which is
+ * the fix for a link that was pasted to the wrong person or leaked.
+ *
+ * Revoking is final: a revoked invite cannot be reissued. Failure modes:
+ * - `404`: unknown request, or one that never minted an invite;
+ * - `409`: the invite was already used, revoked or expired;
+ * - `403`: the caller is not a moderator or admin.
+ */
+export const revokeJoinRequestInvite = (id: string) =>
+  apiPost<JoinRequestDTO>(
+    `/join-requests/${encodeURIComponent(id)}/invite/revoke`,
+  );
+
 /** A random sample of past-reviewed requests, for the periodic peer quality
  *  pass (Mod/Admin only). */
 export const sampleJoinRequests = (n = 10) =>

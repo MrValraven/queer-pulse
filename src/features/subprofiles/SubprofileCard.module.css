@@ -118,6 +118,42 @@
   overflow: hidden;
 }
 
+/* A Quest persona's "At the table" summary under the tagline: at most three
+   short segments (format + up to two vibes), read as a data line distinct
+   from the tagline's free-text sentence above it through weight and
+   letter-spacing alone. Stays plain --ink-60: an earlier accent-tinted
+   version failed WCAG AA against --paper for several accents (as low as
+   2.63:1). Capped to two lines exactly like the tagline, so a long PT
+   combination can't grow one card taller than its siblings. */
+.tableLine {
+  color: var(--ink-60);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Each segment stays unbroken (never wraps inside "Beginner-friendly"). The
+   generated separator resets to normal white-space so a wrap point still
+   exists between segments even though the clamp above lays them out as
+   ordinary wrapping inline content. */
+.tableSegment {
+  white-space: nowrap;
+}
+.tableSegment:not(:last-child)::after {
+  /* Plain fallback first for browsers without alt-text `content` support;
+     the alt-text form after it hides the decorative dot from assistive tech
+     (its own empty alt-text overrides the fallback where it's supported). */
+  content: " · ";
+  content: " · " / "";
+  white-space: normal;
+  color: var(--ink-40);
+}
+
 .tags {
   margin-block-start: 2px;
 }

@@ -189,7 +189,7 @@ export const auth: Catalog = {
     "Não foi possível voltar a enviar agora. Tenta outra vez daqui a pouco.",
 
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
-  "sharePreview.heroTitle.line1": "Entra na QueerPulse",
+  "sharePreview.heroTitle.line1": "Entra numa sala",
   "sharePreview.heroTitle.line2": "<em>onde já pertences</em>",
   "sharePreview.heroExplainer": "Uma rede queer. Enraizada em Lisboa.",
   "sharePreview.heroSub_one": "Só por convite · {count} pessoa",
@@ -223,9 +223,6 @@ export const auth: Catalog = {
   "under18.link.eligibility": "Porque somos 18+ (os nossos Termos)",
   "under18.backDefault": "Voltar",
   "under18.link.contact": "Fala connosco se algo aqui parecer errado",
-  "under18.signedIn.body":
-    "Neste momento tens sessão iniciada, por isso vamos fechá-la aqui. Volta quando fizeres 18 anos e alguém te convidará com todo o gosto.",
-  "under18.signOut": "Terminar sessão",
 
   // ── Voltar a concordar quando os Termos ou as Diretrizes mudam (ID-14) ──
   "policyReacceptance.eyebrow": "Antes de continuares",
@@ -595,6 +592,7 @@ export const auth: Catalog = {
     "Escolhe as comunidades que fazem sentido para ti e descobre onde pertences.",
 
   "onboarding.stepWelcome.eyebrowSuffix": "Já estás dentro",
+  "onboarding.stepWelcome.invitedByAmbassador": "Pessoa embaixadora QueerPulse",
   "onboarding.stepWelcome.heading": "Bem-vinde, <em>{firstName}</em>",
   "onboarding.stepWelcome.memberSince": "Aqui desde {since}",
   "onboarding.stepWelcome.invitedYou": "Convidou-te",
@@ -622,7 +620,7 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.photoAlt": "A tua foto de perfil",
   "onboarding.stepPhoto.placeholder": "a tua foto",
   "onboarding.stepPhoto.continue": "Continuar",
-  "onboarding.stepPhoto.skip": "Saltar por agora, podes adicionar isto depois",
+  "onboarding.stepPhoto.skip": "Saltar por agora",
   "onboarding.stepPhoto.back": "Voltar",
   "onboarding.stepPhoto.uploadError":
     "Não conseguimos adicionar essa foto. Tenta novamente.",
@@ -674,8 +672,7 @@ export const auth: Catalog = {
   "onboarding.stepIntents.hint":
     "Escolhe pelo menos uma, e quantas fizerem sentido.",
   "onboarding.stepIntents.continue": "Continuar",
-  "onboarding.stepIntents.skip":
-    "Saltar por agora, podes partilhar isto depois",
+  "onboarding.stepIntents.skip": "Saltar por agora",
   "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
@@ -693,9 +690,9 @@ export const auth: Catalog = {
   // diretório procuram. Opcional: saltar não guarda nada.
   "onboarding.stepWork.heading": "O que <em>fazes?</em>",
   "onboarding.stepWork.hint":
-    "Escolhe a tua área e depois as funções que encaixam. Isto é público e é assim que as pessoas te encontram no diretório de membros.",
+    "Escolhe a tua área, ou pesquisa a tua função, e depois as funções que encaixam. Isto é público e é assim que as pessoas te encontram no diretório de membros.",
   "onboarding.stepWork.continue": "Continuar",
-  "onboarding.stepWork.skip": "Saltar por agora, podes adicionar isto depois",
+  "onboarding.stepWork.skip": "Saltar por agora",
   "onboarding.stepWork.back": "Voltar",
   "onboarding.stepWork.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
@@ -722,8 +719,7 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.leave": "Sair da comunidade",
   "onboarding.stepCommunities.requested": "Pedido enviado",
   "onboarding.stepCommunities.continue": "Continuar",
-  "onboarding.stepCommunities.skip":
-    "Saltar por agora, explora e junta-te depois",
+  "onboarding.stepCommunities.skip": "Saltar por agora",
   "onboarding.stepCommunities.back": "Voltar",
   "onboarding.stepCommunities.empty":
     "Sem sugestões de momento. Podes explorar e juntar-te a comunidades quando quiseres.",

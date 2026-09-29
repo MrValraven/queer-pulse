@@ -1,0 +1,68 @@
+/* Editor desk: the pipeline's select checkbox (`PieceCheckbox.tsx`). A real
+   <input type="checkbox"> stays on top, transparent, and the box below it
+   paints the state through the `+` sibling selectors. */
+
+.wrap {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+}
+
+/* Positioned over the box. The box below ignores the pointer (see `.box`),
+   so every press lands on this input whatever paints on top. */
+.input {
+  position: absolute;
+  inset: -3px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* The check's `opacity` gives it a stacking context that paints above the
+   transparent input, so the box and its mark must pass the pointer through:
+   otherwise a click at the centre hits the svg, which the row reads as
+   "open the piece". */
+.box {
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-5);
+  background: var(--paper);
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.mark {
+  color: var(--paper);
+  font-size: var(--text-12);
+  opacity: 0;
+}
+
+.input:hover + .box {
+  border-color: var(--line-strong);
+}
+
+/* Plum fill (`--text-strong` flips to cream in dark mode, with the paper
+   check flipping with it). */
+.input:checked + .box,
+.input:indeterminate + .box {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+}
+
+.input:checked + .box .mark,
+.input:indeterminate + .box .mark {
+  opacity: 1;
+}
+
+.input:focus-visible + .box {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

@@ -27,20 +27,22 @@ function demoMember(
 }
 
 /**
- * The immutable baseline. `QPL-2026-0007` is house-authored with an offer out
- * and one staff-attached seat, `QPL-2026-0006` is owned with a seat of the
- * owner's own, and `QPL-2026-0005` has nothing arranged yet.
+ * The immutable baseline. `QPL-2026-0008` is the platform-held suggestion,
+ * with an ownership offer out, one staff-attached seat and one invitation
+ * waiting. `QPL-2026-0006` is owned with a seat of the owner's own.
+ * `QPL-2026-0007` (owned) and `QPL-2026-0005` have nothing arranged, so they
+ * answer the empty picture.
  */
 const DEMO_LISTING_DELEGATION: Record<string, AdminListingDelegationDTO> = {
-  "QPL-2026-0007": {
+  "QPL-2026-0008": {
     openOffer: {
       id: "offer-demo-1",
-      listingRef: "QPL-2026-0007",
-      listingSlug: "maison-du-tiago",
-      listingName: "Maison Du Tiago",
+      listingRef: "QPL-2026-0008",
+      listingSlug: "livraria-da-esquina",
+      listingName: "Livraria da Esquina",
       offeree: demoMember("nadia", "Nadia", "Faro"),
       offeredBy: demoMember("sam", "Sam", "Reis"),
-      note: "You run the room night to night, so the page should be yours.",
+      note: "You run the shop day to day, so the page should be yours.",
       status: "offered",
       offeredAt: "2026-08-14T09:20:00.000Z",
       respondedAt: null,

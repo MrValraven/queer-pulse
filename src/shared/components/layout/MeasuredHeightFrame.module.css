@@ -1,0 +1,22 @@
+/* The ring room: the focus ring's width plus its offset (both 3px, see
+   tokens/effects.css), paid as padding and taken back as a negative margin,
+   so the frame's clip sits outside any focused control at the content's edge.
+   Vertical margins collapse with a neighbour's, and the padding restores the
+   same space, so the frame adds no gap of its own. */
+.frame {
+  --frame-ring-room: calc(var(--focus-ring-offset) * 2);
+  box-sizing: content-box;
+  margin: calc(var(--frame-ring-room) * -1);
+  padding: var(--frame-ring-room);
+  overflow: hidden;
+}
+
+.frameSized {
+  transition: height var(--dur-base) var(--ease);
+}
+
+/* Measured wrapper: flow-root keeps a child's margins inside the
+   measurement, so the height matches what the eye sees. */
+.content {
+  display: flow-root;
+}

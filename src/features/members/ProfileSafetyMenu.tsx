@@ -8,13 +8,7 @@ import {
   type RefObject,
   type SetStateAction,
 } from "react";
-import {
-  FiFlag,
-  FiMoreHorizontal,
-  FiSlash,
-  FiVolumeX,
-  FiX,
-} from "react-icons/fi";
+import { FiFlag, FiSlash, FiVolumeX, FiX } from "react-icons/fi";
 import { useSocial } from "../../app/providers/useSocial";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -22,15 +16,16 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ConnectionReportModal } from "../connect/ConnectionReportModal";
 import type { BlockOptions } from "../social/api/social.api";
 import { BlockMemberModal } from "./BlockMemberModal";
+import { ProfileMenuTrigger } from "./ProfileMenuTrigger";
 import styles from "./ProfileSafetyMenu.module.css";
 
 /**
  * Overflow "safety" menu shown on another member's profile hero (never your
- * own — the caller gates on the page's resolved `self`). Offers withdraw-vouch
+ * own, the caller gates on the page's resolved `self`). Offers withdraw-vouch
  * (when currently vouched), report, mute/unmute, and block/unblock, wired
  * straight to `useSocial()` so demo and live both work. Mute and unblock are
  * immediate; withdrawing a vouch and blocking are destructive, so both confirm
- * first — withdraw-vouch via the shared `ConfirmDialog`, block via
+ * first: withdraw-vouch via the shared `ConfirmDialog`, block via
  * `BlockMemberModal` (which also forwards the optional
  * `{ reason, alsoReport, reasonCode }`).
  *
@@ -46,7 +41,7 @@ import styles from "./ProfileSafetyMenu.module.css";
  */
 /**
  * Outside-click dismiss, first-item focus on open, and roving-tabindex
- * keyboard nav for the menu — split out so `ProfileSafetyMenu` itself stays
+ * keyboard nav for the menu, split out so `ProfileSafetyMenu` itself stays
  * under the repo's 200-line-per-component rule.
  */
 function useSafetyMenuDismiss(
@@ -224,20 +219,17 @@ export function ProfileSafetyMenu({
     });
   };
 
+  const triggerLabel = t("safety:profileMenu.ariaLabel", { name: firstName });
+
   return (
     <div ref={containerRef} className={styles.container}>
-      <button
-        ref={triggerRef}
-        type="button"
-        className={styles.trigger}
-        aria-label={t("safety:profileMenu.ariaLabel", { name: firstName })}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={open ? menuId : undefined}
-        onClick={() => setOpen((value) => !value)}
-      >
-        <FiMoreHorizontal aria-hidden />
-      </button>
+      <ProfileMenuTrigger
+        triggerRef={triggerRef}
+        label={triggerLabel}
+        isOpen={open}
+        menuId={menuId}
+        onToggle={() => setOpen((value) => !value)}
+      />
 
       {open && (
         <div

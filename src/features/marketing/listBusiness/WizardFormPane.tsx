@@ -1,7 +1,11 @@
 import { useRef } from "react";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { NEXT_LABEL_KEYS, type ListingDraft } from "./listBusiness.data";
+import {
+  NEXT_LABEL_KEYS,
+  TOTAL_STEPS,
+  type ListingDraft,
+} from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneActions, WizardChrome } from "./ListBusinessChrome";
 import { StepBasics, StepPath, StepStory } from "./ListBusinessSteps";
@@ -24,6 +28,7 @@ export function WizardFormPane({
   onBack,
   onNext,
   uploadPhoto,
+  submitLabel,
 }: {
   form: ListingForm;
   step: number;
@@ -38,13 +43,18 @@ export function WizardFormPane({
     file: File,
     options?: { crop?: CropRect },
   ) => Promise<{ key: string; previewUrl: string }>;
+  /** The final-step submit button's label, in place of the default "Send it
+   *  to the team". Left out, every earlier step's label is unaffected. */
+  submitLabel?: string;
 }) {
   const { t } = useTranslation();
   // The form column, so the preview can outline where the current field shows.
   const formColumnRef = useRef<HTMLDivElement>(null);
-  const nextLabel = t(
-    NEXT_LABEL_KEYS[step] ?? "marketing:listBusiness.next.continue",
-  );
+  const isFinalStep = step === TOTAL_STEPS - 1;
+  const nextLabel =
+    isFinalStep && submitLabel
+      ? submitLabel
+      : t(NEXT_LABEL_KEYS[step] ?? "marketing:listBusiness.next.continue");
 
   return (
     <div className={styles.page}>

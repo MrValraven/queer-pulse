@@ -77,10 +77,11 @@ export const mockFollowedPersonas = (
       avatarUrl: persona.avatarUrl,
       accent: persona.accent,
       slug: persona.slug,
-      // Mirrors the server: an unlinked persona is addressed by its handle, a
-      // linked one under its creator, and neither shape borrows the other's
-      // field.
-      handle: isLinked ? null : persona.handle,
+      // Mirrors the server: a handle always wins the address regardless of
+      // link visibility (`personaOwnerAddress`), so it ships for both kinds;
+      // only `ownerSlug`/`ownerName` below stay linked-only, on the
+      // anonymity rule.
+      handle: persona.handle,
       linkVisibility: persona.linkVisibility,
       ownerSlug: isLinked ? persona.ownerSlug : null,
       // Same linked-only rule as `ownerSlug`: only a linked persona lends its

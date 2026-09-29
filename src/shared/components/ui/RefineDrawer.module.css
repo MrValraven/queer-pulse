@@ -41,9 +41,18 @@
   border-color: rgba(var(--cream-rgb), 0.14);
 }
 
+/* The badge's animated slot. It clips, so while its width eases in or out
+   the pill inside keeps its full size and is revealed rather than squashed. */
+.countSlot {
+  display: inline-flex;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
 /* Count of active-but-hidden refinements, so a collapsed drawer still signals
    that filters are applied. */
 .count {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -91,6 +100,11 @@
 .bodyOpen {
   overflow: visible;
 }
+/* The box the content-height glide measures (see `usePanelHeightGlide`). A
+   flow-root, so the panel's top margin is counted inside it. */
+.measure {
+  display: flow-root;
+}
 @media (prefers-reduced-motion: reduce) {
   .chevron,
   .wrap {
@@ -109,6 +123,20 @@
 }
 :global([data-theme="dark"]) .panel {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+/* A drawer opened inside a surface that is already a card (the full screen
+   map's search card) drops its own card and keeps one hairline over the
+   groups, so the bands use the host card's full width. */
+.panelFlat {
+  margin-top: 12px;
+  padding-inline: 0;
+  border: none;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 0;
+  background: none;
+}
+:global([data-theme="dark"]) .panelFlat {
+  border-top-color: rgba(var(--cream-rgb), 0.1);
 }
 
 /* Two short groups side by side. The first column is capped so a select can't

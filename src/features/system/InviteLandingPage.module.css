@@ -428,6 +428,52 @@
   text-underline-offset: 3px;
 }
 
+/* Wraps the in-card under-18 notice so it can take focus when it opens;
+   the focus itself needs no ring (it lands there programmatically). */
+.under18:focus {
+  outline: none;
+}
+
+/* Phones: the invite drops its floating card and becomes the page itself,
+   full-bleed, so it scrolls like ordinary content. The plum header stays as
+   the top band; the cream body runs to the bottom of the screen. Scoped to
+   the card view (`.cardRoot`): the sealed and loading screens share `.root`
+   and keep their plum stage. */
+@media (--sm) {
+  .cardRoot {
+    background: var(--cream);
+    padding: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .cardRoot::before {
+    display: none;
+  }
+
+  .card {
+    max-width: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    flex: 1;
+  }
+
+  .pageFooter {
+    margin-top: 0;
+    padding: 0 22px 32px;
+  }
+
+  .pageFooter p {
+    color: var(--ink-40);
+  }
+
+  .pageFooter a,
+  .pageFooter button {
+    color: var(--ink-60);
+  }
+}
+
 @media (max-width: 420px) {
   .header {
     padding: 26px 22px 26px;

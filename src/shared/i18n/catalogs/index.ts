@@ -70,12 +70,13 @@ export const enNamespaceLoaders: Partial<
   governance: () =>
     import("./en/governance").then((module) => module.governance),
   myevents: () => import("./en/myevents").then((module) => module.myevents),
+  goTogether: () =>
+    import("./en/goTogether").then((module) => module.goTogether),
   connect: () => import("./en/connect").then((module) => module.connect),
   messages: () => import("./en/messages").then((module) => module.messages),
   culture: () => import("./en/culture").then((module) => module.culture),
   notifications: () =>
     import("./en/notifications").then((module) => module.notifications),
-  help: () => import("./en/help").then((module) => module.help),
 };
 
 /**
@@ -113,12 +114,13 @@ export const ptNamespaceLoaders: Partial<
   governance: () =>
     import("./pt/governance").then((module) => module.governance),
   myevents: () => import("./pt/myevents").then((module) => module.myevents),
+  goTogether: () =>
+    import("./pt/goTogether").then((module) => module.goTogether),
   connect: () => import("./pt/connect").then((module) => module.connect),
   messages: () => import("./pt/messages").then((module) => module.messages),
   culture: () => import("./pt/culture").then((module) => module.culture),
   notifications: () =>
     import("./pt/notifications").then((module) => module.notifications),
-  help: () => import("./pt/help").then((module) => module.help),
 };
 
 /** Per-language namespace-loader table, keyed the same way `catalogs` is. */
@@ -171,11 +173,11 @@ const en: Record<Namespace, Catalog> = {
   topics: PENDING_CATALOG,
   governance: PENDING_CATALOG,
   myevents: PENDING_CATALOG,
+  goTogether: PENDING_CATALOG,
   connect: PENDING_CATALOG,
   messages: PENDING_CATALOG,
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
-  help: PENDING_CATALOG,
 };
 
 const pt: Record<Namespace, Catalog> = {
@@ -210,11 +212,11 @@ const pt: Record<Namespace, Catalog> = {
   topics: PENDING_CATALOG,
   governance: PENDING_CATALOG,
   myevents: PENDING_CATALOG,
+  goTogether: PENDING_CATALOG,
   connect: PENDING_CATALOG,
   messages: PENDING_CATALOG,
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
-  help: PENDING_CATALOG,
 };
 
 /**

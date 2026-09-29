@@ -1,0 +1,284 @@
+/* Go together card on the gathering page. Sits under "who else is going",
+   with the same hairline and rhythm as that block. */
+
+.wrap {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  min-width: 0;
+  /* Arriving on the card's anchor clears the sticky nav. */
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-sm));
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* The heading takes focus after a state change (tabIndex -1). Show the ring
+   for keyboard members only. */
+.eyebrow:focus {
+  outline: none;
+}
+
+.eyebrow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}
+
+.card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* Panel header: icon, title, one line of copy. */
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.panelIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+}
+
+.panelText {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.panelTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+
+.panelBody {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 60ch;
+}
+
+/* On a phone-width card the icon would indent every line by 48px; the card
+   heading already carries an icon, so the copy takes the full width. */
+@container (max-width: 479px) {
+  .panelIcon {
+    display: none;
+  }
+}
+
+.mutedNote {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actionHint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--danger);
+}
+
+/* The opt-in form: each step is a group of radio cards. */
+.flow {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+.step {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.stepTitle {
+  padding: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stepHint {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.choices,
+.modeChoices {
+  display: grid;
+  gap: 8px;
+}
+
+@media (min-width: 560px) {
+  .modeChoices {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.choice {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  align-content: start;
+  min-height: 44px;
+  text-align: start;
+  background: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  padding-block: 12px;
+  padding-inline: 14px 44px;
+  font-family: var(--sans);
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+/* Selected: accent border, tinted surface and a tick, the same look as the
+   questionnaire's choice cards (no halo). */
+.choiceChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.choiceCheck {
+  position: absolute;
+  inset-inline-end: 14px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  color: var(--accent-text);
+}
+
+.choice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .choice:hover {
+    border-color: rgba(var(--line-rgb), 0.28);
+  }
+
+  .choiceChecked:hover {
+    border-color: var(--accent);
+  }
+}
+
+.choiceIcon {
+  color: var(--accent-ink);
+  margin-bottom: 2px;
+}
+
+.choiceLabel {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.choiceDescription {
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* The lens consent: a real checkbox with a 44px row to tap. */
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.05);
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.consentBox {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.consentBox:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice {
+    transition: none;
+  }
+}

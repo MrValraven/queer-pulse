@@ -20,15 +20,15 @@ export function buildLoaderSteps(t: TFunction, inviterFirst: string): string[] {
  */
 export const WHAT_ITEMS: { strongKey: string; restKey: string }[] = [
   {
-    strongKey: "system:inviteLanding.what.private.strong",
-    restKey: "system:inviteLanding.what.private.rest",
+    strongKey: "system:inviteLanding.what.vouched.strong",
+    restKey: "system:inviteLanding.what.vouched.rest",
   },
   {
-    strongKey: "system:inviteLanding.what.noAds.strong",
-    restKey: "system:inviteLanding.what.noAds.rest",
+    strongKey: "system:inviteLanding.what.privacy.strong",
+    restKey: "system:inviteLanding.what.privacy.rest",
   },
   {
-    strongKey: "system:inviteLanding.what.community.strong",
-    restKey: "system:inviteLanding.what.community.rest",
+    strongKey: "system:inviteLanding.what.lisbon.strong",
+    restKey: "system:inviteLanding.what.lisbon.rest",
   },
 ];

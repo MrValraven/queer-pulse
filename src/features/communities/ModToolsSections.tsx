@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModerationStanceNote } from "../safety/ModerationStanceNote";
+import { CommunityGuidelinesNote } from "./CommunityGuidelinesNote";
 import type { LivingCommunity } from "./community.model";
 import { ModJoinRequestRow } from "./ModJoinRequestRow";
 import { ModToolsReportRow } from "./ModToolsReportRow";
@@ -10,10 +10,23 @@ import type { JoinRequestDecision } from "./joinRequestReview.data";
 import { useCommunityBanEvasion } from "./api/useCommunityBanEvasion";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { ModMemberRow, type ModMemberRowActions } from "./ModMemberRow";
-import type { AssignableRole } from "./api/communities.api";
+import type {
+  AssignableRole,
+  CommunityInheritedRules,
+} from "./api/communities.api";
 import type { CommunityRole } from "./membership.types";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
+
+/** The community's own shared values, threaded from `ModToolsTab` into both
+ *  queues that read `CommunityGuidelinesNote`. One object rather than four
+ *  loose props, since every field always travels together. */
+export interface ModToolsGuidelines {
+  communityName: string;
+  rules: string[];
+  inheritedRules: CommunityInheritedRules | null;
+  parentName: string | null;
+}
 
 // The members-card entry point lives in its own file (`ModToolsCardSection`)
 // rather than growing this already-364-line, multi-session-shared file — it
@@ -90,6 +103,7 @@ export function ModJoinRequests({
   total,
   state,
   paging,
+  guidelines,
   isPending = false,
   onResolve,
 }: {
@@ -102,6 +116,8 @@ export function ModJoinRequests({
   state: ModQueueState;
   /** The queue's own pagination, same shape as the roster's. */
   paging: RosterPaging;
+  /** The community's own shared values, read against every applicant. */
+  guidelines: ModToolsGuidelines;
   /** True while a decision for this queue is in flight (keeps the decline
    *  step's confirm button from firing twice). */
   isPending?: boolean;
@@ -122,7 +138,13 @@ export function ModJoinRequests({
         {t("communities:detail.modtools.joinRequests.label")}{" "}
         {total > 0 && <span className={detail.tabCount}>{total}</span>}
       </div>
-      <ModerationStanceNote variant="applicants" />
+      <CommunityGuidelinesNote
+        variant="requests"
+        communityName={guidelines.communityName}
+        rules={guidelines.rules}
+        inheritedRules={guidelines.inheritedRules}
+        parentName={guidelines.parentName}
+      />
       <ModQueueStatus state={state}>
         {requests.length === 0 ? (
           <EmptyState
@@ -167,6 +189,7 @@ export function ModReportedPosts({
   reports,
   slug,
   state,
+  guidelines,
   onRemove,
   onDismiss,
   onEscalate,
@@ -175,6 +198,8 @@ export function ModReportedPosts({
   /** The community this queue belongs to: each row links into its thread. */
   slug: string;
   state: ModQueueState;
+  /** The community's own shared values, weighed against every report. */
+  guidelines: ModToolsGuidelines;
   onRemove: (report: Report) => void;
   onDismiss: (report: Report) => void;
   /** Hands a report to platform staff (TS-07). */
@@ -189,7 +214,13 @@ export function ModReportedPosts({
           <span className={detail.tabCount}>{reports.length}</span>
         )}
       </div>
-      <ModerationStanceNote />
+      <CommunityGuidelinesNote
+        variant="reports"
+        communityName={guidelines.communityName}
+        rules={guidelines.rules}
+        inheritedRules={guidelines.inheritedRules}
+        parentName={guidelines.parentName}
+      />
       <ModQueueStatus state={state}>
         {reports.length === 0 ? (
           <EmptyState

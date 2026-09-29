@@ -52,6 +52,13 @@ describe("StaffBadge", () => {
     );
   });
 
+  it("renders a named, label-free shield button at icon size", () => {
+    render(<StaffBadge role="admin" size="icon" />, { wrapper: I18nProvider });
+    const button = screen.getByRole("button", { name: "QueerPulse Staff" });
+    expect(button).toHaveTextContent(/^$/);
+    expect(button).not.toHaveAttribute("title");
+  });
+
   it("keeps the long form available as a tooltip at sm size", () => {
     const { container } = render(<StaffBadge role="admin" size="sm" />, {
       wrapper: I18nProvider,

@@ -16,7 +16,7 @@ import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor
 import type { EditorRowsState } from "./useEditorRowsState";
 import { CAPACITY_OPTIONS } from "./skins/therapist/therapistHero.data";
 import type { SocialRow } from "./subprofileEditorContext";
-import { sectionsInPageBlocks } from "./editorRail.data";
+import { sectionsNormalizedOnSave } from "./editorRail.data";
 import { normalizeSectionItemRows } from "./sectionItemsNormalize";
 import type { SubprofileEditorRow } from "./subprofileSectionEditorRows";
 import {
@@ -49,23 +49,17 @@ const filledSocials = (rows: SocialRow[]) =>
 const filledAffiliations = (rows: AffiliationRow[]) =>
   rows.filter((row) => row.targetSlug.trim());
 
-/** The sections this kind edits inline through a `sectionItems` control (a
- *  therapist's specialisms). */
-const inlineEditedSections = (kind: SubprofileView["kind"]): Set<string> =>
-  new Set(
-    Array.from(sectionsInPageBlocks(kind).values(), (entry) => entry.section),
-  );
-
-// Like the filled lists above, for a section edited inline: its editor can
-// hold a blank topic or a trailing empty line, so the diff and the save both
-// read the normalised rows. Every other section is diffed and sent exactly as
-// the draft holds it.
+// Like the filled lists above, for a section edited as topic rows: its editor
+// can hold a blank topic or a trailing empty line, so the diff and the save
+// both read the normalised rows. Every other section (each one edited through
+// a `sectionList` control included) is diffed and sent exactly as the draft
+// holds it.
 const savedSectionRows = (
   section: string,
   sectionRowList: SubprofileEditorRow[],
-  inlineSections: Set<string>,
+  topicSections: Set<string>,
 ) =>
-  inlineSections.has(section)
+  topicSections.has(section)
     ? normalizeSectionItemRows(sectionRowList)
     : sectionRowList;
 
@@ -193,11 +187,13 @@ export function useEditorSaveGraph(
   const pending: PendingChange[] = [];
   pending.push(...diffMeta(meta.metaSnapshot(), meta.baselineSnapshot()));
   pending.push(...skinChangesToPending(skinBlocks.changes));
-  const inlineSections = inlineEditedSections(subprofile.kind);
+  // Sections edited as topic rows (a therapist's specialisms): their rows
+  // are normalised before diff and save.
+  const topicSections = sectionsNormalizedOnSave(subprofile.kind);
   const sectionDiff = (section: string) =>
     diffRows(
-      savedSectionRows(section, sectionRows[section] ?? [], inlineSections),
-      savedSectionRows(section, sectionBaseline[section] ?? [], inlineSections),
+      savedSectionRows(section, sectionRows[section] ?? [], topicSections),
+      savedSectionRows(section, sectionBaseline[section] ?? [], topicSections),
     );
   for (const section of Object.keys(sectionRows)) {
     const change = rowDiffToChange(
@@ -289,7 +285,7 @@ export function useEditorSaveGraph(
       const sectionRowsForKey = sectionRows[section] ?? [];
       if (!hasRowChange(sectionDiff(section))) continue;
       const items = itemsToInputDto(
-        savedSectionRows(section, sectionRowsForKey, inlineSections),
+        savedSectionRows(section, sectionRowsForKey, topicSections),
       );
       tasks.push({
         labelKey: sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
@@ -300,8 +296,8 @@ export function useEditorSaveGraph(
             items,
           }),
         // The baseline takes the draft as it stands (a blank topic or trailing
-        // line included). The diff normalises both sides the same way, so the
-        // section reads clean after the save.
+        // line included). For a topic section, the diff normalises both sides
+        // the same way, so the section reads clean after the save.
         commit: () =>
           setSectionBaseline((current) => ({
             ...current,

@@ -16,7 +16,7 @@ export const API_VERSION_PREFIX = "/v1";
 
 // Fail-fast ceiling for every call made through `request()`. A hung backend must
 // never strand the UI on an infinite skeleton — worst of all a hung
-// `GET /auth/me`, which holds EVERY gated route behind the AuthLoader forever.
+// `GET /auth/me`, which holds EVERY gated route behind the full-screen PageLoader forever.
 // 15s is generous for our JSON endpoints (the only bytes `request()` ever
 // carries — binary uploads PUT straight to storage via XHR, never through here;
 // see features/members/api/useUploadImage.ts) yet far short of "never". Callers

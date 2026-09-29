@@ -33,6 +33,10 @@ export function SubprofileItemTile({
   const { t } = useTranslation();
   const plateNumber = String(index + 1).padStart(2, "0");
   const studioMeta = workMeta(item);
+  // Marks a real picture (as the spotlight's `data-has-image` does), so a skin
+  // can collapse an imageless tile to text instead of showing the "Image"
+  // placeholder frame.
+  const hasImage = item.imageUrl ? "" : undefined;
 
   const content = (
     <>
@@ -65,6 +69,7 @@ export function SubprofileItemTile({
       <button
         type="button"
         className="pp-tile pp-tile-btn"
+        data-has-image={hasImage}
         onClick={() => onOpenWork(item)}
       >
         {content}
@@ -72,5 +77,9 @@ export function SubprofileItemTile({
     );
   }
 
-  return <div className="pp-tile">{content}</div>;
+  return (
+    <div className="pp-tile" data-has-image={hasImage}>
+      {content}
+    </div>
+  );
 }

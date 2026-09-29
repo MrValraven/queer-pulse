@@ -17,12 +17,15 @@ export interface InviteView {
     initials: string;
     photo?: string;
     since?: string;
+    /** True only for an active ambassador whose tag is visible. The onboarding
+     *  welcome step names them as one when this is true. */
+    isAmbassador: boolean;
   };
   note?: string;
-  /** The inviter's vouch — why they're inviting you — surfaced at onboarding. */
+  /** The inviter's vouch (why they're inviting you), surfaced at onboarding. */
   vouch?: string;
   /** False when the inviter is no longer active (deactivated / suspended /
-   *  banned / erased) — the landing shows a tailored "inviter inactive" state. */
+   *  banned / erased). The landing shows a tailored "inviter inactive" state. */
   inviterActive: boolean;
   /** Raw expiry instant, or null when the invite has no set expiry. */
   expiresAt?: Date | null;
@@ -65,6 +68,7 @@ function dtoToView(dto: InviteDTO): InviteQueryData {
       initials: initialsFromParts(inviter.firstName, inviter.lastName),
       photo: inviter.avatarUrl ?? undefined,
       since: inviter.memberSince,
+      isAmbassador: inviter.isAmbassador === true,
     },
     note: dto.note,
     vouch: dto.vouch,
@@ -90,6 +94,7 @@ function demoInvite(code: string): InviteQueryData {
       initials: ines.initials,
       photo: ines.photo,
       since: ines.since,
+      isAmbassador: false,
     },
     note: DEMO_NOTE,
     vouch: DEMO_VOUCH,
@@ -109,7 +114,7 @@ export function useInvite(code: string | undefined) {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
   // The expiry label is derived here rather than inside `queryFn`: the cached
-  // entry is keyed on the code, not the language, so a label baked in at fetch
+  // entry is keyed on the code alone, so a label baked in at fetch
   // time would stay in whatever language happened to be active then. `fmt` is
   // memoized per language, so this select only re-runs when the language (or
   // the data) actually changes.

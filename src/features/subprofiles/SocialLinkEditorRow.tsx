@@ -14,6 +14,10 @@ import { ROW_MOVE_KEY_SHORTCUTS } from "./useReorderableRows";
 import reorderStyles from "./ReorderRow.module.css";
 import styles from "./SubprofileSocialLinksEditor.module.css";
 
+/** `.linksEditor`'s row gap (`--gap-sm`), in CSS pixels, for a list that
+ *  folds its rows (`foldGap`). */
+export const LINK_ROW_GAP = 14;
+
 /** Every named platform is a brand noun and stays untranslated in every
  *  locale; only the generic "Other link" fallback is platform chrome.
  *  Mirrors `members/SocialLinksEditor`'s `platformLabel`. */
@@ -36,6 +40,9 @@ interface SocialLinkEditorRowProps {
   isDragging: boolean;
   /** A row the person added in this session: eases in on mount. */
   isEntering?: boolean;
+  /** Set when the list wraps its rows in an `AnimatePresence`: the row grows
+   *  in and folds away (`ReorderRow`'s `foldGap`). */
+  foldGap?: number;
   /** From `useReorderableRows`, for the row's `ReorderRow`. */
   moveCount: number;
   /** From `useReorderableRows`: turns the grip into the drag handle. */
@@ -62,6 +69,7 @@ export function SocialLinkEditorRow({
   listLabel,
   isDragging,
   isEntering = false,
+  foldGap,
   moveCount,
   gripHandlers,
   onMove,
@@ -79,6 +87,7 @@ export function SocialLinkEditorRow({
       className={isDragging ? reorderStyles.linkDragging : undefined}
       isDragging={isDragging}
       isEntering={isEntering}
+      foldGap={foldGap}
       moveCount={moveCount}
     >
       <div className={styles.linkGroup}>

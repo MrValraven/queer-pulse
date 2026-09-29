@@ -1,3 +1,4 @@
+import { type ReactNode, useCallback, useEffect } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import {
   EmptyState,
@@ -37,6 +38,48 @@ function VenueCardSkeleton() {
   );
 }
 
+/** One card's slot in the list. It registers the node for pin-tap scrolling
+ *  and reports pointer or keyboard presence as the hovered place, which the
+ *  map mirrors onto that place's pin. */
+function MapCardSlot({
+  placeId,
+  cardRefs,
+  setHoveredId,
+  children,
+}: Pick<DirectoryMapViewState, "cardRefs" | "setHoveredId"> & {
+  placeId: string;
+  children: ReactNode;
+}) {
+  // Id-guarded, so a late leave from one card never wipes the next one's hover.
+  const clearHover = useCallback(
+    () => setHoveredId((current) => (current === placeId ? null : current)),
+    [placeId, setHoveredId],
+  );
+  // A card can vanish under the pointer with no mouseleave (a filter change,
+  // or a pin tap narrowing the panel), so unmounting clears it too. This sits
+  // in an effect because the inline ref callback below re-runs on every
+  // render, and clearing there would drop the hover it just caused.
+  useEffect(() => clearHover, [clearHover]);
+
+  return (
+    <div
+      ref={(node) => {
+        if (node) cardRefs.current.set(placeId, node);
+        else cardRefs.current.delete(placeId);
+      }}
+      onMouseEnter={() => setHoveredId(placeId)}
+      onMouseLeave={clearHover}
+      onFocus={() => setHoveredId(placeId)}
+      onBlur={(event) => {
+        // Focus moving between the card's own links and buttons stays put.
+        if (!event.currentTarget.contains(event.relatedTarget)) clearHover();
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 interface Props extends DirectoryMapViewState {
   loading: boolean;
   /** True when the directory read failed (DES-25). The sidebar says so instead
@@ -69,6 +112,7 @@ export function DirectoryMapSidebar({
   clearFocus,
   toggleExpand,
   markBeen,
+  setHoveredId,
   loading,
   isError = false,
   onRetry,
@@ -79,12 +123,11 @@ export function DirectoryMapSidebar({
   const { t } = useTranslation();
 
   const renderCard = (place: LocalPlace, index: number) => (
-    <div
+    <MapCardSlot
       key={place.id}
-      ref={(node) => {
-        if (node) cardRefs.current.set(place.id, node);
-        else cardRefs.current.delete(place.id);
-      }}
+      placeId={place.id}
+      cardRefs={cardRefs}
+      setHoveredId={setHoveredId}
     >
       <LocalPlaceCard
         place={place}
@@ -94,7 +137,7 @@ export function DirectoryMapSidebar({
         onToggleExpand={toggleExpand}
         onMarkBeen={markBeen}
       />
-    </div>
+    </MapCardSlot>
   );
 
   return (

@@ -6,7 +6,7 @@
 
 /* The interactive container. Carries the hover/selected/entrance transforms
    (never rotated), so they compose cleanly with the head's teardrop rotation.
-   Sized so the centred, rotated head's tip lands at the box's bottom-centre —
+   Sized so the centred, rotated head's tip lands at the box's bottom-centre,
    which is the marker's `anchor: "bottom"`, i.e. the exact coordinate.
    `transform-origin: bottom` keeps the tip pinned while the pin scales. */
 .pin {
@@ -20,7 +20,8 @@
   background: none;
   cursor: pointer;
   transform-origin: bottom center;
-  transition: transform var(--dur-fast) var(--ease);
+  /* --dur-base gives the growth on a list-card hover an unhurried ease. */
+  transition: transform var(--dur-base) var(--ease);
 }
 
 /* The teardrop itself: a rounded square with one sharp corner, rotated so the
@@ -36,7 +37,9 @@
   box-shadow: inset 0 0 0 2px rgba(var(--cream-rgb), 1);
   transform: rotate(-45deg);
   filter: drop-shadow(0 2px 5px rgba(var(--plum-rgb), 0.4));
-  transition: box-shadow var(--dur-fast) var(--ease);
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    filter var(--dur-base) var(--ease);
 }
 
 /* Staggered drop-in for pins/clusters on the map's first paint (List→Map).
@@ -56,7 +59,7 @@
 }
 
 /* Counter-rotate the icon so it sits upright inside the rotated head. White
-   on the category fill — a fixed value that stays legible in both themes. */
+   on the category fill: a fixed value that stays legible in both themes. */
 .pinIcon {
   display: grid;
   place-items: center;
@@ -153,8 +156,8 @@
 }
 
 /* z-index 2/3/4 across hover/focus/selected below are a self-contained local
-   order among sibling pins on the same map, not app-chrome layers, so they
-   stay literal rather than reaching for a shared z-* tier token. */
+   order among sibling pins on the same map. They stay literal because the
+   shared z-* tier tokens describe app-chrome layers. */
 .pin:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -178,6 +181,28 @@
 .pinSelected .pinLabel {
   opacity: 1;
   visibility: visible;
+}
+
+/* Hovered from the list: the pin whose card is under the pointer grows past
+   the selected size and wears a stronger accent halo. Declared after
+   .pinSelected so a pin that is both shows this state. Fine pointers only, so
+   a tap on a card on a phone never leaves a pin stuck enlarged. The cluster
+   holding a hovered venue gets the same cue. */
+@media (hover: hover) and (pointer: fine) {
+  .pinHovered {
+    transform: translateY(-3px) scale(1.22);
+    z-index: 4;
+  }
+  .pinHovered .pinHead {
+    box-shadow:
+      inset 0 0 0 2px rgba(var(--cream-rgb), 1),
+      0 0 0 5px rgba(var(--accent-rgb), 0.45);
+    filter: drop-shadow(0 8px 16px rgba(var(--plum-rgb), 0.5));
+  }
+  .clusterHovered {
+    transform: scale(1.14);
+    box-shadow: var(--shadow-accent);
+  }
 }
 
 /* Cluster badge: a coral count bubble that grows with the group size. Text is a
@@ -227,7 +252,7 @@
    white ring are all fixed values (the standard "markers stay light" map
    convention), so contrast holds in both themes as the basemap dims. */
 
-/* Local copy of the shared drop-in keyframe — a CSS Module can't reference the
+/* Local copy of the shared drop-in keyframe: a CSS Module can't reference the
    global @keyframes in effects.css (the name gets scoped to a dangling hash).
    Same note as Skeleton.module.css / localMap.module.css. */
 @keyframes qpPinPop {
@@ -255,7 +280,9 @@
   .cluster:hover {
     transform: none;
   }
-  .pinSelected {
+  .pinSelected,
+  .pinHovered,
+  .clusterHovered {
     transform: none; /* keep the ring + shadow cues, drop the scale */
   }
 }

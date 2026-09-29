@@ -8,22 +8,17 @@ import styles from "./Under18Notice.module.css";
 
 interface Under18NoticeProps {
   /**
-   * Return to the form/step — the block is a pause, never a dead end. Omit it
-   * where going back would mean silently re-attesting an age the member has
-   * just told us is under 18 (the signed-in onboarding wizard); pass `onSignOut`
-   * there instead.
+   * Return to the form/step: the block is a pause, never a dead end, and the
+   * "not 18 yet" link is easy to tap by mistake.
    */
   onBack?: () => void;
   backLabel?: string;
-  /**
-   * Ends the session instead of returning to the attestation. Used once an
-   * account already exists, where "back" would let a self-declared minor tick
-   * "I'm 18+" and carry on.
-   */
-  onSignOut?: () => void;
   /** Adds a "talk to us" line to the link list, for anyone who tapped by
    *  mistake or wants to reach a human. */
   shouldShowContactLink?: boolean;
+  /** Always drops the plum card, at every width. For hosts that place the
+   *  notice inside their own light card (the invite landing page). */
+  shouldFlatten?: boolean;
 }
 
 /**
@@ -35,12 +30,17 @@ interface Under18NoticeProps {
 export function Under18Notice({
   onBack,
   backLabel,
-  onSignOut,
   shouldShowContactLink = false,
+  shouldFlatten = false,
 }: Under18NoticeProps) {
   const { t } = useTranslation();
+  // `ghost-dark` is drawn for the plum surface; the flat panel sits on a light one.
+  const buttonVariant = shouldFlatten ? "ghost" : "ghost-dark";
+  const panelClassName = shouldFlatten
+    ? `${styles.panel} ${styles.flat}`
+    : styles.panel;
   return (
-    <div className={styles.panel}>
+    <div className={panelClassName}>
       <div className={styles.icon}>
         <FiHeart size={26} color="var(--accent)" aria-hidden />
       </div>
@@ -73,18 +73,10 @@ export function Under18Notice({
           </li>
         )}
       </ul>
-      {onSignOut && (
-        <p className={styles.body}>{t("auth:under18.signedIn.body")}</p>
-      )}
       <div className={styles.actions}>
         {onBack && (
-          <Button variant="ghost-dark" onClick={onBack}>
+          <Button variant={buttonVariant} onClick={onBack}>
             {backLabel ?? t("auth:under18.backDefault")}
-          </Button>
-        )}
-        {onSignOut && (
-          <Button variant="ghost-dark" onClick={onSignOut}>
-            {t("auth:under18.signOut")}
           </Button>
         )}
       </div>

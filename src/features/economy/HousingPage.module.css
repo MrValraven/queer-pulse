@@ -31,14 +31,6 @@
   color: var(--accent);
   margin-bottom: 12px;
 }
-/* Title + info chip on one line. The chip sits beside the heading rather than
-   inside it, so it never eats into the h1's `ch` measure. */
-.titleRow {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;

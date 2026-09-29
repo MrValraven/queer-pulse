@@ -1,5 +1,6 @@
 /* The editor↔writer per-piece message thread (Phase 7 Wave F), shared by the
-   desk's Chase modal and the writer workspace's message overlay. */
+   desk's Chase modal, the writer workspace's message overlay and the desk's
+   piece peek (condensed). PieceThreadComposer reads the composer rules. */
 
 .thread {
   display: flex;
@@ -14,6 +15,23 @@
   max-height: 340px;
   overflow-y: auto;
   padding-right: 2px;
+}
+
+/* Condensed (`latestCount`): the host scrolls, so the list grows in place. */
+.messagesInline {
+  max-height: none;
+  overflow-y: visible;
+  padding-right: 0;
+}
+
+.messagesInline:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.showEarlier {
+  align-self: flex-start;
 }
 
 .loading {
@@ -103,4 +121,24 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+.composerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sendError {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--danger);
+}
+
+/* A full touch target on phones, where the condensed thread fills a sheet.
+   Two classes deep so it outranks Button's own `.sm` min-height. */
+@media (max-width: 767px) {
+  .thread .showEarlier {
+    min-height: var(--tap-min);
+  }
 }

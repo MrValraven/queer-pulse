@@ -1468,6 +1468,17 @@ class RealtimeClient {
         queryKey: ["conversations-unread-count"],
       });
     }
+    // Deliberately NOT also invalidating every closed thread's own
+    // `["messages", id]` cache here: `ensureInactiveThreadTrim`
+    // (`threadCacheTrim.ts`) already invalidates a thread's cache with
+    // `refetchType: "none"` the instant it loses its last observer, which is
+    // exactly what happens whenever this controller's `active` moves off it
+    // or its page unmounts. `useMessageThread` is the thread cache's only
+    // reader in this app, so by the time a socket drop and reconnect can even
+    // occur, every CLOSED thread this tab has ever opened is already
+    // invalidated and refetches page 0 on its next reopen regardless of the
+    // gap. Doing it again here would be a no-op for those threads and a
+    // needless whole-cache scan on every reconnect for zero extra coverage.
     this.hasConnectedBefore = true;
     // ENG-219 (frontend half): arm the first proactive session:reauth for
     // THIS connection. See `ASSUMED_ACCESS_TOKEN_TTL_MS`'s own doc for why

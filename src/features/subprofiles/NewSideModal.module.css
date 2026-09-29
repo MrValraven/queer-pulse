@@ -169,6 +169,13 @@
   flex: none;
   color: var(--ink-40);
 }
+/* A filled `gi` glyph (game_master/ttrpg_designer/game_night_host/
+   tournament_organizer's icon override) sits heavier than the outline `fi`
+   icons beside it at the same nominal size, so it renders 1px smaller. */
+.kindIconFilled {
+  width: 15px;
+  height: 15px;
+}
 .kindBtnOn {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 8%, transparent);

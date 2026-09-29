@@ -15,7 +15,7 @@ import type { ResponseValidator } from "./client";
  * response the whole app is hostage to — `GET /auth/me`. A malformed auth/me
  * (a backend field rename, a truncated body) otherwise flows through as
  * `undefined`/mis-typed fields and silently corrupts or holds EVERY gated route
- * behind the AuthLoader. Validating it turns that into a loud `ApiError(422)`.
+ * behind the full-screen PageLoader. Validating it turns that into a loud `ApiError(422)`.
  *
  * The guards throw a precise message on the first bad field; `client.ts` catches
  * the throw and re-raises it as `ApiError(422, "Malformed response …")`. They

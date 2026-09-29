@@ -34,6 +34,7 @@ import {
   brunchCrewConversation,
   portoMentorsConversation,
   prideVolunteersConversation,
+  transJoyPicnicConversation,
 } from "./demoGroupThreads.data";
 import { mariaConversation } from "./demoLongThread.data";
 
@@ -464,6 +465,9 @@ export interface Conversation {
    *  the group is read-only for every former participant. Absent/null while
    *  active, and for DMs. */
   dissolvedAt?: string | null;
+  /** GROUP only (Go together): the matched group this chat belongs to.
+   *  Absent/null for every other chat. Mounts `GoTogetherChatBanner`. */
+  eventMatchGroupId?: string | null;
   /** GROUP only, THIS member (DES-227): why the composer is severed:
    *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
    *  `"dissolved"` (the owner ended the group). Absent/null while an active
@@ -539,6 +543,7 @@ export const DEMO_INBOUND_SIMULATION_MESSAGE_BODY =
  *  does the same client-side. */
 export const conversations: Conversation[] = [
   brunchCrewConversation,
+  transJoyPicnicConversation,
   anikaConversation,
   cafeLisboaFatimaConversation,
   atelierPulsoSaraConversation,

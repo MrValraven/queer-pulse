@@ -371,6 +371,7 @@ function groupConversationToView(
     canManageRoles: dto.canManageRoles ?? false,
     description: dto.description ?? undefined,
     dissolvedAt: dto.dissolvedAt ?? undefined,
+    eventMatchGroupId: dto.eventMatchGroupId ?? null,
     leftReason: dto.leftReason ?? undefined,
     // Only ever populated for the owner/admin who may manage it, see the
     // field's own doc on `ConversationResponse`.

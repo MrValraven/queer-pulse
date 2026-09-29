@@ -1,0 +1,495 @@
+/* Go together questionnaire: one step per screen on the cream page, a
+   sticky action bar at the bottom. Mobile first; every row fits a 320px
+   phone with no horizontal scroll. */
+
+.page {
+  width: 100%;
+  max-width: var(--maxw-text);
+  margin-inline: auto;
+  padding-inline: var(--wrap-px);
+  padding-block-start: var(--gap-lg);
+}
+
+.loading {
+  padding-block: var(--gap-lg);
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  min-width: 0;
+}
+
+/* ── Header: product eyebrow, progress rail, "Step 2 of 9" ─────────────── */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.stepper {
+  min-width: 0;
+}
+
+.progress {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* ── Step body ─────────────────────────────────────────────────────────── */
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--text-strong);
+  border-radius: var(--radius-4);
+  scroll-margin-block-start: calc(var(--sticky-top) + var(--gap-sm));
+}
+
+.title:focus {
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.pageIntro,
+.intro {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-body);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.pageIntro {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  margin-block-start: var(--gap-sm);
+  min-width: 0;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.groupLabel,
+.rowLabel {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.groupHint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Every chip in these steps uses size="touch": a real 44px pill. A 12px row
+   gap under touch keeps wrapped rows comfortably apart, so a tap lands on the
+   chip it is nearest. */
+@media (pointer: coarse) {
+  .rows .chipRow {
+    row-gap: 12px;
+  }
+}
+
+/* ── Likert scale: five equal points, anchors under the ends ────────────── */
+
+.likertRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.likert {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.likertPoints {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.likertPoint {
+  min-height: var(--tap-min);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--ink-60);
+  font: inherit;
+  font-size: var(--text-body);
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.likertPoint[data-checked] {
+  background: var(--plum);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* Dark theme: plum does not flip, so a plum fill on the dark paper barely
+   separates from the other points. The pick takes the coral fill there. */
+:global([data-theme="dark"]) .likertPoint[data-checked] {
+  background: var(--accent);
+  border-color: var(--accent);
+  /* css-scale-allow: non-flipping-text: plum type on a coral fill, which is
+     light in both themes. */
+  color: var(--plum);
+}
+
+.likertPoint:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .likertPoint:not([data-checked]):hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+}
+
+.likertAnchors {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  font-size: var(--text-label);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+
+.likertAnchors > span {
+  max-width: 45%;
+}
+
+.likertAnchorHigh {
+  text-align: end;
+}
+
+/* ── Tappable cards: humour lines and single choices ───────────────────── */
+
+/* The Go together "selected" look for a single choice: coral border, a coral
+   tint and a trailing tick, so the pick never rests on colour alone. The same
+   1.5px border sits on every state, so picking never shifts the layout.
+   Scales and tags keep the plum fill. */
+
+.humourPairBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pairCount {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.humourPair,
+.choiceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--gap-xs);
+}
+
+.humourCard,
+.choiceCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  width: 100%;
+  padding-block: 14px;
+  padding-inline: 16px 44px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.humourCard {
+  min-height: 5.5rem;
+}
+
+.humourCardOn,
+.choiceCardOn {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.humourCard:focus-visible,
+.choiceCard:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .humourCard:not([data-checked]):hover,
+  .choiceCard:not([data-checked]):hover {
+    border-color: var(--line-strong);
+  }
+}
+
+.humourLine {
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  line-height: 1.4;
+}
+
+.choiceText {
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cardTick {
+  position: absolute;
+  inset-inline-end: 16px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  color: var(--accent-text);
+}
+
+/* ── Area ──────────────────────────────────────────────────────────────── */
+
+.areaSelect {
+  width: 100%;
+  font-size: var(--text-16);
+}
+
+.skipLink {
+  align-self: flex-start;
+  min-height: var(--tap-min);
+  margin-inline-start: -4px;
+  padding: 0 4px;
+  border: none;
+  border-radius: var(--radius-4);
+  background: none;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: var(--text-body);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.skipLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .skipLink:hover {
+    color: var(--accent-ink);
+  }
+}
+
+/* ── Consent ───────────────────────────────────────────────────────────── */
+
+.consentList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: var(--card-pad);
+  list-style: none;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+.consentPoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: var(--text-body);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.consentIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-block-start: 3px;
+  color: var(--jade-ink);
+}
+
+.inlineLink {
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-2);
+}
+
+.inlineLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.consentCheck {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: var(--tap-min);
+  padding-block: 10px;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.consentCheck input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 1px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.consentCheck input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Save error and the sticky action bar ──────────────────────────────── */
+
+.saveError {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--danger-ink);
+}
+
+.saveError svg {
+  flex: none;
+  margin-block-start: 3px;
+}
+
+/* Sits on top of the mobile tab bar: `--bottom-inset` is the bar plus the
+   home indicator, so the bar is offset by the tab bar alone and pads its own
+   block end for the home indicator where no tab bar covers it. */
+.actionBar {
+  position: sticky;
+  bottom: max(
+    0px,
+    calc(var(--bottom-inset) - env(safe-area-inset-bottom, 0px))
+  );
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-inline: calc(var(--wrap-px) * -1);
+  padding-block: var(--gap-sm) max(var(--gap-sm), env(safe-area-inset-bottom));
+  padding-inline: var(--wrap-px);
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+}
+
+/* The pick counter rides in the bar on the interests and music steps, so the
+   limit stays in view while the chips scroll. */
+.actionCounter {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* Shown only after a press on the unavailable Next or Save. */
+.actionHint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Wraps on narrow phones (the PT Save label is long), so Save drops to its
+   own line, still at the end, and is never clipped. */
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+.actionRow > :last-child {
+  margin-inline-start: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .likertPoint,
+  .humourCard,
+  .choiceCard {
+    transition: none;
+  }
+}

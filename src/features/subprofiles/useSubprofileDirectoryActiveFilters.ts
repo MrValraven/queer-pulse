@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 import type { ActiveFilter } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  TABLE_FORMAT_LABEL_KEY,
+  TABLE_VIBE_LABEL_KEY,
+} from "./questTable.data";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
 
@@ -23,6 +27,10 @@ export function useSubprofileDirectoryActiveFilters(
     setActiveTags,
     openToCollabs,
     setOpenToCollabs,
+    tableFormats,
+    setTableFormats,
+    tableVibes,
+    setTableVibes,
     query,
     setQuery,
   } = directory;
@@ -45,6 +53,24 @@ export function useSubprofileDirectoryActiveFilters(
         onRemove: () => setOpenToCollabs(false),
       });
     }
+    tableFormats.forEach((format) => {
+      list.push({
+        key: `table-format:${format}`,
+        label: t(TABLE_FORMAT_LABEL_KEY[format]),
+        onRemove: () =>
+          setTableFormats((current) =>
+            current.filter((entry) => entry !== format),
+          ),
+      });
+    });
+    tableVibes.forEach((vibe) => {
+      list.push({
+        key: `table-vibe:${vibe}`,
+        label: t(TABLE_VIBE_LABEL_KEY[vibe]),
+        onRemove: () =>
+          setTableVibes((current) => current.filter((entry) => entry !== vibe)),
+      });
+    });
     activeTags.forEach((tag) => {
       list.push({
         key: `tag:${tag}`,
@@ -66,11 +92,15 @@ export function useSubprofileDirectoryActiveFilters(
     kinds,
     activeTags,
     openToCollabs,
+    tableFormats,
+    tableVibes,
     query,
     t,
     setKinds,
     setActiveTags,
     setOpenToCollabs,
+    setTableFormats,
+    setTableVibes,
     setQuery,
   ]);
 }

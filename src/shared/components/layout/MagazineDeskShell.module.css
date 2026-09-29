@@ -42,11 +42,23 @@
   flex-direction: column;
 }
 
+/* Its height is --desk-shell-bar-h (spacing.css); the desk page's sticky
+   headers read that token, so change the bar through its tokens. */
 .mobileBar {
   display: none;
   align-items: center;
-  padding: 12px 18px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  /* Menu toggle on the left, the Write button on the right. */
+  justify-content: space-between;
+  padding-block: var(--desk-shell-bar-pad-y);
+  /* 18px matches this same gutter's own mobile value (--wrap-px under 640px,
+     tokens/spacing.css), kept literal rather than swapped to the token
+     itself: this bar is also visible above 640px up to the mobile-shell
+     cutover, where --wrap-px reverts to its wider desktop figure. `max()`
+     against the safe-area inset keeps a notch or rounded corner from
+     clipping the menu button on the left or the Write button on the right. */
+  padding-inline-start: max(18px, env(safe-area-inset-left));
+  padding-inline-end: max(18px, env(safe-area-inset-right));
+  border-bottom: var(--desk-shell-bar-rule) solid rgba(var(--line-rgb), 0.09);
   background: var(--cream);
   position: sticky;
   top: 0;
@@ -56,8 +68,8 @@
 .menuBtn {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: var(--tap-min);
+  height: var(--tap-min);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-11);
   background: var(--paper);
@@ -97,10 +109,14 @@
     width: min(84vw, 300px);
     transform: translateX(-100%);
     transition: transform var(--dur, 0.24s) var(--ease, ease);
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.32);
   }
+  /* The shadow lives on the open state only: `.sidebarDock` keeps its box
+     even while translated off-canvas, and a shadow with no offset spreads
+     from every edge, including the one now sitting at x=0, bleeding into the
+     page underneath the closed drawer. */
   .sidebarDockOpen {
     transform: translateX(0);
+    box-shadow: var(--shadow-overlay-ambient);
   }
 
   .mobileBar {

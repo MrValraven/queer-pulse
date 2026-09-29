@@ -32,7 +32,9 @@ import { PORTUGUESE_INSURERS } from "./portugueseInsurers.data";
  * writes a `string[]` on the first edit. `THERAPIST_BLOCKS` below is derived
  * from these chapters (one block per first path segment) and keeps feeding the
  * draft, the save graph and the pending-changes list. The `sectionItems`
- * control edits the `specialisms` section's rows and derives no block.
+ * control edits the `specialisms` section's rows, and the two `sectionList`
+ * controls edit the `credentials` and `gallery` sections' full lists; none of
+ * them derives a block.
  *
  * Only type imports from `skinBlockFields.data.ts`: that module imports the
  * runtime values here, and a runtime import back would form a cycle. The pick
@@ -314,6 +316,21 @@ const APPROACH_CHAPTER: SkinChapterDescriptor = {
           kind: "sectionItems",
           section: "specialisms",
           labelKey: groupKey("helpsWith"),
+        },
+      ],
+    },
+    {
+      titleKey: groupKey("credentials"),
+      helperKey: groupKey("credentialsHelper"),
+      controls: [
+        {
+          path: "section:credentials",
+          kind: "sectionList",
+          section: "credentials",
+          labelKey: groupKey("credentials"),
+          // This layout has no spotlight slot for credentials (S6): the
+          // star toggle would mark a change the page never reflects.
+          isFeatureHidden: true,
         },
       ],
     },
@@ -610,6 +627,18 @@ const WHERE_CHAPTER: SkinChapterDescriptor = {
         }),
       ],
     },
+    {
+      titleKey: groupKey("gallery"),
+      helperKey: groupKey("galleryHelper"),
+      controls: [
+        {
+          path: "section:gallery",
+          kind: "sectionList",
+          section: "gallery",
+          labelKey: groupKey("gallery"),
+        },
+      ],
+    },
   ],
 };
 
@@ -721,8 +750,8 @@ export const THERAPIST_CHAPTERS: SkinChapterDescriptor[] = [
 
 /** One block per first path segment, in first-appearance order across the
  *  chapters, each holding that block's controls. Feeds the draft, the save
- *  graph and the pending-changes list. A `sectionItems` control saves with its
- *  section's rows, so it is left out. */
+ *  graph and the pending-changes list. A `sectionItems` or `sectionList`
+ *  control saves with its section's rows, so it is left out. */
 export function therapistBlocksFromChapters(
   chapters: SkinChapterDescriptor[] = THERAPIST_CHAPTERS,
 ): SkinBlockDescriptor[] {
@@ -730,7 +759,9 @@ export function therapistBlocksFromChapters(
   for (const chapter of chapters) {
     for (const group of chapter.groups) {
       for (const control of group.controls) {
-        if (control.kind === "sectionItems") continue;
+        if (control.kind === "sectionItems" || control.kind === "sectionList") {
+          continue;
+        }
         const blockKey = control.path.split(".")[0]!;
         const block = blocksByKey.get(blockKey) ?? {
           blockKey,

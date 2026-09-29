@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { MessageResponse } from "../contracts/contracts";
 import type { Conversation } from "../../features/messages/data";
 import {
+  isThreadCacheBehindConversation,
   patchConversationPreview,
   patchConversationPinned,
   patchConversationRead,
@@ -138,15 +139,26 @@ describe("patchConversationPinned / patchConversationRead against the flat cache
     );
   });
 
-  it("clears unread and advances myLastReadAt without touching row order", () => {
+  it("clears unread and advances myLastReadAt without touching row order, when the watermark covers the row's newest message", () => {
     const queryClient = new QueryClient();
     seedConversationsCache(queryClient, [
-      conversation({ id: "c1", unread: true, unreadCount: 3 }),
+      conversation({
+        id: "c1",
+        unread: true,
+        unreadCount: 3,
+        markedUnreadAt: "2026-09-13T00:00:00Z",
+        updatedAt: "2026-09-14T09:00:00Z",
+      }),
       conversation({ id: "c2" }),
     ]);
 
-    patchConversationRead(queryClient, "c1", "2026-09-14T12:00:00Z");
+    const isFullyCovered = patchConversationRead(
+      queryClient,
+      "c1",
+      "2026-09-14T12:00:00Z",
+    );
 
+    expect(isFullyCovered).toBe(true);
     const patched = queryClient.getQueryData<Conversation[]>([
       "conversations",
       false,
@@ -156,7 +168,123 @@ describe("patchConversationPinned / patchConversationRead against the flat cache
     const row = patched?.find((c) => c.id === "c1");
     expect(row?.unread).toBe(false);
     expect(row?.unreadCount).toBe(0);
+    expect(row?.markedUnreadAt).toBeUndefined();
     expect(row?.myLastReadAt).toBe("2026-09-14T12:00:00Z");
+  });
+
+  it("leaves unread state alone, but still advances myLastReadAt and clears markedUnreadAt, when the watermark is behind the row's newest message", () => {
+    const queryClient = new QueryClient();
+    seedConversationsCache(queryClient, [
+      conversation({
+        id: "c1",
+        unread: true,
+        unreadCount: 2,
+        markedUnreadAt: "2026-09-13T00:00:00Z",
+        // The row already knows about a message newer than the watermark
+        // this read POST carried: a reconnect resynced the list while this
+        // thread's own cached tail stayed behind (see
+        // `isThreadCacheBehindConversation`'s own doc for the full scenario).
+        updatedAt: "2026-09-14T12:00:00Z",
+      }),
+    ]);
+
+    const isFullyCovered = patchConversationRead(
+      queryClient,
+      "c1",
+      "2026-09-14T10:00:00Z",
+    );
+
+    expect(isFullyCovered).toBe(false);
+    const row = queryClient
+      .getQueryData<Conversation[]>(["conversations", false, ""])
+      ?.find((c) => c.id === "c1");
+    // Deliberately still flagged unread: clearing it here would show a clean
+    // inbox for a thread the server still counts unread.
+    expect(row?.unread).toBe(true);
+    expect(row?.unreadCount).toBe(2);
+    // The server clears `marked_unread_at` on every successful read POST
+    // regardless of how far the watermark reaches, so this mirrors that.
+    expect(row?.markedUnreadAt).toBeUndefined();
+    expect(row?.myLastReadAt).toBe("2026-09-14T10:00:00Z");
+  });
+
+  it("is a no-op that reports full coverage when the row isn't cached", () => {
+    const queryClient = new QueryClient();
+    seedConversationsCache(queryClient, [conversation({ id: "c2" })]);
+
+    const isFullyCovered = patchConversationRead(
+      queryClient,
+      "not-cached",
+      "2026-09-14T12:00:00Z",
+    );
+
+    expect(isFullyCovered).toBe(true);
+  });
+});
+
+describe("isThreadCacheBehindConversation", () => {
+  function seedThreadCache(
+    queryClient: QueryClient,
+    conversationId: string,
+    messages: MessageResponse[],
+  ): void {
+    queryClient.setQueryData(["messages", conversationId, false], {
+      pages: [{ items: messages, nextCursor: null }],
+      pageParams: [undefined],
+    });
+  }
+
+  it("is true when the cached tail's newest message is older than the row's updatedAt", () => {
+    const queryClient = new QueryClient();
+    seedThreadCache(queryClient, "c1", [
+      message({ id: "m1", createdAt: "2026-09-14T10:00:00Z" }),
+    ]);
+
+    expect(
+      isThreadCacheBehindConversation(
+        queryClient,
+        "c1",
+        "2026-09-14T12:00:00Z",
+      ),
+    ).toBe(true);
+  });
+
+  it("is false when the cached tail already covers the row's updatedAt", () => {
+    const queryClient = new QueryClient();
+    seedThreadCache(queryClient, "c1", [
+      message({ id: "m1", createdAt: "2026-09-14T12:00:00Z" }),
+    ]);
+
+    expect(
+      isThreadCacheBehindConversation(
+        queryClient,
+        "c1",
+        "2026-09-14T12:00:00Z",
+      ),
+    ).toBe(false);
+  });
+
+  it("is false when nothing is cached yet for the thread", () => {
+    const queryClient = new QueryClient();
+
+    expect(
+      isThreadCacheBehindConversation(
+        queryClient,
+        "c1",
+        "2026-09-14T12:00:00Z",
+      ),
+    ).toBe(false);
+  });
+
+  it("is false when the row carries no updatedAt to compare against", () => {
+    const queryClient = new QueryClient();
+    seedThreadCache(queryClient, "c1", [
+      message({ id: "m1", createdAt: "2026-09-14T10:00:00Z" }),
+    ]);
+
+    expect(isThreadCacheBehindConversation(queryClient, "c1", undefined)).toBe(
+      false,
+    );
   });
 });
 

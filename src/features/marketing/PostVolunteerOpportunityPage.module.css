@@ -48,7 +48,7 @@
 }
 @media (--mobile) {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 28px;
   }
 }
@@ -97,6 +97,55 @@
     grid-template-columns: 1fr;
     gap: 0;
   }
+}
+
+/* ── Commitment level: two side-by-side radio cards ──────────────────────── */
+.commitChoices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (--mobile) {
+  .commitChoices {
+    grid-template-columns: 1fr;
+  }
+}
+.commitChoice {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 16px;
+  text-align: start;
+  font: inherit;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .commitChoice:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+  }
+}
+/* Line tokens rather than plum: plum is a fixed brand colour that would
+   vanish against the dark theme's surface. */
+.commitChoiceOn,
+.commitChoiceOn:hover {
+  background: rgba(var(--line-rgb), 0.05);
+  border-color: var(--line-strong);
+}
+.commitChoiceLabel {
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.commitChoiceHint {
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
 }
 
 /* ── Optional (details/summary) ───────────────────────────────────────────── */

@@ -6,7 +6,7 @@ import type { BoardItem } from "./data/members";
 import { BOARD_KIND_OPTIONS, newBoardItem } from "./boardEditor.data";
 import { useRowKeys } from "./useRowKeys";
 import { Section } from "./ProfileSections";
-import { TagEditor } from "./profileEditControls";
+import { TagEditor } from "./ProfileTagEditor";
 import editStyles from "./ProfileEdit.module.css";
 import styles from "./ProfileListEditors.module.css";
 

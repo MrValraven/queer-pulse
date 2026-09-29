@@ -37,6 +37,26 @@ import {
   FiUsers,
   FiVideo,
 } from "react-icons/fi";
+import {
+  GiBookshelf,
+  GiCog,
+  GiDiceTwentyFacesTwenty,
+  GiDramaMasks,
+  GiJigsawPiece,
+  GiLaurelsTrophy,
+  GiMeeple,
+  GiMicrophone,
+  GiPaintBrush,
+  GiRollingDices,
+  GiScrollUnfurled,
+  GiSpellBook,
+  GiStopwatch,
+  GiSwordsEmblem,
+  GiTheaterCurtains,
+  GiTreasureMap,
+  GiTrophyCup,
+  GiVideoCamera,
+} from "react-icons/gi";
 import type {
   SubprofileItemDTO,
   SubprofileKind,
@@ -154,6 +174,27 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   facilitator: ["workshops", "clients"],
   tutor: ["subjects", "courses"],
   lecturer: ["courses", "papers"],
+  // Quest personas (+20). Identical mapping to the backend mirror.
+  game_master: ["campaigns", "sessions"],
+  ttrpg_designer: ["games", "jams"],
+  board_game_reviewer: ["reviews", "playthroughs"],
+  game_night_host: ["nights", "library"],
+  larp_organizer: ["larps", "workshops"],
+  miniature_painter: ["minis", "commissions"],
+  cartographer: ["maps", "commissions"],
+  dice_maker: ["dice", "commissions"],
+  tournament_organizer: ["events", "results"],
+  actual_play: ["shows", "appearances"],
+  streamer: ["streams", "videos"],
+  speedrunner: ["runs", "videos"],
+  modder: ["mods", "open_source"],
+  cosplayer: ["builds", "cons"],
+  prop_maker: ["builds", "commissions"],
+  puzzle_designer: ["puzzles", "events"],
+  podcaster: ["episodes", "appearances"],
+  voice_actor: ["reel", "roles"],
+  fanfic_writer: ["works", "series"],
+  game_critic: ["reviews", "publications"],
 };
 
 /** The content sections of a kind, plus the universal 'gallery' section. */
@@ -779,7 +820,110 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     icon: FiBookOpen,
     fields: ["title", "description"],
   },
+  // Quest personas. `campaigns` already exists above (model, heritage,
+  // organizer, activist) and the game master shares that entry.
+  sessions: {
+    labelKey: "subprofiles:section.sessions",
+    icon: FiCalendar,
+    fields: ["title", "date", "url", "description"],
+  },
+  playthroughs: {
+    labelKey: "subprofiles:section.playthroughs",
+    icon: GiMeeple,
+    fields: ["title", "url", "imageUrl", "date"],
+  },
+  library: {
+    labelKey: "subprofiles:section.library",
+    icon: GiBookshelf,
+    fields: ["title", "subtitle", "imageUrl", "tags"],
+  },
+  larps: {
+    labelKey: "subprofiles:section.larps",
+    icon: GiSwordsEmblem,
+    fields: ["title", "date", "description", "url", "imageUrl"],
+  },
+  minis: {
+    labelKey: "subprofiles:section.minis",
+    icon: GiPaintBrush,
+    fields: ["title", "imageUrl", "description", "tags"],
+  },
+  maps: {
+    labelKey: "subprofiles:section.maps",
+    icon: GiTreasureMap,
+    fields: ["title", "imageUrl", "description", "url"],
+  },
+  dice: {
+    labelKey: "subprofiles:section.dice",
+    icon: GiRollingDices,
+    fields: ["title", "imageUrl", "description", "meta"],
+  },
+  results: {
+    labelKey: "subprofiles:section.results",
+    icon: GiTrophyCup,
+    fields: ["title", "date", "description", "url"],
+  },
+  streams: {
+    labelKey: "subprofiles:section.streams",
+    icon: GiVideoCamera,
+    fields: ["title", "url", "date", "imageUrl"],
+  },
+  runs: {
+    labelKey: "subprofiles:section.runs",
+    icon: GiStopwatch,
+    fields: ["title", "meta", "url", "date"],
+  },
+  mods: {
+    labelKey: "subprofiles:section.mods",
+    icon: GiCog,
+    fields: ["title", "description", "url", "tags"],
+  },
+  cons: {
+    labelKey: "subprofiles:section.cons",
+    icon: GiDramaMasks,
+    fields: ["title", "date", "subtitle", "imageUrl"],
+  },
+  puzzles: {
+    labelKey: "subprofiles:section.puzzles",
+    icon: GiJigsawPiece,
+    fields: ["title", "description", "url", "imageUrl"],
+  },
+  episodes: {
+    labelKey: "subprofiles:section.episodes",
+    icon: GiMicrophone,
+    fields: ["title", "url", "date", "description", "imageUrl"],
+  },
+  roles: {
+    labelKey: "subprofiles:section.roles",
+    icon: GiTheaterCurtains,
+    fields: ["title", "subtitle", "url", "date"],
+  },
+  works: {
+    labelKey: "subprofiles:section.works",
+    icon: GiScrollUnfurled,
+    fields: ["title", "subtitle", "description", "url", "tags"],
+  },
 };
+
+/** The create picker shows a kind's icon as its lead section's icon
+ *  (`SECTION_META[KIND_SECTIONS[kind][0]].icon`), which reads wrong or
+ *  clashes for a few Quest kinds: game_master's lead section is "campaigns"
+ *  (shared with organizer/activist/model/heritage), whose flag icon doesn't
+ *  read as tabletop; ttrpg_designer and game_designer share "games" (the grid
+ *  icon); game_night_host and tournament_organizer share a calendar-first
+ *  section. These four get a picker-only override instead. Verified to exist
+ *  in `react-icons/gi`. */
+export const KIND_ICON_OVERRIDE: Partial<Record<SubprofileKind, IconType>> = {
+  game_master: GiDiceTwentyFacesTwenty,
+  ttrpg_designer: GiSpellBook,
+  game_night_host: GiMeeple,
+  tournament_organizer: GiLaurelsTrophy,
+};
+
+/** The icon for a kind's create-picker chip: the override above when one
+ *  exists, else the lead section's own icon. */
+export function kindIcon(kind: SubprofileKind): IconType {
+  return KIND_ICON_OVERRIDE[kind] ?? SECTION_META[KIND_SECTIONS[kind][0]!].icon;
+}
 
 // ── Kind display labels (for pickers / badges) ───────────────────────────────
 
@@ -819,7 +963,8 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   tattoo_artist: "subprofiles:kind.tattoo_artist",
   animator: "subprofiles:kind.animator",
   comic_artist: "subprofiles:kind.comic_artist",
-  game_designer: "subprofiles:kind.game_designer",
+  // game_designer moved to the Quest block below (quest family), since this
+  // Record's order sets each family's kind order in `KIND_FAMILIES`.
   artist_3d: "subprofiles:kind.artist_3d",
   printmaker: "subprofiles:kind.printmaker",
   // page (new kinds)
@@ -893,6 +1038,28 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   facilitator: "subprofiles:kind.facilitator",
   tutor: "subprofiles:kind.tutor",
   lecturer: "subprofiles:kind.lecturer",
+  // Quest personas (+20)
+  game_master: "subprofiles:kind.game_master",
+  ttrpg_designer: "subprofiles:kind.ttrpg_designer",
+  game_designer: "subprofiles:kind.game_designer",
+  board_game_reviewer: "subprofiles:kind.board_game_reviewer",
+  game_night_host: "subprofiles:kind.game_night_host",
+  larp_organizer: "subprofiles:kind.larp_organizer",
+  miniature_painter: "subprofiles:kind.miniature_painter",
+  cartographer: "subprofiles:kind.cartographer",
+  dice_maker: "subprofiles:kind.dice_maker",
+  tournament_organizer: "subprofiles:kind.tournament_organizer",
+  actual_play: "subprofiles:kind.actual_play",
+  streamer: "subprofiles:kind.streamer",
+  speedrunner: "subprofiles:kind.speedrunner",
+  modder: "subprofiles:kind.modder",
+  cosplayer: "subprofiles:kind.cosplayer",
+  prop_maker: "subprofiles:kind.prop_maker",
+  puzzle_designer: "subprofiles:kind.puzzle_designer",
+  podcaster: "subprofiles:kind.podcaster",
+  voice_actor: "subprofiles:kind.voice_actor",
+  fanfic_writer: "subprofiles:kind.fanfic_writer",
+  game_critic: "subprofiles:kind.game_critic",
 };
 
 /**
@@ -1013,6 +1180,27 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   facilitator: "Workshop facilitator",
   tutor: "Tutor",
   lecturer: "Lecturer",
+  // Quest personas (+20)
+  game_master: "Game master (DM/GM)",
+  ttrpg_designer: "TTRPG writer",
+  board_game_reviewer: "Board game reviewer",
+  game_night_host: "Game night host",
+  larp_organizer: "LARP organiser",
+  miniature_painter: "Miniature painter",
+  cartographer: "Fantasy map maker",
+  dice_maker: "Dice maker",
+  tournament_organizer: "Tournament organiser",
+  actual_play: "Actual play performer",
+  streamer: "Streamer / VTuber",
+  speedrunner: "Speedrunner",
+  modder: "Modder",
+  cosplayer: "Cosplayer",
+  prop_maker: "Prop and armour maker",
+  puzzle_designer: "Puzzle and escape room designer",
+  podcaster: "Podcaster",
+  voice_actor: "Voice actor",
+  fanfic_writer: "Fanfic writer",
+  game_critic: "Video game critic",
 };
 
 /**
@@ -1124,11 +1312,32 @@ const PT_KIND_LABELS: Record<SubprofileKind, string> = {
   facilitator: "Facilitação",
   tutor: "Explicações",
   lecturer: "Docência universitária",
+  // Quest personas (+20)
+  game_master: "Narração de RPG",
+  ttrpg_designer: "Escrita de RPG",
+  board_game_reviewer: "Crítica de jogos de tabuleiro",
+  game_night_host: "Noites de jogos",
+  larp_organizer: "LARP",
+  miniature_painter: "Pintura de miniaturas",
+  cartographer: "Cartografia fantástica",
+  dice_maker: "Dados artesanais",
+  tournament_organizer: "Organização de torneios",
+  actual_play: "Actual play",
+  streamer: "Streaming",
+  speedrunner: "Speedrunning",
+  modder: "Modding",
+  cosplayer: "Cosplay",
+  prop_maker: "Adereços e armaduras",
+  puzzle_designer: "Puzzles e escape rooms",
+  podcaster: "Podcast",
+  voice_actor: "Dobragem e voz",
+  fanfic_writer: "Fanfic",
+  game_critic: "Crítica de videojogos",
 };
 
 /** Every supported UI language's kind label, so adding a language to
  *  `Language` fails to compile until its labels are listed here. */
-const KIND_LABELS_BY_LANGUAGE: Record<
+export const KIND_LABELS_BY_LANGUAGE: Record<
   Language,
   Record<SubprofileKind, string>
 > = { en: KIND_LABELS, pt: PT_KIND_LABELS };
@@ -1378,6 +1587,65 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   facilitator: "facilitator",
   tutor: "tutor",
   lecturer: "lecturer",
+  // Quest personas (+20)
+  game_master: "game-master",
+  ttrpg_designer: "ttrpg-writer",
+  board_game_reviewer: "board-game-reviewer",
+  game_night_host: "game-night-host",
+  larp_organizer: "larp-organiser",
+  miniature_painter: "miniature-painter",
+  cartographer: "map-maker",
+  dice_maker: "dice-maker",
+  tournament_organizer: "tournament-organiser",
+  actual_play: "actual-play",
+  streamer: "streamer",
+  speedrunner: "speedrunner",
+  modder: "modder",
+  cosplayer: "cosplayer",
+  prop_maker: "prop-maker",
+  puzzle_designer: "puzzle-designer",
+  podcaster: "podcaster",
+  voice_actor: "voice-actor",
+  fanfic_writer: "fanfic-writer",
+  game_critic: "game-critic",
+};
+
+/**
+ * Extra words a directory search can name a profession by, beyond its EN and
+ * PT labels. Mirrors the aliases in the backend's `subprofile-kind-search.ts`
+ * (keep in step); demo mode's `mockDirectory` reads them through
+ * `kindSearch.ts`.
+ */
+export const KIND_SEARCH_ALIASES: Partial<
+  Record<SubprofileKind, readonly string[]>
+> = {
+  game_master: [
+    "dm",
+    "gm",
+    "dungeon master",
+    "game master",
+    "mestre",
+    "mestre de jogo",
+    "narrador",
+    "narradora",
+    "keeper",
+    "storyteller",
+    "rpg",
+  ],
+  ttrpg_designer: ["ttrpg", "rpg designer"],
+  streamer: ["vtuber", "twitch"],
+  cosplayer: ["cosplay"],
+  larp_organizer: ["larp", "live action"],
+  tournament_organizer: [
+    "tournament",
+    "torneio",
+    "magic",
+    "mtg",
+    "pokemon",
+    "chess",
+    "xadrez",
+  ],
+  board_game_reviewer: ["board games", "jogos de tabuleiro"],
 };
 
 /** The slug a persona gets by default when the owner names it after the

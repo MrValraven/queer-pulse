@@ -1,26 +1,22 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import {
-  Eyebrow,
-  Reveal,
-  SkeletonLine,
-  Tag,
-  TagRow,
-} from "../../shared/components/ui";
+import { Eyebrow, Reveal, Tag, TagRow } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { useVouch } from "../../app/providers/useVouch";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberAmbassadorTag } from "../../shared/ambassadors/MemberAmbassadorTag";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { type MemberProfile } from "./data/memberProfiles";
-import { useRecognition } from "./api/useRecognition";
-import { levelNameKeyFor } from "./levelLadder.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileBioLanguageToggle } from "./ProfileBioLanguageToggle";
 import { ProfileHeroActions } from "./ProfileHeroActions";
+import {
+  ProfileHeroOverflowMenu,
+  type ProfileHeroMenuCallbacks,
+} from "./ProfileHeroOverflowMenu";
+import { ProfileHeroRecognition } from "./ProfileHeroRecognition";
+import { ProfileHeroToolbar } from "./ProfileHeroToolbar";
 import { ProfileNamePronunciation } from "./ProfileNamePronunciation";
-import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
-import { ProfileSettingsMenu } from "./ProfileSettingsMenu";
 import { ProfileWorkRow } from "./ProfileWorkRow";
 import { PublicProfileBadge } from "./PublicProfileBadge";
 import { SocialLinksRow } from "./SocialLinksRow";
@@ -28,7 +24,7 @@ import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
 import pageStyles from "./ProfilePage.module.css";
 import styles from "./ProfileHeroMain.module.css";
 
-interface ProfileHeroMainProps {
+interface ProfileHeroMainProps extends ProfileHeroMenuCallbacks {
   profile: MemberProfile;
   /** Whether this is the viewer's own profile, resolved by the page against
    *  the authenticated user (same prop `ProfileHero`/`ProfileRail` receive). */
@@ -41,30 +37,17 @@ interface ProfileHeroMainProps {
   onEditLinks?: () => void;
   /** Preview your profile as a visitor (only used on your own profile). */
   onPreview?: () => void;
-  /** Open the "Who sees what" visibility sheet (only used on your own profile). */
-  onOpenWhoSeesWhat?: () => void;
-  /** Open the account-data sheet (only used on your own profile). */
-  onOpenAccountData?: () => void;
-  /** Toggle the 24h hide-me switch (only used on your own profile). */
-  onToggleHidden?: () => void;
-  /** Whether — and until when — the profile is currently hidden. */
-  hiddenUntil?: string | null;
 }
 
 /**
  * The profile hero's main column: eyebrow/visibility, name (+ pronunciation),
- * role/pronouns/staff badge, curator link, the recognition strip (a fuller
- * self view, or a visitor's narrower view of the profile being viewed),
- * bio (with the EN/PT toggle), "here for" chips, the "works in" row, tags,
- * social links, the CTA row (say hello / vouch / safety menu) and the vouch
- * row. The "not here for" boundary note moved into the Now card
- * (`NowBoundaryNote`), the only place it renders now. Decomposed from the
- * former monolithic `ProfileHero` in
- * `ProfileSections.tsx`, which is now a thin composer of this component,
- * `ProfileRail` (the left column — portrait, location, trust signals, rail
- * controls, section nav) and — for a visitor viewing someone else's profile —
- * `ProfileMutualsCard`, floating beside this column rather than inline
- * within it.
+ * the staff shield beside the name, role/pronouns/ambassador tag, curator link, the recognition strip, bio (with
+ * the EN/PT toggle), "here for" chips, the "works in" row, tags, social links,
+ * the CTA row (say hello / vouch) and the vouch row. The owner
+ * actions and the safety menu live in `ProfileHeroToolbar`, on the eyebrow's
+ * line. `ProfileHero` (`ProfileSections.tsx`) composes it with `ProfileRail`
+ * (the left column) and, for a visitor on someone else's profile,
+ * `ProfileMutualsCard`.
  */
 export function ProfileHeroMain({
   profile,
@@ -73,33 +56,47 @@ export function ProfileHeroMain({
   onEdit,
   onEditLinks,
   onPreview,
-  onOpenWhoSeesWhat,
-  onOpenAccountData,
-  onToggleHidden,
-  hiddenUntil = null,
+  ...menuCallbacks
 }: ProfileHeroMainProps) {
   const { t } = useTranslation();
-  const { hasVouched, removeVouch } = useVouch();
   // `self` is resolved by the page against the authenticated user, same as
   // `ProfileRail`. `isSelf` folds in the visitor-preview gate: true only when
   // this really is your own profile AND you're not previewing it as a
-  // visitor would see it — this is what gates the edit CTA, the public-
+  // visitor would see it; this is what gates the edit CTA, the public-
   // profile badge, and the recognition strip. `self` on its own (ignoring
   // preview) gates things that must never show on your own profile at all,
   // preview or not: the safety menu and the mutuals row.
   const isSelf = Boolean(self) && !asVisitor;
-  const vouched = hasVouched(profile.slug);
   const curatorSlug = curatorSlugForName(`${profile.first} ${profile.last}`);
+  const overflowMenu = (
+    <ProfileHeroOverflowMenu
+      profile={profile}
+      isOwnProfile={Boolean(self)}
+      isSelf={isSelf}
+      {...menuCallbacks}
+    />
+  );
+  const eyebrow = (
+    <Eyebrow live>{t(VISIBILITY_LABEL_KEY[profile.visibility])}</Eyebrow>
+  );
 
   return (
     <Reveal delay={80} className={styles.pheroMain}>
-      <Eyebrow live className={styles.eyebrow}>
-        {t(VISIBILITY_LABEL_KEY[profile.visibility])}
-      </Eyebrow>
+      <div className={styles.eyebrowRow}>
+        {eyebrow}
+        <ProfileHeroToolbar
+          isOwnProfile={Boolean(self)}
+          isSelf={isSelf}
+          onEdit={onEdit}
+          onPreview={onPreview}
+          menu={overflowMenu}
+        />
+      </div>
       <div className={styles.heroNameRow}>
         <h1 className={styles.name}>
           {profile.first} <em>{profile.last}</em>
         </h1>
+        <MemberStaffBadge slug={profile.slug} size="icon" />
         {isSelf && <PublicProfileBadge />}
       </div>
       <ProfileNamePronunciation profile={profile} />
@@ -110,7 +107,7 @@ export function ProfileHeroMain({
             <span className={styles.pronoun}> · {profile.pronouns}</span>
           )}
         </span>
-        <MemberStaffBadge slug={profile.slug} size="lg" />
+        <MemberAmbassadorTag slug={profile.slug} size="lg" />
       </div>
       {curatorSlug && (
         <Link
@@ -120,11 +117,7 @@ export function ProfileHeroMain({
           {t("members:profile.hero.curatorLink")} <FiArrowRight aria-hidden />
         </Link>
       )}
-      {isSelf ? (
-        <HeroRecognition />
-      ) : (
-        <OtherMemberRecognition slug={profile.slug} />
-      )}
+      <ProfileHeroRecognition isSelf={isSelf} slug={profile.slug} />
       <ProfileBioLanguageToggle profile={profile} />
       {profile.lookingFor &&
         profile.lookingFor.length > 0 &&
@@ -172,146 +165,22 @@ export function ProfileHeroMain({
         self={isSelf}
         onEdit={onEditLinks}
       />
-      <div className={styles.ctaRow}>
-        <ProfileHeroActions
-          profile={profile}
-          isSelf={isSelf}
-          asVisitor={asVisitor}
-          realSelf={Boolean(self)}
-          onEdit={onEdit}
-          onPreview={onPreview}
-        />
-        {/* Safety controls only on another member's profile — never your own
-            (raw `self` covers both self view and self-as-visitor preview). */}
-        {!self && (
-          <ProfileSafetyMenu
-            slug={profile.slug}
-            firstName={profile.first}
-            onWithdrawVouch={
-              vouched ? () => removeVouch(profile.slug) : undefined
-            }
-          />
-        )}
-        {/* The settings-menu counterpart: only on your own profile, and only
-            once it's genuinely `isSelf` (not the visitor preview — same gate
-            the edit CTA above already uses). */}
-        {isSelf && onOpenWhoSeesWhat && onOpenAccountData && onToggleHidden && (
-          <ProfileSettingsMenu
+      {/* The owner's actions live in the toolbar above, so the row is
+          skipped for the owner's own profile. */}
+      {!isSelf && (
+        <div className={styles.ctaRow}>
+          <ProfileHeroActions
             profile={profile}
-            onOpenWhoSeesWhat={onOpenWhoSeesWhat}
-            onOpenAccountData={onOpenAccountData}
-            onToggleHidden={onToggleHidden}
-            hiddenUntil={hiddenUntil}
+            asVisitor={asVisitor}
+            realSelf={Boolean(self)}
           />
-        )}
-      </div>
+        </div>
+      )}
       <HeroVouchRow
         profile={profile}
         realSelf={Boolean(self)}
         isSelf={isSelf}
       />
     </Reveal>
-  );
-}
-
-/**
- * A quiet recognition strip that lives in the profile hero meta zone: three
- * small chips (level, badges, perks) that link through to your own badges/
- * perks pages. Deliberately subtle — no heading, no card — so it reads as
- * secondary hero meta rather than a headline section. Rendered only on your
- * own profile (the "own view" branch — see `OtherMemberRecognition` below
- * for what a visitor sees on someone else's).
- */
-function HeroRecognition() {
-  const { t } = useTranslation();
-  const { level, badges, perks, hasRealData } = useRecognition();
-  // The ladder's words are owned by the frontend and keyed on the level
-  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
-  // own English name.
-  const levelNameKey = levelNameKeyFor(level.level);
-  // Until real recognition data lands in live mode, skeleton the chips rather
-  // than flash the demo placeholder's fictional level/badge/perk counts.
-  if (!hasRealData) {
-    return (
-      <div className={styles.heroRecog} aria-hidden>
-        <SkeletonLine width={128} height={26} />
-        <SkeletonLine width={92} height={26} />
-        <SkeletonLine width={108} height={26} />
-      </div>
-    );
-  }
-  const totalBadges = badges.earnedCount + badges.discoverCount;
-  return (
-    <div className={styles.heroRecog}>
-      <Link
-        to={routes.badges}
-        className={`${styles.heroRecogChip} ${styles.accent}`}
-      >
-        {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
-        {levelNameKey ? t(levelNameKey) : level.name}
-      </Link>
-      <Link to={routes.badges} className={styles.heroRecogChip}>
-        {t("members:profile.hero.badgesChip", {
-          earned: badges.earnedCount,
-          total: totalBadges,
-        })}
-      </Link>
-      <Link
-        to={routes.perks}
-        className={`${styles.heroRecogChip} ${styles.jade}`}
-      >
-        {t("members:profile.hero.perksChip", { count: perks.availableCount })}
-      </Link>
-    </div>
-  );
-}
-
-/**
- * The same quiet recognition strip as `HeroRecognition`, but for viewing
- * ANOTHER member's profile (or your own profile in visitor-preview mode).
- * Recognition (level + badges) is a visible trust signal between members —
- * the backend has always supported reading it by slug
- * (`GET /profiles/:slug/recognition`), but no frontend surface ever called
- * `useRecognition(slug)` for someone else until now (COM-24).
- *
- * Deliberately narrower than the self view: no perks chip, and the chips
- * aren't links. Perk state is owner-only — the backend already omits it for
- * a non-owner slug lookup (`availableCount` comes back `0`), so showing a
- * "0 perks" chip on a stranger's profile would misread as "this member has
- * no perks" rather than "you can't see their perks" — better to just not
- * show it. `/badges` and `/perks` are self-scoped pages (they always render
- * the viewer's OWN recognition, not the profile being viewed), so linking to
- * them from here would silently swap in the viewer's own data — the chips
- * are plain, non-interactive text instead.
- */
-function OtherMemberRecognition({ slug }: { slug: string }) {
-  const { t } = useTranslation();
-  const { level, badges, hasRealData } = useRecognition(slug);
-  // The ladder's words are owned by the frontend and keyed on the level
-  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
-  // own English name.
-  const levelNameKey = levelNameKeyFor(level.level);
-  if (!hasRealData) {
-    return (
-      <div className={styles.heroRecog} aria-hidden>
-        <SkeletonLine width={128} height={26} />
-        <SkeletonLine width={92} height={26} />
-      </div>
-    );
-  }
-  const totalBadges = badges.earnedCount + badges.discoverCount;
-  return (
-    <div className={styles.heroRecog}>
-      <span className={`${styles.heroRecogChip} ${styles.accent}`}>
-        {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
-        {levelNameKey ? t(levelNameKey) : level.name}
-      </span>
-      <span className={styles.heroRecogChip}>
-        {t("members:profile.hero.badgesChip", {
-          earned: badges.earnedCount,
-          total: totalBadges,
-        })}
-      </span>
-    </div>
   );
 }

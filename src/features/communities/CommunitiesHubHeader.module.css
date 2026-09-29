@@ -26,13 +26,6 @@
   color: var(--ink-40);
 }
 
-.titleRow {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--gap-xs);
-}
-
 .title {
   margin: 0;
   font-family: var(--serif);
@@ -83,5 +76,34 @@
 .invitesLink:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-4);
+}
+
+/* "How communities work", a secondary text link under the lead line. Quieter
+   than the invitations link: body-copy ink with an underline, so it reads as
+   an aside to the lead. */
+.howItWorksButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.howItWorksButton:hover {
+  color: var(--text-strong);
+}
+
+.howItWorksButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-radius: var(--radius-4);
 }

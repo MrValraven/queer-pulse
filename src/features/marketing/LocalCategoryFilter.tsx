@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { FilterChips } from "../../shared/components/ui";
+import { ChipSelect } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,20 +8,27 @@ import { CATEGORY_ICON } from "./map.data";
 import s from "./LocalFilterBar.module.css";
 
 /**
- * The place-type chips.
+ * The place-type chips, multi-select.
+ *
+ * Several types can be on at once and combine as an OR: picking "Food" and
+ * "Nightlife" shows both kinds of place. "All" is on while none is chosen, and
+ * tapping it clears the choice.
  *
  * Each chip leads with a colour swatch that mirrors its map pin (category fill
  * plus a white icon), so the filter group doubles as a live legend for the map
  * view, and carries the live count of how many of the LOADED places it would
- * surface right now.
+ * add right now.
  */
 export function LocalCategoryFilter({
-  category,
-  onCategoryChange,
+  categories,
+  onToggleCategory,
+  onClearCategories,
   categoryCounts,
 }: {
-  category: string;
-  onCategoryChange: (value: string) => void;
+  /** The chosen place types. Empty means every type. */
+  categories: string[];
+  onToggleCategory: (categoryId: string) => void;
+  onClearCategories: () => void;
   /** Live count per category id (+ "all"), reflecting the other active filters. */
   categoryCounts: Record<string, number>;
 }) {
@@ -78,16 +85,27 @@ export function LocalCategoryFilter({
     ),
   ];
 
+  const selected = new Set(categories.length === 0 ? ["all"] : categories);
+  const toggleChip = (value: string) => {
+    if (value === "all") onClearCategories();
+    else onToggleCategory(value);
+  };
+
+  // The counts ride inside each label and stay off ChipSelect's `count`, which
+  // would disable a zero chip. A type with nothing among the loaded places can
+  // still have matches on pages the browser has yet to fetch, so it stays
+  // pickable.
   return (
     <div className={s.group}>
       <span className={s.groupLabel} id={categoryLabelId}>
         {t("marketing:local.filter.categoryLabel")}
       </span>
-      <FilterChips
+      <ChipSelect
         labelledBy={categoryLabelId}
         options={categoryOptions}
-        value={category}
-        onChange={onCategoryChange}
+        selected={selected}
+        onToggle={toggleChip}
+        tick={false}
       />
     </div>
   );

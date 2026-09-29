@@ -31,6 +31,19 @@ describe("businessToLocal", () => {
     expect(local.detailPath).toBe("/local/directory/atelier-pulso");
   });
 
+  it("files a business under the parish its pin sits in, over its typed hood", () => {
+    const atelier = DIRECTORY_PLACES.find(
+      (place) => place.slug === "atelier-pulso",
+    )!;
+    const pinnedInArroios = {
+      ...atelier,
+      hood: "Alfama",
+      latitude: 38.72984,
+      longitude: -9.13881,
+    };
+    expect(businessToLocal(pinnedInArroios, false).freguesia).toBe("Arroios");
+  });
+
   it("gives a location-less business null coords (list-only)", () => {
     const supper = DIRECTORY_PLACES.find(
       (place) => place.slug === "queer-supper-club",
@@ -107,9 +120,9 @@ describe("filterLocalPlaces", () => {
     VENUES.map(venueToLocal),
   );
 
-  it("returns everything when category is 'all', query empty, no vibes", () => {
+  it("returns everything when no place type is chosen, query empty, no vibes", () => {
     const result = filterLocalPlaces(places, {
-      category: "all",
+      categories: [],
       query: "",
       vibes: [],
     });
@@ -118,7 +131,7 @@ describe("filterLocalPlaces", () => {
 
   it("filters by unified category", () => {
     const nightlife = filterLocalPlaces(places, {
-      category: "nightlife",
+      categories: ["nightlife"],
       query: "",
       vibes: [],
     });
@@ -128,9 +141,26 @@ describe("filterLocalPlaces", () => {
     );
   });
 
+  it("combines several place types as an OR", () => {
+    const filtersFor = (categories: string[]) => ({
+      categories,
+      query: "",
+      vibes: [],
+    });
+    const nightlife = filterLocalPlaces(places, filtersFor(["nightlife"]));
+    const food = filterLocalPlaces(places, filtersFor(["food"]));
+    const both = filterLocalPlaces(places, filtersFor(["food", "nightlife"]));
+    expect(nightlife.length).toBeGreaterThan(0);
+    expect(food.length).toBeGreaterThan(0);
+    expect(both).toHaveLength(nightlife.length + food.length);
+    expect(
+      both.every((place) => ["food", "nightlife"].includes(place.category)),
+    ).toBe(true);
+  });
+
   it("matches the query against the full searchText haystack, case-insensitively", () => {
     const result = filterLocalPlaces(places, {
-      category: "all",
+      categories: [],
       query: "Mouraria",
       vibes: [],
     });
@@ -143,7 +173,7 @@ describe("filterLocalPlaces", () => {
   it("broadens beyond the name — a word from the blurb still matches", () => {
     // "sliding scale" appears in descriptions, never in a place name.
     const result = filterLocalPlaces(places, {
-      category: "all",
+      categories: [],
       query: "sliding scale",
       vibes: [],
     });
@@ -155,7 +185,7 @@ describe("filterLocalPlaces", () => {
 
   it("passes vibe-less businesses through while narrowing venues to the vibe", () => {
     const result = filterLocalPlaces(places, {
-      category: "all",
+      categories: [],
       query: "",
       vibes: ["mixed"],
     });

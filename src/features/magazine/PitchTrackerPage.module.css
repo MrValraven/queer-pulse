@@ -1,111 +1,136 @@
-/* ---- Page shell ---- */
-/* Centred: this is a member surface rendered inside `AppShell`, whose content
-   column is full-width. It used to sit inside `MagazineDeskShell`, where the
-   editor rail supplied the left offset and `margin: 0` was right. PRD-125. */
-.page {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 40px 28px var(--section-y-80);
-}
+/* The story-submission tracker, rendered as the Submissions tab of the writer
+   workspace (`desk/writer/WriterSubmissionsTab.tsx`). The tab sits inside the
+   workspace's left column and lays its rows out with `pieceStyles.stack`, so
+   the vertical rhythm between the summary row, the status filter and the
+   cards comes from that stack's gap and these rules carry no bottom margins. */
 
-/* ---- Header ---- */
-.head {
-  padding-bottom: 24px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid var(--line-strong);
+/* ---- Summary row ---- */
+.summary {
+  container: submissions-summary / inline-size;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 18px;
+  align-items: center;
+  gap: 12px 18px;
   flex-wrap: wrap;
 }
-.eyebrow {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(2.25rem, 5vw, 3.25rem);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.h1 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.lead {
+.summaryLead {
+  flex: 1 1 auto;
   font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
-  max-width: 50ch;
+  margin: 0;
 }
-.lead b {
+.summaryLead b {
   color: var(--text-strong);
   font-weight: 600;
+}
+/* Pinned right while the counts line is hidden during the first read. Once
+   the counts are in, they grow to fill the line and push the button right;
+   when the two no longer fit (the PT counts wrap earlier than the EN ones),
+   the button starts the second line flush with the counts, so it never
+   floats alone at the far edge. */
+.summaryCta {
+  margin-inline-start: auto;
+}
+.summaryLead + .summaryCta {
+  margin-inline-start: 0;
+}
+/* On a narrow row the button starts at the edge from the first paint, so it
+   does not jump across when the counts arrive above it. */
+@container submissions-summary (max-width: 560px) {
+  .summaryCta {
+    margin-inline-start: 0;
+  }
+}
+/* Touch: the small button's 40px grows to the 44px target floor. Scoped
+   under `.summary` so it outranks the Button's own `.sm` height whichever
+   stylesheet loads last. */
+@media (pointer: coarse) {
+  .summary .summaryCta {
+    min-height: var(--tap-min);
+  }
 }
 
-/* ---- Tabs ---- */
-.tabs {
+/* ---- Status filter ----
+   A compact toggle group in the look of `.chip[aria-pressed]` from
+   `desk/pieceTabs.module.css`, so it reads as a control inside the tab, one
+   level below the workspace tabs. The chips wrap as whole chips onto a
+   second line on a narrow column, keeping the same gap in both directions.
+   The subtle fills in this file (pressed chip, badges, stage bars, note) read
+   `--line-rgb`: it equals `--plum-rgb` in light mode and flips to light
+   channels in dark mode, so the fills stay visible on the dark paper. */
+.filters {
   display: flex;
-  gap: 4px;
-  margin-bottom: 22px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
 }
-.tab {
-  background: none;
-  border: none;
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
   font-family: var(--sans);
-  font-size: var(--text-13-5);
+  font-size: var(--text-12-5);
   font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(var(--line-rgb), 0.2);
+  background: var(--paper);
   color: var(--ink-60);
-  padding: 11px 16px;
   cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
+  touch-action: manipulation;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
 }
-.tabActive {
+.filterChip[aria-pressed="true"] {
+  border-color: var(--line-strong);
   color: var(--text-strong);
+  background: rgba(var(--line-rgb), 0.035);
 }
-.tabActive::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 16px;
-  right: 16px;
-  height: 2px;
-  background: var(--accent);
+@media (hover: hover) {
+  .filterChip:hover {
+    color: var(--text-strong);
+    border-color: rgba(var(--line-rgb), 0.35);
+  }
+  .filterChip[aria-pressed="true"]:hover {
+    border-color: var(--line-strong);
+  }
 }
-.tabCount {
-  font-size: var(--text-11);
-  font-weight: 700;
-  color: var(--ink-40);
-  background: rgba(var(--plum-rgb), 0.06);
-  border-radius: var(--radius-5);
-  padding: 1px 7px;
-  margin-left: 5px;
+@media (pointer: coarse) {
+  .filterChip {
+    min-height: var(--tap-min);
+  }
 }
-.tab:focus-visible {
+.filterChip:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
-  border-radius: var(--radius-5);
+}
+.filterCount {
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+.filterChip[aria-pressed="true"] .filterCount {
+  color: var(--ink-60);
 }
 
-/* ---- Pitch card ---- */
+/* ---- Pitch card ----
+   The card is its own size container, so the stage rail and the actions adapt
+   to the width the card actually gets. Padding matches the sibling writer
+   cards (18px) and eases down to the 14px gap token on a phone-width column;
+   a percentage padding resolves against the column, which is the card's own
+   width here. */
 .card {
+  container: pitch-card / inline-size;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-18);
-  padding: 24px 26px;
-  margin-bottom: 14px;
+  padding: clamp(var(--gap-sm), 4.5%, 18px);
   transition:
     transform 0.2s var(--ease),
     border-color 0.2s;
@@ -128,9 +153,12 @@
   flex-wrap: wrap;
 }
 .title {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: var(--text-21);
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -178,7 +206,7 @@
 }
 .statusCommissioned {
   color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.08);
+  background: rgba(var(--line-rgb), 0.08);
 }
 .statusPublished {
   color: var(--jade);
@@ -186,7 +214,7 @@
 }
 .statusRejected {
   color: var(--ink-60);
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
 }
 
 @keyframes pitchPulse {
@@ -218,23 +246,30 @@
   font-weight: 600;
 }
 
-/* ---- Stage rail ---- */
+/* ---- Stage rail ----
+   `flex: 1 1 0` plus `min-width: 0` keeps every segment the same width, so a
+   long label can never widen its own bar. Wide labels end in an ellipsis; the
+   full text stays in the DOM for screen readers. */
 .stages {
   display: flex;
   gap: 4px;
   margin: 14px 0 12px;
+  padding: 0;
+  list-style: none;
   align-items: flex-start;
 }
 .stage {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 .stageBar {
+  display: block;
   height: 5px;
   border-radius: var(--radius-3);
-  background: rgba(var(--plum-rgb), 0.1);
+  background: rgba(var(--line-rgb), 0.1);
 }
 .stageDone .stageBar {
   background: var(--jade);
@@ -243,13 +278,17 @@
   background: var(--accent);
 }
 .stageRejected .stageBar {
-  background: rgba(var(--plum-rgb), 0.2);
+  background: rgba(var(--line-rgb), 0.2);
 }
 .stageLabel {
+  display: block;
   font-size: var(--text-10);
   font-weight: 600;
+  line-height: 1.4;
   color: var(--ink-40);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .stageDone .stageLabel {
   color: var(--jade);
@@ -258,11 +297,51 @@
   color: var(--accent-ink);
   font-weight: 700;
 }
+/* The current stage's label is bold, so a done or closed "you are here" still
+   stands out from the stages around it. */
+.stage[aria-current="step"] .stageLabel {
+  font-weight: 700;
+}
+.stageRejected[aria-current="step"] .stageLabel {
+  color: var(--ink-60);
+}
+
+/* Six labels stop fitting side by side below about 560px of rail, the card's
+   content box (the longest PT label needs ~89px per segment). From there only the current stage shows its label, at its
+   full length, running across the hidden neighbours away from the nearer
+   card edge. The other labels leave the layout but stay readable to screen
+   readers, the same technique as `.visuallyHidden` in base.css. */
+@container pitch-card (max-width: 560px) {
+  .stage {
+    position: relative;
+  }
+  .stageLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .stage[aria-current="step"] .stageLabel {
+    position: static;
+    width: max-content;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    text-overflow: clip;
+  }
+  .stage[aria-current="step"][data-label-align="end"] .stageLabel {
+    align-self: flex-end;
+  }
+}
 
 /* ---- Note / outline ---- */
 .note {
   padding: 12px 16px;
-  background: rgba(var(--plum-rgb), 0.04);
+  background: rgba(var(--line-rgb), 0.04);
   border-radius: var(--radius-10);
   font-size: var(--text-13-5);
   color: var(--ink);
@@ -299,6 +378,9 @@
   flex-wrap: wrap;
 }
 .action {
+  display: inline-flex;
+  align-items: center;
+  touch-action: manipulation;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -323,7 +405,7 @@
 }
 @media (hover: hover) {
   .action:hover {
-    background: rgba(var(--plum-rgb), 0.05);
+    background: var(--wash);
     color: var(--text-strong);
   }
   .actionDanger:hover {
@@ -336,30 +418,23 @@
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
+/* Touch: every action clears the 44px target floor. The taller buttons carry
+   their own air, so the rule above them tightens to keep the card's rhythm. */
+@media (pointer: coarse) {
+  .actions {
+    margin-top: 10px;
+    padding-top: 4px;
+    gap: 4px 8px;
+  }
+  .action {
+    min-height: var(--tap-min);
+  }
+}
 
-/* ---- Skeleton + empty ---- */
+/* ---- Skeleton ---- */
 .skeletonCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-18);
-  padding: 24px 26px;
-  margin-bottom: 14px;
-}
-.empty {
-  text-align: center;
-  padding: var(--section-y-56) 24px;
-  color: var(--ink-60);
-}
-.empty h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-22);
-  color: var(--text-strong);
-  margin-bottom: 8px;
-}
-.empty p {
-  font-size: var(--text-14);
-  line-height: 1.6;
-  max-width: 42ch;
-  margin: 0 auto;
+  padding: clamp(var(--gap-sm), 4.5%, 18px);
 }

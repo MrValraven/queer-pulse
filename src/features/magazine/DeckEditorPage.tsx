@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { emptyDraft, draftToDeck, type DeckDraft } from "./deckDraft";
-import { draftsEqual } from "./deckEditorLoad";
+import { draftToDeck } from "./deckDraft";
 import { DeckMetaForm } from "./DeckMetaForm";
 import { DeckSlidesEditor } from "./DeckSlidesEditor";
 import { useDeckEditorActions } from "./DeckEditorActions";
@@ -18,7 +17,7 @@ import {
 } from "./desk/deck/DeckDangerCard";
 import { useDeckAutosave } from "./desk/deck/useDeckAutosave";
 import { useDeckIssueLink } from "./api/useDeckIssueLink";
-import { useAdminDeck } from "./api/useAdminDeck";
+import { useDeckEditorDraft } from "./desk/deck/useDeckEditorDraft";
 import { useDeckEditorNavigation } from "./desk/deck/useDeckEditorNavigation";
 import { useDeckPublishTiming } from "./desk/deck/useDeckPublishTiming";
 import { DeckModals, type DeckModal } from "./desk/deck/DeckModals";
@@ -29,16 +28,19 @@ export function DeckEditorPage() {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
 
-  const deckQuery = useAdminDeck(id);
-
-  const [draft, setDraft] = useState<DeckDraft>(emptyDraft());
-  const [lastSaved, setLastSaved] = useState<DeckDraft>(emptyDraft());
-  const [published, setPublished] = useState(false);
-  // A FUTURE instant means scheduled rather than live (PRD-131).
-  const [publishedAt, setPublishedAt] = useState<string | null>(null);
+  const {
+    draft,
+    setDraft,
+    lastSaved,
+    setLastSaved,
+    isDirty: dirty,
+    published,
+    publishedAt,
+    applyPublishedAt,
+    markSeeded,
+  } = useDeckEditorDraft(id);
   const { effectiveId, setCreatedId, deferNavigateTo } =
     useDeckEditorNavigation(id);
-  const seededForRef = useRef<string | null>(null);
 
   // Local-only chrome state: which slide the rail preview / Present overlay
   // shows, and which modal is open. Neither is part of the persisted draft.
@@ -52,18 +54,8 @@ export function DeckEditorPage() {
     isPublishBlocked,
   } = useDeckPublishTiming({ draft, published, t });
 
-  useEffect(() => {
-    if (!deckQuery.data) return;
-    const seedKey = id ?? "new";
-    if (seededForRef.current === seedKey) return;
-    seededForRef.current = seedKey;
-    setDraft(deckQuery.data.draft);
-    setLastSaved(deckQuery.data.draft);
-    setPublished(deckQuery.data.published);
-    setPublishedAt(deckQuery.data.publishedAt);
-  }, [deckQuery.data, id]);
-
-  const dirty = !draftsEqual(draft, lastSaved);
+  // The issue that ships this deck, and the desk piece that publishes it.
+  const issueLinkQuery = useDeckIssueLink(effectiveId);
 
   const {
     saveDraft,
@@ -72,6 +64,7 @@ export function DeckEditorPage() {
     handlePublish,
     handleDelete,
     handleConvert,
+    requestConvert,
     isSaving,
     isCreatePending,
     isPublishPending,
@@ -81,17 +74,15 @@ export function DeckEditorPage() {
     id: effectiveId,
     draft,
     published,
+    linkedPieceId: issueLinkQuery.data?.pieceId ?? null,
     onCreated: (newId) => {
       setLastSaved(draft);
       setCreatedId(newId);
-      seededForRef.current = newId;
+      markSeeded(newId);
       deferNavigateTo(`${routes.deckEditor}?id=${newId}`);
     },
     onSaved: setLastSaved,
-    onPublishedChange: (nextPublishedAt) => {
-      setPublishedAt(nextPublishedAt);
-      setPublished(nextPublishedAt !== null);
-    },
+    onPublishedChange: applyPublishedAt,
     onDeleted: () => {
       setLastSaved(draft);
       deferNavigateTo(routes.magazineEditor);
@@ -125,9 +116,6 @@ export function DeckEditorPage() {
     confirmMessage: t("magazine:deck.editor.leaveConfirm"),
     onSaveAndLeave: isDeckActionPending ? undefined : saveBeforeLeaving,
   });
-
-  // Which issue would ship this deck, for the rail's "With issue" timing.
-  const issueLinkQuery = useDeckIssueLink(effectiveId);
 
   const deck = draftToDeck(draft);
   const clampedIndex =
@@ -165,7 +153,8 @@ export function DeckEditorPage() {
           onIndex={setPreviewIndex}
           onSave={handleSave}
           savePending={isWriting}
-          onConvert={() => setModal({ kind: "convert" })}
+          onConvert={() => requestConvert(() => setModal({ kind: "convert" }))}
+          isConvertBlocked={published}
           publishPending={isPublishPending}
           publishDisabled={publishDisabled}
           publishedAt={publishedAt}

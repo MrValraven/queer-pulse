@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
-import { FadeIn, FeatureHelp, SuccessPanel } from "../../shared/components/ui";
+import { FadeIn, SuccessPanel } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ListingWizard } from "../marketing/listBusiness/ListingWizard";
@@ -125,12 +125,7 @@ export function AdminListingNewPage() {
       <FadeIn>
         <AdminPageHeader
           eyebrow={t("admin:listingNew.eyebrow")}
-          title={
-            <>
-              {t("admin:listingNew.title")}{" "}
-              <FeatureHelp id="admin.listingNew" />
-            </>
-          }
+          title={t("admin:listingNew.title")}
           sub={t("admin:listingNew.sub")}
         />
       </FadeIn>

@@ -87,23 +87,6 @@ export function useImageReframerState({
     typeof aspect === "number" ? "native" : "original",
   );
 
-  const {
-    frameRef,
-    isDragging,
-    handleFramePointerDown,
-    handleFramePointerMove,
-    endFramePointer,
-  } = useFramePanPinch({
-    zoom,
-    panX,
-    panY,
-    minZoom: MIN_ZOOM,
-    maxZoom: MAX_ZOOM,
-    setZoom,
-    setPanX,
-    setPanY,
-  });
-
   const seededRef = useRef(false);
   const onChangeRef = useRef(onChange);
   useEffect(() => {
@@ -168,6 +151,27 @@ export function useImageReframerState({
     minOutputWidth,
     minOutputHeight,
   ]);
+
+  // Called after `displayRect` so a drag can scale the pointer's travel by the
+  // crop's size and keep the image under the finger.
+  const {
+    frameRef,
+    isDragging,
+    handleFramePointerDown,
+    handleFramePointerMove,
+    endFramePointer,
+  } = useFramePanPinch({
+    zoom,
+    panX,
+    panY,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
+    setZoom,
+    setPanX,
+    setPanY,
+    cropWidthFraction: displayRect?.width ?? null,
+    cropHeightFraction: displayRect?.height ?? null,
+  });
 
   // Seed zoom/pan from a controlled `value` the first time the source loads,
   // then emit `onChange` on every geometry change thereafter. `seededRef`
@@ -279,6 +283,7 @@ export function useImageReframerState({
     setFreeformChoice,
     aspectChoiceDefinitions,
     activeAspectNumber,
+    displayRect,
     imageStyle,
     handleImageLoad,
     handleReset,

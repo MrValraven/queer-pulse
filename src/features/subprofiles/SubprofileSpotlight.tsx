@@ -44,7 +44,10 @@ export function SubprofileSpotlight({
   const spotlightHref = safeHref(item.url);
 
   return (
-    <div className="pp-spot">
+    // `data-has-image` marks a real picture, the same way the cover band's
+    // `data-has-cover` does, so a skin can drop the empty frame instead of
+    // showing the "Image" placeholder (the Quest skin hides `.art` on it).
+    <div className="pp-spot" data-has-image={item.imageUrl ? "" : undefined}>
       <div className="art">
         <ImageSlot
           src={item.imageUrl || undefined}
@@ -56,7 +59,11 @@ export function SubprofileSpotlight({
         />
       </div>
       <div className="txt">
-        <Eyebrow>{t("subprofiles:spotlight.eyebrow")}</Eyebrow>
+        {/* The global class lets a skin theme the eyebrow; the module class
+            on `Eyebrow` is hashed, so a stylesheet cannot reach it. */}
+        <Eyebrow className="pp-spot-eyebrow">
+          {t("subprofiles:spotlight.eyebrow")}
+        </Eyebrow>
         {/* `<h2>`, not `<h3>`: the page heading order is h1 (name) → h2
             (spotlight + each section), so the spotlight can't skip a level. */}
         <h2>{item.title}</h2>

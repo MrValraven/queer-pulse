@@ -151,8 +151,14 @@ export function NotificationItem({
           {notification.icon && <notification.icon.Glyph />}
         </span>
       )}
-      <MemberStaffBadge slug={notification.actorSlug} />
       <div className={styles.body}>
+        {/* Its own line above the sentence: the actor's name sits inside
+            translated copy, so the badge cannot go beside it, and as a row
+            sibling it took a whole column from the text. Collapses when the
+            actor is not staff. */}
+        <div className={styles.staffBadges}>
+          <MemberStaffBadge slug={notification.actorSlug} />
+        </div>
         <div className={styles.text}>
           {notification.actor?.textKey ? (
             <Translation
@@ -165,7 +171,10 @@ export function NotificationItem({
                   />
                 ),
               }}
-              values={{ name: notification.actor.name }}
+              values={{
+                ...notification.actor.textValues,
+                name: notification.actor.name,
+              }}
             />
           ) : (
             notification.text

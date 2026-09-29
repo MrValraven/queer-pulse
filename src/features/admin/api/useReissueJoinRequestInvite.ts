@@ -14,8 +14,9 @@ export interface ReissueJoinRequestInviteVars {
   id: string;
 }
 
-/** The stand-in row demo mode refreshes when an id isn't in the mock queue. */
-function demoRow(id: string): JoinRequestDTO {
+/** The stand-in row demo mode refreshes when an id isn't in the mock queue.
+ *  Shared with the revoke hook, which patches the same row the other way. */
+export function demoRow(id: string): JoinRequestDTO {
   const found = JOIN_REQUESTS.find((request) => request.id === id);
   if (found) return found;
   const now = new Date().toISOString();
@@ -42,7 +43,7 @@ function demoRow(id: string): JoinRequestDTO {
     priorDeclineCount: 0,
     referenceMemberName: null,
     referenceMemberSlug: null,
-    // OPS-04: a stand-in row nobody has claimed and that carries no clock —
+    // OPS-04: a stand-in row nobody has claimed and that carries no clock:
     // there is no queue row behind it to have made a promise about.
     assignedStaffId: null,
     dueAt: null,
@@ -61,8 +62,8 @@ function demoRow(id: string): JoinRequestDTO {
  *
  * Live mode POSTs `/join-requests/:id/invite/reissue` (moderator or admin);
  * demo mode synthesizes the same refreshed row so the flow is exercisable with
- * no backend. The same code comes back with a fresh expiry, never a new code,
- * so a link already pasted somewhere keeps working.
+ * no backend. The same code comes back with a fresh expiry, so a link already
+ * pasted somewhere keeps working.
  */
 export function useReissueJoinRequestInvite() {
   const { demoMode } = useDemoMode();

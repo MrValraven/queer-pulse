@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import type { TranslateOptions } from "../../shared/i18n/types";
 
 // "messages" was retired: private-message alerts live only in the message-icon
 // unread badge and push notifications, never in the in-app notifications centre.
@@ -59,8 +60,15 @@ export interface Notification {
    * link and their avatar links to the same profile. `textKey` is the
    * personalized `notifications:type.<kind>.textNamed` copy with a
    * `<profile>{name}</profile>` slot; absent when no personalized copy exists.
+   * `textValues` carries the row's other tokens (`{listingName}`, …) into that
+   * copy; `name` always comes from the actor.
    */
-  actor?: { name: string; href: string; textKey?: string };
+  actor?: {
+    name: string;
+    href: string;
+    textKey?: string;
+    textValues?: TranslateOptions;
+  };
   /**
    * Deep-link to the discussion the notification originated from (a forum
    * thread or a community post), derived from the backend payload's `source`

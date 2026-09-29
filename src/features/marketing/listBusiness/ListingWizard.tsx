@@ -74,6 +74,14 @@ export interface ListingWizardProps {
    *  `ListBusinessSuccess`. Supplied, whatever it returns is rendered, so
    *  returning `null` shows nothing at all. */
   renderSuccess?: (created: PendingListing) => ReactNode;
+  /** The final-step submit button's label. Defaults to the member flow's
+   *  "Send it to the team". An admin console editing a listing passes its
+   *  own copy (e.g. "Save changes"). */
+  submitLabel?: string;
+  /** Whether the sending phase is an edit save rather than a new
+   *  submission. Defaults to false, the member behaviour, which renders
+   *  `SendingPanel`'s create copy. True renders `<SendingPanel isEdit />`. */
+  isEditSave?: boolean;
 }
 
 export function ListingWizard({
@@ -88,6 +96,8 @@ export function ListingWizard({
   onCancel,
   onDone,
   renderSuccess,
+  submitLabel,
+  isEditSave,
 }: ListingWizardProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -245,11 +255,12 @@ export function ListingWizard({
               onBack={back}
               onNext={() => void next()}
               uploadPhoto={uploadPhoto}
+              submitLabel={submitLabel}
             />
           </>
         )}
 
-        {phase === "sending" && <SendingPanel />}
+        {phase === "sending" && <SendingPanel isEdit={isEditSave} />}
 
         {phase === "success" && listing && (
           <div className={styles.page}>

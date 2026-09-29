@@ -1,0 +1,411 @@
+/* Pitch triage overlay: shared by PitchTriage.tsx (frame, done state),
+   PitchTriageCard.tsx (one pitch), PitchTriageList.tsx (checklist) and
+   PitchTriageFooter.tsx (key hints, bulk row). No cards inside the dialog:
+   the pitch sits on the dialog surface, separated by space and hairlines. */
+
+.progress {
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.triage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-block: var(--triage-ring-room) var(--gap-xs);
+}
+
+.modeSwitch {
+  align-self: flex-start;
+}
+
+/* ── One pitch at a time ─────────────────────────────────────────────────── */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs) var(--gap-sm);
+  border-bottom: 1px solid var(--line);
+  animation: triageCardIn var(--dur-base) var(--ease) both;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.card[data-leaving="true"] {
+  opacity: 0;
+  transform: translateX(var(--triage-exit-shift));
+  pointer-events: none;
+}
+
+@keyframes triageCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--triage-enter-rise));
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--triage-gap-tight) var(--gap-xs);
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.writer {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* Same mark as the table row's "New voice" (PieceRow `.tagNew`), so one fact
+   reads one way across the desk. */
+.newVoice {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  padding: var(--desk-chip-pad-y) var(--desk-chip-pad-x);
+  border-radius: var(--radius-tag);
+  background: var(--desk-tone-ready-soft);
+  color: var(--desk-tone-ready);
+  white-space: nowrap;
+}
+
+.age {
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-28);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.note {
+  font-size: var(--text-15);
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 60ch;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--triage-gap-tight);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-12);
+  font-weight: 600;
+  padding: var(--triage-tag-pad-y) var(--triage-tag-pad-x);
+  border-radius: var(--radius-tag);
+  background: var(--wash);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* Told apart from topic tags by a hairline, which flips with the theme. */
+.tagDeck {
+  outline: 1px solid var(--line-2);
+  outline-offset: -1px;
+  color: var(--text-strong);
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.decisions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+/* Phone: the previous/next arrows share the decisions'
+   own row instead of wrapping onto an orphan row under them. `.actionRow`
+   stops wrapping its two children (the decisions block and the stepper)
+   apart, so they always share a line; `.decisions` keeps its own internal
+   wrap (its three buttons can still break onto a second line by themselves)
+   and grows to fill the row, while `.stepper` stays fixed-width at the end.
+   `align-items: flex-end` keeps the arrows anchored to the last line of a
+   wrapped decisions block, the same place a "send" control sits beside a
+   wrapping composer. */
+@media (--md) {
+  .actionRow {
+    flex-wrap: nowrap;
+    align-items: flex-end;
+  }
+
+  .decisions {
+    flex: 1 1 auto;
+  }
+
+  .stepper {
+    flex: none;
+  }
+}
+
+/* The one emphasised answer: a stronger outline and weight, still unfilled,
+   so the shell's Write stays the only coral fill on the screen. The border
+   takes the text colour, which is stronger than the ghost border in both
+   themes. Scoped under the row, hover included, so it outranks the ghost
+   button's own dark mode and hover borders. */
+.actionRow .decisions .commission,
+.actionRow .decisions .commission:hover {
+  border-color: var(--text-strong);
+  font-weight: 700;
+}
+
+.keyHint {
+  display: inline-grid;
+  place-items: center;
+  min-width: 19px;
+  height: 19px;
+  margin-inline-start: var(--gap-xs);
+  padding: 0 var(--triage-kbd-pad-x);
+  border-radius: var(--radius-5);
+  border: 1px solid var(--line-2);
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--ink-60);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--triage-gap-hair);
+}
+
+/* ── Footer: key hints ───────────────────────────────────────────────────── */
+
+.shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--triage-gap-tight) var(--gap-sm);
+  width: 100%;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--triage-gap-tight);
+}
+
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 var(--triage-kbd-pad-x);
+  border-radius: var(--radius-5);
+  border: 1px solid var(--line-2);
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--ink-60);
+  background: var(--wash);
+}
+
+@media (hover: none) {
+  .shortcuts,
+  .keyHint {
+    display: none;
+  }
+}
+
+/* ── List mode ───────────────────────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list:focus {
+  outline: none;
+}
+
+.list:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Checkbox, pitch, answers. On a phone the answers drop under the pitch and
+   line up with its title, beside the checkbox column. */
+.listRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--gap-xs);
+  padding-block: var(--triage-row-pad-y);
+  border-bottom: 1px solid var(--line);
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.listRow:last-child {
+  border-bottom: none;
+}
+
+.listRow[data-leaving="true"] {
+  opacity: 0;
+  transform: translateX(var(--triage-exit-shift));
+  pointer-events: none;
+}
+
+.check {
+  width: 18px;
+  height: 18px;
+  margin-top: var(--triage-check-nudge);
+  accent-color: var(--text-strong);
+  cursor: pointer;
+}
+
+.check:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.listBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--triage-gap-hair);
+}
+
+.listTitle {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  line-height: 1.25;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.listActions {
+  display: flex;
+  gap: var(--triage-gap-tight);
+}
+
+/* ── Footer: bulk answers ────────────────────────────────────────────────── */
+
+.bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  width: 100%;
+}
+
+.bulkCount {
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.bulkActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--triage-gap-tight);
+}
+
+/* ── All answered, nothing waiting, still loading ────────────────────────── */
+
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-lg);
+  text-align: center;
+}
+
+.doneIcon {
+  width: 28px;
+  height: 28px;
+  color: var(--jade-ink);
+}
+
+.doneTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-24);
+  color: var(--text-strong);
+}
+
+.doneTitle:focus {
+  outline: none;
+}
+
+.doneTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.doneBody {
+  max-width: 40ch;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  margin-bottom: var(--triage-gap-tight);
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs) var(--gap-sm);
+}
+
+@media (--md) {
+  .title {
+    font-size: var(--text-24);
+  }
+
+  .listRow {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .listActions {
+    grid-column: 2;
+    flex-wrap: wrap;
+  }
+}

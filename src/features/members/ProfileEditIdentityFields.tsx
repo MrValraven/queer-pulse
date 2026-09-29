@@ -5,11 +5,8 @@ import {
   parsePronouns,
   serializePronouns,
 } from "../../shared/identity/pronouns";
-import {
-  InlineText,
-  PronounPicker,
-  VisibilityPicker,
-} from "./profileEditControls";
+import { InlineText, VisibilityPicker } from "./profileEditControls";
+import { PronounPicker } from "./PronounPicker";
 import { ProfileNeighbourhoodField } from "./ProfileNeighbourhoodField";
 import { ProfileShortBioField } from "./ProfileShortBioField";
 import styles from "./ProfileEdit.module.css";

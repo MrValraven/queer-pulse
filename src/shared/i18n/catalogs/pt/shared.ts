@@ -98,11 +98,26 @@ export const shared: Catalog = {
   "consent.storage.monitoring.purpose":
     "Absolutamente nada enquanto isto estiver desativado. Se o ativares, o nosso relator de erros (Sentry) carrega e pode guardar um identificador de diagnóstico. Sem gravação de sessão, sem rastreio de desempenho, sem dados de publicidade ou perfilagem.",
 
-  // Feedback: AuthLoader / RouteFallback / ErrorFallback / RoomLoader
+  // Feedback: PageLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Algo correu mal do nosso <em>lado</em>",
-  "feedback.errorFallback.body":
-    "Não foi nada que tenhas feito, e nada se perdeu. Tenta outra vez, ou volta ao início. Já estamos a tratar disto.",
+  "feedback.errorFallback.eyebrow": "Erro na página",
+  "feedback.errorFallback.lead":
+    "Uma falha no nosso código impediu esta página de carregar. Acontece raramente, e cabe-nos a nós resolver.",
+  "feedback.errorFallback.assure.safe.title": "Nada do que guardaste se perdeu",
+  "feedback.errorFallback.assure.safe.body":
+    "Publicações, mensagens e tudo o que já nos enviaste continuam intactos.",
+  "feedback.errorFallback.assure.notYou.title": "Não precisas de fazer nada",
+  "feedback.errorFallback.assure.notYou.body":
+    "Já estamos a trabalhar numa correção.",
+  "feedback.errorFallback.assure.retry.title":
+    "Uma segunda tentativa costuma resolver",
+  "feedback.errorFallback.assure.retry.body":
+    "A maioria destas falhas desaparece ao tentar outra vez ou ao recarregar.",
   "feedback.errorFallback.tryAgain": "Tentar outra vez",
+  "feedback.errorFallback.reload": "Recarregar a página",
+  "feedback.errorFallback.retryHint":
+    "Não resolveu. Se recarregar também não resolver, volta ao início e conta-nos o que aconteceu.",
+  "feedback.errorFallback.contact": "Conta-nos o que aconteceu",
   "feedback.errorFallback.reference": "Referência: {referenceId}",
 
   "loadError.title": "Não conseguimos <em>carregar</em>",
@@ -151,7 +166,6 @@ export const shared: Catalog = {
   "accountMenu.items.events": "Eventos",
   "accountMenu.items.cards": "Cartões",
   "accountMenu.items.drafts": "Rascunhos",
-  "accountMenu.items.pitches": "Propostas",
   "accountMenu.items.saved": "Guardados",
   "accountMenu.items.settings": "Definições",
   "accountMenu.items.darkMode": "Modo escuro",
@@ -266,6 +280,7 @@ export const shared: Catalog = {
   "adminNav.items.media": "Imagens enviadas",
   "adminNav.items.invites": "Convites",
   "adminNav.items.changemakerNominations": "Nomeações",
+  "adminNav.items.ambassadors": "Pessoas embaixadoras",
   "adminNav.items.commissionInterests": "Encomendas",
   "adminNav.items.readingGroupProposals": "Grupos de leitura",
   "adminNav.items.guideFeedback": "Feedback dos guias",
@@ -401,6 +416,21 @@ export const shared: Catalog = {
   "staffBadge.grant.resourceCurator": "Curadoria de recursos",
   "staffBadge.grant.editorial": "Equipa editorial",
   "staffBadge.grant.communities": "Equipa de comunidades",
+  "ambassador.tag.short": "Pessoa embaixadora",
+  "ambassador.tag.long": "Pessoa embaixadora QueerPulse",
+  "ambassador.tag.meta": "Desde {since} · {focus}",
+  "ambassador.focus.trans_health": "Saúde trans",
+  "ambassador.focus.sexual_health": "Saúde sexual",
+  "ambassador.focus.mental_health": "Saúde mental",
+  "ambassador.focus.housing": "Habitação",
+  "ambassador.focus.nightlife_safety": "Segurança na noite",
+  "ambassador.focus.work_and_careers": "Trabalho e carreiras",
+  "ambassador.focus.youth": "Juventude",
+  "ambassador.focus.elders": "Pessoas mais velhas",
+  "ambassador.focus.migrants_and_refugees": "Pessoas migrantes e refugiadas",
+  "ambassador.focus.sport": "Desporto",
+  "ambassador.focus.arts_and_culture": "Artes e cultura",
+  "ambassador.focus.rights_and_activism": "Direitos e ativismo",
 
   // ImageSlot
   "imageSlot.placeholder": "Imagem",
@@ -654,6 +684,9 @@ export const shared: Catalog = {
   "reframe.ratio.original": "Original",
   "reframe.ratio.square": "Quadrado",
   "reframe.ratio.native": "Forma da capa",
+  "reframe.preview.group": "Como vai ficar",
+  "reframe.hintTouch": "Arrasta para mover. Dois dedos para ampliar.",
+  "reframe.hintPointer": "Arrasta para mover. Usa a roda para aproximar.",
 
   // announcement.*: faixa de aviso em todo o site, escrita por quem administra
   // (AnnouncementBanner.tsx), montada tanto no AppShell como no PageShell —

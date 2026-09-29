@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FiMenu } from "react-icons/fi";
 import { Button } from "../ui";
 import { canGoBack, currentHistoryIdx } from "./canGoBack";
 import { tabOf } from "./tabRoots";
@@ -25,6 +26,7 @@ import { MobileNavDrawer } from "./MobileNavDrawer";
 import { AccountSheet } from "./AccountSheet";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { useAppBarScrollAway } from "./useAppBarScrollAway";
+import { NAV_DRAWER_TRIGGER_ATTRIBUTE } from "./useNavDrawerFocus";
 import { useIsLandingVisitor } from "./useIsLandingVisitor";
 import styles from "./Navbar.module.css";
 
@@ -138,6 +140,40 @@ function MobileSheets() {
 }
 
 /**
+ * Widest viewport, in px, that gets the compact desktop pill: the brand, a Menu
+ * button that opens the browse drawer, and the usual right cluster. From one
+ * pixel wider the full MegaNav trigger row fits beside the brand in EN and PT,
+ * signed in and out (measured: the signed-in PT row is the widest and needs
+ * about 993px). Local to the top bar on purpose: the shared `mobile`
+ * breakpoint (860) still owns the app bar and the bottom tab bar. JS twin of
+ * `@custom-media --nav-compact (max-width: 999px)` in
+ * src/styles/tokens/breakpoints.css, which Navbar, MegaNav and AccountMenu
+ * CSS read: change both together.
+ */
+const NAV_COMPACT_MAX_PX = 999;
+
+/** The compact pill's way into navigation, where the MegaNav row does not fit.
+    It opens the same browse drawer the bottom tab bar's "More" tab opens. */
+function CompactMenuButton() {
+  const { t } = useTranslation();
+  const { activeSheet, openSheet } = useNavDrawer();
+  return (
+    <button
+      type="button"
+      className={styles.compactMenu}
+      aria-haspopup="dialog"
+      aria-expanded={activeSheet === "browse"}
+      aria-label={t("nav:openMenu")}
+      onClick={() => openSheet("browse")}
+      {...{ [NAV_DRAWER_TRIGGER_ATTRIBUTE]: "" }}
+    >
+      <FiMenu aria-hidden />
+      <span>{t("nav:menu")}</span>
+    </button>
+  );
+}
+
+/**
  * The single site-wide nav. Reflects the global auth state: signed-in members
  * see the notifications bell + profile menu; signed-out visitors see the
  * marketing sign-in / request-an-invite calls to action.
@@ -154,6 +190,8 @@ export function Navbar({
 } = {}) {
   const scrolled = useScrolled(8);
   const isMobile = useMediaQuery(mediaMax("mobile"));
+  const isBelowFullNav = useMediaQuery(mediaMax(NAV_COMPACT_MAX_PX));
+  const isCompactNav = isBelowFullNav && !isMobile;
   const { theme, toggleTheme } = useTheme();
   const { loggedIn } = useAuth();
   const { navMode } = useNavMode();
@@ -167,10 +205,9 @@ export function Navbar({
   // outlives it. Without this, resizing past 860px with the drawer open unmounts
   // it while `activeSheet` stays non-null — so resizing back down reopens a drawer
   // the user never asked for, and leaves the scroll lock and the pushed history
-  // entry live in between. Close it as the gate closes.
-  useEffect(() => {
-    if (!isMobile && activeSheet) closeSheet();
-  }, [isMobile, activeSheet, closeSheet]);
+  // entry live in between. Close it as the gate closes. The compact pill mounts
+  // the browse drawer only, so an open account sheet closes there too. The
+  // effect itself sits below `isLandingNav`, which it needs.
   // On any mobile view (installed or browser tab): the bottom tab bar owns
   // navigation, so the top bar drops to a slim title strip. The hamburger goes
   // with it — the "More" tab opens the drawer now — but search and the
@@ -196,6 +233,16 @@ export function Navbar({
   // route. It sits above the sidebar branch because the landing page is public and
   // the sidebar is a signed-in-only mode, so the two can never both apply.
   const isLandingNav = useIsLandingVisitor();
+
+  // The compact drawer is only mounted where the compact pill itself renders:
+  // the sidebar mode and the landing bar return early below and never mount it.
+  const isCompactDrawerMounted =
+    isCompactNav && navMode !== "sidebar" && !isLandingNav;
+  useEffect(() => {
+    if (!activeSheet || isMobile) return;
+    if (isCompactDrawerMounted && activeSheet === "browse") return;
+    closeSheet();
+  }, [isMobile, isCompactDrawerMounted, activeSheet, closeSheet]);
 
   // The app bar steps out of the way while the member reads down a page and
   // returns as soon as they scroll back up. Only the app bar: the desktop pill
@@ -261,7 +308,7 @@ export function Navbar({
         </div>
 
         <div className={styles.links}>
-          <MegaNav />
+          {isCompactNav ? <CompactMenuButton /> : <MegaNav />}
         </div>
 
         <div className={styles.right}>
@@ -327,7 +374,11 @@ export function Navbar({
         </div>
       </nav>
 
-      {isMobile && <MobileSheets />}
+      {/* One drawer slot for the app bar and the compact pill, so crossing
+          860px with the drawer open keeps the same instance (and the opener
+          it will return focus to) instead of remounting it. */}
+      {(isMobile || isCompactDrawerMounted) && <MobileNavDrawer />}
+      {isMobile && <AccountSheet />}
     </>
   );
 }

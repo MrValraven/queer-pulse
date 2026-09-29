@@ -555,6 +555,17 @@ export const admin: Catalog = {
   "members.verify.decided.decidedOn": "Decided {date}",
   "members.verify.decided.decidedUnknown": "Decision date not recorded",
   "members.verify.decided.declineReasonLine": "Reason: {reason}",
+  "members.verify.decided.showDetails": "Show details for {name}",
+  "members.verify.decided.hideDetails": "Hide details for {name}",
+  "members.verify.decided.filter.groupLabel": "Filter decided requests",
+  "members.verify.decided.filter.all": "All",
+  "members.verify.decided.filter.unclaimed": "Not claimed",
+  "members.verify.decided.filter.claimed": "Claimed",
+  "members.verify.decided.filter.declined": "Declined",
+  "members.verify.decided.filter.optionSr_one": "{label}, {count} request",
+  "members.verify.decided.filter.optionSr_other": "{label}, {count} requests",
+  "members.verify.decided.filterEmpty":
+    "No decided request loaded here fits “{filter}”.",
 
   // The state of the invite an approval minted. It expires seven days after it
   // is minted, and only an expired one can be reissued.
@@ -589,6 +600,18 @@ export const admin: Catalog = {
     "This link was used or revoked, or it still works. There is nothing to reissue.",
   "members.verify.invite.reissueError.generic":
     "Could not reissue that link. Please try again.",
+  "members.verify.invite.revoke.cta": "Revoke link",
+  "members.verify.invite.revoke.confirmTitle":
+    "Revoke the invite link for {name}?",
+  "members.verify.invite.revoke.confirmBody":
+    "The invite link for {email} stops working straight away. A revoked link cannot be reissued.",
+  "members.verify.invite.revoke.confirmCta": "Revoke link",
+  "members.verify.invite.revoke.doneToast":
+    "The link for {email} no longer works.",
+  "members.verify.invite.revoke.movedOnToast":
+    "This link already changed state, so there is nothing to revoke. Refresh to see where it stands.",
+  "members.verify.invite.revoke.failedToast":
+    "Could not revoke that link. Please try again.",
 
   // Quality-sampling tab: a periodic read-only look at past decisions for a
   // second admin to compare notes on. Not a signoff workflow — say so.
@@ -1426,6 +1449,7 @@ export const admin: Catalog = {
   // Secondary, subtle meta-line text — a moderator triaging the queue can
   // see how long a listing has been waiting without opening it.
   "adminListings.row.submittedAgo": "Submitted {time}",
+  "adminListings.suggestedBy": "Suggested by {name}",
   "adminListings.filter.all": "All",
   "adminListings.filter.review": "In review",
   "adminListings.filter.question": "Quick question",
@@ -1447,8 +1471,10 @@ export const admin: Catalog = {
   "adminListings.sendBackCta": "Back to review",
   "adminListings.toast.moved": "{name} moved to {status}.",
   "adminListings.viewCta": "View & preview",
+  "adminListings.viewLiveCta": "View live",
   "adminListings.preview.sub":
     "Exactly how this listing will look once it's live in the directory.",
+  "adminListings.preview.editCta": "Edit listing",
   "adminListings.ask.eyebrow": "Ask a question",
   "adminListings.ask.title": "Ask about {name}",
   "adminListings.ask.sub": "We'll send this to {name} as a message.",
@@ -1465,6 +1491,7 @@ export const admin: Catalog = {
     "This listing has no member to contact. There's no one to send a question to.",
   "adminListings.view.queue": "Submissions",
   "adminListings.view.editSuggestions": "Edit suggestions",
+  "adminListings.view.claims": "Ownership claims",
   "adminListings.remove.cta": "Delete",
   "adminListings.actions.moreAriaLabel": "More actions for {name}",
   "adminListings.remove.toast.removed": "{name} was deleted.",
@@ -1521,6 +1548,8 @@ export const admin: Catalog = {
   "adminListings.history.event.ownershipTransferred":
     "{actor} approved an ownership transfer.",
   "adminListings.history.event.ownerEdited": "{actor} edited the live listing.",
+  "adminListings.history.event.staffEdited":
+    "{actor} edited the listing for QueerPulse.",
   "adminListings.history.event.coManagerAdded":
     "{actor} joined as a co-manager.",
   "adminListings.history.event.coManagerRemoved":
@@ -4729,7 +4758,9 @@ export const admin: Catalog = {
   "adminGlossary.searchLabel": "Search terms",
   "adminGlossary.searchPlaceholder": "Term, slug or category",
   "adminGlossary.newTermCta": "Add a term",
-  "adminGlossary.untranslatedBanner":
+  "adminGlossary.untranslatedBanner_one":
+    "{count} term has no Portuguese definition yet.",
+  "adminGlossary.untranslatedBanner_other":
     "{count} terms have no Portuguese definition yet.",
   "adminGlossary.empty":
     "No terms yet. Add the first one, or run the backfill migration.",
@@ -4739,6 +4770,19 @@ export const admin: Catalog = {
   "adminGlossary.loadError.body":
     "The term list didn't come back. Try again in a moment.",
   "adminGlossary.row.noPortuguese": "No Portuguese",
+
+  // Glossary term preview modal
+  "adminGlossary.preview.rowCta": "Preview",
+  "adminGlossary.preview.title": "How readers see this term",
+  "adminGlossary.preview.intro":
+    "This is the term as the public glossary shows it right now. Terms are public as soon as they are saved, whether or not anyone has reviewed them.",
+  "adminGlossary.preview.englishLabel": "English",
+  "adminGlossary.preview.portugueseLabel": "Portuguese",
+  "adminGlossary.preview.fallbackNotice":
+    "This term has no Portuguese definition yet, so readers browsing in Portuguese see the English definition below.",
+  "adminGlossary.preview.openInGlossaryCta": "Open in glossary",
+  "adminGlossary.preview.openInGlossaryAriaLabel":
+    "Open in glossary (opens in a new tab)",
   "adminGlossary.editor.createTitle": "Add a glossary term",
   "adminGlossary.editor.editTitle": "Edit this term",
   "adminGlossary.editor.createCta": "Add term",
@@ -4777,12 +4821,16 @@ export const admin: Catalog = {
   "adminResourceGuides.sort.reviewDue": "Review due",
   "adminResourceGuides.sort.title": "Title",
   "adminResourceGuides.sort.updated": "Recently updated",
-  "adminResourceGuides.staleBanner":
+  "adminResourceGuides.staleBanner_one":
+    "{count} guide has never been reviewed by anyone.",
+  "adminResourceGuides.staleBanner_other":
     "{count} guides have never been reviewed by anyone.",
   // PRD-270: a guide already reviewed once but now past `review_due_on`
   // was invisible here, because staleCount only counted never-reviewed
-  // guides. Kept non-pluralised to match the sibling above.
-  "adminResourceGuides.overdueBanner":
+  // guides. Pluralised on `count`, like the sibling above.
+  "adminResourceGuides.overdueBanner_one":
+    "{count} guide is past its review date.",
+  "adminResourceGuides.overdueBanner_other":
     "{count} guides are past their review date.",
   "adminResourceGuides.empty":
     "No guides yet. Once the backfill migration has run, every guide appears here.",
@@ -4821,6 +4869,23 @@ export const admin: Catalog = {
   "adminResourceGuides.review.reviewedOnLabel": "Reviewed on",
   "adminResourceGuides.review.dueLabel": "Next review due",
   "adminResourceGuides.review.confirmCta": "Mark reviewed",
+
+  // Guide preview (/admin/resource-guides/preview/:id)
+  "guidePreview.row.previewCta": "Preview",
+  "guidePreview.shellTitle": "Guide preview",
+  "guidePreview.bar.label": "Guide preview controls",
+  "guidePreview.bar.eyebrow": "Preview",
+  "guidePreview.bar.public": "Live. Readers can see this guide.",
+  "guidePreview.bar.unpublished": "Unpublished. Readers can't see this guide.",
+  "guidePreview.bar.neverReviewed":
+    "Readers can't see this guide until someone marks it reviewed.",
+  "guidePreview.bar.unpublishedNeverReviewed":
+    "Unpublished and never reviewed. Readers can't see this guide.",
+  "guidePreview.bar.portugueseMissing":
+    "No Portuguese version yet. Portuguese readers see the English text.",
+  "guidePreview.noPage.title": "{title} has no page yet",
+  "guidePreview.noPage.body":
+    "It has no sections in the editor and no built-in page, so readers would find nothing here. Add a section in the editor to give it one.",
 
   // ── Guide workspace (/admin/resource-guides/new, /edit/:id) ──
   "guideWorkspace.breadcrumb": "Resource guides",
@@ -6592,6 +6657,48 @@ export const admin: Catalog = {
   "stickerPacks.errors.deletePack": "Couldn't delete the pack",
   "stickerPacks.errors.reorder": "Couldn't save the new order",
   "stickerPacks.errors.updateSticker": "Couldn't save the sticker",
+  "stickerPacks.grid.itemsLegend": "Stickers",
+  "stickerPacks.grid.hint":
+    "Every sticker starts in this run. Click a sticker to preview it, and use the tick in its corner to leave it out or add it back.",
+  "stickerPacks.grid.keyboardHint":
+    "Use the arrow keys to move between stickers. Press Space to add a sticker or leave it out, and Enter to preview it without changing what you publish.",
+  "stickerPacks.preview.noItemTitle": "No item picked",
+  "stickerPacks.preview.pickItem": "Pick an item to preview it",
+  "stickerPacks.controls.itemsLegend": "Stickers",
+  "stickerPacks.publish.blocked.noItems": "Pick at least one sticker to add.",
+  "stickerPacks.publish.blocked.allSkippedItems":
+    "Every selected sticker is already in this pack. Choose Replace to update their art.",
+  "stickerPacks.publish.mode.itemsLegend_one":
+    "{count} selected sticker is already in this pack",
+  "stickerPacks.publish.mode.itemsLegend_other":
+    "{count} selected stickers are already in this pack",
+  "stickerPacks.templates.label": "Template",
+  "stickerPacks.templates.lockedNote":
+    "Template: {template}. A pack keeps one template.",
+  "stickerPacks.templates.unoReverse.name": "Uno reverse",
+  "stickerPacks.templates.unoReverse.description":
+    "Reverse-card sticker in each flag's colours",
+  "stickerPacks.templates.blip.name": "Blip",
+  "stickerPacks.templates.blip.description":
+    "Our little mascot in {count} moods",
+  "stickerPacks.templates.tea.name": "Tea, shade and sparkle",
+  "stickerPacks.templates.tea.description":
+    "Queer slang stickers: spill the tea, mother, ate",
+  "stickerPacks.blip.sectionBody": "Body",
+  "stickerPacks.blip.fillLegend": "Fill",
+  "stickerPacks.blip.fillColor": "Colour",
+  "stickerPacks.blip.fillFlag": "Flag",
+  "stickerPacks.blip.bodyColor": "Colour",
+  "stickerPacks.blip.bodyFlag": "Flag",
+  "stickerPacks.blip.faceContrastWarning":
+    "Blip's face is hard to read on this colour. Pick a lighter body.",
+  "stickerPacks.tea.sectionAccent": "Accent",
+  "stickerPacks.tea.accentColor": "Accent colour",
+  "stickerPacks.dieCut.section": "Finish",
+  "stickerPacks.dieCut.label": "White die-cut border",
+  "stickerPacks.publish.mode.addMissingShort": "Add missing",
+  "stickerPacks.publish.mode.replaceShort": "Replace",
+  "stickerPacks.publish.blocked.showReason": "Why can't I add stickers?",
 
   // ── Admin-authored directory listings (`/admin/listings/new`) ─────────────
   // Staff writing up a place that has not joined QueerPulse yet. The listing
@@ -6632,6 +6739,30 @@ export const admin: Catalog = {
   "listingNew.success.step.live": "It is showing in the directory now.",
   "listingNew.success.closeCta": "Back to the listings queue",
 
+  // ── Admin edit of a platform-held listing (`/admin/listings/:ref/edit`) ───
+  // A listing nobody owns yet, edited by staff on QueerPulse's behalf. If the
+  // listing has since gained an owner, the page shows the hasOwner state
+  // instead of the wizard.
+  "listingEdit.title": "Edit listing",
+  "listingEdit.eyebrow": "Directory",
+  "listingEdit.sub":
+    "QueerPulse holds this listing until someone takes it over. On a live listing, your changes show in the directory as soon as you save.",
+  "listingEdit.queueBreadcrumb": "Listings",
+  "listingEdit.submitCta": "Save changes",
+  "listingEdit.hasOwner.title": "This listing has an owner now",
+  "listingEdit.hasOwner.body":
+    "Someone has taken this listing over, so they edit it from now on. To change something, suggest an edit from its page in the directory.",
+  "listingEdit.hasOwner.backCta": "Back to listings",
+  "listingEdit.hasOwner.viewCta": "View in the directory",
+  "listingEdit.loadError.title": "This listing didn't load",
+  "listingEdit.loadError.body": "Check your connection and try again.",
+  "listingEdit.notFound.title": "We couldn't find this listing",
+  "listingEdit.notFound.body":
+    "It may have been removed. Head back to the queue to pick another.",
+  "listingEdit.success.title": "Saved",
+  "listingEdit.success.body": "Your changes to {ref} are saved.",
+  "listingEdit.success.closeCta": "Back to the listings queue",
+
   // ── Delegation panel on a listing ─────────────────────────────────────────
   // Who runs a listing the house authored: its owner, any ownership offer
   // waiting on an answer, and the co-managers seated to help. A listing
@@ -6649,9 +6780,10 @@ export const admin: Catalog = {
 
   "listingDelegation.owner.heading": "Owner",
   "listingDelegation.owner.ownedBy": "Owned by @{slug}",
-  "listingDelegation.owner.none": "No owner yet.",
-  "listingDelegation.owner.noneDetail":
-    "Nobody holds this listing, so you can offer it to a member.",
+  "listingDelegation.owner.heldByPlatform": "Held by QueerPulse.",
+  "listingDelegation.owner.heldByPlatformDetail":
+    "Nobody owns this listing yet. You can edit it, offer it to a member or approve a claim.",
+  "listingDelegation.owner.suggestedBy": "Suggested by @{slug}",
 
   "listingDelegation.offer.heading": "Ownership offer",
   "listingDelegation.offer.ownedNotice":
@@ -6899,4 +7031,86 @@ export const admin: Catalog = {
   "emailTemplates.copy.sampleCopiedToast": "Copied with sample values.",
   "emailTemplates.copy.failedToast":
     "Copying did not work in this browser. Try again.",
+  // QueerPulse Ambassadors admin page (/admin/ambassadors) and member-drawer line.
+  "ambassadors.title": "Ambassadors",
+  "ambassadors.header.eyebrow": "Partnerships",
+  "ambassadors.header.title": "QueerPulse <em>Ambassadors</em>",
+  "ambassadors.header.sub":
+    "Members who publicly back QueerPulse. Grant the status, set each person's focus area, and keep the record of who granted or revoked it and why.",
+  "ambassadors.tabs.active": "Active",
+  "ambassadors.tabs.past": "Past",
+  "ambassadors.loadError":
+    "We couldn't load the ambassadors. Try again in a moment.",
+  "ambassadors.empty.active.title": "No ambassadors yet",
+  "ambassadors.empty.active.description":
+    "Grant the status to a member with the form on this page.",
+  "ambassadors.empty.past.title": "No past ambassadors",
+  "ambassadors.empty.past.description":
+    "Revoked grants stay here, with who revoked them and why.",
+  "ambassadors.row.tagHidden": "Tag hidden",
+  "ambassadors.row.since": "Since",
+  "ambassadors.row.grantedBy": "Granted by",
+  "ambassadors.row.unknownStaff": "Not recorded",
+  "ambassadors.row.grantReason": "Why",
+  "ambassadors.row.revokedOn": "Revoked",
+  "ambassadors.row.revokedBy": "Revoked by",
+  "ambassadors.row.revokeReason": "Why it was revoked",
+  "ambassadors.row.quotaOverride":
+    "Invite quota overridden to {quota} a month, so the ambassador bonus doesn't apply.",
+  "ambassadors.row.changeFocus": "Change focus",
+  "ambassadors.row.changeFocusAria": "Change focus for {name}",
+  "ambassadors.row.focusSaved": "Focus area updated.",
+  "ambassadors.row.revoke": "Revoke",
+  "ambassadors.row.revokeAria": "Revoke ambassador status for {name}",
+  "ambassadors.grant.title": "Grant the status",
+  "ambassadors.grant.hint":
+    "Ambassadors join the private circle straight away and get 10 extra invites a month.",
+  "ambassadors.grant.memberLabel": "Member",
+  "ambassadors.grant.memberPlaceholder": "Search by name",
+  "ambassadors.grant.memberSearchAria": "Search members to grant the status",
+  "ambassadors.grant.clearMemberAria": "Remove {name} and pick someone else",
+  "ambassadors.grant.focusLabel": "Focus area",
+  "ambassadors.grant.focusPlaceholder": "Choose a focus area",
+  "ambassadors.grant.reasonLabel": "Why this member",
+  "ambassadors.grant.reasonHint":
+    "At least {min} characters. Logged with the grant; only staff see it.",
+  "ambassadors.grant.submit": "Grant the status",
+  "ambassadors.grant.pending": "Granting…",
+  "ambassadors.grant.success": "{name} is now a QueerPulse Ambassador.",
+  "ambassadors.revoke.eyebrow": "Revoke ambassador status",
+  "ambassadors.revoke.title": "Revoke {name}'s status?",
+  "ambassadors.revoke.body":
+    "They lose the tag, the extra invites and their seat in the circle, and get a notification. You can grant it again later.",
+  "ambassadors.revoke.reasonLabel": "Reason for revoking",
+  "ambassadors.revoke.reasonHint":
+    "Required, at least {min} characters. Logged with the revoke; only staff see it.",
+  "ambassadors.revoke.confirm": "Revoke the status",
+  "ambassadors.revoke.pending": "Revoking…",
+  "ambassadors.revoke.success": "{name} is no longer an ambassador.",
+  "ambassadors.circle.title": "The ambassadors circle",
+  "ambassadors.circle.hint":
+    "A private community for previews and polls. Ambassadors join when granted and leave when revoked.",
+  "ambassadors.circle.memberCount_one": "{count} member",
+  "ambassadors.circle.memberCount_other": "{count} members",
+  "ambassadors.circle.open": "Open the circle",
+  "ambassadors.circle.takeSeat": "Take a staff seat",
+  "ambassadors.circle.seatTaken": "You have a staff seat in the circle.",
+  "ambassadors.circle.error": "We couldn't load the circle.",
+  "ambassadors.errors.generic": "Something went wrong. Try again.",
+  "ambassadors.errors.ambassador_already_active":
+    "This member is already an ambassador.",
+  "ambassadors.errors.ambassador_not_found":
+    "This person has no active ambassador status. Refresh the list.",
+  "ambassadors.errors.ambassador_member_not_found":
+    "We couldn't find that member.",
+  "ambassadors.errors.ambassador_self_grant":
+    "You can't grant the status to yourself.",
+  "ambassadors.errors.ambassador_ineligible_member":
+    "This account can't hold the status. It's a system account or it isn't active.",
+  "ambassadors.drawer.label": "Ambassador",
+  "ambassadors.drawer.since": "Ambassador since {since} · {focus}",
+  "ambassadors.drawer.none": "No visible Ambassador tag",
+  "ambassadors.drawer.hiddenNote":
+    "Hidden tags don't show here. The Ambassadors page has the full record.",
+  "ambassadors.drawer.manage": "Manage ambassadors",
 };

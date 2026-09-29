@@ -1,5 +1,6 @@
 import { Eyebrow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberAmbassadorTag } from "../../shared/ambassadors/MemberAmbassadorTag";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PublicProfileBadge } from "./PublicProfileBadge";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
@@ -38,6 +39,7 @@ export function MobileProfileIdentityTop({
         <h1 className={styles.identityName}>
           {profile.first} <em>{profile.last}</em>
         </h1>
+        <MemberStaffBadge slug={profile.slug} size="icon" />
         {isSelf && <PublicProfileBadge />}
       </div>
       <div className={styles.identityTopRole}>
@@ -50,7 +52,7 @@ export function MobileProfileIdentityTop({
             </span>
           )}
         </span>
-        <MemberStaffBadge slug={profile.slug} size="lg" />
+        <MemberAmbassadorTag slug={profile.slug} size="lg" />
       </div>
       {isLocationShown && (
         <div className={styles.identityTopLoc}>

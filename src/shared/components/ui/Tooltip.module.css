@@ -66,6 +66,24 @@
   transform: translate(calc(-50% + var(--tooltip-shift, 0px)), 0);
 }
 
+/* `align="end"`: the bubble's right edge meets the trigger's, for the last
+   control against a clipping column edge. Each rule outranks its centred twin
+   above, so only the horizontal anchor changes; the reveal is the same. */
+.bubble.end {
+  left: auto;
+  right: 0;
+  transform: translate(var(--tooltip-shift, 0px), 2px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .wrap:hover .bubble.end {
+    transform: translate(var(--tooltip-shift, 0px), 0);
+  }
+}
+.wrap:has(:focus-visible) .bubble.end,
+.bubble.end.open {
+  transform: translate(var(--tooltip-shift, 0px), 0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bubble {
     transition: none;

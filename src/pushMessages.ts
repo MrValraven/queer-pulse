@@ -194,6 +194,17 @@ const en: Record<string, string> = {
   "push:listingOwnerOffer.title": "Ownership offer",
   "push:listingOwnerOffer.body":
     "{name} has offered you ownership of {listingName}.",
+  // QueerPulse Go together (design spec 2026-09-28). None of the three names
+  // the gathering: `PushNotificationListener`'s English fallback titles and
+  // bodies for all three must stay word-for-word identical to these, since
+  // iOS renders that fallback directly and never reads this catalog.
+  "push:goTogether.pairInvite.title": "Go together",
+  "push:goTogether.pairInvite.body":
+    "{name} wants to go to a gathering together",
+  "push:goTogether.groupReady.title": "Go together",
+  "push:goTogether.groupReady.body": "Your group for a gathering is ready",
+  "push:goTogether.mutual.title": "Go together",
+  "push:goTogether.mutual.body": "You and {name} both want to meet again",
 };
 
 const pt: Record<string, string> = {
@@ -318,6 +329,12 @@ const pt: Record<string, string> = {
   "push:listingOwnerOffer.title": "Oferta de propriedade",
   "push:listingOwnerOffer.body":
     "{name} ofereceu-te a propriedade de {listingName}.",
+  "push:goTogether.pairInvite.title": "Vamos juntes",
+  "push:goTogether.pairInvite.body": "{name} quer ir contigo a um convívio",
+  "push:goTogether.groupReady.title": "Vamos juntes",
+  "push:goTogether.groupReady.body": "O teu grupo para um convívio está pronto",
+  "push:goTogether.mutual.title": "Vamos juntes",
+  "push:goTogether.mutual.body": "Tu e {name} querem voltar a encontrar-se",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

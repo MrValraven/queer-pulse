@@ -23,6 +23,8 @@ export interface InviteWelcome {
     initials: string;
     since?: string;
     photo?: string;
+    /** True only for an active ambassador whose tag is visible. */
+    isAmbassador?: boolean;
   };
 }
 
@@ -31,7 +33,7 @@ export function rememberInviteWelcome(welcome: InviteWelcome): void {
   try {
     sessionStorage.setItem(WELCOME_KEY, JSON.stringify(welcome));
   } catch {
-    /* storage unavailable — onboarding falls back to its default welcome */
+    /* storage unavailable; onboarding falls back to its default welcome */
   }
 }
 

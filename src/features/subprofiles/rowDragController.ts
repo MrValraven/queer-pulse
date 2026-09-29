@@ -8,6 +8,7 @@ import {
   clampHeldRowTop,
   clearRowOffset,
   layoutTopOf,
+  liveRowsOf,
   nextRowNeighbourIndex,
   setRowOffset,
   settleRowOffset,
@@ -46,7 +47,7 @@ export function createRowDragController({
     const container = readContainer();
     if (!session?.isDragging || !container) return;
     const { element, grabOffset, pointerY } = session;
-    const rows = Array.from(container.children) as HTMLElement[];
+    const rows = liveRowsOf(container);
     const heldTop = clampHeldRowTop(rows, element, pointerY - grabOffset);
     setRowOffset(element, heldTop - layoutTopOf(element));
     if (session.isAwaitingCommit) return;
@@ -103,8 +104,9 @@ export function createRowDragController({
   function press(index: number, event: GripPress) {
     // Primary button, touch contact or pen tip only, one gesture at a time.
     if (event.button !== 0 || session) return;
-    const element = readContainer()?.children[index];
-    if (!(element instanceof HTMLElement)) return;
+    const container = readContainer();
+    const element = container ? liveRowsOf(container)[index] : undefined;
+    if (!element) return;
     // Mouse only: keeps a focused field focused and stops text selection, and
     // the click still fires. Touch and pen keep their native tap and focus.
     if (event.pointerType === "mouse") event.preventDefault();
@@ -147,8 +149,11 @@ export function createRowDragController({
    *  them (the dragging class lands on the first one). */
   function syncAfterCommit(draggingIndex: number) {
     if (!session?.isDragging) return;
-    const element = readContainer()?.children[draggingIndex];
-    if (!(element instanceof HTMLElement)) return finish({ isInstant: true });
+    const container = readContainer();
+    const element = container
+      ? liveRowsOf(container)[draggingIndex]
+      : undefined;
+    if (!element) return finish({ isInstant: true });
     if (element === session.element) session.releaseHeldStyle();
     else releaseRow(session.element, session.releaseHeldStyle);
     session.element = element;

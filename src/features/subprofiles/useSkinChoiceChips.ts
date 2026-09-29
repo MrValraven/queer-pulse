@@ -16,9 +16,8 @@ export interface ChoiceChipItem extends ChoiceOptionLabel {
 }
 
 /**
- * The data side of a `choice` / `multiChoice` control, shared by the generic
- * page blocks editor (`SkinChoiceChipsControl`) and the therapist chapter
- * editor (`SkinChoiceChipsRefined`): the chips to show, which are selected,
+ * The data side of a `choice` / `multiChoice` control, read by the chapter
+ * editor's chips (`SkinChoiceChipsRefined`): the chips to show, which are selected,
  * the toggle that writes the stored shape, the helper and the note about an
  * older answer.
  *

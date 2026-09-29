@@ -1,0 +1,51 @@
+.stack {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Each face punches a paper ring out of the one before it, so an overlap
+   reads as a sequence of people. The paper fill sits under Avatar's
+   translucent tint, so the face underneath cannot show through. The overlap
+   scales with the size prop, which Avatar exposes on its wrapper as
+   --avatar-size. */
+.face {
+  background: var(--paper);
+  box-shadow: var(--ring-paper);
+}
+
+/* Avatar scales its initials to a third of the face, which at the desk's
+   18 to 22px faces is 6 to 7px and unreadable. A fixed small sans size
+   reads at every one of them. Two classes, so it wins over Avatar's own
+   wrapper size whatever order the stylesheets load in. */
+.stack .face {
+  font-size: var(--text-10);
+}
+
+.stack .face > * {
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.eye {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-inline-end: 4px;
+  color: var(--ink-60);
+}
+
+.face + .face {
+  margin-inline-start: calc(var(--avatar-size, 22px) * -0.32);
+}
+
+.more {
+  margin-inline-start: 4px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  white-space: nowrap;
+}

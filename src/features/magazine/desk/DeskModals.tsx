@@ -1,12 +1,12 @@
-import { Modal, Button, ConfirmDialog } from "../../../shared/components/ui";
+import { ConfirmDialog } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { Piece } from "../data/desk.data";
 import { CommissionModal, type CommissionPayload } from "./CommissionModal";
-import type { DeskTrack } from "./DeskTrackTabs";
+import type { DeskTrack } from "./deskTrack";
 import { PassModal, type PassPayload } from "./PassModal";
 import { ChaseModal } from "./ChaseModal";
 import { HandoffModal } from "./HandoffModal";
-import { SHORTCUTS } from "./deskModals.data";
-import styles from "./DeskModals.module.css";
+import { DeskShortcutsSheet } from "./DeskShortcutsSheet";
 
 /** Every overlay the desk can raise, keyed by `kind`. `null` renders nothing. */
 export type DeskModal =
@@ -16,9 +16,15 @@ export type DeskModal =
       sectionName?: string;
     }
   | { kind: "pass"; pitch: { title: string } }
-  // `id` travels here (unlike the other variants, which only carry display
-  // copy) because `ChaseModal` needs it to open the real `PieceThread`.
-  | { kind: "chase"; piece: { id: string; title: string; byline: string } }
+  // The full `Piece` travels here (unlike the other variants, which only
+  // carry display copy) because `ChaseModal` needs the id to open the real
+  // `PieceThread`, and the due fields to seed the chase draft (`chaseDraft.ts`).
+  // `progress` is set while the bulk bar's chase queue runs (`useChaseQueue`).
+  | {
+      kind: "chase";
+      piece: Piece;
+      progress?: { current: number; total: number };
+    }
   | { kind: "handoff"; piece: { title: string } }
   // Routed through the desk's single overlay slot rather than owned by the
   // row: `useDeskKeyboard` is disabled while `modal !== null`, so j/k/o cannot
@@ -33,7 +39,7 @@ export interface DeskModalsProps {
   sections: { name: string }[];
   /** Track pre-selected in the commission modal, matching the active desk tab. */
   commissionTrack: DeskTrack;
-  /** Whether a current issue exists — disables the commission's Issue choice. */
+  /** Whether a current issue exists; without one the Issue choice is disabled. */
   hasCurrentIssue: boolean;
   /** The current issue's display number, for the commission's Issue choice label. */
   issueNumber: string;
@@ -41,36 +47,11 @@ export interface DeskModalsProps {
   onCommission: (payload: CommissionPayload) => void;
   onPass: (payload: PassPayload) => void;
   onHandoff: (editorId: string) => void;
+  /** Skip in a queued chase: moves on to the next writer in the queue. */
+  onSkipChase: () => void;
   onConfirmDeletePiece: () => void;
-  /** True while the delete request is in flight — disables both buttons. */
+  /** True while the delete request is in flight, disabling both buttons. */
   isDeletingPiece: boolean;
-}
-
-/** Keyboard-shortcut reference. Small enough to keep inline here. */
-function ShortcutsModal({ onClose }: { onClose: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <Modal
-      title={t("magazine:desk.modals.shortcuts.title")}
-      onClose={onClose}
-      footer={
-        <div className={styles.actions}>
-          <Button variant="primary" onClick={onClose}>
-            {t("magazine:desk.modals.shortcuts.gotIt")}
-          </Button>
-        </div>
-      }
-    >
-      <div className={styles.kbdList}>
-        {SHORTCUTS.map((shortcut) => (
-          <div key={shortcut.keys} style={{ display: "contents" }}>
-            <span className={styles.kbd}>{shortcut.keys}</span>
-            <span className={styles.kbdDesc}>{t(shortcut.labelKey)}</span>
-          </div>
-        ))}
-      </div>
-    </Modal>
-  );
 }
 
 /**
@@ -121,6 +102,7 @@ export function DeskModals({
   onCommission,
   onPass,
   onHandoff,
+  onSkipChase,
   onConfirmDeletePiece,
   isDeletingPiece,
 }: DeskModalsProps) {
@@ -145,7 +127,16 @@ export function DeskModals({
         <PassModal pitch={modal.pitch} onClose={onClose} onPass={onPass} />
       );
     case "chase":
-      return <ChaseModal piece={modal.piece} onClose={onClose} />;
+      return (
+        // Keyed by piece, so each queued chase starts with an empty reply box.
+        <ChaseModal
+          key={modal.piece.id}
+          piece={modal.piece}
+          progress={modal.progress}
+          onSkip={modal.progress ? onSkipChase : undefined}
+          onClose={onClose}
+        />
+      );
     case "handoff":
       return (
         <HandoffModal
@@ -165,7 +156,7 @@ export function DeskModals({
         />
       );
     case "shortcuts":
-      return <ShortcutsModal onClose={onClose} />;
+      return <DeskShortcutsSheet onClose={onClose} />;
     default:
       return null;
   }

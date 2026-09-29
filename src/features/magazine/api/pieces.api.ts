@@ -35,8 +35,6 @@ export type WaitingOn = "writer" | "you" | "nobody";
 /** Mirrors backend `ArtState` (`magazine-piece.entity.ts`). */
 export type ArtState = "none" | "brief" | "in" | "na";
 
-export type SavedViewId = "v-late" | "v-art" | "v-sens" | "v-pay";
-
 export type PitchVerdict = "maybe" | "pass" | "commission";
 
 /** jsonb shape stored on `MagazinePiece.brief` (validated by hand on the backend). */
@@ -102,7 +100,19 @@ export interface PieceListItemDto {
   deckId: string | null;
   /** The one-sentence issue-contents blurb the desk writes per piece (Task B2a). */
   contentsBlurb: string;
+  /** ISO instant the piece entered its current stage, derived on the backend
+   *  from the audit trail (`deriveStageEnteredAt`). */
+  stageEnteredAt: string;
+  /** Where the piece's money stands (see `PiecePaymentStatus`). */
+  paymentStatus: PiecePaymentStatus;
 }
+
+/**
+ * One word for a piece's money, on every list row. Mirrors backend
+ * `PiecePaymentStatus`. `none`: no payment recorded. `owed`: a payment row
+ * that is not paid yet (`agreed` or `approved_unpaid`). `paid`: settled.
+ */
+export type PiecePaymentStatus = "none" | "owed" | "paid";
 
 /** One row of the "have we run this before?" archive search — mirrors backend `ArchiveEntryResponse`. */
 export interface ArchiveEntryDto {
@@ -122,6 +132,8 @@ export interface PitchDto {
   suggestFormat: PieceFormat | null;
   status: PitchStatus;
   fresh: boolean;
+  /** ISO instant the pitch arrived (backend `createdAt`). */
+  receivedAt: string;
 }
 
 /**
@@ -226,6 +238,16 @@ export interface CurrentIssueDto {
   theme: string;
   filled: number;
   slots: number;
+  /** `YYYY-MM-DD`, or `null` while the issue is still unscheduled. */
+  publishedOn: string | null;
+  /** `YYYY-MM-DD` the issue stops taking copy, or `null` while unset. */
+  closesOn: string | null;
+}
+
+/** Body and response of the `/magazine/admin/issues/:number/closes-on` pair. */
+export interface IssueClosesOnDto {
+  /** `YYYY-MM-DD`, or `null` to clear the close date. */
+  closesOn: string | null;
 }
 
 /** Body of `PATCH /magazine/admin/pieces/assign-issue` — mirrors backend
@@ -452,7 +474,6 @@ export interface ListPiecesFilters {
   section?: string;
   issue?: string;
   q?: string;
-  savedView?: SavedViewId;
   /** 1-based. Omitted means page 1. */
   page?: number;
   /** Server default is 50, maximum 200. */
@@ -502,7 +523,8 @@ export type UpdatePieceDto = Omit<Partial<CreatePieceDto>, "issueId"> & {
   /** Widened from the inherited `issueId?: string` (via `Omit` — an
    *  intersection alone can't loosen `Partial<CreatePieceDto>`'s `string`) so
    *  the desk can detach a piece back to a standalone highlight by sending
-   *  `{ issueId: null }` (mirrors backend B2 — accepts a UUID or null). */
+   *  `{ issueId: null }` (mirrors the backend field, which accepts a UUID
+   *  or null). */
   issueId?: string | null;
 };
 
@@ -579,7 +601,6 @@ export function getPieces(filters: ListPiecesFilters = {}) {
   if (filters.section) query.set("section", filters.section);
   if (filters.issue) query.set("issue", filters.issue);
   if (filters.q) query.set("q", filters.q);
-  if (filters.savedView) query.set("savedView", filters.savedView);
   if (filters.page) query.set("page", String(filters.page));
   if (filters.pageSize) query.set("pageSize", String(filters.pageSize));
   const queryString = query.toString();
@@ -624,6 +645,24 @@ export const getMagazineEditors = () =>
 
 export const getCurrentIssue = () =>
   apiGet<CurrentIssueDto | null>("/magazine/admin/issues/current");
+
+/** GET /magazine/admin/issues/:number/closes-on: the day the issue stops
+ *  taking copy, beside the submission-deadline pair. */
+export const getIssueClosesOn = (issueNumber: string) =>
+  apiGet<IssueClosesOnDto>(
+    `/magazine/admin/issues/${encodeURIComponent(issueNumber)}/closes-on`,
+  );
+
+/** PATCH /magazine/admin/issues/:number/closes-on. `null` clears the date,
+ *  which takes the countdown off the desk header. */
+export const updateIssueClosesOn = (
+  issueNumber: string,
+  closesOn: string | null,
+) =>
+  apiPatch<IssueClosesOnDto>(
+    `/magazine/admin/issues/${encodeURIComponent(issueNumber)}/closes-on`,
+    { closesOn } satisfies IssueClosesOnDto,
+  );
 
 export const updatePayment = (id: string, body: UpdatePaymentDto) =>
   apiPatch<PaymentDto>(`/magazine/admin/pieces/${id}/payment`, body);

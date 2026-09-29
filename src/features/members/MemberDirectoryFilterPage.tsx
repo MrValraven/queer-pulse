@@ -106,13 +106,8 @@ export function MemberDirectoryFilterPage() {
 
   const chips = useMemo(() => appliedChips(filters, t), [filters, t]);
   // Distinguish a genuinely empty directory (nothing to show, e.g. live mode
-  // against a fresh backend) from filters that happen to exclude everyone. The
-  // age range carries no chip, so fold it in alongside the chip count.
-  const hasActiveFilters =
-    chips.length > 0 ||
-    search.term !== "" ||
-    filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
-    filters.yearsTo !== EMPTY_FILTERS.yearsTo;
+  // against a fresh backend) from filters that happen to exclude everyone.
+  const hasActiveFilters = chips.length > 0 || search.term !== "";
   // Server pagination drives "load more" now; client-side filtering/sorting runs
   // over every page fetched so far. Demo mode returns the whole MEMBERS list as a
   // single page, so `hasNextPage` is false and the full mock list renders.

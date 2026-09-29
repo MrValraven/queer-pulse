@@ -1,42 +1,48 @@
 import { useRef, useState } from "react";
-import { FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
+import { FiMoreHorizontal } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PieceRowMenuPopover } from "./PieceRowMenuPopover";
-import type { PieceRowMenuItem } from "./pieceRowMenuItems";
+import {
+  buildPieceRowMenuItems,
+  type PieceRowMenuActions,
+} from "./pieceRowMenuItems";
 import styles from "./PieceRowMenu.module.css";
 
-export interface PieceRowMenuProps {
+export interface PieceRowMenuProps extends PieceRowMenuActions {
   /** Names the trigger for screen readers ("More actions for {title}"). */
   pieceTitle: string;
-  /** Opens the delete confirmation for this piece. */
-  onDelete: () => void;
+  /** Whether any issue exists; with none, the issue item is left out. */
+  hasAnyIssue: boolean;
+  /** The issue item's label key ("Add to issue" or "Move issue"). */
+  assignLabelKey: string;
 }
 
 /**
- * The piece row's trailing "⋯" menu. Delete lives here rather than as a fifth
- * inline button because the row's action strip is hover-revealed: a destructive
- * control sitting one stray click from Hand off is the wrong default, and a
- * menu makes deleting a deliberate second step.
+ * The piece row's trailing More menu. The row leads with one next action;
+ * everything else an editor can do to a piece (edit, chase, hand off, file to
+ * an issue, delete) waits here, so the row stays one clear verb wide and
+ * deleting stays a deliberate second step below a rule.
  *
- * The open menu is a separate, portaled component (`PieceRowMenuPopover`) —
- * `.pieces` is `overflow: hidden`, so a dropdown in normal flow would be
- * clipped off the lower rows.
+ * The open menu is a separate, portaled component (`PieceRowMenuPopover`), so
+ * it floats over sticky group headers and the table's clipped corners.
  */
-export function PieceRowMenu({ pieceTitle, onDelete }: PieceRowMenuProps) {
+export function PieceRowMenu({
+  pieceTitle,
+  hasAnyIssue,
+  assignLabelKey,
+  ...actions
+}: PieceRowMenuProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const label = t("magazine:desk.pieceRow.moreAria", { title: pieceTitle });
 
-  const items: PieceRowMenuItem[] = [
-    {
-      key: "delete",
-      label: t("magazine:desk.pieceRow.delete"),
-      icon: <FiTrash2 aria-hidden />,
-      danger: true,
-      onSelect: onDelete,
-    },
-  ];
+  const items = buildPieceRowMenuItems({
+    translate: t,
+    hasAnyIssue,
+    assignLabelKey,
+    ...actions,
+  });
 
   function close(shouldRestoreFocus: boolean): void {
     setIsOpen(false);
@@ -52,8 +58,8 @@ export function PieceRowMenu({ pieceTitle, onDelete }: PieceRowMenuProps) {
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-label={label}
-        // The row's own Enter handler opens the piece; without this, opening
-        // the menu by keyboard would navigate away at the same time.
+        // Keeps Enter and Space on the trigger away from the desk's own
+        // keyboard shortcuts, which listen further up the tree.
         onKeyDown={(event) => event.stopPropagation()}
         onClick={(event) => {
           event.stopPropagation();

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button, SuccessPanel } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { nestedPersonaPath, personaPath } from "../../app/routeMap";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
   PublishUnmetError,
@@ -11,17 +10,41 @@ import {
 import { evaluatePublishRequirements } from "./subprofileDraftReadiness";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { useEditorFieldJump } from "./useEditorFieldJump";
-import { requirementsFor } from "./publishChecklist.data";
+import {
+  FIELD_ANCHOR_ID,
+  PUBLISH_REQUIREMENTS,
+  requirementsFor,
+} from "./publishChecklist.data";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
 import type { PublishAttempt } from "./PublishChecklist";
 import { PersonaDangerZone } from "./PersonaDangerZone";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
+import { personaOwnerAddress } from "./personaLinks.data";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofilePublishPanel.module.css";
 
 /** Ties the Publish button to the line explaining why it's disabled. A fixed
  *  id is safe: one publish pane is mounted per editor. */
 const PUBLISH_HINT_ID = "persona-publish-hint";
+
+/** The unmet codes a LINKED persona's 422 can still carry, mapped to the same
+ *  fail copy the unlinked checklist already shows for them: its handle is
+ *  server-derived and the rest of the checklist does not apply, but the
+ *  server can still refuse the derived handle (taken, reserved, invalid) or
+ *  flag the screened text (a blocked term), and a linked persona has no
+ *  checklist row to surface that through. */
+const LINKED_HANDLE_FAIL_CODES = [
+  "handle_invalid",
+  "handle_reserved",
+  "handle_taken",
+  "handle_is_kind",
+  "blocked_terms",
+];
+const LINKED_PUBLISH_FAIL_KEY: Record<string, string> = Object.fromEntries(
+  PUBLISH_REQUIREMENTS.flatMap((requirement) =>
+    Object.entries(requirement.failKey),
+  ).filter(([code]) => LINKED_HANDLE_FAIL_CODES.includes(code)),
+);
 
 /** A past attempt, plus the screened text it actually judged. */
 interface StoredAttempt extends PublishAttempt {
@@ -79,7 +102,7 @@ export function SubprofilePublishPanel({
   const isLinked = subprofile.linkVisibility === "linked";
   // Read off the LIVE editor snapshot (meta fields + working rows), not the
   // saved persona, so the list tracks unsaved edits as they're made.
-  const clientCodes = evaluatePublishRequirements(editor);
+  const clientCodes = evaluatePublishRequirements(editor, subprofile.kind);
   const unmetCount = Object.values(clientCodes).filter(Boolean).length;
   const hasRequirements = requirementsFor(subprofile.linkVisibility).length > 0;
   // Publish verifies the SAVED server row. With unsaved edits in the editor,
@@ -99,21 +122,17 @@ export function SubprofilePublishPanel({
       ? storedAttempt
       : null;
 
-  // Where the now-live persona can be viewed: a linked persona nests under the
-  // CREATOR's main profile (the only slug that route resolves by), an unlinked
-  // one stands on its own handle. Reading the signed-in member's slug here sent
-  // every co-owner of a shared persona to a not-found wall.
+  // Where the now-live persona can be viewed: its handle once it has one,
+  // else the nested fallback under the CREATOR's main profile (the only
+  // slug that route resolves by) for a legacy or demo linked row that never
+  // got one. Reading the signed-in member's slug here sent every co-owner of a
+  // shared persona to a not-found wall.
   const creatorSlug = usePersonaCreatorSlug(
     subprofile.id,
     subprofile.memberCount,
   );
-  const livePath = isLinked
-    ? creatorSlug
-      ? nestedPersonaPath(creatorSlug, subprofile.slug)
-      : null
-    : subprofile.handle
-      ? personaPath(subprofile.handle)
-      : null;
+  const ownerAddress = personaOwnerAddress(subprofile, creatorSlug);
+  const livePath = ownerAddress.status === "ready" ? ownerAddress.path : null;
 
   async function onPublish() {
     setStoredAttempt(null);
@@ -124,6 +143,25 @@ export function SubprofilePublishPanel({
     } catch (err) {
       if (err instanceof PublishUnmetError) {
         setStoredAttempt({ unmet: err.unmet, unknown: false, screenedText });
+        // A linked persona renders no checklist (it has no requirements), so
+        // a 422 here would otherwise fail silently: surface it as a toast and
+        // send the owner to the one field it can still be about.
+        if (!hasRequirements) {
+          // Map each unmet code to its fail-copy key first, then narrow with
+          // the type guard below: indexing a `Record` after a separate
+          // `find` on the codes would leave the value typed
+          // `string | undefined` for the compiler, even though the key is
+          // known present.
+          const failMessageKey = err.unmet
+            .map((code) => LINKED_PUBLISH_FAIL_KEY[code])
+            .find((key): key is string => key !== undefined);
+          if (failMessageKey) {
+            showToast(t(failMessageKey), "error");
+            jumpToField({ pane: "address", anchors: [FIELD_ANCHOR_ID.handle] });
+          } else {
+            showToast(t("subprofiles:publishPanel.toastPublishError"), "error");
+          }
+        }
       } else {
         setStoredAttempt({ unmet: [], unknown: true, screenedText });
         showToast(t("subprofiles:publishPanel.toastPublishError"), "error");

@@ -1,0 +1,393 @@
+/* The system stage (the crash screen, the 404). A drenched plum stage that IS
+   the page: no card, no panel. --plum and the cream channels do not flip with
+   the theme, so the stage and its type read the same in light and dark.
+   Decoration is three soft radial orbs and the visual slot, all transform and
+   opacity, all switched off under reduced motion with the resting state left
+   visible. */
+
+/* ── App level: the only landmark on screen ── */
+.appMain {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--plum);
+}
+
+/* ── The stage ── */
+.stage {
+  --stage-visual-size: clamp(140px, 36vw, 180px);
+  --stage-pad-top: clamp(28px, 6vh, var(--section-y-72));
+  --stage-pad-bottom: clamp(40px, 8vh, var(--section-y-88));
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow: clip;
+  padding-top: var(--stage-pad-top);
+  padding-bottom: var(--stage-pad-bottom);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.stageApp {
+  flex: 1;
+}
+
+/* Route level, as the first child of the shell's <main>: pull the plum up
+   under the floating nav pill by the visible part of the reserved band and add
+   it back as padding (the Studio and Cinema teaser pattern, spacing.css
+   `--nav-band-visible`). The band is zero in the sidebar rail and the mobile
+   app bar layouts, so the pull collapses there by itself. The stage then fills
+   the window, and the footer follows below the fold. */
+:global(main[data-page-main]) > .stageRoute:first-child {
+  margin-top: calc(-1 * var(--nav-band-visible));
+  padding-top: calc(var(--nav-band-visible) + var(--stage-pad-top));
+  min-height: 100vh;
+  min-height: 100svh;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+}
+
+/* Phones: the slim app bar sits above and the tab bar below (their heights
+   are reserved on <main> by standalone.css), so the stage fills what is left
+   between them. */
+@media (--mobile) {
+  :global(main[data-page-main]) > .stageRoute:first-child {
+    min-height: calc(
+      100svh - var(--app-bar-h) - env(safe-area-inset-top) - var(--tab-bar-h) -
+        env(safe-area-inset-bottom)
+    );
+  }
+}
+
+/* ── Background orbs ── */
+.orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.orbCoral {
+  width: min(760px, 130vw);
+  aspect-ratio: 1;
+  top: -22%;
+  right: -16%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.16) 0%,
+    transparent 64%
+  );
+}
+
+.orbJade {
+  width: min(680px, 120vw);
+  aspect-ratio: 1;
+  bottom: -26%;
+  left: -18%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.15) 0%,
+    transparent 64%
+  );
+}
+
+.orbGlow {
+  width: min(460px, 90vw);
+  aspect-ratio: 1;
+  top: 34%;
+  left: 36%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.12) 0%,
+    transparent 62%
+  );
+}
+
+/* ── App-level wordmark (no navbar exists there) ── */
+.brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto 24px;
+  padding-inline: calc(var(--wrap-px) + env(safe-area-inset-left))
+    calc(var(--wrap-px) + env(safe-area-inset-right));
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-22);
+  color: rgba(var(--cream-rgb), 0.92);
+}
+
+.brand em {
+  font-style: italic;
+}
+
+.brandDot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ── Layout: one column, visual on top; two columns from 720px ── */
+.layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: start;
+  gap: clamp(20px, 4vh, 32px);
+  width: 100%;
+  max-width: calc(38rem + 2 * var(--wrap-px));
+  margin-block: auto;
+  margin-inline: auto;
+  padding-inline: calc(var(--wrap-px) + env(safe-area-inset-left))
+    calc(var(--wrap-px) + env(safe-area-inset-right));
+}
+
+.copy {
+  width: 100%;
+  min-width: 0;
+}
+
+/* The visual follows the copy in the source, so a screen reader meets the
+   caption after the page's content, and is pinned to the first row so it
+   still sits on top in one column. */
+.visual {
+  grid-row: 1;
+  width: min(100%, var(--stage-visual-size));
+  flex: none;
+}
+
+.visualCaption {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .stage {
+    --stage-visual-size: clamp(180px, 28vw, 400px);
+  }
+
+  .layout {
+    max-width: var(--maxw);
+    grid-template-columns: minmax(0, 38rem) minmax(180px, 1fr);
+    column-gap: clamp(40px, 6vw, 112px);
+    align-items: center;
+  }
+
+  .copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .visual {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+
+  .visualCaption {
+    display: block;
+    max-width: 34ch;
+    margin: 18px auto 0;
+    font-size: var(--text-caption);
+    line-height: 1.5;
+    text-align: center;
+    text-wrap: balance;
+    color: rgba(var(--cream-rgb), 0.66);
+  }
+}
+
+/* ── Shared copy pieces ── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+.eyebrowDot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  /* Coral echoes the pulse core. Jade is reserved for live and success, and
+     beside an error label it would read as "all good". */
+  background: var(--accent);
+}
+
+.title {
+  margin: 0 0 18px;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: rgba(var(--cream-rgb), 1);
+  /* Keeps the coral em word from sitting alone on the last line. */
+  text-wrap: balance;
+}
+
+/* The h1 takes focus on mount only so a screen reader starts on it. It is
+   tabIndex -1, never a Tab stop, so no keyboard user ever lands on it by Tab
+   and the ring would only draw a box around the headline. */
+.title:focus,
+.title:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.lead {
+  max-width: 46ch;
+  margin: 0 0 clamp(20px, 4vh, 32px);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.82);
+}
+
+/* Large phones and below: the visual shrinks to a small mark on the eyebrow's
+   row, so the first screen reaches the actions. `.copy` steps out of the grid
+   (display: contents) so the eyebrow can share a row with the visual. */
+@media (--sm) {
+  .stage {
+    --stage-visual-size: 52px;
+  }
+
+  .layout {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 0;
+    align-items: center;
+  }
+
+  .copy {
+    display: contents;
+  }
+
+  .copy > * {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+  }
+
+  /* A fixed width: `min(100%, …)` inside an auto-sized column resolves
+     against itself and collapses the visual to a dot. */
+  .visual {
+    grid-column: 1;
+    grid-row: 1;
+    width: var(--stage-visual-size);
+  }
+
+  .copy > .eyebrow {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin: 0;
+  }
+
+  .eyebrowDot {
+    display: none;
+  }
+
+  .copy > .title {
+    margin-top: 18px;
+  }
+}
+
+/* Short laptop screens: tighten the vertical rhythm so the column fits above
+   the fold. */
+@media (min-width: 960px) and (max-height: 820px) {
+  .title {
+    margin-bottom: 14px;
+  }
+
+  .lead {
+    margin-bottom: 18px;
+  }
+}
+
+/* ── Motion ── Only with no motion preference. Every element's base style is
+   its resting, visible state, so with these rules gone (the OS setting, or the
+   in-app toggle below) nothing is ever left at opacity 0. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: stageRise 700ms var(--ease) both;
+    animation-delay: calc(120ms + var(--i, 0) * 55ms);
+  }
+
+  .visualReveal {
+    animation: visualIn 900ms var(--ease) both;
+  }
+
+  .orbCoral {
+    animation: orbDrift 26s var(--ease-in-out) infinite alternate;
+  }
+
+  .orbJade {
+    animation: orbDrift 32s var(--ease-in-out) -9s infinite alternate-reverse;
+  }
+
+  .orbGlow {
+    animation: orbDrift 38s var(--ease-in-out) -17s infinite alternate;
+  }
+}
+
+/* A settled stage (after a failed retry) appears at once, so "it broke
+   again" reads instantly instead of replaying the entrance. */
+.stageSettled .reveal,
+.stageSettled .visualReveal,
+:global(html[data-reduce-motion="true"]) .reveal,
+:global(html[data-reduce-motion="true"]) .visualReveal,
+:global(html[data-reduce-motion="true"]) .orb {
+  animation: none;
+}
+
+@keyframes stageRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes visualIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes orbDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(5%, 7%, 0);
+  }
+}

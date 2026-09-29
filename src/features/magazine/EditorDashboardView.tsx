@@ -1,205 +1,130 @@
-import type { Dispatch, SetStateAction } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { MagazineDeskShell } from "../../shared/components/layout";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DEMO_STAGES } from "./data/desk.data";
-import type { useCreateIssue } from "./api/useDeskIssues";
-import { DeskView, type DeskViewProps } from "./desk/DeskView";
+import { formatRelative } from "../../shared/lib/date";
+import { DEMO_STAGES, type Pitch } from "./data/desk.data";
+import { DeskView } from "./desk/DeskView";
 import { DeskModals } from "./desk/DeskModals";
 import { DeskIssueModals } from "./desk/DeskIssueModals";
-import type { useDeskTracks } from "./desk/useDeskTracks";
-import type { useDeskState } from "./desk/useDeskState";
-import type { useDeskPieceSelection } from "./desk/useDeskPieceSelection";
-import type { useDeskAssignment } from "./desk/useDeskAssignment";
-import type { useDeskModals } from "./desk/useDeskModals";
-import type { usePitchTriageActions } from "./desk/usePitchTriageActions";
-import type { useDeskPieceActions } from "./desk/useDeskPieceActions";
-import type { useDeskWriteAction } from "./desk/useDeskWriteAction";
+import { DeskBulkBar } from "./desk/DeskBulkBar";
+import { PitchTriage } from "./desk/PitchTriage";
+import { PiecePeekPanel } from "./desk/PiecePeekPanel";
+import { DeskPublishFlow } from "./desk/DeskPublishFlow";
+import type { EditorDesk } from "./desk/useEditorDesk";
 
 export interface EditorDashboardViewProps {
-  isLoading: boolean;
-  hasDeskLoadError: boolean;
-  isEmpty: boolean;
-  issue: DeskViewProps["issue"];
-  issues: DeskViewProps["issues"];
-  onSelectIssue: DeskViewProps["onSelectIssue"];
-  tracks: ReturnType<typeof useDeskTracks>;
-  deskState: ReturnType<typeof useDeskState>;
-  pieceSelection: ReturnType<typeof useDeskPieceSelection>;
-  assignment: ReturnType<typeof useDeskAssignment>;
-  modals: ReturnType<typeof useDeskModals>;
-  triage: ReturnType<typeof usePitchTriageActions>;
-  pieceActions: ReturnType<typeof useDeskPieceActions>;
-  writeAction: ReturnType<typeof useDeskWriteAction>;
-  editors: DeskViewProps["editors"];
-  /** PRD-130 — the section taxonomy from `useMagazineSections` (seeded rows
-   *  in live mode, the canonical fixture in demo), feeding both the Issue
-   *  plan's gap counts and the commission picker. It arrives EMPTY while the
-   *  fetch is in flight and after it fails, which is exactly what
-   *  `CommissionModal` reads to disable its picker rather than filing a
-   *  piece into no section. */
-  sections: DeskViewProps["sections"];
-  activeMe: DeskViewProps["me"];
-  onMe: DeskViewProps["onMe"];
-  layout: DeskViewProps["layout"];
-  onLayout: DeskViewProps["onLayout"];
-  pitches: DeskViewProps["pitches"];
-  summary: DeskViewProps["summary"];
-  isNewIssueOpen: boolean;
-  setIsNewIssueOpen: Dispatch<SetStateAction<boolean>>;
-  createIssue: ReturnType<typeof useCreateIssue>;
+  desk: EditorDesk;
 }
 
 /**
- * The desk's render layer: the page shell plus `DeskView` and the two modal
- * dispatchers, wired to the hook results `EditorDashboardPage` composes.
- * Split out solely to keep `EditorDashboardPage` under the line limit — all
- * prop-name mapping (a hook's result shape -> `DeskView`'s flatter prop
- * names) lives here, so the page itself stays a thin composition of its
- * data/state hooks.
+ * The desk's render layer: the page shell, `DeskView`, and every overlay the
+ * desk raises. The overlays sit here, beside `DeskView` and outside its
+ * layout boxes: the peek panel is `position: fixed` and the table is a size
+ * container, which would otherwise become the panel's containing block.
+ * Pitch triage mounts before `DeskModals`, so the pass and commission
+ * dialogs it opens portal on top of it.
  */
-export function EditorDashboardView({
-  isLoading,
-  hasDeskLoadError,
-  isEmpty,
-  issue,
-  issues,
-  onSelectIssue,
-  tracks,
-  deskState,
-  pieceSelection,
-  assignment,
-  modals,
-  triage,
-  pieceActions,
-  writeAction,
-  editors,
-  sections,
-  activeMe,
-  onMe,
-  layout,
-  onLayout,
-  pitches,
-  summary,
-  isNewIssueOpen,
-  setIsNewIssueOpen,
-  createIssue,
-}: EditorDashboardViewProps) {
+export function EditorDashboardView({ desk }: EditorDashboardViewProps) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const queryClient = useQueryClient();
+  const format = useFormat();
+  const { deskState, modals, triage, triageState, peek, tracks } = desk;
+
+  // "3 days ago" from the pitch's received instant, through the same
+  // relative-time formatter the piece threads use.
+  const pitchAgeLabel = (pitch: Pitch) =>
+    pitch.receivedAt ? formatRelative(pitch.receivedAt, format) || null : null;
 
   return (
     <MagazineDeskShell>
-      <DeskView
-        loading={isLoading}
-        showError={hasDeskLoadError}
-        onRetry={() => {
-          void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
-          void queryClient.invalidateQueries({
-            queryKey: ["magazine-pitches"],
-          });
-        }}
-        isEmpty={isEmpty}
-        issue={issue}
-        issues={issues}
-        onSelectIssue={onSelectIssue}
-        onNewIssue={() => setIsNewIssueOpen(true)}
+      <DeskView desk={desk} />
+
+      <PiecePeekPanel
+        piece={peek.peekPiece}
         track={tracks.track}
-        onTrack={tracks.setTrack}
-        hasCurrentIssue={tracks.hasCurrentIssue}
-        unassignedCount={tracks.unassignedPieces.length}
-        issueCount={tracks.issuePieces.length}
-        editors={editors}
-        me={activeMe}
-        onMe={onMe}
-        layout={layout}
-        onLayout={onLayout}
-        onWrite={writeAction.startWriting}
-        isWriting={writeAction.isStarting}
-        onCommission={modals.openCommission}
-        onProduce={pieceActions.produceIssue}
-        pieces={tracks.activePieces}
-        visiblePieces={deskState.visiblePieces}
-        focusId={deskState.focusId}
-        pitches={pitches}
-        pitchCount={pitches.length}
+        onClose={peek.close}
+        onOpenFullRecord={desk.pieceActions.openPiece}
+        onNextAction={desk.nextAction.runNextAction}
+        onPrevious={peek.showPrevious}
+        onNext={peek.showNext}
+        hasPrevious={peek.hasPrevious}
+        hasNext={peek.hasNext}
+        me={desk.activeMe}
+        viewers={
+          peek.peekPiece
+            ? desk.presence.viewersByPiece[peek.peekPiece.id]
+            : undefined
+        }
+      />
+
+      <DeskBulkBar
+        selectedPieces={desk.selectedPieces}
         stages={DEMO_STAGES}
-        sections={sections}
-        q={deskState.q}
-        onQ={deskState.setQ}
-        fmt={deskState.fmt}
-        onFmt={deskState.setFmt}
-        mine={deskState.mine}
-        onMine={deskState.setMine}
-        sort={deskState.sort}
-        onSort={deskState.setSort}
-        onShortcuts={modals.openShortcuts}
-        activeView={deskState.view}
-        onToggleView={(id) =>
-          deskState.setView(deskState.view === id ? null : id)
+        hasAnyIssue={desk.issues.length > 0}
+        track={tracks.track}
+        onAssignIssue={() =>
+          desk.assignment.openForSelection(desk.selectedPieces)
         }
-        onSaveView={() =>
-          showToast(t("magazine:desk.page.savingViewsUnavailable"), "info")
+        onChangeStage={(stage) =>
+          desk.bulkActions.changeStageForSelection(desk.selectedPieces, stage)
         }
-        onOpenPiece={pieceActions.openPiece}
-        onEditPiece={pieceActions.editPiece}
-        onChasePiece={modals.openChase}
-        onHandoffPiece={modals.openHandoff}
-        onDeletePiece={modals.openDeletePiece}
-        onAssignPieceIssue={assignment.openForPiece}
-        selectedPieceIds={pieceSelection.selectedPieceIds}
-        areAllPiecesSelected={pieceSelection.areAllSelected}
-        onTogglePieceSelect={assignment.togglePieceSelect}
-        onToggleAllPieceSelect={assignment.toggleAllPieceSelect}
-        onBulkAssignIssue={() =>
-          assignment.openForSelection(deskState.visiblePieces)
-        }
-        onClearPieceSelection={pieceSelection.clearPieceSelection}
-        onMovePiece={pieceActions.movePiece}
-        onCommissionSection={modals.openCommissionForSection}
-        selectedPitchIds={deskState.selected}
-        onTogglePitchSelect={assignment.togglePitchSelect}
-        onCommissionPitch={modals.openCommissionFromPitch}
-        onMaybePitch={triage.maybe}
-        onPassPitch={modals.openPassFromPitch}
+        onChaseAll={modals.openChaseQueue}
+        onHandOff={() => desk.bulkActions.handOffSelection(desk.selectedPieces)}
+        onClear={desk.pieceSelection.clearPieceSelection}
+        selectableCount={deskState.visiblePieces.length}
+        onSelectAll={desk.pieceSelection.selectAll}
+      />
+
+      <PitchTriage
+        isOpen={triageState.isOpen}
+        onClose={triageState.close}
+        pitches={desk.pitches}
+        isLoading={desk.arePitchesLoading}
+        initialPitchId={triageState.initialPitchId}
         leavingPitchIds={[...triage.leavingIds]}
+        onCommission={modals.openCommissionFromPitch}
+        onMaybe={triage.maybe}
+        onPass={modals.openPassFromPitch}
+        selectedPitchIds={deskState.selected}
+        // The overlay's own selection: picking a pitch here leaves the
+        // desk's piece selection (and its bulk bar) alone.
+        onToggleSelect={deskState.toggleSelect}
         onBulkMaybe={triage.bulkMaybe}
         onBulkPass={triage.bulkPass}
-        onClearBulkSelection={deskState.clearSelected}
-        summary={summary}
+        onClearSelection={deskState.clearSelected}
+        pitchAgeLabel={pitchAgeLabel}
+        answeredPitchIds={triageState.answeredPitchIds}
       />
 
       <DeskModals
         modal={modals.modal}
-        editors={editors}
-        sections={sections}
+        editors={desk.editors}
+        sections={desk.sections}
         commissionTrack={tracks.track}
         hasCurrentIssue={tracks.hasCurrentIssue}
-        issueNumber={issue.number}
+        issueNumber={desk.issue.number}
         onClose={modals.close}
         onCommission={modals.submitCommission}
         onPass={modals.submitPass}
         onHandoff={modals.confirmHandoff}
+        onSkipChase={modals.skipChase}
         onConfirmDeletePiece={() => void modals.confirmDeletePiece()}
         isDeletingPiece={modals.isDeletingPiece}
       />
 
       <DeskIssueModals
-        assignTargets={assignment.assignTargets}
-        onCloseAssign={assignment.close}
-        onAssign={assignment.submit}
-        isNewIssueOpen={isNewIssueOpen}
-        onCloseNewIssue={() => setIsNewIssueOpen(false)}
-        isCreatingIssue={createIssue.isPending}
-        issues={issues}
+        assignTargets={desk.assignment.assignTargets}
+        onCloseAssign={desk.assignment.close}
+        onAssign={desk.assignment.submit}
+        isNewIssueOpen={desk.isNewIssueOpen}
+        onCloseNewIssue={() => desk.setIsNewIssueOpen(false)}
+        isCreatingIssue={desk.createIssue.isPending}
+        issues={desk.issues}
         onCreateIssue={async (body) => {
-          const created = await createIssue.mutateAsync(body);
-          // Land on the issue that was just made — creating one and then still
-          // looking at the previous issue is the wrong default.
-          onSelectIssue(created.number);
-          showToast(
+          const created = await desk.createIssue.mutateAsync(body);
+          // Land on the issue that was just made, in its own scope: creating
+          // one and still looking at the previous issue is the wrong default.
+          desk.selectIssueScope(created.number);
+          desk.showToast(
             t("magazine:desk.newIssue.createdToast", {
               number: created.number,
             }),
@@ -207,6 +132,11 @@ export function EditorDashboardView({
           );
           return created;
         }}
+      />
+
+      <DeskPublishFlow
+        piece={desk.nextAction.publishPiece}
+        onDone={desk.nextAction.finishPublish}
       />
     </MagazineDeskShell>
   );

@@ -63,14 +63,17 @@
   min-width: 0;
 }
 
-/* From 984px of page width the rail (280) and a 680px workspace (the Add
-   tab's two-column split) fit side by side with the 24px gap. The pack list
-   then stays in reach while the workspace scrolls; a long list scrolls
-   inside itself. */
-@container sticker-page (min-width: 984px) {
+/* From 948px of page width the rail (248 to 280px, a quarter of the page)
+   and a 680px workspace (the Add tab's two-column split) fit side by side
+   with the 20px gap. The rail grows with the page: 248px on the 972px page
+   of a 1280 screen (a 704px workspace), 254px at 1058 (784px) and 272px at
+   1132 (840px). 248px keeps the rail's heading and its New pack button on
+   one line in both languages. The pack list then stays in reach while the
+   workspace scrolls; a long list scrolls inside itself. */
+@container sticker-page (min-width: 948px) {
   .layout {
-    grid-template-columns: 280px minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: clamp(248px, 24cqi, 280px) minmax(0, 1fr);
+    gap: 20px;
   }
 
   .railColumn {

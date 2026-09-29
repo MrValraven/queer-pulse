@@ -1,125 +1,190 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  FiArrowLeft,
-  FiBookOpen,
-  FiCalendar,
-  FiBook,
-  FiMessageCircle,
-  FiHelpCircle,
-  FiMail,
-} from "react-icons/fi";
+import { useId, useState, type FormEvent } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FiArrowLeft, FiArrowUpRight, FiSearch } from "react-icons/fi";
 import { PageShell } from "../shared/components/layout";
+import {
+  SystemStage,
+  SystemStageLead,
+  SystemStageTitle,
+} from "../shared/components/layout/SystemStage";
+import { stageRevealProps } from "../shared/components/layout/systemStageReveal";
+import { Ping } from "../shared/components/mascot/Ping";
 import { Button } from "../shared/components/ui";
 import { Translation } from "../shared/i18n/Translation";
 import { useTranslation } from "../shared/i18n/useTranslation";
 import { routes } from "../app/routeMap";
+import { NOT_FOUND_LINKS, type NotFoundLinkTone } from "./notFoundLinks.data";
 import styles from "./NotFoundPage.module.css";
 
-const LINKS = [
-  {
-    icon: <FiBookOpen />,
-    labelKey: "system:notFound.links.magazine.label",
-    subKey: "system:notFound.links.magazine.sub",
-    to: routes.magazine,
-  },
-  {
-    icon: <FiCalendar />,
-    labelKey: "system:notFound.links.gatherings.label",
-    subKey: "system:notFound.links.gatherings.sub",
-    to: routes.gatherings,
-  },
-  {
-    icon: <FiBook />,
-    labelKey: "system:notFound.links.readingGroups.label",
-    subKey: "system:notFound.links.readingGroups.sub",
-    to: routes.readingGroups,
-  },
-  {
-    icon: <FiMessageCircle />,
-    labelKey: "system:notFound.links.forum.label",
-    subKey: "system:notFound.links.forum.sub",
-    to: routes.forum,
-  },
-  {
-    icon: <FiHelpCircle />,
-    labelKey: "system:notFound.links.help.label",
-    subKey: "system:notFound.links.help.sub",
-    to: routes.help,
-  },
-  {
-    icon: <FiMail />,
-    labelKey: "system:notFound.links.contact.label",
-    subKey: "system:notFound.links.contact.sub",
-    to: routes.contact,
-  },
-];
+const TONE_CLASS: Record<NotFoundLinkTone, string | undefined> = {
+  coral: styles.placeIconCoral,
+  jade: styles.placeIconJade,
+  cream: styles.placeIconCream,
+};
 
-export function NotFoundPage() {
-  const navigate = useNavigate();
+/** The pathname as a reader would type it: percent escapes decoded where
+ *  they form valid text, left as they are where they do not. */
+function readablePath(pathname: string): string {
+  try {
+    return decodeURI(pathname);
+  } catch {
+    return pathname;
+  }
+}
+
+/** The address that was asked for, echoed back small, on one line. */
+function RequestedPath({ revealIndex }: { revealIndex: number }) {
   const { t } = useTranslation();
-  const [query, setQuery] = useState("");
+  const { pathname } = useLocation();
+  const path = readablePath(pathname);
+  return (
+    <p {...stageRevealProps(revealIndex, styles.path)}>
+      <span className={styles.pathLabel}>{t("system:notFound.pathLabel")}</span>
+      <span className={styles.pathValue} title={path}>
+        {path}
+      </span>
+    </p>
+  );
+}
 
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (query.trim())
-      void navigate(routes.search + "?q=" + encodeURIComponent(query.trim()));
+/** Search the platform instead. Submitting sends the query to the search
+ *  page; the button stays disabled until the query has text. */
+function NotFoundSearch({ revealIndex }: { revealIndex: number }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const inputId = useId();
+  const [query, setQuery] = useState("");
+  const trimmedQuery = query.trim();
+
+  function handleSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (trimmedQuery)
+      void navigate(`${routes.search}?q=${encodeURIComponent(trimmedQuery)}`);
   }
 
   return (
-    <PageShell>
-      <div className={styles.page}>
-        <div className={styles.numBg} aria-hidden>
-          404
-        </div>
-
-        <div className={styles.content}>
-          <div className={styles.eyebrow}>{t("system:notFound.eyebrow")}</div>
-          <h1 className={styles.title}>
-            {t("system:notFound.title.line1")}
-            <br />
-            <Translation
-              i18nKey="system:notFound.title.line2"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.sub}>{t("system:notFound.sub")}</p>
-
-          <div className={styles.actions}>
-            <Button to="/">{t("system:notFound.homeCta")}</Button>
-            <Button variant="ghost" onClick={() => void navigate(-1)}>
-              <FiArrowLeft aria-hidden /> {t("system:notFound.backCta")}
-            </Button>
-          </div>
-
-          <div className={styles.linksTitle}>
-            {t("system:notFound.linksTitle")}
-          </div>
-          <div className={styles.grid}>
-            {LINKS.map((l) => (
-              <Link key={l.to} to={l.to} className={styles.link}>
-                <span className={styles.linkIcon}>{l.icon}</span>
-                <span className={styles.linkLabel}>{t(l.labelKey)}</span>
-                <span className={styles.linkSub}>{t(l.subKey)}</span>
-              </Link>
-            ))}
-          </div>
-
-          <form className={styles.search} onSubmit={handleSearch}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              aria-label={t("system:notFound.searchPlaceholder")}
-              placeholder={t("system:notFound.searchPlaceholder")}
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-            <Button variant="plum" type="submit" className={styles.searchBtn}>
-              {t("system:notFound.searchCta")}
-            </Button>
-          </form>
-        </div>
+    <form
+      role="search"
+      onSubmit={handleSearch}
+      {...stageRevealProps(revealIndex, styles.search)}
+    >
+      <label htmlFor={inputId} className={styles.searchLabel}>
+        {t("system:notFound.searchLabel")}
+      </label>
+      <div className={styles.searchRow}>
+        <span className={styles.searchField}>
+          <FiSearch className={styles.searchIcon} aria-hidden="true" />
+          <input
+            id={inputId}
+            className={styles.searchInput}
+            type="search"
+            enterKeyHint="search"
+            placeholder={t("system:notFound.searchPlaceholder")}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </span>
+        <Button
+          type="submit"
+          variant="ghost-dark"
+          size="lg"
+          disabled={!trimmedQuery}
+        >
+          {t("system:notFound.searchCta")}
+        </Button>
       </div>
+    </form>
+  );
+}
+
+/** "Popular places": a two-column list with hairline rules, one column on
+ *  phones. Each row is a router link (the 404 lives inside the router). */
+function PopularPlaces({ revealIndex }: { revealIndex: number }) {
+  const { t } = useTranslation();
+  const titleId = useId();
+  return (
+    <nav
+      aria-labelledby={titleId}
+      {...stageRevealProps(revealIndex, styles.places)}
+    >
+      <h2 id={titleId} className={styles.placesTitle}>
+        {t("system:notFound.linksTitle")}
+      </h2>
+      <ul className={styles.placesList}>
+        {NOT_FOUND_LINKS.map(({ id, Icon, tone, labelKey, subKey, to }) => (
+          <li key={id} className={styles.placeItem}>
+            <Link to={to} className={styles.place}>
+              <span
+                className={`${styles.placeIcon} ${TONE_CLASS[tone] ?? ""}`}
+                aria-hidden="true"
+              >
+                <Icon />
+              </span>
+              <span className={styles.placeText}>
+                <span className={styles.placeLabel}>{t(labelKey)}</span>
+                <span className={styles.placeSub}>{t(subKey)}</span>
+              </span>
+              <FiArrowUpRight
+                className={styles.placeArrow}
+                aria-hidden="true"
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+/**
+ * The 404. The same plum SystemStage as the crash screen, with Ping in its
+ * searching mood looking around for the page. The copy column says what
+ * happened, echoes the address back, then offers a way on: search first,
+ * home or back, and a short list of popular places last, so on a short
+ * laptop the search and the actions still sit above the fold.
+ */
+export function NotFoundPage() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const headingId = useId();
+
+  return (
+    <PageShell>
+      <SystemStage
+        level="route"
+        labelledBy={headingId}
+        eyebrow={t("system:notFound.eyebrow")}
+        visual={<Ping mood="searching" />}
+        visualCaption={t("system:notFound.mascot")}
+      >
+        <SystemStageTitle id={headingId}>
+          <Translation
+            i18nKey="system:notFound.title"
+            components={{ em: <em /> }}
+          />
+        </SystemStageTitle>
+
+        <SystemStageLead>{t("system:notFound.sub")}</SystemStageLead>
+
+        <RequestedPath revealIndex={3} />
+        <NotFoundSearch revealIndex={4} />
+
+        <div {...stageRevealProps(5, styles.actions)}>
+          <Button size="lg" to="/">
+            {t("system:notFound.homeCta")}
+          </Button>
+          <Button
+            size="lg"
+            variant="ghost-dark"
+            onClick={() => void navigate(-1)}
+          >
+            <FiArrowLeft aria-hidden="true" />
+            {t("system:notFound.backCta")}
+          </Button>
+        </div>
+
+        <PopularPlaces revealIndex={6} />
+      </SystemStage>
     </PageShell>
   );
 }

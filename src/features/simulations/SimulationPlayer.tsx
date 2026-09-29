@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   FiArrowLeft,
   FiSmartphone,
@@ -13,6 +13,11 @@ import { isSandbox } from "../../shared/sandbox/sandbox";
 import { Button } from "../../shared/components/ui";
 import { DeviceFrame, type Device } from "./DeviceFrame";
 import { findSimFlow, withSandboxFlag } from "./simulations.data";
+import {
+  announceSurfaceReady,
+  isPlainPrimaryClick,
+  useSimulationMorph,
+} from "./useSimulationMorph";
 import styles from "./SimulationPlayer.module.css";
 
 /**
@@ -27,21 +32,31 @@ export function SimulationPlayer() {
   const { t } = useTranslation();
   const [device, setDevice] = useState<Device>("desktop");
   // Boots a fresh instance in the frame. Anything that plays once and is then
-  // over — the launch sequence above all — is otherwise unwatchable a second
+  // over (the launch sequence above all) is otherwise unwatchable a second
   // time without reloading the whole page.
   const [replayKey, setReplayKey] = useState(0);
-  const navigate = useNavigate();
+  const { exitToGallery } = useSimulationMorph();
+  const flow = id ? findSimFlow(id) : undefined;
+  const flowId = flow?.id;
 
-  // Esc returns to the gallery. This covers focus on the player chrome
-  // around the frame; DeviceFrame's onEscape below covers focus that has
-  // moved inside the iframe's own (same-origin) document.
+  // Mounted: a card morph waiting on this page can capture it now.
+  useEffect(() => {
+    announceSurfaceReady();
+  }, []);
+
+  // Esc returns to the gallery, shrinking the player back into its card. This
+  // covers focus on the player chrome around the frame; DeviceFrame's onEscape
+  // below covers focus that has moved inside the iframe's own (same-origin)
+  // document.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") void navigate(routes.simulations);
+      if (event.key === "Escape" && !event.defaultPrevented) {
+        exitToGallery(flowId);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [navigate]);
+  }, [exitToGallery, flowId]);
 
   if (isSandbox()) {
     // The player itself is a full app instance when it is booted inside
@@ -57,8 +72,6 @@ export function SimulationPlayer() {
     );
   }
 
-  const flow = id ? findSimFlow(id) : undefined;
-
   if (!flow) {
     return (
       <div className={styles.notFound}>
@@ -73,7 +86,15 @@ export function SimulationPlayer() {
   return (
     <div className={styles.player}>
       <header className={styles.bar}>
-        <Link to={routes.simulations} className={styles.back}>
+        <Link
+          to={routes.simulations}
+          className={styles.back}
+          onClick={(event) => {
+            if (!isPlainPrimaryClick(event)) return;
+            event.preventDefault();
+            exitToGallery(flow.id);
+          }}
+        >
           <FiArrowLeft aria-hidden /> {t("simulations:player.back")}
         </Link>
         <span className={styles.title}>{flow.title}</span>
@@ -131,7 +152,7 @@ export function SimulationPlayer() {
         title={flow.title}
         device={device}
         replayKey={replayKey}
-        onEscape={() => void navigate(routes.simulations)}
+        onEscape={() => exitToGallery(flow.id)}
       />
     </div>
   );

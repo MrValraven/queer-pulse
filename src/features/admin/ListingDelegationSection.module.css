@@ -57,6 +57,12 @@
   color: var(--ink-60);
 }
 
+/* The "Edit listing" link under "Held by QueerPulse". A default-size
+   `<Button>`, so it keeps the 44px touch target. */
+.editAction {
+  margin-block-start: var(--gap-xs);
+}
+
 .quote {
   margin: 8px 0 0;
   padding: 8px 10px;

@@ -245,6 +245,16 @@ export interface Member {
    *  `ProfileCard.vouchersVisible`. Defaults to visible (`true`) when absent
    *  — matches the backend column default. */
   vouchersVisible?: boolean;
+  /** Whether other members can see this member's Ambassador tag (roster,
+   *  directory filter, invitee welcome line). Owner-controlled; meaningful
+   *  only while `ambassador` is set. Defaults to visible (`true`) when absent,
+   *  matching the backend column default. */
+  isAmbassadorTagVisible?: boolean;
+  /** This member's own active ambassador standing. Owner-only: `undefined`/
+   *  `null` on any non-owner viewer's fetch and for a member who currently
+   *  isn't an ambassador. Drives the "Show my Ambassador tag" toggle in the
+   *  "Who sees what" sheet. */
+  ambassador?: { since: string; focusArea: string } | null;
   /** ISO 8601 timestamp until which the member has self-hidden their profile
    *  (24h self-hide), or `null` when not hidden. Owner-only: the backend does
    *  not currently expose this on any response DTO (see `members.adapters.ts`

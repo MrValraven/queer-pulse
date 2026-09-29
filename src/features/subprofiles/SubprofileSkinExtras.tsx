@@ -26,6 +26,7 @@ import { OnView, VisitBlock } from "./skins/GalleryBlocks";
 import { RecordBlock } from "./skins/HistoryBlocks";
 import { NextAction, Principles } from "./skins/CollectiveBlocks";
 import { FeesBlock, Promises } from "./skins/ClassroomBlocks";
+import { AtTheTableBlock } from "./skins/QuestBlocks";
 
 export type SkinExtrasSlot = "top" | "afterBio" | "spotlight" | "end";
 
@@ -97,6 +98,7 @@ export function SubprofileSkinExtras({
       if (skin === "chart") return <ChartBirthData persona={persona} />;
       if (skin === "chair") return <ChairCard persona={persona} />;
       if (skin === "classroom") return <FeesBlock persona={persona} />;
+      if (skin === "quest") return <AtTheTableBlock persona={persona} />;
       return null;
     case "spotlight":
       // Every other skin's featured item renders through the generic

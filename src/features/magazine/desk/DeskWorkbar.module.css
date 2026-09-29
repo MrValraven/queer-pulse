@@ -1,0 +1,214 @@
+/* The desk workbar: search, layout switch, Filter, Sort and help on one row
+   above the table, with the active filter tokens under it. Shared by
+   DeskWorkbar, DeskFilterMenu, DeskSortMenu and DeskActiveFilters. */
+
+.workbar {
+  container: desk-workbar / inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* At a mid width where search would shrink under 200px, the controls wrap
+   to a second line instead. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.search {
+  flex: 1 1 200px;
+  min-width: 200px;
+  border-radius: var(--radius-pill);
+}
+
+/* The field's own focus style is a 1px border change; the desk's controls
+   all show the ring triple, so the field shows it too, drawn on its pill. */
+.search:focus-within {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* `position: relative` keeps the visually hidden labels below (absolutely
+   positioned) inside this box, so they never widen the page. */
+.controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.layoutSwitch {
+  flex: none;
+}
+
+/* The phone's layout switch (DeskLayoutMenu); the segments serve every
+   wider screen. Scoped under .controls to outrank the shared Button's own
+   `display`, whichever stylesheet loads first. */
+.controls .layoutMenu {
+  display: none;
+}
+
+/* Filter and Sort triggers are the shared ghost `sm` button; only the icon
+   is sized here, to match the layout switch's icons. */
+.menuTrigger svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+/* The current sort, beside the Sort label: readable, one step quieter. */
+.triggerValue {
+  color: var(--ink-60);
+  font-weight: 500;
+}
+
+/* A workbar narrower than its full row (1280px and below, with Calendar and
+   Views in the row) drops the current sort from view first, so search, the
+   layout switch and every menu still share one line. It stays in the Sort
+   button's accessible name. */
+@container desk-workbar (width < 1070px) {
+  .sortValue {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* How many filters are on. A soft neutral pill: filters are a normal state,
+   so the badge stays calm. */
+.countBadge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--workbar-badge-pad-x);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.12);
+  color: var(--text-strong);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.help {
+  display: inline-flex;
+}
+
+.workbar .activeFilters {
+  margin-top: var(--gap-sm);
+}
+
+/* Narrower than the full row (a tablet, a small laptop window): the layout
+   switch folds into DeskLayoutMenu, one icon button, so search and every
+   menu still share one line with their labels. `.layoutFolded` is the same
+   fold at any width, set by `useDeskWorkbarFit` when the labelled switch
+   would squeeze search under its minimum (Portuguese labels at 1280px). */
+@container desk-workbar (width < 860px) {
+  .controls .layoutSwitch {
+    display: none;
+  }
+
+  .controls .layoutMenu {
+    display: inline-flex;
+  }
+}
+
+.layoutFolded .controls .layoutSwitch {
+  display: none;
+}
+
+.layoutFolded .controls .layoutMenu {
+  display: inline-flex;
+}
+
+/* A touch screen gets every menu trigger at the thumb's full 44px (the
+   shared `sm` Button stops at 40px). */
+@media (pointer: coarse) {
+  .controls .menuTrigger {
+    min-height: var(--tap-min);
+  }
+}
+
+/* Phone width: still one row. Search takes what the controls leave, and
+   Views, Filter and Sort drop to 44px icon buttons with their labels kept in
+   the accessible name, so the row fits at 375px. Below about 360px the
+   controls wrap to a second row, and narrower still they scroll sideways
+   inside the workbar, so the page itself never does. The menus are
+   portaled, so the scroller never clips them. */
+@container desk-workbar (width < 560px) {
+  .row {
+    /* 10px of visible gap once the controls' focus-ring margin is paid. */
+    row-gap: 16px;
+  }
+
+  .search {
+    flex: 1 1 120px;
+    min-width: 120px;
+  }
+
+  /* An empty field has no clear button to keep clear of, so its end padding
+     narrows and the short placeholder ("Pesquisar") shows whole. */
+  .search input:placeholder-shown {
+    padding-inline-end: var(--gap-xs);
+  }
+
+  .controls .menuTrigger {
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+    padding-inline: var(--gap-xs);
+  }
+
+  .controls {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    /* The strip only ever needs to scroll sideways. Left implicit, `overflow-y`
+       computes to `auto` too, and the help tooltip's bubble stays present and
+       absolutely positioned in the layout while hidden, merely transparent,
+       so it counts as scrollable overflow and gives the strip a few pixels of
+       vertical scroll it doesn't need. */
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    /* Room for the focus ring, which the scroller would otherwise clip. */
+    padding: var(--workbar-ring-room);
+    margin: calc(-1 * var(--workbar-ring-room));
+  }
+
+  .controls > * {
+    flex: none;
+  }
+
+  .triggerLabel,
+  .triggerValue {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* A touch-only phone has no keyboard, so the shortcuts sheet has nothing to
+   offer there. Its tooltip would also be clipped by the scroller above. */
+@media (max-width: 767px) and (pointer: coarse) {
+  .help {
+    display: none;
+  }
+}

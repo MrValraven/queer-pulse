@@ -426,10 +426,6 @@ export const getDeck = (slug: string) =>
 // `AdminMagazineDecksController` — distinct route prefix from the public
 // `magazine/decks` reads above; drafts included, id-addressed not slug-addressed.
 
-/** GET /magazine/admin/decks — every deck, drafts included; a bare array (not paginated). */
-export const getAdminDecks = () =>
-  apiGet<DeckListItemDTO[]>("/magazine/admin/decks");
-
 export const getAdminDeck = (id: string) =>
   apiGet<DeckDTO>(`/magazine/admin/decks/${id}`);
 

@@ -3,6 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
+import type { ResourceResponseDTO } from "./api/resources.api";
 import { useManagedGuide } from "./api/useManagedGuide";
 import { GuideBody } from "./GuideBody";
 import { GuideUnderReview } from "./GuideUnderReview";
@@ -25,7 +26,7 @@ export interface ManagedGuideProps {
  * database, so an editor changing a phone number in a crisis guide is an
  * admin-panel edit instead of an engineer editing two i18n catalogs across
  * two directories and shipping a deploy. Every other guide falls through to
- * its hardcoded page exactly as before — the page is the fallback until
+ * its hardcoded page exactly as before: the page is the fallback until
  * somebody takes it over in the editor.
  *
  * Both paths get the review footer (CON-09), which is the point of putting
@@ -33,7 +34,7 @@ export interface ManagedGuideProps {
  * guides from here rather than from 31 separate page edits.
  *
  * It is also the single gate for editorial review. A guide the backend will
- * not serve publicly — unpublished, or never read end to end by an editor —
+ * not serve publicly (unpublished, or never read end to end by an editor)
  * renders `GuideUnderReview` instead of its page, and because every guide
  * route in `routes.tsx` goes through here, that is one condition rather than
  * 31. A guide with no visible row is hidden even when a hardcoded page for it
@@ -74,9 +75,10 @@ export function ManagedGuide({ slug, fallback }: ManagedGuideProps) {
  * Shown only in live mode while the "is this guide managed?" lookup is in
  * flight. Rendering the hardcoded page first and swapping would flash one
  * version of a health guide into another, which is worse than a brief
- * skeleton on a page people read carefully.
+ * skeleton on a page people read carefully. The admin guide preview reuses it
+ * while its own lookup is in flight.
  */
-function ManagedGuideSkeleton() {
+export function ManagedGuideSkeleton() {
   return (
     <PageShell>
       <div className="wrap" style={{ padding: "72px 0" }}>
@@ -94,16 +96,17 @@ function ManagedGuideSkeleton() {
   );
 }
 
-type ManagedGuideData = NonNullable<
-  ReturnType<typeof useManagedGuide>["guide"]
->;
-
-function ManagedGuideBody({
+/**
+ * A database-managed guide exactly as readers get it. Exported for the admin
+ * guide preview, which passes the admin row straight in: it carries every
+ * field the public DTO does.
+ */
+export function ManagedGuideBody({
   slug,
   guide,
 }: {
   slug: string;
-  guide: ManagedGuideData;
+  guide: ResourceResponseDTO;
 }) {
   const { t, language } = useTranslation();
 

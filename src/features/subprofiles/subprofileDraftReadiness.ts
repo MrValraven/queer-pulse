@@ -1,10 +1,15 @@
-import type { LinkVisibility, SubprofileSection } from "./api/subprofiles.api";
+import type {
+  LinkVisibility,
+  SubprofileKind,
+  SubprofileSection,
+} from "./api/subprofiles.api";
 import type {
   PublicSubprofileView,
   SubprofileView,
 } from "./api/subprofiles.adapters";
 import { handleFormatError } from "../../shared/handles";
 import { isContentSection } from "./subprofile-kinds";
+import { handleIsKindName } from "./personaHandle";
 // Contract-C5 thresholds, taken from the dual-mode-safe editor data module
 // rather than the demo-only `subprofiles.data.ts` (which must never be imported
 // into a path that also runs live — see the `queerpulse-demo-persona-leak`
@@ -190,21 +195,28 @@ export function estimateEditorReadiness(editor: {
  * and a taken one still comes back as a 422. It is reported when the
  * availability check has already run and said unavailable.
  *
+ * `kind` is the persona's kind, which the editor meta does not carry: a handle
+ * that is only that kind's name ("therapist", "terapia") fails as
+ * `handle_is_kind`, matching the server.
+ *
  * A LINKED persona has NO publish requirements at all — it nests under the
  * owner's profile and the server's `validatePublish` returns an empty list for
  * it outright — so this returns an empty map for one, and the Publish button is
  * never gated on a check the API would not run. Content items are not a
  * requirement for anyone (see `PUBLISH_REQUIREMENTS`).
  */
-export function evaluatePublishRequirements(editor: {
-  meta: {
-    link: LinkVisibility;
-    handle: string;
-    handleStatus: { status: string };
-    avatarUrl: string;
-    bio: string;
-  };
-}): Record<string, string | null> {
+export function evaluatePublishRequirements(
+  editor: {
+    meta: {
+      link: LinkVisibility;
+      handle: string;
+      handleStatus: { status: string };
+      avatarUrl: string;
+      bio: string;
+    };
+  },
+  kind: SubprofileKind,
+): Record<string, string | null> {
   const { meta } = editor;
   if (meta.link === "linked") return {};
 
@@ -213,6 +225,7 @@ export function evaluatePublishRequirements(editor: {
     const formatProblem = handleFormatError(meta.handle);
     if (formatProblem === "invalid") return "handle_invalid";
     if (formatProblem === "reserved") return "handle_reserved";
+    if (handleIsKindName(meta.handle, kind)) return "handle_is_kind";
     if (meta.handleStatus.status === "unavailable") return "handle_taken";
     return null;
   }

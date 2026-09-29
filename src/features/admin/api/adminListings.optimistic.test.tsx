@@ -37,6 +37,8 @@ function makeRow(
     status,
     submitterName: "Rita V",
     submitterSlug: "rita",
+    suggesterName: "",
+    suggesterSlug: "",
     createdAt: "2026-07-23T10:00:00Z",
     // The moderation preview payload — never read by the cache patch itself.
     detail: {} as ListingQueueRow["detail"],

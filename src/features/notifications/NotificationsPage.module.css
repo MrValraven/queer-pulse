@@ -126,6 +126,17 @@
   flex: 1;
   min-width: 0;
 }
+/* Staff pill(s) for the actor, on their own wrapping line above the text.
+   `MemberStaffBadge` renders nothing for non-staff, so the line collapses. */
+.staffBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.staffBadges:empty {
+  display: none;
+}
 .text {
   font-size: var(--text-14-5);
   color: var(--ink);

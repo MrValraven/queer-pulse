@@ -2,7 +2,7 @@
    flow under the chip row (SkinMultiSelectInline). */
 
 /* The owner's own words in the panel: dashed and italic, as
-   SkinChoiceChipsControl's older answers. */
+   SkinChoiceChipsRefined's older answers. */
 .custom .optionText {
   font-style: italic;
 }

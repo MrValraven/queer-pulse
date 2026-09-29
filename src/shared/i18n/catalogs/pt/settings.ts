@@ -1275,4 +1275,9 @@ export const settings: Catalog = {
     "Sessão terminada em todos os dispositivos",
   "sessions.toast.signedOutEverywhereError":
     "Não conseguimos terminar a sessão em todo o lado neste momento. Continuas com sessão iniciada, por isso tenta novamente.",
+
+  // Go together.
+  "dataExport.type.goTogether.label": "Respostas do Vamos juntes",
+  "dataExport.type.goTogether.sub":
+    "As tuas respostas ao questionário de amizade e às perguntas de anfitrião",
 };

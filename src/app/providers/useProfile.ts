@@ -82,6 +82,15 @@ export interface ProfileDraft {
   /** Whether other members can see this member's vouchers list. Owner-
    *  controlled; see `Member.vouchersVisible`. */
   vouchersVisible?: boolean;
+  /** Whether other members can see this member's Ambassador tag (roster,
+   *  directory filter, invitee welcome line). Owner-controlled; meaningful
+   *  only while `ambassador` is set. See `Member.isAmbassadorTagVisible`. */
+  isAmbassadorTagVisible?: boolean;
+  /** This member's own active ambassador standing, read-only here: the "Who
+   *  sees what" sheet's ambassador toggle only renders while this is set.
+   *  `undefined`/`null` for a member who isn't currently an ambassador. See
+   *  `Member.ambassador`. */
+  ambassador?: { since: string; focusArea: string } | null;
   /** ISO 8601 timestamp until which the member has self-hidden their profile,
    *  or `null` when not hidden. See `Member.hiddenUntil`. Sent on save via
    *  `draftToUpdateDto` and committed straight from `draft` in `save()`'s
@@ -137,6 +146,8 @@ export function toDraft(m: Member): ProfileDraft {
     photoVisible: m.photoVisible,
     hoodVisible: m.hoodVisible,
     vouchersVisible: m.vouchersVisible,
+    isAmbassadorTagVisible: m.isAmbassadorTagVisible,
+    ambassador: m.ambassador ?? null,
     hiddenUntil: m.hiddenUntil,
   };
 }
@@ -288,6 +299,7 @@ export function draftToUpdateDto(
     photoVisible: d.photoVisible,
     hoodVisible: d.hoodVisible,
     vouchersVisible: d.vouchersVisible,
+    isAmbassadorTagVisible: d.isAmbassadorTagVisible,
     hiddenUntil: d.hiddenUntil,
   };
 }

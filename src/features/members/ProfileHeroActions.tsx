@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck, FiEdit3, FiEye } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
@@ -10,25 +10,20 @@ import { ProfileHelloModal } from "./ProfileHelloModal";
 import styles from "./ProfilePage.module.css";
 
 /**
- * The primary + vouch action row in the profile hero. Splits three ways: your
- * own profile (edit / preview), a preview of your profile "as a visitor" (the
- * real CTAs rendered inert), and the live view a real visitor gets (say-hello /
- * message + vouch / withdraw-vouch).
+ * The primary + vouch action row in the profile hero, for anyone other than
+ * the profile's owner (the owner's own actions live in `ProfileHeroToolbar`
+ * now). Splits two ways: a preview of your profile "as a visitor" (the real
+ * CTAs rendered inert), and the live view a real visitor gets (say-hello /
+ * message + vouch).
  */
 export function ProfileHeroActions({
   profile,
-  isSelf,
   asVisitor,
   realSelf,
-  onEdit,
-  onPreview,
 }: {
   profile: MemberProfile;
-  isSelf: boolean;
   asVisitor: boolean;
   realSelf: boolean;
-  onEdit?: () => void;
-  onPreview?: () => void;
 }) {
   const { t } = useTranslation();
   const { connected, hasIncomingRequest, contact } = useMemberContact(
@@ -55,17 +50,8 @@ export function ProfileHeroActions({
   return (
     <>
       <div className={styles.cta}>
-        {isSelf ? (
-          <>
-            <Button id="profileEditCta" size="lg" onClick={onEdit}>
-              <FiEdit3 aria-hidden /> {t("members:profile.hero.editCta")}
-            </Button>
-            <Button size="lg" variant="ghost" onClick={onPreview}>
-              <FiEye aria-hidden /> {t("members:profile.hero.previewCta")}
-            </Button>
-          </>
-        ) : asVisitor ? (
-          // Faithful preview of what a first-time visitor sees — the same
+        {asVisitor ? (
+          // Faithful preview of what a first-time visitor sees: the same
           // primary + vouch CTAs a real viewer gets, rendered inert so
           // preview mode doesn't leave an empty, misleading action row.
           <>

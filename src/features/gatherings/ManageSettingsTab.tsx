@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { GoTogetherHostSettings } from "../goTogether/host/GoTogetherHostSettings";
 import type { EventHostDTO } from "./api/events.api";
 import { CohostManager } from "./CohostManager";
 import { GATHERING_SETTINGS } from "./manageGathering.data";
@@ -86,6 +87,7 @@ export function SettingsTab({
           </div>
         ))}
       </div>
+      <GoTogetherHostSettings slug={slug} />
       <div className={styles.dangerLabel}>
         {t("gatherings:manage.settings.dangerZoneHeading")}
       </div>

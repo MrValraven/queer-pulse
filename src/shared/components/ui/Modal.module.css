@@ -228,27 +228,107 @@
     box-shadow: var(--shadow-e4);
   }
 }
-/* Drag-to-dismiss handle — a visible affordance that the sheet is draggable,
+/* The strip the drag handle sits on: a band across the top of every sheet
+   that shows a handle (success sheets have none), painted with the sheet's
+   own surface (`background: inherit`, so a caller that recolours the sheet,
+   like economy's plum NoteModal, gets a matching strip) and pinned to the top
+   edge, so scrolled content slides under the strip and never passes behind
+   the bare handle. A pseudo-element adds no DOM node, so callers' child
+   selectors (`> div:first-child` for the handle, `> button` for Close) still
+   match what they did.
+   Geometry: the sheet's top padding is 44px; the strip is solid for the
+   first 22px of it, which ends above where any caller's content starts at
+   rest (31px, or 22px for the persona preview's full-bleed cover), then has
+   a 10px fade below that. Browsers measure a sticky offset from inside the
+   scroller's padding, so `top` pays the 44px back to pin the strip at the
+   sheet's edge. The inline margins pay back the 32px side padding so it
+   spans edge to edge.
+   The fade is an alpha mask over the strip's own surface, so it matches the
+   sheet in every theme. Its second mask layer is 0px tall at rest, so a
+   sheet that has not scrolled looks exactly as it did; where scroll-driven
+   animation is supported it grows to 10px over the first 12px of scroll, so
+   scrolled content fades out under the strip. Elsewhere the edge stays
+   hard. */
+.sheet:not(.sheetSuccess)::before {
+  content: "";
+  display: block;
+  position: sticky;
+  top: -44px;
+  z-index: var(--z-sticky);
+  height: 32px;
+  margin: -44px -32px 0;
+  background: inherit;
+  mask-image:
+    linear-gradient(black, black), linear-gradient(black, transparent);
+  mask-position:
+    0 0,
+    0 22px;
+  mask-size:
+    100% 22px,
+    100% 0px;
+  mask-repeat: no-repeat;
+}
+@supports (animation-timeline: scroll()) {
+  .sheet:not(.sheetSuccess)::before {
+    animation: sheetStripFade linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 12px;
+  }
+}
+@keyframes sheetStripFade {
+  to {
+    mask-size:
+      100% 22px,
+      100% 10px;
+  }
+}
+/* Drag-to-dismiss handle: a visible affordance that the sheet is draggable,
    and the pointer surface the drag starts from. Hidden on desktop, where the
    sheet is a centered dialog. */
 .grabber {
-  /* Sticky (not absolute) so it stays visible as the sheet content scrolls;
-     the negative top margin lifts it up into the sheet's top padding, and
-     margin-inline auto keeps it centered. */
+  /* Sticky so it stays on the strip above as the sheet content scrolls. The
+     negative top margin lifts it into the strip, 12px under the sheet's edge
+     (the strip is 32px tall), and `top` holds it there (44px padding minus
+     32px). Its bottom edge and bottom margin are what they always were, so
+     the first child below it starts where it always did. Same stacking
+     layer as the strip and later in the DOM, so it paints on top of it.
+     margin-inline auto centres it. */
   position: sticky;
-  top: 0;
-  z-index: 2;
+  top: -32px;
+  z-index: var(--z-sticky);
   width: 40px;
   height: 5px;
-  margin: -32px auto 14px;
+  margin: -20px auto 14px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   /* The sheet owns this vertical gesture; don't let it scroll the page. */
   touch-action: none;
   cursor: grab;
 }
+/* The drag target: a transparent box around the 5px pill, from the sheet's
+   top edge down to where content starts at rest (31px), 160px wide. It
+   belongs to the grabber element, so the drag handlers get it with no
+   markup change, and the pill itself looks the same. It stops at 31px so a
+   tap on a caller's first row still reaches that row, and 160px stays clear
+   of the Close chip at a 320px-wide sheet. */
+.grabber::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  height: 31px;
+  inset-inline: -60px;
+  touch-action: none;
+}
+@media (max-width: 719.98px) {
+  .sheet {
+    /* Keyboard focus and scroll-into-view stop below the strip and its
+       fade, so a focused control is never parked underneath them. */
+    scroll-padding-block-start: 32px;
+  }
+}
 @media (min-width: 720px) {
-  .grabber {
+  .grabber,
+  .sheet:not(.sheetSuccess)::before {
     display: none;
   }
 }
@@ -261,17 +341,37 @@
   background: var(--plum);
   overflow: hidden;
 }
+/* Close chip: pinned 18px from the sheet's top and inline-end edges at rest
+   and while the content scrolls, so it is always in reach.
+   It is sticky, so it sits in the flow, and its margins are chosen so the
+   flow below it is exactly what it was when the chip was absolutely placed.
+   On phones its in-flow box ends where the drag handle's does (17px), with
+   the handle's 14px bottom margin, so the first child's margin collapses
+   against the same 14px as before. From 720px (no handle) its in-flow box
+   ends at the content edge with no bottom margin. Sticky offsets are measured
+   inside the sheet's 44px top padding, so `top: -26px` holds it at 18px, and
+   the negative inline-end margin pays back the side padding to keep the 18px
+   inset. Callers that restyle it by class (the persona preview's glass chip)
+   keep their own margins. Same layer as the handle strip and later in the
+   DOM, so it paints over the strip and over content passing beneath it. */
 .close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
+  position: sticky;
+  top: -26px;
+  z-index: var(--z-sticky);
   width: 36px;
   height: 36px;
+  margin: -50px -14px 14px auto;
+  padding: 0;
   display: grid;
   place-items: center;
   border: none;
   border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.08);
+  /* The same 8% plum tint as before, laid over the sheet's own surface
+     (`inherit`), so the chip looks as it always did at rest but is opaque:
+     scrolled text never shows through it. A caller that sets `background`
+     on the chip replaces both layers. */
+  background-color: inherit;
+  background-image: linear-gradient(rgba(var(--plum-rgb), 0.08) 0 0);
   color: var(--ink-60);
   font-size: var(--text-20);
   line-height: 1;
@@ -292,6 +392,11 @@
   .close:hover {
     background: rgba(var(--plum-rgb), 0.16);
     color: var(--text-strong);
+  }
+}
+@media (min-width: 720px) {
+  .close {
+    margin: -36px -30px 0 auto;
   }
 }
 .close svg {
@@ -453,7 +558,8 @@
   background: rgba(var(--cream-rgb), 0.22);
 }
 :global([data-theme="dark"]) .close {
-  background: rgba(var(--cream-rgb), 0.1);
+  background-color: inherit;
+  background-image: linear-gradient(rgba(var(--cream-rgb), 0.1) 0 0);
 }
 @media (hover: hover) {
   :global([data-theme="dark"]) .close:hover {

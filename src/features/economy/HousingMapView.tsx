@@ -68,6 +68,7 @@ export function HousingMapView({
               isFullscreen: fullscreen.isFullscreen,
               onToggle: fullscreen.toggle,
               redrawHandleRef: fullscreen.redrawHandleRef,
+              toggleButtonRef: fullscreen.toggleButtonRef,
             }}
           />
 

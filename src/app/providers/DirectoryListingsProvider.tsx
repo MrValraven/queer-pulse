@@ -66,7 +66,15 @@ export function DirectoryListingsProvider({
         // GET /listings/mine; the dedup-by-ref merge prevents a double.
         const persisted = await createListing.mutateAsync(draftToDto(draft));
         if (persisted) {
-          setLocal((prev) => [persisted, ...prev]);
+          // The platform holds a suggestion until someone claims it: adding
+          // it to this overlay would make DirectorySpacePage treat the
+          // suggester as the owner for the rest of the session (an owner
+          // band with 404ing Edit/Confirm, the claim control hidden). Skip it
+          // whenever either the submitted draft or the created listing says
+          // suggest.
+          if (draft.path !== "suggest" && persisted.path !== "suggest") {
+            setLocal((prev) => [persisted, ...prev]);
+          }
           return persisted;
         }
       }
@@ -79,7 +87,11 @@ export function DirectoryListingsProvider({
         slug: slugify(draft.name),
         submittedBy,
       };
-      setLocal((prev) => [listing, ...prev]);
+      // Same rule as the live branch above: a suggestion stays out of the
+      // overlay so demo mode never lists it under "Places you run" either.
+      if (draft.path !== "suggest") {
+        setLocal((prev) => [listing, ...prev]);
+      }
       setSeq((n) => n + 1);
       return listing;
     },

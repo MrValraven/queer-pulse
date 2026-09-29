@@ -46,7 +46,7 @@ describe("usePublicSubprofile (demo mode, by-handle)", () => {
   it("resolves a visibility:network persona to state:restricted/members_only for a signed-out visitor", async () => {
     window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
     const { result } = renderHook(
-      () => usePublicSubprofile({ handle: "afterhours-jordan" }),
+      () => usePublicSubprofile({ handle: "afterhours-club" }),
       { wrapper: TestProviders },
     );
     await waitFor(() => expect(result.current.state).not.toBe("loading"));
@@ -60,7 +60,7 @@ describe("usePublicSubprofile (demo mode, by-handle)", () => {
     // Phase 1b's simplified "network" gate: authenticated at all, not a
     // trust-graph check — TestProviders' default demo session is signed in.
     const { result } = renderHook(
-      () => usePublicSubprofile({ handle: "afterhours-jordan" }),
+      () => usePublicSubprofile({ handle: "afterhours-club" }),
       { wrapper: TestProviders },
     );
     await waitFor(() => expect(result.current.state).not.toBe("loading"));

@@ -1,7 +1,6 @@
-import { useId, type KeyboardEvent } from "react";
+import { useId, useRef, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
-import { FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, ChipList } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -263,6 +262,8 @@ export function SkillsSection({
 }: SkillsSectionProps) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const skillInputRef = useRef<HTMLInputElement>(null);
+  const interestInputRef = useRef<HTMLInputElement>(null);
   return (
     <div className={styles.section} id="skills">
       <h2 className={styles.sectionTitle}>
@@ -280,6 +281,7 @@ export function SkillsSection({
         </label>
         <div className={styles.skillInputRow}>
           <input
+            ref={skillInputRef}
             id={`${fieldId}-skill`}
             className={styles.fieldInput}
             type="text"
@@ -296,23 +298,17 @@ export function SkillsSection({
             {t("settings:editProfile.skills.add")}
           </Button>
         </div>
-        <div className={styles.skillsDisplay}>
-          {skills.map((s) => (
-            <span key={s} className={styles.skillTag}>
-              {s}
-              <button
-                type="button"
-                className={styles.skillTagRemove}
-                aria-label={t("settings:editProfile.skills.removeAria", {
-                  name: s,
-                })}
-                onClick={() => onRemove("skills", s)}
-              >
-                <FiX aria-hidden />
-              </button>
-            </span>
-          ))}
-        </div>
+        <ChipList
+          className={styles.skillChips}
+          items={skills}
+          getKey={(skill) => skill}
+          renderLabel={(skill) => skill}
+          removeLabel={(skill) =>
+            t("settings:editProfile.skills.removeAria", { name: skill })
+          }
+          onRemove={(skill) => onRemove("skills", skill)}
+          emptyFocusRef={skillInputRef}
+        />
       </div>
       <div className={styles.field}>
         <label className={styles.fieldLabel} htmlFor={`${fieldId}-interest`}>
@@ -320,6 +316,7 @@ export function SkillsSection({
         </label>
         <div className={styles.skillInputRow}>
           <input
+            ref={interestInputRef}
             id={`${fieldId}-interest`}
             className={styles.fieldInput}
             type="text"
@@ -336,23 +333,19 @@ export function SkillsSection({
             {t("settings:editProfile.skills.add")}
           </Button>
         </div>
-        <div className={styles.skillsDisplay}>
-          {interests.map((s) => (
-            <span key={s} className={styles.skillTag}>
-              {s}
-              <button
-                type="button"
-                className={styles.skillTagRemove}
-                aria-label={t("settings:editProfile.interests.removeAria", {
-                  name: s,
-                })}
-                onClick={() => onRemove("interests", s)}
-              >
-                <FiX aria-hidden />
-              </button>
-            </span>
-          ))}
-        </div>
+        <ChipList
+          className={styles.skillChips}
+          items={interests}
+          getKey={(interest) => interest}
+          renderLabel={(interest) => interest}
+          removeLabel={(interest) =>
+            t("settings:editProfile.interests.removeAria", {
+              name: interest,
+            })
+          }
+          onRemove={(interest) => onRemove("interests", interest)}
+          emptyFocusRef={interestInputRef}
+        />
       </div>
     </div>
   );

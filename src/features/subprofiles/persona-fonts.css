@@ -19,6 +19,8 @@
      - Libre Caslon Text (400 + italic)  — Record (history) skin display type
      - Archivo Black (400)               — Poster (collective) skin display type
      - Newsreader (400 + italic)         — Classroom skin display type
+     - Cinzel (400, 700): Quest sheet headings
+     - Alegreya SC (400, 700): Quest map headings
 
    Unlike Fraunces/DM Sans, these don't have variable-axis Fontsource
    builds, so each weight/style is its own static @font-face (registered
@@ -47,3 +49,9 @@
 @import "@fontsource/archivo-black/latin-400.css";
 @import "@fontsource/newsreader/latin-400.css";
 @import "@fontsource/newsreader/latin-400-italic.css";
+/* Quest family: two concepts behind `?questSkin=`, sheet and map. Body text
+   reuses the Newsreader import above. */
+@import "@fontsource/cinzel/latin-400.css";
+@import "@fontsource/cinzel/latin-700.css";
+@import "@fontsource/alegreya-sc/latin-400.css";
+@import "@fontsource/alegreya-sc/latin-700.css";

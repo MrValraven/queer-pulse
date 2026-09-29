@@ -7,6 +7,8 @@ import { FiRefreshCw } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { FilterChips } from "./ChipSelect";
 import { type CropRect } from "./cropGeometry";
+import ReframeShapePreview from "./ReframeShapePreview";
+import { useReframeHint } from "./useReframeHint";
 import {
   useImageReframerState,
   type FreeformChoiceKey,
@@ -21,6 +23,9 @@ export interface ImageReframerProps {
   minOutput: { width: number; height: number };
   value?: CropRect;
   onChange: (rect: CropRect) => void;
+  /** Square avatar kinds: circle guide over the frame, a live round and
+   *  rounded-square preview under it, and a gesture hint. */
+  shouldShowShapePreview?: boolean;
 }
 
 /**
@@ -40,8 +45,10 @@ export default function ImageReframer({
   minOutput: { width: minOutputWidth, height: minOutputHeight },
   value,
   onChange,
+  shouldShowShapePreview = false,
 }: ImageReframerProps) {
   const { t } = useTranslation();
+  const { hintId, hintText } = useReframeHint();
   const {
     frameRef,
     zoom,
@@ -51,6 +58,7 @@ export default function ImageReframer({
     setFreeformChoice,
     aspectChoiceDefinitions,
     activeAspectNumber,
+    displayRect,
     imageStyle,
     handleImageLoad,
     handleReset,
@@ -122,12 +130,17 @@ export default function ImageReframer({
             standards-compliant primary keyboard control. */}
         <div
           ref={frameRef}
-          className={[styles.frame, isDragging && styles.dragging]
+          className={[
+            styles.frame,
+            shouldShowShapePreview && styles.frameWithShapePreview,
+            isDragging && styles.dragging,
+          ]
             .filter(Boolean)
             .join(" ")}
           style={{ aspectRatio: String(activeAspectNumber || 1) }}
           role="group"
           aria-label={t("shared:reframe.frame")}
+          aria-describedby={shouldShowShapePreview ? hintId : undefined}
           tabIndex={0}
           onPointerDown={handleFramePointerDownEvent}
           onPointerMove={handleFramePointerMoveEvent}
@@ -143,9 +156,20 @@ export default function ImageReframer({
             draggable={false}
             onLoad={handleImageLoadEvent}
           />
+          {shouldShowShapePreview && (
+            <div className={styles.circleGuide} aria-hidden />
+          )}
         </div>
         {/* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */}
       </div>
+      {shouldShowShapePreview && (
+        <>
+          <ReframeShapePreview src={src} displayRect={displayRect} />
+          <p id={hintId} className={styles.hint}>
+            {hintText}
+          </p>
+        </>
+      )}
       <div className={styles.controls}>
         <input
           type="range"

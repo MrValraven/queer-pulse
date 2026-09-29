@@ -50,6 +50,10 @@ interface MembersPageVM {
 export function useMembers(
   params: {
     query?: string;
+    /** Field and profession ids whose label matches `query`; they widen the
+     *  text search server-side. Part of `params`, so they ride in the key. */
+    searchDisciplines?: string[];
+    searchProfessions?: string[];
     tags?: string[];
     identities?: string[];
     openTo?: string[];
@@ -57,8 +61,11 @@ export function useMembers(
     disciplines?: string[];
     professions?: string[];
     languages?: string[];
-    yearsFrom?: number;
-    yearsTo?: number;
+    /** The directory's "Ambassadors" switch. `focus` means nothing to the
+     *  backend without this on (Task B6). */
+    ambassador?: boolean;
+    /** Selected ambassador focus-area keys; only sent alongside `ambassador`. */
+    focus?: string[];
     /** Server-side sort order (a `MemberSort` wire token). Demo mode ignores it
      *  and sorts the mock list in the browser; see the page's `sortMembers`. */
     sort?: string;

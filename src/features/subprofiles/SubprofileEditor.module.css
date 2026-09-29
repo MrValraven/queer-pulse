@@ -268,6 +268,16 @@
   flex-direction: column;
   gap: var(--gap-grid);
 }
+/* Inside a Page blocks chapter card: one hairline list (the rows' `.flat`
+   rules in EditorItemRow.module.css), sized by the card through the
+   `section-list` container. */
+.itemsFlat {
+  container: section-list / inline-size;
+  gap: 0;
+}
+.itemsFlat:not(:empty) + .sectionFoot {
+  margin-top: var(--gap-sm);
+}
 .sectionFoot {
   display: flex;
   flex-wrap: wrap;
@@ -460,17 +470,6 @@
 }
 .checklistWrap {
   margin-top: var(--gap-grid);
-}
-
-/* ── Loading / not-found states ──────────────────────────────────────────── */
-.stateWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: clamp(40px, 8vw, 80px) 20px;
-  color: var(--ink-60);
-  text-align: center;
 }
 
 /* ── Practice skin: availability grid control ────────────────────────────── */

@@ -1553,9 +1553,11 @@ export const marketing: Catalog = {
     "És dono, lideras, ou trabalhas aqui. Vamos pedir-te para verificares a propriedade, para o diretório continuar de confiança.",
   "listBusiness.step0.suggest.title": "Estou a sugerir um lugar de que gosto",
   "listBusiness.step0.suggest.desc":
-    "Um sítio que tem sido bom para ti. A equipa vai contactar quem o gere antes de ficar no ar.",
+    "Um sítio que tem sido bom para ti. A equipa revê o anúncio, e a QueerPulse cuida dele até o negócio o reclamar. Não vais aparecer nele.",
   "listBusiness.step0.signedInAs":
     "Tens sessão iniciada como <b>{name}</b>. Vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
+  "listBusiness.step0.signedInAsSuggest":
+    "Tens sessão iniciada como <b>{name}</b>. A equipa pode enviar-te uma mensagem se tiver alguma pergunta sobre a tua sugestão.",
   // Passo 1 — básico
   "listBusiness.step1.title": "Começa com",
   "listBusiness.step1.em": "o básico.",
@@ -1825,6 +1827,10 @@ export const marketing: Catalog = {
     "Uma notificação da QueerPulse avisa-te quando o teu anúncio ficar no ar, e as perguntas da equipa chegam por mensagem na QueerPulse.",
   "listBusiness.step4.consent":
     "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima. Não há problema nenhum.",
+  "listBusiness.step4.suggest.title": "Algumas",
+  "listBusiness.step4.suggest.em": "fotos.",
+  "listBusiness.step4.suggest.sub":
+    "As fotos ajudam as pessoas a imaginar o sítio antes de irem. Partilha as que tiveres, e o negócio pode juntar as suas mais tarde.",
   // Opções de ligação
   "listBusiness.ownerRole.owner": "Dono/a",
   "listBusiness.ownerRole.coOwner": "Codono/a",
@@ -1905,6 +1911,8 @@ export const marketing: Catalog = {
     "Li as diretrizes da comunidade e como os meus dados são usados.",
   "listBusiness.step5.submitNote":
     "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias, e a QueerPulse avisa-te quando ficar no ar (ou a equipa manda-te mensagem se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
+  "listBusiness.step5.suggestNote":
+    "<b>Uma pessoa a sério revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reclamar, e o teu nome fica de fora. Enviamos-te uma mensagem quando estiver no ar.",
   // Painel de sucesso
   "listBusiness.success.stage.review": "Em revisão",
   "listBusiness.success.stage.question": "Pergunta rápida",
@@ -1915,12 +1923,18 @@ export const marketing: Catalog = {
   "listBusiness.success.title.question.em": "uma coisinha.",
   "listBusiness.success.title.live.text": "Estás",
   "listBusiness.success.title.live.em": "no mapa.",
+  "listBusiness.success.title.suggestLive.text": "Está",
+  "listBusiness.success.title.suggestLive.em": "no mapa.",
   "listBusiness.success.note.review":
     "Agradecemos o contributo para o diretório. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e recebes uma notificação da QueerPulse assim que estiver no ar.",
   "listBusiness.success.note.question":
     "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar. Está à tua espera nas mensagens da QueerPulse. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
   "listBusiness.success.note.live":
     "<b>Já está no ar no diretório.</b> O teu lugar já pode ser encontrado pela comunidade. Agradecemos por tornares o mapa um bocadinho mais completo.",
+  "listBusiness.success.note.suggestReview":
+    "Agradecemos a sugestão. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reclamar, e o teu nome fica de fora. Enviamos-te uma mensagem assim que estiver no ar.",
+  "listBusiness.success.note.suggestLive":
+    "<b>Já está no ar no diretório.</b> Agradecemos por tornares o mapa um bocadinho mais completo. Se afinal és tu que geres este lugar, podes reclamá-lo a partir da página dele.",
   "listBusiness.success.fallbackName": "O teu lugar",
   "listBusiness.success.withdrawConfirm":
     "Retirar <b>{name}</b>? Isto tira-o da revisão. Podes sempre anunciá-lo outra vez mais tarde.",
@@ -2175,6 +2189,8 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.actor.moderation": "A moderação do QueerPulse",
   "listBusiness.editor.history.event.ownerEdited":
     "<strong>{actor}</strong> alterou {fields}",
+  "listBusiness.editor.history.event.staffEdited":
+    "<strong>{actor}</strong> editou {fields}",
   "listBusiness.editor.history.event.suggestionApplied":
     "<strong>{actor}</strong> aplicou uma correção sugerida a {fields}",
   "listBusiness.editor.history.event.directoryPaused":
@@ -2856,6 +2872,10 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-29.headline":
+    "Uma redação de editores redesenhada, stickers do Blip e do Chá, e Ping na nova página 404.",
+  "changelog.releases.2026-09-28.headline":
+    "Vamos juntes para quem vai a sós, pessoas embaixadoras QueerPulse e personas para mestres de jogo.",
   "changelog.releases.2026-09-25.headline":
     "Quatro categorias novas no fórum, links da QueerPulse na app e histórico de alterações nos anúncios.",
   "changelog.releases.2026-09-24.headline":
@@ -2986,6 +3006,261 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.one-loader-on-first-load.title":
+    "Um só ecrã de carregamento ao abrir",
+  "changelog.entries.one-loader-on-first-load.body":
+    "A marca a juntar-se e o nome QueerPulse levam-te da verificação da sessão até à página numa só espera contínua.",
+  "changelog.entries.work-picker-smooth-motion.title":
+    "Escolhe o teu trabalho com movimento suave",
+  "changelog.entries.work-picker-smooth-motion.body":
+    "Os chips entram e saem, a lista de funções abre-se e os botões deslizam, no registo, nas Definições e no perfil.",
+  "changelog.entries.guidelines-checkbox-opens-guidelines.title":
+    "Tocar na caixa das diretrizes abre as diretrizes",
+  "changelog.entries.guidelines-checkbox-opens-guidelines.body":
+    "No onboarding e no pedido de convite, a caixa de consentimento bloqueada abre as diretrizes para leres em vez de abanar.",
+  "changelog.entries.editor-desk-redesign.title":
+    "A redação é reconstruída em quatro secções",
+  "changelog.entries.editor-desk-redesign.body":
+    "Uma tabela agrupada com uma coluna fixa, um painel de consulta rápida e uma vista de quadro com arrastar e largar.",
+  "changelog.entries.editor-desk-planning-tools.title":
+    "Novas ferramentas de planeamento na redação",
+  "changelog.entries.editor-desk-planning-tools.body":
+    "Um calendário de fecho, previsão da edição, tempo em cada fase, vistas guardadas e presença nas peças.",
+  "changelog.entries.editor-desk-workflow.title":
+    "Datas de fecho, insistências e triagem de propostas",
+  "changelog.entries.editor-desk-workflow.body":
+    "As ações em lote insistem com quem escreve, uma pessoa de cada vez, e uma peça publicada só sai ao ser despublicada.",
+  "changelog.entries.editor-desk-due-dates-and-shortcuts.title":
+    "Prazos definidos diretamente na tabela da redação",
+  "changelog.entries.editor-desk-due-dates-and-shortcuts.body":
+    "As peças sem data ganham um seletor na própria linha, os atalhos de uma tecla podem ser desligados e os decks ligados publicam pelo controlo de cuidado da peça.",
+  "changelog.entries.onboarding-steps-arrive-sharp.title":
+    "Os passos do registo chegam nítidos",
+  "changelog.entries.onboarding-steps-arrive-sharp.body":
+    "Cada passo aparece agora com o texto nítido desde o primeiro instante, onde antes começava desfocado.",
+  "changelog.entries.invite-flat-on-phones.title":
+    "A página de convite fica lisa no telemóvel",
+  "changelog.entries.invite-flat-on-phones.body":
+    'Ocupa o ecrã todo e desliza como uma página, e "Ainda não tens 18?" abre agora dentro do próprio convite.',
+  "changelog.entries.onboarding-age-asked-once.title":
+    "O registo pergunta a idade uma vez",
+  "changelog.entries.onboarding-age-asked-once.body":
+    "Confirmas que tens 18 anos ou mais antes de entrar com o Google, por isso o passo das diretrizes já não pergunta outra vez.",
+  "changelog.entries.directory-card-shows-tags.title":
+    "Os cartões do diretório mostram as etiquetas e o preço",
+  "changelog.entries.directory-card-shows-tags.body":
+    "Os cartões da página Local mostram o nível de preço e as primeiras etiquetas, tal como a pré-visualização ao criar o anúncio.",
+  "changelog.entries.meet-ping-404.title": "Conhece Ping, numa nova página 404",
+  "changelog.entries.meet-ping-404.body":
+    "Ping procura a página em falta, segue o teu cursor e sugere pesquisa e sítios populares.",
+  "changelog.entries.calm-crash-page.title":
+    "O ecrã de erro é agora uma página inteira e calma",
+  "changelog.entries.calm-crash-page.body":
+    "Um pulso a respirar, a garantia de que o que guardaste está a salvo e a opção de recarregar se falhar.",
+  "changelog.entries.branded-page-loader.title":
+    "Os ecrãs de carregamento pulsam com a marca QueerPulse",
+  "changelog.entries.branded-page-loader.body":
+    "Adeus ao spinner simples: a marca junta os seus pontos enquanto ondas coral saem do centro.",
+  "changelog.entries.forum-new-post-tags-from-list.title":
+    "Novos posts escolhem etiquetas da lista do fórum",
+  "changelog.entries.forum-new-post-tags-from-list.body":
+    "Pesquisa a lista, toca numa sugestão ou vê todas as etiquetas por grupo, e cada post fica numa etiqueta filtrável.",
+  "changelog.entries.directory-drops-member-age-filter.title":
+    "Filtro de tempo na comunidade saiu do diretório",
+  "changelog.entries.directory-drops-member-age-filter.body":
+    "A barra de filtros de membros já não mostra o intervalo de anos na QueerPulse, ficam os filtros que usas mesmo.",
+  "changelog.entries.volunteer-card-community-avatar.title":
+    "As vagas de voluntariado mostram o avatar da comunidade",
+  "changelog.entries.volunteer-card-community-avatar.body":
+    "Uma vaga publicada por uma comunidade leva a imagem dela, e a vaga de um parceiro mostra a marca desse parceiro.",
+  "changelog.entries.blip-and-tea-sticker-packs.title":
+    "Dois novos packs de stickers: o Blip e Chá, indiretas e brilho",
+  "changelog.entries.blip-and-tea-sticker-packs.body":
+    "O Blip tem 22 estados de espírito em qualquer cor ou bandeira e o calão queer ganha 12 stickers na cor que escolheres.",
+  "changelog.entries.page-change-no-flash.title":
+    "Mudar de página já não mostra a página antiga por cima da nova",
+  "changelog.entries.page-change-no-flash.body":
+    "A página antiga sai logo, a navegação fica no lugar enquanto a página carrega e a nova aparece quando está pronta.",
+  "changelog.entries.profile-staff-shield-icon.title":
+    "O selo de equipa nos perfis passa a ser um escudo ao lado do nome",
+  "changelog.entries.profile-staff-shield-icon.body":
+    "Passa o cursor, toca ou foca o escudo para ver a função; a linha sob o nome fica só com função e pronomes.",
+  "changelog.entries.feed-tab-footer-steady.title":
+    "Trocar de separador no feed já não faz o rodapé saltar",
+  "changelog.entries.feed-tab-footer-steady.body":
+    "O feed desliza diretamente para a altura real do novo separador e o rodapé assenta num só movimento.",
+  "changelog.entries.directory-map-single-load.title":
+    "O mapa do diretório Local carrega numa só revelação suave",
+  "changelog.entries.directory-map-single-load.body":
+    "A animação de carregamento corre uma única vez, do primeiro instante até o mapa assentar.",
+  "changelog.entries.local-multi-place-types.title":
+    "Escolhe vários tipos de lugar de uma vez no diretório Local",
+  "changelog.entries.local-multi-place-types.body":
+    "Cada tipo ganha o seu chip removível, e o Limpar tudo e a gaveta Refinar agora animam com suavidade.",
+  "changelog.entries.map-photo-pins.title":
+    "Os pinos do mapa de Lisboa mostram a foto e o nome de cada sítio",
+  "changelog.entries.map-photo-pins.body":
+    "Cada foto tem o anel da categoria, os grupos mostram a mistura e um pino tocado abre um cartão com o bairro.",
+  "changelog.entries.map-holds-zoom-leaving-place.title":
+    "O mapa fica onde está quando voltas a todos os locais",
+  "changelog.entries.map-holds-zoom-leaving-place.body":
+    "Fechar o cartão de um local mantém o zoom e o bairro, e os outros pinos voltam a aparecer à volta.",
+  "changelog.entries.map-fullscreen-search.title":
+    "Pesquisa e filtra sem sair do mapa em ecrã inteiro",
+  "changelog.entries.map-fullscreen-search.body":
+    'No computador, a pesquisa, "Usar a minha localização" e Refinar ficam por cima do mapa em ecrã inteiro.',
+  "changelog.entries.map-streets-read-clearly.title":
+    "As ruas do mapa são mais fáceis de seguir",
+  "changelog.entries.map-streets-read-clearly.body":
+    "Todas as ruas passam a brancas entre quarteirões suaves, e os limites das freguesias somem quando aproximas.",
+  "changelog.entries.map-parish-follows-the-pin.title":
+    "As freguesias do mapa contam os sítios pela posição do pin",
+  "changelog.entries.map-parish-follows-the-pin.body":
+    "Um anúncio cujo bairro indica outra zona aparece na freguesia onde o pin está.",
+  "changelog.entries.admin-member-search-whole-directory.title":
+    "A pesquisa de membros na administração encontra toda a gente",
+  "changelog.entries.admin-member-search-whole-directory.body":
+    "Pesquisa o diretório inteiro no servidor, por isso encontra também quem só aparecia com Mostrar mais.",
+  "changelog.entries.focus-and-glossary-language-fixes.title":
+    "O foco do teclado fica na página e as etiquetas do glossário seguem a língua",
+  "changelog.entries.focus-and-glossary-language-fixes.body":
+    "Páginas com esqueleto de carregamento mantêm o foco lá dentro e os cabeçalhos de admin já não encolhem no telemóvel.",
+  "changelog.entries.admin-guide-and-glossary-preview.title":
+    "Pré-visualiza guias e termos do glossário na consola de admin",
+  "changelog.entries.admin-guide-and-glossary-preview.body":
+    "Quem edita lê um guia ainda por rever tal como os leitores o vão ver, e confere um termo em inglês e português.",
+  "changelog.entries.queerpulse-ambassadors.title":
+    "A equipa pode nomear pessoas embaixadoras QueerPulse",
+  "changelog.entries.queerpulse-ambassadors.body":
+    "As pessoas embaixadoras ganham uma etiqueta junto ao nome, mais 10 convites por mês e um círculo privado com cartão próprio.",
+  "changelog.entries.volunteer-org-typed-or-linked.title":
+    "Ao publicar voluntariado, escreve a organização ou associa uma tua",
+  "changelog.entries.volunteer-org-typed-or-linked.body":
+    "Só podes associar parceiros que geres e comunidades que moderas, e a publicação mostra o nome associado.",
+  "changelog.entries.volunteer-why-it-matters-upfront.title":
+    "Ao publicar voluntariado, porque é que importa aparece logo",
+  "changelog.entries.volunteer-why-it-matters-upfront.body":
+    "Porque é que a função importa e para quem é indicada aparecem logo a seguir ao essencial, e continuam opcionais.",
+  "changelog.entries.volunteer-cause-and-commitment-pickers.title":
+    "Escolha de causa e compromisso mais clara ao publicar uma função",
+  "changelog.entries.volunteer-cause-and-commitment-pickers.body":
+    "As causas ocupam o formulário todo, com contagem e a causa principal; os dois níveis mostram o que significam.",
+  "changelog.entries.volunteer-role-edits-save-only-changes.title":
+    "Editar uma oportunidade de voluntariado ganha Guardar e fechar",
+  "changelog.entries.volunteer-role-edits-save-only-changes.body":
+    "Guardar fica esbatido até mudares alguma coisa, e o novo botão Guardar e fechar guarda e leva-te de volta à oportunidade.",
+  "changelog.entries.profile-photos-keep-your-framing.title":
+    "As fotos de perfil ficam com o enquadramento que escolhes",
+  "changelog.entries.profile-photos-keep-your-framing.body":
+    "A foto reenquadrada fica assim em todo o lado, e o ecrã de reenquadrar mostra-a em redondo e em quadrado.",
+  "changelog.entries.community-guidelines-in-mod-tools.title":
+    "As ferramentas de moderação mostram os valores partilhados de cada comunidade",
+  "changelog.entries.community-guidelines-in-mod-tools.body":
+    "Pedidos de entrada e denúncias listam os valores com que moderas, e num espaço os herdados vêm primeiro.",
+  "changelog.entries.messages-badge-matches-inbox.title":
+    "O contador de mensagens bate sempre certo com a tua caixa",
+  "changelog.entries.messages-badge-matches-inbox.body":
+    "Depois de perderes a ligação, uma conversa que abres conta como lida quando chegas à mensagem mais recente.",
+  "changelog.entries.directory-search-finds-professions.title":
+    "Encontra membros pelo que fazem",
+  "changelog.entries.directory-search-finds-professions.body":
+    "Escreve uma profissão ou área na pesquisa do diretório, como enfermagem ou design, para veres quem a faz.",
+  "changelog.entries.search-roles-when-picking-work.title":
+    "Pesquisa a tua função quando dizes o que fazes",
+  "changelog.entries.search-roles-when-picking-work.body":
+    "Escreve uma função ou área ao criar conta, no perfil ou nas Definições e vê tudo o que existe, por área.",
+  "changelog.entries.screen-info-chips-retired.title":
+    "Os títulos das páginas perdem o botão de informação",
+  "changelog.entries.screen-info-chips-retired.body":
+    'As janelas "Como usar" saíram de 40 ecrãs; nas Comunidades, Como funcionam as comunidades fica como link.',
+  "changelog.entries.decided-invite-requests-fold-and-revoke.title":
+    "Pedidos de convite decididos arrumam-se, filtram-se e revogam-se",
+  "changelog.entries.decided-invite-requests-fold-and-revoke.body":
+    "Os pedidos decididos abrem fechados, filtram-se pela ligação usada, e uma ligação ativa pode ser revogada.",
+  "changelog.entries.tag-fields-match-everywhere.title":
+    "Os campos de etiquetas são iguais em todo o lado",
+  "changelog.entries.tag-fields-match-everywhere.body":
+    "As etiquetas entram e deslizam no teu perfil, pronomes, Disponível para, competências, fórum e anúncios.",
+  "changelog.entries.suggested-places-held-by-queerpulse.title":
+    "Os sítios sugeridos ficam com a QueerPulse até o negócio os reclamar",
+  "changelog.entries.suggested-places-held-by-queerpulse.body":
+    "O teu nome fica fora do sítio que sugeres, e a equipa pode editá-lo, publicá-lo e entregá-lo ao dono.",
+  "changelog.entries.list-business-more-neighbourhoods.title":
+    "Mais bairros ao listar um negócio",
+  "changelog.entries.list-business-more-neighbourhoods.body":
+    "A lista passa de 15 para 50 zonas, com Belém, Chiado, Parque das Nações, Almada, Cascais e Sintra.",
+  "changelog.entries.profile-actions-toolbar.title":
+    "As ações do perfil passaram para uma barra discreta",
+  "changelog.entries.profile-actions-toolbar.body":
+    "Editar, pré-visualizar e o menu ficam no canto superior direito no computador, e numa linha sob o teu nome no telemóvel.",
+  "changelog.entries.go-together.title":
+    "Vamos juntes: entra num pequeno grupo quando vais a um convívio a sós",
+  "changelog.entries.go-together.body":
+    "Responde a um questionário curto, entra num convívio e chega com 4 ou 5 pessoas com quem tens afinidade.",
+  "changelog.entries.friendly-businesses-keep-their-listing.title":
+    "Os negócios que acolhem pessoas LGBTQ+ mantêm o seu anúncio",
+  "changelog.entries.friendly-businesses-keep-their-listing.body":
+    "Os membros já lhes podem enviar mensagens, e ninguém pode reclamar um anúncio que o dono já gere.",
+  "changelog.entries.standalone-personas-need-own-address.title":
+    "Personas independentes precisam de endereço próprio",
+  "changelog.entries.standalone-personas-need-own-address.body":
+    "Escolhes um nome /p/ antes de guardar, abrir ao vivo ou publicar, e o tipo de persona sozinho não serve.",
+  "changelog.entries.map-pin-follows-card-hover.title":
+    "Os pinos do mapa acendem enquanto percorres a lista",
+  "changelog.entries.map-pin-follows-card-hover.body":
+    "Passa o rato ou navega com o teclado por um cartão e o pino cresce com um halo coral, ou o seu grupo.",
+  "changelog.entries.practice-pages-one-place-per-fact.title":
+    "As páginas de prática pedem cada detalhe uma vez",
+  "changelog.entries.practice-pages-one-place-per-fact.body":
+    "Valores, disponibilidade e formação têm agora um só lugar; respostas antigas ficam visíveis até as moveres ou limpares.",
+  "changelog.entries.slimmer-phone-save-bar.title":
+    "Uma barra de guardar mais fina no telemóvel",
+  "changelog.entries.slimmer-phone-save-bar.body":
+    "As alterações por guardar cabem numa linha com Descartar e Guardar, e a Pré-visualização passou para o topo.",
+  "changelog.entries.persona-page-in-one-place.title":
+    "Edita toda a página da persona num só sítio",
+  "changelog.entries.persona-page-in-one-place.body":
+    "Cada secção e foto está agora nos capítulos dos Blocos da página, pela ordem da tua página, em todas as personas.",
+  "changelog.entries.every-job-in-the-work-picker.title":
+    "Todas as profissões no seletor de trabalho",
+  "changelog.entries.every-job-in-the-work-picker.body":
+    "Mais 180 funções em onze novas áreas, uma opção Neste momento para estudantes e pessoas reformadas, e uma área de trabalho sexual que só as tuas conexões veem.",
+  "changelog.entries.business-work-fields.title":
+    "Funções de marketing, operações e RH no diretório de membros",
+  "changelog.entries.business-work-fields.body":
+    "Cinco novas áreas, de pessoas e RH a finanças e vendas, para os trabalhos de escritório terem lugar.",
+  "changelog.entries.feed-masonry-layout.title":
+    "Os cartões do feed encaixam sem buracos",
+  "changelog.entries.feed-masonry-layout.body":
+    "Cada cartão fica logo abaixo do anterior, e um cartão de membro mais alto já não deixa um espaço vazio ao lado.",
+  "changelog.entries.submissions-join-writer-workspace.title":
+    "As submissões de histórias passam para o espaço de escrita",
+  "changelog.entries.submissions-join-writer-workspace.body":
+    "Quem escreve acompanha agora as suas submissões num separador em /magazine/writer, e o link antigo leva lá.",
+  "changelog.entries.date-picker-calendar-fits-again.title":
+    "Os calendários dos seletores de data abrem no tamanho certo",
+  "changelog.entries.date-picker-calendar-fits-again.body":
+    "A grelha do mês abre como um painel compacto por baixo do campo em vez de se esticar pelo ecrã.",
+  "changelog.entries.personas-live-at-one-address.title":
+    "Todas as personas vivem num só endereço /p/",
+  "changelog.entries.personas-live-at-one-address.body":
+    "As personas ligadas ganham um identificador como alex-therapist, e os links antigos do perfil levam até ele.",
+  "changelog.entries.quest-personas.title":
+    "Personas para mestres de jogo, streamers e cosplayers",
+  "changelog.entries.quest-personas.body":
+    'Vinte novos ofícios e uma página Aventura, e procurar "DM" já encontra mestres de jogo queer.',
+  "changelog.entries.staff-notification-rows-read-cleanly.title":
+    "As notificações da equipa leem-se bem",
+  "changelog.entries.staff-notification-rows-read-cleanly.body":
+    "O selo da equipa fica por cima da frase, e os convites de cogestão mostram a pessoa com ligação ao perfil.",
+  "changelog.entries.onboarding-flat-on-phones.title":
+    "No telemóvel, o onboarding desliza como uma página normal",
+  "changelog.entries.onboarding-flat-on-phones.body":
+    "Os passos assentam na página sem cartão a flutuar, por isso deslizar move sempre a página e chegas a todos os botões.",
+  "changelog.entries.onboarding-fields-clear-the-keyboard.title":
+    "No iPhone, os campos do onboarding ficam à vista",
+  "changelog.entries.onboarding-fields-clear-the-keyboard.body":
+    "Com o teclado aberto, a barra de Continuar fica no fim do passo e deixa de tapar o campo onde escreves.",
   "changelog.entries.changelog-releases-open-smoothly.title":
     "Os dias do registo de alterações abrem com suavidade",
   "changelog.entries.changelog-releases-open-smoothly.body":
@@ -7496,23 +7771,26 @@ export const marketing: Catalog = {
     "Um turno regular e um prazo mínimo: a consistência importa.",
   "postOpportunity.core.basicsHeading": "O essencial",
   "postOpportunity.core.orgLabel": "Organização",
-  "postOpportunity.core.orgHelper":
-    "Escolhe uma comunidade que possuis ou moderas, ou uma organização parceira aprovada.",
-  "postOpportunity.core.orgEmptyState":
-    "Precisas de possuir ou moderar uma comunidade, ou ser uma organização parceira aprovada, antes de poderes publicar uma oportunidade em nome dela.",
   "postOpportunity.core.orgPlaceholder": "ex.: a tua organização",
-  "postOpportunity.core.orgLinkLabel": "Associar a uma organização",
+  "postOpportunity.core.orgModeLabel": "Como indicar a organização",
+  "postOpportunity.core.orgModeText": "Nome livre",
+  "postOpportunity.core.orgModeLink": "Uma das minhas",
   "postOpportunity.core.orgLinkHelper":
-    "Opcional: associe esta publicação a uma comunidade que possui ou modera, ou a uma organização parceira aprovada.",
-  "postOpportunity.core.orgLinkNone": "Nenhuma",
-  "postOpportunity.core.orgLinkGroupPartner": "Parceiros",
+    "Organizações parceiras e comunidades que geres ou moderas. A que escolheres aparece na publicação.",
+  "postOpportunity.core.orgLinkGroupPartner":
+    "As minhas organizações parceiras",
   "postOpportunity.core.orgLinkGroupCommunity": "As minhas comunidades",
+  "postOpportunity.core.orgLinkGroupCurrent":
+    "Associada agora a esta publicação",
+  "postOpportunity.core.orgRequiredNote": "Obrigatório",
   "postOpportunity.core.roleLabel": "Título da função",
   "postOpportunity.core.rolePlaceholder":
     "ex.: Voluntário de Sensibilização Comunitária",
   "postOpportunity.core.causeLabel": "Causa",
   "postOpportunity.core.causeHelper":
-    "Escolhe até {{max}}. A primeira que escolheres é a que aparece à frente no teu cartão.",
+    "Escolhe até {max}. A primeira que escolheres é a que aparece à frente no teu cartão.",
+  "postOpportunity.core.causeHelperLead":
+    "Escolhe até {max}. O teu cartão abre com {cause}.",
   "postOpportunity.core.commitLabel": "Nível de compromisso",
   "postOpportunity.core.timePlaceHeading": "Tempo e local",
   "postOpportunity.core.timeLabel": "Disponibilidade de tempo",
@@ -7546,6 +7824,8 @@ export const marketing: Catalog = {
   "postOpportunity.missing.heading_other":
     "Faltam preencher {count} campos para continuares:",
   "postOpportunity.edit.saving": "A guardar…",
+  "postOpportunity.edit.saveAndCloseCta": "Guardar e fechar",
+  "postOpportunity.edit.noChanges": "Ainda não há alterações para guardar.",
   "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
   "postOpportunity.edit.errorToast":
     "Não foi possível guardar as alterações. Tenta novamente.",

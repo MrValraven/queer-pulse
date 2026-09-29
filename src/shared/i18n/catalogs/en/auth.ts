@@ -190,7 +190,7 @@ export const auth: Catalog = {
     "Couldn't send that one again just now. Give it another try in a moment.",
 
   // ── Invite unfurl preview card (mirrors the static Open Graph tags) ──
-  "sharePreview.heroTitle.line1": "Step into QueerPulse",
+  "sharePreview.heroTitle.line1": "Walk into a room",
   "sharePreview.heroTitle.line2": "<em>where you already belong</em>",
   "sharePreview.heroExplainer": "A queer network. Rooted in Lisbon.",
   "sharePreview.heroSub_one": "Invite-only · {count} member",
@@ -224,12 +224,6 @@ export const auth: Catalog = {
   "under18.link.eligibility": "Why we're 18+ (our Terms)",
   "under18.backDefault": "Back",
   "under18.link.contact": "Talk to us if something here looks wrong",
-  // Shown when the person telling us they're under 18 already has a live
-  // session (the onboarding wizard), where "go back" would just let them
-  // re-attest. Signing out is the only way on from there.
-  "under18.signedIn.body":
-    "You're signed in right now, so we'll close that session here. Come back when you turn 18 and someone will gladly invite you in.",
-  "under18.signOut": "Sign out",
 
   // ── Re-agreeing after the Terms or Community Guidelines change (ID-14) ──
   // Shown in a blocking sheet when a member's stored revision has fallen
@@ -595,6 +589,7 @@ export const auth: Catalog = {
     "Choose the communities that feel relevant to you and discover where you belong.",
 
   "onboarding.stepWelcome.eyebrowSuffix": "You're in",
+  "onboarding.stepWelcome.invitedByAmbassador": "QueerPulse Ambassador",
   "onboarding.stepWelcome.heading": "Welcome, <em>{firstName}</em>",
   "onboarding.stepWelcome.memberSince": "Member since {since}",
   "onboarding.stepWelcome.invitedYou": "Invited you",
@@ -622,7 +617,7 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.photoAlt": "Your profile photo",
   "onboarding.stepPhoto.placeholder": "your photo",
   "onboarding.stepPhoto.continue": "Continue",
-  "onboarding.stepPhoto.skip": "Skip for now, you can add this later",
+  "onboarding.stepPhoto.skip": "Skip for now",
   "onboarding.stepPhoto.back": "Back",
   "onboarding.stepPhoto.uploadError":
     "We couldn't add that photo. Please try again.",
@@ -670,7 +665,7 @@ export const auth: Catalog = {
   "onboarding.stepIntents.hint":
     "Pick at least one, and choose as many as fit.",
   "onboarding.stepIntents.continue": "Continue",
-  "onboarding.stepIntents.skip": "Skip for now, you can share this later",
+  "onboarding.stepIntents.skip": "Skip for now",
   "onboarding.stepIntents.back": "Back",
   "onboarding.stepIntents.saveError":
     "We couldn't save that just now. Please try again.",
@@ -689,9 +684,9 @@ export const auth: Catalog = {
   // their work. Optional: skipping writes nothing.
   "onboarding.stepWork.heading": "What do <em>you do?</em>",
   "onboarding.stepWork.hint":
-    "Pick your field, then the roles that fit. This is public, and it's how people find you in the member directory.",
+    "Pick your field, or search for your role, then the roles that fit. This is public, and it's how people find you in the member directory.",
   "onboarding.stepWork.continue": "Continue",
-  "onboarding.stepWork.skip": "Skip for now, you can add this later",
+  "onboarding.stepWork.skip": "Skip for now",
   "onboarding.stepWork.back": "Back",
   "onboarding.stepWork.saveError":
     "We couldn't save that just now. Please try again.",
@@ -718,7 +713,7 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.leave": "Leave community",
   "onboarding.stepCommunities.requested": "Requested",
   "onboarding.stepCommunities.continue": "Continue",
-  "onboarding.stepCommunities.skip": "Skip for now, explore and join later",
+  "onboarding.stepCommunities.skip": "Skip for now",
   "onboarding.stepCommunities.back": "Back",
   "onboarding.stepCommunities.empty":
     "No suggestions right now. You can explore and join communities anytime.",

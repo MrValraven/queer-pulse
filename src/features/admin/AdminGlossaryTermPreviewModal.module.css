@@ -1,0 +1,57 @@
+/* The glossary term preview. The card inside each frame is the public
+   `GlossaryTermCard` with GlossaryPage.module.css, on the same cream ground
+   the public page uses; this file only frames and labels the two languages. */
+.intro {
+  margin: 0 0 16px;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.pane {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.paneLabel {
+  margin: 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.fallbackNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  background: rgba(var(--accent-rgb), 0.06);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+
+.fallbackNotice svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+.cardFrame {
+  padding: 0 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+}
+
+/* On the public page the card's bottom hairline separates it from the next
+   term. A lone card inside a frame has no next term, so the frame's own
+   border does that job. */
+.cardFrame > * {
+  border-bottom: 0;
+}

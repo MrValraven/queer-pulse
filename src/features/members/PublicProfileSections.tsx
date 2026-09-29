@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar, Button, ExpandableText } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { MemberAmbassadorTag } from "../../shared/ambassadors/MemberAmbassadorTag";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { Translation } from "../../shared/i18n/Translation";
@@ -150,19 +151,22 @@ export function PublicProfileHead({
         <div className={styles.eyebrow}>
           {t("members:publicProfile.head.eyebrow", { slug: profile.slug })}
         </div>
-        <h1 className={styles.name}>
-          {profile.first} <em>{profile.last}</em>
-          {profile.verified && (
-            <span
-              className={styles.verified}
-              title={t("members:profile.hero.verifiedBadge")}
-            >
-              <svg viewBox="0 0 24 24">
-                <polyline points="4,12.5 10,18 20,6" />
-              </svg>
-            </span>
-          )}
-        </h1>
+        <div className={styles.nameRow}>
+          <h1 className={styles.name}>
+            {profile.first} <em>{profile.last}</em>
+            {profile.verified && (
+              <span
+                className={styles.verified}
+                title={t("members:profile.hero.verifiedBadge")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <polyline points="4,12.5 10,18 20,6" />
+                </svg>
+              </span>
+            )}
+          </h1>
+          <MemberStaffBadge slug={profile.slug} size="icon" />
+        </div>
         <p className={styles.pronouns}>
           <span>
             {profile.pronouns && (
@@ -170,7 +174,7 @@ export function PublicProfileHead({
             )}
             {profile.role}
           </span>
-          <MemberStaffBadge slug={profile.slug} size="lg" />
+          <MemberAmbassadorTag slug={profile.slug} size="lg" />
         </p>
         {curatorSlug && (
           <Link

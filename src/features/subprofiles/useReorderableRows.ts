@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { liveRowsOf } from "./rowDragGeometry";
 import { useFocusAcrossMove } from "./useFocusAcrossMove";
 import { useRowDragReorder } from "./useRowDragReorder";
 
@@ -32,7 +33,8 @@ export function useReorderableRows(onMove: (from: number, to: number) => void) {
   const [moveCount, setMoveCount] = useState(0);
 
   const moveRow = (from: number, to: number) => {
-    const rowCount = drag.containerRef.current?.children.length ?? 0;
+    const container = drag.containerRef.current;
+    const rowCount = container ? liveRowsOf(container).length : 0;
     if (from === to || from < 0 || to < 0 || to >= rowCount) return;
     keepFocus.remember();
     setMoveCount((count) => count + 1);
@@ -61,8 +63,8 @@ export function useReorderableRows(onMove: (from: number, to: number) => void) {
       ) {
         return;
       }
-      const row = target.closest(`[${REORDER_ROW_ATTRIBUTE}]`);
-      const rowIndex = row ? Array.from(container!.children).indexOf(row) : -1;
+      const row = target.closest<HTMLElement>(`[${REORDER_ROW_ATTRIBUTE}]`);
+      const rowIndex = row ? liveRowsOf(container!).indexOf(row) : -1;
       if (rowIndex < 0) return;
       event.preventDefault();
       moveRowRef.current(

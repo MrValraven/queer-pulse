@@ -1,7 +1,12 @@
 import { useRef, useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  goTogetherSlugsToSwitchOn,
+  switchOnGoTogetherForSlugs,
+} from "../goTogether/host/goTogetherPublish";
 import { createCohostInvite } from "./api/events.api";
 import { formToCreateEventDto } from "./api/events.adapters";
 import { useCreateEvent } from "./api/useEventMutations";
@@ -29,6 +34,7 @@ export function usePublishGathering({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const createEvent = useCreateEvent();
   // The slug the backend assigned, for the success CTA. Null in demo, where
   // nothing persists, so the CTA falls back to the board.
@@ -72,10 +78,23 @@ export function usePublishGathering({
     }
   };
 
+  /**
+   * Switch Go together on for every saved date. Best effort: the gathering
+   * is already published, so a failure only toasts once, and the host can
+   * switch it on from Manage.
+   */
+  const switchOnGoTogether = async (slugs: string[]) => {
+    const hasFailure = await switchOnGoTogetherForSlugs(slugs);
+    if (hasFailure) {
+      showToast(t("goTogether:host.toast.publishSwitchFailed"), "warning");
+    }
+  };
+
   const publish = () => {
     if (isPublishInFlightRef.current || createEvent.isPending) return;
     // Read now: the form may change while the request is out.
     const cohostSlugs = [...form.cohostSlugs];
+    const shouldOfferGoTogether = form.goTogetherEnabled && !demoMode;
     const payload = formToCreateEventDto(form);
     isPublishInFlightRef.current = true;
     createEvent.mutate(payload, {
@@ -92,6 +111,19 @@ export function usePublishGathering({
         // Demo mode returns no slug, and there is nothing to invite onto.
         if (slug && cohostSlugs.length > 0) {
           void inviteCohosts(slug, cohostSlugs);
+        }
+        // Demo makes no call: nothing was saved to switch it on for. A date
+        // whose opt-in already closed (under 6 hours away) is left out.
+        if (shouldOfferGoTogether) {
+          const goTogetherSlugs = goTogetherSlugsToSwitchOn({
+            slug,
+            occurrenceSlugs: savedOccurrenceSlugs,
+            firstStartAt: payload.startAt,
+            nowMs: Date.now(),
+          });
+          if (goTogetherSlugs.length > 0) {
+            void switchOnGoTogether(goTogetherSlugs);
+          }
         }
       },
       onError: () =>

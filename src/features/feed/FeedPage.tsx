@@ -12,7 +12,6 @@ import {
   SkeletonAvatar,
   SkeletonLine,
   EmptyState,
-  FeatureHelp,
   PullToRefresh,
   Tabs,
 } from "../../shared/components/ui";
@@ -35,6 +34,7 @@ import {
   ArticleCard,
 } from "./FeedCards";
 import { FeedLoadMore } from "./FeedLoadMore";
+import { FeedMasonryGrid } from "./FeedMasonryGrid";
 import { useFeedPage } from "./useFeedPage";
 import { FeedSidebar } from "./FeedSidebar";
 import { SuggestedPeopleStrip } from "./SuggestedPeopleStrip";
@@ -78,7 +78,7 @@ function FeedGreeting({
     <div className={styles.greetingRow}>
       <div>
         <div className={styles.greeting}>
-          {greeting}, <em>{first}</em> <FeatureHelp id="feed.hub" />
+          {greeting}, <em>{first}</em>
         </div>
         <div className={styles.greetingDate}>{dateLine}</div>
       </div>
@@ -207,8 +207,8 @@ export function FeedListBody({
   }
 
   if (!demoMode) {
-    if (isError) return <div className={styles.spanFull}>{errorPanel}</div>;
-    if (empty) return <div className={styles.spanFull}>{emptyPanel}</div>;
+    if (isError) return <div data-masonry-full>{errorPanel}</div>;
+    if (empty) return <div data-masonry-full>{emptyPanel}</div>;
     return (
       <>
         {liveItems.map((item, index) => (
@@ -224,7 +224,7 @@ export function FeedListBody({
     );
   }
 
-  if (empty) return <div className={styles.spanFull}>{emptyPanel}</div>;
+  if (empty) return <div data-masonry-full>{emptyPanel}</div>;
   return (
     <>
       {pulse.map((item, index) => (
@@ -371,11 +371,15 @@ export function FeedPage() {
                       queryClient.invalidateQueries({ queryKey: ["feed"] })
                     }
                   >
-                    {/* Responsive card grid: every card packs two-up (auto-fill
-                        reflows to one-up on narrow viewports). `.spanFull` is
-                        reserved for the empty/error panels and the pager row
-                        below, which legitimately claim the full width. */}
-                    <div className={styles.grid}>
+                    {/* Masonry card grid (FeedMasonryGrid + useMasonryLayout):
+                        at desktop width each card drops into the shorter of two
+                        columns, directly under the card above it, so a tall
+                        card leaves no hole beside a short one; a phone gets a
+                        single column. The DOM stays in feed order, so Tab and
+                        screen readers follow the feed. `data-masonry-full`
+                        marks the empty/error panels and the pager row below,
+                        which span the full width. */}
+                    <FeedMasonryGrid>
                       <FeedListBody
                         loading={loading}
                         demoMode={demoMode}
@@ -393,7 +397,7 @@ export function FeedPage() {
                           disabled), so it renders nothing until there's a real
                           next cursor page to fetch. */}
                       {!demoMode && !loading && !isError && !empty && (
-                        <div className={styles.spanFull}>
+                        <div data-masonry-full>
                           <FeedLoadMore
                             hasNextPage={hasNextPage}
                             fetchNextPage={() => {
@@ -403,7 +407,7 @@ export function FeedPage() {
                           />
                         </div>
                       )}
-                    </div>
+                    </FeedMasonryGrid>
                   </PullToRefresh>
                 </div>
               </div>

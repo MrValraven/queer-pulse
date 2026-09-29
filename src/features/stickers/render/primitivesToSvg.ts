@@ -1,4 +1,4 @@
-import type { Primitive } from "../templates/primitives";
+import type { Primitive, PathCommand } from "../templates/primitives";
 
 /** Rounds a coordinate so the markup stays small and stable across machines.
  *  Three decimals is far below a pixel at 512. */
@@ -6,16 +6,33 @@ function round(value: number): string {
   return String(Math.round(value * 1000) / 1000);
 }
 
+/** Serialises path commands into an SVG `d` attribute value. */
+function pathData(commands: PathCommand[]): string {
+  return commands
+    .map((command) => {
+      if (command.type === "moveTo")
+        return `M${round(command.x)} ${round(command.y)}`;
+      if (command.type === "lineTo")
+        return `L${round(command.x)} ${round(command.y)}`;
+      return "Z";
+    })
+    .join(" ");
+}
+
 function paintAttributes(primitive: {
   fill?: string;
   stroke?: string;
   strokeWidth?: number;
+  lineCap?: "round" | "butt";
 }): string {
   const parts = [`fill="${primitive.fill ?? "none"}"`];
   if (primitive.stroke) {
     parts.push(`stroke="${primitive.stroke}"`);
     parts.push(`stroke-width="${round(primitive.strokeWidth ?? 1)}"`);
     parts.push(`stroke-linejoin="round"`);
+    if (primitive.lineCap === "round") {
+      parts.push(`stroke-linecap="round"`);
+    }
   }
   return parts.join(" ");
 }
@@ -62,16 +79,7 @@ export function primitivesToSvg(primitives: Primitive[], size: number): string {
           );
         }
         if (primitive.type === "path") {
-          const data = primitive.commands
-            .map((command) => {
-              if (command.type === "moveTo")
-                return `M${round(command.x)} ${round(command.y)}`;
-              if (command.type === "lineTo")
-                return `L${round(command.x)} ${round(command.y)}`;
-              return "Z";
-            })
-            .join(" ");
-          return `<path d="${data}" ${paintAttributes(primitive)}/>`;
+          return `<path d="${pathData(primitive.commands)}" ${paintAttributes(primitive)}/>`;
         }
         const transforms: string[] = [];
         if (primitive.translateX || primitive.translateY) {
@@ -96,6 +104,13 @@ export function primitivesToSvg(primitives: Primitive[], size: number): string {
             `<clipPath id="${clipId}"><rect x="${round(primitive.clipRect.x)}" ` +
               `y="${round(primitive.clipRect.y)}" width="${round(primitive.clipRect.width)}" ` +
               `height="${round(primitive.clipRect.height)}"${radius}/></clipPath>`,
+          );
+          clipAttribute = ` clip-path="url(#${clipId})"`;
+        } else if (primitive.clipPath) {
+          clipCounter += 1;
+          const clipId = `sticker-clip-${clipCounter}`;
+          definitions.push(
+            `<clipPath id="${clipId}"><path d="${pathData(primitive.clipPath)}"/></clipPath>`,
           );
           clipAttribute = ` clip-path="url(#${clipId})"`;
         }

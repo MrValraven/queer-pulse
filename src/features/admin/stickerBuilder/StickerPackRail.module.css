@@ -2,10 +2,11 @@
    New pack action beside the heading.
 
    The rail is its own size container. Beside the workspace it is a narrow
-   column (a 280px track leaves about 254px of content box), and the list is
-   vertical. When the page stacks it full width (a phone gives at least about
-   298px from 360px up), the list turns into a horizontal strip of pack chips,
-   so eight packs no longer push the builder below the first screen. */
+   column (a 248 to 280px track leaves about 222 to 254px of content box),
+   and the list is vertical. When the page stacks it full width (a phone
+   gives at least about 298px from 360px up), the list turns into a
+   horizontal strip of pack chips, so eight packs no longer push the builder
+   below the first screen. */
 
 .rail {
   container: sticker-rail / inline-size;

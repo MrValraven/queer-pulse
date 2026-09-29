@@ -83,24 +83,50 @@ export function useSequencedTabSwap(initialTab: FeedTab): SequencedTabSwap {
     // first render (height is "") there is nothing to ease.
     if (!viewport.style.height || viewport.style.height === "auto") return;
 
-    const target = content.offsetHeight;
     const frozen = Number.parseFloat(viewport.style.height);
     // No delta (two equally tall tabs): skip the transition, which would
     // otherwise never fire `transitionend` and strand the fixed height.
-    if (Number.isNaN(frozen) || Math.abs(frozen - target) < 1) {
+    if (Number.isNaN(frozen) || Math.abs(frozen - content.offsetHeight) < 1) {
       viewport.style.height = "auto";
       return;
     }
 
-    viewport.style.height = `${target}px`;
-    const handleTransitionEnd = (event: TransitionEvent) => {
-      if (event.propertyName !== "height") return;
+    let sizeObserver: ResizeObserver | null = null;
+    const release = () => {
       viewport.style.height = "auto";
       viewport.removeEventListener("transitionend", handleTransitionEnd);
+      sizeObserver?.disconnect();
     };
+    const handleTransitionEnd = (event: TransitionEvent) => {
+      if (event.propertyName === "height") release();
+    };
+
+    viewport.style.height = `${content.offsetHeight}px`;
     viewport.addEventListener("transitionend", handleTransitionEnd);
-    return () =>
+
+    // The height read above is an estimate: fresh feed cards sit at their
+    // `content-visibility` placeholder height until the browser first renders
+    // them, and the masonry repacks a frame later. Easing to that estimate and
+    // then releasing to `auto` made the footer overshoot and snap. Retarget the
+    // running transition whenever the real content height changes instead.
+    if (typeof ResizeObserver !== "undefined") {
+      sizeObserver = new ResizeObserver(() => {
+        const target = `${content.offsetHeight}px`;
+        if (viewport.style.height === target) return;
+        viewport.style.height = target;
+        // Retargeting onto the height already painted starts no transition,
+        // so no `transitionend` would ever release the lock.
+        if (Math.abs(viewport.offsetHeight - content.offsetHeight) < 1) {
+          release();
+        }
+      });
+      sizeObserver.observe(content);
+    }
+
+    return () => {
       viewport.removeEventListener("transitionend", handleTransitionEnd);
+      sizeObserver?.disconnect();
+    };
   }, [displayTab, reduceMotion]);
 
   // Clear a pending exit timer if the page unmounts mid-swap.

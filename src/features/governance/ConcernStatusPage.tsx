@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Spinner } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -146,12 +147,12 @@ export function ConcernStatusPage() {
           // only come back 400, since the endpoint allows 20 an hour.
           <ConcernCodeNotFoundState onTryAgain={askForAnotherCode} />
         ) : statusQuery.isPending ? (
-          // A live region: this page is often opened days later, and the answer
-          // must reach a screen reader without a focus change.
-          <div className={styles.loading} role="status">
-            <Spinner />
-            <p>{t("governance:concernStatus.loading")}</p>
-          </div>
+          // PageLoader is a live region: this page is often opened days later,
+          // and the answer must reach a screen reader without a focus change.
+          <PageLoader
+            size="section"
+            label={t("governance:concernStatus.loading")}
+          />
         ) : statusQuery.error ? (
           isUnresolvableConcernToken(statusQuery.error) ? (
             <ConcernCodeNotFoundState onTryAgain={askForAnotherCode} />

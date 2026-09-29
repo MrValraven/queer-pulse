@@ -59,8 +59,9 @@ function toTrackerPitch(
 }
 
 /**
- * `PitchTrackerPage.tsx` ("my submissions"). Demo mode keeps the page's own
- * `PITCHES` registry, editorial workflow and all. Live mode calls GET
+ * `WriterSubmissionsTab.tsx`, the writer workspace's Submissions tab ("my
+ * submissions"). Demo mode keeps the tracker's own `PITCHES` registry,
+ * editorial workflow and all. Live mode calls GET
  * /magazine/submissions/mine and maps each row through `submissionToPitch`,
  * then folds the editorial decision on top (see `withDecision`): a submission
  * now reaches accepted / declined / commissioned with the desk's reply

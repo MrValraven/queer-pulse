@@ -1,0 +1,199 @@
+import { http, HttpResponse } from "msw";
+import type {
+  AdminAmbassadorCircleDTO,
+  AdminAmbassadorDTO,
+  GrantAmbassadorBody,
+} from "../../features/admin/ambassadors/adminAmbassadors.api";
+import {
+  ADMIN_AMBASSADOR_CIRCLE_DEMO,
+  ADMIN_AMBASSADORS_DEMO,
+} from "../../features/admin/ambassadors/adminAmbassadors.data";
+import { isAmbassadorReasonValid } from "../../features/admin/ambassadors/adminAmbassadors.api";
+import { isAmbassadorFocusArea } from "../../shared/ambassadors/ambassadorFocusAreas.data";
+
+/**
+ * MSW handlers for the admin ambassadors endpoints. They document the wire
+ * shapes and coded errors the page assumes from the NestJS backend, and back
+ * its LIVE-mode suite. Seeded from the demo fixture so the two modes agree.
+ *
+ * The handlers keep a small in-memory roster so a grant or a revoke is visible
+ * to the refetch that follows it. A suite that writes calls
+ * `resetAmbassadorHandlerState()` in `beforeEach`.
+ *
+ * Both reasons follow the backend's `@Length(3, 500)` on the trimmed text: a
+ * shorter or longer one answers a code-less 400, as the real DTO does.
+ */
+
+/** The staff member the handlers name as the actor on writes. */
+const HANDLER_ACTOR = { slug: "ana", name: "Ana Ribeiro" };
+
+/** Members the grant handler can find beyond the seeded roster. Any other slug
+ *  answers 404 `ambassador_member_not_found`, as the backend does. */
+const GRANTABLE_MEMBERS: Record<
+  string,
+  { firstName: string; lastName: string }
+> = {
+  helena: { firstName: "Helena", lastName: "Duarte" },
+  sofia: { firstName: "Sofia", lastName: "Andrade" },
+};
+
+let ambassadorRows: AdminAmbassadorDTO[] = [];
+let ambassadorCircle: AdminAmbassadorCircleDTO = {
+  ...ADMIN_AMBASSADOR_CIRCLE_DEMO,
+};
+let grantCounter = 0;
+
+export function resetAmbassadorHandlerState() {
+  ambassadorRows = ADMIN_AMBASSADORS_DEMO.map((row) => ({ ...row }));
+  ambassadorCircle = { ...ADMIN_AMBASSADOR_CIRCLE_DEMO };
+  grantCounter = 0;
+}
+resetAmbassadorHandlerState();
+
+function codedError(status: number, code: string, message: string) {
+  return HttpResponse.json({ statusCode: status, code, message }, { status });
+}
+
+function memberNameFor(slug: string) {
+  const seeded = ambassadorRows.find((row) => row.member.slug === slug);
+  if (seeded) {
+    return {
+      firstName: seeded.member.firstName,
+      lastName: seeded.member.lastName,
+    };
+  }
+  return GRANTABLE_MEMBERS[slug] ?? null;
+}
+
+export function ambassadorHandlers(api: string) {
+  return [
+    // GET /admin/ambassadors/circle -> { slug, memberCount, isViewerMember }
+    http.get(`${api}/admin/ambassadors/circle`, () =>
+      HttpResponse.json<AdminAmbassadorCircleDTO>(ambassadorCircle),
+    ),
+
+    // POST /admin/ambassadors/circle/staff-seat -> { slug }
+    http.post(`${api}/admin/ambassadors/circle/staff-seat`, () => {
+      if (!ambassadorCircle.isViewerMember) {
+        ambassadorCircle = {
+          ...ambassadorCircle,
+          isViewerMember: true,
+          memberCount: ambassadorCircle.memberCount + 1,
+        };
+      }
+      return HttpResponse.json({ slug: ambassadorCircle.slug });
+    }),
+
+    // GET /admin/ambassadors?status=active|past -> AdminAmbassadorDTO[]
+    http.get(`${api}/admin/ambassadors`, ({ request }) => {
+      const status = new URL(request.url).searchParams.get("status");
+      const wantsPast = status === "past";
+      return HttpResponse.json<AdminAmbassadorDTO[]>(
+        ambassadorRows.filter((row) => Boolean(row.revokedAt) === wantsPast),
+      );
+    }),
+
+    // POST /admin/ambassadors { memberSlug, focusArea, reason } -> 201 row
+    // 409 ambassador_already_active, 404 ambassador_member_not_found
+    http.post(`${api}/admin/ambassadors`, async ({ request }) => {
+      const body = (await request.json()) as Partial<GrantAmbassadorBody>;
+      const memberSlug = body.memberSlug ?? "";
+      const focusArea = body.focusArea;
+      const reason = body.reason?.trim() ?? "";
+      if (
+        !isAmbassadorFocusArea(focusArea) ||
+        !isAmbassadorReasonValid(reason)
+      ) {
+        return HttpResponse.json(
+          { statusCode: 400, message: "Invalid grant" },
+          { status: 400 },
+        );
+      }
+      const isAlreadyActive = ambassadorRows.some(
+        (row) => row.member.slug === memberSlug && !row.revokedAt,
+      );
+      if (isAlreadyActive) {
+        return codedError(
+          409,
+          "ambassador_already_active",
+          "Already an ambassador",
+        );
+      }
+      const name = memberNameFor(memberSlug);
+      if (!name) {
+        return codedError(404, "ambassador_member_not_found", "No such member");
+      }
+      grantCounter += 1;
+      const row: AdminAmbassadorDTO = {
+        id: `msw-ambassador-${grantCounter}`,
+        member: { slug: memberSlug, ...name, avatarUrl: null },
+        focusArea,
+        grantedAt: new Date().toISOString(),
+        grantedBy: HANDLER_ACTOR,
+        grantReason: reason,
+        revokedAt: null,
+        revokedBy: null,
+        revokeReason: null,
+        isTagVisible: true,
+        inviteQuotaOverride: null,
+      };
+      ambassadorRows = [row, ...ambassadorRows];
+      return HttpResponse.json(row, { status: 201 });
+    }),
+
+    // PATCH /admin/ambassadors/:id { focusArea } -> row
+    http.patch(`${api}/admin/ambassadors/:id`, async ({ params, request }) => {
+      const body = (await request.json()) as { focusArea?: unknown };
+      const focusArea = body.focusArea;
+      const existing = ambassadorRows.find(
+        (row) => row.id === params.id && !row.revokedAt,
+      );
+      if (!existing) {
+        return codedError(404, "ambassador_not_found", "No active grant");
+      }
+      if (!isAmbassadorFocusArea(focusArea)) {
+        return HttpResponse.json(
+          { statusCode: 400, message: "Invalid focus" },
+          { status: 400 },
+        );
+      }
+      const updated = { ...existing, focusArea };
+      ambassadorRows = ambassadorRows.map((row) =>
+        row.id === updated.id ? updated : row,
+      );
+      return HttpResponse.json(updated);
+    }),
+
+    // POST /admin/ambassadors/:id/revoke { reason } -> row
+    // 404 ambassador_not_found when there is no active grant
+    http.post(
+      `${api}/admin/ambassadors/:id/revoke`,
+      async ({ params, request }) => {
+        const body = (await request.json()) as { reason?: string };
+        const reason = body.reason?.trim() ?? "";
+        const existing = ambassadorRows.find(
+          (row) => row.id === params.id && !row.revokedAt,
+        );
+        if (!existing) {
+          return codedError(404, "ambassador_not_found", "No active grant");
+        }
+        if (!isAmbassadorReasonValid(reason)) {
+          return HttpResponse.json(
+            { statusCode: 400, message: "reason must be 3 to 500 characters" },
+            { status: 400 },
+          );
+        }
+        const revoked: AdminAmbassadorDTO = {
+          ...existing,
+          revokedAt: new Date().toISOString(),
+          revokedBy: HANDLER_ACTOR,
+          revokeReason: reason,
+        };
+        ambassadorRows = ambassadorRows.map((row) =>
+          row.id === revoked.id ? revoked : row,
+        );
+        return HttpResponse.json(revoked);
+      },
+    ),
+  ];
+}

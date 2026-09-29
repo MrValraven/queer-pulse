@@ -16,9 +16,6 @@ import { GuidelinesLink } from "../marketing/GuidelinesLink";
 import { usePushSubscription } from "../push/usePushSubscription";
 import { BlockMuteInfoModal } from "../safety/BlockMuteInfoModal";
 import { clearInviteWelcome } from "./api/pendingInvite";
-import { useUnderAgeDisclosure } from "./api/useUnderAgeDisclosure";
-import { AgeAttestation } from "./AgeAttestation";
-import { Under18Notice } from "./Under18Notice";
 import type { StepProps } from "./OnboardingStepChrome";
 import { NORMS, QUICK_STARTS, ONBOARDING_PREVIEW } from "./onboardingPage.data";
 import styles from "./OnboardingPage.module.css";
@@ -54,7 +51,7 @@ export function StepIntro({
           </div>
         ))}
       </div>
-      <div className={styles.navPlain}>
+      <div className={styles.nav}>
         <Button onClick={onNext}>{t("auth:onboarding.stepIntro.cta")}</Button>
       </div>
     </>
@@ -63,42 +60,16 @@ export function StepIntro({
 
 export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const { t } = useTranslation();
-  // Records the disclosure with the backend and THEN ends the session — see
-  // `useUnderAgeDisclosure` for why that order is the whole point.
-  const { discloseAndSignOut } = useUnderAgeDisclosure();
   const [agreed, setAgreed] = useState(false);
-  const [is18, setIs18] = useState(false);
-  const [isUnder18, setIsUnder18] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
   const [showBlockMuteInfo, setShowBlockMuteInfo] = useState(false);
 
-  // The 18+ attestation is recorded at SIGN-UP now (it rides the OAuth `state`
-  // param; the backend refuses to create an account without it), so by the time
-  // anyone reaches onboarding it is already on their user row. This step used to
-  // POST /auth/onboarding, an endpoint that was never built — it 404'd silently
-  // inside a try/catch on every signup.
-  //
-  // The checkbox stays deliberately: it is the one place someone who clicked
-  // through the gate too fast can correct themselves and reach Under18Notice.
+  // No 18+ checkbox here. The attestation is taken at SIGN-UP, before the
+  // Google hand-off (it rides the OAuth `state` param and the backend refuses
+  // to create an account without it), so asking again here only repeated a
+  // question the member had just answered.
   function handleContinue() {
     onNext();
-  }
-
-  // Someone with a live account has just told us they're under 18. There is no
-  // "go back and re-attest" from here: the only way on is out of the session,
-  // so the wizard can't be finished by a self-declared minor.
-  //
-  // Signing out is no longer the end of it. `POST /auth/under-18-disclosure`
-  // records the declaration and locks the account first, so the platform stops
-  // holding an active adult-community account for someone who has told us they
-  // are under 18. A failed call still signs them out, and it is logged.
-  if (isUnder18) {
-    return (
-      <Under18Notice
-        onSignOut={() => void discloseAndSignOut()}
-        shouldShowContactLink
-      />
-    );
   }
 
   return (
@@ -160,17 +131,13 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           request-invite form: the guidelines opener inside the text is itself a
           control, and wrapping the whole row in a <label> both folded that
           control into the checkbox's accessible name and made every click on it
-          also hit the checkbox (opening the modal AND firing the locked shake). */}
-      <div
-        className={`${styles.agreeRow} ${!agreed ? styles.locked : ""} ${shake ? styles.shake : ""}`}
-        onAnimationEnd={() => setShake(false)}
-      >
+          also hit the checkbox. */}
+      <div className={`${styles.agreeRow} ${!agreed ? styles.locked : ""}`}>
         {/* Read-only on purpose: reading the guidelines to the end is the only
             way to tick this. Controlled by `agreed`, which only the guidelines'
             confirm button flips (via `onRead`); `preventDefault` blocks any
-            manual toggle from a click or Space. A click while locked triggers
-            a shake instead of doing nothing, per design-best-practices: never
-            leave a click silent. */}
+            manual toggle from a click or Space. A click while locked opens the
+            guidelines, so the click always leads somewhere useful. */}
         <input
           id="ob-agree"
           type="checkbox"
@@ -178,7 +145,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           readOnly
           onClick={(e) => {
             e.preventDefault();
-            if (!agreed) setShake(true);
+            if (!agreed) setIsGuidelinesOpen(true);
           }}
           aria-describedby={!agreed ? "ob-agree-hint" : undefined}
         />
@@ -186,7 +153,13 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           <Translation
             i18nKey="auth:onboarding.stepNorms.agree"
             components={{
-              guidelines: <GuidelinesLink onRead={() => setAgreed(true)} />,
+              guidelines: (
+                <GuidelinesLink
+                  onRead={() => setAgreed(true)}
+                  isOpen={isGuidelinesOpen}
+                  onOpenChange={setIsGuidelinesOpen}
+                />
+              ),
             }}
           />
         </label>
@@ -196,19 +169,15 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           <FiLock aria-hidden /> {t("auth:onboarding.stepNorms.readHint")}
         </p>
       )}
-      <AgeAttestation
-        id="ob-age"
-        confirmed={is18}
-        onConfirmedChange={setIs18}
-        onUnder18={() => setIsUnder18(true)}
-      />
       <div className={styles.nav}>
-        <Button onClick={handleContinue} disabled={!agreed || !is18}>
-          {t("auth:onboarding.stepNorms.continue")}
-        </Button>
-        <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepNorms.back")}
-        </button>
+        <div className={styles.navRow}>
+          <button type="button" className={styles.back} onClick={onBack}>
+            <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepNorms.back")}
+          </button>
+          <Button onClick={handleContinue} disabled={!agreed}>
+            {t("auth:onboarding.stepNorms.continue")}
+          </Button>
+        </div>
       </div>
     </>
   );

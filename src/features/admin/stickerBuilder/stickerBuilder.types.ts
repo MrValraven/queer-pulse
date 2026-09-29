@@ -2,33 +2,35 @@ import type {
   AdminStickerPackResponse,
   AdminStickerResponse,
 } from "../../../shared/contracts/contracts";
+import type { StickerTemplateId } from "../../stickers/templates/templateDefinition";
 
 export type PackStatus = AdminStickerPackResponse["status"];
 
-/** How a run treats a selected flag the pack already holds. */
+/** How a run treats a selected item the pack already holds. */
 export type PublishMode = "add-missing" | "replace";
 
-/** Whether a flag already has a sticker in the selected pack. */
-export type FlagPackState = "new" | "in-pack";
+/** Whether an item of the pack's template already has a sticker in the
+ *  selected pack. */
+export type ItemPackState = "new" | "in-pack";
 
-/** What a run will do with one selected flag. */
-export type FlagPlanAction = "add" | "replace" | "skip";
+/** What a run will do with one selected item. */
+export type ItemPlanAction = "add" | "replace" | "skip";
 
-export interface FlagPlanEntry {
-  flagId: string;
-  action: FlagPlanAction;
+export interface ItemPlanEntry {
+  itemId: string;
+  action: ItemPlanAction;
   /** The existing sticker a "replace" (or "skip") refers to. */
   existingSticker: AdminStickerResponse | null;
 }
 
-export type FlagRunStatus =
+export type ItemRunStatus =
   "queued" | "running" | "done" | "failed" | "cancelled";
 
 export type PublishFailureReason =
   "conflict" | "rate-limit" | "upload" | "unknown";
 
-export interface FlagRunState {
-  status: FlagRunStatus;
+export interface ItemRunState {
+  status: ItemRunStatus;
   failureReason?: PublishFailureReason;
 }
 
@@ -36,11 +38,13 @@ export interface StickerPublishRun {
   packId: string;
   packName: string;
   mode: PublishMode;
-  /** The flags this run processes, in canonical order (skips excluded). */
-  flagIds: string[];
-  /** Per flag, the action it was planned with. */
-  actionByFlag: Record<string, Exclude<FlagPlanAction, "skip">>;
-  stateByFlag: Record<string, FlagRunState>;
+  /** The template every sticker in this run is drawn with. */
+  templateId: StickerTemplateId;
+  /** The items this run processes, in canonical order (skips excluded). */
+  itemIds: string[];
+  /** Per item, the action it was planned with. */
+  actionByItem: Record<string, Exclude<ItemPlanAction, "skip">>;
+  stateByItem: Record<string, ItemRunState>;
   isRunning: boolean;
 }
 

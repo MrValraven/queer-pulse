@@ -1,3 +1,5 @@
+import type { ProfileDraft } from "../../app/providers/useProfile";
+
 /**
  * The three one-tap visibility presets offered at the top of the "Who sees
  * what" sheet. Each maps directly onto the four instant-save fields
@@ -54,9 +56,19 @@ export const PRESET_META: Record<
 /** One instant-save visibility switch. `key` names the exact `ProfileDraft`
  *  boolean field it edits. */
 export interface VisibilityFieldConfig {
-  key: "photoVisible" | "hoodVisible" | "vouchersVisible" | "lookingForPublic";
+  key:
+    | "photoVisible"
+    | "hoodVisible"
+    | "vouchersVisible"
+    | "lookingForPublic"
+    | "isAmbassadorTagVisible";
   labelKey: string;
   descKey: string;
+  /** Whether this switch shows at all for the current draft. Absent means
+   *  always shown, like the four original fields. Ambassador-only fields use
+   *  this to hide the row entirely for a member who isn't one, rather than
+   *  showing a switch that controls nothing. */
+  isShownFor?: (draft: ProfileDraft) => boolean;
 }
 
 export const VISIBILITY_FIELDS: VisibilityFieldConfig[] = [
@@ -79,5 +91,11 @@ export const VISIBILITY_FIELDS: VisibilityFieldConfig[] = [
     key: "lookingForPublic",
     labelKey: "members:profile.whoSeesWhat.fields.intent.label",
     descKey: "members:profile.whoSeesWhat.fields.intent.desc",
+  },
+  {
+    key: "isAmbassadorTagVisible",
+    labelKey: "members:profile.whoSeesWhat.fields.ambassador.label",
+    descKey: "members:profile.whoSeesWhat.fields.ambassador.desc",
+    isShownFor: (draft) => Boolean(draft.ambassador),
   },
 ];

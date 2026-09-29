@@ -1,0 +1,131 @@
+/* The shared removable chip row. Positioned, because a chip on its way out
+   (AnimatePresence popLayout) is lifted out of the flow and placed against
+   this row while it fades. */
+.row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Empty only once the last chip's exit has finished, and then it would still
+   add its parent's gap. Kept while focused, since it can be the last-resort
+   focus target after that removal. */
+.row:empty:not(:focus) {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .row {
+    row-gap: 12px;
+  }
+}
+
+/* Focused only as the last-resort target when a chip removal leaves nothing
+   else to focus (no next/previous ×, no emptyFocusRef). Script-focused only,
+   so no ring is needed; both selectors out-specify the global `:focus-visible`
+   halo in base.css (a class plus a pseudo-class beats a lone pseudo-class). */
+.row:focus,
+.row:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 5px 5px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.06);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.chip[data-leaving] {
+  pointer-events: none;
+}
+
+/* A long typed entry ellipses inside its chip on a narrow screen. */
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-avatar);
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.remove svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* A larger invisible hit area around the 20px circle. It stays inside the
+   chip's right padding plus the row gap, so it never covers the next chip. */
+.remove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+}
+
+@media (pointer: coarse) {
+  .remove::after {
+    width: 32px;
+    height: 44px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .remove:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+    color: var(--accent-text);
+  }
+}
+
+.remove:active {
+  transform: scale(0.9);
+}
+
+.remove:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* --plum-rgb does not flip in the dark theme, so the fill is restated on the
+   cream channel, as Tag.module.css does. */
+:global([data-theme="dark"]) .chip {
+  background: rgba(var(--cream-rgb), 0.08);
+  border-color: rgba(var(--cream-rgb), 0.12);
+}

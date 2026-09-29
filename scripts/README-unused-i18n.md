@@ -255,8 +255,7 @@ beneath the prefix cannot be wrong that way.
   treatment. Rule 8 is the one construct where the tool stops needing to know:
   it reads the prefix off the call site and gives up on the suffix entirely.
 - The cost is yield, never safety: 2,956 keys are "live by shape" rather than
-  provably live, and the tool has essentially nothing to say about the `help`
-  namespace, where 176 of 181 keys arrive through `FeatureHelp.tsx`'s shapes.
+  provably live.
 
 It reports its own limits: `--patterns` lists every shape it found with how many
 keys each reaches, and the report hard-fails (exit 2) if any scanned file

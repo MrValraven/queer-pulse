@@ -75,7 +75,34 @@
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 12px;
+}
+
+/* Always-flat variant for hosts that already wrap the notice in a light card
+   (the invite landing page): no plum panel at any width. */
+.flat {
+  background: none;
+  color: var(--text-strong);
+  padding: 8px 0 0;
+  border-radius: 0;
+}
+
+.flat .title {
+  color: var(--text-strong);
+}
+
+.flat .body {
+  color: var(--ink-60);
+}
+
+.flat .links a {
+  color: var(--text-strong);
+}
+
+.flat .links a:hover {
+  color: var(--accent-ink);
 }
 
 @keyframes panelIn {

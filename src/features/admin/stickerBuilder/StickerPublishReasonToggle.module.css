@@ -1,0 +1,7 @@
+/* The info disclosure beside a blocked CTA: the shared quiet icon button,
+   tinted while its reason line is open. Tokens only. */
+.toggle[aria-expanded="true"] {
+  background: var(--wash);
+  border-color: var(--line);
+  color: var(--text-strong);
+}

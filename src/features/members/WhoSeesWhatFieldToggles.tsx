@@ -62,7 +62,9 @@ export function WhoSeesWhatFieldToggles() {
         {t("members:profile.whoSeesWhat.fields.sub")}
       </p>
       <div className={styles.rowList}>
-        {VISIBILITY_FIELDS.map((field) => (
+        {VISIBILITY_FIELDS.filter(
+          (field) => field.isShownFor?.(draft) ?? true,
+        ).map((field) => (
           <div className={styles.row} key={field.key}>
             <div>
               <div className={styles.rowTitle}>{t(field.labelKey)}</div>

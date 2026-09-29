@@ -1,6 +1,6 @@
 /**
- * The desk's two-track state (Unassigned vs. the selected issue): the
- * URL-persisted active track, the client-side partition of the already-fetched
+ * The desk's track state (Unassigned, the selected issue, or Everything in
+ * flight): the URL-persisted active track, the client-side partition of the already-fetched
  * pieces, and the handlers that file a piece onto an issue or lift it back
  * out. Kept out of `EditorDashboardPage` so the page stays thin — mirrors
  * `useDeskState` / `useDeskModals`.
@@ -15,7 +15,7 @@ import type { Issue, Piece } from "../data/desk.data";
 import type { usePieceMutations } from "../api/usePieceMutations";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { ToastType } from "../../../shared/components/feedback/toastContext";
-import type { DeskTrack } from "./DeskTrackTabs";
+import type { DeskTrack } from "./deskTrack";
 
 export interface UseDeskTracksParams {
   pieces: Piece[];
@@ -35,14 +35,20 @@ export interface UseDeskTracksResult {
   hasCurrentIssue: boolean;
   unassignedPieces: Piece[];
   issuePieces: Piece[];
+  /** Every piece this hook received that is not yet published, whichever
+   *  issue it sits on (the "everything" scope). */
+  everythingPieces: Piece[];
   /** The active track's pieces — feed straight into `useDeskState`. */
   activePieces: Piece[];
   /** File one piece onto a specific issue, or detach it with `null`. Toast is
    *  owned here so it can name the issue it moved to; fires in both demo and
-   *  live via the mutation callback. */
+   *  live via the mutation callback. `onSuccess` runs once the move lands,
+   *  after the toast, for a caller that has its own follow-up (clearing a
+   *  bulk selection this piece came from). */
   assignPieceToIssue: (
     piece: Piece,
     target: { id: string; number: string } | null,
+    onSuccess?: () => void,
   ) => void;
 }
 
@@ -56,6 +62,7 @@ function readTrackParam(
   if (rawTrack === "unassigned" || rawTrack === "highlights")
     return "unassigned";
   if (rawTrack === "issue") return "issue";
+  if (rawTrack === "everything") return "everything";
   return hasCurrentIssue ? "issue" : "unassigned";
 }
 
@@ -73,14 +80,22 @@ export function useDeskTracks({
   // into neither track and stay off this desk — switch issues to reach them.
   // Partition the already-fetched list once: no second fetch, no new query key.
   const hasCurrentIssue = issue.id !== "";
-  const { unassignedPieces, issuePieces } = useMemo(() => {
+  // The "everything" scope is the one view that reaches across issues; it
+  // leaves out only published work, which has left the desk.
+  const { unassignedPieces, issuePieces, everythingPieces } = useMemo(() => {
     const unassigned: Piece[] = [];
     const issueWork: Piece[] = [];
+    const inFlight: Piece[] = [];
     for (const piece of pieces) {
       if (piece.issueId === null) unassigned.push(piece);
       else if (piece.issueId === issue.id) issueWork.push(piece);
+      if (piece.stage !== "Published") inFlight.push(piece);
     }
-    return { unassignedPieces: unassigned, issuePieces: issueWork };
+    return {
+      unassignedPieces: unassigned,
+      issuePieces: issueWork,
+      everythingPieces: inFlight,
+    };
   }, [pieces, issue.id]);
 
   // Track lives in the URL (`?track=`), mirroring the `?commission=` idiom.
@@ -92,7 +107,12 @@ export function useDeskTracks({
     setSearchParams(nextParams, { replace: true });
   };
 
-  const activePieces = track === "unassigned" ? unassignedPieces : issuePieces;
+  const activePieces =
+    track === "everything"
+      ? everythingPieces
+      : track === "unassigned"
+        ? unassignedPieces
+        : issuePieces;
 
   // The mutation invalidates `["magazine-pieces"]`, so the piece re-partitions
   // and hops tabs. Passing the target explicitly (rather than deriving it from
@@ -101,11 +121,12 @@ export function useDeskTracks({
   const assignPieceToIssue = (
     piece: Piece,
     target: { id: string; number: string } | null,
+    onSuccess?: () => void,
   ) => {
     pieceMutations.updatePiece.mutate(
       { id: piece.id, body: { issueId: target?.id ?? null } },
       {
-        onSuccess: () =>
+        onSuccess: () => {
           showToast(
             target
               ? translate("magazine:desk.reassign.addedToIssueToast", {
@@ -113,7 +134,9 @@ export function useDeskTracks({
                 })
               : translate("magazine:desk.reassign.madeUnassignedToast"),
             "success",
-          ),
+          );
+          onSuccess?.();
+        },
         onError: () =>
           showToast(translate("magazine:desk.reassign.failedToast"), "error"),
       },
@@ -126,6 +149,7 @@ export function useDeskTracks({
     hasCurrentIssue,
     unassignedPieces,
     issuePieces,
+    everythingPieces,
     activePieces,
     assignPieceToIssue,
   };

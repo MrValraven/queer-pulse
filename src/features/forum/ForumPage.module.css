@@ -21,15 +21,6 @@
   color: var(--accent);
   margin-bottom: 14px;
 }
-/* Title + info chip on one line. The chip is a sibling of the h1, never a
-   child: inside it, it joined the heading's accessible name and rode the
-   display font-size. */
-.titleRow {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;

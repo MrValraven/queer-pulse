@@ -2,25 +2,6 @@
   position: relative;
   display: inline-flex;
 }
-.trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: var(--paper);
-  color: var(--text-strong);
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: background-color 0.15s var(--ease);
-}
-@media (hover: hover) {
-  .trigger:hover {
-    background: rgba(var(--plum-rgb), 0.06);
-  }
-}
 .menu {
   position: absolute;
   top: calc(100% + 6px);
@@ -56,9 +37,4 @@
 }
 .danger {
   color: var(--danger);
-}
-@media (prefers-reduced-motion: reduce) {
-  .trigger {
-    transition: none;
-  }
 }

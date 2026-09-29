@@ -362,8 +362,10 @@
 }
 .contribName {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
+  row-gap: 4px;
   font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);

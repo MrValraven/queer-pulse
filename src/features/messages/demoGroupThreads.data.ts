@@ -1,5 +1,6 @@
 // src/features/messages/demoGroupThreads.data.ts
 import type { GifAttachment } from "../../shared/api/gifs";
+import { demoGroupIdFor } from "../goTogether/goTogether.mock";
 import type { Conversation } from "./data";
 import { DEMO_GIFS } from "./demoGifs.data";
 import {
@@ -47,6 +48,26 @@ const priya = {
 const noah = {
   senderName: "Noah Reyes",
   senderHandle: "noah-reyes",
+  senderTint: "plum",
+} as const;
+const queerpulse = {
+  senderName: "QueerPulse",
+  senderHandle: "queerpulse",
+  senderTint: "coral",
+} as const;
+const sofia = {
+  senderName: "Sofia Andrade",
+  senderHandle: "sofia",
+  senderTint: "jade",
+} as const;
+const rui = {
+  senderName: "Rui Marçal",
+  senderHandle: "rui",
+  senderTint: "plum",
+} as const;
+const mariana = {
+  senderName: "Mariana Loução",
+  senderHandle: "mariana",
   senderTint: "plum",
 } as const;
 
@@ -634,4 +655,120 @@ export const prideVolunteersConversation: Conversation = demoConversation({
     ],
     PAST_MEMBER,
   ),
+});
+
+const picnicLastLine = "See you all Saturday!";
+
+/** A Go together matched group (final-wave finding I5): the house account is
+ *  the Owner, exactly as `groups.service.ts`'s `createMatchedGroup` seats it,
+ *  and the viewer is a plain member with every management flag off, since a
+ *  matched group locks add/invite/rename/roles/transfer/dissolve (only
+ *  leaving stays open). `eventMatchGroupId` is `demoGroupIdFor("trans-joy-picnic")`,
+ *  the same id `demoGroup()` in `goTogether.mock.ts` resolves for that
+ *  gathering slug, so `GoTogetherChatBanner` finds a real group and renders
+ *  the "Trans Joy Picnic" banner with "See your group" wired to it. */
+export const transJoyPicnicConversation: Conversation = demoConversation({
+  id: "trans-joy-picnic-group",
+  initials: "TJ",
+  tint: "jade",
+  name: "Trans Joy Picnic",
+  pronouns: "",
+  preview: `Sofia: ${picnicLastLine}`,
+  lastMessageSenderHandle: "sofia",
+  lastMessageBody: picnicLastLine,
+  unread: false,
+  isGroup: true,
+  memberCount: 5,
+  myRole: "member",
+  canAddMembers: false,
+  canRemoveMembers: false,
+  canRename: false,
+  canManageRoles: false,
+  canTransferOwnership: false,
+  canDissolve: false,
+  canManageInviteLink: false,
+  eventMatchGroupId: demoGroupIdFor("trans-joy-picnic"),
+  members: [
+    {
+      name: "QueerPulse",
+      initials: "QP",
+      tint: "coral",
+      role: "owner",
+      slug: "queerpulse",
+    },
+    {
+      name: "Tiago Costa",
+      initials: "TC",
+      tint: "plum",
+      role: "member",
+      slug: "tiago",
+    },
+    {
+      name: "Sofia Andrade",
+      initials: "SA",
+      tint: "jade",
+      role: "member",
+      slug: "sofia",
+      lastReadAt: minutesAgo(25),
+    },
+    {
+      name: "Rui Marçal",
+      initials: "RM",
+      tint: "plum",
+      role: "member",
+      slug: "rui",
+    },
+    {
+      name: "Mariana Loução",
+      initials: "ML",
+      tint: "plum",
+      role: "member",
+      slug: "mariana",
+    },
+  ],
+  messages: demoThread([
+    {
+      id: "demo-msg-picnic-001",
+      from: "them",
+      text: "created the group",
+      kind: "system",
+      systemEvent: { type: "group_created", actorName: "QueerPulse" },
+      at: daysAgoAt(2, 9, 0),
+      ...queerpulse,
+    },
+    {
+      id: "demo-msg-picnic-002",
+      from: "them",
+      text: "Hi all! So happy to be grouped for the picnic.",
+      at: daysAgoAt(2, 9, 5),
+      ...sofia,
+    },
+    {
+      id: "demo-msg-picnic-003",
+      from: "them",
+      text: "Same here, looking forward to it.",
+      at: daysAgoAt(2, 9, 8),
+      ...rui,
+    },
+    {
+      id: "demo-msg-picnic-004",
+      from: "them",
+      text: "I'll bring board games for after lunch, if anyone's up for it.",
+      at: daysAgoAt(2, 9, 12),
+      ...mariana,
+    },
+    {
+      id: "demo-msg-picnic-005",
+      from: "me",
+      text: "Sounds great, I'll bring snacks to share.",
+      at: daysAgoAt(2, 9, 20),
+    },
+    {
+      id: "demo-msg-picnic-006",
+      from: "them",
+      text: picnicLastLine,
+      at: minutesAgo(30),
+      ...sofia,
+    },
+  ]),
 });

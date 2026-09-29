@@ -8,8 +8,11 @@ import { apiGet, apiPost } from "../../../shared/api/client";
  * particular person has blocked you, so the frontend copy stays neutral too.
  */
 export type ListingContactUnavailableReason =
-  /** Nobody has claimed this entry, so the account attached to it belongs to
-   *  the member who suggested the place rather than to the business. */
+  /** Nobody has claimed this entry: the listing has no owner (`ownerId` is
+   *  null, as on a suggestion the platform still holds) and no co-manager is
+   *  seated to answer for it, so a message would land in a thread nobody
+   *  reads. Ownership is `ownerId` alone; the `friendly` badge describes the
+   *  business, and an owned friendly listing is reachable like any other. */
   | "unclaimed"
   /** Parked on a house account, or the owning account is gone or not active. */
   | "no_owner_account"

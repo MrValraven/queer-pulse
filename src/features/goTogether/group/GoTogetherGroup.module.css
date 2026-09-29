@@ -1,0 +1,419 @@
+/* Go together: the group entry on the gathering card, the full group sheet
+   and the one-line banner in the group chat. */
+
+/* ── Shared pieces ─────────────────────────────────────────────────────── */
+
+.bandPill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.bandStrong {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade-ink);
+}
+
+.bandGood {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-text);
+}
+
+.reasonList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reasonItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.reasonIcon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  margin-block-start: 3px;
+  color: var(--accent-text);
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Leave sits on its own row, away from the chat and share-plans actions: a
+   destructive choice should never share a visual weight class with routine
+   ones. */
+.leaveRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.leaveAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding-inline: 4px;
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.leaveAction:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .leaveAction:hover {
+    /* --danger-ink has no dark-mode value (about 2.3:1 there); --danger does
+       flip in dark, and it's already this row's resting colour, so the
+       underline alone carries the hover state at AA in both themes. */
+    text-decoration: underline;
+  }
+}
+
+.quietNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.errorNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+/* ── Entry on the gathering card ───────────────────────────────────────── */
+
+.entry {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.entryHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.entryTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+/* ── Group sheet ───────────────────────────────────────────────────────── */
+
+.sheetBody {
+  display: grid;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.sheetHead {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  /* Clear the sheet's close button in the top corner, and the shared
+     ModalSheet's sticky drag handle above: without this space the handle
+     sits level with the eyebrow, and scrolled content passes under it. */
+  padding-inline-end: 40px;
+  padding-block-start: var(--gap-sm);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.sheetTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.sheetSection {
+  display: grid;
+  gap: 12px;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.memberList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memberRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.memberText {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.memberName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.memberTag {
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.07);
+  font-size: var(--text-label);
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.memberPronouns {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.memberStatus {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.memberStatus[data-tone="here"] {
+  color: var(--jade-ink);
+}
+
+.meetingPoint {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 14px 18px;
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+.meetingPointNote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-body);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.meetingPointLabel {
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.mergeOffer {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+.checkIn {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
+/* ── Icebreakers ───────────────────────────────────────────────────────── */
+
+.icebreakers {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+.icebreakerToggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.icebreakerToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.icebreakerTitle {
+  flex: 1;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+}
+
+.icebreakerChevron {
+  flex: none;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.icebreakerChevron[data-open="true"] {
+  transform: rotate(180deg);
+}
+
+.icebreakerList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0 16px 16px 36px;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ── Chat banner ───────────────────────────────────────────────────────── */
+
+.chatBanner {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  /* No block padding: the row's height comes from the 44px action below, the
+     same as the thread header above it, so the banner stays a single compact
+     strip and does not eat into the message log. */
+  padding-block: 0;
+  padding-inline: 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(var(--jade-rgb), 0.06);
+}
+
+.chatBannerIcon {
+  flex: none;
+  color: var(--jade-ink);
+}
+
+.chatBannerTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A quiet text-style action: an outlined button reads heavier than the plain
+   header it sits under. The 44px hit area comes from the row's own
+   min-height. */
+.chatBannerAction {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  border: none;
+  background: transparent;
+  color: var(--accent-text);
+  font: inherit;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.chatBannerAction:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chatBannerAction:hover {
+    text-decoration: underline;
+  }
+}
+
+/* The pill is the first thing to go when a small phone runs out of room:
+   the title and the action carry the row. */
+@media (max-width: 420px) {
+  .chatBanner .bandPill {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icebreakerChevron {
+    transition: none;
+  }
+}

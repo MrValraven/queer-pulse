@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getPieces, PIECE_PAGE_SIZE_MAX } from "./pieces.api";
-import type { PieceFormat, PieceStage, SavedViewId } from "./pieces.api";
+import type { PieceFormat, PieceStage } from "./pieces.api";
 import { pieceDtoToView, STAGE_DTO_TO_VIEW } from "./pieces.adapters";
 import { DEMO_PIECES, type Piece } from "../data/desk.data";
-import { VIEW_TEST } from "../data/desk.copy";
 
 /**
  * Filters shared by the desk toolbar/board/pipeline. Shaped to match
@@ -18,7 +17,6 @@ export interface PieceFilters {
   section?: string;
   issue?: string;
   q?: string;
-  savedView?: SavedViewId;
 }
 
 function matchesFilters(piece: Piece, filters: PieceFilters): boolean {
@@ -27,10 +25,6 @@ function matchesFilters(piece: Piece, filters: PieceFilters): boolean {
   if (filters.stage && piece.stage !== STAGE_DTO_TO_VIEW[filters.stage])
     return false;
   if (filters.section && piece.section !== filters.section) return false;
-  if (filters.savedView) {
-    const viewTest = VIEW_TEST[filters.savedView];
-    if (!viewTest(piece)) return false;
-  }
   if (filters.q) {
     const query = filters.q.toLowerCase();
     const haystack =

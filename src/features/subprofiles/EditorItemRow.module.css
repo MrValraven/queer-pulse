@@ -1,18 +1,32 @@
-/* Layout-only additions on top of the global `.itemrow` (persona-editor.css)
-   — that stylesheet's `.itemrow b`/`.itemrow small` rules already cover this
-   row's typography via descendant selectors, so this module only needs the
+/* Layout-only additions on top of the global `.itemrow` (persona-editor.css).
+   That stylesheet's `.itemrow b`/`.itemrow small` rules already cover this
+   row's typography via descendant selectors, so the base row here needs only the
    text column's flex sizing (a plain `<div>` would otherwise refuse to
    shrink next to the fixed-width grip + action buttons) and a touch of
    breathing room between the title and its subtitle line. `min-width: 0`
    is what actually keeps this row from ever forcing horizontal scroll on
-   narrow phones — it lets the title/subtitle ellipsize instead of pushing
-   the fixed-width grip/action buttons out of the row. */
+   narrow phones: it lets the title/subtitle ellipsize while the fixed-width
+   grip/action buttons keep their own width. */
 /* Thumbnail preview of the row's image (photo-gallery photos, portfolio
    items) sitting between the grip and the text column, so the user can see
-   WHICH image they're reordering. Fixed square that never shrinks or grows —
+   WHICH image they're reordering. Fixed square that never shrinks or grows:
    `flex: none` keeps it stable while the text column absorbs the slack. */
-.thumb {
+.thumb,
+.thumbPlaceholder {
   flex: none;
+}
+/* Fills the 44px slot with the section's own icon, tinted, when the row
+   has no image (S1), so image and non-image rows in the same list still
+   line up their titles at the same offset. */
+.thumbPlaceholder {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-10);
+  background: var(--wash);
+  color: var(--ink-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content {
@@ -42,4 +56,94 @@
   border-color: var(--line-2);
   box-shadow: var(--shadow-e2);
   cursor: grabbing;
+}
+
+/* ── Chapter list row (`isFlat`) ─────────────────────────────────────────
+   Inside a Page blocks chapter the rows sit in the chapter's own card, so
+   they drop their card chrome and read as one list split by hairlines. The
+   list (`.itemsFlat` in SubprofileEditor.module.css) is the `section-list`
+   container these queries read, so the row answers to the card's width
+   whatever the viewport. Narrow (the default): the title and meta take the
+   whole column beside the grip and thumbnail and wrap, with the actions on
+   their own line underneath. From 560px the actions rejoin the title's
+   line. `:global(.itemrow)` lifts these rules over the global `.itemrow`
+   ones in persona-editor.css, whatever order the two sheets load in. The
+   row reaches 8px into the card's padding on each side, so a lifted row
+   keeps some air around its content. */
+:global(.itemrow).flat {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-areas:
+    "grip thumb content"
+    "grip thumb actions";
+  align-items: start;
+  column-gap: 0;
+  row-gap: 2px;
+  margin-inline: -8px;
+  padding: 12px 8px 4px;
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+:global(.itemrow).flat + :global(.itemrow).flat {
+  border-top: 1px solid var(--line);
+}
+.flat > :global(.grip) {
+  grid-area: grip;
+  margin-inline-end: 12px;
+}
+.flat > .thumb,
+.flat > .thumbPlaceholder {
+  grid-area: thumb;
+  margin-inline-end: 12px;
+}
+.flat > .content {
+  grid-area: content;
+}
+/* Wraps to fit: a 30 character title reads whole at 390px. */
+.flat .content b {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.flat .content small {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+}
+/* The first icon lines up with the title above it: the 12px pull matches
+   the empty space inside a 40px button around its 15px icon. */
+:global(.itemrow).flat > :global(.itemacts) {
+  grid-area: actions;
+  justify-self: start;
+  gap: 0;
+  margin-inline: -12px 0;
+}
+/* A 40px hit area for every action (the global `.iact` is 28 to 30px). */
+:global(.itemrow).flat :global(.iact) {
+  width: 40px;
+  height: 40px;
+}
+:global(.itemrow).flat.dragging {
+  border-radius: var(--radius-12);
+  background: var(--paper);
+}
+@container section-list (min-width: 560px) {
+  :global(.itemrow).flat {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "grip thumb content actions";
+    align-items: center;
+    padding-block: 8px;
+  }
+  :global(.itemrow).flat > :global(.grip) {
+    padding-top: 0;
+  }
+  :global(.itemrow).flat > :global(.itemacts) {
+    justify-self: end;
+    margin-inline: var(--gap-sm) -8px;
+  }
 }

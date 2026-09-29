@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useId } from "react";
+import { createContext, useContext, useEffect, useId, useState } from "react";
 
 export interface Frame {
   id: string;
@@ -50,4 +50,38 @@ export function useShellFrame(): {
     fullHeight: top?.fullHeight ?? false,
     chromeless: top?.chromeless ?? false,
   };
+}
+
+/**
+ * Keep the chrome the previous page had for as long as the caller is mounted.
+ * The route Suspense fallback calls this: the page a member is leaving drops
+ * its frame as soon as its plane is removed, and without a stand-in the stack
+ * would sit empty until the next chunk loads, so AppChrome would unmount the
+ * nav for that whole gap and mount it again when the page arrives.
+ *
+ * The frame is copied once, at the first render, so the hold never follows
+ * the stack it is propping up. When nothing was active (a cold boot, or
+ * leaving an admin, system or auth page, which has no nav) it registers
+ * nothing, so the fallback never brings in chrome the member did not have.
+ * The page that replaces the fallback registers in the same effect flush in
+ * which the fallback's hold is removed, so the stack never goes empty there
+ * either.
+ */
+export function useHoldShellFrame(): void {
+  const id = useId();
+  const currentFrame = useShellFrame();
+  const [heldFrame] = useState(() =>
+    currentFrame.active
+      ? {
+          fullHeight: currentFrame.fullHeight,
+          chromeless: currentFrame.chromeless,
+        }
+      : null,
+  );
+  const { push, remove } = useShellFrameApi();
+  useEffect(() => {
+    if (!heldFrame) return;
+    push({ id, ...heldFrame });
+    return () => remove(id);
+  }, [id, heldFrame, push, remove]);
 }

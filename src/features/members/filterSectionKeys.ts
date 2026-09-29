@@ -1,32 +1,32 @@
 /** The collapsible filter groups on the members directory. Order here is the
  *  render order in the sidebar. */
 export type SectionKey =
+  | "ambassadors"
   | "openTo"
   | "hoods"
   | "fields"
   | "professions"
   | "identities"
-  | "age"
   | "languages";
 
 export const FILTER_SECTION_KEYS: SectionKey[] = [
+  "ambassadors",
   "openTo",
   "hoods",
   "fields",
   "professions",
   "identities",
-  "age",
   "languages",
 ];
 
 /** Default view state: every section starts collapsed (a compact "menu"). */
 export const ALL_SECTIONS_COLLAPSED: Record<SectionKey, boolean> = {
+  ambassadors: false,
   openTo: false,
   hoods: false,
   fields: false,
   professions: false,
   identities: false,
-  age: false,
   languages: false,
 };
 

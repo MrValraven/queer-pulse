@@ -1,24 +1,15 @@
-import { lazy, Suspense, useState } from "react";
-import { MdQrCode2 } from "react-icons/md";
+import { useState } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MobileProfileActions } from "./MobileProfileActions";
 import { MobileProfileIdentity } from "./MobileProfileIdentity";
 import { MobileProfileIdentityTop } from "./MobileProfileIdentityTop";
+import { MobileProfileOwnerActions } from "./MobileProfileOwnerActions";
 import { MobileProfileStats } from "./MobileProfileStats";
-import { ProfileHeroActions } from "./ProfileHeroActions";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
-import { ProfileSettingsMenu } from "./ProfileSettingsMenu";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 import styles from "./MobileProfile.module.css";
-
-// Pulls in the `qrcode` package — lazy-load it so it's only fetched when the
-// button below is actually tapped (mirrors `ProfileSettingsMenu`'s desktop
-// counterpart).
-const ProfileQrModal = lazy(() =>
-  import("./ProfileQrModal").then((m) => ({ default: m.ProfileQrModal })),
-);
 
 function VerifiedCheck() {
   return (
@@ -37,9 +28,10 @@ function VerifiedCheck() {
 /**
  * The Instagram-style header cluster for the mobile member profile: a
  * pride-ringed avatar beside the compact stat row, the full identity block
- * beneath it, and a full-width action row. Shows exactly the same data as
- * the desktop `ProfileHero` (`ProfileSections.tsx`) — same self/visitor
- * gating, same sub-pieces — just restructured for a single narrow column.
+ * beneath it, and the equal-width action row right under it (Edit/Preview
+ * for the owner, the CTA block for a visitor). Shows exactly the same data
+ * as the desktop `ProfileHero` (`ProfileSections.tsx`), same self/visitor
+ * gating, same sub-pieces, just restructured for a single narrow column.
  */
 export function MobileProfileHeader({
   profile,
@@ -51,9 +43,7 @@ export function MobileProfileHeader({
   onEdit,
   onEditLinks,
   onPreview,
-  onOpenWhoSeesWhat,
-  onOpenAccountData,
-  onToggleHidden,
+  ...settingsHandlers
 }: {
   profile: MemberProfile;
   self: boolean;
@@ -65,8 +55,8 @@ export function MobileProfileHeader({
   onEditLinks?: () => void;
   onPreview?: () => void;
   /** Owner-only settings surfaces. Supplied together (the page hands over all
-   *  three) and only rendered on a genuine self view, never in the visitor
-   *  preview — the same gate `ProfileHeroMain` applies on desktop. */
+   *  three); rendered only on a genuine self view, outside the visitor
+   *  preview (the same gate `ProfileHeroMain` applies on desktop). */
   onOpenWhoSeesWhat?: () => void;
   onOpenAccountData?: () => void;
   onToggleHidden?: () => void;
@@ -78,7 +68,20 @@ export function MobileProfileHeader({
   const realSelf = self;
   const isSelf = realSelf && !asVisitor;
   const [photoOpen, setPhotoOpen] = useState(false);
-  const [qrOpen, setQrOpen] = useState(false);
+  const actions = isSelf ? (
+    <MobileProfileOwnerActions
+      profile={profile}
+      onEdit={onEdit}
+      onPreview={onPreview}
+      settingsHandlers={settingsHandlers}
+    />
+  ) : (
+    <MobileProfileActions
+      profile={profile}
+      asVisitor={asVisitor}
+      realSelf={realSelf}
+    />
+  );
   const fullName = `${profile.first} ${profile.last}`;
   const avatarTint = profile.tint === "auth" ? "plum" : profile.tint;
   const avatar = (
@@ -131,6 +134,8 @@ export function MobileProfileHeader({
         <MobileProfileIdentityTop profile={profile} isSelf={isSelf} />
       </div>
 
+      {actions}
+
       <div className={styles.statsSlot}>
         <MobileProfileStats
           profile={profile}
@@ -148,48 +153,6 @@ export function MobileProfileHeader({
         onEditLinks={onEditLinks}
       />
 
-      {isSelf ? (
-        <div className={styles.actionRow}>
-          <div className={styles.actionsSlot}>
-            <ProfileHeroActions
-              profile={profile}
-              isSelf={isSelf}
-              asVisitor={asVisitor}
-              realSelf={realSelf}
-              onEdit={onEdit}
-              onPreview={onPreview}
-            />
-          </div>
-          <button
-            type="button"
-            className={styles.qrButton}
-            aria-label={t("members:profile.qr.mobileTriggerAria")}
-            onClick={() => setQrOpen(true)}
-          >
-            <MdQrCode2 aria-hidden />
-          </button>
-          {/* Visibility settings, per-person hiding, report receipts, data
-              export, step-away and DSAR all live behind this menu. It used to
-              render only in the desktop hero, which left every one of them
-              unreachable from a phone. */}
-          {onOpenWhoSeesWhat && onOpenAccountData && onToggleHidden && (
-            <ProfileSettingsMenu
-              profile={profile}
-              onOpenWhoSeesWhat={onOpenWhoSeesWhat}
-              onOpenAccountData={onOpenAccountData}
-              onToggleHidden={onToggleHidden}
-              hiddenUntil={profile.hiddenUntil ?? null}
-            />
-          )}
-        </div>
-      ) : (
-        <MobileProfileActions
-          profile={profile}
-          asVisitor={asVisitor}
-          realSelf={realSelf}
-        />
-      )}
-
       {photoOpen && profile.photo && (
         <ProfilePhotoViewer
           src={profile.photo}
@@ -197,12 +160,6 @@ export function MobileProfileHeader({
           tint={avatarTint}
           onClose={() => setPhotoOpen(false)}
         />
-      )}
-
-      {qrOpen && (
-        <Suspense fallback={null}>
-          <ProfileQrModal profile={profile} onClose={() => setQrOpen(false)} />
-        </Suspense>
       )}
     </header>
   );

@@ -2,12 +2,35 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useMediaQuery, usePrefersReducedMotion } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { type LocalPlace } from "./localPlaces";
+import { type DirectoryPlace } from "./directoryPlaces";
+import { galleryShotsOf } from "./directoryGalleryShots";
+import { type Venue } from "./map.data";
 import { type VenueMarkerData } from "./venueMarker";
+
+/** The place's cover photo URL, or undefined when it has none. A demo venue
+ *  carries a hand-picked `photo`. A business's photos are its uploaded slots,
+ *  wide shot first; its `gallery` holds caption text for the placeholder
+ *  grid, so it is never read as an image. */
+function placePhoto(place: LocalPlace): string | undefined {
+  if (place.kind === "venue") {
+    return (place.source as Venue).photo || undefined;
+  }
+  return galleryShotsOf(place.source as DirectoryPlace)[0]?.url;
+}
+
+/** A verified safe space, or a moderator-verified queer-owned business. */
+function isPlaceVerified(place: LocalPlace): boolean {
+  if (place.safeSpaceStatus === "verified") return true;
+  return (
+    place.kind === "business" &&
+    (place.source as DirectoryPlace).queerOwnedVerified === true
+  );
+}
 
 /** Adapt a coords-having LocalPlace to the map's marker shape. Every pin keys off
  *  the unified `category` (venue types fold into it upstream), so bars + clubs
  *  read as one "nightlife" pin, community spaces + listed spaces as one "space"
- *  pin — one coherent icon/colour legend across the whole map. */
+ *  pin: one coherent icon/colour legend across the whole map. */
 function localPlaceToMarker(place: LocalPlace): VenueMarkerData {
   const coords = place.coords!;
   return {
@@ -17,6 +40,8 @@ function localPlaceToMarker(place: LocalPlace): VenueMarkerData {
     address: place.neighbourhood,
     latitude: coords.latitude,
     longitude: coords.longitude,
+    photo: placePhoto(place),
+    isVerified: isPlaceVerified(place),
   };
 }
 
@@ -48,6 +73,8 @@ export function useDirectoryMapView(
   // A place picked straight off the map. It takes over the sidebar (one card,
   // its own heading) instead of being hunted for inside a parish list.
   const [focusedId, setFocusedId] = useState<string | null>(null);
+  // The card under the pointer or keyboard focus, mirrored onto its pin.
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
   const mappable = useMemo(
@@ -161,6 +188,8 @@ export function useDirectoryMapView(
     selectedFreguesia,
     expandedId,
     focusedPlace,
+    hoveredId,
+    setHoveredId,
     been,
     markers,
     counts,

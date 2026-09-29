@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useRegisterShellFrame } from "../../../app/providers/shellFrame";
 import { AnnouncementBanner } from "../system/AnnouncementBanner";
+import { usePageShellLead } from "./PageShellLeadContext";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 
 /**
@@ -11,14 +12,20 @@ import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
  *
  * `tabIndex={-1}` on `<main>` is what makes the skip link actually work: without
  * it the fragment jump scrolls but leaves focus stranded back in the nav.
+ *
+ * A `PageShellLeadContext` provider above the page can hand it a lead (the
+ * admin guide preview bar) that renders first inside `<main>`, so it is the
+ * first stop for Tab after a route change focuses the landmark.
  */
 export function PageShell({ children }: { children: ReactNode }) {
   useRegisterShellFrame();
+  const lead = usePageShellLead();
   return (
     <>
       <SkipToContentLink />
       <AnnouncementBanner />
       <main id={MAIN_CONTENT_ID} tabIndex={-1} data-page-main>
+        {lead}
         {children}
       </main>
     </>

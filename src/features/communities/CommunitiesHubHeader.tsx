@@ -1,4 +1,4 @@
-import { FeatureHelp, SkeletonLine } from "../../shared/components/ui";
+import { SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
@@ -16,8 +16,19 @@ import type { DiscoverCommunities } from "./useDiscoverCommunities";
 import type { TopTab } from "./useCommunitiesTopTab";
 import styles from "./CommunitiesHubHeader.module.css";
 
-/** The ⓘ's read-more button: the page's own deeper explainer. */
-type HubHelpAction = { label: string; onClick: () => void };
+/**
+ * The quiet text button under the lead line that opens "How communities
+ * work". Both heading variants render it in the same place, so the explainer
+ * is one tap away on either tab.
+ */
+function HowItWorksButton({ onOpen }: { onOpen: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <button type="button" className={styles.howItWorksButton} onClick={onOpen}>
+      {t("communities:hub.howItWorksCta")}
+    </button>
+  );
+}
 
 /**
  * The "My communities" heading block: the page name steps down to an eyebrow
@@ -25,7 +36,11 @@ type HubHelpAction = { label: string; onClick: () => void };
  * part of the header that needs the membership map — mounted on this tab
  * alone, so Discover never pays for `GET /me/communities`.
  */
-function HubMineHeading({ helpAction }: { helpAction: HubHelpAction }) {
+function HubMineHeading({
+  onOpenHowItWorks,
+}: {
+  onOpenHowItWorks: () => void;
+}) {
   const { t } = useTranslation();
   const { profile } = useProfileData();
   const memberships = useMyCommunities();
@@ -34,16 +49,13 @@ function HubMineHeading({ helpAction }: { helpAction: HubHelpAction }) {
   return (
     <div className={styles.headingGroup}>
       <p className={styles.eyebrow}>{t("communities:hub.eyebrow")}</p>
-      <div className={styles.titleRow}>
-        <h1 className={styles.title}>
-          <Translation
-            i18nKey="communities:hub.welcome"
-            values={{ name: profile.first }}
-            components={{ em: <em /> }}
-          />
-        </h1>
-        <FeatureHelp id="communities.hub" action={helpAction} />
-      </div>
+      <h1 className={styles.title}>
+        <Translation
+          i18nKey="communities:hub.welcome"
+          values={{ name: profile.first }}
+          components={{ em: <em /> }}
+        />
+      </h1>
       {/* The lead line is a count, so it can't render until the count is
           known: "across your 0 communities" for the length of the membership
           fetch is a wrong number, not a loading state. */}
@@ -56,6 +68,7 @@ function HubMineHeading({ helpAction }: { helpAction: HubHelpAction }) {
           {t("communities:hub.sub", { count: Object.keys(memberships).length })}
         </p>
       )}
+      <HowItWorksButton onOpen={onOpenHowItWorks} />
       <HubInvitationsLink />
     </div>
   );
@@ -88,41 +101,34 @@ function HubInvitationsLink() {
 }
 
 /** Discover's heading block: the platform-wide title and its standing lead. */
-function HubDiscoverHeading({ helpAction }: { helpAction: HubHelpAction }) {
+function HubDiscoverHeading({
+  onOpenHowItWorks,
+}: {
+  onOpenHowItWorks: () => void;
+}) {
   const { t } = useTranslation();
 
   return (
     <div className={styles.headingGroup}>
-      {/* FeatureHelp sits beside the heading, not inside it, so the info
-          button doesn't pollute the h1's accessible name or inherit its
-          hero-scale font-size (see CommunityDetailHero for the same
-          pattern). */}
-      <div className={styles.titleRow}>
-        <h1 className={styles.title}>
-          {t("communities:hubShell.title")}{" "}
-          <em>{t("communities:hubShell.titleEm")}</em>
-        </h1>
-        <FeatureHelp id="communities.hub" action={helpAction} />
-      </div>
+      <h1 className={styles.title}>
+        {t("communities:hubShell.title")}{" "}
+        <em>{t("communities:hubShell.titleEm")}</em>
+      </h1>
       <p className={styles.lead}>{t("communities:hubShell.subtitle")}</p>
+      <HowItWorksButton onOpen={onOpenHowItWorks} />
     </div>
   );
 }
 
 /**
- * The ⓘ beside the title is now the page's only explainer affordance: "About
- * this screen" first, with "How communities work" as its read-more. That
- * explainer used to be a ghost button on the control row, one of two
- * explain-this-page controls a thumb's width apart, and the ~215px it took is
- * what let the row collapse to a single line.
+ * The "How communities work" explainer, the page's one explain-this-page
+ * affordance. It opens from a quiet text button directly under the lead line
+ * on both tabs, which keeps the control row free for the toolbar alone. The
+ * header renders `modalElement` once for whichever tab is showing.
  */
-function useHubHelp() {
-  const { t } = useTranslation();
+function useHowItWorksExplainer() {
   const { openModal, modalElement } = useHowCommunitiesWorkModal();
-  return {
-    action: { label: t("communities:hub.howItWorksCta"), onClick: openModal },
-    modalElement,
-  };
+  return { openExplainer: openModal, modalElement };
 }
 
 /**
@@ -143,15 +149,15 @@ export function CommunitiesHubHeader({
   active: TopTab;
   onChange: (next: TopTab) => void;
 }) {
-  const help = useHubHelp();
+  const explainer = useHowItWorksExplainer();
 
   return (
     <header className={styles.header}>
       <div className="wrap">
         {active === "mine" ? (
-          <HubMineHeading helpAction={help.action} />
+          <HubMineHeading onOpenHowItWorks={explainer.openExplainer} />
         ) : (
-          <HubDiscoverHeading helpAction={help.action} />
+          <HubDiscoverHeading onOpenHowItWorks={explainer.openExplainer} />
         )}
         <div className={styles.controls}>
           <CommunitiesToolbar
@@ -161,7 +167,7 @@ export function CommunitiesHubHeader({
           />
         </div>
       </div>
-      {help.modalElement}
+      {explainer.modalElement}
     </header>
   );
 }

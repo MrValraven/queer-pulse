@@ -10,7 +10,7 @@ import {
  * Save edits to the logged-in member's own profile. In demo mode this is a
  * no-op (the ProfileProvider keeps the change in local state) and resolves to
  * `undefined`; in live mode it PATCHes /profiles/me, refreshes any cached
- * profile/directory views, and resolves to the saved `ProfileDTO` — the caller
+ * profile/directory views, and resolves to the saved `ProfileDTO`. The caller
  * needs this to read back server-computed fields such as `avatarUrl`, which
  * the backend turns from a storage key into a fetchable files URL.
  */
@@ -25,6 +25,9 @@ export function useUpdateProfile() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["profile"] });
       void queryClient.invalidateQueries({ queryKey: ["members"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["platform-ambassadors"],
+      });
     },
   });
 }

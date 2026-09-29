@@ -38,4 +38,19 @@ describe("subprofile-skins", () => {
     // membership here would leak blank-titled items into that flow.
     expect(VISUAL_SECTIONS.includes("gallery")).toBe(false);
   });
+
+  it("puts the tabletop and fandom kinds in the quest family", () => {
+    for (const kind of [
+      "game_master",
+      "game_designer",
+      "cosplayer",
+      "streamer",
+    ] as const) {
+      expect(SKIN_OF[kind]).toBe("quest");
+    }
+    expect(SKIN_OF.podcaster).toBe("stage");
+    expect(SKIN_OF.voice_actor).toBe("stage");
+    expect(SKIN_OF.fanfic_writer).toBe("page");
+    expect(SKIN_OF.game_critic).toBe("page");
+  });
 });

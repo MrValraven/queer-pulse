@@ -54,7 +54,7 @@ export function RequestInviteForm({
   const [mutual, setMutual] = useState("");
   const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
   // Flipped by the first rejected submit. Until then, only the blur-driven
@@ -181,16 +181,13 @@ export function RequestInviteForm({
         onMutualBlur={() => setMutualTouched(true)}
       />
 
-      <div
-        className={`${styles.agreeRow} ${!agreed ? styles.locked : ""} ${shake ? styles.shake : ""}`}
-        onAnimationEnd={() => setShake(false)}
-      >
+      <div className={`${styles.agreeRow} ${!agreed ? styles.locked : ""}`}>
         {/* Read-only on purpose: reading the guidelines to the end is the only
-            way to tick this. A direct click (or Space) can't toggle it — it's
+            way to tick this. A direct click (or Space) can't toggle it: it's
             controlled by `agreed`, which only the guidelines' confirm button
             flips (via `onRead`), so `preventDefault` blocks any manual toggle.
-            A click while locked triggers a shake instead of doing nothing,
-            per design-best-practices: never leave a click silent. */}
+            A click while locked opens the guidelines, so the click always
+            leads somewhere useful. */}
         <input
           id="ri-agree"
           type="checkbox"
@@ -198,7 +195,7 @@ export function RequestInviteForm({
           readOnly
           onClick={(e) => {
             e.preventDefault();
-            if (!agreed) setShake(true);
+            if (!agreed) setIsGuidelinesOpen(true);
           }}
           aria-invalid={consentMissing}
           aria-describedby={!agreed ? "ri-agree-hint" : undefined}
@@ -207,7 +204,13 @@ export function RequestInviteForm({
           <Translation
             i18nKey="auth:requestInvite.agree"
             components={{
-              guidelines: <GuidelinesLink onRead={() => setAgreed(true)} />,
+              guidelines: (
+                <GuidelinesLink
+                  onRead={() => setAgreed(true)}
+                  isOpen={isGuidelinesOpen}
+                  onOpenChange={setIsGuidelinesOpen}
+                />
+              ),
             }}
           />
         </label>

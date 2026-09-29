@@ -51,6 +51,26 @@
     animation: none;
   }
 }
+/* Small phones (`--xs`, ≤480px): `.control`'s own left offset inside the
+   composer pill (the paperclip plus its gap, before this trigger) puts
+   `left: 0`'s containing block well past the screen's left edge, so this
+   panel's width ran off the right side there. Pinning to the viewport's own
+   side margins instead guarantees a 16px gap on both sides at every phone
+   width, whatever `.control`'s own offset happens to be. `--emoji-picker-
+   bottom` is set in `EmojiPicker.tsx` from `.control`'s live position (this
+   panel's `offsetParent`), reproducing the same spot `bottom: calc(100% +
+   16px)` lands on above the trigger; the `16px` fallback only covers the one
+   frame before that effect runs. */
+@media (--xs) {
+  .panel {
+    position: fixed;
+    top: auto;
+    bottom: var(--emoji-picker-bottom, 16px);
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
 
 /* The Emoji/Stickers segmented rail (a real ARIA tablist), sitting above the
    category rail only when the surface can send a sticker. Same 10px

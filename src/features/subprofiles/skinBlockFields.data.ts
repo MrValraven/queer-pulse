@@ -1,9 +1,14 @@
 import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 import { skinFor, type SkinFamily } from "./subprofile-skins";
 import {
-  THERAPIST_BLOCKS,
-  THERAPIST_CHAPTERS,
-} from "./therapistEditorChapters.data";
+  SAFETY_TOOLS,
+  SAFETY_TOOL_LABEL_KEY,
+  TABLE_FORMATS,
+  TABLE_FORMAT_LABEL_KEY,
+  TABLE_VIBES,
+  TABLE_VIBE_LABEL_KEY,
+} from "./questTable.data";
+import { THERAPIST_BLOCKS } from "./therapistEditorChapters.data";
 
 /**
  * Descriptor tables for the per-skin "Page blocks" editor pane
@@ -62,6 +67,11 @@ import {
  *    heading plus one line per topic (what a therapist helps with). Its
  *    `path` is `"section:<name>"`; it saves with the section's own rows and
  *    derives no `SkinData` block.
+ *  - `sectionList`: the full item list of a persona section (`section`),
+ *    edited with the section editor (drawer, reorder, feature, gallery
+ *    picker). Its `path` is `"section:<name>"`; it saves with the section's
+ *    own rows and derives no `SkinData` block. Every derived chapter uses it
+ *    for a kind's sections (`derivedSkinChapters.ts`).
  *
  * All copy is i18n KEYS resolved by the pane via `t(...)`; the intended EN
  * strings live in the build's `b2-i18n-keys.json` (catalogs updated separately).
@@ -85,7 +95,8 @@ export type SkinControlKind =
   | "choice"
   | "multiChoice"
   | "multiSelect"
-  | "sectionItems";
+  | "sectionItems"
+  | "sectionList";
 
 /** A status dot shown before a `segmented` option's label. */
 export type SkinOptionTone = "jade" | "amber" | "muted";
@@ -116,10 +127,19 @@ export interface SkinItemFieldDescriptor {
 
 /** Show a control only while another control's value is one of `values`
  *  (the waitlist note only for status "wait"). A control with no stored value
- *  counts as holding its own `defaultValue`. Hidden values stay stored. */
+ *  counts as holding its own `defaultValue`. Hidden values stay stored.
+ *  A control shown only while it holds a value of its own is a retired
+ *  field: see `SkinBlockControl.isRetired`. */
 export interface SkinShowWhen {
   path: string;
   values: string[];
+}
+
+/** Where a retired list's lines can move: a persona section, and the helper
+ *  naming it ("Older field. Move this into Credentials, then clear it."). */
+export interface SkinMoveTarget {
+  section: SubprofileSection;
+  helperKey: string;
 }
 
 export interface SkinBlockControl {
@@ -142,6 +162,22 @@ export interface SkinBlockControl {
   /** Chaptered editor only: render this control only under a condition (every
    *  condition in an array must hold). */
   showWhen?: SkinShowWhen | SkinShowWhen[];
+  /** Chaptered editor only: a retired field, for a fact that now lives in
+   *  one other place. It shows only while it holds a value, with its
+   *  `helperKey` saying where the fact lives now, so an older answer can be
+   *  moved there and cleared. Once empty it leaves the chapter and its fill
+   *  count, and never comes back. The value still saves as it stands, and the
+   *  public page keeps showing it until it is cleared. */
+  isRetired?: boolean;
+  /** Retired `lines` only: the persona sections its lines can move into, in
+   *  order of preference. A derived chapter keeps the first one the kind has
+   *  as `moveToSection`, with that target's helper; a kind with none keeps
+   *  the control as a live field with its own `helperKey`
+   *  (`derivedSkinChapters.ts`). */
+  moveTargets?: SkinMoveTarget[];
+  /** Set from `moveTargets` for the persona's kind: the section the "Move to"
+   *  action adds one row per line to (`SkinMoveToSectionAction`). */
+  moveToSection?: SubprofileSection;
   /** `text` and `lines`: a one-line field that wraps long values onto more
    *  lines (a `rows=1` textarea that never stores a newline). */
   isWrapping?: boolean;
@@ -171,8 +207,11 @@ export interface SkinBlockControl {
   /** Chapter `multiSelect` only: option values shown as inline toggle chips;
    *  the rest stay in the full list. */
   featuredValues?: string[];
-  /** `sectionItems` only: the persona section whose items this control edits. */
+  /** `sectionItems` and `sectionList`: the persona section this control edits. */
   section?: SubprofileSection;
+  /** `sectionList` only: hide the spotlight star, for a page that never
+   *  shows a spotlight. */
+  isFeatureHidden?: boolean;
 }
 
 /** One card of a chapter: an optional heading and helper over its controls. */
@@ -220,6 +259,8 @@ function objectBlock(
     labelKey: string;
     multiline?: boolean;
     placeholderKey?: string;
+    helperKey?: string;
+    isRetired?: boolean;
   }[],
 ): SkinBlockDescriptor {
   return {
@@ -230,6 +271,8 @@ function objectBlock(
       kind: field.multiline ? "textarea" : "text",
       labelKey: field.labelKey,
       placeholderKey: field.placeholderKey,
+      ...(field.helperKey ? { helperKey: field.helperKey } : {}),
+      ...(field.isRetired ? { isRetired: true } : {}),
     })),
   };
 }
@@ -238,6 +281,16 @@ const label = (family: SkinFamily, block: string, field: string): string =>
   `subprofiles:skinBlock.${family}.${block}.${field}`;
 const title = (family: SkinFamily, block: string): string =>
   `subprofiles:skinBlock.${family}.${block}.title`;
+
+/** A retired sub-field of the practice `practical` block: shown only while
+ *  it holds a value, its helper keyed
+ *  `skinBlock.practice.practical.<field>RetiredHelper`. */
+const retiredPracticalField = (key: string) => ({
+  key,
+  labelKey: label("practice", "practical", key),
+  helperKey: label("practice", "practical", `${key}RetiredHelper`),
+  isRetired: true,
+});
 
 /** A whole-block `string[]` as reorderable one-line rows, its example and
  *  add label keyed `skinBlock.<family>.<block>.placeholder` and `.add`. */
@@ -424,21 +477,37 @@ const PRACTICE_VENUE_BLOCK: SkinBlockDescriptor = {
 };
 
 const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
+  // The fee and sliding scale now live in the Fees list, and the next
+  // opening in the availability calendar: each shows here only while it
+  // still holds an older answer.
   objectBlock("practical", title("practice", "practical"), [
-    { key: "fee", labelKey: label("practice", "practical", "fee") },
-    { key: "sliding", labelKey: label("practice", "practical", "sliding") },
+    retiredPracticalField("fee"),
+    retiredPracticalField("sliding"),
     { key: "length", labelKey: label("practice", "practical", "length") },
     { key: "languages", labelKey: label("practice", "practical", "languages") },
     { key: "mode", labelKey: label("practice", "practical", "mode") },
-    { key: "next", labelKey: label("practice", "practical", "next") },
+    retiredPracticalField("next"),
   ]),
   PRACTICE_FIRST_SESSION_BLOCK,
   linesBlock("practice", "access"),
   PRACTICE_REFERRALS_BLOCK,
   PRACTICE_APPROACH_BLOCK,
+  // Training now lives in the persona's Credentials list (a yoga teacher's
+  // Trainings). A kind with neither keeps this list live, with its own helper.
   linesBlock("practice", "training", {
     isWrapping: true,
     helperKey: label("practice", "training", "helper"),
+    isRetired: true,
+    moveTargets: [
+      {
+        section: "credentials",
+        helperKey: label("practice", "training", "retiredHelper"),
+      },
+      {
+        section: "trainings",
+        helperKey: label("practice", "training", "retiredHelperTrainings"),
+      },
+    ],
   }),
   objectListBlock("practice", "feeSchedule", "pairs", [
     itemField("practice", "feeSchedule", "label"),
@@ -550,12 +619,79 @@ const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
   linesBlock("classroom", "promises", { isWrapping: true }),
 ];
 
+/** Quest: how the table runs. One block so the pending-changes list names it
+ *  once; format and vibe are fixed vocabularies because the directory filters
+ *  on them. */
+const QUEST_BLOCKS: SkinBlockDescriptor[] = [
+  {
+    blockKey: "atTheTable",
+    titleKey: title("quest", "atTheTable"),
+    helperKey: label("quest", "atTheTable", "helper"),
+    controls: [
+      {
+        path: "atTheTable.format",
+        kind: "choice",
+        labelKey: label("quest", "atTheTable", "format"),
+        options: TABLE_FORMATS.map((value) => ({
+          value,
+          labelKey: TABLE_FORMAT_LABEL_KEY[value],
+        })),
+      },
+      {
+        path: "atTheTable.where",
+        kind: "text",
+        labelKey: label("quest", "atTheTable", "where"),
+        placeholderKey: label("quest", "atTheTable", "wherePlaceholder"),
+        isWrapping: true,
+      },
+      {
+        path: "atTheTable.systems",
+        kind: "lines",
+        labelKey: label("quest", "atTheTable", "systems"),
+        placeholderKey: label("quest", "atTheTable", "systemsPlaceholder"),
+        addLabelKey: label("quest", "atTheTable", "systemsAdd"),
+      },
+      {
+        path: "atTheTable.safetyTools",
+        kind: "multiChoice",
+        labelKey: label("quest", "atTheTable", "safetyTools"),
+        options: SAFETY_TOOLS.map((value) => ({
+          value,
+          labelKey: SAFETY_TOOL_LABEL_KEY[value],
+        })),
+      },
+      {
+        path: "atTheTable.vibe",
+        kind: "multiChoice",
+        labelKey: label("quest", "atTheTable", "vibe"),
+        options: TABLE_VIBES.map((value) => ({
+          value,
+          labelKey: TABLE_VIBE_LABEL_KEY[value],
+        })),
+      },
+      {
+        path: "atTheTable.price",
+        kind: "text",
+        labelKey: label("quest", "atTheTable", "price"),
+        placeholderKey: label("quest", "atTheTable", "pricePlaceholder"),
+        isWrapping: true,
+      },
+      {
+        path: "atTheTable.note",
+        kind: "textarea",
+        labelKey: label("quest", "atTheTable", "note"),
+      },
+    ],
+  },
+];
+
 /**
- * Editable `SkinData` blocks per family. `studio`/`workshop` have no
+ * Editable `SkinData` blocks per family. `studio` and `workshop` have no
  * owner-editable persona-level block (their skins render only from section
- * items), so they are absent and a persona in those families shows no "Page
- * blocks" rail entry. The per-dish menu COURSES (`ItemStructured.courses`) are
- * item-structured data edited elsewhere, so they are out of scope here.
+ * items), so they are absent here and their Page blocks chapters come from
+ * their sections alone (`derivedSkinChapters.ts`). The per-dish menu
+ * COURSES (`ItemStructured.courses`) are item-structured data edited
+ * elsewhere, so they are out of scope here.
  */
 export const SKIN_BLOCKS_BY_FAMILY: Partial<
   Record<SkinFamily, SkinBlockDescriptor[]>
@@ -571,6 +707,7 @@ export const SKIN_BLOCKS_BY_FAMILY: Partial<
   history: HISTORY_BLOCKS,
   collective: COLLECTIVE_BLOCKS,
   classroom: CLASSROOM_BLOCKS,
+  quest: QUEST_BLOCKS,
 };
 
 /**
@@ -593,27 +730,4 @@ export function skinBlocksForKind(kind: SubprofileKind): SkinBlockDescriptor[] {
   return (
     SKIN_BLOCKS_BY_KIND[kind] ?? SKIN_BLOCKS_BY_FAMILY[skinFor(kind)] ?? []
   );
-}
-
-/** Kinds whose "Page blocks" pane is split into chapters (`?chapter=`). Every
- *  control in a kind's chapters also sits in its `SKIN_BLOCKS_BY_KIND` table,
- *  except a `sectionItems` control, which saves with its section. */
-const SKIN_CHAPTERS_BY_KIND: Partial<
-  Record<SubprofileKind, SkinChapterDescriptor[]>
-> = {
-  therapist: THERAPIST_CHAPTERS,
-};
-
-/** The chapters of a persona kind's "Page blocks" pane, or `[]` when the kind
- *  keeps the single-scroll block editor. */
-export function skinChaptersForKind(
-  kind: SubprofileKind,
-): SkinChapterDescriptor[] {
-  return SKIN_CHAPTERS_BY_KIND[kind] ?? [];
-}
-
-/** Whether this persona's skin has any owner-editable `SkinData` block. Gates
- *  the "Page blocks" rail entry + pane. */
-export function hasSkinBlocks(kind: SubprofileKind): boolean {
-  return skinBlocksForKind(kind).length > 0;
 }

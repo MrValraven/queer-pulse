@@ -57,6 +57,16 @@
   flex: none;
   flex-wrap: wrap;
 }
+/* On a phone the actions drop below the title. Side by side, `.phActions`
+   keeps its full width (`flex: none`) and squeezes the title and sub into a
+   column a letter or two wide. */
+@media (max-width: 719.98px) {
+  .ph {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
 
 @keyframes adminPulse {
   0%,

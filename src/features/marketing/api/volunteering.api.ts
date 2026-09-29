@@ -36,8 +36,11 @@ export type Commit = "low" | "medium";
 export interface OpportunityCardDTO {
   slug: string;
   org: string;
-  partner: { slug: string; name: string } | null;
-  community: { slug: string; name: string } | null;
+  /** `logo` is the partner's own short text mark, shown in the card's badge. */
+  partner: { slug: string; name: string; logo: string } | null;
+  /** `avatarUrl` is a resolved, fetchable image URL, or null when the
+   *  community has no avatar (the card badge then shows initials). */
+  community: { slug: string; name: string; avatarUrl: string | null } | null;
   role: string;
   /** One to three, poster-ordered. `causes[0]` is the one the card leads with
    *  and takes its avatar tint from, so never sort this for display. */

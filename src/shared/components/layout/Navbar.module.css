@@ -242,6 +242,46 @@
   }
 }
 
+/* Compact pill (861px to NAV_COMPACT_MAX_PX in Navbar.tsx): a labelled Menu
+   button takes the MegaNav row's place and opens the browse drawer. It sits
+   next to the brand, where the row starts, instead of floating mid-bar. */
+.compactMenu {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding-inline: var(--gap-sm);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+.compactMenu[aria-expanded="true"] {
+  background: rgba(var(--plum-rgb), 0.06);
+}
+@media (hover: hover) {
+  .compactMenu:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    border-color: rgba(var(--line-rgb), 0.32);
+  }
+}
+/* --nav-compact is the CSS twin of NAV_COMPACT_MAX_PX in Navbar.tsx, so the row
+   and the Menu button switch at the same width. */
+@media (--nav-compact) {
+  .links {
+    margin-inline-end: auto;
+  }
+}
+
 .menuButton {
   display: none;
   width: 40px;
@@ -326,6 +366,7 @@
 :global([data-theme="dark"]) .brand,
 :global([data-theme="dark"]) .themeToggle,
 :global([data-theme="dark"]) .menuButton,
+:global([data-theme="dark"]) .compactMenu,
 :global([data-theme="dark"]) .signIn {
   color: rgba(var(--cream-rgb), 1);
 }

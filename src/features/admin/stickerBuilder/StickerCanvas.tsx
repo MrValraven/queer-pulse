@@ -1,30 +1,32 @@
 import { useEffect, useRef } from "react";
 import { drawStickerOnCanvas } from "../../stickers/render/renderStickerBlob";
-import { unoReverseGeometry } from "../../stickers/templates/unoReverse.geometry";
-import {
-  STICKER_CANVAS_SIZE,
-  type UnoReverseParams,
-} from "../../stickers/templates/unoReverse.params";
+import { STICKER_CANVAS_SIZE } from "../../stickers/templates/unoReverse.params";
+import type {
+  StickerTemplate,
+  TemplateStyle,
+} from "../../stickers/templates/templateDefinition";
 
 /**
  * One live sticker drawn from the same geometry that ships. The backing store
  * is always the sticker's true 512px size and the caller sizes the element in
  * CSS, so a 112px tile and the 320px hero show identical art.
  *
- * Drawing waits for the next animation frame: a slider drag changes `params`
- * many times a frame, and the flag grid holds two dozen of these, so
+ * Drawing waits for the next animation frame: a slider drag changes `style`
+ * many times a frame, and the item grid holds two dozen of these, so
  * coalescing keeps a drag at one paint per canvas per frame.
  *
  * A canvas paints pixels only, hence `role="img"` and the caller's label.
  */
 export function StickerCanvas({
-  flagId,
-  params,
+  template,
+  style,
+  itemId,
   className,
   label,
 }: {
-  flagId: string;
-  params: UnoReverseParams;
+  template: StickerTemplate;
+  style: TemplateStyle;
+  itemId: string;
   className?: string;
   label: string;
 }) {
@@ -34,11 +36,11 @@ export function StickerCanvas({
     const frameId = requestAnimationFrame(() => {
       const canvas = canvasRef.current;
       if (!canvas) return;
-      const primitives = unoReverseGeometry({ ...params, flagId });
+      const primitives = template.geometry(style, itemId);
       drawStickerOnCanvas(canvas, primitives, STICKER_CANVAS_SIZE);
     });
     return () => cancelAnimationFrame(frameId);
-  }, [flagId, params]);
+  }, [template, style, itemId]);
 
   return (
     <canvas

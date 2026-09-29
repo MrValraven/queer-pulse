@@ -72,6 +72,7 @@
 
 .rowActions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   flex: none;
 }

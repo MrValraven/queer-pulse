@@ -2,48 +2,47 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
 import type { AdminStickerPackResponse } from "../../../shared/contracts/contracts";
-import { useUploadImage } from "../../members/api/useUploadImage";
+import {
+  useUploadImage,
+  type UploadResult,
+} from "../../members/api/useUploadImage";
 import { renderStickerBlob } from "../../stickers/render/renderStickerBlob";
 import { primitivesToSvg } from "../../stickers/render/primitivesToSvg";
-import { unoReverseGeometry } from "../../stickers/templates/unoReverse.geometry";
-import {
-  STICKER_CANVAS_SIZE,
-  type UnoReverseParams,
-} from "../../stickers/templates/unoReverse.params";
+import { STICKER_CANVAS_SIZE } from "../../stickers/templates/unoReverse.params";
+import { templateById } from "../../stickers/templates/registry";
+import type {
+  StickerTemplate,
+  TemplateStyle,
+} from "../../stickers/templates/templateDefinition";
 import {
   ADMIN_STICKER_PACKS_KEY,
   useAddSticker,
   useUpdateSticker,
 } from "../../stickers/api/useAdminStickerPacks";
 import type {
-  FlagPlanEntry,
-  FlagRunState,
+  ItemPlanEntry,
+  ItemRunState,
   PublishFailureReason,
   PublishMode,
   StickerPublishRun,
   StickerPublishSummary,
 } from "./stickerBuilder.types";
-import {
-  buildFlagPlan,
-  stickerKeywordsForFlag,
-  stickerSlugForFlag,
-} from "./stickerFlags";
-
-const UNO_REVERSE_TEMPLATE_ID = "uno-reverse";
+import { buildItemPlan } from "./stickerItems";
 
 interface StartRunArgs {
   pack: AdminStickerPackResponse;
-  plan: FlagPlanEntry[];
+  template: StickerTemplate;
+  plan: ItemPlanEntry[];
   mode: PublishMode;
-  params: UnoReverseParams;
-  labelsByFlagId: Record<string, string>;
+  style: TemplateStyle;
+  labelsByItemId: Record<string, string>;
 }
 
-/** A failed flag a retry found already in the pack, carried into the new run
+/** A failed item a retry found already in the pack, carried into the new run
  *  as done. */
-interface LandedFlag {
-  flagId: string;
-  action: StickerPublishRun["actionByFlag"][string];
+interface LandedItem {
+  itemId: string;
+  action: StickerPublishRun["actionByItem"][string];
 }
 
 /** Counts a run's outcomes for the progress bar and the result line. */
@@ -59,12 +58,12 @@ export function summarizeRun(
     replacedCount: 0,
   };
   if (!run) return summary;
-  summary.totalCount = run.flagIds.length;
-  for (const flagId of run.flagIds) {
-    const status = run.stateByFlag[flagId]?.status;
+  summary.totalCount = run.itemIds.length;
+  for (const itemId of run.itemIds) {
+    const status = run.stateByItem[itemId]?.status;
     if (status === "done") {
       summary.doneCount += 1;
-      if (run.actionByFlag[flagId] === "replace") summary.replacedCount += 1;
+      if (run.actionByItem[itemId] === "replace") summary.replacedCount += 1;
       else summary.addedCount += 1;
     } else if (status === "failed") {
       summary.failedCount += 1;
@@ -105,58 +104,99 @@ function failureReasonOf(
 }
 
 /**
- * The failed flags of a finished run, re-planned against the pack as it
- * stands now. A flag whose add landed server-side (a POST that timed out on
- * the way back, then failed as "Already in this pack") becomes a skip in "Add
- * missing only", and a replace targets the sticker the pack holds today.
+ * The failed items of a finished run, re-planned against the pack as it
+ * stands now, against the template the run was drawn with (the caller
+ * resolves it first and never calls this when the template is no longer
+ * registered). An item whose add landed server-side (a POST that timed out
+ * on the way back, then failed as "Already in this pack") becomes a skip in
+ * "Add missing only", and a replace targets the sticker the pack holds
+ * today.
  */
 function retryPlanFor(
   run: StickerPublishRun,
   latestPack: AdminStickerPackResponse,
-): FlagPlanEntry[] {
-  const failedFlagIds = run.flagIds.filter(
-    (flagId) => run.stateByFlag[flagId]?.status === "failed",
+  template: StickerTemplate,
+): ItemPlanEntry[] {
+  const failedItemIds = run.itemIds.filter(
+    (itemId) => run.stateByItem[itemId]?.status === "failed",
   );
-  if (failedFlagIds.length === 0) return [];
-  return buildFlagPlan(failedFlagIds, latestPack, run.mode);
+  if (failedItemIds.length === 0) return [];
+  return buildItemPlan(template, failedItemIds, latestPack, run.mode);
 }
 
-/** The retry plan's skips: flags the pack already holds did land, so they
+/** The retry plan's skips: items the pack already holds did land, so they
  *  read as done, under the action they were first sent as. */
-function landedFlagsOf(
-  retryPlan: FlagPlanEntry[],
+function landedItemsOf(
+  retryPlan: ItemPlanEntry[],
   run: StickerPublishRun,
-): LandedFlag[] {
+): LandedItem[] {
   return retryPlan
     .filter((entry) => entry.action === "skip")
     .map((entry) => ({
-      flagId: entry.flagId,
-      action: run.actionByFlag[entry.flagId] ?? "add",
+      itemId: entry.itemId,
+      action: run.actionByItem[entry.itemId] ?? "add",
     }));
 }
 
+/** One item's rendered artwork, uploaded and ready for `addSticker` or
+ *  `updateSticker`, plus the local preview URL the caller must revoke once
+ *  it is done with it. Pulled out of `publishItem` so the render-then-upload
+ *  steps read as one call there. */
+async function uploadItemArtwork(
+  template: StickerTemplate,
+  style: TemplateStyle,
+  itemId: string,
+  uploadImage: (file: File) => Promise<UploadResult>,
+): Promise<{
+  artwork: {
+    storageKey: string;
+    width: number;
+    height: number;
+    svgSource: string;
+    templateId: string;
+    templateParams: Record<string, unknown>;
+  };
+  previewUrl: string;
+}> {
+  const primitives = template.geometry(style, itemId);
+  const blob = await renderStickerBlob(primitives);
+  const file = new File([blob], `${itemId}.png`, { type: "image/png" });
+  const uploaded = await uploadImage(file);
+  return {
+    previewUrl: uploaded.previewUrl,
+    artwork: {
+      storageKey: uploaded.key,
+      width: STICKER_CANVAS_SIZE,
+      height: STICKER_CANVAS_SIZE,
+      svgSource: primitivesToSvg(primitives, STICKER_CANVAS_SIZE),
+      templateId: template.id,
+      templateParams: template.toParams(style, itemId),
+    },
+  };
+}
+
 /**
- * Publish one sticker per planned flag, sequentially, as a run the builder
- * can watch flag by flag.
+ * Publish one sticker per planned item, sequentially, as a run the builder
+ * can watch item by item.
  *
- * Sequential on purpose: every flag is a presign round trip plus an S3 PUT
+ * Sequential on purpose: every item is a presign round trip plus an S3 PUT
  * plus a metadata call, and firing twelve of those at once would burn the
  * per-user presign rate limit (20 per minute) and give no usable progress.
  *
- * An "add" creates the sticker with its label and default keywords. A
- * "replace" sends the redrawn artwork only, so the sticker keeps its id,
- * order and cover status, and the label and keywords an admin may have
- * edited stay as they are.
+ * An "add" creates the sticker with its label and the template item's default
+ * keywords. A "replace" sends the redrawn artwork only, so the sticker keeps
+ * its id, order and cover status, and the label and keywords an admin may
+ * have edited stay as they are.
  *
  * A failure part-way leaves the stickers already written in place and marks
- * that flag failed with a reason, so `retryFailed` re-runs only the flags
+ * that item failed with a reason, so `retryFailed` re-runs only the items
  * that did not land, and the rest of the pack stays untouched.
  *
- * `labelsByFlagId` carries the translated "<Flag> reverse" label for every
- * flag the page currently shows, resolved by the caller through `t()`. This
+ * `labelsByItemId` carries the translated label for every item the page
+ * currently shows, resolved by the caller through `stickerLabelFor`. This
  * hook stays translation-free on purpose: resolving labels once in the
  * caller keeps `useTranslation`'s read of the active language to a single
- * pass, ahead of the sequential loop. A raw flag id must never ship as a
+ * pass, ahead of the sequential loop. A raw item id must never ship as a
  * sticker's label, because that label becomes the sticker's alt text and
  * its reply-quote line.
  */
@@ -173,7 +213,7 @@ export function useStickerPublish() {
   // navigated away stops there rather than starting a run or updating state.
   const isMountedRef = useRef(true);
   // The inputs of the last run, kept so `retryFailed` can rebuild it from
-  // its failed flags with the same mode, params and labels (the pack itself
+  // its failed items with the same mode, style and labels (the pack itself
   // is read fresh from the admin list, see `retryPlanFor`).
   const lastRunArgsRef = useRef<StartRunArgs | null>(null);
   // Set while `retryFailed` refetches the pack list, so a second tap on
@@ -183,15 +223,15 @@ export function useStickerPublish() {
   const isRetryPendingRef = useRef(false);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  const setFlagState = useCallback(
-    (flagId: string, flagState: FlagRunState) => {
-      // Functional on purpose: a fast flag can land its "running" and "done"
+  const setItemState = useCallback(
+    (itemId: string, itemState: ItemRunState) => {
+      // Functional on purpose: a fast item can land its "running" and "done"
       // updates in the same tick, and a closure over `run` would drop one.
       setRun((previous) =>
         previous
           ? {
               ...previous,
-              stateByFlag: { ...previous.stateByFlag, [flagId]: flagState },
+              stateByItem: { ...previous.stateByItem, [itemId]: itemState },
             }
           : previous,
       );
@@ -199,34 +239,28 @@ export function useStickerPublish() {
     [],
   );
 
-  const publishFlag = useCallback(
-    async (entry: FlagPlanEntry, args: StartRunArgs) => {
-      const { flagId } = entry;
+  const publishItem = useCallback(
+    async (entry: ItemPlanEntry, args: StartRunArgs) => {
+      const { itemId } = entry;
       const existingSticker = entry.existingSticker;
       if (entry.action === "replace" && existingSticker === null) {
         // A replace with nothing to replace is a broken plan. Failing the
-        // flag keeps it visible, where adding would quietly create a second
+        // item keeps it visible, where adding would quietly create a second
         // sticker the admin never asked for.
-        setFlagState(flagId, { status: "failed", failureReason: "unknown" });
+        setItemState(itemId, { status: "failed", failureReason: "unknown" });
         return;
       }
-      const stickerParams: UnoReverseParams = { ...args.params, flagId };
       let isArtworkStep = true;
       let previewUrl: string | null = null;
       try {
-        const primitives = unoReverseGeometry(stickerParams);
-        const blob = await renderStickerBlob(primitives);
-        const file = new File([blob], `${flagId}.png`, { type: "image/png" });
-        const uploaded = await uploadImage(file);
+        const uploaded = await uploadItemArtwork(
+          args.template,
+          args.style,
+          itemId,
+          uploadImage,
+        );
         previewUrl = uploaded.previewUrl;
-        const artwork = {
-          storageKey: uploaded.key,
-          width: STICKER_CANVAS_SIZE,
-          height: STICKER_CANVAS_SIZE,
-          svgSource: primitivesToSvg(primitives, STICKER_CANVAS_SIZE),
-          templateId: UNO_REVERSE_TEMPLATE_ID,
-          templateParams: { ...stickerParams },
-        };
+        const artwork = uploaded.artwork;
         isArtworkStep = false;
         if (existingSticker !== null && entry.action === "replace") {
           await updateSticker.mutateAsync({
@@ -235,19 +269,22 @@ export function useStickerPublish() {
             body: { artwork },
           });
         } else {
+          const item = args.template.items.find(
+            (templateItem) => templateItem.id === itemId,
+          );
           await addSticker.mutateAsync({
             packId: args.pack.id,
             body: {
               ...artwork,
-              slug: stickerSlugForFlag(flagId),
-              label: args.labelsByFlagId[flagId] ?? flagId,
-              keywords: stickerKeywordsForFlag(flagId),
+              slug: args.template.slugFor(itemId),
+              label: args.labelsByItemId[itemId] ?? itemId,
+              keywords: item?.keywords,
             },
           });
         }
-        setFlagState(flagId, { status: "done" });
+        setItemState(itemId, { status: "done" });
       } catch (error) {
-        setFlagState(flagId, {
+        setItemState(itemId, {
           status: "failed",
           failureReason: failureReasonOf(error, isArtworkStep),
         });
@@ -257,41 +294,42 @@ export function useStickerPublish() {
         if (previewUrl) URL.revokeObjectURL(previewUrl);
       }
     },
-    [uploadImage, addSticker, updateSticker, setFlagState],
+    [uploadImage, addSticker, updateSticker, setItemState],
   );
 
-  // `landedFlags` are flags a retry found already in the pack. They join the
+  // `landedItems` are items a retry found already in the pack. They join the
   // new run as done, with the action they were first sent as, so the result
   // line keeps counting them as part of the run they now belong to.
   const startRun = useCallback(
-    async (args: StartRunArgs, landedFlags: readonly LandedFlag[]) => {
+    async (args: StartRunArgs, landedItems: readonly LandedItem[]) => {
       if (isRunningRef.current) return;
       const entries = args.plan.filter((entry) => entry.action !== "skip");
       if (entries.length === 0) return;
       isRunningRef.current = true;
       isCancelRequestedRef.current = false;
       lastRunArgsRef.current = args;
-      const actionByFlag: StickerPublishRun["actionByFlag"] = {};
-      const stateByFlag: StickerPublishRun["stateByFlag"] = {};
-      for (const landed of landedFlags) {
-        actionByFlag[landed.flagId] = landed.action;
-        stateByFlag[landed.flagId] = { status: "done" };
+      const actionByItem: StickerPublishRun["actionByItem"] = {};
+      const stateByItem: StickerPublishRun["stateByItem"] = {};
+      for (const landed of landedItems) {
+        actionByItem[landed.itemId] = landed.action;
+        stateByItem[landed.itemId] = { status: "done" };
       }
       for (const entry of entries) {
-        actionByFlag[entry.flagId] =
+        actionByItem[entry.itemId] =
           entry.action === "replace" ? "replace" : "add";
-        stateByFlag[entry.flagId] = { status: "queued" };
+        stateByItem[entry.itemId] = { status: "queued" };
       }
       setRun({
         packId: args.pack.id,
         packName: args.pack.name,
         mode: args.mode,
-        flagIds: [
-          ...landedFlags.map((landed) => landed.flagId),
-          ...entries.map((entry) => entry.flagId),
+        templateId: args.template.id,
+        itemIds: [
+          ...landedItems.map((landed) => landed.itemId),
+          ...entries.map((entry) => entry.itemId),
         ],
-        actionByFlag,
-        stateByFlag,
+        actionByItem,
+        stateByItem,
         isRunning: true,
       });
       // The teardown belongs in `finally`, structurally, rather than as the
@@ -302,12 +340,12 @@ export function useStickerPublish() {
         for (const [index, entry] of entries.entries()) {
           if (isCancelRequestedRef.current) {
             for (const remaining of entries.slice(index)) {
-              setFlagState(remaining.flagId, { status: "cancelled" });
+              setItemState(remaining.itemId, { status: "cancelled" });
             }
             break;
           }
-          setFlagState(entry.flagId, { status: "running" });
-          await publishFlag(entry, args);
+          setItemState(entry.itemId, { status: "running" });
+          await publishItem(entry, args);
         }
       } finally {
         isRunningRef.current = false;
@@ -316,7 +354,7 @@ export function useStickerPublish() {
         );
       }
     },
-    [publishFlag, setFlagState],
+    [publishItem, setItemState],
   );
 
   const start = useCallback(
@@ -333,11 +371,15 @@ export function useStickerPublish() {
     if (!run || run.isRunning || !lastRunArgs || isRetryPendingRef.current) {
       return;
     }
+    // A template dropped from the registry between the failed run and this
+    // retry leaves nothing to redraw the failed items with.
+    const template = templateById(run.templateId);
+    if (!template) return;
     isRetryPendingRef.current = true;
     setIsRetrying(true);
     try {
       // The cached list can predate a POST that landed and then timed out on
-      // the way back. Re-planning from it would send that flag as an add
+      // the way back. Re-planning from it would send that item as an add
       // again, so the list is read fresh from the server first.
       await queryClient.refetchQueries({
         queryKey: ADMIN_STICKER_PACKS_KEY,
@@ -359,23 +401,23 @@ export function useStickerPublish() {
       queryClient
         .getQueryData<AdminStickerPackResponse[]>(ADMIN_STICKER_PACKS_KEY)
         ?.find((pack) => pack.id === run.packId) ?? lastRunArgs.pack;
-    const retryPlan = retryPlanFor(run, latestPack);
+    const retryPlan = retryPlanFor(run, latestPack, template);
     if (retryPlan.length === 0) return;
-    const landedFlags = landedFlagsOf(retryPlan, run);
-    if (landedFlags.length === retryPlan.length) {
+    const landedItems = landedItemsOf(retryPlan, run);
+    if (landedItems.length === retryPlan.length) {
       // Nothing is left to send, so this is the whole retry: the marks go on
       // the finished run, and its result line and the grid badges agree with
       // the pack.
-      for (const landed of landedFlags) {
-        setFlagState(landed.flagId, { status: "done" });
+      for (const landed of landedItems) {
+        setItemState(landed.itemId, { status: "done" });
       }
       return;
     }
     await startRun(
-      { ...lastRunArgs, pack: latestPack, plan: retryPlan },
-      landedFlags,
+      { ...lastRunArgs, pack: latestPack, template, plan: retryPlan },
+      landedItems,
     );
-  }, [queryClient, run, setFlagState, startRun]);
+  }, [queryClient, run, setItemState, startRun]);
 
   const dismiss = useCallback(() => {
     if (isRunningRef.current) return;
@@ -384,7 +426,7 @@ export function useStickerPublish() {
     setRun(null);
   }, []);
 
-  // Leaving the page mid-run strands the flags still queued, so the browser
+  // Leaving the page mid-run strands the items still queued, so the browser
   // asks first while a run is in flight.
   const isRunning = run?.isRunning ?? false;
   useEffect(() => {
@@ -396,7 +438,7 @@ export function useStickerPublish() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isRunning]);
 
-  // An in-app navigation away unmounts the builder; the flag in flight
+  // An in-app navigation away unmounts the builder; the item in flight
   // finishes and the rest stop, so no sticker lands where nobody can see it.
   // `isMountedRef` is cleared at the same time, so a retry's refetch that
   // resolves after this point sees it and stops in `retryFailed`.

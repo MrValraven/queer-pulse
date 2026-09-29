@@ -1,207 +1,285 @@
-.page {
-  min-height: 100svh;
+/* The 404's own pieces. The plum stage, its layout, the eyebrow, title and
+   lead come from SystemStage, and the mascot is Ping in its searching mood;
+   what is left here is the address echo, the search, the actions and the
+   popular places list. Everything sits on locked plum, so type uses the
+   cream channels. */
+
+/* ── The requested address, small and on one line ── */
+.path {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 20px 28px var(--section-y-80);
-  text-align: center;
-  position: relative;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 100%;
+  margin: calc(-1 * clamp(6px, 1.5vh, 12px)) 0 clamp(20px, 3.5vh, 28px);
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+}
+
+.pathLabel {
+  flex: none;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+
+.pathValue {
+  min-width: 0;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(var(--cream-rgb), 0.78);
 }
 
-.page::before {
-  content: "";
-  position: absolute;
-  top: -15%;
-  right: -5%;
-  width: 560px;
-  height: 560px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--accent-rgb), 0.07),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-
-.page::after {
-  content: "";
-  position: absolute;
-  bottom: -10%;
-  left: -4%;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--jade-rgb), 0.06),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-
-.numBg {
-  font-family: var(--serif);
-  font-size: clamp(6.25rem, 18vw, 13.75rem);
-  font-weight: 300;
-  color: var(--text-strong);
-  letter-spacing: -0.04em;
-  line-height: 0.85;
-  opacity: 0.12;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%);
-  pointer-events: none;
-  user-select: none;
-}
-
-.content {
-  position: relative;
-  z-index: 1;
-  max-width: 520px;
-}
-
-.eyebrow {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-
-.title {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-display);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.98;
-  margin-bottom: 18px;
-}
-
-.title em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-
-.sub {
-  font-size: var(--text-16-5);
-  color: var(--ink-60);
-  line-height: 1.72;
-  margin-bottom: 36px;
-  max-width: 42ch;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 52px;
-}
-
-.linksTitle {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin-bottom: 18px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.link {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px 16px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-14);
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 0.2s,
-    transform 0.2s var(--ease);
-}
-
-@media (hover: hover) {
-  .link:hover {
-    border-color: rgba(var(--line-rgb), 0.2);
-    transform: translateY(-2px);
-  }
-}
-
-.linkIcon {
-  font-size: var(--text-18);
-  margin-bottom: 2px;
-}
-
-.linkLabel {
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  color: var(--text-strong);
-}
-
-.linkSub {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-}
-
+/* ── Search ── */
 .search {
+  max-width: 34rem;
+  margin: 0 0 clamp(16px, 3vh, 22px);
+}
+
+.searchLabel {
+  display: block;
+  margin: 0 0 8px;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(var(--cream-rgb), 0.9);
+}
+
+.searchRow {
   display: flex;
-  gap: 0;
-  max-width: 380px;
-  margin: 32px auto 0;
+  gap: 10px;
 }
 
-.searchInput {
+.searchField {
+  position: relative;
+  display: flex;
   flex: 1;
-  font-family: var(--sans);
-  font-size: var(--text-14-5);
-  padding: 12px 16px;
-  background: var(--paper);
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-right: none;
-  border-radius: var(--radius-11) 0 0 var(--radius-11);
-  color: var(--ink);
-  outline: none;
-  transition: border-color 0.2s;
+  min-width: 0;
+  align-items: center;
 }
 
-.searchInput:focus {
-  border-color: rgba(var(--line-rgb), 0.3);
+.searchIcon {
+  position: absolute;
+  left: 18px;
+  width: 18px;
+  height: 18px;
+  color: rgba(var(--cream-rgb), 0.7);
+  pointer-events: none;
+}
+
+/* Cream on plum. The border is the field's only boundary, so it holds 3:1
+   against plum (0.45, the same floor as the ghost-dark button beside it). */
+.searchInput {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 12px 20px 12px 46px;
+  font-family: var(--sans);
+  /* 16px or more, so iOS Safari never zooms the viewport on focus. */
+  font-size: var(--text-16);
+  color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--cream-rgb), 0.07);
+  border: 1.5px solid rgba(var(--cream-rgb), 0.45);
+  border-radius: var(--radius-pill);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 
 .searchInput::placeholder {
-  color: var(--ink-40);
+  color: rgba(var(--cream-rgb), 0.62);
 }
 
-/* The shared <Button variant="plum"> primitive (FE-CNT-20) supplies the fill,
-   type, focus ring and hover; only the joined-to-the-input geometry is
-   overridden here, at a specificity the primitive's own class cannot beat. */
-.search .searchBtn {
-  border-radius: 0 var(--radius-11) var(--radius-11) 0;
-  padding: 0 20px;
+/* WebKit's own clear button draws in dark grey, invisible on plum. */
+.searchInput::-webkit-search-cancel-button,
+.searchInput::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-@media (--xs) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
+@media (hover: hover) {
+  .searchInput:hover {
+    border-color: rgba(var(--cream-rgb), 0.7);
+  }
+}
+
+.searchInput:focus {
+  border-color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--cream-rgb), 0.1);
+}
+
+/* Restates the global ring, which this rule out-specifies, and keeps the
+   pill shape the global rule would square off. */
+.searchInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-pill);
+}
+
+/* ── Actions ── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 clamp(28px, 5vh, 44px);
+}
+
+/* ── Popular places: a list with hairline rules ── */
+.places {
+  container-type: inline-size;
+}
+
+.placesTitle {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+
+.placesList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.placeItem {
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
+}
+
+.placeItem:nth-last-child(-n + 2) {
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+}
+
+.place {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 2px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.placeIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: var(--text-15);
+  color: rgba(var(--cream-rgb), 0.95);
+}
+
+.placeIconCoral {
+  background: rgba(var(--accent-rgb), 0.26);
+}
+
+.placeIconJade {
+  background: rgba(var(--jade-rgb), 0.3);
+}
+
+.placeIconCream {
+  background: rgba(var(--cream-rgb), 0.12);
+}
+
+.placeText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.placeLabel {
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba(var(--cream-rgb), 1);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.placeSub {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: rgba(var(--cream-rgb), 0.66);
+}
+
+.placeArrow {
+  width: 16px;
+  height: 16px;
+  color: rgba(var(--cream-rgb), 0.45);
+  transition:
+    transform var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .place:hover .placeLabel {
+    color: var(--accent);
+  }
+
+  .place:hover .placeArrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+}
+
+/* One column of places wherever the copy column is too narrow for two
+   (phones, and the tablet two-column layout). */
+@container (max-width: 520px) {
+  .placesList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .placeItem:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .placeItem:last-child {
+    border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+  }
+}
+
+/* Large phones and below: the buttons stack full-width, and the search
+   button slims down so the field keeps room for its placeholder. */
+@media (--sm) {
+  .searchRow > :last-child {
+    padding-inline: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}
+
+/* Short laptop screens: tighten the rhythm so the search and the actions sit
+   above the fold. */
+@media (min-width: 960px) and (max-height: 820px) {
+  .path {
+    margin-bottom: 16px;
+  }
+
+  .search {
+    margin-bottom: 14px;
+  }
+
+  .actions {
+    margin-bottom: 24px;
+  }
+
+  .place {
+    padding-block: 9px;
   }
 }

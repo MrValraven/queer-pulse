@@ -12,6 +12,7 @@ import {
   type UploadKind,
 } from "./uploads.api";
 import {
+  bakesCropIntoPixels,
   ImageProcessingError,
   processImage,
   validateTypeAndSize,
@@ -24,11 +25,17 @@ export interface UploadOptions {
   /** Called with 0–100 as the storage PUT streams. No-ops in demo mode. */
   onProgress?: (percent: number) => void;
   /**
-   * The reframe crop chosen for this image, as fractions of the source. When
-   * present and not the identity crop (the whole image, unreframed), it's
-   * persisted server-side keyed by the uploaded `key` — see `saveCrop` in
-   * `uploads.api.ts`. Persisting it is best-effort: it never blocks or fails
-   * the upload itself (see the live-mode branch below).
+   * The reframe crop chosen for this image, as fractions of the source. What
+   * happens to it depends on the kind:
+   *
+   * - A `bakesCropIntoPixels` kind (the avatars) cuts it into the uploaded
+   *   image itself (`processImage`), so the stored file is already framed and
+   *   nothing is saved server-side.
+   * - Every other kind uploads the whole image and, when the crop is a real
+   *   reframe (anything `isIdentityCrop` rejects), persists it server-side
+   *   keyed by the uploaded `key` (`saveCrop` in `uploads.api.ts`). Persisting
+   *   it is best-effort: it never blocks or fails the upload itself (see the
+   *   live-mode branch below).
    */
   crop?: CropRect;
 }
@@ -58,7 +65,12 @@ export interface UploadResult {
    * covers them.
    */
   previewUrl: string;
-  /** Echoes `options.crop`, when one was passed in. */
+  /**
+   * Echoes `options.crop`, when one was passed in, for a kind that keeps its
+   * crop as metadata. Always `undefined` for a `bakesCropIntoPixels` kind: its
+   * `previewUrl` and stored image are already framed, so a caller that
+   * re-applied the crop would frame them a second time.
+   */
   crop?: CropRect;
 }
 
@@ -157,13 +169,21 @@ async function putWithRetry(
  *   `previewUrl` exists precisely so callers don't have to wait for that
  *   round-trip to show the picked image.
  *
- * When `options.crop` is a non-identity reframe (see `isIdentityCrop`), live
- * mode also persists it server-side after the upload PUT succeeds, keyed by
- * the storage `key` (`saveCrop` in `uploads.api.ts`). That persistence is
- * best-effort: one retry on failure, then it's logged and swallowed — it
- * never blocks or fails the resolved `{ key, previewUrl }`. The resolved
- * value always echoes `crop` back (in both modes) so callers can render the
- * reframed preview immediately without waiting on a round-trip.
+ * `options.crop` takes one of two paths, chosen by `bakesCropIntoPixels`:
+ *
+ * - **Baked (avatar, group avatar, community avatar):** the crop goes into
+ *   `processImage`, which cuts it out before encoding, so the uploaded blob
+ *   and its `previewUrl` are already framed. Nothing is persisted with
+ *   `saveCrop` (the profile hero would otherwise crop the already-cropped
+ *   image again), and the resolved `crop` is `undefined` in both modes.
+ * - **Metadata (every other kind):** the whole image is uploaded. When the
+ *   crop is a non-identity reframe (see `isIdentityCrop`), live mode persists
+ *   it server-side after the upload PUT succeeds, keyed by the storage `key`
+ *   (`saveCrop` in `uploads.api.ts`). That persistence is best-effort: one
+ *   retry on failure, then it's logged and swallowed, and it never blocks or
+ *   fails the resolved `{ key, previewUrl }`. The resolved value echoes
+ *   `crop` back (in both modes) so callers can render the reframed preview
+ *   immediately without waiting on a round-trip.
  *
  * Every `previewUrl` this hook creates is revoked when the owning component
  * unmounts (see the `outstandingPreviewUrls` ref below) — that's the only
@@ -203,14 +223,24 @@ export function useUploadImage(kind: UploadKind) {
     async (file: File, options?: UploadOptions): Promise<UploadResult> => {
       // Guards run above the demo short-circuit so demo validates too.
       validateTypeAndSize(file, kind);
-      const blob = await processImage(file, kind);
+      // A baked kind carries its framing in the pixels, so the crop is spent
+      // here. It skips `saveCrop` and resolves with no crop (see
+      // `UploadResult.crop`).
+      const isCropBaked = bakesCropIntoPixels(kind);
+      const blob = await processImage(
+        file,
+        kind,
+        isCropBaked ? options?.crop : undefined,
+      );
+      const resultCrop = isCropBaked ? undefined : options?.crop;
       const previewUrl = URL.createObjectURL(blob);
       outstandingPreviewUrls.current.add(previewUrl);
 
       if (demoMode) {
         // Demo mode never touches the network, so there's nowhere real to
-        // persist the crop — just echo it back for the caller to store
-        // alongside the preview, same as the key/previewUrl above.
+        // persist the crop. A metadata kind just echoes it back for the
+        // caller to store alongside the preview, same as the key/previewUrl
+        // above.
         options?.onProgress?.(100);
         // Ownership of this URL passes to the caller as soon as it's
         // returned — stop tracking it so the unmount sweep below doesn't
@@ -219,7 +249,7 @@ export function useUploadImage(kind: UploadKind) {
         // moment it hands the result to `onPick`, in the same commit that
         // mounts the caller's `<img src={previewUrl}>`).
         outstandingPreviewUrls.current.delete(previewUrl);
-        return { key: previewUrl, previewUrl, crop: options?.crop };
+        return { key: previewUrl, previewUrl, crop: resultCrop };
       }
 
       const contentType = blob.type as UploadContentType;
@@ -237,8 +267,9 @@ export function useUploadImage(kind: UploadKind) {
       // Persist the crop, best-effort, AFTER the upload itself has already
       // succeeded. This must never turn a successful image upload into a
       // failed one: one retry on failure, then swallow (logged) — the caller
-      // still gets back a resolved { key, previewUrl }.
-      if (options?.crop && !isIdentityCrop(options.crop)) {
+      // still gets back a resolved { key, previewUrl }. A baked kind has
+      // nothing to persist: its uploaded pixels are already framed.
+      if (!isCropBaked && options?.crop && !isIdentityCrop(options.crop)) {
         try {
           await saveCrop(key, options.crop);
         } catch {
@@ -253,7 +284,7 @@ export function useUploadImage(kind: UploadKind) {
       // Ownership passes to the caller now — see the demo-mode branch above
       // for why this must happen before returning.
       outstandingPreviewUrls.current.delete(previewUrl);
-      return { key, previewUrl, crop: options?.crop };
+      return { key, previewUrl, crop: resultCrop };
     },
     [demoMode, kind],
   );

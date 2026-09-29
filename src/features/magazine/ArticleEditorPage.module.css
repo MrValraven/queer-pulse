@@ -17,7 +17,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 26px;
-  background: rgba(var(--cream-rgb), 0.9);
+  background: var(--cream-translucent);
   backdrop-filter: var(--blur-nav);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import type { SyntheticEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties, RefObject, SyntheticEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./DeviceFrame.module.css";
 
@@ -20,6 +20,56 @@ interface DeviceFrameProps {
 }
 
 type Status = "loading" | "ready" | "error";
+
+/** CSS viewport of a current mid-size phone (iPhone 14/15/16). The mobile
+ *  frame always renders at exactly this size so the booted app lays out as it
+ *  would on a real device; a stage too small to hold it scales the whole
+ *  phone down instead of squashing the viewport. */
+const PHONE_VIEWPORT_WIDTH = 390;
+const PHONE_VIEWPORT_HEIGHT = 844;
+/** The frame's 1px border sits outside the viewport (content-box sizing), so
+ *  the phone's footprint is the viewport plus a border on each side. */
+const PHONE_FRAME_BORDER_WIDTH = 1;
+const PHONE_OUTER_WIDTH = PHONE_VIEWPORT_WIDTH + 2 * PHONE_FRAME_BORDER_WIDTH;
+const PHONE_OUTER_HEIGHT = PHONE_VIEWPORT_HEIGHT + 2 * PHONE_FRAME_BORDER_WIDTH;
+
+/** Desktop scrollbars take ~15px out of the phone viewport, which real phones
+ *  never do (theirs overlay the content). Hidden inside the mobile frame only;
+ *  wheel and trackpad scrolling still work. */
+const PHONE_SCROLLBAR_STYLE =
+  "*{scrollbar-width:none}*::-webkit-scrollbar{display:none}";
+
+function hideFrameScrollbars(frameNode: HTMLIFrameElement) {
+  const frameDocument = frameNode.contentDocument;
+  if (!frameDocument?.head) return;
+  const styleNode = frameDocument.createElement("style");
+  styleNode.textContent = PHONE_SCROLLBAR_STYLE;
+  frameDocument.head.appendChild(styleNode);
+}
+
+/** Largest scale (capped at 1) at which the phone fits the stage's content
+ *  box, kept current as the window resizes. */
+function usePhoneScale(
+  stageRef: RefObject<HTMLDivElement | null>,
+  isEnabled: boolean,
+) {
+  const [phoneScale, setPhoneScale] = useState(1);
+  useLayoutEffect(() => {
+    const stageNode = stageRef.current;
+    if (!isEnabled || !stageNode) return undefined;
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      const { width, height } = entry.contentRect;
+      if (width <= 0 || height <= 0) return;
+      setPhoneScale(
+        Math.min(1, width / PHONE_OUTER_WIDTH, height / PHONE_OUTER_HEIGHT),
+      );
+    });
+    observer.observe(stageNode);
+    return () => observer.disconnect();
+  }, [stageRef, isEnabled]);
+  return phoneScale;
+}
 
 /** Tracks the outcome of the most recently framed src/device pair, keyed so
  *  that switching device or src re-enters "loading" instead of showing a
@@ -45,6 +95,9 @@ export function DeviceFrame({
   const frameKey = `${device}:${src}:${replayKey}`;
   const status: Status =
     loadState && loadState.key === frameKey ? loadState.status : "loading";
+  const isMobile = device === "mobile";
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const phoneScale = usePhoneScale(stageRef, isMobile);
 
   // Tracks the cleanup for the contentWindow keydown listener attached on
   // the most recent load, so a reframe (device/src change) or unmount tears
@@ -55,6 +108,13 @@ export function DeviceFrame({
     setLoadState({ key: frameKey, status: "ready" });
     escapeCleanupRef.current?.();
     escapeCleanupRef.current = null;
+    if (isMobile) {
+      try {
+        hideFrameScrollbars(event.currentTarget);
+      } catch {
+        // Same-origin sandbox frames allow this; purely defensive, as below.
+      }
+    }
     if (!onEscape) return;
     try {
       const frameWindow = event.currentTarget.contentWindow;
@@ -92,35 +152,57 @@ export function DeviceFrame({
 
   useEffect(() => () => escapeCleanupRef.current?.(), []);
 
+  // The slot takes the phone's scaled footprint in layout, since a transform
+  // alone would leave the stage centring and scrolling the unscaled phone.
+  const phoneSlotStyle: CSSProperties | undefined = isMobile
+    ? {
+        width: PHONE_OUTER_WIDTH * phoneScale,
+        height: PHONE_OUTER_HEIGHT * phoneScale,
+      }
+    : undefined;
+  const phoneFrameStyle: CSSProperties | undefined = isMobile
+    ? {
+        width: PHONE_VIEWPORT_WIDTH,
+        height: PHONE_VIEWPORT_HEIGHT,
+        transform: `translate(-50%, -50%) scale(${phoneScale})`,
+      }
+    : undefined;
+
   return (
-    <div className={styles.stage}>
+    <div ref={stageRef} className={styles.stage}>
       <div
-        className={[
-          styles.frame,
-          device === "mobile" ? styles.frameMobile : styles.frameDesktop,
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className={isMobile ? styles.slotMobile : styles.slotDesktop}
+        style={phoneSlotStyle}
       >
-        {status === "loading" && (
-          <div className={styles.overlay}>
-            {t("simulations:player.loading")}
-          </div>
-        )}
-        {status === "error" && (
-          <div className={styles.overlay}>
-            {t("simulations:player.loadError")}
-          </div>
-        )}
-        <iframe
-          key={frameKey}
-          ref={frameRef}
-          src={src}
-          title={title}
-          data-sandbox="1"
-          className={styles.iframe}
-          onLoad={handleFrameLoad}
-        />
+        <div
+          className={[
+            styles.frame,
+            isMobile ? styles.frameMobile : styles.frameDesktop,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          style={phoneFrameStyle}
+        >
+          {status === "loading" && (
+            <div className={styles.overlay}>
+              {t("simulations:player.loading")}
+            </div>
+          )}
+          {status === "error" && (
+            <div className={styles.overlay}>
+              {t("simulations:player.loadError")}
+            </div>
+          )}
+          <iframe
+            key={frameKey}
+            ref={frameRef}
+            src={src}
+            title={title}
+            data-sandbox="1"
+            className={styles.iframe}
+            onLoad={handleFrameLoad}
+          />
+        </div>
       </div>
     </div>
   );

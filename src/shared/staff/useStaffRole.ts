@@ -7,7 +7,7 @@ import { getPlatformStaff, type StaffIdentity } from "./staff.api";
 import { DEMO_STAFF } from "./staffRegistry.data";
 
 /** Staff membership changes on the order of months, and the payload is a
- *  handful of slugs — so fetch it once and hold it for the session. */
+ *  handful of slugs, so fetch it once and hold it for the session. */
 const ONE_HOUR_MS = 60 * 60 * 1000;
 
 /** Nobody: the answer for a signed-out viewer and for a slug off the roster. */
@@ -17,7 +17,7 @@ const NO_STAFF_IDENTITY: StaffIdentity = { tier: null, badgedStaffRoles: [] };
  * The whole staff roster as a slug-keyed map.
  *
  * Signed-out visitors always get an empty map. That is the single point where
- * the members-only rule is enforced — the badge is a public statement about who
+ * the members-only rule is enforced: the badge is a public statement about who
  * runs the platform, and the open web does not get a scrapable roster of it.
  * Enforcing it here rather than at each call site means no surface can leak it
  * by forgetting.
@@ -28,17 +28,44 @@ const NO_STAFF_IDENTITY: StaffIdentity = { tier: null, badgedStaffRoles: [] };
  * appear on this map as nobody at all.
  */
 export function useStaffMap(): Record<string, StaffIdentity> {
+  const { loggedIn, staffRosterQuery } = useStaffRosterQuery();
+  if (!loggedIn) return {};
+  return staffRosterQuery.data ?? {};
+}
+
+/** The one roster query both hooks below observe. Same key and options, so a
+ *  second observer shares the cache entry and never fires a second request. */
+function useStaffRosterQuery() {
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
-  const { data } = useQuery({
+  const staffRosterQuery = useQuery({
     queryKey: ["platform-staff", demoMode],
     queryFn: async () => (demoMode ? DEMO_STAFF : await getPlatformStaff()),
     enabled: loggedIn,
     staleTime: ONE_HOUR_MS,
     gcTime: ONE_HOUR_MS,
   });
-  if (!loggedIn) return {};
-  return data ?? {};
+  return { loggedIn, staffRosterQuery };
+}
+
+/**
+ * Whether the staff roster has answered SUCCESSFULLY. Until it has,
+ * `useStaffMap` reads as "nobody is staff", which is true of most members and
+ * false of a few. The Ambassador tag waits on this so a staff member who is
+ * also an ambassador never shows the tag for a moment before their staff
+ * badge replaces it.
+ *
+ * Reads `isSuccess` deliberately. A fetch that ended in an error is also
+ * "fetched", and treating that as settled would let the tag show beside a
+ * staff member whenever the roster request fails.
+ *
+ * Signed out counts as settled: the roster is empty by rule, and so is the
+ * ambassador map. Demo mode resolves instantly, so it settles on the first
+ * render pass too.
+ */
+export function useIsStaffRosterSettled(): boolean {
+  const { loggedIn, staffRosterQuery } = useStaffRosterQuery();
+  return !loggedIn || staffRosterQuery.isSuccess;
 }
 
 /**

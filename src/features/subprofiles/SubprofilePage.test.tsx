@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import { useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { AppRoutes } from "../../app/routes";
@@ -27,6 +28,17 @@ beforeEach(() => {
   window.localStorage.clear();
 });
 
+/** Reports where the router actually landed, as one string, read alongside
+ *  `<AppRoutes>` to observe F2's legacy nested-address redirect. */
+function LocationProbe() {
+  const location = useLocation();
+  return (
+    <div data-testid="location-probe">
+      {`${location.pathname}${location.search}${location.hash}`}
+    </div>
+  );
+}
+
 describe("SubprofilePage restricted states (demo mode)", () => {
   it("renders the private wall for a visibility:private persona", async () => {
     render(
@@ -43,7 +55,7 @@ describe("SubprofilePage restricted states (demo mode)", () => {
   it("renders the members-only wall for a signed-out visitor on a visibility:network persona", async () => {
     window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
     render(
-      <TestProviders initialEntries={["/p/afterhours-jordan"]}>
+      <TestProviders initialEntries={["/p/afterhours-club"]}>
         <AppRoutes />
       </TestProviders>,
     );
@@ -103,5 +115,32 @@ describe("SubprofilePage owner-draft preview (demo mode)", () => {
     expect(
       await screen.findByText("This persona isn't here"),
     ).toBeInTheDocument();
+  });
+});
+
+describe("SubprofilePage legacy nested-address redirect (demo mode)", () => {
+  it("replaces the legacy /members/:slug/:subslug address with /p/<handle> once the persona loads", async () => {
+    // sp-jordan-iron-orchid is linked, published, open, and already carries
+    // the handle "jordan-iron-orchid" (linkedPersonaHandleCandidate("jordan",
+    // "iron-orchid")), so this exercises F2's redirect end to end through the
+    // real route tree rather than the hook in isolation.
+    render(
+      <TestProviders
+        initialEntries={["/members/jordan/iron-orchid?tab=classes#book"]}
+      >
+        <AppRoutes />
+        <LocationProbe />
+      </TestProviders>,
+    );
+    await waitForPageLoad();
+    await waitFor(() =>
+      expect(screen.getByTestId("location-probe")).toHaveTextContent(
+        "/p/jordan-iron-orchid?tab=classes#book",
+      ),
+    );
+    // findDemoSubprofileByHandle now matches linked handles too, so the
+    // destination address renders the real persona rather than a not-found
+    // wall, confirming the redirect lands somewhere real.
+    expect(await screen.findByText("Iron Orchid")).toBeInTheDocument();
   });
 });

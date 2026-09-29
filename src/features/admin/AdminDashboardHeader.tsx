@@ -1,5 +1,5 @@
 import { FiArrowRight } from "react-icons/fi";
-import { Button, FeatureHelp, SkeletonLine } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -77,8 +77,7 @@ export function AdminDashboardHeader({
                     values={{ count: totalNeedsHuman }}
                   />
                 </>
-              )}{" "}
-              <FeatureHelp id="admin.hub" />
+              )}
             </h1>
             <p className={styles.phSub}>
               {isCaughtUp

@@ -1,31 +1,59 @@
-/* Editor desk — issue-plan layout (section rows + slot cards). Ported from
-   the design's `.plan`/`.plan-row`/`.slot` (`mag.css`) onto repo tokens. */
+/* Editor desk: issue-plan layout (summary line, section rows, slot cards).
+   Shared by IssuePlan, IssuePlanSectionRow and IssuePlanSlotCard. Rows are
+   separated by hairlines on the page itself; only the slots are cards. */
 
 .plan {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.heading {
+  margin-bottom: 4px;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  padding: 2px 4px 12px;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+/* The dot between parts is drawn here, with empty alt text, so a screen
+   reader reads three short phrases. */
+.summaryPart + .summaryPart::before {
+  content: "·";
+  content: "·" / "";
+  margin-inline: 8px;
+  color: var(--ink-40);
+}
+
+/* Zeros recede. */
+.summaryZero {
+  color: var(--ink-40);
 }
 
 .row {
   display: grid;
   grid-template-columns: 160px 1fr;
   gap: 18px;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--line);
+  padding: 16px 4px;
+  border-top: 1px solid var(--line);
   align-items: start;
-}
-
-.row:last-child {
-  border-bottom: none;
 }
 
 .label {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .labelName {
@@ -35,64 +63,98 @@
   color: var(--text-strong);
 }
 
+/* Filled of target, drawn small: a neutral fill that turns the ready tone
+   once the section is full. */
+.meter {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  height: 4px;
+  margin: 2px 0;
+  overflow: hidden;
+  background: var(--line-2);
+  border-radius: var(--radius-pill);
+}
+
+.meterFill {
+  display: block;
+  height: 100%;
+  background: var(--desk-tone-neutral);
+  border-radius: var(--radius-pill);
+}
+
+.meterFull {
+  background: var(--desk-tone-ready);
+}
+
 .tiny {
   font-size: var(--text-12-5);
-  color: var(--ink-40);
+  color: var(--ink-60);
+}
+
+.tagGap,
+.tagFull {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  padding: 4px 9px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: var(--radius-tag);
 }
 
 .tagGap {
-  align-self: flex-start;
-  margin-top: 4px;
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--text-12);
-  font-weight: 600;
-  padding: 4px 9px;
-  border-radius: var(--radius-tag);
-  background: rgba(var(--accent-rgb), 0.13);
-  color: var(--accent-ink);
-  white-space: nowrap;
+  background: var(--desk-tone-neutral-soft);
+  color: var(--ink-60);
 }
 
 .tagFull {
-  align-self: flex-start;
-  margin-top: 4px;
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--text-12);
-  font-weight: 600;
-  padding: 4px 9px;
-  border-radius: var(--radius-tag);
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade-ink);
-  white-space: nowrap;
+  background: var(--desk-tone-ready-soft);
+  color: var(--desk-tone-ready);
 }
 
 .slots {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: 10px;
+  min-width: 0;
 }
 
 .slot {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-14);
-  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 7px;
-  cursor: pointer;
+  min-width: 0;
+  padding: 12px;
   background: var(--paper);
-  transition:
-    transform var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  cursor: pointer;
+  transition-property: box-shadow, border-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
 }
 
 @media (hover: hover) {
   .slot:hover {
-    transform: translateY(-2px);
     box-shadow: var(--shadow-card-hover);
   }
+}
+
+/* `.slot` is no longer itself a focusable control (the
+   title's own `<button>` below is the real keyboard target now), so only
+   `.slotEmpty` (the "Commission for {section}" placeholder, its own button)
+   keeps this ring. */
+.slotEmpty:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.slotLate {
+  border-left: 3px solid var(--desk-tone-late);
 }
 
 .slotTitle {
@@ -103,27 +165,79 @@
   color: var(--text-strong);
 }
 
+/* The slot's real keyboard/screen-reader target, styled like
+   `PiecesBoard.module.css`'s own `.titleButton` (same pattern, a different
+   CSS module since board and plan cards do not share one). */
+.titleButton {
+  padding: 0;
+  font: inherit;
+  line-height: inherit;
+  text-align: start;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-4);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .titleButton:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+  }
+}
+
+.titleButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.slotFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-width: 0;
+}
+
+.due {
+  margin-left: auto;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink-60);
+}
+
+.dueLate {
+  font-weight: 600;
+  color: var(--desk-tone-late);
+}
+
 .slotEmpty {
-  border: 1px dashed rgba(var(--line-rgb), 0.3);
-  border-radius: var(--radius-14);
-  padding: 12px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 7px;
   min-height: 92px;
-  background: var(--wash);
-  color: var(--ink-40);
+  padding: 12px;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1px dashed rgba(var(--line-rgb), 0.3);
+  border-radius: var(--radius-14);
   cursor: pointer;
-  transition:
-    border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+  transition-property: border-color, color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
-.slotEmpty:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+@media (hover: hover) {
+  .slotEmpty:hover {
+    border-color: var(--line-strong);
+    color: var(--text-strong);
+  }
 }
 
 .slotEmptyLabel {
@@ -131,32 +245,13 @@
   font-weight: 600;
 }
 
-.bar {
-  height: 4px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.08);
-  overflow: hidden;
-}
-
-.barFill {
-  display: block;
-  height: 100%;
-  background: var(--jade);
-}
-
-.barFillLate {
-  background: var(--accent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .slot,
-  .slotEmpty {
-    transition: none;
-  }
-}
-
 @media (--lg) {
   .row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .slots {
     grid-template-columns: 1fr;
   }
 }

@@ -202,18 +202,6 @@
   letter-spacing: 0.02em;
 }
 
-/* Loading. Deliberately a sentence rather than a bare spinner: this page is
-   often opened weeks later, and "we are looking" is the reassurance. */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 28px 0;
-  font-size: var(--text-14);
-  color: var(--ink-60);
-}
-
 @media (max-width: 480px) {
   .reason,
   .invite {

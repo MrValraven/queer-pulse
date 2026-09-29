@@ -72,7 +72,7 @@ function ChapterFooter({
 }
 
 /**
- * The chaptered "Page blocks" editor (therapist today): a map of every
+ * The chaptered "Page blocks" editor (every kind): a map of every
  * chapter, then the active chapter alone, held in `?chapter=`. Every control
  * writes the shared draft, so switching chapters never loses an edit, and all
  * of it saves with the global "Save all".
@@ -136,6 +136,7 @@ export function SkinChapterEditor({
                 groups={groups}
                 editor={editor}
                 chapters={chapters}
+                chapterTitleKey={activeChapter.titleKey}
               />
             ),
           )}

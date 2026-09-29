@@ -55,6 +55,7 @@ Disallow: /host
 Disallow: /create-gathering
 Disallow: /manage-gathering
 Disallow: /co-host-invite
+Disallow: /go-together
 Disallow: /forum
 Disallow: /thread
 Disallow: /changemaker
@@ -184,6 +185,7 @@ Disallow: /host
 Disallow: /create-gathering
 Disallow: /manage-gathering
 Disallow: /co-host-invite
+Disallow: /go-together
 Disallow: /forum
 Disallow: /thread
 Disallow: /changemaker

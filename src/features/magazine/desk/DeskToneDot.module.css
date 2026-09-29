@@ -1,0 +1,30 @@
+/* Tone values live in styles/tokens/colors.css (`--desk-tone-*`); each clears
+   3:1 against --paper and --cream in both themes, the floor for a mark. */
+.dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--desk-tone-neutral);
+}
+
+.late {
+  background: var(--desk-tone-late);
+}
+
+.you {
+  background: var(--desk-tone-you);
+}
+
+.writer {
+  background: var(--desk-tone-writer);
+}
+
+.ready {
+  background: var(--desk-tone-ready);
+}
+
+.neutral {
+  background: var(--desk-tone-neutral);
+}

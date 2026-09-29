@@ -1,5 +1,5 @@
-import { useId, useMemo, useState, type KeyboardEvent } from "react";
-import { FiX } from "react-icons/fi";
+import { useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { ChipList, Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useListingTagVocabulary } from "./api/useListingTagVocabulary";
 import { ListingTagGroupList } from "./ListingTagGroupList";
@@ -33,6 +33,7 @@ export function ListingTagPicker({
   const listId = useId();
   const availableLabelId = useId();
   const [query, setQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const isAtCap = tags.length >= LISTING_TAG_CAP;
   const visibleGroups = useMemo(
@@ -73,6 +74,7 @@ export function ListingTagPicker({
     <div>
       <div className={pageStyles.tagInputWrap}>
         <input
+          ref={searchInputRef}
           type="search"
           maxLength={40}
           value={query}
@@ -105,28 +107,24 @@ export function ListingTagPicker({
         onToggle={toggleTag}
       />
 
-      {legacyTags.length > 0 && (
+      <Collapse isOpen={legacyTags.length > 0}>
         <div className={styles.legacy}>
           <span className={styles.sectionLabel}>
             {t("marketing:listBusiness.step2.tagsLegacyLabel")}
           </span>
-          <div className={`${pageStyles.tagList} ${styles.legacyList}`}>
-            {legacyTags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className={pageStyles.tagPill}
-                onClick={() => onRemove(tag)}
-                aria-label={t("marketing:listBusiness.step2.tagRemoveAria", {
-                  tag,
-                })}
-              >
-                {tag} <FiX size={11} aria-hidden />
-              </button>
-            ))}
-          </div>
+          <ChipList
+            items={legacyTags}
+            getKey={(tag) => tag}
+            renderLabel={(tag) => tag}
+            removeLabel={(tag) =>
+              t("marketing:listBusiness.step2.tagRemoveAria", { tag })
+            }
+            onRemove={(tag) => onRemove(tag)}
+            emptyFocusRef={searchInputRef}
+            className={styles.legacyList}
+          />
         </div>
-      )}
+      </Collapse>
 
       <p className={styles.capHint} aria-live="polite">
         {isAtCap ? t("marketing:listBusiness.step2.tagsCapHint") : ""}

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { EmptyState, Spinner } from "../../shared/components/ui";
+import { EmptyState } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -43,12 +44,7 @@ export function BadgesPage() {
 
   let body;
   if (recognition.isLoading) {
-    body = (
-      <div className={styles.stateWrap} role="status" aria-live="polite">
-        <Spinner />
-        <span>{t("members:badges.loading")}</span>
-      </div>
-    );
+    body = <PageLoader size="section" label={t("members:badges.loading")} />;
   } else if (recognition.isError) {
     body = (
       <EmptyState

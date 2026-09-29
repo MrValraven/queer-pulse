@@ -63,10 +63,26 @@ export interface UpdateListingDto extends Omit<
  * baseline is the condition of appearing in the directory, so the API rejects
  * `false` rather than storing it, and rejects the field entirely on PATCH
  * because there is no edit that un-agrees to it.
+ *
+ * Optional here: a member's suggestion posts this body without the field at
+ * all, because nobody has agreed to anything yet on a listing the platform
+ * holds.
  */
 export interface CreateListingDto extends UpdateListingDto {
-  affirmingBaselineAccepted: boolean;
+  affirmingBaselineAccepted?: boolean;
 }
+
+/**
+ * POST body for a member's suggestion: the business payload, and nothing
+ * about the suggester. The platform holds the listing until someone
+ * claims it, so the create body carries none of the owner's seven personal
+ * keys, no `ownerRole` (there is no owner yet to hold one), and no
+ * `affirmingBaselineAccepted` (nobody has agreed to anything).
+ */
+export type SuggestListingDto = Omit<
+  CreateListingDto,
+  OwnerPersonalField | "ownerRole" | "affirmingBaselineAccepted"
+>;
 
 /**
  * A listing as returned by the backend. `photos` is narrower than the request
@@ -94,6 +110,8 @@ export interface ListingDTO extends Omit<
   menu?: ListingMenu;
   status: ListingStatus;
   submittedBy: MemberRefDTO | null;
+  /** Who suggested the place. Only admin queue rows carry it. */
+  suggestedBy?: MemberRefDTO | null;
   /** ISO 8601 timestamp. */
   createdAt: string;
   photos: Record<PhotoKey, string | null>;
@@ -222,8 +240,9 @@ export interface ConfirmDetailsResult {
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
-/** POST /listings — submit a new directory listing for review. */
-export const createListing = (dto: CreateListingDto) =>
+/** POST /listings: submit a new directory listing for review, or a member's
+ *  suggestion (`SuggestListingDto`), which the platform holds until claimed. */
+export const createListing = (dto: CreateListingDto | SuggestListingDto) =>
   apiPost<ListingDTO>("/listings", dto);
 
 export interface ResolvedMapLink {

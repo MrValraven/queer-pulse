@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiMail } from "react-icons/fi";
-import { FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
@@ -107,8 +106,6 @@ export function CommunityDetailHero({
           <span className={styles.dot} />
           {detail.badge}
         </div>
-        {/* FeatureHelp sits beside the heading, not inside it, so the info
-            button doesn't pollute the h1's accessible name. */}
         <div className={styles.h1Row}>
           {/* The community's own mark. Decorative: its name is the heading
               right beside it, so naming the image would only repeat it to a
@@ -127,7 +124,6 @@ export function CommunityDetailHero({
             )}
           </span>
           <h1 className={styles.h1}>{community.name}</h1>
-          <FeatureHelp id="community.detail" />
         </div>
         <p className={styles.heroSub}>{community.description}</p>
         {shouldShowNowReading && (

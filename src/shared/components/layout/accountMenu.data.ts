@@ -4,7 +4,6 @@ import {
   FiUser,
   FiUserPlus,
   FiEdit3,
-  FiSend,
   FiBriefcase,
   FiBookmark,
   FiCalendar,
@@ -139,19 +138,11 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
     },
   ],
   // Career & content. Applications now lives inside the Work hub rather than
-  // as its own link. Drafts/Pitches sit here rather than in the staff-only
-  // RoleLinks block below, because both are general-member features: Drafts
-  // spans job/post/pitch/grant drafts, and Pitches tracks any member's
-  // submitted story pitches.
-  //
-  // "Pitches" here is the MEMBER's own tracker (`routes.pitchTracker`,
-  // `/magazine/pitches`), reading `GET /magazine/submissions/mine` — a
-  // different surface from the editor desk's pitch inbox and from the writer
-  // workspace's pitches tab, both of which are staff-only. Until PRD-125 the
-  // route was capability-gated on `magazine_writer` while this entry was shown
-  // to everyone, so a member who tapped it landed on the visitor homepage.
-  // `authGate.ts` now gates it as a plain member surface, matching the
-  // `ActiveMemberGuard` on the endpoint it reads.
+  // as its own link. Drafts sits here rather than in the staff-only RoleLinks
+  // block below because it is a general-member feature spanning
+  // job/post/pitch/grant drafts. The story-submission tracker lives in the
+  // writer workspace's Submissions tab, which writers reach through the staff
+  // "Writer workspace" link in `accountMenuShared.tsx`.
   [
     {
       labelKey: "shared:accountMenu.items.work",
@@ -162,11 +153,6 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       labelKey: "shared:accountMenu.items.drafts",
       to: routes.drafts,
       icon: FiEdit3,
-    },
-    {
-      labelKey: "shared:accountMenu.items.pitches",
-      to: routes.pitchTracker,
-      icon: FiSend,
     },
   ],
   // Support

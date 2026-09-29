@@ -3,7 +3,6 @@ import { FiHeart, FiTag } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Thread, type ThreadPoll } from "./forum.data";
 import { MarkdownLite } from "../../shared/markdown";
-import { FeatureHelp } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { ForumPostPhotos } from "./ForumPostPhotos";
@@ -115,9 +114,7 @@ export function ThreadOpCard({
         onMoveCategory={onMoveCategory}
       />
       <ThreadStateNotice thread={thread} />
-      <h1 className={styles.opTitle}>
-        {title} <FeatureHelp id="forum.thread" />
-      </h1>
+      <h1 className={styles.opTitle}>{title}</h1>
       {hasWarnings && !deleted && !isOpUnavailable && (
         <div className={styles.opWarning}>
           <ContentWarningPill

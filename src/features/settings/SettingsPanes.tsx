@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiShield } from "react-icons/fi";
-import { Button, FeatureHelp } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useConsent } from "../../app/providers/useConsent";
@@ -25,6 +25,7 @@ import { useActivityVisibility } from "./api/useActivityVisibility";
 import { useSuggestionVisibility } from "./api/useSuggestionVisibility";
 import { GroupAddPolicySection } from "./GroupAddPolicySection";
 import { MessagingPrivacySection } from "./MessagingPrivacySection";
+import { GoTogetherDataSection } from "../goTogether/settings/GoTogetherDataSection";
 import {
   DataCard,
   Pane,
@@ -50,13 +51,10 @@ export function NotificationsPane() {
   return (
     <Pane
       title={
-        <>
-          <Translation
-            i18nKey="settings:notifications.title"
-            components={{ em: <em /> }}
-          />{" "}
-          <FeatureHelp id="settings.privacy" />
-        </>
+        <Translation
+          i18nKey="settings:notifications.title"
+          components={{ em: <em /> }}
+        />
       }
       sub={t("settings:notifications.sub")}
     >
@@ -210,6 +208,7 @@ export function DataPane({
           />
         </div>
       </Section>
+      <GoTogetherDataSection />
       <Section label={t("settings:data.section.cookiePrivacy")}>
         <ToggleList>
           <ConsentToggleRow
@@ -447,13 +446,10 @@ export function AccountPane() {
   return (
     <Pane
       title={
-        <>
-          <Translation
-            i18nKey="settings:account.title"
-            components={{ em: <em /> }}
-          />{" "}
-          <FeatureHelp id="settings.hub" />
-        </>
+        <Translation
+          i18nKey="settings:account.title"
+          components={{ em: <em /> }}
+        />
       }
       sub={t("settings:account.sub")}
     >

@@ -67,6 +67,10 @@ export const currentUser: Member = {
     "Reading & culture",
   ],
   lookingForPublic: true,
+  // Demo "me" isn't an ambassador, so the "Who sees what" sheet's ambassador
+  // toggle stays hidden in demo mode. See `VISIBILITY_FIELDS`'s `isShownFor`
+  // on the `isAmbassadorTagVisible` field.
+  ambassador: null,
   work: [
     {
       category: "Fullstack Developer",

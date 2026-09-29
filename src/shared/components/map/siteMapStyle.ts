@@ -8,8 +8,8 @@ type FillLayer = Extract<LayerSpecification, { type: "fill" }>;
 type LineLayer = Extract<LayerSpecification, { type: "line" }>;
 type SymbolLayer = Extract<LayerSpecification, { type: "symbol" }>;
 
-// OpenFreeMap public vector style — no API key, no signup. Swapping to another
-// provider (e.g. MapTiler) later is a single change to this constant.
+// OpenFreeMap public vector style: it needs no API key and no signup. Swapping
+// to another provider (e.g. MapTiler) later is a single change to this constant.
 export const MAP_STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
 
 // SW then NE corner (lng, lat) framing greater Lisbon: Sintra and Cascais to
@@ -24,23 +24,28 @@ export const GREATER_LISBON_BOUNDS: [[number, number], [number, number]] = [
 // WebGL context that cannot read CSS custom properties. Keep in sync with
 // src/styles/tokens/colors.css.
 export const BRAND = {
-  cream: "#f7f3ee", // --cream (page bg)
+  cream: "#f7f3ee", // --cream (page bg); also the map ground and label haloes
   plum: "#2d1b3d", // --plum
   accent: "#e8775a", // --accent (coral)
   accentInk: "#c85a40", // --accent-ink
-  jade: "#4a8c6f", // --jade
-  ink: "#1a1a1f", // --ink
-  paper: "#ffffff", // --paper
   water: "#cdd9da", // soft muted blue for the Tejo/water
   green: "#e7ebe0", // muted sage for parks/greenery
-  settled: "#f2ebe1", // built-up landuse, a warm step off the cream ground
-  building: "#ece3d7", // warm building fill
-  // Road scale. positron paints its streets white / light grey for its own
-  // near-white ground; on cream those wash out, so the web is repainted on a
-  // warm scale with a casing dark enough to give every street an edge.
-  road: "#ffffff", // major road fill; a bright ribbon on the cream ground
-  roadCasing: "#d3c6b6", // warm taupe road edge
-  roadMinor: "#e6dccf", // minor streets, one warm step down from cream
+  settled: "#efe6da", // built-up landuse, a warm step off the cream ground
+  building: "#ebe1d3", // city blocks as calm solid shapes
+  buildingOpacity: 0.6,
+  // Road scale. Streets are the lightest thing on the map, so they read as
+  // open ground between the darker blocks. Every road is plain white and the
+  // hierarchy comes from line width, with one faint warm edge shared by the
+  // casings, the low-zoom stand-ins and the admin boundaries.
+  road: "#ffffff", // major roads, motorways and runways
+  roadMinor: "#ffffff", // minor streets and taxiways
+  roadCasing: "#e8dfd3", // road edge; admin boundaries use it too
+  // The low-zoom stand-ins for major roads take the edge tone, because a white
+  // stand-in vanishes on cream at city zoom.
+  roadSubtle: "#e8dfd3",
+  // Footpaths sit one step off the ground and are dashed, so they stay quieter
+  // than the white streets they run beside.
+  footpath: "#e9e0d4",
   rail: "#cdc0b0", // railway lines
   // Label scale, warmed off positron's neutral #333/#666/#000.
   labelInk: "#4a4038", // base place labels
@@ -48,9 +53,10 @@ export const BRAND = {
   waterInk: "#5c7c83", // water names
 } as const;
 
-// OpenFreeMap's glyph server hosts Noto Sans, not the "Open Sans / Metropolis"
-// stack the positron style requests (those 404). Every text layer is remapped
-// to Noto so labels render from the server with no missing-glyph fallback.
+// OpenFreeMap's glyph server hosts only Noto Sans, while the positron style
+// requests an "Open Sans / Metropolis" stack that 404s. Every text layer is
+// remapped to Noto so labels render from the server with no missing-glyph
+// fallback.
 const NOTO_REGULAR = "Noto Sans Regular";
 const NOTO_BOLD = "Noto Sans Bold";
 
@@ -76,7 +82,7 @@ export async function buildWarmStyle(): Promise<StyleSpecification> {
 // Neighbourhood-scale OSM `place` classes that the freguesia overlay
 // (useLisbonMap) already labels with our own branded symbols. positron draws
 // these same features from its `label_other` layer (e.g. a grey uppercase
-// "CAMPOLIDE" beneath our bold "Campolide"), so the two stack — often as a
+// "CAMPOLIDE" beneath our bold "Campolide"), so the two stack, often as a
 // visible duplicate. Suppressing them at the base leaves the overlay as the
 // single source of truth. City-and-up labels ("Lisbon") and every road / water
 // / POI label are untouched.
@@ -109,8 +115,8 @@ function hideOverlaidPlaceLabels(layer: LayerSpecification): void {
 // `get` in an implicit `["number", …]` assertion (see the expression compiler:
 // `"value"===s.type.kind && "value"!==o.type.kind ? new Assertion(o.type,[s])`).
 // That assertion THROWS "Expected value to be of type number, but found null
-// instead." for every feature missing the property — a benign but noisy console
-// warning. positron hits it on nullable OSM props: admin_level / maritime /
+// instead." for every feature missing the property. It is benign, and it fills
+// the console with warnings. positron hits it on nullable OSM props: admin_level / maritime /
 // disputed on boundaries, rank on country labels, ref_length on road shields.
 const COMPARISON_OPERATORS = new Set(["==", "!=", "<", "<=", ">", ">="]);
 
@@ -186,10 +192,10 @@ function recolorFill(layer: FillLayer, id: string): void {
   } else if (/park|wood|grass|green|landcover/.test(id)) {
     layer.paint = { ...layer.paint, "fill-color": BRAND.green };
   } else if (id.includes("landuse")) {
-    // Built-up land, NOT greenery. positron paints `landuse_residential` a
-    // neutral grey; the old catch-all regex swept it in with the parks, which
-    // laid a sage film over the whole built-up city and flattened everything
-    // drawn on top of it.
+    // Built-up land gets its own warm step. positron paints
+    // `landuse_residential` a neutral grey; the old catch-all regex swept it
+    // in with the parks, which laid a sage film over the whole built-up city
+    // and flattened everything drawn on top of it.
     layer.paint = { ...layer.paint, "fill-color": BRAND.settled };
   } else if (id.includes("pier")) {
     // positron's own background colour, so on cream it shows as a cold patch.
@@ -197,13 +203,12 @@ function recolorFill(layer: FillLayer, id: string): void {
   } else if (id.includes("aeroway")) {
     layer.paint = { ...layer.paint, "fill-color": BRAND.road };
   } else if (id.includes("building")) {
-    // Was 0.5 over a near-identical warm grey, which left blocks invisible and
-    // took the basemap's structure with them. Buildings are the thing that
-    // makes a light basemap read as sharp at street zoom, so they get to show.
+    // Blocks read as calm solid shapes: present enough to give the city its
+    // form at street zoom, soft enough that the white streets stay brightest.
     layer.paint = {
       ...layer.paint,
       "fill-color": BRAND.building,
-      "fill-opacity": 0.9,
+      "fill-opacity": BRAND.buildingOpacity,
     };
   }
 }
@@ -214,17 +219,23 @@ function recolorFill(layer: FillLayer, id: string): void {
 function recolorLine(layer: LineLayer, id: string): void {
   const color = lineColor(id);
   if (color) layer.paint = { ...layer.paint, "line-color": color };
+  // A dash tells a footpath apart from the street it runs beside.
+  if (/path/.test(id)) {
+    layer.paint = { ...layer.paint, "line-dasharray": [2, 1.5] };
+  }
 }
 
 function lineColor(id: string): string | null {
   if (/water/.test(id)) return BRAND.water;
   // The light dashes drawn ON TOP of a rail line read as the gap between
-  // sleepers, so they take the ground colour, not a rail colour.
+  // sleepers, so they take the ground colour.
   if (/dashline|pier/.test(id)) return BRAND.cream;
   if (/casing/.test(id)) return BRAND.roadCasing;
   if (/railway/.test(id)) return BRAND.rail;
+  if (/path/.test(id)) return BRAND.footpath;
   // "subtle" layers are the low-zoom stand-ins for the same roads.
-  if (/minor|path|subtle|taxiway/.test(id)) return BRAND.roadMinor;
+  if (/subtle/.test(id)) return BRAND.roadSubtle;
+  if (/minor|taxiway/.test(id)) return BRAND.roadMinor;
   if (/highway|motorway|runway/.test(id)) return BRAND.road;
   if (/boundary/.test(id)) return BRAND.roadCasing;
   return null;
@@ -255,6 +266,9 @@ function textColor(id: string): string {
   if (/water/.test(id)) return BRAND.waterInk;
   // City and up: the few labels that should anchor the whole view.
   if (/^label_(city|country|state|town)/.test(id)) return BRAND.plum;
+  // Street names keep their own rule so their ink can move apart from the
+  // shields and POIs below.
+  if (/^highway-name/.test(id)) return BRAND.labelSoft;
   if (/highway|shield|airport|path/.test(id)) return BRAND.labelSoft;
   return BRAND.labelInk;
 }

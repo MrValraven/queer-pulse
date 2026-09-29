@@ -1,0 +1,179 @@
+/* Admin guide preview: the slim plum bar pinned above a guide rendered
+   exactly as readers get it, plus the admin-framed states around it. */
+
+/* Sticky under whatever fixed nav is on screen: `--sticky-top` is the pill
+   band on desktop, the app bar on a phone (rising with it when it scrolls
+   away) and zero beside the sidebar rail. The bar is the first child of the
+   page's `<main>` (PageShellLeadContext), so it starts below the band `<main>`
+   reserves and already sits beside the rail in that nav mode. Its own layer
+   keeps the page's sticky tab bars from painting over it; the coral rule
+   marks it as admin chrome over a plum hero. */
+.bar {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: var(--z-preview-bar);
+  transition: top var(--dur-base) var(--ease);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-bottom: 2px solid var(--accent);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  /* Block only, so the global `.wrap` keeps its side gutter. */
+  padding-block: 10px;
+}
+
+.summary {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-14);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: rgba(var(--cream-rgb), 0.74);
+}
+
+.note svg {
+  flex: none;
+}
+
+.noteText {
+  min-width: 0;
+}
+
+.noteHidden {
+  color: var(--amber);
+}
+
+.actions,
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* On a phone the bar becomes a grid: the title shares its row with the
+   language switch, each note keeps to one line (the full text is its
+   `title`), and the buttons take the last row. Edit and Back collapse to
+   icons with a tooltip, their label staying in the accessibility tree as the
+   name; "Mark reviewed" keeps its label, and the row wraps before it would
+   overflow. */
+@media (max-width: 640px) {
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    padding-block: 8px;
+  }
+
+  .summary,
+  .actions {
+    display: contents;
+  }
+
+  .heading {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+  }
+
+  .languageSlot {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .note,
+  .actionButtons {
+    grid-column: 1 / -1;
+  }
+
+  .actionButtons {
+    margin-top: 4px;
+  }
+
+  .note {
+    display: flex;
+    min-width: 0;
+  }
+
+  .noteText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .iconOnlyLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Loading errors and the no-page state, inside the admin shell. */
+.state {
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+  margin: 32px 0;
+}
+
+.stateTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-26);
+  color: var(--text-strong);
+}
+
+.stateText {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.stateActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

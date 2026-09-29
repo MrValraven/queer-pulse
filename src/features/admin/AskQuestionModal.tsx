@@ -27,7 +27,10 @@ export function AskQuestionModal({
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
   const trimmed = body.trim();
-  const hasSubmitter = row.submitterSlug.length > 0;
+  // A platform-held suggestion has no submitter (empty `submitterSlug`), but
+  // the backend still delivers the question to whoever suggested the place
+  // (`suggesterSlug`), so either identifies someone to contact.
+  const hasSubmitter = (row.submitterSlug || row.suggesterSlug).length > 0;
 
   async function send() {
     if (trimmed.length === 0 || askQuestion.isPending) return;
@@ -50,7 +53,10 @@ export function AskQuestionModal({
       title={t("admin:adminListings.ask.title", { name: row.name })}
       eyebrow={t("admin:adminListings.ask.eyebrow")}
       sub={t("admin:adminListings.ask.sub", {
-        name: row.submitterName || t("admin:adminListings.unknownSubmitter"),
+        name:
+          row.submitterName ||
+          row.suggesterName ||
+          t("admin:adminListings.unknownSubmitter"),
       })}
       onClose={onClose}
       footer={

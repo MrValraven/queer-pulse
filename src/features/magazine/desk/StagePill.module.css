@@ -1,11 +1,9 @@
-/* magazine desk stage palette — not in global tokens
-   The design's stage colours for "In review"/"Edit" (amber) and
-   "Sensitivity read"/"Layout" (violet) don't match any repo token exactly
-   (repo --amber-ink/--amber-rgb are reused directly; repo --violet is a
-   different, more saturated hue than this design). The violet itself is
-   `--desk-violet`/`--desk-violet-rgb` from styles/tokens/colors.css. */
+/* The pill reads its colour from `--stage-tone`, which StagePill sets inline
+   to the stage's `--desk-stage-N` token (styles/tokens/colors.css). Each step
+   is chosen to clear 4.5:1 as text over a 12% wash of itself in both themes,
+   so label and wash come from the same token. */
 .pill {
-  --desk-violet-soft: rgba(var(--desk-violet-rgb), 0.14);
+  --stage-tone: var(--desk-stage-1);
 
   display: inline-flex;
   align-items: center;
@@ -14,33 +12,16 @@
   font-weight: 600;
   padding: 5px 11px;
   border-radius: var(--radius-pill);
-  background: var(--wash);
-  color: var(--ink-60);
+  background: color-mix(in srgb, var(--stage-tone) 12%, transparent);
+  color: var(--stage-tone);
   white-space: nowrap;
 }
 
-.ready {
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade-ink);
-}
-
-/* Published is terminal, so it reads as the same jade family as Ready with a
-   heavier wash: "out of the pipeline", one step past ready. No ring or border,
-   which would change the pill's box and break its alignment in a row of
-   others. Both jade tokens flip correctly in dark mode. */
+/* Published is terminal, so it carries a heavier wash and weight: "out of
+   the pipeline", one step past Ready. No ring or border, which would change
+   the pill's box and break its alignment in a row of others. Step 8 still
+   clears 4.5:1 over this 20% wash in both themes. */
 .published {
-  background: rgba(var(--jade-rgb), 0.3);
-  color: var(--jade-ink);
+  background: color-mix(in srgb, var(--stage-tone) 20%, transparent);
   font-weight: 700;
-}
-
-.sens,
-.lay {
-  background: var(--desk-violet-soft);
-  color: var(--desk-violet);
-}
-
-.review {
-  background: rgba(var(--amber-rgb), 0.18);
-  color: var(--amber-ink);
 }

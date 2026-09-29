@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiShield } from "react-icons/fi";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GatheringAccessPanel } from "./GatheringAccessPanel";
@@ -27,12 +28,26 @@ export function GatheringDetailPanels({
   demoMode: boolean;
 }) {
   const { t } = useTranslation();
-  const [isSharePlansOpen, setIsSharePlansOpen] = useState(false);
+  const [isSharePlansOpenLocally, setIsSharePlansOpenLocally] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   if (demoMode) return null;
 
   const isGoing =
     gathering.myRsvpStatus === "going" ||
     gathering.myRsvpStatus === "waitlisted";
+  // `?share=plans` opens Share plans on arrival (the Go together group sheet
+  // links here). Derived from the URL on every render, so it also opens when
+  // the member is already on this page and only the query changes.
+  const isSharePlansRequested =
+    isGoing && searchParams.get("share") === "plans";
+  const isSharePlansOpen = isSharePlansOpenLocally || isSharePlansRequested;
+  const closeSharePlans = () => {
+    setIsSharePlansOpenLocally(false);
+    if (!searchParams.has("share")) return;
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.delete("share");
+    setSearchParams(nextSearchParams, { replace: true });
+  };
 
   return (
     <>
@@ -46,17 +61,17 @@ export function GatheringDetailPanels({
             {t("gatherings:sharePlans.panelHeading")}
           </h2>
           <p className={styles.lead}>{t("gatherings:sharePlans.panelLead")}</p>
-          <Button variant="ghost" onClick={() => setIsSharePlansOpen(true)}>
+          <Button
+            variant="ghost"
+            onClick={() => setIsSharePlansOpenLocally(true)}
+          >
             <FiShield aria-hidden /> {t("gatherings:sharePlans.openCta")}
           </Button>
         </section>
       )}
 
       {isSharePlansOpen && (
-        <SharePlansModal
-          gathering={gathering}
-          onClose={() => setIsSharePlansOpen(false)}
-        />
+        <SharePlansModal gathering={gathering} onClose={closeSharePlans} />
       )}
     </>
   );

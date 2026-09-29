@@ -123,19 +123,25 @@ function GroupBody({
  * One card of a chapter: the first group's serif heading and helper, then
  * that group's controls and those of any untitled groups folded in after it
  * (the sliding scale's range, places and rules read as one card). A control
- * whose label repeats the heading drops its own label. The heading carries
- * the card's fill count, and each visible control still empty says "(empty)"
- * to screen readers. Controls hidden by `showWhen` are left out, and fade in
- * when they appear.
+ * whose label repeats the heading drops its own label. A card with no heading
+ * of its own (a derived chapter's single block or section list) sits right
+ * under the chapter title, so a control repeating that title drops its
+ * visible label too, and with it the "(empty)" mark: the chapter map's fill
+ * count already says so. The heading carries the card's fill count, and each
+ * visible control still empty says "(empty)" to screen readers. Controls
+ * hidden by `showWhen` are left out, and fade in when they appear.
  */
 export function SkinChapterGroupCard({
   groups,
   editor,
   chapters,
+  chapterTitleKey,
 }: {
   groups: SkinChapterGroup[];
   editor: SubprofileSkinBlocksEditor;
   chapters: SkinChapterDescriptor[];
+  /** The chapter's title, the heading an untitled card sits under. */
+  chapterTitleKey: string;
 }) {
   const { t } = useTranslation();
   const headGroup = groups[0];
@@ -183,7 +189,7 @@ export function SkinChapterGroupCard({
             group={group}
             editor={editor}
             visibleControls={visibleControls}
-            headingKey={headGroup.titleKey}
+            headingKey={headGroup.titleKey ?? chapterTitleKey}
           />
         ))}
       </div>

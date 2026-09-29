@@ -4,10 +4,13 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Button, SegmentedControl } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { renderStickerBlob } from "../../stickers/render/renderStickerBlob";
-import { unoReverseGeometry } from "../../stickers/templates/unoReverse.geometry";
-import type { UnoReverseParams } from "../../stickers/templates/unoReverse.params";
+import type {
+  StickerTemplate,
+  TemplateStyle,
+} from "../../stickers/templates/templateDefinition";
 import { StickerCanvas } from "./StickerCanvas";
 import type { PreviewBackdrop } from "./stickerBuilder.types";
+import { itemName, stickerLabelFor } from "./stickerItems";
 import styles from "./StickerHeroPreview.module.css";
 
 const BACKDROPS: readonly PreviewBackdrop[] = ["light", "dark", "checker"];
@@ -42,26 +45,25 @@ function isPreviewBackdrop(value: string): value is PreviewBackdrop {
   return (BACKDROPS as readonly string[]).includes(value);
 }
 
-/** Renders the sticker at its true 512px size and saves it as a PNG. */
+/** Renders the item at its true 512px size and saves it as a PNG. */
 function useStickerPngDownload(
-  flagId: string | null,
-  params: UnoReverseParams,
+  template: StickerTemplate,
+  style: TemplateStyle,
+  itemId: string | null,
 ) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   async function download() {
-    if (flagId === null || isDownloading) return;
+    if (itemId === null || isDownloading) return;
     setIsDownloading(true);
     try {
-      const blob = await renderStickerBlob(
-        unoReverseGeometry({ ...params, flagId }),
-      );
+      const blob = await renderStickerBlob(template.geometry(style, itemId));
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = `${flagId}-reverse.png`;
+      link.download = `${template.slugFor(itemId)}.png`;
       document.body.append(link);
       link.click();
       link.remove();
@@ -80,29 +82,36 @@ function useStickerPngDownload(
 }
 
 /**
- * The builder's large preview of one flag: the sticker at hero size on a
- * chosen backdrop, the same sticker at its real size inside a mock chat, and
- * a PNG download of the exact art that would upload.
+ * The builder's large preview of one template item: the sticker at hero size
+ * on a chosen backdrop, the same sticker at its real size inside a mock chat,
+ * and a PNG download of the exact art that would upload.
  */
 export function StickerHeroPreview({
-  flagId,
-  params,
+  template,
+  style,
+  itemId,
   backdrop,
   onBackdropChange,
 }: {
-  flagId: string | null;
-  params: UnoReverseParams;
+  template: StickerTemplate;
+  style: TemplateStyle;
+  itemId: string | null;
   backdrop: PreviewBackdrop;
   onBackdropChange: (backdrop: PreviewBackdrop) => void;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const headingId = useId();
-  const { download, isDownloading } = useStickerPngDownload(flagId, params);
-  const flagName = flagId === null ? null : t(`cards:flag.${flagId}`);
+  const { download, isDownloading } = useStickerPngDownload(
+    template,
+    style,
+    itemId,
+  );
+  const title =
+    itemId === null
+      ? t("admin:stickerPacks.preview.noItemTitle")
+      : itemName(template, itemId, language);
   const stickerLabel =
-    flagName === null
-      ? ""
-      : t("admin:stickerPacks.publish.stickerLabel", { flag: flagName });
+    itemId === null ? "" : stickerLabelFor(template, itemId, t, language);
 
   return (
     <section className={styles.hero} aria-labelledby={headingId}>
@@ -112,15 +121,21 @@ export function StickerHeroPreview({
             {t("admin:stickerPacks.preview.heading")}
           </p>
           <h3 id={headingId} className={styles.title}>
-            {flagName ?? t("admin:stickerPacks.preview.noFlagTitle")}
+            {title}
           </h3>
         </div>
         <div className={styles.actions}>
+          {/* Icon-only segments: each name stays in the button as
+              screen-reader text, so the switch fits beside the title. */}
           <SegmentedControl
             label={t("admin:stickerPacks.preview.backdropLabel")}
             options={BACKDROPS.map((backdropOption) => ({
               value: backdropOption,
-              label: t(`admin:stickerPacks.preview.backdrop.${backdropOption}`),
+              label: (
+                <span className="visuallyHidden">
+                  {t(`admin:stickerPacks.preview.backdrop.${backdropOption}`)}
+                </span>
+              ),
               icon: BACKDROP_ICON[backdropOption],
             }))}
             value={backdrop}
@@ -131,11 +146,15 @@ export function StickerHeroPreview({
           <Button
             variant="ghost"
             size="sm"
-            disabled={flagId === null || isDownloading}
+            className={styles.download}
+            title={t("admin:stickerPacks.preview.download")}
+            disabled={itemId === null || isDownloading}
             onClick={() => void download()}
           >
             <FiDownload aria-hidden />
-            {t("admin:stickerPacks.preview.download")}
+            <span className={styles.downloadLabel}>
+              {t("admin:stickerPacks.preview.download")}
+            </span>
           </Button>
         </div>
       </div>
@@ -144,11 +163,11 @@ export function StickerHeroPreview({
         className={[styles.surface, BACKDROP_CLASS[backdrop]].join(" ")}
         data-theme={BACKDROP_THEME[backdrop]}
       >
-        {flagId === null ? (
+        {itemId === null ? (
           <div className={styles.empty}>
             <FiEye className={styles.emptyIcon} aria-hidden />
             <p className={styles.emptyText}>
-              {t("admin:stickerPacks.preview.pickFlag")}
+              {t("admin:stickerPacks.preview.pickItem")}
             </p>
           </div>
         ) : (
@@ -156,8 +175,9 @@ export function StickerHeroPreview({
             <div className={styles.stage}>
               <StickerCanvas
                 className={styles.heroCanvas}
-                flagId={flagId}
-                params={params}
+                template={template}
+                style={style}
+                itemId={itemId}
                 label={stickerLabel}
               />
             </div>
@@ -170,8 +190,9 @@ export function StickerHeroPreview({
               </p>
               <StickerCanvas
                 className={styles.chatSticker}
-                flagId={flagId}
-                params={params}
+                template={template}
+                style={style}
+                itemId={itemId}
                 label={stickerLabel}
               />
             </figure>

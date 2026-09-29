@@ -10,6 +10,7 @@ import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
+import { freguesiaAt } from "../../shared/components/map/freguesiaAt";
 
 export type LocalKind = "business" | "venue";
 
@@ -109,6 +110,24 @@ function warnIfUnknownFreguesia(freguesia: string, source: string): string {
   return freguesia;
 }
 
+/**
+ * The parish a place is counted and filtered under. The pin wins: an owner's
+ * typed neighbourhood can name another part of town, and a place listed under
+ * a parish it does not sit in vanishes when that parish is picked on the map.
+ * The typed value only stands in when there is no pin, or the pin falls
+ * outside every mapped parish.
+ */
+function placeFreguesia(
+  coords: LocalPlace["coords"],
+  typedFreguesia: string,
+  source: string,
+): string {
+  const pinnedFreguesia = coords
+    ? freguesiaAt(coords.latitude, coords.longitude)
+    : null;
+  return pinnedFreguesia ?? warnIfUnknownFreguesia(typedFreguesia, source);
+}
+
 /** Normalize a name for cross-dataset matching: fold diacritics + trim + lowercase. */
 export function normalizeName(name: string): string {
   return name
@@ -132,17 +151,19 @@ export function businessToLocal(
   const fallbackCoords = demoMode
     ? (BUSINESS_COORDS[place.slug] ?? null)
     : null;
+  const coords = listedCoords ?? fallbackCoords;
   return {
     id: `business:${place.slug}`,
     kind: "business",
     name: place.name,
     category: normalizeCategory(place.cat),
     neighbourhood: place.hood,
-    freguesia: warnIfUnknownFreguesia(
+    freguesia: placeFreguesia(
+      coords,
       HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
       `business "${place.name}"`,
     ),
-    coords: listedCoords ?? fallbackCoords,
+    coords,
     detailPath: `${routes.directory}/${place.slug}`,
     safeSpaceStatus: place.safeSpaceStatus ?? "none",
     safeSpaceTier: place.safeSpaceTier ?? null,
@@ -158,14 +179,15 @@ export function businessToLocal(
 }
 
 export function venueToLocal(venue: Venue): LocalPlace {
+  const coords = { latitude: venue.latitude, longitude: venue.longitude };
   return {
     id: `venue:${venue.id}`,
     kind: "venue",
     name: venue.name,
     category: VENUE_TYPE_TO_CATEGORY[venue.type] ?? venue.type,
     neighbourhood: venue.bairro,
-    freguesia: warnIfUnknownFreguesia(venue.freguesia, `venue "${venue.name}"`),
-    coords: { latitude: venue.latitude, longitude: venue.longitude },
+    freguesia: placeFreguesia(coords, venue.freguesia, `venue "${venue.name}"`),
+    coords,
     detailPath: `${routes.venue}/${venue.id}`,
     vibe: venue.vibe,
     beenHere: venue.beenHere,
@@ -198,9 +220,12 @@ export function mergeLocalPlaces(
     const twin = venueByName.get(key);
     if (!twin) return business;
     venueByName.delete(key);
+    // A business that borrows its twin's pin takes the twin's parish with it.
+    const isBorrowingPin = business.coords === null;
     return {
       ...business,
       coords: business.coords ?? twin.coords,
+      freguesia: isBorrowingPin ? twin.freguesia : business.freguesia,
       vibe: twin.vibe,
       beenHere: twin.beenHere,
       searchText: buildSearchText([business.searchText, twin.searchText]),
@@ -211,7 +236,9 @@ export function mergeLocalPlaces(
 }
 
 export interface LocalFilters {
-  category: string;
+  /** Unified category ids to keep. Empty means every type; otherwise a place
+   *  stays when its category is any one of them. */
+  categories: string[];
   query: string;
   vibes: string[];
   /** `"verified"` restricts to safe-space-verified places; `null`/absent = no restriction. */
@@ -274,8 +301,10 @@ export function placeMeetsAccess(
  * `searchText` haystack (name + area + category + blurb + tags), not just the
  * name. Vibes are **pass-through**: only venues carry vibe data, so a selected
  * vibe narrows venues while businesses (no vibe) always stay visible — instead
- * of silently deleting every business the moment a vibe is picked. `safe` is a
- * hard filter like category: demo-only venues never carry `safeSpaceStatus`
+ * of silently deleting every business the moment a vibe is picked. Place types
+ * combine as an OR, since a place has exactly one type and someone picking
+ * "Food" and "Nightlife" wants both kinds of place. `safe` is a hard filter
+ * like the place types: demo-only venues never carry `safeSpaceStatus`
  * (undefined), so they're naturally excluded once it's active.
  *
  * `safe` matches `"verified"` EXACTLY, which is the rule the server applies to
@@ -295,8 +324,9 @@ export function filterLocalPlaces(
   filters: LocalFilters,
 ): LocalPlace[] {
   const normalizedQuery = filters.query.trim().toLowerCase();
+  const wantedCategories = new Set(filters.categories);
   return places.filter((place) => {
-    if (filters.category !== "all" && place.category !== filters.category) {
+    if (wantedCategories.size > 0 && !wantedCategories.has(place.category)) {
       return false;
     }
     if (normalizedQuery && !place.searchText.includes(normalizedQuery)) {

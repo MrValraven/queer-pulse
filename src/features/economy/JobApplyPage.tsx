@@ -70,7 +70,7 @@ function liveInitialFields(
     cvName: "",
     site: "",
     instagram: "",
-    profileUrl: profile?.slug ? `queerpulse.app/p/${profile.slug}` : "",
+    profileUrl: profile?.slug ? `queerpulse.app/members/${profile.slug}` : "",
     letter: "",
     when: "now",
     salary: "",

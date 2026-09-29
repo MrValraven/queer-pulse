@@ -11,13 +11,19 @@ import type { MemberProfile } from "./data/memberProfiles";
 import styles from "./MobileProfile.module.css";
 
 /**
- * Visitor action cluster for the mobile member profile: a full-width primary
- * ("Say hello" / "Message") over a compact second row holding the vouch
- * control and the "…" safety menu. Mirrors the live-visitor data branch of the
- * desktop-shared `ProfileHeroActions` (same hooks, same "say hello" modal for
- * connected members) but arranged for the narrow column; `asVisitor` renders
- * the CTAs inert so the owner's "preview as a visitor" mode shows the real
- * shape without live side effects.
+ * Visitor action cluster for the mobile member profile: the primary CTA
+ * ("Say hello" / "Message" / "Accept") and the secondary control (Vouch /
+ * Decline / the vouched pill) side by side at equal width, with the "…"
+ * safety menu as a quiet 44px icon at the end of the same row. Mirrors the
+ * live-visitor data branch of the desktop's `ProfileHeroActions` (same
+ * hooks, same "say hello" modal for connected members), but as its own
+ * component arranged for the narrow column; `asVisitor` renders the CTAs
+ * inert so the owner's "preview as a visitor" mode shows the real shape
+ * without live side effects.
+ *
+ * Buttons carry short labels (11 characters at most in either language) so
+ * each half fits one line at 375px; where the short label drops the name,
+ * the full wording stays on as the accessible name.
  */
 export function MobileProfileActions({
   profile,
@@ -41,20 +47,33 @@ export function MobileProfileActions({
   const vouched = hasVouched(profile.slug);
   const [helloOpen, setHelloOpen] = useState(false);
   const fullName = `${profile.first} ${profile.last}`;
+  const acceptLabel = t("members:profile.hero.acceptRequestCta", {
+    first: profile.first,
+  });
+  const vouchLabel = t("members:profile.hero.vouchForCta", {
+    first: profile.first,
+  });
 
   const primary = asVisitor ? (
-    <Button size="lg" disabled>
+    <Button size="md" className={styles.actionButton} disabled>
       {t("members:profile.hero.sayHelloCta")}
     </Button>
   ) : hasIncomingRequest ? (
-    // They asked first: the primary answers them. Decline sits in the second
-    // row below, where this layout already keeps its secondary controls.
-    <Button size="lg" onClick={() => void accept()} disabled={isAnswering}>
-      {t("members:profile.hero.acceptRequestCta", { first: profile.first })}
+    // They asked first: the primary answers them. Decline sits beside it,
+    // where this layout already keeps its secondary control.
+    <Button
+      size="md"
+      className={styles.actionButton}
+      aria-label={acceptLabel}
+      onClick={() => void accept()}
+      disabled={isAnswering}
+    >
+      {t("connect:card.accept")}
     </Button>
   ) : (
     <Button
-      size="lg"
+      size="md"
+      className={styles.actionButton}
       onClick={() =>
         connected
           ? setHelloOpen(true)
@@ -67,45 +86,49 @@ export function MobileProfileActions({
     </Button>
   );
 
+  const secondary =
+    hasIncomingRequest && !asVisitor ? (
+      <Button
+        size="md"
+        variant="ghost"
+        className={styles.actionButton}
+        onClick={() => void decline()}
+        disabled={isAnswering}
+      >
+        {t("connect:card.decline")}
+      </Button>
+    ) : vouched ? (
+      <span className={`${styles.vouchedPill} ${styles.actionButton}`}>
+        <FiCheck aria-hidden />
+        {t("members:profile.hero.vouchedShort")}
+      </span>
+    ) : (
+      <Button
+        size="md"
+        variant="ghost"
+        className={styles.actionButton}
+        aria-label={vouchLabel}
+        disabled={asVisitor}
+        onClick={asVisitor ? undefined : () => openVouch(profile.slug)}
+      >
+        {t("members:profile.hero.vouchShort")}
+      </Button>
+    );
+
+  const safetyMenu = !realSelf && (
+    <ProfileSafetyMenu
+      slug={profile.slug}
+      firstName={profile.first}
+      onWithdrawVouch={vouched ? () => removeVouch(profile.slug) : undefined}
+    />
+  );
+
   return (
     <>
-      <div className={styles.actionStack}>
-        <div className={styles.primaryRow}>{primary}</div>
-        <div className={styles.secondaryRow}>
-          {hasIncomingRequest && !asVisitor ? (
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={() => void decline()}
-              disabled={isAnswering}
-            >
-              {t("members:profile.hero.declineRequestCta")}
-            </Button>
-          ) : vouched ? (
-            <span className={styles.vouchedPill}>
-              <FiCheck aria-hidden />
-              {t("members:profile.hero.vouchedShort")}
-            </span>
-          ) : (
-            <Button
-              size="lg"
-              variant="ghost"
-              disabled={asVisitor}
-              onClick={asVisitor ? undefined : () => openVouch(profile.slug)}
-            >
-              {t("members:profile.hero.vouchForCta", { first: profile.first })}
-            </Button>
-          )}
-          {!realSelf && (
-            <ProfileSafetyMenu
-              slug={profile.slug}
-              firstName={profile.first}
-              onWithdrawVouch={
-                vouched ? () => removeVouch(profile.slug) : undefined
-              }
-            />
-          )}
-        </div>
+      <div className={styles.actionRow}>
+        {primary}
+        {secondary}
+        {safetyMenu}
       </div>
       {helloOpen && (
         <ProfileHelloModal

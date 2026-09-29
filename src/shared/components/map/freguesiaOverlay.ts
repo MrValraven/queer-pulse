@@ -196,10 +196,12 @@ export function createFreguesiaOverlay(
     id: "freguesia-line",
     type: "line",
     source: "freguesias",
+    // The parish edge is a city-scale wayfinding aid too, so it fades out by
+    // street zoom, where it was being mistaken for a road.
     paint: {
       "line-color": BRAND.accentInk,
       "line-width": 1,
-      "line-opacity": 0.55,
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 11, 0.5, 14, 0],
     },
   });
 

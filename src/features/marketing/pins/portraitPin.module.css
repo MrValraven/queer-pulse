@@ -1,0 +1,430 @@
+/* The directory map's pin (see portraitPin.ts): the place's photo in a ringed
+   disc with a short tail, and its name floating beside it, on the shared
+   chrome in pinChrome.module.css.
+
+   Map-marker exception, as in the chrome: the fixed cream rim, the category
+   fills, the plum shadows and the label's plum ink on its cream halo do not
+   follow the theme. Markers stay light in both themes so they keep their
+   contrast as the basemap dims (it only fades to a grey beige), and the halo
+   is what the ink is read against, whatever the tile beneath it.
+
+   Geometry, from the top of the 54 by 64px button:
+     0 to 54px   the disc: a 44px photo, a 3px category ring, a 2px cream rim
+     54 to 60px  the tail's visible point, ending at the body's bottom edge
+     60px on     the chrome's ground dot, centred on the button's bottom
+                 centre, the exact coordinate; the tail tip meets its top
+   The body scales from its bottom edge, the tail tip, so a grown or shrunk
+   pin keeps pointing at the same dot. The disc's centre, 27px from the top,
+   is 37px above the coordinate (visualCenterOffsetPx in portraitPin.ts).
+   The label starts 62px from the button's inline start (the disc, then an
+   8px gap that clears the chip) with its name line centred on the disc. */
+
+/* Every transform on the body reads the first three, so the zoom band, the
+   hover or selection emphasis and the reduced-motion override each change
+   one number and never fight over the whole transform. The label reads the
+   lift and its own slide, which points back towards the disc in either
+   direction of text. */
+.pin {
+  --portrait-lift: 0px;
+  --portrait-emphasis: 1;
+  --portrait-density: 1;
+  --portrait-label-slide: -4px;
+
+  inline-size: 54px;
+  block-size: 64px;
+}
+.pin:dir(rtl) {
+  --portrait-label-slide: 4px;
+}
+
+/* The city view: smaller faces and no chips, so a dense map stays calm. */
+:global([data-pin-zoom="far"]) .pin {
+  --portrait-density: 0.75;
+}
+
+/* The keyboard ring follows the round disc: the button's own ring from the
+   chrome is dropped, and the frame wears it instead. The doubled class
+   outranks the chrome's `.pin:focus-visible` whatever order the two
+   stylesheets load in; the chrome's z-index on the button still applies. */
+.pin.pin:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.pin:focus-visible .frame {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────
+   Everything that lifts. The button itself never moves: the ground is its
+   child and must stay planted on the coordinate. */
+.body {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 54px;
+  block-size: 60px;
+  transform: translateY(var(--portrait-lift))
+    scale(calc(var(--portrait-density) * var(--portrait-emphasis)));
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-base) var(--ease);
+}
+
+/* The tail and the frame share one plum-tinted drop shadow, so the shadow
+   follows the pin's outline, point included. The first shadow is the
+   selection glow, transparent at rest; it comes first so it hugs the shape
+   and the plum shadows fall under it. A filter drop-shadow is used because it
+   traces the tail, which a box shadow cannot. */
+.shape {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 0 0 transparent)
+    drop-shadow(0 1px 1px rgba(var(--plum-rgb), 0.3))
+    drop-shadow(0 3px 5px rgba(var(--plum-rgb), 0.2));
+  transition: filter var(--dur-base) var(--ease);
+}
+
+/* The point: a 12px square turned 45 degrees behind the frame, so only its
+   lower corner shows below the disc. Its two lower edges carry the cream rim
+   on, so disc and point read as one outline. Physical sides on purpose: the
+   point is geometry aimed at a coordinate and must not mirror in a
+   right-to-left layout. */
+.tail {
+  position: absolute;
+  top: 46px;
+  left: 21px;
+  box-sizing: border-box;
+  inline-size: 12px;
+  block-size: 12px;
+  border-right: 2px solid rgba(var(--cream-rgb), 1);
+  border-bottom: 2px solid rgba(var(--cream-rgb), 1);
+  border-bottom-right-radius: var(--radius-2);
+  background: var(--pin-color, var(--plum));
+  transform: rotate(45deg);
+}
+
+/* The disc: the cream rim as a border, the category ring as the background
+   showing through a 3px gap around the photo. */
+.frame {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  box-sizing: border-box;
+  inline-size: 54px;
+  block-size: 54px;
+  border: 2px solid rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-avatar);
+  background: var(--pin-color, var(--plum));
+}
+
+/* The fallback face: the name's first letter in the display serif on the
+   category colour, lighter at the top like light falling on it, or the
+   category icon when the name has no letter to show. The white hairline
+   keeps it apart from the ring of the same colour. It always sits under the
+   photo, and hides once the photo has loaded (see watchPhoto). */
+.monogram {
+  position: absolute;
+  inset: 3px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--radius-avatar);
+  background: linear-gradient(
+    to bottom,
+    color-mix(
+      in srgb,
+      var(--pin-color, var(--plum)) 72%,
+      rgba(var(--cream-rgb), 1)
+    ),
+    var(--pin-color, var(--plum)) 70%
+  );
+  color: rgba(var(--cream-rgb), 1);
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 600;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(var(--plum-rgb), 0.3);
+  user-select: none;
+}
+.monogram svg {
+  inline-size: 20px;
+  block-size: 20px;
+  filter: drop-shadow(0 1px 1px rgba(var(--plum-rgb), 0.3));
+}
+.frame[data-photo="ready"] .monogram {
+  visibility: hidden;
+}
+
+.photo {
+  position: absolute;
+  inset: 3px;
+  display: block;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: var(--radius-avatar);
+  object-fit: cover;
+  transition: filter var(--dur-base) var(--ease);
+}
+
+/* ── Chip and verified mark ──────────────────────────────────────────────
+   Both sit on the rim at 45 degrees, overlapping it, so they read as
+   pinned to the portrait. Physical sides, like the tail: the disc is the
+   same shape in either direction of text, so the marks keep their places on
+   it and stay with the point. */
+.chip {
+  position: absolute;
+  top: 36px;
+  left: 36px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: 20px;
+  block-size: 20px;
+  border: 1.5px solid rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-avatar);
+  background: var(--pin-color, var(--plum));
+  box-shadow: var(--shadow-e2);
+  color: rgba(var(--cream-rgb), 1);
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+.chip svg {
+  inline-size: 12px;
+  block-size: 12px;
+}
+:global([data-pin-zoom="far"]) .chip {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.verified {
+  position: absolute;
+  top: 0;
+  left: 38px;
+  display: grid;
+  line-height: 0;
+}
+
+/* ── Label ───────────────────────────────────────────────────────────────
+   Name over category, beside the disc, with the name line centred on the
+   disc's centre (27px down, less half the name's 1.25 line). It moves with
+   the lift alone and never with the body's scale, so its text stays crisp.
+
+   Set with no box: a cream halo around every letter carries the ink over any
+   tile. The halo is a 3px cream stroke painted under the fill
+   (`paint-order: stroke fill`), so the full glyph shape shows with a crisp
+   1.5px cream edge outside it, plus a soft cream shadow that feathers that
+   edge into busy streets and parks. Round joins keep the stroke off the
+   sharp corners of letters such as V and A. Every piece here inherits to
+   both lines.
+
+   A label ignores the pointer unless its pin is hovered or focused, so a
+   name shown by the zoom band never takes a tap meant for a neighbouring
+   disc; a hovered one takes it, and the click bubbles to the pin's button. */
+.label {
+  position: absolute;
+  inset-block-start: calc(27px - var(--text-13-5) * 0.625);
+  inset-inline-start: 62px;
+  display: flex;
+  flex-direction: column;
+  inline-size: max-content;
+  max-inline-size: 140px;
+  font-family: var(--sans);
+  line-height: 1.25;
+  text-align: start;
+  white-space: nowrap;
+  -webkit-text-stroke: 3px rgba(var(--cream-rgb), 1);
+  paint-order: stroke fill;
+  stroke-linejoin: round;
+  text-shadow: 0 0 4px rgba(var(--cream-rgb), 0.95);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(var(--portrait-label-slide), var(--portrait-lift));
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+@media (max-width: 600px) {
+  .label {
+    max-inline-size: 112px;
+  }
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+}
+
+/* The padding, taken back by the negative margin, gives the halo room
+   inside the clip that the ellipsis needs, so descenders keep their cream
+   edge. */
+.name,
+.category {
+  min-inline-size: 0;
+  margin: -2px -3px;
+  padding: 2px 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.name {
+  /* Fixed plum on the fixed cream halo, legible in both themes because the
+     halo never darkens, so it must not follow the theme's ink.
+     css-scale-allow: non-flipping-text */
+  color: var(--plum);
+  font-size: var(--text-13-5);
+  font-weight: 700;
+}
+/* The category colour carries its name in cream-haloed type; each --cat-*
+   fill clears 4.5:1 on cream. */
+.category {
+  color: var(--pin-color, var(--plum));
+  font-size: var(--text-11);
+  font-weight: 600;
+}
+
+/* ── Which labels show ───────────────────────────────────────────────────
+   In cascade order, since each step overrides the one before:
+     1. Street zoom shows every label.
+     2. A label the manager culled for colliding with a kept label, another
+        disc or the selected callout hides.
+     3. The hovered or focused pin shows its label at street or neighbourhood
+        zoom, culled or not, and only that label takes the pointer. Its
+        marker is raised above its neighbours, so the name reads over them.
+     4. City zoom and a selection hide the label whatever else applies; the
+        selected pin's callout names the place instead. */
+:global([data-pin-zoom="near"]) .label {
+  opacity: 1;
+  transform: translate(0, var(--portrait-lift));
+}
+
+.pin[data-label="hidden"] .label {
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(var(--portrait-label-slide), var(--portrait-lift));
+}
+
+.pin[data-hovered="true"] .label,
+.pin:focus-visible .label {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translate(0, var(--portrait-lift));
+}
+@media (hover: hover) and (pointer: fine) {
+  .pin:hover .label {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translate(0, var(--portrait-lift));
+  }
+}
+
+:global([data-pin-zoom="far"]) .pin .label,
+.pin[data-selected="true"] .label {
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(var(--portrait-label-slide), var(--portrait-lift));
+}
+
+/* ── States ──────────────────────────────────────────────────────────────
+   Hover rises and grows a touch, and the shadow softens and lengthens as
+   the pin leaves the map. The growth stays small so a hovered disc never
+   covers its neighbours. --z-raised lifts the marker's wrapper (maplibre
+   makes each one its own stacking context) so the grown disc and its shown
+   label paint over neighbouring pins. The manager's inline z-index for a
+   selected or list-hovered marker still wins. */
+@media (hover: hover) and (pointer: fine) {
+  .pin:hover,
+  .pin[data-hovered="true"] {
+    --portrait-lift: -4px;
+    --portrait-emphasis: 1.04;
+  }
+  .pin:hover .shape,
+  .pin[data-hovered="true"] .shape {
+    filter: drop-shadow(0 0 0 transparent)
+      drop-shadow(0 2px 2px rgba(var(--plum-rgb), 0.16))
+      drop-shadow(0 12px 16px rgba(var(--plum-rgb), 0.26));
+  }
+  :global(.maplibregl-marker):has(> .pin:hover) {
+    z-index: var(--z-raised);
+  }
+}
+:global(.maplibregl-marker):has(> .pin:focus-visible) {
+  z-index: var(--z-raised);
+}
+
+/* Selected grows a little further, returns to full size at any zoom, shows
+   its chip again, and the ring glows in its own colour. The photo warms up a
+   touch. The grown disc and its glow rise above the button, so the callout
+   needs more room than the chrome's 10px. --pin-callout-gap is the chrome
+   handoff that lets a pin set it; the chrome reads it for the callout
+   offset. */
+.pin[data-selected="true"] {
+  --portrait-lift: -4px;
+  --portrait-emphasis: 1.08;
+  --portrait-density: 1;
+  --pin-callout-gap: 22px;
+}
+.pin[data-selected="true"] .shape {
+  filter: drop-shadow(
+      0 0 7px color-mix(in srgb, var(--pin-color, var(--plum)) 60%, transparent)
+    )
+    drop-shadow(0 2px 2px rgba(var(--plum-rgb), 0.16))
+    drop-shadow(0 12px 18px rgba(var(--plum-rgb), 0.28));
+}
+.pin[data-selected="true"] .photo {
+  filter: saturate(1.12) brightness(1.04);
+}
+:global([data-pin-zoom="far"]) .pin[data-selected="true"] .chip {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reduced motion, from the OS or the app's own setting (matching the
+   chrome). The pin stays still: no lift, no growth, and a selected pin keeps
+   its zoom band's size. Labels lose their slide and keep their fade. The
+   glow, the shadow change and the photo boost stay, so hover and selection
+   still read. */
+@media (prefers-reduced-motion: reduce) {
+  .pin,
+  .pin:dir(rtl) {
+    --portrait-label-slide: 0px;
+  }
+  .pin:hover,
+  .pin[data-hovered="true"],
+  .pin[data-selected="true"] {
+    --portrait-lift: 0px;
+    --portrait-emphasis: 1;
+    --pin-callout-gap: 10px;
+  }
+  :global([data-pin-zoom="far"]) .pin[data-selected="true"] {
+    --portrait-density: 0.75;
+  }
+  .chip,
+  :global([data-pin-zoom="far"]) .chip {
+    transform: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .pin,
+:global(html[data-reduce-motion="true"]) .pin:dir(rtl) {
+  --portrait-label-slide: 0px;
+}
+:global(html[data-reduce-motion="true"]) .pin:hover,
+:global(html[data-reduce-motion="true"]) .pin[data-hovered="true"],
+:global(html[data-reduce-motion="true"]) .pin[data-selected="true"] {
+  --portrait-lift: 0px;
+  --portrait-emphasis: 1;
+  --pin-callout-gap: 10px;
+}
+:global(html[data-reduce-motion="true"])
+  :global([data-pin-zoom="far"])
+  .pin[data-selected="true"] {
+  --portrait-density: 0.75;
+}
+:global(html[data-reduce-motion="true"]) .chip {
+  transform: none;
+}

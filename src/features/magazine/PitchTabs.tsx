@@ -1,46 +1,47 @@
-import { useTablistKeys } from "../../shared/components/ui";
+import type { Ref } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PitchTab } from "./pitchTracker.data";
 import styles from "./PitchTrackerPage.module.css";
 
+/**
+ * The Submissions tab's status filter: a labelled group of toggle chips, one
+ * per `PITCH_TABS` entry, each with its live count. The chips filter one list
+ * in place and own no panels, so they are `aria-pressed` buttons in plain Tab
+ * order. The look follows `.chip[aria-pressed]` in `desk/pieceTabs.module.css`.
+ */
 export function PitchTabs({
   tabs,
   active,
   counts,
   onChange,
+  groupRef,
 }: {
   tabs: PitchTab[];
   active: string;
   counts: Record<string, number>;
   onChange: (key: string) => void;
+  /** Lets the tab move focus back onto a chip after resetting the filter. */
+  groupRef?: Ref<HTMLDivElement>;
 }) {
   const { t } = useTranslation();
-  // APG tablist keys: Arrow/Home/End with a roving tabIndex.
-  const { tabProps } = useTablistKeys(tabs.length, (index) => {
-    const nextTab = tabs[index];
-    if (nextTab) onChange(nextTab.key);
-  });
 
   return (
     <div
-      className={styles.tabs}
-      role="tablist"
+      ref={groupRef}
+      className={styles.filters}
+      role="group"
       aria-label={t("magazine:pitchTracker.tabs.ariaLabel")}
     >
-      {tabs.map((tab, index) => (
+      {tabs.map((tab) => (
         <button
           key={tab.key}
           type="button"
-          role="tab"
-          aria-selected={active === tab.key}
-          {...tabProps(index, active === tab.key)}
-          className={[styles.tab, active === tab.key && styles.tabActive]
-            .filter(Boolean)
-            .join(" ")}
+          aria-pressed={active === tab.key}
+          className={styles.filterChip}
           onClick={() => onChange(tab.key)}
         >
           {t(tab.labelKey)}{" "}
-          <span className={styles.tabCount}>{counts[tab.key]}</span>
+          <span className={styles.filterCount}>{counts[tab.key] ?? 0}</span>
         </button>
       ))}
     </div>

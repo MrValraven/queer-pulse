@@ -15,13 +15,18 @@
   padding: 11px 16px;
   background: var(--paper);
 }
+/* Held at its size in a narrow field (the full screen map's card at ~420px),
+   where the input takes the squeeze and clips its placeholder to an ellipsis. */
 .search svg {
+  flex: none;
   width: 17px;
   height: 17px;
   color: var(--ink-40);
 }
 .search input {
   flex: 1;
+  min-width: 0;
+  text-overflow: ellipsis;
   border: none;
   background: none;
   font-family: var(--sans);
@@ -177,6 +182,11 @@
   align-items: stretch;
   gap: 6px 12px;
 }
+/* The same row inside the full screen map's card, which drops the view
+   switcher and so needs one column fewer. */
+.barRowOverlay {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
 /* The view switcher closes the row. A little extra air and a hairline set it
    apart from the three controls that narrow the results: this one chooses how
    they are drawn. */
@@ -316,6 +326,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+/* The access chip's tick. Its own inline-flex box, because the Refine glide
+   pops it in with a scale, which a plain inline span cannot take. */
+.tick {
+  display: inline-flex;
 }
 
 /* The quick-filter chip row is spaced by its group label inside the drawer, so

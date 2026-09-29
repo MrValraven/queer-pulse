@@ -1,0 +1,369 @@
+/* The piece peek panel (PiecePeekPanel + Header/Status/Body/Thread). A 480px
+   paper panel fixed to the viewport's right edge over the desk rail, with no
+   scrim so the table stays usable; a full-screen modal sheet below 768px (the
+   matching JS query is PEEK_SHEET_QUERY in PiecePeekPanel.tsx). One surface,
+   sections split by space and hairlines, no cards inside it. */
+
+.panel {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: var(--z-nav);
+  width: min(480px, 100vw);
+  display: flex;
+  flex-direction: column;
+  /* The sheet's page-sized surface turns cream on a phone (see below). */
+  --peek-surface: var(--paper);
+  background: var(--peek-surface);
+  border-inline-start: 1px solid var(--line);
+  box-shadow: var(--shadow-e4);
+  opacity: 1;
+  transform: none;
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+/* Entry: the first style the panel gets is the off-stage one, so it slides
+   and fades in on mount. Browsers without @starting-style show it at once. */
+@starting-style {
+  .panel {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+/* Leave: timed to PEEK_EXIT_MS (150ms) in PiecePeekPanel.tsx. */
+.panel.exiting {
+  opacity: 0;
+  transform: translateX(24px);
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-in);
+}
+
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-1 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream);
+}
+
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ── Header ──
+   `.toolbar` (`PiecePeekToolbar`) and the title block (`.headerBody`,
+   `PiecePeekHeader`) are each their own component now, so the panel can
+   place them independently: on the desktop panel both are direct children
+   of `.scroll`, so the sticky
+   toolbar has `.scroll` itself as its containing block instead of a short
+   parent that would scroll away as one piece with it inside. On the
+   phone sheet `.toolbar` moves out of `.scroll` entirely (see the phone query
+   below and `PiecePeekPanel.tsx`), so `.headerBody` alone stays here. */
+
+.headerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 20px 16px;
+}
+
+/* Pinned while the panel scrolls, so close and the step pair stay in reach. */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-raised);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 10px 20px;
+  background: var(--peek-surface);
+}
+
+.section {
+  min-width: 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-inline-start: auto;
+  flex: none;
+}
+
+/* Another editor on this piece right now, beside the step pair. */
+.headerPresence {
+  margin-inline-end: 6px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.byline {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+/* On the phone sheet only (`isSheet` in PiecePeekHeader.tsx), the same
+   editor-viewing stack moves here, off the toolbar, where three 44px icon
+   buttons would otherwise squeeze the section name down to a few letters. */
+.headerPresenceLine {
+  margin-top: 2px;
+}
+
+/* ── Status: stage, next action, due, waiting on ── */
+
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fact dt {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.fact dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-14);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+.fact dd.late {
+  color: var(--desk-tone-late);
+  font-weight: 600;
+}
+
+.fact dd.stalled {
+  color: var(--desk-tone-writer);
+  font-weight: 600;
+}
+
+.stalledIcon {
+  flex: none;
+}
+
+/* ── Record sections: brief, latest messages, money ── */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > * {
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Same eyebrow as the record's card headings (`.card h3` in
+   pieceTabs.module.css), so MoneyMiniCard's own heading matches. */
+.blockHeading {
+  margin: 0;
+  font-size: var(--text-12);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+}
+
+.muted {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-40);
+}
+
+.angle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  line-height: 1.45;
+  font-weight: 300;
+  color: var(--text-strong);
+}
+
+.wants {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.wants li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.wants svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--desk-tone-ready);
+}
+
+/* MoneyMiniCard brings its own card box; inside the panel it sits flat like
+   the other sections. The child selector outranks `.card` without editing
+   pieceTabs.module.css. */
+.money > div {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.footer {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--peek-surface);
+}
+
+/* ── Phone: a full-screen modal sheet ── */
+
+@media (max-width: 767px) {
+  .panel {
+    inset: 0;
+    width: auto;
+    z-index: var(--z-modal);
+    --peek-surface: var(--cream);
+    border-inline-start: 0;
+    box-shadow: none;
+  }
+
+  @starting-style {
+    .panel {
+      transform: translateY(24px);
+    }
+  }
+
+  .panel.exiting {
+    transform: translateY(24px);
+  }
+
+  .status,
+  .body > * {
+    padding-inline: 16px;
+  }
+
+  /* A non-scrolling safe-area band, `.panel`'s own first flex item (fix
+     round 1 got this wrong: a `.scroll::before` made sticky, which resolves
+     its `top: 0` against the SCROLLPORT the scroller's own padding already
+     deflates, so the band stuck at the padding edge, below the notch strip,
+     and painted over the title instead of masking the status bar). A plain
+     flex item needs no sticky positioning trick at all: it is simply never
+     part of the scrolling content, so it neither scrolls away nor moves.
+     Zero height with no inset, so it is a no-op on an ordinary browser. */
+  .panel::before {
+    content: "";
+    display: block;
+    flex: none;
+    height: env(safe-area-inset-top);
+    background: var(--peek-surface);
+  }
+
+  /* `.scroll` no longer needs any inset math of its own: the band above it
+     already clears the notch, so this is simply the plain breathing-room gap
+     the design asked for. No `--gap-md` token exists; `--gap-sm` is the
+     closest. */
+  .scroll {
+    padding-block-start: var(--gap-sm);
+  }
+
+  .headerBody {
+    padding-inline: 16px;
+    padding-block-start: 6px;
+  }
+
+  /* On the sheet, `PiecePeekPanel` mounts the toolbar as `.panel`'s own flex
+     child, a sibling of `.scroll` and `.footer`, rather than inside `.scroll`:
+     it no longer scrolls with the content, so close and the step pair
+     land at the bottom of the screen, in thumb's reach, rather than the
+     sheet's far top corner. It is now also placed AFTER `.scroll` in the DOM
+     (`PiecePeekPanel.tsx` dropped the earlier `order`-only
+     reshuffle), so focus order matches paint order: Tab now reaches
+     `.scroll`'s own controls first, the toolbar's step/close buttons next,
+     then `.footer`'s "Open full record" last (`PiecePeekPanel.test.tsx`'s
+     sheet trap test reflects this). It no longer needs to stick: undo the
+     desktop sticky rule, size it to content (`flex: none`) and give it a top
+     hairline like `.footer`, since it is now the same kind of fixed row.
+     `.footer` already carries the bottom safe-area inset; `.toolbar` sits
+     between the two and needs neither. */
+  .toolbar {
+    position: static;
+    top: auto;
+    flex: none;
+    padding: 10px max(16px, env(safe-area-inset-right)) 10px
+      max(16px, env(safe-area-inset-left));
+    border-top: 1px solid var(--line);
+  }
+
+  .footer {
+    padding-inline: 16px;
+  }
+}

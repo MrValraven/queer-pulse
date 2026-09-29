@@ -1,6 +1,7 @@
 import { useId } from "react";
+import { m } from "motion/react";
 import { FiClock, FiShield } from "react-icons/fi";
-import { RefineGroup } from "../../shared/components/ui";
+import { RefineGroup, useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./LocalFilterBar.module.css";
 
@@ -22,6 +23,9 @@ export function LocalQuickFilters({
 }) {
   const { t } = useTranslation();
   const quickLabelId = useId();
+  // Inside the Refine drawer the chips glide to their new places as the
+  // drawer's content shifts; in the mobile sheet the glide stays still.
+  const glide = useRefineGlide();
 
   return (
     <RefineGroup
@@ -30,8 +34,9 @@ export function LocalQuickFilters({
       role="group"
       aria-labelledby={quickLabelId}
     >
-      <div className={s.safeRow}>
-        <button
+      <m.div {...glide.row} className={s.safeRow}>
+        <m.button
+          {...glide.chip}
           type="button"
           aria-pressed={openNow}
           className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
@@ -39,8 +44,9 @@ export function LocalQuickFilters({
         >
           <FiClock aria-hidden />
           {t("marketing:local.filter.openNow")}
-        </button>
-        <button
+        </m.button>
+        <m.button
+          {...glide.chip}
           type="button"
           aria-pressed={safeOnly}
           className={[s.chip, safeOnly && s.chipOn].filter(Boolean).join(" ")}
@@ -48,8 +54,8 @@ export function LocalQuickFilters({
         >
           <FiShield aria-hidden />
           {t("marketing:local.filter.verifiedSafeSpaces")}
-        </button>
-      </div>
+        </m.button>
+      </m.div>
     </RefineGroup>
   );
 }

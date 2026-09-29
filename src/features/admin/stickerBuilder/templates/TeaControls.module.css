@@ -1,0 +1,9 @@
+/* Tea's controls. The panel frame and the control groups come from
+   StylePanel; this wrapper only lets the accent field shrink with a narrow
+   sticky column, so the hex box and presets wrap onto the next line. */
+
+.accentField {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

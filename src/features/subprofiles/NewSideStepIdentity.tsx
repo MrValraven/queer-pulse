@@ -2,12 +2,17 @@ import { FormField, RadioCardGroup } from "../../shared/components/ui";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import { handleFormatError } from "../../shared/handles";
 import type { LinkVisibility } from "./api/subprofiles.api";
+import {
+  handleNamesOwner,
+  linkedPersonaHandleCandidate,
+} from "./personaHandle";
 import styles from "./NewSideModal.module.css";
 
 /** One line of live handle feedback below a `.choice` card: `good` (format
- *  clean, first-come-first-served at publish), `bad` (invalid/reserved —
- *  blocks submission), or `idle` (no handle to check — the linked address
- *  isn't globally unique, so there's nothing to claim). */
+ *  clean, first-come-first-served at publish), `bad` (invalid, reserved,
+ *  only the kind name, or names the owner; blocks submission), or `idle`
+ *  (nothing to check: the linked address starts from a default the server
+ *  derives and stores on save). */
 function HandleState({
   tone,
   children,
@@ -27,13 +32,16 @@ function HandleState({
 }
 
 /**
- * Step 2: name the persona, then choose whether it lives under the owner's
- * profile (linked) or stands alone with a public handle (unlinked). Both are
+ * Step 2: name the persona, then choose whether it shows it belongs to the
+ * owner (linked) or stands alone (unlinked). Both live at `/p/<handle>`; a
+ * linked one starts from the derived `<creatorSlug>-<personaSlug>`. Both are
  * `.choice` radio cards with a live address preview; the unlinked one runs
- * the handle through the same client-side format/reserved check as the
- * editor's publish checklist — availability itself is only settled at
- * publish (first come, first served), so the state line says so rather than
- * pretending to confirm it here.
+ * the handle through the same client-side format/reserved/names-owner check
+ * as the editor's publish checklist, and refuses a handle that is only the
+ * kind name (an empty display name would otherwise give `/p/therapist`).
+ * Availability itself is only settled at
+ * publish (first come, first served), so the state line says so and leaves
+ * the confirmation to publish.
  */
 export function NewSideStepIdentity({
   displayName,
@@ -42,8 +50,10 @@ export function NewSideStepIdentity({
   linkVisibility,
   onChangeLinkVisibility,
   ownerSlug,
+  creatorSlugForChecks,
   slug,
   handle,
+  isHandleKindName,
   t,
 }: {
   displayName: string;
@@ -52,11 +62,22 @@ export function NewSideStepIdentity({
   linkVisibility: LinkVisibility;
   onChangeLinkVisibility: (value: LinkVisibility) => void;
   ownerSlug: string;
+  /** `null` until a real creator slug resolves; the names-owner check below
+   *  skips entirely then, same as `useNewSideForm`'s `step2Ready` (see its
+   *  `creatorSlugForChecks` doc comment for why `ownerSlug`'s "you" fallback
+   *  can't be used for this check). */
+  creatorSlugForChecks: string | null;
   slug: string;
   handle: string;
+  /** From `useNewSideForm`: the handle is only the persona's kind name, which
+   *  keeps standalone Create disabled until a name is given above. */
+  isHandleKindName: boolean;
   t: TranslationApi["t"];
 }) {
   const handleError = handleFormatError(handle);
+  const doesHandleNameOwner =
+    creatorSlugForChecks !== null &&
+    handleNamesOwner(handle, creatorSlugForChecks);
 
   return (
     <>
@@ -92,12 +113,14 @@ export function NewSideStepIdentity({
                   <p className={styles.choiceDesc}>
                     {t("subprofiles:link.help.linked")}
                   </p>
-                  {/* eslint-disable-next-line local/no-literal-string -- literal route path shown as an address preview; app routes aren't localized. */}
                   <code className={styles.choiceCode}>
-                    /members/{ownerSlug}/{slug || "…"}
+                    /p/
+                    {slug ? linkedPersonaHandleCandidate(ownerSlug, slug) : "…"}
                   </code>
                   <HandleState tone="idle">
-                    {t("subprofiles:newModal.linkedAddressNote")}
+                    {t("subprofiles:newModal.linkedAddressNoteCreate", {
+                      creator: ownerSlug,
+                    })}
                   </HandleState>
                 </>
               ),
@@ -123,6 +146,14 @@ export function NewSideStepIdentity({
                   ) : handleError === "reserved" ? (
                     <HandleState tone="bad">
                       {t("subprofiles:checklist.reqHandleFailReserved")}
+                    </HandleState>
+                  ) : isHandleKindName ? (
+                    <HandleState tone="bad">
+                      {t("subprofiles:newModal.handleStateIsKind")}
+                    </HandleState>
+                  ) : doesHandleNameOwner ? (
+                    <HandleState tone="bad">
+                      {t("subprofiles:checklist.reqHandleFailNamesOwner")}
                     </HandleState>
                   ) : (
                     <HandleState tone="good">

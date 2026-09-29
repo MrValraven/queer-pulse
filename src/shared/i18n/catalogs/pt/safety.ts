@@ -276,8 +276,7 @@ export const safety: Catalog = {
     "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
   "reason.offPlatform": "Pediram para pagar ou sair da plataforma",
   "reason.listingDispute": "Contestação ou reivindicação de um anúncio",
-  "reason.listingOwnerNotify":
-    "Contacto com quem gere: anúncio sugerido ou amigo",
+  "reason.listingOwnerNotify": "Contacto com quem gere: anúncio sugerido",
   "reason.other": "Outra coisa, explicada em detalhe",
 
   // ── Safe-space BADGE flag copy. Ver a nota em en/safety.ts ─────────────

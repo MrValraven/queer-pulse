@@ -20,6 +20,9 @@ export interface DeckEditorHeaderProps {
   onSave: () => void;
   savePending: boolean;
   onConvert: () => void;
+  /** A live or scheduled deck has to come down before it can become an
+   *  article. The button stays focusable and says why when pressed. */
+  isConvertBlocked: boolean;
   publishPending: boolean;
   publishDisabled: boolean;
   /** The stored publish instant. A FUTURE one means the deck is SCHEDULED,
@@ -56,6 +59,7 @@ export function DeckEditorHeader({
   onSave,
   savePending,
   onConvert,
+  isConvertBlocked,
   publishPending,
   publishDisabled,
   publishedAt,
@@ -105,7 +109,12 @@ export function DeckEditorHeader({
         >
           {t("magazine:deck.editor.saveDraft")}
         </Button>
-        <Button variant="ghost" size="sm" onClick={onConvert}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onConvert}
+          aria-disabled={isConvertBlocked}
+        >
           {t("magazine:deck.editor.convert")}
         </Button>
         {deck.slides.length > 0 && (

@@ -37,6 +37,79 @@
   cursor: grabbing;
 }
 
+/* Square avatar kinds add the preview row and a hint under the frame, so the
+   frame takes whatever height is left once the rest of the sheet is laid
+   out. Width and height share one cap because the frame is 1:1 and a height
+   cap alone would squash it out of square.
+   Phone bottom sheet (max-height 92svh): the fixed content around the frame
+   measures about 319px (sheet head 79, three 14px gaps 42, preview row 56,
+   one-line hint 20, controls 36, body bottom padding 8, pinned footer 77).
+   The frame gets 92svh - 20.5rem: the extra 0.5rem over that content is
+   headroom, about 9px of slack at 390x664, 375x667 and 375x548. The env()
+   term takes off any home-indicator inset beyond the footer's own 16px
+   bottom padding, since the footer grows by that much. The 160px floor
+   keeps a 375x548 phone inside the formula; on shorter screens the floor
+   binds, the body scrolls and the footer's Save stays pinned. A note line
+   under the title adds its own height and can also make the body scroll.
+   Desktop dialog: 40svh leaves ample room under the 760px dialog cap. */
+.frameWithShapePreview {
+  max-width: min(420px, 40svh);
+  max-height: 40svh;
+}
+
+@media (max-width: 719.98px) {
+  .frameWithShapePreview {
+    max-width: min(
+      420px,
+      max(
+        160px,
+        calc(92svh - 20.5rem - max(0px, env(safe-area-inset-bottom) - 16px))
+      )
+    );
+    max-height: min(
+      420px,
+      max(
+        160px,
+        calc(92svh - 20.5rem - max(0px, env(safe-area-inset-bottom) - 16px))
+      )
+    );
+  }
+}
+
+/* Soft circle guide for round avatars: dims the corners the circle crops
+   away and draws a ring. It takes no pointer input, so drags pass through to
+   the frame. --scrim-rgb and --cream-rgb hold the same dark and light
+   channels in both themes. The ring is a dark hairline (::before) around a
+   light one (::after), so it keeps an edge on white photos and on dark ones;
+   two bordered layers stand in for a box-shadow outline. */
+.circleGuide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle closest-side,
+    transparent 99%,
+    rgba(var(--scrim-rgb), 0.45) 100%
+  );
+}
+
+.circleGuide::before,
+.circleGuide::after {
+  content: "";
+  position: absolute;
+  border-radius: var(--radius-avatar);
+}
+
+.circleGuide::before {
+  inset: 0;
+  border: 1px solid rgba(var(--scrim-rgb), 0.3);
+}
+
+.circleGuide::after {
+  inset: 1px;
+  border: 1px solid rgba(var(--cream-rgb), 0.75);
+}
+
 .image {
   position: absolute;
   max-width: none;
@@ -46,13 +119,62 @@
 }
 
 /* Smooths wheel/slider/chip-driven jumps; live pointer drag stays
-   transition-free (via .dragging) so the image tracks the pointer exactly. */
+   transition-free (via .dragging) so the image tracks the pointer exactly;
+   .dragging stays on through a pinch too, so zoom follows the fingers.
+   Size eases with position so a zoom step scales and shifts as one move. */
 @media (prefers-reduced-motion: no-preference) {
   .frame:not(.dragging) .image {
-    transition:
-      left 0.12s var(--ease),
-      top 0.12s var(--ease);
+    transition-property: left, top, width, height;
+    transition-duration: 0.12s;
+    transition-timing-function: var(--ease);
   }
+}
+
+/* "How it will look": heading beside a round and a rounded-square thumbnail
+   (ReframeShapePreview.tsx), centred on the thumbnails' middle. Wraps the
+   heading above the thumbnails when the row runs out of width. */
+.shapePreview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+.shapePreviewHeading {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.shapePreviewShapes {
+  display: flex;
+  gap: var(--gap-sm);
+}
+
+.shapePreviewThumb {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+.shapePreviewRound {
+  border-radius: var(--radius-avatar);
+}
+
+.shapePreviewSquare {
+  border-radius: var(--radius-14);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+  text-align: center;
 }
 
 .controls {

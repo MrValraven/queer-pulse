@@ -1,0 +1,84 @@
+/* The desk rail. Beside the table it is one paper surface: its bands
+   (RailCard, `data-rail-card`) draw no box of their own and hairlines
+   separate them. Stacked under the table (`data-stacked`, which DeskRail sets
+   at or below --desk-split through DESK_SPLIT_QUERY) it becomes a grid of
+   cards, each its own paper box at its natural height. The width comes from
+   the page grid (--desk-rail-w, DeskView.module.css). Band internals live in
+   rail.module.css. */
+
+.rail {
+  /* The sticky offset: the table's sticky offset chain plus a small gap, so
+     the two stay aligned. It also sits in `scroll-margin-top`, and the gap
+     kept under a tall rail in `scroll-margin-bottom`, because those compute
+     to pixels in every state: useRailFitsViewport reads them there. */
+  --desk-rail-sticky-top: calc(
+    var(--desk-table-sticky-top, var(--sticky-top)) + var(--gap-sm)
+  );
+  scroll-margin-top: var(--desk-rail-sticky-top);
+  scroll-margin-bottom: var(--gap-sm);
+  /* Pinned by its top while it fits the viewport, by its bottom when taller:
+     useRailFitsViewport writes --desk-rail-pin-top. A taller rail scrolls
+     with the page until its end is in view, with no scroller of its own. */
+  position: sticky;
+  top: var(--desk-rail-pin-top, var(--desk-rail-sticky-top));
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: var(--gap-grid) var(--gap-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (--desk-rail-wide) {
+  .rail {
+    padding: var(--gap-grid);
+  }
+}
+
+/* A hairline between bands; the first band has none. DeskRail renders the
+   bands in reading order for each layout, so this one rule is right. */
+.rail:not([data-stacked="true"]) > [data-rail-card] + [data-rail-card] {
+  border-block-start: 1px solid var(--line);
+  padding-block-start: var(--gap-sm);
+}
+
+/* Stacked: two columns of cards under the table (Pitches and Issue health,
+   then Team and Activity), one column on narrow screens. Each card keeps its
+   natural height, so bars stay the width of their card. */
+.rail[data-stacked="true"] {
+  position: static;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  padding: 0;
+  border: 0;
+  gap: var(--gap-grid);
+  border-radius: 0;
+  background: none;
+}
+
+.rail[data-stacked="true"] > [data-rail-card] {
+  padding: var(--gap-grid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+@media (max-width: 767px) {
+  .rail[data-stacked="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (--md) {
+  .rail[data-stacked="true"] {
+    gap: var(--gap-sm);
+  }
+
+  .rail[data-stacked="true"] > [data-rail-card] {
+    padding: var(--gap-sm);
+  }
+}

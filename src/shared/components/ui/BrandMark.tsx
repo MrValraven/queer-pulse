@@ -156,7 +156,14 @@ function RippleRings() {
 
 const ARRIVAL_STAGGER_MS = 90;
 
-/** Eight satellites drawing a Q around the core: six on the bowl, two on the tail. */
+/**
+ * Eight satellites drawing a Q around the core: six on the bowl, two on the tail.
+ *
+ * Each satellite's stagger is pulled back by `--gather-elapsed` (the core's
+ * beat reads it in the stylesheet), so a host can join the gather mid-cycle:
+ * PageLoader sets it when one full-screen loader takes over from another.
+ * Unset, it falls back to 0ms and the gather starts from the top.
+ */
 function Gathering({
   isArriving,
   coreFill,
@@ -173,7 +180,7 @@ function Gathering({
               "--from-x": `${satellite.from[0]}px`,
               "--from-y": `${satellite.from[1]}px`,
               "--settled-opacity": gathering.satelliteOpacity,
-              animationDelay: `${index * ARRIVAL_STAGGER_MS}ms`,
+              animationDelay: `calc(${index * ARRIVAL_STAGGER_MS}ms - var(--gather-elapsed, 0ms))`,
             } as CSSProperties)
           : undefined;
         return (

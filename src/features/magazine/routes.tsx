@@ -38,10 +38,6 @@ const SubmitStoryPage = lazyNamed(
   () => import("./SubmitStoryPage"),
   "SubmitStoryPage",
 );
-const PitchTrackerPage = lazyNamed(
-  () => import("./PitchTrackerPage"),
-  "PitchTrackerPage",
-);
 const EditorDashboardPage = lazyNamed(
   () => import("./EditorDashboardPage"),
   "EditorDashboardPage",
@@ -153,7 +149,6 @@ export function magazineRoutes() {
         path={routes.magazineApplyToWrite}
         element={<ApplyToWritePage />}
       />
-      <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
       <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
       <Route path={routes.magazineWriter} element={<WriterWorkspacePage />} />
       {/* CON-16 — the lifecycle desk. Declared before the `:id`-bearing editor

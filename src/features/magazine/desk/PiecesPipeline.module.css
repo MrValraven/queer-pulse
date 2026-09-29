@@ -1,223 +1,273 @@
-/* Editor desk — pipeline table (default layout). Ported from the design's
-   `.pieces`/`.phead`/`.prow` (`mag.css`) onto repo tokens. Shared by
-   `PiecesPipeline.tsx` (container/header/empty state) and `PieceRow.tsx`
-   (row cells) — the two components together make up one layout. */
+/* Editor desk: the pipeline table (`PiecesPipeline.tsx`), its column header
+   (`PiecesPipelineColumns.tsx`) and its sticky group headers
+   (`PieceGroupHeader.tsx`). Row cells live in PieceRow.module.css.
+
+   `.table` is the one grid behind the whole table, its tracks declared as
+   `--piece-columns`. The column header, each group, each group body and
+   each row are subgrids of it, so every fact column is exactly as wide as its
+   widest cell (a header label included), within a floor and the cell's own
+   cap. The title takes every pixel left over, so no fixed column holds dead
+   space in one locale while clipping text in another. The table's side
+   gutters are tracks too: a subgrid row cannot pad its edge tracks without
+   pushing the checkbox out of its column.
+
+   `.pieces` is the `desk-pieces` size container: the layout follows the
+   table's own width (beside the rail, or full width on a phone), in three
+   steps. PieceRow.module.css repeats the same two widths.
+     820px and up   every column at full size, stage name beside the dots.
+     660 to 819px   stage name under the dots, the short "Waiting" label,
+                    tighter gutters and caps.
+     under 660px    rows stack and the column header never shows: its only
+                    control there was select-all, which now lives in the
+                    bulk bar's "Select all {count}" action once a row is
+                    selected. */
 
 .pieces {
+  container: desk-pieces / inline-size;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
   background: var(--paper);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
+  /* `clip` rounds the corners without making the table a scroll container
+     (which would stop the group headers from sticking to the page). The
+     size container above makes none either. */
+  overflow: clip;
 }
 
-.phead,
-.prow {
+.table {
+  /* The gutter track plus the column gap equals the old side padding. */
+  --piece-gutter: calc(var(--gap-grid) - var(--gap-xs));
+  /* The More trigger's track: its 30px circle, or a full tap target on a
+     touch screen (below), where the row's trigger grows to match. */
+  --piece-more-track: 30px;
+  /* gutter | select | piece | stage | waiting on | due | next action | more
+     | gutter. A fact column grows from its floor to its widest cell. */
+  --piece-columns: var(--piece-gutter) 22px minmax(180px, 1fr)
+    minmax(112px, auto) minmax(56px, auto) minmax(64px, auto) minmax(48px, auto)
+    var(--piece-more-track) var(--piece-gutter);
   display: grid;
-  grid-template-columns: 22px minmax(0, 2.5fr) 118px 130px 96px 96px;
-  gap: var(--gap-sm);
-  align-items: center;
-  padding: var(--gap-sm) var(--gap-grid);
+  grid-template-columns: var(--piece-columns);
+  column-gap: var(--gap-xs);
 }
 
-.phead {
+/* A touch screen showing the full table (a tablet in landscape): the More
+   column widens with its trigger (PieceRow.module.css), so the trigger stays
+   inside its own track and clear of the next action. */
+@media (pointer: coarse) {
+  .table {
+    --piece-more-track: var(--tap-min);
+  }
+}
+
+/* Every band of the table spans it edge to edge and shares its columns.
+   An engine without subgrid drops the second declaration and keeps the
+   first: the same tracks (the custom property inherits from `.table`),
+   sized per band, so the table still lines up closely. */
+.columns,
+.group,
+.groupBody {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: var(--piece-columns);
+  grid-template-columns: subgrid;
+}
+
+.columns {
+  align-items: center;
+  padding: var(--desk-head-pad-y) 0;
+  border-bottom: 1px solid var(--line);
   font-size: var(--text-11-5);
+  font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  font-weight: 700;
-  color: var(--ink-40);
-  border-bottom: 1px solid var(--line);
-  background: var(--wash);
+  color: var(--ink-60);
 }
 
-.prow {
-  position: relative;
-  border-bottom: 1px solid var(--line);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease);
+/* The gutter track stays empty. */
+.selectAll {
+  grid-column-start: 2;
 }
 
-.prow:last-child {
-  border-bottom: none;
-}
-
-.prow:hover,
-.prow:focus-visible,
-.prow[data-focus="true"] {
-  background: var(--wash);
-}
-
-.prow[data-focus="true"] {
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-
-/* Selected rows stay tinted whether or not they are hovered, so a bulk
-   selection reads as a set rather than as one hovered row at a time. */
-.prow[data-selected="true"] {
-  background: var(--wash);
-}
-
-.selectBox {
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-5);
-  background: var(--paper);
-  color: var(--paper);
-  font-size: var(--text-11);
-  cursor: pointer;
-}
-
-.selectBox[data-on="true"] {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
-.titleCell {
+/* One line each: a label that wrapped cost the header 17px. Labels only:
+   the select-all box draws its focus ring and hit area past its own edge. */
+.columns > span[aria-hidden="true"] {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.title {
-  font-family: var(--serif);
-  font-size: var(--text-16-5);
-  font-weight: 400;
-  color: var(--text-strong);
-  line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.sub {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  font-size: var(--text-12-5);
-  color: var(--ink-40);
-  flex-wrap: wrap;
+/* A label is often its column's widest item ("WAITING ON" over "Writer"),
+   so it carries a little air of its own and never runs into the next one. */
+.columnFact {
+  padding-inline-end: var(--gap-xs);
 }
 
-.tagJade {
-  display: inline-flex;
+.columnLabelShort {
+  display: none;
+}
+
+/* Spans the next action and More columns, which carry no heading. */
+.columnActions {
+  grid-column: span 2;
+}
+
+.allClear {
+  grid-column: 1 / -1;
+  display: flex;
   align-items: center;
-  font-size: var(--text-12);
+  gap: 8px;
+  margin: 0;
+  padding: var(--desk-row-pad-y) var(--gap-grid);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-13);
+  color: var(--desk-tone-ready);
+}
+
+.group + .group {
+  border-top: 1px solid var(--line);
+}
+
+/* ── Group header ── */
+
+.groupHeader {
+  grid-column: 1 / -1;
+  position: sticky;
+  /* The page can move this down past its own sticky toolbar. */
+  top: var(--desk-table-sticky-top, var(--sticky-top));
+  z-index: var(--z-raised);
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  font-size: var(--text-13);
   font-weight: 600;
-  padding: 4px 9px;
-  border-radius: var(--radius-tag);
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade-ink);
+}
+
+/* A folded group's rule comes from the next group's top edge, so its own
+   bottom edge would draw a double line. */
+.groupHeader[data-collapsed="true"] {
+  border-bottom: none;
+}
+
+.groupToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: var(--desk-row-pad-y) var(--gap-grid);
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--text-strong);
+  text-align: left;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.groupToggle:hover {
+  background: var(--wash);
+}
+
+/* Drawn inside the button: the table clips anything past its edges. */
+.groupToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  box-shadow: var(--ring-cream);
+}
+
+.groupChevron {
+  flex: none;
+  color: var(--ink-60);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.groupHeader[data-collapsed="true"] .groupChevron {
+  transform: rotate(-90deg);
+}
+
+.groupLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.waitCell {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-12-5);
-  color: var(--ink-40);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--jade);
+.groupCount {
   flex: none;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
 }
 
-.dotLate {
-  background: var(--accent);
+/* "· 2 more under Late": quieter than the count, and the first thing to
+   trim when the header runs out of width (its shrink factor dwarfs the
+   label's). */
+.groupNote {
+  flex: 0 1000 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  color: var(--ink-60);
 }
 
-.dotAmber {
-  background: var(--amber);
-}
-
-.due {
-  font-size: var(--text-12-5);
+.groupNoteSeparator {
+  flex: none;
   color: var(--ink-40);
 }
 
-.late {
-  color: var(--accent-ink);
-  font-weight: 600;
+.groupHeader[data-tone="you"] .groupLabel {
+  color: var(--desk-tone-you);
 }
 
-/* The row's action buttons routinely need more room than the fixed 96px
-   track they sit in (3-4 pill buttons vs. a column sized for the "Due"
-   column's width). Rather than reserving that width in the grid — which
-   would permanently starve the title column even while the buttons are
-   hidden — they're pulled out of grid flow and overlaid on hover/focus,
-   on an opaque surface so they cleanly cover the stage/due text underneath
-   instead of drawing over it (the ghost buttons' own fill is transparent,
-   so a translucent wash tint here would still let that text show through).
-   That surface repaints the row's own hover colour — `--wash` is a 5%-alpha
-   tint, so it's layered over `--paper` as a flat gradient rather than set as
-   the background colour, giving an opaque match for the hovered row instead
-   of a pale patch over the last two columns. */
-.rowActs {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding-right: var(--gap-grid);
-  background: linear-gradient(var(--wash), var(--wash)) var(--paper);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-fast) var(--ease);
+.groupHeader[data-tone="late"] .groupLabel {
+  color: var(--desk-tone-late);
 }
 
-.prow:hover .rowActs,
-.prow:focus-visible .rowActs,
-.prow[data-focus="true"] .rowActs,
-/* The ⋯ menu portals its popover to <body>, so moving the pointer from the
-   trigger onto the menu leaves the row un-hovered and would fade the whole
-   strip (trigger included) out from under an open menu. Hold it visible for
-   as long as the menu is open. */
-.prow:has([data-menu-open]) .rowActs {
-  opacity: 1;
-  pointer-events: auto;
-}
+/* ── Middle width ── */
 
-@media (prefers-reduced-motion: reduce) {
-  .prow,
-  .rowActs {
-    transition: none;
+@container desk-pieces (width < 820px) {
+  .table {
+    --piece-gutter: calc(var(--gap-sm) - var(--gap-xs));
+    --piece-columns: var(--piece-gutter) 22px minmax(160px, 1fr)
+      minmax(80px, auto) minmax(52px, auto) minmax(64px, auto)
+      minmax(48px, auto) var(--piece-more-track) var(--piece-gutter);
   }
-}
 
-@media (--wide) {
-  .phead {
+  .columnLabelFull {
     display: none;
   }
 
-  .prow {
-    grid-template-columns: 22px 1fr;
-    gap: 10px;
+  .columnLabelShort {
+    display: inline;
   }
 
-  /* Stacked card: the checkbox keeps its own narrow first column, every
-     other cell spans the full width beneath it. */
-  .prow > *:not(.selectBox) {
-    grid-column: 2;
+  .allClear,
+  .groupToggle {
+    padding-left: var(--gap-sm);
+    padding-right: var(--gap-sm);
+  }
+}
+
+/* ── Narrow: rows stack, the column header never shows ── */
+
+@container desk-pieces (width < 660px) {
+  .table,
+  .group,
+  .groupBody {
+    display: block;
   }
 
-  /* No hover on touch — the stacked card shows its actions in normal flow,
-     always on, instead of the desktop hover-revealed overlay. */
-  .rowActs {
-    position: static;
-    flex-wrap: wrap;
-    padding-right: 0;
-    background: none;
-    opacity: 1;
-    pointer-events: auto;
+  /* The header row would only ever hold select-all, and that control now
+     lives in the bulk bar's "Select all {count}" action once a row is
+     selected, so the header simply never shows here instead of waiting for
+     a selection and shifting the first row down by its own height. */
+  .columns {
+    display: none;
   }
 }

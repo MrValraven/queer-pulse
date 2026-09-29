@@ -146,17 +146,19 @@ export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
         </div>
       )}
       <div className={styles.nav}>
-        <Button onClick={onNext}>
-          {t("auth:onboarding.stepCommunities.continue")}
-        </Button>
+        <div className={styles.navRow}>
+          <button type="button" className={styles.back} onClick={onBack}>
+            <FiArrowLeft aria-hidden />{" "}
+            {t("auth:onboarding.stepCommunities.back")}
+          </button>
+          <Button onClick={onNext}>
+            {t("auth:onboarding.stepCommunities.continue")}
+          </Button>
+        </div>
         <SkipLink
           onSkip={onNext}
           label={t("auth:onboarding.stepCommunities.skip")}
         />
-        <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden />{" "}
-          {t("auth:onboarding.stepCommunities.back")}
-        </button>
       </div>
     </>
   );

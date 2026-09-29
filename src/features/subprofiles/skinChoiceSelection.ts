@@ -1,5 +1,5 @@
 /**
- * Pure reads behind `SkinChoiceChipsControl`: which chips a stored `choice`
+ * Pure reads behind `useSkinChoiceChips`: which chips a stored `choice`
  * or `multiChoice` value selects. No React here.
  */
 

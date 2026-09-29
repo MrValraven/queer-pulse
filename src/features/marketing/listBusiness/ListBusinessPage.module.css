@@ -767,30 +767,6 @@
 .tagInputWrap input {
   flex: 1;
 }
-.tagList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
-.tagPill {
-  font-size: var(--text-11-5);
-  color: var(--ink-60);
-  background: rgba(var(--plum-rgb), 0.05);
-  border: none;
-  border-radius: var(--radius-7);
-  padding: 5px 10px;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-@media (hover: hover) {
-  .tagPill:hover {
-    color: var(--accent-ink);
-  }
-}
 
 /* ===== Hours: the toolbar, day card and window lines live in
    ListingHoursEditor.module.css ===== */
@@ -1306,8 +1282,7 @@
 
 /* ===== Inputs shared inside steps (when not using FormField) ===== */
 /* ===== Keyboard focus rings for bare (non-Button) controls ===== */
-.recapEdit:focus-visible,
-.tagPill:focus-visible {
+.recapEdit:focus-visible {
   outline: 2px solid var(--line-strong);
   outline-offset: 2px;
 }
@@ -1988,19 +1963,6 @@
     box-shadow: 0 0 0 9px rgba(var(--accent-rgb), 0.08);
   }
 }
-/* Small fade + scale for pills/chips appearing (a 10px slide reads as a jump
-   on a small element). */
-@keyframes lbPopIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   /* --- Staggered step entrance: each top-level element rises in sequence.
      Replays on every step change because the step (and thus .stepBody)
@@ -2060,12 +2022,6 @@
   .pdChips span,
   .pdSec {
     animation: lbFieldIn 300ms var(--ease-out) both;
-  }
-
-  /* --- Form-side "add" interactions: a new tag pops in. Keyed by id, so
-     only the freshly-added element animates. --- */
-  .tagPill {
-    animation: lbPopIn var(--dur-base) var(--ease-out) both;
   }
 
   /* --- Success panel cascade (statusCheck keeps its own checkPop). --- */

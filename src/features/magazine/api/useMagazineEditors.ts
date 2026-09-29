@@ -12,8 +12,8 @@ const EDITOR_TINT_CYCLE: Editor["tint"][] = ["coral", "jade", "violet"];
 const DEFAULT_EDITOR_CAP = 7;
 
 /**
- * The magazine's editor directory — who can appear in the desk header's
- * "Viewing as" picker and the sidebar's editor-load rows. Demo mode uses
+ * The magazine's editor directory: the desk's team names and filter menu,
+ * and the sidebar's editor-load rows. Demo mode uses
  * the static `DEMO_EDITORS`; live mode calls `GET /magazine/admin/editors`
  * (every user holding the `magazine_editor` staff role, plus admins) and
  * adapts the DTO to the view's `Editor` shape.

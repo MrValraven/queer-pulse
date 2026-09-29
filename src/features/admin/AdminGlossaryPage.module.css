@@ -1,5 +1,5 @@
 /* PRD-264: the glossary console. Mirrors AdminResourceGuidesPage.module.css
-   deliberately — same row idiom, same modal field idiom — so the two halves of
+   deliberately (same row idiom, same modal field idiom) so the two halves of
    the resource library read as one surface. Freshness leads every row, and a
    term with no Portuguese definition is flagged there too: the glossary ships
    an EN/PT toggle, so an untranslated term is a visible hole for a reader. */
@@ -166,5 +166,11 @@
   .row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  /* Four actions outgrow a phone-width row, so they wrap onto a second line
+     instead of pushing the last one past the card edge. */
+  .rowActions {
+    flex-wrap: wrap;
   }
 }

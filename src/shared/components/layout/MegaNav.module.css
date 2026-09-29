@@ -1,7 +1,16 @@
+/* The gap between triggers is fluid so the row always fits between the brand
+   and the right cluster. Signed in, in PT (the widest case: six triggers,
+   search, messages, bell and account), the row has (viewport - 948px) to work
+   with once the pill padding, the brand, the right cluster and the pill's own
+   gaps are taken out, and ~435px of it is trigger text. Five gaps of
+   (viewport - 960px) / 5 therefore fit with room to spare from 1000px up, reach
+   the full 26px by 1090px and stay there, so wide screens look as before.
+   Without this the row kept its width and the shrinkable brand slid under
+   "Comunidade" at 1024px. */
 .items {
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: clamp(var(--gap-xs), (100vw - 960px) / 5, 26px);
 }
 
 .button {
@@ -53,7 +62,7 @@
   top: 72px;
   left: 50%;
   transform: translateX(-50%);
-  /* One stable, centered "room" — no per-trigger horizontal nudge. */
+  /* One stable, centred panel that holds still whichever trigger opened it. */
   width: min(1120px, calc(100vw - 40px));
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -218,7 +227,7 @@
   margin-bottom: 4px;
 }
 /* Solid plum ground for the per-menu monoline spot illustration (cream stroke,
-   one coral accent — drawn in megaNavArt.tsx). Matches the plum-panel pattern
+   one coral accent, drawn in megaNavArt.tsx). Matches the plum-panel pattern
    and reads in both themes. Fixed height mirrors the old ImageSlot frame. */
 .previewArt {
   margin-bottom: 4px;
@@ -332,7 +341,12 @@
   border-color: rgba(var(--cream-rgb), 0.12);
 }
 
-@media (--mobile) {
+/* Up to --nav-compact (NAV_COMPACT_MAX_PX in Navbar.tsx) the row does not
+   fit, so the top bar shows a Menu button instead (and the app bar below
+   860px). Navbar stops rendering MegaNav there; this rule covers the
+   prerendered HTML that paints before the app boots, so a narrow window never
+   shows the row overlapping the brand. */
+@media (--nav-compact) {
   .items,
   .panel,
   .overlay {

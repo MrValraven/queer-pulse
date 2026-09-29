@@ -1,0 +1,84 @@
+/* Sizes are custom properties on the root so one rule per variant covers both
+   sizes. `--stage-tone` (the current stage) and each segment's
+   `--segment-tone` are set inline from the `--desk-stage-N` scale in
+   styles/tokens/colors.css. */
+.progress {
+  --progress-dot: 7px;
+  --progress-dot-current: 10px;
+  --progress-bar-width: 88px;
+  --progress-bar-height: 4px;
+  --progress-bar-height-current: 7px;
+  --progress-gap: 4px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sm {
+  --progress-dot: 5px;
+  --progress-dot-current: 8px;
+  --progress-bar-width: 56px;
+  --progress-bar-height: 3px;
+  --progress-bar-height-current: 5px;
+  --progress-gap: 3px;
+
+  gap: 6px;
+}
+
+.track {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--progress-gap);
+  flex-shrink: 0;
+}
+
+/* Steps still ahead: a hairline grey that flips with the theme. */
+.segment {
+  flex-shrink: 0;
+  background: var(--line-2);
+}
+
+.filled {
+  background: var(--segment-tone);
+}
+
+.dots .segment {
+  width: var(--progress-dot);
+  height: var(--progress-dot);
+  border-radius: 50%;
+}
+
+.dots .current {
+  width: var(--progress-dot-current);
+  height: var(--progress-dot-current);
+}
+
+.bar {
+  width: var(--progress-bar-width);
+  gap: 2px;
+}
+
+.bar .segment {
+  flex: 1 1 0;
+  height: var(--progress-bar-height);
+  border-radius: var(--radius-pill);
+}
+
+.bar .current {
+  height: var(--progress-bar-height-current);
+}
+
+.label {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--stage-tone);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sm .label {
+  font-size: var(--text-11-5);
+}

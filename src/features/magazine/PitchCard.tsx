@@ -32,13 +32,13 @@ export function PitchCard({
         .join(" ")}
     >
       <div className={styles.headRow}>
-        <div className={styles.title}>
+        <h3 className={styles.title}>
           {pitch.href ? (
             <Link to={pitch.href}>{pitch.title}</Link>
           ) : (
             pitch.title
           )}
-        </div>
+        </h3>
         <span className={[styles.status, STATUS_CLASS[pitch.status]].join(" ")}>
           {t(pitch.statusLabelKey)}
         </span>

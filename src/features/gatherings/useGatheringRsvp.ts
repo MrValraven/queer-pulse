@@ -9,6 +9,21 @@ import { useHasRsvpCutoffPassed } from "./rsvpCutoff";
 
 export type RsvpStatus = GatheringDetail["myRsvpStatus"];
 
+/**
+ * Demo mode's RSVP mirror, module level and keyed by slug (the same pattern
+ * `goTogether.mock.ts`'s `demoState` uses), so a demo RSVP survives leaving
+ * this hook's mount and coming back to it.
+ *
+ * `useRsvp`/`useUnrsvp` no-op the network in demo, so nothing server-side
+ * ever remembers the choice; the static `gatheringDetails` mock the "server"
+ * status below falls back to never changes either. Without this map, a
+ * fresh mount always re-derives `status` from that untouched fallback, so
+ * navigating away and back (a questionnaire round trip, in particular:
+ * design review S4) forgets the RSVP and shows "Reserve a seat" again for a
+ * gathering the member already joined.
+ */
+const demoRsvpStatusBySlug = new Map<string, RsvpStatus>();
+
 export interface GatheringRsvpState {
   /** The viewer's current standing, optimistically ahead of the server. */
   status: RsvpStatus;
@@ -71,14 +86,30 @@ export function useGatheringRsvp(
   const rsvp = useRsvp(gathering.slug);
   const unrsvp = useUnrsvp(gathering.slug);
 
-  const serverStatus = gathering.myRsvpStatus ?? null;
+  // In demo mode, a status this hook already recorded for this gathering
+  // wins over the static mock's own `myRsvpStatus`, which never changes: see
+  // `demoRsvpStatusBySlug` above.
+  const serverStatus = demoMode
+    ? (demoRsvpStatusBySlug.get(gathering.slug) ??
+      gathering.myRsvpStatus ??
+      null)
+    : (gathering.myRsvpStatus ?? null);
   const [previousServerStatus, setPreviousServerStatus] =
     useState<RsvpStatus>(serverStatus);
-  const [status, setStatus] = useState<RsvpStatus>(serverStatus);
+  const [status, setRawStatus] = useState<RsvpStatus>(serverStatus);
   if (previousServerStatus !== serverStatus) {
     setPreviousServerStatus(serverStatus);
-    setStatus(serverStatus);
+    setRawStatus(serverStatus);
   }
+  // Every optimistic change is mirrored into the demo map too, so the next
+  // mount of this hook for the same gathering (the questionnaire round trip
+  // GoTogether sends members on, in particular) picks it back up through
+  // `serverStatus` above, keeping the RSVP the mock's own original status
+  // never carries on its own.
+  const setStatus = (nextStatus: RsvpStatus) => {
+    if (demoMode) demoRsvpStatusBySlug.set(gathering.slug, nextStatus);
+    setRawStatus(nextStatus);
+  };
 
   const isCancelled = gathering.cancelled === true;
   // LIVE ONLY. The demo registry's gatherings are hand-dated and drift into the

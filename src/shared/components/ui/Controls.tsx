@@ -87,16 +87,23 @@ export function Toggle({
   onChange,
   label,
   tone = "jade",
+  id,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
   /** On-state colour: jade (default) or coral. */
   tone?: "jade" | "coral";
+  /** Optional id, so an outside `<label htmlFor>` can turn its own visible
+   *  text into part of the tap target and focus/activate this switch. A
+   *  `button` is a labelable element, so this is a plain HTML association.
+   *  Leaves `aria-label` as the switch's accessible name either way. */
+  id?: string;
 }) {
   return (
     <button
       type="button"
+      id={id}
       role="switch"
       aria-checked={checked}
       aria-label={label}

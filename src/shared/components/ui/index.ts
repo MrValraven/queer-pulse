@@ -17,7 +17,6 @@ export { FadeIn } from "./FadeIn";
 export { Outro } from "./Outro";
 export { Tooltip } from "./Tooltip";
 export { QrCode, type QrCodeProps } from "./QrCode";
-export { FeatureHelp } from "./FeatureHelp";
 export {
   BrandMark,
   type BrandMarkProps,
@@ -37,6 +36,13 @@ export { useDismiss, useScrimDismiss } from "./useDismiss";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";
 export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";
+export { ChipList, type ChipListProps } from "./ChipList";
+export {
+  TagPicker,
+  type TagPickerLabels,
+  type TagPickerProps,
+} from "./TagPicker";
+export { useChipMotion } from "./useChipMotion";
 export { ActiveFilters, type ActiveFilter } from "./ActiveFilters";
 export {
   RefineToggle,
@@ -45,6 +51,11 @@ export {
   RefineSplit,
   RefineNote,
 } from "./RefineDrawer";
+export {
+  useRefineGlide,
+  RefineGlideContext,
+  type RefineGlide,
+} from "./useRefineGlide";
 export {
   Select,
   type SelectProps,

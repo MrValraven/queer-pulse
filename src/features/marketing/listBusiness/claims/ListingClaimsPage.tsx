@@ -3,8 +3,8 @@ import {
   EmptyState,
   HubBackLink,
   SkeletonLine,
+  LoadErrorState,
 } from "../../../../shared/components/ui";
-import { ErrorFallback } from "../../../../shared/components/feedback/ErrorFallback";
 import { PageMeta } from "../../../../shared/seo/PageMeta";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { routes } from "../../../../app/routeMap";
@@ -82,7 +82,7 @@ export function ListingClaimsPage() {
         </p>
 
         {isError ? (
-          <ErrorFallback onReset={refetch} level="route" />
+          <LoadErrorState onRetry={() => void refetch()} />
         ) : isLoading ? (
           <div className={styles.loading} aria-busy="true">
             <span className={styles.loadingLabel}>

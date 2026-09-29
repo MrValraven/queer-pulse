@@ -1,8 +1,11 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, SkeletonLine } from "../../shared/components/ui";
-import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
+import {
+  Button,
+  SkeletonLine,
+  LoadErrorState,
+} from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -206,7 +209,7 @@ export function SafeSpaceDetailPage() {
   if (isError || !space) {
     return (
       <PageShell>
-        <ErrorFallback onReset={refetch} level="route" />
+        <LoadErrorState onRetry={() => void refetch()} />
       </PageShell>
     );
   }

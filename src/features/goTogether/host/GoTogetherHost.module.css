@@ -1,0 +1,114 @@
+/* Go together host settings: a section on the manage page's Settings tab.
+   The heading matches the tab's other section labels ("Gathering options",
+   "Danger zone"); the fields reuse the Create Gathering primitives. */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-block: 28px 20px;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.intro {
+  margin: 0;
+  max-width: 65ch;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ── Host questions ── */
+.questionList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.questionCard {
+  align-self: stretch;
+  padding: 0 16px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  min-width: 0;
+}
+
+.answersLabel {
+  margin-block: 16px 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.answerList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.questionActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.addQuestion {
+  align-self: flex-start;
+}
+
+/* ── Save ── */
+.saveRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* ── Summary: counts only ── */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.summaryHeading {
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.summaryNote {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+}

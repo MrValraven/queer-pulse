@@ -1,11 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import {
-  Button,
-  FeatureHelp,
-  LoadErrorState,
-  Outro,
-} from "../../shared/components/ui";
+import { Button, LoadErrorState, Outro } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -165,8 +160,7 @@ export function FlatmatesBoard() {
                       />
                     ),
                   }}
-                />{" "}
-                <FeatureHelp id="housing.flatmates" />
+                />
               </div>
               <div className={styles.topActions}>
                 <FlatmateViewToggle view={view} setView={setView} />

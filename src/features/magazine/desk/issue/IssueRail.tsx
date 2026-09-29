@@ -43,6 +43,8 @@ export function IssueRail({
         // state after a successful save.
         key={production.publishedOn ?? "unscheduled"}
         publishedOn={production.publishedOn}
+        // The close-date row reads and saves its own date by issue number.
+        issueNumber={production.number}
         isSaving={isSavingSchedule}
         onSave={(publishedOn) =>
           onSaveSchedule(publishedOn, () =>

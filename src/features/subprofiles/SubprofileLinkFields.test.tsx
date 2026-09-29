@@ -65,10 +65,9 @@ function makeSubprofile(
   } as SubprofileView;
 }
 
-/** `editor.link` defaults to `"linked"` so the pane renders the plain slug
- *  `<input>` below the choice cards rather than `UsernameField` (which pulls
- *  in the handle-availability network hook), kept out of scope here since
- *  these tests cover only the choice cards themselves. */
+/** `editor.link` defaults to `"linked"` with an empty handle. `UsernameField`
+ *  renders for both kinds; demo mode (forced on in vitest) keeps its
+ *  availability check off the network. */
 function makeEditor(
   overrides: Partial<SubprofileMetaEditor> = {},
 ): SubprofileMetaEditor {
@@ -89,6 +88,17 @@ function makeEditor(
 
 function linkedCard() {
   return screen.getByText("subprofiles:link.linked").closest("button")!;
+}
+
+function addressInput() {
+  return screen.getByLabelText("subprofiles:metaForm.addressFieldLabel");
+}
+
+/** The field's own status line, found through the input's description so a
+ *  toast region elsewhere in the providers can never match instead. */
+function addressStatus() {
+  const statusId = addressInput().getAttribute("aria-describedby")!;
+  return document.getElementById(statusId)!;
 }
 
 function renderPane(subprofile: SubprofileView, editor: SubprofileMetaEditor) {
@@ -153,5 +163,216 @@ describe("SubprofileLinkFields creator-only link rule", () => {
     expect(
       screen.queryByText("subprofiles:link.creatorOnlyHint"),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("SubprofileLinkFields one handle field", () => {
+  it("renders the address field with the derived default for a linked persona", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({ linkVisibility: "linked" }),
+      makeEditor({ link: "linked" }),
+    );
+
+    expect(addressInput()).toHaveAttribute("placeholder", "mara-atelier");
+    expect(screen.getByText("/p/")).toBeInTheDocument();
+  });
+
+  it("uses the standalone placeholder for an unlinked persona", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({ linkVisibility: "unlinked" }),
+      makeEditor({ link: "unlinked" }),
+    );
+
+    expect(addressInput()).toHaveAttribute(
+      "placeholder",
+      "subprofiles:metaForm.standalonePlaceholder",
+    );
+  });
+
+  it("hints at the derived default when a linked handle is empty", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({ linkVisibility: "linked" }),
+      makeEditor({ link: "linked", handle: "", slug: "atelier" }),
+    );
+
+    expect(
+      screen.getByText(
+        'subprofiles:metaForm.linkedHandleHint{"handle":"mara-atelier"}',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("shows an unlinked handle that carries the creator slug as a field error", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({ linkVisibility: "unlinked" }),
+      makeEditor({ link: "unlinked", handle: "mara-nights" }),
+    );
+
+    const status = addressStatus();
+    expect(status).toHaveTextContent(
+      'subprofiles:metaForm.handleNamesOwner{"creator":"mara"}',
+    );
+    expect(status).toHaveAttribute("data-state", "unavailable");
+    expect(status).not.toHaveTextContent("settings:usernameField.free");
+    expect(addressInput()).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("leaves an unlinked handle without the creator slug unflagged", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({ linkVisibility: "unlinked" }),
+      makeEditor({ link: "unlinked", handle: "nightform" }),
+    );
+
+    expect(addressStatus()).not.toHaveTextContent(
+      "subprofiles:metaForm.handleNamesOwner",
+    );
+    expect(addressInput()).not.toHaveAttribute("aria-invalid");
+  });
+
+  it("clears the handle when a draft switches mode", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    const editor = makeEditor({ link: "linked", handle: "mara-atelier" });
+    renderPane(makeSubprofile({ linkVisibility: "linked" }), editor);
+
+    fireEvent.click(
+      screen.getByText("subprofiles:link.standalone").closest("button")!,
+    );
+    expect(editor.setLink).toHaveBeenCalledWith("unlinked");
+    expect(editor.setHandle).toHaveBeenCalledWith("");
+  });
+});
+
+describe("SubprofileLinkFields address notes and warnings", () => {
+  it("explains the linked default only while no handle is typed", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    const linkedNote =
+      'subprofiles:newModal.linkedAddressNote{"creator":"mara"}';
+    const { unmount } = renderPane(
+      makeSubprofile({ linkVisibility: "linked" }),
+      makeEditor({ link: "linked", handle: "" }),
+    );
+    expect(screen.getByText(linkedNote)).toBeInTheDocument();
+    unmount();
+
+    renderPane(
+      makeSubprofile({ linkVisibility: "linked" }),
+      makeEditor({ link: "linked", handle: "tc-therapy" }),
+    );
+    expect(screen.queryByText(linkedNote)).not.toBeInTheDocument();
+  });
+
+  it("gives the first come note only to a draft standalone persona", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    const { unmount } = renderPane(
+      makeSubprofile({ linkVisibility: "unlinked" }),
+      makeEditor({ link: "unlinked" }),
+    );
+    expect(addressStatus()).toHaveTextContent(
+      "subprofiles:newModal.handleStateClaim",
+    );
+    unmount();
+
+    renderPane(
+      makeSubprofile({
+        linkVisibility: "unlinked",
+        status: "published",
+        handle: "nightform",
+      }),
+      makeEditor({ link: "unlinked", handle: "nightform" }),
+    );
+    expect(
+      screen.queryByText("subprofiles:newModal.handleStateClaim"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("skips the warning when clearing a published linked default keeps its address", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({
+        linkVisibility: "linked",
+        status: "published",
+        handle: "mara-atelier",
+      }),
+      makeEditor({ link: "linked", handle: "" }),
+    );
+
+    fireEvent.focusOut(addressInput());
+    expect(
+      screen.queryByText("subprofiles:addressWarning.editTitle"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("restores the previous handle when clearing a published linked default, sending no change", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    const editor = makeEditor({ link: "linked", handle: "" });
+    renderPane(
+      makeSubprofile({
+        linkVisibility: "linked",
+        status: "published",
+        handle: "mara-atelier",
+      }),
+      editor,
+    );
+
+    fireEvent.focusOut(addressInput());
+    expect(editor.setHandle).toHaveBeenCalledWith("mara-atelier");
+    expect(
+      screen.queryByText("subprofiles:addressWarning.editTitle"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("warns before a published handle edit moves the address", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({
+        linkVisibility: "linked",
+        status: "published",
+        handle: "mara-atelier",
+      }),
+      makeEditor({ link: "linked", handle: "tc-therapy" }),
+    );
+
+    fireEvent.focusOut(addressInput());
+    expect(
+      screen.getByText("subprofiles:addressWarning.editTitle"),
+    ).toBeInTheDocument();
+  });
+
+  it("says a published persona switching to standalone waits for a new handle", () => {
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    renderPane(
+      makeSubprofile({
+        linkVisibility: "linked",
+        status: "published",
+        handle: "mara-atelier",
+      }),
+      makeEditor({ link: "linked", handle: "mara-atelier" }),
+    );
+
+    fireEvent.click(
+      screen.getByText("subprofiles:link.standalone").closest("button")!,
+    );
+    expect(
+      screen.getByText(
+        'subprofiles:addressWarning.noticeBodyNewHandle{"from":"/p/mara-atelier"}',
+      ),
+    ).toBeInTheDocument();
   });
 });

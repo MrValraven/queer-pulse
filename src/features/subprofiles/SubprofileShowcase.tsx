@@ -1,4 +1,4 @@
-import { nestedPersonaPath, routes } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { safeHref } from "../../shared/lib/safeHref";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
@@ -8,6 +8,7 @@ import type {
   PublicSubprofileView,
   SubprofileOwnerMeta,
 } from "./api/subprofiles.adapters";
+import { personaHrefWithOwnerFallback } from "./personaLinks.data";
 import { personaTitleName } from "./subprofile-kinds";
 import { SubprofileEditButton } from "./SubprofileEditButton";
 import { SubprofileFeatureCard } from "./SubprofileFeatureCard";
@@ -123,18 +124,16 @@ export function SubprofileShowcase({
   const loneHasCover = !hasList && Boolean(safeHref(active.coverUrl));
   const loneLayoutClass = loneHasCover ? styles.soloWide : styles.solo;
 
-  // The nested route is addressed by the persona's OWN `ownerSlug`, which the
-  // server resolves per persona to its CREATOR's profile slug. A co-owned
-  // persona shows on every co-owner's profile, and the route resolves
-  // `slug` + creator only, so building the link from the slug of whichever
-  // profile is being viewed produced a 404, and, where that co-owner had a
-  // persona of their own under the same slug, opened the OTHER persona. The
-  // `ownerSlug` prop stays as the fallback for the self view, where the owner
-  // list carries no per-persona owner of its own.
-  const activeHref = nestedPersonaPath(
-    active.ownerSlug ?? ownerSlug,
-    active.slug,
-  );
+  // The active persona's own handle wins once it has one. Its nested
+  // fallback is addressed by the persona's OWN `ownerSlug`, which the server
+  // resolves per persona to its CREATOR's profile slug. A co-owned persona
+  // shows on every co-owner's profile, and the route resolves `slug` +
+  // creator only, so building the link from the slug of whichever profile is
+  // being viewed produced a 404, and, where that co-owner had a persona of
+  // their own under the same slug, opened the OTHER persona. The `ownerSlug`
+  // prop stays as the fallback for the self view, where the owner list
+  // carries no per-persona owner of its own.
+  const activeHref = personaHrefWithOwnerFallback(active, ownerSlug);
 
   return (
     <div

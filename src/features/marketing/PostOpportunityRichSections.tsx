@@ -280,7 +280,7 @@ export function PostOpportunityTeamFields({
       )}
 
       {/* The organization this opportunity is attributed to is picked once,
-          in Basics, through `OrganizationPickerField`: the single control
+          in Basics, through `OrganizationField`: the single control
           that sets exactly one of `partnerSlug`/`communitySlug` and clears
           the other. No second slug field here. The free-text one that used
           to sit beside "Apply-as role label" only ever edited `partnerSlug`,

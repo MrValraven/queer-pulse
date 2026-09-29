@@ -292,6 +292,11 @@ export const magazine: Catalog = {
     "Source line on every stat slide (optional)",
   "deck.editor.publish.checklist.sourcePending":
     "Source line on every stat slide (optional, none yet)",
+
+  // ── useLinkedDeckPublish (what a piece-linked deck's publish act refuses) ──
+  "deck.editor.piecePublish.careGateToast": "Held by the care gate: {items}.",
+  "deck.editor.piecePublish.notReadyToast": "Not ready to publish yet. {items}",
+
   "deck.editor.danger.title": "Danger zone",
   "deck.editor.danger.body":
     "Deleting a deck removes it everywhere it's linked. This can't be undone.",
@@ -318,6 +323,8 @@ export const magazine: Catalog = {
     "Converted, but {dropped} couldn't carry over and were dropped.",
   "deck.editor.convertModal.errorToast":
     "We couldn't convert this deck. Please try again.",
+  "deck.editor.convertModal.blockedPublishedToast":
+    "Unpublish this deck before turning it into an article.",
 
   // ── Issue chrome — shared by IssueCover, IssueContents, IssuesPage ────────
   "issue.backToAllIssues": "All issues",
@@ -555,18 +562,9 @@ export const magazine: Catalog = {
   // ── EditorSideCards ────────────────────────────────────────────────────
 
   // ── EditorDecksSection ──────────────────────────────────────────────────
-  "editor.decks.title": "Interactive decks",
-  "editor.decks.countLabel": "{count} decks",
-  "editor.decks.columnTitle": "Title",
-  "editor.decks.columnSection": "Section",
-  "editor.decks.columnStatus": "Status",
-  "editor.decks.emptyTitle": "No decks yet",
-  "editor.decks.emptyBody":
-    "Interactive slide decks you create will show up here. Start one and publish it whenever it's ready.",
-  "editor.decks.new": "New deck",
+  // The section itself is gone; DeckEditorHeader still reads these two.
   "editor.decks.statusPublished": "Published",
   "editor.decks.statusDraft": "Draft",
-  "editor.decks.edit": "Edit",
 
   // ── EditorDashboardPage ────────────────────────────────────────────────
 
@@ -582,20 +580,13 @@ export const magazine: Catalog = {
   // above — a literal stage id doubling as display text is a bigger
   // label-key project, out of this pass's scope.
 
-  // ── DeskHeader ───────────────────────────────────────────────────────────
+  // ── Desk header (DeskPulseHeader, DeskScopeMenu) ─────────────────────────
   "desk.header.layout.pipeline": "Pipeline",
   "desk.header.layout.board": "Board",
   "desk.header.layout.issuePlan": "Issue plan",
   "desk.header.eyebrow": "Issue {number} · {theme}",
   "desk.header.title": "The desk",
-  "desk.header.meta": "Closes {closes} · publishes {publishes}",
-  "desk.header.daysLeft": "{days} days",
-  "desk.header.toClose": "to close",
   "desk.header.slotsFilled": "{filled} of {slots} slots filled",
-  "desk.header.viewingAs": "Viewing as",
-  "desk.header.viewingAsEditorAria": "Viewing as editor",
-  "desk.header.commissionCta": "Commission",
-  "desk.header.writeCta": "Write",
 
   // ── Write (a piece the editor writes themselves) ─────────────────────────
   "desk.write.untitledTitle": "Untitled piece",
@@ -614,18 +605,11 @@ export const magazine: Catalog = {
   "desk.header.slotsFilledAria": "Issue slots filled",
   "desk.header.layoutAria": "Desk layout",
   "desk.header.metaPublishesOnly": "Publishes {publishes}",
-  "desk.header.unassignedEyebrow": "Not in an issue yet",
-  "desk.header.unassignedMeta":
-    "Pieces waiting to be filed. Assign one to an issue when you know where it runs.",
 
-  // ── Issue switcher + create (desk header) ────────────────────────────────
-  "desk.header.workingOn": "Working on",
-  "desk.header.workingOnAria": "Which issue you are working on",
+  // ── Issue options in the scope menu (DeskScopeMenu) ──────────────────────
   "desk.header.issueOption": "Issue {number} · {title}",
-  "desk.header.newIssueCta": "New issue",
 
-  // ── DeskTrackTabs (Unassigned ⇄ Issue) ───────────────────────────────────
-  "desk.trackTabs.unassigned": "Unassigned",
+  // ── Issue scope labels (DeskScopeMenu) ───────────────────────────────────
   "desk.trackTabs.issue": "Issue {number}",
   "desk.trackTabs.issueNoNumber": "Issue",
 
@@ -668,40 +652,29 @@ export const magazine: Catalog = {
   "desk.newIssue.createdToast": "Issue {number} created. You're on it now.",
   "desk.newIssue.duplicateNumberError": "Issue {number} already exists.",
   "desk.newIssue.saveFailedError": "That didn't save. Give it another try.",
-
-  // ── NeedsStrip ───────────────────────────────────────────────────────────
-  "desk.needsStrip.lateDue": "Late · due {due}",
-  "desk.needsStrip.waitingOnYou": "Waiting on you",
-  "desk.needsStrip.chase": "Chase",
-  "desk.needsStrip.pickUp": "Pick it up",
-  "desk.needsStrip.open": "Open",
-
-  // ── DeskStats ────────────────────────────────────────────────────────────
-  "desk.stats.inFlight": "in flight",
-  "desk.stats.readyToLayOut": "ready to lay out",
-  "desk.stats.behindSchedule": "behind schedule",
-  "desk.stats.pitchesWaiting": "pitches waiting",
+  "desk.newIssue.closesLabel": "Closes",
+  "desk.newIssue.closesHelper":
+    "Optional. Leave it open and set the date once you know when copy stops.",
+  "desk.closeDate.afterPublishError":
+    "The close date must be on or before the publish date.",
 
   // ── DeskToolbar ──────────────────────────────────────────────────────────
-  "desk.toolbar.searchPlaceholder": "Search pieces, authors, sections…",
   "desk.toolbar.searchAria": "Search",
   "desk.toolbar.formatAria": "Format",
   "desk.toolbar.format.everything": "Everything",
   "desk.toolbar.format.articles": "Articles",
   "desk.toolbar.format.decks": "Decks",
-  "desk.toolbar.myQueue": "My queue",
   "desk.toolbar.sortAria": "Sort",
-  "desk.toolbar.sort.due": "Sort · due date",
-  "desk.toolbar.sort.stage": "Sort · stage",
-  "desk.toolbar.sort.section": "Sort · section",
-  "desk.toolbar.shortcuts": "Shortcuts",
 
   // ── SavedViews ───────────────────────────────────────────────────────────
-  "desk.savedViews.saveThisView": "Save this view",
-  "desk.savedViews.lateOrAtRisk": "Late or at risk",
-  "desk.savedViews.waitingOnArt": "Waiting on art",
-  "desk.savedViews.needsSensitivityRead": "Needs a sensitivity read",
-  "desk.savedViews.unpaidAfterFiling": "Unpaid after filing",
+  "desk.savedViews.duplicateName":
+    "You already have a saved view with this name.",
+  "desk.savedViews.limitReached_one":
+    "You can keep up to {count} saved view. Delete it to save another.",
+  "desk.savedViews.limitReached_other":
+    "You can keep up to {count} saved views. Delete one to save another.",
+  "desk.savedViews.saveFailed": "The view could not be saved. Try again.",
+  "desk.savedViews.deleteFailed": "The view could not be deleted. Try again.",
 
   // ── PiecesPipeline ───────────────────────────────────────────────────────
   "desk.pipeline.emptyTitle": "The desk is clear",
@@ -709,8 +682,12 @@ export const magazine: Catalog = {
   "desk.pipeline.columnPiece": "Piece",
   "desk.pipeline.columnStage": "Stage",
   "desk.pipeline.columnWaitingOn": "Waiting on",
+  "desk.pipeline.columnWaitingOnShort": "Waiting",
   "desk.pipeline.columnDue": "Due",
   "desk.pipeline.selectAllAria": "Select every piece shown",
+  "desk.pipeline.allClear": "Nothing is waiting on you",
+  "desk.pipeline.groupAria_one": "{group}, {count} piece",
+  "desk.pipeline.groupAria_other": "{group}, {count} pieces",
 
   // ── PieceRow ─────────────────────────────────────────────────────────────
   "desk.pieceRow.newVoice": "New voice",
@@ -723,6 +700,16 @@ export const magazine: Catalog = {
   "desk.pieceRow.selectAria": "Select {title}",
   "desk.pieceRow.moreAria": "More actions for {title}",
   "desk.pieceRow.delete": "Delete piece",
+  "desk.pieceRow.noWriter": "No writer yet",
+  "desk.pieceRow.setDate": "Set date",
+  "desk.pieceRow.noDue": "No due date",
+  "desk.pieceRow.reader": "Reader",
+  "desk.pieceRow.editor": "Editor",
+  "desk.pieceRow.waitingOnAria": "Waiting on {who}",
+  "desk.pieceRow.waitingOnYouAria": "Waiting on you",
+  // PieceDueDatePopover (the due-date popover opened from the row)
+  "desk.pieceRow.setDateDialogLabel": "Choose a due date",
+  "desk.pieceRow.dueSavedToast": "Due {date}.",
 
   // ── Delete confirmation (DeskModals -> DeletePieceDialog) ────────────────
   // The description names everything the backend removes in the same
@@ -739,6 +726,10 @@ export const magazine: Catalog = {
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Empty",
   "desk.board.moveStageAria": "Move stage",
+  "desk.board.overCap": "Over {cap}",
+  "desk.board.unpublishToMove": "Unpublish from the piece record to move it",
+  "desk.board.scrollPrevious": "Previous stages",
+  "desk.board.scrollNext": "Next stages",
 
   // ── IssuePlan ────────────────────────────────────────────────────────────
   "desk.issuePlan.slotsFilled": "{filled} of {target} · {note}",
@@ -748,36 +739,19 @@ export const magazine: Catalog = {
   "desk.issuePlan.commissionFor": "Commission for {section}",
   "desk.issuePlan.slidesCount_one": "{count} slide",
   "desk.issuePlan.slidesCount_other": "{count} slides",
-  "desk.issuePlan.lateSuffix": " · late",
-
-  // ── PitchInbox ───────────────────────────────────────────────────────────
-  "desk.pitchInbox.heading": "Pitch inbox",
-  "desk.pitchInbox.countLabel_one": "{count} pitch",
-  "desk.pitchInbox.countLabel_other": "{count} pitches",
-  "desk.pitchInbox.emptyTitle": "Inbox empty",
+  "desk.issuePlan.summary.full_one": "{count} section full",
+  "desk.issuePlan.summary.full_other": "{count} sections full",
+  "desk.issuePlan.summary.gaps_one": "{count} with gaps",
+  "desk.issuePlan.summary.gaps_other": "{count} with gaps",
+  "desk.issuePlan.summary.filtered_one": "Showing {shown} of {count} piece",
+  "desk.issuePlan.summary.filtered_other": "Showing {shown} of {count} pieces",
+  "desk.issuePlan.unfiledHeading": "Where unfiled pieces would fit",
 
   // ── PitchRow ─────────────────────────────────────────────────────────────
-  "desk.pitchRow.selectAria": "Select {title}",
-  "desk.pitchRow.firstPitchSuffix": " · first pitch",
   "desk.pitchRow.betterAsDeck": "Better as a deck",
-  "desk.pitchRow.commission": "Commission",
-  "desk.pitchRow.maybe": "Maybe",
-  "desk.pitchRow.pass": "Pass",
-
-  // ── BulkTriageBar ────────────────────────────────────────────────────────
-  "desk.bulkTriage.selected_one": "{count} pitch selected",
-  "desk.bulkTriage.selected_other": "{count} pitches selected",
-  "desk.bulkTriage.ariaLabel": "Bulk pitch triage",
-  "desk.bulkTriage.clearSelection": "Clear selection",
-  "desk.bulkTriage.maybe": "Maybe",
-  "desk.bulkTriage.passKindly": "Pass, kindly",
 
   // ── Bulk assign to issue (pipeline rows) ─────────────────────────────────
-  "desk.bulkAssign.selected_one": "{count} piece selected",
-  "desk.bulkAssign.selected_other": "{count} pieces selected",
-  "desk.bulkAssign.ariaLabel": "Bulk assign to issue",
   "desk.bulkAssign.clearSelection": "Clear selection",
-  "desk.bulkAssign.assignToIssue": "Assign to issue\u2026",
   "desk.bulkAssign.assignedToast_one": "{count} piece moved to issue {number}.",
   "desk.bulkAssign.assignedToast_other":
     "{count} pieces moved to issue {number}.",
@@ -787,10 +761,7 @@ export const magazine: Catalog = {
     "{count} pieces back in the unassigned pool.",
 
   // ── DeskSidebar ──────────────────────────────────────────────────────────
-  "desk.sidebar.issueStanding": "Where the issue stands",
   "desk.sidebar.noPiecesYet": "No pieces in the pipeline yet.",
-  "desk.sidebar.editorLoad": "Editor load",
-  "desk.sidebar.noEditorsYet": "No editors assigned yet.",
   "desk.sidebar.activity": "Activity",
   "desk.sidebar.nothingHereYet": "Nothing here yet.",
   "desk.sidebar.someone": "Someone",
@@ -804,6 +775,28 @@ export const magazine: Catalog = {
   "desk.states.errorBand":
     "Could not reach the pipeline. Showing what we last had.",
   "desk.states.tryAgain": "Try again",
+
+  // ── DeskNoMatchState (no-match empty state) ────────────────────────────────
+  "desk.states.noMatchSearchTitle": "No pieces match “{query}”",
+  "desk.states.noMatchFilterTitle": "No pieces match these filters",
+  "desk.states.noMatchDescription_one":
+    "{count} piece here is hidden by the search and filters.",
+  "desk.states.noMatchDescription_other":
+    "{count} pieces here are hidden by the search and filters.",
+  "desk.states.noMatchSearchDescription_one":
+    "{count} piece here is hidden by this search.",
+  "desk.states.noMatchSearchDescription_other":
+    "{count} pieces here are hidden by this search.",
+  "desk.states.noMatchFiltersDescription_one":
+    "{count} piece here is hidden by these filters.",
+  "desk.states.noMatchFiltersDescription_other":
+    "{count} pieces here are hidden by these filters.",
+  "desk.states.clearSearchAndFilters": "Clear search and filters",
+  "desk.states.clearFilters": "Clear filters",
+
+  // ── DeskShownCountStatus (a live region announcing the settled piece count) ──
+  "desk.workArea.shownCount_one": "{count} piece shown",
+  "desk.workArea.shownCount_other": "{count} pieces shown",
 
   // ── CommandPalette ───────────────────────────────────────────────────────
   "desk.palette.kindArticle": "Article",
@@ -823,6 +816,10 @@ export const magazine: Catalog = {
   "deskShell.nav.desk": "Desk",
   "deskShell.nav.issue": "Issue",
   "deskShell.nav.lifecycle": "Archive",
+  "deskShell.nav.yourTurnAria": "{count} waiting on you",
+  "deskShell.nav.daysToClose": "{days}d",
+  "deskShell.nav.daysToCloseAria_one": "{count} day to close",
+  "deskShell.nav.daysToCloseAria_other": "{count} days to close",
   "deskShell.openNow": "Open now",
   "deskShell.writePiece": "Write",
   "deskShell.kbdHintSuffix": "to jump · ? for keys",
@@ -842,6 +839,15 @@ export const magazine: Catalog = {
   "desk.modals.shortcuts.triageTopPitch": "Triage the top pitch",
   "desk.modals.shortcuts.jumpAnywhere": "Jump anywhere, or start a piece",
   "desk.modals.shortcuts.thisList": "This list",
+  "desk.modals.shortcuts.toggleSelect": "Select the focused piece",
+  "desk.modals.shortcuts.openTriage": "Open the pitch inbox",
+  "desk.modals.shortcuts.focusSearch": "Jump to search",
+  // DeskShortcutsSheet: a switch to turn off single-key chords (for example
+  // when speech input would otherwise trigger them).
+  "desk.modals.shortcuts.singleKeySwitch": "Single-key shortcuts",
+  "desk.modals.shortcuts.singleKeySwitchHint":
+    "Switch these off if single keys get in your way, for example with speech input. ? always opens this list.",
+  "desk.modals.shortcuts.offSuffix": "(off)",
 
   // ── CommissionModal ──────────────────────────────────────────────────────
   "desk.modals.commission.titleFromPitch": "Commission this pitch",
@@ -894,6 +900,25 @@ export const magazine: Catalog = {
   "desk.modals.chase.body":
     "A quick, human nudge to keep things moving gently.",
 
+  // ── Chase draft (chaseDraft.ts) ───────────────────────────────────────────
+  // A draft is `${greeting} ${body}`: a greeting key, then a body key that
+  // places one of the due clauses below as {dueClause}.
+  "desk.chase.draft.greetingNamed": "Hi {writer},",
+  "desk.chase.draft.greetingAnonymous": "Hi,",
+  "desk.chase.draft.dueToday": "is due today",
+  "desk.chase.draft.dueTomorrow": "is due tomorrow",
+  "desk.chase.draft.dueInDays_one": "is due in {count} day",
+  "desk.chase.draft.dueInDays_other": "is due in {count} days",
+  "desk.chase.draft.dueLate_one": "was due {count} day ago",
+  "desk.chase.draft.dueLate_other": "was due {count} days ago",
+  "desk.chase.draft.dueRaw": "is due {text}",
+  "desk.chase.draft.dueLateRaw": "was due {text}",
+  "desk.chase.draft.dueSoon":
+    'checking in on "{title}". It {dueClause}. How is it going?',
+  "desk.chase.draft.late":
+    '"{title}" {dueClause}. Can you send me an update on where it stands?',
+  "desk.chase.draft.noDate": 'checking in on "{title}". How is it going?',
+
   // ── HandoffModal ─────────────────────────────────────────────────────────
   "desk.modals.handoff.title": "Hand off",
   "desk.modals.handoff.cta": "Hand off",
@@ -931,15 +956,306 @@ export const magazine: Catalog = {
   "desk.pieceToast.movedToStage": "Moved to {stage}",
   "desk.pieceToast.handedOff": "Handed off",
   "desk.pieceToast.deleted": "Deleted",
+  "desk.pieceToast.deckStarted": "Deck started",
   "desk.pitchToast.maybe": "Marked as maybe",
   "desk.pitchToast.passed": "Pitch passed",
   "desk.pitchToast.added": "Pitch added",
 
+  // ── Focus chips (DeskFocusBar, deskFocus.ts) ──────────────────────────────
+  "desk.focus.yourTurn": "Your turn",
+  "desk.focus.late": "Late",
+  "desk.focus.withWriters": "With writers",
+  "desk.focus.needsArt": "Needs art",
+  "desk.focus.sensitivity": "In sensitivity read",
+  "desk.focus.ready": "Ready to publish",
+  "desk.focus.unpaid": "Unpaid after filing",
+  "desk.focus.mine": "Mine",
+  "desk.focus.aria": "Focus the desk",
+  "desk.focus.none": "none",
+  "desk.focus.more": "+{count}",
+  "desk.focus.moreAria_one": "Show {count} more filter",
+  "desk.focus.moreAria_other": "Show {count} more filters",
+  "desk.focus.fewer": "Show fewer",
+  "desk.focus.clear": "Clear",
+  "desk.focus.pitches": "Pitches",
+  "desk.focus.stalled": "Stalled",
+  "desk.focus.newVoices": "New voices",
+  "desk.focus.atRisk": "At risk",
+
+  // ── Next action per piece (pieceNextAction.ts) ────────────────────────────
+  "desk.nextAction.chase": "Chase",
+  "desk.nextAction.edit": "Edit",
+  "desk.nextAction.chaseReader": "Chase reader",
+  "desk.nextAction.chaseReaderShort": "Chase",
+  "desk.nextAction.layOut": "Lay out",
+  "desk.nextAction.addToIssue": "Add to issue",
+  "desk.nextAction.addToIssueShort": "Add to issue",
+  "desk.nextAction.publish": "Publish",
+  "desk.nextAction.handOff": "Hand off",
+
+  // ── Pipeline groups (pipelineGroups.ts) ───────────────────────────────────
+  "desk.groups.yourTurn": "Your turn",
+  "desk.groups.late": "Late",
+  "desk.groups.withWriters": "With writers",
+  "desk.groups.inProduction": "In production",
+  "desk.groups.ready": "Ready",
+  "desk.groups.published": "Published",
+  "desk.groups.inProgress": "In progress",
+  "desk.groups.noSection": "No section",
+  "desk.groups.moreUnder_one": "{count} more under {group}",
+  "desk.groups.moreUnder_other": "{count} more under {group}",
+
+  // ── Due line (deskDue.ts) ─────────────────────────────────────────────────
+  "desk.due.today": "Today",
+  "desk.due.tomorrow": "Tomorrow",
+  "desk.due.inDays_one": "in {count} day",
+  "desk.due.inDays_other": "in {count} days",
+  "desk.due.daysLate_one": "{count} day late",
+  "desk.due.daysLate_other": "{count} days late",
+
+  // ── StageProgress ─────────────────────────────────────────────────────────
+  "desk.stageProgress.aria": "{stage}, step {step} of {total}",
+
+  // ── Time in stage (deskStageAge.ts, PieceRowStageAge) ─────────────────────
+  "desk.stageAge.short": "{days}d in stage",
+  "desk.stageAge.columnLabel": "Time in stage",
+  "desk.stageAge.long_one": "{count} day in {stage}",
+  "desk.stageAge.long_other": "{count} days in {stage}",
+  "desk.stageAge.stalled_one": "Stalled: {count} day in {stage}",
+  "desk.stageAge.stalled_other": "Stalled: {count} days in {stage}",
+
+  // ── Scope menu (DeskScopeMenu) ────────────────────────────────────────────
+  "desk.scope.unfiled": "Unfiled",
+  "desk.scope.everything": "Everything in flight",
+  "desk.scope.issuesHeading": "Issues",
+  "desk.scope.menuLabel": "What the desk shows",
+  "desk.scope.issuePieces_one": "{count} piece on the desk",
+  "desk.scope.issuePieces_other": "{count} pieces on the desk",
+  "desk.scope.unfiledDescription_one": "{count} piece not in an issue yet",
+  "desk.scope.unfiledDescription_other": "{count} pieces not in an issue yet",
+  "desk.scope.everythingDescription_one": "{count} piece across every issue",
+  "desk.scope.everythingDescription_other": "{count} pieces across every issue",
+  "desk.scope.newIssue": "Start a new issue",
+  "desk.scope.triggerPrefix": "Change what the desk shows:",
+
+  // ── New menu (DeskNewMenu) ────────────────────────────────────────────────
+  "desk.newMenu.trigger": "New",
+  "desk.newMenu.writeArticle": "Write an article",
+  "desk.newMenu.buildDeck": "Build a deck",
+  "desk.newMenu.commission": "Commission a writer",
+  "desk.newMenu.newIssue": "Start an issue",
+
+  // ── Pulse line (DeskPulseLine, DeskIssuePulse) ────────────────────────────
+  "desk.pulse.closes": "Closes {closes}",
+  "desk.pulse.daysLeft_one": "{count} day left",
+  "desk.pulse.daysLeft_other": "{count} days left",
+  "desk.pulse.unfiledEmpty": "Every piece is in an issue",
+  "desk.pulse.everything_one": "{count} piece in flight across {issues} issues",
+  "desk.pulse.everything_other":
+    "{count} pieces in flight across {issues} issues",
+  "desk.pulse.everythingOneIssue_one": "{count} piece in flight in one issue",
+  "desk.pulse.everythingOneIssue_other":
+    "{count} pieces in flight in one issue",
+  "desk.pulse.everythingEmpty": "Nothing in flight",
+  "desk.pulse.inFlight_one": "{count} piece in flight",
+  "desk.pulse.inFlight_other": "{count} pieces in flight",
+  "desk.pulse.filedInIssue": "{count} in Issue {number}",
+  "desk.pulse.filedInOneIssue": "{count} in one issue",
+  "desk.pulse.filedAcrossIssues": "{count} across {issues} issues",
+  "desk.pulse.unfiledPart": "{count} unfiled",
+  "desk.pulse.closesToday": "Closes today",
+  "desk.pulse.closed": "Closed {closes}",
+  "desk.pulse.changeCloseDateAria": "Change close date",
+  "desk.pulse.openPlanAria": "Open the issue plan",
+  "desk.pulse.setCloseDate": "Set close date",
+  "desk.pulse.setCloseDateDialogLabel": "Choose a close date",
+  "desk.pulse.closeDateSavedToast": "Closes {date}.",
+
+  // ── DeskWorkbar (search, layout, filter, sort) ────────────────────────────
+  "desk.workbar.searchPlaceholder": "Search pieces, writers, sections",
+  "desk.workbar.searchPlaceholderMedium": "Search pieces",
+  "desk.workbar.searchPlaceholderShort": "Search",
+  "desk.workbar.layout.calendar": "Calendar",
+  "desk.workbar.layoutTrigger": "Layout: {layout}",
+  "desk.workbar.shortcutsAria": "Keyboard shortcuts",
+  "desk.workbar.filter.trigger": "Filter",
+  "desk.workbar.filter.triggerAria_one": "Filter, {count} active",
+  "desk.workbar.filter.triggerAria_other": "Filter, {count} active",
+  "desk.workbar.filter.menuLabel": "Filter pieces",
+  "desk.workbar.filter.anyone": "Anyone",
+  "desk.workbar.field.section": "Section",
+  "desk.workbar.field.stage": "Stage",
+  "desk.workbar.field.editor": "Editor",
+  "desk.workbar.field.editorFormer": "Former editor",
+  "desk.workbar.sort.menuLabel": "Sort and group",
+  "desk.workbar.sort.sortBy": "Sort by",
+  "desk.workbar.sort.due": "Due date",
+  "desk.workbar.sort.groupBy": "Group by",
+  "desk.workbar.sort.waitingOn": "Waiting on",
+  "desk.workbar.sort.none": "None",
+  "desk.workbar.sort.density": "Density",
+  "desk.workbar.sort.comfortable": "Comfortable",
+  "desk.workbar.sort.compact": "Compact",
+  "desk.workbar.token": "{label}: {value}",
+
+  // ── DeskRail (issue health, pitches, team, activity) ──────────────────────
+  "desk.rail.label": "Desk overview",
+  "desk.rail.health.title": "Issue health",
+  "desk.rail.health.byStage": "Pieces by stage",
+  "desk.rail.health.slots": "Slots",
+  "desk.rail.health.slotCount": "{filled} of {target}",
+  "desk.rail.health.newVoices_one":
+    "{fresh} of {total} piece by first-time writers",
+  "desk.rail.health.newVoices_other":
+    "{fresh} of {total} pieces by first-time writers",
+  "desk.rail.health.lateRisk": "Pieces at risk of missing the close",
+  "desk.rail.health.showAllSections": "Show all sections",
+  "desk.rail.health.showFewerSections": "Show fewer sections",
+  "desk.rail.pitches.title": "Pitches",
+  "desk.rail.pitches.empty": "No pitches waiting",
+  "desk.rail.pitches.newVoice": "New voice",
+  "desk.rail.pitches.triageAll": "Triage all",
+  "desk.rail.pitches.openTriage": "Open pitch triage, {count} waiting",
+  "desk.rail.team.title": "Team",
+  "desk.rail.team.loadAria": ", {load} of {cap} pieces",
+  "desk.rail.team.overCapacitySuffix": ", over capacity",
+  "desk.rail.team.viewingQueue": "Viewing {name}'s queue",
+  "desk.rail.team.showEveryone": "Show everyone",
+  "desk.rail.activity.seeAll": "See all ({count})",
+  "desk.rail.activity.showLess": "Show less",
+  // Close forecast (rail/IssueForecast.tsx)
+  "desk.rail.forecast.onTrack": "On track to close {date}",
+  "desk.rail.forecast.atRisk_one": "{count} piece may miss close",
+  "desk.rail.forecast.atRisk_other": "{count} pieces may miss close",
+  "desk.rail.forecast.reasonLate": "Late",
+  "desk.rail.forecast.reasonDueAfterClose": "After close",
+  "desk.rail.forecast.reasonNotEnoughTime": "Too tight",
+  "desk.rail.forecast.more": "+{count} more",
+  "desk.rail.forecast.showAtRisk_one":
+    "{count} piece may miss close, show it in the table",
+  "desk.rail.forecast.showAtRisk_other":
+    "{count} pieces may miss close, show them in the table",
+  "desk.rail.forecast.fewer": "Show fewer",
+
+  // ── PitchTriage ───────────────────────────────────────────────────────────
+  "desk.triage.title": "Pitches",
+  "desk.triage.progress": "{current} of {total}",
+  "desk.triage.waiting_one": "{count} pitch waiting",
+  "desk.triage.waiting_other": "{count} pitches waiting",
+  "desk.triage.viewLabel": "How to show the pitches",
+  "desk.triage.viewOneAtATime": "One at a time",
+  "desk.triage.viewList": "List",
+  "desk.triage.newVoice": "New voice",
+  "desk.triage.tagsLabel": "Topics",
+  "desk.triage.suggestedDeck": "Suggested as a deck",
+  "desk.triage.commission": "Commission",
+  "desk.triage.maybe": "Maybe",
+  "desk.triage.pass": "Pass",
+  "desk.triage.previous": "Previous pitch",
+  "desk.triage.next": "Next pitch",
+  "desk.triage.shortcuts.label": "Keyboard shortcuts:",
+  "desk.triage.shortcuts.maybe": "maybe",
+  "desk.triage.shortcuts.pass": "pass",
+  "desk.triage.shortcuts.arrows": "Left and right arrows",
+  "desk.triage.shortcuts.move": "move",
+  "desk.triage.listLabel": "Waiting pitches",
+  "desk.triage.bulkLabel": "Answer selected pitches",
+  "desk.triage.selected_one": "{count} selected",
+  "desk.triage.selected_other": "{count} selected",
+  "desk.triage.selectHint": "Tick pitches to answer them together",
+  "desk.triage.clearSelection": "Clear selection",
+  "desk.triage.doneTitle": "All pitches answered",
+  "desk.triage.doneBody": "Every writer in this batch has an answer.",
+  "desk.triage.close": "Close",
+  "desk.triage.emptyTitle": "No pitches waiting",
+  "desk.triage.loading": "Loading pitches",
+
+  // ── PiecePeekPanel ────────────────────────────────────────────────────────
+  "desk.peek.openFullRecord": "Open full record",
+  "desk.peek.previousAria": "Previous piece",
+  "desk.peek.nextAria": "Next piece",
+  "desk.peek.closeAria": "Close preview",
+  "desk.peek.recordErrorTitle": "Couldn't load this piece's record",
+  "desk.peek.threadHeading": "Latest messages",
+
+  // ── DeskBulkBar ───────────────────────────────────────────────────────────
+  "desk.bulk.selected_one": "{count} selected",
+  "desk.bulk.selected_other": "{count} selected",
+  "desk.bulk.ariaLabel": "Bulk piece actions",
+  "desk.bulk.changeStage": "Change stage",
+  "desk.bulk.chase_one": "Chase {count}",
+  "desk.bulk.chase_other": "Chase {count}",
+  "desk.bulk.stageChangedToast_one": "{count} piece moved to {stage}.",
+  "desk.bulk.stageChangedToast_other": "{count} pieces moved to {stage}.",
+  "desk.bulk.stageChangeFailedToast_one":
+    "{count} piece did not move to {stage}.",
+  "desk.bulk.stageChangeFailedToast_other":
+    "{count} pieces did not move to {stage}.",
+  "desk.bulk.chaseProgress": "Chase {current} of {total}",
+  "desk.bulk.chaseSkip": "Skip",
+  "desk.bulk.addToIssue": "Add to issue",
+  "desk.bulk.moveIssue": "Move issue",
+  "desk.bulk.actions": "Actions",
+  "desk.bulk.selectAll": "Select all {count}",
+  "desk.bulk.handOffOneAtATime": "Hand off one piece at a time",
+
+  // ── PresenceStack ─────────────────────────────────────────────────────────
+  "desk.presence.viewing": "{names} viewing",
+  "desk.presence.more": "+{count}",
+
+  // ── Build a deck (useDeskBuildDeckAction) ─────────────────────────────────
+  "desk.buildDeck.untitledTitle": "Untitled deck",
+
+  // ── PiecesCalendar ────────────────────────────────────────────────────────
+  "desk.calendar.caption": "Due dates, {start} to {end}",
+  "desk.calendar.undated": "No date yet: {count}",
+  "desk.calendar.earlier": "Due before this week: {count}",
+  "desk.calendar.later": "Due after {date}: {count}",
+  "desk.calendar.closes": "Closes",
+  "desk.calendar.publishes": "Publishes",
+  "desk.calendar.afterClose": "After close",
+  "desk.calendar.late": "Late",
+  "desk.calendar.more": "+{count} more",
+  "desk.calendar.fewer": "Show fewer",
+  "desk.calendar.emptyWeeks": "Nothing is due in these weeks",
+  "desk.calendar.legendLabel": "Dot colours",
+  "desk.calendar.legendWriter": "Writer or reader",
+  "desk.calendar.legendNeutral": "Editor or nobody",
+
+  // ── Saved views (DeskViewsMenu, DeskViewsSaveModal, DeskViewsManageModal) ──
+  "desk.views.trigger": "Views",
+  "desk.views.heading": "Saved views",
+  "desk.views.loading": "Loading saved views…",
+  "desk.views.empty": "No saved views yet",
+  "desk.views.emptyHint":
+    "Save the filters and sort you use most, then come back to them in one click.",
+  "desk.views.save": "Save current view…",
+  "desk.views.manage": "Manage views…",
+  "desk.views.saveTitle": "Save this view",
+  "desk.views.saveSub":
+    "Saves the scope, focus chips, filters, sort and grouping you have on screen now.",
+  "desk.views.nameLabel": "Name",
+  "desk.views.namePlaceholder": "Long-form pieces",
+  "desk.views.saveCta": "Save view",
+  "desk.views.saving": "Saving…",
+  "desk.views.manageTitle": "Your saved views",
+  "desk.views.manageSub":
+    "Only you see these. Renaming or deleting a view leaves your pieces as they are.",
+  "desk.views.manageEmpty":
+    "No saved views left. Save one from the Views menu.",
+  "desk.views.renameAria": "Rename {name}",
+  "desk.views.deleteAria": "Delete {name}",
+  "desk.views.renameLabel": "New name for {name}",
+  "desk.views.renameSave": "Save",
+  "desk.views.done": "Done",
+  "desk.views.deleteTitle": "Delete “{name}”?",
+  "desk.views.deleteBody":
+    "The view goes for good. Your pieces and the desk stay as they are.",
+  "desk.views.deleteConfirm": "Delete view",
+
   // ── DeskView ─────────────────────────────────────────────────────────────
 
   // ── EditorDashboardPage ──────────────────────────────────────────────────
-  "desk.page.savingViewsUnavailable":
-    "Saving custom views isn't available yet.",
 
   // ══════════════════ Piece record (Phase 2) ═══════════════════════════════
   // Brief/Care/Money/History/After. Record content (audit `what` text, letter
@@ -1307,36 +1623,36 @@ export const magazine: Catalog = {
   // Marta", "14 comments") remains unswept — content/chrome-mixed and
   // name/count-fused, not a clean label-key case.
 
-  // ── PitchTrackerHeader ─────────────────────────────────────────────────
-  "pitchTracker.header.eyebrow": "Magazine · your pitches",
-  "pitchTracker.header.title": "Where every pitch <em>actually is.</em>",
-  "pitchTracker.header.newPitchCta": "+ New pitch",
+  // ── SubmissionsSummary ─────────────────────────────────────────────────
+  "pitchTracker.header.newPitchCta": "Submit a story",
   // PRD-129 replaced `pitchTracker.header.lead`, which interpolated three
   // hardcoded prototype numbers and promised a turnaround nothing measures.
   // Two pluralized fragments over real counts, rendered by `Translation`.
-  "pitchTracker.header.leadActive_one": "{count} pitch with the desk right now",
+  "pitchTracker.header.leadActive_one":
+    "{count} submission with the desk right now",
   "pitchTracker.header.leadActive_other":
-    "{count} pitches with the desk right now",
+    "{count} submissions with the desk right now",
   "pitchTracker.header.leadPublished_one": "<b>{count} published</b> all-time",
   "pitchTracker.header.leadPublished_other":
     "<b>{count} published</b> all-time",
 
   // ── PitchTabs ──────────────────────────────────────────────────────────
-  "pitchTracker.tabs.ariaLabel": "Pitch status",
+  "pitchTracker.tabs.ariaLabel": "Submission status",
   "pitchTracker.tabs.all": "All",
   "pitchTracker.tabs.review": "In review",
   "pitchTracker.tabs.commissioned": "Commissioned",
   "pitchTracker.tabs.published": "Published",
   "pitchTracker.tabs.closed": "Closed",
 
-  // ── PitchTrackerPage ───────────────────────────────────────────────────
+  // ── WriterSubmissionsTab ───────────────────────────────────────────────
   "pitchTracker.page.emptyTitle": "Nothing in this view.",
   "pitchTracker.page.emptyBody":
-    "No pitches here right now. Switch tabs, or start something new from the New pitch button above.",
-  "pitchTracker.page.withdrawnToast": "Pitch withdrawn",
+    "No submissions here right now. Try another status, or submit a story with the button above.",
+  "pitchTracker.page.showAllCta": "Show all",
+  "pitchTracker.page.withdrawnToast": "Submission withdrawn",
   "pitchTracker.page.undoCta": "Undo",
   "pitchTracker.page.stubToast": "{label}: coming soon in this prototype",
-  "pitchTracker.page.loadErrorTitle": "We couldn't load your pitches",
+  "pitchTracker.page.loadErrorTitle": "We couldn't load your submissions",
   "pitchTracker.page.loadErrorBody":
     "Everything you sent is still with the desk. Try again in a moment.",
 
@@ -1346,15 +1662,15 @@ export const magazine: Catalog = {
   // Undo. The decided case is the 409 the desk answers with when it got there
   // first, which is a real outcome rather than a failure.
   "pitchTracker.card.withdrawCta": "Withdraw",
-  "pitchTracker.withdraw.confirmTitle": "Withdraw this pitch?",
+  "pitchTracker.withdraw.confirmTitle": "Withdraw this submission?",
   "pitchTracker.withdraw.confirmBody":
-    "The desk stops seeing it and it leaves your tracker. You cannot undo this, though you are always welcome to pitch the story again.",
-  "pitchTracker.withdraw.confirmCta": "Withdraw pitch",
-  "pitchTracker.withdraw.doneToast": "Pitch withdrawn.",
+    "The desk stops seeing it and it leaves your submissions. You cannot undo this, though you are always welcome to submit the story again.",
+  "pitchTracker.withdraw.confirmCta": "Withdraw submission",
+  "pitchTracker.withdraw.doneToast": "Submission withdrawn.",
   "pitchTracker.withdraw.decidedToast":
-    "The desk has already answered this pitch, so it can no longer be withdrawn.",
+    "The desk has already answered this submission, so it can no longer be withdrawn.",
   "pitchTracker.withdraw.failedToast":
-    "We couldn't withdraw that pitch. Try again in a moment.",
+    "We couldn't withdraw that submission. Try again in a moment.",
 
   // ── PitchCard ─────────────────────────────────────────────────────────
   // The note author/body are an editor's own words (content); only the
@@ -1751,6 +2067,16 @@ export const magazine: Catalog = {
   "issue.publishDate.savedToast": "Issue set to run on {date}.",
   "issue.publishDate.clearedToast":
     "Publish date cleared. The issue is unscheduled again.",
+  // Close date (PublishDateCard): the last day the issue takes copy.
+  "issue.closeDate.heading": "Close date",
+  "issue.closeDate.set": "This issue closes on {date}.",
+  "issue.closeDate.unset":
+    "No close date yet. Set one so the desk can count down to it.",
+  "issue.closeDate.save": "Save date",
+  "issue.closeDate.clear": "Clear date",
+  "issue.closeDate.saving": "Saving…",
+  "issue.closeDate.savedToast": "Issue closes on {date}.",
+  "issue.closeDate.clearedToast": "Close date cleared.",
   "issue.pages.heading": "Pages",
   "issue.pages.editorial": "Editorial",
   "issue.pages.total": "Total",
@@ -1872,8 +2198,26 @@ export const magazine: Catalog = {
   // ── WriterWorkspacePage ──────────────────────────────────────────────────
   "writer.tabs.work": "Your work",
   "writer.tabs.pitches": "Your pitches",
+  "writer.tabs.submissions": "Your submissions",
   "writer.tabs.payments": "Payments",
   "writer.tabs.ariaLabel": "Writer workspace tabs",
+  // Writer-facing state labels. The wording matches what the backend used to
+  // compose in English (`magazine-writer-response.ts`); these keys were read
+  // by the tabs but never defined, so they rendered as raw keys.
+  "writer.work.stage.edit": "With your editor",
+  "writer.work.stage.layout": "In layout",
+  "writer.pitches.state.waiting": "Waiting to hear back",
+  "writer.pitches.state.maybe": "Held for consideration",
+  "writer.pitches.state.passed": "Passed",
+  "writer.pitches.deskNote": "From the desk: {note}",
+  "writer.pitches.state.commissioned": "Commissioned",
+  "writer.payments.state.notAgreed": "Not yet agreed",
+  "writer.payments.state.paid": "Paid",
+  "writer.payments.state.paidOn": "Paid {date}",
+  "writer.payments.state.approvedUnpaid": "Approved, unpaid",
+  "writer.payments.state.approvedUnpaidDue": "Approved, unpaid: due {date}",
+  "writer.payments.state.agreed": "Agreed",
+  "writer.payments.state.agreedDue": "Agreed: due {date}",
   "writer.page.heading": "Your desk",
   "writer.page.openCount_one": "{count} assignment open",
   "writer.page.openCount_other": "{count} assignments open",
@@ -2015,6 +2359,9 @@ export const magazine: Catalog = {
   "pieceThread.composerPlaceholder": "Write a message…",
   "pieceThread.send": "Send",
   "pieceThread.sentToast": "Message sent.",
+  "pieceThread.showEarlier_one": "Show {count} earlier message",
+  "pieceThread.showEarlier_other": "Show {count} earlier messages",
+  "pieceThread.sendError": "Couldn't send. Your message is still here.",
 
   // ══════════════════ Apply to write ═══════════════════════════════════════
   "applyToWrite.intro.title": "Show us <em>what you've got.</em>",

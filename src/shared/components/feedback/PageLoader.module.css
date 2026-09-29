@@ -1,0 +1,283 @@
+/* Hold the whole loader invisible for its first 200ms.
+ *
+ * Now that route chunks are prefetched on hover/focus/touch (app/routePrefetch.ts),
+ * most navigations resolve their lazy import in a microtask. React still
+ * suspends for that microtask, so without this the member gets a one-frame
+ * strobe of loader between two pages that were both ready. Below 200ms nothing
+ * is shown at all and the new page simply appears; past it, the wait is real and
+ * deserves the status region.
+ *
+ * A 1ms duration makes this a delay with no motion in it: the reduced-motion
+ * resets in base.css clamp `animation-duration`, which leaves the behaviour
+ * here identical under reduced motion. `both` is what makes the delay do the
+ * hiding, by applying the 0% frame before the animation starts.
+ *
+ * The hold belongs to the wait, and a wait can span two loaders: a screen
+ * loader that takes over from another (the session check handing off to the
+ * route fallback) gets `--loader-elapsed`, how long the wait has already run,
+ * on its root. Every delay in this file subtracts it, so the hold is only
+ * what is left of the 200ms, and a loader already on screen stays on screen
+ * with no blank frame. The page and section sizes never set it, and the
+ * `0ms` fallback leaves their timing exactly as written.
+ *
+ * Every keyframe this file uses is declared in this module on purpose: a
+ * CSS-module `animation:` naming a keyframe defined globally silently never
+ * runs. */
+.loader {
+  animation: pageLoaderReveal 1ms linear
+    calc(200ms - var(--loader-elapsed, 0ms)) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding-inline: var(--wrap-px);
+  text-align: center;
+  color: var(--text-strong);
+  /* The halo and the outermost wave can be wider than a narrow card or a
+   * 375px screen. Clipping the inline axis keeps them from adding a sideways
+   * scroll, and `clip` leaves the block axis visible, so nothing is cut at the
+   * top or bottom. */
+  overflow-x: clip;
+  /* Light theme: a mid-strength coral stroke, painted normally. */
+  --wave-stroke: rgba(var(--accent-rgb), 0.7);
+  --glow-blend: normal;
+}
+
+/* Dark theme: on the near-black cream a translucent coral composites to a
+ * muddy maroon. A stronger stroke and a `screen` blend make the halo and the
+ * waves add light to the ground, so they glow. Selected the way the tokens
+ * select dark mode, by the `data-theme` attribute. */
+:global([data-theme="dark"]) .loader {
+  --wave-stroke: rgba(var(--accent-rgb), 0.85);
+  --glow-blend: screen;
+}
+
+/* The whole viewport, for the session check and the route fallbacks, which
+ * render with no shell.
+ * The end padding lifts the optical centre so the mark sits near 42% of the
+ * screen height, where a centred object reads as centred. */
+.screen {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-block-end: 8svh;
+  background: var(--cream);
+}
+
+/* The body of a page under its shell: the viewport less the band the fixed
+ * nav reserves, so the shell's footer stays below the fold. */
+.page {
+  min-height: calc(100vh - var(--nav-band));
+  min-height: calc(100svh - var(--nav-band));
+  background: var(--cream);
+}
+
+.section {
+  min-height: 240px;
+  padding-block: var(--section-y-48);
+  background: transparent;
+}
+
+/* The stage is exactly as large as the widest wave, so nothing it draws is
+ * clipped. `--mark-size` comes from the component, which picks the pixel size
+ * it hands BrandMark for each loader size.
+ *
+ * The small negative end margin tucks the first line of text (the wordmark at
+ * screen size, the caption otherwise) up into the stage's lower edge, where
+ * the waves have long faded and the halo's gradient is down to its faint
+ * outer ring, so the text holds its contrast. */
+.stage {
+  --wave-size: min(calc(var(--mark-size) * 2.6), 90vw);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--wave-size);
+  height: var(--wave-size);
+  margin-block-end: calc(var(--mark-size) * -0.15);
+}
+
+/* A coral glow, 3 times the mark, that breathes slowly behind it. It reaches
+ * a little past the waves, so they travel through light all the way out.
+ * Centred with negative margins so `transform` is free for the scale. Its base
+ * style (scale 1, opacity 0.85) is what reduced motion keeps. */
+.halo {
+  --halo-size: min(calc(var(--mark-size) * 3), 100vw);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--halo-size);
+  height: var(--halo-size);
+  margin: calc(var(--halo-size) / -2) 0 0 calc(var(--halo-size) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(var(--accent-rgb), 0.3),
+    rgba(var(--accent-rgb), 0.14) 45%,
+    rgba(var(--accent-rgb), 0.05) 75%,
+    transparent
+  );
+  filter: blur(12px);
+  opacity: 0.85;
+  mix-blend-mode: var(--glow-blend);
+  pointer-events: none;
+  animation: pageLoaderBreathe 3200ms var(--ease-in-out)
+    calc(0ms - var(--loader-elapsed, 0ms)) infinite;
+}
+
+/* The pulse waves: two coral rings born just outside the drawing that travel
+ * outward and are gone by 70% of their cycle, so at most moments one ring is
+ * in flight and the stage never reads as a static target. They sit between
+ * the halo and the mark by markup order. The border is set at the full size,
+ * so a wave is hairline-thin at birth and gains weight as it travels.
+ *
+ * The waves are timed to the gather beat: the 3200ms cycle matches the mark's
+ * gather cycle, whose core beats at 49% (1568ms after mount). The negative
+ * delays start each wave part-way through, so the first is born on that beat
+ * and the second half a cycle later, at the top of the gather cycle. Both
+ * also subtract `--loader-elapsed`, the same shift the mark gets, so a
+ * handed-off loader keeps them on the beat. */
+.wave,
+.waveLate {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--wave-size);
+  height: var(--wave-size);
+  margin: calc(var(--wave-size) / -2) 0 0 calc(var(--wave-size) / -2);
+  border: 1.5px solid var(--wave-stroke);
+  border-radius: 50%;
+  opacity: 0;
+  mix-blend-mode: var(--glow-blend);
+  pointer-events: none;
+  animation: pageLoaderWave 3200ms cubic-bezier(0.25, 0.5, 0.5, 1)
+    calc(-1632ms - var(--loader-elapsed, 0ms)) infinite;
+}
+.waveLate {
+  animation-delay: calc(-32ms - var(--loader-elapsed, 0ms));
+}
+
+/* Sits above the halo and the waves, which come first in the markup. Hands
+ * the loader's elapsed time to BrandMark, whose gather reads `--gather-elapsed`
+ * so the satellites and the core's beat continue in phase with the halo and
+ * the waves. */
+.mark {
+  position: relative;
+  --gather-elapsed: var(--loader-elapsed, 0ms);
+}
+
+/* The QueerPulse wordmark, screen size only: the headline of the full-screen
+ * wait, set like the brand lockup with an italic "Pulse". Present from the
+ * reveal with no rise of its own, so the name is the first thing that reads. */
+.wordmark {
+  position: relative;
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-26);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-heading);
+  color: var(--text-strong);
+}
+.wordmarkItalic {
+  font-style: italic;
+}
+
+/* Positioned so it paints above the waves' faded tails, which it overlaps. */
+.caption {
+  position: relative;
+  margin: 0;
+  max-width: 32ch;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-heading);
+  color: var(--ink-60);
+  text-wrap: balance;
+  animation: pageLoaderCaptionRise 600ms var(--ease-out)
+    calc(300ms - var(--loader-elapsed, 0ms)) both;
+}
+
+/* Under the wordmark the caption steps back to a quiet italic line, since the
+ * name is now the headline. */
+.screen .caption {
+  font-size: var(--text-14);
+  font-style: italic;
+  letter-spacing: normal;
+  color: var(--ink-40);
+}
+
+/* Reduced motion, from the OS setting or the in-app toggle (the hook reads
+ * both and sets `.still`): the halo rests at its base style, the waves are
+ * removed, since a single frozen ring would read as a stray outline, and the
+ * caption is simply there. The 200ms reveal on `.loader` is kept on purpose. */
+.still .halo,
+.still .caption {
+  animation: none;
+}
+.still .wave,
+.still .waveLate {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halo,
+  .caption {
+    animation: none;
+  }
+  .wave,
+  .waveLate {
+    display: none;
+  }
+}
+
+@keyframes pageLoaderReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pageLoaderBreathe {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Opacity has its own keyframes, a fade-in over the first 10% and a fade-out
+ * complete by 70%; transform only has 0% and 100%, so the outward travel stays
+ * one unbroken curve. */
+@keyframes pageLoaderWave {
+  0% {
+    transform: scale(0.35);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes pageLoaderCaptionRise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

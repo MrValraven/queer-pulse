@@ -310,11 +310,13 @@
   font-weight: 400;
   font-size: var(--text-22);
   color: var(--text-strong);
-  /* Clears <ModalSheet>'s own chrome. The close button sits top-right, hence
-     the padding. The drag grabber is `position: sticky; top: 0`, so it paints
-     at the top of the sheet's scrollport while its negative top margin pulls
-     the first child up into the sheet's padding — which lands the two on the
-     same line. The first child is the one that has to pay that margin back. */
+  /* Clears <ModalSheet>'s own chrome. The Close chip is pinned top-right,
+     hence the padding. The drag handle now sits on the sheet's own strip,
+     12px under its top edge, and content starts 31px down at rest, so this
+     title no longer has to clear the handle. The 30px top margin (which
+     collapses with the handle's 14px, landing the title at about 47px) is
+     kept only so the title's spacing stays as it was; it can be trimmed if a
+     tighter top is wanted. */
   padding-right: 40px;
   margin-top: 30px;
   margin-bottom: var(--gap-xs);
@@ -929,7 +931,7 @@ html[data-reduce-motion="true"]
   color: var(--accent-ink);
 }
 
-/* ── savebar (Task 4 — EditorSavebar) ────────────────────────────────── */
+/* ── savebar (Task 4, EditorSavebar) ────────────────────────────────── */
 .savebar {
   position: sticky;
   /* Clears the mobile bottom tab bar; collapses to 0px on desktop, where the tab bar is hidden. */
@@ -942,7 +944,7 @@ html[data-reduce-motion="true"]
   border-radius: var(--radius-16);
   /* Same floating-glass idiom as the app nav bar: cream-tinted glass in
      light mode, paper-tinted in dark (the two surfaces the prototype's
-     literal rgba pair actually resolved to — see the Task 1 report). */
+     literal rgba pair actually resolved to; see the Task 1 report). */
   background: color-mix(in srgb, var(--cream) 86%, transparent);
   backdrop-filter: var(--blur-lg);
   border: 1px solid var(--line);
@@ -956,21 +958,8 @@ html[data-reduce-motion="true"]
   color: var(--ink-60);
   flex: 1;
 }
-/* Narrow phones: the status line + preview-toggle button no longer sit
-   comfortably on one row. Wrap instead of squeezing the button — the
-   status text takes its own full-width line, the button gets the next,
-   both stay easily tappable rather than crowding into a single row. */
-@container (max-width: 560px) {
-  .savebar {
-    flex-wrap: wrap;
-    padding: var(--gap-sm);
-  }
-  .savebar span {
-    flex: 1 1 100%;
-  }
-}
 
-/* Dirty state: the pill becomes a column — an itemized list of everything
+/* Dirty state: the pill becomes a column: an itemized list of everything
    changed across every pane, above a row of Discard/Save-all actions. */
 .savebar-dirty {
   flex-direction: column;
@@ -1010,7 +999,7 @@ html[data-reduce-motion="true"]
   flex-wrap: wrap;
 }
 /* The reason Save is disabled while there are still changes (e.g. a missing
-   name) — sits at the start of the actions row, pushing the buttons to the end.
+   name). It sits at the start of the actions row, pushing the buttons to the end.
    Parent-scoped so it out-specifies the generic `.savebar span` rule above. */
 .savebar .savebar-block {
   flex: 1 1 auto;
@@ -1021,36 +1010,108 @@ html[data-reduce-motion="true"]
   line-height: 1.4;
 }
 /* The preview-toggle wrapper is a plain inline box, not one of the flexible
-   status spans — keep it hugging its button (out-specifies `.savebar span`). */
+   status spans, so keep it hugging its button (out-specifies `.savebar span`). */
 .savebar .savebar-preview-toggle {
   display: inline-flex;
   flex: 0 0 auto;
 }
 
-/* Phone-only summary line: EditorSavebar renders this INSTEAD of the heading +
-   list ≤560px, so the dirty pill costs one row rather than six while the
-   on-screen keyboard is up. Tapping it reveals the same `.savebar-list` below.
-   Parent-scoped to out-specify the generic `.savebar span`/button resets. */
-.savebar .savebar-summary {
+/* ── phone savebar (EditorSavebarPhone, ≤760px) ──────────────────────────
+   ONE compact row, about 56px: the "{count} unsaved" toggle, then Discard,
+   then Save. The toggle opens the itemized list in a panel under the row;
+   the bar is pinned to the bottom, so opening it grows the bar upward. A
+   blocked-save note, when there is one, sits on its own line above the row.
+   `.savebar.savebar-phone` (0,2,0) so it out-specifies the base pill.
+
+   It reaches out past the pane's 20px padding and the page gutter to 8px
+   from each screen edge, the same bleed idea as the `.ed-switch` bar up top:
+   inside those gutters the row had 284px at 360px wide, and "2 por guardar"
+   was cut to "2 po..." beside Descartar and Guardar. */
+.savebar.savebar-phone {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-inline: calc(8px - 20px - var(--wrap-px));
+  /* Floats 8px over the tab bar too, matching the side inset. */
+  bottom: calc(var(--bottom-inset) + 8px);
+  padding: 8px;
+  animation: savebar-phone-rise var(--dur-base) var(--ease);
+}
+/* This keyframe animates the separate `translate` property. EditorSavebar
+   sets an inline `transform` that lifts the bar above the on-screen keyboard
+   (see useVisualViewportInset there); `transform` and `translate` compose as
+   independent properties, so animating `translate` here leaves that inline
+   lift in place throughout the rise for the animation's duration. */
+@keyframes savebar-phone-rise {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+.savebar-phone-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-xs);
-  width: 100%;
+  gap: 6px;
+}
+.savebar-phone .savebar-block {
+  padding: 2px 6px 0;
+}
+/* The toggle: a quiet 40px pill hugging its label at the start of the row,
+   pushing the two buttons to the end. It ellipsizes before it would push
+   them off the row. */
+.savebar .savebar-summary {
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   margin: 0;
-  padding: 0;
+  margin-inline-end: auto;
+  padding: 0 10px;
   border: 0;
+  border-radius: var(--radius-pill);
   background: none;
   font: inherit;
   font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   text-align: start;
+  white-space: nowrap;
   cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+.savebar .savebar-summary .savebar-count {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.savebar .savebar-summary[aria-expanded="true"] {
+  background: var(--wash);
+}
+@media (hover: hover) {
+  .savebar .savebar-summary:hover {
+    background: var(--wash);
+  }
 }
 .savebar .savebar-summary svg {
   flex: none;
   color: var(--ink-60);
+}
+/* The row's two buttons keep their 40px `sm` height and trade a little side
+   padding, so Discard and Save fit beside the toggle at 360px in both
+   languages. */
+.savebar-phone-row > button:not(.savebar-summary) {
+  flex: none;
+  padding-inline: 12px;
+}
+.savebar-phone-list {
+  padding: 8px 10px 4px;
+  border-top: 1px solid var(--line);
+  animation: savebar-phone-rise var(--dur-fast) var(--ease);
+}
+.savebar-phone-list .savebar-list {
+  max-height: min(132px, 30svh);
 }
 /* A rolling pending count (`PendingCountLabel`, in the summary line and the
    Save-all button). The generic `.savebar span` rule would give the figure's
@@ -1062,14 +1123,6 @@ html[data-reduce-motion="true"]
   flex: initial;
   font-size: inherit;
   color: inherit;
-}
-/* Expanded on a phone, the list still can't be allowed to reclaim the height
-   the collapse just bought — cap it lower than the 132px desktop scroller.
-   AFTER `.savebar-list` above: same specificity, so source order decides. */
-@container (max-width: 560px) {
-  .savebar-list {
-    max-height: 84px;
-  }
 }
 
 /* ── publish readiness (Task 7 — PublishChecklist restyle) ───────────── */

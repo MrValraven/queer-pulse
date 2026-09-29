@@ -1,7 +1,7 @@
 /* ── Tags ──────────────────────────────────────────────────────────────────
-   The input lives inside the chip box, so the box reads as one field: clicking
-   anywhere in it lands on the caret, and the focus ring is drawn around the
-   whole thing rather than around a bare input floating among chips. */
+   The chip box and its input live in the shared TagPicker (see
+   src/shared/components/ui/TagPicker.module.css); this file only styles the
+   section head and the hint under the picker. */
 
 .section {
   margin-top: 26px;
@@ -45,138 +45,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── The box ───────────────────────────────────────────────────────────── */
-
-/* Positioned, because a chip on its way out is lifted out of the flow
-   (AnimatePresence "popLayout") and placed against this box while it fades. */
-.box {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  min-height: 46px;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-14);
-  background: var(--cream);
-  transition: border-color var(--dur-fast) var(--ease);
-}
-
-.box:focus-within {
-  border-color: var(--line-strong);
-}
-
-.chip {
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 6px 4px 10px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.07);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.chipRemove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border: 0;
-  border-radius: var(--radius-avatar);
-  background: none;
-  color: var(--ink-40);
-  cursor: pointer;
-  transition:
-    color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .chipRemove:hover {
-    color: var(--accent-ink);
-    background: rgba(var(--accent-rgb), 0.12);
-  }
-}
-
-.chipRemove:active {
-  transform: scale(0.9);
-}
-
-.entry {
-  flex: 1;
-  min-width: 150px;
-  border: 0;
-  background: none;
-  outline: 0;
-  padding: 4px 2px;
-  font-family: var(--sans);
-  font-size: var(--text-15);
-  color: var(--ink);
-}
-
-.entry::placeholder {
-  color: var(--ink-40);
-}
-
-.full {
-  padding: 4px 2px;
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-}
-
 .inputHint {
-  margin: 6px 0 0;
+  margin: 0;
   font-size: var(--text-12);
   color: var(--ink-60);
-}
-
-/* ── Suggestions ───────────────────────────────────────────────────────── */
-
-.suggestions {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.suggestionsLabel {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-}
-
-/* Dashed, so an offer never looks like something already chosen. */
-.suggestion {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  /* popLayout lifts a leaving chip out of the row at its old width; keeping
-     the tag on one line stops it rewrapping mid-word as it fades. */
-  white-space: nowrap;
-  min-height: 30px;
-  padding: 5px 11px;
-  border: 1px dashed var(--line-2);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  font-family: var(--sans);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--text-strong);
-  cursor: pointer;
-  /* The dashed-to-solid edge on hover cannot be eased; the fill carries it. */
-  transition: background var(--dur-fast) var(--ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .suggestion:hover {
-    border-style: solid;
-    background: rgba(var(--ink-rgb), 0.05);
-  }
 }

@@ -294,6 +294,14 @@
   --shadow-e3: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4); /* floating: dropdown, popover */
   --shadow-e4: 0 24px 60px -20px rgba(var(--plum-rgb), 0.38); /* overlay: modal, sheet */
   --shadow-lift: 0 22px 44px -26px rgba(var(--plum-rgb), 0.4); /* the 4px hover lift */
+  /* A symmetric ambient glow with no offset and a flat black: a different
+     shape from the e1-e4 scale above (an offset lift tinted --plum-rgb). A
+     slide-in panel sitting on top of the whole page reads as a physical
+     sheet that wants a glow around it, where a card on the page wants a lift
+     off it instead. Was a literal on the magazine desk's mobile drawer; the
+     exact same literal also appears in AdminShell.module.css's own drawer,
+     untouched here since AdminShell is out of this fix's file list. */
+  --shadow-overlay-ambient: 0 0 60px rgba(0, 0, 0, 0.32);
 
   /* Role names re-pointed at the scale. Values unchanged. */
   --shadow-card: var(--shadow-e1);

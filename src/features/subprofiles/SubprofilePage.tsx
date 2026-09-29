@@ -11,6 +11,7 @@ import {
 } from "./api/usePublicSubprofile";
 import { ProfileMovedNote } from "../members/ProfileMovedNote";
 import { useMovedPersonaAddressRedirect } from "./useMovedPersonaRedirect";
+import { useLegacyNestedPersonaRedirect } from "./useLegacyNestedPersonaRedirect";
 import { PersonaMovedNote } from "./PersonaMovedNote";
 import { RehomedPersonaNote } from "./RehomedPersonaNote";
 import { SubprofilePageBody } from "./SubprofilePageBody";
@@ -66,9 +67,12 @@ const RESTRICTED_TO_PAGE_STATE: Record<RestrictedState, PersonaPageState> = {
 };
 
 /**
- * Public persona page — serves both the standalone `/p/:handle` route and the
- * nested `/members/:slug/:subslug` linked-persona route. Composes the full
- * skinned tree (`data-skin={skinFor(kind)}`, built in `SubprofilePageBody`):
+ * Public persona page. Every persona's address is `/p/:handle`. The nested
+ * `/members/:slug/:subslug` route is the legacy linked-persona address: it
+ * still resolves here, and `useLegacyNestedPersonaRedirect` replaces it with
+ * the persona's `/p/<handle>` address the moment the load carries a handle.
+ * Composes the full skinned tree (`data-skin={skinFor(kind)}`, built in
+ * `SubprofilePageBody`):
  * cover, per-slot `SkinExtras`, hero, spotlight/sections, the endorsers+
  * affiliations foot, the studio lightbox, and the report/people modals — one
  * renderer for every craft family, styled entirely through
@@ -100,6 +104,11 @@ export function SubprofilePage() {
     slug,
     result.state === "moved" ? result.error : undefined,
   );
+  // Old nested links land on the persona's `/p/<handle>` address. Either
+  // forwarding leaves this page nowhere to paint until it settles.
+  const isRedirectingAway =
+    useLegacyNestedPersonaRedirect(!handle, result) ||
+    isForwardingToMovedAddress;
   const lightbox = useStudioLightbox(
     result.state === "ok" ? result.data.sections : undefined,
   );
@@ -136,7 +145,7 @@ export function SubprofilePage() {
   // otherwise claim the moved 404 as an absence and paint for a frame on the
   // way through. The navigation can only run from an effect, so this ordering
   // is the fix, and reversing it would silently undo the whole thing.
-  if (result.state === "loading" || isForwardingToMovedAddress) {
+  if (result.state === "loading" || isRedirectingAway) {
     return (
       <PageShell>
         <SubprofilePageSkeleton />

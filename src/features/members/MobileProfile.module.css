@@ -1,4 +1,4 @@
-/* Mobile profile (≤640px) — Instagram-style layout. Tokens only. */
+/* Mobile profile (≤640px): Instagram-style layout. Tokens only. */
 
 /* ── Stat row (MobileProfileStats) ───────────────────────────────────────── */
 .statRow {
@@ -55,15 +55,16 @@
   overscroll-behavior-x: contain;
   /* Block padding is this row's only distance from the header above and the
      sticky tab bar below (siblings in MobileProfileView stack in plain flow,
-     no shared flex gap) — --gap-grid rather than --gap-xs so the space
+     no shared flex gap): --gap-grid rather than --gap-xs so the space
      BETWEEN these three groups reads clearly larger than the --gap-sm used
      WITHIN each group (e.g. the header's own internal rows). */
   padding-block: var(--gap-grid);
   /* MobileProfileView no longer wraps this row in a shared `.wrap` (see its
-     doc comment), so this is now the row's real page gutter, not just
-     focus-ring clearance — same left/right inset as `.wrap` in base.css, put
-     on the scroll container itself so the first/last highlight sits inset
-     from the edge at rest but can still scroll flush to it. */
+     doc comment), so this padding now serves as both the row's real page
+     gutter and its focus-ring clearance: the same left/right inset as
+     `.wrap` in base.css, put on the scroll container itself so the
+     first/last highlight sits inset from the edge at rest but can still
+     scroll flush to it. */
   padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
   padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
   scrollbar-width: none;
@@ -168,7 +169,7 @@
 }
 
 /* --cream-rgb is fixed to the LIGHT cream channels in both themes (see
-   tokens/colors.css — cream-on-plum surfaces need to stay light), so this
+   tokens/colors.css: cream-on-plum surfaces need to stay light), so this
    translucent backdrop doesn't flip automatically the way --line-rgb does.
    Same fix, same literal values as Navbar.module.css `.nav`/`.appBar`'s dark
    override, so the sticky tab bar reads as the same glass surface as the app
@@ -252,7 +253,7 @@
 
 /* `MobileProfileTabPanels`' `SectionWrap` renders unconditionally around
    each section so it can apply a single `.wrap` gutter, but the section
-   inside self-hides (returns `null`) when its data is empty — that leaves an
+   inside self-hides (returns `null`) when its data is empty. That leaves an
    empty, childless wrapper `<div>` sitting between `.tabPanel`'s flex
    siblings. Collapse it entirely so an empty section doesn't still consume
    a `.tabPanel` flex-gap gap on both sides (this selector has no local class
@@ -267,7 +268,7 @@
    and isn't itself empty": a section that returned `null` leaves either no
    node at all (the self-wrapping `ProfileCommunitiesSection`/`PlacesSection`)
    or the childless `[data-section-wrap]` div collapsed just above, so both
-   fail it. `[data-section-pending]` is `PlacesSection`'s in-flight marker —
+   fail it. `[data-section-pending]` is `PlacesSection`'s in-flight marker,
    a deliberately childless node, so it needs naming separately or a visitor
    would see the empty state flash while `GET /directory/by-member/:slug` is
    still out.
@@ -288,8 +289,8 @@
   flex-direction: column;
   gap: var(--gap-sm);
   /* MobileProfileView no longer wraps this in a shared `.wrap` (see its doc
-     comment) — same left/right inset as `.wrap` in base.css, so the header
-     keeps its page gutter now that it owns it directly. */
+     comment): the same left/right inset as `.wrap` in base.css, so the
+     header keeps its page gutter now that it owns it directly. */
   padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
   padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
   /* The nav band is reserved once by `main[data-page-main]` (base.css); this
@@ -351,7 +352,7 @@
   width: 100%;
 }
 
-/* Pride ring — the one sanctioned place to compose pride colour outside the
+/* Pride ring: the one sanctioned place to compose pride colour outside the
    token system's ordinary rules. No dedicated pride/rainbow token exists yet
    (checked tokens/colors.css), so the ring is composed from the existing
    brand hues instead of new hex: coral (--accent), violet, jade, plum. */
@@ -385,7 +386,7 @@
   background: var(--cream);
 }
 
-/* Tap-to-enlarge trigger wrapping the avatar — visually inert, just a bigger
+/* Tap-to-enlarge trigger wrapping the avatar: visually inert, just a bigger
    hit target with a zoom cursor. */
 .photoButton {
   display: block;
@@ -509,82 +510,14 @@
   margin-top: var(--gap-xs);
 }
 
-/* ── Owner (self) action row — still ProfileHeroActions ──────────────────── */
-/* ProfileHeroActions owns its own CSS module, so its internal button row
-   can't be reached by class name from here — the `> div` / `> *` structural
-   selectors target its known DOM shape (one wrapper div of buttons) instead,
-   which is stable because it is single-purpose and always renders that
-   shape. */
-.actionRow {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-xs);
-}
-
-.actionsSlot {
-  flex: 1;
-  min-width: 0;
-}
-
-.actionsSlot > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-xs);
-  width: 100%;
-}
-
-.actionsSlot > div > * {
-  flex: 1 1 auto;
-  min-width: 0;
-  justify-content: center;
-}
-
-/* Matches ProfileSettingsMenu's `.trigger` (desktop overflow-menu button) so
-   the mobile QR trigger reads as the same affordance family. */
-.qrButton {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.2em;
-  height: 2.2em;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: var(--paper);
-  color: var(--text-strong);
-  font-size: var(--text-20);
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-/* ── Visitor action cluster (MobileProfileActions) ───────────────────────── */
-.actionStack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-xs);
-}
-
-.primaryRow {
-  display: flex;
-}
-
-.primaryRow > * {
-  flex: 1 1 auto;
-  justify-content: center;
-}
-
-.secondaryRow {
-  display: flex;
-  align-items: stretch;
-  gap: var(--gap-xs);
-}
-
-.secondaryRow > :first-child {
-  flex: 1 1 auto;
-  min-width: 0;
-  justify-content: center;
-}
-
+/* ── Owner and visitor action row (MobileProfileOwnerActions /
+   MobileProfileActions) ───────────────────────────────────────────────────
+   Two equal labelled buttons, then the 44px "…" menu icon, straight under
+   the identity block. They carry short labels (at most 11 characters in
+   either language) so each fits one line at 375px; the buttons still
+   stretch to one shared height and may wrap as a safety net. The `…` safety
+   menu's own trigger is the shared `IconButton`; it sits within `.actionRow`
+   at its natural width. */
 .vouchedPill {
   display: inline-flex;
   align-items: center;
@@ -601,9 +534,21 @@
   font-size: var(--text-15);
 }
 
-/* The `…` safety menu's own trigger sizing comes from
-   `ProfileSafetyMenu.module.css`; it sits as the second child of
-   `.secondaryRow` at its natural width. */
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.actionRow > .actionButton {
+  flex: 1 1 0;
+  align-self: stretch;
+  min-width: 0;
+  padding-inline: var(--gap-xs);
+  white-space: normal;
+  text-align: center;
+  line-height: 1.2;
+}
 
 /* ── Dark-mode hairline fix ───────────────────────────────────────────────
    .statRow / .statColumn write their border as a literal plum rgba() (the

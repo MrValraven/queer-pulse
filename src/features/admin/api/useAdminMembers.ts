@@ -1,4 +1,6 @@
+import { useMemo, useState } from "react";
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useQuery,
   useQueryClient,
@@ -8,6 +10,7 @@ import {
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDemoAwareMutation } from "./demoAwareMutation";
+import { useDebouncedValue } from "../../../shared/hooks/useDebouncedValue";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -60,6 +63,21 @@ interface AdminMembersPageVM {
   pageSize: number;
 }
 
+/** How long the name search waits after the last keystroke before asking
+ *  the server again. */
+const ADMIN_MEMBERS_SEARCH_DEBOUNCE_MS = 300;
+
+/** Name/pronoun match used for demo mode and for the brief typing window
+ *  before the server answers. Plain lowercase, so it can be slightly narrower
+ *  than the server's accent-folded match: a row can drop out while typing and
+ *  come back once the server answers. */
+function matchesMemberSearch(member: AdminMember, lowercaseSearch: string) {
+  return (
+    member.name.toLowerCase().includes(lowercaseSearch) ||
+    member.pronoun.toLowerCase().includes(lowercaseSearch)
+  );
+}
+
 /**
  * Admin member directory grid, paginated. Demo mode returns the whole
  * `MEMBERS` fixture as a single synthetic page whose `pageSize` is set to
@@ -71,26 +89,52 @@ interface AdminMembersPageVM {
  * `cardDtoToMember`, stopping once `page * pageSize` reaches the server's
  * real `total`.
  *
+ * `search` is matched on the server (`q`), across the whole directory, so a
+ * member on a page nobody has loaded yet is still found. It is debounced and
+ * sits in the query key; `keepPreviousData` holds the previous answer on
+ * screen while the next one loads. During that gap (`isSearchPending`),
+ * `visibleMembers` narrows the held rows by name so typing feels instant.
+ * Once the server answers, its rows render as-is: filtering them again on the
+ * client would hide accent-folded and handle matches the server found.
+ *
+ * `total` is the directory size for the current status filter, and stays put
+ * while a search is active, since the header counts the whole directory. It is
+ * refreshed from the next unsearched answer.
+ *
  * `language` sits in the query key (not just `fmt`/`t` in the closure)
  * because `cardDtoToMember` resolves catalog keys and locale-formats
  * dates/relative-times through them — a language switch must re-map the
  * already-fetched DTOs, not just re-render stale English strings.
  */
-export function useAdminMembers(filter: "all" | "verified" | "new") {
+export function useAdminMembers(
+  filter: "all" | "verified" | "new",
+  search = "",
+) {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
   const fmt = useFormat();
+  const trimmedSearch = search.trim();
+  const debouncedSearch = useDebouncedValue(
+    trimmedSearch,
+    ADMIN_MEMBERS_SEARCH_DEBOUNCE_MS,
+  );
   const query = useInfiniteQuery<AdminMembersPageVM>({
-    queryKey: ["admin-members", demoMode, filter, language],
+    // `debouncedSearch` goes last: `staffRolesQueryMatchesMode` reads
+    // `demoMode` from position 1 of this key.
+    queryKey: ["admin-members", demoMode, filter, language, debouncedSearch],
     initialPageParam: 1,
+    placeholderData: keepPreviousData,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const filteredMembers =
-          filter === "verified"
-            ? MEMBERS.filter((member) => member.verified)
-            : filter === "new"
-              ? MEMBERS.filter((member) => member.newThisWeek)
-              : MEMBERS;
+        const lowercaseSearch = debouncedSearch.toLowerCase();
+        const filteredMembers = MEMBERS.filter(
+          (member) =>
+            (filter === "verified"
+              ? member.verified
+              : filter === "new"
+                ? member.newThisWeek
+                : true) && matchesMemberSearch(member, lowercaseSearch),
+        );
         // pageSize === ACTIVE_MEMBER_COUNT so getNextPageParam yields
         // undefined (no page 2 in demo) while the header still shows the
         // 8,412 vanity total.
@@ -104,6 +148,7 @@ export function useAdminMembers(filter: "all" | "verified" | "new") {
       const listDto = await getAdminMembers({
         page: pageParam as number,
         filter,
+        q: debouncedSearch || undefined,
       });
       return {
         items: listDto.items.map((cardDto) => cardDtoToMember(cardDto, t, fmt)),
@@ -117,9 +162,29 @@ export function useAdminMembers(filter: "all" | "verified" | "new") {
         ? lastPage.page + 1
         : undefined,
   });
-  const members = query.data?.pages.flatMap((page) => page.items) ?? [];
-  const total = query.data?.pages[0]?.total ?? 0;
-  return { ...query, members, total };
+  const members = useMemo(
+    () => query.data?.pages.flatMap((page) => page.items) ?? [],
+    [query.data],
+  );
+  const isSearchPending =
+    trimmedSearch !== debouncedSearch || query.isPlaceholderData;
+  const visibleMembers = useMemo(() => {
+    if (!isSearchPending || !trimmedSearch) return members;
+    const lowercaseSearch = trimmedSearch.toLowerCase();
+    return members.filter((member) =>
+      matchesMemberSearch(member, lowercaseSearch),
+    );
+  }, [members, isSearchPending, trimmedSearch]);
+
+  // Adjusted during render, like the drawer id in `AdminMembersPage`: only an
+  // unsearched, settled answer counts the directory.
+  const answeredTotal = query.data?.pages[0]?.total ?? 0;
+  const [total, setTotal] = useState(answeredTotal);
+  const isDirectoryAnswer =
+    debouncedSearch === "" && !query.isPlaceholderData && !!query.data;
+  if (isDirectoryAnswer && answeredTotal !== total) setTotal(answeredTotal);
+
+  return { ...query, members, visibleMembers, isSearchPending, total };
 }
 
 /**

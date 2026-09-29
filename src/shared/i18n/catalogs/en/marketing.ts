@@ -1511,9 +1511,11 @@ export const marketing: Catalog = {
     "You own it, lead it, or work here. We'll ask you to verify ownership so the directory stays trustworthy.",
   "listBusiness.step0.suggest.title": "I'm suggesting a place I love",
   "listBusiness.step0.suggest.desc":
-    "A spot that's been good to you. The team will reach out to the owner before it goes live.",
+    "A spot that's been good to you. The team reviews it, and QueerPulse looks after the listing until the business claims it. You won't be shown on it.",
   "listBusiness.step0.signedInAs":
     "You're signed in as <b>{name}</b>. We'll attach this submission to your member profile so the team knows who to thank (and ask, if needed).",
+  "listBusiness.step0.signedInAsSuggest":
+    "You're signed in as <b>{name}</b>. The team can message you if they have a question about your suggestion.",
   // Step 1 — basics
   "listBusiness.step1.title": "Start with",
   "listBusiness.step1.em": "the basics.",
@@ -1777,6 +1779,10 @@ export const marketing: Catalog = {
     "A QueerPulse notification tells you when your listing goes live, and the team's questions arrive as a QueerPulse message.",
   "listBusiness.step4.consent":
     "You're in control of what's public. <b>Contact details you leave blank stay off the listing.</b> Want your name kept private? Pick “role only” or “anonymous” above. That's completely fine.",
+  "listBusiness.step4.suggest.title": "A few",
+  "listBusiness.step4.suggest.em": "photos.",
+  "listBusiness.step4.suggest.sub":
+    "Photos help people picture the place before they go. Share any you have, and the business can add its own later.",
   // Relationship options
   "listBusiness.ownerRole.owner": "Owner",
   "listBusiness.ownerRole.coOwner": "Co-owner",
@@ -1856,6 +1862,8 @@ export const marketing: Catalog = {
     "I've read the community guidelines and how my data is used.",
   "listBusiness.step5.submitNote":
     "<b>A human reviews every listing.</b> This keeps the directory community-verified. Nothing auto-publishes. We'll read it within a few days, and QueerPulse tells you when it's live (or the team messages you if we have a question). You can edit or withdraw it any time before then.",
+  "listBusiness.step5.suggestNote":
+    "<b>A real person reviews every listing.</b> QueerPulse holds this one until the business claims it, and your name stays off it. We'll message you when it's live.",
   // Success panel
   "listBusiness.success.stage.review": "In review",
   "listBusiness.success.stage.question": "Quick question",
@@ -1866,12 +1874,18 @@ export const marketing: Catalog = {
   "listBusiness.success.title.question.em": "one quick thing.",
   "listBusiness.success.title.live.text": "You're",
   "listBusiness.success.title.live.em": "on the map.",
+  "listBusiness.success.title.suggestLive.text": "It's",
+  "listBusiness.success.title.suggestLive.em": "on the map.",
   "listBusiness.success.note.review":
     "Thank you for adding to the directory. <b>A real person on the community team reads every listing</b> before it goes live. That's the promise behind our community-verified badge. We'll review within <b>a few days</b>, and a QueerPulse notification reaches you the moment it's live.",
   "listBusiness.success.note.question":
     "<b>The team has a small question</b> before it goes live. It's waiting in your QueerPulse messages. Nothing's wrong; a quick reply is all it takes and you're back on track.",
   "listBusiness.success.note.live":
     "<b>It's live in the directory.</b> Your place is now searchable by the community. Thank you for making the map a little fuller.",
+  "listBusiness.success.note.suggestReview":
+    "Thank you for the suggestion. <b>A real person on the community team reads every listing</b> before it goes live. QueerPulse looks after it until the business claims it, and your name stays off it. We'll message you the moment it's live.",
+  "listBusiness.success.note.suggestLive":
+    "<b>It's live in the directory.</b> Thank you for making the map a little fuller. If you run this place after all, you can claim it from its page.",
   "listBusiness.success.fallbackName": "Your place",
   "listBusiness.success.withdrawConfirm":
     "Withdraw <b>{name}</b>? This takes it out of review. You can always list it again later.",
@@ -2120,6 +2134,8 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.actor.moderation": "QueerPulse moderation",
   "listBusiness.editor.history.event.ownerEdited":
     "<strong>{actor}</strong> changed {fields}",
+  "listBusiness.editor.history.event.staffEdited":
+    "<strong>{actor}</strong> edited {fields}",
   "listBusiness.editor.history.event.suggestionApplied":
     "<strong>{actor}</strong> applied a suggested correction to {fields}",
   "listBusiness.editor.history.event.directoryPaused":
@@ -2783,6 +2799,10 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-29.headline":
+    "A redesigned editor desk, Blip and Tea sticker packs, and Ping's new 404 page.",
+  "changelog.releases.2026-09-28.headline":
+    "Go together for people going solo, QueerPulse Ambassadors and game master personas.",
   "changelog.releases.2026-09-25.headline":
     "Four new forum categories, in-app QueerPulse links, and a change history for listings.",
   "changelog.releases.2026-09-24.headline":
@@ -2913,6 +2933,260 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.one-loader-on-first-load.title":
+    "One loader while QueerPulse opens",
+  "changelog.entries.one-loader-on-first-load.body":
+    "The gathering mark and the QueerPulse wordmark now carry you from sign-in check to page in one unbroken wait.",
+  "changelog.entries.work-picker-smooth-motion.title":
+    "Pick your work with smooth motion",
+  "changelog.entries.work-picker-smooth-motion.body":
+    "Chips pop in and out, role lists fold open and buttons glide, in onboarding, Settings and your profile.",
+  "changelog.entries.guidelines-checkbox-opens-guidelines.title":
+    "Tapping the guidelines checkbox opens the guidelines",
+  "changelog.entries.guidelines-checkbox-opens-guidelines.body":
+    "In onboarding and invite requests, the locked consent box now opens the guidelines instead of shaking.",
+  "changelog.entries.editor-desk-redesign.title":
+    "The editor desk gets rebuilt around four bands",
+  "changelog.entries.editor-desk-redesign.body":
+    "A grouped table with a sticky rail, a peek panel for quick checks, and a drag-and-drop board view.",
+  "changelog.entries.editor-desk-planning-tools.title":
+    "New planning tools land on the editor desk",
+  "changelog.entries.editor-desk-planning-tools.body":
+    "A close-week calendar, an issue forecast, time-in-stage tracking, saved views, and presence on pieces.",
+  "changelog.entries.editor-desk-workflow.title":
+    "Chase drafts, close dates and pitch triage",
+  "changelog.entries.editor-desk-workflow.body":
+    "Bulk actions chase several writers in sequence, and a published piece leaves Published only by unpublishing.",
+  "changelog.entries.editor-desk-due-dates-and-shortcuts.title":
+    "Set due dates straight from the desk table",
+  "changelog.entries.editor-desk-due-dates-and-shortcuts.body":
+    "Undated pieces get a date picker in their row, single-key shortcuts can be switched off, and linked decks publish through their piece's care check.",
+  "changelog.entries.onboarding-steps-arrive-sharp.title":
+    "Onboarding steps arrive sharp",
+  "changelog.entries.onboarding-steps-arrive-sharp.body":
+    "Each step now fades in with its text crisp from the first frame, where it used to start out blurry.",
+  "changelog.entries.invite-flat-on-phones.title":
+    "The invite page lies flat on phones",
+  "changelog.entries.invite-flat-on-phones.body":
+    'It fills the screen and scrolls like a page, and "Not 18 yet?" now opens right inside the invitation.',
+  "changelog.entries.onboarding-age-asked-once.title":
+    "Onboarding asks your age once",
+  "changelog.entries.onboarding-age-asked-once.body":
+    "You confirm you're 18 or older before signing in with Google, so the guidelines step no longer asks again.",
+  "changelog.entries.directory-card-shows-tags.title":
+    "Directory cards show a place's tags and price",
+  "changelog.entries.directory-card-shows-tags.body":
+    "Cards on the Local page list the price band and first tags, matching the preview you see while listing.",
+  "changelog.entries.meet-ping-404.title": "Meet Ping, on a new 404 page",
+  "changelog.entries.meet-ping-404.body":
+    "Ping looks around for the missing page, follows your cursor, and offers search and popular places.",
+  "changelog.entries.calm-crash-page.title":
+    "Our crash screen is now a calm, full page",
+  "changelog.entries.calm-crash-page.body":
+    "A breathing pulse, plain reassurance that your saved things are safe, and a reload offer if a retry fails.",
+  "changelog.entries.branded-page-loader.title":
+    "Loading screens pulse with the QueerPulse mark",
+  "changelog.entries.branded-page-loader.body":
+    "The plain spinner is gone: the mark gathers its dots while coral waves ripple out from its core.",
+  "changelog.entries.forum-new-post-tags-from-list.title":
+    "New posts pick tags from the forum's tag list",
+  "changelog.entries.forum-new-post-tags-from-list.body":
+    "Search the list, tap a suggestion or browse every tag by group, so each post lands under a filterable tag.",
+  "changelog.entries.directory-drops-member-age-filter.title":
+    "Member age filter removed from the directory",
+  "changelog.entries.directory-drops-member-age-filter.body":
+    "The members sidebar no longer offers a years-on-QueerPulse range, leaving the filters people actually use.",
+  "changelog.entries.volunteer-card-community-avatar.title":
+    "Volunteer roles show the community's own avatar",
+  "changelog.entries.volunteer-card-community-avatar.body":
+    "Roles posted for a community carry its picture, and a partner's roles show the partner's own mark.",
+  "changelog.entries.blip-and-tea-sticker-packs.title":
+    "Two new sticker packs: Blip the mascot and Tea, shade and sparkle",
+  "changelog.entries.blip-and-tea-sticker-packs.body":
+    "Blip has 22 moods in any colour or flag, and queer slang gets 12 wordless stickers in any accent colour.",
+  "changelog.entries.page-change-no-flash.title":
+    "Changing pages no longer flashes the old page over the new one",
+  "changelog.entries.page-change-no-flash.body":
+    "The old page leaves at once, the nav stays put while a page loads, and the new page fades in when ready.",
+  "changelog.entries.profile-staff-shield-icon.title":
+    "The staff badge on profiles is now a shield beside the name",
+  "changelog.entries.profile-staff-shield-icon.body":
+    "Hover, tap or focus the shield to read the role; the line under the name keeps only role and pronouns.",
+  "changelog.entries.feed-tab-footer-steady.title":
+    "Switching feed tabs no longer makes the footer jump",
+  "changelog.entries.feed-tab-footer-steady.body":
+    "The feed eases straight to the new tab's real height, so the footer settles in one smooth move.",
+  "changelog.entries.directory-map-single-load.title":
+    "The Local directory map loads in one smooth reveal",
+  "changelog.entries.directory-map-single-load.body":
+    "Its loading animation runs once, from the first frame straight through to the settled map.",
+  "changelog.entries.local-multi-place-types.title":
+    "Pick several place types at once in the Local directory",
+  "changelog.entries.local-multi-place-types.body":
+    "Each type gets its own removable chip, and Clear all and the Refine drawer now animate smoothly.",
+  "changelog.entries.map-photo-pins.title":
+    "Lisbon map pins show each place's photo and name",
+  "changelog.entries.map-photo-pins.body":
+    "Category rings frame each photo, clusters show their mix, and a tapped pin opens a card about the place.",
+  "changelog.entries.map-holds-zoom-leaving-place.title":
+    "The map stays put when you go back to all places",
+  "changelog.entries.map-holds-zoom-leaving-place.body":
+    "Closing a place card keeps your zoom and neighbourhood, and the other pins reappear around it.",
+  "changelog.entries.map-fullscreen-search.title":
+    "Search and filter without leaving the full screen map",
+  "changelog.entries.map-fullscreen-search.body":
+    'On desktop, the search field, "Use my location" and Refine now sit on top of the map in full screen.',
+  "changelog.entries.map-streets-read-clearly.title":
+    "Streets on the map are easier to follow",
+  "changelog.entries.map-streets-read-clearly.body":
+    "Every street is now white between soft city blocks, and parish lines fade out as you zoom in.",
+  "changelog.entries.map-parish-follows-the-pin.title":
+    "Map parishes count places by where their pin sits",
+  "changelog.entries.map-parish-follows-the-pin.body":
+    "A listing whose neighbourhood names another area still shows under the parish its pin is in.",
+  "changelog.entries.admin-member-search-whole-directory.title":
+    "Member search in admin finds everyone",
+  "changelog.entries.admin-member-search-whole-directory.body":
+    "It searches the whole directory on the server, so people past Load more turn up too.",
+  "changelog.entries.focus-and-glossary-language-fixes.title":
+    "Keyboard focus stays in the page, and glossary chips follow the term language",
+  "changelog.entries.focus-and-glossary-language-fixes.body":
+    "Pages that show a loading skeleton keep focus inside, and admin headers no longer squash on phones.",
+  "changelog.entries.admin-guide-and-glossary-preview.title":
+    "Preview guides and glossary terms from the admin console",
+  "changelog.entries.admin-guide-and-glossary-preview.body":
+    "Editors can read an unreviewed guide exactly as readers will, and check a term in English and Portuguese.",
+  "changelog.entries.queerpulse-ambassadors.title":
+    "Staff can name QueerPulse Ambassadors",
+  "changelog.entries.queerpulse-ambassadors.body":
+    "Ambassadors get a tag by their name, 10 extra invites a month and a private circle with its own card.",
+  "changelog.entries.volunteer-org-typed-or-linked.title":
+    "Type the organisation or link one you run when posting a role",
+  "changelog.entries.volunteer-org-typed-or-linked.body":
+    "Linking offers only partners you maintain and communities you run, and the post shows the linked name.",
+  "changelog.entries.volunteer-why-it-matters-upfront.title":
+    "Posting a volunteer role puts why it matters up front",
+  "changelog.entries.volunteer-why-it-matters-upfront.body":
+    "Why this role matters and who it suits now sit right under the basics; both stay optional.",
+  "changelog.entries.volunteer-cause-and-commitment-pickers.title":
+    "Cleaner cause and commitment pickers when posting a role",
+  "changelog.entries.volunteer-cause-and-commitment-pickers.body":
+    "Causes span the full form with a live count and name your lead cause; commitment levels show what they mean.",
+  "changelog.entries.volunteer-role-edits-save-only-changes.title":
+    "Volunteer role editing gets Save & close",
+  "changelog.entries.volunteer-role-edits-save-only-changes.body":
+    "Save stays greyed out until you edit something, and a new Save & close button saves and takes you back to the role.",
+  "changelog.entries.profile-photos-keep-your-framing.title":
+    "Profile photos keep the framing you choose",
+  "changelog.entries.profile-photos-keep-your-framing.body":
+    "A reframed avatar now saves as framed everywhere, and the reframe screen previews it round and square.",
+  "changelog.entries.community-guidelines-in-mod-tools.title":
+    "Mod tools show each community's own shared values",
+  "changelog.entries.community-guidelines-in-mod-tools.body":
+    "Join requests and reports list the shared values mods judge against, with a space's inherited ones first.",
+  "changelog.entries.messages-badge-matches-inbox.title":
+    "The messages badge always matches your inbox",
+  "changelog.entries.messages-badge-matches-inbox.body":
+    "After a dropped connection, a chat you open counts as read once you reach its newest message.",
+  "changelog.entries.directory-search-finds-professions.title":
+    "Find members by what they do",
+  "changelog.entries.directory-search-finds-professions.body":
+    "Type a profession or field into the member directory search, like nurse or design, to see who does it.",
+  "changelog.entries.search-roles-when-picking-work.title":
+    "Search for your role when you say what you do",
+  "changelog.entries.search-roles-when-picking-work.body":
+    "Type a role or field when you join, on your profile or in Settings, to see every match by field.",
+  "changelog.entries.screen-info-chips-retired.title":
+    "Page titles lose their info buttons",
+  "changelog.entries.screen-info-chips-retired.body":
+    'The "How to use this" pop-ups are gone from 40 screens; Communities keeps How communities work as a link.',
+  "changelog.entries.decided-invite-requests-fold-and-revoke.title":
+    "Decided invite requests fold away, filter and revoke",
+  "changelog.entries.decided-invite-requests-fold-and-revoke.body":
+    "Settled requests open collapsed, filter by claimed link, and a live invite link can be revoked.",
+  "changelog.entries.tag-fields-match-everywhere.title":
+    "Tag fields look and move the same everywhere",
+  "changelog.entries.tag-fields-match-everywhere.body":
+    "Chips pop in and slide aside on your profile tags, pronouns, Open to, skills, forum posts and listings.",
+  "changelog.entries.suggested-places-held-by-queerpulse.title":
+    "Suggested places are held by QueerPulse until the business claims them",
+  "changelog.entries.suggested-places-held-by-queerpulse.body":
+    "Your name stays off a place you suggest, and admins can edit it, publish it and hand it to its owner.",
+  "changelog.entries.list-business-more-neighbourhoods.title":
+    "More neighbourhoods when listing a business",
+  "changelog.entries.list-business-more-neighbourhoods.body":
+    "The list grows from 15 areas to 50, adding Belém, Chiado, Parque das Nações, Almada, Cascais and Sintra.",
+  "changelog.entries.profile-actions-toolbar.title":
+    "Profile actions moved into a quiet toolbar",
+  "changelog.entries.profile-actions-toolbar.body":
+    "Edit, preview and the settings menu sit top right on desktop, and in one row under your name on phones.",
+  "changelog.entries.go-together.title":
+    "Go together: get matched into a small group when you're going solo",
+  "changelog.entries.go-together.body":
+    "Answer a short questionnaire, opt in on a gathering, and meet up with 4 or 5 compatible people.",
+  "changelog.entries.friendly-businesses-keep-their-listing.title":
+    "LGBTQ+ friendly businesses keep their listing",
+  "changelog.entries.friendly-businesses-keep-their-listing.body":
+    "Members can message them, and nobody else can claim a listing its owner already runs.",
+  "changelog.entries.standalone-personas-need-own-address.title":
+    "Standalone personas need an address of their own",
+  "changelog.entries.standalone-personas-need-own-address.body":
+    "You pick a /p/ name before saving, opening it live or publishing, and the persona type alone won't do.",
+  "changelog.entries.map-pin-follows-card-hover.title":
+    "Map pins light up as you browse the list",
+  "changelog.entries.map-pin-follows-card-hover.body":
+    "Hover or tab onto a place card and its pin grows with a coral halo, or its cluster does.",
+  "changelog.entries.practice-pages-one-place-per-fact.title":
+    "Practice pages ask for each detail once",
+  "changelog.entries.practice-pages-one-place-per-fact.body":
+    "Fees, availability and training each have one home; older answers stay until you move or clear them.",
+  "changelog.entries.slimmer-phone-save-bar.title":
+    "A slimmer save bar on phones",
+  "changelog.entries.slimmer-phone-save-bar.body":
+    "Unsaved changes fit on one row with Discard and Save, and Preview moved to the top bar.",
+  "changelog.entries.persona-page-in-one-place.title":
+    "Edit your whole persona page in one place",
+  "changelog.entries.persona-page-in-one-place.body":
+    "Every section and photo now sits in Page blocks chapters that follow your page, for every kind of persona.",
+  "changelog.entries.every-job-in-the-work-picker.title":
+    "Every job in the work picker",
+  "changelog.entries.every-job-in-the-work-picker.body":
+    "180 more roles across eleven new fields, a Right now option for students and retirees, and a sex work field only your connections see.",
+  "changelog.entries.business-work-fields.title":
+    "Marketing, operations and HR roles in the member directory",
+  "changelog.entries.business-work-fields.body":
+    "Five new fields, from people and HR to finance and sales, so office roles have a place to live.",
+  "changelog.entries.feed-masonry-layout.title": "Feed cards pack without gaps",
+  "changelog.entries.feed-masonry-layout.body":
+    "Each card sits right under the one above it, so a tall member card no longer leaves a hole beside it.",
+  "changelog.entries.submissions-join-writer-workspace.title":
+    "Story submissions move into the writer workspace",
+  "changelog.entries.submissions-join-writer-workspace.body":
+    "Writers now track their story submissions in a tab at /magazine/writer, and the old tracker link redirects there.",
+  "changelog.entries.date-picker-calendar-fits-again.title":
+    "Date picker calendars open at their proper size",
+  "changelog.entries.date-picker-calendar-fits-again.body":
+    "The month grid opens as a compact panel under its field instead of stretching across the screen.",
+  "changelog.entries.personas-live-at-one-address.title":
+    "Every persona lives at one /p/ address",
+  "changelog.entries.personas-live-at-one-address.body":
+    "Linked personas get a handle like alex-therapist, and old profile links forward to it.",
+  "changelog.entries.quest-personas.title":
+    "Personas for game masters, streamers and cosplayers",
+  "changelog.entries.quest-personas.body":
+    'Twenty new crafts and a Quest page skin, and searching "DM" now finds queer game masters.',
+  "changelog.entries.staff-notification-rows-read-cleanly.title":
+    "Notifications from staff read cleanly",
+  "changelog.entries.staff-notification-rows-read-cleanly.body":
+    "The staff badge now sits above the sentence, and co-manager invites name the person as a profile link.",
+  "changelog.entries.onboarding-flat-on-phones.title":
+    "Onboarding scrolls like a normal page on phones",
+  "changelog.entries.onboarding-flat-on-phones.body":
+    "Steps sit flat on the page with no floating card, so a swipe always scrolls and every button stays in reach.",
+  "changelog.entries.onboarding-fields-clear-the-keyboard.title":
+    "Onboarding fields stay in view on iPhone",
+  "changelog.entries.onboarding-fields-clear-the-keyboard.body":
+    "While the keyboard is up, the Continue bar rests at the end of the step and stops covering your field.",
   "changelog.entries.changelog-releases-open-smoothly.title":
     "Changelog days open smoothly",
   "changelog.entries.changelog-releases-open-smoothly.body":
@@ -7384,22 +7658,23 @@ export const marketing: Catalog = {
     "A regular shift and a minimum term, consistency matters.",
   "postOpportunity.core.basicsHeading": "The basics",
   "postOpportunity.core.orgLabel": "Organisation",
-  "postOpportunity.core.orgHelper":
-    "Pick a community you own or moderate, or an approved partner org.",
-  "postOpportunity.core.orgEmptyState":
-    "You'll need to own or moderate a community, or be an approved partner, before you can post an opportunity on their behalf.",
   "postOpportunity.core.orgPlaceholder": "e.g. your organisation",
-  "postOpportunity.core.orgLinkLabel": "Link to an organisation",
+  "postOpportunity.core.orgModeLabel": "How to name the organisation",
+  "postOpportunity.core.orgModeText": "Type a name",
+  "postOpportunity.core.orgModeLink": "Link one I run",
   "postOpportunity.core.orgLinkHelper":
-    "Optional: attach this post to a community you own or moderate, or an approved partner.",
-  "postOpportunity.core.orgLinkNone": "None",
-  "postOpportunity.core.orgLinkGroupPartner": "Partners",
+    "Partner organisations you maintain and communities you own or moderate. The one you pick is named on the post.",
+  "postOpportunity.core.orgLinkGroupPartner": "My partner organisations",
   "postOpportunity.core.orgLinkGroupCommunity": "My communities",
+  "postOpportunity.core.orgLinkGroupCurrent": "Linked to this post now",
+  "postOpportunity.core.orgRequiredNote": "Required",
   "postOpportunity.core.roleLabel": "Role title",
   "postOpportunity.core.rolePlaceholder": "e.g. Community Outreach Volunteer",
   "postOpportunity.core.causeLabel": "Cause",
   "postOpportunity.core.causeHelper":
-    "Pick up to {{max}}. The first one you pick is the one your card leads with.",
+    "Pick up to {max}. The first one you pick is the one your card leads with.",
+  "postOpportunity.core.causeHelperLead":
+    "Pick up to {max}. Your card leads with {cause}.",
   "postOpportunity.core.commitLabel": "Commitment level",
   "postOpportunity.core.timePlaceHeading": "Time & place",
   "postOpportunity.core.timeLabel": "Time commitment",
@@ -7433,6 +7708,8 @@ export const marketing: Catalog = {
   "postOpportunity.missing.heading_other":
     "{count} fields still to fill in before you can continue:",
   "postOpportunity.edit.saving": "Saving…",
+  "postOpportunity.edit.saveAndCloseCta": "Save & close",
+  "postOpportunity.edit.noChanges": "No changes to save yet.",
   "postOpportunity.edit.successToast": "Your changes are saved.",
   "postOpportunity.edit.errorToast":
     "Couldn't save your changes. Please try again.",

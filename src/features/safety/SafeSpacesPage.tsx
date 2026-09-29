@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FeatureHelp, Outro } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -61,8 +61,7 @@ export function SafeSpacesPage() {
             <Translation
               i18nKey="safety:spaces.hero.title"
               components={{ em: <em /> }}
-            />{" "}
-            <FeatureHelp id="safety.hub" />
+            />
           </h1>
           <p className={styles.lead}>{t("safety:spaces.hero.lead")}</p>
           <div className={styles.heroStats}>

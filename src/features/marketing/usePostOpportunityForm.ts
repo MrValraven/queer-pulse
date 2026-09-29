@@ -14,6 +14,7 @@ import type {
   CreateOpportunityDto,
   UpdateOpportunityDto,
 } from "./api/volunteering.api";
+import type { OrganizationOption } from "./api/useOrganizationOptions";
 
 /** Re-exported so call sites keep reading the form's own types from the form's
  *  own module. `RequiredField` is defined alongside its labels and control ids
@@ -43,6 +44,16 @@ const splitCommas = (s: string) =>
 export const defaultApplyRole = (role: string, org: string): string =>
   [role.trim(), org.trim()].filter(Boolean).join(" · ");
 
+/** The slugs a payload carries, read through `orgMode`: a typed name links
+ *  nothing, whatever a slug field happens to hold. */
+const linkedSlugs = (state: PostOpportunityState) =>
+  state.orgMode === "link"
+    ? {
+        partnerSlug: state.partnerSlug.trim(),
+        communitySlug: state.communitySlug.trim(),
+      }
+    : { partnerSlug: "", communitySlug: "" };
+
 /**
  * State + payload builder for the "Post an opportunity" form. Holds every field
  * (core + optional rich lists), exposes a generic setter plus repeatable-row
@@ -55,8 +66,16 @@ export const defaultApplyRole = (role: string, org: string): string =>
  * form from an existing opportunity instead of a blank one — this also skips
  * the poster-account auto-prefill below, since the seed already carries the
  * real values.
+ *
+ * `pinnedOrganizations` (the edit flow's current link) rides along on the
+ * returned form, so `OrganizationField` keeps offering that link even once
+ * the poster no longer runs the organisation behind it.
  */
-export function usePostOpportunityForm(initial?: PostOpportunityState) {
+export function usePostOpportunityForm(
+  initial?: PostOpportunityState,
+  options: { pinnedOrganizations?: OrganizationOption[] } = {},
+) {
+  const { pinnedOrganizations } = options;
   const [state, setState] = useState<PostOpportunityState>(initial ?? EMPTY);
   const { user } = useAuth();
   const stewardedCommunities = useMyCommunityOptions({
@@ -86,9 +105,17 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
   if (!communitySlugPrefilled && !membershipsResolving) {
     setCommunitySlugPrefilled(true);
     const [stewarded] = stewardedCommunities;
-    if (stewarded && !state.communitySlug && !state.partnerSlug) {
+    // A name the poster already typed keeps the form in text mode.
+    const hasTypedOrg = Boolean(state.org.trim());
+    if (
+      stewarded &&
+      !hasTypedOrg &&
+      !state.communitySlug &&
+      !state.partnerSlug
+    ) {
       setState((s) => ({
         ...s,
+        orgMode: "link",
         communitySlug: stewarded.slug,
         org: stewarded.name,
       }));
@@ -100,6 +127,13 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
       key: K,
       value: PostOpportunityState[K],
     ) => setState((s) => ({ ...s, [key]: value })),
+    [],
+  );
+  // Several fields in one update, for changes that only make sense together
+  // (a link sets one slug, clears the other and mirrors the name into `org`).
+  const patch = useCallback(
+    (changes: Partial<PostOpportunityState>) =>
+      setState((s) => ({ ...s, ...changes })),
     [],
   );
 
@@ -140,6 +174,7 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
   const toDto = (): CreateOpportunityDto => {
     const org = state.org.trim();
     const role = state.role.trim();
+    const { partnerSlug, communitySlug } = linkedSlugs(state);
     const skills = splitCommas(state.skills);
     const why = splitLines(state.why);
     const goodFor = splitLines(state.goodFor);
@@ -166,12 +201,8 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
       ...(state.team.length ? { team: state.team } : {}),
       ...(tasks.length ? { tasks } : {}),
       ...(commitments.length ? { commitments } : {}),
-      ...(state.partnerSlug.trim()
-        ? { partnerSlug: state.partnerSlug.trim() }
-        : {}),
-      ...(state.communitySlug.trim()
-        ? { communitySlug: state.communitySlug.trim() }
-        : {}),
+      ...(partnerSlug ? { partnerSlug } : {}),
+      ...(communitySlug ? { communitySlug } : {}),
       ...(state.handle.trim() ? { handle: state.handle.trim() } : {}),
     };
   };
@@ -206,14 +237,15 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
       teamIntro: state.teamIntro.trim(),
       tasks,
       commitments,
-      partnerSlug: state.partnerSlug.trim(),
-      communitySlug: state.communitySlug.trim(),
+      ...linkedSlugs(state),
     };
   };
 
   return {
     state,
     set,
+    patch,
+    pinnedOrganizations,
     setTask,
     addTask,
     removeTask,

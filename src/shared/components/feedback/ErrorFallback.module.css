@@ -1,82 +1,131 @@
-/* Branded failure surface — mirrors SuccessPanel but for errors. Plum panel on
-   a cream page; never a white card (design-system rule). */
+/* The crash screen's own pieces. The plum stage, its layout, the eyebrow,
+   title and lead come from SystemStage, and the pulse is Ping in its broken
+   mood; what is left here is the assurance list, the actions, the retry hint,
+   the contact line and the reference. */
 
-.wrap {
-  min-height: 60vh;
+/* A real list with hairline rules between rows: no cards, no stripes. */
+.assurances {
+  list-style: none;
+  margin: 0 0 clamp(24px, 4vh, 32px);
+  padding: 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+}
+
+.assurance {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  padding: 13px 0;
+  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
+}
+
+.assuranceIcon {
   display: grid;
   place-items: center;
-  padding: 40px 20px;
-  background: var(--cream);
-}
-
-.panel {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  text-align: center;
-  padding: var(--section-y-48) 40px 40px;
-  border-radius: var(--radius-28);
-  max-width: 34rem;
-  animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
-}
-
-.icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 22px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: rgba(var(--accent-rgb), 0.18);
+  font-size: var(--text-16);
+  color: rgba(var(--cream-rgb), 0.95);
 }
 
-.title {
-  font-family: var(--serif);
-  font-size: var(--text-heading);
-  font-weight: 400;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  margin: 0 0 12px;
+.assuranceIconJade {
+  background: rgba(var(--jade-rgb), 0.3);
+}
+
+.assuranceIconCoral {
+  background: rgba(var(--accent-rgb), 0.26);
+}
+
+.assuranceIconCream {
+  background: rgba(var(--cream-rgb), 0.12);
+}
+
+.assuranceText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 1px;
+}
+
+.assuranceTitle {
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.4;
   color: rgba(var(--cream-rgb), 1);
 }
-.title em {
-  color: var(--accent);
-  font-style: italic;
-}
 
-.body {
-  font-size: var(--text-15);
-  line-height: 1.6;
-  color: rgba(var(--cream-rgb), 0.82);
-  margin: 0 auto 24px;
-  max-width: 42ch;
+.assuranceBody {
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.74);
 }
 
 .actions {
   display: flex;
-  gap: 12px;
-  justify-content: center;
   flex-wrap: wrap;
+  gap: 12px;
 }
 
-.ref {
-  margin: 18px 0 0;
-  font-size: var(--text-12);
+.retryHint {
+  max-width: 46ch;
+  margin: calc(-1 * clamp(8px, 2vh, 16px)) 0 clamp(20px, 4vh, 32px);
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+.contact {
+  margin: 20px 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+}
+
+.contactLink {
+  color: rgba(var(--cream-rgb), 0.9);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--cream-rgb), 0.45);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition:
+    color var(--dur-fast) var(--ease),
+    text-decoration-color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .contactLink:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+}
+
+.reference {
+  margin: 22px 0 0;
+  font-size: var(--text-label);
   letter-spacing: 0.02em;
   color: rgba(var(--cream-rgb), 0.6);
 }
 
-@keyframes panelIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* Large phones and below: the buttons stack full-width. */
+@media (--sm) {
+  .actions {
+    flex-direction: column;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .actions > * {
+    width: 100%;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .panel {
-    animation: none;
+
+/* Short laptop screens: tighten the list so the whole column, actions
+   included, fits above the fold (SystemStage tightens the title and lead). */
+@media (min-width: 960px) and (max-height: 820px) {
+  .assurance {
+    padding: 10px 0;
+  }
+
+  .assurances {
+    margin-bottom: 22px;
   }
 }

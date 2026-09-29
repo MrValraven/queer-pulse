@@ -1,0 +1,152 @@
+/* DeskBulkBar sits on the shared BulkActionBar's plum floating-pill surface
+ * (see BulkActionBar.module.css: `.bar.floating`). Every override of that
+ * surface below is doubled (`.bar.bar`) so it wins over `.floating` on
+ * specificity alone rather than depending on which CSS module the bundler
+ * happens to place later (the two files are not guaranteed an order). */
+
+.trigger .chevron {
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.trigger[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger .chevron {
+    transition-property: none;
+  }
+}
+
+/* Above 900px the shell's plum sidebar (`MagazineSidebar.module.css`, 214px)
+ * sits fixed on the left, so centring the pill on the full viewport (the
+ * shared `.floating`'s `left: 50%`) reads as off-centre against the desk
+ * column beside it. Recentre on that column by half the sidebar's
+ * width. Physical `left`, matching `.floating`'s own physical `left` and
+ * `transform`, so the override is unambiguous; the app ships English and
+ * European Portuguese only, both left-to-right. */
+@media (min-width: 901px) {
+  .bar.bar {
+    left: calc(50% + 107px);
+  }
+}
+
+/* `.actions` (`BulkActionBar.module.css`) has no class hook from here, so
+   it is reached the same structural way as `.clear` below: it is the pill's
+   only direct `<div>` child. Its own `flex-wrap: wrap` let a wrappable
+   actions row size the WHOLE floating pill more narrowly than the row's
+   real, unwrapped width: a flex container that is allowed to wrap
+   contributes only its widest single item to an ancestor's shrink-to-fit
+   width, so three longer Portuguese labels ("Mudar de edição", "Mudar de
+   estado", "Insistir 1") wrapped into a two-line pill at a width the same
+   row fits on one line in English. `nowrap` here makes the pill
+   size itself to the row's real width instead, so it grows sideways as the
+   row's own content demands. Scoped to 1024px and up, contiguous with the
+   compact cutover just below it (`BULK_BAR_COMPACT_QUERY`, `max-width:
+   1023px`), so the wide row only ever renders where this rule also applies:
+   a width sweep confirmed one row, inside the viewport, in both languages
+   from 1024px up. */
+@media (min-width: 1024px) {
+  .bar.bar > div {
+    flex-wrap: nowrap;
+  }
+}
+
+/* The desktop Clear hit box measured 30x18: floor both dimensions
+   at 32px everywhere; the two blocks below raise the same selector to the
+   44px touch floor, for narrow widths and for any width a touch pointer is
+   the primary input, and both win there by coming later in the file at
+   equal specificity. Reached the same structural way as `.actions` above:
+   Clear is the pill's only direct `<button>` child, same reasoning as the
+   blocks below's own copy of this selector. */
+.bar.bar > button {
+  min-width: 32px;
+  min-height: 32px;
+}
+
+/* A touch tablet in the 768 to 1366px range never matches the narrow block
+   below (that one is a width query), so Clear stayed at the 32px desktop
+   floor there under a touch pointer: the brief asked 44px on touch at any
+   width. */
+@media (pointer: coarse) {
+  .bar.bar > button {
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+  }
+}
+
+/* Below this width the pill becomes a full-width bottom bar, one row: count,
+ * the single "Actions" trigger (`BULK_BAR_COMPACT_QUERY` in DeskBulkBar.tsx,
+ * the same literal breakpoint so the JS and CSS switch together), then
+ * Clear. This replaces the floating pill's centred, shrink-to-fit shape,
+ * which is what let "Change stage" and the old "More" trigger wrap into a
+ * three-line blob; the cutover moved from 520px to 640px because the
+ * un-compacted row itself started wrapping the same way just above the old
+ * cutover, then to 1023px once a width sweep found it still wrapping onto
+ * 3 to 4 lines anywhere
+ * from 641px to 1023px, in English as well as Portuguese once "Hand off"
+ * became always-visible. `.floating`'s own bottom offset (safe-area inset
+ * plus `--bottom-inset`) is kept as is. */
+@media (max-width: 1023px) {
+  .bar.bar {
+    left: 12px;
+    right: 12px;
+    transform: none;
+    width: auto;
+    max-width: none;
+    gap: 10px;
+    padding: 11px 10px 11px 16px;
+    border-radius: var(--radius-card);
+    /* `.floating`'s `animation: bulkBarIn … both` keeps holding its `to`
+       keyframe's `transform: translateX(-50%)` once the entry animation ends
+       (animation values beat a plain declaration at equal specificity, and
+       `both` keeps the end state applied forever), which shifted this whole
+       bar about half its own width off-screen.
+       Overriding only `animation-name` leaves `.floating`'s duration/easing/
+       fill-mode alone and swaps in a keyframe that touches only opacity and
+       `translateY`. */
+    animation-name: deskBulkBarRiseCompact;
+  }
+
+  /* Same rise, positioned by the `left`/`right` set above alone: this
+     keyframe carries no horizontal shift of its own. */
+  @keyframes deskBulkBarRiseCompact {
+    from {
+      opacity: 0;
+      transform: translateY(80px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* The compact trigger keeps the bar's `sm` button chrome (padding, type
+     scale) for visual consistency with the wide layout's own buttons; only
+     its tap height needs raising to the 44px floor (`.sm` alone gives 40px).
+     Clear has no class hook of its own here (it is `BulkActionBar`'s plain
+     trailing `<button>`, from a different CSS module), so it is reached
+     structurally: it is the pill's only direct `<button>` child, every other
+     button living inside the nested `.actions` div. */
+  .bar.bar .trigger {
+    min-height: var(--tap-min);
+  }
+
+  .bar.bar > button {
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+  }
+}
+
+/* `.floating`'s own reduced-motion rule (`animation: none`) is a lower-
+   specificity single class, so without this it would lose the `animation-name`
+   longhand above to `deskBulkBarRiseCompact` whenever both conditions are
+   true at once (a narrow, reduced-motion browser) and animate anyway. Same
+   specificity as the rule above; declared after it, so it wins the tie. */
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .bar.bar {
+    animation: none;
+  }
+}

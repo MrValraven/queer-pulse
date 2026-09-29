@@ -24,14 +24,17 @@ const SubprofileEditorPage = lazyNamed(
 export function subprofileRoutes() {
   return (
     <>
-      {/* Linked persona nested under its owner's main profile. A two-segment
-          path never shadows the one-segment `:slug` route in react-router
-          v7 (a `/members/x` URL only matches `:slug`; `/members/x/y` only this). */}
+      {/* The legacy linked-persona address: a two-segment path that never
+          shadows the one-segment `:slug` route in react-router v7 (a
+          `/members/x` URL only matches `:slug`; `/members/x/y` only this).
+          It still resolves, and `useLegacyNestedPersonaRedirect` replaces it
+          with the persona's `/p/<handle>` address once the load carries a
+          handle. */}
       <Route
         path={`${routes.members}/:slug/:subslug`}
         element={<SubprofilePage />}
       />
-      {/* Standalone (unlinked) persona by its global handle. */}
+      {/* Every persona's address. */}
       <Route path="/p/:handle" element={<SubprofilePage />} />
       {/* Public persona directory. */}
       <Route path={routes.subprofiles} element={<SubprofileDirectoryPage />} />

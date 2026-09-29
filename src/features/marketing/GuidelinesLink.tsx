@@ -13,15 +13,27 @@ import s from "./GuidelinesLink.module.css";
  * a checkbox `<label>` — `preventDefault` + `stopPropagation` stop the click
  * from toggling the box (the repo's rule against nesting a real button in a
  * label/link). `onKeyDown` gives it Enter/Space activation to match a button.
+ *
+ * Pass `isOpen` + `onOpenChange` to control the sheet from the host, so a
+ * locked consent checkbox can open the same sheet its link does.
  */
 export function GuidelinesLink({
   children,
   onRead,
+  isOpen,
+  onOpenChange,
 }: {
   children?: ReactNode;
   onRead?: () => void;
+  isOpen?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [isOpenLocally, setIsOpenLocally] = useState(false);
+  const open = isOpen ?? isOpenLocally;
+  function setOpen(nextIsOpen: boolean) {
+    setIsOpenLocally(nextIsOpen);
+    onOpenChange?.(nextIsOpen);
+  }
   return (
     <>
       <span

@@ -13,14 +13,12 @@ import { routes } from "../../app/routeMap";
 import { AdminPageHeader } from "./ui";
 import { useAdminGlossaryTerms } from "./api/useAdminResourceGuides";
 import { AdminGlossaryRows } from "./AdminGlossaryRows";
-import { AdminGlossaryTermEditor } from "./AdminGlossaryTermEditor";
-import { AdminGlossaryReviewModal } from "./AdminGlossaryReviewModal";
-import { AdminGlossaryDeleteModal } from "./AdminGlossaryDeleteModal";
-import type { AdminGlossaryTermDTO } from "./api/adminResourceGuides.api";
+import { AdminGlossaryDialogs } from "./AdminGlossaryDialogs";
+import { useAdminGlossaryDialogs } from "./useAdminGlossaryDialogs";
 import styles from "./AdminGlossaryPage.module.css";
 
 /**
- * The glossary console (`/admin/resource-guides/glossary`) — PRD-264.
+ * The glossary console (`/admin/resource-guides/glossary`), PRD-264.
  *
  * `AdminGlossaryController` has been writable since CON-08, but nothing on the
  * frontend consumed it: adding or correcting a term meant a SQL statement, so
@@ -41,15 +39,7 @@ export function AdminGlossaryPage() {
   const { t } = useTranslation();
   const { data, isLoading, isError, error, refetch } = useAdminGlossaryTerms();
   const [query, setQuery] = useState("");
-  const [editorTarget, setEditorTarget] = useState<
-    AdminGlossaryTermDTO | "new" | null
-  >(null);
-  const [reviewTarget, setReviewTarget] = useState<AdminGlossaryTermDTO | null>(
-    null,
-  );
-  const [deleteTarget, setDeleteTarget] = useState<AdminGlossaryTermDTO | null>(
-    null,
-  );
+  const dialogs = useAdminGlossaryDialogs();
 
   const isForbidden =
     isError && error instanceof ApiError && error.status === 403;
@@ -105,7 +95,7 @@ export function AdminGlossaryPage() {
               <Button
                 variant="primary"
                 size="md"
-                onClick={() => setEditorTarget("new")}
+                onClick={() => dialogs.setEditorTarget("new")}
               >
                 {t("admin:adminGlossary.newTermCta")}
               </Button>
@@ -165,32 +155,14 @@ export function AdminGlossaryPage() {
       ) : (
         <AdminGlossaryRows
           terms={visibleTerms}
-          onEdit={setEditorTarget}
-          onReview={setReviewTarget}
-          onDelete={setDeleteTarget}
+          onPreview={dialogs.setPreviewTarget}
+          onEdit={dialogs.setEditorTarget}
+          onReview={dialogs.setReviewTarget}
+          onDelete={dialogs.setDeleteTarget}
         />
       )}
 
-      {editorTarget && (
-        <AdminGlossaryTermEditor
-          term={editorTarget === "new" ? null : editorTarget}
-          onClose={() => setEditorTarget(null)}
-        />
-      )}
-
-      {reviewTarget && (
-        <AdminGlossaryReviewModal
-          term={reviewTarget}
-          onClose={() => setReviewTarget(null)}
-        />
-      )}
-
-      {deleteTarget && (
-        <AdminGlossaryDeleteModal
-          term={deleteTarget}
-          onClose={() => setDeleteTarget(null)}
-        />
-      )}
+      <AdminGlossaryDialogs dialogs={dialogs} />
     </AdminShell>
   );
 }

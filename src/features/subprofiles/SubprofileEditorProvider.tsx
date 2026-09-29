@@ -67,6 +67,7 @@ export function SubprofileEditorProvider({
   }, [meta, skinBlocks, rows]);
 
   const value: SubprofileEditorContextValue = {
+    subprofile,
     meta,
     skinBlocks,
     sectionRows: rows.sectionRows,

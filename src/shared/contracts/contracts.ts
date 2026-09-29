@@ -598,6 +598,10 @@ export interface ConversationResponse {
    *  the group is read-only for every former participant. Null while active;
    *  absent for DMs. */
   dissolvedAt?: string | null;
+  /** GROUP only (Go together): the matched group this chat belongs to, else
+   *  null. The client shows the group banner under the header when set.
+   *  Always null for DMs; absent on an older response. */
+  eventMatchGroupId?: string | null;
   /** GROUP only, THIS caller (DES-227): why the composer is severed:
    *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
    *  `"dissolved"` (the owner ended the group). Null while the caller is an

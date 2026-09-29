@@ -9,7 +9,7 @@ import {
 import { routes } from "../../app/routeMap";
 import type { InviteView } from "../auth/api/useInvite";
 
-/** Why an invite link can't be used — drives copy, rows, and CTAs. */
+/** Why an invite link can't be used; drives copy, rows, and CTAs. */
 export type InviteFailureReason =
   "expired" | "used" | "revoked" | "notFound" | "inviterInactive";
 
@@ -62,8 +62,8 @@ export const INVITE_STATE_CONFIG: Record<
     leadKey: "system:inviteState.expired.lead",
     showExpiry: true,
     showInviter: true,
-    // The recipient can't trigger a resend — that lives on the sender's own
-    // invite list now — so the honest primary is to request a fresh invite.
+    // The recipient can't trigger a resend (that lives on the sender's own
+    // invite list now), so the honest primary is to request a fresh invite.
     primary: {
       labelKey: "system:inviteState.actions.requestNew",
       to: routes.requestInvite,
@@ -179,6 +179,7 @@ export const DEMO_EXPIRED_INVITE: InviteView = {
     firstName: "Catarina",
     initials: "CV",
     since: "2024",
+    isAmbassador: false,
   },
   inviterActive: true,
   expiryLabel: "6 June 2026",

@@ -9,13 +9,16 @@ import {
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { QuestTableRefineGroup } from "./QuestTableRefineGroup";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
 import styles from "./SubprofileDirectoryPage.module.css";
 
 /**
- * The directory's Refine drawer: profession chips grouped by page family, then
- * the availability toggle and the tag tray sharing one band below them.
+ * The directory's Refine drawer: profession chips grouped by page family, the
+ * Quest personas' "At the table" band (format and table vibe, shown only once a
+ * loaded persona has a table), then the availability toggle and the tag tray
+ * sharing one band below them.
  *
  * All three used to stand open above the first card, which put a thirteen-chip
  * row, a note, a search field and a tag row between the headline and the
@@ -53,6 +56,7 @@ export function SubprofileDirectoryRefinePanel({
   return (
     <RefinePanel {...panelProps}>
       <SubprofileProfessionFilter directory={directory} />
+      <QuestTableRefineGroup directory={directory} />
 
       {/* Availability and tags share one band rather than taking one each: both
           are a single short row, so a band apiece spent a hairline and a band's

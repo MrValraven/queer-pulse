@@ -1,4 +1,4 @@
-/* Left rail — fixed dark surface (like AdminSidebar): plum background, cream
+/* Left rail: fixed dark surface (like AdminSidebar): plum background, cream
    text. `--cream-rgb`/`--plum` intentionally do NOT flip in dark mode (see
    colors.css), so cream-on-plum stays legible in both themes. */
 .rail {
@@ -92,6 +92,84 @@
   white-space: nowrap;
 }
 
+/* "Desk" nav count: pieces waiting on the viewer. Fill and text are built
+   from `--cream-rgb` and `--plum`, the one pairing this file's own header
+   comment already guarantees stays legible in both themes (neither token
+   flips): rgba(247,243,238,1) on #2d1b3d computes to 14.2:1 either way. A
+   solid `--desk-tone-you` fill looked "on brand" but only works with cream
+   TEXT on it, and that tone is itself a light pink in dark mode
+   (colors.css's dark block), so cream-on-tone measured 1.83:1 there (fix
+   round 1). Hidden from assistive tech: the visually-hidden span right
+   after it carries the same number inside a full sentence, so the pill is
+   read once. */
+.navCount {
+  flex: none;
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 1);
+  /* css-scale-allow: non-flipping-text. The ground under this text is the
+     `--cream-rgb` fill directly above, locked light in both themes, so the
+     text has to stay locked dark too; --text-strong would flip it to light
+     ink in dark mode and erase it against its own fill. */
+  color: var(--plum);
+  font-size: var(--text-11);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* The Desk item with its "waiting on you" pill: two sibling links in one
+   row. The Desk link fills the row and keeps its end clear for the pill;
+   the pill's link sits over that end, the row's full height and
+   `--tap-min` wide, so it is an easy target that does not grow the row.
+   Hovering either link washes the row as one item. */
+.navRow {
+  position: relative;
+  display: flex;
+}
+.navRow > .navItem {
+  flex: 1;
+  min-width: 0;
+  padding-inline-end: var(--tap-min);
+}
+@media (hover: hover) {
+  .navRow:hover > .navItem {
+    background: rgba(var(--cream-rgb), 0.08);
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+.navCountLink {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--tap-min);
+  border-radius: var(--radius-12);
+  text-decoration: none;
+}
+/* On touch, the row grows to the 44px floor so the pill's link (which spans
+   the row's full height) clears it in both directions. */
+@media (pointer: coarse) {
+  .navRow {
+    min-block-size: var(--tap-min);
+  }
+}
+
+/* "Issue" nav item: days left to close, a compact echo of the desk header's
+   own countdown (`DeskPulseLine` spells it out in full). The
+   short "9d" is hidden from screen readers, which hear the long form from
+   the visually hidden span beside it. */
+.issueDays {
+  flex: none;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--cream-rgb), 0.5);
+}
+
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 .railFoot {
   margin-top: auto;
@@ -143,6 +221,24 @@
   font-weight: 700;
   color: var(--ink-60);
   background: var(--paper);
+}
+
+/* "Open now" rows: `Tooltip` (`placement="right"`, so the bubble portals to
+   <body> instead of clipping in this rail's own `overflow-y: auto`, same
+   reason `AdminSidebar`'s `MaybeTooltip` uses `right`) wraps the whole
+   `NavLink`, so its focus listener sits on an ANCESTOR of the actual
+   focusable element and fires on Tab (wrapping only the inner
+   label span left the wrap a descendant of the link, so keyboard focus
+   never bubbled into it). `.nav`'s own `align-items: stretch` already grows
+   Tooltip's `inline-flex` wrap span to the rail's width, matching an
+   unwrapped `.navItem`; only the `NavLink` inside it needs this explicit
+   rule to fill that box in turn, so `.navLabel`'s ellipsis still applies at
+   the rail's width instead of the label's full content width. `.nav > span`
+   only ever matches a Tooltip wrap: every other direct child of `.nav` is a
+   `NavLink`, which renders as an `<a>`, or the Desk item's `.navRow` div. */
+.nav > span > .navItem {
+  flex: 1;
+  min-width: 0;
 }
 
 @media (--wide) {

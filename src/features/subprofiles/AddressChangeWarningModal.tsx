@@ -4,16 +4,18 @@ import { Button, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
 interface AddressChangeWarningModalProps {
-  /** Caller-composed heading — switching link mode and editing an already-
+  /** Caller-composed heading. Switching link mode and editing an already
    *  published address use different copy, so the title stays their call. */
   title: ReactNode;
   /** The path this persona is live at right now. */
   oldPath: string;
-  /** The path it will live at once the pending change is confirmed. */
-  newPath: string;
-  /** True when this change frees a previously-claimed global `@handle` back
-   *  to the namespace (relinking, or editing the handle while unlinked) — a
-   *  linked→linked slug edit never claims/releases a handle at all. */
+  /** The path it will live at once the pending change is confirmed, or null
+   *  when it only gets one after the owner chooses a handle (a switch to
+   *  standalone, or a cleared standalone handle). */
+  newPath: string | null;
+  /** True when this change frees a previously claimed global handle back to
+   *  the namespace. Every address change does today, since each persona's one
+   *  address is its handle. */
   releasesHandle: boolean;
   onConfirm: () => void;
   onCancel: () => void;
@@ -21,14 +23,11 @@ interface AddressChangeWarningModalProps {
 
 /**
  * "What breaks" confirmation shown before a PUBLISHED persona's address
- * actually changes — either by flipping linked↔unlinked or by editing an
- * already-live slug/handle. Only ever mounted while open (self-contained,
- * per repo convention); the caller (`SubprofileLinkFields`) holds the
- * pending value and only commits it into the shared meta-editor state on
- * `onConfirm` — `onCancel` leaves that state untouched, i.e. the visible
- * revert already happened by never applying the change in the first place.
- * A draft/unpublished persona never triggers this — nothing is live yet, so
- * there's nothing to break.
+ * actually changes: flipping linked and unlinked, or editing an already live
+ * handle. Only ever mounted while open (self-contained, per repo convention).
+ * The caller (`SubprofileLinkFields`) holds the pending change and applies or
+ * reverts it on `onConfirm`/`onCancel`. A draft persona never triggers this:
+ * nothing is live yet, so there is nothing to break.
  */
 export function AddressChangeWarningModal({
   title,
@@ -60,10 +59,14 @@ export function AddressChangeWarningModal({
         <div className="warnbody">
           <b>{t("subprofiles:addressWarning.noticeTitle")}</b>
           <p>
-            {t("subprofiles:addressWarning.noticeBody", {
-              from: oldPath,
-              to: newPath,
-            })}
+            {newPath === null
+              ? t("subprofiles:addressWarning.noticeBodyNewHandle", {
+                  from: oldPath,
+                })
+              : t("subprofiles:addressWarning.noticeBody", {
+                  from: oldPath,
+                  to: newPath,
+                })}
           </p>
         </div>
       </div>

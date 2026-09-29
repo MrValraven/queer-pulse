@@ -49,6 +49,8 @@
      night field — the correct "city at night" look either way. */
   stroke: var(--text-strong);
   animation: qpStreetsIn var(--dur-slow) var(--ease-out) forwards;
+  /* Resumes a loader this one replaced; see resumedDelay in MapLoading.tsx. */
+  animation-delay: calc(0s - var(--map-loader-elapsed, 0ms));
 }
 .street {
   /* pathLength="100" normalises every polyline, so dasharray:100 / dashoffset:100

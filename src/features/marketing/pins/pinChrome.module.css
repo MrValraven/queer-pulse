@@ -1,0 +1,438 @@
+/* The chrome under the local directory's Portrait pin (see pinChrome.ts).
+   Every piece keys its state off the data attributes the marker manager
+   writes on each pin and cluster button, `[data-selected="true"]` and
+   `[data-hovered="true"]`, so the pin's own module never has to know these
+   class names. Every state selector is anchored on `.pin` or `.cluster`, the
+   button itself: other components also write `data-selected="true"`, and an
+   unanchored selector would light up every callout under such an ancestor.
+
+   Map-marker exception, as in venueMarker.module.css: the fixed cream, plum
+   and category fills below do not follow the theme. Markers stay light in
+   both themes so they keep their contrast as the basemap dims. The callout is
+   the one exception to the exception: it is a small card, so it takes the
+   theme's --paper and --ink and reads as part of the app. */
+
+/* The pin button's base. The style's own class sizes it and draws its body.
+   `transform-origin: bottom` keeps a tipped pin planted while it scales. */
+.pin {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transform-origin: bottom center;
+}
+
+/* z-index 3 is a self-contained local order among sibling pins on the same
+   map, as in venueMarker.module.css. */
+.pin:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+  z-index: 3;
+}
+
+/* ── Ground ──────────────────────────────────────────────────────────────
+   A zero-size point at the button's bottom centre, which is the exact
+   coordinate for a pin anchored "bottom". Its children centre on it. */
+.ground {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  inline-size: 0;
+  block-size: 0;
+  pointer-events: none;
+}
+.groundCentered {
+  inset-block-start: 50%;
+}
+
+/* The contact shadow: a soft plum ellipse that fades out at its rim. */
+.groundShadow {
+  position: absolute;
+  inset-block-start: -3px;
+  inset-inline-start: -10px;
+  inline-size: 20px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--plum-rgb), 0.35),
+    rgba(var(--plum-rgb), 0)
+  );
+  transition:
+    transform var(--dur-base) var(--ease),
+    opacity var(--dur-base) var(--ease);
+}
+
+/* The exact point: a small dot in the category colour with a cream ring.
+   At rest it would read as a stray full stop beside a place name, so it
+   fades in only once the pin lifts off it, on selection or hover. */
+.groundDot {
+  position: absolute;
+  inset-block-start: -4px;
+  inset-inline-start: -4px;
+  inline-size: 5px;
+  block-size: 5px;
+  border: 1.5px solid rgba(var(--cream-rgb), 1);
+  border-radius: 50%;
+  background: var(--pin-color, var(--plum));
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+.pin[data-selected="true"] .groundDot {
+  opacity: 1;
+}
+
+/* The pin lifted off the map: the shadow draws in and softens under it, and
+   the point it stood on shows. */
+@media (hover: hover) and (pointer: fine) {
+  .pin:hover .groundShadow,
+  .pin[data-hovered="true"] .groundShadow {
+    transform: scale(0.75);
+    opacity: 0.7;
+  }
+  .pin:hover .groundDot,
+  .pin[data-hovered="true"] .groundDot {
+    opacity: 1;
+  }
+}
+
+/* ── Ripple ──────────────────────────────────────────────────────────────
+   One ring that spreads out from the ground point and fades, each time the
+   pin becomes selected. At rest it is invisible. A repaint keeps the
+   element (see paintChromePin), so the ring plays once per selection. */
+.ripple {
+  position: absolute;
+  inset-block-start: -14px;
+  inset-inline-start: -14px;
+  inline-size: 28px;
+  block-size: 28px;
+  border: 2px solid
+    color-mix(in srgb, var(--pin-color, var(--plum)) 70%, transparent);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.3);
+}
+.pin[data-selected="true"] .ripple {
+  animation: pinChromeRipple 900ms var(--ease-out) 1 both;
+}
+
+/* ── Callout ─────────────────────────────────────────────────────────────
+   The selected pin's card, centred above it. Hidden by opacity alone: it is
+   aria-hidden and ignores the pointer, so there is no visibility to flip.
+   A style whose selected body rises past the button top sets
+   --pin-callout-gap on its pin so the card clears the lifted body. The
+   width cap keeps a 16px gutter on a phone. */
+.callout {
+  position: absolute;
+  inset-block-end: calc(100% + var(--pin-callout-gap, 10px));
+  inset-inline-start: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  inline-size: max-content;
+  max-inline-size: min(280px, calc(100vw - 32px));
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  box-shadow: var(--shadow-e3);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.25;
+  text-align: start;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 6px);
+  transition:
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+.pin[data-selected="true"] .callout {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* A 40px tile: the category fill with its cream icon, covered by the photo
+   when there is one. The 8px corner nests inside the card's 14px radius
+   and 6px padding. The card centres it on the text block, so it stays
+   level with a meta line that wraps to two lines. */
+.calloutThumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 40px;
+  block-size: 40px;
+  overflow: hidden;
+  border-radius: var(--radius-8);
+  background: var(--pin-color, var(--plum));
+}
+/* `display: none` until selected, so the lazy photo waits to download
+   until someone opens this card (see calloutThumbMarkup). */
+.calloutThumb img {
+  position: absolute;
+  inset: 0;
+  display: none;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+.pin[data-selected="true"] .calloutThumb img {
+  display: block;
+}
+.calloutThumbIcon {
+  display: grid;
+  place-items: center;
+  color: rgba(var(--cream-rgb), 1);
+}
+.calloutThumbIcon svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+
+.calloutText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+.calloutNameRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-inline-size: 0;
+}
+.calloutName {
+  min-inline-size: 0;
+  overflow: hidden;
+  font-size: var(--text-13);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The dot aligns with the first line of the meta text, which may wrap. */
+.calloutMeta {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  min-inline-size: 0;
+  color: var(--ink-60);
+  font-size: var(--text-11-5);
+  font-weight: 500;
+}
+.calloutDot {
+  flex: none;
+  inline-size: 6px;
+  block-size: 6px;
+  margin-block-start: calc((1lh - 6px) / 2);
+  border-radius: 50%;
+  background: var(--pin-color, var(--plum));
+}
+/* Category and neighbourhood wrap to a second line, then clamp. */
+.calloutMetaText {
+  display: -webkit-box;
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* The tail: a square in the card's own surface, turned 45 degrees so its
+   bordered corner points down at the pin. Its upper half sits inside the
+   card and hides the border there, so card and tail read as one shape. */
+.calloutTail {
+  position: absolute;
+  inset-block-end: -6px;
+  inset-inline-start: 50%;
+  inline-size: 11px;
+  block-size: 11px;
+  margin-inline-start: -5.5px;
+  border-inline-end: 1px solid var(--line);
+  border-block-end: 1px solid var(--line);
+  border-end-end-radius: var(--radius-2);
+  background: var(--paper);
+  transform: rotate(45deg);
+}
+
+/* ── Verified badge ──────────────────────────────────────────────────────
+   Jade with a cream check and a cream ring, the colours of the app's other
+   verified marks. --jade-fill is fixed, so it holds in both themes. */
+.verifiedBadge {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: 16px;
+  block-size: 16px;
+  border: 1.5px solid rgba(var(--cream-rgb), 1);
+  border-radius: 50%;
+  background: var(--jade-fill);
+  box-shadow: var(--shadow-e2);
+  color: rgba(var(--cream-rgb), 1);
+}
+.verifiedBadge svg {
+  inline-size: 9px;
+  block-size: 9px;
+  stroke-width: 3.5;
+}
+
+/* ── Cluster ─────────────────────────────────────────────────────────────
+   A fixed cream disc: a 2px cream edge, the category ring (one arc per
+   category, sized by share, from --cluster-ring), and a cream centre with
+   the count in the display serif. A cluster holding the selected place wears
+   an accent ring, so the selection stays visible inside the count. */
+.cluster {
+  position: relative;
+  display: block;
+  inline-size: 38px;
+  block-size: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--cream-rgb), 1);
+  box-shadow: var(--shadow-e2);
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+/* Stretches the smallest disc's hit area from 38px to 44px. */
+.cluster::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+}
+.cluster[data-size="md"] {
+  inline-size: 46px;
+  block-size: 46px;
+}
+.cluster[data-size="lg"] {
+  inline-size: 54px;
+  block-size: 54px;
+}
+.clusterRing {
+  position: absolute;
+  inset: 2px;
+  border-radius: var(--radius-avatar);
+  background: var(--cluster-ring, var(--plum));
+}
+.clusterCount {
+  position: absolute;
+  inset: 6px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--cream-rgb), 1);
+  /* Plum on the fixed cream centre in both themes, so it must not follow
+     the theme's ink. css-scale-allow: non-flipping-text */
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: var(--text-14);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+}
+.cluster[data-size="md"] .clusterCount {
+  font-size: var(--text-16);
+}
+.cluster[data-size="lg"] .clusterCount {
+  font-size: var(--text-18);
+}
+.cluster[data-selected="true"] {
+  box-shadow: var(--shadow-e2), var(--ring-accent-strong);
+}
+/* Hover keeps the accent ring, so a hovered selected cluster still reads as
+   selected, and adds the lift and the accent glow. */
+@media (hover: hover) and (pointer: fine) {
+  .cluster:hover,
+  .cluster[data-hovered="true"] {
+    transform: scale(1.08);
+    box-shadow: var(--shadow-accent), var(--ring-accent-strong);
+  }
+}
+.cluster:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--shadow-e2), var(--ring-cream);
+}
+
+/* ── Entrance ────────────────────────────────────────────────────────────
+   The staggered drop-in on the map's first paint. The manager adds this and
+   an inline animation-delay; `backwards` holds the marker hidden through the
+   delay. */
+.enter {
+  animation: pinChromePop 360ms var(--ease-out) backwards;
+}
+
+/* Local keyframes: a CSS Module cannot reference the global ones in
+   effects.css (the name gets scoped to a dangling hash). */
+@keyframes pinChromePop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes pinChromeRipple {
+  from {
+    opacity: 0.9;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+/* Reduced motion, from the OS or the app's own setting. The global rule
+   already cuts every duration to nothing, which would play the ripple to its
+   invisible end, so it becomes a static faint ring instead. The callout
+   keeps its fade and loses the rise; scaling goes. */
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+  .pin[data-selected="true"] .ripple {
+    animation: none;
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  .callout,
+  .pin[data-selected="true"] .callout {
+    transform: translate(-50%, 0);
+  }
+  .cluster:hover,
+  .cluster[data-hovered="true"] {
+    transform: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .enter {
+  animation: none;
+}
+:global(html[data-reduce-motion="true"]) .pin[data-selected="true"] .ripple {
+  animation: none;
+  opacity: 0.35;
+  transform: scale(1);
+}
+:global(html[data-reduce-motion="true"]) .callout,
+:global(html[data-reduce-motion="true"]) .pin[data-selected="true"] .callout {
+  transform: translate(-50%, 0);
+}
+:global(html[data-reduce-motion="true"]) .cluster:hover,
+:global(html[data-reduce-motion="true"]) .cluster[data-hovered="true"] {
+  transform: none;
+}

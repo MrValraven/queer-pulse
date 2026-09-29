@@ -12,13 +12,14 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AdminStickerPackResponse } from "../../../shared/contracts/contracts";
 import { StickerPackHeader } from "./StickerPackHeader";
 import { StickerPackContents } from "./StickerPackContents";
-import { StickerTemplateControls } from "./StickerTemplateControls";
 import { StickerHeroPreview } from "./StickerHeroPreview";
-import { StickerFlagGrid } from "./StickerFlagGrid";
+import { StickerItemGrid } from "./StickerItemGrid";
 import { StickerPublishDock } from "./StickerPublishDock";
 import { NewStickerPackDialog } from "./NewStickerPackDialog";
-import { packStateByFlag } from "./stickerFlags";
-import type { useStickerPublish } from "./useStickerPublish";
+import { BUILDER_TEMPLATES } from "./templates/builderTemplates";
+import { StickerTemplatePicker } from "./templates/StickerTemplatePicker";
+import { packStateByItem } from "./stickerItems";
+import { summarizeRun, type useStickerPublish } from "./useStickerPublish";
 import type {
   StickerBuilderState,
   StickerBuilderTab,
@@ -30,12 +31,13 @@ type StickerPublisher = ReturnType<typeof useStickerPublish>;
 
 /**
  * The selected pack's workspace: its header, then two tabs. "Add stickers"
- * pairs the style controls (sticky on wide screens) with the live preview and
- * the flag grid, and docks the publish bar at the bottom of the viewport, so
- * the one filled button on screen is always the one that does the work. "In
- * this pack" manages what the pack already holds; while a run is writing, the
- * dock stays under that tab too (its running phase has no filled button), so
- * the progress and Cancel never drop out of sight.
+ * pairs the template picker and style controls (sticky on wide screens) with
+ * the live preview and the item grid, and docks the publish bar at the
+ * bottom of the viewport, so the one filled button on screen is always the
+ * one that does the work. "In this pack" manages what the pack already
+ * holds; while a run is writing, the dock stays under that tab too (its
+ * running phase has no filled button), so the progress and Cancel never drop
+ * out of sight.
  */
 export function StickerBuilderWorkspace({
   pack,
@@ -71,16 +73,31 @@ export function StickerBuilderWorkspace({
     setActiveTab(tab);
   }
 
+  const { Controls: TemplateControls } = BUILDER_TEMPLATES[state.template.id];
   const { run } = publisher;
   const isRunWritingThisPack = Boolean(
     run?.isRunning && run.packId === pack.id,
   );
-  const runStateByFlag = run?.packId === pack.id ? run.stateByFlag : null;
+  // A run's tiles and retries belong to the template it was drawn with, so
+  // they show only while the builder is on that same template.
+  const runStateByItem =
+    run?.packId === pack.id && run.templateId === state.template.id
+      ? run.stateByItem
+      : null;
+  // While this pack's run is writing, or its finished run still has failed
+  // items to retry, the template stays put: Retry failed redraws with the
+  // run's own template, and the grid keeps showing that run's states.
+  const hasFailedRunOnThisPack =
+    run?.packId === pack.id && summarizeRun(run).failedCount > 0;
+  // The run's own template only, so a run left writing an empty pack under
+  // one template never locks a different template the admin later shows for
+  // that same pack.
+  const isRunOnShownTemplate = run?.templateId === state.template.id;
   const isDockVisible = activeTab === "add" || Boolean(run?.isRunning);
 
   // A run that finishes while "In this pack" is open takes the dock away,
   // and with it the Cancel button that may hold focus. Focus then goes back
-  // to the active tab instead of falling to the page body.
+  // to the active tab, so it stays in the workspace.
   const wasDockVisibleRef = useRef(isDockVisible);
   useEffect(() => {
     const wasDockVisible = wasDockVisibleRef.current;
@@ -136,36 +153,49 @@ export function StickerBuilderWorkspace({
       {activeTab === "add" ? (
         <div {...tabPanelProps(tabsId, "add")} className={styles.panel}>
           <h2 className="visuallyHidden">{t("admin:stickerPacks.tabs.add")}</h2>
-          {/* Preview first, then style, then flags: on one column every
-              adjustment lands right under the sticker it redraws. */}
+          {/* Preview first, then template and style, then items: on one
+              column every adjustment lands right under the sticker it
+              redraws. */}
           <div className={styles.addColumns}>
             <div className={styles.heroArea}>
               <StickerHeroPreview
-                flagId={state.focusedFlagId}
-                params={state.params}
+                template={state.template}
+                style={state.style}
+                itemId={state.focusedItemId}
                 backdrop={state.backdrop}
                 onBackdropChange={state.setBackdrop}
               />
             </div>
             <div className={styles.controlsColumn}>
-              <StickerTemplateControls
-                params={state.params}
-                onParamsChange={state.setParams}
-                contrastFlagIds={state.selectedFlagIds}
+              <StickerTemplatePicker
+                template={state.template}
+                isLocked={
+                  state.isTemplateLocked ||
+                  (isRunWritingThisPack && isRunOnShownTemplate) ||
+                  (hasFailedRunOnThisPack && isRunOnShownTemplate)
+                }
+                onChoose={state.chooseTemplate}
+              />
+              <TemplateControls
+                key={state.template.id}
+                style={state.style}
+                onStyleChange={state.setStyle}
+                selectedItemIds={state.selectedItemIds}
                 packStyle={state.packStyle}
                 onLoadPackStyle={state.loadPackStyle}
               />
             </div>
             <div className={styles.flagsArea}>
-              <StickerFlagGrid
-                params={state.params}
-                selectedFlagIds={state.selectedFlagIds}
-                onSelectedFlagIdsChange={state.setSelectedFlagIds}
-                focusedFlagId={state.focusedFlagId}
-                onFocusFlag={state.setFocusedFlagId}
-                packStates={packStateByFlag(pack)}
+              <StickerItemGrid
+                template={state.template}
+                style={state.style}
+                selectedItemIds={state.selectedItemIds}
+                onSelectedItemIdsChange={state.setSelectedItemIds}
+                focusedItemId={state.focusedItemId}
+                onFocusItem={state.setFocusedItemId}
+                packStates={packStateByItem(pack, state.template)}
                 mode={state.mode}
-                runStateByFlag={runStateByFlag}
+                runStateByItem={runStateByItem}
               />
             </div>
           </div>

@@ -1,7 +1,8 @@
-/* magazine desk stage palette — not in global tokens
-   The design's "Deck" violet doesn't match any repo token exactly (repo
-   --violet is a different, more saturated hue). The violet itself is
-   `--desk-violet`/`--desk-violet-rgb` from styles/tokens/colors.css. */
+/* Editor desk: the format badge (`FormatBadge`) and the row's deck mark
+   (`FormatIcon`). The design's "Deck" violet matches no global token (the
+   repo's --violet is a more saturated hue), so it lives in
+   styles/tokens/colors.css as `--desk-violet`/`--desk-violet-rgb`, with a
+   lifted lilac for the dark theme. */
 .badge {
   --desk-violet-soft: rgba(var(--desk-violet-rgb), 0.14);
 
@@ -24,4 +25,12 @@
 .deck {
   background: var(--desk-violet-soft);
   color: var(--desk-violet);
+}
+
+/* The row's deck mark (`FormatIcon`): the badge's violet without its box. */
+.icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--desk-violet);
+  font-size: var(--text-13);
 }

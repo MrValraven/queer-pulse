@@ -1,11 +1,13 @@
 // src/features/messages/StickerPicker.tsx
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStickerPacks } from "../stickers/api/useStickerPacks";
 import {
   loadStickerRecents,
   recordStickerRecent,
 } from "../stickers/stickerRecents";
+import { StickerPackRail } from "./StickerPackRail";
+import { useStickerPackScrollSpy } from "./useStickerPackScrollSpy";
 import type {
   StickerPackResponse,
   StickerResponse,
@@ -86,7 +88,6 @@ export function StickerPicker({
   const [recentIds, setRecentIds] = useState<string[]>(() =>
     loadStickerRecents(),
   );
-  const packSectionRefs = useRef(new Map<string, HTMLDivElement>());
 
   const stickerById = useMemo(() => {
     const map = new Map<string, StickerResponse>();
@@ -96,10 +97,26 @@ export function StickerPicker({
     return map;
   }, [packs]);
   const hasAnySticker = stickerById.size > 0;
+  // The one list of packs that actually render a section below (a pack with
+  // no stickers gets no section, no ref, and no rail tile): passed to
+  // `StickerPackRail` AS-IS, so its own `packs.length < 2` gate reads this
+  // same filtered count, the one `hasRail` below is also built from. A
+  // raw-vs-filtered mismatch there previously let one real pack plus one
+  // empty pack render the rail while `data-has-rail` stayed off, so a tap on
+  // the rail's own last tile could no longer reach the top (see
+  // `StickerPicker.module.css`'s own `.section:last-child` comments).
+  const packsWithStickers = useMemo(
+    () => (packs ?? []).filter((pack) => pack.stickers.length > 0),
+    [packs],
+  );
+  // Scopes the last-section scroll-anchoring CSS to exactly the cases
+  // `StickerPackRail` actually renders in, so a single small pack keeps
+  // sizing to its own content and stays at that size.
+  const hasRail = packsWithStickers.length >= 2;
 
-  // Dropped rather than shown blank the moment a recent sticker's own pack
-  // gets unpublished: `stickerById` only ever holds the CURRENT catalogue, so
-  // a stale recent id simply resolves to nothing here.
+  // Quietly dropped the moment a recent sticker's own pack gets unpublished:
+  // `stickerById` only ever holds the CURRENT catalogue, so a stale recent id
+  // simply resolves to nothing here.
   const recentStickers = recentIds
     .map((id) => stickerById.get(id))
     .filter((sticker): sticker is StickerResponse => Boolean(sticker));
@@ -110,15 +127,8 @@ export function StickerPicker({
     onPick(sticker);
   }
 
-  function scrollToPack(packId: string) {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    packSectionRefs.current.get(packId)?.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start",
-    });
-  }
+  const { bodyRef, activePackId, registerSection, scrollToPack } =
+    useStickerPackScrollSpy(packsWithStickers, hasRail);
 
   function coverStickerFor(
     pack: StickerPackResponse,
@@ -132,6 +142,10 @@ export function StickerPicker({
       className={
         isEmbedded ? styles.panel : `${styles.panel} ${styles.standalone}`
       }
+      // Scopes `StickerPicker.module.css`'s last-section min-height rule to
+      // exactly when the rail renders (see `hasRail` above and that file's
+      // own `[data-has-rail]` comments).
+      data-has-rail={hasRail || undefined}
       // Embedded: `EmojiPicker`'s own `.panel` already carries `role="dialog"`
       // and its `role="tabpanel"` wrapper already labels this region, so a
       // second `role="dialog"` here would nest one dialog inside another, a
@@ -145,29 +159,16 @@ export function StickerPicker({
             "aria-label": t("messages:sticker.panelLabel"),
           })}
     >
-      {!isLoading && !isError && packs && packs.length > 1 && (
-        <div
-          className={styles.packRail}
-          role="toolbar"
-          aria-label={t("messages:sticker.packsLabel")}
-        >
-          {packs.map((pack) => {
-            const cover = coverStickerFor(pack);
-            return (
-              <button
-                key={pack.id}
-                type="button"
-                className={styles.packTile}
-                aria-label={pack.name}
-                onClick={() => scrollToPack(pack.id)}
-              >
-                {cover && <img src={cover.url} alt="" width={28} height={28} />}
-              </button>
-            );
-          })}
-        </div>
+      {!isLoading && !isError && packs && (
+        <StickerPackRail
+          packs={packsWithStickers}
+          activePackId={activePackId}
+          coverStickerFor={coverStickerFor}
+          onSelectPack={scrollToPack}
+          ariaLabel={t("messages:sticker.packsLabel")}
+        />
       )}
-      <div className={styles.body}>
+      <div className={styles.body} ref={bodyRef}>
         {isLoading && (
           <p className={styles.state}>{t("messages:sticker.loading")}</p>
         )}
@@ -199,34 +200,28 @@ export function StickerPicker({
                 </div>
               </div>
             )}
-            {(packs ?? []).map(
-              (pack) =>
-                pack.stickers.length > 0 && (
-                  <div
-                    key={pack.id}
-                    className={styles.section}
-                    ref={(node) => {
-                      if (node) packSectionRefs.current.set(pack.id, node);
-                      else packSectionRefs.current.delete(pack.id);
-                    }}
-                  >
-                    <p className={styles.sectionHeader}>{pack.name}</p>
-                    <div
-                      className={styles.grid}
-                      role="group"
-                      aria-label={pack.name}
-                    >
-                      {pack.stickers.map((sticker) => (
-                        <StickerTile
-                          key={sticker.id}
-                          sticker={sticker}
-                          onPick={handlePick}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ),
-            )}
+            {packsWithStickers.map((pack) => (
+              <div
+                key={pack.id}
+                className={styles.section}
+                ref={(node) => registerSection(pack.id, node)}
+              >
+                <p className={styles.sectionHeader}>{pack.name}</p>
+                <div
+                  className={styles.grid}
+                  role="group"
+                  aria-label={pack.name}
+                >
+                  {pack.stickers.map((sticker) => (
+                    <StickerTile
+                      key={sticker.id}
+                      sticker={sticker}
+                      onPick={handlePick}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
           </>
         )}
       </div>

@@ -103,6 +103,8 @@ describe("usePieces (live mode via MSW)", () => {
         articleId: null,
         deckId: null,
         contentsBlurb: "",
+        stageEnteredAt: "2026-08-10T09:00:00.000Z",
+        paymentStatus: "owed",
       },
       {
         id: "piece-2",
@@ -125,6 +127,8 @@ describe("usePieces (live mode via MSW)", () => {
         articleId: null,
         deckId: null,
         contentsBlurb: "",
+        stageEnteredAt: "2026-08-11T15:30:00.000Z",
+        paymentStatus: "none",
       },
     ];
 
@@ -159,5 +163,12 @@ describe("usePieces (live mode via MSW)", () => {
     expect(result.current.pieces[0]!.title).toBe("What we owe old friends");
     expect(result.current.pieces[0]!.words).toBe(2800);
     expect(result.current.pieces[1]!.slides).toBe(12);
+
+    // The desk's time-in-stage and unpaid readings pass straight through.
+    expect(result.current.pieces[0]!.stageEnteredAt).toBe(
+      "2026-08-10T09:00:00.000Z",
+    );
+    expect(result.current.pieces[0]!.paymentStatus).toBe("owed");
+    expect(result.current.pieces[1]!.paymentStatus).toBe("none");
   });
 });

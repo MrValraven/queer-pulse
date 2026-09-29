@@ -47,9 +47,12 @@ export interface PathPrimitive {
   fill?: string;
   stroke?: string;
   strokeWidth?: number;
+  /** End caps on an open stroke. Omitted means butt, the default of both
+   *  renderers, so existing templates serialise exactly as before. */
+  lineCap?: "round" | "butt";
 }
 
-/** A transform and an optional rounded-rect clip applied to its children.
+/** A transform and an optional clip applied to its children.
  *  Order of application is translate, then rotate, then scale, then clip. */
 export interface GroupPrimitive {
   type: "group";
@@ -64,6 +67,9 @@ export interface GroupPrimitive {
     height: number;
     radius?: number;
   };
+  /** Clip the children to a closed path, in the group's own coordinates.
+   *  A group sets at most one of `clipRect` and `clipPath`. */
+  clipPath?: PathCommand[];
   children: Primitive[];
 }
 

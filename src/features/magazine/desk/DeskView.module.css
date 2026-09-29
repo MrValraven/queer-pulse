@@ -1,19 +1,71 @@
+/* The desk page. `--desk-table-sticky-top` is how far below the viewport top
+   the table's sticky group headers and the sticky rail sit. On a wide screen
+   nothing is pinned above the desk (MagazineDeskShell draws no top bar
+   there), so they pin flush. Below --wide the shell's sticky phone bar sits
+   at the top, and its height is the --desk-shell-bar-h token. */
 .page {
+  --desk-table-sticky-top: 0px;
   max-width: var(--maxw);
   margin: 0;
-  padding: 40px 28px var(--section-y-120);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 328px;
-  gap: var(--gap-lg);
-  align-items: flex-start;
-  margin-top: var(--gap-grid);
+  padding: var(--gap-lg) var(--wrap-px) var(--section-y-120);
 }
 
 @media (--wide) {
-  .grid {
-    grid-template-columns: 1fr;
+  .page {
+    --desk-table-sticky-top: var(--desk-shell-bar-h);
   }
+}
+
+@media (--md) {
+  .page {
+    padding-top: var(--gap-sm);
+  }
+}
+
+/* The focus chips and the workbar: one row each, a small step apart. */
+.band {
+  min-width: 0;
+  margin-bottom: var(--gap-sm);
+}
+
+/* The work area: the table beside the rail, both from the top of the grid.
+   The shell sidebar takes 214px and the page gutters 56px, so the table gets
+   the viewport minus 270px, the gap and the rail. The gap is narrow at each
+   step's low edge so a classic 15-17px scrollbar still leaves the table's
+   container (the track minus its 2px border) on the intended step:
+     1224px: 954 - 14 - 260 = 680 (678; 663 with 15px, 661 with 17px)
+             middle step, 660 and up
+     1440px: 1170 - 22 - 300 = 848 (846; 831 with 15px, 829 with 17px)
+             wide step, 820 and up
+   At or below --desk-split the grid is one column and the rail stacks under
+   the table as a grid of cards. Every child gets `min-width: 0` so nothing
+   forces a sideways scroll at 375px. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--desk-rail-w);
+  gap: var(--gap-sm);
+  align-items: start;
+  margin-top: var(--gap-xs);
+}
+
+.grid > * {
+  min-width: 0;
+}
+
+@media (--desk-rail-wide) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) var(--desk-rail-w-wide);
+    gap: var(--gap-grid);
+  }
+}
+
+@media (--desk-split) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-lg);
+  }
+}
+
+.workMain {
+  min-width: 0;
 }

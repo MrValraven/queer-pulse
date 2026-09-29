@@ -3,6 +3,7 @@ import { FiMoreVertical } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { businessPath } from "../../app/routeMap";
 import { useListingModeration } from "./api/useListingModeration";
 import { useSetQueerOwnedVerified } from "./api/useSetQueerOwnedVerified";
 import { AskQuestionModal } from "./AskQuestionModal";
@@ -89,6 +90,18 @@ export function ListingModerationActions({
           disabled={moderation.isPending}
         >
           {t("admin:adminListings.sendBackCta")}
+        </Button>
+      )}
+      {row.status === "live" && (
+        // A new tab, so the moderator keeps their place in the queue.
+        <Button
+          variant="ghost"
+          size={buttonSize}
+          to={businessPath(row.slug)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t("admin:adminListings.viewLiveCta")}
         </Button>
       )}
       {row.detail.linkToProfile && (

@@ -14,7 +14,7 @@ export function actorName(actor: MemberRefDTO | null, t: TFunction): string {
 
 /** One line per event action: `fromStatus`/`toStatus` only apply to the two
  *  status-transition actions, so only those two interpolate `{from}`/`{to}`.
- *  Exhaustive over all 13 values of `ListingModerationAction` (mirrors the
+ *  Exhaustive over all 14 values of `ListingModerationAction` (mirrors the
  *  backend's `ListingModerationAction` enum in
  *  `listing-moderation-event.entity.ts`), so a new action added to the
  *  backend enum fails this switch's `never` check at compile time instead of
@@ -77,6 +77,8 @@ export function eventLabel(
       return t("admin:adminListings.history.event.directoryResumed", {
         actor,
       });
+    case "staff_edited":
+      return t("admin:adminListings.history.event.staffEdited", { actor });
     default: {
       const exhaustiveCheck: never = event.action;
       return exhaustiveCheck;

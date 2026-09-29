@@ -265,12 +265,6 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
-.openToInput {
-  width: 190px;
-  font-size: var(--text-13-5);
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-}
 
 /* ---- Pronoun picker ------------------------------------------------------- */
 .chips {
@@ -305,190 +299,11 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
-.customPronoun {
-  width: 120px;
-  font-size: var(--text-13-5);
-  padding: 6px 12px;
-}
-
-/* ---- Tag editor ----------------------------------------------------------- */
-/* Stacks the chips+search row above the "popular" quick-add row. */
-.tagField {
+/* Presets row above the member's own pronouns. */
+.pronounPicker {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-}
-.tagEditor {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-13-5);
-  font-weight: 500;
-  background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-pill);
-  padding: 6px 8px 6px 14px;
-  color: var(--ink);
-}
-.tagRemove {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  color: var(--ink-40);
-  transition:
-    background 0.15s var(--ease),
-    color 0.15s var(--ease);
-}
-/* Expand the touch target to ≥44px without enlarging the ink or the pill. */
-.tagRemove::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 44px;
-  height: 44px;
-}
-@media (hover: hover) {
-  .tagRemove:hover {
-    background: rgba(var(--accent-rgb), 0.16);
-    color: var(--accent-ink);
-  }
-}
-/* The search field anchors the suggestion popover below it. */
-.tagInputWrap {
-  position: relative;
-}
-.tagInput {
-  width: 170px;
-  font-size: var(--text-13-5);
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-}
-
-/* Type-ahead suggestion dropdown of curated tags. */
-.tagSuggest {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: var(--z-popover);
-  min-width: 200px;
-  max-width: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 5px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-12);
-  box-shadow: var(--shadow-e3);
-}
-.tagSuggestItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  text-align: left;
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  font-weight: 500;
-  color: var(--ink);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-8);
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: background 0.15s var(--ease);
-}
-.tagSuggestItem span {
-  color: var(--ink-40);
-  font-weight: 600;
-}
-@media (hover: hover) {
-  .tagSuggestItem:hover {
-    background: rgba(var(--plum-rgb), 0.06);
-  }
-}
-.tagSuggestItemHl {
-  background: rgba(var(--plum-rgb), 0.06);
-}
-
-/* One-tap "popular" quick-add chips shown beneath the field. */
-.tagPopular {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.tagPopularLabel {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin-right: 2px;
-}
-.tagAdd {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--ink-60);
-  background: transparent;
-  border: 1.5px dashed rgba(var(--line-rgb), 0.28);
-  border-radius: var(--radius-pill);
-  padding: 6px 13px;
-  cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease),
-    background 0.18s var(--ease);
-}
-.tagAdd span {
-  color: var(--ink-40);
-}
-@media (hover: hover) {
-  .tagAdd:hover {
-    color: var(--text-strong);
-    border-color: var(--line-strong);
-    background: rgba(var(--plum-rgb), 0.04);
-  }
-}
-/* The "browse all" entry point sits in the same chip row as the popular
-   quick-adds but reads as a control rather than a value: solid edge, plum ink. */
-.tagBrowseAll {
-  border-style: solid;
-  border-color: rgba(var(--line-rgb), 0.22);
-  color: var(--accent);
-}
-@media (hover: hover) {
-  .tagBrowseAll:hover {
-    color: var(--accent);
-    border-color: rgba(var(--accent-rgb), 0.45);
-    background: rgba(var(--accent-rgb), 0.07);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .tagSuggestItem,
-  .tagAdd {
-    transition: none;
-  }
+  gap: 10px;
 }
 
 /* ---- Visibility segmented control ----------------------------------------- */
@@ -635,15 +450,18 @@
 }
 
 /* ---- Social links editor -------------------------------------------------- */
+/* No flex gap: a gap stays behind a folding row and snaps shut when it
+   unmounts. Each row carries its own space below it instead, inside the
+   height that folds. */
 .linksEditor {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 .linkRow {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-bottom: 10px;
 }
 .linkIcon {
   display: inline-flex;
@@ -1116,9 +934,6 @@
    .workTitleInput 18) are intentionally left alone. */
 @media (--md) {
   .hoodInput,
-  .openToInput,
-  .customPronoun,
-  .tagInput,
   .linkSelect,
   .linkInput,
   .workCatInput,
@@ -1144,8 +959,6 @@
 .chip:focus-visible,
 .openToChip:focus-visible,
 .segment:focus-visible,
-.tagAdd:focus-visible,
-.tagRemove:focus-visible,
 .linkRemove:focus-visible,
 .avatarBtn:focus-visible,
 .workRemove:focus-visible,
@@ -1195,4 +1008,8 @@
    for flex children regardless of text-align. Centre it explicitly. */
 .identityCentered .chips {
   justify-content: center;
+}
+/* The own-pronouns picker below the presets centres with them. */
+.identityCentered .pronounPicker {
+  align-items: center;
 }

@@ -1,10 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  Button,
-  FadeIn,
-  FeatureHelp,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -49,36 +44,23 @@ export function AdminMembersPage() {
   // was erased), so it opens from the page header rather than a member drawer.
   const [isSuppressionOpen, setIsSuppressionOpen] = useState(false);
 
+  // The search runs on the server across every page (see `useAdminMembers`),
+  // so "Load more" stays available while a query is active.
   const {
     members,
+    visibleMembers,
+    isSearchPending,
     total,
     isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useAdminMembers(filter);
+  } = useAdminMembers(filter, search);
   const { data: flagged = [] } = useAdminFlagged();
   const pendingCount = useJoinRequests("pending").data?.length ?? 0;
 
-  // Client-side name search over the members already loaded. It narrows what's
-  // on screen without a refetch; server-side pagination ("Load more") is hidden
-  // while a query is active so we never imply results beyond what we've matched.
-  const query = search.trim().toLowerCase();
-  const visibleMembers = useMemo(
-    () =>
-      query
-        ? members.filter(
-            (member) =>
-              member.name.toLowerCase().includes(query) ||
-              member.pronoun.toLowerCase().includes(query),
-          )
-        : members,
-    [members, query],
-  );
-
-  // Resolved from the full roster on every render, so the drawer always shows
-  // the member as the list currently has them, and typing in the search box
-  // behind the drawer leaves it open.
+  // Resolved from the roster on every render, so the drawer always shows the
+  // member as the list currently has them.
   const selectedMember = useMemo(
     () => members.find((member) => member.id === selectedMemberId) ?? null,
     [members, selectedMemberId],
@@ -142,8 +124,7 @@ export function AdminMembersPage() {
               <Translation
                 i18nKey="admin:members.header.titleLine2"
                 components={{ em: <em /> }}
-              />{" "}
-              <FeatureHelp id="admin.members" />
+              />
             </>
           }
           sub={t("admin:members.header.sub", { count: pendingCount })}
@@ -184,7 +165,9 @@ export function AdminMembersPage() {
 
       <FadeIn delay={140}>
         {tab === "all" &&
-          (isLoading ? (
+          // A pending search with no held rows left to narrow is still
+          // loading, so it shows the skeleton rather than the empty line.
+          (isLoading || (isSearchPending && visibleMembers.length === 0) ? (
             <MemberRowsSkeleton />
           ) : (
             <>
@@ -192,7 +175,7 @@ export function AdminMembersPage() {
                 members={visibleMembers}
                 onSelect={(member) => setSelectedMemberId(member.id)}
               />
-              {hasNextPage && !query && (
+              {hasNextPage && !isSearchPending && (
                 <div className={styles.loadMore}>
                   <Button
                     variant="ghost"

@@ -7,6 +7,10 @@ import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { personaCardPath } from "./personaLinks.data";
 import { personaTitleName } from "./subprofile-kinds";
+import {
+  TABLE_FORMAT_LABEL_KEY,
+  TABLE_VIBE_LABEL_KEY,
+} from "./questTable.data";
 import type { AccentKey, SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
 
@@ -20,6 +24,13 @@ const CARD_TAG_CAP = 4;
  *  fluid default — viewport width × DPR — would over-ask by several times for
  *  every card on the page. */
 const COVER_SRC_SIZE = 720;
+
+/** One rendered piece of a Quest card's "at the table" line: `id` is the
+ *  stored `TableFormat`/`TableVibe` value (a stable React key across
+ *  language changes), `label` its translated display text. Widened to plain
+ *  `string` rather than the narrower union types so the format entry and the
+ *  mapped vibe entries below share one array element type. */
+type TableSegment = { id: string; label: string };
 
 /**
  * Expressive "artist card" for a standalone persona. Reused by the persona
@@ -66,6 +77,29 @@ export function SubprofileCard({
     kind: card.kind,
     ownerName: card.ownerName,
   });
+  // A Quest persona's table at a glance: format first, then up to two vibes.
+  // Kept as separate segments so each one can stay `white-space: nowrap`
+  // while the line as a whole wraps between them. A joined string breaks
+  // mid-word ("Beginner-/friendly") and can leave an orphaned leading
+  // separator on the wrapped line. `id` is the stored format/vibe value (a
+  // stable React key); `label` is the translated text, which changes with
+  // the active language and so can't key the list itself.
+  const rawTableSegments: (TableSegment | null)[] = card.table
+    ? [
+        card.table.format
+          ? {
+              id: card.table.format,
+              label: t(TABLE_FORMAT_LABEL_KEY[card.table.format]),
+            }
+          : null,
+        ...card.table.vibe
+          .slice(0, 2)
+          .map((vibe) => ({ id: vibe, label: t(TABLE_VIBE_LABEL_KEY[vibe]) })),
+      ]
+    : [];
+  const tableSegments = rawTableSegments.filter(
+    (segment): segment is TableSegment => segment !== null,
+  );
 
   return (
     <Link
@@ -104,6 +138,15 @@ export function SubprofileCard({
         </span>
         <span className={styles.name}>{titleName}</span>
         {card.tagline && <span className={styles.tagline}>{card.tagline}</span>}
+        {tableSegments.length > 0 && (
+          <span className={styles.tableLine}>
+            {tableSegments.map((segment) => (
+              <span key={segment.id} className={styles.tableSegment}>
+                {segment.label}
+              </span>
+            ))}
+          </span>
+        )}
         {visibleTags.length > 0 && (
           <TagRow className={styles.tags}>
             {visibleTags.map((tag) => (

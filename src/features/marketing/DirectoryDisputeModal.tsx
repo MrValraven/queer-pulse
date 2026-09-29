@@ -19,9 +19,10 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * "Report / dispute this listing" — a self-contained modal letting anyone
- * (including the named business) contest a directory listing: a "friendly"/
- * queer-tagged entry can be added via the suggest path WITHOUT the venue's
- * knowledge, so this is the way to say so. Files through `useDisputeListing`
+ * (including the named business) contest a directory listing: a member's
+ * suggestion can add a whole listing WITHOUT the venue's knowledge, and the
+ * "friendly" badge can be attached to it either way, so this is the way to
+ * say so. Files through `useDisputeListing`
  * (`POST /listings/:ref/dispute`, the shared moderation pipeline) — a free-text
  * reason plus an optional contact email for a disputer with no reason to be
  * reachable via their member account. Confirms with the plum success panel.

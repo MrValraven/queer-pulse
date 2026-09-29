@@ -6,7 +6,11 @@ import {
 } from "../../members/data/members";
 import { foldForSearch } from "../../connect/connectionsFilter";
 import { handleFormatError } from "../../../shared/handles";
+import { handleIsKindName } from "../personaHandle";
 import { isContentSection } from "../subprofile-kinds";
+import { kindsMatchingSearch } from "../kindSearch";
+import { toCardTableSummary } from "../questTable.data";
+import { QUEST_DEMO_SUBPROFILES } from "./questDemoSubprofiles.data";
 import type {
   CollaboratorDTO,
   EndorserDTO,
@@ -306,7 +310,8 @@ const RUI_DEV: DemoSubprofile = {
   id: "sp-rui-dev",
   kind: "developer",
   slug: "engineering",
-  handle: null,
+  // linkedPersonaHandleCandidate("rui", "engineering")
+  handle: "rui-engineering",
   displayName: "Rui Marçal",
   avatarUrl: null,
   tagline: "Backend & infrastructure · Rust, Go, Postgres",
@@ -398,7 +403,8 @@ const ANIKA_WRITER: DemoSubprofile = {
   id: "sp-anika-writer",
   kind: "writer",
   slug: "poetry",
-  handle: null,
+  // linkedPersonaHandleCandidate("anika", "poetry")
+  handle: "anika-poetry",
   displayName: "Anika Kovač",
   avatarUrl: null,
   tagline: "Poems & translations on migration and belonging",
@@ -832,7 +838,8 @@ const SOFIA_NEVES: DemoSubprofile = {
   id: "sp-maria-therapist",
   kind: "therapist",
   slug: "practice",
-  handle: null,
+  // linkedPersonaHandleCandidate("maria", "practice")
+  handle: "maria-practice",
   displayName: "Sofia Neves",
   avatarUrl: null,
   tagline: "Psychotherapy for LGBTQ+ adults · EN / PT",
@@ -1442,7 +1449,8 @@ const LECHATDASHINKO: DemoSubprofile = {
   id: "sp-jordan-lechatdashinko",
   kind: "dj",
   slug: "lechatdashinko",
-  handle: null,
+  // linkedPersonaHandleCandidate("jordan", "lechatdashinko")
+  handle: "jordan-lechatdashinko",
   displayName: "LeChatDashinko",
   avatarUrl:
     "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop",
@@ -1722,7 +1730,7 @@ const JORDAN_AFTERHOURS: DemoSubprofile = {
   id: "sp-jordan-afterhours",
   kind: "dj",
   slug: "afterhours",
-  handle: "afterhours-jordan",
+  handle: "afterhours-club",
   displayName: "Afterhours",
   avatarUrl: null,
   tagline: "The quiet alias: sets shared with people I actually know",
@@ -2704,7 +2712,8 @@ const IRON_ORCHID: DemoSubprofile = {
   id: "sp-jordan-iron-orchid",
   kind: "pole_dancer",
   slug: "iron-orchid",
-  handle: "iron-orchid",
+  // linkedPersonaHandleCandidate("jordan", "iron-orchid")
+  handle: "jordan-iron-orchid",
   displayName: "Iron Orchid",
   avatarUrl: null,
   tagline: "Pole as strength and as language. I perform, and I teach.",
@@ -2853,6 +2862,7 @@ export const DEMO_SUBPROFILES: DemoSubprofile[] = [
   ANIKA_JOURNAL,
   JORDAN_AFTERHOURS,
   CASA_CORVO_ANTIGA,
+  ...QUEST_DEMO_SUBPROFILES,
 ];
 
 // ── Mock selectors (mirror the backend gating; used by the demo hook branches) ─
@@ -2950,9 +2960,23 @@ function contentItemTags(sp: DemoSubprofile): string[] {
   return tags;
 }
 
+/** Mirrors the backend's directory card: Quest personas carry their cleaned
+ *  "At the table" summary, everyone else carries none. */
+function tableField(sp: DemoSubprofile): Pick<SubprofileCardDTO, "table"> {
+  const table = toCardTableSummary(sp.kind, sp.skinData?.atTheTable);
+  return table ? { table } : {};
+}
+
 export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
   return {
-    handle: sp.handle ?? sp.slug,
+    ...tableField(sp),
+    // A handle-less UNLINKED persona has no real address here, but every demo
+    // fixture predates the handle rollout, so falling back to its slug keeps
+    // the card usable. A handle-less LINKED persona must NOT take that same
+    // fallback: `personaCardPath` only reads `slug` for a linked card's own
+    // nested fallback, keyed off `ownerSlug` below, and a bare slug read as a
+    // handle would fabricate a `/p/<slug>` no route actually resolves.
+    handle: sp.handle ?? (sp.linkVisibility === "unlinked" ? sp.slug : ""),
     linkVisibility: sp.linkVisibility,
     ownerSlug: sp.linkVisibility === "linked" ? sp.ownerSlug : null,
     // Same linked-only rule as `ownerSlug` — mirrors the backend's `toCardDTO`.
@@ -3093,7 +3117,8 @@ export const mockSubprofilesForProfile = (
 
 /** Directory cards: published + open + not removed, filtered by kind/query.
  *  Includes both unlinked AND linked personas (linked ones route to their
- *  owner-nested URL via `personaCardPath`). */
+ *  owner-nested URL via `personaCardPath`). A term naming a profession ("dm",
+ *  "cosplay") also matches that kind, as the backend's alias branch does. */
 export const mockDirectory = (
   params: { kind?: string; query?: string } = {},
 ): SubprofileCardDTO[] => {
@@ -3102,6 +3127,7 @@ export const mockDirectory = (
   // accent-folded server-side and the persona half is not — see
   // `matchesDemoOwnerName` for why the two branches differ.
   const foldedQuery = q ? foldForSearch(q) : "";
+  const searchKinds = q ? new Set(kindsMatchingSearch(q)) : null;
   return DEMO_SUBPROFILES.filter(
     (s) =>
       s.status === "published" &&
@@ -3110,6 +3136,7 @@ export const mockDirectory = (
       (!params.kind || s.kind === params.kind) &&
       (!q ||
         s.displayName.toLowerCase().includes(q) ||
+        Boolean(searchKinds?.has(s.kind)) ||
         (s.tagline ?? "").toLowerCase().includes(q) ||
         matchesDemoOwnerName(s, foldedQuery)),
   ).map(toCardDto);
@@ -3168,15 +3195,19 @@ export type DemoPublicAccessResult =
   | { kind: "restricted"; restricted: RestrictedState }
   | { kind: "not-found" };
 
-/** Unfiltered lookup by global handle for an UNLINKED persona. Falls back to
- *  matching the internal `slug` when `handle` is null: an unpublished unlinked
- *  draft has no handle yet (it's only assigned on publish, see
- *  `validatePublishDemo`/the MSW publish handler), so a hand-typed `/p/<slug>`
- *  still opens it in the prototype.
+/** Unfiltered lookup by global handle, for both linked and unlinked personas:
+ *  a linked persona joins the same `handles` registry an unlinked one does,
+ *  so `/p/<handle>` resolves either kind straight through this one finder.
+ *  Falls back to matching the internal `slug` when `handle` is null, but only
+ *  for an UNLINKED persona: an unpublished unlinked draft has no handle yet
+ *  (it's only assigned on publish, see `validatePublishDemo`/the MSW publish
+ *  handler), so a hand-typed `/p/<slug>` still opens it in the prototype. A
+ *  legacy or demo linked row with no handle has no such fallback: its address
+ *  stays at `/members/<owner>/<slug>` until it gets a handle.
  *
- *  Nothing LINKS here any more. The owner surfaces used to build a `/p/<slug>`
- *  preview link from this fallback, which the real `/p/:handle` route resolves
- *  for nobody, so View / Share / QR / vCard now go through
+ *  The owner surfaces used to build a `/p/<slug>` preview link from the
+ *  unlinked fallback for a handle-less persona, which the real `/p/:handle`
+ *  route resolves for nobody, so View / Share / QR / vCard now go through
  *  `personaOwnerAddress` and say "no address yet" instead (PRD-206). The
  *  fallback stays because the demo registry is also read by direct URL. */
 export const findDemoSubprofileByHandle = (
@@ -3184,8 +3215,10 @@ export const findDemoSubprofileByHandle = (
 ): DemoSubprofile | undefined =>
   DEMO_SUBPROFILES.find(
     (s) =>
-      s.linkVisibility === "unlinked" &&
-      (s.handle === handle || (s.handle === null && s.slug === handle)),
+      s.handle === handle ||
+      (s.linkVisibility === "unlinked" &&
+        s.handle === null &&
+        s.slug === handle),
   );
 
 /** Unfiltered lookup by owner slug + persona slug for a LINKED persona (the
@@ -3221,7 +3254,13 @@ export function resolvePublicAccessDemo(
   if (sp.visibility === "private") {
     return { kind: "restricted", restricted: "private" };
   }
-  if (sp.visibility === "network" && viewerSlug === null) {
+  // A linked persona sits behind the members-only wall for a signed-out
+  // visitor no matter its own visibility setting, the same wall an unlinked
+  // persona set to "network" sits behind.
+  if (
+    viewerSlug === null &&
+    (sp.linkVisibility === "linked" || sp.visibility === "network")
+  ) {
     return { kind: "restricted", restricted: "members_only" };
   }
   return { kind: "ok", dto: toPublicDto(sp, false) };
@@ -3383,15 +3422,30 @@ export const MIN_CONTENT_ITEMS = 3;
 /** Placeholder blocklist; a real moderation-module hook is a documented follow-up. */
 export const BLOCKED_TERMS = ["slur-placeholder", "banned-term-placeholder"];
 
-/** Run the completeness check against a mock DTO, returning the unmet C5 codes.
- *  Linked personas only need a non-empty displayName; unlinked run the full gate. */
-export function validatePublishDemo(dto: SubprofileDTO): string[] {
-  const unmet: string[] = [];
-  if (dto.linkVisibility === "linked") return unmet; // linked: displayName only
-  const handle = dto.handle ?? dto.slug;
+/** The handle codes shared by both gates: its format, then whether it is only
+ *  the persona's own kind name ("therapist", "terapia"), which is checked on a
+ *  well-formed handle alone. */
+function handleUnmetCodes(handle: string, dto: SubprofileDTO): string[] {
   const handleFormatProblem = handleFormatError(handle);
-  if (handleFormatProblem === "invalid") unmet.push("handle_invalid");
-  if (handleFormatProblem === "reserved") unmet.push("handle_reserved");
+  if (handleFormatProblem === "invalid") return ["handle_invalid"];
+  if (handleFormatProblem === "reserved") return ["handle_reserved"];
+  return handleIsKindName(handle, dto.kind) ? ["handle_is_kind"] : [];
+}
+
+/** Run the completeness check against a mock DTO, returning the unmet C5 codes.
+ *  Linked personas skip the completeness gate entirely (displayName only); if
+ *  one already carries a typed handle, only that handle is checked (its format,
+ *  and that it is more than the kind name), since a linked persona may still
+ *  edit its default `<creator>-<persona>` address to something else before it
+ *  publishes. Unlinked personas run the full gate, and their handle is required:
+ *  a standalone persona with no handle fails as `handle_invalid`, because the
+ *  server never falls back to the slug. */
+export function validatePublishDemo(dto: SubprofileDTO): string[] {
+  if (dto.linkVisibility === "linked") {
+    return dto.handle ? handleUnmetCodes(dto.handle, dto) : [];
+  }
+  const handle = dto.handle ?? "";
+  const unmet = handleUnmetCodes(handle, dto);
   if (!dto.avatarUrl) unmet.push("avatar_missing");
   if ((dto.bio ?? "").length < MIN_BIO) unmet.push("bio_too_short");
   // No content-count check: an empty persona publishes (see MIN_CONTENT_ITEMS).

@@ -44,7 +44,7 @@ const GATED_PATTERNS: string[] = [
   // Magazine editorial tools (dashboard + deck authoring) — staff-only
   "/magazine/editor",
   "/magazine/editor/*",
-  // Magazine writer workspace (assignments/pitches/payments) — staff-only
+  // Magazine writer workspace (work/pitches/submissions/payments): staff-only
   "/magazine/writer",
   "/magazine/writer/*",
   // Personal member surfaces
@@ -86,6 +86,13 @@ const GATED_PATTERNS: string[] = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // The Go together friend-match questionnaire and day-after feedback prompt
+  // (F3). `/go-together/*` covers both, the same wildcard pattern `/forum/*`
+  // needs just below: the bare "/go-together" is never a route on its own, so
+  // without the wildcard the questionnaire and feedback children would be
+  // publicly reachable.
+  "/go-together",
+  "/go-together/*",
   // Forum. `/forum/*` is what covers the full-page composer at `/forum/new`:
   // matchPath treats the bare "/forum" as an EXACT match, so without the
   // wildcard every child route under it would be publicly reachable.
@@ -113,12 +120,11 @@ const GATED_PATTERNS: string[] = [
   routes.postVolunteer,
   routes.editVolunteer,
   routes.manageVolunteerApplicants,
-  // The member's own pitch tracker ("where every pitch actually is"). Gated as
-  // a member surface and nothing more: the page reads
-  // `GET /magazine/submissions/mine`, which `MagazineController` guards with
-  // `ActiveMemberGuard` alone, so every active member is admitted. It carries
-  // NO entry in CAPABILITY_PATTERNS below — see the note there for why the
-  // `magazine_writer` gate it used to sit behind was wrong. PRD-125.
+  // The old standalone story-submission tracker, now a legacy redirect into
+  // the writer workspace's Submissions tab (`routes.redirects.data.ts`). Kept
+  // here so a signed-out visitor still goes to sign-in; after sign-in the
+  // redirect lands on `/magazine/writer`, where the `magazine_writer` gate in
+  // CAPABILITY_PATTERNS below applies.
   routes.pitchTracker,
   // Block & mute is an account-settings surface that lives under /safety, where
   // the crisis pages around it are deliberately public.
@@ -389,16 +395,12 @@ const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
     capability: "magazine_editor",
   },
   {
-    // The writer workspace, and only the writer workspace. `routes.pitchTracker`
-    // (`/magazine/pitches`) used to be listed here as "the workspace's third
-    // tab", but the two are different surfaces reading different backends:
-    // the workspace's pitches tab reads `GET /magazine/writer/pitches` behind
-    // `@StaffRoles('magazine_writer')`, while the tracker reads
-    // `GET /magazine/submissions/mine` behind `ActiveMemberGuard` alone. Gating
-    // the tracker on this grant bounced every plain member — and every
-    // non-admin editor — off a page their own account menu links them to, onto
-    // the visitor homepage with no explanation, even though the endpoint the
-    // page calls would have answered them. PRD-125.
+    // The writer workspace. It also hosts the member submission tracker as its
+    // Submissions tab (`/magazine/pitches` redirects there), behind this same
+    // grant. The backend is unchanged: the workspace's pitches tab reads
+    // `GET /magazine/writer/pitches` behind `@StaffRoles('magazine_writer')`,
+    // while the Submissions tab reads `GET /magazine/submissions/mine`, which
+    // is still guarded by `ActiveMemberGuard` alone.
     patterns: ["/magazine/writer", "/magazine/writer/*"],
     capability: "magazine_writer",
   },
@@ -528,6 +530,8 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       `${routes.adminOrgTiers}/*`,
       routes.adminChangemakers,
       `${routes.adminChangemakers}/*`,
+      routes.adminAmbassadors,
+      `${routes.adminAmbassadors}/*`,
       routes.adminChangemakerNominations,
       `${routes.adminChangemakerNominations}/*`,
     ],

@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { useDebouncedValue } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberName } from "./data/members";
 import { useMembers, type MembersResult } from "./api/useMembers";
+import { workIdsMatchingSearch } from "./directoryWorkSearch";
+import { foldForSearch } from "./workFieldPicker.data";
 import {
   ALL_OF_LISBON,
-  EMPTY_FILTERS,
   SORT_PARAM,
   type FilterState,
   type SortKey,
@@ -47,10 +49,7 @@ export interface MemberDirectoryResult extends MembersResult {
  * Every facet is forwarded. This used to stop at `identities`/`sort`, silently
  * leaving the rest of the sidebar decorative in live mode (an audited P0).
  * `ALL_OF_LISBON` is FE-only chrome meaning "no hood filter" and is stripped
- * before the request; `yearsFrom`/`yearsTo` are only sent once the range has
- * actually been narrowed from its full [0, 9] default. Sending the untouched
- * default would be a harmless no-op filter, but omitting it keeps the query key
- * (and the request) identical to before a member ever touches the slider.
+ * before the request.
  *
  * Sort is server-side in live mode, so it belongs in the query key: changing it
  * refetches. Demo mode sorts the whole mock list in the browser and must NOT
@@ -75,6 +74,14 @@ export interface MemberDirectoryResult extends MembersResult {
  * honest: it counts demo facets off the list it is handed, and live facets
  * already come back counted under the search term, so both modes report
  * availability within the current search.
+ *
+ * The same box also finds people by WORK. `workIdsMatchingSearch` turns the
+ * term into the field and profession ids whose visible label it matches
+ * ("nur" gives `nurse`, "saude" gives `healthcare`). Live mode sends them as
+ * `searchDisciplines=` / `searchProfessions=` beside `query=`, so they widen
+ * the text match server-side and ride in the query key. Demo mode keeps a
+ * mock member whose `discipline` or `profession` is among them. Name matching
+ * folds accents in demo too, so "joao" finds "João".
  */
 export function useMemberDirectoryQuery(
   filters: FilterState,
@@ -83,36 +90,44 @@ export function useMemberDirectoryQuery(
 ): MemberDirectoryResult {
   const [searchInput, setSearchInput] = useState("");
   const searchTerm = useDebouncedValue(searchInput.trim(), SEARCH_DEBOUNCE_MS);
+  const { t } = useTranslation();
+  const workIds = useMemo(
+    () => workIdsMatchingSearch(searchTerm, t),
+    [searchTerm, t],
+  );
+  const isLiveSearch = !demoMode && searchTerm !== "";
   const hoods = filters.hoods.filter((hood) => hood !== ALL_OF_LISBON);
   const result = useMembers({
-    query: demoMode ? undefined : searchTerm || undefined,
+    query: isLiveSearch ? searchTerm : undefined,
+    searchDisciplines: isLiveSearch ? workIds.disciplineIds : undefined,
+    searchProfessions: isLiveSearch ? workIds.professionIds : undefined,
     identities: filters.identities,
     openTo: filters.openTo,
     hoods,
     disciplines: filters.disciplines,
     professions: filters.professions,
     languages: filters.languages,
-    yearsFrom:
-      filters.yearsFrom !== EMPTY_FILTERS.yearsFrom
-        ? filters.yearsFrom
-        : undefined,
-    yearsTo:
-      filters.yearsTo !== EMPTY_FILTERS.yearsTo ? filters.yearsTo : undefined,
+    // `focus` means nothing to the backend without `ambassador=1` (Task B6),
+    // so it always rides alongside it.
+    ambassador: filters.isAmbassadorsOnly ? true : undefined,
+    focus: filters.isAmbassadorsOnly ? filters.ambassadorFocusAreas : undefined,
     sort: demoMode ? undefined : SORT_PARAM[sort],
   });
 
   const items = useMemo(() => {
     if (!demoMode || searchTerm === "") return result.items;
-    const needle = searchTerm.toLowerCase();
+    const foldedTerm = foldForSearch(searchTerm);
     return result.items.filter((member) => {
+      if (workIds.disciplineIds.includes(member.discipline)) return true;
+      if (workIds.professionIds.includes(member.profession)) return true;
       const name = member.firstName
         ? `${member.firstName} ${member.lastName ?? ""}`
         : memberName(member.slug);
-      return `${name} ${member.slug} ${member.role}`
-        .toLowerCase()
-        .includes(needle);
+      return foldForSearch(`${name} ${member.slug} ${member.role}`).includes(
+        foldedTerm,
+      );
     });
-  }, [demoMode, searchTerm, result.items]);
+  }, [demoMode, searchTerm, workIds, result.items]);
 
   return {
     ...result,

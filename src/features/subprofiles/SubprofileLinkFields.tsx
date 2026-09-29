@@ -1,27 +1,23 @@
 import { useState, type FocusEvent } from "react";
-import { FiLock } from "react-icons/fi";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import {
-  LINK_HELP_KEY,
-  LINK_TO_LABEL_KEY,
-  VISIBILITY_OPTIONS,
-} from "./subprofileEditor.data";
+import { VISIBILITY_OPTIONS } from "./subprofileEditor.data";
 import { UsernameField } from "../settings/UsernameField";
 import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { AddressChangeWarningModal } from "./AddressChangeWarningModal";
+import { SubprofileLinkChoiceCards } from "./SubprofileLinkChoiceCards";
 import {
   usePersonaCreatorSlug,
   usePersonaIsCreator,
 } from "./usePersonaCreatorSlug";
-import { PersonaAddressField } from "./PersonaAddressField";
 import {
-  finishSlug,
-  handleStateLine,
+  handleNamesOwner,
+  linkedPersonaHandleCandidate,
+} from "./personaHandle";
+import {
   linkChoiceLockState,
   pathFor,
   warningPathsForPending,
@@ -29,19 +25,25 @@ import {
 } from "./subprofileAddressChange";
 
 /**
- * The "Address" rail pane: how this persona is found (linked to the owner's
- * profile vs. standing alone with a global handle) plus who can see it. Fed
- * by the SAME `useSubprofileMetaEditor` hook instance the Identity/Presence
- * panes share (lifted in `EditorPaneRouter`), so this pane never owns its
- * own save — flipping link mode or editing the value here is just more of
- * that one hook's dirty state until the shared Save button PATCHes it.
+ * The "Address" rail pane: whether this persona shows it belongs to its
+ * creator (linked) or stands alone (unlinked), its one `/p/<handle>` address,
+ * and who can see it. Fed by the SAME `useSubprofileMetaEditor` hook instance
+ * the Identity/Presence panes share (lifted in `EditorPaneRouter`), so this
+ * pane owns no save of its own: flipping link mode or editing the handle here
+ * is more of that one hook's dirty state until the shared Save button
+ * PATCHes it.
  *
- * Restyled to the design's `.choices`/`.choice` card toggle (each card
- * carries its own `<code>` path preview + a live `.handlestate` line) in
- * place of the old `SegmentedControl`. A PUBLISHED persona's address is
- * live — switching link mode, or editing an already-published slug/handle,
- * intercepts the change with `AddressChangeWarningModal` and only applies it
- * on confirm; a draft has nothing live yet, so nothing is intercepted.
+ * Both kinds claim a handle from the global namespace through the same
+ * `UsernameField`. A linked persona may leave it empty: the server then
+ * derives `<creatorSlug>-<personaSlug>` and stores it on save, draft or live,
+ * which the placeholder and hint preview. An unlinked handle that carries the creator's slug would say
+ * who runs the persona, so the field shows it as an error. A link switch
+ * always starts from an empty handle.
+ *
+ * A PUBLISHED persona's address is live: switching link mode, or editing an
+ * already-published handle, intercepts the change with
+ * `AddressChangeWarningModal` and only applies it on confirm. A draft has
+ * nothing live yet, so nothing is intercepted.
  */
 export function SubprofileLinkFields({
   editor,
@@ -51,10 +53,9 @@ export function SubprofileLinkFields({
   subprofile: SubprofileView;
 }) {
   const { t } = useTranslation();
-  // The `/members/:ownerSlug/:slug` preview must name the persona's CREATOR,
-  // not whoever is editing: a co-owner was shown (and could copy) a path under
-  // their OWN profile, which resolves to nothing. Until it resolves, the
-  // placeholder stands in rather than a confidently wrong slug.
+  // The derived linked default names the persona's CREATOR even when a
+  // co-owner is editing, since the server derives it from the creator's slug.
+  // Until it resolves, the placeholder stands in for the address.
   const creatorSlug = usePersonaCreatorSlug(
     subprofile.id,
     subprofile.memberCount,
@@ -83,6 +84,13 @@ export function SubprofileLinkFields({
     setAcknowledged(false);
   }
 
+  // A link switch always starts from a fresh handle: the server releases the
+  // old one, and a linked persona with no handle gets the derived default.
+  function switchLink(target: LinkVisibility) {
+    editor.setLink(target);
+    editor.setHandle("");
+  }
+
   function selectLink(target: LinkVisibility) {
     if (target === "linked" && linkChoiceLocked) return;
     if (target === editor.link) return;
@@ -90,22 +98,7 @@ export function SubprofileLinkFields({
       setPending({ kind: "switchMode", target });
       return;
     }
-    editor.setLink(target);
-  }
-
-  function handleSlugBlur() {
-    // Drop a dangling "-" left mid-typing, so the saved slug is the one shown.
-    const slug = finishSlug(editor.slug);
-    if (slug !== editor.slug) editor.setSlug(slug);
-    if (!isPublished || acknowledged) return;
-    if (editor.link !== subprofile.linkVisibility) return; // a mode switch is already gated above
-    if (slug === subprofile.slug) return;
-    setPending({
-      kind: "editField",
-      field: "slug",
-      value: slug,
-      previous: subprofile.slug,
-    });
+    switchLink(target);
   }
 
   function handleHandleBlur(event: FocusEvent<HTMLDivElement>) {
@@ -114,6 +107,15 @@ export function SubprofileLinkFields({
     if (editor.link !== subprofile.linkVisibility) return;
     const previousHandle = subprofile.handle ?? "";
     if (editor.handle === previousHandle) return;
+    // Clearing a linked handle that already is the derived default keeps the
+    // same address: restore the field instead of sending an empty handle,
+    // which would draft (unpublish) the persona for no visible change.
+    const pathWith = (handle: string) =>
+      pathFor(editor.link, ownerSlug, editor.slug, handle);
+    if (pathWith(editor.handle) === pathWith(previousHandle)) {
+      editor.setHandle(previousHandle);
+      return;
+    }
     setPending({
       kind: "editField",
       field: "handle",
@@ -123,20 +125,42 @@ export function SubprofileLinkFields({
   }
 
   function cancelPending() {
-    if (pending?.kind === "editField") {
-      if (pending.field === "slug") editor.setSlug(pending.previous);
-      else editor.setHandle(pending.previous);
-    }
+    if (pending?.kind === "editField") editor.setHandle(pending.previous);
     setPending(null);
   }
 
   function confirmPending() {
-    if (pending?.kind === "switchMode") editor.setLink(pending.target);
+    if (pending?.kind === "switchMode") switchLink(pending.target);
     else if (pending?.kind === "editField") setAcknowledged(true);
     setPending(null);
   }
 
-  const handleNote = handleStateLine(editor.handleStatus, t);
+  const linkedDefaultHandle = creatorSlug
+    ? linkedPersonaHandleCandidate(creatorSlug, editor.slug || "persona")
+    : undefined;
+  const isLinked = editor.link === "linked";
+  // Linked with an empty handle previews the derived default. A draft
+  // standalone persona learns that handles go to whoever publishes first.
+  let handleHint: string | undefined;
+  if (isLinked && !editor.handle && linkedDefaultHandle)
+    handleHint = t("subprofiles:metaForm.linkedHandleHint", {
+      handle: linkedDefaultHandle,
+    });
+  else if (!isLinked && !isPublished)
+    handleHint = t("subprofiles:newModal.handleStateClaim");
+  const namesOwnerError =
+    !isLinked && creatorSlug && handleNamesOwner(editor.handle, creatorSlug)
+      ? t("subprofiles:metaForm.handleNamesOwner", { creator: creatorSlug })
+      : undefined;
+  // A standalone persona has no derived default, so an empty address is an
+  // error there. The bare kind name ("therapist") is refused for both kinds.
+  let handleError = namesOwnerError;
+  if (!isLinked && editor.isStandaloneHandleMissing)
+    handleError = t("subprofiles:metaForm.handleRequired");
+  else if (editor.isHandleKindName)
+    handleError = t("subprofiles:metaForm.handleIsKind", {
+      handle: editor.handle.trim(),
+    });
   const warning = pending
     ? warningPathsForPending(pending, {
         link: editor.link,
@@ -148,36 +172,32 @@ export function SubprofileLinkFields({
 
   return (
     <>
-      <LinkChoiceCards
+      <SubprofileLinkChoiceCards
         editor={editor}
-        ownerSlug={ownerSlug}
+        creatorSlug={creatorSlug}
         linkChoiceLocked={linkChoiceLocked}
         showLinkLockHint={showLinkLockHint}
-        handleNote={handleNote}
         onSelect={selectLink}
         t={t}
       />
 
-      {editor.link === "linked" ? (
-        <PersonaAddressField
-          label={t("subprofiles:metaForm.addressLabel")}
-          placeholder={t("subprofiles:metaForm.addressPlaceholder")}
-          ownerSlug={ownerSlug}
-          value={editor.slug}
-          onChange={editor.setSlug}
-          onBlur={handleSlugBlur}
+      <div id={FIELD_ANCHOR_ID.handle} onBlur={handleHandleBlur}>
+        <UsernameField
+          value={editor.handle}
+          onChange={editor.setHandle}
+          currentName={subprofile.handle ?? undefined}
+          label={t("subprofiles:metaForm.addressFieldLabel")}
+          prefix="/p/"
+          placeholder={
+            isLinked && linkedDefaultHandle
+              ? linkedDefaultHandle
+              : t("subprofiles:metaForm.standalonePlaceholder")
+          }
+          hint={handleHint}
+          error={handleError}
+          onStatusChange={editor.setHandleStatus}
         />
-      ) : (
-        <div id={FIELD_ANCHOR_ID.handle} onBlur={handleHandleBlur}>
-          <UsernameField
-            value={editor.handle}
-            onChange={editor.setHandle}
-            currentName={subprofile.handle ?? undefined}
-            label={t("subprofiles:metaForm.handleLabel")}
-            onStatusChange={editor.setHandleStatus}
-          />
-        </div>
-      )}
+      </div>
 
       <FormField
         label={t("subprofiles:metaForm.visibilityLabel")}
@@ -212,72 +232,5 @@ export function SubprofileLinkFields({
         />
       )}
     </>
-  );
-}
-
-/** The linked/unlinked `.choice` card pair. Split out of `SubprofileLinkFields`
- *  to keep that pane under the line cap; `linkChoiceLocked`/`showLinkLockHint`
- *  come from `linkChoiceLockState` (see there for the product rule they
- *  encode). */
-function LinkChoiceCards({
-  editor,
-  ownerSlug,
-  linkChoiceLocked,
-  showLinkLockHint,
-  handleNote,
-  onSelect,
-  t,
-}: {
-  editor: SubprofileMetaEditor;
-  ownerSlug: string;
-  linkChoiceLocked: boolean;
-  showLinkLockHint: boolean;
-  handleNote: ReturnType<typeof handleStateLine>;
-  onSelect: (target: LinkVisibility) => void;
-  t: TFunction;
-}) {
-  return (
-    <div className="choices">
-      <button
-        type="button"
-        className="choice"
-        aria-pressed={editor.link === "linked"}
-        disabled={linkChoiceLocked}
-        onClick={() => onSelect("linked")}
-      >
-        <b>{t(LINK_TO_LABEL_KEY.linked)}</b>
-        <p>{t(LINK_HELP_KEY.linked)}</p>
-        <code>{pathFor("linked", ownerSlug, editor.slug, editor.handle)}</code>
-        <p className="handlestate idle">
-          {t("subprofiles:newModal.linkedAddressNote")}
-        </p>
-        {showLinkLockHint && (
-          <p className="choiceLockHint">
-            <FiLock aria-hidden />
-            {t("subprofiles:link.creatorOnlyHint")}
-          </p>
-        )}
-      </button>
-      <button
-        type="button"
-        className="choice"
-        aria-pressed={editor.link === "unlinked"}
-        onClick={() => onSelect("unlinked")}
-      >
-        <b>{t(LINK_TO_LABEL_KEY.unlinked)}</b>
-        <p>{t(LINK_HELP_KEY.unlinked)}</p>
-        <code>
-          {pathFor("unlinked", ownerSlug, editor.slug, editor.handle)}
-        </code>
-        <p className="handlestate idle">
-          {t("subprofiles:newModal.standaloneNote")}
-        </p>
-        {handleNote && (
-          <p className={`handlestate ${handleNote.tone}`}>
-            {handleNote.message}
-          </p>
-        )}
-      </button>
-    </div>
   );
 }

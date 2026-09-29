@@ -8,16 +8,6 @@
   padding: var(--section-y-48) 24px var(--section-y-80);
 }
 
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: var(--section-y-64) 0;
-  color: var(--ink-60);
-  font-size: var(--text-15);
-}
-
 .card {
   display: flex;
   flex-direction: column;

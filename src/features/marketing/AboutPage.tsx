@@ -1,6 +1,6 @@
 import { FiCheck, FiX } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -40,7 +40,6 @@ export function AboutPage() {
             components={{ em: <em /> }}
           />
         }
-        titleAction={<FeatureHelp id="marketing.about" />}
         sub={t("marketing:about.hero.sub")}
       />
 

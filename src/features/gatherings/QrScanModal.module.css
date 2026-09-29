@@ -49,21 +49,52 @@
   }
 }
 
-/* Drag-affordance grabber — a visible cue the panel is a sheet. Hidden on
-   desktop where it's a centered dialog. */
+/* This .overlay/.modal/.grabber/.close block predates the shared
+   <ModalSheet>/<Modal> (see ../../shared/components/ui/Modal.module.css) and
+   is no longer rendered here: QrScanModal.tsx and DoorScanModal.tsx both use
+   the shared <Modal> for the scanning view and the shared <ModalSheet> for
+   the success view, which carry their own chrome from that stylesheet.
+   Nothing in this file's own consumers references these four classes today.
+   Kept in sync with the same scroll-under-the-handle fix ModalSheet
+   received, in case this block is ever revived or copied elsewhere; a
+   cleanup pass could remove it outright.
+   Geometry: the sheet's top padding is 30px at every width this class shows
+   the grabber at; browsers measure a sticky offset from inside that padding,
+   so `top` pays it back on both the strip and the grabber. */
 .grabber {
   position: sticky;
-  top: 0;
-  z-index: 2;
+  top: -12px;
+  z-index: var(--z-sticky);
   width: 40px;
   height: 5px;
-  margin: -12px auto 16px;
+  margin: -10px auto 16px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   touch-action: none;
 }
+/* The strip the drag handle sits on: painted with the sheet's own surface
+   (`background: inherit`) and pinned to the top edge, so scrolled content
+   slides under the strip and never behind the bare handle. */
+.modal::before {
+  content: "";
+  display: block;
+  position: sticky;
+  top: -30px;
+  z-index: var(--z-sticky);
+  height: 28px;
+  margin: -30px -32px 0;
+  background: inherit;
+}
+@media (max-width: 719.98px) {
+  .modal {
+    /* Keyboard focus and scroll-into-view stop below the strip, so a focused
+       control is never parked underneath it. */
+    scroll-padding-block-start: 28px;
+  }
+}
 @media (min-width: 720px) {
-  .grabber {
+  .grabber,
+  .modal::before {
     display: none;
   }
 }
@@ -87,6 +118,7 @@
   position: absolute;
   top: 14px;
   right: 14px;
+  z-index: var(--z-sticky);
   width: 2em; /* 36 / 18 */
   height: 2em;
   border-radius: 50%;

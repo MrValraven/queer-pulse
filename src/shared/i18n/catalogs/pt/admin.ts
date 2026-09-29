@@ -563,6 +563,17 @@ export const admin: Catalog = {
   "members.verify.decided.decidedOn": "Decidido a {date}",
   "members.verify.decided.decidedUnknown": "Data da decisão não registada",
   "members.verify.decided.declineReasonLine": "Motivo: {reason}",
+  "members.verify.decided.showDetails": "Mostrar detalhes de {name}",
+  "members.verify.decided.hideDetails": "Esconder detalhes de {name}",
+  "members.verify.decided.filter.groupLabel": "Filtrar pedidos decididos",
+  "members.verify.decided.filter.all": "Todos",
+  "members.verify.decided.filter.unclaimed": "Por usar",
+  "members.verify.decided.filter.claimed": "Já usados",
+  "members.verify.decided.filter.declined": "Recusados",
+  "members.verify.decided.filter.optionSr_one": "{label}, {count} pedido",
+  "members.verify.decided.filter.optionSr_other": "{label}, {count} pedidos",
+  "members.verify.decided.filterEmpty":
+    "Nenhum pedido decidido carregado aqui cabe em “{filter}”.",
 
   // O estado da ligação de convite criada por uma aprovação. Caduca sete dias
   // depois de ser criada, e só uma ligação caducada pode ser reemitida.
@@ -597,6 +608,18 @@ export const admin: Catalog = {
     "Esta ligação foi usada ou revogada, ou ainda funciona. Não há nada para reemitir.",
   "members.verify.invite.reissueError.generic":
     "Não foi possível reemitir essa ligação. Tenta outra vez.",
+  "members.verify.invite.revoke.cta": "Revogar ligação",
+  "members.verify.invite.revoke.confirmTitle":
+    "Revogar a ligação de convite de {name}?",
+  "members.verify.invite.revoke.confirmBody":
+    "A ligação de convite para {email} deixa de funcionar de imediato. Uma ligação revogada não pode ser reemitida.",
+  "members.verify.invite.revoke.confirmCta": "Revogar ligação",
+  "members.verify.invite.revoke.doneToast":
+    "A ligação para {email} já não funciona.",
+  "members.verify.invite.revoke.movedOnToast":
+    "Esta ligação já mudou de estado, por isso não há nada para revogar. Atualiza para veres como está.",
+  "members.verify.invite.revoke.failedToast":
+    "Não foi possível revogar essa ligação. Tenta outra vez.",
 
   // Separador de amostra de qualidade: uma verificação periódica e só de
   // leitura de decisões passadas, para outro admin comparar notas. Não é um
@@ -1423,6 +1446,7 @@ export const admin: Catalog = {
     "Todas as submissões já têm o seu lugar. Não há nada à tua espera agora. Novas listagens aparecem aqui assim que alguém as adicionar.",
   "adminListings.unknownSubmitter": "Membro desconhecido",
   "adminListings.row.submittedAgo": "Enviado {time}",
+  "adminListings.suggestedBy": "Sugerido por {name}",
   "adminListings.filter.all": "Todos",
   "adminListings.filter.review": "Em revisão",
   "adminListings.filter.question": "Pergunta rápida",
@@ -1444,8 +1468,10 @@ export const admin: Catalog = {
   "adminListings.sendBackCta": "Voltar a revisão",
   "adminListings.toast.moved": "{name} movido para {status}.",
   "adminListings.viewCta": "Ver e pré-visualizar",
+  "adminListings.viewLiveCta": "Ver página",
   "adminListings.preview.sub":
     "Exatamente como esta página ficará quando estiver publicada no diretório.",
+  "adminListings.preview.editCta": "Editar espaço",
   "adminListings.ask.eyebrow": "Fazer uma pergunta",
   "adminListings.ask.title": "Perguntar sobre {name}",
   "adminListings.ask.sub": "Vamos enviar isto a {name} como mensagem.",
@@ -1462,6 +1488,7 @@ export const admin: Catalog = {
     "Esta página não tem nenhum membro associado. Não há a quem enviar a pergunta.",
   "adminListings.view.queue": "Submissões",
   "adminListings.view.editSuggestions": "Sugestões de edição",
+  "adminListings.view.claims": "Reivindicações",
   "adminListings.remove.cta": "Eliminar",
   "adminListings.actions.moreAriaLabel": "Mais ações para {name}",
   "adminListings.remove.toast.removed": "Anúncio eliminado: {name}.",
@@ -1523,6 +1550,8 @@ export const admin: Catalog = {
     "{actor} aprovou uma transferência de propriedade.",
   "adminListings.history.event.ownerEdited":
     "{actor} editou a listagem publicada.",
+  "adminListings.history.event.staffEdited":
+    "{actor} editou a listagem em nome da QueerPulse.",
   "adminListings.history.event.coManagerAdded":
     "{actor} juntou-se à equipa de cogestão.",
   "adminListings.history.event.coManagerRemoved":
@@ -4717,7 +4746,9 @@ export const admin: Catalog = {
   "adminGlossary.searchLabel": "Pesquisar termos",
   "adminGlossary.searchPlaceholder": "Termo, slug ou categoria",
   "adminGlossary.newTermCta": "Adicionar um termo",
-  "adminGlossary.untranslatedBanner":
+  "adminGlossary.untranslatedBanner_one":
+    "{count} termo ainda não tem definição em português.",
+  "adminGlossary.untranslatedBanner_other":
     "{count} termos ainda não têm definição em português.",
   "adminGlossary.empty":
     "Ainda não há termos. Adiciona o primeiro, ou corre a migração de preenchimento.",
@@ -4728,6 +4759,19 @@ export const admin: Catalog = {
   "adminGlossary.loadError.body":
     "A lista de termos não chegou. Tenta outra vez daqui a um momento.",
   "adminGlossary.row.noPortuguese": "Sem português",
+
+  // Glossary term preview modal
+  "adminGlossary.preview.rowCta": "Pré-visualizar",
+  "adminGlossary.preview.title": "Como os leitores veem este termo",
+  "adminGlossary.preview.intro":
+    "É assim que o glossário público mostra este termo neste momento. Os termos ficam públicos assim que são guardados, tenham sido revistos ou não.",
+  "adminGlossary.preview.englishLabel": "Inglês",
+  "adminGlossary.preview.portugueseLabel": "Português",
+  "adminGlossary.preview.fallbackNotice":
+    "Este termo ainda não tem definição em português, por isso quem navega em português vê a definição em inglês abaixo.",
+  "adminGlossary.preview.openInGlossaryCta": "Abrir no glossário",
+  "adminGlossary.preview.openInGlossaryAriaLabel":
+    "Abrir no glossário (abre num novo separador)",
   "adminGlossary.editor.createTitle": "Adicionar um termo ao glossário",
   "adminGlossary.editor.editTitle": "Editar este termo",
   "adminGlossary.editor.createCta": "Adicionar termo",
@@ -4766,10 +4810,14 @@ export const admin: Catalog = {
   "adminResourceGuides.sort.reviewDue": "Revisão pendente",
   "adminResourceGuides.sort.title": "Título",
   "adminResourceGuides.sort.updated": "Atualizados recentemente",
-  "adminResourceGuides.staleBanner":
+  "adminResourceGuides.staleBanner_one":
+    "{count} guia nunca foi revisto por ninguém.",
+  "adminResourceGuides.staleBanner_other":
     "{count} guias nunca foram revistos por ninguém.",
   // PRD-270: ver a nota no catálogo EN.
-  "adminResourceGuides.overdueBanner":
+  "adminResourceGuides.overdueBanner_one":
+    "{count} guia passou a data de revisão.",
+  "adminResourceGuides.overdueBanner_other":
     "{count} guias passaram a data de revisão.",
   "adminResourceGuides.empty":
     "Ainda não há guias. Assim que a migração de conteúdo correr, todos aparecem aqui.",
@@ -4808,6 +4856,24 @@ export const admin: Catalog = {
   "adminResourceGuides.review.reviewedOnLabel": "Revisto a",
   "adminResourceGuides.review.dueLabel": "Próxima revisão",
   "adminResourceGuides.review.confirmCta": "Marcar como revisto",
+
+  // Guide preview (/admin/resource-guides/preview/:id)
+  "guidePreview.row.previewCta": "Pré-visualizar",
+  "guidePreview.shellTitle": "Pré-visualização do guia",
+  "guidePreview.bar.label": "Controlos da pré-visualização do guia",
+  "guidePreview.bar.eyebrow": "Pré-visualização",
+  "guidePreview.bar.public": "Publicado. Quem lê consegue ver este guia.",
+  "guidePreview.bar.unpublished":
+    "Não publicado. Quem lê não consegue ver este guia.",
+  "guidePreview.bar.neverReviewed":
+    "Quem lê só vê este guia depois de alguém o marcar como revisto.",
+  "guidePreview.bar.unpublishedNeverReviewed":
+    "Não publicado e nunca revisto. Quem lê não consegue ver este guia.",
+  "guidePreview.bar.portugueseMissing":
+    "Ainda não há versão em português. Quem lê em português vê o texto em inglês.",
+  "guidePreview.noPage.title": "{title} ainda não tem página",
+  "guidePreview.noPage.body":
+    "Não tem secções no editor nem uma página própria no código, por isso quem lê não encontraria nada aqui. Adiciona uma secção no editor para lhe dares uma.",
 
   // ── Espaço de edição de guias (/admin/resource-guides/new, /edit/:id) ──
   "guideWorkspace.breadcrumb": "Guias de recursos",
@@ -6605,6 +6671,50 @@ export const admin: Catalog = {
   "stickerPacks.errors.deletePack": "Não foi possível apagar o pack",
   "stickerPacks.errors.reorder": "Não foi possível guardar a nova ordem",
   "stickerPacks.errors.updateSticker": "Não foi possível guardar o sticker",
+  "stickerPacks.grid.itemsLegend": "Stickers",
+  "stickerPacks.grid.hint":
+    "Todos os stickers começam incluídos nesta publicação. Carrega num sticker para o pré-visualizares, e usa o visto no canto para o tirares ou voltares a pôr.",
+  "stickerPacks.grid.keyboardHint":
+    "Usa as setas para te moveres entre os stickers. Carrega em Espaço para incluíres ou tirares um sticker, e em Enter para o pré-visualizares sem mudares o que publicas.",
+  "stickerPacks.preview.noItemTitle": "Nenhum item escolhido",
+  "stickerPacks.preview.pickItem": "Escolhe um item para o pré-visualizares",
+  "stickerPacks.controls.itemsLegend": "Stickers",
+  "stickerPacks.publish.blocked.noItems":
+    "Escolhe pelo menos um sticker para adicionar.",
+  "stickerPacks.publish.blocked.allSkippedItems":
+    "Todos os stickers escolhidos já estão neste pack. Escolhe Substituir para atualizar a arte.",
+  "stickerPacks.publish.mode.itemsLegend_one":
+    "{count} sticker escolhido já está neste pack",
+  "stickerPacks.publish.mode.itemsLegend_other":
+    "{count} stickers escolhidos já estão neste pack",
+  "stickerPacks.templates.label": "Modelo",
+  "stickerPacks.templates.lockedNote":
+    "Modelo: {template}. Cada pack fica com um só modelo.",
+  "stickerPacks.templates.unoReverse.name": "Uno reverse",
+  "stickerPacks.templates.unoReverse.description":
+    "Sticker de carta reverse nas cores de cada bandeira",
+  "stickerPacks.templates.blip.name": "Blip",
+  "stickerPacks.templates.blip.description":
+    "A nossa pequena mascote em {count} estados de espírito",
+  "stickerPacks.templates.tea.name": "Chá, indiretas e brilho",
+  "stickerPacks.templates.tea.description":
+    "Stickers de calão queer: conta tudo, mãe, arrasou",
+  "stickerPacks.blip.sectionBody": "Corpo",
+  "stickerPacks.blip.fillLegend": "Preenchimento",
+  "stickerPacks.blip.fillColor": "Cor",
+  "stickerPacks.blip.fillFlag": "Bandeira",
+  "stickerPacks.blip.bodyColor": "Cor",
+  "stickerPacks.blip.bodyFlag": "Bandeira",
+  "stickerPacks.blip.faceContrastWarning":
+    "A cara do Blip fica difícil de ler nesta cor. Escolhe um corpo mais claro.",
+  "stickerPacks.tea.sectionAccent": "Destaque",
+  "stickerPacks.tea.accentColor": "Cor de destaque",
+  "stickerPacks.dieCut.section": "Acabamento",
+  "stickerPacks.dieCut.label": "Contorno branco recortado",
+  "stickerPacks.publish.mode.addMissingShort": "Só as que faltam",
+  "stickerPacks.publish.mode.replaceShort": "Substituir",
+  "stickerPacks.publish.blocked.showReason":
+    "Porque é que não posso adicionar stickers?",
 
   // ── Espaços do diretório escritos pela equipa (`/admin/listings/new`) ─────
   // A equipa escreve sobre um espaço que ainda não se juntou à QueerPulse. O
@@ -6645,6 +6755,31 @@ export const admin: Catalog = {
   "listingNew.success.step.live": "Já está a aparecer no diretório.",
   "listingNew.success.closeCta": "Voltar à fila de espaços",
 
+  // ── Edição pela administração de um espaço ao cuidado da plataforma
+  // (`/admin/listings/:ref/edit`) ────────────────────────────────────────────
+  // Um espaço que ainda não é de ninguém, editado pela equipa em nome da
+  // QueerPulse. Se entretanto ganhou um proprietário, a página mostra o
+  // estado hasOwner em vez do assistente.
+  "listingEdit.title": "Editar espaço",
+  "listingEdit.eyebrow": "Diretório",
+  "listingEdit.sub":
+    "A QueerPulse cuida deste espaço até alguém o assumir. Num espaço publicado, as tuas alterações aparecem no diretório assim que gravares.",
+  "listingEdit.queueBreadcrumb": "Espaços",
+  "listingEdit.submitCta": "Guardar alterações",
+  "listingEdit.hasOwner.title": "Este espaço já tem proprietário",
+  "listingEdit.hasOwner.body":
+    "Alguém assumiu este espaço, por isso passa a ser essa pessoa a editá-lo. Para mudar alguma coisa, sugere uma edição na página dele no diretório.",
+  "listingEdit.hasOwner.backCta": "Voltar aos espaços",
+  "listingEdit.hasOwner.viewCta": "Ver no diretório",
+  "listingEdit.loadError.title": "Este espaço não carregou",
+  "listingEdit.loadError.body": "Verifica a ligação e tenta outra vez.",
+  "listingEdit.notFound.title": "Não encontrámos este espaço",
+  "listingEdit.notFound.body":
+    "Pode ter sido removido. Volta à fila para escolher outro.",
+  "listingEdit.success.title": "Guardado",
+  "listingEdit.success.body": "As tuas alterações a {ref} estão guardadas.",
+  "listingEdit.success.closeCta": "Voltar à fila de espaços",
+
   // ── Painel de delegação de um espaço ──────────────────────────────────────
   // Quem trata de um espaço escrito pela equipa: quem é proprietário, a
   // oferta de propriedade à espera de resposta, e as pessoas com lugar para
@@ -6662,9 +6797,10 @@ export const admin: Catalog = {
 
   "listingDelegation.owner.heading": "Proprietário",
   "listingDelegation.owner.ownedBy": "Pertence a @{slug}",
-  "listingDelegation.owner.none": "Ainda sem proprietário.",
-  "listingDelegation.owner.noneDetail":
-    "Este espaço não é de ninguém, por isso podes oferecer a propriedade.",
+  "listingDelegation.owner.heldByPlatform": "Ao cuidado da QueerPulse.",
+  "listingDelegation.owner.heldByPlatformDetail":
+    "Ainda ninguém é dono deste espaço. Podes editá-lo, oferecê-lo a um membro ou aprovar uma reivindicação.",
+  "listingDelegation.owner.suggestedBy": "Sugerido por @{slug}",
 
   "listingDelegation.offer.heading": "Oferta de propriedade",
   "listingDelegation.offer.ownedNotice":
@@ -6921,4 +7057,89 @@ export const admin: Catalog = {
   "emailTemplates.copy.sampleCopiedToast": "Copiado com valores de exemplo.",
   "emailTemplates.copy.failedToast":
     "A cópia não funcionou neste navegador. Tenta outra vez.",
+  // QueerPulse Ambassadors admin page (/admin/ambassadors) and member-drawer line.
+  "ambassadors.title": "Pessoas embaixadoras",
+  "ambassadors.header.eyebrow": "Parcerias",
+  "ambassadors.header.title": "<em>Pessoas embaixadoras</em> QueerPulse",
+  "ambassadors.header.sub":
+    "Pessoas da comunidade que apoiam publicamente a QueerPulse. Atribui o estatuto, define a área de foco de cada pessoa e guarda o registo de quem o atribuiu ou retirou e porquê.",
+  "ambassadors.tabs.active": "Ativas",
+  "ambassadors.tabs.past": "Anteriores",
+  "ambassadors.loadError":
+    "Não conseguimos carregar as pessoas embaixadoras. Tenta de novo daqui a pouco.",
+  "ambassadors.empty.active.title": "Ainda não há pessoas embaixadoras",
+  "ambassadors.empty.active.description":
+    "Atribui o estatuto a alguém com o formulário desta página.",
+  "ambassadors.empty.past.title": "Sem pessoas embaixadoras anteriores",
+  "ambassadors.empty.past.description":
+    "Os estatutos retirados ficam aqui, com quem os retirou e porquê.",
+  "ambassadors.row.tagHidden": "Etiqueta escondida",
+  "ambassadors.row.since": "Desde",
+  "ambassadors.row.grantedBy": "Atribuído por",
+  "ambassadors.row.unknownStaff": "Sem registo",
+  "ambassadors.row.grantReason": "Porquê",
+  "ambassadors.row.revokedOn": "Retirado a",
+  "ambassadors.row.revokedBy": "Retirado por",
+  "ambassadors.row.revokeReason": "Porque foi retirado",
+  "ambassadors.row.quotaOverride":
+    "A quota de convites foi fixada em {quota} por mês, por isso o bónus de pessoa embaixadora não se aplica.",
+  "ambassadors.row.changeFocus": "Mudar o foco",
+  "ambassadors.row.changeFocusAria": "Mudar o foco de {name}",
+  "ambassadors.row.focusSaved": "Área de foco atualizada.",
+  "ambassadors.row.revoke": "Retirar",
+  "ambassadors.row.revokeAria":
+    "Retirar o estatuto de pessoa embaixadora a {name}",
+  "ambassadors.grant.title": "Atribuir o estatuto",
+  "ambassadors.grant.hint":
+    "As pessoas embaixadoras entram logo no círculo privado e recebem mais 10 convites por mês.",
+  "ambassadors.grant.memberLabel": "Pessoa",
+  "ambassadors.grant.memberPlaceholder": "Procura pelo nome",
+  "ambassadors.grant.memberSearchAria":
+    "Procurar pessoas para atribuir o estatuto",
+  "ambassadors.grant.clearMemberAria": "Tirar {name} e escolher outra pessoa",
+  "ambassadors.grant.focusLabel": "Área de foco",
+  "ambassadors.grant.focusPlaceholder": "Escolhe uma área de foco",
+  "ambassadors.grant.reasonLabel": "Porquê esta pessoa",
+  "ambassadors.grant.reasonHint":
+    "Pelo menos {min} caracteres. Fica registado com o estatuto; só a equipa o vê.",
+  "ambassadors.grant.submit": "Atribuir o estatuto",
+  "ambassadors.grant.pending": "A atribuir…",
+  "ambassadors.grant.success":
+    "{name} é agora pessoa embaixadora da QueerPulse.",
+  "ambassadors.revoke.eyebrow": "Retirar o estatuto",
+  "ambassadors.revoke.title": "Retirar o estatuto a {name}?",
+  "ambassadors.revoke.body":
+    "A pessoa perde a etiqueta, os convites extra e o lugar no círculo, e recebe uma notificação. Podes voltar a atribuir o estatuto mais tarde.",
+  "ambassadors.revoke.reasonLabel": "Motivo para retirar",
+  "ambassadors.revoke.reasonHint":
+    "Obrigatório, com pelo menos {min} caracteres. Fica registado; só a equipa o vê.",
+  "ambassadors.revoke.confirm": "Retirar o estatuto",
+  "ambassadors.revoke.pending": "A retirar…",
+  "ambassadors.revoke.success": "{name} deixou de ser pessoa embaixadora.",
+  "ambassadors.circle.title": "O círculo de pessoas embaixadoras",
+  "ambassadors.circle.hint":
+    "Uma comunidade privada para antevisões e sondagens. As pessoas embaixadoras entram quando recebem o estatuto e saem quando o perdem.",
+  "ambassadors.circle.memberCount_one": "{count} pessoa",
+  "ambassadors.circle.memberCount_other": "{count} pessoas",
+  "ambassadors.circle.open": "Abrir o círculo",
+  "ambassadors.circle.takeSeat": "Ocupar um lugar da equipa",
+  "ambassadors.circle.seatTaken": "Tens um lugar da equipa no círculo.",
+  "ambassadors.circle.error": "Não conseguimos carregar o círculo.",
+  "ambassadors.errors.generic": "Algo correu mal. Tenta de novo.",
+  "ambassadors.errors.ambassador_already_active":
+    "Esta pessoa já tem o estatuto de pessoa embaixadora.",
+  "ambassadors.errors.ambassador_not_found":
+    "Esta pessoa não tem o estatuto ativo. Atualiza a lista.",
+  "ambassadors.errors.ambassador_member_not_found":
+    "Não encontrámos essa pessoa.",
+  "ambassadors.errors.ambassador_self_grant":
+    "Não te podes atribuir o estatuto.",
+  "ambassadors.errors.ambassador_ineligible_member":
+    "Esta conta não pode ter o estatuto. É uma conta de sistema ou não está ativa.",
+  "ambassadors.drawer.label": "Pessoa embaixadora",
+  "ambassadors.drawer.since": "Pessoa embaixadora desde {since} · {focus}",
+  "ambassadors.drawer.none": "Sem etiqueta de pessoa embaixadora visível",
+  "ambassadors.drawer.hiddenNote":
+    "As etiquetas escondidas não aparecem aqui. A página de pessoas embaixadoras tem o registo completo.",
+  "ambassadors.drawer.manage": "Gerir pessoas embaixadoras",
 };

@@ -1,68 +1,251 @@
-/* Editor desk — board layout (one horizontally-scrolling column per stage).
-   Ported from the design's `.board`/`.bcol`/`.bcard` (`mag.css`) onto repo
-   tokens. */
+/* Editor desk: board layout (one column per stage, cards drag between
+   columns). Column and card chrome is shared by PiecesBoard and
+   PiecesBoardCard. Stage colours come from `--desk-stage-N` (set inline as
+   `--stage-tone`), state colours from `--desk-tone-*`. */
+
+/* The scroll buttons are flex siblings of `.boardInner` (they used
+   to sit absolutely on top of `.board`'s own box, over the outermost cards).
+   `.boardInner` alone is `position: relative`, so the edge fade still lays
+   itself over the scroller's box exactly as before. */
+.boardWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.boardInner {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
 
 .board {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 264px;
-  gap: 14px;
+  grid-auto-columns: 228px;
+  gap: var(--gap-sm);
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   padding-bottom: 14px;
   scroll-snap-type: x proximity;
 }
 
-.bcol {
-  background: var(--wash);
-  border-radius: var(--radius-20);
-  padding: 12px;
+/* A soft fade toward the page background at whichever edge still has a
+   column past the visible ones, `data-visible` toggled by
+   `useBoardEdgeScroll`. `pointer-events: none` so it never blocks the card
+   underneath; the real affordance is the scroll button in the gutter
+   beside it (`.edgeButton`, a flex sibling of `.boardInner`). */
+.edgeFade {
+  position: absolute;
+  top: 0;
+  bottom: 14px;
+  width: 48px;
+  pointer-events: none;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.edgeFade[data-visible="true"] {
+  opacity: 1;
+}
+
+.edgeFadeStart {
+  left: 0;
+  background: linear-gradient(to right, var(--cream), transparent);
+}
+
+.edgeFadeEnd {
+  right: 0;
+  background: linear-gradient(to left, var(--cream), transparent);
+}
+
+/* Doubled so it reliably outranks the shared IconButton's own `.icon`
+   background and border (equal specificity otherwise, and the two CSS
+   modules are not guaranteed a load order relative to each other). A flex
+   sibling of `.boardInner` now, centred on the row by
+   `.boardWrap`'s own `align-items: center` alone, with no positioning of
+   its own. */
+.edgeButton.edgeButton {
+  flex: none;
+  align-self: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-e2);
+}
+
+/* The global `:focus-visible` ring is `outline` (untouched here) plus a
+   `box-shadow`; restore that second half, which the resting `box-shadow`
+   above would otherwise replace outright. */
+.edgeButton.edgeButton:focus-visible {
+  box-shadow: var(--ring-cream), var(--shadow-e2);
+}
+
+/* `Button.module.css` keeps an `aria-disabled` button focusable and
+   clickable everywhere else on purpose (a submit button that is merely
+   invalid should still answer the click), but this one has nothing to
+   answer with at its scroll end: the buttons now sit beside the cards
+   (`.boardWrap` above), in their own gutter, where a disabled one can still
+   catch a click meant for that gutter. Local to the board, so the shared
+   component's own convention elsewhere is untouched. */
+.edgeButton.edgeButton[aria-disabled="true"] {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edgeFade {
+    transition-property: none;
+  }
+}
+
+/* Phones scroll one column at a time by touch (see the `--md` step below);
+   the hover-only buttons would just duplicate the gesture. Doubled for the
+   same cross-module specificity reason as `.edgeButton.edgeButton` above:
+   a single class ties with `Button.module.css`'s own `.button { display:
+   inline-flex }`. */
+@media (hover: none) {
+  .edgeButton.edgeButton {
+    display: none;
+  }
+}
+
+/* A column is space plus a stage-coloured rule on top: no box of its own
+   until a drag makes it a place to drop. */
+.column {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  scroll-snap-align: start;
   min-height: 220px;
+  padding: 12px 4px;
+  border-top: 3px solid var(--stage-tone);
+  border-radius: var(--radius-4);
+  scroll-snap-align: start;
+  transition-property: background-color, outline-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+  outline: 2px dashed transparent;
+  outline-offset: -2px;
+}
+
+/* While a card is in the air, every column it can land in shows a wash. */
+.columnDroppable {
+  background: var(--wash);
+}
+
+/* The column under the pointer: the wash plus a dashed rule in its stage colour. */
+.columnTarget {
+  outline-color: var(--stage-tone);
 }
 
 .colHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
   font-size: var(--text-12);
+  font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  font-weight: 700;
-  color: var(--ink-40);
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 2px 4px;
+  color: var(--ink-60);
+}
+
+.colLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overCap {
+  flex-shrink: 0;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--desk-tone-late);
 }
 
 .colCount {
   margin-left: auto;
-  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
 }
 
-.bcard {
+/* Zeros recede. */
+.colCountZero {
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.emptyCol {
+  padding: 8px 6px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+/* ── Card ── */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: 12px;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius-16);
-  padding: 13px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  cursor: pointer;
-  transition:
-    transform var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
+  cursor: grab;
+  transition-property: box-shadow, opacity, border-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
 }
 
 @media (hover: hover) {
-  .bcard:hover {
-    transform: translateY(-3px);
+  .card:hover {
     box-shadow: var(--shadow-card-hover);
   }
 }
 
+.card:active {
+  cursor: grabbing;
+}
+
+/* A Published card cannot be picked up, so it keeps the plain pointer. */
+.cardFixed,
+.cardFixed:active {
+  cursor: pointer;
+}
+
+/* The card being dragged stays in place, dimmed, until it lands. */
+.card[data-dragging="true"] {
+  opacity: 0.45;
+}
+
+.cardYourTurn {
+  border-left: 3px solid var(--desk-tone-you);
+}
+
+/* Late outranks your turn: declared after it so its edge wins. */
 .cardLate {
-  border-color: rgba(var(--accent-rgb), 0.42);
+  border-left: 3px solid var(--desk-tone-late);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.waiting {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: var(--text-12);
+  color: var(--ink-60);
 }
 
 .cardTitle {
@@ -73,46 +256,120 @@
   color: var(--text-strong);
 }
 
-.cardFoot {
+.titleButton {
+  padding: 0;
+  font: inherit;
+  line-height: inherit;
+  text-align: start;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-4);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .titleButton:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+  }
+}
+
+.titleButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.cardMeta {
   display: flex;
   align-items: center;
   gap: 7px;
+  min-width: 0;
   font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.byline {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noWriter {
   color: var(--ink-40);
 }
 
-.cardDue {
+.due {
+  flex-shrink: 0;
   margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.late {
-  color: var(--accent-ink);
+.dueLate {
+  font-weight: 600;
+  color: var(--desk-tone-late);
+}
+
+/* "5d in stage", or the writer/amber Stalled treatment once `stageAge`
+   crosses that stage's own threshold (`deskStageAge.ts`). */
+.stageAge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+.stageAgeStalled {
+  color: var(--desk-tone-writer);
   font-weight: 600;
 }
 
-.selectRow {
+.stageAgeIcon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.cardControls {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 
-.stageSelect {
+/* The stage picker is the keyboard path for a move, so it stays, quietly:
+   a hairline pill in muted type. The compound selector outranks the shared
+   Select's `.trigger.sm`. */
+.stagePicker {
+  flex: 1 1 120px;
+  min-width: 0;
+}
+
+.stagePicker button[aria-haspopup="listbox"] {
+  min-height: 32px;
   padding: 5px 9px;
   font-size: var(--text-12-5);
-  border-radius: var(--radius-pill);
-  border: 1.5px solid var(--line);
-  background: var(--paper);
-  color: var(--ink-60);
   font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border-color: var(--line);
+  border-radius: var(--radius-pill);
 }
 
-.emptyCol {
-  font-size: var(--text-12-5);
-  color: var(--ink-40);
-  padding: 8px 6px;
-}
+/* Phones: a column is nearly the full width, the next one peeks in, and the
+   board snaps one column at a time. */
+@media (--md) {
+  .board {
+    grid-auto-columns: calc(100% - 40px);
+    scroll-snap-type: x mandatory;
+  }
 
-@media (prefers-reduced-motion: reduce) {
-  .bcard {
-    transition: none;
+  .stagePicker button[aria-haspopup="listbox"] {
+    min-height: var(--tap-min);
   }
 }

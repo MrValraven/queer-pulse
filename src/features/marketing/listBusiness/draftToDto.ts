@@ -18,6 +18,7 @@ import { stripOwnerPersonalFields } from "./ownerPersonalFields";
 import type {
   CoManagerUpdateListingDto,
   CreateListingDto,
+  SuggestListingDto,
   UpdateListingDto,
 } from "./api/listings.api";
 
@@ -138,12 +139,26 @@ function listingPayload(draft: ListingDraft): UpdateListingDto {
 }
 
 /**
- * The POST body. Adds the one create-only field: the submitter's agreement to
- * the affirming baseline, which is the condition of appearing in the directory
- * at all. Creating is always the owner's own act, so it always carries the
- * full payload.
+ * The POST body.
+ *
+ * A CLAIM adds the one create-only field: the submitter's agreement to the
+ * affirming baseline, which is the condition of appearing in the directory at
+ * all. Claiming is always the owner's own act, so it always carries the full
+ * payload.
+ *
+ * A SUGGESTION is held by the platform, so it carries nothing about the
+ * suggester and no affirming promise: the business makes that promise when it
+ * takes the listing over. The API stores no owner-personal field on a
+ * suggestion either way, which is what its narrower `SuggestListingDto`
+ * return type enforces.
  */
-export function draftToDto(draft: ListingDraft): CreateListingDto {
+export function draftToDto(
+  draft: ListingDraft,
+): CreateListingDto | SuggestListingDto {
+  if (draft.path === "suggest") {
+    const { ownerRole: _ownerRole, ...business } = businessPayload(draft);
+    return business;
+  }
   return {
     ...listingPayload(draft),
     affirmingBaselineAccepted: draft.affirmingBaselineAccepted,
@@ -163,12 +178,17 @@ export function draftToDto(draft: ListingDraft): CreateListingDto {
  * body correct; the strip is what makes it guaranteed, including against a
  * future edit that spreads a whole draft in here. One of those seven keys in
  * the body 403s the whole save.
+ *
+ * `path` is fixed at creation and the API ignores it on a PATCH, so it is
+ * left out of every save, which is what the `Omit<..., "path">` return type
+ * enforces.
  */
 export function draftToUpdateDto(
   draft: ListingDraft,
-): UpdateListingDto | CoManagerUpdateListingDto {
-  if (draft.managementRole === "co_manager") {
-    return stripOwnerPersonalFields(businessPayload(draft));
-  }
-  return listingPayload(draft);
+): Omit<UpdateListingDto, "path"> | Omit<CoManagerUpdateListingDto, "path"> {
+  const { path: _path, ...payload } =
+    draft.managementRole === "co_manager"
+      ? stripOwnerPersonalFields(businessPayload(draft))
+      : listingPayload(draft);
+  return payload;
 }

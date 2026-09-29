@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CROP_CONFIG,
   getMinOutput,
@@ -26,8 +26,12 @@ export type PhotoReframeModalProps = ReframeSource & {
 
 /**
  * Modal wrapper around `ImageReframer` for one picked `File` or stored image
- * `src`: builds an object URL for a file (revoked on unmount/file change to
- * avoid leaking it), reads the per-`UploadKind` crop config
+ * `src`: creates an object URL for a file inside an effect and revokes it in
+ * that effect's cleanup (on unmount or file change, so it never leaks). The
+ * create and revoke pair lives in one effect so StrictMode's dev-only
+ * unmount and remount revokes the first URL and then makes a fresh one. The
+ * reframer mounts once that URL exists, so a picked file never renders a
+ * broken image first. It also reads the per-`UploadKind` crop config
  * (`CROP_CONFIG`/`getMinOutput`), and confirms with the reframed `CropRect`
  * (falling back to `IDENTITY_CROP` in the unreachable case Save fires before
  * the image has produced a first rect).
@@ -42,20 +46,27 @@ export default function PhotoReframeModal({
   onConfirm,
 }: PhotoReframeModalProps) {
   const { t } = useTranslation();
-  const objectUrl = useMemo(
-    () => (file ? URL.createObjectURL(file) : null),
-    [file],
-  );
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+  // With no file the modal shows `src` and ignores `objectUrl`, so a stale
+  // value left from an earlier file is never rendered.
   useEffect(() => {
-    if (!objectUrl) return;
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [objectUrl]);
-  const imageSrc = objectUrl ?? src ?? "";
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    // The URL is an external resource created and revoked here; state only
+    // hands it to render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setObjectUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+  const imageSrc = (file ? objectUrl : src) ?? "";
 
   const [rect, setRect] = useState<CropRect | undefined>(initialCrop);
 
   const { aspect, aspectLabel, allowFreeform } = CROP_CONFIG[kind];
   const minOutput = getMinOutput(kind);
+  // Locked 1:1 kinds (member, group and community avatars) paint as a circle
+  // or a rounded square, so the reframer previews both shapes for them.
+  const shouldShowShapePreview = aspect === 1 && !allowFreeform;
 
   return (
     <Modal
@@ -77,16 +88,19 @@ export default function PhotoReframeModal({
         </>
       }
     >
-      <ImageReframer
-        key={imageSrc}
-        src={imageSrc}
-        aspect={aspect}
-        aspectLabel={aspectLabel}
-        allowFreeform={allowFreeform}
-        minOutput={minOutput}
-        value={initialCrop}
-        onChange={setRect}
-      />
+      {imageSrc !== "" && (
+        <ImageReframer
+          key={imageSrc}
+          src={imageSrc}
+          aspect={aspect}
+          aspectLabel={aspectLabel}
+          allowFreeform={allowFreeform}
+          minOutput={minOutput}
+          value={initialCrop}
+          onChange={setRect}
+          shouldShowShapePreview={shouldShowShapePreview}
+        />
+      )}
     </Modal>
   );
 }

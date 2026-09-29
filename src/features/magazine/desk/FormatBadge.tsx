@@ -1,3 +1,4 @@
+import { FiLayers } from "react-icons/fi";
 import type { PieceFormat } from "../data/desk.data";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -23,5 +24,34 @@ export function FormatBadge({ format }: { format: PieceFormat }) {
     <span className={cx(styles.badge, VARIANT_CLASS[format])}>
       {t(FORMAT_LABEL_KEY[format])}
     </span>
+  );
+}
+
+/**
+ * The pipeline row's quieter format mark. Articles are the desk's default,
+ * so they carry none; a deck carries the layers icon the shell's "Open now"
+ * list uses for decks, with its name for screen readers and on hover.
+ */
+export function FormatIcon({
+  format,
+  className,
+}: {
+  format: PieceFormat;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+  if (format !== "deck") return null;
+  const label = t(FORMAT_LABEL_KEY.deck);
+  return (
+    <>
+      <span
+        aria-hidden="true"
+        className={cx(styles.icon, className)}
+        title={label}
+      >
+        <FiLayers />
+      </span>
+      <span className="visuallyHidden">{label}</span>
+    </>
   );
 }

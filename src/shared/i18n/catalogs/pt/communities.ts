@@ -463,6 +463,11 @@ export const communities: Catalog = {
   "detail.modtools.insights.postCount": "Publicações",
   "detail.modtools.insights.postsThisWeek": "Publicações esta semana",
   "detail.modtools.insights.activeMembers": "Ativas esta semana",
+  "detail.modtools.guidelines.requests.head": "O que {name} pede aos membros",
+  "detail.modtools.guidelines.reports.head":
+    "Avaliado pelos valores partilhados de {name}",
+  "detail.modtools.guidelines.empty":
+    "{name} ainda não escreveu os seus valores partilhados. A pessoa responsável pode adicioná-los a partir de Editar comunidade.",
   "detail.modtools.joinRequests.label": "Pessoas a pedir para entrar",
   "detail.modtools.joinRequests.empty.title": "Sem pedidos à espera",
   "detail.modtools.joinRequests.empty.description":

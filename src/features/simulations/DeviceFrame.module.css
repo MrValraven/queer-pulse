@@ -15,6 +15,26 @@
   overflow: auto;
 }
 
+.slotDesktop,
+.slotMobile {
+  position: relative;
+  transition:
+    width 0.28s var(--ease),
+    height 0.28s var(--ease);
+}
+
+.slotDesktop {
+  width: 100%;
+  height: 100%;
+}
+
+/* Sized inline to the phone's scaled footprint; the frame inside keeps the
+   true viewport size and is scaled about its centre, so it stays centred
+   while the slot animates in from the desktop size. */
+.slotMobile {
+  flex-shrink: 0;
+}
+
 .frame {
   position: relative;
   background: var(--paper);
@@ -22,9 +42,6 @@
   border-radius: var(--radius-16);
   box-shadow: var(--shadow-e3);
   overflow: hidden;
-  transition:
-    width 0.28s var(--ease),
-    height 0.28s var(--ease);
 }
 
 .overlay {
@@ -48,10 +65,13 @@
   height: 100%;
 }
 
+/* Width, height and scale come inline from DeviceFrame. Content-box keeps the
+   border outside the width, so the iframe gets the exact phone viewport. */
 .frameMobile {
-  width: 390px;
-  max-width: 100%;
-  height: 100%;
+  box-sizing: content-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   border-radius: var(--radius-28);
 }
 
@@ -64,14 +84,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .frame {
+  .slotDesktop,
+  .slotMobile {
     transition: none;
-  }
-}
-
-@media (max-width: 720px) {
-  .frameMobile {
-    width: 100%;
-    border-radius: var(--radius-16);
   }
 }

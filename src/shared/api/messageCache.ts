@@ -383,47 +383,98 @@ export function newestCachedMessage(
   return newest;
 }
 
-/** Patch a conversation-list row's unread state to zero — used by
- *  `useMarkRead.onSuccess` instead of `invalidateQueries(["conversations"])`,
- *  so opening an unread thread (which fires on every thread-open-with-unread)
- *  doesn't cost a network round-trip. A no-op if the row isn't cached.
- *  Also clears `markedUnreadAt` (PRD-225): re-opening/reading a thread is the
- *  ONLY thing that clears a manual "mark unread", mirroring exactly what the
- *  server's `markRead` does in the same request this patches the response of —
- *  so the two can never disagree.
+/** True when this tab's cached thread tail is behind what the conversation
+ *  list row already knows arrived (`conversationUpdatedAt`, the row's
+ *  `updatedAt`; see `patchConversationRead`'s own doc for why that stands in
+ *  for "the newest message's `createdAt`"). Happens when a socket drop
+ *  delivers messages into a non-active thread while this tab never fetches
+ *  them into that thread's own `["messages", id]` cache (`threadCacheTrim.ts`
+ *  marks a closed thread's cache stale, so page 0 refetches on reopen, but
+ *  this check runs before that refetch lands). Reopening that thread would then send its stale cached tail as an honest
+ *  `upToMessageId` read watermark, under-reporting what the reader has
+ *  actually seen. Callers (`openThread`, the desktop auto-mark effect) use
+ *  this to skip that stale POST and leave the real one to
+ *  `useMarkReadOnInbound`'s own heal path once page 0 refetches and the
+ *  reader has genuinely caught up. Returns false when nothing is cached yet
+ *  (the wall-clock watermark form already handles that case) or the row
+ *  carries no `updatedAt` to compare against. */
+export function isThreadCacheBehindConversation(
+  queryClient: QueryClient,
+  conversationId: string,
+  conversationUpdatedAt: string | null | undefined,
+): boolean {
+  if (!conversationUpdatedAt) return false;
+  const newestCached = newestCachedMessage(queryClient, conversationId);
+  return !!newestCached && newestCached.createdAt < conversationUpdatedAt;
+}
+
+/** Patch a conversation-list row's unread state from an acknowledged read
+ *  watermark. Used by `useMarkRead.onSuccess` instead of unconditionally
+ *  calling `invalidateQueries(["conversations"])`, so opening an unread
+ *  thread (which fires on every thread-open-with-unread) doesn't cost a
+ *  network round-trip. A no-op if the row isn't cached.
  *
- *  Also advances the viewer's own `myLastReadAt`, so reopening the thread
- *  before an inbox refetch places "New messages" after what was just read.
- *  `readThrough` is the exact watermark the POST carried, captured when it
- *  STARTED: the `createdAt` of the message sent as `upToMessageId` (whose
- *  `created_at` the server stores), or the wall-clock ISO sent as `lastReadAt`
- *  when nothing was cached. Re-reading the cache here on success would count a
- *  `message:new` upserted mid-request as read locally while the server still
- *  counts it unread. It never moves backwards. */
+ *  Only clears `unread`/`unreadCount` when `readThrough` actually covers the
+ *  row's newest message (`conversation.updatedAt`, which both the live DTO
+ *  and `patchConversationPreview` keep as that message's own `createdAt`;
+ *  see their own docs). A thread whose message-thread cache is stale (e.g. a
+ *  socket drop delivered messages this tab never fetched into that cache)
+ *  sends an honest but older `readThrough` than the row already knows about:
+ *  `useMarkRead`'s watermark comes from the cached thread tail, which can lag
+ *  behind the row's own freshly-synced state. Clearing the row anyway would
+ *  show a clean inbox for a thread the server still counts unread, which is
+ *  the exact bug this guards against. When `readThrough` falls short,
+ *  `unread`/`unreadCount` stay as they were and the caller
+ *  (`useMarkRead.onSuccess`) re-syncs the row from the server instead. A row
+ *  with no `updatedAt` (built by a shared cache patch from before that field
+ *  existed) is treated as covered, the prior behaviour.
+ *
+ *  `markedUnreadAt` is always cleared, regardless of whether the watermark
+ *  covers the row: the server's `markRead` clears `marked_unread_at`
+ *  unconditionally on every successful read POST, on both its watermark and
+ *  its wall-clock branch, so the two stay in lockstep.
+ *
+ *  Also always advances the viewer's own `myLastReadAt`, so reopening the
+ *  thread before an inbox refetch places "New messages" after what was just
+ *  read, even on a partially-covering watermark (a partial read still moved
+ *  the watermark forward on the server). `readThrough` is the exact watermark
+ *  the POST carried, captured when it started: the `createdAt` of the message
+ *  sent as `upToMessageId` (whose `created_at` the server stores), or the
+ *  wall-clock ISO sent as `lastReadAt` when nothing was cached. Re-reading the
+ *  cache here on success would count a `message:new` upserted mid-request as
+ *  read locally while the server still counts it unread. It only ever moves
+ *  forward.
+ *
+ *  Returns true when every cached row for this conversation was fully
+ *  covered (unread cleared, or no row was cached at all); false when at
+ *  least one cached row's newest message is newer than `readThrough`, the
+ *  caller's signal to invalidate `["conversations"]` for a real resync. */
 export function patchConversationRead(
   queryClient: QueryClient,
   conversationId: string,
   readThrough: string,
-): void {
+): boolean {
+  let isFullyCovered = true;
   queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? {
-              ...conversation,
-              unread: false,
-              unreadCount: 0,
-              markedUnreadAt: undefined,
-              myLastReadAt:
-                conversation.myLastReadAt &&
-                conversation.myLastReadAt > readThrough
-                  ? conversation.myLastReadAt
-                  : readThrough,
-            }
-          : conversation,
-      ),
+      previous?.map((conversation) => {
+        if (conversation.id !== conversationId) return conversation;
+        const isReadThroughCurrent =
+          !conversation.updatedAt || readThrough >= conversation.updatedAt;
+        if (!isReadThroughCurrent) isFullyCovered = false;
+        return {
+          ...conversation,
+          markedUnreadAt: undefined,
+          ...(isReadThroughCurrent ? { unread: false, unreadCount: 0 } : null),
+          myLastReadAt:
+            conversation.myLastReadAt && conversation.myLastReadAt > readThrough
+              ? conversation.myLastReadAt
+              : readThrough,
+        };
+      }),
   );
+  return isFullyCovered;
 }
 
 /** Raise a conversation-list row's unread state by ONE — used by the socket

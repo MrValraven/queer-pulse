@@ -268,16 +268,18 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
         bio={bio}
       />
       <div className={styles.nav}>
-        <Button
-          onClick={() => void handleContinue()}
-          disabled={uploading || saving || !firstName.trim()}
-        >
-          {t("auth:onboarding.stepPhoto.continue")}
-        </Button>
+        <div className={styles.navRow}>
+          <button type="button" className={styles.back} onClick={onBack}>
+            <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepPhoto.back")}
+          </button>
+          <Button
+            onClick={() => void handleContinue()}
+            disabled={uploading || saving || !firstName.trim()}
+          >
+            {t("auth:onboarding.stepPhoto.continue")}
+          </Button>
+        </div>
         <SkipLink onSkip={onNext} />
-        <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepPhoto.back")}
-        </button>
       </div>
       {pendingFile && (
         <PhotoReframeModal

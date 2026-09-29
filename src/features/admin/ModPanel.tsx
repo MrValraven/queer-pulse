@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { EmptyState, Spinner } from "../../shared/components/ui";
+import { EmptyState } from "../../shared/components/ui";
+import { PageLoader } from "../../shared/components/feedback/PageLoader";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCommunity } from "../communities/api/useCommunity";
 import {
@@ -31,11 +32,7 @@ export function ModPanel({ slug }: { slug: string }) {
   const [tab, setTab] = useState<(typeof TAB_KEYS)[number][0]>("requests");
 
   if (isLoading) {
-    return (
-      <div style={{ padding: "48px 0", textAlign: "center" }}>
-        <Spinner />
-      </div>
-    );
+    return <PageLoader size="section" />;
   }
 
   if (notFound || !living || !editable) {

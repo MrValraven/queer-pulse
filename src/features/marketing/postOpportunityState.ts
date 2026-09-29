@@ -15,8 +15,14 @@ export interface CommitmentRow {
   detail: string;
 }
 
+/** How the poster names the organisation: typed as free text, or linked to
+ *  one organisation they run (a partner they maintain, or a community they
+ *  own or moderate). In "link" mode `org` mirrors the linked option's name. */
+export type OrganizationMode = "text" | "link";
+
 export interface PostOpportunityState {
   org: string;
+  orgMode: OrganizationMode;
   role: string;
   /** One to three, in the order the poster picked them. The first is the one
    *  the card leads with and tints from, so the picker appends rather than
@@ -43,6 +49,7 @@ export interface PostOpportunityState {
 
 export const EMPTY: PostOpportunityState = {
   org: "",
+  orgMode: "text",
   role: "",
   // Blank, not pre-filled: a default cause would have every poster who never
   // looked at the field filing under Rights.

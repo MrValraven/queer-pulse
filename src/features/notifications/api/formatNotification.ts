@@ -1,3 +1,7 @@
+import {
+  AMBASSADOR_FOCUS_LABEL_KEY,
+  isAmbassadorFocusArea,
+} from "../../../shared/ambassadors/ambassadorFocusAreas.data";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import type { NotifType } from "../notifications.types";
@@ -599,7 +603,67 @@ export type NotificationKind =
   // mod-tools console (see `sourceHrefFromPayload`), where the requesting
   // owner or co-owner reads the decision.
   | "community_space_request_approved"
-  | "community_space_request_declined";
+  | "community_space_request_declined"
+  // The two ambassador lifecycle moments (QueerPulse Ambassadors design,
+  // 2026-09-28, section 4.5). Both are in-app only, ride the
+  // `ALWAYS_DELIVERED_NOTIFICATION_TYPES` account-lifecycle band on the
+  // backend (a grant or revoke happens at most once at a time, so there is no
+  // volume for a preference switch to control), and QueerPulse sends no
+  // email, so no copy for either may say one is on the way.
+  //
+  // `ambassador_granted` carries `{ focusArea, communitySlug }`: the focus
+  // area names the curated cause the member was granted for (F1's closed
+  // `AMBASSADOR_FOCUS_AREAS` list), and the community slug is the seeded
+  // "QueerPulse Ambassadors" circle the grant just added them to. Tapping the
+  // row opens that circle (see `sourceHrefFromPayload` in
+  // `notifications.adapters.ts`), which is the whole point of the row: a
+  // member who was just added to a private community they cannot browse to
+  // needs an actual door into it, since it is otherwise unreachable.
+  //
+  // `ambassador_revoked` carries no payload at all: it is the platform
+  // telling the member their own status ended, resolves no destination (they
+  // were already removed from the circle by the time this row is read), and
+  // reads no differently whoever ends it.
+  | "ambassador_granted"
+  | "ambassador_revoked"
+  // QueerPulse Go together (design spec 2026-09-28, Plan 1 Task 3 Step 4;
+  // mirrors the backend `notifications_type_enum` values added in
+  // `AddGoTogetherNotificationTypes1822500100000`). Every payload carries
+  // `eventId`, `eventSlug` and `eventTitle`; the rest is per kind.
+  //
+  // `go_together_pair_invite` goes to the partner a member names when they
+  // opt in as a pair, carrying that member as `actorId`
+  // (`GoTogetherEntryService.optIn`).
+  //
+  // `go_together_group_ready` goes to every member a formation run places
+  // together, carrying `groupId` and `conversationId` (the matched chat,
+  // `null` when the chat failed to create, which is why the deep link falls
+  // back to the gathering itself rather than a broken conversation).
+  //
+  // `go_together_unmatched` goes to a member a run could not place, carrying
+  // `isFinal`. It is a plain boolean, so it never survives
+  // `interpolationTokens`; instead its own early return in `formatNotification`
+  // reads it directly (via `goTogetherUnmatchedIsFinal`) and picks between the
+  // ongoing `.text` (`isFinal: false`, a run may still place them) and the
+  // calmer `.textFinal` (`isFinal: true`, no more runs will try), sharing one
+  // flat `.meta` line.
+  //
+  // `go_together_member_left` goes to the members remaining in a group after
+  // somebody leaves it, carrying `groupId` and `mergeOfferGroupId` (the group
+  // they can merge into, `null` when none was found).
+  //
+  // `go_together_meet_again` goes to every member of a group once the event
+  // is over, opening the feedback flow, carrying `groupId`.
+  //
+  // `go_together_mutual` goes to both sides of a group once they each answer
+  // "yes" to meeting again, carrying `groupId` and the other member as
+  // `actorId`.
+  | "go_together_pair_invite"
+  | "go_together_group_ready"
+  | "go_together_unmatched"
+  | "go_together_member_left"
+  | "go_together_meet_again"
+  | "go_together_mutual";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -790,6 +854,23 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // sit in: the recipient is the requesting owner or co-owner themself.
   community_space_request_approved: "community",
   community_space_request_declined: "community",
+  // A member's own ambassador status changing is account/standing news, the
+  // same tab as security_new_sign_in/account_export_ready/card_expiring
+  // above: there is no dedicated "account" category among the three tabs this
+  // union collapses onto, and this is the nearest one already in use for a
+  // row about the member's own account rather than a community they belong
+  // to.
+  ambassador_granted: "platform",
+  ambassador_revoked: "platform",
+  // Go together. Five of the six kinds are gathering news, the same tab as
+  // event_reminder/event_nearly_full; go_together_mutual is a new connection
+  // instead, the same tab as connection_accepted.
+  go_together_pair_invite: "events",
+  go_together_group_ready: "events",
+  go_together_unmatched: "events",
+  go_together_member_left: "events",
+  go_together_meet_again: "events",
+  go_together_mutual: "community",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -810,6 +891,10 @@ export interface FormattedNotification {
    *  callers build the personalized `type.<kind>.textNamed` variant without
    *  re-deriving the type→kind mapping that lives here. */
   kind: NotificationKind | null;
+  /** The resolved interpolation tokens behind `text`, so a personalized
+   *  `textNamed` variant can name the same subject (a listing, a group) and
+   *  not only the actor. Absent on the early-return admin kinds. */
+  textValues?: TranslateOptions;
 }
 
 /**
@@ -1231,12 +1316,11 @@ function listingNameToken(payload: unknown, t: TFunction): string {
 /**
  * Resolves the `{name}` token the three co-manager rows and
  * `listing_owner_offer` interpolate into their plain `.text`, the same
- * mechanism `group_added` uses, staying clear of the `PERSONALIZED_KINDS`/
- * `textNamed` path in `notifications.adapters.ts`: all four always carry an
- * actor (the owner on the invite, the member on the accept/decline, the
- * offering admin on the offer), and `actorDisplayName` is already threaded
- * through every call site regardless of kind, so no change is needed outside
- * this file to make the name resolve. All four share ONE fallback key
+ * mechanism `group_added` uses. A row with a resolved actor renders the
+ * `textNamed` variant instead (they sit in `PERSONALIZED_KINDS` in
+ * `notifications.adapters.ts`, which hands `{listingName}` over through
+ * `textValues`), so this plain `.text` is the screen-reader label and the
+ * copy for a row whose actor did not resolve. All four share ONE fallback key
  * (`listing_co_manager_invite.nameFallback`), the same way they share
  * `listingNameToken`'s fallback above.
  */
@@ -1487,6 +1571,31 @@ function communityNameToken(
 }
 
 /**
+ * Resolves the whole meta line for an `ambassador_granted` row: "Ambassador ·
+ * Trans health" when the payload carries a focus area this build has a label
+ * for (F1's closed `AMBASSADOR_FOCUS_AREAS` list, via `isAmbassadorFocusArea`
+ * and `AMBASSADOR_FOCUS_LABEL_KEY`), or the bare "Ambassador" when it does
+ * not.
+ *
+ * Unlike every other defensive resolver in this file, this one picks between
+ * two WHOLE catalog strings rather than filling one token into a fixed
+ * template: a missing or unrecognised focus area has to drop the "· {focus}"
+ * clause entirely, and a template can't remove its own punctuation, so the
+ * choice is made here instead. Read defensively like the rest: an older or
+ * future payload missing `focusArea`, or one this build has never seen, must
+ * never leave a literal `{focus}` beside somebody's own new status.
+ */
+function ambassadorGrantedMeta(payload: unknown, t: TFunction): string {
+  const focusArea = (payload as { focusArea?: unknown } | null)?.focusArea;
+  if (isAmbassadorFocusArea(focusArea)) {
+    return t("notifications:type.ambassador_granted.meta", {
+      focus: t(AMBASSADOR_FOCUS_LABEL_KEY[focusArea]),
+    });
+  }
+  return t("notifications:type.ambassador_granted.metaFallback");
+}
+
+/**
  * Resolve the i18n subkey a `report_filed` / `community_report_filed`
  * notification's copy lives under. The row carries `payload.severity`
  * (`emergency | high | medium | low`, derived server-side from the reason code
@@ -1718,6 +1827,17 @@ function moderationQueueAlertTokens(
   };
 }
 
+/**
+ * Whether a `go_together_unmatched` row is the FINAL notice: a formation run
+ * has given up placing this member for the event. The other state is the
+ * ongoing notice: a run could not place them yet, and will try again. Pulled
+ * out of `formatNotification`'s own `go_together_unmatched` branch to keep
+ * that branch short enough for the file's `max-lines-per-function` cap.
+ */
+function goTogetherUnmatchedIsFinal(payload: unknown): boolean {
+  return (payload as { isFinal?: unknown } | null)?.isFinal === true;
+}
+
 /** The queue key from an admin-queue payload, or null when it is missing. */
 function adminQueueKeyOf(payload: unknown): string | null {
   const record = payload as { queue?: unknown } | null;
@@ -1832,6 +1952,25 @@ export function formatNotification(
       meta: t("notifications:type.subprofile_creator_changed.meta", tokens),
       category: "community",
       kind: "subprofile_creator_changed",
+    };
+  }
+  // Go together (design spec 2026-09-28). The fourth and last kind whose copy
+  // needs a hand-computed key because the `key =` chain below won't work, for the
+  // same reason `subprofile_creator_changed` above does: `isFinal` is a
+  // boolean, so it never survives `interpolationTokens`, and it picks between
+  // two whole `.text` keys that share one flat `.meta` line across both variants.
+  // A run that could not place a member notifies them once while it keeps trying (`isFinal:
+  // false`) and once more when it gives up for this event (`isFinal: true`);
+  // the two are different news and read differently, so `textFinal` is
+  // written as its own calmer, more conclusive sentence.
+  if (type === "go_together_unmatched") {
+    const tokens = interpolationTokens(payload);
+    const variant = goTogetherUnmatchedIsFinal(payload) ? "textFinal" : "text";
+    return {
+      text: t(`notifications:type.go_together_unmatched.${variant}`, tokens),
+      meta: t("notifications:type.go_together_unmatched.meta", tokens),
+      category: "events",
+      kind: "go_together_unmatched",
     };
   }
   let key: string;
@@ -2046,8 +2185,16 @@ export function formatNotification(
   }
   return {
     text: t(`notifications:type.${key}.text`, tokens),
-    meta: t(`notifications:type.${key}.meta`, tokens),
+    // `ambassador_granted` is the one kind whose meta line is resolved as a
+    // whole string rather than through the shared `key`/`tokens` templating
+    // above: see `ambassadorGrantedMeta`. Every other kind keeps the ordinary
+    // path.
+    meta:
+      type === "ambassador_granted"
+        ? ambassadorGrantedMeta(payload, t)
+        : t(`notifications:type.${key}.meta`, tokens),
     category: known ? KIND_CATEGORY[type] : "platform",
     kind: known ? type : null,
+    textValues: tokens,
   };
 }

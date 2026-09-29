@@ -1,38 +1,15 @@
-import { useState } from "react";
-import { FiRefreshCw } from "react-icons/fi";
-import { Button, CopyLinkRow } from "../../shared/components/ui";
-import { ApiError } from "../../shared/api/client";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
+import { FiChevronDown } from "react-icons/fi";
+import { Collapse } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
 import { declineReasonLabelKey } from "../auth/api/joinRequestDeclineReason";
-import { inviteFullUrlFor, inviteUrlFor } from "../../shared/lib/inviteUrl";
-import { useReissueJoinRequestInvite } from "./api/useReissueJoinRequestInvite";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
+import { JoinRequestDecidedInvitePanel } from "./JoinRequestDecidedInvitePanel";
 import { AdminAvatar, AdminChip } from "./ui";
-import { WelcomeEmailCopyGroup } from "./emailTemplates/WelcomeEmailCopyGroup";
 import rowStyles from "./AdminSubmissionList.module.css";
 import styles from "./AdminVerifyDecided.module.css";
-
-/** Turn a reissue failure into an honest, no-blame line. The backend 403s a
- *  caller without the moderator role, 404s a request with no invite on it, and
- *  409s an invite that cannot be re-minted (already used, revoked, or still
- *  valid): each gets its own message; anything else falls through. */
-function reissueErrorMessage(error: unknown, t: TFunction): string {
-  const status = error instanceof ApiError ? error.status : 0;
-  switch (status) {
-    case 403:
-      return t("admin:members.verify.invite.reissueError.forbidden");
-    case 404:
-      return t("admin:members.verify.invite.reissueError.notFound");
-    case 409:
-      return t("admin:members.verify.invite.reissueError.notReissuable");
-    default:
-      return t("admin:members.verify.invite.reissueError.generic");
-  }
-}
 
 /** "20 Jun 2026": the absolute dates a history row is read for. */
 function shortDate(value: string | null, format: (at: Date) => string) {
@@ -49,122 +26,150 @@ function shortDate(value: string | null, format: (at: Date) => string) {
  * long it has left, because QueerPulse delivers no email: handing that link
  * over is the reviewer's job, and until this row existed the link lived only in
  * a card held in React state that a refresh threw away. A lapsed link gets a
- * reissue action rather than a dead end.
+ * reissue action, and a live one can be revoked.
+ *
+ * The row opens collapsed to a one-glance summary (who, the decision, and
+ * whether the link was claimed), because a page of fully expanded invite
+ * panels made the history too long to scan. The summary is the toggle, and
+ * everything with a control in it lives in the details below it, so no
+ * interactive element ever sits inside the button.
  */
 export function JoinRequestDecidedRow({ item }: { item: JoinRequestView }) {
   const { t } = useTranslation();
   const format = useFormat();
-  const { showToast } = useToast();
-  const reissueInvite = useReissueJoinRequestInvite();
-  const [reissueError, setReissueError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const baseId = useId();
+  const detailsId = `${baseId}-details`;
+  const statusId = `${baseId}-status`;
+  const emailId = `${baseId}-email`;
+  const datesId = `${baseId}-dates`;
+
+  // A reissue or revoke swaps the invite's status, and the refetched row drops
+  // the button that was just pressed, which leaves focus on <body>. Hand it to
+  // this row's toggle so a keyboard user stays where they were working. It
+  // only fires when focus was last inside these details, so a background
+  // refetch never pulls focus (and the scroll) to a row nobody was using.
+  const isFocusInDetailsRef = useRef(false);
+  const previousInviteStatusRef = useRef(item.inviteStatus);
+  useEffect(() => {
+    if (previousInviteStatusRef.current === item.inviteStatus) return;
+    previousInviteStatusRef.current = item.inviteStatus;
+    const focused = document.activeElement;
+    const isFocusLost = !focused || focused === document.body;
+    if (isFocusLost && isFocusInDetailsRef.current) {
+      isFocusInDetailsRef.current = false;
+      toggleRef.current?.focus();
+    }
+  }, [item.inviteStatus]);
+
+  // A removed button can blur with no destination, so only a blur that lands
+  // somewhere else (or leaves a still-mounted element) counts as leaving.
+  // Focus inside the portalled confirm dialog bubbles here through React too.
+  function trackDetailsBlur(event: FocusEvent<HTMLDivElement>) {
+    const destination = event.relatedTarget;
+    const hasLeft = destination
+      ? !event.currentTarget.contains(destination)
+      : event.target.isConnected;
+    if (hasLeft) isFocusInDetailsRef.current = false;
+  }
 
   const isApproved = item.status === "approved";
   const inviteState = joinRequestInviteState(item, t);
-  const inviteUrl = item.inviteCode ? inviteFullUrlFor(item.inviteCode) : null;
   const appliedOn = shortDate(item.createdAt, (at) =>
     format.date(at, { day: "numeric", month: "short", year: "numeric" }),
   );
   const decidedOn = shortDate(item.reviewedAt, (at) =>
     format.date(at, { day: "numeric", month: "short", year: "numeric" }),
   );
-  const isReissuing = reissueInvite.isPending;
-
-  function reissue() {
-    if (isReissuing) return;
-    setReissueError(null);
-    reissueInvite.mutate(
-      { id: item.id },
-      {
-        onSuccess: () =>
-          showToast(
-            t("admin:members.verify.invite.reissuedToast", {
-              email: item.email,
-            }),
-            "success",
-          ),
-        onError: (error) => setReissueError(reissueErrorMessage(error, t)),
-      },
-    );
-  }
 
   return (
     <div className={rowStyles.row}>
-      <AdminAvatar initials={item.initials} tone={item.tone} size="md" />
-      <div className={rowStyles.rowMain}>
-        <div className={rowStyles.rowTop}>
-          <span className={rowStyles.rowName}>{item.name}</span>
-          <AdminChip tone={isApproved ? "jade" : "ghost"} dot>
-            {t(
-              `admin:members.verify.status.${isApproved ? "approved" : "declined"}`,
+      <div className={styles.decidedBody}>
+        <button
+          ref={toggleRef}
+          type="button"
+          className={styles.summary}
+          aria-expanded={isOpen}
+          aria-controls={detailsId}
+          aria-label={t(
+            isOpen
+              ? "admin:members.verify.decided.hideDetails"
+              : "admin:members.verify.decided.showDetails",
+            { name: item.name },
+          )}
+          aria-describedby={`${statusId} ${emailId} ${datesId}`}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
+        >
+          <AdminAvatar initials={item.initials} tone={item.tone} size="md" />
+          <span className={rowStyles.rowMain}>
+            <span className={rowStyles.rowTop}>
+              <span className={rowStyles.rowName}>{item.name}</span>
+              <span id={statusId} className={styles.summaryChips}>
+                <AdminChip tone={isApproved ? "jade" : "ghost"} dot>
+                  {t(
+                    `admin:members.verify.status.${isApproved ? "approved" : "declined"}`,
+                  )}
+                </AdminChip>
+                {isApproved && inviteState && (
+                  <AdminChip tone={inviteState.chipTone}>
+                    {inviteState.chipLabel}
+                  </AdminChip>
+                )}
+              </span>
+            </span>
+            <span
+              id={emailId}
+              className={`${rowStyles.rowMeta} ${styles.summaryLine}`}
+            >
+              {item.email}
+            </span>
+            <span
+              id={datesId}
+              className={`${rowStyles.rowDates} ${styles.summaryLine}`}
+            >
+              {appliedOn
+                ? t("admin:members.verify.decided.appliedOn", {
+                    date: appliedOn,
+                  })
+                : t("admin:members.verify.appliedRecently")}
+              {decidedOn
+                ? ` · ${t("admin:members.verify.decided.decidedOn", { date: decidedOn })}`
+                : ` · ${t("admin:members.verify.decided.decidedUnknown")}`}
+            </span>
+          </span>
+          <FiChevronDown className={styles.chevron} aria-hidden />
+        </button>
+
+        <div
+          id={detailsId}
+          className={styles.details}
+          onFocus={() => {
+            isFocusInDetailsRef.current = true;
+          }}
+          onBlur={trackDetailsBlur}
+        >
+          <Collapse isOpen={isOpen}>
+            {!isApproved && (
+              <div className={rowStyles.rowNote}>
+                {t("admin:members.verify.decided.declineReasonLine", {
+                  reason: t(declineReasonLabelKey(item.declineReason)),
+                })}
+              </div>
             )}
-          </AdminChip>
-        </div>
-        <div className={rowStyles.rowMeta}>{item.email}</div>
-        <div className={rowStyles.rowDates}>
-          {appliedOn
-            ? t("admin:members.verify.decided.appliedOn", { date: appliedOn })
-            : t("admin:members.verify.appliedRecently")}
-          {decidedOn
-            ? ` · ${t("admin:members.verify.decided.decidedOn", { date: decidedOn })}`
-            : ` · ${t("admin:members.verify.decided.decidedUnknown")}`}
-        </div>
-
-        {!isApproved && (
-          <div className={rowStyles.rowNote}>
-            {t("admin:members.verify.decided.declineReasonLine", {
-              reason: t(declineReasonLabelKey(item.declineReason)),
-            })}
-          </div>
-        )}
-
-        {isApproved && inviteState && (
-          <div className={styles.invite}>
-            <div className={styles.inviteHead}>
-              <AdminChip tone={inviteState.chipTone}>
-                {inviteState.chipLabel}
-              </AdminChip>
-              <span className={styles.inviteNote}>{inviteState.note}</span>
-            </div>
-            {inviteUrl && item.inviteCode && (
-              <CopyLinkRow
-                tone="paper"
-                value={inviteUrl}
-                display={inviteUrlFor(item.inviteCode)}
-                fieldLabel={t("admin:members.verify.linkFieldLabel")}
-                copyLabel={t("admin:members.verify.copyLink")}
-                copiedLabel={t("admin:members.verify.copiedLink")}
-                copiedToast={t("admin:members.verify.copiedToast")}
-                errorToast={t("admin:members.verify.copyFailed")}
+            {isApproved && inviteState && (
+              <JoinRequestDecidedInvitePanel
+                item={item}
+                inviteState={inviteState}
               />
             )}
-            <WelcomeEmailCopyGroup item={item} />
-            {inviteState.isReissuable && (
-              <Button
-                variant="ghost"
-                size="md"
-                className={styles.reissue}
-                disabled={isReissuing}
-                onClick={reissue}
-              >
-                <FiRefreshCw aria-hidden />
-                {isReissuing
-                  ? t("admin:members.verify.invite.reissuing")
-                  : t("admin:members.verify.invite.reissueCta")}
-              </Button>
+            {isApproved && !inviteState && (
+              <div className={rowStyles.rowNote}>
+                {t("admin:members.verify.invite.noneMinted")}
+              </div>
             )}
-            {reissueError && (
-              <p className={styles.inviteError} role="status">
-                {reissueError}
-              </p>
-            )}
-          </div>
-        )}
-
-        {isApproved && !inviteState && (
-          <div className={rowStyles.rowNote}>
-            {t("admin:members.verify.invite.noneMinted")}
-          </div>
-        )}
+          </Collapse>
+        </div>
       </div>
     </div>
   );

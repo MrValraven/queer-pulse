@@ -67,10 +67,16 @@
 }
 
 /* ── Grid ── */
+/* Stretched by `min-width`, never `width: 100%` + `table-layout: fixed`: both
+   Blink and Gecko give a fixed-layout table with a percentage width an
+   effectively infinite max-content (1,000,000px). The desktop `.popover` is a
+   fixed, shrink-to-fit panel, so it grew to the whole viewport and
+   `useAnchoredPopover` then pushed it off screen chasing its own width. Auto
+   layout keeps the max-content at seven day buttons; the columns still come
+   out equal because every cell holds the same fixed-size button. */
 .grid {
-  width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
 }
 
 .weekdayHeader {

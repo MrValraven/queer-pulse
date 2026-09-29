@@ -1,11 +1,9 @@
-import { useState, type KeyboardEvent } from "react";
-import { FiX } from "react-icons/fi";
+import { useLayoutEffect, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { TagPicker } from "../../shared/components/ui";
 import {
   OPEN_TO_PRESETS,
   isPreset,
-  openToLabel,
-  reasonValue,
   type OpenToEntry,
   type OpenToId,
 } from "./openTo.data";
@@ -13,9 +11,10 @@ import styles from "./ProfileEdit.module.css";
 
 /**
  * Picker for the "Open to" chips under the Now status: the shared presets as
- * toggles, plus a free-text input for the long tail the taxonomy deliberately
+ * toggles, plus a free-text field for the long tail the taxonomy deliberately
  * doesn't cover (see `openTo.data.ts`). Presets stay filterable in the
- * directory; customs are stored verbatim in the member's own words.
+ * directory; customs are removable chips from the shared `TagPicker`, stored
+ * verbatim in the member's own words.
  */
 export function OpenToEditor({
   entries,
@@ -25,50 +24,68 @@ export function OpenToEditor({
   onChange: (next: OpenToEntry[]) => void;
 }) {
   const { t } = useTranslation();
-  const [input, setInput] = useState("");
 
   const selectedIds = new Set(
     entries.filter(isPreset).map((entry) => entry.id),
   );
-  const customs = entries.filter((entry) => entry.kind === "custom");
+  const customLabels = entries.flatMap((entry) =>
+    entry.kind === "custom" ? [entry.label] : [],
+  );
+
+  // A pasted "coffee, walks, gigs," commits each piece through `onAdd` inside
+  // one event, and `entries` stays stale for the whole event, so
+  // `togglePreset` and `addCustom` read and advance this ref and build each
+  // next list from it.
+  const latestEntriesRef = useRef(entries);
+  useLayoutEffect(() => {
+    latestEntriesRef.current = entries;
+  });
 
   function togglePreset(id: OpenToId) {
-    onChange(
-      selectedIds.has(id)
-        ? entries.filter((entry) => !(isPreset(entry) && entry.id === id))
-        : [...entries, { kind: "preset", id }],
+    const current = latestEntriesRef.current;
+    const isSelected = current.some(
+      (entry) => isPreset(entry) && entry.id === id,
     );
+    const next: OpenToEntry[] = isSelected
+      ? current.filter((entry) => !(isPreset(entry) && entry.id === id))
+      : [...current, { kind: "preset", id }];
+    latestEntriesRef.current = next;
+    onChange(next);
   }
 
-  function addCustom() {
-    const label = input.trim();
-    setInput("");
-    if (!label) return;
-    // Don't let someone re-type a preset's words as a custom — the preset is the
+  function addCustom(label: string) {
+    // Don't let someone re-type a preset's words as a custom: the preset is the
     // filterable one, so the duplicate would only ever lose them reach.
     const asPreset = OPEN_TO_PRESETS.find(
       (preset) => t(preset.labelKey).toLowerCase() === label.toLowerCase(),
     );
     if (asPreset) {
-      if (!selectedIds.has(asPreset.id)) togglePreset(asPreset.id);
+      const current = latestEntriesRef.current;
+      const isSelected = current.some(
+        (entry) => isPreset(entry) && entry.id === asPreset.id,
+      );
+      if (!isSelected) togglePreset(asPreset.id);
       return;
     }
-    const exists = customs.some(
+    const current = latestEntriesRef.current;
+    const exists = current.some(
       (entry) =>
         entry.kind === "custom" &&
         entry.label.toLowerCase() === label.toLowerCase(),
     );
-    if (!exists) onChange([...entries, { kind: "custom", label }]);
+    if (!exists) {
+      const next: OpenToEntry[] = [...current, { kind: "custom", label }];
+      latestEntriesRef.current = next;
+      onChange(next);
+    }
   }
 
-  function handleKey(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      addCustom();
-    }
-    // Backspace deliberately does NOT remove the previous chip. Holding it to
-    // clear what you typed would run on into the entries you already added and
-    // silently delete them; the × on each chip is the only way to remove one.
+  function removeCustom(label: string) {
+    onChange(
+      entries.filter(
+        (entry) => !(entry.kind === "custom" && entry.label === label),
+      ),
+    );
   }
 
   return (
@@ -94,32 +111,17 @@ export function OpenToEditor({
         })}
       </div>
 
-      <div className={styles.tagEditor}>
-        {customs.map((entry) => (
-          <span key={reasonValue(entry)} className={styles.tag}>
-            {openToLabel(entry, t)}
-            <button
-              type="button"
-              className={styles.tagRemove}
-              aria-label={t("members:profileEdit.openTo.removeLabel", {
-                label: openToLabel(entry, t),
-              })}
-              onClick={() => onChange(entries.filter((x) => x !== entry))}
-            >
-              <FiX size={13} />
-            </button>
-          </span>
-        ))}
-        <input
-          className={`${styles.inlineInput} ${styles.openToInput}`}
-          value={input}
-          placeholder={t("members:profileEdit.openTo.addPlaceholder")}
-          aria-label={t("members:profileEdit.openTo.addLabel")}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={handleKey}
-          onBlur={addCustom}
-        />
-      </div>
+      <TagPicker
+        tags={customLabels}
+        onAdd={addCustom}
+        onRemove={removeCustom}
+        labels={{
+          input: t("members:profileEdit.openTo.addLabel"),
+          placeholder: t("members:profileEdit.openTo.addPlaceholder"),
+          remove: (label) =>
+            t("members:profileEdit.openTo.removeLabel", { label }),
+        }}
+      />
     </div>
   );
 }

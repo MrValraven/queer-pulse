@@ -145,6 +145,14 @@ const KINDS: NotificationKind[] = [
   // sentence rather than leaving `{communityName}` in front of the requester.
   "community_space_request_approved",
   "community_space_request_declined",
+  // The two ambassador lifecycle rows. Listed with an empty payload for the
+  // same reason as `community_space_request_approved`/`_declined` above:
+  // `ambassador_granted`'s meta line interpolates the focus area, and a row
+  // whose payload never arrived still has to read as a whole sentence rather
+  // than leaving `{focus}` on screen (see the dedicated `describe` block
+  // below for the focus-area branching itself).
+  "ambassador_granted",
+  "ambassador_revoked",
 ];
 
 describe("formatNotification", () => {
@@ -173,6 +181,73 @@ describe("formatNotification", () => {
       expect(formatted.text).not.toMatch(/\{communityName\}/);
     },
   );
+
+  describe("ambassador notifications", () => {
+    it("ambassador_granted names the focus area in its meta line for a recognised focus", () => {
+      const withFocus = formatNotification(
+        "ambassador_granted",
+        { focusArea: "trans_health", communitySlug: "queerpulse-ambassadors" },
+        t,
+      );
+      const withoutFocus = formatNotification("ambassador_granted", {}, t);
+      // The two must differ: a recognised focus area appends its label, so the
+      // row with one is strictly longer than the bare "Ambassador" fallback.
+      expect(withFocus.meta).not.toBe(withoutFocus.meta);
+      expect(withFocus.meta.length).toBeGreaterThan(withoutFocus.meta.length);
+      expect(withFocus.meta).not.toMatch(/\{focus\}/);
+    });
+
+    it("ambassador_granted drops the focus clause for a payload with no focus area", () => {
+      const result = formatNotification("ambassador_granted", {}, t);
+      expect(result.meta.trim()).not.toBe("");
+      expect(result.meta).not.toMatch(/\{focus\}/);
+    });
+
+    it("ambassador_granted drops the focus clause for a focus area this build has never seen", () => {
+      const result = formatNotification(
+        "ambassador_granted",
+        {
+          focusArea: "a_future_focus_area",
+          communitySlug: "queerpulse-ambassadors",
+        },
+        t,
+      );
+      expect(result.meta.trim()).not.toBe("");
+      expect(result.meta).not.toMatch(/\{focus\}/);
+      // Same fallback line as the missing-payload case above: an unrecognised
+      // value falls back exactly the same way an absent one does, through the
+      // translated label alone.
+      expect(result.meta).not.toContain("a_future_focus_area");
+    });
+
+    it("ambassador_granted's own text never varies with the focus area", () => {
+      const withFocus = formatNotification(
+        "ambassador_granted",
+        { focusArea: "trans_health", communitySlug: "queerpulse-ambassadors" },
+        t,
+      );
+      const withoutFocus = formatNotification("ambassador_granted", {}, t);
+      expect(withFocus.text).toBe(withoutFocus.text);
+      expect(withFocus.text.trim()).not.toBe("");
+    });
+
+    it("ambassador_revoked reads as a flat sentence with no payload at all", () => {
+      const result = formatNotification("ambassador_revoked", {}, t);
+      expect(result.text.trim()).not.toBe("");
+      expect(result.meta.trim()).not.toBe("");
+      expect(result.category).toBe("platform");
+      expect(result.kind).toBe("ambassador_revoked");
+    });
+
+    it("both ambassador kinds resolve to the platform tab", () => {
+      expect(formatNotification("ambassador_granted", {}, t).category).toBe(
+        "platform",
+      );
+      expect(formatNotification("ambassador_revoked", {}, t).category).toBe(
+        "platform",
+      );
+    });
+  });
 
   it("gives each kind text distinct from the generic fallback", () => {
     const fallback = formatNotification("something_else", {}, t).text;

@@ -1,0 +1,65 @@
+/* DeskScopeMenu: the header eyebrow doubles as the scope switcher. It keeps
+ * the eyebrow's look (small caps-style sans, tracked, muted) so the header
+ * reads the same as before, and only the chevron says it opens. */
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-4);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  line-height: var(--lh-title);
+  text-align: start;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.trigger:hover,
+.trigger[data-open] {
+  color: var(--text-strong);
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A long theme wraps onto a second line at 375px; the chevron stays whole
+   at the end of the last line. */
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.trigger[data-open] .chevron {
+  transform: rotate(180deg);
+}
+
+/* A touch screen gets a full-height target without changing the eyebrow's
+   visual size. */
+@media (pointer: coarse) {
+  .trigger {
+    min-height: var(--tap-min);
+  }
+}

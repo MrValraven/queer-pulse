@@ -2,13 +2,13 @@
    only). Extended by Task 6 (ProfileHeroMain) with the rest of the hero's
    styles: eyebrow, name row, role line, links row spacing, CTA row.
    `.hereFor`/`.hereForChip`/`.hereForLabel`/`.hereForHint` stay in
-   `ProfilePage.module.css` — `.hereFor`/`.hereForChip` are still shared with
+   `ProfilePage.module.css`: `.hereFor`/`.hereForChip` are still shared with
    `HeroVouchRow`'s own "texture" chips, and `.hereForLabel` doubles as this
    file's tags-row micro-label, so this file reuses that single source rather
    than forking a duplicate copy. `SocialLinksRow` owns its own spacing in its
    own CSS module, so no extra wrapper class is needed for it here. The
    visitor-only mutual-connections card (`ProfileMutualsCard`) is no longer a
-   child of this component — `ProfileHero` (`ProfileSections.tsx`) renders it
+   child of this component; `ProfileHero` (`ProfileSections.tsx`) renders it
    as a sibling, floating beside this column instead of inline within it. */
 
 .pheroMain {
@@ -19,7 +19,21 @@
   flex: 1 1 420px;
 }
 
-.eyebrow {
+/* The eyebrow shares its line with `ProfileHeroToolbar` (pushed right by its
+   own `margin-left: auto`). The row takes over the eyebrow's 18px bottom
+   margin, so the name keeps its offset from the line above. An inline-flex
+   eyebrow normally sits on a text line box whose strut (16px at
+   `--lh-body`) starts about 3.5px above it; as a flex item it loses that
+   strut, so the top padding restores that offset, keeping the eyebrow, and
+   the name under it, where the strut would otherwise place them. (The
+   strut's sliver below the eyebrow falls inside the 18px margin, so nothing
+   is added below.) */
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 3.5px;
   margin-bottom: 18px;
 }
 
@@ -75,7 +89,7 @@
 }
 
 /* Quiet recognition strip: level/badges/perks chips on your own profile
-   (interactive links), or level/badges only on another member's (COM-24 —
+   (interactive links), or level/badges only on another member's (COM-24:
    plain, non-interactive chips, since /badges and /perks are self-scoped
    pages and perk state is owner-only). */
 .heroRecog {
@@ -164,7 +178,7 @@
   border-color: var(--plum);
   /* --plum stays fixed across themes but --cream flips in dark mode, so a
      literal var(--cream) here would go near-invisible (dark text on a dark
-     plum chip) — rgba(var(--cream-rgb),1) is the repo's plum-panel pattern
+     plum chip); rgba(var(--cream-rgb),1) is the repo's plum-panel pattern
      for cream text over a plum background regardless of theme (see
      SettingsSaveBar.module.css, DestructiveActionFlow.module.css). */
   color: rgba(var(--cream-rgb), 1);

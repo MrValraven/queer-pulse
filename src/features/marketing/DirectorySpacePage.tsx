@@ -2,8 +2,11 @@ import { useMemo, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { FiMapPin } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
-import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
+import {
+  EmptyState,
+  SkeletonLine,
+  LoadErrorState,
+} from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { useImagesReady } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -98,7 +101,7 @@ export function DirectorySpacePage() {
   } else if (isError || !place) {
     body = (
       <PageShell>
-        <ErrorFallback onReset={refetch} level="route" />
+        <LoadErrorState onRetry={() => void refetch()} />
       </PageShell>
     );
   } else {

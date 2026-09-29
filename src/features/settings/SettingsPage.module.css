@@ -2,8 +2,13 @@
   display: grid;
   grid-template-columns: 252px 1fr;
   gap: 48px;
-  /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 0 var(--section-y-lg);
+  /* nav band reserved by shell (base.css); this is only breathing room.
+     Block-only: the inline (left/right) gutter comes from the global `.wrap`
+     class this element also carries (padding-left/right: --wrap-px). The old
+     shorthand `padding: 28px 0 …` zeroed that inline padding, so at phone
+     width, where `.wrap`'s own max-width no longer constrains the box, the
+     pane ran flush to the viewport edge. */
+  padding-block: 28px var(--section-y-lg);
   align-items: start;
 }
 
@@ -277,6 +282,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* Containment context for `.dataCard`'s own container query below, so the
+     button stack reacts to the pane column's real width rather than the
+     viewport (the pane sits beside a 252px sidebar on desktop). */
+  container-type: inline-size;
 }
 .dataCard {
   display: flex;
@@ -286,6 +295,19 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-14);
   padding: 18px 20px;
+}
+/* Below about 420px of container width the description no longer has room
+   beside the button; stack the button under the text instead of squeezing
+   the text column. */
+@container (max-width: 420px) {
+  .dataCard {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--gap-sm);
+  }
+  .dcBtn {
+    width: 100%;
+  }
 }
 .dcTitle {
   font-size: var(--text-14-5);
@@ -448,9 +470,18 @@
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
+    /* Bleed the strip past `.page`'s restored inline gutter to the screen
+       edge (the same negative-margin-plus-matching-padding bleed
+       `PainPoints.module.css`'s `.rail` uses), so the sticky background spans
+       full width and the last chip is not clipped at the gutter instead of
+       scrolling into view. The pills still start at the same inset the rest
+       of the pane content uses, from the padding replacing the margin. */
+    margin-inline: calc(-1 * var(--wrap-px));
+    scroll-padding-inline: var(--wrap-px);
     /* Opaque, column-wide background so scrolled pane content clears cleanly
        under the sticky strip. */
-    padding: 10px 0;
+    padding-block: 10px;
+    padding-inline: var(--wrap-px);
     background: var(--cream);
     border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   }

@@ -2,10 +2,10 @@ import { useCallback, useId, useMemo, useState } from "react";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  DISCIPLINES,
+  DIRECTORY_DISCIPLINES,
   FIELD_BY_PROFESSION,
   PROFESSIONS_BY_FIELD,
-  professionsForFields,
+  directoryProfessionsForFields,
   type DirectoryFacetCounts,
   type FilterState,
 } from "./memberDirectoryFilter.data";
@@ -53,14 +53,14 @@ export function FilterProfessions({
   const disciplineOptions = useMemo(
     () =>
       q
-        ? DISCIPLINES.filter(
+        ? DIRECTORY_DISCIPLINES.filter(
             (d) =>
               t(d.labelKey).toLowerCase().includes(q) ||
               (PROFESSIONS_BY_FIELD[d.id] ?? []).some((p) =>
                 t(p.labelKey).toLowerCase().includes(q),
               ),
           )
-        : DISCIPLINES,
+        : DIRECTORY_DISCIPLINES,
     [q, t],
   );
 
@@ -152,7 +152,7 @@ function ProfessionFilterCard({
   const professionGroups = useMemo(
     () =>
       q
-        ? DISCIPLINES.map((discipline) => ({
+        ? DIRECTORY_DISCIPLINES.map((discipline) => ({
             fieldId: discipline.id,
             labelKey: discipline.labelKey,
             professions: (PROFESSIONS_BY_FIELD[discipline.id] ?? []).filter(
@@ -169,7 +169,7 @@ function ProfessionFilterCard({
   const scopedProfessions = useMemo(
     () =>
       !q && filters.disciplines.length
-        ? professionsForFields(filters.disciplines)
+        ? directoryProfessionsForFields(filters.disciplines)
         : [],
     [q, filters.disciplines],
   );

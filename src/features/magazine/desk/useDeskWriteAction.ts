@@ -1,5 +1,5 @@
 /**
- * "Write" — the desk action for a piece the editor writes themselves, as
+ * "Write": the desk action for a piece the editor writes themselves, as
  * opposed to commissioning it out. Kept out of `EditorDashboardPage` so the
  * page stays thin, mirroring `useDeskPieceActions` / `useDeskModals`.
  *
@@ -11,16 +11,17 @@
  * the audit trail says "started writing" instead of "commissioned".
  */
 
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
 import type { Editor, Issue } from "../data/desk.data";
 import type { usePieceMutations } from "../api/usePieceMutations";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { ToastType } from "../../../shared/components/feedback/toastContext";
-import type { DeskTrack } from "./DeskTrackTabs";
+import type { DeskTrack } from "./deskTrack";
 
 export interface UseDeskWriteActionParams {
-  /** The "Viewing as" editor id — stamped as BOTH `editorId` and `writerId`. */
+  /** The viewing editor's id, stamped as BOTH `editorId` and `writerId`. */
   activeMe: string;
   /** The editor directory, for resolving `activeMe` to a display byline. */
   editors: Editor[];
@@ -29,14 +30,14 @@ export interface UseDeskWriteActionParams {
    *  commission modal uses; it is changed in the editor's meta rail like
    *  every other piece of metadata. */
   sections: { name: string }[];
-  /** PRD-130 — the taxonomy fetch is still in flight, so the list is empty
+  /** PRD-130: the taxonomy fetch is still in flight, so the list is empty
    *  for a reason that will pass on its own. Kept apart from the error case
    *  so the editor is told to wait rather than told something broke. */
   areSectionsLoading: boolean;
-  /** PRD-130 — the taxonomy fetch failed. Starting a draft anyway would
+  /** PRD-130: the taxonomy fetch failed. Starting a draft anyway would
    *  stamp an empty section the backend rejects. */
   hasSectionsError: boolean;
-  /** The selected issue — a new draft files onto it on the Issue track. */
+  /** The selected issue: a new draft files onto it on the Issue track. */
   issue: Issue;
   /** The active desk track, mirroring how the commission modal defaults. */
   track: DeskTrack;
@@ -65,8 +66,14 @@ export function useDeskWriteAction({
   translate,
 }: UseDeskWriteActionParams): UseDeskWriteActionResult {
   const navigate = useNavigate();
+  // Set synchronously on the first call, so a second press in the same tick
+  // (a double tap on w, the rail button and the key together) finds it
+  // already set; `isPending` only turns true on the next render.
+  const isStartingRef = useRef(false);
 
   function startWriting(): void {
+    if (isStartingRef.current || pieceMutations.startDraft.isPending) return;
+
     // `editorId`/`writerId` must be real user UUIDs. Same guard as
     // `submitCommission`: the session may not have resolved yet, and firing
     // early earns a "must be a UUID" rejection instead of a draft.
@@ -75,7 +82,7 @@ export function useDeskWriteAction({
       return;
     }
 
-    // PRD-130 — the section list is live data now, so "empty" has three
+    // PRD-130: the section list is live data now, so "empty" has three
     // meanings and each earns different copy: still arriving, failed, or a
     // magazine with no seeded sections at all. Starting the draft regardless
     // would stamp an empty section, which the backend rejects and which the
@@ -97,6 +104,7 @@ export function useDeskWriteAction({
       return;
     }
 
+    isStartingRef.current = true;
     pieceMutations.startDraft.mutate(
       {
         format: "article",
@@ -115,6 +123,9 @@ export function useDeskWriteAction({
       {
         onSuccess: ({ id }) =>
           void navigate(routes.magazineWrite.replace(":id", id)),
+        onSettled: () => {
+          isStartingRef.current = false;
+        },
       },
     );
   }

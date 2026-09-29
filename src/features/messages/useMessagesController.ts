@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -7,6 +8,7 @@ import { useSocial } from "../../app/providers/useSocial";
 import { useAuth } from "../../app/providers/authContext";
 import { useStorageScope } from "../../app/providers/useStorageScope";
 import { useJoinConversation } from "../../shared/api/realtime";
+import { isThreadCacheBehindConversation } from "../../shared/api/messageCache";
 import { type ChatMessage, type Conversation } from "./data";
 import { clearConversationPrefs } from "./conversationPrefs";
 import { clearOutbox, loadOutbox, setMessageOutboxScope } from "./outbox";
@@ -77,6 +79,7 @@ export { nextLocalId } from "./useMessagesController.helpers";
 // eslint-disable-next-line max-lines-per-function
 export function useMessagesController() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { demoMode } = useDemoMode();
   const { isBlocked } = useSocial();
   const { user } = useAuth();
@@ -422,8 +425,21 @@ export function useMessagesController() {
     setReadIds((current) => new Set(current).add(active.id));
     if (demoMode) return;
     const realId = realConversationId(active);
-    if (realId) markRead.mutate(realId);
-  }, [isMobile, active, readIds, demoMode, markRead]);
+    if (!realId) return;
+    // If this tab's cached thread tail is behind what the list row already
+    // knows arrived (a dropped-socket gap never fetched into THIS thread's
+    // own cache), sending it as `upToMessageId` would under-report what's
+    // actually unread (see `isThreadCacheBehindConversation`'s own doc).
+    // Skip the stale POST here and let `useMarkReadOnInbound`'s heal path
+    // send the true watermark once page 0 refetches and the reader has
+    // genuinely caught up.
+    if (
+      isThreadCacheBehindConversation(queryClient, realId, active.updatedAt)
+    ) {
+      return;
+    }
+    markRead.mutate(realId);
+  }, [isMobile, active, readIds, demoMode, markRead, queryClient]);
   const startConversation = useStartConversation();
   const createGroupMutation = useCreateGroup();
   const leaveGroupMutation = useLeaveGroup();

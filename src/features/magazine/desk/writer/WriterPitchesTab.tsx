@@ -39,15 +39,9 @@ const PITCH_STATUS_LABEL_KEYS: Record<PitchStatus, string> = {
 };
 
 /**
- * How a pitch landed, in the reader's language.
- *
- * A pass can carry the editor's own note, and the server used to weld the two
- * together ("Passed: not now, pitch again in 16"). The platform's half is a
- * catalog string and the editor's half is authored text, so they are composed
- * here instead: the note goes through `{note}` interpolation verbatim, never
- * rewritten, truncated or looked up. Interpolation substitutes into the
- * template in a single pass, so braces inside a note stay literal, and React
- * escapes the result like any other text node.
+ * How a pitch landed, in the reader's language: the short state label only,
+ * so the badge stays a pill. A pass with an editor's note still reads
+ * "Passed"; the note gets its own line (see `pitchDeskNote`).
  *
  * `state` remains the fallback for a row this build cannot classify.
  */
@@ -57,12 +51,25 @@ function pitchStateLabel(pitch: WriterPitchDto, t: TFunction): string {
   if (!statusLabelKey) {
     return pitch.state;
   }
-  if (pitch.status === "passed" && pitch.passNote) {
-    return t("magazine:writer.pitches.state.passedWithNote", {
-      note: pitch.passNote,
-    });
-  }
   return t(statusLabelKey);
+}
+
+/**
+ * The editor's note on a pitch, as its own line under the head.
+ *
+ * The server used to weld the verdict and the note together ("Passed: not
+ * now, pitch again in 16"). The platform's half is a catalog string and the
+ * editor's half is authored text, so they are composed here instead: the note
+ * goes through `{note}` interpolation verbatim, with no rewriting, truncation
+ * or lookup. Interpolation substitutes into the template in a single pass, so
+ * braces inside a note stay literal, and React escapes the result like any
+ * other text node.
+ */
+function pitchDeskNote(pitch: WriterPitchDto, t: TFunction): string | null {
+  if (!pitch.passNote) {
+    return null;
+  }
+  return t("magazine:writer.pitches.deskNote", { note: pitch.passNote });
 }
 
 /** Your pitches: what's been sent and how it landed, plus a form to pitch
@@ -94,21 +101,32 @@ export function WriterPitchesTab({
           description={t("magazine:writer.pitches.emptyDescription")}
         />
       ) : (
-        pitches.map((pitch) => (
-          <div key={pitch.id} className={pieceStyles.card}>
-            <div className={styles.head}>
-              <h3 className={pieceStyles.lede}>{pitch.title}</h3>
-              <Badge tone={TONE_TO_BADGE[pitch.tone]}>
-                {pitchStateLabel(pitch, t)}
-              </Badge>
+        pitches.map((pitch) => {
+          const deskNote = pitchDeskNote(pitch, t);
+          return (
+            <div key={pitch.id} className={pieceStyles.card}>
+              <div className={styles.head}>
+                <h3 className={pieceStyles.lede}>{pitch.title}</h3>
+                <Badge
+                  tone={TONE_TO_BADGE[pitch.tone]}
+                  className={styles.wrappingBadge}
+                >
+                  {pitchStateLabel(pitch, t)}
+                </Badge>
+              </div>
+              {deskNote && (
+                <p className={`${pieceStyles.tiny} ${styles.deskNote}`}>
+                  {deskNote}
+                </p>
+              )}
+              <p className={pieceStyles.tiny}>
+                {t("magazine:writer.pitches.sentMeta", {
+                  sent: deskDateText(pitch.sent, language),
+                })}
+              </p>
             </div>
-            <p className={pieceStyles.tiny}>
-              {t("magazine:writer.pitches.sentMeta", {
-                sent: deskDateText(pitch.sent, language),
-              })}
-            </p>
-          </div>
-        ))
+          );
+        })
       )}
 
       <div className={pieceStyles.card}>

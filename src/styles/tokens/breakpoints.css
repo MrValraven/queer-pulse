@@ -59,9 +59,33 @@
  *                feature pages (cinema, marketing, studio, community, forum, …).
  *                Sits between --mobile (860) and --wide (900). Named neutrally
  *                (not "map") because its CSS usage is general, not map-specific.
+ *   --desk-split : the magazine editor desk's two-column cutover (1223px). From
+ *                1224px the pieces table and the desk rail sit side by side
+ *                (the rail --desk-rail-w wide, the table at its middle
+ *                container step or wider); at or below it the rail stacks
+ *                under a full-width table as a grid of cards. The desk page
+ *                grid and its skeleton (desk/DeskView.module.css,
+ *                desk/DeskStates.module.css) read this; the rail reads
+ *                its JS twin, `DESK_SPLIT_QUERY` (`mediaMax(1223)`) in
+ *                desk/rail/deskSplit.ts, and sets `data-stacked`, so the two
+ *                always switch together.
+ *   --desk-rail-wide : from 1440px the desk rail widens to
+ *                --desk-rail-w-wide and the table still reaches its wide
+ *                container step. Read by desk/DeskView.module.css,
+ *                desk/DeskStates.module.css and desk/rail/DeskRail.module.css
+ *                (the rail's padding).
+ *   --nav-compact : the top bar's compact pill (999px). Between --mobile and
+ *                this width the full MegaNav trigger row does not fit, so a
+ *                Menu button opening the browse drawer takes its place. Read by
+ *                Navbar, MegaNav and AccountMenu CSS. JS twin:
+ *                `NAV_COMPACT_MAX_PX` (`mediaMax(999)`) in
+ *                shared/components/layout/Navbar.tsx.
  */
 @custom-media --messages (max-width: 768px);
 @custom-media --compact (max-width: 880px);
+@custom-media --desk-split (max-width: 1223px);
+@custom-media --desk-rail-wide (min-width: 1440px);
+@custom-media --nav-compact (max-width: 999px);
 
 :root {
   --bp-xs: 480px; /* small phones */

@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiArrowRight, FiPlus } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FeatureHelp,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { createGatheringPath, gatheringPath } from "../gatherings/data";
@@ -175,8 +170,7 @@ export function EventsTab({
   return (
     <div>
       <div className={detail.secLbl}>
-        {t("communities:detail.events.upcoming")}{" "}
-        <FeatureHelp id="community.events" />
+        {t("communities:detail.events.upcoming")}
       </div>
       {upcoming.length > 0 ? (
         <>

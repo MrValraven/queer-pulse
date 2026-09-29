@@ -167,7 +167,12 @@ function AdminListingRow({
         </div>
         <div className={styles.rowMeta}>
           {row.ref} ·{" "}
-          {row.submitterName || t("admin:adminListings.unknownSubmitter")}
+          {row.submitterName ||
+            (row.suggesterName
+              ? t("admin:adminListings.suggestedBy", {
+                  name: row.suggesterName,
+                })
+              : t("admin:adminListings.unknownSubmitter"))}
           {row.hood ? ` · ${row.hood}` : ""}
           {ageText
             ? ` · ${t("admin:adminListings.row.submittedAgo", { time: ageText })}`

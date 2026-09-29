@@ -26,6 +26,8 @@
   --z-raised: 3;
   /* Page furniture that scrolls with content but sits over it. */
   --z-sticky: 20;
+  /* The admin guide preview bar: over the previewed page's own sticky bars. */
+  --z-preview-bar: 30;
   /* App chrome: the nav bar and the mobile bottom tab bar. */
   --z-nav: 100;
   /* Anchored popovers: dropdown menus, comboboxes, tooltips. Above nav so a

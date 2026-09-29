@@ -83,9 +83,9 @@ function cardAccessibility(
 /**
  * Map a public `DirectoryCardDTO` onto the `DirectoryPlace` view model the grid
  * renders. The grid reads only card-level fields (name, cat, hood, desc, tint,
- * av, owned, member, cover photo, opening hours, accessibility answers); the
- * detail-only fields are filled with empty defaults here because the detail
- * page fetches its own richer payload via `useDirectoryPlace` — those
+ * av, owned, member, cover photo, opening hours, accessibility answers,
+ * pills); the detail-only fields are filled with empty defaults here because
+ * the detail page fetches its own richer payload via `useDirectoryPlace` — those
  * placeholder values are never rendered.
  */
 export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
@@ -133,9 +133,12 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // The six accessibility answers, so a card can show what it meets and the
     // grid can be filtered on real needs. `unknown` travels through intact.
     accessibility: cardAccessibility(dto.accessibilityAnswers),
+    // The pill row under the blurb: price band first when set, then the tags,
+    // so the real card matches the wizard preview. Absent on older payloads,
+    // which the card reads as an empty row.
+    pills: dto.pills ?? [],
     // detail-only fields — unused by the grid, filled by the detail fetch
     tagline: "",
-    pills: [],
     rating: { score: "0", count: 0 },
     gallery: [],
     whatItIs: [],

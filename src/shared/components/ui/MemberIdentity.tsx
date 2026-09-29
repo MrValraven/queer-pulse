@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Avatar, type AvatarTint } from "./Avatar";
 import { StaffBadge, type StaffRole } from "./StaffBadge";
 import { staffBadgeRolesFor } from "../../staff/badgedStaffRoles";
+import { MemberAmbassadorTag } from "../../ambassadors/MemberAmbassadorTag";
 import { initialsFromName } from "../../lib/initials";
 import { tintForSlug } from "../../api/refs";
 import styles from "./MemberIdentity.module.css";
@@ -25,12 +26,15 @@ export interface MemberIdentityPerson {
 
 export interface MemberIdentityProps {
   person: MemberIdentityPerson;
-  /** Muted second line — pronouns, role, @handle, etc. */
+  /** Muted second line: pronouns, role, @handle, etc. */
   secondary?: ReactNode;
   /** When set, the avatar + name link to this profile path. */
   to?: string;
   size?: number;
-  /** Show the StaffBadge when the person is staff. Default true. */
+  /**
+   * Show the StaffBadge when the person is staff, or the Ambassador tag when
+   * they are a visible ambassador with no staff badge. Default true.
+   */
   showStaffBadge?: boolean;
   /**
    * Override the avatar tint. Defaults to a deterministic per-slug tint; pass a
@@ -44,14 +48,14 @@ function asStaffRole(role: string | undefined): StaffRole | null {
 }
 
 /**
- * Avatar + name (+ optional StaffBadge) + optional secondary line — the member
- * identity block duplicated across connections, the member directory, the
- * message picker, the cohost picker, and subprofile rows. Reuses the shared
- * `Avatar` and `StaffBadge` primitives. The visible name labels the avatar, so
- * the avatar image is decorative here (no `alt`).
+ * Avatar + name (+ optional StaffBadge or Ambassador tag) + optional secondary
+ * line: the member identity block duplicated across connections, the member
+ * directory, the message picker, the cohost picker, and subprofile rows. Reuses
+ * the shared `Avatar` and `StaffBadge` primitives. The visible name labels the
+ * avatar, so the avatar image is decorative here (no `alt`).
  *
- * Deliberately NOT `.nameRow` — that class name collides across three feature
- * modules; the name line uses `.nameLine`.
+ * The name line uses `.nameLine` on purpose: `.nameRow` collides across three
+ * feature modules.
  */
 export function MemberIdentity({
   person,
@@ -69,6 +73,9 @@ export function MemberIdentity({
   const badgeRoles = showStaffBadge
     ? staffBadgeRolesFor(asStaffRole(person.staffRole), person.staffBadgedRoles)
     : [];
+  // Same rule as `MemberStaffBadge`: staff win, and the Ambassador tag shows
+  // only for someone with no staff badge to wear.
+  const shouldShowAmbassadorTag = showStaffBadge && badgeRoles.length === 0;
 
   const avatar = (
     <Avatar
@@ -82,7 +89,7 @@ export function MemberIdentity({
   return (
     <div className={styles.identity}>
       {to ? (
-        // Decorative duplicate of the name link — hidden from the a11y tree and
+        // Decorative duplicate of the name link, hidden from the a11y tree and
         // out of the tab order so there's a single stop per person.
         <Link to={to} className={styles.avatarLink} aria-hidden tabIndex={-1}>
           {avatar}
@@ -104,6 +111,9 @@ export function MemberIdentity({
           {badgeRoles.map((badgeRole) => (
             <StaffBadge key={badgeRole} role={badgeRole} />
           ))}
+          {shouldShowAmbassadorTag && (
+            <MemberAmbassadorTag slug={person.slug} />
+          )}
         </span>
         {secondary != null && secondary !== "" && (
           <span className={styles.secondary}>{secondary}</span>

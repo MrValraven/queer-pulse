@@ -59,12 +59,14 @@ export function vmFromPublic(dto: SubprofilePublicDTO): TherapistCardVM {
     .split(/[,/]/)
     .map((lang) => lang.trim())
     .filter(Boolean);
-  // Mirrors `personaPublicPath` (personaLinks.data.ts): a linked persona
-  // (has `ownerSlug`) lives nested under its owner's profile; an unlinked
-  // one lives at its global handle address.
-  const href = dto.ownerSlug
-    ? nestedPersonaPath(dto.ownerSlug, dto.slug)
-    : personaPath(dto.handle ?? handle);
+  // Mirrors `personaPublicPathOrNull` (personaLinks.data.ts): the handle
+  // once the persona has one, else the owner-nested fallback for a linked
+  // persona, else its own address by its per-owner slug.
+  const href = dto.handle
+    ? personaPath(dto.handle)
+    : dto.ownerSlug
+      ? nestedPersonaPath(dto.ownerSlug, dto.slug)
+      : personaPath(handle);
   return {
     id: dto.id,
     handle,

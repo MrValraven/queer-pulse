@@ -36,11 +36,11 @@ export type Namespace =
   | "topics"
   | "governance"
   | "myevents"
+  | "goTogether"
   | "connect"
   | "messages"
   | "culture"
   | "notifications"
-  | "help"
   | "shared";
 
 /** Flat key → translated string. Keys are dot paths, e.g. `signIn.title`. */

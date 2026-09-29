@@ -9,7 +9,7 @@ import type { Stage } from "../data/desk.data";
  * the label `"Sensitivity read"`, and `STAGE_DTO_TO_VIEW` turns the backend's
  * `"sensitivity_read"` into it. That is how the desk ended up printing a
  * machine-derived English string on screen in every locale. Neither type can
- * change here (they key `STAGE_CLASS`, `DEMO_STAGES` and the board columns),
+ * change here (they key `STAGE_STEP`, `DEMO_STAGES` and the board columns),
  * so the translation lives beside them as a lookup resolved at each render
  * site with `t()`.
  *

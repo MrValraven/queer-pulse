@@ -5,6 +5,7 @@ import {
   type ComposeThreadState,
 } from "./composeThread.types";
 import { SUGGESTABLE_CATEGORIES } from "./composeCategories.data";
+import { FORUM_TAG_OPTIONS } from "../forumTags.data";
 
 // ── The derived readouts ────────────────────────────────────────────────────
 // The rail's "Ready to post" list, the live tip under the title, and the
@@ -141,8 +142,10 @@ export function suggestedCategoryFor(state: ComposeThreadState): string | null {
 
 /**
  * Tags worth offering right now: the chosen category's suggestions, plus the
- * kind itself when it names something a reader would browse by. Already-added
- * tags are dropped, and the list is capped at five chips.
+ * kind itself when it names something a reader would browse by. The pool is
+ * kept to words in `FORUM_TAG_OPTIONS`, since the tag box accepts only those
+ * (so the "guide" and "proposal" kinds qualify and "question" drops out).
+ * Already-added tags are dropped, and the list is capped at five chips.
  */
 export function suggestedTagsFor(
   state: ComposeThreadState,
@@ -155,6 +158,8 @@ export function suggestedTagsFor(
   const fromKind = state.kind && state.kind !== "share" ? [state.kind] : [];
   const pool = [...fromCategory, ...fromKind];
   return [...new Set(pool)]
-    .filter((tag) => !state.tags.includes(tag))
+    .filter(
+      (tag) => FORUM_TAG_OPTIONS.includes(tag) && !state.tags.includes(tag),
+    )
     .slice(0, 5);
 }

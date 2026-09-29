@@ -12,6 +12,7 @@ import type {
   UpdateSubprofileDTO,
 } from "../../features/subprofiles/api/subprofiles.api";
 import {
+  DEMO_SUBPROFILES,
   findDemoSubprofileByHandle,
   findDemoSubprofileByOwnerSlug,
   mockDirectory,
@@ -27,6 +28,8 @@ import {
   validatePublishDemo,
   type DemoPublicAccessResult,
 } from "../../features/subprofiles/data/subprofiles.data";
+import { linkedPersonaHandleCandidate } from "../../features/subprofiles/personaHandle";
+import { currentUserSlug } from "../../features/members/data/demoCurrentUser";
 import {
   KIND_LABELS,
   defaultSlugForKind,
@@ -117,10 +120,34 @@ function affiliationOptionsFixture(
   return [...communities, ...events];
 }
 
+/** Mirrors the backend's draft-handle rule: a LINKED persona that is not
+ *  published and holds no handle gets `<creatorSlug>-<personaSlug>` stored on
+ *  its row as soon as it is saved (no registry claim until publish). Every
+ *  other persona keeps the handle it has. The creator's slug comes off the
+ *  demo fixture, since the owner-full DTO never carries it (see
+ *  `toOwnerDto`). Pulled out of `subprofileHandlers` to keep that function
+ *  under the repo's line cap. */
+function withDerivedDraftHandle(subprofile: SubprofileDTO): SubprofileDTO {
+  const isHandlelessLinkedDraft =
+    subprofile.linkVisibility === "linked" &&
+    subprofile.status !== "published" &&
+    !subprofile.handle;
+  const creatorSlug = DEMO_SUBPROFILES.find(
+    (demoSubprofile) => demoSubprofile.id === subprofile.id,
+  )?.ownerSlug;
+  if (!isHandlelessLinkedDraft || !creatorSlug) return subprofile;
+  return {
+    ...subprofile,
+    handle: linkedPersonaHandleCandidate(creatorSlug, subprofile.slug),
+  };
+}
+
 /** Build the freshly-created draft DTO for the `POST /subprofiles` echo, mirroring
  *  the backend: `displayName` is required and the slug is derived server-side
- *  (create rejects a client slug; rename via PATCH). Pulled out of
- *  `subprofileHandlers` to keep that function under the repo's line cap. */
+ *  (create rejects a client slug; rename via PATCH). A new persona starts
+ *  linked, so it carries its derived handle right away, with the signed-in
+ *  demo member as its creator. Pulled out of `subprofileHandlers` to keep
+ *  that function under the repo's line cap. */
 function buildCreatedSubprofile(body: CreateSubprofileDTO): SubprofileDTO {
   const displayName = body.displayName?.trim() || KIND_LABELS[body.kind];
   const slug = slugify(displayName) || defaultSlugForKind(body.kind);
@@ -128,7 +155,7 @@ function buildCreatedSubprofile(body: CreateSubprofileDTO): SubprofileDTO {
     id: `sp-msw-${Date.now()}`,
     kind: body.kind,
     slug,
-    handle: null,
+    handle: linkedPersonaHandleCandidate(currentUserSlug, slug),
     displayName,
     avatarUrl: null,
     tagline: null,
@@ -235,7 +262,24 @@ export function subprofileHandlers(api: string) {
       const current = mockSubprofileById(String(params.id));
       if (!current) return new HttpResponse(null, { status: 404 });
       const patch = (await request.json()) as UpdateSubprofileDTO;
-      return HttpResponse.json({ ...current, ...patch });
+      // A link-visibility switch always drops the old handle: a typed new one
+      // in the same patch survives (mirrors the backend's
+      // release-with-no-forwarding rule for a linked-to-unlinked switch).
+      // A linked draft left with no handle, by that switch or by a cleared
+      // handle field, then gets the derived default; any other persona stays
+      // handle-less until it is republished.
+      const isSwitchingLinkVisibility =
+        patch.linkVisibility !== undefined &&
+        patch.linkVisibility !== current.linkVisibility;
+      return HttpResponse.json(
+        withDerivedDraftHandle({
+          ...current,
+          ...patch,
+          ...(isSwitchingLinkVisibility
+            ? { handle: patch.handle ?? null }
+            : {}),
+        }),
+      );
     }),
     http.put(
       `${api}/subprofiles/:id/sections/:section`,
@@ -315,22 +359,31 @@ export function subprofileHandlers(api: string) {
       if (!current) return new HttpResponse(null, { status: 404 });
       const unmet = validatePublishDemo(current);
       if (unmet.length) return HttpResponse.json({ unmet }, { status: 422 });
+      // A linked persona's default handle needs its CREATOR's profile slug,
+      // which the owner-full DTO above never carries (see `toOwnerDto`); read
+      // it off the underlying demo fixture instead.
+      const ownerSlug = DEMO_SUBPROFILES.find(
+        (sp) => sp.id === current.id,
+      )?.ownerSlug;
       return HttpResponse.json({
         ...current,
         status: "published",
         handle:
-          current.linkVisibility === "unlinked"
-            ? (current.handle ?? current.slug)
-            : null,
+          current.handle ??
+          (current.linkVisibility === "linked" && ownerSlug
+            ? linkedPersonaHandleCandidate(ownerSlug, current.slug)
+            : current.slug),
       });
     }),
     http.post(`${api}/subprofiles/:id/unpublish`, ({ params }) => {
       const current = mockSubprofileById(String(params.id));
       if (!current) return new HttpResponse(null, { status: 404 });
+      // A linked persona keeps its handle as a draft; an unlinked one gives
+      // its handle back (mirrors the backend).
       return HttpResponse.json({
         ...current,
         status: "draft",
-        handle: current.linkVisibility === "unlinked" ? null : current.handle,
+        handle: current.linkVisibility === "linked" ? current.handle : null,
       });
     }),
     http.delete(`${api}/subprofiles/:id`, () =>

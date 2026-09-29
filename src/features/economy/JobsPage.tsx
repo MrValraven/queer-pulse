@@ -12,7 +12,6 @@ import { PageShell } from "../../shared/components/layout";
 import {
   Button,
   EmptyState,
-  FeatureHelp,
   LoadErrorState,
   Reveal,
   SkeletonLine,
@@ -238,8 +237,7 @@ export function JobsPage() {
             <Translation
               i18nKey="economy:jobs.title"
               components={{ em: <em /> }}
-            />{" "}
-            <FeatureHelp id="economy.jobs" />
+            />
           </Reveal>
           <Reveal as="p" delay={120}>
             {t("economy:jobs.lead")}

@@ -1,14 +1,15 @@
 import { lazy, Suspense, type ComponentType, type ReactNode } from "react";
-import { AuthLoader } from "../shared/components/feedback/AuthLoader";
+import { PageLoader } from "../shared/components/feedback/PageLoader";
 import { reloadForStaleChunk } from "../shared/lib/staleChunkReload";
 
 /**
  * Wrap an auth/onboarding route element in its own Suspense boundary so its
- * lazy chunk loads behind the branded {@link AuthLoader} instead of the generic
- * app-wide RouteFallback spinner.
+ * lazy chunk loads behind the bare full-screen {@link PageLoader}: the same
+ * loader RouteFallback shows, without the previous page's shell-frame hold
+ * that RouteFallback adds, since the auth screens render with no nav.
  */
 export const auth = (element: ReactNode) => (
-  <Suspense fallback={<AuthLoader />}>{element}</Suspense>
+  <Suspense fallback={<PageLoader size="screen" />}>{element}</Suspense>
 );
 
 /**

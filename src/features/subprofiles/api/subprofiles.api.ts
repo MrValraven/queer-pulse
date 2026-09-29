@@ -198,7 +198,28 @@ export type SubprofileKind =
   | "facilitator"
   | "tutor"
   | "lecturer"
-  | "pole_dancer";
+  | "pole_dancer"
+  // Quest personas (+20)
+  | "game_master"
+  | "ttrpg_designer"
+  | "board_game_reviewer"
+  | "game_night_host"
+  | "larp_organizer"
+  | "miniature_painter"
+  | "cartographer"
+  | "dice_maker"
+  | "tournament_organizer"
+  | "actual_play"
+  | "streamer"
+  | "speedrunner"
+  | "modder"
+  | "cosplayer"
+  | "prop_maker"
+  | "puzzle_designer"
+  | "podcaster"
+  | "voice_actor"
+  | "fanfic_writer"
+  | "game_critic";
 
 export type SubprofileSection =
   | "projects"
@@ -314,7 +335,24 @@ export type SubprofileSection =
   | "nights"
   | "roster"
   | "courses"
-  | "subjects";
+  | "subjects"
+  // Quest personas (+16; `campaigns` above is shared with the game master)
+  | "sessions"
+  | "playthroughs"
+  | "library"
+  | "larps"
+  | "minis"
+  | "maps"
+  | "dice"
+  | "results"
+  | "streams"
+  | "runs"
+  | "mods"
+  | "cons"
+  | "puzzles"
+  | "episodes"
+  | "roles"
+  | "works";
 
 export type GigState = "sold_out" | "cancelled" | "guest";
 export type WorkState = "shipped" | "archived" | "in_progress";
@@ -465,6 +503,31 @@ export interface TherapistWorksAlongside {
   kind: string;
   name: string;
   note: string;
+}
+
+/** Quest personas: where an "At the table" game runs. */
+export type TableFormat = "online" | "in_person" | "both";
+/** Quest personas: the table-vibe options, in `questTable.data.ts` order. */
+export type TableVibe =
+  | "queer_led"
+  | "trans_led"
+  | "beginner_friendly"
+  | "adults_only"
+  | "neurodivergent_friendly"
+  | "accessible_venue";
+/** Quest personas: the safety-tool options, in `questTable.data.ts` order. */
+export type SafetyTool =
+  | "session_zero"
+  | "lines_and_veils"
+  | "x_card"
+  | "open_door"
+  | "check_ins"
+  | "content_warnings";
+/** The cleaned "At the table" summary a directory card carries: known values
+ *  only, vibes in canonical order. */
+export interface CardTableSummary {
+  format: TableFormat | null;
+  vibe: TableVibe[];
 }
 
 /** Persona-level skin blocks (subprofiles.skin_data). Only the keys relevant to the
@@ -628,6 +691,22 @@ export interface SkinData {
   faq?: { question: string; answer: string }[] | null;
   /** Therapist layout: people and services the therapist works alongside. */
   worksAlongside?: TherapistWorksAlongside[] | null;
+  /** Quest skin: how the table runs. `skinData` has no server schema, so
+   *  every reader cleans the option lists through `knownOptions` in
+   *  `questTable.data.ts` and skips values it does not know. */
+  atTheTable?: {
+    format?: TableFormat;
+    /** City, venue, or platform. */
+    where?: string;
+    /** Free lines, one game system each. */
+    systems?: string[];
+    /** `SafetyTool` option values. */
+    safetyTools?: string[];
+    /** `TableVibe` option values. */
+    vibe?: string[];
+    price?: string;
+    note?: string;
+  };
 }
 
 export interface SubprofileItemDTO {
@@ -791,6 +870,8 @@ export interface SubprofileCardDTO {
   // directory list path (ONE grouped query, never per-card) — mirrors
   // `socialCount`/`tags`.
   followerCount: number;
+  /** Quest personas only: cleaned "At the table" summary, absent when empty. */
+  table?: CardTableSummary;
 }
 
 /** Publish failure body (HTTP 422). */

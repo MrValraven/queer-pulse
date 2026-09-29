@@ -72,7 +72,7 @@ export function MemberCardBody({
         />
         <div>
           <div className={styles.mName}>
-            {name}
+            <span>{name}</span>
             <MemberStaffBadge slug={slug} />
             {isMe && (
               <span className={styles.mYou}>{t("members:card.you")}</span>

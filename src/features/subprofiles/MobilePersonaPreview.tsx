@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { ModalSheet } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,10 +13,11 @@ import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
+import { overlaySectionRows } from "./editorPreviewSections";
 import { usePersonaCreatorName } from "./usePersonaCreatorSlug";
 import styles from "./MobilePersonaPreview.module.css";
 
-/** No-op — the tree is fully inert in `mode="preview"`, so these handlers only
+/** No-op: the tree is fully inert in `mode="preview"`, so these handlers only
  *  satisfy `SubprofilePageBody`'s prop contract and are never invoked. */
 function noop() {}
 
@@ -25,13 +27,16 @@ const PREVIEW_MODE: PersonaViewMode = "preview";
  * The mobile equivalent of the docked `EditorPreview`: the same live
  * `SubprofilePageBody` tree, but presented in a full-height `<ModalSheet wide>`
  * because the docked preview column is `display:none` ≤860px. Opened from the
- * savebar's mobile-only "Preview" button (`EditorSavebar`).
+ * pane switcher's eye on phones (`EditorSwitchPreviewButton`) and from the
+ * savebar's "Preview" button on tablets (`EditorSavebar`).
  *
  * Self-contained (mounted only while open). It reads the SAME in-progress editor
- * state the dock does — the shared meta editor off `SubprofileEditorContext`
- * overlaid onto the saved persona — so the preview updates live per keystroke,
- * exactly like the desktop dock. The saved persona is read back from the query
- * cache via `useSubprofile(id)` (a warm cache hit, no extra fetch — the editor
+ * state the dock does: the shared meta editor and `sectionRows` off
+ * `SubprofileEditorContext`, overlaid onto the saved persona via the same
+ * `overlaySectionRows` helper `EditorPreview` uses, so the preview updates
+ * live per keystroke and per section edit, exactly like the desktop dock. The
+ * saved persona is read back from the query
+ * cache via `useSubprofile(id)` (a warm cache hit, no extra fetch; the editor
  * page already loaded it), which keeps the savebar free of a new `subprofile`
  * prop it can't receive through the shell.
  */
@@ -40,10 +45,27 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
   const { id } = useParams();
   const { data: subprofile } = useSubprofile(id);
   const { profile } = useProfileData();
-  const { meta: editor, skinBlocks } = useSubprofileEditorContext();
+  const {
+    meta: editor,
+    skinBlocks,
+    sectionRows,
+  } = useSubprofileEditorContext();
   const creatorName = usePersonaCreatorName(
     subprofile?.id,
     subprofile?.memberCount ?? 1,
+  );
+
+  // Overlay the in-progress section rows onto the saved persona's sections,
+  // the same helper `EditorPreview` uses, so both previews agree. Called
+  // unconditionally (Rules of Hooks) ahead of the cache-miss guard below;
+  // falls back to an empty overlay while `subprofile` is still unset, which
+  // is discarded by the guard's `return null` on the same render.
+  const sectionsOverlay = useMemo(
+    () =>
+      subprofile
+        ? overlaySectionRows(subprofile, sectionRows)
+        : { sections: [], featured: null },
+    [subprofile, sectionRows],
   );
 
   // Guard the (practically-impossible) cache miss: this only ever mounts from
@@ -51,7 +73,7 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
   // rather than a broken empty sheet.
   if (!subprofile) return null;
 
-  // Overlay the in-progress meta-editor fields onto the saved persona — the
+  // Overlay the in-progress meta-editor fields onto the saved persona: the
   // exact overlay `EditorPreview` applies, so the two previews never diverge.
   const liveView: SubprofileView = {
     ...subprofile,
@@ -71,6 +93,8 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
     visibility: editor.visibility,
     slug: editor.slug,
     handle: editor.handle || null,
+    sections: sectionsOverlay.sections,
+    featured: sectionsOverlay.featured,
     skinData: {
       ...(subprofile.skinData ?? {}),
       ...skinBlocks.buildSkinBlocks(),
@@ -85,6 +109,7 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
   return (
     <ModalSheet
       wide
+      className={styles.sheet}
       onClose={onClose}
       ariaLabel={t("subprofiles:mobilePreview.ariaLabel")}
     >

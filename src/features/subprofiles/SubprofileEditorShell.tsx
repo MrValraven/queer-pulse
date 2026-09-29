@@ -28,7 +28,7 @@ import "./persona-editor.css";
  * Below this the rail is gone and `EditorPaneSwitcher` navigates instead. It
  * must be the same 760px cut the CSS hides the rail at, which is why that one
  * CSS block is a `@media` rule while the editor's other breakpoints are
- * `@container` queries against `.ed-shell` — see the note in
+ * `@container` queries against `.ed-shell`, see the note in
  * `persona-editor.css`.
  */
 const RAIL_HIDDEN_QUERY = mediaMax("lg");
@@ -47,14 +47,14 @@ function isBoolean(value: unknown): value is boolean {
 }
 
 /**
- * The `.ed` grid interior — rail, routed pane + savebar, and docked preview —
+ * The `.ed` grid interior: rail, routed pane + savebar, and docked preview,
  * for ONE persona. Mounted with `key={subprofile.id}` by `SubprofileEditorPage`
  * so it fully re-initializes when the route lands on a different persona.
  *
  * Everything below the rail is wrapped in `SubprofileEditorProvider`, which
  * owns the ONE shared editor state (meta fields + every section/social/
  * affiliation working-list) behind a single global save. The routed panes and
- * the savebar write it; the docked preview reads it — so in-progress edits show
+ * the savebar write it; the docked preview reads it, so in-progress edits show
  * live before any save, and one "Save all" in the savebar commits every dirty
  * area at once.
  *
@@ -68,7 +68,7 @@ function isBoolean(value: unknown): value is boolean {
  *
  * That pane state is also published on `SubprofileEditorNavContext`, the one
  * seam that lets something rendered INSIDE a pane move the editor to another
- * one — the publish checklist's unmet rows jumping to the field they are about
+ * one: the publish checklist's unmet rows jumping to the field they are about
  * (`useEditorFieldJump`). Kept separate from `SubprofileEditorProvider` on
  * purpose: that context owns the unsaved-edit state, and folding "where am I
  * looking" into it would re-render every consumer of the edit state on each
@@ -100,8 +100,10 @@ export function SubprofileEditorShell({
     : "mobile";
 
   const groups = useMemo(() => buildEditorRailGroups(subprofile), [subprofile]);
-  // Flattened rail order — what `?pane=` is validated against, and the order
-  // the switcher's back/forward arrows walk.
+  // Flattened rail order, what `?pane=` is validated against. On a pane with
+  // Page blocks the mobile switcher's back/forward arrows step through its
+  // chapters first (`EditorPaneSwitcher`'s own `switchStops`), then move on
+  // to the next pane in this order.
   const paneKeys = useMemo(
     () =>
       groups.flatMap((group): EditorPaneKey[] =>
@@ -159,8 +161,8 @@ export function SubprofileEditorShell({
 
           {/* Kept MOUNTED regardless of `previewOpen` so the panel can animate OUT
             (a conditional unmount would pop it away with no exit). While hidden
-            it's `inert` — pulled out of the tab order and the a11y tree, and its
-            in-flight "Open live" link made unfocusable — so the collapsed column
+            it's `inert`, pulled out of the tab order and the a11y tree, and its
+            in-flight "Open live" link made unfocusable, so the collapsed column
             is truly gone to keyboard/AT users even though it's still in the DOM.
             The visual collapse itself is driven by `data-preview` in CSS. */}
           <div className="ed-preview" inert={!previewOpen}>

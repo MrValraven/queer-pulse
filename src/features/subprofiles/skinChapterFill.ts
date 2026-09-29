@@ -10,7 +10,10 @@ import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor
  * No React here, so the strip, the cards and any test can share one answer.
  */
 
-type ValueReader = Pick<SubprofileSkinBlocksEditor, "getValue">;
+type ValueReader = Pick<
+  SubprofileSkinBlocksEditor,
+  "getValue" | "sectionRowCount"
+>;
 
 export interface ChapterFill {
   filled: number;
@@ -43,13 +46,17 @@ function watchedValue(
   return findControl(path, chapters)?.defaultValue ?? "";
 }
 
-/** Whether a control shows right now: every `showWhen` condition holds. A
- *  control without `showWhen` always shows; hidden values stay stored. */
+/** Whether a control shows right now: a retired control (`isRetired`) only
+ *  while it holds a value, and every `showWhen` condition holds. A control
+ *  without either always shows; hidden values stay stored. A hidden control
+ *  leaves the fill counts too, so an emptied retired field never reads as
+ *  "to fill". */
 export function isControlVisible(
   control: SkinBlockControl,
   editor: ValueReader,
   chapters: SkinChapterDescriptor[],
 ): boolean {
+  if (control.isRetired && !isControlFilled(control, editor)) return false;
   if (!control.showWhen) return true;
   const conditions = Array.isArray(control.showWhen)
     ? control.showWhen
@@ -85,11 +92,29 @@ function isFilledValue(value: unknown): boolean {
  *  reads its stored value, else its `defaultValue` (what the page renders);
  *  an empty choice ("Not said") counts as unfilled. A control whose older
  *  free-text answer (`legacyTextPath`) is still set counts as filled, since
- *  the page shows that text. */
+ *  the page shows that text.
+ *  A section list counts once its section holds a row of any kind, so a
+ *  gallery photo with no title or description still fills it.
+ *  The availability calendar counts once it has a start date, the one field
+ *  the page needs to place its cells. */
 export function isControlFilled(
   control: SkinBlockControl,
   editor: ValueReader,
 ): boolean {
+  if (control.kind === "sectionList") {
+    return (
+      control.section !== undefined &&
+      editor.sectionRowCount(control.section) > 0
+    );
+  }
+  if (control.kind === "grid") {
+    const calendar = editor.getValue(control.path);
+    return (
+      typeof calendar === "object" &&
+      calendar !== null &&
+      isNonBlankString((calendar as Record<string, unknown>).startDate)
+    );
+  }
   if (
     control.legacyTextPath &&
     isNonBlankString(editor.getValue(control.legacyTextPath))
@@ -120,6 +145,20 @@ export function chapterFill(
     }
   }
   return { filled, total };
+}
+
+/** The section a chapter edits when its one control is a section list (a
+ *  derived section chapter, the gallery), else undefined. Such a chapter is
+ *  counted in items: "1 to fill" would read as a field left blank. */
+export function soleListSection(
+  chapter: SkinChapterDescriptor,
+): SkinBlockControl["section"] {
+  const controls = chapter.groups.flatMap((group) => group.controls);
+  const [onlyControl] = controls;
+  if (controls.length !== 1 || onlyControl?.kind !== "sectionList") {
+    return undefined;
+  }
+  return onlyControl.section;
 }
 
 /** A stored value read as a number, or null when blank or not numeric. */

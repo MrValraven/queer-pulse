@@ -9,7 +9,7 @@ const PARTNER = routes.partner;
 
 /**
  * The opportunity's linked organization card: a partner org OR a community
- * (never both in practice — `OrganizationPickerField` is a single combined
+ * (one at most in practice, since `OrganizationField` is a single combined
  * control), reusing the same pill/text/link treatment for either. Renders
  * nothing when neither is set. Split out of `VolunteerOpportunitySidebar` to
  * keep that component under the 200-line limit.

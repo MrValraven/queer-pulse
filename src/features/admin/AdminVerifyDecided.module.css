@@ -32,6 +32,99 @@
   color: var(--ink-40);
 }
 
+/* Bucket chips under the search: who still has a link waiting on them, who
+   already came in, and who was declined. */
+.filters {
+  margin-top: 14px;
+}
+
+.filterCount {
+  font-size: var(--text-12-5);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+/* A decided row opens collapsed. `.decidedBody` is the single flex child of the
+   shared `.row`, so the summary toggle and its details stack inside it. */
+.decidedBody {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The summary is the disclosure button itself: a bare, full-width button that
+   keeps the row's avatar-and-text layout, so the whole header is the target. */
+.summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-14);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.summary:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The decision chip and the link chip travel together when the name wraps. */
+.summaryChips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Spans inside a button are inline by default, which would drop the row
+   family's top margins on the email and dates lines. */
+.summaryLine {
+  display: block;
+}
+
+/* Rotation only, named explicitly: base.css's reduced-motion rule shortens
+   every transition, and a transition on `all` would drag other properties
+   along with it. */
+.chevron {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--ink-60);
+  transition-property: transform;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
+}
+
+.summary[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .summary:hover .chevron {
+    color: var(--text-strong);
+  }
+}
+
+/* The details line up under the text column, past the 40px avatar and the
+   16px gap, and use the full width on a phone. */
+.details {
+  margin-inline-start: 56px;
+}
+
+@media (max-width: 560px) {
+  .details {
+    margin-inline-start: 0;
+  }
+}
+
 /* The invite an approval minted: its status, its countdown, the link itself,
    and the one action left when it has lapsed. */
 .invite {
@@ -58,8 +151,20 @@
   color: var(--ink-60);
 }
 
-.reissue {
-  align-self: flex-start;
+/* The one action the link's state allows (reissue a lapsed link, revoke a live
+   one), set apart from the copy tools above by a hairline so a destructive
+   press never sits flush against a copy button. */
+.inviteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* Same dark-mode hairline the shared row border switches to. */
+:global([data-theme="dark"]) .inviteActions {
+  border-top-color: rgba(var(--cream-rgb), 0.1);
 }
 
 .inviteError {
