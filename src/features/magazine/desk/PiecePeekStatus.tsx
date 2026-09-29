@@ -1,6 +1,7 @@
 import { FiClock } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import { cx } from "../../../shared/lib/cx";
 import { useMagazineEditors } from "../api/useMagazineEditors";
@@ -11,6 +12,7 @@ import { stageAge } from "./deskStageAge";
 import { describeWaitingOn, waitingOnLabel } from "./deskWaitingOn";
 import { DeskToneDot } from "./DeskToneDot";
 import { pieceNextAction, type PieceNextAction } from "./pieceNextAction";
+import { isPieceScheduled } from "./pieceSchedule";
 import { StageProgress } from "./StageProgress";
 import { viewStageLabelKey } from "./stageLabels";
 import { useDeskViewerId } from "./useDeskViewerId";
@@ -24,6 +26,15 @@ export interface PiecePeekStatusProps {
    *  reads the signed-in editor itself (`useDeskViewerId`). */
   me?: string;
 }
+
+/** Day, month and time: a scheduled piece goes live at a set minute. The
+ *  hour stays unpadded ("2:15 PM"). */
+const SCHEDULED_FOR_FORMAT: Intl.DateTimeFormatOptions = {
+  day: "numeric",
+  month: "long",
+  hour: "numeric",
+  minute: "2-digit",
+};
 
 /** The due text, or null when there is nothing left to chase (Ready and
  *  Published: the stage bar above already says so). */
@@ -42,7 +53,8 @@ function dueText(due: DeskDueDescription, translate: TFunction): string | null {
 
 /**
  * Where the piece stands and what moves it: the stage bar with its name, the
- * one next action from `pieceNextAction`, then when it is due and who holds
+ * one next action from `pieceNextAction` (a scheduled piece says when it goes
+ * live in its slot, with a clock), then when it is due and who holds
  * it, each marked with the desk's tone dot. Reads only the desk's `Piece`, so
  * it paints before the record has loaded. Calm unless late: only a late due
  * date takes the late tone.
@@ -54,6 +66,7 @@ export function PiecePeekStatus({
   me,
 }: PiecePeekStatusProps) {
   const { t } = useTranslation();
+  const format = useFormat();
   const viewerId = useDeskViewerId(me);
   const { editors } = useMagazineEditors();
   // The table's "Waiting on" rule, so the row and the panel name one person.
@@ -70,6 +83,12 @@ export function PiecePeekStatus({
         { count: age.days, stage: t(viewStageLabelKey(piece.stage)) },
       )
     : null;
+  const scheduledLine =
+    piece.publishedAt && isPieceScheduled(piece)
+      ? t("magazine:desk.peek.scheduledFor", {
+          date: format.date(new Date(piece.publishedAt), SCHEDULED_FOR_FORMAT),
+        })
+      : null;
 
   return (
     <div className={styles.status}>
@@ -83,6 +102,12 @@ export function PiecePeekStatus({
           >
             {t(nextAction.labelKey)}
           </Button>
+        )}
+        {scheduledLine !== null && (
+          <p className={styles.scheduled}>
+            <FiClock aria-hidden="true" className={styles.scheduledIcon} />
+            {scheduledLine}
+          </p>
         )}
       </div>
       <dl className={styles.facts}>

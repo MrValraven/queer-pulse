@@ -9,14 +9,22 @@ import {
   isMessageBodyOverLimit,
   shouldShowMessageLengthCounter,
 } from "./messageBodyLimit";
+import { ATTACHMENT_CAPTION_MAX_LENGTH } from "./messageEditKinds";
 import styles from "./InlineEditField.module.css";
 
 export interface InlineEditFieldProps {
   /** The message's current text. Seeds the textarea. */
   initialValue: string;
+  /** ENG-405: the field edits a photo's, document's or GIF's caption. It is
+   *  named for the caption, shows the caption placeholder while empty, and
+   *  holds the edit to `ATTACHMENT_CAPTION_MAX_LENGTH`. */
+  isCaption?: boolean;
   /** Called with the textarea's current value on Enter (fine pointer only)
-   *  or the Save button. Never called while the trimmed value is empty or
-   *  over `MESSAGE_BODY_MAX_LENGTH` (see `canSave` below). */
+   *  or the Save button. Never called while the value is over its length
+   *  limit, `MESSAGE_BODY_MAX_LENGTH` or, for a caption,
+   *  `ATTACHMENT_CAPTION_MAX_LENGTH` (see `canSave` below). Never called
+   *  while the trimmed value is empty, except to clear a caption the message
+   *  already had (`canClearCaption`): the caller trims it and sends "". */
   onSubmit: (nextValue: string) => void;
   /** Called on Escape or the Cancel button; the caller decides whether the
    *  value actually changed before mutating anything. */
@@ -40,7 +48,9 @@ export interface InlineEditFieldProps {
  * hint explains why, the same pattern chat apps commonly use so a blank
  * Enter can't quietly auto-delete a message's text as a side effect of
  * editing it. Deleting the whole message stays a deliberate, separate action,
- * one tap away via the overlay's own Delete action.
+ * one tap away via the overlay's own Delete action. The one exception
+ * (ENG-405) is a caption the message already had: emptying it and saving
+ * removes the caption, with a hint that says so, and the media stays.
  *
  * Also surfaces the server's length limit (DES-202's inline-editor half):
  * a counter appears once the edit is within `MESSAGE_BODY_COUNTER_THRESHOLD`
@@ -51,10 +61,14 @@ export interface InlineEditFieldProps {
  */
 export function InlineEditField({
   initialValue,
+  isCaption = false,
   onSubmit,
   onCancel,
 }: InlineEditFieldProps) {
   const { t } = useTranslation();
+  const maxLength = isCaption
+    ? ATTACHMENT_CAPTION_MAX_LENGTH
+    : MESSAGE_BODY_MAX_LENGTH;
   const [value, setValue] = useState(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const counterId = useId();
@@ -72,21 +86,23 @@ export function InlineEditField({
 
   const trimmedLength = getMessageBodyLength(value);
   const isEmpty = trimmedLength === 0;
-  const isOverLimit = isMessageBodyOverLimit(value);
-  const showCounter = shouldShowMessageLengthCounter(value);
-  const canSave = !isEmpty && !isOverLimit;
+  const isOverLimit = isMessageBodyOverLimit(value, maxLength);
+  const showCounter = shouldShowMessageLengthCounter(value, maxLength);
+  // ENG-405: emptying a caption the message already had removes it, so an
+  // empty Save is allowed there; a caption edit that starts empty still
+  // needs text, like any message edit.
+  const canClearCaption = isCaption && initialValue.trim().length > 0;
+  const canSave = !isOverLimit && (!isEmpty || canClearCaption);
 
   useEffect(() => {
     if (isOverLimit === wasOverLimitRef.current) return;
     wasOverLimitRef.current = isOverLimit;
     setLimitAnnouncement(
       isOverLimit
-        ? t("messages:actions.editOverLimitAnnouncement", {
-            max: MESSAGE_BODY_MAX_LENGTH,
-          })
+        ? t("messages:actions.editOverLimitAnnouncement", { max: maxLength })
         : t("messages:actions.editWithinLimitAnnouncement"),
     );
-  }, [isOverLimit, t]);
+  }, [isOverLimit, maxLength, t]);
 
   function attemptSubmit() {
     if (!canSave) return;
@@ -117,7 +133,14 @@ export function InlineEditField({
         className={styles.editTextarea}
         value={value}
         rows={2}
-        aria-label={t("messages:actions.editing")}
+        placeholder={
+          isCaption ? t("messages:attachments.captionPlaceholder") : undefined
+        }
+        aria-label={
+          isCaption
+            ? t("messages:actions.editingCaption")
+            : t("messages:actions.editing")
+        }
         aria-describedby={showCounter || isEmpty ? counterId : undefined}
         aria-invalid={isOverLimit || undefined}
         placement="above"
@@ -142,12 +165,14 @@ export function InlineEditField({
           >
             {t("messages:actions.editCounter", {
               count: trimmedLength,
-              max: MESSAGE_BODY_MAX_LENGTH,
+              max: maxLength,
             })}
           </span>
         ) : isEmpty ? (
           <span id={counterId} className={styles.editHint}>
-            {t("messages:actions.editEmptyHint")}
+            {canClearCaption
+              ? t("messages:actions.editCaptionClearHint")
+              : t("messages:actions.editEmptyHint")}
           </span>
         ) : (
           <span />

@@ -4,6 +4,7 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { patchConversationRow } from "../../../shared/api/messageCache";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   createGroupInviteLink,
@@ -38,9 +39,10 @@ import type { Conversation } from "../data";
  * so a coded refusal (e.g. `GROUP_DISSOLVED`) gets its specific copy.
  */
 
-/** Patch a single field of one cached group row, for a write whose response
+/** Patch a single field of one cached group, in the inbox list and the
+ *  detail entry (`patchConversationRow`), for a write whose response
  *  carries only that field (not a full `ConversationResponse`): the
- *  invite-link create/disable calls below. A no-op if the row isn't cached
+ *  invite-link create/disable calls below. A no-op if nothing is cached
  *  yet, same fallback as `patchConversationInList`. */
 function patchGroupField<K extends keyof Conversation>(
   queryClient: QueryClient,
@@ -48,15 +50,10 @@ function patchGroupField<K extends keyof Conversation>(
   key: K,
   value: Conversation[K],
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, [key]: value }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    [key]: value,
+  }));
 }
 
 /** POST /conversations/:id/owner: owner transfers ownership; actor becomes
@@ -110,22 +107,39 @@ export function useDissolveGroup() {
 }
 
 /** POST /conversations/:id/invite-link: owner/admin creates or rotates the
- *  group's revocable invite link. Resolves the fresh token directly (null in
- *  demo) so the consuming screen can show/copy it with no extra cache read,
- *  and also patches it straight into the cached row's own `inviteToken`
- *  (there is no full DTO in the response to patch from otherwise). */
+ *  group's revocable invite link. Resolves the fresh token and its expiry
+ *  directly (null in demo) so the consuming screen can show/copy it with no
+ *  extra cache read, and also patches both straight into the cached row's
+ *  own `inviteToken`/`inviteTokenExpiresAt` (there is no full DTO in the
+ *  response to patch from otherwise). */
 export function useCreateGroupInviteLink() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<string | null, Error, string>({
+  return useMutation<
+    { inviteToken: string; inviteTokenExpiresAt: string } | null,
+    Error,
+    string
+  >({
     mutationFn: async (conversationId) => {
       if (demoMode) return null;
-      const { inviteToken } = await createGroupInviteLink(conversationId);
-      return inviteToken;
+      return createGroupInviteLink(conversationId);
     },
-    onSuccess: (inviteToken, conversationId) => {
-      if (demoMode || !inviteToken) return;
-      patchGroupField(queryClient, conversationId, "inviteToken", inviteToken);
+    onSuccess: (link, conversationId) => {
+      if (demoMode || !link) return;
+      patchGroupField(
+        queryClient,
+        conversationId,
+        "inviteToken",
+        link.inviteToken,
+      );
+      // PRD-400: the fresh 7-day window lands with the token, so the panel's
+      // "Expires in" line never shows the previous link's date.
+      patchGroupField(
+        queryClient,
+        conversationId,
+        "inviteTokenExpiresAt",
+        link.inviteTokenExpiresAt,
+      );
     },
     meta: { silentError: true },
   });
@@ -145,6 +159,12 @@ export function useDisableGroupInviteLink() {
     onSuccess: (_result, conversationId) => {
       if (demoMode) return;
       patchGroupField(queryClient, conversationId, "inviteToken", null);
+      patchGroupField(
+        queryClient,
+        conversationId,
+        "inviteTokenExpiresAt",
+        null,
+      );
     },
     meta: { silentError: true },
   });

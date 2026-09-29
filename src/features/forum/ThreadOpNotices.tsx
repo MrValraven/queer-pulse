@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { FiClock, FiEdit3, FiGlobe, FiLock, FiMapPin } from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NEIGHBOURHOOD_OTHER_ID } from "./compose/composeNeighbourhoods.data";
 import type { Thread } from "./forum.data";
@@ -17,7 +20,7 @@ const DATE_AND_TIME: Intl.DateTimeFormatOptions = {
 
 /** The catalog key for each language the composer can state. Anything else,
  *  including the null the older threads carry, has no label and renders as
- *  nothing rather than as a guess. */
+ *  nothing, so the page never guesses. */
 const LANGUAGE_KEY: Record<string, string> = {
   pt: "forum:opMeta.languagePt",
   en: "forum:opMeta.languageEn",
@@ -28,7 +31,7 @@ const LANGUAGE_KEY: Record<string, string> = {
  * Where the thread is about and what it is written in.
  *
  * QUIET METADATA, deliberately: a line of small ink under the post, beside the
- * tags, rather than a badge competing with the title. Neighbourhood names are
+ * tags, kept quieter than the title. Neighbourhood names are
  * proper nouns and print verbatim; only the composer's trailing "Other" is UI
  * copy, so only it carries a key.
  */
@@ -66,22 +69,34 @@ export function ThreadOpMeta({
 }
 
 /**
- * The notice an AUTHOR sees on a thread the forum cannot see yet.
+ * The notice on a thread the forum cannot see yet, in the author's voice for
+ * the author and in a neutral voice for a moderator.
  *
  * The backend lets an author reach their own scheduled or under-review thread
  * by link while every member-facing read path hides the row, so somebody
  * standing on this page can be looking at a post nobody else can open. This
  * says which of the two it is and when, so that silence reads as the plan
- * rather than as a thread that vanished.
+ * and the thread reads as waiting.
  *
  * `isPublished` is the server's own conjunction; the state underneath it comes
  * from `reviewState` and `publishedAt`, in that order, because a thread sent
- * for review is awaiting a person rather than a clock.
+ * for review is awaiting a person, and a scheduled one is awaiting a clock.
+ *
+ * A moderator reaches the same page from Forum review ("Read the thread"), and
+ * "You sent this for review" would misname them. The server's own flags tell
+ * the two apart: `canEditTitle` is the thread author's permission, `canLock`
+ * and `canPin` are the moderator's. A moderator who wrote the thread keeps the
+ * author's voice. Demo threads carry none of these flags, so demo keeps the
+ * author's notice it was written to show.
  */
 export function ThreadStateNotice({ thread }: { thread: Thread }) {
   const { t } = useTranslation();
   const format = useFormat();
   if (thread.isPublished !== false) return null;
+
+  const isModeratorViewer =
+    !thread.canEditTitle && !!(thread.canLock || thread.canPin);
+  if (isModeratorViewer) return <ModeratorStateNotice thread={thread} />;
 
   if (thread.reviewState === "pending") {
     return (
@@ -148,7 +163,61 @@ export function ThreadClosedBanner({
   );
 }
 
-/** The shared shape of the author-only state notices above. */
+/**
+ * What a moderator reads on a scheduled, pending or sent-back thread: the same
+ * three states, said about the author. A pending thread links back to Forum
+ * review, where the approve and decline controls live. The thread page itself
+ * carries none.
+ */
+function ModeratorStateNotice({ thread }: { thread: Thread }) {
+  const { t } = useTranslation();
+  const format = useFormat();
+  if (thread.reviewState === "pending") {
+    return (
+      <Notice
+        icon={<FiEdit3 aria-hidden="true" />}
+        title={t("forum:unpublished.moderatorReviewTitle")}
+        body={
+          <Translation
+            i18nKey="forum:unpublished.moderatorReviewBody"
+            components={{
+              link: (
+                <Link
+                  to={routes.adminForumReview}
+                  className={styles.stateNoticeLink}
+                />
+              ),
+            }}
+          />
+        }
+      />
+    );
+  }
+  if (thread.reviewState === "rejected") {
+    return (
+      <Notice
+        icon={<FiEdit3 aria-hidden="true" />}
+        title={t("forum:unpublished.moderatorRejectedTitle")}
+        body={t("forum:unpublished.moderatorRejectedBody")}
+      />
+    );
+  }
+  return (
+    <Notice
+      icon={<FiClock aria-hidden="true" />}
+      title={t("forum:unpublished.scheduledTitle")}
+      body={
+        thread.publishedAt
+          ? t("forum:unpublished.moderatorScheduledBody", {
+              date: format.date(new Date(thread.publishedAt), DATE_AND_TIME),
+            })
+          : t("forum:unpublished.moderatorScheduledBodyNoDate")
+      }
+    />
+  );
+}
+
+/** The shared shape of the state notices above. */
 function Notice({
   icon,
   title,
@@ -156,7 +225,7 @@ function Notice({
 }: {
   icon: ReactNode;
   title: string;
-  body: string;
+  body: ReactNode;
 }) {
   return (
     <div className={styles.stateNotice} role="status">

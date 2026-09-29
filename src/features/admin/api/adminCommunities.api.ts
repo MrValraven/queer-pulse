@@ -169,11 +169,25 @@ export const updateAdminCommunitySettings = (
   dto: UpdateAdminCommunitySettingsDto,
 ) => apiPatch<AdminCommunityDetailDTO>(`/admin/communities/${slug}`, dto);
 
-/** The roster members eligible to be promoted to moderator (plain members). */
-export const getAdminCommunityModeratorCandidates = (slug: string) =>
-  apiGet<AdminModeratorCandidateDTO[]>(
-    `/admin/communities/${slug}/moderators/candidates`,
+/** The roster members eligible to be promoted to moderator (plain members).
+ *  The server answers at most 25, by name; `searchTerm` narrows them by name
+ *  or handle, accent-folded (ENG-492). */
+export const getAdminCommunityModeratorCandidates = (
+  slug: string,
+  searchTerm = "",
+  signal?: AbortSignal,
+) => {
+  const trimmedSearchTerm = searchTerm.trim();
+  const searchParams = trimmedSearchTerm
+    ? `?${new URLSearchParams({ q: trimmedSearchTerm }).toString()}`
+    : "";
+  return apiGet<AdminModeratorCandidateDTO[]>(
+    `/admin/communities/${slug}/moderators/candidates${searchParams}`,
+    undefined,
+    undefined,
+    signal,
   );
+};
 
 /** Promote a roster member (`memberId` = their user id) to moderator. */
 export const addAdminCommunityModerator = (slug: string, memberId: string) =>
@@ -233,6 +247,16 @@ export const reassignAdminCommunityOwner = (slug: string, memberSlug: string) =>
 /** Admin override: remove any roster member outright (by profile slug), not
  *  just demote a moderator. 404s if `memberSlug` isn't on this community's
  *  roster; 400s if the target is the current owner — reassign ownership
- *  first. */
-export const removeAdminCommunityMember = (slug: string, memberSlug: string) =>
-  apiDelete<void>(`/admin/communities/${slug}/members/${memberSlug}`);
+ *  first. `shouldBarReturn` opts the target out of rejoining this community;
+ *  omitted (the default), today's behaviour applies (no bar). Always sends
+ *  the member a bell either way. */
+export const removeAdminCommunityMember = (
+  slug: string,
+  memberSlug: string,
+  shouldBarReturn = false,
+) =>
+  apiDelete<void>(
+    `/admin/communities/${slug}/members/${memberSlug}${
+      shouldBarReturn ? "?barReturn=true" : ""
+    }`,
+  );

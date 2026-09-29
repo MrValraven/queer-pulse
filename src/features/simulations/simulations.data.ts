@@ -299,13 +299,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.offline,
       },
       {
-        id: "server-error",
-        title: "Server error",
-        description:
-          "Preview the 500 error page shown when something breaks on our side.",
-        to: routes.serverError,
-      },
-      {
         id: "page-crash",
         title: "A page crashes",
         description:

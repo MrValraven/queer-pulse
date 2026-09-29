@@ -62,7 +62,12 @@ export function useEditorDesk() {
     selectedPitchIds: deskState.selected,
     clearSelectedPitchIds: deskState.clearSelected,
   });
-  const pieceActions = useDeskPieceActions({ issue, pieceMutations });
+  const pieceActions = useDeskPieceActions({
+    issue,
+    pieceMutations,
+    showToast,
+    translate,
+  });
   const creationParams = {
     activeMe,
     editors,
@@ -107,6 +112,7 @@ export function useEditorDesk() {
       groupBy: deskState.groupBy,
       focusId: deskState.focusId,
       selectedPieceIds: pieceSelection.selectedPieceIds,
+      isFocusActive: data.focus.activeFocusIds.length > 0,
     });
 
   // One presence socket per page: the peek watches the piece it shows, and

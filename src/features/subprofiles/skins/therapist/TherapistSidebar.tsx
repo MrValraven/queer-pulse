@@ -2,7 +2,7 @@ import { useId } from "react";
 import { FiFlag, FiShare2 } from "react-icons/fi";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { personaPublicPathOrNull } from "../../personaLinks.data";
+import { personaShareUrl } from "../../personaLinks.data";
 import { shareSubprofile } from "../../shareSubprofile";
 import type { PublicSubprofileView } from "../../api/subprofiles.adapters";
 import type { PersonaAction, PersonaViewMode } from "../../personaSkinRender";
@@ -66,8 +66,11 @@ function LinksCard({
   const { showToast } = useToast();
   const isReportShown = mode !== "owner";
   const isReportLive = mode === "public";
-  const isShareLive =
-    mode !== "preview" && personaPublicPathOrNull(data) !== null;
+  // A draft's stored handle 404s for everyone but its owners until it's
+  // published (M4/PRD-429); `personaShareUrl` already withholds it there, so
+  // reusing it here (as `SubprofileShare` does for the main hero row) keeps
+  // a draft therapist page from offering a link nobody else can open.
+  const isShareLive = mode !== "preview" && personaShareUrl(data) !== null;
 
   return (
     <div className={styles.card}>

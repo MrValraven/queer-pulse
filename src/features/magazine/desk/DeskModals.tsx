@@ -1,6 +1,7 @@
 import { ConfirmDialog } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece } from "../data/desk.data";
+import { useMagazineWriters } from "../api/useMagazineWriters";
 import { CommissionModal, type CommissionPayload } from "./CommissionModal";
 import type { DeskTrack } from "./deskTrack";
 import { PassModal, type PassPayload } from "./PassModal";
@@ -12,7 +13,12 @@ import { DeskShortcutsSheet } from "./DeskShortcutsSheet";
 export type DeskModal =
   | {
       kind: "commission";
-      pitch?: { title: string; byline: string; note: string };
+      pitch?: {
+        title: string;
+        byline: string;
+        note: string;
+        isExternal: boolean;
+      };
       sectionName?: string;
     }
   | { kind: "pass"; pitch: { title: string } }
@@ -25,7 +31,17 @@ export type DeskModal =
       piece: Piece;
       progress?: { current: number; total: number };
     }
-  | { kind: "handoff"; piece: { title: string } }
+  // The current editor and writer seed the pickers; `byline` names a writer
+  // the roster lacks.
+  | {
+      kind: "handoff";
+      piece: {
+        title: string;
+        byline: string;
+        editorId: string;
+        writerId: string | null;
+      };
+    }
   // Routed through the desk's single overlay slot rather than owned by the
   // row: `useDeskKeyboard` is disabled while `modal !== null`, so j/k/o cannot
   // move the desk underneath an open confirmation.
@@ -46,7 +62,7 @@ export interface DeskModalsProps {
   onClose: () => void;
   onCommission: (payload: CommissionPayload) => void;
   onPass: (payload: PassPayload) => void;
-  onHandoff: (editorId: string) => void;
+  onHandoff: (editorId: string, writerId: string | null) => void;
   /** Skip in a queued chase: moves on to the next writer in the queue. */
   onSkipChase: () => void;
   onConfirmDeletePiece: () => void;
@@ -106,6 +122,12 @@ export function DeskModals({
   onConfirmDeletePiece,
   isDeletingPiece,
 }: DeskModalsProps) {
+  const writerList = useMagazineWriters();
+  const { writers } = writerList;
+  // Mirrors the section picker: an empty roster while loading or after a
+  // failure disables the writer pickers, which say why.
+  const isWriterListUnavailable =
+    writers.length === 0 && (writerList.isLoading || writerList.isError);
   if (!modal) return null;
 
   switch (modal.kind) {
@@ -115,6 +137,8 @@ export function DeskModals({
           pitch={modal.pitch}
           sectionName={modal.sectionName}
           sections={sections}
+          writers={writers}
+          isWriterListUnavailable={isWriterListUnavailable}
           defaultTrack={commissionTrack}
           hasCurrentIssue={hasCurrentIssue}
           issueNumber={issueNumber}
@@ -142,6 +166,10 @@ export function DeskModals({
         <HandoffModal
           piece={modal.piece}
           editors={editors}
+          writers={writers}
+          isWriterListUnavailable={isWriterListUnavailable}
+          currentEditorId={modal.piece.editorId}
+          currentWriterId={modal.piece.writerId}
           onClose={onClose}
           onHandoff={onHandoff}
         />

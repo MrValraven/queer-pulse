@@ -53,7 +53,7 @@ function buildGroup(
     isDissolved: false,
     members: [
       {
-        slug: "tiago",
+        memberRef: "member-ref-tiago",
         firstName: "Tiago",
         pronouns: "he/they",
         avatarUrl: null,
@@ -64,6 +64,8 @@ function buildGroup(
       },
     ],
     mergeOffer: null,
+    isLeaveChatOnly: false,
+    hasLeftChat: false,
     checkIn: { isOpen: false, isHere: false, hasLeftEvent: false },
     feedback: { isOpen: true, closesAt: null, hasAnswered: false },
     ...overrides,
@@ -107,6 +109,30 @@ describe("GoTogetherGroupEntry", () => {
     expect(
       screen.getByRole("link", { name: "Change how it went" }),
     ).toHaveAttribute("href", "/go-together/feedback/group-1");
+  });
+
+  it("links Open group chat while the member is in the chat", () => {
+    renderEntry(buildGroup({ conversationId: "conversation-9" }), false);
+    expect(
+      screen.getByRole("link", { name: "Open group chat" }),
+    ).toHaveAttribute("href", "/messages?c=conversation-9");
+  });
+
+  it("drops Open group chat once the member has left the chat", () => {
+    renderEntry(
+      buildGroup({
+        conversationId: "conversation-9",
+        isLeaveChatOnly: true,
+        hasLeftChat: true,
+      }),
+      false,
+    );
+    expect(
+      screen.queryByRole("link", { name: "Open group chat" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "See your group" }),
+    ).toBeInTheDocument();
   });
 
   it("opens the group sheet from See your group", () => {

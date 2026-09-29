@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Modal, SegmentedControl } from "../../shared/components/ui";
+import { Button, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -14,6 +14,7 @@ import type { RsvpQuestions } from "./gatheringExtras";
 import { GatheringRsvpDetailsQuestions } from "./GatheringRsvpDetailsQuestions";
 import { GatheringRsvpGuestCountField } from "./GatheringRsvpGuestCountField";
 import { RsvpDetailsLoadError } from "./RsvpDetailsLoadError";
+import { RsvpVisibilityField } from "./RsvpVisibilityField";
 import { useHasRsvpCutoffPassed } from "./rsvpCutoff";
 import { rsvpDetailsSaveErrorMessage } from "./rsvpErrors";
 import {
@@ -25,16 +26,14 @@ import {
 } from "./rsvpDetailsAnswers";
 import styles from "./GatheringDetailPanels.module.css";
 
-/** Stable canonical ids — never the translated label. `SegmentedControl` only
- *  knows display strings, so the state stores the id and maps to/from the
- *  current-language label at the edges. Matches the backend's
- *  `RsvpDetailsVisibility` one-to-one, so no translation layer on save. */
-const VISIBILITY_IDS: RsvpDetailsVisibility[] = [
-  "everyone",
-  "connections",
-  "justMe",
-];
-const VISIBILITY_DEFAULT: RsvpDetailsVisibility = "connections";
+/** PRD-414/415: the one answer to "Who can see you're going?", the same field
+ *  (`RsvpVisibilityField`) and meaning as My events. `justMe` lists the member
+ *  to the hosts only, `connections` to their accepted connections too, and
+ *  `everyone` to every member who can read the guest list. The host always
+ *  sees the member and every note they write, whatever they pick. The default
+ *  matches what the server applies to an RSVP that never chose, so the field
+ *  opens on the setting that is actually in force. */
+const VISIBILITY_DEFAULT: RsvpDetailsVisibility = "everyone";
 
 /** How many extra people a member may declare from this sheet. Capacity is
  *  measured in seats, so every number here is a seat the host has to lay. */
@@ -113,11 +112,6 @@ export function GatheringRsvpDetailsModal({
   const updateAnswer = (key: RsvpDetailsAnswerKey, value: string) =>
     setAnswers((current) => ({ ...current, [key]: value }));
 
-  const visibilityLabel: Record<RsvpDetailsVisibility, string> = {
-    everyone: t("gatherings:rsvpDetails.visibility.everyone"),
-    connections: t("gatherings:rsvpDetails.visibility.connections"),
-    justMe: t("gatherings:rsvpDetails.visibility.justMe"),
-  };
   // Past the host's cutoff the server refuses a member's raise and lets an
   // organiser through, so a member's options stop at the count they saved.
   // Until that count lands the options stay open and the server answers.
@@ -174,9 +168,6 @@ export function GatheringRsvpDetailsModal({
       sub={t("gatherings:rsvpDetails.sub")}
       footer={
         <>
-          <div className={styles.detailsPrivacyNote}>
-            {t("gatherings:rsvpDetails.privacyNote")}
-          </div>
           <Button variant="ghost" onClick={onClose}>
             {t("gatherings:rsvpDetails.cancelCta")}
           </Button>
@@ -210,23 +201,12 @@ export function GatheringRsvpDetailsModal({
             onAnswerChange={updateAnswer}
           />
 
-          <div className={styles.detailsField}>
-            <div className={styles.detailsLabel}>
-              {t("gatherings:rsvpDetails.whoSeesLabel")}
-            </div>
-            <SegmentedControl
-              fullWidth
-              label={t("gatherings:rsvpDetails.whoSeesLabel")}
-              options={VISIBILITY_IDS.map((id) => visibilityLabel[id])}
-              value={visibilityLabel[visibility]}
-              onChange={(label) =>
-                setVisibility(
-                  VISIBILITY_IDS.find((id) => visibilityLabel[id] === label) ??
-                    VISIBILITY_DEFAULT,
-                )
-              }
-            />
-          </div>
+          <RsvpVisibilityField
+            value={visibility}
+            onChange={setVisibility}
+            note={t("gatherings:rsvpDetails.privacyNote")}
+            labelClassName={styles.detailsLabel}
+          />
         </>
       )}
     </Modal>

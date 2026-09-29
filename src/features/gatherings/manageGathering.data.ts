@@ -64,8 +64,8 @@ export const GOING_ATTENDEES = [
   {
     id: "going-jp",
     initials: "JP",
-    background: "rgba(45,27,61,.1)",
-    color: "var(--plum)",
+    background: "rgba(var(--line-rgb),.1)",
+    color: "var(--text-strong)",
     name: "Jordan Park",
     pronouns: "they/them",
     rsvpAt: new Date(2026, 4, 31),
@@ -85,8 +85,8 @@ export const WAITLIST_ATTENDEES = [
   {
     id: "wait-nc",
     initials: "NC",
-    background: "rgba(45,27,61,.07)",
-    color: "var(--plum)",
+    background: "rgba(var(--line-rgb),.07)",
+    color: "var(--text-strong)",
     name: "Nadia Castillo",
     pronouns: "she/her",
     waitlistedAt: new Date(2026, 5, 3),

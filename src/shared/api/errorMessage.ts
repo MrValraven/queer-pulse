@@ -22,6 +22,36 @@ function isPlatformLocked(error: ApiError): boolean {
   );
 }
 
+/** ENG-450: a co-owner invite (send or accept) refused because of a block
+ *  between the invitee and a persona's current owners, or its inviter. Its
+ *  raw backend message is deliberately plain, untranslated English. A caller
+ *  checks this code first and shows its own translated copy for it, the way
+ *  `InviteCoOwnerModal` and `PersonaInvitesBanner` do, keeping that string out
+ *  of the `reasonFor` result entirely. */
+export function isInviteBlocked(error: unknown): boolean {
+  return (
+    error instanceof ApiError &&
+    (error.data as { code?: string } | null)?.code ===
+      "SUBPROFILE_INVITE_BLOCKED"
+  );
+}
+
+/** ENG-448: a write refused because a moderation restriction is in effect on
+ *  the member's account. The backend's sentence names the appeal, so a caller
+ *  that handles its own errors (a `silentError` mutation) checks this first
+ *  and shows `shared:apiError.accountRestricted`, the copy the global handler
+ *  uses. `reasonFor` still returns the server's message for it (every other
+ *  caller relies on that reason to show the appeal), so a caller that wants
+ *  its own translated copy must check `isAccountRestricted` before calling
+ *  `reasonFor` or `describeError`. */
+export function isAccountRestricted(error: unknown): boolean {
+  return (
+    error instanceof ApiError &&
+    error.status === 403 &&
+    (error.data as { code?: string } | null)?.code === "ACCOUNT_RESTRICTED"
+  );
+}
+
 function isMeaningfulMessage(message: string): boolean {
   const trimmed = message.trim();
   return trimmed.length > 0 && !BARE_STATUS_WORDS.has(trimmed.toLowerCase());
@@ -31,9 +61,13 @@ function isMeaningfulMessage(message: string): boolean {
  * The specific, user-appropriate reason for a failure — or `null` when there
  * isn't one we should show the user. Only an `ApiError` can carry a shown
  * reason, and only when it's a 4xx with a meaningful message:
- *  - 401 / 404 / PLATFORM_LOCKED 503 are owned by other UI (auth, empty
- *    states, the maintenance screen);
+ *  - 401 / 404 / PLATFORM_LOCKED 503 / SUBPROFILE_INVITE_BLOCKED are owned by
+ *    other UI (auth, empty states, the maintenance screen, the invite flow's
+ *    own translated copy);
  *  - 5xx must never leak server internals.
+ * ACCOUNT_RESTRICTED 403 is not filtered here: its server message is the
+ * reason most callers show. A caller that wants the translated appeal copy
+ * instead must check `isAccountRestricted(error)` before calling this.
  * Every non-`ApiError` — plain `Error`/`TypeError`/`SyntaxError`, raw network
  * failures, anything else — returns `null` so the caller falls back to its
  * friendly generic instead of surfacing raw runtime noise.
@@ -42,6 +76,7 @@ export function reasonFor(error: unknown): string | null {
   if (error instanceof ApiError) {
     if (error.status === 401 || error.status === 404) return null;
     if (isPlatformLocked(error)) return null;
+    if (isInviteBlocked(error)) return null;
     if (error.status >= 500) return null;
     return isMeaningfulMessage(error.message) ? error.message.trim() : null;
   }

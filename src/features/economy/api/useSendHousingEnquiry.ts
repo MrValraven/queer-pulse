@@ -26,6 +26,9 @@ export function useSendHousingEnquiry() {
     Error,
     SendHousingEnquiryInput
   >({
+    // The enquiry modal says every refusal itself (inline copy, or the pledge
+    // and step-up prompts), so silence the global toast.
+    meta: { silentError: true },
     mutationFn: async ({ ref, body }) => {
       if (demoMode || !ref) {
         await new Promise((resolve) => setTimeout(resolve, 650));

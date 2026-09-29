@@ -112,6 +112,8 @@ export interface ListingDTO extends Omit<
   submittedBy: MemberRefDTO | null;
   /** Who suggested the place. Only admin queue rows carry it. */
   suggestedBy?: MemberRefDTO | null;
+  /** The staff member who authored the listing. Only admin queue rows carry it. */
+  addedByStaff?: MemberRefDTO | null;
   /** ISO 8601 timestamp. */
   createdAt: string;
   photos: Record<PhotoKey, string | null>;

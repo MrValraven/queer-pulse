@@ -234,11 +234,21 @@ function PerkCard({ perk }: { perk: Perk }) {
     displayMeta?.categoryKey ?? perkCategoryLabelKeyFor(perk.category);
   // The invite-quota perks name real numbers, so the translated sentence
   // interpolates the ones the backend enforces rather than baking in a pair.
+  // Under a staff invite-quota override the enforced total can already equal
+  // the base allowance, and "goes from 25 to 25" reads as broken copy, so
+  // that case gets its own sentence naming only the total.
+  const inviteQuota = perk.inviteQuota;
+  const isInviteQuotaAtLimit =
+    inviteQuota !== undefined && inviteQuota.base === inviteQuota.total;
   const description = displayMeta
-    ? t(displayMeta.descKey, {
-        base: perk.inviteQuota?.base,
-        total: perk.inviteQuota?.total,
-      })
+    ? isInviteQuotaAtLimit
+      ? t("members:perks.catalog.inviteQuotaAtLimit.desc", {
+          total: inviteQuota.total,
+        })
+      : t(displayMeta.descKey, {
+          base: inviteQuota?.base,
+          total: inviteQuota?.total,
+        })
     : perk.description;
   return (
     <article
@@ -317,12 +327,6 @@ export function PerksSidebar() {
   const suggestFieldId = useId();
 
   function send() {
-    // No suggestion endpoint yet. Demo confirms receipt; live must not fake it.
-    if (!demoMode) {
-      showToast(t("members:perks.sidebar.suggestUnavailableToast"), "info");
-      setIdea("");
-      return;
-    }
     showToast(sidebarCopy.suggestToast, "success");
     setIdea("");
   }
@@ -382,19 +386,34 @@ export function PerksSidebar() {
         <div className={styles.sbTitle}>
           {t("members:perks.sidebar.suggestTitle")}
         </div>
-        <label className={styles.suggestLabel} htmlFor={suggestFieldId}>
-          {t("members:perks.sidebar.suggestLabel")}
-        </label>
-        <textarea
-          id={suggestFieldId}
-          className={styles.suggestTa}
-          placeholder={t("members:perks.sidebar.suggestPlaceholder")}
-          value={idea}
-          onChange={(e) => setIdea(e.target.value)}
-        />
-        <Button variant="ghost" className={styles.suggestBtn} onClick={send}>
-          {t("members:perks.sidebar.sendSuggestionCta")}
-        </Button>
+        {demoMode ? (
+          <>
+            <label className={styles.suggestLabel} htmlFor={suggestFieldId}>
+              {t("members:perks.sidebar.suggestLabel")}
+            </label>
+            <textarea
+              id={suggestFieldId}
+              className={styles.suggestTa}
+              placeholder={t("members:perks.sidebar.suggestPlaceholder")}
+              value={idea}
+              onChange={(e) => setIdea(e.target.value)}
+            />
+            <Button
+              variant="ghost"
+              className={styles.suggestBtn}
+              onClick={send}
+            >
+              {t("members:perks.sidebar.sendSuggestionCta")}
+            </Button>
+          </>
+        ) : (
+          // No suggestion endpoint exists yet. Show the reason up front,
+          // before the member writes anything, so the card never takes a
+          // submission that has nowhere to go.
+          <p className={styles.suggestUnavailableNote}>
+            {t("members:perks.sidebar.suggestUnavailableNote")}
+          </p>
+        )}
       </div>
     </aside>
   );

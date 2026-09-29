@@ -1,5 +1,6 @@
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { ApiError } from "../../../shared/api/client";
 import { describeError } from "../../../shared/api/errorMessage";
 import type {
   AdminStickerPackResponse,
@@ -16,9 +17,21 @@ import {
 } from "../../stickers/api/useAdminStickerPacks";
 import type { PackStatus } from "./stickerBuilder.types";
 
+/** The `code` the API puts on its 400 when a removal would empty a published
+ *  pack (`LAST_STICKER_IN_PUBLISHED_PACK_CODE` in the backend's
+ *  `admin-stickers.service.ts`). */
+const LAST_STICKER_IN_PUBLISHED_PACK_CODE = "LAST_STICKER_IN_PUBLISHED_PACK";
+
+function isLastStickerRefusal(cause: unknown): boolean {
+  if (!(cause instanceof ApiError) || cause.status !== 400) return false;
+  const data = cause.data as { code?: unknown } | null | undefined;
+  return data?.code === LAST_STICKER_IN_PUBLISHED_PACK_CODE;
+}
+
 /**
- * Every mutation the builder page issues against a pack: create, rename,
- * change status, delete, set the cover, reorder, edit or remove a sticker.
+ * Every mutation the builder page issues against a pack: create, rename (in
+ * either language), change status, delete, set the cover, reorder, edit or
+ * remove a sticker.
  * Each one toasts its own outcome (errors through `toastError`, so the API's
  * reason reaches the admin), which keeps the page a thin composition.
  *
@@ -57,6 +70,7 @@ export function useStickerPackActions({
   async function handleCreatePack(body: {
     slug: string;
     name: string;
+    namePt?: string;
   }): Promise<boolean> {
     try {
       const createdPack = await createStickerPack.mutateAsync(body);
@@ -76,6 +90,21 @@ export function useStickerPackActions({
       {
         onSuccess: () =>
           showToast(t("admin:stickerPacks.toast.renamed", { name }), "success"),
+        onError: (cause) =>
+          toastError("admin:stickerPacks.errors.rename", cause),
+      },
+    );
+  }
+
+  /** Sets the pack's Portuguese name, or clears it with `null` so readers
+   *  in Portuguese see the English name. */
+  function handleRenamePt(namePt: string | null) {
+    if (!selectedPack) return;
+    updateStickerPack.mutate(
+      { packId: selectedPack.id, body: { namePt } },
+      {
+        onSuccess: () =>
+          showToast(t("admin:stickerPacks.toast.renamedPt"), "success"),
         onError: (cause) =>
           toastError("admin:stickerPacks.errors.rename", cause),
       },
@@ -176,8 +205,19 @@ export function useStickerPackActions({
             }),
             "success",
           ),
-        onError: (cause) =>
-          toastError("admin:stickerPacks.errors.deleteSticker", cause),
+        onError: (cause) => {
+          // The API's own reason is English; this one refusal has a
+          // translated sentence of its own, so the admin reads why in the
+          // builder's language.
+          if (isLastStickerRefusal(cause)) {
+            showToast(
+              t("admin:stickerPacks.errors.lastStickerInPublishedPack"),
+              "error",
+            );
+            return;
+          }
+          toastError("admin:stickerPacks.errors.deleteSticker", cause);
+        },
       },
     );
   }
@@ -185,6 +225,7 @@ export function useStickerPackActions({
   return {
     handleCreatePack,
     handleRename,
+    handleRenamePt,
     handleSetStatus,
     handleDeletePack,
     handleSetCover,

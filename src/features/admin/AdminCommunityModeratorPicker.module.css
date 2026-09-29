@@ -1,0 +1,108 @@
+/* Candidate search and list (ENG-492), shared by the add-moderator picker and
+   the reassign-owner modal. The picker's own frame, notes and candidate chips
+   live in AdminCommunitiesPage.module.css. */
+.searchLabel {
+  display: block;
+  flex-basis: 100%;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* A name search wants a short measure, so the field stops growing on wide
+   panels; the owner modal's column is already narrow (see .ownerSearch). */
+.searchField {
+  position: relative;
+  flex-basis: 100%;
+  max-width: 28rem;
+}
+
+.searchIcon {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--ink-60);
+  pointer-events: none;
+}
+
+/* 16px keeps iOS from zooming the page when the picker focuses this field on
+   open, and the tap floor keeps it a comfortable target. `appearance: none`
+   stops WebKit's native search styling from overriding the pill and padding. */
+.searchInput {
+  width: 100%;
+  min-height: var(--tap-min);
+  box-sizing: border-box;
+  padding-block: 9px;
+  padding-inline: 34px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-16);
+  appearance: none;
+}
+
+.searchInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The status live region stays mounted so a screen reader hears the next
+   message, and leaves the flex flow while empty so it adds no row or gap. */
+.statusLine:empty {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.errorRow {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.candidateList {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A newer search is on its way: the held answer dims until it lands. */
+.candidateList[aria-busy="true"] {
+  opacity: 0.6;
+}
+
+/* The handle beside a candidate's name: what a handle search matched, and
+   what tells two members with the same name apart. The markup puts a real
+   space before it, so a screen reader hears two words. */
+.candidateHandle {
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+/* The reassign-owner modal's search block, stacked above its radiogroup. */
+.ownerSearch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.ownerSearch .searchField {
+  max-width: none;
+}

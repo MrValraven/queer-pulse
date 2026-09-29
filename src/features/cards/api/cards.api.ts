@@ -88,7 +88,9 @@ export interface MyCardDTO {
   communityName: string;
   communitySlug: string;
   role: string;
-  holderName: string;
+  /** Null when the holder's profile carries no name. Print it through
+   *  `cardHolderName`, which supplies the localized fallback. */
+  holderName: string | null;
   /**
    * The face on the card, or null. The backend resolves this from the
    * holder's profile avatar and sends it ONLY when the programme allows
@@ -125,7 +127,9 @@ export interface IssuerCardDTO {
   revokedAt: string | null;
   revokedReason: string | null;
   holderSlug: string;
-  holderName: string;
+  /** Null when the holder's profile carries no name. Print it through
+   *  `cardHolderName`, which supplies the localized fallback. */
+  holderName: string | null;
   /** The holder's PROFILE picture, for the roster row. */
   avatarUrl: string | null;
   /** The holder's role in the issuing community, as printed on the card. */
@@ -186,7 +190,9 @@ export interface CardVerificationCountsDTO {
 export interface CardVerificationDTO {
   status: EffectiveCardStatus;
   issuerName: string;
-  holderName: string;
+  /** Null when the holder's profile carries no name. Print it through
+   *  `cardHolderName`, which supplies the localized fallback. */
+  holderName: string | null;
   role: string;
   serial: string;
   memberSince: string;

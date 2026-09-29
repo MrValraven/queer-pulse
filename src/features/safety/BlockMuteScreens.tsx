@@ -229,11 +229,16 @@ export function BlockMuteMuted({
 
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
-      <div className={s.icon} style={{ background: "rgba(45,27,61,.07)" }}>
+      {/* `--line-rgb` and `--text-strong` equal plum in light mode and flip in
+          dark mode, so the disc and its mark stay visible on the dark card. */}
+      <div
+        className={s.icon}
+        style={{ background: "rgba(var(--line-rgb), .07)" }}
+      >
         <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
           <path
             d="M5.5 8.5h13M5.5 12h8M5.5 15.5h5"
-            stroke="var(--plum)"
+            stroke="var(--text-strong)"
             strokeWidth={2}
             strokeLinecap="round"
           />
@@ -293,12 +298,21 @@ export function BlockMuteBlocked({
 
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
-      <div className={s.icon} style={{ background: "rgba(45,27,61,.08)" }}>
+      <div
+        className={s.icon}
+        style={{ background: "rgba(var(--line-rgb), .08)" }}
+      >
         <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-          <circle cx={12} cy={12} r={8} stroke="var(--plum)" strokeWidth={2} />
+          <circle
+            cx={12}
+            cy={12}
+            r={8}
+            stroke="var(--text-strong)"
+            strokeWidth={2}
+          />
           <path
             d="M6.5 6.5l11 11"
-            stroke="var(--plum)"
+            stroke="var(--text-strong)"
             strokeWidth={2}
             strokeLinecap="round"
           />

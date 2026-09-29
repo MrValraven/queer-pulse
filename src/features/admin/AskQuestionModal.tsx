@@ -31,6 +31,11 @@ export function AskQuestionModal({
   // the backend still delivers the question to whoever suggested the place
   // (`suggesterSlug`), so either identifies someone to contact.
   const hasSubmitter = (row.submitterSlug || row.suggesterSlug).length > 0;
+  // PRD-433. A platform-held suggestion (a suggester and no submitter) gets
+  // the question as a bell notification, which they answer through the
+  // contact form; an owner gets it as a direct message. The copy says which.
+  const isPlatformHeldSuggestion =
+    row.submitterSlug.length === 0 && row.suggesterSlug.length > 0;
 
   async function send() {
     if (trimmed.length === 0 || askQuestion.isPending) return;
@@ -52,12 +57,17 @@ export function AskQuestionModal({
     <Modal
       title={t("admin:adminListings.ask.title", { name: row.name })}
       eyebrow={t("admin:adminListings.ask.eyebrow")}
-      sub={t("admin:adminListings.ask.sub", {
-        name:
-          row.submitterName ||
-          row.suggesterName ||
-          t("admin:adminListings.unknownSubmitter"),
-      })}
+      sub={t(
+        isPlatformHeldSuggestion
+          ? "admin:adminListings.ask.subSuggestion"
+          : "admin:adminListings.ask.sub",
+        {
+          name:
+            row.submitterName ||
+            row.suggesterName ||
+            t("admin:adminListings.unknownSubmitter"),
+        },
+      )}
       onClose={onClose}
       footer={
         <>
@@ -79,7 +89,11 @@ export function AskQuestionModal({
       {hasSubmitter ? (
         <FormField
           label={t("admin:adminListings.ask.label")}
-          helper={t("admin:adminListings.ask.helper")}
+          helper={t(
+            isPlatformHeldSuggestion
+              ? "admin:adminListings.ask.helperSuggestion"
+              : "admin:adminListings.ask.helper",
+          )}
           error={error ?? undefined}
           labelAside={`${body.length}/${MAX_LENGTH}`}
         >

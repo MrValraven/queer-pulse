@@ -31,12 +31,13 @@ export function ForwardMessagePreview({ message }: { message: ChatMessage }) {
             alt=""
             aria-hidden="true"
           />
-          {/* `message.text` carries the sticker's own label: a locally-sent
+          {/* `message.text` carries the sticker's name in the reader's
+           *  language, resolved by `stickerLabelIn`: a locally-sent
            *  optimistic sticker sets it directly (`useMessageSendActions.
            *  sendSticker`), and a received one gets it from `messages.
-           *  adapters.ts`'s `messageDisplayText`, which falls the always-
-           *  blank server `body` back to `attachment.label`. A sticker
-           *  carries no caption to show instead. */}
+           *  adapters.ts`'s `messageDisplayText`, which replaces the always-
+           *  blank server `body` with that label. A sticker carries no
+           *  caption to show here. */}
           <span className={styles.previewText}>{message.text}</span>
         </div>
       );

@@ -6,6 +6,7 @@ import { useJoinRequests } from "../../../features/admin/api/useJoinRequests";
 import { usePartnerApplications } from "../../../features/marketing/api/usePartnerApplications";
 import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
 import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
+import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
 
 /**
@@ -34,22 +35,43 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   // `isFullConsole`) and for a grant holder. Pointing every viewer at the
   // overview would 403 for a moderator on every admin page and quietly show
   // them a zero on the queue they work daily. So a moderator keeps the
-  // `/mod/reports` source, which their role can read, and exactly one of the
-  // two queries is ever enabled.
+  // `/mod/reports` source, which their role can read. A grant holder can read
+  // neither, so for them both stay off.
+  //
+  // ENG-491: every other badge query is gated the same way, on the guard of
+  // the endpoint behind it, so a moderator or a grant holder no longer fires a
+  // guaranteed 403 on each admin page load:
+  //   `/join-requests`, `/admin/verifications/requests`, `/mod/reports`:
+  //     `@Roles(Moderator, Admin)`.
+  //   `/admin/partners/applications`: `@Roles(Admin)` or the `partnerships`
+  //     staff grant (`RolesOrStaffGuard`).
+  //   `/admin/housing/join-requests`, `/admin/overview`: `@Roles(Admin)` alone.
+  // A disabled query's badge reads 0 whatever its cache entry holds.
   const { role } = useAuth();
   const { demoMode } = useDemoMode();
-  // Demo mode reads fixtures from both hooks and touches no network, so it
-  // takes the overview arm, matching `AdminSidebar`'s own `isAdmin`.
+  // Grants come from the same source `AdminSidebar` filters the rail with. It
+  // already treats demo mode and an admin as holding every grant.
+  const staffRoles = useMyStaffRoles();
+  // Demo mode reads fixtures from every hook and touches no network, so it
+  // keeps every badge on and takes the overview arm, matching `AdminSidebar`'s
+  // own `isAdmin` and `isFullConsole`.
   const hasAdminOverviewAccess = demoMode || role === "admin";
+  const hasModeratorQueueAccess =
+    hasAdminOverviewAccess || role === "moderator";
+  const hasPartnerApplicationsAccess = staffRoles.includes("partnerships");
   const overview = useAdminOverview({ isEnabled: hasAdminOverviewAccess });
   const modReports = useModReports(
     undefined,
     "all",
     undefined,
-    !hasAdminOverviewAccess,
+    hasModeratorQueueAccess && !hasAdminOverviewAccess,
   );
-  const joinRequests = useJoinRequests("pending");
-  const partnerApplications = usePartnerApplications();
+  const joinRequests = useJoinRequests("pending", {
+    isEnabled: hasModeratorQueueAccess,
+  });
+  const partnerApplications = usePartnerApplications({
+    isEnabled: hasPartnerApplicationsAccess,
+  });
   // OPS-06: the cross-co-op join-request queue on /admin/housing. Same query
   // key the page itself uses, so this is served from cache rather than a
   // second request. The hook asks the server for pending requests only and
@@ -57,7 +79,9 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   // (ENG-41): it used to count the pending rows inside whatever the newest 200
   // requests in every status happened to be, which under-counted a busy queue
   // and could read zero while people waited.
-  const housingCoopJoinRequests = useAdminJoinRequests();
+  const housingCoopJoinRequests = useAdminJoinRequests({
+    isEnabled: hasAdminOverviewAccess,
+  });
 
   // Phase 2's review queue is live, so the badge counts the actual review-queue
   // backlog: every request still waiting on a moderator, at any stage of that
@@ -66,25 +90,28 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   // review-queue default exactly so the query key hashes the same and
   // react-query serves this from the page's own cache instead of firing a
   // second request.
-  const verificationRequestsQuery = useVerificationRequests({
-    status: "all",
-    query: "",
-    sort: "recent",
-  });
+  const verificationRequestsQuery = useVerificationRequests(
+    { status: "all", query: "", sort: "recent" },
+    { isEnabled: hasModeratorQueueAccess },
+  );
   const pendingRequestCount =
     (verificationRequestsQuery.counts.pending ?? 0) +
     (verificationRequestsQuery.counts.in_review ?? 0) +
     (verificationRequestsQuery.counts.appealing ?? 0);
 
+  const moderationCount = hasAdminOverviewAccess
+    ? (overview.data?.triageCounts.openReports ?? 0)
+    : (modReports.data?.counts.open ?? 0);
+  const pendingApplicationCount =
+    partnerApplications.data?.filter(
+      (application) => application.status === "pending",
+    ).length ?? 0;
+
   return {
-    moderation: hasAdminOverviewAccess
-      ? (overview.data?.triageCounts.openReports ?? 0)
-      : (modReports.data?.counts.open ?? 0),
-    members: joinRequests.data?.length ?? 0,
-    partnerships:
-      partnerApplications.data?.filter((a) => a.status === "pending").length ??
-      0,
-    verifications: pendingRequestCount,
-    housingCoops: housingCoopJoinRequests.total,
+    moderation: hasModeratorQueueAccess ? moderationCount : 0,
+    members: hasModeratorQueueAccess ? (joinRequests.data?.length ?? 0) : 0,
+    partnerships: hasPartnerApplicationsAccess ? pendingApplicationCount : 0,
+    verifications: hasModeratorQueueAccess ? pendingRequestCount : 0,
+    housingCoops: hasAdminOverviewAccess ? housingCoopJoinRequests.total : 0,
   };
 }

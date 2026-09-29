@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
@@ -17,6 +17,7 @@ import {
   usePiecePublishAction,
   type PiecePublishAction,
 } from "./desk/usePiecePublishAction";
+import { usePieceOpenDraft } from "./desk/usePieceOpenDraft";
 import { PieceTabsNav, type PieceRecordTabId } from "./desk/PieceTabsNav";
 import { MoneyMiniCard } from "./desk/MoneyMiniCard";
 import { BriefTab } from "./desk/BriefTab";
@@ -31,6 +32,7 @@ interface PieceRecordActionsProps {
   title: string;
   openGateCount: number;
   onOpenDraft: () => void;
+  isOpeningDraft: boolean;
 }
 
 /**
@@ -43,6 +45,7 @@ function PieceRecordActions({
   title,
   openGateCount,
   onOpenDraft,
+  isOpeningDraft,
 }: PieceRecordActionsProps) {
   const { t } = useTranslation();
   const publishReasonId = useId();
@@ -50,8 +53,16 @@ function PieceRecordActions({
 
   return (
     <div className={styles.right}>
-      <Button variant="ghost" size="sm" onClick={onOpenDraft}>
-        {t("magazine:piece.header.openDraft")}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onOpenDraft}
+        aria-disabled={isOpeningDraft}
+        aria-busy={isOpeningDraft}
+      >
+        {isOpeningDraft
+          ? t("magazine:piece.header.openingDraft")
+          : t("magazine:piece.header.openDraft")}
       </Button>
       {action.isPublished && action.publicHref && (
         <Button
@@ -71,7 +82,9 @@ function PieceRecordActions({
           onClick={action.askToUnpublish}
           disabled={action.isPending}
         >
-          {t("magazine:piece.publish.unpublish")}
+          {action.isScheduled
+            ? t("magazine:piece.header.unschedule")
+            : t("magazine:piece.publish.unpublish")}
         </Button>
       ) : (
         <Button
@@ -101,8 +114,8 @@ function PieceRecordActions({
  * letters — behind `/magazine/editor/piece/:id`. "Open the draft" navigates
  * to the block-based article editor (`routes.magazineWrite`) for
  * article-format pieces (Phase 3), and to the deck editor
- * (`routes.deckEditor`) for deck-format pieces (Phase 4) — opening the
- * linked deck directly when `deckId` is set, otherwise a fresh deck.
+ * (`routes.deckEditor`) for deck-format pieces (Phase 4) on the piece's own
+ * deck, which `usePieceOpenDraft` creates first when the piece has none.
  *
  * Publish and Unpublish are real (PRD-119/PRD-120) and both confirm first;
  * `usePiecePublishAction` owns the whole action so the header button and the
@@ -113,7 +126,6 @@ function PieceRecordActions({
  */
 export function PieceRecordPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { record, isLoading, isError } = usePieceRecord(id!);
   const {
     markPaid,
@@ -129,6 +141,7 @@ export function PieceRecordPage() {
   // Above the early returns: hooks cannot run conditionally, so the action
   // hook tolerates an undefined record while the page is still loading.
   const publishAction = usePiecePublishAction({ record, publish, unpublish });
+  const { openDraft, isOpening } = usePieceOpenDraft(id!);
 
   if (isLoading) {
     return (
@@ -185,23 +198,6 @@ export function PieceRecordPage() {
   const issueLabel = pieceRecord.issueId
     ? t("magazine:piece.header.inAnIssue")
     : t("magazine:piece.header.notScheduled");
-  // Live mode routes by the real piece id; demo mode's article editor ignores
-  // the id and always shows DEMO_ARTICLE (fine — there's only one demo draft
-  // fixture today). Deck-format pieces open the deck editor: the linked
-  // deck when `deckId` is set, otherwise a fresh deck (same fallback the
-  // desk's "New deck" entry point uses).
-  const handleOpenDraft = () => {
-    if (pieceRecord.format === "article") {
-      void navigate(routes.magazineWrite.replace(":id", id!));
-      return;
-    }
-    void navigate(
-      pieceRecord.deckId
-        ? `${routes.deckEditor}?id=${pieceRecord.deckId}`
-        : routes.deckEditor,
-    );
-  };
-
   function renderTabBody() {
     switch (tab) {
       case "brief":
@@ -257,7 +253,8 @@ export function PieceRecordPage() {
             action={publishAction}
             title={pieceRecord.title}
             openGateCount={openGateCount}
-            onOpenDraft={handleOpenDraft}
+            onOpenDraft={() => openDraft(pieceRecord)}
+            isOpeningDraft={isOpening}
           />
         </div>
 
@@ -290,6 +287,7 @@ export function PieceRecordPage() {
         intent={publishAction.confirmIntent}
         title={pieceRecord.title}
         isPending={publishAction.isPending}
+        isAlreadyLive={publishAction.isAlreadyLive}
         onClose={publishAction.closeConfirm}
         onConfirm={
           publishAction.confirmIntent === "unpublish"

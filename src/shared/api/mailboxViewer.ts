@@ -21,7 +21,15 @@ export interface MailboxSummary {
   /** The member's own naming preference here, true until they change it.
    *  Null on the profile mailbox. */
   shouldAllowMyName: boolean | null;
+  /** ENG-456: set when customers never see a staff name from this mailbox,
+   *  whatever both switches say. `unlinkedPersona` is a persona that keeps
+   *  who runs it private. Null, or absent from an older server, otherwise. */
+  staffNamesLockedReason?: StaffNamesLockedReason | null;
 }
+
+/** Why a mailbox never names its staff to customers (backend
+ *  `StaffNamesLockedReason`). */
+export type StaffNamesLockedReason = "unlinkedPersona";
 
 /**
  * Deliberately under the nav badge's `["conversations-unread-count"]` prefix:

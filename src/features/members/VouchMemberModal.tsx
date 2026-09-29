@@ -152,7 +152,7 @@ export function VouchMemberModal({
               anonymous={anonymous}
               setAnonymous={setAnonymous}
               isPending={vouch.isPending}
-              isError={vouch.isError}
+              error={vouch.error}
               onClose={onClose}
               onSubmit={submit}
             />

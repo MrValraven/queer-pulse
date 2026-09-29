@@ -1,214 +1,21 @@
 import { useId, useState } from "react";
-import { Link } from "react-router-dom";
-import { FiLink2, FiStar } from "react-icons/fi";
+import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { routes } from "../../app/routeMap";
 import { ModalShell } from "./ModalKit";
-import { useHousingListingContact } from "./api/useHousingListingContact";
 import { useRecommendLandlord } from "./api/useRecommendLandlord";
-import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
-import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import styles from "./housingModals.module.css";
 
-/** posterFrom() (housingListing.adapters.ts) uses this exact placeholder when
- * a live listing has no lister on file — never a real member's name. */
-const GENERIC_LISTER_NAME = "A member";
-
-/** First name to greet, or null when there's no real name to greet (empty or
- * the anonymous-lister placeholder) — callers fall back to a generic greeting. */
-function firstNameOf(toName: string): string | null {
-  const trimmed = toName.trim();
-  if (!trimmed || trimmed === GENERIC_LISTER_NAME) return null;
-  return trimmed.split(/\s+/)[0] ?? null;
-}
+// "Message the lister" lives in `HousingEnquiryModal.tsx`, on the shared
+// first-contact composer.
 
 const Check = () => (
   <svg viewBox="0 0 24 24">
     <polyline points="20 6 9 17 4 12" />
   </svg>
 );
-
-/* ---- Message the lister ---- */
-export function MessageModal({
-  toName,
-  listingTitle,
-  responseTime,
-  listingRef,
-  onClose,
-}: {
-  toName: string;
-  listingTitle: string;
-  /** Only set when a MEASURED reply time is on file (demo fixtures author one;
-   *  the live listing DTO carries no response metric). When absent the
-   *  confirmation drops the "usually replies" clause instead of inventing it. */
-  responseTime?: string;
-  listingRef: string | null;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { demoMode } = useDemoMode();
-  const firstName = firstNameOf(toName);
-  const [text, setText] = useState(() =>
-    firstName
-      ? t("economy:housingModal.message.draftNamed", {
-          name: firstName,
-          listingTitle,
-        })
-      : t("economy:housingModal.message.draftGeneric", { listingTitle }),
-  );
-  const [done, setDone] = useState(false);
-  /** The thread the enquiry actually landed in, so the confirmation can hand it
-   *  over. Null in demo (the send never leaves the browser) and whenever the
-   *  listing carries no ref. */
-  const [sentConversationId, setSentConversationId] = useState<string | null>(
-    null,
-  );
-  const sendEnquiry = useSendHousingEnquiry();
-  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
-  // PRD-339, refined PRD-340: read before the member types anything,
-  // mirroring `DirectoryEnquiryModal`'s consult of `useListingContact`. The
-  // lister can reply to this first message in one tap (no connection
-  // needed), so the field is read fresh rather than assumed.
-  const { followUpAwaitsReply } = useHousingListingContact(listingRef);
-  const canSend = text.trim().length >= 20;
-  const remaining = 20 - text.trim().length;
-
-  const handleSend = () => {
-    sendEnquiry.mutate(
-      { ref: listingRef, body: text.trim() },
-      {
-        onSuccess: (result) => {
-          setSentConversationId(result?.conversationId ?? null);
-          setDone(true);
-        },
-        onError: (error) => {
-          if (handlePledgeError(error, handleSend)) return;
-          // Don't show "sent" for a message that didn't go through — leave the
-          // draft in place so the member can retry.
-          showToast(t("economy:housingModal.message.error"), "error");
-        },
-      },
-    );
-  };
-
-  if (pledgeGate) return pledgeGate;
-
-  return (
-    <ModalShell
-      onClose={onClose}
-      ariaLabel={t("economy:housingModal.message.ariaLabel")}
-    >
-      {done ? (
-        <div className={styles.success}>
-          <div className={styles.successIcon}>
-            <Check />
-          </div>
-          <div className={styles.title}>
-            <Translation
-              i18nKey="economy:housingModal.message.successTitle"
-              components={{ em: <em /> }}
-            />
-          </div>
-          <p className={styles.sub}>
-            <Translation
-              i18nKey={
-                responseTime
-                  ? "economy:housingModal.message.successBody"
-                  : "economy:housingModal.message.successBodyNoReplyTime"
-              }
-              values={{ toName, responseTime: responseTime ?? "" }}
-              components={{ strong: <strong /> }}
-            />
-          </p>
-          <div className={styles.actions}>
-            <Button variant="ghost" className={styles.full} onClick={onClose}>
-              {t("economy:housingModal.done")}
-            </Button>
-          </div>
-          {/* Live only: a demo send resolves null, so there is no thread to
-              open. No onClose here on purpose. Navigating away unmounts the
-              route and this modal with it. */}
-          {!demoMode && sentConversationId && (
-            <Link
-              className={styles.threadLink}
-              to={`${routes.messages}?c=${encodeURIComponent(sentConversationId)}`}
-            >
-              {t("economy:housingModal.message.openThreadCta")}
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div>
-          <div className={styles.eye}>
-            {t("economy:housingModal.message.eyebrow")}
-          </div>
-          <div className={styles.title}>
-            <Translation
-              i18nKey="economy:housingModal.message.title"
-              values={{ toName }}
-              components={{ em: <em /> }}
-            />
-          </div>
-          <p className={styles.sub}>
-            <Translation
-              i18nKey="economy:housingModal.message.body"
-              values={{ listingTitle }}
-              components={{ strong: <strong /> }}
-            />
-          </p>
-          {/* PRD-339/PRD-340: said before they type, not discovered from a
-              reply that never comes. Housing is the highest-stakes enquiry
-              on the platform, so the enquirer meets this rule up front
-              rather than only via a composer they never see. */}
-          {followUpAwaitsReply && (
-            <div className={styles.notice}>
-              <FiLink2 aria-hidden />
-              <span>
-                {t("economy:housingModal.message.replyNotice", {
-                  name: toName,
-                })}
-              </span>
-            </div>
-          )}
-          <textarea
-            className={styles.textarea}
-            aria-label={t("economy:housingModal.message.eyebrow")}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          <div className={styles.counter}>
-            {remaining > 0
-              ? t("economy:housingModal.charsToSend", { count: remaining })
-              : t("economy:housingModal.charsCount", {
-                  count: text.trim().length,
-                })}
-          </div>
-          <div className={styles.note}>
-            {t("economy:housingModal.message.note")}
-          </div>
-          <div className={styles.actions}>
-            <Button variant="ghost" onClick={onClose}>
-              {t("economy:housingModal.cancel")}
-            </Button>
-            <Button
-              variant="primary"
-              className={styles.full}
-              onClick={handleSend}
-              disabled={!canSend || sendEnquiry.isPending}
-            >
-              {t("economy:housingModal.message.send")}
-            </Button>
-          </div>
-        </div>
-      )}
-    </ModalShell>
-  );
-}
 
 /**
  * PRD-249. What the author of a landlord recommendation attests to: that they

@@ -7,20 +7,24 @@ import s from "./DirectorySpacePage.module.css";
 export function DirectoryMapPlaceholder() {
   return (
     <>
-      {/* Decorative illustration: the hex fills below are map-tone artwork
-          colours (warm greys + a soft green landmark), not UI-surface chrome, so
-          they are intentional literals rather than design tokens. */}
+      {/* Decorative map illustration in the live "Quiet" basemap's palette
+          (siteMapStyle.ts): a cream ground, white roads as the lightest layer
+          and a sage park. The basemap stays light in both themes, so every
+          fill here holds its value in dark mode too: --cream-rgb is not
+          theme-switched, and --map-tint is the park sage. */}
       <svg
         viewBox="0 0 300 300"
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
-        <rect width="300" height="300" fill="#e9e5db" />
-        <path d="M0 80 L300 100 L300 110 L0 90 Z" fill="#d9d3c5" />
-        <path d="M0 180 L300 200 L300 210 L0 190 Z" fill="#d9d3c5" />
-        <path d="M80 0 L100 300 L110 300 L90 0 Z" fill="#d9d3c5" />
-        <path d="M200 0 L220 300 L230 300 L210 0 Z" fill="#d9d3c5" />
-        <circle cx="160" cy="148" r="20" fill="#b8d4b1" opacity=".7" />
+        <rect width="300" height="300" fill="rgb(var(--cream-rgb))" />
+        <g fill="rgb(255 255 255)">
+          <path d="M0 80 L300 100 L300 110 L0 90 Z" />
+          <path d="M0 180 L300 200 L300 210 L0 190 Z" />
+          <path d="M80 0 L100 300 L110 300 L90 0 Z" />
+          <path d="M200 0 L220 300 L230 300 L210 0 Z" />
+        </g>
+        <circle cx="160" cy="148" r="20" fill="var(--map-tint)" />
       </svg>
       <div className={s.pin}>
         <svg viewBox="0 0 24 24">

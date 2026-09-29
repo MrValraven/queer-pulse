@@ -8,36 +8,30 @@ import {
   patchConversationMarkedUnread,
   patchConversationMuted,
   patchConversationPinned,
+  patchConversationRow,
 } from "../../../shared/api/messageCache";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { Conversation, ConversationMuteMode } from "../data";
+import type { ConversationMuteMode } from "../data";
 import { writeConversationPrefOverride } from "../conversationPrefs";
 import { updateConversationPrefs } from "./messages.api";
 import { UNREAD_COUNT_KEY } from "./useConversations";
 
 /**
- * Patches `archivedAt` onto a cached inbox row in place — `useToggleArchive`'s
- * optimistic update in both demo and live mode. A no-op if the row isn't
- * cached. Kept local (rather than added to `shared/api/messageCache.ts`
- * alongside its `pinnedAt`/`favorite`/`muted` siblings) purely because that
- * shared file sits outside this change's file ownership for this build pass;
- * a follow-up cleanup could move it there to match the others exactly.
+ * Patches `archivedAt` onto a cached conversation in place, in the inbox
+ * list and the detail entry (`patchConversationRow`): `useToggleArchive`'s
+ * optimistic update in both demo and live mode. A no-op if nothing is
+ * cached.
  */
 function patchConversationArchived(
   queryClient: QueryClient,
   conversationId: string,
   archivedAt: string | undefined,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, archivedAt }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    archivedAt,
+  }));
 }
 
 /**
@@ -153,27 +147,20 @@ export interface ToggleMuteInput {
 }
 
 /**
- * Patches `mutedUntil` onto a cached inbox row in place: `useToggleMute`'s
- * optimistic update for the PRD-349 timed-mute expiry, alongside the existing
- * `patchConversationMuted` (the plain boolean). Kept local rather than added
- * to `shared/api/messageCache.ts` for the same file-ownership reason
- * `patchConversationArchived` above is: that shared file sits outside this
- * change's file ownership for this build pass.
+ * Patches `mutedUntil` onto a cached conversation in place, in the inbox
+ * list and the detail entry: `useToggleMute`'s optimistic update for the
+ * PRD-349 timed-mute expiry, alongside the existing `patchConversationMuted`
+ * (the plain boolean).
  */
 function patchConversationMutedUntil(
   queryClient: QueryClient,
   conversationId: string,
   mutedUntil: string | null | undefined,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, mutedUntil }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    mutedUntil,
+  }));
 }
 
 /** Mute/unmute a chat's push notifications (any thread, DM or group), with
@@ -225,26 +212,18 @@ export interface ToggleMuteModeInput {
 }
 
 /**
- * Patches `muteMode` onto a cached inbox row in place, mirroring
- * `patchConversationMutedUntil` above. Kept local for the same
- * file-ownership reason as `patchConversationArchived`/
- * `patchConversationMutedUntil`: `shared/api/messageCache.ts` sits outside
- * this change's file ownership.
+ * Patches `muteMode` onto a cached conversation in place, in the inbox list
+ * and the detail entry, mirroring `patchConversationMutedUntil` above.
  */
 function patchConversationMuteMode(
   queryClient: QueryClient,
   conversationId: string,
   muteMode: ConversationMuteMode,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, muteMode }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    muteMode,
+  }));
 }
 
 /**
@@ -258,8 +237,7 @@ function patchConversationMuteMode(
  * demo toggle here, lasting only for the current session:
  * `conversationPrefs.ts`'s localStorage-backed override map sits outside
  * this change's file ownership, so this session-only cache patch is the
- * honest ceiling for demo mode here, the same tradeoff
- * `patchConversationArchived`'s own doc calls out.
+ * honest ceiling for demo mode here.
  */
 export function useToggleMuteMode() {
   const { demoMode } = useDemoMode();

@@ -71,8 +71,16 @@ function isWithinAlbumWindow(
  * everything else, including a lone qualifying photo, stays an ordinary
  * message segment. Order is preserved and every item lands in exactly one
  * segment.
+ *
+ * ENG-405: the photo whose caption is being edited (`editingMessageId`)
+ * steps out to its own bubble for the edit, since only a bubble hosts the
+ * inline editor. A caption saved on it keeps it out afterwards, per the
+ * captioned-photo rule in `canJoinAlbum`.
  */
-export function groupIntoAlbums(items: ChatMessage[]): RunSegment[] {
+export function groupIntoAlbums(
+  items: ChatMessage[],
+  editingMessageId?: string | null,
+): RunSegment[] {
   const segments: RunSegment[] = [];
   let pendingPhotos: ChatMessage[] = [];
   let pendingStartIndex = 0;
@@ -93,7 +101,8 @@ export function groupIntoAlbums(items: ChatMessage[]): RunSegment[] {
     pendingPhotos = [];
   };
   items.forEach((message, index) => {
-    if (!canJoinAlbum(message)) {
+    const isBeingEdited = !!editingMessageId && message.id === editingMessageId;
+    if (isBeingEdited || !canJoinAlbum(message)) {
       flushPending();
       segments.push({ kind: "message", message, index });
       return;

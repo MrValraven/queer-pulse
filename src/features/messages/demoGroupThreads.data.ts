@@ -7,6 +7,7 @@ import {
   daysAgoAt,
   demoConversation,
   demoThread,
+  hoursAfterAnchor,
   minutesAgo,
 } from "./demoTimeline.data";
 
@@ -55,18 +56,20 @@ const queerpulse = {
   senderHandle: "queerpulse",
   senderTint: "coral",
 } as const;
+// The Go together picnic group's members. A matched chat names every member
+// by first name only (PRD-423), as the backend's `displayNameFor` does live.
 const sofia = {
-  senderName: "Sofia Andrade",
+  senderName: "Sofia",
   senderHandle: "sofia",
   senderTint: "jade",
 } as const;
 const rui = {
-  senderName: "Rui Marçal",
+  senderName: "Rui",
   senderHandle: "rui",
   senderTint: "plum",
 } as const;
 const mariana = {
-  senderName: "Mariana Loução",
+  senderName: "Mariana",
   senderHandle: "mariana",
   senderTint: "plum",
 } as const;
@@ -114,6 +117,8 @@ export const brunchCrewConversation: Conversation = demoConversation({
   canDissolve: true,
   canManageInviteLink: true,
   inviteToken: "brunch-crew-7hq2m9",
+  // PRD-400: a link reset two days ago, so the panel reads "Expires in 5 days".
+  inviteTokenExpiresAt: hoursAfterAnchor(5 * 24),
   pendingInvites: [
     {
       id: "demo-invite-brunch-maria",
@@ -666,7 +671,10 @@ const picnicLastLine = "See you all Saturday!";
  *  leaving stays open). `eventMatchGroupId` is `demoGroupIdFor("trans-joy-picnic")`,
  *  the same id `demoGroup()` in `goTogether.mock.ts` resolves for that
  *  gathering slug, so `GoTogetherChatBanner` finds a real group and renders
- *  the "Trans Joy Picnic" banner with "See your group" wired to it. */
+ *  the "Trans Joy Picnic" banner with "See your group" wired to it.
+ *  `isGoTogetherChat` is set alongside it: the durable flag the roster and
+ *  mention rules key on, which would stay true even were this demo group
+ *  ever dissolved. */
 export const transJoyPicnicConversation: Conversation = demoConversation({
   id: "trans-joy-picnic-group",
   initials: "TJ",
@@ -688,6 +696,7 @@ export const transJoyPicnicConversation: Conversation = demoConversation({
   canDissolve: false,
   canManageInviteLink: false,
   eventMatchGroupId: demoGroupIdFor("trans-joy-picnic"),
+  isGoTogetherChat: true,
   members: [
     {
       name: "QueerPulse",
@@ -696,31 +705,33 @@ export const transJoyPicnicConversation: Conversation = demoConversation({
       role: "owner",
       slug: "queerpulse",
     },
+    // First names and one-letter initials, as the live adapter renders a
+    // matched chat roster (PRD-423).
     {
-      name: "Tiago Costa",
-      initials: "TC",
+      name: "Tiago",
+      initials: "T",
       tint: "plum",
       role: "member",
       slug: "tiago",
     },
     {
-      name: "Sofia Andrade",
-      initials: "SA",
+      name: "Sofia",
+      initials: "S",
       tint: "jade",
       role: "member",
       slug: "sofia",
       lastReadAt: minutesAgo(25),
     },
     {
-      name: "Rui Marçal",
-      initials: "RM",
+      name: "Rui",
+      initials: "R",
       tint: "plum",
       role: "member",
       slug: "rui",
     },
     {
-      name: "Mariana Loução",
-      initials: "ML",
+      name: "Mariana",
+      initials: "M",
       tint: "plum",
       role: "member",
       slug: "mariana",

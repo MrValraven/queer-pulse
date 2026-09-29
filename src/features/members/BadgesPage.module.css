@@ -23,11 +23,11 @@
   --tint-rgb: var(--plum-rgb);
 }
 [data-theme="dark"] .tPlum {
-  /* Plum is the dark-mode paper colour — using it as a tint would read as
-     dark-on-dark, so dark mode gets a light lavender instead. */
-  --tint: #b8a2d9;
-  --tint-rgb: 184, 162, 217;
-  --tint2: #d6c7ec;
+  /* Plum is the dark-mode paper colour: using it as a tint would read as
+     dark-on-dark, so dark mode gets the light lavender token instead. */
+  --tint: var(--plum-tint);
+  --tint-rgb: var(--plum-tint-rgb);
+  --tint2: var(--plum-tint-strong);
 }
 
 /* ── section headers: three weights, not one ── */
@@ -90,7 +90,7 @@
 .hero {
   background: linear-gradient(
     155deg,
-    #33204a 0%,
+    var(--plum-bright) 0%,
     var(--plum) 44%,
     var(--plum-deep) 100%
   );
@@ -1756,7 +1756,7 @@
   padding: 20px;
 }
 .earnCard {
-  background: linear-gradient(160deg, #3a2553, var(--plum-deep));
+  background: linear-gradient(160deg, var(--plum-vivid), var(--plum-deep));
   color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-30);
   padding: var(--section-y-48) 40px 40px;
@@ -1810,7 +1810,7 @@
 }
 
 .caseCard {
-  background: linear-gradient(165deg, #3a2553, var(--plum-deep));
+  background: linear-gradient(165deg, var(--plum-vivid), var(--plum-deep));
   color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-26);
   padding: 34px 30px 26px;

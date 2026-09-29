@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
+import { communityPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { CommunityType } from "../homepage/data/types";
@@ -202,12 +203,20 @@ export function CommunityCardShell({
 
   const rootClassName = [styles.card, className].filter(Boolean).join(" ");
 
-  if (isPreview) {
-    return <div className={rootClassName}>{face}</div>;
+  // The edit modal's live preview passes no slug (the draft it renders has
+  // none yet), and `isPreview` already covers that case. Any other caller
+  // with no slug has nothing to link to either, so it gets the same inert
+  // render: the card still shows, it just is not a `<Link>`. `cardInert`
+  // drops the pointer cursor and the hover lift/name-colour affordances,
+  // since there is nowhere for a click or hover to lead.
+  if (isPreview || !slug) {
+    return (
+      <div className={[rootClassName, styles.cardInert].join(" ")}>{face}</div>
+    );
   }
 
   return (
-    <Link to={`/community/${slug}`} className={rootClassName}>
+    <Link to={communityPath(slug)} className={rootClassName}>
       {face}
     </Link>
   );

@@ -125,6 +125,7 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterSlug: "",
     suggesterName: memberName(DEMO_SUGGESTER),
     suggesterSlug: DEMO_SUGGESTER.slug,
+    addedByStaffName: "",
     createdAt: "2026-07-29T16:45:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0008",
@@ -167,6 +168,7 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterSlug: DEMO_OWNER.slug,
     suggesterName: "",
     suggesterSlug: "",
+    addedByStaffName: "",
     createdAt: "2026-07-28T10:00:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0007",
@@ -235,6 +237,7 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterSlug: DEMO_CASA_VIVA_OWNER.slug,
     suggesterName: "",
     suggesterSlug: "",
+    addedByStaffName: "",
     createdAt: "2026-07-27T14:30:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0006",
@@ -303,6 +306,7 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterSlug: DEMO_LIVE_LISTING_OWNER.slug,
     suggesterName: "",
     suggesterSlug: "",
+    addedByStaffName: "",
     createdAt: "2026-07-25T09:15:00.000Z",
     detail: demoListing({
       ref: "QPL-2026-0005",

@@ -10,6 +10,7 @@
 
 import type { Piece } from "../data/desk.data";
 import { forecastPieceReason } from "./deskForecast";
+import { isPieceScheduled } from "./pieceSchedule";
 import { stageAge } from "./deskStageAge";
 import { isWaitingOnViewer } from "./deskWaitingOn";
 
@@ -102,7 +103,11 @@ export const DESK_FOCUS_DEFINITIONS: DeskFocusDefinition[] = [
     id: "ready",
     labelKey: "magazine:desk.focus.ready",
     tone: "ready",
-    matches: (piece) => piece.stage === "Ready",
+    // A piece with a publish date ahead of now has no Publish action left to
+    // take, so it drops out of this chip; unscheduling it on its record is
+    // what brings it back.
+    matches: (piece, _me, today = new Date()) =>
+      piece.stage === "Ready" && !isPieceScheduled(piece, today.getTime()),
   },
   {
     id: "unpaid",

@@ -10,6 +10,7 @@ import {
   withDemoPresentation,
 } from "./demoThreadCache";
 import { getMessages } from "./messages.api";
+import { useThreadWindow } from "./useThreadWindow";
 import { groupMessages } from "./messages.adapters";
 import {
   ensureInactiveThreadTrim,
@@ -85,17 +86,36 @@ export function useMessageThread(conversationId: string | null) {
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 
+  // PRD-401: a jump to a message older than the loaded pages shows a window
+  // of history around it in place of the live tail (see `useThreadWindow`).
+  // While it is shown, rendering, paging and history readiness all read the
+  // window; this live query stays observed underneath and keeps receiving
+  // every live frame.
+  const threadWindow = useThreadWindow(conversationId, demoMode);
+  const { windowQuery, isDetached } = threadWindow;
+  const shownPages: MessagePage[] | undefined = isDetached
+    ? windowQuery.data?.pages
+    : query.data?.pages;
+
   // Pages arrive newest-first per page; flatten oldest to newest for display.
-  // Demo bubbles keep their seeded sender presentation (`withDemoPresentation`).
+  // A window's newer page can repeat its millisecond boundary row, so rows
+  // are kept once by id. Demo bubbles keep their seeded sender presentation
+  // (`withDemoPresentation`).
   const groups = useMemo(() => {
-    const oldestFirst = (query.data?.pages ?? [])
+    const seenIds = new Set<string>();
+    const oldestFirst = (shownPages ?? [])
       .flatMap((page) => page.items)
+      .filter((message) => {
+        if (seenIds.has(message.id)) return false;
+        seenIds.add(message.id);
+        return true;
+      })
       .reverse();
     const grouped = groupMessages(oldestFirst, viewer);
     return demoMode && conversationId
       ? withDemoPresentation(conversationId, grouped)
       : grouped;
-  }, [query.data, viewer, demoMode, conversationId]);
+  }, [shownPages, viewer, demoMode, conversationId]);
 
   // react-query keeps `fetchMeta` from the last fetch until the next one
   // starts, and its optimistic result for a mount or key change marks the
@@ -115,21 +135,58 @@ export function useMessageThread(conversationId: string | null) {
   // Page 0 (the first load or a refetch) failed. An older page failing is a
   // different thing: the loaded history is still current then.
   const isPageZeroError = query.isLoadingError || query.isRefetchError;
+  // The window's own page 0 is the page it was opened around; its older and
+  // newer pages are excluded from "refetching" by react-query itself.
+  const isWindowError =
+    windowQuery.isLoadingError || windowQuery.isRefetchError;
+  const { fetchNextPage, refetch } = query;
+  const { fetchNextPage: fetchWindowOlderPage, refetch: refetchWindow } =
+    windowQuery;
   return {
     ...query,
     groups: groups as { day: string; dayKey: string; items: ChatMessage[] }[],
-    isLoadingOlder,
+    isLoadingOlder: isDetached
+      ? windowQuery.isFetchingNextPage
+      : isLoadingOlder,
     /** True once page 0 has been fetched, its last fetch succeeded and no
      *  fetch of it is pending (offline-paused included), so the loaded
      *  history is current. Always true when there is nothing to fetch (a
      *  not-yet-created thread). Demo's page 0 is local and present from the
-     *  first render, so it only waits on a pending refetch. */
-    isHistorySettled:
-      !isEnabled ||
-      ((demoMode || query.isFetched) && !isPageZeroPending && !isPageZeroError),
+     *  first render, so it only waits on a pending refetch. A shown window
+     *  reads the same about the page it was opened around. */
+    isHistorySettled: isDetached
+      ? windowQuery.data !== undefined &&
+        !windowQuery.isRefetching &&
+        !isWindowError
+      : !isEnabled ||
+        ((demoMode || query.isFetched) &&
+          !isPageZeroPending &&
+          !isPageZeroError),
     /** Page 0's last fetch failed and nothing is retrying it. A failed older
      *  page never sets this: whoever requested that page sees it not land. */
-    isHistoryError:
-      isEnabled && isPageZeroError && query.fetchStatus === "idle",
+    isHistoryError: isDetached
+      ? isWindowError && windowQuery.fetchStatus === "idle"
+      : isEnabled && isPageZeroError && query.fetchStatus === "idle",
+    /** Older history exists past the oldest shown row. */
+    hasMoreOlder:
+      (isDetached ? windowQuery.hasNextPage : query.hasNextPage) ?? false,
+    /** Requests the next older page of whatever is shown. */
+    requestOlderPage: () => {
+      void (isDetached
+        ? fetchWindowOlderPage({ cancelRefetch: false })
+        : fetchNextPage({ cancelRefetch: false }));
+    },
+    /** Retries the shown history's page 0 after it failed. */
+    retryHistory: () => {
+      void (isDetached
+        ? refetchWindow({ cancelRefetch: false })
+        : refetch({ cancelRefetch: false }));
+    },
+    /** The shown history holds SOME page-0 data (see `ThreadHistory`). */
+    hasLoadedThreadData: isDetached
+      ? windowQuery.data !== undefined
+      : query.data !== undefined,
+    /** PRD-401: the detached history window's controls. */
+    threadWindow: threadWindow.controls,
   };
 }

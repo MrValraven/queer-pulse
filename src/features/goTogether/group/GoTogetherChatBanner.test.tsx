@@ -38,7 +38,7 @@ const group: GoTogetherGroupDTO = {
   isDissolved: false,
   members: [
     {
-      slug: "tiago",
+      memberRef: "member-ref-tiago",
       firstName: "Tiago",
       pronouns: "he/they",
       avatarUrl: null,
@@ -49,6 +49,8 @@ const group: GoTogetherGroupDTO = {
     },
   ],
   mergeOffer: null,
+  isLeaveChatOnly: false,
+  hasLeftChat: false,
   checkIn: { isOpen: false, isHere: false, hasLeftEvent: false },
   feedback: { isOpen: false, closesAt: null, hasAnswered: false },
 };
@@ -101,7 +103,9 @@ afterEach(() => {
 describe("GoTogetherChatBanner", () => {
   it("stays hidden in a DM", () => {
     renderBanner({ isGroup: false });
-    expect(screen.queryByText("Pride picnic")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: /Pride picnic/ }),
+    ).not.toBeInTheDocument();
     expect(requestedGroupIds.every((groupId) => !groupId)).toBe(true);
   });
 
@@ -121,9 +125,14 @@ describe("GoTogetherChatBanner", () => {
     expect(requestedGroupIds.every((groupId) => !groupId)).toBe(true);
   });
 
-  it("shows the gathering title and opens the group sheet", () => {
+  it("names the group, carries the gathering in its label and opens the group sheet", () => {
     renderBanner({});
-    expect(screen.getByText("Pride picnic")).toBeInTheDocument();
+    const banner = screen.getByRole("region", {
+      name: "Your Go together group for Pride picnic",
+    });
+    // The chat header already shows the gathering's title.
+    expect(banner).toHaveTextContent("Your Go together group");
+    expect(banner).not.toHaveTextContent("Pride picnic");
     expect(screen.getByText("Good fit")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "See your group" }));

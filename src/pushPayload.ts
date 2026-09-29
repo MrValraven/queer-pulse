@@ -1,3 +1,15 @@
+/**
+ * One notification action button. `title` is the required English label;
+ * `titleKey` (ENG-414) is an optional `push:` catalog key sw.ts localises the
+ * label from, keeping `title` when the key or language cannot be resolved.
+ * Field shape MUST match the backend `PushPayload` action (lockstep contract).
+ */
+export interface PushAction {
+  action: string;
+  title: string;
+  titleKey?: string;
+}
+
 export interface DirectMessagePush {
   title: string;
   body: string;
@@ -8,12 +20,12 @@ export interface DirectMessagePush {
   data?: { conversationId?: string; url?: string; isGroup?: boolean };
   icon?: string;
   image?: string;
-  actions?: { action: string; title: string }[];
+  actions?: PushAction[];
   renotify?: boolean;
   vibrate?: number[];
   requireInteraction?: boolean;
   silent?: boolean;
-  // Optional localization hint — see pushMessages.ts. `title`/`body` above
+  // Optional localization hint, see pushMessages.ts. `title`/`body` above
   // remain the required English fallback; this only overrides them when the
   // SW can resolve the key. Field shape MUST match the backend `PushPayload`
   // exactly (lockstep contract).
@@ -23,9 +35,9 @@ export interface DirectMessagePush {
     params?: Record<string, string>;
   };
   // Optional epoch-ms event time (e.g. a message's `createdAt`, an event's
-  // start time, a notification's `createdAt`) — NOT delivery time. Passed to
-  // `showNotification` so a push that was queued/delayed still shows the true
-  // moment the underlying event happened. Field shape MUST match the backend
+  // start time, a notification's `createdAt`), the moment it happened.
+  // Passed to `showNotification` so a push that was queued/delayed still
+  // shows the true moment the underlying event happened. Field shape MUST match the backend
   // `PushPayload` exactly (lockstep contract).
   timestamp?: number;
 }
@@ -50,9 +62,12 @@ function safeImageUrl(value: unknown): string | undefined {
   return undefined;
 }
 
-function safeActions(
-  value: unknown,
-): { action: string; title: string }[] | undefined {
+/**
+ * Validate the optional action buttons. A bad `action` id or `title` drops
+ * the whole field. A `titleKey` that is not a well-formed `push:` key is
+ * dropped on its own, and the action keeps its plain English `title`.
+ */
+function safeActions(value: unknown): PushAction[] | undefined {
   if (
     !Array.isArray(value) ||
     value.length === 0 ||
@@ -60,7 +75,7 @@ function safeActions(
   ) {
     return undefined;
   }
-  const parsed: { action: string; title: string }[] = [];
+  const parsed: PushAction[] = [];
   for (const item of value) {
     if (!isRecord(item)) return undefined;
     if (typeof item.action !== "string" || !ALLOWED_ACTIONS.has(item.action)) {
@@ -73,7 +88,11 @@ function safeActions(
     ) {
       return undefined;
     }
-    parsed.push({ action: item.action, title: item.title });
+    parsed.push({
+      action: item.action,
+      title: item.title,
+      ...(isL10nKey(item.titleKey) ? { titleKey: item.titleKey } : {}),
+    });
   }
   return parsed;
 }
@@ -126,11 +145,10 @@ function isL10nKey(value: unknown): value is string {
 }
 
 /**
- * Validate the optional `l10n` block. Any structural problem — a key that
- * doesn't start with `"push:"`, a non-string param, too many params — drops
- * the WHOLE block (returns undefined) rather than the offending field alone,
- * so a malformed hint never partially renders; the caller falls back to the
- * plain `title`/`body` instead.
+ * Validate the optional `l10n` block. Any structural problem (a key that
+ * doesn't start with `"push:"`, a non-string param, too many params) drops
+ * the WHOLE block (returns undefined), so a malformed hint never partially
+ * renders; the caller falls back to the plain `title`/`body`.
  */
 function safeL10n(value: unknown): DirectMessagePush["l10n"] {
   if (!isRecord(value)) return undefined;

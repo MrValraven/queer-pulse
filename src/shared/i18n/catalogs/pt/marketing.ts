@@ -311,13 +311,13 @@ export const marketing: Catalog = {
   "about.linkModal.governanceOverview.lead":
     "O registo de como a QueerPulse é governada, como as decisões são tomadas, e o que acontece quando algo corre mal.",
   "about.linkModal.governanceOverview.p1":
-    "A moderação é feita por uma pequena equipa de pessoas membras que aceitaram esse papel. Respondem perante o conselho consultivo, e qualquer decisão pode ser contestada em 14 dias. É o conselho consultivo que analisa o recurso, e o desfecho é final.",
+    "A moderação é feita por uma pequena equipa de pessoas membras que aceitaram esse papel. Respondem perante o conselho consultivo pelo funcionamento do processo, e qualquer decisão pode ser contestada uma vez, no prazo de 14 dias. É uma pessoa moderadora que não fez parte da decisão original que analisa o recurso, e o desfecho é final.",
   "about.linkModal.governanceOverview.p2":
     "As denúncias são analisadas em 48 horas, no próprio dia quando a segurança de alguém está em risco, e os números por trás desse processo são publicados todos os trimestres.",
   "about.linkModal.governanceOverview.point.council.title":
     "O conselho consultivo.",
   "about.linkModal.governanceOverview.point.council.body":
-    "Analisa recursos, propõe mudanças na plataforma e serve de camada de responsabilização. Os seus lugares têm mandatos de um ano e podem ser retirados por votação de dois terços da comunidade.",
+    "Supervisiona o funcionamento da moderação e dos recursos, propõe mudanças na plataforma e serve de camada de responsabilização. Os seus lugares têm mandatos de um ano e podem ser retirados por votação de dois terços da comunidade.",
   "about.linkModal.governanceOverview.point.finances.title":
     "Contas às claras.",
   "about.linkModal.governanceOverview.point.finances.body":
@@ -1557,7 +1557,7 @@ export const marketing: Catalog = {
   "listBusiness.step0.signedInAs":
     "Tens sessão iniciada como <b>{name}</b>. Vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
   "listBusiness.step0.signedInAsSuggest":
-    "Tens sessão iniciada como <b>{name}</b>. A equipa pode enviar-te uma mensagem se tiver alguma pergunta sobre a tua sugestão.",
+    "Tens sessão iniciada como <b>{name}</b>. Se a equipa tiver alguma pergunta sobre a tua sugestão, recebes uma notificação.",
   // Passo 1 — básico
   "listBusiness.step1.title": "Começa com",
   "listBusiness.step1.em": "o básico.",
@@ -1912,7 +1912,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.submitNote":
     "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias, e a QueerPulse avisa-te quando ficar no ar (ou a equipa manda-te mensagem se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
   "listBusiness.step5.suggestNote":
-    "<b>Uma pessoa a sério revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reclamar, e o teu nome fica de fora. Enviamos-te uma mensagem quando estiver no ar.",
+    "<b>Uma pessoa a sério revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação quando estiver no ar.",
   // Painel de sucesso
   "listBusiness.success.stage.review": "Em revisão",
   "listBusiness.success.stage.question": "Pergunta rápida",
@@ -1932,7 +1932,7 @@ export const marketing: Catalog = {
   "listBusiness.success.note.live":
     "<b>Já está no ar no diretório.</b> O teu lugar já pode ser encontrado pela comunidade. Agradecemos por tornares o mapa um bocadinho mais completo.",
   "listBusiness.success.note.suggestReview":
-    "Agradecemos a sugestão. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reclamar, e o teu nome fica de fora. Enviamos-te uma mensagem assim que estiver no ar.",
+    "Agradecemos a sugestão. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação assim que estiver no ar.",
   "listBusiness.success.note.suggestLive":
     "<b>Já está no ar no diretório.</b> Agradecemos por tornares o mapa um bocadinho mais completo. Se afinal és tu que geres este lugar, podes reclamá-lo a partir da página dele.",
   "listBusiness.success.fallbackName": "O teu lugar",
@@ -1945,6 +1945,7 @@ export const marketing: Catalog = {
   "listBusiness.success.viewOnProfile": "Ver no teu perfil",
   "listBusiness.success.editSubmission": "Editar submissão",
   "listBusiness.success.listAnother": "Anunciar outro lugar",
+  "listBusiness.success.sendCorrection": "Enviar uma correção",
   "listBusiness.success.withdraw": "Retirar",
   "listBusiness.success.reference":
     "Referência · <b>{ref}</b>  ·  guarda-a algures",
@@ -2873,7 +2874,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-29.headline":
-    "Uma redação de editores redesenhada, stickers do Blip e do Chá, e Ping na nova página 404.",
+    "Uma redação de editores redesenhada, stickers do Blip e do Chá, e avisos de remoção com recurso.",
   "changelog.releases.2026-09-28.headline":
     "Vamos juntes para quem vai a sós, pessoas embaixadoras QueerPulse e personas para mestres de jogo.",
   "changelog.releases.2026-09-25.headline":
@@ -3004,8 +3005,298 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+  "changelog.entries.magazine-desk-writer-picker.title":
+    "Escolhe quem escreve ao encomendar ou passar uma peça",
+  "changelog.entries.magazine-desk-writer-picker.body":
+    "A encomenda passa a guardar o valor e o ângulo, e a passagem também pode mudar quem escreve.",
+  "changelog.entries.magazine-scheduled-pieces-locked.title":
+    "As peças agendadas da revista ficam no lugar até serem publicadas",
+  "changelog.entries.magazine-scheduled-pieces-locked.body":
+    "Uma peça com data de publicação passa a Pronta e fica aí até alguém da redação cancelar o agendamento.",
+  "changelog.entries.magazine-pitch-pass-bell.title":
+    "Quem escreve é avisado quando a redação recusa uma proposta",
+  "changelog.entries.magazine-pitch-pass-bell.body":
+    "Recusar uma proposta do espaço de escrita avisa agora quem a enviou, e cada proposta só recebe uma resposta.",
+  "changelog.entries.takedown-notices-and-appeals.title":
+    "Recebe um aviso quando algo teu é removido",
+  "changelog.entries.takedown-notices-and-appeals.body":
+    "O aviso indica o motivo e abre logo o recurso dessa decisão.",
+  "changelog.entries.one-appeal-per-decision.title":
+    "Cada decisão só pode ser contestada uma vez",
+  "changelog.entries.one-appeal-per-decision.body":
+    "Uma pessoa moderadora que não fez parte da decisão original revê o caso, e essa decisão é final.",
+  "changelog.entries.one-appeal-per-decision.details":
+    "Podes recorrer de uma decisão de moderação uma vez. Uma pessoa moderadora que não fez parte da decisão original revê o caso, e essa decisão é final. O conselho consultivo acompanha como a moderação e os recursos funcionam em toda a QueerPulse. Se abrires a página de recurso de uma decisão já contestada, ela diz isso com clareza e aponta-te para o resultado e para a equipa de moderação. A Governança, o Sobre, a Constituição e a página de conta banida já descrevem isto da mesma forma.",
+  "changelog.entries.safer-report-forms.title":
+    "Denúncia e bloqueio deixam de vir com uma razão pré-escolhida",
+  "changelog.entries.safer-report-forms.body":
+    "Denúncias sobre uma comunidade vão agora direto para a moderação da plataforma, que age de forma independente dos donos.",
+  "changelog.entries.takedowns-reach-everywhere.title":
+    "Um encontro retirado deixa de lembrar quem se inscreveu",
+  "changelog.entries.takedowns-reach-everywhere.body":
+    "Também sai dos calendários subscritos, e uma oportunidade de voluntariado removida desaparece das listas.",
+  "changelog.entries.my-reports-show-what.title":
+    "Vê do que trata cada uma das tuas denúncias",
+  "changelog.entries.my-reports-show-what.body":
+    "Cada entrada passa a dizer se é sobre uma publicação, uma mensagem, um membro ou outra coisa.",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus para bares, cafés e restaurantes, 23 Set 2026.
+  "changelog.entries.lighter-first-load.title":
+    "As páginas abrem mais depressa na primeira visita",
+  "changelog.entries.lighter-first-load.body":
+    "Cerca de 300 KB a menos de JavaScript antes do primeiro ecrã, e as caixas de demonstração só carregam no modo demo.",
+  "changelog.entries.dark-mode-chip-washes.title":
+    "As etiquetas do fórum, eventos e parceiros aparecem no modo escuro",
+  "changelog.entries.dark-mode-chip-washes.body":
+    "Os fundos tingidos e os discos dos ícones de bloquear e silenciar seguem agora o tema e leem-se bem no fundo escuro.",
+  "changelog.entries.mobile-app-bar-search.title":
+    "A pesquisa está agora na barra do topo no telemóvel",
+  "changelog.entries.mobile-app-bar-search.body":
+    "Um toque abre a pesquisa no telemóvel, e quem visita já não vê uma ligação de Pesquisa que só leva ao início de sessão.",
+  "changelog.entries.enquiries-share-first-contact-composer.title":
+    "Pedidos ao diretório e à habitação usam o compositor de mensagens comum",
+  "changelog.entries.enquiries-share-first-contact-composer.body":
+    "Ambos avisam antes de partilhares um telefone ou IBAN e guardam o rascunho quando o envio falha.",
+  "changelog.entries.homepage-member-feed-cta.title":
+    "Quem é membro tem na página inicial um caminho de volta ao feed",
+  "changelog.entries.homepage-member-feed-cta.body":
+    "Com sessão iniciada, os botões do topo e do fim dizem Ir para o teu feed, onde antes ofereciam um convite.",
+  "changelog.entries.private-message-files-out-of-media-console.title":
+    "Os ficheiros das mensagens privadas ficam fora da consola de media",
+  "changelog.entries.private-message-files-out-of-media-console.body":
+    "O navegador de media da equipa ignora fotos e documentos enviados em DMs, e cada eliminação forçada regista quem a fez.",
+  "changelog.entries.housing-group-join-requests-reach-staff.title":
+    "Os pedidos de entrada em grupos de habitação chegam à fila da equipa",
+  "changelog.entries.housing-group-join-requests-reach-staff.body":
+    "A moderação é avisada, e esconder um anúncio de grupo pede uma razão que chega a quem o publicou.",
+  "changelog.entries.staff-queues-show-load-errors.title":
+    "As filas da equipa avisam quando não conseguem carregar",
+  "changelog.entries.staff-queues-show-load-errors.body":
+    "O painel, a fila de convites e a lista de pessoas mostram um erro com um botão para tentar outra vez.",
+  "changelog.entries.chat-list-keeps-opened-chats-in-place.title":
+    "A lista de conversas mantém as abertas no lugar",
+  "changelog.entries.chat-list-keeps-opened-chats-in-place.body":
+    "Conversas abertas mais abaixo ficam no sítio ao carregar mais, e ficheiros e stickers antigos aparecem bem.",
+  "changelog.entries.taken-down-communities-stay-closed.title":
+    "Comunidades retiradas e tópicos restritos ficam fechados",
+  "changelog.entries.taken-down-communities-stay-closed.body":
+    "Uma comunidade retirada recusa novas publicações e respostas, e os alertas param quando perdes acesso a um tópico.",
+  "changelog.entries.work-taxonomy-isco.title":
+    "Áreas de trabalho das vagas e dos perfis refeitas com base na ISCO-08",
+  "changelog.entries.work-taxonomy-isco.body":
+    "Vagas e perfis partilham 43 áreas sem opção Outro, e o quadro de vagas filtra por grupo de áreas.",
+  "changelog.entries.shared-values-search-from-first-letter.title":
+    "As pesquisas de valores e de ofícios filtram logo à primeira letra",
+  "changelog.entries.shared-values-search-from-first-letter.body":
+    "Os dois seletores procuram o início das palavras e a lista de ofícios da persona encolhe e desliza com suavidade.",
+  "changelog.entries.community-edit-saves-without-values.title":
+    "A edição da comunidade diz o que falta para guardar",
+  "changelog.entries.community-edit-saves-without-values.body":
+    "Um Guardar desativado mostra os campos obrigatórios vazios, e comunidades sem valores partilhados já guardam.",
+  "changelog.entries.like-forum-threads-from-feed.title":
+    "Gosta de tópicos do fórum diretamente no feed",
+  "changelog.entries.like-forum-threads-from-feed.body":
+    "O coração num cartão do fórum no teu feed é o gosto do próprio tópico, com a mesma contagem.",
+  "changelog.entries.sheets-stay-put-on-iphone.title":
+    "As janelas deslizantes ficam no lugar no iPhone",
+  "changelog.entries.sheets-stay-put-on-iphone.body":
+    "Chegar ao fim de uma janela, como o cartão de uma comunidade só para membros, já não a arrasta para fora do ecrã.",
+  "changelog.entries.onboarding-community-join.title":
+    "Juntar-te a comunidades na configuração inicial volta a funcionar",
+  "changelog.entries.onboarding-community-join.body":
+    "As comunidades com regras mostram-nas antes de entrares, e cada adesão diz-te como correu.",
+  "changelog.entries.forward-to-any-group.title":
+    "Reencaminha uma mensagem para qualquer um dos teus grupos",
+  "changelog.entries.forward-to-any-group.body":
+    "O seletor de reencaminhar encontra agora qualquer grupo teu pelo nome, esteja onde estiver na tua caixa.",
+  "changelog.entries.mentions-respect-private-spaces.title":
+    "Menções em comunidades privadas e tópicos restritos ficam lá dentro",
+  "changelog.entries.mentions-respect-private-spaces.body":
+    "Uma menção aí só notifica quem pode ler a publicação, e os nomes só aparecem onde os consegues ver.",
+  "changelog.entries.emoji-safe-captions.title":
+    "Legendas e excertos mantêm todos os emojis inteiros",
+  "changelog.entries.emoji-safe-captions.body":
+    "Uma legenda que acaba num emoji no limite de tamanho é enviada, e edições antigas mostram o que escreveste.",
+  "changelog.entries.stickers-in-portuguese.title":
+    "Os stickers trazem os nomes em português",
+  "changelog.entries.stickers-in-portuguese.body":
+    "Os nomes dos stickers seguem a tua língua nas conversas e pré-visualizações, e a pesquisa de emojis iguala a dos stickers.",
+  "changelog.entries.open-chats-stay-current.title":
+    "As conversas abertas mantêm-se atualizadas",
+  "changelog.entries.open-chats-stay-current.body":
+    "Nomes, afixados, silenciados e membros mudam logo, e reenviar ou reencaminhar leva-te à mensagem mais recente.",
+  "changelog.entries.going-visibility-honoured.title":
+    "Quem pode ver que vais já funciona",
+  "changelog.entries.going-visibility-honoured.body":
+    "As minhas conexões e Só quem organiza tiram-te das listas e da atividade do perfil; quem organiza vê as notas.",
+  "changelog.entries.go-together-member-safety.title":
+    "Bloqueia ou denuncia uma pessoa do teu grupo do Vamos juntes",
+  "changelog.entries.go-together-member-safety.body":
+    "As conversas dos grupos mostram só o primeiro nome, também nas menções e notificações.",
+  "changelog.entries.go-together-host-changes.title":
+    "Quem organiza pode desligar o Vamos juntes ou mudar uma pergunta com justiça",
+  "changelog.entries.go-together-host-changes.body":
+    "Quem está à espera fica a saber porquê, e quem respondeu a uma pergunta alterada volta a responder.",
+  "changelog.entries.go-together-sturdier.title":
+    "Os grupos do Vamos juntes aguentam-se melhor",
+  "changelog.entries.go-together-sturdier.body":
+    "Os grupos nunca passam de cinco, sair depois do início mantém a revelação e convívios apagados fecham as conversas.",
+  "changelog.entries.notifications-sync-across-screens.title":
+    "As notificações ficam sincronizadas entre ecrãs",
+  "changelog.entries.notifications-sync-across-screens.body":
+    "Ler ou limpar uma notificação num dispositivo atualiza o sino em todos os outros separadores e dispositivos que tens abertos.",
+  "changelog.entries.directory-cards-fit-long-names.title":
+    "Os cartões do diretório aguentam nomes longos e colunas estreitas",
+  "changelog.entries.directory-cards-fit-long-names.body":
+    "Avaliação compacta, nomes em duas linhas e etiquetas numa só linha; no telemóvel, os sítios perto deslizam de lado.",
+  "changelog.entries.persona-craft-search.title":
+    "Pesquisa o teu ofício pelo nome ao começar uma nova persona",
+  "changelog.entries.persona-craft-search.body":
+    "O primeiro passo está mais largo, oferece Por ofício ou Copiar uma, e ajuda-te a escolher o mais parecido quando nada serve.",
+  "changelog.entries.listings-queue-table.title":
+    "A fila de moderação de espaços é agora uma tabela fácil de percorrer",
+  "changelog.entries.listings-queue-table.body":
+    "Cada linha mostra foto, categoria e autor, com uma ação principal e as restantes no menu.",
+  "changelog.entries.listing-actions-menu-animates.title":
+    "O menu de mais ações na fila de espaços abre e fecha com suavidade",
+  "changelog.entries.listing-actions-menu-animates.body":
+    "Cresce a partir do botão de três pontos e recolhe-se nele, e aparece logo com o movimento reduzido ligado.",
+  "changelog.entries.added-listing-next-steps.title":
+    "Adicionar um espaço termina com um link para ele e um atalho para o próximo",
+  "changelog.entries.added-listing-next-steps.body":
+    "A equipa começa o próximo espaço num clique, e abre no diretório um que publicou logo à primeira.",
+  "changelog.entries.empty-search-dropdowns-stay-on-top.title":
+    "Os menus ficam por cima quando a pesquisa não encontra nada",
+  "changelog.entries.empty-search-dropdowns-stay-on-top.body":
+    "O seletor de bairro ao registar um espaço, e o filtro de convites do admin, ficam acima do campo seguinte.",
+  "changelog.entries.badge-notifications-open-the-badge.title":
+    "As notificações de crachá abrem o crachá que ganhaste",
+  "changelog.entries.badge-notifications-open-the-badge.body":
+    "Ao tocar numa, vais para a página de emblemas com esse crachá aberto; uma subida de nível também te leva lá.",
+  "changelog.entries.listing-review-keeps-line-breaks.title":
+    "O passo de revisão do espaço mantém as quebras de linha",
+  "changelog.entries.listing-review-keeps-line-breaks.body":
+    "Os parágrafos e quebras de linha da tua descrição aparecem na revisão final, como na pré-visualização.",
+  "changelog.entries.persona-takedowns-take-effect.title":
+    "As remoções da moderação passam a esconder personas",
+  "changelog.entries.persona-takedowns-take-effect.body":
+    "Uma persona removida sai do diretório, da pesquisa e da sua página, e as personas privadas ficam fora dos perfis.",
+  "changelog.entries.persona-renames-stay-live.title":
+    "Mudar o endereço de uma persona mantém-na no ar",
+  "changelog.entries.persona-renames-stay-live.body":
+    "Os links antigos reencaminham durante 30 dias, e passar a pseudónimo começa do zero, sem seguidores nem recomendações.",
+  "changelog.entries.persona-editor-save-conflicts.title":
+    "O editor de personas avisa quando alguém guardou primeiro",
+  "changelog.entries.persona-editor-save-conflicts.body":
+    "Uma gravação que apagaria alterações mais recentes de outra pessoa para, e Recarregar traz a versão mais recente.",
+  "changelog.entries.unclaimed-listings-take-no-questions.title":
+    "Espaços sem dono deixam de receber perguntas",
+  "changelog.entries.unclaimed-listings-take-no-questions.body":
+    "Sem ninguém para responder, um espaço sem dono esconde a caixa de perguntas e, se vazia, a secção inteira.",
+  "changelog.entries.mailbox-staff-names-stay-private.title":
+    "Personas não ligadas nunca mostram quem respondeu",
+  "changelog.entries.mailbox-staff-names-stay-private.body":
+    "As respostas de uma persona que mantém em privado quem a gere já não mostram nenhum primeiro nome, nem no ecrã bloqueado.",
+  "changelog.entries.suggested-places-notify-suggesters.title":
+    "Os lugares sugeridos agora avisam-te por notificação",
+  "changelog.entries.suggested-places-notify-suggesters.body":
+    "Publicação, perguntas, revisões e remoções chegam na tua língua, com ligação e um formulário rápido de correção.",
+  "changelog.entries.ambassador-grant-history.title":
+    "A página de pessoas embaixadoras ganha histórico e paginação",
+  "changelog.entries.ambassador-grant-history.body":
+    "A equipa vê o registo de cada pessoa, as vantagens mostram o limite real de convites e o lugar da equipa acaba com o cargo.",
+  "changelog.entries.therapist-registration-self-declared.title":
+    "Números de cédula de terapeutas aparecem como autodeclarados",
+  "changelog.entries.therapist-registration-self-declared.body":
+    "O visto verde desapareceu e “Também vale a pena ver” agora roda por página, sem lugares fixos para ninguém.",
+  "changelog.entries.member-profiles-respect-hiding.title":
+    "Quem se afasta ou é removido continua escondido",
+  "changelog.entries.member-profiles-respect-hiding.body":
+    "Links antigos, filtros do diretório e listas de votos respeitam desativações, remoções, bios privadas e zonas ocultas.",
+  "changelog.entries.membership-cards-respect-suspension.title":
+    "Os cartões de membro deixam de ser válidos para quem está suspenso",
+  "changelog.entries.membership-cards-respect-suspension.body":
+    "A porta e o check-in dos eventos recusam quem está suspenso, por cartão ou nome, e a foto segue o teu interruptor de foto.",
+  "changelog.entries.community-rosters-respect-blocks.title":
+    "As listas de membros das comunidades respeitam bloqueios",
+  "changelog.entries.community-rosters-respect-blocks.body":
+    "Quem bloqueaste, ou quem te bloqueou, sai das listas de membros das comunidades; a moderação continua a ver todos.",
+  "changelog.entries.forum-review-queue.title":
+    "As conversas em revisão têm uma fila para a equipa",
+  "changelog.entries.forum-review-queue.body":
+    "A moderação aprova ou recusa em Revisão do fórum, com uma nota opcional para quem escreveu.",
+  "changelog.entries.forum-privacy-everywhere.title":
+    "Conversas anónimas, agendadas e com aviso ficam assim em todo o lado",
+  "changelog.entries.forum-privacy-everywhere.body":
+    "O feed, os temas, os perfis, a pesquisa e as notificações escondem autorias ocultas, conversas por publicar e avisos.",
+  "changelog.entries.homepage-faces-respect-privacy.title":
+    "A página inicial só mostra quem escolheu aparecer",
+  "changelog.entries.homepage-faces-respect-privacy.body":
+    "As caras das comunidades na página inicial deixam de fora perfis privados, escondidos, suspensos e fotos desligadas.",
+  "changelog.entries.town-square-cross-posting.title":
+    '"Mostrar também na praça" já funciona',
+  "changelog.entries.town-square-cross-posting.body":
+    "Uma conversa de comunidade que partilhas na praça fica legível em todo o fórum, e as respostas ficam na comunidade.",
+  "changelog.entries.forum-co-author-consent.title":
+    "Quem foi creditado pode tirar o nome de uma conversa",
+  "changelog.entries.forum-co-author-consent.body":
+    "Não dá para creditar alguém que te bloqueou, e quem foi creditado tira o nome no menu da publicação.",
+  "changelog.entries.forum-drafts-and-polls-hold.title":
+    "Os rascunhos do fórum guardam bem e as sondagens contam um voto",
+  "changelog.entries.forum-drafts-and-polls-hold.body":
+    "O guardar automático recupera de conflitos e guarda quando sais, e os prazos agendados contam a partir da publicação.",
+  "changelog.entries.erasure-keeps-forum-replies.title":
+    "Sair do QueerPulse mantém as respostas das outras pessoas",
+  "changelog.entries.erasure-keeps-forum-replies.body":
+    "As conversas que começaste ficam sem o teu nome onde houve respostas, e as que estavam por publicar são apagadas.",
+  "changelog.entries.sticker-search.title":
+    "Pesquisa stickers por nome ou palavra-chave",
+  "changelog.entries.sticker-search.body":
+    "Escreve no seletor para encontrar um sticker em todos os packs. Os nomes já aparecem também em português.",
+  "changelog.entries.notifications-say-what-happened.title":
+    "Cada notificação diz agora o que aconteceu",
+  "changelog.entries.notifications-say-what-happened.body":
+    "Trinta e uma notificações genéricas dizem agora do que tratam, e as recusas mostram o motivo da moderação.",
+  "changelog.entries.notification-boundaries-hold.title":
+    "As notificações respeitam os teus limites",
+  "changelog.entries.notification-boundaries-hold.body":
+    "Fotos ocultas, pessoas bloqueadas e palavras removidas ficam fora do sino, das menções e da exportação de dados.",
+  "changelog.entries.gathering-reminders-follow-settings.title":
+    "Os lembretes de convívios seguem as tuas definições",
+  "changelog.entries.gathering-reminders-follow-settings.body":
+    "Os lembretes respeitam o teu interruptor e as pré-visualizações ocultas, nomeiam o convívio e abrem-no na tua língua.",
+  "changelog.entries.notification-bell-reads-unread-count.title":
+    "Os leitores de ecrã ouvem quantas estão por ler",
+  "changelog.entries.notification-bell-reads-unread-count.body":
+    "O sino anuncia quantas notificações são novas, e cada linha por ler di-lo.",
+  "changelog.entries.group-history-from-join.title":
+    "Novos membros de um grupo veem as mensagens a partir da entrada",
+  "changelog.entries.group-history-from-join.body":
+    "Os links de convite de grupo expiram agora ao fim de 7 dias, e o painel do link mostra quando o teu termina.",
+  "changelog.entries.private-chat-mentions-stay-private.title":
+    "Menções e pré-visualizações em conversas privadas ficam privadas",
+  "changelog.entries.private-chat-mentions-stay-private.body":
+    "Só quem está na conversa recebe as menções, e as pré-visualizações ignoram mensagens de quem bloqueaste ou após saíres.",
+  "changelog.entries.sign-out-clears-message-drafts.title":
+    "Terminar sessão apaga as mensagens por enviar e os rascunhos",
+  "changelog.entries.sign-out-clears-message-drafts.body":
+    "Quem usar o dispositivo a seguir não encontra mensagens a meio, mesmo que nunca tenhas aberto as Mensagens.",
+  "changelog.entries.jump-to-any-message.title":
+    "Salta para qualquer mensagem, por mais antiga que seja",
+  "changelog.entries.jump-to-any-message.body":
+    "Resultados e links abrem a conversa certa além das primeiras 30, e as legendas das fotos podem ser editadas e pesquisadas.",
+  "changelog.entries.gated-community-joining.title":
+    "Entrar em comunidades fechadas volta a funcionar",
+  "changelog.entries.gated-community-joining.body":
+    "Podes ler as regras da casa, pedir para entrar ou aceitar um convite, e ver ou retirar o teu pedido pendente.",
+  "changelog.entries.community-invites-expire.title":
+    "Os convites para comunidades agora expiram e respeitam bloqueios",
+  "changelog.entries.community-invites-expire.body":
+    "Os convites duram 30 dias e deixam de valer se quem o enviou sair da moderação ou se uma das pessoas bloquear a outra.",
+  "changelog.entries.community-reads-follow-moderation.title":
+    "Comunidades escondidas e arquivadas ficam mesmo fechadas",
+  "changelog.entries.community-reads-follow-moderation.body":
+    "Numa comunidade escondida, publicações e lista fecham-se a quem é de fora; numa arquivada, manténs a Biblioteca e o pulso.",
   "changelog.entries.feed-tab-switch-no-stale-cards.title":
     "Os separadores do feed deixam de mostrar de relance os cartões do separador anterior",
   "changelog.entries.feed-tab-switch-no-stale-cards.body":
@@ -8028,6 +8319,9 @@ export const marketing: Catalog = {
   "contact.form.topic.press": "Pedido de imprensa ou investigação",
   "contact.form.topic.partnership": "Proposta de parceria",
   "contact.form.topic.other": "Outra coisa",
+  "contact.form.topic.listing_correction":
+    "Correção de um anúncio do diretório",
+  "contact.form.correctionNote": "Sobre o anúncio {ref}",
   "contact.form.messageLabel": "A tua mensagem",
   "contact.form.messagePlaceholder":
     "Escreve com naturalidade. Não há modelo nem limite de palavras.",
@@ -9472,14 +9766,14 @@ export const marketing: Catalog = {
   "constitution.art7.clause2":
     "<strong>A QueerPulse não modera críticas a si própria.</strong> Publicações críticas da QueerPulse, das suas decisões, ou de quem a organiza não podem ser removidas ao abrigo de nenhuma cláusula do Código de Conduta.",
   "constitution.art7.clause3":
-    "As decisões de moderação são recorríveis junto de um painel de recurso permanente composto por três pessoas-membro de fora do círculo que decidiu. A percentagem de decisões revertidas em recurso é contada a partir do registo da moderação e publicada a cada trimestre no <a>Relatório de Transparência</a>.",
+    "As decisões de moderação são recorríveis <strong>uma vez</strong>, junto de uma pessoa moderadora que não fez parte da decisão original. A percentagem de decisões revertidas em recurso é contada a partir do registo da moderação e publicada a cada trimestre no <a>Relatório de Transparência</a>.",
 
   "constitution.art8.toc": "VIII · Remoção",
   "constitution.art8.title": "Remoção",
   "constitution.art8.clause1":
     "As pessoas-membro só podem ser removidas através da escala de moderação especificada no §04 do Código de Conduta, e apenas por decisão do círculo de moderação, ratificada por mais uma pessoa moderadora independente.",
   "constitution.art8.clause2":
-    "A remoção é recorrível <strong>uma vez</strong>, junto do painel de recurso, no prazo de 14 dias a contar da data de efeito.",
+    "A remoção é recorrível <strong>uma vez</strong>, junto de uma pessoa moderadora que não fez parte da decisão original, no prazo de 14 dias a contar da data de efeito.",
   "constitution.art8.clause3":
     "Os dados de uma pessoa-membro removida são eliminados ou anonimizados nos termos da Política de Privacidade no prazo de 30 dias. Os registos do caso são conservados durante 36 meses, para eventual necessidade legal.",
 
@@ -10303,20 +10597,9 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.unavailable.blocked":
     "Não é possível contactar este negócio a partir da tua conta.",
   "directory.detail.enquiry.ariaLabel": "Escrever a {name}",
-  "directory.detail.enquiry.eyebrow": "Mensagem privada",
-  "directory.detail.enquiry.title": "Escrever a <em>{name}</em>",
   "directory.detail.enquiry.sub":
-    "Isto vai para a caixa de mensagens de quem gere esta ficha, e a resposta chega em nome do negócio. Não fica publicado na ficha.",
-  "directory.detail.enquiry.replyNotice":
-    "{name} pode responder-te já a isto. Podes escrever mais assim que o fizer.",
-  "directory.detail.enquiry.bodyLabel": "A tua mensagem",
-  "directory.detail.enquiry.bodyPlaceholder":
-    "O que gostarias de lhes perguntar?",
-  "directory.detail.enquiry.bodyHint": "Pelo menos {min} carateres.",
-  "directory.detail.enquiry.charactersLeft": "Carateres restantes: {remaining}",
+    "Chega à caixa de mensagens desta ficha, e a resposta vem do negócio.",
   "directory.detail.enquiry.cancel": "Cancelar",
-  "directory.detail.enquiry.submit": "Enviar mensagem",
-  "directory.detail.enquiry.submitting": "A enviar…",
   "directory.detail.enquiry.error.rateLimited":
     "Já escreveste a este negócio hoje. Dá-lhes tempo para responder primeiro.",
   "directory.detail.enquiry.error.notAllowed":

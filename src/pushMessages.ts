@@ -1,8 +1,8 @@
 /**
  * Static EN/PT push-copy catalog, bundled straight into the service worker
- * (imported statically by `sw.ts`, same as `pushPayload.ts`) — it must NOT go
- * through the app's lazy i18n chunks, because those aren't reachable from a
- * worker context. Keep this small: only strings a push notification renders.
+ * (imported statically by `sw.ts`, same as `pushPayload.ts`). It stays out of
+ * the app's lazy i18n chunks, because those aren't reachable from a worker
+ * context. Keep this small: only strings a push notification renders.
  *
  * The backend stays language-neutral (see the push-notifications-expansion
  * design doc): a sender attaches an opaque `l10n.titleKey`/`bodyKey` + params,
@@ -27,8 +27,19 @@ const UNRESOLVED_TOKEN = /\{\w+\}/;
  */
 export const STAFF_TITLE_KEY = "push:messages.staffTitle";
 
+/**
+ * ENG-414: the event reminder's "view" action button label. LOCKSTEP with
+ * the backend sender (`queerpulse-backend/src/events/event-reminders.service.ts`),
+ * which sets it as the action's `titleKey`.
+ */
+export const EVENT_REMINDER_ACTION_DETAILS_KEY =
+  "push:event.reminder.actionDetails";
+
 const en: Record<string, string> = {
-  "push:event.reminder.body": "Starting soon — tap to see the details.",
+  "push:event.reminder.body": "Starting soon. Tap to see the details.",
+  // ENG-414: the reminder's "view" action button. The sender sets the English
+  // `title` plus this `titleKey`; sw.ts localises the button from it.
+  [EVENT_REMINDER_ACTION_DETAILS_KEY]: "Details",
   "push:messages.coalesced": "{count} new messages from {name}",
   [STAFF_TITLE_KEY]: "{name} from {business}",
   // PRD-333: a group burst names the group, since its senders differ.
@@ -54,7 +65,7 @@ const en: Record<string, string> = {
   "push:messages.group.mention.document": "{name} mentioned you: Document",
   "push:messages.group.mention.sticker": "{name} mentioned you: Sticker",
   "push:test.title": "Test notification",
-  "push:test.body": "This is a test — your notifications are working.",
+  "push:test.body": "This is a test. Your notifications are working.",
   "push:connection.request.title": "New connection request",
   "push:connection.request.body": "{name} wants to connect with you.",
   "push:connection.accepted.title": "Connection accepted",
@@ -63,19 +74,28 @@ const en: Record<string, string> = {
   "push:mention.body": "{name} mentioned you.",
   "push:forumReply.title": "New reply",
   "push:forumReply.body": "{name} replied to you.",
+  // ENG-413: the moderation verdict on a thread the member wrote. `{title}`
+  // is the thread's own title. Word-for-word identical to the English
+  // fallbacks in `PushNotificationListener.pushForumThreadReviewed`, since
+  // iOS renders that fallback directly and never reads this catalog.
+  "push:forumThreadReviewed.approved.title": "Your thread is live",
+  "push:forumThreadReviewed.approved.body": "{title} is on the forum now.",
+  "push:forumThreadReviewed.rejected.title": "About your thread",
+  "push:forumThreadReviewed.rejected.body":
+    "{title} was not published. Tap to read why.",
   "push:vouch.received.title": "You received a vouch",
   "push:vouch.received.body": "{name} vouched for you.",
   "push:event.updated.title": "Event updated",
   "push:event.updated.body":
-    "{event} has new details — tap to see what changed.",
+    "{event} has new details. Tap to see what changed.",
   "push:event.cancelled.title": "Event cancelled",
   "push:event.cancelled.body": "{event} has been cancelled.",
-  // ENG-141 — a series cancellation is ONE message covering every date it took
+  // ENG-141: a series cancellation is ONE message covering every date it took
   // off the calendar. Cancelling a weekly group thirty weeks out used to send
   // thirty separate pushes in a burst, one per occurrence.
   //
   // TWO KEYS, because this catalog is the service worker's and has no CLDR
-  // plural support — `formatPushCopy` does plain `{token}` interpolation, so a
+  // plural support: `formatPushCopy` does plain `{token}` interpolation, so a
   // single "{count} later dates" string renders "1 later dates" for a
   // two-date series. The SENDER picks the key; it is the side that knows the
   // count. The singular drops the number entirely, since "1" says nothing the
@@ -146,6 +166,9 @@ const en: Record<string, string> = {
   "push:groupListing.question.title": "A question about your listing",
   "push:groupListing.question.body":
     "Moderators need one thing cleared up about {title}.",
+  "push:groupListing.hidden.title": "About your listing",
+  "push:groupListing.hidden.body":
+    "{title} was taken off the group's board. Tap to read why.",
   "push:groupListing.declined.title": "About your listing",
   "push:groupListing.declined.body":
     "{title} was not published. Tap to read why.",
@@ -179,9 +202,9 @@ const en: Record<string, string> = {
   "push:groupAdded.body": "{name} added you to {group}.",
   // A group with no title yet, so there is no {group} to name.
   "push:groupAdded.bodyUntitled": "{name} added you to a group.",
-  // PRD-353: someone invited the member into a group (not seated directly —
-  // their "who can add me" preference is `invite_only`, or they left/were
-  // removed and are being asked back). Answered on the Requests tab, so this
+  // PRD-353: someone invited the member into a group. They were not seated
+  // directly: their "who can add me" preference is `invite_only`, or they
+  // left/were removed and are being asked back. Answered on the Requests tab, so this
   // deliberately does NOT say "added".
   "push:groupInvite.title": "New group invite",
   "push:groupInvite.body": "{name} invited you to {group}.",
@@ -205,10 +228,24 @@ const en: Record<string, string> = {
   "push:goTogether.groupReady.body": "Your group for a gathering is ready",
   "push:goTogether.mutual.title": "Go together",
   "push:goTogether.mutual.body": "You and {name} both want to meet again",
+  "push:goTogether.memberLeft.title": "Go together",
+  "push:goTogether.memberLeft.body": "Someone left your group for a gathering",
+  "push:goTogether.memberLeft.bodyMergeOffer":
+    "Someone left your group. Another group has room for you",
+  "push:goTogether.unmatched.title": "Go together",
+  "push:goTogether.unmatched.body":
+    "We couldn't find a group for you yet. We'll keep looking",
+  "push:goTogether.unmatched.bodyFinal":
+    "We weren't able to place you in a group this time",
+  "push:goTogether.unmatched.bodyHostSwitchedOff":
+    "The host switched Go together off for this gathering",
+  "push:goTogether.meetAgain.title": "Go together",
+  "push:goTogether.meetAgain.body": "Want to meet your group again?",
 };
 
 const pt: Record<string, string> = {
-  "push:event.reminder.body": "A começar em breve — toca para ver os detalhes.",
+  "push:event.reminder.body": "A começar em breve. Toca para ver os detalhes.",
+  [EVENT_REMINDER_ACTION_DETAILS_KEY]: "Detalhes",
   "push:messages.coalesced": "{count} novas mensagens de {name}",
   [STAFF_TITLE_KEY]: "{name}, de {business}",
   "push:messages.coalescedGroup": "{count} novas mensagens em {group}",
@@ -228,7 +265,7 @@ const pt: Record<string, string> = {
   "push:messages.group.mention.document": "{name} mencionou-te: Documento",
   "push:messages.group.mention.sticker": "{name} mencionou-te: Sticker",
   "push:test.title": "Notificação de teste",
-  "push:test.body": "Isto é um teste — as tuas notificações estão a funcionar.",
+  "push:test.body": "Isto é um teste. As tuas notificações estão a funcionar.",
   "push:connection.request.title": "Novo pedido de conexão",
   "push:connection.request.body": "{name} quer ligar-se a ti.",
   "push:connection.accepted.title": "Conexão aceite",
@@ -237,14 +274,19 @@ const pt: Record<string, string> = {
   "push:mention.body": "{name} mencionou-te.",
   "push:forumReply.title": "Nova resposta",
   "push:forumReply.body": "{name} respondeu-te.",
+  "push:forumThreadReviewed.approved.title": "O teu tópico está publicado",
+  "push:forumThreadReviewed.approved.body": "{title} já está no fórum.",
+  "push:forumThreadReviewed.rejected.title": "Sobre o teu tópico",
+  "push:forumThreadReviewed.rejected.body":
+    "{title} não foi publicado. Toca para leres porquê.",
   "push:vouch.received.title": "Recebeste um aval",
   "push:vouch.received.body": "{name} avalizou-te.",
   "push:event.updated.title": "Convívio atualizado",
   "push:event.updated.body":
-    "{event} tem novos detalhes — toca para ver o que mudou.",
+    "{event} tem novos detalhes. Toca para ver o que mudou.",
   "push:event.cancelled.title": "Convívio cancelado",
   "push:event.cancelled.body": "{event} foi cancelado.",
-  // ENG-141 — duas chaves, sem plural CLDR neste catálogo. Ver a nota EN.
+  // ENG-141: duas chaves, sem plural CLDR neste catálogo. Ver a nota EN.
   // A forma escolhida evita também a concordância de género: o sujeito
   // misturava um título masculino com "datas", que é feminino.
   "push:event.cancelled.seriesBodyOne":
@@ -297,6 +339,9 @@ const pt: Record<string, string> = {
   "push:groupListing.question.title": "Uma questão sobre o teu anúncio",
   "push:groupListing.question.body":
     "A moderação precisa de esclarecer uma coisa sobre {title}.",
+  "push:groupListing.hidden.title": "Sobre o teu anúncio",
+  "push:groupListing.hidden.body":
+    "{title} foi retirado do quadro do grupo. Toca para leres porquê.",
   "push:groupListing.declined.title": "Sobre o teu anúncio",
   "push:groupListing.declined.body":
     "{title} não foi publicado. Toca para leres porquê.",
@@ -335,9 +380,26 @@ const pt: Record<string, string> = {
   "push:goTogether.groupReady.body": "O teu grupo para um convívio está pronto",
   "push:goTogether.mutual.title": "Vamos juntes",
   "push:goTogether.mutual.body": "Tu e {name} querem voltar a encontrar-se",
+  "push:goTogether.memberLeft.title": "Vamos juntes",
+  "push:goTogether.memberLeft.body":
+    "Alguém saiu do teu grupo para um convívio",
+  "push:goTogether.memberLeft.bodyMergeOffer":
+    "Alguém saiu do teu grupo. Há outro grupo com lugar para ti",
+  "push:goTogether.unmatched.title": "Vamos juntes",
+  "push:goTogether.unmatched.body":
+    "Ainda não encontrámos um grupo para ti. Vamos continuar a procurar",
+  "push:goTogether.unmatched.bodyFinal":
+    "Desta vez não foi possível juntar-te a um grupo",
+  "push:goTogether.unmatched.bodyHostSwitchedOff":
+    "Quem organiza desligou o Vamos juntes neste convívio",
+  "push:goTogether.meetAgain.title": "Vamos juntes",
+  "push:goTogether.meetAgain.body": "Queres voltar a encontrar o teu grupo?",
 };
 
-const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };
+/** Exported read-only for the spec's EN/PT key-parity and copy checks. */
+export const CATALOG: Readonly<
+  Record<PushLang, Readonly<Record<string, string>>>
+> = { en, pt };
 
 /** Replace `{token}` placeholders; an unknown token is left intact. */
 function interpolate(
@@ -364,7 +426,7 @@ export interface PushCopySource {
 /**
  * Resolve the notification's rendered title/body for `lang`. Falls back to
  * the payload's plain `title`/`body` per field when its key is absent, the
- * key isn't in the catalog, or there is no `l10n` block at all — so a push
+ * key isn't in the catalog, or there is no `l10n` block at all. So a push
  * from before this feature (or a key the catalog hasn't caught up with) still
  * renders correctly.
  *
@@ -401,4 +463,30 @@ export function formatPushCopy(
         ? interpolate(bodyTemplate, params)
         : payload.body,
   };
+}
+
+/** A notification action as the validated payload carries it (ENG-414). */
+export interface PushActionSource {
+  action: string;
+  title: string;
+  titleKey?: string;
+}
+
+/**
+ * ENG-414: resolve each action button's label for `lang`, with the same
+ * lookup and fallback `formatPushCopy` uses for the body. A `titleKey` found
+ * in the catalog wins; a missing key, an unknown key or an unknown language
+ * keeps the action's plain English `title`. The result drops `titleKey`, so
+ * only the fields `showNotification` reads reach it.
+ */
+export function formatPushActions(
+  actions: readonly PushActionSource[] | undefined,
+  lang: PushLang,
+): { action: string; title: string }[] | undefined {
+  if (!actions) return undefined;
+  const table = CATALOG[lang] ?? CATALOG.en;
+  return actions.map(({ action, title, titleKey }) => {
+    const localizedTitle = titleKey !== undefined ? table[titleKey] : undefined;
+    return { action, title: localizedTitle ?? title };
+  });
 }

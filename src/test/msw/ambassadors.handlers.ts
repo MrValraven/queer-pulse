@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import type { ItemsPage } from "../../shared/api/pagination";
 import type {
   AdminAmbassadorCircleDTO,
   AdminAmbassadorDTO,
@@ -7,6 +8,7 @@ import type {
 import {
   ADMIN_AMBASSADOR_CIRCLE_DEMO,
   ADMIN_AMBASSADORS_DEMO,
+  AMBASSADOR_CIRCLE_SLUG_DEMO,
 } from "../../features/admin/ambassadors/adminAmbassadors.data";
 import { isAmbassadorReasonValid } from "../../features/admin/ambassadors/adminAmbassadors.api";
 import { isAmbassadorFocusArea } from "../../shared/ambassadors/ambassadorFocusAreas.data";
@@ -23,6 +25,9 @@ import { isAmbassadorFocusArea } from "../../shared/ambassadors/ambassadorFocusA
  * Both reasons follow the backend's `@Length(3, 500)` on the trimmed text: a
  * shorter or longer one answers a code-less 400, as the real DTO does.
  */
+
+/** The backend's `PAGE_SIZE` for `GET /admin/ambassadors`. */
+export const AMBASSADOR_HANDLER_PAGE_SIZE = 20;
 
 /** The staff member the handlers name as the actor on writes. */
 const HANDLER_ACTOR = { slug: "ana", name: "Ana Ribeiro" };
@@ -50,6 +55,26 @@ export function resetAmbassadorHandlerState() {
 }
 resetAmbassadorHandlerState();
 
+/** Seeds the roster directly, for a suite that needs more rows than a page
+ *  or a circle that has not been founded yet. */
+export function seedAmbassadorHandlerState(seed: {
+  rows?: AdminAmbassadorDTO[];
+  circle?: AdminAmbassadorCircleDTO;
+}) {
+  if (seed.rows) ambassadorRows = seed.rows.map((row) => ({ ...row }));
+  if (seed.circle) ambassadorCircle = { ...seed.circle };
+}
+
+/** Newest first by `field`, the order the backend pages in. */
+function newestFirst(
+  rows: AdminAmbassadorDTO[],
+  field: "grantedAt" | "revokedAt",
+) {
+  return [...rows].sort((left, right) =>
+    (right[field] ?? "").localeCompare(left[field] ?? ""),
+  );
+}
+
 function codedError(status: number, code: string, message: string) {
   return HttpResponse.json({ statusCode: status, code, message }, { status });
 }
@@ -67,30 +92,63 @@ function memberNameFor(slug: string) {
 
 export function ambassadorHandlers(api: string) {
   return [
-    // GET /admin/ambassadors/circle -> { slug, memberCount, isViewerMember }
+    // GET /admin/ambassadors/circle
+    //   -> { isFounded, slug, memberCount, isViewerMember }
+    // A pure read: before the first grant it answers isFounded false.
     http.get(`${api}/admin/ambassadors/circle`, () =>
       HttpResponse.json<AdminAmbassadorCircleDTO>(ambassadorCircle),
     ),
 
     // POST /admin/ambassadors/circle/staff-seat -> { slug }
+    // Founds the circle when nothing has yet, as the backend does.
     http.post(`${api}/admin/ambassadors/circle/staff-seat`, () => {
       if (!ambassadorCircle.isViewerMember) {
         ambassadorCircle = {
           ...ambassadorCircle,
+          isFounded: true,
+          slug: AMBASSADOR_CIRCLE_SLUG_DEMO,
           isViewerMember: true,
           memberCount: ambassadorCircle.memberCount + 1,
         };
       }
-      return HttpResponse.json({ slug: ambassadorCircle.slug });
+      return HttpResponse.json({ slug: AMBASSADOR_CIRCLE_SLUG_DEMO });
     }),
 
-    // GET /admin/ambassadors?status=active|past -> AdminAmbassadorDTO[]
-    http.get(`${api}/admin/ambassadors`, ({ request }) => {
-      const status = new URL(request.url).searchParams.get("status");
-      const wantsPast = status === "past";
+    // GET /admin/ambassadors/history?userId= -> AdminAmbassadorDTO[]
+    // Every grant the member has held, newest first. 400 without a userId.
+    http.get(`${api}/admin/ambassadors/history`, ({ request }) => {
+      const userId = new URL(request.url).searchParams.get("userId");
+      if (!userId) {
+        return HttpResponse.json(
+          { statusCode: 400, message: "userId must be a UUID" },
+          { status: 400 },
+        );
+      }
       return HttpResponse.json<AdminAmbassadorDTO[]>(
-        ambassadorRows.filter((row) => Boolean(row.revokedAt) === wantsPast),
+        newestFirst(
+          ambassadorRows.filter((row) => row.member.userId === userId),
+          "grantedAt",
+        ),
       );
+    }),
+
+    // GET /admin/ambassadors?status=active|past&page=N
+    //   -> { items, total, page, pageSize }
+    http.get(`${api}/admin/ambassadors`, ({ request }) => {
+      const searchParams = new URL(request.url).searchParams;
+      const wantsPast = searchParams.get("status") === "past";
+      const page = Math.max(1, Number(searchParams.get("page")) || 1);
+      const matching = newestFirst(
+        ambassadorRows.filter((row) => Boolean(row.revokedAt) === wantsPast),
+        wantsPast ? "revokedAt" : "grantedAt",
+      );
+      const start = (page - 1) * AMBASSADOR_HANDLER_PAGE_SIZE;
+      return HttpResponse.json<ItemsPage<AdminAmbassadorDTO>>({
+        items: matching.slice(start, start + AMBASSADOR_HANDLER_PAGE_SIZE),
+        total: matching.length,
+        page,
+        pageSize: AMBASSADOR_HANDLER_PAGE_SIZE,
+      });
     }),
 
     // POST /admin/ambassadors { memberSlug, focusArea, reason } -> 201 row
@@ -124,9 +182,17 @@ export function ambassadorHandlers(api: string) {
         return codedError(404, "ambassador_member_not_found", "No such member");
       }
       grantCounter += 1;
+      const earlierGrant = ambassadorRows.find(
+        (existing) => existing.member.slug === memberSlug,
+      );
       const row: AdminAmbassadorDTO = {
         id: `msw-ambassador-${grantCounter}`,
-        member: { slug: memberSlug, ...name, avatarUrl: null },
+        member: {
+          userId: earlierGrant?.member.userId ?? `msw-user-${memberSlug}`,
+          slug: memberSlug,
+          ...name,
+          avatarUrl: null,
+        },
         focusArea,
         grantedAt: new Date().toISOString(),
         grantedBy: HANDLER_ACTOR,
@@ -138,6 +204,13 @@ export function ambassadorHandlers(api: string) {
         inviteQuotaOverride: null,
       };
       ambassadorRows = [row, ...ambassadorRows];
+      // The first grant founds the circle and seats the member.
+      ambassadorCircle = {
+        ...ambassadorCircle,
+        isFounded: true,
+        slug: AMBASSADOR_CIRCLE_SLUG_DEMO,
+        memberCount: ambassadorCircle.memberCount + 1,
+      };
       return HttpResponse.json(row, { status: 201 });
     }),
 

@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useId, useMemo, useState, type FormEvent } from "react";
 import { Modal, Button, Select } from "../../shared/components/ui";
 import { FormField } from "../../shared/components/ui/FormField";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -26,6 +26,8 @@ import { useCommunityForm } from "./startCommunity/useCommunityForm";
 import { EditCommunityRules } from "./EditCommunityRules";
 import { EditCommunityChangeSummary } from "./EditCommunityChangeSummary";
 import { diffCommunityUpdates } from "./editCommunityChanges";
+import { missingRequiredFieldKeys } from "./editCommunityRequired";
+import { EditCommunityMissingFields } from "./EditCommunityMissingFields";
 import {
   CommunityCardPreview,
   type CommunityCardStats,
@@ -101,16 +103,9 @@ export function EditCommunityModal({
     onClose();
   };
 
-  const missingRequired =
-    !draft.name.trim() ||
-    !draft.tagline.trim() ||
-    !draft.purpose.trim() ||
-    !draft.whoFor.trim() ||
-    !draft.type ||
-    !draft.accessTier ||
-    // A community keeps at least one shared value — the same floor the
-    // Start-a-Community wizard enforces, so editing can't strip it below that.
-    draft.rules.length === 0;
+  const missingFieldKeys = missingRequiredFieldKeys(draft, initialDraft);
+  const missingRequired = missingFieldKeys.length > 0;
+  const missingNoticeId = useId();
 
   // Nothing to save until something actually differs. Compared as the very DTO
   // the submit would send rather than field by field, so the check can't drift
@@ -185,6 +180,10 @@ export function EditCommunityModal({
             {/* Ahead of the buttons so the wrapping footer puts it on its own
                 full-width line directly above Save, where it is read before
                 the press rather than discovered after it. */}
+            <EditCommunityMissingFields
+              id={missingNoticeId}
+              labelKeys={missingFieldKeys}
+            />
             <EditCommunityChangeSummary changes={changes} />
             <Button
               variant="ghost"
@@ -197,6 +196,7 @@ export function EditCommunityModal({
               variant="primary"
               type="submit"
               form={FORM_ID}
+              aria-describedby={missingRequired ? missingNoticeId : undefined}
               disabled={
                 missingRequired || isUnchanged || updateCommunity.isPending
               }

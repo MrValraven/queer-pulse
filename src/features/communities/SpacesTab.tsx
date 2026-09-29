@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiLock } from "react-icons/fi";
 import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -48,6 +49,19 @@ export function SpacesTab({
     living.slug,
     { enabled: canFetchSpaces },
   );
+  const queryClient = useQueryClient();
+
+  // A "join the parent first" refusal here means this page's own membership
+  // was stale (say, the member left in another tab). Refreshing the parent's
+  // detail on close brings the hero's join action back on the page the
+  // refusal points to. `["community", slug]` prefixes the detail key, which
+  // also carries the language.
+  const closeJoinWizard = () => {
+    setJoiningSpace(null);
+    void queryClient.invalidateQueries({
+      queryKey: ["community", living.slug],
+    });
+  };
 
   return (
     <div>
@@ -111,11 +125,14 @@ export function SpacesTab({
           </div>
         ))}
 
+      {/* No `parentSlug`: this wizard opens on the parent's own page, so a
+          "join the parent first" refusal says to join right here and closes
+          back onto this page. A link to the parent would lead back here. */}
       {joiningSpace && (
         <CommunityJoinFlowModal
           community={joiningSpace}
           parentName={name}
-          onClose={() => setJoiningSpace(null)}
+          onClose={closeJoinWizard}
         />
       )}
     </div>

@@ -76,7 +76,7 @@ export const governance: Catalog = {
   "sections.moderation.title":
     "What happens when something <em>goes wrong.</em>",
   "sections.moderation.intro":
-    "QueerPulse is moderated by a small team of members who agreed to take on this role. They are accountable to the advisory council, and their decisions can be appealed.",
+    "QueerPulse is moderated by a small team of members who agreed to take on this role. They are accountable to the advisory council for how moderation is run, and any decision can be appealed once, with a final outcome.",
   "sections.moderation.wontTolerate.label": "What we won't tolerate:",
   "sections.moderation.wontTolerate.text":
     "Any behaviour that makes a member feel unsafe or unwelcome on the basis of their identity, body, or background. Harassment of any form. Commercial solicitation without permission. Violation of another member's privacy.",
@@ -94,13 +94,13 @@ export const governance: Catalog = {
     "Possible outcomes: no action (with explanation), direct communication, warning, temporary suspension, permanent removal. The reported person is informed of the outcome but not the reporter.",
   "steps.appeal.title": "Right to appeal",
   "steps.appeal.text":
-    "Any member can appeal a moderation decision within 14 days. Appeals are reviewed by the advisory council, independently of the team that made the original decision. The outcome is final.",
+    "Any member can appeal a moderation decision once, within 14 days. The appeal is reviewed by a moderator who was not part of the original decision. The outcome is final.",
 
   // ── Advisory council ────────────────────────────────────────────────────
   "sections.council.eyebrow": "Advisory council",
   "sections.council.title": "Who <em>oversees</em> this.",
   "sections.council.intro":
-    "The advisory council reviews moderation appeals, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote. See Proposals & votes below.",
+    "The advisory council oversees how moderation is run, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote. See Proposals & votes below.",
   "sections.council.empty":
     "No seats are filled right now. The council is being appointed, and this list will name everyone on it.",
 
@@ -302,11 +302,8 @@ export const governance: Catalog = {
   "sections.raise.option.other": "Something else",
   "sections.raise.textareaPlaceholder":
     "Describe what happened, or what's wrong, in as much detail as you're comfortable with…",
-  "sections.raise.emailPlaceholder": "Your email (so we can update you)",
   "sections.raise.submitCta": "Submit",
   "sections.raise.submittingCta": "Sending…",
-  "sections.raise.submittedToast":
-    "Submitted. We'll be in touch within 48 hours.",
   "sections.raise.errorToast":
     "Please choose a category and add a few details first.",
   "sections.raise.failedToast":

@@ -46,13 +46,15 @@ export function BlockReportMessagesStep({
   const reasons = useReportReasons("message");
   const createReport = useCreateReport();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [reasonCode, setReasonCode] = useState<string | null>(
-    reasons[0]?.code ?? null,
-  );
+  const [reasonCode, setReasonCode] = useState<string | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isFiling, setIsFiling] = useState(false);
   const leadRef = useRef<HTMLParagraphElement>(null);
   const legendId = useId();
+  const missingHintId = useId();
+  // Neither is explained by the dimmed continue button alone: no message
+  // ticked, or a message ticked but no reason picked yet.
+  const isMissingRequirements = selectedIds.length === 0 || !reasonCode;
 
   useEffect(() => {
     leadRef.current?.focus();
@@ -112,7 +114,13 @@ export function BlockReportMessagesStep({
           <Button
             variant="primary"
             onClick={() => void handleContinue()}
-            disabled={selectedIds.length === 0 || isFiling}
+            // aria-disabled keeps the button focusable and clickable, so a
+            // blocked click still lands on `handleContinue`'s own guard, and
+            // aria-describedby lets a keyboard/screen-reader member hear the
+            // hint explaining what's missing (Button.module.css styles
+            // `[aria-disabled="true"]` identically to `:disabled`).
+            aria-disabled={isMissingRequirements || isFiling}
+            aria-describedby={isMissingRequirements ? missingHintId : undefined}
           >
             {isFiling
               ? t("messages:blockThenReport.continuingCta")
@@ -152,7 +160,13 @@ export function BlockReportMessagesStep({
           }))}
           value={reasonCode}
           onChange={setReasonCode}
+          placeholder={t("safety:reportPerson.form.reasonPlaceholder")}
         />
+        {isMissingRequirements && (
+          <p id={missingHintId} className={styles.reasonHint}>
+            {t("messages:blockThenReport.missingHint")}
+          </p>
+        )}
       </div>
 
       <label className={styles.anonymousRow}>

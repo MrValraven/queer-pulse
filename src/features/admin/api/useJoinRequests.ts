@@ -223,16 +223,23 @@ export function dtoToView(
  * decided history wants the newest decision first. Both are part of the query
  * key, so two callers asking for different orders never share a cache entry.
  * Demo mode honours them over the mock array so the two modes agree.
+ *
+ * `isEnabled: false` mounts the hook without fetching. The admin rail's badge
+ * hook passes it for a grant holder, because `GET /join-requests` is
+ * `@Roles(Moderator, Admin)` and would 403 for anyone else. It stays out of
+ * the query key, so the rail still shares the queue page's cache entry.
  */
 export function useJoinRequests(
   status: JoinRequestDTO["status"] = "pending",
-  options: GetJoinRequestsOptions = {},
+  options: GetJoinRequestsOptions & { isEnabled?: boolean } = {},
 ) {
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const { t, language } = useTranslation();
-  const { limit, sort, assignedTo } = options;
+  const { isEnabled = true, ...requestOptions } = options;
+  const { limit, sort, assignedTo } = requestOptions;
   return useQuery<JoinRequestView[]>({
+    enabled: isEnabled,
     queryKey: [
       "join-requests",
       demoMode,
@@ -267,7 +274,7 @@ export function useJoinRequests(
         }
         if (limit != null) rows = rows.slice(0, limit);
       } else {
-        rows = await getJoinRequests(status, options);
+        rows = await getJoinRequests(status, requestOptions);
       }
       return rows.map((row) => dtoToView(row, t, language));
     },

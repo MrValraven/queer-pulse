@@ -354,6 +354,10 @@ export interface Thread {
     /** Member slug, when the co-author links to a profile. */
     slug?: string;
   };
+  /** Whether the viewer IS the credited co-author, which is what offers them
+   *  the "Remove my name" control. Live-provided; absent on demo threads, so
+   *  the control only ever appears against a real record. */
+  viewerIsCoAuthor?: boolean;
   /** The ballot attached to this thread, or null/absent when it carries none. */
   poll?: ThreadPoll | null;
   /** The opening post's photos, resolved and ordered (up to four). The backend
@@ -412,9 +416,15 @@ const SOLID: Partial<
 // Soft avatar (reply authors) by member tint.
 const SOFT: Partial<Record<AvatarTint, { background: string; color: string }>> =
   {
-    coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
-    jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
-    plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
+    coral: {
+      background: "rgba(var(--accent-rgb), .14)",
+      color: "var(--accent-ink)",
+    },
+    jade: {
+      background: "rgba(var(--jade-rgb), .15)",
+      color: "var(--jade-ink)",
+    },
+    plum: { background: "rgba(var(--line-rgb), .1)", color: "var(--ink)" },
   };
 const solid = (tint: AvatarTint) => SOLID[tint] ?? SOLID.plum!;
 const soft = (tint: AvatarTint) => SOFT[tint] ?? SOFT.plum!;
@@ -487,7 +497,7 @@ const qpReply = (
   >,
 ): Reply => ({
   avatar: "QP",
-  background: "rgba(232,119,90,.14)",
+  background: "rgba(var(--accent-rgb), .14)",
   color: "var(--accent-ink)",
   name: "QueerPulse",
   official: true,

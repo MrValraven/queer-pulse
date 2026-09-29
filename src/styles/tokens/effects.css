@@ -380,3 +380,30 @@
   --blur-lg: blur(14px);
   --blur-overlay: var(--blur-sm);
 }
+
+/* ── Soft elevation ──
+   A diffuse, layered alternative to the e1-e4 scale for a white card that
+   should float without a hard band under its edge: the e-steps pool their
+   shadow under the bottom through a negative spread, and these spread it
+   wide and faint instead. First used by the forum's unfinished-post ribbon.
+   Plum barely registers on the dark ground, so dark mode layers black. */
+:root,
+[data-theme="light"] {
+  --shadow-soft:
+    0 1px 2px rgba(var(--plum-rgb), 0.02),
+    0 4px 14px rgba(var(--plum-rgb), 0.035),
+    0 12px 40px -4px rgba(var(--plum-rgb), 0.055);
+  --shadow-soft-lift:
+    0 2px 4px rgba(var(--plum-rgb), 0.025),
+    0 8px 24px rgba(var(--plum-rgb), 0.05),
+    0 20px 56px -8px rgba(var(--plum-rgb), 0.09);
+}
+
+[data-theme="dark"] {
+  --shadow-soft:
+    0 1px 2px rgba(0, 0, 0, 0.18), 0 4px 14px rgba(0, 0, 0, 0.24),
+    0 12px 40px -4px rgba(0, 0, 0, 0.34);
+  --shadow-soft-lift:
+    0 2px 4px rgba(0, 0, 0, 0.22), 0 8px 24px rgba(0, 0, 0, 0.32),
+    0 20px 56px -8px rgba(0, 0, 0, 0.44);
+}

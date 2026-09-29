@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiLink2 } from "react-icons/fi";
 import {
-  Button,
-  FormField,
   ModalSheet,
-  Sending,
   SuccessPanel,
+  type AvatarTint,
 } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { FirstContactComposer } from "../messages/FirstContactComposer";
+import { messageRequestErrorKey } from "../messages/api/firstContactError";
 import {
-  MAX_ENQUIRY_LENGTH,
   MIN_ENQUIRY_LENGTH,
   readListingEnquiryRefusal,
   useSendListingEnquiry,
@@ -21,13 +18,12 @@ import {
 } from "./api/useListingEnquiry";
 import styles from "./DirectoryEnquiryModal.module.css";
 
-/** Below this many characters remaining, the counter starts being read out.
- *  Announcing every keystroke would talk over the person typing. */
-const ANNOUNCE_REMAINING_BELOW = 200;
-
 interface Props {
   slug: string;
   placeName: string;
+  /** The listing's own initials and tint, for the composer's identity row. */
+  placeInitials: string;
+  placeTint: AvatarTint;
   /** From `GET /directory/:slug/contact` (PRD-340): true when the two are not
    *  accepted connections, so this first message stays a one-message thread
    *  until the OWNER replies to it (their reply needs no connection). */
@@ -49,22 +45,31 @@ const REFUSAL_KEYS: Record<ListingEnquiryRefusalKind, string> = {
 };
 
 /**
- * "Message this business" — a member writing PRIVATELY to the people behind a
+ * "Message this business": a member writing PRIVATELY to the people behind a
  * directory listing, delivered through the platform's own messaging.
  *
- * Everything a member needs in order to decide is said before they type: the
- * message arrives as a direct message from their account, and where a
- * connection does not exist yet, this first message is the only one the thread
- * will carry until one is accepted. The confirmation then hands them the
- * thread, because a message they cannot find again is a message they cannot
- * follow up.
+ * The composer is the shared first-contact one (`FirstContactComposer`,
+ * door="enquiry"), so this door gets the same identity row, safety notice,
+ * 2000-character field and footer as every other first message. What stays
+ * here is the door's own: where the message lands (the listing's mailbox),
+ * the backend's 8-character minimum, and the listing-specific refusals.
+ *
+ * Everything a member needs in order to decide is said before they type: where
+ * the message lands and, when the contact read says so, that this first
+ * message is the only one the thread carries until the business replies. The
+ * confirmation then hands them the thread, because a message they cannot find
+ * again is a message they cannot follow up.
  *
  * A refusal is rendered where they are looking and in the terms that actually
- * apply: a cap is not a permission problem and a taken-down listing is neither.
+ * apply: a coded first-contact refusal (a paused account) first, then the
+ * listing's own reasons, where a cap, a block and a taken-down listing each
+ * get their own words.
  */
 export function DirectoryEnquiryModal({
   slug,
   placeName,
+  placeInitials,
+  placeTint,
   followUpAwaitsReply,
   onClose,
   onCapReached,
@@ -79,13 +84,13 @@ export function DirectoryEnquiryModal({
   );
   const [isSent, setIsSent] = useState(false);
 
-  const trimmedBody = body.trim();
-  const canSubmit =
-    trimmedBody.length >= MIN_ENQUIRY_LENGTH && !sendEnquiry.isPending;
-  const remaining = MAX_ENQUIRY_LENGTH - body.length;
-
+  // The composer gates the send on the same minimum; this guard keeps a
+  // double submit from racing the pending flag.
   const submit = () => {
-    if (!canSubmit) return;
+    const trimmedBody = body.trim();
+    if (trimmedBody.length < MIN_ENQUIRY_LENGTH || sendEnquiry.isPending) {
+      return;
+    }
     setErrorMessage(null);
     sendEnquiry.mutate(trimmedBody, {
       onSuccess: (result) => {
@@ -93,6 +98,11 @@ export function DirectoryEnquiryModal({
         setIsSent(true);
       },
       onError: (error) => {
+        const firstContactKey = messageRequestErrorKey(error);
+        if (firstContactKey) {
+          setErrorMessage(t(firstContactKey, { name: placeName }));
+          return;
+        }
         const refusal = readListingEnquiryRefusal(error);
         const message = refusal.serverReason ?? t(REFUSAL_KEYS[refusal.kind]);
         setErrorMessage(message);
@@ -152,83 +162,29 @@ export function DirectoryEnquiryModal({
         name: placeName,
       })}
     >
-      <div className={styles.eyebrow}>
-        {t("marketing:directory.detail.enquiry.eyebrow")}
-      </div>
-      <h3 className={styles.title}>
-        <Translation
-          i18nKey="marketing:directory.detail.enquiry.title"
-          components={{ em: <em /> }}
-          values={{ name: placeName }}
-        />
-      </h3>
-      <p className={styles.sub}>
-        {t("marketing:directory.detail.enquiry.sub")}
-      </p>
-
-      {followUpAwaitsReply && (
-        <div className={styles.notice}>
-          <FiLink2 aria-hidden />
-          <span>
-            {t("marketing:directory.detail.enquiry.replyNotice", {
-              name: placeName,
-            })}
-          </span>
-        </div>
-      )}
-
-      <FormField label={t("marketing:directory.detail.enquiry.bodyLabel")}>
-        <textarea
-          rows={6}
-          value={body}
-          maxLength={MAX_ENQUIRY_LENGTH}
-          onChange={(event) => setBody(event.target.value)}
-          placeholder={t("marketing:directory.detail.enquiry.bodyPlaceholder")}
-        />
-      </FormField>
-
-      <div className={styles.footRow}>
-        <p className={styles.hint}>
-          {t("marketing:directory.detail.enquiry.bodyHint", {
-            min: MIN_ENQUIRY_LENGTH,
-          })}
-        </p>
-        <p className={styles.counter}>
-          <span aria-hidden>
-            {body.length}/{MAX_ENQUIRY_LENGTH}
-          </span>
-          {/* Polite and only once the ceiling is actually in reach, so the
-              count never talks over somebody mid-sentence. */}
-          <span className="visuallyHidden" aria-live="polite">
-            {remaining < ANNOUNCE_REMAINING_BELOW
-              ? t("marketing:directory.detail.enquiry.charactersLeft", {
-                  remaining,
-                })
-              : ""}
-          </span>
-        </p>
-      </div>
-
-      {errorMessage && (
-        <p className={styles.error} role="alert">
-          {errorMessage}
-        </p>
-      )}
-
-      <div className={styles.foot}>
-        <Button variant="ghost" onClick={onClose}>
-          {t("marketing:directory.detail.enquiry.cancel")}
-        </Button>
-        <Button variant="primary" onClick={submit} disabled={!canSubmit}>
-          {sendEnquiry.isPending ? (
-            <Sending
-              label={t("marketing:directory.detail.enquiry.submitting")}
-            />
-          ) : (
-            t("marketing:directory.detail.enquiry.submit")
-          )}
-        </Button>
-      </div>
+      <FirstContactComposer
+        door="enquiry"
+        target={{
+          name: placeName,
+          shortName: placeName,
+          initials: placeInitials,
+          tint: placeTint,
+        }}
+        heading={
+          <p className={styles.context}>
+            {t("marketing:directory.detail.enquiry.sub")}
+          </p>
+        }
+        followUpAwaitsReply={followUpAwaitsReply}
+        minLength={MIN_ENQUIRY_LENGTH}
+        message={body}
+        onMessageChange={setBody}
+        isSending={sendEnquiry.isPending}
+        error={errorMessage}
+        onSubmit={submit}
+        onBack={onClose}
+        backLabel={t("marketing:directory.detail.enquiry.cancel")}
+      />
     </ModalSheet>
   );
 }

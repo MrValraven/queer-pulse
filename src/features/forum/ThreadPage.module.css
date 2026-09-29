@@ -72,6 +72,11 @@
   font-size: var(--text-16);
   flex: none;
 }
+/* The byline column shrinks before the ⋯ menu does, so a long name or a
+   co-author credit wraps inside the card on a 320 px phone. */
+.opHeadText {
+  min-width: 0;
+}
 .opName {
   display: flex;
   align-items: center;
@@ -311,7 +316,7 @@
   color: var(--accent-ink);
 }
 /* The thread author's own answer mark. Jade, the platform's confirmation
-   colour, so it reads as settled rather than merely popular. */
+   colour, so it reads as settled, a step past popular. */
 .acceptedBadge {
   display: inline-flex;
   align-items: center;
@@ -426,7 +431,7 @@
   margin-bottom: 3px;
 }
 /* Wraps the like + reply actions with `gap` (not per-child margins) so the
- * row's own top spacing is set once, here, instead of on each button. */
+ * row's own top spacing is set once, here, on the row. */
 .replyActions {
   display: flex;
   align-items: center;
@@ -490,8 +495,8 @@
   padding: 18px 20px;
 }
 
-/* Locked-thread banner — the plum-panel pattern standing in for the composer
-   when replies are closed. Warm, not punitive: the thread stays fully readable
+/* Locked-thread banner: the plum-panel pattern standing in for the composer
+   when replies are closed. Warm in tone: the thread stays fully readable
    above it. */
 .lockedBanner {
   display: flex;
@@ -646,8 +651,21 @@
   margin: 0;
 }
 .draftStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: var(--text-12);
   color: var(--ink-60);
+}
+/* A failed save is the one reading the member must notice: danger ink plus an
+   alert icon, so the words are never carried by colour alone. */
+.draftStatus[data-state="failed"] {
+  color: var(--danger);
+}
+.draftStatus svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
 }
 /* A published photo, under an opening post or a reply. */
 .postImage {
@@ -695,7 +713,7 @@
   margin-top: 12px;
 }
 
-/* Zero-height scroll marker for progressive windowing — reveals the next
+/* Zero-height scroll marker for progressive windowing: reveals the next
    batch of top-level reply trees as it nears the viewport. Never occupies
    visual space. Mirrors MemberDirectoryFilterPage.module.css's `.sentinel`. */
 .sentinel {
@@ -704,7 +722,7 @@
 
 /* ── Nested replies: indent, thread-line, collapse/continue affordances ── */
 
-/* One reply + its subtree. Depth 0 stays flush-left (no line, no indent —
+/* One reply + its subtree. Depth 0 stays flush-left (no line, no indent;
  * the indent itself is applied inline via marginLeft, clamped in TSX). */
 .replyNode {
   position: relative;
@@ -713,7 +731,7 @@
 /* Left rail marking "this is a reply to the item above/left of it," drawn
  * only past depth 0. Reuses the same hairline token as every other border
  * in this file (`--line-rgb`), just at a slightly lower opacity so a long
- * thread's rails stay quiet rather than competing with content. */
+ * thread's rails stay quiet beside the content. */
 .threadLine {
   padding-left: 14px;
 }
@@ -777,7 +795,7 @@
   .replyReact svg {
     transition: none;
   }
-  /* Hold the "voted" heart at rest size — no scale pop on toggle. */
+  /* Hold the "voted" heart at rest size, with no scale pop on toggle. */
   .replyReactOn svg {
     transform: none;
   }
@@ -786,7 +804,7 @@
 /* ── Link unfurl card (PRD-171) ──
    Sits under a post body (the opening post or any reply) for the FIRST link it
    carries. Horizontal on anything wider than a phone so it reads as a citation
-   rather than a second post; stacks below that. Tokens only, and every colour
+   and sits apart from the posts; stacks below that. Tokens only, and every colour
    here flips in dark mode: --paper, --ink, --ink-60 and --line-rgb all do, and
    --accent-ink is the coral tuned for small text. */
 .linkPreview {
@@ -962,7 +980,7 @@
   color: var(--ink-40);
 }
 /* Only a moderator ever sees this: the real author beside the fact that the
-   room does not. Quiet, because it marks a state rather than a problem. */
+   room does not. Quiet, because it marks a state and nothing is wrong. */
 .anonMark {
   display: inline-flex;
   align-items: center;
@@ -1006,10 +1024,11 @@
   height: 13px;
 }
 
-/* ── The author's own view of a thread the forum cannot see yet ────────────
-   Scheduled, or waiting on the editors. A cream-tinted panel rather than the
-   plum one: this is a status the author already chose, so it reassures rather
-   than announces. */
+/* ── A thread the forum cannot see yet ─────────────────────────────────────
+   Scheduled, waiting on the editors, or sent back. The author reads it in
+   their own voice; a moderator arriving from Forum review reads a neutral
+   one with a link back to the queue. A soft amber-tinted panel: it marks a
+   status and reassures quietly. */
 .stateNotice {
   display: flex;
   align-items: flex-start;
@@ -1041,12 +1060,23 @@
   line-height: var(--lh-body);
   color: var(--ink-60);
 }
+/* The moderator's way back to the queue, where approve and decline live.
+   Underlined, so it reads as a link without leaning on colour. */
+.stateNoticeLink {
+  color: var(--text-strong);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 @media (hover: hover) and (pointer: fine) {
   .warningReveal:hover {
     color: var(--accent-ink);
   }
   .coAuthor:hover {
+    color: var(--accent-ink);
+  }
+  .stateNoticeLink:hover {
     color: var(--accent-ink);
   }
 }

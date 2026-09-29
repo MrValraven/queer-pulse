@@ -11,6 +11,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCardHolders, useReplaceCardCode } from "./api/useCardHolders";
 import { CardHolderActions, type PendingCardStatus } from "./CardHolderActions";
+import { cardHolderName } from "./cardHolderName";
 import { CardHolderCardModal } from "./CardHolderCardModal";
 import { CardHolderStatusModal } from "./CardHolderStatusModal";
 import { CardPrintToolbar } from "./CardPrintToolbar";
@@ -37,6 +38,7 @@ function CardHolderRow({
   onToggleSelected: (cardId: string) => void;
 }) {
   const { t } = useTranslation();
+  const holderName = cardHolderName(holder.holderName, t);
 
   return (
     <li className={styles.row}>
@@ -48,9 +50,7 @@ function CardHolderRow({
         type="button"
         className={styles.rowOpen}
         onClick={() => onOpen(holder.id)}
-        aria-label={t("cards:holders.viewCardAria", {
-          name: holder.holderName,
-        })}
+        aria-label={t("cards:holders.viewCardAria", { name: holderName })}
       />
       {/* Outside the stretched overlay button and above it in the stacking
           order (see `.selectBox` in the CSS), so ticking a card for printing
@@ -61,19 +61,17 @@ function CardHolderRow({
           className={styles.selectBox}
           checked={isSelected}
           onChange={() => onToggleSelected(holder.id)}
-          aria-label={t("cards:holders.selectAria", {
-            name: holder.holderName,
-          })}
+          aria-label={t("cards:holders.selectAria", { name: holderName })}
         />
       ) : null}
       <Avatar
         src={holder.avatarUrl ?? undefined}
-        initials={initialsFromName(holder.holderName, "?")}
-        name={holder.holderName}
+        initials={initialsFromName(holder.holderName ?? "", "?")}
+        name={holderName}
         size={40}
       />
       <div className={styles.identity}>
-        <p className={styles.name}>{holder.holderName}</p>
+        <p className={styles.name}>{holderName}</p>
         <p className={styles.serial}>{holder.serial}</p>
         {holder.revokedReason ? (
           <p className={styles.reason}>{holder.revokedReason}</p>
@@ -137,12 +135,14 @@ export function CardHoldersPanel({
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return holders;
+    // Matches the name as printed, so a holder shown under the fallback name
+    // is found by it too.
     return holders.filter(
       (holder) =>
-        holder.holderName.toLowerCase().includes(needle) ||
+        cardHolderName(holder.holderName, t).toLowerCase().includes(needle) ||
         holder.serial.toLowerCase().includes(needle),
     );
-  }, [holders, query]);
+  }, [holders, query, t]);
 
   const activeHolders = useMemo(
     () => holders.filter((holder) => holder.status === "active"),
@@ -277,7 +277,7 @@ export function CardHoldersPanel({
                 onSuccess: () => {
                   showToast(
                     t("cards:holders.replaceToast", {
-                      name: holder.holderName,
+                      name: cardHolderName(holder.holderName, t),
                     }),
                     "success",
                   );

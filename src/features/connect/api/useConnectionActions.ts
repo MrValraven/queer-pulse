@@ -145,6 +145,11 @@ export function useConnectionActions() {
         await replyToConnectionRequest(ref.id, body);
         invalidate();
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+        // A DM opened past the loaded inbox pages reads its gate from its
+        // detail entry; only an entry on screen refetches.
+        void queryClient.invalidateQueries({
+          queryKey: ["conversation-detail"],
+        });
         return true;
       } catch (error) {
         rollback(prev, error);
@@ -212,6 +217,8 @@ export function useConnectionActions() {
     void queryClient.invalidateQueries({ queryKey: ["profile"] });
     void queryClient.invalidateQueries({ queryKey: ["profile-mutuals"] });
     void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    // The DM's detail entry carries the same gate for a thread opened by id.
+    void queryClient.invalidateQueries({ queryKey: ["conversation-detail"] });
   }, [invalidate, queryClient]);
 
   /**

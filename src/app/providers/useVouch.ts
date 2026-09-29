@@ -14,8 +14,16 @@ export interface VouchContextValue {
   hasVouched: (slug: string) => boolean;
   /** Open the vouch modal addressed to a member slug. */
   openVouch: (slug: string) => void;
-  /** Withdraw an existing vouch for a member slug. */
-  removeVouch: (slug: string) => void;
+  /**
+   * Withdraw an existing vouch for a member slug. `onSettled`, when given,
+   * fires once the server confirms or rejects the withdrawal (`true`/`false`),
+   * so a caller can wait for the real outcome before telling the member it
+   * worked, the `toggleBlock`-style pattern PRD-202 already uses for block.
+   */
+  removeVouch: (
+    slug: string,
+    onSettled?: (didSucceed: boolean) => void,
+  ) => void;
 }
 
 /**

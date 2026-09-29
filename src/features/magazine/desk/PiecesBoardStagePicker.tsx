@@ -1,22 +1,32 @@
 import { useId } from "react";
+import { FiClock, FiGlobe } from "react-icons/fi";
 import { Select } from "../../../shared/components/ui";
 import { viewStageLabelKey } from "./stageLabels";
+import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece, Stage } from "../data/desk.data";
+import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
 import styles from "./PiecesBoard.module.css";
 
 export interface PiecesBoardStagePickerProps {
   piece: Piece;
   stages: Stage[];
   onMove: (piece: Piece, stage: Stage) => void;
-  /** The card title's id: `Select`'s trigger takes it as its own description
-   *  (with the Published lock reason added, once it applies), the same
-   *  `aria-describedby` pattern `PieceRowNextAction.tsx` uses, so a screen
-   *  reader hears "Move stage" (or the locked reason) followed by this
-   *  card's own piece title, naming which card each identical trigger
-   *  belongs to. */
+  /** The card title's id: `Select`'s trigger takes it as its own description,
+   *  the same `aria-describedby` pattern `PieceRowNextAction.tsx` uses, so a
+   *  screen reader hears "Move stage" followed by this card's own piece
+   *  title, naming which card each identical trigger belongs to. */
   titleId: string;
 }
+
+/** Short day and month plus an unpadded hour: it has to fit a card about
+ *  200px wide. */
+const GOES_LIVE_FORMAT: Intl.DateTimeFormatOptions = {
+  day: "numeric",
+  month: "short",
+  hour: "numeric",
+  minute: "2-digit",
+};
 
 /**
  * The card's stage picker: the keyboard and screen-reader path for the same
@@ -29,12 +39,17 @@ export interface PiecesBoardStagePickerProps {
  *   and sensitivity gate. `PATCH /magazine/admin/pieces/:id` refuses
  *   `stage: 'published'` outright (see `PIECE_STAGES` in the backend's
  *   `update-piece.dto.ts`), so offering it would only hand the editor a 400.
- * - A Published piece gets the whole picker disabled. A plain stage update
- *   leaves the article live (it skips the `publishedAt` clearing that
- *   Unpublish does), so moving it back belongs to the piece record's
- *   Unpublish. A visually hidden line says so to screen readers.
- * The Published option IS kept, disabled, for a piece already there, so its
- * picker shows "Published" in place of the empty "Select…" placeholder.
+ * - A Published piece shows a static status line in the picker's slot. A
+ *   plain stage update leaves the article live (it skips the `publishedAt`
+ *   clearing that Unpublish does), so moving it back belongs to the piece
+ *   record's Unpublish.
+ * - A piece with a publish date (`hasPublishDate`) gets the same line,
+ *   whatever its stage. A scheduled one waits at Ready for its date ("Goes
+ *   live {date}"); a live one (date passed, stage not yet Published) is
+ *   public already ("Live on the site").
+ * The line is plain text, so sighted readers see it and screen readers reach
+ * it in reading order. Its accessible description is the way out: unschedule
+ * or unpublish on the piece record.
  * Dragging follows the same rule (`canDropOnStage` in `useBoardDrag.ts`).
  */
 export function PiecesBoardStagePicker({
@@ -44,9 +59,33 @@ export function PiecesBoardStagePicker({
   titleId,
 }: PiecesBoardStagePickerProps) {
   const { t } = useTranslation();
+  const format = useFormat();
   const lockedReasonId = useId();
-  const isPublished = piece.stage === "Published";
-  const describedBy = isPublished ? `${lockedReasonId} ${titleId}` : titleId;
+  const isLocked = piece.stage === "Published" || hasPublishDate(piece);
+
+  if (isLocked) {
+    const isScheduled = isPieceScheduled(piece);
+    const StatusIcon = isScheduled ? FiClock : FiGlobe;
+    const statusText =
+      isScheduled && piece.publishedAt
+        ? t("magazine:desk.board.goesLive", {
+            date: format.date(new Date(piece.publishedAt), GOES_LIVE_FORMAT),
+          })
+        : t("magazine:desk.board.liveOnSite");
+    return (
+      <p className={styles.stageLocked} aria-describedby={lockedReasonId}>
+        <StatusIcon aria-hidden="true" className={styles.stageLockedIcon} />
+        <span>{statusText}</span>
+        <span id={lockedReasonId} className="visuallyHidden">
+          {t(
+            isScheduled
+              ? "magazine:desk.board.unscheduleToMove"
+              : "magazine:desk.board.unpublishToMove",
+          )}
+        </span>
+      </p>
+    );
+  }
 
   return (
     <div className={styles.stagePicker}>
@@ -54,24 +93,17 @@ export function PiecesBoardStagePicker({
         size="sm"
         value={piece.stage}
         label={t("magazine:desk.board.moveStageAria")}
-        disabled={isPublished}
-        aria-describedby={describedBy}
+        aria-describedby={titleId}
         onChange={(value) => {
           if (value) onMove(piece, value as Stage);
         }}
         options={stages
-          .filter((option) => option !== "Published" || isPublished)
+          .filter((option) => option !== "Published")
           .map((option) => ({
             value: option,
             label: t(viewStageLabelKey(option)),
-            disabled: option === "Published",
           }))}
       />
-      {isPublished && (
-        <span id={lockedReasonId} className="visuallyHidden">
-          {t("magazine:desk.board.unpublishToMove")}
-        </span>
-      )}
     </div>
   );
 }

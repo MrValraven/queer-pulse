@@ -26,8 +26,20 @@
 }
 
 .chipText {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The first name customers will see (ENG-456). It never shortens: when the
+   chip runs out of room, the mailbox name before it takes the ellipsis. */
+.chipNaming {
+  flex: none;
+  padding-left: 6px;
+  border-left: 1px solid var(--line);
+  color: var(--ink-60);
+  font-weight: 400;
   white-space: nowrap;
 }
 

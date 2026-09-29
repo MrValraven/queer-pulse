@@ -50,6 +50,16 @@
   box-shadow: var(--ring-plum-soft);
 }
 
+/* While the clear control shows, the text stops short of it: 44px is the
+   control's hit area, measured from the field's end edge. */
+.wrap:has(.clear) .input {
+  padding-inline-end: var(--tap-min);
+}
+
+/* The disc stays 22px on the button itself, so callers that restyle it
+   (AdminShell's plum rail search tints this button) keep working. The
+   `::after` grows the hit area to --tap-min around the disc, the base.css
+   `tap-target` pattern, and paints nothing. */
 .clear {
   position: absolute;
   right: 12px;
@@ -62,7 +72,18 @@
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--ink-60);
   cursor: pointer;
+  touch-action: manipulation;
   transition: background 0.16s var(--ease);
+}
+.clear::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  background: transparent;
 }
 @media (hover: hover) {
   .clear:hover {

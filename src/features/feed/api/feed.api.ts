@@ -73,11 +73,14 @@ export interface FeedItem extends ContractFeedItem {
   reason?: FeedReason;
   /** The community, person or topic `reason` names, ready to render. */
   reasonSubject?: string | null;
-  /** Likes on a `community_post` — the counter the inline action toggles. */
+  /** Likes on a `community_post`, or a `forum_thread`'s opening-post vote
+   *  count (FEED-LIKE), the counter the inline action toggles. */
   reactionCount?: number;
   /** Replies on a `community_post`, or a `forum_thread`'s stored count. */
   replyCount?: number;
-  /** The viewer's own reaction key, or null when they haven't reacted. */
+  /** The viewer's own reaction key, or null when they haven't reacted.
+   *  FEED-LIKE: also carries a `forum_thread`'s opening-post vote, `"like"`
+   *  when the viewer has upvoted the OP and null otherwise. */
   myReaction?: string | null;
   /** PRD-107, `article` only: the magazine's own furniture. `title` is the
    *  headline and `summary` the dek; these carry what the shared shape has no
@@ -91,6 +94,21 @@ export interface FeedItem extends ContractFeedItem {
    *  original where no translation exists can be told which one they got. */
   locale?: string;
   byline?: FeedArticleByline | null;
+  /** `forum_thread` only (ENG-417): which mask hides the author, or null when
+   *  the thread shows its author. When set, `actor` is null. */
+  bylineMask?: "anonymous" | "official" | null;
+  /** `forum_thread` only (FEED-LIKE): the opening post's id, the post the
+   *  card's like upvotes through `POST /forum/posts/:id/vote`. Null or absent
+   *  (an older server, a tombstoned opening post) means the card offers no
+   *  like. */
+  opPostId?: string | null;
+  /** `forum_thread` only (DES-404): the author's content warnings, which
+   *  cover the excerpt until the reader reveals it. */
+  contentWarnings?: string[];
+  /** `forum_thread` only (ENG-420): the raw category key, translated on the
+   *  card. Absent from an older server, which the card reads as "use
+   *  `summary`". */
+  category?: string;
   // PRD-167's `excerpt` (a `forum_thread`'s opening post) is inherited from the
   // shared contract, which is where it is documented.
 }

@@ -4,6 +4,7 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { patchConversationRow } from "../../../shared/api/messageCache";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   acceptGroupInvite,
@@ -14,6 +15,7 @@ import {
 } from "./messages.api";
 import { conversationToView } from "./messages.adapters";
 import { GROUP_INVITES_KEY } from "./useGroupInvites";
+import { patchConversationInList } from "./useMessageMutations";
 import type { Conversation } from "../data";
 
 /**
@@ -56,9 +58,12 @@ export function useJoinGroupByToken() {
       const dto = await joinGroupByToken(token);
       return conversationToView(dto, t);
     },
-    onSuccess: () => {
+    onSuccess: (joined) => {
       void queryClient.invalidateQueries({ queryKey: ["group-join-preview"] });
       if (demoMode) return;
+      // A detail entry cached from before (a thread the member had left and
+      // opened by link) takes the fresh seat at once; the list has no row yet.
+      if (joined) patchConversationInList(queryClient, joined);
       void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
     meta: { silentError: true },
@@ -86,6 +91,7 @@ export function useAcceptGroupInvite() {
         return;
       }
       if (!joined) return;
+      patchConversationInList(queryClient, joined);
       void queryClient.invalidateQueries({ queryKey: ["conversations"] });
       void queryClient.invalidateQueries({ queryKey: [GROUP_INVITES_KEY] });
     },
@@ -142,7 +148,8 @@ function removeCachedGroupInvite(
 
 /** DELETE /conversations/:id/invites/:inviteId: owner/admin revokes a
  *  pending invite before it's answered. Patches the cached row's own
- *  `pendingInvites` in place (no full `Conversation` in the 204 response for
+ *  `pendingInvites` in place, in the list and the detail entry (no full
+ *  `Conversation` in the 204 response for
  *  `patchConversationInList` to take), instead of refetching the whole inbox
  *  for a one-array change. */
 export function useRevokeGroupInvite() {
@@ -156,19 +163,15 @@ export function useRevokeGroupInvite() {
       },
       onSuccess: (_result, { conversationId, inviteId }) => {
         if (demoMode) return;
-        queryClient.setQueriesData<Conversation[]>(
-          { queryKey: ["conversations"] },
-          (previous) =>
-            previous?.map((conversation) =>
-              conversation.id === conversationId && conversation.pendingInvites
-                ? {
-                    ...conversation,
-                    pendingInvites: conversation.pendingInvites.filter(
-                      (invite) => invite.id !== inviteId,
-                    ),
-                  }
-                : conversation,
-            ),
+        patchConversationRow(queryClient, conversationId, (conversation) =>
+          conversation.pendingInvites
+            ? {
+                ...conversation,
+                pendingInvites: conversation.pendingInvites.filter(
+                  (invite) => invite.id !== inviteId,
+                ),
+              }
+            : conversation,
         );
       },
       meta: { silentError: true },

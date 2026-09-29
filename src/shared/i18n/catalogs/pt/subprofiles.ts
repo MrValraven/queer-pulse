@@ -89,6 +89,8 @@ export const subprofiles: Catalog = {
 
   "directory.narrowedNote":
     "Profissão, etiquetas e disponibilidade filtram as personas já carregadas. Mostra mais para procurar mais longe.",
+  "directory.narrowedZeroNote":
+    "Nada do que já carregámos corresponde a estes filtros. Carrega em Ver mais para continuar a procurar.",
 
   // Lembrete final do diretório (SubprofileDirectoryFooterPrompt — descoberta
   // de personas, Fase 5, Momento 2). Dispensável; texto estático, sem dados ao vivo.
@@ -644,6 +646,8 @@ export const subprofiles: Catalog = {
     "Este identificador inclui @{creator}, por isso mostraria quem está por trás desta persona. Escolhe outro.",
   "metaForm.handleRequired":
     "Uma persona independente precisa de endereço próprio. Dá-lhe um nome.",
+  "metaForm.handleRequiredPublished":
+    "Uma persona publicada precisa de um endereço. Escreve um novo, ou despublica-a para a tirar do ar.",
   "metaForm.handleIsKind":
     "“{handle}” é o que esta persona faz. Dá ao endereço um nome próprio.",
   "metaForm.visibilityLabel": "Quem pode ver",
@@ -781,6 +785,16 @@ export const subprofiles: Catalog = {
   "newModal.handleStateIsKind":
     "Dá um nome a esta persona acima. O endereço não pode ser só o ofício.",
   "newModal.toastError": "Não conseguimos começar essa agora. Tenta outra vez.",
+  // Pesquisa de ofícios acima do seletor de famílias (KindFamilyPicker).
+  "newModal.searchPlaceholder":
+    "Pesquisa ofícios, por ex. tatuagem, DJ, terapia",
+  "newModal.searchAria": "Pesquisar ofícios",
+  "newModal.searchResultCount_one": "{count} ofício encontrado",
+  "newModal.searchResultCount_other": "{count} ofícios encontrados",
+  "newModal.searchEmptyTitle": "Ainda nada com o nome “{query}”",
+  "newModal.searchEmptyDescription":
+    "Escolhe o ofício mais próximo do teu. Depois de entrares, podes mudar o nome da persona e moldar cada secção.",
+  "newModal.searchEmptyClear": "Limpar pesquisa",
 
   // Duplicar uma persona — seletor de método inicial (StartMethodPicker) e
   // seletor de fonte/modo de cópia (CopySourcePicker, CopyModePreview),
@@ -790,7 +804,6 @@ export const subprofiles: Catalog = {
   "start.copyDisabledHelper":
     "Cria primeiro uma persona para depois a poderes copiar aqui.",
   "start.template": "Por ofício",
-  "start.blank": "Em branco",
   "start.copy": "Copiar uma",
   "copy.noSources": "Ainda não tens nenhuma persona para copiar.",
   "copy.sourceLabel": "Escolhe uma persona para copiar",
@@ -805,7 +818,7 @@ export const subprofiles: Catalog = {
   // Ofícios agrupados por família (kindFamilies.data.ts) — o passo "Por
   // ofício" agrupa os 17 ofícios sob estas seis famílias de página.
   "family.stage.label": "Palco",
-  "family.stage.note": "Para ofícios que acontecem à frente de uma sala.",
+  "family.stage.note": "Para ofícios que acontecem à frente de um público.",
   "family.studio.label": "Estúdio",
   "family.studio.note": "O trabalho primeiro, as legendas depois.",
   "family.page.label": "Página",
@@ -1091,6 +1104,9 @@ export const subprofiles: Catalog = {
     "Esta persona ainda não tem endereço, por isso não há nada para partilhar.",
   "share.noAddressAria":
     "Partilhar esta persona. Indisponível até ter um endereço.",
+  "share.draftAria": "Partilhar esta persona. Indisponível até ser publicada.",
+  "share.draftNotLive":
+    "Esta persona ainda é um rascunho, por isso o link ainda não abre para mais ninguém. Publica-a para a partilhares.",
   "share.copied": "Link copiado",
   "share.copyFailed":
     "O teu navegador não nos deixou copiar. O link está aqui, seleciona-o e copia-o à mão.",
@@ -1288,6 +1304,8 @@ export const subprofiles: Catalog = {
     "Vais perder a capacidade de a editar. Os outros responsáveis mantêm tudo como está.",
   "owners.leaveModalBodyCreator":
     "Deixas de a poder editar. Quem partilha a persona há mais tempo passa a ser responsável por ela e pode mudar o endereço ou a visibilidade, ou eliminá-la.",
+  "owners.leaveModalBodyCreatorHandleNamed":
+    "Deixas de a poder editar. Quem partilha a persona há mais tempo passa a ser responsável por ela. Como /p/{handle} inclui @{creator}, a persona passa para um endereço com o nome dessa pessoa, e os links para /p/{handle} deixam de funcionar.",
   "owners.leaveModalKeep": "Ficar",
   "owners.leaveModalConfirm": "Sair",
   "owners.leaveModalLeaving": "A sair…",
@@ -1313,6 +1331,7 @@ export const subprofiles: Catalog = {
   "invite.toastSent":
     "Convite enviado. A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
   "invite.toastError": "Não conseguimos enviar esse convite. Tenta outra vez.",
+  "invite.toastBlocked": "Não podes convidar este membro. Tenta outra pessoa.",
 
   // Modal de convite a um responsável — etapa de confirmação/aviso (IDN-2):
   // aparece antes de o convite ser mesmo enviado, para que aceitar um convite
@@ -1344,6 +1363,7 @@ export const subprofiles: Catalog = {
   "invites.toastAccepted": "Agora és responsável conjunta de {name}",
   "invites.toastAcceptError":
     "Não conseguimos aceitar esse convite. Tenta outra vez.",
+  "invites.toastAcceptBlocked": "Este convite já não está disponível.",
   "invites.toastDeclined": "Convite recusado",
   "invites.toastDeclineError":
     "Não conseguimos recusar esse convite. Tenta outra vez.",
@@ -1702,6 +1722,7 @@ export const subprofiles: Catalog = {
   // persona dentro do próprio editor.
   "editorPreview.label": "Pré-visualização ao vivo",
   "editorPreview.openLive": "Abrir ao vivo",
+  "editorPreview.openDraftPage": "Abrir página do rascunho",
   // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
   "editorPreview.device.label": "Tamanho da pré-visualização",
   "editorPreview.device.mobile": "Telemóvel",
@@ -1848,12 +1869,33 @@ export const subprofiles: Catalog = {
     "Esta persona sai de {from}. Recebe o novo endereço assim que escolheres um identificador.",
   "addressWarning.oldLinksDie":
     "Os links antigos para {path} deixam de funcionar",
+  "addressWarning.renameOldLinksForward":
+    "Os links para {path} reencaminham para o novo endereço durante 30 dias, depois deixam de funcionar",
   "addressWarning.handleReleased":
-    "O teu identificador volta a ficar disponível. Qualquer pessoa o pode reclamar",
+    "O teu identificador fica reservado durante 30 dias, até para ti, e depois qualquer pessoa o pode reclamar",
   "addressWarning.followersKept":
     "Os teus seguidores e as tuas recomendações mantêm-se exatamente como estão",
   "addressWarning.cancel": "Manter o endereço atual",
   "addressWarning.confirm": "Mudar endereço",
+  "addressWarning.unlinkLossTitle":
+    "Os teus seguidores e as tuas recomendações são removidos de vez",
+  "addressWarning.unlinkLossTitleCounts":
+    "{followers} e {endorsements} são removidos de vez",
+  "addressWarning.unlinkLossBody":
+    "Assim, nada liga o novo endereço a ti. Isto não pode ser desfeito.",
+  "addressWarning.unlinkBackToDraft":
+    "Volta a ser rascunho até escolheres um novo identificador e a publicares outra vez",
+  "addressWarning.confirmUnlink": "Mudar e remover seguidores",
+  "addressWarning.renameNoticeTitle":
+    "A tua página passa para {to} assim que confirmares",
+  "editConflict.title": "Esta persona mudou enquanto editavas",
+  "editConflict.body":
+    "Recarregar apaga o que não guardaste aqui. Copia antes o que queres manter.",
+  "editConflict.reload": "Recarregar",
+  "editConflict.reloading": "A recarregar…",
+  "editConflict.reloadedToast": "Carregámos a versão guardada mais recente.",
+  "editConflict.reloadFailed":
+    "Não deu para recarregar. Verifica a ligação e tenta outra vez.",
 
   // Painel de publicação — extras (SubprofilePublishPanel) — a linha de
   // eliminar na zona de perigo. A estimativa que aqui estava desapareceu: o
@@ -1920,6 +1962,12 @@ export const subprofiles: Catalog = {
     "Esta persona precisa de um endereço. Adiciona-o no separador Endereço.",
   "pending.blockedHandleKind":
     "O endereço precisa de um nome próprio. Muda-o no separador Endereço.",
+  "pending.blockedHandleMissingHere":
+    "Esta persona precisa de um endereço. Escreve um no campo do endereço.",
+  "pending.blockedHandleKindHere":
+    "O endereço precisa de um nome próprio. Muda-o no campo do endereço.",
+  "pending.blockedHandleHere":
+    "Esse endereço já está em uso. Escolhe outro no campo do endereço.",
   "newModal.toastHandleClaimFailed":
     "Esse identificador foi reservado agora mesmo. Mantivemos esta persona associada ao teu perfil por enquanto. Podes reclamar um novo endereço no editor.",
   "newModal.toastAffiliationsDropped_one":
@@ -1963,6 +2011,8 @@ export const subprofiles: Catalog = {
   "therapist.firstSession.heading": "O que *realmente* acontece",
   "therapist.vouches.label": "Votos de confiança da comunidade",
   "therapist.vouches.heading": "Pessoas que *realmente* trabalharam com {name}",
+  "therapist.vouches.headingHidden":
+    "Quem deu votos de confiança fica em privado",
   "therapist.vouches.count_one": "Com o voto de confiança de {count} membro",
   "therapist.vouches.count_other": "Com votos de confiança de {count} membros",
   "therapist.vouches.quiet_one":
@@ -2355,6 +2405,9 @@ export const subprofiles: Catalog = {
   "therapist.hero.facts.feesFromSliding":
     "a partir de {lowest}€ · escala variável {min}–{max}€",
   "therapist.hero.facts.feesSlidingOnly": "Escala variável {min}–{max}€",
+  "therapist.hero.registration": "{number} (autodeclarado)",
+  "therapist.hero.registrationNote":
+    "A QueerPulse não verifica números de cédula profissional. Podes confirmá-lo junto da entidade que o emitiu.",
   // Therapist editor chapters (pass 1)
   "skinBlock.therapist.chapter.basics.title": "O essencial",
   "skinBlock.therapist.chapter.basics.lede":

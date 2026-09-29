@@ -1,5 +1,6 @@
 import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
 import { AccessTierBadge } from "./CommunityBadges";
@@ -16,10 +17,12 @@ export function CommunityCard({
   onJoin: (c: Community) => void;
 }) {
   const { t } = useTranslation();
-  const living = getLiving(community.slug);
-  // living data (flagship demo) → the card DTO's join policy (live + created) →
-  // legacy `privateBadge` fallback. Consulting `community.accessTier` is what
-  // keeps invite/request cards from showing an "Open to all" badge + public join.
+  const { demoMode } = useDemoMode();
+  const living = demoMode ? getLiving(community.slug) : undefined;
+  // Live trusts the card's own DTO tier. The mock living registry is a demo
+  // fixture and would otherwise describe a real community whose slug happens
+  // to match one of the prototype's (an instant-join door on a space that
+  // actually reviews requests, or the reverse).
   const tier =
     living?.accessTier ??
     community.accessTier ??
@@ -53,8 +56,9 @@ export function CommunityCard({
       coverImageUrl={coverImageUrl}
       /* The community's own square mark, on the same terms as the cover: only
          the live card DTO carries one, so a demo card and a live community that
-         set none draw no mark at all rather than a placeholder. Read off the
-         view-model, never off `living` — `getLiving` is the demo registry. */
+         set none draw no mark at all. A placeholder mark would misrepresent an
+         unset one. Always read off the view-model: `getLiving` is a demo
+         registry, gated on `demoMode` above. */
       avatarImageUrl={community.avatarImageUrl}
       tags={community.tags}
       roster={roster}
@@ -62,9 +66,9 @@ export function CommunityCard({
         .filter(Boolean)
         .join(" ")}
       badge={
-        /* Once you're in, the access tier has stopped being news — the badge
-           slot says so instead, which is the only thing that distinguishes
-           your own communities' cards on the "My communities" tab. */
+        /* Once you're in, the access tier has stopped being news. The badge
+           slot says so: it is the only thing that distinguishes your own
+           communities' cards on the "My communities" tab. */
         joined ? (
           <span className={styles.inBadge}>
             <FiCheck aria-hidden /> {t("communities:card.youreIn")}
@@ -74,7 +78,10 @@ export function CommunityCard({
         )
       }
       footAction={
-        joined ? (
+        // A card with no slug has no community to join: the wizard it would
+        // open has nothing to submit to, and can only end on a generic
+        // failure. Render no control here, since nothing it does could work.
+        !community.slug ? undefined : joined ? (
           <span className={[styles.joinBtn, styles.joined].join(" ")}>
             <FiCheck aria-hidden /> {t("communities:card.joined")}
           </span>

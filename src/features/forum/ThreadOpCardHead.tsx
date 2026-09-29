@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+import { useRef } from "react";
 import { FiEyeOff } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
 import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
-import { authorHref, isMaskedByline, memberPath } from "./forumAuthor.helpers";
+import { authorHref, isMaskedByline } from "./forumAuthor.helpers";
 import { ModeratorByline } from "./ThreadReplies";
 import { PostActionsMenu } from "./PostActionsMenu";
+import { ThreadCoAuthorCredit } from "./ThreadCoAuthorCredit";
+import { useCoAuthorCreditRemoval } from "./useCoAuthorCreditRemoval";
 import styles from "./ThreadPage.module.css";
 
 /**
@@ -20,7 +22,7 @@ import styles from "./ThreadPage.module.css";
  * masked by the server: an empty handle, which is what makes the name link
  * nowhere. A MODERATOR receives the real author instead, with `isAnonymous`
  * still true beside it, because anonymity is a rendering decision for the room
- * rather than a gap in the record. Both of those are drawn exactly as they
+ * and the record itself stays whole. Both of those are drawn exactly as they
  * arrive. Nothing here re-derives who is allowed to see whom: a second copy of
  * that rule is a second thing to keep in step with the first.
  *
@@ -64,10 +66,14 @@ export function ThreadOpCardHead({
     CAT_STYLE[thread.category]?.color ?? "var(--text-strong)";
 
   // The server masked this byline: no handle came back, so there is nobody to
-  // link to and the name it did send is a placeholder rather than a person.
+  // link to and the name it did send is a placeholder.
   const isMasked = isMaskedByline(thread);
   const anonymousName = t("forum:composePage.preview.anonymousName");
   const displayName = isMasked ? anonymousName : thread.author.name;
+  // The byline row outlives the co-author's menu item, so focus lands here
+  // once its confirm closes (PRD-408).
+  const bylineRef = useRef<HTMLDivElement>(null);
+  const coAuthorRemoval = useCoAuthorCreditRemoval({ thread, bylineRef });
 
   return (
     <div className={styles.opHead}>
@@ -96,8 +102,8 @@ export function ThreadOpCardHead({
           }}
         />
       </ProfileLink>
-      <div>
-        <div className={styles.opName}>
+      <div className={styles.opHeadText}>
+        <div className={styles.opName} ref={bylineRef} tabIndex={-1}>
           <ProfileLink
             to={authorHref(thread.author)}
             name={displayName}
@@ -108,7 +114,7 @@ export function ThreadOpCardHead({
           </ProfileLink>
           {!isMasked && <MemberStaffBadge slug={thread.author.slug} />}
           {thread.author.official && <OfficialBadge />}
-          <OpCoAuthor coAuthor={thread.coAuthor} />
+          <ThreadCoAuthorCredit thread={thread} />
           {/* A moderator reading an anonymous thread sees the real author AND
               the fact that the room does not. Saying so is what stops that
               view from looking like the byline everybody else gets. */}
@@ -129,7 +135,7 @@ export function ThreadOpCardHead({
             {t("forum:threadOp.postedPrefix", { time: thread.posted })}
           </span>
           {/* Live threads carry no view count (the DTO has none), so the stat
-              is omitted entirely rather than printing "0 views". */}
+              is omitted entirely, so the line never reads "0 views". */}
           {thread.views != null && (
             <>
               <span>·</span>
@@ -167,29 +173,16 @@ export function ThreadOpCardHead({
           }}
           canMoveCategory={!!onMoveCategory}
           onMoveCategory={onMoveCategory}
+          extraActions={
+            coAuthorRemoval.action ? [coAuthorRemoval.action] : undefined
+          }
           onEdit={onEdit}
           onDelete={onDelete}
           onRestore={onRestore}
           onHistory={onHistory}
         />
+        {coAuthorRemoval.dialog}
       </div>
     </div>
-  );
-}
-
-/** The second name on a co-authored thread, linked when it carries a slug.
- *  Absent on a masked byline, which the server already guarantees: an
- *  "anonymous" thread credited to a named member is not anonymous. */
-function OpCoAuthor({ coAuthor }: { coAuthor: Thread["coAuthor"] }) {
-  const { t } = useTranslation();
-  if (!coAuthor) return null;
-  const label = t("forum:composePage.preview.withCoAuthor", {
-    name: coAuthor.name,
-  });
-  if (!coAuthor.slug) return <span className={styles.coAuthor}>{label}</span>;
-  return (
-    <Link to={memberPath(coAuthor.slug)} className={styles.coAuthor}>
-      {label}
-    </Link>
   );
 }

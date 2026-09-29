@@ -74,6 +74,10 @@ export function CommunityDetailDialogs({ state }: { state: ReadyState }) {
           tier={tier}
           isInvited={isInvited}
           parentName={living?.parent?.name}
+          // On a space's own page, "join the parent first" links to the
+          // parent. The Spaces tab mounts the wizard on the parent itself and
+          // leaves the slug out.
+          parentSlug={living?.parent?.slug}
           onClose={() => setJoining(false)}
           onJoined={onJoined}
           onRequested={onRequested}

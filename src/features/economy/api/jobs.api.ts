@@ -29,8 +29,13 @@ export interface JobCardDTO {
   slug: string;
   title: string;
   company: { slug: string; nameText: string } | null;
-  category: string;
+  /** Job field id (a `JOB_FIELD_IDS` member), or null for a legacy listing. */
+  category: string | null;
+  /** Optional profession id inside `category`. */
+  profession: string | null;
+  /** Commitment id (`JobCommitmentId`). */
   commitment: string;
+  /** Seniority id (`JobSeniorityId`). */
   seniority: string;
   format: JobFormat;
   location: string;
@@ -85,7 +90,10 @@ export interface JobApplicationDTO {
 
 export interface CreateJobDto {
   title: string;
+  /** Job field id. */
   category: string;
+  /** Optional profession id; it must belong to `category`. */
+  profession?: string;
   commitment: string;
   seniority: string;
   format: JobFormat;
@@ -116,7 +124,7 @@ export interface CreateJobDto {
   companySlug?: string;
   /** …or inline-create a company when `companySlug` is omitted. */
   company?: CreateCompanyDto;
-  /** Must be true — the poster confirms the Code of Care. */
+  /** Must be true: the poster confirms the Code of Care. */
   agreement: boolean;
 }
 
@@ -143,6 +151,8 @@ export interface CreateJobDto {
 export interface UpdateJobDto {
   title?: string;
   category?: string;
+  /** `null` clears the profession. */
+  profession?: string | null;
   commitment?: string;
   seniority?: string;
   format?: JobFormat;
@@ -176,7 +186,10 @@ export interface CreateJobApplicationDto {
 
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
-/** GET /jobs?cat=&type=&page= — `cat` filters category, `type` filters commitment. */
+/**
+ * GET /jobs?cat=&type=&page=. `cat` is a comma-separated list of job field ids
+ * (the server matches any of them); `type` filters commitment.
+ */
 export async function getJobs(
   params: { cat?: string; type?: string; page?: number } = {},
 ) {
@@ -191,9 +204,9 @@ export async function getJobs(
   return toItemsPage(res);
 }
 
-/** GET /jobs/:slug — accepts an `AbortSignal` (react-query forwards its
+/** GET /jobs/:slug accepts an `AbortSignal` (react-query forwards its
  *  `queryFn` signal here) so navigating away from a job detail page mid-fetch
- *  cancels the underlying request instead of letting it run to completion. */
+ *  cancels the underlying request. */
 export const getJob = (slug: string, signal?: AbortSignal) =>
   apiGet<JobDetailDTO>(`/jobs/${slug}`, undefined, undefined, signal);
 
@@ -246,7 +259,7 @@ export const applyToJob = (slug: string, dto: CreateJobApplicationDto) =>
   apiPost<JobApplicationDTO>(`/jobs/${slug}/applications`, dto);
 
 /**
- * GET /me/applications — the authenticated member's own job applications,
+ * GET /me/applications: the authenticated member's own job applications,
  * newest first. Backs `useMyApplications` (the Application Status tracker). The
  * backend hand-maps each row to `JobApplicationDTO` (no column leaks) and the
  * set is naturally bounded to one member's own applications.
@@ -262,7 +275,7 @@ export const getMyApplications = () =>
 export type JobApplicationDecision = "reviewing" | "accepted" | "declined";
 
 /**
- * GET /jobs/:slug/applications — the poster's view of who applied to their own
+ * GET /jobs/:slug/applications: the poster's view of who applied to their own
  * listing. Poster only: 403 for anyone else, 404 for an unknown slug. Bounded
  * server-side to the standard list limit.
  */
@@ -275,7 +288,7 @@ export const getJobApplications = (slug: string, signal?: AbortSignal) =>
   );
 
 /**
- * PATCH /jobs/:slug/applications/:id — the poster's decision (BE-HSG-16).
+ * PATCH /jobs/:slug/applications/:id: the poster's decision (BE-HSG-16).
  * Before this route existed every application was permanently `submitted` for
  * both sides. A decision is one-way: 409 when the application was already
  * decided (including a concurrent second decision), 403 when the caller is not

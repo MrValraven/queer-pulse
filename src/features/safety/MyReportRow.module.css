@@ -23,13 +23,34 @@
   font-weight: 600;
   color: var(--ink);
 }
+/* Facts are separated by a middle dot that must never open a line, however
+   the line wraps. Each part draws its dot in a box of --meta-dot-space
+   before it and pulls itself back over that box with a negative margin,
+   while the column gap pays the same space between parts. So every part's
+   layout width is its text alone, and the part that opens a line puts its
+   dot left of the line, where `overflow-x: clip` cuts it. Copied from the
+   same pattern in magazine/desk/DeskPulseHeader.module.css. */
 .reportMeta {
+  --meta-dot-space: 1.2em;
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
+  align-items: baseline;
+  column-gap: var(--meta-dot-space);
+  row-gap: 2px;
+  overflow-x: clip;
   font-size: var(--text-12);
   color: var(--ink-40);
+}
+.metaPart {
+  margin-inline-start: calc(-1 * var(--meta-dot-space));
+}
+/* The middle dot is decoration: the empty alt text keeps a screen reader
+   from reading it out. */
+.metaPart::before {
+  content: "\00B7" / "";
+  display: inline-block;
+  inline-size: var(--meta-dot-space);
+  text-align: center;
 }
 .reportRef {
   font-weight: 600;

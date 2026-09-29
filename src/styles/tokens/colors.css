@@ -17,6 +17,16 @@
   --plum: #2d1b3d;
   --plum-rgb: 45, 27, 61;
   --plum-deep: #241430;
+  /* A brighter plum, one step up from --plum, for a gradient highlight stop
+     that gives a plum panel a lifted look (the Badges hero). Fixed in both
+     themes, like --plum and --plum-deep. */
+  --plum-bright: #33204a;
+  /* A second, slightly lighter highlight stop for the Badges earn-moment card
+     and case card gradients, which pair straight from a bright plum to
+     --plum-deep with no --plum midpoint (unlike the hero above). Its own
+     token because the value differs from --plum-bright. Fixed in both
+     themes, like --plum-bright. */
+  --plum-vivid: #3a2553;
 
   /* ── Accent (coral / terracotta — swappable) ──
      `--accent` is the BRAND colour: fills, tints, glows, decorative marks.
@@ -249,6 +259,13 @@
   --ink-60: rgba(247, 243, 238, 0.62);
   --ink-40: rgba(247, 243, 238, 0.61);
   --jade-ink: #7cd7ad; /* on dark surfaces a lighter jade reads as "ink" */
+  /* Plum is the dark-mode paper colour, so it can't double as a category tint
+     the way it does in light mode (that would read as dark-on-dark). This
+     light lavender pairing stands in for it on dark, e.g. the Badges
+     medallion's Plum category tint. */
+  --plum-tint: #b8a2d9;
+  --plum-tint-rgb: 184, 162, 217;
+  --plum-tint-strong: #d6c7ec;
   /* These three don't flip and land badly on dark --paper #1A1030.
      See contrast-audit.md §9. */
   --danger: #e34646; /* was #B91C1C → 2.80:1. Now 4.51 paper / 4.87 cream. */

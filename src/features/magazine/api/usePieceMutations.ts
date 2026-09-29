@@ -171,11 +171,12 @@ export function usePieceMutations() {
     onSuccess: (result) => invalidateDesk(result.id),
   });
 
-  /** PATCH /magazine/admin/pieces/:id: hand a piece off to a different editor/writer. */
+  /** PATCH /magazine/admin/pieces/:id: hand a piece off to a different editor/writer.
+   *  `writerId: null` takes the writer off. */
   const assign = useMutation<
     { id: string },
     Error,
-    { id: string; editorId?: string; writerId?: string }
+    { id: string; editorId?: string; writerId?: string | null }
   >({
     mutationFn: async ({ id, editorId, writerId }) => {
       if (demoMode) {

@@ -8,12 +8,16 @@ import type {
   ReactionSummary,
 } from "../contracts/contracts";
 import {
+  groupInitials,
   lastMessageMailboxFields,
   messageDisplayText,
   previewForMessage,
   timeLabel,
   type ConversationWithPreview,
+  type LastMessageMailboxFields,
 } from "../../features/messages/api/messages.adapters";
+import type { Conversation } from "../../features/messages/data";
+import { isCaptionEditKind } from "../../features/messages/messageEditKinds";
 
 // ── Message-thread cache patches ─────────────────────────────────────────────
 // The messages page keeps HTTP authoritative but avoids a blanket
@@ -30,10 +34,13 @@ import {
 // too, so every helper here patches a demo thread and its store exactly as it
 // patches a live thread.
 
-/** One page of the infinite thread query (see `useMessageThread`). */
+/** One page of the infinite thread query (see `useMessageThread`). A page of
+ *  a PRD-401 detached history window (`features/messages/api/threadWindow.ts`)
+ *  also carries `newerCursor`, set while newer history remains unfetched. */
 interface MessagePage {
   items: MessageResponse[];
   nextCursor: string | null;
+  newerCursor?: string | null;
 }
 type ThreadData = InfiniteData<MessagePage>;
 
@@ -138,17 +145,35 @@ export function patchMessageReactionCounts(
   });
 }
 
-/** Patch an edited body + `editedAt` in place (author edit, 15-min window). */
+/** Patch an edit + `editedAt` in place (author edit, 15-min window).
+ *  `editedText` is what the author edited: the body of a text message, or
+ *  (ENG-405) the caption of a photo, document or GIF (every kind
+ *  `isCaptionEditKind` names), whose `body` stays the send-time
+ *  "Photo"/"Document"/"GIF" fallback the server also keeps. An empty
+ *  caption clears it, exactly as the server stores no caption key. A
+ *  sticker is never caption-edited, so its attachment is left as it is. */
 export function patchMessageEdit(
   queryClient: QueryClient,
   conversationId: string,
   messageId: string,
-  body: string,
+  editedText: string,
   editedAt: string,
 ): void {
-  patchThread(queryClient, conversationId, (message) =>
-    message.id === messageId ? { ...message, body, editedAt } : message,
-  );
+  patchThread(queryClient, conversationId, (message) => {
+    if (message.id !== messageId) return message;
+    if (!isCaptionEditKind(message.kind)) {
+      return { ...message, body: editedText, editedAt };
+    }
+    const attachment = message.attachment;
+    if (!attachment || "stickerId" in attachment) {
+      return { ...message, editedAt };
+    }
+    return {
+      ...message,
+      editedAt,
+      attachment: { ...attachment, caption: editedText || null },
+    };
+  });
 }
 
 /**
@@ -255,12 +280,175 @@ export function patchMessageStarred(
 // unchanged in shape from before ENG-253; only the element type widens to
 // `ConversationWithPreview`, a structural superset of `Conversation`, so
 // nothing downstream typed as `Conversation[]` even needs to change.
+//
+// ENG-403 follow-up: a thread opened past the loaded inbox pages (a search
+// hit, a starred message, a `?c=` deep link) renders from its by-id read,
+// `["conversation-detail", id, demoMode]` (`useConversationDetail`), and a
+// thread the list does hold still reads its roster and draft from there. So
+// every conversation-level patch below writes that detail entry too, through
+// `patchConversationRow`, the same way `patchConversationClaim`
+// (claimCache.ts) already did. The detail write is set-if-exists: an entry
+// that was never fetched (or is still loading) is left absent, so a patch
+// never invents a detail the server did not send. Demo mode never populates
+// the detail entry (its query is disabled there), so the detail half is a
+// no-op in demo.
+
+/** Prefix filter for one thread's detail entry, whatever its demoMode
+ *  segment. */
+function conversationDetailFilter(conversationId: string) {
+  return { queryKey: ["conversation-detail", conversationId] as const };
+}
+
+/** Apply `update` to one thread's cached detail entry. Set-if-exists: the
+ *  updater hands back `undefined` for an entry with no data, and TanStack
+ *  writes nothing for an `undefined` result, so no entry is ever created.
+ *
+ *  A manual write stamps the entry fresh (`isInvalidated: false`), which
+ *  would wipe a stale mark a socket frame, a reconnect or a delete left for
+ *  the entry's next open. So every entry that was invalidated before the
+ *  write is marked stale again right after it, with no refetch fired
+ *  (`refetchType: "none"`): the patched fields show at once, and the next
+ *  open still reads the server. */
+export function patchConversationDetail(
+  queryClient: QueryClient,
+  conversationId: string,
+  update: (conversation: ConversationWithPreview) => ConversationWithPreview,
+): void {
+  const filter = conversationDetailFilter(conversationId);
+  const staleKeys = queryClient
+    .getQueryCache()
+    .findAll(filter)
+    .filter((query) => query.state.isInvalidated)
+    .map((query) => query.queryKey);
+  queryClient.setQueriesData<ConversationWithPreview>(filter, (previous) =>
+    previous ? update(previous) : previous,
+  );
+  for (const queryKey of staleKeys) {
+    void queryClient.invalidateQueries({
+      queryKey,
+      exact: true,
+      refetchType: "none",
+    });
+  }
+}
+
+/** Apply `update` to the thread's row in every cached inbox list (each
+ *  mailbox scope has its own `["conversations", ...]` entry) and to its
+ *  detail entry, so both caches agree. A list without the thread keeps its
+ *  array identity, and every other row keeps its object identity, so nothing
+ *  re-renders that did not change. A no-op for entries that are not cached. */
+export function patchConversationRow(
+  queryClient: QueryClient,
+  conversationId: string,
+  update: (conversation: ConversationWithPreview) => ConversationWithPreview,
+): void {
+  patchConversationListRows(queryClient, conversationId, update);
+  patchConversationDetail(queryClient, conversationId, update);
+}
+
+/** The list half of `patchConversationRow`. */
+function patchConversationListRows(
+  queryClient: QueryClient,
+  conversationId: string,
+  update: (conversation: ConversationWithPreview) => ConversationWithPreview,
+): void {
+  queryClient.setQueriesData<ConversationWithPreview[]>(
+    { queryKey: ["conversations"] },
+    (previous) => {
+      if (!previous?.some((row) => row.id === conversationId)) {
+        return previous;
+      }
+      return previous.map((row) =>
+        row.id === conversationId ? update(row) : row,
+      );
+    },
+  );
+}
+
+/** Mark one thread's detail entry stale so its next read comes from the
+ *  server, for the places the list is invalidated for the same thread
+ *  (leave, a read the patch could not cover, a reconnect gap). An entry the
+ *  screen is observing refetches at once. `shouldDeferRefetch` only marks
+ *  it (`refetchType: "none"`), for a thread that is leaving the screen, so
+ *  the next open reads fresh with no request fired now. */
+export function invalidateConversationDetail(
+  queryClient: QueryClient,
+  conversationId: string,
+  shouldDeferRefetch = false,
+): Promise<void> {
+  return queryClient.invalidateQueries({
+    ...conversationDetailFilter(conversationId),
+    ...(shouldDeferRefetch ? { refetchType: "none" as const } : null),
+  });
+}
+
+/** `conversation` with its last activity taken from `activitySource`: the
+ *  same fields `withMessagePreview` below writes from a message, so keep the
+ *  two in step. Every other field (a name, a photo, a pin, a mute) stays
+ *  `conversation`'s. Keys `activitySource` lacks are copied as `undefined`,
+ *  clearing the older message's values the way a preview patch does. Lets
+ *  `mergeInboxThreads` show a newer message from one copy of a row beside a
+ *  rename that landed on another. */
+export function withLastActivityOf<ConversationRow extends Conversation>(
+  conversation: ConversationRow,
+  activitySource: Conversation,
+): ConversationRow {
+  // Typed as the interface so a new mailbox key fails to compile here.
+  const mailboxFields: LastMessageMailboxFields = {
+    lastMessageSenderIdentityId: activitySource.lastMessageSenderIdentityId,
+    lastMessageStaffFirstName: activitySource.lastMessageStaffFirstName,
+    lastMessageIsSentByViewer: activitySource.lastMessageIsSentByViewer,
+  };
+  return {
+    ...conversation,
+    preview: activitySource.preview,
+    time: activitySource.time,
+    updatedAt: activitySource.updatedAt,
+    lastMessageSenderHandle: activitySource.lastMessageSenderHandle,
+    lastMessageBody: activitySource.lastMessageBody,
+    lastMessageIsSystem: activitySource.lastMessageIsSystem,
+    ...mailboxFields,
+  };
+}
+
+/** `conversation` with `preview`/`time` and the fields behind them taken
+ *  from `message`. */
+function withMessagePreview(
+  conversation: ConversationWithPreview,
+  message: MessageResponse,
+): ConversationWithPreview {
+  return {
+    ...conversation,
+    preview: previewForMessage(!!conversation.isGroup, message),
+    time: timeLabel(message.createdAt),
+    // Keep the machine-readable instant in step with the rendered label.
+    // `time` is a frozen string ("14:32", "Yesterday"), so without this the
+    // row's age stops advancing for an actively-chatting thread and
+    // `useThreadRowTimeLabel` has nothing newer to re-derive from.
+    updatedAt: message.createdAt,
+    // DES-190: carry the raw sender/body/kind behind `preview` forward too
+    // (same fields `messages.adapters.ts` maps on load), so a live-patched
+    // send/receive doesn't leave the row's "You: " substitution and DM
+    // delivery-status tick pointing at the PREVIOUS last message until the
+    // next full inbox refetch.
+    lastMessageSenderHandle: message.sender.handle || undefined,
+    lastMessageBody: messageDisplayText(message),
+    lastMessageIsSystem: message.kind === "system",
+    // Business mailboxes: all three keys are written on every patch, so
+    // a customer message after a colleague's reply drops that colleague's
+    // name and a reply the viewer typed reads "You: " at once.
+    ...lastMessageMailboxFields(message),
+  };
+}
 
 /** Patch a conversation-list row's `preview`/`time` from a new message and
  *  move it to the top (most-recently-active-first, matching the server's own
  *  `updatedAt DESC` ordering) — instead of `invalidateQueries(["conversations"])`.
- *  A no-op if the conversation isn't in the cached list yet (a brand-new
- *  thread is picked up by `conversation:new`'s invalidate instead). */
+ *  A no-op on a list that does not hold the conversation yet (a brand-new
+ *  thread is picked up by `conversation:new`'s invalidate instead). The
+ *  thread's detail entry gets the same fields in place, so its `updatedAt`
+ *  stays what `patchConversationRead` and `isThreadCacheBehindConversation`
+ *  compare against. */
 export function patchConversationPreview(
   queryClient: QueryClient,
   conversationId: string,
@@ -272,93 +460,77 @@ export function patchConversationPreview(
       if (!previous) return previous;
       const index = previous.findIndex((c) => c.id === conversationId);
       if (index === -1) return previous;
-      const conversation = previous[index]!;
-      const updated: ConversationWithPreview = {
-        ...conversation,
-        preview: previewForMessage(!!conversation.isGroup, message),
-        time: timeLabel(message.createdAt),
-        // Keep the machine-readable instant in step with the rendered label.
-        // `time` is a frozen string ("14:32", "Yesterday"), so without this the
-        // row's age stops advancing for an actively-chatting thread and
-        // `useThreadRowTimeLabel` has nothing newer to re-derive from.
-        updatedAt: message.createdAt,
-        // DES-190: carry the raw sender/body/kind behind `preview` forward too
-        // (same fields `messages.adapters.ts` maps on load), so a live-patched
-        // send/receive doesn't leave the row's "You: " substitution and DM
-        // delivery-status tick pointing at the PREVIOUS last message until the
-        // next full inbox refetch.
-        lastMessageSenderHandle: message.sender.handle || undefined,
-        lastMessageBody: messageDisplayText(message),
-        lastMessageIsSystem: message.kind === "system",
-        // Business mailboxes: all three keys are written on every patch, so
-        // a customer message after a colleague's reply drops that colleague's
-        // name and a reply the viewer typed reads "You: " at once.
-        ...lastMessageMailboxFields(message),
-      };
+      const updated = withMessagePreview(previous[index]!, message);
       const next = previous.slice();
       next.splice(index, 1);
       next.unshift(updated);
       return next;
     },
   );
+  patchConversationDetail(queryClient, conversationId, (conversation) =>
+    withMessagePreview(conversation, message),
+  );
 }
 
-/** Patch a conversation-list row's pin state in place (`pinnedAt` ISO, or
- *  undefined when unpinned) — used by `useTogglePin`'s optimistic update in
- *  both demo and live mode, so the row floats to/from the top without an
- *  inbox refetch. A no-op if the row isn't cached. */
+/** Patch a conversation's pin state in place (`pinnedAt` ISO, or undefined
+ *  when unpinned), in the list and the detail entry. Used by
+ *  `useTogglePin`'s optimistic update in both demo and live mode, so the row
+ *  floats to/from the top without an inbox refetch. A no-op if nothing is
+ *  cached. */
 export function patchConversationPinned(
   queryClient: QueryClient,
   conversationId: string,
   pinnedAt: string | undefined,
 ): void {
-  queryClient.setQueriesData<ConversationWithPreview[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, pinnedAt }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    pinnedAt,
+  }));
 }
 
-/** Patch a conversation-list row's favorite state in place — used by
- *  `useToggleFavorite`'s optimistic update in both demo and live mode. A
- *  no-op if the row isn't cached. */
+/** Patch a conversation's favorite state in place, in the list and the
+ *  detail entry. Used by `useToggleFavorite`'s optimistic update in both
+ *  demo and live mode. A no-op if nothing is cached. */
 export function patchConversationFavorite(
   queryClient: QueryClient,
   conversationId: string,
   favorite: boolean,
 ): void {
-  queryClient.setQueriesData<ConversationWithPreview[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, favorite }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    favorite,
+  }));
 }
 
-/** Patch a conversation-list row's mute state in place — used by
- *  `useToggleMute`'s optimistic update in both demo and live mode. A no-op if
- *  the row isn't cached. */
+/** Patch a conversation's mute state in place, in the list and the detail
+ *  entry. Used by `useToggleMute`'s optimistic update in both demo and live
+ *  mode. A no-op if nothing is cached. */
 export function patchConversationMuted(
   queryClient: QueryClient,
   conversationId: string,
   muted: boolean,
 ): void {
-  queryClient.setQueriesData<ConversationWithPreview[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? { ...conversation, muted }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    muted,
+  }));
+}
+
+/** Patch a group's title (and the initials derived from it, as
+ *  `messages.adapters.ts` maps them) in the list and the detail entry, from
+ *  a `group_renamed` pill's `systemEvent.value`. The pill is the only frame
+ *  a remote rename sends, so without this the row kept the old title until
+ *  the next inbox fetch. A no-op if nothing is cached. */
+export function patchConversationTitle(
+  queryClient: QueryClient,
+  conversationId: string,
+  title: string,
+): void {
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    name: title,
+    initials: groupInitials(title),
+  }));
 }
 
 /** The newest message cached for a thread across every demoMode variant, by
@@ -445,36 +617,76 @@ export function isThreadCacheBehindConversation(
  *  read locally while the server still counts it unread. It only ever moves
  *  forward.
  *
+ *  The thread's detail entry is patched by the same rule, and counts toward
+ *  the result like any list row.
+ *
  *  Returns true when every cached row for this conversation was fully
  *  covered (unread cleared, or no row was cached at all); false when at
  *  least one cached row's newest message is newer than `readThrough`, the
- *  caller's signal to invalidate `["conversations"]` for a real resync. */
+ *  caller's signal to resync. `patchConversationReadCoverage` below says
+ *  which cache fell short, so the caller refetches only that one. */
 export function patchConversationRead(
   queryClient: QueryClient,
   conversationId: string,
   readThrough: string,
 ): boolean {
-  let isFullyCovered = true;
-  queryClient.setQueriesData<ConversationWithPreview[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) => {
-        if (conversation.id !== conversationId) return conversation;
-        const isReadThroughCurrent =
-          !conversation.updatedAt || readThrough >= conversation.updatedAt;
-        if (!isReadThroughCurrent) isFullyCovered = false;
-        return {
-          ...conversation,
-          markedUnreadAt: undefined,
-          ...(isReadThroughCurrent ? { unread: false, unreadCount: 0 } : null),
-          myLastReadAt:
-            conversation.myLastReadAt && conversation.myLastReadAt > readThrough
-              ? conversation.myLastReadAt
-              : readThrough,
-        };
-      }),
+  const coverage = patchConversationReadCoverage(
+    queryClient,
+    conversationId,
+    readThrough,
   );
-  return isFullyCovered;
+  return coverage.isListCovered && coverage.isDetailCovered;
+}
+
+/** Which caches a read watermark fully covered, reported per cache. */
+export interface ConversationReadCoverage {
+  /** Every cached inbox row for the thread (true when none is cached). */
+  isListCovered: boolean;
+  /** The thread's detail entry (true when it is not cached). */
+  isDetailCovered: boolean;
+}
+
+/** `patchConversationRead`'s patch, reporting coverage per cache. A thread
+ *  opened past the loaded inbox pages lives only in its detail entry, so a
+ *  short watermark there needs that one entry refetched and leaves the
+ *  whole inbox alone. */
+export function patchConversationReadCoverage(
+  queryClient: QueryClient,
+  conversationId: string,
+  readThrough: string,
+): ConversationReadCoverage {
+  const coverage: ConversationReadCoverage = {
+    isListCovered: true,
+    isDetailCovered: true,
+  };
+  const withRead = (
+    conversation: ConversationWithPreview,
+    onShort: () => void,
+  ): ConversationWithPreview => {
+    const isReadThroughCurrent =
+      !conversation.updatedAt || readThrough >= conversation.updatedAt;
+    if (!isReadThroughCurrent) onShort();
+    return {
+      ...conversation,
+      markedUnreadAt: undefined,
+      ...(isReadThroughCurrent ? { unread: false, unreadCount: 0 } : null),
+      myLastReadAt:
+        conversation.myLastReadAt && conversation.myLastReadAt > readThrough
+          ? conversation.myLastReadAt
+          : readThrough,
+    };
+  };
+  patchConversationListRows(queryClient, conversationId, (conversation) =>
+    withRead(conversation, () => {
+      coverage.isListCovered = false;
+    }),
+  );
+  patchConversationDetail(queryClient, conversationId, (conversation) =>
+    withRead(conversation, () => {
+      coverage.isDetailCovered = false;
+    }),
+  );
+  return coverage;
 }
 
 /** Raise a conversation-list row's unread state by ONE — used by the socket
@@ -495,25 +707,18 @@ export function patchConversationRead(
  *  features/messages/data.ts: "unread counting/badges are unaffected (mirrors
  *  WhatsApp)") — so this never branches on `muted`.
  *
- *  A no-op if the row isn't cached yet (a brand-new thread is `conversation:new`'s
- *  job instead). */
+ *  The detail entry is raised the same way (see `patchConversationRow`). A
+ *  no-op if the row isn't cached yet (a brand-new thread is
+ *  `conversation:new`'s job instead). */
 export function bumpConversationUnread(
   queryClient: QueryClient,
   conversationId: string,
 ): void {
-  queryClient.setQueriesData<ConversationWithPreview[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? {
-              ...conversation,
-              unread: true,
-              unreadCount: (conversation.unreadCount ?? 0) + 1,
-            }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    unread: true,
+    unreadCount: (conversation.unreadCount ?? 0) + 1,
+  }));
 }
 
 /** Patch a conversation-list row's manual "mark unread" state in place
@@ -521,25 +726,17 @@ export function bumpConversationUnread(
  *  true also flips `unread` immediately (the row menu's whole point is an
  *  instant unread dot); clearing it does NOT touch `unread`/`unreadCount` on
  *  its own — only a genuine read (`patchConversationRead` above) may do that.
- *  A no-op if the row isn't cached. */
+ *  Written to the list and the detail entry. A no-op if nothing is cached. */
 export function patchConversationMarkedUnread(
   queryClient: QueryClient,
   conversationId: string,
   markedUnreadAt: string | undefined,
 ): void {
-  queryClient.setQueriesData<ConversationWithPreview[]>(
-    { queryKey: ["conversations"] },
-    (previous) =>
-      previous?.map((conversation) =>
-        conversation.id === conversationId
-          ? {
-              ...conversation,
-              markedUnreadAt,
-              unread: markedUnreadAt ? true : conversation.unread,
-            }
-          : conversation,
-      ),
-  );
+  patchConversationRow(queryClient, conversationId, (conversation) => ({
+    ...conversation,
+    markedUnreadAt,
+    unread: markedUnreadAt ? true : conversation.unread,
+  }));
 }
 
 /** True when `candidate` is the same message as `message` — by server id, or by
@@ -592,6 +789,17 @@ function insertInOrder(
   pages: MessagePage[],
   message: MessageResponse,
 ): MessagePage[] | null {
+  // The mirror of the older edge below, for a detached history window (PRD-401):
+  // while newer history is still unfetched, a message newer than everything
+  // loaded belongs past that gap, in the live query. The window's own newer
+  // page brings it, or the live query already holds it when the two merge.
+  const newestLoaded = pages.find((page) => page.items.length > 0)?.items[0];
+  if (
+    pages[0]?.newerCursor &&
+    (!newestLoaded || isNewerMessage(message, newestLoaded))
+  ) {
+    return null;
+  }
   for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
     const page = pages[pageIndex]!;
     const oldestInPage = page.items.at(-1);
@@ -738,6 +946,9 @@ export async function reconcileConversationHistory(
     if (page.data.length < PAGE_LIMIT) break;
   }
   // The gap may also have changed inbox previews / unread — cheap to refresh.
+  // The thread's detail entry is refreshed by the reconnect itself
+  // (`handleSessionLive` in realtime.ts invalidates every detail entry
+  // once), the only caller of this function.
   if (merged) {
     void queryClient.invalidateQueries({ queryKey: ["conversations"] });
   }

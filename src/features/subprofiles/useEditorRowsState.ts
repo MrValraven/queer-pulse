@@ -82,6 +82,11 @@ export interface EditorRowsState {
  * used after a revision restore (see its doc on `EditorRowsState`) — every
  * other path stays seed-once. Lifted out of `SubprofileEditorProvider` so the
  * provider stays thin wiring.
+ *
+ * ENG-451: after a save conflict, the alert's Reload remounts the editor state
+ * (`SubprofileEditorProvider`'s `seedGeneration` key), so every list area
+ * re-seeds from the refetched persona through the lazy `useState` above. That
+ * remount is the whole reseed; nothing here seeds a second way.
  */
 export function useEditorRowsState(
   subprofile: SubprofileView,

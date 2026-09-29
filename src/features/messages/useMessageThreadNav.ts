@@ -127,7 +127,9 @@ export function useMessageThreadNav({
    *  carries a server message id, arm the jump-to + highlight of that bubble.
    *  Clears the search so the opened thread is fully in view (on mobile the
    *  thread pane replaces the list). Demo hits carry their seeded message ids,
-   *  so they jump to the exact message the same way live hits do. */
+   *  so they jump to the exact message the same way live hits do. A thread
+   *  past the loaded inbox pages opens too: the controller reads it by id
+   *  (ENG-403) and holds the pane on its loading state until it lands. */
   function openThreadAtMessage(conversationId: string, messageId?: string) {
     openThread(conversationId);
     setJumpMessageId(messageId ?? null);
@@ -154,6 +156,11 @@ export function useMessageThreadNav({
     );
     if (activeId === conversationId) {
       setView("list");
+      // Release the deleted id so the controller's default select lands on
+      // the first remaining thread. A requested id never falls back to
+      // another thread on its own (ENG-403), so the deleted one would
+      // otherwise hold the pane on its unavailable state.
+      setActiveId("");
     }
     deleteConversationMutation.mutate(conversationId);
   }

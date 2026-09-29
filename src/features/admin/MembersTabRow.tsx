@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { FiX, FiUserPlus, FiShield } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { photoOf } from "../communities/communityPeople";
@@ -8,41 +8,39 @@ import { RoleBadge } from "../communities/CommunityBadges";
 import type { RosterMember } from "../communities/community.model";
 import styles from "./ModPanel.module.css";
 
-/** One roster action. A `<span role="button">` rather than a `<button>`
- *  because the row it sits in is already a link target in other mod surfaces
- *  (see the repo rule against nesting a button inside a router Link). */
+/** One roster action (DES-425). The shared `<Button>` brings the house focus
+ *  ring. A busy row's action is `aria-disabled`, which the Button styles as
+ *  disabled while keeping it focusable, and the guard stops it firing. The row
+ *  itself is a plain container, so a real button nests safely.
+ *  `accessibleName` names the member the action applies to. */
 function RowAction({
   className,
   isDisabled,
   onActivate,
   icon,
   label,
+  accessibleName,
 }: {
-  className: string | undefined;
+  className?: string;
   isDisabled: boolean;
   onActivate: () => void;
   icon: ReactNode;
   label: string;
+  accessibleName: string;
 }) {
-  const activate = () => {
-    if (!isDisabled) onActivate();
-  };
   return (
-    <span
-      role="button"
-      tabIndex={0}
+    <Button
+      variant="ghost"
+      size="sm"
+      className={[styles.rowAction, className].filter(Boolean).join(" ")}
       aria-disabled={isDisabled || undefined}
-      className={className}
-      onClick={activate}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          activate();
-        }
+      onClick={() => {
+        if (!isDisabled) onActivate();
       }}
+      aria-label={accessibleName}
     >
       {icon} {label}
-    </span>
+    </Button>
   );
 }
 
@@ -80,7 +78,7 @@ export function MembersTabRow({
   const { demoMode } = useDemoMode();
 
   return (
-    <div className={styles.modRow}>
+    <div className={[styles.modRow, styles.modRowWithActions].join(" ")}>
       <Avatar
         initials={member.initials}
         tint={member.tint}
@@ -97,29 +95,36 @@ export function MembersTabRow({
       <div className={styles.modActions}>
         {!isMod && (
           <RowAction
-            className={styles.declineBtn}
             isDisabled={isBusy}
             onActivate={onPromote}
             icon={<FiUserPlus aria-hidden />}
             label={t("admin:modPanel.members.makeModCta")}
+            accessibleName={t("admin:modPanel.members.makeModAriaLabel", {
+              name: member.name,
+            })}
           />
         )}
         {isPromotedMod && (
           <RowAction
-            className={styles.declineBtn}
             isDisabled={isBusy}
             onActivate={onDemote}
             icon={<FiX aria-hidden />}
             label={t("admin:modPanel.members.removeModCta")}
+            accessibleName={t("admin:modPanel.members.removeModAriaLabel", {
+              name: member.name,
+            })}
           />
         )}
         {member.role !== "owner" && (
           <RowAction
-            className={[styles.declineBtn, styles.removeBtn].join(" ")}
+            className={styles.removeBtn}
             isDisabled={isBusy}
             onActivate={onRequestRemove}
             icon={<FiX aria-hidden />}
             label={t("admin:modPanel.members.removeCta")}
+            accessibleName={t("admin:modPanel.members.removeAriaLabel", {
+              name: member.name,
+            })}
           />
         )}
         {member.role === "owner" && (

@@ -53,6 +53,25 @@ import { ApiError } from "../../../shared/api/client";
 /** The backend's typed discriminator for a late appeal filing. */
 const APPEAL_WINDOW_CLOSED_CODE = "APPEAL_WINDOW_CLOSED";
 
+/**
+ * The backend's typed discriminator for filing a second appeal against a
+ * decision that already has one: PRD-459. Each moderation action can be
+ * appealed once, and once that appeal is decided (upheld or overturned) the
+ * outcome is final, so a further attempt on the same action gets this same
+ * refusal.
+ *
+ * ```json
+ * { "statusCode": 409, "error": "Conflict",
+ *   "code": "APPEAL_ALREADY_DECIDED",
+ *   "message": "This decision has already been appealed. The appeal decision is final." }
+ * ```
+ *
+ * The refusal carries no extra fields beyond `code`, so unlike
+ * `classifyAppealWindowClosed` there is no state to extract: the panel this
+ * feeds is the same regardless of which action was targeted.
+ */
+const APPEAL_ALREADY_DECIDED_CODE = "APPEAL_ALREADY_DECIDED";
+
 /** A refused-because-late filing, with whatever detail the server sent with it. */
 export interface AppealWindowClosedRefusal {
   /** The instant the window shut, or null when the server did not name it. */
@@ -99,4 +118,19 @@ export function classifyAppealWindowClosed(
   const body = error.data as Record<string, unknown> | null | undefined;
   if (!body || body.code !== APPEAL_WINDOW_CLOSED_CODE) return null;
   return { closedAt: readClosedAt(body), windowDays: readWindowDays(body) };
+}
+
+/**
+ * Whether this failure is the deterministic "this decision has already been
+ * appealed and decided" refusal (PRD-459). Returns false for every other
+ * failure, including a fresh appeal awaiting review, so the caller keeps its
+ * existing toast for anything else.
+ *
+ * Pure and dependency-free like `classifyAppealWindowClosed`, and reads the
+ * same `ApiError.data` the API client already parsed.
+ */
+export function isAppealAlreadyDecided(error: unknown): boolean {
+  if (!(error instanceof ApiError)) return false;
+  const body = error.data as Record<string, unknown> | null | undefined;
+  return body?.code === APPEAL_ALREADY_DECIDED_CODE;
 }

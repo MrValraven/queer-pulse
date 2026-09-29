@@ -3,7 +3,8 @@ import type { IconType } from "react-icons";
 import { FiInstagram, FiMail } from "react-icons/fi";
 import { MdAccessible } from "react-icons/md";
 import { linkToPath } from "../../../app/routeMap";
-import { useIsLinkVisible } from "../../../app/authGate";
+import { useIsLinkVisible, isGuestOnlyPath } from "../../../app/authGate";
+import { useAuth } from "../../../app/providers/authContext";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { LanguageSwitcher } from "../../i18n/LanguageSwitcher";
@@ -48,14 +49,28 @@ function BaseLink({ link }: { link: FooterLink }) {
   );
 }
 
+/**
+ * Guest-only destinations (sign-in, request-invite, …) bounce a signed-in
+ * member right back out, so the footer hides them once someone is signed in.
+ * `isGuestOnlyPath` is the same taxonomy `useIsLinkVisible` already reads for
+ * the gated side of this filter, kept here as the single source of truth.
+ */
+function isGuestOnlyHref(href: string): boolean {
+  const path = linkToPath(href).split(/[?#]/)[0] || "/";
+  return path.startsWith("/") && isGuestOnlyPath(path);
+}
+
 export function Footer() {
   const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
+  const { loggedIn } = useAuth();
+  const isLinkShown = (link: FooterLink) =>
+    isLinkVisible(link.href) && (!loggedIn || !isGuestOnlyHref(link.href));
   const columns = COLUMNS.map((column) => ({
     ...column,
-    links: column.links.filter((link) => isLinkVisible(link.href)),
+    links: column.links.filter(isLinkShown),
   })).filter((column) => column.links.length > 0);
-  const baseLinks = BASE_LINKS.filter((link) => isLinkVisible(link.href));
+  const baseLinks = BASE_LINKS.filter(isLinkShown);
 
   return (
     <footer className={`site-footer ${styles.footer}`}>

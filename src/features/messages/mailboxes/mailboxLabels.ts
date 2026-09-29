@@ -2,6 +2,7 @@ import type { IdentityKind } from "../../../shared/contracts/contracts";
 import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
 import { initialsOf } from "../../../shared/api/refs";
 import type { TFunction } from "../../../shared/i18n/types";
+import type { MailboxAttribution } from "../api/mailboxes.api";
 
 /** The catalog key naming each kind of mailbox. */
 export const MAILBOX_KIND_LABEL_KEYS: Record<IdentityKind, string> = {
@@ -26,4 +27,40 @@ export function mailboxInitials(name: string): string {
   const firstWord = words[0] ?? "";
   const lastWord = words.length > 1 ? (words[words.length - 1] ?? "") : "";
   return initialsOf(firstWord, lastWord);
+}
+
+/** The member's own first name, from their personal mailbox: the word the
+ *  server signs their replies with. */
+export function memberFirstNameOf(
+  mailboxes: readonly MailboxSummary[] | undefined,
+): string | undefined {
+  const firstName = mailboxes
+    ?.find((mailbox) => mailbox.kind === "profile")
+    ?.displayName?.trim()
+    .split(/\s+/)[0];
+  return firstName || undefined;
+}
+
+/**
+ * ENG-456: whether a customer sees the member's own first name beside a
+ * reply sent as `mailbox`. The mailbox switch and the member's own
+ * preference must both allow it, and an unlinked persona never names anyone.
+ * `attribution`, when this session holds it, is newer than the list.
+ */
+export function isMemberNamedToCustomers(
+  mailbox: MailboxSummary,
+  attribution?: MailboxAttribution,
+): boolean {
+  if (mailbox.kind === "profile") return false;
+  const shouldShowStaffNames =
+    attribution?.shouldShowStaffNames ?? mailbox.shouldShowStaffNames;
+  const shouldAllowMyName =
+    attribution?.shouldAllowMyName ?? mailbox.shouldAllowMyName;
+  const staffNamesLockedReason =
+    attribution?.staffNamesLockedReason ?? mailbox.staffNamesLockedReason;
+  return (
+    shouldShowStaffNames === true &&
+    shouldAllowMyName === true &&
+    !staffNamesLockedReason
+  );
 }

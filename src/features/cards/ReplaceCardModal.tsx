@@ -1,6 +1,7 @@
 import { Button, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { IssuerCardDTO } from "./api/cards.api";
+import { cardHolderName } from "./cardHolderName";
 
 /**
  * Confirms voiding the printed copies of one card.
@@ -26,7 +27,9 @@ export function ReplaceCardModal({
 
   return (
     <Modal
-      title={t("cards:holders.replaceModal.title", { name: holder.holderName })}
+      title={t("cards:holders.replaceModal.title", {
+        name: cardHolderName(holder.holderName, t),
+      })}
       onClose={onClose}
       footer={
         <>

@@ -6,6 +6,7 @@
 
 import type { Piece } from "../data/desk.data";
 import { pieceHolder } from "./deskWaitingOn";
+import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
 import type { DeskTrack } from "./deskTrack";
 
 export type PieceNextActionKind =
@@ -71,7 +72,12 @@ function hasWriter(piece: Piece): boolean {
  * at all (an empty byline) is handed off, since assigning it is the move; one
  * that already has a byline (an editor writing it themselves, say) opens
  * for editing instead. Ready work is filed or published whoever last
- * touched it.
+ * touched it, except a scheduled piece: it goes live on its own date, so it
+ * has no next action (the record is where its date changes). With no job to
+ * flip a passed date to Published, a Ready piece whose date already passed
+ * is live already; Publish is still its move (settling it: the stage
+ * advances and the writer hears about it), whether or not it sits on an
+ * issue.
  *
  * The track is part of the signature so a later rule can tell issue work from
  * unfiled work. Today the piece's own `issueId` already answers "is it on an
@@ -83,6 +89,8 @@ export function pieceNextAction(
 ): PieceNextAction | null {
   if (piece.stage === "Published") return null;
   if (piece.stage === "Ready") {
+    if (isPieceScheduled(piece)) return null;
+    if (hasPublishDate(piece)) return actionOf("publish");
     return actionOf(piece.issueId === null ? "add-to-issue" : "publish");
   }
   switch (pieceHolder(piece)) {

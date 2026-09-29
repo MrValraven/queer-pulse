@@ -246,6 +246,10 @@ export const admin: Catalog = {
     "Nada está sinalizado como urgente. Trabalha a fila ao teu ritmo. Estás a manter toda a rede estável.",
   "dashboard.header.subClear":
     "Cada item aberto tem uma decisão humana associada. Vai descansar. A rede está segura nas tuas mãos.",
+  "dashboard.header.titleErrorLine1": "Não conseguimos",
+  "dashboard.header.titleErrorLine2": "<em>ver a fila</em>.",
+  "dashboard.header.subError":
+    "A fila pode ter denúncias à tua espera. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
   "dashboard.header.moderationCta": "Abrir moderação",
 
   "dashboard.metrics.activeMembers.label": "Membros em situação regular",
@@ -343,6 +347,9 @@ export const admin: Catalog = {
     "cada uma <em>com voto de confiança de alguém</em>.",
   "members.header.sub":
     "Não são linhas numa tabela. São pessoas em quem alguém confiou o suficiente para as trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui. {count} pessoas estão à espera de serem acolhidas.",
+  "members.header.titleLine1NoCount": "As pessoas daqui,",
+  "members.header.subNoCount":
+    "Cada linha é uma pessoa em quem alguém confiou o suficiente para a trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui.",
   "members.header.exportCta": "Exportar",
   "members.filterAriaLabel": "Filtrar pessoas",
   "members.searchPlaceholder": "Pesquisar por nome…",
@@ -356,7 +363,31 @@ export const admin: Catalog = {
   "members.filters.new": "Novas esta semana",
   "members.empty": "Nenhuma pessoa corresponde a estes filtros.",
   "members.loadMore": "Mostrar mais pessoas",
-  "members.openAriaLabel": "Abrir {name}",
+  "members.verify.partialLoadError.title":
+    "Não conseguimos carregar <em>parte da fila</em>",
+  "members.verify.partialLoadError.body":
+    "Podem faltar alguns pedidos aqui em baixo. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
+  "members.flagged.loadError.title":
+    "Não conseguimos carregar <em>as pessoas sinalizadas</em>",
+  "members.flagged.loadError.body":
+    "Pode haver sinalizações em aberto. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
+  "members.flagged.empty": "Ninguém está sinalizado de momento.",
+  "tabs.countUnavailable": "contagem indisponível",
+  "housingGroups.listings.hideDialog.bodyUnpublished":
+    "Este anúncio não está no quadro do grupo, por isso quem o publicou não recebe notificação. O teu motivo fica guardado no anúncio, e podes voltar a mostrá-lo a partir desta lista.",
+  "members.loadError.title":
+    "Não conseguimos carregar <em>a lista de pessoas</em>",
+  "members.loadError.body":
+    "A lista não chegou. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
+  "members.verify.loadError.title": "Não conseguimos carregar <em>a fila</em>",
+  "members.verify.loadError.body":
+    "Pode haver pessoas à espera. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
+  "members.row.ariaLabel": "Abrir {name}: {status}, {role}, {reports}",
+  "members.row.notVerified": "Por verificar",
+  "members.loadMoreError.title":
+    "Não conseguimos carregar <em>mais pessoas</em>",
+  "members.loadMoreError.body":
+    "As pessoas acima continuam aqui. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
   "members.vouchedLabel": "com voto de confiança",
 
   "members.verify.intro":
@@ -1446,13 +1477,16 @@ export const admin: Catalog = {
     "Todas as submissões já têm o seu lugar. Não há nada à tua espera agora. Novas listagens aparecem aqui assim que alguém as adicionar.",
   "adminListings.unknownSubmitter": "Membro desconhecido",
   "adminListings.row.submittedAgo": "Enviado {time}",
+  "adminListings.row.addedAgo": "Adicionado {time}",
   "adminListings.suggestedBy": "Sugerido por {name}",
+  "adminListings.provenance.ownedBy": "Pertence a {name}",
+  "adminListings.provenance.addedByStaff": "Adicionado por {name} (equipa)",
+  "adminListings.provenance.noOwnerYet": "Ainda sem proprietário",
   "adminListings.filter.all": "Todos",
   "adminListings.filter.review": "Em revisão",
   "adminListings.filter.question": "Pergunta rápida",
   "adminListings.filter.live": "Publicado",
   "adminListings.filter.ariaLabel": "Filtrar por estado",
-  "adminListings.filter.countedLabel": "{label} ({count})",
   "adminListings.search.placeholder": "Pesquisar por nome, autor ou ref…",
   "adminListings.search.ariaLabel": "Pesquisar listagens",
   "adminListings.sort.label": "Ordenar",
@@ -1478,6 +1512,10 @@ export const admin: Catalog = {
   "adminListings.ask.label": "A tua pergunta",
   "adminListings.ask.helper":
     "Sê caloroso/a e específico/a. A pessoa recebe como mensagem direta e pode responder ali mesmo.",
+  "adminListings.ask.subSuggestion":
+    "Vamos enviar isto a {name} como notificação.",
+  "adminListings.ask.helperSuggestion":
+    "Sê caloroso/a e específico/a. A pessoa recebe como notificação e pode responder pelo formulário de contacto.",
   "adminListings.ask.placeholder":
     "Olá! Antes de publicarmos, podias confirmar…",
   "adminListings.ask.send": "Enviar pergunta",
@@ -1495,13 +1533,24 @@ export const admin: Catalog = {
   "adminListings.loadMoreCta": "Carregar mais",
   "adminListings.selectAll.ariaLabel": "Selecionar todas as listagens visíveis",
   "adminListings.selectAll.label": "Selecionar todos os visíveis",
+  "adminListings.columns.listing": "Espaço",
+  "adminListings.columns.submitter": "Submetido por",
+  "adminListings.columns.status": "Estado",
+  "adminListings.columns.actions": "Ações",
+  "adminListings.row.openAriaLabel": "Abrir {name}",
+  "adminListings.noMatch.title": "Nenhum espaço corresponde a “{query}”",
+  "adminListings.noMatch.body":
+    "Experimenta o nome do espaço, o autor, ou uma referência como QPL-2026-0008.",
+  "adminListings.emptyTab.title": "Nada em “{status}” de momento",
+  "adminListings.emptyTab.body":
+    "Os espaços aparecem aqui à medida que os avanças na revisão.",
   "adminListings.selectRow.ariaLabel": "Selecionar {name}",
   "adminListings.bulk.ariaLabel": "Ações em massa",
   "adminListings.bulk.selectedCount_one": "{count} selecionada",
   "adminListings.bulk.selectedCount_other": "{count} selecionadas",
   "adminListings.bulk.publishCta": "Publicar",
-  "adminListings.bulk.sendBackCta": "Devolver a revisão",
-  "adminListings.bulk.removeCta": "Remover",
+  "adminListings.bulk.sendBackCta": "Voltar a revisão",
+  "adminListings.bulk.removeCta": "Eliminar",
   "adminListings.bulk.clearCta": "Limpar",
   "adminListings.bulk.capNote": "Seleção limitada a {cap} listagens",
   "adminListings.bulk.toast.success_one": "{count} listagem atualizada.",
@@ -1816,6 +1865,8 @@ export const admin: Catalog = {
     "Isto abrange o que foi publicado e a resposta por baixo, e podem ter sido duas pessoas diferentes a escrever cada metade. A denúncia não regista qual das metades a pessoa queria denunciar, por isso restringir e banir podem não avançar aqui.",
   "moderation.reportDrawer.accountActionsTarget":
     "Restringir e banir atuam sobre quem publicou isto. Ocultar e remover atuam sobre o próprio conteúdo. Sem uma conta por trás, um anúncio sem dono ou uma conta apagada, restringir e banir não vão avançar.",
+  "moderation.reportDrawer.accountActionsTargetNoContent":
+    "Aqui não há conteúdo próprio para ocultar ou remover. Restringir e banir aplicam-se a quem está por trás, e não avançam quando não há uma conta.",
   "moderation.reportDrawer.restrictDurationLabel": "Duração da restrição",
   "moderation.reportDrawer.restrictDuration.24h": "24 horas",
   "moderation.reportDrawer.restrictDuration.7d": "7 dias",
@@ -2055,16 +2106,12 @@ export const admin: Catalog = {
   "communities.settings.moderators": "Pessoas moderadoras",
   "communities.settings.removeModAriaLabel": "Remover {name}",
   "communities.settings.addModCta": "+ Adicionar",
-  "communities.settings.addModToast":
-    "Procurar pessoas para adicionar à moderação",
   "communities.settings.modRemovedToast": "Removemos {name} da moderação",
   // Gestão de moderação em modo live (adicionar/remover). O modo demo mantém o
   // comportamento simulado; o modo live liga ambos os controlos aos endpoints
   // reais de `/admin/communities/:slug/moderators`.
   "communities.settings.mod.addPickerTitle": "Adicionar moderação",
   "communities.settings.mod.pickerLoading": "A carregar pessoas…",
-  "communities.settings.mod.pickerError":
-    "Não foi possível carregar as pessoas. Tenta novamente.",
   "communities.settings.mod.pickerEmpty":
     "Todas as pessoas aqui já fazem parte da moderação.",
   "communities.settings.mod.addedToast": "{name} passou a fazer moderação",
@@ -2072,6 +2119,13 @@ export const admin: Catalog = {
     "Não foi possível adicionar {name} à moderação",
   "communities.settings.mod.removeFailedToast":
     "Não foi possível remover {name} da moderação",
+  "communities.settings.mod.searchLabel": "Pesquisar pessoas",
+  "communities.settings.mod.searchPlaceholder": "Nome ou identificador",
+  "communities.settings.mod.pickerNoMatches": "Ninguém corresponde a “{query}”",
+  "communities.settings.mod.pickerCapped":
+    "A mostrar as primeiras {count}. Pesquisa por nome ou identificador para encontrares outra pessoa.",
+  "communities.settings.mod.pickerLoadFailed":
+    "Não conseguimos carregar as pessoas.",
   "communities.settings.mod.cancelCta": "Cancelar",
   "communities.settings.secondVouch.title":
     "Exigir um segundo voto de confiança para entrar",
@@ -2593,6 +2647,21 @@ export const admin: Catalog = {
   "governance.audit.actionType.warn": "Aviso",
   "governance.audit.actionType.hide_content": "Conteúdo ocultado",
   "governance.audit.actionType.remove_content": "Conteúdo removido",
+  "governance.audit.actionType.media_force_delete":
+    "Ficheiro eliminado à força",
+  "governance.audit.actionType.topic_hard_delete": "Tema eliminado de vez",
+  "governance.audit.actionType.housing_group_delete":
+    "Grupo de habitação eliminado",
+  "governance.audit.actionType.housing_group_listing_hide":
+    "Anúncio de grupo escondido",
+  "governance.audit.actionType.housing_group_listing_unhide":
+    "Anúncio de grupo reposto",
+  "governance.audit.actionType.housing_group_join_request_triage":
+    "Pedido de entrada no grupo decidido",
+  "governance.audit.actionType.housing_coop_delete":
+    "Cooperativa de habitação eliminada",
+  "governance.audit.actionType.housing_coop_join_request_triage":
+    "Pedido de entrada na cooperativa decidido",
   "governance.audit.actionType.restrict": "Restrição",
   "governance.audit.actionType.suspend": "Suspensão",
   "governance.audit.actionType.ban": "Banimento",
@@ -2737,6 +2806,8 @@ export const admin: Catalog = {
   "modPanel.requests.requestedAgo": "Pedido feito há {time}",
   "modPanel.requests.approveCta": "Aprovar",
   "modPanel.requests.declineCta": "Recusar",
+  "modPanel.requests.approveAriaLabel": "Aprovar {name}",
+  "modPanel.requests.declineAriaLabel": "Recusar {name}",
   "modPanel.requests.approvedToast": "Aprovámos {name}. Dá-lhe as boas-vindas.",
   "modPanel.requests.declinedToast":
     "O pedido de {name} não foi aprovado desta vez.",
@@ -2771,6 +2842,9 @@ export const admin: Catalog = {
   "modPanel.members.makeModCta": "Tornar moderadora",
   "modPanel.members.removeModCta": "Retirar da moderação",
   "modPanel.members.removeCta": "Remover",
+  "modPanel.members.makeModAriaLabel": "Tornar moderadora: {name}",
+  "modPanel.members.removeModAriaLabel": "Retirar da moderação: {name}",
+  "modPanel.members.removeAriaLabel": "Remover {name}",
   "modPanel.members.ownerTag": "Fundadora",
   "modPanel.members.promotedToast": "Agora {name} é pessoa moderadora.",
   "modPanel.members.demotedToast": "{name} deixou de fazer parte da moderação.",
@@ -3311,6 +3385,14 @@ export const admin: Catalog = {
   "housingGroups.listings.hiddenChip": "Escondido",
   "housingGroups.listings.hideCta": "Esconder",
   "housingGroups.listings.unhideCta": "Mostrar",
+  "housingGroups.listings.hideDialog.title": "Esconder “{title}”?",
+  "housingGroups.listings.hideDialog.body":
+    "O anúncio sai do grupo de imediato. Quem o publicou recebe uma notificação com o teu motivo. Podes voltar a mostrá-lo a partir desta lista.",
+  "housingGroups.listings.hideDialog.reasonLabel":
+    "Motivo para quem o publicou",
+  "housingGroups.listings.hideDialog.reasonPlaceholder":
+    "Diz que norma é que quebra, por exemplo um preço escondido.",
+  "housingGroups.listings.hideDialog.confirm": "Esconder anúncio",
   "housingGroups.listings.error": "Não foi possível atualizar esse anúncio",
 
   // ── Roteiro (/admin/roadmap) — quadro, fila de ideias, estatísticas ────────
@@ -3896,6 +3978,8 @@ export const admin: Catalog = {
     "{count} pessoa notificada. Um email, sem seguimentos",
   "roadmap.toasts.notified_other":
     "{count} pessoas notificadas. Um email, sem seguimentos",
+  "roadmap.toasts.digestCopyFailed":
+    "Não foi possível copiar. Seleciona e copia o texto à mão.",
   "roadmap.toasts.digestCopied": "Resumo copiado. Cola-o no email mensal",
   "roadmap.toasts.auditExported":
     "Registo de auditoria exportado para a governança",
@@ -4305,6 +4389,14 @@ export const admin: Catalog = {
   "communities.settings.mod.removeFromCommunityConfirmBody":
     "{name} perde o papel de moderação e o lugar na comunidade, e recebe um aviso de que já não faz parte dela. As publicações ficam. Pode voltar a pedir para entrar, segundo as regras de entrada da comunidade.",
   "communities.settings.mod.removeFromCommunityCta": "Remover da comunidade",
+  "communities.settings.mod.removeFromCommunityConfirmBodyBarred":
+    "{name} perde o papel de moderação e o lugar na comunidade, e recebe um aviso de que já não faz parte dela. As publicações ficam. Não pode voltar a pedir para entrar nesta comunidade até a moderação levantar o impedimento.",
+  "communities.settings.mod.removeFromCommunityAndBarCta":
+    "Remover e impedir regresso",
+  "communities.settings.mod.removeFromCommunityBarLabel":
+    "Impedir também que volte a entrar nesta comunidade",
+  "communities.settings.mod.removeFromCommunityBarHint":
+    "A pessoa fica a saber que não pode voltar a entrar. A moderação da comunidade pode levantar isto mais tarde.",
   "communities.settings.mod.removedFromCommunityToast":
     "Removemos {name} da comunidade",
   "communities.settings.mod.removeFromCommunityFailedToast":
@@ -5658,6 +5750,8 @@ export const admin: Catalog = {
   "moderationHealth.queue.concerns": "Preocupações de governação",
   "moderationHealth.queue.intakes": "Formulários",
   "moderationHealth.queue.legal_requests": "Exigências legais e do Estado",
+  "moderationHealth.queue.housing_group_join_requests":
+    "Pedidos de entrada em grupos de habitação",
   "moderationHealth.queue.housing_coop_join_requests":
     "Pedidos de adesão a cooperativas",
   "moderationHealth.queue.community_tag_requests": "Pedidos de etiquetas",
@@ -5684,6 +5778,37 @@ export const admin: Catalog = {
     "Escalonamentos de evasão a bloqueio",
   "moderationHealth.queue.community_owner_review_requests":
     "Pedidos de revisão de dono",
+  "moderationHealth.queue.forum_thread_reviews":
+    "Conversas do fórum à espera de revisão",
+  "adminForumReview.title": "Revisão do <em>fórum</em>",
+  "adminForumReview.header.eyebrow": "Fórum",
+  "adminForumReview.header.title": "Conversas à espera de <em>leitura</em>",
+  "adminForumReview.header.sub":
+    "Estas conversas ficaram à espera de moderação. Mais ninguém as vê até as aprovares.",
+  "adminForumReview.empty":
+    "Nada à espera. Todas as conversas enviadas para revisão já têm decisão.",
+  "adminForumReview.error": "A fila não carregou.",
+  "adminForumReview.loadMore": "Carregar mais",
+  "adminForumReview.loadingMore": "A carregar…",
+  "adminForumReview.row.submitted": "Enviada {time}",
+  "adminForumReview.row.inCommunity": "Em {community}",
+  "adminForumReview.row.anonymous": "Vai ser publicada em anonimato",
+  "adminForumReview.row.scheduled": "Fica visível {time} depois de aprovada",
+  "adminForumReview.row.warnings": "Avisos: {warnings}",
+  "adminForumReview.action.approve": "Aprovar",
+  "adminForumReview.action.reject": "Recusar",
+  "adminForumReview.rejectModal.title": 'Recusar "{title}"?',
+  "adminForumReview.rejectModal.body":
+    "Quem a escreveu fica a saber que foi recusada. Uma nota ajuda a corrigir.",
+  "adminForumReview.rejectModal.noteLabel":
+    "Nota para quem escreveu (opcional)",
+  "adminForumReview.rejectModal.submit": "Recusar conversa",
+  "adminForumReview.rejectModal.cancel": "Deixar à espera",
+  "adminForumReview.toast.approved":
+    "Aprovada. A conversa está visível e quem a escreveu já sabe.",
+  "adminForumReview.toast.rejected": "Recusada. Avisámos quem a escreveu.",
+  "adminForumReview.toast.conflict": "Alguém já decidiu sobre esta conversa.",
+  "adminForumReview.toast.error": "Não passou. Tentas outra vez?",
 
   // Qual dos três eixos disparou, dito pelo que significa e não pelo nome do
   // campo.
@@ -6380,7 +6505,6 @@ export const admin: Catalog = {
 
   "stickerPacks.rail.heading": "Packs",
   "stickerPacks.rail.newCta": "Novo pack",
-  "stickerPacks.rail.newName": "Nome do pack",
   "stickerPacks.rail.newSlug": "Slug",
 
   "stickerPacks.status.draft": "Rascunho",
@@ -6404,6 +6528,8 @@ export const admin: Catalog = {
   "stickerPacks.errors.updateStatus": "Não foi possível atualizar o pack",
   "stickerPacks.errors.setCover": "Não foi possível definir a capa",
   "stickerPacks.errors.deleteSticker": "Não foi possível remover o sticker",
+  "stickerPacks.errors.lastStickerInPublishedPack":
+    "Um pack publicado precisa de pelo menos um sticker. Despublica ou arquiva o pack primeiro, ou adiciona outro sticker.",
   "stickerPacks.publish.retrying": "A tentar de novo…",
   "stickerPacks.contents.hintTouch":
     "Usa o menu de um sticker para o mudar de lugar. Os membros veem os stickers por esta ordem.",
@@ -6430,7 +6556,7 @@ export const admin: Catalog = {
     "Começa como rascunho. Os membros só o veem quando o publicares.",
   "stickerPacks.newPack.namePlaceholder": "ex.: Bandeiras do orgulho",
   "stickerPacks.newPack.nameRequired": "Dá um nome ao pack",
-  "stickerPacks.newPack.slugAuto": "A partir do nome",
+  "stickerPacks.newPack.slugAuto": "A partir do nome em inglês",
   "stickerPacks.newPack.slugHint":
     "Palavras em minúsculas ligadas por hífenes. Usado nos links.",
   "stickerPacks.newPack.slugInvalid":
@@ -6439,6 +6565,10 @@ export const admin: Catalog = {
   "stickerPacks.newPack.slugRequired": "Escreve um slug para este pack",
   "stickerPacks.newPack.submit": "Criar pack",
   "stickerPacks.newPack.creating": "A criar…",
+  "stickerPacks.newPack.namePt": "Nome em português",
+  "stickerPacks.newPack.namePtHelper":
+    "Opcional. Se o deixares vazio, quem lê em português vê o nome em inglês.",
+  "stickerPacks.newPack.nameEn": "Nome em inglês",
   "stickerPacks.header.stickerCount_one": "{count} sticker",
   "stickerPacks.header.stickerCount_other": "{count} stickers",
   "stickerPacks.header.explainer.draft":
@@ -6450,6 +6580,11 @@ export const admin: Catalog = {
   "stickerPacks.header.renameLabel": "Mudar o nome de {name}",
   "stickerPacks.header.nameInputLabel": "Nome do pack",
   "stickerPacks.header.renameHint": "Enter para guardar, Esc para cancelar",
+  "stickerPacks.header.namePtValue": "Em português: {namePt}",
+  "stickerPacks.header.namePtEmpty": "Adicionar nome em português",
+  "stickerPacks.header.namePtLabel": "Nome do pack em português",
+  "stickerPacks.header.namePtHint":
+    "Enter para guardar, Esc para cancelar. Deixa vazio para usar o nome em inglês.",
   "stickerPacks.header.action.publish": "Publicar pack",
   "stickerPacks.header.action.unpublish": "Despublicar",
   "stickerPacks.header.action.restore": "Repor como rascunho",
@@ -6477,6 +6612,7 @@ export const admin: Catalog = {
     "O pack e os seus {count} stickers são apagados para sempre. Não dá para desfazer.",
   "stickerPacks.header.deleteConfirm.bodyEmpty":
     "O pack é apagado para sempre. Não dá para desfazer.",
+  "stickerPacks.header.namePtEditSuffix": "Editar",
   "stickerPacks.contents.hint":
     "Arrasta para reordenar. Os membros veem os stickers por esta ordem.",
   "stickerPacks.contents.savingOrder": "A guardar a nova ordem…",
@@ -6504,6 +6640,10 @@ export const admin: Catalog = {
   "stickerPacks.contents.remove.confirm": "Remover",
   "stickerPacks.editSticker.title": "Editar sticker",
   "stickerPacks.editSticker.label": "Nome",
+  "stickerPacks.editSticker.labelEn": "Nome em inglês",
+  "stickerPacks.editSticker.labelPt": "Nome em português",
+  "stickerPacks.editSticker.labelPtHelper":
+    "Opcional. Se o deixares vazio, quem lê em português vê o nome em inglês.",
   "stickerPacks.editSticker.keywords.en": "Palavras-chave em inglês",
   "stickerPacks.editSticker.keywords.pt": "Palavras-chave em português",
   "stickerPacks.editSticker.keywordsHelper":
@@ -6661,6 +6801,7 @@ export const admin: Catalog = {
   "stickerPacks.tabs.add": "Adicionar stickers",
   "stickerPacks.tabs.contents": "Neste pack",
   "stickerPacks.toast.renamed": "Nome alterado para {name}",
+  "stickerPacks.toast.renamedPt": "Nome em português guardado",
   "stickerPacks.toast.status.published": "{name} está publicado",
   "stickerPacks.toast.status.draft": "{name} voltou a ser rascunho",
   "stickerPacks.toast.status.archived": "{name} foi arquivado",
@@ -6754,6 +6895,8 @@ export const admin: Catalog = {
   "listingNew.success.step.review": "Está à espera na fila de moderação.",
   "listingNew.success.step.live": "Já está a aparecer no diretório.",
   "listingNew.success.closeCta": "Voltar à fila de espaços",
+  "listingNew.success.viewLiveCta": "Ver no diretório",
+  "listingNew.success.addAnotherCta": "Adicionar outro espaço",
 
   // ── Edição pela administração de um espaço ao cuidado da plataforma
   // (`/admin/listings/:ref/edit`) ────────────────────────────────────────────
@@ -7142,4 +7285,20 @@ export const admin: Catalog = {
   "ambassadors.drawer.hiddenNote":
     "As etiquetas escondidas não aparecem aqui. A página de pessoas embaixadoras tem o registo completo.",
   "ambassadors.drawer.manage": "Gerir pessoas embaixadoras",
+  "ambassadors.loadMore": "Ver mais",
+  "ambassadors.loadingMore": "A carregar…",
+  "ambassadors.loadMoreError":
+    "Não conseguimos carregar mais pessoas embaixadoras. Tenta de novo.",
+  "ambassadors.row.history": "Histórico",
+  "ambassadors.row.historyAria": "Histórico do estatuto de {name}",
+  "ambassadors.history.label": "Histórico do estatuto de {name}",
+  "ambassadors.history.title": "Histórico do estatuto",
+  "ambassadors.history.active": "Ativo",
+  "ambassadors.history.grantedOn": "Atribuído a",
+  "ambassadors.history.revoked": "Retirado",
+  "ambassadors.history.error":
+    "Não conseguimos carregar este histórico. Tenta de novo daqui a pouco.",
+  "ambassadors.history.empty": "Não há estatutos registados para esta pessoa.",
+  "ambassadors.circle.notFounded":
+    "O círculo abre quando for atribuído o estatuto à primeira pessoa embaixadora.",
 };

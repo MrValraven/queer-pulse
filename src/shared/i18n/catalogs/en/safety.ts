@@ -60,6 +60,30 @@ export const safety: Catalog = {
   "myReports.retry": "Try again",
   "myReports.footNote":
     "Your 50 most recent reports. We show you your own filing and its status, never what was decided about anyone else.",
+  "myReports.subject.member": "About a member",
+  "myReports.subject.post": "About a post",
+  "myReports.subject.reply": "About a reply",
+  "myReports.subject.venue": "About a place",
+  "myReports.subject.message": "About a message",
+  "myReports.subject.community": "About a community",
+  "myReports.subject.housing": "About a housing listing",
+  "myReports.subject.flatmate": "About a flatmate profile",
+  "myReports.subject.landlord": "About a landlord",
+  "myReports.subject.listing": "About a business listing",
+  "myReports.subject.event": "About a gathering",
+  "myReports.subject.business": "About a business",
+  "myReports.subject.company": "About an employer",
+  "myReports.subject.job": "About a job posting",
+  "myReports.subject.subprofile": "About a persona",
+  "myReports.subject.review": "About a review",
+  "myReports.subject.magazine_comment": "About a magazine comment",
+  "myReports.subject.listing_public_question": "About a question on a listing",
+  "myReports.subject.event_photo": "About a gathering photo",
+  "myReports.subject.landlord_recommendation":
+    "About a landlord recommendation",
+  "myReports.subject.volunteering": "About a volunteering opportunity",
+  "myReports.subject.conversation": "About a group chat",
+  "myReports.subject.identity": "About a business chat",
   "report.guide.meta.title": "How reporting works on QueerPulse",
   "report.guide.meta.description":
     "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and a public log of past moderation outcomes.",
@@ -232,6 +256,8 @@ export const safety: Catalog = {
   "reportPerson.form.lead":
     "A moderator reads what you write here. Specifics help: what happened, when, and where on the platform. Pick the reason closest to what happened, because it sets how quickly this gets reviewed.",
   "reportPerson.form.reasonLabel": "What is this about?",
+  "reportPerson.form.reasonPlaceholder": "Choose a reason",
+  "reportPerson.form.reasonMissing": "Choose what this is about to send",
   "reportPerson.form.detailLabel": "What should the moderator know?",
   "reportPerson.form.detailPlaceholder":
     "What happened, when, and anything that helps a moderator find it. Be as specific as you're comfortable with.",
@@ -258,6 +284,7 @@ export const safety: Catalog = {
   "reportGroup.form.lead":
     "This reports the group itself, not one person in it. A moderator reads what you write here: specifics help, like what the group is organised around, what it lets stand, or what happens in it. Pick the reason closest to what happened, because it sets how quickly this gets reviewed.",
   "reportGroup.form.reasonLabel": "What is wrong here?",
+  "reportGroup.form.reasonMissing": "Choose what this is about to send",
   "reportGroup.form.detailLabel": "What should the moderator know?",
   "reportGroup.form.detailPlaceholder":
     "What's happening in this group, since when, and anything that helps a moderator find it. Be as specific as you're comfortable with.",
@@ -398,6 +425,8 @@ export const safety: Catalog = {
     "{name} will no longer be able to count your vouch toward their standing on QueerPulse. You can vouch for them again later.",
   "profileMenu.withdrawVouchConfirmCta": "Withdraw vouch",
   "profileMenu.withdrawVouchToast": "You withdrew your vouch for {name}.",
+  "profileMenu.withdrawVouchErrorToast":
+    "We couldn't withdraw your vouch for {name}. Try again.",
   "blockModal.title": "Block {name}?",
   "blockModal.body":
     "Blocking severs any connection between you. {name} won't be able to view your profile, message you, or find you in search, and neither of you can connect with the other. You can unblock later.",
@@ -405,6 +434,9 @@ export const safety: Catalog = {
   "blockModal.reasonCodeLabel": "What happened?",
   "blockModal.reasonCodeHelper":
     "This is what the moderation team sees first, and it sets how fast the report is picked up.",
+  "blockModal.reasonCodePlaceholder": "Choose what happened",
+  "blockModal.reasonCodeMissing":
+    "Choose what happened, or untick the report box to block now.",
   "blockModal.reasonLabel": "Reason (optional)",
   "blockModal.reasonPlaceholder": "Add any context for the moderation team…",
   "blockModal.cancelCta": "Cancel",
@@ -485,6 +517,12 @@ export const safety: Catalog = {
     "Appeals are open for {days} days after a decision. This one closed on {date}. If something has changed since, or you could not reach this form in time, write to the moderation team and ask them to look again.",
   "appealSubmit.windowClosed.title":
     "The appeal window for this decision has closed",
+  "appealSubmit.alreadyDecided.title":
+    "This decision has already been appealed",
+  "appealSubmit.alreadyDecided.body":
+    "Each decision can be appealed once. A moderator who was not part of the original call already reviewed this one, and that decision is final. If something has changed since, write to the moderation team.",
+  "appealSubmit.alreadyDecided.outcomeCta": "See the outcome",
+  "appealSubmit.alreadyDecided.contactCta": "Write to the moderation team",
   "appealSubmit.filingWindow":
     "Appeals are open for {days} days after a decision. The clock starts when the decision was taken, rather than when you read about it. Where there is no record of when that was, no deadline applies to you.",
   "appealSubmit.foot":

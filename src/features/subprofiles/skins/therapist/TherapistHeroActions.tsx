@@ -14,6 +14,7 @@ import { SubprofileFollow } from "../../SubprofileFollow";
 import { SubprofileMoreMenu } from "../../SubprofileMoreMenu";
 import type { PublicSubprofileView } from "../../api/subprofiles.adapters";
 import type { PersonaAction, PersonaViewMode } from "../../personaSkinRender";
+import { isPersonaOpenToEngagement } from "../../personaEngagement";
 import type { TherapistView } from "./therapistView";
 import { emailHref, websiteHref, websiteLabel } from "./therapistContactLinks";
 import { TherapistInertButton as InertButton } from "./TherapistInertButton";
@@ -136,29 +137,31 @@ export function TherapistHeroActions({
             />
           ))}
 
-        {isLive ? (
-          <SubprofileFollow
-            subprofileId={data.id}
-            followerCount={data.followerCount}
-            viewerFollowing={data.viewerFollowing}
-            isOwnerViewing={false}
-          />
-        ) : (
-          <InertButton
-            icon={
-              data.viewerFollowing ? (
-                <FiUserCheck aria-hidden />
-              ) : (
-                <FiUserPlus aria-hidden />
-              )
-            }
-            label={t(
-              data.viewerFollowing
-                ? "subprofiles:hero.follow.following"
-                : "subprofiles:hero.follow.cta",
-            )}
-          />
-        )}
+        {/* Follow accepts an open persona only (PRD-428), live or inert. */}
+        {isPersonaOpenToEngagement(data) &&
+          (isLive ? (
+            <SubprofileFollow
+              subprofileId={data.id}
+              followerCount={data.followerCount}
+              viewerFollowing={data.viewerFollowing}
+              isOwnerViewing={false}
+            />
+          ) : (
+            <InertButton
+              icon={
+                data.viewerFollowing ? (
+                  <FiUserCheck aria-hidden />
+                ) : (
+                  <FiUserPlus aria-hidden />
+                )
+              }
+              label={t(
+                data.viewerFollowing
+                  ? "subprofiles:hero.follow.following"
+                  : "subprofiles:hero.follow.cta",
+              )}
+            />
+          ))}
 
         {/* The editor's docked preview and the owner's own view mount no
             menu, as the persona hero does; the owner's visitor preview gets

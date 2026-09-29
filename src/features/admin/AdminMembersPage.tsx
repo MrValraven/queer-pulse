@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
-import { AdminMemberRows, AdminFlaggedRows } from "./AdminMemberRows";
+import { AdminTabs, type AdminTab } from "./ui";
+import { AdminMembersHeader } from "./AdminMembersHeader";
+import { AdminFlaggedTab } from "./AdminFlaggedTab";
+import { AdminMembersRoster } from "./AdminMembersRoster";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
 import { AdminMemberCardLoadingDrawer } from "./AdminMemberCardSelection";
@@ -17,6 +18,7 @@ import {
 import { AdminEmailSuppressionModal } from "./AdminEmailSuppressionModal";
 import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
 import { useJoinRequests } from "./api/useJoinRequests";
+import { hasFailedWithoutData } from "./queryLoadFailure";
 import styles from "./AdminMembersPage.module.css";
 
 // No "sample" tab here. The quality sample lives beside the queue it reviews,
@@ -27,7 +29,6 @@ type TabId = "all" | "pending" | "flagged";
 
 export function AdminMembersPage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const [tab, setTab] = useState<TabId>("all");
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
@@ -46,18 +47,17 @@ export function AdminMembersPage() {
 
   // The search runs on the server across every page (see `useAdminMembers`),
   // so "Load more" stays available while a query is active.
-  const {
-    members,
-    visibleMembers,
-    isSearchPending,
-    total,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useAdminMembers(filter, search);
-  const { data: flagged = [] } = useAdminFlagged();
-  const pendingCount = useJoinRequests("pending").data?.length ?? 0;
+  const roster = useAdminMembers(filter, search);
+  const { members, total, isLoading } = roster;
+  const flaggedQuery = useAdminFlagged();
+  // DES-424: a count shows only once its read has answered. While loading or
+  // after a failed read these stay `undefined`, so the tabs show no number
+  // and the header uses its count-free copy.
+  // A failed read marks its tab (N4) so it reads apart from one still loading.
+  const pendingQuery = useJoinRequests("pending");
+  const pendingCount = pendingQuery.data?.length;
+  const flaggedCount = flaggedQuery.data?.length;
+  const hasRosterTotal = roster.data !== undefined;
 
   // Resolved from the roster on every render, so the drawer always shows the
   // member as the list currently has them.
@@ -95,11 +95,13 @@ export function AdminMembersPage() {
       id: "pending",
       label: t("admin:members.tabs.pending"),
       count: pendingCount,
+      isCountUnavailable: hasFailedWithoutData(pendingQuery),
     },
     {
       id: "flagged",
       label: t("admin:members.tabs.flagged"),
-      count: flagged.length,
+      count: flaggedCount,
+      isCountUnavailable: hasFailedWithoutData(flaggedQuery),
     },
   ];
 
@@ -113,35 +115,10 @@ export function AdminMembersPage() {
       }
     >
       <FadeIn>
-        <AdminPageHeader
-          eyebrow={t("admin:members.header.eyebrow")}
-          title={
-            <>
-              {t("admin:members.header.titleLine1", {
-                total: fmt.number(total),
-              })}
-              <br />
-              <Translation
-                i18nKey="admin:members.header.titleLine2"
-                components={{ em: <em /> }}
-              />
-            </>
-          }
-          sub={t("admin:members.header.sub", { count: pendingCount })}
-          actions={
-            <>
-              <Button
-                variant="ghost"
-                size="md"
-                onClick={() => setIsSuppressionOpen(true)}
-              >
-                {t("admin:recovery.suppression.openCta")}
-              </Button>
-              <Button variant="ghost" size="md">
-                {t("admin:members.header.exportCta")}
-              </Button>
-            </>
-          }
+        <AdminMembersHeader
+          total={hasRosterTotal ? total : undefined}
+          pendingCount={pendingCount}
+          onOpenSuppression={() => setIsSuppressionOpen(true)}
         />
       </FadeIn>
 
@@ -164,35 +141,16 @@ export function AdminMembersPage() {
       </FadeIn>
 
       <FadeIn delay={140}>
-        {tab === "all" &&
-          // A pending search with no held rows left to narrow is still
-          // loading, so it shows the skeleton rather than the empty line.
-          (isLoading || (isSearchPending && visibleMembers.length === 0) ? (
-            <MemberRowsSkeleton />
-          ) : (
-            <>
-              <AdminMemberRows
-                members={visibleMembers}
-                onSelect={(member) => setSelectedMemberId(member.id)}
-              />
-              {hasNextPage && !isSearchPending && (
-                <div className={styles.loadMore}>
-                  <Button
-                    variant="ghost"
-                    size="md"
-                    onClick={() => void fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                  >
-                    {t("admin:members.loadMore")}
-                  </Button>
-                </div>
-              )}
-            </>
-          ))}
+        {tab === "all" && (
+          <AdminMembersRoster
+            roster={roster}
+            onSelect={(member) => setSelectedMemberId(member.id)}
+          />
+        )}
         {tab === "pending" && <AdminVerifyQueue />}
         {tab === "flagged" && (
-          <AdminFlaggedRows
-            members={flagged}
+          <AdminFlaggedTab
+            flaggedQuery={flaggedQuery}
             onOpenMember={flaggedSelection.selectMember}
           />
         )}
@@ -210,19 +168,5 @@ export function AdminMembersPage() {
         />
       )}
     </AdminShell>
-  );
-}
-
-function MemberRowsSkeleton() {
-  return (
-    <div className={styles.rows}>
-      {[0, 1, 2, 3, 4].map((skeletonIndex) => (
-        <SkeletonLine
-          key={skeletonIndex}
-          height={64}
-          style={{ borderRadius: 14 }}
-        />
-      ))}
-    </div>
   );
 }

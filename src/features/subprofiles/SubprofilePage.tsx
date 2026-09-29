@@ -1,22 +1,15 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { LoadErrorState } from "../../shared/components/ui";
-import { PageMeta, JsonLd, buildPersonProfileSchema } from "../../shared/seo";
-import { socialHref } from "../../shared/social/socialPlatforms";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  usePublicSubprofile,
-  type RestrictedState,
-} from "./api/usePublicSubprofile";
+import { usePublicSubprofile } from "./api/usePublicSubprofile";
 import { ProfileMovedNote } from "../members/ProfileMovedNote";
 import { useMovedPersonaAddressRedirect } from "./useMovedPersonaRedirect";
 import { useLegacyNestedPersonaRedirect } from "./useLegacyNestedPersonaRedirect";
 import { PersonaMovedNote } from "./PersonaMovedNote";
 import { RehomedPersonaNote } from "./RehomedPersonaNote";
 import { SubprofilePageBody } from "./SubprofilePageBody";
-import { SubprofilePageStates } from "./SubprofilePageStates";
-import { SubprofilePageSkeleton } from "./SubprofilePageSkeleton";
+import { SubprofilePageHeadMeta } from "./SubprofilePageHeadMeta";
+import { SubprofilePageResultState } from "./SubprofilePageResultState";
 import { SubprofileDraftBanner } from "./SubprofileDraftBanner";
 import { SubprofilePreviewBanner } from "./SubprofilePreviewBanner";
 import { SubprofileReportModal } from "./SubprofileReportModal";
@@ -29,17 +22,12 @@ import { useImageLightbox } from "./useImageLightbox";
 import { usePoemDeepLink } from "./usePoemDeepLink";
 import { PoemReaderModal } from "./poem/PoemReaderModal";
 import { slugify } from "./poem/poemModel";
-import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
-import { personaPublicPathOrNull, personaShareUrl } from "./personaLinks.data";
+import { personaShareUrl } from "./personaLinks.data";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
-import {
-  PAGE_STATE_COPY,
-  type PersonaPageState,
-} from "./subprofilePageStates.data";
 
 type PeopleModalMode = "followers" | "endorsements";
 
@@ -54,17 +42,6 @@ function draftBannerFor(data: PublicSubprofileView, mode: PersonaViewMode) {
     />
   );
 }
-
-/** The Shared Contract's `RestrictedState` ("members_only", underscore) maps
- *  1:1 onto `SubprofilePageStates`' pre-existing `PersonaPageState` keys
- *  ("members-only", hyphen) — same three states, named before this contract
- *  existed (Phase 1 built the wall copy off the design ground truth's
- *  `personas-states.jsx`, which used hyphens). */
-const RESTRICTED_TO_PAGE_STATE: Record<RestrictedState, PersonaPageState> = {
-  private: "private",
-  members_only: "members-only",
-  removed: "removed",
-};
 
 /**
  * Public persona page. Every persona's address is `/p/:handle`. The nested
@@ -88,7 +65,6 @@ const RESTRICTED_TO_PAGE_STATE: Record<RestrictedState, PersonaPageState> = {
  * here.
  */
 export function SubprofilePage() {
-  const { t } = useTranslation();
   const { handle, slug, subslug } = useParams();
 
   // The two public entry points, discriminated: a standalone `/p/:handle`
@@ -144,51 +120,18 @@ export function SubprofilePage() {
   // The forwarding checks are held ABOVE every wall below, which would
   // otherwise claim the moved 404 as an absence and paint for a frame on the
   // way through. The navigation can only run from an effect, so this ordering
-  // is the fix, and reversing it would silently undo the whole thing.
-  if (result.state === "loading" || isRedirectingAway) {
+  // is the fix, and reversing it would silently undo the whole thing. See
+  // `SubprofilePageResultState` for the loading/error/not-found/moved/
+  // restricted walls this delegates to.
+  if (result.state !== "ok" || isRedirectingAway) {
     return (
-      <PageShell>
-        <SubprofilePageSkeleton />
-      </PageShell>
+      <SubprofilePageResultState
+        result={result}
+        isRedirectingAway={isRedirectingAway}
+      />
     );
   }
 
-  if (result.state === "error") {
-    return (
-      <PageShell>
-        <PageMeta title={t("subprofiles:page.notFoundMetaTitle")} noIndex />
-        <LoadErrorState onRetry={result.retry} />
-      </PageShell>
-    );
-  }
-
-  // A `moved` result that produced no navigation has nowhere to send anyone: the
-  // payload named the address already being viewed, or demo mode gated the
-  // forwarding out. Either way this URL leads nowhere, which is what the
-  // not-found wall says.
-  if (result.state === "not-found" || result.state === "moved") {
-    return (
-      <PageShell>
-        <PageMeta title={t("subprofiles:page.notFoundMetaTitle")} noIndex />
-        <SubprofilePageStates state="not-found" />
-      </PageShell>
-    );
-  }
-
-  if (result.state === "restricted") {
-    const pageState = RESTRICTED_TO_PAGE_STATE[result.restricted];
-    return (
-      <PageShell>
-        <PageMeta
-          title={`${t(PAGE_STATE_COPY[pageState].titleKey)} · QueerPulse`}
-          noIndex
-        />
-        <SubprofilePageStates state={pageState} />
-      </PageShell>
-    );
-  }
-
-  // result.state === "ok" from here on — every other branch returned above.
   const { data } = result;
   const skin = skinFor(data.kind);
   const isOwnerPreviewingAsVisitor = data.viewerIsMember && previewingAsVisitor;
@@ -199,71 +142,14 @@ export function SubprofilePage() {
       : "owner";
   const isOwnerDraftPreview = data.status === "draft" && data.viewerIsMember;
   const skinStyle = skinVars(data.accent ?? DEFAULT_ACCENT);
-
-  const craftLabel = t(KIND_LABEL_KEYS[data.kind]);
-  // Reaching this page means the URL resolved, so an address exists in every
-  // real case. It stays nullable because the builder refuses to invent one, and
-  // an absent canonical is dropped rather than pointed at a dead path.
-  const canonicalPath = personaPublicPathOrNull(data);
   const poemShareUrl = personaShareUrl(data);
-  // A persona still named after its profession ("Poet") is titled "Owner Name |
-  // Poet". The three sinks below each already carry the craft as its own field,
-  // so they take the owner's name alone rather than the composed title, which
-  // would otherwise say "Poet" twice ("Poet · Poet · QueerPulse").
-  const seoName = personaNameBesideCraft({
-    displayName: data.displayName,
-    kind: data.kind,
-    ownerName: data.ownerName,
-  });
-  const cardImage = data.coverUrl ?? data.avatarUrl ?? undefined;
-  // A real wide cover reads well as a large-image card; falling back to the
-  // small avatar/default, `summary` (square thumb) is the better fit.
-  const twitterCard = data.coverUrl ? "summary_large_image" : "summary";
-  const cardImageAlt = cardImage
-    ? t("subprofiles:page.ogImageAlt", {
-        name: seoName,
-        craft: craftLabel,
-      })
-    : undefined;
-  // Resolved external profile URLs for the Person's `sameAs`.
-  const sameAs = data.socialLinks
-    .map((link) => socialHref(link.platform, link.urlOrHandle))
-    .filter((href): href is string => Boolean(href));
 
   return (
     <PageShell>
-      <PageMeta
-        title={`${seoName} · ${craftLabel} · QueerPulse`}
-        description={
-          (data.tagline || data.bio || "").slice(0, 160) || undefined
-        }
-        image={cardImage}
-        imageAlt={cardImageAlt}
-        twitterCard={twitterCard}
-        canonical={canonicalPath ?? undefined}
-        // An owner's own unpublished draft preview must never index — only a
-        // published persona is meant to be publicly discoverable.
-        noIndex={isOwnerDraftPreview || undefined}
-        type="profile"
+      <SubprofilePageHeadMeta
+        data={data}
+        isOwnerDraftPreview={isOwnerDraftPreview}
       />
-
-      {/* Structured data for the public persona — never for an owner's own
-          unpublished draft preview, which must not be discoverable at all. */}
-      {!isOwnerDraftPreview && canonicalPath && (
-        <JsonLd
-          schema={buildPersonProfileSchema({
-            // schema.org Person: the human's name in `name`, the craft in
-            // `jobTitle` — the same split the "Owner Name | Poet" heading makes.
-            name: seoName,
-            url: canonicalPath,
-            jobTitle: craftLabel,
-            image: cardImage ?? null,
-            sameAs,
-            description:
-              (data.tagline || data.bio || "").slice(0, 300) || undefined,
-          })}
-        />
-      )}
 
       {/* Says which address was followed and where it now leads. Each renders
           only when this very navigation carried its own forwarding state, so a

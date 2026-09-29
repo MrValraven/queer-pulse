@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Button, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
@@ -14,6 +15,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
  * ever existing.
  *
  * Nobody is told. The community's queue simply stops showing the row.
+ *
+ * Opens with focus on "Leave it pending", the safe choice, as the house's
+ * destructive confirms do (`ConfirmDialog`'s `initialFocus="cancel"`). The
+ * commit button repeats the visible label "Withdraw request" of the trigger
+ * that opened it, so a member who pressed the trigger lands on the choice
+ * that keeps their request, and reaches the commit only on purpose.
  */
 export function WithdrawJoinRequestModal({
   name,
@@ -27,13 +34,20 @@ export function WithdrawJoinRequestModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
   return (
     <Modal
       title={t("communities:detail.withdraw.confirm.title", { name })}
       onClose={onClose}
+      initialFocusRef={cancelButtonRef}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={pending}>
+          <Button
+            ref={cancelButtonRef}
+            variant="ghost"
+            onClick={onClose}
+            disabled={pending}
+          >
             {t("communities:detail.withdraw.confirm.cancel")}
           </Button>
           <Button variant="danger" onClick={onConfirm} disabled={pending}>

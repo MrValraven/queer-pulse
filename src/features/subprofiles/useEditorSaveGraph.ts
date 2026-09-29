@@ -1,4 +1,6 @@
+import { useRef, useState } from "react";
 import { ApiError } from "../../shared/api/client";
+import { isAccountRestricted } from "../../shared/api/errorMessage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -15,7 +17,10 @@ import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import type { EditorRowsState } from "./useEditorRowsState";
 import { CAPACITY_OPTIONS } from "./skins/therapist/therapistHero.data";
-import type { SocialRow } from "./subprofileEditorContext";
+import type {
+  EditorEditVersionControls,
+  SocialRow,
+} from "./subprofileEditorContext";
 import { sectionsNormalizedOnSave } from "./editorRail.data";
 import { normalizeSectionItemRows } from "./sectionItemsNormalize";
 import type { SubprofileEditorRow } from "./subprofileSectionEditorRows";
@@ -28,6 +33,11 @@ import {
   type PendingChange,
   type RowDiffCounts,
 } from "./subprofileEditorDiff";
+import {
+  personaRefusalMessageKey,
+  runEditorSaveChain,
+  type EditorSaveStep,
+} from "./editorSaveChain";
 
 /** Save-shape projection for a social row (what the PUT actually persists),
  *  so a uid/order-only change never reads as an edit in the diff. */
@@ -69,23 +79,31 @@ const hasRowChange = (counts: RowDiffCounts) =>
   counts.edited > 0 ||
   counts.reordered;
 
-/** One dirty area's mutation inside `saveAll`, and the baseline advance that
- *  runs only on its success. */
-type SaveTask = {
-  labelKey: string;
-  run: () => Promise<unknown>;
-  commit: () => void;
-};
+/** The persona writes the save steps call, from `useSubprofileMutations` and
+ *  `useAffiliations`. */
+type SaveMutations = Pick<
+  ReturnType<typeof useSubprofileMutations>,
+  "update" | "replaceSection" | "replaceSocials"
+> & { replaceAffiliations: ReturnType<typeof useAffiliations>["replace"] };
 
-export interface EditorSaveGraph {
+/** The save graph also owns the persona's `editVersion` and the conflict flag,
+ *  so a write outside the chain (an item revision restore) reads, advances
+ *  and raises them through these controls. */
+export interface EditorSaveGraph extends EditorEditVersionControls {
   /** Live, itemized list of every unsaved change across all areas. */
   pending: PendingChange[];
   dirty: boolean;
   canSave: boolean;
   saving: boolean;
+  /** A save was refused because someone else (a co-owner, or this owner in
+   *  another tab) saved the persona after this editor loaded it (ENG-451).
+   *  Stays true until the editor reloads; Save stays off meanwhile, since
+   *  every further request would be refused the same way. */
+  hasEditConflict: boolean;
   /** Resolves true once nothing is left unsaved: every area saved, or there
-   *  was nothing to save. False when a gate stopped the save or any area
-   *  failed (the leave dialog's "Save and leave" then keeps the visitor here). */
+   *  was nothing to save. False when a gate stopped the save, any area
+   *  failed, or the save hit an edit conflict (the leave dialog's "Save and
+   *  leave" then keeps the visitor here). */
   saveAll: () => Promise<boolean>;
 }
 
@@ -152,12 +170,162 @@ function metaSaveParts(
 }
 
 /**
+ * The save steps for every dirty area, captured at save time, in the order the
+ * chain runs them: the persona PATCH (meta and skin blocks), each changed
+ * section, the social links, then the affiliations. Each step's `run` sends
+ * the `expectedEditVersion` the chain hands it (ENG-451), and its `commit`
+ * advances that area's baseline to exactly what was sent, so rows typed while
+ * the chain runs stay dirty.
+ */
+function buildSaveSteps(
+  subprofile: SubprofileView,
+  meta: SubprofileMetaEditor,
+  skinBlocks: SubprofileSkinBlocksEditor,
+  rows: EditorRowsState,
+  mutations: SaveMutations,
+  sectionDiff: (section: string) => RowDiffCounts,
+): EditorSaveStep[] {
+  const { update, replaceSection, replaceSocials, replaceAffiliations } =
+    mutations;
+  const topicSections = sectionsNormalizedOnSave(subprofile.kind);
+  const steps: EditorSaveStep[] = [];
+
+  // The persona PATCH carries meta fields AND the whole `skinData` column
+  // (coverBleed + every editable skin block). The backend REPLACES `skin_data`
+  // wholesale, so we send ONE merged object. A second concurrent skinData
+  // PATCH would clobber the bleed flag. Fire this step when
+  // either the meta fields OR any skin block changed.
+  const { metaPatch, dtoBase, commitMeta } = metaSaveParts(
+    subprofile,
+    meta,
+    skinBlocks,
+  );
+  const skinDirty = skinBlocks.dirty;
+  const coverBleedChanged =
+    meta.metaSnapshot().coverBleed !== meta.baselineSnapshot().coverBleed;
+  if (metaPatch || skinDirty) {
+    const dto: UpdateSubprofileDTO = { ...dtoBase };
+    // Attach the merged skinData only when a skin-relevant field changed, so a
+    // pure identity/text edit doesn't needlessly rewrite the column. The merge
+    // is authoritative: loaded skinData, then the current coverBleed, then the
+    // current block values (each key disjoint, later spreads win their own).
+    // The `expectedEditVersion` precondition keeps this merge from writing
+    // over a co-owner's newer blocks: the server refuses it when anyone saved
+    // after this editor loaded.
+    if (coverBleedChanged || skinDirty) {
+      dto.skinData = {
+        ...(subprofile.skinData ?? {}),
+        coverBleed: meta.metaSnapshot().coverBleed,
+        ...skinBlocks.buildSkinBlocks(),
+      };
+    }
+    steps.push({
+      labelKey: "subprofiles:pending.area.meta",
+      run: (expectedEditVersion) =>
+        update.mutateAsync({
+          id: subprofile.id,
+          dto: { ...dto, expectedEditVersion },
+        }),
+      commit: () => {
+        commitMeta();
+        if (skinDirty) skinBlocks.markSaved();
+      },
+    });
+  }
+  for (const section of Object.keys(rows.sectionRows)) {
+    const sectionRowsForKey = rows.sectionRows[section] ?? [];
+    if (!hasRowChange(sectionDiff(section))) continue;
+    const items = itemsToInputDto(
+      savedSectionRows(section, sectionRowsForKey, topicSections),
+    );
+    steps.push({
+      labelKey:
+        rows.sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
+      // A section is replaced wholesale, so the precondition is what keeps a
+      // co-owner's items in the same section from being dropped.
+      run: (expectedEditVersion) =>
+        replaceSection.mutateAsync({
+          id: subprofile.id,
+          section: section as SubprofileSection,
+          items,
+          expectedEditVersion,
+        }),
+      // The baseline takes the draft as it stands (a blank topic or trailing
+      // line included). For a topic section, the diff normalises both sides
+      // the same way, so the section reads clean after the save.
+      commit: () =>
+        rows.setSectionBaseline((current) => ({
+          ...current,
+          [section]: sectionRowsForKey,
+        })),
+    });
+  }
+  const { socialRows, affiliationRows } = rows;
+  if (
+    hasRowChange(
+      diffRowsBy(
+        filledSocials(socialRows),
+        filledSocials(rows.socialBaseline),
+        socialComparable,
+      ),
+    )
+  ) {
+    const items = filledSocials(socialRows).map(
+      ({ platform, urlOrHandle }) => ({
+        platform,
+        urlOrHandle: urlOrHandle.trim(),
+      }),
+    );
+    steps.push({
+      labelKey: "subprofiles:pending.area.socials",
+      run: (expectedEditVersion) =>
+        replaceSocials.mutateAsync({
+          id: subprofile.id,
+          items,
+          expectedEditVersion,
+        }),
+      commit: () => rows.setSocialBaseline(socialRows),
+    });
+  }
+  if (
+    hasRowChange(
+      diffRowsBy(
+        filledAffiliations(affiliationRows),
+        filledAffiliations(rows.affiliationBaseline),
+        affiliationComparable,
+      ),
+    )
+  ) {
+    const items = filledAffiliations(affiliationRows).map(
+      ({ targetType, targetSlug, role }) => ({
+        targetType,
+        targetSlug: targetSlug.trim(),
+        role,
+      }),
+    );
+    steps.push({
+      labelKey: "subprofiles:pending.area.affiliations",
+      run: (expectedEditVersion) =>
+        replaceAffiliations.mutateAsync({ items, expectedEditVersion }),
+      commit: () => rows.setAffiliationBaseline(affiliationRows),
+    });
+  }
+  return steps;
+}
+
+/**
  * The editor's ONE global save: derives the live itemized `pending` diff across
  * meta + every list area, the `dirty`/`canSave`/`saving` flags, and the
- * `saveAll()` fan-out that commits each dirty area's mutation (advancing that
+ * `saveAll()` chain that commits each dirty area's mutation (advancing that
  * area's baseline only on ITS success, so a partial failure keeps just the
  * failed areas dirty). Extracted from `SubprofileEditorProvider` so the provider
  * is thin wiring; the save-shape diff helpers above live here alongside it.
+ *
+ * ENG-451: the requests run one after another (`runEditorSaveChain`), each
+ * carrying the persona's `editVersion` as `expectedEditVersion`. The version
+ * starts as the one this editor loaded (seeded once per mount, as the drafts
+ * are) and advances with each response, so only a save by someone else can
+ * conflict. A conflict stops the chain and raises `hasEditConflict`.
  */
 export function useEditorSaveGraph(
   subprofile: SubprofileView,
@@ -169,17 +337,29 @@ export function useEditorSaveGraph(
   const { showToast } = useToast();
   const { update, replaceSection, replaceSocials } = useSubprofileMutations();
   const { replace: replaceAffiliations } = useAffiliations(subprofile.id);
+  // The version the drafts were seeded from, advanced by this editor's own
+  // saves only. A refetch of `subprofile` must not move it: that would accept
+  // a co-owner's save as if this editor had loaded it. An item revision
+  // restore that carried the precondition advances it too (`adoptEditVersion`).
+  const editVersionRef = useRef(subprofile.editVersion);
+  const [hasEditConflict, setHasEditConflict] = useState(false);
+  const getEditVersion = () => editVersionRef.current;
+  const adoptEditVersion = (nextEditVersion: number) => {
+    editVersionRef.current = nextEditVersion;
+  };
+  const markEditConflict = () => setHasEditConflict(true);
+  // Between two steps of the chain no mutation is pending, so the chain keeps
+  // its own flag (state for the UI, a ref against a double press).
+  const [isChainRunning, setIsChainRunning] = useState(false);
+  const isChainRunningRef = useRef(false);
 
   const {
     sectionRows,
     sectionBaseline,
-    setSectionBaseline,
     socialRows,
     socialBaseline,
-    setSocialBaseline,
     affiliationRows,
     affiliationBaseline,
-    setAffiliationBaseline,
     sectionLabelKeys,
   } = rows;
 
@@ -228,15 +408,19 @@ export function useEditorSaveGraph(
   // `nameMissing`/`handleBlocked` disable the button outright (a save would be
   // rejected); `ctaMismatch` instead lets the click through so `saveAll` can
   // explain the label/link pairing in a toast, mirroring the old per-pane save.
-  const canSave = dirty && !meta.nameMissing && !meta.handleBlocked;
+  // After an edit conflict the button stays off too: every request would be
+  // refused until the editor reloads (the conflict alert offers that).
+  const canSave =
+    dirty && !meta.nameMissing && !meta.handleBlocked && !hasEditConflict;
   const saving =
+    isChainRunning ||
     update.isPending ||
     replaceSection.isPending ||
     replaceSocials.isPending ||
     replaceAffiliations.isPending;
 
   async function saveAll(): Promise<boolean> {
-    if (saving) return false;
+    if (saving || isChainRunningRef.current || hasEditConflict) return false;
     if (!dirty) return true;
     if (meta.nameMissing || meta.handleBlocked) return false;
     if (meta.ctaMismatch) {
@@ -244,118 +428,33 @@ export function useEditorSaveGraph(
       return false;
     }
     const changedCount = pending.length;
-    const tasks: SaveTask[] = [];
-
-    // The persona PATCH carries meta fields AND the whole `skinData` column
-    // (coverBleed + every editable skin block). The backend REPLACES `skin_data`
-    // wholesale, so we send ONE merged object. A second concurrent skinData
-    // PATCH would clobber the bleed flag. Fire this task when
-    // either the meta fields OR any skin block changed.
-    const { metaPatch, dtoBase, commitMeta } = metaSaveParts(
+    const steps = buildSaveSteps(
       subprofile,
       meta,
       skinBlocks,
+      rows,
+      { update, replaceSection, replaceSocials, replaceAffiliations },
+      sectionDiff,
     );
-    const skinDirty = skinBlocks.dirty;
-    const coverBleedChanged =
-      meta.metaSnapshot().coverBleed !== meta.baselineSnapshot().coverBleed;
-    if (metaPatch || skinDirty) {
-      const dto: UpdateSubprofileDTO = { ...dtoBase };
-      // Attach the merged skinData only when a skin-relevant field changed, so a
-      // pure identity/text edit doesn't needlessly rewrite the column. The merge
-      // is authoritative: loaded skinData, then the current coverBleed, then the
-      // current block values (each key disjoint, later spreads win their own).
-      if (coverBleedChanged || skinDirty) {
-        dto.skinData = {
-          ...(subprofile.skinData ?? {}),
-          coverBleed: meta.metaSnapshot().coverBleed,
-          ...skinBlocks.buildSkinBlocks(),
-        };
-      }
-      tasks.push({
-        labelKey: "subprofiles:pending.area.meta",
-        run: () => update.mutateAsync({ id: subprofile.id, dto }),
-        commit: () => {
-          commitMeta();
-          if (skinDirty) skinBlocks.markSaved();
-        },
-      });
-    }
-    for (const section of Object.keys(sectionRows)) {
-      const sectionRowsForKey = sectionRows[section] ?? [];
-      if (!hasRowChange(sectionDiff(section))) continue;
-      const items = itemsToInputDto(
-        savedSectionRows(section, sectionRowsForKey, topicSections),
-      );
-      tasks.push({
-        labelKey: sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
-        run: () =>
-          replaceSection.mutateAsync({
-            id: subprofile.id,
-            section: section as SubprofileSection,
-            items,
-          }),
-        // The baseline takes the draft as it stands (a blank topic or trailing
-        // line included). For a topic section, the diff normalises both sides
-        // the same way, so the section reads clean after the save.
-        commit: () =>
-          setSectionBaseline((current) => ({
-            ...current,
-            [section]: sectionRowsForKey,
-          })),
-      });
-    }
-    if (
-      hasRowChange(
-        diffRowsBy(
-          filledSocials(socialRows),
-          filledSocials(socialBaseline),
-          socialComparable,
-        ),
-      )
-    ) {
-      const items = filledSocials(socialRows).map(
-        ({ platform, urlOrHandle }) => ({
-          platform,
-          urlOrHandle: urlOrHandle.trim(),
-        }),
-      );
-      tasks.push({
-        labelKey: "subprofiles:pending.area.socials",
-        run: () => replaceSocials.mutateAsync({ id: subprofile.id, items }),
-        commit: () => setSocialBaseline(socialRows),
-      });
-    }
-    if (
-      hasRowChange(
-        diffRowsBy(
-          filledAffiliations(affiliationRows),
-          filledAffiliations(affiliationBaseline),
-          affiliationComparable,
-        ),
-      )
-    ) {
-      const items = filledAffiliations(affiliationRows).map(
-        ({ targetType, targetSlug, role }) => ({
-          targetType,
-          targetSlug: targetSlug.trim(),
-          role,
-        }),
-      );
-      tasks.push({
-        labelKey: "subprofiles:pending.area.affiliations",
-        run: () => replaceAffiliations.mutateAsync(items),
-        commit: () => setAffiliationBaseline(affiliationRows),
-      });
-    }
-    if (!tasks.length) return true;
+    if (!steps.length) return true;
 
-    const results = await Promise.allSettled(tasks.map((task) => task.run()));
-    const failed: string[] = [];
-    results.forEach((result, index) => {
-      if (result.status === "fulfilled") tasks[index]!.commit();
-      else failed.push(t(tasks[index]!.labelKey));
+    isChainRunningRef.current = true;
+    setIsChainRunning(true);
+    const outcome = await runEditorSaveChain(
+      steps,
+      editVersionRef.current,
+    ).finally(() => {
+      isChainRunningRef.current = false;
+      setIsChainRunning(false);
     });
+    editVersionRef.current = outcome.editVersion;
+    // The conflict alert says what happened and offers Reload, so no toast.
+    // The areas saved before the conflict stay saved (their baselines moved).
+    if (outcome.hasConflict) {
+      setHasEditConflict(true);
+      return false;
+    }
+    const failed = outcome.failedLabelKeys.map((labelKey) => t(labelKey));
 
     if (failed.length === 0) {
       showToast(
@@ -364,19 +463,25 @@ export function useEditorSaveGraph(
       );
       return true;
     }
-    // Client-error responses name the actual problem: a 400 names an offending
+    // A typed refusal gets its translated copy (`personaRefusalMessageKey`).
+    // A restriction explains every failed area at once, so it shows at any
+    // count; a handle refusal names the one area it failed. Other
+    // client-error responses name the actual problem: a 400 names an offending
     // collaborator/affiliation entry, a 403 a permission the viewer lacks (e.g.
-    // only the persona's creator may link it), a 409 a taken address/handle, a
-    // 422 an unmet publish rule. Surface that message when a single area
-    // failed; for multi-area failures (or opaque 5xx) fall back to listing the
-    // areas.
-    const rejection = results.find((result) => result.status === "rejected");
+    // only the persona's creator may link it), a 409 a taken address. Surface
+    // that message when a single area failed; for multi-area failures (or
+    // opaque 5xx) fall back to listing the areas.
+    const rejection = outcome.firstFailure;
+    const refusalKey = personaRefusalMessageKey(rejection);
+    const isSingleFailure = failed.length === 1;
     const detail =
-      failed.length === 1 &&
-      rejection?.reason instanceof ApiError &&
-      [400, 403, 409, 422].includes(rejection.reason.status)
-        ? rejection.reason.message
-        : null;
+      refusalKey && (isSingleFailure || isAccountRestricted(rejection))
+        ? t(refusalKey)
+        : isSingleFailure &&
+            rejection instanceof ApiError &&
+            [400, 403, 409, 422].includes(rejection.status)
+          ? rejection.message
+          : null;
     showToast(
       detail ??
         t("subprofiles:pending.saveError", { areas: failed.join(", ") }),
@@ -385,5 +490,15 @@ export function useEditorSaveGraph(
     return false;
   }
 
-  return { pending, dirty, canSave, saving, saveAll };
+  return {
+    pending,
+    dirty,
+    canSave,
+    saving,
+    hasEditConflict,
+    saveAll,
+    getEditVersion,
+    adoptEditVersion,
+    markEditConflict,
+  };
 }

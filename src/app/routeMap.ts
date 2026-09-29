@@ -79,6 +79,9 @@ export const routes = {
   adminChangemakerNominations: "/admin/changemaker-nominations",
   adminCommissionInterests: "/admin/commission-interests",
   adminReadingGroupProposals: "/admin/reading-group-proposals",
+  /** PRD-461: the staff forum review queue. Moderator or admin, no staff
+   *  grant; the triage console's forum row deep-links here. */
+  adminForumReview: "/admin/forum",
   adminGuideFeedback: "/admin/guide-feedback",
   adminMagazineSubmissions: "/admin/magazine-submissions",
   adminWriterApplications: "/admin/writer-applications",
@@ -517,7 +520,6 @@ export const routes = {
   accountSuspended: "/system/account-suspended",
   maintenance: "/system/maintenance",
   offline: "/system/offline",
-  serverError: "/system/500",
   pwaPrompt: "/system/pwa-prompt",
   feed: "/feed",
   onboarding: "/auth/onboarding",

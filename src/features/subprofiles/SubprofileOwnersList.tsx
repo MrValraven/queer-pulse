@@ -8,7 +8,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { reasonFor } from "../../shared/api/errorMessage";
+import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { MemberDTO } from "./api/subprofiles.api";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
@@ -52,8 +52,12 @@ export function SubprofileOwnersList({
       setPendingRemoval(null);
       showToast(t("subprofiles:owners.toastRemoved", { name }), "info");
     } catch (error) {
+      // ENG-448: a moderation restriction gets the copy naming the appeal,
+      // the same one the global handler shows, ahead of any server message.
       showToast(
-        reasonFor(error) ?? t("subprofiles:owners.toastRemoveError"),
+        isAccountRestricted(error)
+          ? t("shared:apiError.accountRestricted")
+          : (reasonFor(error) ?? t("subprofiles:owners.toastRemoveError")),
         "error",
       );
     }

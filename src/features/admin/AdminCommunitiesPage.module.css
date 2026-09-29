@@ -630,6 +630,11 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* Scrolls on its own, so a long answer keeps the search above it in view
+     while the admin refines it. */
+  max-height: min(40svh, 20rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .ownerPickRow {
   display: flex;
@@ -765,6 +770,12 @@
   .modPickerItem:hover:not(:disabled) {
     border-color: var(--line-strong);
     background: rgba(var(--jade-rgb), 0.1);
+  }
+}
+/* Candidate chips are tapped on phones; desktop keeps the dense pill. */
+@media (pointer: coarse) {
+  .modPickerItem {
+    min-height: var(--tap-min);
   }
 }
 
@@ -1088,6 +1099,39 @@
 }
 .noteArea::placeholder {
   color: var(--ink-40);
+}
+
+/* Remove-member confirm modal: the "also bar them from rejoining" checkbox
+   row, below the confirm body paragraph. Same shape as EditCommunityModal's
+   `.check`/`.checkText` roster-visibility row. */
+.removeBarCheck {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  cursor: pointer;
+}
+.removeBarCheck input {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+.removeBarCheckText {
+  font-size: var(--text-14-5);
+  line-height: 1.5;
+  color: var(--ink);
+}
+/* A sibling of .removeBarCheck now (S12: kept out of the checkbox's
+   accessible name, wired in via aria-describedby instead). Indented to align
+   under the label text: the checkbox's 18px box plus the row's 10px gap. */
+.removeBarCheckHint {
+  margin: 4px 0 0 28px;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
 }
 
 @media (prefers-reduced-motion: reduce) {

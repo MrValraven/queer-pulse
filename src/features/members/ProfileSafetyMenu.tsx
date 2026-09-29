@@ -118,7 +118,10 @@ export function ProfileSafetyMenu({
 }: {
   slug: string;
   firstName: string;
-  onWithdrawVouch?: () => void;
+  /** Called with an `onSettled(didSucceed)` callback once the member confirms
+   *  the withdrawal, so the menu can wait for the server before it toasts
+   *  (PRD-424). Undefined when the viewer has not vouched for this member. */
+  onWithdrawVouch?: (onSettled: (didSucceed: boolean) => void) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -169,13 +172,25 @@ export function ProfileSafetyMenu({
     setReporting(true);
   };
 
+  // Closes right away and toasts only once the server has answered, exactly
+  // like `confirmBlock` below (PRD-202): a pre-confirm success toast believed
+  // the withdrawal had already gone through when a failed DELETE left the
+  // vouch standing, the false-success bug PRD-424 reports for this action.
   const confirmWithdrawVouch = () => {
     setConfirmingWithdrawVouch(false);
-    onWithdrawVouch?.();
-    showToast(
-      t("safety:profileMenu.withdrawVouchToast", { name: firstName }),
-      "success",
-    );
+    onWithdrawVouch?.((didSucceed) => {
+      if (didSucceed) {
+        showToast(
+          t("safety:profileMenu.withdrawVouchToast", { name: firstName }),
+          "success",
+        );
+      } else {
+        showToast(
+          t("safety:profileMenu.withdrawVouchErrorToast", { name: firstName }),
+          "error",
+        );
+      }
+    });
   };
 
   // Block and unblock confirm only once the server has answered. `toggleBlock`

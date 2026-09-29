@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiAlertCircle, FiEyeOff } from "react-icons/fi";
+import { FiAlertCircle, FiClock, FiEyeOff } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
@@ -22,20 +22,23 @@ const DATE_OPTIONS: Intl.DateTimeFormatOptions = {
 
 /**
  * One ambassador grant. An active row carries the two actions (change focus,
- * revoke); a past row reads as the record of who revoked it and why. The
- * revoke confirm is owned by the page: this row leaves the list the moment the
- * revoke lands, and a modal hosted here would unmount with it.
+ * revoke); a past row reads as the record of who revoked it and why. Every row
+ * opens the member's grant history. The revoke confirm and the history drawer
+ * are owned by the page: this row leaves the list the moment the revoke
+ * lands, and a dialog hosted here would unmount with it.
  */
 export function AdminAmbassadorRow({
   row,
   isFocusSaving,
   onChangeFocus,
   onRevoke,
+  onShowHistory,
 }: {
   row: AdminAmbassadorDTO;
   isFocusSaving: boolean;
   onChangeFocus: (focusArea: AmbassadorFocusArea) => void;
   onRevoke: () => void;
+  onShowHistory: () => void;
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
@@ -118,8 +121,8 @@ export function AdminAmbassadorRow({
         </p>
       )}
 
-      {isActive && (
-        <div className={styles.rowActions}>
+      <div className={styles.rowActions}>
+        {isActive && (
           <div className={styles.focusControl}>
             <span className={styles.focusCaption} aria-hidden>
               {t("admin:ambassadors.row.changeFocus")}
@@ -141,16 +144,28 @@ export function AdminAmbassadorRow({
               ))}
             </select>
           </div>
+        )}
+        <div className={styles.rowButtons}>
           <Button
-            variant="danger"
+            variant="ghost"
             size="sm"
-            onClick={onRevoke}
-            aria-label={t("admin:ambassadors.row.revokeAria", { name })}
+            onClick={onShowHistory}
+            aria-label={t("admin:ambassadors.row.historyAria", { name })}
           >
-            {t("admin:ambassadors.row.revoke")}
+            <FiClock aria-hidden /> {t("admin:ambassadors.row.history")}
           </Button>
+          {isActive && (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={onRevoke}
+              aria-label={t("admin:ambassadors.row.revokeAria", { name })}
+            >
+              {t("admin:ambassadors.row.revoke")}
+            </Button>
+          )}
         </div>
-      )}
+      </div>
     </article>
   );
 }

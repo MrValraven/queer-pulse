@@ -12,6 +12,7 @@ import { routes } from "../../app/routeMap";
 import { useSubmitAppeal } from "./api/useSubmitAppeal";
 import {
   classifyAppealWindowClosed,
+  isAppealAlreadyDecided,
   type AppealWindowClosedRefusal,
 } from "./api/appealSubmissionError";
 import type { SubmittedAppealDTO } from "./api/appeals.api";
@@ -132,6 +133,37 @@ function AppealWindowClosedNotice({
   );
 }
 
+/**
+ * The refusal that a decision was already appealed and that appeal was
+ * already decided (PRD-459): each moderation action can be appealed once, a
+ * moderator who was not part of the original decision reviews it, and once
+ * decided the outcome is final. Shares the coral-edged treatment of
+ * `AppealWindowClosedNotice` because it is the same kind of thing: a
+ * permanent state that belongs on screen, since pressing submit again can
+ * only repeat the identical refusal.
+ */
+function AppealAlreadyDecidedNotice() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.windowClosed} role="alert">
+      <p className={styles.windowClosedTitle}>
+        {t("safety:appealSubmit.alreadyDecided.title")}
+      </p>
+      <p className={styles.windowClosedBody}>
+        {t("safety:appealSubmit.alreadyDecided.body")}
+      </p>
+      <div className={styles.actions}>
+        <Button variant="ghost" to={routes.appealOutcome}>
+          {t("safety:appealSubmit.alreadyDecided.outcomeCta")}
+        </Button>
+        <Button variant="ghost" to={routes.contact}>
+          {t("safety:appealSubmit.alreadyDecided.contactCta")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 /** The appeal form: a single required free-text case, with a live counter. */
 function AppealForm({
   submitAppeal,
@@ -144,6 +176,7 @@ function AppealForm({
   const [reason, setReason] = useState("");
   const [windowClosed, setWindowClosed] =
     useState<AppealWindowClosedRefusal | null>(null);
+  const [isAlreadyDecided, setIsAlreadyDecided] = useState(false);
 
   const trimmedLength = reason.trim().length;
   const canSubmit =
@@ -152,7 +185,10 @@ function AppealForm({
     // Once the window is shut, every further attempt gets the identical
     // refusal. The notice sits directly above the button and says why, so this
     // stops a member re-sending into a wall rather than disabling in silence.
-    !windowClosed;
+    !windowClosed &&
+    // Same logic for the one-appeal-per-decision refusal: the action already
+    // has a final outcome, so a second attempt on it can only repeat.
+    !isAlreadyDecided;
   // A specific action id can be deep-linked from the enforcement notification;
   // absent, the backend resolves the latest action against the member.
   const actionId = searchParams.get("action") ?? undefined;
@@ -170,6 +206,12 @@ function AppealForm({
           const closed = classifyAppealWindowClosed(error);
           if (closed) {
             setWindowClosed(closed);
+            return;
+          }
+          // A decided action's second appeal is likewise a permanent state
+          // with its own panel: see `AppealAlreadyDecidedNotice`.
+          if (isAppealAlreadyDecided(error)) {
+            setIsAlreadyDecided(true);
             return;
           }
           // Everything else stays a toast carrying the specific backend reason
@@ -247,13 +289,19 @@ function AppealForm({
         {windowClosed ? (
           <AppealWindowClosedNotice refusal={windowClosed} />
         ) : null}
+        {isAlreadyDecided ? <AppealAlreadyDecidedNotice /> : null}
 
         <div className={styles.actions}>
-          <Button variant="primary" type="submit" disabled={!canSubmit}>
-            {submitAppeal.isPending
-              ? t("safety:appealSubmit.form.submitting")
-              : t("safety:appealSubmit.form.submitCta")}
-          </Button>
+          {/* N4: once either permanent notice is showing, a second submit can
+              only repeat the identical refusal, so the notice's own buttons
+              are the path forward. */}
+          {windowClosed || isAlreadyDecided ? null : (
+            <Button variant="primary" type="submit" disabled={!canSubmit}>
+              {submitAppeal.isPending
+                ? t("safety:appealSubmit.form.submitting")
+                : t("safety:appealSubmit.form.submitCta")}
+            </Button>
+          )}
           <Button variant="ghost" to={routes.codeOfConduct}>
             {t("safety:appealSubmit.form.ladderCta")}
           </Button>

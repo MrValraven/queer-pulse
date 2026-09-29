@@ -39,10 +39,11 @@
  * The sticker fields below (slug, keyword lists, labels) mirror what
  * `useStickerPublish.ts` sends a real pack through the admin builder, so a
  * demo sticker and a published one carry the same shape. Uno reverse keeps
- * its own label (`"<flag name> reverse"`, from the English `cards` catalog)
- * and keyword format exactly as before; Blip and Tea take their label and
- * keywords straight from the template's own item catalog, since those two
- * templates carry no separate flag-name lookup.
+ * its own label (`"<flag name> reverse"`, from the English `cards` catalog,
+ * and `labelPt` the same way from the Portuguese one) and keyword format
+ * exactly as before; Blip and Tea take their English and Portuguese labels
+ * and keywords straight from the template's own item catalog, since those
+ * two templates carry no separate flag-name lookup.
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -67,6 +68,7 @@ const PACK_TABLE = [
     packId: "demo-sticker-pack-uno-reverse",
     packSlug: "uno-reverse",
     packName: "Uno reverse",
+    packNamePt: "Uno reverse",
     packDescription: "Every pride flag, drawn as an Uno reverse card.",
     pngDirectoryName: "uno-reverse",
   },
@@ -75,6 +77,7 @@ const PACK_TABLE = [
     packId: "demo-sticker-pack-blip",
     packSlug: "blip",
     packName: "Blip",
+    packNamePt: "Blip",
     packDescription: "QueerPulse's own mascot, in 22 moods.",
     pngDirectoryName: "blip",
   },
@@ -83,6 +86,7 @@ const PACK_TABLE = [
     packId: "demo-sticker-pack-tea",
     packSlug: "tea",
     packName: "Tea, shade and sparkle",
+    packNamePt: "Cusquice, veneno e brilho",
     packDescription: "Queer slang, no words needed.",
     pngDirectoryName: "tea",
   },
@@ -116,6 +120,9 @@ try {
   const cardsModule = await server.ssrLoadModule(
     "/src/shared/i18n/catalogs/en/cards.ts",
   );
+  const portugueseCardsModule = await server.ssrLoadModule(
+    "/src/shared/i18n/catalogs/pt/cards.ts",
+  );
   const paramsModule = await server.ssrLoadModule(
     "/src/features/stickers/templates/unoReverse.params.ts",
   );
@@ -123,6 +130,7 @@ try {
   const { templateById } = registryModule;
   const { primitivesToSvg } = svgModule;
   const { cards } = cardsModule;
+  const { cards: portugueseCards } = portugueseCardsModule;
   const { STICKER_CANVAS_SIZE } = paramsModule;
 
   stickerCanvasSize = STICKER_CANVAS_SIZE;
@@ -138,6 +146,7 @@ try {
     const stickerEntries = template.items.map((item) => {
       const itemId = item.id;
       let label;
+      let labelPt;
       let keywords;
       if (isUnoReverse) {
         const flagName = cards[`flag.${itemId}`];
@@ -147,12 +156,15 @@ try {
           );
         }
         label = `${flagName} reverse`;
+        // A flag missing from the Portuguese catalog keeps its English name.
+        labelPt = `${portugueseCards[`flag.${itemId}`] ?? flagName} reverse`;
         keywords = {
           en: [itemId, "uno", "reverse"],
           pt: [itemId, "uno", "reverso"],
         };
       } else {
         label = item.label.en;
+        labelPt = item.label.pt;
         keywords = item.keywords;
       }
       const primitives = template.geometry(template.defaultStyle, itemId);
@@ -162,6 +174,7 @@ try {
         stickerId: `demo-sticker-${packConfig.packSlug}-${itemId}`,
         slug: template.slugFor(itemId),
         label,
+        labelPt,
         url: `/stickers/${packConfig.pngDirectoryName}/${itemId}.png`,
         keywords,
         svg,
@@ -216,6 +229,7 @@ function renderSticker(stickerEntry) {
     `id: ${JSON.stringify(stickerEntry.stickerId)}`,
     `slug: ${JSON.stringify(stickerEntry.slug)}`,
     `label: ${JSON.stringify(stickerEntry.label)}`,
+    `labelPt: ${JSON.stringify(stickerEntry.labelPt)}`,
     `url: ${JSON.stringify(stickerEntry.url)}`,
     `width: ${stickerCanvasSize}`,
     `height: ${stickerCanvasSize}`,
@@ -231,6 +245,7 @@ function renderPack(packEntry) {
     `    id: ${JSON.stringify(packEntry.packId)},`,
     `    slug: ${JSON.stringify(packEntry.packSlug)},`,
     `    name: ${JSON.stringify(packEntry.packName)},`,
+    `    namePt: ${JSON.stringify(packEntry.packNamePt)},`,
     `    description: ${JSON.stringify(packEntry.packDescription)},`,
     `    coverStickerId: ${JSON.stringify(packEntry.coverStickerId)},`,
     "    stickers: [",

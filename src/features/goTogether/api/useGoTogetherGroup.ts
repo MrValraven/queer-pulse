@@ -60,7 +60,7 @@ export function useGoTogetherCheckIn(groupId: string) {
  * list root and `["conversation-detail", id, demoMode]` query, which has no
  * exported key factory to import, hence the matching literal prefixes here.
  */
-function invalidateGoTogetherGroupSideEffects(
+export function invalidateGoTogetherGroupSideEffects(
   queryClient: ReturnType<typeof useQueryClient>,
 ) {
   void queryClient.invalidateQueries({ queryKey: goTogetherKeys.cardRoot });

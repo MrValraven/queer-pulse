@@ -17,7 +17,10 @@ export const getAdminStickerPacks = () =>
 
 export interface CreateStickerPackBody {
   slug: string;
+  /** The English pack name. */
   name: string;
+  /** The Portuguese pack name; omitted when none was written. */
+  namePt?: string;
   description?: string;
 }
 
@@ -27,6 +30,8 @@ export const createStickerPack = (body: CreateStickerPackBody) =>
 
 export interface UpdateStickerPackBody {
   name?: string;
+  /** `null` clears the Portuguese name, so Portuguese readers see `name`. */
+  namePt?: string | null;
   description?: string;
   status?: "draft" | "published" | "archived";
   sortOrder?: number;
@@ -42,7 +47,10 @@ export const updateStickerPack = (
 
 export interface AddStickerBody {
   slug: string;
+  /** The English name. */
   label: string;
+  /** The Portuguese name. */
+  labelPt?: string;
   storageKey: string;
   width: number;
   height: number;
@@ -60,6 +68,8 @@ export const addSticker = (packId: string, body: AddStickerBody) =>
 
 export interface UpdateStickerBody {
   label?: string;
+  /** `null` clears the Portuguese name, so Portuguese readers see `label`. */
+  labelPt?: string | null;
   keywords?: { en: string[]; pt: string[] };
   /** A redrawn artwork replaces the file, size, source and template params
    *  together, so the sticker keeps its id, order and cover status. */

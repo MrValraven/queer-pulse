@@ -151,11 +151,19 @@
   color: var(--accent-ink);
   font-weight: 700;
 }
-.content {
+.content,
+.contentGone {
   font-size: var(--text-14-5);
-  color: var(--ink);
   line-height: 1.65;
   padding-left: 42px;
+}
+.content {
+  color: var(--ink);
+}
+/* ENG-411. Stands in for an excerpt the backend no longer serves. */
+.contentGone {
+  font-style: italic;
+  color: var(--ink-40);
 }
 .content em {
   font-style: italic;

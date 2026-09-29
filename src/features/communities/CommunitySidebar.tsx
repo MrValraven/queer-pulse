@@ -4,7 +4,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useConnect } from "../../app/providers/useConnect";
-import { routes } from "../../app/routeMap";
+import { routes, communityPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Community } from "../homepage/data/types";
@@ -41,6 +41,14 @@ export function CommunitySidebar({
   const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
   const org = detail.organiser;
+  // `Community.slug` is typed optional for sources that genuinely have none
+  // yet (a founding draft); every related community here comes from either
+  // the demo registry or a live card DTO, both of which always carry one.
+  // Filtered defensively anyway, so a malformed entry with no slug is simply
+  // skipped and never turns into a `/community/undefined` link.
+  const relatedWithSlug = related.filter(
+    (c): c is Community & { slug: string } => Boolean(c.slug),
+  );
   // `detail.nextEvent` is a placeholder the detail adapter always fills with
   // "to be announced", because GET /communities/:slug carries no events. The
   // real upcoming gatherings arrive on the pulse query, so when one exists it
@@ -141,15 +149,15 @@ export function CommunitySidebar({
 
       <CommunityPulseSidebarCards pulse={communityPulse} />
 
-      {related.length > 0 && (
+      {relatedWithSlug.length > 0 && (
         <div className={styles.sbC}>
           <div className={styles.sbLbl}>
             {t("communities:detail.sidebar.relatedCommunities")}
           </div>
-          {related.map((c) => (
+          {relatedWithSlug.map((c) => (
             <Link
               key={c.slug}
-              to={`/community/${c.slug}`}
+              to={communityPath(c.slug)}
               className={styles.sbRelItem}
             >
               <div

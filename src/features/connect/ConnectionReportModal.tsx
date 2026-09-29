@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -8,6 +8,7 @@ import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { logError } from "../../shared/observability/logger";
+import { focusControl } from "../../shared/lib/focusFirstError";
 import styles from "./ConnectionsPage.module.css";
 
 export interface ConnectionReportModalProps {
@@ -37,18 +38,42 @@ export function ConnectionReportModal({
   // Server-owned taxonomy when it answers, the local one instantly and
   // silently when it does not. Never a spinner, never an empty list.
   const reasons = useReportReasons("member");
-  const [reason, setReason] = useState<string>(reasons[0]!.code);
+  const [reason, setReason] = useState<string | null>(null);
+  const reasonLabelId = useId();
   const detailFieldId = useId();
+  const missingHintId = useId();
+  const firstReasonRef = useRef<HTMLInputElement>(null);
+  const detailRef = useRef<HTMLTextAreaElement>(null);
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
   const createReport = useCreateReport();
   const describeReportError = useReportSubmissionError();
 
-  const canSubmit = detail.trim().length >= 10;
+  const canSubmit = reason !== null && detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
+  // One slot under the textarea says what is still missing: the reason
+  // first, then the character count. The blocked submit points at it.
+  let counterText = t("safety:reportPerson.form.charsCount", {
+    count: detail.trim().length,
+  });
+  if (reason === null) {
+    counterText = t("safety:reportPerson.form.reasonMissing");
+  } else if (charsLeft > 0) {
+    counterText = t("safety:reportPerson.form.charsRemaining", {
+      count: charsLeft,
+    });
+  }
 
   const submit = () => {
-    if (!canSubmit || createReport.isPending) return;
+    if (createReport.isPending) return;
+    if (!canSubmit || reason === null) {
+      // The submit stays focusable while blocked, so a press lands the
+      // reporter on the field that still needs them.
+      focusControl(
+        reason === null ? firstReasonRef.current : detailRef.current,
+      );
+      return;
+    }
     createReport.mutate(
       {
         subjectType: "member",
@@ -105,10 +130,13 @@ export function ConnectionReportModal({
           <Button variant="ghost" onClick={onClose}>
             {t("safety:reportPerson.form.cancelCta")}
           </Button>
+          {/* aria-disabled keeps the submit in the tab order, so the hint it
+              points at is heard and an early press can move focus. */}
           <Button
             variant="primary"
             onClick={submit}
-            disabled={!canSubmit || createReport.isPending}
+            aria-disabled={!canSubmit || createReport.isPending}
+            aria-describedby={canSubmit ? undefined : missingHintId}
           >
             {createReport.isPending
               ? t("safety:reportPerson.form.submitting")
@@ -117,11 +145,16 @@ export function ConnectionReportModal({
         </>
       }
     >
-      <div className={styles.reportLabel}>
+      <div id={reasonLabelId} className={styles.reportLabel}>
         {t("safety:reportPerson.form.reasonLabel")}
       </div>
-      <div className={styles.reportOpts}>
-        {reasons.map((option) => (
+      <div
+        className={styles.reportOpts}
+        role="radiogroup"
+        aria-labelledby={reasonLabelId}
+        aria-required="true"
+      >
+        {reasons.map((option, optionIndex) => (
           <label
             key={option.code}
             className={[
@@ -132,6 +165,7 @@ export function ConnectionReportModal({
               .join(" ")}
           >
             <input
+              ref={optionIndex === 0 ? firstReasonRef : undefined}
               type="radio"
               name="connection-report-reason"
               value={option.code}
@@ -146,18 +180,15 @@ export function ConnectionReportModal({
         {t("safety:reportPerson.form.detailLabel")}
       </label>
       <textarea
+        ref={detailRef}
         id={detailFieldId}
         className={styles.reportTextarea}
         placeholder={t("safety:reportPerson.form.detailPlaceholder")}
         value={detail}
         onChange={(event) => setDetail(event.target.value)}
       />
-      <div className={styles.reportCounter}>
-        {charsLeft > 0
-          ? t("safety:reportPerson.form.charsRemaining", { count: charsLeft })
-          : t("safety:reportPerson.form.charsCount", {
-              count: detail.trim().length,
-            })}
+      <div id={missingHintId} className={styles.reportCounter}>
+        {counterText}
       </div>
     </Modal>
   );

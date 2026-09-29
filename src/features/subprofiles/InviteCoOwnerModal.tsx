@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { FiEyeOff, FiShield } from "react-icons/fi";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { FiAlertTriangle, FiEyeOff, FiShield } from "react-icons/fi";
 import {
   Button,
   MemberIdentity,
@@ -11,7 +11,11 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
-import { reasonFor } from "../../shared/api/errorMessage";
+import {
+  isAccountRestricted,
+  isInviteBlocked,
+  reasonFor,
+} from "../../shared/api/errorMessage";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileInvites } from "./api/useSubprofileInvites";
@@ -61,6 +65,20 @@ export function InviteCoOwnerModal({
   const [selectedPerson, setSelectedPerson] =
     useState<MemberSelectPerson | null>(null);
   const [disclosureAcknowledged, setDisclosureAcknowledged] = useState(false);
+  // S8: a blocked send (or a restricted sender account) is permanent for
+  // this attempt, so Send stays disabled with the reason shown inline,
+  // avoiding a second dead press. Cleared whenever the member picks someone
+  // else or steps back to the picker.
+  const [blockedReason, setBlockedReason] = useState<string | null>(null);
+  const blockedNoticeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Send was disabled mid-request and took focus with it; a disabled
+    // control can't hold it, so it fell back to <body> (S8). Move focus onto
+    // the reason itself, which stays inside the modal and reads the reason
+    // aloud for a screen reader.
+    if (blockedReason) blockedNoticeRef.current?.focus();
+  }, [blockedReason]);
 
   const isUnlinkedPersona = subprofile.linkVisibility === "unlinked";
 
@@ -90,11 +108,13 @@ export function InviteCoOwnerModal({
     if (!person) return;
     setSelectedPerson(person);
     setDisclosureAcknowledged(false);
+    setBlockedReason(null);
   }
 
   function handleBackToPicker() {
     setSelectedPerson(null);
     setDisclosureAcknowledged(false);
+    setBlockedReason(null);
   }
 
   async function handleConfirmInvite() {
@@ -105,6 +125,21 @@ export function InviteCoOwnerModal({
       showToast(t("subprofiles:invite.toastSent"), "success");
       onClose();
     } catch (error) {
+      if (isInviteBlocked(error)) {
+        // Permanent for this pair: keep Send disabled with the reason shown
+        // in the modal (S8).
+        setBlockedReason(t("subprofiles:invite.toastBlocked"));
+        setInvitingSlug(null);
+        return;
+      }
+      if (isAccountRestricted(error)) {
+        // Same treatment as a blocked send: the restriction won't clear by
+        // retrying, so Send stays disabled with the global handler's own
+        // translated copy (names the appeal) shown inline.
+        setBlockedReason(t("shared:apiError.accountRestricted"));
+        setInvitingSlug(null);
+        return;
+      }
       showToast(
         reasonFor(error) ?? t("subprofiles:invite.toastError"),
         "error",
@@ -135,7 +170,11 @@ export function InviteCoOwnerModal({
             <Button
               variant="primary"
               onClick={() => void handleConfirmInvite()}
-              disabled={!disclosureAcknowledged || invitingSlug !== null}
+              disabled={
+                !disclosureAcknowledged ||
+                invitingSlug !== null ||
+                blockedReason !== null
+              }
             >
               {invitingSlug
                 ? t("subprofiles:invite.inviting")
@@ -146,62 +185,14 @@ export function InviteCoOwnerModal({
       }
     >
       {selectedPerson ? (
-        <div className={styles.confirm}>
-          <div className={styles.selectedPerson}>
-            <MemberIdentity
-              person={selectedPerson}
-              secondary={selectedPerson.pronouns}
-            />
-          </div>
-
-          <div className="notice warn">
-            <FiShield size={20} aria-hidden />
-            <div className="warnbody">
-              <b>{t("subprofiles:invite.disclosureAccessTitle")}</b>
-              <p>
-                {t("subprofiles:invite.disclosureAccessBody", {
-                  name: selectedPerson.name,
-                })}
-              </p>
-            </div>
-          </div>
-
-          {isUnlinkedPersona && (
-            <div className="notice warn">
-              <FiEyeOff size={20} aria-hidden />
-              <div className="warnbody">
-                <b>{t("subprofiles:invite.disclosureIdentityTitle")}</b>
-                <p>
-                  {t("subprofiles:invite.disclosureIdentityBody", {
-                    name: selectedPerson.name,
-                  })}
-                </p>
-              </div>
-            </div>
-          )}
-
-          <label
-            className={styles.acknowledgeRow}
-            htmlFor="invite-co-owner-disclosure-acknowledge"
-          >
-            <input
-              id="invite-co-owner-disclosure-acknowledge"
-              type="checkbox"
-              checked={disclosureAcknowledged}
-              onChange={(event) =>
-                setDisclosureAcknowledged(event.target.checked)
-              }
-            />
-            <span>
-              {t(
-                isUnlinkedPersona
-                  ? "subprofiles:invite.acknowledgeUnlinked"
-                  : "subprofiles:invite.acknowledgeLinked",
-                { name: selectedPerson.name },
-              )}
-            </span>
-          </label>
-        </div>
+        <InviteConfirmStep
+          selectedPerson={selectedPerson}
+          isUnlinkedPersona={isUnlinkedPersona}
+          disclosureAcknowledged={disclosureAcknowledged}
+          onAcknowledgedChange={setDisclosureAcknowledged}
+          blockedReason={blockedReason}
+          blockedNoticeRef={blockedNoticeRef}
+        />
       ) : loading && people.length === 0 ? (
         <div className={styles.empty}>
           <Spinner />
@@ -239,5 +230,97 @@ export function InviteCoOwnerModal({
         </>
       )}
     </Modal>
+  );
+}
+
+interface InviteConfirmStepProps {
+  selectedPerson: MemberSelectPerson;
+  isUnlinkedPersona: boolean;
+  disclosureAcknowledged: boolean;
+  onAcknowledgedChange: (acknowledged: boolean) => void;
+  /** Set once a send just failed permanently (blocked, or the sender's
+   *  account is restricted), per S8. */
+  blockedReason: string | null;
+  blockedNoticeRef: RefObject<HTMLDivElement | null>;
+}
+
+/** Step 2: the picked person, the access (and, for an Unlinked persona,
+ *  identity) disclosure notices, the acknowledgment checkbox, and, once a
+ *  send has just failed permanently, the inline reason that keeps Send
+ *  disabled and holds focus (S8). Split out of `InviteCoOwnerModal` to keep
+ *  that component under the 200-line cap. */
+function InviteConfirmStep({
+  selectedPerson,
+  isUnlinkedPersona,
+  disclosureAcknowledged,
+  onAcknowledgedChange,
+  blockedReason,
+  blockedNoticeRef,
+}: InviteConfirmStepProps) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.confirm}>
+      <div className={styles.selectedPerson}>
+        <MemberIdentity
+          person={selectedPerson}
+          secondary={selectedPerson.pronouns}
+        />
+      </div>
+
+      <div className="notice warn">
+        <FiShield size={20} aria-hidden />
+        <div className="warnbody">
+          <b>{t("subprofiles:invite.disclosureAccessTitle")}</b>
+          <p>
+            {t("subprofiles:invite.disclosureAccessBody", {
+              name: selectedPerson.name,
+            })}
+          </p>
+        </div>
+      </div>
+
+      {isUnlinkedPersona && (
+        <div className="notice warn">
+          <FiEyeOff size={20} aria-hidden />
+          <div className="warnbody">
+            <b>{t("subprofiles:invite.disclosureIdentityTitle")}</b>
+            <p>
+              {t("subprofiles:invite.disclosureIdentityBody", {
+                name: selectedPerson.name,
+              })}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <label
+        className={styles.acknowledgeRow}
+        htmlFor="invite-co-owner-disclosure-acknowledge"
+      >
+        <input
+          id="invite-co-owner-disclosure-acknowledge"
+          type="checkbox"
+          checked={disclosureAcknowledged}
+          onChange={(event) => onAcknowledgedChange(event.target.checked)}
+        />
+        <span>
+          {t(
+            isUnlinkedPersona
+              ? "subprofiles:invite.acknowledgeUnlinked"
+              : "subprofiles:invite.acknowledgeLinked",
+            { name: selectedPerson.name },
+          )}
+        </span>
+      </label>
+
+      {blockedReason && (
+        <div className="notice warn" ref={blockedNoticeRef} tabIndex={-1}>
+          <FiAlertTriangle size={20} aria-hidden />
+          <div className="warnbody">
+            <p>{blockedReason}</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

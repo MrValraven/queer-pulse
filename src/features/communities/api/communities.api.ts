@@ -59,8 +59,13 @@ export interface CommunityCardDTO {
  * NOT a `CommunityCardDTO`. It carries neither `ref` nor any activity stat nor
  * the viewer's `myRole`, and it adds the place/language/purpose fields a gate
  * card needs. Mirrors the backend's `PublicCommunityResponse`, whose field
- * list is closed on purpose: no roster, no owner, no post, no rules. Do not
- * widen this interface without widening that one, and read its comment first.
+ * list is closed on purpose: no roster, no owner, no post, no rules. The
+ * house rules reach an applicant through the join wizard, which reads them
+ * from their own route (`GET /communities/:slug/rules`). Do not widen this
+ * interface without widening that one, and read its comment first.
+ *
+ * The one field about the VIEWER is `myJoinRequestStatus`: the caller's own
+ * request, which is what lets the card say "you asked" and offer to withdraw.
  */
 export interface CommunityGateCardDTO {
   slug: string;
@@ -84,6 +89,10 @@ export interface CommunityGateCardDTO {
     endAt: string | null;
     isOnline: boolean;
   } | null;
+  /** The CALLER'S own newest join request to this community, any status, or
+   *  null when they never asked. Same value `CommunityDetailDTO` carries under
+   *  the same name. Optional so an older backend that omits it reads as null. */
+  myJoinRequestStatus?: JoinRequestStatus | null;
 }
 export interface CommunityDetailDTO extends CommunityCardDTO {
   purpose: string;

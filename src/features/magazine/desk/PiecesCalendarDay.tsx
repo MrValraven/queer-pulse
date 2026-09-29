@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { DeskToneDot } from "./DeskToneDot";
+import { PieceGoLiveStatus } from "./PieceGoLiveStatus";
 import { formattedCountValues } from "./deskHeaderCopy";
 import { waitingOnLabel } from "./deskWaitingOn";
 import type { CalendarDay, CalendarEntry } from "./piecesCalendarWeeks";
@@ -28,8 +29,9 @@ export interface PiecesCalendarChipProps {
  * One piece on the calendar: its title in the editorial serif on one line,
  * with a dot for who holds it. Work waiting on the viewer carries the "your
  * turn" edge and late work the late edge, which wins; work due after
- * the issue closes says so in words. The state the colour shows is spelled
- * out for screen readers too, in the table's own "Waiting on" words.
+ * the issue closes says so in words, and a scheduled piece says when it goes
+ * live. The state the colour shows is spelled out for screen readers too, in
+ * the table's own "Waiting on" words.
  */
 export function PiecesCalendarChip({
   entry,
@@ -65,9 +67,12 @@ export function PiecesCalendarChip({
       <DeskToneDot tone={entry.waitTone} className={styles.chipDot} />
       <span className={styles.chipBody}>
         <span className={styles.chipTitle}>{entry.piece.title}</span>
-        {(dateLabel || entry.isAfterClose) && (
+        {(dateLabel || entry.isAfterClose || entry.goesLiveOn) && (
           <span className={styles.chipMeta}>
             {dateLabel && <span>{dateLabel}</span>}
+            {entry.goesLiveOn && (
+              <PieceGoLiveStatus piece={entry.piece} isCompact />
+            )}
             {entry.isAfterClose && (
               <span className={styles.afterClose}>
                 {t("magazine:desk.calendar.afterClose")}

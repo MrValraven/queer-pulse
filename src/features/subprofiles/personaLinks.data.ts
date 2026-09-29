@@ -4,7 +4,10 @@ import type {
   PublicSubprofileView,
   SubprofileView,
 } from "./api/subprofiles.adapters";
-import type { SubprofileCardDTO } from "./api/subprofiles.api";
+import type {
+  SubprofileCardDTO,
+  SubprofileStatus,
+} from "./api/subprofiles.api";
 
 /**
  * Every persona's address builder in this module follows the same rule:
@@ -27,13 +30,21 @@ export function personaPublicPathOrNull(
   view: PublicSubprofileView,
 ): string | null {
   if (view.handle) return personaPath(view.handle);
-  if (view.ownerSlug) return nestedPersonaPath(view.ownerSlug, view.slug);
+  // Rule 2 is for a linked persona alone. The editor preview hands in the
+  // creator's slug for every persona (`ownerViewToShowcaseView`), so a
+  // standalone one with its handle cleared would otherwise read as
+  // `/members/<creator>/<slug>`: a dead path that names its owner.
+  if (view.ownerSlug && view.linkVisibility !== "unlinked")
+    return nestedPersonaPath(view.ownerSlug, view.slug);
   return null;
 }
 
-/** Absolute, shareable URL for a persona (Share control + OG canonical/url),
- *  or `null` when the persona has no public address yet. */
+/** Absolute, shareable URL for a persona (Share control, poem share links),
+ *  or `null` when there is nothing live to hand out: no public address yet,
+ *  or a draft (PRD-429), whose stored handle 404s for everyone but its
+ *  owners until it is published. */
 export function personaShareUrl(view: PublicSubprofileView): string | null {
+  if (view.status === "draft") return null;
   const path = personaPublicPathOrNull(view);
   return path ? toAbsoluteUrl(path) : null;
 }
@@ -85,12 +96,12 @@ export function personaShareUrlForOwner(
 
 /**
  * The one answer the owner dashboard asks about a persona's address, in the
- * three states it can actually be in.
+ * four states it can actually be in.
  *
  * `"ready"` is the ONLY shape that carries a path, so a caller cannot reach a
- * link without having handled the other two: View, Share, the QR code and the
- * vCard `URL:` line all read the same value and cannot drift into fabricating
- * `/p/<slug>` one affordance at a time.
+ * link without having handled the other three: View, Share, the QR code and
+ * the vCard `URL:` line all read the same value and cannot drift into
+ * fabricating `/p/<slug>` one affordance at a time.
  */
 export interface PersonaResolvedAddress {
   /** In-app router path, for View. */
@@ -100,6 +111,12 @@ export interface PersonaResolvedAddress {
 }
 
 export type PersonaOwnerAddress =
+  /** Unpublished (PRD-429): nothing is live yet, whatever the row's stored
+   *  `handle` says. A linked draft's handle only previews what it will claim
+   *  at publish, and an unlinked draft's handle is not reserved in the
+   *  registry until then either, so treating either as `"ready"` would hand
+   *  out a QR code or a share link that 404s until the owner publishes. */
+  | { status: "draft" }
   /** The creator slug a linked persona's nested fallback needs is still
    *  being fetched. */
   | { status: "pending" }
@@ -114,13 +131,23 @@ function readyAddress(path: string): PersonaOwnerAddress {
 /** Resolve an owner-dashboard row's public address. `ownerSlug` is the CREATOR's
  *  profile slug from `usePersonaCreatorSlug`, `undefined` while it resolves.
  *
- *  A row with a handle settles immediately, whether linked or not. Only the
- *  nested fallback for a handle-less LINKED row depends on that slug, so it
- *  is the only case that sits in `"pending"` behind a fetch. */
+ *  `status` is optional: every owner-dashboard row carries it, but a couple of
+ *  callers (a followed persona, a directory card) hand in a shape with no
+ *  `status` field at all, because the server already filters those lists down
+ *  to published personas alone. Leaving it out reads as published; only an
+ *  explicit `"draft"` trips the check below.
+ *
+ *  A PUBLISHED row with a handle settles immediately, whether linked or not.
+ *  Only the nested fallback for a handle-less LINKED row depends on the
+ *  creator slug, so it is the only case that sits in `"pending"` behind a
+ *  fetch. */
 export function personaOwnerAddress(
-  row: Pick<SubprofileView, "handle" | "slug" | "linkVisibility">,
+  row: Pick<SubprofileView, "handle" | "slug" | "linkVisibility"> & {
+    status?: SubprofileStatus;
+  },
   ownerSlug: string | undefined,
 ): PersonaOwnerAddress {
+  if (row.status === "draft") return { status: "draft" };
   if (row.handle) return readyAddress(personaPath(row.handle));
   if (row.linkVisibility !== "linked") return { status: "none" };
   if (!ownerSlug) return { status: "pending" };

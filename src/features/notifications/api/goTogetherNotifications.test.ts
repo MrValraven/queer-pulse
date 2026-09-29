@@ -32,6 +32,8 @@ const GO_TOGETHER_STRINGS: Record<string, string> = {
     "We couldn't put together a group for {eventTitle} this time",
   "notifications:type.go_together_unmatched.textFinal":
     "We weren't able to place you in a group for {eventTitle}",
+  "notifications:type.go_together_unmatched.textHostOff":
+    "The host switched Go together off for {eventTitle}",
   "notifications:type.go_together_unmatched.meta": "Go together update",
   "notifications:type.go_together_member_left.text":
     "Someone left your group for {eventTitle}",
@@ -168,6 +170,29 @@ describe("formatNotification: go_together_unmatched isFinal", () => {
     const { text } = formatNotification(
       "go_together_unmatched",
       { eventTitle: EVENT_TITLE, isFinal: true },
+      t,
+      fmt,
+    );
+    expect(text).toBe(
+      `We weren't able to place you in a group for ${EVENT_TITLE}`,
+    );
+  });
+
+  it("names the host switching Go together off when the reason says so", () => {
+    const { text, meta } = formatNotification(
+      "go_together_unmatched",
+      { eventTitle: EVENT_TITLE, isFinal: true, reason: "hostSwitchedOff" },
+      t,
+      fmt,
+    );
+    expect(text).toBe(`The host switched Go together off for ${EVENT_TITLE}`);
+    expect(meta).toBe("Go together update");
+  });
+
+  it("keeps the final text for any other reason value", () => {
+    const { text } = formatNotification(
+      "go_together_unmatched",
+      { eventTitle: EVENT_TITLE, isFinal: true, reason: "somethingElse" },
       t,
       fmt,
     );

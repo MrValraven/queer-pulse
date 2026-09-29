@@ -67,13 +67,13 @@ describe("matchingProfessionGroups", () => {
     // "te" matches the Tech label and the Terapeuta profession under Saúde.
     const groups = matchingProfessionGroups("te", resolveLabel);
     expect(groups.map((group) => group.fieldId)).toEqual([
-      "healthcare",
       "tech",
+      "healthcare",
     ]);
-    expect(idsOf(groups[0]?.professions ?? [])).toEqual(["therapist"]);
-    expect(idsOf(groups[1]?.professions ?? [])).toEqual(
+    expect(idsOf(groups[0]?.professions ?? [])).toEqual(
       idsOf(PROFESSIONS_BY_FIELD.tech ?? []),
     );
+    expect(idsOf(groups[1]?.professions ?? [])).toEqual(["therapist"]);
   });
 
   it("returns no groups when nothing matches", () => {
@@ -96,8 +96,8 @@ describe("matchingFields", () => {
 
   it("keeps the selected fields alongside the matches, in DISCIPLINES order", () => {
     expect(idsOf(matchingFields("enferm", resolveLabel, ["tech"]))).toEqual([
-      "healthcare",
       "tech",
+      "healthcare",
     ]);
     expect(idsOf(matchingFields("xyz", resolveLabel, ["tech"]))).toEqual([
       "tech",

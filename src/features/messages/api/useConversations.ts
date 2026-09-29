@@ -6,7 +6,6 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
 import { applyConversationPrefs } from "../conversationPrefs";
 import { isServerConversationId } from "../useMessagesController.helpers";
-import { conversations as mockConversations } from "../data";
 import {
   belongsToMailbox,
   isBlockedByIdentity,
@@ -14,7 +13,6 @@ import {
   withMailboxSeat,
   type ConversationListScope,
 } from "../mailboxes/mailboxScope";
-import { readDemoIdentityBlocks } from "../../social/api/identityBlocks.data";
 import { applyDemoClaims } from "./demoClaims";
 import {
   getConversation,
@@ -29,6 +27,13 @@ import {
 // ENG-253: server default is 30, kept explicit here so a demo/live page-size
 // mismatch never becomes a silent behavior difference.
 const CONVERSATIONS_PAGE_SIZE = 30;
+
+/** ENG-504: the demo inbox (every scripted thread plus both `messages`
+ *  catalogs it formats with) loads on demand. The Navbar badge below mounts on
+ *  every route, so a static import put all of it in the first-paint JS of a
+ *  live visitor who can never see it. */
+const loadDemoConversations = async () =>
+  (await import("../data")).conversations;
 
 interface ConversationsPageCursor {
   nextCursor: string | null;
@@ -122,6 +127,11 @@ export function useConversations(scope: ConversationListScope | null) {
         // survives this refetch and a reload, see conversationPrefs.ts. The
         // whole seeded list is one page; there is nothing to page through.
         setPageCursor(NO_MORE_PAGES);
+        const [mockConversations, { readDemoIdentityBlocks }] =
+          await Promise.all([
+            loadDemoConversations(),
+            import("../../social/api/identityBlocks.data"),
+          ]);
         // I-2: mirrors the live backend (`mailbox-seats.ts`), which drops a
         // blocked identity's threads from every read for both sides.
         const blockedIdentityIds = new Set(
@@ -222,6 +232,13 @@ export function useConversations(scope: ConversationListScope | null) {
  * which caller (`useMessagesController`'s `active`) needs to merge this
  * result's `.members`/`.draft` onto the list-derived conversation object for
  * the open thread once it resolves.
+ *
+ * ENG-403: a thread opened past the loaded inbox pages renders from this
+ * entry alone, so every conversation-level cache patch writes it beside the
+ * list (`patchConversationRow` in `shared/api/messageCache.ts`,
+ * `patchConversationClaim` in `claimCache.ts`, `patchConversationInList`
+ * for group mutations), set-if-exists. Remote group changes and a socket
+ * reconnect invalidate it (`realtime.ts`).
  */
 export function useConversationDetail(conversationId: string | null) {
   const { demoMode } = useDemoMode();
@@ -230,8 +247,10 @@ export function useConversationDetail(conversationId: string | null) {
     !demoMode && !!conversationId && isServerConversationId(conversationId);
   return useQuery<ConversationWithPreview>({
     queryKey: ["conversation-detail", conversationId, demoMode],
-    queryFn: async () => {
-      const dto = await getConversation(conversationId!);
+    // The signal lets a superseded refetch (a burst of group changes, a
+    // reconnect) abort its request for real.
+    queryFn: async ({ signal }) => {
+      const dto = await getConversation(conversationId!, signal);
       return conversationToView(dto, t);
     },
     enabled: isFetchable,
@@ -288,6 +307,7 @@ export function useUnreadMessages(): number {
         // does live, instead of reading the mock's own never-changing
         // baseline. Also honours locally-deleted chats, the exact number the
         // badge showed before, at zero network cost.
+        const mockConversations = await loadDemoConversations();
         return applyConversationPrefs(mockConversations).filter(
           (conversation) =>
             conversation.unread &&

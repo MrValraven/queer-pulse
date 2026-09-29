@@ -6,7 +6,10 @@ import {
   type SubprofileView,
 } from "./api/subprofiles.adapters";
 import { personaPublicPathForOwnerOrNull } from "./personaLinks.data";
-import { handleIsKindName } from "./personaHandle";
+import {
+  handleIsKindName,
+  linkedPersonaHandleCandidate,
+} from "./personaHandle";
 import {
   usePersonaCreatorName,
   usePersonaCreatorSlug,
@@ -115,8 +118,17 @@ export function useEditorPreviewView(
   const layoutName = KINDS_WITH_OWN_LAYOUT.has(liveView.kind)
     ? t(KIND_LABEL_KEYS[liveView.kind])
     : SKIN_META[skin].name;
+  // A linked persona with an empty handle previews the default the server
+  // derives and stores on save (`/p/<creatorSlug>-<personaSlug>`), the same
+  // address the Address pane shows. A standalone one with no handle has no
+  // address, and `personaPublicPathOrNull` shows it as such.
+  const previewHandle =
+    liveView.handle ??
+    (liveView.linkVisibility === "linked" && creatorSlug
+      ? linkedPersonaHandleCandidate(creatorSlug, liveView.slug || "persona")
+      : null);
   const data = ownerViewToShowcaseView(
-    liveView,
+    { ...liveView, handle: previewHandle },
     creatorSlug ?? profile.slug,
     creatorName,
   );
@@ -127,6 +139,9 @@ export function useEditorPreviewView(
   // slug is known.
   // Hidden while a link switch is pending (saving it retires the saved
   // address) and while a saved standalone persona still lacks a real name.
+  // A saved DRAFT's address answers its owners alone until publish
+  // (PRD-429), so the same link is labelled as the draft page it is
+  // (`isDraftHref`) and never promises a live page.
   const savedHandle = subprofile.handle ?? "";
   const isLinkSwitchPending = editor.link !== subprofile.linkVisibility;
   const isSavedStandaloneUnnamed =
@@ -147,5 +162,6 @@ export function useEditorPreviewView(
     data,
     skinStyle,
     liveHref,
+    isDraftHref: subprofile.status === "draft",
   };
 }

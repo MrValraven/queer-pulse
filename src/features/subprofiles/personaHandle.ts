@@ -61,6 +61,43 @@ export function handleNamesOwner(handle: string, creatorSlug: string): boolean {
   );
 }
 
+/** How many suffixed candidates `handleCarriesCreatorSlug` checks before
+ *  giving up: mirrors the backend's `MAX_DERIVATION_SUFFIX`
+ *  (`persona-handle.ts`), the same ceiling `deriveLinkedPersonaHandle` tries
+ *  before refusing a publish. */
+const MAX_DERIVATION_SUFFIX = 99;
+
+/**
+ * True when `handle` carries `creatorSlug`, on either of the two shapes a
+ * linked handle can name its creator: as a whole hyphen-delimited run
+ * (`handleNamesOwner`, above), or as the default
+ * `<creatorSlug>-<personaSlug>` derivation for `personaSlug`, at any suffix.
+ * The second form catches a long creator slug the 30-char handle cut
+ * shortened, which no longer appears whole in the stored handle.
+ *
+ * Mirrors the backend's `handleCarriesCreatorSlug`
+ * (`subprofile-creator-transfer.ts`, used to decide which reservations a
+ * creator transfer re-issues), simplified to the ONE current persona slug the
+ * frontend has in hand: the backend also checks a persona's slug from just
+ * before its own rename, which only matters mid-transaction on the transfer
+ * itself and never reaches a client.
+ */
+export function handleCarriesCreatorSlug(
+  handle: string,
+  creatorSlug: string,
+  personaSlug: string,
+): boolean {
+  if (handleNamesOwner(handle, creatorSlug)) return true;
+  for (let suffix = 1; suffix <= MAX_DERIVATION_SUFFIX; suffix += 1) {
+    if (
+      linkedPersonaHandleCandidate(creatorSlug, personaSlug, suffix) === handle
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /** A label as a handle-shaped slug, accents folded first ("Cerâmica" ->
  *  "ceramica") so a translated kind name is caught whichever way it is typed. */
 function kindNameSlug(label: string): string {

@@ -1,4 +1,11 @@
-import { Fragment, useEffect, useId, useState, type ReactNode } from "react";
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import {
   FiChevronRight,
@@ -14,6 +21,7 @@ import {
   pushModal,
   popModal,
   isTopmostModal,
+  useInertWhileCovered,
 } from "../../shared/components/ui/modalStack";
 import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -182,8 +190,32 @@ function GraphModalShell({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Claims focus into the dialog on mount, ahead of the `useInertWhileCovered`
+  // call below: this opens from a control inside another dialog/drawer (e.g.
+  // AdminMemberDrawer's "View network"), and that layer goes `inert` the
+  // moment this one registers, which force-blurs whatever had focus to
+  // `<body>` if nothing here has claimed it first. Restores focus to that
+  // control when this dialog unmounts. Deliberately not the full `useDismiss`
+  // (no Tab trap, no Escape change): this graph modal keeps its own
+  // hand-rolled Escape listener (see `AdminVouchGraphModal` below).
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    return () => {
+      previouslyFocused?.focus?.();
+    };
+  }, []);
+  // A dialog opened on top (e.g. AdminMemberDrawer's own overlays, or a
+  // confirm) makes this shell inert until it closes, so assistive tech
+  // reaches only the top dialog (mirrors the shared Modal in
+  // shared/components/ui/Modal.tsx). No exit animation here, so it is never
+  // "closing".
+  const overlayRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(overlayRef, false);
   return createPortal(
     <div
+      ref={overlayRef}
       className={styles.overlay}
       role="presentation"
       onClick={(e) => {
@@ -197,6 +229,7 @@ function GraphModalShell({
         aria-label={t("admin:vouchGraph.modal.ariaLabel")}
       >
         <button
+          ref={closeButtonRef}
           type="button"
           className={styles.close}
           onClick={onClose}
@@ -281,9 +314,34 @@ function GraphModalInner({
   const graph = useTrustGraph();
   const g = useVouchGraph(graph, focusSlug);
   const focusPerson = graph.peopleById[g.focus]!;
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Claims focus into the dialog on mount, ahead of the `useInertWhileCovered`
+  // call below (see the matching comment on `GraphModalShell` above for why):
+  // this opens from a control inside another dialog/drawer, and that layer
+  // goes `inert` the moment this one registers, which force-blurs whatever
+  // had focus if nothing here has claimed it first. Restores focus to that
+  // control when this dialog unmounts (including the loading-to-loaded
+  // handoff from `GraphModalShell`, and a member-finder jump's remount).
+  // Deliberately not the full `useDismiss` (no Tab trap, no Escape change).
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    return () => {
+      previouslyFocused?.focus?.();
+    };
+  }, []);
+  // The inspector's own "Cite" confirm (InspectorPanel below) opens on top of
+  // this shell, and so can AdminMemberDrawer's other overlays underneath it
+  // in the stack. Either one makes this shell inert until it closes, so
+  // assistive tech reaches only the top dialog (mirrors the shared Modal in
+  // shared/components/ui/Modal.tsx). No exit animation here, so it is never
+  // "closing".
+  const overlayRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(overlayRef, false);
 
   return createPortal(
     <div
+      ref={overlayRef}
       className={styles.overlay}
       role="presentation"
       onClick={(e) => {
@@ -351,6 +409,7 @@ function GraphModalInner({
           </div>
 
           <button
+            ref={closeButtonRef}
             type="button"
             className={styles.close}
             onClick={onClose}

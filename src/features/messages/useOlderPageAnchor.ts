@@ -2,6 +2,7 @@
 import { useCallback, useMemo, useRef, type RefObject } from "react";
 import type { Virtualizer } from "@tanstack/react-virtual";
 import type { MessageRow } from "./messageRows";
+import type { ThreadWindowControls } from "./threadWindowTypes";
 import { isNearBottom } from "./useStickToBottom";
 import {
   captureScrollAnchor,
@@ -48,6 +49,10 @@ export interface ThreadHistory {
    *  though restored data is sitting right there. Lets a reader tell "this
    *  thread is genuinely empty" apart from "this thread was never loaded". */
   hasLoadedThreadData: boolean;
+  /** PRD-401: the detached history window a far jump shows in place of the
+   *  live tail (see `ThreadWindowControls`). Absent where no window can be
+   *  loaded, in which case a jump pages back through `onLoadOlder`. */
+  threadWindow?: ThreadWindowControls;
 }
 
 /** The scroll layer's side of a jump-to-message, handed to the jump hunter. */
@@ -239,6 +244,9 @@ export function useJumpScrollBridge(
   releaseSettlingAnchor: () => void,
   cancelUnreadLanding: () => void,
   armHistoryPageAnchor: () => void,
+  /** PRD-401: true while a detached history window is shown, whose bottom is
+   *  not the latest message, so a reveal ending there never pins the reader. */
+  isDetachedRef?: RefObject<boolean>,
 ): JumpScrollBridge {
   const beginProgrammaticJump = useCallback(() => {
     atBottomRef.current = false;
@@ -247,8 +255,10 @@ export function useJumpScrollBridge(
   }, [atBottomRef, releaseSettlingAnchor, cancelUnreadLanding]);
   const endProgrammaticJump = useCallback(() => {
     const area = areaRef.current;
-    if (area) atBottomRef.current = isNearBottom(area);
-  }, [areaRef, atBottomRef]);
+    if (area) {
+      atBottomRef.current = !isDetachedRef?.current && isNearBottom(area);
+    }
+  }, [areaRef, atBottomRef, isDetachedRef]);
   return useMemo(
     () => ({
       beginProgrammaticJump,

@@ -2865,6 +2865,28 @@ export const DEMO_SUBPROFILES: DemoSubprofile[] = [
   ...QUEST_DEMO_SUBPROFILES,
 ];
 
+/** Demo-only edit counters (ENG-451), keyed by persona id. A persona with no
+ *  entry is at 0. `mockBumpEditVersion` is the one writer: every demo save the
+ *  editor makes (PATCH, section, social links, affiliations) raises it, as
+ *  the server does, so the owner view the next refetch returns carries the
+ *  version the editor already advanced to and a demo save never reads as a
+ *  conflict. */
+const demoEditVersions = new Map<string, number>();
+
+/** Raise a demo persona's edit counter by 1 and return the new value, the
+ *  `editVersion` the demo save answers with. */
+export function mockBumpEditVersion(id: string): number {
+  const nextEditVersion = (demoEditVersions.get(id) ?? 0) + 1;
+  demoEditVersions.set(id, nextEditVersion);
+  return nextEditVersion;
+}
+
+/** Test-only reset for `demoEditVersions`, so a spec's demo saves do not leak
+ *  a raised counter into the next spec. */
+export function resetDemoEditVersionsForTests(): void {
+  demoEditVersions.clear();
+}
+
 // ── Mock selectors (mirror the backend gating; used by the demo hook branches) ─
 
 /** Strip the owner-only demo fields down to the owner-full wire DTO. */
@@ -2898,6 +2920,7 @@ export function toOwnerDto(sp: DemoSubprofile): SubprofileDTO {
     // (which a demo Leave shrinks); every other demo persona is solo-owned.
     memberCount:
       sp.id === DEMO_CO_OWNED_SUBPROFILE_ID ? demoCoOwnedMembers.length : 1,
+    editVersion: demoEditVersions.get(sp.id) ?? 0,
   };
 }
 
@@ -2927,6 +2950,7 @@ export function toPublicDto(
     ctaUrl: sp.ctaUrl,
     socialLinks: sp.socialLinks,
     linkVisibility: sp.linkVisibility,
+    visibility: sp.visibility,
     status: sp.status,
     items: sp.items,
     endorsementCount: sp.endorsementCount,
@@ -3212,14 +3236,18 @@ export type DemoPublicAccessResult =
  *  fallback stays because the demo registry is also read by direct URL. */
 export const findDemoSubprofileByHandle = (
   handle: string,
-): DemoSubprofile | undefined =>
-  DEMO_SUBPROFILES.find(
-    (s) =>
-      s.handle === handle ||
-      (s.linkVisibility === "unlinked" &&
-        s.handle === null &&
-        s.slug === handle),
+): DemoSubprofile | undefined => {
+  // The handle namespace is case-folded, as live `getByHandle` folds the
+  // route param (ENG-454), so `/p/NightForm` resolves in demo too.
+  const foldedHandle = handle.trim().toLowerCase();
+  return DEMO_SUBPROFILES.find(
+    (persona) =>
+      persona.handle === foldedHandle ||
+      (persona.linkVisibility === "unlinked" &&
+        persona.handle === null &&
+        persona.slug === foldedHandle),
   );
+};
 
 /** Unfiltered lookup by owner slug + persona slug for a LINKED persona (the
  *  nested `/members/:slug/:subslug` route) — every status/visibility, same

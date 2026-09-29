@@ -712,6 +712,11 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.joined": "Joined",
   "onboarding.stepCommunities.leave": "Leave community",
   "onboarding.stepCommunities.requested": "Requested",
+  "onboarding.stepCommunities.joining": "Joining…",
+  "onboarding.stepCommunities.joinedAnnouncement": "You joined {name}",
+  "onboarding.stepCommunities.leftAnnouncement": "You left {name}",
+  "onboarding.stepCommunities.requestedNotice":
+    "Your request to join {name} is with the moderators.",
   "onboarding.stepCommunities.continue": "Continue",
   "onboarding.stepCommunities.skip": "Skip for now",
   "onboarding.stepCommunities.back": "Back",

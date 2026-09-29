@@ -101,8 +101,8 @@ export function useFeedPage() {
   const feed = useFeed(displayTab);
   // The sidebar's "New this week" widget is page-global: it must stay put no
   // matter which feed tab is active. Source it from a dedicated People-tab
-  // query rather than the tab-scoped `feed` above, whose `items` carries no
-  // `new_member` entries on tabs like Gatherings/Posts.
+  // query. The tab-scoped `feed` above carries no `new_member` entries on
+  // tabs like Gatherings/Posts.
   //
   // PRD-168: that query is bounded to the last seven days, which is what the
   // widget's heading promises. It used to be a plain `useFeed("People")`,
@@ -112,7 +112,7 @@ export function useFeedPage() {
   // narrowed. An empty week now falls through to the widget's empty state.
   const sidebarFeed = useNewMembersThisWeek();
   // The sidebar's "Upcoming" widget shows the upcoming gatherings, independent of
-  // the active feed tab — same page-global rationale as the members widget.
+  // the active feed tab (the same page-global rationale as the members widget).
   // `useEvents` branches demo/live internally; in demo the sidebar keeps its own
   // curated rows and ignores this.
   const upcomingFeed = useEvents({ filter: "upcoming" });
@@ -128,7 +128,7 @@ export function useFeedPage() {
   const hidden = new Set([...blocked, ...muted]);
 
   // When the platform is (re)populated, snap straight into the skeleton during
-  // this render — adjusting state mid-render avoids a one-frame flash of data
+  // this render. Adjusting state mid-render avoids a one-frame flash of data
   // before the load-in. Emptying the platform just clears the skeleton.
   if (demoMode !== prevDemo) {
     setPrevDemo(demoMode);
@@ -153,10 +153,16 @@ export function useFeedPage() {
   const pageLoading = demoMode ? demoLoading : feed.isLoading;
 
   // Cross-community aggregation: the latest pulse from communities you're in.
+  // `getLiving` reads the demo registry only, so it is gated on `demoMode`
+  // here even though this whole aggregation is discarded below when live
+  // (`pulse` only reads `communityPulse` in demo). Without the guard, a live
+  // member's real community slug that happened to match a demo one would
+  // resolve to that demo community's fake roster and posts, computed for no
+  // reason on every render.
   const communityPulse: HubPost[] = Object.keys(memberships)
     .map((slug) => ({
       slug,
-      living: getLiving(slug),
+      living: demoMode ? getLiving(slug) : undefined,
       community: communities.find((x) => x.slug === slug),
     }))
     .filter((x) => x.living)
@@ -182,7 +188,7 @@ export function useFeedPage() {
       )
     : [];
   // Live feed items, merged newest-first exactly as the backend returned them
-  // (community_post/forum_thread/gathering/new_member interleaved) — `useFeed`
+  // (community_post/forum_thread/gathering/new_member interleaved). `useFeed`
   // already applies the block/mute filter, so no re-filtering needed here.
   const liveItems: FeedItem[] = demoMode ? [] : feed.items;
   // Feed hero banner: the scripted DEMO copy only. It used to be derived in
@@ -190,7 +196,7 @@ export function useFeedPage() {
   // loaded, so "N people joined near you this week" grew every time you hit
   // "Load more" and had no geographic or weekly basis whatsoever. There is no
   // `/feed/summary` endpoint to source a true number from, so live shows no
-  // banner rather than a fabricated one.
+  // banner.
   const banner = demoMode ? DEMO_BANNER : null;
   const empty = demoMode
     ? pulse.length === 0 && staticItems.length === 0
@@ -252,7 +258,7 @@ export function useFeedPage() {
 
   // Card entrance timing. The first paint of the page is a load, so it earns the
   // slower, more generous stagger; a tab switch should feel instant, so the step
-  // tightens and stops compounding after the sixth card rather than trailing off.
+  // tightens and stops compounding after the sixth card.
   const revealDelay = (index: number) =>
     hasSwitchedTab ? `${Math.min(index, 5) * 40}ms` : `${index * 60}ms`;
 

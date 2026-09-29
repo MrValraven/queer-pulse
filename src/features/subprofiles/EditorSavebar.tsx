@@ -6,11 +6,13 @@ import { useVisualViewportInset } from "../../shared/hooks/useVisualViewportInse
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
+import { useSubprofileEditorNav } from "./subprofileEditorNav";
 import { PendingChangesList } from "./PendingChangesList";
 import { MobilePersonaPreview } from "./MobilePersonaPreview";
 import { PendingCountLabel } from "./EditorSavebarSummary";
 import { EditorSavebarPhone } from "./EditorSavebarPhone";
 import { metaBlockReasonKey } from "./editorSavebarBlockReason";
+import { EditorConflictAlert } from "./EditorConflictAlert";
 
 /** Phones: the SAME 760px viewport cut `SubprofileEditorShell` mounts
  *  `EditorPaneSwitcher` behind. The phone row hands Preview to that switcher,
@@ -40,8 +42,17 @@ export function EditorSavebar({
   onTogglePreview: () => void;
 }) {
   const { t } = useTranslation();
-  const { meta, pending, dirty, saving, canSave, saveAll, discardAll } =
-    useSubprofileEditorContext();
+  const {
+    meta,
+    pending,
+    dirty,
+    saving,
+    canSave,
+    saveAll,
+    discardAll,
+    hasEditConflict,
+  } = useSubprofileEditorContext();
+  const { activePane } = useSubprofileEditorNav();
   // The docked preview column is `display:none` ≤860px, so on phones/tablets we
   // offer the same live preview in a bottom sheet instead (Task 4).
   const isMobile = useMediaQuery("(max-width: 860px)");
@@ -57,11 +68,17 @@ export function EditorSavebar({
 
   // When the save is blocked despite having changes, `canSave` is false because
   // of a meta gate: say WHICH one and where to fix it, so the disabled Save
-  // button isn't a silent dead end.
-  const blockReasonKey = dirty && !canSave ? metaBlockReasonKey(meta) : null;
+  // button isn't a silent dead end. On the Address pane a handle reason points
+  // at the field on screen and leaves out "on the Address tab".
+  const blockReasonKey =
+    dirty && !canSave ? metaBlockReasonKey(meta, activePane) : null;
 
   if (isPhone) {
-    return dirty ? (
+    // Clean after "Discard all", yet still behind a co-owner's save, the phone
+    // bar stays up holding just the conflict alert: the next edit would be
+    // refused too. One bar component for both keeps the alert node mounted,
+    // so a screen reader does not hear it again on Discard.
+    return dirty || hasEditConflict ? (
       <EditorSavebarPhone
         style={savebarStyle}
         blockReasonKey={blockReasonKey}
@@ -111,6 +128,25 @@ export function EditorSavebar({
     <MobilePersonaPreview onClose={() => setMobilePreviewOpen(false)} />
   );
 
+  if (hasEditConflict) {
+    // Behind someone else's save, dirty or clean: the alert is the whole bar.
+    // Save is refused until Reload, and Reload drops every unsaved change, so
+    // Save, Discard and the preview toggle have nothing to offer here; without
+    // them the bar stays a short strip and the form above it stays readable
+    // for copying edits. The alert carries the unsaved list behind its own
+    // toggle. This branch and the dirty one below render the same `.savebar`
+    // div with the alert as its first child, so React keeps the alert node
+    // across the switch and a screen reader does not hear it again.
+    return (
+      <>
+        <div className="savebar savebar-dirty" style={savebarStyle}>
+          <EditorConflictAlert />
+        </div>
+        {mobilePreview}
+      </>
+    );
+  }
+
   if (!dirty) {
     return (
       <>
@@ -127,6 +163,7 @@ export function EditorSavebar({
   return (
     <>
       <div className="savebar savebar-dirty" style={savebarStyle}>
+        <EditorConflictAlert />
         <div className="savebar-changes">
           <span className="savebar-heading">
             {t("subprofiles:pending.heading")}

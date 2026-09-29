@@ -1,4 +1,5 @@
 import { useCallback, type RefObject } from "react";
+import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -10,7 +11,11 @@ import {
   type StagedPostImage,
 } from "../communities/usePostImageAttach";
 import { ForumImageAttach } from "./ForumImageAttach";
-import { useForumComposerDraft } from "./useForumComposerDraft";
+import {
+  FORUM_DRAFT_STATUS_LABEL_KEY,
+  useForumComposerDraft,
+  type ForumDraftStatus,
+} from "./useForumComposerDraft";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadComposer({
@@ -32,18 +37,18 @@ export function ThreadComposer({
   /** Autosave this composer's text under a stable draft id. Passed by BOTH
    *  the bottom composer (keyed to the thread) and every inline nested-reply
    *  composer (keyed to the thread AND the reply being answered, see
-   *  `nestedReplyDraftId`) — the inline one is where quotes and threaded
+   *  `nestedReplyDraftId`). The inline one is where quotes and threaded
    *  answers get written, and used to lose them on a mis-tap (PRD-166).
    *  Omitted only while a composer has no thread to belong to yet. */
   draft?: { draftId: string; title: string; href: string };
 }) {
   const { t } = useTranslation();
   // The signed-in member, mode-aware: the real user in live, the mock persona in
-  // demo — so the composer never borrows the demo persona's avatar in production.
+  // demo, so the composer keeps the demo persona's avatar out of production.
   const { profile } = useProfileData();
   // The shared presigned upload pipeline, same hook the community composers
-  // use. Owned here rather than threaded down from the thread page, so both the
-  // bottom composer and every inline nested one get it without any plumbing.
+  // use. Owned here in the composer itself, so both the bottom composer and
+  // every inline nested one get it without any plumbing.
   const attach = usePostImageAttach();
   const onRestore = useCallback((body: string) => setReply(body), [setReply]);
   const { status: draftStatus, clearDraft } = useForumComposerDraft({
@@ -107,26 +112,23 @@ export function ThreadComposer({
   );
 }
 
-/** The quiet "we have your text" line under a composer. Renders nothing until
- *  there is something true to say, so an untouched composer stays silent. */
-function ComposerDraftStatus({
-  status,
-}: {
-  status: "idle" | "saving" | "saved" | "restored";
-}) {
+/** The quiet "we have your text" line under a composer. Empty until there is
+ *  something true to say, so an untouched composer stays silent. The live
+ *  region itself stays mounted, so its first reading is announced too.
+ *
+ *  "Not saved yet" is the one reading that asks for attention: it turns danger
+ *  red and leads with an alert icon, matching the page composer's footer. */
+function ComposerDraftStatus({ status }: { status: ForumDraftStatus }) {
   const { t } = useTranslation();
-  if (status === "idle") return null;
-  // An explicit map, not an interpolated key: every key a catalog has to carry
-  // stays greppable, and the en/pt parity check can see all three.
-  const labelKey =
-    status === "saving"
-      ? "forum:draft.saving"
-      : status === "saved"
-        ? "forum:draft.saved"
-        : "forum:draft.restored";
+  const isFailed = status === "unsaved";
   return (
-    <span className={styles.draftStatus} role="status">
-      {t(labelKey)}
+    <span
+      className={styles.draftStatus}
+      data-state={isFailed ? "failed" : undefined}
+      role="status"
+    >
+      {isFailed && <FiAlertCircle aria-hidden="true" />}
+      {status !== "idle" && t(FORUM_DRAFT_STATUS_LABEL_KEY[status])}
     </span>
   );
 }

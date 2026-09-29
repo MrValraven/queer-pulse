@@ -398,7 +398,8 @@ export const goTogether: Catalog = {
   "group.pairPartner": "Vem contigo",
   "group.reasonsHeading": "O que têm em comum",
   "group.report": "Denunciar este grupo",
-  "group.reportAria": "Denunciar a conversa do grupo de {title}",
+  "group.reportAria": "Denunciar este grupo: conversa de {title}",
+  "group.bannerTitle": "O teu grupo do Vamos juntes",
   "group.seeGroup": "Ver o teu grupo",
   "group.sharePlans": "Diz a alguém onde vais estar",
   "group.sheetLabel": "O teu grupo do Vamos juntes",
@@ -436,6 +437,13 @@ export const goTogether: Catalog = {
     "Até 2 perguntas, com 2 a 4 respostas cada. Quem escolhe a mesma resposta tem mais hipóteses de ficar no mesmo grupo.",
   "host.questions.label": "Perguntas divertidas",
   "host.questions.promptLabel": "Pergunta {number}",
+  "host.questions.reaskHint":
+    "Se mudares ou juntares uma pergunta, quem já está à espera responde no cartão.",
+  "host.offConfirm.title": "Desligar o Vamos juntes?",
+  "host.offConfirm.description":
+    "Quem está à espera de um grupo é avisade de que não há grupo desta vez. Os grupos já formados continuam. Se voltares a ligar, tem de pedir para entrar outra vez.",
+  "host.offConfirm.confirm": "Desligar",
+  "host.offConfirm.cancel": "Manter ligado",
   "host.questions.promptPlaceholder": "Manta de piquenique ou pista de dança?",
   "host.questions.removeAnswer": "Remover a resposta {number}",
   "host.questions.removeQuestion": "Remover a pergunta {number}",
@@ -582,8 +590,57 @@ export const goTogether: Catalog = {
     "Responde a cada pergunta de quem organiza para continuar.",
   "card.optIn.hint.lensConsent": "Marca a caixa para confirmar a tua lente.",
   "card.optIn.hint.partner": "Escolhe uma pessoa amiga para continuar.",
+  "card.answerAgain.body":
+    "Continuas na lista. Responde outra vez para te juntarmos ao grupo certo.",
+  "card.loadError.retryFailed":
+    "O Vamos juntes continua sem carregar. Tenta outra vez daqui a pouco.",
+  "card.answerAgain.error.invalidAnswers":
+    "As perguntas de quem organiza voltaram a mudar. Responde outra vez e guarda.",
+  "card.answerAgain.bodyMany":
+    "Continuas na lista. Responde outra vez a cada uma para te juntarmos ao grupo certo.",
+  "card.answerAgain.save": "Guardar a minha resposta",
+  "card.answerAgain.saveMany": "Guardar as minhas respostas",
+  "card.answerAgain.title": "Quem organiza mudou uma pergunta",
+  "card.answerAgain.titleMany": "Quem organiza mudou as perguntas",
+  "card.loadError.body":
+    "Se já tiveres configurado alguma coisa, continua guardada. Tenta outra vez daqui a pouco.",
+  "card.loadError.retry": "Tentar outra vez",
+  "card.loadError.retrying": "A tentar outra vez",
+  "card.loadError.title": "O Vamos juntes não carregou",
   "feedback.confirmation.titleEm": "nos contares",
   "feedback.privacyLine":
     "As tuas respostas ficam privadas. Sem nomes, ajudam-nos a formar grupos melhores.",
   "group.feedbackEditCta": "Mudar o que respondeste sobre o grupo",
+  "group.member.optionsLabel": "Opções para {name}",
+  "group.member.block": "Bloquear {name}",
+  "group.member.report": "Denunciar {name}",
+  "group.block.title": "Bloquear {name}?",
+  "group.block.description.beforeStart":
+    "Sais deste grupo e passas para outro grupo que vai a este convívio, se houver um que encaixe. O teu cartão mostra o que vem a seguir. {name} fica, e ninguém lhe diz porquê.",
+  "group.block.description.afterStart":
+    "Sais deste grupo e da conversa. {name} fica, e ninguém lhe diz porquê.",
+  "group.block.description.late":
+    "Já é tarde para mudar de grupo, e deixam de se ver neste grupo. Ninguém diz a {name} porquê.",
+  "group.block.everywhere":
+    "O bloqueio vale em toda a QueerPulse: {name} não te pode enviar mensagens, ver o teu perfil nem encontrar-te na pesquisa. Podes desbloquear mais tarde.",
+  "group.block.confirm": "Bloquear",
+  "group.block.movedToast":
+    "Bloqueaste {name} e saíste desse grupo. O teu cartão do Vamos juntes mostra o que vem a seguir.",
+  "group.block.doneToast": "Bloqueaste {name}.",
+  "group.memberReport.title": "Denunciar {name}",
+  "group.leaveChat.label": "Sair da conversa",
+  "group.leaveChat.hint":
+    "Continuas no grupo e ainda podes dizer quem queres voltar a encontrar.",
+  "group.leaveChat.done": "Saíste da conversa. Continuas no grupo.",
+  "group.leaveChatConfirm.title": "Sair da conversa?",
+  "group.leaveChatConfirm.description":
+    "Deixas de receber as mensagens deste grupo, e as outras pessoas veem a nota habitual de que saíste. Continuas no grupo, por isso ainda podes dizer quem queres voltar a encontrar.",
+  "group.leaveChatConfirm.confirm": "Sair da conversa",
+  "group.member.gone": "Esta pessoa já não está no grupo.",
+  "group.block.pairMoves":
+    "{partner} vem contigo, por isso muda de grupo contigo.",
+  "group.block.pairEnds":
+    "Tu e {partner} deixam de ser um par para este convívio, e {partner} fica no grupo.",
+  "group.block.pairBlocked":
+    "Tu e {name} deixam de ser um par para este convívio.",
 };

@@ -4,13 +4,18 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { REASON_LABEL_KEYS } from "./reportReasons";
 import type { MyReportEntry } from "./api/useMyReports";
-import { REPORT_STATUS_LABEL_KEY, REPORT_STATUS_TONE } from "./myReports.data";
+import {
+  REPORT_STATUS_LABEL_KEY,
+  REPORT_STATUS_TONE,
+  REPORT_SUBJECT_LABEL_KEY,
+} from "./myReports.data";
 import styles from "./MyReportRow.module.css";
 
 /**
  * One filed report, as its own reporter sees it: the reason (reusing the
  * shared reporting taxonomy's own labels — `REASON_LABEL_KEYS`, the same
- * lookup `ReportPage`/`FlagModal` render), the reference code they can quote
+ * lookup `ReportPage`/`FlagModal` render), what kind of thing was reported
+ * (PRD-460, `REPORT_SUBJECT_LABEL_KEY`), the reference code they can quote
  * back to the safety team, when it was filed, and a status pill reusing the
  * shared `<Badge>` tone-pill primitive rather than a bespoke status style.
  *
@@ -44,6 +49,9 @@ export function MyReportRow({ report }: { report: MyReportEntry }) {
     : null;
   const reasonKey = REASON_LABEL_KEYS[report.reasonCode];
   const statusLabelKey = REPORT_STATUS_LABEL_KEY[report.status];
+  // Falls back to nothing for a `subjectType` an older server sent that this
+  // build's `ReportSubjectType` union does not (yet) know about.
+  const subjectLabelKey = REPORT_SUBJECT_LABEL_KEY[report.subjectType];
 
   return (
     <div className={styles.reportRow}>
@@ -52,15 +60,16 @@ export function MyReportRow({ report }: { report: MyReportEntry }) {
           {reasonKey ? t(reasonKey) : report.reasonCode}
         </div>
         <div className={styles.reportMeta}>
-          <span className={styles.reportRef}>{report.reference}</span>
-          <span aria-hidden>·</span>
-          <span>{filedLabel}</span>
-          {resolvedLabel && (
-            <>
-              <span aria-hidden>·</span>
-              <span>{resolvedLabel}</span>
-            </>
+          {subjectLabelKey && (
+            <span className={styles.metaPart}>{t(subjectLabelKey)}</span>
           )}
+          <span className={styles.metaPart}>{filedLabel}</span>
+          {resolvedLabel && (
+            <span className={styles.metaPart}>{resolvedLabel}</span>
+          )}
+          <span className={`${styles.metaPart} ${styles.reportRef}`}>
+            {report.reference}
+          </span>
         </div>
       </div>
       <Badge tone={REPORT_STATUS_TONE[report.status] ?? "ghost"}>

@@ -89,7 +89,7 @@
 }
 .jobStepper {
   /* Original rail: current dot solid plum, but the completed connector line
-     and done dots were jade — keep those distinct. */
+     and done dots were jade. Keep those distinct. */
   --stepper-accent: var(--plum);
   --stepper-fill: var(--jade);
 }
@@ -176,8 +176,10 @@
   color: var(--text-strong);
   margin-bottom: 6px;
 }
+/* Coral text on paper: --accent measures 2.91:1, so small text uses the
+   --accent-text variant (AA), as FormField does. */
 .req {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .opt {
   font-weight: 400;
@@ -190,7 +192,7 @@
   color: var(--ink-40);
 }
 .counterOver {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .input,
 .select,
@@ -228,7 +230,7 @@
   align-items: center;
   gap: 5px;
   font-size: var(--text-12);
-  color: var(--accent);
+  color: var(--accent-text);
   margin-top: 6px;
 }
 .fieldErr .error {

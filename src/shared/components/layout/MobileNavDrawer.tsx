@@ -9,6 +9,7 @@ import { m, useDragControls, type PanInfo } from "motion/react";
 import { Button, useScrimDismiss } from "../ui";
 import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
+import { useIsLinkVisible } from "../../../app/authGate";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { routes } from "../../../app/routeMap";
@@ -39,6 +40,7 @@ const DISMISS_VELOCITY = 500;
 export function MobileNavDrawer() {
   const { activeSheet, closeSheet, closeSheetForNavigation } = useNavDrawer();
   const { loggedIn } = useAuth();
+  const isLinkVisible = useIsLinkVisible();
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -127,14 +129,18 @@ export function MobileNavDrawer() {
           <FiX />
         </button>
         <MegaNavDrawer onNavigate={closeSheetForNavigation} />
-        <Link
-          to={routes.search}
-          replace
-          className={styles.link}
-          onClick={closeSheetForNavigation}
-        >
-          {t("nav:searchShort")}
-        </Link>
+        {/* /search is member-only (authGate), so it follows the same
+            visibility check as every other gated nav link. */}
+        {isLinkVisible(routes.search) && (
+          <Link
+            to={routes.search}
+            replace
+            className={styles.link}
+            onClick={closeSheetForNavigation}
+          >
+            {t("nav:searchShort")}
+          </Link>
+        )}
         {!loggedIn && (
           <>
             <Link

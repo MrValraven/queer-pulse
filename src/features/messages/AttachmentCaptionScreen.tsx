@@ -118,9 +118,12 @@ export function AttachmentCaptionScreen({
 
   if (!selectedItem) return null;
 
-  // Mirrors `Composer`'s own `handleComposerKeyDown`: Enter sends on a fine
-  // pointer, Shift+Enter (or Enter on touch) inserts a newline instead.
+  // Mirrors `Composer`'s own `handleComposerKeyDown` (`useComposerSendHandlers.ts`):
+  // Enter during CJK/IME composition belongs to the IME, so it must not send;
+  // Enter otherwise sends on a fine pointer, Shift+Enter (or Enter on touch)
+  // inserts a newline instead.
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.nativeEvent.isComposing || event.keyCode === 229) return;
     const isCoarsePointer =
       typeof window !== "undefined" &&
       window.matchMedia?.("(pointer: coarse)").matches;

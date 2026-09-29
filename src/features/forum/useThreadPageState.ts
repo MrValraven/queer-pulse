@@ -203,18 +203,26 @@ export function useThreadPageState() {
   // writing separate fields, and opening a thread must never sign anybody up
   // for a notification per reply.
   //
-  // The ref keys on the slug, so it fires once per thread rather than once per
-  // render, and again when the member navigates to a different thread on the
-  // same mounted page.
+  // The stamp carries `readUpTo`, the newest post the loaded pages genuinely
+  // cover (PRD-409), and only fires while that is a string: `null` means the
+  // current ordering leaves gaps below the loaded pages, so there is nothing
+  // honest to stamp yet. The ref keys on slug AND watermark, so it fires once
+  // per reading position, again as "Load more" pulls in newer posts, and
+  // again on a different thread on the same mounted page. The
+  // server keeps the watermark from moving backward, so a re-stamp after a
+  // sort change can only ever hold it or advance it.
   const { markRead } = useMarkThreadRead();
-  const stampedReadSlugRef = useRef<string | null>(null);
+  const stampedReadKeyRef = useRef<string | null>(null);
   const loadedThreadSlug = threadData?.slug;
+  const { readUpTo } = threadQuery;
   useEffect(() => {
     if (demoMode || !loadedThreadSlug) return;
-    if (stampedReadSlugRef.current === loadedThreadSlug) return;
-    stampedReadSlugRef.current = loadedThreadSlug;
-    markRead({ slug: loadedThreadSlug });
-  }, [demoMode, loadedThreadSlug, markRead]);
+    if (typeof readUpTo !== "string") return;
+    const stampKey = `${loadedThreadSlug}|${readUpTo}`;
+    if (stampedReadKeyRef.current === stampKey) return;
+    stampedReadKeyRef.current = stampKey;
+    markRead({ slug: loadedThreadSlug, upTo: readUpTo });
+  }, [demoMode, loadedThreadSlug, readUpTo, markRead]);
 
   const catMeta = CATS.find((c) => c.id === threadData?.category);
 

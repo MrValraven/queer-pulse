@@ -1,3 +1,4 @@
+import type { TranslateInFunction } from "../../../app/providers/i18nContext";
 import type {
   AdminStickerPackResponse,
   AdminStickerResponse,
@@ -192,4 +193,53 @@ export function stickerLabelFor(
   const name = itemName(template, itemId, language);
   if (template.id !== UNO_REVERSE_TEMPLATE.id) return name;
   return t("admin:stickerPacks.publish.stickerLabel", { flag: name });
+}
+
+/** The sentence an Uno reverse sticker's label is built from. */
+const STICKER_LABEL_KEY = "admin:stickerPacks.publish.stickerLabel";
+
+/**
+ * Asks for the `admin` catalog in both languages, so the sentence
+ * `stickerLabelsFor` builds is on hand in each by the time an admin
+ * confirms a publish. Call it during render: `translateIn` queues a missing
+ * namespace and its arrival re-renders the caller. True once both resolve.
+ */
+export function warmStickerLabelCatalogs(
+  translateIn: TranslateInFunction,
+): boolean {
+  const englishSentence = translateIn("en", STICKER_LABEL_KEY);
+  const portugueseSentence = translateIn("pt", STICKER_LABEL_KEY);
+  return englishSentence !== undefined && portugueseSentence !== undefined;
+}
+
+/** A published sticker's name in both languages. */
+export interface StickerLabels {
+  en: string;
+  pt: string;
+}
+
+/**
+ * Both labels a published sticker gets, each in its own language whatever
+ * language the admin has the builder in: the template item's English and
+ * Portuguese names, and for Uno the `stickerLabel` sentence around them.
+ * `translateIn` answers undefined while a language's `admin` catalog is
+ * still loading (`warmStickerLabelCatalogs` asks for both ahead of time);
+ * the active-language `t` stands in then, which still puts the right
+ * language's flag name in the sentence.
+ */
+export function stickerLabelsFor(
+  template: StickerTemplate,
+  itemId: string,
+  t: TFunction,
+  translateIn: TranslateInFunction,
+): StickerLabels {
+  const labelIn = (language: Language): string => {
+    const name = itemName(template, itemId, language);
+    if (template.id !== UNO_REVERSE_TEMPLATE.id) return name;
+    return (
+      translateIn(language, STICKER_LABEL_KEY, { flag: name }) ??
+      t(STICKER_LABEL_KEY, { flag: name })
+    );
+  };
+  return { en: labelIn("en"), pt: labelIn("pt") };
 }

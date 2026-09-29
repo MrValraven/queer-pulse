@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
 import {
+  invalidateConversationDetail,
   patchMessageDelete,
   patchMessageEdit,
   patchMessageReaction,
@@ -16,6 +17,7 @@ import type { MessageReactionKey } from "../../../shared/contracts/contracts";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Conversation } from "../data";
+import { editedTextOfResponse } from "../messageEditKinds";
 import {
   addMessageReaction,
   deleteConversation,
@@ -214,14 +216,16 @@ export function useEditMessage(conversationId: string | null) {
     // whose last-message preview may now show the edited text. Prefer the
     // server's own `editedAt` (the response already carries it) over the
     // client clock, which can be skewed — fall back to it only if the
-    // response is ever missing the field.
+    // response is ever missing the field. ENG-405: live, the server's own
+    // edited text wins (a photo's caption comes back sanitized); demo has no
+    // response and patches the submitted text.
     onSuccess: (updated, { messageId, body }) => {
       if (!conversationId) return;
       patchMessageEdit(
         queryClient,
         conversationId,
         messageId,
-        body,
+        updated ? editedTextOfResponse(updated) : body,
         updated?.editedAt ?? new Date().toISOString(),
       );
       if (demoMode) return;
@@ -285,6 +289,10 @@ export function useDeleteConversation() {
             (conversation) => conversation.id !== conversationId,
           ),
       );
+      // The detail entry has no row to drop. Marking it stale makes a later
+      // open (a search hit, a deep link) read the cleared thread fresh, with
+      // no request fired while the member has moved on.
+      void invalidateConversationDetail(queryClient, conversationId, true);
     },
   });
 

@@ -174,38 +174,36 @@
   flex: none;
   flex-wrap: wrap;
 }
-.declineBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--ink-60);
-  cursor: pointer;
-  padding: 8px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
+/* A request or roster row: the text, then its buttons. The text keeps a 12rem
+   floor, so on a phone the buttons drop to their own line, right-aligned, and
+   the name gets the full width. From about 510px of row width it all sits on
+   one line. `max-width` caps the button group at the row, so a pair too wide
+   for one line (PT "Retirar da moderação" + "Remover" at 375px) wraps inside
+   the group and the row never overflows. Scoped to these rows: the transfer
+   modal's radio rows and the report card's actions keep their layout. */
+.modRowWithActions {
+  flex-wrap: wrap;
 }
-.declineBtn svg {
-  width: 13px;
-  height: 13px;
+.modRowWithActions > .modMain {
+  flex: 1 1 12rem;
 }
-@media (hover: hover) {
-  .declineBtn:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
-    color: var(--ink);
+.modRowWithActions > .modActions {
+  max-width: 100%;
+  margin-inline-start: auto;
+  justify-content: flex-end;
+}
+/* Roster actions are sm Buttons (40px) for desk density; a thumb gets the
+   full tap floor. */
+@media (pointer: coarse) {
+  .modActions .rowAction {
+    min-height: var(--tap-min);
   }
 }
-.declineBtn:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 2px;
-}
+/* Roster "Remove" is a ghost <Button>; its hover warms to the accent so the
+   one irreversible action reads apart from the role toggles. The extra
+   selectors outrank the ghost hover rule in Button.module.css. */
 @media (hover: hover) {
-  .removeBtn:hover {
+  .modActions .removeBtn:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: var(--accent);
     color: var(--accent-ink);
   }
@@ -387,7 +385,6 @@
   .tab,
   .chip,
   .modeChip,
-  .declineBtn,
   .search,
   .settingsInput,
   .rulesArea {

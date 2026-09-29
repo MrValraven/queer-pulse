@@ -57,6 +57,7 @@ export function EditorPreview({
     data,
     skinStyle,
     liveHref,
+    isDraftHref,
   } = useEditorPreviewView(subprofile, device);
 
   return (
@@ -81,7 +82,13 @@ export function EditorPreview({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {t("subprofiles:editorPreview.openLive")}{" "}
+            {/* A draft's page answers its owners alone, so it opens as the
+                draft page it is. */}
+            {t(
+              isDraftHref
+                ? "subprofiles:editorPreview.openDraftPage"
+                : "subprofiles:editorPreview.openLive",
+            )}{" "}
             <FiExternalLink aria-hidden />
           </Button>
         )}

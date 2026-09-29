@@ -11,6 +11,10 @@ import { closeJob } from "../../features/economy/api/jobs.api";
 import { useDemoMode } from "./DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
 import { PostedJobsContext } from "./usePostedJobs";
+import {
+  normalizePostedJob,
+  type StoredPostedJob,
+} from "./postedJobs.normalize";
 
 const STORAGE_KEY = "qp-posted-jobs";
 
@@ -19,15 +23,17 @@ function readInitial(): Job[] {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    const parsed = JSON.parse(raw) as Job[];
-    return Array.isArray(parsed) ? parsed : [];
+    const parsed = JSON.parse(raw) as StoredPostedJob[];
+    // Jobs saved before the work taxonomy carry old category slugs and no
+    // commitment, seniority or profession ids.
+    return Array.isArray(parsed) ? parsed.map(normalizePostedJob) : [];
   } catch {
     return [];
   }
 }
 
 /**
- * Session store for jobs members publish through the composer — a localStorage
+ * Session store for jobs members publish through the composer: a localStorage
  * array, the prototype's stand-in for a backend, so a freshly posted role keeps
  * showing after a reload.
  *
@@ -35,13 +41,13 @@ function readInitial(): Job[] {
  * merged the server's rows in, but every consumer reads `postedJobs` inside a
  * `demoMode` branch: `JobsPage` (`demoMode ? [...postedJobs, ...JOBS] :
  * liveJobs`), `JobDetailPage` (demo lookup), `CompanyPage` (whose local merge is
- * unreachable live — `profile` and `openRoles` come from the same `useCompany`
+ * unreachable live, since `profile` and `openRoles` come from the same `useCompany`
  * response, so the API's roles always win), and `PostJobComposer` (which calls
  * `addJob` only in its demo branch). The live query fed nothing that rendered,
  * so it fired on every route for no one and has been removed.
  *
  * In live mode a posted job reaches the UI through `useCreateJob`, which
- * invalidates `["jobs"]` / `["companies"]` / `["company", slug]` — the keys the
+ * invalidates `["jobs"]` / `["companies"]` / `["company", slug]`, the keys the
  * board and company pages actually render from. Do not reintroduce a `["myJobs"]`
  * query here; if "my postings" ever needs its own view, give that view its own
  * hook under `src/features/economy/api/`.
@@ -56,13 +62,13 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(postedJobs));
     } catch {
-      // Ignore storage failures — session state still holds the posted jobs.
+      // Ignore storage failures: session state still holds the posted jobs.
     }
   }, [postedJobs]);
 
   const addJob = useCallback((job: Job) => {
     // The real server create already happened at the composer call site via
-    // useCreateJob, which invalidates the board's own keys — don't double-POST
+    // useCreateJob, which invalidates the board's own keys. Don't double-POST
     // and don't invalidate here.
     setPostedJobs((prev) => [job, ...prev.filter((j) => j.slug !== job.slug)]);
   }, []);

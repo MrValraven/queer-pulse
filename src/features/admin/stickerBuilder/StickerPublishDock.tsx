@@ -3,7 +3,12 @@ import { ConfirmDialog } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AdminStickerPackResponse } from "../../../shared/contracts/contracts";
 import { StickerPublishBar } from "./StickerPublishBar";
-import { buildItemPlan, stickerLabelFor } from "./stickerItems";
+import {
+  buildItemPlan,
+  stickerLabelsFor,
+  warmStickerLabelCatalogs,
+  type StickerLabels,
+} from "./stickerItems";
 import { summarizeRun, type useStickerPublish } from "./useStickerPublish";
 import type { StickerBuilderState } from "./useStickerBuilderState";
 import type { StickerPackActions } from "./useStickerPackActions";
@@ -102,7 +107,11 @@ export function StickerPublishDock({
   publisher: StickerPublisher;
   onViewPack: () => void;
 }) {
-  const { t, language } = useTranslation();
+  const { t, translateIn } = useTranslation();
+  // Asked for on every render, long before a confirm: an EN admin's first
+  // publish then writes the Portuguese sentence into `labelPt`, where the
+  // active-language fallback would put the English one.
+  warmStickerLabelCatalogs(translateIn);
   const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
   const dockRef = useRef<HTMLDivElement>(null);
   const { run } = publisher;
@@ -123,13 +132,13 @@ export function StickerPublishDock({
   });
 
   function handleConfirmRun() {
-    const labelsByItemId: Record<string, string> = {};
+    const labelsByItemId: Record<string, StickerLabels> = {};
     for (const entry of plan) {
-      labelsByItemId[entry.itemId] = stickerLabelFor(
+      labelsByItemId[entry.itemId] = stickerLabelsFor(
         state.template,
         entry.itemId,
         t,
-        language,
+        translateIn,
       );
     }
     void publisher.start({

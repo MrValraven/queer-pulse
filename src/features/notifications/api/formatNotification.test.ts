@@ -15,6 +15,7 @@ import {
   formatNotification,
   type NotificationKind,
 } from "./formatNotification";
+import { LIFECYCLE_KIND_CATEGORY } from "./notificationKindCopy";
 
 /**
  * The resolved `notifications` catalog per language. EN is eager, but PT's
@@ -153,6 +154,11 @@ const KINDS: NotificationKind[] = [
   // below for the focus-area branching itself).
   "ambassador_granted",
   "ambassador_revoked",
+  // ENG-462, the desk passing on a pitch. Listed with an empty payload for
+  // the same reason the piece rows above resolve `title` defensively: a row
+  // whose payload never arrived still has to read as a whole sentence, with
+  // the shared fallback filling `{title}`.
+  "magazine_pitch_passed",
 ];
 
 describe("formatNotification", () => {
@@ -456,19 +462,21 @@ describe("formatNotification — verification_update", () => {
       // The bug this fix closes: this must never read as a level update.
       expect(result.text).not.toContain("updated");
       expect(result.text).not.toContain("level");
-      expect(result.meta).toBe(
+      expect(result.reason).toBe(
         "The submitted document photo was too blurry to verify.",
       );
+      expect(result.meta).toBe("Verification update");
     });
 
-    it("falls back to a generic phrase when no reason is on the payload", () => {
+    it("keeps the label and carries no reason when none is on the payload", () => {
       const result = formatNotification(
         "verification_update",
-        { requestedLevel: "id_verified", decision: "rejected" },
+        { requestedLevel: "id_verified", decision: "rejected", reason: "  " },
         t,
       );
       expect(result.text).toBe("Your verification request was declined.");
-      expect(result.meta).toBe("No reason was shared.");
+      expect(result.meta).toBe("Verification update");
+      expect(result.reason).toBeUndefined();
     });
 
     it("resolves the same row in Portuguese", () => {
@@ -482,7 +490,8 @@ describe("formatNotification — verification_update", () => {
         makeT("pt"),
       );
       expect(result.text).toBe("O teu pedido de verificação foi recusado.");
-      expect(result.meta).toBe("A foto do documento estava desfocada.");
+      expect(result.meta).toBe("Atualização de verificação");
+      expect(result.reason).toBe("A foto do documento estava desfocada.");
     });
   });
 });
@@ -669,4 +678,628 @@ describe("formatNotification: subprofile_creator_changed", () => {
     );
     expect(successor.text).toBe("Passaste a ser responsável por Nightform.");
   });
+});
+
+/**
+ * ENG-409. The thirty-one kinds the backend wrote with no copy here. A sibling
+ * top-level describe for the same line-budget reason as the blocks above.
+ *
+ * Unlike `KINDS`, every one of these IS safe to sweep with an empty payload:
+ * `applyLifecycleTokens` resolves each interpolated field to a fallback
+ * phrase, so a row whose payload never arrived still reads as a sentence.
+ */
+const LIFECYCLE_KINDS = Object.keys(LIFECYCLE_KIND_CATEGORY);
+
+describe("formatNotification: ENG-409 newly rendered kinds", () => {
+  it.each(LIFECYCLE_KINDS)(
+    "renders %s as its own copy, with no brace token, in both languages",
+    (kind) => {
+      const fallback = formatNotification("a_type_from_the_future", {}, t);
+      for (const language of ["en", "pt"] as const) {
+        const result = formatNotification(kind, {}, makeT(language));
+        expect(result.kind).toBe(kind);
+        expect(result.text.trim()).not.toBe("");
+        expect(result.meta.trim()).not.toBe("");
+        expect(`${result.text} ${result.meta}`).not.toMatch(/[{}]/);
+      }
+      expect(formatNotification(kind, {}, t).text).not.toBe(fallback.text);
+    },
+  );
+
+  it("files each group under the tab its neighbours use", () => {
+    expect(formatNotification("community_new_post", {}, t).category).toBe(
+      "community",
+    );
+    expect(formatNotification("event_announcement", {}, t).category).toBe(
+      "events",
+    );
+    expect(formatNotification("forum_thread_reviewed", {}, t).category).toBe(
+      "platform",
+    );
+    expect(formatNotification("subprofile_invite", {}, t).category).toBe(
+      "community",
+    );
+  });
+
+  it("names the community a fan-out came from", () => {
+    const result = formatNotification(
+      "community_new_post",
+      {
+        source: "community",
+        communitySlug: "trans-friends",
+        communityName: "Trans Friends",
+        postId: "p1",
+      },
+      t,
+    );
+    expect(result.text).toContain("Trans Friends");
+  });
+
+  it("branches a role change on the new role, and falls back for an unknown one", () => {
+    const moderator = formatNotification(
+      "community_role_changed",
+      { communityName: "Trans Friends", role: "mod" },
+      t,
+    );
+    const unknown = formatNotification(
+      "community_role_changed",
+      { communityName: "Trans Friends", role: "gardener" },
+      t,
+    );
+    expect(moderator.text).toContain("Trans Friends");
+    expect(moderator.text).not.toBe(unknown.text);
+    expect(unknown.text).toBe(
+      formatNotification(
+        "community_role_changed",
+        { communityName: "Trans Friends" },
+        t,
+      ).text,
+    );
+  });
+
+  it("names the listing field an accepted correction touched", () => {
+    const hours = formatNotification(
+      "listing_edit_suggestion_accepted",
+      { source: "listing", listingSlug: "lux-cafe", field: "hours" },
+      t,
+    );
+    const other = formatNotification(
+      "listing_edit_suggestion_accepted",
+      { field: "other" },
+      t,
+    );
+    // The member reads the field's label.
+    expect(hours.text).toContain("opening hours");
+    expect(hours.text).not.toBe(other.text);
+  });
+
+  it("names the persona and the gathering where the payload carries them", () => {
+    const invite = formatNotification(
+      "subprofile_invite",
+      { subprofileName: "Fio Solto" },
+      t,
+    );
+    expect(invite.text).toContain("Fio Solto");
+    expect(invite.textValues?.subprofileName).toBe("Fio Solto");
+    const venue = formatNotification(
+      "venue_event_attachment",
+      { listingName: "Lux Cafe", eventTitle: "Picnic in Estrela" },
+      t,
+    );
+    expect(venue.text).toContain("Lux Cafe");
+    expect(venue.text).toContain("Picnic in Estrela");
+  });
+});
+
+/**
+ * PRD-404. `event_reminder` names the gathering when the backend's new
+ * payload carries its title, and keeps the original sentence for rows written
+ * before that change.
+ */
+describe("formatNotification: event_reminder with a gathering title", () => {
+  it("names the gathering when the title is present", () => {
+    const titled = formatNotification(
+      "event_reminder",
+      {
+        eventId: "e1",
+        source: "event",
+        eventSlug: "picnic-in-estrela",
+        eventTitle: "Picnic in Estrela",
+      },
+      t,
+    );
+    expect(titled.text).toContain("Picnic in Estrela");
+    expect(titled.meta).toBe(formatNotification("event_reminder", {}, t).meta);
+  });
+
+  it("keeps the original sentence for an older row with no title", () => {
+    const untitled = formatNotification("event_reminder", { eventId: "e1" }, t);
+    expect(untitled.text).toBe("A gathering you're going to is coming up.");
+  });
+
+  it("resolves the titled variant in Portuguese", () => {
+    const titled = formatNotification(
+      "event_reminder",
+      { eventTitle: "Piquenique na Estrela" },
+      makeT("pt"),
+    );
+    expect(titled.text).toContain("Piquenique na Estrela");
+  });
+});
+
+/**
+ * PRD-402. Five decline pushes say "Tap to read why" and open the bell, so
+ * the bell row has to carry the moderator's words. They ride on the row's own
+ * `reason` field, verbatim and trimmed, the row shows them in full under the
+ * sentence, and `meta` stays the kind's short label whether or not a reason
+ * was written.
+ */
+describe("formatNotification: PRD-402 decline reasons on the bell row", () => {
+  const REASON = "The photos show a different flat from the one described.";
+
+  const declines: [string, Record<string, unknown>, string][] = [
+    [
+      "forum_thread_reviewed",
+      {
+        source: "forum",
+        threadSlug: "t1",
+        title: "Coming out at work",
+        decision: "rejected",
+        reviewNote: REASON,
+      },
+      "Thread review",
+    ],
+    [
+      "reading_group_proposal_decided",
+      {
+        source: "community",
+        decision: "declined",
+        book: "Stone Butch Blues",
+        reason: REASON,
+      },
+      "Reading group proposal",
+    ],
+    [
+      "group_listing_decided",
+      {
+        source: "housing_group",
+        decision: "declined",
+        listingTitle: "Sunny room in Arroios",
+        groupName: "Casa Lilás",
+        groupSlug: "casa-lilas",
+        reason: REASON,
+      },
+      "Group listing",
+    ],
+    // PRD-463. A published listing a moderator hid, with the required reason.
+    [
+      "group_listing_decided",
+      {
+        source: "housing_group",
+        decision: "hidden",
+        listingTitle: "Sunny room in Arroios",
+        groupName: "Casa Lilás",
+        groupSlug: "casa-lilas",
+        reason: REASON,
+      },
+      "Group listing",
+    ],
+    [
+      "landlord_suggestion_decided",
+      {
+        source: "landlord",
+        decision: "removed",
+        landlordName: "Casas do Bairro",
+        landlordSlug: "casas-do-bairro",
+        reason: REASON,
+      },
+      "Landlord suggestion",
+    ],
+    [
+      "landlord_intro_request_decided",
+      {
+        source: "landlord",
+        decision: "declined",
+        landlordName: "Casas do Bairro",
+        landlordSlug: "casas-do-bairro",
+        reason: REASON,
+      },
+      "Introduction request",
+    ],
+  ];
+
+  it.each(declines)(
+    "%s carries the reason on `reason` and its label on `meta`",
+    (kind, payload, label) => {
+      const result = formatNotification(kind, payload, t);
+      expect(result.reason).toBe(REASON);
+      expect(result.meta).toBe(label);
+      expect(result.text).not.toContain(REASON);
+      expect(result.text).not.toMatch(/[{}]/);
+    },
+  );
+
+  it.each(declines)(
+    "%s keeps a readable sentence and its label when no reason was written",
+    (kind, payload, label) => {
+      const withoutReason = { ...payload };
+      delete withoutReason.reason;
+      delete withoutReason.reviewNote;
+      expect(formatNotification(kind, withoutReason, t).meta).toBe(label);
+      for (const language of ["en", "pt"] as const) {
+        const result = formatNotification(kind, withoutReason, makeT(language));
+        expect(result.reason).toBeUndefined();
+        expect(result.meta.trim()).not.toBe("");
+        expect(`${result.text} ${result.meta}`).not.toMatch(/[{}]/);
+      }
+    },
+  );
+
+  it("trims the reason and drops one that is only whitespace", () => {
+    const padded = formatNotification(
+      "group_listing_decided",
+      { decision: "declined", reason: `  ${REASON}\n` },
+      t,
+    );
+    expect(padded.reason).toBe(REASON);
+    const blank = formatNotification(
+      "group_listing_decided",
+      { decision: "declined", reason: " \n\t " },
+      t,
+    );
+    expect(blank.reason).toBeUndefined();
+    expect(blank.meta).toBe("Group listing");
+  });
+
+  it("passes a reason through as plain text, markup and all", () => {
+    const markup = "<b>Not a room</b> & <a href='x'>see</a>";
+    const result = formatNotification(
+      "group_listing_decided",
+      { decision: "declined", reason: markup },
+      t,
+    );
+    // The row renders `reason` as a text node, so the string must arrive
+    // untouched: neither parsed nor escaped here.
+    expect(result.reason).toBe(markup);
+    expect(result.meta).toBe("Group listing");
+  });
+
+  it("gives the declined and the approved outcome different sentences", () => {
+    const approved = formatNotification(
+      "reading_group_proposal_decided",
+      { decision: "approved", book: "Stone Butch Blues" },
+      t,
+    );
+    const declined = formatNotification(
+      "reading_group_proposal_decided",
+      { decision: "declined", book: "Stone Butch Blues", reason: REASON },
+      t,
+    );
+    expect(approved.text).not.toBe(declined.text);
+    expect(approved.reason).toBeUndefined();
+    expect(approved.meta).toBe(declined.meta);
+  });
+
+  it("gives a hidden group listing its own sentence, naming the listing", () => {
+    const payload = {
+      source: "housing_group",
+      listingTitle: "Sunny room in Arroios",
+      groupName: "Casa Lilás",
+      groupSlug: "casa-lilas",
+    };
+    for (const language of ["en", "pt"] as const) {
+      const localized = makeT(language);
+      const hidden = formatNotification(
+        "group_listing_decided",
+        { ...payload, decision: "hidden", reason: REASON },
+        localized,
+      );
+      const declined = formatNotification(
+        "group_listing_decided",
+        { ...payload, decision: "declined", reason: REASON },
+        localized,
+      );
+      // The flat fallback also names the listing, so pin the outcome sentence:
+      // this fails if `hidden` leaves OUTCOME_FIELDS.
+      const flat = formatNotification(
+        "group_listing_decided",
+        payload,
+        localized,
+      );
+      expect(hidden.text).not.toBe(flat.text);
+      expect(hidden.text).not.toBe(declined.text);
+      expect(hidden.reason).toBe(REASON);
+    }
+    expect(
+      formatNotification(
+        "group_listing_decided",
+        { ...payload, decision: "hidden", reason: REASON },
+        t,
+      ).text,
+    ).toBe("Sunny room in Arroios was hidden from Casa Lilás by moderators.");
+  });
+
+  it.each(["request_changes", "reject", "take_down"])(
+    "carries the reason on the housing listing decision (%s)",
+    (decision) => {
+      const result = formatNotification(
+        "housing_listing_decision",
+        {
+          source: "housing",
+          slug: "sunny-room",
+          title: "Sunny room",
+          decision,
+          reason: REASON,
+        },
+        t,
+      );
+      expect(result.reason).toBe(REASON);
+      expect(result.meta).toBe("Housing");
+      expect(result.text).toContain("Sunny room");
+    },
+  );
+});
+
+/**
+ * PRD-402, continued. The kinds that carried a reason on their meta line
+ * before the lifecycle kinds did, plus the one whose reason a member wrote.
+ */
+describe("formatNotification: PRD-402 reasons on the other decision kinds", () => {
+  it("carries the moderator's note on every moderation outcome", () => {
+    const note = "Repeated slurs in the community chat.";
+    for (const action of ["warn", "suspend", "ban", "restriction_lifted"]) {
+      const result = formatNotification(
+        "moderation_outcome",
+        { action, note },
+        t,
+      );
+      expect(result.reason).toBe(note);
+      expect(result.meta).toBe("Moderation decision");
+    }
+    const flat = formatNotification("moderation_outcome", { note }, t);
+    expect(flat.reason).toBe(note);
+    expect(flat.meta).toBe("Moderation decision");
+    expect(formatNotification("moderation_outcome", {}, t).reason).toBe(
+      undefined,
+    );
+  });
+
+  it("carries the reviewer's note on a decided submission", () => {
+    const reviewNote = "We only list swaps between members in Portugal.";
+    const declined = formatNotification(
+      "submission_decided",
+      { kind: "barter_proposal", outcome: "declined", reviewNote },
+      t,
+    );
+    expect(declined.reason).toBe(reviewNote);
+    expect(declined.meta).toBe("Swap proposal");
+    expect(
+      formatNotification(
+        "submission_decided",
+        { kind: "partner_application", outcome: "accepted" },
+        t,
+      ).meta,
+    ).toBe("Partner application");
+    const unknownKind = formatNotification(
+      "submission_decided",
+      { kind: "a_future_kind", reviewNote },
+      t,
+    );
+    expect(unknownKind.reason).toBe(reviewNote);
+    expect(unknownKind.meta).toBe("Submission");
+  });
+
+  it("carries the member's reason on an owner review request", () => {
+    const reason = "The owner has not answered anyone in three months.";
+    const result = formatNotification(
+      "community_owner_review_requested",
+      { communityName: "Trans Friends", reason },
+      t,
+    );
+    expect(result.reason).toBe(reason);
+    expect(result.meta).toBe("Owner review");
+    expect(result.text).toContain("Trans Friends");
+  });
+
+  it("carries no reason on kinds whose sentence already quotes it", () => {
+    const result = formatNotification(
+      "community_banned",
+      { communityName: "Trans Friends", reason: "Repeated slurs." },
+      t,
+    );
+    expect(result.reason).toBeUndefined();
+  });
+});
+
+/**
+ * ENG-409 review fix. Three sentences end on a named thing ("…: {title}.").
+ * A row missing that name reads a variant sentence written without it, so no
+ * fallback phrase is left dangling after a colon.
+ */
+describe("formatNotification: ENG-409 rows missing their named thing", () => {
+  it.each([
+    ["community_resource_added", { communityName: "Trans Friends" }],
+    ["community_tag_request_resolved", {}],
+    ["venue_event_attachment", { listingName: "Lux Cafe" }],
+  ] as [string, Record<string, unknown>][])(
+    "%s reads a whole sentence with no colon tail in both languages",
+    (kind, payload) => {
+      for (const language of ["en", "pt"] as const) {
+        const result = formatNotification(kind, payload, makeT(language));
+        expect(result.text).not.toContain(":");
+        expect(result.text).not.toMatch(/[{}]/);
+      }
+    },
+  );
+
+  it("names the resource once the payload carries its title", () => {
+    const titled = formatNotification(
+      "community_resource_added",
+      { communityName: "Trans Friends", title: "Name change guide" },
+      t,
+    );
+    expect(titled.text).toContain("Name change guide");
+  });
+});
+
+/**
+ * ENG-409 follow-up. The payload fields the backend began forwarding later.
+ * Every one of them is missing from rows stored before that, so each case
+ * checks both shapes: the new field names the thing, and its absence keeps
+ * the original sentence.
+ */
+describe("formatNotification: newly forwarded payload fields", () => {
+  it("tells the incoming owner the community is theirs now", () => {
+    const incoming = formatNotification(
+      "community_ownership_transferred",
+      { communityName: "Trans Friends", youAreNowOwner: true },
+      t,
+    );
+    const outgoing = formatNotification(
+      "community_ownership_transferred",
+      { communityName: "Trans Friends", youAreNowOwner: false },
+      t,
+    );
+    expect(incoming.text).toContain("Trans Friends");
+    expect(incoming.text).not.toBe(outgoing.text);
+    // A handover reads differently from being made owner by a role change.
+    expect(incoming.text).not.toBe(
+      formatNotification(
+        "community_role_changed",
+        { communityName: "Trans Friends", role: "owner" },
+        t,
+      ).text,
+    );
+    expect(
+      formatNotification("community_ownership_transferred", {}, t).text,
+    ).toBe(
+      outgoing.text.replace("Trans Friends", "a community you're part of"),
+    );
+  });
+
+  it.each(["persona_endorsed", "persona_followed"])(
+    "%s names the persona when the payload carries it",
+    (kind) => {
+      const named = formatNotification(
+        kind,
+        { subprofileName: "Fio Solto" },
+        t,
+      );
+      expect(named.text).toContain("Fio Solto");
+    },
+  );
+
+  it.each([
+    ["persona_endorsed", "Someone endorsed one of your personas."],
+    ["persona_followed", "Someone started following one of your personas."],
+  ])("%s keeps its original sentence without a persona name", (kind, text) => {
+    expect(formatNotification(kind, {}, t).text).toBe(text);
+  });
+
+  it("names the gathering a host posted about, and keeps the old sentence without a title", () => {
+    const titled = formatNotification(
+      "event_announcement",
+      { source: "event", eventSlug: "picnic", title: "Picnic in Estrela" },
+      t,
+    );
+    expect(titled.text).toBe(
+      "A host posted an update about Picnic in Estrela.",
+    );
+    expect(titled.textValues?.title).toBe("Picnic in Estrela");
+    expect(formatNotification("event_announcement", {}, t).text).toBe(
+      "A host posted an update about one of your gatherings.",
+    );
+  });
+
+  it.each([
+    "governance_motion_approved",
+    "governance_motion_rejected",
+    "governance_motion_ready_for_review",
+  ])("%s names the motion when the payload carries its title", (kind) => {
+    const titled = formatNotification(
+      kind,
+      { source: "governance", title: "Quiet hours in shared spaces" },
+      t,
+    );
+    expect(titled.text).toContain("Quiet hours in shared spaces");
+  });
+
+  it.each([
+    [
+      "governance_motion_approved",
+      "Your motion was approved and is now open for a vote.",
+    ],
+    [
+      "governance_motion_rejected",
+      "Your motion wasn't put to a vote this time.",
+    ],
+    [
+      "governance_motion_ready_for_review",
+      "A motion has enough co-signatures and is ready for review.",
+    ],
+  ])("%s keeps its original sentence without a title", (kind, text) => {
+    expect(formatNotification(kind, {}, t).text).toBe(text);
+  });
+
+  it("carries the admin's reason on a rejected motion beside its label", () => {
+    const note = "It repeats a motion the community voted on in June.";
+    const withNote = formatNotification(
+      "governance_motion_rejected",
+      { source: "governance", title: "Quiet hours", note },
+      t,
+    );
+    expect(withNote.reason).toBe(note);
+    expect(withNote.meta).toBe("Governance motion");
+    expect(withNote.text).not.toContain(note);
+    const untitledWithNote = formatNotification(
+      "governance_motion_rejected",
+      { note },
+      t,
+    );
+    expect(untitledWithNote.reason).toBe(note);
+    expect(untitledWithNote.meta).toBe("Governance motion");
+    const withoutNote = formatNotification("governance_motion_rejected", {}, t);
+    expect(withoutNote.reason).toBeUndefined();
+    expect(withoutNote.meta).toBe("Governance motion");
+  });
+
+  it.each(["listing_claim_approved", "listing_claim_declined"])(
+    "%s names the listing when the payload carries it",
+    (kind) => {
+      const named = formatNotification(
+        kind,
+        { source: "listing", listingSlug: "lux-cafe", listingName: "Lux Cafe" },
+        t,
+      );
+      expect(named.text).toContain("Lux Cafe");
+    },
+  );
+
+  it.each([
+    [
+      "listing_claim_approved",
+      "Your claim was approved. You now manage this listing.",
+    ],
+    ["listing_claim_declined", "Your claim on a listing wasn't approved."],
+  ])("%s keeps its original sentence without a listing name", (kind, text) => {
+    expect(formatNotification(kind, {}, t).text).toBe(text);
+  });
+
+  it.each([
+    ["community_ownership_transferred", { youAreNowOwner: true }],
+    ["persona_endorsed", { subprofileName: "Fio Solto" }],
+    ["persona_followed", { subprofileName: "Fio Solto" }],
+    ["event_announcement", { title: "Piquenique" }],
+    ["governance_motion_approved", { title: "Horas de silêncio" }],
+    ["governance_motion_rejected", { title: "Horas de silêncio" }],
+    ["governance_motion_ready_for_review", { title: "Horas de silêncio" }],
+    ["listing_claim_approved", { listingName: "Lux Cafe" }],
+    ["listing_claim_declined", { listingName: "Lux Cafe" }],
+  ] as [string, Record<string, unknown>][])(
+    "%s resolves its new variant in Portuguese with no brace token",
+    (kind, payload) => {
+      const result = formatNotification(kind, payload, makeT("pt"));
+      expect(`${result.text} ${result.meta}`).not.toMatch(/[{}]/);
+    },
+  );
 });

@@ -16,6 +16,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useSocial } from "../../app/providers/useSocial";
 import { useFeedMutes, type FeedMuteTarget } from "./api/useFeedMutes";
+import { useFeedBlockConfirm } from "./feedBlockConfirmContext";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
@@ -25,17 +26,17 @@ import { logError } from "../../shared/observability/logger";
 import styles from "./FeedPage.module.css";
 
 interface MoreMenuProps {
-  /** Author display name — used for toast/label copy only. */
+  /** Author display name. Used for toast/label copy only. */
   authorName: string;
-  /** Author profile slug — the canonical key blocks/mutes are stored under. */
+  /** Author profile slug: the canonical key blocks/mutes are stored under. */
   slug: string;
   /** Opens the report flow. Omit it on a card whose reportable subject the
    *  feed item doesn't carry (a forum thread is reported through its opening
-   *  post), and the Report item is left out rather than filing against the
-   *  wrong id. */
+   *  post); the Report item is then left out, keeping every report tied to
+   *  the right id. */
   onReport?: () => void;
   /**
-   * The SOURCE this card came from — a community or a thread (SOC-18). When
+   * The SOURCE this card came from: a community or a thread (SOC-18). When
    * present the menu offers "show me less of this", which quiets that source
    * in this member's feed and NOTHING else: they stay in the community, keep
    * their access, and the community is never told. Omit it and the menu is
@@ -56,12 +57,14 @@ export function MoreMenu({
   const { showToast } = useToast();
   const { isMuted, toggleMute, isBlocked, toggleBlock } = useSocial();
   const { mutedIds, mute, unmute } = useFeedMutes();
+  const blockConfirmHost = useFeedBlockConfirm();
   const isSourceMuted = muteTarget ? mutedIds.has(muteTarget.sourceId) : false;
   const muted = isMuted(slug);
   const blocked = isBlocked(slug);
   const [open, setOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const moreBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -80,68 +83,73 @@ export function MoreMenu({
     };
   }, [open]);
 
-  const items: { label: string; icon: React.ReactNode; run: () => void }[] = [
+  // Data only: no item here carries a closure, so nothing built during
+  // render can hold a value derived from `moreBtnRef`. Every item's actual
+  // behaviour lives in the one place below, the menu button's own `onClick`,
+  // which is the only location `react-hooks/refs` accepts a ref read (the
+  // block branch needs `moreBtnRef` to name where focus should return once
+  // the dialog closes). Keeping all four actions together there keeps the
+  // block item's logic in one piece with its siblings'.
+  const items: {
+    id: "report" | "muteSource" | "mute" | "block";
+    label: string;
+    icon: React.ReactNode;
+  }[] = [
     ...(onReport
       ? [
           {
+            id: "report" as const,
             label: t("feed:moderation.reportPost"),
             icon: <FiFlag />,
-            run: onReport,
           },
         ]
       : []),
     ...(muteTarget
       ? [
           {
+            id: "muteSource" as const,
             label: t(
               isSourceMuted ? "feed:mute.showAgain" : "feed:mute.showLess",
               { name: muteTarget.name },
             ),
             icon: <FiEyeOff />,
-            run: () => (isSourceMuted ? unmute(muteTarget) : mute(muteTarget)),
           },
         ]
       : []),
-    {
-      label: t(muted ? "feed:moderation.unmute" : "feed:moderation.mute", {
-        name: authorName,
-      }),
-      icon: <FiVolumeX />,
-      run: () => {
-        const now = toggleMute(slug);
-        showToast(
-          t(
-            now ? "feed:moderation.mutedToast" : "feed:moderation.unmutedToast",
-            { name: authorName },
-          ),
-          now ? "success" : "info",
-        );
-      },
-    },
-    {
-      // Block is a mutual, destructive severance → confirm first. Unblocking is
-      // low-stakes and reversible, so it toggles straight away.
-      label: t(blocked ? "feed:moderation.unblock" : "feed:moderation.block", {
-        name: authorName,
-      }),
-      icon: <FiSlash />,
-      run: () => {
-        if (blocked) {
-          toggleBlock(slug);
-          showToast(
-            t("feed:moderation.unblockedToast", { name: authorName }),
-            "info",
-          );
-        } else {
-          setConfirming(true);
-        }
-      },
-    },
+    // A masked or flat feed item carries no profile slug, so there is no
+    // member to mute or block: drop both person-scoped items and keep every
+    // mute/block action tied to a real id.
+    ...(slug
+      ? [
+          {
+            id: "mute" as const,
+            label: t(
+              muted ? "feed:moderation.unmute" : "feed:moderation.mute",
+              { name: authorName },
+            ),
+            icon: <FiVolumeX />,
+          },
+          {
+            // Block is a mutual, destructive severance → confirm first.
+            // Unblocking is low-stakes and reversible, so it toggles straight
+            // away.
+            id: "block" as const,
+            label: t(
+              blocked ? "feed:moderation.unblock" : "feed:moderation.block",
+              { name: authorName },
+            ),
+            icon: <FiSlash />,
+          },
+        ]
+      : []),
   ];
+
+  if (items.length === 0) return null;
 
   return (
     <div className={styles.moreWrap} ref={wrapRef}>
       <button
+        ref={moreBtnRef}
         type="button"
         className={styles.moreBtn}
         aria-haspopup="menu"
@@ -155,13 +163,54 @@ export function MoreMenu({
         <div className={styles.menu} role="menu">
           {items.map((item) => (
             <button
-              key={item.label}
+              key={item.id}
               type="button"
               role="menuitem"
               className={styles.menuItem}
               onClick={() => {
                 setOpen(false);
-                item.run();
+                switch (item.id) {
+                  case "report":
+                    onReport?.();
+                    return;
+                  case "muteSource":
+                    if (!muteTarget) return;
+                    if (isSourceMuted) unmute(muteTarget);
+                    else mute(muteTarget);
+                    return;
+                  case "mute": {
+                    const now = toggleMute(slug);
+                    showToast(
+                      t(
+                        now
+                          ? "feed:moderation.mutedToast"
+                          : "feed:moderation.unmutedToast",
+                        { name: authorName },
+                      ),
+                      now ? "success" : "info",
+                    );
+                    return;
+                  }
+                  case "block":
+                    if (blocked) {
+                      toggleBlock(slug);
+                      showToast(
+                        t("feed:moderation.unblockedToast", {
+                          name: authorName,
+                        }),
+                        "info",
+                      );
+                    } else if (blockConfirmHost) {
+                      blockConfirmHost.requestBlockConfirm({
+                        authorName,
+                        slug,
+                        returnFocusRef: moreBtnRef,
+                      });
+                    } else {
+                      setConfirming(true);
+                    }
+                    return;
+                }
               }}
             >
               <span aria-hidden>{item.icon}</span>
@@ -199,6 +248,8 @@ export function BlockConfirmModal({
   const { toggleBlock } = useSocial();
   const [alsoReport, setAlsoReport] = useState(false);
   const [done, setDone] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -207,6 +258,23 @@ export function BlockConfirmModal({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  // Moves focus onto the dialog itself the moment it mounts, so a keyboard
+  // or screen reader user hears the heading through `aria-labelledby`. The
+  // dialog is the least consequential stop in a destructive confirm: Tab
+  // reaches the "also report" checkbox next, and a first Space press leaves
+  // the report choice as it was.
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
+
+  // The done panel replaces the form (and the submit button it held focus)
+  // the moment a block succeeds, which would otherwise drop focus to
+  // <body> with no announcement that the confirmation this dialog exists to
+  // show is now on screen.
+  useEffect(() => {
+    if (done) dialogRef.current?.focus();
+  }, [done]);
 
   // Portaled to <body> so the fixed-position overlay stays full-screen: the
   // feed card now carries `content-visibility: auto`, whose always-on paint
@@ -220,6 +288,8 @@ export function BlockConfirmModal({
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={
           done ? `${styles.dialog} ${styles.dialogConfirm}` : styles.dialog
         }
@@ -256,8 +326,19 @@ export function BlockConfirmModal({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              toggleBlock(slug, { alsoReport });
-              setDone(true);
+              if (isSubmitting) return;
+              setIsSubmitting(true);
+              // Waits for the server's answer before showing the done
+              // panel. The dialog outlives its card, so a rejected request
+              // keeps the form on screen next to the store's own error
+              // toast, and the "you blocked them" confirmation appears only
+              // once the block has landed. Demo mode calls back
+              // synchronously, so its behaviour (and the tests) stay the
+              // same.
+              toggleBlock(slug, { alsoReport }, (didSucceed) => {
+                setIsSubmitting(false);
+                if (didSucceed) setDone(true);
+              });
             }}
           >
             <h2 id="block-title" className={styles.dialogTitle}>
@@ -282,10 +363,20 @@ export function BlockConfirmModal({
               <Button variant="ghost" type="button" onClick={onClose}>
                 {t("feed:action.cancel")}
               </Button>
-              <Button variant="primary" type="submit">
-                {t("feed:moderation.blockDialog.submitCta", {
-                  name: authorName,
-                })}
+              {/* `aria-disabled` keeps the button focusable while the
+                  request is in flight, so focus stays on it after a failed
+                  block and a retry is one press away. */}
+              <Button
+                variant="primary"
+                type="submit"
+                aria-disabled={isSubmitting}
+                aria-busy={isSubmitting}
+              >
+                {isSubmitting
+                  ? t("feed:moderation.sending")
+                  : t("feed:moderation.blockDialog.submitCta", {
+                      name: authorName,
+                    })}
               </Button>
             </div>
           </form>
@@ -301,11 +392,12 @@ export function BlockConfirmModal({
  *
  * The band is the backend's own decision (`deriveSeverity` in
  * `report-severity.ts`, from the reason code alone) and it rides back on the
- * created `ReportDTO`, so this renders a fact rather than a promise. It
- * replaced a line pointing anyone with something urgent at the general
- * `hello@` mailbox, which has no triage path and is the same inbox as press,
- * rights and the 500 page: a report already in the emergency band was being
- * sent to a general inbox instead of being told the band exists.
+ * created `ReportDTO`, so this renders a settled fact. It replaced a line
+ * pointing anyone with something urgent at the general `hello@` mailbox,
+ * which has no triage path and is the same inbox as press, rights and the
+ * 500 page: a report already in the emergency band was being sent to a
+ * general inbox, silently dropping the band the backend had already computed
+ * for it.
  *
  * The DTO also carries the backend's own `acknowledgement` string, which is
  * NOT rendered here: it is server-authored English with no localization, so
@@ -323,7 +415,7 @@ const SEVERITY_BAND_KEYS: Record<ReportDTO["severity"], string> = {
 
 interface ReportModalProps {
   authorName: string;
-  /** Content id of the reported post/reply — the report's `subjectId`. */
+  /** Content id of the reported post/reply: the report's `subjectId`. */
   subjectId: string;
   /** Defaults to "post"; forum replies pass "reply". */
   subjectType?: ReportSubjectType;
@@ -341,7 +433,7 @@ export function ReportModal({
   useScrollLock();
   const [reason, setReason] = useState<string>("");
   const [detail, setDetail] = useState("");
-  // The created report itself, not a boolean: the confirmation reads the
+  // The created report object itself: the confirmation reads the
   // server-derived severity band off it. Null until the write lands.
   const [sentReport, setSentReport] = useState<ReportDTO | null>(null);
   // A report that FAILED must never render the "we received your report"
@@ -355,7 +447,7 @@ export function ReportModal({
   const createReport = useCreateReport();
   const describeReportError = useReportSubmissionError();
   // Server-owned taxonomy, falling back to the local one instantly and
-  // silently. Never a spinner, never an empty reason list.
+  // silently, so the reason list is always on screen at once.
   const reasons = useReportReasons(subjectType);
 
   useEffect(() => {

@@ -1,6 +1,7 @@
-import { useRef, type Dispatch, type SetStateAction } from "react";
+import { useCallback, useRef, type Dispatch, type SetStateAction } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { ApiError } from "../../../shared/api/client";
 import { unvouch } from "./members.api";
 import type { GivenVouchFace } from "./useGivenVouches";
 
@@ -14,8 +15,10 @@ interface UseVouchMutationsArgs {
 /**
  * The withdraw-vouch optimistic lifecycle, moved out of VouchProvider and into
  * React Query. Optimistically updates the provider's `vouched` list on
- * `onMutate`, rolls that change back on `onError`, and on `onSettled`
- * invalidates the affected query keys plus re-runs auth refresh. It also drops
+ * `onMutate`, rolls that change back on `onError` (a 404 is the one
+ * exception: it means the vouch was already gone, so it settles as a success
+ * instead), and on `onSettled` invalidates the affected query keys plus
+ * re-runs auth refresh. It also drops
  * the withdrawn slug from the `["givenVouches", demoMode]` cache (and puts it
  * back on failure), because that query is deliberately never invalidated — see
  * `useGivenVouches`.
@@ -48,6 +51,22 @@ export function useVouchMutations({
   // point the updater has certainly run.
   const existedBySlugRef = useRef<Record<string, boolean>>({});
 
+  // Per-slug registry for `removeVouch`'s caller-supplied `onSettled`. Keyed
+  // this way, because `mutate()`'s own per-call options cannot hold it safely:
+  // `unvouchMutation` is ONE shared observer for the whole app (this hook runs
+  // once, inside `VouchProvider`), and react-query's
+  // `MutationObserver` keeps only the LATEST per-call options for a given
+  // observer. A member withdrawing on profile A, then navigating and
+  // withdrawing on profile B before A's request settles, would otherwise lose
+  // A's callback the moment B's `mutate()` call overwrote it, and A would
+  // resolve silently either way. Keying by slug keeps two different
+  // withdrawals independent; the same slug withdrawn twice at once is
+  // accepted as out of scope, since the UI already shows it as withdrawn
+  // (optimistically) after the first click.
+  const settleCallbacksRef = useRef<
+    Record<string, ((didSucceed: boolean) => void) | undefined>
+  >({});
+
   const onSettled = (_data: void, _error: Error | null, slug: string) => {
     delete existedBySlugRef.current[slug];
     // Refresh the vouchee's profile + the directory so counts update, and the
@@ -71,6 +90,11 @@ export function useVouchMutations({
     string,
     { previousGivenVouches: GivenVouchFace[] | undefined }
   >({
+    // `ProfileSafetyMenu` owns this write's success/error toast through the
+    // `onSettled` callback `removeVouch` registers below; the app-wide
+    // `MutationCache` handler (`handleMutationError`) would otherwise raise
+    // its own toast on top of it for every non-401/404 failure.
+    meta: { silentError: true },
     onMutate: (slug) => {
       setVouched((prev) => {
         existedBySlugRef.current[slug] = prev.includes(slug);
@@ -94,7 +118,19 @@ export function useVouchMutations({
       if (demoMode) return;
       await unvouch(slug);
     },
-    onError: (_error, slug, context) => {
+    onError: (error, slug, context) => {
+      // A 404 ("No vouch to withdraw") means the vouch is already gone,
+      // withdrawn from another tab, or otherwise severed server-side. Settle
+      // this the way a real success would: keep the optimistic removal, keep
+      // the given-vouches cache as patched, and tell the caller `true`.
+      // Rolling it back would show the vouch as still standing and invite a
+      // retry that lands on the same 404 every time, the PRD-425 pattern
+      // applied here to withdrawal.
+      if (error instanceof ApiError && error.status === 404) {
+        settleCallbacksRef.current[slug]?.(true);
+        delete settleCallbacksRef.current[slug];
+        return;
+      }
       // Roll back the optimistic removal (restore most-recent-first) if it existed.
       if (existedBySlugRef.current[slug]) {
         setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]));
@@ -105,9 +141,31 @@ export function useVouchMutations({
           context.previousGivenVouches,
         );
       }
+      settleCallbacksRef.current[slug]?.(false);
+      delete settleCallbacksRef.current[slug];
+    },
+    onSuccess: (_data, slug) => {
+      settleCallbacksRef.current[slug]?.(true);
+      delete settleCallbacksRef.current[slug];
     },
     onSettled,
   });
 
-  return { unvouch: unvouchMutation };
+  /**
+   * Withdraw a vouch. `onSettled`, when given, fires once the server confirms
+   * or rejects the withdrawal (`true`/`false`), so a caller can wait for the
+   * real outcome before telling the member it worked (PRD-424). It goes into
+   * `settleCallbacksRef`, keyed by slug; see that ref's doc comment for why
+   * `mutate()`'s own transient per-call options cannot carry it safely on
+   * this shared mutation.
+   */
+  const removeVouch = useCallback(
+    (slug: string, onSettled?: (didSucceed: boolean) => void) => {
+      if (onSettled) settleCallbacksRef.current[slug] = onSettled;
+      unvouchMutation.mutate(slug);
+    },
+    [unvouchMutation],
+  );
+
+  return { removeVouch };
 }

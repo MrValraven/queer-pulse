@@ -17,6 +17,7 @@ import type { Piece, Stage } from "../data/desk.data";
 import { STAGE_VIEW_TO_DTO } from "../api/pieces.adapters";
 import type { usePieceMutations } from "../api/usePieceMutations";
 import { viewStageLabelKey } from "./stageLabels";
+import { hasPublishDate } from "./pieceSchedule";
 
 export interface UseDeskBulkActionsParams {
   /** `usePieceMutations().moveStage`, awaited per piece (rather than the
@@ -66,12 +67,32 @@ export function useDeskBulkActions({
    * before they answer can claim a count the desk has not actually reached.
    * `Published` is terminal (a piece reaches it only by being published; see
    * `Stage`'s doc comment), so a piece already published is left alone rather
-   * than silently PATCHed back out of it.
+   * than silently PATCHed back out of it. A piece with a publish date
+   * (`hasPublishDate`) is left alone too: a scheduled one waits at Ready for
+   * its date (the backend would answer 409 `magazine_piece_scheduled`), and
+   * a live one would stay public at its new stage. Those skipped-with-date
+   * pieces get their own info toast right away, so a click that only picks
+   * up scheduled or live pieces still gets an answer.
    */
   function changeStageForSelection(pieces: Piece[], stage: Stage): void {
-    const targets = pieces.filter(
-      (piece) => piece.stage !== "Published" && piece.stage !== stage,
-    );
+    const targets: Piece[] = [];
+    let skippedWithDateCount = 0;
+    for (const piece of pieces) {
+      if (piece.stage === "Published" || piece.stage === stage) continue;
+      if (hasPublishDate(piece)) {
+        skippedWithDateCount += 1;
+        continue;
+      }
+      targets.push(piece);
+    }
+    if (skippedWithDateCount > 0) {
+      showToast(
+        t("magazine:desk.bulk.skippedWithDate", {
+          count: skippedWithDateCount,
+        }),
+        "info",
+      );
+    }
     if (targets.length === 0) return;
     void Promise.allSettled(
       targets.map((piece) =>

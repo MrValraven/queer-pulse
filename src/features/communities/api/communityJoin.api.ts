@@ -5,7 +5,7 @@
  *
  * Every call here maps 1:1 onto a backend route that already exists:
  *   POST   /communities/:slug/join                  (rules acceptance, involvement)
- *   GET    /communities/:slug                       (rules + version, for the wizard)
+ *   GET    /communities/:slug/rules                 (rules + versions, for the wizard)
  *   GET    /communities/:slug/join-requests         (with reviewer context)
  *   PATCH  /communities/:slug/join-requests/:id     (approve / kinded decline)
  *   DELETE /communities/:slug/join-requests/mine    (withdraw your own request)
@@ -19,7 +19,7 @@ import {
 } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
-import type { JoinRequestStatus, RosterRole } from "./communities.api";
+import type { JoinRequestStatus } from "./communities.api";
 
 /** `CommunityJoinRequestInvolvement` on the backend: how an applicant says they
  *  want to take part. The ids are the stored enum values, so they are the same
@@ -31,9 +31,9 @@ export type JoinInvolvement = "updates" | "active" | "organise";
 export type DeclineKind = "not_now" | "not_a_fit";
 
 /** The join body. `note` is now purely what the applicant typed: the
- *  involvement answer travels in its own field rather than being folded into
- *  the note as a text tag, and the rules version is the applicant's explicit
- *  agreement to the covenant they were shown. */
+ *  involvement answer travels in its own field (the note carries no text tag
+ *  for it), and the rules version is the applicant's explicit agreement to
+ *  the covenant they were shown. */
 export interface JoinCommunityPayload {
   note?: string;
   involvement?: JoinInvolvement;
@@ -56,8 +56,8 @@ export interface CommunityJoinRequestReviewDTO {
   declineKind: DeclineKind | null;
   declineReason: string | null;
   reapplyAfter: string | null;
-  /** When the applicant's ACCOUNT was created (not when they applied). Null on
-   *  any surface that computed no context. */
+  /** When the applicant's ACCOUNT was created (`createdAt` is when they
+   *  applied). Null on any surface that computed no context. */
   accountCreatedAt: string | null;
   sharedConnectionCount: number | null;
   sharedCommunityCount: number | null;
@@ -68,9 +68,9 @@ export interface JoinResultDTO {
   /**
    * `invite_required` (PRD-141) is the `invite` tier's refusal: the caller
    * holds no pending invitation, so there is no door for them yet. It arrives
-   * as a 201 with `role` and `request` both null rather than as an error,
-   * because it is a state of the community ("invitation only") rather than
-   * something the member did wrong. A `private` community answers the same
+   * as a 201 with `role` and `request` both null, because it describes a state
+   * of the community ("invitation only") and nothing the member did wrong. A
+   * `private` community answers the same
    * caller with a 404 instead: that tier does not confirm it exists.
    */
   outcome: "joined" | "requested" | "invite_required";
@@ -78,32 +78,60 @@ export interface JoinResultDTO {
   request: CommunityJoinRequestReviewDTO | null;
 }
 
+const JOIN_OUTCOMES: readonly JoinResultDTO["outcome"][] = [
+  "joined",
+  "requested",
+  "invite_required",
+];
+
 /**
- * Whether a settled join says "you need an invitation first". Read off the
- * RESOLVED value rather than off a thrown error, because this refusal is a
- * successful response: `joinRefusalFor` below can never see it.
+ * The outcome a settled join answered with, or null when the value carries
+ * none (demo mode resolves `null`, and a caller may resolve `undefined`).
+ * The server decides the outcome, so every surface that shows what happened
+ * reads it here: an invitation spent on a gated tier answers `joined`, and an
+ * open community can hold a join for review and answer `requested`.
  *
  * Typed against `unknown` so the join wizard can call it on whatever its
- * `onJoined`/`onRequested` prop resolved to (demo mode resolves `null`).
+ * `onJoined`/`onRequested` prop resolved to.
  */
-export function isInviteRequiredResult(result: unknown): boolean {
-  return (
-    typeof result === "object" &&
-    result !== null &&
-    (result as { outcome?: unknown }).outcome === "invite_required"
-  );
+export function joinOutcomeOf(
+  result: unknown,
+): JoinResultDTO["outcome"] | null {
+  if (typeof result !== "object" || result === null) return null;
+  const outcome = (result as { outcome?: unknown }).outcome;
+  return JOIN_OUTCOMES.find((known) => known === outcome) ?? null;
 }
 
-/** Just the house-rules slice of `GET /communities/:slug`. Typed narrowly so
- *  this file never has to restate the whole detail DTO. */
+/**
+ * Whether a settled join says "you need an invitation first". Read off the
+ * RESOLVED value, because this refusal is a successful response:
+ * `joinRefusalFor` below can never see it.
+ */
+export function isInviteRequiredResult(result: unknown): boolean {
+  return joinOutcomeOf(result) === "invite_required";
+}
+
+/**
+ * Whether a settled join was held for review. A gated tier answers
+ * `requested`, and so can an OPEN community: a second-vouch hold, or a joiner
+ * who correlates with somebody this community banned (ENG-428).
+ */
+export function isRequestedResult(result: unknown): boolean {
+  return joinOutcomeOf(result) === "requested";
+}
+
+/** `GET /communities/:slug/rules` (PRD-410): the house rules the join wizard
+ *  asks an applicant to agree to. A route of its own because the detail read
+ *  answers a gated outsider with a 403, and that outsider is exactly who has
+ *  to read the rules at the door. Visible to anyone who can see the gate card
+ *  (plus the roster of an archived community); 404 otherwise. */
 export interface CommunityRulesDTO {
+  /** Preset rule KEYS or member-written text, as stored. */
   rules: string[];
   rulesVersion: number;
   /** The version THIS viewer last agreed to: null for a non-member, and for a
    *  member who joined before acceptance was recorded. */
   rulesAcceptedVersion: number | null;
-  myRole: RosterRole | null;
-  name: string;
 }
 
 export const joinCommunityWithRules = (
@@ -112,20 +140,20 @@ export const joinCommunityWithRules = (
 ) => apiPost<JoinResultDTO>(`/communities/${slug}/join`, payload);
 
 export const getCommunityRules = (slug: string) =>
-  apiGet<CommunityRulesDTO>(`/communities/${slug}`);
+  apiGet<CommunityRulesDTO>(`/communities/${slug}/rules`);
 
 /**
- * GET /communities/:slug/join-requests?page — one page of the community's
+ * GET /communities/:slug/join-requests?page: one page of the community's
  * PENDING join-request queue, oldest first.
  *
  * The route used to answer with a flat array capped at 200 rows. Oldest-first
  * plus a hard cap means the requests that fell off the end were the NEWEST
  * arrivals, so a gated community with 201 pending requests hid the most recent
  * one from every moderator and said nothing about it (ENG-41). It now answers
- * with the `{ items, total, page, pageSize }` envelope; `total` is the size of
- * the whole pending queue, not of this page. Wrapped in `toItemsPage` so a
- * deploy where the backend is still on the old array shape reads as one full
- * page instead of throwing on `.items`.
+ * with the `{ items, total, page, pageSize }` envelope; `total` counts the
+ * whole pending queue across every page. Wrapped in `toItemsPage` so a deploy
+ * where the backend still answers the old array shape reads as one full page
+ * with no throw on `.items`.
  */
 export const getJoinRequestsForReview = async (
   slug: string,
@@ -165,12 +193,12 @@ export const triageJoinRequest = (
   );
 
 /**
- * `DELETE /communities/:slug/join-requests/mine` (PRD-148) — the applicant
+ * `DELETE /communities/:slug/join-requests/mine` (PRD-148): the applicant
  * takes their own pending request back.
  *
  * Applicant-side only: the backend finds the row by the CALLER'S user id, so
  * this is never a way to reach somebody else's request. The row is deleted
- * rather than moved to a fourth status, which is what makes the member whole
+ * outright (no fourth status), which is what makes the member whole
  * immediately: they can ask again in the same breath, and no reapply lock is
  * left behind. Nobody is notified.
  */
@@ -178,9 +206,9 @@ export const withdrawMyJoinRequest = (slug: string) =>
   apiDelete<void>(`/communities/${slug}/join-requests/mine`);
 
 /**
- * The three machine-readable refusals `POST /join` can answer with, read off
- * the error body's `code` rather than its prose (which is server-worded and
- * not translatable).
+ * The machine-readable refusals `POST /join` can answer with, read off the
+ * error body's `code`. The body's prose is server-worded English and never
+ * reaches the screen: every refusal below renders from a catalog key.
  *
  *  - `rulesChanged` (400): the community has house rules the caller did not
  *    agree to, or agreed to an older version of. Carries the version to
@@ -189,6 +217,12 @@ export const withdrawMyJoinRequest = (slug: string) =>
  *    UI must not invent either.
  *  - `reapplyTooSoon` (403): a previous decline set a wait; `reapplyAfter` is
  *    the ISO moment the applicant may try again.
+ *  - `frozen` (403 `COMMUNITY_FROZEN`, DES-407): the community is paused.
+ *    `frozenReason` picks the same body line the hub's pause banner shows.
+ *  - `alreadyPending` (409 `COMMUNITY_JOIN_REQUEST_PENDING`, PRD-411): the
+ *    caller already has a request with the moderators.
+ *  - `parentRequired` (403 `PARENT_MEMBERSHIP_REQUIRED`): a space whose parent
+ *    community the caller has not joined yet.
  */
 export type JoinRefusal =
   | { kind: "rulesChanged"; rulesVersion: number | null }
@@ -196,17 +230,30 @@ export type JoinRefusal =
   | { kind: "reapplyTooSoon"; reapplyAfter: string | null }
   /**
    * PRD-141. The `invite` tier with no invitation on file. It reaches the
-   * wizard through `isInviteRequiredResult` on a SUCCESSFUL response, never
-   * through `joinRefusalFor` below, and it is rendered by the same refusal
-   * panel as the two above because it is the same kind of thing: an answer
-   * about the community, not a fault of the person reading it.
+   * wizard only through `isInviteRequiredResult` on a SUCCESSFUL response,
+   * and it is rendered by the same refusal panel as the others because it is
+   * the same kind of thing: an answer about the community.
    */
-  | { kind: "inviteRequired" };
+  | { kind: "inviteRequired" }
+  | { kind: "frozen"; frozenReason: string | null }
+  | { kind: "alreadyPending" }
+  | { kind: "parentRequired" };
+
+/** Every refusal the panel renders (all but the inline rules recovery). */
+export type JoinRefusalPanelKind = Exclude<
+  JoinRefusal,
+  { kind: "rulesChanged" }
+>;
 
 export function joinRefusalFor(error: unknown): JoinRefusal | null {
   if (!(error instanceof ApiError)) return null;
   const body = error.data as
-    | { code?: string; rulesVersion?: number; reapplyAfter?: string }
+    | {
+        code?: string;
+        rulesVersion?: number;
+        reapplyAfter?: string;
+        frozenReason?: string | null;
+      }
     | null
     | undefined;
   switch (body?.code) {
@@ -223,6 +270,16 @@ export function joinRefusalFor(error: unknown): JoinRefusal | null {
         kind: "reapplyTooSoon",
         reapplyAfter: body.reapplyAfter ?? null,
       };
+    case "COMMUNITY_FROZEN":
+      return {
+        kind: "frozen",
+        frozenReason:
+          typeof body.frozenReason === "string" ? body.frozenReason : null,
+      };
+    case "COMMUNITY_JOIN_REQUEST_PENDING":
+      return { kind: "alreadyPending" };
+    case "PARENT_MEMBERSHIP_REQUIRED":
+      return { kind: "parentRequired" };
     default:
       return null;
   }

@@ -44,6 +44,7 @@ const EXPECTED_CAPABILITIES: Record<string, string[]> = {
   changemaker_nominations: ["partnerships"],
   roadmap_ideas: [],
   guide_reviews: ["resource_curator"],
+  housing_group_join_requests: ["housing_moderator"],
 };
 
 /**
@@ -68,6 +69,7 @@ const MOD_TIER_QUEUES: readonly string[] = [
   "housing_group_listings",
   "landlord_intro_requests",
   "landlord_suggestions",
+  "housing_group_join_requests",
 ];
 
 const navItemsByPath = new Map(
@@ -78,8 +80,8 @@ const navItemsByPath = new Map(
 );
 
 describe("admin queue routes", () => {
-  it("covers twenty-nine queues", () => {
-    expect(ADMIN_QUEUE_KEYS).toHaveLength(29);
+  it("covers thirty queues", () => {
+    expect(ADMIN_QUEUE_KEYS).toHaveLength(30);
   });
 
   it("points every queue at a real admin route", () => {

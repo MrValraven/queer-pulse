@@ -21,8 +21,12 @@ export function DirectoryCardPreview() {
   const initials =
     ((draft.first[0] ?? "") + (draft.last[0] ?? "")).toUpperCase() ||
     profile.initials;
-  const blurb = directoryBlurb(draft.role, draft.bio);
-  const borrowedFromBio = isBlurbBorrowedFromBio(draft.role, draft.bio);
+  // The directory borrows a bio only from an `open` profile (backend
+  // `toMemberCard`, ENG-438): a network or private bio sits behind the limited
+  // card. Same rule here, so the preview keeps matching what strangers see.
+  const borrowableBio = draft.visibility === "open" ? draft.bio : "";
+  const blurb = directoryBlurb(draft.role, borrowableBio);
+  const borrowedFromBio = isBlurbBorrowedFromBio(draft.role, borrowableBio);
 
   return (
     <div className={styles.previewWrap}>

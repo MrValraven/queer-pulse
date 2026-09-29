@@ -19,12 +19,13 @@ interface Preview {
 
 /**
  * Resolve the preview to render, normalizing live vs. demo onto one shape.
- * Live reads straight off `gathering.goingAttendeesPreview` — already
- * privacy- (host's `showAttendeeCount` toggle) and block-filtered
- * server-side (`EventsService.buildGoingAttendeesPreview`), so this never
- * re-derives or second-guesses that filtering client-side. Demo has no
- * per-gathering mock attendee list, so it derives a small stable one from the
- * member registry instead — see that file's doc for why.
+ * Live reads straight off `gathering.goingAttendeesPreview`, which the server
+ * already filters (`EventsService.buildGoingAttendeesPreview`) by the host's
+ * `showAttendeeCount` toggle, by blocks, and by each attendee's own "Who can
+ * see you're going?" answer (PRD-414: a face shows only when that answer
+ * admits this viewer). This never re-derives that filtering client-side. Demo
+ * has no per-gathering mock attendee list, so it derives a small stable one
+ * from the member registry instead. See that file's doc for why.
  */
 function resolvePreview(
   gathering: GatheringDetail,
@@ -43,9 +44,11 @@ function resolvePreview(
  * MSG-12 — a small pre-RSVP "who else is going" glance: safety-in-numbers,
  * seeing familiar/other attendees before committing to show up. Sits right
  * under the RSVP CTA on both demo and live. Renders nothing when there's no
- * one to show (nobody going yet, or the host has hidden attendee visibility
- * via the manage dashboard's "Show attendee count" toggle) — the backend is
- * the actual privacy gate; this component only ever renders what it's given.
+ * one to show: nobody going yet, the host has hidden attendee visibility via
+ * the manage dashboard's "Show attendee count" toggle, or every attendee's
+ * "Who can see you're going?" answer leaves this viewer out. The backend is
+ * the privacy gate; this component only ever renders what it's given. The
+ * "+N more" total counts hidden attendees as a number, with no face.
  */
 export function GoingAttendeesPreview({
   gathering,

@@ -35,6 +35,12 @@ interface SideCardFooterProps {
   personaName?: string;
 }
 
+/** View and Share need a live address: none for an unlinked persona with no
+ *  handle, and none for a draft, whose stored handle 404s until publish. */
+function hasNoLiveAddress(address: PersonaOwnerAddress): boolean {
+  return address.status === "none" || address.status === "draft";
+}
+
 /**
  * The owner action set for one persona, in the shape its presenter needs:
  * `SideCard` takes the default `"card"` bar, `SideRow` takes `variant="row"`.
@@ -58,13 +64,20 @@ export function SideCardFooter(props: SideCardFooterProps) {
  *
  * Two states shape this row:
  *
- * **No public address.** An unlinked persona with no handle resolves nowhere,
- * so View and Share are DISABLED rather than hidden, with a line above saying
- * what to do about it. Hiding them would leave the owner with a card that has
- * fewer actions than the one beside it and no way to learn why, which reads as
- * a broken feature; the disabled pair plus one sentence says exactly what is
- * missing. The reason is reachable to a screen reader through
- * `aria-describedby` on both controls, and is on screen for everyone else.
+ * **No public address.** An unlinked persona with no handle (`"none"`) has
+ * nothing to view or share yet. View and Share stay visible and DISABLED
+ * there, with a line above saying what to do about it. Hiding them would
+ * leave the owner with a card that has fewer actions than the one beside it
+ * and no way to learn why, which reads as a broken feature; the disabled pair
+ * plus one sentence says exactly what is missing. The reason is reachable to
+ * a screen reader through `aria-describedby` on both controls, and is on
+ * screen for everyone else.
+ *
+ * A DRAFT never reaches this footer: `splitByProfileVisibility` sends every
+ * draft to `NotShownPersonas`, which gives it its own reason ("Still a
+ * draft") and a link to publish it. `"draft"` (PRD-429) is still folded into
+ * the disabled state here, so a draft routed to this footer by mistake could
+ * never hand out its stored handle as a live QR code or share link.
  *
  * **Not the creator.** Deleting a persona is creator-only server-side, so a
  * co-owner is offered Leave in the slot where they went looking for Delete
@@ -82,7 +95,7 @@ function SideCardActions({
 }: SideCardFooterProps) {
   const { t } = useTranslation();
   const noteId = useId();
-  const hasNoAddress = address.status === "none";
+  const hasNoAddress = hasNoLiveAddress(address);
 
   return (
     <>
@@ -180,8 +193,9 @@ function SideRowActions({
 }: SideCardFooterProps) {
   const { t } = useTranslation();
   const noteId = useId();
-  const hasNoAddress = address.status === "none";
+  const hasNoAddress = hasNoLiveAddress(address);
   const describedBy = hasNoAddress ? noteId : undefined;
+  const addressNote = t("subprofiles:side.noAddressNote");
   const name = personaName || t("subprofiles:mine.untitled");
   const editLabel = t("subprofiles:mine.rowEditNamed", { name });
   const viewLabel = t("subprofiles:mine.rowViewNamed", { name });
@@ -258,13 +272,14 @@ function SideRowActions({
       </div>
       {hasNoAddress && (
         <p id={noteId} className={styles.rowNote}>
-          {t("subprofiles:side.noAddressNote")}
+          {addressNote}
         </p>
       )}
       <PersonaRowActionsMenu
         className={styles.rowMenu}
         personaName={name}
         hasNoAddress={hasNoAddress}
+        addressNote={addressNote}
         danger={danger}
         onEdit={onEdit}
         onOpen={onOpen}

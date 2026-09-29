@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { communityPath } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -112,6 +113,11 @@ export function useCommunityDetailState() {
     standingInviteId,
   });
 
+  // No `:slug` segment in the URL. The route is always `/community/:slug`,
+  // so this should never be reached in practice; `useParams()` still types
+  // `slug` as optional, so this guard is what lets every read below treat it
+  // as a real string. Renders the same as an unmatched community.
+  if (!slug) return { status: "notFound" as const };
   if (notFound) return { status: "notFound" as const };
   // A community this viewer isn't allowed into (the server answered the
   // coded 403). Checked before `isError`/`isLoading` so a gated viewer never
@@ -195,7 +201,7 @@ export function useCommunityDetailState() {
   // addressed by `?tab=modtools&mod=danger`. Linking to it (rather than
   // reaching into `CommunityDangerZone`'s local modal state) is what lets the
   // owner-facing leave dialog hand them the only real exit there is.
-  const transferOwnershipHref = `/community/${slug}?tab=modtools&mod=danger`;
+  const transferOwnershipHref = `${communityPath(slug)}?tab=modtools&mod=danger`;
   // PRD-140. A standing invitation only ever reaches a non-member, and only in
   // live mode. It replaces the join CTA with accept/decline, and for a
   // `private` community it is the only reason this page rendered at all.

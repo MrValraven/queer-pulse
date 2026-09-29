@@ -32,6 +32,10 @@ const GENERIC_BODY =
   "You'll lose the ability to edit it. The other co-owners keep everything as it is.";
 const CREATOR_BODY =
   "You'll lose editing access. The co-owner who's been here longest becomes the creator and can change its address or visibility, or delete it.";
+// Names the successor (unnamed, as above), the exact path that stops working
+// and the username it carries, for the `tiago-therapist` fixture below.
+const CREATOR_HANDLE_NAMED_BODY =
+  "You'll lose editing access. The co-owner who's been here longest becomes the creator. Because /p/tiago-therapist includes @tiago, the persona moves to an address under their name, and links to /p/tiago-therapist stop working.";
 
 function makeMember(overrides: Partial<MemberDTO>): MemberDTO {
   return {
@@ -76,6 +80,72 @@ describe("LeavePersonaModal", () => {
     expect(await screen.findByText(CREATOR_BODY)).toBeInTheDocument();
     // Never names Rui (or anyone) as the successor.
     expect(screen.queryByText(/Rui Marçal/)).not.toBeInTheDocument();
+  });
+
+  it("shows the handle-named creator body when the linked handle carries the departing creator's username (PRD-431)", async () => {
+    membersFixture = [
+      makeMember({
+        userId: "tiago",
+        slug: "tiago",
+        name: "Tiago Costa",
+        isCreator: true,
+        joinedAt: "2026-01-04T00:00:00.000Z",
+      }),
+      makeMember({
+        userId: "rui",
+        slug: "rui",
+        name: "Rui Marçal",
+        joinedAt: "2026-02-01T00:00:00.000Z",
+      }),
+    ];
+
+    render(
+      <TestProviders>
+        <LeavePersonaModal
+          subprofileId="sp-test"
+          linkVisibility="linked"
+          handle="tiago-therapist"
+          personaSlug="therapist"
+          onClose={() => {}}
+        />
+      </TestProviders>,
+    );
+
+    expect(
+      await screen.findByText(CREATOR_HANDLE_NAMED_BODY),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the plain creator body when the linked handle does not carry the departing creator's username", async () => {
+    membersFixture = [
+      makeMember({
+        userId: "tiago",
+        slug: "tiago",
+        name: "Tiago Costa",
+        isCreator: true,
+        joinedAt: "2026-01-04T00:00:00.000Z",
+      }),
+      makeMember({
+        userId: "rui",
+        slug: "rui",
+        name: "Rui Marçal",
+        joinedAt: "2026-02-01T00:00:00.000Z",
+      }),
+    ];
+
+    render(
+      <TestProviders>
+        <LeavePersonaModal
+          subprofileId="sp-test"
+          linkVisibility="linked"
+          handle="night-market"
+          personaSlug="market"
+          onClose={() => {}}
+        />
+      </TestProviders>,
+    );
+
+    expect(await screen.findByText(CREATOR_BODY)).toBeInTheDocument();
   });
 
   it("shows the generic leave body for a co-owner who did not create the persona", async () => {

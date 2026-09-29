@@ -10,7 +10,9 @@ import {
 import { gatheringPath } from "../../features/gatherings/data";
 import { parseMentions, type MentionSegment } from "./parseMentions";
 import { mentionNameKey } from "./mentionNameKey";
+import { useIsMemberMentionInert } from "./MentionLinkPolicyContext";
 import { useMentionNameMap } from "./MentionNamesContext";
+import { useTranslation } from "../i18n/useTranslation";
 import styles from "./MentionText.module.css";
 
 type MentionKind = Exclude<MentionSegment["kind"], "text">;
@@ -27,6 +29,14 @@ const MENTION_CONFIG: Record<
   event: { sigil: "e/", to: gatheringPath },
   thread: { sigil: "t/", to: thread },
 };
+
+/** The placeholder for a member mention a matched Go together chat cannot
+ *  name. Its own component, so `MentionText` reads the i18n context only
+ *  inside such a chat. */
+function UnnamedMemberMention() {
+  const { t } = useTranslation();
+  return <>{t("messages:mention.member")}</>;
+}
 
 /** Render a plain reply/message body, linkifying `@member`, `c/community`,
  *  `#topic`, `b/business`, `e/event`, and `t/thread` tokens.
@@ -55,6 +65,7 @@ export function MentionText({
   linkify?: boolean;
 }) {
   const nameMap = useMentionNameMap();
+  const isMemberMentionInert = useIsMemberMentionInert();
   const segments = parseMentions(text);
   return (
     <>
@@ -75,6 +86,21 @@ export function MentionText({
             : nameMap.get(mentionNameKey(segment.kind, segment.slug));
         const label = resolvedName ?? sigilSlug;
         const title = resolvedName ? sigilSlug : undefined;
+        // PRD-423: a matched Go together chat names a member by first name
+        // and links to no profile; the hover title would hand over the slug.
+        // A handle can carry a surname, so a member the chat cannot name yet
+        // (lookup pending or failed, or someone outside the roster) reads as
+        // a neutral "@member" and the slug stays out of the page.
+        if (isMemberMentionInert && segment.kind === "member") {
+          return (
+            <span
+              key={index}
+              className={`${styles.mentionFlat} ${styles.mentionInert}`}
+            >
+              {resolvedName ?? <UnnamedMemberMention />}
+            </span>
+          );
+        }
         if (!linkify) {
           return (
             <span key={index} className={styles.mentionFlat} title={title}>

@@ -125,10 +125,13 @@ export const cards: Catalog = {
     "The community below issued this card and it stands today.",
   "verify.lead.expired":
     "This card was genuine and its term has run out. Its community can renew it.",
-  "verify.lead.suspended":
-    "Its community has put this card on hold. Treat it as not valid today.",
+  "verify.lead.suspended": "This card is on hold. Treat it as not valid today.",
   "verify.lead.revoked":
     "Its community has withdrawn this card. Treat it as not valid.",
+
+  "holder.fallbackName": "A member",
+  "photo.profileHidden":
+    "This card shows no photo while Photo is off in Who sees what, on your profile.",
 
   "verify.face.label": "The face on this card",
   "verify.face.caption":

@@ -223,6 +223,11 @@ export function useSocialStore(): SocialContextValue {
               void queryClient.invalidateQueries({
                 queryKey: ["conversations"],
               });
+              // A DM opened past the loaded inbox pages reads its gate from
+              // its detail entry; only an entry on screen refetches.
+              void queryClient.invalidateQueries({
+                queryKey: ["conversation-detail"],
+              });
               void queryClient.invalidateQueries({
                 queryKey: [UNREAD_COUNT_KEY],
               });

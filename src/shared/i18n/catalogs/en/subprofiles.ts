@@ -104,6 +104,8 @@ export const subprofiles: Catalog = {
 
   "directory.narrowedNote":
     "Profession, tags and availability narrow the personas loaded so far. Show more to search wider.",
+  "directory.narrowedZeroNote":
+    "Nothing loaded so far matches these filters. Show more to keep looking.",
 
   // Directory closing nudge (SubprofileDirectoryFooterPrompt — personas
   // discovery Phase 5, Moment 2). Dismissible; static copy, no live data.
@@ -651,6 +653,8 @@ export const subprofiles: Catalog = {
     "This handle includes @{creator}, so it would show who runs this persona. Pick another.",
   "metaForm.handleRequired":
     "A standalone persona needs its own address. Give it a name.",
+  "metaForm.handleRequiredPublished":
+    "A published persona needs an address. Type a new one, or unpublish it to take it offline.",
   "metaForm.handleIsKind":
     "“{handle}” is what this persona does. Give the address a name of its own.",
   "metaForm.visibilityLabel": "Who can see it",
@@ -785,6 +789,15 @@ export const subprofiles: Catalog = {
   "newModal.handleStateIsKind":
     "Give this persona a name above. Its address can't be only the profession.",
   "newModal.toastError": "We couldn't start that one. Try again.",
+  // Craft search above the family picker (KindFamilyPicker).
+  "newModal.searchPlaceholder": "Search crafts, e.g. tattoo, DJ, therapist",
+  "newModal.searchAria": "Search crafts",
+  "newModal.searchResultCount_one": "{count} craft matches",
+  "newModal.searchResultCount_other": "{count} crafts match",
+  "newModal.searchEmptyTitle": "Nothing called “{query}” yet",
+  "newModal.searchEmptyDescription":
+    "Pick the craft closest to yours. You can rename the persona and shape every section once you're in.",
+  "newModal.searchEmptyClear": "Clear search",
 
   // Duplicate a persona — start-method picker (StartMethodPicker) and
   // copy-source/mode picker (CopySourcePicker, CopyModePreview), both used
@@ -794,7 +807,6 @@ export const subprofiles: Catalog = {
   "start.copyDisabledHelper":
     "Create a persona first, then you can copy it here.",
   "start.template": "By craft",
-  "start.blank": "Blank",
   "start.copy": "Copy one",
   "copy.noSources": "You don't have any personas to copy yet.",
   "copy.sourceLabel": "Choose a persona to copy",
@@ -809,7 +821,7 @@ export const subprofiles: Catalog = {
   // Craft families (kindFamilies.data.ts) — the create flow's "By craft"
   // step groups the 17 kinds under these six shared page families.
   "family.stage.label": "Stage",
-  "family.stage.note": "For crafts that happen in front of a room.",
+  "family.stage.note": "For crafts that happen in front of an audience.",
   "family.studio.label": "Studio",
   "family.studio.note": "Work first, captions second.",
   "family.page.label": "Page",
@@ -1091,6 +1103,9 @@ export const subprofiles: Catalog = {
     "This persona has no address yet, so there is nothing to share.",
   "share.noAddressAria":
     "Share this persona. Unavailable until it has an address.",
+  "share.draftAria": "Share this persona. Unavailable until it's published.",
+  "share.draftNotLive":
+    "This persona is still a draft, so its link doesn't open for anyone else yet. Publish it to share it.",
   "share.copied": "Link copied",
   "share.copyFailed":
     "Your browser wouldn't let us copy that. The link is right there, select it and copy it by hand.",
@@ -1275,6 +1290,8 @@ export const subprofiles: Catalog = {
     "You'll lose the ability to edit it. The other co-owners keep everything as it is.",
   "owners.leaveModalBodyCreator":
     "You'll lose editing access. The co-owner who's been here longest becomes the creator and can change its address or visibility, or delete it.",
+  "owners.leaveModalBodyCreatorHandleNamed":
+    "You'll lose editing access. The co-owner who's been here longest becomes the creator. Because /p/{handle} includes @{creator}, the persona moves to an address under their name, and links to /p/{handle} stop working.",
   "owners.leaveModalKeep": "Stay",
   "owners.leaveModalConfirm": "Leave",
   "owners.leaveModalLeaving": "Leaving…",
@@ -1297,6 +1314,7 @@ export const subprofiles: Catalog = {
   "invite.toastSent":
     "Invite sent. They'll need to accept before they can manage this persona.",
   "invite.toastError": "We couldn't send that invite. Try again.",
+  "invite.toastBlocked": "You can't invite this member. Try someone else.",
 
   // Invite-a-co-owner modal — disclosure/confirm step (IDN-2): shown before
   // the invite actually sends, so accepting a co-owner invite is never a
@@ -1325,6 +1343,7 @@ export const subprofiles: Catalog = {
   "invites.declining": "Declining…",
   "invites.toastAccepted": "You now co-own {name}",
   "invites.toastAcceptError": "We couldn't accept that invite. Try again.",
+  "invites.toastAcceptBlocked": "This invite is no longer available.",
   "invites.toastDeclined": "Invite declined",
   "invites.toastDeclineError": "We couldn't decline that invite. Try again.",
 
@@ -1676,6 +1695,7 @@ export const subprofiles: Catalog = {
   // inside the editor shell.
   "editorPreview.label": "Live preview",
   "editorPreview.openLive": "Open live",
+  "editorPreview.openDraftPage": "Open draft page",
   // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
   "editorPreview.device.label": "Preview size",
   "editorPreview.device.mobile": "Mobile",
@@ -1815,12 +1835,33 @@ export const subprofiles: Catalog = {
   "addressWarning.noticeBodyNewHandle":
     "This persona leaves {from}. It gets its new address once you choose a handle.",
   "addressWarning.oldLinksDie": "Old links to {path} stop working",
+  "addressWarning.renameOldLinksForward":
+    "Links to {path} forward to the new address for 30 days, then stop working",
   "addressWarning.handleReleased":
-    "Your handle goes back into the pool. Anyone could claim it",
+    "Your handle is held for 30 days, even from you, then anyone can claim it",
   "addressWarning.followersKept":
     "Your followers and endorsements stay exactly as they are",
   "addressWarning.cancel": "Keep the current address",
   "addressWarning.confirm": "Change address",
+  "addressWarning.unlinkLossTitle":
+    "Your followers and endorsements are removed for good",
+  "addressWarning.unlinkLossTitleCounts":
+    "{followers} and {endorsements} are removed for good",
+  "addressWarning.unlinkLossBody":
+    "That way nothing ties the new address back to you. This can't be undone.",
+  "addressWarning.unlinkBackToDraft":
+    "It goes back to draft until you choose a new handle and publish it again",
+  "addressWarning.confirmUnlink": "Switch and remove followers",
+  "addressWarning.renameNoticeTitle":
+    "Your page moves to {to} as soon as you confirm",
+  "editConflict.title": "This persona changed while you were editing",
+  "editConflict.body":
+    "Reload clears your unsaved edits here, so copy what you want to keep first.",
+  "editConflict.reload": "Reload",
+  "editConflict.reloading": "Reloading…",
+  "editConflict.reloadedToast": "Loaded the latest saved version.",
+  "editConflict.reloadFailed":
+    "Couldn't reload. Check your connection and try again.",
 
   // Publish panel additions (SubprofilePublishPanel) — the danger-zone delete
   // row. The readiness estimate that used to sit here is gone: the pane now
@@ -1886,6 +1927,12 @@ export const subprofiles: Catalog = {
     "This persona needs an address. Add it on the Address tab.",
   "pending.blockedHandleKind":
     "The address needs a name of its own. Change it on the Address tab.",
+  "pending.blockedHandleMissingHere":
+    "This persona needs an address. Type one in the address field.",
+  "pending.blockedHandleKindHere":
+    "The address needs a name of its own. Change it in the address field.",
+  "pending.blockedHandleHere":
+    "That address is taken. Pick another in the address field.",
   "newModal.toastHandleClaimFailed":
     "That handle got taken just now. We've kept this linked to your profile for the moment. You can claim a new address from the editor.",
   "newModal.toastAffiliationsDropped_one":
@@ -1928,6 +1975,7 @@ export const subprofiles: Catalog = {
   "therapist.firstSession.heading": "What *actually* happens",
   "therapist.vouches.label": "Community vouches",
   "therapist.vouches.heading": "People who have *actually* worked with {name}",
+  "therapist.vouches.headingHidden": "Who vouched stays private",
   "therapist.vouches.count_one": "Vouched for by {count} member",
   "therapist.vouches.count_other": "Vouched for by {count} members",
   "therapist.vouches.quiet_one": "{count} vouched without a note",
@@ -2301,6 +2349,9 @@ export const subprofiles: Catalog = {
   "therapist.hero.facts.feesFromSliding":
     "from {lowest}€ · sliding {min}–{max}€",
   "therapist.hero.facts.feesSlidingOnly": "Sliding {min}–{max}€",
+  "therapist.hero.registration": "{number} (self-declared)",
+  "therapist.hero.registrationNote":
+    "QueerPulse does not check registration numbers. You can confirm this one with the professional body that issued it.",
   // Therapist editor chapters (pass 1)
   "skinBlock.therapist.chapter.basics.title": "The basics",
   "skinBlock.therapist.chapter.basics.lede":

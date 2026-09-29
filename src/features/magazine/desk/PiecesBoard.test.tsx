@@ -3,7 +3,12 @@ import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { DEMO_STAGES, type Piece } from "../data/desk.data";
 import { PiecesBoard } from "./PiecesBoard";
-import { canDropOnStage } from "./useBoardDrag";
+import { canDropOnStage, isCardDraggable } from "./useBoardDrag";
+
+/** An instant a day ahead, so a piece carrying it reads as scheduled. */
+function tomorrowIso(): string {
+  return new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+}
 
 function makePiece(overrides: Partial<Piece> = {}): Piece {
   return {
@@ -42,6 +47,15 @@ function cardFor(title: string): HTMLElement {
     .closest<HTMLElement>('[draggable="true"]');
   if (!card) throw new Error(`No card for ${title}`);
   return card;
+}
+
+/** A locked card's status line: the paragraph holding its hidden way-out
+ *  reason, which is also the line's accessible description. */
+async function lockedStageLine(reason: string): Promise<HTMLElement> {
+  const reasonText = await screen.findByText(reason);
+  const line = reasonText.closest<HTMLElement>("p");
+  if (!line) throw new Error(`No status line for "${reason}"`);
+  return line;
 }
 
 function renderBoard(
@@ -133,16 +147,83 @@ describe("PiecesBoard", () => {
     );
   });
 
-  it("disables a Published piece's stage picker and says why", async () => {
+  it("shows a Published piece's live line in place of its stage picker", async () => {
     renderBoard({
       pieces: [makePiece({ title: "Live piece", stage: "Published" })],
     });
 
-    const picker = await screen.findByRole("button", { name: "Move stage" });
-    expect(picker).toBeDisabled();
-    expect(picker).toHaveAccessibleDescription(
+    const line = await lockedStageLine(
       "Unpublish from the piece record to move it",
     );
+    expect(line).toHaveTextContent(/^Live on the site/);
+    expect(line).toHaveAccessibleDescription(
+      "Unpublish from the piece record to move it",
+    );
+    expect(screen.queryByRole("button", { name: "Move stage" })).toBeNull();
+  });
+
+  it("keeps a scheduled card in place: no drag and no drop elsewhere", () => {
+    const scheduled = makePiece({
+      stage: "Ready",
+      issueId: "issue-14",
+      publishedAt: tomorrowIso(),
+    });
+
+    expect(isCardDraggable(scheduled)).toBe(false);
+    expect(canDropOnStage(scheduled, "Layout")).toBe(false);
+  });
+
+  it("keeps a live Ready card in place once its publish instant has passed", () => {
+    const live = makePiece({
+      stage: "Ready",
+      issueId: "issue-14",
+      publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    });
+
+    expect(isCardDraggable(live)).toBe(false);
+    expect(canDropOnStage(live, "Edit")).toBe(false);
+  });
+
+  it("shows a live Ready piece's live line and says to unpublish", async () => {
+    renderBoard({
+      pieces: [
+        makePiece({
+          title: "Live Ready piece",
+          stage: "Ready",
+          issueId: "issue-14",
+          publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+        }),
+      ],
+    });
+
+    const line = await lockedStageLine(
+      "Unpublish from the piece record to move it",
+    );
+    expect(line).toHaveTextContent(/^Live on the site/);
+    expect(line).toHaveAccessibleDescription(
+      "Unpublish from the piece record to move it",
+    );
+    expect(screen.queryByRole("button", { name: "Move stage" })).toBeNull();
+  });
+
+  it("shows a scheduled piece's go-live date and points to the record", async () => {
+    renderBoard({
+      pieces: [
+        makePiece({
+          title: "Scheduled piece",
+          stage: "Ready",
+          issueId: "issue-14",
+          publishedAt: tomorrowIso(),
+        }),
+      ],
+    });
+
+    const reason =
+      "Scheduled to publish. Unschedule it from the piece record to move it";
+    const line = await lockedStageLine(reason);
+    expect(line).toHaveTextContent(/^Goes live \S/);
+    expect(line).toHaveAccessibleDescription(reason);
+    expect(screen.queryByRole("button", { name: "Move stage" })).toBeNull();
   });
 
   it("starts no drag from a press on the card's controls", async () => {

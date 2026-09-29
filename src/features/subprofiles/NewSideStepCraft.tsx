@@ -2,20 +2,19 @@ import type { Translation as TranslationApi } from "../../shared/i18n/useTransla
 import type { SubprofileKind } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
-  KIND_ICON_OVERRIDE,
   KIND_LABEL_KEYS,
   KIND_SECTIONS,
   SECTION_META,
-  kindIcon,
 } from "./subprofile-kinds";
 import { KIND_FAMILIES } from "./kindFamilies.data";
+import { KindFamilyPicker } from "./KindFamilyPicker";
 import { StartMethodPicker, type StartMethod } from "./StartMethodPicker";
 import { CopySourcePicker } from "./CopySourcePicker";
 import { CopyModePreview } from "./CopyModePreview";
 import type { CopyMode } from "./subprofileDuplicate";
 import styles from "./NewSideModal.module.css";
 
-/** "Shows, Looks" / "Shows & Looks" — a plain locale-neutral join (no i18n
+/** "Shows, Looks" / "Shows & Looks": a plain locale-neutral join (no i18n
  *  list-formatting helper exists in this repo's `t()`; see translate.ts). */
 function joinedSectionLabels(
   kind: SubprofileKind,
@@ -29,11 +28,11 @@ function joinedSectionLabels(
 }
 
 /**
- * Step 1: choose how the persona starts. A `.seg` [By craft / Blank / Copy
- * one] picks the method; "By craft" and "Blank" both need a kind (it decides
- * the page family/sections either way), shown as a family-grouped picker
- * (`.fams`); "Copy" swaps in the existing source + mode pickers. A live
- * summary line explains what the chosen kind produces.
+ * Step 1: choose how the persona starts. A `.seg` [By craft / Copy one]
+ * picks the method; "By craft" needs a kind (it decides the page
+ * family/sections), shown as the searchable family-grouped picker
+ * (`KindFamilyPicker`); "Copy" swaps in the existing source + mode pickers. A
+ * live summary line explains what the chosen kind produces.
  */
 export function NewSideStepCraft({
   method,
@@ -71,49 +70,8 @@ export function NewSideStepCraft({
         t={t}
       />
 
-      {method !== "copy" && (
-        <div className={styles.fams}>
-          {KIND_FAMILIES.map((familyGroup) => (
-            <div key={familyGroup.family} className={styles.fam}>
-              <div className={styles.famHead}>
-                <b>{t(familyGroup.labelKey)}</b>
-                <span>{t(familyGroup.noteKey)}</span>
-              </div>
-              <div className={styles.kinds}>
-                {familyGroup.kinds.map((candidateKind) => {
-                  const Icon = kindIcon(candidateKind);
-                  // A filled `gi` glyph (the icon overrides above) reads
-                  // heavier than the outline `fi` icons beside it at the same
-                  // nominal size, so it gets trimmed 1px to balance optically.
-                  const isFilledIcon = Boolean(
-                    KIND_ICON_OVERRIDE[candidateKind],
-                  );
-                  const selected = kind === candidateKind;
-                  return (
-                    <button
-                      key={candidateKind}
-                      type="button"
-                      aria-pressed={selected}
-                      className={[styles.kindBtn, selected && styles.kindBtnOn]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() => onChangeKind(candidateKind)}
-                    >
-                      <Icon
-                        size={16}
-                        aria-hidden
-                        className={
-                          isFilledIcon ? styles.kindIconFilled : undefined
-                        }
-                      />
-                      {t(KIND_LABEL_KEYS[candidateKind])}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
+      {method === "template" && (
+        <KindFamilyPicker kind={kind} onChangeKind={onChangeKind} t={t} />
       )}
 
       {method === "copy" && (

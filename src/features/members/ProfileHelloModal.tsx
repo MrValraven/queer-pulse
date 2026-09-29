@@ -6,7 +6,10 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { messageRequestErrorKey } from "../messages/api/firstContactError";
-import { useSendMessageRequest } from "../messages/api/useMessageRequest";
+import {
+  useComposeIdempotencyKey,
+  useSendMessageRequest,
+} from "../messages/api/useMessageRequest";
 import { type MemberProfile } from "./data/memberProfiles";
 import { openToLabel, reasonValue } from "./openTo.data";
 import { draftForReason } from "./profileHello.data";
@@ -41,15 +44,18 @@ export function ProfileHelloModal({
   const sendMessageRequest = useSendMessageRequest();
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
+  // ENG-407: one key per compose, reused when the member retries the same text.
+  const composeKey = useComposeIdempotencyKey();
   const hasReasons = profile.openTo.length > 0;
 
   function handleSend() {
     const body = draft.trim();
     if (!body || sendMessageRequest.isPending) return;
     sendMessageRequest.mutate(
-      { toSlug: profile.slug, body },
+      { toSlug: profile.slug, body, clientMessageId: composeKey.keyFor(body) },
       {
         onSuccess: (result) => {
+          composeKey.clear();
           onClose();
           showToast(
             t("members:profile.hello.sentToast", { first: profile.first }),

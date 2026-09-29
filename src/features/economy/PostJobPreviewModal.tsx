@@ -3,10 +3,11 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
 import {
-  CATEGORIES,
   COMMITMENTS,
   FORMATS,
+  SENIORITY,
   TIMEZONES,
+  jobFieldLabel,
   optionLabel,
 } from "./postJob.data";
 import type { CompanyProfile } from "./companies.data";
@@ -27,19 +28,22 @@ export function PostJobPreviewModal({
   const { t } = useTranslation();
   const { state, payLabel } = form;
 
+  const fieldLabel = jobFieldLabel(state.category, state.profession, t);
   const meta: [string, string][] = [
-    [
-      t("economy:postJob.field.category"),
-      optionLabel(CATEGORIES, state.category, t),
-    ],
+    ...(fieldLabel
+      ? [[t("economy:postJob.field.category"), fieldLabel] as [string, string]]
+      : []),
     [t("economy:postJob.field.format"), optionLabel(FORMATS, state.format, t)],
     [
       t("economy:postJob.field.commitment"),
       optionLabel(COMMITMENTS, state.commitment, t),
     ],
   ];
-  if (state.seniority !== "Any level")
-    meta.push([t("economy:postJob.field.level"), state.seniority]);
+  if (state.seniority !== "anyLevel")
+    meta.push([
+      t("economy:postJob.field.level"),
+      optionLabel(SENIORITY, state.seniority, t),
+    ]);
   if (form.needsCity && state.city)
     meta.push([t("economy:postJob.field.where"), state.city]);
   if (form.showsTimezone && state.timezone !== "No preference")

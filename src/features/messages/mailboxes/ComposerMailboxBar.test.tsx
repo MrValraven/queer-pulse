@@ -29,14 +29,26 @@ function seated(id: string): Conversation {
 }
 
 describe("ComposerMailboxBar (demo)", () => {
-  it("says which business the member replies as and offers a claim", async () => {
+  it("says which business the member replies as, the first name customers see, and offers a claim", async () => {
     render(<ComposerMailboxBar active={seated("demo-cafe-lisboa-fatima")} />, {
       wrapper: TestProviders,
     });
     expect(
       await screen.findByText("Replying as Café Lisboa"),
     ).toBeInTheDocument();
+    // Its own element, so a narrow chip shortens the mailbox name alone.
+    expect(screen.getByText("Customers see “Tiago”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Claim" })).toBeInTheDocument();
+  });
+
+  it("names no one on an unlinked persona, even with both of its switches on", async () => {
+    render(<ComposerMailboxBar active={seated("demo-atelier-pulso-sara")} />, {
+      wrapper: TestProviders,
+    });
+    expect(
+      await screen.findByText("Replying as Atelier Pulso"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Customers see/)).not.toBeInTheDocument();
   });
 
   it("names the colleague holding a thread and offers a confirmed take-over", async () => {

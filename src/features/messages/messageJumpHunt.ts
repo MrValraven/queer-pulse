@@ -8,8 +8,10 @@ import {
 } from "./messageJumpStore";
 import { revealMessageRow } from "./revealMessageRow";
 import type { JumpScrollBridge } from "./useOlderPageAnchor";
+import type { ThreadWindowControls } from "./threadWindowTypes";
 
-/** Upper bound on older pages one jump may load before it stops looking. */
+/** Upper bound on older pages one jump may load before it stops looking. Only
+ *  the fallback page-back hunt (a thread with no history window) reads it. */
 export const MAX_HUNT_PAGES = 25;
 /** Upper bound on how long one jump may keep looking, whatever the pages. */
 const HUNT_DEADLINE_MS = 15_000;
@@ -33,6 +35,13 @@ export interface JumpThreadSnapshot {
   isHistoryError: boolean;
   /** The same load-older trigger the scroll-to-top path uses. */
   onLoadOlder: () => void;
+  /** PRD-401: the thread's history window. With it, an unloaded message is
+   *  reached in one request for a window around it; without it the hunt
+   *  pages back one older page at a time. */
+  threadWindow?: Pick<
+    ThreadWindowControls,
+    "anchorMessageId" | "openWindowAround" | "showWindow" | "readCancelCount"
+  >;
   /** The scroll layer's side of a jump (see `JumpScrollBridge`). */
   scroll: JumpScrollBridge;
 }
@@ -45,12 +54,20 @@ export interface HuntProgress {
   hasSeenLoading: boolean;
   requestedAt: number;
   oldestKeyAtRequest: string | undefined;
+  /** PRD-401: `pending` while the window around the message loads,
+   *  `detached` once the thread was told to show it. Unset on a page-back
+   *  hunt. */
+  windowRequest?: "pending" | "detached";
+  /** PRD-401: the window's `readCancelCount` when the hunt started. Unset
+   *  when the thread has no window. */
+  cancelCountAtStart?: number;
 }
 
 export type HuntDecision =
   | { kind: "reveal" }
   | { kind: "wait" }
   | { kind: "requestPage" }
+  | { kind: "requestWindow" }
   | { kind: "giveUp"; phase: MessageJumpPhase };
 
 /** Identity of the oldest loaded message, used to tell whether a page landed. */
@@ -83,13 +100,25 @@ export function decideHuntStep(
     | "isLoadingOlder"
     | "isHistorySettled"
     | "isHistoryError"
+    | "threadWindow"
   >,
   now: number,
 ): HuntDecision {
   const { rows, hasMoreOlder, isLoadingOlder } = snapshot;
-  const { isHistorySettled, isHistoryError } = snapshot;
+  const { isHistorySettled, isHistoryError, threadWindow } = snapshot;
   if (findRowIndexForMessage(rows, hunt.messageId) !== -1) {
     return { kind: "reveal" };
+  }
+  if (hunt.windowRequest === "pending") return { kind: "wait" };
+  if (hunt.windowRequest === "detached") {
+    // The thread has been told to show the window: wait for a commit that
+    // renders it. A settled window without the message has lost it since
+    // (hidden or removed in between), which reads as not found.
+    const isWindowRendered =
+      threadWindow?.anchorMessageId === hunt.messageId && isHistorySettled;
+    return isWindowRendered
+      ? { kind: "giveUp", phase: "notFound" }
+      : { kind: "wait" };
   }
   if (isLoadingOlder) return { kind: "wait" };
   // Page 0 failed. An older page failing never sets this, so an earlier
@@ -97,6 +126,11 @@ export function decideHuntStep(
   // caught by the oldest-message check below.
   if (isHistoryError) return { kind: "giveUp", phase: "loadFailed" };
   if (!isHistorySettled) return { kind: "wait" };
+  // PRD-401: the loaded history is current and lacks the message, so ask for
+  // a window around it: one request reaches it however far back it is.
+  if (threadWindow && hunt.pagesRequested === 0) {
+    return { kind: "requestWindow" };
+  }
   if (hunt.isAwaitingPage) {
     const isPickupPending =
       !hunt.hasSeenLoading && now - hunt.requestedAt < PAGE_PICKUP_GRACE_MS;
@@ -127,6 +161,22 @@ function deadlineOutcome(
   return snapshot.rows.length > 0 ? "tooFar" : "notFound";
 }
 
+/** PRD-401: the reader returned to the latest message (a send, a pill tap)
+ *  after this hunt started. The hunt then ends quietly wherever it is, so no
+ *  window it was heading for replaces the tail the reader chose. */
+function hasReaderReturnedToLatest(
+  current: HuntProgress,
+  snapshot: JumpThreadSnapshot | null,
+): boolean {
+  const countAtStart = current.cancelCountAtStart;
+  const countNow = snapshot?.threadWindow?.readCancelCount();
+  return (
+    countAtStart !== undefined &&
+    countNow !== undefined &&
+    countNow !== countAtStart
+  );
+}
+
 export interface MessageJumpHunter {
   /** Feeds the latest thread state in and advances any hunt in progress. */
   sync: (snapshot: JumpThreadSnapshot) => void;
@@ -138,10 +188,13 @@ export interface MessageJumpHunter {
 
 /**
  * The single jump engine for one conversation panel: reveal a loaded message,
- * or page back one older page at a time until it loads, history runs out, or
- * a bound is hit, then reveal it or say why it could not be reached. A newer
- * jump or a thread switch cancels whatever is in flight. Plain closures
- * outside React so the timers and frame loops never depend on render timing.
+ * or show a history window around an unloaded one (PRD-401) and reveal it
+ * there, or say why it could not be reached. A thread with no window pages
+ * back one older page at a time instead, until the message loads, history
+ * runs out, or a bound is hit. A newer jump, a thread switch, or a send or
+ * pill tap back to the latest message cancels whatever is in flight. Plain
+ * closures outside React so the timers and frame loops never depend on
+ * render timing.
  */
 export function createMessageJumpHunter(): MessageJumpHunter {
   let latest: JumpThreadSnapshot | null = null;
@@ -201,11 +254,52 @@ export function createMessageJumpHunter(): MessageJumpHunter {
     snapshot.onLoadOlder();
   }
 
+  function requestWindow(current: HuntProgress, snapshot: JumpThreadSnapshot) {
+    const threadWindow = snapshot.threadWindow;
+    if (!threadWindow) return;
+    current.windowRequest = "pending";
+    void threadWindow.openWindowAround(current.messageId).then((outcome) => {
+      // A later jump, a thread switch or the deadline ended this hunt: its
+      // window is never shown.
+      if (hunt !== current) return;
+      if (hasReaderReturnedToLatest(current, latest)) {
+        stopHunt();
+        return;
+      }
+      if (outcome === "ready") {
+        // Shown only now that this hunt is known to be current. A send or a
+        // pill tap made while it loaded has cancelled the request, and the
+        // thread stays on the latest message.
+        const isShown =
+          latest?.conversationId === current.conversationId &&
+          latest.threadWindow?.showWindow(current.messageId) === true;
+        if (!isShown) {
+          stopHunt();
+          return;
+        }
+        current.windowRequest = "detached";
+        advance();
+        return;
+      }
+      if (outcome === "cancelled") {
+        stopHunt();
+        return;
+      }
+      stopHunt(outcome === "notFound" ? "notFound" : "loadFailed");
+    });
+  }
+
   function advance() {
     const current = hunt;
     const snapshot = latest;
     if (!current || !snapshot) return;
     if (snapshot.conversationId !== current.conversationId) {
+      stopHunt();
+      return;
+    }
+    // A send or pill tap while page 0 loaded, while the window loaded, or
+    // after it was shown and before the reveal: the reader chose the latest.
+    if (hasReaderReturnedToLatest(current, snapshot)) {
       stopHunt();
       return;
     }
@@ -215,13 +309,18 @@ export function createMessageJumpHunter(): MessageJumpHunter {
     const decision = decideHuntStep(current, snapshot, Date.now());
     if (decision.kind === "reveal") {
       stopHunt();
-      // Pages were prepended while looking: an instant landing reads better
-      // than a glide across freshly-inserted, still-unmeasured rows.
-      reveal(current.messageId, current.pagesRequested === 0);
+      // Pages were prepended, or a window replaced the rows, while looking:
+      // an instant landing reads better than a glide across freshly-inserted,
+      // still-unmeasured rows.
+      const hasRowsChanged =
+        current.pagesRequested > 0 || current.windowRequest !== undefined;
+      reveal(current.messageId, !hasRowsChanged);
     } else if (decision.kind === "giveUp") {
       stopHunt(decision.phase);
     } else if (decision.kind === "requestPage") {
       requestPage(current, snapshot);
+    } else if (decision.kind === "requestWindow") {
+      requestWindow(current, snapshot);
     }
   }
 
@@ -263,18 +362,32 @@ export function createMessageJumpHunter(): MessageJumpHunter {
         hasSeenLoading: false,
         requestedAt: 0,
         oldestKeyAtRequest: undefined,
+        cancelCountAtStart: snapshot.threadWindow?.readCancelCount(),
       };
       hunt = started;
       // A pending unread landing must not move the reader mid-hunt.
       snapshot.scroll.cancelUnreadLanding();
       schedule(() => {
-        if (hunt === started) {
-          showMessageJumpStatus(started.conversationId, "finding");
+        if (hunt !== started) return;
+        if (hasReaderReturnedToLatest(started, latest)) {
+          stopHunt();
+          return;
         }
+        showMessageJumpStatus(started.conversationId, "finding");
       }, FINDING_STATUS_DELAY_MS);
       schedule(() => {
         if (hunt !== started) return;
-        stopHunt(deadlineOutcome(latest));
+        // The reader went back to the latest message: nothing failed.
+        if (hasReaderReturnedToLatest(started, latest)) {
+          stopHunt();
+          return;
+        }
+        // A window request still unanswered this late is a load problem.
+        stopHunt(
+          started.windowRequest === undefined
+            ? deadlineOutcome(latest)
+            : "loadFailed",
+        );
       }, HUNT_DEADLINE_MS);
       advance();
       return false;

@@ -718,6 +718,11 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.joined": "Já estás dentro",
   "onboarding.stepCommunities.leave": "Sair da comunidade",
   "onboarding.stepCommunities.requested": "Pedido enviado",
+  "onboarding.stepCommunities.joining": "A entrar…",
+  "onboarding.stepCommunities.joinedAnnouncement": "Entraste em {name}",
+  "onboarding.stepCommunities.leftAnnouncement": "Saíste de {name}",
+  "onboarding.stepCommunities.requestedNotice":
+    "O teu pedido para entrar em {name} está com a moderação.",
   "onboarding.stepCommunities.continue": "Continuar",
   "onboarding.stepCommunities.skip": "Saltar por agora",
   "onboarding.stepCommunities.back": "Voltar",

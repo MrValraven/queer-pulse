@@ -16,7 +16,11 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
 import { API, API_V1 } from "../../../test/msw/handlers";
-import { resetAmbassadorHandlerState } from "../../../test/msw/ambassadors.handlers";
+import {
+  resetAmbassadorHandlerState,
+  seedAmbassadorHandlerState,
+} from "../../../test/msw/ambassadors.handlers";
+import { ADMIN_AMBASSADORS_DEMO } from "./adminAmbassadors.data";
 
 /**
  * LIVE-mode suite for `/admin/ambassadors` against the MSW handlers in
@@ -297,6 +301,7 @@ describe("AdminAmbassadorsPage (live mode via MSW)", () => {
     server.use(
       http.get(`${API_V1}/admin/ambassadors/circle`, () =>
         HttpResponse.json({
+          isFounded: true,
           slug: "queerpulse-ambassadors",
           memberCount: 6,
           isViewerMember: true,
@@ -309,5 +314,92 @@ describe("AdminAmbassadorsPage (live mode via MSW)", () => {
     expect(
       screen.queryByRole("button", { name: /take a staff seat/i }),
     ).toBeNull();
+  });
+});
+
+describe("AdminAmbassadorsPage history, paging and circle founding (live mode via MSW)", () => {
+  it("says the circle opens with the first ambassador before it is founded", async () => {
+    seedAmbassadorHandlerState({
+      circle: {
+        isFounded: false,
+        slug: null,
+        memberCount: 0,
+        isViewerMember: false,
+      },
+    });
+    await renderLivePage();
+
+    expect(
+      await screen.findByText(/opens when the first ambassador is granted/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /take a staff seat/i }),
+    ).toBeNull();
+    expect(screen.queryByRole("link", { name: /open the circle/i })).toBeNull();
+  });
+
+  it("opens a member's grant history, every grant newest first", async () => {
+    let requestedUserId: string | null = null;
+    server.use(
+      http.get(`${API_V1}/admin/ambassadors/history`, ({ request }) => {
+        requestedUserId = new URL(request.url).searchParams.get("userId");
+        // No response: fall through to the stateful handler.
+        return undefined;
+      }),
+    );
+    const user = await renderLivePage();
+    await screen.findByRole("link", { name: "Diogo Vasques" });
+
+    await user.click(
+      screen.getByRole("button", { name: /grant history for diogo vasques/i }),
+    );
+
+    const drawer = await screen.findByRole("dialog", {
+      name: /grant history for diogo vasques/i,
+    });
+    expect(
+      await within(drawer).findByText(
+        "Leads the harm reduction crew at the Bairro Alto club nights.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(drawer).getByText("Took a break for the winter season."),
+    ).toBeInTheDocument();
+    const entries = within(drawer).getAllByRole("listitem");
+    expect(entries).toHaveLength(2);
+    expect(entries[0]).toHaveTextContent(/active/i);
+    expect(entries[1]).toHaveTextContent(/revoked/i);
+    expect(requestedUserId).toBe("demo-user-diogo");
+  });
+
+  it("pages the list, loading the next page on demand", async () => {
+    const template = ADMIN_AMBASSADORS_DEMO[0]!;
+    seedAmbassadorHandlerState({
+      rows: Array.from({ length: 25 }, (_, rowIndex) => ({
+        ...template,
+        id: `paged-${rowIndex}`,
+        member: {
+          ...template.member,
+          userId: `paged-user-${rowIndex}`,
+          slug: `paged-${rowIndex}`,
+          firstName: "Member",
+          lastName: String(rowIndex + 1).padStart(2, "0"),
+        },
+        grantedAt: new Date(Date.UTC(2026, 0, 25 - rowIndex)).toISOString(),
+      })),
+    });
+    const user = await renderLivePage();
+
+    await screen.findByRole("link", { name: "Member 01" });
+    expect(screen.getAllByRole("article")).toHaveLength(20);
+    expect(screen.queryByRole("link", { name: "Member 21" })).toBeNull();
+
+    await user.click(screen.getByRole("button", { name: /load more/i }));
+
+    expect(
+      await screen.findByRole("link", { name: "Member 25" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("article")).toHaveLength(25);
+    expect(screen.queryByRole("button", { name: /load more/i })).toBeNull();
   });
 });

@@ -5,6 +5,7 @@ import {
   FiBarChart2,
   FiBookOpen,
   FiClock,
+  FiCheckSquare,
   FiCpu,
   FiEdit3,
   FiFeather,
@@ -64,7 +65,9 @@ export interface AdminNavItem {
    * Set it only where the backend controller genuinely admits the grant and
    * `CAPABILITY_ELEVATED_PATTERNS` in `app/authGate.ts` elevates the same path,
    * so the rail can never offer a link the route gate then bounces. Absent
-   * means "account tier only", which is most of the console.
+   * means "account tier only", which is most of the console. A moderator
+   * holding none of these grants sees the item only when its path is in
+   * `MODERATOR_ADMITTED_CAPABILITY_PATHS` below (ENG-491).
    */
   capabilities?: StaffRoleId[];
   /**
@@ -75,9 +78,11 @@ export interface AdminNavItem {
    *
    * Most of the console is already admin-only and carries no flag, because a
    * moderator is bounced by the blanket `/admin/*` match anyway. It matters
-   * here because a moderator DOES see the whole rail today, and the legal
-   * register is the one entry whose mere presence in a moderator's sidebar
-   * says something the register itself is meant to keep narrow.
+   * here because a moderator still sees every account-tier entry, and the
+   * legal register is the one entry whose mere presence in a moderator's
+   * sidebar says something the register itself is meant to keep narrow. The
+   * housing co-ops console carries it too, so its badge query and its link
+   * both stay off for a moderator (ENG-491).
    */
   isAdminOnly?: boolean;
 }
@@ -147,6 +152,19 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiShield,
         badge: "moderation",
         tone: "alert",
+      },
+      {
+        // PRD-461. Threads members held back for a moderator. The controller is
+        // `@Roles(Moderator, Admin)` with an empty `@StaffRoles()`, and the path
+        // sits in `MOD_ACCESSIBLE_ADMIN_PATTERNS`, so moderators see it and it
+        // carries no `capabilities` and no `isAdminOnly`.
+        labelKey: "shared:adminNav.items.forumReview",
+        to: routes.adminForumReview,
+        // N1/M5: distinct from Response templates (FiMessageSquare, same
+        // group) and from Intakes (FiInbox, also this group). The row's own
+        // actions are a decision, so a check icon reads as "review to
+        // approve".
+        icon: FiCheckSquare,
       },
       {
         labelKey: "shared:adminNav.items.concerns",
@@ -274,8 +292,11 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiLayers,
       },
       {
+        // PRD-462. `HousingModerationGuard` admits Moderator, Admin and the
+        // `housing_moderator` grant, mirrored in both authGate pattern lists.
         labelKey: "shared:adminNav.items.housingGroups",
         to: routes.adminHousingGroups,
+        capabilities: ["housing_moderator"],
         icon: FiHome,
       },
       {
@@ -283,12 +304,15 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         // join-request endpoints, and linked from nowhere. The cross-co-op
         // join-request queue had real people waiting in it, reachable only by
         // typing the URL. Admin-only, like the endpoints behind it, so it
-        // carries no `capabilities` grant.
+        // carries no `capabilities` grant. `AdminHousingController` is
+        // `@Roles(Admin)` alone and `/admin/housing` is absent from
+        // `MOD_ACCESSIBLE_ADMIN_PATTERNS`, hence `isAdminOnly` (ENG-491).
         labelKey: "shared:adminNav.items.housingCoops",
         to: routes.adminHousingCoops,
         icon: FiHome,
         badge: "housingCoops",
         tone: "warn",
+        isAdminOnly: true,
       },
       {
         labelKey: "shared:adminNav.items.housingGroupListings",
@@ -589,37 +613,84 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
 ];
 
 /**
+ * The capability-gated destinations a moderator without the grant can open
+ * (ENG-491). A path joins only when BOTH gates admit a plain moderator: the
+ * controller's role guard names Moderator, AND `app/authGate.ts` lists the
+ * path in `MOD_ACCESSIBLE_ADMIN_PATTERNS`. For capability-gated items, a
+ * moderator's rail mirrors the route gate, so every such link it offers
+ * opens; account-tier items follow `isAdminOnly` alone. Keyed by path so
+ * each entry can be checked against both gates in one place:
+ *   queues: `AdminQueuesController`, `@Roles(Moderator, Admin)`.
+ *   housing groups, housing-group listings, housing listings:
+ *     `HousingModerationGuard` (Moderator, Admin or `housing_moderator`).
+ *
+ * Held out for now. Each backend admits moderators, but authGate bounces a
+ * moderator without the grant. Widening authGate is the user's decision:
+ *   community tag requests: `@Roles(Moderator, Admin)` + `communities`.
+ *   reading-group proposals: `@Roles(Moderator, Admin)` + `communities`.
+ *   topics: `@Roles(Moderator, Admin)` + `communities`.
+ *   safe spaces: `@Roles(Moderator, Admin)` + `directory_moderator`.
+ *   listings: `@Roles(Moderator, Admin)` + `directory_moderator`.
+ *   resource guides: `@Roles(Moderator, Admin)` + `resource_curator`.
+ *   glossary: `@Roles(Moderator, Admin)` + `resource_curator`.
+ * Every other `capabilities` entry sits behind `@Roles(Admin)` plus its grant,
+ * so a moderator reaches it only by holding that grant.
+ */
+const MODERATOR_ADMITTED_CAPABILITY_PATHS: ReadonlySet<string> = new Set([
+  routes.adminQueues,
+  routes.adminHousingGroups,
+  routes.adminHousingGroupListings,
+  routes.adminHousingListings,
+]);
+
+/** True when one of the viewer's grants opens this item. */
+function holdsItemGrant(
+  item: AdminNavItem,
+  staffRoles: readonly StaffRoleId[],
+): boolean {
+  return (item.capabilities ?? []).some((capability) =>
+    staffRoles.includes(capability),
+  );
+}
+
+/**
  * The rail as one viewer should see it.
  *
- * Platform tiers keep exactly the rail they had: an admin sees everything, and
- * so does a moderator (the route gate is still what decides each link). A
+ * An admin sees everything. A moderator sees the account-tier rail minus the
+ * `isAdminOnly` entries, and a capability-gated entry only when both its
+ * backend and the route gate admit moderators
+ * (`MODERATOR_ADMITTED_CAPABILITY_PATHS`) or they hold one of its grants. A
  * member who is in the console only because they hold an additive staff grant
- * sees the items that grant opens and nothing else, so the console reads as
- * the job they were handed rather than as a wall of links that bounce.
+ * sees the items that grant opens and nothing else, so the console shows
+ * exactly the job they were handed.
  */
 export function visibleAdminNavSections(options: {
   /** True for a viewer who sees the whole console: admin, moderator, or demo. */
   isFullConsole: boolean;
-  /** True for an admin (or demo). A moderator sees the full rail MINUS the
-   *  `isAdminOnly` entries, whose backends refuse them outright. */
+  /** True for an admin (or demo). A moderator sees the rail MINUS the
+   *  `isAdminOnly` entries and the grant-only ones they hold no grant for,
+   *  whose backends refuse them outright. */
   isAdmin: boolean;
   staffRoles: readonly StaffRoleId[];
 }): AdminNavSection[] {
+  const { staffRoles } = options;
   if (options.isFullConsole) {
     if (options.isAdmin) return ADMIN_NAV_SECTIONS;
     return ADMIN_NAV_SECTIONS.map((section) => ({
       ...section,
-      items: section.items.filter((item) => !item.isAdminOnly),
+      items: section.items.filter(
+        (item) =>
+          !item.isAdminOnly &&
+          (!item.capabilities ||
+            MODERATOR_ADMITTED_CAPABILITY_PATHS.has(item.to) ||
+            holdsItemGrant(item, staffRoles)),
+      ),
     })).filter((section) => section.items.length > 0);
   }
   return ADMIN_NAV_SECTIONS.map((section) => ({
     ...section,
     items: section.items.filter(
-      (item) =>
-        !item.isAdminOnly &&
-        (item.capabilities ?? []).some((capability) =>
-          options.staffRoles.includes(capability),
-        ),
+      (item) => !item.isAdminOnly && holdsItemGrant(item, staffRoles),
     ),
   })).filter((section) => section.items.length > 0);
 }

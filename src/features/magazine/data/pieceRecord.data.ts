@@ -28,6 +28,7 @@ import type {
   PublishGateItemDto,
 } from "../api/pieces.api";
 import type { Piece, PiecePaymentStatus } from "./desk.data";
+import { isPieceScheduled } from "../desk/pieceSchedule";
 
 /** One row of the "we have run this before" list on the Brief tab. FE-only —
  *  the backend has no similar-pieces endpoint yet. */
@@ -344,7 +345,9 @@ const PAYMENT_STATUS_BY_PIECE_STATUS: Record<
  * for), its own word count on target, in place of the shared 2800/3140 pair;
  * there is no per-piece "filed over target" story to tell. An id the desk
  * fixture does not know about keeps the plain `DEMO_RECORD`, since there is
- * nothing truer to derive.
+ * nothing truer to derive. The piece's own `publishedAt` rides along, so a
+ * scheduled demo piece reads as scheduled on its record too (and as not
+ * published while that instant is still ahead).
  */
 export function demoRecordForPiece(piece: Piece | undefined): PieceRecordView {
   if (!piece || piece.id === DEMO_RECORD.id) return DEMO_RECORD;
@@ -365,5 +368,7 @@ export function demoRecordForPiece(piece: Piece | undefined): PieceRecordView {
       ...DEMO_RECORD.payment,
       status: PAYMENT_STATUS_BY_PIECE_STATUS[piece.paymentStatus ?? "none"],
     },
+    publishedAt: piece.publishedAt ?? null,
+    ...(isPieceScheduled(piece) && { isPublished: false }),
   };
 }

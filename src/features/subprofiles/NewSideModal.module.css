@@ -9,7 +9,7 @@
    surface but isn't itself a flex column with a gap — the ground-truth
    `.modal-body` is (`display:flex;flex-direction:column;gap:22px`, see
    personas.css:129). This wrapper reproduces that rhythm between the
-   craft/blank/copy picker, the family list (or copy pickers), and the live
+   craft/copy picker, the family list (or copy pickers), and the live
    summary line — otherwise those blocks sit flush against each other. */
 .stepBody {
   display: flex;
@@ -32,7 +32,7 @@
   margin-bottom: var(--gap-xs);
 }
 
-/* ── seg: By craft / Blank / Copy one ───────────────────────────────────── */
+/* ── seg: By craft / Copy one ───────────────────────────────────────────── */
 .seg {
   display: flex;
   background: var(--wash);
@@ -50,8 +50,8 @@
   padding: 8px 15px;
   border-radius: var(--radius-pill);
   color: var(--ink-60);
-  /* Transparent over the `.seg` wash track — without this the two unselected
-     segments show native button chrome (no global <button> reset in this repo). */
+  /* Transparent over the `.seg` wash track. Without this the unselected
+     segment shows native button chrome (no global <button> reset in this repo). */
   border: none;
   background: none;
   cursor: pointer;
@@ -79,7 +79,23 @@
   pointer-events: none;
 }
 
-/* ── craft picker: family-grouped kinds ─────────────────────────────────── */
+/* ── craft picker: search field above the family-grouped kinds ─────────── */
+/* Step 1 keeps the dialog at its full height, so the head and the search
+   field stay put while typing narrows the list below them. The mobile sheet
+   keeps its own sizing. */
+@media (min-width: 720px) {
+  .craftStepModal {
+    height: min(86svh, 760px);
+  }
+}
+
+/* KindFamilyPicker's column: the search field, then the families (or the
+   no-match empty state), on the same rhythm as the family cards. */
+.kindPicker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
 /* No max-height/overflow here on purpose — the ground-truth prototype scrolls
    the whole `.modal-body`, not this list separately (see personas.css:129,135).
    A capped, independently-scrolling `.fams` nested inside the modal body (which
@@ -92,18 +108,32 @@
    content height and leaving the scrolling to `.modalBody` (flex:1;
    overflow-y:auto) removes the cap that triggered the shrink, so every family
    card renders (and its kind chips stay clickable) and the whole step scrolls
-   as one surface, exactly like the design. */
+   as one surface, exactly like the design.
+   Each family card (and the no-match empty state) sits in its own `Collapse`
+   slot, which folds with height. The rhythm between them is each card's own
+   `margin-top`, held inside the slot (`Collapse` is a flow-root), so a
+   folding card takes its spacing with it and the cards after it slide by the
+   exact amount. A flex `gap` would stay behind until the slot unmounts and
+   then jump. The negative margin here cancels the first card's margin, so
+   the search field keeps its `.kindPicker` gap above the list. */
 .fams {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-sm);
+  margin-top: calc(var(--gap-sm) * -1);
+}
+.famsEmpty {
+  margin-top: var(--gap-sm);
 }
 .fam {
+  margin-top: var(--gap-sm);
   border: 1px solid var(--line);
   border-radius: var(--radius-panel);
+  /* Clips the header's wash to the rounded corners, and clips a row of kinds
+     still growing in while the card's height eases open (KindFamilyCard). The
+     card never layout-animates, so this radius never stretches. */
   overflow: hidden;
   /* Belt-and-braces: never let this card be shrunk below its content height by
-     an ancestor flex column, whatever height constraint it ends up under —
+     an ancestor flex column, whatever height constraint it ends up under.
      `overflow: hidden` above already makes it a shrink target (see note on
      `.fams`), so pin it back to its natural size explicitly. */
   flex-shrink: 0;
@@ -131,7 +161,10 @@
      card at narrow widths (default min-width:auto on a flex child blocks that). */
   min-width: 0;
 }
+/* Positioned, so a kind popping out (`AnimatePresence mode="popLayout"`)
+   is lifted out of the grid at the cell it had while the rest reflow. */
 .kinds {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 8px;
@@ -160,6 +193,10 @@
     background: var(--wash);
   }
 }
+/* A kind on its way out ignores the pointer (KindFamilyCard's KindButton). */
+.kindBtn[data-leaving] {
+  pointer-events: none;
+}
 .kindBtn:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -178,7 +215,9 @@
 }
 .kindBtnOn {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  /* The same 8% tint over the modal's cream, mixed opaque, so a kind fading
+     out behind a chosen kind gliding over its cell never shows through. */
+  background: color-mix(in srgb, var(--accent) 8%, var(--cream));
   color: var(--accent-ink);
   font-weight: 600;
 }

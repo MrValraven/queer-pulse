@@ -61,6 +61,7 @@ function makeView(
     ctaUrl: "",
     socialLinks: [],
     linkVisibility: "unlinked",
+    visibility: "open",
     status: "published",
     sections: [],
     featured: null,

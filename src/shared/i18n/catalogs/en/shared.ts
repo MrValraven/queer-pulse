@@ -133,6 +133,7 @@ export const shared: Catalog = {
   "loadError.title": "We couldn't load <em>this</em>",
   "loadError.body":
     "The request didn't come back. This one is on us. Try again in a moment.",
+  "loadError.retryingCta": "Trying again…",
   "loadError.retryCta": "Try again",
 
   "feedback.roomLoader.ariaLabel": "Preparing the room",
@@ -289,6 +290,7 @@ export const shared: Catalog = {
   "adminNav.items.pressKit": "Press kit",
   "adminNav.items.queues": "All queues",
   "adminNav.items.moderation": "Moderation",
+  "adminNav.items.forumReview": "Forum review",
   "adminNav.items.staff": "Staff & roles",
   "adminNav.items.concerns": "Concerns",
   "adminNav.items.intakes": "Intakes & messages",

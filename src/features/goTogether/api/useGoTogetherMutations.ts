@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   demoAcceptPair,
+  demoAnswerHostQuestions,
   demoDeclinePair,
   demoOptIn,
   demoRevealGroup,
@@ -9,12 +10,14 @@ import {
 } from "../goTogether.mock";
 import {
   acceptGoTogetherPair,
+  answerGoTogetherHostQuestions,
   declineGoTogetherPair,
   optInGoTogether,
   withdrawGoTogether,
 } from "./goTogether.api";
 import type {
   GoTogetherCardDTO,
+  HostAnswersBody,
   OptInBody,
   PairAnswersBody,
 } from "./goTogether.types";
@@ -84,6 +87,21 @@ export function useDeclineGoTogetherPair(slug: string) {
     meta: { silentError: true },
     mutationFn: async () =>
       demoMode ? demoDeclinePair(slug) : declineGoTogetherPair(slug),
+    onSuccess: setCard,
+  });
+}
+
+/** PUT /events/:slug/go-together/host-answers: a waiting member answers
+ *  the host questions the card asks again. The other saved answers stay. */
+export function useAnswerGoTogetherHostQuestions(slug: string) {
+  const { demoMode } = useDemoMode();
+  const setCard = useSetCard(slug);
+  return useMutation<GoTogetherCardDTO, Error, HostAnswersBody>({
+    meta: { silentError: true },
+    mutationFn: async (body) =>
+      demoMode
+        ? demoAnswerHostQuestions(slug, body)
+        : answerGoTogetherHostQuestions(slug, body),
     onSuccess: setCard,
   });
 }

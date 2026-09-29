@@ -113,6 +113,8 @@ const groupFixture: GoTogetherGroupDTO = {
   isDissolved: false,
   members: [],
   mergeOffer: null,
+  isLeaveChatOnly: true,
+  hasLeftChat: false,
   checkIn: { isOpen: false, isHere: false, hasLeftEvent: false },
   feedback: { isOpen: true, closesAt: null, hasAnswered: false },
 };

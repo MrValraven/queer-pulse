@@ -10,10 +10,12 @@ const PACK_NAME_MAX_LENGTH = 80;
 const PACK_SLUG_MAX_LENGTH = 64;
 
 /**
- * Starts a new draft pack. The name comes first because it is what the admin
- * thinks in; the slug follows it automatically until the admin types into the
- * slug field, and clearing that field hands it back to the name. Mount it only
- * while open: closing unmounts it, which is also how the form resets.
+ * Starts a new draft pack. The English name comes first because it is what
+ * the admin thinks in; the slug sits right below it and follows it
+ * automatically until the admin types into the slug field, and clearing that
+ * field hands it back to the name. The Portuguese name comes last and is
+ * optional; left empty, readers in Portuguese see the English one. Mount it only while open: closing unmounts it, which is also
+ * how the form resets.
  */
 export function NewStickerPackDialog({
   packs,
@@ -23,13 +25,18 @@ export function NewStickerPackDialog({
 }: {
   packs: AdminStickerPackResponse[];
   isCreatingPack: boolean;
-  onCreatePack: (body: { slug: string; name: string }) => Promise<boolean>;
+  onCreatePack: (body: {
+    slug: string;
+    name: string;
+    namePt?: string;
+  }) => Promise<boolean>;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const formId = useId();
   const nameInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
+  const [namePt, setNamePt] = useState("");
   const [typedSlug, setTypedSlug] = useState("");
   const [hasEditedSlug, setHasEditedSlug] = useState(false);
   const [hasTouchedName, setHasTouchedName] = useState(false);
@@ -79,9 +86,12 @@ export function NewStickerPackDialog({
     setIsSubmitting(true);
     // The caller toasts a failure; a rejection counts as one, so the dialog
     // stays open with the admin's input intact and validation live again.
-    const isCreated = await onCreatePack({ slug, name: trimmedName }).catch(
-      () => false,
-    );
+    const trimmedNamePt = namePt.trim();
+    const isCreated = await onCreatePack({
+      slug,
+      name: trimmedName,
+      namePt: trimmedNamePt.length > 0 ? trimmedNamePt : undefined,
+    }).catch(() => false);
     if (isCreated) onClose();
     else setIsSubmitting(false);
   }
@@ -118,13 +128,14 @@ export function NewStickerPackDialog({
         noValidate
       >
         <FormField
-          label={t("admin:stickerPacks.rail.newName")}
+          label={t("admin:stickerPacks.newPack.nameEn")}
           required
           error={nameError}
         >
           <input
             ref={nameInputRef}
             type="text"
+            lang="en"
             value={name}
             maxLength={PACK_NAME_MAX_LENGTH}
             autoComplete="off"
@@ -152,6 +163,19 @@ export function NewStickerPackDialog({
             autoCapitalize="none"
             spellCheck={false}
             onChange={(event) => changeSlug(event.target.value)}
+          />
+        </FormField>
+        <FormField
+          label={t("admin:stickerPacks.newPack.namePt")}
+          helper={t("admin:stickerPacks.newPack.namePtHelper")}
+        >
+          <input
+            type="text"
+            lang="pt"
+            value={namePt}
+            maxLength={PACK_NAME_MAX_LENGTH}
+            autoComplete="off"
+            onChange={(event) => setNamePt(event.target.value)}
           />
         </FormField>
       </form>

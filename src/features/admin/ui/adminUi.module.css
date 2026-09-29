@@ -136,6 +136,11 @@
   background: rgba(var(--cream-rgb), 0.2);
   color: rgba(var(--cream-rgb), 1);
 }
+/* A failed count read: the alert icon sits centred in the count's pill. */
+.tabCountUnavailable {
+  display: inline-grid;
+  place-items: center;
+}
 
 /* ── Filter pills (secondary toggles in toolbars) ───────────────────────── */
 .filter {

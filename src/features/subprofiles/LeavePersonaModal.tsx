@@ -4,8 +4,10 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
-import { reasonFor } from "../../shared/api/errorMessage";
+import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
+import type { LinkVisibility } from "./api/subprofiles.api";
+import { handleCarriesCreatorSlug } from "./personaHandle";
 
 /**
  * "Leave this persona?" confirm: the signed-in member's own exit from a shared
@@ -29,15 +31,38 @@ import { useSubprofileMembers } from "./api/useSubprofileMembers";
  * name whenever the real longest-standing co-owner turns out to be suspended
  * or deactivated.
  *
+ * A departing CREATOR of a LINKED persona whose handle carries their own
+ * username (the default `<creatorSlug>-<personaSlug>`, at any derivation
+ * suffix, or a custom handle that names them outright) gets a third variant
+ * (PRD-431): `transferCreatorWithin` re-issues that handle under the new
+ * creator's name instead, so the old `/p/<handle>` link stops resolving once
+ * the transfer commits. That variant still says who takes over (the
+ * longest-standing co-owner, unnamed, as above), and names the exact path
+ * that stops working and the username it carries ("/p/<handle> includes
+ * @<slug>", the editor's own wording). `handleCarriesCreatorSlug`
+ * (`personaHandle.ts`) mirrors the backend's own check exactly, suffixes
+ * included, so a long creator slug the 30-char handle cut shortened still
+ * reads as "named for me" here the same way it does server-side.
+ * `linkVisibility`, `handle` and
+ * `personaSlug` are optional and default to "not linked", so a future call
+ * site that cannot easily reach a full persona row still renders the two
+ * generic variants.
+ *
  * Deliberately no type-to-confirm: leaving takes nothing away from anyone else
  * and the member can be invited back, so the friction Delete needs would only
  * read as a scolding here.
  */
 export function LeavePersonaModal({
   subprofileId,
+  linkVisibility,
+  handle,
+  personaSlug,
   onClose,
 }: {
   subprofileId: string;
+  linkVisibility?: LinkVisibility;
+  handle?: string | null;
+  personaSlug?: string;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -51,6 +76,12 @@ export function LeavePersonaModal({
   const isViewerCreator = memberList.some(
     (member) => member.isCreator && member.slug === viewerSlug,
   );
+  const isHandleNamedForViewer =
+    linkVisibility === "linked" &&
+    !!handle &&
+    !!personaSlug &&
+    !!viewerSlug &&
+    handleCarriesCreatorSlug(handle, viewerSlug, personaSlug);
 
   async function handleLeave() {
     try {
@@ -59,8 +90,12 @@ export function LeavePersonaModal({
       showToast(t("subprofiles:owners.toastLeft"), "info");
       void navigate(routes.subprofilesDashboard);
     } catch (error) {
+      // ENG-448: a moderation restriction gets the copy naming the appeal,
+      // the same one the global handler shows, ahead of any server message.
       showToast(
-        reasonFor(error) ?? t("subprofiles:owners.toastLeaveError"),
+        isAccountRestricted(error)
+          ? t("shared:apiError.accountRestricted")
+          : (reasonFor(error) ?? t("subprofiles:owners.toastLeaveError")),
         "error",
       );
     }
@@ -89,7 +124,12 @@ export function LeavePersonaModal({
     >
       <p>
         {isViewerCreator
-          ? t("subprofiles:owners.leaveModalBodyCreator")
+          ? isHandleNamedForViewer
+            ? t("subprofiles:owners.leaveModalBodyCreatorHandleNamed", {
+                handle: handle ?? "",
+                creator: viewerSlug ?? "",
+              })
+            : t("subprofiles:owners.leaveModalBodyCreator")
           : t("subprofiles:owners.leaveModalBody")}
       </p>
     </Modal>

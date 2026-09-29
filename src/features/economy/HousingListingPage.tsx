@@ -12,7 +12,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS } from "./housing.data";
 import { HousingGallery } from "./HousingGallery";
-import { MessageModal } from "./HousingModals";
+import { HousingEnquiryModal } from "./HousingEnquiryModal";
 import { RequestViewingModal } from "./RequestViewingModal";
 import { VerifiedListingBadge } from "./VerifiedListingBadge";
 import { HousingListingSkeleton } from "./HousingListingSkeleton";
@@ -182,10 +182,9 @@ export function HousingListingPage() {
       </div>
 
       {messaging && (
-        <MessageModal
-          toName={listing.poster.fullName}
+        <HousingEnquiryModal
+          lister={listing.poster}
           listingTitle={listing.title}
-          responseTime={listing.poster.responseTime}
           listingRef={data.ref}
           onClose={() => setMessaging(false)}
         />

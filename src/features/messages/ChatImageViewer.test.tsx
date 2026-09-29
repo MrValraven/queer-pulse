@@ -1,9 +1,10 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
+import { useInertWhileCovered } from "../../shared/components/ui/modalStack";
 import { ChatImageViewer } from "./ChatImageViewer";
 import type { ViewerPhoto } from "./useThreadImageGallery";
 
@@ -292,4 +293,32 @@ describe("ChatImageViewer", () => {
     });
     expect(onClose).toHaveBeenCalled();
   });
+
+  it("goes inert while a dialog opened on top covers it", () => {
+    // Forward opens the forward picker over the viewer while the viewer plays
+    // its exit, so the viewer must leave hit testing and the tab order.
+    const view = render(<ViewerWithCover isCovered={false} />, { wrapper });
+    const viewerScrim = screen.getByRole("dialog").parentElement;
+    expect(viewerScrim).not.toHaveAttribute("inert");
+    view.rerender(<ViewerWithCover isCovered />);
+    expect(viewerScrim).toHaveAttribute("inert");
+    view.rerender(<ViewerWithCover isCovered={false} />);
+    expect(viewerScrim).not.toHaveAttribute("inert");
+  });
 });
+
+/** A stand-in for a dialog layer opened on top, such as the forward picker. */
+function CoveringLayer() {
+  const layerRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(layerRef, false);
+  return <div ref={layerRef}>Forward to</div>;
+}
+
+function ViewerWithCover({ isCovered }: { isCovered: boolean }) {
+  return (
+    <>
+      <ChatImageViewer photos={photos} startIndex={0} onClose={vi.fn()} />
+      {isCovered && <CoveringLayer />}
+    </>
+  );
+}

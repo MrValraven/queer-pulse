@@ -185,24 +185,13 @@ export const CONNECTION_META: Record<string, ConnectionMeta> = {
   },
 };
 
-/** Initial buckets (real member slugs). The ConnectionsProvider seeds from these. */
-export const SEED_CONNECTED = [
-  "catarina-vaz",
-  "jonas",
-  "luisa",
-  "anika",
-  "rita",
-  "nuno",
-  "sofia-castano",
-  "sara-pinheiro",
-];
-export const SEED_INCOMING = [
-  "daniel-oliveira",
-  "mariana-costa",
-  "bilal-kaya",
-  "ines-fonseca",
-];
-export const SEED_SENT = ["raquel-baptista", "catarina-melo"];
+/** Initial buckets (real member slugs). The ConnectionsProvider seeds from these;
+ *  they live in `connectionSeeds.data.ts` so the provider never imports this file. */
+export {
+  SEED_CONNECTED,
+  SEED_INCOMING,
+  SEED_SENT,
+} from "./connectionSeeds.data";
 
 /** Extra members revealed by "Load more" in the All tab. */
 export const MORE_POOL = [

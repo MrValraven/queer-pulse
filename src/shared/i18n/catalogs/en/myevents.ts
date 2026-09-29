@@ -414,18 +414,11 @@ export const myevents: Catalog = {
   "rsvpModal.pronounsPlaceholder": "she/her, they/them…",
   "rsvpModal.customQuestionHint": "The host asked this one.",
   "rsvpModal.customAnswerPlaceholder": "Your answer",
-  "rsvpModal.whoSees": "Who can see you're going?",
-  "rsvpModal.visibility.everyone": "Everyone",
-  "rsvpModal.visibility.connections": "Connections",
-  "rsvpModal.visibility.justMe": "Just me",
-  "rsvpModal.attendQuietly": "Attend quietly",
-  "rsvpModal.attendQuietlyDesc":
-    "Come along without your name showing on the guest list.",
   "rsvpModal.privacyNote":
-    "Only the host sees your access & dietary notes. You can change all of this any time.",
+    "The hosts always see what you write here and that you're going. You can change all of this any time.",
   "rsvpModal.cancelCta": "Cancel",
   "rsvpModal.saveCta": "Save",
-  "rsvpModal.savedToast": "Saved. Only the host can see this",
+  "rsvpModal.savedToast": "Saved",
   "rsvpModal.saveErrorToast": "That didn't save. Try again.",
   "rsvpModal.closedToast": "RSVPs for this gathering have closed.",
 

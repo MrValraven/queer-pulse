@@ -39,7 +39,7 @@
 /* Grid items default to `min-width: auto`, so the feed column's min-content
    (the scrollable tab strip + the cards) can force the `1fr` track wider than
    its container, overflowing the page horizontally on mobile. Letting the
-   items shrink below their content keeps the column inside the viewport — the
+   items shrink below their content keeps the column inside the viewport; the
    tab strip then scrolls within its own `overflow-x: auto`. */
 .layout > * {
   min-width: 0;
@@ -66,6 +66,15 @@
   flex-direction: column;
   gap: 10px;
 }
+/* The list is the block dialog's fallback focus target once the opening card
+   is gone. `.viewport` clips anything drawn outside it, so the ring is drawn
+   inward: the outline sits one offset inside the edge and the cream halo
+   fills the gap between them, mirroring the global ring. */
+.list:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-2 * var(--focus-ring-offset));
+  box-shadow: inset var(--ring-cream);
+}
 /* The feed cards (posts, new members, gatherings, threads, articles) pack as a
    masonry: at desktop feed width two columns of at least 320px, each card
    directly under the previous card in its column with a 14px gap, so a short
@@ -86,9 +95,9 @@
 /* Feed hero banner: a small pill under the greeting summarizing recent
    activity (new joins / shared communities). Coral-tinted background with
    --accent-ink text, which is the token tuned for AA-contrast coral text on
-   light/tinted surfaces (5.94:1 on --paper, ≥4.5:1 over coral-tinted badges
-   — see colors.css). `flex-wrap` + no fixed width lets long translated copy
-   wrap onto a second line rather than overflow on a narrow phone. */
+   light/tinted surfaces (5.94:1 on --paper, ≥4.5:1 over coral-tinted badges;
+   see colors.css). `flex-wrap` + no fixed width lets long translated copy
+   wrap onto a second line on a narrow phone. */
 .banner {
   display: inline-flex;
   align-items: center;
@@ -111,7 +120,7 @@
   flex: none;
 }
 /* Infinite-scroll pager below the live feed (FeedLoadMore). Also the
-   IntersectionObserver sentinel node — its own height keeps the observer's
+   IntersectionObserver sentinel node: its own height keeps the observer's
    generous rootMargin from clamping to zero. */
 .loadMore {
   display: flex;
@@ -133,7 +142,7 @@
      with the footer + empty-reply state, so it's weighted toward them).
      Note: content-visibility applies paint containment even while onscreen,
      which would trap PostCard's fixed-overlay modals (Report / Block) inside the
-     card — so those two overlays are portaled to <body> in FeedModeration.tsx.
+     card, so those two overlays are portaled to <body> in FeedModeration.tsx.
      The MoreMenu dropdown is already clipped by this card's `overflow: hidden`,
      so it is unaffected. */
   content-visibility: auto;
@@ -159,8 +168,8 @@
 .cardReveal {
   animation: sbReveal 0.4s var(--ease) both;
 }
-/* A tab switch re-mounts the list, so the same reveal replays — but quicker, so
-   changing tab reads as instant rather than as another page load. */
+/* A tab switch re-mounts the list, so the same reveal replays at a quicker
+   pace, and changing tab reads as an instant swap within the page. */
 .listSwitch .cardReveal {
   animation-duration: 0.25s;
 }
@@ -660,10 +669,22 @@
   outline: none;
   border-color: var(--accent);
 }
+/* The block submit label carries the member's full name, so at phone widths
+   the pair wraps: each button grows to the full row and submit, last in DOM
+   order, lands at the bottom in the thumb arc. A label longer than the row
+   wraps its own text inside the button. */
 .dialogActions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
+}
+.dialogActions > button {
+  flex: 1 1 auto;
+  max-width: 100%;
+  white-space: normal;
+  line-height: var(--lh-title);
+  text-align: center;
 }
 
 /* plum-panel confirmation */

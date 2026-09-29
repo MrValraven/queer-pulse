@@ -4,6 +4,7 @@ import { ApiError } from "../../shared/api/client";
 import { emptyDraft } from "./deckDraft";
 import { DECK_PUBLISH_VIA_PIECE_CODE } from "./api/useLinkedDeckPublish";
 import {
+  DECK_PUBLISH_UNLINKED_CODE,
   useDeckPublishAction,
   type UseDeckPublishActionArgs,
 } from "./useDeckPublishAction";
@@ -124,6 +125,38 @@ describe("useDeckPublishAction", () => {
     expect(mocks.linkedPublish).toHaveBeenCalledTimes(1);
     expect(mocks.linkedPublish).toHaveBeenCalledWith(
       expect.objectContaining({ pieceId: "piece-1" }),
+    );
+  });
+
+  it("names the unlinked-deck 409 so the writer starts from the desk", async () => {
+    mocks.publishDeck.mockRejectedValue(
+      new ApiError(409, "Decks publish from their desk piece.", {
+        code: DECK_PUBLISH_UNLINKED_CODE,
+      }),
+    );
+    const { result, args } = renderPublishAction({});
+
+    await act(() => result.current.handlePublish("now", null));
+
+    expect(mocks.linkedPublish).not.toHaveBeenCalled();
+    expect(args.onPublishedChange).not.toHaveBeenCalled();
+    expect(mocks.showToast).toHaveBeenCalledWith(
+      "magazine:deck.editor.publishUnlinked",
+      "error",
+    );
+  });
+
+  it("keeps the generic save error for any other 409", async () => {
+    mocks.publishDeck.mockRejectedValue(
+      new ApiError(409, "Conflict.", { code: "some_other_conflict" }),
+    );
+    const { result } = renderPublishAction({});
+
+    await act(() => result.current.handlePublish("now", null));
+
+    expect(mocks.showToast).toHaveBeenCalledWith(
+      "magazine:deck.editor.saveError",
+      "error",
     );
   });
 

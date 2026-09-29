@@ -131,9 +131,13 @@ export const cards: Catalog = {
   "verify.lead.expired":
     "Este cartão foi genuíno e o seu prazo terminou. A comunidade pode renová-lo.",
   "verify.lead.suspended":
-    "A comunidade suspendeu este cartão. Trate-o como não válido hoje.",
+    "Este cartão está suspenso. Trata-o como não válido hoje.",
   "verify.lead.revoked":
-    "A comunidade retirou este cartão. Trate-o como não válido.",
+    "A comunidade retirou este cartão. Trata-o como não válido.",
+
+  "holder.fallbackName": "Um membro",
+  "photo.profileHidden":
+    "Este cartão não mostra foto enquanto Foto estiver desligada em Quem vê o quê, no teu perfil.",
 
   "verify.face.label": "O rosto que consta deste cartão",
   "verify.face.caption":

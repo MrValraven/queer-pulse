@@ -330,3 +330,24 @@ export function clearOutbox(): void {
     // ignore storage failures
   }
 }
+
+/**
+ * Wipe every unsent message stored for `scopeId` (ENG-404), independent of the
+ * module's `activeScope`, so an explicit sign-out in `AuthProvider` clears the
+ * signing-out member's outbox whether or not the Messages page is mounted.
+ * Also removes the un-suffixed base key: it holds demo sends and any entry
+ * written before per-member scoping existed, and `loadOutbox` still reads it
+ * whenever the scope is "demo" or unset. Each removal is guarded on its own,
+ * so blocked storage never throws and one failure never skips the other key.
+ * A background replay still in flight for this scope finds its entry gone on
+ * its next `peekOutbox` read and writes nothing back.
+ */
+export function clearOutboxForScope(scopeId: string | null): void {
+  for (const key of new Set([storageKey(scopeId), STORAGE_KEY])) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch {
+      // ignore storage failures (private mode / blocked storage)
+    }
+  }
+}

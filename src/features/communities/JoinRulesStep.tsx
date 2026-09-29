@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, type RefObject } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Button, CheckLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,9 +17,10 @@ import styles from "./JoinModal.module.css";
  * `isUpdated` covers the one race worth handling: an owner edited the rules
  * while this modal was open, the join came back with
  * `RULES_ACCEPTANCE_REQUIRED`, and the applicant is brought back here to read
- * the new version rather than being handed a generic failure.
+ * the new version, with a notice saying the rules changed.
  */
 export function JoinRulesStep({
+  headingRef,
   name,
   rules,
   isUpdated,
@@ -28,6 +29,8 @@ export function JoinRulesStep({
   onContinue,
   parentName,
 }: {
+  /** The heading ref `JoinModal` focuses when the step changes. */
+  headingRef: RefObject<HTMLHeadingElement | null>;
   name: string;
   rules: string[];
   isUpdated: boolean;
@@ -42,13 +45,19 @@ export function JoinRulesStep({
 }) {
   const { t } = useTranslation();
   // Shown only after a continue attempt with the box unticked. The button
-  // stays enabled so the requirement is discoverable by keyboard and screen
-  // reader instead of silently dead.
+  // stays enabled so a keyboard or screen-reader user can discover the
+  // requirement by pressing it.
   const [hasTriedWithoutAck, setHasTriedWithoutAck] = useState(false);
+  // Wraps the acknowledgement. `CheckLine` takes no ref, so a failed continue
+  // reaches its button through this wrapper: focusing it scrolls the box and
+  // the line beneath it into view on a phone, where both can sit below the
+  // fold under a long list of rules.
+  const ackRef = useRef<HTMLDivElement>(null);
 
   const handleContinue = () => {
     if (!isAcknowledged) {
       setHasTriedWithoutAck(true);
+      ackRef.current?.querySelector("button")?.focus();
       return;
     }
     onContinue();
@@ -57,9 +66,9 @@ export function JoinRulesStep({
   return (
     <div>
       <div className={styles.eye}>{t("communities:join.rules.eyebrow")}</div>
-      <div className={styles.title}>
+      <h2 ref={headingRef} tabIndex={-1} className={styles.title}>
         {t("communities:join.rules.title", { name })}
-      </div>
+      </h2>
       {isUpdated && (
         <p className={styles.notice} role="status">
           <FiAlertCircle aria-hidden />{" "}
@@ -75,7 +84,7 @@ export function JoinRulesStep({
 
       <CommunityRulesList rules={rules} />
 
-      <div className={styles.ack}>
+      <div className={styles.ack} ref={ackRef}>
         <CheckLine
           checked={isAcknowledged}
           onChange={(checked) => {
@@ -85,16 +94,16 @@ export function JoinRulesStep({
           title={t("communities:join.rules.acknowledge.title")}
           sub={t("communities:join.rules.acknowledge.sub")}
         />
+        {hasTriedWithoutAck && !isAcknowledged && (
+          <p className={styles.error} role="alert">
+            {t("communities:join.rules.acknowledgeRequired")}
+          </p>
+        )}
       </div>
 
       <Button variant="primary" onClick={handleContinue}>
         {t("communities:join.rules.continueCta")}
       </Button>
-      {hasTriedWithoutAck && !isAcknowledged && (
-        <p className={styles.error} role="alert">
-          {t("communities:join.rules.acknowledgeRequired")}
-        </p>
-      )}
     </div>
   );
 }

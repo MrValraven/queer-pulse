@@ -216,3 +216,140 @@ describe("forum adapters carry the post id + flags", () => {
     expect(card.author.official).toBe(true);
   });
 });
+
+/** A minimal thread response; each test overrides only what it asserts on. */
+function threadResponse(
+  overrides: Partial<ForumThreadResponse> = {},
+): ForumThreadResponse {
+  return {
+    id: "thread-1",
+    slug: "welcome",
+    title: "Welcome",
+    author: { handle: "rita", displayName: "Rita V", avatarUrl: null },
+    category: "general",
+    isPinned: false,
+    isLocked: false,
+    lockReason: null,
+    replyCount: 0,
+    lastActivityAt: "2026-07-23T10:00:00Z",
+    createdAt: "2026-07-23T10:00:00Z",
+    canEdit: false,
+    canDelete: false,
+    canRestore: false,
+    canViewHistory: false,
+    canLock: false,
+    canPin: false,
+    opPostId: "op-1",
+    opVoteCount: 0,
+    myVote: 0,
+    tags: [],
+    isSubscribed: false,
+    acceptedPostId: null,
+    canAcceptAnswer: false,
+    canEditTags: false,
+    isDeleted: false,
+    excerpt: null,
+    unreadReplyCount: null,
+    kind: null,
+    contentWarnings: [],
+    isAnonymous: false,
+    coAuthor: null,
+    publishedAt: "2026-07-23T10:00:00Z",
+    reviewState: null,
+    isPublished: true,
+    crossPosted: false,
+    neighbourhood: null,
+    closesAt: null,
+    language: null,
+    isClosed: false,
+    poll: null,
+    opPhotos: [],
+    ...overrides,
+  };
+}
+
+describe("forum adapters: washes and co-author (DES-406, PRD-408)", () => {
+  it("reply avatar washes use rgb tokens only", () => {
+    const handles = "abcdefghijklmnopqrstuvwxyz".split("");
+    const replies = handles.map((handle) =>
+      postToReply(
+        post({
+          author: { handle, displayName: handle, avatarUrl: null },
+        }),
+        t,
+        fmt,
+      ),
+    );
+    const washes = new Set(replies.map((reply) => reply.background));
+    // Every tint the slug hash can land on is exercised.
+    expect(washes.size).toBe(3);
+    for (const wash of washes) {
+      expect(wash).toMatch(/^rgba\(var\(--[a-z]+-rgb\), \.\d+\)$/);
+    }
+    for (const reply of replies) {
+      expect(reply.color).toMatch(/^var\(--[a-z-]+\)$/);
+    }
+  });
+
+  it("maps viewerIsCoAuthor", () => {
+    const coAuthor = { handle: "joana", displayName: "Joana", avatarUrl: null };
+    expect(
+      threadToCard(threadResponse({ coAuthor, viewerIsCoAuthor: true }), t, fmt)
+        .viewerIsCoAuthor,
+    ).toBe(true);
+    expect(
+      threadToCard(threadResponse({ coAuthor }), t, fmt).viewerIsCoAuthor,
+    ).toBe(false);
+  });
+});
+
+describe("forum adapters: the OP badge on a thread with no named author (ENG-494)", () => {
+  const erasedAuthor = { handle: "", displayName: "Member", avatarUrl: null };
+
+  it("no reply is badged OP when the thread author handle is empty", () => {
+    // The author erased their account: the thread survives with the
+    // placeholder byline and no opening post, and a tombstoned reply or a
+    // reply with no resolvable profile also carries an empty handle.
+    const detail = threadDetail(
+      threadResponse({ author: erasedAuthor }),
+      [
+        post({ id: "reply-1" }),
+        post({
+          id: "reply-2",
+          deleted: true,
+          author: { handle: "", displayName: "", avatarUrl: null },
+        }),
+        post({ id: "reply-3", author: erasedAuthor }),
+      ],
+      t,
+      fmt,
+      false,
+    );
+
+    expect(detail.replies.map((reply) => reply.isOP)).toEqual([
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  it("still badges the thread author's replies when the OP is unavailable", () => {
+    const detail = threadDetail(
+      threadResponse({
+        author: { handle: "rita", displayName: "Rita V", avatarUrl: null },
+      }),
+      [
+        post({ id: "reply-1" }),
+        post({
+          id: "reply-2",
+          author: { handle: "joana", displayName: "Joana R", avatarUrl: null },
+        }),
+      ],
+      t,
+      fmt,
+      false,
+    );
+
+    expect(detail.replies.map((reply) => reply.isOP)).toEqual([true, false]);
+  });
+});

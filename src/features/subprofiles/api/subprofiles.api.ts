@@ -779,6 +779,14 @@ export interface SubprofileDTO {
   // predate this field keep compiling — `subprofileToView` defaults an absent
   // value to 1, same as the backend's own default.
   memberCount?: number;
+  /** ENG-451: the persona's edit counter (an integer from 0). Each successful
+   *  PATCH or section / social-links / affiliations PUT raises it by 1 and
+   *  answers with the new value. The editor sends the value it loaded back as
+   *  `expectedEditVersion`, and the server answers 409
+   *  `PERSONA_EDIT_CONFLICT` when someone saved in between. Optional so
+   *  fixtures that predate it keep compiling; `subprofileToView` reads an
+   *  absent value as 0. */
+  editVersion?: number;
 }
 
 /** Public view: owner-stripped when linkVisibility === 'unlinked'.
@@ -813,6 +821,11 @@ export interface SubprofilePublicDTO {
   ctaUrl: string | null;
   socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
+  /** Who may open the persona. A non-owner only ever receives `open` or
+   *  `network`: the single reads answer a `private` persona with a 403, and
+   *  a profile's persona list shows it to its owners alone. Follow and endorse accept
+   *  an `open` persona only, so the page hides both on a `network` one. */
+  visibility: Visibility;
   status: SubprofileStatus;
   items: SubprofileItemDTO[];
   affiliations: AffiliationDTO[]; // event/community links ("Part of")
@@ -903,7 +916,14 @@ export interface UpdateSubprofileDTO {
   linkVisibility?: LinkVisibility;
   visibility?: Visibility;
   position?: number;
+  /** ENG-451 save precondition: the `editVersion` this save was built on. */
+  expectedEditVersion?: number;
 }
+
+/** ENG-451: the precondition the three full-replace PUTs carry beside their
+ *  `items`, omitted when the caller has none. */
+const withExpectedEditVersion = (expectedEditVersion?: number) =>
+  expectedEditVersion === undefined ? {} : { expectedEditVersion };
 
 export interface SubprofileItemInputDTO {
   // section comes from the URL, not the body
@@ -1025,15 +1045,34 @@ export const replaceSubprofileSection = (
   id: string,
   section: SubprofileSection,
   items: SubprofileItemInputDTO[],
-) => apiPut<SubprofileDTO>(`/subprofiles/${id}/sections/${section}`, { items });
+  expectedEditVersion?: number,
+) =>
+  apiPut<SubprofileDTO>(`/subprofiles/${id}/sections/${section}`, {
+    items,
+    ...withExpectedEditVersion(expectedEditVersion),
+  });
 
 /** Fully replace a persona's social links. */
-export const replaceSocialLinks = (id: string, items: SocialLinkDTO[]) =>
-  apiPut<SubprofileDTO>(`/subprofiles/${id}/social-links`, { items });
+export const replaceSocialLinks = (
+  id: string,
+  items: SocialLinkDTO[],
+  expectedEditVersion?: number,
+) =>
+  apiPut<SubprofileDTO>(`/subprofiles/${id}/social-links`, {
+    items,
+    ...withExpectedEditVersion(expectedEditVersion),
+  });
 
 /** Fully replace a persona's event/community affiliations ("Part of"). */
-export const replaceAffiliations = (id: string, items: AffiliationInputDTO[]) =>
-  apiPut<SubprofileDTO>(`/subprofiles/${id}/affiliations`, { items });
+export const replaceAffiliations = (
+  id: string,
+  items: AffiliationInputDTO[],
+  expectedEditVersion?: number,
+) =>
+  apiPut<SubprofileDTO>(`/subprofiles/${id}/affiliations`, {
+    items,
+    ...withExpectedEditVersion(expectedEditVersion),
+  });
 
 /** The communities and events this persona may link (owner/co-owner only). */
 export const getAffiliationOptions = (id: string, signal?: AbortSignal) =>

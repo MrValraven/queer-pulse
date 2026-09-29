@@ -62,6 +62,30 @@ export const safety: Catalog = {
   "myReports.retry": "Tentar de novo",
   "myReports.footNote":
     "As tuas 50 denúncias mais recentes. Mostramos-te a tua denúncia e o estado dela, nunca o que foi decidido sobre outra pessoa.",
+  "myReports.subject.member": "Sobre um membro",
+  "myReports.subject.post": "Sobre uma publicação",
+  "myReports.subject.reply": "Sobre uma resposta",
+  "myReports.subject.venue": "Sobre um local",
+  "myReports.subject.message": "Sobre uma mensagem",
+  "myReports.subject.community": "Sobre uma comunidade",
+  "myReports.subject.housing": "Sobre um anúncio de habitação",
+  "myReports.subject.flatmate": "Sobre um perfil de colega de casa",
+  "myReports.subject.landlord": "Sobre um senhorio",
+  "myReports.subject.listing": "Sobre um anúncio de negócio",
+  "myReports.subject.event": "Sobre um convívio",
+  "myReports.subject.business": "Sobre um negócio",
+  "myReports.subject.company": "Sobre um empregador",
+  "myReports.subject.job": "Sobre uma oferta de emprego",
+  "myReports.subject.subprofile": "Sobre uma persona",
+  "myReports.subject.review": "Sobre uma avaliação",
+  "myReports.subject.magazine_comment": "Sobre um comentário na revista",
+  "myReports.subject.listing_public_question": "Sobre uma pergunta num anúncio",
+  "myReports.subject.event_photo": "Sobre uma fotografia de um convívio",
+  "myReports.subject.landlord_recommendation":
+    "Sobre uma recomendação de senhorio",
+  "myReports.subject.volunteering": "Sobre uma oportunidade de voluntariado",
+  "myReports.subject.conversation": "Sobre um grupo de conversa",
+  "myReports.subject.identity": "Sobre uma conversa com um negócio",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
     "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",
@@ -216,6 +240,8 @@ export const safety: Catalog = {
   "reportPerson.form.lead":
     "Quem modera lê o que escreveres aqui. Detalhes ajudam: o que aconteceu, quando, e em que parte da plataforma. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
   "reportPerson.form.reasonLabel": "Sobre o que é isto?",
+  "reportPerson.form.reasonPlaceholder": "Escolhe um motivo",
+  "reportPerson.form.reasonMissing": "Escolhe do que se trata para enviar",
   "reportPerson.form.detailLabel": "O que deve quem modera saber?",
   "reportPerson.form.detailPlaceholder":
     "O que aconteceu, quando, e qualquer coisa que ajude quem modera a encontrar isto. Sê tão específique quanto te sintas confortável.",
@@ -243,6 +269,7 @@ export const safety: Catalog = {
   "reportGroup.form.lead":
     "Isto denuncia o grupo em si, não uma pessoa dentro dele. Quem modera lê o que escreveres aqui: detalhes ajudam, como à volta do que o grupo está organizado, o que deixa acontecer, ou o que se passa nele. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
   "reportGroup.form.reasonLabel": "O que está errado aqui?",
+  "reportGroup.form.reasonMissing": "Escolhe do que se trata para enviar",
   "reportGroup.form.detailLabel": "O que deve quem modera saber?",
   "reportGroup.form.detailPlaceholder":
     "O que se passa neste grupo, desde quando, e qualquer coisa que ajude quem modera a encontrar isto. Sê tão específique quanto te sintas confortável.",
@@ -377,6 +404,8 @@ export const safety: Catalog = {
   "profileMenu.withdrawVouchConfirmCta": "Retirar voto de confiança",
   "profileMenu.withdrawVouchToast":
     "Retiraste o teu voto de confiança a {name}.",
+  "profileMenu.withdrawVouchErrorToast":
+    "Não conseguimos retirar o teu voto de confiança a {name}. Tenta novamente.",
   "blockModal.title": "Bloquear {name}?",
   "blockModal.body":
     "Bloquear corta qualquer conexão entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer conexão com o outro. Podes desbloquear mais tarde.",
@@ -384,6 +413,9 @@ export const safety: Catalog = {
   "blockModal.reasonCodeLabel": "O que aconteceu?",
   "blockModal.reasonCodeHelper":
     "É isto que a equipa de moderação vê primeiro, e é o que define a rapidez com que a denúncia é vista.",
+  "blockModal.reasonCodePlaceholder": "Escolhe o que aconteceu",
+  "blockModal.reasonCodeMissing":
+    "Escolhe o que aconteceu, ou desmarca a denúncia para bloquear já.",
   "blockModal.reasonLabel": "Motivo (opcional)",
   "blockModal.reasonPlaceholder":
     "Acrescenta qualquer contexto para a equipa de moderação…",
@@ -465,6 +497,11 @@ export const safety: Catalog = {
     "Os recursos estão abertos durante {days} dias depois de uma decisão. Este fechou a {date}. Se algo mudou entretanto, ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a olhar.",
   "appealSubmit.windowClosed.title":
     "A janela de recurso para esta decisão fechou",
+  "appealSubmit.alreadyDecided.title": "Esta decisão já foi contestada",
+  "appealSubmit.alreadyDecided.body":
+    "Cada decisão só pode ser contestada uma vez. Uma pessoa moderadora que não fez parte da decisão original já reviu este caso, e essa decisão é final. Se algo mudou entretanto, escreve à equipa de moderação.",
+  "appealSubmit.alreadyDecided.outcomeCta": "Ver o resultado",
+  "appealSubmit.alreadyDecided.contactCta": "Escreve à equipa de moderação",
   "appealSubmit.filingWindow":
     "Os recursos estão abertos durante {days} dias depois de uma decisão. O prazo começa quando a decisão foi tomada, e não quando a leste. Quando não há registo de quando isso foi, não se aplica nenhum prazo a ti.",
   "appealSubmit.foot":

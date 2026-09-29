@@ -3,10 +3,9 @@ import { FiMove } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSubprofileMutations } from "./api/useSubprofileMutations";
+import { useOwnerSkinPatch } from "./api/useOwnerSkinPatch";
 import { useCoverReposition } from "./useCoverReposition";
 import styles from "./PersonaCoverReposition.module.css";
-import type { SkinData } from "./api/subprofiles.api";
 
 /**
  * The owner's in-page control for where the banner sits vertically — the same
@@ -24,14 +23,10 @@ import type { SkinData } from "./api/subprofiles.api";
  */
 export function PersonaCoverReposition({
   subprofileId,
-  skinData,
   baseOffsetY,
   coverRef,
 }: {
   subprofileId: string;
-  /** The persona's whole `skinData` blob. The PATCH replaces the column
-   *  wholesale, so the save has to carry every other key back with it. */
-  skinData: SkinData | null | undefined;
   /** Where the banner sits today: the saved offset, or the media crop's focal
    *  Y when the owner has never repositioned it. */
   baseOffsetY: number;
@@ -39,7 +34,7 @@ export function PersonaCoverReposition({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { update } = useSubprofileMutations();
+  const { patchSkin, isSaving } = useOwnerSkinPatch(subprofileId);
   const reposition = useCoverReposition(coverRef, baseOffsetY);
   const surfaceRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLButtonElement>(null);
@@ -61,16 +56,22 @@ export function PersonaCoverReposition({
   }, [reposition.isActive]);
 
   async function save() {
+    // Enter on the slider reaches here too, so a save in flight ignores it.
+    if (isSaving) return;
     const coverOffsetY = Math.round(reposition.offsetY * 10) / 10;
     try {
-      await update.mutateAsync({
-        id: subprofileId,
-        dto: { skinData: { ...(skinData ?? {}), coverOffsetY } },
-      });
+      // The PATCH replaces the whole `skinData` column, so the hook merges the
+      // offset into the persona's freshly read blob, keeping every block a
+      // co-owner saved since this page loaded.
+      await patchSkin((freshSkinData) => ({
+        ...(freshSkinData ?? {}),
+        coverOffsetY,
+      }));
       reposition.finish();
       showToast(t("subprofiles:cover.reposition.saved"), "success");
     } catch {
-      // The mutation is `silentError`, so this is the only word the owner gets.
+      // The fresh read runs outside the query cache and the mutation is
+      // `silentError`, so this is the only word the owner gets.
       showToast(t("subprofiles:cover.reposition.error"), "error");
     }
   }
@@ -144,7 +145,7 @@ export function PersonaCoverReposition({
           variant="ghost-dark"
           size="sm"
           onClick={reposition.cancel}
-          disabled={update.isPending}
+          disabled={isSaving}
         >
           {t("subprofiles:cover.reposition.cancel")}
         </Button>
@@ -153,10 +154,10 @@ export function PersonaCoverReposition({
           variant="primary"
           size="sm"
           onClick={() => void save()}
-          disabled={update.isPending}
+          disabled={isSaving}
         >
           {t(
-            update.isPending
+            isSaving
               ? "subprofiles:cover.reposition.saving"
               : "subprofiles:cover.reposition.save",
           )}

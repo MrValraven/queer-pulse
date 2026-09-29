@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
+import type { ItemsPage } from "../../../shared/api/pagination";
 import type { AmbassadorFocusArea } from "../../../shared/ambassadors/ambassadorFocusAreas.data";
 
 /** Which side of the roster the page is reading: current ambassadors, or the
@@ -32,6 +33,8 @@ export interface AdminAmbassadorDTO {
   /** The grant row's id. A re-grant is a new row with a new id. */
   id: string;
   member: {
+    /** The key the History drawer asks the grant record by. */
+    userId: string;
     slug: string;
     firstName: string;
     lastName: string;
@@ -50,9 +53,11 @@ export interface AdminAmbassadorDTO {
   inviteQuotaOverride: number | null;
 }
 
-/** The private "QueerPulse Ambassadors" community, as the page summarises it. */
+/** The private "QueerPulse Ambassadors" community, as the page summarises it.
+ *  Until the first grant founds it, `isFounded` is false and `slug` is null. */
 export interface AdminAmbassadorCircleDTO {
-  slug: string;
+  isFounded: boolean;
+  slug: string | null;
   memberCount: number;
   isViewerMember: boolean;
 }
@@ -78,9 +83,32 @@ export interface GrantAmbassadorBody {
   reason: string;
 }
 
-/** GET /admin/ambassadors?status=: Admin or the `partnerships` staff grant. */
-export const getAdminAmbassadors = (status: AdminAmbassadorStatus) =>
-  apiGet<AdminAmbassadorDTO[]>(`/admin/ambassadors?status=${status}`);
+/** GET /admin/ambassadors?status=&page=: one page of grants, newest first.
+ *  Admin or the `partnerships` staff grant. */
+export const getAdminAmbassadors = (
+  status: AdminAmbassadorStatus,
+  page: number,
+  signal?: AbortSignal,
+) =>
+  apiGet<ItemsPage<AdminAmbassadorDTO>>(
+    `/admin/ambassadors?status=${status}&page=${page}`,
+    undefined,
+    undefined,
+    signal,
+  );
+
+/** GET /admin/ambassadors/history?userId=: every grant one member has held,
+ *  active and revoked, newest first. */
+export const getAdminAmbassadorHistory = (
+  userId: string,
+  signal?: AbortSignal,
+) =>
+  apiGet<AdminAmbassadorDTO[]>(
+    `/admin/ambassadors/history?userId=${encodeURIComponent(userId)}`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** POST /admin/ambassadors: grants the status and seats the member in the
  *  circle. 409 `ambassador_already_active` when they already hold it. */
@@ -97,7 +125,7 @@ export const updateAmbassadorFocus = (
 export const revokeAmbassador = (id: string, reason: string) =>
   apiPost<AdminAmbassadorDTO>(`/admin/ambassadors/${id}/revoke`, { reason });
 
-/** GET /admin/ambassadors/circle. */
+/** GET /admin/ambassadors/circle. A pure read: it never founds the circle. */
 export const getAmbassadorCircle = () =>
   apiGet<AdminAmbassadorCircleDTO>("/admin/ambassadors/circle");
 

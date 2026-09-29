@@ -35,9 +35,14 @@ const SOLID: Record<SlugTint, { background: string; color: string }> = {
   plum: { background: "var(--plum)", color: "rgb(var(--cream-rgb))" },
 };
 const SOFT: Record<SlugTint, { background: string; color: string }> = {
-  coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
-  jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
+  coral: {
+    background: "rgba(var(--accent-rgb), .14)",
+    color: "var(--accent-ink)",
+  },
+  jade: { background: "rgba(var(--jade-rgb), .15)", color: "var(--jade-ink)" },
+  // `--line-rgb` and `--ink` flip in dark mode, so the neutral wash stays a
+  // faint tint with legible initials on the dark card.
+  plum: { background: "rgba(var(--line-rgb), .1)", color: "var(--ink)" },
 };
 
 function relative(iso: string, t: TFunction, fmt: Formatters): string {
@@ -242,6 +247,8 @@ export function threadToCard(
           slug: dto.coAuthor.handle || undefined,
         }
       : undefined,
+    // Offers the co-author the control that takes their name off (PRD-408).
+    viewerIsCoAuthor: dto.viewerIsCoAuthor ?? false,
     poll: pollView(dto.poll),
     opPhotos: photos(dto.opPhotos),
     neighbourhood: dto.neighbourhood ?? null,
@@ -341,14 +348,17 @@ export function threadDetail(
   );
   // Who counts as "OP" on a reply badge. Falls back to the THREAD's author when
   // the opening post itself is unavailable, so the marker survives a page that
-  // carries no OP instead of silently going missing from every reply.
-  const opAuthorHandle = op?.author.handle ?? dto.author.handle;
+  // carries no OP.
+  // An empty handle names nobody (ENG-494: an erased, anonymous or unknown
+  // author), so it badges no reply; a tombstoned reply's empty handle would
+  // otherwise match it.
+  const opAuthorHandle = op?.author.handle || dto.author.handle || null;
   const mappedReplies = rest.map((post) =>
     postToReply(
       post,
       t,
       fmt,
-      post.author.handle === opAuthorHandle,
+      opAuthorHandle !== null && post.author.handle === opAuthorHandle,
       post.parentPostId ? authorNameByPostId.get(post.parentPostId) : undefined,
     ),
   );

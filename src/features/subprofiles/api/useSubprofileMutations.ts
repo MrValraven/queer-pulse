@@ -22,6 +22,7 @@ import {
 } from "./subprofiles.api";
 import { KIND_LABELS, defaultSlugForKind, slugify } from "../subprofile-kinds";
 import { subprofileToView } from "./subprofiles.adapters";
+import { subprofileQueryKey } from "./useSubprofile";
 import { linkedPersonaHandleCandidate } from "../personaHandle";
 import { currentUserSlug } from "../../members/data/demoCurrentUser";
 
@@ -168,6 +169,137 @@ function demoResolveCopiedAffiliation(
   };
 }
 
+// ── Demo write paths ───────────────────────────────────────────────────────
+// Each owner write's demo branch, kept out of the hook so the hook stays a
+// thin demo/live switch. They resolve from the mock registry with no network.
+// Every persona-content write (PATCH, section, social links, affiliations)
+// answers with a raised `editVersion`, as the server does (ENG-451), so the
+// editor's save chain never reads a demo save as a conflict.
+
+/** The demo registry, loaded on first use so it stays out of live bundles. */
+const loadDemoStore = () => import("../data/subprofiles.data");
+
+/** The owner view of a demo persona, or a throw when the viewer has none. */
+async function demoOwnedSubprofile(id: string): Promise<SubprofileDTO> {
+  const { mockSubprofileById } = await loadDemoStore();
+  const current = mockSubprofileById(id);
+  if (!current) throw new Error("Subprofile not found");
+  return current;
+}
+
+/** The creator's profile slug off the demo fixture: the owner-full DTO never
+ *  carries it (mirrors the MSW publish handler). */
+async function demoCreatorSlug(id: string): Promise<string | undefined> {
+  const { DEMO_SUBPROFILES } = await loadDemoStore();
+  return DEMO_SUBPROFILES.find((subprofile) => subprofile.id === id)?.ownerSlug;
+}
+
+async function demoUpdate(
+  id: string,
+  dto: UpdateSubprofileDTO,
+): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  const { mockBumpEditVersion } = await loadDemoStore();
+  // The precondition is request-only; it never lands on the persona.
+  const changes: UpdateSubprofileDTO = { ...dto };
+  delete changes.expectedEditVersion;
+  // A save that leaves a linked draft with no handle (a switch to linked, a
+  // cleared handle field) gets the derived default, as on the server.
+  return withDerivedDraftHandle(
+    { ...current, ...changes, editVersion: mockBumpEditVersion(id) },
+    await demoCreatorSlug(id),
+  );
+}
+
+async function demoReplaceSection(
+  id: string,
+  section: SubprofileSection,
+  items: SubprofileItemInputDTO[],
+): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  const { mockBumpEditVersion, resolveCollaboratorsDemo } =
+    await loadDemoStore();
+  return {
+    ...applySection(current, section, items, resolveCollaboratorsDemo),
+    editVersion: mockBumpEditVersion(id),
+  };
+}
+
+async function demoReplaceSocials(
+  id: string,
+  items: SocialLinkDTO[],
+): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  const { mockBumpEditVersion } = await loadDemoStore();
+  return {
+    ...current,
+    socialLinks: items,
+    editVersion: mockBumpEditVersion(id),
+  };
+}
+
+async function demoReplaceAffiliations(
+  id: string,
+  items: AffiliationInputDTO[],
+): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  const { mockBumpEditVersion } = await loadDemoStore();
+  return {
+    ...current,
+    affiliations: items.map(demoResolveCopiedAffiliation),
+    editVersion: mockBumpEditVersion(id),
+  };
+}
+
+/** Live publish. The 422 carries `{ unmet: string[] }` in the ApiError body;
+ *  re-throw it as the same PublishUnmetError the demo path throws so B3's
+ *  PublishChecklist handles both modes identically. */
+async function livePublish(id: string): Promise<SubprofileDTO> {
+  try {
+    return await publishSubprofile(id);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 422) {
+      const unmet = (err.data as { unmet?: unknown } | undefined)?.unmet;
+      if (Array.isArray(unmet)) {
+        throw new PublishUnmetError(
+          unmet.filter((u): u is string => typeof u === "string"),
+        );
+      }
+    }
+    throw err;
+  }
+}
+
+async function demoPublish(id: string): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  const { validatePublishDemo } = await loadDemoStore();
+  const unmet = validatePublishDemo(current);
+  if (unmet.length) throw new PublishUnmetError(unmet);
+  // A linked persona's default handle needs its CREATOR's profile slug.
+  const ownerSlug = await demoCreatorSlug(id);
+  return {
+    ...current,
+    status: "published",
+    handle:
+      current.handle ??
+      (current.linkVisibility === "linked" && ownerSlug
+        ? linkedPersonaHandleCandidate(ownerSlug, current.slug)
+        : current.slug),
+  };
+}
+
+async function demoUnpublish(id: string): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  // A linked persona keeps its handle as a draft, so its address stays
+  // `/p/<handle>`; an unlinked one gives its handle back (mirrors the
+  // backend).
+  return {
+    ...current,
+    status: "draft",
+    handle: current.linkVisibility === "linked" ? current.handle : null,
+  };
+}
+
 /**
  * All owner mutations for subprofiles. Each branches demo↔live: demo resolves
  * optimistically from the mock registry with no network; live calls the API.
@@ -192,7 +324,7 @@ export function useSubprofileMutations() {
     void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
     if (id) {
       void queryClient.invalidateQueries({
-        queryKey: ["subprofile", demoMode, id],
+        queryKey: subprofileQueryKey(demoMode, id),
       });
     }
     void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
@@ -217,20 +349,8 @@ export function useSubprofileMutations() {
     // useSubprofileMetaEditor / NewSideModal toast their own error, so
     // silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, dto }) => {
-      if (!demoMode) return updateSubprofile(id, dto);
-      const { DEMO_SUBPROFILES, mockSubprofileById } =
-        await import("../data/subprofiles.data");
-      const current = mockSubprofileById(id);
-      if (!current) throw new Error("Subprofile not found");
-      // A save that leaves a linked draft with no handle (a switch to linked,
-      // a cleared handle field) gets the derived default, as on the server.
-      // The creator's slug comes off the demo fixture, as in publish below.
-      const creatorSlug = DEMO_SUBPROFILES.find(
-        (subprofile) => subprofile.id === current.id,
-      )?.ownerSlug;
-      return withDerivedDraftHandle({ ...current, ...dto }, creatorSlug);
-    },
+    mutationFn: ({ id, dto }) =>
+      demoMode ? demoUpdate(id, dto) : updateSubprofile(id, dto),
     onSuccess: (data, { id }) => {
       // The PATCH answers with the whole owner view (the same shape GET
       // returns), so write it straight into this persona's owner-editor
@@ -241,7 +361,7 @@ export function useSubprofileMutations() {
       // on mount, so an open editor only sees a fresher `subprofile` here,
       // as it already does after the refetch below.
       queryClient.setQueryData(
-        ["subprofile", demoMode, id],
+        subprofileQueryKey(demoMode, id),
         subprofileToView(data),
       );
       invalidateOwned(id);
@@ -251,38 +371,54 @@ export function useSubprofileMutations() {
   const replaceSection = useMutation<
     SubprofileDTO,
     Error,
-    { id: string; section: SubprofileSection; items: SubprofileItemInputDTO[] }
+    {
+      id: string;
+      section: SubprofileSection;
+      items: SubprofileItemInputDTO[];
+      expectedEditVersion?: number;
+    }
   >({
     // SubprofileSectionEditor / NewSideModal toast their own error, so
     // silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, section, items }) => {
-      if (!demoMode) return replaceSubprofileSection(id, section, items);
-      const { mockSubprofileById, resolveCollaboratorsDemo } =
-        await import("../data/subprofiles.data");
-      const current = mockSubprofileById(id);
-      if (!current) throw new Error("Subprofile not found");
-      return applySection(current, section, items, resolveCollaboratorsDemo);
+    mutationFn: ({ id, section, items, expectedEditVersion }) =>
+      demoMode
+        ? demoReplaceSection(id, section, items)
+        : replaceSubprofileSection(id, section, items, expectedEditVersion),
+    // The response is the whole owner view (same shape as `update`'s), so
+    // seed the owner-editor query with it before invalidating. A copy flow's
+    // editor can mount from this cache before the refetch below lands; without
+    // this write it would seed its `editVersion` from a stale pre-write read
+    // and conflict on its own first save (I2).
+    onSuccess: (data, { id }) => {
+      queryClient.setQueryData(
+        subprofileQueryKey(demoMode, id),
+        subprofileToView(data),
+      );
+      invalidateOwned(id);
     },
-    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const replaceSocials = useMutation<
     SubprofileDTO,
     Error,
-    { id: string; items: SocialLinkDTO[] }
+    { id: string; items: SocialLinkDTO[]; expectedEditVersion?: number }
   >({
     // SubprofileSocialLinksEditor toasts its own error, so silence the global
     // duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, items }) => {
-      if (!demoMode) return replaceSocialLinks(id, items);
-      const { mockSubprofileById } = await import("../data/subprofiles.data");
-      const current = mockSubprofileById(id);
-      if (!current) throw new Error("Subprofile not found");
-      return { ...current, socialLinks: items };
+    mutationFn: ({ id, items, expectedEditVersion }) =>
+      demoMode
+        ? demoReplaceSocials(id, items)
+        : replaceSocialLinks(id, items, expectedEditVersion),
+    // Same owner-view seed as replaceSection's onSuccess above (I2).
+    onSuccess: (data, { id }) => {
+      queryClient.setQueryData(
+        subprofileQueryKey(demoMode, id),
+        subprofileToView(data),
+      );
+      invalidateOwned(id);
     },
-    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const replaceAffiliations = useMutation<
@@ -293,84 +429,33 @@ export function useSubprofileMutations() {
     // SubprofileAffiliationsEditor / DuplicateMutations toast their own error,
     // so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, items }) => {
-      if (!demoMode) return replaceAffiliationsApi(id, items);
-      const { mockSubprofileById } = await import("../data/subprofiles.data");
-      const current = mockSubprofileById(id);
-      if (!current) throw new Error("Subprofile not found");
-      return {
-        ...current,
-        affiliations: items.map(demoResolveCopiedAffiliation),
-      };
+    mutationFn: ({ id, items }) =>
+      demoMode
+        ? demoReplaceAffiliations(id, items)
+        : replaceAffiliationsApi(id, items),
+    // Same owner-view seed as replaceSection's onSuccess above (I2).
+    onSuccess: (data, { id }) => {
+      queryClient.setQueryData(
+        subprofileQueryKey(demoMode, id),
+        subprofileToView(data),
+      );
+      invalidateOwned(id);
     },
-    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const publish = useMutation<SubprofileDTO, Error, string>({
     // SubprofilePublishPanel toasts its own error (and handles PublishUnmetError
     // as a checklist), so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async (id) => {
-      if (!demoMode) {
-        try {
-          return await publishSubprofile(id);
-        } catch (err) {
-          // Live 422 carries `{ unmet: string[] }` in the ApiError body; re-throw
-          // it as the same PublishUnmetError the demo path throws so B3's
-          // PublishChecklist handles both modes identically.
-          if (err instanceof ApiError && err.status === 422) {
-            const unmet = (err.data as { unmet?: unknown } | undefined)?.unmet;
-            if (Array.isArray(unmet)) {
-              throw new PublishUnmetError(
-                unmet.filter((u): u is string => typeof u === "string"),
-              );
-            }
-          }
-          throw err;
-        }
-      }
-      const { DEMO_SUBPROFILES, mockSubprofileById, validatePublishDemo } =
-        await import("../data/subprofiles.data");
-      const current = mockSubprofileById(id);
-      if (!current) throw new Error("Subprofile not found");
-      const unmet = validatePublishDemo(current);
-      if (unmet.length) throw new PublishUnmetError(unmet);
-      // A linked persona's default handle needs its CREATOR's profile slug,
-      // which the owner-full DTO above never carries; read it off the
-      // underlying demo fixture instead (mirrors the MSW publish handler).
-      const ownerSlug = DEMO_SUBPROFILES.find(
-        (subprofile) => subprofile.id === current.id,
-      )?.ownerSlug;
-      return {
-        ...current,
-        status: "published",
-        handle:
-          current.handle ??
-          (current.linkVisibility === "linked" && ownerSlug
-            ? linkedPersonaHandleCandidate(ownerSlug, current.slug)
-            : current.slug),
-      };
-    },
+    mutationFn: (id) => (demoMode ? demoPublish(id) : livePublish(id)),
     onSuccess: (_data, id) => invalidateOwned(id),
   });
 
   const unpublish = useMutation<SubprofileDTO, Error, string>({
     // SubprofilePublishPanel toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async (id) => {
-      if (!demoMode) return unpublishSubprofile(id);
-      const { mockSubprofileById } = await import("../data/subprofiles.data");
-      const current = mockSubprofileById(id);
-      if (!current) throw new Error("Subprofile not found");
-      // A linked persona keeps its handle as a draft, so its address stays
-      // `/p/<handle>`; an unlinked one gives its handle back (mirrors the
-      // backend).
-      return {
-        ...current,
-        status: "draft",
-        handle: current.linkVisibility === "linked" ? current.handle : null,
-      };
-    },
+    mutationFn: (id) =>
+      demoMode ? demoUnpublish(id) : unpublishSubprofile(id),
     onSuccess: (_data, id) => invalidateOwned(id),
   });
 

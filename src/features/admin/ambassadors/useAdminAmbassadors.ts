@@ -1,13 +1,17 @@
 import {
+  useInfiniteQuery,
   useQuery,
   useQueryClient,
+  type InfiniteData,
   type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
+import type { ItemsPage } from "../../../shared/api/pagination";
 import type { AmbassadorFocusArea } from "../../../shared/ambassadors/ambassadorFocusAreas.data";
 import { useDemoAwareMutation } from "../api/demoAwareMutation";
 import {
+  getAdminAmbassadorHistory,
   getAdminAmbassadors,
   getAmbassadorCircle,
   grantAmbassador,
@@ -21,6 +25,7 @@ import {
 import {
   ADMIN_AMBASSADOR_CIRCLE_DEMO,
   ADMIN_AMBASSADORS_DEMO,
+  AMBASSADOR_CIRCLE_SLUG_DEMO,
 } from "./adminAmbassadors.data";
 
 export const ADMIN_AMBASSADORS_KEY = "admin-ambassadors";
@@ -38,6 +43,30 @@ function statusOf(row: AdminAmbassadorDTO): AdminAmbassadorStatus {
   return row.revokedAt ? "past" : "active";
 }
 
+/** Newest first by `field`, the order the backend pages in. ISO timestamps
+ *  sort as strings. */
+function newestFirst(
+  rows: AdminAmbassadorDTO[],
+  field: "grantedAt" | "revokedAt",
+): AdminAmbassadorDTO[] {
+  return [...rows].sort((left, right) =>
+    (right[field] ?? "").localeCompare(left[field] ?? ""),
+  );
+}
+
+/** Demo mode answers the whole filtered list as one page, so
+ *  `getNextPageParam` yields undefined and no page 2 is ever asked for. */
+function singlePage(rows: AdminAmbassadorDTO[]): ItemsPage<AdminAmbassadorDTO> {
+  return {
+    items: rows,
+    total: rows.length,
+    page: 1,
+    pageSize: rows.length || 1,
+  };
+}
+
+type AmbassadorPages = InfiniteData<ItemsPage<AdminAmbassadorDTO>>;
+
 function invalidateAmbassadors(queryClient: QueryClient) {
   void queryClient.invalidateQueries({ queryKey: [ADMIN_AMBASSADORS_KEY] });
   void queryClient.invalidateQueries({
@@ -46,26 +75,81 @@ function invalidateAmbassadors(queryClient: QueryClient) {
   void queryClient.invalidateQueries({ queryKey: [PLATFORM_AMBASSADORS_KEY] });
 }
 
-/** Rewrites every cached list for one tab, demo and live alike. */
+/**
+ * Rewrites every cached page of one tab, demo and live alike. `update` gets
+ * each page's rows and whether it is the first page, the one a new row joins
+ * at the top of.
+ */
 function patchRows(
   queryClient: QueryClient,
   status: AdminAmbassadorStatus,
-  update: (rows: AdminAmbassadorDTO[]) => AdminAmbassadorDTO[],
+  update: (
+    rows: AdminAmbassadorDTO[],
+    isFirstPage: boolean,
+  ) => AdminAmbassadorDTO[],
 ) {
-  queryClient.setQueriesData<AdminAmbassadorDTO[]>(
+  queryClient.setQueriesData<AmbassadorPages>(
     { queryKey: [ADMIN_AMBASSADORS_KEY, status] },
-    (rows) => (rows ? update(rows) : rows),
+    (cache) =>
+      cache
+        ? {
+            ...cache,
+            pages: cache.pages.map((page, pageIndex) => ({
+              ...page,
+              items: update(page.items, pageIndex === 0),
+            })),
+          }
+        : cache,
   );
 }
 
+/**
+ * One tab of grants, paginated, newest first (active by grant date, past by
+ * revoke date). Live mode calls `GET /admin/ambassadors?status&page`; demo
+ * mode answers the writable fixture as a single page.
+ */
 export function useAdminAmbassadors(status: AdminAmbassadorStatus) {
   const { demoMode } = useDemoMode();
-  return useQuery<AdminAmbassadorDTO[]>({
+  const query = useInfiniteQuery<ItemsPage<AdminAmbassadorDTO>>({
     queryKey: [ADMIN_AMBASSADORS_KEY, status, demoMode],
-    queryFn: () =>
+    initialPageParam: 1,
+    queryFn: ({ pageParam, signal }) =>
       demoMode
-        ? demoRows.filter((row) => statusOf(row) === status)
-        : getAdminAmbassadors(status),
+        ? Promise.resolve(
+            singlePage(
+              newestFirst(
+                demoRows.filter((row) => statusOf(row) === status),
+                status === "past" ? "revokedAt" : "grantedAt",
+              ),
+            ),
+          )
+        : getAdminAmbassadors(status, pageParam as number, signal),
+    getNextPageParam: (lastPage) =>
+      lastPage.page * lastPage.pageSize < lastPage.total
+        ? lastPage.page + 1
+        : undefined,
+  });
+  const rows = query.data?.pages.flatMap((page) => page.items) ?? [];
+  const total = query.data?.pages[0]?.total ?? 0;
+  return { ...query, rows, total };
+}
+
+/**
+ * Every grant one member has held, active and revoked, newest first, for the
+ * History drawer. Idle until a member is picked (`userId` null).
+ */
+export function useAdminAmbassadorHistory(userId: string | null) {
+  const { demoMode } = useDemoMode();
+  return useQuery<AdminAmbassadorDTO[]>({
+    queryKey: [ADMIN_AMBASSADORS_KEY, "history", userId, demoMode],
+    enabled: userId !== null,
+    queryFn: ({ signal }) =>
+      demoMode
+        ? newestFirst(
+            demoRows.filter((row) => row.member.userId === userId),
+            "grantedAt",
+          )
+        : getAdminAmbassadorHistory(userId ?? "", signal),
   });
 }
 
@@ -99,9 +183,14 @@ function demoGrant({
     });
   }
   const [firstName = member.name, ...lastNames] = member.name.split(" ");
+  // A re-grant keeps the member's id, so their History lists both grants.
+  const earlierGrant = demoRows.find(
+    (existing) => existing.member.slug === member.slug,
+  );
   const row: AdminAmbassadorDTO = {
     id: `demo-ambassador-${member.slug}-${Date.now()}`,
     member: {
+      userId: earlierGrant?.member.userId ?? `demo-user-${member.slug}`,
       slug: member.slug,
       firstName,
       lastName: lastNames.join(" "),
@@ -138,10 +227,10 @@ export function useGrantAmbassador() {
     logLabel: "admin.ambassador.grant",
     logContext: ({ member, focusArea }) => ({ slug: member.slug, focusArea }),
     onSuccess: (row) => {
-      patchRows(queryClient, "active", (rows) => [
-        row,
-        ...rows.filter((existing) => existing.id !== row.id),
-      ]);
+      patchRows(queryClient, "active", (rows, isFirstPage) => {
+        const others = rows.filter((existing) => existing.id !== row.id);
+        return isFirstPage ? [row, ...others] : others;
+      });
       invalidateAmbassadors(queryClient);
     },
   });
@@ -215,10 +304,10 @@ export function useRevokeAmbassador() {
       patchRows(queryClient, "active", (rows) =>
         rows.filter((existing) => existing.id !== revoked.id),
       );
-      patchRows(queryClient, "past", (rows) => [
-        revoked,
-        ...rows.filter((existing) => existing.id !== revoked.id),
-      ]);
+      patchRows(queryClient, "past", (rows, isFirstPage) => {
+        const others = rows.filter((existing) => existing.id !== revoked.id);
+        return isFirstPage ? [revoked, ...others] : others;
+      });
       invalidateAmbassadors(queryClient);
     },
   });
@@ -230,13 +319,16 @@ export function useTakeAmbassadorCircleStaffSeat() {
   return useDemoAwareMutation<{ slug: string }, Error, void>({
     demoMode,
     meta: { silentError: true },
+    // The seat founds the circle when nothing has yet, as the backend does.
     demoResult: () => {
       demoCircle = {
         ...demoCircle,
+        isFounded: true,
+        slug: AMBASSADOR_CIRCLE_SLUG_DEMO,
         isViewerMember: true,
         memberCount: demoCircle.memberCount + 1,
       };
-      return { slug: demoCircle.slug };
+      return { slug: AMBASSADOR_CIRCLE_SLUG_DEMO };
     },
     live: () => takeAmbassadorCircleStaffSeat(),
     logLabel: "admin.ambassador.staffSeat",

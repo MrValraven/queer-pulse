@@ -69,6 +69,8 @@ export function DirectoryVisitCardProvider({ place, children }: Props) {
         <DirectoryEnquiryModal
           slug={place.slug}
           placeName={place.name}
+          placeInitials={place.av}
+          placeTint={place.tint}
           followUpAwaitsReply={composerFollowUpAwaitsReply}
           onClose={() => setComposerFollowUpAwaitsReply(null)}
           onCapReached={setCapReason}

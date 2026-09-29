@@ -137,6 +137,60 @@ describe("PiecesCalendar grid", () => {
   });
 });
 
+/** A scheduled piece going live on Fri 14 Aug at 10:00 local, with the
+ *  clock pinned to TODAY so the chip's go-live line reads it as scheduled. */
+function makeScheduledPiece(overrides: Partial<Piece> = {}): Piece {
+  return makePiece({
+    title: "Harbour lights",
+    stage: "Ready",
+    publishedAt: new Date(2026, 7, 14, 10, 0, 0).toISOString(),
+    ...overrides,
+  });
+}
+
+describe("PiecesCalendar scheduled pieces", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it("files an undated scheduled piece on its go-live day with a clock line", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(TODAY);
+    const { container } = renderCalendar({ pieces: [makeScheduledPiece()] });
+    const cell = cellFor(container, "2026-08-14");
+    const chip = within(cell).getByRole("button", { name: /Harbour lights/ });
+    expect(chip).toHaveTextContent(/Goes live \S/);
+    expect(screen.queryByRole("region", { name: /No date yet/ })).toBeNull();
+  });
+
+  it("shows the go-live line in the phone agenda, with no action button", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(TODAY);
+    stubPhoneWidth();
+    renderCalendar({ pieces: [makeScheduledPiece()] });
+    const chip = screen.getByRole("button", { name: /Harbour lights/ });
+    expect(chip).toHaveTextContent(/Goes live \S/);
+    expect(screen.queryByRole("button", { name: "Publish" })).toBeNull();
+  });
+
+  it("dates a scheduled piece past the grid through its go-live line", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(TODAY);
+    renderCalendar({
+      pieces: [
+        makeScheduledPiece({
+          publishedAt: new Date(2026, 11, 1, 9, 0, 0).toISOString(),
+        }),
+      ],
+    });
+    const lane = screen.getByRole("region", { name: /Due after/ });
+    expect(
+      within(lane).getByRole("button", { name: /Harbour lights/ }),
+    ).toHaveTextContent(/Goes live \S/);
+  });
+});
+
 describe("PiecesCalendar on a phone", () => {
   afterEach(() => {
     vi.unstubAllGlobals();

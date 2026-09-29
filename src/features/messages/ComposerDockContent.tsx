@@ -4,6 +4,7 @@ import { FiArrowDown } from "react-icons/fi";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Composer } from "./Composer";
 import { useDemoReplyClaim } from "./api/useConversationClaim";
 import { ComposerMailboxBar } from "./mailboxes/ComposerMailboxBar";
@@ -84,6 +85,7 @@ export function ComposerDockContent({
   onJumpToLatest,
 }: ComposerDockContentProps) {
   const fmt = useFormat();
+  const { t } = useTranslation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const staging = useAttachmentStaging({
     conversationId: active.id,
@@ -119,18 +121,24 @@ export function ComposerDockContent({
           onClick={onJumpToLatest}
         >
           <span>
-            <Translation
-              i18nKey="messages:conversation.newMessagesCount"
-              values={{ count: newMessagesCount }}
-              slots={{
-                count: (
-                  <RollingNumber
-                    value={fmt.number(newMessagesCount)}
-                    numericValue={newMessagesCount}
-                  />
-                ),
-              }}
-            />
+            {newMessagesCount > 0 ? (
+              <Translation
+                i18nKey="messages:conversation.newMessagesCount"
+                values={{ count: newMessagesCount }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(newMessagesCount)}
+                      numericValue={newMessagesCount}
+                    />
+                  ),
+                }}
+              />
+            ) : (
+              // PRD-401: a history window around an older message is shown,
+              // with nothing new counted yet: the pill leads back to the latest.
+              t("messages:conversation.jumpToLatest")
+            )}
           </span>
           <FiArrowDown aria-hidden />
         </button>

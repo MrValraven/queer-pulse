@@ -15,10 +15,10 @@ export {
 } from "./partners.adapters";
 
 /**
- * Admin-only queue of partner applications. Demo mode returns the mock pending
+ * The staff queue of partner applications. Demo mode returns the mock pending
  * queue with no network; live mode calls GET /admin/partners/applications,
- * which 403s for a non-admin viewer (the caller surfaces that as a permission
- * notice).
+ * which admits an admin or a holder of the `partnerships` staff grant and
+ * 403s for everyone else (the caller surfaces that as a permission notice).
  *
  * `assignedTo` is OPS-04's "Assigned to me" narrowing. Live mode sends it to
  * the server, because the queue is capped at a page size and filtering after
@@ -26,17 +26,22 @@ export {
  * no server, so its fixture is narrowed here against the signed-in demo user,
  * which is enough to make the control do something with no network.
  *
- * Called with no argument (the sidebar badge) the key is unchanged from
+ * Called without `assignedTo` (the sidebar badge) the key is unchanged from
  * before, so the rail and the page still share one cache entry.
+ *
+ * `isEnabled: false` mounts the hook without fetching, and stays out of the
+ * key. The rail passes it for a viewer who is neither an admin nor a holder of
+ * the `partnerships` grant, the two the endpoint admits.
  */
 export function usePartnerApplications(
-  options: { assignedTo?: "me" | "unassigned" } = {},
+  options: { assignedTo?: "me" | "unassigned"; isEnabled?: boolean } = {},
 ) {
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
-  const { assignedTo } = options;
+  const { assignedTo, isEnabled = true } = options;
   return useQuery<PartnerApplicationDTO[]>({
     queryKey: ["partner-applications", demoMode, assignedTo],
+    enabled: isEnabled,
     queryFn: async () => {
       if (demoMode) {
         const { MOCK_PARTNER_APPLICATIONS } =

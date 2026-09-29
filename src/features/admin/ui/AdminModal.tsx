@@ -1,8 +1,9 @@
-import { useId, type ReactNode } from "react";
+import { useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDismiss } from "../../../shared/components/ui";
+import { useInertWhileCovered } from "../../../shared/components/ui/modalStack";
 import styles from "./adminUi.module.css";
 
 /**
@@ -35,6 +36,12 @@ export function AdminModal({
   // `Modal` use. It still registers on the modal stack, so a confirm opened
   // from inside an AdminDrawer closes alone on one Escape press.
   const dialogRef = useDismiss(onClose);
+  // A dialog opened on top (e.g. a confirm) makes this one inert until it
+  // closes, so assistive tech reaches only the top dialog (mirrors the
+  // shared Modal in shared/components/ui/Modal.tsx). AdminModal has no exit
+  // animation, so it is never "closing".
+  const scrimRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(scrimRef, false);
   const titleId = useId();
 
   // Portal to <body> so the fixed scrim is anchored to the viewport itself.
@@ -46,6 +53,7 @@ export function AdminModal({
   // unchanged. Mirrors the shared `Modal` in shared/components/ui/Modal.tsx.
   return createPortal(
     <div
+      ref={scrimRef}
       className={styles.modalScrim}
       role="presentation"
       onClick={(e) => {

@@ -1,6 +1,7 @@
 import { useId, useRef, useState, type RefObject } from "react";
 import { useAutoGrowTextarea } from "../hooks/useAutoGrowTextarea";
 import { detectTrigger } from "./detectTrigger";
+import { useMentionMemberScope } from "./MentionMemberScopeContext";
 import {
   useMentionSuggestions,
   type Suggestion,
@@ -66,6 +67,7 @@ export function MentionTextarea(props: MentionTextareaProps) {
   useAutoGrowTextarea(ref, value, props.autoGrow ?? false);
   const { members, communities, topics, businesses, events, threads } =
     useMentionSuggestions();
+  const scopedMembers = useMentionMemberScope();
   const [active, setActive] = useState(0);
   const [trigger, setTrigger] =
     useState<ReturnType<typeof detectTrigger>>(null);
@@ -73,22 +75,27 @@ export function MentionTextarea(props: MentionTextareaProps) {
   const listboxId = useId();
   const optionId = (index: number) => `${listboxId}-option-${index}`;
 
-  const poolByKind: Record<Suggestion["kind"], Suggestion[]> = {
-    member: members,
+  const poolByKind: Record<Suggestion["kind"], readonly Suggestion[]> = {
+    // A surface may narrow `@` to its own roster (a matched Go together chat,
+    // PRD-423); otherwise the whole member directory.
+    member: scopedMembers ?? members,
     community: communities,
     topic: topics,
     business: businesses,
     event: events,
     thread: threads,
   };
-  const pool: Suggestion[] = trigger ? poolByKind[trigger.kind] : [];
+  const pool: readonly Suggestion[] = trigger ? poolByKind[trigger.kind] : [];
+  // PRD-423: a roster-scoped `@` lists and matches first names alone, since
+  // a handle can carry a surname. The inserted token is still the handle.
+  const isNameOnly = trigger?.kind === "member" && scopedMembers !== null;
   // Lowercase the query once, not per candidate.
   const query = trigger ? trigger.query.toLowerCase() : "";
   const matches = trigger
     ? pool
         .filter(
           (item) =>
-            item.slug.includes(query) ||
+            (!isNameOnly && item.slug.includes(query)) ||
             item.name.toLowerCase().includes(query),
         )
         .slice(0, MAX_SUGGESTIONS)
@@ -217,10 +224,12 @@ export function MentionTextarea(props: MentionTextareaProps) {
                   </span>
                 )}
                 <span className={styles.name}>{item.name}</span>
-                <span className={styles.handle}>
-                  {SIGIL_BY_KIND[item.kind]}
-                  {item.slug}
-                </span>
+                {!isNameOnly && (
+                  <span className={styles.handle}>
+                    {SIGIL_BY_KIND[item.kind]}
+                    {item.slug}
+                  </span>
+                )}
               </button>
             </li>
           ))}

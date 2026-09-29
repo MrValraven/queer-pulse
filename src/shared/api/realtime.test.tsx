@@ -41,6 +41,7 @@ vi.mock("./messageCache", () => ({
   bumpConversationUnread: vi.fn(),
   upsertMessage: vi.fn(),
   patchConversationPreview: vi.fn(),
+  patchConversationTitle: vi.fn(),
   patchMessageDelete: vi.fn(),
   patchMessageEdit: vi.fn(),
   patchMessagePinned: vi.fn(),
@@ -185,6 +186,7 @@ describe("subscribed events", () => {
     expect(events).toContain("conversation:message");
     expect(events).toContain("read");
     expect(events).toContain("notification:new");
+    expect(events).toContain("notification:changed");
     expect(events).toContain("exception");
   });
 
@@ -377,6 +379,139 @@ describe("cache invalidation", () => {
     });
     expect(invalidateSpy).not.toHaveBeenCalledWith({
       queryKey: ["notifications"],
+    });
+  });
+
+  it("notification:changed refetches the whole notifications prefix and the Mentions tab", async () => {
+    // Another tab or device of the same member read or dismissed rows. The
+    // frame is empty and carries no count, so the bare prefix is deliberate:
+    // it reaches both the feed and the unread-count badge.
+    const mod = await loadRealtime();
+    const { queryClient } = await import("./queryClient");
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    await mount(mod);
+    const call = socket.on.mock.calls.find(
+      (entry) => entry[0] === "notification:changed",
+    );
+    const handler = call?.[1] as (data: unknown) => void;
+    handler({});
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["notifications"],
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["mentions", false],
+    });
+  });
+});
+
+// ENG-403 follow-up: a thread opened past the loaded inbox pages renders from
+// its `["conversation-detail", id]` entry, so the conversation-level frames
+// keep that entry in step with the list.
+describe("conversation detail entry", () => {
+  async function wireDetail(event: string) {
+    const mod = await loadRealtime();
+    const messageCache = await import("./messageCache");
+    const { queryClient } = await import("./queryClient");
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    await mount(mod);
+    const call = socket.on.mock.calls.find((c) => c[0] === event);
+    return {
+      handler: call?.[1] as (data: unknown) => void,
+      invalidateSpy,
+      messageCache,
+      queryClient,
+    };
+  }
+
+  it("conversation:new marks the thread's detail stale beside the list", async () => {
+    const { handler, invalidateSpy } = await wireDetail("conversation:new");
+    handler({ conversationId: "c-group" });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["conversations"] });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["conversation-detail", "c-group"],
+      refetchType: "none",
+    });
+  });
+
+  it("a system message:new marks the thread's detail stale", async () => {
+    const { handler, invalidateSpy } = await wireDetail("message:new");
+    handler({
+      conversationId: "c-group",
+      message: { id: "m-sys", kind: "system", sender: { handle: "" } },
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["conversation-detail", "c-group"],
+      refetchType: "none",
+    });
+  });
+
+  it("a group_renamed pill patches the new title into the row", async () => {
+    const { handler, messageCache } = await wireDetail("message:new");
+    handler({
+      conversationId: "c-group",
+      message: {
+        id: "m-rename-title",
+        kind: "system",
+        sender: { handle: "" },
+        systemEvent: { type: "group_renamed", value: "Book club" },
+      },
+    });
+    expect(messageCache.patchConversationTitle).toHaveBeenCalledWith(
+      expect.anything(),
+      "c-group",
+      "Book club",
+    );
+  });
+
+  it("an ordinary message:new leaves the detail to the preview patch", async () => {
+    const { handler, invalidateSpy } = await wireDetail("message:new");
+    handler({
+      conversationId: "c-dm",
+      message: { id: "m-user", kind: "user", sender: { handle: "someone" } },
+    });
+    expect(invalidateSpy).not.toHaveBeenCalledWith({
+      queryKey: ["conversation-detail", "c-dm"],
+      refetchType: "none",
+    });
+  });
+
+  it("a system conversation:message marks the thread's detail stale", async () => {
+    const { handler, invalidateSpy } = await wireDetail("conversation:message");
+    handler({
+      conversationId: "c-renamed",
+      message: { id: "m-rename", kind: "system", sender: { handle: "" } },
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["conversation-detail", "c-renamed"],
+      refetchType: "none",
+    });
+  });
+
+  it("conversation:message still patches the preview when the list lacks the row", async () => {
+    const { handler, invalidateSpy, messageCache, queryClient } =
+      await wireDetail("conversation:message");
+    queryClient.setQueryData(
+      ["conversations", false, "", "personal"],
+      [{ id: "c-loaded" }],
+    );
+    const message = { id: "m-past", kind: "user", sender: { handle: "x" } };
+    handler({ conversationId: "c-past-pages", message });
+    // The list has no row, so it is refetched, and the preview patch still
+    // runs so the thread's detail entry takes the new message.
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["conversations"] });
+    expect(messageCache.patchConversationPreview).toHaveBeenCalledWith(
+      expect.anything(),
+      "c-past-pages",
+      message,
+    );
+  });
+
+  it("mailbox:staffing refetches every detail entry beside the list", async () => {
+    const { handler, invalidateSpy } = await wireDetail("mailbox:staffing");
+    handler({});
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["conversations"] });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["conversation-detail"],
     });
   });
 });

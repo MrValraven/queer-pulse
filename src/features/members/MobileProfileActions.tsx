@@ -119,7 +119,11 @@ export function MobileProfileActions({
     <ProfileSafetyMenu
       slug={profile.slug}
       firstName={profile.first}
-      onWithdrawVouch={vouched ? () => removeVouch(profile.slug) : undefined}
+      onWithdrawVouch={
+        vouched
+          ? (onSettled) => removeVouch(profile.slug, onSettled)
+          : undefined
+      }
     />
   );
 

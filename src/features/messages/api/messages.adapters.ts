@@ -1,5 +1,7 @@
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
-import { activeLocale } from "../../../shared/i18n/locale";
+import { activeLocale, detectLanguage } from "../../../shared/i18n/locale";
+import { stickerLabelIn } from "../../stickers/stickerLocale";
+import { readableAttachmentBody } from "../legacyMessageBody";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { ChatMessage, Conversation, GroupMemberView } from "../data";
@@ -154,19 +156,37 @@ export function groupInitials(title: string): string {
  *  before persisting, since every field a sticker bubble needs already lives
  *  on its baked `attachment`. A raw `.body` read for a sticker is therefore
  *  always empty. Every caller that shows a message as plain TEXT (a chat
- *  bubble, an inbox/group preview) falls back to the sticker's own `label`
- *  instead, exactly the placeholder a locally-sent optimistic sticker
- *  already carries (`useMessageSendActions.sendSticker`'s `text:
- *  sticker.label`). Narrows with the raw `"stickerId" in attachment` check
+ *  bubble, an inbox/group preview) falls back to the sticker's own name
+ *  instead, in the reader's language: the baked `labelPt` for a Portuguese
+ *  reader when the sticker had one, its English `label` otherwise. That is
+ *  exactly the placeholder a locally-sent optimistic sticker already carries
+ *  (`useMessageSendActions.sendSticker`'s `text`). The language is read
+ *  outside React through `detectLanguage`, the same persisted choice
+ *  `activeLocale` reads; `groupMessages` keys its bubble cache on that
+ *  locale, so a language switch rebuilds every bubble's text. Narrows with
+ *  the raw `"stickerId" in attachment` check
  *  rather than the shared `isStickerAttachment` guard, mirroring
  *  `attachmentToChat`'s own reasoning below: this function sits on the wire
  *  `MessageResponse["attachment"]` shape, whose `caption` is nullable, unlike
- *  the normalized `ChatMessage` shape the guard is typed against. */
-export function messageDisplayText(message: MessageResponse): string {
+ *  the normalized `ChatMessage` shape the guard is typed against.
+ *
+ *  Two legacy row classes are repaired here too (`legacyMessageBody.ts`): a
+ *  sticker's body is never read, so text a pre-fix edit left on one stays
+ *  hidden, and a photo/GIF/file row whose body is a raw catalog key shows the
+ *  kind's label in the reader's language. `t` is optional and additive: the
+ *  inbox adapters pass theirs, while the live-patch preview and the chat
+ *  adapter have none and resolve the label the way the sticker does. */
+export function messageDisplayText(
+  message: MessageResponse,
+  t?: TFunction,
+): string {
   const attachment = message.attachment;
-  return message.kind === "sticker" && attachment && "stickerId" in attachment
-    ? attachment.label
-    : message.body;
+  if (message.kind === "sticker") {
+    return attachment && "stickerId" in attachment
+      ? stickerLabelIn(attachment, detectLanguage())
+      : "";
+  }
+  return readableAttachmentBody(message.kind, message.body, { t });
 }
 
 /** The business a moved note names, kept only while that business still
@@ -218,7 +238,7 @@ function groupPreview(
     last.sender.isFormerMember && formerMemberLabel
       ? formerMemberLabel
       : (last.sender.displayName.trim().split(/\s+/)[0] ?? "");
-  const displayText = messageDisplayText(last);
+  const displayText = messageDisplayText(last, t);
   return first ? `${first}: ${displayText}` : displayText;
 }
 
@@ -258,7 +278,7 @@ function directPreview(
       t,
     );
   }
-  return messageDisplayText(lastMessage);
+  return messageDisplayText(lastMessage, t);
 }
 
 /** The business side of a row's last message, every key always present. */
@@ -336,7 +356,7 @@ function groupConversationToView(
     // the last message, without re-parsing `groupPreview`'s formatted string.
     lastMessageSenderHandle: dto.lastMessage?.sender.handle || undefined,
     lastMessageBody: dto.lastMessage
-      ? messageDisplayText(dto.lastMessage)
+      ? messageDisplayText(dto.lastMessage, t)
       : undefined,
     lastMessageIsSystem: dto.lastMessage?.kind === "system",
     ...lastMessageMailboxFields(dto.lastMessage),
@@ -372,10 +392,14 @@ function groupConversationToView(
     description: dto.description ?? undefined,
     dissolvedAt: dto.dissolvedAt ?? undefined,
     eventMatchGroupId: dto.eventMatchGroupId ?? null,
+    // Stays true for the life of the chat, unlike `eventMatchGroupId` above,
+    // which goes null once the group row is deleted.
+    isGoTogetherChat: dto.isGoTogetherChat ?? false,
     leftReason: dto.leftReason ?? undefined,
     // Only ever populated for the owner/admin who may manage it, see the
     // field's own doc on `ConversationResponse`.
     inviteToken: dto.inviteToken ?? undefined,
+    inviteTokenExpiresAt: dto.inviteTokenExpiresAt ?? undefined,
     canManageInviteLink: dto.canManageInviteLink ?? false,
     canTransferOwnership: dto.canTransferOwnership ?? false,
     canDissolve: dto.canDissolve ?? false,
@@ -435,7 +459,7 @@ export function conversationToView(
     // still needs to know WHO sent it to show "You: " when the viewer did.
     lastMessageSenderHandle: dto.lastMessage?.sender.handle || undefined,
     lastMessageBody: dto.lastMessage
-      ? messageDisplayText(dto.lastMessage)
+      ? messageDisplayText(dto.lastMessage, t)
       : undefined,
     lastMessageIsSystem: dto.lastMessage?.kind === "system",
     ...lastMessageMailboxFields(dto.lastMessage),

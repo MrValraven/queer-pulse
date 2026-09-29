@@ -15,6 +15,7 @@ import {
   useDeleteFriendMatchProfile,
   useFriendMatchProfile,
 } from "../api/useFriendMatchProfile";
+import { isGoTogetherOff } from "../api/goTogether.api";
 import { clearQuestionnaireDrafts } from "../questionnaire/questionnaireDraftStorage";
 
 const GO_TOGETHER_QUESTIONNAIRE_RETURN_PATH = `${routes.settings}?pane=data`;
@@ -41,6 +42,10 @@ const GO_TOGETHER_QUESTIONNAIRE_PATH = `${routes.goTogetherQuestionnaire}?return
  * pane's own danger-card look (`.dangerCard`/`.dangerTitle`/`.dcBtn.danger`,
  * the same classes the Data & privacy zone uses for deactivate/delete) so it
  * reads as clearly destructive, set apart from the edit action beside it.
+ * When the Go together routes answer 404 (gatherings switched off), the
+ * section renders nothing. The Go together launch key alone keeps it:
+ * saved answers stay readable and deletable, because only saving answers
+ * is gated by that key.
  */
 export function GoTogetherDataSection() {
   const { t } = useTranslation();
@@ -48,6 +53,7 @@ export function GoTogetherDataSection() {
   const { showToast } = useToast();
   const {
     data: profile,
+    error,
     isLoading,
     isError,
     refetch,
@@ -67,6 +73,9 @@ export function GoTogetherDataSection() {
       },
     });
   }
+
+  // Go together switched off everywhere answers 404: the section stays out.
+  if (isError && isGoTogetherOff(error)) return null;
 
   if (isLoading) {
     return (

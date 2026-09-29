@@ -6,6 +6,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { ApiError } from "../../../shared/api/client";
 import { TestProviders } from "../../../test/TestProviders";
 import { GoTogetherDataSection } from "./GoTogetherDataSection";
 import type {
@@ -41,6 +42,7 @@ const {
     data: undefined as FriendMatchProfileDTO | undefined,
     isLoading: false,
     isError: false,
+    error: null as Error | null,
   },
   profileRefetch: vi.fn(),
   deleteAnswersMutate: vi.fn<DeleteAnswersMutate>(),
@@ -98,6 +100,7 @@ afterEach(() => {
   profileQueryState.data = undefined;
   profileQueryState.isLoading = false;
   profileQueryState.isError = false;
+  profileQueryState.error = null;
 });
 
 describe("GoTogetherDataSection", () => {
@@ -146,6 +149,23 @@ describe("GoTogetherDataSection", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: "Edit your answers" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders nothing on a 404, because Go together is switched off", () => {
+    profileQueryState.isError = true;
+    profileQueryState.error = new ApiError(404, "Not found");
+    render(
+      <TestProviders>
+        <div data-testid="data-section-slot">
+          <GoTogetherDataSection />
+        </div>
+      </TestProviders>,
+    );
+
+    expect(screen.getByTestId("data-section-slot")).toBeEmptyDOMElement();
+    expect(
+      screen.queryByRole("button", { name: "Try again" }),
     ).not.toBeInTheDocument();
   });
 

@@ -18,6 +18,7 @@ import { SubprofileMoreMenu } from "./SubprofileMoreMenu";
 import { SubprofileShare } from "./SubprofileShare";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { personaAddressName } from "./subprofile-kinds";
+import { isPersonaOpenToEngagement } from "./personaEngagement";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
@@ -64,6 +65,9 @@ export function SubprofileHeroActions({
   // persona is messageable too. The only thing that still gates it is
   // whether there is a published page to reach at all.
   const canMessage = view.status === "published";
+  // Follow and endorse accept an open persona only, so a members-only one
+  // shows neither, live or inert (PRD-428).
+  const isOpenToEngagement = isPersonaOpenToEngagement(view);
 
   if (mode === "owner") {
     return (
@@ -90,6 +94,8 @@ export function SubprofileHeroActions({
             <FiEye aria-hidden /> {t("subprofiles:hero.viewAsVisitor")}
           </Button>
         )}
+        {/* Disabled on a draft, stored handle or not: that address 404s for
+            everyone else until publish (PRD-429), which the banner says. */}
         <SubprofileShare view={view} />
         <SubprofileAvailability value={view.availability} accent={accent} />
       </div>
@@ -107,28 +113,32 @@ export function SubprofileHeroActions({
         {canMessage && (
           <InertAction icon={null} label={t("subprofiles:hero.message")} />
         )}
-        <InertAction
-          icon={
-            view.viewerFollowing ? (
-              <FiUserCheck aria-hidden />
-            ) : (
-              <FiUserPlus aria-hidden />
-            )
-          }
-          label={t(
-            view.viewerFollowing
-              ? "subprofiles:hero.follow.following"
-              : "subprofiles:hero.follow.cta",
-          )}
-        />
-        <InertAction
-          icon={view.viewerEndorsed ? <FiCheck aria-hidden /> : null}
-          label={t(
-            view.viewerEndorsed
-              ? "subprofiles:hero.endorse.endorsed"
-              : "subprofiles:hero.endorse.cta",
-          )}
-        />
+        {isOpenToEngagement && (
+          <>
+            <InertAction
+              icon={
+                view.viewerFollowing ? (
+                  <FiUserCheck aria-hidden />
+                ) : (
+                  <FiUserPlus aria-hidden />
+                )
+              }
+              label={t(
+                view.viewerFollowing
+                  ? "subprofiles:hero.follow.following"
+                  : "subprofiles:hero.follow.cta",
+              )}
+            />
+            <InertAction
+              icon={view.viewerEndorsed ? <FiCheck aria-hidden /> : null}
+              label={t(
+                view.viewerEndorsed
+                  ? "subprofiles:hero.endorse.endorsed"
+                  : "subprofiles:hero.endorse.cta",
+              )}
+            />
+          </>
+        )}
         {/* A stranger gets the overflow menu, so the owner previewing as one
             gets it too — with Share live (sharing your own persona is exactly
             what a visitor would do) and Report inert, since there is nobody to
@@ -165,24 +175,30 @@ export function SubprofileHeroActions({
           onOpen={() => onAction("message")}
         />
       )}
-      <SubprofileFollow
-        subprofileId={view.id}
-        followerCount={view.followerCount}
-        viewerFollowing={view.viewerFollowing}
-        isOwnerViewing={false}
-      />
-      <SubprofileEndorse
-        subprofileId={view.id}
-        endorsementCount={view.endorsementCount}
-        viewerEndorsed={view.viewerEndorsed}
-        isOwnerViewing={false}
-        personaName={personaAddressName({
-          displayName: view.displayName,
-          kind: view.kind,
-          ownerName: view.ownerName,
-        })}
-        personaAvatarUrl={view.avatarUrl}
-      />
+      {isOpenToEngagement && (
+        <>
+          <SubprofileFollow
+            subprofileId={view.id}
+            followerCount={view.followerCount}
+            viewerFollowing={view.viewerFollowing}
+            isOwnerViewing={false}
+          />
+          {/* Mounting it also reads the endorser list, which a members-only
+              persona refuses to a non-owner, so the gate covers both. */}
+          <SubprofileEndorse
+            subprofileId={view.id}
+            endorsementCount={view.endorsementCount}
+            viewerEndorsed={view.viewerEndorsed}
+            isOwnerViewing={false}
+            personaName={personaAddressName({
+              displayName: view.displayName,
+              kind: view.kind,
+              ownerName: view.ownerName,
+            })}
+            personaAvatarUrl={view.avatarUrl}
+          />
+        </>
+      )}
       <SubprofileMoreMenu view={view} onAction={onAction} />
       <SubprofileAvailability value={view.availability} accent={accent} />
     </div>

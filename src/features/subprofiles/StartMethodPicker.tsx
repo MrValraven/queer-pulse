@@ -1,16 +1,16 @@
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import styles from "./NewSideModal.module.css";
 
-/** Top-level start method: seed from a kind template, start blank, or copy one
- *  of the owner's existing personas. "Copy" is disabled when the owner has no
+/** Top-level start method: seed from a kind template, or copy one of the
+ *  owner's existing personas. "Copy" is disabled when the owner has no
  *  personas yet (nothing to copy). */
-export type StartMethod = "template" | "blank" | "copy";
+export type StartMethod = "template" | "copy";
 
-const METHODS: StartMethod[] = ["template", "blank", "copy"];
+const METHODS: StartMethod[] = ["template", "copy"];
 
-/** The design's `.seg` segmented control: three plain toggle buttons in a
+/** The design's `.seg` segmented control: two plain toggle buttons in a
  *  pill track, `aria-pressed` marking the active one. A single-select toggle
- *  group of this size doesn't need full radiogroup semantics — the pressed
+ *  group of this size doesn't need full radiogroup semantics; the pressed
  *  state alone is enough for assistive tech to track which method is active. */
 export function StartMethodPicker({
   method,
@@ -25,7 +25,6 @@ export function StartMethodPicker({
 }) {
   const labelKeys: Record<StartMethod, string> = {
     template: "subprofiles:start.template",
-    blank: "subprofiles:start.blank",
     copy: "subprofiles:start.copy",
   };
 

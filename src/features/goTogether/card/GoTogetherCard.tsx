@@ -8,10 +8,13 @@ import {
 import { FiUsers } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { GatheringDetail } from "../../gatherings/data";
+import { isGoTogetherOff } from "../api/goTogether.api";
 import { useGoTogetherCard } from "../api/useGoTogetherCard";
 import type { GoTogetherCardDTO } from "../api/goTogether.types";
 import { GoTogetherGroupEntry } from "../group/GoTogetherGroupEntry";
+import { GoTogetherCardLoadError } from "./GoTogetherCardLoadError";
 import { GoTogetherOptInFlow } from "./GoTogetherOptInPanel";
+import { GoTogetherReaskPanel } from "./GoTogetherReaskPanel";
 import {
   NotVerifiedPanel,
   PairInvitePanel,
@@ -21,7 +24,12 @@ import {
   UnmatchedPanel,
   WaitingPanel,
 } from "./GoTogetherStatePanels";
-import { BLOCKER_PANEL, GO_TOGETHER_CARD_ANCHOR } from "./goTogetherCard.data";
+import {
+  BLOCKER_PANEL,
+  GO_TOGETHER_CARD_ANCHOR,
+  hasReceivedPairInvite,
+  questionsToAnswerAgain,
+} from "./goTogetherCard.data";
 import {
   GoTogetherHeadingFocusContext,
   moveFocusTo,
@@ -39,20 +47,53 @@ const GROUPED_STATES: ReadonlySet<GoTogetherCardDTO["state"]> = new Set([
 /**
  * The Go together card on a gathering page. It shows to members who are
  * going, and to anyone already in a group. Everything else (the feature off
- * for this gathering, a visitor, a member not going) renders nothing.
+ * for this gathering or switched off everywhere, a visitor, a member not
+ * going) renders nothing. A failed load shows a small error with Retry
+ * inside the frame to any member with an RSVP, so a grouped member who
+ * moved to "maybe" still finds their group and a waiting member finds Stop
+ * looking.
  */
 export function GoTogetherCard({ gathering }: { gathering: GatheringDetail }) {
-  const { data: card, refetch } = useGoTogetherCard(gathering.slug);
+  const {
+    data: card,
+    error,
+    isError,
+    isFetching,
+    refetch,
+  } = useGoTogetherCard(gathering.slug);
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const focusHeading = useCallback(() => moveFocusTo(headingRef.current), []);
   const headingFocus = useHeadingFocusControls(card?.state, focusHeading);
   useArriveAtCardAnchor(sectionRef, headingRef, card?.state);
   const isGoing = gathering.myRsvpStatus === "going";
+  // The card keeps a grouped member's entry whatever their RSVP says now, so
+  // any RSVP at all may be hiding a group behind a failed load.
+  const hasRsvp = gathering.myRsvpStatus != null;
 
+  // A 404 means Go together is off, even over a card loaded earlier.
+  if (isError && isGoTogetherOff(error)) return null;
+  if (!card) {
+    if (!isError || !hasRsvp) return null;
+    // Same tree shape as a loaded card, so a successful Retry swaps only the
+    // panel, and focus moves from the vanished button to the card heading.
+    return (
+      <GoTogetherHeadingFocusContext.Provider value={headingFocus}>
+        <GoTogetherCardFrame sectionRef={sectionRef} headingRef={headingRef}>
+          <GoTogetherCardLoadError
+            isRetrying={isFetching}
+            onRetry={() => {
+              headingFocus.afterStateChange();
+              void refetch();
+            }}
+          />
+        </GoTogetherCardFrame>
+      </GoTogetherHeadingFocusContext.Provider>
+    );
+  }
   // An RSVP change refreshes the card through `useRsvp`/`useUnrsvp`, which
   // invalidate `goTogetherKeys.cardRoot` once the server has the new standing.
-  if (!card || card.state === "unavailable") return null;
+  if (card.state === "unavailable") return null;
   const isGrouped = GROUPED_STATES.has(card.state);
   if (!isGoing && !isGrouped) return null;
   if (
@@ -157,8 +198,17 @@ function GoTogetherCardContent({
           />
         </>
       );
-    case "waiting":
-      return <WaitingPanel card={card} slug={slug} />;
+    case "waiting": {
+      // A pair invite comes first: accepting it answers every host question.
+      const questions = hasReceivedPairInvite(card)
+        ? []
+        : questionsToAnswerAgain(card);
+      return questions.length > 0 ? (
+        <GoTogetherReaskPanel slug={slug} questions={questions} />
+      ) : (
+        <WaitingPanel card={card} slug={slug} />
+      );
+    }
     case "pairInvite":
       return <PairInvitePanel card={card} slug={slug} />;
     case "ineligible": {

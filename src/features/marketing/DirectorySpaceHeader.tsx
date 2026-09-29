@@ -66,7 +66,7 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
             </div>
             <h1 className={s.h1}>
               {lead && `${lead} `}
-              <em>{last}.</em>
+              <em>{last}</em>
             </h1>
             <p className={s.tagline}>{place.tagline}</p>
             <div className={s.metaRow}>

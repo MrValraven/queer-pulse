@@ -62,7 +62,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
         </div>
         <h1 className={styles.removedTitle}>
           {lead && `${lead} `}
-          <em>{last}.</em>
+          <em>{last}</em>
         </h1>
         <p className={styles.removedReason}>{s.reason}</p>
         <div className={styles.removedMetaRow}>

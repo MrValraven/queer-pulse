@@ -1,17 +1,9 @@
 import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
-import {
-  FiArrowRight,
-  FiBriefcase,
-  FiBookmark,
-  FiCheck,
-  FiShield,
-} from "react-icons/fi";
+import { FiArrowRight, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
-  Button,
-  EmptyState,
   LoadErrorState,
   Reveal,
   SkeletonLine,
@@ -22,20 +14,26 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
-import { deadlineText } from "./api/jobs.adapters";
+import { deadlineText, jobFieldFilterQuery } from "./api/jobs.adapters";
 import { useSaved } from "../../app/providers/useSaved";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useWorkProfile } from "../../app/providers/useWorkProfile";
 import { usePostedJobs } from "../../app/providers/usePostedJobs";
-import { JOBS, JOB_FILTERS, type Job } from "./jobs.data";
+import { JOBS, type Job } from "./jobs.data";
+import { JobFieldFilter, type JobFieldFilterValue } from "./JobFieldFilter";
 import { useJobs } from "./api/useJobs";
 import { useMyJobs } from "./api/jobOwner.hooks";
 import { JobsEmployers } from "./JobsEmployers";
+import { JobsEmptyState } from "./JobsEmptyState";
+import { JobsLoadMore } from "./JobsLoadMore";
+import { jobFieldLabel } from "./postJob.data";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
 import { affiliationFromLabel } from "./safetyBadges.data";
 import styles from "./JobsPage.module.css";
+
+const NO_FIELD_FILTER: JobFieldFilterValue = { groupId: null, fieldId: null };
 
 function JobCard({ job }: { job: Job }) {
   const { t } = useTranslation();
@@ -45,6 +43,9 @@ function JobCard({ job }: { job: Job }) {
   const navigate = useNavigate();
   const savedId = `job:${job.slug}`;
   const saved = isSaved(savedId);
+  const fieldLabel = job.category
+    ? jobFieldLabel(job.category, job.profession ?? "", t)
+    : "";
 
   function apply(e: SyntheticEvent) {
     e.preventDefault();
@@ -101,6 +102,8 @@ function JobCard({ job }: { job: Job }) {
         />
         <div className={styles.desc}>{job.description}</div>
         <div className={styles.meta}>
+          {fieldLabel && <span>{fieldLabel}</span>}
+          {fieldLabel && <span className={styles.dot} />}
           <span>{job.type}</span>
           <span className={styles.dot} />
           <span>{job.location}</span>
@@ -182,6 +185,11 @@ export function JobsPage() {
   const { safeOnly } = useWorkProfile();
   const { postedJobs } = usePostedJobs();
   const { demoMode } = useDemoMode();
+  const [fieldFilter, setFieldFilter] = useState(NO_FIELD_FILTER);
+  const { fieldIds: selectedFieldIds, params: jobsQueryParams } = useMemo(
+    () => jobFieldFilterQuery(fieldFilter),
+    [fieldFilter],
+  );
   const {
     jobs: liveJobs,
     isLoading: jobsLoading,
@@ -190,13 +198,13 @@ export function JobsPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useJobs();
+    isFetchNextPageError,
+  } = useJobs(jobsQueryParams);
   // PRD-44: a poster had no index of what they published. The board is where
   // they come looking, so the way in sits next to the post button, and only
   // for someone who actually has a posting to manage.
   const { rows: myPostedJobs } = useMyJobs();
   const navigate = useNavigate();
-  const [filter, setFilter] = useState("all");
   const [showAll, setShowAll] = useState(false);
   const [localLoading, setLocalLoading] = useState(true);
 
@@ -211,10 +219,14 @@ export function JobsPage() {
     () => (demoMode ? [...postedJobs, ...JOBS] : liveJobs),
     [demoMode, postedJobs, liveJobs],
   );
+  // Live pages arrive already narrowed by `cat`: per the rule "server-narrowed
+  // results must not be client-filtered", only the demo list filters here.
   const byCat = useMemo(
     () =>
-      filter === "all" ? allJobs : allJobs.filter((j) => j.category === filter),
-    [filter, allJobs],
+      demoMode && selectedFieldIds.length
+        ? allJobs.filter((job) => selectedFieldIds.includes(job.category ?? ""))
+        : allJobs,
+    [demoMode, selectedFieldIds, allJobs],
   );
   const verifiedOnly = safeOnly && !showAll;
   const visible = useMemo(
@@ -259,23 +271,11 @@ export function JobsPage() {
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.top}>
-            <div className={styles.filters}>
-              {JOB_FILTERS.map((f) => (
-                <button
-                  type="button"
-                  key={f.value}
-                  className={[
-                    styles.chip,
-                    filter === f.value && styles.chipActive,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => setFilter(f.value)}
-                >
-                  {t(f.labelKey)}
-                </button>
-              ))}
-            </div>
+            <JobFieldFilter
+              groupId={fieldFilter.groupId}
+              fieldId={fieldFilter.fieldId}
+              onChange={setFieldFilter}
+            />
             <div className={styles.topActions}>
               {myPostedJobs.length > 0 && (
                 <Link to={routes.myJobs} className={styles.myJobsLink}>
@@ -325,52 +325,31 @@ export function JobsPage() {
               Array.from({ length: 4 }).map((_, i) => <JobSkeleton key={i} />)
             ) : hasJobsError ? (
               // The board is this page's main content, so a failed fetch says
-              // so instead of "no roles match your filters" (DES-22).
+              // it could not load (DES-22).
               <LoadErrorState
                 title={t("economy:jobs.loadError.title")}
                 description={t("economy:jobs.loadError.description")}
                 onRetry={refetchJobs}
               />
             ) : visible.length === 0 ? (
-              <EmptyState
-                icon={<FiBriefcase />}
-                title={t("economy:jobs.empty.title")}
-                description={t(
-                  verifiedOnly
-                    ? "economy:jobs.empty.verifiedDescription"
-                    : "economy:jobs.empty.description",
-                )}
-                action={{
-                  label: t("economy:jobs.empty.showAll"),
-                  onClick: () =>
-                    verifiedOnly ? setShowAll(true) : setFilter("all"),
-                }}
-                secondaryAction={
-                  filter !== "all"
-                    ? {
-                        label: t("economy:jobs.empty.clearCategory"),
-                        onClick: () => setFilter("all"),
-                      }
-                    : undefined
-                }
+              <JobsEmptyState
+                isVerifiedOnly={verifiedOnly}
+                fieldFilter={fieldFilter}
+                onShowUnverified={() => setShowAll(true)}
+                onFieldFilterChange={setFieldFilter}
               />
             ) : (
               visible.map((job) => <JobCard key={job.slug} job={job} />)
             )}
           </div>
           {hasNextPage && (
-            <div className={styles.loadMore}>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={isFetchingNextPage}
-                onClick={fetchNextPage}
-              >
-                {isFetchingNextPage
-                  ? t("economy:jobs.loadingMore")
-                  : t("economy:jobs.loadMoreCta")}
-              </Button>
-            </div>
+            // A failed next page keeps the loaded list above; only this footer
+            // reports it, and its button retries.
+            <JobsLoadMore
+              isFetchingNextPage={isFetchingNextPage}
+              isFetchNextPageError={isFetchNextPageError}
+              onLoadMore={fetchNextPage}
+            />
           )}
         </div>
       </div>

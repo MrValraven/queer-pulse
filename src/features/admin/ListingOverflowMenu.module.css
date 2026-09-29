@@ -1,0 +1,158 @@
+/* ── Listing overflow menu (⋮) ────────────────────────────────────────────
+   Carries a listing's secondary moderation actions. The panel hangs below
+   the trigger, flush to its end edge, and rises above it when the trigger
+   sits low in the viewport (`data-placement="top"`, set on open). */
+.overflow {
+  position: relative;
+  flex: none;
+}
+
+/* 40px on fine pointers, the same height as the row's `sm` primary pill. */
+.trigger {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  color: var(--ink-60);
+  font-size: var(--text-16);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease),
+    border-color 0.16s var(--ease);
+}
+.trigger[aria-expanded="true"] {
+  border-color: rgba(var(--line-rgb), 0.24);
+  color: var(--text-strong);
+}
+.trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .trigger:hover:not(:disabled) {
+    background: var(--cream);
+    color: var(--text-strong);
+  }
+}
+/* Touch: the square grows to the 44px tap-target floor. */
+@media (pointer: coarse) {
+  .trigger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: var(--z-popover);
+  min-width: 190px;
+  padding: 6px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  box-shadow: var(--shadow-e3);
+}
+.menu[data-placement="top"] {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.16s var(--ease);
+}
+.item:focus-visible {
+  background: rgba(var(--line-rgb), 0.06);
+}
+.itemDanger {
+  color: var(--danger);
+}
+.itemDanger:focus-visible {
+  background: rgba(var(--danger-rgb), 0.08);
+}
+.item[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .item:hover:not([aria-disabled="true"]) {
+    background: rgba(var(--line-rgb), 0.06);
+  }
+  .itemDanger:hover:not([aria-disabled="true"]) {
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}
+@media (pointer: coarse) {
+  .item {
+    min-height: 44px;
+  }
+}
+
+/* Hairline between the safe actions and the danger group. */
+.divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: rgba(var(--line-rgb), 0.09);
+}
+
+/* The row's primary action: `Button size="sm"` sits at 40px, so on touch it
+   is lifted back to the 44px tap-target floor. The element in the selector
+   outranks the Button module's own `.sm` whatever the stylesheet order. */
+@media (pointer: coarse) {
+  :is(a, button).primaryAction {
+    min-height: 44px;
+  }
+}
+
+/* The row's "Publish live" as a quiet tonal pill: a soft jade wash with
+   jade-ink text, so a column of rows reads by listing name first. Hover fills
+   it solid. `.jade` from the Button module paints a solid fill and a jade drop
+   shadow; the element plus two classes here outrank it (and its hover rule)
+   whatever the stylesheet order. The drawer keeps the solid jade button.
+   Contrast (13.5px text needs 4.5:1):
+   light  --jade-ink on the 12% wash over --paper 4.95:1, over a selected row
+          4.65:1; hover --paper on --jade-ink 5.68:1.
+   dark   --jade-ink on the wash 9.29:1, over a selected row 8.69:1; hover
+          --paper on --jade-ink 10.49:1. */
+:is(a, button).primaryAction.primaryTonal {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade-ink);
+  border: none;
+  box-shadow: none;
+}
+/* The rule above clears the global `:focus-visible` halo along with the drop
+   shadow; the outline still comes from base.css, so restate only the halo. */
+:is(a, button).primaryAction.primaryTonal:focus-visible {
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  :is(a, button).primaryAction.primaryTonal:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    background: var(--jade-ink);
+    color: var(--paper);
+    box-shadow: none;
+  }
+}

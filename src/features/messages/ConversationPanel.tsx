@@ -5,6 +5,7 @@ import { ConversationComposerDock } from "./ConversationComposerDock";
 import { ConversationPanelSurfaces } from "./ConversationPanelSurfaces";
 import { ConversationTopSection } from "./ConversationTopSection";
 import type { ConversationGroupModalsProps } from "./ConversationGroupModals";
+import { MatchedChatMentionScope } from "./MatchedChatMentionScope";
 import { MessageArea } from "./MessageArea";
 import { MessageSafetyProvider } from "./MessageSafetyContext";
 import { useConversationMediaGallery } from "./useConversationMediaGallery";
@@ -217,97 +218,99 @@ export function ConversationPanel({
     // thread's connection state without threading a new prop through every
     // layer in between; see that context's own doc.
     <MessageSafetyProvider active={active}>
-      <div
-        className={styles.convoPanel}
-        data-wallpaper-pattern={wallpaper.pattern}
-      >
-        <ConversationTopSection
-          active={active}
-          isCounterpartOnline={isCounterpartOnline}
-          onBack={onBack}
-          onOpenStarred={onOpenStarred}
-          onOpenGroupInfo={groupInfo.open}
-          onOpenMediaGallery={mediaGallery.open}
-          pinnedMessages={pinnedMessages}
-          onJumpToMessage={jumpToMessageVirtualized}
-        />
-
-        <ChatImageViewerProvider openImage={openImage}>
-          <MessageArea
-            areaRef={areaRef}
-            contentRef={contentRef}
-            messageGroups={messageGroups}
-            rows={rows}
-            rowVirtualizer={rowVirtualizer}
-            loadingOlder={history.loadingOlder}
-            isThreadUnsavedOffline={isThreadUnsavedOffline}
-            onScroll={handleAreaScroll}
-            counterpart={counterpart}
-            counterpartName={active.name}
-            isGroup={active.isGroup}
-            conversationId={active.id}
-            groupMembers={active.members}
-            groupSeenBy={groupSeenBy}
-            onOpenSeenBy={seenBy.open}
-            onRetry={onRetry}
-            seenActive={seenActive}
-            deliveredActive={deliveredActive}
-            lastOutbound={lastOutbound}
-            onReactionToggle={actionMenu.handleReactionToggle}
-            onReply={onSetReply}
-            onOpenActions={actionMenu.openActions}
-            editingMessageId={actionMenu.editingMessageId}
-            onBeginEdit={actionMenu.beginEdit}
-            onSubmitEdit={actionMenu.submitEdit}
-            onCancelEdit={actionMenu.cancelEdit}
+      <MatchedChatMentionScope active={active} messageGroups={messageGroups}>
+        <div
+          className={styles.convoPanel}
+          data-wallpaper-pattern={wallpaper.pattern}
+        >
+          <ConversationTopSection
+            active={active}
+            isCounterpartOnline={isCounterpartOnline}
+            onBack={onBack}
+            onOpenStarred={onOpenStarred}
+            onOpenGroupInfo={groupInfo.open}
+            onOpenMediaGallery={mediaGallery.open}
+            pinnedMessages={pinnedMessages}
             onJumpToMessage={jumpToMessageVirtualized}
           />
-        </ChatImageViewerProvider>
 
-        <ConversationComposerDock
-          active={active}
-          onSend={onSend}
-          onSendGif={onSendGif}
-          onSendImage={onSendImage}
-          onSendDocument={onSendDocument}
-          onSendSticker={onSendSticker}
-          blocked={blocked}
-          replyDraft={replyDraft}
-          onCancelReply={onCancelReply}
-          showJumpPill={showJumpPill}
-          newMessagesCount={newMessagesCount}
-          onJumpToLatest={jumpToLatest}
-        />
-        <ConversationPanelSurfaces
-          overlays={overlays}
-          groupModals={{
-            active,
-            groupInfoOpen: groupInfo.isOpen,
-            seenBySheetOpen: seenBy.isOpen,
-            onCloseGroupInfo: groupInfo.close,
-            onCloseSeenBy: seenBy.close,
-            myUserId,
-            groupSeenBy,
-            onOpenMediaGallery: mediaGallery.open,
-            ...groupManagement,
-          }}
-          media={{
-            conversationId: demoMode ? active.id : realConversationId(active),
-            isOpen: mediaGallery.isOpen,
-            onClose: mediaGallery.close,
-            // Handing over to the viewer or the thread also closes group info.
-            onNavigateAway: () => {
-              mediaGallery.closeForNavigation();
-              groupInfo.close();
-            },
-            counterpartName: active.name,
-            onOpenPhoto: openImage,
-            onShowInChat: jumpToMessageVirtualized,
-            onShowPhotoInChat: openGalleryPhotoAfterJump,
-            messageGroups,
-          }}
-        />
-      </div>
+          <ChatImageViewerProvider openImage={openImage}>
+            <MessageArea
+              areaRef={areaRef}
+              contentRef={contentRef}
+              messageGroups={messageGroups}
+              rows={rows}
+              rowVirtualizer={rowVirtualizer}
+              loadingOlder={history.loadingOlder}
+              isThreadUnsavedOffline={isThreadUnsavedOffline}
+              onScroll={handleAreaScroll}
+              counterpart={counterpart}
+              counterpartName={active.name}
+              isGroup={active.isGroup}
+              conversationId={active.id}
+              groupMembers={active.members}
+              groupSeenBy={groupSeenBy}
+              onOpenSeenBy={seenBy.open}
+              onRetry={onRetry}
+              seenActive={seenActive}
+              deliveredActive={deliveredActive}
+              lastOutbound={lastOutbound}
+              onReactionToggle={actionMenu.handleReactionToggle}
+              onReply={onSetReply}
+              onOpenActions={actionMenu.openActions}
+              editingMessageId={actionMenu.editingMessageId}
+              onBeginEdit={actionMenu.beginEdit}
+              onSubmitEdit={actionMenu.submitEdit}
+              onCancelEdit={actionMenu.cancelEdit}
+              onJumpToMessage={jumpToMessageVirtualized}
+            />
+          </ChatImageViewerProvider>
+
+          <ConversationComposerDock
+            active={active}
+            onSend={onSend}
+            onSendGif={onSendGif}
+            onSendImage={onSendImage}
+            onSendDocument={onSendDocument}
+            onSendSticker={onSendSticker}
+            blocked={blocked}
+            replyDraft={replyDraft}
+            onCancelReply={onCancelReply}
+            showJumpPill={showJumpPill}
+            newMessagesCount={newMessagesCount}
+            onJumpToLatest={jumpToLatest}
+          />
+          <ConversationPanelSurfaces
+            overlays={overlays}
+            groupModals={{
+              active,
+              groupInfoOpen: groupInfo.isOpen,
+              seenBySheetOpen: seenBy.isOpen,
+              onCloseGroupInfo: groupInfo.close,
+              onCloseSeenBy: seenBy.close,
+              myUserId,
+              groupSeenBy,
+              onOpenMediaGallery: mediaGallery.open,
+              ...groupManagement,
+            }}
+            media={{
+              conversationId: demoMode ? active.id : realConversationId(active),
+              isOpen: mediaGallery.isOpen,
+              onClose: mediaGallery.close,
+              // Handing over to the viewer or the thread also closes group info.
+              onNavigateAway: () => {
+                mediaGallery.closeForNavigation();
+                groupInfo.close();
+              },
+              counterpartName: active.name,
+              onOpenPhoto: openImage,
+              onShowInChat: jumpToMessageVirtualized,
+              onShowPhotoInChat: openGalleryPhotoAfterJump,
+              messageGroups,
+            }}
+          />
+        </div>
+      </MatchedChatMentionScope>
     </MessageSafetyProvider>
   );
 }

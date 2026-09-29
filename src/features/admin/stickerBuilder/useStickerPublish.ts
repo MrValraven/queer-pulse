@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
-import type { AdminStickerPackResponse } from "../../../shared/contracts/contracts";
+import type {
+  AdminStickerPackResponse,
+  AdminStickerResponse,
+} from "../../../shared/contracts/contracts";
+import type { UpdateStickerBody } from "../../stickers/api/adminStickers.api";
 import {
   useUploadImage,
   type UploadResult,
@@ -27,7 +31,7 @@ import type {
   StickerPublishRun,
   StickerPublishSummary,
 } from "./stickerBuilder.types";
-import { buildItemPlan } from "./stickerItems";
+import { buildItemPlan, type StickerLabels } from "./stickerItems";
 
 interface StartRunArgs {
   pack: AdminStickerPackResponse;
@@ -35,7 +39,7 @@ interface StartRunArgs {
   plan: ItemPlanEntry[];
   mode: PublishMode;
   style: TemplateStyle;
-  labelsByItemId: Record<string, string>;
+  labelsByItemId: Record<string, StickerLabels>;
 }
 
 /** A failed item a retry found already in the pack, carried into the new run
@@ -175,6 +179,31 @@ async function uploadItemArtwork(
   };
 }
 
+/** A replace's body: the redrawn artwork, plus the Portuguese label whenever
+ *  the sticker has none. That covers a sticker published before Portuguese
+ *  names existed, and also one whose Portuguese name an admin cleared to
+ *  null: a replace fills it again from the item data. The English label
+ *  stays as the admin may have edited it. */
+function replaceBodyFor(
+  existingSticker: AdminStickerResponse,
+  artwork: UpdateStickerBody["artwork"],
+  labels: StickerLabels | undefined,
+): UpdateStickerBody {
+  if (!existingSticker.labelPt && labels) {
+    return { artwork, labelPt: labels.pt };
+  }
+  return { artwork };
+}
+
+/** An add's English and Portuguese labels. The raw item id stands in only
+ *  when the caller resolved no label for the item. */
+function addLabelsFor(
+  labels: StickerLabels | undefined,
+  itemId: string,
+): { label: string; labelPt: string | undefined } {
+  return { label: labels?.en ?? itemId, labelPt: labels?.pt };
+}
+
 /**
  * Publish one sticker per planned item, sequentially, as a run the builder
  * can watch item by item.
@@ -183,19 +212,22 @@ async function uploadItemArtwork(
  * plus a metadata call, and firing twelve of those at once would burn the
  * per-user presign rate limit (20 per minute) and give no usable progress.
  *
- * An "add" creates the sticker with its label and the template item's default
- * keywords. A "replace" sends the redrawn artwork only, so the sticker keeps
- * its id, order and cover status, and the label and keywords an admin may
- * have edited stay as they are.
+ * An "add" creates the sticker with its English and Portuguese labels and the
+ * template item's default keywords. A "replace" sends the redrawn artwork, so
+ * the sticker keeps its id, order and cover status, and the label and
+ * keywords an admin may have edited stay as they are. The one label a replace
+ * does write is a missing Portuguese one, which fills in stickers published
+ * before Portuguese names existed.
  *
  * A failure part-way leaves the stickers already written in place and marks
  * that item failed with a reason, so `retryFailed` re-runs only the items
  * that did not land, and the rest of the pack stays untouched.
  *
- * `labelsByItemId` carries the translated label for every item the page
- * currently shows, resolved by the caller through `stickerLabelFor`. This
- * hook stays translation-free on purpose: resolving labels once in the
- * caller keeps `useTranslation`'s read of the active language to a single
+ * `labelsByItemId` carries both labels (English and Portuguese) for every
+ * item the page currently shows, resolved by the caller through
+ * `stickerLabelsFor`, each in its own language whatever language the admin
+ * reads the builder in. This hook stays translation-free on purpose:
+ * resolving labels once in the caller keeps the catalog reads to a single
  * pass, ahead of the sequential loop. A raw item id must never ship as a
  * sticker's label, because that label becomes the sticker's alt text and
  * its reply-quote line.
@@ -260,13 +292,13 @@ export function useStickerPublish() {
           uploadImage,
         );
         previewUrl = uploaded.previewUrl;
-        const artwork = uploaded.artwork;
         isArtworkStep = false;
+        const labels = args.labelsByItemId[itemId];
         if (existingSticker !== null && entry.action === "replace") {
           await updateSticker.mutateAsync({
             packId: args.pack.id,
             stickerId: existingSticker.id,
-            body: { artwork },
+            body: replaceBodyFor(existingSticker, uploaded.artwork, labels),
           });
         } else {
           const item = args.template.items.find(
@@ -275,9 +307,9 @@ export function useStickerPublish() {
           await addSticker.mutateAsync({
             packId: args.pack.id,
             body: {
-              ...artwork,
+              ...uploaded.artwork,
               slug: args.template.slugFor(itemId),
-              label: args.labelsByItemId[itemId] ?? itemId,
+              ...addLabelsFor(labels, itemId),
               keywords: item?.keywords,
             },
           });

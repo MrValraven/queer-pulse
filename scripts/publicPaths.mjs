@@ -170,10 +170,10 @@ export function isGatedPath(pathname) {
  *      whatever it gets (including an empty-state fallback if the build machine
  *      cannot reach the API). With VITE_DEMO=1 it bakes fixture data as though
  *      it were real. Both are ways to ship a misleading page to crawlers.
- *      Known API-backed paths in this list: /about/partners, /about/volunteer.
- *      They are kept because their content is genuinely worth indexing, but the
- *      build machine MUST be able to reach the API. Audit any new path against
- *      this before adding it.
+ *      Known API-backed paths in this list: /about/partners, /about/volunteer,
+ *      /safety, /safety/legal. They are kept because their content is
+ *      genuinely worth indexing, but the build machine MUST be able to reach
+ *      the API. Audit any new path against this before adding it.
  *
  * Dynamic `:slug` routes are excluded: there is no canonical content source to
  * enumerate, and profiles are gated regardless.
@@ -208,6 +208,20 @@ export const QUIET_PUBLIC_PATHS = [
   "/local/safe-spaces",
   "/local/arriving",
   "/local/visas",
+
+  // ── Safety & crisis, and the coming-out guide: the indexed front door
+  // (PRD-331). /safety and /safety/legal render through ManagedGuide
+  // (useManagedGuide), so they are API-backed the same way /about/partners
+  // and /about/volunteer are above: the build machine must be able to reach
+  // the API for their content to be current. /safety/hate-crime,
+  // /safety/report and /coming-out are static pages with no such dependency.
+  // Block & mute (/safety/block-mute) stays out of this list: it is a gated
+  // account-settings surface hosted under the public /safety prefix.
+  "/safety",
+  "/safety/hate-crime",
+  "/safety/legal",
+  "/safety/report",
+  "/coming-out",
 ];
 
 /**

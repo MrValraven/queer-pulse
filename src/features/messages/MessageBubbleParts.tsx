@@ -8,6 +8,7 @@ import { MessageMarks } from "./MessageBubbleBody";
 import { useBubbleLabelIds, type BubbleLabelIds } from "./bubbleLabelIds";
 import type { UseLongPressHandlers } from "./useLongPress";
 import type { ChatMessage } from "./data";
+import { shouldShowEditedMark } from "./legacyMessageBody";
 import styles from "./MessagesPage.module.css";
 
 /** Hidden nodes a bubble's `aria-labelledby`/`aria-describedby` point at: the
@@ -31,7 +32,7 @@ export function BubbleHiddenLabels({
   const details = [
     message.time,
     !isDeleted && message.forwarded && t("messages:actions.forwardedLabel"),
-    !isDeleted && message.editedAt && t("messages:actions.edited"),
+    !isDeleted && shouldShowEditedMark(message) && t("messages:actions.edited"),
     !isDeleted && message.pinnedAt && t("messages:pinned.indicator"),
     !isDeleted && message.starred && t("messages:starred.indicator"),
   ].filter(Boolean);
@@ -127,13 +128,14 @@ export function BubbleTombstone({
 
 /** The "edited" marker and the pin/star marks trailing a live bubble's body.
  *  Both are also folded into the bubble's description by
- *  `BubbleHiddenLabels`, so a focused bubble announces them. */
+ *  `BubbleHiddenLabels`, so a focused bubble announces them. A sticker never
+ *  shows the edited mark (`shouldShowEditedMark`). */
 export function BubbleTrailingMarks({ message }: { message: ChatMessage }) {
   const { t } = useTranslation();
   if (message.deletedAt) return null;
   return (
     <>
-      {message.editedAt && (
+      {shouldShowEditedMark(message) && (
         <span className={styles.editedMarker}>
           {" "}
           · {t("messages:actions.edited")}

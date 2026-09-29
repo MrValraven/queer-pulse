@@ -130,6 +130,7 @@ export function StickerBuilderWorkspace({
       <StickerPackHeader
         pack={pack}
         onRename={actions.handleRename}
+        onRenamePt={actions.handleRenamePt}
         onSetStatus={actions.handleSetStatus}
         onDeletePack={actions.handleDeletePack}
         isMutating={actions.isMutatingPack}
@@ -274,7 +275,11 @@ export function StickerWorkspacePlaceholder({
   isRetrying: boolean;
   onRetry: () => void;
   isCreatingPack: boolean;
-  onCreatePack: (body: { slug: string; name: string }) => Promise<boolean>;
+  onCreatePack: (body: {
+    slug: string;
+    name: string;
+    namePt?: string;
+  }) => Promise<boolean>;
 }) {
   const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);

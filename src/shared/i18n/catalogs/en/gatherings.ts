@@ -1529,6 +1529,12 @@ export const gatherings: Catalog = {
   "door.undoAria": "Undo check-in for {name}",
   "door.undoneToast": "Check-in undone",
   "door.failedToast": "That didn't go through. Try again in a moment.",
+  "door.checkInRefusedToast": "We couldn't check this person in.",
+  "door.checkInWaitlistedToast":
+    "This person is on the waitlist. Promote them first, then check them in.",
+  "door.checkInMaybeToast": "This person answered maybe and has no seat yet.",
+  "door.checkInNotOnListToast": "This person isn't on the guest list.",
+  "door.undoRefusedToast": "We couldn't undo this check-in.",
   "door.emptyTitle": "Nobody on the list yet",
   "door.emptyDescription":
     "As people RSVP they show up here, ready to check in at the door.",
@@ -1568,6 +1574,13 @@ export const gatherings: Catalog = {
     "This browser can't read a code from the camera. Type the code from the card instead.",
   "door.scan.failedHint":
     "The camera didn't start. Type the code from the card instead.",
+  "door.scan.cardUnreadableHint":
+    "That card couldn't be read. Try finding them on the guest list.",
+  "door.scan.checkInWaitlistedHint":
+    "This person is on the waitlist. Promote them first, then check them in.",
+  "door.scan.checkInMaybeHint":
+    "This person answered maybe and has no seat yet.",
+  "door.scan.checkInNotOnListHint": "This person isn't on the guest list.",
   "door.scan.codeLabel": "Code from the card",
   "door.scan.codeHelper":
     "Every membership card carries this under its code. Paste or type it and it works the same way.",
@@ -1623,13 +1636,14 @@ export const gatherings: Catalog = {
   "manage.attendees.seatsFromGuests_one": "1 person going, guests included",
   "manage.attendees.seatsFromGuests_other":
     "{count} people going, guests included",
-  "manage.attendees.needs.privateLabel": "Private to the organisers",
+  "manage.attendees.needs.privateLabel": "Private to the hosts",
   "manage.attendees.needs.guests_one": "Bringing 1 guest",
   "manage.attendees.needs.guests_other": "Bringing {count} guests",
   "manage.attendees.needs.accessLabel": "Access:",
   "manage.attendees.needs.dietaryLabel": "Food:",
   "manage.attendees.needs.customAnswerLabel": "Answer to your question:",
-  "manage.attendees.needs.withheld": "They chose to keep their answers private",
+  "manage.attendees.needs.hiddenFromGuests":
+    "Only the hosts can see they're going",
 
   // ── LOC-08: the host's own door ───────────────────────────────────────────
   "manage.bans.eyebrow": "This gathering only",
@@ -1809,7 +1823,7 @@ export const gatherings: Catalog = {
   // undeclared plus-one is a place the host never laid.
   "rsvpDetails.eyebrow": "Your RSVP",
   "rsvpDetails.title": "Anything we should <em>know</em>?",
-  "rsvpDetails.sub": "The host reads this. Nobody else has to.",
+  "rsvpDetails.sub": "The hosts read this. Nobody else has to.",
   "rsvpDetails.guestsLabel": "Who's coming",
   "rsvpDetails.guestOption_one": "Me and {count} other",
   "rsvpDetails.guestOption_other": "Me and {count} others",
@@ -1829,12 +1843,15 @@ export const gatherings: Catalog = {
   "rsvpDetails.pronounsPlaceholder": "she/her, they/them…",
   "rsvpDetails.customQuestionHint": "The host asked this one.",
   "rsvpDetails.customAnswerPlaceholder": "Your answer",
-  "rsvpDetails.whoSeesLabel": "Who can see this",
-  "rsvpDetails.visibility.everyone": "Everyone going",
+  "rsvpDetails.whoSeesLabel": "Who can see you're going?",
+  "rsvpDetails.visibility.everyone": "Everyone",
   "rsvpDetails.visibility.connections": "My connections",
-  "rsvpDetails.visibility.justMe": "Just the host",
+  "rsvpDetails.visibility.justMe": "Only the hosts",
+  "rsvpDetails.visibility.everyoneDesc": "Members who can see the guest list",
+  "rsvpDetails.visibility.connectionsDesc": "Your connections see your name",
+  "rsvpDetails.visibility.justMeDesc": "Your name stays off the guest list",
   "rsvpDetails.privacyNote":
-    "The host always sees what you write here, whatever you choose above.",
+    "The hosts always see what you write here and that you're going, whatever you pick above.",
   "rsvpDetails.cancelCta": "Cancel",
   "rsvpDetails.saveCta": "Save",
   "rsvpDetails.savedToast": "Saved",

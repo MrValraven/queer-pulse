@@ -37,6 +37,8 @@ export function MessagesPage() {
     replyDraft,
     setReplyDraft,
     active,
+    activeThreadStatus,
+    retryActiveThread,
     activeBlocked,
     messageGroups,
     threadHistory,
@@ -94,6 +96,7 @@ export function MessagesPage() {
   const { openForward, forwardPickerNode } = useForwardPicker(
     forwardableGroups,
     forwardMessage,
+    activeMailbox.scope,
   );
 
   const showList = !isMobile || view === "list";
@@ -186,7 +189,11 @@ export function MessagesPage() {
                   onMarkThreadRead={markThreadRead}
                 />
               ) : (
-                <MessagesEmptyPanel />
+                <MessagesEmptyPanel
+                  status={activeThreadStatus}
+                  onBack={isMobile ? () => setView("list") : undefined}
+                  onRetry={retryActiveThread}
+                />
               ))}
           </div>
         </AttachmentQueueProvider>

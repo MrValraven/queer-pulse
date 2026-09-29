@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDismiss, useScrimDismiss } from "../../../shared/components/ui";
+import { useInertWhileCovered } from "../../../shared/components/ui/modalStack";
 import styles from "./adminUi.module.css";
 
 /**
@@ -29,6 +30,12 @@ export function AdminDrawer({
   // three things it was missing: initial focus, a Tab trap, and focus restore
   // to whatever opened it. Typed to <aside>, the drawer's own element.
   const drawerRef = useDismiss<HTMLElement>(onClose);
+  // A dialog opened on top of the drawer (e.g. AdminVouchGraphModal, or a
+  // confirm) makes it inert until that dialog closes, so assistive tech
+  // reaches only the top layer (mirrors the shared Modal in
+  // shared/components/ui/Modal.tsx). AdminDrawer has no exit animation, so
+  // it is never "closing".
+  useInertWhileCovered(drawerRef, false);
   // Requires the pointer to have gone DOWN on the scrim, so a text-selection
   // drag that ends outside the drawer no longer discards it.
   const scrimProps = useScrimDismiss(onClose);

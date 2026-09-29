@@ -53,6 +53,15 @@
   color: var(--ink-60);
 }
 
+/* Under the last row: the next page, with a failed fetch's line above it. */
+.loadMore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 /* ── Row ─────────────────────────────────────────────────────────────── */
 .row {
   display: flex;
@@ -85,6 +94,7 @@
   font-weight: 600;
   color: var(--ink);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .rowName:hover {
@@ -94,6 +104,7 @@
 .rowSlug {
   font-size: var(--text-13);
   color: var(--ink-60);
+  overflow-wrap: anywhere;
 }
 
 .rowChips {
@@ -162,6 +173,15 @@
   gap: 12px;
   padding-top: 14px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* History, then Revoke on an active row. Pushed to the end so a past row,
+   which has no focus control, still keeps them on the right. */
+.rowButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-inline-start: auto;
 }
 
 .focusControl {
@@ -345,6 +365,42 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* ── History drawer ──────────────────────────────────────────────────── */
+.historyHead {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.historyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historyEntry {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
 }
 
 /* ── Revoke modal ────────────────────────────────────────────────────── */

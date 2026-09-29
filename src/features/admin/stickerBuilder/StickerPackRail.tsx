@@ -148,7 +148,11 @@ export function StickerPackRail({
   isDemo: boolean;
   selectedPackId: string | null;
   onSelectPack: (packId: string) => void;
-  onCreatePack: (body: { slug: string; name: string }) => Promise<boolean>;
+  onCreatePack: (body: {
+    slug: string;
+    name: string;
+    namePt?: string;
+  }) => Promise<boolean>;
   isCreatingPack: boolean;
 }) {
   const { t } = useTranslation();

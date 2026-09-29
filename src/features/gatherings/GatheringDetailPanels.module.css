@@ -225,16 +225,6 @@
   color: var(--ink-60);
 }
 
-/* Sits in the modal footer beside the buttons, saying who actually reads
-   these answers. The host does; nobody else can, unless the member says so. */
-.detailsPrivacyNote {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: var(--text-12);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
 /* A short single-line answer (pronouns), in the textarea's own frame. */
 .detailsInput {
   width: 100%;

@@ -1,5 +1,8 @@
 // src/features/messages/starredMessagesFilter.ts
 import type { StarredMessageHit } from "../../shared/contracts/contracts";
+import { LANGUAGES, type Language } from "../../shared/i18n/types";
+import { stickerLabelIn } from "../stickers/stickerLocale";
+import { readableAttachmentBody } from "./legacyMessageBody";
 import { firstLinkUrl } from "./linkify";
 
 /**
@@ -89,16 +92,53 @@ function attachmentStickerLabel(item: FilterableStarredMessage): string {
   return attachment && "stickerId" in attachment ? attachment.label : "";
 }
 
+/** A starred sticker's baked Portuguese name, searched alongside its English
+ *  one so either name finds it whatever the reader's language. Empty for
+ *  every other hit, and for a sticker sent without one. */
+function attachmentStickerLabelPt(item: FilterableStarredMessage): string {
+  const attachment = item.attachment;
+  return attachment && "stickerId" in attachment
+    ? (attachment.labelPt ?? "")
+    : "";
+}
+
+/** The snippet line a starred row shows. The server fills a sticker hit's
+ *  `snippet` with its English `label`, since it cannot know the reader's
+ *  language (PRD-325), so a sticker hit is named here from its baked
+ *  attachment through `stickerLabelIn`: `labelPt` for a Portuguese reader
+ *  when the sticker had one, `label` otherwise. A sticker's snippet is never
+ *  read, so text a pre-fix sticker edit left behind stays hidden (see
+ *  `legacyMessageBody.ts`), and a photo/GIF/file hit whose snippet is a raw
+ *  catalog key shows its kind's label instead. Every other hit keeps the
+ *  server's snippet as-is. `kind` is optional so a caller holding only the
+ *  snippet and attachment still gets the sticker naming. */
+export function starredSnippetIn(
+  item: Pick<StarredMessageHit, "snippet" | "attachment"> &
+    Partial<Pick<StarredMessageHit, "kind">>,
+  language: Language,
+): string {
+  const attachment = item.attachment;
+  if (attachment && "stickerId" in attachment) {
+    return stickerLabelIn(attachment, language);
+  }
+  if (item.kind === "sticker") return "";
+  return readableAttachmentBody(item.kind, item.snippet, { language });
+}
+
 function matchesStarredMessageQuery(
   item: FilterableStarredMessage,
   normalizedQuery: string,
 ): boolean {
   if (!normalizedQuery) return true;
   const haystacks = [
-    item.snippet,
+    // The snippet as a row shows it in either language, the way a sticker
+    // is found by either of its names below: a legacy raw-key hit matches
+    // "Photo" or "Foto", and a sticker never matches on its stored text.
+    ...LANGUAGES.map((language) => starredSnippetIn(item, language)),
     attachmentCaption(item),
     attachmentFileName(item),
     attachmentStickerLabel(item),
+    attachmentStickerLabelPt(item),
     item.sender.displayName,
     item.conversationTitle,
   ];

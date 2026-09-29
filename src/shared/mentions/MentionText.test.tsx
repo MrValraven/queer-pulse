@@ -2,8 +2,10 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { ReactNode } from "react";
 import { expect, test } from "vitest";
+import { I18nProvider } from "../../app/providers/I18nProvider";
 import { MentionText } from "./MentionText";
 import { renderWithLinks } from "../../features/messages/linkify";
+import { InertMemberMentionsContext } from "./MentionLinkPolicyContext";
 import { MentionNamesContext } from "./MentionNamesContext";
 import { mentionNameKey } from "./mentionNameKey";
 
@@ -113,4 +115,46 @@ test("plain text around an unlinked mention is untouched", () => {
     <MentionText text="hey @ana-lopes welcome" linkify={false} />,
   );
   expect(container.textContent).toBe("hey @ana-lopes welcome");
+});
+
+test("PRD-423: an inert member mention shows the first name as plain text with no profile link or slug", () => {
+  render(
+    <MemoryRouter>
+      <InertMemberMentionsContext.Provider value={true}>
+        <MentionNamesContext.Provider
+          value={new Map([[mentionNameKey("member", "ana-sousa"), "Ana"]])}
+        >
+          <MentionText text="hey @ana-sousa, see c/lisboa-queer" />
+        </MentionNamesContext.Provider>
+      </InertMemberMentionsContext.Provider>
+    </MemoryRouter>,
+  );
+  expect(screen.queryByRole("link", { name: "Ana" })).not.toBeInTheDocument();
+  expect(screen.getByText("Ana")).not.toHaveAttribute("title");
+  // Other kinds keep their links.
+  expect(
+    screen.getByRole("link", { name: "c/lisboa-queer" }),
+  ).toBeInTheDocument();
+});
+
+test("PRD-423: an inert member mention the chat cannot name reads as a neutral placeholder and keeps the handle out of the page", async () => {
+  const { container } = render(
+    <MemoryRouter>
+      <I18nProvider>
+        <InertMemberMentionsContext.Provider value={true}>
+          <MentionNamesContext.Provider value={new Map()}>
+            <MentionText text="hey @ana-sousa, see c/lisboa-queer" />
+          </MentionNamesContext.Provider>
+        </InertMemberMentionsContext.Provider>
+      </I18nProvider>
+    </MemoryRouter>,
+  );
+  // `messages` is a lazy namespace, so the string arrives a tick later.
+  expect(await screen.findByText("@member")).toBeInTheDocument();
+  expect(container.innerHTML).not.toContain("ana-sousa");
+  expect(screen.queryByRole("link", { name: "@member" })).toBeNull();
+  // Other kinds keep their links.
+  expect(
+    screen.getByRole("link", { name: "c/lisboa-queer" }),
+  ).toBeInTheDocument();
 });

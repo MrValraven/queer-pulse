@@ -50,7 +50,7 @@ export function RequestViewingModal({
   const requestViewing = useRequestHousingViewing();
   // A viewing is the most direct route to meeting a lister, so it sits behind
   // the same mandatory affirming pledge as every other housing contact path
-  // (MessageModal, SayHelloModal, ContactRequestModal, JoinGroupModal…): the
+  // (HousingEnquiryModal, SayHelloModal, ContactRequestModal, JoinGroupModal…): the
   // server answers AFFIRMING_PLEDGE_REQUIRED, this opens the pledge, and the
   // send is retried once the member has taken it.
   const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();

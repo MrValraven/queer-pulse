@@ -1,11 +1,27 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useWizardForm } from "../../shared/hooks/useWizardForm";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  fieldLabelKey,
+  isJobFieldId,
+  professionBelongsToField,
+} from "../members/workTaxonomy.data";
 import type { CompanyProfile } from "./companies.data";
+import {
+  commitmentLabelKey,
+  normalizeCommitment,
+  normalizeSeniority,
+} from "./jobVocabulary.data";
 import type { Job } from "./jobs.data";
 
 export interface PostJobState {
+  /** Job field id (a JOB_FIELD_IDS member), or "" until chosen. */
   category: string;
+  /** Profession id inside `category`, or "" for none. */
+  profession: string;
+  /** Commitment id (JobCommitmentId). */
   commitment: string;
+  /** Seniority id (JobSeniorityId). */
   seniority: string;
   format: string;
   city: string;
@@ -41,9 +57,10 @@ export const STEP_LABEL_KEYS = [
 const DRAFT_KEY = "qp-postjob-draft";
 
 const INITIAL: PostJobState = {
-  category: "Design & creative",
-  commitment: "Freelance / gig",
-  seniority: "Any level",
+  category: "",
+  profession: "",
+  commitment: "freelanceGig",
+  seniority: "anyLevel",
   format: "In-person (Lisbon)",
   city: "",
   timezone: "No preference",
@@ -67,12 +84,41 @@ const INITIAL: PostJobState = {
   agreed: false,
 };
 
+/**
+ * Bring a stored draft up to the current shape. A draft saved before the job
+ * taxonomy carries an English category label ("Design & creative") and English
+ * commitment and seniority labels: the category comes back empty (the poster
+ * picks a field again), the other two become ids, and a profession outside the
+ * restored field is dropped.
+ */
+export function normalizePostJobDraft(
+  raw: Partial<PostJobState> & Record<string, unknown>,
+): PostJobState {
+  const merged: PostJobState = { ...INITIAL, ...raw };
+  const category = isJobFieldId(merged.category) ? merged.category : "";
+  const profession =
+    category &&
+    typeof merged.profession === "string" &&
+    professionBelongsToField(merged.profession, category)
+      ? merged.profession
+      : "";
+  return {
+    ...merged,
+    category,
+    profession,
+    commitment: normalizeCommitment(String(merged.commitment ?? "")),
+    seniority: normalizeSeniority(String(merged.seniority ?? "")),
+  };
+}
+
 function readDraft(): PostJobState {
   if (typeof window === "undefined") return INITIAL;
   try {
     const raw = window.localStorage.getItem(DRAFT_KEY);
     if (!raw) return INITIAL;
-    return { ...INITIAL, ...(JSON.parse(raw) as Partial<PostJobState>) };
+    return normalizePostJobDraft(
+      JSON.parse(raw) as Partial<PostJobState> & Record<string, unknown>,
+    );
   } catch {
     return INITIAL;
   }
@@ -93,8 +139,8 @@ function slugify(s: string) {
 
 /** Parse the wizard's date field value (yyyy-mm-dd) into a real `Date` (local
  *  midnight, so the picked day never shifts across timezones); empty/invalid
- *  input means "no deadline", the consumer renders that as "Open" via
- *  `deadlineText()`/`useFormat()`, never a baked-in locale string here. */
+ *  input means "no deadline", which the consumer renders as "Open" via
+ *  `deadlineText()`/`useFormat()`, so the locale string stays out of here. */
 function parseFormDeadline(d: string): Date | null {
   if (!d) return null;
   const parsed = new Date(`${d}T00:00`);
@@ -102,6 +148,7 @@ function parseFormDeadline(d: string): Date | null {
 }
 
 export function usePostJobForm() {
+  const { t } = useTranslation();
   const [state, setState] = useState<PostJobState>(readDraft);
   // Step index + navigation come from the shared wizard hook; gating stays in
   // the composer, which shows inline errors before allowing a step forward.
@@ -173,6 +220,7 @@ export function usePostJobForm() {
   const stepValid = useCallback(
     (i: number): boolean => {
       if (i === 0) {
+        if (state.category === "") return false;
         if (needsCity(state.format) && !state.city.trim()) return false;
       }
       if (i === 1) {
@@ -191,6 +239,7 @@ export function usePostJobForm() {
 
   const canPublish = useMemo(
     () =>
+      state.category !== "" &&
       state.title.trim() !== "" &&
       state.description.trim() !== "" &&
       state.agreed,
@@ -210,7 +259,10 @@ export function usePostJobForm() {
       const qr = company.badges.some((b) => /queer/i.test(b.label));
       return {
         slug: `${slugify(state.title)}-${Date.now().toString(36)}`,
-        category: slugify(state.category.split(" ")[0] ?? state.category),
+        category: state.category || null,
+        profession: state.profession || null,
+        commitment: state.commitment,
+        seniority: state.seniority,
         qr,
         qrLabel: qr ? "Queer-run" : "Inclusive",
         organization: company.nameText,
@@ -218,14 +270,15 @@ export function usePostJobForm() {
         logoBg: "rgba(var(--accent-rgb),.14)",
         logoText: "var(--accent-ink)",
         title: state.title.trim(),
-        type: state.commitment,
+        // A label snapshot taken at publish time is enough for the demo board.
+        type: t(commitmentLabelKey(state.commitment)),
         location,
         salary,
         deadline: parseFormDeadline(state.deadline),
         description,
-        tags: state.tags.length ? state.tags : [state.category],
+        tags: state.tags,
         detail: {
-          category: state.category,
+          category: state.category ? t(fieldLabelKey(state.category)) : "",
           posted: new Date(),
           about: [state.description],
           dayToDay: [],
@@ -236,7 +289,7 @@ export function usePostJobForm() {
         },
       };
     },
-    [state, payLabel],
+    [state, payLabel, t],
   );
 
   return {

@@ -101,7 +101,7 @@ export function PartnerDetailPage() {
             <div className={s.eyebrow}>{p.eyebrow}</div>
             <h1 className={s.name}>
               {lead && `${lead} `}
-              <em>{last}.</em>
+              <em>{last}</em>
             </h1>
             <p className={s.tagline}>{p.tagline}</p>
           </div>

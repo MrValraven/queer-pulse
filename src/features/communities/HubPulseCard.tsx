@@ -32,7 +32,7 @@ export function HubPulseCard({ item }: { item: HubPost }) {
   const reactionTotal = post.reactions.reduce((sum, r) => sum + r.count, 0);
   return (
     <article className={styles.pulseCard}>
-      <Link to={`/community/${communitySlug}`} className={styles.pulseFrom}>
+      <Link to={communityPath(communitySlug)} className={styles.pulseFrom}>
         <SpaceLabel parentName={parentName} name={communityName} />
         {post.kind === "announcement" && (
           <span className={styles.announce}>
@@ -66,7 +66,7 @@ export function HubPulseCard({ item }: { item: HubPost }) {
         <span className={styles.pulseStat}>
           <FiCornerUpLeft aria-hidden /> {post.replies.length}
         </span>
-        <Link to={`/community/${communitySlug}`} className={styles.pulseOpen}>
+        <Link to={communityPath(communitySlug)} className={styles.pulseOpen}>
           {t("communities:hub.pulseCard.open")} <FiArrowRight aria-hidden />
         </Link>
       </div>

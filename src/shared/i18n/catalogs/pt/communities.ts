@@ -191,6 +191,13 @@ export const communities: Catalog = {
   "gate.request.action": "Pedir para entrar",
   "gate.invited.line": "Foste convidada ou convidado para esta.",
   "gate.invited.action": "Aceitar convite",
+  "gate.requested.line":
+    "Pediste para entrar. O teu pedido está com a moderação.",
+  "gate.requested.withdraw": "Retirar pedido",
+  "gate.requested.withdrawAriaLabel": "Retirar pedido para entrar em {name}",
+  "gate.approved.line":
+    "O teu pedido foi aprovado. Já fazes parte desta comunidade.",
+  "gate.approved.action": "Abrir a comunidade",
   "gate.online": "Online",
   "gate.close": "Voltar às comunidades",
   "gate.error.title": "Não foi possível carregar",
@@ -1388,7 +1395,26 @@ export const communities: Catalog = {
     "Esta comunidade pediu-te para esperares antes de te candidatares de novo. Podes enviar um novo pedido a partir de {date}.",
   "join.refusal.reapply.bodyNoDate":
     "Esta comunidade pediu-te para esperares antes de te candidatares de novo. Podes enviar um novo pedido quando essa espera terminar.",
+  "join.refusal.pending.title": "O teu pedido já foi enviado",
+  "join.refusal.pending.body":
+    "A moderação já tem o teu pedido e vais receber a resposta aqui.",
+  "join.refusal.pending.withdrawCta": "Retirar o meu pedido",
+  // No mesmo botão enquanto a retirada segue (ou espera pela ligação), para
+  // que um segundo toque não tenha nada para enviar.
+  "join.refusal.pending.withdrawingCta": "A retirar o teu pedido",
+  "join.refusal.parent.title": "Entra primeiro na comunidade principal",
+  "join.refusal.parent.body":
+    "Este espaço é para membros da comunidade a que pertence. Entra nessa e depois volta.",
+  "join.refusal.parent.cta": "Ir para {name}",
+  // A mesma recusa, aberta no separador Espaços da própria comunidade
+  // principal: a pessoa já está na página onde pode entrar.
+  "join.refusal.parent.bodyOnParentPage":
+    "Este espaço é para membros de {name}. Podes entrar a partir desta página e depois voltar ao espaço.",
+  "join.refusal.parent.backCta": "Voltar a {name}",
   "join.refusal.closeCta": "Fechar",
+  "join.done.heldTitle": "A moderação vai ver primeiro",
+  "join.done.heldBody":
+    "<strong>{name}</strong> revê algumas entradas à mão. A moderação vai ler a tua em breve e avisamos-te de como correu.",
   "join.done.requestTitle": "O teu pedido está com a moderação",
   "join.done.welcomeTitle": "Bem-vinde a {name}",
   "join.done.requestBody":
@@ -1811,6 +1837,8 @@ export const communities: Catalog = {
   "tagPicker.addMore": "Adicionar mais etiquetas",
   "tagPicker.collapse": "Mostrar menos",
   "tagPicker.count": "{count} de {max} escolhidas",
+  "tagPicker.countAtLimit":
+    "{max} de {max} escolhidas. Tira uma para escolheres outra.",
   "tagPicker.empty": "Ainda não escolheste etiquetas.",
   "edit.suggestTag.trigger":
     "Não encontras a etiqueta que precisas? Sugere uma",
@@ -1864,6 +1892,7 @@ export const communities: Catalog = {
   "edit.rules.add": "Adicionar",
   "edit.rules.addPlaceholder": "Adiciona um valor partilhado…",
   "edit.rules.remove": "Remover regra",
+  "edit.missing.title": "Falta preencher para guardar",
   "edit.changes.title": "Ao guardar, vais alterar",
   "edit.changes.added": "A adicionar: {values}",
   "edit.changes.removed": "A remover: {values}",
@@ -2152,6 +2181,7 @@ export const communities: Catalog = {
   "spaces.join.parentFirst": "Entra primeiro em {name}",
   "spaces.join.rulesNote":
     "Já aceitaste as regras de {name}. Este espaço acrescenta algumas próprias.",
+  "spaces.paused.title": "Este espaço está em pausa",
   "spaces.paused.parent":
     "Este espaço está em pausa porque {name} está em pausa.",
   "spaces.mod.label": "Espaços",

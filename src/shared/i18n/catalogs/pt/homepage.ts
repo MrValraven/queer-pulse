@@ -25,6 +25,7 @@ export const homepage: Catalog = {
   "hero.sub":
     "Um lugar para descobrires o que se passa na comunidade queer de Lisboa e encontrares as pessoas, comunidades, eventos e oportunidades que dão forma à vida queer na cidade.",
   "hero.requestInviteCta": "Pedir um convite",
+  "hero.memberFeedCta": "Ir para o teu feed",
   "hero.exploreMembersCta": "Explorar pessoas",
   "hero.note":
     "Todas as semanas entram pessoas novas, sempre com um voto de confiança.",
@@ -735,7 +736,7 @@ export const homepage: Catalog = {
   "subprofiles.personas.drag.foot":
     "Tudo o que precisam de saber sobre o trabalho da Sofia como artista, sem o resto do perfil dela pelo meio.",
   "subprofiles.personas.drag.note":
-    "A falar como Sophie: quem contrata vê os espetáculos, as fotos e o cachet. O currículo de design de produto fica fora desta página.",
+    "Este é o perfil da Sophie. Quem contrata encontra aqui os espetáculos, as fotos e os detalhes para marcar. Tudo o resto fica do outro lado do perfil.",
   "subprofiles.personas.drag.laneLabel": "drag",
 
   "subprofiles.personas.yoga.role": "Professora de yoga",
@@ -776,5 +777,7 @@ export const homepage: Catalog = {
   "outro.title": "Entra onde <em>já pertences.</em>",
   "outro.sub":
     "A QueerPulse é uma comunidade só por convite, construída sobre confiança, curiosidade e a crença de que ligações genuínas podem mudar vidas e cidades.",
+  "outro.memberSub": "Ainda bem que voltaste. O teu feed está à tua espera.",
   "outro.cta": "Pedir um convite",
+  "outro.memberCta": "Ir para o teu feed",
 };

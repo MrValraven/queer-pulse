@@ -293,6 +293,14 @@
 }
 
 /* Suggest */
+.suggestUnavailableNote {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  line-height: 1.55;
+}
 .suggestLabel {
   font-size: var(--text-12-5);
   color: var(--ink-60);

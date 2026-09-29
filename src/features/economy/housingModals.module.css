@@ -188,23 +188,18 @@
   margin-bottom: 22px;
 }
 
-/* PRD-339: the connection rule, stated before anybody types. Same pattern as
- * `DirectoryEnquiryModal.module.css`'s `.notice`. */
-.notice {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 18px;
-  padding: 12px 14px;
-  border-radius: var(--radius-12);
-  background: var(--cream);
-  font-size: var(--text-13);
-  line-height: 1.55;
+/* The listing summary under the shared first-contact composer's identity row
+ * (HousingEnquiryModal). Same type ramp as that composer's intro line, so the
+ * two read as one block; the reply rule itself is the composer's own. */
+.enquiryContext {
+  margin: 0 0 14px;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
   color: var(--ink-60);
 }
-.notice svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--accent-text);
+.enquiryContext strong {
+  color: var(--text-strong);
+  font-weight: 600;
 }
 
 .actions {
@@ -221,14 +216,13 @@
   animation: hmSuccessIn 0.45s cubic-bezier(0.22, 0.68, 0.16, 1) both;
 }
 
-/* Sits under the Done button on the paper sheet, so it takes ink accent
-   rather than the cream used on plum success panels. */
+/* HousingEnquirySent's open-thread link, in the shared SuccessPanel's
+   `footer` slot on the plum surface, so it dims toward cream like the
+   equivalent link on DirectoryEnquiryModal's success panel. */
 .threadLink {
-  display: inline-block;
-  margin-top: 16px;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   font-weight: 600;
-  color: var(--accent);
+  color: rgba(var(--cream-rgb), 1);
   text-decoration: underline;
 }
 @keyframes hmSuccessIn {

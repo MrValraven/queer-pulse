@@ -122,13 +122,9 @@ export function useDeckPublishAction({
       }
       // A 400 is the server-side readiness re-check refusing the publish
       // (see `MagazineService.updateDeck`), which is worth naming: the
-      // writer can act on it, unlike a generic failure.
-      showToast(
-        error instanceof ApiError && error.status === 400
-          ? t("magazine:deck.editor.publishNotReadyError")
-          : t("magazine:deck.editor.saveError"),
-        "error",
-      );
+      // writer can act on it, unlike a generic failure. So is the 409 for a
+      // deck with no desk piece: decks publish from their piece.
+      showToast(t(standaloneFailureKey(error)), "error");
     }
   }
 
@@ -164,4 +160,27 @@ export function useDeckPublishAction({
     isPublishPending:
       isActing || publishDeck.isPending || linkedPublish.isPending,
   };
+}
+
+/** The 409 `code` `MagazineService.updateDeck` answers when a deck with no
+ *  desk piece tries to go live (mirrors the backend's constant). */
+export const DECK_PUBLISH_UNLINKED_CODE = "magazine_deck_publish_unlinked";
+
+/** The toast for a refused standalone publish. */
+function standaloneFailureKey(error: unknown): string {
+  if (readConflictCode(error) === DECK_PUBLISH_UNLINKED_CODE) {
+    return "magazine:deck.editor.publishUnlinked";
+  }
+  return error instanceof ApiError && error.status === 400
+    ? "magazine:deck.editor.publishNotReadyError"
+    : "magazine:deck.editor.saveError";
+}
+
+/** A 409's body `code`, read the way `DeckEditorActions.tsx` reads it. */
+function readConflictCode(error: unknown): unknown {
+  if (!(error instanceof ApiError) || error.status !== 409) return null;
+  const body = error.data;
+  return typeof body === "object" && body !== null
+    ? (body as Record<string, unknown>).code
+    : null;
 }

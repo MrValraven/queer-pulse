@@ -1,5 +1,5 @@
 // src/features/messages/ConversationReportModal.tsx
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -9,6 +9,7 @@ import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { logError } from "../../shared/observability/logger";
+import { focusControl } from "../../shared/lib/focusFirstError";
 import styles from "./MessagesPage.module.css";
 
 export type ConversationReportModalProps =
@@ -52,8 +53,12 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
   // Server-owned taxonomy when it answers, the local one instantly and
   // silently when it does not. Never a spinner, never an empty list.
   const reasons = useReportReasons(isGroupReport ? "conversation" : "member");
-  const [reason, setReason] = useState<string>(reasons[0]!.code);
+  const [reason, setReason] = useState<string | null>(null);
+  const reasonLabelId = useId();
   const detailFieldId = useId();
+  const missingHintId = useId();
+  const firstReasonRef = useRef<HTMLInputElement>(null);
+  const detailRef = useRef<HTMLTextAreaElement>(null);
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
   const createReport = useCreateReport();
@@ -63,6 +68,7 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
     ? {
         lead: t("safety:reportGroup.form.lead"),
         reasonLabel: t("safety:reportGroup.form.reasonLabel"),
+        reasonMissing: t("safety:reportGroup.form.reasonMissing"),
         detailLabel: t("safety:reportGroup.form.detailLabel"),
         detailPlaceholder: t("safety:reportGroup.form.detailPlaceholder"),
         cancelCta: t("safety:reportGroup.form.cancelCta"),
@@ -80,6 +86,7 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
     : {
         lead: t("safety:reportPerson.form.lead"),
         reasonLabel: t("safety:reportPerson.form.reasonLabel"),
+        reasonMissing: t("safety:reportPerson.form.reasonMissing"),
         detailLabel: t("safety:reportPerson.form.detailLabel"),
         detailPlaceholder: t("safety:reportPerson.form.detailPlaceholder"),
         cancelCta: t("safety:reportPerson.form.cancelCta"),
@@ -95,11 +102,24 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
           t("safety:reportPerson.form.charsCount", { count }),
       };
 
-  const canSubmit = detail.trim().length >= 10;
+  const canSubmit = reason !== null && detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
+  // One slot under the textarea says what is still missing: the reason
+  // first, then the character count. The blocked submit points at it.
+  let counterText = copy.charsCount(detail.trim().length);
+  if (reason === null) counterText = copy.reasonMissing;
+  else if (charsLeft > 0) counterText = copy.charsRemaining(charsLeft);
 
   const submit = () => {
-    if (!canSubmit || createReport.isPending) return;
+    if (createReport.isPending) return;
+    if (!canSubmit || reason === null) {
+      // The submit stays focusable while blocked, so a press lands the
+      // reporter on the field that still needs them.
+      focusControl(
+        reason === null ? firstReasonRef.current : detailRef.current,
+      );
+      return;
+    }
     createReport.mutate(
       {
         subjectType: isGroupReport ? "conversation" : "member",
@@ -160,19 +180,29 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
           <Button variant="ghost" onClick={onClose}>
             {copy.cancelCta}
           </Button>
+          {/* aria-disabled keeps the submit in the tab order, so the hint it
+              points at is heard and an early press can move focus. */}
           <Button
             variant="primary"
             onClick={submit}
-            disabled={!canSubmit || createReport.isPending}
+            aria-disabled={!canSubmit || createReport.isPending}
+            aria-describedby={canSubmit ? undefined : missingHintId}
           >
             {createReport.isPending ? copy.submitting : copy.submitCta}
           </Button>
         </>
       }
     >
-      <div className={styles.reportLabel}>{copy.reasonLabel}</div>
-      <div className={styles.reportOpts}>
-        {reasons.map((option) => (
+      <div id={reasonLabelId} className={styles.reportLabel}>
+        {copy.reasonLabel}
+      </div>
+      <div
+        className={styles.reportOpts}
+        role="radiogroup"
+        aria-labelledby={reasonLabelId}
+        aria-required="true"
+      >
+        {reasons.map((option, optionIndex) => (
           <label
             key={option.code}
             className={[
@@ -183,6 +213,7 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
               .join(" ")}
           >
             <input
+              ref={optionIndex === 0 ? firstReasonRef : undefined}
               type="radio"
               name="conversation-report-reason"
               value={option.code}
@@ -197,16 +228,15 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
         {copy.detailLabel}
       </label>
       <textarea
+        ref={detailRef}
         id={detailFieldId}
         className={styles.reportTextarea}
         placeholder={copy.detailPlaceholder}
         value={detail}
         onChange={(event) => setDetail(event.target.value)}
       />
-      <div className={styles.reportCounter}>
-        {charsLeft > 0
-          ? copy.charsRemaining(charsLeft)
-          : copy.charsCount(detail.trim().length)}
+      <div id={missingHintId} className={styles.reportCounter}>
+        {counterText}
       </div>
     </Modal>
   );

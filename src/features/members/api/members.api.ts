@@ -37,7 +37,11 @@ export interface MemberCardDTO {
   avatarUrl?: string | null;
   tags?: string[];
   vouchCount: number;
-  visibility: Visibility;
+  /** The member's profile tier. Owner-only on a list card (backend
+   *  `ProfileCard.visibility`, ENG-444): a directory page carrying it would be
+   *  a list of who went private. The single-profile read always carries it,
+   *  see `ProfileDTO.visibility`. */
+  visibility?: Visibility;
   openTo?: OpenToEntryDTO[];
   /** Neighbourhood / area shown as the profile's "hood". */
   location?: string;
@@ -60,15 +64,17 @@ export interface MemberCardDTO {
    *  the UI must render both as nothing at all. */
   activityBand?: string | null;
   /** Member-controlled visibility toggles (backend `ProfileCard.photoVisible`).
-   *  ALWAYS the true stored value for every viewer — they say whether `avatarUrl`
-   *  is gated, they are never themselves gated. Backend default `true`; optional
-   *  here only defensively (a backend ahead of this build must not crash). */
+   *  OWNER-ONLY (ENG-444): present only when the viewer is this member, absent
+   *  on every other card and profile, so no response lists who hid what. The
+   *  content they govern arrives already gated (a hidden photo is a null
+   *  `avatarUrl`), so a non-owner view needs no flag to render it. */
   photoVisible?: boolean;
-  /** Member-controlled visibility toggle (backend `ProfileCard.hoodVisible`) —
-   *  same shape/defensiveness as `photoVisible`, gates `location`/`hood`. */
+  /** Owner-only, same as `photoVisible`: gates `location`/`hood`, which reach
+   *  a non-owner already emptied. */
   hoodVisible?: boolean;
-  /** Member-controlled visibility toggle (backend `ProfileCard.vouchersVisible`)
-   *  — same shape/defensiveness as `photoVisible`, gates the vouchers list. */
+  /** Owner-only, same as `photoVisible`: gates the vouchers list. A non-owner
+   *  reads a hidden roster off `ProfileDTO.mutualVoucherCount === null` (see
+   *  `profileToMember`). */
   vouchersVisible?: boolean;
 }
 
@@ -230,6 +236,10 @@ export interface ActivityItemDTO {
 }
 
 export interface ProfileDTO extends MemberCardDTO {
+  /** The profile tier, sent to EVERY viewer of a single profile (backend
+   *  `FullProfileResponse.visibility`): the hero prints it and the limited
+   *  note picks its words by it. Only list cards withhold it. */
+  visibility: Visibility;
   /** How many of the viewer's own accepted connections vouched for this member
    *  (backend `FullProfileResponse.mutualVoucherCount`).
    *
@@ -245,7 +255,9 @@ export interface ProfileDTO extends MemberCardDTO {
   /** Private Interests preferences — not shown on the profile (Settings → Interests). */
   identities?: string[];
   lookingFor?: string[];
-  /** Whether `lookingFor` is shown on the profile to other viewers. */
+  /** Whether `lookingFor` is shown on the profile to other viewers.
+   *  Owner-only; absent for other viewers (ENG-444). `profileToMember`
+   *  derives a visitor's value from a non-empty `lookingFor`. */
   lookingForPublic?: boolean;
   /** Whether the member's trust network (vouchers/vouched-for) is hidden
    *  from other members. Admins can still see it for safety. */

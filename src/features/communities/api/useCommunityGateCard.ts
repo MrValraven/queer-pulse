@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { getCommunityGateCard } from "./communities.api";
 import type { CommunityGateCardDTO } from "./communities.api";
 import { useAllCommunities } from "../useAllCommunities";
@@ -42,6 +43,7 @@ export function useCommunityGateCard(
 ): CommunityGateCardResult {
   const { demoMode } = useDemoMode();
   const all = useAllCommunities();
+  const { hasRequested } = useCommunityMembership();
 
   const query = useQuery({
     queryKey: ["community-gate-card", slug],
@@ -96,6 +98,9 @@ export function useCommunityGateCard(
         avatarImageUrl: community.avatarImageUrl ?? null,
         coverImageUrl: community.coverImageUrl ?? null,
         nextGathering: null,
+        // The demo membership store records a request the moment the wizard
+        // files one, so a demo applicant sees their own pending line here.
+        myJoinRequestStatus: hasRequested(slug) ? "pending" : null,
       },
     };
   }

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { readableTextIs } from "../../test/readableText";
 import { TestProviders } from "../../test/TestProviders";
 import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
@@ -15,7 +15,17 @@ import type { JoinRequestView } from "./api/useJoinRequests";
  * select-all above them and the bar that appears are one wiring, and a test
  * that hand-fed a selection would pass with that wiring broken.
  */
-function Harness({ rows }: { rows: JoinRequestView[] }) {
+function Harness({
+  rows,
+  hasLoadError = false,
+  isRetrying = false,
+  onRetry = () => {},
+}: {
+  rows: JoinRequestView[];
+  hasLoadError?: boolean;
+  isRetrying?: boolean;
+  onRetry?: () => void;
+}) {
   const assignment = useJoinRequestAssignment();
   const decisions = useJoinRequestQueueDecisions(rows);
   return (
@@ -23,6 +33,9 @@ function Harness({ rows }: { rows: JoinRequestView[] }) {
       pending={rows}
       waitlisted={[]}
       isLoading={false}
+      hasLoadError={hasLoadError}
+      isRetrying={isRetrying}
+      onRetry={onRetry}
       decisions={decisions}
       assignment={assignment}
     />
@@ -114,5 +127,54 @@ describe("AdminVerifyQueueWaiting selection", () => {
     expect(
       screen.queryByRole("region", { name: "Bulk actions" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("AdminVerifyQueueWaiting load error (DES-424)", () => {
+  it("offers a retry and hides the clear-queue line when the read failed", async () => {
+    const user = userEvent.setup();
+    const onRetry = vi.fn();
+    render(<Harness rows={[]} hasLoadError onRetry={onRetry} />, {
+      wrapper: TestProviders,
+    });
+
+    await user.click(await screen.findByRole("button", { name: "Try again" }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText(/The queue is clear/)).not.toBeInTheDocument();
+  });
+
+  it("keeps loaded rows on screen beside the error", async () => {
+    render(<Harness rows={rows} hasLoadError />, { wrapper: TestProviders });
+
+    expect(
+      await screen.findByRole("checkbox", {
+        name: "Select Kai Mendes's request",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Try again" }),
+    ).toBeInTheDocument();
+    // The copy names the missing part, since half the queue is on screen.
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "We couldn't load part of the queue",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the Retry in place and marks it busy while a retry runs", async () => {
+    const user = userEvent.setup();
+    const onRetry = vi.fn();
+    render(<Harness rows={[]} hasLoadError isRetrying onRetry={onRetry} />, {
+      wrapper: TestProviders,
+    });
+
+    const retryButton = await screen.findByRole("button", {
+      name: "Trying again…",
+    });
+    expect(retryButton).toHaveAttribute("aria-disabled", "true");
+    await user.click(retryButton);
+    expect(onRetry).not.toHaveBeenCalled();
   });
 });

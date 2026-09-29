@@ -6,6 +6,7 @@ import { MessagesThreadList } from "../MessagesThreadList";
 import { MailboxSettingsPanel } from "./MailboxSettingsPanel";
 
 const cafe = DEMO_MAILBOX_SUMMARIES[1]!;
+const atelierPulso = DEMO_MAILBOX_SUMMARIES[2]!;
 const estudioNorte = DEMO_MAILBOX_SUMMARIES[3]!;
 
 const NOOP = () => {};
@@ -41,6 +42,35 @@ describe("MailboxSettingsPanel (demo)", () => {
     expect(
       screen.getByRole("switch", { name: "Include my first name" }),
     ).toBeDisabled();
+  });
+
+  it("shows an unlinked persona's switch off and locked with the reason, and leaves out the member's own switch", async () => {
+    render(<MailboxSettingsPanel mailbox={atelierPulso} />, {
+      wrapper: TestProviders,
+    });
+    expect(
+      await screen.findByText(
+        "This persona keeps who runs it private, so replies never show a first name.",
+      ),
+    ).toBeInTheDocument();
+    const ownerSwitch = screen.getByRole("switch", {
+      name: "Show who replied",
+    });
+    expect(ownerSwitch).toBeDisabled();
+    // Atelier Pulso's stored switch is on: the lock overrides it.
+    expect(atelierPulso.shouldShowStaffNames).toBe(true);
+    expect(ownerSwitch).toHaveAttribute("aria-checked", "false");
+    expect(
+      screen.queryByText("Only the owner can change this."),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Customers see a first name beside each reply/),
+    ).not.toBeInTheDocument();
+    // The member's own switch could never take effect here, so it is left
+    // out.
+    expect(
+      screen.queryByRole("switch", { name: "Include my first name" }),
+    ).not.toBeInTheDocument();
   });
 
   it("leaves a team member their own switch and locks the owner's", async () => {

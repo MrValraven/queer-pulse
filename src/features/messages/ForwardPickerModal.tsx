@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
+import { useForwardGroupSearch } from "./api/useForwardGroupSearch";
 import { connectionToRecipient } from "./forwardRecipient.helpers";
 import { ForwardChipStrip } from "./ForwardChipStrip";
 import { ForwardMessagePreview } from "./ForwardMessagePreview";
@@ -16,6 +17,7 @@ import {
   useForwardSelection,
 } from "./useForwardSelection";
 import { useForwardSend } from "./useForwardSend";
+import type { ConversationListScope } from "./mailboxes/mailboxScope";
 import type { MessageForwarding } from "./useMessageForwarding";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./ForwardPickerModal.module.css";
@@ -24,8 +26,12 @@ interface ForwardPickerModalProps {
   /** The message being forwarded, rendered as a preview and carried,
    *  unchanged, into every recipient's own `forwardMessage` call. */
   message: ChatMessage;
-  /** Active group conversations, shown as a "Groups" section below People. */
+  /** The forwardable groups on the loaded inbox pages, shown as a "Groups"
+   *  section below People. A search also reaches groups past those pages
+   *  (`useForwardGroupSearch`). */
   groups: Conversation[];
+  /** The active mailbox's list scope, which the group search runs under. */
+  mailboxScope: ConversationListScope | null;
   forwardMessage: MessageForwarding["forwardMessage"];
   onClose: () => void;
 }
@@ -44,6 +50,7 @@ interface ForwardPickerModalProps {
 export function ForwardPickerModal({
   message,
   groups,
+  mailboxScope,
   forwardMessage,
   onClose,
 }: ForwardPickerModalProps) {
@@ -99,15 +106,7 @@ export function ForwardPickerModal({
       : candidates;
   }, [query, candidates]);
 
-  const groupResults = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    const activeGroups = groups.filter((group) => group.isGroup);
-    return needle
-      ? activeGroups.filter((group) =>
-          group.name.toLowerCase().includes(needle),
-        )
-      : activeGroups;
-  }, [query, groups]);
+  const groupSearch = useForwardGroupSearch(query, groups, mailboxScope);
 
   function handleClose() {
     if (isSending) return;
@@ -176,9 +175,10 @@ export function ForwardPickerModal({
       />
       <ForwardRecipientList
         people={people}
-        groupResults={groupResults}
+        groupResults={groupSearch.groups}
         staffMap={staffMap}
         loading={loading}
+        isSearchingGroups={groupSearch.isSearching}
         candidatesCount={candidates.length}
         query={query}
         isSelected={isSelected}
@@ -187,6 +187,11 @@ export function ForwardPickerModal({
         capNoticeId={capNoticeId}
         onToggle={toggle}
       />
+      {groupSearch.isError && (
+        <p className={styles.empty} role="status">
+          {t("messages:forward.groupSearchError")}
+        </p>
+      )}
     </Modal>
   );
 }

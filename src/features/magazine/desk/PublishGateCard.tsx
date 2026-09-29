@@ -97,7 +97,9 @@ export function PublishGateCard({
             onClick={action.askToUnpublish}
             disabled={action.isPending}
           >
-            {t("magazine:piece.publish.unpublish")}
+            {isScheduled
+              ? t("magazine:piece.header.unschedule")
+              : t("magazine:piece.publish.unpublish")}
           </Button>
         </div>
       ) : (

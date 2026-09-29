@@ -10,11 +10,18 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { Issue, Piece, Stage } from "../data/desk.data";
 import type { usePieceMutations } from "../api/usePieceMutations";
 import { STAGE_VIEW_TO_DTO } from "../api/pieces.adapters";
+import type { TFunction } from "../../../shared/i18n/types";
+import type { ToastType } from "../../../shared/components/feedback/toastContext";
+import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
 
 export interface UseDeskPieceActionsParams {
   /** The current issue: its number backs the "Produce" link target. */
   issue: Issue;
   pieceMutations: ReturnType<typeof usePieceMutations>;
+  /** Says why a scheduled or live piece did not move. Optional: without them the
+   *  move is still refused, silently, behind the disabled picker and drag. */
+  showToast?: (message: string, type?: ToastType) => void;
+  translate?: TFunction;
 }
 
 export interface UseDeskPieceActionsResult {
@@ -27,6 +34,8 @@ export interface UseDeskPieceActionsResult {
 export function useDeskPieceActions({
   issue,
   pieceMutations,
+  showToast,
+  translate,
 }: UseDeskPieceActionsParams): UseDeskPieceActionsResult {
   const navigate = useNavigate();
   const { demoMode } = useDemoMode();
@@ -70,11 +79,31 @@ export function useDeskPieceActions({
   // already toasts the server's own message (`reasonFor` reads a 409's
   // `message` straight through) instead of a generic failure. A handler
   // added here would only double the toast.
-  const movePiece = (piece: Piece, stage: Stage) =>
+  //
+  // A piece with a publish date stays put: a scheduled one waits at Ready
+  // for its date, and a live one would stay public at its new stage. The
+  // picker and drag are already locked, so this guard only catches a caller
+  // that skips them. The backend's 409 `magazine_piece_scheduled` stays the
+  // final backstop for a scheduled piece.
+  const movePiece = (piece: Piece, stage: Stage) => {
+    if (hasPublishDate(piece)) {
+      if (showToast && translate) {
+        showToast(
+          translate(
+            isPieceScheduled(piece)
+              ? "magazine:desk.board.unscheduleToMove"
+              : "magazine:desk.board.unpublishToMove",
+          ),
+          "info",
+        );
+      }
+      return;
+    }
     pieceMutations.moveStage.mutate({
       id: piece.id,
       stage: STAGE_VIEW_TO_DTO[stage],
     });
+  };
 
   const produceIssue = () =>
     void navigate(routes.magazineIssueProd.replace(":number", issue.number));

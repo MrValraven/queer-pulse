@@ -324,6 +324,72 @@ describe("buildCalendarWeeks markers and flags", () => {
   });
 });
 
+/** An ISO instant at a local hour on a local day, so the go-live day reads
+ *  the same in every timezone the suite runs in. */
+function localInstant(month: number, day: number, hour: number): string {
+  return new Date(2026, month, day, hour, 0, 0).toISOString();
+}
+
+describe("buildCalendarWeeks scheduled pieces", () => {
+  it("files a scheduled piece with no due date on its go-live day", () => {
+    const scheduled = makePiece({
+      id: "scheduled",
+      stage: "Ready",
+      publishedAt: localInstant(7, 14, 10),
+    });
+    const layout = buildCalendarWeeks([scheduled], TODAY, "2026-08-21", null);
+    expect(layout.undated).toHaveLength(0);
+    const friday = dayOf(layout, "2026-08-14");
+    expect(friday.entries.map((entry) => entry.piece.id)).toEqual([
+      "scheduled",
+    ]);
+    expect(friday.entries[0]?.goesLiveOn).toBe("2026-08-14");
+    expect(friday.entries[0]?.dueDate).toBeNull();
+  });
+
+  it("keeps a scheduled piece with a due date on its due day", () => {
+    const scheduled = makePiece({
+      stage: "Ready",
+      dueDate: "2026-08-11",
+      publishedAt: localInstant(7, 14, 10),
+    });
+    const layout = buildCalendarWeeks([scheduled], TODAY, "2026-08-21", null);
+    expect(dayOf(layout, "2026-08-11").entries).toHaveLength(1);
+    expect(dayOf(layout, "2026-08-14").entries).toHaveLength(0);
+  });
+
+  it("stretches the range to reach a go-live day past the close", () => {
+    const scheduled = makePiece({
+      stage: "Ready",
+      publishedAt: localInstant(7, 26, 9),
+    });
+    const layout = buildCalendarWeeks([scheduled], TODAY, "2026-08-14", null);
+    expect(layout.weeks).toHaveLength(3);
+    expect(dayOf(layout, "2026-08-26").entries).toHaveLength(1);
+  });
+
+  it("leaves a piece already live with no due date in the no-date lane", () => {
+    const live = makePiece({
+      id: "live",
+      stage: "Ready",
+      publishedAt: localInstant(7, 5, 9),
+    });
+    const layout = buildCalendarWeeks([live], TODAY, "2026-08-21", null);
+    expect(layout.undated.map((entry) => entry.piece.id)).toEqual(["live"]);
+    expect(layout.undated[0]?.goesLiveOn).toBeNull();
+  });
+
+  it("lanes a go-live day beyond the last week drawn as later", () => {
+    const scheduled = makePiece({
+      id: "far",
+      stage: "Ready",
+      publishedAt: localInstant(11, 1, 9),
+    });
+    const layout = buildCalendarWeeks([scheduled], TODAY, "2026-08-21", null);
+    expect(layout.later.map((entry) => entry.piece.id)).toEqual(["far"]);
+  });
+});
+
 describe("calendarPieceOrder", () => {
   it("walks the lanes first, then the grid day by day", () => {
     const layout = buildCalendarWeeks(

@@ -5,6 +5,7 @@ import { SubprofileSections } from "../SubprofileSections";
 import { SubprofileSpotlight } from "../SubprofileSpotlight";
 import { SubprofileAffiliations } from "../SubprofileAffiliations";
 import { useEndorsers } from "../api/useEndorsers";
+import { canReadPersonaEndorsers } from "../personaEngagement";
 import {
   PracticePractical,
   PracticeFirstSession,
@@ -72,7 +73,13 @@ export function PracticeBody({
   onOpenPoem: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
-  const endorsers = useEndorsers(data.id, data.endorsementCount > 0);
+  // A members-only persona's endorser list answers its owners alone, and not
+  // while an owner previews the page as a visitor.
+  const endorsers = useEndorsers(
+    data.id,
+    data.endorsementCount > 0 &&
+      canReadPersonaEndorsers(data, data.viewerIsMember && mode !== "visitor"),
+  );
   // Which two sections are this persona's OWN content depends on its kind —
   // the practice family spans nine kinds, not just therapist (e.g. coach's
   // are "programmes"/"credentials", yoga_teacher's are "classes"/"trainings").

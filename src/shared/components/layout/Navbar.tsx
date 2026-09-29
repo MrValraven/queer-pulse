@@ -23,6 +23,7 @@ import { NavBrand } from "./NavBrand";
 import { Sidebar } from "./Sidebar";
 import { AccountMenu } from "./AccountMenu";
 import { MobileNavDrawer } from "./MobileNavDrawer";
+import { AppBarSearchButton } from "./AppBarSearchButton";
 import { AccountSheet } from "./AccountSheet";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { useAppBarScrollAway } from "./useAppBarScrollAway";
@@ -87,11 +88,15 @@ function NotificationsBell({
     <Link
       to={routes.notifications}
       className={styles.bell}
-      aria-label={t("nav:notifications")}
+      aria-label={
+        count > 0
+          ? t("nav:notificationsUnread", { count })
+          : t("nav:notifications")
+      }
     >
       {bellIcon}
       {count > 0 && (
-        <span className={styles.bellBadge}>
+        <span className={styles.bellBadge} aria-hidden="true">
           <RollingNumber value={fmt.number(count)} numericValue={count} />
         </span>
       )}
@@ -326,7 +331,7 @@ export function Navbar({
             </button>
           )}
 
-          {/* Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT). Desktop only — mobile search lives in the More sheet. */}
+          {/* Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT). Desktop only. The mobile app bar mounts AppBarSearchButton. */}
           {!isMobile && (
             <button
               type="button"
@@ -345,6 +350,7 @@ export function Navbar({
           {isAppBar &&
             (loggedIn ? (
               <>
+                <AppBarSearchButton />
                 <MessagesLink />
                 <NotificationsBell unreadCount={unreadCount} />
               </>

@@ -2,6 +2,7 @@ import "@testing-library/jest-dom/vitest";
 import { afterEach, beforeEach, expect, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import * as axeMatchers from "vitest-axe/matchers.js";
+import { resetMswSubprofileEditVersions } from "./msw/subprofiles.handlers";
 
 // ── axe-core matcher ─────────────────────────────────────────────────────────
 // Registers `expect(results).toHaveNoViolations()` for every suite. The `axe()`
@@ -115,4 +116,5 @@ afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
+  resetMswSubprofileEditVersions();
 });

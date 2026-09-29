@@ -2,11 +2,17 @@
  *
  * `buildReviewRows` turns the live form state + posting company into the
  * labelled summary rows the review step lists (with the wizard step each row
- * jumps back to on "edit"). It's derived config, not static data, so it takes
- * the form and `t` at call time and reuses the canonical option lists here
- * rather than in the component body. */
+ * jumps back to on "edit"). It is derived config: it takes the form and `t` at
+ * call time and keeps the canonical option lookups here, out of the component
+ * body. */
 import type { TFunction } from "../../shared/i18n/types";
-import { CATEGORIES, COMMITMENTS, FORMATS, optionLabel } from "./postJob.data";
+import {
+  COMMITMENTS,
+  FORMATS,
+  SENIORITY,
+  jobFieldLabel,
+  optionLabel,
+} from "./postJob.data";
 import type { CompanyProfile } from "./companies.data";
 import type { PostJobForm } from "./usePostJobForm";
 
@@ -25,6 +31,7 @@ export function buildReviewRows(
   const { state, payLabel } = form;
   const dash = t("economy:postJob.step5.dash");
   const screeningCount = state.screening.filter(Boolean).length;
+  const fieldLabel = jobFieldLabel(state.category, state.profession, t);
 
   return [
     {
@@ -33,18 +40,22 @@ export function buildReviewRows(
       step: 1,
       empty: !state.title,
     },
-    {
-      k: t("economy:postJob.field.category"),
-      v: optionLabel(CATEGORIES, state.category, t),
-      step: 0,
-    },
+    ...(fieldLabel
+      ? [{ k: t("economy:postJob.field.category"), v: fieldLabel, step: 0 }]
+      : []),
     {
       k: t("economy:postJob.field.arrangement"),
       v: `${optionLabel(COMMITMENTS, state.commitment, t)} · ${optionLabel(FORMATS, state.format, t)}`,
       step: 0,
     },
-    ...(state.seniority !== "Any level"
-      ? [{ k: t("economy:postJob.field.level"), v: state.seniority, step: 0 }]
+    ...(state.seniority !== "anyLevel"
+      ? [
+          {
+            k: t("economy:postJob.field.level"),
+            v: optionLabel(SENIORITY, state.seniority, t),
+            step: 0,
+          },
+        ]
       : []),
     ...(form.needsCity
       ? [

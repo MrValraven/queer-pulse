@@ -47,11 +47,18 @@ export function useAdminHousingCoops() {
  * never hits the network: this is an admin-only endpoint that 403s for anyone
  * else. Mirrors `useAdminGroupJoinRequests` for the sibling housing-groups
  * queue.
+ *
+ * `isEnabled: false` mounts the hook without fetching, and stays out of the
+ * key. The admin rail passes it for every live viewer who is not an admin, so
+ * a moderator's page load never fires that guaranteed 403.
  */
-export function useAdminJoinRequests() {
+export function useAdminJoinRequests({
+  isEnabled = true,
+}: { isEnabled?: boolean } = {}) {
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<ItemsPage<AdminJoinRequestDTO>>({
     queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY, demoMode],
+    enabled: isEnabled,
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       demoMode

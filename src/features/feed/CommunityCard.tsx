@@ -1,6 +1,7 @@
 import { FiBarChart2 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Avatar, Button } from "../../shared/components/ui";
+import { communityPath } from "../../app/routeMap";
 import { communities } from "../homepage/data/communities";
 import {
   CARD_TAG_DISPLAY_CAP,
@@ -20,10 +21,10 @@ import {
 
 export function CommunityCard() {
   const { t } = useTranslation();
-  const to = `/community/${c.slug}`;
+  const to = communityPath(c.slug);
   // This card mirrors the real "trans-hub" record (see feedCards.data.ts's
-  // doc comment), so its tag pills are that community's real curated tags —
-  // translated via the shared catalog — not invented flavor text.
+  // doc comment), so its tag pills are that community's real curated tags,
+  // translated via the shared catalog.
   const curatedTagIds =
     communities.find((community) => community.slug === c.slug)?.tags ?? [];
   const tags = [

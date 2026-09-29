@@ -77,10 +77,20 @@ export interface RestoreItemRevisionVariables {
   subprofileId: string;
   itemId: string;
   revisionId: string;
+  /** ENG-451: the open editor's `editVersion`. Sent, the restore is refused
+   *  with a 409 `PERSONA_EDIT_CONFLICT` when someone saved the persona after
+   *  the editor loaded it. Left out, the restore is unconditional. */
+  expectedEditVersion?: number;
 }
 
 export interface RestoreItemRevisionResult {
   ok: true;
+  /** The persona's `editVersion` after the restore, for the editor to carry
+   *  on its next write. Set only when the restore SENT `expectedEditVersion`:
+   *  an unconditional restore's version could include a co-owner's save the
+   *  editor never loaded. `null` in demo mode, where there is no version to
+   *  move, and from a server that predates the field. */
+  editVersion: number | null;
   /** The persona, refetched immediately after a LIVE restore so this already
    *  holds the restored item's content. The open editor's row state is
    *  seed-once (see `useEditorRowsState`) and would otherwise keep showing
@@ -97,7 +107,9 @@ export interface RestoreItemRevisionResult {
 /**
  * Restore a saved revision as the item's current content.
  *
- * Live: `POST .../revisions/:revisionId/restore`, then refetches the
+ * Live: `POST .../revisions/:revisionId/restore` (body
+ * `{ expectedEditVersion }` when the caller passes one; the server answers
+ * `{ ok, editVersion }`), then refetches the
  * persona's owner-editor query (`["subprofile", demoMode, subprofileId]`,
  * the exact key `useSubprofile` reads) and returns that fresh data as
  * `subprofile`. The refetch reuses whichever queryFn is already registered
@@ -128,14 +140,28 @@ export function useRestoreItemRevision() {
     Error,
     RestoreItemRevisionVariables
   >({
-    mutationFn: async ({ subprofileId, itemId, revisionId }) => {
+    // `ItemRevisionHistoryModal` toasts its own copy for every failure, so
+    // silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({
+      subprofileId,
+      itemId,
+      revisionId,
+      expectedEditVersion,
+    }) => {
       if (demoMode) {
         restoreDemoRevisionSnapshot(itemId, revisionId);
-        return { ok: true, subprofile: null };
+        return { ok: true, editVersion: null, subprofile: null };
       }
-      await apiPost<{ ok: true }>(
+      const hasPrecondition = expectedEditVersion !== undefined;
+      const restored = await apiPost<{ ok: true; editVersion?: number }>(
         `/subprofiles/${subprofileId}/items/${itemId}/revisions/${revisionId}/restore`,
+        hasPrecondition ? { expectedEditVersion } : undefined,
       );
+      const editVersion =
+        hasPrecondition && typeof restored.editVersion === "number"
+          ? restored.editVersion
+          : null;
       // Refetch (not just invalidate) and AWAIT it here, inside the
       // mutationFn, so the restored data is what this mutation resolves
       // with — an `onSuccess`-only invalidate would race the caller, which
@@ -148,7 +174,7 @@ export function useRestoreItemRevision() {
       const subprofile =
         queryClient.getQueryData<SubprofileView | null>(subprofileQueryKey) ??
         null;
-      return { ok: true, subprofile };
+      return { ok: true, editVersion, subprofile };
     },
     onSuccess: (_data, { subprofileId, itemId }) => {
       void queryClient.invalidateQueries({

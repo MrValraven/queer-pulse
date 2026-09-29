@@ -1,8 +1,7 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useId, useState } from "react";
 import type { IconType } from "react-icons";
 import {
   FiArchive,
-  FiEdit2,
   FiEye,
   FiEyeOff,
   FiImage,
@@ -15,9 +14,8 @@ import type { AdminStickerPackResponse } from "../../../shared/contracts/contrac
 import { AdminChip } from "../ui";
 import type { PackStatus } from "./stickerBuilder.types";
 import { StickerPackMenu } from "./StickerPackMenu";
+import { StickerPackNames } from "./StickerPackNames";
 import styles from "./StickerPackHeader.module.css";
-
-const MAX_PACK_NAME_LENGTH = 80;
 
 const STATUS_TONE: Record<PackStatus, "plum" | "jade" | "ghost"> = {
   draft: "plum",
@@ -57,6 +55,7 @@ const STATUS_ACTION: Record<
 export function StickerPackHeader({
   pack,
   onRename,
+  onRenamePt,
   onSetStatus,
   onDeletePack,
   isMutating,
@@ -64,6 +63,8 @@ export function StickerPackHeader({
 }: {
   pack: AdminStickerPackResponse;
   onRename: (name: string) => void;
+  /** Saves the Portuguese name, or clears it with `null`. */
+  onRenamePt: (namePt: string | null) => void;
   onSetStatus: (status: PackStatus) => void;
   onDeletePack: () => void;
   isMutating: boolean;
@@ -104,7 +105,11 @@ export function StickerPackHeader({
         </div>
 
         <div className={styles.titleBlock}>
-          <PackTitle pack={pack} onRename={onRename} />
+          <StickerPackNames
+            pack={pack}
+            onRename={onRename}
+            onRenamePt={onRenamePt}
+          />
           <p className={styles.meta}>
             <span className={styles.slug}>{pack.slug}</span>
             <span className={styles.separator} aria-hidden />
@@ -174,115 +179,5 @@ export function StickerPackHeader({
         confirmLabel={t(`admin:stickerPacks.header.action.${action.key}`)}
       />
     </header>
-  );
-}
-
-/**
- * The pack name as an inline-editable title. At rest it is a button that
- * reads as the heading with a pencil beside it; activating it swaps in a text
- * input. Enter or leaving the field saves a changed, non-empty name; Escape
- * (or an empty field) puts the old name back. Editing is tied to the pack id,
- * so switching packs mid-edit drops the draft and leaves the new pack alone.
- */
-function PackTitle({
-  pack,
-  onRename,
-}: {
-  pack: AdminStickerPackResponse;
-  onRename: (name: string) => void;
-}) {
-  const { t } = useTranslation();
-  const hintId = useId();
-  const [editingPackId, setEditingPackId] = useState<string | null>(null);
-  const [draftName, setDraftName] = useState(pack.name);
-  const titleButtonRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const shouldRestoreFocusRef = useRef(false);
-  const hasFinishedRef = useRef(false);
-  const isEditing = editingPackId === pack.id;
-
-  // Focus follows the swap both ways: into the input (text selected, ready to
-  // overwrite) when editing starts, and back to the title after Enter or
-  // Escape. A blur save leaves focus wherever the admin clicked.
-  useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus();
-      inputRef.current?.select();
-      return;
-    }
-    if (!shouldRestoreFocusRef.current) return;
-    shouldRestoreFocusRef.current = false;
-    titleButtonRef.current?.focus();
-  }, [isEditing]);
-
-  function startEditing() {
-    hasFinishedRef.current = false;
-    setDraftName(pack.name);
-    setEditingPackId(pack.id);
-  }
-
-  // Guarded by a ref so the blur that can follow an Enter or Escape (the
-  // input unmounting under focus, still running the old render's handler)
-  // cannot save a second time or undo an Escape.
-  function finishEditing(shouldSave: boolean, shouldRestoreFocus: boolean) {
-    if (!isEditing || hasFinishedRef.current) return;
-    hasFinishedRef.current = true;
-    const trimmedName = draftName.trim();
-    const isSaveable =
-      trimmedName.length > 0 &&
-      trimmedName.length <= MAX_PACK_NAME_LENGTH &&
-      trimmedName !== pack.name;
-    shouldRestoreFocusRef.current = shouldRestoreFocus;
-    setEditingPackId(null);
-    if (shouldSave && isSaveable) onRename(trimmedName);
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      finishEditing(true, true);
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-      finishEditing(false, true);
-    }
-  }
-
-  if (isEditing) {
-    return (
-      <div className={styles.titleEditor}>
-        <input
-          ref={inputRef}
-          className={styles.titleInput}
-          type="text"
-          value={draftName}
-          maxLength={MAX_PACK_NAME_LENGTH}
-          aria-label={t("admin:stickerPacks.header.nameInputLabel")}
-          aria-describedby={hintId}
-          onChange={(event) => setDraftName(event.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={() => finishEditing(true, false)}
-        />
-        <p id={hintId} className={styles.titleHint}>
-          {t("admin:stickerPacks.header.renameHint")}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <h2 className={styles.title}>
-      <button
-        ref={titleButtonRef}
-        type="button"
-        className={styles.titleButton}
-        aria-label={t("admin:stickerPacks.header.renameLabel", {
-          name: pack.name,
-        })}
-        onClick={startEditing}
-      >
-        <span className={styles.titleText}>{pack.name}</span>
-        <FiEdit2 className={styles.titleEditIcon} aria-hidden />
-      </button>
-    </h2>
   );
 }

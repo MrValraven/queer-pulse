@@ -4,20 +4,23 @@
    second wrapper repeating the same rules.
 
    The bottom radius matches the card it closes (`--radius-24`), and the
-   translucent ground is a color-mix on --paper rather than a literal white,
-   so it follows the theme. */
+   translucent ground is a color-mix on --paper, so it follows the theme. */
 
 .foot {
   position: sticky;
-  bottom: 0;
+  /* Clears the bottom tab bar on a phone, home indicator included. The token
+     collapses to the bare safe-area inset where no bar renders, and to zero on
+     a desktop. */
+  bottom: var(--bottom-inset);
   z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--gap-xs);
+  /* On a phone `bottom` above already clears the home indicator, so the
+     padding carries no inset of its own there. Wider screens add it back
+     below (`--mobile-up`). */
   padding: 14px 28px;
-  /* Clears the home indicator when the footer is the last thing on screen. */
-  padding-bottom: max(14px, env(safe-area-inset-bottom));
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
   border-radius: 0 0 var(--radius-24) var(--radius-24);
   background: color-mix(in srgb, var(--paper) 92%, transparent);
@@ -91,6 +94,18 @@
   background: var(--accent);
 }
 
+/* The last save failed and a retry is scheduled. The label says so in words,
+   so the colour is never the only signal. */
+.savedDot[data-state="failed"] {
+  background: var(--danger);
+}
+
+/* The label follows the dot: "Not saved yet" must not read like "Draft saved"
+   in the same quiet ink. `--danger` clears 4.5:1 on paper in both themes. */
+.saved[data-state="failed"] {
+  color: var(--danger);
+}
+
 /* ── The blocker / ready line ────────────────────────────────────────────── */
 
 .hint {
@@ -161,8 +176,8 @@
 
 .publishGroup {
   display: inline-flex;
-  /* The caret matches whatever height <Button> resolves to, rather than both
-     halves guessing at 44px separately. */
+  /* The caret matches whatever height <Button> resolves to, so both halves
+     share one height. */
   align-items: stretch;
   position: relative;
   transition: transform var(--dur-fast) var(--ease);
@@ -192,7 +207,7 @@
 }
 
 /* Square off the edge the caret sits against, so the two halves read as one
-   control rather than two pills that happen to touch. Written as a descendant
+   control. Written as a descendant
    so it out-specifies <Button>'s own `border-radius` shorthand whichever way
    the two stylesheets land in the bundle. */
 .publishGroup .publishButton {
@@ -290,13 +305,22 @@
 @media (--wide) {
   .foot {
     padding: 12px 16px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
     border-radius: 0 0 var(--radius-18) var(--radius-18);
   }
 
   /* A touch-first width: the ⌘ hint has no key to point at. */
   .shortcut {
     display: none;
+  }
+}
+
+/* Past the tab-bar cutover `--bottom-inset` is zero, yet a large phone in
+   landscape or an installed iPad app still has a home indicator. The footer's
+   own padding clears it there. Placed after `--wide` so the shorthand above
+   does not reset it between 860 and 900 px. */
+@media (--mobile-up) {
+  .foot {
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
 }
 

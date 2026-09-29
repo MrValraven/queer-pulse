@@ -121,6 +121,10 @@ export interface SubprofileView {
    *  Never less than 1. Drives the dashboard `SideCard`'s co-owner meta, shown
    *  only when greater than 1. */
   memberCount: number;
+  /** The persona's edit counter (see `SubprofileDTO.editVersion`), 0 when the
+   *  server sent none. The editor keeps the value it loaded as the
+   *  precondition of its saves. */
+  editVersion: number;
 }
 
 /** Public view model (from SubprofilePublicDTO); owner fields only when linked. */
@@ -144,6 +148,10 @@ export interface PublicSubprofileView {
   ctaUrl: string;
   socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
+  /** Mirrors the wire DTO. Follow and endorse accept an `open` persona only,
+   *  so every follow/endorse affordance and endorser-list read gates on it
+   *  (`personaEngagement.ts`). */
+  visibility: Visibility;
   /** Phase 1b: present on every public view now (mirrors the wire DTO).
    *  Only ever `"draft"` when the viewer is the owner/co-owner previewing
    *  their own unpublished persona — every other viewer only ever reaches
@@ -168,8 +176,8 @@ export interface PublicSubprofileView {
 
 /** Per-persona owner-only metadata (status/visibility/position/id), threaded
  *  alongside a `PublicSubprofileView` in self view rather than merged into
- *  it — `PublicSubprofileView` has no `status`/`visibility`/`position` and
- *  giving it optional copies would blur which shape callers are holding.
+ *  it: `PublicSubprofileView` has no `position`, and giving it an optional
+ *  copy would blur which shape callers are holding.
  *  Built by `ProfileSubprofilesSection` from the raw owner `SubprofileView[]`
  *  and read by `SubprofileShowcase`/`SubprofileSwitchList`/`SubprofileFeatureCard`. */
 export interface SubprofileOwnerMeta {
@@ -271,6 +279,7 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     followerCount: dto.followerCount,
     skinData: dto.skinData ?? null,
     memberCount: dto.memberCount ?? 1,
+    editVersion: dto.editVersion ?? 0,
   };
 }
 
@@ -295,6 +304,7 @@ export function publicSubprofileToView(
     ctaUrl: dto.ctaUrl ?? "",
     socialLinks: dto.socialLinks,
     linkVisibility: dto.linkVisibility,
+    visibility: dto.visibility,
     status: dto.status,
     ...(dto.ownerSlug !== undefined ? { ownerSlug: dto.ownerSlug } : {}),
     ...(dto.ownerName !== undefined ? { ownerName: dto.ownerName } : {}),
@@ -313,8 +323,8 @@ export function publicSubprofileToView(
 /** Adapt an owner (self-view) `SubprofileView` into the `PublicSubprofileView`
  *  shape `SubprofileShowcase`/`SubprofileFeatureCard` already know how to
  *  render, so self and public views share one rendering pipeline instead of
- *  a messy type merge. Owner-only fields (`status`/`visibility`/`position`)
- *  don't carry across here — they travel separately as `SubprofileOwnerMeta`
+ *  a messy type merge. The owner-only `position` doesn't carry across
+ *  here; it travels separately in `SubprofileOwnerMeta`
  *  (see `ProfileSubprofilesSection`). Viewer-relative fields the owner has no
  *  concept of *as a visitor* (endorsed/following) default to `false`; the
  *  card renders `isOwnerViewing` instead of reading these when self. */
@@ -344,6 +354,8 @@ export function ownerViewToShowcaseView(
     ctaUrl: view.ctaUrl,
     socialLinks: view.socialLinks,
     linkVisibility: view.linkVisibility,
+    // The preview shows what a visitor gets, which depends on this.
+    visibility: view.visibility,
     status: view.status,
     ownerSlug: selfOwnerSlug,
     ...(isLinkedWithName ? { ownerName: creatorName } : {}),

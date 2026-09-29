@@ -30,11 +30,16 @@ export function StepOpening() {
           tint="plum"
           size={26}
         />
-        <Translation
-          i18nKey="communities:start.opening.signed"
-          components={{ strong: <b /> }}
-          values={{ name: firstName }}
-        />
+        {/* One span, so the sentence is ONE flex item. Bare, the text node and
+            the <b> name became sibling flex items and the name was squeezed to
+            a letter-wide column on a phone. */}
+        <span>
+          <Translation
+            i18nKey="communities:start.opening.signed"
+            components={{ strong: <b /> }}
+            values={{ name: firstName }}
+          />
+        </span>
       </div>
     </div>
   );

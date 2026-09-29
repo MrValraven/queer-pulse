@@ -3,7 +3,10 @@ import { useCommunityMembership } from "../../app/providers/useCommunityMembersh
 import { getLiving } from "./livingCommunities.data";
 import { JoinModal } from "./JoinModal";
 import type { AccessTier } from "./api/communities.api";
-import type { JoinCommunityPayload } from "./api/communityJoin.api";
+import {
+  joinOutcomeOf,
+  type JoinCommunityPayload,
+} from "./api/communityJoin.api";
 import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
 
 /**
@@ -29,7 +32,7 @@ export interface JoinFlowCommunity {
  * "similar communities" strip both open it the same way). The detail page has
  * its own mount, since it can pass the richer detail copy.
  *
- * Two things live here rather than in each page: the access tier the modal
+ * Two things live here, once for every page: the access tier the modal
  * opens on, and what "join" actually does. Demo mode drives the session
  * membership provider; live awaits `POST /communities/:slug/join` and hands
  * the outcome back to the modal, which is what lets it hold its welcome step
@@ -38,13 +41,32 @@ export interface JoinFlowCommunity {
 export function CommunityJoinFlowModal({
   community,
   parentName,
+  parentSlug,
+  isInvited = false,
   onClose,
+  onMembershipGranted,
+  onRequestFiled,
 }: {
   community: JoinFlowCommunity;
   /** Set when `community` is a space: the parent's name, so the wizard's
    *  rules step notes the parent's rules the applicant already agreed to. */
   parentName?: string;
+  /** The parent's slug when `community` is a space, so a "join the parent
+   *  first" refusal can link to the parent. */
+  parentSlug?: string;
+  /** The viewer holds a standing invitation (PRD-140), so the wizard words
+   *  itself as joining. The gate passes `hasStandingInvitation`. */
+  isInvited?: boolean;
   onClose: () => void;
+  /** Called once the viewer is on the roster: live when the server answers
+   *  `joined`, demo after an instant join. The gate uses it to take the new
+   *  member into the community when the wizard closes. */
+  onMembershipGranted?: () => void;
+  /** Called once a request is with the moderators: live when the server
+   *  answers `requested` (a gated tier, or an open community holding the join
+   *  for review), demo after a request. Onboarding uses it to show its card as
+   *  requested once the wizard closes. */
+  onRequestFiled?: () => void;
 }) {
   const { demoMode } = useDemoMode();
   const { join, requestToJoin } = useCommunityMembership();
@@ -65,12 +87,25 @@ export function CommunityJoinFlowModal({
   const submit = async (isRequest: boolean, payload: JoinCommunityPayload) => {
     if (demoMode) {
       if (community.slug) {
-        if (isRequest) requestToJoin(community.slug);
-        else join(community.slug);
+        if (isRequest) {
+          requestToJoin(community.slug);
+          onRequestFiled?.();
+        } else {
+          join(community.slug);
+          onMembershipGranted?.();
+        }
       }
-      return;
+      return null;
     }
-    await joinMutation.mutateAsync(payload);
+    // Returned so the wizard reads the outcome. This used to be awaited and
+    // dropped, so every card-mounted wizard (gate, grid, similar, suggested,
+    // spaces) resolved to `undefined`: an uninvited `invite_required` read as
+    // "You're in", and a join held for review as a welcome.
+    const result = await joinMutation.mutateAsync(payload);
+    const outcome = joinOutcomeOf(result);
+    if (outcome === "joined") onMembershipGranted?.();
+    if (outcome === "requested") onRequestFiled?.();
+    return result;
   };
 
   return (
@@ -83,7 +118,9 @@ export function CommunityJoinFlowModal({
         slug: community.slug,
       }}
       tier={tier}
+      isInvited={isInvited}
       parentName={parentName}
+      parentSlug={parentSlug}
       onClose={onClose}
       onJoined={(payload) => submit(false, payload)}
       onRequested={(payload) => submit(true, payload)}

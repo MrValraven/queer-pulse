@@ -19,23 +19,28 @@ import styles from "./SubprofileShare.module.css";
  * an owner who cannot find Share reads the feature as broken. The reason rides
  * the accessible name, and the hero's meta line right below already spells out
  * "No address yet: set a handle to give it one" on screen.
+ *
+ * A DRAFT is disabled the same way, even with a stored handle (PRD-429): its
+ * address 404s for everyone but its owners until it is published, so sharing
+ * it would hand out a dead link. The draft banner above says so on screen.
  */
 export function SubprofileShare({ view }: { view: PublicSubprofileView }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const isDraft = view.status === "draft";
   const hasPublicAddress = personaPublicPathOrNull(view) !== null;
+  const isShareable = hasPublicAddress && !isDraft;
+  let ariaLabelKey = "subprofiles:share.ariaLabel";
+  if (isDraft) ariaLabelKey = "subprofiles:share.draftAria";
+  else if (!hasPublicAddress) ariaLabelKey = "subprofiles:share.noAddressAria";
 
   return (
     <Button
       variant="ghost"
       size="md"
       className={styles.shareButton}
-      disabled={!hasPublicAddress}
-      aria-label={t(
-        hasPublicAddress
-          ? "subprofiles:share.ariaLabel"
-          : "subprofiles:share.noAddressAria",
-      )}
+      disabled={!isShareable}
+      aria-label={t(ariaLabelKey)}
       onClick={() => void shareSubprofile(view, t, showToast)}
     >
       <FiShare2 aria-hidden />

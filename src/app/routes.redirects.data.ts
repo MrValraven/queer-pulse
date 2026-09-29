@@ -132,7 +132,6 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/about/press-archive", routes.pressArchive],
   ["/policies/dsar", routes.dsar],
   // System
-  ["/500", routes.serverError],
   ["/maintenance", routes.maintenance],
   ["/offline", routes.offline],
   ["/pwa-prompt", routes.pwaPrompt],

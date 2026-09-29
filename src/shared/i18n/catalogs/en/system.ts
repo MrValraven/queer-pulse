@@ -63,7 +63,7 @@ export const system: Catalog = {
   // Both numbers come from `features/system/accountWindows.ts`, mirroring the
   // backend constants that enforce them. This line used to promise 21 days.
   "accountBanned.whatNow.row1.body":
-    "Open within {filingDays} days of removal. Reviewed by the Assembly's standing appeals panel, different humans than your case moderators. A decision comes back within {decisionDays} days.",
+    "Open within {filingDays} days of removal. Reviewed by a moderator who was not part of the original decision. A decision comes back within {decisionDays} days.",
   "accountBanned.whatNow.row2.title":
     "Your data stays until you ask us to erase it",
   // Being removed schedules no deletion: erasure only ever runs on the
@@ -71,7 +71,7 @@ export const system: Catalog = {
   // used to read "removed from the platform within 30 days", as though a ban
   // triggered it.
   "accountBanned.whatNow.row2.body":
-    "Per our <a>privacy policy</a>. Ask for erasure below and your account is hidden straight away, then permanently deleted {erasureDays} days later. Posts you authored stay up with your name removed.",
+    "Per our <a>privacy policy</a>. Ask for erasure below and your account is hidden straight away, then permanently deleted {erasureDays} days later. Community posts you authored stay up with your name removed. Your forum posts are deleted, and threads you started stay up without your name wherever other members replied or you credited a co-author.",
   "accountBanned.whatNow.row3.title":
     "Public records of this action are not kept",
   // Was: "The case file exists internally for 36 months. Your connections were
@@ -335,28 +335,6 @@ export const system: Catalog = {
     "Add it to your Home Screen to get notifications. Takes about 30 seconds.",
   "pwaInstall.nudge.cta": "Show me how",
   "pwaInstall.nudge.dismiss": "Dismiss the install suggestion",
-
-  // ── ServerErrorPage.tsx ───────────────────────────────────────────────────
-  "serverError.countdown.label": "Estimated back online in",
-  "serverError.demoModeAria": "Demo mode",
-  "serverError.tabs.error": "500 Error",
-  "serverError.tabs.maintenance": "Maintenance",
-  "serverError.heading.error.line1": "Something went",
-  "serverError.heading.error.line2": "<em>wrong on our end.</em>",
-  "serverError.heading.maintenance.line1": "Planned maintenance.",
-  "serverError.heading.maintenance.line2": "<em>Back soon.</em>",
-  "serverError.sub.error":
-    "This is our fault. We've been automatically notified and we're looking at it.",
-  "serverError.sub.maintenance":
-    "We're upgrading the platform. Shouldn't be long. We appreciate your patience.",
-  "serverError.status.maintenance":
-    "<strong>Planned downtime.</strong> Follow <a>status.queerpulse.com</a> for updates.",
-  "serverError.status.error":
-    "<strong>Our team has been alerted.</strong> Check <a>status.queerpulse.com</a> for live updates.",
-  "serverError.actions.retryCta": "Try again",
-  "serverError.actions.homeCta": "Go to homepage",
-  "serverError.actions.statusCta": "Check platform status",
-  "serverError.footer.contact": "If this keeps happening, <a>contact us</a>.",
 
   // ── StatusPage.tsx / StatusComponents.tsx / status.data.ts ───────────────
   "status.hero.allOperational": "All systems operational",

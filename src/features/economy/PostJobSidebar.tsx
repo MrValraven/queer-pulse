@@ -2,10 +2,10 @@ import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  CATEGORIES,
   COMMITMENTS,
   FORMATS,
   SENIORITY,
+  jobFieldLabel,
   optionLabel,
 } from "./postJob.data";
 import type { CompanyProfile } from "./companies.data";
@@ -23,12 +23,13 @@ export function PostJobSidebar({
 }) {
   const { t } = useTranslation();
   const { state, payLabel } = form;
+  const fieldLabel = jobFieldLabel(state.category, state.profession, t);
   const chips = [
-    optionLabel(CATEGORIES, state.category, t),
+    ...(fieldLabel ? [fieldLabel] : []),
     optionLabel(FORMATS, state.format, t),
     optionLabel(COMMITMENTS, state.commitment, t),
   ];
-  if (state.seniority !== "Any level")
+  if (state.seniority !== "anyLevel")
     chips.push(optionLabel(SENIORITY, state.seniority, t));
   const desc = state.description
     ? state.description.slice(0, 150) +

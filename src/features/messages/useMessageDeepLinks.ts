@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -83,17 +83,30 @@ export async function resolveThreadMailbox(
 /**
  * A push opens `/messages?c=<id>` with no `?as=` (the backend's deep link
  * carries no mailbox). When `c` is not in the scoped list, read the thread's
- * mailbox and switch to it, keeping `c` and `m`, so the open effect below
- * finds it once the scoped list holds it. A thread of a mailbox the member
- * does not staff is personal. A thread the member cannot read at all any
- * more (`resolveThreadMailbox` returning `"refused"`, most often a mailbox
- * they were staffing and lost) clears the dangling `c`/`m`, says so, and
- * leaves the currently active mailbox alone. Each `c` is resolved once.
+ * mailbox and switch to it, keeping `c` and `m`. A thread of a mailbox the
+ * member does not staff is personal. A thread the member cannot read at all
+ * any more (`resolveThreadMailbox` returning `"refused"`, most often a
+ * mailbox they were staffing and lost) clears the dangling `c`/`m`, says so,
+ * and leaves the currently active mailbox alone. An id nothing can resolve
+ * clears `c`/`m` too. Each `c` is resolved once per active mailbox; a
+ * cleared one resolves afresh if a later link brings it back.
+ *
+ * Returns the `c` that is readable in the mailbox now active (ENG-403), so
+ * the open effect below opens a thread past the loaded inbox pages without
+ * waiting for a page that may never load. It stays null until any mailbox
+ * switch has landed, so the switch's own reset never swallows the opened
+ * thread.
  */
 function useCrossMailboxDeepLink(
   allThreads: Conversation[],
   activeMailbox: ActiveMailbox,
-): void {
+): string | null {
+  /** The last resolved `c` and the mailbox that holds it (null: the mailbox
+   *  already active when it resolved, with no switch to wait for). */
+  const [resolvedThread, setResolvedThread] = useState<{
+    conversationId: string;
+    mailboxIdentityId: string | null;
+  } | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -124,23 +137,41 @@ function useCrossMailboxDeepLink(
     );
   }, [setSearchParams]);
 
+  // The once-guard is keyed on the active mailbox too (ENG-403): the same `c`
+  // linked again after a mailbox change (a second push for a business thread
+  // lands on the personal mailbox, or a seat was lost between the switch and
+  // the open) resolves afresh, so its hold ends. The read is cached, and a
+  // resolve in the target mailbox never switches again, so this cannot loop.
+  const resolveKey = `${conversationId ?? ""}@${active?.identityId ?? ""}`;
   useEffect(() => {
     if (!conversationId || !scope || isInScopedList) return;
-    if (resolvedConversationIdRef.current === conversationId) return;
-    resolvedConversationIdRef.current = conversationId;
+    if (resolvedConversationIdRef.current === resolveKey) return;
+    resolvedConversationIdRef.current = resolveKey;
     void resolveThreadMailbox(conversationId, demoMode, queryClient, t).then(
       (threadMailbox) => {
         if (threadMailbox === "refused") {
+          resolvedConversationIdRef.current = null;
           clearDeepLinkParams();
           showToast(t("messages:mailbox.lostAccess"), "info");
           return;
         }
-        if (!threadMailbox) return;
+        if (!threadMailbox) {
+          // ENG-403: an id nothing can resolve (a demo id no seed owns, or a
+          // live id that is no server id) drops the link, so the
+          // controller's hold on its default select always ends.
+          resolvedConversationIdRef.current = null;
+          clearDeepLinkParams();
+          return;
+        }
         const { mailboxIdentityId } = threadMailbox;
         const targetIdentityId =
           mailboxIdentityId && staffedIdentityIds.has(mailboxIdentityId)
             ? mailboxIdentityId
             : profileMailbox?.identityId;
+        setResolvedThread({
+          conversationId,
+          mailboxIdentityId: targetIdentityId ?? null,
+        });
         if (targetIdentityId && targetIdentityId !== active?.identityId) {
           switchMailboxKeepingThread(targetIdentityId);
         }
@@ -148,6 +179,7 @@ function useCrossMailboxDeepLink(
     );
   }, [
     conversationId,
+    resolveKey,
     scope,
     isInScopedList,
     demoMode,
@@ -160,6 +192,13 @@ function useCrossMailboxDeepLink(
     clearDeepLinkParams,
     showToast,
   ]);
+
+  const isResolvedInActiveMailbox =
+    !!resolvedThread &&
+    resolvedThread.conversationId === conversationId &&
+    (resolvedThread.mailboxIdentityId === null ||
+      resolvedThread.mailboxIdentityId === active?.identityId);
+  return isResolvedInActiveMailbox ? conversationId : null;
 }
 
 /**
@@ -183,7 +222,10 @@ export function useMessageDeepLinks({
   const location = useLocation();
   const navigate = useNavigate();
   const activeMailbox = useActiveMailbox();
-  useCrossMailboxDeepLink(allThreads, activeMailbox);
+  const readableConversationId = useCrossMailboxDeepLink(
+    allThreads,
+    activeMailbox,
+  );
   // The hand-off waits for the mailboxes, and runs on the personal mailbox
   // only. A failed mailbox list leaves the inbox on the member's own seat,
   // so the hand-off runs then too.
@@ -249,11 +291,15 @@ export function useMessageDeepLinks({
   // later manual thread switch. Coexists with the pendingRecipient effect
   // above: that one deep-links to a person (existing-or-new thread via slug),
   // this one deep-links to an existing conversation by id.
+  //
+  // ENG-403: a chat past the loaded inbox pages opens as soon as the by-id
+  // read above places it in the active mailbox (`readableConversationId`);
+  // the controller then reads it by id.
   useEffect(() => {
     const conversationId = searchParams.get("c");
     if (!conversationId) return;
     const exists = allThreads.some((thread) => thread.id === conversationId);
-    if (!exists) return;
+    if (!exists && readableConversationId !== conversationId) return;
     // One-shot notification-tap deep-link; the `c` (and optional `m`) params
     // are cleared right after. `m` is the server message id to scroll to +
     // highlight — e.g. a mention notification's href — once the thread is
@@ -272,5 +318,5 @@ export function useMessageDeepLinks({
       { replace: true },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, allThreads, setSearchParams]);
+  }, [searchParams, allThreads, readableConversationId, setSearchParams]);
 }

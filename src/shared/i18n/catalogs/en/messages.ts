@@ -98,6 +98,8 @@ export const messages: Catalog = {
   "emoji.loading": "Loading emoji…",
   "emoji.loadError": "Couldn't load emoji. Try again",
   "emoji.empty": "No emoji found",
+  "emoji.searchResultsCount_one": "{count} emoji found",
+  "emoji.searchResultsCount_other": "{count} emoji found",
   "emoji.railLabel": "Emoji categories",
   "emoji.recentsLabel": "Recently used",
   "emoji.categorySmileys": "Smileys & emotion",
@@ -120,6 +122,13 @@ export const messages: Catalog = {
   "sticker.empty": "No stickers yet",
   "sticker.imageAlt": "{label} sticker",
   "sticker.attachmentLabel": "Sticker",
+  "sticker.searchLabel": "Search stickers",
+  "sticker.searchResultsLabel": "Search results",
+  "sticker.searchResultsCount_one": "{count} sticker found",
+  "sticker.searchResultsCount_other": "{count} stickers found",
+  "sticker.searchEmpty": "No stickers match “{query}”.",
+  "sticker.searchNoResults": "No stickers found",
+  "sticker.clearSearch": "Clear search",
   // Segmented rail inside the emoji popover; keep these in the emoji.* family,
   // since they label that rail rather than the standalone sticker picker.
   "emoji.tabsLabel": "Emoji and stickers",
@@ -301,6 +310,14 @@ export const messages: Catalog = {
   "conversation.emptyPanelTitle": "Your messages live here",
   "conversation.emptyPanelBody":
     "Pick a conversation on the left, or start a new one: a quiet, private space just for you and the people you reach out to.",
+  "conversation.openingTitle": "Opening this conversation…",
+  "conversation.unavailableTitle": "This conversation isn't available",
+  "conversation.unavailableBody":
+    "It may have been deleted, or you may no longer be part of it. Your other conversations are all still here.",
+  "conversation.loadFailedTitle": "We couldn't open this conversation",
+  "conversation.loadFailedBody":
+    "Something went wrong on the way. Check your connection and try again.",
+  "conversation.jumpToLatest": "Back to latest",
   "day.today": "Today",
   "day.yesterday": "Yesterday",
   // Screen-reader-only boundary label for a day separator; `day` is the visible
@@ -345,6 +362,8 @@ export const messages: Catalog = {
   "actions.copy": "Copy",
   "actions.edited": "edited",
   "actions.editing": "Editing message",
+  "actions.editingCaption": "Editing caption",
+  "actions.editCaptionClearHint": "Save to remove the caption.",
   "actions.editSave": "Save",
   "actions.editCancel": "Cancel",
   replyDeleted: "Message deleted",
@@ -399,6 +418,8 @@ export const messages: Catalog = {
   "forward.title": "Forward to…",
   "forward.sectionPeople": "People",
   "forward.sectionGroups": "Groups",
+  "forward.groupSearchError":
+    "We couldn't search all your groups right now, so some may be missing.",
 
   // Starred messages view (StarredMessagesModal)
   "starred.title": "Starred messages",
@@ -477,6 +498,15 @@ export const messages: Catalog = {
   "firstContact.replyAria": "Your reply",
   "firstContact.replySendCta": "Send & accept",
   "firstContact.cancelReply": "Cancel",
+  // Cold enquiry door (door="enquiry": DirectoryEnquiryModal, HousingEnquiryModal)
+  // and the shared minimum-length countdown.
+  "firstContact.enquiryStatus": "Private message. Only they can read it.",
+  "firstContact.enquiryAwaitsReply":
+    "{name} can reply to this straight away. You can send more once they do.",
+  "firstContact.enquiryPlaceholder": "What would you like to ask them?",
+  "firstContact.enquirySendCta": "Send message",
+  "firstContact.moreToSend_one": "{count} more character to send",
+  "firstContact.moreToSend_other": "{count} more characters to send",
 
   // "Requests" inbox tab (incoming message requests with accept/decline)
   "requests.tabLabel": "Requests",
@@ -595,6 +625,15 @@ export const messages: Catalog = {
   "group.inviteLink.resetConfirmTitle": "Reset the invite link?",
   "group.inviteLink.resetConfirmBody":
     "The old link stops working right away. Anyone who still has it won't be able to join with it.",
+  "group.inviteLink.historyNote":
+    "New members see messages from the moment they join.",
+  "group.inviteLink.expiresInDays_one": "Expires in {count} day",
+  "group.inviteLink.expiresInDays_other": "Expires in {count} days",
+  "group.inviteLink.expiresInHours_one": "Expires in {count} hour",
+  "group.inviteLink.expiresInHours_other": "Expires in {count} hours",
+  "group.inviteLink.expiresSoon": "Expires in under an hour",
+  "group.inviteLink.expired":
+    "This link has expired. Reset it to share a fresh one.",
   // Pending-invites count heading (CLDR plural: _one / _other).
   "group.pendingInvites.title_one": "{count} pending invite",
   "group.pendingInvites.title_other": "{count} pending invites",
@@ -608,12 +647,16 @@ export const messages: Catalog = {
   "group.error.addRefused": "This person can't be added right now.",
   "group.error.inviteNotFound": "That invite is no longer available.",
   "group.error.inviteLinkInvalid": "This invite link isn't valid anymore.",
+  "group.error.inviteLinkExpired":
+    "This invite link has expired. Ask someone in the group for a new one.",
   "group.error.removedFromGroup":
     "You were removed from this group and can't rejoin this way.",
   "group.error.pinLimitReached":
     "This chat already has the maximum number of pinned messages.",
   "group.error.generic":
     "Something went wrong with that group action. Please try again.",
+  "group.matchedMemberSafetyAriaLabel": "Block or report {name}",
+  "mention.member": "@member",
 
   // System messages (centred event pills — SystemMessagePill). Bilingual;
   // actor/target names arrive resolved from the server (or the demo mock).
@@ -697,6 +740,7 @@ export const messages: Catalog = {
   "mailbox.replyOnly.composeHint":
     "{name} answers conversations members start. Switch to your own mailbox to write to someone.",
   "mailbox.composer.replyingAs": "Replying as {name}",
+  "mailbox.composer.customersSee": "Customers see “{firstName}”",
   "mailbox.composer.readOnly":
     "Moderation removed {name}. Its conversations stay here to read, and replies are switched off.",
   "mailbox.claim.unclaimed": "Unclaimed",
@@ -737,6 +781,8 @@ export const messages: Catalog = {
     "Customers see a first name beside each reply, like “{firstName} from {name}”. Surnames and profiles stay hidden.",
   "mailbox.settings.exampleFirstName": "Ana",
   "mailbox.settings.ownerOnly": "Only the owner can change this.",
+  "mailbox.settings.unlinkedPersona":
+    "This persona keeps who runs it private, so replies never show a first name.",
   "mailbox.settings.readOnly":
     "Moderation removed {name}, so these settings can't change.",
   "mailbox.settings.allowMyName": "Include my first name",
@@ -744,6 +790,8 @@ export const messages: Catalog = {
     "Takes effect while “Show who replied” is on.",
   "mailbox.settings.saved": "Saved",
   "mailbox.settings.error": "That didn't save. Try again.",
+  "mailbox.settings.unlinkedPersonaError":
+    "That didn't save. This persona now keeps who runs it private.",
   "mailbox.settings.loadError": "These settings didn't load. Try again.",
   "mailbox.block.action": "Block {name}",
   "mailbox.block.unblockAction": "Unblock {name}",
@@ -1078,6 +1126,8 @@ export const messages: Catalog = {
   "blockThenReport.title": "Report messages before you block?",
   "blockThenReport.lead":
     "These are {name}'s most recent messages in this chat. Pick any you'd like the moderation team to see before you block them.",
+  "blockThenReport.missingHint":
+    "Pick at least one message and a reason to report them.",
   "blockThenReport.skipCta": "Skip",
   "blockThenReport.continueCta": "Report and continue",
   "blockThenReport.continuingCta": "Reporting…",
@@ -1105,6 +1155,9 @@ export const messages: Catalog = {
   "join.invalidLinkTitle": "This invite link isn't valid",
   "join.invalidLinkBody":
     "It may have been rotated, disabled, or the group may no longer exist.",
+  "join.expiredLinkTitle": "This invite link has expired",
+  "join.expiredLinkBody":
+    "Invite links last 7 days. Ask someone in the group to send you a fresh one.",
   "join.errorTitle": "Something went wrong",
   "join.errorBody": "We couldn't load this invite. Try again.",
   "join.backToMessages": "Back to messages",

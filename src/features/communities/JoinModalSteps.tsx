@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -6,13 +7,18 @@ import { INVOLVEMENT } from "./joinModal.data";
 import type { JoinModalCommunity } from "./JoinModal";
 import styles from "./JoinModal.module.css";
 
+/** The heading ref `JoinModal` focuses when the step changes. */
+type StepHeadingRef = RefObject<HTMLHeadingElement | null>;
+
 export function JoinStepIntro({
+  headingRef,
   community,
   isRequest,
   isInvite,
   isInvited = false,
   onNext,
 }: {
+  headingRef: StepHeadingRef;
   community: JoinModalCommunity;
   isRequest: boolean;
   isInvite: boolean;
@@ -31,7 +37,9 @@ export function JoinStepIntro({
             ? t("communities:join.intro.eyebrow.request")
             : t("communities:join.intro.eyebrow.public")}
       </div>
-      <div className={styles.title}>{community.name}</div>
+      <h2 ref={headingRef} tabIndex={-1} className={styles.title}>
+        {community.name}
+      </h2>
       <div className={styles.meta}>
         {community.typeLabel} · {community.count}
       </div>
@@ -78,6 +86,7 @@ export function JoinStepIntro({
  * the request read them off the applicant's profile.
  */
 export function JoinStepAbout({
+  headingRef,
   isRequest,
   involvement,
   setInvolvement,
@@ -87,6 +96,7 @@ export function JoinStepAbout({
   errorMessage,
   onSubmit,
 }: {
+  headingRef: StepHeadingRef;
   isRequest: boolean;
   involvement: JoinInvolvement;
   setInvolvement: (involvement: JoinInvolvement) => void;
@@ -102,7 +112,9 @@ export function JoinStepAbout({
   return (
     <div>
       <div className={styles.eye}>{t("communities:join.about.eyebrow")}</div>
-      <div className={styles.title}>{t("communities:join.about.title")}</div>
+      <h2 ref={headingRef} tabIndex={-1} className={styles.title}>
+        {t("communities:join.about.title")}
+      </h2>
       <p className={styles.hint}>{t("communities:join.about.hint")}</p>
       <div className={styles.fields}>
         <textarea
@@ -161,16 +173,46 @@ export function JoinStepAbout({
   );
 }
 
+/** The done step's title and body keys: a held join, a request, or a
+ *  welcome. */
+function doneCopyKeys(isRequest: boolean, isHeldForReview: boolean) {
+  if (isHeldForReview)
+    return {
+      titleKey: "communities:join.done.heldTitle",
+      bodyKey: "communities:join.done.heldBody",
+    };
+  if (isRequest)
+    return {
+      titleKey: "communities:join.done.requestTitle",
+      bodyKey: "communities:join.done.requestBody",
+    };
+  return {
+    titleKey: "communities:join.done.welcomeTitle",
+    bodyKey: "communities:join.done.joinedBody",
+  };
+}
+
+/**
+ * The wizard's last step, worded by what the server did. A held join
+ * (ENG-428) gets its own copy: the member pressed Join and asked for nothing,
+ * so the request wording would describe an action they never took.
+ */
 export function JoinStepDone({
+  headingRef,
   community,
   isRequest,
+  isHeldForReview = false,
   onClose,
 }: {
+  headingRef: StepHeadingRef;
   community: JoinModalCommunity;
   isRequest: boolean;
+  /** An instant join the server held for review. */
+  isHeldForReview?: boolean;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { titleKey, bodyKey } = doneCopyKeys(isRequest, isHeldForReview);
   return (
     <div>
       <div className={styles.successIcon}>
@@ -178,25 +220,15 @@ export function JoinStepDone({
           <path d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <div className={styles.title}>
-        {isRequest
-          ? t("communities:join.done.requestTitle")
-          : t("communities:join.done.welcomeTitle", { name: community.name })}
-      </div>
+      <h2 ref={headingRef} tabIndex={-1} className={styles.title}>
+        {t(titleKey, { name: community.name })}
+      </h2>
       <p className={styles.desc}>
-        {isRequest ? (
-          <Translation
-            i18nKey="communities:join.done.requestBody"
-            components={{ strong: <strong /> }}
-            values={{ name: community.name }}
-          />
-        ) : (
-          <Translation
-            i18nKey="communities:join.done.joinedBody"
-            components={{ strong: <strong /> }}
-            values={{ name: community.name }}
-          />
-        )}
+        <Translation
+          i18nKey={bodyKey}
+          components={{ strong: <strong /> }}
+          values={{ name: community.name }}
+        />
       </p>
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onClose}>

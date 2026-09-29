@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { isInviteBlocked } from "../../../shared/api/errorMessage";
 import {
   acceptPersonaInvite,
   declinePersonaInvite,
@@ -65,6 +66,22 @@ export function useMyPersonaInvites() {
     // subprofile lists too so it shows up on the dashboard right away, not
     // just the invite banner clearing.
     onSuccess: invalidateAfterResolve,
+    // I1 (fix round 1): a block-refused accept has already closed the invite
+    // server-side (`SubprofileInvitesService.accept` sets it `Revoked`), so a
+    // stale row must not linger on screen for a second tap to hit. A retry
+    // against an already-closed invite would 409 with "no longer pending",
+    // carrying a different code, and `reasonFor` would show that raw,
+    // untranslated backend string: the banner's translated copy only covers
+    // the block-coded failure itself. Invalidating removes the row: the list
+    // query is Pending-only, so a refetch drops it once the server has it as
+    // Revoked.
+    onError: (error) => {
+      if (isInviteBlocked(error)) {
+        void queryClient.invalidateQueries({
+          queryKey: ["my-persona-invites"],
+        });
+      }
+    },
   });
 
   const decline = useMutation<{ ok: true }, Error, string>({

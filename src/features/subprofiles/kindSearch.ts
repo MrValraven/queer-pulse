@@ -78,6 +78,61 @@ function isWholeWordMatch(haystack: string, needle: string): boolean {
   return false;
 }
 
+/** The word of `haystack` that starts at `startIndex`: every character up to
+ *  the next word break or the end of the entry. */
+function wordStartingAt(haystack: string, startIndex: number): string {
+  let endIndex = startIndex;
+  while (
+    endIndex < haystack.length &&
+    !WORD_END_BEFORE.has(haystack[endIndex] ?? "")
+  ) {
+    endIndex += 1;
+  }
+  return haystack.slice(startIndex, endIndex);
+}
+
+/**
+ * Same word-start rule as `isAtWordBoundary`, skipping a match that lands on
+ * a stop word of the entry: "de" still starts "Design", and the "de" inside
+ * "Organização de eventos" is passed over.
+ */
+function isAtContentWordStart(haystack: string, needle: string): boolean {
+  let index = haystack.indexOf(needle);
+  while (index !== -1) {
+    const isWordStart =
+      index === 0 || WORD_START_AFTER.has(haystack[index - 1] ?? "");
+    if (isWordStart && !STOP_WORDS.has(wordStartingAt(haystack, index))) {
+      return true;
+    }
+    index = haystack.indexOf(needle, index + 1);
+  }
+  return false;
+}
+
+/**
+ * The create flow's craft picker search (`KindFamilyPicker`). Deliberately
+ * looser than `kindsMatchingSearch`, the backend mirror below: the picker
+ * filters a list already on screen as the member types, so it narrows from
+ * the first letter, and any word start in a kind's EN or PT label or alias
+ * counts ("t" finds Tattoo artist and Therapist, "ta" finds Tattoo artist).
+ * A single-word needle skips matches that land on a stop word inside an
+ * entry, so "d" and "de" find Design and DJ and pass over every PT label with
+ * a " de " in it. A needle with a space in it uses the plain word-start rule,
+ * so "mestre de" still finds the game master. Only the picker reads it: the
+ * directory keeps the backend's rules, so demo and live stay in step.
+ */
+export function kindsMatchingWordPrefix(term: string): SubprofileKind[] {
+  const needle = foldForSearch(term.trim());
+  if (needle.length === 0) return [];
+  const isSingleWord = !/\s/.test(needle);
+  const matchesEntry = isSingleWord
+    ? (entry: string) => isAtContentWordStart(entry, needle)
+    : (entry: string) => isAtWordBoundary(entry, needle);
+  return FOLDED_TERMS.filter(({ entries }) => entries.some(matchesEntry)).map(
+    ({ kind }) => kind,
+  );
+}
+
 export function kindsMatchingSearch(term: string): SubprofileKind[] {
   const needle = foldForSearch(term.trim());
   if (needle.length < MIN_TERM_LENGTH || STOP_WORDS.has(needle)) return [];

@@ -27,7 +27,7 @@ interface PostActionsMenuProps {
   /** Re-file this thread into another category (PRD-163). The gate is the
    *  thread endpoint's: a moderator at any time, the author inside the
    *  thread's first 24 hours (see `canMoveThreadCategory`). Post-level menus
-   *  (a reply) never pass it — a reply has no category of its own. */
+   *  (a reply) leave it out: a reply has no category of its own. */
   canMoveCategory?: boolean;
   onMoveCategory?: () => void;
   /** Mod-only: pin/unpin this post to the top of its feed. `pinned` reflects
@@ -35,13 +35,19 @@ interface PostActionsMenuProps {
   canPin?: boolean;
   pinned?: boolean;
   onTogglePin?: () => void;
-  /** Any member may report someone else's post/reply — never their own. */
+  /** Any member may report someone else's post or reply. Their own posts
+   *  carry no Report item. */
   canReport?: boolean;
   onReport?: () => void;
   /** The post's author, which adds "Mute" / "Block" to the menu. Safe to pass
    *  for every post: `usePostAuthorSafety` returns no actions for the viewer's
    *  own posts, the QueerPulse Official account, and authors with no slug. */
   author?: PostAuthor;
+  /** Items only the caller knows about, placed after the content actions and
+   *  before Mute / Block. The thread page passes the co-author's "remove my
+   *  credit" item here (`useCoAuthorCreditRemoval`); the caller renders the
+   *  dialog an item opens. */
+  extraActions?: PostMenuAction[];
 }
 
 export function PostActionsMenu({
@@ -61,6 +67,7 @@ export function PostActionsMenu({
   canReport,
   onReport,
   author,
+  extraActions = [],
 }: PostActionsMenuProps) {
   const { t } = useTranslation();
   // Mute/block for this post's author, wired to the app-wide social store. Its
@@ -84,7 +91,7 @@ export function PostActionsMenu({
       const container = containerRef.current;
       if (!container || container.contains(event.target as Node)) return;
       // Focus was inside the menu we are about to unmount, so hand it back to
-      // the trigger rather than dropping the caret on <body>. When the click
+      // the trigger, so the caret has somewhere to land. When the click
       // landed on some other focusable element, focus has already left the
       // container and that element keeps it.
       if (container.contains(document.activeElement)) {
@@ -116,6 +123,7 @@ export function PostActionsMenu({
     !canMoveCategory &&
     !canPin &&
     !canReport &&
+    extraActions.length === 0 &&
     safety.actions.length === 0
   )
     return null;
@@ -164,6 +172,7 @@ export function PostActionsMenu({
       label: t("forum:postMenu.report"),
       run: () => onReport?.(),
     },
+    ...extraActions,
     // Safety last, after the content actions, matching the feed's ⋯ menu order.
     ...safety.actions,
   ].filter((action): action is PostMenuAction => Boolean(action));

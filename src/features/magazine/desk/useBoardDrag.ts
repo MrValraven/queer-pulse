@@ -1,5 +1,6 @@
 import { useRef, useState, type DragEvent, type PointerEvent } from "react";
 import type { Piece, Stage } from "../data/desk.data";
+import { hasPublishDate } from "./pieceSchedule";
 
 /**
  * Whether `piece` may be dropped on the `stage` column. A piece enters or
@@ -10,6 +11,11 @@ import type { Piece, Stage } from "../data/desk.data";
  * - Out of Published: a plain stage update leaves the article live (it never
  *   clears `publishedAt` the way Unpublish does), so a live piece moves back
  *   only through the piece record's Unpublish.
+ * - A piece with a publish date (`hasPublishDate`) stays put whatever its
+ *   stage: a scheduled one waits at Ready for its date (the backend answers
+ *   a stage move on it with 409 `magazine_piece_scheduled`), and one whose
+ *   date has passed is already public, so a plain move would leave it live.
+ *   The piece record unschedules or unpublishes it first.
  * The stage picker in `PiecesBoardCard` follows the same rule. Dropping a
  * piece on its own column is a no-op, so that column does not light up
  * either.
@@ -18,13 +24,15 @@ export function canDropOnStage(piece: Piece, stage: Stage): boolean {
   return (
     piece.stage !== "Published" &&
     stage !== "Published" &&
-    piece.stage !== stage
+    piece.stage !== stage &&
+    !hasPublishDate(piece)
   );
 }
 
-/** Whether a card can be picked up at all: a Published card stays put. */
+/** Whether a card can be picked up at all: a Published card, or one with a
+ *  publish date (scheduled or live), stays put. */
 export function isCardDraggable(piece: Piece): boolean {
-  return piece.stage !== "Published";
+  return piece.stage !== "Published" && !hasPublishDate(piece);
 }
 
 /** Marks a region inside a card (its controls) where a press never starts a drag. */

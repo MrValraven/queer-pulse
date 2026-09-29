@@ -1,150 +1,40 @@
-import { lazy, Suspense, useEffect } from "react";
-import { FiPlus } from "react-icons/fi";
-import { PageHero, PageShell } from "../../shared/components/layout";
-import { ActiveFilters, Button, Reveal } from "../../shared/components/ui";
-import {
-  useMediaQuery,
-  useMyLocation,
-  useSimulatedLoad,
-} from "../../shared/hooks";
-import { mediaMax } from "../../shared/theme/breakpoints";
-import { Translation } from "../../shared/i18n/Translation";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo/PageMeta";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { routes } from "../../app/routeMap";
-import { useLocalPlaces } from "./api/useLocalPlaces";
-import {
-  useDirectoryFilterParams,
-  useDirectoryFilterResults,
-} from "./useDirectoryFilters";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LocalFilterBar } from "./LocalFilterBar";
-import {
-  LocalFilterFields,
-  type LocalFilterFieldsProps,
-} from "./LocalFilterFields";
-import { DirectoryNearMe } from "./DirectoryNearMe";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
-import { DirectoryListView } from "./DirectoryListView";
 import { DirectoryVerificationSection } from "./DirectoryVerificationSection";
-import { DirectoryMapFallback } from "./DirectoryMapFallback";
-import { useMapFallbackShownAt } from "./useMapFallbackShownAt";
-import s from "./DirectoryPage.module.css";
-
-// Code-split the map view (pulls in maplibre-gl) so it stays off the entry
-// chunk — it's only fetched when the visitor switches to the map tab.
-const DirectoryMapView = lazy(() =>
-  import("./DirectoryMapView").then((module) => ({
-    default: module.DirectoryMapView,
-  })),
-);
+import { DirectoryHero } from "./DirectoryHero";
+import { DirectoryResultsView } from "./DirectoryResultsView";
+import { DirectorySubmitStrip } from "./DirectorySubmitStrip";
+import { useDirectoryPageState } from "./useDirectoryPageState";
 
 export function DirectoryPage() {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const filterParams = useDirectoryFilterParams();
   const {
     view,
-    categories,
-    sort,
-    vibes,
-    safe,
-    openNow,
-    access,
-    query,
     selectView,
-    toggleCategory,
-    clearCategories,
-    setQuery,
-    setSort,
-    toggleVibe,
-    setSafe,
-    setOpenNow,
-    toggleAccess,
-    clearFilters,
-  } = filterParams;
-  const {
     places,
-    total: serverTotal,
-    isLoading: placesLoading,
-    isError: hasPlacesError,
-    refetch: refetchPlaces,
+    serverTotal,
+    hasPlacesError,
+    refetchPlaces,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useLocalPlaces({ query, safe, access });
-  // Opt-in, memory-only, never sent anywhere. Held here so one position serves
-  // both the ordering and the walking times, and so turning it off is a single
-  // state change that hands the previous ordering straight back.
-  const myLocation = useMyLocation();
-  // Where the "use my location" control lives. On desktop it rides the search
-  // row, between the field and "Refine". On phones that row collapses into the
-  // Filters sheet, and distance is too central to bury behind a tap — so there
-  // it stays in the results header. Same breakpoint the bar itself switches on,
-  // so exactly one of the two renders.
-  const isMobile = useMediaQuery(mediaMax("mobile"));
-  const nearMe = (
-    <DirectoryNearMe
-      location={myLocation}
-      layout={isMobile ? "stack" : "inline"}
-    />
-  );
-  const {
+    myLocation,
+    isMobile,
+    nearMe,
     filtered,
-    categoryCounts,
     mappableCount,
     activeFilters,
     distanceById,
-  } = useDirectoryFilterResults(places, filterParams, myLocation.coordinates);
-  // `useSimulatedLoad` is a DEMO device (ENG-172). The demo registry resolves
-  // in the same tick, so without a short fake beat the grid pops in with no
-  // loading state at all. Live mode has a real one in `placesLoading`, and the
-  // fake 600ms only painted a skeleton on top of places that had already
-  // arrived, so it is gated to demo mode.
-  const isSimulatedLoading = useSimulatedLoad();
-  const loading = placesLoading || (demoMode && isSimulatedLoading);
-  const hasActiveFilters = activeFilters.length > 0;
-  // What is narrowing the list right now, as removable chips. Placed the same
-  // way as `nearMe` above: on the search row on desktop, where it answers
-  // "what's on?" without opening the drawer, and in the results header on
-  // phones, where the sticky bar has no room for a wrapping row. Mounted even
-  // with nothing active, so "Clear all" lets the row animate itself away.
-  const activeFilterChips = (
-    <ActiveFilters filters={activeFilters} onClearFilters={clearFilters} />
-  );
-  // One set of field props for the page's bar and the full screen map's card,
-  // so both drive the same URL filters.
-  const filterFieldProps: LocalFilterFieldsProps = {
-    categories,
-    onToggleCategory: toggleCategory,
-    onClearCategories: clearCategories,
-    categoryCounts,
-    query,
-    onQueryChange: setQuery,
-    vibes,
-    onToggleVibe: toggleVibe,
-    safeOnly: safe === "verified",
-    onToggleSafeOnly: () => setSafe(safe !== "verified"),
-    openNow,
-    onToggleOpenNow: () => setOpenNow(!openNow),
-    access,
-    onToggleAccess: toggleAccess,
-    sort,
-    onSortChange: setSort,
-    isLocationOn: myLocation.coordinates !== null,
-  };
-
-  // Map view has no scroll-driven "load more" of its own (unlike the list's
-  // incremental reveal in `DirectoryListView`), and wants every matching pin
-  // on screen — so keep pulling pages while the map tab is active. This
-  // terminates naturally once the server reports no more pages (a curated,
-  // bounded city registry), never an unbounded fetch loop.
-  useEffect(() => {
-    if (view !== "map") return;
-    if (!hasNextPage || isFetchingNextPage) return;
-    fetchNextPage();
-  }, [view, hasNextPage, isFetchingNextPage, fetchNextPage, places.length]);
-  const mapFallback = useMapFallbackShownAt(view === "map");
+    loading,
+    hasActiveFilters,
+    clearFilters,
+    activeFilterChips,
+    filterFieldProps,
+    mapFallback,
+  } = useDirectoryPageState();
 
   return (
     <PageShell>
@@ -152,31 +42,7 @@ export function DirectoryPage() {
         title={t("marketing:directory.meta.title")}
         description={t("marketing:directory.meta.description")}
       />
-      {/* Compact: this page is a search box and a result list, and the full
-          display hero pushed the first places below the fold. */}
-      <PageHero
-        compact
-        eyebrow={t("marketing:directory.hero.eyebrow")}
-        title={
-          <Translation
-            i18nKey="marketing:directory.hero.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("marketing:directory.hero.sub")}
-      >
-        {/* The listing wizard was only reachable from the strip under every
-            result. Ghost-dark keeps it quieter than the search it sits above,
-            since most visitors come here to find a place. */}
-        <div className={s.heroFoot}>
-          <Button variant="ghost-dark" to={routes.listBusiness}>
-            <FiPlus aria-hidden /> {t("marketing:directory.hero.cta")}
-          </Button>
-          <div className={s.heroNote}>
-            <span className={s.live} /> {t("marketing:directory.hero.note")}
-          </div>
-        </div>
-      </PageHero>
+      <DirectoryHero />
 
       <LocalFilterBar
         {...filterFieldProps}
@@ -201,71 +67,30 @@ export function DirectoryPage() {
         activeFiltersSlot={isMobile ? activeFilterChips : undefined}
       />
 
-      {view === "list" ? (
-        <DirectoryListView
-          places={filtered}
-          distanceById={distanceById}
-          total={serverTotal}
-          loadedCount={places.length}
-          loading={loading}
-          isError={hasPlacesError}
-          onRetry={refetchPlaces}
-          hasActiveFilters={hasActiveFilters}
-          onClearFilters={clearFilters}
-          hasMoreFromServer={hasNextPage}
-          isLoadingMoreFromServer={isFetchingNextPage}
-          onLoadMoreFromServer={fetchNextPage}
-        />
-      ) : (
-        <Suspense
-          fallback={
-            <DirectoryMapFallback onShown={mapFallback.recordFallbackShown} />
-          }
-        >
-          <DirectoryMapView
-            fallbackShownAt={mapFallback.fallbackShownAt}
-            places={filtered}
-            loading={loading}
-            isError={hasPlacesError}
-            onRetry={refetchPlaces}
-            hasActiveFilters={hasActiveFilters}
-            onClearFilters={clearFilters}
-            fullscreenControls={
-              <LocalFilterFields
-                {...filterFieldProps}
-                variant="overlay"
-                nearMeSlot={
-                  <DirectoryNearMe location={myLocation} layout="inline" />
-                }
-                activeFiltersSlot={activeFilterChips}
-              />
-            }
-          />
-        </Suspense>
-      )}
+      <DirectoryResultsView
+        view={view}
+        filtered={filtered}
+        distanceById={distanceById}
+        serverTotal={serverTotal}
+        loadedCount={places.length}
+        loading={loading}
+        hasPlacesError={hasPlacesError}
+        refetchPlaces={refetchPlaces}
+        hasActiveFilters={hasActiveFilters}
+        clearFilters={clearFilters}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+        fallbackShownAt={mapFallback.fallbackShownAt}
+        onMapFallbackShown={mapFallback.recordFallbackShown}
+        filterFieldProps={filterFieldProps}
+        myLocation={myLocation}
+        activeFilterChips={activeFilterChips}
+      />
 
       <DirectoryVerificationSection />
 
-      <section className={s.content}>
-        <div className="wrap">
-          <Reveal className={s.submitStrip}>
-            <div>
-              <h3>
-                <Translation
-                  i18nKey="marketing:directory.submitStrip.title"
-                  components={{ em: <em /> }}
-                />
-              </h3>
-              <p>{t("marketing:directory.submitStrip.body")}</p>
-            </div>
-            <Button size="lg" to={routes.listBusiness}>
-              {t("marketing:directory.submitStrip.cta")}
-            </Button>
-          </Reveal>
-        </div>
-      </section>
-      {/* No "Request an invite" outro: `/local/directory` is behind the auth
-          gate, so everyone who reaches this page is already a member. */}
+      <DirectorySubmitStrip />
     </PageShell>
   );
 }

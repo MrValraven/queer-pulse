@@ -91,8 +91,9 @@ export interface ChatMessage {
    *  only for copy/analytics — the bubble markup is identical either way);
    *  `"document"` renders a file-card (name, format, size, a download link —
    *  PRD-226); `"sticker"` renders bare (no bubble chrome, no caption; its
-   *  alt text comes from `attachment.label`); absent/`"user"` is an ordinary
-   *  bubble. */
+   *  alt text is the sticker's name in the reader's language, resolved by
+   *  `stickerLabelIn` through `useStickerAttachmentLabel`); absent/`"user"`
+   *  is an ordinary bubble. */
   kind?: "user" | "system" | "gif" | "image" | "document" | "sticker";
   /** Resolved system event for a `kind: "system"` message. */
   systemEvent?: ChatSystemEvent;
@@ -466,8 +467,17 @@ export interface Conversation {
    *  active, and for DMs. */
   dissolvedAt?: string | null;
   /** GROUP only (Go together): the matched group this chat belongs to.
-   *  Absent/null for every other chat. Mounts `GoTogetherChatBanner`. */
+   *  Absent/null for every other chat, and once the group row is deleted
+   *  even though the chat stays a matched chat. Mounts `GoTogetherChatBanner`,
+   *  and is what the sheet/safety-button paths need a real group for. */
   eventMatchGroupId?: string | null;
+  /** GROUP only (Go together): true for the life of a matched chat, even
+   *  after the group is deleted and `eventMatchGroupId` goes null. Every
+   *  matched-chat NAME or PROFILE-LINK rule (roster, mentions) keys on this
+   *  flag; `eventMatchGroupId` is only for paths that need the group row, so
+   *  the person's plain first name and no-profile-link roster never come
+   *  back once a group is gone. */
+  isGoTogetherChat?: boolean;
   /** GROUP only, THIS member (DES-227): why the composer is severed:
    *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
    *  `"dissolved"` (the owner ended the group). Absent/null while an active
@@ -479,6 +489,9 @@ export interface Conversation {
    *  populated for the owner/admin who may manage it. Absent/null for every
    *  other member, a group with no active link, and DMs. */
   inviteToken?: string | null;
+  /** GROUP only (PRD-400): ISO instant `inviteToken` stops working, 7 days
+   *  from its last issue or reset. Present exactly when `inviteToken` is. */
+  inviteTokenExpiresAt?: string | null;
   /** Whether THIS member may create/rotate/disable the invite link, gated on
    *  being owner/admin with the group active and not dissolved. Absent/false
    *  for DMs and a member who has left. */

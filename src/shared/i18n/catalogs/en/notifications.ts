@@ -184,6 +184,9 @@ export const notifications: Catalog = {
 
   "type.event_reminder.text": "A gathering you're going to is coming up.",
   "type.event_reminder.meta": "Gathering reminder",
+  "type.event_reminder.titled.text":
+    "A gathering you're going to is coming up: {eventTitle}.",
+  "type.event_reminder.titled.meta": "Gathering reminder",
 
   "type.waitlist_promoted.text": "A spot opened up. You're off the waitlist.",
   "type.waitlist_promoted.meta": "Gathering waitlist",
@@ -514,6 +517,9 @@ export const notifications: Catalog = {
   "type.magazine_piece_published.text":
     "Your piece \u201C{title}\u201D is live in the magazine.",
   "type.magazine_piece_published.meta": "Published",
+  "type.magazine_pitch_passed.text":
+    "The desk passed on your pitch \u201C{title}\u201D. Open your pitches to read the note.",
+  "type.magazine_pitch_passed.meta": "Pitch answered",
 
   // `textNamed` carries the `<profile>` slot, like every other entry in
   // `PERSONALIZED_KINDS`. This row names no piece because the backend's
@@ -633,34 +639,40 @@ export const notifications: Catalog = {
 
   // A member's own verification request was declined
   // (VerificationService.decideRequest). No level changed, so the copy never
-  // names one. {reason} is the admin's note explaining the decision.
+  // names one. The admin's reason travels on the row's own `reason` field.
   "type.verification_update.rejected.text":
     "Your verification request was declined.",
-  "type.verification_update.rejected.meta": "{reason}",
-  // Fallback for a rejection row with no reason on the payload (shouldn't
-  // happen — the backend requires one to reject — but read defensively).
-  "type.verification_update.rejected.reasonFallback": "No reason was shared.",
+  "type.verification_update.rejected.meta": "Verification update",
 
-  // Moderation outcome — headline per action; the moderator's member-facing note
-  // ("the reason the member reads") rides in as {note}. Tapping opens the appeal
+  // Moderation outcome: headline per action; the moderator's member-facing note
+  // ("the reason the member reads") travels on the row's own `reason` field. Tapping opens the appeal
   // page. The flat keys are the fallback for an unrecognised action.
   "type.moderation_outcome.text":
     "There's a decision from the moderation team.",
-  "type.moderation_outcome.meta": "{note}",
+  "type.moderation_outcome.meta": "Moderation decision",
   "type.moderation_outcome.warn.text":
     "You've received a warning from the moderation team.",
-  "type.moderation_outcome.warn.meta": "{note}",
+  "type.moderation_outcome.warn.meta": "Moderation decision",
   "type.moderation_outcome.suspend.text": "Your account has been suspended.",
-  "type.moderation_outcome.suspend.meta": "{note}",
+  "type.moderation_outcome.suspend.meta": "Moderation decision",
   "type.moderation_outcome.ban.text":
     "Your account has been permanently suspended.",
-  "type.moderation_outcome.ban.meta": "{note}",
+  "type.moderation_outcome.ban.meta": "Moderation decision",
+  "type.moderation_outcome.hide_content.text":
+    "The moderation team hid something you shared.",
+  "type.moderation_outcome.hide_content.meta": "Moderation decision",
+  "type.moderation_outcome.remove_content.text":
+    "The moderation team removed something you shared.",
+  "type.moderation_outcome.remove_content.meta": "Moderation decision",
+  "type.moderation_outcome.restrict.text":
+    "Your account has been restricted for a while.",
+  "type.moderation_outcome.restrict.meta": "Moderation decision",
   // A lifted restriction is good news, and the generic
   // "there's a decision from the moderation team" line reads as more bad news
   // arriving. It gets its own sentence for that reason.
   "type.moderation_outcome.restriction_lifted.text":
     "Your restriction has been lifted.",
-  "type.moderation_outcome.restriction_lifted.meta": "{note}",
+  "type.moderation_outcome.restriction_lifted.meta": "Moderation decision",
 
   // A fellow member credited a persona of yours as a collaborator on one of
   // their items (personas discovery Phase 5, Moment 6). The first live kind
@@ -752,6 +764,241 @@ export const notifications: Catalog = {
   "type.barter_proposal_received.meta": "Skill exchange · {listingOffer}",
   "type.barter_proposal_received.offerFallback": "a swap you posted",
 
+  "type.community_new_post.text": "New post in {communityName}.",
+  "type.community_new_post.meta": "Community post",
+  "type.community_new_post.communityNameFallback": "a community you're in",
+  "type.community_announcement.text": "New announcement in {communityName}.",
+  "type.community_announcement.meta": "Announcement",
+  "type.community_announcement.communityNameFallback": "a community you're in",
+  "type.community_resource_added.text":
+    "A new resource was added to {communityName}: {title}.",
+  "type.community_resource_added.meta": "New resource",
+  "type.community_resource_added.communityNameFallback": "your community",
+  "type.community_resource_added.untitled.text":
+    "A new resource was added to {communityName}.",
+  "type.community_resource_added.untitled.meta": "New resource",
+  "type.community_member_removed.text":
+    "You were removed from {communityName}.",
+  "type.community_member_removed.meta": "Removed from a community",
+  "type.community_member_removed.communityNameFallback": "a community",
+  "type.community_archived.text": "{communityName} has been archived.",
+  "type.community_archived.meta": "Community archived",
+  "type.community_archived.communityNameFallback": "A community you're in",
+  "type.community_frozen.text": "{communityName} has been frozen.",
+  "type.community_frozen.meta": "Community frozen",
+  "type.community_frozen.communityNameFallback": "Your community",
+  "type.community_unfrozen.text": "{communityName} is no longer frozen.",
+  "type.community_unfrozen.meta": "Community unfrozen",
+  "type.community_unfrozen.communityNameFallback": "Your community",
+  "type.community_role_changed.text":
+    "Your role in {communityName} has changed.",
+  "type.community_role_changed.meta": "Community role",
+  "type.community_role_changed.owner.text":
+    "You're now the owner of {communityName}.",
+  "type.community_role_changed.owner.meta": "Community role",
+  "type.community_role_changed.co_owner.text":
+    "You're now a co-owner of {communityName}.",
+  "type.community_role_changed.co_owner.meta": "Community role",
+  "type.community_role_changed.mod.text":
+    "You're now a moderator of {communityName}.",
+  "type.community_role_changed.mod.meta": "Community role",
+  "type.community_role_changed.member.text":
+    "You no longer hold a staff role in {communityName}.",
+  "type.community_role_changed.member.meta": "Community role",
+  "type.community_role_changed.communityNameFallback": "a community",
+  "type.community_ownership_transferred.text":
+    "Ownership of {communityName} has changed hands.",
+  "type.community_ownership_transferred.meta": "Community ownership",
+  "type.community_ownership_transferred.communityNameFallback":
+    "a community you're part of",
+  "type.community_ownership_transferred.you.text":
+    "Ownership of {communityName} has passed to you.",
+  "type.community_ownership_transferred.you.meta": "Community ownership",
+  "type.community_owner_review_requested.text":
+    "A member of {communityName} has asked for a review of its owner.",
+  "type.community_owner_review_requested.meta": "Owner review",
+  "type.community_owner_review_requested.communityNameFallback": "a community",
+  "type.community_tag_request_resolved.text":
+    "The QueerPulse team has reviewed your tag suggestion: {label}.",
+  "type.community_tag_request_resolved.meta": "Tag suggestion",
+  "type.community_tag_request_resolved.unlabelled.text":
+    "The QueerPulse team has reviewed your tag suggestion.",
+  "type.community_tag_request_resolved.unlabelled.meta": "Tag suggestion",
+  "type.event_announcement.text": "A host posted an update about {title}.",
+  "type.event_announcement.textNamed":
+    "<profile>{name}</profile> posted an update about {title}.",
+  "type.event_announcement.meta": "Message from the host",
+  "type.event_announcement.titleFallback": "one of your gatherings",
+  "type.forum_thread_reviewed.text": "Your thread “{title}” has been reviewed.",
+  "type.forum_thread_reviewed.meta": "Thread review",
+  "type.forum_thread_reviewed.approved.text":
+    "Your thread “{title}” was approved and is now published.",
+  "type.forum_thread_reviewed.approved.meta": "Thread review",
+  "type.forum_thread_reviewed.rejected.text":
+    "Your thread “{title}” wasn't approved for publishing.",
+  "type.forum_thread_reviewed.rejected.meta": "Thread review",
+  "type.forum_thread_reviewed.titleFallback": "Untitled",
+  "type.governance_motion_approved.text":
+    "Your motion was approved and is now open for a vote.",
+  "type.governance_motion_approved.meta": "Governance motion",
+  "type.governance_motion_approved.titled.text":
+    "Your motion “{title}” was approved and is now open for a vote.",
+  "type.governance_motion_approved.titled.meta": "Governance motion",
+  "type.governance_motion_rejected.text":
+    "Your motion wasn't put to a vote this time.",
+  "type.governance_motion_rejected.meta": "Governance motion",
+  "type.governance_motion_rejected.titled.text":
+    "Your motion “{title}” wasn't put to a vote this time.",
+  "type.governance_motion_rejected.titled.meta": "Governance motion",
+  "type.governance_motion_ready_for_review.text":
+    "A motion has enough co-signatures and is ready for review.",
+  "type.governance_motion_ready_for_review.meta": "Motion to review",
+  "type.governance_motion_ready_for_review.titled.text":
+    "The motion “{title}” has enough co-signatures and is ready for review.",
+  "type.governance_motion_ready_for_review.titled.meta": "Motion to review",
+  "type.group_listing_decided.text": "{listingTitle} has been reviewed.",
+  "type.group_listing_decided.meta": "Group listing",
+  "type.group_listing_decided.live.text":
+    "{listingTitle} is live in {groupName}.",
+  "type.group_listing_decided.live.meta": "Group listing",
+  "type.group_listing_decided.question.text":
+    "{listingTitle} needs an answer from you before it goes live.",
+  "type.group_listing_decided.question.meta": "Group listing",
+  "type.group_listing_decided.hidden.text":
+    "{listingTitle} was hidden from {groupName} by moderators.",
+  "type.group_listing_decided.hidden.meta": "Group listing",
+  "type.group_listing_decided.declined.text":
+    "{listingTitle} won't be published in {groupName}.",
+  "type.group_listing_decided.declined.meta": "Group listing",
+  "type.group_listing_decided.listingTitleFallback": "Your listing",
+  "type.group_listing_decided.groupNameFallback": "your group",
+  "type.landlord_suggestion_decided.text":
+    "Your landlord suggestion has been reviewed.",
+  "type.landlord_suggestion_decided.meta": "Landlord suggestion",
+  "type.landlord_suggestion_decided.live.text":
+    "{landlordName} is now in the landlord directory. Thanks for the suggestion.",
+  "type.landlord_suggestion_decided.live.meta": "Landlord suggestion",
+  "type.landlord_suggestion_decided.review.text":
+    "{landlordName} is held back from the landlord directory for now.",
+  "type.landlord_suggestion_decided.review.meta": "Landlord suggestion",
+  "type.landlord_suggestion_decided.removed.text":
+    "{landlordName} was removed from the landlord directory.",
+  "type.landlord_suggestion_decided.removed.meta": "Landlord suggestion",
+  "type.landlord_suggestion_decided.landlordNameFallback":
+    "The landlord you suggested",
+  "type.listing_suggestion_live.text":
+    "{listingName} is now live in the directory. Thanks for the suggestion.",
+  "type.listing_suggestion_live.meta": "Suggested listing",
+  "type.listing_suggestion_live.listingNameFallback": "The place you suggested",
+  "type.listing_suggestion_needs_info.text":
+    "{listingName} needs more information before it can go live. Send us what you know about it.",
+  "type.listing_suggestion_needs_info.meta": "Suggested listing",
+  "type.listing_suggestion_needs_info.listingNameFallback":
+    "The place you suggested",
+  "type.listing_suggestion_sent_back.text": "{listingName} is back in review.",
+  "type.listing_suggestion_sent_back.meta": "Suggested listing",
+  "type.listing_suggestion_sent_back.listingNameFallback":
+    "The place you suggested",
+  "type.listing_suggestion_removed.text":
+    "{listingName} was removed from the directory.",
+  "type.listing_suggestion_removed.meta": "Suggested listing",
+  "type.listing_suggestion_removed.listingNameFallback":
+    "The place you suggested",
+  "type.landlord_intro_request_decided.text":
+    "There's a decision on your request for an introduction to {landlordName}.",
+  "type.landlord_intro_request_decided.meta": "Introduction request",
+  "type.landlord_intro_request_decided.accepted.text":
+    "Your request for an introduction to {landlordName} was accepted.",
+  "type.landlord_intro_request_decided.accepted.meta": "Introduction request",
+  "type.landlord_intro_request_decided.declined.text":
+    "Your request for an introduction to {landlordName} wasn't accepted.",
+  "type.landlord_intro_request_decided.declined.meta": "Introduction request",
+  "type.landlord_intro_request_decided.landlordNameFallback": "a landlord",
+  "type.reading_group_proposal_decided.text":
+    "There's a decision on your reading group proposal for {book}.",
+  "type.reading_group_proposal_decided.meta": "Reading group proposal",
+  "type.reading_group_proposal_decided.approved.text":
+    "Your reading group for {book} was approved and its community is ready.",
+  "type.reading_group_proposal_decided.approved.meta": "Reading group proposal",
+  "type.reading_group_proposal_decided.declined.text":
+    "Your reading group proposal for {book} wasn't approved.",
+  "type.reading_group_proposal_decided.declined.meta": "Reading group proposal",
+  "type.reading_group_proposal_decided.bookFallback": "the book you proposed",
+  "type.housing_listing_decision.text": "{title} has been reviewed.",
+  "type.housing_listing_decision.meta": "Housing",
+  "type.housing_listing_decision.approve.text":
+    "{title} is now live on the housing board.",
+  "type.housing_listing_decision.approve.meta": "Housing",
+  "type.housing_listing_decision.request_changes.text":
+    "{title} needs a change before it can go live.",
+  "type.housing_listing_decision.request_changes.meta": "Housing",
+  "type.housing_listing_decision.reject.text":
+    "{title} won't be published on the housing board.",
+  "type.housing_listing_decision.reject.meta": "Housing",
+  "type.housing_listing_decision.take_down.text":
+    "{title} was taken down from the housing board.",
+  "type.housing_listing_decision.take_down.meta": "Housing",
+  "type.housing_listing_decision.titleFallback": "Your housing listing",
+  "type.listing_claim_approved.text":
+    "Your claim was approved. You now manage this listing.",
+  "type.listing_claim_approved.meta": "Listing claim",
+  "type.listing_claim_approved.named.text":
+    "Your claim on {listingName} was approved. You now manage this listing.",
+  "type.listing_claim_approved.named.meta": "Listing claim",
+  "type.listing_claim_declined.text":
+    "Your claim on a listing wasn't approved.",
+  "type.listing_claim_declined.meta": "Listing claim",
+  "type.listing_claim_declined.named.text":
+    "Your claim on {listingName} wasn't approved.",
+  "type.listing_claim_declined.named.meta": "Listing claim",
+  "type.listing_edit_suggestion_accepted.text":
+    "A suggested correction to your listing's {field} was accepted.",
+  "type.listing_edit_suggestion_accepted.meta": "Listing correction",
+  "type.listing_edit_suggestion_accepted.field.hours": "opening hours",
+  "type.listing_edit_suggestion_accepted.field.address": "address",
+  "type.listing_edit_suggestion_accepted.field.phone": "phone number",
+  "type.listing_edit_suggestion_accepted.field.website": "website",
+  "type.listing_edit_suggestion_accepted.field.description": "description",
+  "type.listing_edit_suggestion_accepted.fieldFallback": "details",
+  "type.venue_event_attachment.text":
+    "{eventTitle} has been listed at {listingName}.",
+  "type.venue_event_attachment.meta": "Gathering at your venue",
+  "type.venue_event_attachment.untitled.text":
+    "A gathering has been listed at {listingName}.",
+  "type.venue_event_attachment.untitled.meta": "Gathering at your venue",
+  "type.venue_event_attachment.listingNameFallback": "your venue",
+  "type.persona_endorsed.text": "Someone endorsed one of your personas.",
+  "type.persona_endorsed.meta": "Persona endorsement",
+  "type.persona_endorsed.named.text":
+    "Someone endorsed your persona {subprofileName}.",
+  "type.persona_endorsed.named.meta": "Persona endorsement",
+  "type.persona_followed.text":
+    "Someone started following one of your personas.",
+  "type.persona_followed.meta": "New follower",
+  "type.persona_followed.named.text":
+    "Someone started following your persona {subprofileName}.",
+  "type.persona_followed.named.meta": "New follower",
+  "type.subprofile_invite.text":
+    "You've been invited to co-own {subprofileName}.",
+  "type.subprofile_invite.textNamed":
+    "<profile>{name}</profile> invited you to co-own {subprofileName}.",
+  "type.subprofile_invite.meta": "Persona invitation",
+  "type.subprofile_invite.subprofileNameFallback": "a persona",
+  "type.subprofile_co_owner_joined.text":
+    "Someone joined {subprofileName} as a co-owner.",
+  "type.subprofile_co_owner_joined.textNamed":
+    "<profile>{name}</profile> joined {subprofileName} as a co-owner.",
+  "type.subprofile_co_owner_joined.meta": "Persona co-owner",
+  "type.subprofile_co_owner_joined.subprofileNameFallback":
+    "one of your personas",
+  "type.subprofile_deleted.text":
+    "{subprofileName} was deleted by its creator.",
+  "type.subprofile_deleted.meta": "Persona deleted",
+  "type.subprofile_deleted.subprofileNameFallback": "A persona you co-owned",
+  "type.subprofile_member_removed.text":
+    "You were removed as a co-owner of {subprofileName}.",
+  "type.subprofile_member_removed.meta": "Persona co-owner",
+  "type.subprofile_member_removed.subprofileNameFallback": "a persona",
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 
@@ -801,6 +1048,10 @@ export const notifications: Catalog = {
   // PRD-224: accessible name for the icon-only clear button on every row. Never
   // rendered as visible text, so it names what is being cleared.
   "actions.dismiss": "Clear this notification",
+  "row.unread": "Unread",
+  "row.reasonLead": "Reason from the moderators:",
+  "row.reasonLeadMember": "Reason from the member who asked:",
+  "row.reasonLeadQuestion": "The moderators' question:",
   "actions.viewThread": "View thread",
   "actions.viewEvent": "View event",
   "actions.viewProfile": "View profile",
@@ -897,6 +1148,7 @@ export const notifications: Catalog = {
   "mentions.row.rsvpGoingToast": "You’re going · {name}’s invite",
   "mentions.row.rsvpWithdrawnToast": "RSVP withdrawn",
   "mentions.row.genericToast": "{label} · {name}",
+  "mentions.row.unavailable": "The original text is no longer available.",
   "mentions.actions.reply": "Reply",
   "mentions.actions.openThread": "Open thread",
   "mentions.actions.markRead": "Mark read",
@@ -924,56 +1176,58 @@ export const notifications: Catalog = {
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // W0-NOTIF-B — PRD-47 - the personalised variant of the review-reply row. `review_replied` is now in PERSONALIZED_KINDS in notifications.adapters.ts (the set W0-NOTIF's note called NAMED_KINDS; PERSONALIZED_KINDS is its real name), so an actor-bearing row can read as a sentence with the replier's name in it instead of saying 'Someone replied' next to their face and profile link. It DEGRADES CORRECTLY WITH NO ACTOR and needs no extra key for that: NotificationItem only reaches `actor.textKey` inside its `if (dto.actor)` branch, so a moderator-written reply, a co-manager's reply, and a reply from a business owner whose public page does not name them all keep the generic type.review_replied.text, which already carries {subjectLabel}. The named string does NOT carry the business name, and cannot: NotificationItem passes {name} and nothing else into a textNamed string, the same constraint type.barter_proposal_received.textNamed hit. The reviewed thing is still one click away through sourceHref, which resolves 'listing' + listingSlug to the business page the reply is published on. COORDINATOR NOTE: if you want the business name back on a named row, the place for it is type.review_replied.meta (currently 'Reply to your review'), which formatNotification does interpolate {subjectLabel} into. That key belongs to W0-NOTIF's manifest, so it is deliberately not redefined here rather than clobbered. Nothing here says anything is emailed or on its way: QueerPulse sends no email.
-  // W0-NOTIF — PRD-48 - the two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is `{reviewNote}`, the same shape type.moderation_outcome.*.meta uses: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionNoteToken` falls the meta back to the kind's own short label when no note was given, and `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
+  // W0-NOTIF: PRD-48. The two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is the kind's short label, and the reviewer's note travels on the row's own `reason` field: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
   "type.review_replied.textNamed":
     "<profile>{name}</profile> replied to your review.",
   "type.submission_decided.text": "There is news about something you sent in.",
-  "type.submission_decided.meta": "{reviewNote}",
+  "type.submission_decided.meta": "Submission",
   "type.submission_decided.subjectFallback": "something you sent in",
-  "type.submission_decided.labelFallback": "Submission",
-  "type.submission_decided.partner_application.label": "Partner application",
   "type.submission_decided.partner_application.subjectFallback":
     "your organisation",
   "type.submission_decided.partner_application.text":
     "There is a decision on your partner application for {subjectLabel}.",
-  "type.submission_decided.partner_application.meta": "{reviewNote}",
+  "type.submission_decided.partner_application.meta": "Partner application",
   "type.submission_decided.partner_application.accepted.text":
     "Your partner application for {subjectLabel} was accepted.",
-  "type.submission_decided.partner_application.accepted.meta": "{reviewNote}",
+  "type.submission_decided.partner_application.accepted.meta":
+    "Partner application",
   "type.submission_decided.partner_application.declined.text":
     "Your partner application for {subjectLabel} was not accepted.",
-  "type.submission_decided.partner_application.declined.meta": "{reviewNote}",
+  "type.submission_decided.partner_application.declined.meta":
+    "Partner application",
   "type.submission_decided.partner_application.archived.text":
     "Your partner application for {subjectLabel} was closed without a decision.",
-  "type.submission_decided.partner_application.archived.meta": "{reviewNote}",
-  "type.submission_decided.barter_proposal.label": "Swap proposal",
+  "type.submission_decided.partner_application.archived.meta":
+    "Partner application",
   "type.submission_decided.barter_proposal.subjectFallback": "a listing",
   "type.submission_decided.barter_proposal.text":
     "There is an answer to your swap proposal on {subjectLabel}.",
-  "type.submission_decided.barter_proposal.meta": "{reviewNote}",
+  "type.submission_decided.barter_proposal.meta": "Swap proposal",
   "type.submission_decided.barter_proposal.accepted.text":
     "Your swap proposal on {subjectLabel} was accepted.",
-  "type.submission_decided.barter_proposal.accepted.meta": "{reviewNote}",
+  "type.submission_decided.barter_proposal.accepted.meta": "Swap proposal",
   "type.submission_decided.barter_proposal.declined.text":
     "Your swap proposal on {subjectLabel} was turned down.",
-  "type.submission_decided.barter_proposal.declined.meta": "{reviewNote}",
+  "type.submission_decided.barter_proposal.declined.meta": "Swap proposal",
   "type.submission_decided.barter_proposal.archived.text":
     "Your swap proposal on {subjectLabel} was closed. That listing is no longer open.",
-  "type.submission_decided.barter_proposal.archived.meta": "{reviewNote}",
-  "type.submission_decided.resource_suggestion.label": "Resource suggestion",
+  "type.submission_decided.barter_proposal.archived.meta": "Swap proposal",
   "type.submission_decided.resource_suggestion.subjectFallback": "a resource",
   "type.submission_decided.resource_suggestion.text":
     "There is a decision on your suggestion of {subjectLabel}.",
-  "type.submission_decided.resource_suggestion.meta": "{reviewNote}",
+  "type.submission_decided.resource_suggestion.meta": "Resource suggestion",
   "type.submission_decided.resource_suggestion.accepted.text":
     "Your suggestion of {subjectLabel} is now in the resources directory.",
-  "type.submission_decided.resource_suggestion.accepted.meta": "{reviewNote}",
+  "type.submission_decided.resource_suggestion.accepted.meta":
+    "Resource suggestion",
   "type.submission_decided.resource_suggestion.declined.text":
     "Your suggestion of {subjectLabel} was not added to the directory.",
-  "type.submission_decided.resource_suggestion.declined.meta": "{reviewNote}",
+  "type.submission_decided.resource_suggestion.declined.meta":
+    "Resource suggestion",
   "type.submission_decided.resource_suggestion.archived.text":
     "Your suggestion of {subjectLabel} was closed without a decision.",
-  "type.submission_decided.resource_suggestion.archived.meta": "{reviewNote}",
+  "type.submission_decided.resource_suggestion.archived.meta":
+    "Resource suggestion",
   "type.review_replied.text":
     "Someone replied to your review of {subjectLabel}.",
   "type.review_replied.meta": "Reply to your review",
@@ -981,12 +1235,12 @@ export const notifications: Catalog = {
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // W0-NOTIF-B — PRD-47 - the personalised variant of the review-reply row. `review_replied` is now in PERSONALIZED_KINDS in notifications.adapters.ts (the set W0-NOTIF's note called NAMED_KINDS; PERSONALIZED_KINDS is its real name), so an actor-bearing row can read as a sentence with the replier's name in it instead of saying 'Someone replied' next to their face and profile link. It DEGRADES CORRECTLY WITH NO ACTOR and needs no extra key for that: NotificationItem only reaches `actor.textKey` inside its `if (dto.actor)` branch, so a moderator-written reply, a co-manager's reply, and a reply from a business owner whose public page does not name them all keep the generic type.review_replied.text, which already carries {subjectLabel}. The named string does NOT carry the business name, and cannot: NotificationItem passes {name} and nothing else into a textNamed string, the same constraint type.barter_proposal_received.textNamed hit. The reviewed thing is still one click away through sourceHref, which resolves 'listing' + listingSlug to the business page the reply is published on. COORDINATOR NOTE: if you want the business name back on a named row, the place for it is type.review_replied.meta (currently 'Reply to your review'), which formatNotification does interpolate {subjectLabel} into. That key belongs to W0-NOTIF's manifest, so it is deliberately not redefined here rather than clobbered. Nothing here says anything is emailed or on its way: QueerPulse sends no email.
-  // W0-NOTIF — PRD-48 - the two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is `{reviewNote}`, the same shape type.moderation_outcome.*.meta uses: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionNoteToken` falls the meta back to the kind's own short label when no note was given, and `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
+  // W0-NOTIF: PRD-48. The two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is the kind's short label, and the reviewer's note travels on the row's own `reason` field: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // LEAK-02 — LEAK-02 task 4 - copy for `listing_public_question_answered`, the row that goes to the MEMBER WHO ASKED a public question on a business page. The type has been written since AddListingPublicQuestionNotificationTypes1794300000000 and was absent from KIND_CATEGORY in formatNotification.ts, so until now it rendered the `unknown` fallback: a member got generic platform copy as the answer to a question they personally typed. All three keys are NEW; nothing here overwrites an existing key. THE SENTENCE IS WRITTEN FOR NO ACTOR, deliberately, because that is the common case rather than the edge one: the public Q&A attributes an answer by ROLE only, a co-manager is invisible on the page by design, and an owner who is anonymous or withheld linkToProfile has told the platform not to tie their name to the business, so the backend spreads payload.actorId only where the page already links that owner's profile. The asker is owed the ANSWER, never the name of whoever wrote it, and the copy therefore never names or implies a person. There is also no `textNamed` key on purpose: `listing_public_question_answered` is not in PERSONALIZED_KINDS in notifications.adapters.ts (a file LEAK-02 does not own), so a personalised variant would be dead copy. `subjectFallback` covers a malformed payload with no `listingName`, so a brace token can never reach the screen. The row deep-links to the business page the answer is published on, so the answer TEXT is not in the copy and must never be added to it. Nothing here says anything is emailed or on its way: QueerPulse sends no email.
   // W0-NOTIF-B — PRD-47 - the personalised variant of the review-reply row. `review_replied` is now in PERSONALIZED_KINDS in notifications.adapters.ts (the set W0-NOTIF's note called NAMED_KINDS; PERSONALIZED_KINDS is its real name), so an actor-bearing row can read as a sentence with the replier's name in it instead of saying 'Someone replied' next to their face and profile link. It DEGRADES CORRECTLY WITH NO ACTOR and needs no extra key for that: NotificationItem only reaches `actor.textKey` inside its `if (dto.actor)` branch, so a moderator-written reply, a co-manager's reply, and a reply from a business owner whose public page does not name them all keep the generic type.review_replied.text, which already carries {subjectLabel}. The named string does NOT carry the business name, and cannot: NotificationItem passes {name} and nothing else into a textNamed string, the same constraint type.barter_proposal_received.textNamed hit. The reviewed thing is still one click away through sourceHref, which resolves 'listing' + listingSlug to the business page the reply is published on. COORDINATOR NOTE: if you want the business name back on a named row, the place for it is type.review_replied.meta (currently 'Reply to your review'), which formatNotification does interpolate {subjectLabel} into. That key belongs to W0-NOTIF's manifest, so it is deliberately not redefined here rather than clobbered. Nothing here says anything is emailed or on its way: QueerPulse sends no email.
-  // W0-NOTIF — PRD-48 - the two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is `{reviewNote}`, the same shape type.moderation_outcome.*.meta uses: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionNoteToken` falls the meta back to the kind's own short label when no note was given, and `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
+  // W0-NOTIF: PRD-48. The two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is the kind's short label, and the reviewer's note travels on the row's own `reason` field: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
   "type.listing_public_question_answered.text":
     "Your question about {listingName} was answered.",
   "type.listing_public_question_answered.meta": "Answer to your question",
@@ -997,7 +1251,7 @@ export const notifications: Catalog = {
   // COORD — COORD - the OWNER's half of a listing's public Q&A. It was missing from the frontend's known-kind list, so a business owner's 'somebody asked you a question' row rendered the unknown-kind fallback. Copy is written to work with or without a named asker, and never carries the question text: that is published on the listing page this row opens.
   // LEAK-02 — LEAK-02 task 4 - copy for `listing_public_question_answered`, the row that goes to the MEMBER WHO ASKED a public question on a business page. The type has been written since AddListingPublicQuestionNotificationTypes1794300000000 and was absent from KIND_CATEGORY in formatNotification.ts, so until now it rendered the `unknown` fallback: a member got generic platform copy as the answer to a question they personally typed. All three keys are NEW; nothing here overwrites an existing key. THE SENTENCE IS WRITTEN FOR NO ACTOR, deliberately, because that is the common case rather than the edge one: the public Q&A attributes an answer by ROLE only, a co-manager is invisible on the page by design, and an owner who is anonymous or withheld linkToProfile has told the platform not to tie their name to the business, so the backend spreads payload.actorId only where the page already links that owner's profile. The asker is owed the ANSWER, never the name of whoever wrote it, and the copy therefore never names or implies a person. There is also no `textNamed` key on purpose: `listing_public_question_answered` is not in PERSONALIZED_KINDS in notifications.adapters.ts (a file LEAK-02 does not own), so a personalised variant would be dead copy. `subjectFallback` covers a malformed payload with no `listingName`, so a brace token can never reach the screen. The row deep-links to the business page the answer is published on, so the answer TEXT is not in the copy and must never be added to it. Nothing here says anything is emailed or on its way: QueerPulse sends no email.
   // W0-NOTIF-B — PRD-47 - the personalised variant of the review-reply row. `review_replied` is now in PERSONALIZED_KINDS in notifications.adapters.ts (the set W0-NOTIF's note called NAMED_KINDS; PERSONALIZED_KINDS is its real name), so an actor-bearing row can read as a sentence with the replier's name in it instead of saying 'Someone replied' next to their face and profile link. It DEGRADES CORRECTLY WITH NO ACTOR and needs no extra key for that: NotificationItem only reaches `actor.textKey` inside its `if (dto.actor)` branch, so a moderator-written reply, a co-manager's reply, and a reply from a business owner whose public page does not name them all keep the generic type.review_replied.text, which already carries {subjectLabel}. The named string does NOT carry the business name, and cannot: NotificationItem passes {name} and nothing else into a textNamed string, the same constraint type.barter_proposal_received.textNamed hit. The reviewed thing is still one click away through sourceHref, which resolves 'listing' + listingSlug to the business page the reply is published on. COORDINATOR NOTE: if you want the business name back on a named row, the place for it is type.review_replied.meta (currently 'Reply to your review'), which formatNotification does interpolate {subjectLabel} into. That key belongs to W0-NOTIF's manifest, so it is deliberately not redefined here rather than clobbered. Nothing here says anything is emailed or on its way: QueerPulse sends no email.
-  // W0-NOTIF — PRD-48 - the two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is `{reviewNote}`, the same shape type.moderation_outcome.*.meta uses: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionNoteToken` falls the meta back to the kind's own short label when no note was given, and `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
+  // W0-NOTIF: PRD-48. The two shared rows behind the intake primitive. `submission_decided` branches on payload.kind AND payload.outcome, laid out exactly like type.volunteer_application_decided.* (a key set per outcome plus a flat fallback), with one extra step because it has two discriminators: `<kind>.<outcome>` when both are known, `<kind>` when only the kind is, and flat when neither is. Every .meta is the kind's short label, and the reviewer's note travels on the row's own `reason` field: these intakes have no member-facing tracker page and QueerPulse sends NO email, so the bell is the only place the reviewer's reason can be read at all. `submissionSubjectToken` falls `{subjectLabel}` back to the per-kind phrase the sentence is written around. A declined outcome is written plainly, with no apology and no hint that it might yet change. No string here says anything is on its way, is being emailed, or will arrive in an inbox. `review_replied` has no textNamed key on purpose: `review_replied` is not in NAMED_KINDS in notifications.adapters.ts (a file this agent does not own), so the personalised variant would be dead copy until that one-line edit lands.
   "type.listing_public_question.text":
     "Someone asked a question on {listingName}.",
   "type.listing_public_question.meta": "Question on your listing",
@@ -1061,7 +1315,9 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> wants to go to {eventTitle} together",
   "type.go_together_unmatched.meta": "Go together update",
   "type.go_together_unmatched.text":
-    "We couldn't put together a group for {eventTitle} this time",
+    "We haven't found a group for {eventTitle} yet. We'll keep looking",
   "type.go_together_unmatched.textFinal":
     "We weren't able to place you in a group for {eventTitle}",
+  "type.go_together_unmatched.textHostOff":
+    "The host switched Go together off for {eventTitle}",
 };

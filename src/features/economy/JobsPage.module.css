@@ -127,18 +127,43 @@
 .body {
   padding: var(--section-y-72) 0 var(--section-y-104);
 }
+/* The filter takes the flexible column and the post actions keep their own
+   column on the right, so the chips wrap inside their track and "Post a job"
+   stays beside them. */
 .top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--gap-sm);
   margin-bottom: 36px;
 }
 .filters {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+}
+/* The field filter stacks its group row over the optional field row, with
+   more space between the rows than between the chips inside one. */
+.fieldFilter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+/* The field row hangs off a rule under the group row, so it reads as a
+   refinement of the group picked above it. */
+.fieldRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+  border-inline-start: 2px solid rgba(var(--line-rgb), 0.16);
+  padding-inline-start: var(--gap-sm);
+}
+.fieldLead {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
 }
 .chip {
   font-family: var(--sans);
@@ -156,7 +181,7 @@
     border-color var(--dur-base) var(--ease);
 }
 @media (hover: hover) {
-  .chip:not(.chipActive):hover {
+  .chip:not(.chipActive, .chipSubActive):hover {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.4);
   }
@@ -165,6 +190,61 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
+}
+/* Field chips are smaller and press to a light tint with a solid outline, so
+   the solid plum fill stays the mark of the chosen group. */
+.chipSub {
+  font-size: var(--text-13);
+  padding: 6px 14px;
+}
+.chipSubActive {
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--text-strong);
+  border-color: var(--line-strong);
+}
+@media (pointer: coarse) {
+  .chip {
+    min-height: var(--tap-min);
+  }
+  .postBtn,
+  .myJobsLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+}
+/* Phone: each filter row is one horizontal scroller bled to the screen edge
+   (the SettingsPage `.sidebar` pattern), so picking a group puts its field
+   row directly below it and the post actions sit right under both rows. */
+@media (--lg) {
+  .top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    margin-inline: calc(-1 * var(--wrap-px));
+    padding-inline: var(--wrap-px);
+    scroll-padding-inline: var(--wrap-px);
+    /* Room for the focus ring, which the scroller would otherwise clip. */
+    padding-block: 6px;
+    margin-block: -6px;
+  }
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+  .chip {
+    flex: none;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+  .fieldRow {
+    border-inline-start: none;
+    padding-inline-start: 0;
+  }
 }
 /* PRD-44: the way into "jobs you posted" sits beside the post button, quiet
    next to it, because managing a listing is a return visit and posting one is
@@ -480,6 +560,15 @@
 
 .loadMore {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
   margin-top: 12px;
+}
+/* A failed "Load more": the loaded roles stay above, this line says why. */
+.loadMoreError {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+  text-align: center;
 }

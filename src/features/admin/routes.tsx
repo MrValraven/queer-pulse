@@ -122,6 +122,10 @@ const AdminReadingGroupProposalsPage = lazyNamed(
   () => import("./AdminReadingGroupProposalsPage"),
   "AdminReadingGroupProposalsPage",
 );
+const AdminForumReviewPage = lazyNamed(
+  () => import("./AdminForumReviewPage"),
+  "AdminForumReviewPage",
+);
 const AdminVolunteerHoursPage = lazyNamed(
   () => import("./AdminVolunteerHoursPage"),
   "AdminVolunteerHoursPage",
@@ -329,6 +333,10 @@ export function adminRoutes() {
       <Route
         path={routes.adminReadingGroupProposals}
         element={<AdminReadingGroupProposalsPage />}
+      />
+      <Route
+        path={routes.adminForumReview}
+        element={<AdminForumReviewPage />}
       />
       <Route
         path={routes.adminGuideFeedback}

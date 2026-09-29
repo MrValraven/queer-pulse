@@ -12,13 +12,15 @@ const DEMO_GRANTOR = { slug: "ana", name: "Ana Ribeiro" };
  * same since date), so the tag the rest of the demo paints matches what this
  * page lists. Mariana is the demo of a hidden tag: active here, and absent
  * from that registry for exactly that reason. Carla carries an invite quota
- * override so the "bonus not applying" note has a row to show on. Rui is the
- * one revoked grant, for the Past tab.
+ * override so the "bonus not applying" note has a row to show on. Rui is a
+ * revoked grant, for the Past tab. Diogo also holds an earlier revoked grant
+ * (he stepped back and was granted again), so his History drawer shows two.
  */
 export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
   {
     id: "demo-ambassador-beatriz",
     member: {
+      userId: "demo-user-beatriz",
       slug: "beatriz",
       firstName: "Beatriz",
       lastName: "Pinto",
@@ -38,6 +40,7 @@ export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
   {
     id: "demo-ambassador-diogo",
     member: {
+      userId: "demo-user-diogo",
       slug: "diogo",
       firstName: "Diogo",
       lastName: "Vasques",
@@ -57,6 +60,7 @@ export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
   {
     id: "demo-ambassador-carla",
     member: {
+      userId: "demo-user-carla",
       slug: "carla",
       firstName: "Carla",
       lastName: "Nogueira",
@@ -75,6 +79,7 @@ export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
   {
     id: "demo-ambassador-ines",
     member: {
+      userId: "demo-user-ines",
       slug: "ines",
       firstName: "Inês",
       lastName: "Tavares",
@@ -93,6 +98,7 @@ export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
   {
     id: "demo-ambassador-mariana",
     member: {
+      userId: "demo-user-mariana",
       slug: "mariana",
       firstName: "Mariana",
       lastName: "Loução",
@@ -111,6 +117,7 @@ export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
   {
     id: "demo-ambassador-rui",
     member: {
+      userId: "demo-user-rui",
       slug: "rui",
       firstName: "Rui",
       lastName: "Marçal",
@@ -126,10 +133,33 @@ export const ADMIN_AMBASSADORS_DEMO: readonly AdminAmbassadorDTO[] = [
     isTagVisible: true,
     inviteQuotaOverride: null,
   },
+  {
+    id: "demo-ambassador-diogo-earlier",
+    member: {
+      userId: "demo-user-diogo",
+      slug: "diogo",
+      firstName: "Diogo",
+      lastName: "Vasques",
+      avatarUrl: null,
+    },
+    focusArea: "nightlife_safety",
+    grantedAt: "2025-05-10T10:00:00.000Z",
+    grantedBy: DEMO_GRANTOR,
+    grantReason: "Started the first harm reduction table at the Arraial.",
+    revokedAt: "2025-12-01T10:00:00.000Z",
+    revokedBy: DEMO_GRANTOR,
+    revokeReason: "Took a break for the winter season.",
+    isTagVisible: true,
+    inviteQuotaOverride: null,
+  },
 ];
 
+/** The circle's handle, as `ambassador-circle.data.ts` founds it. */
+export const AMBASSADOR_CIRCLE_SLUG_DEMO = "queerpulse-ambassadors";
+
 export const ADMIN_AMBASSADOR_CIRCLE_DEMO: AdminAmbassadorCircleDTO = {
-  slug: "queerpulse-ambassadors",
+  isFounded: true,
+  slug: AMBASSADOR_CIRCLE_SLUG_DEMO,
   memberCount: 5,
   isViewerMember: false,
 };

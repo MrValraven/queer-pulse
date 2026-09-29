@@ -69,3 +69,37 @@ describe("ConversationContextMessage sentAsIdentity", () => {
     expect(screen.queryByText(/^Sent as/)).not.toBeInTheDocument();
   });
 });
+
+describe("ConversationContextMessage sticker", () => {
+  it("labels a sticker and shows the text a legacy edit stored", async () => {
+    render(
+      <ol>
+        <ConversationContextMessage
+          message={baseMessage({
+            kind: "sticker",
+            body: "text a pre-fix edit wrote",
+            editedAt: "2026-09-01T10:05:00.000Z",
+          })}
+        />
+      </ol>,
+      { wrapper: TestProviders },
+    );
+
+    expect(await screen.findByText("Sticker")).toBeInTheDocument();
+    expect(screen.getByText("text a pre-fix edit wrote")).toBeInTheDocument();
+  });
+
+  it("renders only the label line for an ordinary sticker", async () => {
+    const { container } = render(
+      <ol>
+        <ConversationContextMessage
+          message={baseMessage({ kind: "sticker", body: "" })}
+        />
+      </ol>,
+      { wrapper: TestProviders },
+    );
+
+    expect(await screen.findByText("Sticker")).toBeInTheDocument();
+    expect(container.querySelectorAll("p")).toHaveLength(1);
+  });
+});

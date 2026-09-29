@@ -29,7 +29,11 @@ import {
 import { isAnyWindowViewingConversation, isViewingTarget } from "./pushFocus";
 import { readPushLang } from "./pushLang";
 import { readHidePushPreviews } from "./pushPrivacy";
-import { type PushLang, formatPushCopy } from "./pushMessages";
+import {
+  type PushLang,
+  formatPushActions,
+  formatPushCopy,
+} from "./pushMessages";
 import {
   type DirectMessagePush,
   createFallbackPush,
@@ -43,7 +47,7 @@ declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 // until the user accepts the update pill. That pill's Reload button calls
 // updateServiceWorker(true), which posts { type: "SKIP_WAITING" } to this
 // worker. Without this listener the message is ignored: the worker never
-// activates, controllerchange never fires, and the page never reloads — the
+// activates, controllerchange never fires, and the page never reloads, so the
 // button appears to do nothing. Activating here lets the new build take over
 // and the plugin's controllerchange handler reload the page.
 self.addEventListener("message", (event) => {
@@ -55,14 +59,14 @@ self.addEventListener("message", (event) => {
 cleanupOutdatedCaches();
 
 // Precache diet: __WB_MANIFEST is scoped by injectManifest.globPatterns
-// (vite.config.ts) to the *app shell only* — index.html, CSS, the entry chunk,
+// (vite.config.ts) to the *app shell only*: index.html, CSS, the entry chunk,
 // the core react/query vendor chunks, fonts, and icons. The ~470 lazy route
 // chunks (Studio, Cinema, maplibre, visx, per-page bundles) are deliberately
 // NOT in the manifest; they are runtime-cached on first use by the script route
 // below, so a first visit no longer downloads the whole app up front.
 //
 // directoryIndex: null keeps "/" from being served out of the precached
-// index.html before the NetworkFirst navigation route runs — so a deploy's
+// index.html before the NetworkFirst navigation route runs, so a deploy's
 // fresh index.html is picked up.
 precacheAndRoute(self.__WB_MANIFEST, { directoryIndex: null });
 
@@ -93,7 +97,7 @@ registerRoute(
   }),
 );
 
-// Fonts: cache-first with a long TTL — they change roughly never and are on the
+// Fonts: cache-first with a long TTL. They change roughly never and are on the
 // shell's critical path, but are heavy enough that we don't want them bloating
 // the upfront precache.
 registerRoute(
@@ -140,9 +144,10 @@ setCatchHandler(async ({ request }) => {
 // lib.dom.d.ts's NotificationOptions only models the fields TypeScript's DOM
 // lib has caught up with (body/tag/data/icon/requireInteraction/silent). The
 // Notification API additionally defines image/actions/vibrate/renotify, which
-// Chrome/Android implement at runtime — widen locally rather than casting or
-// suppressing so this object literal is still checked against everything
-// TypeScript *does* know.
+// Chrome/Android implement at runtime. Widening locally keeps this object
+// literal checked against everything TypeScript *does* know, with no cast or
+// suppression. `actions` is the shape the engine reads: `formatPushActions`
+// resolves each payload action's `titleKey` into `title` and drops the key.
 type RichNotificationOptions = NotificationOptions & {
   image?: string;
   actions?: { action: string; title: string }[];
@@ -305,12 +310,12 @@ async function showPushNotification(
       return;
     }
     // The recipient's language lives in IndexedDB (written by the app on
-    // boot/language-switch — see pushLang.ts), never in the payload itself:
-    // the backend stays language-neutral and does not know the recipient's
-    // locale. formatPushCopy resolves payload.l10n's key(s) in that
+    // boot/language-switch, see pushLang.ts). The payload itself carries no
+    // language: the backend stays language-neutral and does not know the
+    // recipient's locale. formatPushCopy resolves payload.l10n's key(s) in that
     // language, falling back to the payload's plain English title/body when
     // there's no l10n block or the key/lang can't be resolved (also what
-    // iOS renders — it never runs this handler's JS).
+    // iOS renders, since it never runs this handler's JS).
     lang = await readPushLang();
     // Lock-screen privacy: when the member has asked for hidden
     // previews, nothing identifying may reach showNotification.
@@ -320,9 +325,9 @@ async function showPushNotification(
     // checks for an already-showing notification on the SAME tag (every DM
     // push tags itself with its conversationId, and sets renotify: true, so
     // at most one live notification per conversation exists at a time). If
-    // one is found, this is a burst — fold it into "{count} new messages
-    // from {name}" (or "in {group}" for a group, PRD-333) instead of stacking
-    // a second notification, and carry the running count forward in `data`
+    // one is found, this is a burst: fold it into "{count} new messages
+    // from {name}" (or "in {group}" for a group, PRD-333) so one notification
+    // holds the whole burst, and carry the running count forward in `data`
     // so the NEXT message in the burst can read it back. `decideCoalesce`
     // holds the pure count/label decision so it's unit-testable without the
     // unmockable `getNotifications()` call.
@@ -380,7 +385,9 @@ async function showPushNotification(
       // A preview image can be as identifying as the text (an avatar, a
       // photo attachment), so it goes when previews are hidden.
       image: shouldHidePreviews ? undefined : payload.image,
-      actions: payload.actions,
+      // ENG-414: each button label is localised from its `titleKey` with
+      // the same lookup and English fallback as the body.
+      actions: formatPushActions(payload.actions, lang),
       renotify: payload.renotify,
       // Per the Notifications spec, `silent` and a vibration pattern conflict;
       // silent wins, so suppress vibrate when the payload asked for silent.
@@ -388,7 +395,8 @@ async function showPushNotification(
       requireInteraction: payload.requireInteraction,
       silent: payload.silent,
       // The true event time (message createdAt / event start / notification
-      // createdAt), not delivery time — every sender now sets this.
+      // createdAt), which a delayed delivery leaves intact. Every sender now
+      // sets this.
       timestamp: payload.timestamp,
     };
     await self.registration.showNotification(shownTitle, options);
@@ -462,10 +470,10 @@ async function syncAppBadge(excludedTag?: string): Promise<void> {
 const vapidPublicKey = (import.meta.env.VITE_VAPID_PUBLIC_KEY ?? "").trim();
 
 // Fires when the browser rotates the push subscription out from under us
-// (key expiry, browser-initiated refresh) — greenfield without this handler:
+// (key expiry, browser-initiated refresh). Greenfield without this handler:
 // the old subscription silently stops receiving pushes and nothing ever
 // re-subscribes. We re-subscribe immediately so delivery keeps working, but
-// we do NOT POST the new subscription to /push/subscribe from here — that
+// we do NOT POST the new subscription to /push/subscribe from here. That
 // route is CSRF-guarded (double-submit cookie) and the SW has no clean way to
 // read the app's CSRF token. Instead: stash the new subscription as "pending"
 // in IndexedDB (pushSubStore.ts) and best-effort postMessage any open client
@@ -603,7 +611,7 @@ async function openNotificationTarget(targetUrl: string): Promise<void> {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   // Every action ("view") and a plain body tap deep-link to the same safe
-  // conversation/event path via safeNotificationPath below — there is only one
+  // conversation/event path via safeNotificationPath below. There is only one
   // destination today, so we don't need to branch on event.action. A future
   // multi-destination action (e.g. "mark as read" vs. "view") would read
   // event.action here and choose a different target/behaviour per action id.

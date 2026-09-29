@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSetCardHolderStatus } from "./api/useCardHolders";
 import type { IssuerCardDTO } from "./api/cards.api";
+import { cardHolderName } from "./cardHolderName";
 
 type NextStatus = "active" | "suspended" | "revoked";
 
@@ -34,6 +35,7 @@ export function CardHolderStatusModal({
   const { showToast } = useToast();
   const setStatus = useSetCardHolderStatus(slug);
   const [reason, setReason] = useState("");
+  const holderName = cardHolderName(card.holderName, t);
 
   const needsReason = nextStatus !== "active";
   const canSubmit = !needsReason || reason.trim().length >= REASON_MIN_LENGTH;
@@ -49,7 +51,7 @@ export function CardHolderStatusModal({
       {
         onSuccess: () => {
           showToast(
-            t(`cards:holders.toast.${nextStatus}`, { name: card.holderName }),
+            t(`cards:holders.toast.${nextStatus}`, { name: holderName }),
           );
           onClose();
         },
@@ -62,7 +64,7 @@ export function CardHolderStatusModal({
 
   return (
     <Modal
-      title={t(`cards:holders.modal.${nextStatus}`, { name: card.holderName })}
+      title={t(`cards:holders.modal.${nextStatus}`, { name: holderName })}
       onClose={onClose}
       footer={
         <>

@@ -55,10 +55,14 @@
   overflow-x: auto;
 }
 
+/* A size container, so a row lays itself out by the width it actually gets:
+   the page column on a phone and the 400px bell popover both take the
+   stacked layout at the end of this file. */
 .list {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  container-type: inline-size;
 }
 .day {
   font-size: var(--text-11);
@@ -120,6 +124,10 @@
   align-items: center;
   justify-content: center;
   font-size: var(--text-18);
+  flex: none;
+}
+/* The avatar, avatar link or icon tile that opens a row. */
+.lead {
   flex: none;
 }
 .body {
@@ -187,6 +195,22 @@
   font-size: var(--text-12);
   color: var(--ink-40);
 }
+/* The written reason behind a decision, in full. Body ink at a readable size,
+   set off from the sentence by a hairline rule so it reads as the author's
+   words quoted to the member. */
+.reason {
+  margin: 8px 0 0;
+  padding-inline-start: 10px;
+  border-inline-start: 2px solid var(--line);
+  font-size: var(--text-13-5);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.reasonLead {
+  font-weight: 600;
+  color: var(--ink-60);
+}
 .time {
   font-size: var(--text-12);
   color: var(--ink-40);
@@ -197,36 +221,25 @@
 .itemActions {
   margin-top: 10px;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   position: relative;
   z-index: 1;
 }
-.btn {
-  font-family: var(--sans);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  padding: 6px 13px;
-  border-radius: var(--radius-9);
-  cursor: pointer;
-  border: none;
-  transition: all 0.18s;
+/* The shared <Button> keeps its label on one line. A long label such as
+   "Make a persona for this" can still outgrow the text column in the 400px
+   popover, so a row action wraps its label and stays inside the column. Two
+   classes outrank the shared `.button`; its 40px `sm` floor still holds. */
+.itemActions .action {
+  white-space: normal;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.3;
 }
-.btnPrimary {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-}
-@media (hover: hover) {
-  .btnPrimary:hover {
-    background: var(--plum-deep);
-  }
-}
-.btnGhost {
-  background: rgba(var(--plum-rgb), 0.07);
-  color: var(--text-strong);
-}
-@media (hover: hover) {
-  .btnGhost:hover {
-    background: rgba(var(--plum-rgb), 0.12);
+/* A fingertip gets the full tap target on the row's actions. */
+@media (pointer: coarse) {
+  .itemActions .action {
+    min-height: var(--tap-min);
   }
 }
 .empty {
@@ -246,36 +259,15 @@
   margin: 16px 0 8px;
 }
 
-/* PRD-224. The control that clears one row. Deliberately quiet: it sits above
-   the overlay row link (z-index, like every other interactive part of a row)
-   and only takes colour on hover or focus, so the affordance is there without
-   competing with the notification itself. */
+/* PRD-224. The control that clears one row: the shared quiet <IconButton>,
+   which owns its look, hover and 44px tap target. This only lifts it above the
+   overlay row link (z-index, like every other interactive part of a row) and
+   pulls it up so its glyph lines up with the first line of text. */
 .dismiss {
   flex: none;
-  margin-top: 1px;
-  min-width: 32px;
-  min-height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: none;
-  border-radius: var(--radius-9);
-  color: var(--ink-40);
-  font-size: var(--text-14);
-  cursor: pointer;
+  margin-top: -5px;
   position: relative;
   z-index: 1;
-  transition:
-    color 0.18s,
-    background 0.18s;
-}
-@media (hover: hover) {
-  .dismiss:hover {
-    color: var(--text-strong);
-    background: rgba(var(--plum-rgb), 0.07);
-  }
 }
 
 /* The same row inside the nav bell's popover (NotificationsPopoverPanel):
@@ -285,4 +277,39 @@
 .itemCompact {
   gap: 12px;
   padding: 12px 8px 12px 16px;
+}
+
+/* A narrow list (a phone, the 400px popover): the time and the clear control
+   share a short first line beside the avatar, and the text takes the full
+   width under them. In one flex line those two columns left the sentence
+   about 150px, and a long reason ran to twenty lines. The dismiss control
+   keeps its 44px target; the negative block margin keeps it from heightening
+   that first line. `.notificationRow` is the real row only, so the loading
+   skeleton keeps its simple flex layout. Must follow `.item` and
+   `.itemCompact`, whose gaps it replaces. */
+@container (max-width: 560px) {
+  .notificationRow {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 4px 12px;
+  }
+  .notificationRow .lead {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  .notificationRow .time {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    margin-top: 0;
+  }
+  .notificationRow .dismiss {
+    grid-column: 3;
+    grid-row: 1;
+    margin-block: -8px;
+  }
+  .notificationRow .body {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
 }

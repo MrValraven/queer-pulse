@@ -154,8 +154,6 @@ export const connect: Catalog = {
 
   // Reach-out form (ConnectForm)
   "form.title": "Say <em>hello.</em>",
-  "form.sub":
-    "Your message goes directly. No notifications, no read receipts, no algorithm watching. Just a real message.",
   "form.reasonLabel": "What's this about?",
   "form.reasonPlaceholder": "Pick a reason, or leave it open",
   "form.reasonOpenToGroup": "What {first} is open to",
@@ -165,13 +163,7 @@ export const connect: Catalog = {
   "form.reasonSawPost": "I saw your board post",
   "form.reasonShouldMeet": "I think we should meet",
   "form.reasonSomethingElse": "Something else entirely",
-  "form.messageLabel": "Your message",
-  "form.messagePlaceholder": "Write naturally. There's no template.",
-  "form.note":
-    "If you're not connected yet, this arrives as a request: they decide whether to open the conversation. Either way, it stays between the two of you.",
   "form.cancel": "Cancel",
-  "form.sendingLabel": "Sending…",
-  "form.send": "Send",
   "form.sendError":
     "That didn't go through. Check your connection and try again.",
   "form.rateLimitError":
@@ -255,7 +247,4 @@ export const connect: Catalog = {
   "suggested.hideStripAria": "Hide people you might know",
   "suggested.browseMembers": "Browse all members",
   "contact.message": "Message",
-
-  // Messaging inbox and entry points (scan section 5, 2026-09-15)
-  "form.charactersLeft": "Characters left: {remaining}",
 };

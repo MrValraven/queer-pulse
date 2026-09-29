@@ -3,6 +3,7 @@ import type {
   AdminStickerPackResponse,
   AdminStickerResponse,
 } from "../../../shared/contracts/contracts";
+import type { TranslateInFunction } from "../../../app/providers/i18nContext";
 import type { TFunction } from "../../../shared/i18n/types";
 import { BLIP_TEMPLATE } from "../../stickers/templates/blip/blip.template";
 import { TEA_TEMPLATE } from "../../stickers/templates/tea/tea.template";
@@ -18,7 +19,9 @@ import {
   resolveTemplate,
   sortItemIds,
   stickerLabelFor,
+  stickerLabelsFor,
   templateItemIds,
+  warmStickerLabelCatalogs,
 } from "./stickerItems";
 
 let stickerCounter = 0;
@@ -31,6 +34,7 @@ function stickerFixture(
     id: `sticker-${stickerCounter}`,
     slug: `sticker-${stickerCounter}`,
     label: "Sticker",
+    labelPt: null,
     url: "https://example.test/sticker.png",
     width: 512,
     height: 512,
@@ -49,6 +53,7 @@ function packFixture(
     id: "pack-1",
     slug: "pack-one",
     name: "Pack one",
+    namePt: null,
     description: null,
     coverStickerId: null,
     status: "draft",
@@ -302,5 +307,62 @@ describe("itemName and stickerLabelFor", () => {
     expect(stickerLabelFor(BLIP_TEMPLATE, "hi", echoTranslate, "pt")).toBe(
       blipHiLabel,
     );
+  });
+});
+
+describe("stickerLabelsFor", () => {
+  const echoTranslate: TFunction = (key, options) =>
+    `active:${key}|${String(options?.flag ?? "")}`;
+  const translateInLoaded: TranslateInFunction = (language, key, options) =>
+    `${language}:${key}|${String(options?.flag ?? "")}`;
+  const translateInPending: TranslateInFunction = () => undefined;
+
+  it("gives both item labels, whatever language the builder is in", () => {
+    const blipHi = BLIP_TEMPLATE.items.find((item) => item.id === "hi");
+    expect(
+      stickerLabelsFor(BLIP_TEMPLATE, "hi", echoTranslate, translateInLoaded),
+    ).toEqual({ en: blipHi?.label.en, pt: blipHi?.label.pt });
+  });
+
+  it("wraps each Uno flag name in its own language's sentence", () => {
+    expect(
+      stickerLabelsFor(
+        UNO_REVERSE_TEMPLATE,
+        "lesbian",
+        echoTranslate,
+        translateInLoaded,
+      ),
+    ).toEqual({
+      en: "en:admin:stickerPacks.publish.stickerLabel|Lesbian",
+      pt: "pt:admin:stickerPacks.publish.stickerLabel|Lésbica",
+    });
+  });
+
+  it("falls back to the active-language sentence while a catalog loads", () => {
+    expect(
+      stickerLabelsFor(
+        UNO_REVERSE_TEMPLATE,
+        "lesbian",
+        echoTranslate,
+        translateInPending,
+      ).pt,
+    ).toBe("active:admin:stickerPacks.publish.stickerLabel|Lésbica");
+  });
+});
+
+describe("warmStickerLabelCatalogs", () => {
+  it("asks for the sentence in both languages", () => {
+    const requestedLanguages: string[] = [];
+    const recordingTranslateIn: TranslateInFunction = (language) => {
+      requestedLanguages.push(language);
+      return language === "en" ? "{flag} reverse" : undefined;
+    };
+    expect(warmStickerLabelCatalogs(recordingTranslateIn)).toBe(false);
+    expect(requestedLanguages).toEqual(["en", "pt"]);
+  });
+
+  it("reports ready once both languages resolve", () => {
+    const loadedTranslateIn: TranslateInFunction = () => "{flag} reverse";
+    expect(warmStickerLabelCatalogs(loadedTranslateIn)).toBe(true);
   });
 });

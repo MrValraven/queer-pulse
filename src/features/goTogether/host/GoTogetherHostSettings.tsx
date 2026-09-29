@@ -19,7 +19,7 @@ import {
   TextInput,
 } from "../../gatherings/CreateGatheringFields";
 import { eventZoneFormat } from "../../gatherings/eventTimezone";
-import { goTogetherErrorCode } from "../api/goTogether.api";
+import { goTogetherErrorCode, isGoTogetherOff } from "../api/goTogether.api";
 import type { HostConfigDTO } from "../api/goTogether.types";
 import { goTogetherKeys } from "../api/goTogetherKeys";
 import {
@@ -31,6 +31,7 @@ import {
   MAX_MEETING_POINT_LENGTH,
   MIN_HOST_OPTIONS,
 } from "../goTogetherQuestionnaire.data";
+import { GoTogetherHostOffConfirmDialog } from "./GoTogetherHostOffConfirmDialog";
 import { GoTogetherHostQuestionsEditor } from "./GoTogetherHostQuestionsEditor";
 import {
   areQuestionBodiesValid,
@@ -321,6 +322,7 @@ function HostSettingsDetails({
       <GoTogetherHostQuestionsEditor
         questions={questions}
         isLocked={isReadOnly}
+        hasSavedQuestions={config.hostQuestions.length > 0}
         error={questionsError}
         onChange={(nextQuestions) => {
           setQuestions(nextQuestions);
@@ -406,6 +408,10 @@ function HostSettingsBody({
   const showSaveError = useSaveErrorToast();
   const toggleConfig = useSaveGoTogetherHostConfig(slug);
   const [openedAtMs] = useState(() => Date.now());
+  // A confirm gate before an on-to-off save: only a config saved as enabled
+  // has anyone waiting to tell (PRD-416). Turning it on, or turning off a
+  // config that was never saved enabled, skips straight to the save.
+  const [isOffConfirmOpen, setIsOffConfirmOpen] = useState(false);
   // Opt-in closes at the latest cutoff; after it every save is refused.
   const isOptInClosed = openedAtMs >= Date.parse(config.latestCutoffAt);
   // The switch follows the press while the save is out, then the server.
@@ -413,6 +419,11 @@ function HostSettingsBody({
     toggleConfig.isPending && toggleConfig.variables
       ? toggleConfig.variables.enabled
       : config.enabled;
+  const saveEnabled = (isChecked: boolean) =>
+    toggleConfig.mutate(
+      { ...savedConfigBody(config, Date.now()), enabled: isChecked },
+      { onError: showSaveError },
+    );
   return (
     <>
       <HostSwitch
@@ -421,10 +432,20 @@ function HostSettingsBody({
         isEnabled={isEnabled}
         onChange={(isChecked) => {
           if (toggleConfig.isPending) return;
-          toggleConfig.mutate(
-            { ...savedConfigBody(config, Date.now()), enabled: isChecked },
-            { onError: showSaveError },
-          );
+          if (!isChecked && config.enabled) {
+            setIsOffConfirmOpen(true);
+            return;
+          }
+          saveEnabled(isChecked);
+        }}
+      />
+      <GoTogetherHostOffConfirmDialog
+        open={isOffConfirmOpen}
+        isPending={toggleConfig.isPending}
+        onCancel={() => setIsOffConfirmOpen(false)}
+        onConfirm={() => {
+          setIsOffConfirmOpen(false);
+          saveEnabled(false);
         }}
       />
       {(isEnabled || config.isLocked) && (
@@ -453,6 +474,8 @@ export function GoTogetherHostSettings({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const headingId = useId();
   const configQuery = useGoTogetherHostConfig(slug);
+  // Go together switched off everywhere answers 404: the section stays out.
+  if (configQuery.isError && isGoTogetherOff(configQuery.error)) return null;
   return (
     <section aria-labelledby={headingId} className={styles.section}>
       <h2 id={headingId} className={styles.heading}>

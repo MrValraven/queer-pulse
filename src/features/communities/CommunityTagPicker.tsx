@@ -19,20 +19,20 @@ interface CommunityTagPickerProps {
 
 /**
  * The curated tag multi-select, shared by `EditCommunityModal` and the
- * Start-a-Community wizard's "why" chapter (chapter 1 — the only place tags
+ * Start-a-Community wizard's "why" chapter (chapter 1: the only place tags
  * can be picked at creation time). A `ChipSelect` over the full
  * `COMMUNITY_TAGS` vocab, capped at `MAX_COMMUNITY_TAGS`, plus a soft
  * "these often go together" nudge (`TAG_OVERLAP_CLUSTERS`,
  * `communityTags.data.ts`) once 2+ selected tags share a cluster. The hint is
- * informational only — it never blocks toggling a tag or submitting.
+ * informational only: it never blocks toggling a tag or submitting.
  *
  * The picker opens collapsed once anything is chosen: the vocab is 53 chips,
  * ten-odd wrapped rows that every unrelated edit (welcome message, access,
  * roster) has to scroll past, while the tags already on the community are the
  * only ones an owner usually needs to see. Collapsed still renders the chosen
- * chips as live chips, so removing one never needs the list open. With nothing
- * chosen there is nothing to collapse, so it starts open rather than reading
- * as an empty field.
+ * chips as live chips, so removing one keeps the list closed. With nothing
+ * chosen there is nothing to collapse, so it starts open and shows the full
+ * chip list right away.
  */
 export function CommunityTagPicker({
   label,
@@ -46,9 +46,14 @@ export function CommunityTagPicker({
   const [isOpen, setIsOpen] = useState(() => selectedIds.length === 0);
   const listId = useId();
 
+  const isAtLimit = selectedIds.length >= MAX_COMMUNITY_TAGS;
+
   const toggle = (id: string) => {
     const isSelected = selectedIds.includes(id);
-    if (!isSelected && selectedIds.length >= MAX_COMMUNITY_TAGS) return;
+    // Belt and braces: ChipSelect's own maxSelected already disables every
+    // unselected chip once the cap is hit, so this guard only matters if a
+    // click somehow reaches here anyway.
+    if (!isSelected && isAtLimit) return;
     onChange(
       isSelected
         ? selectedIds.filter((tagId) => tagId !== id)
@@ -82,6 +87,20 @@ export function CommunityTagPicker({
       }
     >
       <div className={styles.picker}>
+        {/* Repeats the footer's own countAtLimit line above the open chip
+            list: with 53 chips wrapped across ten-odd rows, a member tapping
+            a disabled chip near the top has no way to see why nothing
+            happened without scrolling past all of them. The footer's
+            aria-live count stays the single region announced on change; this
+            copy is plain, unannounced text. */}
+        {isAtLimit && isOpen && (
+          <p className={styles.limitNote}>
+            {t("communities:tagPicker.countAtLimit", {
+              count: selectedIds.length,
+              max: MAX_COMMUNITY_TAGS,
+            })}
+          </p>
+        )}
         <div id={listId}>
           {visibleTags.length > 0 ? (
             <ChipSelect
@@ -92,6 +111,7 @@ export function CommunityTagPicker({
               }))}
               selected={new Set(selectedIds)}
               onToggle={toggle}
+              maxSelected={MAX_COMMUNITY_TAGS}
             />
           ) : (
             <p className={styles.empty}>{t("communities:tagPicker.empty")}</p>
@@ -114,11 +134,16 @@ export function CommunityTagPicker({
                     : "communities:tagPicker.choose",
                 )}
           </Button>
-          <span className={styles.count}>
-            {t("communities:tagPicker.count", {
-              count: selectedIds.length,
-              max: MAX_COMMUNITY_TAGS,
-            })}
+          <span className={styles.count} aria-live="polite">
+            {t(
+              isAtLimit
+                ? "communities:tagPicker.countAtLimit"
+                : "communities:tagPicker.count",
+              {
+                count: selectedIds.length,
+                max: MAX_COMMUNITY_TAGS,
+              },
+            )}
           </span>
         </div>
       </div>

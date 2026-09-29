@@ -4,14 +4,18 @@ import { Button, Modal } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { formatDate } from "../../../shared/lib/date";
+import { isAccountRestricted } from "../../../shared/api/errorMessage";
 import type { SubprofileSection } from "../api/subprofiles.api";
 import type { SubprofileView } from "../api/subprofiles.adapters";
+import { isPersonaEditConflict } from "../api/personaEditConflict";
+import type { EditorEditVersionControls } from "../subprofileEditorContext";
 import { PoemBlocksView } from "../poem/PoemBlocksView";
 import { normalizePoemVersions } from "../poem/poemModel";
 import {
   useItemRevisionDetail,
   useItemRevisions,
   useRestoreItemRevision,
+  type RestoreItemRevisionResult,
 } from "../api/useItemRevisions";
 import styles from "./ItemRevisionHistoryModal.module.css";
 
@@ -30,6 +34,12 @@ export interface ItemRevisionHistoryModalProps {
    *  state with the restored content before closing. Falls back to `onClose`
    *  for callers with nothing extra to do on restore. */
   onRestored?: (subprofile: SubprofileView | null) => void;
+  /** ENG-451: the open editor's version controls. Given, a restore carries
+   *  the editor's `editVersion`, hands the version it produced back to the
+   *  editor, and raises the editor's conflict alert on a 409
+   *  `PERSONA_EDIT_CONFLICT` (then closes via `onClose`). Left out, the
+   *  restore is unconditional and moves no editor version. */
+  editVersionControls?: EditorEditVersionControls;
 }
 
 /** `snapshot` is a raw `Record<string, unknown>` (whatever shape the item had
@@ -86,6 +96,7 @@ export function ItemRevisionHistoryModal({
   section,
   onClose,
   onRestored,
+  editVersionControls,
 }: ItemRevisionHistoryModalProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -99,20 +110,42 @@ export function ItemRevisionHistoryModal({
   );
 
   async function restore(revisionId: string) {
-    let result: { subprofile: SubprofileView | null };
+    let result: RestoreItemRevisionResult;
     try {
       result = await restoreItemRevision.mutateAsync({
         subprofileId,
         itemId,
         revisionId,
+        expectedEditVersion: editVersionControls?.getEditVersion(),
       });
-    } catch {
-      // Ownership lapsed (403), the revision no longer exists (404), or the
-      // network dropped: tell the owner and leave the modal open so they can
-      // retry, same shape as `ProtectWorkSection`'s clipboard/record try/catch.
-      // Deliberately does NOT call onRestored/onClose here.
-      showToast(t("subprofiles:history.restoreFailed"), "error");
+    } catch (error) {
+      // ENG-451: someone saved the persona after the editor loaded it. The
+      // editor's conflict alert says so and offers Reload, so no toast here.
+      if (editVersionControls && isPersonaEditConflict(error)) {
+        editVersionControls.markEditConflict();
+        onClose();
+        return;
+      }
+      // A moderation restriction (ENG-448) gets the copy naming the appeal.
+      // Otherwise ownership lapsed (403), the revision no longer exists
+      // (404), or the network dropped: tell the owner and leave the modal
+      // open so they can retry, same shape as `ProtectWorkSection`'s
+      // clipboard/record try/catch. Deliberately does NOT call
+      // onRestored/onClose here.
+      showToast(
+        t(
+          isAccountRestricted(error)
+            ? "shared:apiError.accountRestricted"
+            : "subprofiles:history.restoreFailed",
+        ),
+        "error",
+      );
       return;
+    }
+    // Before `onRestored` reseeds the section, so the next Save carries the
+    // version this restore produced.
+    if (result.editVersion !== null) {
+      editVersionControls?.adoptEditVersion(result.editVersion);
     }
     showToast(t("subprofiles:history.restored"));
     if (onRestored) {

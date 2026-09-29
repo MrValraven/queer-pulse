@@ -31,9 +31,11 @@ const TINT_CSS: Record<
   "coral" | "jade" | "plum",
   { bg: string; color: string }
 > = {
-  jade: { bg: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  coral: { bg: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
-  plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
+  jade: { bg: "rgba(var(--jade-rgb), .15)", color: "var(--jade)" },
+  coral: { bg: "rgba(var(--accent-rgb), .14)", color: "var(--accent-ink)" },
+  // `--line-rgb` and `--text-strong` equal plum in light mode and flip in
+  // dark mode, so the plum avatar stays visible on the dark plum surfaces.
+  plum: { bg: "rgba(var(--line-rgb), .1)", color: "var(--text-strong)" },
 };
 
 /** Build the testimonial view-model, or null when the partner has no quote. */

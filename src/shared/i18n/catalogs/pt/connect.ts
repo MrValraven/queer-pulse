@@ -153,8 +153,6 @@ export const connect: Catalog = {
 
   // Formulário de contacto (ConnectForm)
   "form.title": "Diz <em>olá.</em>",
-  "form.sub":
-    "A tua mensagem vai diretamente. Sem notificações, sem confirmações de leitura, sem algoritmo a observar. Só uma mensagem verdadeira.",
   "form.reasonLabel": "Sobre o que é?",
   "form.reasonPlaceholder": "Escolhe um motivo, ou deixa em aberto",
   "form.reasonOpenToGroup": "Ao que {first} está disponível",
@@ -164,13 +162,7 @@ export const connect: Catalog = {
   "form.reasonSawPost": "Vi a tua publicação no mural",
   "form.reasonShouldMeet": "Acho que devíamos conhecer-nos",
   "form.reasonSomethingElse": "Outra coisa qualquer",
-  "form.messageLabel": "A tua mensagem",
-  "form.messagePlaceholder": "Escreve com naturalidade. Não há modelo.",
-  "form.note":
-    "Se ainda não estão ligados, isto chega como um pedido: essa pessoa decide se quer abrir a conversa. De qualquer forma, fica só entre vocês os dois.",
   "form.cancel": "Cancelar",
-  "form.sendingLabel": "A enviar…",
-  "form.send": "Enviar",
   "form.sendError":
     "Não foi possível enviar. Verifica a ligação e tenta novamente.",
   "form.rateLimitError":
@@ -255,7 +247,4 @@ export const connect: Catalog = {
   "suggested.hideStripAria": "Esconder pessoas que talvez conheças",
   "suggested.browseMembers": "Ver todas as pessoas",
   "contact.message": "Mensagem",
-
-  // Messaging inbox and entry points (scan section 5, 2026-09-15)
-  "form.charactersLeft": "Carateres restantes: {remaining}",
 };

@@ -9,7 +9,11 @@ interface ForwardRecipientListProps {
   people: Conversation[];
   groupResults: Conversation[];
   staffMap: Record<string, StaffIdentity>;
+  /** The connection pool is still loading. */
   loading: boolean;
+  /** The server group search for the typed text has not answered yet
+   *  (`useForwardGroupSearch`). */
+  isSearchingGroups: boolean;
   /** Total accepted connections before the query filter. Distinguishes "no
    *  connections at all" from "no connections match this search" (mirrors
    *  `NewMessagePickList`). */
@@ -42,6 +46,7 @@ export function ForwardRecipientList({
   groupResults,
   staffMap,
   loading,
+  isSearchingGroups,
   candidatesCount,
   query,
   isSelected,
@@ -51,13 +56,17 @@ export function ForwardRecipientList({
   onToggle,
 }: ForwardRecipientListProps) {
   const { t } = useTranslation();
+  const hasNothingListed = people.length === 0 && groupResults.length === 0;
+  const isStillLooking = loading || isSearchingGroups;
+  // A search still running with nothing to show yet reads as loading, so
+  // the list area is never blank and "no matches" waits for the answer.
+  const shouldShowLoading =
+    (loading && candidatesCount === 0) ||
+    (isSearchingGroups && hasNothingListed);
   const hasNoResultsAtAll =
-    !loading && candidatesCount === 0 && groupResults.length === 0;
+    !isStillLooking && candidatesCount === 0 && groupResults.length === 0;
   const hasNoMatchesForQuery =
-    !loading &&
-    candidatesCount > 0 &&
-    people.length === 0 &&
-    groupResults.length === 0;
+    !isStillLooking && candidatesCount > 0 && hasNothingListed;
   return (
     <>
       {people.length > 0 && (
@@ -131,7 +140,7 @@ export function ForwardRecipientList({
           </ul>
         </fieldset>
       )}
-      {loading && candidatesCount === 0 && (
+      {shouldShowLoading && (
         <p className={styles.empty} role="status">
           {t("messages:newMessage.loading")}
         </p>

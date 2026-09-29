@@ -104,6 +104,7 @@ export function pieceDtoToView(pieceDto: PieceListItemDto): Piece {
     kind: pieceDto.kind ?? "",
     byline: pieceDto.byline,
     editorId: pieceDto.editorId,
+    writerId: pieceDto.writerId ?? null,
     stage,
     due,
     dueDate: isoCalendarDate(pieceDto.due),
@@ -118,6 +119,7 @@ export function pieceDtoToView(pieceDto: PieceListItemDto): Piece {
     issueId: pieceDto.issueId,
     stageEnteredAt: pieceDto.stageEnteredAt,
     paymentStatus: pieceDto.paymentStatus,
+    publishedAt: pieceDto.publishedAt ?? null,
   };
 }
 
@@ -132,6 +134,7 @@ export function pitchDtoToView(pitchDto: PitchDto): Pitch {
     fresh: pitchDto.fresh,
     suggest: pitchDto.suggestFormat === "deck" ? "deck" : undefined,
     receivedAt: pitchDto.receivedAt,
+    submitterId: pitchDto.submitterId ?? null,
   };
 }
 

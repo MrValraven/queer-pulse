@@ -29,9 +29,11 @@ export function setMessageDraftsScope(scopeId: string | null): void {
   activeScope = scopeId;
 }
 
-function storageKey(): string {
-  if (!activeScope || activeScope === "demo") return STORAGE_KEY;
-  return `${STORAGE_KEY}.u.${activeScope}`;
+/** The storage key for `scopeId`, or the current `activeScope` when omitted
+ *  (mirrors `outbox.ts`'s `storageKey`). */
+function storageKey(scopeId: string | null = activeScope): string {
+  if (!scopeId || scopeId === "demo") return STORAGE_KEY;
+  return `${STORAGE_KEY}.u.${scopeId}`;
 }
 
 /** Per-conversation composer text, keyed by conversation id. */
@@ -136,5 +138,25 @@ export function clearDrafts(): void {
     window.localStorage.removeItem(storageKey());
   } catch {
     // ignore storage failures
+  }
+}
+
+/**
+ * Wipe every composer draft stored for `scopeId` (ENG-404), independent of
+ * the module's `activeScope`, so an explicit sign-out in `AuthProvider` can
+ * clear the signing-out member's unsent text whether or not the Messages page
+ * is mounted. Also removes the un-suffixed base key: it holds demo drafts and
+ * any draft written before per-member scoping existed, and `loadDrafts` still
+ * reads it whenever the scope is "demo" or unset. Each removal is guarded on
+ * its own, so blocked storage never throws and one failure never skips the
+ * other key.
+ */
+export function clearDraftsForScope(scopeId: string | null): void {
+  for (const key of new Set([storageKey(scopeId), STORAGE_KEY])) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch {
+      // ignore storage failures (private mode / blocked storage)
+    }
   }
 }

@@ -25,6 +25,8 @@ import { useMentions } from "./api/useMentions";
 import { useMentionsReadState } from "./useMentionsReadState";
 import { MentionsListSkeleton } from "./MentionsSkeleton";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { MentionExcerpt } from "./MentionExcerpt";
+import { isMentionExcerptEmpty } from "./mentionExcerptIsEmpty";
 import styles from "./MentionsPanel.module.css";
 import type { TFunction } from "../../shared/i18n/types";
 
@@ -150,21 +152,27 @@ function MentionRow({
     setComposing(false);
   }
 
+  // A mention whose source text is gone has nothing left to answer, so the
+  // row offers its other actions only.
+  const hasSource = !isMentionExcerptEmpty(m.content);
+  const visibleActions = m.actions.filter(
+    (action) => hasSource || action.type !== "reply",
+  );
+
   return (
     <div className={`${styles.row} ${unread ? styles.unread : ""}`}>
       <div className={styles.headRow}>
         <div className={`${styles.av} ${avClass[m.tint]}`}>{m.initials}</div>
         <div className={styles.who}>
           <span className={styles.whoName}>
-            <Link
-              to={
-                m.actorSlug
-                  ? `${routes.members}/${m.actorSlug}`
-                  : routes.members
-              }
-            >
-              {m.name}
-            </Link>
+            {/* A matched Go together chat's mention actor carries no slug
+                (no profile to open): the name renders as plain text, same
+                as the notifications bell for the same case. */}
+            {m.actorSlug ? (
+              <Link to={`${routes.members}/${m.actorSlug}`}>{m.name}</Link>
+            ) : (
+              <span>{m.name}</span>
+            )}
             <MemberStaffBadge slug={m.actorSlug} />
           </span>
           <span> · {m.context}</span>
@@ -173,7 +181,7 @@ function MentionRow({
           {m.when}
         </div>
       </div>
-      <div className={styles.content}>{m.content}</div>
+      <MentionExcerpt content={m.content} />
       <div className={styles.where}>
         {t("notifications:mentions.where.prefix")}{" "}
         {m.whereTo ? (
@@ -190,9 +198,9 @@ function MentionRow({
           {body}
         </div>
       ))}
-      {m.actions.length > 0 && (
+      {visibleActions.length > 0 && (
         <div className={styles.actions}>
-          {m.actions.map((action) => {
+          {visibleActions.map((action) => {
             const isGoing = action.type === "rsvp" && going;
             return (
               <button

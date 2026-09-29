@@ -327,12 +327,20 @@ export const economy: Catalog = {
   "jobs.postCta": "+ Publicar uma vaga",
 
   "jobs.filter.all": "Todas as vagas",
-  "jobs.filter.design": "Design",
-  "jobs.filter.tech": "Tecnologia",
-  "jobs.filter.arts": "Artes e cultura",
-  "jobs.filter.care": "Cuidados",
-  "jobs.filter.food": "Restauração",
-  "jobs.filter.community": "Comunidade",
+
+  "jobs.fieldGroup.creativeMedia": "Criativo e media",
+  "jobs.fieldGroup.techScience": "Tecnologia e ciência",
+  "jobs.fieldGroup.business": "Negócios",
+  "jobs.fieldGroup.healthCare": "Saúde e cuidados",
+  "jobs.fieldGroup.educationCommunity": "Educação e comunidade",
+  "jobs.fieldGroup.foodHospitality": "Restauração, hotelaria e comércio",
+  "jobs.fieldGroup.tradesIndustry": "Ofícios, indústria e logística",
+  "jobs.fieldGroup.landAnimals": "Terra e animais",
+  "jobs.fieldGroup.publicSafety": "Serviço público e segurança",
+
+  "jobs.fieldFilter.groupsLabel": "Filtrar vagas por área",
+  "jobs.fieldFilter.fieldsLabel": "Escolher uma área",
+  "jobs.fieldFilter.anyField": "Qualquer área",
 
   "jobs.card.applyBy": "Candidaturas até {date}",
   "jobs.card.deadlineOpen": "Sem prazo",
@@ -365,6 +373,7 @@ export const economy: Catalog = {
 
   "jobs.loadingMore": "A carregar…",
   "jobs.loadMoreCta": "Carregar mais vagas",
+  "jobs.loadMoreError": "Não conseguimos carregar mais vagas.",
 
   "jobs.employers.title": "Empresas queer <em>em que confiamos</em>",
   "jobs.employers.subtitle":
@@ -425,7 +434,8 @@ export const economy: Catalog = {
   "jobDetail.sidebar.salary": "Salário",
   "jobDetail.sidebar.type": "Tipo",
   "jobDetail.sidebar.location": "Localização",
-  "jobDetail.sidebar.category": "Categoria",
+  "jobDetail.sidebar.category": "Área",
+  "jobDetail.sidebar.profession": "Profissão",
   "jobDetail.sidebar.deadline": "Prazo",
   "jobDetail.sidebar.applyCta": "Candidatar agora",
   "jobDetail.sidebar.shareToCommunityCta": "Partilhar numa comunidade",
@@ -609,8 +619,6 @@ export const economy: Catalog = {
   "housing.outro.askForum": "Perguntar no fórum",
 
   // ── HousingModals (mensagem à pessoa anunciante / recomendar) ──────────
-  "housingModal.charsToSend_one": "Falta mais {count} caráter para enviar",
-  "housingModal.charsToSend_other": "Faltam mais {count} carateres para enviar",
   "housingModal.charsToSubmit_one": "Falta mais {count} caráter para submeter",
   "housingModal.charsToSubmit_other":
     "Faltam mais {count} carateres para submeter",
@@ -622,18 +630,16 @@ export const economy: Catalog = {
   "housingModal.message.openThreadCta": "Abrir a conversa",
 
   "housingModal.message.ariaLabel": "Enviar mensagem a quem anunciou",
-  "housingModal.message.successTitle": "Mensagem <em>enviada.</em>",
+  "housingModal.message.successTitle": "Mensagem",
+  "housingModal.message.successEm": "enviada",
   "housingModal.message.successBody":
     "A tua mensagem está a caminho de <strong>{toName}</strong>, que costuma responder <strong>{responseTime}</strong>. Vais receber aqui uma notificação quando o fizer. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
   "housingModal.message.successBodyNoReplyTime":
     "A tua mensagem está a caminho de <strong>{toName}</strong>. Vais receber aqui uma notificação quando responder. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
-  "housingModal.message.eyebrow": "Enviar mensagem a quem anunciou",
-  "housingModal.message.title": "Enviar mensagem a <em>{toName}</em>",
   "housingModal.message.body":
     "Sobre <strong>{listingTitle}</strong>. Mantém um tom humano, uma frase sobre quem és e porque te interessa já ajuda muito. O teu perfil é partilhado com a mensagem.",
   "housingModal.message.note":
     "Para tua segurança, mantém a conversa dentro da QueerPulse até se terem conhecido pessoalmente. Nunca envies um depósito antes de visitar o espaço.",
-  "housingModal.message.send": "Enviar mensagem",
   "housingModal.message.error":
     "Não foi possível enviar a tua mensagem, não foi entregue. Verifica a ligação e tenta novamente.",
   "housingModal.message.draftNamed":
@@ -1154,6 +1160,8 @@ export const economy: Catalog = {
   "housingListing.reportModal.lead":
     "As denúncias ajudam-nos a manter o QueerPulse fiável. Conta-nos o que se passa, detalhes ajudam a equipa de revisão. O teu nome nunca é partilhado com quem denuncias.",
   "housingListing.reportModal.concernLabel": "Qual é a preocupação?",
+  "housingListing.reportModal.reasonMissing":
+    "Escolhe uma preocupação para enviar",
   "housingListing.reportModal.detailLabel": "Conta-nos mais",
   "housingListing.reportModal.detailPlaceholder":
     "O que fez isto parecer inseguro, discriminatório, ou pouco fiável? Sê tão específique quanto te sintas confortável.",
@@ -1985,7 +1993,11 @@ export const economy: Catalog = {
     "Não foi possível publicar a tua vaga. Tenta novamente.",
 
   "postJob.field.optional": "opcional",
-  "postJob.field.category": "Categoria",
+  "postJob.field.category": "Área",
+  "postJob.field.profession": "Profissão",
+  "postJob.field.fieldPlaceholder": "Escolhe uma área",
+  "postJob.field.fieldSearch": "Pesquisa áreas e profissões",
+  "postJob.field.professionPlaceholder": "Qualquer função nesta área",
   "postJob.field.commitment": "Compromisso",
   "postJob.field.experienceLevel": "Nível de experiência",
   "postJob.field.format": "Formato",
@@ -2004,16 +2016,6 @@ export const economy: Catalog = {
   "postJob.field.screening": "Triagem",
   "postJob.field.postingAs": "A publicar como",
   "postJob.field.respondVia": "Responder via",
-
-  "postJob.option.category.legalAdmin": "Jurídico e administrativo",
-  "postJob.option.category.designCreative": "Design e criativo",
-  "postJob.option.category.techEngineering": "Tecnologia e engenharia",
-  "postJob.option.category.writingEditing": "Escrita e edição",
-  "postJob.option.category.translation": "Tradução",
-  "postJob.option.category.teachingTutoring": "Ensino e explicações",
-  "postJob.option.category.healthWellbeing": "Saúde e bem-estar",
-  "postJob.option.category.practicalHelp": "Ajuda prática",
-  "postJob.option.category.other": "Outro",
 
   "postJob.option.commitment.fullTime": "Tempo inteiro",
   "postJob.option.commitment.partTime": "Tempo parcial",
@@ -2056,6 +2058,7 @@ export const economy: Catalog = {
   "postJob.step1.locationPlaceholder":
     "ex.: Arroios, Lisboa, ou um bairro / concelho",
   "postJob.step1.locationError": "Indica onde isto está baseado.",
+  "postJob.step1.fieldError": "Escolhe a área desta vaga.",
 
   "postJob.step2.eyebrow": "Passo 2 de 5",
   "postJob.step2.title": "Os <em>detalhes</em>",
@@ -3634,10 +3637,6 @@ export const economy: Catalog = {
   "salarySubmitModal.annualSalaryPlaceholder": "Salário anual (€)",
   "salarySubmitModal.yearsExpPlaceholder": "Anos de experiência",
   "salarySubmitModal.employmentTypeLabel": "Tipo de vínculo",
-  "salarySubmitModal.type.fullTime": "Tempo inteiro",
-  "salarySubmitModal.type.partTime": "Meio tempo",
-  "salarySubmitModal.type.freelance": "Freelancer",
-  "salarySubmitModal.type.contract": "Contrato a termo",
   "salarySubmitModal.submitCta": "Enviar anonimamente",
 
   // ── AffiliateCompanyModal ────────────────────────────────────────────────
@@ -4455,7 +4454,10 @@ export const economy: Catalog = {
   "editJob.field.description": "Em que consiste a vaga",
   "editJob.field.descriptionHelper":
     "É este o texto que aparece no cartão da vaga.",
-  "editJob.field.category": "Categoria",
+  "editJob.field.category": "Área",
+  "editJob.field.profession": "Profissão",
+  "editJob.legacyFieldNote":
+    "Este anúncio foi publicado antes de existirem áreas. Escolhe uma para guardares as alterações.",
   "editJob.field.commitment": "Regime",
   "editJob.field.seniority": "Nível",
   "editJob.field.format": "Onde se trabalha",
@@ -4610,6 +4612,4 @@ export const economy: Catalog = {
 
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "barterDetail.propose.openThreadCta": "Abrir a conversa",
-  "housingModal.message.replyNotice":
-    "{name} pode responder-te já a isto. Podes escrever mais assim que o fizer.",
 };

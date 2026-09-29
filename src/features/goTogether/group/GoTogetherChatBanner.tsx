@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiUsers } from "react-icons/fi";
+import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Conversation } from "../../messages/data";
 import { useGoTogetherGroup } from "../api/useGoTogetherGroup";
@@ -17,9 +18,10 @@ function bannerGroupId(conversation: Conversation): string | null {
 }
 
 /**
- * One compact row under the header of a Go together group chat: the
- * gathering's title, the band and "See your group". It stays one line with a
- * 44px button, so the thread keeps its room on a small phone.
+ * One compact row under the header of a Go together group chat: "Your Go
+ * together group", the band and "See your group". The chat header above
+ * already names the gathering, so the strip names the group. It stays one
+ * line with a 44px button, so the thread keeps its room on a small phone.
  */
 export function GoTogetherChatBanner({
   conversation,
@@ -47,15 +49,17 @@ export function GoTogetherChatBanner({
       })}
     >
       <FiUsers aria-hidden="true" className={styles.chatBannerIcon} />
-      <span className={styles.chatBannerTitle}>{group.event.title}</span>
+      <span className={styles.chatBannerTitle}>
+        {t("goTogether:group.bannerTitle")}
+      </span>
       <GoTogetherBandPill band={group.band} />
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         className={styles.chatBannerAction}
         onClick={() => setIsSheetOpen(true)}
       >
         {t("goTogether:group.seeGroup")}
-      </button>
+      </Button>
       {isSheetOpen && (
         <GoTogetherGroupSheet
           groupId={group.id}

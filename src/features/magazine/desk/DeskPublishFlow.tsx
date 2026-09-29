@@ -30,9 +30,12 @@ export function DeskPublishFlow({ piece, onDone }: DeskPublishFlowProps) {
  * The confirm opens the moment Publish is pressed, titled from the desk's own
  * piece, with its confirm button busy until the record (and so the care gate)
  * has loaded. A gate with open items then answers with the record page's own
- * "blocked" toast and the dialog closes. After a confirm the dialog stays
- * busy until the request answers, so its success or refusal toast still
- * fires.
+ * "blocked" toast and the dialog closes. A piece the record shows as already
+ * scheduled ends the flow the same way, with a toast that points to opening
+ * its draft, where its date changes. A piece whose date already passed reaches
+ * the confirm as usual, with its sub-line naming that it is settling an
+ * already-live piece. After a confirm the dialog stays busy until the
+ * request answers, so its success or refusal toast still fires.
  */
 function DeskPublishConfirm({
   piece,
@@ -51,9 +54,11 @@ function DeskPublishConfirm({
   // mounted until the answer so its toast still fires.
   const [isDismissed, setIsDismissed] = useState(false);
   const isGateBlocked = Boolean(record) && publishAction.hasOpenGateItems;
+  const isAlreadyScheduled = Boolean(record) && publishAction.isScheduled;
 
-  // Once the record is in, a blocked gate explains itself (askToPublish
-  // toasts the open items and opens nothing) and the flow ends.
+  // Once the record is in, a scheduled piece or a blocked gate explains
+  // itself (askToPublish toasts the open items and opens nothing) and the
+  // flow ends.
   useEffect(() => {
     if (hasCheckedGateRef.current) return;
     if (isError) {
@@ -64,11 +69,25 @@ function DeskPublishConfirm({
     }
     if (!record) return;
     hasCheckedGateRef.current = true;
+    if (isAlreadyScheduled) {
+      showToast(t("magazine:desk.publish.alreadyScheduled"), "info");
+      onDone();
+      return;
+    }
     if (isGateBlocked) {
       publishAction.askToPublish();
       onDone();
     }
-  }, [record, isError, isGateBlocked, publishAction, onDone, showToast, t]);
+  }, [
+    record,
+    isError,
+    isAlreadyScheduled,
+    isGateBlocked,
+    publishAction,
+    onDone,
+    showToast,
+    t,
+  ]);
 
   const hasPublishSettled = publish.isSuccess || publish.isError;
   useEffect(() => {
@@ -77,9 +96,14 @@ function DeskPublishConfirm({
 
   return (
     <PiecePublishModal
-      intent={isGateBlocked || isError || isDismissed ? null : "publish"}
+      intent={
+        isAlreadyScheduled || isGateBlocked || isError || isDismissed
+          ? null
+          : "publish"
+      }
       title={record?.title ?? piece.title}
       isPending={!record || publishAction.isPending}
+      isAlreadyLive={publishAction.isAlreadyLive}
       onClose={() => {
         if (publish.isPending) setIsDismissed(true);
         else onDone();

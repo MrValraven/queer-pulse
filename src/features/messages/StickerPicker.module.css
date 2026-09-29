@@ -6,15 +6,14 @@
    `EmojiPicker.module.css`'s own panel geometry exactly, so the two popovers
    are the same size and sit in the same place.
 
-   `--sticker-panel-max` names that shared cap once, for `.standalone`'s own
-   `max-height` below and for `.section:last-child` further down: the two
-   need to agree on the SAME number for the last-pack scroll-anchoring trick
-   described there to work. EMBEDDED has no `max-height` of its own in this
-   file (`EmojiPicker.module.css` owns that cap instead), but inherits this
-   custom property regardless, since `.section:last-child` reads it in both
-   contexts alike. */
+   Both contexts hold one fixed height, `--composer-popover-max`
+   (`tokens/spacing.css`): `.standalone` sets it below, and embedded fills
+   `EmojiPicker`'s `.panel`, which sets the same token. The panel keeps that
+   height while a search filters the grid down to a few results or none, so
+   the results and the empty state sit at the top of a stable panel and the
+   search field never moves. The token also shrinks the panel above a raised
+   phone keyboard. */
 .panel {
-  --sticker-panel-max: 380px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -26,7 +25,7 @@
   left: 0;
   z-index: var(--z-popover);
   width: min(400px, calc(100vw - 32px));
-  max-height: var(--sticker-panel-max);
+  height: var(--composer-popover-max);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-card);
@@ -53,6 +52,12 @@
 /* Pack rail: extracted to `StickerPackRail.tsx` / `.module.css`, its own
    component so this file stays under the 200-line budget. */
 
+/* The search field row, the panel's first row, above the rail: see
+   `PickerSearchField.module.css`, shared with the Emoji tab's own field so
+   both land at the same height and the same distance from the content
+   below. It sits above the rail so the rail stepping aside during a search
+   never moves it. */
+
 /* The scrolling body: recents, then one section per pack. Reaching its top/
    bottom must not chain into the message log scrolling behind the popover,
    same reasoning as `GifPicker.module.css`'s `.body`. */
@@ -68,25 +73,16 @@
 .section + .section {
   margin-top: 10px;
 }
-/* The last section is always a pack section (see `StickerPicker`): giving it
-   AT LEAST the panel's own max-height lets a rail tap that scrolls the LAST
-   pack (Tea) to `block: "start"` actually reach the top, even once the
-   pack's own short content would otherwise leave the scroll area unable to
-   scroll that far. A section this tall guarantees `.body`'s own content
-   always exceeds the panel's cap, so the panel reliably settles AT that cap,
-   a definite, CSS-computed size with no script measuring `.body` to derive
-   it: an earlier version read `.body`'s own rendered height with a
-   `ResizeObserver` and fed it back in here, which could still loop (a small
-   embedded catalogue never actually reached the cap, so each measurement
-   nudged the next one a little further). This fixed value cannot loop: it
-   never depends on anything this rule itself changes. The tradeoff is
-   deliberate: a short last pack can leave real empty space below its own
-   stickers, trading a little blank room for a fix that always holds. Scoped
-   to
-   `[data-has-rail]`: with no rail, there is nothing to jump between, so the
-   one pack keeps sizing to its own content and stays at that size. */
+/* The last section is always a pack section (see `StickerPicker`). Giving it
+   at least the panel's own height lets a rail tap that scrolls the LAST pack
+   to `block: "start"` actually reach the top, even when that pack's short
+   content would otherwise leave the body unable to scroll that far. The
+   value is a CSS-computed size that no script measures or feeds back, so it
+   cannot loop. A short last pack leaves some empty room below its stickers,
+   the accepted cost of a jump that always lands. Scoped to
+   `[data-has-rail]`: with no rail there is nothing to jump between. */
 .panel[data-has-rail] .section:last-child {
-  min-height: var(--sticker-panel-max);
+  min-height: var(--composer-popover-max);
 }
 .sectionHeader {
   margin: 0 0 6px;
@@ -139,10 +135,26 @@
   background: rgba(var(--line-rgb), 0.08);
 }
 
-.state {
-  padding: 20px 16px;
+.state,
+.emptyStateText {
   text-align: center;
   color: var(--ink-40);
   font-family: var(--sans);
   font-size: var(--text-14-5);
+}
+.state {
+  padding: 20px 16px;
+}
+
+/* A search with no match: the line, then a quiet "Clear search" beneath it,
+   so the way back to browsing sits right where the eye lands. */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: 20px 16px;
+}
+.emptyStateText {
+  margin: 0;
 }

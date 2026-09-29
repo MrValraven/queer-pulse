@@ -243,6 +243,14 @@
   margin-block-start: 4px;
   border-top: 1px solid rgba(var(--line-rgb), 0.12);
 }
+/* PRD-430: a filter that narrows the loaded pages to zero, with more still to
+   fetch, renders the pager with no `.grid` above it. The divider line then
+   has nothing to divide, and sits directly under the toolbar; drop it and the
+   lead-in space along with it, same tokens either way. */
+.pagerBare {
+  border-top: none;
+  padding-block-start: 0;
+}
 .pagerCount {
   font-size: var(--text-13);
   color: var(--ink-60);
@@ -255,6 +263,29 @@
   color: var(--ink-60);
   margin-block-start: 10px;
   max-width: 62ch;
+}
+/* S6: the zero-shown case of the same explanation, above the pager. This is
+   the moment it matters most (loaded pages are exhausted and only a further
+   fetch can turn up a match), so it reads at body size in the ink-strength
+   color; `.pagerNote` keeps the small, faded treatment for the non-zero
+   case. */
+.pagerNoteLead {
+  font-size: var(--text-body);
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0 0 16px;
+  max-width: 62ch;
+}
+/* N5: on a coarse pointer, Show more is the only action the zero-shown state
+   offers, so it needs the full 44px target; the `.sm` floor alone is only
+   40px. The doubled class beats Button's own `.sm` rule at equal specificity
+   whatever the stylesheet load order (mirrors TherapistSections.module.css's
+   `.vouchButton.vouchButton`). */
+@media (pointer: coarse) {
+  .pagerShowMore.pagerShowMore {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
 /* ── Hub tabs ────────────────────────────────────────────────────────────── */

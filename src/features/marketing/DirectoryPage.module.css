@@ -41,7 +41,9 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* `minmax(0, 1fr)` drops the track's content minimum, so a card with a wide
+     footer wraps inside its column and every column stays the same width. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 .card {
@@ -86,19 +88,28 @@
 }
 /* The directory card's badge corner: the ownership pill, then the safe-space
    mark beside it. A row rather than one slot, so a verified safe space no
-   longer hides what the place actually is. */
+   longer hides what the place actually is. The row stops 12px short of the
+   right edge, so in a narrow column the pill's words ellipsize inside the
+   photo. */
 .photoBadges {
   position: absolute;
   inset-block-end: 12px;
   inset-inline-start: 12px;
+  max-width: calc(100% - 24px);
   display: flex;
   align-items: center;
   gap: 6px;
+}
+/* The safe-space mark (inside its Tooltip wrapper) keeps its full size; the
+   ownership pill is the one that gives up width. */
+.photoBadges > :not(.photoBadgeDark) {
+  flex: none;
 }
 .photoBadgeDark {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  min-width: 0;
   font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -107,6 +118,12 @@
   background: rgba(var(--plum-rgb), 0.72);
   border-radius: var(--radius-pill);
   padding: 5px 11px;
+  white-space: nowrap;
+}
+.photoBadgeText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 /* The tick that separates a moderator-confirmed queer-owned badge from the
@@ -172,28 +189,62 @@
   color: var(--accent-ink);
 }
 
+/* Top-aligned: a line-clamped name has no reliable baseline to share, so the
+   rating's own top padding sets it on the name's first line. */
 .nameRow {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
 }
+/* Two lines at most, balanced so a wrap splits the name evenly. `anywhere`
+   lets a single very long word break inside the column. */
 .name {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-19);
+  line-height: 1.25;
   color: var(--text-strong);
   letter-spacing: -0.01em;
-  min-width: 0;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
 }
+/* A compact chip: star, score, count. The 5px top padding sets its 16px line
+   box level with the name's first line (19px serif at 1.25). */
 .rating {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 4px;
+  padding-block-start: 5px;
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--ink-60);
+  line-height: 16px;
+  color: var(--text-strong);
   white-space: nowrap;
+}
+.ratingScore {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+/* Coral, matching the shared Stars row. */
+.ratingStar {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  color: var(--accent);
+}
+.ratingCount {
+  font-weight: 500;
+  color: var(--ink-60);
 }
 .metaRow {
   display: flex;
@@ -229,17 +280,29 @@
   overflow: hidden;
   min-height: calc(1.6em * 2);
 }
-/* Capped to one row (callers slice to 3 pills) so a card with fewer tags
-   isn't shorter than one with a full set. */
+/* Exactly one pill row tall, whatever the tags: min-height holds the row open on
+   a card with none, and max-height clips the second row, so a pill that does
+   not fit the column wraps below and drops out whole. "Member-run" comes first,
+   so it is the pill that always stays. */
 .pillsRow {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 6px;
   min-height: 24px;
+  max-height: 24px;
   overflow: hidden;
 }
+/* One line of 16px plus 4px above and below makes the 24px row. A single tag
+   wider than the whole column ellipsizes inside its own pill. */
 .pill {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: var(--text-11-5);
+  line-height: 16px;
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
@@ -261,7 +324,9 @@
   font-weight: 600;
   color: var(--ink-60);
 }
+/* The status and "Visit" stay whole; the host is the one that gives up width. */
 .status {
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -292,15 +357,23 @@
   background: var(--accent-text);
 }
 .host {
+  flex: 0 1 auto;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+}
+/* Its own box, so a long first name ellipsizes beside the avatar (Avatar's
+   wrapper is already `flex: none`). */
+.hostName {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .visit {
+  flex: none;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -347,17 +420,22 @@
 
 @media (--wide) {
   .grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (--sm) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 :global([data-theme="dark"]) .card {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+/* The plum wash disappears on the dark card, so plain pills take a cream one.
+   "Member-run" keeps its jade ground. */
+:global([data-theme="dark"]) .pill:not(.pillMember) {
+  background: rgba(var(--cream-rgb), 0.07);
 }
 
 /* Shared results header: "showing X of Y" on the left; on phones the near-me
@@ -436,12 +514,18 @@
   padding: 0;
   list-style: none;
 }
+/* One line each: a label longer than the column ellipsizes inside its pill,
+   and the tick keeps its size. */
 .accessPill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
   font-size: var(--text-11-5);
   font-weight: 600;
+  line-height: 16px;
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.1);
   border-radius: var(--radius-pill);
@@ -452,6 +536,11 @@
   block-size: 12px;
   flex: none;
 }
+.accessLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .accessMore {
   display: inline-flex;
   align-items: center;
@@ -459,6 +548,7 @@
   font-weight: 600;
   color: var(--ink-40);
   padding-block: 4px;
+  white-space: nowrap;
 }
 
 /* ── "Use my location" ─────────────────────────────────────────────────────

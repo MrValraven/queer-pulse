@@ -7,6 +7,7 @@ import {
   type AffiliationOptionDTO,
   type SubprofileDTO,
 } from "./subprofiles.api";
+import { subprofileToView } from "./subprofiles.adapters";
 
 /** Resolve an owner-edited affiliation input to its display `name`/`imageUrl`
  *  in demo mode. A newly picked target resolves from the picker's options (the
@@ -58,13 +59,20 @@ export function useAffiliations(subprofileId: string) {
     void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
   };
 
-  const replace = useMutation<SubprofileDTO, Error, AffiliationInputDTO[]>({
+  const replace = useMutation<
+    SubprofileDTO,
+    Error,
+    { items: AffiliationInputDTO[]; expectedEditVersion?: number }
+  >({
     // SubprofileAffiliationsEditor toasts its own error, so silence the global
     // duplicate.
     meta: { silentError: true },
-    mutationFn: async (items) => {
-      if (!demoMode) return replaceAffiliations(subprofileId, items);
-      const { mockSubprofileById } = await import("../data/subprofiles.data");
+    mutationFn: async ({ items, expectedEditVersion }) => {
+      if (!demoMode) {
+        return replaceAffiliations(subprofileId, items, expectedEditVersion);
+      }
+      const { mockBumpEditVersion, mockSubprofileById } =
+        await import("../data/subprofiles.data");
       const current = mockSubprofileById(subprofileId);
       if (!current) throw new Error("Subprofile not found");
       // Prefix match: the options key's 4th element (demo community key) varies.
@@ -82,9 +90,22 @@ export function useAffiliations(subprofileId: string) {
             current.affiliations ?? [],
           ),
         ),
+        editVersion: mockBumpEditVersion(subprofileId),
       };
     },
-    onSuccess: invalidateOwned,
+    // The response is the whole owner view, so seed the owner-editor query
+    // with it before invalidating, the way `useSubprofileMutations`' section
+    // and socials writes do. A copy flow's editor can mount from this cache
+    // before the refetch below lands; without this write it would seed its
+    // `editVersion` from a stale pre-write read and conflict on its own first
+    // save (I2).
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ["subprofile", demoMode, subprofileId],
+        subprofileToView(data),
+      );
+      invalidateOwned();
+    },
   });
 
   return { replace };

@@ -77,6 +77,9 @@ function invalidateAfterIdentityBlockChange(
   demoMode: boolean,
 ) {
   void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+  // A thread opened past the loaded inbox pages reads from its detail
+  // entry; only an entry on screen refetches.
+  void queryClient.invalidateQueries({ queryKey: ["conversation-detail"] });
   void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
   void queryClient.invalidateQueries({
     queryKey: MAILBOXES_QUERY_KEY_PREFIX,

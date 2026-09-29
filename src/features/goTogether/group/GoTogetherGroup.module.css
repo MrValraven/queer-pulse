@@ -58,40 +58,37 @@
 
 /* Leave sits on its own row, away from the chat and share-plans actions: a
    destructive choice should never share a visual weight class with routine
-   ones. */
+   ones. It starts on the sheet's left edge like everything above it; the
+   section gap and the danger colour set it apart. */
 .leaveRow {
   display: flex;
-  justify-content: flex-end;
-}
-
-.leaveAction {
-  display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  min-height: var(--tap-min);
-  padding-inline: 4px;
-  border: none;
-  background: transparent;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+/* Leave keeps the shared ghost Button's shape, states and 44px target, and
+   takes the danger colour on top, so it reads as the destructive choice
+   below "Share plans". --danger flips in dark mode (--danger-ink does not). The row prefix
+   and :not(:disabled) out-rank the ghost variant's own colour rules, dark
+   mode's included, whatever order the two modules load in. */
+.leaveRow .leaveButton:not(:disabled) {
   color: var(--danger);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  touch-action: manipulation;
+  border-color: var(--danger);
 }
 
-.leaveAction:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .leaveAction:hover {
-    /* --danger-ink has no dark-mode value (about 2.3:1 there); --danger does
-       flip in dark, and it's already this row's resting colour, so the
-       underline alone carries the hover state at AA in both themes. */
+@media (hover: hover) {
+  .leaveRow .leaveButton:not(:disabled):not([aria-disabled="true"]):hover {
+    color: var(--danger);
+    border-color: var(--danger);
     text-decoration: underline;
   }
+}
+
+/* The chat-only explanation takes the row's free width and wraps above the
+   button on a small phone. */
+.leaveHint {
+  flex: 1 1 16rem;
 }
 
 .quietNote {
@@ -185,6 +182,12 @@
 }
 
 .memberList {
+  /* The row's avatar column: the size GoTogetherGroupMemberRow passes to
+     <Avatar>, and the gap after it. Block and Report line up with the name
+     through the same two values. */
+  --member-avatar-size: 40px;
+  --member-row-gap: 12px;
+  container: go-together-members / inline-size;
   display: grid;
   gap: 12px;
   margin: 0;
@@ -192,10 +195,35 @@
   list-style: none;
 }
 
+.memberItem {
+  display: grid;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+/* Block and Report sit under the row they act on, lined up with the name
+   (the avatar column plus the row's gap). */
+.memberActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  padding-inline-start: calc(
+    var(--member-avatar-size) + var(--member-row-gap)
+  );
+}
+
+/* On a narrow sheet the indent would push Report onto a second row, so the
+   two buttons start at the edge and share one row. */
+@container go-together-members (max-width: 24rem) {
+  .memberActions {
+    padding-inline-start: 0;
+  }
+}
+
 .memberRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--member-row-gap);
   min-width: 0;
 }
 
@@ -343,15 +371,16 @@
 /* ── Chat banner ───────────────────────────────────────────────────────── */
 
 .chatBanner {
+  container: go-together-banner / inline-size;
   flex: none;
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
-  /* No block padding: the row's height comes from the 44px action below, the
-     same as the thread header above it, so the banner stays a single compact
-     strip and does not eat into the message log. */
-  padding-block: 0;
+  /* A thin block padding: the row's height comes from the 44px action, and
+     this keeps the outlined See your group button off the strip's edges
+     while the banner stays one compact strip over the message log. */
+  padding-block: calc(var(--gap-xs) / 2);
   padding-inline: 20px;
   border-bottom: 1px solid var(--line);
   background: rgba(var(--jade-rgb), 0.06);
@@ -373,41 +402,78 @@
   white-space: nowrap;
 }
 
-/* A quiet text-style action: an outlined button reads heavier than the plain
-   header it sits under. The 44px hit area comes from the row's own
-   min-height. */
+/* The shared ghost <Button> carries the look, states and 44px target; the
+   row only keeps it from shrinking. */
 .chatBannerAction {
   flex: none;
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-min);
-  border: none;
-  background: transparent;
-  color: var(--accent-text);
-  font: inherit;
+}
+
+/* ── Member report dialog ──────────────────────────────────────────────── */
+
+.reportForm {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+.reportLabel {
+  margin: 0;
   font-size: var(--text-body-sm);
   font-weight: 600;
-  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.reportReasons {
+  display: grid;
+  gap: var(--gap-xs);
+}
+
+/* Room on the end for the ChoiceCheck tick a chosen reason carries. */
+.reportReason {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding-block: var(--gap-xs);
+  padding-inline: var(--gap-sm) var(--tap-min);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-15);
+  text-align: start;
   cursor: pointer;
   touch-action: manipulation;
 }
 
-.chatBannerAction:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+.reportReasonChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .chatBannerAction:hover {
-    text-decoration: underline;
-  }
+/* ── Member block dialog ───────────────────────────────────────────────── */
+
+/* The notes under the block description, spaced as their own paragraphs.
+   The dialog's own rule spaces this block from the description. */
+.dialogNotes {
+  display: grid;
+  gap: var(--gap-xs);
 }
 
-/* The pill is the first thing to go when a small phone runs out of room:
-   the title and the action carry the row. */
-@media (max-width: 420px) {
-  .chatBanner .bandPill {
+/* "The block works across QueerPulse too" carries as much weight as the
+   description above it, so it reads at the description's size. */
+.dialogNoteStrong {
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* The pill is the first thing to go when the strip runs out of room (a
+   small phone, or the thread column beside the inbox): the title and the
+   action carry the row. */
+@container go-together-banner (max-width: 30rem) {
+  .bandPill {
     display: none;
   }
 }

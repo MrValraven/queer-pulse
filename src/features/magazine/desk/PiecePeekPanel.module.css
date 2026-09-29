@@ -147,6 +147,22 @@
   gap: 12px;
 }
 
+/* A scheduled piece has no next action: when it goes live fills that slot,
+   in the same clock-and-date form as the record's publish gate. */
+.scheduled {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.scheduledIcon {
+  flex: none;
+}
+
 .facts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

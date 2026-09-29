@@ -5,6 +5,7 @@ import {
   formatPay,
   jobCardToJob,
   jobDetailToJob,
+  jobFieldFilterQuery,
   logoFromName,
   parseDeadline,
   parsePosted,
@@ -24,8 +25,8 @@ import type { CompanyProfile } from "../companies.data";
 import type { PostJobState } from "../usePostJobForm";
 
 /**
- * A minimal `t` over the real `en` catalog — asserts against the shipped copy
- * rather than a fixture, so a key that goes missing fails here too.
+ * A minimal `t` over the real `en` catalog. It asserts against the shipped
+ * copy, so a key that goes missing fails here too.
  */
 // The `economy` namespace is now lazily loaded; `beforeAll` swaps in the real
 // catalog (an empty placeholder is present until its chunk resolves).
@@ -143,9 +144,10 @@ const card: JobCardDTO = {
   slug: "designer-role",
   title: "Brand Designer",
   company: { slug: "atelier-pulso", nameText: "Atelier Pulso" },
-  category: "Arts & Culture",
-  commitment: "Freelance",
-  seniority: "Mid",
+  category: "design",
+  profession: null,
+  commitment: "freelanceGig",
+  seniority: "mid",
   format: "hybrid",
   location: "Lisbon",
   city: "Lisbon",
@@ -162,11 +164,11 @@ const card: JobCardDTO = {
 };
 
 describe("jobCardToJob", () => {
-  it("maps card fields and derives cat slug + logo + qrLabel", () => {
+  it("maps card fields and derives logo + qrLabel", () => {
     const job = jobCardToJob(card, t);
     expect(job.slug).toBe("designer-role");
     expect(job.organization).toBe("Atelier Pulso");
-    expect(job.category).toBe("arts"); // "Arts & Culture" → first token
+    expect(job.category).toBe("design");
     expect(job.logo).toBe("AP");
     expect(job.qr).toBe(true);
     expect(job.qrLabel).toBe("Queer-run"); // derived from queerRun when null
@@ -189,6 +191,31 @@ describe("jobCardToJob", () => {
   it("labels a non-queer-run listing Inclusive", () => {
     const job = jobCardToJob({ ...card, queerRun: false, qrLabel: null }, t);
     expect(job.qrLabel).toBe("Inclusive");
+  });
+
+  it("keeps the field id and resolves display labels", () => {
+    const job = jobCardToJob(
+      {
+        ...card,
+        category: "healthcare",
+        profession: "nurse",
+        commitment: "partTime",
+      },
+      t,
+    );
+    expect(job.category).toBe("healthcare");
+    expect(job.profession).toBe("nurse");
+    expect(job.commitment).toBe("partTime");
+    expect(job.type).toBe(t("economy:postJob.option.commitment.partTime"));
+    expect(job.detail.category).toBe(
+      t("members:directory.discipline.healthcare"),
+    );
+  });
+
+  it("maps a legacy job with no field to an empty display category", () => {
+    const job = jobCardToJob({ ...card, category: null, profession: null }, t);
+    expect(job.category).toBeNull();
+    expect(job.detail.category).toBe("");
   });
 });
 
@@ -214,6 +241,7 @@ describe("jobDetailToJob", () => {
       myApplicationStatus: null,
     };
     const job = jobDetailToJob(detail, t);
+    expect(job.detail.category).toBe(t("members:directory.discipline.design"));
     expect(job.detail.about).toEqual(["Long about."]);
     expect(job.detail.dayToDay).toEqual(["Standups"]);
     expect(job.detail.reviewerNote).toBe("Vetted.");
@@ -227,9 +255,10 @@ describe("postJobStateToCreateJobDto", () => {
   } as unknown as CompanyProfile;
 
   const state: PostJobState = {
-    category: "Design & creative",
-    commitment: "Freelance / gig",
-    seniority: "Any level",
+    category: "design",
+    profession: "",
+    commitment: "freelanceGig",
+    seniority: "anyLevel",
     format: "In-person (Lisbon)",
     city: "Porto",
     timezone: "No preference",
@@ -267,6 +296,26 @@ describe("postJobStateToCreateJobDto", () => {
     expect(dto.screening).toEqual(["portfolio?"]); // blanks filtered
     expect(dto.companySlug).toBe("atelier-pulso");
     expect(dto.agreement).toBe(true);
+    expect(dto.profession).toBeUndefined(); // "" means no profession
+  });
+
+  it("sends the profession on create", () => {
+    const dto = postJobStateToCreateJobDto(
+      {
+        ...state,
+        category: "design",
+        profession: "illustrator",
+        commitment: "freelanceGig",
+        seniority: "anyLevel",
+      },
+      company,
+      "owner",
+    );
+    expect(dto).toMatchObject({
+      category: "design",
+      profession: "illustrator",
+      commitment: "freelanceGig",
+    });
   });
 
   it("uses the format string as location for remote roles and omits queerRun", () => {
@@ -277,6 +326,30 @@ describe("postJobStateToCreateJobDto", () => {
     expect(dto.location).toBe("Remote");
     expect(dto.queerRun).toBe(false);
     expect(dto.qrLabel).toBeUndefined();
+  });
+});
+
+describe("jobFieldFilterQuery", () => {
+  it("sends no cat when no group is picked", () => {
+    expect(jobFieldFilterQuery({ groupId: null, fieldId: null })).toEqual({
+      fieldIds: [],
+      params: {},
+    });
+  });
+
+  it("sends every field of the picked group as one comma-separated cat", () => {
+    const query = jobFieldFilterQuery({
+      groupId: "landAnimals",
+      fieldId: null,
+    });
+    expect(query.fieldIds).toEqual(["farming", "animals"]);
+    expect(query.params).toEqual({ cat: "farming,animals" });
+  });
+
+  it("narrows to the one picked field", () => {
+    expect(
+      jobFieldFilterQuery({ groupId: "healthCare", fieldId: "care" }),
+    ).toEqual({ fieldIds: ["care"], params: { cat: "care" } });
   });
 });
 

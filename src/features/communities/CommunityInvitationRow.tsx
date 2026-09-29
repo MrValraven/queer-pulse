@@ -1,6 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { communityPath } from "../../app/routeMap";
 import { cardDtoToCommunity } from "./api/communities.adapters";
 import type { MyCommunityInviteDTO } from "./api/communityInvites.api";
 import { CommunityCardShell } from "./CommunityCardShell";
@@ -74,7 +75,10 @@ export function CommunityInvitationRow({
           </Button>
           <Button
             variant="primary"
-            to={`/community/${community.slug}`}
+            // Reads `invite.community.slug`, the DTO's required string.
+            // `cardDtoToCommunity` returns the shared `Community` type, whose
+            // `slug?` is optional for demo and edit-preview sources.
+            to={communityPath(invite.community.slug)}
             aria-label={t("communities:invites.acceptAriaLabel", {
               name: community.name,
             })}

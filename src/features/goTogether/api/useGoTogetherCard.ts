@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { demoCard } from "../goTogether.mock";
-import { getGoTogetherCard } from "./goTogether.api";
+import { getGoTogetherCard, retryGoTogetherQuery } from "./goTogether.api";
 import type { GoTogetherCardDTO } from "./goTogether.types";
 import { goTogetherKeys } from "./goTogetherKeys";
 
@@ -10,6 +10,9 @@ import { goTogetherKeys } from "./goTogetherKeys";
  * The Go together card on a gathering page, `GET /events/:slug/go-together`.
  * Demo mode reads the demo registry; live mode waits for a settled, active
  * session, the same gate `useEventLineup` uses, so a visitor never hits it.
+ * A network drop or a 5xx gets a couple of retries and a 4xx none (a 404
+ * means Go together is off). The card shows its own load error, so the
+ * global toast stays quiet.
  */
 export function useGoTogetherCard(slug: string | undefined) {
   const { demoMode } = useDemoMode();
@@ -18,7 +21,8 @@ export function useGoTogetherCard(slug: string | undefined) {
   return useQuery<GoTogetherCardDTO>({
     queryKey: goTogetherKeys.card(slug, demoMode),
     enabled: Boolean(slug) && (demoMode || isActiveSession),
-    retry: false,
+    retry: retryGoTogetherQuery,
+    meta: { silentError: true },
     queryFn: async () =>
       demoMode || !slug ? demoCard(slug ?? "") : getGoTogetherCard(slug),
   });

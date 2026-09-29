@@ -1,87 +1,39 @@
 /* Static option lists for the Post-a-Job composer.
  *
- * CATEGORIES/COMMITMENTS/SENIORITY/FORMATS/TIMEZONES/RATE_PER carry a stable
- * canonical English `value` (used to build the posted job's content fields
- * and matched by usePostJobForm's needsCity/showsTimezone regexes) alongside
- * a `labelKey` the picker UI resolves via t() — see docs/i18n Trap 5.1.
+ * COMMITMENTS and SENIORITY carry the job's stored id (`jobVocabulary.data.ts`)
+ * as `value`; the job field and profession ids come from
+ * `features/members/workTaxonomy.data.ts`. FORMATS/TIMEZONES/RATE_PER still
+ * carry a stable canonical English `value` (used to build the posted job's
+ * content fields and matched by usePostJobForm's needsCity/showsTimezone
+ * regexes). Every option pairs its value with a `labelKey` the picker UI
+ * resolves via t(), see docs/i18n Trap 5.1.
  */
 import type { TFunction } from "../../shared/i18n/types";
+import {
+  fieldLabelKey,
+  professionLabelKey,
+} from "../members/workTaxonomy.data";
+import {
+  JOB_COMMITMENT_IDS,
+  JOB_SENIORITY_IDS,
+  commitmentLabelKey,
+  seniorityLabelKey,
+} from "./jobVocabulary.data";
 
 export interface Option {
   value: string;
   labelKey: string;
 }
 
-export const CATEGORIES: Option[] = [
-  {
-    value: "Legal & admin",
-    labelKey: "economy:postJob.option.category.legalAdmin",
-  },
-  {
-    value: "Design & creative",
-    labelKey: "economy:postJob.option.category.designCreative",
-  },
-  {
-    value: "Tech & engineering",
-    labelKey: "economy:postJob.option.category.techEngineering",
-  },
-  {
-    value: "Writing & editing",
-    labelKey: "economy:postJob.option.category.writingEditing",
-  },
-  {
-    value: "Translation",
-    labelKey: "economy:postJob.option.category.translation",
-  },
-  {
-    value: "Teaching & tutoring",
-    labelKey: "economy:postJob.option.category.teachingTutoring",
-  },
-  {
-    value: "Health & wellbeing",
-    labelKey: "economy:postJob.option.category.healthWellbeing",
-  },
-  {
-    value: "Practical help",
-    labelKey: "economy:postJob.option.category.practicalHelp",
-  },
-  { value: "Other", labelKey: "economy:postJob.option.category.other" },
-];
+export const COMMITMENTS: Option[] = JOB_COMMITMENT_IDS.map((id) => ({
+  value: id,
+  labelKey: commitmentLabelKey(id),
+}));
 
-export const COMMITMENTS: Option[] = [
-  {
-    value: "Full-time",
-    labelKey: "economy:postJob.option.commitment.fullTime",
-  },
-  {
-    value: "Part-time",
-    labelKey: "economy:postJob.option.commitment.partTime",
-  },
-  { value: "Contract", labelKey: "economy:postJob.option.commitment.contract" },
-  {
-    value: "Freelance / gig",
-    labelKey: "economy:postJob.option.commitment.freelanceGig",
-  },
-  {
-    value: "Volunteer",
-    labelKey: "economy:postJob.option.commitment.volunteer",
-  },
-  {
-    value: "Internship",
-    labelKey: "economy:postJob.option.commitment.internship",
-  },
-];
-
-export const SENIORITY: Option[] = [
-  { value: "Any level", labelKey: "economy:postJob.option.seniority.anyLevel" },
-  { value: "Entry", labelKey: "economy:postJob.option.seniority.entry" },
-  { value: "Mid", labelKey: "economy:postJob.option.seniority.mid" },
-  { value: "Senior", labelKey: "economy:postJob.option.seniority.senior" },
-  {
-    value: "Lead / Principal",
-    labelKey: "economy:postJob.option.seniority.leadPrincipal",
-  },
-];
+export const SENIORITY: Option[] = JOB_SENIORITY_IDS.map((id) => ({
+  value: id,
+  labelKey: seniorityLabelKey(id),
+}));
 
 export const FORMATS: Option[] = [
   { value: "Remote", labelKey: "economy:postJob.option.format.remote" },
@@ -125,7 +77,7 @@ export const RATE_PER: Option[] = [
 ];
 
 /** Look up an option's translated label by its canonical stored value, falling
- *  back to the raw value if unmatched (defensive — should not happen). Used
+ *  back to the raw value if unmatched (defensive; should not happen). Used
  *  wherever a picked value is displayed read-only (sidebar, preview, review). */
 export function optionLabel(
   options: Option[],
@@ -134,6 +86,20 @@ export function optionLabel(
 ): string {
   const match = options.find((option) => option.value === value);
   return match ? t(match.labelKey) : value;
+}
+
+/** A job's field label with its profession appended ("Design · Illustrator"),
+ *  or "" while no field is chosen, so callers can skip the row. */
+export function jobFieldLabel(
+  fieldId: string,
+  professionId: string,
+  t: TFunction,
+): string {
+  if (!fieldId) return "";
+  const field = t(fieldLabelKey(fieldId));
+  return professionId
+    ? `${field} · ${t(professionLabelKey(professionId))}`
+    : field;
 }
 
 export const BENEFITS = [
@@ -189,7 +155,7 @@ export const CONTACT_METHODS = [
 ];
 
 /** The affiliation roles offered when a member claims a company.
- *  i18n Pattern A — `value` is the stable stored role (persisted via
+ *  i18n Pattern A: `value` is the stable stored role (persisted via
  *  `affiliate(slug, role)`); `labelKey` is resolved via t() for display only. */
 export const AFFILIATION_ROLES: { value: string; labelKey: string }[] = [
   { value: "Founder / owner", labelKey: "economy:affiliateRole.founder" },

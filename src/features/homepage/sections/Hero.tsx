@@ -1,11 +1,14 @@
 import { Button, Eyebrow, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useAuth } from "../../../app/providers/authContext";
+import { routes } from "../../../app/routeMap";
 import { requestInvitePath } from "../../auth/api/joinRequestSource";
 import styles from "./Hero.module.css";
 
 export function Hero() {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
 
   return (
     <header className={styles.hero} id="top">
@@ -28,8 +31,16 @@ export function Hero() {
           <p className={styles.sub}>{t("homepage:hero.sub")}</p>
 
           <div className={styles.cta}>
-            <Button size="lg" to={requestInvitePath("homepage_hero")}>
-              {t("homepage:hero.requestInviteCta")}
+            {/* Request-invite is guest-only, so a signed-in member reaching "/"
+                gets their feed as the primary action. Same Button element either
+                way, so the hero keeps its shape when the session resolves. */}
+            <Button
+              size="lg"
+              to={loggedIn ? routes.feed : requestInvitePath("homepage_hero")}
+            >
+              {loggedIn
+                ? t("homepage:hero.memberFeedCta")
+                : t("homepage:hero.requestInviteCta")}
             </Button>
             <Button size="lg" variant="ghost" href="#discovery">
               {t("homepage:hero.exploreMembersCta")}

@@ -203,7 +203,7 @@ export function ArticleEditorPage() {
           publishDisabled={publishDisabled}
           onPublish={publishNow}
           sendOnLabel={sendOnLabel}
-          sendOnDisabled={!nextStage || moveStage.isPending}
+          sendOnDisabled={!nextStage || moveStage.isPending || published}
           onSendOn={handleSendOn}
         />
 

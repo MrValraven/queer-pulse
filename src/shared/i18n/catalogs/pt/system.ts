@@ -65,13 +65,13 @@ export const system: Catalog = {
   // Os dois números vêm de `features/system/accountWindows.ts`. Esta linha
   // dizia 21 dias.
   "accountBanned.whatNow.row1.body":
-    "Abre o recurso no prazo de {filingDays} dias após a remoção. É revisto pelo painel permanente de recursos da Assembleia, pessoas diferentes das que trataram o teu processo. A decisão chega em {decisionDays} dias.",
+    "Abre o recurso no prazo de {filingDays} dias após a remoção. É revisto por uma pessoa moderadora que não fez parte da decisão original. A decisão chega em {decisionDays} dias.",
   "accountBanned.whatNow.row2.title":
     "Os teus dados ficam até pedires que sejam apagados",
   // O encerramento da conta não agenda eliminação nenhuma: só acontece a teu
   // pedido, com um período de {erasureDays} dias. Ver a nota em en/system.ts.
   "accountBanned.whatNow.row2.body":
-    "Consulta a nossa <a>política de privacidade</a>. Pede a eliminação abaixo e a tua conta fica logo escondida, e os dados são apagados definitivamente {erasureDays} dias depois. As publicações que escreveste ficam no lugar sem o teu nome.",
+    "Consulta a nossa <a>política de privacidade</a>. Pede a eliminação abaixo e a tua conta fica logo escondida, e os dados são apagados definitivamente {erasureDays} dias depois. As publicações que escreveste nas comunidades ficam no lugar sem o teu nome. As tuas publicações no fórum são apagadas, e as conversas que começaste ficam no lugar, sem o teu nome, quando outras pessoas lhes responderam ou quando deste crédito de coautoria a alguém.",
   "accountBanned.whatNow.row3.title": "Não ficam registos públicos desta ação",
   // Dizia: "O processo existe internamente durante 36 meses. As tuas ligações
   // foram notificadas de que saíste." Nada disso existe no código.
@@ -330,29 +330,6 @@ export const system: Catalog = {
     "Adiciona ao ecrã principal para receberes notificações. Demora cerca de 30 segundos.",
   "pwaInstall.nudge.cta": "Mostra-me como",
   "pwaInstall.nudge.dismiss": "Dispensar a sugestão de instalação",
-
-  // ── ServerErrorPage.tsx ───────────────────────────────────────────────────
-  "serverError.countdown.label": "Previsão de regresso em",
-  "serverError.demoModeAria": "Modo de demonstração",
-  "serverError.tabs.error": "Erro 500",
-  "serverError.tabs.maintenance": "Manutenção",
-  "serverError.heading.error.line1": "Algo correu",
-  "serverError.heading.error.line2": "<em>mal do nosso lado.</em>",
-  "serverError.heading.maintenance.line1": "Manutenção planeada.",
-  "serverError.heading.maintenance.line2": "<em>Já voltamos.</em>",
-  "serverError.sub.error":
-    "A responsabilidade é nossa. Já fomos notificados automaticamente e estamos a analisar o problema.",
-  "serverError.sub.maintenance":
-    "Estamos a atualizar a plataforma. Não deve demorar muito. Agradecemos a tua paciência.",
-  "serverError.status.maintenance":
-    "<strong>Interrupção planeada.</strong> Acompanha em <a>status.queerpulse.com</a> para atualizações.",
-  "serverError.status.error":
-    "<strong>A nossa equipa já foi alertada.</strong> Consulta <a>status.queerpulse.com</a> para atualizações em direto.",
-  "serverError.actions.retryCta": "Tentar outra vez",
-  "serverError.actions.homeCta": "Ir para a página inicial",
-  "serverError.actions.statusCta": "Ver o estado da plataforma",
-  "serverError.footer.contact":
-    "Se isto continuar a acontecer, <a>contacta-nos</a>.",
 
   // ── StatusPage.tsx / StatusComponents.tsx / status.data.ts ───────────────
   "status.hero.allOperational": "Todos os sistemas operacionais",

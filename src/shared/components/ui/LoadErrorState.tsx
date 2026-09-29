@@ -16,8 +16,21 @@ export interface LoadErrorStateProps {
   description?: ReactNode;
   /** Tighter padding for inline/in-grid usage. */
   compact?: boolean;
+  /**
+   * The retry is in flight. Keep the panel mounted and pass this: the Retry
+   * button stays in place (so keyboard focus stays on it), reads "Trying
+   * again…", is `aria-disabled` and ignores presses until the read settles.
+   * Defaults to `false`, which is the panel as it always was.
+   */
+  isRetrying?: boolean;
+  /** Title heading level, forwarded to `EmptyState`. Defaults to `3`; pass `2`
+   *  when the panel sits straight under the page `h1`. */
+  headingLevel?: 2 | 3;
   className?: string;
 }
+
+// Swallows presses while a retry runs; the button stays focusable.
+const ignorePress = () => {};
 
 /**
  * The shared "we couldn't load this" panel. It exists to keep an outage from
@@ -33,6 +46,8 @@ export function LoadErrorState({
   title,
   description,
   compact = false,
+  isRetrying = false,
+  headingLevel,
   className,
 }: LoadErrorStateProps) {
   const { t } = useTranslation();
@@ -40,6 +55,7 @@ export function LoadErrorState({
     <EmptyState
       className={className}
       compact={compact}
+      headingLevel={headingLevel}
       icon={<FiAlertCircle />}
       title={
         title ?? (
@@ -52,7 +68,13 @@ export function LoadErrorState({
       description={description ?? t("shared:loadError.body")}
       action={
         onRetry
-          ? { label: t("shared:loadError.retryCta"), onClick: onRetry }
+          ? isRetrying
+            ? {
+                label: t("shared:loadError.retryingCta"),
+                onClick: ignorePress,
+                isBusy: true,
+              }
+            : { label: t("shared:loadError.retryCta"), onClick: onRetry }
           : undefined
       }
     />

@@ -54,7 +54,7 @@ export function DirectoryCardAccess({ place }: { place: DirectoryPlace }) {
       {shown.map((question) => (
         <li key={question.slug} className={s.accessPill}>
           <FiCheck aria-hidden />
-          {t(question.labelKey)}
+          <span className={s.accessLabel}>{t(question.labelKey)}</span>
         </li>
       ))}
       {hiddenCount > 0 && (

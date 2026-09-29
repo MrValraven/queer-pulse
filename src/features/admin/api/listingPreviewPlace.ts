@@ -17,7 +17,7 @@ import {
 const DIRECTORY_TINTS: Tint[] = ["coral", "jade", "plum"];
 
 /** Stable per-slug tint (mirrors backend `tintForSlug`). */
-function tintForSlug(slug: string): Tint {
+export function tintForSlug(slug: string): Tint {
   let hash = 0;
   for (const character of slug) {
     hash = (hash + character.charCodeAt(0)) % DIRECTORY_TINTS.length;
@@ -26,7 +26,7 @@ function tintForSlug(slug: string): Tint {
 }
 
 /** Two-letter initials from the business name (mirrors backend `initialsForName`). */
-function initialsForName(name: string): string {
+export function initialsForName(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return "";
   const firstWord = words[0] ?? "";

@@ -29,8 +29,8 @@ import type {
  * `GET /conversations/:id` (the detail fetch, `useConversationDetail`) does.
  * The controller merges the detail fetch onto `active`; these specs prove
  * the merge resolves, never leaks one thread's roster under another's id, and
- * never lets a stale detail fetch clobber a fresher roster `rawActive` already
- * carries (e.g. from a group-mutation cache patch). A fourth spec proves demo
+ * that the detail roster outranks a roster a list row carries. A fourth spec
+ * proves demo
  * mode (unaffected by ENG-253, seeded with a full roster already) renders
  * byte-identical to before.
  */
@@ -340,17 +340,17 @@ describe("useMessagesController: active roster/draft merge (ENG-253, live mode v
     expect(result.current.active?.members?.[0]?.name).toBe("Cleo");
   });
 
-  it("prefers a fresh non-empty roster already on the list row over a stale cached detail fetch (no clobbering an optimistic group-mutation patch)", async () => {
+  it("keeps the detail roster over a roster a list row carries, so a remote add or removal reaches the open group", async () => {
     registerSessionHandlers();
     let listCallCount = 0;
     server.use(
       http.get(`${API_V1}/conversations`, () => {
         listCallCount += 1;
         // First call: the ordinary ENG-253-trimmed list row. Second call
-        // (the test's own `refetchInbox()` below) stands in for what a
-        // group-mutation success (`patchConversationInList`) does to this
-        // exact cache entry: a fresh, non-empty roster landing straight on
-        // the list row, well ahead of the detail query's own next refetch.
+        // (the test's own `refetchInbox()` below) stands in for a list row
+        // that carries a roster, the copy a past local group patch
+        // (`patchConversationInList`) leaves there. List rows never follow
+        // a later remote add or removal, so the detail roster outranks it.
         const members =
           listCallCount === 1
             ? []
@@ -387,14 +387,18 @@ describe("useMessagesController: active roster/draft merge (ENG-253, live mode v
     act(() => result.current.refetchInbox());
     await waitFor(() => expect(listCallCount).toBe(2));
 
-    // The list row's own fresh 3-member roster must win. It must never fall
-    // back to, or get overwritten by, the detail fetch's still-cached
-    // 2-member snapshot, which the merge never re-fetches on its own here.
-    await waitFor(() => expect(result.current.active?.members).toHaveLength(3));
+    // The refetched list row has landed with its 3-member roster, and the
+    // open thread still shows the detail's own 2-member roster.
+    await waitFor(() =>
+      expect(
+        result.current.visibleThreads.find(
+          (thread) => thread.id === GROUP_ONE_ID,
+        )?.members,
+      ).toHaveLength(3),
+    );
     expect(result.current.active?.members?.map((m) => m.name)).toEqual([
       "Ana",
       "Bea",
-      "Cleo",
     ]);
   });
 });

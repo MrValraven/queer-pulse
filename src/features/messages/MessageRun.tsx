@@ -174,8 +174,12 @@ function MessageRunViewImpl({
   // The bubble the thread-level seen/delivered flags ride: the newest one that
   // is not a tombstone, which renders no meta to carry them.
   const receiptIndex = lastUndeletedIndex(run.items);
-  // Photo bursts collapse into albums (DES-219); everything else stays a bubble.
-  const segments = useMemo(() => groupIntoAlbums(run.items), [run.items]);
+  // Photo bursts collapse into albums (DES-219); everything else stays a
+  // bubble, and so does a photo while its caption is being edited (ENG-405).
+  const segments = useMemo(
+    () => groupIntoAlbums(run.items, editingMessageId),
+    [run.items, editingMessageId],
+  );
   const metaStatusAt = (index: number) =>
     runMetaStatus(
       run.items[index]!,

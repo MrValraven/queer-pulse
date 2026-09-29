@@ -33,6 +33,7 @@ import {
   ForumThreadCard,
   ArticleCard,
 } from "./FeedCards";
+import { FeedBlockConfirmHost } from "./FeedBlockConfirmHost";
 import { FeedLoadMore } from "./FeedLoadMore";
 import { FeedMasonryGrid } from "./FeedMasonryGrid";
 import { useFeedPage } from "./useFeedPage";
@@ -86,10 +87,10 @@ function FeedGreeting({
   );
 }
 
-/** The feed's tab row. Uses the shared `Tabs` primitive rather than a row of
- *  bare `<button>`s: that gets `role="tablist"`/`role="tab"`, `aria-selected`,
- *  a roving tabindex and Arrow/Home/End traversal, none of which the local
- *  version had. Visually it is the same underline row; `.tabsScroll` keeps the
+/** The feed's tab row. Uses the shared `Tabs` primitive, which brings
+ *  `role="tablist"`/`role="tab"`, `aria-selected`, a roving tabindex and
+ *  Arrow/Home/End traversal to what a row of bare `<button>`s never had.
+ *  Visually it is the same underline row; `.tabsScroll` keeps the
  *  horizontal overflow behaviour on a phone. */
 function FeedTabs({
   activeTab,
@@ -118,8 +119,8 @@ function FeedTabs({
 /** Render the right card for one live `FeedItem`, switching on `type`. The
  *  backend merges all five types into a single ordered `/feed` page (Task 7,
  *  plus `article` from PRD-107),
- *  so the render layer — not the hook — is what adapts each item to its
- *  card. `community_post` is the one type whose card still speaks the
+ *  so it is the render layer that adapts each item to its own card.
+ *  `community_post` is the one type whose card still speaks the
  *  prototype's `FeedPost` shape, so it's the one adapted via
  *  `feedItemToPost`; the other four cards render straight off the raw
  *  `FeedItem`. `default` is a defensive no-op for a future item type the
@@ -339,8 +340,8 @@ export function FeedPage() {
           <div className={styles.layout}>
             <div>
               {/* SOC-05: people you might know. Sits ABOVE the tabs on
-                  purpose, so it survives every tab switch instead of
-                  re-mounting with the list, and renders nothing at all when
+                  purpose, so it survives every tab switch with the list
+                  re-mounting around it, and renders nothing at all when
                   there is no explainable suggestion to make. */}
               <SuggestedPeopleStrip />
               <FeedTabs activeTab={targetTab} onSelect={selectTab} />
@@ -348,68 +349,84 @@ export function FeedPage() {
                   before committing the swap, then eases this viewport's height
                   across the change so it never snaps. */}
               <div ref={viewportRef} className={styles.viewport}>
-                {/* Keyed on displayTab so every committed switch re-mounts the
-                    panel and the card reveal replays — without this, cards
-                    shared between two tabs keep their DOM nodes and silently
-                    jump into place. */}
-                <div
-                  ref={contentRef}
-                  key={displayTab}
-                  className={[
-                    styles.list,
-                    hasSwitchedTab && styles.listSwitch,
-                    leaving && styles.leaving,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {/* `queryKey: ["feed"]` matches useFeed's `["feed", tab, demoMode]`
-                      as a prefix — invalidates every tab/mode variant, so a pull
-                      refresh refetches whichever tab is currently displayed. */}
-                  <PullToRefresh
-                    onRefresh={() =>
-                      queryClient.invalidateQueries({ queryKey: ["feed"] })
-                    }
+                {/* Hosts the block-confirmation dialog above the cards, so the
+                    dialog outlives whichever card asked for it once the block
+                    optimistically removes that card from the list. Sits inside
+                    the viewport, around the keyed list div below, so a tab
+                    switch that remounts the list keeps the dialog open.
+                    `contentRef` is a stable ref object that always points at
+                    whichever list div is current. */}
+                <FeedBlockConfirmHost fallbackFocusRef={contentRef}>
+                  {/* Keyed on displayTab so every committed switch re-mounts
+                      the panel and the card reveal replays. Without this,
+                      cards shared between two tabs keep their DOM nodes and
+                      silently jump into place. `tabIndex={-1}` and the named
+                      region make it the host's fallback focus target once the
+                      opening card is gone. */}
+                  <div
+                    ref={contentRef}
+                    key={displayTab}
+                    tabIndex={-1}
+                    role="region"
+                    aria-label={t("feed:list.regionAria", {
+                      tab: t(FEED_TAB_LABEL_KEY[displayTab]),
+                    })}
+                    className={[
+                      styles.list,
+                      hasSwitchedTab && styles.listSwitch,
+                      leaving && styles.leaving,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   >
-                    {/* Masonry card grid (FeedMasonryGrid + useMasonryLayout):
-                        at desktop width each card drops into the shorter of two
-                        columns, directly under the card above it, so a tall
-                        card leaves no hole beside a short one; a phone gets a
-                        single column. The DOM stays in feed order, so Tab and
-                        screen readers follow the feed. `data-masonry-full`
-                        marks the empty/error panels and the pager row below,
-                        which span the full width. */}
-                    <FeedMasonryGrid>
-                      <FeedListBody
-                        loading={loading}
-                        demoMode={demoMode}
-                        isError={isError}
-                        empty={empty}
-                        emptyPanel={emptyPanel}
-                        errorPanel={errorPanel}
-                        liveItems={liveItems}
-                        pulse={pulse}
-                        staticItems={staticItems}
-                        revealDelay={revealDelay}
-                      />
-                      {/* Live-only infinite-scroll pager. Self-guards on
-                          `hasNextPage` (false in demo mode, where the feed hook is
-                          disabled), so it renders nothing until there's a real
-                          next cursor page to fetch. */}
-                      {!demoMode && !loading && !isError && !empty && (
-                        <div data-masonry-full>
-                          <FeedLoadMore
-                            hasNextPage={hasNextPage}
-                            fetchNextPage={() => {
-                              void fetchNextPage();
-                            }}
-                            isFetchingNextPage={isFetchingNextPage}
-                          />
-                        </div>
-                      )}
-                    </FeedMasonryGrid>
-                  </PullToRefresh>
-                </div>
+                    {/* `queryKey: ["feed"]` matches useFeed's `["feed", tab, demoMode]`
+                        as a prefix: it invalidates every tab/mode variant, so a pull
+                        refresh refetches whichever tab is currently displayed. */}
+                    <PullToRefresh
+                      onRefresh={() =>
+                        queryClient.invalidateQueries({ queryKey: ["feed"] })
+                      }
+                    >
+                      {/* Masonry card grid (FeedMasonryGrid + useMasonryLayout):
+                          at desktop width each card drops into the shorter of two
+                          columns, directly under the card above it, so a tall
+                          card leaves no hole beside a short one; a phone gets a
+                          single column. The DOM stays in feed order, so Tab and
+                          screen readers follow the feed. `data-masonry-full`
+                          marks the empty/error panels and the pager row below,
+                          which span the full width. */}
+                      <FeedMasonryGrid>
+                        <FeedListBody
+                          loading={loading}
+                          demoMode={demoMode}
+                          isError={isError}
+                          empty={empty}
+                          emptyPanel={emptyPanel}
+                          errorPanel={errorPanel}
+                          liveItems={liveItems}
+                          pulse={pulse}
+                          staticItems={staticItems}
+                          revealDelay={revealDelay}
+                        />
+                        {/* Live-only infinite-scroll pager. Self-guards on
+                            `hasNextPage` (false in demo mode, where the feed hook is
+                            disabled), so it renders nothing until there's a real
+                            next cursor page to fetch. */}
+                        {!demoMode && !loading && !isError && !empty && (
+                          <div data-masonry-full>
+                            <FeedLoadMore
+                              hasNextPage={hasNextPage}
+                              fetchNextPage={() => {
+                                void fetchNextPage();
+                              }}
+                              isFetchingNextPage={isFetchingNextPage}
+                            />
+                          </div>
+                        )}
+                      </FeedMasonryGrid>
+                    </PullToRefresh>
+                  </div>
+                </FeedBlockConfirmHost>
               </div>
             </div>
             <FeedSidebar

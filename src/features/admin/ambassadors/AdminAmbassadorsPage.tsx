@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiAward } from "react-icons/fi";
 import {
+  Button,
   EmptyState,
   FadeIn,
   SkeletonLine,
@@ -27,6 +28,7 @@ import { AdminAmbassadorRow } from "./AdminAmbassadorRow";
 import { AdminAmbassadorGrantPanel } from "./AdminAmbassadorGrantPanel";
 import { AdminAmbassadorCirclePanel } from "./AdminAmbassadorCirclePanel";
 import { AdminAmbassadorRevokeModal } from "./AdminAmbassadorRevokeModal";
+import { AdminAmbassadorHistoryDrawer } from "./AdminAmbassadorHistoryDrawer";
 import styles from "./AdminAmbassadorsPage.module.css";
 
 const HEADING_ID = "admin-ambassadors-heading";
@@ -62,12 +64,27 @@ export function AdminAmbassadorsPage() {
   const status = isAdminAmbassadorStatus(requestedStatus)
     ? requestedStatus
     : "active";
-  const { data: rows = [], isLoading, isError } = useAdminAmbassadors(status);
+  const {
+    rows,
+    isLoading,
+    isError,
+    isFetchNextPageError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAdminAmbassadors(status);
+  // A failed next page also sets `isError`; the loaded rows stay on screen
+  // and the error shows beside Load more, so only a first-page failure
+  // replaces the list.
+  const isFirstPageError = isError && !isFetchNextPageError;
   const changeFocus = useChangeAmbassadorFocus();
   const revoke = useRevokeAmbassador();
   const [revokeTarget, setRevokeTarget] = useState<AdminAmbassadorDTO | null>(
     null,
   );
+  const [historyMember, setHistoryMember] = useState<
+    AdminAmbassadorDTO["member"] | null
+  >(null);
 
   function openRevoke(row: AdminAmbassadorDTO) {
     revoke.reset();
@@ -132,7 +149,7 @@ export function AdminAmbassadorsPage() {
                 <SkeletonLine key={skeletonIndex} height={132} />
               ))}
             </div>
-          ) : isError ? (
+          ) : isFirstPageError ? (
             <p className={styles.emptyLine} role="alert">
               {t("admin:ambassadors.loadError")}
             </p>
@@ -167,8 +184,28 @@ export function AdminAmbassadorsPage() {
                     )
                   }
                   onRevoke={() => openRevoke(row)}
+                  onShowHistory={() => setHistoryMember(row.member)}
                 />
               ))}
+            </div>
+          )}
+          {hasNextPage && !isFirstPageError && (
+            <div className={styles.loadMore}>
+              {isFetchNextPageError && (
+                <p className={styles.emptyLine} role="alert">
+                  {t("admin:ambassadors.loadMoreError")}
+                </p>
+              )}
+              <Button
+                variant="ghost"
+                size="md"
+                disabled={isFetchingNextPage}
+                onClick={() => void fetchNextPage()}
+              >
+                {isFetchingNextPage
+                  ? t("admin:ambassadors.loadingMore")
+                  : t("admin:ambassadors.loadMore")}
+              </Button>
             </div>
           )}
         </div>
@@ -188,6 +225,13 @@ export function AdminAmbassadorsPage() {
           }
           onSubmit={handleConfirmRevoke}
           onClose={() => setRevokeTarget(null)}
+        />
+      )}
+
+      {historyMember && (
+        <AdminAmbassadorHistoryDrawer
+          member={historyMember}
+          onClose={() => setHistoryMember(null)}
         />
       )}
     </AdminShell>

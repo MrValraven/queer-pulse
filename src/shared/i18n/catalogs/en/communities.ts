@@ -204,6 +204,13 @@ export const communities: Catalog = {
   "gate.request.action": "Ask to join",
   "gate.invited.line": "You have been invited to this one.",
   "gate.invited.action": "Accept invitation",
+  "gate.requested.line":
+    "You asked to join. Your request is with the moderators.",
+  "gate.requested.withdraw": "Withdraw request",
+  "gate.requested.withdrawAriaLabel": "Withdraw request to join {name}",
+  "gate.approved.line":
+    "Your request was approved. You're part of this community now.",
+  "gate.approved.action": "Open the community",
   "gate.online": "Online",
   "gate.close": "Back to communities",
   "gate.error.title": "That did not load",
@@ -1412,7 +1419,26 @@ export const communities: Catalog = {
     "This community asked you to wait before applying again. You can send a new request from {date}.",
   "join.refusal.reapply.bodyNoDate":
     "This community asked you to wait before applying again. You can send a new request once that wait is over.",
+  "join.refusal.pending.title": "Your request is already in",
+  "join.refusal.pending.body":
+    "The moderators have it, and their answer will reach you here.",
+  "join.refusal.pending.withdrawCta": "Withdraw my request",
+  // Shown on the same button while a withdraw is on its way (or waiting for
+  // the connection), so a second press has nothing to send.
+  "join.refusal.pending.withdrawingCta": "Withdrawing your request",
+  "join.refusal.parent.title": "Join the main community first",
+  "join.refusal.parent.body":
+    "This space is for members of the community it belongs to. Join that one, then come back.",
+  "join.refusal.parent.cta": "Go to {name}",
+  // The same refusal, opened from the parent's own Spaces tab: the member is
+  // already on the page where they can join.
+  "join.refusal.parent.bodyOnParentPage":
+    "This space is for members of {name}. You can join from this page, then come back to the space.",
+  "join.refusal.parent.backCta": "Back to {name}",
   "join.refusal.closeCta": "Close",
+  "join.done.heldTitle": "A moderator will look first",
+  "join.done.heldBody":
+    "<strong>{name}</strong> checks some new joins by hand. A moderator will read yours soon, and we'll let you know how it goes.",
   "join.done.requestTitle": "Your request is with the mods",
   "join.done.welcomeTitle": "Welcome to {name}",
   "join.done.requestBody":
@@ -1837,6 +1863,8 @@ export const communities: Catalog = {
   "tagPicker.addMore": "Add more tags",
   "tagPicker.collapse": "Show fewer",
   "tagPicker.count": "{count} of {max} chosen",
+  "tagPicker.countAtLimit":
+    "{max} of {max} chosen. Remove one to pick another.",
   "tagPicker.empty": "No tags chosen yet.",
   "edit.suggestTag.trigger": "Don't see the tag you need? Suggest one",
   // PRD-140. The invitations shelf: everything a member has been invited to, in
@@ -1887,6 +1915,7 @@ export const communities: Catalog = {
   "edit.rules.add": "Add",
   "edit.rules.addPlaceholder": "Add a shared value…",
   "edit.rules.remove": "Remove rule",
+  "edit.missing.title": "Needed before you can save",
   "edit.changes.title": "Saving will change",
   "edit.changes.added": "Adding: {values}",
   "edit.changes.removed": "Removing: {values}",
@@ -2169,6 +2198,7 @@ export const communities: Catalog = {
   "spaces.join.parentFirst": "Join {name} first",
   "spaces.join.rulesNote":
     "You already agreed to the rules of {name}. This space adds a few of its own.",
+  "spaces.paused.title": "This space is paused",
   "spaces.paused.parent": "This space is paused because {name} is paused.",
   "spaces.mod.label": "Spaces",
   "spaces.mod.intro":

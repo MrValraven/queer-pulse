@@ -49,13 +49,15 @@ const { mutate, hookState } = vi.hoisted(() => ({
   hookState: {
     config: undefined as HostConfigDTO | undefined,
     summary: undefined as HostSummaryDTO | undefined,
+    configError: null as Error | null,
   },
 }));
 
 vi.mock("../api/useGoTogetherHostConfig", () => ({
   useGoTogetherHostConfig: () => ({
     data: hookState.config,
-    isError: false,
+    isError: hookState.configError !== null,
+    error: hookState.configError,
     refetch: vi.fn(),
   }),
   useGoTogetherHostSummary: () => ({ data: hookState.summary }),
@@ -70,6 +72,7 @@ afterEach(() => {
   mutate.mockReset();
   hookState.config = undefined;
   hookState.summary = undefined;
+  hookState.configError = null;
 });
 
 function renderSettings(config: HostConfigDTO, summary?: HostSummaryDTO) {
@@ -129,6 +132,33 @@ describe("GoTogetherHostSettings", () => {
     expect(
       screen.getByText("Pick a time in the range above."),
     ).toBeInTheDocument();
+  });
+
+  it("hints that changing or adding a question re-asks people already waiting, once a question is saved", () => {
+    renderSettings(
+      hostConfig({
+        hostQuestions: [
+          {
+            id: "q1",
+            prompt: "Picnic blanket or dance floor?",
+            options: [
+              { id: "o1", label: "Blanket" },
+              { id: "o2", label: "Dance floor" },
+            ],
+          },
+        ],
+      }),
+    );
+
+    expect(
+      screen.getByText(/If you change or add a question/),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the re-ask hint off while the saved config has no questions yet", () => {
+    renderSettings(hostConfig());
+
+    expect(screen.queryByText(/If you change or add a question/)).toBeNull();
   });
 
   it("allows at most 2 questions with 2 to 4 answers each", () => {
@@ -246,5 +276,106 @@ describe("GoTogetherHostSettings", () => {
     expect(cutoffInput.getAttribute("aria-describedby")).toContain(
       error.closest("p")?.id,
     );
+  });
+});
+
+describe("GoTogetherHostSettings off switch confirm", () => {
+  it("switches on with no confirm", () => {
+    renderSettings(hostConfig({ enabled: false }));
+
+    fireEvent.click(screen.getByRole("switch", { name: "Offer Go together" }));
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(mutate).toHaveBeenCalledTimes(1);
+    expect(mutate.mock.calls[0]?.[0].enabled).toBe(true);
+  });
+
+  it("asks to confirm before switching a config saved as enabled off", () => {
+    renderSettings(hostConfig({ enabled: true }));
+
+    const toggle = screen.getByRole("switch", { name: "Offer Go together" });
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(toggle);
+
+    expect(mutate).not.toHaveBeenCalled();
+    const dialog = screen.getByRole("dialog", {
+      name: "Switch Go together off?",
+    });
+    expect(
+      within(dialog).getByText(
+        "Members waiting for a group will be told there is no group this time. Groups that already formed stay together. If you switch it back on, they'll need to opt in again.",
+      ),
+    ).toBeInTheDocument();
+    // The switch itself has not moved: it waits on the dialog's answer.
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("keeps the switch on when the off confirm is cancelled", () => {
+    renderSettings(hostConfig({ enabled: true }));
+
+    fireEvent.click(screen.getByRole("switch", { name: "Offer Go together" }));
+    const dialog = screen.getByRole("dialog", {
+      name: "Switch Go together off?",
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Keep it on" }));
+
+    expect(mutate).not.toHaveBeenCalled();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(
+      screen.getByRole("switch", { name: "Offer Go together" }),
+    ).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("saves the switch off once the off confirm is accepted", () => {
+    renderSettings(
+      hostConfig({
+        enabled: true,
+        meetingPointNote: "By the kiosk",
+      }),
+    );
+
+    fireEvent.click(screen.getByRole("switch", { name: "Offer Go together" }));
+    const dialog = screen.getByRole("dialog", {
+      name: "Switch Go together off?",
+    });
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Switch it off" }),
+    );
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(mutate).toHaveBeenCalledTimes(1);
+    expect(mutate.mock.calls[0]?.[0]).toEqual({
+      enabled: false,
+      hostQuestions: [],
+      meetingPointNote: "By the kiosk",
+    });
+  });
+});
+
+describe("GoTogetherHostSettings load failures", () => {
+  function renderFailedSettings(error: Error) {
+    hookState.configError = error;
+    render(
+      <TestProviders>
+        <div data-testid="host-settings-slot">
+          <GoTogetherHostSettings slug="pride-picnic" />
+        </div>
+      </TestProviders>,
+    );
+  }
+
+  it("renders nothing on a 404, because Go together is switched off", () => {
+    renderFailedSettings(new ApiError(404, "Not found"));
+    expect(screen.getByTestId("host-settings-slot")).toBeEmptyDOMElement();
+    expect(
+      screen.queryByRole("button", { name: /try again/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps the section with a retry for any other failure", () => {
+    renderFailedSettings(new ApiError(500, "Server error"));
+    expect(
+      screen.getByRole("button", { name: /try again/i }),
+    ).toBeInTheDocument();
   });
 });

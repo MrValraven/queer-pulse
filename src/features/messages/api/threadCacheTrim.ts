@@ -26,7 +26,10 @@ export const THREAD_HISTORY_STALE_TIME_MS = 5 * 60_000;
 const clientsWithTrim = new WeakSet<QueryClient>();
 
 function isThreadQuery(query: Query): boolean {
-  return query.queryKey[0] === "messages";
+  // A PRD-401 history window (`threadWindow.ts`) is prefetched with no
+  // observer and shown a moment later: trimming or invalidating it in between
+  // would fetch it twice. It is removed as soon as it stops being shown.
+  return query.queryKey[0] === "messages" && query.queryKey[3] !== "window";
 }
 
 /**

@@ -54,7 +54,8 @@
 }
 
 .rowSlug {
-  font-family: monospace;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
   color: var(--ink-40);
 }
 

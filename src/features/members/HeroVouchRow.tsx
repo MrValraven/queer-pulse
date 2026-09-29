@@ -265,10 +265,11 @@ export function HeroVouchRow({
 
   // The member turned their voucher roster off. The backend still sends the
   // true `count` and withholds only the names, and it exempts the owner: the
-  // owner's own fetch carries the full roster (backend `listVouchers`, and the
-  // profile DTO ships `vouchersVisible` unchanged to every viewer, precisely so
-  // a visitor can tell an empty roster apart from an absent one). So this is
-  // "hidden from the person currently looking", which is never the owner.
+  // owner's own fetch carries the full roster (backend `listVouchers`). The
+  // `vouchersVisible` toggle itself is owner-only (ENG-444); a visitor's value
+  // is inferred in `profileToMember` from `mutualVoucherCount === null`, which
+  // the backend sends a non-owner exactly when the roster is hidden. So this
+  // is "hidden from the person currently looking", which is never the owner.
   const isRosterHidden = profile.vouchersVisible === false;
   const isRosterHiddenFromViewer = isRosterHidden && !isSelf;
 

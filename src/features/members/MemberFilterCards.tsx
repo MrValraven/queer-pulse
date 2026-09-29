@@ -457,8 +457,12 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
   // into `tagline` (the card DTO carries no bio — see directoryBlurb.ts), so
   // `member.role` is already final and the bio branch never fires. The registry
   // bio is passed only in demo mode: pulling a mock bio onto a live card would
-  // put words in a real member's mouth.
-  const blurb = directoryBlurb(member.role || profile?.role, profile?.bio);
+  // put words in a real member's mouth. Demo borrows it only from an `open`
+  // profile, the live rule (backend `toMemberCard`, ENG-438): a network or
+  // private bio sits behind the limited card.
+  const borrowableBio =
+    profile?.visibility === "open" ? profile.bio : undefined;
+  const blurb = directoryBlurb(member.role || profile?.role, borrowableBio);
   const tags: MemberCard["tags"] =
     member.tags.length > 0
       ? member.tags

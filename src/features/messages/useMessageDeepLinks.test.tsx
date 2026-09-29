@@ -46,8 +46,11 @@ function searchOf(location: { search: string }) {
 
 function renderDeepLinks(url: string, initialThreads: Conversation[]) {
   const openThread = vi.fn();
-  const openThreadAtMessage = vi.fn();
   const latest = { search: "" };
+  const searchAtOpen: string[] = [];
+  const openThreadAtMessage = vi.fn(() => {
+    searchAtOpen.push(latest.search);
+  });
   const searchAtStartThread: string[] = [];
   const startThread = vi.fn(() => {
     searchAtStartThread.push(latest.search);
@@ -73,6 +76,7 @@ function renderDeepLinks(url: string, initialThreads: Conversation[]) {
   return {
     ...view,
     openThreadAtMessage,
+    searchAtOpen,
     startThread,
     searchAtStartThread,
   };
@@ -100,21 +104,22 @@ describe("useMessageDeepLinks and the active mailbox (demo mode)", () => {
   });
 
   it("switches to the thread's own mailbox for a push into another mailbox, then opens it", async () => {
-    const { result, rerender, openThreadAtMessage } = renderDeepLinks(
+    const { result, openThreadAtMessage, searchAtOpen } = renderDeepLinks(
       `/messages?c=${FATIMA_ID}`,
       [],
     );
-    await waitFor(() =>
-      expect(result.current.mailbox.active?.identityId).toBe(
-        DEMO_IDENTITY.cafeLisboa,
-      ),
-    );
-    expect(searchOf(result.current.location).get("c")).toBe(FATIMA_ID);
-    expect(openThreadAtMessage).not.toHaveBeenCalled();
-
-    rerender({ allThreads: [cafeLisboaFatimaConversation] });
+    // ENG-403: the thread opens once its own mailbox is active, without
+    // waiting for an inbox page that holds it.
     await waitFor(() =>
       expect(openThreadAtMessage).toHaveBeenCalledWith(FATIMA_ID, undefined),
+    );
+    expect(result.current.mailbox.active?.identityId).toBe(
+      DEMO_IDENTITY.cafeLisboa,
+    );
+    expect(openThreadAtMessage).toHaveBeenCalledTimes(1);
+    // Opened after the switch landed, so the switch's reset keeps it open.
+    expect(searchOf({ search: searchAtOpen[0] ?? "" }).get("as")).toBe(
+      DEMO_IDENTITY.cafeLisboa,
     );
     await waitFor(() =>
       expect(searchOf(result.current.location).has("c")).toBe(false),
@@ -124,8 +129,54 @@ describe("useMessageDeepLinks and the active mailbox (demo mode)", () => {
     );
   });
 
+  it("the same ?c= linked again after a mailbox change opens again", async () => {
+    const { result, openThreadAtMessage, searchAtOpen } = renderDeepLinks(
+      `/messages?c=${FATIMA_ID}`,
+      [],
+    );
+    await waitFor(() => expect(openThreadAtMessage).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(searchOf(result.current.location).has("c")).toBe(false),
+    );
+
+    // A second push for the same thread routes in-app with no `?as=`, so
+    // the personal mailbox is active again when it lands.
+    act(() => {
+      void result.current.navigate(`/messages?c=${FATIMA_ID}`);
+    });
+
+    await waitFor(() => expect(openThreadAtMessage).toHaveBeenCalledTimes(2));
+    expect(openThreadAtMessage).toHaveBeenLastCalledWith(FATIMA_ID, undefined);
+    expect(searchOf({ search: searchAtOpen[1] ?? "" }).get("as")).toBe(
+      DEMO_IDENTITY.cafeLisboa,
+    );
+    await waitFor(() =>
+      expect(searchOf(result.current.location).has("c")).toBe(false),
+    );
+  });
+
+  it("opens a thread of the active mailbox that no loaded inbox page holds", async () => {
+    const { result, openThreadAtMessage } = renderDeepLinks(
+      `/messages?as=${DEMO_IDENTITY.cafeLisboa}&c=${FATIMA_ID}&m=${FATIMA_MESSAGE_ID}`,
+      [],
+    );
+    await waitFor(() =>
+      expect(openThreadAtMessage).toHaveBeenCalledWith(
+        FATIMA_ID,
+        FATIMA_MESSAGE_ID,
+      ),
+    );
+    await waitFor(() =>
+      expect(searchOf(result.current.location).has("c")).toBe(false),
+    );
+    expect(searchOf(result.current.location).get("as")).toBe(
+      DEMO_IDENTITY.cafeLisboa,
+    );
+    expect(openThreadAtMessage).toHaveBeenCalledTimes(1);
+  });
+
   it("stays in the active mailbox when the linked thread cannot be read", async () => {
-    const { result } = renderDeepLinks(
+    const { result, openThreadAtMessage } = renderDeepLinks(
       `/messages?as=${DEMO_IDENTITY.cafeLisboa}&c=demo-thread-unknown`,
       [],
     );
@@ -134,10 +185,15 @@ describe("useMessageDeepLinks and the active mailbox (demo mode)", () => {
         DEMO_IDENTITY.cafeLisboa,
       ),
     );
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    // ENG-403: the unresolvable link is dropped, so the controller's hold on
+    // its default select ends.
+    await waitFor(() =>
+      expect(searchOf(result.current.location).has("c")).toBe(false),
+    );
     expect(searchOf(result.current.location).get("as")).toBe(
       DEMO_IDENTITY.cafeLisboa,
     );
+    expect(openThreadAtMessage).not.toHaveBeenCalled();
   });
 
   it("moves a Message <member> hand-off to the personal mailbox before starting the thread", async () => {

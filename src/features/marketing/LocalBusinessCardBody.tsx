@@ -1,9 +1,10 @@
 import type { ReactNode, SyntheticEvent } from "react";
 import { FiArrowRight, FiBookmark, FiCheck } from "react-icons/fi";
-import { Avatar, ImageSlot, Stars } from "../../shared/components/ui";
+import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { DirectoryCardAccess } from "./DirectoryCardAccess";
+import { DirectoryCardRating } from "./DirectoryCardRating";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
 import { categoryLabel } from "./localCategories";
 import { listingTagLabel } from "./listBusiness/listingTags.data";
@@ -108,7 +109,9 @@ function DirectoryCardBadges({ place }: { place: DirectoryPlace }) {
         {ownership === "verified" && (
           <FiCheck className={s.photoBadgeCheck} aria-hidden />
         )}
-        {t(OWNERSHIP_BADGE_KEYS[ownership])}
+        <span className={s.photoBadgeText}>
+          {t(OWNERSHIP_BADGE_KEYS[ownership])}
+        </span>
       </span>
       <SafeSpaceCardMark place={place} />
     </span>
@@ -145,8 +148,8 @@ export function LocalBusinessCardBody({
    *  can't meaningfully save their own listing. Overrides `saveControl`. */
   topRight?: ReactNode;
   /** Drop the star rating (default: shown). The profile's owner grid passes
-   *  false for a submitted listing, which carries no reviews and would
-   *  otherwise always read as five empty stars. */
+   *  false for a submitted listing. A place with no reviews shows no rating
+   *  either way (see `DirectoryCardRating`). */
   showRating?: boolean;
   /** Drop the "run by <first>" avatar in the footer (default: shown). Both
    *  profile views already sit under that member's own name. */
@@ -226,15 +229,12 @@ export function LocalBusinessCardBody({
       </div>
 
       <div className={s.nameRow}>
-        <div className={s.name} data-preview-region="name">
+        {/* Clamped to two lines in a narrow column; `title` keeps the full
+            name one hover away. */}
+        <div className={s.name} data-preview-region="name" title={place.name}>
           {place.name}
         </div>
-        {showRating && (
-          <div className={s.rating} data-preview-region="chrome">
-            <Stars value={Number(place.rating.score)} size={12} />
-            <span>({place.rating.count})</span>
-          </div>
-        )}
+        {showRating && <DirectoryCardRating place={place} />}
       </div>
       <div className={s.metaRow} data-preview-region="meta">
         <span className={s.catPill}>{categoryLabel(t, place.cat)}</span>
@@ -245,17 +245,19 @@ export function LocalBusinessCardBody({
       <div className={s.desc} data-preview-region="desc">
         {place.desc}
       </div>
+      {/* One row at most: "Member-run" leads so it is the pill that survives
+          a narrow column, and the tags fill whatever room is left. */}
       <div className={s.pillsRow} data-preview-region="pills">
-        {place.pills.slice(0, 3).map((pill) => (
-          <span key={pill} className={s.pill}>
-            {listingTagLabel(t, pill)}
-          </span>
-        ))}
         {place.member && (
           <span className={`${s.pill} ${s.pillMember}`}>
             {t("marketing:directory.card.memberRun")}
           </span>
         )}
+        {place.pills.slice(0, 3).map((pill) => (
+          <span key={pill} className={s.pill}>
+            {listingTagLabel(t, pill)}
+          </span>
+        ))}
       </div>
       <DirectoryCardAccess place={place} />
       <div className={s.foot}>
@@ -277,7 +279,7 @@ export function LocalBusinessCardBody({
               src={place.owner.avatarUrl ?? undefined}
               size={20}
             />
-            {place.owner.first}
+            <span className={s.hostName}>{place.owner.first}</span>
           </span>
         )}
         {visitSlot ?? (

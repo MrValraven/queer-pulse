@@ -19,14 +19,13 @@ import type {
 // can no longer see. Nothing here reads React, i18n or the DOM.
 //
 // `POST /forum/threads` runs under `whitelist` + `forbidNonWhitelisted`, so a
-// key the server has never heard of does not get quietly dropped — it 400s the
-// whole publish and the member loses the post. Two rules follow from that and
-// are enforced here rather than hoped for:
+// key the server has never heard of 400s the whole publish and the member
+// loses the post. Two rules follow from that, and both are enforced here:
 //
 //  - A photo's description is capped at `WIRE_ALT_MAX_LENGTH`, which is the
 //    column's width. The composer allows a longer one (`COMPOSE_ALT_MAX_LENGTH`
 //    is sized for the draft row's meta bag), so one long description would
-//    otherwise refuse the publish rather than the description.
+//    otherwise refuse the whole publish over one description.
 //  - `image` and `photos` are two spellings of the same thing and the server
 //    refuses both at once. Staged photos therefore always travel as `photos`,
 //    and the legacy single field is never sent from this page.
@@ -53,25 +52,28 @@ const WIRE_POLL_MAX_OPTIONS = 6;
 
 /** The fewest it accepts. Under this the poll is not sent at all: the composer
  *  already refuses to publish one (`pollNeedsTwoOptions`), so this is the
- *  belt to that brace rather than a second opinion. */
+ *  belt to that brace, agreeing with it exactly. */
 const WIRE_POLL_MIN_OPTIONS = 2;
 
 /** The chosen auto-close as an absolute instant, or null for "never".
  *
  *  `poll` defers to the attached poll's own deadline, so a thread tied to a
  *  poll and the poll itself can never close on two different days. A poll that
- *  never closes closes nothing. */
+ *  never closes closes nothing.
+ *
+ *  `anchor` is the moment the thread goes live: the scheduled publish time
+ *  for a scheduled post, now for one published straight away. */
 export function closesAtFor(
   closeAfter: CloseAfter,
   poll: ComposePoll | null,
-  now: Date = new Date(),
+  anchor: Date = new Date(),
 ): string | null {
   if (closeAfter === "poll") {
     const days = poll ? POLL_CLOSES_DAYS[poll.closes] : undefined;
-    return days ? addDays(now, days) : null;
+    return days ? addDays(anchor, days) : null;
   }
   const days = CLOSE_AFTER_DAYS[closeAfter];
-  return days ? addDays(now, days) : null;
+  return days ? addDays(anchor, days) : null;
 }
 
 function addDays(from: Date, days: number): string {
@@ -93,7 +95,9 @@ export interface ComposePublishInput {
    *  the flag away for anyone else, and sending it anyway would ask a question
    *  the composer already knows the answer to. */
   canPostAsOfficial: boolean;
-  /** Injectable clock, so the deadline arithmetic is testable. */
+  /** Injectable clock, so the deadline arithmetic is testable. Deadlines count
+   *  from here only when the post publishes now; a scheduled post counts from
+   *  its publish time. */
   now?: Date;
 }
 
@@ -112,19 +116,24 @@ export function toCreateThreadDto({
   now = new Date(),
 }: ComposePublishInput): CreateThreadDto {
   const communitySlug = state.communitySlug.trim();
-  const closesAt = closesAtFor(state.closeAfter, state.poll, now);
   const scheduledAt =
     mode === "schedule" && scheduledAtLocal
       ? new Date(scheduledAtLocal).toISOString()
       : null;
+  // ENG-423: every deadline counts from the moment the thread goes live. A
+  // post scheduled for next week with "close after 2 weeks" stays open for two
+  // weeks of its own life, so a scheduled post counts from its publish time and
+  // a post published now counts from now.
+  const anchor = scheduledAt ? new Date(scheduledAt) : now;
+  const closesAt = closesAtFor(state.closeAfter, state.poll, anchor);
   const isOfficial = canPostAsOfficial && state.isOfficial;
-  const pollDto = toPollDto(state.poll, now);
+  const pollDto = toPollDto(state.poll, anchor);
 
   return {
     title: state.title.trim(),
     body: state.body.trim(),
     // Guarded by `canPublish`, which refuses to publish without one. The
-    // fallback keeps the type honest rather than describing a reachable state.
+    // fallback only keeps the type honest; the empty value is unreachable.
     category: state.category ?? "",
     ...(state.tags.length ? { tags: state.tags } : {}),
     ...(communitySlug ? { communitySlug } : {}),
@@ -133,7 +142,7 @@ export function toCreateThreadDto({
     ...(pollDto ? { poll: pollDto } : {}),
     ...(state.kind ? { kind: state.kind } : {}),
     ...(state.contentWarnings.length
-      ? // The catalog IDS, never the rendered labels: a warning flagged in
+      ? // The catalog IDS travel here, since a warning flagged in
         // English has to read as the same warning in Portuguese, which is
         // exactly what `CONTENT_WARNINGS` says its `id` is for.
         { contentWarnings: state.contentWarnings }
@@ -143,8 +152,8 @@ export function toCreateThreadDto({
     ...(state.isAnonymous ? { isAnonymous: true } : {}),
     ...(state.coAuthorSlug ? { coAuthorHandle: state.coAuthorSlug } : {}),
     ...(state.neighbourhood ? { neighbourhood: state.neighbourhood } : {}),
-    // `auto` is a composer state, not an answer: it means the member never
-    // said, and NULL is what the server stores for that.
+    // `auto` is a composer state that means the member never said, and
+    // NULL is what the server stores for that.
     ...(state.language === "auto" ? {} : { language: state.language }),
     // Meaningless without a community, and coerced away server-side anyway.
     ...(communitySlug && state.crossPost ? { crossPosted: true } : {}),
@@ -156,7 +165,7 @@ export function toCreateThreadDto({
 
 /**
  * The staged photos as the wire wants them: a storage key each, in the order
- * the member arranged them. There is no `position` field — the array IS the
+ * the member arranged them. There is no `position` field: the array IS the
  * ordering, and a second source of truth for it is how a gallery ends up in an
  * order nobody chose.
  */
@@ -170,7 +179,7 @@ function toPhotoDtos(photos: readonly ComposePhoto[]): CreateThreadPhotoDto[] {
 /**
  * The attached poll, or null when there is nothing publishable.
  *
- * Blank rows are dropped rather than sent: an empty row is how the member adds
+ * Blank rows are dropped before sending: an empty row is how the member adds
  * the next one, and the server refuses a label with no visible characters. A
  * poll left with fewer than two real answers asks nothing, so it goes nowhere.
  *
@@ -180,7 +189,7 @@ function toPhotoDtos(photos: readonly ComposePhoto[]): CreateThreadPhotoDto[] {
  */
 function toPollDto(
   poll: ComposePoll | null,
-  now: Date,
+  anchor: Date,
 ): CreateThreadPollDto | null {
   if (!poll) return null;
   const options = poll.options
@@ -193,6 +202,6 @@ function toPollDto(
   return {
     options,
     ...(poll.allowMultiple ? { allowMultiple: true } : {}),
-    ...(days ? { closesAt: addDays(now, days) } : {}),
+    ...(days ? { closesAt: addDays(anchor, days) } : {}),
   };
 }

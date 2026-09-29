@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiAlertCircle, FiLock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
@@ -11,6 +11,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
 import { describeError } from "../../shared/api/errorMessage";
+import { focusControl } from "../../shared/lib/focusFirstError";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -28,7 +29,7 @@ import styles from "./EditJobPage.module.css";
  * PRD-44: the poster corrects their own listing.
  *
  * `PATCH /jobs/:slug` shipped with no frontend caller, so a wrong salary band,
- * a stale deadline or a typo in the title could only be closed, never fixed.
+ * a stale deadline or a typo in the title could only be fixed by closing it.
  * The slug does not change when the title does (`JobsService.update` never
  * re-allocates it), so a save lands the poster back on the same detail page.
  * Editing neither re-opens moderation nor sends a notification: it is a quiet
@@ -126,6 +127,37 @@ function EditJobMissing() {
 }
 
 /**
+ * The first control whose FormField error is showing, in page order. FormField
+ * links every error to its control through `aria-describedby`, which also
+ * reaches a Select trigger (a role=button that carries no `aria-invalid`), so a
+ * text input and a picker are found alike.
+ */
+function findFirstErroredControl(root: HTMLElement | null): HTMLElement | null {
+  if (!root) return null;
+  const errorIds = new Set(
+    Array.from(
+      root.querySelectorAll('[role="alert"][id]'),
+      (errorElement) => errorElement.id,
+    ),
+  );
+  const controls = root.querySelectorAll<HTMLElement>(
+    '[aria-describedby], [aria-invalid="true"]',
+  );
+  return (
+    Array.from(controls).find((control) => {
+      if (control.hasAttribute("disabled")) return false;
+      if (control.getAttribute("aria-invalid") === "true") return true;
+      const describedByIds = (control.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean);
+      return describedByIds.some((describedById) =>
+        errorIds.has(describedById),
+      );
+    }) ?? null
+  );
+}
+
+/**
  * The form itself, mounted only once the prefill has arrived so
  * `useEditJobForm` can seed both its working draft and the untouched baseline
  * the PATCH body is diffed against.
@@ -144,11 +176,21 @@ function EditJobFormBody({
   const updateJob = useUpdateJob(slug);
   const [showErrors, setShowErrors] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   function handleSave() {
     setShowErrors(true);
     setSaveError(null);
-    if (!form.isValid || !form.hasChanges) return;
+    if (!form.isValid) {
+      // Save stays enabled on an invalid form so pressing it can say why: the
+      // errors appear, and the poster lands on the first one, which on a phone
+      // can sit screens above the button. One frame lets the errors render.
+      requestAnimationFrame(() => {
+        focusControl(findFirstErroredControl(formRef.current));
+      });
+      return;
+    }
+    if (!form.hasChanges) return;
     updateJob.mutate(form.buildBody(), {
       onSuccess: () => {
         showToast(t("economy:editJob.toast.saved"), "success");
@@ -181,9 +223,11 @@ function EditJobFormBody({
     <>
       <p className={styles.quietNote}>{t("economy:editJob.quietNote")}</p>
 
-      <EditJobRoleFields form={form} showErrors={showErrors} />
-      <EditJobPayFields form={form} showErrors={showErrors} />
-      <EditJobExtrasFields form={form} showErrors={showErrors} />
+      <div ref={formRef}>
+        <EditJobRoleFields form={form} showErrors={showErrors} />
+        <EditJobPayFields form={form} showErrors={showErrors} />
+        <EditJobExtrasFields form={form} showErrors={showErrors} />
+      </div>
 
       {saveError && (
         <p className={styles.saveError} role="alert">

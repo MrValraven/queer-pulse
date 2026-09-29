@@ -3,9 +3,15 @@
    keeps it apart from the three staff tones (admin coral, moderator violet,
    grants jade), since an ambassador holds no powers.
 
-   Every variant carries a 1px border (transparent where it has none) and each
-   size trims 1px of padding to pay for it, so all three variants measure
-   exactly the same as a StaffBadge of the same size. */
+   The pill carries a 1px border (transparent, since the gold look has no
+   border colour of its own) and each size trims 1px of padding to pay for it,
+   so it measures exactly the same as a StaffBadge of the same size.
+
+   Gold: the amber pairing Badge.module.css already audits, amber-ink over a
+   16% amber tint. Warm like coral, clearly its own hue. 0.2 measured 4.46:1
+   for amber-ink on cream at this pill's 11.5px sm size; 0.16 clears it while
+   the dark-theme rule (amber-ink resolves to plain --amber there) still reads
+   at 6.4-7.2:1. */
 
 .tag {
   display: inline-flex;
@@ -13,50 +19,11 @@
   white-space: nowrap;
   border: 1px solid transparent;
   border-radius: var(--radius-pill);
+  background: rgba(var(--amber-rgb), 0.16);
+  color: var(--amber-ink);
   font-family: var(--sans);
   font-weight: 600;
   line-height: 1.3;
-}
-
-/* --- looks, behind ?ambassadorTag= until one is picked (see
-   ambassadorTagVariant.ts). Delete the two that lose. --- */
-
-/* gold (default): the amber pairing Badge.module.css already audits, amber-ink
-   over a 16% amber tint. Warm like coral, clearly its own hue. 0.2 measured
-   4.46:1 for amber-ink on cream at this pill's 11.5px sm size; 0.16 clears it
-   while the dark-theme rule (amber-ink resolves to plain --amber there) still
-   reads at 6.4-7.2:1. */
-.gold {
-  background: rgba(var(--amber-rgb), 0.16);
-  color: var(--amber-ink);
-}
-
-/* outline: no fill, a coral hairline. Lighter than any staff pill, so it sits
-   one step quieter than the badges that carry power. */
-.outline {
-  background: transparent;
-  border-color: var(--accent);
-  color: var(--accent-text);
-}
-
-/* pride: a card-surface fill inside a thin gradient ring drawn from the
-   palette's own brand hues. */
-.pride {
-  background:
-    linear-gradient(var(--paper), var(--paper)) padding-box,
-    linear-gradient(
-        90deg,
-        var(--accent),
-        var(--amber),
-        var(--jade),
-        var(--violet),
-        var(--rose)
-      )
-      border-box;
-  color: var(--text-strong);
-}
-.pride svg {
-  color: var(--accent-text);
 }
 
 /* --- sizes: StaffBadge's padding minus the 1px border --- */

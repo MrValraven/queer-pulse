@@ -1,4 +1,4 @@
-/* Plum-panel confirmation — the repo's standard success surface.
+/* Plum-panel confirmation: the repo's standard success surface.
    Self-contained: brings its own plum background + padding so it can be used
    standalone or dropped into <ModalSheet success>. */
 
@@ -79,7 +79,9 @@
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 12px;
 }
 
 .footer {

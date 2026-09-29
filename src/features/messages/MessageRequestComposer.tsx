@@ -3,7 +3,10 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FirstContactComposer } from "./FirstContactComposer";
 import { messageRequestErrorKey } from "./api/firstContactError";
-import { useSendMessageRequest } from "./api/useMessageRequest";
+import {
+  useComposeIdempotencyKey,
+  useSendMessageRequest,
+} from "./api/useMessageRequest";
 import type { StrangerMemberResult } from "./api/useStrangerMemberSearch";
 
 interface MessageRequestComposerProps {
@@ -36,15 +39,22 @@ export function MessageRequestComposer({
   const { showToast } = useToast();
   const [body, setBody] = useState("");
   const sendRequest = useSendMessageRequest();
+  // ENG-407: one key per compose, reused when the member retries the same text.
+  const composeKey = useComposeIdempotencyKey();
 
   function handleSubmit() {
     if (sendRequest.isPending) return;
     const trimmed = body.trim();
     if (!trimmed) return;
     sendRequest.mutate(
-      { toSlug: target.slug, body: trimmed },
+      {
+        toSlug: target.slug,
+        body: trimmed,
+        clientMessageId: composeKey.keyFor(trimmed),
+      },
       {
         onSuccess: (result) => {
+          composeKey.clear();
           showToast(
             result.conversationId
               ? t("messages:request.sentDirectToast", { name: target.name })

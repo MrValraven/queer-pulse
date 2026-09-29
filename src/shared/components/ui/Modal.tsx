@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useDismiss, useScrimDismiss } from "./useDismiss";
+import { useInertWhileCovered } from "./modalStack";
 import { useFocusHandBack, useModalExit } from "./useModalExit";
 import styles from "./Modal.module.css";
 
@@ -53,6 +54,10 @@ export function Modal({
   const exit = useModalExit(onClose);
   const dialogRef = useDismiss(exit.close, initialFocusRef);
   useFocusHandBack(exit, dialogRef);
+  // A dialog opened on top makes this one inert until it closes (see
+  // useInertWhileCovered), so assistive tech reaches only the top dialog.
+  const scrimRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(scrimRef, exit.isClosing);
   const scrimProps = useScrimDismiss(exit.close);
   const titleId = useId();
   // Portal to <body> so the fixed scrim is anchored to the viewport, never to a
@@ -65,6 +70,7 @@ export function Modal({
   // tree, so onClose et al. work unchanged.
   return createPortal(
     <div
+      ref={scrimRef}
       className={[styles.scrim, exit.isClosing && styles.scrimClosing]
         .filter(Boolean)
         .join(" ")}
@@ -142,6 +148,8 @@ export function ModalSheet({
   const exit = useModalExit(onClose);
   const dialogRef = useDismiss(exit.close);
   useFocusHandBack(exit, dialogRef);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(overlayRef, exit.isClosing);
   const scrimProps = useScrimDismiss(exit.close);
   // Drag-to-dismiss for the mobile sheet. Touch-only (mouse is ignored so the
   // desktop centered dialog is untouched); a downward drag past the threshold
@@ -188,6 +196,7 @@ export function ModalSheet({
   // must anchor to the viewport, not to any transformed/contained ancestor.
   return createPortal(
     <div
+      ref={overlayRef}
       className={[styles.overlay, exit.isClosing && styles.scrimClosing]
         .filter(Boolean)
         .join(" ")}
@@ -263,10 +272,13 @@ export function SideSheet({
   const exit = useModalExit(onClose);
   const dialogRef = useDismiss(exit.close);
   useFocusHandBack(exit, dialogRef);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(scrimRef, exit.isClosing);
   const scrimProps = useScrimDismiss(exit.close);
   const titleId = useId();
   return createPortal(
     <div
+      ref={scrimRef}
       className={[styles.sideScrim, exit.isClosing && styles.scrimClosing]
         .filter(Boolean)
         .join(" ")}

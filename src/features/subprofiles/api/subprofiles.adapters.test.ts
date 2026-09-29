@@ -188,6 +188,7 @@ describe("publicSubprofileToView", () => {
       ctaUrl: null,
       socialLinks: [],
       linkVisibility: "linked",
+      visibility: "open",
       status: "published",
       items: [makeItem({ section: "projects", title: "Tide" })],
       affiliations: [],
@@ -219,6 +220,13 @@ describe("publicSubprofileToView", () => {
     );
     expect(view.ownerSlug).toBeUndefined();
     expect(view.ownerName).toBeUndefined();
+  });
+
+  it("carries a members-only visibility, which hides Follow and Endorse", () => {
+    const view = publicSubprofileToView(
+      makePublicDto({ visibility: "network" }),
+    );
+    expect(view.visibility).toBe("network");
   });
 });
 
@@ -309,6 +317,7 @@ describe("Phase 0 skin-specific fields (plumbing only, no UI yet)", () => {
       ctaUrl: null,
       socialLinks: [],
       linkVisibility: "unlinked",
+      visibility: "open",
       status: "published",
       items: [],
       affiliations: [],

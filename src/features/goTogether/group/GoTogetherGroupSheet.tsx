@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, type RefObject } from "react";
 import {
   FiCheckCircle,
   FiLogOut,
@@ -8,18 +8,14 @@ import {
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import {
-  Avatar,
   Button,
-  ConfirmDialog,
   LoadErrorState,
   ModalSheet,
   SkeletonLine,
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { useFocusHeadingAfterStateChange } from "../card/goTogetherCardFocus";
 import { gatheringPath } from "../../gatherings/data";
 import { ReportSubjectControl } from "../../safety/ReportSubjectControl";
-import { goTogetherErrorCode } from "../api/goTogether.api";
 import type {
   GoTogetherGroupDTO,
   GoTogetherGroupMemberDTO,
@@ -29,25 +25,14 @@ import {
   useAcceptGoTogetherMerge,
   useGoTogetherCheckIn,
   useGoTogetherGroup,
-  useLeaveGoTogetherGroup,
 } from "../api/useGoTogetherGroup";
+import { GoTogetherGroupLeaveAction } from "./GoTogetherGroupLeaveAction";
+import { GoTogetherGroupMemberRow } from "./GoTogetherGroupMemberRow";
 import { GoTogetherIcebreakers } from "./GoTogetherIcebreakers";
-import { memberInitial } from "./memberInitial";
 import { GoTogetherReasonList } from "./GoTogetherReasonList";
+import { useAfterGroupBlock } from "./useAfterGroupBlock";
+import { groupErrorKey, type GroupBlockTiming } from "./groupActionHelpers";
 import styles from "./GoTogetherGroup.module.css";
-
-/** Plain copy for a failed group action. The server's code picks the line;
- *  anything else reads as a gentle retry. */
-function groupErrorKey(error: unknown): string {
-  switch (goTogetherErrorCode(error)) {
-    case "GO_TOGETHER_CHECKIN_CLOSED":
-      return "goTogether:group.error.checkInClosed";
-    case "GO_TOGETHER_MERGE_EXPIRED":
-      return "goTogether:group.error.mergeExpired";
-    default:
-      return "goTogether:group.error.generic";
-  }
-}
 
 const BAND_CLASS: Record<GroupBand, string | undefined> = {
   strong: styles.bandStrong,
@@ -62,47 +47,6 @@ export function GoTogetherBandPill({ band }: { band: GroupBand }) {
     <span className={[styles.bandPill, BAND_CLASS[band]].join(" ")}>
       {t(`goTogether:band.${band}`)}
     </span>
-  );
-}
-
-function GroupMemberRow({ member }: { member: GoTogetherGroupMemberDTO }) {
-  const { t } = useTranslation();
-  return (
-    <li className={styles.memberRow}>
-      <Avatar
-        initials={memberInitial(member.firstName)}
-        src={member.avatarUrl ?? undefined}
-        size={40}
-      />
-      <span className={styles.memberText}>
-        <span className={styles.memberName}>
-          {member.firstName}
-          {member.isYou && (
-            <span className={styles.memberTag}>
-              {t("goTogether:group.you")}
-            </span>
-          )}
-          {member.isPairPartner && (
-            <span className={styles.memberTag}>
-              {t("goTogether:group.pairPartner")}
-            </span>
-          )}
-        </span>
-        {member.pronouns && (
-          <span className={styles.memberPronouns}>{member.pronouns}</span>
-        )}
-      </span>
-      {member.hasLeftEvent ? (
-        <span className={styles.memberStatus}>
-          <FiLogOut aria-hidden="true" /> {t("goTogether:group.status.left")}
-        </span>
-      ) : member.isHere ? (
-        <span className={styles.memberStatus} data-tone="here">
-          <FiCheckCircle aria-hidden="true" />{" "}
-          {t("goTogether:group.status.here")}
-        </span>
-      ) : null}
-    </li>
   );
 }
 
@@ -184,66 +128,17 @@ function GroupMergeOffer({
   );
 }
 
-function GroupLeaveAction({
-  groupId,
-  onLeft,
-}: {
-  groupId: string;
-  onLeft: () => void;
-}) {
-  const { t } = useTranslation();
-  const leave = useLeaveGoTogetherGroup(groupId);
-  const focusHeadingAfterStateChange = useFocusHeadingAfterStateChange();
-  const [isConfirming, setIsConfirming] = useState(false);
-  return (
-    <>
-      <button
-        type="button"
-        className={styles.leaveAction}
-        onClick={() => setIsConfirming(true)}
-      >
-        <FiLogOut aria-hidden="true" /> {t("goTogether:group.leave")}
-      </button>
-      {isConfirming && (
-        <ConfirmDialog
-          open
-          tone="destructive"
-          loading={leave.isPending}
-          title={t("goTogether:group.leaveConfirm.title")}
-          description={t("goTogether:group.leaveConfirm.description")}
-          confirmLabel={t("goTogether:group.leaveConfirm.confirm")}
-          onClose={() => setIsConfirming(false)}
-          onConfirm={() =>
-            leave.mutate(undefined, {
-              onSuccess: () => {
-                setIsConfirming(false);
-                // The entry (and this sheet) unmount once the card's state
-                // swaps away from grouped: without this, focus would drop to
-                // the page body. The card ignores the request if the swap
-                // never happens (e.g. this sheet was opened from a chat).
-                focusHeadingAfterStateChange();
-                onLeft();
-              },
-            })
-          }
-        >
-          {leave.isError && (
-            <p className={styles.errorNote} role="alert">
-              {t(groupErrorKey(leave.error))}
-            </p>
-          )}
-        </ConfirmDialog>
-      )}
-    </>
-  );
-}
-
 interface GroupSheetBodyProps {
   group: GoTogetherGroupDTO;
   eventSlug: string;
   openedFromConversationId: string | undefined;
   onClose: () => void;
   onMerged: (mergedGroupId: string) => void;
+  onBlocked: (
+    member: GoTogetherGroupMemberDTO,
+    timing: GroupBlockTiming,
+  ) => void;
+  membersHeadingRef: RefObject<HTMLHeadingElement | null>;
 }
 
 function GroupSheetBody({
@@ -252,15 +147,32 @@ function GroupSheetBody({
   openedFromConversationId,
   onClose,
   onMerged,
+  onBlocked,
+  membersHeadingRef,
 }: GroupSheetBodyProps) {
   const { t } = useTranslation();
   const isActive = !group.isDissolved;
-  // Hidden only inside the very chat it would open. After a merge the group
-  // has a new chat, so the member still gets a way into it.
+  // One member's options open at a time.
+  const [openActionsMemberRef, setOpenActionsMemberRef] = useState<
+    string | null
+  >(null);
+  const pairPartnerName =
+    group.members.find((member) => member.isPairPartner)?.firstName ?? null;
+  // Hidden only inside the very chat it would open, and once the member has
+  // left that chat. After a merge the group has a new chat, so the member
+  // still gets a way into it.
   const chatPath =
-    group.conversationId && group.conversationId !== openedFromConversationId
+    group.conversationId &&
+    !group.hasLeftChat &&
+    group.conversationId !== openedFromConversationId
       ? `${routes.messages}?c=${encodeURIComponent(group.conversationId)}`
       : null;
+  // Before the start Leave takes the member out of the group. From the start
+  // it only ends the chat seat, so it needs a chat to leave.
+  const isLeaveAvailable =
+    isActive &&
+    !group.hasLeftChat &&
+    (!group.isLeaveChatOnly || Boolean(group.conversationId));
 
   return (
     <div className={styles.sheetBody}>
@@ -285,12 +197,27 @@ function GroupSheetBody({
       </section>
 
       <section className={styles.sheetSection}>
-        <h3 className={styles.sectionHeading}>
+        <h3
+          ref={membersHeadingRef}
+          tabIndex={-1}
+          className={styles.sectionHeading}
+        >
           {t("goTogether:group.membersHeading")}
         </h3>
         <ul className={styles.memberList}>
           {group.members.map((member) => (
-            <GroupMemberRow key={member.slug} member={member} />
+            <GoTogetherGroupMemberRow
+              key={member.memberRef}
+              member={member}
+              groupId={group.id}
+              eventStartAt={group.event.startAt}
+              isLeaveChatOnly={group.isLeaveChatOnly}
+              hasSafetyActions={isActive && !member.isYou}
+              pairPartnerName={member.isPairPartner ? null : pairPartnerName}
+              isActionsOpen={openActionsMemberRef === member.memberRef}
+              onOpenActionsChange={setOpenActionsMemberRef}
+              onBlocked={onBlocked}
+            />
           ))}
         </ul>
       </section>
@@ -330,12 +257,8 @@ function GroupSheetBody({
           <FiShield aria-hidden="true" /> {t("goTogether:group.sharePlans")}
         </Button>
       </div>
-      {/* Leave gets its own row, away from the chat/share-plans actions: a
-          destructive choice should not share their visual weight (design N2). */}
-      {isActive && (
-        <div className={styles.leaveRow}>
-          <GroupLeaveAction groupId={group.id} onLeft={onClose} />
-        </div>
+      {isLeaveAvailable && (
+        <GoTogetherGroupLeaveAction group={group} onLeft={onClose} />
       )}
 
       {group.conversationId && (
@@ -366,9 +289,11 @@ interface GoTogetherGroupSheetProps {
 
 /**
  * The full group card in a bottom sheet: band, reasons, members (first name
- * and pronouns only), the host's meeting point, icebreakers, check-in, leave,
- * share plans and report. A successful leave closes the sheet: the leave hook
- * refetches the group, which the member can no longer read.
+ * and pronouns only, each other member with Block and Report), the host's
+ * meeting point, icebreakers, check-in, leave, share plans and report. A
+ * successful leave closes the sheet: the leave hook refetches the group,
+ * which the member can no longer read. A block that moves the member out
+ * closes it too.
  */
 export function GoTogetherGroupSheet({
   groupId,
@@ -381,6 +306,12 @@ export function GoTogetherGroupSheet({
   const [currentGroupId, setCurrentGroupId] = useState(groupId);
   const groupQuery = useGoTogetherGroup(currentGroupId);
   const group = groupQuery.data;
+  const membersHeadingRef = useRef<HTMLHeadingElement>(null);
+  const handleBlocked = useAfterGroupBlock(
+    groupQuery.refetch,
+    membersHeadingRef,
+    onClose,
+  );
 
   return (
     <ModalSheet onClose={onClose} ariaLabel={t("goTogether:group.sheetLabel")}>
@@ -391,6 +322,8 @@ export function GoTogetherGroupSheet({
           openedFromConversationId={openedFromConversationId}
           onClose={onClose}
           onMerged={setCurrentGroupId}
+          onBlocked={handleBlocked}
+          membersHeadingRef={membersHeadingRef}
         />
       ) : groupQuery.isError ? (
         <LoadErrorState

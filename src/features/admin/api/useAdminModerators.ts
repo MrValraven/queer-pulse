@@ -21,12 +21,26 @@ const ADMIN_COMMUNITIES_KEY = "admin-communities";
  * The roster members eligible to be promoted to moderator. `enabled` gates the
  * fetch to when the add-moderator picker is actually open (live mode only) so
  * the admin-only endpoint isn't hit on every settings render.
+ *
+ * The server caps the answer at 25, by name (ENG-492). `searchTerm` (already
+ * debounced by the caller) is matched on the server, accent-folded, and sits
+ * in the key. The last answer for the SAME community stays on screen while
+ * the next search loads; another community's list is never shown as a
+ * placeholder.
  */
-export function useModeratorCandidates(slug: string, enabled: boolean) {
+export function useModeratorCandidates(
+  slug: string,
+  enabled: boolean,
+  searchTerm = "",
+) {
+  const trimmedSearchTerm = searchTerm.trim();
   return useQuery<AdminModeratorCandidateDTO[]>({
-    queryKey: [ADMIN_COMMUNITIES_KEY, "candidates", slug],
+    queryKey: [ADMIN_COMMUNITIES_KEY, "candidates", slug, trimmedSearchTerm],
     enabled,
-    queryFn: () => getAdminCommunityModeratorCandidates(slug),
+    placeholderData: (previousCandidates, previousQuery) =>
+      previousQuery?.queryKey[2] === slug ? previousCandidates : undefined,
+    queryFn: ({ signal }) =>
+      getAdminCommunityModeratorCandidates(slug, trimmedSearchTerm, signal),
   });
 }
 

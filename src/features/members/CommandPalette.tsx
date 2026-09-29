@@ -11,12 +11,13 @@ import { type SearchItem } from "./search.data";
 import { CommandPaletteResults } from "./CommandPaletteResults";
 import { useSearchData } from "./api/useSearchData";
 import { pushRecent } from "./searchRecents";
+import { OPEN_SEARCH_EVENT } from "./commandPaletteEvents";
 import styles from "./CommandPalette.module.css";
 
 const MAX_RESULTS = 8;
 
-/** Custom event any control can dispatch to open the palette (e.g. the navbar search button). */
-export const OPEN_SEARCH_EVENT = "qp:open-search";
+/** Re-exported so existing imports keep working; see commandPaletteEvents. */
+export { OPEN_SEARCH_EVENT };
 
 function matches(item: SearchItem, q: string) {
   return `${item.name} ${item.sub} ${item.kw}`.toLowerCase().includes(q);

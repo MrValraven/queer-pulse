@@ -1,3 +1,4 @@
+import { communityPath } from "../../../app/routeMap";
 import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
 import { activeLocale } from "../../../shared/i18n/locale";
@@ -130,7 +131,7 @@ export function cardDtoToCommunity(
 ): Community {
   return {
     slug: dto.slug,
-    href: `/community/${dto.slug}`,
+    href: communityPath(dto.slug),
     type: dto.type,
     typeLabel: shortTypeLabel(dto.type),
     name: dto.name,

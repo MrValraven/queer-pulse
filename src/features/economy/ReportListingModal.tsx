@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { logError } from "../../shared/observability/logger";
+import { focusControl } from "../../shared/lib/focusFirstError";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
@@ -40,17 +41,41 @@ export function ReportListingModal({
   // Server-owned taxonomy when it answers, the local one instantly and
   // silently when it does not. Never a spinner, never an empty list.
   const reasons = useReportReasons(subjectType);
-  const [reason, setReason] = useState<string>(reasons[0]!.code);
+  const [reason, setReason] = useState<string | null>(null);
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
+  const concernLabelId = useId();
+  const missingHintId = useId();
+  const firstReasonRef = useRef<HTMLInputElement>(null);
+  const detailRef = useRef<HTMLTextAreaElement>(null);
   const createReport = useCreateReport();
   const describeReportError = useReportSubmissionError();
 
-  const canSubmit = detail.trim().length >= 10;
+  const canSubmit = reason !== null && detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
+  // One slot under the textarea says what is still missing: the concern
+  // first, then the character count. The blocked submit points at it.
+  let counterText = t("economy:housingListing.reportModal.charsCount", {
+    count: detail.trim().length,
+  });
+  if (reason === null) {
+    counterText = t("economy:housingListing.reportModal.reasonMissing");
+  } else if (charsLeft > 0) {
+    counterText = t("economy:housingListing.reportModal.charsRemaining", {
+      count: charsLeft,
+    });
+  }
 
   const submit = () => {
-    if (!canSubmit || createReport.isPending) return;
+    if (createReport.isPending) return;
+    if (!canSubmit || reason === null) {
+      // The submit stays focusable while blocked, so a press lands the
+      // reporter on the field that still needs them.
+      focusControl(
+        reason === null ? firstReasonRef.current : detailRef.current,
+      );
+      return;
+    }
     createReport.mutate(
       {
         subjectType,
@@ -118,11 +143,16 @@ export function ReportListingModal({
           </p>
 
           <div className={shell.field}>
-            <label>
+            <label id={concernLabelId}>
               {t("economy:housingListing.reportModal.concernLabel")}
             </label>
-            <div className={styles.reasons}>
-              {reasons.map((option) => (
+            <div
+              className={styles.reasons}
+              role="radiogroup"
+              aria-labelledby={concernLabelId}
+              aria-required="true"
+            >
+              {reasons.map((option, optionIndex) => (
                 <label
                   key={option.code}
                   className={[
@@ -133,6 +163,7 @@ export function ReportListingModal({
                     .join(" ")}
                 >
                   <input
+                    ref={optionIndex === 0 ? firstReasonRef : undefined}
                     type="radio"
                     name="report-listing-reason"
                     value={option.code}
@@ -150,6 +181,7 @@ export function ReportListingModal({
               {t("economy:housingListing.reportModal.detailLabel")}
             </label>
             <textarea
+              ref={detailRef}
               id="report-listing-detail"
               placeholder={t(
                 "economy:housingListing.reportModal.detailPlaceholder",
@@ -158,14 +190,8 @@ export function ReportListingModal({
               onChange={(event) => setDetail(event.target.value)}
             />
           </div>
-          <div className={styles.counter}>
-            {charsLeft > 0
-              ? t("economy:housingListing.reportModal.charsRemaining", {
-                  count: charsLeft,
-                })
-              : t("economy:housingListing.reportModal.charsCount", {
-                  count: detail.trim().length,
-                })}
+          <div id={missingHintId} className={styles.counter}>
+            {counterText}
           </div>
 
           <p className={shell.note}>
@@ -179,10 +205,13 @@ export function ReportListingModal({
             <Button variant="ghost" onClick={onClose}>
               {t("economy:housingListing.reportModal.cancelCta")}
             </Button>
+            {/* aria-disabled keeps the submit in the tab order, so the hint
+                it points at is heard and an early press can move focus. */}
             <Button
               variant="primary"
               onClick={submit}
-              disabled={!canSubmit || createReport.isPending}
+              aria-disabled={!canSubmit || createReport.isPending}
+              aria-describedby={canSubmit ? undefined : missingHintId}
             >
               {createReport.isPending
                 ? t("economy:housingListing.reportModal.submitting")

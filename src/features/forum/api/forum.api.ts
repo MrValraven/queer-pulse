@@ -72,6 +72,10 @@ export interface ForumThreadResponse extends BaseForumThreadResponse {
    *  single-author case. Null as well whenever the byline is masked: an
    *  "anonymous" thread co-credited to a named member is not anonymous. */
   coAuthor: AuthorSummary | null;
+  /** Is the viewer the credited co-author? Offers them the control that takes
+   *  their own name off the thread. Optional so an older backend reads as
+   *  false. */
+  viewerIsCoAuthor?: boolean;
   /** When the thread became visible, which stops being `createdAt` the moment
    *  the composer can schedule. A future value only ever reaches the author or
    *  a moderator. */
@@ -342,8 +346,22 @@ export async function getThreadPosts(
  * the count from before the stamp, which is what lets the page show a member
  * where they left off on the very visit that clears it.
  */
-export const markThreadRead = (slug: string) =>
-  apiPost<{ ok: true }>(`/forum/threads/${slug}/read`);
+export const markThreadRead = (slug: string, upTo?: string) =>
+  apiPost<{ ok: true }>(
+    `/forum/threads/${slug}/read`,
+    // `upTo` is the newest post the member actually had in front of them
+    // (PRD-409). Sent only when known, so the server's own "now" stays the
+    // default for a caller that has no watermark to offer.
+    upTo === undefined ? undefined : { upTo },
+  );
+
+/**
+ * DELETE /forum/threads/:slug/co-author: the credited co-author takes their
+ * own name off the thread (PRD-408). The thread stays up under its author's
+ * name. Answers with the updated thread.
+ */
+export const removeThreadCoAuthor = (slug: string) =>
+  apiDelete<ForumThreadResponse>(`/forum/threads/${slug}/co-author`);
 
 /**
  * `POST /forum/threads` body. Mirrors the backend's own `CreateThreadDto`

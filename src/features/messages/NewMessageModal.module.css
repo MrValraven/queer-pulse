@@ -1,90 +1,3 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--scrim);
-  backdrop-filter: var(--blur-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  z-index: var(--z-modal);
-}
-
-.dialog {
-  width: 100%;
-  max-width: 440px;
-  max-height: 80svh;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-18);
-  padding: 22px 22px 16px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-e4);
-}
-
-/* Bottom sheet on phones — in the thumb arc, lifts above the on-screen keyboard
-   (the search field can raise it) and clears the notch/home indicator. */
-@media (--mobile) {
-  .overlay {
-    align-items: flex-end;
-    padding: 0;
-    padding-block-end: var(--keyboard-inset, 0px);
-  }
-  .dialog {
-    max-width: none;
-    border-radius: var(--radius-18) var(--radius-18) 0 0;
-    max-height: 85svh;
-    padding-block-end: max(16px, env(safe-area-inset-bottom));
-    overscroll-behavior: contain;
-  }
-  .dialog::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 4px;
-    border-radius: var(--radius-pill);
-    background: rgba(var(--plum-rgb), 0.18);
-    margin: -6px auto 12px;
-  }
-}
-
-.head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.title {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: var(--text-24);
-  color: var(--text-strong);
-  letter-spacing: -0.01em;
-}
-.close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--ink-40);
-  display: flex;
-  padding: 6px;
-  border-radius: var(--radius-8);
-  transition:
-    color 0.2s var(--ease),
-    background 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .close:hover {
-    color: var(--text-strong);
-    background: rgba(var(--plum-rgb), 0.05);
-  }
-}
-.sub {
-  font-size: var(--text-13-5);
-  color: var(--ink-60);
-  margin: 6px 0 16px;
-}
-
 .searchField {
   margin-bottom: 12px;
 }
@@ -156,10 +69,6 @@
   padding-top: 4px;
 }
 
-:global([data-theme="dark"]) .dialog {
-  border-color: rgba(var(--cream-rgb), 0.12);
-}
-
 /* ── Group info (GroupInfoModal) ── */
 .groupIdentity {
   display: flex;
@@ -188,30 +97,35 @@
   padding: 3px 9px;
   border-radius: var(--radius-pill);
 }
-.leaveRow {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.09);
-}
 
 /* ── Group management (GroupInfoModal Phase 2) ── */
 /* A roster row that carries management actions is a plain flex container (not a
-   single button) so the row's action buttons are independently focusable. */
+   single button) so the row's action buttons are independently focusable.
+   The row wraps: the identity asks for at least 7.5rem, so when the owner's
+   action buttons need more room than the row has, they move to a second line
+   under the name. That basis still lets the identity, a role badge and the
+   safety menu share one line on a 320px phone. The inherited
+   `overflow-wrap: anywhere` from base.css only ever breaks a truly long
+   single word. */
 .memberRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
   width: 100%;
   padding: 8px;
   border-radius: var(--radius-12);
+}
+/* Whatever closes the row (the safety menu, the actions or the role badge)
+   sits at the row's end, on the first line or on a wrapped one. */
+.memberRow > :last-child {
+  margin-inline-start: auto;
 }
 .memberLink {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1 1 auto;
+  flex: 1 1 7.5rem;
   min-width: 0;
   background: none;
   border: none;
@@ -219,11 +133,26 @@
   padding: 0;
   cursor: pointer;
 }
+/* PRD-423: a matched Go together chat's roster row opens no profile. */
+.memberStatic {
+  cursor: default;
+}
+/* Pinned to the row's end on either line. The max-width leaves room for the
+   safety menu button (--tap-min wide) and the 12px row gap beside it, so the
+   two always share a line, and on a narrow phone the action buttons wrap
+   among themselves. The full-width basis (clamped by that max-width) always
+   gives the actions their own line under the name, so every managed row has
+   the same two-line shape and the name keeps the whole first line. */
 .memberActions {
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: 6px;
-  flex: none;
+  flex: 0 1 100%;
+  min-width: 0;
+  max-width: calc(100% - var(--tap-min) - 12px);
+  margin-inline-start: auto;
 }
 .rowActionBtn {
   font: inherit;
@@ -333,53 +262,6 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
-}
-
-/* DES-196: MessageRequestComposer's message field. Extends `.groupNameField`'s
-   look (same tokens) with the min-height/resize a multi-line message needs, since
-   `.groupNameField` alone is an `<input>` shape (no min-height, no resize)
-   built for `NewGroupModal`'s single-line name field. */
-.requestComposerField {
-  width: 100%;
-  box-sizing: border-box;
-  font: inherit;
-  font-size: var(--text-15);
-  line-height: 1.5;
-  color: var(--text-strong);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-12);
-  padding: 11px 14px;
-  min-height: 104px;
-  resize: vertical;
-  margin-bottom: 6px;
-}
-.requestComposerField:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-.requestComposerCounter {
-  margin: 0 0 10px;
-  text-align: right;
-  font-size: var(--text-12-5);
-  font-weight: 500;
-  color: var(--ink-40);
-}
-.pickBox {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(var(--line-rgb), 0.28);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--paper);
-}
-.pickBoxOn {
-  background: var(--accent);
-  border-color: var(--accent);
 }
 
 /* DES-229: the "N of max selected" hint above a capped MemberSelectList, and

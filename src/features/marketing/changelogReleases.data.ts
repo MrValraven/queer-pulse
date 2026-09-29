@@ -9,12 +9,14 @@
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
     "29 Sep 2026": {
-      // Twenty-eight entries this day, so three highlights; features first,
-      // the editor desk redesign leads as the largest build of the day.
+      // Well over seven entries this day, so three highlights; features first,
+      // the editor desk redesign leads as the largest build of the day, and
+      // takedown notices with appeals outrank group history from join as a
+      // trust and safety feature.
       highlights: [
         "editor-desk-redesign",
         "blip-and-tea-sticker-packs",
-        "meet-ping-404",
+        "takedown-notices-and-appeals",
       ],
     },
     "28 Sep 2026": {

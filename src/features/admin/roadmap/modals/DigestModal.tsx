@@ -34,10 +34,7 @@ export function DigestModal() {
       await navigator.clipboard.writeText(draft);
       showToast(t("admin:roadmap.toasts.digestCopied"), "success");
     } catch {
-      // NOTE: no dedicated catalog key for a clipboard failure on this
-      // modal — plain literal fallback, matching the house "no blame,
-      // plainly recoverable" error tone.
-      showToast("Couldn't copy. Select and copy the text instead.", "error");
+      showToast(t("admin:roadmap.toasts.digestCopyFailed"), "error");
     }
   }
 

@@ -98,7 +98,27 @@ export interface Notification {
    * other kind, which keeps the generic suffix.
    */
   hasOwnBundleCount?: boolean;
+  /** The kind's short label ("Group listing", "Housing"). */
   meta: string;
+  /**
+   * The free text someone wrote to explain a decision on this row: a
+   * moderator's note, a reviewer's or admin's reason (PRD-402). Trimmed, and
+   * present only when the payload carries a non-empty one. The row shows it
+   * in full under the sentence, as a text node.
+   */
+  reason?: string;
+  /**
+   * Whether a member wrote `reason` (a request for staff to review a
+   * community's owner). Staff wrote every other reason. Lets the row pick a
+   * lead-in naming the right author.
+   */
+  isReasonFromMember?: boolean;
+  /**
+   * The catalog key of this kind's own reason lead-in, when the reason is not
+   * a decision's reason: `listing_suggestion_needs_info` carries the
+   * moderators' question (PRD-433). Wins over `isReasonFromMember`.
+   */
+  reasonLeadKey?: string;
   time: string;
   /**
    * Raw ISO creation time behind the display `time` label. The page's

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Button, Modal, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
+import { focusControl } from "../../shared/lib/focusFirstError";
 import type { BlockOptions } from "../social/api/social.api";
 import styles from "./BlockMemberModal.module.css";
 
@@ -47,12 +48,15 @@ export function BlockMemberModal({
   const [alsoReport, setAlsoReport] = useState(false);
   const [reason, setReason] = useState("");
   const reasonInputId = useId();
+  const reasonSelectId = useId();
   // Never empty and never a spinner: the local taxonomy renders on first paint
   // and the server's list replaces it only once it actually arrives.
   const reportReasons = useReportReasons("member");
-  const [reasonCode, setReasonCode] = useState<string | null>(
-    reportReasons[0]?.code ?? null,
-  );
+  const [reasonCode, setReasonCode] = useState<string | null>(null);
+  // Ticking "also report" with no reason code chosen used to leave the Block
+  // button dimmed with no explanation. This flips on only when a blocked
+  // click actually happens, so the FormField error stays quiet until then.
+  const [showReasonError, setShowReasonError] = useState(false);
   // Multi-step-dialog rule: when this is the SECOND step of a conversation
   // block flow (PRD-362), a screen-reader member moving from the "report
   // messages" step into this one should hear THIS step's own warning, not
@@ -74,19 +78,30 @@ export function BlockMemberModal({
           </Button>
           <Button
             variant="primary"
-            onClick={() =>
+            // aria-disabled keeps the button focusable and clickable, so a
+            // blocked click can answer with the reason-code error and move
+            // focus to the Select (Button.module.css styles
+            // `[aria-disabled="true"]` identically to `:disabled`).
+            aria-disabled={alsoReport && !reasonCode}
+            onClick={() => {
+              if (alsoReport && !reasonCode) {
+                setShowReasonError(true);
+                focusControl(document.getElementById(reasonSelectId));
+                return;
+              }
               onConfirm({
                 reason: reason.trim() || undefined,
                 alsoReport,
                 // Sent only alongside `alsoReport`, matching what the server
-                // reads. Omitted entirely when nothing is picked, which is the
-                // documented fallback to `other`.
+                // reads. The guard above returns before this when
+                // `alsoReport` is true and no reason is picked, so this is
+                // never omitted while `alsoReport` is true.
                 reasonCode:
                   alsoReport && reasonCode
                     ? asReasonCode(reasonCode)
                     : undefined,
-              })
-            }
+              });
+            }}
           >
             {t("safety:blockModal.confirmCta", { name: firstName })}
           </Button>
@@ -107,7 +122,12 @@ export function BlockMemberModal({
         <input
           type="checkbox"
           checked={alsoReport}
-          onChange={(event) => setAlsoReport(event.target.checked)}
+          onChange={(event) => {
+            setAlsoReport(event.target.checked);
+            // Unticking makes the reason code irrelevant again, so any error
+            // still showing from an earlier blocked click no longer applies.
+            if (!event.target.checked) setShowReasonError(false);
+          }}
         />
         {t("safety:blockModal.reportCheckbox", { name: firstName })}
       </label>
@@ -117,14 +137,25 @@ export function BlockMemberModal({
           className={styles.reasonField}
           label={t("safety:blockModal.reasonCodeLabel")}
           helper={t("safety:blockModal.reasonCodeHelper")}
+          required
+          error={
+            showReasonError
+              ? t("safety:blockModal.reasonCodeMissing")
+              : undefined
+          }
         >
           <Select
+            id={reasonSelectId}
             options={reportReasons.map((option) => ({
               value: option.code,
               label: option.label,
             }))}
             value={reasonCode}
-            onChange={setReasonCode}
+            onChange={(value) => {
+              setReasonCode(value);
+              if (value) setShowReasonError(false);
+            }}
+            placeholder={t("safety:blockModal.reasonCodePlaceholder")}
           />
         </FormField>
       )}

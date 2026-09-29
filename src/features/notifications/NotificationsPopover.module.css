@@ -63,10 +63,13 @@
   overscroll-behavior: contain;
   padding: 6px;
 }
+/* A size container, so its rows take the stacked narrow layout from
+   NotificationsPage.module.css at the panel's 400px width. */
 .list {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  container-type: inline-size;
 }
 
 .state {

@@ -361,6 +361,26 @@
   border-radius: var(--radius-pill);
 }
 
+/* A piece with a publish date cannot change stage here: a static line takes
+   the picker's slot and says when it goes live, or that it is live. */
+.stageLocked {
+  display: flex;
+  flex: 1 1 120px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.stageLockedIcon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
 /* Phones: a column is nearly the full width, the next one peeks in, and the
    board snaps one column at a time. */
 @media (--md) {

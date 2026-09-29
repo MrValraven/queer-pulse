@@ -354,7 +354,43 @@ describe("SubprofileLinkFields address notes and warnings", () => {
     ).toBeInTheDocument();
   });
 
-  it("says a published persona switching to standalone waits for a new handle", () => {
+  it("skips the confirm modal and explains a published standalone persona needs an address when its handle is cleared", () => {
+    // Finding 1 (Task 5 review, fix round 1): clearing a published standalone
+    // handle to empty is refused outright by the server (422
+    // `handle_invalid`), so the modal must not claim it "gets its new address
+    // once you choose a handle": that described the old silent-draft
+    // behavior. The field's own error explains it instead.
+    creatorSlugMock.mockReturnValue("mara");
+    isCreatorMock.mockReturnValue(true);
+    const editor = makeEditor({
+      link: "unlinked",
+      handle: "",
+      isStandaloneHandleMissing: true,
+    });
+    renderPane(
+      makeSubprofile({
+        linkVisibility: "unlinked",
+        status: "published",
+        handle: "nightform",
+      }),
+      editor,
+    );
+
+    fireEvent.focusOut(addressInput());
+    expect(
+      screen.queryByText("subprofiles:addressWarning.editTitle"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        'subprofiles:addressWarning.noticeBodyNewHandle{"from":"/p/nightform"}',
+      ),
+    ).not.toBeInTheDocument();
+    expect(addressStatus()).toHaveTextContent(
+      "subprofiles:metaForm.handleRequiredPublished",
+    );
+  });
+
+  it("leads a published switch to standalone with the saved follower and endorsement counts it removes", () => {
     creatorSlugMock.mockReturnValue("mara");
     isCreatorMock.mockReturnValue(true);
     renderPane(
@@ -362,6 +398,8 @@ describe("SubprofileLinkFields address notes and warnings", () => {
         linkVisibility: "linked",
         status: "published",
         handle: "mara-atelier",
+        followerCount: 12,
+        endorsementCount: 3,
       }),
       makeEditor({ link: "linked", handle: "mara-atelier" }),
     );
@@ -369,10 +407,22 @@ describe("SubprofileLinkFields address notes and warnings", () => {
     fireEvent.click(
       screen.getByText("subprofiles:link.standalone").closest("button")!,
     );
+    const lossTitle = screen.getByText(
+      /^subprofiles:addressWarning\.unlinkLossTitleCounts/,
+    );
+    expect(lossTitle.textContent).toContain(
+      'subprofiles:deleteConfirm.losingFollowers{\\"count\\":12}',
+    );
+    expect(lossTitle.textContent).toContain(
+      'subprofiles:deleteConfirm.losingEndorsements{\\"count\\":3}',
+    );
     expect(
-      screen.getByText(
-        'subprofiles:addressWarning.noticeBodyNewHandle{"from":"/p/mara-atelier"}',
-      ),
+      screen.getByText("subprofiles:addressWarning.unlinkBackToDraft"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "subprofiles:addressWarning.confirmUnlink",
+      }),
     ).toBeInTheDocument();
   });
 });

@@ -98,6 +98,13 @@ export interface ServerToClientEvents {
    *  around it: the gateway emits `toNotificationResponse(notification,
    *  undefined)` directly, so the frame's top level IS the notification. */
   "notification:new": RealtimeNotification;
+  /** `namespace.to('user:'+id).emit('notification:changed', {})` after a
+   *  mark read, mark all read, mentions mark all read or dismiss. Fanned to
+   *  the member's own user room, so every tab and device of theirs gets it,
+   *  the acting tab included. The payload is empty on purpose: the client
+   *  refetches the feed, the badge and the Mentions tab, so the server runs
+   *  no extra query to build the frame. */
+  "notification:changed": Record<string, never>;
   /** `chat.gateway.ts` → `namespace.to('user:'+id).emit('conversation:new', …)`
    *  — a new conversation (a group #17) the member was just added to. Fanned to
    *  each member's user room (they aren't in the conversation room yet), so the

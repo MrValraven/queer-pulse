@@ -15,10 +15,18 @@ export interface JobsResult {
   /** True while the first page is in flight. */
   isLoading: boolean;
   /**
-   * True when the fetch failed. Without it an outage renders as "no jobs
-   * match" — the board must say it could not load instead (DES-22).
+   * True when the FIRST page failed. Without it an outage renders as "no jobs
+   * match", and the board must say it could not load (DES-22). A failed next
+   * page also sets react-query's `isError`, which would swap every loaded row
+   * for the error state, so that case is excluded here and reported by
+   * `isFetchNextPageError`.
    */
   isError: boolean;
+  /**
+   * True when the latest "Load more" failed. The loaded pages stay in `jobs`;
+   * the board keeps them on screen and offers `fetchNextPage` as the retry.
+   */
+  isFetchNextPageError: boolean;
   /** Re-runs the failed fetch. Wire it to the error state's retry. */
   refetch: () => void;
   /** True when another page is available (always false in demo). */
@@ -39,12 +47,12 @@ interface JobsPageVM {
  * Jobs board source, paginated. Demo mode returns the mock `JOBS` array as a
  * single synthetic full page (the page merges its locally-posted jobs on top
  * and does its own client-side filtering, so demo renders exactly as today and
- * never offers "Load more" — `loaded === total` on the first page). Live mode
+ * never offers "Load more": `loaded === total` on the first page). Live mode
  * calls GET /jobs?cat=&type=&page= and appends each page, stopping at the
  * server `total`; every card is adapted via `jobCardToJob`.
  *
  * i18n: `language` is part of the query key because `jobCardToJob` resolves
- * chrome (pay/affiliation fallbacks) through `t` — switching language must
+ * chrome (pay/affiliation fallbacks) through `t`, so switching language must
  * re-derive the adapted view-models. Locale stays independent of demo mode.
  */
 export function useJobs(
@@ -59,7 +67,7 @@ export function useJobs(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        // Demo-only mock — loaded on demand so it never ships in the live bundle.
+        // Demo-only mock, loaded on demand so it stays out of the live bundle.
         const { JOBS } = await import("../jobs.data");
         return { items: JOBS, total: JOBS.length, page: 1 };
       }
@@ -81,7 +89,8 @@ export function useJobs(
     jobs: pages.flatMap((p) => p.items),
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
-    isError: query.isError,
+    isError: query.isError && !query.isFetchNextPageError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),

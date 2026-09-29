@@ -1104,9 +1104,28 @@ export const MOD_ACTIONS: ModAction[] = [
  * someone can now be acted on without leaving the queue. The backend still
  * answers 400 when the subject genuinely has no author, such as a venue report
  * describing a place in prose, an unclaimed listing, or an erased author.
+ *
+ * ENG-484: `hide` and `remove` act on content, and `SUBJECT_TYPES_WITHOUT_CONTENT`
+ * names the three subjects with none of their own to hide: a `conversation` is
+ * a whole group chat (its messages are moderated per `message`), an `identity`
+ * is a business mailbox (the business behind it is moderated as
+ * `listing`/`business`/`company`), and a `venue` is a place described in
+ * prose. The backend mirrors this same allowlist with a typed 400
+ * (`moderation.service.ts`); this filter only keeps the tiles from showing in
+ * the single-report drawer. The bulk decision modal keeps offering both tiles
+ * for every subject and leans on that typed refusal per row.
  */
-export function modActionsFor(_subjectType: ReportSubjectType): ModAction[] {
-  return MOD_ACTIONS;
+const SUBJECT_TYPES_WITHOUT_CONTENT = new Set<ReportSubjectType>([
+  "venue",
+  "conversation",
+  "identity",
+]);
+
+export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {
+  if (!SUBJECT_TYPES_WITHOUT_CONTENT.has(subjectType)) return MOD_ACTIONS;
+  return MOD_ACTIONS.filter(
+    (action) => action.id !== "hide" && action.id !== "remove",
+  );
 }
 
 export interface ModReason {

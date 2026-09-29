@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Button,
-  Modal,
-  SegmentedControl,
-  Toggle,
-} from "../../shared/components/ui";
+import { Button, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -23,6 +18,8 @@ import {
 import { useHasRsvpCutoffPassed } from "../gatherings/rsvpCutoff";
 import { isRsvpsClosedError } from "../gatherings/rsvpErrors";
 import { RsvpDetailsLoadError } from "../gatherings/RsvpDetailsLoadError";
+import { RsvpVisibilityField } from "../gatherings/RsvpVisibilityField";
+import type { RsvpDetailsVisibility } from "../gatherings/api/events.api";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import {
@@ -31,14 +28,14 @@ import {
   RsvpGuestField,
 } from "./RsvpDetailsFields";
 
-/** Stable canonical ids — never the translated label itself (i18n sweep
- * §5.1). `SegmentedControl` only knows display strings, so `vis` state stores
- * the id and is mapped to/from the current-language label at the edges.
- * Matches the backend's `RsvpDetailsVisibility` one-to-one (see
- * `events.api.ts`), so no translation layer is needed on save. */
-type Visibility = "everyone" | "connections" | "justMe";
-const VIS_IDS: Visibility[] = ["everyone", "connections", "justMe"];
-const VIS_DEFAULT: Visibility = "connections";
+/** PRD-414: the one answer to "Who can see you're going?", the same field
+ * (`RsvpVisibilityField`) and meaning as the gathering page. `justMe` lists
+ * the member to the hosts only, `connections` to their accepted connections
+ * too, and `everyone` to every member who can read the guest list. The host
+ * always sees the member and every note they write, whatever they pick. The
+ * default matches what the server applies to an RSVP that never chose, so the
+ * field opens on the setting that is actually in force. */
+const VISIBILITY_DEFAULT: RsvpDetailsVisibility = "everyone";
 
 /**
  * "Anything we should know?" RSVP details editor. Mounted only while open.
@@ -73,8 +70,8 @@ export function RsvpDetailsModal() {
   const updateRsvpDetails = useUpdateRsvpDetails(ev?.slug);
 
   const [guest, setGuest] = useState(false);
-  const [vis, setVis] = useState<Visibility>(VIS_DEFAULT);
-  const [quiet, setQuiet] = useState(false);
+  const [visibility, setVisibility] =
+    useState<RsvpDetailsVisibility>(VISIBILITY_DEFAULT);
   const [answers, setAnswers] = useState<RsvpDetailsAnswers>(() =>
     answersFromSaved(null),
   );
@@ -92,7 +89,7 @@ export function RsvpDetailsModal() {
     if (savedDetails) {
       setGuest(savedDetails.guestCount > 0);
       setAnswers(answersFromSaved(savedDetails));
-      if (savedDetails.visibility) setVis(savedDetails.visibility);
+      if (savedDetails.visibility) setVisibility(savedDetails.visibility);
     }
   }
 
@@ -121,15 +118,6 @@ export function RsvpDetailsModal() {
   const isSavedDetailsLoadError =
     isAwaitingSavedDetails && hasSavedDetailsError;
 
-  const visLabel: Record<Visibility, string> = {
-    everyone: t("myevents:rsvpModal.visibility.everyone"),
-    connections: t("myevents:rsvpModal.visibility.connections"),
-    justMe: t("myevents:rsvpModal.visibility.justMe"),
-  };
-  const visOptions = VIS_IDS.map((id) => visLabel[id]);
-  const labelToVisId = (label: string): Visibility =>
-    VIS_IDS.find((id) => visLabel[id] === label) ?? VIS_DEFAULT;
-
   const save = () => {
     if (demoMode || !ev?.slug) {
       closeDetails();
@@ -143,7 +131,7 @@ export function RsvpDetailsModal() {
     updateRsvpDetails.mutate(
       {
         ...guestCountChange,
-        visibility: vis,
+        visibility,
         ...askedAnswersPayload(answers, asked),
       },
       {
@@ -175,9 +163,6 @@ export function RsvpDetailsModal() {
       sub={ev?.title}
       footer={
         <>
-          <div className={sx("modal-privacy")}>
-            {t("myevents:rsvpModal.privacyNote")}
-          </div>
           <Button variant="ghost" onClick={closeDetails}>
             {t("myevents:rsvpModal.cancelCta")}
           </Button>
@@ -211,34 +196,12 @@ export function RsvpDetailsModal() {
             answers={answers}
             onAnswerChange={updateAnswer}
           />
-          <div className={sx("field")}>
-            <label className={sx("field-label")}>
-              {t("myevents:rsvpModal.whoSees")}
-            </label>
-            <SegmentedControl
-              fullWidth
-              options={visOptions}
-              value={visLabel[vis]}
-              onChange={(label) => setVis(labelToVisId(label))}
-            />
-          </div>
-          <div className={sx("field")}>
-            <div className={sx("set-row flush")}>
-              <div className={sx("set-info")}>
-                <div className={sx("set-t")}>
-                  {t("myevents:rsvpModal.attendQuietly")}
-                </div>
-                <div className={sx("set-d")}>
-                  {t("myevents:rsvpModal.attendQuietlyDesc")}
-                </div>
-              </div>
-              <Toggle
-                checked={quiet}
-                onChange={setQuiet}
-                label={t("myevents:rsvpModal.attendQuietly")}
-              />
-            </div>
-          </div>
+          <RsvpVisibilityField
+            value={visibility}
+            onChange={setVisibility}
+            note={t("myevents:rsvpModal.privacyNote")}
+            labelClassName={sx("field-label")}
+          />
         </>
       )}
     </Modal>

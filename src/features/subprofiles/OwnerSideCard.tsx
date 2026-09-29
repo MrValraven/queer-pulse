@@ -118,6 +118,9 @@ export function OwnerSideCard({
       {leaving && (
         <LeavePersonaModal
           subprofileId={view.id}
+          linkVisibility={view.linkVisibility}
+          handle={view.handle}
+          personaSlug={view.slug}
           onClose={() => setLeaving(false)}
         />
       )}

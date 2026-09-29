@@ -1,5 +1,6 @@
 import { FiActivity, FiArrowRight, FiCalendar, FiCheck } from "react-icons/fi";
 import { Button, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
+import { communityPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community, CommunityType } from "../../shared/types/domain";
 import { useCommunityPulse } from "./api/useCommunityPulse";
@@ -151,7 +152,7 @@ export function FeaturedCommunityCard({
               </span>
             )}
           </div>
-          <Button variant="primary" to={`/community/${slug}`}>
+          <Button variant="primary" to={communityPath(slug)}>
             {t("communities:discover.featured.openCta")}
             <FiArrowRight aria-hidden />
           </Button>

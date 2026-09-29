@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { MessageActions } from "./MessageActions";
 import { attachmentCaption } from "./messageCopy";
+import { editableTextOf, isCaptionEditKind } from "./messageEditKinds";
 import {
   SwipeReplyHint,
   BubbleReactionStrip,
@@ -121,8 +122,12 @@ function MessageBubbleImpl({
   if (editingMessageId && editingMessageId === message.id) {
     return (
       <div id={bubbleDomId} className={styles.bubbleWrap}>
+        {/* ENG-405: a photo, GIF or document edits its caption (see
+            `isCaptionEditKind`); the send-time "Photo"/"GIF"/"Document"
+            fallback in `message.text` stays untouched. */}
         <InlineEditField
-          initialValue={message.text}
+          initialValue={editableTextOf(message)}
+          isCaption={isCaptionEditKind(message.kind)}
           onSubmit={(nextValue) => onSubmitEdit?.(message, nextValue)}
           onCancel={() => onCancelEdit?.()}
         />

@@ -79,7 +79,7 @@ export const governance: Catalog = {
   "sections.moderation.eyebrow": "Como funciona a moderação",
   "sections.moderation.title": "O que acontece quando algo <em>corre mal.</em>",
   "sections.moderation.intro":
-    "O QueerPulse é moderado por uma pequena equipa de pessoas da comunidade que aceitaram este papel. São responsáveis perante o conselho consultivo, e as suas decisões podem ser contestadas.",
+    "O QueerPulse é moderado por uma pequena equipa de pessoas da comunidade que aceitaram este papel. São responsáveis perante o conselho consultivo pelo funcionamento da moderação, e qualquer decisão pode ser contestada uma vez, com um resultado final.",
   "sections.moderation.wontTolerate.label": "O que não toleramos:",
   "sections.moderation.wontTolerate.text":
     "Qualquer comportamento que faça alguém sentir-se inseguro ou não bem-vinde por causa da sua identidade, corpo, ou percurso. Assédio de qualquer tipo. Solicitação comercial sem autorização. Violação da privacidade de outra pessoa.",
@@ -97,13 +97,13 @@ export const governance: Catalog = {
     "Resultados possíveis: nenhuma ação (com explicação), comunicação direta, aviso, suspensão temporária, remoção permanente. A pessoa denunciada é informada do resultado, mas quem denunciou não.",
   "steps.appeal.title": "Direito a contestar",
   "steps.appeal.text":
-    "Qualquer pessoa da comunidade pode contestar uma decisão de moderação no prazo de 14 dias. As contestações são revistas pelo conselho consultivo, de forma independente da equipa que tomou a decisão original. O resultado é final.",
+    "Qualquer pessoa da comunidade pode contestar uma decisão de moderação uma vez, no prazo de 14 dias. A contestação é revista por uma pessoa moderadora que não fez parte da decisão original. O resultado é final.",
 
   // ── Conselho consultivo ─────────────────────────────────────────────────
   "sections.council.eyebrow": "Conselho consultivo",
   "sections.council.title": "Quem <em>supervisiona</em> isto.",
   "sections.council.intro":
-    "O conselho consultivo revê contestações de moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e um lugar pode ser encerrado por voto de dois terços da comunidade. Vê Propostas e votações abaixo.",
+    "O conselho consultivo supervisiona o funcionamento da moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e um lugar pode ser encerrado por voto de dois terços da comunidade. Vê Propostas e votações abaixo.",
   "sections.council.empty":
     "Nenhum assento está ocupado neste momento. O conselho está a ser nomeado, e esta lista vai nomear quem o compõe.",
 
@@ -309,11 +309,8 @@ export const governance: Catalog = {
   "sections.raise.option.other": "Outra coisa",
   "sections.raise.textareaPlaceholder":
     "Descreve o que aconteceu, ou o que está errado, com o detalhe que te for confortável…",
-  "sections.raise.emailPlaceholder": "O teu email (para te podermos atualizar)",
   "sections.raise.submitCta": "Submeter",
   "sections.raise.submittingCta": "A enviar…",
-  "sections.raise.submittedToast":
-    "Submetido. Entraremos em contacto no prazo de 48 horas.",
   "sections.raise.errorToast":
     "Escolhe uma categoria e acrescenta alguns detalhes primeiro.",
   "sections.raise.failedToast":

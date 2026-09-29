@@ -14,6 +14,10 @@ import { KIND_LABEL_KEYS, personaTitleName } from "./subprofile-kinds";
 import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { personaPublicPathOrNull } from "./personaLinks.data";
+import {
+  canReadPersonaEndorsers,
+  isPersonaOpenToEngagement,
+} from "./personaEngagement";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileHeroActions } from "./SubprofileHeroActions";
 import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
@@ -45,6 +49,62 @@ function PersonaMetaCount({
         }}
       />
     </span>
+  );
+}
+
+/** The endorsement and follower counts at the head of the meta line. A zero
+ *  count, or a list this viewer may not read, would open an empty modal, so
+ *  it renders as plain text and leaves nothing dead to click. */
+function PersonaEngagementCounts({
+  view,
+  interactive,
+  isEndorserListOpenable,
+  onAction,
+}: {
+  view: PublicSubprofileView;
+  interactive: boolean;
+  isEndorserListOpenable: boolean;
+  onAction: (action: PersonaAction) => void;
+}) {
+  const endorsementLabel = (
+    <PersonaMetaCount
+      i18nKey="subprofiles:hero.endorse.count"
+      count={view.endorsementCount}
+    />
+  );
+  const followerLabel = (
+    <PersonaMetaCount
+      i18nKey="subprofiles:hero.follow.count"
+      count={view.followerCount}
+    />
+  );
+  return (
+    <>
+      {isEndorserListOpenable ? (
+        <button
+          type="button"
+          className="pp-metabtn"
+          disabled={!interactive}
+          onClick={interactive ? () => onAction("people:endorsers") : undefined}
+        >
+          {endorsementLabel}
+        </button>
+      ) : (
+        <span>{endorsementLabel}</span>
+      )}
+      {view.followerCount > 0 ? (
+        <button
+          type="button"
+          className="pp-metabtn"
+          disabled={!interactive}
+          onClick={interactive ? () => onAction("people:followers") : undefined}
+        >
+          {followerLabel}
+        </button>
+      ) : (
+        <span>{followerLabel}</span>
+      )}
+    </>
   );
 }
 
@@ -101,18 +161,19 @@ export function SubprofileHero({
     ownerName: view.ownerName,
   });
 
-  const endorsementLabel = (
-    <PersonaMetaCount
-      i18nKey="subprofiles:hero.endorse.count"
-      count={view.endorsementCount}
-    />
-  );
-  const followerLabel = (
-    <PersonaMetaCount
-      i18nKey="subprofiles:hero.follow.count"
-      count={view.followerCount}
-    />
-  );
+  // A members-only persona's endorser list answers its owners alone (and not
+  // while the owner previews the page as a visitor).
+  const isEndorserListOpenable =
+    view.endorsementCount > 0 &&
+    canReadPersonaEndorsers(view, view.viewerIsMember && mode !== "visitor");
+  // A members-only persona takes no follows or endorsements, so "0
+  // endorsements · 0 followers" there is a count nobody can move. Any count
+  // it already holds (from before it closed) still shows.
+  const shouldShowEngagementCounts =
+    isPersonaOpenToEngagement(view) ||
+    view.endorsementCount > 0 ||
+    view.followerCount > 0;
+
   const avatar = (
     <Avatar
       className="pp-av"
@@ -164,35 +225,13 @@ export function SubprofileHero({
           <SubprofileHeroActions view={view} mode={mode} onAction={onAction} />
 
           <div className="pp-meta">
-            {/* A zero count opens an empty modal — render it as plain text
-                instead of a button so there's nothing dead to click. */}
-            {view.endorsementCount > 0 ? (
-              <button
-                type="button"
-                className="pp-metabtn"
-                disabled={!interactive}
-                onClick={
-                  interactive ? () => onAction("people:endorsers") : undefined
-                }
-              >
-                {endorsementLabel}
-              </button>
-            ) : (
-              <span>{endorsementLabel}</span>
-            )}
-            {view.followerCount > 0 ? (
-              <button
-                type="button"
-                className="pp-metabtn"
-                disabled={!interactive}
-                onClick={
-                  interactive ? () => onAction("people:followers") : undefined
-                }
-              >
-                {followerLabel}
-              </button>
-            ) : (
-              <span>{followerLabel}</span>
+            {shouldShowEngagementCounts && (
+              <PersonaEngagementCounts
+                view={view}
+                interactive={interactive}
+                isEndorserListOpenable={isEndorserListOpenable}
+                onAction={onAction}
+              />
             )}
             {linkedToOwner && interactive ? (
               <Link

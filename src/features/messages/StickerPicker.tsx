@@ -1,12 +1,17 @@
 // src/features/messages/StickerPicker.tsx
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStickerPacks } from "../stickers/api/useStickerPacks";
 import {
   loadStickerRecents,
   recordStickerRecent,
 } from "../stickers/stickerRecents";
+import { stickerIndexOf, stickerPackNameIn } from "../stickers/stickerLocale";
 import { StickerPackRail } from "./StickerPackRail";
+import { StickerPackSections } from "./StickerPackSections";
+import { StickerSearchField } from "./StickerSearchField";
+import { StickerSearchResults } from "./StickerSearchResults";
+import { normalizeStickerSearchText, searchStickers } from "./stickerSearch";
 import { useStickerPackScrollSpy } from "./useStickerPackScrollSpy";
 import type {
   StickerPackResponse,
@@ -14,109 +19,83 @@ import type {
 } from "../../shared/contracts/contracts";
 import styles from "./StickerPicker.module.css";
 
+const NO_PACKS: StickerPackResponse[] = [];
+
 interface StickerPickerProps {
   onPick: (sticker: StickerResponse) => void;
-  /** True when this panel is rendering INSIDE another panel's chrome, the
-   *  Stickers tab of `EmojiPicker` on desktop, which already supplies the
-   *  outer positioned panel, border, shadow, background, and its own
-   *  `role="dialog"` (`EmojiPicker`'s own `.panel`). Embedded therefore
-   *  draws neither its own chrome nor its own dialog role: the panel below
-   *  omits BOTH `position`/border/shadow/background AND `role="dialog"`/
-   *  `aria-label` when this is true, so switching tabs never stacks two
-   *  floating panels, or two nested `role="dialog"` regions (a real ARIA
-   *  violation `EmojiPicker`'s own `role="tabpanel"` wrapper already labels
-   *  this region for), on top of each other.
+  /** True inside the Stickers tab of `EmojiPicker` on desktop, whose own
+   *  `.panel` already supplies the positioned chrome and `role="dialog"`.
+   *  Embedded therefore draws neither, so switching tabs never stacks two
+   *  floating panels or nests one dialog inside another.
    *
    *  Absent (or false) is the STANDALONE case, the touch attach menu's
-   *  Sticker row, which has no other panel around it: this IS the dialog
-   *  there, so it draws its own full chrome, the same size and position
-   *  `EmojiPicker` uses, and keeps `role="dialog"`/`aria-label`. */
+   *  Sticker row: this IS the dialog there, so it draws its own chrome at
+   *  `EmojiPicker`'s size and position and keeps `role="dialog"`. */
   isEmbedded?: boolean;
-}
-
-interface StickerTileProps {
-  sticker: StickerResponse;
-  onPick: (sticker: StickerResponse) => void;
-}
-
-/** One grid cell: a real button whose accessible name is the sticker's own
- *  label, wrapping a decorative `<img>` (the button already carries the
- *  name, so the image itself needs none). Explicit `width`/`height` come
- *  straight from the catalogue entry, matching the image's own intrinsic
- *  size so the tile never shifts layout while it loads; the CSS module
- *  scales the box visually regardless of that intrinsic size. */
-function StickerTile({ sticker, onPick }: StickerTileProps) {
-  return (
-    <button
-      type="button"
-      className={styles.stickerBtn}
-      aria-label={sticker.label}
-      onClick={() => onPick(sticker)}
-    >
-      <img
-        src={sticker.url}
-        alt=""
-        width={sticker.width}
-        height={sticker.height}
-      />
-    </button>
-  );
 }
 
 /**
  * One sticker panel reached from two entry points: the Stickers tab of
  * `EmojiPicker` on desktop, and the attach menu's Sticker row on touch (see
- * `ComposerAttachButton`). Modelled on `EmojiPicker`'s own structure (a rail,
- * then a scrolling grid) and on `GifPicker`'s loading/error/empty states.
+ * `ComposerAttachButton`), built like `EmojiPicker` (rail, scrolling grid).
  *
- * Registers no Escape listener of its own: `useComposerPopovers` already
- * owns Escape and outside-click dismissal for every composer popover, and a
- * real browser trace in this composer proved a listener inside a panel never
- * wins that race.
+ * Registers no Escape listener of its own: `useComposerPopovers` owns Escape
+ * and outside-click dismissal for every composer popover.
  *
- * Never virtualized: the catalogue is at most a few hundred small images,
- * far short of the 1,914-entry emoji dataset the emoji grid's virtualizer
- * exists for, so a plain CSS grid over the full list is simpler and cheap
- * enough on its own.
+ * Never virtualized: a few hundred small images stay cheap in a plain CSS
+ * grid, far short of the emoji dataset the emoji virtualizer exists for.
+ *
+ * A search field filters across every pack by the sticker's name and its
+ * keywords in the reader's language (see `stickerSearch.ts`). While it holds
+ * text, one results grid replaces the recents and the pack sections, and the
+ * rail steps aside, since there are no sections left to jump between.
  */
 export function StickerPicker({
   onPick,
   isEmbedded = false,
 }: StickerPickerProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { data: packs, isLoading, isError } = useStickerPacks();
   const [recentIds, setRecentIds] = useState<string[]>(() =>
     loadStickerRecents(),
   );
+  const [query, setQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const stickerById = useMemo(() => {
-    const map = new Map<string, StickerResponse>();
-    for (const pack of packs ?? []) {
-      for (const sticker of pack.stickers) map.set(sticker.id, sticker);
-    }
-    return map;
-  }, [packs]);
+  const stickerById = stickerIndexOf(packs ?? NO_PACKS);
   const hasAnySticker = stickerById.size > 0;
-  // The one list of packs that actually render a section below (a pack with
-  // no stickers gets no section, no ref, and no rail tile): passed to
-  // `StickerPackRail` AS-IS, so its own `packs.length < 2` gate reads this
-  // same filtered count, the one `hasRail` below is also built from. A
-  // raw-vs-filtered mismatch there previously let one real pack plus one
-  // empty pack render the rail while `data-has-rail` stayed off, so a tap on
-  // the rail's own last tile could no longer reach the top (see
-  // `StickerPicker.module.css`'s own `.section:last-child` comments).
+  // The one list of packs that render a section (an empty pack gets no
+  // section, ref or rail tile). The rail's own `packs.length < 2` gate and
+  // `hasRail` below both read this filtered count, so they always agree on
+  // whether the rail shows.
   const packsWithStickers = useMemo(
     () => (packs ?? []).filter((pack) => pack.stickers.length > 0),
     [packs],
   );
+  const isSearching = normalizeStickerSearchText(query).length > 0;
+  const searchResults = useMemo(
+    () => searchStickers(packsWithStickers, query, language),
+    [packsWithStickers, query, language],
+  );
   // Scopes the last-section scroll-anchoring CSS to exactly the cases
-  // `StickerPackRail` actually renders in, so a single small pack keeps
-  // sizing to its own content and stays at that size.
-  const hasRail = packsWithStickers.length >= 2;
+  // `StickerPackRail` actually renders in. Off during a search: the rail is
+  // hidden then, and turning it back on when the search ends re-runs the
+  // scroll spy's observer against the remounted sections.
+  const hasRail = packsWithStickers.length >= 2 && !isSearching;
+  // The rail names each pack in the reader's language; every other field
+  // (ids, cover, stickers) passes through unchanged.
+  const railPacks = useMemo(
+    () =>
+      packsWithStickers.map((pack) => ({
+        ...pack,
+        name: stickerPackNameIn(pack, language),
+      })),
+    [packsWithStickers, language],
+  );
+  const isCatalogueReady = !isLoading && !isError && Boolean(packs);
 
-  // Quietly dropped the moment a recent sticker's own pack gets unpublished:
-  // `stickerById` only ever holds the CURRENT catalogue, so a stale recent id
-  // simply resolves to nothing here.
+  // `stickerById` holds only the current catalogue, so a recent sticker
+  // whose pack was unpublished resolves to nothing and drops out.
   const recentStickers = recentIds
     .map((id) => stickerById.get(id))
     .filter((sticker): sticker is StickerResponse => Boolean(sticker));
@@ -130,6 +109,18 @@ export function StickerPicker({
   const { bodyRef, activePackId, registerSection, scrollToPack } =
     useStickerPackScrollSpy(packsWithStickers, hasRail);
 
+  // Each new query starts its results from the top, wherever the browse view
+  // had been scrolled to.
+  function handleQueryChange(nextQuery: string) {
+    setQuery(nextQuery);
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  }
+
+  function handleClearSearch() {
+    handleQueryChange("");
+    searchInputRef.current?.focus();
+  }
+
   function coverStickerFor(
     pack: StickerPackResponse,
   ): StickerResponse | undefined {
@@ -142,16 +133,11 @@ export function StickerPicker({
       className={
         isEmbedded ? styles.panel : `${styles.panel} ${styles.standalone}`
       }
-      // Scopes `StickerPicker.module.css`'s last-section min-height rule to
-      // exactly when the rail renders (see `hasRail` above and that file's
-      // own `[data-has-rail]` comments).
+      // Scopes `StickerPicker.module.css`'s last-section min-height rule, which
+      // lets a rail tap reach the last pack, to when the rail renders.
       data-has-rail={hasRail || undefined}
-      // Embedded: `EmojiPicker`'s own `.panel` already carries `role="dialog"`
-      // and its `role="tabpanel"` wrapper already labels this region, so a
-      // second `role="dialog"` here would nest one dialog inside another, a
-      // real ARIA violation. Standalone (the touch attach menu): this panel
-      // IS the dialog, so it keeps both. Never render `role="dialog"`
-      // unconditionally here again.
+      // Embedded sits inside `EmojiPicker`'s own dialog, so only the
+      // standalone panel carries `role="dialog"` (see `isEmbedded`).
       {...(isEmbedded
         ? {}
         : {
@@ -159,9 +145,22 @@ export function StickerPicker({
             "aria-label": t("messages:sticker.panelLabel"),
           })}
     >
-      {!isLoading && !isError && packs && (
+      {/* The field is the panel's first row, and the panel holds one fixed
+          height (`--composer-popover-max`), so neither the rail stepping
+          aside nor a shorter result list moves the field under the finger.
+          Results and the empty state start at the top of the body. */}
+      {isCatalogueReady && hasAnySticker && (
+        <StickerSearchField
+          query={query}
+          onQueryChange={handleQueryChange}
+          isSearching={isSearching}
+          resultCount={searchResults.length}
+          inputRef={searchInputRef}
+        />
+      )}
+      {isCatalogueReady && !isSearching && (
         <StickerPackRail
-          packs={packsWithStickers}
+          packs={railPacks}
           activePackId={activePackId}
           coverStickerFor={coverStickerFor}
           onSelectPack={scrollToPack}
@@ -175,54 +174,24 @@ export function StickerPicker({
         {isError && (
           <p className={styles.state}>{t("messages:sticker.loadError")}</p>
         )}
-        {!isLoading && !isError && !hasAnySticker && (
+        {isCatalogueReady && !hasAnySticker && (
           <p className={styles.state}>{t("messages:sticker.empty")}</p>
         )}
-        {!isLoading && !isError && hasAnySticker && (
-          <>
-            {recentStickers.length > 0 && (
-              <div className={styles.section}>
-                <p className={styles.sectionHeader}>
-                  {t("messages:sticker.recentsLabel")}
-                </p>
-                <div
-                  className={styles.grid}
-                  role="group"
-                  aria-label={t("messages:sticker.recentsLabel")}
-                >
-                  {recentStickers.map((sticker) => (
-                    <StickerTile
-                      key={sticker.id}
-                      sticker={sticker}
-                      onPick={handlePick}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            {packsWithStickers.map((pack) => (
-              <div
-                key={pack.id}
-                className={styles.section}
-                ref={(node) => registerSection(pack.id, node)}
-              >
-                <p className={styles.sectionHeader}>{pack.name}</p>
-                <div
-                  className={styles.grid}
-                  role="group"
-                  aria-label={pack.name}
-                >
-                  {pack.stickers.map((sticker) => (
-                    <StickerTile
-                      key={sticker.id}
-                      sticker={sticker}
-                      onPick={handlePick}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </>
+        {isCatalogueReady && hasAnySticker && isSearching && (
+          <StickerSearchResults
+            query={query}
+            results={searchResults}
+            onPick={handlePick}
+            onClearSearch={handleClearSearch}
+          />
+        )}
+        {isCatalogueReady && hasAnySticker && !isSearching && (
+          <StickerPackSections
+            recentStickers={recentStickers}
+            packs={packsWithStickers}
+            registerSection={registerSection}
+            onPick={handlePick}
+          />
         )}
       </div>
     </div>

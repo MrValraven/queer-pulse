@@ -4,7 +4,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
-import { reasonFor } from "../../shared/api/errorMessage";
+import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
@@ -70,8 +70,12 @@ export function SubprofileOwnersPanel({
       await revoke.mutateAsync(inviteId);
       showToast(t("subprofiles:owners.toastRevoked"), "info");
     } catch (error) {
+      // ENG-448: a moderation restriction gets the copy naming the appeal,
+      // the same one the global handler shows, ahead of any server message.
       showToast(
-        reasonFor(error) ?? t("subprofiles:owners.toastRevokeError"),
+        isAccountRestricted(error)
+          ? t("shared:apiError.accountRestricted")
+          : (reasonFor(error) ?? t("subprofiles:owners.toastRevokeError")),
         "error",
       );
     } finally {
@@ -142,6 +146,9 @@ export function SubprofileOwnersPanel({
       {leaveOpen && (
         <LeavePersonaModal
           subprofileId={subprofileId}
+          linkVisibility={subprofile.linkVisibility}
+          handle={subprofile.handle}
+          personaSlug={subprofile.slug}
           onClose={() => setLeaveOpen(false)}
         />
       )}

@@ -45,6 +45,12 @@ export function useVouchMember() {
     Error,
     VouchMemberInput
   >({
+    // `VouchMemberModalParts` renders its own mapped error in a
+    // `role="alert"` paragraph (`vouchErrorMessageKey`); the app-wide
+    // `MutationCache` handler would otherwise raise a second, untranslated
+    // toast on top of it for every failure (409 already vouched, a 403, the
+    // daily cap).
+    meta: { silentError: true },
     mutationFn: async ({ slug, relationships, note, anonymous }) => {
       if (demoMode) return undefined;
       return vouchFor(slug, { relationships, note, anonymous });

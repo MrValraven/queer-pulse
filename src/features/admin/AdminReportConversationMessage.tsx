@@ -4,6 +4,7 @@ import {
   FiFileText,
   FiImage,
   FiSlash,
+  FiSmile,
 } from "react-icons/fi";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -18,6 +19,9 @@ const ATTACHMENT_LABEL_KEY: Partial<
   image: "admin:moderation.reportDrawer.conversationContext.photoLabel",
   gif: "admin:moderation.reportDrawer.conversationContext.gifLabel",
   document: "admin:moderation.reportDrawer.conversationContext.documentLabel",
+  // No admin key names a sticker; the chat's own kind word is the same one
+  // the member-facing message info sheet uses.
+  sticker: "messages:sticker.attachmentLabel",
 };
 
 /**
@@ -118,16 +122,27 @@ function ConversationContextBody({
     ]
       .filter(Boolean)
       .join(" · ");
+    // A sticker's body is empty unless a pre-fix edit wrote text into it;
+    // staff keep seeing that stored text under the label.
+    const legacyStickerText =
+      message.kind === "sticker" && message.body ? message.body : null;
     return (
-      <p className={styles.attachmentLine}>
-        {message.kind === "document" ? (
-          <FiFileText aria-hidden />
-        ) : (
-          <FiImage aria-hidden />
+      <>
+        <p className={styles.attachmentLine}>
+          {message.kind === "document" ? (
+            <FiFileText aria-hidden />
+          ) : message.kind === "sticker" ? (
+            <FiSmile aria-hidden />
+          ) : (
+            <FiImage aria-hidden />
+          )}
+          <span>{facts?.fileName ?? t(attachmentLabelKey)}</span>
+          {meta && <span className={styles.attachmentMeta}>{meta}</span>}
+        </p>
+        {legacyStickerText && (
+          <p className={styles.contextBody}>{legacyStickerText}</p>
         )}
-        <span>{facts?.fileName ?? t(attachmentLabelKey)}</span>
-        {meta && <span className={styles.attachmentMeta}>{meta}</span>}
-      </p>
+      </>
     );
   }
 

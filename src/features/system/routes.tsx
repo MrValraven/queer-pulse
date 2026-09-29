@@ -2,10 +2,6 @@ import { Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
-const ServerErrorPage = lazyNamed(
-  () => import("./ServerErrorPage"),
-  "ServerErrorPage",
-);
 const MaintenancePage = lazyNamed(
   () => import("./MaintenancePage"),
   "MaintenancePage",
@@ -46,7 +42,6 @@ const NewsletterUnsubscribePage = lazyNamed(
 export function systemRoutes() {
   return (
     <>
-      <Route path={routes.serverError} element={<ServerErrorPage />} />
       <Route path={routes.maintenance} element={<MaintenancePage />} />
       <Route path={routes.offline} element={<OfflinePage />} />
       <Route path={routes.pwaPrompt} element={<PwaPromptPage />} />

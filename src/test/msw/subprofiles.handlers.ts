@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, type HttpResponseResolver } from "msw";
 import type {
   AffiliationDTO,
   AffiliationInputDTO,
@@ -178,6 +178,67 @@ function buildCreatedSubprofile(body: CreateSubprofileDTO): SubprofileDTO {
   };
 }
 
+/** ENG-451: the write resolvers' own edit-version counter, local to this
+ *  file and kept apart from `subprofiles.data.ts`'s `demoEditVersions` map
+ *  (which demo-mode writes use). A live spec's MSW writes must never raise
+ *  that production module's state, and a demo-mode write must never satisfy
+ *  a live spec's precondition either. Cleared once, globally, by the shared
+ *  `afterEach` in `src/test/setup.ts` via `resetMswSubprofileEditVersions`,
+ *  so no live spec has to remember its own reset. */
+const mswEditVersions = new Map<string, number>();
+
+/** Test-only: clear the local counter between specs. Called once from
+ *  `src/test/setup.ts`'s existing global `afterEach`; an individual spec
+ *  never needs to call this itself. */
+export function resetMswSubprofileEditVersions(): void {
+  mswEditVersions.clear();
+}
+
+/** The version a persona's next write checks against: the local counter
+ *  once an earlier write in this test run raised it, else the fixture's own
+ *  value. */
+function storedMswEditVersion(id: string, current: SubprofileDTO): number {
+  return mswEditVersions.get(id) ?? current.editVersion ?? 0;
+}
+
+/** Raise a persona's local edit counter by 1 and return the new value, the
+ *  `editVersion` a successful write answers with. */
+function bumpMswEditVersion(id: string, current: SubprofileDTO): number {
+  const next = storedMswEditVersion(id, current) + 1;
+  mswEditVersions.set(id, next);
+  return next;
+}
+
+/** ENG-451: the precondition every persona content write shares (PATCH,
+ *  section/social-links/affiliations PUT). A request with no
+ *  `expectedEditVersion` writes unconditionally. A request that carries one
+ *  matching the stored value also proceeds. A mismatch answers 409 with the
+ *  typed conflict body `isPersonaEditConflict` reads and changes nothing, the
+ *  same contract `runEditorSaveChain` stops on. Pulled out of
+ *  `subprofileHandlers` to keep every write handler under the repo's line
+ *  cap. */
+function editConflictResponse(
+  id: string,
+  current: SubprofileDTO,
+  expectedEditVersion: number | undefined,
+) {
+  const storedEditVersion = storedMswEditVersion(id, current);
+  if (
+    expectedEditVersion === undefined ||
+    expectedEditVersion === storedEditVersion
+  ) {
+    return null;
+  }
+  return HttpResponse.json(
+    {
+      code: "PERSONA_EDIT_CONFLICT",
+      message: "This persona changed while you were editing.",
+      currentEditVersion: storedEditVersion,
+    },
+    { status: 409 },
+  );
+}
+
 /**
  * Turn a `resolvePublicAccessDemo` outcome into the exact live-wire shape the
  * Shared Contract (Phase 1b) promises: 200 the DTO / 403 `{restrictedState}`
@@ -199,6 +260,137 @@ function publicAccessResponse(result: DemoPublicAccessResult) {
   }
   return new HttpResponse(null, { status: 404 });
 }
+
+/** `PATCH /subprofiles/:id` resolver (ENG-451 edit-version precondition).
+ *  Pulled out of `subprofileHandlers` to keep that function under the repo's
+ *  line cap. */
+const patchSubprofile: HttpResponseResolver<{ id: string }> = async ({
+  params,
+  request,
+}) => {
+  const id = String(params.id);
+  const current = mockSubprofileById(id);
+  if (!current) return new HttpResponse(null, { status: 404 });
+  const patch = (await request.json()) as UpdateSubprofileDTO;
+  const conflict = editConflictResponse(id, current, patch.expectedEditVersion);
+  if (conflict) return conflict;
+  // The precondition is request-only; it never lands on the persona.
+  const changes: UpdateSubprofileDTO = { ...patch };
+  delete changes.expectedEditVersion;
+  // A link-visibility switch always drops the old handle: a typed new one in
+  // the same patch survives (mirrors the backend's release-with-no-
+  // forwarding rule for a linked-to-unlinked switch). A linked draft left
+  // with no handle, by that switch or by a cleared handle field, then gets
+  // the derived default; any other persona stays handle-less until it is
+  // republished.
+  const isSwitchingLinkVisibility =
+    changes.linkVisibility !== undefined &&
+    changes.linkVisibility !== current.linkVisibility;
+  return HttpResponse.json(
+    withDerivedDraftHandle({
+      ...current,
+      ...changes,
+      ...(isSwitchingLinkVisibility ? { handle: changes.handle ?? null } : {}),
+      editVersion: bumpMswEditVersion(id, current),
+    }),
+  );
+};
+
+/** `PUT /subprofiles/:id/sections/:section` resolver (ENG-451 edit-version
+ *  precondition). Pulled out of `subprofileHandlers` to keep that function
+ *  under the repo's line cap. */
+const replaceSection: HttpResponseResolver<{
+  id: string;
+  section: string;
+}> = async ({ params, request }) => {
+  const id = String(params.id);
+  const current = mockSubprofileById(id);
+  if (!current) return new HttpResponse(null, { status: 404 });
+  const section = String(params.section) as SubprofileSection;
+  const body = (await request.json()) as {
+    items: SubprofileItemInputDTO[];
+    expectedEditVersion?: number;
+  };
+  const conflict = editConflictResponse(id, current, body.expectedEditVersion);
+  if (conflict) return conflict;
+  // Mirrors the demo mutation path: `links` items can never be featured, and
+  // a featured item arriving in this section clears `isFeatured` on every
+  // other section's items (single spotlight per persona).
+  const replacedItems = buildReplacedSectionItems(section, body.items);
+  const incomingHasFeaturedItem = replacedItems.some((item) => item.isFeatured);
+  const otherSectionItems = current.items
+    .filter((item) => item.section !== section)
+    .map((item) =>
+      incomingHasFeaturedItem ? { ...item, isFeatured: false } : item,
+    );
+  return HttpResponse.json({
+    ...current,
+    items: [...otherSectionItems, ...replacedItems],
+    editVersion: bumpMswEditVersion(id, current),
+  });
+};
+
+/** `PUT /subprofiles/:id/social-links` resolver (ENG-451 edit-version
+ *  precondition). Pulled out of `subprofileHandlers` to keep that function
+ *  under the repo's line cap. */
+const replaceSocialLinksItems: HttpResponseResolver<{
+  id: string;
+}> = async ({ params, request }) => {
+  const id = String(params.id);
+  const current = mockSubprofileById(id);
+  if (!current) return new HttpResponse(null, { status: 404 });
+  const body = (await request.json()) as {
+    items: SocialLinkDTO[];
+    expectedEditVersion?: number;
+  };
+  const conflict = editConflictResponse(id, current, body.expectedEditVersion);
+  if (conflict) return conflict;
+  return HttpResponse.json({
+    ...current,
+    socialLinks: body.items,
+    editVersion: bumpMswEditVersion(id, current),
+  });
+};
+
+/** `PUT /subprofiles/:id/affiliations` resolver (ENG-451 edit-version
+ *  precondition). Pulled out of `subprofileHandlers` to keep that function
+ *  under the repo's line cap. */
+const replaceAffiliationItems: HttpResponseResolver<{
+  id: string;
+}> = async ({ params, request }) => {
+  const id = String(params.id);
+  const current = mockSubprofileById(id);
+  if (!current) return new HttpResponse(null, { status: 404 });
+  const body = (await request.json()) as {
+    items: AffiliationInputDTO[];
+    expectedEditVersion?: number;
+  };
+  const conflict = editConflictResponse(id, current, body.expectedEditVersion);
+  if (conflict) return conflict;
+  // Mirrors the demo mutation path (`useAffiliations`): re-resolve each
+  // input against the persona's currently-known affiliations so an edit,
+  // reorder, or removal keeps its real `name`/`imageUrl`; a genuinely new
+  // slug falls back to the raw slug as a placeholder name.
+  const resolvedAffiliations: AffiliationDTO[] = body.items.map((item) => {
+    const known = current.affiliations.find(
+      (affiliation) =>
+        affiliation.targetType === item.targetType &&
+        affiliation.targetSlug === item.targetSlug,
+    );
+    return {
+      targetType: item.targetType,
+      targetSlug: item.targetSlug,
+      role: item.role,
+      name: known?.name ?? item.targetSlug,
+      imageUrl: known?.imageUrl ?? null,
+    };
+  });
+  return HttpResponse.json({
+    ...current,
+    affiliations: resolvedAffiliations,
+    editVersion: bumpMswEditVersion(id, current),
+  });
+};
 
 /**
  * MSW handlers for the subprofiles C4 endpoints. They double as executable
@@ -258,97 +450,10 @@ export function subprofileHandlers(api: string) {
         ? HttpResponse.json(dto)
         : new HttpResponse(null, { status: 404 });
     }),
-    http.patch(`${api}/subprofiles/:id`, async ({ params, request }) => {
-      const current = mockSubprofileById(String(params.id));
-      if (!current) return new HttpResponse(null, { status: 404 });
-      const patch = (await request.json()) as UpdateSubprofileDTO;
-      // A link-visibility switch always drops the old handle: a typed new one
-      // in the same patch survives (mirrors the backend's
-      // release-with-no-forwarding rule for a linked-to-unlinked switch).
-      // A linked draft left with no handle, by that switch or by a cleared
-      // handle field, then gets the derived default; any other persona stays
-      // handle-less until it is republished.
-      const isSwitchingLinkVisibility =
-        patch.linkVisibility !== undefined &&
-        patch.linkVisibility !== current.linkVisibility;
-      return HttpResponse.json(
-        withDerivedDraftHandle({
-          ...current,
-          ...patch,
-          ...(isSwitchingLinkVisibility
-            ? { handle: patch.handle ?? null }
-            : {}),
-        }),
-      );
-    }),
-    http.put(
-      `${api}/subprofiles/:id/sections/:section`,
-      async ({ params, request }) => {
-        const current = mockSubprofileById(String(params.id));
-        if (!current) return new HttpResponse(null, { status: 404 });
-        const section = String(params.section) as SubprofileSection;
-        const body = (await request.json()) as {
-          items: SubprofileItemInputDTO[];
-        };
-        // Mirrors the demo mutation path: `links` items can never be featured,
-        // and a featured item arriving in this section clears `isFeatured` on
-        // every other section's items (single spotlight per persona).
-        const replacedItems = buildReplacedSectionItems(section, body.items);
-        const incomingHasFeaturedItem = replacedItems.some(
-          (item) => item.isFeatured,
-        );
-        const otherSectionItems = current.items
-          .filter((item) => item.section !== section)
-          .map((item) =>
-            incomingHasFeaturedItem ? { ...item, isFeatured: false } : item,
-          );
-        return HttpResponse.json({
-          ...current,
-          items: [...otherSectionItems, ...replacedItems],
-        });
-      },
-    ),
-    http.put(
-      `${api}/subprofiles/:id/social-links`,
-      async ({ params, request }) => {
-        const current = mockSubprofileById(String(params.id));
-        if (!current) return new HttpResponse(null, { status: 404 });
-        const body = (await request.json()) as { items: SocialLinkDTO[] };
-        return HttpResponse.json({ ...current, socialLinks: body.items });
-      },
-    ),
-    http.put(
-      `${api}/subprofiles/:id/affiliations`,
-      async ({ params, request }) => {
-        const current = mockSubprofileById(String(params.id));
-        if (!current) return new HttpResponse(null, { status: 404 });
-        const body = (await request.json()) as { items: AffiliationInputDTO[] };
-        // Mirrors the demo mutation path (`useAffiliations`): re-resolve each
-        // input against the persona's currently-known affiliations so an edit,
-        // reorder, or removal keeps its real `name`/`imageUrl`; a genuinely new
-        // slug falls back to the raw slug as a placeholder name.
-        const resolvedAffiliations: AffiliationDTO[] = body.items.map(
-          (item) => {
-            const known = current.affiliations.find(
-              (affiliation) =>
-                affiliation.targetType === item.targetType &&
-                affiliation.targetSlug === item.targetSlug,
-            );
-            return {
-              targetType: item.targetType,
-              targetSlug: item.targetSlug,
-              role: item.role,
-              name: known?.name ?? item.targetSlug,
-              imageUrl: known?.imageUrl ?? null,
-            };
-          },
-        );
-        return HttpResponse.json({
-          ...current,
-          affiliations: resolvedAffiliations,
-        });
-      },
-    ),
+    http.patch(`${api}/subprofiles/:id`, patchSubprofile),
+    http.put(`${api}/subprofiles/:id/sections/:section`, replaceSection),
+    http.put(`${api}/subprofiles/:id/social-links`, replaceSocialLinksItems),
+    http.put(`${api}/subprofiles/:id/affiliations`, replaceAffiliationItems),
     http.get(`${api}/subprofiles/:id/affiliation-options`, ({ params }) => {
       const current = mockSubprofileById(String(params.id));
       if (!current) return new HttpResponse(null, { status: 404 });

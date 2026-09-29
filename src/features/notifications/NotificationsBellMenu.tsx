@@ -121,14 +121,21 @@ export function NotificationsBellMenu({
         ref={triggerRef}
         type="button"
         className={triggerClassName}
-        aria-label={t("nav:notifications")}
+        // DES-400. The label replaces the button's content as its name, so the
+        // count rides along in it ("Notifications, 3 unread") and the badge
+        // below stays sighted-only, heard once.
+        aria-label={
+          unreadCount > 0
+            ? t("nav:notificationsUnread", { count: unreadCount })
+            : t("nav:notifications")
+        }
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         onClick={toggle}
       >
         {icon}
         {unreadCount > 0 && (
-          <span className={badgeClassName}>
+          <span className={badgeClassName} aria-hidden="true">
             <RollingNumber
               value={fmt.number(unreadCount)}
               numericValue={unreadCount}

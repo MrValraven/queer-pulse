@@ -18,6 +18,7 @@ import {
   markThreadRead,
   moveThreadCategory,
   pinThread,
+  removeThreadCoAuthor,
   replyToThread,
   restorePost,
   setAcceptedAnswer,
@@ -305,6 +306,13 @@ export function useVotePost() {
         POSTS_KEY,
         (data) => patchPostsCache(data, postId, serverValue, post.voteCount),
       );
+      // FEED-LIKE: marks the feed stale so a feed card shows this vote next
+      // time the feed mounts, with no refetch now so a mounted feed keeps its
+      // place.
+      void queryClient.invalidateQueries({
+        queryKey: ["feed"],
+        refetchType: "none",
+      });
     },
     onError: (_error, _variables, context) => {
       hasFailedVote.current = true;
@@ -750,18 +758,22 @@ export function useMoveThreadCategory() {
  * the thread page, so they simply refetch when they next mount — which is the
  * moment the cleared badge matters.
  *
+ * `upTo` is the createdAt of the newest post the member actually had loaded
+ * (PRD-409), so a stamp covers what was on screen and nothing past it. The
+ * server clamps it to now and keeps the watermark from moving backward.
+ *
  * `markRead` is `mutation.mutate`, which react-query keeps referentially
  * stable, so it can sit in an effect's dependency list without re-firing.
  */
 export function useMarkThreadRead() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  const mutation = useMutation<void, Error, { slug: string }>({
-    mutationFn: async ({ slug }) => {
+  const mutation = useMutation<void, Error, { slug: string; upTo?: string }>({
+    mutationFn: async ({ slug, upTo }) => {
       // Demo has no watermark to stamp; the mock threads carry no unread count
       // in the first place, so there is nothing to clear.
       if (demoMode || !slug) return;
-      await markThreadRead(slug);
+      await markThreadRead(slug, upTo);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -809,6 +821,31 @@ export function useDeleteThread() {
         queryKey: ["forum-thread-counts"],
       });
       void queryClient.invalidateQueries({ queryKey: ["feed"] });
+    },
+  });
+}
+
+/**
+ * DELETE /forum/threads/:slug/co-author: the credited co-author takes their own
+ * name off a thread (PRD-408).
+ *
+ * On success the thread meta refetches (the byline drops the second name and
+ * `viewerIsCoAuthor` goes false, which hides the control) and so does the
+ * thread list, whose cards carry the co-author too. DEMO is a no-op: demo
+ * threads never set `viewerIsCoAuthor`, so the control never renders there.
+ */
+export function useRemoveCoAuthorCredit() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { slug: string }>({
+    mutationFn: async ({ slug }) => {
+      if (demoMode) return;
+      await removeThreadCoAuthor(slug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["forum-thread-meta"] });
+      void queryClient.invalidateQueries(THREADS_KEY);
     },
   });
 }

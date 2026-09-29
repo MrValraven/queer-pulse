@@ -384,6 +384,21 @@
   color: var(--accent-text);
 }
 
+/* "Needed before you can save": the same footer panel as the change summary,
+   tinted coral so a disabled Save reads as "something to fill in" at a glance.
+   The title names the state in words too, so the colour is never the only
+   signal. */
+.missing {
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.missingTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-text);
+}
+
 .changesNotice {
   display: flex;
   align-items: flex-start;

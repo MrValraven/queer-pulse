@@ -29,6 +29,15 @@
   color: var(--ink-40);
 }
 
+/* Repeats the footer's countAtLimit copy above the open chip list, so it is
+   visible without scrolling past the full vocab. Plain, unannounced text;
+   the footer count stays the single region announced on change. */
+.limitNote {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
 .footer {
   display: flex;
   align-items: center;

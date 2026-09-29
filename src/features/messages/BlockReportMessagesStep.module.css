@@ -69,3 +69,11 @@
   color: var(--ink-60);
   margin-block-start: 4px;
 }
+
+/* Same quiet hint treatment as .anonymousHelper, placed under the reason
+   Select. */
+.reasonHint {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  margin-block-start: 4px;
+}

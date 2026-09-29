@@ -1,0 +1,10 @@
+/* PickerSearchField: the one search row both the emoji and sticker tabs of
+   the composer's emoji/sticker popover sit inside, so the field lands at the
+   same height and the same distance from the content below it in either
+   tab. `flex: none` keeps it at its own height while the scrolling body
+   below takes the rest; the same 10px side inset as that body's own padding
+   lines the field up with the grid underneath it. */
+.searchRow {
+  flex: none;
+  padding: 10px 10px 2px;
+}

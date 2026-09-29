@@ -22,12 +22,18 @@ import styles from "./AdminModerationPage.module.css";
  * as a second prop that has to agree with it, so the tiles and the note
  * underneath them cannot describe two different subjects.
  *
- * Be careful reading `modActionsFor`: since TS-03 it returns every action for
- * every subject type, because `restrict` and `ban` resolve a content report to
- * its AUTHOR server-side (`AccountEnforcementService`). Every tile therefore
- * renders on every subject type, and the note under the grid tells a moderator
- * who a sanction lands on and when it can refuse. It used to say restrict and
- * ban were not shown at all, beside the very tiles it denied.
+ * Be careful reading `modActionsFor`: since TS-03, `restrict` and `ban`
+ * resolve a content report to its AUTHOR server-side
+ * (`AccountEnforcementService`), so those two tiles render on every subject
+ * type, and the note under the grid tells a moderator who a sanction lands on
+ * and when it can refuse. It used to say restrict and ban were not shown at
+ * all, beside the very tiles it denied.
+ *
+ * ENG-484 is the exception on the other side of the grid: `venue`,
+ * `conversation` and `identity` reports have no content of their own to hide
+ * or remove, so `modActionsFor` leaves the `hide` and `remove` tiles out for
+ * those three, and the note switches to `accountActionsTargetNoContent` to
+ * match.
  */
 
 /** The action-grid + restrict-duration picker (lines used to live inline in
@@ -51,6 +57,13 @@ export function ReportDrawerActionGrid({
 }) {
   const { t } = useTranslation();
   const actions = modActionsFor(subjectType);
+  // ENG-484: `hide` is missing from the grid exactly when this subject type
+  // has no content of its own to act on (see `SUBJECT_TYPES_WITHOUT_CONTENT`
+  // in `adminModeration.data.ts`), which is also when the note below has to
+  // stop claiming hide/remove act on the content itself.
+  const hasContentToActOn = actions.some(
+    (modAction) => modAction.id === "hide",
+  );
   const decisionTitleId = useId();
   // One decision, so the tiles are radios. They used to be `aria-pressed`
   // toggles in a plain div: nothing announced them as a single choice, every
@@ -102,7 +115,11 @@ export function ReportDrawerActionGrid({
       {subjectType !== "member" && (
         <p className={styles.dTransparency}>
           <FiInfo aria-hidden />{" "}
-          {t("admin:moderation.reportDrawer.accountActionsTarget")}
+          {t(
+            hasContentToActOn
+              ? "admin:moderation.reportDrawer.accountActionsTarget"
+              : "admin:moderation.reportDrawer.accountActionsTargetNoContent",
+          )}
         </p>
       )}
       {action === "restrict" && (

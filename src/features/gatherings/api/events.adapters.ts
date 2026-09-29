@@ -349,10 +349,13 @@ function activeRsvpStatus(
 
 // ── Attendee view-model (manage / dashboard rows) ───────────────────────────
 
+// The plum wash reads `--line-rgb` and its initials `--text-strong`: both equal
+// plum in light mode and flip in dark mode, so the chip stays visible on the
+// dark plum surfaces.
 const AV_TINTS = [
-  { background: "rgba(74,140,111,.12)", color: "var(--jade)" },
-  { background: "rgba(232,119,90,.12)", color: "var(--accent-ink)" },
-  { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
+  { background: "rgba(var(--jade-rgb), .12)", color: "var(--jade)" },
+  { background: "rgba(var(--accent-rgb), .12)", color: "var(--accent-ink)" },
+  { background: "rgba(var(--line-rgb), .1)", color: "var(--text-strong)" },
 ];
 
 export interface AttendeeRow {
@@ -374,15 +377,17 @@ export interface AttendeeRow {
   checkedInAt?: Date | null;
   /** ── The attendee's own answers, organisers only (LOC-07) ─────────────
    *  `undefined` = the viewer is not an organiser and was never sent these.
-   *  A `null` free text = the attendee wrote nothing, or chose "just me". */
+   *  A `null` free text = the attendee wrote nothing. The host always
+   *  receives every answer the attendee gave (PRD-415). */
   guestCount?: number;
   accessNeeds?: string | null;
   dietaryNeeds?: string | null;
-  /** Their answer to the host's own RSVP question, organisers only, withheld
-   *  under the same rule as the needs above. */
+  /** Their answer to the host's own RSVP question, organisers only, sent on
+   *  the same terms as the needs above. */
   customAnswer?: string | null;
-  /** Their own "who can see this" choice, so the host's list can say why a
-   *  needs line is absent rather than implying nobody has any. */
+  /** Their answer to "Who can see you're going?". `justMe` marks an attendee
+   *  who asked to be listed to the hosts only, so the host's list can say so
+   *  (`AttendeeNeeds`). */
   detailsVisibility?: string | null;
 }
 
@@ -429,8 +434,8 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     color: tint.color,
     name: `${dto.firstName} ${dto.lastName}`.trim(),
     // The pronouns the attendee gave on their RSVP (Create Gathering v2).
-    // Organisers only, and `null` when withheld, which reads here as "none to
-    // show" so the meta line prints only the slots it has.
+    // Organisers only, and `null` when the attendee gave none, which reads here
+    // as "none to show" so the meta line prints only the slots it has.
     pronouns: dto.pronouns ?? undefined,
     ...(dto.rsvpAt ? { rsvpAt: new Date(dto.rsvpAt) } : {}),
     ...(typeof dto.waitlistPosition === "number"
@@ -439,7 +444,9 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     checkedInAt: dto.checkedInAt ? new Date(dto.checkedInAt) : null,
     // Organiser-only fields (LOC-07). `undefined` here means "the viewer is
     // not an organiser", which is a different fact from a `null` free-text
-    // answer ("the attendee withheld it, or wrote nothing").
+    // answer ("the attendee wrote nothing"). The host always receives every
+    // answer (PRD-415), and `detailsVisibility` marks who asked to be listed
+    // to the hosts only.
     guestCount: dto.guestCount,
     accessNeeds: dto.accessNeeds,
     dietaryNeeds: dto.dietaryNeeds,

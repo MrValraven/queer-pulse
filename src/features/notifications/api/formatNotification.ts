@@ -6,6 +6,14 @@ import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import type { NotifType } from "../notifications.types";
 import { ADMIN_QUEUE_ROUTES } from "./adminQueueRoutes";
+import {
+  applyLifecycleTokens,
+  isLifecycleKind,
+  LIFECYCLE_KIND_CATEGORY,
+  lifecycleKeyFor,
+  type LifecycleNotificationKind,
+} from "./notificationKindCopy";
+import { notificationReasonOf } from "./notificationReason";
 
 /**
  * The notification kinds the backend's `notifications_type_enum` can serve
@@ -256,7 +264,7 @@ export type NotificationKind =
   //    label sources from `requestedLevel` instead.
   //  - a request rejected (`VerificationService.decideRequest`):
   //    `{ requestedLevel, decision: 'rejected', reason }` — no level change
-  //    to name; `reason` surfaces as the meta line instead.
+  //    to name; `reason` travels on the row's own `reason` field.
   | "verification_update"
   // Sent to a member when the XP/badge awarding engine credits them across a
   // level threshold (mirrors the backend `notifications_type_enum` value
@@ -442,6 +450,12 @@ export type NotificationKind =
   | "magazine_piece_commissioned"
   | "magazine_piece_stage_changed"
   | "magazine_piece_published"
+  // Sent to the member who submitted a pitch the desk read and passed on
+  // (ENG-462). Payload carries `{ source: "magazine", pitchId, title }`: no
+  // actor, because the desk speaks as the desk here, the same as the rest of
+  // the pitch queue. The row deep-links to the writer workspace's pitches
+  // tab, where the pass note lives.
+  | "magazine_pitch_passed"
   // A membership card thirty days from expiry (SUS-07; mirrors the backend
   // `notifications_type_enum` value added in
   // `AddCardSelfRenewAndExpiryWarning1795620000000`, emitted from
@@ -516,11 +530,11 @@ export type NotificationKind =
   //
   // `subjectLabel` is the submission's own headline read back to the member so
   // the row says WHICH submission, and `reviewNote` is the reviewer's reason
-  // where one was given. The note is the meta line, exactly as
-  // `moderation_outcome`'s `{note}` is: these intakes have no member-facing
-  // tracker page and QueerPulse sends no email, so this row is the whole of
-  // what the member ever hears, and a declined outcome without its reason would
-  // be the reasonless refusal the finding exists to stop.
+  // where one was given. The note travels on the row's `reason` field,
+  // exactly as `moderation_outcome`'s `note` does: these intakes have no
+  // member-facing tracker page and QueerPulse sends no email, so this row is
+  // the whole of what the member ever hears, and a declined outcome without
+  // its reason would be the reasonless refusal the finding exists to stop.
   | "submission_decided"
   // `review_replied` goes to the AUTHOR OF A REVIEW when the SUBJECT of that
   // review answers it in public, written by `ReviewReplyNotifier`. A business
@@ -663,7 +677,11 @@ export type NotificationKind =
   | "go_together_unmatched"
   | "go_together_member_left"
   | "go_together_meet_again"
-  | "go_together_mutual";
+  | "go_together_mutual"
+  // ENG-409. Thirty-one kinds the backend wrote with no entry here, so each
+  // rendered the unknown-kind fallback. Listed, categorised and given their
+  // key selectors and token fallbacks in `notificationKindCopy.ts`.
+  | LifecycleNotificationKind;
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -806,6 +824,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   magazine_piece_commissioned: "platform",
   magazine_piece_stage_changed: "platform",
   magazine_piece_published: "platform",
+  // A pitch answer is the desk's word on a member's own submission, same tab
+  // as the four rows above it.
+  magazine_pitch_passed: "platform",
   // A credential of the member's own running out is the platform's word about
   // their own standing, same tab as account_deletion_final_warning.
   card_expiring: "platform",
@@ -871,6 +892,8 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   go_together_member_left: "events",
   go_together_meet_again: "events",
   go_together_mutual: "community",
+  // ENG-409. See `LIFECYCLE_KIND_CATEGORY` for the per-kind reasoning.
+  ...LIFECYCLE_KIND_CATEGORY,
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -895,6 +918,10 @@ export interface FormattedNotification {
    *  `textNamed` variant can name the same subject (a listing, a group) and
    *  not only the actor. Absent on the early-return admin kinds. */
   textValues?: TranslateOptions;
+  /** The free text someone wrote to explain a decision (a moderator's note,
+   *  a reviewer's reason), trimmed. Present only when the payload carries a
+   *  non-empty one; see `notificationReasonOf`. `meta` stays the label. */
+  reason?: string;
 }
 
 /**
@@ -939,11 +966,18 @@ function mentionKeyFor(type: string, payload: unknown): string {
 
 /**
  * Resolve the i18n subkey a `moderation_outcome` notification's copy lives
- * under. The row carries `payload.action` (`warn | suspend | ban`, written by
- * the backend) — each gets its own headline ("You've received a warning" vs
- * "Your account has been suspended"), so the key branches to
- * `moderation_outcome.<action>`. An unknown/missing action falls back to the
- * flat `moderation_outcome.*` copy. Non-moderation types pass through unchanged.
+ * under. The row carries `payload.action`, written by the backend: `warn`,
+ * `suspend`, `ban`, `restriction_lifted`, `restrict`, `hide_content` and
+ * `remove_content` each get their own headline, so the key branches to
+ * `moderation_outcome.<action>`.
+ *
+ * PRD-458 added `hide_content` and `remove_content`: the platform review
+ * queue can now hide or remove a piece of content, and the author is owed the
+ * same word a warned or suspended member already gets. `restrict` closes the
+ * same gap for a time-boxed account restriction, which previously fell
+ * through to the flat copy below. An unknown/missing action falls back to the
+ * flat `moderation_outcome.*` copy. Non-moderation types pass through
+ * unchanged.
  */
 function moderationKeyFor(type: string, payload: unknown): string {
   if (type !== "moderation_outcome") return type;
@@ -951,7 +985,10 @@ function moderationKeyFor(type: string, payload: unknown): string {
   return action === "warn" ||
     action === "suspend" ||
     action === "ban" ||
-    action === "restriction_lifted"
+    action === "restriction_lifted" ||
+    action === "restrict" ||
+    action === "hide_content" ||
+    action === "remove_content"
     ? `moderation_outcome.${action}`
     : "moderation_outcome";
 }
@@ -1214,32 +1251,6 @@ function submissionSubjectToken(payload: unknown, t: TFunction): string {
 }
 
 /**
- * Resolves the `{reviewNote}` token a `submission_decided` row interpolates
- * into its META line: the reviewer's reason, where one was given.
- *
- * The meta line IS the note, the same shape `moderation_outcome.*.meta` uses
- * (`"{note}"`). That is deliberate: these intakes have no member-facing tracker
- * page, and QueerPulse sends no email, so the bell is the only place the reason
- * can be read at all.
- *
- * A decision with no note falls back to the kind's own short label ("Partner
- * application"), so the meta line still says what the row is about instead of
- * going blank. It never apologises and never suggests the decision might yet
- * change.
- */
-function submissionNoteToken(payload: unknown, t: TFunction): string {
-  const decided = payload as { kind?: string; reviewNote?: string } | null;
-  const reviewNote = decided?.reviewNote;
-  if (typeof reviewNote === "string" && reviewNote.trim() !== "") {
-    return reviewNote;
-  }
-  const kind = decided?.kind;
-  return typeof kind === "string" && SUBMISSION_KINDS.has(kind)
-    ? t(`notifications:type.submission_decided.${kind}.label`)
-    : t("notifications:type.submission_decided.labelFallback");
-}
-
-/**
  * Resolves the `{subjectLabel}` token a `review_replied` row interpolates: the
  * public name of the thing the member reviewed (the business, the employer, the
  * home).
@@ -1499,24 +1510,6 @@ function verificationLevelToken(payload: unknown, t: TFunction): string {
   return isKnownLevel
     ? t(`notifications:type.verification_update.level.${level}`)
     : t("notifications:type.verification_update.levelFallback");
-}
-
-/**
- * Resolves the `{reason}` token a rejected `verification_update` notification
- * interpolates — the admin's reason for declining the request
- * (`payload.reason`, written by `VerificationService.decideRequest`; the
- * backend requires a non-empty reason to reject, but this reads defensively
- * like every other payload-driven helper in this file, in case an older row
- * predates that guarantee or the field arrives as something unexpected). A
- * missing/blank reason falls back to a generic phrase rather than
- * interpolating an empty or literal-unresolved token. Only called for the
- * `rejected` decision.
- */
-function verificationReasonToken(payload: unknown, t: TFunction): string {
-  const reason = (payload as { reason?: string } | null)?.reason;
-  return typeof reason === "string" && reason.trim() !== ""
-    ? reason
-    : t("notifications:type.verification_update.rejected.reasonFallback");
 }
 
 /**
@@ -1838,6 +1831,18 @@ function goTogetherUnmatchedIsFinal(payload: unknown): boolean {
   return (payload as { isFinal?: unknown } | null)?.isFinal === true;
 }
 
+/**
+ * The `go_together_unmatched` text variant. `reason: "hostSwitchedOff"` is
+ * the notice a waiting member gets when the host switches Go together off
+ * (`GoTogetherHostService.notifySwitchedOff`), so it names that cause. Any
+ * other row keeps the ongoing or final wording by `isFinal`.
+ */
+function goTogetherUnmatchedVariant(payload: unknown): string {
+  const reason = (payload as { reason?: unknown } | null)?.reason;
+  if (reason === "hostSwitchedOff") return "textHostOff";
+  return goTogetherUnmatchedIsFinal(payload) ? "textFinal" : "text";
+}
+
 /** The queue key from an admin-queue payload, or null when it is missing. */
 function adminQueueKeyOf(payload: unknown): string | null {
   const record = payload as { queue?: unknown } | null;
@@ -1864,6 +1869,33 @@ function adminQueueLabelKey(queue: string | null): string {
     return "admin:moderationHealth.queue.unknown";
   }
   return `admin:moderationHealth.queue.${queue}`;
+}
+
+/**
+ * The payload field whose NUMBER each pluralised kind's copy counts. CLDR
+ * selection in `translate.ts` keys off `count` specifically, while each
+ * payload names its number after what it is (`daysRemaining`, `newItemCount`,
+ * `seatsRemaining`) because that is also the name the copy interpolates. So
+ * the same number is mirrored onto `count`; without it the row falls through
+ * to the `_other` form and reads "in 1 days".
+ */
+const PLURAL_COUNT_FIELD: Partial<Record<NotificationKind, string>> = {
+  account_deletion_final_warning: "daysRemaining",
+  card_expiring: "daysRemaining",
+  persona_update: "newItemCount",
+  event_nearly_full: "seatsRemaining",
+};
+
+/** Mirrors a pluralised kind's own count field onto `tokens.count`. */
+function mirrorPluralCount(
+  type: string,
+  payload: unknown,
+  tokens: TranslateOptions,
+): void {
+  const field = isKnownKind(type) ? PLURAL_COUNT_FIELD[type] : undefined;
+  if (!field || typeof payload !== "object" || payload === null) return;
+  const value = (payload as Record<string, unknown>)[field];
+  if (typeof value === "number") tokens.count = value;
 }
 
 /**
@@ -1965,7 +1997,7 @@ export function formatNotification(
   // written as its own calmer, more conclusive sentence.
   if (type === "go_together_unmatched") {
     const tokens = interpolationTokens(payload);
-    const variant = goTogetherUnmatchedIsFinal(payload) ? "textFinal" : "text";
+    const variant = goTogetherUnmatchedVariant(payload);
     return {
       text: t(`notifications:type.go_together_unmatched.${variant}`, tokens),
       meta: t("notifications:type.go_together_unmatched.meta", tokens),
@@ -2006,74 +2038,31 @@ export function formatNotification(
     key = communityPostRemovedKeyFor(type, payload);
   } else if (type === "card_expiring") {
     key = cardExpiringKeyFor(type, payload);
+  } else if (isLifecycleKind(type) || type === "event_reminder") {
+    key = lifecycleKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.
     key = mentionKeyFor(type, payload);
   }
   const tokens = interpolationTokens(payload);
-  if (type === "verification_update") {
-    const decision = (payload as { decision?: string } | null)?.decision;
-    if (decision === "rejected") {
-      // Overrides the raw `reason` string `interpolationTokens` would already
-      // have copied through with the same value, defensively re-resolved so a
-      // missing/blank reason falls back to a generic phrase instead of
-      // interpolating an empty string.
-      tokens.reason = verificationReasonToken(payload, t);
-    } else {
-      // Overrides the raw `toLevel`/`fromLevel`/`requestedLevel` enum values
-      // `interpolationTokens` would otherwise copy through verbatim (e.g.
-      // `id_verified`) with the translated, member-facing label the catalog
-      // string's `{level}` expects. Covers both the override shape
-      // (`decision` absent) and the `approved` decision.
-      tokens.level = verificationLevelToken(payload, t);
-    }
+  if (
+    type === "verification_update" &&
+    (payload as { decision?: string } | null)?.decision !== "rejected"
+  ) {
+    // Overrides the raw `toLevel`/`fromLevel`/`requestedLevel` enum values
+    // `interpolationTokens` would otherwise copy through verbatim (e.g.
+    // `id_verified`) with the translated, member-facing label the catalog
+    // string's `{level}` expects. Covers both the override shape
+    // (`decision` absent) and the `approved` decision. A rejection names no
+    // level; its admin's reason travels on `reason` (see the return below).
+    tokens.level = verificationLevelToken(payload, t);
   }
-  if (type === "account_deletion_final_warning") {
-    // The copy is pluralised ("in 1 day" / "in 3 days"), and CLDR selection in
-    // `translate.ts` keys off `count` specifically. The payload names the value
-    // `daysRemaining` — which the copy also interpolates by that name — so the
-    // same number is mirrored onto `count` for the plural to resolve. Without
-    // this the row would fall through to the `_other` form and read "in 1
-    // days".
-    const daysRemaining = (payload as { daysRemaining?: unknown } | null)
-      ?.daysRemaining;
-    if (typeof daysRemaining === "number") {
-      tokens.count = daysRemaining;
-    }
-  }
-  if (type === "card_expiring") {
-    // Same reason as `account_deletion_final_warning` above: the copy is
-    // pluralised ("in 1 day" / "in 30 days") and CLDR selection keys off
-    // `count`, while the payload names the value `daysRemaining` because that
-    // is what the copy interpolates. Both names carry the same number.
-    const daysRemaining = (payload as { daysRemaining?: unknown } | null)
-      ?.daysRemaining;
-    if (typeof daysRemaining === "number") {
-      tokens.count = daysRemaining;
-    }
-  }
-  if (type === "persona_update") {
-    // Same reason as the three blocks above: the copy is pluralised ("a new
-    // piece of work" / "3 new pieces of work") and CLDR selection keys off
-    // `count`, while the payload names the value `newItemCount` because that
-    // is what the emit site calls it. Both names carry the same number.
-    const newItemCount = (payload as { newItemCount?: unknown } | null)
-      ?.newItemCount;
-    if (typeof newItemCount === "number") {
-      tokens.count = newItemCount;
-    }
-  }
-  if (type === "event_nearly_full") {
-    // Same reason as `card_expiring` above: the copy is pluralised ("1 spot
-    // left" / "3 spots left") and CLDR selection keys off `count`, while the
-    // payload names the value `seatsRemaining` because that is what the copy
-    // interpolates. Both names carry the same number.
-    const seatsRemaining = (payload as { seatsRemaining?: unknown } | null)
-      ?.seatsRemaining;
-    if (typeof seatsRemaining === "number") {
-      tokens.count = seatsRemaining;
-    }
-  }
+  // `account_deletion_final_warning`, `card_expiring`, `persona_update` and
+  // `event_nearly_full` are pluralised on their own count field; see
+  // `PLURAL_COUNT_FIELD`.
+  mirrorPluralCount(type, payload, tokens);
+  // ENG-409: the defensive tokens of the kinds in `notificationKindCopy.ts`.
+  applyLifecycleTokens(type, payload, tokens, t);
   if (type === "intake_reviewed") {
     // The copy names the form the member actually filled in; the payload only
     // carries its snake_case identifier, so the readable phrase is resolved
@@ -2112,13 +2101,11 @@ export function formatNotification(
     tokens.communityName = communityNameToken(type, payload, t);
   }
   if (type === "submission_decided") {
-    // Overrides the raw `subjectLabel`/`reviewNote` `interpolationTokens`
-    // already copied through with the same values, defensively re-resolved so a
-    // row missing either still reads as a whole sentence and a whole meta line
-    // instead of showing a brace token to somebody being told their submission
-    // was turned down.
+    // Overrides the raw `subjectLabel` `interpolationTokens` already copied
+    // through with the same value, defensively re-resolved so a row missing it
+    // still reads as a whole sentence to somebody being told their submission
+    // was turned down. The reviewer's `reviewNote` travels on `reason`.
     tokens.subjectLabel = submissionSubjectToken(payload, t);
-    tokens.reviewNote = submissionNoteToken(payload, t);
   }
   if (type === "review_replied") {
     // Same reason: the reviewed thing's name is the copy's only interpolation
@@ -2138,7 +2125,8 @@ export function formatNotification(
   if (
     type === "magazine_piece_commissioned" ||
     type === "magazine_piece_stage_changed" ||
-    type === "magazine_piece_published"
+    type === "magazine_piece_published" ||
+    type === "magazine_pitch_passed"
   ) {
     // Overrides the raw `title` `interpolationTokens` already copied through
     // with the same value, defensively re-resolved so a row missing it still
@@ -2196,5 +2184,8 @@ export function formatNotification(
     category: known ? KIND_CATEGORY[type] : "platform",
     kind: known ? type : null,
     textValues: tokens,
+    // PRD-402: the decision's written reason, shown in full under the
+    // sentence; `meta` above is always the kind's label.
+    reason: notificationReasonOf(type, payload),
   };
 }

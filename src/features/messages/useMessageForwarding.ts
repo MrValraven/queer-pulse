@@ -6,10 +6,50 @@ import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import { nextLocalId } from "./useMessagesController.helpers";
 import type { useStartConversation } from "./api/useMessageMutations";
 import type { MediaKind } from "./messageSending.helpers";
+import type { LastMessageMailboxFields } from "./api/messages.adapters";
+
+/**
+ * A session copy with its last activity taken from a forward the member just
+ * sent: the forward's instant, its time label, and its display text (the
+ * optimistic bubble's own `text`, which already holds a media forward's
+ * label). The sender fields behind the old preview are cleared, since the
+ * hook holds no handle to name the member as its sender; the list refetch
+ * that prunes this copy brings the server's own row back.
+ */
+function withForwardActivity(
+  thread: Conversation,
+  displayText: string,
+  timeLabel: string,
+  forwardedAt: string,
+): Conversation {
+  // Typed as the interface so a new mailbox key fails to compile here.
+  const mailboxFields: LastMessageMailboxFields = {
+    lastMessageSenderIdentityId: undefined,
+    lastMessageStaffFirstName: undefined,
+    lastMessageIsSentByViewer: undefined,
+  };
+  return {
+    ...thread,
+    preview: displayText,
+    time: timeLabel,
+    updatedAt: forwardedAt,
+    lastMessageSenderHandle: undefined,
+    lastMessageBody: displayText,
+    lastMessageIsSystem: false,
+    ...mailboxFields,
+  };
+}
 
 interface ForwardingDeps {
   demoMode: boolean;
   allThreads: Conversation[];
+  /** The open thread's id, so a forward into it can leave a detached history
+   *  window first. */
+  activeId: string;
+  /** From the thread window (PRD-401): returns the open thread to its live
+   *  tail and cancels a window request or jump hunt still on its way, the
+   *  same call the composer's sends make first. */
+  returnToLatest: () => void;
   t: TFunction;
   setExtraThreads: Dispatch<SetStateAction<Conversation[]>>;
   setReadIds: Dispatch<SetStateAction<Set<string>>>;
@@ -71,12 +111,18 @@ export interface MessageForwarding {
  * this once per selected recipient and stays open, or closes on full
  * success, on top of whatever thread was already open.
  *
+ * A forward whose target is the open thread (PRD-401) returns that thread
+ * to its latest message first, the way a composer send does, so the
+ * forwarded bubble lands in view and any jump hunt still on its way ends.
+ *
  * Extracted from `useMessageCreation`; the send/outbox mechanics are
  * unchanged from the single-recipient flow this replaced.
  */
 export function useMessageForwarding({
   demoMode,
   allThreads,
+  activeId,
+  returnToLatest,
   t,
   setExtraThreads,
   setReadIds,
@@ -94,6 +140,8 @@ export function useMessageForwarding({
     stickerId?: string,
   ): Promise<boolean> {
     const localId = nextLocalId();
+    // One label for the bubble and the session row it stamps below.
+    const justNowLabel = t("messages:time.justNow");
     const optimistic: ChatMessage = {
       from: "me",
       text,
@@ -109,7 +157,7 @@ export function useMessageForwarding({
       // stay true for it too, and only `stickerId` tells the two apart.
       kind: stickerId ? "sticker" : attachment ? mediaKind : undefined,
       attachment,
-      time: t("messages:time.justNow"),
+      time: justNowLabel,
       status: "sending",
       localId,
       forwarded: true,
@@ -122,6 +170,11 @@ export function useMessageForwarding({
       conversationId: string,
       seatIdentityId: string | undefined,
     ): void => {
+      // The open thread may be showing a detached history window, where the
+      // forwarded bubble would stay out of view until the reader went back.
+      if (conversationId === activeId || recipient.id === activeId) {
+        returnToLatest();
+      }
       appendOptimistic(conversationId, {
         ...optimistic,
         sendAsIdentityId: seatIdentityId,
@@ -136,6 +189,20 @@ export function useMessageForwarding({
         mediaKind,
         stickerId,
         seatIdentityId,
+      );
+      // The send path patches only the list and an existing detail entry
+      // (`patchConversationPreview`), so a session copy (a thread started or
+      // opened past the loaded pages) would keep its old activity and sit at
+      // that old slot in `mergeInboxThreads`. Stamp it with this forward.
+      const forwardedAt = new Date().toISOString();
+      setExtraThreads((previous) =>
+        previous.some((thread) => thread.id === conversationId)
+          ? previous.map((thread) =>
+              thread.id === conversationId
+                ? withForwardActivity(thread, text, justNowLabel, forwardedAt)
+                : thread,
+            )
+          : previous,
       );
     };
     // Group target: the conversation already exists (real UUID in live, mock

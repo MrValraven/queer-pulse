@@ -524,6 +524,23 @@
     white-space: nowrap;
   }
 
+  /* A go-live line (`data-status`, no verb) is text, a line longer than the
+     verb column: it takes a row of its own under the card's last line, from
+     the piece's edge through More, with no tap-target offset. Line -1 ends
+     the explicit grid, so the row follows the wait line or, under the
+     waiting grouping, the stage line. */
+  .actionCell[data-status] {
+    grid-row: -1 / span 1;
+    grid-column: piece-start / more-end;
+    justify-content: flex-start;
+    max-width: none;
+    margin-top: 0;
+  }
+
+  .row .actionCell[data-status] > * {
+    text-align: start;
+  }
+
   /* Full width again regardless of density: the title (clamped to two
      lines) with the presence stack after it, then the meta line alone. */
   .pieceCell,

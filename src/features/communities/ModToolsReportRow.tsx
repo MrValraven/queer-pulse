@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { Avatar, Button } from "../../shared/components/ui";
+import { communityPath } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
@@ -114,7 +115,7 @@ export function ModToolsReportRow({
   const SeverityIcon = severity?.icon;
   const author = report.author;
   const threadHref = report.threadPostId
-    ? `/community/${slug}?tab=discussion#post-${report.threadPostId}`
+    ? `${communityPath(slug)}?tab=discussion#post-${report.threadPostId}`
     : null;
   // Two separate reasons a report is not this moderator's to settle, and the
   // row has to tell them apart because the sentence it shows differs.

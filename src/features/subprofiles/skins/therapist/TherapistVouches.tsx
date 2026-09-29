@@ -12,6 +12,10 @@ import type { EndorserDTO } from "../../api/subprofiles.api";
 import { useEndorsers } from "../../api/useEndorsers";
 import { EndorseSubprofileModal } from "../../EndorseSubprofileModal";
 import type { PersonaAction, PersonaViewMode } from "../../personaSkinRender";
+import {
+  canReadPersonaEndorsers,
+  isPersonaOpenToEngagement,
+} from "../../personaEngagement";
 import { personaAddressName } from "../../subprofile-kinds";
 import { TherapistSection } from "./TherapistSection";
 import type { TherapistView } from "./therapistView";
@@ -36,7 +40,21 @@ export function TherapistVouches({ data, view, mode }: TherapistVouchesProps) {
   const { t } = useTranslation();
   const name = view.firstName;
   const count = data.endorsementCount;
-  const { data: endorsersResult } = useEndorsers(data.id, count > 0);
+  // A members-only persona's endorser list answers its owners alone, and not
+  // while an owner previews the page as a visitor (PRD-428).
+  const canSeeEndorsers = canReadPersonaEndorsers(
+    data,
+    data.viewerIsMember && mode !== "visitor",
+  );
+  // N2: the count is public even when the list behind it isn't. Heading the
+  // section "People who have actually worked with {name}" over a card that
+  // can show no faces or notes promises a list this viewer can't see, so
+  // this case swaps in a quiet heading that makes no such promise.
+  const isVouchListHidden = count > 0 && !canSeeEndorsers;
+  const { data: endorsersResult } = useEndorsers(
+    data.id,
+    count > 0 && canSeeEndorsers,
+  );
   const endorsers = endorsersResult?.endorsers ?? [];
   const withNotes = endorsers.filter(
     (endorser) => (endorser.note ?? "").trim() !== "",
@@ -46,7 +64,11 @@ export function TherapistVouches({ data, view, mode }: TherapistVouchesProps) {
   return (
     <TherapistSection
       label={t("subprofiles:therapist.vouches.label")}
-      heading={t("subprofiles:therapist.vouches.heading", { name })}
+      heading={
+        isVouchListHidden
+          ? t("subprofiles:therapist.vouches.headingHidden")
+          : t("subprofiles:therapist.vouches.heading", { name })
+      }
     >
       {count > 0 ? (
         <div className={styles.vouchHead}>
@@ -181,6 +203,10 @@ function VouchFooter({
   const { t } = useTranslation();
   const isPublic = mode === "public";
   const isInert = mode === "preview" || mode === "visitor";
+
+  // Endorsing accepts an open persona only (PRD-428), so a members-only one
+  // shows neither the invitation line nor the vouch button, live or inert.
+  if (!isPersonaOpenToEngagement(data)) return null;
 
   return (
     <div className={styles.vouchFoot}>

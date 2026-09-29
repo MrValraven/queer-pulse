@@ -6,6 +6,7 @@ import {
   useState,
   type KeyboardEvent,
   type ReactNode,
+  type RefObject,
 } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Spinner } from "./Spinner";
@@ -31,20 +32,183 @@ interface SelectPanelProps {
   onClose: () => void;
 }
 
-/** Text the typeahead filter matches against, per option. */
+/** Lower cases, strips accents (NFD, then combining marks), and trims, so a
+ *  search folds "Saúde" and "saude" to the same text. Applied to both the
+ *  query and each option's text before comparing. */
+function foldForSearch(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+/** Text the typeahead filter matches against, per option: the visible label
+ *  (when it is a plain string) plus any extra `keywords`, so a caller adding
+ *  keywords widens what matches while keeping the label itself searchable. */
 function optionText(option: SelectOption): string {
-  if (option.keywords) return option.keywords;
-  return typeof option.label === "string" ? option.label : "";
+  const labelText = typeof option.label === "string" ? option.label : "";
+  return [labelText, option.keywords].filter(Boolean).join(" ");
 }
 
 function filterOptions(
   options: readonly SelectOption[],
   query: string,
 ): readonly SelectOption[] {
-  const normalized = query.trim().toLowerCase();
+  const normalized = foldForSearch(query);
   if (!normalized) return options;
   return options.filter((option) =>
-    optionText(option).toLowerCase().includes(normalized),
+    foldForSearch(optionText(option)).includes(normalized),
+  );
+}
+
+/** A row's option plus its absolute index into the filtered list, which is
+ *  what `optionId` keys off, so it has to survive grouping. */
+interface OptionRow {
+  option: SelectOption;
+  index: number;
+}
+
+/** A consecutive stretch of same-group rows. `group` is undefined for a run
+ *  of ungrouped rows, which render with no heading and no wrapping element. */
+interface OptionRun {
+  group: string | undefined;
+  items: OptionRow[];
+}
+
+/** Splits the filtered list into consecutive same-group runs, so each group's
+ *  rows can be wrapped in one `role="group"` element together with their
+ *  heading. Relies on `SelectOption.group`'s own contract ("first-seen order
+ *  wins"): a field is expected to stay together in one contiguous stretch. */
+function buildOptionRuns(options: readonly SelectOption[]): OptionRun[] {
+  const runs: OptionRun[] = [];
+  options.forEach((option, index) => {
+    const previousRun = runs[runs.length - 1];
+    if (previousRun && previousRun.group === option.group) {
+      previousRun.items.push({ option, index });
+    } else {
+      runs.push({ group: option.group, items: [{ option, index }] });
+    }
+  });
+  return runs;
+}
+
+interface SelectOptionListProps {
+  listRef: RefObject<HTMLDivElement | null>;
+  listboxId: string;
+  listboxLabel: string;
+  baseId: string;
+  multiple: boolean;
+  searchable: boolean;
+  optionRuns: readonly OptionRun[];
+  activeIndex: number;
+  hasOptions: boolean;
+  optionId: (index: number) => string;
+  selected: ReadonlySet<string>;
+  renderOption?: (option: SelectOption, state: SelectOptionState) => ReactNode;
+  onSelect: (value: string) => void;
+  onActivate: (value: string) => void;
+  onKeyDown: (event: KeyboardEvent) => void;
+}
+
+/** The `role="listbox"` itself: an ungrouped run's rows sit directly under it,
+ *  a grouped run's rows sit inside a `role="group"` named by its heading. */
+function SelectOptionList({
+  listRef,
+  listboxId,
+  listboxLabel,
+  baseId,
+  multiple,
+  searchable,
+  optionRuns,
+  activeIndex,
+  hasOptions,
+  optionId,
+  selected,
+  renderOption,
+  onSelect,
+  onActivate,
+  onKeyDown,
+}: SelectOptionListProps) {
+  // An option button that stays out of the tab order: the combobox keeps
+  // focus on the input and drives selection via aria-activedescendant, so
+  // each option carries tabIndex=-1 and is reached by pointer or the input's
+  // key handler. Mirrors MemberPicker's role="option".
+  const renderOptionRow = (option: SelectOption, index: number) => {
+    const isSelected = selected.has(option.value);
+    const isActive = index === activeIndex;
+    return (
+      <button
+        key={option.value}
+        type="button"
+        id={optionId(index)}
+        role="option"
+        tabIndex={-1}
+        aria-selected={isSelected}
+        disabled={option.disabled}
+        data-active={isActive}
+        className={[styles.option, isSelected && styles.optionSelected]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={() => onSelect(option.value)}
+        onMouseMove={() => onActivate(option.value)}
+      >
+        {renderOption ? (
+          renderOption(option, { selected: isSelected, active: isActive })
+        ) : (
+          <>
+            <span className={styles.optionLabel}>{option.label}</span>
+            {isSelected && <FiCheck className={styles.check} aria-hidden />}
+          </>
+        )}
+      </button>
+    );
+  };
+
+  return (
+    <div
+      ref={listRef}
+      id={listboxId}
+      role="listbox"
+      aria-label={listboxLabel}
+      aria-multiselectable={multiple || undefined}
+      aria-activedescendant={hasOptions ? optionId(activeIndex) : undefined}
+      tabIndex={searchable ? -1 : 0}
+      className={styles.list}
+      onKeyDown={searchable ? undefined : onKeyDown}
+    >
+      {optionRuns.map((run, runIndex) => {
+        // An ungrouped run (option.group is unset) renders its rows directly
+        // as listbox children, with no wrapping element and no heading.
+        if (run.group == null) {
+          return (
+            <Fragment key={`run-${runIndex}`}>
+              {run.items.map(({ option, index }) =>
+                renderOptionRow(option, index),
+              )}
+            </Fragment>
+          );
+        }
+        // A grouped run wraps its rows in role="group" named by its heading,
+        // so listbox > group > option stays valid ARIA and a screen reader
+        // announces each option's group name alongside its label.
+        const headingId = `${baseId}-group-${runIndex}`;
+        return (
+          <div key={`run-${runIndex}`} role="group" aria-labelledby={headingId}>
+            <div
+              role="presentation"
+              id={headingId}
+              className={styles.groupLabel}
+            >
+              {run.group}
+            </div>
+            {run.items.map(({ option, index }) =>
+              renderOptionRow(option, index),
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -74,11 +238,13 @@ export function SelectPanel({
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(
     () => filterOptions(options, query),
     [options, query],
   );
+  const optionRuns = useMemo(() => buildOptionRuns(filtered), [filtered]);
 
   // Active row starts on the first selected option, else the first row. Held as
   // a value so it survives re-filtering; clamped to the filtered list on read.
@@ -96,6 +262,33 @@ export function SelectPanel({
   useEffect(() => {
     (searchable ? inputRef.current : listRef.current)?.focus();
   }, [searchable]);
+
+  // A trigger near the bottom of a short viewport (a phone's tab bar, an
+  // embedded webview) can open a panel that renders partly off screen.
+  // `{ block: "nearest" }` only scrolls the minimum needed to bring it fully
+  // into view, and never smooth-scrolls (the browser default is instant), so
+  // there is nothing extra to gate behind prefers-reduced-motion. Runs once,
+  // since SelectPanel only mounts while open.
+  //
+  // Waits for the panel's own entrance animation (`qpMenuIn`, translateY +
+  // scale) to finish first: measuring mid-animation reads a box that is still
+  // short of its settled size, so a panel that only just fits ends up
+  // scrolled short by that same amount. Under reduced motion the animation is
+  // `none`, `getAnimations()` returns an empty list, and the scroll runs on
+  // the next tick. `getAnimations` is itself optional-called for a host that
+  // lacks it (jsdom), and the panel is checked for `isConnected` after the
+  // wait, since the trigger can unmount it (a fast Escape, a fast selection)
+  // before its animation settles.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const animations = panel.getAnimations?.() ?? [];
+    Promise.all(animations.map((animation) => animation.finished))
+      .catch(() => {})
+      .finally(() => {
+        if (panel.isConnected) panel.scrollIntoView?.({ block: "nearest" });
+      });
+  }, []);
 
   // Keep the active row scrolled into view as it moves. `scrollIntoView` is
   // optional-called: not every host (jsdom, older embedded webviews) implements
@@ -151,69 +344,27 @@ export function SelectPanel({
   };
 
   const listbox = (
-    <div
-      ref={listRef}
-      id={listboxId}
-      role="listbox"
-      aria-label={listboxLabel}
-      aria-multiselectable={multiple || undefined}
-      aria-activedescendant={
-        filtered.length > 0 ? optionId(activeIndex) : undefined
-      }
-      tabIndex={searchable ? -1 : 0}
-      className={styles.list}
-      onKeyDown={searchable ? undefined : onKeyDown}
-    >
-      {filtered.map((option, index) => {
-        const isSelected = selected.has(option.value);
-        const isActive = index === activeIndex;
-        // A group heading precedes the first option of each new group.
-        const startsGroup =
-          option.group != null && option.group !== filtered[index - 1]?.group;
-        return (
-          <Fragment key={option.value}>
-            {startsGroup && (
-              <div role="presentation" className={styles.groupLabel}>
-                {option.group}
-              </div>
-            )}
-            {/* An option button (not a focusable tab stop): the combobox keeps
-                focus on the input and drives selection via aria-activedescendant,
-                so each option carries tabIndex=-1 and is reached by pointer or
-                the input's key handler. Mirrors MemberPicker's role="option". */}
-            <button
-              type="button"
-              id={optionId(index)}
-              role="option"
-              tabIndex={-1}
-              aria-selected={isSelected}
-              disabled={option.disabled}
-              data-active={isActive}
-              className={[styles.option, isSelected && styles.optionSelected]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => onSelect(option.value)}
-              onMouseMove={() => setActiveValue(option.value)}
-            >
-              {renderOption ? (
-                renderOption(option, { selected: isSelected, active: isActive })
-              ) : (
-                <>
-                  <span className={styles.optionLabel}>{option.label}</span>
-                  {isSelected && (
-                    <FiCheck className={styles.check} aria-hidden />
-                  )}
-                </>
-              )}
-            </button>
-          </Fragment>
-        );
-      })}
-    </div>
+    <SelectOptionList
+      listRef={listRef}
+      listboxId={listboxId}
+      listboxLabel={listboxLabel}
+      baseId={baseId}
+      multiple={multiple}
+      searchable={searchable}
+      optionRuns={optionRuns}
+      activeIndex={activeIndex}
+      hasOptions={filtered.length > 0}
+      optionId={optionId}
+      selected={selected}
+      renderOption={renderOption}
+      onSelect={onSelect}
+      onActivate={setActiveValue}
+      onKeyDown={onKeyDown}
+    />
   );
 
   return (
-    <div className={styles.panel}>
+    <div ref={panelRef} className={styles.panel}>
       {searchable && (
         <input
           ref={inputRef}

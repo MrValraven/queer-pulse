@@ -4,8 +4,11 @@
  * written one.
  *
  * This rule is a CONTRACT SHARED WITH THE BACKEND. `GET /members` must serve each
- * card's `tagline` as `tagline || truncate(bio)`, because the card DTO
- * deliberately doesn't carry `bio` (see `MemberCardDTO` in `members.api.ts`) — so
+ * card's `tagline` as `tagline || truncate(bio)` for an `open` profile, and
+ * `tagline` alone otherwise (ENG-438: a network or private bio sits behind the
+ * limited card, so its opening must not print on a card). Callers here apply
+ * that gate by passing the bio only for an `open` profile. The card DTO
+ * deliberately doesn't carry `bio` (see `MemberCardDTO` in `members.api.ts`), so
  * a stranger's browser has no bio to fall back to. This module is the frontend
  * half of the same rule, and it runs in exactly two places:
  *

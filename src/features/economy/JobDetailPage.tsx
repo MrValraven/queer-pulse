@@ -86,10 +86,14 @@ export function JobDetailPage() {
       <span className={styles.bcSep} aria-hidden>
         <FiChevronRight />
       </span>
-      <span>{d.category}</span>
-      <span className={styles.bcSep} aria-hidden>
-        <FiChevronRight />
-      </span>
+      {d.category && (
+        <>
+          <span>{d.category}</span>
+          <span className={styles.bcSep} aria-hidden>
+            <FiChevronRight />
+          </span>
+        </>
+      )}
       <span className={styles.bcCurrent}>{job.title}</span>
     </div>
   );

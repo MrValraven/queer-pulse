@@ -9,7 +9,7 @@ import {
   SEED_CONNECTED,
   SEED_INCOMING,
   SEED_SENT,
-} from "../../features/connect/connections.data";
+} from "../../features/connect/connectionSeeds.data";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import {

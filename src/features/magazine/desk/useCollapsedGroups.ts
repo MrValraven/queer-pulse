@@ -62,14 +62,24 @@ interface RevealedGroup {
  * j/k never land on a row nobody can see. The stored choice is left alone:
  * the group folds back once the current row moves on, and folding it by hand
  * while the row is inside wins.
+ *
+ * While `isFocusActive` (a focus chip has the desk narrowed), every group
+ * shows fully open unless the editor folds it: `focusFolds` holds only the
+ * ids folded during this focus session, separate from the stored choices, so
+ * a fold made while chasing a chip never touches what the editor keeps
+ * folded day to day. Clearing focus drops that session's folds and the
+ * stored choices take over again.
  */
 export function useCollapsedGroups(
   groups: DeskPieceGroup[],
   revealPieceId: string | null,
+  isFocusActive = false,
 ): CollapsedGroups {
   const [choices, setChoices] =
     useState<CollapsedGroupChoices>(readStoredChoices);
   const [revealed, setRevealed] = useState<RevealedGroup | null>(null);
+  const [focusFolds, setFocusFolds] = useState<ReadonlySet<string>>(new Set());
+  const [wasFocusActive, setWasFocusActive] = useState(isFocusActive);
 
   const holdingGroupId = revealPieceId
     ? (groups.find((group) =>
@@ -94,15 +104,38 @@ export function useCollapsedGroups(
     setRevealed({ pieceId: revealed.pieceId, groupId: holdingGroupId });
   }
 
+  // Same pattern as `revealed`: the previous flag is tracked in state, so a
+  // change is caught and applied in this render pass. Leaving focus starts
+  // the next focus session with every group open again.
+  if (isFocusActive !== wasFocusActive) {
+    setWasFocusActive(isFocusActive);
+    if (!isFocusActive) setFocusFolds(new Set());
+  }
+
   const isCollapsed = useCallback(
-    (group: DeskPieceGroup) =>
-      group.id !== revealed?.groupId &&
-      (choices[group.id] ?? group.isCollapsedByDefault),
-    [choices, revealed],
+    (group: DeskPieceGroup) => {
+      if (isFocusActive) {
+        return group.id !== revealed?.groupId && focusFolds.has(group.id);
+      }
+      return (
+        group.id !== revealed?.groupId &&
+        (choices[group.id] ?? group.isCollapsedByDefault)
+      );
+    },
+    [isFocusActive, focusFolds, choices, revealed],
   );
 
   const toggleCollapsed = useCallback(
     (group: DeskPieceGroup) => {
+      if (isFocusActive) {
+        setFocusFolds((currentFolds) => {
+          const nextFolds = new Set(currentFolds);
+          if (nextFolds.has(group.id)) nextFolds.delete(group.id);
+          else nextFolds.add(group.id);
+          return nextFolds;
+        });
+        return;
+      }
       const nextChoices = { ...choices, [group.id]: !isCollapsed(group) };
       setChoices(nextChoices);
       writeStoredChoices(nextChoices);
@@ -110,7 +143,7 @@ export function useCollapsedGroups(
         setRevealed({ pieceId: revealed.pieceId, groupId: null });
       }
     },
-    [choices, isCollapsed, revealed],
+    [isFocusActive, choices, isCollapsed, revealed],
   );
 
   const collapsedGroupIds = useMemo(

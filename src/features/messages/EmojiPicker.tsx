@@ -17,6 +17,8 @@ import { useEmojiGridVirtualizer } from "./useEmojiGridVirtualizer";
 import { useEmojiPickerSectionJump } from "./useEmojiPickerSectionJump";
 import { EmojiCategoryRail } from "./EmojiCategoryRail";
 import { EmojiGrid } from "./EmojiGrid";
+import { PickerSearchField } from "./PickerSearchField";
+import { PickerSearchStatus } from "./PickerSearchStatus";
 import { filterEmojiEntries, normalizeEmojiQuery } from "./emojiSearch";
 import {
   buildEmojiSections,
@@ -154,9 +156,13 @@ interface EmojiPickerProps {
 }
 
 /**
- * The desktop emoji picker popover: a category rail, a search field and a
- * virtualized grid over the full dataset — modelled directly on `GifPicker`,
- * in WhatsApp's own top-to-bottom order (tabs first, then the field).
+ * The desktop emoji picker popover: a search field, a category rail and a
+ * virtualized grid over the full dataset, modelled directly on `GifPicker`.
+ * The field is the panel's own first row (below the Emoji/Stickers segmented
+ * rail when that's present), landing at the exact same offset as
+ * `StickerSearchField` does in the Stickers tab, so switching tabs never
+ * moves the field up or down. `PickerSearchField` is the one component both
+ * tabs render for it.
  *
  * The dataset loads through a dynamic `import()` on first open
  * (`useEmojiDataset`) so its ~81KB chunk is fetched on demand and never
@@ -165,14 +171,13 @@ interface EmojiPickerProps {
  * blank band; a live search replaces the grid's recents + categories with one
  * flat "results" section.
  *
- * The rail stays mounted through that search rather than being dropped (it
- * used to be, back when it sat BELOW the field and could vanish without
- * moving anything): now that it's the panel's first row, unmounting it would
- * yank the field out from under whoever is typing in it. It is built from
- * `categorySections`, which ignores the query entirely, so the tabs neither
- * collapse to the single synthetic "results" section nor reshuffle mid-type
- * — and a tab clicked during a search clears the query, which is the only
- * thing "jump to a group" can sensibly mean from a flat result list.
+ * The rail sits directly under the field and stays mounted through every
+ * search: it is built from `categorySections`, which ignores the query
+ * entirely, so the tabs neither collapse to the single synthetic "results"
+ * section nor reshuffle mid-type, and the field itself keeps a stable
+ * neighbour above and below it as a member types. A tab clicked during a
+ * search clears the query, which is the only thing "jump to a group" can
+ * sensibly mean from a flat result list.
  *
  * No local Escape/outside-click handling here — `useComposerPopovers`
  * already owns that for every composer popover, and `EmojiComposerButton`
@@ -210,8 +215,8 @@ export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
   const tabPanelId = `${idPrefix}-tabpanel`;
 
   useEffect(() => {
-    // Focusing the search field only makes sense on the Emoji tab; the
-    // Stickers tab has no field of its own to steal focus from.
+    // Focuses the emoji search field on the Emoji tab only. The Stickers tab's
+    // own field waits for the member, so focus stays on the chosen tab.
     if (activeTab === "emoji") searchRef.current?.focus();
   }, [activeTab]);
 
@@ -267,6 +272,27 @@ export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
     );
     return buildSearchResultSections(results);
   }, [categorySections, datasetState, normalizedQuery]);
+
+  // Gated on the dataset actually being ready: a query typed while the
+  // ~81KB chunk is still in flight has nothing real to search yet, so the
+  // live region stays silent, matching the visible "Loading emoji…" state,
+  // until there's an actual result to announce.
+  const isSearching =
+    datasetState.status === "ready" && normalizedQuery.length > 0;
+  // While searching, `sections` collapses to the one synthetic "results"
+  // section built above, so its total item count is exactly what matched.
+  const resultCount = useMemo(
+    () =>
+      isSearching
+        ? sections.reduce((total, section) => total + section.items.length, 0)
+        : 0,
+    [isSearching, sections],
+  );
+  const searchStatusText = !isSearching
+    ? ""
+    : resultCount > 0
+      ? t("messages:emoji.searchResultsCount", { count: resultCount })
+      : t("messages:emoji.empty");
 
   const {
     containerRef,
@@ -333,21 +359,20 @@ export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
           aria-labelledby={onPickSticker ? emojiTabId : undefined}
           className={styles.tabPanel}
         >
+          <PickerSearchField
+            query={query}
+            onQueryChange={setQuery}
+            inputRef={searchRef}
+            placeholder={t("messages:emoji.searchPlaceholder")}
+          >
+            <PickerSearchStatus text={searchStatusText} settleKey={query} />
+          </PickerSearchField>
           <EmojiCategoryRail
             sections={categorySections}
             onSelectSection={handleSelectSection}
             // Nothing reads as current mid-search: the grid's only section is
             // the synthetic "results" one, whose key matches no tab.
             activeSectionKey={pendingSectionKey ?? activeSectionKey}
-          />
-          <input
-            ref={searchRef}
-            type="search"
-            className={styles.search}
-            placeholder={t("messages:emoji.searchPlaceholder")}
-            aria-label={t("messages:emoji.searchPlaceholder")}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
           />
           {datasetState.status === "loading" && (
             <p className={styles.state}>{t("messages:emoji.loading")}</p>

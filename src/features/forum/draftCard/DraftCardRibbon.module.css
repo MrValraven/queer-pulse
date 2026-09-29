@@ -1,0 +1,372 @@
+/* The ribbon: the unfinished post as one band under the forum search.
+
+   The band is a plain white card: --paper with a hairline and a soft
+   resting shadow, the same surface as the search box above it, so it reads
+   as part of the hero. Being a compact band, it deliberately uses
+   --radius-18 and the lighter 0.09 hairline where the standard card uses
+   --radius-card and --line. Colour is kept for the parts that carry meaning:
+   the coral pen badge and eyebrow, the jade autosave dot, and the primary
+   button. The chips stay quiet neutral pills. The shadow is the soft,
+   diffuse one, and hovering deepens it (a layer fades in, so only opacity
+   animates). The title speaks in the hero's Fraunces; everything else stays
+   in DM Sans at caption sizes.
+
+   The band is a named container, so the chips step aside when the band
+   itself runs short of room, whatever the page around it does.
+
+   The text blocks are divs on purpose: the hero styles every `p` inside it
+   (`.hero p` in ForumPage.module.css) with a margin, a measure and ink-60,
+   which would outrank these single-class rules. */
+
+.ribbon {
+  position: relative;
+  isolation: isolate;
+  container: draft-ribbon / inline-size;
+  display: grid;
+  /* Chips and button take implicit tracks, so a hidden chip list leaves no
+     empty column (and no stray gap) behind. */
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-auto-columns: auto;
+  grid-auto-flow: column;
+  align-items: center;
+  column-gap: 18px;
+  min-height: 78px;
+  padding: 14px 16px 14px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+/* The hover lift: the deeper soft shadow on a layer behind the card, faded in. */
+.ribbon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: var(--shadow-soft-lift);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+@media (hover: hover) {
+  .ribbon:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ── Pen badge with its autosave dot ── */
+
+.badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--accent-rgb), 0.14);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  color: var(--accent);
+}
+
+.badgeIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* The dot sits on the badge's lower-right edge, punched out of it by a paper
+   ring; the halo behind it breathes three times to say "saved", then settles. */
+.badge::before,
+.badge::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-avatar);
+  background: var(--jade);
+}
+
+.badge::after {
+  box-shadow: var(--ring-paper);
+}
+
+.badge::before {
+  opacity: 0;
+  animation: ribbonSavedPulse 2.8s var(--ease-out);
+  animation-iteration-count: 3;
+}
+
+@keyframes ribbonSavedPulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge::before {
+    animation: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .badge::before {
+  animation: none;
+}
+
+/* ── Eyebrow and the title line ── */
+
+.body {
+  min-width: 0;
+}
+
+/* The two parts wrap as whole units when a narrow band (or a longer language)
+   cannot fit them on one line. The separator dot lives in the gap between
+   them, so when "Autosaved" drops to the second line its dot falls past the
+   eyebrow's left edge and is clipped: neither line ever starts or ends with
+   a stray dot. */
+.eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 19px;
+  row-gap: 3px;
+  overflow-x: clip;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent-text);
+  line-height: 1.2;
+}
+
+.eyebrow > span {
+  white-space: nowrap;
+}
+
+/* "Autosaved" in a quieter voice, after a small CSS dot centred in the gap. */
+.saved {
+  position: relative;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.saved::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -11px;
+  width: 3px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: var(--radius-avatar);
+  background: currentColor;
+}
+
+.line {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  margin-top: 5px;
+}
+
+.title,
+.excerpt {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  flex: 0 1 auto;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  letter-spacing: var(--ls-heading);
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+.titleFromBody,
+.titleUntitled {
+  font-style: italic;
+}
+
+.titleUntitled {
+  color: var(--ink-60);
+}
+
+/* The body glimpse gives way first: it only takes the space the title leaves,
+   and keeps a readable few words' width so a long title shrinks before the
+   glimpse vanishes. */
+.excerpt {
+  flex: 1 1 0;
+  min-width: 10em;
+  margin-left: 12px;
+  padding-left: 13px;
+  /* The divider: a 1px hairline, shorter than the line box, drawn as a
+     background so the span can stay a plain block that ellipsises. */
+  background: linear-gradient(
+      rgba(var(--line-rgb), 0.22),
+      rgba(var(--line-rgb), 0.22)
+    )
+    left center / 1px 14px no-repeat;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.excerptEmpty {
+  font-style: italic;
+}
+
+/* ── Chips ── */
+
+.facts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 180px;
+  padding: 5px 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.035);
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.factIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  color: var(--ink-60);
+}
+
+.factLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.factMore {
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Continue ── */
+
+.cta {
+  flex: none;
+}
+
+/* The whole band is the way back in: the button's link stretches over the
+   ribbon (the nearest positioned ancestor, the Button itself being static),
+   so a click on the title, the badge or a chip continues the draft, matching
+   the hover that already lifts the whole card. The focus ring stays on the
+   button. */
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-18);
+}
+
+/* The Button lifts on hover and sinks on press with a transform, and a
+   transformed element becomes the containing block of its own ::after: the
+   stretched layer would collapse onto the button mid-hover (flicker) and
+   mid-press (a press on the title would release outside the link and never
+   click). The card's deeper shadow and the button's darker fill carry the
+   hover here. */
+.ribbon .cta:is(:hover, :active):not(:disabled):not([aria-disabled="true"]) {
+  transform: none;
+}
+
+.ctaArrow {
+  transition: transform var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .ribbon:hover .ctaArrow,
+  .cta:focus-visible .ctaArrow {
+    transform: translateX(3px);
+  }
+}
+
+/* When the band runs short the chips go first, so pen, title and button keep
+   their room. Two chips beside a typical title want about 1080px inside the
+   band (the container measures inside the padding); below that the title
+   began to cut off mid-name. */
+@container draft-ribbon (max-width: 1079px) {
+  .facts {
+    display: none;
+  }
+}
+
+/* On a tablet the body glimpse goes too, and the whole line is the title's;
+   a title longer than the line wraps to two balanced lines before it cuts. */
+@container draft-ribbon (max-width: 719px) {
+  .excerpt {
+    display: none;
+  }
+
+  .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+}
+
+/* Phone: two rows. The badge and the words on top, where the title may take
+   a second line; the button spans the width below at full tap height. */
+@media (--sm) {
+  .ribbon {
+    grid-auto-flow: row;
+    align-items: start;
+    column-gap: 14px;
+    row-gap: 14px;
+    padding: 16px;
+  }
+
+  .cta {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: var(--tap-min);
+  }
+
+  .excerpt {
+    display: none;
+  }
+
+  .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    font-size: var(--text-19);
+  }
+}

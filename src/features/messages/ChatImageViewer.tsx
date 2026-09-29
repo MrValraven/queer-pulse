@@ -7,6 +7,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useDismiss, useScrimDismiss } from "../../shared/components/ui";
+import { useInertWhileCovered } from "../../shared/components/ui/modalStack";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useViewerClose } from "./useViewerClose";
@@ -81,6 +82,15 @@ export function ChatImageViewer({
   const requestClose = useCallback(() => beginClose("default"), [beginClose]);
   const dismissByDrag = useCallback(() => beginClose("drag"), [beginClose]);
   const dialogRef = useDismiss(requestClose);
+  // Joins the shared dialog layers (see `useInertWhileCovered`), so a dialog
+  // opened on top makes this viewer inert. Forward is the case that needs it:
+  // the forward picker mounts in the same render that starts this viewer's
+  // exit, and the viewer paints above it for that exit. The layer stays
+  // registered through the exit (hence `false`), which keeps the fading
+  // viewer out of the tab order, the accessibility tree and hit testing
+  // while the picker owns the screen. It leaves the layers on unmount.
+  const scrimRef = useRef<HTMLDivElement>(null);
+  useInertWhileCovered(scrimRef, false);
   const scrimWashRef = useRef<HTMLDivElement>(null);
   const fallbackOriginRef = useRef<HTMLElement | null>(null);
   const scrimProps = useScrimDismiss(requestClose);
@@ -144,6 +154,7 @@ export function ChatImageViewer({
 
   return createPortal(
     <div
+      ref={scrimRef}
       className={[styles.scrim, closing && styles.closing]
         .filter(Boolean)
         .join(" ")}

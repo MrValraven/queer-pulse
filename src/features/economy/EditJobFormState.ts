@@ -22,6 +22,8 @@ export type JobEditToggleKey = "benefits" | "inclusivity" | "tags" | "contacts";
 export interface JobEditErrors {
   title?: string;
   description?: string;
+  /** A legacy job has no field; the form will not save until one is chosen. */
+  category?: string;
   city?: string;
   rateMax?: string;
   email?: string;
@@ -115,6 +117,9 @@ export function useEditJobForm(initial: JobEditDraft): EditJobForm {
       found.description = "economy:editJob.error.descriptionRequired";
     } else if (draft.description.trim().length > DESCRIPTION_MAX) {
       found.description = "economy:editJob.error.descriptionTooLong";
+    }
+    if (!draft.category) {
+      found.category = "economy:postJob.step1.fieldError";
     }
     if (needsCity && !draft.city.trim()) {
       found.city = "economy:editJob.error.cityRequired";

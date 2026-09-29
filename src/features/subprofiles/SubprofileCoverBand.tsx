@@ -70,7 +70,6 @@ export function SubprofileCoverBand({
       {isOwner && data.coverUrl && (
         <PersonaCoverReposition
           subprofileId={data.id}
-          skinData={data.skinData}
           baseOffsetY={baseOffsetY}
           coverRef={coverRef}
         />

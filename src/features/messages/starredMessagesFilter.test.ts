@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   filterStarredMessages,
+  starredSnippetIn,
   type FilterableStarredMessage,
 } from "./starredMessagesFilter";
 
@@ -212,5 +213,84 @@ describe("filterStarredMessages", () => {
   it("returns an empty list when nothing matches", () => {
     const items = [makeItem({ snippet: "hello there" })];
     expect(filterStarredMessages(items, "goodbye", "all")).toEqual([]);
+  });
+});
+
+function stickerAttachment(): FilterableStarredMessage["attachment"] {
+  return {
+    url: "https://cdn.example.com/sticker.png",
+    previewUrl: "https://cdn.example.com/sticker.png",
+    width: 512,
+    height: 512,
+    provider: "sticker",
+    stickerId: "sticker-1",
+    label: "Bi reverse",
+    labelPt: "Bi invertido",
+  };
+}
+
+const RAW_DOCUMENT_KEY = "messages:attachments.documentFallbackText";
+const RAW_IMAGE_KEY = "messages:attachments.fallbackText";
+
+describe("starredSnippetIn: legacy rows", () => {
+  it("names a raw-key document hit in the reader's language", () => {
+    const item = makeItem({
+      kind: "document",
+      snippet: RAW_DOCUMENT_KEY,
+      attachment: documentAttachment("lease.pdf"),
+    });
+    expect(starredSnippetIn(item, "en")).toBe("File");
+    expect(starredSnippetIn(item, "pt")).toBe("Ficheiro");
+  });
+
+  it("names a raw-key photo hit in the reader's language", () => {
+    const item = makeItem({
+      kind: "image",
+      snippet: RAW_IMAGE_KEY,
+      attachment: imageAttachment(),
+    });
+    expect(starredSnippetIn(item, "en")).toBe("Photo");
+    expect(starredSnippetIn(item, "pt")).toBe("Foto");
+  });
+
+  it("keeps a server-mapped English label as sent", () => {
+    const item = makeItem({ kind: "document", snippet: "File" });
+    expect(starredSnippetIn(item, "pt")).toBe("File");
+  });
+
+  it("names a legacy sticker by its label, whatever its stored text", () => {
+    const item = makeItem({
+      kind: "sticker",
+      snippet: "edited words",
+      attachment: stickerAttachment(),
+    });
+    expect(starredSnippetIn(item, "en")).toBe("Bi reverse");
+    expect(starredSnippetIn(item, "pt")).toBe("Bi invertido");
+  });
+
+  it("shows nothing for a sticker hit without its attachment", () => {
+    const item = makeItem({ kind: "sticker", snippet: "edited words" });
+    expect(starredSnippetIn(item, "en")).toBe("");
+  });
+});
+
+describe("filterStarredMessages: legacy rows", () => {
+  it("finds a raw-key document by its label in either language", () => {
+    const items = [makeItem({ kind: "document", snippet: RAW_DOCUMENT_KEY })];
+    expect(filterStarredMessages(items, "file", "all")).toEqual(items);
+    expect(filterStarredMessages(items, "ficheiro", "all")).toEqual(items);
+    expect(filterStarredMessages(items, "fallback", "all")).toEqual([]);
+  });
+
+  it("never matches a sticker on the text a legacy edit stored", () => {
+    const items = [
+      makeItem({
+        kind: "sticker",
+        snippet: "edited words",
+        attachment: stickerAttachment(),
+      }),
+    ];
+    expect(filterStarredMessages(items, "edited", "all")).toEqual([]);
+    expect(filterStarredMessages(items, "invertido", "all")).toEqual(items);
   });
 });

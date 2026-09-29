@@ -63,4 +63,6 @@ export const nav: Catalog = {
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   messagesUnread_one: "Mensagens, {count} por ler",
   messagesUnread_other: "Mensagens, {count} por ler",
+  notificationsUnread_one: "Notificações, {count} por ler",
+  notificationsUnread_other: "Notificações, {count} por ler",
 };

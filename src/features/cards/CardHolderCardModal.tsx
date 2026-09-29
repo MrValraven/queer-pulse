@@ -4,6 +4,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CardProgramDTO, IssuerCardDTO } from "./api/cards.api";
 import { CardHolderActions, type PendingCardStatus } from "./CardHolderActions";
+import { cardHolderName } from "./cardHolderName";
 import { cardRoleLabelKey } from "./cardRoles";
 import { MembershipCardFace } from "./MembershipCardFace";
 import { holderCardFace } from "./holderCard.data";
@@ -60,7 +61,7 @@ export function CardHolderCardModal({
     <Modal
       wide
       className={styles.dialog}
-      title={holder.holderName}
+      title={cardHolderName(holder.holderName, t)}
       sub={holder.serial}
       onClose={onClose}
       footer={

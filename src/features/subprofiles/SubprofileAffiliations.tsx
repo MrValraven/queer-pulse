@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { AffiliationDTO } from "./api/subprofiles.api";
 import { useEndorsers } from "./api/useEndorsers";
+import { canReadPersonaEndorsers } from "./personaEngagement";
 import { AFFILIATION_ROLE_KEYS, affiliationHref } from "./affiliations.data";
 import { PracticeReferrals } from "./skins/PracticeBlocks";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
@@ -71,9 +72,16 @@ export function SubprofileAffiliations({
   const interactive = mode !== "preview";
   const showEndo = skin !== "practice";
 
+  // A members-only persona's endorser list answers its owners alone, and not
+  // while an owner previews the page as a visitor.
   const { data: endorsersResult } = useEndorsers(
     persona.id,
-    showEndo && persona.endorsementCount > 0,
+    showEndo &&
+      persona.endorsementCount > 0 &&
+      canReadPersonaEndorsers(
+        persona,
+        persona.viewerIsMember && mode !== "visitor",
+      ),
   );
   const endorsers = endorsersResult?.endorsers ?? [];
   const hasEndo = showEndo && endorsers.length > 0;

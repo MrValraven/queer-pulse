@@ -5,6 +5,7 @@ import {
   personaOwnerAddress,
   personaPublicPathForOwnerOrNull,
   personaPublicPathOrNull,
+  personaShareUrl,
 } from "./personaLinks.data";
 
 describe("personaPublicPathOrNull", () => {
@@ -21,6 +22,7 @@ describe("personaPublicPathOrNull", () => {
     expect(
       personaPublicPathOrNull({
         handle: null,
+        linkVisibility: "linked",
         ownerSlug: "tiago-costa",
         slug: "therapist",
       } as never),
@@ -30,6 +32,39 @@ describe("personaPublicPathOrNull", () => {
     expect(
       personaPublicPathOrNull({ handle: null, slug: "nightform" } as never),
     ).toBeNull();
+  });
+  it("returns null for a standalone persona with no handle when an owner slug is present (the editor preview)", () => {
+    expect(
+      personaPublicPathOrNull({
+        handle: null,
+        linkVisibility: "unlinked",
+        ownerSlug: "tiago",
+        slug: "code",
+      } as never),
+    ).toBeNull();
+  });
+});
+
+describe("personaShareUrl", () => {
+  it("hands out no link for a draft, stored handle or not", () => {
+    expect(
+      personaShareUrl({
+        handle: "codeworks",
+        linkVisibility: "unlinked",
+        slug: "code",
+        status: "draft",
+      } as never),
+    ).toBeNull();
+  });
+  it("builds the absolute handle URL for a published persona", () => {
+    expect(
+      personaShareUrl({
+        handle: "codeworks",
+        linkVisibility: "unlinked",
+        slug: "code",
+        status: "published",
+      } as never),
+    ).toMatch(/\/p\/codeworks$/);
   });
 });
 
@@ -88,6 +123,29 @@ describe("owner dashboard addresses", () => {
         "tiago-costa",
       ),
     ).toEqual({ status: "none" });
+  });
+  it("answers draft for an unpublished row even with a stored handle (PRD-429)", () => {
+    expect(
+      personaOwnerAddress({ ...linkedRow, status: "draft" }, "tiago-costa"),
+    ).toEqual({ status: "draft" });
+  });
+  it("answers draft for an unpublished unlinked row regardless of its handle", () => {
+    expect(
+      personaOwnerAddress(
+        {
+          handle: null,
+          slug: "nightform",
+          linkVisibility: "unlinked",
+          status: "draft",
+        },
+        "tiago-costa",
+      ),
+    ).toEqual({ status: "draft" });
+  });
+  it("reads no status as published (a followed persona or a directory card)", () => {
+    expect(personaOwnerAddress(linkedRow, undefined)).toMatchObject({
+      status: "ready",
+    });
   });
 });
 

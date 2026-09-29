@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { FiAlertTriangle, FiKey, FiUsers } from "react-icons/fi";
+import { FiAlertTriangle, FiUsers } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { communityPath } from "../../app/routeMap";
 import {
   Button,
   EmptyState,
@@ -11,12 +13,12 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import type { AccessTier } from "./api/communities.api";
 import { useCommunityGateCard } from "./api/useCommunityGateCard";
 import { useMyCommunityInvites } from "./api/useCommunityInvites";
 import { shortTypeLabel } from "./api/communities.adapters";
 import { COMMUNITY_TAG_LABEL_KEY } from "./communityTags.data";
 import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
+import { GateAction } from "./CommunityGateAction";
 import styles from "./CommunityGateModal.module.css";
 
 /**
@@ -28,8 +30,11 @@ import styles from "./CommunityGateModal.module.css";
  * scrim over hidden content: there is nothing behind it to hide.
  *
  * What it may show is `CommunityGateCardDTO` and only that. No roster, no
- * owner, no post, no house rules. If a field you want is not on that type, the
- * answer is that an outsider may not see it, not that the type needs widening.
+ * owner, no post, no house rules: the rules reach an applicant inside the join
+ * wizard. If a field you want is missing from that type, the answer is that
+ * an outsider may not see it. The one thing the card knows about the viewer
+ * is their own join request, so an applicant sees that they already asked and
+ * can take the request back.
  */
 export function CommunityGateModal({
   slug,
@@ -43,6 +48,8 @@ export function CommunityGateModal({
   const { card, isLoading, isError, notFound, refetch } =
     useCommunityGateCard(slug);
   const [isJoining, setIsJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
+  const navigate = useNavigate();
 
   // Gone, or private with no invitation. It disappears silently rather than
   // announcing that something was there, which is the same posture a private
@@ -110,6 +117,18 @@ export function CommunityGateModal({
     card.accessTier === "private"
       ? t("communities:common.count.membersOnly")
       : t("communities:common.count.members", { count: card.memberCount });
+
+  // A real join (the server answered `joined`, or demo admitted them) ends in
+  // the community itself. Closing the welcome step takes the new member
+  // inside, and the gate goes with the hub underneath it: a gate left open
+  // over a community they just entered would still read as a closed door.
+  // `replace` swaps out the `?gate=` entry, so Back skips the door too. The
+  // join already invalidated `["community", slug]`, so the detail loads fresh
+  // as a member.
+  const closeWizard = () => {
+    setIsJoining(false);
+    if (hasJoined) void navigate(communityPath(card.slug), { replace: true });
+  };
 
   const placeLabel = card.isOnline
     ? t("communities:gate.online")
@@ -200,8 +219,12 @@ export function CommunityGateModal({
 
         <GateAction
           accessTier={card.accessTier}
+          communityName={card.name}
+          slug={card.slug}
+          joinRequestStatus={card.myJoinRequestStatus ?? null}
           hasStandingInvitation={hasStandingInvitation}
           isInvitesLoading={shouldReadInvitations && isInvitesLoading}
+          isWizardOpen={isJoining}
           onAct={() => setIsJoining(true)}
         />
       </Modal>
@@ -216,88 +239,11 @@ export function CommunityGateModal({
             description: card.tagline,
             accessTier: card.accessTier,
           }}
-          onClose={() => setIsJoining(false)}
+          isInvited={hasStandingInvitation}
+          onMembershipGranted={() => setHasJoined(true)}
+          onClose={closeWizard}
         />
       )}
     </>
-  );
-}
-
-/**
- * The one line and the one action a gate card offers, keyed on the viewer's
- * standing INVITATION rather than on the tier: somebody invited to any gated
- * community holds a real invitation and must be offered Accept, whatever its
- * tier, which is what `CommunityHeroActions` already does on the detail hero.
- * That is why the invitation check sits above the tier branches.
- *
- * Accept and Ask to join open the SAME wizard. The invitation is spent by the
- * join endpoint, and the wizard is what puts the house rules in front of
- * somebody before they agree to them.
- *
- * Decline is deliberately absent: declining fires a notification and is worth
- * a moment's thought, and the invitations shelf on the page underneath is one
- * dismissal away.
- */
-function GateAction({
-  accessTier,
-  hasStandingInvitation,
-  isInvitesLoading,
-  onAct,
-}: {
-  accessTier: AccessTier;
-  hasStandingInvitation: boolean;
-  isInvitesLoading: boolean;
-  onAct: () => void;
-}) {
-  const { t } = useTranslation();
-
-  if (hasStandingInvitation) {
-    return (
-      <div className={styles.action}>
-        <p className={styles.body}>{t("communities:gate.invited.line")}</p>
-        <Button variant="primary" onClick={onAct}>
-          {t("communities:gate.invited.action")}
-        </Button>
-      </div>
-    );
-  }
-
-  if (accessTier === "request") {
-    return (
-      <div className={styles.action}>
-        <p className={styles.body}>{t("communities:gate.request.line")}</p>
-        <Button variant="primary" onClick={onAct}>
-          {t("communities:gate.request.action")}
-        </Button>
-      </div>
-    );
-  }
-
-  // The shelf has not landed yet, so whether an invitation exists is unknown.
-  // The line goes up and the action waits: nothing here may offer to accept an
-  // invitation whose id has not arrived.
-  if (isInvitesLoading) {
-    return (
-      <div className={styles.action}>
-        <p className={styles.body}>
-          {t("communities:detail.join.inviteOnlyHint")}
-        </p>
-      </div>
-    );
-  }
-
-  // Invitation only, and this viewer holds none. Deliberately not a button:
-  // there is no action to offer, and a disabled control would read as "try
-  // again later" rather than as "this is how it works". Same reasoning
-  // `CommunityHeroActions` states for the hero's version of this note.
-  return (
-    <p className={styles.inviteOnly}>
-      <span className={styles.inviteOnlyLabel}>
-        <FiKey aria-hidden /> {t("communities:detail.join.inviteOnly")}
-      </span>
-      <span className={styles.body}>
-        {t("communities:detail.join.inviteOnlyHint")}
-      </span>
-    </p>
   );
 }

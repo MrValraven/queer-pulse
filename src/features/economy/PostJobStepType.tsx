@@ -3,8 +3,8 @@ import { FiAlertCircle } from "react-icons/fi";
 import { Select as UiSelect } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { JobFieldSelects } from "./JobFieldSelects";
 import {
-  CATEGORIES,
   COMMITMENTS,
   FORMATS,
   SENIORITY,
@@ -87,20 +87,24 @@ export function PostJobStepType({
           {t("economy:postJob.step1.arrangementSub")}
         </div>
         <div className={styles.fieldRow}>
-          <Select
-            label={t("economy:postJob.field.category")}
-            value={state.category}
-            options={CATEGORIES}
-            onChange={(v) => patch({ category: v })}
+          <JobFieldSelects
+            fieldId={state.category}
+            professionId={state.profession}
+            onChange={({ fieldId: category, professionId: profession }) =>
+              patch({ category, profession })
+            }
+            isFieldInvalid={showErrors && !state.category}
+            fieldLabelKey="economy:postJob.field.category"
+            professionLabelKey="economy:postJob.field.profession"
           />
+        </div>
+        <div className={styles.fieldRow}>
           <Select
             label={t("economy:postJob.field.commitment")}
             value={state.commitment}
             options={COMMITMENTS}
             onChange={(v) => patch({ commitment: v })}
           />
-        </div>
-        <div className={styles.fieldRow}>
           <Select
             label={t("economy:postJob.field.experienceLevel")}
             value={state.seniority}
@@ -108,13 +112,13 @@ export function PostJobStepType({
             onChange={(v) => patch({ seniority: v })}
             optional
           />
-          <Select
-            label={t("economy:postJob.field.format")}
-            value={state.format}
-            options={FORMATS}
-            onChange={(v) => patch({ format: v })}
-          />
         </div>
+        <Select
+          label={t("economy:postJob.field.format")}
+          value={state.format}
+          options={FORMATS}
+          onChange={(v) => patch({ format: v })}
+        />
 
         {needsCity && (
           <div

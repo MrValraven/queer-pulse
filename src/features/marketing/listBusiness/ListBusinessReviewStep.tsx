@@ -38,6 +38,22 @@ function hoursSummary(draft: ListingDraft): string {
   return open.map((d) => d.id).join(", ");
 }
 
+/** The description as plain text, keeping the line breaks the owner typed
+ *  and a blank line between paragraphs, so the recap reads like the live
+ *  preview. `toPlainText` collapses every newline, so it runs per line; it
+ *  also keeps single `*` marks, so italics are unwrapped here. */
+function descriptionSummary(draft: ListingDraft): string {
+  return draft.whatItIs
+    .map((paragraph) => paragraph.text)
+    .filter((text) => text.trim())
+    .join("\n\n")
+    .split("\n")
+    .map((line) => toPlainText(line).replace(/\*(\S[^*]*?)\*/g, "$1"))
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 function onlineSummary(t: TFunction, draft: ListingDraft): string {
   const bits: string[] = [];
   if (draft.social.instagram)
@@ -55,10 +71,13 @@ function Row({
   k,
   children,
   quote,
+  isMultiline,
 }: {
   k: string;
   children: ReactNode;
   quote?: boolean;
+  /** Keeps the value's line breaks instead of running them together. */
+  isMultiline?: boolean;
 }) {
   const { t } = useTranslation();
   const empty = children === "" || children === null || children === undefined;
@@ -66,7 +85,11 @@ function Row({
     <div className={styles.recapRow}>
       <span className={styles.rk}>{k}</span>
       <span
-        className={[styles.rv, quote && styles.rvQuote]
+        className={[
+          styles.rv,
+          quote && styles.rvQuote,
+          isMultiline && styles.rvMultiline,
+        ]
           .filter(Boolean)
           .join(" ")}
       >
@@ -210,11 +233,8 @@ export function StepReview({
         <Row k={t("marketing:listBusiness.step5.row.tagline")} quote>
           {draft.tagline}
         </Row>
-        <Row k={t("marketing:listBusiness.step5.row.whatItIs")}>
-          {/* `toPlainText` keeps single `*` marks, so italics are unwrapped here. */}
-          {toPlainText(
-            draft.whatItIs.map((paragraph) => paragraph.text).join("\n\n"),
-          ).replace(/\*(\S[^*]*?)\*/g, "$1")}
+        <Row k={t("marketing:listBusiness.step5.row.whatItIs")} isMultiline>
+          {descriptionSummary(draft)}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.tags")}>
           {draft.tags.map((tag) => listingTagLabel(t, tag)).join(", ")}

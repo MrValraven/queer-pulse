@@ -151,6 +151,56 @@
   box-shadow: var(--ring-cream);
 }
 
+/* The Portuguese name: the same inline-edit control as the title, on its
+   own line under it and visibly quieter. `.titleButton` inherits its font
+   and colour, so this line sets the UI face, a regular weight and the muted
+   text colour explicitly, well below the title's serif `--text-strong`. */
+.secondaryName {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--ink-60);
+}
+
+.secondaryNameButton {
+  gap: 8px;
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+.secondaryNameButton .titleEditIcon {
+  font-size: var(--text-13);
+}
+
+/* No Portuguese name saved yet: the line is an invitation to add one, so it
+   sits a step quieter and in italic, set apart from a saved name. */
+.secondaryNameEmpty {
+  color: var(--ink-40);
+  font-style: italic;
+}
+
+.secondaryNameInput {
+  width: min(100%, 32rem);
+  margin-inline: -8px;
+  padding: 2px 8px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  line-height: var(--lh-body);
+  accent-color: var(--accent);
+}
+
+.secondaryNameInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
 .titleHint {
   margin: 0;
   font-size: var(--text-12);

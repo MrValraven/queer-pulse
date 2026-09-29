@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, type FocusEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiAlertTriangle } from "react-icons/fi";
 import {
@@ -6,14 +6,13 @@ import {
   EmptyState,
   FadeIn,
   SegmentedControl,
-  SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { AdminListingRows } from "./AdminListingRows";
+import { AdminListingRows, ListingRowsSkeleton } from "./AdminListingRows";
 import { BulkActionBar } from "./BulkActionBar";
 import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
 import { EditSuggestionsSection } from "./EditSuggestionsSection";
@@ -24,6 +23,7 @@ import {
 } from "./AdminListingsHeader";
 import { useAdminListings } from "./api/useAdminListings";
 import { LISTING_QUEUE_HEADING_ID } from "./listingQueueFocus";
+import { useHasHiddenEndContent } from "./useHasHiddenEndContent";
 import {
   LISTING_BULK_ACTION_CAP,
   type AdminListingsStatusFilter,
@@ -42,9 +42,8 @@ const VIEWS: ViewTab[] = ["queue", "editSuggestions", "claims"];
  * patches the shared `[admin-listings]` cache directly, so this page reads
  * `rows` straight from the query with no local override/removed-refs state.
  *
- * `filter` drives the server-side `status` param (rather than a client-side
- * filter over one unfiltered fetch), so each tab is its own paginated,
- * counted query. `q`/`sort` are driven by `<AdminListingsHeader>`, which owns
+ * `filter` drives the server-side `status` param, so each tab is its own
+ * paginated, counted query. `q`/`sort` are driven by `<AdminListingsHeader>`, which owns
  * the search/sort/status controls as a single controlled `value`/`onChange`
  * pair; this page just holds the three primitives it patches.
  */
@@ -53,10 +52,8 @@ export function AdminListingsPage() {
   const [searchParams] = useSearchParams();
   const [view, setView] = useState<ViewTab>("queue");
   const [filter, setFilter] = useState<AdminListingsStatusFilter>("all");
-  // Seeded once from `?q=`, so a deep link (e.g. the directory staff band
-  // pointing at one listing reference) lands on that row. The URL is a
-  // starting point: typing in the header owns the value from then on, and
-  // nothing syncs it back.
+  // Seeded once from `?q=` so a deep link lands on that row; typing in the
+  // header owns the value from then on, and nothing syncs it back.
   const [searchQuery, setSearchQuery] = useState(
     () => searchParams.get("q") ?? "",
   );
@@ -74,10 +71,8 @@ export function AdminListingsPage() {
   } = useAdminListings({ status: statusArg, q: searchQuery, sort });
   const [openRow, setOpenRow] = useState<ListingQueueRow | null>(null);
   const [selectedRefs, setSelectedRefs] = useState<Set<string>>(new Set());
-  // Starts `true` so the queue's genuine first mount gets the row-entrance
-  // cascade; `handleHeaderChange` flips it permanently `false` the moment the
-  // moderator first touches search/sort/status, so every later tab/search/
-  // sort change renders the new rows instantly instead of re-staggering.
+  // First mount gets the row-entrance cascade; the first search/sort/status
+  // change flips this off for good, so later changes render rows instantly.
   const [animateRowEntrance, setAnimateRowEntrance] = useState(true);
 
   function handleHeaderChange(next: AdminListingsHeaderValue) {
@@ -85,17 +80,18 @@ export function AdminListingsPage() {
     setSearchQuery(next.q);
     setSort(next.sort);
     setAnimateRowEntrance(false);
-    // A ref selected under one filter/search/sort combination stops meaning
-    // anything once the moderator switches to another (e.g. a row picked
-    // while on "In review" no longer applies once they jump to "Live").
+    // A selection made under one filter/search/sort stops applying once the
+    // moderator switches to another.
     setSelectedRefs(new Set());
   }
 
-  // Mirrors the backend's per-request cap (`LISTING_BULK_ACTION_CAP`) so a
-  // moderator can't select past what a single bulk request can carry,
-  // enforced here (the state itself never exceeds it) and surfaced to the
-  // row/select-all checkboxes below so unselected ones disable at the cap.
+  // Mirrors the backend's per-request cap (`LISTING_BULK_ACTION_CAP`): the
+  // state never exceeds it, and unselected checkboxes disable at the cap.
   const atSelectionCap = selectedRefs.size >= LISTING_BULK_ACTION_CAP;
+  const hasSelection = selectedRefs.size > 0;
+  // The rows (or the empty queue) render once loading is done, unless the
+  // fetch failed with nothing cached to show.
+  const hasRowsBody = !isLoading && !(isError && rows.length === 0);
 
   function toggleSelected(ref: string) {
     setSelectedRefs((current) => {
@@ -128,9 +124,8 @@ export function AdminListingsPage() {
     });
   }
 
-  // The drawer always shows the latest cached row for the open ref (not the
-  // possibly-stale object captured when it was opened), so a status change
-  // made from the row underneath is reflected without any local merge.
+  // The drawer shows the latest cached row for the open ref, so a status
+  // change made from the row underneath shows up without a local merge.
   const openRowLive = openRow
     ? (rows.find((row) => row.ref === openRow.ref) ?? openRow)
     : null;
@@ -161,40 +156,31 @@ export function AdminListingsPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={60}>
-        <SegmentedControl
-          label={t("admin:adminListings.view.ariaLabel")}
-          options={VIEWS.map((viewOption) => ({
-            value: viewOption,
-            label: t(`admin:adminListings.view.${viewOption}`),
-          }))}
-          value={view}
-          onChange={(nextView) => setView(nextView as ViewTab)}
-        />
-      </FadeIn>
+      <ListingViewSwitch view={view} onChange={setView} />
 
       {view === "queue" ? (
         <>
-          <FadeIn delay={70}>
-            <AdminListingsHeader
-              value={{ q: searchQuery, sort, status: filter }}
-              counts={counts}
-              onChange={handleHeaderChange}
-            />
-          </FadeIn>
-
-          <FadeIn delay={80}>
-            {isLoading ? (
-              <ListingRowsSkeleton />
-            ) : isError && rows.length === 0 ? (
-              // A failed fetch must read as an outage. `EmptyQueueState`'s
-              // plum "queue is empty" success panel is reserved for a
-              // genuinely empty queue after a successful fetch.
-              <ListingQueueErrorState onRetry={() => void refetch()} />
-            ) : (
-              <>
+          {/* One queue panel: the toolbar, then the body. While a selection
+              is active, the bulk-bar reserve pads below the panel. */}
+          <FadeIn
+            delay={70}
+            className={
+              hasRowsBody && hasSelection ? styles.queueWithBulkBar : undefined
+            }
+          >
+            <section className={styles.queuePanel}>
+              <AdminListingsHeader
+                value={{ q: searchQuery, sort, status: filter }}
+                counts={counts}
+                onChange={handleHeaderChange}
+              />
+              {isLoading ? (
+                <ListingRowsSkeleton />
+              ) : hasRowsBody ? (
                 <AdminListingRows
                   rows={rows}
+                  searchQuery={searchQuery}
+                  statusFilter={filter}
                   selectedRefs={selectedRefs}
                   atSelectionCap={atSelectionCap}
                   animateEntrance={animateRowEntrance}
@@ -202,27 +188,37 @@ export function AdminListingsPage() {
                   onToggle={toggleSelected}
                   onToggleAll={toggleSelectAll}
                 />
-                {selectedRefs.size > 0 && (
-                  <BulkActionBar
-                    selectedRefs={selectedRefs}
-                    onClear={() => setSelectedRefs(new Set())}
-                  />
-                )}
-                {hasNextPage && (
-                  <div className={styles.loadMore}>
-                    <Button
-                      variant="ghost"
-                      size="md"
-                      onClick={() => void fetchNextPage()}
-                      disabled={isFetchingNextPage}
-                    >
-                      {t("admin:adminListings.loadMoreCta")}
-                    </Button>
-                  </div>
-                )}
-              </>
+              ) : (
+                // A failed fetch must read as an outage. `EmptyQueueState`'s
+                // plum "queue is empty" success panel is reserved for a
+                // genuinely empty queue after a successful fetch.
+                <div className={styles.panelMessage}>
+                  <ListingQueueErrorState onRetry={() => void refetch()} />
+                </div>
+              )}
+            </section>
+            {hasRowsBody && hasNextPage && (
+              <div className={styles.loadMore}>
+                <Button
+                  variant="ghost"
+                  size="md"
+                  onClick={() => void fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                >
+                  {t("admin:adminListings.loadMoreCta")}
+                </Button>
+              </div>
             )}
           </FadeIn>
+          {/* Mounted outside the FadeIn and the panel: both are containing
+              blocks for fixed descendants (`will-change: transform`, the
+              container query), and the bar floats against the viewport. */}
+          {hasRowsBody && hasSelection && (
+            <BulkActionBar
+              selectedRefs={selectedRefs}
+              onClear={() => setSelectedRefs(new Set())}
+            />
+          )}
         </>
       ) : view === "editSuggestions" ? (
         <EditSuggestionsSection />
@@ -240,6 +236,54 @@ export function AdminListingsPage() {
   );
 }
 
+/** The Submissions / Edit suggestions / Ownership claims switcher. On a
+ *  phone its wrapper scrolls sideways (AdminListingsPage.module.css), so a
+ *  segment that takes keyboard focus scrolls itself into view, ring included
+ *  through the wrapper's scroll padding. `scrollIntoView` with no `behavior`
+ *  follows each scroller's own `scroll-behavior`: the wrapper keeps the
+ *  instant default, and base.css turns the page's smooth scrolling off under
+ *  reduced motion (OS setting or the in-app toggle). The end edge fades while
+ *  segments hide past it. */
+function ListingViewSwitch({
+  view,
+  onChange,
+}: {
+  view: ViewTab;
+  onChange: (nextView: ViewTab) => void;
+}) {
+  const { t } = useTranslation();
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const hasHiddenViewsAtEnd = useHasHiddenEndContent(scrollerRef);
+
+  function revealFocusedSegment(event: FocusEvent<HTMLDivElement>) {
+    (event.target as HTMLElement).scrollIntoView({
+      block: "nearest",
+      inline: "nearest",
+    });
+  }
+
+  return (
+    <FadeIn
+      ref={scrollerRef}
+      delay={60}
+      className={styles.viewSwitchScroller}
+      data-fade-end={hasHiddenViewsAtEnd ? "" : undefined}
+      onFocus={revealFocusedSegment}
+    >
+      <SegmentedControl
+        className={styles.viewSwitch}
+        label={t("admin:adminListings.view.ariaLabel")}
+        options={VIEWS.map((viewOption) => ({
+          value: viewOption,
+          label: t(`admin:adminListings.view.${viewOption}`),
+        }))}
+        value={view}
+        onChange={(nextView) => onChange(nextView as ViewTab)}
+      />
+    </FadeIn>
+  );
+}
+
 /** Branded, retryable error state, mirroring `QueueErrorPane` in
  *  `AdminModerationPanes.tsx`. A failed live fetch must read as an outage a
  *  moderator can recover from; the "nothing to review" state is kept for a
@@ -254,19 +298,5 @@ function ListingQueueErrorState({ onRetry }: { onRetry: () => void }) {
       description={t("common:error.description")}
       action={{ label: t("common:error.retry"), onClick: onRetry }}
     />
-  );
-}
-
-function ListingRowsSkeleton() {
-  return (
-    <div className={styles.rows}>
-      {[0, 1, 2, 3].map((skeletonIndex) => (
-        <SkeletonLine
-          key={skeletonIndex}
-          height={64}
-          style={{ borderRadius: 14 }}
-        />
-      ))}
-    </div>
   );
 }

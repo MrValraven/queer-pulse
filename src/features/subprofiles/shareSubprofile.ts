@@ -16,11 +16,19 @@ export async function shareSubprofile(
 ): Promise<void> {
   const url = personaShareUrl(view);
 
-  // An unlinked persona with no handle yet resolves nowhere. Every entry point
-  // hides or disables Share in that state, so this branch is the last line of
-  // defence: say what is missing rather than hand over a dead link.
+  // A draft's address 404s for everyone but its owners, and an unlinked
+  // persona with no handle yet resolves nowhere. Entry points disable Share
+  // in both states, so this branch is the last line of defence: say what is
+  // missing and hand over no link at all.
   if (!url) {
-    showToast(t("subprofiles:share.noAddressYet"), "error");
+    showToast(
+      t(
+        view.status === "draft"
+          ? "subprofiles:share.draftNotLive"
+          : "subprofiles:share.noAddressYet",
+      ),
+      "error",
+    );
     return;
   }
 

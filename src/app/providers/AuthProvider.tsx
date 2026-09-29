@@ -20,6 +20,8 @@ import {
 } from "../../features/members/data/demoCurrentUser";
 import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
 import { clearQuestionnaireDrafts } from "../../features/goTogether/questionnaire/questionnaireDraftStorage";
+import { clearDraftsForScope } from "../../features/messages/drafts";
+import { clearOutboxForScope } from "../../features/messages/outbox";
 import { logoutAndDetachPush } from "../../features/push/detachPushOnSignOut";
 import { purgeMessagingCache } from "../../shared/api/queryPersistence/messagingCachePersistence";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
@@ -174,6 +176,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // The same for an unsaved Go together questionnaire: its answers are
     // sensitive, so the next member in this tab never inherits them.
     clearQuestionnaireDrafts();
+    // And every unsent DM: the offline outbox and each composer draft, for the
+    // signing-out member's own scope (ENG-404). Runs here so the wipe happens
+    // whether or not the Messages page is mounted to see the scope change.
+    const signingOutScopeId = demoMode ? "demo" : (user?.id ?? null);
+    clearOutboxForScope(signingOutScopeId);
+    clearDraftsForScope(signingOutScopeId);
     if (demoMode) {
       setLoggedIn(false);
       return;
@@ -207,7 +215,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // browser unsubscribe, the shown notifications, the badge and the local
     // sync records are cleared in parallel and never hold the logout.
     void logoutAndDetachPush(postLogout);
-  }, [demoMode]);
+  }, [demoMode, user?.id]);
 
   const endPreparing = useCallback(() => setPreparing(false), []);
 

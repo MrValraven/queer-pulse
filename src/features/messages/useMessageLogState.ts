@@ -224,8 +224,9 @@ export function useMessageLogState(
   );
 
   // Reply-quote / pinned-banner / cross-inbox-search jumps all resolve
-  // through this one virtualizer-aware function (see the hook). It pages back
-  // for an unloaded message through the same load-older trigger as scrolling.
+  // through this one virtualizer-aware function (see the hook). An unloaded
+  // message opens a history window around it (PRD-401), or pages back through
+  // the same load-older trigger as scrolling where no window can be loaded.
   const jumpToMessageVirtualized = useMessageRowJump(
     rows,
     rowVirtualizer,
@@ -238,6 +239,7 @@ export function useMessageLogState(
       isHistorySettled: history.isHistorySettled,
       isHistoryError: history.isHistoryError,
       onLoadOlder: history.onLoadOlder,
+      threadWindow: history.threadWindow,
       scroll: jumpScroll,
     },
   );

@@ -624,7 +624,27 @@
   background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
-/* Join is the primary action of this step — give it a full 44px touch target on
+/* A call in flight. The button keeps focus (aria-disabled leaves it in the
+   tab order) and dims the way `.toggleBusy` does. */
+.ccJoin[aria-disabled="true"] {
+  cursor: progress;
+  opacity: 0.6;
+}
+/* The card's one-line outcome (a hold for review, a refusal, a failed call).
+   The live region stays mounted while empty, so it gives up its margin then. */
+.ccMessage {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+.ccMessage:empty {
+  margin: 0;
+}
+.ccMessageError {
+  color: var(--accent-text);
+}
+/* Join is the primary action of this step: give it a full 44px touch target on
    touch devices without enlarging its ink. */
 @media (pointer: coarse) {
   .ccJoin {

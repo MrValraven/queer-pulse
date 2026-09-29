@@ -1,10 +1,9 @@
-import { useMemo, useState } from "react";
-import { FiSend, FiMessageCircle, FiSearch } from "react-icons/fi";
+import { useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import {
   Button,
   EmptyState,
   FadeIn,
-  LoadErrorState,
   SearchInput,
   SkeletonAvatar,
   SkeletonLine,
@@ -16,16 +15,16 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDebouncedValue, useSimulatedLoad } from "../../shared/hooks";
 import { ReportReplyModal } from "../forum/ReportReplyModal";
-import type { LivingCommunity, Post, PulseMoment } from "./community.model";
+import type { LivingCommunity } from "./community.model";
 import { useCommunityTime } from "./communityTime";
 import {
   useCommunityPostSearch,
   type PulsePaging,
 } from "./api/useCommunityPosts";
-import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
-import { CommunityPostComposer } from "./CommunityPostComposer";
-import { CommunityWelcomeCard } from "./CommunityWelcomeCard";
+import { PulseComposerArea } from "./PulseComposerArea";
+import { PulseFeedList } from "./PulseFeedList";
 import { PulseFeedPost } from "./PulseFeedPost";
+import { usePulseFeedData } from "./usePulseFeedData";
 import { usePulseTabActions } from "./usePulseTabActions";
 import styles from "./PulseTab.module.css";
 
@@ -87,26 +86,10 @@ export function PulseTab({
   const isSearching = debouncedSearchTerm.length > 0;
   const search = useCommunityPostSearch(community.slug, debouncedSearchTerm);
 
-  // Merge the pinned + regular lists once so a pin override can move a post
-  // between the two sections without waiting on a refetch (demo mode has no
-  // refetch to rely on — see `isPinnedEffective`).
-  const allLivingPosts = useMemo(
-    () => [...community.pinned, ...community.pulse],
-    [community.pinned, community.pulse],
+  const { pinnedPosts, feed, isFeedEmpty } = usePulseFeedData(
+    community,
+    actions,
   );
-  const pinnedPosts = allLivingPosts.filter(actions.isPinnedEffective);
-  const regularPosts = allLivingPosts.filter(
-    (post) => !actions.isPinnedEffective(post),
-  );
-
-  // Interleave system moments between posts so the feed reads as alive.
-  const feed: Array<{ post?: Post; moment?: PulseMoment }> = [];
-  [...actions.mine, ...regularPosts].forEach((post, index) => {
-    feed.push({ post });
-    const moment = community.moments[index];
-    if (moment) feed.push({ moment });
-  });
-  const isFeedEmpty = pinnedPosts.length === 0 && feed.length === 0;
 
   const postProps = {
     roleOf: actions.roleOf,
@@ -124,52 +107,14 @@ export function PulseTab({
 
   return (
     <div>
-      {isMember && (
-        <CommunityWelcomeCard
-          key={community.slug}
-          slug={community.slug}
-          communityName={name}
-        />
-      )}
-
-      {isMember ? (
-        frozen ? (
-          <div style={{ marginBottom: 20 }}>
-            <CommunityFrozenComposerNotice />
-          </div>
-        ) : (
-          <CommunityPostComposer
-            viewer={actions.viewer}
-            className={styles.composer}
-            textareaClassName={styles.composerTa}
-            placeholder={t("communities:detail.pulse.composerPlaceholder", {
-              name,
-            })}
-            value={actions.draft}
-            onChange={actions.setDraft}
-            onSubmit={actions.share}
-            submitLabel={t(
-              actions.isAnnouncementDraft
-                ? "communities:detail.pulse.announcement.shareCta"
-                : "communities:detail.pulse.shareCta",
-            )}
-            submitIcon={<FiSend aria-hidden />}
-            attach={actions.imageAttach}
-            {...(canAnnounce
-              ? {
-                  announcement: {
-                    isOn: actions.isAnnouncementDraft,
-                    onToggle: actions.setIsAnnouncementDraft,
-                  },
-                }
-              : {})}
-          />
-        )
-      ) : (
-        <div className={styles.joinHint}>
-          {t("communities:detail.pulse.joinHint", { name })}
-        </div>
-      )}
+      <PulseComposerArea
+        communitySlug={community.slug}
+        name={name}
+        isMember={isMember}
+        frozen={frozen}
+        canAnnounce={canAnnounce}
+        actions={actions}
+      />
 
       {/* Live only: demo mode has no server to search, and its whole feed is
           already on screen. */}
@@ -194,73 +139,15 @@ export function PulseTab({
           postProps={postProps}
         />
       ) : (
-        <>
-          {/* A failed feed read is never the "nothing here yet" empty state:
-              that reads as an answer about the community rather than as a
-              request that did not land (DES-22). */}
-          {isFeedEmpty && paging.isError ? (
-            <LoadErrorState onRetry={paging.refetch} />
-          ) : (
-            isFeedEmpty && (
-              <EmptyState
-                icon={<FiMessageCircle />}
-                title={t("communities:detail.pulse.empty.title")}
-                description={t(
-                  isMember
-                    ? "communities:detail.pulse.empty.description"
-                    : "communities:detail.pulse.empty.visitorDescription",
-                )}
-              />
-            )
-          )}
-
-          {pinnedPosts.map((post) => (
-            <FadeIn key={post.id} className={styles.rowFade}>
-              <PulseFeedPost post={post} isPinned postProps={postProps} />
-            </FadeIn>
-          ))}
-
-          {feed.map((item, index) =>
-            item.post ? (
-              <FadeIn
-                key={item.post.id}
-                className={styles.rowFade}
-                delay={Math.min(index, 8) * 55}
-              >
-                <PulseFeedPost post={item.post} postProps={postProps} />
-              </FadeIn>
-            ) : (
-              <FadeIn
-                key={`m-${item.moment!.id}`}
-                className={styles.rowFade}
-                delay={Math.min(index, 8) * 55}
-              >
-                <div className={styles.moment}>
-                  <span className={styles.momentDot} />
-                  {item.moment!.text}
-                  <span className={styles.momentTime}>
-                    {communityTime.ago(item.moment!)}
-                  </span>
-                </div>
-              </FadeIn>
-            ),
-          )}
-
-          {paging.hasNextPage && (
-            <div className={styles.loadMore}>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={paging.isFetchingNextPage}
-                onClick={paging.fetchNextPage}
-              >
-                {paging.isFetchingNextPage
-                  ? t("communities:detail.pulse.loadingMore")
-                  : t("communities:detail.pulse.loadMoreCta")}
-              </Button>
-            </div>
-          )}
-        </>
+        <PulseFeedList
+          pinnedPosts={pinnedPosts}
+          feed={feed}
+          isFeedEmpty={isFeedEmpty}
+          isMember={isMember}
+          paging={paging}
+          postProps={postProps}
+          momentAgo={communityTime.ago}
+        />
       )}
 
       {actions.reportTarget && (

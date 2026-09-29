@@ -2,7 +2,8 @@
  * Where each piece lands on the desk calendar: the weeks from this Monday to
  * the issue's close, with every visible piece placed on its due day or in one
  * of three lanes above the grid (no date yet, due before this week, due past
- * the last week drawn). Every piece lands in exactly one place, so the
+ * the last week drawn). A scheduled piece with no due date lands on the day
+ * it goes live. Every piece lands in exactly one place, so the
  * calendar never hides work the table shows.
  *
  * Pure logic with no `t()` and no formatting: days are ISO calendar dates
@@ -13,6 +14,7 @@
 import type { Editor, Piece } from "../data/desk.data";
 import { isoCalendarDate } from "../api/pieces.adapters";
 import { describeDue } from "./deskDue";
+import { isPieceScheduled } from "./pieceSchedule";
 import type { DeskTone } from "./deskTones";
 import {
   describeWaitingOn,
@@ -32,6 +34,9 @@ export interface CalendarEntry {
   piece: Piece;
   /** The ISO due day, when the piece has one. */
   dueDate: string | null;
+  /** The ISO day a scheduled piece goes live on the site, or null when it
+   *  is not scheduled. */
+  goesLiveOn: string | null;
   /** Who holds the piece, as a tone for its dot. */
   waitTone: DeskTone;
   /** Who holds the piece, as the table's "Waiting on" names them; null
@@ -64,7 +69,7 @@ export interface CalendarWeek {
 
 export interface CalendarLayout {
   weeks: CalendarWeek[];
-  /** Pieces with no due date. */
+  /** Pieces with no due date (and no go-live day). */
   undated: CalendarEntry[];
   /** Pieces due before the first Monday drawn. */
   earlier: CalendarEntry[];
@@ -115,6 +120,12 @@ function toEntry(
 ): CalendarEntry {
   // The same reading `describeDue` uses, so the table and the calendar agree.
   const dueDate = piece.dueDate ?? isoCalendarDate(piece.due) ?? null;
+  // `today` is local midnight, so a piece going live later today still
+  // counts as scheduled and lands on today.
+  const goesLiveOn =
+    piece.publishedAt && isPieceScheduled(piece, today.getTime())
+      ? toIsoDay(new Date(piece.publishedAt))
+      : null;
   const isAfterClose =
     dueDate !== null &&
     closesOn !== null &&
@@ -126,12 +137,19 @@ function toEntry(
   return {
     piece,
     dueDate,
+    goesLiveOn,
     waitTone: waitingOn.tone,
     waitingOn: pieceHolder(piece) === "nobody" ? null : waitingOn,
     isLate: describeDue(piece, today).isLate,
     isYourTurn: isWaitingOnViewer(piece, viewer.me),
     isAfterClose,
   };
+}
+
+/** The day the calendar files an entry on: its due day, or for a scheduled
+ *  piece with no due date, the day it goes live. */
+function placementDate(entry: CalendarEntry): string | null {
+  return entry.dueDate ?? entry.goesLiveOn;
 }
 
 /** How many week rows to draw from `firstMonday`: through the week holding
@@ -181,13 +199,12 @@ export function buildCalendarWeeks(
     toEntry(piece, today, closeDay, viewer),
   );
 
-  const latestDueDate = entries.reduce<string | null>(
-    (latest, entry) =>
-      entry.dueDate && (latest === null || entry.dueDate > latest)
-        ? entry.dueDate
-        : latest,
-    null,
-  );
+  const latestDueDate = entries.reduce<string | null>((latest, entry) => {
+    const placedOn = placementDate(entry);
+    return placedOn && (latest === null || placedOn > latest)
+      ? placedOn
+      : latest;
+  }, null);
   const dayCount =
     weekCount(firstMonday, closeDay, latestDueDate) * DAYS_PER_WEEK;
   const lastDayIso = toIsoDay(addCalendarDays(firstMonday, dayCount - 1));
@@ -202,13 +219,14 @@ export function buildCalendarWeeks(
     publishesOn: publishDay,
   };
   for (const entry of entries) {
-    if (entry.dueDate === null) layout.undated.push(entry);
-    else if (entry.dueDate < firstMondayIso) layout.earlier.push(entry);
-    else if (entry.dueDate > lastDayIso) layout.later.push(entry);
+    const placedOn = placementDate(entry);
+    if (placedOn === null) layout.undated.push(entry);
+    else if (placedOn < firstMondayIso) layout.earlier.push(entry);
+    else if (placedOn > lastDayIso) layout.later.push(entry);
     else {
-      const dayEntries = entriesByDay.get(entry.dueDate) ?? [];
+      const dayEntries = entriesByDay.get(placedOn) ?? [];
       dayEntries.push(entry);
-      entriesByDay.set(entry.dueDate, dayEntries);
+      entriesByDay.set(placedOn, dayEntries);
     }
   }
 

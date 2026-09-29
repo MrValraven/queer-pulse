@@ -1,6 +1,8 @@
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { initialsFromName } from "../../shared/lib/initials";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MyCardDTO } from "./api/cards.api";
+import { cardHolderName } from "./cardHolderName";
 import { CARD_PORTRAIT_PX } from "./useCardImagesReady";
 import styles from "./MembershipCardFace.module.css";
 
@@ -40,6 +42,7 @@ export function CardFrontFace({
    */
   isPreview: boolean;
 }) {
+  const { t } = useTranslation();
   // The size is a shared constant because `resolveAvatarSrc` bakes it into
   // the URL: the preload that holds the card back until every image has
   // decoded has to ask for the very same one, or it would wait on a
@@ -94,7 +97,7 @@ export function CardFrontFace({
           className={[styles.portrait, styles.portraitStandIn].join(" ")}
           aria-hidden="true"
         >
-          {initialsFromName(card.holderName)}
+          {initialsFromName(card.holderName ?? "")}
         </span>
       ) : null}
 
@@ -106,7 +109,7 @@ export function CardFrontFace({
             translation can lose half a pair, and the pronouns carry their own
             `nowrap` so the closing bracket never lands on the next line. */}
         <p className={styles.holder}>
-          {card.holderName}
+          {cardHolderName(card.holderName, t)}
           {card.holderPronouns ? (
             <span className={styles.holderPronouns}>
               {" "}

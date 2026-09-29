@@ -1,3 +1,4 @@
+import { communityPath } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type {
   CommunityInheritedRules,
@@ -48,7 +49,7 @@ export const DEMO_SPACE_FLINTA_SLUG = `${DEMO_SPACES_PARENT_SLUG}-flinta`;
  * membership store overrides it once the viewer joins one). */
 const PARENTS_SPACE: SpaceCardModel = {
   slug: DEMO_SPACE_PARENTS_SLUG,
-  href: `/community/${DEMO_SPACE_PARENTS_SLUG}`,
+  href: communityPath(DEMO_SPACE_PARENTS_SLUG),
   type: "sports",
   typeLabel: "Sports",
   name: "Runners with kids",
@@ -64,7 +65,7 @@ const PARENTS_SPACE: SpaceCardModel = {
 
 const FLINTA_SPACE: SpaceCardModel = {
   slug: DEMO_SPACE_FLINTA_SLUG,
-  href: `/community/${DEMO_SPACE_FLINTA_SLUG}`,
+  href: communityPath(DEMO_SPACE_FLINTA_SLUG),
   type: "sports",
   typeLabel: "Sports",
   name: "FLINTA* night runs",

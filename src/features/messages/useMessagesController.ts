@@ -13,14 +13,10 @@ import { type ChatMessage, type Conversation } from "./data";
 import { clearConversationPrefs } from "./conversationPrefs";
 import { clearOutbox, loadOutbox, setMessageOutboxScope } from "./outbox";
 import { clearDrafts } from "./drafts";
-import {
-  useConversationDetail,
-  useConversations,
-  useUnreadMessages,
-} from "./api/useConversations";
+import { useConversations, useUnreadMessages } from "./api/useConversations";
 import { useMessageThread } from "./api/useMessageThread";
 import { useActiveMailbox } from "./mailboxes/useActiveMailbox";
-import { isNotStaffError, withMailboxSeat } from "./mailboxes/mailboxScope";
+import { isNotStaffError } from "./mailboxes/mailboxScope";
 import { withDemoLocalOnlyMessages } from "./api/demoThreadCache";
 import { useDeleteConversation } from "./api/useMessageActions";
 import {
@@ -42,6 +38,7 @@ import {
   useTransferGroupOwnership,
 } from "./api/useGroupManagementMutations";
 import {
+  isServerConversationId,
   mergeOptimisticGroups,
   realConversationId,
 } from "./useMessagesController.helpers";
@@ -52,12 +49,21 @@ import {
   useScrollTraceDemoHistoryDelay,
 } from "./scrollTrace";
 import { useMessageThreadNav } from "./useMessageThreadNav";
-import { useMessageThreadList } from "./useMessageThreadList";
+import {
+  useMessageThreadList,
+  withoutListedExtraThreads,
+} from "./useMessageThreadList";
+import { useCachedConversationDetails } from "./useCachedConversationDetails";
 import { useMessageSending } from "./useMessageSending";
 import { useMessageCreation } from "./useMessageCreation";
 import { useMessageGroupActions } from "./useMessageGroupActions";
 import { useGroupOwnershipActions } from "./useGroupOwnershipActions";
 import { useMarkThreadUnread } from "./useMarkThreadUnread";
+import { useRequestedActiveThread } from "./useRequestedActiveThread";
+import {
+  sessionSendsForThreadWindow,
+  useThreadWindowSends,
+} from "./useThreadWindowSends";
 import type { ThreadHistory } from "./useOlderPageAnchor";
 
 export { nextLocalId } from "./useMessagesController.helpers";
@@ -252,97 +258,73 @@ export function useMessagesController() {
     }
   }
 
+  // Live, a session row the list pages now hold is pruned (render-phase, the
+  // same reset pattern as above), and a session row they lack follows its
+  // cached detail read, so a later remote change reaches both (see
+  // `mergeInboxThreads`). Demo keeps its session rows as they are.
+  const shouldPreferCachedRows = !demoMode;
+  const listedThreadIds = useMemo(
+    () => new Set(baseThreads.map((thread) => thread.id)),
+    [baseThreads],
+  );
+  const prunedExtraThreads = withoutListedExtraThreads(
+    extraThreads,
+    listedThreadIds,
+    shouldPreferCachedRows,
+  );
+  if (prunedExtraThreads !== extraThreads) {
+    // The updater form, so a mailbox reset queued above in this same render
+    // keeps its empty list.
+    setExtraThreads((previous) =>
+      withoutListedExtraThreads(
+        previous,
+        listedThreadIds,
+        shouldPreferCachedRows,
+      ),
+    );
+  }
+  const unlistedExtraThreadIds = useMemo(
+    () =>
+      prunedExtraThreads
+        .map((thread) => thread.id)
+        .filter(isServerConversationId),
+    [prunedExtraThreads],
+  );
+  const detailThreadsById = useCachedConversationDetails(
+    unlistedExtraThreadIds,
+    shouldPreferCachedRows,
+  );
   const { allThreads, visibleThreads, forwardableGroups } =
     useMessageThreadList({
-      extraThreads,
+      extraThreads: prunedExtraThreads,
       baseThreads,
+      detailThreadsById,
+      shouldPreferCachedRows,
       locallyDeletedIds,
       query,
       isBlocked,
     });
 
-  // Default the open thread to the first available once threads load. Adjusting
-  // state during render (not in an effect) avoids a cascading re-render frame.
-  // The composer (keyed on the thread id) seeds its own persisted draft on
-  // mount, so there's nothing to hydrate here.
-  if (!activeId && allThreads.length > 0) {
-    const firstThreadId = allThreads[0]!.id;
-    setActiveId(firstThreadId);
-  }
-
-  const rawActive = useMemo(
-    () => allThreads.find((c) => c.id === activeId) ?? allThreads[0] ?? null,
-    [allThreads, activeId],
-  );
+  // ENG-403: the open thread for `activeId`. The default select holds while
+  // a `?c=` deep link resolves; a requested id only ever resolves to its own
+  // thread, merged with its by-id detail read (see the hook).
+  const { rawActive, activeWithDetail, activeThreadStatus, retryActiveThread } =
+    useRequestedActiveThread({
+      activeId,
+      setActiveId,
+      allThreads,
+      isInboxLoading: loading,
+      mailboxScope,
+      demoMode,
+    });
 
   // Real conversation UUID for the open thread, or null while it's still a
-  // just-picked placeholder (id === slug) or in demo mode. Computed off
-  // `rawActive` (identical to `active`'s own id: neither merge below ever
-  // touches `id`) so it's available before `active` itself is built, for the
-  // detail fetch right below. The live conversation-scoped hooks further down
-  // key off this too, so they never fire against a slug and trip the
-  // backend's `ParseUUIDPipe` before reconciliation lands the UUID.
+  // just-picked placeholder (id === slug), still resolving, unavailable, or
+  // in demo mode. The live conversation-scoped hooks further down key off
+  // this, so they never fire against a slug (tripping the backend's
+  // `ParseUUIDPipe` before reconciliation lands the UUID) or against a
+  // thread the member cannot read.
   const liveConversationId = demoMode ? null : realConversationId(rawActive);
-
-  // ENG-253: `GET /conversations` (what `allThreads`/`rawActive` are built
-  // from) no longer carries a group's real member roster or a stored draft;
-  // see `ConversationResponse.members`/`.draft`'s own docs. Fetch the FULL
-  // detail (`GET /conversations/:id`) for the OPEN thread only, never the
-  // whole inbox, and merge its `members`/`draft` onto `rawActive` below.
-  // Disabled in demo mode (`useConversationDetail`'s own gate): the seeded
-  // mock conversation already carries both fields in full, so
-  // `activeDetailQuery.data` stays `undefined` there forever and the merge
-  // beneath is a pure no-op. Demo mode renders byte-identical to before.
-  const activeDetailQuery = useConversationDetail(liveConversationId);
-
-  // `rawActive` merged with the resolved detail fetch. Until the detail
-  // resolves, `members`/`draft` stay exactly what the list row carried
-  // (`[]`/`undefined` live post-ENG-253). Every consumer below already reads
-  // an absent/empty roster as "still loading" (a live group always has at
-  // least its owner, so an empty roster can only ever mean that), so this
-  // loading window renders nothing false, only briefly less than the whole
-  // picture.
-  const activeWithDetail = useMemo(() => {
-    if (!rawActive) return null;
-    const detail = activeDetailQuery.data;
-    // Require the id match explicitly, on top of just checking `detail` is
-    // present: react-query already keys `activeDetailQuery` by
-    // `liveConversationId`, so `detail` can only ever be a response FOR that
-    // id today, but this check is what actually stops thread A's roster from
-    // ever rendering under thread B if that invariant is ever weakened (e.g.
-    // a future `placeholderData` option), and it makes the guarantee visible
-    // and testable here rather than resting entirely on cache-key behaviour
-    // the reader has to trust from elsewhere.
-    if (!detail || detail.id !== rawActive.id) {
-      return mailboxScope
-        ? withMailboxSeat(rawActive, mailboxScope)
-        : rawActive;
-    }
-    const merged = {
-      ...rawActive,
-      // A thread opened by deep link before the list holds it may be a bare
-      // placeholder; the detail read names its mailbox, so the seat below
-      // still lands.
-      mailboxIdentityId:
-        rawActive.mailboxIdentityId ?? detail.mailboxIdentityId,
-      // A group mutation (add/remove member, role change, rename) patches an
-      // already-fresh, already-correct roster straight into `extraThreads`/the
-      // `["conversations"]` cache the instant it succeeds (see
-      // `useMessageGroupActions`'s `patchGroupThread` and
-      // `patchConversationInList`), well ahead of this query's own refetch.
-      // That patched roster must win over `detail.members`, which can still be
-      // the PRE-mutation snapshot until its own refetch lands, or an optimistic
-      // add/remove would flash back to the stale roster for a beat. Only fall
-      // back to the detail fetch's roster/draft while `rawActive`'s own copy is
-      // still the list's trimmed placeholder (`[]` / absent).
-      members:
-        rawActive.members && rawActive.members.length > 0
-          ? rawActive.members
-          : detail.members,
-      draft: rawActive.draft ?? detail.draft,
-    };
-    return mailboxScope ? withMailboxSeat(merged, mailboxScope) : merged;
-  }, [rawActive, activeDetailQuery.data, mailboxScope]);
 
   // Apply the optimistic "left this group" flag so the composer severs + Group
   // info update the instant the member leaves, before the refetch lands.
@@ -371,14 +353,14 @@ export function useMessagesController() {
   const thread = useMessageThread(
     demoMode ? (active?.id ?? null) : liveConversationId,
   );
-  const hasMoreOlder = thread.hasNextPage ?? false;
+  const hasMoreOlder = thread.hasMoreOlder;
   const loadingOlder = thread.isLoadingOlder;
-  const { isHistorySettled, isHistoryError } = thread;
+  const { isHistorySettled, isHistoryError, threadWindow } = thread;
   function loadOlder() {
     // Page 0 failed: an older page would append to the stale page and stamp
     // it fresh, so retry page 0 itself instead.
     if (isHistoryError) {
-      void thread.refetch({ cancelRefetch: false });
+      thread.retryHistory();
       return;
     }
     // No older page while page 0 is (re)fetching, for the same reason: it
@@ -386,7 +368,7 @@ export function useMessagesController() {
     // `cancelRefetch: false` also keeps a caller holding a render-old closure
     // from cancelling that refetch.
     if (hasMoreOlder && !loadingOlder && isHistorySettled) {
-      void thread.fetchNextPage({ cancelRefetch: false });
+      thread.requestOlderPage();
     }
   }
   const threadHistory: ThreadHistory = {
@@ -395,7 +377,8 @@ export function useMessagesController() {
     onLoadOlder: loadOlder,
     isHistorySettled,
     isHistoryError,
-    hasLoadedThreadData: thread.data !== undefined,
+    hasLoadedThreadData: thread.hasLoadedThreadData,
+    threadWindow,
   };
 
   const sendMessage = useSendMessage();
@@ -460,6 +443,7 @@ export function useMessagesController() {
   // `?scrolltrace&simulatelive` is set; `demoHistoryReady` is `true` otherwise.
   const demoHistoryReady = useScrollTraceDemoHistoryDelay(activeId, demoMode);
 
+  const isThreadWindowShown = threadWindow.anchorMessageId !== null;
   /** Base history (the paged thread cache, in both modes) + session sends. */
   const messageGroups = useMemo(() => {
     if (!active) return [];
@@ -467,11 +451,15 @@ export function useMessagesController() {
     // `false`: the base is always the thread cache now. Demo also carries the
     // bubbles its store never pages (a pill a demo group action appended, a
     // thread created this session), merged in beside the session sends.
+    // PRD-401: a detached history window renders no session sends.
     const base = mergeOptimisticGroups(
       active,
       false,
       thread.groups,
-      demoMode ? withDemoLocalOnlyMessages(sent, active) : sent,
+      sessionSendsForThreadWindow(
+        demoMode ? withDemoLocalOnlyMessages(sent, active) : sent,
+        isThreadWindowShown,
+      ),
     );
     // TEMPORARY: see scrollTrace.ts's revert instructions. The demo GROUP
     // threads are too short to reliably overflow the viewport; inject
@@ -489,7 +477,14 @@ export function useMessagesController() {
       );
     }
     return base;
-  }, [active, demoMode, thread.groups, sent, demoHistoryReady]);
+  }, [
+    active,
+    demoMode,
+    thread.groups,
+    sent,
+    demoHistoryReady,
+    isThreadWindowShown,
+  ]);
 
   // Open-thread selection, cross-inbox jump-to-message, thread deletion.
   const navigation = useMessageThreadNav({
@@ -522,17 +517,12 @@ export function useMessagesController() {
     t,
     sendMessage,
   });
-  const {
-    send,
-    sendGif,
-    sendSticker,
-    sendImage,
-    sendDocument,
-    retrySend,
-    appendOptimistic,
-    deliver,
-    migrateOutboxConversation,
-  } = sending;
+  const { appendOptimistic, deliver, migrateOutboxConversation } = sending;
+  // PRD-401: a send or a retry from the open thread returns it to the latest
+  // message first, cancelling a jump hunt on its way (see the hook).
+  const { onReturnToLatest } = threadWindow;
+  const { send, sendGif, sendSticker, sendImage, sendDocument, retrySend } =
+    useThreadWindowSends(sending, onReturnToLatest);
 
   // Thread + group creation, forwarding, and the deep-link effects.
   const creation = useMessageCreation({
@@ -555,6 +545,8 @@ export function useMessagesController() {
     appendOptimistic,
     deliver,
     migrateOutboxConversation,
+    // A forward into the open thread returns it to the latest message first.
+    returnToLatest: onReturnToLatest,
   });
 
   // Group management (feature #17 Phase 2): leave, add/remove, role, edit info.
@@ -618,6 +610,8 @@ export function useMessagesController() {
     replyDraft,
     setReplyDraft,
     active,
+    activeThreadStatus,
+    retryActiveThread,
     activeBlocked,
     messageGroups,
     threadHistory,

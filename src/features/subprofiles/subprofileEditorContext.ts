@@ -36,7 +36,24 @@ export const withAffiliationUid = (
   _uid: `affiliation-${uidSequence++}`,
 });
 
-export interface SubprofileEditorContextValue {
+/**
+ * ENG-451: the editor's hold on the persona's `editVersion`, for a persona
+ * write made outside the Save chain (an item revision restore) that must still
+ * carry the version and join the one conflict state.
+ */
+export interface EditorEditVersionControls {
+  /** The version the editor's next write must carry. */
+  getEditVersion: () => number;
+  /** Take the version a conditional write answered with, so the next Save
+   *  carries it. Only a write that SENT the precondition may hand one in: an
+   *  unconditional write's version could hide a co-owner's save. */
+  adoptEditVersion: (nextEditVersion: number) => void;
+  /** Raise the conflict alert, as a Save refused with
+   *  `PERSONA_EDIT_CONFLICT` does. */
+  markEditConflict: () => void;
+}
+
+export interface SubprofileEditorContextValue extends EditorEditVersionControls {
   /** The persona being edited, as loaded. */
   subprofile: SubprofileView;
   /** The meta-field editor (identity/presence/address) — its own hook. */
@@ -63,6 +80,19 @@ export interface SubprofileEditorContextValue {
   saveAll: () => Promise<boolean>;
   /** Reset every area back to its loaded baseline. */
   discardAll: () => void;
+  /** ENG-451: a save was refused because someone else saved this persona
+   *  after the editor loaded it. The savebar shows the conflict alert. */
+  hasEditConflict: boolean;
+  /** Refetch the persona and re-seed every editor area from it (the conflict
+   *  alert's Reload). Drops every unsaved change in this editor. */
+  reloadLatest: () => void;
+  /** The Reload refetch is in flight. */
+  isReloading: boolean;
+  /** The last Reload failed; the editor kept its edits and the alert says so. */
+  hasReloadFailed: boolean;
+  /** How many Reloads re-seeded this editor (0 on first load). Above 0, the
+   *  freshly remounted pane moves focus to its heading. */
+  reloadGeneration: number;
   /** Explicit escape hatch from the editor's normal seed-once row state:
    *  re-seeds ONE section's rows + baseline from freshly-fetched subprofile
    *  data, discarding any in-progress draft for that section only. Wired to

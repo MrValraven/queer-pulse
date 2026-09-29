@@ -1,5 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { CommunityDraft } from "./startCommunity/startCommunity.data";
 import { shortTypeLabel } from "./api/communities.adapters";
 import { AccessTierBadge } from "./CommunityBadges";
@@ -8,16 +9,17 @@ import { getLiving } from "./livingCommunities.data";
 import styles from "./CommunitiesPage.module.css";
 
 /** The two numbers the card's footer shows and the edit form cannot change.
- *  Both optional: a source that carries no number leaves the line out rather
- *  than guessing at one. */
+ *  Both optional: a source that carries no number leaves the line out. Making
+ *  one up would only mislead the owner about their own community. */
 export interface CommunityCardStats {
   memberCount?: number;
   activeThisWeek?: number;
 }
 
 interface CommunityCardPreviewProps extends CommunityCardStats {
-  /** The community being edited — only used to borrow the demo roster faces
-   *  the real Discover card would show; a live community has none. */
+  /** The community being edited. Demo mode uses it to borrow the demo roster
+   *  faces the real Discover card would show; live mode draws none, since it
+   *  never reads the demo registry. */
   slug?: string;
   draft: CommunityDraft;
   /** The locally renderable URL of a cover picked THIS session, if any. A fresh
@@ -34,10 +36,10 @@ interface CommunityCardPreviewProps extends CommunityCardStats {
 /**
  * The community's Discover card, drawn live from the edit form's draft.
  *
- * It renders through `CommunityCardShell` — the same component Discover and a
- * member's profile pins use — so what the owner sees while typing is the card
- * itself, not a lookalike that can drift from it. The two differences are
- * deliberate: the card is inert (`isPreview`, no link, not tabbable), and the
+ * It renders through `CommunityCardShell`, the same component Discover and a
+ * member's profile pins use, so what the owner sees while typing is the card
+ * itself and stays identical to it. Two differences are deliberate: the card
+ * is inert (`isPreview`, no link, no tab stop), and the
  * shoulder badge and join pill always show the *visitor's* view of the current
  * access tier, since that is the thing the owner is choosing.
  */
@@ -50,6 +52,7 @@ export function CommunityCardPreview({
   activeThisWeek,
 }: CommunityCardPreviewProps) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   // A pick made this session wins over the draft value it just replaced: the
   // draft now holds that pick's storage key, which is not fetchable, while the
   // preview URL renders immediately. Clearing the image empties BOTH, so the
@@ -62,7 +65,7 @@ export function CommunityCardPreview({
     : "";
   const tier = draft.accessTier || "public";
   const isPrivate = tier === "private";
-  const roster = getLiving(slug)?.roster.slice(0, 4) ?? [];
+  const roster = demoMode ? (getLiving(slug)?.roster.slice(0, 4) ?? []) : [];
   const type = draft.type || "social";
 
   // Mirrors `cardDtoToCommunity`: a private community shows no number at all,
@@ -95,7 +98,8 @@ export function CommunityCardPreview({
       /* The mark the owner is choosing right now. The draft's own value is
          already a resolved URL for the COMMITTED mark (the edit modal seeds it
          from the detail DTO), but a mark picked this session is a private
-         storage key — hence the session preview URL taking precedence above. */
+         storage key, which is why the session preview URL takes precedence
+         above. */
       avatarImageUrl={avatarSrc || undefined}
       tags={draft.tags}
       roster={roster}

@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import { FiStar, FiShield, FiUser } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CommunityCardShell } from "../communities/CommunityCardShell";
 import { getLiving } from "../communities/livingCommunities.data";
 import {
@@ -9,9 +10,9 @@ import {
 } from "./profileCommunities.types";
 import styles from "./ProfileCommunityCard.module.css";
 
-/** Icon per role for the shoulder pill. A plain member gets one too — unlike
- *  the roster's `RoleBadge`, this slot is never empty: it is what tells you
- *  how the profile's owner stands in the community they pinned. */
+/** Icon per role for the shoulder pill. This slot is always filled, even for
+ *  a plain member: it is what tells you how the profile's owner stands in
+ *  the community they pinned. */
 const ROLE_ICON: Record<FeaturedCommunityRef["role"], IconType> = {
   owner: FiStar,
   co_owner: FiStar,
@@ -22,10 +23,10 @@ const ROLE_ICON: Record<FeaturedCommunityRef["role"], IconType> = {
 /**
  * A community the member features on their profile, rendered through the same
  * `CommunityCardShell` as the discover grid's cards so the two read as one
- * object. The shoulder's badge slot carries the owner's role instead of the
- * access tier (a pinned community is one they are already in, so the tier has
- * stopped being news), and the footer has no join control since the whole card
- * already links through to the community.
+ * object. The shoulder's badge slot carries the owner's role: a pinned
+ * community is one they are already in, so the access tier has stopped being
+ * news. The footer has no join control since the whole card already links
+ * through to the community.
  */
 export function ProfileCommunityCard({
   community,
@@ -33,10 +34,12 @@ export function ProfileCommunityCard({
   community: FeaturedCommunityRef;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   // Demo's flagship communities carry a roster and a week's activity on the
-  // `living` mock; live mode has neither on this DTO's source, exactly as on
-  // the discover card. Never a live read — `getLiving` is a demo registry.
-  const living = getLiving(community.slug);
+  // `living` mock. Live mode leaves `living` undefined here, so this falls
+  // back to the DTO's own (possibly absent) roster and activity number,
+  // exactly as on the discover card.
+  const living = demoMode ? getLiving(community.slug) : undefined;
   const roster = living?.roster.slice(0, 4) ?? [];
   const activeThisWeek =
     living?.stats.activeThisWeek ?? community.activeThisWeek;

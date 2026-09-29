@@ -1,10 +1,26 @@
+import { FiAlertCircle } from "react-icons/fi";
 import { useTablistKeys } from "../../../shared/components/ui";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./adminUi.module.css";
 
 export interface AdminTab {
   id: string;
   label: string;
   count?: number;
+  /** The read behind `count` failed. With no `count`, the tab shows an alert
+   *  mark where the number goes, so a failed read looks different from one
+   *  still loading (which shows nothing). */
+  isCountUnavailable?: boolean;
+}
+
+function CountUnavailable() {
+  const { t } = useTranslation();
+  return (
+    <span className={`${styles.tabCount} ${styles.tabCountUnavailable}`}>
+      <FiAlertCircle aria-hidden />
+      <span className="visuallyHidden">{t("admin:tabs.countUnavailable")}</span>
+    </span>
+  );
 }
 
 export function AdminTabs({
@@ -43,8 +59,10 @@ export function AdminTabs({
           onClick={() => onChange(t.id)}
         >
           {t.label}
-          {t.count != null && (
+          {t.count != null ? (
             <span className={styles.tabCount}>{t.count}</span>
+          ) : (
+            t.isCountUnavailable && <CountUnavailable />
           )}
         </button>
       ))}

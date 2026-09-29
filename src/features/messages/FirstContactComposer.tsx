@@ -10,19 +10,17 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
 import { detectContactSafetySignals } from "./contactSafetyDetector";
 import { FirstContactComposerField } from "./FirstContactComposerField";
+import { DOOR_COPY, type FirstContactDoor } from "./firstContactDoorCopy";
 import styles from "./FirstContactComposer.module.css";
 
-/**
- * The three doors a member can write a first message to someone through
- * (PRD-340): reaching out from a profile, the "message someone new" picker,
- * and replying to a stranger's inbound request. Each resolves its OWN copy
- * below, never a string passed in from a call site, so the three doors can
- * never drift back into bespoke wording for the same act.
- */
-export type FirstContactDoor = "connect" | "messageRequest" | "reply";
+// The door union and each door's own copy live in `firstContactDoorCopy.ts`.
+export type { FirstContactDoor } from "./firstContactDoorCopy";
 
 export interface FirstContactComposerTarget {
   name: string;
+  /** How the copy addresses them. Defaults to the first word of `name`; a
+   *  business or venue goes by its whole name. */
+  shortName?: string;
   initials: string;
   tint?: AvatarTint;
   avatarUrl?: string;
@@ -41,6 +39,16 @@ export interface FirstContactComposerProps {
   /** `door="reply"` only: the stranger's own request message, shown
    *  read-only above the reply field. */
   requestMessage?: string;
+  /** `door="enquiry"`: from the contact read, true when this first message
+   *  stays the only one until they reply, so the rule is said up front. */
+  followUpAwaitsReply?: boolean;
+  /** The backend's own minimum body length for this door (an enquiry DTO's
+   *  `@MinLength`). Send stays disabled below it, with a countdown. */
+  minLength?: number;
+  /** Door-specific guidance under the field that only this door's subject
+   *  calls for, e.g. housing's deposit warning. The generic contact-safety
+   *  notice stays this component's own. */
+  footnote?: ReactNode;
   message: string;
   onMessageChange: (value: string) => void;
   isSending: boolean;
@@ -51,47 +59,16 @@ export interface FirstContactComposerProps {
   backLabel: string;
 }
 
-const DOOR_COPY: Record<
-  FirstContactDoor,
-  {
-    statusKey: string;
-    introKey?: string;
-    placeholderKey: string;
-    ariaKey: string;
-    sendCtaKey: string;
-  }
-> = {
-  connect: {
-    statusKey: "messages:firstContact.notConnectedYet",
-    introKey: "messages:firstContact.composeIntro",
-    placeholderKey: "messages:firstContact.composePlaceholder",
-    ariaKey: "messages:firstContact.composeAria",
-    sendCtaKey: "messages:firstContact.sendCta",
-  },
-  messageRequest: {
-    statusKey: "messages:firstContact.notConnectedYet",
-    introKey: "messages:firstContact.composeIntro",
-    placeholderKey: "messages:firstContact.composePlaceholder",
-    ariaKey: "messages:firstContact.composeAria",
-    sendCtaKey: "messages:firstContact.sendCta",
-  },
-  reply: {
-    statusKey: "messages:firstContact.replyAccepts",
-    placeholderKey: "messages:firstContact.replyPlaceholder",
-    ariaKey: "messages:firstContact.replyAria",
-    sendCtaKey: "messages:firstContact.replySendCta",
-  },
-};
-
 /**
  * The ONE composer every "first message to someone you're not connected
  * with yet" door renders (PRD-340): `ConnectForm` (Connections > Say hello),
- * `MessageRequestComposer` (Messages > New message), and the Requests tab's
+ * `MessageRequestComposer` (Messages > New message), the Requests tab's
  * Reply flow (`MessagesInboundRequestCard`, where sending IS the accept, see
- * `useMessageRequestReply.ts`). All three get the same identity header, the
- * same honest "this isn't a connection yet" / "replying accepts their
- * request" line, the same safety notice, the same 2000-char field + counter,
- * and the same footer shape, differing only in the props above.
+ * `useMessageRequestReply.ts`), and the cold enquiry doors
+ * (`DirectoryEnquiryModal`, `HousingEnquiryModal`). All of them get the same
+ * identity header, the same honest status line, the same safety notice, the
+ * same 2000-char field + counter, and the same footer shape, differing only
+ * in the props above.
  */
 export function FirstContactComposer({
   door,
@@ -99,6 +76,9 @@ export function FirstContactComposer({
   heading,
   extraFields,
   requestMessage,
+  followUpAwaitsReply,
+  minLength = 1,
+  footnote,
   message,
   onMessageChange,
   isSending,
@@ -109,8 +89,13 @@ export function FirstContactComposer({
 }: FirstContactComposerProps) {
   const { t } = useTranslation();
   const copy = DOOR_COPY[door];
-  const firstName = target.name.split(" ")[0] ?? target.name;
-  const canSend = message.trim().length > 0 && !isSending;
+  const introKey =
+    followUpAwaitsReply && copy.awaitsReplyKey
+      ? copy.awaitsReplyKey
+      : copy.introKey;
+  const firstName =
+    target.shortName ?? target.name.split(" ")[0] ?? target.name;
+  const canSend = message.trim().length >= minLength && !isSending;
   const safetySignals = useMemo(
     () => detectContactSafetySignals(message),
     [message],
@@ -144,8 +129,8 @@ export function FirstContactComposer({
       {requestMessage && (
         <blockquote className={styles.quote}>{requestMessage}</blockquote>
       )}
-      {copy.introKey && (
-        <p className={styles.sub}>{t(copy.introKey, { name: firstName })}</p>
+      {introKey && (
+        <p className={styles.sub}>{t(introKey, { name: firstName })}</p>
       )}
       {extraFields}
       <FirstContactComposerField
@@ -155,11 +140,13 @@ export function FirstContactComposer({
         ariaLabel={t(copy.ariaKey)}
         disabled={isSending}
         fieldRef={fieldRef}
+        minLength={minLength}
       />
       <ComposerSafetyNotice
         signals={safetySignals}
         onDismiss={() => fieldRef.current?.focus()}
       />
+      {footnote}
       {error && (
         <p className={styles.sendError} role="alert">
           {error}

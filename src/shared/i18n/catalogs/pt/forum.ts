@@ -264,6 +264,16 @@ export const forum: Catalog = {
     "Isto fica visível a {date}. Até lá és a única pessoa que o consegue abrir.",
   "unpublished.scheduledBodyNoDate":
     "Isto está à espera da hora de publicação. Até lá és a única pessoa que o consegue abrir.",
+  "unpublished.moderatorReviewTitle": "À espera de revisão",
+  "unpublished.moderatorReviewBody":
+    "Alguém da comunidade enviou isto para revisão. Aprova ou recusa em <link>Revisão do fórum</link>.",
+  "unpublished.moderatorRejectedTitle": "Devolvido a quem o escreveu",
+  "unpublished.moderatorRejectedBody":
+    "A equipa editorial devolveu isto. Fica fora do fórum até quem o escreveu voltar a enviar.",
+  "unpublished.moderatorScheduledBody":
+    "Isto fica visível a {date}. Até lá só quem o escreveu e a moderação o conseguem abrir.",
+  "unpublished.moderatorScheduledBodyNoDate":
+    "Isto está à espera da hora de publicação. Até lá só quem o escreveu e a moderação o conseguem abrir.",
   "unpublished.reviewTitle": "Com a equipa editorial",
   "unpublished.reviewBody":
     "Enviaste isto para revisão. Entra no fórum assim que alguém aprovar.",
@@ -292,6 +302,16 @@ export const forum: Catalog = {
 
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Fórum",
+  "threadPage.coAuthor.confirmTitle": "Tirar o teu nome desta conversa?",
+  "threadPage.coAuthor.confirmBody":
+    "A conversa continua publicada só com o nome de {author}. Não te podes voltar a adicionar.",
+  "threadPage.coAuthor.confirmBodyMasked":
+    "O teu nome sai desta conversa. Não dá para desfazer.",
+  "threadPage.coAuthor.confirmCta": "Tirar o meu nome",
+  "threadPage.coAuthor.cancel": "Deixar como está",
+  "threadPage.coAuthor.removedToast": "O teu nome já não aparece na conversa.",
+  "threadPage.coAuthor.removeFailed": "Não resultou. Tentas outra vez?",
+  "threadPage.coAuthor.menuItem": "Tirar o meu nome da coautoria",
   "threadPage.replyPostedToast": "Resposta publicada",
   "threadPage.replyFailedToast":
     "Não foi possível publicar a tua resposta. Tenta novamente daqui a pouco.",
@@ -457,6 +477,7 @@ export const forum: Catalog = {
   "draft.saving": "A guardar…",
   "draft.saved": "Rascunho guardado",
   "draft.restored": "Rascunho recuperado",
+  "draft.unsaved": "Ainda não guardado",
   "draft.threadKind": "PUBLICAÇÃO",
   "draft.replyKind": "RESPOSTA",
   // Row title for an autosaved inline nested reply, so the drafts list says
@@ -467,8 +488,23 @@ export const forum: Catalog = {
   "draft.untitledThreadTitle": "Publicação por acabar",
 
   // ── The forum's own sight of an unsent draft (PRD-165) ────────────────────
-  "draftNotice.title": "A tua publicação por acabar continua aqui",
-  "draftNotice.resumeCta": "Retomar",
+  // O cartão de rascunho no fórum: uma faixa por baixo da pesquisa.
+  "draftNotice.cardLabel": "A tua publicação por acabar",
+  "draftNotice.eyebrow": "Publicação por acabar",
+  "draftNotice.autosaved": "Guardado",
+  "draftNotice.untitled": "Publicação sem título",
+  "draftNotice.emptyBody": "Ainda sem texto. As tuas escolhas estão guardadas.",
+  "draftNotice.continueCta": "Continuar a escrever",
+  "draftNotice.factsLabel": "Neste rascunho",
+  "draftNotice.moreFacts": "+{count}",
+  "draftNotice.moreFactsLabel_one": "mais {count} detalhe",
+  "draftNotice.moreFactsLabel_other": "mais {count} detalhes",
+  "draftNotice.fact.townSquare": "A praça",
+  "draftNotice.fact.tags_one": "{count} etiqueta",
+  "draftNotice.fact.tags_other": "{count} etiquetas",
+  "draftNotice.fact.photos_one": "{count} foto",
+  "draftNotice.fact.photos_other": "{count} fotos",
+  "draftNotice.fact.poll": "Votação",
 
   // ── Cartão de pré-visualização de link numa publicação (PRD-171) ─────────
   "linkPreview.aria": "Pré-visualização do link: {title}",
@@ -793,7 +829,7 @@ export const forum: Catalog = {
   "composePage.preview.hideAgain": "Esconder outra vez",
   "composePage.preview.officialName": "QueerPulse Official",
   "composePage.preview.officialVia": "via {name}",
-  "composePage.preview.anonymousName": "Um membro",
+  "composePage.preview.anonymousName": "Uma pessoa",
   "composePage.preview.withCoAuthor": "com {name}",
   "composePage.preview.pollPickOne": "Escolhe uma",
   "composePage.preview.pollPickMany": "Escolhe as que se aplicarem",

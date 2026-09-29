@@ -21,9 +21,13 @@ import {
   thread,
 } from "../../../app/routeMap";
 import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
+import { writerTabHref } from "../../magazine/writerTabs";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import { adminQueueRoute } from "./adminQueueRoutes";
+import { lifecycleSourceHref } from "./notificationKindHrefs";
+import { isMemberWrittenReason } from "./notificationReason";
+import { reasonLeadKeyOf } from "./notificationReason";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -288,6 +292,14 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // or group it is about.
   "go_together_pair_invite",
   "go_together_mutual",
+  // ENG-409. The three kinds from `notificationKindCopy.ts` whose backend
+  // `ACTOR_PAYLOAD_KEY` entry resolves an actor: the host who posted an
+  // announcement, the member who sent a persona invite, and the co-owner who
+  // accepted one. The two persona `textNamed` strings keep
+  // `{subprofileName}`, which rides in on `actor.textValues`.
+  "event_announcement",
+  "subprofile_invite",
+  "subprofile_co_owner_joined",
 ]);
 
 export function notificationDtoToView(
@@ -295,7 +307,7 @@ export function notificationDtoToView(
   t: TFunction,
   fmt: Formatters,
 ): Notification {
-  const { text, meta, category, kind, textValues } = formatNotification(
+  const { text, meta, reason, category, kind, textValues } = formatNotification(
     dto.type,
     dto.payload,
     t,
@@ -331,12 +343,24 @@ export function notificationDtoToView(
     time: formatTime(dto.createdAt, fmt),
     createdAtIso: dto.createdAt,
   };
+  // PRD-402: a decision's written reason rides beside the label; the row
+  // renders it under the sentence. Absent keys stay absent on the view.
+  if (reason) {
+    view.reason = reason;
+    if (isMemberWrittenReason(dto.type)) view.isReasonFromMember = true;
+    const reasonLeadKey = reasonLeadKeyOf(dto.type);
+    if (reasonLeadKey) view.reasonLeadKey = reasonLeadKey;
+  }
 
   // When the backend resolved the acting member, upgrade the row from an
   // anonymous icon + "someone …" to their avatar, name, and a profile link.
   if (dto.actor) {
     const name = actorName(dto.actor);
-    const href = `${routes.members}/${dto.actor.slug}`;
+    // A mention from a matched Go together chat names its actor by first
+    // name only, with an empty slug and lastName (product decision: no
+    // profile link there). `hasProfile` is false for exactly that row.
+    const hasProfile = Boolean(dto.actor.slug);
+    const href = hasProfile ? `${routes.members}/${dto.actor.slug}` : "";
     // `mention` rows branch their copy by `payload.entityKind` (who/what was
     // actually @-mentioned — member/community/business/event/thread). No
     // `entityKind` (older rows) or `entityKind === "member"` keeps the flat
@@ -348,7 +372,7 @@ export function notificationDtoToView(
       kind === "mention" && entityKind && entityKind !== "member"
         ? `mention.${entityKind}`
         : kind;
-    view.actorSlug = dto.actor.slug;
+    view.actorSlug = hasProfile ? dto.actor.slug : undefined;
     const isPersonalized = Boolean(kind && PERSONALIZED_KINDS.has(kind));
     view.actor = {
       name,
@@ -358,13 +382,15 @@ export function notificationDtoToView(
         : undefined,
       textValues: isPersonalized ? textValues : undefined,
     };
-    view.avatar = {
-      initials: actorInitials(dto.actor),
-      tint: tintForSlug(dto.actor.slug),
-      src: dto.actor.avatarUrl ?? undefined,
-    };
-    // The icon is the fallback for actor-less rows; drop it so the avatar shows.
-    view.icon = undefined;
+    if (hasProfile) {
+      view.avatar = {
+        initials: actorInitials(dto.actor),
+        tint: tintForSlug(dto.actor.slug),
+        src: dto.actor.avatarUrl ?? undefined,
+      };
+      // The icon is the fallback for actor-less rows; drop it so the avatar shows.
+      view.icon = undefined;
+    }
   }
 
   view.sourceHref = sourceHrefFromPayload(dto.type, dto.payload);
@@ -769,6 +795,10 @@ function sourceHrefFromPayload(
   if (type.startsWith("go_together_")) {
     return goTogetherSourceHref(type, payload);
   }
+  // ENG-409. The newly rendered kinds whose destination the generic `source`
+  // branches below would miss; `null` means "not one of them, fall through".
+  const lifecycleHref = lifecycleSourceHref(type, payload);
+  if (lifecycleHref) return lifecycleHref.href;
   if (!payload) return undefined;
   if (payload.source === "forum") {
     const threadSlug = payload.threadSlug;
@@ -844,10 +874,13 @@ function sourceHrefFromPayload(
   // `source: 'housing'` since LOC-01 and nothing here resolved it.
   //
   // The destination depends on what happened, so the type is read before the
-  // slug. A VIEWING row opens the viewings desk rather than the listing, because
-  // the thing the member has to act on (accept, propose another time, cancel) is
-  // there and nowhere else. A JOIN decision opens the co-op or the group. Every
-  // other housing row opens the listing itself.
+  // slug. A VIEWING row opens the viewings desk, because the thing the member
+  // has to act on (accept, propose another time, cancel) lives there alone. A
+  // JOIN decision opens the co-op or the group. `housing_listing_decision`
+  // never reaches this branch: `lifecycleSourceHref` above resolves it first
+  // (an approved listing opens the listing, every other outcome opens the
+  // lister's own listings page). Every remaining housing row opens the listing
+  // itself.
   if (payload.source === "housing") {
     if (
       type === "housing_viewing_requested" ||
@@ -940,6 +973,11 @@ function sourceHrefFromPayload(
   if (payload.source === "intake") {
     return undefined;
   }
+  // A pitch the desk passed on (ENG-462) → the pitches tab, keyed on `type`
+  // for the same reason the three piece rows above are: its payload also
+  // carries `source: "magazine"`, and falling through would send the writer
+  // to an issue page instead.
+  if (type === "magazine_pitch_passed") return writerTabHref("pitches");
   // A shipped magazine issue (CON-05) → that issue's own page, where the
   // desk's curated "In this issue" panel lives. The issue number is the route
   // segment, so a row missing it drops the link rather than landing on the
@@ -959,10 +997,18 @@ function sourceHrefFromPayload(
   if (payload.source === "appeal") {
     return routes.appealOutcome;
   }
-  // A moderation outcome (warn/suspend/ban) links to the appeal page so the
-  // decision is contestable. No slug needed.
+  // A moderation outcome (warn/suspend/ban/restrict/hide_content/
+  // remove_content) links to the appeal page so the decision is contestable.
+  // ENG-480: when the backend resolved the audit row's own id onto the
+  // payload (`actionId`), the link carries it as `?action=`, so the appeal
+  // form opens pre-selected on this exact action. A row written before that
+  // backend change, or a source that never carries one (the safe-space
+  // notifier), keeps the bare link.
   if (payload.source === "moderation") {
-    return routes.appealSubmit;
+    const actionId = payload.actionId;
+    return typeof actionId === "string" && actionId
+      ? `${routes.appealSubmit}?action=${encodeURIComponent(actionId)}`
+      : routes.appealSubmit;
   }
   // A swap proposal carries no `source` field: its payload allowlist passes
   // `barterListingId` and `listingOffer` only, so it is matched on that id

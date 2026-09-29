@@ -19,6 +19,7 @@ export const homepage: Catalog = {
   "hero.sub":
     "A place to discover what's happening across Lisbon's queer community and find the people, communities, events, and opportunities shaping queer life in the city.",
   "hero.requestInviteCta": "Request an invite",
+  "hero.memberFeedCta": "Go to your feed",
   "hero.exploreMembersCta": "Explore members",
   "hero.note": "New members join every week, always vouched in.",
 
@@ -710,7 +711,7 @@ export const homepage: Catalog = {
   "subprofiles.personas.drag.sub": "Anjos · performing since 2018",
   "subprofiles.personas.drag.cta": "Book a show",
   "subprofiles.personas.drag.bio":
-    "Performing at Anjos since 2018, with a public rate card and travels for festivals.",
+    "Performing in Anjos since 2018. Available for shows, festivals, and other bookings.",
   "subprofiles.personas.drag.meta.0": "Two shows a month",
   "subprofiles.personas.drag.meta.1": "Rate card public",
   "subprofiles.personas.drag.meta.2": "Travels for festivals",
@@ -720,7 +721,7 @@ export const homepage: Catalog = {
   "subprofiles.personas.drag.foot":
     "Everything they need to know about Sofia's work as a performer, without the rest of her profile getting in the way.",
   "subprofiles.personas.drag.note":
-    "Speaking as Sophie: bookers get the shows, the photos and the fee. The product design CV stays off this page.",
+    "This is Sophie's profile. Bookers can find the shows, photos, and booking details here. Everything else stays on the other side of the profile.",
   "subprofiles.personas.drag.laneLabel": "drag",
 
   "subprofiles.personas.yoga.role": "Yoga teacher",
@@ -761,5 +762,7 @@ export const homepage: Catalog = {
   "outro.title": "Walk in where you <em>already belong.</em>",
   "outro.sub":
     "QueerPulse is an invite-only community built on trust, curiosity, and the belief that meaningful connections can change lives and cities.",
+  "outro.memberSub": "Good to see you back. Your feed is waiting for you.",
   "outro.cta": "Request an invite",
+  "outro.memberCta": "Go to your feed",
 };

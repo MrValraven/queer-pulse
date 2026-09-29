@@ -90,6 +90,9 @@ export function PersonaDangerZone({
       {leaving && (
         <LeavePersonaModal
           subprofileId={subprofile.id}
+          linkVisibility={subprofile.linkVisibility}
+          handle={subprofile.handle}
+          personaSlug={subprofile.slug}
           onClose={() => setLeaving(false)}
         />
       )}

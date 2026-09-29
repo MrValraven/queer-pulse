@@ -3,17 +3,14 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { useSaved } from "../../app/providers/useSaved";
+import { communityPath } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { ApiError } from "../../shared/api/client";
 import type { Community } from "../homepage/data/types";
 import { useRemoveMember } from "./api/useCommunityMutations";
 import type { JoinCommunityPayload } from "./api/communityJoin.api";
-import {
-  useJoinCommunityWithRules,
-  useWithdrawJoinRequest,
-} from "./api/useCommunityJoin";
+import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
+import { useWithdrawJoinRequestWithFeedback } from "./api/useWithdrawJoinRequestWithFeedback";
 import { useDeclineCommunityInvite } from "./api/useCommunityInvites";
 
 /**
@@ -44,7 +41,6 @@ export function useCommunityDetailActions({
   standingInviteId: string | null;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const { showToast } = useToast();
@@ -65,7 +61,8 @@ export function useCommunityDetailActions({
   // PRD-148, and PRD-140's other half. Both are live-only: the demo membership
   // store has no primitive for either, so the affordances behind them are
   // gated on `demoMode` and the prototype behaves exactly as it did.
-  const withdrawMutation = useWithdrawJoinRequest(slug ?? "");
+  const withdrawFlow = useWithdrawJoinRequestWithFeedback(slug ?? "");
+  const withdrawMutation = withdrawFlow.mutation;
   const declineInviteMutation = useDeclineCommunityInvite();
 
   // Bookmark this community via the backend-wired SavedProvider (kind "group") —
@@ -79,7 +76,7 @@ export function useCommunityDetailActions({
       id: savedId,
       kind: "group",
       title: community.name,
-      href: `/community/${slug}`,
+      href: communityPath(slug ?? ""),
       meta: community.count,
       description: community.description,
     });
@@ -147,43 +144,12 @@ export function useCommunityDetailActions({
 
   // PRD-148. Withdraw the caller's own pending join request. Only ever reached
   // after the applicant confirms, because withdrawing throws the request away:
-  // the row is deleted rather than parked, which is exactly what lets them ask
-  // again straight afterwards with no wait attached.
+  // the row is deleted, which is exactly what lets them ask again straight
+  // afterwards with no wait attached. The toasts live in the shared flow so
+  // the gate card reports the same outcomes in the same words.
   const performWithdrawRequest = () => {
     if (!slug || demoMode) return;
-    withdrawMutation.mutate(undefined, {
-      onSuccess: () =>
-        showToast(t("communities:detail.withdraw.doneToast"), "success"),
-      // The server answers 409 ONLY when a decision landed first, and it says
-      // which. Reporting that as "we could not withdraw it" would be a lie in
-      // both directions: an approved applicant is already a member, and a
-      // declined one needs to know a reapply date now exists. A generic error
-      // is right only for a genuine failure.
-      onError: (error) => {
-        if (error instanceof ApiError && error.status === 409) {
-          const body = error.data as
-            { code?: string; reapplyAfter?: string } | undefined;
-          if (body?.code === "JOIN_REQUEST_ALREADY_ANSWERED") {
-            showToast(
-              t("communities:detail.withdraw.alreadyDeclinedToast", {
-                date: body.reapplyAfter
-                  ? fmt.date(new Date(body.reapplyAfter))
-                  : "",
-              }),
-              "info",
-            );
-            return;
-          }
-          showToast(
-            t("communities:detail.withdraw.alreadyApprovedToast"),
-            "success",
-          );
-          return;
-        }
-        showToast(t("communities:common.error"), "error");
-      },
-      onSettled: () => setConfirmingWithdraw(false),
-    });
+    withdrawFlow.withdraw(() => setConfirmingWithdraw(false));
   };
 
   // PRD-140. Decline a standing invitation. Nobody is told: the community
@@ -206,7 +172,7 @@ export function useCommunityDetailActions({
   // (mobile), else copy the link to the clipboard and confirm with a toast.
   const onShare = async () => {
     if (!community) return;
-    const url = `${window.location.origin}/community/${slug}`;
+    const url = `${window.location.origin}${communityPath(slug ?? "")}`;
     const shareData = {
       title: community.name,
       text: community.description,

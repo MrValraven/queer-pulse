@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { useId, type RefObject } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./FirstContactComposer.module.css";
 
@@ -18,12 +18,16 @@ interface FirstContactComposerFieldProps {
   ariaLabel: string;
   disabled: boolean;
   fieldRef: RefObject<HTMLTextAreaElement | null>;
+  /** The door's minimum trimmed length. Above 1, a "N more characters to
+   *  send" countdown shows until it is met, tied to the field by
+   *  `aria-describedby` and left out of any live region. */
+  minLength?: number;
 }
 
 /**
  * The textarea + character counter every first-contact composer shares
  * (PRD-340): same 2000-char cap, same 80%-of-cap reveal threshold, same
- * polite `aria-live` remaining-count announcement, across all three doors.
+ * polite `aria-live` remaining-count announcement, across every door.
  * Split out of `FirstContactComposer.tsx` to keep it under the 200-line cap.
  */
 export function FirstContactComposerField({
@@ -33,10 +37,15 @@ export function FirstContactComposerField({
   ariaLabel,
   disabled,
   fieldRef,
+  minLength = 1,
 }: FirstContactComposerFieldProps) {
   const { t } = useTranslation();
+  const minimumHintId = useId();
   const remaining = MAX_LENGTH - value.length;
   const isCounterVisible = value.length >= COUNTER_VISIBLE_FROM;
+  const charactersShortOfMinimum =
+    minLength > 1 ? Math.max(0, minLength - value.trim().length) : 0;
+  const isMinimumHintVisible = charactersShortOfMinimum > 0;
 
   return (
     <>
@@ -50,7 +59,15 @@ export function FirstContactComposerField({
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}
         aria-label={ariaLabel}
+        aria-describedby={isMinimumHintVisible ? minimumHintId : undefined}
       />
+      {isMinimumHintVisible && (
+        <p id={minimumHintId} className={styles.counter}>
+          {t("messages:firstContact.moreToSend", {
+            count: charactersShortOfMinimum,
+          })}
+        </p>
+      )}
       {isCounterVisible && (
         <p className={styles.counter}>
           <span aria-hidden>

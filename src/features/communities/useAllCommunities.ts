@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { communityPath } from "../../app/routeMap";
 import { useCreatedCommunities } from "./startCommunity/createdCommunities.store";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityEdits } from "../../app/providers/useCommunityEdits";
@@ -21,7 +22,7 @@ export function createdToCommunity(
   const c = community;
   return {
     slug: c.slug,
-    href: `/community/${c.slug}`,
+    href: communityPath(c.slug),
     type: c.type,
     typeLabel: typeLabelFor(c.type),
     name: c.name,

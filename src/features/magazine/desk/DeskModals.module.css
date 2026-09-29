@@ -20,6 +20,16 @@
   margin-bottom: 14px;
 }
 
+/* Commission terms row (CommissionDetailsFields only): a column collapses to
+   full width below 11rem so a Select's text can't crush a neighbouring date
+   input, and the row still sits two-up once the modal has room. */
+.termsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;

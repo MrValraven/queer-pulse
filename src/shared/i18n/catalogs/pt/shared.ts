@@ -123,6 +123,7 @@ export const shared: Catalog = {
   "loadError.title": "Não conseguimos <em>carregar</em>",
   "loadError.body":
     "O pedido não voltou. A falha é nossa. Tenta outra vez daqui a um momento.",
+  "loadError.retryingCta": "A tentar outra vez…",
   "loadError.retryCta": "Tentar outra vez",
 
   "feedback.roomLoader.ariaLabel": "A preparar a sala",
@@ -267,6 +268,7 @@ export const shared: Catalog = {
   "adminNav.items.pressKit": "Kit de imprensa",
   "adminNav.items.queues": "Todas as filas",
   "adminNav.items.moderation": "Moderação",
+  "adminNav.items.forumReview": "Revisão do fórum",
   "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
   "adminNav.items.intakes": "Submissões e mensagens",

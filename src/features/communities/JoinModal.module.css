@@ -1,8 +1,11 @@
-/* Body styling on top of the shared <ModalSheet> — the sheet owns the overlay,
+/* Body styling on top of the shared <ModalSheet>: the sheet owns the overlay,
    scroll-lock, focus-trap, grabber and close chrome. Tokens only. */
 
+/* Clear of the sheet's 44px close circle, which sits over the top-right
+   corner: under it, the bar's end hid and "Step 2 of 3" read as nearly done. */
 .progress {
   margin-bottom: 28px;
+  padding-inline-end: calc(var(--tap-min) + var(--gap-xs));
 }
 .bar {
   height: 3px;
@@ -181,9 +184,9 @@
   flex-wrap: wrap;
 }
 
-/* Why the last join attempt failed, under the submit button on the About step.
-   The applicant stays on the form, so the reason sits with the action that
-   produced it rather than in a toast that outlives the modal. */
+/* Why the last attempt failed: under the submit button on the About step, and
+   under the acknowledgement on the rules step. The applicant stays on the form,
+   so the reason sits beside the control it concerns and leaves with the modal. */
 .error {
   margin-top: 12px;
   font-size: var(--text-13-5);
@@ -198,8 +201,8 @@
   margin: 18px 0 22px;
 }
 
-/* "These rules changed while you had this open" — a status line, not a
-   failure, so it reads in the calm plum panel tone rather than danger red. */
+/* "These rules changed while you had this open" is a status line. It reads in
+   the calm plum panel tone, since the applicant did nothing wrong. */
 .notice {
   display: flex;
   align-items: flex-start;
@@ -218,9 +221,9 @@
   color: var(--accent);
 }
 
-/* The two "you cannot join right now" answers (banned / reapply wait). Neutral
-   ink, never danger red: this is an answer to a request, not an error the
-   applicant caused. */
+/* The refusal panel's icon (banned, reapply wait, pause, pending, parent
+   first). Neutral ink: each is an answer about the community, and the
+   applicant caused none of them. */
 .refusalIcon {
   width: 52px;
   height: 52px;

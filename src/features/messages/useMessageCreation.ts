@@ -55,6 +55,9 @@ interface CreationDeps {
   /** From the sending sub-hook — re-keys and re-drives any outbox entries
    *  queued under a placeholder id once its real conversation exists. */
   migrateOutboxConversation: (oldConvId: string, newConvId: string) => void;
+  /** From the thread window (PRD-401): returns the open thread to its live
+   *  tail. A forward into the open thread calls it first. */
+  returnToLatest: () => void;
 }
 
 export interface MessageCreation {
@@ -130,6 +133,7 @@ export function useMessageCreation({
   appendOptimistic,
   deliver,
   migrateOutboxConversation,
+  returnToLatest,
 }: CreationDeps): MessageCreation {
   const [pendingRequestTarget, setPendingRequestTarget] =
     useState<StrangerMemberResult | null>(null);
@@ -171,6 +175,8 @@ export function useMessageCreation({
   const { forwardMessage } = useMessageForwarding({
     demoMode,
     allThreads,
+    activeId,
+    returnToLatest,
     t,
     setExtraThreads,
     setReadIds,

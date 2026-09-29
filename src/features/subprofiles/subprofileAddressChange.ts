@@ -13,6 +13,29 @@ export type PendingAddressChange =
       previous: string;
     };
 
+/** Which of `AddressChangeWarningModal`'s copy branches a pending change
+ *  needs (PRD-427, ENG-447). A plain handle edit on an already-published
+ *  persona (`"rename"`) now keeps the page live at its new address with the
+ *  old one forwarding for the cooldown, so it reads nothing like a link-mode
+ *  switch. Switching a LINKED persona to unlinked (`"linkToUnlink"`) is the
+ *  one direction that drops followers and endorsements (ENG-447's clean
+ *  break), so nothing left over still ties the pseudonymous address to its
+ *  owner. Every other change (switching unlinked to linked, or a link switch
+ *  still awaiting a typed handle) reads with the original generic copy. */
+export type AddressChangeKind = "rename" | "linkToUnlink" | "other";
+
+/** Classify a pending change for the modal's copy, given the link mode it is
+ *  changing FROM: the saved/editor value, ahead of whatever `pending` targets. */
+export function addressChangeKindFor(
+  pending: PendingAddressChange,
+  currentLink: LinkVisibility,
+): AddressChangeKind {
+  if (pending.kind === "editField") return "rename";
+  if (currentLink === "linked" && pending.target === "unlinked")
+    return "linkToUnlink";
+  return "other";
+}
+
 /** Whether the "linked" choice card is locked for this viewer, and whether to
  *  explain why. Only the persona's CREATOR may switch a currently-unlinked
  *  persona to linked (linking shows the creator's name); co-owners keep every

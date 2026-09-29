@@ -148,6 +148,9 @@ export interface GoTogetherHostQuestionsEditorProps {
   questions: HostQuestionDraft[];
   onChange: (questions: HostQuestionDraft[]) => void;
   isLocked: boolean;
+  /** Whether the saved config already has at least one question: gates the
+   *  re-ask hint below, since nobody can have answered an unsaved one. */
+  hasSavedQuestions: boolean;
   /** Shown under the questions, e.g. a question with no prompt. */
   error?: string | null;
 }
@@ -158,18 +161,30 @@ export function GoTogetherHostQuestionsEditor({
   questions,
   onChange,
   isLocked,
+  hasSavedQuestions,
   error,
 }: GoTogetherHostQuestionsEditorProps) {
   const { t } = useTranslation();
   const labelId = useId();
   const isAtQuestionLimit = questions.length >= MAX_HOST_QUESTIONS;
+  const shouldShowReaskHint =
+    !isLocked && questions.length > 0 && hasSavedQuestions;
 
   return (
     <Field
       label={t("goTogether:host.questions.label")}
       labelId={labelId}
       isOptional
-      hint={t("goTogether:host.questions.hint")}
+      hint={
+        shouldShowReaskHint ? (
+          <>
+            {t("goTogether:host.questions.hint")}{" "}
+            {t("goTogether:host.questions.reaskHint")}
+          </>
+        ) : (
+          t("goTogether:host.questions.hint")
+        )
+      }
       error={error}
     >
       <div

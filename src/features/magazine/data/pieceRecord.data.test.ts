@@ -88,4 +88,16 @@ describe("demoRecordForPiece", () => {
     expect(demoBrief.filedWords).toBe(beforeFiledWords);
     expect(DEMO_RECORD.payment?.status).toBe(beforeStatus);
   });
+
+  it("carries a scheduled piece's publish instant and keeps it unpublished", () => {
+    const p5 = findDemoPiece("p5"); // Ready, on the demo issue, scheduled
+    const record = demoRecordForPiece(p5);
+    expect(p5.publishedAt).toBeTruthy();
+    expect(record.publishedAt).toBe(p5.publishedAt);
+    expect(record.isPublished).toBe(false);
+  });
+
+  it("leaves the publish instant empty for a piece with none", () => {
+    expect(demoRecordForPiece(findDemoPiece("p7")).publishedAt).toBeNull();
+  });
 });

@@ -372,6 +372,13 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   `${routes.adminHousingGroupListings}/*`,
   routes.adminLandlords,
   `${routes.adminLandlords}/*`,
+  // PRD-462. The housing-groups console (group join-request triage and the
+  // post-publication hide) is `AdminHousingGroupsController`, guarded by the
+  // same `HousingModerationGuard` union, so it sits here and in
+  // CAPABILITY_ELEVATED_PATTERNS below. People asking to join a gated group
+  // wait on this queue, so the moderators the backend admits must reach it.
+  routes.adminHousingGroups,
+  `${routes.adminHousingGroups}/*`,
   // SUS-05. The volunteer-hours report is `@Roles(Moderator, Admin)` on the
   // backend, so it belongs here rather than behind the blanket admin-only
   // match: a moderator already sees the whole rail, and the link would
@@ -379,6 +386,13 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // It carries no capability grant (see `adminNav.data.ts`), so it appears in
   // this list only, never in CAPABILITY_ELEVATED_PATTERNS.
   routes.adminVolunteerHours,
+  // PRD-461. The forum review queue. `AdminForumController` is
+  // `@Roles(Moderator, Admin)` with an empty `@StaffRoles()`, so no grant opens
+  // it and it stays out of CAPABILITY_ELEVATED_PATTERNS. Held threads are
+  // invisible to every member until a moderator decides, so the people doing
+  // the reviewing have to reach the page. No `/*` sibling: it has no child
+  // routes.
+  routes.adminForumReview,
 ];
 
 /**
@@ -436,12 +450,15 @@ const CAPABILITY_ELEVATED_PATTERNS: {
 }[] = [
   {
     // `HousingModerationGuard`: Moderator or Admin, OR `housing_moderator`.
-    // Both housing queues are guarded by it, so both elevate the same way.
+    // All three housing consoles are guarded by it (the housing-groups one
+    // since PRD-462), so all three elevate the same way.
     patterns: [
       routes.adminHousingListings,
       `${routes.adminHousingListings}/*`,
       routes.adminHousingGroupListings,
       `${routes.adminHousingGroupListings}/*`,
+      routes.adminHousingGroups,
+      `${routes.adminHousingGroups}/*`,
     ],
     capabilities: ["housing_moderator"],
   },

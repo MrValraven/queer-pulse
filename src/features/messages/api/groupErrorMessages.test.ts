@@ -43,6 +43,7 @@ describe("groupErrorCodeOf", () => {
       "GROUP_ADD_REFUSED",
       "INVITE_NOT_FOUND",
       "INVITE_LINK_INVALID",
+      "INVITE_LINK_EXPIRED",
       "REMOVED_FROM_GROUP",
       "PIN_LIMIT_REACHED",
     ] as const;
@@ -53,6 +54,12 @@ describe("groupErrorCodeOf", () => {
 });
 
 describe("groupErrorToastKey", () => {
+  it("maps INVITE_LINK_EXPIRED (PRD-400, 410) to its own toast key", () => {
+    expect(groupErrorToastKey(coded(410, "INVITE_LINK_EXPIRED"))).toBe(
+      "messages:group.error.inviteLinkExpired",
+    );
+  });
+
   it("maps GROUP_FULL to the shared picker toast key, not a separate one", () => {
     expect(groupErrorToastKey(coded(409, "GROUP_FULL"))).toBe(
       "messages:group.fullToast",

@@ -5,6 +5,7 @@ import {
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
+import type { ForumThreadDraftSnapshot } from "../forumDraftSnapshot";
 
 // ── Composer autosave, over the generic drafts module ────────────────────────
 // SOC-13: the forum composer used to be a plain textarea with nowhere to put an
@@ -114,6 +115,10 @@ export interface ForumDraftPreview {
   /** True when the draft holds something beyond title and body (a community,
    *  tags, an attached photo), so a body-less draft still announces itself. */
   hasExtraFields: boolean;
+  /** The composer fields beside the body, so the forum's draft card can say
+   *  what the post holds (its kind, audience, tags, photos, poll). Null when
+   *  the draft carries none. */
+  snapshot: ForumThreadDraftSnapshot | null;
 }
 
 /**

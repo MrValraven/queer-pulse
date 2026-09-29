@@ -296,13 +296,13 @@ export const marketing: Catalog = {
   "about.linkModal.governanceOverview.lead":
     "The record of how QueerPulse is governed, how decisions get made, and what happens when things go wrong.",
   "about.linkModal.governanceOverview.p1":
-    "Moderation is done by a small team of members who agreed to take on the role. They answer to the advisory council, and any decision can be appealed within 14 days. The advisory council hears the appeal, and its outcome is final.",
+    "Moderation is done by a small team of members who agreed to take on the role. They answer to the advisory council for how the process is run, and any decision can be appealed once, within 14 days. A moderator who was not part of the original decision hears the appeal, and the outcome is final.",
   "about.linkModal.governanceOverview.p2":
     "Reports are reviewed within 48 hours, same-day where someone's safety is at risk, and the figures behind that process are published every quarter.",
   "about.linkModal.governanceOverview.point.council.title":
     "The advisory council.",
   "about.linkModal.governanceOverview.point.council.body":
-    "It reviews appeals, proposes platform changes, and serves as the accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote.",
+    "It oversees how moderation and appeals are run, proposes platform changes, and serves as the accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote.",
   "about.linkModal.governanceOverview.point.finances.title":
     "Finances in the open.",
   "about.linkModal.governanceOverview.point.finances.body":
@@ -1515,7 +1515,7 @@ export const marketing: Catalog = {
   "listBusiness.step0.signedInAs":
     "You're signed in as <b>{name}</b>. We'll attach this submission to your member profile so the team knows who to thank (and ask, if needed).",
   "listBusiness.step0.signedInAsSuggest":
-    "You're signed in as <b>{name}</b>. The team can message you if they have a question about your suggestion.",
+    "You're signed in as <b>{name}</b>. If the team has a question about your suggestion, you'll get it as a notification.",
   // Step 1 — basics
   "listBusiness.step1.title": "Start with",
   "listBusiness.step1.em": "the basics.",
@@ -1863,7 +1863,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.submitNote":
     "<b>A human reviews every listing.</b> This keeps the directory community-verified. Nothing auto-publishes. We'll read it within a few days, and QueerPulse tells you when it's live (or the team messages you if we have a question). You can edit or withdraw it any time before then.",
   "listBusiness.step5.suggestNote":
-    "<b>A real person reviews every listing.</b> QueerPulse holds this one until the business claims it, and your name stays off it. We'll message you when it's live.",
+    "<b>A real person reviews every listing.</b> QueerPulse holds this one until the business claims it, and your name stays off it. You'll get a notification when it's live.",
   // Success panel
   "listBusiness.success.stage.review": "In review",
   "listBusiness.success.stage.question": "Quick question",
@@ -1883,7 +1883,7 @@ export const marketing: Catalog = {
   "listBusiness.success.note.live":
     "<b>It's live in the directory.</b> Your place is now searchable by the community. Thank you for making the map a little fuller.",
   "listBusiness.success.note.suggestReview":
-    "Thank you for the suggestion. <b>A real person on the community team reads every listing</b> before it goes live. QueerPulse looks after it until the business claims it, and your name stays off it. We'll message you the moment it's live.",
+    "Thank you for the suggestion. <b>A real person on the community team reads every listing</b> before it goes live. QueerPulse looks after it until the business claims it, and your name stays off it. You'll get a notification the moment it's live.",
   "listBusiness.success.note.suggestLive":
     "<b>It's live in the directory.</b> Thank you for making the map a little fuller. If you run this place after all, you can claim it from its page.",
   "listBusiness.success.fallbackName": "Your place",
@@ -1896,6 +1896,7 @@ export const marketing: Catalog = {
   "listBusiness.success.viewOnProfile": "View on your profile",
   "listBusiness.success.editSubmission": "Edit submission",
   "listBusiness.success.listAnother": "List another place",
+  "listBusiness.success.sendCorrection": "Send a correction",
   "listBusiness.success.withdraw": "Withdraw",
   "listBusiness.success.reference":
     "Reference · <b>{ref}</b>  ·  keep it somewhere",
@@ -2800,7 +2801,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-29.headline":
-    "A redesigned editor desk, Blip and Tea sticker packs, and Ping's new 404 page.",
+    "A redesigned editor desk, Blip and Tea stickers, and takedown notices with appeals.",
   "changelog.releases.2026-09-28.headline":
     "Go together for people going solo, QueerPulse Ambassadors and game master personas.",
   "changelog.releases.2026-09-25.headline":
@@ -2931,8 +2932,297 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+  "changelog.entries.magazine-desk-writer-picker.title":
+    "Choose the writer when you commission or hand off a piece",
+  "changelog.entries.magazine-desk-writer-picker.body":
+    "The commission form now keeps its fee and angle, and hand-off can change the writer too.",
+  "changelog.entries.magazine-scheduled-pieces-locked.title":
+    "Scheduled magazine pieces hold their place until they go live",
+  "changelog.entries.magazine-scheduled-pieces-locked.body":
+    "A piece with a publish date moves to Ready and stays there until an editor unschedules it.",
+  "changelog.entries.magazine-pitch-pass-bell.title":
+    "Writers hear when the desk passes on a pitch",
+  "changelog.entries.magazine-pitch-pass-bell.body":
+    "Passing on a workspace pitch now rings the writer, and each pitch is answered only once.",
+  "changelog.entries.takedown-notices-and-appeals.title":
+    "Get a notice when something of yours is taken down",
+  "changelog.entries.takedown-notices-and-appeals.body":
+    "It names the reason and opens straight into the appeal for that decision.",
+  "changelog.entries.one-appeal-per-decision.title":
+    "Get one appeal per moderation decision",
+  "changelog.entries.one-appeal-per-decision.body":
+    "A moderator who was not part of the original decision reviews it, and that outcome is final.",
+  "changelog.entries.one-appeal-per-decision.details":
+    "You can appeal a moderation decision once. A moderator who was not part of the original decision reviews it, and that outcome is final. The advisory council oversees how moderation and appeals are run across QueerPulse. Open the appeal page for a decision that was already appealed and it says so plainly, pointing you to the outcome and to the moderation team. Governance, About, the Constitution and the banned-account page now describe this the same way.",
+  "changelog.entries.safer-report-forms.title":
+    "Report and block forms stop pre-picking a reason",
+  "changelog.entries.safer-report-forms.body":
+    "Reports about a community now go straight to platform moderators, who act independently of its owners.",
+  "changelog.entries.takedowns-reach-everywhere.title":
+    "A taken-down gathering stops reminding people",
+  "changelog.entries.takedowns-reach-everywhere.body":
+    "It also drops out of subscribed calendars, and a removed volunteering opportunity disappears from listings.",
+  "changelog.entries.my-reports-show-what.title":
+    "See what each of your reports was about",
+  "changelog.entries.my-reports-show-what.body":
+    "Every entry now names the post, message, member or other item involved.",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Menus for bars, cafés and restaurants, 23 Sep 2026.
+  "changelog.entries.lighter-first-load.title":
+    "Pages start faster on a first visit",
+  "changelog.entries.lighter-first-load.body":
+    "About 300 KB less JavaScript loads before the first screen, and demo inboxes now load only in demo mode.",
+  "changelog.entries.dark-mode-chip-washes.title":
+    "Forum, event and partner chips show up in dark mode",
+  "changelog.entries.dark-mode-chip-washes.body":
+    "Their tinted backgrounds and the block and mute icon discs now follow the theme and stay readable.",
+  "changelog.entries.mobile-app-bar-search.title":
+    "Search now sits in the mobile app bar",
+  "changelog.entries.mobile-app-bar-search.body":
+    "One tap opens search on phones, and visitors no longer see a Search link that only leads to sign-in.",
+  "changelog.entries.enquiries-share-first-contact-composer.title":
+    "Directory and housing enquiries use the shared message composer",
+  "changelog.entries.enquiries-share-first-contact-composer.body":
+    "Both warn before you share a phone number or IBAN and keep your draft when a send fails.",
+  "changelog.entries.homepage-member-feed-cta.title":
+    "Members on the homepage get a way back to their feed",
+  "changelog.entries.homepage-member-feed-cta.body":
+    "Signed-in members see Go to your feed on the hero and closing buttons, which used to offer an invite.",
+  "changelog.entries.private-message-files-out-of-media-console.title":
+    "Private message files stay out of the media console",
+  "changelog.entries.private-message-files-out-of-media-console.body":
+    "The staff media browser skips photos and documents sent in DMs, and forced deletes record who did them.",
+  "changelog.entries.housing-group-join-requests-reach-staff.title":
+    "Housing group join requests reach the staff queue",
+  "changelog.entries.housing-group-join-requests-reach-staff.body":
+    "Moderators hear about them, and hiding a group listing asks for a reason its poster is told.",
+  "changelog.entries.staff-queues-show-load-errors.title":
+    "Staff queues say when they could not load",
+  "changelog.entries.staff-queues-show-load-errors.body":
+    "The dashboard, invite queue and member list show an error with a retry button when a load fails.",
+  "changelog.entries.chat-list-keeps-opened-chats-in-place.title":
+    "Chat list keeps opened chats in place",
+  "changelog.entries.chat-list-keeps-opened-chats-in-place.body":
+    "Chats opened from further down stay put as more load, and old file previews and stickers show correctly.",
+  "changelog.entries.taken-down-communities-stay-closed.title":
+    "Taken-down communities and gated threads stay closed",
+  "changelog.entries.taken-down-communities-stay-closed.body":
+    "A taken-down community refuses new posts and replies, and reply alerts stop once you lose access to a thread.",
+  "changelog.entries.work-taxonomy-isco.title":
+    "Job fields and work areas rebuilt on ISCO-08",
+  "changelog.entries.work-taxonomy-isco.body":
+    "Jobs and profiles share 43 fields with no Other option, and the job board filters by field group.",
+  "changelog.entries.shared-values-search-from-first-letter.title":
+    "Shared values and craft searches narrow from the first letter",
+  "changelog.entries.shared-values-search-from-first-letter.body":
+    "Both pickers match word starts as you type, and the persona craft list folds and glides as it narrows.",
+  "changelog.entries.community-edit-saves-without-values.title":
+    "Community edits say what's missing before you can save",
+  "changelog.entries.community-edit-saves-without-values.body":
+    "A disabled Save now lists the empty required fields, and communities with no shared values can save again.",
+  "changelog.entries.like-forum-threads-from-feed.title":
+    "Like forum threads straight from the feed",
+  "changelog.entries.like-forum-threads-from-feed.body":
+    "The heart on a forum card in your feed is the thread's own like, with the same count.",
+  "changelog.entries.sheets-stay-put-on-iphone.title":
+    "Pop-up sheets stay put on iPhone",
+  "changelog.entries.sheets-stay-put-on-iphone.body":
+    "Scrolling to the end of a sheet, like a members-only community card, no longer drags it off screen.",
+  "changelog.entries.onboarding-community-join.title":
+    "Joining communities during onboarding works again",
+  "changelog.entries.onboarding-community-join.body":
+    "Communities with house rules now show them before you join, and every join tells you how it went.",
+  "changelog.entries.forward-to-any-group.title":
+    "Forward a message to any of your groups",
+  "changelog.entries.forward-to-any-group.body":
+    "The forward picker now finds any of your groups by name, however far down your inbox they sit.",
+  "changelog.entries.mentions-respect-private-spaces.title":
+    "Mentions in private communities and gated threads stay inside",
+  "changelog.entries.mentions-respect-private-spaces.body":
+    "A mention there now notifies only people who can read the post, and names resolve only where you can see them.",
+  "changelog.entries.emoji-safe-captions.title":
+    "Captions and snippets keep every emoji whole",
+  "changelog.entries.emoji-safe-captions.body":
+    "A caption ending in an emoji at the length limit now sends, and old caption edits show what you wrote.",
+  "changelog.entries.stickers-in-portuguese.title":
+    "Stickers carry their Portuguese names",
+  "changelog.entries.stickers-in-portuguese.body":
+    "Sticker names follow your language in chats and previews, and emoji search matches the sticker search field.",
+  "changelog.entries.open-chats-stay-current.title": "Open chats stay current",
+  "changelog.entries.open-chats-stay-current.body":
+    "Renames, pins, mutes and member changes show at once, and retry or forward returns you to the latest message.",
+  "changelog.entries.going-visibility-honoured.title":
+    "Who can see you're going now works",
+  "changelog.entries.going-visibility-honoured.body":
+    "My connections and Only the hosts hide you from guest lists and profile activity; hosts see your notes.",
+  "changelog.entries.go-together-member-safety.title":
+    "Block or report one person in your Go together group",
+  "changelog.entries.go-together-member-safety.body":
+    "Matched chats show first names only, in mentions and notifications too.",
+  "changelog.entries.go-together-host-changes.title":
+    "Hosts can switch Go together off or edit a question fairly",
+  "changelog.entries.go-together-host-changes.body":
+    "Waiting members hear why, and anyone whose question changed is asked again on their card.",
+  "changelog.entries.go-together-sturdier.title":
+    "Go together groups hold together better",
+  "changelog.entries.go-together-sturdier.body":
+    "Groups never pass five, leaving after the start keeps your reveal, and deleted gatherings close their chats.",
+  "changelog.entries.notifications-sync-across-screens.title":
+    "Notifications stay in sync across your screens",
+  "changelog.entries.notifications-sync-across-screens.body":
+    "Reading or clearing a notification on one device now updates the bell on your other open tabs and devices.",
+  "changelog.entries.directory-cards-fit-long-names.title":
+    "Directory cards fit long names and narrow columns",
+  "changelog.entries.directory-cards-fit-long-names.body":
+    "Compact ratings, two-line names and one-row tags keep cards tidy; on phones, nearby places swipe sideways.",
+  "changelog.entries.persona-craft-search.title":
+    "Search for your craft by name when you start a new persona",
+  "changelog.entries.persona-craft-search.body":
+    "The first step is wider, offers By craft or Copy one, and helps you pick a close match when nothing fits.",
+  "changelog.entries.listings-queue-table.title":
+    "The listings moderation queue is now one scannable table",
+  "changelog.entries.listings-queue-table.body":
+    "Each row shows a photo, category and submitter, with one main action and the rest in its menu.",
+  "changelog.entries.listing-actions-menu-animates.title":
+    "The listing queue's more-actions menu opens and closes smoothly",
+  "changelog.entries.listing-actions-menu-animates.body":
+    "It grows out of the three-dot button and folds back into it, and appears instantly with reduced motion on.",
+  "changelog.entries.added-listing-next-steps.title":
+    "Adding a listing ends with a link to it and a way to add the next",
+  "changelog.entries.added-listing-next-steps.body":
+    "Staff can start the next listing in one click, and open the directory page of one published straight away.",
+  "changelog.entries.empty-search-dropdowns-stay-on-top.title":
+    "Dropdowns stay on top when a search finds nothing",
+  "changelog.entries.empty-search-dropdowns-stay-on-top.body":
+    "The neighbourhood picker when listing a place, and the admin invite filter, now sit above the field below.",
+  "changelog.entries.badge-notifications-open-the-badge.title":
+    "Badge notifications open the badge you earned",
+  "changelog.entries.badge-notifications-open-the-badge.body":
+    "Tapping one lands on your badge case with that badge open; a level-up opens the case too.",
+  "changelog.entries.listing-review-keeps-line-breaks.title":
+    "The listing review step keeps your line breaks",
+  "changelog.entries.listing-review-keeps-line-breaks.body":
+    "Your description's paragraphs and line breaks show in the final check, as they do in the live preview.",
+  "changelog.entries.persona-takedowns-take-effect.title":
+    "Moderator takedowns now hide personas",
+  "changelog.entries.persona-takedowns-take-effect.body":
+    "A removed persona leaves the directory, search and its page, and private personas stay off owners' profiles.",
+  "changelog.entries.persona-renames-stay-live.title":
+    "Renaming a persona's address keeps it live",
+  "changelog.entries.persona-renames-stay-live.body":
+    "Old links forward for 30 days, and going pseudonymous now starts fresh with no followers or endorsements.",
+  "changelog.entries.persona-editor-save-conflicts.title":
+    "The persona editor warns when a co-owner saved first",
+  "changelog.entries.persona-editor-save-conflicts.body":
+    "A save that would overwrite someone's newer changes stops, and Reload brings in the latest version.",
+  "changelog.entries.unclaimed-listings-take-no-questions.title":
+    "Unclaimed listings stop taking questions",
+  "changelog.entries.unclaimed-listings-take-no-questions.body":
+    "With nobody to answer, a listing with no owner hides the ask box and, when empty, the whole section.",
+  "changelog.entries.mailbox-staff-names-stay-private.title":
+    "Unlinked personas never name who replied",
+  "changelog.entries.mailbox-staff-names-stay-private.body":
+    "Replies from a persona that keeps its owner private no longer show a staff first name, even on a lock screen.",
+  "changelog.entries.suggested-places-notify-suggesters.title":
+    "Suggested places now update you by notification",
+  "changelog.entries.suggested-places-notify-suggesters.body":
+    "Going live, questions, send-backs and removals arrive in your language, with a link and a correction form.",
+  "changelog.entries.ambassador-grant-history.title":
+    "Ambassador admin gains grant history and paging",
+  "changelog.entries.ambassador-grant-history.body":
+    "Staff see each member's grant record, perks show the real invite allowance, and staff seats end with the role.",
+  "changelog.entries.therapist-registration-self-declared.title":
+    "Therapist registration numbers read as self-declared",
+  "changelog.entries.therapist-registration-self-declared.body":
+    "The green tick is gone, and “Also worth a look” now rotates by page so no therapist holds a permanent slot.",
+  "changelog.entries.member-profiles-respect-hiding.title":
+    "Members who step away or are taken down stay hidden",
+  "changelog.entries.member-profiles-respect-hiding.body":
+    "Old links, directory filters and voucher lists respect deactivation, takedowns, private bios and hidden areas.",
+  "changelog.entries.membership-cards-respect-suspension.title":
+    "Membership cards stop verifying for suspended members",
+  "changelog.entries.membership-cards-respect-suspension.body":
+    "Door and event check-in refuse suspended members, by card or by name, and card photos follow Show your photo.",
+  "changelog.entries.community-rosters-respect-blocks.title":
+    "Community member lists respect blocks",
+  "changelog.entries.community-rosters-respect-blocks.body":
+    "People you blocked, or who blocked you, drop off community member lists; moderators still see everyone.",
+  "changelog.entries.forum-review-queue.title":
+    "Forum threads held for review have a staff queue",
+  "changelog.entries.forum-review-queue.body":
+    "Moderators approve or decline them in Forum review, with an optional note the author gets.",
+  "changelog.entries.forum-privacy-everywhere.title":
+    "Anonymous, scheduled and warned threads stay that way everywhere",
+  "changelog.entries.forum-privacy-everywhere.body":
+    "The feed, topic pages, profiles, search and bells now hide masked authors, unpublished threads and warnings.",
+  "changelog.entries.homepage-faces-respect-privacy.title":
+    "The homepage shows only members who chose to be seen",
+  "changelog.entries.homepage-faces-respect-privacy.body":
+    "Community faces on the landing page skip private, hidden and suspended members and switched-off photos.",
+  "changelog.entries.town-square-cross-posting.title":
+    '"Also show in the town square" now works',
+  "changelog.entries.town-square-cross-posting.body":
+    "A community thread you cross-post is readable across the forum, and replies stay with the community.",
+  "changelog.entries.forum-co-author-consent.title":
+    "Co-authors can take their name off a thread",
+  "changelog.entries.forum-co-author-consent.body":
+    "Nobody can credit a member who blocked them, and a credited member removes their name from the post menu.",
+  "changelog.entries.forum-drafts-and-polls-hold.title":
+    "Forum drafts save reliably and polls count one vote each",
+  "changelog.entries.forum-drafts-and-polls-hold.body":
+    "Autosave recovers from conflicts and saves when you leave, and scheduled deadlines count from publish time.",
+  "changelog.entries.erasure-keeps-forum-replies.title":
+    "Leaving QueerPulse keeps other members' replies",
+  "changelog.entries.erasure-keeps-forum-replies.body":
+    "Threads you started stay up without your name where others replied, and unpublished ones are deleted.",
+  "changelog.entries.sticker-search.title":
+    "Search stickers by name or keyword",
+  "changelog.entries.sticker-search.body":
+    "Type in the picker to find a sticker across all packs. Names and alt text now come in Portuguese too.",
+  "changelog.entries.notifications-say-what-happened.title":
+    "Every notification now says what happened",
+  "changelog.entries.notifications-say-what-happened.body":
+    "Thirty-one generic notifications now name what they're about, and declines show the moderators' reason.",
+  "changelog.entries.notification-boundaries-hold.title":
+    "Notifications respect your boundaries",
+  "changelog.entries.notification-boundaries-hold.body":
+    "Hidden photos, blocked people and removed words stay out of your bell, mentions and data export.",
+  "changelog.entries.gathering-reminders-follow-settings.title":
+    "Gathering reminders follow your settings",
+  "changelog.entries.gathering-reminders-follow-settings.body":
+    "Reminders respect your switch and hidden previews, name the gathering and open it, in your language.",
+  "changelog.entries.notification-bell-reads-unread-count.title":
+    "Screen readers hear your unread count",
+  "changelog.entries.notification-bell-reads-unread-count.body":
+    "The bell announces how many notifications are new, and each unread row says so.",
+  "changelog.entries.group-history-from-join.title":
+    "New group members see messages from when they join",
+  "changelog.entries.group-history-from-join.body":
+    "Group invite links now expire after 7 days, and the link panel shows when yours runs out.",
+  "changelog.entries.private-chat-mentions-stay-private.title":
+    "Mentions and previews in private chats stay private",
+  "changelog.entries.private-chat-mentions-stay-private.body":
+    "Only chat members get its mentions, and previews skip messages sent after you left or by people you block.",
+  "changelog.entries.sign-out-clears-message-drafts.title":
+    "Signing out clears your unsent messages and drafts",
+  "changelog.entries.sign-out-clears-message-drafts.body":
+    "Whoever uses the device next finds no half-written message, even if you never opened Messages.",
+  "changelog.entries.jump-to-any-message.title":
+    "Jump to any message, however old",
+  "changelog.entries.jump-to-any-message.body":
+    "Search hits and links open the right chat past your first 30, and photo captions can be edited and searched.",
+  "changelog.entries.gated-community-joining.title":
+    "Joining closed communities works again",
+  "changelog.entries.gated-community-joining.body":
+    "You can read the house rules, ask to join or accept an invitation, and see or withdraw your pending request.",
+  "changelog.entries.community-invites-expire.title":
+    "Community invitations now expire and respect blocks",
+  "changelog.entries.community-invites-expire.body":
+    "Invitations last 30 days and stop working if the sender leaves the mod team or either of you blocks the other.",
+  "changelog.entries.community-reads-follow-moderation.title":
+    "Hidden and archived communities stay closed",
+  "changelog.entries.community-reads-follow-moderation.body":
+    "Hidden communities close their posts and roster to outsiders; archived ones stay readable to their members.",
   "changelog.entries.feed-tab-switch-no-stale-cards.title":
     "Feed tabs stop flashing the previous tab's cards",
   "changelog.entries.feed-tab-switch-no-stale-cards.body":
@@ -7907,6 +8197,8 @@ export const marketing: Catalog = {
   "contact.form.topic.press": "Press or research inquiry",
   "contact.form.topic.partnership": "Partnership proposal",
   "contact.form.topic.other": "Something else",
+  "contact.form.topic.listing_correction": "Correction to a directory listing",
+  "contact.form.correctionNote": "About listing {ref}",
   "contact.form.messageLabel": "Your message",
   "contact.form.messagePlaceholder":
     "Write naturally. There's no template and no word count.",
@@ -9347,14 +9639,14 @@ export const marketing: Catalog = {
   "constitution.art7.clause2":
     "<strong>QueerPulse does not moderate criticism of itself.</strong> Posts critical of QueerPulse, its decisions, or its organisers may not be removed under any clause of the Code of Conduct.",
   "constitution.art7.clause3":
-    "Moderation decisions are appealable to a standing appeals panel composed of three members from outside the deciding circle. The share of decisions overturned on appeal is counted from the moderation record and published every quarter in the <a>Transparency Report</a>.",
+    "Moderation decisions are appealable <strong>once</strong>, to a moderator who was not part of the original decision. The share of decisions overturned on appeal is counted from the moderation record and published every quarter in the <a>Transparency Report</a>.",
 
   "constitution.art8.toc": "VIII · Removal",
   "constitution.art8.title": "Removal",
   "constitution.art8.clause1":
     "Members may be removed only through the moderation ladder specified in §04 of the Code of Conduct, and only by decision of the moderation circle, ratified by one additional independent moderator.",
   "constitution.art8.clause2":
-    "Removal is appealable <strong>once</strong>, to the appeals panel, within 14 days of effective date.",
+    "Removal is appealable <strong>once</strong>, to a moderator who was not part of the original decision, within 14 days of effective date.",
   "constitution.art8.clause3":
     "A removed member's data is deleted or anonymised per the Privacy Policy within 30 days. Case records are kept for 36 months in case of legal need.",
 
@@ -10173,20 +10465,9 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.unavailable.blocked":
     "This business cannot be reached from your account.",
   "directory.detail.enquiry.ariaLabel": "Write to {name}",
-  "directory.detail.enquiry.eyebrow": "Private message",
-  "directory.detail.enquiry.title": "Write to <em>{name}</em>",
   "directory.detail.enquiry.sub":
-    "This goes to the mailbox of the people who run this listing, and they reply as the business. It is not published anywhere on the listing.",
-  "directory.detail.enquiry.replyNotice":
-    "{name} can reply to this straight away. You can send more once they do.",
-  "directory.detail.enquiry.bodyLabel": "Your message",
-  "directory.detail.enquiry.bodyPlaceholder":
-    "What would you like to ask them?",
-  "directory.detail.enquiry.bodyHint": "At least {min} characters.",
-  "directory.detail.enquiry.charactersLeft": "Characters left: {remaining}",
+    "It reaches this listing's mailbox, and the reply comes from the business.",
   "directory.detail.enquiry.cancel": "Cancel",
-  "directory.detail.enquiry.submit": "Send message",
-  "directory.detail.enquiry.submitting": "Sending",
   "directory.detail.enquiry.error.rateLimited":
     "You have already written to this business today. Give them a chance to reply first.",
   "directory.detail.enquiry.error.notAllowed":

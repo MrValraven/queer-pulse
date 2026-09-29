@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { FiRepeat } from "react-icons/fi";
-import { communityPath, routes } from "../../../app/routeMap";
+import {
+  businessPath,
+  communityPath,
+  routes,
+  thread,
+} from "../../../app/routeMap";
+import { communityPostPath } from "../../communities/communityPostPath";
+import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
+import { gatheringPath } from "../../gatherings/data";
+import { writerTabHref } from "../../magazine/writerTabs";
 import type { TFunction } from "../../../shared/i18n/types";
 import { createFormatters } from "../../../shared/i18n/format";
 import { notificationDtoToView } from "./notifications.adapters";
@@ -140,6 +149,37 @@ describe("notificationDtoToView", () => {
         fmt,
       );
       expect(view.actor).toBeUndefined();
+      expect(view.avatar).toBeUndefined();
+      expect(view.icon).toBeDefined();
+    });
+
+    // A matched Go together chat names its members by first name only, with
+    // no profile link (product decision): the backend sends that mention's
+    // actor with an empty slug and lastName, since there is no profile to
+    // open. The row still names the person, it just builds no link to them.
+    it("names a matched-chat mention by first name and builds no profile link", () => {
+      const view = notificationDtoToView(
+        dto({
+          type: "mention",
+          payload: {},
+          actor: {
+            slug: "",
+            firstName: "Alex",
+            lastName: "",
+            avatarUrl: null,
+          },
+        }),
+        t,
+        fmt,
+      );
+      expect(view.actorSlug).toBeUndefined();
+      expect(view.actor).toEqual({
+        name: "Alex",
+        href: "",
+        textKey: "notifications:type.mention.textNamed",
+        textValues: {},
+      });
+      // No avatar link either: the row falls back to the category icon.
       expect(view.avatar).toBeUndefined();
       expect(view.icon).toBeDefined();
     });
@@ -300,6 +340,37 @@ describe("notificationDtoToView: report source hrefs", () => {
   });
 });
 
+// ENG-480. The appeal deep link now carries the exact action a moderation
+// outcome resolved, so the appeal form opens pre-selected on it. `actionId`
+// reaches the payload only for the kinds `Task B` wired it onto; the
+// safe-space notifier still sends `source: "moderation"` with no `actionId`
+// and must keep the bare link.
+describe("notificationDtoToView: moderation outcome deep link", () => {
+  it("links to the appeal form pre-selected on the resolved action", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "moderation_outcome",
+        payload: { source: "moderation", action: "suspend", actionId: "a1" },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(`${routes.appealSubmit}?action=a1`);
+  });
+
+  it("keeps the bare appeal link when the payload carries no actionId", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "moderation_outcome",
+        payload: { source: "moderation", action: "warn" },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(routes.appealSubmit);
+  });
+});
+
 /**
  * Phase 2 persona creator handoff. The row carries no actor and no deep link,
  * so its destination and glyph come from the type alone. Every recipient is a
@@ -370,5 +441,350 @@ describe("notificationDtoToView: ambassador source hrefs", () => {
       fmt,
     );
     expect(view.sourceHref).toBeUndefined();
+  });
+});
+
+/**
+ * ENG-409. Where each newly rendered kind leads. A sibling top-level describe
+ * for the same line-budget reason as the blocks above. The helper builds a
+ * view from a type and payload so each case reads as one line of intent.
+ */
+describe("notificationDtoToView: ENG-409 source hrefs", () => {
+  const hrefFor = (type: string, payload: Record<string, unknown>) =>
+    notificationDtoToView(dto({ type, payload }), t, fmt).sourceHref;
+
+  it("links a titled event reminder to the gathering (PRD-404)", () => {
+    expect(
+      hrefFor("event_reminder", {
+        eventId: "e1",
+        startAt: "2026-10-01T18:00:00.000Z",
+        source: "event",
+        eventSlug: "picnic-in-estrela",
+        eventTitle: "Picnic in Estrela",
+      }),
+    ).toBe(gatheringPath("picnic-in-estrela"));
+  });
+
+  it("links a host announcement to its gathering, with no source field", () => {
+    expect(
+      hrefFor("event_announcement", { eventSlug: "picnic-in-estrela" }),
+    ).toBe(gatheringPath("picnic-in-estrela"));
+  });
+
+  it("opens the post a community fan-out is about", () => {
+    expect(
+      hrefFor("community_new_post", {
+        source: "community",
+        communitySlug: "trans-friends",
+        postId: "p1",
+      }),
+    ).toBe(communityPostPath("trans-friends", "p1"));
+  });
+
+  it("sends an owner-review alert to the staff console over the community page", () => {
+    expect(
+      hrefFor("community_owner_review_requested", {
+        source: "community",
+        communitySlug: "trans-friends",
+      }),
+    ).toBe(routes.adminCommunities);
+  });
+
+  it("opens a reviewed forum thread through the forum source branch", () => {
+    expect(
+      hrefFor("forum_thread_reviewed", {
+        source: "forum",
+        threadSlug: "coming-out-at-work",
+      }),
+    ).toBe(thread("coming-out-at-work"));
+  });
+
+  it("routes governance rows to the page each recipient can act on", () => {
+    expect(
+      hrefFor("governance_motion_approved", { source: "governance" }),
+    ).toBe(routes.governance);
+    expect(
+      hrefFor("governance_motion_rejected", { source: "governance" }),
+    ).toBe(routes.governance);
+    expect(
+      hrefFor("governance_motion_ready_for_review", { source: "governance" }),
+    ).toBe(routes.adminGovernance);
+  });
+
+  it("opens the housing group a room listing was posted in", () => {
+    expect(
+      hrefFor("group_listing_decided", {
+        source: "housing_group",
+        decision: "declined",
+        groupSlug: "casa-lilas",
+      }),
+    ).toBe(`${routes.housingGroups}/casa-lilas`);
+    // PRD-463. A hidden listing opens the same group, where the poster's own
+    // listings (hidden ones included) are shown.
+    expect(
+      hrefFor("group_listing_decided", {
+        source: "housing_group",
+        decision: "hidden",
+        groupSlug: "casa-lilas",
+      }),
+    ).toBe(`${routes.housingGroups}/casa-lilas`);
+    expect(
+      hrefFor("group_listing_decided", { decision: "live" }),
+    ).toBeUndefined();
+  });
+
+  it("links a landlord only where the suggester can open the page", () => {
+    expect(
+      hrefFor("landlord_suggestion_decided", {
+        decision: "live",
+        landlordSlug: "casas-do-bairro",
+      }),
+    ).toBe("/work/landlord/casas-do-bairro");
+    expect(
+      hrefFor("landlord_suggestion_decided", {
+        decision: "removed",
+        landlordSlug: "casas-do-bairro",
+      }),
+    ).toBeUndefined();
+    expect(
+      hrefFor("landlord_intro_request_decided", {
+        decision: "declined",
+        landlordSlug: "casas-do-bairro",
+      }),
+    ).toBe("/work/landlord/casas-do-bairro");
+  });
+
+  it("opens an approved housing listing, and the lister's own page otherwise", () => {
+    expect(
+      hrefFor("housing_listing_decision", {
+        source: "housing",
+        slug: "sunny-room",
+        decision: "approve",
+      }),
+    ).toBe(`${routes.housing}/sunny-room`);
+    expect(
+      hrefFor("housing_listing_decision", {
+        source: "housing",
+        slug: "sunny-room",
+        decision: "reject",
+      }),
+    ).toBe(MY_HOUSING_LISTINGS_PATH);
+  });
+
+  it("opens the listing on an approved claim and the member's claims on a declined one", () => {
+    expect(
+      hrefFor("listing_claim_approved", {
+        source: "listing",
+        listingSlug: "lux-cafe",
+      }),
+    ).toBe(businessPath("lux-cafe"));
+    expect(
+      hrefFor("listing_claim_declined", {
+        source: "listing",
+        listingSlug: "lux-cafe",
+      }),
+    ).toBe(routes.listingClaims);
+  });
+
+  it("opens the venue page a gathering was attached to", () => {
+    expect(
+      hrefFor("venue_event_attachment", {
+        source: "listing",
+        listingSlug: "lux-cafe",
+        eventSlug: "picnic-in-estrela",
+      }),
+    ).toBe(businessPath("lux-cafe"));
+  });
+
+  it("opens the personas dashboard for persona rows, and nothing once the persona is gone", () => {
+    expect(hrefFor("persona_followed", {})).toBe(routes.subprofilesDashboard);
+    expect(hrefFor("subprofile_invite", { subprofileName: "Fio Solto" })).toBe(
+      routes.subprofilesDashboard,
+    );
+    expect(
+      hrefFor("subprofile_deleted", { subprofileName: "Fio Solto" }),
+    ).toBeUndefined();
+  });
+
+  it("opens the earned badge on the badge case, and the case for a level-up", () => {
+    expect(
+      hrefFor("badge_earned", {
+        badgeKey: "networker",
+        badgeName: "Networker",
+      }),
+    ).toBe(`${routes.badges}?badge=networker`);
+    expect(hrefFor("badge_earned", { badgeName: "Networker" })).toBe(
+      routes.badges,
+    );
+    expect(hrefFor("xp_level_up", { level: 3, name: "Regular" })).toBe(
+      routes.badges,
+    );
+  });
+
+  it("opens the writer workspace's pitches tab for a passed pitch (ENG-462)", () => {
+    expect(
+      hrefFor("magazine_pitch_passed", {
+        source: "magazine",
+        pitchId: "pitch-1",
+        title: "The Long Way Home",
+      }),
+    ).toBe(writerTabHref("pitches"));
+  });
+});
+
+describe("notificationDtoToView: ENG-409 categories and named rows", () => {
+  const actor = {
+    slug: "ines",
+    firstName: "Inês",
+    lastName: "Tavares",
+    avatarUrl: null,
+  };
+
+  it("files each group under its tab", () => {
+    const categoryOf = (type: string) =>
+      notificationDtoToView(dto({ type, payload: {} }), t, fmt).type;
+    expect(categoryOf("event_announcement")).toBe("events");
+    expect(categoryOf("community_new_post")).toBe("community");
+    expect(categoryOf("group_listing_decided")).toBe("platform");
+    expect(categoryOf("subprofile_invite")).toBe("community");
+  });
+
+  it("names the inviter on a persona invite and keeps the persona name", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "subprofile_invite",
+        payload: { subprofileName: "Fio Solto" },
+        actor,
+      }),
+      t,
+      fmt,
+    );
+    expect(view.actor?.textKey).toBe(
+      "notifications:type.subprofile_invite.textNamed",
+    );
+    expect(view.actor?.textValues?.subprofileName).toBe("Fio Solto");
+  });
+
+  it("names the host on an announcement", () => {
+    const view = notificationDtoToView(
+      dto({ type: "event_announcement", payload: {}, actor }),
+      t,
+      fmt,
+    );
+    expect(view.actor?.textKey).toBe(
+      "notifications:type.event_announcement.textNamed",
+    );
+  });
+});
+
+/**
+ * ENG-409 follow-up. The deep links of rows written since the backend began
+ * forwarding each kind's named fields, next to the rows stored before that:
+ * both shapes have to land in the same place.
+ */
+describe("notificationDtoToView: links for the newly forwarded payload fields", () => {
+  const hrefFor = (type: string, payload: Record<string, unknown>) =>
+    notificationDtoToView(dto({ type, payload }), t, fmt).sourceHref;
+
+  it("opens the gathering for an announcement, with or without its source", () => {
+    expect(
+      hrefFor("event_announcement", {
+        source: "event",
+        eventSlug: "picnic-in-estrela",
+        title: "Picnic in Estrela",
+      }),
+    ).toBe(gatheringPath("picnic-in-estrela"));
+    expect(
+      hrefFor("event_announcement", { eventSlug: "picnic-in-estrela" }),
+    ).toBe(gatheringPath("picnic-in-estrela"));
+  });
+
+  it("opens the claimed listing on approval and the claims page on a decline", () => {
+    const payload = {
+      source: "listing",
+      listingSlug: "lux-cafe",
+      listingName: "Lux Cafe",
+    };
+    expect(hrefFor("listing_claim_approved", payload)).toBe(
+      businessPath("lux-cafe"),
+    );
+    expect(hrefFor("listing_claim_declined", payload)).toBe(
+      routes.listingClaims,
+    );
+  });
+
+  it("opens the community a role change or freeze is about", () => {
+    const payload = {
+      source: "community",
+      communitySlug: "trans-friends",
+      communityName: "Trans Friends",
+    };
+    expect(hrefFor("community_role_changed", payload)).toBe(
+      communityPath("trans-friends"),
+    );
+    expect(hrefFor("community_frozen", payload)).toBe(
+      communityPath("trans-friends"),
+    );
+    expect(hrefFor("community_ownership_transferred", payload)).toBe(
+      communityPath("trans-friends"),
+    );
+  });
+});
+
+/**
+ * PRD-402. A decision's written reason reaches the view as its own `reason`
+ * field beside the label `meta`, so the row can show it in full under the
+ * sentence and name who wrote it.
+ */
+describe("notificationDtoToView: decision reasons", () => {
+  it("puts a moderator's reason on `reason` and keeps `meta` the label key", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "housing_listing_decision",
+        payload: {
+          decision: "reject",
+          title: "Sunny room",
+          reason: " Too dark ",
+        },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.reason).toBe("Too dark");
+    expect(view.meta).toBe(
+      "notifications:type.housing_listing_decision.reject.meta",
+    );
+    expect(view.isReasonFromMember).toBeUndefined();
+  });
+
+  it("leaves `reason` off the view when the payload carries none", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "housing_listing_decision",
+        payload: { decision: "reject", title: "Sunny room", reason: "   " },
+      }),
+      t,
+      fmt,
+    );
+    expect("reason" in view).toBe(false);
+    expect("isReasonFromMember" in view).toBe(false);
+  });
+
+  it("marks a member-written reason so the row can name its author", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "community_owner_review_requested",
+        payload: {
+          source: "community",
+          communitySlug: "trans-friends",
+          communityName: "Trans Friends",
+          reason: "The owner has not answered anyone in months.",
+        },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.reason).toBe("The owner has not answered anyone in months.");
+    expect(view.isReasonFromMember).toBe(true);
   });
 });

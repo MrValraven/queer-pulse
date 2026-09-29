@@ -4,7 +4,6 @@ import { EmptyState, SkeletonLine } from "../../../shared/components/ui";
 import { PageShell } from "../../../shared/components/layout";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { ApiError } from "../../../shared/api/client";
 import { routes } from "../../../app/routeMap";
 import { useEvent } from "../api/useEvent";
 import { useAttendees } from "../api/useAttendees";
@@ -15,6 +14,11 @@ import { DoorGuestList } from "./DoorGuestList";
 import { DoorClosedNotice, DoorScanCard } from "./DoorScanCard";
 import { DoorScanModal } from "./DoorScanModal";
 import { DoorShell } from "./DoorShell";
+import {
+  cardScanFailureHint,
+  checkInFailureToast,
+  undoFailureToast,
+} from "./doorFailureCopy";
 import styles from "../GatheringDashboardPage.module.css";
 
 /** Loading / not-yours frame. A guest list is the host's, so a viewer who is
@@ -98,11 +102,6 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
   // that was already open finds out when a tap lands.
   const canCheckIn = isCheckInKept && !wasRefusedPastWindow;
 
-  const failed = (error: unknown) =>
-    error instanceof ApiError && error.message
-      ? error.message
-      : t("gatherings:door.failedToast");
-
   const checkInByName = (memberSlug: string) => {
     setPendingSlug(memberSlug);
     checkIn.mutate(
@@ -116,14 +115,18 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
             "success",
           ),
         onError: (error) => {
-          // A closed window is permanent, so it is stated in place and the
-          // buttons come down. Everything else is worth another tap and keeps
-          // the toast it always had.
+          // A closed window is final for the whole gathering: the buttons
+          // come down and the reason is stated in place. Every other coded
+          // refusal here (an unmatched or inactive name, a resolved member
+          // who never RSVPed or cancelled, one who is waitlisted, or one who
+          // answered maybe) is just as final for this one name, so it gets
+          // its own translated toast. An uncoded failure is transient and
+          // keeps the ordinary retry toast.
           if (isAttendanceWindowClosed(error)) {
             setWasRefusedPastWindow(true);
             return;
           }
-          showToast(failed(error), "error");
+          showToast(checkInFailureToast(t, error), "error");
         },
         onSettled: () => setPendingSlug(null),
       },
@@ -134,7 +137,12 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
     setPendingSlug(memberSlug);
     undoCheckIn.mutate(memberSlug, {
       onSuccess: () => showToast(t("gatherings:door.undoneToast"), "info"),
-      onError: (error) => showToast(failed(error), "error"),
+      // A resolved member with no RSVP row, or a slug that no longer
+      // resolves to a member, is just as final here as it is for check-in: a
+      // second tap will not succeed, so it gets its own translated toast with
+      // no invitation to retry. An uncoded failure keeps the ordinary retry
+      // toast.
+      onError: (error) => showToast(undoFailureToast(t, error), "error"),
       onSettled: () => setPendingSlug(null),
     });
   };
@@ -154,16 +162,21 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
           );
         },
         onError: (error) => {
-          // The scan modal's own submit would happily be pressed again, and
-          // this refusal will never succeed. Close it and put the reason on
-          // the page behind it instead of leaving a live-looking button.
+          // A closed window is final for the whole gathering: this refusal
+          // will never succeed, so the modal closes and the reason lands on
+          // the page behind it. Every other coded refusal (a card that will
+          // not verify, or a resolved member who never RSVPed, cancelled, is
+          // waitlisted, or answered maybe) is just as final for this one
+          // attempt, and gets its own translated hint right in the modal's
+          // field. An uncoded failure is transient and keeps the plain retry
+          // message in that same field.
           if (isAttendanceWindowClosed(error)) {
             setIsScanOpen(false);
             setScanError(null);
             setWasRefusedPastWindow(true);
             return;
           }
-          setScanError(failed(error));
+          setScanError(cardScanFailureHint(t, error));
         },
       },
     );

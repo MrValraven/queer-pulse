@@ -9,6 +9,7 @@ import { listingDtoToPreviewPlace } from "./api/listingPreviewPlace";
 import { ListingModerationActions } from "./ListingModerationActions";
 import { ListingHistoryPanel } from "./ListingHistoryPanel";
 import { ListingDelegationSection } from "./ListingDelegationSection";
+import { listingProvenanceLabel } from "./listingProvenance";
 import {
   LISTING_STATUS_TONE,
   type ListingQueueRow,
@@ -33,13 +34,6 @@ export function ListingPreviewDrawer({
   // rail entries, and for the same reason: never offer a control the route
   // gate then bounces.
   const isAdmin = demoMode || role === "admin";
-  // A suggestion the platform holds has no submitter, so it names whoever
-  // suggested it before falling back to "unknown submitter".
-  const submitterLabel =
-    row.submitterName ||
-    (row.suggesterName
-      ? t("admin:adminListings.suggestedBy", { name: row.suggesterName })
-      : t("admin:adminListings.unknownSubmitter"));
 
   return (
     <Modal
@@ -47,7 +41,7 @@ export function ListingPreviewDrawer({
       className={styles.drawerModal}
       eyebrow={
         <>
-          {row.ref} · {submitterLabel} ·{" "}
+          {row.ref} · {listingProvenanceLabel(row, t)} ·{" "}
           {fmt.date(new Date(row.createdAt), {
             day: "numeric",
             month: "short",

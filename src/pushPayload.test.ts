@@ -131,7 +131,7 @@ describe("toDirectMessagePush", () => {
   });
 });
 
-describe("toDirectMessagePush — rich fields", () => {
+describe("toDirectMessagePush: rich fields", () => {
   const base = { title: "Ana", body: "hi" };
 
   it("accepts an https icon and a leading-slash icon", () => {
@@ -181,6 +181,45 @@ describe("toDirectMessagePush — rich fields", () => {
     ).toBeUndefined();
   });
 
+  it("keeps an action titleKey that is a push: key (ENG-414)", () => {
+    expect(
+      toDirectMessagePush({
+        ...base,
+        actions: [
+          {
+            action: "view",
+            title: "Details",
+            titleKey: "push:event.reminder.actionDetails",
+          },
+        ],
+      })?.actions,
+    ).toEqual([
+      {
+        action: "view",
+        title: "Details",
+        titleKey: "push:event.reminder.actionDetails",
+      },
+    ]);
+  });
+
+  it("drops a malformed action titleKey and keeps the action itself", () => {
+    for (const badKey of [
+      "event.reminder.actionDetails",
+      "",
+      42,
+      null,
+      { key: "push:x" },
+      `push:${"a".repeat(100)}`,
+    ]) {
+      const actions = toDirectMessagePush({
+        ...base,
+        actions: [{ action: "view", title: "Details", titleKey: badKey }],
+      })?.actions;
+      expect(actions).toEqual([{ action: "view", title: "Details" }]);
+      expect(actions?.[0]).not.toHaveProperty("titleKey");
+    }
+  });
+
   it("validates vibrate as an array of small non-negative numbers", () => {
     expect(
       toDirectMessagePush({ ...base, vibrate: [80, 40, 80] })?.vibrate,
@@ -221,7 +260,7 @@ describe("toDirectMessagePush — rich fields", () => {
   });
 });
 
-describe("toDirectMessagePush — l10n", () => {
+describe("toDirectMessagePush: l10n", () => {
   const base = { title: "Ana", body: "hi" };
 
   it("accepts a full l10n block (titleKey, bodyKey, params)", () => {
@@ -311,7 +350,7 @@ describe("toDirectMessagePush — l10n", () => {
   });
 });
 
-describe("toDirectMessagePush — timestamp", () => {
+describe("toDirectMessagePush: timestamp", () => {
   const base = { title: "Ana", body: "hi" };
 
   it("accepts a finite non-negative epoch-ms timestamp", () => {

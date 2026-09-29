@@ -42,9 +42,9 @@ const EditorDashboardPage = lazyNamed(
   () => import("./EditorDashboardPage"),
   "EditorDashboardPage",
 );
-const DeckEditorPage = lazyNamed(
-  () => import("./DeckEditorPage"),
-  "DeckEditorPage",
+const DeckEditorRoute = lazyNamed(
+  () => import("./DeckEditorRoute"),
+  "DeckEditorRoute",
 );
 const PieceRecordPage = lazyNamed(
   () => import("./PieceRecordPage"),
@@ -155,7 +155,7 @@ export function magazineRoutes() {
           routes below is unnecessary (no wildcard collides with this literal
           path), so it sits with the other editor surfaces. */}
       <Route path={routes.magazineLifecycle} element={<LifecycleDeskPage />} />
-      <Route path={routes.deckEditor} element={<DeckEditorPage />} />
+      <Route path={routes.deckEditor} element={<DeckEditorRoute />} />
       <Route path={routes.magazinePiece} element={<PieceRecordPage />} />
       <Route
         path={routes.magazineIssueProd}

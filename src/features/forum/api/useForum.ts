@@ -19,6 +19,7 @@ import {
   type ReplySort,
 } from "./forum.api";
 import { threadDetail, threadToCard } from "./forum.adapters";
+import { threadReadUpTo } from "./threadReadWatermark";
 
 /** One cursor page of thread cards. Exported so `useForumMutations` can type its
  *  optimistic patch of this exact react-query cache shape. */
@@ -258,6 +259,18 @@ export function useThread(routeParam: string, sort: ReplySort = "oldest") {
     [postsQuery.data],
   );
 
+  // How far the loaded pages genuinely cover, for the read stamp (PRD-409).
+  // A string stamps, null skips, undefined means nothing has loaded yet.
+  const readUpTo = useMemo(
+    () =>
+      threadReadUpTo({
+        posts,
+        sort,
+        hasNextPage: postsQuery.hasNextPage,
+      }),
+    [posts, sort, postsQuery.hasNextPage],
+  );
+
   // `opAvailable` describes the thread, so every page agrees; read it off the
   // first page that has landed. Undefined until one has, which is what keeps
   // "still loading" from rendering as "there is no opening post".
@@ -299,6 +312,9 @@ export function useThread(routeParam: string, sort: ReplySort = "oldest") {
       void metaQuery.refetch();
       void postsQuery.refetch();
     },
+    /** The `upTo` for the read stamp: a post `createdAt` to stamp, `null`
+     *  to skip, `undefined` while nothing has loaded. See `threadReadUpTo`. */
+    readUpTo,
     hasNextPage: !demoMode && postsQuery.hasNextPage,
     fetchNextPage: () => void postsQuery.fetchNextPage(),
     isFetchingNextPage: postsQuery.isFetchingNextPage,

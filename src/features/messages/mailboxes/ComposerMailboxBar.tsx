@@ -6,9 +6,11 @@ import {
   useConversationClaim,
   useTakeOverConfirm,
 } from "../api/useConversationClaim";
+import { useCachedMailboxAttribution } from "../api/useMailboxAttribution";
 import { useMailboxes } from "../api/useMailboxes";
 import type { Conversation } from "../data";
 import { useMessageViewer } from "../useMessageViewer";
+import { isMemberNamedToCustomers, memberFirstNameOf } from "./mailboxLabels";
 import styles from "./ComposerMailboxBar.module.css";
 
 interface TakeOverConfirmDialogProps {
@@ -52,6 +54,11 @@ export function TakeOverConfirmDialog({
  * (behind a confirm) on a colleague's. Claims are advisory, so the input
  * below stays live in every state. Renders nothing on a personal thread and
  * on a read-only mailbox, whose composer `ComposerBlockedState` replaces.
+ * When the customer will see the member's own first name beside the reply
+ * (ENG-456: both switches allow it, on a listing, a company or a linked
+ * persona), the chip says so, so nobody signs a reply without knowing. Only
+ * the mailbox name may shorten on a narrow screen: the first name customers
+ * see always shows in full.
  *
  * The action is one button in one slot whose label and handler follow the
  * claim, so keyboard focus stays on it when an action flips the state, and
@@ -65,12 +72,21 @@ export function ComposerMailboxBar({ active }: { active: Conversation }) {
   const { claim, release, takeOver, isPending } = useConversationClaim(active);
   const status = claimStatusOf(active, viewer.myHandle);
   const takeOverConfirm = useTakeOverConfirm(active, status);
+  const cachedAttribution = useCachedMailboxAttribution(
+    active.mailboxSeatIdentityId,
+  );
   if (status === "none") return null;
 
   const mailbox = mailboxes?.find(
     (candidate) => candidate.identityId === active.mailboxSeatIdentityId,
   );
   const mailboxName = mailbox?.displayName ?? t("messages:mailbox.untitled");
+  const memberFirstName = memberFirstNameOf(mailboxes);
+  const namedFirstName =
+    mailbox && isMemberNamedToCustomers(mailbox, cachedAttribution)
+      ? memberFirstName
+      : undefined;
+
   const claimantFirstName = active.claimedBy?.firstName ?? "";
   const previousFirstName = active.claimTakenOverFrom?.firstName;
 
@@ -102,6 +118,13 @@ export function ComposerMailboxBar({ active }: { active: Conversation }) {
         <span className={styles.chipText}>
           {t("messages:mailbox.composer.replyingAs", { name: mailboxName })}
         </span>
+        {namedFirstName && (
+          <span className={styles.chipNaming}>
+            {t("messages:mailbox.composer.customersSee", {
+              firstName: namedFirstName,
+            })}
+          </span>
+        )}
       </span>
       <div className={styles.status}>
         <span className={styles.statusLine}>{statusLine}</span>

@@ -1,56 +1,59 @@
-import { useState } from "react";
+import { useId, useRef, useState, type RefObject } from "react";
 import { FiUserX, FiX } from "react-icons/fi";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import {
-  useAddModerator,
-  useModeratorCandidates,
-  useRemoveModerator,
-} from "./api/useAdminModerators";
+import { useRemoveModerator } from "./api/useAdminModerators";
 import { useRemoveAdminCommunityMember } from "./api/useAdminCommunityActions";
 import {
   shortName,
   type Community,
   type Moderator,
 } from "./adminCommunities.data";
+import { AdminCommunityModeratorPicker } from "./AdminCommunityModeratorPicker";
 import styles from "./AdminCommunitiesPage.module.css";
 
 /**
  * The Moderators row of a community's admin settings pane.
  *
  * Dual-mode: demo keeps the simulated local-state prototype (an Undo-able
- * removal, an informational "search members" add); live wires both controls to
- * the real `/admin/communities/:slug/moderators` endpoints and re-reads the
- * roster off the invalidated `["admin-communities"]` query — so the founder is
- * never removable and every change is real, not a fake toast.
+ * removal, and a picker over the fixture roster that adds a local chip); live
+ * wires both controls to the real `/admin/communities/:slug/moderators`
+ * endpoints and re-reads the roster off the invalidated `["admin-communities"]`
+ * query, so the founder stays unremovable and every change reaches the server.
  */
 export function ModeratorsRow({ community }: { community: Community }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  // Focus target for `LiveModerators`' post-removal refocus (S11): the trigger
+  // a removal confirm would otherwise restore focus to is the very chip the
+  // roster refetch deletes.
+  const headingRef = useRef<HTMLDivElement>(null);
   return (
     <div className={styles.setRow}>
-      <div className={styles.setLabel}>
+      <div className={styles.setLabel} tabIndex={-1} ref={headingRef}>
         {t("admin:communities.settings.moderators")}
       </div>
       {demoMode ? (
         <DemoModerators community={community} />
       ) : (
-        <LiveModerators community={community} />
+        <LiveModerators community={community} headingRef={headingRef} />
       )}
     </div>
   );
 }
 
-/** Demo: the original functional prototype — local state, Undo-able removal,
- *  and an informational add (there is no real roster to pick from in demo). */
+/** Demo: the original functional prototype. Local state, Undo-able removal,
+ *  and a picker over the fixture roster that adds to the local chips. */
 function DemoModerators({ community }: { community: Community }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [moderators, setModerators] = useState<Moderator[]>(
     community.moderators,
   );
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
 
   function removeMod(moderator: Moderator) {
     setModerators((prev) => prev.filter((m) => m.name !== moderator.name));
@@ -88,14 +91,34 @@ function DemoModerators({ community }: { community: Community }) {
         </span>
       ))}
       <button
+        ref={addButtonRef}
         type="button"
         className={styles.addBtn}
-        onClick={() =>
-          showToast(t("admin:communities.settings.addModToast"), "info")
-        }
+        aria-expanded={isPickerOpen}
+        onClick={() => setIsPickerOpen((isOpen) => !isOpen)}
       >
         {t("admin:communities.settings.addModCta")}
       </button>
+      {isPickerOpen && (
+        <AdminCommunityModeratorPicker
+          communitySlug={community.slug}
+          moderators={moderators}
+          onClose={() => setIsPickerOpen(false)}
+          returnFocusRef={addButtonRef}
+          onDemoPromote={(candidate) =>
+            setModerators((prev) => [
+              ...prev,
+              {
+                initials: candidate.initials,
+                name: candidate.name,
+                pronouns: "",
+                tone: "plum",
+                role: "",
+              },
+            ])
+          }
+        />
+      )}
     </div>
   );
 }
@@ -105,12 +128,28 @@ function DemoModerators({ community }: { community: Community }) {
  *  now carries two admin controls: demote back to a plain member (existing),
  *  and remove from the community outright (admin-override, new — see
  *  `RemoveMemberConfirmModal`). */
-function LiveModerators({ community }: { community: Community }) {
+function LiveModerators({
+  community,
+  headingRef,
+}: {
+  community: Community;
+  headingRef: RefObject<HTMLDivElement | null>;
+}) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
   const [removeTarget, setRemoveTarget] = useState<Moderator | null>(null);
   const removeModerator = useRemoveModerator(community.slug);
+
+  // A successful removal closes `RemoveMemberConfirmModal`, whose own
+  // unmount restores focus to the row's FiUserX trigger, the very chip the
+  // roster refetch is about to delete, stranding focus on <body> once it
+  // goes. Deferred one frame so it runs after that restore (and after the
+  // roster re-render): the moderators heading gets focus instead (S11).
+  function onMemberRemoved() {
+    requestAnimationFrame(() => headingRef.current?.focus());
+  }
 
   function onDemote(moderator: Moderator) {
     if (!moderator.memberId) return;
@@ -176,6 +215,7 @@ function LiveModerators({ community }: { community: Community }) {
         </span>
       ))}
       <button
+        ref={addButtonRef}
         type="button"
         className={styles.addBtn}
         aria-expanded={pickerOpen}
@@ -184,9 +224,11 @@ function LiveModerators({ community }: { community: Community }) {
         {t("admin:communities.settings.addModCta")}
       </button>
       {pickerOpen && (
-        <ModeratorPicker
-          community={community}
+        <AdminCommunityModeratorPicker
+          communitySlug={community.slug}
+          moderators={community.moderators}
           onClose={() => setPickerOpen(false)}
+          returnFocusRef={addButtonRef}
         />
       )}
       {removeTarget && (
@@ -194,6 +236,7 @@ function LiveModerators({ community }: { community: Community }) {
           community={community}
           moderator={removeTarget}
           onClose={() => setRemoveTarget(null)}
+          onRemoved={onMemberRemoved}
         />
       )}
     </div>
@@ -213,14 +256,21 @@ function RemoveMemberConfirmModal({
   community,
   moderator,
   onClose,
+  onRemoved,
 }: {
   community: Community;
   moderator: Moderator;
   onClose: () => void;
+  /** Fires after a successful removal, once the toast is queued and the
+   *  dialog is told to close (S11's post-removal refocus lives in the
+   *  caller, which owns the moderators section heading). */
+  onRemoved: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const removeMember = useRemoveAdminCommunityMember();
+  const [shouldBarReturn, setShouldBarReturn] = useState(false);
+  const barHintId = useId();
 
   const confirm = () => {
     if (!moderator.slug || removeMember.isPending) return;
@@ -236,7 +286,7 @@ function RemoveMemberConfirmModal({
       return;
     }
     removeMember.mutate(
-      { slug: community.slug, memberSlug: moderator.slug },
+      { slug: community.slug, memberSlug: moderator.slug, shouldBarReturn },
       {
         onSuccess: () => {
           showToast(
@@ -246,6 +296,7 @@ function RemoveMemberConfirmModal({
             "success",
           );
           onClose();
+          onRemoved();
         },
         onError: () =>
           showToast(
@@ -269,91 +320,36 @@ function RemoveMemberConfirmModal({
       )}
       tone="destructive"
       loading={removeMember.isPending}
-      confirmLabel={t("admin:communities.settings.mod.removeFromCommunityCta")}
+      initialFocus="cancel"
+      confirmLabel={t(
+        shouldBarReturn
+          ? "admin:communities.settings.mod.removeFromCommunityAndBarCta"
+          : "admin:communities.settings.mod.removeFromCommunityCta",
+      )}
       cancelLabel={t("admin:modPanel.settings.cancel")}
     >
       <p>
-        {t("admin:communities.settings.mod.removeFromCommunityConfirmBody", {
-          name: moderator.name,
-        })}
+        {t(
+          shouldBarReturn
+            ? "admin:communities.settings.mod.removeFromCommunityConfirmBodyBarred"
+            : "admin:communities.settings.mod.removeFromCommunityConfirmBody",
+          { name: moderator.name },
+        )}
+      </p>
+      <label className={styles.removeBarCheck}>
+        <input
+          type="checkbox"
+          checked={shouldBarReturn}
+          aria-describedby={barHintId}
+          onChange={(event) => setShouldBarReturn(event.target.checked)}
+        />
+        <span className={styles.removeBarCheckText}>
+          {t("admin:communities.settings.mod.removeFromCommunityBarLabel")}
+        </span>
+      </label>
+      <p id={barHintId} className={styles.removeBarCheckHint}>
+        {t("admin:communities.settings.mod.removeFromCommunityBarHint")}
       </p>
     </ConfirmDialog>
-  );
-}
-
-/** The add-moderator picker: the community's promotable plain members, fetched
- *  only while open. Picking one promotes them and closes the picker. */
-function ModeratorPicker({
-  community,
-  onClose,
-}: {
-  community: Community;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  const {
-    data: candidates,
-    isLoading,
-    isError,
-  } = useModeratorCandidates(community.slug, true);
-  const addModerator = useAddModerator(community.slug);
-
-  function onPick(userId: string, name: string) {
-    addModerator.mutate(
-      { memberId: userId },
-      {
-        onSuccess: () => {
-          showToast(
-            t("admin:communities.settings.mod.addedToast", { name }),
-            "success",
-          );
-          onClose();
-        },
-        onError: () =>
-          showToast(
-            t("admin:communities.settings.mod.addFailedToast", { name }),
-            "error",
-          ),
-      },
-    );
-  }
-
-  return (
-    <div
-      className={styles.modPicker}
-      role="group"
-      aria-label={t("admin:communities.settings.mod.addPickerTitle")}
-    >
-      {isLoading && (
-        <p className={styles.modPickerNote}>
-          {t("admin:communities.settings.mod.pickerLoading")}
-        </p>
-      )}
-      {isError && (
-        <p className={styles.modPickerNote}>
-          {t("admin:communities.settings.mod.pickerError")}
-        </p>
-      )}
-      {candidates && candidates.length === 0 && (
-        <p className={styles.modPickerNote}>
-          {t("admin:communities.settings.mod.pickerEmpty")}
-        </p>
-      )}
-      {candidates?.map((candidate) => (
-        <button
-          key={candidate.userId}
-          type="button"
-          className={styles.modPickerItem}
-          disabled={addModerator.isPending}
-          onClick={() => onPick(candidate.userId, candidate.name)}
-        >
-          {candidate.name}
-        </button>
-      ))}
-      <button type="button" className={styles.addBtn} onClick={onClose}>
-        {t("admin:communities.settings.mod.cancelCta")}
-      </button>
-    </div>
   );
 }

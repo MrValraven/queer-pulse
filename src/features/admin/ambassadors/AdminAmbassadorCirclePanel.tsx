@@ -15,7 +15,8 @@ import styles from "./AdminAmbassadorsPage.module.css";
  * The private "QueerPulse Ambassadors" community: how many are in it, a way
  * in, and a staff seat for the viewer when they do not hold one yet. The seat
  * is a mod seat, which is what posting previews and polls and restyling the
- * card programme need.
+ * card programme need. Reading the summary never founds the circle; until the
+ * first grant does, the panel says so.
  */
 export function AdminAmbassadorCirclePanel() {
   const { t } = useTranslation();
@@ -44,6 +45,10 @@ export function AdminAmbassadorCirclePanel() {
       ) : isError || !circle ? (
         <p className={styles.panelHint}>
           {t("admin:ambassadors.circle.error")}
+        </p>
+      ) : !circle.isFounded || !circle.slug ? (
+        <p className={styles.panelHint}>
+          {t("admin:ambassadors.circle.notFounded")}
         </p>
       ) : (
         <>

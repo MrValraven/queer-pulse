@@ -2,13 +2,13 @@ import { useState } from "react";
 import {
   Modal,
   Button,
-  DatePicker,
   FormField,
   SegmentedControl,
   Select,
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { DeskTrack } from "./deskTrack";
+import { CommissionDetailsFields } from "./CommissionDetailsFields";
 import styles from "./DeskModals.module.css";
 
 export interface CommissionPayload {
@@ -21,23 +21,24 @@ export interface CommissionPayload {
    *  id, `unassigned` leaves it unfiled (`issueId: null`) for someone to
    *  assign later. */
   track: DeskTrack;
+  /** The picked writer (`null` for none); its name bylines a scratch brief. */
+  writerId: string | null;
+  writerName: string | null;
 }
 
 interface CommissionModalProps {
-  pitch?: { title: string; byline: string; note: string };
+  /** `isExternal`: no submitter account, so the editor names the writer. */
+  pitch?: { title: string; byline: string; note: string; isExternal: boolean };
   sectionName?: string;
   /**
-   * The section taxonomy from `useMagazineSections` (seeded rows in live
-   * mode, the canonical fixture in demo). PRD-130: this used to be the demo
-   * `DEMO_SECTIONS` constant even in live mode, so an editor commissioned
-   * into a hand-curated list the backend had never heard of.
-   *
-   * It arrives EMPTY while the fetch is in flight and after it fails, and
-   * that empty case is what disables the picker below. Commissioning into no
-   * section at all is worse than being told to wait: the piece would carry a
-   * section the Issue plan can never count.
+   * The section taxonomy from `useMagazineSections`, the seeded rows in live
+   * mode (PRD-130). It arrives EMPTY while loading and after a failure, which
+   * disables the picker: the Issue plan can never count a sectionless piece.
    */
   sections: { name: string }[];
+  writers: { id: string; name: string }[];
+  /** True while the writer roster loads, or after it failed to. */
+  isWriterListUnavailable: boolean;
   /** Track pre-selected to match the desk's active tab. */
   defaultTrack: DeskTrack;
   /** Whether an issue is selected — the Issue choice is disabled without one. */
@@ -48,15 +49,14 @@ interface CommissionModalProps {
   onCommission: (payload: CommissionPayload) => void;
 }
 
-/**
- * Commission a pitch into a brief — or start a brief from scratch when no
- * pitch prompted it. Same fields either way: the angle, where it runs, how
- * long, and by when.
- */
+/** Commission a pitch into a brief, or start one from scratch: the angle,
+ *  where it runs, how long, by when, and who writes it. */
 export function CommissionModal({
   pitch,
   sectionName,
   sections,
+  writers,
+  isWriterListUnavailable,
   defaultTrack,
   hasCurrentIssue,
   issueNumber,
@@ -65,11 +65,9 @@ export function CommissionModal({
 }: CommissionModalProps) {
   const { t } = useTranslation();
   const [angle, setAngle] = useState(pitch?.note ?? "");
-  // The taxonomy is fetched now, so it can land after this modal is already
-  // open (the desk opens it on a keystroke). The editor's choice is therefore
-  // held as an OVERRIDE and the effective section derived below, so a list
-  // that arrives late fills the picker on the next render without an effect,
-  // and without ever swapping out a section the editor has already picked.
+  // The taxonomy can land after this modal opens, so the editor's pick is an
+  // OVERRIDE over a derived default: a late list fills the picker without an
+  // effect and never swaps out a section the editor already picked.
   const [sectionOverride, setSectionOverride] = useState<string | null>(
     sectionName ?? null,
   );
@@ -77,7 +75,9 @@ export function CommissionModal({
   const [words, setWords] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [fee, setFee] = useState("");
+  const [writerId, setWriterId] = useState("");
   const hasNoSections = sections.length === 0;
+  const isWriterPickerShown = !pitch || pitch.isExternal;
 
   // Without a selected issue there's nowhere to bind an issue piece, and the
   // "everything" scope names no issue, so both pre-select Unassigned.
@@ -96,6 +96,9 @@ export function CommissionModal({
       dueDate,
       fee: fee.trim(),
       track,
+      writerId: writerId || null,
+      writerName:
+        writers.find((writer) => writer.id === writerId)?.name ?? null,
     });
     onClose();
   };
@@ -155,57 +158,41 @@ export function CommissionModal({
           onChange={(event) => setAngle(event.target.value)}
         />
       </FormField>
-      <div className={styles.row}>
-        <FormField
-          label={t("magazine:desk.modals.commission.sectionLabel")}
-          error={
+      <FormField
+        label={t("magazine:desk.modals.commission.sectionLabel")}
+        error={
+          hasNoSections
+            ? t("magazine:desk.modals.commission.sectionsUnavailable")
+            : undefined
+        }
+      >
+        <Select
+          value={section}
+          onChange={setSectionOverride}
+          disabled={hasNoSections}
+          placeholder={
             hasNoSections
-              ? t("magazine:desk.modals.commission.sectionsUnavailable")
+              ? t("magazine:desk.modals.commission.sectionsEmptyOption")
               : undefined
           }
-        >
-          <Select
-            value={section}
-            onChange={setSectionOverride}
-            disabled={hasNoSections}
-            placeholder={
-              hasNoSections
-                ? t("magazine:desk.modals.commission.sectionsEmptyOption")
-                : undefined
-            }
-            options={sections.map((option) => ({
-              value: option.name,
-              label: option.name,
-            }))}
-          />
-        </FormField>
-        <FormField label={t("magazine:desk.modals.commission.wordsLabel")}>
-          <input
-            type="number"
-            min={0}
-            value={words}
-            onChange={(event) => setWords(event.target.value)}
-          />
-        </FormField>
-      </div>
-      <div className={styles.row}>
-        <FormField label={t("magazine:desk.modals.commission.dueDateLabel")}>
-          <DatePicker
-            mode="date"
-            label={t("magazine:desk.modals.commission.dueDateLabel")}
-            value={dueDate || null}
-            onChange={(value) => setDueDate(value ?? "")}
-          />
-        </FormField>
-        <FormField label={t("magazine:desk.modals.commission.feeLabel")}>
-          <input
-            type="text"
-            placeholder={t("magazine:desk.modals.commission.feePlaceholder")}
-            value={fee}
-            onChange={(event) => setFee(event.target.value)}
-          />
-        </FormField>
-      </div>
+          options={sections.map((option) => ({
+            value: option.name,
+            label: option.name,
+          }))}
+        />
+      </FormField>
+      <CommissionDetailsFields
+        words={words}
+        dueDate={dueDate}
+        fee={fee}
+        onWordsChange={setWords}
+        onDueDateChange={setDueDate}
+        onFeeChange={setFee}
+        writers={isWriterPickerShown ? writers : null}
+        isWriterListUnavailable={isWriterListUnavailable}
+        writerId={writerId}
+        onWriterChange={setWriterId}
+      />
     </Modal>
   );
 }

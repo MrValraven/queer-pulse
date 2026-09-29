@@ -398,7 +398,8 @@ export const goTogether: Catalog = {
   "group.pairPartner": "Coming with you",
   "group.reasonsHeading": "What you have in common",
   "group.report": "Report this group",
-  "group.reportAria": "Report the group chat for {title}",
+  "group.reportAria": "Report this group chat for {title}",
+  "group.bannerTitle": "Your Go together group",
   "group.seeGroup": "See your group",
   "group.sharePlans": "Tell someone where you'll be",
   "group.sheetLabel": "Your Go together group",
@@ -436,6 +437,13 @@ export const goTogether: Catalog = {
     "Up to 2 questions, with 2 to 4 answers each. People who pick the same answer are more likely to share a group.",
   "host.questions.label": "Fun questions",
   "host.questions.promptLabel": "Question {number}",
+  "host.questions.reaskHint":
+    "If you change or add a question, people already waiting answer it on their card.",
+  "host.offConfirm.title": "Switch Go together off?",
+  "host.offConfirm.description":
+    "Members waiting for a group will be told there is no group this time. Groups that already formed stay together. If you switch it back on, they'll need to opt in again.",
+  "host.offConfirm.confirm": "Switch it off",
+  "host.offConfirm.cancel": "Keep it on",
   "host.questions.promptPlaceholder": "Picnic blanket or dance floor?",
   "host.questions.removeAnswer": "Remove answer {number}",
   "host.questions.removeQuestion": "Remove question {number}",
@@ -574,8 +582,57 @@ export const goTogether: Catalog = {
     "Answer each question from the host to continue.",
   "card.optIn.hint.lensConsent": "Tick the box to confirm your lens.",
   "card.optIn.hint.partner": "Pick a friend to continue.",
+  "card.answerAgain.body":
+    "You're still waiting for a group. Answer it again so we can match you well.",
+  "card.loadError.retryFailed":
+    "Go together still didn't load. Try again in a moment.",
+  "card.answerAgain.error.invalidAnswers":
+    "The host's questions changed again. Answer them once more, then save.",
+  "card.answerAgain.bodyMany":
+    "You're still waiting for a group. Answer them again so we can match you well.",
+  "card.answerAgain.save": "Save my answer",
+  "card.answerAgain.saveMany": "Save my answers",
+  "card.answerAgain.title": "The hosts changed a question",
+  "card.answerAgain.titleMany": "The hosts changed their questions",
+  "card.loadError.body":
+    "If you've set anything up, it's still saved. Try again in a moment.",
+  "card.loadError.retry": "Try again",
+  "card.loadError.retrying": "Trying again",
+  "card.loadError.title": "Go together didn't load",
   "feedback.confirmation.titleEm": "telling us",
   "feedback.privacyLine":
     "Your answers stay private. With names removed, they help us form better groups.",
   "group.feedbackEditCta": "Change how it went",
+  "group.member.optionsLabel": "Options for {name}",
+  "group.member.block": "Block {name}",
+  "group.member.report": "Report {name}",
+  "group.block.title": "Block {name}?",
+  "group.block.description.beforeStart":
+    "You'll move out of this group, into another group going to this gathering if one fits. Your card shows what's next. {name} stays and isn't told why.",
+  "group.block.description.afterStart":
+    "You'll leave this group and its chat. {name} stays and isn't told why.",
+  "group.block.description.late":
+    "It's too late to change groups, and you won't see each other in this group any more. {name} isn't told why.",
+  "group.block.everywhere":
+    "The block works across QueerPulse too: {name} can't message you, view your profile or find you in search. You can unblock later.",
+  "group.block.confirm": "Block",
+  "group.block.movedToast":
+    "You've blocked {name} and left that group. Your Go together card shows what's next.",
+  "group.block.doneToast": "You've blocked {name}.",
+  "group.memberReport.title": "Report {name}",
+  "group.leaveChat.label": "Leave the chat",
+  "group.leaveChat.hint":
+    "You stay in the group and can still say who you'd meet again.",
+  "group.leaveChat.done": "You've left the chat. You're still in the group.",
+  "group.leaveChatConfirm.title": "Leave the chat?",
+  "group.leaveChatConfirm.description":
+    "You'll stop getting this group's messages, and the others see the usual note that you left. You stay in the group, so you can still say who you'd meet again.",
+  "group.leaveChatConfirm.confirm": "Leave the chat",
+  "group.member.gone": "They're no longer in this group.",
+  "group.block.pairMoves":
+    "{partner} is coming with you, so they move with you.",
+  "group.block.pairEnds":
+    "You and {partner} stop being a pair for this gathering, and {partner} stays in the group.",
+  "group.block.pairBlocked":
+    "You and {name} stop being a pair for this gathering.",
 };

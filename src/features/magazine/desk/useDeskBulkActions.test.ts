@@ -117,4 +117,81 @@ describe("useDeskBulkActions changeStageForSelection", () => {
     expect(mutateAsync).not.toHaveBeenCalled();
     expect(toastMock).not.toHaveBeenCalled();
   });
+
+  it("skips a scheduled or live piece and moves the rest of the selection", () => {
+    const mutateAsync = vi.fn().mockResolvedValue({ id: "b" });
+    const { result } = renderBulkActions(mutateAsync);
+    const scheduled: Piece = {
+      ...makePiece("scheduled", "Ready"),
+      issueId: "issue-14",
+      publishedAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    const live: Piece = {
+      ...makePiece("live", "Ready"),
+      issueId: "issue-14",
+      publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    };
+
+    act(() => {
+      result.current.changeStageForSelection(
+        [scheduled, live, makePiece("b", "Edit")],
+        "Layout",
+      );
+    });
+
+    expect(mutateAsync).toHaveBeenCalledTimes(1);
+    expect(mutateAsync).toHaveBeenCalledWith({ id: "b", stage: "layout" });
+  });
+
+  it("toasts the skipped count and moves nothing when the selection is only scheduled or live pieces", () => {
+    const mutateAsync = vi.fn();
+    const { result } = renderBulkActions(mutateAsync);
+    const scheduled: Piece = {
+      ...makePiece("scheduled", "Ready"),
+      issueId: "issue-14",
+      publishedAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    act(() => {
+      result.current.changeStageForSelection([scheduled], "Layout");
+    });
+
+    expect(mutateAsync).not.toHaveBeenCalled();
+    expect(toastMock).toHaveBeenCalledTimes(1);
+    expect(toastMock).toHaveBeenCalledWith(
+      expect.stringContaining('"count":1'),
+      "info",
+    );
+  });
+
+  it("toasts both the moved count and the skipped count for a mixed selection", async () => {
+    const mutateAsync = vi.fn().mockResolvedValue({ id: "b" });
+    const { result } = renderBulkActions(mutateAsync);
+    const scheduled: Piece = {
+      ...makePiece("scheduled", "Ready"),
+      issueId: "issue-14",
+      publishedAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    act(() => {
+      result.current.changeStageForSelection(
+        [scheduled, makePiece("b", "Edit")],
+        "Layout",
+      );
+    });
+
+    expect(toastMock).toHaveBeenCalledWith(
+      expect.stringContaining('"count":1'),
+      "info",
+    );
+
+    await waitFor(() =>
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.stringContaining('"count":1'),
+        "success",
+      ),
+    );
+    expect(toastMock).toHaveBeenCalledTimes(2);
+  });
 });

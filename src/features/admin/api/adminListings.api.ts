@@ -29,6 +29,9 @@ export interface ListingQueueRow {
    *  listing with no suggester). */
   suggesterName: string;
   suggesterSlug: string;
+  /** Who on staff added the listing through "Add a listing". Empty string
+   *  for anything else. */
+  addedByStaffName: string;
   createdAt: string;
   /** The listing, for the moderation preview drawer. As narrow as what the
    *  queue served: a `directory_moderator` grant holder's copy carries no
@@ -45,6 +48,7 @@ export function listingDtoToQueueRow(
 ): ListingQueueRow {
   const submitter = dto.submittedBy;
   const suggester = dto.suggestedBy;
+  const staffAuthor = dto.addedByStaff;
   return {
     ref: dto.ref,
     slug: dto.slug,
@@ -59,6 +63,9 @@ export function listingDtoToQueueRow(
       ? `${suggester.firstName} ${suggester.lastName}`.trim()
       : "",
     suggesterSlug: suggester?.slug ?? "",
+    addedByStaffName: staffAuthor
+      ? `${staffAuthor.firstName} ${staffAuthor.lastName}`.trim()
+      : "",
     createdAt: dto.createdAt,
     detail: dto,
   };

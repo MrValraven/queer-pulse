@@ -191,6 +191,8 @@ export function useLeaveCommunity(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { memberSlug: string }>({
+    // The onboarding card (the only caller) shows the failure inline.
+    meta: { silentError: true },
     mutationFn: async ({ memberSlug }) => {
       if (demoMode) return;
       await removeMember(slug, memberSlug);

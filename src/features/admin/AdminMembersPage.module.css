@@ -115,6 +115,11 @@
   margin-top: 20px;
 }
 
+/* The failed "Load more" panel takes the button's place and its gap. */
+.loadMoreError {
+  margin-top: 20px;
+}
+
 .emptyLine {
   font-size: var(--text-14);
   color: var(--ink-60);
@@ -143,9 +148,19 @@
   }
 }
 
+/* A roster row is a native <button> (DES-425): drop the UA button chrome so
+   it keeps the card look. */
+.rowButton {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+}
+
 .row:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .rowFlagged {
@@ -211,7 +226,10 @@
   border-radius: var(--radius-pill, 999px);
 }
 
+/* `display: block` because the roster row renders these as <span>s: its
+   <button> takes phrasing content only. */
 .rowMain {
+  display: block;
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -249,6 +267,7 @@
 }
 
 .rowMeta {
+  display: block;
   margin-top: 5px;
   font-size: var(--text-13);
   color: var(--ink-60);
@@ -326,6 +345,12 @@
 
 .queueEmpty {
   padding: 8px 0;
+}
+
+/* Partial-failure panel above loaded cards: keeps two bordered surfaces
+   (this panel and the stance note) from touching. */
+.queueLoadError {
+  margin-bottom: 16px;
 }
 
 .queueGrid {

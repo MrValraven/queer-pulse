@@ -258,6 +258,8 @@ export const magazine: Catalog = {
   "deck.editor.budget.count": "{count} / {max} characters",
   "deck.editor.saved": "Draft saved",
   "deck.editor.publishedToast": "Deck published",
+  "deck.editor.publishUnlinked":
+    "This deck has no desk piece yet, and decks publish from their piece. Start decks from the desk with Build a deck.",
   "deck.editor.scheduledToast": "Deck scheduled",
   "deck.editor.unpublishedToast": "Deck unpublished",
   "deck.editor.deletedToast": "Deck deleted",
@@ -728,6 +730,10 @@ export const magazine: Catalog = {
   "desk.board.moveStageAria": "Move stage",
   "desk.board.overCap": "Over {cap}",
   "desk.board.unpublishToMove": "Unpublish from the piece record to move it",
+  "desk.board.unscheduleToMove":
+    "Scheduled to publish. Unschedule it from the piece record to move it",
+  "desk.board.goesLive": "Goes live {date}",
+  "desk.board.liveOnSite": "Live on the site",
   "desk.board.scrollPrevious": "Previous stages",
   "desk.board.scrollNext": "Next stages",
 
@@ -862,6 +868,10 @@ export const magazine: Catalog = {
   "desk.modals.commission.wordsLabel": "Words",
   "desk.modals.commission.dueDateLabel": "Due date",
   "desk.modals.commission.feeLabel": "Fee",
+  "desk.modals.commission.writerLabel": "Writer",
+  "desk.modals.commission.writerNone": "No writer yet",
+  "desk.modals.commission.writersUnavailable":
+    "The writer list has not loaded. You can send this brief now and name a writer later.",
   "desk.modals.commission.feePlaceholder": "e.g. €150",
   "desk.modals.commission.trackLabel": "Where it runs",
   "desk.modals.commission.trackUnassigned": "No issue",
@@ -923,8 +933,12 @@ export const magazine: Catalog = {
   "desk.modals.handoff.title": "Hand off",
   "desk.modals.handoff.cta": "Hand off",
   "desk.modals.handoff.body":
-    "Hand “{title}” to another editor. They pick up right where you left off.",
+    "Choose who edits and who writes “{title}”. Whoever takes it picks up right where it is.",
   "desk.modals.handoff.toLabel": "To",
+  "desk.modals.handoff.writerLabel": "Writer",
+  "desk.modals.handoff.writerNone": "No writer",
+  "desk.modals.handoff.writersUnavailable":
+    "The writer list has not loaded, so the writer stays as it is.",
 
   // ── Editorial pipeline stage names (desk/stageLabels.ts) ─────────────────
   // Supersedes the "left unswept here" note in this section's header: the raw
@@ -1175,6 +1189,9 @@ export const magazine: Catalog = {
   "desk.peek.previousAria": "Previous piece",
   "desk.peek.nextAria": "Next piece",
   "desk.peek.closeAria": "Close preview",
+  "desk.peek.scheduledFor": "Scheduled to publish {date}",
+  "desk.publish.alreadyScheduled":
+    "This piece is already scheduled. Open its draft to change the date.",
   "desk.peek.recordErrorTitle": "Couldn't load this piece's record",
   "desk.peek.threadHeading": "Latest messages",
 
@@ -1183,6 +1200,10 @@ export const magazine: Catalog = {
   "desk.bulk.selected_other": "{count} selected",
   "desk.bulk.ariaLabel": "Bulk piece actions",
   "desk.bulk.changeStage": "Change stage",
+  "desk.bulk.skippedWithDate_one":
+    "{count} piece with a publish date stayed where it is. Unschedule or unpublish it to move it.",
+  "desk.bulk.skippedWithDate_other":
+    "{count} pieces with a publish date stayed where they are. Unschedule or unpublish them to move them.",
   "desk.bulk.chase_one": "Chase {count}",
   "desk.bulk.chase_other": "Chase {count}",
   "desk.bulk.stageChangedToast_one": "{count} piece moved to {stage}.",
@@ -1268,11 +1289,14 @@ export const magazine: Catalog = {
   // ── PieceRecordPage ──────────────────────────────────────────────────────
   "piece.header.backToDesk": "Back to the desk",
   "piece.header.openDraft": "Open the draft",
+  "piece.header.openingDraft": "Opening the draft…",
+  "piece.header.unschedule": "Unschedule",
+  "piece.header.openDeckError": "We couldn't open this deck. Please try again.",
   "piece.header.publish": "Publish",
   "piece.header.formatArticle": "Article",
   "piece.header.formatDeck": "Deck",
   "piece.header.inAnIssue": "In an issue",
-  "piece.header.notScheduled": "Not yet scheduled",
+  "piece.header.notScheduled": "No issue yet",
   "piece.header.notFoundTitle": "We couldn't open this piece",
   "piece.header.notFoundDescription":
     "It may have been removed, or the link is out of date.",
@@ -1329,6 +1353,8 @@ export const magazine: Catalog = {
     "The desk gave no reason. Reload the record and try again.",
   "piece.publish.confirmPublishTitle": "Publish “{title}”?",
   "piece.publish.confirmPublishSub": "It goes live to readers straight away.",
+  "piece.publish.confirmSettleSub":
+    "It is already live. Publishing marks it published and tells the writer.",
   "piece.publish.confirmPublishBody":
     "The writer is told it went out. You can take it down again at any time, and nothing is deleted when you do.",
   "piece.publish.confirmPublishCta": "Publish it",
@@ -1506,7 +1532,7 @@ export const magazine: Catalog = {
     "Late submissions go to the following issue.",
   "submitStory.sidebar.afterSubmitHeading": "After you submit",
   "submitStory.sidebar.afterSubmit.response":
-    "Our editors respond within <strong>5 working days</strong> with acceptance, a request for edits, or a pass with notes.",
+    "Our editors read every submission and reply with acceptance, a request for edits, or a pass with notes.",
   "submitStory.sidebar.afterSubmit.approve":
     "Accepted pieces go through one round of editing. <strong>You approve the final version</strong> before it publishes.",
   "submitStory.sidebar.afterSubmit.licence":
@@ -2266,8 +2292,8 @@ export const magazine: Catalog = {
   // ── WriterPitchesTab ─────────────────────────────────────────────────────
   "writer.pitches.emptyTitle": "No pitches yet",
   "writer.pitches.emptyDescription":
-    "Send one below. A person reads every pitch, and answers within 5 days.",
-  "writer.pitches.sentMeta": "Sent {sent} · answered within 5 days",
+    "Send one below. A person on the desk reads every pitch.",
+  "writer.pitches.sentMeta": "Sent {sent}",
   "writer.pitches.formHeading": "Pitch something",
   "writer.pitches.titleLabel": "Working title",
   "writer.pitches.titlePlaceholder": "What's the piece called, roughly?",

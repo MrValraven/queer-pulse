@@ -1,6 +1,9 @@
+/* `--admin-rail-w` publishes the rail's width so fixed page chrome (the
+   listings bulk bar) can centre itself on the content column. */
 .shell {
+  --admin-rail-w: 248px;
   display: grid;
-  grid-template-columns: 248px 1fr;
+  grid-template-columns: var(--admin-rail-w) 1fr;
   min-height: 100svh;
   background: var(--cream);
   transition: grid-template-columns var(--dur, 0.18s) var(--ease, ease);
@@ -9,7 +12,7 @@
    into tooltips, pending pills become corner dots, and the two menus float out
    to their own width instead of matching a 68px column. */
 .shellCollapsed {
-  grid-template-columns: 68px 1fr;
+  --admin-rail-w: 68px;
 }
 @media (prefers-reduced-motion: reduce) {
   .shell {

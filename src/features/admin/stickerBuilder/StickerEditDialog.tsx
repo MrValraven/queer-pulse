@@ -28,8 +28,10 @@ function parseKeywords(rawKeywords: string): string[] {
 }
 
 /**
- * Renames a sticker and edits its search keywords in both languages, in
- * place: the sticker keeps its id, art, order and cover status. Keywords are
+ * Renames a sticker in both languages and edits its search keywords in both
+ * languages, in place: the sticker keeps its id, art, order and cover status.
+ * The Portuguese name is optional; saving it empty clears it, and readers in
+ * Portuguese then see the English name. Keywords are
  * typed as comma-separated text and previewed as chips, so the admin sees
  * exactly what gets saved. Mount it only while open; it closes itself once
  * `onSave` resolves true and stays open on false (the caller toasts the
@@ -43,12 +45,14 @@ export function StickerEditDialog({
   sticker: AdminStickerResponse;
   onSave: (body: {
     label: string;
+    labelPt: string | null;
     keywords: { en: string[]; pt: string[] };
   }) => Promise<boolean>;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const [label, setLabel] = useState(sticker.label);
+  const [labelPt, setLabelPt] = useState(sticker.labelPt ?? "");
   const [rawKeywords, setRawKeywords] = useState<
     Record<KeywordLanguage, string>
   >({
@@ -65,6 +69,11 @@ export function StickerEditDialog({
       : trimmedLabel.length > LABEL_MAX_LENGTH
         ? t("admin:stickerPacks.editSticker.errors.labelTooLong")
         : undefined;
+  const trimmedLabelPt = labelPt.trim();
+  const labelPtError =
+    trimmedLabelPt.length > LABEL_MAX_LENGTH
+      ? t("admin:stickerPacks.editSticker.errors.labelTooLong")
+      : undefined;
   const keywordsByLanguage = {
     en: parseKeywords(rawKeywords.en),
     pt: parseKeywords(rawKeywords.pt),
@@ -91,14 +100,17 @@ export function StickerEditDialog({
   const isValid =
     trimmedLabel.length > 0 &&
     trimmedLabel.length <= LABEL_MAX_LENGTH &&
+    trimmedLabelPt.length <= LABEL_MAX_LENGTH &&
     KEYWORD_LANGUAGES.every((language) => !keywordError(language));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setHasTriedSave(true);
     if (!isValid || isSaving) return;
+    const nextLabelPt = trimmedLabelPt.length > 0 ? trimmedLabelPt : null;
     const isUnchanged =
       trimmedLabel === sticker.label &&
+      nextLabelPt === (sticker.labelPt ?? null) &&
       KEYWORD_LANGUAGES.every(
         (language) =>
           keywordsByLanguage[language].join("\n") ===
@@ -111,6 +123,7 @@ export function StickerEditDialog({
     setIsSaving(true);
     const isSaved = await onSave({
       label: trimmedLabel,
+      labelPt: nextLabelPt,
       keywords: keywordsByLanguage,
     });
     if (isSaved) {
@@ -154,7 +167,7 @@ export function StickerEditDialog({
           />
         </div>
         <FormField
-          label={t("admin:stickerPacks.editSticker.label")}
+          label={t("admin:stickerPacks.editSticker.labelEn")}
           required
           error={labelError}
           labelAside={`${label.trim().length}/${LABEL_MAX_LENGTH}`}
@@ -167,45 +180,89 @@ export function StickerEditDialog({
             onChange={(event) => setLabel(event.target.value)}
           />
         </FormField>
+        <FormField
+          label={t("admin:stickerPacks.editSticker.labelPt")}
+          helper={t("admin:stickerPacks.editSticker.labelPtHelper")}
+          error={labelPtError}
+          labelAside={`${trimmedLabelPt.length}/${LABEL_MAX_LENGTH}`}
+        >
+          <input
+            type="text"
+            lang="pt"
+            value={labelPt}
+            maxLength={LABEL_MAX_LENGTH}
+            autoComplete="off"
+            onChange={(event) => setLabelPt(event.target.value)}
+          />
+        </FormField>
         {KEYWORD_LANGUAGES.map((language) => (
-          <div key={language} className={styles.keywordGroup}>
-            <FormField
-              label={t(`admin:stickerPacks.editSticker.keywords.${language}`)}
-              helper={t("admin:stickerPacks.editSticker.keywordsHelper")}
-              error={keywordError(language)}
-              labelAside={`${keywordsByLanguage[language].length}/${KEYWORDS_MAX_COUNT}`}
-            >
-              <input
-                type="text"
-                value={rawKeywords[language]}
-                autoComplete="off"
-                spellCheck={false}
-                onChange={(event) =>
-                  setRawKeywords((current) => ({
-                    ...current,
-                    [language]: event.target.value,
-                  }))
-                }
-              />
-            </FormField>
-            {keywordsByLanguage[language].length > 0 && (
-              <ul className={styles.chips} aria-hidden>
-                {keywordsByLanguage[language].map((keyword) => (
-                  <li
-                    key={keyword}
-                    className={styles.chip}
-                    data-invalid={
-                      keyword.length > KEYWORD_MAX_LENGTH ? "true" : undefined
-                    }
-                  >
-                    {keyword}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <KeywordField
+            key={language}
+            language={language}
+            rawKeywords={rawKeywords[language]}
+            keywords={keywordsByLanguage[language]}
+            error={keywordError(language)}
+            onChange={(nextRawKeywords) =>
+              setRawKeywords((current) => ({
+                ...current,
+                [language]: nextRawKeywords,
+              }))
+            }
+          />
         ))}
       </form>
     </Modal>
+  );
+}
+
+/** One language's keyword field, typed as comma-separated text, followed by
+ *  chips of exactly what will save. */
+function KeywordField({
+  language,
+  rawKeywords,
+  keywords,
+  error,
+  onChange,
+}: {
+  language: KeywordLanguage;
+  rawKeywords: string;
+  keywords: string[];
+  error: string | undefined;
+  onChange: (rawKeywords: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.keywordGroup}>
+      <FormField
+        label={t(`admin:stickerPacks.editSticker.keywords.${language}`)}
+        helper={t("admin:stickerPacks.editSticker.keywordsHelper")}
+        error={error}
+        labelAside={`${keywords.length}/${KEYWORDS_MAX_COUNT}`}
+      >
+        <input
+          type="text"
+          lang={language}
+          value={rawKeywords}
+          autoComplete="off"
+          spellCheck={false}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </FormField>
+      {keywords.length > 0 && (
+        <ul className={styles.chips} aria-hidden>
+          {keywords.map((keyword) => (
+            <li
+              key={keyword}
+              className={styles.chip}
+              data-invalid={
+                keyword.length > KEYWORD_MAX_LENGTH ? "true" : undefined
+              }
+            >
+              {keyword}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

@@ -17,9 +17,9 @@ export interface ViewerPhoto {
    *  browser can reserve the letterbox before decode. */
   width: number;
   height: number;
-  /** The GIF's own text, so the viewer's alt matches the bubble's instead of
-   *  falling back to the generic "Photo message". Undefined for an uploaded
-   *  image, where the stage falls back to `messages:attachments.imageAlt`.
+  /** A GIF's alt: its caption when it has one, else the localized "GIF"
+   *  label (see `gifAltOf`). Undefined for an uploaded image, where the stage
+   *  falls back to `messages:attachments.imageAlt`.
    *  Optional so the other `ViewerPhoto` literals in ChatImageViewer.test.tsx
    *  keep compiling without it. */
   alt?: string;
@@ -86,6 +86,26 @@ function senderOf(
   };
 }
 
+/** A GIF's alt text for the viewer. Its body is the send-time "GIF" fallback
+ *  (ENG-405 moved the member's words into the caption), so the caption wins
+ *  when there is one, read the way the bubble reads it (a restored outbox
+ *  entry keeps it on `sendAttachment`). Without one, the localized GIF label
+ *  the reply quote and pinned banner use; with no `t`, the body itself. */
+function gifAltOf(
+  message: ChatMessage,
+  caption: string | undefined,
+  t: TFunction | undefined,
+): string {
+  const sendAttachment = message.sendAttachment;
+  const sendCaption =
+    sendAttachment && !isDocumentAttachment(sendAttachment)
+      ? sendAttachment.caption
+      : undefined;
+  const memberCaption = caption ?? sendCaption;
+  if (memberCaption) return memberCaption;
+  return t ? t("messages:viewer.gifBadge") : message.text;
+}
+
 /**
  * Whether a message is a photo the viewer can actually open. Excludes
  * documents (a file card has no pixels) and stickers (tapping one must never
@@ -122,13 +142,23 @@ export function collectThreadPhotos(
     for (const message of group.items) {
       if (!isViewablePhoto(message)) continue;
       const attachment = message.attachment;
-      if (!attachment || isDocumentAttachment(attachment)) continue;
+      // `isViewablePhoto` already excluded both; this narrows the type.
+      if (
+        !attachment ||
+        isDocumentAttachment(attachment) ||
+        isStickerAttachment(attachment)
+      ) {
+        continue;
+      }
       photos.push({
         message,
         url: attachment.url,
         width: attachment.width,
         height: attachment.height,
-        alt: message.kind === "gif" ? message.text : undefined,
+        alt:
+          message.kind === "gif"
+            ? gifAltOf(message, attachment.caption, options.t)
+            : undefined,
         ...senderOf(message, options),
         dayLabel: group.day,
         timeLabel: message.time ?? "",

@@ -11,6 +11,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useProfileData } from "../../app/providers/useProfile";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useDeleteMyCard, useMyCards, useUpdateMyCard } from "./api/useMyCards";
@@ -55,6 +56,13 @@ export function MyCardsPage() {
   // a pointer to where to set them.
   const { pronouns } = useAccountIdentity();
   const hasProfilePronouns = Boolean(pronouns?.trim());
+  // The profile-wide Photo switch outranks every card's own toggle, so the
+  // photo consent says when it is the reason a card shows no face. Absent
+  // reads as visible, the backend column's default, and nothing is claimed
+  // until the member's own profile has loaded.
+  const { profile, isProfileLoading } = useProfileData();
+  const isProfilePhotoHidden =
+    !isProfileLoading && profile.photoVisible === false;
 
   const visibleCards: MyCardDTO[] = demoMode
     ? cards.map((card) => {
@@ -133,6 +141,7 @@ export function MyCardsPage() {
                 {card.program.allowsMemberPhoto && (
                   <CardPhotoConsent
                     card={card}
+                    isProfilePhotoHidden={isProfilePhotoHidden}
                     isPending={updateCard.isPending}
                     onChange={(isPhotoHidden) =>
                       updateCard.mutate(

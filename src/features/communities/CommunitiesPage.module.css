@@ -297,6 +297,23 @@
   }
 }
 
+/* Slugless cards (the edit modal's live preview, or any other caller with
+   nothing to link to) render through the same `.card` but drop every
+   click/hover affordance: the pointer cursor, the lift and the coral name
+   on hover all promise a destination this card does not have. */
+.cardInert {
+  cursor: default;
+}
+@media (hover: hover) {
+  .cardInert:hover {
+    transform: none;
+    box-shadow: var(--shadow-card);
+  }
+  .cardInert:hover .name {
+    color: inherit;
+  }
+}
+
 /* Category-coloured "shoulder" — a full-width letterhead block at the top of
    the card, bled out to its edges via negative margin. The type label and
    tier badge sit inside it; the avatar roster overlaps its bottom edge. */

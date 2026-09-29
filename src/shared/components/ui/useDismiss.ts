@@ -14,6 +14,60 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
+ * Focus returns held over from dialogs that closed underneath another one.
+ * The chat image viewer is the case: Forward opens the forward picker and
+ * starts the viewer's exit in the same render, so the viewer unmounts about
+ * 180ms later while the member is already typing in the picker. That viewer
+ * leaves focus in the picker and parks its own return target here. The
+ * picker's opener was the viewer's Forward button, gone with the viewer, so
+ * when the picker closes its return resolves through this list to the photo
+ * that opened the viewer. Capped, since an entry is only read back when a
+ * dialog on top closes after the one underneath.
+ */
+const parkedFocusReturns: { dialog: HTMLElement; target: HTMLElement }[] = [];
+const PARKED_FOCUS_RETURN_LIMIT = 4;
+
+/** Follows a return target that went away with a dialog that closed
+ *  underneath to the target that dialog parked, through any chain of them. */
+function resolveFocusReturn(target: HTMLElement | null): HTMLElement | null {
+  if (!target || target.isConnected) return target;
+  const parkedIndex = parkedFocusReturns.findIndex(({ dialog }) =>
+    dialog.contains(target),
+  );
+  if (parkedIndex === -1) return target;
+  const [parkedReturn] = parkedFocusReturns.splice(parkedIndex, 1);
+  return resolveFocusReturn(parkedReturn?.target ?? null);
+}
+
+/**
+ * Sends focus back to the control that opened `dialog` as it closes. When
+ * focus sits inside any other connected `aria-modal="true"` dialog at that
+ * moment (in practice one opened on top while this one played its exit),
+ * focus stays there, and the return target is parked for a later close whose
+ * own opener went away inside this dialog.
+ */
+function returnFocusOnClose(
+  dialog: HTMLElement | null,
+  previouslyFocused: HTMLElement | null,
+): void {
+  const focusReturn = resolveFocusReturn(previouslyFocused);
+  const activeElement = document.activeElement;
+  const isFocusInAnotherDialog =
+    activeElement instanceof HTMLElement &&
+    activeElement.isConnected &&
+    !dialog?.contains(activeElement) &&
+    activeElement.closest('[aria-modal="true"]') !== null;
+  if (!isFocusInAnotherDialog) {
+    focusReturn?.focus?.();
+    return;
+  }
+  if (!dialog || !focusReturn || focusReturn === activeElement) return;
+  parkedFocusReturns.push({ dialog, target: focusReturn });
+  if (parkedFocusReturns.length > PARKED_FOCUS_RETURN_LIMIT)
+    parkedFocusReturns.shift();
+}
+
+/**
  * Modal a11y for both variants: scroll-lock, Escape-to-close, an initial focus
  * into the dialog, a Tab focus-trap so keyboard/screen-reader users can't tab
  * out to the inert page behind, and focus restore to the trigger on close.
@@ -102,7 +156,7 @@ export function useDismiss<ElementType extends HTMLElement = HTMLDivElement>(
     return () => {
       popModal(modalId);
       document.removeEventListener("keydown", onKey);
-      previouslyFocused?.focus?.();
+      returnFocusOnClose(dialog, previouslyFocused);
     };
   }, [modalId, preferredInitialFocusRef]);
 

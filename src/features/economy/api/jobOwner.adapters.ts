@@ -1,6 +1,7 @@
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { Job } from "../jobs.data";
+import { normalizeCommitment, normalizeSeniority } from "../jobVocabulary.data";
 import { formatPay, parsePosted } from "./jobs.adapters";
 import type {
   JobCardDTO,
@@ -24,6 +25,8 @@ export interface MyJobRow {
   organization: string;
   /** "open" or "closed". Closed listings stay in this index, unlike the board. */
   status: JobStatus;
+  /** Commitment id; a listing saved before ids may still hold an English
+   *  label, which `normalizeCommitment` maps when it is displayed. */
   commitment: string;
   location: string;
   /** Already rendered through `formatPay`, so it reads exactly as the board. */
@@ -52,7 +55,7 @@ export function jobCardToMyJobRow(
 /**
  * Demo mode's own postings come from `PostedJobsProvider` (the prototype's
  * localStorage stand-in for a backend), which stores the board's `Job`
- * view-model rather than a DTO. Everything the row needs is already on it
+ * view-model (no DTO). Everything the row needs is already on it
  * except the status, which the demo store has no concept of: a demo listing is
  * always open.
  */
@@ -62,7 +65,9 @@ export function demoJobToMyJobRow(job: Job): MyJobRow {
     title: job.title,
     organization: job.organization,
     status: "open",
-    commitment: job.type,
+    // A demo listing stored before ids has no `commitment`; its `type` label
+    // is what `normalizeCommitment` then reads.
+    commitment: job.commitment || job.type,
     location: job.location,
     payLabel: job.salary,
     postedAt: job.detail.posted,
@@ -71,14 +76,17 @@ export function demoJobToMyJobRow(job: Job): MyJobRow {
 
 /* ── The edit form's draft (PRD-44) ─────────────────────────────────────────
  * Mirrors `PostJobState`: every value is the string/boolean/array a control
- * binds to, and the canonical English option values from `postJob.data.ts`
- * (which the backend stores verbatim) are what is kept, never a translated
- * label.
+ * binds to. Field, profession, commitment and seniority hold ids; the other
+ * options keep the canonical English values from `postJob.data.ts` (which the
+ * backend stores verbatim). A translated label is never kept.
  */
 
 export interface JobEditDraft {
   title: string;
+  /** Job field id, or "" for a legacy job saved without one. */
   category: string;
+  /** Profession id inside `category`, or "" for none. */
+  profession: string;
   commitment: string;
   seniority: string;
   format: string;
@@ -146,9 +154,10 @@ function toNumberInputValue(stored: number | null): string {
 export function jobDetailDtoToEditDraft(dto: JobDetailDTO): JobEditDraft {
   return {
     title: dto.title,
-    category: dto.category,
-    commitment: dto.commitment,
-    seniority: dto.seniority,
+    category: dto.category ?? "",
+    profession: dto.profession ?? "",
+    commitment: normalizeCommitment(dto.commitment),
+    seniority: normalizeSeniority(dto.seniority),
     format: FORMAT_LABELS[dto.format] ?? "Either",
     city: dto.city ?? "",
     timezone: dto.timezone ?? NO_TIMEZONE_PREFERENCE,
@@ -180,9 +189,10 @@ export function jobDetailDtoToEditDraft(dto: JobDetailDTO): JobEditDraft {
 export function demoJobToEditDraft(job: Job): JobEditDraft {
   return {
     title: job.title,
-    category: job.detail.category,
-    commitment: job.type,
-    seniority: "Any level",
+    category: job.category ?? "",
+    profession: job.profession ?? "",
+    commitment: normalizeCommitment(job.commitment || job.type),
+    seniority: normalizeSeniority(job.seniority || ""),
     format: FORMAT_VALUES[job.location] ? job.location : "Either",
     city: "",
     timezone: NO_TIMEZONE_PREFERENCE,
@@ -242,6 +252,9 @@ export function buildUpdateJobDto(
     body.title = current.title.trim();
   }
   if (current.category !== original.category) body.category = current.category;
+  if (current.profession !== original.profession) {
+    body.profession = current.profession || null;
+  }
   if (current.commitment !== original.commitment) {
     body.commitment = current.commitment;
   }

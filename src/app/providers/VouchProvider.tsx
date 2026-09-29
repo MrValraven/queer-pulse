@@ -51,17 +51,15 @@ export function VouchProvider({ children }: { children: ReactNode }) {
   // mutates IS provider state (see the docblock above), so the mutations must
   // write there. Re-pointing them at a query cache would drag the localStorage
   // store out of the provider — the one thing this refactor must not do.
-  const { unvouch } = useVouchMutations({ setVouched, refresh });
+  // `removeVouch` already accepts the caller's `onSettled(didSucceed)` (PRD-424,
+  // the same shape `toggleBlock` uses for block) and keeps it correct across
+  // overlapping withdrawals; see the doc comment on `settleCallbacksRef` in
+  // `useVouchMutations` for why a per-slug registry replaces `mutate()`'s own
+  // per-call options here.
+  const { removeVouch } = useVouchMutations({ setVouched, refresh });
 
   const openVouch = useCallback((slug: string) => setOpenSlug(slug), []);
   const close = useCallback(() => setOpenSlug(null), []);
-
-  const removeVouch = useCallback(
-    (slug: string) => {
-      unvouch.mutate(slug);
-    },
-    [unvouch],
-  );
 
   const value = useMemo<VouchStore>(
     () => ({

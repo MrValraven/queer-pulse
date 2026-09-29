@@ -27,6 +27,7 @@ vi.mock("./messageCache", () => ({
   bumpConversationUnread: vi.fn(),
   upsertMessage: vi.fn(),
   patchConversationPreview: vi.fn(),
+  patchConversationTitle: vi.fn(),
   patchMessageDelete: vi.fn(),
   patchMessageEdit: vi.fn(),
   patchMessagePinned: vi.fn(),

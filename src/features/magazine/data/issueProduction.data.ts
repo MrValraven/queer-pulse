@@ -49,6 +49,7 @@ function toPieceListItemDto(piece: Piece): PieceListItemDto {
     // Every `DEMO_PIECES` row sets both; the fallbacks only satisfy the type.
     stageEnteredAt: piece.stageEnteredAt ?? new Date().toISOString(),
     paymentStatus: piece.paymentStatus ?? "none",
+    publishedAt: piece.publishedAt ?? null,
   };
 }
 

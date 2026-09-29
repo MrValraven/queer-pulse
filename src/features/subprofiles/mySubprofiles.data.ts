@@ -58,6 +58,11 @@ export interface SubprofileProfileGroups {
  * Relative order is preserved inside both groups, which is what lets the
  * reorder mutation rebuild the complete id list the API demands: the moved
  * on-profile group first, then this function's `notShownOnProfile` untouched.
+ *
+ * It also decides which footer a persona gets. Only `shownOnProfile` mounts
+ * `OwnerSideCard` (View, Share, QR). Every draft lands in `notShownOnProfile`,
+ * where `NotShownPersonas` shows its draft reason and a link to publish, so
+ * the dashboard never offers a draft's stored handle as a live address.
  */
 export function splitByProfileVisibility(
   subprofiles: SubprofileView[],

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { routes } from "../../app/routeMap";
+import { routes, communityPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
 import styles from "./VolunteerOpportunityPage.module.css";
@@ -42,7 +42,7 @@ export function VolunteerOrganizationCard({
 
   if (opp.community) {
     const communityTo = opp.community.slug
-      ? `/community/${opp.community.slug}`
+      ? communityPath(opp.community.slug)
       : routes.communities;
     return (
       <div className={styles.card}>

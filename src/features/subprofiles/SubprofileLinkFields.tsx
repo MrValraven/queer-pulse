@@ -18,6 +18,7 @@ import {
   linkedPersonaHandleCandidate,
 } from "./personaHandle";
 import {
+  addressChangeKindFor,
   linkChoiceLockState,
   pathFor,
   warningPathsForPending,
@@ -108,14 +109,23 @@ export function SubprofileLinkFields({
     const previousHandle = subprofile.handle ?? "";
     if (editor.handle === previousHandle) return;
     // Clearing a linked handle that already is the derived default keeps the
-    // same address: restore the field instead of sending an empty handle,
-    // which would draft (unpublish) the persona for no visible change.
+    // same address: the server would claim that same default again and the
+    // persona stays published. Restoring the field keeps the edit a no-op,
+    // so no change is sent and no warning asks about a move with no effect.
     const pathWith = (handle: string) =>
       pathFor(editor.link, ownerSlug, editor.slug, handle);
     if (pathWith(editor.handle) === pathWith(previousHandle)) {
       editor.setHandle(previousHandle);
       return;
     }
+    // Clearing a STANDALONE persona's handle to empty is not a rename with a
+    // pending new address to warn about: a published standalone persona
+    // always needs one, so the server refuses this outright (422
+    // `handle_invalid`) and never drafts it. `handleError` below already
+    // says so (type a new one, or unpublish) and keeps Save disabled
+    // (`useSubprofileMetaEditor`'s `isStandaloneHandleMissing`), so there is
+    // nothing left for the confirm modal to add.
+    if (editor.link !== "linked" && !editor.handle) return;
     setPending({
       kind: "editField",
       field: "handle",
@@ -153,10 +163,18 @@ export function SubprofileLinkFields({
       ? t("subprofiles:metaForm.handleNamesOwner", { creator: creatorSlug })
       : undefined;
   // A standalone persona has no derived default, so an empty address is an
-  // error there. The bare kind name ("therapist") is refused for both kinds.
+  // error there. A PUBLISHED one needs the sharper version of that error: the
+  // server refuses to clear it outright (Finding 1), so the field spells out
+  // what to do (type a new one, or unpublish), where the generic "give it a
+  // name" message would only imply a save that can never succeed. The bare
+  // kind name ("therapist") is refused for both kinds.
   let handleError = namesOwnerError;
   if (!isLinked && editor.isStandaloneHandleMissing)
-    handleError = t("subprofiles:metaForm.handleRequired");
+    handleError = t(
+      isPublished
+        ? "subprofiles:metaForm.handleRequiredPublished"
+        : "subprofiles:metaForm.handleRequired",
+    );
   else if (editor.isHandleKindName)
     handleError = t("subprofiles:metaForm.handleIsKind", {
       handle: editor.handle.trim(),
@@ -169,6 +187,9 @@ export function SubprofileLinkFields({
         handle: editor.handle,
       })
     : null;
+  const changeKind = pending
+    ? addressChangeKindFor(pending, editor.link)
+    : "other";
 
   return (
     <>
@@ -227,6 +248,9 @@ export function SubprofileLinkFields({
           oldPath={warning.oldPath}
           newPath={warning.newPath}
           releasesHandle={warning.releasesHandle}
+          changeKind={changeKind}
+          followerCount={subprofile.followerCount}
+          endorsementCount={subprofile.endorsementCount}
           onConfirm={confirmPending}
           onCancel={cancelPending}
         />

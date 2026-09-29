@@ -115,6 +115,19 @@
   margin: 6px 0 20px;
   line-height: 1.55;
 }
+/* PRD-434. "About listing QPL-…" above the message field when the page was
+   opened for a listing correction: prefilled context, so a quiet inset row on
+   the page cream, bound to the message label below it. */
+.form .correctionNote {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-10);
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+  line-height: 1.55;
+}
 .sent {
   text-align: center;
   padding: 20px 0;

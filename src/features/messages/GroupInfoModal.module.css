@@ -84,6 +84,26 @@
   gap: 8px;
   margin-top: 10px;
 }
+/* PRD-400: the quiet "newcomers read from their join" line under the title. */
+.inviteHistoryNote {
+  margin: 0 0 10px;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+/* PRD-400: when the invite link stops working, under the link row. */
+.inviteLinkExpiry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+.inviteLinkExpired {
+  font-weight: 600;
+  color: var(--text-strong);
+}
 
 .pendingInviteList {
   list-style: none;

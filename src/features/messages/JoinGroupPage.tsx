@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiUsers } from "react-icons/fi";
+import { FiClock, FiUsers } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { PageLoader } from "../../shared/components/feedback/PageLoader";
@@ -20,8 +20,10 @@ import styles from "./JoinGroupPage.module.css";
  * to sign in first, same as tapping any other messages link); see the
  * `/messages/*` addition in `authGate.ts`.
  *
- * Four states: loading, an invalid/rotated/dissolved link (`INVITE_LINK_INVALID`,
- * terminal, no retry can fix it), a load fault of some other kind (retryable),
+ * Five states: loading, an invalid/rotated/dissolved link (`INVITE_LINK_INVALID`,
+ * terminal, no retry can fix it), a link past its 7-day window
+ * (`INVITE_LINK_EXPIRED`, PRD-400, terminal too, with guidance to ask the
+ * group for a fresh one), a load fault of some other kind (retryable),
  * and the resolved preview, which itself branches on `isMember` (Open chat vs
  * Join). `GROUP_FULL`/`GROUP_DISSOLVED`/`REMOVED_FROM_GROUP` are refusals of
  * the JOIN action itself, not of the preview load, so they surface as a toast
@@ -75,8 +77,9 @@ export function JoinGroupPage() {
     );
   }
 
-  const isInvalidLink =
-    groupErrorCodeOf(preview.error) === "INVITE_LINK_INVALID";
+  const previewErrorCode = groupErrorCodeOf(preview.error);
+  const isInvalidLink = previewErrorCode === "INVITE_LINK_INVALID";
+  const isExpiredLink = previewErrorCode === "INVITE_LINK_EXPIRED";
 
   return (
     <AppShell>
@@ -87,6 +90,16 @@ export function JoinGroupPage() {
             isJoining={isJoining}
             onJoin={() => void handleJoin()}
             onOpenChat={handleOpenChat}
+          />
+        ) : preview.isError && isExpiredLink ? (
+          <EmptyState
+            icon={<FiClock aria-hidden />}
+            title={t("messages:join.expiredLinkTitle")}
+            description={t("messages:join.expiredLinkBody")}
+            action={{
+              label: t("messages:join.backToMessages"),
+              to: routes.messages,
+            }}
           />
         ) : preview.isError && isInvalidLink ? (
           <EmptyState

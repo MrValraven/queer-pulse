@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from "vitest";
+import { ApiError } from "../../shared/api/client";
 import {
   demoAcceptPair,
+  demoAnswerHostQuestions,
   demoCard,
   demoDeclinePair,
   demoWithdraw,
@@ -133,6 +135,43 @@ describe("demoCard state override, consumed by the first real action", () => {
     // `demoState`.
     expect(afterAccept.pair?.direction).toBe("sent");
     expect(afterAccept.pair?.status).toBe("accepted");
+  });
+});
+
+/** The hosts changed a question after this demo member opted in: the card
+ *  asks it again until they answer. */
+describe("demoCard hostQuestionChanged walk", () => {
+  it("pins a waiting card that asks one host question again", () => {
+    setDemoSearch("?goTogetherDemo=hostQuestionChanged");
+    const card = demoCard("pride-picnic");
+    expect(card.state).toBe("waiting");
+    expect(card.unansweredHostQuestionIds).toHaveLength(1);
+    expect(card.hostQuestions.map((question) => question.id)).toEqual(
+      card.unansweredHostQuestionIds,
+    );
+  });
+
+  it("keeps the member waiting with nothing left to answer once they answer", () => {
+    setDemoSearch("?goTogetherDemo=hostQuestionChanged");
+    const [question] = demoCard("pride-picnic").hostQuestions;
+    const afterAnswer = demoAnswerHostQuestions("pride-picnic", {
+      hostAnswers: { [question?.id ?? ""]: question?.options[0]?.id ?? "" },
+    });
+    expect(afterAnswer.state).toBe("waiting");
+    expect(afterAnswer.unansweredHostQuestionIds).toEqual([]);
+    expect(demoCard("pride-picnic").state).toBe("waiting");
+  });
+
+  it("refuses a blank answer with the backend's typed code", () => {
+    setDemoSearch("?goTogetherDemo=hostQuestionChanged");
+    expect(() =>
+      demoAnswerHostQuestions("pride-picnic", { hostAnswers: { q1: "" } }),
+    ).toThrow(ApiError);
+    expect(demoCard("pride-picnic").unansweredHostQuestionIds).toHaveLength(1);
+  });
+
+  it("gives every natural demo card an empty list", () => {
+    expect(demoCard("pride-picnic").unansweredHostQuestionIds).toEqual([]);
   });
 });
 

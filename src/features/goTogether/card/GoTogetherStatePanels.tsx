@@ -10,7 +10,6 @@ import { useFormat } from "../../../shared/i18n/format";
 import {
   useDeclineGoTogetherPair,
   useRevealDemoGoTogetherGroup,
-  useWithdrawGoTogether,
 } from "../api/useGoTogetherMutations";
 import type { GoTogetherCardDTO } from "../api/goTogether.types";
 import { GoTogetherOptInFlow } from "./GoTogetherOptInPanel";
@@ -19,11 +18,16 @@ import {
   NO_LENS,
   QUIET_STATE_COPY,
   cardErrorKey,
+  hasReceivedPairInvite,
   REVEAL_DAY_FORMAT,
   STATE_ICONS,
   type QuietCardState,
 } from "./goTogetherCard.data";
 import { useFocusCardHeading, useFormOpener } from "./goTogetherCardFocus";
+import {
+  useLeaveMatching,
+  type LeaveMatchingControls,
+} from "./useLeaveMatching";
 import styles from "./GoTogetherCard.module.css";
 
 /** Icon, title and one line of copy: the top of every panel. A panel with
@@ -135,7 +139,7 @@ export function NotVerifiedPanel({ onVerified }: { onVerified: () => void }) {
 }
 
 /** A failed write's copy, announced as it appears. */
-function ErrorLine({ errorKey }: { errorKey: string | null }) {
+export function ErrorLine({ errorKey }: { errorKey: string | null }) {
   const { t } = useTranslation();
   if (!errorKey) return null;
   return (
@@ -145,25 +149,8 @@ function ErrorLine({ errorKey }: { errorKey: string | null }) {
   );
 }
 
-/** Leaving matching from any live state: withdraw, then move focus to the
- *  card heading because the panel under the button goes away. */
-interface LeaveMatchingControls {
-  leave: () => void;
-  isPending: boolean;
-  errorKey: string | null;
-}
-
-function useLeaveMatching(slug: string): LeaveMatchingControls {
-  const withdraw = useWithdrawGoTogether(slug);
-  const focusCardHeading = useFocusCardHeading();
-  return {
-    leave: () => withdraw.mutate(undefined, { onSuccess: focusCardHeading }),
-    isPending: withdraw.isPending,
-    errorKey: cardErrorKey(withdraw.error),
-  };
-}
-
-function LeaveMatchingButton({
+/** Stop looking for a group, beside whatever else the panel offers. */
+export function LeaveMatchingButton({
   leaveMatching,
 }: {
   leaveMatching: LeaveMatchingControls;
@@ -302,11 +289,6 @@ function usePairLine(card: GoTogetherCardDTO): string | undefined {
     : undefined;
 }
 
-/** A waiting member a friend has just invited to go together. */
-function hasReceivedPairInvite(card: GoTogetherCardDTO): boolean {
-  return card.pair?.status === "pending" && card.pair.direction === "received";
-}
-
 /** A waiting member reopens the opt-in, starting from their current mode,
  *  friend and lens. Host answers are not on the card, so they answer again. */
 function ChangeHowIGoFlow({
@@ -410,8 +392,9 @@ function WaitingForGroupPanel({
   );
 }
 
-/** Not enough people yet. Matching still runs until the opt-in closes, so
- *  the member can still leave it. */
+/** Not enough people yet. Matching still runs until the final late-group
+ *  pass, so the member can still leave it. Once that pass has run the card
+ *  reads `closed`, and this panel's promise goes with it. */
 export function UnmatchedPanel({ slug }: { slug: string }) {
   const leaveMatching = useLeaveMatching(slug);
   return (

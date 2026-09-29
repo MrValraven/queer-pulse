@@ -314,12 +314,20 @@ export const economy: Catalog = {
   "jobs.postCta": "+ Post a job",
 
   "jobs.filter.all": "All roles",
-  "jobs.filter.design": "Design",
-  "jobs.filter.tech": "Tech",
-  "jobs.filter.arts": "Arts & Culture",
-  "jobs.filter.care": "Care",
-  "jobs.filter.food": "Food",
-  "jobs.filter.community": "Community",
+
+  "jobs.fieldGroup.creativeMedia": "Creative & media",
+  "jobs.fieldGroup.techScience": "Tech & science",
+  "jobs.fieldGroup.business": "Business",
+  "jobs.fieldGroup.healthCare": "Health & care",
+  "jobs.fieldGroup.educationCommunity": "Education & community",
+  "jobs.fieldGroup.foodHospitality": "Food, hospitality & retail",
+  "jobs.fieldGroup.tradesIndustry": "Trades, industry & logistics",
+  "jobs.fieldGroup.landAnimals": "Land & animals",
+  "jobs.fieldGroup.publicSafety": "Public service & safety",
+
+  "jobs.fieldFilter.groupsLabel": "Filter roles by field",
+  "jobs.fieldFilter.fieldsLabel": "Narrow to one field",
+  "jobs.fieldFilter.anyField": "Any field",
 
   "jobs.card.applyBy": "Apply by {date}",
   "jobs.card.deadlineOpen": "Open",
@@ -352,6 +360,7 @@ export const economy: Catalog = {
 
   "jobs.loadingMore": "Loading…",
   "jobs.loadMoreCta": "Load more roles",
+  "jobs.loadMoreError": "We couldn't load more roles.",
 
   "jobs.employers.title": "Queer-run employers <em>we trust</em>",
   "jobs.employers.subtitle":
@@ -412,7 +421,8 @@ export const economy: Catalog = {
   "jobDetail.sidebar.salary": "Salary",
   "jobDetail.sidebar.type": "Type",
   "jobDetail.sidebar.location": "Location",
-  "jobDetail.sidebar.category": "Category",
+  "jobDetail.sidebar.category": "Field",
+  "jobDetail.sidebar.profession": "Profession",
   "jobDetail.sidebar.deadline": "Deadline",
   "jobDetail.sidebar.applyCta": "Apply now",
   "jobDetail.sidebar.shareToCommunityCta": "Share to a community",
@@ -598,8 +608,6 @@ export const economy: Catalog = {
   "housing.outro.askForum": "Ask the forum",
 
   // ── HousingModals (message the lister / recommend a landlord) ─────────
-  "housingModal.charsToSend_one": "{count} more character to send",
-  "housingModal.charsToSend_other": "{count} more characters to send",
   "housingModal.charsToSubmit_one": "{count} more character to submit",
   "housingModal.charsToSubmit_other": "{count} more characters to submit",
   "housingModal.charsCount_one": "{count} character",
@@ -616,20 +624,18 @@ export const economy: Catalog = {
   "housingModal.message.openThreadCta": "Open the conversation",
 
   "housingModal.message.ariaLabel": "Message the lister",
-  "housingModal.message.successTitle": "Message <em>sent.</em>",
+  "housingModal.message.successTitle": "Message",
+  "housingModal.message.successEm": "sent",
   "housingModal.message.successBody":
     "Your message is on its way to <strong>{toName}</strong>, who usually replies <strong>{responseTime}</strong>. You'll get a notification here when they do. Contact details are shared once you both agree to take it further.",
   // Used when we have no measured reply time for this lister: same promise,
   // minus the reply-speed claim we cannot back.
   "housingModal.message.successBodyNoReplyTime":
     "Your message is on its way to <strong>{toName}</strong>. You'll get a notification here when they reply. Contact details are shared once you both agree to take it further.",
-  "housingModal.message.eyebrow": "Message the lister",
-  "housingModal.message.title": "Message <em>{toName}</em>",
   "housingModal.message.body":
     "About <strong>{listingTitle}</strong>. Keep it human, a sentence about who you are and why it suits you goes a long way. Your profile is shared with the message.",
   "housingModal.message.note":
     "For your safety, keep the conversation on QueerPulse until you've met. Never send a deposit before viewing the place in person.",
-  "housingModal.message.send": "Send message",
   "housingModal.message.error":
     "Couldn't send your message. It didn't go through. Check your connection and try again.",
   "housingModal.message.draftNamed":
@@ -1160,6 +1166,7 @@ export const economy: Catalog = {
   "housingListing.reportModal.lead":
     "Reports help us keep QueerPulse trustworthy. Tell us what's going on, specifics help the review team. Your name is never shared with whoever you're reporting.",
   "housingListing.reportModal.concernLabel": "What's the concern?",
+  "housingListing.reportModal.reasonMissing": "Choose a concern to send",
   "housingListing.reportModal.detailLabel": "Tell us more",
   "housingListing.reportModal.detailPlaceholder":
     "What made this feel unsafe, discriminatory, or untrustworthy? Be as specific as you're comfortable with.",
@@ -2003,7 +2010,11 @@ export const economy: Catalog = {
     "We couldn't publish your listing. Please try again.",
 
   "postJob.field.optional": "optional",
-  "postJob.field.category": "Category",
+  "postJob.field.category": "Field",
+  "postJob.field.profession": "Profession",
+  "postJob.field.fieldPlaceholder": "Choose a field",
+  "postJob.field.fieldSearch": "Search fields and professions",
+  "postJob.field.professionPlaceholder": "Any role in this field",
   "postJob.field.commitment": "Commitment",
   "postJob.field.experienceLevel": "Experience level",
   "postJob.field.format": "Format",
@@ -2022,16 +2033,6 @@ export const economy: Catalog = {
   "postJob.field.screening": "Screening",
   "postJob.field.postingAs": "Posting as",
   "postJob.field.respondVia": "Respond via",
-
-  "postJob.option.category.legalAdmin": "Legal & admin",
-  "postJob.option.category.designCreative": "Design & creative",
-  "postJob.option.category.techEngineering": "Tech & engineering",
-  "postJob.option.category.writingEditing": "Writing & editing",
-  "postJob.option.category.translation": "Translation",
-  "postJob.option.category.teachingTutoring": "Teaching & tutoring",
-  "postJob.option.category.healthWellbeing": "Health & wellbeing",
-  "postJob.option.category.practicalHelp": "Practical help",
-  "postJob.option.category.other": "Other",
 
   "postJob.option.commitment.fullTime": "Full-time",
   "postJob.option.commitment.partTime": "Part-time",
@@ -2074,6 +2075,7 @@ export const economy: Catalog = {
   "postJob.step1.locationPlaceholder":
     "e.g. Arroios, Lisbon, or a neighbourhood / district",
   "postJob.step1.locationError": "Add where this is based.",
+  "postJob.step1.fieldError": "Choose the field this role belongs to.",
 
   "postJob.step2.eyebrow": "Step 2 of 5",
   "postJob.step2.title": "The <em>details</em>",
@@ -3643,10 +3645,6 @@ export const economy: Catalog = {
   "salarySubmitModal.annualSalaryPlaceholder": "Annual salary (€)",
   "salarySubmitModal.yearsExpPlaceholder": "Years of experience",
   "salarySubmitModal.employmentTypeLabel": "Employment type",
-  "salarySubmitModal.type.fullTime": "Full-time",
-  "salarySubmitModal.type.partTime": "Part-time",
-  "salarySubmitModal.type.freelance": "Freelance",
-  "salarySubmitModal.type.contract": "Contract",
   "salarySubmitModal.submitCta": "Submit anonymously",
 
   // ── AffiliateCompanyModal ────────────────────────────────────────────────
@@ -4477,7 +4475,10 @@ export const economy: Catalog = {
   "editJob.field.title": "Role title",
   "editJob.field.description": "What the role is",
   "editJob.field.descriptionHelper": "This is the blurb on the job card.",
-  "editJob.field.category": "Category",
+  "editJob.field.category": "Field",
+  "editJob.field.profession": "Profession",
+  "editJob.legacyFieldNote":
+    "This listing was posted before fields existed. Choose one to save your changes.",
   "editJob.field.commitment": "Commitment",
   "editJob.field.seniority": "Level",
   "editJob.field.format": "Where the work happens",
@@ -4627,6 +4628,4 @@ export const economy: Catalog = {
 
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "barterDetail.propose.openThreadCta": "Open the conversation",
-  "housingModal.message.replyNotice":
-    "{name} can reply to this straight away. You can send more once they do.",
 };

@@ -264,6 +264,16 @@ export const forum: Catalog = {
     "This goes live {date}. Until then you are the only one who can open it.",
   "unpublished.scheduledBodyNoDate":
     "This is waiting for its publishing time. Until then you are the only one who can open it.",
+  "unpublished.moderatorReviewTitle": "Waiting for review",
+  "unpublished.moderatorReviewBody":
+    "A member sent this for review. Approve or decline it in <link>Forum review</link>.",
+  "unpublished.moderatorRejectedTitle": "Sent back to its author",
+  "unpublished.moderatorRejectedBody":
+    "The editors sent this back. It stays off the forum until its author submits it again.",
+  "unpublished.moderatorScheduledBody":
+    "This goes live {date}. Until then only its author and the moderators can open it.",
+  "unpublished.moderatorScheduledBodyNoDate":
+    "This is waiting for its publishing time. Until then only its author and the moderators can open it.",
   "unpublished.reviewTitle": "With the editors",
   "unpublished.reviewBody":
     "You sent this for review. It joins the forum once somebody approves it.",
@@ -291,6 +301,16 @@ export const forum: Catalog = {
 
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Forum",
+  "threadPage.coAuthor.confirmTitle": "Take your name off this thread?",
+  "threadPage.coAuthor.confirmBody":
+    "The thread stays up under {author}'s name only. You can't add yourself back.",
+  "threadPage.coAuthor.confirmBodyMasked":
+    "Your name will come off this thread. You can't undo this.",
+  "threadPage.coAuthor.confirmCta": "Remove my name",
+  "threadPage.coAuthor.cancel": "Keep it",
+  "threadPage.coAuthor.removedToast": "Your name is off the thread.",
+  "threadPage.coAuthor.removeFailed": "That didn't work. Try again?",
+  "threadPage.coAuthor.menuItem": "Remove my co-author credit",
   "threadPage.replyPostedToast": "Reply posted",
   "threadPage.replyFailedToast":
     "Couldn't post your reply. Try again in a moment.",
@@ -457,6 +477,7 @@ export const forum: Catalog = {
   "draft.saving": "Saving…",
   "draft.saved": "Draft saved",
   "draft.restored": "Draft restored",
+  "draft.unsaved": "Not saved yet",
   "draft.threadKind": "POST",
   "draft.replyKind": "REPLY",
   // Row title for an autosaved inline nested reply, so the drafts list says
@@ -467,8 +488,23 @@ export const forum: Catalog = {
   "draft.untitledThreadTitle": "Unfinished post",
 
   // ── The forum's own sight of an unsent draft (PRD-165) ────────────────────
-  "draftNotice.title": "Your unfinished post is still here",
-  "draftNotice.resumeCta": "Resume",
+  // The draft card on the forum: a ribbon under the search box.
+  "draftNotice.cardLabel": "Your unfinished post",
+  "draftNotice.eyebrow": "Unfinished post",
+  "draftNotice.autosaved": "Autosaved",
+  "draftNotice.untitled": "Untitled post",
+  "draftNotice.emptyBody": "No words yet. Your choices are saved.",
+  "draftNotice.continueCta": "Continue writing",
+  "draftNotice.factsLabel": "In this draft",
+  "draftNotice.moreFacts": "+{count}",
+  "draftNotice.moreFactsLabel_one": "{count} more detail",
+  "draftNotice.moreFactsLabel_other": "{count} more details",
+  "draftNotice.fact.townSquare": "Town square",
+  "draftNotice.fact.tags_one": "{count} tag",
+  "draftNotice.fact.tags_other": "{count} tags",
+  "draftNotice.fact.photos_one": "{count} photo",
+  "draftNotice.fact.photos_other": "{count} photos",
+  "draftNotice.fact.poll": "Poll",
 
   // ── Link unfurl card under a post (PRD-171) ───────────────────────────────
   "linkPreview.aria": "Link preview: {title}",

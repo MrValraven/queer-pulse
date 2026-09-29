@@ -3,6 +3,7 @@ import { MessageMeta, type MetaStatus } from "./MessageSendStatus";
 import type { BubbleLabelIds } from "./bubbleLabelIds";
 import type { ChatMessage } from "./data";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import { useStickerAttachmentLabel } from "../stickers/useStickerAttachmentLabel";
 import styles from "./MessagesPage.module.css";
 import type { ReactNode } from "react";
 
@@ -18,9 +19,9 @@ const STICKER_DISPLAY_SIZE = 128;
  * row sits below rather than floating, for the same reason the image branch
  * places it there: there is no coloured bubble to tuck it into.
  *
- * There is no caption. `attachment.label` is the sticker's name and is used
- * as alt text only, so a screen reader says "Bi reverse sticker" instead of
- * announcing nothing.
+ * There is no caption. The sticker's name is used as alt text only, so a
+ * screen reader announces "Bi reverse sticker". The name follows the
+ * reader's language (see `useStickerAttachmentLabel`).
  */
 export function StickerBubble({
   message,
@@ -42,6 +43,8 @@ export function StickerBubble({
     message.attachment && isStickerAttachment(message.attachment)
       ? message.attachment
       : null;
+  // Called ahead of the early return below, as hooks must be.
+  const stickerLabel = useStickerAttachmentLabel(attachment);
   if (!attachment) return null;
   return (
     <>
@@ -51,7 +54,7 @@ export function StickerBubble({
         id={labelIds.content}
         className={styles.stickerImage}
         src={attachment.url}
-        alt={t("messages:sticker.imageAlt", { label: attachment.label })}
+        alt={t("messages:sticker.imageAlt", { label: stickerLabel })}
         width={STICKER_DISPLAY_SIZE}
         height={STICKER_DISPLAY_SIZE}
         loading="lazy"

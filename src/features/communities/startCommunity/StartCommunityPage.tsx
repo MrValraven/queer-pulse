@@ -7,7 +7,7 @@ import { FadeIn } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { routes, communityPath } from "../../../app/routeMap";
 import { useUnsavedChangesGuard } from "../../../shared/hooks";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
@@ -302,7 +302,7 @@ export function StartCommunityPage() {
       create.mutate(draftToCreateDto(submitDraft), {
         onSuccess: (dto) => {
           clearCommunityDraft(ownerSlug);
-          if (dto) void navigate(`/community/${dto.slug}`);
+          if (dto) void navigate(communityPath(dto.slug));
         },
         onError: (error) => {
           // A 409 is one specific, fixable thing: the handle is taken. Say so

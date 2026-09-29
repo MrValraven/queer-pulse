@@ -12,6 +12,7 @@ import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminVerifyDecided } from "./AdminVerifyDecided";
 import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
 import { JoinRequestDeclineModal } from "./JoinRequestDeclineModal";
+import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
 import { AdminTabs } from "./ui";
 
 type QueueTabId = "waiting" | "decided" | "sample";
@@ -46,8 +47,26 @@ export function AdminVerifyQueue() {
   const [assignmentFilter, setAssignmentFilter] =
     useState<QueueAssignmentScope>("all");
   const assignedTo = assignedToParam(assignmentFilter);
-  const { data, isLoading } = useJoinRequests("pending", { assignedTo });
-  const { data: waitlisted } = useJoinRequests("waitlisted", { assignedTo });
+  const pendingQuery = useJoinRequests("pending", { assignedTo });
+  const waitlistedQuery = useJoinRequests("waitlisted", { assignedTo });
+  const { data } = pendingQuery;
+  const { data: waitlisted } = waitlistedQuery;
+  const queueQueries = [pendingQuery, waitlistedQuery];
+  // DES-424: a read that failed with nothing loaded must never render as "the
+  // queue is clear". A failed refetch keeps its rows, so only a query with no
+  // data counts here, and it keeps counting while its retry runs.
+  const failedQueries = queueQueries.filter(hasFailedWithoutData);
+  const hasLoadError = failedQueries.length > 0;
+  const isRetrying = failedQueries.some(isRetryingFailedRead);
+  // The empty line and the tab count summarise both reads, so both wait for
+  // both to answer. Only a first load counts: a retry keeps the error panel
+  // and any loaded rows on screen.
+  const isLoading = queueQueries.some(
+    (query) => query.isLoading && !hasFailedWithoutData(query),
+  );
+  const retryLoad = () => {
+    for (const query of failedQueries) void query.refetch();
+  };
   const assignment = useJoinRequestAssignment();
   // A claim taken this session is overlaid before the rows reach any decision
   // bookkeeping, so the card, the filter and the queue all read one row.
@@ -66,7 +85,10 @@ export function AdminVerifyQueue() {
           {
             id: "waiting",
             label: t("admin:members.verify.tabs.waiting"),
-            count: waitingCount,
+            // A loading or failed queue has no count to show; a failed one
+            // says so in the count's place.
+            count: hasLoadError || isLoading ? undefined : waitingCount,
+            isCountUnavailable: hasLoadError,
           },
           { id: "decided", label: t("admin:members.verify.tabs.decided") },
           // The peer quality sample sits beside the queue it reviews, on the
@@ -95,6 +117,9 @@ export function AdminVerifyQueue() {
             pending={pendingRows}
             waitlisted={waitlistedRows}
             isLoading={isLoading}
+            hasLoadError={hasLoadError}
+            isRetrying={isRetrying}
+            onRetry={retryLoad}
             decisions={decisions}
             assignment={assignment}
           />

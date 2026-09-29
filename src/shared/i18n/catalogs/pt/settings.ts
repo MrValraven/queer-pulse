@@ -1091,7 +1091,7 @@ export const settings: Catalog = {
   "deleteAccount.wh.delete.messagesDeleted":
     "As mensagens que enviaste <strong>são eliminadas de todas as conversas</strong>. Quem as recebeu também as perde.",
   "deleteAccount.wh.delete.postsRemoved":
-    "As tuas publicações no fórum são <strong>permanentemente removidas</strong>. O conteúdo é eliminado por completo.",
+    "As tuas publicações no fórum são <strong>apagadas definitivamente</strong>. As conversas que começaste ficam abertas, sem o teu nome, quando outras pessoas lhes responderam ou quando deste crédito de coautoria a alguém, e o que escreveram continua lá.",
   "deleteAccount.wh.delete.emailSuppressed":
     "O teu endereço de email é <strong>adicionado a uma lista de supressão</strong> para não recriarmos a tua conta por acidente.",
   "deleteAccount.wh.delete.exportFirst":

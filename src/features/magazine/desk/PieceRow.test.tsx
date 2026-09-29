@@ -157,6 +157,18 @@ describe("PieceRow", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("says when a scheduled piece goes live in place of a verb", () => {
+    renderRow({
+      piece: makePiece({
+        stage: "Ready",
+        publishedAt: new Date(Date.now() + 40 * 60 * 60 * 1000).toISOString(),
+      }),
+    });
+
+    expect(screen.getByText(/^Goes live \S/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Publish" })).toBeNull();
+  });
+
   it("hands the next action to onNextAction", () => {
     const onNextAction = vi.fn();
     const { props } = renderRow({ onNextAction });

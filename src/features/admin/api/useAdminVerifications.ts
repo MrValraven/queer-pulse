@@ -196,14 +196,23 @@ export interface UseVerificationRequestsFilter {
  * hits the network) as a single full page — this is a Moderator/Admin-only
  * endpoint that 403s for anyone else, so this fabricated data must never
  * appear as platform truth in live mode.
+ *
+ * `isEnabled: false` mounts the hook without fetching. It sits in its own
+ * options argument because `filter` is hashed whole into the query key, and
+ * the admin rail (which passes it for a grant holder) has to keep sharing the
+ * review queue page's cache entry.
  */
-export function useVerificationRequests(filter: UseVerificationRequestsFilter) {
+export function useVerificationRequests(
+  filter: UseVerificationRequestsFilter,
+  { isEnabled = true }: { isEnabled?: boolean } = {},
+) {
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const { status, type, query, sort, assignedTo } = filter;
 
   const infiniteQuery = useInfiniteQuery<AdminVerificationRequestListDTO>({
     queryKey: [ADMIN_VERIFICATION_REQUESTS_KEY, demoMode, filter],
+    enabled: isEnabled,
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) => {
       if (demoMode) {

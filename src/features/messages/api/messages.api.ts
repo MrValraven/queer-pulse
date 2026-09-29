@@ -59,11 +59,21 @@ export interface GetConversationsPageOptions {
   limit?: number;
   signal?: AbortSignal;
   /** The mailbox to list, an identity uuid the member staffs (or their own
-   *  profile identity for the personal mailbox). The server declares `as` on
-   *  this route; `forbidNonWhitelisted` rejects any parameter it does not
-   *  declare, so nothing else is added. Omitted, the server lists the merged
-   *  view. */
+   *  profile identity for the personal mailbox). Omitted, the server lists
+   *  the merged view. The server declares `as`, `q`, `kind` and
+   *  `excludeLeft` on this route, and `forbidNonWhitelisted` rejects any
+   *  parameter it does not declare, so this helper sends those alone. */
   as?: string;
+  /** ENG-403: keeps only conversations whose displayed name (a group's
+   *  title, a direct partner's name) contains this text, accent-folded
+   *  server-side. Every visibility rule of the plain list still applies. */
+  q?: string;
+  /** ENG-403: `group` keeps only group conversations, groups the member
+   *  left included. */
+  kind?: "group";
+  /** ENG-403: keeps only conversations the member still has a seat in,
+   *  dropping every group they left or were removed from. */
+  excludeLeft?: boolean;
 }
 
 /**
@@ -76,11 +86,14 @@ export interface GetConversationsPageOptions {
 export async function getConversationsPage(
   options: GetConversationsPageOptions = {},
 ): Promise<Paginated<ConversationResponse>> {
-  const { cursor, limit, signal, as } = options;
+  const { cursor, limit, signal, as, q, kind, excludeLeft } = options;
   const params = new URLSearchParams();
   if (cursor) params.set("cursor", cursor);
   if (limit) params.set("limit", String(limit));
   if (as) params.set("as", as);
+  if (q) params.set("q", q);
+  if (kind) params.set("kind", kind);
+  if (excludeLeft) params.set("excludeLeft", "true");
   const qs = params.toString();
   const res = await apiGet<
     ConversationResponse[] | Paginated<ConversationResponse>
@@ -137,6 +150,68 @@ export async function getMessages(
     signal,
   );
   return toPage(res);
+}
+
+/** PRD-401: one window of history centred on a message (see
+ *  `getMessagesAround`). `nextCursor`/`hasMore` page older from the window's
+ *  oldest row exactly as a backward page does; `newerAfter`/`newerAfterId`
+ *  are the exact keyset of its newest row for `getMessagesNewer`. */
+export interface MessageHistoryWindow {
+  data: MessageResponse[];
+  pageInfo: {
+    nextCursor: string | null;
+    hasMore: boolean;
+    hasNewer: boolean;
+    newerAfter: string | null;
+    newerAfterId: string | null;
+  };
+}
+
+/**
+ * GET /conversations/:id/messages?around= (PRD-401): a window of history
+ * centred on `messageId`, newest first, so jump-to-message reaches a message
+ * however far back it is in one request. Rejects with a 404 `ApiError` when
+ * the message is not in this thread or the reader may not see it.
+ */
+export async function getMessagesAround(
+  conversationId: string,
+  messageId: string,
+  signal?: AbortSignal,
+): Promise<MessageHistoryWindow> {
+  const searchParams = new URLSearchParams({ around: messageId });
+  return apiGet<MessageHistoryWindow>(
+    `/conversations/${conversationId}/messages?${searchParams.toString()}`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+/**
+ * GET /conversations/:id/messages?after=&afterId=&limit=: up to `limit`
+ * messages strictly newer than the `(after, afterId)` keyset, OLDEST first
+ * (the reconnect-sync path). A detached history window pages newer through
+ * this until it reaches the live tail.
+ */
+export async function getMessagesNewer(
+  conversationId: string,
+  after: string,
+  afterId: string,
+  limit: number,
+  signal?: AbortSignal,
+): Promise<MessageResponse[]> {
+  const searchParams = new URLSearchParams({
+    after,
+    afterId,
+    limit: String(limit),
+  });
+  const res = await apiGet<MessageResponse[] | Paginated<MessageResponse>>(
+    `/conversations/${conversationId}/messages?${searchParams.toString()}`,
+    undefined,
+    undefined,
+    signal,
+  );
+  return toPage(res).data;
 }
 
 /**
@@ -326,9 +401,21 @@ export const startConversation = (recipientHandle: string) =>
  * materializes once the recipient accepts — see the "Requests" inbox tab).
  * Used by `NewMessageModal`'s fall-through when the picked member isn't an
  * accepted connection yet.
+ *
+ * ENG-407: `clientMessageId` is the same idempotency key a thread send
+ * carries. For a connected pair the server dedups on it, so a retry of the
+ * same compose returns the stored message and posts nothing new.
  */
-export const sendMessageRequest = (toSlug: string, body: string) =>
-  apiPost<MessageRequestResponse>("/messages/request", { toSlug, body });
+export const sendMessageRequest = (
+  toSlug: string,
+  body: string,
+  clientMessageId?: string,
+) =>
+  apiPost<MessageRequestResponse>("/messages/request", {
+    toSlug,
+    body,
+    ...(clientMessageId ? { clientMessageId } : {}),
+  });
 
 /** POST /conversations/group — create a group thread. Members are addressed by
  *  handle (slug); the caller becomes owner. Each member must be a connection and
@@ -411,9 +498,10 @@ export const dissolveGroup = (conversationId: string) =>
 
 /** POST /conversations/:id/invite-link: owner/admin creates (or rotates) the
  *  group's revocable invite link (PRD-358, no QR). Rotating invalidates any
- *  previously shared link. */
+ *  previously shared link. PRD-400: every issue or rotation is valid for 7
+ *  days, and `inviteTokenExpiresAt` says until when. */
 export const createGroupInviteLink = (conversationId: string) =>
-  apiPost<{ inviteToken: string }>(
+  apiPost<{ inviteToken: string; inviteTokenExpiresAt: string }>(
     `/conversations/${conversationId}/invite-link`,
     {},
   );

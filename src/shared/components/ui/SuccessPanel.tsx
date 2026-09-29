@@ -11,9 +11,12 @@ interface SuccessPanelProps {
   children: ReactNode;
   onClose: () => void;
   closeLabel?: ReactNode;
+  /** Optional extra buttons shown in the action row before the close
+   *  button, e.g. a link onward or a "do it again" action. */
+  extraActions?: ReactNode;
   /** Optional checklist of next steps, each rendered with a jade tick. */
   steps?: ReactNode[];
-  /** Optional content below the primary action — e.g. an undo affordance. */
+  /** Optional content below the primary action, e.g. an undo affordance. */
   footer?: ReactNode;
   /** Override the default jade check glyph. */
   icon?: ReactNode;
@@ -43,6 +46,7 @@ export function SuccessPanel({
   children,
   onClose,
   closeLabel,
+  extraActions,
   steps,
   footer,
   icon,
@@ -71,6 +75,7 @@ export function SuccessPanel({
         </ul>
       )}
       <div className={styles.actions}>
+        {extraActions}
         <Button size="lg" variant="ghost-dark" onClick={onClose}>
           {closeLabel ?? t("shared:successPanel.done")}
         </Button>

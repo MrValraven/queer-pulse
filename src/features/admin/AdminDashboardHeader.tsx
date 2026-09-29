@@ -1,4 +1,4 @@
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiRefreshCw } from "react-icons/fi";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,17 +9,29 @@ import styles from "./AdminDashboardPage.module.css";
 
 interface AdminDashboardHeaderProps {
   /** The live (or demo) triage queue, so the headline count and the
-   *  emergency callout reflect the real backlog rather than a baked number. */
-  triage: QueueRow[];
-  loading: boolean;
+   *  emergency callout reflect the real backlog rather than a baked number.
+   *  `undefined` until the overview has loaded: only a loaded queue can say
+   *  "caught up" (DES-424). */
+  triage: QueueRow[] | undefined;
+  /** The overview read failed with nothing loaded, including while a retry
+   *  of it runs. */
+  isError: boolean;
+  /** A retry is in flight: the error line stays and its Retry reads busy. */
+  isRetrying: boolean;
+  onRetry: () => void;
 }
 
 export function AdminDashboardHeader({
   triage,
-  loading,
+  isError,
+  isRetrying,
+  onRetry,
 }: AdminDashboardHeaderProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  // In the error state the only thing the page asks of the operator is to
+  // retry, so Retry takes the primary and "Open moderation" steps back.
+  const isLoadError = triage === undefined && isError;
 
   // The eyebrow shows the actual current moment — genuine data, not a baked
   // demo timestamp.
@@ -27,8 +39,9 @@ export function AdminDashboardHeader({
 
   // Everything in the triage queue "needs a human"; the danger-tone row is the
   // safety-emergencies bucket (same discriminator in demo and live).
-  const totalNeedsHuman = triage.reduce((sum, row) => sum + row.count, 0);
-  const emergencyCount = triage
+  const triageRows = triage ?? [];
+  const totalNeedsHuman = triageRows.reduce((sum, row) => sum + row.count, 0);
+  const emergencyCount = triageRows
     .filter((row) => row.tone === "danger")
     .reduce((sum, row) => sum + row.count, 0);
   const isCaughtUp = totalNeedsHuman === 0;
@@ -47,7 +60,38 @@ export function AdminDashboardHeader({
           · {fmt.time(now)}
         </div>
 
-        {loading ? (
+        {isLoadError ? (
+          <>
+            <h1 className={styles.h1}>
+              {t("admin:dashboard.header.titleErrorLine1")}
+              <br />
+              <Translation
+                i18nKey="admin:dashboard.header.titleErrorLine2"
+                components={{ em: <em /> }}
+              />
+            </h1>
+            {/* A status region, like the house error panel: the Retry label
+                flipping from "Trying again…" back to "Try again" is spoken,
+                so a second failure is heard without moving focus. */}
+            <div role="status">
+              <p className={styles.phSub}>
+                {t("admin:dashboard.header.subError")}
+              </p>
+              <div className={styles.phRetry}>
+                <Button
+                  variant="primary"
+                  aria-disabled={isRetrying || undefined}
+                  onClick={isRetrying ? undefined : onRetry}
+                >
+                  <FiRefreshCw aria-hidden />{" "}
+                  {isRetrying
+                    ? t("shared:loadError.retryingCta")
+                    : t("shared:loadError.retryCta")}
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : triage === undefined ? (
           <>
             <SkeletonLine width={240} height={40} style={{ marginTop: 4 }} />
             <SkeletonLine width={190} height={40} style={{ marginTop: 10 }} />
@@ -92,7 +136,10 @@ export function AdminDashboardHeader({
         )}
       </div>
       <div className={styles.phActions}>
-        <Button variant="primary" to={routes.adminModeration}>
+        <Button
+          variant={isLoadError ? "ghost" : "primary"}
+          to={routes.adminModeration}
+        >
           {t("admin:dashboard.header.moderationCta")}{" "}
           <FiArrowRight aria-hidden />
         </Button>

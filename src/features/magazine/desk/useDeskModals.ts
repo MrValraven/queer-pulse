@@ -86,14 +86,24 @@ export function useDeskModals({
   }
   function openCommissionFromPitch(pitch: Pitch): void {
     const { title, byline, note } = pitch;
-    openFor({ kind: "commission", pitch: { title, byline, note } }, pitch.id);
+    // No submitter account means an outside pitch: the editor picks the writer.
+    const isExternal = !pitch.submitterId;
+    openFor(
+      { kind: "commission", pitch: { title, byline, note, isExternal } },
+      pitch.id,
+    );
     setSourcePitchFormat(pitch.suggest === "deck" ? "deck" : undefined);
   }
   function openPassFromPitch(pitch: Pitch): void {
     openFor({ kind: "pass", pitch: { title: pitch.title } }, pitch.id);
   }
   function openHandoff(piece: Piece): void {
-    openFor({ kind: "handoff", piece: { title: piece.title } }, piece.id);
+    const { title, byline, editorId } = piece;
+    const writerId = piece.writerId ?? null;
+    openFor(
+      { kind: "handoff", piece: { title, byline, editorId, writerId } },
+      piece.id,
+    );
   }
   function openDeletePiece(piece: Piece): void {
     openFor({ kind: "deletePiece", piece: { title: piece.title } }, piece.id);
@@ -126,6 +136,12 @@ export function useDeskModals({
         section: payload.section,
         dueOn: payload.dueDate || undefined,
         wordTarget: payload.words ?? undefined,
+        angle: payload.angle || undefined,
+        fee: payload.fee || undefined,
+        // A member's pitch is written by its submitter (the backend sets it).
+        ...(modal.pitch.isExternal
+          ? { writerId: payload.writerId ?? undefined }
+          : {}),
       });
       return;
     }
@@ -143,6 +159,10 @@ export function useDeskModals({
       editorId: activeMe,
       dueOn: payload.dueDate || undefined,
       wordTarget: payload.words ?? undefined,
+      angle: payload.angle || undefined,
+      fee: payload.fee || undefined,
+      writerId: payload.writerId ?? undefined,
+      ...(payload.writerName ? { byline: payload.writerName } : {}),
       // Issue-track commissions bind to the current issue; highlights stay
       // standalone (`issueId` omitted → null). Guard the id so an "issue"
       // choice can never send an empty string the backend would reject.
@@ -159,8 +179,18 @@ export function useDeskModals({
     }
   }
 
-  function confirmHandoff(editorId: string): void {
-    if (contextId) pieceMutations.assign.mutate({ id: contextId, editorId });
+  /** Sends only what the editor changed (`writerId: null` unassigns), so
+   *  changing the writer never reassigns the editor. No change, no request. */
+  function confirmHandoff(editorId: string, writerId: string | null): void {
+    if (!contextId || modal?.kind !== "handoff") return;
+    const isEditorChanged = editorId !== modal.piece.editorId;
+    const isWriterChanged = writerId !== modal.piece.writerId;
+    if (!isEditorChanged && !isWriterChanged) return;
+    pieceMutations.assign.mutate({
+      id: contextId,
+      ...(isEditorChanged ? { editorId } : {}),
+      ...(isWriterChanged ? { writerId } : {}),
+    });
   }
 
   /** See `deletePieceWithOutcome` for why delete reports its own result. */

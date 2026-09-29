@@ -60,6 +60,13 @@ export function DirectoryQuestionsSection({
   const canShowAll =
     !isShowingAll && inlineQuestions.length >= INLINE_QUESTION_CAP;
 
+  // An unclaimed listing has nobody to answer, so it takes no new questions.
+  // It can still carry questions a former owner answered before erasing their
+  // account (see `DirectoryAsideFooter`), and those stay readable; with none,
+  // the section would be an invitation to an empty mailbox, so it goes.
+  const isUnclaimed = place.isUnclaimed === true;
+  if (isUnclaimed && inlineQuestions.length === 0) return null;
+
   return (
     <section className={s.sec}>
       <h2>
@@ -132,6 +139,7 @@ export function DirectoryQuestionsSection({
           button by default (see `DirectoryQuestionAskForm`), so it stays
           quiet under the content above it. */}
       {!preview &&
+        !isUnclaimed &&
         (ownerRef ? (
           <p className={q.ownerNote}>
             {t("marketing:directory.detail.questions.ownerNote")}

@@ -5,6 +5,7 @@ import { Avatar, Button, Toggle } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { vouchErrorMessageKey } from "./api/vouchErrorMessageKey";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import { currentUser, type MemberProfile } from "./data/memberProfiles";
 import {
@@ -123,7 +124,7 @@ export function VouchForm({
   anonymous,
   setAnonymous,
   isPending,
-  isError,
+  error,
   onClose,
   onSubmit,
 }: {
@@ -136,7 +137,8 @@ export function VouchForm({
   anonymous: boolean;
   setAnonymous: (anonymous: boolean) => void;
   isPending: boolean;
-  isError: boolean;
+  /** The failed mutation's error, when the last submit did not succeed. */
+  error: unknown;
   onClose: () => void;
   onSubmit: () => void;
 }) {
@@ -233,8 +235,10 @@ export function VouchForm({
           : t("members:vouch.modal.form.noteOptional")}
       </div>
 
-      {isError && (
-        <p className={styles.error}>{t("members:vouch.modal.error")}</p>
+      {error != null && (
+        <p className={styles.error} role="alert">
+          {t(vouchErrorMessageKey(error))}
+        </p>
       )}
 
       <div className={styles.actions}>

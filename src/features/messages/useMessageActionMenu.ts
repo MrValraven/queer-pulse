@@ -7,6 +7,11 @@ import {
   useEditMessage,
 } from "./api/useMessageActions";
 import { attachmentCaption, isMediaMessage } from "./messageCopy";
+import {
+  editableTextOf,
+  isCaptionEditKind,
+  isEditableMessageKind,
+} from "./messageEditKinds";
 import { type LongPressOrigin } from "./useLongPress";
 import { type ChatMessage } from "./data";
 
@@ -99,12 +104,21 @@ export function useMessageActionMenu(
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
 
   const beginEdit = useCallback((message: ChatMessage) => {
-    if (message.id) setEditingMessageId(message.id);
+    if (message.id && isEditableMessageKind(message.kind)) {
+      setEditingMessageId(message.id);
+    }
   }, []);
   const submitEdit = useCallback(
     (message: ChatMessage, nextBody: string) => {
       const trimmed = nextBody.trim();
-      if (message.id && trimmed && trimmed !== message.text) {
+      // ENG-405: compared against the caption for a photo, document or GIF, the
+      // text its editor was seeded with (see `editableTextOf`). An empty
+      // edit is sent only to clear a caption the message already had.
+      const previousText = editableTextOf(message);
+      const isCaptionClear =
+        !trimmed && isCaptionEditKind(message.kind) && previousText !== "";
+      const hasText = !!trimmed || isCaptionClear;
+      if (message.id && hasText && trimmed !== previousText) {
         editMessage.mutate({ messageId: message.id, body: trimmed });
       }
       setEditingMessageId(null);
@@ -127,8 +141,9 @@ export function useMessageActionMenu(
         message,
         rect: origin.rect,
         isSent,
-        // Server-authoritative — see `ActionOverlayTarget.canEdit`.
-        canEdit: !!message.canEdit,
+        // Server-authoritative, see `ActionOverlayTarget.canEdit`. ENG-405:
+        // a sticker never offers Edit, even under a stale flag.
+        canEdit: !!message.canEdit && isEditableMessageKind(message.kind),
         source: origin.source,
         point: origin.point,
       });

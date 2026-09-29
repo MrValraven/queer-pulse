@@ -1,6 +1,5 @@
 // src/features/messages/ConversationMediaGallery.tsx
 import { useId, useState } from "react";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   Modal,
   Tabs,
@@ -10,7 +9,6 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ConversationMediaKind } from "./api/conversationMedia.api";
 import { ConversationMediaTabPanel } from "./ConversationMediaTabPanel";
-import { useCachedThreadMessages } from "./useCachedThreadMessages";
 import type { MessageGroup } from "./useMessagesController.helpers";
 import type { ChatMessage } from "./data";
 import styles from "./ConversationMediaGallery.module.css";
@@ -69,16 +67,8 @@ function ConversationMediaGallerySheet({
   messageGroups,
 }: ConversationMediaGalleryProps) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const [activeKind, setActiveKind] = useState<ConversationMediaKind>("media");
   const tabsId = useId();
-  // The viewer can only open a photo the thread has loaded (it never fetches
-  // by itself). Demo history pages 30 at a time through the same infinite
-  // query as live, so this reads the same paged cache in both modes.
-  const loadedThreadMessages = useCachedThreadMessages(
-    conversationId,
-    demoMode,
-  );
 
   const tabs: Tab[] = [
     { id: "media", label: t("messages:mediaGallery.tabMedia") },
@@ -94,26 +84,34 @@ function ConversationMediaGallerySheet({
   const openPhoto = (message: ChatMessage) => {
     // A session-only send (demo mode): the demo delivery path only ever
     // patches `status` on it (`useMessageDeliverCore`'s `setStatus`), so it
-    // never gains a server id, and `loadedThreadMessages` (the query cache)
-    // never carries it either. It IS the exact object the open thread's own
+    // never gains a server id. It IS the exact object the open thread's own
     // photo gallery already renders from (both read the same
     // `messageGroups`), so it opens directly here, ahead of the loaded-thread
-    // check below, which only ever concerns messages the query cache holds.
+    // check below, which only concerns a message carrying a server id.
     if (!message.id) {
       if (!message.localId) return;
       onNavigateAway();
       onOpenPhoto(message);
       return;
     }
-    const isInLoadedThread = loadedThreadMessages.some(
-      (threadMessage) => threadMessage.id === message.id,
+    // `useChatImageViewerState().openImage` (passed in as `onOpenPhoto`)
+    // builds its gallery from these same `messageGroups`, so a photo is
+    // openable in place only when it sits in one of these rendered rows.
+    // The query cache (`useCachedThreadMessages`) is a wider set: it also
+    // holds a cached but unshown prefetched window, and, while such a
+    // window IS shown, the live tail sitting outside it. Either case used
+    // to read as "loaded" here and open nothing, since the viewer itself
+    // only ever searches what is rendered. Checking `messageGroups` directly
+    // keeps this decision and the viewer's own search in agreement.
+    const isInLoadedThread = messageGroups.some((group) =>
+      group.items.some((item) => item.id === message.id),
     );
     onNavigateAway();
-    // An older photo outside the loaded history hands off to the jump: it
-    // pages back through the thread, and the viewer opens once the jump
-    // actually lands on the message (`useGalleryPhotoJumpHandoff`). A jump
-    // that can't reach it shows the jump's own failure status on screen,
-    // with nothing opened.
+    // A photo outside the rendered rows hands off to the jump: it pages back
+    // (and opens a window if needed) through the thread, and the viewer
+    // opens once the jump actually lands on the message
+    // (`useGalleryPhotoJumpHandoff`). A jump that can't reach it shows the
+    // jump's own failure status on screen, with nothing opened.
     if (isInLoadedThread) onOpenPhoto(message);
     else onShowPhotoInChat(message.id);
   };

@@ -392,9 +392,11 @@
    `will-change: opacity, transform`, so this wrapper is its own stacking
    context and the panel only wins INSIDE it — the later-sibling rows FadeIn
    then paints its opaque cards on top. Lift the whole wrapper, but only while
-   a listbox is open, so nothing else changes. Mirrors
-   `.rowFade:has([role="menu"])` in the communities modules. */
-.filterFade:has([role="listbox"]) {
+   the Select is open, so nothing else changes. Keyed on the open trigger:
+   the panel swaps its listbox for a "No matches" status, which would drop
+   the lift. Mirrors `.rowFade:has([role="menu"])` in the communities
+   modules. */
+.filterFade:has([aria-haspopup="listbox"][aria-expanded="true"]) {
   position: relative;
   z-index: var(--z-raised);
 }

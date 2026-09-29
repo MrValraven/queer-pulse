@@ -23,6 +23,7 @@ function makeRow(overrides: Partial<ListingQueueRow> = {}): ListingQueueRow {
     submitterSlug: "",
     suggesterName: "",
     suggesterSlug: "",
+    addedByStaffName: "",
     createdAt: "2026-07-23T10:00:00Z",
     // Never read by this modal.
     detail: {} as ListingQueueRow["detail"],
@@ -69,13 +70,29 @@ describe("AskQuestionModal", () => {
       makeRow({ suggesterName: "Jane Doe", suggesterSlug: "jane-doe" }),
     );
 
+    // PRD-433: a suggester gets the question as a notification, with no DM.
     expect(
-      await screen.findByText("We'll send this to Jane Doe as a message."),
+      await screen.findByText("We'll send this to Jane Doe as a notification."),
     ).toBeInTheDocument();
     expect(screen.getByRole("textbox")).toBeInTheDocument();
     // Send stays disabled until a question is typed, same as the submitter path.
     expect(
       screen.getByRole("button", { name: "Send question" }),
     ).toBeDisabled();
+  });
+
+  it("keeps the direct-message copy for a member's own submission", async () => {
+    renderModal(
+      makeRow({
+        submitterName: "Rui Mendes",
+        submitterSlug: "rui-mendes",
+        suggesterName: "Jane Doe",
+        suggesterSlug: "jane-doe",
+      }),
+    );
+
+    expect(
+      await screen.findByText("We'll send this to Rui Mendes as a message."),
+    ).toBeInTheDocument();
   });
 });

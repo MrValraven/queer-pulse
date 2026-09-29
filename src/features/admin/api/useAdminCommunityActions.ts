@@ -226,6 +226,9 @@ export interface RemoveAdminCommunityMemberVars {
    *  remove-member endpoint addresses roster members by (unlike the
    *  promote/demote moderator endpoints, which use the user id). */
   memberSlug: string;
+  /** Also bars the target from rejoining this community. Defaults to false
+   *  (today's behaviour) when left out. */
+  shouldBarReturn?: boolean;
 }
 
 /** `DELETE /admin/communities/:slug/members/:memberSlug` — admin override
@@ -241,10 +244,14 @@ export function useRemoveAdminCommunityMember() {
   return useDemoAwareMutation<void, Error, RemoveAdminCommunityMemberVars>({
     demoMode,
     logLabel: "admin.community.removeMember",
-    logContext: ({ slug, memberSlug }) => ({ slug, memberSlug }),
+    logContext: ({ slug, memberSlug, shouldBarReturn }) => ({
+      slug,
+      memberSlug,
+      shouldBarReturn,
+    }),
     demoResult: () => undefined,
-    live: async ({ slug, memberSlug }) => {
-      await removeAdminCommunityMember(slug, memberSlug);
+    live: async ({ slug, memberSlug, shouldBarReturn }) => {
+      await removeAdminCommunityMember(slug, memberSlug, shouldBarReturn);
     },
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_COMMUNITIES_KEY] });

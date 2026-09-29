@@ -114,7 +114,7 @@ describe("Select", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("matches on keywords, not just the visible label", async () => {
+  it("also matches on keywords beyond the visible label", async () => {
     const user = userEvent.setup();
     renderWithProviders(<SingleHarness searchable />);
 
@@ -125,6 +125,73 @@ describe("Select", () => {
     expect(
       screen.queryByRole("option", { name: "Apple" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("still matches an option's own label once it also carries keywords", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<SingleHarness searchable />);
+
+    await user.click(screen.getByRole("button", { name: "Fruit" }));
+    // "Date" carries `keywords: "medjool"`; searching its own label has to
+    // keep finding it, since keywords only widen the match.
+    await user.type(screen.getByRole("combobox"), "date");
+
+    expect(screen.getByRole("option", { name: "Date" })).toBeInTheDocument();
+  });
+
+  it("folds accents in the typeahead filter", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(
+      <Select
+        label="Category"
+        searchable
+        options={[
+          { value: "health", label: "Saúde" },
+          { value: "sports", label: "Esportes" },
+        ]}
+        value={null}
+        onChange={() => {}}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Category" }));
+    await user.type(screen.getByRole("combobox"), "saude");
+
+    expect(screen.getByRole("option", { name: "Saúde" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("option", { name: "Esportes" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("wraps grouped options in a role=group named by their heading", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(
+      <Select
+        label="Field"
+        options={[
+          { value: "nurse", label: "Nurse", group: "Healthcare" },
+          { value: "doctor", label: "Doctor", group: "Healthcare" },
+          { value: "teacher", label: "Teacher", group: "Education" },
+        ]}
+        value={null}
+        onChange={() => {}}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Field" }));
+
+    const healthcareGroup = screen.getByRole("group", { name: "Healthcare" });
+    expect(
+      within(healthcareGroup).getByRole("option", { name: "Nurse" }),
+    ).toBeInTheDocument();
+    expect(
+      within(healthcareGroup).getByRole("option", { name: "Doctor" }),
+    ).toBeInTheDocument();
+
+    const educationGroup = screen.getByRole("group", { name: "Education" });
+    expect(
+      within(educationGroup).getByRole("option", { name: "Teacher" }),
+    ).toBeInTheDocument();
   });
 
   it("navigates with the arrow keys and selects with Enter", async () => {
@@ -144,9 +211,10 @@ describe("Select", () => {
     const onChange = vi.fn();
     renderWithProviders(<MultiHarness onChange={onChange} />);
 
-    // The trigger is named by its LABEL, not by the placeholder it happens to
-    // be showing: `aria-label` overrides the text content for the accessible
-    // name, so the control keeps one stable name as its value changes.
+    // The trigger keeps its LABEL as the accessible name, whatever placeholder
+    // text it happens to be showing: `aria-label` overrides the text content
+    // for the accessible name, so the control's name stays stable as its
+    // value changes.
     await user.click(screen.getByRole("button", { name: "Fruit" }));
     const listbox = screen.getByRole("listbox");
     await user.click(within(listbox).getByRole("option", { name: "Apple" }));

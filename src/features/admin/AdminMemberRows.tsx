@@ -4,22 +4,9 @@ import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminAvatar, AdminChip } from "./ui";
-import { useDemoPortrait } from "./useDemoPortrait";
-import { STAFF_ROLES } from "./staffRoles.registry";
-import type {
-  AdminMember,
-  FlaggedMember,
-  VouchAvatar,
-} from "./adminMembers.data";
+import { AdminMemberRow } from "./AdminMemberRow";
+import type { AdminMember, FlaggedMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
-
-/**
- * A vouch avatar as the live adapter emits it: `VouchAvatarRow` carries the
- * vouching member's `slug`, which the shared view model has no field for. Demo
- * fixtures predate it, so it stays optional here and the key falls back to the
- * avatar's own initials.
- */
-type VouchAvatarWithSlug = VouchAvatar & { slug?: string };
 
 /* ── All members ─────────────────────────────────────────── */
 
@@ -31,7 +18,6 @@ export function AdminMemberRows({
   onSelect: (member: AdminMember) => void;
 }) {
   const { t } = useTranslation();
-  const demoPortrait = useDemoPortrait();
   if (members.length === 0) {
     return <p className={styles.emptyLine}>{t("admin:members.empty")}</p>;
   }
@@ -39,97 +25,9 @@ export function AdminMemberRows({
     <div className={styles.rows}>
       {members.map((member, position) => (
         <FadeIn key={member.id} delay={Math.min(position, 8) * 50}>
-          <div
-            className={styles.row}
-            role="button"
-            tabIndex={0}
-            aria-label={t("admin:members.openAriaLabel", { name: member.name })}
-            onClick={() => onSelect(member)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                onSelect(member);
-              }
-            }}
-          >
-            <AdminAvatar
-              initials={member.initials}
-              tone={member.tone}
-              size="md"
-              verified={member.verified}
-              // Their own photo in live mode; the name-keyed registry only
-              // stands in for demo fixtures, which have no `avatarUrl`.
-              src={member.avatarUrl ?? demoPortrait(member.name)}
-            />
-            <div className={styles.rowMain}>
-              <div className={styles.rowTop}>
-                <span className={styles.rowName}>{member.name}</span>
-                <span className={styles.pronoun}>{member.pronoun}</span>
-                <AdminChip tone={member.statusTone} dot>
-                  {member.verified
-                    ? t("admin:members.status.verified")
-                    : t("admin:members.status.openReports", {
-                        count: member.openReportsCount ?? 0,
-                      })}
-                </AdminChip>
-                {member.role !== "member" && (
-                  <AdminChip tone={member.role === "admin" ? "violet" : "plum"}>
-                    {t(`admin:members.role.value.${member.role}`)}
-                  </AdminChip>
-                )}
-                {STAFF_ROLES.filter((staffRole) =>
-                  member.staffRoles.includes(staffRole.id),
-                ).map((staffRole) => (
-                  <AdminChip key={staffRole.id} tone="ghost">
-                    {t(staffRole.labelKey)}
-                  </AdminChip>
-                ))}
-              </div>
-              <div className={styles.rowMeta}>{member.meta}</div>
-            </div>
-            <VouchStrip
-              vouchedBy={member.vouchedBy}
-              total={member.vouchCount}
-            />
-          </div>
+          <AdminMemberRow member={member} onSelect={onSelect} />
         </FadeIn>
       ))}
-    </div>
-  );
-}
-
-function VouchStrip({
-  vouchedBy,
-  total,
-}: {
-  vouchedBy: VouchAvatarWithSlug[];
-  total: number;
-}) {
-  const { t } = useTranslation();
-  const shown = vouchedBy.slice(0, 4);
-  const more = total - shown.length;
-  return (
-    <div className={styles.vouchStrip}>
-      <div className={styles.stack}>
-        {shown.map((vouchAvatar, position) => (
-          <span
-            key={vouchAvatar.slug ?? `${vouchAvatar.initials}-${position}`}
-            className={styles.stackItem}
-            style={{ zIndex: shown.length - position }}
-          >
-            <AdminAvatar
-              initials={vouchAvatar.initials}
-              tone={vouchAvatar.tone}
-              size="sm"
-              src={vouchAvatar.avatarUrl ?? undefined}
-            />
-          </span>
-        ))}
-        {more > 0 && <span className={styles.stackMore}>+{more}</span>}
-      </div>
-      <span className={styles.vouchLabel}>
-        {t("admin:members.vouchedLabel")}
-      </span>
     </div>
   );
 }

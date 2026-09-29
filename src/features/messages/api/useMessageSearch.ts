@@ -14,6 +14,8 @@ import type { MessageSearchResponse } from "../../../shared/contracts/contracts"
 import type { TFunction } from "../../../shared/i18n/types";
 import { conversations as mockConversations, type ChatMessage } from "../data";
 import { demoIdentityAuthor } from "../demoIdentities.data";
+import { attachmentCaption } from "../messageCopy";
+import { isCaptionEditKind } from "../messageEditKinds";
 import {
   belongsToMailbox,
   isNotStaffError,
@@ -203,6 +205,23 @@ function demoHitSenderName(
   );
 }
 
+/** ENG-405: the text a demo message matches on, mirroring the backend's
+ *  `searchMessages`/`searchHitText`: a photo, document or GIF matches its
+ *  caption (its `text` is the "Photo"/"Document"/"GIF" fallback, so a search
+ *  for "gif" finds only GIFs whose caption says it), everything else its
+ *  text. Undefined when nothing holds `needle` (already lowercased). */
+function demoSearchHitText(
+  item: ChatMessage,
+  needle: string,
+): string | undefined {
+  const candidate = isCaptionEditKind(item.kind)
+    ? attachmentCaption(item)
+    : item.text;
+  return candidate && candidate.toLowerCase().includes(needle)
+    ? candidate
+    : undefined;
+}
+
 /** Demo search: filter the colocated mock message set locally — no network.
  *  `scopedToConversationId`, when set, only searches that one conversation's
  *  mock messages (the "search in this chat" mode), mirroring the live-mode
@@ -227,11 +246,12 @@ function searchDemo(
     const hits: MessageSearchHitView[] = [];
     for (const day of conversation.messages) {
       for (const item of day.items) {
-        if (!item.text.toLowerCase().includes(needle)) continue;
+        const hitText = demoSearchHitText(item, needle);
+        if (hitText === undefined) continue;
         hits.push({
           id: item.id,
           conversationId: conversation.id,
-          snippet: snippetAround(item.text, query),
+          snippet: snippetAround(hitText, query),
           time: item.time ?? conversation.time,
           from: item.from,
           senderName: demoHitSenderName(item, conversation.name, youLabel, t),

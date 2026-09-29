@@ -1,8 +1,14 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import { DemoModeProvider } from "../../../app/providers/DemoModeProvider";
+import {
+  demoGroup,
+  demoGroupIdFor,
+  demoState,
+  resetDemoGoTogetherState,
+} from "../goTogether.mock";
 import {
   useAcceptGoTogetherMerge,
   useLeaveGoTogetherGroup,
@@ -98,5 +104,41 @@ describe("useAcceptGoTogetherMerge", () => {
         "conversation-detail",
       ]),
     );
+  });
+});
+
+describe("useLeaveGoTogetherGroup from the gathering's start (PRD-418)", () => {
+  const eventSlug = "go-together-leave-chat-test";
+  const groupId = demoGroupIdFor(eventSlug);
+
+  afterEach(() => {
+    vi.useRealTimers();
+    resetDemoGoTogetherState();
+  });
+
+  it("ends only the chat seat and keeps the member in the group", async () => {
+    demoState.entriesBySlug.set(eventSlug, {
+      status: "grouped",
+      partnerSlug: null,
+      pairStatus: "pending",
+      lens: null,
+    });
+    expect(demoGroup(groupId).isLeaveChatOnly).toBe(false);
+    // An unknown demo slug starts five days after module load, so a week on
+    // is past the start.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    expect(demoGroup(groupId).isLeaveChatOnly).toBe(true);
+
+    const { wrapper } = renderWithSpy();
+    const { result } = renderHook(() => useLeaveGoTogetherGroup(groupId), {
+      wrapper,
+    });
+    await act(async () => {
+      await result.current.mutateAsync();
+    });
+
+    expect(demoState.entriesBySlug.get(eventSlug)?.status).toBe("grouped");
+    expect(demoGroup(groupId).hasLeftChat).toBe(true);
   });
 });

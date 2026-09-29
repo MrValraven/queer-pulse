@@ -1,0 +1,440 @@
+/* ── Listing queue rows ─────────────────────────────────────────────────────
+   The body of the page's queue panel (`.queuePanel` in
+   AdminListingsPage.module.css), which is the `listingQueue` inline-size
+   container. Every row and the column header share one grid, and the layout
+   switches on the PANEL's width through `@container listingQueue`, so the
+   admin sidebar opening or closing can never desync it from the viewport.
+
+   Three layouts: wide (panel 960px and up), medium (640 to 959), phone (below
+   640). Wide is the base rule below. The status track is 136px because the
+   longest chip, PT "Pergunta rápida", is 125px. The actions column has a
+   176px floor because the widest cluster, PT "Ver página" plus the kebab, is
+   169px: each row is its own grid, and a floor above every cluster keeps the
+   Submitted by and Status columns aligned row to row. */
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.columnHeader,
+.row {
+  display: grid;
+  grid-template-columns:
+    20px 48px minmax(0, 1.8fr) minmax(0, 1.3fr) 136px
+    minmax(176px, auto);
+  column-gap: 16px;
+  align-items: center;
+  padding: 0 18px;
+}
+
+/* ── Column header ───────────────────────────────────────────────────────── */
+.columnHeader {
+  grid-template-areas: "check listing listing who status actions";
+  min-height: 40px;
+  background: rgba(var(--line-rgb), 0.025);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.columnListing {
+  grid-area: listing;
+}
+.columnWho {
+  grid-area: who;
+}
+.columnStatus {
+  grid-area: status;
+}
+.selectAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+/* Shown only at phone width, where the column labels are gone and the lone
+   checkbox needs its words. */
+.selectAllText {
+  display: none;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* ── Row ─────────────────────────────────────────────────────────────────── */
+.row {
+  grid-template-areas: "check thumb main who status actions";
+  position: relative;
+  min-height: 76px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  transition: background 0.16s var(--ease);
+}
+/* The column header draws the line above the first row. */
+.columnHeader + .row,
+.columnHeader + .rowFade > .row {
+  border-top: 0;
+}
+/* The last row's wash follows the panel's rounded bottom corners. */
+.rows > .row:last-child,
+.rows > .rowFade:last-child > .row {
+  border-bottom-left-radius: var(--radius-card);
+  border-bottom-right-radius: var(--radius-card);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--line-rgb), 0.03);
+  }
+}
+.row.rowSelected {
+  background: rgba(var(--jade-rgb), 0.06);
+}
+/* The name button is the row's open control; its keyboard focus rings the
+   whole row, inset so the panel edge never clips it. */
+.row:has(.rowOpen:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+.cellCheck {
+  grid-area: check;
+}
+.cellThumb {
+  grid-area: thumb;
+}
+.cellMain {
+  grid-area: main;
+  min-width: 0;
+}
+.cellWho {
+  grid-area: who;
+  min-width: 0;
+}
+.cellStatus {
+  grid-area: status;
+  min-width: 0;
+}
+.cellActions {
+  grid-area: actions;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.rowOpen {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+/* Stretches the open target over the whole row. The checkbox and actions
+   cells sit above it at `z-index: 1`, so each keeps its own click. */
+.rowOpen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.rowOpen:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.rowMeta,
+.whoLine,
+.ageLine {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rowMeta {
+  margin-top: 3px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+/* Lifted above the stretched open target so a moderator can select and copy
+   the ref. */
+.rowRef {
+  position: relative;
+  z-index: 1;
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+  user-select: text;
+  cursor: text;
+}
+/* Wraps to a second line before it ellipsizes, so a long provenance such as
+   "Suggested by Devon Okoro · No owner yet" keeps its ending. */
+.whoLine {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+}
+.ageLine {
+  margin-top: 2px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+/* ── Thumb: lead photo, or initials on the listing's tint ─────────────────
+   Tint values copied from AdminAvatar's `av_coral/av_jade/av_plum` in
+   ui/adminUi.module.css so the queue reads in the same palette. */
+.thumb {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-12);
+  object-fit: cover;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.tintCoral {
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent-text);
+}
+.tintJade {
+  background: rgba(var(--jade-rgb), 0.2);
+  color: var(--jade-ink);
+}
+.tintPlum {
+  background: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
+}
+[data-theme="dark"] .tintPlum {
+  background: rgba(var(--cream-rgb), 0.12);
+  color: var(--ink);
+}
+
+/* ── Checkbox ────────────────────────────────────────────────────────────
+   The wrapping label is the hit area. It sits above the stretched open
+   target, and on coarse pointers pads out to 44px while negative margins keep
+   the visual box at 20px in its column. */
+.checkHit {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+@media (pointer: coarse) {
+  .checkHit {
+    margin: -12px;
+    padding: 12px;
+  }
+}
+.checkbox {
+  appearance: none;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1.6px solid rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-6);
+  background: var(--paper);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background 0.15s var(--ease),
+    border-color 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .checkbox:hover {
+    border-color: var(--jade);
+  }
+}
+.checkbox:checked,
+.checkbox:indeterminate {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--paper);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.checkbox:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 8.5px;
+  height: 2px;
+  background: var(--paper);
+  border-radius: var(--radius-1);
+}
+.checkbox:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+/* The shared two-tone ring, offset off the box so it never sits flush. */
+.checkbox:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Stacking ─────────────────────────────────────────────────────────────
+   An open row menu hangs down over the next row. Each `<FadeIn>` wrapper
+   sets `will-change: transform` and so is its own stacking context, and
+   without the entrance wrapper each row's actions cell is one; either way the
+   next row would paint over the menu. Raise whichever holds the open menu. */
+.rowFade:has([role="menu"]),
+.row:has([role="menu"]) {
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+/* ── Empty and loading ─────────────────────────────────────────────────── */
+.emptyBody {
+  padding: 0 18px 20px;
+}
+.skeletonRow {
+  pointer-events: none;
+}
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Medium: the submitter stacks under the listing ───────────────────────
+   Status and actions share one right-hand `auto` track, the chip on the
+   listing's line and the actions on the submitter's line, so the listing cell
+   keeps every pixel left of them: at a 640px panel it is 640 - 36 padding -
+   20 - 48 - 3 x 12 gaps - 169 (widest actions) = 331px. Each row sizes that
+   track to its own cluster; its cells are right-aligned, so their edges still
+   line up row to row. */
+@container listingQueue (max-width: 959px) {
+  .columnHeader,
+  .row {
+    grid-template-columns: 20px 48px minmax(0, 1fr) auto;
+    column-gap: 12px;
+  }
+  .columnHeader {
+    grid-template-areas: "check listing listing status";
+  }
+  .columnWho {
+    display: none;
+  }
+  .columnStatus {
+    justify-self: end;
+  }
+  .row {
+    grid-template-areas:
+      "check thumb main status"
+      "check thumb who actions";
+    row-gap: 2px;
+  }
+  .cellMain {
+    align-self: end;
+  }
+  .cellStatus {
+    justify-self: end;
+    align-self: end;
+  }
+  .cellActions {
+    justify-self: end;
+    align-self: start;
+  }
+  /* Provenance, then the age, as one run of text that wraps to a second line
+     before it ellipsizes. */
+  .cellWho {
+    align-self: start;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    font-size: var(--text-12-5);
+  }
+  .whoLine,
+  .ageLine {
+    display: inline;
+    white-space: normal;
+    font-size: var(--text-12-5);
+  }
+  .ageLine::before {
+    content: " · ";
+  }
+}
+
+/* ── Phone: status and actions share a last line ──────────────────────────
+   Below a 640px panel the medium listing cell would drop under 330px, so the
+   status and actions move to their own line and the listing takes the rest. */
+@container listingQueue (max-width: 639px) {
+  .columnHeader {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "check";
+  }
+  .columnListing,
+  .columnStatus {
+    display: none;
+  }
+  .selectAllText {
+    display: inline;
+  }
+  .row {
+    grid-template-columns: 20px 44px minmax(0, 1fr);
+    grid-template-areas:
+      "check thumb main"
+      "check thumb who"
+      "status status actions";
+  }
+  .thumb {
+    width: 44px;
+    height: 44px;
+  }
+  /* The chip may run wider than the first two narrow columns, so the status
+     cell spans the full line and the actions cell sits on top at the right. */
+  .cellStatus {
+    grid-column: status-start / actions-end;
+    grid-row: 3;
+    justify-self: start;
+    align-self: center;
+    margin-top: 10px;
+  }
+  .cellActions {
+    align-self: center;
+    margin-top: 10px;
+  }
+  /* Two lines keep the ref in view on a narrow listing cell. */
+  .rowMeta {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+  }
+}

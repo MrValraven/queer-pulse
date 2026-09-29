@@ -278,9 +278,11 @@
    .stepBody child animates transform on entrance (below), which transiently
    makes each one its own stacking context — Select's own z-index escalation
    on `.container.open` only wins inside that context, so a later sibling
-   still paints over an earlier field's open panel. See the
+   still paints over an earlier field's open panel. Keyed on the open
+   trigger, not `[role="listbox"]`: the panel swaps the listbox out for its
+   "No matches" / loading status, which dropped the lift mid-search. See the
    fadein-row-stacking-context-clips-dropdown pattern. */
-.stepBody > *:has([role="listbox"]) {
+.stepBody > *:has([aria-haspopup="listbox"][aria-expanded="true"]) {
   z-index: var(--z-raised);
 }
 .stepBody .lbField {
@@ -1139,6 +1141,10 @@
   font-weight: 300;
   font-size: var(--text-16);
   color: var(--accent-ink);
+}
+/* A multi-line value (the description) keeps the owner's line breaks. */
+.rvMultiline {
+  white-space: pre-line;
 }
 .rvMiss {
   color: var(--ink-40);

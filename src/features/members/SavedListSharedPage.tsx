@@ -19,10 +19,21 @@ import styles from "./SavedListSharedPage.module.css";
  *  An item the API reports unavailable says so (PRD-169). This page is the case
  *  that hurt most: somebody sent a list to a friend, and a subject that has
  *  since gone left a row the reader cannot tell apart from a live one. No
- *  remove hint here, because the reader owns nothing on this page. */
+ *  remove hint here, because the reader owns nothing on this page.
+ *
+ *  ENG-443: unlike the owner's own saved list, this reader is a THIRD PARTY,
+ *  so an unavailable item here carries no snapshot at all (`title`/`meta`
+ *  come back blank): the subject can be unavailable because its owner
+ *  blocked or hid from this specific reader, and their name and
+ *  neighbourhood would otherwise disclose exactly who is hiding from them.
+ *  `item.title` is empty in that case, so the row falls back to the same
+ *  "no longer available" label `SavedUnavailableNote` already prints below
+ *  it, keeping the title slot filled with a neutral value. */
 function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
+  const { t } = useTranslation();
   const isUnavailable = isSavedItemUnavailable(item);
   const canOpen = !isUnavailable && Boolean(item.href);
+  const title = item.title || t("members:savedItem.unavailable.label");
 
   return (
     <li
@@ -34,10 +45,10 @@ function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
       <span>
         {canOpen && item.href ? (
           <Link to={linkToPath(item.href)} className={styles.rowTitle}>
-            {item.title}
+            {title}
           </Link>
         ) : (
-          <span className={styles.rowTitle}>{item.title}</span>
+          <span className={styles.rowTitle}>{title}</span>
         )}
         {item.meta && <span className={styles.rowMeta}>{item.meta}</span>}
         {item.description && (

@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Button, Modal } from "../../shared/components/ui";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button, ConfirmDialog, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { goTogetherKeys } from "../goTogether/api/goTogetherKeys";
+import { useGoTogetherGroup } from "../goTogether/api/useGoTogetherGroup";
 import { computeGroupSuccessor } from "./groupSuccession";
 import { GroupInfoBody } from "./GroupInfoBody";
 import { GroupInfoConfirms } from "./GroupInfoConfirms";
@@ -114,15 +117,12 @@ export function GroupInfoModal({
         footer={
           !active.hasLeft ? (
             <>
-              <Button
-                variant="ghost"
-                onClick={() => setConfirmingLeave(true)}
-                disabled={leaving}
-              >
-                {leaving
-                  ? t("messages:group.leaving")
-                  : t("messages:group.leave")}
-              </Button>
+              <GroupInfoLeaveAction
+                eventMatchGroupId={active.eventMatchGroupId ?? null}
+                leaving={leaving}
+                onOpenLeaveConfirm={() => setConfirmingLeave(true)}
+                onLeave={onLeave}
+              />
               {active.canDissolve && (
                 <Button
                   variant="danger"
@@ -188,6 +188,87 @@ export function GroupInfoModal({
         onLeave={onLeave}
         onDissolve={onDissolve}
       />
+    </>
+  );
+}
+
+/**
+ * The footer's Leave. In a matched Go together chat it names the act the
+ * way the group sheet does (S9): "Leave group" before the gathering starts,
+ * "Leave the chat" from the start (`isLeaveChatOnly`, the member stays in
+ * the group), with the same confirm copy. The chat's own leave route then
+ * withdraws the Go together entry on the server. Until the group can be
+ * read, and in every other group, it opens the generic leave confirm.
+ */
+function GroupInfoLeaveAction({
+  eventMatchGroupId,
+  leaving,
+  onOpenLeaveConfirm,
+  onLeave,
+}: {
+  eventMatchGroupId: string | null;
+  leaving: boolean;
+  onOpenLeaveConfirm: () => void;
+  onLeave: () => void;
+}) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const groupQuery = useGoTogetherGroup(eventMatchGroupId ?? undefined);
+  const [isConfirmingMatchedLeave, setIsConfirmingMatchedLeave] =
+    useState(false);
+  // The Go together entry changes on the server after the chat leave lands
+  // (a post-commit listener), and this footer unmounts as the leave starts.
+  // So the card and group roots are marked stale with no refetch now: the
+  // next card or sheet that mounts reads the settled state.
+  const markGoTogetherStale = () => {
+    for (const queryKey of [goTogetherKeys.cardRoot, goTogetherKeys.groupRoot])
+      void queryClient.invalidateQueries({ queryKey, refetchType: "none" });
+  };
+  const group = groupQuery.data;
+  const matchedCopyKey =
+    eventMatchGroupId && group && !group.isDissolved && !groupQuery.isError
+      ? group.isLeaveChatOnly
+        ? "leaveChat"
+        : "leave"
+      : null;
+  const leaveLabel =
+    matchedCopyKey === "leaveChat"
+      ? t("goTogether:group.leaveChat.label")
+      : matchedCopyKey === "leave"
+        ? t("goTogether:group.leave")
+        : t("messages:group.leave");
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        onClick={
+          matchedCopyKey
+            ? () => setIsConfirmingMatchedLeave(true)
+            : onOpenLeaveConfirm
+        }
+        disabled={leaving}
+      >
+        {leaving ? t("messages:group.leaving") : leaveLabel}
+      </Button>
+      {matchedCopyKey && isConfirmingMatchedLeave && (
+        <ConfirmDialog
+          open
+          tone="destructive"
+          loading={leaving}
+          title={t(`goTogether:group.${matchedCopyKey}Confirm.title`)}
+          description={t(
+            `goTogether:group.${matchedCopyKey}Confirm.description`,
+          )}
+          confirmLabel={t(`goTogether:group.${matchedCopyKey}Confirm.confirm`)}
+          onClose={() => setIsConfirmingMatchedLeave(false)}
+          onConfirm={() => {
+            setIsConfirmingMatchedLeave(false);
+            onLeave();
+            markGoTogetherStale();
+          }}
+        />
+      )}
     </>
   );
 }

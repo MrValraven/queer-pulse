@@ -419,6 +419,9 @@
 .vt {
   font-size: var(--text-11-5);
   font-weight: 600;
+  /* 16px plus 4px above and below fills the shared one-row .pillsRow exactly. */
+  line-height: 16px;
+  white-space: nowrap;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
 }

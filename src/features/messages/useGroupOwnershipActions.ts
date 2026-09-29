@@ -7,6 +7,7 @@ import {
   simulateDissolveGroup,
   simulateTransferOwnership,
 } from "./groupOwnershipDemo";
+import { INVITE_LINK_TTL_MS } from "./inviteLinkExpiry";
 import type {
   useCreateGroupInviteLink,
   useDisableGroupInviteLink,
@@ -149,7 +150,11 @@ export function useGroupOwnershipActions({
     if (!group) return;
     if (demoMode) {
       const token = `demo-invite-${Math.random().toString(36).slice(2, 10)}`;
-      patchGroupThread({ ...group, inviteToken: token });
+      // PRD-400: a fresh link runs for 7 days, as the server grants.
+      const inviteTokenExpiresAt = new Date(
+        Date.now() + INVITE_LINK_TTL_MS,
+      ).toISOString();
+      patchGroupThread({ ...group, inviteToken: token, inviteTokenExpiresAt });
       return;
     }
     createInviteLinkMutation.mutate(conversationId, {
@@ -161,7 +166,11 @@ export function useGroupOwnershipActions({
     const group = findGroup(conversationId);
     if (!group) return;
     if (demoMode) {
-      patchGroupThread({ ...group, inviteToken: null });
+      patchGroupThread({
+        ...group,
+        inviteToken: null,
+        inviteTokenExpiresAt: null,
+      });
       return;
     }
     disableInviteLinkMutation.mutate(conversationId, {

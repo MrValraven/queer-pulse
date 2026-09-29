@@ -1,18 +1,22 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
-import { Avatar, FadeIn } from "../../shared/components/ui";
-import { useConnectionActions } from "../connect/api/useConnectionActions";
+import { FadeIn, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { NotificationItemActions } from "./NotificationItemActions";
+import { NotificationItemLead } from "./NotificationItemLead";
 import type { Notification } from "./data";
-import type { NotifAction } from "./notifications.types";
 import styles from "./NotificationsPage.module.css";
 
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
 type NotificationId = Notification["id"];
+
+/** Closes a spoken phrase with a full stop unless it already ends a sentence. */
+function asSentence(phrase: string): string {
+  return /[.!?…]$/.test(phrase) ? phrase : `${phrase}.`;
+}
 
 export function NotificationItem({
   notification,
@@ -34,33 +38,6 @@ export function NotificationItem({
   isCompact?: boolean;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  // PRD-15. A "wants to connect" row answers the request from here, so the
-  // mutations the connections page uses are wired straight into its buttons.
-  // Every other row leaves these untouched.
-  const { acceptRequest, declineRequest } = useConnectionActions();
-  const [isAnswering, setIsAnswering] = useState(false);
-
-  /**
-   * Answer a connection request from the row. Resolves the row (removing it,
-   * with a confirming toast) only once the server has agreed; a refusal has
-   * already toasted its own reason and rolled the local move back, so the row
-   * stays where it is and the member can try again.
-   */
-  async function answerConnection(
-    response: NonNullable<NotifAction["connectionResponse"]>,
-  ) {
-    if (isAnswering) return;
-    setIsAnswering(true);
-    const respond =
-      response.action === "accept" ? acceptRequest : declineRequest;
-    const didSucceed = await respond({
-      slug: response.memberSlug,
-      id: response.connectionId,
-    });
-    setIsAnswering(false);
-    if (didSucceed) onResolve(notification.id, response.toast);
-  }
 
   // Where the whole row navigates on click/keypress. A specific source
   // deep-link (thread/post/event) wins; otherwise an actor-driven row
@@ -84,14 +61,32 @@ export function NotificationItem({
       ? t("notifications:bundle.others", { count: otherActorCount })
       : "";
 
+  // DES-400. The coral dot is sighted-only, so an unread row also says
+  // "Unread" to a screen reader: first in the overlay link's name when the row
+  // has one, and as hidden text beside the dot when it does not.
+  const unreadLabel = isUnread ? t("notifications:row.unread") : "";
+
+  // The written reason behind a decision, shown in full under the sentence.
+  // Absent on every row whose payload carried no reason. Staff wrote most of
+  // them; the lead-in names a member as the author when a member wrote it.
+  const reason = notification.reason?.trim() ?? "";
+  const reasonLead = t(
+    notification.reasonLeadKey ??
+      (notification.isReasonFromMember
+        ? "notifications:row.reasonLeadMember"
+        : "notifications:row.reasonLead"),
+  );
+  const spokenReason = reason ? ` ${reasonLead} ${asSentence(reason)}` : "";
+
   // The row's accessible name for the overlay link below. The bundle count is
   // part of it: a screen reader must hear "and 39 others", since that is the
-  // difference between one reply and a conversation.
-  const rowLabel = `${
+  // difference between one reply and a conversation. The reason follows the
+  // sentence, so the overlay link carries everything the row shows.
+  const rowLabel = `${unreadLabel ? `${unreadLabel}. ` : ""}${
     typeof notification.text === "string"
       ? notification.text
       : notification.meta
-  }${othersLabel ? ` ${othersLabel}` : ""}. ${t(
+  }${othersLabel ? ` ${othersLabel}` : ""}.${spokenReason} ${t(
     rowGoesToProfile
       ? "notifications:actions.viewProfile"
       : "notifications:actions.viewThread",
@@ -103,6 +98,7 @@ export function NotificationItem({
       delay={Math.min(index, 8) * 60}
       className={[
         styles.item,
+        styles.notificationRow,
         isCompact && styles.itemCompact,
         isUnread && styles.unread,
       ]
@@ -121,36 +117,10 @@ export function NotificationItem({
         </Link>
       )}
       {isUnread && <span className={styles.unreadDot} aria-hidden />}
-      {notification.avatar ? (
-        notification.actor ? (
-          <Link
-            to={linkToPath(notification.actor.href)}
-            className={styles.avatarLink}
-            aria-label={notification.actor.name}
-          >
-            <Avatar
-              initials={notification.avatar.initials}
-              tint={notification.avatar.tint}
-              src={notification.avatar.src}
-              size={isCompact ? 36 : 40}
-            />
-          </Link>
-        ) : (
-          <Avatar
-            initials={notification.avatar.initials}
-            tint={notification.avatar.tint}
-            src={notification.avatar.src}
-            size={40}
-          />
-        )
-      ) : (
-        <span
-          className={styles.icon}
-          style={{ background: notification.icon?.background }}
-        >
-          {notification.icon && <notification.icon.Glyph />}
-        </span>
+      {isUnread && !rowHref && (
+        <span className="visuallyHidden">{unreadLabel}</span>
       )}
+      <NotificationItemLead notification={notification} isCompact={isCompact} />
       <div className={styles.body}>
         {/* Its own line above the sentence: the actor's name sits inside
             translated copy, so the badge cannot go beside it, and as a row
@@ -163,14 +133,22 @@ export function NotificationItem({
           {notification.actor?.textKey ? (
             <Translation
               i18nKey={notification.actor.textKey}
-              components={{
-                profile: (
-                  <Link
-                    to={linkToPath(notification.actor.href)}
-                    className={styles.actorLink}
-                  />
-                ),
-              }}
+              // A matched Go together chat's mention actor carries an empty
+              // href (no profile to open): an unmapped `profile` tag renders
+              // its plain inner text, so the name still shows with no link
+              // (see `Translation`'s own doc on that fallback).
+              components={
+                notification.actor.href
+                  ? {
+                      profile: (
+                        <Link
+                          to={linkToPath(notification.actor.href)}
+                          className={styles.actorLink}
+                        />
+                      ),
+                    }
+                  : undefined
+              }
               values={{
                 ...notification.actor.textValues,
                 name: notification.actor.name,
@@ -184,51 +162,19 @@ export function NotificationItem({
           )}
         </div>
         <div className={styles.meta}>{notification.meta}</div>
+        {/* The whole reason as a plain text node, so the member reads every
+            word of the moderators' free text exactly as it was written. */}
+        {reason && (
+          <p className={styles.reason}>
+            <span className={styles.reasonLead}>{reasonLead}</span> {reason}
+          </p>
+        )}
         {notification.actions && (
-          <div className={styles.itemActions}>
-            {notification.actions.map((action) => {
-              // An action only earns an interactive control when it can
-              // actually DO something on click: resolve the row in place, or
-              // navigate to a real destination. A placeholder `href` of "#"
-              // with no resolve handler would be a dead button — so we render
-              // it as plain, non-interactive text instead of a fake affordance.
-              const canResolve = Boolean(action.resolve);
-              const canAnswer = Boolean(action.connectionResponse);
-              const canNavigate = Boolean(action.href) && action.href !== "#";
-              if (!canResolve && !canAnswer && !canNavigate) {
-                return (
-                  <span key={action.label} className={styles.meta}>
-                    {action.label}
-                  </span>
-                );
-              }
-              return (
-                <button
-                  type="button"
-                  key={action.label}
-                  className={[
-                    styles.btn,
-                    action.variant === "primary"
-                      ? styles.btnPrimary
-                      : styles.btnGhost,
-                  ].join(" ")}
-                  disabled={canAnswer && isAnswering}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    if (action.connectionResponse) {
-                      void answerConnection(action.connectionResponse);
-                    } else if (action.resolve) {
-                      onResolve(notification.id, action.resolve.toast);
-                    } else {
-                      void navigate(linkToPath(action.href));
-                    }
-                  }}
-                >
-                  {action.label}
-                </button>
-              );
-            })}
-          </div>
+          <NotificationItemActions
+            notificationId={notification.id}
+            actions={notification.actions}
+            onResolve={onResolve}
+          />
         )}
       </div>
       <div className={styles.time}>{notification.time}</div>
@@ -236,8 +182,8 @@ export function NotificationItem({
           at something they have already dealt with. Sits above the overlay row
           link and stops the click there, so clearing a row never also
           navigates into it. */}
-      <button
-        type="button"
+      <IconButton
+        size="sm"
         className={styles.dismiss}
         aria-label={t("notifications:actions.dismiss")}
         onClick={(event) => {
@@ -246,7 +192,7 @@ export function NotificationItem({
         }}
       >
         <FiX aria-hidden />
-      </button>
+      </IconButton>
     </FadeIn>
   );
 }

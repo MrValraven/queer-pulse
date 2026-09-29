@@ -253,6 +253,12 @@ function seedDraft(
  * `coverBleed` is deliberately NOT owned here: it stays on the meta editor,
  * and the save graph merges both into one `skinData` object. `sectionRows`
  * (owned by `useEditorRowsState`) is read only, for `section:<name>` paths.
+ *
+ * ENG-451: draft and baseline seed once per mount. The save graph's PATCH
+ * carries the persona's `expectedEditVersion`, so a merge built on a stale
+ * load is refused with a conflict before it can write over a co-owner's
+ * blocks; the conflict alert's Reload then remounts this hook and it seeds
+ * again from the refetched `skinData`.
  */
 export function useSubprofileSkinBlocksEditor(
   subprofile: SubprofileView,

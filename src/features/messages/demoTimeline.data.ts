@@ -2,6 +2,7 @@
 import { activeLocale } from "../../shared/i18n/locale";
 import { clockLabel, localDayKey, timeLabel } from "./api/messages.adapters";
 import type { ChatMessage, Conversation } from "./data";
+import { isEditableMessageKind } from "./messageEditKinds";
 import { isTypedByViewer } from "./viewerSideSender";
 
 // ── DEMO timeline ────────────────────────────────────────────────────────────
@@ -119,7 +120,8 @@ const ACTIVE_VIEWER: DemoThreadViewer = { isViewerActiveParticipant: true };
  * on the viewer's side while staying someone else's message: the viewer may
  * report it, and Edit and Delete stay off it.
  * - canPin: not deleted, and the viewer is an active participant.
- * - canEdit: not deleted, not a system pill, the viewer authored it, inside
+ * - canEdit: not deleted, not a system pill, an editable kind (ENG-405:
+ *   every kind except GIF and sticker), the viewer authored it, inside
  *   `EDIT_WINDOW_MS`, and the viewer is an active participant.
  * - canDelete: not deleted, not a system pill, the viewer authored it. No
  *   participant check: `deleteMessage` stays lenient for a member who left or
@@ -147,6 +149,7 @@ function serverFlags(
     canEdit:
       !isDeleted &&
       !isSystemMessage &&
+      isEditableMessageKind(seed.kind) &&
       isAuthor &&
       isWithinEditWindow &&
       isViewerActiveParticipant,

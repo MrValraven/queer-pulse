@@ -1,4 +1,5 @@
 import { useLayoutEffect, type RefObject } from "react";
+import { planMasonry } from "./masonryPlan";
 
 // ── Feed masonry ────────────────────────────────────────────────────────────
 // Feed cards run very different heights (a new-member card with a bio and
@@ -16,14 +17,17 @@ import { useLayoutEffect, type RefObject } from "react";
 // style is cleared and the CSS fallback on `.grid` (a flex column with the same
 // gap) renders the list in normal flow.
 //
-// Column locks: a card the reader can see, or has scrolled past, keeps the
-// column it was first given. Offscreen cards start at the `content-visibility`
-// placeholder height and resolve to their real height as they near the
-// viewport; re-packing everything by "shortest column" at that moment could
-// move a visible card sideways. With the lock, a height change on screen only
-// pushes the later cards in the same column down (normal flow), and only cards
-// below the fold rebalance. A change in column count drops every lock, so a
-// resize re-packs the whole feed.
+// Placement: every relayout repacks every direct child from scratch with
+// plain shortest-column placement (`planMasonry` in `masonryPlan.ts`), so a
+// card always goes to whichever column currently has the least content
+// queued in it. There is no memory of where a card sat on a previous pass,
+// so a removed card's neighbours slide straight into its old slot, closing
+// the space it left, and a height change anywhere simply repacks around it.
+//
+// Order guarantee: this placement also keeps every card's top at or after
+// the top of the card before it in DOM order (WCAG 2.4.3, focus order
+// matches reading order). See the comment on `planMasonry` for why that
+// holds by construction.
 
 /** Narrowest a column may get before the layout drops to fewer columns. Same
  *  floor the old `auto-fill` / `minmax(320px, 1fr)` grid used. */
@@ -84,56 +88,13 @@ function clearMasonryStyles(container: HTMLElement) {
   );
 }
 
-/** Per-hook-instance memory of which column each card was placed in, valid
- *  for one column count. */
-interface ColumnLocks {
-  columnCount: number;
-  columnByChild: WeakMap<HTMLElement, number>;
-}
-
-function indexOfShortestColumn(columnNextTops: number[]): number {
-  let shortestIndex = 0;
-  columnNextTops.forEach((nextTop, index) => {
-    // Strictly shorter, so a tie keeps the leftmost column.
-    if (nextTop < (columnNextTops[shortestIndex] ?? 0)) shortestIndex = index;
-  });
-  return shortestIndex;
-}
-
-/** The column for a regular card. A card that already has a column and whose
- *  last written top starts above the viewport bottom (on screen, or scrolled
- *  past) keeps it; any other card takes the shortest column. The choice is
- *  stored either way. */
-function pickColumn(
-  childElement: HTMLElement,
-  columnNextTops: number[],
-  columnLocks: ColumnLocks,
-  viewportBottom: number,
-): number {
-  const lockedColumn = columnLocks.columnByChild.get(childElement);
-  // The inline `top` still holds the previous pass's value here, since this
-  // pass writes it only after picking the column.
-  const previousTop = Number.parseFloat(childElement.style.top);
-  const isOnOrAboveScreen =
-    !Number.isNaN(previousTop) && previousTop < viewportBottom;
-  const columnIndex =
-    lockedColumn !== undefined && isOnOrAboveScreen
-      ? lockedColumn
-      : indexOfShortestColumn(columnNextTops);
-  columnLocks.columnByChild.set(childElement, columnIndex);
-  return columnIndex;
-}
-
 /** One full layout pass, batched as write widths, read heights, write
  *  positions, so the browser lays out at most twice however many cards there
- *  are. */
-function layoutMasonry(container: HTMLElement, columnLocks: ColumnLocks) {
+ *  are. Repacks every direct child from scratch each time (see the block
+ *  comment at the top), so it needs no memory between passes. */
+function layoutMasonry(container: HTMLElement) {
   const containerWidth = container.clientWidth;
   const columnCount = columnCountFor(containerWidth);
-  if (columnLocks.columnCount !== columnCount) {
-    columnLocks.columnCount = columnCount;
-    columnLocks.columnByChild = new WeakMap();
-  }
   if (columnCount < 2) {
     clearMasonryStyles(container);
     return;
@@ -158,42 +119,31 @@ function layoutMasonry(container: HTMLElement, columnLocks: ColumnLocks) {
     );
   });
 
-  // Read: one forced layout for every height, plus where the bottom of the
-  // viewport falls in the container's own coordinates.
+  // Read: one forced layout for every height.
   const childHeights = childElements.map(
     (childElement) => childElement.offsetHeight,
   );
-  const viewportBottom =
-    window.innerHeight - container.getBoundingClientRect().top;
+  const fullWidthFlags = childElements.map((childElement) =>
+    childElement.hasAttribute(FULL_WIDTH_ATTRIBUTE),
+  );
 
-  // Place in DOM order. `columnNextTops` holds where the next card in each
-  // column would start, with the gap below the previous card already added.
-  const columnNextTops: number[] = Array.from({ length: columnCount }, () => 0);
-  let contentBottom = 0;
+  // Plan in DOM order, then write the styles the plan chose.
+  const { columns, tops, contentBottom } = planMasonry({
+    heights: childHeights,
+    fullWidth: fullWidthFlags,
+    columnCount,
+    gap: COLUMN_GAP,
+  });
+
   childElements.forEach((childElement, index) => {
-    const childHeight = childHeights[index] ?? 0;
-    const isFullWidth = childElement.hasAttribute(FULL_WIDTH_ATTRIBUTE);
-    const columnIndex = isFullWidth
-      ? 0
-      : pickColumn(childElement, columnNextTops, columnLocks, viewportBottom);
-    const top = isFullWidth
-      ? Math.max(...columnNextTops)
-      : (columnNextTops[columnIndex] ?? 0);
-
+    const columnIndex = columns[index] ?? 0;
+    const top = tops[index] ?? 0;
     setStyleIfChanged(childElement, "top", toPixels(top));
     setStyleIfChanged(
       childElement,
       "left",
       toPixels(columnIndex * (columnWidth + COLUMN_GAP)),
     );
-
-    // An empty child (the pager wrapper once the feed is exhausted) takes no
-    // room, so it adds no gap either.
-    if (childHeight === 0) return;
-    const nextTop = top + childHeight + COLUMN_GAP;
-    if (isFullWidth) columnNextTops.fill(nextTop);
-    else columnNextTops[columnIndex] = nextTop;
-    contentBottom = Math.max(contentBottom, top + childHeight);
   });
 
   // Out-of-flow children give the container no height of its own. It needs
@@ -204,9 +154,9 @@ function layoutMasonry(container: HTMLElement, columnLocks: ColumnLocks) {
 
 /**
  * Lays the direct children of `containerRef` out as a masonry of
- * `MIN_COLUMN_WIDTH`-wide columns (see the block comment at the top). Cards
- * on screen or above it keep their column across relayouts (column locks,
- * also described at the top); the locks live as long as this effect.
+ * `MIN_COLUMN_WIDTH`-wide columns (see the block comment at the top). Every
+ * relayout repacks every card from its currently measured height, so a
+ * removal or a resize never leaves a stale slot behind.
  *
  * `widthProbeRef` is a zero-height element in normal flow beside the
  * container, with the container's width. Width changes are observed on the
@@ -246,11 +196,7 @@ export function useMasonryLayout(
       return;
     }
 
-    const columnLocks: ColumnLocks = {
-      columnCount: 0,
-      columnByChild: new WeakMap(),
-    };
-    const relayout = () => layoutMasonry(container, columnLocks);
+    const relayout = () => layoutMasonry(container);
     relayout();
 
     const sizeObserver = new ResizeObserver(relayout);

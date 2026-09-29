@@ -17,6 +17,7 @@ import { useReportSubmissionError } from "./api/reportSubmissionError";
 import type { ReasonCode } from "./reportReasons";
 import { CATEGORIES, subjectTypeForCategory } from "./reportCategories";
 import { logError } from "../../shared/observability/logger";
+import { useIncidentSubjectId } from "./useIncidentSubjectId";
 import s from "./ReportPage.module.css";
 
 /** i18n Pattern A — chrome list, sole consumer is `ReportFormSection`. */
@@ -98,16 +99,6 @@ const LOG = [
 ];
 
 /**
- * This public form has no subject picker, so nothing a reporter types here
- * identifies a record. `subjectId` therefore carries a fixed sentinel rather
- * than the reporter's own words: sending free text as an id produced reports
- * addressed to things like "the guy from Friday", which no moderator can open
- * and no moderation action can attach to. The words themselves are far more
- * useful inside `detail`, where they read as the account they are.
- */
-const UNLINKED_SUBJECT_ID = "unspecified";
-
-/**
  * Who the moderator sees when this report reaches them.
  *
  * This used to be INFERRED: `anonymous` was `email.trim().length === 0`, so a
@@ -187,6 +178,7 @@ export function ReportFormSection() {
   // their prior-report signal in front of the moderator. Anonymity stays one
   // click away, with the trade spelled out beside it.
   const [identity, setIdentity] = useState<ReporterIdentity>("named");
+  const { incidentSubjectId, renew } = useIncidentSubjectId();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -195,10 +187,9 @@ export function ReportFormSection() {
       return;
     }
     const done = () => {
-      // Two different truths, so two different confirmations. A member is told
-      // where the outcome lands (their notifications). A signed-out reporter is
-      // told plainly that there is no in-app place for one to land, rather than
-      // being left waiting on a follow-up this platform cannot send.
+      // Two different truths, so two different confirmations: a member is told
+      // where the outcome lands (their notifications); a signed-out reporter is
+      // told plainly that this platform sends no follow-up to wait on.
       showToast(
         t(
           loggedIn
@@ -212,9 +203,10 @@ export function ReportFormSection() {
       setDetail("");
       setEmail("");
       setIdentity("named");
+      renew();
     };
-    // The "who or what was involved" line is a description, so it travels with
-    // the account of what happened rather than posing as a subject id.
+    // The "who or what was involved" line is a description. It travels with
+    // the account of what happened and stays out of the subject id.
     const involvedText = involved.trim();
     const detailText = detail.trim();
     const describedSubject = involvedText
@@ -224,36 +216,32 @@ export function ReportFormSection() {
       .filter(Boolean)
       .join("\n\n");
     // Live POSTs /reports; demo resolves locally. The backend derives severity
-    // and the SLA from the reason code alone.
-    //
-    // `anonymous` is the signed-in member's OWN choice now, never inferred
-    // from the optional email field. A signed-out reporter keeps the original
-    // behaviour exactly: no account to name them, so leaving the email blank
-    // is what makes the report anonymous. The wire format is untouched, still
-    // the `anonymous?: boolean` + `contactEmail?: string` pair in
-    // `CreateReportInput`.
+    // and the SLA from the reason code alone. `anonymous` is now the signed-in
+    // member's own explicit choice above; a signed-out reporter's blank email
+    // still makes the report anonymous. The wire format is unchanged: the
+    // `anonymous?: boolean` + `contactEmail?: string` pair in `CreateReportInput`.
     const isAnonymous = loggedIn
       ? identity === "anonymous"
       : email.trim().length === 0;
     createReport.mutate(
       {
         subjectType: subjectTypeForCategory(category),
-        subjectId: UNLINKED_SUBJECT_ID,
+        subjectId: incidentSubjectId,
         reasonCode: category,
         detail: composedDetail || undefined,
         anonymous: isAnonymous,
-        // Signed-out only, and stated rather than implied. The field is not
-        // rendered for a member, so `email` is already "" for them; sending it
-        // conditionally anyway means a future edit that reintroduces the input
-        // cannot quietly start posting an address the server would refuse.
+        // Signed-out only, and made explicit here. The field is not rendered
+        // for a member, so `email` is already "" for them; sending it
+        // conditionally guards a future re-add of the input, keeping it from
+        // posting an address the server would refuse.
         contactEmail: loggedIn ? undefined : email.trim() || undefined,
       },
       {
         onSuccess: done,
         onError: (err) => {
           logError(err, { scope: "safety.reportPage" });
-          // Never tell a reporter "received" when the report didn't land —
-          // surface an honest error and leave the form filled in to retry. A
+          // Never tell a reporter "received" when the report did not land.
+          // Surface an honest error and leave the form filled in to retry. A
           // rolling flood cap answers with its own member-facing explanation,
           // which `describeReportError` shows in place of the generic line.
           showToast(

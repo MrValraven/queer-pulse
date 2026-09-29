@@ -1,18 +1,15 @@
-import { FiEdit3 } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { useForumThreadDraftPreview } from "./useForumThreadDraftPreview";
+import { DraftCardRibbon } from "./draftCard/DraftCardRibbon";
 import styles from "./ForumDraftResumeNotice.module.css";
 
 /**
- * "You have an unfinished post" — the forum's own sight of a saved draft
+ * "You have an unfinished post": the forum's own sight of a saved draft
  * (PRD-165).
  *
  * Before this, a draft was visible ONLY on `/account/drafts`, so a member who
  * closed the composer had no reason to believe their words had survived, and
- * nothing on the forum said otherwise. Resume opens `/forum/new`, which
- * restores the whole draft field by field.
+ * nothing on the forum said otherwise. Continue writing opens `/forum/new`,
+ * which restores the whole draft field by field.
  *
  * There is no discard control on purpose. Emptying the composer already deletes
  * the draft (see `useForumComposerDraft`), which is a path the member can see
@@ -20,29 +17,16 @@ import styles from "./ForumDraftResumeNotice.module.css";
  * with nothing to undo it.
  *
  * Renders nothing when there is no draft, so the forum stays exactly as it was
- * for everyone else.
+ * for everyone else. The card itself is the ribbon in `draftCard/`.
  */
 export function ForumDraftResumeNotice() {
-  const { t } = useTranslation();
-  const { hasDraft, label } = useForumThreadDraftPreview();
+  const { details } = useForumThreadDraftPreview();
 
-  if (!hasDraft) return null;
+  if (!details) return null;
 
   return (
-    <div className={styles.notice} role="status">
-      <FiEdit3 className={styles.icon} aria-hidden />
-      <div className={styles.text}>
-        <p className={styles.title}>{t("forum:draftNotice.title")}</p>
-        {label && <p className={styles.preview}>{label}</p>}
-      </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        className={styles.action}
-        to={routes.forumNew}
-      >
-        {t("forum:draftNotice.resumeCta")}
-      </Button>
+    <div className={styles.host}>
+      <DraftCardRibbon details={details} />
     </div>
   );
 }

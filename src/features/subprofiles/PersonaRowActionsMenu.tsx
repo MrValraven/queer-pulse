@@ -19,9 +19,13 @@ import styles from "./PersonaRowActionsMenu.module.css";
 export interface PersonaRowActionsMenuProps {
   /** Names the trigger and the menu ("Actions for Maya"). */
   personaName: string;
-  /** No public address yet: View and Share stay listed but inert, with the
-   *  reason under them. */
+  /** No public address yet (unlinked with no handle, or still a draft):
+   *  View and Share stay listed but inert, with the reason under them. */
   hasNoAddress: boolean;
+  /** The reason, already resolved by the caller so this menu and the row's
+   *  own visible note (`SideCardFooter`) always read the same copy
+   *  (`side.noAddressNote`). Ignored when `hasNoAddress` is false. */
+  addressNote: string;
   danger: PersonaDangerAction;
   onEdit: () => void;
   onOpen: () => void;
@@ -42,7 +46,8 @@ export interface PersonaRowActionsMenuProps {
  * Share, then Delete for the creator or Leave for a co-owner in danger ink,
  * and neither while the members roster is still answering (`"unknown"`).
  * With no public address View and Share are listed but disabled, and the
- * reason (`side.noAddressNote`) sits right under them inside the menu.
+ * reason (`addressNote`, resolved by `SideCardFooter`) sits right under them
+ * inside the menu.
  *
  * An APG menu button (`aria-haspopup`, `aria-expanded`, `aria-controls`):
  * click, Enter, Space or Arrow Down open it on the first item, Arrow Up on the
@@ -53,6 +58,7 @@ export interface PersonaRowActionsMenuProps {
 export function PersonaRowActionsMenu({
   personaName,
   hasNoAddress,
+  addressNote,
   danger,
   onEdit,
   onOpen,
@@ -144,7 +150,7 @@ export function PersonaRowActionsMenu({
           menuId={menuId}
           label={label}
           initialFocus={openFrom}
-          note={hasNoAddress ? t("subprofiles:side.noAddressNote") : undefined}
+          note={hasNoAddress ? addressNote : undefined}
           onClose={close}
         />
       )}

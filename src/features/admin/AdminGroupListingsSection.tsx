@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
@@ -11,6 +12,7 @@ import {
   useSetGroupListingHidden,
 } from "./api/useAdminHousingGroups";
 import type { AdminGroupListingDTO } from "./api/adminHousingGroups.api";
+import { HideGroupListingDialog } from "./HideGroupListingDialog";
 import styles from "./AdminHousingCoopsPage.module.css";
 
 /**
@@ -19,6 +21,11 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * norms (hidden price, broker post, hate speech) and un-hide it if it was a
  * mistake — wired to useSetGroupListingHidden. Hiding is instant in the UI via
  * query invalidation; it's a no-op in demo mode (the demo table is empty).
+ *
+ * Hide goes through `HideGroupListingDialog` (PRD-463): the server requires a
+ * reason, and the poster reads it on their notification. The dialog stays open
+ * on an error so the reason already typed survives a retry. Un-hide undoes a
+ * mistake and stays one click.
  *
  * Hiding is the POST-publication takedown and nothing else. Whether a listing
  * ever becomes public is the separate pre-publication review, which lives on
@@ -30,18 +37,36 @@ export function AdminGroupListingsSection() {
   const { showToast } = useToast();
   const { data, isLoading, isError } = useAdminGroupListings();
   const setHidden = useSetGroupListingHidden();
+  const [listingToHide, setListingToHide] =
+    useState<AdminGroupListingDTO | null>(null);
 
   const listings = data ?? [];
 
-  function toggleHidden(listing: AdminGroupListingDTO) {
+  function showUpdateError(error: Error) {
+    showToast(
+      describeError(t("admin:housingGroups.listings.error"), error),
+      "error",
+    );
+  }
+
+  function unhide(listing: AdminGroupListingDTO) {
     setHidden.mutate(
-      { id: listing.id, hidden: !listing.hidden },
+      { id: listing.id, hidden: false },
+      { onError: showUpdateError },
+    );
+  }
+
+  function hideWithReason(listing: AdminGroupListingDTO, reason: string) {
+    setHidden.mutate(
+      { id: listing.id, hidden: true, reason },
       {
-        onError: (error) =>
-          showToast(
-            describeError(t("admin:housingGroups.listings.error"), error),
-            "error",
+        // Close only the dialog this request came from: the moderator may
+        // have dismissed it and opened Hide on another row meanwhile.
+        onSuccess: () =>
+          setListingToHide((current) =>
+            current?.id === listing.id ? null : current,
           ),
+        onError: showUpdateError,
       },
     );
   }
@@ -99,7 +124,11 @@ export function AdminGroupListingsSection() {
                   <Button
                     variant={listing.hidden ? "jade" : "ghost"}
                     size="md"
-                    onClick={() => toggleHidden(listing)}
+                    onClick={() =>
+                      listing.hidden
+                        ? unhide(listing)
+                        : setListingToHide(listing)
+                    }
                   >
                     {listing.hidden
                       ? t("admin:housingGroups.listings.unhideCta")
@@ -110,6 +139,15 @@ export function AdminGroupListingsSection() {
             </FadeIn>
           ))}
         </div>
+      )}
+      {listingToHide && (
+        <HideGroupListingDialog
+          listingTitle={listingToHide.title}
+          listingStatus={listingToHide.status}
+          isPending={setHidden.isPending}
+          onSubmit={(reason) => hideWithReason(listingToHide, reason)}
+          onClose={() => setListingToHide(null)}
+        />
       )}
     </div>
   );

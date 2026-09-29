@@ -14,6 +14,7 @@ import {
   type GoTogetherErrorCode,
   type GoTogetherFeedbackDTO,
   type GoTogetherGroupDTO,
+  type HostAnswersBody,
   type HostConfigBody,
   type HostConfigDTO,
   type HostSummaryDTO,
@@ -31,6 +32,11 @@ export const acceptGoTogetherPair = (slug: string, body: PairAnswersBody) =>
   apiPost<GoTogetherCardDTO>(`/events/${slug}/go-together/pair/accept`, body);
 export const declineGoTogetherPair = (slug: string) =>
   apiPost<GoTogetherCardDTO>(`/events/${slug}/go-together/pair/decline`);
+export const answerGoTogetherHostQuestions = (
+  slug: string,
+  body: HostAnswersBody,
+) =>
+  apiPut<GoTogetherCardDTO>(`/events/${slug}/go-together/host-answers`, body);
 
 export const getFriendMatchProfile = () =>
   apiGet<FriendMatchProfileDTO>("/go-together/profile");
@@ -83,4 +89,33 @@ export function goTogetherErrorCode(
   const code = (error.data as { code?: unknown } | null | undefined)?.code;
   if (typeof code !== "string" || !KNOWN_ERROR_CODES.has(code)) return null;
   return code as GoTogetherErrorCode;
+}
+
+/**
+ * Go together has its own launch key. While it is off, every gathering and
+ * group Go together endpoint answers 404, and each surface that reads one
+ * renders nothing.
+ */
+export function isGoTogetherOff(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 404;
+}
+
+const MAX_QUERY_RETRIES = 2;
+
+/**
+ * Retry rule for the Go together reads a member relies on: a couple of tries
+ * for a network drop, a 5xx or the client's own 408 timeout. Any other 4xx is
+ * the server's answer and comes back the same, so it is never retried (a 404
+ * means the feature is off).
+ */
+export function retryGoTogetherQuery(
+  failureCount: number,
+  error: unknown,
+): boolean {
+  const isClientAnswer =
+    error instanceof ApiError &&
+    error.status >= 400 &&
+    error.status < 500 &&
+    error.status !== 408;
+  return !isClientAnswer && failureCount < MAX_QUERY_RETRIES;
 }

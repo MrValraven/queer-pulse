@@ -4,6 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { likeFeedPost, replyToFeedPost, type FeedItem } from "./feed.api";
+import { votePost } from "../../forum/api/forum.api";
 
 /** The shape react-query holds for every `useFeed` infinite query. Patched in
  *  place rather than invalidated, so acting on a card never reshuffles the
@@ -30,13 +31,16 @@ function isCachedFeed(value: unknown): value is CachedFeed {
 type ItemPatch = (item: FeedItem) => FeedItem;
 
 /**
- * Inline reactions and replies on a feed card (SOC-04).
+ * Inline reactions and replies on a feed card (SOC-04), plus liking a
+ * `forum_thread` card's opening post (FEED-LIKE).
  *
  * Every feed card used to be read-only in live mode: reacting meant opening
  * the thread, which is the one thing a member scrolling their home screen
- * will not do. These two actions write through the flat `community-posts`
- * aliases and patch the cached page so the card updates the instant it is
- * tapped.
+ * will not do. The reaction/reply actions write through the flat
+ * `community-posts` aliases. `likeThread` goes through the forum's own
+ * opening-post upvote (`POST /forum/posts/:id/vote`), since a thread's like
+ * IS that vote. All three patch the cached page so the card updates the
+ * instant it is tapped.
  *
  * OPTIMISTIC WITH A REAL ROLLBACK. The patch is applied before the request,
  * the previous cache entries are snapshotted, and a failure restores them
@@ -84,6 +88,9 @@ export function useFeedPostActions() {
   );
 
   const reactMutation = useMutation({
+    // The mutation's own `onError` already toasts, so `silentError` keeps
+    // the global handler quiet on this one and avoids a second toast.
+    meta: { silentError: true },
     mutationFn: async ({
       postId,
       liked,
@@ -143,10 +150,64 @@ export function useFeedPostActions() {
     onSuccess: () => showToast(t("feed:action.replySent"), "success"),
   });
 
+  // FEED-LIKE: like a forum-thread card by upvoting its opening post.
+  // `threadId` (the card's own id, matched by `patchCachedItem`) is passed
+  // apart from `postId` (the OP's id, what the endpoint actually votes on)
+  // because they are two different ids on the same item.
+  const likeThreadMutation = useMutation({
+    // The mutation's own `onError` already toasts, so `silentError` keeps
+    // the global handler quiet on this one and avoids a second toast.
+    meta: { silentError: true },
+    mutationFn: async ({
+      postId,
+      liked,
+    }: {
+      threadId: string;
+      postId: string;
+      liked: boolean;
+    }) => {
+      if (demoMode) return undefined;
+      return votePost(postId, liked ? 1 : 0);
+    },
+    onMutate: async ({ threadId, liked }) => {
+      await queryClient.cancelQueries({ queryKey: ["feed"] });
+      return {
+        snapshot: patchCachedItem(threadId, (item) => ({
+          ...item,
+          myReaction: liked ? "like" : null,
+          reactionCount: Math.max(
+            0,
+            (item.reactionCount ?? 0) + (liked ? 1 : -1),
+          ),
+        })),
+      };
+    },
+    onError: (_error, _variables, context) => {
+      restore(context?.snapshot);
+      showToast(t("feed:action.reactionFailed"), "error");
+    },
+    onSuccess: (post, { threadId }) => {
+      if (!post) return;
+      // The server's own vote count wins over the guess, same as the
+      // community-post reaction above.
+      patchCachedItem(threadId, (item) => ({
+        ...item,
+        reactionCount: post.voteCount,
+        myReaction: post.myVote ? "like" : null,
+      }));
+      // The forum reads the same vote from its own caches; mark them stale so
+      // it shows this like next time it mounts.
+      void queryClient.invalidateQueries({ queryKey: ["forum-threads"] });
+      void queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
+    },
+  });
+
   return {
     react: reactMutation.mutate,
     isReacting: reactMutation.isPending,
     reply: replyMutation.mutate,
     isReplying: replyMutation.isPending,
+    likeThread: likeThreadMutation.mutate,
+    isLikingThread: likeThreadMutation.isPending,
   };
 }

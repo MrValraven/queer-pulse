@@ -50,7 +50,9 @@ export function JobApplySidebar({
           </div>
           <div>
             <div className={styles.sideName}>{job.organization}</div>
-            <div className={styles.sideRole}>{job.detail.category}</div>
+            {job.detail.category && (
+              <div className={styles.sideRole}>{job.detail.category}</div>
+            )}
           </div>
         </div>
         <div className={styles.sideInfo}>

@@ -182,9 +182,12 @@
   color: var(--ink-60);
 }
 
+/* A long unspaced registration number breaks inside its item and stays in
+   the column. The separator dot is positioned, so breaking leaves it be. */
 .roleItem {
   position: relative;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .roleItem + .roleItem::before {
@@ -203,20 +206,10 @@
   margin-top: -6px;
 }
 
-.registration {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.registrationIcon {
-  flex: none;
-  width: 15px;
-  height: 15px;
-  stroke-width: 2.4;
-  color: var(--jade);
+/* The "self-declared" explanation reads as a footnote to the role line:
+   it tucks up under it, closer than the column's gap. */
+.body .roleNote {
+  margin-top: -8px;
 }
 
 /* ── Quote, or the bio's first paragraph ── */

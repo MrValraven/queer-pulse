@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, SuccessPanel } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { routes, communityPath } from "../../../app/routeMap";
 import type { CreatedCommunity } from "./startCommunity.data";
 
 /** "Opening the doors" — the plum-panel celebration after a community is created. */
@@ -29,7 +29,7 @@ export function StartCommunitySuccess({
           <FiArrowRight aria-hidden />
         </>
       }
-      onClose={() => void navigate(`/community/${community.slug}`)}
+      onClose={() => void navigate(communityPath(community.slug))}
       steps={[
         <Translation
           key="live"

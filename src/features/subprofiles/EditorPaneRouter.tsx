@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
@@ -21,6 +22,22 @@ import { SubprofileSectionEditor } from "./SubprofileSectionEditor";
 import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
 import { SubprofileOwnersPanel } from "./SubprofileOwnersPanel";
 import { SubprofilePublishPanel } from "./SubprofilePublishPanel";
+
+/** Whether the heading is on screen and uncovered: its first line sits inside
+ *  the viewport and the topmost element there is the heading itself, so a
+ *  sticky nav or pane switcher over it counts as hidden. Without hit-testing
+ *  (jsdom) the viewport check alone decides. */
+function isPainted(heading: HTMLElement): boolean {
+  const box = heading.getBoundingClientRect();
+  const probeY = box.top + Math.min(box.height, 32) / 2;
+  if (box.height === 0 || probeY <= 0 || probeY >= window.innerHeight) {
+    return false;
+  }
+  if (typeof document.elementFromPoint !== "function") return true;
+  const probeX = box.left + Math.min(box.width, 48) / 2;
+  const topmost = document.elementFromPoint(probeX, probeY);
+  return topmost !== null && heading.contains(topmost);
+}
 
 /**
  * The `.ed-main` body: a header (h2 + `.lede`, reflecting whichever rail
@@ -56,7 +73,7 @@ export function EditorPaneRouter({
   subprofile: SubprofileView;
 }) {
   const { t } = useTranslation();
-  const { meta } = useSubprofileEditorContext();
+  const { meta, reloadGeneration } = useSubprofileEditorContext();
   const header = PANE_HEADER[pane];
   const ledeKey =
     KIND_PANE_LEDE_KEY[subprofile.kind]?.[pane] ??
@@ -89,6 +106,29 @@ export function EditorPaneRouter({
     prevPaneRef.current = pane;
     headingRef.current?.focus({ preventScroll: true });
   }, [pane]);
+
+  // ENG-451: a conflict Reload remounts the whole editor, this pane included,
+  // and the Reload button that had focus goes with it. Hand focus to the
+  // pane's heading, which names where the member is at every width, and
+  // bring it on screen when the member pressed Reload from further down the
+  // pane (or it sits under the sticky chrome), so the focus lands somewhere
+  // they can see. The generation is fixed for this mount, so this runs once
+  // per Reload; the first load (generation 0) leaves focus alone.
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (reloadGeneration === 0 || !heading) return;
+    heading.focus({ preventScroll: true });
+    if (isPainted(heading)) return;
+    heading.scrollIntoView?.({
+      // Centred: the nav band, and on phones the pane switcher too, stick
+      // over the top of the page, and a start-aligned heading lands under
+      // them.
+      block: "center",
+      // `instant` under reduced motion: `html { scroll-behavior: smooth }` in
+      // base.css would otherwise animate the jump.
+      behavior: prefersReducedMotionNow() ? "instant" : "smooth",
+    });
+  }, [reloadGeneration]);
 
   return (
     <>

@@ -1,4 +1,3 @@
-import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ResolvedMentionText } from "../../../../shared/mentions/ResolvedMentionText";
 import { useAuth } from "../../../../app/providers/authContext";
@@ -85,12 +84,18 @@ export function TherapistHero({
               <span className={styles.roleItem}>{view.title}</span>
             )}
             {view.registration && (
-              <span className={`${styles.roleItem} ${styles.registration}`}>
-                <FiCheck aria-hidden className={styles.registrationIcon} />
-                {view.registration}
+              <span className={styles.roleItem}>
+                {t("subprofiles:therapist.hero.registration", {
+                  number: view.registration,
+                })}
               </span>
             )}
             <TherapistEditLink target={THERAPIST_EDIT_TARGETS.role} />
+          </p>
+        )}
+        {view.registration && (
+          <p className={`${styles.hint} ${styles.roleNote}`}>
+            {t("subprofiles:therapist.hero.registrationNote")}
           </p>
         )}
 

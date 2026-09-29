@@ -3,6 +3,12 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { getGroupJoinPreview, type GroupJoinPreview } from "./messages.api";
 import { bookSwapConversation } from "../demoGroupThreads.data";
+import { ApiError } from "../../../shared/api/client";
+
+/** PRD-400: the demo token that previews as an expired link
+ *  (`/messages/join/demo-expired-link`). Every other demo token resolves to
+ *  the fixed preview below. */
+export const DEMO_EXPIRED_INVITE_TOKEN = "demo-expired-link";
 
 /** Any token in demo mode resolves to the SAME fixed preview: the group the
  *  viewer already left (`bookSwapConversation`, PRD-358: previewing an
@@ -43,7 +49,17 @@ export function useGroupJoinPreview(token: string | undefined) {
   return useQuery<GroupJoinPreview>({
     queryKey: ["group-join-preview", demoMode, token],
     queryFn: async () => {
-      if (demoMode) return demoGroupJoinPreview();
+      if (demoMode) {
+        // PRD-400: one scripted token answers the way a live link past its
+        // 7-day window does, so the expired landing state is reachable in
+        // demo too.
+        if (token === DEMO_EXPIRED_INVITE_TOKEN) {
+          throw new ApiError(410, "This invite link has expired", {
+            code: "INVITE_LINK_EXPIRED",
+          });
+        }
+        return demoGroupJoinPreview();
+      }
       return getGroupJoinPreview(token!);
     },
     enabled: demoMode || (Boolean(token) && !checking && loggedIn),

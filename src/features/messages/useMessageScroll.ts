@@ -7,7 +7,6 @@ import {
 } from "react";
 import type { Virtualizer } from "@tanstack/react-virtual";
 import { isNearBottom } from "./useStickToBottom";
-import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 import type { MessageRow } from "./messageRows";
 import {
   useJumpScrollBridge,
@@ -15,6 +14,8 @@ import {
   type ThreadHistory,
 } from "./useOlderPageAnchor";
 import { useScrollResizeFollow } from "./useScrollResizeFollow";
+import { useScrollToBottom } from "./useScrollToBottom";
+import { useThreadWindowScroll } from "./useThreadWindowScroll";
 import { useUnreadLanding, type UnreadLandingInput } from "./useUnreadLanding";
 // TEMPORARY — see scrollTrace.ts's revert instructions.
 import { traceScrollEvent } from "./scrollTrace";
@@ -158,62 +159,13 @@ export function useMessageScroll(
     });
   }, [areaRef, rowVirtualizer]);
 
-  /** Pin to the bottom, through the virtualizer's own scroll API (see the file
-   *  comment for why a raw `element.scrollTop =` isn't safe here). `animate`
-   *  requests a smooth glide (honouring prefers-reduced-motion — reduced-motion
-   *  readers always get an instant jump); every pin passes `false` (an instant
-   *  WhatsApp-style snap) EXCEPT the explicit pill tap (`jumpToLatest`), which
-   *  is a user-initiated jump across potentially many messages and reads
-   *  better as a glide. Thread-switch, new-message, and resize-follow are all
-   *  instant — the reader should never watch a growing thread glide into place.
-   *
-   *  Nothing wraps this in an animation: a transform on the log would hang
-   *  below its layout box and hand the next pin scroll room that does not
-   *  really exist. `.area`'s block padding is outside the virtualizer's
-   *  coordinate space (no `scrollMargin`/`paddingStart` is passed), so
-   *  `scrollToIndex(last, "end")` already targets ~40px past the true bottom
-   *  and will consume any such room on sight. Measured: an animated log walked
-   *  itself up 45px per frame and then snapped back. */
-  const scrollToBottom = useCallback(
-    (animate: boolean) => {
-      const rowCount = rowVirtualizer.options.count;
-      const behavior =
-        animate && !prefersReducedMotionNow() ? "smooth" : "auto";
-      traceScrollEvent(
-        "scrollToBottom:before",
-        areaRef.current,
-        rowVirtualizer,
-        atBottomRef,
-        {
-          rowCount,
-          targetIndex: rowCount > 0 ? rowCount - 1 : null,
-          behavior,
-        },
-      );
-      if (rowCount > 0) {
-        // `scrollToIndex` (not a raw offset) — it resolves iteratively across
-        // frames if the target row's real height isn't known yet, which a
-        // single `getTotalSize()`-based offset can't: on a long thread this is
-        // exactly the row that's never been measured before, so a plain offset
-        // computed from the CURRENT (partly-estimated) total consistently came
-        // up short of the true bottom in practice.
-        rowVirtualizer.scrollToIndex(rowCount - 1, { align: "end", behavior });
-      } else {
-        rowVirtualizer.scrollToOffset(0, { align: "start", behavior });
-      }
-      atBottomRef.current = true;
-      traceScrollEvent(
-        "scrollToBottom:after",
-        areaRef.current,
-        rowVirtualizer,
-        atBottomRef,
-        {
-          rowCount,
-          targetIndex: rowCount > 0 ? rowCount - 1 : null,
-        },
-      );
-    },
-    [rowVirtualizer, areaRef],
+  /** Pin to the bottom, through the virtualizer's own scroll API (see
+   *  `useScrollToBottom` for the animate rule and why nothing wraps it in an
+   *  animation). */
+  const scrollToBottom = useScrollToBottom(
+    rowVirtualizer,
+    areaRef,
+    atBottomRef,
   );
 
   // Thread switch: jump to bottom, reset the pill count and growth baselines,
@@ -245,6 +197,25 @@ export function useMessageScroll(
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
+
+  // PRD-401: a detached history window shown in place of the live tail. Its
+  // window-switch effect MUST sit here, between the thread-switch effect and
+  // the content effect, so the swap never reads as growth.
+  const { isDetached, isDetachedRef, handleDetachedScroll, jumpToLatest } =
+    useThreadWindowScroll({
+      threadWindow: history.threadWindow,
+      activeId,
+      messageCount,
+      inboundCount,
+      loadingOlder,
+      areaRef,
+      atBottomRef,
+      previousCountRef,
+      previousInboundCountRef,
+      setNewMessagesCount,
+      resetOlderPageAnchor,
+      scrollToBottom,
+    });
 
   // Single owner of scroll position on content change, in priority order:
   //  1. An older-history page request just settled with an anchor armed →
@@ -299,6 +270,8 @@ export function useMessageScroll(
       return;
     }
     if (!grew) return;
+    // Growth inside a detached window is paged history: it moves nothing.
+    if (isDetached) return;
     if (atBottomRef.current) {
       traceScrollEvent(
         "contentEffect:stick",
@@ -329,6 +302,9 @@ export function useMessageScroll(
     messageCount,
     inboundCount,
     loadingOlder,
+    isDetached,
+    areaRef,
+    rowVirtualizer,
     scrollToBottom,
     settleOlderPage,
     armInitialSettleGuard,
@@ -354,6 +330,7 @@ export function useMessageScroll(
     releaseSettlingAnchor,
     cancelUnreadLanding,
     armHistoryPageAnchor,
+    isDetachedRef,
   );
 
   // Stick-to-bottom across a resize of the content OR of the scroll container
@@ -377,7 +354,11 @@ export function useMessageScroll(
   const handleAreaScroll = useCallback(() => {
     const element = areaRef.current;
     if (!element) return;
-    if (isNearBottom(element)) {
+    // A detached window's bottom is a page boundary (see the hook), so that
+    // hook owns the pin state while a window is shown. The older-page
+    // trigger below still applies either way.
+    const isDetachedScrollHandled = handleDetachedScroll(element);
+    if (!isDetachedScrollHandled && isNearBottom(element)) {
       atBottomRef.current = true;
       setNewMessagesCount(0);
       traceScrollEvent(
@@ -386,7 +367,7 @@ export function useMessageScroll(
         rowVirtualizer,
         atBottomRef,
       );
-    } else {
+    } else if (!isDetachedScrollHandled) {
       atBottomRef.current = false;
       traceScrollEvent(
         "handleAreaScroll:notNearBottom",
@@ -439,6 +420,7 @@ export function useMessageScroll(
     }
   }, [
     areaRef,
+    handleDetachedScroll,
     hasMoreOlder,
     loadingOlder,
     isHistorySettled,
@@ -448,13 +430,9 @@ export function useMessageScroll(
     armOlderPageAnchor,
   ]);
 
-  const jumpToLatest = useCallback(() => {
-    scrollToBottom(true);
-    setNewMessagesCount(0);
-  }, [scrollToBottom]);
-
   return {
-    showJumpPill: newMessagesCount > 0,
+    // A detached window always offers the way back to the latest message.
+    showJumpPill: newMessagesCount > 0 || isDetached,
     newMessagesCount,
     handleAreaScroll,
     jumpToLatest,

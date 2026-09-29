@@ -1,0 +1,103 @@
+/* ENG-451: the save-conflict alert (EditorConflictAlert), the savebar's only
+   content while a conflict waits for Reload. An accent-washed strip: the
+   message on top, then one row with the "{count} unsaved" toggle and Reload.
+   It stays a short strip at every width so the form above stays readable. */
+
+.alert {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+}
+
+/* The wide bar's own 14px/18px inset plus this strip's would nest two
+   paddings; the strip reaches most of the way to the bar's edge, which also
+   keeps the toggle and Reload on one row in a 310px form column (1024 wide,
+   Portuguese). The phone bar's inset is already 8px. */
+:global(.savebar-dirty) > .alert {
+  margin: -6px -10px;
+}
+
+/* The icon shares the title's row; the lines under it take the full width on
+   a narrow bar, and line up under the title once there is room. */
+.message {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: start;
+}
+
+.icon {
+  margin-top: 1px;
+  font-size: var(--text-18);
+  color: var(--accent-text);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.body,
+.failed {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.body {
+  color: var(--ink-60);
+}
+
+/* A failed Reload: the editor kept everything, so this only asks for another
+   try. */
+.failed {
+  margin-top: 4px;
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+@container (min-width: 24rem) {
+  .body,
+  .failed {
+    grid-column: 2;
+  }
+}
+
+/* The toggle takes the start (its global rule pushes the rest to the end), so
+   Reload always ends the row, and the row wraps only when both cannot fit. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.reload {
+  flex: none;
+}
+
+/* Phones, and any touch screen: Reload is the one way forward, so it gets the
+   full 44px target, and the toggle beside it matches. */
+:global(.savebar-phone) .reload,
+:global(.savebar-phone) .actions :global(.savebar-summary) {
+  min-height: 44px;
+}
+
+@media (pointer: coarse) {
+  .actions .reload,
+  .alert .actions :global(.savebar-summary) {
+    min-height: 44px;
+  }
+}

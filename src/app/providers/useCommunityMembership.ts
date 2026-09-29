@@ -16,6 +16,9 @@ export interface CommunityMembershipContextValue {
   join: (slug: string) => void;
   /** Submit a join request (request tier). */
   requestToJoin: (slug: string) => void;
+  /** Take a pending join request back (PRD-148), so a demo applicant can
+   *  withdraw from the gate card the way a live one does. */
+  withdrawRequest: (slug: string) => void;
   /** Found a community — the current user joins as its owner. */
   createOwned: (slug: string) => void;
   leave: (slug: string) => void;

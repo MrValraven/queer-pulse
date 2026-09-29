@@ -188,7 +188,12 @@ export interface StickerAttachmentResponse {
   height: number;
   provider: "sticker";
   stickerId: string;
+  /** The sticker's English name, baked at send. */
   label: string;
+  /** The sticker's Portuguese name, baked at send. Absent when the sticker
+   *  had none, and on every message sent before the field existed; pick the
+   *  name to show with `stickerLabelIn`, which falls back to `label`. */
+  labelPt?: string;
 }
 
 /** Every system event type this client renders a dedicated sentence for. See
@@ -600,8 +605,16 @@ export interface ConversationResponse {
   dissolvedAt?: string | null;
   /** GROUP only (Go together): the matched group this chat belongs to, else
    *  null. The client shows the group banner under the header when set.
-   *  Always null for DMs; absent on an older response. */
+   *  Always null for DMs; absent on an older response. Goes null once the
+   *  group row is deleted, even though the chat stays a matched chat: see
+   *  `isGoTogetherChat` for the flag that survives that deletion. */
   eventMatchGroupId?: string | null;
+  /** GROUP only (Go together): true for the life of a matched chat, even
+   *  after the group is deleted and `eventMatchGroupId` goes null. The
+   *  client keys its first-name-only, no-profile-link roster and mention
+   *  rules on this flag. False/absent for DMs, every other group, and an
+   *  older response. */
+  isGoTogetherChat?: boolean;
   /** GROUP only, THIS caller (DES-227): why the composer is severed:
    *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
    *  `"dissolved"` (the owner ended the group). Null while the caller is an
@@ -611,6 +624,10 @@ export interface ConversationResponse {
    *  set for the owner/admin who may manage it; null for every other member
    *  and for a group with no active link. Absent for DMs. */
   inviteToken?: string | null;
+  /** GROUP only (PRD-400): ISO instant the invite-link token expires, 7 days
+   *  from its last issue or rotation. Surfaced under the same rule as
+   *  `inviteToken`; null whenever that is. */
+  inviteTokenExpiresAt?: string | null;
   /** GROUP only: whether THIS caller may create/rotate/disable the invite
    *  link, gated on being owner/admin with the group active and not
    *  dissolved. Absent/false for DMs and a member who has left. */
@@ -1231,7 +1248,11 @@ export interface MediaAssetResponse {
 export interface StickerResponse {
   id: string;
   slug: string;
+  /** The English name. Pick the one to show with `stickerLabelIn`. */
   label: string;
+  /** The Portuguese name, or null when none was written (readers in
+   *  Portuguese then see `label`). */
+  labelPt: string | null;
   url: string;
   width: number;
   height: number;
@@ -1244,7 +1265,11 @@ export interface StickerResponse {
 export interface StickerPackResponse {
   id: string;
   slug: string;
+  /** The English pack name. Pick the one to show with `stickerPackNameIn`. */
   name: string;
+  /** The Portuguese pack name, or null (readers in Portuguese then see
+   *  `name`). */
+  namePt: string | null;
   description: string | null;
   coverStickerId: string | null;
   stickers: StickerResponse[];

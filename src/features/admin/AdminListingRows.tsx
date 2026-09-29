@@ -1,19 +1,48 @@
 import { useEffect, useRef } from "react";
-import { Button, FadeIn } from "../../shared/components/ui";
+import { FiInbox, FiSearch } from "react-icons/fi";
+import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { formatRelative } from "../../shared/lib/date";
-import { AdminChip } from "./ui";
-import { ListingModerationActions } from "./ListingModerationActions";
+import { AdminListingRow } from "./AdminListingRow";
 import { EmptyQueueState } from "./EmptyQueueState";
-import {
-  LISTING_STATUS_TONE,
-  type ListingQueueRow,
+import type {
+  AdminListingsStatusFilter,
+  ListingQueueRow,
 } from "./api/adminListings.api";
-import styles from "./AdminListingsPage.module.css";
+import styles from "./AdminListingRows.module.css";
+
+/** Words the empty body by its cause: a search that matched nothing, an empty
+ *  status tab, or a truly clear queue (the only one that earns a celebration). */
+function ListingRowsEmpty({
+  searchQuery,
+  statusFilter,
+}: {
+  searchQuery: string;
+  statusFilter: AdminListingsStatusFilter;
+}) {
+  const { t } = useTranslation();
+  const trimmedQuery = searchQuery.trim();
+  if (!trimmedQuery && statusFilter === "all") return <EmptyQueueState />;
+  return trimmedQuery ? (
+    <EmptyState
+      icon={<FiSearch />}
+      title={t("admin:adminListings.noMatch.title", { query: trimmedQuery })}
+      description={t("admin:adminListings.noMatch.body")}
+    />
+  ) : (
+    <EmptyState
+      icon={<FiInbox />}
+      title={t("admin:adminListings.emptyTab.title", {
+        status: t(`admin:adminListings.filter.${statusFilter}`),
+      })}
+      description={t("admin:adminListings.emptyTab.body")}
+    />
+  );
+}
 
 export function AdminListingRows({
   rows,
+  searchQuery,
+  statusFilter,
   selectedRefs,
   atSelectionCap,
   animateEntrance,
@@ -22,20 +51,16 @@ export function AdminListingRows({
   onToggleAll,
 }: {
   rows: ListingQueueRow[];
-  /** Refs currently selected for bulk action — controlled by the page so it
-   *  can survive filter/sort changes and drive `<BulkActionBar>`. */
+  /** The page's search text and status tab, read to word the empty body. */
+  searchQuery: string;
+  statusFilter: AdminListingsStatusFilter;
+  /** Refs picked for bulk action, owned by the page for `<BulkActionBar>`. */
   selectedRefs: Set<string>;
-  /** True once the selection has hit the bulk-action cap
-   *  (`LISTING_BULK_ACTION_CAP`, mirroring the backend's `@ArrayMaxSize(200)`).
-   *  Disables any checkbox that would ADD to the selection — an already-selected
-   *  row (or "select all" when every visible row is already picked) stays
-   *  enabled so a moderator can still deselect down from the cap. */
+  /** True at `LISTING_BULK_ACTION_CAP`: checkboxes that would ADD are disabled,
+   *  and selected ones stay enabled so a moderator can deselect down. */
   atSelectionCap: boolean;
-  /** Whether new rows should stagger-fade in. The page flips this to `false`
-   *  the moment the moderator first touches the status/search/sort controls,
-   *  so only the list's genuine first mount cascades in — switching tabs
-   *  after that renders instantly instead of re-triggering the entrance
-   *  animation on every row. See `AdminListingsPage`'s `handleHeaderChange`. */
+  /** Stagger-fades rows in on first mount only; the page clears it on the first
+   *  control change (`handleHeaderChange`), so later tabs render at once. */
   animateEntrance: boolean;
   onOpen: (row: ListingQueueRow) => void;
   onToggle: (ref: string) => void;
@@ -47,144 +72,128 @@ export function AdminListingRows({
   const selectedVisibleCount = rows.filter((row) =>
     selectedRefs.has(row.ref),
   ).length;
-  const allSelected = rows.length > 0 && selectedVisibleCount === rows.length;
-  const someSelected = selectedVisibleCount > 0 && !allSelected;
-  const hasSelection = selectedRefs.size > 0;
-
-  // `indeterminate` isn't a settable HTML attribute — only a DOM property —
-  // so it has to be imperative rather than a prop, same as `DraftsTabs`'s
-  // select-all checkbox.
+  const isEverySelected =
+    rows.length > 0 && selectedVisibleCount === rows.length;
+  const isSomeSelected = selectedVisibleCount > 0 && !isEverySelected;
+  // `indeterminate` is a DOM property with no HTML attribute: set imperatively.
   useEffect(() => {
     if (selectAllRef.current) {
-      selectAllRef.current.indeterminate = someSelected;
+      selectAllRef.current.indeterminate = isSomeSelected;
     }
-  }, [someSelected]);
+  }, [isSomeSelected]);
 
   if (rows.length === 0) {
-    return <EmptyQueueState />;
+    return (
+      <div className={styles.emptyBody}>
+        <ListingRowsEmpty
+          searchQuery={searchQuery}
+          statusFilter={statusFilter}
+        />
+      </div>
+    );
   }
   return (
-    <div
-      className={[styles.rows, hasSelection && styles.rowsWithBulkBar]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <label className={styles.selectAllRow}>
-        <input
-          ref={selectAllRef}
-          type="checkbox"
-          className={styles.rowCheckbox}
-          checked={allSelected}
-          disabled={atSelectionCap && !allSelected}
-          onChange={() => onToggleAll()}
-          aria-label={t("admin:adminListings.selectAll.ariaLabel")}
-        />
-        <span>{t("admin:adminListings.selectAll.label")}</span>
-      </label>
-      {rows.map((row, index) =>
-        animateEntrance ? (
+    <div className={styles.rows}>
+      <div className={styles.columnHeader}>
+        <label
+          className={`${styles.cellCheck} ${styles.checkHit} ${styles.selectAll}`}
+        >
+          <input
+            ref={selectAllRef}
+            type="checkbox"
+            className={styles.checkbox}
+            checked={isEverySelected}
+            disabled={atSelectionCap && !isEverySelected}
+            onChange={() => onToggleAll()}
+            aria-label={t("admin:adminListings.selectAll.ariaLabel")}
+          />
+          <span className={styles.selectAllText}>
+            {t("admin:adminListings.selectAll.label")}
+          </span>
+        </label>
+        <span className={styles.columnListing}>
+          {t("admin:adminListings.columns.listing")}
+        </span>
+        <span className={styles.columnWho}>
+          {t("admin:adminListings.columns.submitter")}
+        </span>
+        <span className={styles.columnStatus}>
+          {t("admin:adminListings.columns.status")}
+        </span>
+        <span className="visuallyHidden">
+          {t("admin:adminListings.columns.actions")}
+        </span>
+      </div>
+      {rows.map((row, index) => {
+        const rowElement = (
+          <AdminListingRow
+            key={row.ref}
+            row={row}
+            isSelected={selectedRefs.has(row.ref)}
+            isSelectDisabled={atSelectionCap && !selectedRefs.has(row.ref)}
+            onOpen={onOpen}
+            onToggle={onToggle}
+          />
+        );
+        return animateEntrance ? (
           <FadeIn
             key={row.ref}
             delay={Math.min(index, 8) * 50}
             className={styles.rowFade}
           >
-            <AdminListingRow
-              row={row}
-              selected={selectedRefs.has(row.ref)}
-              disableSelect={atSelectionCap && !selectedRefs.has(row.ref)}
-              onOpen={onOpen}
-              onToggle={onToggle}
-            />
+            {rowElement}
           </FadeIn>
         ) : (
-          <AdminListingRow
-            key={row.ref}
-            row={row}
-            selected={selectedRefs.has(row.ref)}
-            disableSelect={atSelectionCap && !selectedRefs.has(row.ref)}
-            onOpen={onOpen}
-            onToggle={onToggle}
-          />
-        ),
-      )}
+          rowElement
+        );
+      })}
     </div>
   );
 }
 
-function AdminListingRow({
-  row,
-  selected,
-  disableSelect,
-  onOpen,
-  onToggle,
-}: {
-  row: ListingQueueRow;
-  selected: boolean;
-  /** Disables the checkbox while unselected and the selection is at the bulk
-   *  cap — a selected row's own checkbox stays enabled so it can be deselected. */
-  disableSelect: boolean;
-  onOpen: (row: ListingQueueRow) => void;
-  onToggle: (ref: string) => void;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const ageText = formatRelative(row.createdAt, fmt);
+const SKELETON_ROW_KEYS = [0, 1, 2, 3];
 
+/** Loading state for the queue panel body: the column header's band, then
+ *  four rows shaped like real ones (checkbox, thumb, two lines, chip). */
+export function ListingRowsSkeleton() {
   return (
-    <div className={styles.row}>
-      {/* A sibling of `.rowMain`, never nested inside it — the row-open
-          region below is a `role="button"` that opens the drawer on click, and
-          this needs its own independent click target so picking a row for
-          bulk action never also opens it. */}
-      <input
-        type="checkbox"
-        className={styles.rowCheckbox}
-        checked={selected}
-        disabled={disableSelect}
-        onChange={() => onToggle(row.ref)}
-        onClick={(event) => event.stopPropagation()}
-        aria-label={t("admin:adminListings.selectRow.ariaLabel", {
-          name: row.name,
-        })}
-      />
-      <div
-        className={styles.rowMain}
-        role="button"
-        tabIndex={0}
-        onClick={() => onOpen(row)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            onOpen(row);
-          }
-        }}
-      >
-        <div className={styles.rowTop}>
-          <span className={styles.rowName}>{row.name}</span>
-          <AdminChip tone={LISTING_STATUS_TONE[row.status]} dot>
-            {t(`admin:adminListings.status.${row.status}`)}
-          </AdminChip>
+    <div className={styles.rows} aria-hidden="true">
+      <div className={styles.columnHeader} />
+      {SKELETON_ROW_KEYS.map((skeletonKey) => (
+        <div
+          key={skeletonKey}
+          className={`${styles.row} ${styles.skeletonRow}`}
+        >
+          <div className={styles.cellCheck}>
+            <SkeletonLine
+              width={20}
+              height={20}
+              style={{ borderRadius: "var(--radius-6)" }}
+            />
+          </div>
+          <div className={`${styles.cellThumb} ${styles.thumb}`}>
+            <SkeletonLine
+              width="100%"
+              height="100%"
+              style={{ borderRadius: "var(--radius-12)" }}
+            />
+          </div>
+          <div className={`${styles.cellMain} ${styles.skeletonLines}`}>
+            <SkeletonLine width="58%" height={16} />
+            <SkeletonLine width="36%" height={12} />
+          </div>
+          <div className={styles.cellWho}>
+            <SkeletonLine width="64%" height={12} />
+          </div>
+          <div className={styles.cellStatus}>
+            <SkeletonLine
+              width={76}
+              height={22}
+              style={{ borderRadius: "var(--radius-pill)" }}
+            />
+          </div>
         </div>
-        <div className={styles.rowMeta}>
-          {row.ref} ·{" "}
-          {row.submitterName ||
-            (row.suggesterName
-              ? t("admin:adminListings.suggestedBy", {
-                  name: row.suggesterName,
-                })
-              : t("admin:adminListings.unknownSubmitter"))}
-          {row.hood ? ` · ${row.hood}` : ""}
-          {ageText
-            ? ` · ${t("admin:adminListings.row.submittedAgo", { time: ageText })}`
-            : ""}
-        </div>
-      </div>
-      <div className={styles.rowActions}>
-        <Button variant="ghost" size="md" onClick={() => onOpen(row)}>
-          {t("admin:adminListings.viewCta")}
-        </Button>
-        <ListingModerationActions variant="row" row={row} />
-      </div>
+      ))}
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { Button } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
+import { listingCorrectionContactPath } from "../contactPrefill";
 import type { ListingStatus, PendingListing } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
 
@@ -161,8 +162,10 @@ export function ListBusinessSuccess({
             {/* A suggester holds none of an owner's rights over the listing:
                 no profile to link it from, nothing to edit and nothing to
                 withdraw, since the platform holds it now and the API answers
-                404 to all three. Only the two actions about the SUGGESTER'S
-                own next move stay. */}
+                404 to all three. Only the actions about the SUGGESTER'S own
+                next move stay, plus "Send a correction" (PRD-434), which
+                opens the contact form with this reference prefilled so a
+                typo can be fixed through the product. */}
             {!isSuggestion && listing.linkToProfile && (
               <Button variant="ghost-dark" to={routes.accountProfile}>
                 {t("marketing:listBusiness.success.viewOnProfile")}{" "}
@@ -177,6 +180,14 @@ export function ListBusinessSuccess({
             <Button variant="ghost-dark" onClick={onAnother}>
               {t("marketing:listBusiness.success.listAnother")}
             </Button>
+            {isSuggestion && listing.ref && (
+              <Button
+                variant="ghost-dark"
+                to={listingCorrectionContactPath(listing.ref)}
+              >
+                {t("marketing:listBusiness.success.sendCorrection")}
+              </Button>
+            )}
             {!isSuggestion && (
               <Button
                 variant="ghost-dark"

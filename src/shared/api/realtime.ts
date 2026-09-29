@@ -15,6 +15,7 @@ import { queryClient } from "./queryClient";
 import {
   bumpConversationUnread,
   patchConversationPreview,
+  patchConversationTitle,
   patchMessageDelete,
   patchMessageEdit,
   patchMessagePinned,
@@ -41,6 +42,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logInfo, logWarn } from "../observability/logger";
 import type { Conversation } from "../../features/messages/data";
+import { editedTextOfResponse } from "../../features/messages/messageEditKinds";
 import type {
   ChatWsErrorCode,
   ClientToServerAcks,
@@ -75,6 +77,18 @@ const DELIVERED_ACK_DEBOUNCE_MS = 500;
  *  (FIFO-evicted past this). Only needs to cover a burst's worth of frames, not
  *  a session's worth — see `countedInboxMessageIds`. */
 const INBOX_UNREAD_DEDUPE_LIMIT = 200;
+
+/** How long a thread's detail refresh gathers group-change frames before it
+ *  refetches once. A bulk add posts one pill per member, and each pill can
+ *  arrive twice (room `message:new` plus user-room `conversation:message`),
+ *  so without this window every frame cost a full-roster
+ *  `GET /conversations/:id`. Bounds it to one read per thread per window. */
+const DETAIL_REFRESH_COALESCE_MS = 1000;
+
+/** How many system message ids `refreshDetailOnSystemMessage` remembers for
+ *  its once-per-pill guard (FIFO-evicted past this), mirroring
+ *  `INBOX_UNREAD_DEDUPE_LIMIT`. */
+const DETAIL_REFRESH_DEDUPE_LIMIT = 200;
 
 /** socket.io wants event maps as listener signatures; ours are payload types. */
 type ServerListeners = {
@@ -248,6 +262,12 @@ class RealtimeClient {
    *  (e.g. a room join that hasn't caught up with `activeConversationId` yet),
    *  which would otherwise double-count it into `unreadCount`. */
   private countedInboxMessageIds = new Set<string>();
+  /** Per-conversation windows for the detail refresh (see
+   *  `DETAIL_REFRESH_COALESCE_MS`), shaped like `deliveredAckTimers`. */
+  private detailRefreshTimers = new Map<string, number>();
+  /** System message ids already handled by `refreshDetailOnSystemMessage`,
+   *  so a pill arriving on both message frames refreshes once. */
+  private refreshedSystemMessageIds = new Set<string>();
   /** Messages this client saw deleted: a create or edit frame for one of them
    *  that lands after its `message:deleted` is dropped (see
    *  `MessageTombstones`). */
@@ -448,6 +468,49 @@ class RealtimeClient {
       }
     }, DELIVERED_ACK_DEBOUNCE_MS);
     this.deliveredAckTimers.set(conversationId, timer);
+  }
+  /** A system message (a rename, a new photo or description, a member
+   *  added or removed, a dissolve, a move to a business mailbox) changes
+   *  conversation-level state the frame does not carry. Handled once per
+   *  pill id. A rename carries its new title (`systemEvent.value`), which
+   *  is patched into the list row and the detail entry at once; everything
+   *  else reaches the detail through `scheduleDetailRefresh`. Called after
+   *  the handler's own preview patch, so that patch cannot clear the stale
+   *  mark this leaves. */
+  private refreshDetailOnSystemMessage(
+    conversationId: string,
+    message: Pick<
+      ServerToClientEvents["message:new"]["message"],
+      "id" | "kind" | "systemEvent"
+    >,
+  ): void {
+    if (message.kind !== "system") return;
+    if (this.refreshedSystemMessageIds.has(message.id)) return;
+    this.refreshedSystemMessageIds.add(message.id);
+    if (this.refreshedSystemMessageIds.size > DETAIL_REFRESH_DEDUPE_LIMIT) {
+      const oldest = this.refreshedSystemMessageIds.values().next().value;
+      if (oldest !== undefined) this.refreshedSystemMessageIds.delete(oldest);
+    }
+    const newTitle = message.systemEvent?.value;
+    if (message.systemEvent?.type === "group_renamed" && newTitle) {
+      patchConversationTitle(this.qc, conversationId, newTitle);
+    }
+    this.scheduleDetailRefresh(conversationId);
+  }
+  /** Mark the thread's detail entry stale at once (no request), so a thread
+   *  reopened later reads it fresh, then refetch the entry on screen once
+   *  when the window closes. Frames inside the window join the pending
+   *  refresh (see `DETAIL_REFRESH_COALESCE_MS`). An uncached detail has
+   *  nothing to mark or refetch. */
+  private scheduleDetailRefresh(conversationId: string): void {
+    const queryKey = ["conversation-detail", conversationId];
+    void this.qc.invalidateQueries({ queryKey, refetchType: "none" });
+    if (this.detailRefreshTimers.has(conversationId)) return;
+    const timer = window.setTimeout(() => {
+      this.detailRefreshTimers.delete(conversationId);
+      void this.qc.invalidateQueries({ queryKey });
+    }, DETAIL_REFRESH_COALESCE_MS);
+    this.detailRefreshTimers.set(conversationId, timer);
   }
   /** Raise a NON-active conversation's inbox row unread badge for one message,
    *  deduped by `countedInboxMessageIds` so the same message can't double-count
@@ -1042,6 +1105,8 @@ class RealtimeClient {
       // device) is a no-op re-affirmation, entirely local with no network
       // round-trip of its own.
       patchConversationPreview(this.qc, conversationId, message);
+      // After the preview patch, which writes the detail entry too.
+      this.refreshDetailOnSystemMessage(conversationId, message);
       // Skip the rest for our OWN message: no unread bump (we sent it, it's
       // not unread to us on ANY device), and no delivered ack (a gateway that
       // stores deliveredAt per participant would stamp the sender's own
@@ -1118,11 +1183,33 @@ class RealtimeClient {
         void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
       }
     });
+    // Another tab or device of this same member read or dismissed rows
+    // (mark one read, mark all read, mentions mark all read, dismiss). The
+    // frame is empty and carries no count, and a read or dismiss changes both
+    // the feed and the badge, so the bare `["notifications"]` PREFIX is
+    // deliberate here: it covers the feed key `["notifications", demoMode,
+    // unreadOnly, language]` and the badge key `["notifications",
+    // "unread-count", demoMode]` in one call. Mentions are notification rows
+    // too, and the Mentions tab is keyed `["mentions", demoMode, language]`.
+    // The acting tab also receives its own echo; its mutation already
+    // invalidates on settle, so the echo costs at most one repeat refetch
+    // there, a price accepted to keep the frame query-free on the server.
+    socket.on("notification:changed", () => {
+      void this.qc.invalidateQueries({ queryKey: ["notifications"] });
+      void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
+    });
     // A new conversation (a group) the member was just added to — their inbox
     // doesn't know about it yet, so refetch the list. The member isn't in the
     // conversation room, so this user-room frame is how the group first appears.
-    socket.on("conversation:new", () => {
+    socket.on("conversation:new", ({ conversationId }) => {
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+      // The backend fans this same frame as the group refresh for a remote
+      // removal, dissolve, leave, role change, ownership transfer, photo or
+      // description change (`groups.service.ts`), so the thread's detail
+      // entry is refreshed too: a thread opened by id then shows the severed
+      // composer and the new roster. It joins the same window as the
+      // change's system pill, so the pair costs one read.
+      this.scheduleDetailRefresh(conversationId);
       // A brand-new thread may already carry unread messages → refresh the badge.
       void this.qc.invalidateQueries({
         queryKey: ["conversations-unread-count"],
@@ -1178,11 +1265,15 @@ class RealtimeClient {
       const hasCachedRow = cachedConversationLists.some(([, data]) =>
         data?.some((conversation) => conversation.id === conversationId),
       );
+      // The preview patch runs either way: it is a no-op on a list without
+      // the row, and it still writes the thread's detail entry, which is
+      // the only cached copy of a thread opened past the loaded inbox pages.
+      patchConversationPreview(this.qc, conversationId, message);
       if (isListCached && !hasCachedRow) {
         void this.qc.invalidateQueries({ queryKey: ["conversations"] });
-      } else {
-        patchConversationPreview(this.qc, conversationId, message);
       }
+      // After the preview patch, which writes the detail entry too.
+      this.refreshDetailOnSystemMessage(conversationId, message);
       if (conversationId !== this.activeConversationId) {
         // The ONE unread-count invalidate for this frame, covering both
         // branches above (a brand-new DM's row appearing for the first time,
@@ -1295,11 +1386,14 @@ class RealtimeClient {
     socket.on("message:updated", ({ conversationId, message }) => {
       // An edit that lands after the delete would restore the body.
       if (this.tombstones.has(message.id)) return;
+      // ENG-405: a photo, document or GIF edit changed its caption, so the
+      // frame's caption is what gets patched (its `body` is the unchanged
+      // fallback).
       patchMessageEdit(
         this.qc,
         conversationId,
         message.id,
-        message.body,
+        editedTextOfResponse(message),
         message.editedAt ?? new Date().toISOString(),
       );
     });
@@ -1392,6 +1486,9 @@ class RealtimeClient {
         queryKey: MAILBOXES_QUERY_KEY_PREFIX,
       });
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+      // A thread opened by id reads from its detail entry; a lost seat must
+      // turn it unavailable there too, exactly as the list drops the row.
+      void this.qc.invalidateQueries({ queryKey: ["conversation-detail"] });
     });
   }
 
@@ -1467,6 +1564,17 @@ class RealtimeClient {
       void this.qc.invalidateQueries({
         queryKey: ["conversations-unread-count"],
       });
+      // The same gap can hold a mute, a rename or a dissolve for a thread
+      // opened by id, whose flags live in its detail entry. Only an entry
+      // on screen refetches; the rest are marked stale for their next open.
+      // This is the reconnect's one detail read: the history reconcile above
+      // leaves the detail to it.
+      void this.qc.invalidateQueries({ queryKey: ["conversation-detail"] });
+      // A gap (laptop sleep, lost signal) can also hide `notification:new`
+      // and `notification:changed` frames, so the bell badge, the feed and
+      // the Mentions tab would otherwise stay stale until a reload.
+      void this.qc.invalidateQueries({ queryKey: ["notifications"] });
+      void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
     }
     // Deliberately NOT also invalidating every closed thread's own
     // `["messages", id]` cache here: `ensureInactiveThreadTrim`
@@ -1742,6 +1850,11 @@ class RealtimeClient {
     }
     this.deliveredAckTimers.clear();
     this.countedInboxMessageIds.clear();
+    for (const timer of this.detailRefreshTimers.values()) {
+      window.clearTimeout(timer);
+    }
+    this.detailRefreshTimers.clear();
+    this.refreshedSystemMessageIds.clear();
     this.joinAttemptTokens.clear();
     this.pendingConnectionRefusal = null;
     this.pendingDeliveredAcks.clear();

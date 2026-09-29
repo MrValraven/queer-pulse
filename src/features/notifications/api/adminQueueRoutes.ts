@@ -13,7 +13,7 @@ import { routes } from "../../../app/routeMap";
  * row reaches this file it has already been addressed to somebody. What this
  * file owns is only the destination.
  *
- * 29 keys map onto 24 distinct routes: /admin/moderation carries two
+ * 30 keys map onto 25 distinct routes: /admin/moderation carries two
  * (`appeals`, `ban_ratifications`), /admin/safe-spaces two
  * (`safe_space_nominations`, `safe_space_flags`), /admin/landlords two
  * (`landlord_intro_requests`, `landlord_suggestions`), and /admin/listings
@@ -58,6 +58,11 @@ export const ADMIN_QUEUE_ROUTES: Record<string, string> = {
   // reviewed and is therefore withheld from the public entirely. The daily
   // sweeper announces them into the console that already sorts stalest-first.
   guide_reviews: routes.adminResourceGuides,
+  // PRD-462. A request to join an access-gated housing group used to reach
+  // nobody: the triage table on /admin/housing-groups filled with nothing
+  // announcing it. Moderator tier plus the `housing_moderator` grant, the
+  // same `HousingModerationGuard` union as the two housing queues above.
+  housing_group_join_requests: routes.adminHousingGroups,
 };
 
 /** Every queue key, for catalog-coverage tests. */

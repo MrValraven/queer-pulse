@@ -8,9 +8,9 @@ import {
 import { DIRECTORY_KEY } from "./useDirectory";
 import { LISTING_CONTACT_KEY } from "./useListingContact";
 
-/** The backend's own bounds on an enquiry body (`CreateListingEnquiryDto`). */
+/** The backend's own minimum on an enquiry body (`CreateListingEnquiryDto`).
+ *  Its 2000-character maximum is the shared first-contact field's own cap. */
 export const MIN_ENQUIRY_LENGTH = 8;
-export const MAX_ENQUIRY_LENGTH = 2000;
 
 /**
  * What kind of "no" came back. A rejected enquiry is four different stories and

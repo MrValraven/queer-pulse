@@ -1,10 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   AuthorSummary,
   ConversationResponse,
   MessageResponse,
 } from "../../../shared/contracts/contracts";
-import type { TFunction } from "../../../shared/i18n/types";
+import { messages as enMessages } from "../../../shared/i18n/catalogs/en/messages";
+import { messages as ptMessages } from "../../../shared/i18n/catalogs/pt/messages";
+import { STORAGE_KEY } from "../../../shared/i18n/locale";
+import type { Catalog, TFunction } from "../../../shared/i18n/types";
 import {
   conversationToView,
   groupMessages,
@@ -272,6 +275,127 @@ describe("previewForMessage", () => {
     expect(previewForMessage(true, systemMessage)).toBe(
       "Ana created the group",
     );
+  });
+});
+
+/** A translator over one real `messages` catalog, echoing unknown keys the
+ *  way the provider does while a namespace is still loading. */
+function catalogT(catalog: Catalog): TFunction {
+  return (key) => catalog[key.replace(/^messages:/, "")] ?? key;
+}
+
+const RAW_DOCUMENT_KEY = "messages:attachments.documentFallbackText";
+
+describe("legacy raw-key attachment bodies in the inbox preview", () => {
+  afterEach(() => {
+    window.localStorage.removeItem(STORAGE_KEY);
+  });
+
+  it("names a raw-key document in English on a DM row", () => {
+    const view = conversationToView(
+      conversation({
+        lastMessage: message({ kind: "document", body: RAW_DOCUMENT_KEY }),
+      }),
+      catalogT(enMessages),
+    );
+    expect(view.preview).toBe("File");
+    expect(view.lastMessageBody).toBe("File");
+  });
+
+  it("names a raw-key document in Portuguese on a DM row", () => {
+    const view = conversationToView(
+      conversation({
+        lastMessage: message({ kind: "document", body: RAW_DOCUMENT_KEY }),
+      }),
+      catalogT(ptMessages),
+    );
+    expect(view.preview).toBe("Ficheiro");
+    expect(view.lastMessageBody).toBe("Ficheiro");
+  });
+
+  it("keeps the sender prefix on a group row", () => {
+    const view = conversationToView(
+      conversation({
+        kind: "group",
+        type: "group",
+        title: "Pride Brunch Crew",
+        lastMessage: message({
+          kind: "document",
+          body: RAW_DOCUMENT_KEY,
+          sender: author({ displayName: "Ana Silva" }),
+        }),
+      }),
+      catalogT(ptMessages),
+    );
+    expect(view.preview).toBe("Ana: Ficheiro");
+    expect(view.lastMessageBody).toBe("Ficheiro");
+  });
+
+  it("uses the catalog copy when the translator echoes the key", () => {
+    window.localStorage.setItem(STORAGE_KEY, "pt");
+    const view = conversationToView(
+      conversation({
+        lastMessage: message({
+          kind: "image",
+          body: "messages:attachments.fallbackText",
+        }),
+      }),
+      fakeT,
+    );
+    expect(view.preview).toBe("Foto");
+  });
+
+  it("localizes the live-patch preview through the persisted language", () => {
+    const rawDocument = message({
+      kind: "document",
+      body: RAW_DOCUMENT_KEY,
+      sender: author({ displayName: "Ana Silva" }),
+    });
+    window.localStorage.setItem(STORAGE_KEY, "en");
+    expect(previewForMessage(false, rawDocument)).toBe("File");
+    expect(previewForMessage(true, rawDocument)).toBe("Ana: File");
+    window.localStorage.setItem(STORAGE_KEY, "pt");
+    expect(previewForMessage(false, rawDocument)).toBe("Ficheiro");
+    expect(previewForMessage(true, rawDocument)).toBe("Ana: Ficheiro");
+  });
+
+  it("leaves a server-mapped English label as sent", () => {
+    window.localStorage.setItem(STORAGE_KEY, "pt");
+    expect(
+      previewForMessage(false, message({ kind: "document", body: "File" })),
+    ).toBe("File");
+  });
+
+  it("leaves a text message that happens to hold the key as typed", () => {
+    expect(
+      previewForMessage(
+        false,
+        message({ kind: "user", body: RAW_DOCUMENT_KEY }),
+      ),
+    ).toBe(RAW_DOCUMENT_KEY);
+  });
+
+  it("never shows a legacy sticker's stored body", () => {
+    const legacySticker = message({
+      kind: "sticker",
+      body: "edited words",
+      attachment: {
+        url: "https://cdn.example/sticker.png",
+        previewUrl: "https://cdn.example/sticker.png",
+        width: 512,
+        height: 512,
+        provider: "sticker",
+        stickerId: "sticker-1",
+        label: "Bi reverse",
+      },
+    });
+    expect(previewForMessage(true, legacySticker)).toBe("Jordan: Bi reverse");
+    expect(
+      previewForMessage(
+        false,
+        message({ kind: "sticker", body: "edited words" }),
+      ),
+    ).toBe("");
   });
 });
 

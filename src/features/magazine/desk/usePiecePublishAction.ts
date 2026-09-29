@@ -22,6 +22,7 @@ import {
   type PublishRefusalDto,
 } from "../api/piecePublish.api";
 import type { PieceRecordWithPublish } from "../api/usePieceRecord";
+import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
 import type { PiecePublishIntent } from "./deskModals.data";
 
 /** A published instant is rendered to the minute: "scheduled for 9 September
@@ -34,23 +35,6 @@ const PUBLISHED_AT_FORMAT: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
   minute: "2-digit",
 };
-
-/**
- * Whether an ISO instant is still ahead of the clock, which is what separates
- * a scheduled piece from a live one. A module function rather than an inline
- * `Date.now()`: `react-hooks/purity` rejects a bare clock read in a hook body,
- * and this mirrors `isFutureInstant` on the editor side.
- */
-function isFutureInstantIso(value: string | null): boolean {
-  if (!value) return false;
-  const parsed = Date.parse(value);
-  return !Number.isNaN(parsed) && parsed > Date.now();
-}
-
-/** Whether an ISO instant parses at all, so a malformed value never renders. */
-function isParsableInstant(value: string | null): boolean {
-  return value !== null && !Number.isNaN(Date.parse(value));
-}
 
 type PublishMutation = UseMutationResult<unknown, Error, PublishPieceDto>;
 type UnpublishMutation = UseMutationResult<unknown, Error, void>;
@@ -69,6 +53,11 @@ export interface PiecePublishAction {
   isPublished: boolean;
   /** Has a `publishedAt` the clock has not reached yet. */
   isScheduled: boolean;
+  /** A past `publishedAt` on a piece whose own stage has not caught up to
+   *  Published yet: with no job to flip it, a Ready piece's date can pass
+   *  while it still sits at Ready. Live to readers already, so the publish
+   *  confirm needs its own copy here for settling it. */
+  isAlreadyLive: boolean;
   /** The publish instant, formatted the way the rest of the desk formats
    *  dates, or `null` when the piece is still a draft. Never a raw ISO string. */
   publishedAtLabel: string | null;
@@ -118,9 +107,16 @@ export function usePiecePublishAction({
   // backend leaves the stage at `ready` for a schedule, so the instant is the
   // only thing that separates the two states.
   const publishedAt = record?.publishedAt ?? null;
-  const hasValidInstant = isParsableInstant(publishedAt);
-  const isScheduled = isFutureInstantIso(publishedAt);
+  const hasValidInstant = hasPublishDate({ publishedAt });
+  const isScheduled = isPieceScheduled({ publishedAt });
   const isPublished = record?.isPublished === true && !isScheduled;
+  // The backend's own `isPublished` already answers "live right now",
+  // strictly narrower than "has a `publishedAt`" (it excludes a scheduled
+  // instant), so it is true for a Ready piece whose date already passed:
+  // that piece IS live. The piece's own stage is what tells settled apart
+  // from unsettled here.
+  const isAlreadyLive =
+    hasValidInstant && !isScheduled && record?.stage !== "published";
   const publishedAtLabel =
     publishedAt && hasValidInstant
       ? formatDate(publishedAt, intlLocale(language), PUBLISHED_AT_FORMAT)
@@ -195,6 +191,7 @@ export function usePiecePublishAction({
   return {
     isPublished,
     isScheduled,
+    isAlreadyLive,
     publishedAtLabel,
     publicHref: record?.publicHref ?? null,
     openGateItems,

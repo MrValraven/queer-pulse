@@ -1,22 +1,173 @@
-/* ── Listing queue header: search + sort + status chips ──────────────────── */
+/* ── Listing queue toolbar: status tabs + search + sort ─────────────────────
+   Sits inside the queue panel (AdminListingsPage), so it carries no surface of
+   its own: side padding, a bottom hairline, and one flex line.
+   The DOM holds the controls first and the tabs second. `order` lays the tabs
+   out first (left) and the controls second (right). `flex-wrap: wrap-reverse`
+   stacks flex lines from the bottom up, so when the two stop fitting on one
+   line the tabs keep the bottom line on the hairline and the controls wrap
+   ABOVE them. Top to bottom then reads controls, tabs: the same as the DOM and
+   the Tab order, with or without container query support. The phone-width
+   query at the end lays out the same DOM order on two lines of its own. */
 .header {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin: 4px 0 4px;
+  flex-wrap: wrap-reverse;
+  align-items: stretch;
+  column-gap: 24px;
+  row-gap: 0;
+  min-height: 60px;
+  padding: 0 18px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
-.controlsRow {
+/* The underline sits on the hairline at every width through one margin trick.
+   The tabs always own the bottom flex line (wrap-reverse), and that line ends
+   at the header's content edge, which is the top of its 1px border-bottom. The
+   strip stretches to fill the line through its margin box, so a -1px bottom
+   margin grows its border box 1px down over the hairline. A tab's `::after`
+   drawn at bottom 0 then covers the hairline exactly.
+   The strip scrolls sideways when the tabs outgrow it, with the scrollbar
+   hidden and the tabs kept on one line. The -8px start margin lines the first
+   label up with the panel's 18px content edge. */
+.tabs {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 4px;
+  flex: 0 1 auto;
+  order: 0;
+  min-width: 0;
+  margin: 0 0 -1px -8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+/* While tabs hide past the end edge, the strip fades out over its last 28px
+   as a scroll cue. The component sets `data-fade-end` from a ResizeObserver
+   and clears it once the strip is scrolled to the end. The mask reads only
+   alpha, so the opaque stop is any solid token. */
+.tabs[data-fade-end] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    var(--plum) calc(100% - 28px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    var(--plum) calc(100% - 28px),
+    transparent
+  );
 }
 
-.search {
-  flex: 1 1 260px;
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  min-height: 60px;
+  /* 1px top padding balances the extra 1px the strip reaches into the
+     hairline, keeping the label optically centred. */
+  padding: 1px 8px 0;
+  border: 0;
+  border-radius: var(--radius-8);
+  background: none;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+/* The strip clips anything outside it, so the focus ring draws inside the
+   tab. */
+.tab:focus-visible {
+  outline-offset: -3px;
+}
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--radius-2) var(--radius-2) 0 0;
+  background: transparent;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--text-strong);
+  }
+}
+.tabActive {
+  color: var(--text-strong);
+}
+.tabActive::after {
+  background: var(--text-strong);
+}
+
+.count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.07);
+  color: var(--ink-60);
+  font-size: var(--text-12);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+.tabActive .count {
+  background: rgba(var(--line-rgb), 0.12);
+  color: var(--text-strong);
+}
+/* An empty status reads quieter: no fill and a lighter weight. The text keeps
+   the readable --ink-40 contrast. */
+.countZero,
+.tabActive .countZero {
+  background: transparent;
+  color: var(--ink-40);
+  font-weight: 500;
+}
+
+/* Search and sort. The group grows to fill whatever the tabs leave and pushes
+   its content to the end edge; on its own wrapped line it spans the full
+   width. The field and the Select share one height, so their tops align. */
+.controls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: 1 1 auto;
+  order: 1;
   min-width: 0;
-  max-width: 420px;
+  padding-block: 10px;
+}
+
+/* 320px fits the whole placeholder. When the line is tighter the field
+   shrinks toward 200px and a placeholder that no longer fits ends in an
+   ellipsis at the field's edge. */
+.search {
+  flex: 0 1 320px;
+  min-width: 200px;
+}
+.search input {
+  text-overflow: ellipsis;
+}
+/* The shared field is 44px tall; on fine pointers it trims to exactly the
+   40px of the small Select beside it (border-box height, the padding moves
+   into the fixed height). Its 16px type stays, so iOS never zooms. */
+@media (pointer: fine) {
+  .search input {
+    height: 40px;
+    padding-block: 0;
+  }
 }
 
 .sort {
@@ -25,6 +176,13 @@
   gap: 7px;
   flex: none;
 }
+/* The Select trigger takes the search field's pill shape, so the pair reads
+   as one control group. Only the radius and side padding change; every
+   state colour stays the Select's own. */
+.sortSelect > button:first-of-type {
+  border-radius: var(--radius-pill);
+  padding-inline: 14px;
+}
 .sortLabel {
   font-size: var(--text-12);
   font-weight: 700;
@@ -32,83 +190,90 @@
   text-transform: uppercase;
   color: var(--ink-40);
 }
-.sortSelect {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text-strong);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill);
-  padding: 7px 12px;
-  cursor: pointer;
-  transition: border-color 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .sortSelect:hover {
-    border-color: var(--line-strong);
+
+/* Narrow queue: search and sort on the first line (search grows), tabs on a
+   second line that scrolls sideways. The "Sort" label leaves the line
+   visually and stays in the accessibility tree (the base.css
+   `.visuallyHidden` recipe), which hands its width to the search field. */
+@container listingQueue (max-width: 759px) {
+  .tabs {
+    flex: 1 1 100%;
   }
-}
-[data-theme="dark"] .sortSelect {
-  border-color: rgba(var(--cream-rgb), 0.14);
-}
-/* Touch: lift the native select to the ≥44px target minimum while the
-   resting control stays visually compact. */
-@media (pointer: coarse) {
-  .sortSelect {
-    min-height: 44px;
+  .tab {
+    min-height: 48px;
+  }
+  .controls {
+    flex: 1 1 100%;
+    padding-block: 12px 4px;
+  }
+  .search {
+    flex: 1 1 auto;
+    min-width: 160px;
+  }
+  .sortLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 
-/* Status filter chips — deliberately separated pill buttons (own border per
-   chip), not the connected `SegmentedControl` tray the view switch uses one
-   level up, so the two controls read as distinct kinds of choice. */
-.statusChips {
-  display: inline-flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.statusChip {
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: var(--paper);
-  color: var(--ink-60);
-  font: inherit;
-  font-size: var(--text-13);
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    border-color 0.16s var(--ease),
-    color 0.16s var(--ease),
-    background 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .statusChip:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
-    color: var(--text-strong);
+/* Phone-width queue. The whole placeholder needs about 300px of field, so
+   the search takes the first line alone. `.controls` steps out of the box
+   tree (`display: contents`), which makes the search, the sort and the tabs
+   direct flex items in DOM order: the search fills line one, and the sort
+   leads line two, fixed at the start while the tabs scroll beside it. Plain
+   `wrap` keeps the tabs on the last line, so the underline still lands on
+   the hairline through the same -1px margin. The placeholder drops to 15px
+   and fits whole in the 301px field of a 375px phone; typed text keeps its
+   16px, so iOS never zooms. */
+@container listingQueue (max-width: 519px) {
+  .header {
+    flex-wrap: wrap;
+    column-gap: 8px;
+  }
+  .controls {
+    display: contents;
+  }
+  .search {
+    flex: 1 1 100%;
+    min-width: 0;
+    margin-block: 12px 4px;
+  }
+  .search input::placeholder {
+    font-size: var(--text-15);
+  }
+  .sort {
+    align-self: center;
+  }
+  .tabs {
+    flex: 1 1 0;
+    margin-left: 0;
   }
 }
-.statusChipOn {
-  border-color: var(--line-strong);
-  color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.06);
-}
-@media (hover: hover) {
-  .statusChipOn:hover {
-    border-color: var(--line-strong);
-  }
-}
-/* Touch: keep the resting pill compact but guarantee a ≥44px tap strip. */
+
+/* Touch: the search field and the sort trigger both sit at exactly the 44px
+   tap minimum, so their tops and bottoms align (border-box height, the
+   padding moves into the fixed height). The tabs already clear it at every
+   width (60px wide, 48px narrow). */
 @media (pointer: coarse) {
-  .statusChip {
-    min-height: 44px;
+  .search input {
+    height: var(--tap-min);
+    padding-block: 0;
+  }
+  .sortSelect > button:first-of-type {
+    min-height: var(--tap-min);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sortSelect,
-  .statusChip {
+  .tab,
+  .tab::after {
     transition: none;
   }
 }

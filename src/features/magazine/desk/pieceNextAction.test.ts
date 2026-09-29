@@ -114,6 +114,50 @@ describe("pieceNextAction", () => {
     ).toBe("publish");
   });
 
+  it("a scheduled Ready piece has no next action, on an issue or off one", () => {
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    expect(
+      pieceNextAction(
+        makePiece({
+          stage: "Ready",
+          issueId: "issue-14",
+          publishedAt: tomorrow,
+        }),
+        "issue",
+      ),
+    ).toBeNull();
+    expect(
+      pieceNextAction(
+        makePiece({ stage: "Ready", publishedAt: tomorrow }),
+        "unassigned",
+      ),
+    ).toBeNull();
+  });
+
+  it("still offers Publish on a Ready piece whose date has already passed", () => {
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    expect(
+      pieceNextAction(
+        makePiece({
+          stage: "Ready",
+          issueId: "issue-14",
+          publishedAt: yesterday,
+        }),
+        "issue",
+      )?.kind,
+    ).toBe("publish");
+  });
+
+  it("still offers Publish on a live standalone Ready piece with no issue", () => {
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    expect(
+      pieceNextAction(
+        makePiece({ stage: "Ready", issueId: null, publishedAt: yesterday }),
+        "unassigned",
+      )?.kind,
+    ).toBe("publish");
+  });
+
   it("a published piece has no next action", () => {
     expect(
       pieceNextAction(makePiece({ stage: "Published" }), "issue"),

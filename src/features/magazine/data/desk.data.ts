@@ -37,6 +37,9 @@ export interface Piece {
   kind: string;
   byline: string;
   editorId: string;
+  /** The assigned writer's user id, `null` when nobody is assigned. Demo
+   *  pieces leave it undefined (their writers are bylines only). */
+  writerId?: string | null;
   stage: Stage;
   /** Display text for the due column: a date as the source wrote it, `""`
    *  when none is set, or the `"ready"` sentinel for "nothing left to chase". */
@@ -68,6 +71,9 @@ export interface Piece {
   stageEnteredAt?: string;
   /** Where the piece's money stands; the "unpaid" focus reads `owed`. */
   paymentStatus?: PiecePaymentStatus;
+  /** ISO instant the linked article or deck goes (or went) live, `null` while
+   *  a draft. A future value means scheduled (see `desk/pieceSchedule.ts`). */
+  publishedAt?: string | null;
 }
 
 export interface Pitch {
@@ -81,6 +87,8 @@ export interface Pitch {
   /** ISO instant the pitch arrived, so the inbox can say how long it has
    *  waited for an answer. */
   receivedAt?: string;
+  /** The member who submitted the pitch, `null` for a desk-logged pitch. */
+  submitterId?: string | null;
 }
 
 export interface Editor {
@@ -151,6 +159,12 @@ function demoDueDate(dayOfAugust: number): string {
  *  demo runs. */
 function demoHoursAgo(hoursAgo: number): string {
   return new Date(Date.now() - hoursAgo * HOUR_IN_MS).toISOString();
+}
+
+/** An ISO instant `hoursAhead` after the viewer's load time, so a demo piece
+ *  can stay scheduled whenever the demo runs. */
+function demoHoursFromNow(hoursAhead: number): string {
+  return new Date(Date.now() + hoursAhead * HOUR_IN_MS).toISOString();
 }
 
 /**
@@ -335,7 +349,10 @@ export const DEMO_PIECES: Piece[] = [
     stageEnteredAt: demoHoursAgo(30),
     paymentStatus: "owed",
     title: "On the bus to Faro",
-    issueId: null,
+    // Scheduled: the desk shows this row with no Publish action and the
+    // peek says when it goes live.
+    issueId: DEMO_ISSUE.id,
+    publishedAt: demoHoursFromNow(40),
     format: "article",
     section: "Essays",
     kind: "Essay",
@@ -478,6 +495,24 @@ export const DEMO_PIECES: Piece[] = [
     dueDate: demoDueDate(20),
     words: 500,
     art: "na",
+  },
+  {
+    // Ready with no publish date and no issue yet: the desk leads this row
+    // with "Add to issue", next to p5's scheduled one.
+    id: "p14",
+    stageEnteredAt: demoHoursAgo(20),
+    paymentStatus: "none",
+    title: "Last orders on a Bairro Alto night",
+    issueId: null,
+    format: "article",
+    section: "Review",
+    kind: "Review",
+    byline: "Tomás Reis",
+    editorId: "marta",
+    stage: "Ready",
+    due: "ready",
+    words: 1100,
+    art: "in",
   },
   {
     // Published last week as a platform highlight. The fee is still owed,

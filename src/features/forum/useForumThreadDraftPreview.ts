@@ -18,14 +18,55 @@ import {
 /** Where a demo-mode draft body lives (mirrors `useForumComposerDraft`). */
 const demoStorageKey = (draftId: string) => `qp.forum.draft.${draftId}`;
 
-/** A first line for the resume notice when the member typed no title yet. */
-const EXCERPT_LENGTH = 90;
+/** How much of the body the draft card carries: more than its one line shows,
+ *  so the line always runs to the card's own truncation. */
+const EXCERPT_LENGTH = 240;
 
 function toExcerpt(body: string): string {
   const oneLine = body.trim().replace(/\s+/g, " ");
   return oneLine.length > EXCERPT_LENGTH
     ? `${oneLine.slice(0, EXCERPT_LENGTH - 1)}…`
     : oneLine;
+}
+
+function countWords(body: string): number {
+  const trimmed = body.trim();
+  return trimmed ? trimmed.split(/\s+/).length : 0;
+}
+
+/**
+ * What the draft card shows about the post beyond its words: each field is
+ * what the member chose in the composer, read from the saved snapshot.
+ */
+export interface ForumDraftCardDetails {
+  /** The typed title, or "" when there is none. */
+  title: string;
+  /** The body on one line, cut to a few lines' worth. "" when empty. */
+  excerpt: string;
+  wordCount: number;
+  /** The chosen `PostKind` id, or null before one is picked. */
+  kind: string | null;
+  /** The chosen community slug, or "" for the town square. */
+  communitySlug: string;
+  tagCount: number;
+  photoCount: number;
+  hasPoll: boolean;
+}
+
+function toCardDetails(draft: ForumDraftPreview): ForumDraftCardDetails {
+  const snapshot = draft.snapshot;
+  const photoCount =
+    snapshot?.photoKeys?.length ?? (snapshot?.imageKey ? 1 : 0);
+  return {
+    title: draft.title,
+    excerpt: toExcerpt(draft.body),
+    wordCount: countWords(draft.body),
+    kind: snapshot?.kind ?? null,
+    communitySlug: snapshot?.communitySlug ?? "",
+    tagCount: snapshot?.tags.length ?? 0,
+    photoCount,
+    hasPoll: !!snapshot?.pollOptions,
+  };
 }
 
 /**
@@ -42,7 +83,12 @@ function toPreview(
 ): ForumDraftPreview | null {
   const hasExtraFields = !!snapshot && !isEmptyThreadDraftSnapshot(snapshot);
   if (!body.trim() && !hasExtraFields) return null;
-  return { body, title: snapshot?.title.trim() ?? "", hasExtraFields };
+  return {
+    body,
+    title: snapshot?.title.trim() ?? "",
+    hasExtraFields,
+    snapshot,
+  };
 }
 
 /**
@@ -99,7 +145,7 @@ export function useForumThreadDraftPreview() {
   const draft = draftQuery.data ?? null;
   return {
     hasDraft: !!draft,
-    /** Title if the member typed one, else the first line of the body. */
-    label: draft ? draft.title || toExcerpt(draft.body) : "",
+    /** Everything the draft card reads, or null with no draft. */
+    details: draft ? toCardDetails(draft) : null,
   };
 }

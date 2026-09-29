@@ -180,7 +180,9 @@ export interface Member {
    *  Fixed taxonomy, private, distinct from the public `openTo` blurbs. */
   lookingFor?: string[];
   /** Whether `lookingFor` is shown on the profile to other viewers. Owner-only
-   *  control; defaults to false (private) when absent. */
+   *  control: the owner's profile carries the stored flag. For a visitor the
+   *  live adapter derives it from a non-empty `lookingFor`, since the backend
+   *  omits the flag for non-owners (see `profileToMember`). */
   lookingForPublic?: boolean;
   /** Whether the member's trust network (vouchers/vouched-for) is hidden
    *  from other members. Owner-only control; defaults to false (visible)
@@ -231,19 +233,21 @@ export interface Member {
   /** Recent public activity across the platform. */
   activity: ActivityItem[];
   /** Whether other members can see this member's real avatar photo (vs the
-   *  gated/blank fallback). Owner-controlled; always the true stored setting
-   *  for every viewer per backend `ProfileCard.photoVisible`. Defaults to
-   *  visible (`true`) when absent — matches the backend column default. */
+   *  gated/blank fallback). Owner-controlled, and on the wire owner-only
+   *  (backend `ProfileCard.photoVisible`, ENG-444): a visitor's read carries
+   *  no toggle and gets the photo already gated (a null `avatarUrl`).
+   *  Defaults to visible (`true`) when absent, the backend column default. */
   photoVisible?: boolean;
   /** Whether other members can see this member's neighbourhood/location.
-   *  Owner-controlled; always the true stored setting for every viewer per
-   *  backend `ProfileCard.hoodVisible`. Defaults to visible (`true`) when
-   *  absent — matches the backend column default. */
+   *  Owner-controlled and owner-only on the wire, same as `photoVisible`: a
+   *  visitor gets `location` already emptied. Defaults to visible (`true`)
+   *  when absent. */
   hoodVisible?: boolean;
   /** Whether other members can see this member's vouchers list. Owner-
-   *  controlled; always the true stored setting for every viewer per backend
-   *  `ProfileCard.vouchersVisible`. Defaults to visible (`true`) when absent
-   *  — matches the backend column default. */
+   *  controlled and owner-only on the wire, same as `photoVisible`. For a
+   *  visitor, `profileToMember` infers it from `mutualVoucherCount === null`,
+   *  which the backend sends a non-owner exactly when the roster is hidden.
+   *  Defaults to visible (`true`) when absent. */
   vouchersVisible?: boolean;
   /** Whether other members can see this member's Ambassador tag (roster,
    *  directory filter, invitee welcome line). Owner-controlled; meaningful

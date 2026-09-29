@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { FiCopy, FiLink, FiRefreshCw, FiX } from "react-icons/fi";
+import { FiClock, FiCopy, FiLink, FiRefreshCw, FiX } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useShareLink } from "../../shared/hooks/useClipboard";
 import { GroupPendingInvitesList } from "./GroupPendingInvitesList";
+import { inviteLinkExpiryLabel } from "./inviteLinkExpiry";
 import type { Conversation } from "./data";
 import styles from "./GroupInfoModal.module.css";
 
@@ -32,7 +33,9 @@ function inviteLinkUrl(token: string): string {
  * PRD-358: the group's revocable invite link (owner/admin only, gated on
  * `active.canManageInviteLink`, server-authoritative) plus the pending
  * invites awaiting a response. Split out of `GroupInfoModal` to keep it
- * under the size cap.
+ * under the size cap. PRD-400: says when the link expires (7 days from its
+ * last reset; Reset issues a fresh window) and that newcomers read from
+ * their join onward.
  */
 export function GroupInviteLinkSection({
   active,
@@ -45,6 +48,9 @@ export function GroupInviteLinkSection({
 }: GroupInviteLinkSectionProps) {
   const { t } = useTranslation();
   const [confirmingReset, setConfirmingReset] = useState(false);
+  // Read once when the panel opens: the label is coarse (days, then hours),
+  // so it needs no ticking clock while the modal is up.
+  const [openedAtMs] = useState(() => Date.now());
   const { share } = useShareLink({
     copied: t("messages:group.inviteLink.copiedToast"),
   });
@@ -52,12 +58,20 @@ export function GroupInviteLinkSection({
   if (!active.canManageInviteLink) return null;
   const token = active.inviteToken ?? null;
   const pendingInvites = active.pendingInvites ?? [];
+  const expiry = token
+    ? inviteLinkExpiryLabel(active.inviteTokenExpiresAt, openedAtMs, t)
+    : null;
 
   return (
     <div className={styles.section}>
       <div className={styles.sectionTitle}>
         {t("messages:group.inviteLink.title")}
       </div>
+      {/* PRD-400: whoever can bring people in learns, once and quietly,
+          that newcomers read the group from the moment they join. */}
+      <p className={styles.inviteHistoryNote}>
+        {t("messages:group.inviteLink.historyNote")}
+      </p>
       {token ? (
         <>
           <div className={styles.inviteLinkRow}>
@@ -66,6 +80,18 @@ export function GroupInviteLinkSection({
               {inviteLinkUrl(token)}
             </span>
           </div>
+          {expiry && (
+            <p
+              className={
+                expiry.isExpired
+                  ? `${styles.inviteLinkExpiry} ${styles.inviteLinkExpired}`
+                  : styles.inviteLinkExpiry
+              }
+            >
+              <FiClock aria-hidden />
+              {expiry.text}
+            </p>
+          )}
           <div className={styles.inviteActions}>
             <Button
               variant="ghost"

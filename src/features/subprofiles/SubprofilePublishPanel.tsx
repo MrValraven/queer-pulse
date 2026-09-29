@@ -7,6 +7,8 @@ import {
   PublishUnmetError,
   useSubprofileMutations,
 } from "./api/useSubprofileMutations";
+import { isPersonaEditConflict } from "./api/personaEditConflict";
+import { personaRefusalMessageKey } from "./editorSaveChain";
 import { evaluatePublishRequirements } from "./subprofileDraftReadiness";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { useEditorFieldJump } from "./useEditorFieldJump";
@@ -131,7 +133,19 @@ export function SubprofilePublishPanel({
     subprofile.id,
     subprofile.memberCount,
   );
-  const ownerAddress = personaOwnerAddress(subprofile, creatorSlug);
+  // `personaOwnerAddress` now reads an unpublished row's status as "draft"
+  // (PRD-429), which `subprofile.status` can still say for a beat right after
+  // a successful publish: the mutation's cache write and this pane's own
+  // `justPublished` flip land in the same tick, but nothing guarantees the
+  // `subprofile` PROP, which the editor context above this component owns, has
+  // re-rendered from "draft" to "published" yet. Reading it as published once
+  // `justPublished` is true keeps the success panel's "View live" link
+  // working the moment it appears, ahead of the surrounding context's own
+  // catch-up render.
+  const ownerAddress = personaOwnerAddress(
+    justPublished ? { ...subprofile, status: "published" } : subprofile,
+    creatorSlug,
+  );
   const livePath = ownerAddress.status === "ready" ? ownerAddress.path : null;
 
   async function onPublish() {
@@ -141,6 +155,12 @@ export function SubprofilePublishPanel({
       setJustPublished(true);
       showToast(t("subprofiles:publishPanel.toastLive"), "success");
     } catch (err) {
+      // ENG-451: the row moved while this publish ran. The editor's conflict
+      // alert says so and offers Reload, as it does for a refused Save.
+      if (isPersonaEditConflict(err)) {
+        editor.markEditConflict();
+        return;
+      }
       if (err instanceof PublishUnmetError) {
         setStoredAttempt({ unmet: err.unmet, unknown: false, screenedText });
         // A linked persona renders no checklist (it has no requirements), so
@@ -164,7 +184,14 @@ export function SubprofilePublishPanel({
         }
       } else {
         setStoredAttempt({ unmet: [], unknown: true, screenedText });
-        showToast(t("subprofiles:publishPanel.toastPublishError"), "error");
+        // A typed refusal (a restriction, a taken handle) gets its own copy.
+        showToast(
+          t(
+            personaRefusalMessageKey(err) ??
+              "subprofiles:publishPanel.toastPublishError",
+          ),
+          "error",
+        );
       }
     }
   }
@@ -175,8 +202,18 @@ export function SubprofilePublishPanel({
       setJustPublished(false);
       setStoredAttempt(null);
       showToast(t("subprofiles:publishPanel.toastUnpublished"), "info");
-    } catch {
-      showToast(t("subprofiles:publishPanel.toastError"), "error");
+    } catch (err) {
+      if (isPersonaEditConflict(err)) {
+        editor.markEditConflict();
+        return;
+      }
+      showToast(
+        t(
+          personaRefusalMessageKey(err) ??
+            "subprofiles:publishPanel.toastError",
+        ),
+        "error",
+      );
     }
   }
 

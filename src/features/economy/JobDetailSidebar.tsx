@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
+import { professionLabelKey } from "../members/workTaxonomy.data";
 import { postedText } from "./api/jobs.adapters";
 import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import { ReportSubjectControl } from "../safety/ReportSubjectControl";
@@ -77,12 +78,24 @@ export function JobDetailSidebar({
           </span>
           <span className={styles.dv}>{job.location}</span>
         </div>
-        <div className={styles.detailRow}>
-          <span className={styles.dl}>
-            {t("economy:jobDetail.sidebar.category")}
-          </span>
-          <span className={styles.dv}>{d.category}</span>
-        </div>
+        {d.category && (
+          <div className={styles.detailRow}>
+            <span className={styles.dl}>
+              {t("economy:jobDetail.sidebar.category")}
+            </span>
+            <span className={styles.dv}>{d.category}</span>
+          </div>
+        )}
+        {job.profession && (
+          <div className={styles.detailRow}>
+            <span className={styles.dl}>
+              {t("economy:jobDetail.sidebar.profession")}
+            </span>
+            <span className={styles.dv}>
+              {t(professionLabelKey(job.profession))}
+            </span>
+          </div>
+        )}
         <div className={styles.detailRow}>
           <span className={styles.dl}>
             {t("economy:jobDetail.sidebar.deadline")}

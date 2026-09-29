@@ -1,13 +1,16 @@
 /**
- * Mock job listings. Per the i18n scope rule, everything a poster authors —
- * `title`, `desc`, `org`, `tags`, `salary`, and the whole `detail` body — stays
+ * Mock job listings. Per the i18n scope rule, everything a poster authors
+ * (`title`, `desc`, `org`, `tags`, `salary`, and the whole `detail` body) stays
  * in English: in live mode it arrives from `GET /jobs` as the employer's own
  * words. Only the chrome around it (filters, "Apply by", badge labels) is
- * translated, and dates are held as real `Date`s so `useFormat()` can render
- * them per locale instead of baking "30 Jun" into the data.
+ * translated, and dates are held as real `Date`s so `useFormat()` renders them
+ * per locale.
  */
 export interface JobDetail {
-  /** Display category for breadcrumb + sidebar (e.g. "Design"). */
+  /**
+   * The job field's resolved display label for the breadcrumb and sidebar
+   * (e.g. "Design"), empty when the listing has no field.
+   */
   category: string;
   /** When the listing went up; `null` renders as "Posted recently". */
   posted: Date | null;
@@ -21,7 +24,14 @@ export interface JobDetail {
 
 export interface Job {
   slug: string;
-  category: string;
+  /** Job field id (a JOB_FIELD_IDS member), or null for a legacy listing. */
+  category: string | null;
+  /** Optional profession id inside `category`. */
+  profession: string | null;
+  /** Commitment id (JobCommitmentId). `type` stays the display string. */
+  commitment: string;
+  /** Seniority id (JobSeniorityId). */
+  seniority: string;
   qr: boolean;
   qrLabel: string;
   organization: string;
@@ -51,6 +61,9 @@ export const JOBS: Job[] = [
   {
     slug: "junior-graphic-designer",
     category: "design",
+    profession: "graphicDesigner",
+    commitment: "fullTime",
+    seniority: "entry",
     qr: true,
     qrLabel: "Queer-run",
     organization: "Atelier Pulso",
@@ -102,6 +115,9 @@ export const JOBS: Job[] = [
   {
     slug: "community-outreach-coordinator",
     category: "community",
+    profession: null,
+    commitment: "fullTime",
+    seniority: "anyLevel",
     qr: true,
     qrLabel: "Queer-led",
     organization: "A national LGBTQ+ rights organisation",
@@ -117,7 +133,7 @@ export const JOBS: Job[] = [
       "Coordinate our community outreach programmes across Lisbon. Manage volunteers, build partnerships. Portuguese required.",
     tags: ["Community", "Outreach", "Advocacy"],
     detail: {
-      category: "Community",
+      category: "Social work & community",
       posted: new Date(2026, 5, 4),
       about: [
         "We're looking for a Community Outreach Coordinator to run our programmes across Lisbon: from neighbourhood drop-ins to partnerships with schools, clinics, and local associations. This is a public-facing role for someone who is as comfortable in a community centre as in a coordination meeting.",
@@ -150,6 +166,9 @@ export const JOBS: Job[] = [
   {
     slug: "backend-engineer",
     category: "tech",
+    profession: null,
+    commitment: "fullTime",
+    seniority: "mid",
     qr: false,
     qrLabel: "Queer-inclusive",
     organization: "A Lisbon Fintech",
@@ -169,7 +188,7 @@ export const JOBS: Job[] = [
       posted: new Date(2026, 4, 28),
       about: [
         "A growing Lisbon fintech is hiring a mid-level backend engineer to work on the core of its payments platform. The stack is Rust and Go, the team is small and senior, and the problems are the genuinely hard kind: correctness, latency, and money that has to add up.",
-        "This listing is on QueerPulse because the company has a real LGBTQ+ employee resource group, inclusive benefits, and a track record we have checked rather than taken on faith.",
+        "This listing is on QueerPulse because the company has a real LGBTQ+ employee resource group, inclusive benefits, and a track record we have checked ourselves.",
       ],
       dayToDay: [
         "Design and build services in Rust and Go for the payments core",
@@ -192,12 +211,15 @@ export const JOBS: Job[] = [
       aboutCompany:
         "A Series-A fintech headquartered in Marvila, building cross-border payments infrastructure for small businesses. Around 40 people, half of them engineers.",
       reviewerNote:
-        "First review is by an engineer who'd work with you. Expect a short take-home rather than a whiteboard.",
+        "First review is by an engineer who'd work with you. Expect a short take-home exercise.",
     },
   },
   {
     slug: "programme-coordinator",
-    category: "arts",
+    category: "curation",
+    profession: null,
+    commitment: "partTime",
+    seniority: "anyLevel",
     qr: true,
     qrLabel: "Queer-run",
     organization: "Rainbow Arts Collective",
@@ -213,7 +235,7 @@ export const JOBS: Job[] = [
       "Help coordinate Rainbow Arts Collective exhibitions, events, and residencies. 20 hours per week.",
     tags: ["Arts admin", "Programming", "Events"],
     detail: {
-      category: "Arts & Culture",
+      category: "Museums, libraries & heritage",
       posted: new Date(2026, 4, 30),
       about: [
         "Rainbow Arts Collective is looking for a part-time Programme Coordinator to keep our exhibitions, events, and residencies running smoothly. Twenty hours a week, flexibly arranged, with a couple of fixed days around install and opening nights.",
@@ -246,6 +268,9 @@ export const JOBS: Job[] = [
   {
     slug: "peer-support-facilitator",
     category: "care",
+    profession: null,
+    commitment: "partTime",
+    seniority: "anyLevel",
     qr: true,
     qrLabel: "Community org",
     organization: "Opus Diversus",
@@ -293,7 +318,10 @@ export const JOBS: Job[] = [
   },
   {
     slug: "bookseller",
-    category: "food",
+    category: "retail",
+    profession: "bookseller",
+    commitment: "partTime",
+    seniority: "anyLevel",
     qr: true,
     qrLabel: "Queer-run",
     organization: "Livraria Devagar",
@@ -309,7 +337,7 @@ export const JOBS: Job[] = [
       "Opening September 2026. We're looking for someone who loves queer literature and wants to help build something new in Anjos.",
     tags: ["Bookshop", "Retail", "Community"],
     detail: {
-      category: "Food & Retail",
+      category: "Retail",
       posted: new Date(2026, 5, 5),
       about: [
         "Livraria Devagar is a new queer bookshop opening in Anjos in September 2026, and we want a part-time bookseller to help us open the doors and shape what the shop becomes. You would be one of the first people in the room, which means real say in the sections, the events, and the feel of the place.",
@@ -339,17 +367,6 @@ export const JOBS: Job[] = [
         "Tell us about a book that mattered to you. That is the part of the application we read first.",
     },
   },
-];
-
-/** i18n Pattern A — chrome filter chips, resolved via t() by JobsPage. */
-export const JOB_FILTERS = [
-  { value: "all", labelKey: "economy:jobs.filter.all" },
-  { value: "design", labelKey: "economy:jobs.filter.design" },
-  { value: "tech", labelKey: "economy:jobs.filter.tech" },
-  { value: "arts", labelKey: "economy:jobs.filter.arts" },
-  { value: "care", labelKey: "economy:jobs.filter.care" },
-  { value: "food", labelKey: "economy:jobs.filter.food" },
-  { value: "community", labelKey: "economy:jobs.filter.community" },
 ];
 
 export const EMPLOYERS = [

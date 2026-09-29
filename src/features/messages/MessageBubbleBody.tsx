@@ -335,10 +335,14 @@ function ImageOrGifBubble({
     // which also nudges the resize-follow scroll right after the entrance
     // has already played.
     const aspectRatio = width > 0 && height > 0 ? width / height : 1;
+    // A GIF reads the localized badge word, so its alt stays in the reader's
+    // language whatever fallback body the sender stored. The caption stays
+    // out of the alt: the bubble's accessible name already reads the caption
+    // node below, and repeating it here would announce it twice.
     const imageAlt =
       message.kind === "image"
         ? t("messages:attachments.imageAlt")
-        : message.text;
+        : t("messages:viewer.gifBadge");
     media = (
       <PhotoBubbleImage
         message={message}

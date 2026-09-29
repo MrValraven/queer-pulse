@@ -202,7 +202,8 @@ export function buildScrollTraceInflatedMessages(): {
  * REVERT INSTRUCTIONS (once the investigation is closed out):
  *  1. Delete this file (src/features/messages/scrollTrace.ts).
  *  2. Remove every `traceScrollEvent(...)` call and its `scrollTrace` import
- *     from useMessageScroll.ts.
+ *     from useMessageScroll.ts, useScrollToBottom.ts, useOlderPageAnchor.ts
+ *     and useScrollResizeFollow.ts.
  *  3. Remove the trace-only areaRef ResizeObserver effect and its import from
  *     useMessageLogState.ts.
  *  4. Revert the `isScrollTraceLiveSimulationEnabled()` branches (and their

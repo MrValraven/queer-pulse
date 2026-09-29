@@ -4,6 +4,15 @@ import { orgBadgeInitials } from "../../../shared/lib/initials";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { CompanyProfile } from "../companies.data";
 import type { Job } from "../jobs.data";
+import {
+  commitmentLabelKey,
+  normalizeCommitment,
+  normalizeSeniority,
+} from "../jobVocabulary.data";
+import {
+  JOB_FIELD_GROUPS,
+  fieldLabelKey,
+} from "../../members/workTaxonomy.data";
 import type {
   CreateJobDto,
   JobApplicationDTO,
@@ -18,7 +27,7 @@ import type { PostJobState } from "../usePostJobForm";
 const LOGO_BG = "rgba(var(--accent-rgb),.14)";
 const LOGO_TEXT = "var(--accent-ink)";
 
-// Fallback for callers that haven't threaded `fmt` through yet — see
+// Fallback for callers that haven't threaded `fmt` through yet; see
 // `jobCardToJob`'s doc comment.
 const FALLBACK_FORMATTERS: Formatters = createFormatters("en");
 
@@ -37,7 +46,7 @@ const CURRENCY_CODES: Record<string, string> = {
 };
 
 // `pay.ratePer` stores the stable English id from `RATE_PER` (postJob.data.ts)
-// as the canonical value (§5.1) — only the display suffix is translated here.
+// as the canonical value (§5.1). Only the display suffix is translated here.
 const RATE_PER_SUFFIX_KEYS: Record<string, string> = {
   Hour: "economy:jobs.pay.perHour",
   Day: "economy:jobs.pay.perDay",
@@ -50,10 +59,9 @@ const RATE_PER_SUFFIX_KEYS: Record<string, string> = {
  * Render a pay object to the prototype's single salary string.
  *
  * i18n: the phrases here are chrome composed in source code, which is exactly
- * what proves they're translatable — so this takes `t` and resolves catalog
- * keys rather than emitting English, and `fmt` so the number/currency renders
- * per locale (pt-PT suffixes the symbol with a space: "2 200 €", never a
- * hand-rolled `€` prefix). `pay.salary` is the poster's own free-text pay
+ * what proves they're translatable. So this takes `t` and resolves catalog
+ * keys, and `fmt` so the number/currency renders per locale (pt-PT suffixes
+ * the symbol with a space: "2 200 €"). `pay.salary` is the poster's own free-text pay
  * string and passes through untranslated (it's fetched in live mode).
  */
 export function formatPay(pay: JobPay, t: TFunction, fmt: Formatters): string {
@@ -85,9 +93,8 @@ export function formatPay(pay: JobPay, t: TFunction, fmt: Formatters): string {
 /**
  * ISO date → a real `Date`; null/invalid → `null` ("no deadline").
  *
- * i18n: deliberately parses rather than formats. The old version baked an
- * `en-GB` "30 Jun" into the view-model, which PT could never re-render; the
- * consumer now formats through `useFormat()` and resolves the null case to
+ * i18n: deliberately parses. The old version baked an `en-GB` "30 Jun" into
+ * the view-model, which PT had no way to re-render; the consumer now formats through `useFormat()` and resolves the null case to
  * `economy:jobs.card.deadlineOpen`.
  */
 export function parseDeadline(iso: string | null): Date | null {
@@ -104,7 +111,7 @@ export function parsePosted(iso: string): Date | null {
 
 /**
  * Resolve the "Posted …" line. Chrome phrase + a locale-formatted date, so it
- * takes both `t` and `fmt` rather than baking either.
+ * takes both `t` and `fmt` and bakes in neither.
  */
 export function postedText(
   posted: Date | null,
@@ -115,7 +122,7 @@ export function postedText(
   return t("economy:jobs.posted.on", { date: fmt.date(posted) });
 }
 
-/** Resolve a job deadline to its display string — a date, or "Open". */
+/** Resolve a job deadline to its display string: a date, or "Open". */
 export function deadlineText(
   deadline: Date | null,
   t: TFunction,
@@ -125,11 +132,29 @@ export function deadlineText(
   return fmt.date(deadline, { day: "numeric", month: "short" });
 }
 
-/** Backend display category ("Arts & Culture") → the view-model's filter slug. */
-function catSlug(category: string): string {
-  return (
-    (category.split(/[^a-z0-9]+/i)[0] ?? category).toLowerCase() || "other"
-  );
+/**
+ * The board's field filter as the field ids it matches and the GET /jobs
+ * params that carry them: one field, every field of a group, or none (all
+ * roles, so no `cat`). The params go into the query key, so a new selection
+ * starts pagination again from page 1.
+ */
+export function jobFieldFilterQuery(filter: {
+  groupId: string | null;
+  fieldId: string | null;
+}): { fieldIds: string[]; params: { cat?: string } } {
+  const group = JOB_FIELD_GROUPS.find(({ id }) => id === filter.groupId);
+  const fieldIds = filter.fieldId
+    ? [filter.fieldId]
+    : [...(group?.fieldIds ?? [])];
+  return {
+    fieldIds,
+    params: fieldIds.length ? { cat: fieldIds.join(",") } : {},
+  };
+}
+
+/** A job field id resolved to its display label; "" for a legacy listing. */
+function fieldDisplayLabel(fieldId: string | null, t: TFunction): string {
+  return fieldId ? t(fieldLabelKey(fieldId)) : "";
 }
 
 /**
@@ -142,7 +167,7 @@ function catSlug(category: string): string {
  * correct (see the module-level formatPay doc comment). Falls back to an
  * English-locale formatter, matching this function's pre-fmt behaviour, for
  * any caller that hasn't been threaded yet. All in-repo call sites now pass
- * `fmt` (`useJobs.ts`, `PostedJobsProvider.tsx`) — the default only guards
+ * `fmt` (`useJobs.ts`, `PostedJobsProvider.tsx`); the default only guards
  * against a future untouched caller.
  */
 export function jobCardToJob(
@@ -151,9 +176,13 @@ export function jobCardToJob(
   fmt: Formatters = FALLBACK_FORMATTERS,
 ): Job {
   const organization = dto.company?.nameText ?? "";
+  const commitment = normalizeCommitment(dto.commitment);
   return {
     slug: dto.slug,
-    category: catSlug(dto.category),
+    category: dto.category,
+    profession: dto.profession ?? null,
+    commitment,
+    seniority: normalizeSeniority(dto.seniority ?? ""),
     qr: dto.queerRun,
     // `dto.qrLabel` is the company's own wording (fetched); the fallback is
     // chrome, so it resolves through the catalog.
@@ -169,20 +198,20 @@ export function jobCardToJob(
     logoBg: LOGO_BG,
     logoText: LOGO_TEXT,
     title: dto.title,
-    type: dto.commitment,
+    type: t(commitmentLabelKey(commitment)),
     location: dto.location,
     salary: formatPay(dto.pay, t, fmt),
     deadline: parseDeadline(dto.deadline),
     description: dto.desc,
     tags: dto.tags,
     detail: {
-      category: dto.category,
+      category: fieldDisplayLabel(dto.category, t),
       posted: parsePosted(dto.createdAt),
       about: dto.desc ? [dto.desc] : [],
       dayToDay: [],
       lookingFor: dto.tags,
       offer: [],
-      // The company's full "about" lives on its profile, not the job DTO.
+      // The company's full "about" lives on its profile.
       aboutCompany: "",
       reviewerNote: "",
     },
@@ -202,7 +231,7 @@ export function jobDetailToJob(
     // backend is the only honest source for it.
     isPoster: dto.isPoster,
     detail: {
-      category: dto.category,
+      category: fieldDisplayLabel(dto.category, t),
       posted: parsePosted(dto.createdAt),
       about: dto.detail.about,
       dayToDay: dto.detail.dayToDay,
@@ -233,8 +262,8 @@ export function postJobStateToCreateJobDto(
   company: CompanyProfile,
   _role: string,
 ): CreateJobDto {
-  // Matches the badge's English source label — a data predicate over the
-  // company record, not user-facing copy, so it stays untranslated.
+  // Matches the badge's English source label. It is a data predicate over the
+  // company record, so it stays untranslated.
   const queerRun = company.badges.some((b) => /queer/i.test(b.label));
   const location = needsCity(state.format)
     ? state.city || "Lisbon"
@@ -242,6 +271,7 @@ export function postJobStateToCreateJobDto(
   return {
     title: state.title.trim(),
     category: state.category,
+    profession: state.profession || undefined,
     commitment: state.commitment,
     seniority: state.seniority,
     format: FORMAT_MAP[state.format] ?? "either",

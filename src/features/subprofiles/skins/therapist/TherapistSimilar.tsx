@@ -10,6 +10,10 @@ import type {
 import { personaPublicPathOrNull } from "../../personaLinks.data";
 import type { PublicSubprofileView } from "../../api/subprofiles.adapters";
 import type { PersonaViewMode } from "../../personaSkinRender";
+import {
+  rankSimilarTherapists,
+  therapistTopicSet,
+} from "./rankSimilarTherapists";
 import styles from "./TherapistSidebar.module.css";
 
 const MAX_ROWS = 3;
@@ -86,10 +90,19 @@ function SimilarRow({
   );
 }
 
+/** A stable key for the persona on screen: its public address, the same
+ *  scheme the cards' `href` uses. A persona with no address yet (an owner's
+ *  preview) falls back to its id. */
+function pageKey(data: PublicSubprofileView): string {
+  return personaPublicPathOrNull(data) ?? data.id;
+}
+
 /**
  * "Also worth a look": up to three other therapist personas listed on
- * QueerPulse, open ones first. Renders nothing while loading, on an error,
- * or when this persona is the only one listed.
+ * QueerPulse. Shared topics rank first, then therapists taking new clients,
+ * then a rotation seeded by this page (see `rankSimilarTherapists`). Renders
+ * nothing while loading, on an error, or when this persona is the only one
+ * listed.
  */
 export function TherapistSimilar({
   data,
@@ -102,14 +115,16 @@ export function TherapistSimilar({
   const headingId = useId();
   const { cards, isLoading, isError } = useTherapistPersonas();
 
-  const rows = useMemo(() => {
-    const others = cards.filter((card) => !isSamePersona(card, data));
-    const openFirst = [
-      ...others.filter((card) => card.availability === "open"),
-      ...others.filter((card) => card.availability !== "open"),
-    ];
-    return openFirst.slice(0, MAX_ROWS);
-  }, [cards, data]);
+  const rows = useMemo(
+    () =>
+      rankSimilarTherapists({
+        cards: cards.filter((card) => !isSamePersona(card, data)),
+        topics: therapistTopicSet(data),
+        currentSlug: pageKey(data),
+        limit: MAX_ROWS,
+      }),
+    [cards, data],
+  );
 
   if (isLoading || isError || rows.length === 0) return null;
 

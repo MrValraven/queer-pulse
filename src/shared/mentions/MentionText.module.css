@@ -14,3 +14,9 @@
 .mentionFlat {
   cursor: inherit;
 }
+/* A member mention in a matched Go together chat (PRD-423) opens nothing,
+   so it takes the bubble's own text colour (ink on a received bubble, cream
+   on a sent plum one) and keeps the weight that marks a name. */
+.mentionInert {
+  color: inherit;
+}

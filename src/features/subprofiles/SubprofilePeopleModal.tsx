@@ -14,7 +14,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { personaTitleName } from "./subprofile-kinds";
-import type { SubprofileKind } from "./api/subprofiles.api";
+import type { SubprofileKind, Visibility } from "./api/subprofiles.api";
+import { canReadPersonaEndorsers } from "./personaEngagement";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { getFollowers, type FollowerDTO } from "./api/subprofiles.api";
@@ -45,6 +46,9 @@ export interface PersonaPeopleSummary {
    *  ever see who follows; everyone else gets the private state and no fetch.
    *  Flows straight through from `SubprofilePublicDTO.viewerIsMember`. */
   viewerIsMember: boolean;
+  /** A members-only persona's endorser list answers its owners alone, so a
+   *  non-owner never requests it (`canReadPersonaEndorsers`). */
+  visibility: Visibility;
 }
 
 function PersonRow({
@@ -150,7 +154,10 @@ export function SubprofilePeopleModal({
     isLoading: endorsersLoading,
     isError: haveEndorsersFailed,
     refetch: refetchEndorsers,
-  } = useEndorsers(persona.id, mode === "endorsements");
+  } = useEndorsers(
+    persona.id,
+    mode === "endorsements" && canReadPersonaEndorsers(persona, isOwner),
+  );
   const endorsers = endorsersResult?.endorsers ?? [];
 
   // Followers are owner-only. LIVE hits the 403-guarded endpoint, so we never

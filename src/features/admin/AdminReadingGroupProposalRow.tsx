@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { communityPath } from "../../app/routeMap";
 import { AdminChip, type AdminTone } from "./ui";
+import { isDecisionAvailable } from "./readingGroupProposalDecisions";
 import type {
   AdminReadingGroupProposalDTO,
   ReadingGroupFormat,
@@ -26,8 +27,10 @@ const STATUS_TONE: Record<ReadingGroupProposalStatus, AdminTone> = {
   archived: "ghost",
 };
 
-// Each action button, and the status its proposal lands in — used to disable
-// the button that matches the current status (no-op re-decision).
+// The three action buttons, and the status each one lands its proposal in.
+// Whether a given button is enabled for the current proposal is decided by
+// isDecisionAvailable, so a proposal already past a decision never offers a
+// button the server would answer with a conflict.
 const ACTIONS: {
   decision: ReadingGroupProposalDecision;
   status: ReadingGroupProposalStatus;
@@ -130,12 +133,12 @@ export function AdminReadingGroupProposalRow({
           {t(`admin:adminReadingGroupProposals.status.${proposal.status}`)}
         </AdminChip>
         <div className={styles.rowActionButtons}>
-          {ACTIONS.map(({ decision, status }) => (
+          {ACTIONS.map(({ decision }) => (
             <Button
               key={decision}
               variant="ghost"
               size="sm"
-              disabled={pending || proposal.status === status}
+              disabled={pending || !isDecisionAvailable(proposal, decision)}
               onClick={() => onDecide(decision)}
             >
               {t(`admin:adminReadingGroupProposals.action.${decision}`)}

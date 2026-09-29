@@ -1,4 +1,6 @@
+import { useCallback, useSyncExternalStore } from "react";
 import {
+  hashKey,
   useMutation,
   useQuery,
   useQueryClient,
@@ -25,13 +27,54 @@ export function mailboxAttributionQueryKey(
   return ["mailbox-attribution", identityId, demoMode] as const;
 }
 
+/**
+ * ENG-456: the attribution this session already read or changed for
+ * `identityId`, without asking the server. It listens to the query cache
+ * itself and registers no query observer, so the settings panel's own query
+ * keeps its options (its `queryFn` above all, which a refusal's re-read
+ * needs). A change made in the panel reaches the reader at once, demo mode
+ * included, where that cache holds the only copy of a change. Undefined until
+ * the settings were opened once; the caller then reads the mailbox list.
+ */
+export function useCachedMailboxAttribution(
+  identityId: string | undefined,
+): MailboxAttribution | undefined {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const queryKey = mailboxAttributionQueryKey(identityId ?? "", demoMode);
+  const queryHash = hashKey(queryKey);
+  const subscribe = useCallback(
+    (onStoreChange: () => void) =>
+      queryClient.getQueryCache().subscribe((event) => {
+        if (event.query.queryHash === queryHash) onStoreChange();
+      }),
+    [queryClient, queryHash],
+  );
+  const readCachedAttribution = () =>
+    identityId
+      ? queryClient.getQueryData<MailboxAttribution>(queryKey)
+      : undefined;
+  return useSyncExternalStore(
+    subscribe,
+    readCachedAttribution,
+    readCachedAttribution,
+  );
+}
+
 /** The switches as the mailbox list already carries them, so the settings
- *  render at once. Both read true until someone changes them. */
+ *  render at once. Both read true until someone changes them. The list does
+ *  not know whether a listing has an owner, so the seed lets the owner alone
+ *  change the mailbox switch; live mode then reads the server's answer,
+ *  which also lets staff of an ownerless listing change it. */
 function attributionFromSummary(mailbox: MailboxSummary): MailboxAttribution {
+  const staffNamesLockedReason = mailbox.staffNamesLockedReason ?? null;
   return {
     shouldShowStaffNames: mailbox.shouldShowStaffNames ?? true,
     shouldAllowMyName: mailbox.shouldAllowMyName ?? true,
     isOwner: mailbox.isOwner,
+    isAllowedToChangeStaffNames:
+      mailbox.isOwner && staffNamesLockedReason === null,
+    staffNamesLockedReason,
   };
 }
 
@@ -108,12 +151,22 @@ export function useMailboxAttribution(mailbox: MailboxSummary) {
     onError: (error, { previous }) => {
       queryClient.setQueryData<MailboxAttribution>(queryKey, previous);
       // A refusal means the member's standing changed (they lost the owner
-      // seat or the mailbox itself): read both afresh.
+      // seat or the mailbox itself, or the persona became unlinked): read
+      // both afresh.
       void queryClient.invalidateQueries({ queryKey });
-      if (errorCodeOf(error) === "IDENTITY_NOT_STAFF") {
+      const errorCode = errorCodeOf(error);
+      if (
+        errorCode === "IDENTITY_NOT_STAFF" ||
+        errorCode === "IDENTITY_STAFF_NAMES_LOCKED"
+      ) {
         refreshMailboxes(queryClient);
       }
-      showToast(t("messages:mailbox.settings.error"), "error");
+      showToast(
+        errorCode === "IDENTITY_STAFF_NAMES_LOCKED"
+          ? t("messages:mailbox.settings.unlinkedPersonaError")
+          : t("messages:mailbox.settings.error"),
+        "error",
+      );
     },
   });
 
@@ -132,6 +185,9 @@ export function useMailboxAttribution(mailbox: MailboxSummary) {
 
   return {
     attribution: query.data,
+    // True while `attribution` is still the mailbox list's seed (live mode,
+    // before the server answers).
+    isPlaceholderData: query.isPlaceholderData,
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: query.refetch,

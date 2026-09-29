@@ -1,7 +1,9 @@
-import { useCallback, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
 import type { SubprofileView } from "./api/subprofiles.adapters";
+import { useSubprofileReload } from "./api/useSubprofile";
 import { useSubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { useSubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { useEditorRowsState } from "./useEditorRowsState";
@@ -26,12 +28,89 @@ import {
  * baseline to the sent snapshot); each list area advances its own baseline to
  * the just-saved draft on that area's success, so a partial failure keeps only
  * the failed areas dirty.
+ *
+ * ENG-451 Reload: every area seeds once, on mount. After a save conflict the
+ * alert's Reload refetches the persona and remounts the editor state below
+ * (`key={seedGeneration}`), so meta, skin blocks, rows and sections all
+ * re-seed from the fresh copy through their own mount-time seeding. The
+ * member's edits stay on screen until they press Reload.
  */
 export function SubprofileEditorProvider({
   subprofile,
   children,
 }: {
   subprofile: SubprofileView;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+  const refetchSubprofile = useSubprofileReload(subprofile.id);
+  const [seedGeneration, setSeedGeneration] = useState(0);
+  const [reloadedSubprofile, setReloadedSubprofile] =
+    useState<SubprofileView | null>(null);
+  const [isReloading, setIsReloading] = useState(false);
+  const [hasReloadFailed, setHasReloadFailed] = useState(false);
+
+  const reloadLatest = useCallback(() => {
+    setIsReloading(true);
+    setHasReloadFailed(false);
+    refetchSubprofile()
+      .then((latest) => {
+        // `null`: the persona is gone for this member. The reload stored that
+        // in the owner query, so the page swaps to its not-found state and
+        // there is nothing to re-seed.
+        if (!latest) return;
+        setReloadedSubprofile(latest);
+        setSeedGeneration((generation) => generation + 1);
+        showToast(t("subprofiles:editConflict.reloadedToast"), "success");
+      })
+      // The editor stays as it was (edits, conflict alert and all); the
+      // alert says the reload failed and Reload can be pressed again.
+      .catch(() => setHasReloadFailed(true))
+      .finally(() => setIsReloading(false));
+  }, [refetchSubprofile, showToast, t]);
+
+  // The query's readers re-render a tick after the refetch settles, so for
+  // that tick the `subprofile` prop can still be the copy that conflicted.
+  // Seed from the refetched copy until the prop has caught up with it.
+  const seedSource =
+    reloadedSubprofile &&
+    reloadedSubprofile.editVersion > subprofile.editVersion
+      ? reloadedSubprofile
+      : subprofile;
+
+  return (
+    <SubprofileEditorState
+      key={seedGeneration}
+      subprofile={seedSource}
+      reload={{
+        reloadLatest,
+        isReloading,
+        hasReloadFailed,
+        reloadGeneration: seedGeneration,
+      }}
+    >
+      {children}
+    </SubprofileEditorState>
+  );
+}
+
+/** The Reload half of the editor context, owned by the outer provider so it
+ *  survives the remount a Reload causes. */
+type EditorReloadState = Pick<
+  SubprofileEditorContextValue,
+  "reloadLatest" | "isReloading" | "hasReloadFailed" | "reloadGeneration"
+>;
+
+/** The editor state for one seeding of the persona: composes the area hooks,
+ *  the save graph and the leave guard, and publishes the shared context. */
+function SubprofileEditorState({
+  subprofile,
+  reload,
+  children,
+}: {
+  subprofile: SubprofileView;
+  reload: EditorReloadState;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -43,12 +122,17 @@ export function SubprofileEditorProvider({
     subprofile,
     rows.sectionRows,
   );
-  const { pending, dirty, canSave, saving, saveAll } = useEditorSaveGraph(
-    subprofile,
-    meta,
-    skinBlocks,
-    rows,
-  );
+  const {
+    pending,
+    dirty,
+    canSave,
+    saving,
+    hasEditConflict,
+    saveAll,
+    getEditVersion,
+    adoptEditVersion,
+    markEditConflict,
+  } = useEditorSaveGraph(subprofile, meta, skinBlocks, rows);
 
   useUnsavedChangesGuard({
     active: dirty && !saving,
@@ -82,6 +166,11 @@ export function SubprofileEditorProvider({
     canSave,
     saveAll,
     discardAll,
+    hasEditConflict,
+    getEditVersion,
+    adoptEditVersion,
+    markEditConflict,
+    ...reload,
     reseedSection: rows.reseedSection,
   };
 

@@ -1,24 +1,21 @@
 import { useState } from "react";
-import { FiArrowLeft, FiCheck } from "react-icons/fi";
-import { useAuth } from "../../app/providers/authContext";
+import { FiArrowLeft } from "react-icons/fi";
 import { Button, SkeletonCard } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCommunities } from "../communities/api/useCommunities";
-import {
-  useJoinCommunity,
-  useLeaveCommunity,
-} from "../communities/api/useCommunityMutations";
 import type { Community } from "../homepage/data/types";
+import { OnboardingCommunityCard } from "./OnboardingCommunityCard";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
 const SUGGESTION_LIMIT = 4;
 
-/** Onboarding only suggests communities you can join in one tap — the "public"
- *  tier. Request/invite/private communities gate entry (a join here would sit
- *  pending or be refused), so they don't belong in this quick pick-and-join
- *  step. Treat a missing tier as open only when the card isn't otherwise flagged
+/** Onboarding only suggests "public" tier communities. One with house rules
+ *  opens the join wizard from its card, so the member can read and agree to
+ *  them; the rest join in one tap. Request/invite/private communities gate
+ *  entry (a join here would sit pending or be refused), so they don't belong
+ *  in this quick pick-and-join step. Treat a missing tier as open only when the card isn't otherwise flagged
  *  private, so both the live card DTO (always carries `accessTier`) and the demo
  *  registry (tags only the gated one) filter correctly. */
 function isOpenlyJoinable(community: Community): boolean {
@@ -28,94 +25,25 @@ function isOpenlyJoinable(community: Community): boolean {
   );
 }
 
-/** One suggested community with its own join + leave mutations (one hook set per
- *  card keeps rules-of-hooks intact across a variable-length grid). The button
- *  toggles: tap to join, tap again to leave. */
-function CommunityJoinCard({ community }: { community: Community }) {
-  const { t } = useTranslation();
-  const { user } = useAuth();
-  const slug = community.slug ?? "";
-  const joinCommunity = useJoinCommunity(slug);
-  const leaveCommunity = useLeaveCommunity(slug);
-  // Seed from the card's own role (live discover cards carry `myRole`); demo
-  // cards leave it unset, so they start un-joined and flip on click.
-  const [status, setStatus] = useState<"idle" | "joined" | "requested">(
-    community.myRole ? "joined" : "idle",
-  );
-  const isMember = status !== "idle";
-  const isPending = joinCommunity.isPending || leaveCommunity.isPending;
-
-  async function handleToggle() {
-    if (isPending) return;
-    if (status === "joined") {
-      // Leave. Self-leave passes the caller's own member slug; demo mode's
-      // mutation is a no-op (empty slug is harmless), live mode always has a
-      // profile slug on the session. Roll back to joined if the call fails.
-      setStatus("idle");
-      try {
-        await leaveCommunity.mutateAsync({
-          memberSlug: user?.profile.slug ?? "",
-        });
-      } catch {
-        setStatus("joined");
-      }
-    } else if (status === "idle") {
-      setStatus("joined");
-      try {
-        const result = await joinCommunity.mutateAsync({});
-        if (result?.outcome === "requested") setStatus("requested");
-      } catch {
-        setStatus("idle");
-      }
-    }
-  }
-
-  return (
-    <div
-      className={[styles.commCard, isMember && styles.commJoined]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <div className={styles.ccName}>{community.name}</div>
-      <div className={styles.ccCount}>{community.count}</div>
-      <div className={styles.ccDesc}>{community.description}</div>
-      <button
-        type="button"
-        className={[styles.ccJoin, isMember && styles.ccJoinActive]
-          .filter(Boolean)
-          .join(" ")}
-        onClick={() => void handleToggle()}
-        disabled={isPending}
-        aria-pressed={isMember}
-        title={
-          status === "joined"
-            ? t("auth:onboarding.stepCommunities.leave")
-            : undefined
-        }
-      >
-        {status === "requested" ? (
-          <>
-            <FiCheck /> {t("auth:onboarding.stepCommunities.requested")}
-          </>
-        ) : status === "joined" ? (
-          <>
-            <FiCheck /> {t("auth:onboarding.stepCommunities.joined")}
-          </>
-        ) : (
-          t("auth:onboarding.stepCommunities.join")
-        )}
-      </button>
-    </div>
-  );
-}
-
 export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
   const { t } = useTranslation();
   const { items, isLoading } = useCommunities({ filter: "discover" });
-  const suggestions = items
+  const liveSuggestions = items
     .filter((community) => Boolean(community.slug))
     .filter(isOpenlyJoinable)
     .slice(0, SUGGESTION_LIMIT);
+  // Held from the first non-empty answer on. A join or leave invalidates every
+  // `["communities"]` query, and the refetched page can reorder or drop a card
+  // (a community founded meanwhile, a tier that changed) while it is still
+  // showing its outcome. Set during render, the React pattern for keeping a
+  // value from an earlier render, so the frozen list paints in the same pass.
+  const [frozenSuggestions, setFrozenSuggestions] = useState<
+    Community[] | null
+  >(null);
+  if (frozenSuggestions === null && liveSuggestions.length > 0) {
+    setFrozenSuggestions(liveSuggestions);
+  }
+  const suggestions = frozenSuggestions ?? liveSuggestions;
 
   return (
     <>
@@ -141,7 +69,10 @@ export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
       ) : (
         <div className={styles.communityGrid}>
           {suggestions.map((community) => (
-            <CommunityJoinCard key={community.slug} community={community} />
+            <OnboardingCommunityCard
+              key={community.slug}
+              community={community}
+            />
           ))}
         </div>
       )}

@@ -1557,6 +1557,15 @@ export const gatherings: Catalog = {
   "door.undoAria": "Anular a entrada de {name}",
   "door.undoneToast": "Entrada anulada",
   "door.failedToast": "Não resultou. Tenta outra vez daqui a pouco.",
+  "door.checkInRefusedToast":
+    "Não conseguimos registar a entrada desta pessoa.",
+  "door.checkInWaitlistedToast":
+    "Esta pessoa está na lista de espera. Promove-a primeiro e depois regista a entrada.",
+  "door.checkInMaybeToast":
+    "Esta pessoa respondeu talvez e ainda não tem lugar.",
+  "door.checkInNotOnListToast":
+    "Esta pessoa não está na lista de pessoas convidadas.",
+  "door.undoRefusedToast": "Não conseguimos anular esta entrada.",
   "door.emptyTitle": "Ainda ninguém na lista",
   "door.emptyDescription":
     "À medida que as pessoas confirmam presença aparecem aqui, prontas para registar a entrada.",
@@ -1591,6 +1600,14 @@ export const gatherings: Catalog = {
     "Este navegador não consegue ler códigos pela câmara. Escreve antes o código do cartão.",
   "door.scan.failedHint":
     "A câmara não arrancou. Escreve antes o código do cartão.",
+  "door.scan.cardUnreadableHint":
+    "Não foi possível ler esse cartão. Procura-a na lista de pessoas convidadas.",
+  "door.scan.checkInWaitlistedHint":
+    "Esta pessoa está na lista de espera. Promove-a primeiro e depois regista a entrada.",
+  "door.scan.checkInMaybeHint":
+    "Esta pessoa respondeu talvez e ainda não tem lugar.",
+  "door.scan.checkInNotOnListHint":
+    "Esta pessoa não está na lista de pessoas convidadas.",
   "door.scan.codeLabel": "Código do cartão",
   "door.scan.codeHelper":
     "Todos os cartões de membro têm este código por baixo. Colar ou escrever funciona da mesma maneira.",
@@ -1655,8 +1672,8 @@ export const gatherings: Catalog = {
   "manage.attendees.needs.accessLabel": "Acessibilidade:",
   "manage.attendees.needs.dietaryLabel": "Comida:",
   "manage.attendees.needs.customAnswerLabel": "Resposta à tua pergunta:",
-  "manage.attendees.needs.withheld":
-    "Esta pessoa preferiu manter as respostas privadas",
+  "manage.attendees.needs.hiddenFromGuests":
+    "Só a organização vê que esta pessoa vai",
 
   // ── LOC-08: a porta de quem organiza ──────────────────────────────────────
   "manage.bans.eyebrow": "Só neste convívio",
@@ -1841,12 +1858,17 @@ export const gatherings: Catalog = {
   "rsvpDetails.pronounsPlaceholder": "ela/dela, elu/delu…",
   "rsvpDetails.customQuestionHint": "Esta pergunta é de quem organiza.",
   "rsvpDetails.customAnswerPlaceholder": "A tua resposta",
-  "rsvpDetails.whoSeesLabel": "Quem pode ver isto",
-  "rsvpDetails.visibility.everyone": "Toda a gente que vai",
+  "rsvpDetails.whoSeesLabel": "Quem pode ver que vais?",
+  "rsvpDetails.visibility.everyone": "Toda a gente",
   "rsvpDetails.visibility.connections": "As minhas conexões",
   "rsvpDetails.visibility.justMe": "Só quem organiza",
+  "rsvpDetails.visibility.everyoneDesc":
+    "Membros que podem ver a lista de quem vai",
+  "rsvpDetails.visibility.connectionsDesc": "As tuas conexões veem o teu nome",
+  "rsvpDetails.visibility.justMeDesc":
+    "O teu nome fica fora da lista de quem vai",
   "rsvpDetails.privacyNote":
-    "Quem organiza vê sempre o que escreves aqui, independentemente da escolha acima.",
+    "Quem organiza vê sempre o que escreves aqui e que vais, seja qual for a tua escolha acima.",
   "rsvpDetails.cancelCta": "Cancelar",
   "rsvpDetails.saveCta": "Guardar",
   "rsvpDetails.savedToast": "Guardado",

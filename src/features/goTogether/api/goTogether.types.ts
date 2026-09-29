@@ -53,6 +53,10 @@ export interface GoTogetherCardDTO {
   lens: Lens | null;
   groupId: string | null;
   profile: { exists: boolean; needsRefresh: boolean };
+  /** Ids from `hostQuestions` a waiting member has to answer again, because
+   *  the host changed, added or removed a question after they opted in.
+   *  Always empty unless `state` is `waiting`. */
+  unansweredHostQuestionIds: string[];
 }
 
 export interface FriendMatchProfileDTO {
@@ -104,9 +108,10 @@ export type MeetAgainVerdict = "yes" | "maybe" | "no";
 export type GroupClickAnswer = "yes" | "somewhat" | "no";
 
 /** First name and pronouns only; the avatar follows the member's own photo
- *  setting and is null when they hide it. */
+ *  setting and is null when they hide it. `memberRef` is an opaque id that
+ *  only the group's block and report routes accept: it opens no profile. */
 export interface GoTogetherGroupMemberDTO {
-  slug: string;
+  memberRef: string;
   firstName: string;
   pronouns: string | null;
   avatarUrl: string | null;
@@ -132,6 +137,13 @@ export interface GoTogetherGroupDTO {
   isDissolved: boolean;
   members: GoTogetherGroupMemberDTO[];
   mergeOffer: { groupId: string } | null;
+  /** True from the gathering's start: Leave then ends only the chat seat,
+   *  and the member stays in the group, on meet-again and keeps their
+   *  reveal. */
+  isLeaveChatOnly: boolean;
+  /** True once the caller holds no seat in the group's chat: Open chat and
+   *  Leave chat hide. */
+  hasLeftChat: boolean;
   checkIn: { isOpen: boolean; isHere: boolean; hasLeftEvent: boolean };
   feedback: { isOpen: boolean; closesAt: string | null; hasAnswered: boolean };
 }
@@ -171,6 +183,7 @@ export const GO_TOGETHER_ERROR_CODES = [
   "GO_TOGETHER_CHECKIN_CLOSED",
   "GO_TOGETHER_FEEDBACK_CLOSED",
   "GO_TOGETHER_MERGE_EXPIRED",
+  "GO_TOGETHER_NOT_WAITING",
   "MATCHED_GROUP_LOCKED",
 ] as const;
 export type GoTogetherErrorCode = (typeof GO_TOGETHER_ERROR_CODES)[number];
@@ -183,6 +196,8 @@ export interface OptInBody {
   lensConsent: boolean;
 }
 export type PairAnswersBody = Omit<OptInBody, "mode" | "partnerSlug">;
+/** `PUT .../host-answers`: only the questions the card asks again. */
+export type HostAnswersBody = Pick<OptInBody, "hostAnswers">;
 export interface HostConfigBody {
   enabled: boolean;
   cutoffAt?: string;

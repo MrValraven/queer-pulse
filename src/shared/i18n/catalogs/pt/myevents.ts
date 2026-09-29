@@ -409,18 +409,11 @@ export const myevents: Catalog = {
   "rsvpModal.pronounsPlaceholder": "ela/dela, elu/delu…",
   "rsvpModal.customQuestionHint": "Esta pergunta é de quem organiza.",
   "rsvpModal.customAnswerPlaceholder": "A tua resposta",
-  "rsvpModal.whoSees": "Quem pode ver que vais?",
-  "rsvpModal.visibility.everyone": "Todas as pessoas",
-  "rsvpModal.visibility.connections": "Conexões",
-  "rsvpModal.visibility.justMe": "Só eu",
-  "rsvpModal.attendQuietly": "Participar discretamente",
-  "rsvpModal.attendQuietlyDesc":
-    "Participa sem o teu nome aparecer na lista de convidades.",
   "rsvpModal.privacyNote":
-    "Só quem organiza vê as tuas notas de acesso e alimentação. Podes mudar tudo isto quando quiseres.",
+    "Quem organiza vê sempre o que escreves aqui e que vais. Podes mudar tudo isto quando quiseres.",
   "rsvpModal.cancelCta": "Cancelar",
   "rsvpModal.saveCta": "Guardar",
-  "rsvpModal.savedToast": "Guardado. Só quem organiza vê isto",
+  "rsvpModal.savedToast": "Guardado",
   "rsvpModal.saveErrorToast": "Isso não foi guardado. Tenta outra vez.",
   "rsvpModal.closedToast": "As confirmações para este convívio já fecharam.",
 

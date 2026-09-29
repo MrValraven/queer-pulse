@@ -1,5 +1,6 @@
 import { apiGet, apiPatch } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
+import type { GroupListingStatus } from "./adminHousingGroupListings.api";
 
 /**
  * Admin housing-groups console (`/admin/housing-groups`, moderator/admin only).
@@ -39,6 +40,8 @@ export interface AdminGroupListingDTO {
   priceEuros: number;
   accessibilityInfo: string;
   groupSlug: string | null;
+  /** Where the listing sits in its pre-publication review; only `live` is on the board. */
+  status: GroupListingStatus;
   hidden: boolean;
   hiddenReason: string | null;
   createdAt: string;
@@ -97,6 +100,15 @@ export const triageAdminGroupJoinRequest = (
 export const getAdminGroupListings = () =>
   apiGet<AdminGroupListingDTO[]>("/admin/housing-groups/listings");
 
+/** The server's cap on a hide reason (`HideGroupListingDto`). */
+export const HIDE_GROUP_LISTING_REASON_MAX_LENGTH = 500;
+
+/**
+ * PATCH /admin/housing-groups/listings/:id/hidden. Hiding (`hidden: true`)
+ * requires a non-empty `reason` of at most 500 characters (PRD-463): it reaches
+ * the poster on their `group_listing_decided` notification. Un-hiding takes no
+ * reason, and the server ignores one if sent.
+ */
 export const setAdminGroupListingHidden = (
   id: string,
   hidden: boolean,

@@ -257,6 +257,8 @@ export const magazine: Catalog = {
   "deck.editor.budget.count": "{count} / {max} caracteres",
   "deck.editor.saved": "Rascunho guardado",
   "deck.editor.publishedToast": "Deck publicado",
+  "deck.editor.publishUnlinked":
+    "Este deck ainda não tem uma peça na redação, e os decks são publicados a partir da peça. Começa os decks na redação com Montar um deck.",
   "deck.editor.scheduledToast": "Deck agendado",
   "deck.editor.unpublishedToast": "Deck despublicado",
   "deck.editor.deletedToast": "Deck eliminado",
@@ -733,6 +735,10 @@ export const magazine: Catalog = {
   "desk.board.moveStageAria": "Mudar de estado",
   "desk.board.overCap": "Acima de {cap}",
   "desk.board.unpublishToMove": "Para a mover, despublica-a no registo da peça",
+  "desk.board.unscheduleToMove":
+    "Está agendada. Para a mover, cancela o agendamento no registo da peça",
+  "desk.board.goesLive": "Publica-se a {date}",
+  "desk.board.liveOnSite": "Já está no site",
   "desk.board.scrollPrevious": "Estados anteriores",
   "desk.board.scrollNext": "Estados seguintes",
 
@@ -871,6 +877,10 @@ export const magazine: Catalog = {
   "desk.modals.commission.wordsLabel": "Palavras",
   "desk.modals.commission.dueDateLabel": "Prazo",
   "desk.modals.commission.feeLabel": "Valor",
+  "desk.modals.commission.writerLabel": "Quem escreve",
+  "desk.modals.commission.writerNone": "Ainda sem ninguém",
+  "desk.modals.commission.writersUnavailable":
+    "A lista de quem escreve ainda não carregou. Podes enviar já este briefing e escolher quem escreve mais tarde.",
   "desk.modals.commission.feePlaceholder": "ex.: 150 €",
   "desk.modals.commission.trackLabel": "Onde sai",
   "desk.modals.commission.trackUnassigned": "Nenhuma edição",
@@ -932,8 +942,12 @@ export const magazine: Catalog = {
   "desk.modals.handoff.title": "Passar",
   "desk.modals.handoff.cta": "Passar",
   "desk.modals.handoff.body":
-    "Passa “{title}” a outra pessoa editora. Ela continua exatamente onde ficaste.",
+    "Escolhe quem edita e quem escreve “{title}”. Quem a recebe continua exatamente onde está.",
   "desk.modals.handoff.toLabel": "Para",
+  "desk.modals.handoff.writerLabel": "Quem escreve",
+  "desk.modals.handoff.writerNone": "Sem ninguém",
+  "desk.modals.handoff.writersUnavailable":
+    "A lista de quem escreve ainda não carregou, por isso quem escreve fica igual.",
 
   // ── Editorial pipeline stage names (desk/stageLabels.ts) ─────────────────
   // Substitui a nota "left unswept here" no cabeçalho desta secção: os ids de
@@ -1184,6 +1198,9 @@ export const magazine: Catalog = {
   "desk.peek.previousAria": "Peça anterior",
   "desk.peek.nextAria": "Peça seguinte",
   "desk.peek.closeAria": "Fechar pré-visualização",
+  "desk.peek.scheduledFor": "Agendada para publicar a {date}",
+  "desk.publish.alreadyScheduled":
+    "Esta peça já está agendada. Abre o rascunho para mudar a data.",
   "desk.peek.recordErrorTitle": "Não foi possível carregar a ficha desta peça",
   "desk.peek.threadHeading": "Últimas mensagens",
 
@@ -1192,6 +1209,10 @@ export const magazine: Catalog = {
   "desk.bulk.selected_other": "{count} selecionadas",
   "desk.bulk.ariaLabel": "Ações em lote sobre peças",
   "desk.bulk.changeStage": "Mudar de estado",
+  "desk.bulk.skippedWithDate_one":
+    "{count} peça com data de publicação ficou onde estava. Cancela o agendamento ou despublica-a para a mover.",
+  "desk.bulk.skippedWithDate_other":
+    "{count} peças com data de publicação ficaram onde estavam. Cancela o agendamento ou despublica-as para as mover.",
   "desk.bulk.chase_one": "Insistir {count}",
   "desk.bulk.chase_other": "Insistir {count}",
   "desk.bulk.stageChangedToast_one": "{count} peça movida para {stage}.",
@@ -1278,11 +1299,15 @@ export const magazine: Catalog = {
   // ── PieceRecordPage ──────────────────────────────────────────────────────
   "piece.header.backToDesk": "Voltar à redação",
   "piece.header.openDraft": "Abrir o rascunho",
+  "piece.header.openingDraft": "A abrir o rascunho…",
+  "piece.header.unschedule": "Cancelar agendamento",
+  "piece.header.openDeckError":
+    "Não foi possível abrir este deck. Tenta de novo.",
   "piece.header.publish": "Publicar",
   "piece.header.formatArticle": "Artigo",
   "piece.header.formatDeck": "Deck",
   "piece.header.inAnIssue": "Numa edição",
-  "piece.header.notScheduled": "Ainda não agendada",
+  "piece.header.notScheduled": "Ainda sem edição",
   "piece.header.notFoundTitle": "Não conseguimos abrir esta peça",
   "piece.header.notFoundDescription":
     "Pode ter sido removida, ou a ligação está desatualizada.",
@@ -1340,6 +1365,8 @@ export const magazine: Catalog = {
     "A redação não indicou o motivo. Recarrega o registo e tenta novamente.",
   "piece.publish.confirmPublishTitle": "Publicar “{title}”?",
   "piece.publish.confirmPublishSub": "Fica disponível a quem lê de imediato.",
+  "piece.publish.confirmSettleSub":
+    "Já está no site. Publicar marca-a como publicada e avisa quem escreveu.",
   "piece.publish.confirmPublishBody":
     "Quem escreveu é avisado de que saiu. Podes retirá-la a qualquer momento, e nada é apagado quando o fizeres.",
   "piece.publish.confirmPublishCta": "Publicar",
@@ -1520,7 +1547,7 @@ export const magazine: Catalog = {
     "Submissões atrasadas passam para a edição seguinte.",
   "submitStory.sidebar.afterSubmitHeading": "Depois de submeteres",
   "submitStory.sidebar.afterSubmit.response":
-    "As pessoas editoras respondem no prazo de <strong>5 dias úteis</strong> com aceitação, um pedido de alterações, ou uma recusa com notas.",
+    "As pessoas editoras leem todas as submissões e respondem com aceitação, um pedido de alterações, ou uma recusa com notas.",
   "submitStory.sidebar.afterSubmit.approve":
     "As peças aceites passam por uma ronda de edição. <strong>Aprovas a versão final</strong> antes de ser publicada.",
   "submitStory.sidebar.afterSubmit.licence":
@@ -2279,8 +2306,8 @@ export const magazine: Catalog = {
   // ── WriterPitchesTab ─────────────────────────────────────────────────────
   "writer.pitches.emptyTitle": "Ainda não tens propostas",
   "writer.pitches.emptyDescription":
-    "Envia uma abaixo. Uma pessoa lê todas as propostas, e responde em 5 dias.",
-  "writer.pitches.sentMeta": "Enviada a {sent} · resposta em 5 dias",
+    "Envia uma abaixo. Alguém da redação lê todas as propostas.",
+  "writer.pitches.sentMeta": "Enviada a {sent}",
   "writer.pitches.formHeading": "Propor um texto",
   "writer.pitches.titleLabel": "Título de trabalho",
   "writer.pitches.titlePlaceholder": "Como se chama a peça, mais ou menos?",

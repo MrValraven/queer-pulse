@@ -213,15 +213,17 @@
   font-size: var(--text-15);
   color: var(--ink);
   background: var(--paper);
-  outline: none;
   resize: vertical;
   min-height: 110px;
   line-height: 1.55;
   transition: border-color 0.25s var(--ease);
   margin-bottom: 8px;
 }
-.textarea:focus {
+.textarea:focus-visible {
   border-color: var(--accent);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .counter {
   font-size: var(--text-12);

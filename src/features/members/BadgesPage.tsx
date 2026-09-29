@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
@@ -41,6 +41,37 @@ export function BadgesPage() {
     recognition.badges.locked.length === 0;
   const openBadge = (entries: BadgeDrawerEntry[], index: number) =>
     setDrawerSelection({ entries, index });
+
+  // A badge-earned notification links here as `?badge=<key>`. The drawer is
+  // derived from the param rather than copied into state by an effect, so a
+  // cache that predates the award opens it as soon as the refetch lands.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const deepLinkedBadgeKey = searchParams.get("badge");
+  const earnedBadges = recognition.badges.earned;
+  const deepLinkedIndex = deepLinkedBadgeKey
+    ? earnedBadges.findIndex((badge) => badge.key === deepLinkedBadgeKey)
+    : -1;
+  const deepLinkedSelection =
+    deepLinkedIndex >= 0
+      ? {
+          entries: earnedBadges.map((badge) => ({ badge, earned: true })),
+          index: deepLinkedIndex,
+        }
+      : null;
+  const activeSelection = drawerSelection ?? deepLinkedSelection;
+  const closeDrawer = () => {
+    setDrawerSelection(null);
+    if (deepLinkedBadgeKey) {
+      setSearchParams(
+        (previous) => {
+          const next = new URLSearchParams(previous);
+          next.delete("badge");
+          return next;
+        },
+        { replace: true },
+      );
+    }
+  };
 
   let body;
   if (recognition.isLoading) {
@@ -123,14 +154,14 @@ export function BadgesPage() {
           {body}
         </div>
       </div>
-      {drawerSelection && (
+      {activeSelection && (
         <BadgeDrawer
-          entries={drawerSelection.entries}
-          index={drawerSelection.index}
+          entries={activeSelection.entries}
+          index={activeSelection.index}
           onNavigate={(index) =>
-            setDrawerSelection((prev) => (prev ? { ...prev, index } : prev))
+            setDrawerSelection({ ...activeSelection, index })
           }
-          onClose={() => setDrawerSelection(null)}
+          onClose={closeDrawer}
         />
       )}
     </AppShell>

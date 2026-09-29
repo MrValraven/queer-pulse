@@ -6,7 +6,10 @@ import {
   apiPut,
 } from "../../../shared/api/client";
 import type { AuthorSummary } from "../../../shared/contracts/contracts";
-import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
+import type {
+  MailboxSummary,
+  StaffNamesLockedReason,
+} from "../../../shared/api/mailboxViewer";
 
 export const getMailboxes = () =>
   apiGet<MailboxSummary[]>("/identities/mailboxes");
@@ -60,13 +63,21 @@ export interface MailboxAttribution {
   shouldShowStaffNames: boolean;
   shouldAllowMyName: boolean;
   isOwner: boolean;
+  /** Whether the caller may change `shouldShowStaffNames`: the owner, or any
+   *  staff member of a listing that has no owner (PRD-432). Absent from an
+   *  older server; read `isOwner` then. */
+  isAllowedToChangeStaffNames?: boolean;
+  /** ENG-456: set when customers never see a staff name here, whatever both
+   *  switches say. `shouldShowStaffNames` still reports the stored switch. */
+  staffNamesLockedReason?: StaffNamesLockedReason | null;
 }
 
 export const getMailboxAttribution = (identityId: string) =>
   apiGet<MailboxAttribution>(`/identities/${identityId}/attribution`);
 
-/** Owner only: 403 `IDENTITY_NOT_OWNER` otherwise, and on an ownerless
- *  listing. */
+/** The owner, or any staff member of an ownerless listing: 403
+ *  `IDENTITY_NOT_OWNER` otherwise, and 403 `IDENTITY_STAFF_NAMES_LOCKED` on
+ *  an unlinked persona. */
 export const setMailboxStaffNames = (
   identityId: string,
   shouldShowStaffNames: boolean,

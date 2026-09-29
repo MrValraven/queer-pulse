@@ -157,7 +157,10 @@ export function cardToMember(dto: MemberCardDTO): Member {
     pronunciation: dto.pronunciation,
     hood: dto.location ?? "",
     tags: dto.tags ?? [],
-    visibility: dto.visibility,
+    // Owner-only on a list card (ENG-444). `open` is the tier the limited
+    // note already treats as its "say less" fallback; `profileToMember`
+    // replaces it with the real tier, which a single profile always carries.
+    visibility: dto.visibility ?? "open",
     initials: initialsOf(dto.firstName, dto.lastName),
     tint: tintForSlug(dto.slug),
     photo: dto.avatarUrl ?? undefined,
@@ -176,11 +179,13 @@ export function cardToMember(dto: MemberCardDTO): Member {
     skills: [],
     groups: [],
     activity: [],
-    // Backend `ProfileCard` fields, always the true stored value for every
-    // viewer (never themselves gated) — see the DTO field comments. Default
-    // to visible (`true`) when the wire omits them, matching the backend
-    // column default, so an older/thinner card response doesn't read as
-    // "hidden" by omission.
+    // Backend `ProfileCard` toggles: owner-only since ENG-444, so they are
+    // on the wire only when the viewer is this member. Absent means "not
+    // yours to know", and it defaults to visible (`true`, the column
+    // default) because the CONTENT already arrives gated: a hidden photo is
+    // a null `avatarUrl` and a hidden hood an empty `location`, so no
+    // non-owner render path needs the flag to draw them honestly. The one
+    // exception, the vouchers roster, is re-derived in `profileToMember`.
     photoVisible: dto.photoVisible ?? true,
     hoodVisible: dto.hoodVisible ?? true,
     vouchersVisible: dto.vouchersVisible ?? true,
@@ -227,6 +232,17 @@ export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
 export function profileToMember(dto: ProfileDTO): Member {
   return {
     ...cardToMember(dto),
+    // Every viewer of a single profile gets the tier (backend
+    // `FullProfileResponse.visibility`); `?? "open"` only covers a response
+    // that somehow lacks it, matching `cardToMember`.
+    visibility: dto.visibility ?? "open",
+    // A non-owner gets no `vouchersVisible` (ENG-444), but the hero still
+    // has to say "names hidden" over an empty roster. The backend answers
+    // `mutualVoucherCount: null` to a non-owner exactly when the roster is
+    // hidden (for the owner it is null too, but the owner's response carries
+    // the real flag, which wins here). `undefined`, a backend predating the
+    // count, reads as visible.
+    vouchersVisible: dto.vouchersVisible ?? dto.mutualVoucherCount !== null,
     role: dto.tagline ?? "",
     hood: dto.location ?? "",
     bio: dto.bio ?? "",
@@ -239,7 +255,11 @@ export function profileToMember(dto: ProfileDTO): Member {
     openTo: toOpenToEntries(dto.openTo),
     identities: dto.identities ?? [],
     lookingFor: dto.lookingFor ?? [],
-    lookingForPublic: dto.lookingForPublic ?? false,
+    // Owner-only toggle (ENG-444), derived for a visitor the same way as
+    // `vouchersVisible` above: the backend sends a visitor the list only when
+    // the member made it public, so a non-empty list means public and an
+    // empty one renders as hidden. The owner's response carries the real flag.
+    lookingForPublic: dto.lookingForPublic ?? (dto.lookingFor ?? []).length > 0,
     privateNetwork: dto.privateNetwork ?? false,
     featuredConsent: dto.featuredConsent ?? false,
     // Owner-only self-hide timestamp (Task 17) — absent from the DTO for any

@@ -68,7 +68,13 @@ export function SubprofileDirectoryBrowse() {
         >
           {t("subprofiles:directory.error.description")}
         </SuccessPanel>
-      ) : shownCards.length === 0 ? (
+      ) : shownCards.length === 0 && !hasMore ? (
+        // Genuinely nothing left: either the server term itself matched
+        // nobody, or every loaded page is exhausted and a browser-only facet
+        // (profession, tags, availability) narrowed what's left to zero.
+        // PRD-430: this is the ONLY condition that reads as "no personas".
+        // A filter that merely narrows the pages already loaded keeps the
+        // grid's pager below on screen, since later pages may still match.
         <EmptyState
           icon={<FiLayers />}
           title={t("subprofiles:directory.empty.title")}
@@ -80,14 +86,32 @@ export function SubprofileDirectoryBrowse() {
         />
       ) : (
         <>
-          <div className={styles.grid}>
-            {shownCards.map((card, index) => (
-              <Reveal key={card.handle} delay={Math.min(index, 8) * 60}>
-                <SubprofileCard card={card} />
-              </Reveal>
-            ))}
-          </div>
-          <div className={styles.pager}>
+          {shownCards.length > 0 && (
+            <div className={styles.grid}>
+              {shownCards.map((card, index) => (
+                <Reveal key={card.handle} delay={Math.min(index, 8) * 60}>
+                  <SubprofileCard card={card} />
+                </Reveal>
+              ))}
+            </div>
+          )}
+          {/* PRD-430: every loaded page is exhausted and a browser-only facet
+              narrowed the grid to zero, but a further server page might still
+              match. That's the moment this explanation matters most, so it
+              leads at body size here. The quiet caption below stays for the
+              non-zero case. */}
+          {shownCards.length === 0 && isNarrowedInBrowser && hasMore && (
+            <p className={styles.pagerNoteLead}>
+              {t("subprofiles:directory.narrowedZeroNote")}
+            </p>
+          )}
+          <div
+            className={
+              shownCards.length > 0
+                ? styles.pager
+                : `${styles.pager} ${styles.pagerBare}`
+            }
+          >
             <span className={styles.pagerCount}>
               {/* Show more and the filters move the shown figure; a new
                   search term moves the server total. */}
@@ -114,6 +138,7 @@ export function SubprofileDirectoryBrowse() {
               <Button
                 variant="ghost"
                 size="sm"
+                className={styles.pagerShowMore}
                 onClick={onShowMore}
                 disabled={isFetchingMore}
               >
@@ -125,8 +150,10 @@ export function SubprofileDirectoryBrowse() {
           </div>
           {/* Profession, tags and availability have no server param yet, so
               they cut the pages loaded so far. Saying so is the difference
-              between a partial answer and a wrong one. */}
-          {isNarrowedInBrowser && hasMore && (
+              between a partial answer and a wrong one. The zero-shown case
+              gets the louder `.pagerNoteLead` above instead, so this quiet
+              caption only covers the non-zero case here. */}
+          {shownCards.length > 0 && isNarrowedInBrowser && hasMore && (
             <p className={styles.pagerNote}>
               {t("subprofiles:directory.narrowedNote")}
             </p>

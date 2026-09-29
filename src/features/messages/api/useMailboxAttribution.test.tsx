@@ -66,8 +66,11 @@ afterEach(() => {
 async function renderAttribution(mailbox: MailboxSummary, isLive = true) {
   vi.resetModules();
   if (isLive) vi.stubEnv("VITE_API_URL", API);
-  const { useMailboxAttribution, mailboxAttributionQueryKey } =
-    await import("./useMailboxAttribution");
+  const {
+    useMailboxAttribution,
+    useCachedMailboxAttribution,
+    mailboxAttributionQueryKey,
+  } = await import("./useMailboxAttribution");
   const { MAILBOXES_QUERY_KEY_PREFIX } =
     await import("../../../shared/api/mailboxViewer");
   const { DemoModeProvider } =
@@ -90,9 +93,13 @@ async function renderAttribution(mailbox: MailboxSummary, isLive = true) {
       </I18nProvider>
     </QueryClientProvider>
   );
+  // The composer chip's cache reader renders beside the settings, after
+  // them, the way the chip does, so every test also proves the reader leaves
+  // the settings query's own options alone.
   const { result: probe } = renderHook(
     () => ({
       settings: useMailboxAttribution(mailbox),
+      cached: useCachedMailboxAttribution(mailbox.identityId),
       translate: useTranslation().t,
     }),
     { wrapper },
@@ -109,6 +116,11 @@ async function renderAttribution(mailbox: MailboxSummary, isLive = true) {
       return probe.current.settings;
     },
   };
+  const cached = {
+    get current() {
+      return probe.current.cached;
+    },
+  };
   const wasMailboxListRefreshed = () =>
     invalidateSpy.mock.calls.some(
       ([filters]) =>
@@ -117,6 +129,7 @@ async function renderAttribution(mailbox: MailboxSummary, isLive = true) {
     );
   return {
     result,
+    cached,
     client,
     queryKey: mailboxAttributionQueryKey(mailbox.identityId, !isLive),
     wasMailboxListRefreshed,
@@ -219,6 +232,41 @@ describe("useMailboxAttribution (live)", () => {
     ).toBeInTheDocument();
   });
 
+  it("explains an unlinked persona's refusal, then reads the lock afresh with the chip's reader mounted", async () => {
+    const { ApiError } = await import("../../../shared/api/client");
+    apiMocks.setMailboxStaffNames.mockRejectedValue(
+      new ApiError(403, "Forbidden", { code: "IDENTITY_STAFF_NAMES_LOCKED" }),
+    );
+    const { result, cached, wasMailboxListRefreshed } =
+      await renderAttribution(cafe);
+    await waitFor(() =>
+      expect(apiMocks.getMailboxAttribution).toHaveBeenCalledTimes(1),
+    );
+    const lockedAttribution: MailboxAttribution = {
+      ...serverAttribution,
+      isAllowedToChangeStaffNames: false,
+      staffNamesLockedReason: "unlinkedPersona",
+    };
+    apiMocks.getMailboxAttribution.mockResolvedValue(lockedAttribution);
+    act(() => result.current.setShowStaffNames(false));
+    expect(
+      await screen.findByText(
+        "That didn't save. This persona now keeps who runs it private.",
+      ),
+    ).toBeInTheDocument();
+    // The re-read runs through the settings query's own `queryFn`.
+    await waitFor(() =>
+      expect(apiMocks.getMailboxAttribution).toHaveBeenCalledTimes(2),
+    );
+    await waitFor(() =>
+      expect(result.current.attribution?.staffNamesLockedReason).toBe(
+        "unlinkedPersona",
+      ),
+    );
+    expect(cached.current?.staffNamesLockedReason).toBe("unlinkedPersona");
+    expect(wasMailboxListRefreshed()).toBe(true);
+  });
+
   it("refreshes the mailbox list when the member no longer staffs it", async () => {
     const { ApiError } = await import("../../../shared/api/client");
     apiMocks.setMyStaffNaming.mockRejectedValue(
@@ -247,6 +295,8 @@ describe("useMailboxAttribution (demo)", () => {
         shouldShowStaffNames: false,
         shouldAllowMyName: true,
         isOwner: false,
+        isAllowedToChangeStaffNames: false,
+        staffNamesLockedReason: null,
       }),
     );
     act(() => result.current.setAllowMyName(false));

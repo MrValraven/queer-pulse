@@ -7,6 +7,9 @@ interface EmptyStateAction {
   to?: string;
   href?: string;
   onClick?: () => void;
+  /** The action's work is running. The button stays mounted and focusable
+   *  with `aria-disabled`, so focus stays on it; the caller guards `onClick`. */
+  isBusy?: boolean;
 }
 
 interface EmptyStateProps {
@@ -49,7 +52,11 @@ function ActionButton({
     );
   }
   return (
-    <Button variant={variant} onClick={action.onClick}>
+    <Button
+      variant={variant}
+      onClick={action.onClick}
+      aria-disabled={action.isBusy || undefined}
+    >
       {action.label}
     </Button>
   );

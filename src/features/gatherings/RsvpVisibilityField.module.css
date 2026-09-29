@@ -1,0 +1,101 @@
+/* "Who can see you're going?" (RsvpVisibilityField). It governs who finds
+   the member on the guest list, a separate question from the notes above it,
+   so a hairline and the section gap set it apart as its own step. */
+.field {
+  margin-top: var(--gap-grid);
+  padding-top: var(--gap-grid);
+  border-top: 1px solid var(--line);
+}
+
+/* Used only when the host modal passes no label class of its own. */
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* One row per option: every label and its scope line wrap inside the
+   modal's width, so no option is clipped on a phone in either language. */
+.options {
+  display: grid;
+  gap: 8px;
+}
+
+.option {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  align-content: start;
+  min-width: 0;
+  min-height: 44px;
+  text-align: start;
+  background: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  padding-block: 11px;
+  padding-inline: 14px 44px;
+  font-family: var(--sans);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+/* Chosen: accent border, tinted surface and a tick, the same look as the Go
+   together choice cards. */
+.optionChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    border-color: rgba(var(--line-rgb), 0.28);
+  }
+
+  .optionChecked:hover {
+    border-color: var(--accent);
+  }
+}
+
+.optionLabel {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.optionDescription {
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.check {
+  position: absolute;
+  inset-inline-end: 14px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  color: var(--accent-text);
+}
+
+.note {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+}

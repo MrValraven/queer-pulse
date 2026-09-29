@@ -8,12 +8,14 @@ import { useNewSideForm } from "./useNewSideForm";
 import styles from "./NewSideModal.module.css";
 
 /**
- * Two-step create wizard: step 1 picks the craft (by-craft family picker,
- * blank, or copy an existing persona); step 2 names it and chooses whether
- * it's linked to the owner's profile or stands alone with its own handle. All
- * state, derivation, and the create/seed/navigate submission live in
- * `useNewSideForm` (every write goes through `useSubprofileMutations()`, so
- * demo and live behave identically) — this component is just the render shell.
+ * Two-step create wizard: step 1 picks the craft (a searchable by-craft
+ * family picker, or copy an existing persona); step 2 names it and chooses
+ * whether it's linked to the owner's profile or stands alone with its own
+ * handle. All state, derivation, and the create/seed/navigate submission live
+ * in `useNewSideForm` (every write goes through `useSubprofileMutations()`, so
+ * demo and live behave identically); this component is just the render shell.
+ * Both steps use the `wide` dialog so the craft grid gets three columns and
+ * the dialog keeps one size between steps.
  */
 export function NewSideModal({
   onClose,
@@ -22,7 +24,7 @@ export function NewSideModal({
   onClose: () => void;
   /** Pre-select a craft (Moment 4's persona-creation deep-link, `?kind=` on
    *  `MySubprofilesPage`) so the member lands on step 1 with it already
-   *  chosen instead of the blank family picker. Caller validates the raw
+   *  chosen in the family picker. Caller validates the raw
    *  query param against `SubprofileKind` before passing it in. */
   initialKind?: SubprofileKind | null;
 }) {
@@ -31,6 +33,7 @@ export function NewSideModal({
 
   return (
     <Modal
+      wide
       title={
         <Translation
           i18nKey={
@@ -46,6 +49,7 @@ export function NewSideModal({
           ? "subprofiles:newModal.sub"
           : "subprofiles:newModal.stepIdentitySub",
       )}
+      className={form.step === 1 ? styles.craftStepModal : undefined}
       onClose={onClose}
       footer={
         form.step === 1 ? (

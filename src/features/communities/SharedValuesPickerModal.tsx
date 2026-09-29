@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, Modal, SearchInput } from "../../shared/components/ui";
+import { useDebouncedValue } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COMFORTABLE_RULE_COUNT,
@@ -34,12 +35,22 @@ interface SharedValuesPickerModalProps {
   }) => void;
 }
 
-/** Case- and accent-insensitive contains, so "acao" finds "ação". */
+/** Short enough to feel live, long enough to skip re-filtering mid-word. */
+const SEARCH_DEBOUNCE_MS = 150;
+
+/**
+ * Case- and accent-insensitive, punctuation collapsed to single spaces and a
+ * leading space added, so "acao" finds "ação", "no-one" finds "no one", and a
+ * needle folded the same way can be matched at word starts only.
+ */
 function fold(text: string): string {
-  return text
+  const folded = text
     .toLocaleLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+  return ` ${folded}`;
 }
 
 /**
@@ -65,14 +76,23 @@ export function SharedValuesPickerModal({
   // Translate once per render rather than per row per keystroke: the search
   // reads the same 80 strings the list renders.
   const labelled = useMemo(
-    () => SHARED_VALUE_LIBRARY.map((entry) => ({ entry, label: t(entry.key) })),
+    () =>
+      SHARED_VALUE_LIBRARY.map((entry) => {
+        const label = t(entry.key);
+        return { entry, label, searchText: fold(label) };
+      }),
     [t],
   );
 
-  const needle = fold(query.trim());
-  const matches = needle
-    ? labelled.filter((row) => fold(row.label).includes(needle))
-    : labelled;
+  // Matched at word starts: nearly every value contains an "a" or an "s"
+  // somewhere, so a plain contains left the list looking unfiltered until the
+  // third letter, while "s" at a word start already narrows it.
+  const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS);
+  const needle = fold(debouncedQuery);
+  const matches =
+    needle.trim().length > 0
+      ? labelled.filter((row) => row.searchText.includes(needle))
+      : labelled;
 
   const themes = SHARED_VALUE_THEMES.map((theme) => ({
     theme,

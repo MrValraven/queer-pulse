@@ -173,13 +173,44 @@ describe("collectThreadPhotos", () => {
     expect(photos[0]?.senderAvatar).toBeUndefined();
   });
 
-  it("carries the message's own text as alt for a gif", () => {
-    const gif = photoMessage({ id: "m1", kind: "gif", text: "A cat waving" });
+  it("uses a gif's caption as its alt", () => {
+    const gif = photoMessage({
+      id: "m1",
+      kind: "gif",
+      text: "GIF",
+      attachment: {
+        url: "https://cdn.example/cat.gif",
+        previewUrl: "https://cdn.example/cat-small.gif",
+        width: 480,
+        height: 360,
+        provider: "klipy",
+        caption: "A cat waving",
+      },
+    });
     const photos = collectThreadPhotos(
       [{ day: "Today", items: [gif] }],
       options,
     );
     expect(photos[0]?.alt).toBe("A cat waving");
+  });
+
+  it("uses the localized gif label as alt when a gif has no caption", () => {
+    const gif = photoMessage({ id: "m1", kind: "gif", text: "GIF" });
+    const t: TFunction = (key) => `translated:${key}`;
+    const photos = collectThreadPhotos([{ day: "Today", items: [gif] }], {
+      ...options,
+      t,
+    });
+    expect(photos[0]?.alt).toBe("translated:messages:viewer.gifBadge");
+  });
+
+  it("keeps a gif's body as alt when no translator is passed", () => {
+    const gif = photoMessage({ id: "m1", kind: "gif", text: "GIF" });
+    const photos = collectThreadPhotos(
+      [{ day: "Today", items: [gif] }],
+      options,
+    );
+    expect(photos[0]?.alt).toBe("GIF");
   });
 
   it("leaves alt undefined for an uploaded image", () => {

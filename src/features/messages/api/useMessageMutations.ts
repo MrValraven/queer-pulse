@@ -3,14 +3,18 @@ import {
   useMutation,
   useMutationState,
   useQueryClient,
+  type Query,
   type QueryClient,
+  type QueryKey,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
+  invalidateConversationDetail,
   newestCachedMessage,
+  patchConversationDetail,
   patchConversationPreview,
-  patchConversationRead,
+  patchConversationReadCoverage,
   upsertMessage,
 } from "../../../shared/api/messageCache";
 import type { MessageResponse } from "../../../shared/contracts/contracts";
@@ -159,9 +163,13 @@ export function useLeaveGroup() {
       if (demoMode || !conversationId) return;
       await leaveGroup(conversationId);
     },
-    onSuccess: () => {
+    onSuccess: (_result, conversationId) => {
       if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // The departed thread's detail entry carries `hasLeft` and the roster
+      // too; the controller's optimistic `leftGroupIds` covers the screen
+      // until this read lands.
+      void invalidateConversationDetail(queryClient, conversationId);
     },
   });
 }
@@ -170,7 +178,10 @@ export function useLeaveGroup() {
  *  `["conversations"]` list in place — instead of `invalidateQueries`, which
  *  would throw the returned DTO away and pay for a full `GET /conversations`
  *  round-trip the mutation's own response already made unnecessary. A no-op if
- *  the row isn't cached yet (falls back to the next real fetch). Exported for
+ *  the row isn't cached yet (falls back to the next real fetch). The thread's
+ *  detail entry, when cached, takes the same fields (see
+ *  `withFreshConversation`), so a thread opened past the loaded inbox pages
+ *  shows the rename, roster or dissolve at once. Exported for
  *  `useGroupManagementMutations.ts` (section 8: transfer ownership, dissolve),
  *  which returns the SAME shape of already-fresh `Conversation` for an
  *  existing row and patches it the same way rather than forking this logic. */
@@ -185,6 +196,62 @@ export function patchConversationInList(
         conversation.id === updated.id ? updated : conversation,
       ),
   );
+  const cancelledDetailKeys = cancelDetailReadsInFlight(
+    queryClient,
+    updated.id,
+  );
+  patchConversationDetail(queryClient, updated.id, (detail) =>
+    withFreshConversation(detail, updated),
+  );
+  // A fresh read for each cancelled one, sent after the commit, so a change
+  // another member made in the meantime still arrives.
+  for (const queryKey of cancelledDetailKeys) {
+    void queryClient.invalidateQueries({ queryKey, exact: true });
+  }
+}
+
+/** Cancels the detail reads for `conversationId` that are in flight over
+ *  data already cached, and returns their keys. Such a read may have left
+ *  before the mutation committed, so its answer could land on top of the
+ *  fresh patch and bring the old roster or title back. TanStack reverts a
+ *  cancelled entry synchronously, so the patch that follows writes over the
+ *  reverted state and the aborted answer is dropped. A first read (no data
+ *  yet) keeps running: there is nothing cached for it to overwrite. */
+function cancelDetailReadsInFlight(
+  queryClient: QueryClient,
+  conversationId: string,
+): QueryKey[] {
+  const filter = {
+    queryKey: ["conversation-detail", conversationId],
+    predicate: (query: Query) =>
+      query.state.fetchStatus === "fetching" && query.state.data !== undefined,
+  };
+  const inFlightKeys = queryClient
+    .getQueryCache()
+    .findAll(filter)
+    .map((query) => query.queryKey);
+  if (inFlightKeys.length > 0) void queryClient.cancelQueries(filter);
+  return inFlightKeys;
+}
+
+/** A cached detail entry overlaid with a mutation's fresh `Conversation`.
+ *  The detail read is the one that always carries the full roster and the
+ *  stored draft (ENG-253), so an empty roster or an absent draft in
+ *  `updated` keeps the detail's own copy; a live group always has at least
+ *  its owner, so an empty roster only ever means "not carried". */
+function withFreshConversation<Detail extends Conversation>(
+  detail: Detail,
+  updated: Conversation,
+): Detail {
+  return {
+    ...detail,
+    ...updated,
+    members:
+      updated.members && updated.members.length > 0
+        ? updated.members
+        : detail.members,
+    draft: updated.draft ?? detail.draft,
+  };
 }
 
 /**
@@ -356,7 +423,7 @@ export function useMarkRead() {
     },
     onSuccess: (readThrough, conversationId) => {
       if (demoMode || !readThrough) return;
-      const isFullyCovered = patchConversationRead(
+      const coverage = patchConversationReadCoverage(
         queryClient,
         conversationId,
         readThrough,
@@ -364,12 +431,17 @@ export function useMarkRead() {
       // Reading a thread clears its unread → refresh the cheap nav DM badge
       // (its own isolated key, so the list patch above doesn't touch it).
       void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
-      // A false `isFullyCovered` means this POST's watermark came from a
-      // stale cached thread tail (see `patchConversationRead`'s own doc), so
-      // the row was deliberately left unread; resync it with the server here
-      // so it doesn't stay stuck until some unrelated refetch happens to run.
-      if (!isFullyCovered) {
+      // A short watermark means this POST came from a stale cached thread
+      // tail (see `patchConversationRead`'s own doc), so that cache was
+      // deliberately left unread; resync it with the server here so it
+      // doesn't stay stuck until some unrelated refetch happens to run. Only
+      // the cache that fell short is refetched: a thread past the loaded
+      // inbox pages lives in its detail entry alone, and the inbox stays put.
+      if (!coverage.isListCovered) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
+      if (!coverage.isDetailCovered) {
+        void invalidateConversationDetail(queryClient, conversationId);
       }
     },
   });

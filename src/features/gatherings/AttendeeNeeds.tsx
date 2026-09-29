@@ -21,8 +21,10 @@ import styles from "./AttendeeNeeds.module.css";
  * PRIVACY IS STATED, not implied. The block is marked as private to the
  * organisers on every row that carries one, because a host glancing at a list
  * on a shared screen at a door needs to know which lines are somebody else's
- * to give away. An attendee who chose "just me" has their free text withheld
- * server-side, and that choice is named here rather than rendered as silence.
+ * to give away. The host always receives every answer (PRD-415). An attendee
+ * who answered "Who can see you're going?" with "Only the hosts" is listed to
+ * the hosts only. That line comes first and in full ink, because it is the
+ * one the host acts on: at the door, in photos and in announcements.
  */
 export function AttendeeNeeds({
   attendee,
@@ -46,9 +48,9 @@ export function AttendeeNeeds({
   // Pronouns have no row here: both organiser lists already print them in
   // the attendee's meta line (`attendeeMeta`, `DoorGuestRow`).
   const customAnswer = attendee.customAnswer?.trim();
-  const isWithheld = attendee.detailsVisibility === "justMe";
+  const isHiddenFromGuests = attendee.detailsVisibility === "justMe";
   const hasAnswers = Boolean(accessNeeds || dietaryNeeds || customAnswer);
-  if (!guestCount && !hasAnswers && !isWithheld) return null;
+  if (!guestCount && !hasAnswers && !isHiddenFromGuests) return null;
   const customAnswerLabel =
     customQuestion?.trim() ||
     t("gatherings:manage.attendees.needs.customAnswerLabel");
@@ -59,6 +61,14 @@ export function AttendeeNeeds({
         {t("gatherings:manage.attendees.needs.privateLabel")}
       </span>
       <ul className={styles.list}>
+        {isHiddenFromGuests && (
+          <li className={`${styles.item} ${styles.itemPrivate}`}>
+            <FiEyeOff aria-hidden />
+            <span>
+              {t("gatherings:manage.attendees.needs.hiddenFromGuests")}
+            </span>
+          </li>
+        )}
         {guestCount > 0 && (
           <li className={styles.item}>
             <FiUsers aria-hidden />
@@ -98,12 +108,6 @@ export function AttendeeNeeds({
               <span className={styles.itemLabel}>{customAnswerLabel}</span>{" "}
               {customAnswer}
             </span>
-          </li>
-        )}
-        {isWithheld && !hasAnswers && (
-          <li className={`${styles.item} ${styles.itemMuted}`}>
-            <FiEyeOff aria-hidden />
-            <span>{t("gatherings:manage.attendees.needs.withheld")}</span>
           </li>
         )}
       </ul>

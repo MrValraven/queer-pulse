@@ -8,6 +8,8 @@ import type {
   StickerResponse,
 } from "../../shared/contracts/contracts";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import { detectLanguage } from "../../shared/i18n/locale";
+import { stickerLabelIn } from "../stickers/stickerLocale";
 import { nextLocalId } from "./useMessagesController.helpers";
 import { mediaKindOf, type MediaKind } from "./messageSending.helpers";
 import { replyQuoteSourceFromMessage } from "./replyQuoteSource";
@@ -81,6 +83,10 @@ function stickerPreviewAttachment(
     provider: "sticker",
     stickerId: sticker.id,
     label: sticker.label,
+    // The same optional Portuguese name the server bakes on send, so the
+    // optimistic bubble already names the sticker the way its server copy
+    // will.
+    ...(sticker.labelPt ? { labelPt: sticker.labelPt } : {}),
   };
 }
 
@@ -325,7 +331,8 @@ export function useMessageSendActions({
       const at = new Date().toISOString();
       appendOptimistic(convId, {
         from: "me",
-        text: sticker.label,
+        // Matches `messageDisplayText`, so the text holds still on ack.
+        text: stickerLabelIn(sticker, detectLanguage()),
         kind: "sticker",
         attachment: stickerPreviewAttachment(sticker),
         time: clockLabel(at),

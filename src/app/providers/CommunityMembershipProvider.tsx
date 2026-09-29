@@ -77,6 +77,12 @@ export function CommunityMembershipProvider({
     );
   }, []);
 
+  const withdrawRequest = useCallback((slug: string) => {
+    setPendingRequests((prev) =>
+      prev.filter((pendingSlug) => pendingSlug !== slug),
+    );
+  }, []);
+
   const createOwned = useCallback((slug: string) => {
     setMemberships((prev) =>
       prev[slug]
@@ -102,6 +108,7 @@ export function CommunityMembershipProvider({
       roleIn,
       join,
       requestToJoin,
+      withdrawRequest,
       createOwned,
       leave,
     }),
@@ -113,6 +120,7 @@ export function CommunityMembershipProvider({
       roleIn,
       join,
       requestToJoin,
+      withdrawRequest,
       createOwned,
       leave,
     ],

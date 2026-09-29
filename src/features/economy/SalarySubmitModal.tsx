@@ -2,8 +2,18 @@ import { useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Button, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { commitmentLabelKey } from "./jobVocabulary.data";
 import { ModalShell } from "./ModalKit";
 import styles from "./EconomyPage.module.css";
+
+/** The commitments a salary report can describe (volunteer work has no pay). */
+const SALARY_EMPLOYMENT_TYPE_IDS = [
+  "fullTime",
+  "partTime",
+  "freelanceGig",
+  "contract",
+  "internship",
+] as const;
 
 export function SalarySubmitModal({
   onClose,
@@ -23,8 +33,8 @@ export function SalarySubmitModal({
         </div>
       </div>
       {!demoMode ? (
-        // No salary-board endpoint yet — stay honest instead of faking an
-        // "submitted anonymously" success the backend can't record.
+        // No salary-board endpoint yet, so this says so plainly: the backend
+        // can't record a "submitted anonymously" success.
         <>
           <div className={styles.modalSub}>{t("economy:comingSoon.body")}</div>
           <Button
@@ -72,32 +82,20 @@ export function SalarySubmitModal({
                 placeholder={t("economy:salarySubmitModal.yearsExpPlaceholder")}
               />
             </div>
-            {/* Stable English `value`s kept separate from the translated
-              label text — see i18n sweep §5.1 (never let a rendered label
-              double as the stored/submitted value). */}
+            {/* The job commitment ids (`jobVocabulary.data.ts`) are the
+              submitted values, labelled with the job form's commitment
+              labels, so a salary entry and a job listing share one
+              vocabulary. See i18n sweep §5.1: a rendered label never
+              doubles as the stored value. */}
             <Select
               label={t("economy:salarySubmitModal.employmentTypeLabel")}
               placeholder={t("economy:salarySubmitModal.employmentTypeLabel")}
               value={employmentType}
               onChange={setEmploymentType}
-              options={[
-                {
-                  value: "Full-time",
-                  label: t("economy:salarySubmitModal.type.fullTime"),
-                },
-                {
-                  value: "Part-time",
-                  label: t("economy:salarySubmitModal.type.partTime"),
-                },
-                {
-                  value: "Freelance",
-                  label: t("economy:salarySubmitModal.type.freelance"),
-                },
-                {
-                  value: "Contract",
-                  label: t("economy:salarySubmitModal.type.contract"),
-                },
-              ]}
+              options={SALARY_EMPLOYMENT_TYPE_IDS.map((id) => ({
+                value: id,
+                label: t(commitmentLabelKey(id)),
+              }))}
             />
           </div>
           <Button

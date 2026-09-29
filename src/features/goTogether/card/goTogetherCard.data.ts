@@ -2,15 +2,19 @@ import type { IconType } from "react-icons";
 import {
   FiClock,
   FiCompass,
+  FiEdit3,
   FiMoon,
   FiShield,
   FiUser,
   FiUserPlus,
 } from "react-icons/fi";
+import { ApiError } from "../../../shared/api/client";
 import { LENSES } from "../goTogetherQuestionnaire.data";
-import { goTogetherErrorCode } from "../api/goTogether.api";
+import { goTogetherErrorCode, isGoTogetherOff } from "../api/goTogether.api";
 import type {
+  GoTogetherCardDTO,
   GoTogetherErrorCode,
+  HostQuestion,
   Lens,
   MemberBlocker,
 } from "../api/goTogether.types";
@@ -69,6 +73,7 @@ export const STATE_ICONS = {
   waiting: FiClock,
   pairInvite: FiUserPlus,
   notVerified: FiShield,
+  answerAgain: FiEdit3,
 } satisfies Record<string, IconType>;
 
 /**
@@ -108,6 +113,7 @@ const CARD_REFRESH_ERROR_CODES: ReadonlySet<GoTogetherErrorCode> = new Set([
   "GO_TOGETHER_LOCKED",
   "GO_TOGETHER_UNAVAILABLE",
   "GO_TOGETHER_INVALID_ANSWERS",
+  "GO_TOGETHER_NOT_WAITING",
 ]);
 
 /** Whether a failed write should refetch the card. */
@@ -124,6 +130,58 @@ export function cardErrorKey(error: Error | null): string | null {
   if (!error) return null;
   const code = goTogetherErrorCode(error);
   return (code && OPT_IN_ERROR_KEYS[code]) || OPT_IN_ERROR_FALLBACK_KEY;
+}
+
+/** A refused "answer it again" save: a 403 without a Go together code (a
+ *  restricted account) reads as the ineligible copy, and everything else as
+ *  any other card write. */
+export function answerAgainErrorKey(error: Error | null): string | null {
+  if (!error) return null;
+  const code = goTogetherErrorCode(error);
+  // The opt-in's copy says "confirm"; this panel's button says "Save".
+  if (code === "GO_TOGETHER_INVALID_ANSWERS")
+    return "goTogether:card.answerAgain.error.invalidAnswers";
+  const isForbiddenWithoutCode =
+    error instanceof ApiError && error.status === 403 && code === null;
+  return isForbiddenWithoutCode
+    ? "goTogether:card.error.ineligible"
+    : cardErrorKey(error);
+}
+
+/** Whether a refused "answer it again" save should refetch the card: the
+ *  shared stale-card codes, any 403 (the card then shows the member's
+ *  standing) and a 404 (Go together switched off, so the card hides). */
+export function shouldRefreshCardAfterAnswerAgain(error: Error): boolean {
+  const isForbidden = error instanceof ApiError && error.status === 403;
+  return isForbidden || isGoTogetherOff(error) || shouldRefreshCardAfter(error);
+}
+
+/** The asked questions' ids, prompts and option labels as one string. The
+ *  answer-again panel clears its choices when this changes, because option
+ *  ids are positional and survive a host edit. */
+export function answerAgainQuestionsKey(questions: HostQuestion[]): string {
+  return JSON.stringify(
+    questions.map((question) => [
+      question.id,
+      question.prompt,
+      question.options.map((option) => [option.id, option.label]),
+    ]),
+  );
+}
+
+/** A waiting member a friend has just invited to go together. */
+export function hasReceivedPairInvite(card: GoTogetherCardDTO): boolean {
+  return card.pair?.status === "pending" && card.pair.direction === "received";
+}
+
+/** The current host questions a waiting member has to answer again, in the
+ *  host's order. Empty for every other state. */
+export function questionsToAnswerAgain(
+  card: GoTogetherCardDTO,
+): HostQuestion[] {
+  if (card.state !== "waiting") return [];
+  const askedIds = new Set(card.unansweredHostQuestionIds);
+  return card.hostQuestions.filter((question) => askedIds.has(question.id));
 }
 
 /** The date shape for "Your group lands {day} at {time}". */

@@ -1,8 +1,6 @@
 /* Body treatment for the persona/company "Message" composer. `Modal` already
  * supplies the eyebrow/title/sub head and the footer row; this covers only
- * the form's own hint/counter/error, mirroring `DirectoryEnquiryModal`'s
- * local copy (that file is held by another session, so this is not a
- * cross-import). */
+ * the form's own hint/counter/error, this door's own local copy. */
 .footRow {
   display: flex;
   align-items: baseline;

@@ -27,6 +27,8 @@ export interface UseDeskPieceOrderParams {
   /** The keyboard's current piece: its group opens if it was folded. */
   focusId: string | null;
   selectedPieceIds: string[];
+  /** A focus chip is narrowing the desk: every group opens by default. */
+  isFocusActive: boolean;
 }
 
 export function useDeskPieceOrder({
@@ -37,12 +39,13 @@ export function useDeskPieceOrder({
   groupBy,
   focusId,
   selectedPieceIds,
+  isFocusActive,
 }: UseDeskPieceOrderParams) {
   const groups = useMemo(
     () => groupDeskPieces(visiblePieces, me, groupBy),
     [visiblePieces, me, groupBy],
   );
-  const collapsedGroups = useCollapsedGroups(groups, focusId);
+  const collapsedGroups = useCollapsedGroups(groups, focusId, isFocusActive);
   const { collapsedGroupIds } = collapsedGroups;
   const isPipeline = layout === "list";
   const keyboardPieces = useMemo(() => {

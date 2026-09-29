@@ -57,6 +57,7 @@ export const DEMO_MAILBOX_SUMMARIES: MailboxSummary[] = [
     isReadOnly: false,
     shouldShowStaffNames: null,
     shouldAllowMyName: null,
+    staffNamesLockedReason: null,
   },
   {
     identityId: DEMO_IDENTITY.cafeLisboa,
@@ -69,6 +70,7 @@ export const DEMO_MAILBOX_SUMMARIES: MailboxSummary[] = [
     isReadOnly: false,
     shouldShowStaffNames: true,
     shouldAllowMyName: true,
+    staffNamesLockedReason: null,
   },
   {
     identityId: DEMO_IDENTITY.atelierPulso,
@@ -79,8 +81,11 @@ export const DEMO_MAILBOX_SUMMARIES: MailboxSummary[] = [
     unreadCount: 0,
     isOwner: true,
     isReadOnly: false,
-    shouldShowStaffNames: false,
+    // An unlinked persona: it never names who replied, so its settings show
+    // the switch off and locked with the reason, over a stored "on".
+    shouldShowStaffNames: true,
     shouldAllowMyName: true,
+    staffNamesLockedReason: "unlinkedPersona",
   },
   // A co-owned persona moderation removed: shows the read-only states.
   {
@@ -94,6 +99,7 @@ export const DEMO_MAILBOX_SUMMARIES: MailboxSummary[] = [
     isReadOnly: true,
     shouldShowStaffNames: true,
     shouldAllowMyName: true,
+    staffNamesLockedReason: null,
   },
 ];
 

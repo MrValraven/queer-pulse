@@ -1,9 +1,6 @@
-/* Shared first-contact composer (PRD-340). Field/counter values mirror
-   `NewMessageModal.module.css`'s `.requestComposerField`/`.requestComposerCounter`
-   (the same first-contact composer this replaces); `.sendError` mirrors
-   `ConnectModal.module.css`'s `.sendError` (the same "why this failed" tone).
-   Kept as its own module so all three doors converge on ONE look rather than
-   three bespoke ones. */
+/* Shared first-contact composer (PRD-340). Field, counter and send-error
+   values were carried over from the old per-door composers. Kept as its own
+   module so every door shares one look. */
 
 .groupIdentity {
   display: flex;

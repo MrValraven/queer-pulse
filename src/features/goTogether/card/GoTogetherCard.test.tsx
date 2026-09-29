@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
@@ -24,6 +30,8 @@ import { GoTogetherCard } from "./GoTogetherCard";
  *  each test can assign a DTO. */
 interface CardMockState {
   data: GoTogetherCardDTO | undefined;
+  error: Error | null;
+  isFetching: boolean;
 }
 interface GroupMockState {
   data: GoTogetherGroupDTO | undefined;
@@ -37,26 +45,41 @@ const {
   acceptPairMutate,
   declinePairMutate,
   revealMutate,
+  answerAgainMutate,
   refetchCard,
   groupState,
 } = vi.hoisted(() => {
-  const cardMock: CardMockState = { data: undefined };
+  const cardMock: CardMockState = {
+    data: undefined,
+    error: null,
+    isFetching: false,
+  };
   const groupMock: GroupMockState = { data: undefined };
   return {
     cardState: cardMock,
-    mutationState: { optInError: null as Error | null },
+    mutationState: {
+      optInError: null as Error | null,
+      answerAgainError: null as Error | null,
+    },
     optInMutate: vi.fn(),
     withdrawMutate: vi.fn(),
     acceptPairMutate: vi.fn(),
     declinePairMutate: vi.fn(),
     revealMutate: vi.fn(),
+    answerAgainMutate: vi.fn(),
     refetchCard: vi.fn(),
     groupState: groupMock,
   };
 });
 
 vi.mock("../api/useGoTogetherCard", () => ({
-  useGoTogetherCard: () => ({ data: cardState.data, refetch: refetchCard }),
+  useGoTogetherCard: () => ({
+    data: cardState.data,
+    error: cardState.error,
+    isError: cardState.error !== null,
+    isFetching: cardState.isFetching,
+    refetch: refetchCard,
+  }),
 }));
 
 vi.mock("../api/useGoTogetherMutations", () => ({
@@ -84,6 +107,11 @@ vi.mock("../api/useGoTogetherMutations", () => ({
     mutate: revealMutate,
     isPending: false,
     error: null,
+  }),
+  useAnswerGoTogetherHostQuestions: () => ({
+    mutate: answerAgainMutate,
+    isPending: false,
+    error: mutationState.answerAgainError,
   }),
 }));
 
@@ -135,13 +163,17 @@ vi.mock("../../economy/StepUpVerificationModal", () => ({
 
 afterEach(() => {
   cardState.data = undefined;
+  cardState.error = null;
+  cardState.isFetching = false;
   groupState.data = undefined;
   mutationState.optInError = null;
+  mutationState.answerAgainError = null;
   optInMutate.mockReset();
   withdrawMutate.mockReset();
   acceptPairMutate.mockReset();
   declinePairMutate.mockReset();
   revealMutate.mockReset();
+  answerAgainMutate.mockReset();
   refetchCard.mockReset();
 });
 
@@ -167,6 +199,7 @@ function makeCard(overrides: Partial<GoTogetherCardDTO>): GoTogetherCardDTO {
     lens: null,
     groupId: null,
     profile: { exists: true, needsRefresh: false },
+    unansweredHostQuestionIds: [],
     ...overrides,
   };
 }
@@ -214,7 +247,7 @@ function makeGroup(): GoTogetherGroupDTO {
     isDissolved: false,
     members: [
       {
-        slug: "tiago",
+        memberRef: "member-tiago",
         firstName: "Tiago",
         pronouns: "he/they",
         avatarUrl: null,
@@ -225,6 +258,8 @@ function makeGroup(): GoTogetherGroupDTO {
       },
     ],
     mergeOffer: null,
+    isLeaveChatOnly: false,
+    hasLeftChat: false,
     checkIn: { isOpen: false, isHere: false, hasLeftEvent: false },
     feedback: { isOpen: false, closesAt: null, hasAnswered: false },
   };
@@ -712,5 +747,386 @@ describe("GoTogetherCard focus", () => {
     renderCard(makePairInviteCard());
     fireEvent.click(screen.getByRole("button", { name: "Decline" }));
     expect(cardHeading()).toHaveFocus();
+  });
+});
+
+/** A failed card load says so inside the card, except a 404, which means
+ *  Go together is switched off and the card stays out of sight. */
+describe("GoTogetherCard load failures", () => {
+  function renderFailedCard(
+    error: Error,
+    gathering = makeGathering(),
+    card?: GoTogetherCardDTO,
+  ) {
+    cardState.error = error;
+    cardState.data = card;
+    const tree = (
+      <TestProviders>
+        <GoTogetherCard gathering={gathering} />
+      </TestProviders>
+    );
+    const result = render(tree);
+    return { ...result, rerenderCard: () => result.rerender(tree) };
+  }
+
+  it("shows an inline error with Retry when the card fails to load", () => {
+    renderFailedCard(new ApiError(500, "Server error"));
+    expect(
+      screen.getByRole("heading", { name: "Go together" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Go together didn't load")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    expect(refetchCard).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows the inline error for a network drop too", () => {
+    renderFailedCard(new TypeError("Failed to fetch"));
+    expect(
+      screen.getByRole("button", { name: "Try again" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps Retry pressable while the retry runs and sends no second request", () => {
+    cardState.isFetching = true;
+    renderFailedCard(new ApiError(503, "Unavailable"));
+    const retry = screen.getByRole("button", { name: "Trying again" });
+    expect(retry).toBeEnabled();
+    fireEvent.click(retry);
+    expect(refetchCard).not.toHaveBeenCalled();
+  });
+
+  it("renders nothing on a 404, because Go together is switched off", () => {
+    renderFailedCard(new ApiError(404, "Not found"));
+    expect(
+      screen.queryByRole("heading", { name: "Go together" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Try again" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("hides a card loaded earlier once a refetch answers 404", () => {
+    renderFailedCard(
+      new ApiError(404, "Not found"),
+      makeGathering(),
+      makeCard({ state: "waiting" }),
+    );
+    expect(
+      screen.queryByRole("heading", { name: "Go together" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps a loaded card on screen when a background refetch fails", () => {
+    renderFailedCard(
+      new ApiError(500, "Server error"),
+      makeGathering(),
+      makeCard({ state: "waiting" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Stop looking for a group" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Go together didn't load"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders nothing for a member with no RSVP when the load fails", () => {
+    renderFailedCard(new ApiError(500, "Server error"), makeGathering(null));
+    expect(
+      screen.queryByRole("heading", { name: "Go together" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows the inline error to a member who moved to maybe, who may still be grouped", () => {
+    renderFailedCard(new ApiError(500, "Server error"), makeGathering("maybe"));
+    expect(
+      screen.getByRole("button", { name: "Try again" }),
+    ).toBeInTheDocument();
+  });
+
+  it("moves focus to the card heading once a Retry loads the card", () => {
+    const { rerenderCard } = renderFailedCard(new ApiError(500, "Error"));
+    const retry = screen.getByRole("button", { name: "Try again" });
+    retry.focus();
+    fireEvent.click(retry);
+    expect(refetchCard).toHaveBeenCalledTimes(1);
+
+    cardState.error = null;
+    cardState.data = makeCard({ state: "waiting" });
+    rerenderCard();
+
+    expect(
+      screen.queryByRole("button", { name: "Try again" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Go together" })).toHaveFocus();
+  });
+
+  it("announces a Retry that fails again in a status region", () => {
+    const { rerenderCard } = renderFailedCard(new ApiError(500, "Error"));
+    const cardStatus = () =>
+      within(
+        screen
+          .getByRole("heading", { name: "Go together" })
+          .closest("section") as HTMLElement,
+      ).getByRole("status");
+    expect(cardStatus()).toBeEmptyDOMElement();
+
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    cardState.isFetching = true;
+    rerenderCard();
+    cardState.isFetching = false;
+    rerenderCard();
+
+    expect(cardStatus()).toHaveTextContent(
+      "Go together still didn't load. Try again in a moment.",
+    );
+  });
+});
+
+/** Switch-off and the end of matching, as the card reads them. */
+describe("GoTogetherCard after matching ends", () => {
+  it("says Go together has closed once the search has ended", () => {
+    renderCard(makeCard({ state: "closed" }));
+    expect(
+      screen.getByText("Go together has closed for this gathering."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/we'll still try to group you/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps the group entry for a feedback-due member, who keeps their state after a switch-off", async () => {
+    groupState.data = makeGroup();
+    renderCard(makeCard({ state: "feedbackDue", groupId: "group-1" }));
+    await waitFor(() => {
+      const chatLinks = screen.getAllByRole("link").filter((link) => {
+        const href = link.getAttribute("href") ?? "";
+        return href.startsWith("/messages") && href.includes("c=conv-1");
+      });
+      expect(chatLinks.length).toBeGreaterThan(0);
+    });
+  });
+});
+
+const SECOND_HOST_QUESTION = {
+  id: "q2",
+  prompt: "Early or late?",
+  options: [
+    { id: "q2o1", label: "Early" },
+    { id: "q2o2", label: "Late" },
+  ],
+};
+
+function makeAnswerAgainCard(
+  overrides: Partial<GoTogetherCardDTO> = {},
+): GoTogetherCardDTO {
+  return makeCard({
+    state: "waiting",
+    hostQuestions: [HOST_QUESTION, SECOND_HOST_QUESTION],
+    unansweredHostQuestionIds: ["q2"],
+    ...overrides,
+  });
+}
+
+/** The hosts changed a question after this member opted in: the waiting
+ *  panel asks only that question again. */
+describe("GoTogetherCard answering a changed host question", () => {
+  it("asks only the changed question and sends only that answer", () => {
+    renderCard(makeAnswerAgainCard());
+    expect(
+      screen.getByText("The hosts changed a question"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "You're still waiting for a group. Answer it again so we can match you well.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("radio", { name: "Picnic" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("radio", { name: "Late" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
+    expect(answerAgainMutate).toHaveBeenCalledTimes(1);
+    expect(answerAgainMutate.mock.calls[0]?.[0]).toEqual({
+      hostAnswers: { q2: "q2o2" },
+    });
+  });
+
+  it("keeps Stop looking for a group beside the save", () => {
+    renderCard(makeAnswerAgainCard());
+    fireEvent.click(
+      screen.getByRole("button", { name: "Stop looking for a group" }),
+    );
+    expect(withdrawMutate).toHaveBeenCalledTimes(1);
+  });
+
+  it("says why the save is unavailable until every asked question has an answer", () => {
+    renderCard(
+      makeAnswerAgainCard({ unansweredHostQuestionIds: ["q1", "q2"] }),
+    );
+    expect(
+      screen.getByText("The hosts changed their questions"),
+    ).toBeInTheDocument();
+    const save = screen.getByRole("button", { name: "Save my answers" });
+    expect(save).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(save);
+    expect(answerAgainMutate).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Answer each question from the host to continue.",
+    );
+
+    fireEvent.click(screen.getByRole("radio", { name: "Pub" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Early" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save my answers" }));
+    expect(answerAgainMutate.mock.calls[0]?.[0]).toEqual({
+      hostAnswers: { q1: "q1o2", q2: "q2o1" },
+    });
+  });
+
+  it("shows the usual waiting panel once nothing is left to answer", () => {
+    renderCard(makeAnswerAgainCard({ unansweredHostQuestionIds: [] }));
+    expect(
+      screen.queryByText("The hosts changed a question"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Change how I'm going" }),
+    ).toBeInTheDocument();
+  });
+
+  it("ignores ids the card no longer carries as questions", () => {
+    renderCard(makeAnswerAgainCard({ unansweredHostQuestionIds: ["q9"] }));
+    expect(
+      screen.queryByText("The hosts changed a question"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("lets a pending pair invite come first", () => {
+    renderCard(makeAnswerAgainCard({ pair: makePair("received") }));
+    expect(screen.getByText("Sofia wants to go together")).toBeInTheDocument();
+    expect(
+      screen.queryByText("The hosts changed a question"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("moves focus to the card heading after the save succeeds", () => {
+    answerAgainMutate.mockImplementation(
+      (_body: unknown, options?: { onSuccess?: () => void }) =>
+        options?.onSuccess?.(),
+    );
+    renderCard(makeAnswerAgainCard());
+    fireEvent.click(screen.getByRole("radio", { name: "Early" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
+    expect(screen.getByRole("heading", { name: "Go together" })).toHaveFocus();
+  });
+
+  it.each([
+    ["GO_TOGETHER_NOT_WAITING", 409],
+    ["GO_TOGETHER_UNAVAILABLE", 409],
+    ["GO_TOGETHER_INVALID_ANSWERS", 400],
+  ])("refetches the card when the save is refused with %s", (code, status) => {
+    answerAgainMutate.mockImplementation(
+      (_body: unknown, options?: { onError?: (error: Error) => void }) =>
+        options?.onError?.(new ApiError(status, "Refused", { code })),
+    );
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    cardState.data = makeAnswerAgainCard();
+    render(
+      <TestProviders queryClient={queryClient}>
+        <GoTogetherCard gathering={makeGathering()} />
+      </TestProviders>,
+    );
+    fireEvent.click(screen.getByRole("radio", { name: "Early" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
+
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: goTogetherKeys.cardRoot,
+    });
+  });
+
+  it("shows the changed-questions copy on INVALID_ANSWERS", () => {
+    mutationState.answerAgainError = new ApiError(400, "Invalid", {
+      code: "GO_TOGETHER_INVALID_ANSWERS",
+    });
+    renderCard(makeAnswerAgainCard());
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The host's questions changed again. Answer them once more, then save.",
+    );
+  });
+
+  it("refetches the card when the save answers 404, so a switched-off card hides", () => {
+    answerAgainMutate.mockImplementation(
+      (_body: unknown, options?: { onError?: (error: Error) => void }) =>
+        options?.onError?.(new ApiError(404, "Not found")),
+    );
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    cardState.data = makeAnswerAgainCard();
+    render(
+      <TestProviders queryClient={queryClient}>
+        <GoTogetherCard gathering={makeGathering()} />
+      </TestProviders>,
+    );
+    fireEvent.click(screen.getByRole("radio", { name: "Early" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
+
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: goTogetherKeys.cardRoot,
+    });
+  });
+
+  it("clears a choice when the host edits the asked question under the same ids", () => {
+    const { rerenderCard } = renderCard(makeAnswerAgainCard());
+    fireEvent.click(screen.getByRole("radio", { name: "Late" }));
+    expect(screen.getByRole("radio", { name: "Late" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    cardState.data = makeAnswerAgainCard({
+      hostQuestions: [
+        HOST_QUESTION,
+        {
+          ...SECOND_HOST_QUESTION,
+          options: [
+            { id: "q2o1", label: "Morning" },
+            { id: "q2o2", label: "Evening" },
+          ],
+        },
+      ],
+    });
+    rerenderCard();
+
+    expect(screen.getByRole("radio", { name: "Evening" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    expect(
+      screen.getByRole("button", { name: "Save my answer" }),
+    ).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("reads a restricted account's 403 as the ineligible copy", () => {
+    mutationState.answerAgainError = new ApiError(403, "Restricted", {
+      code: "ACCOUNT_RESTRICTED",
+    });
+    renderCard(makeAnswerAgainCard());
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Go together isn't available on your account right now.",
+    );
+  });
+
+  it("falls back to the general copy when the save is rate limited", () => {
+    mutationState.answerAgainError = new ApiError(429, "Too many requests");
+    renderCard(makeAnswerAgainCard());
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "That didn't go through. Try again in a moment.",
+    );
   });
 });

@@ -134,6 +134,32 @@ describe("focus predicates", () => {
     expect(matches("ready", makePiece({ stage: "Ready" }))).toBe(true);
   });
 
+  it("ready leaves out a piece scheduled ahead of today, but keeps a live Ready piece whose date has passed", () => {
+    const today = new Date(2026, 7, 10, 12, 0, 0);
+    const hoursFromToday = (hours: number) =>
+      new Date(today.getTime() + hours * 60 * 60 * 1000).toISOString();
+    expect(
+      matches(
+        "ready",
+        makePiece({ stage: "Ready", publishedAt: hoursFromToday(2) }),
+        today,
+      ),
+    ).toBe(false);
+    // A publish date already in the past still offers Publish
+    // (pieceNextAction), so this piece belongs in the count same as any
+    // other Ready piece.
+    expect(
+      matches(
+        "ready",
+        makePiece({ stage: "Ready", publishedAt: hoursFromToday(-2) }),
+        today,
+      ),
+    ).toBe(true);
+    expect(
+      matches("ready", makePiece({ stage: "Ready", publishedAt: null }), today),
+    ).toBe(true);
+  });
+
   it("unpaid counts pieces whose writer is owed, Published included", () => {
     expect(matches("unpaid", makePiece({ paymentStatus: "owed" }))).toBe(true);
     expect(

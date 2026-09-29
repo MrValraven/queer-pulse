@@ -54,9 +54,13 @@ export function GoTogetherGroupEntry({
     );
   }
 
-  const chatPath = group.conversationId
-    ? `${routes.messages}?c=${encodeURIComponent(group.conversationId)}`
-    : null;
+  // Once the member has left the chat (from the start, "Leave the chat"
+  // keeps them grouped) the card keeps this entry, and the chat is closed
+  // to them.
+  const chatPath =
+    group.conversationId && !group.hasLeftChat
+      ? `${routes.messages}?c=${encodeURIComponent(group.conversationId)}`
+      : null;
 
   return (
     <div className={styles.entry}>

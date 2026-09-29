@@ -10,7 +10,10 @@ import { StarredMessagesLoadMore } from "./StarredMessagesLoadMore";
 import { StarredMessagesToolbar } from "./StarredMessagesToolbar";
 import { useStarredMessagesLoadMoreAnnouncement } from "./useStarredMessagesLoadMoreAnnouncement";
 import { useStarredMessagesView } from "./useStarredMessagesView";
-import type { StarredMessageFilterType } from "./starredMessagesFilter";
+import {
+  starredSnippetIn,
+  type StarredMessageFilterType,
+} from "./starredMessagesFilter";
 import styles from "./NewMessageModal.module.css";
 
 interface StarredMessagesModalProps {
@@ -44,7 +47,7 @@ export function StarredMessagesModal({
   onClose,
   onPick,
 }: StarredMessagesModalProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [query, setQuery] = useState("");
   const [filterType, setFilterType] = useState<StarredMessageFilterType>("all");
   const {
@@ -135,7 +138,9 @@ export function StarredMessagesModal({
                   />
                   <div className={styles.rowBody}>
                     <span className={styles.rowName}>{identity.name}</span>
-                    <span className={styles.rowMeta}>{item.snippet}</span>
+                    <span className={styles.rowMeta}>
+                      {starredSnippetIn(item, language)}
+                    </span>
                   </div>
                 </button>
               </li>

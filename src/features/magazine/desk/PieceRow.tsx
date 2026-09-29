@@ -132,6 +132,7 @@ export function PieceRow({
   const verb = (
     <PieceRowNextAction
       action={nextAction}
+      piece={piece}
       titleId={titleId}
       onRun={runNextAction}
     />

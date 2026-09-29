@@ -4,7 +4,7 @@ import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { subprofileEditPath } from "../../../../app/routeMap";
-import { useSubprofileMutations } from "../../api/useSubprofileMutations";
+import { useOwnerSkinPatch } from "../../api/useOwnerSkinPatch";
 import { estimateDraftReadiness } from "../../subprofileDraftReadiness";
 import type {
   SkinData,
@@ -103,30 +103,24 @@ export function TherapistOwnerBar({
 }: TherapistOwnerBarProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { update } = useSubprofileMutations();
+  const { patchSkin, isSaving } = useOwnerSkinPatch(data.id);
   const headingId = useId();
   const name = view.firstName || data.displayName;
 
   const saveCapacity = (option: (typeof CAPACITY_OPTIONS)[number]) => {
-    if (option.status === view.status || update.isPending) return;
-    update.mutate(
-      {
-        id: data.id,
-        dto: {
-          skinData: withStatus(data.skinData, option.status),
-          // The persona-wide availability says the same thing, and the
-          // directory's "similar therapists" reads it.
-          availability: option.availability,
-        },
+    if (option.status === view.status || isSaving) return;
+    // The status lands on the persona's freshly read `skinData`, so a block a
+    // co-owner saved after this page loaded rides along.
+    patchSkin((freshSkinData) => withStatus(freshSkinData, option.status), {
+      // The persona-wide availability says the same thing, and the
+      // directory's "similar therapists" reads it.
+      availability: option.availability,
+    }).then(
+      () => {
+        onCapacitySaved(option.status);
+        showToast(t(option.savedKey), "success");
       },
-      {
-        onSuccess: () => {
-          onCapacitySaved(option.status);
-          showToast(t(option.savedKey), "success");
-        },
-        onError: () =>
-          showToast(t("subprofiles:therapist.owner.capacityError"), "error"),
-      },
+      () => showToast(t("subprofiles:therapist.owner.capacityError"), "error"),
     );
   };
 
@@ -146,7 +140,7 @@ export function TherapistOwnerBar({
           className={styles.capacity}
           role="group"
           aria-label={t("subprofiles:therapist.owner.capacityLabel")}
-          aria-busy={update.isPending || undefined}
+          aria-busy={isSaving || undefined}
         >
           {CAPACITY_OPTIONS.map((option) => (
             <button
@@ -156,7 +150,7 @@ export function TherapistOwnerBar({
               aria-pressed={view.status === option.status}
               // aria-disabled, so a keyboard user keeps focus on the button
               // while it saves; `saveCapacity` ignores clicks meanwhile.
-              aria-disabled={update.isPending || undefined}
+              aria-disabled={isSaving || undefined}
               onClick={() => saveCapacity(option)}
             >
               {t(option.labelKey)}

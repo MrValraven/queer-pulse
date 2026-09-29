@@ -33,13 +33,15 @@ type CheckInOptions = {
   onSettled?: () => void;
 };
 
-const { eventState, rosterState, checkInState } = vi.hoisted(() => ({
+const { eventState, rosterState, checkInState, undoState } = vi.hoisted(() => ({
   eventState: { gathering: null as GatheringDetail | null },
   rosterState: { roster: undefined as AttendeesResult | undefined },
-  // What the next check-in attempt does. `null` = resolve silently; an Error
-  // is handed to the caller's own `onError`, which is where the door decides
-  // between a retryable toast and a permanent refusal.
+  // What the next check-in attempt does. `null` = resolve silently; an
+  // Error is handed to the caller's own `onError`, which is where the door
+  // decides between a retryable toast and a permanent refusal.
   checkInState: { rejectWith: null as Error | null },
+  // The same shape, for the next undo attempt.
+  undoState: { rejectWith: null as Error | null },
 }));
 
 vi.mock("../api/useEvent", () => ({
@@ -68,7 +70,14 @@ vi.mock("../api/useCheckIn", () => ({
     },
     isPending: false,
   }),
-  useUndoCheckIn: () => ({ mutate: vi.fn(), isPending: false }),
+  useUndoCheckIn: () => ({
+    mutate: (_memberSlug: string, options?: CheckInOptions) => {
+      if (undoState.rejectWith) options?.onError?.(undoState.rejectWith);
+      else options?.onSuccess?.(undefined);
+      options?.onSettled?.();
+    },
+    isPending: false,
+  }),
 }));
 
 /** The backend's typed refusal once a gathering is past its attendance window
@@ -145,6 +154,7 @@ afterEach(() => {
   eventState.gathering = null;
   rosterState.roster = undefined;
   checkInState.rejectWith = null;
+  undoState.rejectWith = null;
 });
 
 /**
@@ -318,5 +328,319 @@ describe("LiveDoorDashboard when the window closes under an open tab", () => {
       ).toBeInTheDocument(),
     );
     expect(screen.queryByText(CLOSED_NOTICE)).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * A Portuguese host reading English server prose is the bug this guards
+ * against, and a host reading the WRONG translated sentence (round 1's
+ * critical finding: a waitlisted or "maybe" member's card read as
+ * "unreadable") is the sharper version of the same bug. Round 3 codes every
+ * refusal `checkIn`/`undoCheckIn` can throw beyond the window-closed one
+ * (`event-check-in-codes.ts` on the backend), and this door reads only the
+ * code, the same way it already read `EVENT_ATTENDANCE_WINDOW_CLOSED`. Each
+ * coded failure gets its own translated copy; an uncoded one falls back to
+ * the ordinary retry toast.
+ */
+
+/** Builds the `{ statusCode, error, code, message }` body shape every coded
+ *  refusal in this contract shares, mirroring `checkInError.test.ts`'s own
+ *  helper of the same shape. */
+const coded = (statusCode: number, code: string, message: string) => ({
+  statusCode,
+  error: statusCode === 400 ? "Bad Request" : "Not Found",
+  code,
+  message,
+});
+
+const MEMBER_NOT_FOUND_ERROR = new ApiError(
+  404,
+  "Member not found",
+  coded(404, "CHECK_IN_MEMBER_NOT_FOUND", "Member not found"),
+);
+const NOT_ON_GUEST_LIST_ERROR = new ApiError(
+  404,
+  "That member is not on the guest list",
+  coded(
+    404,
+    "CHECK_IN_NOT_ON_GUEST_LIST",
+    "That member is not on the guest list",
+  ),
+);
+const WAITLISTED_ERROR = new ApiError(
+  400,
+  "That member is on the waitlist. Promote them first, then check them in.",
+  coded(
+    400,
+    "CHECK_IN_WAITLISTED",
+    "That member is on the waitlist. Promote them first, then check them in.",
+  ),
+);
+const MAYBE_ERROR = new ApiError(
+  400,
+  "That member answered maybe and has no seat yet",
+  coded(
+    400,
+    "CHECK_IN_MAYBE",
+    "That member answered maybe and has no seat yet",
+  ),
+);
+const CARD_UNREADABLE_ERROR = new ApiError(
+  400,
+  "That card could not be read. Check them in by name instead.",
+  coded(
+    400,
+    "CHECK_IN_CARD_UNREADABLE",
+    "That card could not be read. Check them in by name instead.",
+  ),
+);
+
+/** Opens the scan modal and submits a typed code, so a card-scan failure can
+ *  be driven the same way a real scan or paste would trigger it. */
+async function submitScannedCode() {
+  fireEvent.click(await screen.findByRole("button", { name: "Read a card" }));
+  fireEvent.change(screen.getByPlaceholderText("Paste or type the code"), {
+    target: { value: "some-code" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Check in" }));
+}
+
+describe("LiveDoorDashboard door failures: check-in by name", () => {
+  it("gives an unmatched or inactive name its own refusal toast, and keeps the row", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = MEMBER_NOT_FOUND_ERROR;
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Check in Bo Neves" }),
+    );
+
+    expect(
+      await screen.findByText("We couldn't check this person in."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Member not found")).not.toBeInTheDocument();
+    // A refusal is final only for this one name: no permanent notice, and
+    // the row keeps its button for a different attendee to use.
+    expect(screen.queryByText(CLOSED_NOTICE)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Check in Bo Neves" }),
+    ).toBeInTheDocument();
+  });
+
+  it("names a member with no RSVP row as not on the guest list", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = NOT_ON_GUEST_LIST_ERROR;
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Check in Bo Neves" }),
+    );
+
+    expect(
+      await screen.findByText("This person isn't on the guest list."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("That member is not on the guest list"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("names a waitlisted member as waitlisted, with the promote-first guidance", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = WAITLISTED_ERROR;
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Check in Bo Neves" }),
+    );
+
+    expect(
+      await screen.findByText(
+        "This person is on the waitlist. Promote them first, then check them in.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "That member is on the waitlist. Promote them first, then check them in.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("names a maybe-RSVP member as having no seat yet", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = MAYBE_ERROR;
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Check in Bo Neves" }),
+    );
+
+    expect(
+      await screen.findByText(
+        "This person answered maybe and has no seat yet.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("That member answered maybe and has no seat yet"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("falls back to the generic retry toast for an uncoded check-in failure", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = new ApiError(500, "Internal server error");
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Check in Bo Neves" }),
+    );
+
+    expect(
+      await screen.findByText("That didn't go through. Try again in a moment."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Internal server error")).not.toBeInTheDocument();
+  });
+});
+
+describe("LiveDoorDashboard door failures: undo", () => {
+  it("gives an unmatched name its own undo refusal toast, with no retry invitation", async () => {
+    renderDoor(4);
+    undoState.rejectWith = MEMBER_NOT_FOUND_ERROR;
+
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Undo check-in for Ari Sousa",
+      }),
+    );
+
+    expect(
+      await screen.findByText("We couldn't undo this check-in."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Member not found")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("We couldn't check this person in."),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("That didn't go through. Try again in a moment."),
+    ).not.toBeInTheDocument();
+  });
+
+  it("names a member with no RSVP row as not on the guest list, with no retry invitation", async () => {
+    renderDoor(4);
+    undoState.rejectWith = NOT_ON_GUEST_LIST_ERROR;
+
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Undo check-in for Ari Sousa",
+      }),
+    );
+
+    expect(
+      await screen.findByText("This person isn't on the guest list."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("That didn't go through. Try again in a moment."),
+    ).not.toBeInTheDocument();
+  });
+
+  it("falls back to the generic retry toast for an uncoded undo failure", async () => {
+    renderDoor(4);
+    undoState.rejectWith = new ApiError(500, "Internal server error");
+
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Undo check-in for Ari Sousa",
+      }),
+    );
+
+    expect(
+      await screen.findByText("That didn't go through. Try again in a moment."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Internal server error")).not.toBeInTheDocument();
+  });
+});
+
+describe("LiveDoorDashboard door failures: card scan", () => {
+  it("gives an unreadable card its own translated hint in the modal's field", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = CARD_UNREADABLE_ERROR;
+
+    await submitScannedCode();
+
+    expect(
+      await screen.findByText(
+        "That card couldn't be read. Try finding them on the guest list.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "That card could not be read. Check them in by name instead.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  // Round 1's critical finding: a card that verified fine, for a member
+  // who is waitlisted or answered maybe, must never be told "unreadable"
+  // (the by-name workaround that copy pointed to cannot even reach this
+  // member: `DoorGuestList` only renders `roster.going`).
+  it("names a waitlisted member as waitlisted from a scanned card", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = WAITLISTED_ERROR;
+
+    await submitScannedCode();
+
+    expect(
+      await screen.findByText(
+        "This person is on the waitlist. Promote them first, then check them in.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "That card couldn't be read. Try finding them on the guest list.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("names a maybe-RSVP member as having no seat yet from a scanned card", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = MAYBE_ERROR;
+
+    await submitScannedCode();
+
+    expect(
+      await screen.findByText(
+        "This person answered maybe and has no seat yet.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "That card couldn't be read. Try finding them on the guest list.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("names a member with no RSVP row as not on the guest list from a scanned card", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = NOT_ON_GUEST_LIST_ERROR;
+
+    await submitScannedCode();
+
+    expect(
+      await screen.findByText("This person isn't on the guest list."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "That card couldn't be read. Try finding them on the guest list.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("falls back to the generic retry message for an uncoded card-scan failure, and does not claim the card was unreadable", async () => {
+    renderDoor(4);
+    checkInState.rejectWith = new ApiError(400, "Bad request");
+
+    await submitScannedCode();
+
+    expect(
+      await screen.findByText("That didn't go through. Try again in a moment."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "That card couldn't be read. Try finding them on the guest list.",
+      ),
+    ).not.toBeInTheDocument();
   });
 });

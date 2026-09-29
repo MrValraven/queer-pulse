@@ -26,7 +26,7 @@
      `min(..., calc(100vw - 32px))` keeps a narrow viewport from ever
      pushing the panel off screen. */
   width: min(400px, calc(100vw - 32px));
-  max-height: 380px;
+  height: var(--composer-popover-max);
   display: flex;
   flex-direction: column;
   background: var(--paper);
@@ -128,22 +128,9 @@
   min-height: 0;
 }
 
-.search {
-  flex: none;
-  margin: 10px 10px 6px;
-  padding: 9px 12px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-badge);
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--cream);
-}
-.search:focus-visible {
-  outline: none;
-  border-color: var(--line-strong);
-  background: var(--paper);
-}
+/* The search field: `PickerSearchField.module.css`, shared with the
+   Stickers tab's own field so both hold the same height, clear button and
+   placeholder style. */
 
 /* Category rail — a horizontal toolbar of icon-only buttons. Scrolls
    sideways rather than wrapping if a narrow panel can't fit all nine plus
@@ -154,9 +141,9 @@
   gap: 2px;
   /* Same 10px horizontal inset as `.grid` below, so the rail's first and last
      tab line up with the emoji columns instead of sitting 2px further out.
-     The rail is the panel's FIRST row now (WhatsApp's order: tabs, then the
-     search field), hence a top inset of its own rather than the 0 it had
-     while the search field above was providing one. */
+     The rail sits directly under the search field (`PickerSearchField`'s own
+     `.searchRow` supplies that field's top inset), so its own top inset here
+     is what actually separates the two. */
   padding: 8px 10px 6px;
   overflow-x: auto;
   overscroll-behavior: contain;

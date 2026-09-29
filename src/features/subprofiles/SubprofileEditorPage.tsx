@@ -39,8 +39,11 @@ export function SubprofileEditorPage() {
 
   // A fetch error is distinct from a genuine 404: the persona may well exist,
   // so offer a Retry rather than the dead-end "not found" state below (which
-  // would otherwise swallow every transient/network failure).
-  if (isError) {
+  // would otherwise swallow every transient/network failure). Only when there
+  // is no persona to show: a failed background refetch (the one every save's
+  // invalidation fires) keeps its last data, and swapping the editor out
+  // for this state then would throw away every unsaved edit.
+  if (isError && !subprofile) {
     return (
       <AppShell>
         <div className={styles.page}>

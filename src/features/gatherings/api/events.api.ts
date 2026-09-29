@@ -325,8 +325,10 @@ export interface EventDetailDTO extends EventCardDTO {
   customRsvpQuestion?: string | null;
 }
 
-/** Who can see an attendee's own RSVP details — the same three ids
- *  `RsvpDetailsModal` (myevents) already used as local-only state. */
+/** The attendee's answer to "Who can see you're going?" (PRD-414): `everyone`
+ *  (or unset) lists them to every member who can read the guest list,
+ *  `connections` to their accepted connections, `justMe` to the organisers
+ *  only. Organisers always see every attendee and all their notes. */
 export type RsvpDetailsVisibility = "everyone" | "connections" | "justMe";
 
 /** The self-service fields `RsvpDetailsModal` reads/writes. */
@@ -358,8 +360,7 @@ export interface AttendeeDTO {
   slug: string;
   firstName: string;
   lastName: string;
-  /** The pronouns the attendee gave on their RSVP. ORGANISERS ONLY, and
-   *  withheld (`null`) under the same `justMe` rule as `accessNeeds` below. */
+  /** The pronouns the attendee gave on their RSVP. ORGANISERS ONLY. */
   pronouns?: string | null;
   avatarUrl?: string | null;
   status: RsvpStatus;
@@ -374,18 +375,17 @@ export interface AttendeeDTO {
   /**
    * ── ATTENDEE PII, ORGANISERS ONLY (LOC-07) ──────────────────────────────
    * What the attendee typed into "Anything we should know?". Present only for
-   * the host and co-hosts, and only as far as the attendee's own `visibility`
-   * choice allows: `justMe` withholds the two free-text needs (the guest count
-   * still shows, because it is how many seats the host has to lay).
+   * the host and co-hosts, who always receive every answer whatever the
+   * attendee picked for "Who can see you're going?" (PRD-415).
    */
   guestCount?: number;
   accessNeeds?: string | null;
   dietaryNeeds?: string | null;
-  /** The attendee's answer to the host's own RSVP question. Organisers only,
-   *  withheld (`null`) under the same `justMe` rule as the needs above. */
+  /** The attendee's answer to the host's own RSVP question. Organisers only. */
   customAnswer?: string | null;
-  /** The attendee's own "who can see this" choice, echoed so the host's UI can
-   *  say why a needs line is absent rather than implying nobody has any. */
+  /** The attendee's answer to "Who can see you're going?" (PRD-414), echoed so
+   *  the host's UI can mark a member who asked to be listed to the organisers
+   *  only. Organisers only. */
   detailsVisibility?: string | null;
 }
 

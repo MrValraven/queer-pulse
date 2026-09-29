@@ -50,10 +50,12 @@
   font-weight: 600;
 }
 
-.itemMuted {
-  color: var(--ink-60);
+/* "Only the hosts can see they're going": the line the host has to act on,
+   so it leads the list, its eye icon in the strong text colour. */
+.itemPrivate {
+  font-weight: 600;
 }
 
-.itemMuted svg {
-  color: var(--ink-40);
+.itemPrivate svg {
+  color: var(--text-strong);
 }

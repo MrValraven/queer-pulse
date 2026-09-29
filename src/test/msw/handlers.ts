@@ -30,13 +30,14 @@ import { ambassadorHandlers } from "./ambassadors.handlers";
 export const API = "http://api.test";
 export const API_V1 = `${API}/v1`;
 
-const jobCard: JobCardDTO = {
+export const jobCard: JobCardDTO = {
   slug: "brand-designer",
   title: "Brand Designer",
   company: { slug: "atelier-pulso", nameText: "Atelier Pulso" },
-  category: "Arts & Culture",
-  commitment: "Freelance",
-  seniority: "Mid",
+  category: "design",
+  profession: null,
+  commitment: "freelanceGig",
+  seniority: "anyLevel",
   format: "hybrid",
   location: "Lisbon",
   city: "Lisbon",

@@ -24,6 +24,8 @@ import { MAX_GROUP_MEMBERS } from "../groupLimits";
  *   revoked, or belongs to someone else).
  * - `INVITE_LINK_INVALID`: the join token is unknown, rotated away, or the
  *   group behind it was dissolved.
+ * - `INVITE_LINK_EXPIRED`: PRD-400, the join token is past its 7-day window
+ *   (410); the join page shows its own expired state for it.
  * - `REMOVED_FROM_GROUP`: a previously-removed member tried to re-seat
  *   themself through the link/invite path.
  * - `PIN_LIMIT_REACHED`: `MAX_PINNED_MESSAGES` (50) already pinned.
@@ -34,6 +36,7 @@ export type GroupErrorCode =
   | "GROUP_ADD_REFUSED"
   | "INVITE_NOT_FOUND"
   | "INVITE_LINK_INVALID"
+  | "INVITE_LINK_EXPIRED"
   | "REMOVED_FROM_GROUP"
   | "PIN_LIMIT_REACHED";
 
@@ -48,6 +51,7 @@ const GROUP_ERROR_TOAST_KEYS: Record<GroupErrorCode, string> = {
   GROUP_ADD_REFUSED: "messages:group.error.addRefused",
   INVITE_NOT_FOUND: "messages:group.error.inviteNotFound",
   INVITE_LINK_INVALID: "messages:group.error.inviteLinkInvalid",
+  INVITE_LINK_EXPIRED: "messages:group.error.inviteLinkExpired",
   REMOVED_FROM_GROUP: "messages:group.error.removedFromGroup",
   PIN_LIMIT_REACHED: "messages:group.error.pinLimitReached",
 };

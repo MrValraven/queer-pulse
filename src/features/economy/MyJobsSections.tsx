@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { MyJobRow } from "./api/jobOwner.adapters";
+import { commitmentLabelKey, normalizeCommitment } from "./jobVocabulary.data";
 import styles from "./MyJobsPage.module.css";
 
 /**
@@ -48,7 +49,9 @@ export function MyJobCard({
       <h3 className={styles.cardTitle}>{job.title}</h3>
 
       <div className={styles.cardMeta}>
-        <span>{job.commitment}</span>
+        <span>
+          {t(commitmentLabelKey(normalizeCommitment(job.commitment)))}
+        </span>
         <span>{job.location}</span>
         <span>{job.payLabel}</span>
       </div>

@@ -3,6 +3,7 @@ import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CardVerdictBanner } from "./CardVerdictBanner";
+import { cardHolderName } from "./cardHolderName";
 import { cardRoleLabelKey } from "./cardRoles";
 import { STATUS_ICON } from "./cardVerify.data";
 import type { CardVerificationDTO } from "./api/cards.api";
@@ -44,7 +45,9 @@ export function CardVerifyResult({
         {/* The name owns its line. Pronouns follow on their own, below: they
             qualify the name rather than continuing it, and a verifier reading
             aloud needs to find them without picking them out of a bracket. */}
-        <p className={styles.holder}>{verification.holderName}</p>
+        <p className={styles.holder}>
+          {cardHolderName(verification.holderName, t)}
+        </p>
         {verification.holderPronouns ? (
           <p className={styles.holderPronouns}>{verification.holderPronouns}</p>
         ) : null}

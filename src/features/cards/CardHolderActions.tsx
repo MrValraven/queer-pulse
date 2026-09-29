@@ -1,6 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { IssuerCardDTO } from "./api/cards.api";
+import { cardHolderName } from "./cardHolderName";
 
 export type NextCardStatus = "active" | "suspended" | "revoked";
 export type PendingCardStatus = {
@@ -37,6 +38,7 @@ export function CardHolderActions({
 }) {
   const { t } = useTranslation();
   const isActive = holder.status === "active";
+  const name = cardHolderName(holder.holderName, t);
   // Expired cards get no status-change action here: reinstating one flips
   // `status` back to active but does not extend `expiresAt`, so the card
   // would keep reading as expired everywhere else. Rather than a
@@ -54,9 +56,7 @@ export function CardHolderActions({
             onClick={() =>
               onRequestStatus({ card: holder, nextStatus: "suspended" })
             }
-            aria-label={t("cards:holders.suspendAria", {
-              name: holder.holderName,
-            })}
+            aria-label={t("cards:holders.suspendAria", { name })}
           >
             {t("cards:holders.suspend")}
           </Button>
@@ -66,9 +66,7 @@ export function CardHolderActions({
             onClick={() =>
               onRequestStatus({ card: holder, nextStatus: "revoked" })
             }
-            aria-label={t("cards:holders.revokeAria", {
-              name: holder.holderName,
-            })}
+            aria-label={t("cards:holders.revokeAria", { name })}
           >
             {t("cards:holders.revoke")}
           </Button>
@@ -80,9 +78,7 @@ export function CardHolderActions({
           onClick={() =>
             onRequestStatus({ card: holder, nextStatus: "active" })
           }
-          aria-label={t("cards:holders.reinstateAria", {
-            name: holder.holderName,
-          })}
+          aria-label={t("cards:holders.reinstateAria", { name })}
         >
           {t("cards:holders.reinstate")}
         </Button>
@@ -95,9 +91,7 @@ export function CardHolderActions({
           variant="ghost"
           size="sm"
           onClick={() => onRequestReplace(holder)}
-          aria-label={t("cards:holders.replaceAria", {
-            name: holder.holderName,
-          })}
+          aria-label={t("cards:holders.replaceAria", { name })}
         >
           {t("cards:holders.replace")}
         </Button>

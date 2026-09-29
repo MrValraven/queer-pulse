@@ -47,7 +47,9 @@ export const CATEGORIES: { code: ReasonCode; labelKey: string }[] = [
  * about a person. This is a straight read of the reporter's own choice. It
  * replaces the old heuristic that turned "contains a slash" into
  * `subjectType: "post"`.
- * Neither branch carries an id. See {@link UNLINKED_SUBJECT_ID}.
+ * Neither branch names a record: the form files each incident under its own
+ * `unlinked:<uuid>` id (ENG-483, `createUnlinkedSubjectId` in
+ * `useIncidentSubjectId.ts`).
  */
 export function subjectTypeForCategory(reason: ReasonCode): ReportSubjectType {
   return reason === "venue_safety" ? "venue" : "member";

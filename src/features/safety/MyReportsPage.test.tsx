@@ -58,6 +58,9 @@ describe("MyReportsPage", () => {
 
     expect(await screen.findByText("QPR-2026-4A1C")).toBeInTheDocument();
     expect(screen.getByText("QPR-2026-7BE2")).toBeInTheDocument();
+    // PRD-460: both fixtures are `subjectType: "post"`, so the label appears
+    // once per row.
+    expect(screen.getAllByText("About a post")).toHaveLength(2);
   });
 
   it("says a resolved report was closed, so the loop shuts without the bell", async () => {

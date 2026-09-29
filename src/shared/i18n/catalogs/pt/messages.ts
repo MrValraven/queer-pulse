@@ -90,6 +90,8 @@ export const messages: Catalog = {
   "emoji.loading": "A carregar emoji…",
   "emoji.loadError": "Não foi possível carregar os emoji. Tenta de novo",
   "emoji.empty": "Nenhum emoji encontrado",
+  "emoji.searchResultsCount_one": "{count} emoji encontrado",
+  "emoji.searchResultsCount_other": "{count} emojis encontrados",
   "emoji.railLabel": "Categorias de emoji",
   "emoji.recentsLabel": "Usados recentemente",
   "emoji.categorySmileys": "Smileys e emoções",
@@ -112,6 +114,13 @@ export const messages: Catalog = {
   "sticker.empty": "Ainda sem stickers",
   "sticker.imageAlt": "Sticker de {label}",
   "sticker.attachmentLabel": "Sticker",
+  "sticker.searchLabel": "Pesquisar stickers",
+  "sticker.searchResultsLabel": "Resultados da pesquisa",
+  "sticker.searchResultsCount_one": "{count} sticker encontrado",
+  "sticker.searchResultsCount_other": "{count} stickers encontrados",
+  "sticker.searchEmpty": "Nenhum sticker corresponde a “{query}”.",
+  "sticker.searchNoResults": "Nenhum sticker encontrado",
+  "sticker.clearSearch": "Limpar pesquisa",
   // Separador dentro do seletor de emoji; mantém-se na família emoji.*, já
   // que rotula esse separador em vez do seletor de stickers autónomo.
   "emoji.tabsLabel": "Emoji e stickers",
@@ -298,6 +307,14 @@ export const messages: Catalog = {
   "conversation.emptyPanelTitle": "As tuas mensagens ficam aqui",
   "conversation.emptyPanelBody":
     "Escolhe uma conversa à esquerda, ou começa uma nova: um espaço tranquilo e privado só para ti e para quem contactares.",
+  "conversation.openingTitle": "A abrir esta conversa…",
+  "conversation.unavailableTitle": "Esta conversa não está disponível",
+  "conversation.unavailableBody":
+    "Pode ter sido eliminada, ou talvez já não faças parte dela. As tuas outras conversas continuam todas aqui.",
+  "conversation.loadFailedTitle": "Não conseguimos abrir esta conversa",
+  "conversation.loadFailedBody":
+    "Algo correu mal pelo caminho. Verifica a tua ligação e tenta outra vez.",
+  "conversation.jumpToLatest": "Voltar às mais recentes",
   "day.today": "Hoje",
   "day.yesterday": "Ontem",
   // Rótulo só para leitores de ecrã do separador de dia; `day` é o cabeçalho
@@ -342,6 +359,8 @@ export const messages: Catalog = {
   "actions.copy": "Copiar",
   "actions.edited": "editada",
   "actions.editing": "A editar mensagem",
+  "actions.editingCaption": "A editar a legenda",
+  "actions.editCaptionClearHint": "Guarda para removeres a legenda.",
   "actions.editSave": "Guardar",
   "actions.editCancel": "Cancelar",
   replyDeleted: "Mensagem eliminada",
@@ -393,6 +412,8 @@ export const messages: Catalog = {
   "forward.title": "Reencaminhar para…",
   "forward.sectionPeople": "Pessoas",
   "forward.sectionGroups": "Grupos",
+  "forward.groupSearchError":
+    "Não conseguimos pesquisar todos os teus grupos agora, por isso podem faltar alguns.",
 
   // Vista de mensagens guardadas (StarredMessagesModal)
   "starred.title": "Mensagens guardadas",
@@ -474,6 +495,16 @@ export const messages: Catalog = {
   "firstContact.replyAria": "A tua resposta",
   "firstContact.replySendCta": "Enviar e aceitar",
   "firstContact.cancelReply": "Cancelar",
+  // Cold enquiry door (door="enquiry": DirectoryEnquiryModal, HousingEnquiryModal)
+  // and the shared minimum-length countdown.
+  "firstContact.enquiryStatus":
+    "Mensagem privada. Só quem a recebe a pode ler.",
+  "firstContact.enquiryAwaitsReply":
+    "{name} pode responder-te já a isto. Podes escrever mais assim que o fizer.",
+  "firstContact.enquiryPlaceholder": "O que gostarias de lhes perguntar?",
+  "firstContact.enquirySendCta": "Enviar mensagem",
+  "firstContact.moreToSend_one": "Falta mais {count} caráter para enviar",
+  "firstContact.moreToSend_other": "Faltam mais {count} carateres para enviar",
 
   // Separador "Pedidos" da caixa de entrada (pedidos de mensagem recebidos,
   // com aceitar/recusar)
@@ -594,6 +625,15 @@ export const messages: Catalog = {
   "group.inviteLink.resetConfirmTitle": "Repor o link de convite?",
   "group.inviteLink.resetConfirmBody":
     "O link antigo deixa de funcionar de imediato. Quem ainda o tiver não vai conseguir entrar com ele.",
+  "group.inviteLink.historyNote":
+    "Quem se junta ao grupo vê as mensagens a partir do momento em que entra.",
+  "group.inviteLink.expiresInDays_one": "Expira daqui a {count} dia",
+  "group.inviteLink.expiresInDays_other": "Expira daqui a {count} dias",
+  "group.inviteLink.expiresInHours_one": "Expira daqui a {count} hora",
+  "group.inviteLink.expiresInHours_other": "Expira daqui a {count} horas",
+  "group.inviteLink.expiresSoon": "Expira em menos de uma hora",
+  "group.inviteLink.expired":
+    "Este link expirou. Repõe-no para partilhares um novo.",
   // Título com contagem de convites pendentes (plural CLDR: _one / _other).
   "group.pendingInvites.title_one": "{count} convite pendente",
   "group.pendingInvites.title_other": "{count} convites pendentes",
@@ -608,12 +648,16 @@ export const messages: Catalog = {
   "group.error.addRefused": "Esta pessoa não pode ser adicionada agora.",
   "group.error.inviteNotFound": "Esse convite já não está disponível.",
   "group.error.inviteLinkInvalid": "Este link de convite já não é válido.",
+  "group.error.inviteLinkExpired":
+    "Este link de convite expirou. Pede um novo a alguém do grupo.",
   "group.error.removedFromGroup":
     "Foste removido/a deste grupo e não podes voltar a entrar assim.",
   "group.error.pinLimitReached":
     "Esta conversa já tem o número máximo de mensagens fixadas.",
   "group.error.generic":
     "Algo correu mal com essa ação de grupo. Tenta outra vez.",
+  "group.matchedMemberSafetyAriaLabel": "Bloquear ou denunciar {name}",
+  "mention.member": "@membro",
 
   // Mensagens de sistema (pílulas de evento centradas — SystemMessagePill).
   // Os nomes de autor/alvo chegam já resolvidos do servidor (ou do mock demo).
@@ -697,6 +741,7 @@ export const messages: Catalog = {
   "mailbox.replyOnly.composeHint":
     "{name} responde a conversas que os membros começam. Muda para a tua caixa de mensagens para escreveres a alguém.",
   "mailbox.composer.replyingAs": "A responder como {name}",
+  "mailbox.composer.customersSee": "Os clientes veem “{firstName}”",
   "mailbox.composer.readOnly":
     "A moderação removeu {name}. As conversas ficam aqui para leres, e as respostas estão desligadas.",
   "mailbox.claim.unclaimed": "Por atribuir",
@@ -737,6 +782,8 @@ export const messages: Catalog = {
     "Os clientes veem um primeiro nome junto a cada resposta, como “{firstName}, de {name}”. Apelidos e perfis ficam escondidos.",
   "mailbox.settings.exampleFirstName": "Ana",
   "mailbox.settings.ownerOnly": "Só quem é titular pode mudar isto.",
+  "mailbox.settings.unlinkedPersona":
+    "Esta persona mantém em privado quem a gere, por isso as respostas nunca mostram um primeiro nome.",
   "mailbox.settings.readOnly":
     "A moderação removeu {name}, por isso estas definições não podem mudar.",
   "mailbox.settings.allowMyName": "Incluir o meu primeiro nome",
@@ -744,6 +791,8 @@ export const messages: Catalog = {
     "Aplica-se enquanto “Mostrar quem respondeu” estiver ligado.",
   "mailbox.settings.saved": "Guardado",
   "mailbox.settings.error": "Não ficou guardado. Tenta outra vez.",
+  "mailbox.settings.unlinkedPersonaError":
+    "Não ficou guardado. Esta persona agora mantém em privado quem a gere.",
   "mailbox.settings.loadError":
     "Estas definições não carregaram. Tenta outra vez.",
   "mailbox.block.action": "Bloquear {name}",
@@ -1079,6 +1128,8 @@ export const messages: Catalog = {
   "blockThenReport.title": "Denunciar mensagens antes de bloquear?",
   "blockThenReport.lead":
     "Estas são as mensagens mais recentes de {name} nesta conversa. Escolhe as que queres que a equipa de moderação veja antes de bloqueares.",
+  "blockThenReport.missingHint":
+    "Escolhe pelo menos uma mensagem e um motivo para as denunciar.",
   "blockThenReport.skipCta": "Saltar",
   "blockThenReport.continueCta": "Denunciar e continuar",
   "blockThenReport.continuingCta": "A denunciar…",
@@ -1104,6 +1155,9 @@ export const messages: Catalog = {
   "join.invalidLinkTitle": "Este link de convite não é válido",
   "join.invalidLinkBody":
     "Pode ter sido substituído, desativado, ou o grupo pode já não existir.",
+  "join.expiredLinkTitle": "Este link de convite expirou",
+  "join.expiredLinkBody":
+    "Os links de convite duram 7 dias. Pede a alguém do grupo que te envie um novo.",
   "join.errorTitle": "Algo correu mal",
   "join.errorBody": "Não foi possível carregar este convite. Tenta outra vez.",
   "join.backToMessages": "Voltar às mensagens",

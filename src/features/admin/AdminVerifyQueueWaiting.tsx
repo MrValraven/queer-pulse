@@ -1,4 +1,6 @@
 import { useAuth } from "../../app/providers/authContext";
+import { LoadErrorState } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useBanEvasionAssessments } from "./AdminBanEvasionSignals";
 import type { JoinRequestView } from "./api/useJoinRequests";
@@ -27,12 +29,20 @@ export function AdminVerifyQueueWaiting({
   pending,
   waitlisted,
   isLoading,
+  hasLoadError,
+  isRetrying,
+  onRetry,
   decisions,
   assignment,
 }: {
   pending: JoinRequestView[];
   waitlisted: JoinRequestView[];
   isLoading: boolean;
+  /** The pending or waitlisted read failed with nothing loaded (DES-424). */
+  hasLoadError: boolean;
+  /** A retry of a failed read is in flight. */
+  isRetrying: boolean;
+  onRetry: () => void;
   decisions: ReturnType<typeof useJoinRequestQueueDecisions>;
   /** OPS-04's claim/release, held by the parent alongside the queries whose
    *  "Assigned to me" filter it changes. */
@@ -51,12 +61,42 @@ export function AdminVerifyQueueWaiting({
   if (isLoading) return <AdminVerifyQueueSkeleton />;
 
   const waitlistedRows = decisions.displayedWaitlisted(waitlisted);
+  // `isPartial`: some rows are on screen, so the copy names the missing part
+  // and the panel keeps its distance from the stance note below it. A retry
+  // keeps the panel mounted, so focus stays on its Retry button.
+  const renderLoadError = (isPartial: boolean) => (
+    <LoadErrorState
+      compact
+      headingLevel={2}
+      className={isPartial ? styles.queueLoadError : undefined}
+      isRetrying={isRetrying}
+      onRetry={onRetry}
+      title={
+        <Translation
+          i18nKey={
+            isPartial
+              ? "admin:members.verify.partialLoadError.title"
+              : "admin:members.verify.loadError.title"
+          }
+          components={{ em: <em /> }}
+        />
+      }
+      description={t(
+        isPartial
+          ? "admin:members.verify.partialLoadError.body"
+          : "admin:members.verify.loadError.body",
+      )}
+    />
+  );
 
   if (
     decisions.queue.length === 0 &&
     decisions.approved.length === 0 &&
     waitlistedRows.length === 0
   ) {
+    // Nothing on screen and a read failed: the queue is unknown, so it
+    // shows the error state.
+    if (hasLoadError) return renderLoadError(false);
     return (
       <div className={styles.queueEmpty}>
         <p className={styles.queueIntro}>{t("admin:members.verify.empty")}</p>
@@ -66,6 +106,9 @@ export function AdminVerifyQueueWaiting({
 
   return (
     <div>
+      {/* One half loaded and the other failed: keep the loaded rows and say
+          what is missing above them. */}
+      {hasLoadError && renderLoadError(true)}
       <ModerationStanceNote variant="applicants" />
       <p className={styles.queueIntro}>{t("admin:members.verify.intro")}</p>
       <p className={styles.queueIntroEm}>

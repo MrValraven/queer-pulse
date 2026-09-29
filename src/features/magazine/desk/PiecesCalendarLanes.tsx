@@ -16,7 +16,9 @@ import styles from "./PiecesCalendar.module.css";
 interface CalendarLaneProps {
   label: string;
   entries: CalendarEntry[];
-  /** Print each piece's due day on its chip (lanes that span many days). */
+  /** Print each piece's due day on its chip (lanes that span many days). A
+   *  scheduled piece with no due day needs no label: its chip's go-live line
+   *  (`goesLiveOn`, `PiecesCalendarChip`) already carries the date. */
   shouldShowDates: boolean;
   onOpen: (piece: Piece) => void;
 }

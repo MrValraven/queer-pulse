@@ -19,6 +19,13 @@ export interface PieceFilters {
   q?: string;
 }
 
+/**
+ * Ceiling on how many pages `usePieces` will fetch for one desk load. Guards
+ * against an unbounded fan-out of requests if the desk's piece count ever
+ * grows far past what a single editor's board can hold.
+ */
+const MAX_DESK_PAGES = 50;
+
 function matchesFilters(piece: Piece, filters: PieceFilters): boolean {
   if (filters.format && piece.format !== filters.format) return false;
   if (filters.editor && piece.editorId !== filters.editor) return false;
@@ -50,14 +57,41 @@ export function usePieces(filters: PieceFilters = {}) {
         return DEMO_PIECES.filter((piece) => matchesFilters(piece, filters));
       }
 
-      // The desk board has no pager yet, so ask for the server's maximum page
-      // rather than silently rendering the first 50 as if it were the whole
-      // board. Add a pager here when a real desk outgrows 200 open pieces.
-      const page = await getPieces({
+      // The desk board renders the whole result set, so this pages through
+      // every page the server holds. Page 1 (fetched at the server's
+      // maximum page size) carries `total`, which sizes the
+      // rest of the pages; those are then fetched together and capped at
+      // `MAX_DESK_PAGES` so a runaway total can never fan out into an
+      // unbounded burst of requests. Pages are concatenated in page order,
+      // which keeps the newest-first ordering `MagazineSidebarRecents`
+      // relies on, and any id repeated across pages (a piece that moved
+      // while paging was in flight) is kept only on its first occurrence.
+      const firstPage = await getPieces({
         ...filters,
+        page: 1,
         pageSize: PIECE_PAGE_SIZE_MAX,
       });
-      return page.items.map(pieceDtoToView);
+      const pageCount = Math.min(
+        Math.ceil(firstPage.total / PIECE_PAGE_SIZE_MAX),
+        MAX_DESK_PAGES,
+      );
+      const restPageNumbers = Array.from(
+        { length: Math.max(pageCount - 1, 0) },
+        (_unused, index) => index + 2,
+      );
+      const restPages = await Promise.all(
+        restPageNumbers.map((page) =>
+          getPieces({ ...filters, page, pageSize: PIECE_PAGE_SIZE_MAX }),
+        ),
+      );
+      const items = [firstPage, ...restPages].flatMap((page) => page.items);
+      const seenIds = new Set<string>();
+      const dedupedItems = items.filter((item) => {
+        if (seenIds.has(item.id)) return false;
+        seenIds.add(item.id);
+        return true;
+      });
+      return dedupedItems.map(pieceDtoToView);
     },
   });
 

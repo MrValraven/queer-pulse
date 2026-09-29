@@ -5,6 +5,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileFollow } from "./SubprofileFollow";
 import { SubprofileEndorse } from "./SubprofileEndorse";
 import { personaAddressName } from "./subprofile-kinds";
+import {
+  canReadPersonaEndorsers,
+  isPersonaOpenToEngagement,
+} from "./personaEngagement";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileShowcase.module.css";
 
@@ -34,27 +38,36 @@ export function SubprofileCardFooter({
   ownerControls?: ReactNode;
 }) {
   const { t } = useTranslation();
+  // A members-only persona takes no follow or endorsement, and its endorser
+  // list answers its owners alone. Endorse still mounts for an owner, who
+  // gets only its read-only endorser faces.
+  const isOpenToEngagement = isPersonaOpenToEngagement(persona);
+  const shouldShowEndorse = canReadPersonaEndorsers(persona, isOwnerViewing);
   return (
     <div className={styles.footer}>
       <div className={styles.footerLeft}>
-        <SubprofileFollow
-          subprofileId={persona.id}
-          followerCount={persona.followerCount}
-          viewerFollowing={persona.viewerFollowing}
-          isOwnerViewing={isOwnerViewing}
-        />
-        <SubprofileEndorse
-          subprofileId={persona.id}
-          endorsementCount={persona.endorsementCount}
-          viewerEndorsed={persona.viewerEndorsed}
-          isOwnerViewing={isOwnerViewing}
-          personaName={personaAddressName({
-            displayName: persona.displayName,
-            kind: persona.kind,
-            ownerName: persona.ownerName,
-          })}
-          personaAvatarUrl={persona.avatarUrl}
-        />
+        {isOpenToEngagement && (
+          <SubprofileFollow
+            subprofileId={persona.id}
+            followerCount={persona.followerCount}
+            viewerFollowing={persona.viewerFollowing}
+            isOwnerViewing={isOwnerViewing}
+          />
+        )}
+        {shouldShowEndorse && (
+          <SubprofileEndorse
+            subprofileId={persona.id}
+            endorsementCount={persona.endorsementCount}
+            viewerEndorsed={persona.viewerEndorsed}
+            isOwnerViewing={isOwnerViewing}
+            personaName={personaAddressName({
+              displayName: persona.displayName,
+              kind: persona.kind,
+              ownerName: persona.ownerName,
+            })}
+            personaAvatarUrl={persona.avatarUrl}
+          />
+        )}
       </div>
       <div className={styles.footerRight}>
         {ownerControls}

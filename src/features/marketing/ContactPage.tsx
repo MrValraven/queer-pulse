@@ -23,6 +23,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useSubmitInquiry } from "./api/useSubmitInquiry";
+import {
+  LISTING_CORRECTION_TOPIC,
+  listingRefFromParam,
+} from "./contactPrefill";
 import s from "./ContactPage.module.css";
 
 /** The topic selector's values. Each one has a `contact.form.topic.<value>`
@@ -39,6 +43,10 @@ const TOPICS = [
   "accessibility",
   "press",
   "partnership",
+  // PRD-434: a correction to a business directory listing. The list-business
+  // success panel and the suggested-listing notifications deep-link here as
+  // `?topic=listing_correction&ref=<listing ref>`.
+  LISTING_CORRECTION_TOPIC,
   "other",
 ] as const;
 
@@ -98,6 +106,64 @@ const ROUTES: {
 /** Anchor for the "pick a route, land in the form" jump (PRD-272). */
 const CONTACT_FORM_ID = "contact-form";
 
+/** The "About listing {ref}" note above the message, which describes it. */
+const CORRECTION_NOTE_ID = "contact-correction-note";
+
+/**
+ * PRD-434. A `?ref=` that looks like a listing reference, as the line that
+ * names it ("About listing QPL-2026-0007"), or "" without one. The ref is kept
+ * in state and translated at render time, since the `marketing` namespace may
+ * still be loading on the first render. The page shows it as a note above the
+ * message and prepends it to the body on submit, so staff know which listing
+ * a correction is about while the member's own words stay required.
+ *
+ * Only while the topic is still a listing correction: a member who switches
+ * to another topic is writing about something else, so the note goes away
+ * and nothing is prepended. Switching back brings it back.
+ */
+function useCorrectionNote(
+  searchParams: URLSearchParams,
+  topic: ContactTopic | "",
+): string {
+  const { t } = useTranslation();
+  const [listingRef] = useState(() =>
+    listingRefFromParam(searchParams.get("ref")),
+  );
+  return listingRef && topic === LISTING_CORRECTION_TOPIC
+    ? t("marketing:contact.form.correctionNote", { ref: listingRef })
+    : "";
+}
+
+/** The message field, with the correction note above it when there is one. */
+function ContactMessageField({
+  correctionNote,
+  value,
+  onChange,
+}: {
+  correctionNote: string;
+  value: string;
+  onChange: (message: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {correctionNote && (
+        <p id={CORRECTION_NOTE_ID} className={s.correctionNote}>
+          {correctionNote}
+        </p>
+      )}
+      <FormField label={t("marketing:contact.form.messageLabel")}>
+        <textarea
+          aria-describedby={correctionNote ? CORRECTION_NOTE_ID : undefined}
+          placeholder={t("marketing:contact.form.messagePlaceholder")}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </FormField>
+    </>
+  );
+}
+
 export function ContactPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -110,6 +176,7 @@ export function ContactPage() {
     topic: toTopic(searchParams.get("topic")),
     message: "",
   });
+  const correctionNote = useCorrectionNote(searchParams, form.topic);
   const valid =
     form.name.trim() &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
@@ -133,7 +200,9 @@ export function ContactPage() {
         name: form.name.trim(),
         email: form.email.trim(),
         subject: t(`marketing:contact.form.topic.${form.topic}`),
-        body: form.message.trim(),
+        body: correctionNote
+          ? `${correctionNote}\n\n${form.message.trim()}`
+          : form.message.trim(),
       },
       {
         onSuccess: () => setSent(true),
@@ -263,15 +332,11 @@ export function ContactPage() {
                     }
                   />
                 </FormField>
-                <FormField label={t("marketing:contact.form.messageLabel")}>
-                  <textarea
-                    placeholder={t("marketing:contact.form.messagePlaceholder")}
-                    value={form.message}
-                    onChange={(e) =>
-                      setForm({ ...form, message: e.target.value })
-                    }
-                  />
-                </FormField>
+                <ContactMessageField
+                  correctionNote={correctionNote}
+                  value={form.message}
+                  onChange={(message) => setForm({ ...form, message })}
+                />
                 <Button
                   type="submit"
                   size="lg"

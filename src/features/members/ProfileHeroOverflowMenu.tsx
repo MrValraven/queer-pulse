@@ -44,7 +44,9 @@ export function ProfileHeroOverflowMenu({
         slug={profile.slug}
         firstName={profile.first}
         onWithdrawVouch={
-          hasVouched(profile.slug) ? () => removeVouch(profile.slug) : undefined
+          hasVouched(profile.slug)
+            ? (onSettled) => removeVouch(profile.slug, onSettled)
+            : undefined
         }
       />
     );

@@ -2015,19 +2015,50 @@
   letter-spacing: -0.015em;
   margin: 0 0 20px;
 }
+/* Shared by "Within a short walk" and "More like this". Four across from the
+   nav's compact cutover up, where each card gets about 228px at a 1000px
+   viewport; below it the cards pair up two by two. The tracks are
+   minmax(0, 1fr) so every column shares the row equally: a plain 1fr keeps
+   an auto minimum, which lets a card with a wide footer widen its own column. */
 .relatedGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
 }
-@media (--wide) {
+@media (--nav-compact) {
   .relatedGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+/* Phones: a sideways scroll-snap rail in place of a tall stack. The rail bleeds
+   through the section's 16px gutter to both screen edges, and the matching
+   padding and scroll padding keep the first card lined up with the heading.
+   Each card is sized so the next one peeks in from the right, which is the
+   scroll affordance, so the scrollbar is hidden (every card is a focusable
+   link, so keyboard users still reach each one). The block padding gives the
+   focus ring room inside the overflow box, and the negative block margin
+   cancels it so the strip keeps its spacing. Row items keep the default
+   stretch, so every card in a rail is the same height. */
 @media (--sm) {
   .relatedGrid {
-    grid-template-columns: 1fr;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: min(82%, 20rem);
+    margin: -8px -16px;
+    padding: 8px 16px;
+    scroll-padding-inline: 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+  }
+  .relatedGrid::-webkit-scrollbar {
+    display: none; /* WebKit: the peeking card is the affordance */
+  }
+  .relatedGrid > * {
+    scroll-snap-align: start;
   }
 }
 

@@ -65,10 +65,13 @@ function MailboxSettingRow({
  * the switcher sheet in place of the mailbox list. The sheet owns the heading
  * and the way back. The owner decides whether customers see the first name of
  * whoever replied ("Ana from Café Lisboa"); each staff member may keep their
- * own name out. Only the owner's switch is owner-only, and an ownerless
- * listing keeps it locked for everyone. A persona moderation removed shows
- * both switches locked. The help line's example is signed with the member's
- * own first name when the sheet knows it.
+ * own name out. Only the owner's switch is owner-only, and on a listing with
+ * no owner every staff member may change it (PRD-432). An unlinked persona
+ * never names its staff (ENG-456), so its switch shows off and locked, the
+ * reason takes the help line's place, and the member's own switch is left
+ * out, since it could never take effect there. A persona moderation removed
+ * shows both switches locked. The help line's example is signed with the
+ * member's own first name when the sheet knows it.
  */
 export function MailboxSettingsPanel({
   mailbox,
@@ -86,8 +89,28 @@ export function MailboxSettingsPanel({
     setShowStaffNames,
     setAllowMyName,
     isSaving,
+    isPlaceholderData,
   } = useMailboxAttribution(mailbox);
   const isReadOnly = mailbox.isReadOnly;
+  const isUnlinkedPersona =
+    attribution?.staffNamesLockedReason === "unlinkedPersona";
+  const isAllowedToChangeStaffNames =
+    attribution?.isAllowedToChangeStaffNames ?? attribution?.isOwner ?? false;
+  // An unlinked persona says why in the row's description itself. While the
+  // settings are still the mailbox list's seed, a non-owner's lock is only a
+  // guess (a listing with no owner lets them change it), so it shows no
+  // owner-only note until the server answers.
+  const staffNamesLockedNote =
+    isReadOnly || isUnlinkedPersona || isPlaceholderData
+      ? undefined
+      : t("messages:mailbox.settings.ownerOnly");
+  const staffNamesDescription = isUnlinkedPersona
+    ? t("messages:mailbox.settings.unlinkedPersona")
+    : t("messages:mailbox.settings.showStaffNamesHelp", {
+        name,
+        firstName:
+          memberFirstName || t("messages:mailbox.settings.exampleFirstName"),
+      });
   // `isSaving` follows the latest write, so it belongs to the switch
   // pressed last.
   const [savingSwitch, setSavingSwitch] = useState<
@@ -113,36 +136,31 @@ export function MailboxSettingsPanel({
           <div className={styles.list}>
             <MailboxSettingRow
               title={t("messages:mailbox.settings.showStaffNames")}
-              description={t("messages:mailbox.settings.showStaffNamesHelp", {
-                name,
-                firstName:
-                  memberFirstName ||
-                  t("messages:mailbox.settings.exampleFirstName"),
-              })}
-              isChecked={attribution.shouldShowStaffNames}
-              isLocked={isReadOnly || !attribution.isOwner}
-              isSaving={isSaving && savingSwitch === "showStaffNames"}
-              lockedNote={
-                isReadOnly
-                  ? undefined
-                  : t("messages:mailbox.settings.ownerOnly")
+              description={staffNamesDescription}
+              isChecked={attribution.shouldShowStaffNames && !isUnlinkedPersona}
+              isLocked={
+                isReadOnly || isUnlinkedPersona || !isAllowedToChangeStaffNames
               }
+              isSaving={isSaving && savingSwitch === "showStaffNames"}
+              lockedNote={staffNamesLockedNote}
               onChange={(value) => {
                 setSavingSwitch("showStaffNames");
                 setShowStaffNames(value);
               }}
             />
-            <MailboxSettingRow
-              title={t("messages:mailbox.settings.allowMyName")}
-              description={t("messages:mailbox.settings.allowMyNameHelp")}
-              isChecked={attribution.shouldAllowMyName}
-              isLocked={isReadOnly}
-              isSaving={isSaving && savingSwitch === "allowMyName"}
-              onChange={(value) => {
-                setSavingSwitch("allowMyName");
-                setAllowMyName(value);
-              }}
-            />
+            {!isUnlinkedPersona && (
+              <MailboxSettingRow
+                title={t("messages:mailbox.settings.allowMyName")}
+                description={t("messages:mailbox.settings.allowMyNameHelp")}
+                isChecked={attribution.shouldAllowMyName}
+                isLocked={isReadOnly}
+                isSaving={isSaving && savingSwitch === "allowMyName"}
+                onChange={(value) => {
+                  setSavingSwitch("allowMyName");
+                  setAllowMyName(value);
+                }}
+              />
+            )}
           </div>
         </>
       )}

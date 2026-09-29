@@ -1,17 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ModalSheet } from "../../shared/components/ui";
-import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccessTier } from "./membership.types";
-import {
-  isInviteRequiredResult,
-  joinRefusalFor,
-  type JoinCommunityPayload,
-  type JoinInvolvement,
-  type JoinRefusal,
+import type {
+  JoinCommunityPayload,
+  JoinInvolvement,
 } from "./api/communityJoin.api";
 import { useCommunityRules } from "./api/useCommunityJoin";
 import { JoinModalStepView } from "./JoinModalStepView";
+import { useJoinModalSubmit } from "./useJoinModalSubmit";
 import styles from "./JoinModal.module.css";
 
 export interface JoinModalCommunity {
@@ -31,6 +28,7 @@ export function JoinModal({
   tier = "public",
   isInvited = false,
   parentName,
+  parentSlug,
   onClose,
   onJoined,
   onRequested,
@@ -38,14 +36,19 @@ export function JoinModal({
   community: JoinModalCommunity;
   tier?: AccessTier;
   /** PRD-140: the viewer holds a standing invitation to this community, so the
-   *  gated tiers admit them straight to the roster instead of opening a
-   *  request. The wizard words itself as joining, because that is what
+   *  gated tiers admit them straight to the roster with no request to
+   *  review. The wizard words itself as joining, because that is what
    *  happens. */
   isInvited?: boolean;
   /** Set when `community` is a space (subcommunity): the parent's name,
    *  passed through to `JoinRulesStep` so the rules step can note that the
    *  applicant already agreed to the parent's rules. */
   parentName?: string;
+  /** The parent's slug when `community` is a space, so "join the parent
+   *  first" can link straight to the parent. Left out on the parent's own
+   *  page, where that refusal says to join right here and closes back onto
+   *  the page. */
+  parentSlug?: string;
   onClose: () => void;
   /** Instant (public-tier) join. May return a promise: the modal waits for it
    *  and only shows the welcome step once it resolves. */
@@ -59,9 +62,6 @@ export function JoinModal({
   const [aboutText, setAboutText] = useState("");
   const [isAcknowledged, setIsAcknowledged] = useState(false);
   const [isRulesUpdated, setIsRulesUpdated] = useState(false);
-  const [refusal, setRefusal] = useState<JoinRefusal | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const rulesState = useCommunityRules(community.slug);
 
   // The gated tiers open a request an owner/mod reviews. The one exception is
@@ -83,73 +83,52 @@ export function JoinModal({
   const total = hasRules ? 3 : 2;
   const done = step > total;
   const fill = done ? 100 : (step / total) * 100;
-  // `rulesChanged` is recovered in place (below) and never parked in state, so
-  // anything left here is one of the two refusals that replace the whole form.
-  const refusalPanel =
-    refusal && refusal.kind !== "rulesChanged" ? refusal : null;
   const isIntroStep = step === 1;
   const isRulesStep = hasRules && step === RULES_STEP;
   const isAboutStep = step === aboutStep;
 
-  // The welcome/request-received step belongs on the far side of the network
-  // call: a frozen space, an already-pending request or a lost connection all
-  // fail here, and the applicant needs to see that rather than a "You're in"
-  // for a membership they never got. The form stays put with the reason on it.
-  const submit = async () => {
-    if (isSubmitting) return;
-    const trimmedNote = aboutText.trim();
-    const payload: JoinCommunityPayload = {
-      // The note is now purely the applicant's own words. The involvement
-      // answer travels in its own field, which is what the mod queue reads.
-      ...(trimmedNote ? { note: trimmedNote.slice(0, 1000) } : {}),
-      involvement,
-      ...(hasRules ? { acceptedRulesVersion: rulesState.rulesVersion } : {}),
-    };
-    setErrorMessage(null);
-    setIsSubmitting(true);
-    try {
-      const result = await (isRequest
-        ? onRequested?.(payload)
-        : onJoined?.(payload));
-      // PRD-141. The `invite` tier answers an uninvited caller with a
-      // SUCCESSFUL 201 carrying `outcome: "invite_required"`, so this refusal
-      // never reaches the `catch` below and `joinRefusalFor` can never see it.
-      // Rendered by the same panel as the other two answers-rather-than-faults
-      // instead of the "You're in" step, which is what it used to show.
-      if (isInviteRequiredResult(result)) {
-        setRefusal({ kind: "inviteRequired" });
-        return;
-      }
-      setStep(total + 1);
-    } catch (error) {
-      const refused = joinRefusalFor(error);
-      if (refused?.kind === "rulesChanged") {
-        // The rules moved while this modal was open. Re-read them, drop the
-        // stale acknowledgement, and put the applicant back on the step with
-        // the new text: a generic error toast would leave them retrying a
-        // join that can only fail again.
-        rulesState.refetch();
-        setIsAcknowledged(false);
-        setIsRulesUpdated(true);
-        setStep(RULES_STEP);
-      } else if (refused) {
-        setRefusal(refused);
-      } else {
-        setErrorMessage(
-          reasonFor(error) ?? t("communities:join.about.errorFallback"),
-        );
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const {
+    submit,
+    isSubmitting,
+    errorMessage,
+    refusal,
+    isDoneAsRequest,
+    isHeldForReview,
+  } = useJoinModalSubmit({
+    isRequest,
+    total,
+    rulesState,
+    onJoined,
+    onRequested,
+    setStep,
+    setIsAcknowledged,
+    setIsRulesUpdated,
+    rulesStep: RULES_STEP,
+  });
+  // `refusal` is a `JoinRefusalPanelKind`: `rulesChanged` is recovered in
+  // place by the hook and never parked in state, so any refusal here replaces
+  // the whole form with its panel.
+
+  // The button a member pressed unmounts with its step, so focus moves to the
+  // heading of whatever replaced it: a focused heading is announced, which
+  // covers a refusal panel as well as a step. The view the sheet opened on
+  // keeps the sheet's own initial focus, which is why the first view is
+  // remembered and skipped (a StrictMode re-run sees the same view).
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const viewKey = refusal ? `refusal:${refusal.kind}` : `step:${step}`;
+  const shownViewKeyRef = useRef(viewKey);
+  useEffect(() => {
+    if (shownViewKeyRef.current === viewKey) return;
+    shownViewKeyRef.current = viewKey;
+    headingRef.current?.focus();
+  }, [viewKey]);
 
   return (
     <ModalSheet
       onClose={onClose}
       ariaLabel={t("communities:join.ariaLabel", { name: community.name })}
     >
-      {!done && !refusalPanel && (
+      {!done && !refusal && (
         <div className={styles.progress}>
           <div className={styles.bar}>
             <div
@@ -164,12 +143,15 @@ export function JoinModal({
       )}
 
       <JoinModalStepView
-        refusalPanel={refusalPanel}
+        headingRef={headingRef}
+        refusalPanel={refusal}
         onClose={onClose}
         isIntroStep={isIntroStep}
         isRulesStep={isRulesStep}
         isAboutStep={isAboutStep}
         isDone={done}
+        isDoneAsRequest={isDoneAsRequest}
+        isHeldForReview={isHeldForReview}
         community={community}
         isRequest={isRequest}
         isInvite={isInvite}
@@ -181,13 +163,14 @@ export function JoinModal({
         setIsAcknowledged={setIsAcknowledged}
         onRulesContinue={() => setStep(aboutStep)}
         parentName={parentName}
+        parentSlug={parentSlug}
         involvement={involvement}
         setInvolvement={setInvolvement}
         aboutText={aboutText}
         setAboutText={setAboutText}
         isSubmitting={isSubmitting}
         errorMessage={errorMessage}
-        onAboutSubmit={() => void submit()}
+        onAboutSubmit={() => void submit({ aboutText, involvement })}
       />
     </ModalSheet>
   );

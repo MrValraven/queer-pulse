@@ -75,6 +75,26 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
+/* A line about the viewer's own standing (request pending, request approved).
+ * Stronger ink and weight than `.body`, so the one thing that changed about
+ * this community for the viewer reads as status above the description. The
+ * icon sits on the first line when the text wraps (PT at 375). */
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 60ch;
+  margin: 0;
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--text-strong);
+}
+.status svg {
+  flex: none;
+  margin-block-start: 0.3em;
+}
+
 .inviteOnly {
   display: flex;
   flex-direction: column;

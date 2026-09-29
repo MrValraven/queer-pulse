@@ -61,7 +61,8 @@ export function SubprofileItemDrawer({
   onClose,
 }: SubprofileItemDrawerProps) {
   const { t } = useTranslation();
-  const { reseedSection } = useSubprofileEditorContext();
+  const { reseedSection, getEditVersion, adoptEditVersion, markEditConflict } =
+    useSubprofileEditorContext();
   const [draft, setDraft] = useState(item);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [isConfirmingDiscard, setIsConfirmingDiscard] = useState(false);
@@ -97,6 +98,16 @@ export function SubprofileItemDrawer({
   // ones back over it.
   function closeHistoryAndDrawer(subprofile: SubprofileView | null) {
     if (subprofile) reseedSection(section.section, subprofile);
+    setHistoryOpen(false);
+    onClose();
+  }
+
+  // ENG-451: a restore refused because someone saved the persona meanwhile.
+  // The conflict alert and its Reload live in the savebar, which this sheet
+  // covers, so the modal and the drawer both close to put the alert in view.
+  // Save stays off until the reload, so the drawer's draft could not be kept.
+  function markConflictAndClose() {
+    markEditConflict();
     setHistoryOpen(false);
     onClose();
   }
@@ -232,6 +243,11 @@ export function SubprofileItemDrawer({
           section={section.section}
           onClose={() => setHistoryOpen(false)}
           onRestored={closeHistoryAndDrawer}
+          editVersionControls={{
+            getEditVersion,
+            adoptEditVersion,
+            markEditConflict: markConflictAndClose,
+          }}
         />
       )}
     </div>,

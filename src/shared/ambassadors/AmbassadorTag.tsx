@@ -4,7 +4,6 @@ import { useFormat } from "../i18n/format";
 import { useTranslation } from "../i18n/useTranslation";
 import { AMBASSADOR_FOCUS_LABEL_KEY } from "./ambassadorFocusAreas.data";
 import type { AmbassadorIdentity } from "./ambassadors.api";
-import { readAmbassadorTagVariant } from "./ambassadorTagVariant";
 import styles from "./AmbassadorTag.module.css";
 
 /** The staff badge's two labelled sizes: `lg` is the profile hero, `sm` is
@@ -47,12 +46,11 @@ export function AmbassadorTag({
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
-  const variant = readAmbassadorTagVariant();
   const longLabel = t("shared:ambassador.tag.long");
   const label = size === "lg" ? longLabel : t("shared:ambassador.tag.short");
   const pill = (
     <span
-      className={[styles.tag, styles[variant], styles[size], className]
+      className={[styles.tag, styles[size], className]
         .filter(Boolean)
         .join(" ")}
       title={size === "lg" ? undefined : longLabel}

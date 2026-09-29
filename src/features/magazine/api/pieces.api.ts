@@ -105,6 +105,9 @@ export interface PieceListItemDto {
   stageEnteredAt: string;
   /** Where the piece's money stands (see `PiecePaymentStatus`). */
   paymentStatus: PiecePaymentStatus;
+  /** ISO instant the linked article or deck goes (or went) live, null while a
+   *  draft. A future value means scheduled. */
+  publishedAt: string | null;
 }
 
 /**
@@ -134,6 +137,9 @@ export interface PitchDto {
   fresh: boolean;
   /** ISO instant the pitch arrived (backend `createdAt`). */
   receivedAt: string;
+  /** The member who submitted the pitch, or `null` for a desk-logged pitch
+   *  with no account behind it. */
+  submitterId: string | null;
 }
 
 /**
@@ -507,13 +513,21 @@ export interface CreatePieceDto {
   kind?: string;
   issueId?: string;
   contentsBlurb?: string;
+  /** Commission-time only: the backend writes it into `brief.angle`. */
+  angle?: string;
+  /** Commission-time only: the backend writes it onto the payment row. */
+  fee?: string;
 }
 
 /**
  * Body of `PATCH /magazine/admin/pieces/:id` — every creation field
  * patchable, plus workflow fields that only make sense post-commission.
+ * `angle` and `fee` are commission-time only, so a PATCH never carries them.
  */
-export type UpdatePieceDto = Omit<Partial<CreatePieceDto>, "issueId"> & {
+export type UpdatePieceDto = Omit<
+  Partial<CreatePieceDto>,
+  "issueId" | "angle" | "fee" | "writerId"
+> & {
   stage?: PieceStage;
   brief?: unknown;
   care?: unknown;
@@ -526,6 +540,8 @@ export type UpdatePieceDto = Omit<Partial<CreatePieceDto>, "issueId"> & {
    *  `{ issueId: null }` (mirrors the backend field, which accepts a UUID
    *  or null). */
   issueId?: string | null;
+  /** Widened the same way: `null` unassigns the writer. */
+  writerId?: string | null;
 };
 
 /**
@@ -589,6 +605,10 @@ export interface TriagePitchDto {
   format?: PieceFormat;
   dueOn?: string;
   wordTarget?: number;
+  angle?: string;
+  fee?: string;
+  /** Used only when the pitch has no `submitterId`. */
+  writerId?: string;
 }
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────

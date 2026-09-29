@@ -71,11 +71,16 @@ function refuseWith(error: Error) {
 /** Fill the detail field past its 10-character minimum and submit. Awaiting the
  *  CTA also proves the lazily loaded `safety` catalog has arrived. The labels
  *  are `safety:reportPerson.form.*`: this modal no longer borrows the
- *  safe-space badge copy under `safety:flag.*`. */
+ *  safe-space badge copy under `safety:flag.*`. The reason picker starts
+ *  empty (PRD-457), so the submit carries `aria-disabled` and its handler
+ *  guard sends focus back to the picker until a radio is picked. */
 async function fillAndSubmit() {
   const submitButton = await screen.findByRole("button", {
     name: "Send report",
   });
+  fireEvent.click(
+    screen.getByRole("radio", { name: "Targeted harassment or threats" }),
+  );
   fireEvent.change(screen.getByLabelText("What should the moderator know?"), {
     target: { value: "They kept messaging me after I asked them to stop." },
   });

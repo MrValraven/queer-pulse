@@ -1,3 +1,4 @@
+import { communityPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import type { AffiliationDTO } from "./api/subprofiles.api";
 
@@ -30,14 +31,11 @@ export const AFFILIATION_ROLE_KEYS: Record<string, string> = {
 };
 
 /** The entity link an affiliation card/row points to, built via the app's
- *  existing route helpers — never a hand-rolled path.
+ *  existing route helpers.
  *  - events resolve through `gatheringPath()` (the gatherings feature owns
  *    event detail routing; there is no separate "events" route module).
- *  - communities have no exported path helper — every community surface in
- *    this codebase (CommunityCard, useAllCommunities, communities.adapters)
- *    links via the same literal `/community/:slug` pattern, so this mirrors
- *    that existing convention rather than inventing a new one. */
+ *  - communities resolve through `communityPath()`. */
 export function affiliationHref(dto: AffiliationDTO): string {
   if (dto.targetType === "event") return gatheringPath(dto.targetSlug);
-  return `/community/${dto.targetSlug}`;
+  return communityPath(dto.targetSlug);
 }

@@ -26,13 +26,17 @@ export function RequestsTabRow({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-
+  // A busy row keeps its buttons focusable (`aria-disabled`, which the shared
+  // Button styles as disabled) and these guards stop them firing mid-write.
+  const approve = () => {
+    if (!isBusy) onApprove();
+  };
   const decline = () => {
     if (!isBusy) onDecline();
   };
 
   return (
-    <div className={styles.modRow}>
+    <div className={[styles.modRow, styles.modRowWithActions].join(" ")}>
       <Avatar
         initials={request.person.initials}
         tint={request.person.tint}
@@ -48,24 +52,27 @@ export function RequestsTabRow({
         </div>
       </div>
       <div className={styles.modActions}>
-        <Button variant="jade" onClick={onApprove} disabled={isBusy}>
+        {/* DES-425: each label names the person it acts on. */}
+        <Button
+          variant="jade"
+          onClick={approve}
+          aria-disabled={isBusy || undefined}
+          aria-label={t("admin:modPanel.requests.approveAriaLabel", {
+            name: request.person.name,
+          })}
+        >
           <FiCheck aria-hidden /> {t("admin:modPanel.requests.approveCta")}
         </Button>
-        <span
-          role="button"
-          tabIndex={0}
-          aria-disabled={isBusy || undefined}
-          className={styles.declineBtn}
+        <Button
+          variant="ghost"
           onClick={decline}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              decline();
-            }
-          }}
+          aria-disabled={isBusy || undefined}
+          aria-label={t("admin:modPanel.requests.declineAriaLabel", {
+            name: request.person.name,
+          })}
         >
           <FiX aria-hidden /> {t("admin:modPanel.requests.declineCta")}
-        </span>
+        </Button>
       </div>
     </div>
   );

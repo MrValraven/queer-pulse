@@ -237,6 +237,10 @@ export const admin: Catalog = {
     "Nothing's flagged urgent. Work down the queue at your own pace. You're holding the whole network steady.",
   "dashboard.header.subClear":
     "Every open item has a human decision attached. Go rest. The network's safe in your hands.",
+  "dashboard.header.titleErrorLine1": "We couldn't",
+  "dashboard.header.titleErrorLine2": "<em>check the queue</em>.",
+  "dashboard.header.subError":
+    "The queue may still hold reports that need you. Check your connection or your staff access, then try again.",
   "dashboard.header.moderationCta": "Open moderation",
 
   // Renamed from "Active members": the backing metric is account standing
@@ -344,6 +348,9 @@ export const admin: Catalog = {
   "members.header.titleLine2": "each one <em>vouched for</em>.",
   "members.header.sub":
     "These aren't rows in a table. They're members someone trusted enough to bring in. Pronouns and chosen names are the only names shown here. {count} people are waiting to be welcomed in.",
+  "members.header.titleLine1NoCount": "The people here,",
+  "members.header.subNoCount":
+    "Each row is a member someone trusted enough to bring in. Pronouns and chosen names are the only names shown here.",
   "members.header.exportCta": "Export",
   "members.filterAriaLabel": "Filter members",
   "members.searchPlaceholder": "Search by name…",
@@ -357,7 +364,29 @@ export const admin: Catalog = {
   "members.filters.new": "New this week",
   "members.empty": "No members match those filters.",
   "members.loadMore": "Load more members",
-  "members.openAriaLabel": "Open {name}",
+  "members.verify.partialLoadError.title":
+    "We couldn't load <em>part of the queue</em>",
+  "members.verify.partialLoadError.body":
+    "Some requests may be missing below. Check your connection or your staff access, then try again.",
+  "members.flagged.loadError.title":
+    "We couldn't load <em>flagged members</em>",
+  "members.flagged.loadError.body":
+    "Flags may still be open. Check your connection or your staff access, then try again.",
+  "members.flagged.empty": "No one is flagged right now.",
+  "tabs.countUnavailable": "count unavailable",
+  "housingGroups.listings.hideDialog.bodyUnpublished":
+    "This listing isn't on the group's board, so its poster gets no notification. Your reason is kept on the listing, and you can un-hide it from this list.",
+  "members.loadError.title": "We couldn't load <em>the member list</em>",
+  "members.loadError.body":
+    "The list didn't arrive. Check your connection or your staff access, then try again.",
+  "members.verify.loadError.title": "We couldn't load <em>the queue</em>",
+  "members.verify.loadError.body":
+    "People may still be waiting. Check your connection or your staff access, then try again.",
+  "members.row.ariaLabel": "Open {name}: {status}, {role}, {reports}",
+  "members.row.notVerified": "Not verified",
+  "members.loadMoreError.title": "We couldn't load <em>more members</em>",
+  "members.loadMoreError.body":
+    "The members above are still here. Check your connection or your staff access, then try again.",
   "members.vouchedLabel": "vouched",
 
   "members.verify.intro":
@@ -1449,13 +1478,18 @@ export const admin: Catalog = {
   // Secondary, subtle meta-line text — a moderator triaging the queue can
   // see how long a listing has been waiting without opening it.
   "adminListings.row.submittedAgo": "Submitted {time}",
+  "adminListings.row.addedAgo": "Added {time}",
   "adminListings.suggestedBy": "Suggested by {name}",
+  // Who holds a queue row: its owner, or a line saying nobody owns it yet
+  // beside whoever suggested or added it (see `listingProvenance.ts`).
+  "adminListings.provenance.ownedBy": "Owned by {name}",
+  "adminListings.provenance.addedByStaff": "Added by {name} (staff)",
+  "adminListings.provenance.noOwnerYet": "No owner yet",
   "adminListings.filter.all": "All",
   "adminListings.filter.review": "In review",
   "adminListings.filter.question": "Quick question",
   "adminListings.filter.live": "Live",
   "adminListings.filter.ariaLabel": "Filter by status",
-  "adminListings.filter.countedLabel": "{label} ({count})",
   "adminListings.search.placeholder": "Search by name, submitter, or ref…",
   "adminListings.search.ariaLabel": "Search listings",
   "adminListings.sort.label": "Sort",
@@ -1481,6 +1515,10 @@ export const admin: Catalog = {
   "adminListings.ask.label": "Your question",
   "adminListings.ask.helper":
     "Keep it warm and specific. They'll get it as a direct message and can reply right there.",
+  "adminListings.ask.subSuggestion":
+    "We'll send this to {name} as a notification.",
+  "adminListings.ask.helperSuggestion":
+    "Keep it warm and specific. They'll get it as a notification and can answer through the contact form.",
   "adminListings.ask.placeholder":
     "Hi! Before we publish this, could you confirm…",
   "adminListings.ask.send": "Send question",
@@ -1498,13 +1536,24 @@ export const admin: Catalog = {
   "adminListings.loadMoreCta": "Load more",
   "adminListings.selectAll.ariaLabel": "Select all visible listings",
   "adminListings.selectAll.label": "Select all visible",
+  "adminListings.columns.listing": "Listing",
+  "adminListings.columns.submitter": "Submitted by",
+  "adminListings.columns.status": "Status",
+  "adminListings.columns.actions": "Actions",
+  "adminListings.row.openAriaLabel": "Open {name}",
+  "adminListings.noMatch.title": "No listings match “{query}”",
+  "adminListings.noMatch.body":
+    "Try a place name, a submitter, or a reference like QPL-2026-0008.",
+  "adminListings.emptyTab.title": "Nothing in “{status}” right now",
+  "adminListings.emptyTab.body":
+    "Listings land here as you move them through review.",
   "adminListings.selectRow.ariaLabel": "Select {name}",
   "adminListings.bulk.ariaLabel": "Bulk actions",
   "adminListings.bulk.selectedCount_one": "{count} selected",
   "adminListings.bulk.selectedCount_other": "{count} selected",
   "adminListings.bulk.publishCta": "Publish live",
-  "adminListings.bulk.sendBackCta": "Send back to review",
-  "adminListings.bulk.removeCta": "Remove",
+  "adminListings.bulk.sendBackCta": "Back to review",
+  "adminListings.bulk.removeCta": "Delete",
   "adminListings.bulk.clearCta": "Clear",
   "adminListings.bulk.capNote": "Selection capped at {cap} listings",
   "adminListings.bulk.toast.success_one": "{count} listing updated.",
@@ -1829,6 +1878,8 @@ export const admin: Catalog = {
     "This covers what was posted and the answer under it, and two different people can have written them. The report doesn't record which half somebody meant, so restrict and ban can be refused here.",
   "moderation.reportDrawer.accountActionsTarget":
     "Restrict and ban act on whoever posted this. Hide and remove act on the content itself. With no account behind it, an unclaimed listing or an erased one, restrict and ban will not go through.",
+  "moderation.reportDrawer.accountActionsTargetNoContent":
+    "There is no content of its own to hide or remove here. Restrict and ban act on whoever is behind it, and will not go through when no account is.",
   "moderation.reportDrawer.restrictDurationLabel": "Restriction length",
   "moderation.reportDrawer.restrictDuration.24h": "24 hours",
   "moderation.reportDrawer.restrictDuration.7d": "7 days",
@@ -2085,14 +2136,12 @@ export const admin: Catalog = {
   "communities.settings.moderators": "Moderators",
   "communities.settings.removeModAriaLabel": "Remove {name}",
   "communities.settings.addModCta": "+ Add",
-  "communities.settings.addModToast": "Search members to add as moderator",
   "communities.settings.modRemovedToast": "Removed {name} as moderator",
   // Live moderator management (add/remove). Demo keeps its simulated
   // local-state behaviour; live wires both controls to the real
   // `/admin/communities/:slug/moderators` endpoints.
   "communities.settings.mod.addPickerTitle": "Add a moderator",
   "communities.settings.mod.pickerLoading": "Loading members…",
-  "communities.settings.mod.pickerError": "Couldn't load members. Try again.",
   "communities.settings.mod.pickerEmpty":
     "Every member here is already a moderator.",
   "communities.settings.mod.addedToast": "{name} is now a moderator",
@@ -2100,6 +2149,12 @@ export const admin: Catalog = {
     "Couldn't add {name} as a moderator",
   "communities.settings.mod.removeFailedToast":
     "Couldn't remove {name} as a moderator",
+  "communities.settings.mod.searchLabel": "Search members",
+  "communities.settings.mod.searchPlaceholder": "Name or handle",
+  "communities.settings.mod.pickerNoMatches": "No members match “{query}”",
+  "communities.settings.mod.pickerCapped":
+    "Showing the first {count}. Search by name or handle to find someone else.",
+  "communities.settings.mod.pickerLoadFailed": "We couldn't load the members.",
   "communities.settings.mod.cancelCta": "Cancel",
   "communities.settings.secondVouch.title": "Require a second vouch to join",
   "communities.settings.secondVouch.sub":
@@ -2609,6 +2664,18 @@ export const admin: Catalog = {
   "governance.audit.actionType.warn": "Warned",
   "governance.audit.actionType.hide_content": "Content hidden",
   "governance.audit.actionType.remove_content": "Content removed",
+  "governance.audit.actionType.media_force_delete": "Upload force-deleted",
+  "governance.audit.actionType.topic_hard_delete": "Topic permanently deleted",
+  "governance.audit.actionType.housing_group_delete": "Housing group deleted",
+  "governance.audit.actionType.housing_group_listing_hide":
+    "Group listing hidden",
+  "governance.audit.actionType.housing_group_listing_unhide":
+    "Group listing restored",
+  "governance.audit.actionType.housing_group_join_request_triage":
+    "Group join request decided",
+  "governance.audit.actionType.housing_coop_delete": "Housing co-op deleted",
+  "governance.audit.actionType.housing_coop_join_request_triage":
+    "Co-op join request decided",
   "governance.audit.actionType.restrict": "Restricted",
   "governance.audit.actionType.suspend": "Suspended",
   "governance.audit.actionType.ban": "Banned",
@@ -2772,6 +2839,8 @@ export const admin: Catalog = {
   "modPanel.requests.requestedAgo": "Requested {time} ago",
   "modPanel.requests.approveCta": "Approve",
   "modPanel.requests.declineCta": "Decline",
+  "modPanel.requests.approveAriaLabel": "Approve {name}",
+  "modPanel.requests.declineAriaLabel": "Decline {name}",
   "modPanel.requests.approvedToast": "{name} approved. Welcome them in.",
   "modPanel.requests.declinedToast":
     "{name}'s request wasn't approved this time.",
@@ -2808,6 +2877,9 @@ export const admin: Catalog = {
   "modPanel.members.makeModCta": "Make mod",
   "modPanel.members.removeModCta": "Remove mod",
   "modPanel.members.removeCta": "Remove",
+  "modPanel.members.makeModAriaLabel": "Make mod: {name}",
+  "modPanel.members.removeModAriaLabel": "Remove mod: {name}",
+  "modPanel.members.removeAriaLabel": "Remove {name}",
   "modPanel.members.ownerTag": "Owner",
   "modPanel.members.promotedToast": "{name} is now a mod.",
   "modPanel.members.demotedToast": "{name} is no longer a mod.",
@@ -3336,6 +3408,13 @@ export const admin: Catalog = {
   "housingGroups.listings.hiddenChip": "Hidden",
   "housingGroups.listings.hideCta": "Hide",
   "housingGroups.listings.unhideCta": "Un-hide",
+  "housingGroups.listings.hideDialog.title": "Hide “{title}”?",
+  "housingGroups.listings.hideDialog.body":
+    "The listing leaves the group straight away. Its poster gets a notification with your reason. You can un-hide it from this list.",
+  "housingGroups.listings.hideDialog.reasonLabel": "Reason for the poster",
+  "housingGroups.listings.hideDialog.reasonPlaceholder":
+    "Say which norm it breaks, for example a hidden price.",
+  "housingGroups.listings.hideDialog.confirm": "Hide listing",
   "housingGroups.listings.error": "Couldn't update that listing",
 
   // ── Roadmap (/admin/roadmap) — board, idea queue, hero stats ───────────────
@@ -3904,6 +3983,8 @@ export const admin: Catalog = {
     "{count} voter notified. One email, no follow-ups",
   "roadmap.toasts.notified_other":
     "{count} voters notified. One email, no follow-ups",
+  "roadmap.toasts.digestCopyFailed":
+    "Couldn't copy. Select and copy the text instead.",
   "roadmap.toasts.digestCopied":
     "Digest copied. Paste it into the monthly email",
   "roadmap.toasts.auditExported": "Audit log exported for governance",
@@ -4306,6 +4387,13 @@ export const admin: Catalog = {
   "communities.settings.mod.removeFromCommunityConfirmBody":
     "{name} loses their moderator role and their place on the roster, and is notified that they were removed. Their posts stay. They can ask to join again, subject to the community's join rules.",
   "communities.settings.mod.removeFromCommunityCta": "Remove from community",
+  "communities.settings.mod.removeFromCommunityConfirmBodyBarred":
+    "{name} loses their moderator role and their place on the roster, and is notified that they were removed. Their posts stay. They can't ask to join this community again until its moderators lift the bar.",
+  "communities.settings.mod.removeFromCommunityAndBarCta": "Remove and bar",
+  "communities.settings.mod.removeFromCommunityBarLabel":
+    "Also stop them rejoining this community",
+  "communities.settings.mod.removeFromCommunityBarHint":
+    "They are told they can't rejoin. The community's moderators can lift the bar later.",
   "communities.settings.mod.removedFromCommunityToast":
     "{name} was removed from the community",
   "communities.settings.mod.removeFromCommunityFailedToast":
@@ -5656,6 +5744,8 @@ export const admin: Catalog = {
   "moderationHealth.queue.concerns": "Governance concerns",
   "moderationHealth.queue.intakes": "Intake forms",
   "moderationHealth.queue.legal_requests": "Legal and government demands",
+  "moderationHealth.queue.housing_group_join_requests":
+    "Housing group join requests",
   "moderationHealth.queue.housing_coop_join_requests": "Co-op join requests",
   "moderationHealth.queue.community_tag_requests": "Community tag requests",
   "moderationHealth.queue.community_space_requests": "Space requests",
@@ -5676,6 +5766,36 @@ export const admin: Catalog = {
   "moderationHealth.queue.ban_evasion_escalations": "Ban-evasion escalations",
   "moderationHealth.queue.community_owner_review_requests":
     "Owner review requests",
+  "moderationHealth.queue.forum_thread_reviews":
+    "Forum threads awaiting review",
+  "adminForumReview.title": "Forum <em>review</em>",
+  "adminForumReview.header.eyebrow": "Forum",
+  "adminForumReview.header.title": "Threads waiting on <em>a read</em>",
+  "adminForumReview.header.sub":
+    "Members held these back for a moderator. Nobody else sees them until you approve.",
+  "adminForumReview.empty":
+    "Nothing waiting. Every thread sent for review has a decision.",
+  "adminForumReview.error": "The queue didn't load.",
+  "adminForumReview.loadMore": "Load more",
+  "adminForumReview.loadingMore": "Loading…",
+  "adminForumReview.row.submitted": "Sent {time}",
+  "adminForumReview.row.inCommunity": "In {community}",
+  "adminForumReview.row.anonymous": "Will post anonymously",
+  "adminForumReview.row.scheduled": "Goes live {time} once approved",
+  "adminForumReview.row.warnings": "Warnings: {warnings}",
+  "adminForumReview.action.approve": "Approve",
+  "adminForumReview.action.reject": "Decline",
+  "adminForumReview.rejectModal.title": 'Decline "{title}"?',
+  "adminForumReview.rejectModal.body":
+    "The author is told it was declined. A note helps them fix it.",
+  "adminForumReview.rejectModal.noteLabel": "Note for the author (optional)",
+  "adminForumReview.rejectModal.submit": "Decline thread",
+  "adminForumReview.rejectModal.cancel": "Keep it waiting",
+  "adminForumReview.toast.approved":
+    "Approved. The thread is live and the author knows.",
+  "adminForumReview.toast.rejected": "Declined. We told the author.",
+  "adminForumReview.toast.conflict": "Someone already decided on this thread.",
+  "adminForumReview.toast.error": "That didn't go through. Try again?",
 
   // Which of the three axes tripped, said as what it means rather than as the
   // field name.
@@ -6373,7 +6493,6 @@ export const admin: Catalog = {
 
   "stickerPacks.rail.heading": "Packs",
   "stickerPacks.rail.newCta": "New pack",
-  "stickerPacks.rail.newName": "Pack name",
   "stickerPacks.rail.newSlug": "Slug",
 
   "stickerPacks.status.draft": "Draft",
@@ -6396,6 +6515,8 @@ export const admin: Catalog = {
   "stickerPacks.errors.updateStatus": "Couldn't update the pack",
   "stickerPacks.errors.setCover": "Couldn't set the cover",
   "stickerPacks.errors.deleteSticker": "Couldn't remove the sticker",
+  "stickerPacks.errors.lastStickerInPublishedPack":
+    "A published pack needs at least one sticker. Unpublish or archive the pack first, or add another sticker.",
   "stickerPacks.publish.retrying": "Retrying…",
   "stickerPacks.contents.hintTouch":
     "Use a sticker's menu to move it. Members see stickers in this order.",
@@ -6422,7 +6543,7 @@ export const admin: Catalog = {
     "It starts as a draft. Members see it only once you publish it.",
   "stickerPacks.newPack.namePlaceholder": "e.g. Pride flags",
   "stickerPacks.newPack.nameRequired": "Give the pack a name",
-  "stickerPacks.newPack.slugAuto": "From the name",
+  "stickerPacks.newPack.slugAuto": "From the English name",
   "stickerPacks.newPack.slugHint":
     "Lowercase words joined by hyphens. Used in links.",
   "stickerPacks.newPack.slugInvalid":
@@ -6431,6 +6552,10 @@ export const admin: Catalog = {
   "stickerPacks.newPack.slugRequired": "Type a slug for this pack",
   "stickerPacks.newPack.submit": "Create pack",
   "stickerPacks.newPack.creating": "Creating…",
+  "stickerPacks.newPack.namePt": "Portuguese name",
+  "stickerPacks.newPack.namePtHelper":
+    "Optional. If you leave it empty, people reading in Portuguese see the English name.",
+  "stickerPacks.newPack.nameEn": "English name",
   "stickerPacks.header.stickerCount_one": "{count} sticker",
   "stickerPacks.header.stickerCount_other": "{count} stickers",
   "stickerPacks.header.explainer.draft":
@@ -6442,6 +6567,11 @@ export const admin: Catalog = {
   "stickerPacks.header.renameLabel": "Rename {name}",
   "stickerPacks.header.nameInputLabel": "Pack name",
   "stickerPacks.header.renameHint": "Enter to save, Esc to cancel",
+  "stickerPacks.header.namePtValue": "In Portuguese: {namePt}",
+  "stickerPacks.header.namePtEmpty": "Add a Portuguese name",
+  "stickerPacks.header.namePtLabel": "Portuguese pack name",
+  "stickerPacks.header.namePtHint":
+    "Enter to save, Esc to cancel. Leave it empty to use the English name.",
   "stickerPacks.header.action.publish": "Publish pack",
   "stickerPacks.header.action.unpublish": "Unpublish",
   "stickerPacks.header.action.restore": "Restore as draft",
@@ -6469,6 +6599,7 @@ export const admin: Catalog = {
     "The pack and its {count} stickers are deleted for good. This can't be undone.",
   "stickerPacks.header.deleteConfirm.bodyEmpty":
     "The pack is deleted for good. This can't be undone.",
+  "stickerPacks.header.namePtEditSuffix": "Edit",
   "stickerPacks.contents.hint":
     "Drag to reorder. Members see stickers in this order.",
   "stickerPacks.contents.savingOrder": "Saving the new order…",
@@ -6496,6 +6627,10 @@ export const admin: Catalog = {
   "stickerPacks.contents.remove.confirm": "Remove",
   "stickerPacks.editSticker.title": "Edit sticker",
   "stickerPacks.editSticker.label": "Name",
+  "stickerPacks.editSticker.labelEn": "English name",
+  "stickerPacks.editSticker.labelPt": "Portuguese name",
+  "stickerPacks.editSticker.labelPtHelper":
+    "Optional. If you leave it empty, people reading in Portuguese see the English name.",
   "stickerPacks.editSticker.keywords.en": "English keywords",
   "stickerPacks.editSticker.keywords.pt": "Portuguese keywords",
   "stickerPacks.editSticker.keywordsHelper":
@@ -6647,6 +6782,7 @@ export const admin: Catalog = {
   "stickerPacks.tabs.add": "Add stickers",
   "stickerPacks.tabs.contents": "In this pack",
   "stickerPacks.toast.renamed": "Renamed to {name}",
+  "stickerPacks.toast.renamedPt": "Portuguese name saved",
   "stickerPacks.toast.status.published": "{name} is live",
   "stickerPacks.toast.status.draft": "{name} is a draft again",
   "stickerPacks.toast.status.archived": "{name} is archived",
@@ -6738,6 +6874,8 @@ export const admin: Catalog = {
   "listingNew.success.step.review": "It is waiting in the moderation queue.",
   "listingNew.success.step.live": "It is showing in the directory now.",
   "listingNew.success.closeCta": "Back to the listings queue",
+  "listingNew.success.viewLiveCta": "See the live listing",
+  "listingNew.success.addAnotherCta": "Add another listing",
 
   // ── Admin edit of a platform-held listing (`/admin/listings/:ref/edit`) ───
   // A listing nobody owns yet, edited by staff on QueerPulse's behalf. If the
@@ -7113,4 +7251,19 @@ export const admin: Catalog = {
   "ambassadors.drawer.hiddenNote":
     "Hidden tags don't show here. The Ambassadors page has the full record.",
   "ambassadors.drawer.manage": "Manage ambassadors",
+  "ambassadors.loadMore": "Load more",
+  "ambassadors.loadingMore": "Loading…",
+  "ambassadors.loadMoreError": "We couldn't load more ambassadors. Try again.",
+  "ambassadors.row.history": "History",
+  "ambassadors.row.historyAria": "Grant history for {name}",
+  "ambassadors.history.label": "Grant history for {name}",
+  "ambassadors.history.title": "Grant history",
+  "ambassadors.history.active": "Active",
+  "ambassadors.history.grantedOn": "Granted",
+  "ambassadors.history.revoked": "Revoked",
+  "ambassadors.history.error":
+    "We couldn't load this history. Try again in a moment.",
+  "ambassadors.history.empty": "No grants on record for this member.",
+  "ambassadors.circle.notFounded":
+    "The circle opens when the first ambassador is granted.",
 };

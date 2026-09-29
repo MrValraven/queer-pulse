@@ -9,7 +9,6 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   BENEFITS,
-  CATEGORIES,
   COMMITMENTS,
   CONTACT_METHODS,
   CURRENCIES,
@@ -21,6 +20,7 @@ import {
   TIMEZONES,
 } from "./postJob.data";
 import { MAX_SCREENING_QUESTIONS, type EditJobForm } from "./EditJobFormState";
+import { useJobFieldSelectProps } from "./useJobFieldSelectProps";
 import styles from "./EditJobPage.module.css";
 
 /** Only shows a field's error once the poster has tried to save. */
@@ -35,6 +35,44 @@ function errorText(
 interface FieldsProps {
   form: EditJobForm;
   showErrors: boolean;
+}
+
+/**
+ * The job's field and profession in the page's own FormField style. Options and
+ * the clear-stale-profession rule come from `useJobFieldSelectProps`, shared
+ * with the post wizard.
+ */
+function EditJobTaxonomyFields({ form, showErrors }: FieldsProps) {
+  const { t } = useTranslation();
+  const { draft, patch, errors } = form;
+  const { fieldSelectProps, professionSelectProps } = useJobFieldSelectProps({
+    fieldId: draft.category,
+    professionId: draft.profession,
+    onChange: ({ fieldId: category, professionId: profession }) =>
+      patch({ category, profession }),
+  });
+  // The field select cannot be cleared, so an empty field only happens on a
+  // legacy job saved before the taxonomy. It opens with a calm note, and turns
+  // red only once a save has been tried.
+  const isLegacyField = draft.category === "";
+
+  return (
+    <div className={styles.row}>
+      <FormField
+        label={t("economy:editJob.field.category")}
+        required
+        helper={
+          isLegacyField ? t("economy:editJob.legacyFieldNote") : undefined
+        }
+        error={errorText(errors.category, showErrors, t)}
+      >
+        <Select {...fieldSelectProps} />
+      </FormField>
+      <FormField label={t("economy:editJob.field.profession")}>
+        <Select {...professionSelectProps} />
+      </FormField>
+    </div>
+  );
 }
 
 /** What the role is and where it happens. */
@@ -72,17 +110,9 @@ export function EditJobRoleFields({ form, showErrors }: FieldsProps) {
         />
       </FormField>
 
+      <EditJobTaxonomyFields form={form} showErrors={showErrors} />
+
       <div className={styles.row}>
-        <FormField label={t("economy:editJob.field.category")}>
-          <Select
-            value={draft.category}
-            onChange={(value) => patch({ category: value ?? draft.category })}
-            options={CATEGORIES.map((option) => ({
-              value: option.value,
-              label: t(option.labelKey),
-            }))}
-          />
-        </FormField>
         <FormField label={t("economy:editJob.field.commitment")}>
           <Select
             value={draft.commitment}

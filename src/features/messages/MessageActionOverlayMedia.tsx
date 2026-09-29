@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import { useStickerAttachmentLabel } from "../stickers/useStickerAttachmentLabel";
 import { renderWithLinks } from "./linkify";
 import {
   AttachmentPreviewUnavailable,
@@ -50,6 +51,13 @@ export function MessageActionOverlayMedia({
     sharedStyles.attachmentGroup,
     styles.overlayMediaClone,
   ].join(" ");
+  // The sticker's name in the reader's language, for the clone's alt text
+  // below. Called ahead of the branches, as hooks must be.
+  const sentStickerAttachment =
+    message.attachment && isStickerAttachment(message.attachment)
+      ? message.attachment
+      : null;
+  const stickerLabel = useStickerAttachmentLabel(sentStickerAttachment);
 
   // A sticker clone: just the sticker itself, no caption row (it never
   // carries one) and no tap target. This clone is a static visual for the
@@ -66,9 +74,7 @@ export function MessageActionOverlayMedia({
         <img
           className={sharedStyles.stickerImage}
           src={stickerAttachment.url}
-          alt={t("messages:sticker.imageAlt", {
-            label: stickerAttachment.label,
-          })}
+          alt={t("messages:sticker.imageAlt", { label: stickerLabel })}
         />
       </div>
     );

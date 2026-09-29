@@ -51,7 +51,7 @@ interface CreateAndSeedResult {
 
 /** Create a draft, tie its address (linked default, or explicitly unlinked
  *  with a handle), then seed it per method: copy from a source via
- *  `applyDuplicatePlan`, seed the kind template, or leave it bare (blank).
+ *  `applyDuplicatePlan`, or seed the kind template.
  *  Returns the new draft's id (and whether the standalone-handle claim failed).
  *  Every write goes through `mutations` so demo and live behave identically. */
 async function createAndSeedSubprofile(args: {
@@ -133,10 +133,10 @@ async function createAndSeedSubprofile(args: {
     skippedAffiliationCount = outcome.skippedAffiliationCount;
     hasAffiliationSaveFailed = outcome.hasAffiliationSaveFailed;
   } else if (method === "template") {
-    // Seed the kind's starter template: example items per section, then a
-    // suggested tagline. Each piece is applied independently — a failure on one
-    // section (or the tagline) never strands the fresh draft; the owner lands in
-    // the editor either way and can fill in what's missing.
+    // "By craft": seed the kind's starter template, example items per section
+    // and then a suggested tagline. Each piece is applied independently: a
+    // failure on one section (or the tagline) never strands the fresh draft;
+    // the owner lands in the editor either way and can fill in what's missing.
     for (const { section, items } of buildTemplateSections(kind, t)) {
       try {
         await replaceSection.mutateAsync({
@@ -157,7 +157,6 @@ async function createAndSeedSubprofile(args: {
       }
     }
   }
-  // blank: nothing to seed — the draft is created bare.
   return {
     id: created.id,
     handleClaimFailed,
@@ -210,8 +209,9 @@ export interface NewSideForm {
 /**
  * All state + derivation + submission for the two-step "new persona" wizard,
  * lifted out of `NewSideModal` so each stays under the line budget. Step 1 picks
- * the craft/blank/copy; step 2 names it and chooses linked-vs-standalone; then
- * `submit()` creates and seeds the draft and routes to its editor.
+ * the craft or a persona to copy; step 2 names it and chooses
+ * linked-vs-standalone; then `submit()` creates and seeds the draft and routes
+ * to its editor.
  */
 export function useNewSideForm(
   initialKind: SubprofileKind | null,

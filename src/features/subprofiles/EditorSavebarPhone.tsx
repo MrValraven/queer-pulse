@@ -4,6 +4,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { PendingChangesList } from "./PendingChangesList";
 import { SavebarSummaryToggle } from "./EditorSavebarSummary";
+import { EditorConflictAlert } from "./EditorConflictAlert";
+import type { PendingChange } from "./subprofileEditorDiff";
 
 /** Where focus goes when this bar leaves the page (a Save or Discard just
  *  cleaned the editor): the pane switcher's centre button, the one control
@@ -16,10 +18,13 @@ const FOCUS_FALLBACK_SELECTOR = ".ed-switch-current";
  * row (the bar is pinned to the bottom, so it grows upward). Preview lives in
  * the pane switcher at this width (`EditorSwitchPreviewButton`), and the idle
  * bar is not rendered at all (`EditorSavebar`), so this only mounts while
- * there is something to save.
+ * there is something to save, or while a save conflict (ENG-451) is waiting
+ * for Reload: a conflicted editor, dirty or clean, gets the bar with the
+ * conflict alert alone.
  *
  * The list starts collapsed on every mount, and the bar unmounts as soon as
- * the editor is clean, so it can never grow on its own mid-typing.
+ * the editor is clean (and not conflicted), so it can never grow on its own
+ * mid-typing.
  */
 export function EditorSavebarPhone({
   style,
@@ -29,10 +34,15 @@ export function EditorSavebarPhone({
   blockReasonKey: string | null;
 }) {
   const { t } = useTranslation();
-  const { pending, saving, canSave, saveAll, discardAll } =
-    useSubprofileEditorContext();
-  const [isListOpen, setIsListOpen] = useState(false);
-  const listId = useId();
+  const {
+    pending,
+    dirty,
+    saving,
+    canSave,
+    saveAll,
+    discardAll,
+    hasEditConflict,
+  } = useSubprofileEditorContext();
 
   // Save and Discard both end with this bar unmounting under the finger that
   // pressed them, which drops keyboard and screen reader focus on <body>.
@@ -61,11 +71,50 @@ export function EditorSavebarPhone({
       onFocus={markBarUsed}
       onPointerDown={markBarUsed}
     >
-      {blockReasonKey && (
+      <EditorConflictAlert />
+      {/* While conflicted the alert is the whole bar: Save is refused until
+          Reload, and Reload clears the edits Discard would, so the row and
+          its block reason go. The alert carries the unsaved list itself. */}
+      {blockReasonKey && !hasEditConflict && (
         <span className="savebar-block" role="status">
           {t(blockReasonKey)}
         </span>
       )}
+      {dirty && !hasEditConflict && (
+        <SavebarPhoneRow
+          pending={pending}
+          saving={saving}
+          canSave={canSave}
+          onSave={() => void saveAll()}
+          onDiscard={discardAll}
+        />
+      )}
+    </div>
+  );
+}
+
+/** The phone bar's row of controls (the "{count} unsaved" toggle, Discard,
+ *  Save) and the itemized list it opens. Shown only while something is
+ *  unsaved; a conflicted but clean editor shows the alert alone. The list
+ *  starts collapsed on every mount. */
+function SavebarPhoneRow({
+  pending,
+  saving,
+  canSave,
+  onSave,
+  onDiscard,
+}: {
+  pending: PendingChange[];
+  saving: boolean;
+  canSave: boolean;
+  onSave: () => void;
+  onDiscard: () => void;
+}) {
+  const { t } = useTranslation();
+  const [isListOpen, setIsListOpen] = useState(false);
+  const listId = useId();
+  return (
+    <>
       <div className="savebar-phone-row">
         <SavebarSummaryToggle
           count={pending.length}
@@ -73,18 +122,13 @@ export function EditorSavebarPhone({
           listId={listId}
           onToggle={() => setIsListOpen((isOpen) => !isOpen)}
         />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={discardAll}
-          disabled={saving}
-        >
+        <Button variant="ghost" size="sm" onClick={onDiscard} disabled={saving}>
           {t("subprofiles:pending.compactDiscard")}
         </Button>
         <Button
           variant="primary"
           size="sm"
-          onClick={() => void saveAll()}
+          onClick={onSave}
           disabled={saving || !canSave}
         >
           {saving
@@ -95,6 +139,6 @@ export function EditorSavebarPhone({
       <div id={listId} className="savebar-phone-list" hidden={!isListOpen}>
         <PendingChangesList pending={pending} />
       </div>
-    </div>
+    </>
   );
 }

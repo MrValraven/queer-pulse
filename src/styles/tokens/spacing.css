@@ -100,6 +100,18 @@
      the HIT AREA, not the ink: see the `tap-target` helper in base.css. */
   --tap-min: 44px;
 
+  /* ── Composer popovers (`EmojiPicker`, `StickerPicker`) ──
+     The emoji and sticker panels' fixed height: 380px, capped at 55% of the
+     height the on-screen keyboard leaves (`--keyboard-inset`, published on
+     the root by `useVisualViewportKeyboard`). A phone with the keyboard up
+     keeps the whole panel, its search field included, on screen above the
+     composer. The panel holds this one height while browsing and searching
+     alike, so a filtered list never pulls its field downward. */
+  --composer-popover-max: min(
+    380px,
+    calc((100dvh - var(--keyboard-inset, 0px)) * 0.55)
+  );
+
   /* ── Anchored menus (magazine desk `DeskMenu`) ──
      One set of measures for every dropdown on the desk (scope switcher, New,
      Filter, Sort, the bulk stage picker), so they read as one family.

@@ -23,7 +23,7 @@ import {
 import styles from "./FeedCard.module.css";
 
 /**
- * Compact community-post card — supersedes the feed's old full `PostCard`
+ * Compact community-post card. It supersedes the feed's old full `PostCard`
  * and the in-feed `HubPulseCard` rendering.
  *
  * SOC-04: it is no longer read-only. `FeedPostActions` hosts a reaction and
@@ -32,7 +32,7 @@ import styles from "./FeedCard.module.css";
  * Both are additive: a card with no signals renders exactly as before.
  *
  * Accepts either a standalone demo `post` (the feed's own mock) or an
- * aggregated `hub` item from the communities hub pulse — both normalize to
+ * aggregated `hub` item from the communities hub pulse; both normalize to
  * the same shape below.
  */
 export function CommunityPostCard({
@@ -76,24 +76,35 @@ export function CommunityPostCard({
   // For a hub item, `photoOf` resolves the author's photo from the community
   // people registry. For a live `post`, the feed's own `avatarUrl` (mapped
   // from `FeedItem.actor.avatarUrl` in `feedItemToPost`) is passed straight
-  // through — `Avatar` itself resolves Google/Unsplash sizing and sets
+  // through. `Avatar` itself resolves Google/Unsplash sizing and sets
   // `referrerPolicy="no-referrer"`, same as the feed's other live cards
   // (`MemberCard`, `GatheringCard`, `ForumThreadCard`).
   const avatarSrc = hub
     ? photoOf(hub.post.author, demoMode)
     : (post.avatarUrl ?? undefined);
   const body = hub ? hub.post.body : post.body;
-  const communityName = hub ? hub.communityName : post.context;
+  // A flat post arrives with an empty `context` (the server leaves its title
+  // blank), so the card names the audience in the reader's language on its
+  // meta line. It has no community to open, so it carries no footer link.
+  const isFlatPost = !hub && !post.context;
+  const communityName = hub
+    ? hub.communityName
+    : post.context || t("feed:card.communityPost.flatContext");
   // A `hub` item carries its own `parentName` (from `useCommunitiesHomeData`);
   // a live `post` carries it on the sibling `parentName` prop (see its doc
   // above), since `FeedPost` itself has no such field.
   const communityParentName = hub ? (hub.parentName ?? null) : parentName;
-  const replyCount = hub ? hub.post.replies.length : post.replies.length;
+  // A live post's `replies` is an empty seed (see `feedItemToPost`); the true
+  // count rides on `signals`, so the meta line and the Reply action read the
+  // same number.
+  const replyCount = hub
+    ? hub.post.replies.length
+    : (signals?.replyCount ?? post.replies.length);
   const reactionCount = hub
     ? hub.post.reactions.reduce((sum, reaction) => sum + reaction.count, 0)
     : post.likeCount;
-  // SOC-02: both branches open the POST, not the top of the community
-  // timeline it happens to sit in. The live branch already carries the
+  // SOC-02: both branches open the POST itself, at its own permalink in the
+  // community timeline. The live branch already carries the
   // permalink on `post.link`.
   const threadLink = hub
     ? communityPostPath(hub.communitySlug, hub.post.id)
@@ -132,12 +143,16 @@ export function CommunityPostCard({
             {authorName} <MemberStaffBadge slug={authorSlug} />
           </span>
         }
-        meta={t("feed:post.inCommunity", {
-          community: communityParentName
-            ? `${communityParentName}, ${communityName}`
-            : communityName,
-          count: replyCount,
-        })}
+        meta={
+          isFlatPost
+            ? t("feed:post.flatMeta", { count: replyCount })
+            : t("feed:post.inCommunity", {
+                community: communityParentName
+                  ? `${communityParentName}, ${communityName}`
+                  : communityName,
+                count: replyCount,
+              })
+        }
       />
       <FeedQuote>{body}</FeedQuote>
       <FeedReasonLine
@@ -164,15 +179,20 @@ export function CommunityPostCard({
             <FeedPostActions
               postId={subjectId}
               reactionCount={signals?.reactionCount ?? reactionCount}
-              replyCount={signals?.replyCount ?? replyCount}
+              replyCount={replyCount}
               myReaction={signals?.myReaction ?? null}
             />
           )
         }
         link={
-          <FeedActionLink to={threadLink}>
-            <SpaceLabel parentName={communityParentName} name={communityName} />
-          </FeedActionLink>
+          isFlatPost ? undefined : (
+            <FeedActionLink to={threadLink}>
+              <SpaceLabel
+                parentName={communityParentName}
+                name={communityName}
+              />
+            </FeedActionLink>
+          )
         }
       />
       {reporting && (

@@ -1,0 +1,104 @@
+/* The staff forum review queue (PRD-461). This page and its row read the
+   shared row family straight from AdminSubmissionList.module.css (`.rows`,
+   `.row`, `.rowMain`, `.rowTop`, `.rowMeta`, `.emptyLine`, `.rowName`,
+   `.rowNameLink`, imported by AdminForumReviewPage.tsx and
+   AdminForumReviewRow.tsx), so this queue keeps reading like its siblings.
+   This file keeps only what the family doesn't have. */
+
+.row {
+  /* The family's `.row` never wraps; this queue's warnings/excerpt/actions
+     need to at phone widths, so this modifier rides alongside the family's
+     `.row` on the same element, adding only this one property. */
+  flex-wrap: wrap;
+}
+
+.loadMore {
+  /* The family's `.loadMore` only centers one button; this queue also shows
+     an inline error above it, so this modifier stacks the two and rides
+     alongside the family's `.loadMore` on the same element. */
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.rowWarnings {
+  margin: 8px 0 0;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowExcerpt {
+  margin: 8px 0 0;
+  max-width: 68ch;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.rowFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-block-start: 10px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+/* N5: the family's `size="sm"` button floors at 40px on every width. Raise
+   approve/decline to the house 44px touch target on a phone. Scoped under
+   `.rowActions` so the pair of classes outweighs `.sm`'s single class no
+   matter which CSS module loads first, with no `!important`. */
+@media (--md) {
+  .rowActions .actionButton {
+    min-height: 44px;
+  }
+}
+
+.noteBody {
+  margin: 0 0 16px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.noteLabel {
+  display: block;
+  margin-block-end: 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+
+.noteInput {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  padding: 11px 15px;
+  resize: vertical;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.noteInput:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+  background: var(--paper);
+}

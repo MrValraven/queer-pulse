@@ -1,4 +1,8 @@
-import type { JoinInvolvement, JoinRefusal } from "./api/communityJoin.api";
+import type { RefObject } from "react";
+import type {
+  JoinInvolvement,
+  JoinRefusalPanelKind,
+} from "./api/communityJoin.api";
 import type { JoinModalCommunity } from "./JoinModal";
 import { JoinStepAbout, JoinStepDone, JoinStepIntro } from "./JoinModalSteps";
 import { JoinRulesStep } from "./JoinRulesStep";
@@ -14,12 +18,15 @@ import { JoinRefusalPanel } from "./JoinRefusalPanel";
  * resolved to booleans so this component carries no wizard logic of its own.
  */
 export function JoinModalStepView({
+  headingRef,
   refusalPanel,
   onClose,
   isIntroStep,
   isRulesStep,
   isAboutStep,
   isDone,
+  isDoneAsRequest,
+  isHeldForReview,
   community,
   isRequest,
   isInvite,
@@ -31,6 +38,7 @@ export function JoinModalStepView({
   setIsAcknowledged,
   onRulesContinue,
   parentName,
+  parentSlug,
   involvement,
   setInvolvement,
   aboutText,
@@ -39,20 +47,24 @@ export function JoinModalStepView({
   errorMessage,
   onAboutSubmit,
 }: {
-  /** Already narrowed by `JoinModal` to exclude `"rulesChanged"` (that kind is
-   *  handled inline there, by resending the applicant to the rules step,
-   *  so it never reaches this panel): the same narrowing
-   *  `JoinRefusalPanel`'s own prop type requires, restated here as a plain
-   *  typed prop. */
-  refusalPanel: Extract<
-    JoinRefusal,
-    { kind: "banned" | "reapplyTooSoon" | "inviteRequired" }
-  > | null;
+  /** Handed to whichever heading is on screen, so `JoinModal` can move focus
+   *  to it when the step or the refusal changes. */
+  headingRef: RefObject<HTMLHeadingElement | null>;
+  /** Every refusal but `"rulesChanged"` (that kind is handled inline by
+   *  `useJoinModalSubmit`, which sends the applicant back to the rules step,
+   *  so it never reaches this panel). */
+  refusalPanel: JoinRefusalPanelKind | null;
   onClose: () => void;
   isIntroStep: boolean;
   isRulesStep: boolean;
   isAboutStep: boolean;
   isDone: boolean;
+  /** The done step reads as a request: a gated tier, or an instant join the
+   *  server held for review (ENG-428). */
+  isDoneAsRequest: boolean;
+  /** An instant join the server held for review: the done step says a
+   *  moderator looks first. */
+  isHeldForReview: boolean;
   community: JoinModalCommunity;
   isRequest: boolean;
   isInvite: boolean;
@@ -64,8 +76,11 @@ export function JoinModalStepView({
   setIsAcknowledged: (isAcknowledged: boolean) => void;
   onRulesContinue: () => void;
   /** Set when `community` is a space (subcommunity): the parent's name,
-   *  forwarded straight through to `JoinRulesStep`. */
+   *  forwarded to `JoinRulesStep` and to the refusal panel (a parent pause, or
+   *  "join the parent first"). */
   parentName?: string;
+  /** The parent's slug, so "join the parent first" links to it. */
+  parentSlug?: string;
   involvement: JoinInvolvement;
   setInvolvement: (involvement: JoinInvolvement) => void;
   aboutText: string;
@@ -75,12 +90,23 @@ export function JoinModalStepView({
   onAboutSubmit: () => void;
 }) {
   if (refusalPanel) {
-    return <JoinRefusalPanel refusal={refusalPanel} onClose={onClose} />;
+    return (
+      <JoinRefusalPanel
+        headingRef={headingRef}
+        refusal={refusalPanel}
+        slug={community.slug}
+        communityName={community.name}
+        parentName={parentName}
+        parentSlug={parentSlug}
+        onClose={onClose}
+      />
+    );
   }
   return (
     <>
       {isIntroStep && (
         <JoinStepIntro
+          headingRef={headingRef}
           community={community}
           isRequest={isRequest}
           isInvite={isInvite}
@@ -91,6 +117,7 @@ export function JoinModalStepView({
 
       {isRulesStep && (
         <JoinRulesStep
+          headingRef={headingRef}
           name={community.name}
           rules={rules}
           isUpdated={isRulesUpdated}
@@ -103,6 +130,7 @@ export function JoinModalStepView({
 
       {isAboutStep && (
         <JoinStepAbout
+          headingRef={headingRef}
           isRequest={isRequest}
           involvement={involvement}
           setInvolvement={setInvolvement}
@@ -116,8 +144,10 @@ export function JoinModalStepView({
 
       {isDone && (
         <JoinStepDone
+          headingRef={headingRef}
           community={community}
-          isRequest={isRequest}
+          isRequest={isDoneAsRequest}
+          isHeldForReview={isHeldForReview}
           onClose={onClose}
         />
       )}
