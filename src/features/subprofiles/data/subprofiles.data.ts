@@ -11,6 +11,7 @@ import { isContentSection } from "../subprofile-kinds";
 import { kindsMatchingSearch } from "../kindSearch";
 import { toCardTableSummary } from "../questTable.data";
 import { QUEST_DEMO_SUBPROFILES } from "./questDemoSubprofiles.data";
+import { LATE_BLOOMERS } from "./podcastDemoSubprofile.data";
 import type {
   CollaboratorDTO,
   EndorserDTO,
@@ -20,7 +21,9 @@ import type {
   RestrictedState,
   SubprofileCardDTO,
   SubprofileDTO,
+  SubprofileItemDTO,
   SubprofilePublicDTO,
+  SubprofileSection,
 } from "../api/subprofiles.api";
 
 // ── Demo collaborator directory ─────────────────────────────────────────────
@@ -2862,6 +2865,7 @@ export const DEMO_SUBPROFILES: DemoSubprofile[] = [
   ANIKA_JOURNAL,
   JORDAN_AFTERHOURS,
   CASA_CORVO_ANTIGA,
+  LATE_BLOOMERS,
   ...QUEST_DEMO_SUBPROFILES,
 ];
 
@@ -2885,6 +2889,48 @@ export function mockBumpEditVersion(id: string): number {
  *  a raised counter into the next spec. */
 export function resetDemoEditVersionsForTests(): void {
   demoEditVersions.clear();
+}
+
+/** Each persona's items as first loaded, kept the first time a demo write
+ *  changes them, so `resetDemoItemWritesForTests` can put them back. */
+const originalDemoItems = new Map<string, SubprofileItemDTO[]>();
+
+/**
+ * Demo write for the podcast feed import: put `items` at the TOP of a
+ * persona's section (existing rows shift down, ids kept), in the same registry
+ * the editor and the public page read, and raise the persona's `editVersion`
+ * as a real publish does. Returns the owner view after the write, or `null`
+ * when the persona is not in the registry.
+ */
+export function mockPrependSectionItems(
+  id: string,
+  section: SubprofileSection,
+  items: SubprofileItemDTO[],
+): SubprofileDTO | null {
+  const persona = DEMO_SUBPROFILES.find((candidate) => candidate.id === id);
+  if (!persona) return null;
+  if (!originalDemoItems.has(id)) originalDemoItems.set(id, persona.items);
+  const firstOfSection = persona.items.findIndex(
+    (item) => item.section === section,
+  );
+  const insertAt =
+    firstOfSection === -1 ? persona.items.length : firstOfSection;
+  persona.items = [
+    ...persona.items.slice(0, insertAt),
+    ...items,
+    ...persona.items.slice(insertAt),
+  ];
+  mockBumpEditVersion(id);
+  return toOwnerDto(persona);
+}
+
+/** Test-only: undo every `mockPrependSectionItems` write. */
+export function resetDemoItemWritesForTests(): void {
+  for (const [id, items] of originalDemoItems) {
+    const persona = DEMO_SUBPROFILES.find((candidate) => candidate.id === id);
+    if (persona) persona.items = items;
+  }
+  originalDemoItems.clear();
 }
 
 // ── Mock selectors (mirror the backend gating; used by the demo hook branches) ─

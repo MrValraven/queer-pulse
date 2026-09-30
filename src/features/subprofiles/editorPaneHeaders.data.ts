@@ -1,5 +1,6 @@
 import type { SubprofileKind } from "./api/subprofiles.api";
 import type { EditorPaneKey } from "./editorRail.data";
+import { FEED_IMPORT_PANE } from "./feedImport/feedImportKinds";
 
 export interface PaneHeaderCopy {
   titleKey: string;
@@ -37,6 +38,10 @@ export const PANE_HEADER: Partial<Record<EditorPaneKey, PaneHeaderCopy>> = {
   skinBlocks: {
     titleKey: "subprofiles:editorPane.skinBlocks.title",
     ledeKey: "subprofiles:editorPane.skinBlocks.lede",
+  },
+  [FEED_IMPORT_PANE]: {
+    titleKey: "subprofiles:feedImport.title",
+    ledeKey: "subprofiles:feedImport.lede",
   },
   affiliations: {
     titleKey: "subprofiles:affiliationsEditor.title",

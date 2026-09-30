@@ -5,10 +5,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CredentialProofThumb } from "./CredentialProofThumb";
 import { ItemStateChip } from "./ItemStateChip";
 import { CREDENTIAL_PHOTO_SECTIONS } from "./subprofileEditor.data";
+import { SubprofileItemListen } from "./SubprofileItemListen";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
-import type { AccentKey } from "./api/subprofiles.api";
+import type { AccentKey, SubprofileKind } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
 
 /**
@@ -27,6 +28,7 @@ export function SubprofileItemRow({
   skin,
   interactive,
   accent,
+  kind,
   onOpen,
   hideBody,
 }: {
@@ -36,6 +38,9 @@ export function SubprofileItemRow({
   /** The persona's accent, used to tint per-item social-link icons.
    *  Falls back to `DEFAULT_ACCENT` when the persona has none. */
   accent?: AccentKey;
+  /** The persona's kind: an imported episode gets its Listen (or Watch) link
+   *  only on the kinds, and in the sections, a feed can publish into. */
+  kind?: SubprofileKind;
   /** When set, the whole row becomes a button that opens a reader (poems).
    *  Mutually exclusive with the stage-skin ticket `<a>` in practice. */
   onOpen?: (item: SubprofileItemView) => void;
@@ -80,6 +85,14 @@ export function SubprofileItemRow({
         <span className="ticketgo">
           <FiArrowRight aria-hidden />
         </span>
+      )}
+      {/* A link inside a row that is already a link or a button is invalid. */}
+      {!isTicket && !onOpen && (
+        <SubprofileItemListen
+          item={item}
+          kind={kind}
+          interactive={interactive}
+        />
       )}
       {!hideBody && item.description && <p>{item.description}</p>}
       <SubprofileSocialRow

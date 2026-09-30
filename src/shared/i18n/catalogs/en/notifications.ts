@@ -693,6 +693,16 @@ export const notifications: Catalog = {
   "type.persona_update.text_other":
     "{subprofileName} published {count} new pieces of work.",
   "type.persona_update.meta": "Persona you follow",
+  // Podcast feed import: new episodes from a connected feed wait for review.
+  // CLDR-pluralised: `formatNotification` mirrors `newItemCount` onto `count`.
+  // Names the persona, which the payload always carries.
+  "type.persona_import_ready.text":
+    "New episodes are ready to review on {subprofileName}.",
+  "type.persona_import_ready.text_one":
+    "A new episode is ready to review on {subprofileName}.",
+  "type.persona_import_ready.text_other":
+    "{count} new episodes are ready to review on {subprofileName}.",
+  "type.persona_import_ready.meta": "Podcast import",
   "type.subprofile_creator_changed.text":
     "{newCreatorName} is now the creator of {subprofileName}.",
   "type.subprofile_creator_changed.textYou":
@@ -1074,6 +1084,7 @@ export const notifications: Catalog = {
   // Moment 6) — the first live kind with actions at all.
   "actions.makePersona": "Make a persona for this",
   "actions.seeTheWork": "See the work",
+  "actions.reviewEpisodes": "Review episodes",
 
   // Demo notification list (notificationsList.data.tsx) — mirrors, per row,
   // what `formatNotification` produces for the analogous live `type`, but with

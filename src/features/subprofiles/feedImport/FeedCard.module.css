@@ -1,0 +1,159 @@
+/* A connected feed: paper card on the editor's cream, its status line, actions
+   and settings. The review queue inside carries its own module. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: clamp(var(--card-pad), 3vw, var(--card-pad-lg));
+  box-shadow: var(--shadow-e1);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+.headText h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.headText h3:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-tag);
+}
+.author {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+.ok,
+.failing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+.ok {
+  color: var(--jade-ink);
+}
+.failing {
+  color: var(--danger-ink);
+}
+.failingNote {
+  margin: 0;
+  max-width: 62ch;
+  padding: var(--gap-xs) var(--gap-sm);
+  border-radius: var(--radius-panel);
+  background: rgba(var(--danger-rgb), 0.06);
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.status,
+.statusError {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+}
+.status {
+  color: var(--jade-ink);
+}
+.statusError {
+  color: var(--danger-ink);
+}
+.status:empty,
+.statusError:empty {
+  display: none;
+}
+
+/* ── Settings ────────────────────────────────────────────────────────────── */
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  border-radius: var(--radius-panel);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.settingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+.settingLabel {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+.settingText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.settingText label {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.settingText small {
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+@media (--md) {
+  .actions {
+    flex-basis: 100%;
+  }
+  .actions > * {
+    flex: 1 1 auto;
+  }
+}

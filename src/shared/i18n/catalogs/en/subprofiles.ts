@@ -2859,4 +2859,182 @@ export const subprofiles: Catalog = {
   "therapist.gallery.openAria": "{photo}. Open full-screen",
   "therapist.edit.aria.credentials": "Edit training and registration",
   "therapist.edit.aria.gallery": "Edit practice photos",
+
+  // Podcast feed import (editor Import pane, dashboard nudge). One contiguous
+  // block under `feedImport.`; the plain supporting copy lives here.
+  "feedImport.rail": "Import",
+  "feedImport.title": "Import",
+  "feedImport.lede":
+    "Connect your podcast feed. New episodes land here first, and nothing goes live until you say so.",
+  "feedImport.loading": "Loading your feeds…",
+  "feedImport.loadError": "We couldn't load your feeds.",
+  "feedImport.connect.heading": "Bring your show in",
+  "feedImport.connect.headingAnother": "Bring in another show",
+  "feedImport.connect.intro":
+    "Paste your podcast's RSS link and we'll fetch your episodes for you to review.",
+  "feedImport.connect.urlLabel": "Podcast feed address",
+  "feedImport.connect.urlHelper":
+    "The RSS link from your podcast host. It often ends in /rss or /feed.xml.",
+  "feedImport.connect.urlPlaceholder": "https://feeds.example.com/your-show",
+  "feedImport.connect.urlInvalid":
+    "That doesn't look like a web address. It should start with https://",
+  "feedImport.connect.lookUp": "Look up my show",
+  "feedImport.connect.lookingUp": "Looking…",
+  "feedImport.connect.changeFeed": "Use a different feed",
+  "feedImport.connect.submit": "Connect",
+  "feedImport.connect.connecting": "Connecting…",
+  "feedImport.connect.atLimit":
+    "You've connected {max} feeds, the most one persona can hold. Disconnect one to bring in another.",
+  "feedImport.preview.episodes_one": "{count} episode",
+  "feedImport.preview.episodes_other": "{count} episodes",
+  "feedImport.preview.author": "by {author}",
+  "feedImport.preview.newest": "Newest episodes",
+  "feedImport.preview.untitled": "Untitled show",
+  "feedImport.preview.alreadyConnected":
+    "This feed is already connected to this persona.",
+  "feedImport.options.section": "Where should episodes go?",
+  "feedImport.options.sectionOnly": "Episodes will be added to {section}.",
+  "feedImport.options.backfill": "What should we bring in?",
+  "feedImport.options.backfillAll_one": "Bring in the episode to review",
+  "feedImport.options.backfillAll_other":
+    "Bring in all {count} episodes to review",
+  "feedImport.options.backfillAllBody":
+    "They wait here, newest first. Publish the ones you want and dismiss the rest.",
+  "feedImport.options.backfillNone": "Only new episodes from now on",
+  "feedImport.options.backfillNoneBody":
+    "Your current episodes are set aside. You can bring any of them back from Dismissed.",
+  "feedImport.options.autoPublish": "Publish new episodes automatically",
+  "feedImport.options.autoPublishOff":
+    "Off: new episodes wait here for your review.",
+  "feedImport.options.autoPublishOn":
+    "On: episodes we find from now on go straight to your page. Episodes already in the feed still wait for your review.",
+  "feedImport.success.title": "Your show is",
+  "feedImport.success.em": "connected",
+  "feedImport.success.bodyAll_one":
+    "{count} episode is waiting for your review. Nothing goes live until you say so.",
+  "feedImport.success.bodyAll_other":
+    "{count} episodes are waiting for your review. Nothing goes live until you say so.",
+  "feedImport.success.bodyAllAuto_one":
+    "{count} episode is waiting for your review. Episodes we find from now on go straight to your page.",
+  "feedImport.success.bodyAllAuto_other":
+    "{count} episodes are waiting for your review. Episodes we find from now on go straight to your page.",
+  "feedImport.success.bodyNone":
+    "We'll check for new episodes from now on. They land here for your review, and nothing goes live until you say so.",
+  "feedImport.success.bodyAutoPublish":
+    "We'll check for new episodes from now on, and they go straight to your page.",
+  "feedImport.success.done": "Review episodes",
+  "feedImport.feed.untitled": "Your feed",
+  "feedImport.feed.status.active": "Connected",
+  "feedImport.feed.status.failing": "Can't reach your feed",
+  "feedImport.feed.lastSynced": "Last checked {when}",
+  "feedImport.feed.neverSynced": "Not checked yet",
+  "feedImport.feed.published_one": "{count} episode on your page",
+  "feedImport.feed.published_other": "{count} episodes on your page",
+  "feedImport.feed.checkNow": "Check now",
+  "feedImport.feed.checking": "Checking…",
+  "feedImport.feed.checkedNothing": "Checked just now. Nothing new yet.",
+  "feedImport.feed.checkedFound_one": "Found {count} new episode to review.",
+  "feedImport.feed.checkedFound_other": "Found {count} new episodes to review.",
+  "feedImport.feed.settings": "Settings",
+  "feedImport.feed.disconnect": "Disconnect",
+  "feedImport.feed.actionsLabel": "Actions for {feed}",
+  "feedImport.lastError.unreachable":
+    "We couldn't reach your feed. The address may have changed or your host may be down. We'll keep trying.",
+  "feedImport.lastError.timeout":
+    "Your feed took too long to answer. We'll keep trying.",
+  "feedImport.lastError.http_error":
+    "Your podcast host turned us away when we asked for your feed. We'll keep trying.",
+  "feedImport.lastError.too_large": "Your feed is too big for us to read.",
+  "feedImport.lastError.not_a_feed":
+    "That address no longer looks like a podcast feed. Check the link in your host's settings.",
+  "feedImport.lastError.unknown":
+    "We couldn't read your feed the last few times. We'll keep trying.",
+  "feedImport.settings.section": "Publish episodes to",
+  "feedImport.settings.saved": "Settings saved.",
+  "feedImport.disconnect.title": "Disconnect this feed?",
+  "feedImport.disconnect.body":
+    "Episodes you've already published stay on your page. Anything still waiting for review is cleared, and we stop checking this feed.",
+  "feedImport.disconnect.confirm": "Disconnect",
+  "feedImport.disconnect.done":
+    "Feed disconnected. Your published episodes are still on your page.",
+  "feedImport.review.heading": "Episodes",
+  "feedImport.review.viewLabel": "Which episodes to show",
+  "feedImport.review.viewNew": "New",
+  "feedImport.review.viewDismissed": "Dismissed",
+  "feedImport.review.selectAll": "Select all {count}",
+  "feedImport.review.selected_one": "{count} selected",
+  "feedImport.review.selected_other": "{count} selected",
+  "feedImport.review.publishSelected": "Publish selected",
+  "feedImport.review.publishAll": "Publish all",
+  "feedImport.review.publishing": "Publishing…",
+  "feedImport.review.dismiss": "Dismiss",
+  "feedImport.review.restore": "Restore",
+  "feedImport.review.restoreAria": "Restore {title}",
+  "feedImport.review.showMore": "Show more",
+  "feedImport.review.empty":
+    "Nothing waiting for review. New episodes land here when we find them.",
+  "feedImport.review.emptyDismissed": "Nothing set aside.",
+  "feedImport.review.loadError": "We couldn't load these episodes.",
+  "feedImport.review.room_one": "Room for 1 more item in {section}.",
+  "feedImport.review.room_other": "Room for {count} more items in {section}.",
+  "feedImport.review.roomNone":
+    "{section} is full. A section holds up to {max} items.",
+  "feedImport.review.overRoom":
+    "Only the newest {room} will go live. The rest stay here until there's room.",
+  "feedImport.review.lock.dirty": "Save or discard your edits first.",
+  "feedImport.review.lock.conflict":
+    "This persona changed elsewhere. Reload the latest version first.",
+  "feedImport.review.lock.saving": "Wait for your save to finish.",
+  "feedImport.review.result.published_one": "{count} episode is on your page.",
+  "feedImport.review.result.published_other":
+    "{count} episodes are on your page.",
+  "feedImport.review.result.partial":
+    "{published} on your page, {skipped} didn't make it. A section holds up to {max} items, and anything that didn't fit is still waiting here.",
+  "feedImport.review.result.dismissed_one":
+    "{count} episode set aside. Bring it back from Dismissed any time.",
+  "feedImport.review.result.dismissed_other":
+    "{count} episodes set aside. Bring any back from Dismissed.",
+  "feedImport.review.result.restored_one":
+    "{count} episode is back in your review list.",
+  "feedImport.review.result.restored_other":
+    "{count} episodes are back in your review list.",
+  "feedImport.error.unreachable":
+    "We couldn't reach that address. Check the link and try again.",
+  "feedImport.error.timeout":
+    "That feed took too long to answer. Try again in a moment.",
+  "feedImport.error.http_error":
+    "That address turned us away. Check the link, or ask your podcast host for the feed address.",
+  "feedImport.error.too_large": "That feed is too big for us to read.",
+  "feedImport.error.not_a_feed":
+    "That address doesn't look like a podcast feed. Look for the RSS link in your podcast host's settings.",
+  "feedImport.error.alreadyConnected":
+    "This feed is already connected to this persona.",
+  "feedImport.error.limit":
+    "You've connected {maxFeeds} feeds, the most one persona can hold.",
+  "feedImport.error.sectionFull":
+    "That section already holds {maxItems} items. Remove a few, or choose another section in the feed's settings.",
+  "feedImport.error.sectionNotAllowed":
+    "That section can't take episodes. Pick another one.",
+  "feedImport.error.invalidAddress":
+    "That address isn't one we can read as a feed. Check the link and try again.",
+  "feedImport.error.connectRejected":
+    "We couldn't connect that. Check the address and where the episodes go, then try again.",
+  "feedImport.error.editConflict":
+    "This persona changed while you were here. Reload the latest version, then publish again.",
+  "feedImport.error.tooSoon":
+    "You just checked. Give it a few minutes, then try again.",
+  "feedImport.error.rateLimited":
+    "You've looked things up a lot in the last minute. Wait a moment and try again.",
+  "feedImport.error.generic":
+    "Something went wrong on our side. Try again in a moment.",
+  "feedImport.banner.region": "Episodes waiting for review",
+  "feedImport.banner.message_one":
+    "A new episode from <em>{show}</em> is ready to review",
+  "feedImport.banner.message_other":
+    "{count} new episodes from <em>{show}</em> are ready to review",
+  "feedImport.banner.review": "Review episodes",
+  "feedImport.listen": "Listen",
+  "feedImport.listenAria": "Listen to {title}",
+  "feedImport.watch": "Watch",
+  "feedImport.watchAria": "Watch {title}",
 };

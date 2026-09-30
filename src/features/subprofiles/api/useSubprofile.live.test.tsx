@@ -112,10 +112,19 @@ describe("useSubprofiles (live mode via MSW)", () => {
     const { result } = renderHook(() => useSubprofilesLive(), { wrapper });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    // The demo registry attaches exactly one persona to the current user.
-    expect(result.current.data).toHaveLength(1);
-    expect(result.current.data![0]!.displayName).toBe("Tiago Costa");
-    expect(result.current.data![0]!.status).toBe("draft");
+    // The demo registry attaches two personas to the current user: their
+    // draft developer persona and their published podcast (the demo home of
+    // the feed-import pane).
+    expect(result.current.data).toHaveLength(2);
+    const draft = result.current.data!.find(
+      (persona) => persona.displayName === "Tiago Costa",
+    );
+    expect(draft?.status).toBe("draft");
+    expect(
+      result.current.data!.find(
+        (persona) => persona.displayName === "Late Bloomers",
+      )?.kind,
+    ).toBe("podcaster");
   });
 
   it("skips the query entirely when disabled (visitor-safe)", async () => {

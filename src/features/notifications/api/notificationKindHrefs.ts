@@ -1,4 +1,4 @@
-import { routes } from "../../../app/routeMap";
+import { routes, subprofileEditPath } from "../../../app/routeMap";
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
 import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
@@ -9,6 +9,20 @@ import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
  * entry, the same literal `shared/media/mediaReferences.ts` builds.
  */
 const LANDLORD_PAGE_PATH = "/work/landlord";
+
+/**
+ * Where a `persona_import_ready` row goes: the persona's editor on its Import
+ * pane, where the episodes wait. A payload without a persona id falls back to
+ * the member's personas dashboard, which lists the same nudge.
+ */
+export function personaImportHref(
+  payload: Record<string, unknown> | null | undefined,
+): string {
+  const subprofileId = slugOf(payload, "subprofileId");
+  return subprofileId
+    ? `${subprofileEditPath(subprofileId)}?pane=import`
+    : routes.subprofilesDashboard;
+}
 
 function slugOf(
   payload: Record<string, unknown> | null | undefined,
@@ -113,6 +127,8 @@ export function lifecycleSourceHref(
         href: listingRef ? listingCorrectionContactPath(listingRef) : undefined,
       };
     }
+    case "persona_import_ready":
+      return { href: personaImportHref(payload) };
     // Persona rows carry no persona address today, so they open the member's
     // own personas dashboard, where incoming invites and every persona they
     // hold are listed. For `subprofile_invite` and `subprofile_co_owner_joined`

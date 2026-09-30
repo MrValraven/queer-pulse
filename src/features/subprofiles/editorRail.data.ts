@@ -5,6 +5,7 @@ import {
   FiGlobe,
   FiLayout,
   FiMapPin,
+  FiRss,
   FiUser,
   FiUsers,
 } from "react-icons/fi";
@@ -13,6 +14,10 @@ import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import type { SkinChapterDescriptor } from "./skinBlockFields.data";
 import { hasSkinBlocks, skinChaptersForKind } from "./skinChapters";
+import {
+  FEED_IMPORT_PANE,
+  supportsFeedImport,
+} from "./feedImport/feedImportKinds";
 
 /**
  * Every rail-selectable pane. `identity`/`presence`/`address` are three
@@ -30,6 +35,7 @@ export type EditorPaneKey =
   | "address"
   | "skinBlocks"
   | `section:${SubprofileSection}`
+  | typeof FEED_IMPORT_PANE
   | "affiliations"
   | "owners"
   | "publish";
@@ -121,7 +127,8 @@ export interface EditorRailGroup {
  * Builds the grouped rail nav: This side (identity/presence/address/Page
  * blocks, the last with its chapters as sub-rows) / Content (one entry per
  * section that still has its own pane, badge
- * = item count) / People (affiliations/owners) / Publish (badge = the same
+ * = item count, then Import for the kinds that can bring in a podcast feed)
+ * / People (affiliations/owners) / Publish (badge = the same
  * client-only `estimateDraftReadiness` count the dashboard's
  * `SideReadinessRing` uses, shown as a plain "x/y ready" label here to suit
  * the rail row's tight vertical space). A group with no entries is dropped:
@@ -133,6 +140,17 @@ export function buildEditorRailGroups(
 ): EditorRailGroup[] {
   const readiness = estimateDraftReadiness(subprofile);
   const sectionsInBlocks = sectionsInPageBlocks(subprofile.kind);
+
+  // Only a kind whose craft is a show or a channel can bring in a feed.
+  const importEntries: EditorRailEntry[] = supportsFeedImport(subprofile.kind)
+    ? [
+        {
+          key: FEED_IMPORT_PANE,
+          labelKey: "subprofiles:feedImport.rail",
+          icon: FiRss,
+        },
+      ]
+    : [];
 
   const groups: EditorRailGroup[] = [
     {
@@ -169,16 +187,19 @@ export function buildEditorRailGroups(
     },
     {
       headingKey: "subprofiles:editorRail.content",
-      entries: subprofile.sections
-        .filter(
-          (section) => !sectionsInBlocks.has(sectionPaneKey(section.section)),
-        )
-        .map((section) => ({
-          key: sectionPaneKey(section.section),
-          labelKey: section.labelKey,
-          icon: section.icon,
-          badge: String(section.items.length),
-        })),
+      entries: [
+        ...subprofile.sections
+          .filter(
+            (section) => !sectionsInBlocks.has(sectionPaneKey(section.section)),
+          )
+          .map((section) => ({
+            key: sectionPaneKey(section.section),
+            labelKey: section.labelKey,
+            icon: section.icon,
+            badge: String(section.items.length),
+          })),
+        ...importEntries,
+      ],
     },
     {
       headingKey: "subprofiles:editorRail.people",

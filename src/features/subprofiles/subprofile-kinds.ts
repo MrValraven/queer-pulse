@@ -766,7 +766,17 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   episodes: {
     labelKey: "subprofiles:section.episodes",
     icon: GiMicrophone,
-    fields: ["title", "url", "date", "description", "imageUrl"],
+    // `subtitle` holds the season/episode ("S2 · E14") and `meta` the running
+    // time ("48 min"); a podcast feed import fills both, so both stay editable.
+    fields: [
+      "title",
+      "subtitle",
+      "url",
+      "date",
+      "meta",
+      "description",
+      "imageUrl",
+    ],
   },
   roles: {
     labelKey: "subprofiles:section.roles",

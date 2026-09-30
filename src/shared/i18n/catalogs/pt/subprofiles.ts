@@ -2923,4 +2923,192 @@ export const subprofiles: Catalog = {
   "therapist.gallery.openAria": "{photo}. Abrir em ecrã inteiro",
   "therapist.edit.aria.credentials": "Editar formação e registo",
   "therapist.edit.aria.gallery": "Editar fotos do espaço",
+
+  // Importação de podcast (painel Importar do editor, aviso no painel). Um
+  // bloco contínuo sob `feedImport.`.
+  "feedImport.rail": "Importar",
+  "feedImport.title": "Importar",
+  "feedImport.lede":
+    "Liga o feed do teu podcast. Os episódios novos chegam primeiro aqui, e nada fica no ar sem tu dizeres.",
+  "feedImport.loading": "A carregar os teus feeds…",
+  "feedImport.loadError": "Não conseguimos carregar os teus feeds.",
+  "feedImport.connect.heading": "Traz o teu podcast para cá",
+  "feedImport.connect.headingAnother": "Traz outro podcast",
+  "feedImport.connect.intro":
+    "Cola o link RSS do teu podcast e vamos buscar os teus episódios para rever.",
+  "feedImport.connect.urlLabel": "Endereço do feed do podcast",
+  "feedImport.connect.urlHelper":
+    "O link RSS que o teu alojamento de podcast te dá. Costuma acabar em /rss ou /feed.xml.",
+  "feedImport.connect.urlPlaceholder":
+    "https://feeds.exemplo.com/o-teu-podcast",
+  "feedImport.connect.urlInvalid":
+    "Isto não parece um endereço web. Deve começar por https://",
+  "feedImport.connect.lookUp": "Procurar o meu podcast",
+  "feedImport.connect.lookingUp": "A procurar…",
+  "feedImport.connect.changeFeed": "Usar outro feed",
+  "feedImport.connect.submit": "Ligar",
+  "feedImport.connect.connecting": "A ligar…",
+  "feedImport.connect.atLimit":
+    "Já ligaste {max} feeds, o máximo que uma persona pode ter. Desliga um para trazer outro.",
+  "feedImport.preview.episodes_one": "{count} episódio",
+  "feedImport.preview.episodes_other": "{count} episódios",
+  "feedImport.preview.author": "de {author}",
+  "feedImport.preview.newest": "Episódios mais recentes",
+  "feedImport.preview.untitled": "Podcast sem título",
+  "feedImport.preview.alreadyConnected":
+    "Este feed já está ligado a esta persona.",
+  "feedImport.options.section": "Para onde vão os episódios?",
+  "feedImport.options.sectionOnly": "Os episódios são adicionados a {section}.",
+  "feedImport.options.backfill": "O que devemos trazer?",
+  "feedImport.options.backfillAll_one": "Trazer o episódio para rever",
+  "feedImport.options.backfillAll_other":
+    "Trazer todos os {count} episódios para rever",
+  "feedImport.options.backfillAllBody":
+    "Ficam aqui à espera, do mais recente para o mais antigo. Publica os que queres e descarta os outros.",
+  "feedImport.options.backfillNone": "Só os episódios novos a partir de agora",
+  "feedImport.options.backfillNoneBody":
+    "Os episódios atuais ficam de parte. Podes repor qualquer um a partir de Descartados.",
+  "feedImport.options.autoPublish":
+    "Publicar os episódios novos automaticamente",
+  "feedImport.options.autoPublishOff":
+    "Desligado: os episódios novos ficam aqui à espera da tua revisão.",
+  "feedImport.options.autoPublishOn":
+    "Ligado: os episódios que encontrarmos a partir de agora vão diretamente para a tua página. Os que já estão no feed continuam à espera da tua revisão.",
+  "feedImport.success.title": "O teu podcast está",
+  "feedImport.success.em": "ligado",
+  "feedImport.success.bodyAll_one":
+    "{count} episódio está à espera da tua revisão. Nada fica no ar sem tu dizeres.",
+  "feedImport.success.bodyAll_other":
+    "{count} episódios estão à espera da tua revisão. Nada fica no ar sem tu dizeres.",
+  "feedImport.success.bodyAllAuto_one":
+    "{count} episódio está à espera da tua revisão. Os que encontrarmos a partir de agora vão diretamente para a tua página.",
+  "feedImport.success.bodyAllAuto_other":
+    "{count} episódios estão à espera da tua revisão. Os que encontrarmos a partir de agora vão diretamente para a tua página.",
+  "feedImport.success.bodyNone":
+    "A partir de agora vamos verificar se há episódios novos. Chegam aqui para a tua revisão, e nada fica no ar sem tu dizeres.",
+  "feedImport.success.bodyAutoPublish":
+    "A partir de agora vamos verificar se há episódios novos, e eles vão diretamente para a tua página.",
+  "feedImport.success.done": "Rever episódios",
+  "feedImport.feed.untitled": "O teu feed",
+  "feedImport.feed.status.active": "Ligado",
+  "feedImport.feed.status.failing": "Não chegamos ao teu feed",
+  "feedImport.feed.lastSynced": "Última verificação {when}",
+  "feedImport.feed.neverSynced": "Ainda não verificado",
+  "feedImport.feed.published_one": "{count} episódio na tua página",
+  "feedImport.feed.published_other": "{count} episódios na tua página",
+  "feedImport.feed.checkNow": "Verificar agora",
+  "feedImport.feed.checking": "A verificar…",
+  "feedImport.feed.checkedNothing":
+    "Verificado agora mesmo. Nada de novo por enquanto.",
+  "feedImport.feed.checkedFound_one":
+    "Encontrámos {count} episódio novo para rever.",
+  "feedImport.feed.checkedFound_other":
+    "Encontrámos {count} episódios novos para rever.",
+  "feedImport.feed.settings": "Definições",
+  "feedImport.feed.disconnect": "Desligar",
+  "feedImport.feed.actionsLabel": "Ações para {feed}",
+  "feedImport.lastError.unreachable":
+    "Não conseguimos chegar ao teu feed. O endereço pode ter mudado ou o teu alojamento pode estar em baixo. Vamos continuar a tentar.",
+  "feedImport.lastError.timeout":
+    "O teu feed demorou demasiado a responder. Vamos continuar a tentar.",
+  "feedImport.lastError.http_error":
+    "O teu alojamento de podcast recusou-nos quando pedimos o feed. Vamos continuar a tentar.",
+  "feedImport.lastError.too_large":
+    "O teu feed é demasiado grande para o conseguirmos ler.",
+  "feedImport.lastError.not_a_feed":
+    "Esse endereço já não parece um feed de podcast. Confirma o link nas definições do teu alojamento.",
+  "feedImport.lastError.unknown":
+    "Não conseguimos ler o teu feed nas últimas vezes. Vamos continuar a tentar.",
+  "feedImport.settings.section": "Publicar episódios em",
+  "feedImport.settings.saved": "Definições guardadas.",
+  "feedImport.disconnect.title": "Desligar este feed?",
+  "feedImport.disconnect.body":
+    "Os episódios que já publicaste ficam na tua página. O que ainda estiver à espera de revisão é apagado, e deixamos de verificar este feed.",
+  "feedImport.disconnect.confirm": "Desligar",
+  "feedImport.disconnect.done":
+    "Feed desligado. Os episódios publicados continuam na tua página.",
+  "feedImport.review.heading": "Episódios",
+  "feedImport.review.viewLabel": "Que episódios mostrar",
+  "feedImport.review.viewNew": "Novos",
+  "feedImport.review.viewDismissed": "Descartados",
+  "feedImport.review.selectAll": "Selecionar todos ({count})",
+  "feedImport.review.selected_one": "{count} selecionado",
+  "feedImport.review.selected_other": "{count} selecionados",
+  "feedImport.review.publishSelected": "Publicar selecionados",
+  "feedImport.review.publishAll": "Publicar todos",
+  "feedImport.review.publishing": "A publicar…",
+  "feedImport.review.dismiss": "Descartar",
+  "feedImport.review.restore": "Repor",
+  "feedImport.review.restoreAria": "Repor {title}",
+  "feedImport.review.showMore": "Mostrar mais",
+  "feedImport.review.empty":
+    "Nada à espera de revisão. Os episódios novos chegam aqui quando os encontrarmos.",
+  "feedImport.review.emptyDismissed": "Nada de parte.",
+  "feedImport.review.loadError": "Não conseguimos carregar estes episódios.",
+  "feedImport.review.room_one": "Há espaço para mais 1 item em {section}.",
+  "feedImport.review.room_other":
+    "Há espaço para mais {count} itens em {section}.",
+  "feedImport.review.roomNone":
+    "{section} está cheia. Uma secção tem espaço para {max} itens.",
+  "feedImport.review.overRoom":
+    "Só os {room} mais recentes vão para o ar. Os outros ficam aqui até haver espaço.",
+  "feedImport.review.lock.dirty":
+    "Guarda ou descarta primeiro as tuas alterações.",
+  "feedImport.review.lock.conflict":
+    "Esta persona mudou noutro sítio. Carrega primeiro a versão mais recente.",
+  "feedImport.review.lock.saving": "Espera que a gravação termine.",
+  "feedImport.review.result.published_one":
+    "{count} episódio está na tua página.",
+  "feedImport.review.result.published_other":
+    "{count} episódios estão na tua página.",
+  "feedImport.review.result.partial":
+    "{published} na tua página, {skipped} não chegaram lá. Uma secção tem espaço para {max} itens, e o que não coube continua aqui à espera.",
+  "feedImport.review.result.dismissed_one":
+    "{count} episódio ficou de parte. Podes repô-lo a qualquer momento em Descartados.",
+  "feedImport.review.result.dismissed_other":
+    "{count} episódios ficaram de parte. Repõe qualquer um em Descartados.",
+  "feedImport.review.result.restored_one":
+    "{count} episódio voltou à tua lista de revisão.",
+  "feedImport.review.result.restored_other":
+    "{count} episódios voltaram à tua lista de revisão.",
+  "feedImport.error.unreachable":
+    "Não conseguimos chegar a esse endereço. Confirma o link e tenta outra vez.",
+  "feedImport.error.timeout":
+    "Esse feed demorou demasiado a responder. Tenta outra vez daqui a pouco.",
+  "feedImport.error.http_error":
+    "Esse endereço recusou-nos. Confirma o link, ou pede o endereço do feed ao teu alojamento de podcast.",
+  "feedImport.error.too_large":
+    "Esse feed é demasiado grande para o conseguirmos ler.",
+  "feedImport.error.not_a_feed":
+    "Esse endereço não parece um feed de podcast. Procura o link RSS nas definições do teu alojamento de podcast.",
+  "feedImport.error.alreadyConnected":
+    "Este feed já está ligado a esta persona.",
+  "feedImport.error.limit":
+    "Já ligaste {maxFeeds} feeds, o máximo que uma persona pode ter.",
+  "feedImport.error.sectionFull":
+    "Essa secção já tem {maxItems} itens. Remove alguns, ou escolhe outra secção nas definições do feed.",
+  "feedImport.error.sectionNotAllowed":
+    "Essa secção não pode receber episódios. Escolhe outra.",
+  "feedImport.error.invalidAddress":
+    "Esse endereço não é um que consigamos ler como feed. Confirma o link e tenta outra vez.",
+  "feedImport.error.connectRejected":
+    "Não conseguimos ligar isso. Confirma o endereço e para onde vão os episódios, e tenta outra vez.",
+  "feedImport.error.editConflict":
+    "Esta persona mudou enquanto estavas aqui. Carrega a versão mais recente e publica outra vez.",
+  "feedImport.error.tooSoon":
+    "Acabaste de verificar. Espera uns minutos e tenta outra vez.",
+  "feedImport.error.rateLimited":
+    "Fizeste muitas pesquisas no último minuto. Espera um momento e tenta outra vez.",
+  "feedImport.error.generic":
+    "Algo correu mal do nosso lado. Tenta outra vez daqui a pouco.",
+  "feedImport.banner.region": "Episódios à espera de revisão",
+  "feedImport.banner.message_one":
+    "Há um episódio novo de <em>{show}</em> para rever",
+  "feedImport.banner.message_other":
+    "Há {count} episódios novos de <em>{show}</em> para rever",
+  "feedImport.banner.review": "Rever episódios",
+  "feedImport.listen": "Ouvir",
+  "feedImport.listenAria": "Ouvir {title}",
+  "feedImport.watch": "Ver",
+  "feedImport.watchAria": "Ver {title}",
 };

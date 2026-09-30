@@ -164,6 +164,14 @@ export type NotificationKind =
   // persona; it stays icon-based and speaks in the persona's own name. The
   // copy is CLDR-pluralised on `newItemCount`, mirrored onto `count` below.
   | "persona_update"
+  // Podcast feed import. Sent to EVERY member of a persona when a scheduled
+  // check of one of its connected feeds finds new episodes that now wait for
+  // review (never for a feed set to auto-publish). Bundled per persona.
+  // Payload: `{ subprofileId, subprofileName, subprofileSlugOrHandle, feedId,
+  // feedTitle, newItemCount }`. Carries no actor, like `persona_update`, and
+  // its copy is CLDR-pluralised on `newItemCount`, mirrored onto `count`
+  // below. The row opens the persona's editor on its Import pane.
+  | "persona_import_ready"
   // Phase 2 persona creator handoff, T8. Sent to EVERY remaining member of a
   // persona whose creator just changed (mirrors the backend
   // `notifications_type_enum` value `NotificationType.SubprofileCreatorChanged`
@@ -741,6 +749,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // New work from a persona you follow is somebody else's activity you asked
   // to hear about — the community tab, same as subprofile_credit.
   persona_update: "community",
+  // New episodes waiting in a persona's review queue are persona activity the
+  // member's own personas generate, the community tab like its siblings.
+  persona_import_ready: "community",
   // A persona's creator changing hands is activity inside a persona's own
   // membership, the same tab as subprofile_credit/persona_update.
   subprofile_creator_changed: "community",
@@ -1883,6 +1894,7 @@ const PLURAL_COUNT_FIELD: Partial<Record<NotificationKind, string>> = {
   account_deletion_final_warning: "daysRemaining",
   card_expiring: "daysRemaining",
   persona_update: "newItemCount",
+  persona_import_ready: "newItemCount",
   event_nearly_full: "seatsRemaining",
 };
 

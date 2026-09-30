@@ -1,0 +1,8 @@
+/* The Import pane's column: connected feeds, then the connect flow. */
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
