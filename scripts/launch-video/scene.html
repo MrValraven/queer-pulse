@@ -275,19 +275,28 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 400px;
+        top: 370px;
         height: 170px;
       }
+      .slogan {
+        font-size: 56px;
+        font-weight: 330;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
       #s3-sub {
-        top: 620px;
-        font-size: 36px;
-        color: var(--ink-60);
-        font-family: "Fraunces", serif;
-        font-style: italic;
-        font-weight: 340;
+        top: 570px;
+        color: var(--plum);
+      }
+      #s3-sub em {
+        color: var(--coral-ink);
       }
 
-      /* ── 4 · Moments ── */
+      /* ── 4 · Moments ──
+         One card system: every card is the same 760×640 frame with 48px
+         padding, four type roles (title, body, meta, label) and a footer
+         pinned to the bottom. Headline and card share the frame's midline and
+         its 130px side margins. */
       #s4 {
         background: radial-gradient(
           ellipse at 80% 20%,
@@ -299,19 +308,17 @@
       #s4 .left {
         position: absolute;
         left: 130px;
-        top: 330px;
-        width: 720px;
-      }
-      #s4 .lab,
-      #s4 .head {
-        position: relative;
+        top: 416px;
+        width: 760px;
       }
       #s4 .lab {
+        position: relative;
         height: 30px;
         margin-bottom: 28px;
       }
       #s4 .head {
-        height: 300px;
+        position: relative;
+        height: 190px;
       }
       #s4 .lab span,
       #s4 .head span {
@@ -324,10 +331,10 @@
         white-space: nowrap;
       }
       #s4 .head span {
-        width: 720px;
-        font-size: 88px;
+        width: 760px;
+        font-size: 84px;
         font-weight: 340;
-        line-height: 1.04;
+        line-height: 1.06;
         letter-spacing: -0.015em;
       }
       #s4 .head em {
@@ -336,7 +343,7 @@
       #s4 .progress {
         position: absolute;
         left: 130px;
-        top: 860px;
+        top: 856px;
         display: flex;
         gap: 10px;
       }
@@ -358,108 +365,148 @@
       }
       .vig {
         position: absolute;
-        left: 990px;
-        top: 150px;
-        width: 780px;
-        height: 780px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        left: 1030px;
+        top: 220px;
+        width: 760px;
+        height: 640px;
       }
       .card {
-        position: relative;
-        width: 660px;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 48px;
+        overflow: hidden;
+        border-radius: 32px;
         background: var(--paper);
         color: var(--ink);
-        border-radius: 30px;
-        padding: 40px;
         box-shadow:
           0 60px 120px -30px rgba(10, 4, 16, 0.65),
           0 0 0 1px rgba(45, 27, 61, 0.06);
       }
-      .ghost {
-        position: absolute;
-        width: 600px;
-        height: 420px;
-        border-radius: 30px;
-        background: rgba(247, 243, 238, 0.07);
-        box-shadow: inset 0 0 0 1px rgba(247, 243, 238, 0.1);
+      .card.flush {
+        padding: 0;
+      }
+      .card .body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: 36px 48px 48px;
+      }
+      .foot {
+        margin-top: auto;
       }
       .ttl {
         font-family: "Fraunces", serif;
         font-weight: 420;
-        font-size: 40px;
-        line-height: 1.12;
+        font-size: 44px;
+        line-height: 1.1;
         letter-spacing: -0.01em;
         color: var(--plum);
         font-variation-settings: "opsz" 72;
+        text-wrap: balance;
+      }
+      .ttl.sm {
+        font-size: 38px;
+      }
+      .sub {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 340;
+        font-size: 28px;
+        line-height: 1.2;
+        color: rgba(26, 26, 31, 0.62);
       }
       .meta {
-        font-size: 21px;
+        font-size: 22px;
+        line-height: 1.35;
         color: var(--ink-60);
+      }
+      .meta.s {
+        font-size: 20px;
+      }
+      .txt {
+        font-size: 24px;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+      .label {
+        font-size: 16px;
+        font-weight: 650;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 31, 0.5);
+      }
+      .name {
+        font-size: 24px;
+        font-weight: 650;
+        color: var(--plum);
       }
       .row {
         display: flex;
         align-items: center;
         gap: 16px;
       }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
       .hr {
+        flex: none;
         height: 1px;
+        margin: 32px 0;
         background: var(--line);
-        margin: 28px 0;
       }
-      .cap {
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: rgba(26, 26, 31, 0.45);
-      }
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 16px 8px 8px;
-        border-radius: 999px;
+      .tile {
+        padding: 18px 20px;
+        border-radius: 22px;
         background: var(--cream);
-        font-size: 20px;
-        font-weight: 550;
-        color: var(--plum);
       }
-      .pill {
+      .tag {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 7px 14px;
+        height: 40px;
+        padding: 0 18px;
         border-radius: 999px;
-        font-size: 17px;
+        background: var(--cream);
+        font-size: 19px;
         font-weight: 600;
+        color: rgba(26, 26, 31, 0.72);
+        white-space: nowrap;
       }
-      .pill.jade {
+      .tag.jade {
         background: var(--jade-tint);
         color: var(--jade-ink);
       }
-      .pill.soft {
-        background: var(--cream);
-        color: rgba(26, 26, 31, 0.7);
-      }
       .tick {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: var(--jade);
+        flex: none;
         display: grid;
         place-items: center;
-        flex: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--jade);
       }
       .tick svg {
-        width: 17px;
-        height: 17px;
+        width: 16px;
+        height: 16px;
         stroke: #fff;
         fill: none;
         stroke-width: 3;
         stroke-linecap: round;
         stroke-linejoin: round;
+      }
+      .tag .tick {
+        width: 22px;
+        height: 22px;
+      }
+      .tag .tick svg {
+        width: 13px;
+        height: 13px;
       }
       .btn {
         display: inline-flex;
@@ -470,7 +517,8 @@
         padding: 0 30px;
         border-radius: 999px;
         font-size: 21px;
-        font-weight: 600;
+        font-weight: 650;
+        white-space: nowrap;
       }
       .btn.coral {
         background: var(--coral-fill);
@@ -484,41 +532,74 @@
         display: flex;
       }
       .more {
-        width: 58px;
-        height: 58px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
         border-radius: 50%;
         background: var(--plum);
         color: var(--cream);
-        display: grid;
-        place-items: center;
-        font-size: 18px;
-        font-weight: 650;
+        font-size: 17px;
+        font-weight: 700;
         box-shadow: 0 0 0 4px var(--paper);
       }
+      .date {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 104px;
+        height: 112px;
+        border-radius: 22px;
+        background: var(--cream);
+      }
+      .date b {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: var(--coral-ink);
+      }
+      .date span {
+        font-family: "Fraunces", serif;
+        font-size: 34px;
+        font-weight: 450;
+        line-height: 1.1;
+        color: var(--plum);
+      }
+      .thread {
+        flex: 1;
+        display: grid;
+        gap: 14px;
+        align-content: end;
+        padding: 32px 40px;
+      }
       .bubble {
-        max-width: 440px;
-        padding: 18px 24px;
-        border-radius: 26px;
-        font-size: 25px;
+        max-width: 470px;
+        padding: 16px 22px;
+        border-radius: 24px;
+        font-size: 24px;
         line-height: 1.35;
       }
       .bubble.them {
+        justify-self: start;
+        border-bottom-left-radius: 8px;
         background: var(--cream);
         color: var(--ink);
-        border-bottom-left-radius: 8px;
-        justify-self: start;
       }
       .bubble.me {
+        justify-self: end;
+        border-bottom-right-radius: 8px;
         background: var(--plum);
         color: var(--cream);
-        border-bottom-right-radius: 8px;
-        justify-self: end;
       }
       .dots {
         display: inline-flex;
         gap: 8px;
-        padding: 22px 26px;
-        border-radius: 26px;
+        padding: 22px 24px;
+        border-radius: 24px;
         border-bottom-left-radius: 8px;
         background: var(--cream);
       }
@@ -528,48 +609,95 @@
         border-radius: 50%;
         background: rgba(26, 26, 31, 0.4);
       }
+      .composer {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px 32px 28px;
+        border-top: 1px solid var(--line);
+      }
+      .field {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        padding: 0 26px;
+        border-radius: 999px;
+        background: var(--cream);
+        font-size: 22px;
+        color: rgba(26, 26, 31, 0.45);
+      }
+      .send {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--coral-fill);
+      }
+      .send svg {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .art {
+        flex: none;
+        display: block;
+        width: 100%;
+        height: 220px;
+      }
       .stamp {
         position: absolute;
-        right: 34px;
-        top: 190px;
-        width: 150px;
-        height: 150px;
+        right: 48px;
+        top: 150px;
+        display: grid;
+        place-items: center;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         background: var(--jade-ink);
         color: #fff;
-        display: grid;
-        place-items: center;
         text-align: center;
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 700;
         letter-spacing: 0.12em;
-        text-transform: uppercase;
         line-height: 1.3;
+        text-transform: uppercase;
         box-shadow:
           0 0 0 6px var(--paper),
           0 20px 40px -10px rgba(60, 113, 89, 0.5);
       }
       .reply {
-        display: flex;
+        display: grid;
+        grid-template-columns: 48px 1fr;
         gap: 16px;
-        align-items: flex-start;
+        align-items: start;
       }
-      .reply .av {
-        width: 52px;
-        height: 52px;
-        flex: none;
+      .reply .who {
+        margin-bottom: 2px;
+        font-size: 18px;
+        font-weight: 650;
+        color: var(--ink-60);
       }
       .reply p {
-        font-size: 21px;
+        font-size: 24px;
         line-height: 1.4;
         color: var(--ink);
       }
-      .reply b {
-        display: block;
-        font-size: 17px;
-        color: var(--ink-60);
-        font-weight: 600;
-        margin-bottom: 2px;
+      .ic18 {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
       }
 
       /* ── 5 · Network ── */
@@ -796,7 +924,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 440px;
+        top: 340px;
         height: 200px;
       }
       #s8 .word {
@@ -804,15 +932,18 @@
         color: var(--cream);
       }
       #tag {
-        top: 700px;
-        color: rgba(247, 243, 238, 0.7);
-        letter-spacing: 0.3em;
+        top: 562px;
+        font-size: 60px;
+        color: var(--cream);
+      }
+      #tag em {
+        color: var(--coral);
       }
       #cta {
         position: absolute;
         left: 0;
         right: 0;
-        top: 770px;
+        top: 712px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -950,8 +1081,8 @@
           >
         </h1>
         <div id="s3-lock"><div class="word serif" id="s3-word"></div></div>
-        <p class="center" id="s3-sub">
-          A quiet, vouched-for network for queer Lisbon.
+        <p class="center serif slogan" id="s3-sub">
+          A queer network, <em>rooted in Lisbon.</em>
         </p>
       </section>
 
@@ -1040,7 +1171,7 @@
         </div>
         <h2 class="center serif">
           <span class="line"
-            ><span>Rooted in <em>Lisbon.</em></span></span
+            ><span>From Anjos to <em>Alfama.</em></span></span
           >
         </h2>
       </section>
@@ -1057,7 +1188,9 @@
           <circle id="s8-dot" cx="32" cy="32" r="10" fill="#e8775a" />
         </svg>
         <div id="s8-lock"><div class="word serif" id="s8-word"></div></div>
-        <div id="tag" class="center eyebrow">Invite-only · Lisbon</div>
+        <p id="tag" class="center serif slogan">
+          A queer network, <em>rooted in Lisbon.</em>
+        </p>
         <div id="cta">
           <span class="btn coral">Request an invite</span
           ><span class="url">queerpulse.com</span>
@@ -1400,13 +1533,13 @@
         // The dot travels into the lockup's full stop; the wordmark writes itself.
         const w = $("#s3-word").getBoundingClientRect().width || 1000;
         const dot = 54,
-          gap = 46,
-          lockW = dot + gap + w,
-          left = (1920 - lockW) / 2;
-        $("#s3-word").style.left = left + dot + gap + "px";
+          gap = 40,
+          left = (1920 - w) / 2;
+        $("#s3-word").style.left = left + "px";
         const slide = eInOut5(prog(t, 16.5, 17.2));
         const mark = $("#s3-mark");
-        mark.style.transform = `translate(${lerp(0, left + dot / 2 - 960, slide)}px, ${lerp(0, 400 + 82 - 380, slide)}px) scale(${lerp(1, dot / ((18 / 64) * 260), slide)})`;
+        // Dot centre: hung left of the centred word, on its x-height.
+        mark.style.transform = `translate(${lerp(0, left - gap - dot / 2 - 960, slide)}px, ${lerp(0, 370 + 84 - 380, slide)}px) scale(${lerp(1, dot / ((18 / 64) * 260), slide)})`;
         $("#s3-dot").setAttribute(
           "r",
           (
@@ -1416,7 +1549,7 @@
           ).toFixed(3),
         );
         lettersIn(s3chars, t, 16.85);
-        rise($("#s3-sub"), t, 17.5, 0.7, 20);
+        rise($("#s3-sub"), t, 17.4, 0.8, 24);
         const push = eIn(prog(t, 18.6, 19.2));
         $("#s3").style.transform = `scale(${1 + push * 0.05})`;
       }
@@ -1424,17 +1557,29 @@
       /* ── 4 · Moments ───────────────────────────────────────────────────────── */
       const ITEM = BAR; // one bar per moment
       const MOMENTS = [
-        { lab: "Vouches", head: "Everyone arrives <em>through someone.</em>" },
-        { lab: "Gatherings", head: "See who’s going <em>before you go.</em>" },
-        { lab: "Messages", head: "Your conversations stay <em>yours.</em>" },
+        {
+          lab: "Vouches",
+          head: "Everyone arrives<br /><em>through someone.</em>",
+        },
+        {
+          lab: "Gatherings",
+          head: "See who’s going<br /><em>before you go.</em>",
+        },
+        {
+          lab: "Messages",
+          head: "Your conversations<br />stay <em>yours.</em>",
+        },
         {
           lab: "Safe spaces",
-          head: "Places our team has <em>actually visited.</em>",
+          head: "Places our team has<br /><em>actually visited.</em>",
         },
-        { lab: "Forum", head: "Ask anything. <em>Someone’s been there.</em>" },
+        {
+          lab: "Forum",
+          head: "Ask anything.<br /><em>Someone’s been there.</em>",
+        },
         {
           lab: "Housing",
-          head: "Find a room with <em>people who get it.</em>",
+          head: "Find a room with<br /><em>people who get it.</em>",
         },
       ];
       const LOCK =
@@ -1443,88 +1588,96 @@
         ids
           .map(
             (id, i) =>
-              `<span data-a="${t0 + i * 0.1}" data-pop>${av(id, size, `box-shadow: 0 0 0 4px #fff; margin-left: ${i ? -14 : 0}px`)}</span>`,
+              `<span data-a="${t0 + i * 0.1}" data-pop style="margin-left: ${i ? -14 : 0}px">${av(id, size, "box-shadow: 0 0 0 4px #fff")}</span>`,
           )
           .join("");
-
+      const PIN =
+        '<svg class="ic18" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+      const SEND =
+        '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+      const ring = () => "box-shadow: 0 0 0 4px #fff";
       const VIG = [
-        // Vouch: a profile, and the person who vouched for them.
-        () => `<div class="ghost" style="transform: translate(40px, -40px) rotate(4deg)"></div>
-    <div class="card">
-      <div class="row" style="gap: 26px">${av("ines", 128)}<div><div class="ttl">Inês Fonseca</div><div class="meta" style="margin-top: 6px">she/they · Choreographer</div></div></div>
-      <div class="hr"></div>
-      <div class="cap">Vouched in by</div>
-      <div class="row" style="margin-top: 16px" data-a="0.55"><span class="chip">${av("bilal", 48)}Bilal Kaya</span>${TICK}</div>
-      <div class="cap" style="margin-top: 30px" data-a="1.05">You both know</div>
-      <div class="row" style="margin-top: 16px; gap: 12px" data-a="1.2"><span class="chip">${av("kai", 48)}Kai</span><span class="chip">${av("priya", 48)}Priya</span></div>
-    </div>`,
-        // Gathering: the RSVPs fill in, then you join them.
-        () => `<div class="ghost" style="transform: translate(-30px, 50px) rotate(-3deg)"></div>
-    <div class="card">
-      <div class="row" style="justify-content: space-between"><span class="pill jade"><span class="live" style="margin: 0; width: 9px; height: 9px"></span>Thursday · 19:00</span><span class="meta">Mouraria</span></div>
-      <div class="ttl" style="margin-top: 22px">Queer Book Club: “Stone Butch Blues”</div>
-      <div class="row" style="margin-top: 16px; gap: 10px"><span class="pill soft">Step-free</span><span class="pill soft">Sober</span><span class="pill soft">Tea from 18:45</span></div>
-      <div class="hr"></div>
-      <div class="stack">${stackOf(["priya", "kai", "amara", "tomas", "grace", "leo", "noor"], 58, 0.35)}<span class="more" data-a="1.05" data-pop style="margin-left: -14px">+12</span></div>
-      <div class="meta" style="margin-top: 16px" data-a="1.15">Priya, Kai and 17 others are going</div>
-      <div style="margin-top: 26px; position: relative; height: 60px"><span class="btn coral" data-btn-a>Join them</span><span class="btn jadeb" data-btn-b style="position: absolute; left: 0; top: 0">You’re going</span></div>
-    </div>`,
-        // Messages: a private conversation, end-to-end encrypted.
-        () => `<div class="card" style="padding: 0; overflow: hidden">
-      <div class="row" style="padding: 26px 32px; border-bottom: 1px solid var(--line)">${av("chidi", 60)}<div style="flex: 1"><div style="font-size: 24px; font-weight: 650; color: var(--plum)">Chidi Okafor</div><div class="row" style="gap: 6px; font-size: 16px; color: var(--jade-ink); font-weight: 600">${LOCK}End-to-end encrypted</div></div></div>
-      <div style="padding: 32px; display: grid; gap: 16px; min-height: 330px; align-content: start">
-        <div class="bubble them" data-a="0.25">Are you coming on Thursday?</div>
-        <div class="bubble me" data-a="0.8">Wouldn’t miss it. Save me a seat?</div>
-        <div data-typing style="height: 0; overflow: hidden"><span class="dots"><i></i><i></i><i></i></span></div>
-        <div class="bubble them" data-a="1.7">Already did.</div>
-      </div>
-    </div>`,
-        // Safe space: a venue our team has visited, with the details that matter.
-        () => `<div class="card" style="padding: 0; overflow: hidden">
-      <svg viewBox="0 0 660 200" style="display: block; background: var(--map)">
-        <path d="M-10 150 C 120 120, 220 170, 330 130 S 560 70, 680 100" stroke="#fff" stroke-width="16" fill="none"/>
-        <path d="M200 -10 L 260 210 M 470 -10 C 440 80, 500 140, 450 210" stroke="#fff" stroke-width="10" fill="none"/>
-        <path d="M-10 60 L 680 30" stroke="#fff" stroke-width="7" fill="none"/>
-        <circle cx="330" cy="98" r="38" fill="rgba(232,119,90,.2)"/><circle cx="330" cy="98" r="14" fill="#e8775a"/><circle cx="330" cy="98" r="5" fill="#fff"/>
-      </svg>
-      <div style="padding: 34px 40px 40px">
-        <div class="ttl">Café Norte</div><div class="meta" style="margin-top: 6px">Intendente · café and bar</div>
-        <div style="display: grid; gap: 16px; margin-top: 28px">
-          <div class="row" data-a="0.4">${TICK}<span style="font-size: 22px">Step-free entrance</span></div>
-          <div class="row" data-a="0.55">${TICK}<span style="font-size: 22px">All-gender toilets</span></div>
-          <div class="row" data-a="0.7">${TICK}<span style="font-size: 22px">Staff who get pronouns right</span></div>
-        </div>
-        <div class="row meta" style="margin-top: 28px; gap: 12px" data-a="1.2"><span class="stack">${av("noor", 40, "box-shadow: 0 0 0 3px #fff")}${av("sam", 40, "box-shadow: 0 0 0 3px #fff; margin-left: -10px")}</span>Checked in person by Noor and Sam</div>
-      </div>
-      <div class="stamp" data-stamp>Visited<br/>in person</div>
-    </div>`,
-        // Forum: a hard question, and people who have done it answering.
+        // Vouch: a profile, the person who vouched them in, and who you share.
         () => `<div class="card">
-      <span class="pill soft">Legal &amp; documents</span>
-      <div class="ttl" style="margin-top: 18px; font-size: 36px">Legal name change in Portugal: sharing experiences and tips</div>
-      <div class="row meta" style="margin-top: 14px; gap: 12px">${av("yuki", 36)}Yuki asked · <span data-count>0</span>&nbsp;replies</div>
-      <div class="hr" style="margin: 24px 0"></div>
-      <div style="display: grid; gap: 20px">
-        <div class="reply" data-a="0.4">${av("noor", 52)}<p><b>Noor</b>I did mine last spring. Here’s the order that worked for me.</p></div>
-        <div class="reply" data-a="0.85">${av("sam", 52)}<p><b>Sam</b>Bring two copies of everything. Trust me.</p></div>
-        <div class="reply" data-a="1.3">${av("mateo", 52)}<p><b>Mateo</b>Happy to come with you to the Conservatória.</p></div>
-      </div>
-    </div>`,
-        // Housing: a room, and the household you'd be living with.
-        () => `<div class="card" style="padding: 0; overflow: hidden">
-      <svg viewBox="0 0 660 190" style="display: block; background: #f3e6dc">
-        <rect x="240" y="30" width="180" height="140" rx="10" fill="#fff"/><line x1="330" y1="30" x2="330" y2="170" stroke="#f3e6dc" stroke-width="8"/><line x1="240" y1="100" x2="420" y2="100" stroke="#f3e6dc" stroke-width="8"/>
-        <circle cx="380" cy="64" r="20" fill="rgba(232,119,90,.55)"/>
-        <path d="M110 190 C 100 120, 160 110, 150 60 C 190 110, 180 150, 170 190 Z" fill="#4a8c6f" opacity=".75"/><rect x="118" y="160" width="60" height="30" rx="6" fill="#c85a40"/>
-        <rect x="470" y="120" width="130" height="70" rx="14" fill="#e8b44a" opacity=".7"/>
-      </svg>
-      <div style="padding: 32px 40px 40px">
-        <div class="ttl">A bright room in a three-person flat</div><div class="meta" style="margin-top: 6px">Arroios</div>
-        <div class="hr" style="margin: 24px 0"></div>
-        <div class="row" style="gap: 18px"><span class="stack">${stackOf(["lucia", "tomas", "eva"], 58, 0.35)}</span><div data-a="0.8"><div style="font-size: 22px; font-weight: 650; color: var(--plum)">Lucía, Tomás and Eva</div><div class="meta" style="font-size: 18px">Vouched by 3 members</div></div></div>
-        <div class="row" style="margin-top: 24px; justify-content: space-between" data-a="1.2"><span class="pill jade">LGBTQ+-affirming household</span><span class="btn coral" style="height: 52px; font-size: 19px">Say hello</span></div>
-      </div>
-    </div>`,
+          <div class="row" style="gap: 28px">${av("ines", 112)}<div class="col"><div class="ttl">Inês Fonseca</div><div class="meta">she/they · Choreographer</div></div></div>
+          <div class="hr"></div>
+          <div class="label">Vouched in by</div>
+          <div class="tile" style="margin-top: 16px; padding: 22px 24px" data-a="0.5"><div class="row">${av("bilal", 56)}<div class="col" style="flex: 1"><div class="name">Bilal Kaya</div><div class="meta s">Sound designer · he/him</div></div>${TICK}</div><p class="sub" style="margin-top: 16px; font-size: 25px; line-height: 1.35; color: var(--ink)">“Inês ran the movement workshop at the Pride picnic. Everyone left calmer.”</p></div>
+          <div class="foot">
+            <div class="label" data-a="1.0">You both know</div>
+            <div class="row" style="margin-top: 16px" data-a="1.1"><span class="stack">${av("kai", 48, ring())}${av("priya", 48, ring() + "; margin-left: -12px")}${av("yuki", 48, ring() + "; margin-left: -12px")}</span><span class="meta">Kai, Priya and Yuki</span></div>
+          </div>
+        </div>`,
+        // Gathering: who is going fills in, then you join them.
+        () => `<div class="card">
+          <div class="row" style="gap: 24px; align-items: flex-start"><div class="date"><b>THU</b><span>19:00</span></div><div class="col" style="gap: 8px; padding-top: 6px"><div class="ttl">Queer Book Club</div><div class="sub">“Stone Butch Blues”</div></div></div>
+          <div class="row meta" style="margin-top: 28px; gap: 10px">${PIN}Mouraria Community Centre</div>
+          <p class="txt" style="margin-top: 16px; font-size: 22px; color: rgba(26, 26, 31, 0.72)">Chapter ten to the end. Come whether you’ve finished or fallen behind.</p>
+          <div class="row" style="margin-top: 20px; gap: 10px"><span class="tag">Step-free</span><span class="tag">Sober</span><span class="tag">Tea from 18:45</span></div>
+          <div class="foot">
+            <div class="hr" style="margin-top: 0"></div>
+            <div class="row" style="justify-content: space-between; align-items: flex-end">
+              <div class="col" style="gap: 12px"><span class="stack">${stackOf(["priya", "kai", "amara", "tomas", "grace", "leo", "noor"], 52, 0.35)}<span class="more" data-a="1.05" data-pop style="margin-left: -14px">+12</span></span><span class="meta s" data-a="1.15">Priya, Kai and 17 others are going</span></div>
+              <div style="position: relative; height: 60px; width: 196px"><span class="btn coral" data-btn-a style="position: absolute; right: 0; top: 0">Join them</span><span class="btn jadeb" data-btn-b style="position: absolute; right: 0; top: 0">You’re going</span></div>
+            </div>
+          </div>
+        </div>`,
+        // Messages: a private conversation, end-to-end encrypted.
+        () => `<div class="card flush">
+          <div class="row" style="padding: 28px 40px; border-bottom: 1px solid var(--line)">${av("chidi", 60)}<div class="col" style="gap: 4px"><div class="name">Chidi Okafor</div><div class="row" style="gap: 6px; font-size: 17px; font-weight: 650; color: var(--jade-ink)">${LOCK}End-to-end encrypted</div></div></div>
+          <div class="thread">
+            <div class="bubble them" data-a="0.25">Are you coming on Thursday?</div>
+            <div class="bubble me" data-a="0.8">Wouldn’t miss it. Save me a seat?</div>
+            <div style="position: relative; justify-self: start"><div class="bubble them" data-a="1.7">Already did.</div><span class="dots" data-typing style="position: absolute; left: 0; top: 0"><i></i><i></i><i></i></span></div>
+          </div>
+          <div class="composer"><div class="field">Message Chidi</div><span class="send">${SEND}</span></div>
+        </div>`,
+        // Safe space: a venue our team has visited, with the details that matter.
+        () => `<div class="card flush">
+          <svg class="art" viewBox="0 0 760 220" style="background: var(--map)">
+            <path d="M-10 168 C 140 132, 250 190, 380 146 S 640 78, 780 110" stroke="#fff" stroke-width="18" fill="none"/>
+            <path d="M230 -10 L 300 230 M 540 -10 C 505 90, 575 150, 520 230" stroke="#fff" stroke-width="11" fill="none"/>
+            <path d="M-10 64 L 780 30" stroke="#fff" stroke-width="8" fill="none"/>
+            <circle cx="380" cy="104" r="42" fill="rgba(232,119,90,.2)"/><circle cx="380" cy="104" r="15" fill="#e8775a"/><circle cx="380" cy="104" r="5.5" fill="#fff"/>
+          </svg>
+          <div class="body">
+            <div class="ttl">Café Norte</div><div class="meta" style="margin-top: 6px">Intendente · café and bar</div>
+            <div style="display: grid; gap: 14px; margin-top: 28px">
+              <div class="row" data-a="0.4">${TICK}<span class="txt">Step-free entrance</span></div>
+              <div class="row" data-a="0.55">${TICK}<span class="txt">All-gender toilets</span></div>
+              <div class="row" data-a="0.7">${TICK}<span class="txt">Staff who get pronouns right</span></div>
+            </div>
+            <div class="foot row meta s" style="gap: 12px" data-a="1.2"><span class="stack">${av("noor", 40, ring())}${av("sam", 40, ring() + "; margin-left: -10px")}</span>Checked in person by Noor and Sam</div>
+          </div>
+          <div class="stamp" data-stamp>Visited<br/>in person</div>
+        </div>`,
+        // Forum: a hard question, answered by people who have done it.
+        () => `<div class="card">
+          <div class="row" style="justify-content: space-between"><span class="tag">Legal &amp; documents</span><span class="meta s"><span data-count>0</span> replies</span></div>
+          <div class="ttl sm" style="margin-top: 24px">Legal name change in Portugal: sharing experiences and tips</div>
+          <div class="row meta s" style="margin-top: 16px; gap: 12px">${av("yuki", 36)}Asked by Yuki</div>
+          <div class="hr"></div>
+          <div style="display: grid; gap: 30px">
+            <div class="reply" data-a="0.4">${av("noor", 48)}<div><div class="who">Noor</div><p>I did mine last spring. Here’s the order that worked for me.</p></div></div>
+            <div class="reply" data-a="0.85">${av("sam", 48)}<div><div class="who">Sam</div><p>Bring two copies of everything.</p></div></div>
+            <div class="reply" data-a="1.3">${av("mateo", 48)}<div><div class="who">Mateo</div><p>Happy to come with you to the Conservatória.</p></div></div>
+          </div>
+        </div>`,
+        // Housing: a room, and the household you would be living with.
+        () => `<div class="card flush">
+          <svg class="art" viewBox="0 0 760 220" style="background: #f3e6dc">
+            <rect x="290" y="34" width="180" height="152" rx="12" fill="#fff"/><line x1="380" y1="34" x2="380" y2="186" stroke="#f3e6dc" stroke-width="8"/><line x1="290" y1="110" x2="470" y2="110" stroke="#f3e6dc" stroke-width="8"/>
+            <circle cx="430" cy="70" r="22" fill="rgba(232,119,90,.55)"/>
+            <path d="M150 220 C 138 142, 206 130, 194 72 C 238 128, 226 172, 214 220 Z" fill="#4a8c6f" opacity=".75"/><rect x="156" y="186" width="66" height="34" rx="7" fill="#c85a40"/>
+            <rect x="540" y="140" width="150" height="80" rx="16" fill="#e8b44a" opacity=".7"/>
+          </svg>
+          <div class="body">
+            <div class="ttl sm">A bright room in a three-person flat</div>
+            <div class="meta" style="margin-top: 6px">Arroios</div>
+            <div class="tile row" style="margin-top: 24px; gap: 18px"><span class="stack">${stackOf(["lucia", "tomas", "eva"], 52, 0.35)}</span><div class="col" data-a="0.8"><div class="name" style="font-size: 22px">Lucía, Tomás and Eva</div><div class="meta s">Vouched by 3 members</div></div></div>
+            <div class="foot row" style="justify-content: space-between" data-a="1.2"><span class="tag jade">${TICK}LGBTQ+-affirming household</span><span class="btn coral">Say hello</span></div>
+          </div>
+        </div>`,
       ];
       const s4 = { lab: $("#s4-lab"), head: $("#s4-head") };
       MOMENTS.forEach((m, i) => {
@@ -1567,7 +1720,7 @@
           m.v.style.visibility =
             lt > s - 0.12 && lt < e + 0.2 ? "visible" : "hidden";
           m.v.style.opacity = vIn * (1 - vOut);
-          m.v.style.transform = `perspective(2000px) translateX(${(1 - vIn) * 220 - vOut * 180}px) rotateY(${(1 - vIn) * -14 + vOut * 10}deg) scale(${1.22 * (lerp(0.94, 1, vIn) - vOut * 0.04)})`;
+          m.v.style.transform = `perspective(2000px) translateX(${(1 - vIn) * 220 - vOut * 180}px) rotateY(${(1 - vIn) * -14 + vOut * 10}deg) scale(${lerp(0.94, 1, vIn) - vOut * 0.04})`;
           const lx = lt - s; // time within the moment
           m.anims.forEach(({ n, at, pop: p }) =>
             p ? pop(n, lx, at, 0.4, 12) : rise(n, lx, at, 0.5, 18),
@@ -1580,10 +1733,10 @@
             b.style.transform = `scale(${lerp(0.9, 1, eBack(prog(lx, 1.6, 1.95)))})`;
           }
           if (i === 2) {
-            const typing = $("[data-typing]", m.v),
-              on = lx > 1.2 && lx < 1.7;
-            typing.style.height = on ? "66px" : "0";
-            typing.style.opacity = on ? eOut(prog(lx, 1.2, 1.35)) : 0;
+            // The typing dots hold the reply's place, then give way to it.
+            const typing = $("[data-typing]", m.v);
+            typing.style.opacity =
+              eOut(prog(lx, 1.15, 1.3)) * (1 - eOut(prog(lx, 1.62, 1.72)));
             $$(".dots i", typing).forEach((d, k) => {
               d.style.transform = `translateY(${-Math.max(0, Math.sin(lx * 9 - k * 0.9)) * 6}px)`;
             });
@@ -1967,13 +2120,12 @@
         $("#s8 h2").style.filter = `blur(${hOut * 10}px)`;
         const w = $("#s8-word").getBoundingClientRect().width || 900;
         const dot = 62,
-          gap = 52,
-          lockW = dot + gap + w,
-          left = (1920 - lockW) / 2;
-        $("#s8-word").style.left = left + dot + gap + "px";
+          gap = 48,
+          left = (1920 - w) / 2;
+        $("#s8-word").style.left = left + "px";
         const slide = eInOut5(prog(t, 59.9, 60.5));
         $("#s8-mark").style.transform =
-          `translate(${lerp(0, left + dot / 2 - 960, slide)}px, ${lerp(0, 440 + 96 - 540, slide)}px) scale(${lerp(1, dot / ((20 / 64) * 400), slide)})`;
+          `translate(${lerp(0, left - gap - dot / 2 - 960, slide)}px, ${lerp(0, 340 + 96 - 540, slide)}px) scale(${lerp(1, dot / ((20 / 64) * 400), slide)})`;
         let beat = 0;
         S8_BEATS.forEach((h) => {
           beat = Math.max(beat, hit(t, h, 8), 0.5 * hit(t, h + 0.22, 11));
@@ -1994,9 +2146,7 @@
           );
         });
         lettersIn(s8chars, t, 60.45);
-        const tag = eOut(prog(t, 61.0, 61.8));
-        $("#tag").style.opacity = tag * 0.9;
-        $("#tag").style.letterSpacing = `${lerp(0.42, 0.3, tag)}em`;
+        rise($("#tag"), t, 60.9, 0.8, 24);
         const cta = eOut5(prog(t, 61.5, 62.3));
         $("#cta").style.opacity = cta;
         $("#cta").style.transform = `translateY(${(1 - cta) * 24}px)`;
