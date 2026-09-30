@@ -2938,6 +2938,10 @@ export const marketing: Catalog = {
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Opening a page after using the keyboard no longer draws a focus frame across the whole screen.",
+  "changelog.entries.gathering-preview-stays-whole.title":
+    "The gathering preview keeps its full height",
+  "changelog.entries.gathering-preview-stays-whole.body":
+    "On shorter screens the card preview beside a new gathering no longer shrinks to its label.",
   "changelog.entries.update-card-version-every-deploy.title":
     "The update card always names the version",
   "changelog.entries.update-card-version-every-deploy.body":

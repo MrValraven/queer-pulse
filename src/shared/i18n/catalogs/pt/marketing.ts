@@ -3011,6 +3011,10 @@ export const marketing: Catalog = {
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Abrir uma página depois de usares o teclado já não desenha uma moldura de foco a toda a largura do ecrã.",
+  "changelog.entries.gathering-preview-stays-whole.title":
+    "A pré-visualização do encontro mantém a altura toda",
+  "changelog.entries.gathering-preview-stays-whole.body":
+    "Em ecrãs mais baixos, a pré-visualização ao lado de um novo encontro já não encolhe até ao título.",
   "changelog.entries.update-card-version-every-deploy.title":
     "O cartão de atualização mostra sempre a versão",
   "changelog.entries.update-card-version-every-deploy.body":

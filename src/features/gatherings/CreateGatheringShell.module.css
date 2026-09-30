@@ -152,6 +152,12 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+/* The rail scrolls; its panels never shrink. The preview panel clips its orbs
+   with `overflow: hidden`, which drops its flex minimum to zero, so without
+   this a short viewport squashes it down to the eyebrow. */
+.rail > * {
+  flex-shrink: 0;
+}
 
 /* ── Chapter frame ── */
 .chapter {

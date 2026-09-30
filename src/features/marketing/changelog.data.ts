@@ -66,6 +66,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "gathering-preview-stays-whole",
+        category: "fix",
+        date: "30 Sep 2026",
+        ...entryKeys("gathering-preview-stays-whole"),
+      },
+      {
         id: "update-card-version-every-deploy",
         category: "fix",
         date: "30 Sep 2026",
