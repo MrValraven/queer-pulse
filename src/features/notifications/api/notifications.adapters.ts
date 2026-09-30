@@ -25,7 +25,10 @@ import { writerTabHref } from "../../magazine/writerTabs";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import { adminQueueRoute } from "./adminQueueRoutes";
-import { lifecycleSourceHref } from "./notificationKindHrefs";
+import {
+  lifecycleSourceHref,
+  personaImportHref,
+} from "./notificationKindHrefs";
 import { isMemberWrittenReason } from "./notificationReason";
 import { reasonLeadKeyOf } from "./notificationReason";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
@@ -520,6 +523,19 @@ export function notificationDtoToView(
         },
       ];
     }
+  }
+
+  // `persona_import_ready`: episodes from a connected feed are waiting for
+  // review. One action, straight to the persona's editor Import pane (the
+  // same place the row itself opens).
+  if (dto.type === "persona_import_ready") {
+    view.actions = [
+      {
+        label: t("notifications:actions.reviewEpisodes"),
+        variant: "primary",
+        href: personaImportHref(dto.payload),
+      },
+    ];
   }
 
   return view;

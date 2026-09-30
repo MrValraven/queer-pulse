@@ -8,7 +8,7 @@ import type {
   PublicSubprofileView,
   SubprofileItemView,
 } from "./api/subprofiles.adapters";
-import type { AccentKey } from "./api/subprofiles.api";
+import type { AccentKey, SubprofileKind } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
 
 /** A `.pp-sec`'s items in `.pp-list`/`.pp-tiles`/`.pp-gallery`/upcoming+`.pp-past`
@@ -23,6 +23,7 @@ function SectionBody({
   onOpenPoem,
   displayName,
   accent,
+  kind,
 }: {
   shape: "list" | "visual" | "gallery" | "stage-split";
   items: SubprofileItemView[];
@@ -41,6 +42,8 @@ function SectionBody({
   displayName: string;
   /** The persona's accent, threaded down to per-item social-link rows. */
   accent?: AccentKey;
+  /** The persona's kind, for the row's Listen / Watch link. */
+  kind?: SubprofileKind;
 }) {
   const { t } = useTranslation();
 
@@ -123,6 +126,7 @@ function SectionBody({
               skin={skin}
               interactive={interactive}
               accent={accent}
+              kind={kind}
             />
           ))}
         </div>
@@ -137,6 +141,7 @@ function SectionBody({
                   skin={skin}
                   interactive={interactive}
                   accent={accent}
+                  kind={kind}
                 />
               ))}
             </div>
@@ -160,6 +165,7 @@ function SectionBody({
             skin={skin}
             interactive={interactive}
             accent={accent}
+            kind={kind}
             onOpen={poemOpen}
             hideBody={item.section === "poems"}
           />
@@ -238,6 +244,7 @@ export function SubprofileSections({
               onOpenPoem={onOpenPoem}
               displayName={persona.displayName}
               accent={persona.accent ?? undefined}
+              kind={persona.kind}
             />
           </section>
         );

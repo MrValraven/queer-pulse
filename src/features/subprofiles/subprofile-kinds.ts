@@ -28,8 +28,11 @@ import {
   FiMapPin,
   FiMic,
   FiMoon,
+  FiPlayCircle,
+  FiRadio,
   FiScissors,
   FiSearch,
+  FiSmartphone,
   FiStar,
   FiTag,
   FiTool,
@@ -63,139 +66,12 @@ import type {
   SubprofileSection,
 } from "./api/subprofiles.api";
 import type { Language } from "../../shared/i18n/types";
+import { KIND_SECTIONS } from "./kindSections.data";
 
 // ── Kinds & sections config (contract C1 — verbatim, mirrored on the backend) ─
-
-/** kind -> ordered content sections (excludes the universal 'links'). */
-export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
-  developer: ["projects", "open_source"],
-  writer: ["publications", "readings"],
-  musician: ["discography", "gigs"],
-  visual_artist: ["portfolio", "exhibitions"],
-  filmmaker: ["filmography", "screenings"],
-  designer: ["selected_work", "clients"],
-  maker: ["collections", "workshops"],
-  drag: ["shows", "looks"],
-  dj: ["mixes", "gigs"],
-  dancer: ["performances", "reel"],
-  performer: ["appearances", "reel"],
-  photographer: ["series", "exhibitions"],
-  videomaker: ["videos", "screenings"],
-  chef: ["menus", "residencies"],
-  mixologist: ["cocktails", "residencies"],
-  therapist: ["specialisms", "credentials"],
-  astrologer: ["charts", "sky"],
-  generic: ["showcase"],
-  // stage (new kinds)
-  comedian: ["sets", "tour"],
-  vocalist: ["recordings", "gigs"],
-  burlesque: ["acts", "looks"],
-  circus: ["acts", "reel"],
-  spoken_word: ["pieces", "readings"],
-  host: ["hosted", "appearances"],
-  voguer: ["balls", "reel"],
-  pole_dancer: ["performances", "classes", "reel", "workshops"],
-  // studio (new kinds)
-  illustrator: ["portfolio", "clients"],
-  tattoo_artist: ["flash", "healed"],
-  animator: ["reel", "clients"],
-  comic_artist: ["books", "strips"],
-  game_designer: ["games", "jams"],
-  artist_3d: ["models", "clients"],
-  printmaker: ["editions", "workshops"],
-  // page (new kinds)
-  journalist: ["reporting", "bylines"],
-  poet: ["poems", "readings"],
-  editor: ["edited", "clients"],
-  screenwriter: ["scripts", "productions"],
-  translator: ["translations", "languages"],
-  zinester: ["zines", "distros"],
-  academic: ["papers", "teaching"],
-  // workshop (new kinds)
-  ceramicist: ["wares", "firings"],
-  jeweler: ["pieces", "commissions"],
-  textile_artist: ["pieces", "workshops"],
-  woodworker: ["builds", "commissions"],
-  florist: ["arrangements", "events"],
-  data_scientist: ["analyses", "open_source"],
-  // practice (new kinds)
-  coach: ["programmes", "credentials"],
-  bodyworker: ["treatments", "credentials"],
-  yoga_teacher: ["classes", "trainings"],
-  nutritionist: ["specialisms", "credentials"],
-  doula: ["support", "credentials"],
-  personal_trainer: ["training", "credentials"],
-  sex_educator: ["workshops", "resources"],
-  peer_support: ["groups", "credentials"],
-  // table (new kinds)
-  baker: ["bakes", "markets"],
-  barista: ["brews", "residencies"],
-  brewer: ["releases", "taprooms"],
-  sommelier: ["lists", "pairings"],
-  caterer: ["menus", "events"],
-  // chair (new family)
-  hair_stylist: ["services", "looks"],
-  barber: ["services", "cuts"],
-  makeup_artist: ["looks", "clients"],
-  nail_artist: ["nail_sets", "services"],
-  esthetician: ["treatments", "aftercare"],
-  piercer: ["piercings", "aftercare"],
-  // runway (new family)
-  fashion_designer: ["collections", "shows"],
-  stylist: ["editorials", "clients"],
-  model: ["book", "campaigns"],
-  costume_designer: ["productions", "sketches"],
-  // gallery (new family)
-  curator: ["exhibitions", "texts"],
-  gallerist: ["programme", "artists"],
-  art_dealer: ["available", "advisory"],
-  archivist: ["collections", "finding_aids"],
-  conservator: ["treatments", "credentials"],
-  registrar: ["collections", "loans"],
-  exhibition_designer: ["installations", "clients"],
-  art_critic: ["reviews", "publications"],
-  docent: ["tours", "talks"],
-  preparator: ["installs", "clients"],
-  // history (new family — "Record")
-  historian: ["research", "publications"],
-  art_historian: ["research", "lectures"],
-  oral_historian: ["testimonies", "projects"],
-  genealogist: ["services", "findings"],
-  heritage: ["sites", "campaigns"],
-  archival_researcher: ["research", "finding_aids"],
-  memory_keeper: ["projects", "testimonies"],
-  // collective (new family — "Poster")
-  organizer: ["campaigns", "actions"],
-  activist: ["campaigns", "writing"],
-  event_producer: ["events", "clients"],
-  promoter: ["nights", "roster"],
-  // classroom (new family)
-  teacher: ["courses", "resources"],
-  facilitator: ["workshops", "clients"],
-  tutor: ["subjects", "courses"],
-  lecturer: ["courses", "papers"],
-  // Quest personas (+20). Identical mapping to the backend mirror.
-  game_master: ["campaigns", "sessions"],
-  ttrpg_designer: ["games", "jams"],
-  board_game_reviewer: ["reviews", "playthroughs"],
-  game_night_host: ["nights", "library"],
-  larp_organizer: ["larps", "workshops"],
-  miniature_painter: ["minis", "commissions"],
-  cartographer: ["maps", "commissions"],
-  dice_maker: ["dice", "commissions"],
-  tournament_organizer: ["events", "results"],
-  actual_play: ["shows", "appearances"],
-  streamer: ["streams", "videos"],
-  speedrunner: ["runs", "videos"],
-  modder: ["mods", "open_source"],
-  cosplayer: ["builds", "cons"],
-  prop_maker: ["builds", "commissions"],
-  puzzle_designer: ["puzzles", "events"],
-  podcaster: ["episodes", "appearances"],
-  voice_actor: ["reel", "roles"],
-  fanfic_writer: ["works", "series"],
-  game_critic: ["reviews", "publications"],
-};
+// `KIND_SECTIONS` lives in `kindSections.data.ts` (import-free, so the
+// taxonomy check script can load it) and is re-exported from here.
+export { KIND_SECTIONS };
 
 /** The content sections of a kind, plus the universal 'gallery' section. */
 export const sectionsForKind = (k: SubprofileKind): SubprofileSection[] => [
@@ -890,7 +766,17 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   episodes: {
     labelKey: "subprofiles:section.episodes",
     icon: GiMicrophone,
-    fields: ["title", "url", "date", "description", "imageUrl"],
+    // `subtitle` holds the season/episode ("S2 · E14") and `meta` the running
+    // time ("48 min"); a podcast feed import fills both, so both stay editable.
+    fields: [
+      "title",
+      "subtitle",
+      "url",
+      "date",
+      "meta",
+      "description",
+      "imageUrl",
+    ],
   },
   roles: {
     labelKey: "subprofiles:section.roles",
@@ -917,6 +803,14 @@ export const KIND_ICON_OVERRIDE: Partial<Record<SubprofileKind, IconType>> = {
   ttrpg_designer: GiSpellBook,
   game_night_host: GiMeeple,
   tournament_organizer: GiLaurelsTrophy,
+  // Video & audio creators: video_creator/short_form_creator lead with
+  // "videos" (videomaker's camera) and radio_host with "episodes"
+  // (podcaster's mic), and podcast_producer's "productions" icon doesn't
+  // read as audio, so each gets its own picker chip.
+  video_creator: FiPlayCircle,
+  short_form_creator: FiSmartphone,
+  podcast_producer: FiHeadphones,
+  radio_host: FiRadio,
 };
 
 /** The icon for a kind's create-picker chip: the override above when one
@@ -944,6 +838,8 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   performer: "subprofiles:kind.performer",
   photographer: "subprofiles:kind.photographer",
   videomaker: "subprofiles:kind.videomaker",
+  video_creator: "subprofiles:kind.video_creator",
+  short_form_creator: "subprofiles:kind.short_form_creator",
   chef: "subprofiles:kind.chef",
   mixologist: "subprofiles:kind.mixologist",
   therapist: "subprofiles:kind.therapist",
@@ -1057,6 +953,8 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   prop_maker: "subprofiles:kind.prop_maker",
   puzzle_designer: "subprofiles:kind.puzzle_designer",
   podcaster: "subprofiles:kind.podcaster",
+  podcast_producer: "subprofiles:kind.podcast_producer",
+  radio_host: "subprofiles:kind.radio_host",
   voice_actor: "subprofiles:kind.voice_actor",
   fanfic_writer: "subprofiles:kind.fanfic_writer",
   game_critic: "subprofiles:kind.game_critic",
@@ -1087,6 +985,8 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   performer: "Performer",
   photographer: "Photographer",
   videomaker: "Videomaker",
+  video_creator: "Video creator / YouTuber",
+  short_form_creator: "Short-form creator",
   chef: "Chef",
   mixologist: "Mixologist",
   therapist: "Therapist",
@@ -1198,6 +1098,8 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   prop_maker: "Prop and armour maker",
   puzzle_designer: "Puzzle and escape room designer",
   podcaster: "Podcaster",
+  podcast_producer: "Podcast producer",
+  radio_host: "Radio host",
   voice_actor: "Voice actor",
   fanfic_writer: "Fanfic writer",
   game_critic: "Video game critic",
@@ -1231,6 +1133,8 @@ const PT_KIND_LABELS: Record<SubprofileKind, string> = {
   performer: "Performance",
   photographer: "Fotografia",
   videomaker: "Videografia",
+  video_creator: "Vídeo e YouTube",
+  short_form_creator: "Vídeo curto",
   chef: "Cozinha",
   mixologist: "Coquetelaria",
   therapist: "Terapia",
@@ -1330,6 +1234,8 @@ const PT_KIND_LABELS: Record<SubprofileKind, string> = {
   prop_maker: "Adereços e armaduras",
   puzzle_designer: "Puzzles e escape rooms",
   podcaster: "Podcast",
+  podcast_producer: "Produção de podcast",
+  radio_host: "Rádio",
   voice_actor: "Dobragem e voz",
   fanfic_writer: "Fanfic",
   game_critic: "Crítica de videojogos",
@@ -1494,6 +1400,8 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   performer: "performer",
   photographer: "photographer",
   videomaker: "videomaker",
+  video_creator: "video-creator",
+  short_form_creator: "short-form-creator",
   chef: "chef",
   mixologist: "mixologist",
   therapist: "therapist",
@@ -1605,6 +1513,8 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   prop_maker: "prop-maker",
   puzzle_designer: "puzzle-designer",
   podcaster: "podcaster",
+  podcast_producer: "podcast-producer",
+  radio_host: "radio-host",
   voice_actor: "voice-actor",
   fanfic_writer: "fanfic-writer",
   game_critic: "game-critic",
@@ -1619,6 +1529,40 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
 export const KIND_SEARCH_ALIASES: Partial<
   Record<SubprofileKind, readonly string[]>
 > = {
+  video_creator: [
+    "youtuber",
+    "youtube",
+    "vlogger",
+    "vlog",
+    "video essayist",
+    "video essay",
+    "content creator",
+    "criador de conteúdo",
+    "criadora de conteúdo",
+  ],
+  short_form_creator: [
+    "tiktok",
+    "tiktoker",
+    "reels",
+    "shorts",
+    "short-form",
+    "influencer",
+  ],
+  podcaster: ["podcast host", "podcasting"],
+  podcast_producer: [
+    "podcast editor",
+    "audio editor",
+    "audio producer",
+    "edição de áudio",
+    "produção de áudio",
+  ],
+  radio_host: [
+    "radio",
+    "radio presenter",
+    "broadcaster",
+    "locutor",
+    "locutora",
+  ],
   game_master: [
     "dm",
     "gm",

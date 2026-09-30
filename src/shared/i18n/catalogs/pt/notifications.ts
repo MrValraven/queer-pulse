@@ -651,6 +651,16 @@ export const notifications: Catalog = {
   "type.persona_update.text_other":
     "{subprofileName} publicou {count} trabalhos novos.",
   "type.persona_update.meta": "Persona que segues",
+  // Importação de podcast: episódios novos de um feed ligado à espera de
+  // revisão. Com plural CLDR: o `formatNotification` espelha `newItemCount` em
+  // `count`. Nomeia a persona, que o payload traz sempre.
+  "type.persona_import_ready.text":
+    "Há episódios novos para rever em {subprofileName}.",
+  "type.persona_import_ready.text_one":
+    "Há um episódio novo para rever em {subprofileName}.",
+  "type.persona_import_ready.text_other":
+    "Há {count} episódios novos para rever em {subprofileName}.",
+  "type.persona_import_ready.meta": "Importação de podcast",
   "type.subprofile_creator_changed.text":
     "{newCreatorName} passou a ser responsável por {subprofileName}.",
   "type.subprofile_creator_changed.textYou":
@@ -1035,6 +1045,7 @@ export const notifications: Catalog = {
   // Momento 6) — o primeiro tipo ao vivo com ações.
   "actions.makePersona": "Cria uma persona para isto",
   "actions.seeTheWork": "Ver o trabalho",
+  "actions.reviewEpisodes": "Rever episódios",
 
   // Lista de notificações de demonstração (notificationsList.data.tsx)
   "list.2.text":

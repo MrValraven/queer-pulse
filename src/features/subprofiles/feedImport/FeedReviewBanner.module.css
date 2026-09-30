@@ -1,0 +1,25 @@
+/* Episodes-ready rows — the shared `.banner` accent-tinted row
+   (persona-dashboard.css). This module owns only the list wrapper (stacking
+   several rows) and the action's place in a row. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  margin-bottom: var(--card-pad-lg);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@media (--md) {
+  .actions {
+    flex-basis: 100%;
+  }
+  .actions > * {
+    flex: 1;
+  }
+}

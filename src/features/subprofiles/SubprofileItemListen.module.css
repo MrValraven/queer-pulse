@@ -1,0 +1,6 @@
+/* The Listen action on an episode row. `.pp-row` lines its children up on the
+   text baseline; the pill centres itself so it sits level with the row. */
+.listen {
+  align-self: center;
+  flex-shrink: 0;
+}

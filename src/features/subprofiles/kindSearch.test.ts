@@ -34,6 +34,18 @@ describe("kindsMatchingSearch (demo mirror)", () => {
   it("finds every kind by its English label", () => {
     expect(kindsMatchingSearch("photographer")).toContain("photographer");
   });
+  it("finds the video and audio creators by the words people use", () => {
+    for (const term of ["youtuber", "YouTube", "vlogger", "content creator"]) {
+      expect(kindsMatchingSearch(term)).toContain("video_creator");
+    }
+    for (const term of ["tiktok", "reels", "shorts"]) {
+      expect(kindsMatchingSearch(term)).toContain("short_form_creator");
+    }
+    expect(kindsMatchingSearch("podcast")).toContain("podcaster");
+    expect(kindsMatchingSearch("audio editor")).toContain("podcast_producer");
+    expect(kindsMatchingSearch("radio")).toContain("radio_host");
+    expect(kindsMatchingSearch("rádio")).toContain("radio_host");
+  });
 });
 
 describe("kindsMatchingWordPrefix (craft picker)", () => {

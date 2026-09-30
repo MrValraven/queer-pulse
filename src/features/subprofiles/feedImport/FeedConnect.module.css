@@ -1,0 +1,252 @@
+/* Connect flow for podcast feed import: the lookup form, the preview card and
+   the three choices. Paper card on the editor's cream, tokens only. */
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: clamp(var(--card-pad), 3vw, var(--card-pad-lg));
+  box-shadow: var(--shadow-e1);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  color: var(--text-strong);
+}
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-tag);
+}
+.heading svg {
+  color: var(--accent-ink);
+  flex: none;
+}
+
+.connected:focus {
+  outline: none;
+}
+
+.intro {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-body);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.lookup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+}
+.lookup > :first-child {
+  align-self: stretch;
+  margin-bottom: 0;
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--danger-ink);
+}
+
+.limitNote {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* ── Preview ─────────────────────────────────────────────────────────────── */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--card-pad);
+  border-radius: var(--radius-panel);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.preview h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  color: var(--text-strong);
+}
+.preview h4:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-tag);
+}
+.previewMeta {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+.previewDescription {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.previewHeading {
+  margin: var(--gap-xs) 0 0;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.previewList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+.previewList li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.previewList b {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.previewList small {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+.previewNote {
+  margin: var(--gap-xs) 0 0;
+  font-size: var(--text-body-sm);
+  color: var(--accent-text);
+}
+
+/* ── Options ─────────────────────────────────────────────────────────────── */
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+.optionLabel {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.optionNote {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+
+.backfillGroup {
+  display: grid;
+  gap: var(--gap-xs);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+.backfillOption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: var(--tap-min, 44px);
+  padding: var(--gap-sm);
+  text-align: start;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-panel);
+  cursor: pointer;
+  transition:
+    border-color 0.15s var(--ease),
+    background 0.15s var(--ease);
+}
+.backfillOption b {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.backfillOption small {
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.backfillOptionOn {
+  border-color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.05);
+  box-shadow: inset 0 0 0 1px var(--plum);
+}
+
+.autoPublish {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.autoPublishText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.autoPublishText label {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.autoPublishText small {
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backfillOption {
+    transition: none;
+  }
+}

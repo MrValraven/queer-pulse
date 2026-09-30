@@ -22,6 +22,11 @@ import { SubprofileSectionEditor } from "./SubprofileSectionEditor";
 import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
 import { SubprofileOwnersPanel } from "./SubprofileOwnersPanel";
 import { SubprofilePublishPanel } from "./SubprofilePublishPanel";
+import { FeedImportPane } from "./feedImport/FeedImportPane";
+import {
+  FEED_IMPORT_PANE,
+  supportsFeedImport,
+} from "./feedImport/feedImportKinds";
 
 /** Whether the heading is on screen and uncovered: its first line sits inside
  *  the viewport and the topmost element there is the heading itself, so a
@@ -203,6 +208,12 @@ export function EditorPaneRouter({
           />
         </div>
       ))}
+
+      {supportsFeedImport(subprofile.kind) && (
+        <div hidden={pane !== FEED_IMPORT_PANE}>
+          <FeedImportPane subprofile={subprofile} />
+        </div>
+      )}
 
       <div hidden={pane !== "affiliations"}>
         <SubprofileAffiliationsEditor subprofile={subprofile} />

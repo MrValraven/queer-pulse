@@ -19,6 +19,7 @@ import { MySubprofilesBoard } from "./MySubprofilesBoard";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
 import { NewSideModal } from "./NewSideModal";
 import { PersonaInvitesBanner } from "./PersonaInvitesBanner";
+import { FeedReviewBanner } from "./feedImport/FeedReviewBanner";
 import {
   LoadingSides,
   EmptySides,
@@ -115,6 +116,7 @@ export function MySubprofilesPage() {
         </div>
 
         <PersonaInvitesBanner />
+        <FeedReviewBanner subprofiles={list} />
 
         {isLoading ? (
           <LoadingSides />
