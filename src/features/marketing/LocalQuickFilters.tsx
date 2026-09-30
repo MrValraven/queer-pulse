@@ -1,25 +1,29 @@
 import { useId } from "react";
 import { m } from "motion/react";
-import { FiClock, FiShield } from "react-icons/fi";
+import { FiClock, FiShield, FiUser } from "react-icons/fi";
 import { RefineGroup, useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./LocalFilterBar.module.css";
 
 /**
- * The two one-tap narrowings, side by side: is it open right now, and has it
- * been verified as a safe space. Each chip names itself, so the group only
- * needs a name for the set as a whole.
+ * The one-tap narrowings, side by side: is it open right now, has it been
+ * verified as a safe space, and do women own and run it. Each chip names
+ * itself, so the group only needs a name for the set as a whole.
  */
 export function LocalQuickFilters({
   openNow,
   onToggleOpenNow,
   safeOnly,
   onToggleSafeOnly,
+  womenOwnedOnly,
+  onToggleWomenOwnedOnly,
 }: {
   openNow: boolean;
   onToggleOpenNow: () => void;
   safeOnly: boolean;
   onToggleSafeOnly: () => void;
+  womenOwnedOnly: boolean;
+  onToggleWomenOwnedOnly: () => void;
 }) {
   const { t } = useTranslation();
   const quickLabelId = useId();
@@ -54,6 +58,18 @@ export function LocalQuickFilters({
         >
           <FiShield aria-hidden />
           {t("marketing:local.filter.verifiedSafeSpaces")}
+        </m.button>
+        <m.button
+          {...glide.chip}
+          type="button"
+          aria-pressed={womenOwnedOnly}
+          className={[s.chip, womenOwnedOnly && s.chipOn]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={onToggleWomenOwnedOnly}
+        >
+          <FiUser aria-hidden />
+          {t("marketing:local.filter.womenOwned")}
         </m.button>
       </m.div>
     </RefineGroup>

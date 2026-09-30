@@ -146,6 +146,8 @@ export function healListingDraft(draft: ListingDraft): ListingDraft {
   healed.social = { ...EMPTY_SOCIAL, ...draft.social };
   healed.photos = { ...EMPTY_PHOTO_SLOTS, ...draft.photos };
   healed.alt = { ...EMPTY_PHOTO_SLOTS, ...draft.alt };
+  // Absent on a draft saved before the field existed, which meant "no".
+  if (typeof healed.womenOwned !== "boolean") healed.womenOwned = false;
   if (typeof healed.latitude !== "number") healed.latitude = null;
   if (typeof healed.longitude !== "number") healed.longitude = null;
   return healed;

@@ -60,6 +60,11 @@ export function ListBusinessFullPreview({
                   {t("marketing:listBusiness.step1.friendly.tag")}
                 </span>
               )}
+              {draft.womenOwned && (
+                <span className={`${styles.dirBadge} ${styles.dirBadgeViolet}`}>
+                  {t("marketing:listBusiness.step1.womenOwned.tag")}
+                </span>
+              )}
               {price && (
                 <span className={`${styles.dirBadge} ${styles.dirBadgePrice}`}>
                   {price.sym}

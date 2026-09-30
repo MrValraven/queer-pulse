@@ -19,6 +19,17 @@ describe("draftToDto", () => {
     expect(dto.name).toBe("Bar");
   });
 
+  it("always sends women-owned as a boolean, false when never ticked", () => {
+    const { womenOwned: _womenOwned, ...legacyDraft } = {
+      ...blankDraft(),
+      path: "claim" as const,
+    };
+    expect(draftToDto(legacyDraft)).toHaveProperty("womenOwned", false);
+    expect(
+      draftToDto({ ...legacyDraft, path: "suggest", womenOwned: true }),
+    ).toHaveProperty("womenOwned", true);
+  });
+
   it("on a claim draft keeps the owner's name and the affirming agreement", () => {
     const draft = {
       ...blankDraft(),
@@ -59,5 +70,15 @@ describe("draftToUpdateDto", () => {
     >;
     expect(payload.path).toBeUndefined();
     expect(payload.ownerName).toBeUndefined();
+  });
+
+  it("lets a co-manager change women-owned: it describes the business", () => {
+    const draft = {
+      ...blankDraft(),
+      path: "claim" as const,
+      managementRole: "co_manager" as const,
+      womenOwned: true,
+    };
+    expect(draftToUpdateDto(draft)).toHaveProperty("womenOwned", true);
   });
 });

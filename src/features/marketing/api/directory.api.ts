@@ -76,6 +76,11 @@ export interface DirectoryCardDTO {
   /** Moderator-confirmed queer-owned badge, distinct from the self-reported
    * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. */
   queerOwnedVerified: boolean;
+  /** The owner's own statement that women (cis and trans) own and run the
+   * business. Self-declared, never moderator-checked, so it must never read
+   * as verified. Optional so a payload from before the field shipped still
+   * validates; absent ⇒ false. */
+  womenOwned?: boolean;
   memberFirst: string | null;
   /** The owner's profile photo for the card's "run by <first>" line, resolved
    * server-side and gated exactly like `memberFirst` (null for an unlinked,
@@ -174,6 +179,10 @@ function setAccessParam(
   if (access && access.length > 0) search.set("access", access.join(","));
 }
 
+/** `"women"` restricts to listings whose owner says women own and run them.
+ * The endpoint 400s any other value, so only this literal may reach it. */
+export type DirectoryOwnedFilter = "women";
+
 /** GET /directory — every live directory listing (public), optionally
  * filtered. Always the bare, `DEFAULT_LIST_LIMIT`-capped array shape — for
  * whole-catalog callers that need the full working set client-side rather
@@ -188,11 +197,13 @@ export function getDirectory(params?: {
   safe?: "verified";
   /** Accessibility needs that must ALL be met (see `setAccessParam`). */
   access?: AccessibilitySlug[];
+  owned?: DirectoryOwnedFilter;
 }): Promise<DirectoryCardDTO[]> {
   const search = new URLSearchParams();
   if (params?.cat) search.set("cat", params.cat);
   if (params?.q) search.set("q", params.q);
   if (params?.safe) search.set("safe", params.safe);
+  if (params?.owned) search.set("owned", params.owned);
   setAccessParam(search, params?.access);
   const query = search.toString();
   return apiGet<DirectoryCardDTO[]>(
@@ -222,11 +233,13 @@ export function getDirectoryPage(params: {
   safe?: "verified";
   /** Accessibility needs that must ALL be met (see `setAccessParam`). */
   access?: AccessibilitySlug[];
+  owned?: DirectoryOwnedFilter;
   page: number;
 }): Promise<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>> {
   const search = new URLSearchParams();
   if (params.q) search.set("q", params.q);
   if (params.safe) search.set("safe", params.safe);
+  if (params.owned) search.set("owned", params.owned);
   setAccessParam(search, params.access);
   search.set("page", String(params.page));
   return apiGet<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>>(

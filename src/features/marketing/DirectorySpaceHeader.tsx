@@ -80,6 +80,13 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
               >
                 {t(OWNERSHIP_PILL_KEYS[ownership])}
               </span>
+              {/* The owner's own statement, never checked by a moderator, so
+                  it takes the plain pill style of the owner's other tags. */}
+              {place.womenOwned && (
+                <span className={s.pill}>
+                  {t("marketing:directory.detail.badge.womenOwned")}
+                </span>
+              )}
               {place.pills.map((pill) => (
                 <span key={pill} className={s.pill}>
                   {listingTagLabel(t, pill)}

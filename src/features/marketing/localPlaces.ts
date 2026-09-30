@@ -7,6 +7,7 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
+import type { DirectoryOwnedFilter } from "./api/directory.api";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
@@ -247,6 +248,18 @@ export interface LocalFilters {
   openNow?: boolean;
   /** Accessibility needs that must all be met. Empty/absent = no restriction. */
   access?: AccessibilitySlug[];
+  /** `"women"` keeps only women-owned businesses; `null`/absent = no restriction. */
+  owned?: DirectoryOwnedFilter | null;
+}
+
+/**
+ * Whether the owner has said women own and run this place. Only a business
+ * can say so: a demo-only venue carries no ownership at all, so it drops out
+ * once the filter is on rather than being assumed either way.
+ */
+export function isPlaceWomenOwned(place: LocalPlace): boolean {
+  if (place.kind !== "business") return false;
+  return (place.source as DirectoryPlace).womenOwned === true;
 }
 
 /**
@@ -317,7 +330,8 @@ export function placeMeetsAccess(
  *
  * `openNow` and `access` are hard filters too, and both refuse to guess: a
  * place with no published hours is never "open now", and a need nobody has
- * answered is never "met". See `isPlaceOpenNow` / `placeMeetsAccess`.
+ * answered is never "met". See `isPlaceOpenNow` / `placeMeetsAccess`. `owned`
+ * is the same kind of hard filter (see `isPlaceWomenOwned`).
  */
 export function filterLocalPlaces(
   places: LocalPlace[],
@@ -350,6 +364,9 @@ export function filterLocalPlaces(
       return false;
     }
     if (!placeMeetsAccess(place, filters.access ?? [])) {
+      return false;
+    }
+    if (filters.owned === "women" && !isPlaceWomenOwned(place)) {
       return false;
     }
     return true;

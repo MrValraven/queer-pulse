@@ -551,6 +551,11 @@ export interface ListingDraft {
   hood: string;
   badge: OwnerBadge | "";
   evidence: string; // owned only
+  /** The owner says women (cis and trans) own and run the business. A plain
+   *  self-declaration, independent of `badge`: a women-owned place can be
+   *  queer-owned or queer-friendly. Optional so a draft saved before the
+   *  field existed stays valid; absent reads as false. */
+  womenOwned?: boolean;
   price: string; // PRICES id
   blurb: string; // one-liner, <=140
   tagline: string;

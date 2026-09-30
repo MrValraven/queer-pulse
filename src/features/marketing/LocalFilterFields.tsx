@@ -30,6 +30,9 @@ export interface LocalFilterFieldsProps {
   /** Whether the "Verified safe spaces" filter (`?safe=verified`) is active. */
   safeOnly: boolean;
   onToggleSafeOnly: () => void;
+  /** Whether the "Women-owned" filter (`?owned=women`) is active. */
+  womenOwnedOnly: boolean;
+  onToggleWomenOwnedOnly: () => void;
   /** Whether the "Open now" filter (`?open=now`) is active. */
   openNow: boolean;
   onToggleOpenNow: () => void;
@@ -79,9 +82,9 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 }
 
 /**
- * The filter set itself: search, then the groups. Place type, the two one-tap
- * narrowings (open now, verified safe spaces), access needs, and (demo-only)
- * vibe. Rendered inline in the desktop bar behind the "Refine" toggle, or flat
+ * The filter set itself: search, then the groups. Place type, the one-tap
+ * narrowings (open now, verified safe spaces, women-owned), access needs, and
+ * (demo-only) vibe. Rendered inline in the desktop bar behind the "Refine" toggle, or flat
  * inside the mobile "Filters" sheet; one markup source so the two layouts never
  * diverge in behaviour.
  */
@@ -96,6 +99,8 @@ export function LocalFilterFields({
   onToggleVibe,
   safeOnly,
   onToggleSafeOnly,
+  womenOwnedOnly,
+  onToggleWomenOwnedOnly,
   openNow,
   onToggleOpenNow,
   access,
@@ -134,6 +139,7 @@ export function LocalFilterFields({
     access.length +
     categories.length +
     (safeOnly ? 1 : 0) +
+    (womenOwnedOnly ? 1 : 0) +
     (openNow ? 1 : 0);
   // The field holds its own text. `query` lives in the URL, and the router
   // commits a URL change inside a transition, so a field bound straight to it
@@ -195,7 +201,7 @@ export function LocalFilterFields({
         onClearCategories={onClearCategories}
         categoryCounts={categoryCounts}
       />
-      {/* Ordering and the two one-tap narrowings share a band: all three are
+      {/* Ordering and the one-tap narrowings share a band: all of them are
           short controls, and side by side they fill a line the place-type chips
           have already made wide. */}
       <RefineSplit>
@@ -209,6 +215,8 @@ export function LocalFilterFields({
           onToggleOpenNow={onToggleOpenNow}
           safeOnly={safeOnly}
           onToggleSafeOnly={onToggleSafeOnly}
+          womenOwnedOnly={womenOwnedOnly}
+          onToggleWomenOwnedOnly={onToggleWomenOwnedOnly}
         />
       </RefineSplit>
       <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />

@@ -54,6 +54,21 @@ function descriptionSummary(draft: ListingDraft): string {
     .trim();
 }
 
+/** The ownership row: the queer-owned / friendly choice, then the separate
+ *  women-owned tick when it is on. Empty until a badge is picked. */
+function ownershipSummary(t: TFunction, draft: ListingDraft): string {
+  const badge =
+    draft.badge === "owned"
+      ? t("marketing:listBusiness.step1.owned.tag")
+      : draft.badge === "friendly"
+        ? t("marketing:listBusiness.step1.friendly.tag")
+        : "";
+  if (!badge) return "";
+  return draft.womenOwned
+    ? `${badge} · ${t("marketing:listBusiness.step1.womenOwned.tag")}`
+    : badge;
+}
+
 function onlineSummary(t: TFunction, draft: ListingDraft): string {
   const bits: string[] = [];
   if (draft.social.instagram)
@@ -212,11 +227,7 @@ export function StepReview({
           {draft.hood}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.ownership")}>
-          {draft.badge === "owned"
-            ? t("marketing:listBusiness.step1.owned.tag")
-            : draft.badge === "friendly"
-              ? t("marketing:listBusiness.step1.friendly.tag")
-              : ""}
+          {ownershipSummary(t, draft)}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.price")}>
           {draft.price ? optionLabel(t, PRICES, draft.price) : ""}

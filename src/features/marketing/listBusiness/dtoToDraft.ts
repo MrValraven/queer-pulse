@@ -39,6 +39,8 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     hood: dto.hood,
     badge: dto.badge,
     evidence: dto.evidence,
+    // Rows saved before the field existed arrive without it.
+    womenOwned: dto.womenOwned ?? false,
     price: dto.price,
     blurb: dto.blurb,
     tagline: dto.tagline,

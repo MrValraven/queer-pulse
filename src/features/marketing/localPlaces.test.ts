@@ -4,6 +4,7 @@ import { VENUES } from "./map.data";
 import {
   businessToLocal,
   filterLocalPlaces,
+  isPlaceWomenOwned,
   mergeLocalPlaces,
   normalizeName,
   venueToLocal,
@@ -197,5 +198,59 @@ describe("filterLocalPlaces", () => {
     ).toBe(true);
     // …and vibe-less businesses are still present, not silently dropped.
     expect(result.some((place) => place.kind === "business")).toBe(true);
+  });
+
+  it('keeps only women-owned businesses when owned is "women"', () => {
+    const result = filterLocalPlaces(places, {
+      categories: [],
+      query: "",
+      vibes: [],
+      owned: "women",
+    });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every(isPlaceWomenOwned)).toBe(true);
+    // A demo venue carries no ownership, so it is never assumed to qualify.
+    expect(result.some((place) => place.kind === "venue")).toBe(false);
+    // Independent of the queer-owned badge: an allied place can qualify too.
+    expect(
+      result.some(
+        (place) =>
+          place.kind === "business" &&
+          !(place.source as (typeof DIRECTORY_PLACES)[number]).owned,
+      ),
+    ).toBe(true);
+  });
+
+  it("leaves the list untouched when owned is null", () => {
+    const unfiltered = filterLocalPlaces(places, {
+      categories: [],
+      query: "",
+      vibes: [],
+    });
+    const result = filterLocalPlaces(places, {
+      categories: [],
+      query: "",
+      vibes: [],
+      owned: null,
+    });
+    expect(result).toHaveLength(unfiltered.length);
+  });
+});
+
+describe("isPlaceWomenOwned", () => {
+  const salon = DIRECTORY_PLACES.find(
+    (place) => place.slug === "salao-mouraria",
+  )!;
+
+  it("reads the business's own flag", () => {
+    expect(isPlaceWomenOwned(businessToLocal(salon, true))).toBe(true);
+    expect(
+      isPlaceWomenOwned(businessToLocal({ ...salon, womenOwned: false }, true)),
+    ).toBe(false);
+  });
+
+  it("treats an absent flag (older payload) as not women-owned", () => {
+    const { womenOwned: _womenOwned, ...withoutFlag } = salon;
+    expect(isPlaceWomenOwned(businessToLocal(withoutFlag, true))).toBe(false);
   });
 });

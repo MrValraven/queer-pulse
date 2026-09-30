@@ -86,6 +86,7 @@ export function businessPayload(
     hood: draft.hood,
     badge: draft.badge,
     evidence: draft.evidence.trim(),
+    womenOwned: draft.womenOwned === true,
     price: draft.price,
     blurb: draft.blurb.trim(),
     tagline: draft.tagline.trim(),

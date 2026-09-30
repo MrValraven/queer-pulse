@@ -74,6 +74,16 @@ describe("dtoToDraft", () => {
     expect(draft.photos).toEqual({ wide: "", d1: "", d2: "", vibe: "" });
   });
 
+  it("reads an absent women-owned flag (a row from before it existed) as false", () => {
+    expect(dtoToDraft(makeDto()).womenOwned).toBe(false);
+  });
+
+  it("round-trips the women-owned flag into the save payload", () => {
+    const draft = dtoToDraft(makeDto({ womenOwned: true }));
+    expect(draft.womenOwned).toBe(true);
+    expect(draftToDto(draft)).toHaveProperty("womenOwned", true);
+  });
+
   it("drops server-only fields (no ref/status/slug/submittedBy/createdAt)", () => {
     const draft = dtoToDraft(makeDto()) as unknown as Record<string, unknown>;
     expect(draft.ref).toBeUndefined();

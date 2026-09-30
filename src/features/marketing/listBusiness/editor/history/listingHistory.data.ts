@@ -28,6 +28,7 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   timezone: `${KEY_PREFIX}.field.timezone`,
   badge: `${KEY_PREFIX}.field.badge`,
   evidence: `${KEY_PREFIX}.field.evidence`,
+  womenOwned: `${KEY_PREFIX}.field.womenOwned`,
   price: `${KEY_PREFIX}.field.price`,
   blurb: `${KEY_PREFIX}.field.blurb`,
   tagline: `${KEY_PREFIX}.field.tagline`,

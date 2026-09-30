@@ -50,6 +50,8 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   cats: { step: 1, anchor: ANCHOR.cats },
   hood: { step: 1, anchor: ANCHOR.hood },
   badge: { step: 1, anchor: ANCHOR.badge },
+  // The women-owned tick renders inside the ownership field.
+  womenOwned: { step: 1, anchor: ANCHOR.badge },
   price: { step: 1, anchor: ANCHOR.price },
   blurb: { step: 1, anchor: ANCHOR.blurb },
   // Step 2 — story

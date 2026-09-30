@@ -1592,6 +1592,10 @@ export const marketing: Catalog = {
     "Sem documentos. Só uma frase que quem revê possa confirmar. É isto que mantém o distintivo com significado.",
   "listBusiness.step1.evidencePlaceholder":
     "ex.: Propriedade partilhada entre mim (Sandra, ela/dela) e o Rui (ele/dele) desde 2019",
+  "listBusiness.step1.womenOwned.tag": "Negócio de mulheres",
+  "listBusiness.step1.womenOwned.title": "É de mulheres e são elas que o gerem",
+  "listBusiness.step1.womenOwned.sub":
+    "Mulheres cis e trans, sem distinção. Aparece como etiqueta na página do negócio, e dá para filtrar o diretório por isto.",
   "listBusiness.step1.priceLabel": "Mais ou menos, que preço?",
   "listBusiness.step1.priceAria": "Escalão de preço",
   "listBusiness.step1.blurbLabel": "Descrição curta",
@@ -2222,6 +2226,8 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.field.badge":
     "o selo Queer-owned ou LGBTQ+ friendly",
   "listBusiness.editor.history.field.evidence": "as provas por trás do selo",
+  "listBusiness.editor.history.field.womenOwned":
+    "a etiqueta de negócio de mulheres",
   "listBusiness.editor.history.field.price": "o escalão de preço",
   "listBusiness.editor.history.field.blurb": "a descrição curta",
   "listBusiness.editor.history.field.tagline": "o lema",
@@ -2669,6 +2675,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.field.badge": "Quem o gere",
   "listBusiness.editor.restore.diff.field.evidence":
     "Em que sentido é queer-owned",
+  "listBusiness.editor.restore.diff.field.womenOwned": "Negócio de mulheres",
   "listBusiness.editor.restore.diff.field.price": "Escalão de preço",
   "listBusiness.editor.restore.diff.field.blurb": "Descrição curta",
   "listBusiness.editor.restore.diff.field.tagline": "Lema",
@@ -8608,6 +8615,7 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "Acolhe pessoas LGBTQ+",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
+  "directory.card.womenOwned": "Negócio de mulheres",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
@@ -8660,6 +8668,7 @@ export const marketing: Catalog = {
   "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
   "directory.detail.badge.owned": "Negócio queer",
   "directory.detail.badge.friendly": "Acolhe pessoas LGBTQ+",
+  "directory.detail.badge.womenOwned": "Negócio de mulheres",
   "directory.detail.reviewsCount": "· {count} avaliações",
   "directory.detail.newBadge": "Novo",
   "directory.detail.onlineBusiness": "Só online",
@@ -9682,6 +9691,7 @@ export const marketing: Catalog = {
   "local.filter.vibeLabel": "Ambiente",
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
+  "local.filter.womenOwned": "Negócios de mulheres",
   "local.filter.filters": "Filtros",
   "local.filter.quickFiltersLabel": "Filtros rápidos",
   "local.filter.openNow": "Aberto agora",

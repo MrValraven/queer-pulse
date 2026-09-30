@@ -32,6 +32,7 @@ export function useDirectoryPageState() {
     sort,
     vibes,
     safe,
+    owned,
     openNow,
     access,
     query,
@@ -42,6 +43,7 @@ export function useDirectoryPageState() {
     setSort,
     toggleVibe,
     setSafe,
+    setWomenOwned,
     setOpenNow,
     toggleAccess,
     clearFilters,
@@ -55,7 +57,7 @@ export function useDirectoryPageState() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useLocalPlaces({ query, safe, access });
+  } = useLocalPlaces({ query, safe, access, owned });
   // Opt-in, memory-only, never sent anywhere. Held here so one position serves
   // both the ordering and the walking times, and so turning it off is a single
   // state change that hands the previous ordering straight back.
@@ -108,6 +110,8 @@ export function useDirectoryPageState() {
     onToggleVibe: toggleVibe,
     safeOnly: safe === "verified",
     onToggleSafeOnly: () => setSafe(safe !== "verified"),
+    womenOwnedOnly: owned === "women",
+    onToggleWomenOwnedOnly: () => setWomenOwned(owned !== "women"),
     openNow,
     onToggleOpenNow: () => setOpenNow(!openNow),
     access,

@@ -1417,6 +1417,10 @@
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);
 }
+.dirBadgeViolet {
+  background: rgba(var(--violet-rgb), 0.12);
+  color: var(--violet);
+}
 .dirBadgePrice {
   background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-60);

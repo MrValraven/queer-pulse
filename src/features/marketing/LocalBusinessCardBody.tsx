@@ -245,12 +245,19 @@ export function LocalBusinessCardBody({
       <div className={s.desc} data-preview-region="desc">
         {place.desc}
       </div>
-      {/* One row at most: "Member-run" leads so it is the pill that survives
-          a narrow column, and the tags fill whatever room is left. */}
+      {/* One row at most: "Member-run" and "Women-owned" lead so they are the
+          pills that survive a narrow column (someone filtering for a
+          women-owned place must be able to see why each card matched), and
+          the tags fill whatever room is left. */}
       <div className={s.pillsRow} data-preview-region="pills">
         {place.member && (
           <span className={`${s.pill} ${s.pillMember}`}>
             {t("marketing:directory.card.memberRun")}
+          </span>
+        )}
+        {place.womenOwned && (
+          <span className={`${s.pill} ${s.pillWomenOwned}`}>
+            {t("marketing:directory.card.womenOwned")}
           </span>
         )}
         {place.pills.slice(0, 3).map((pill) => (

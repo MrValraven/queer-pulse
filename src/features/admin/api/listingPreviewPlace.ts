@@ -147,6 +147,7 @@ export function listingDtoToPreviewPlace(
     // want this listing shown on their profile), and answers the "run by"
     // line only.
     owned: dto.badge === "owned",
+    womenOwned: dto.womenOwned === true,
     member: dto.linkToProfile ? identity.first || undefined : undefined,
     av: initialsForName(dto.name),
     tint: tintForSlug(dto.slug),

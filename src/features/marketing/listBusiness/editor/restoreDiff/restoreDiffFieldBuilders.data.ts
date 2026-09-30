@@ -73,6 +73,10 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
       return labelKey ? context.t(labelKey) : "";
     }),
   evidence: (context) => textField(context, "evidence"),
+  womenOwned: (context) =>
+    choiceField(context, "womenOwned", (draft) =>
+      yesNoLabel(context.t, draft.womenOwned === true),
+    ),
   price: (context) =>
     choiceField(context, "price", (draft) =>
       optionLabel(context.t, PRICES, draft.price),
