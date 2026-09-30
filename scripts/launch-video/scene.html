@@ -1662,25 +1662,19 @@
         linesIn($("#turn"), t, 14.8, 0.2, 1.0);
         const tOut = fadeOut($("#turn"), t, 16.4, 16.8);
         $("#turn").style.transform = `translateY(${-tOut * 40}px)`;
-        // The dot travels into the lockup's full stop; the wordmark writes itself.
+        // The dot gives way to the name: it rises to the wordmark's centre and
+        // shrinks to nothing as the letters write themselves. The wordmark and
+        // slogan always appear on their own, without the dot.
         // offsetWidth is the layout width; a bounding rect would shrink with
         // any scale applied to the stage (the preview page scales it to fit).
         const w = $("#s3-word").offsetWidth || 1000;
-        const dot = 54,
-          gap = 40,
-          left = (1920 - w) / 2;
+        const left = (1920 - w) / 2;
         $("#s3-word").style.left = left + "px";
-        const slide = eInOut5(prog(t, 16.5, 17.2));
-        const mark = $("#s3-mark");
-        // Dot centre: hung left of the centred word, on its x-height.
-        mark.style.transform = `translate(${lerp(0, left - gap - dot / 2 - 960, slide)}px, ${lerp(0, 370 + 84 - 380, slide)}px) scale(${lerp(1, dot / ((18 / 64) * 260), slide)})`;
+        const release = eInOut(prog(t, 16.5, 16.9));
+        $("#s3-mark").style.transform = `translateY(${release * 65}px)`;
         $("#s3-dot").setAttribute(
           "r",
-          (
-            9 *
-            eBack(prog(t, 14.5, 15.0)) *
-            (1 + hit(t, 16.8, 8) * 0.15)
-          ).toFixed(3),
+          (9 * eBack(prog(t, 14.5, 15.0)) * (1 - release)).toFixed(3),
         );
         lettersIn(s3chars, t, 16.85);
         rise($("#s3-sub"), t, 17.4, 0.8, 24);
@@ -2273,30 +2267,33 @@
         // offsetWidth is the layout width; a bounding rect would shrink with
         // any scale applied to the stage (the preview page scales it to fit).
         const w = $("#s8-word").offsetWidth || 900;
-        const dot = 62,
-          gap = 48,
-          left = (1920 - w) / 2;
+        const left = (1920 - w) / 2;
         $("#s8-word").style.left = left + "px";
-        const slide = eInOut5(prog(t, 59.9, 60.5));
+        // On its last beat the heart rises to the wordmark's centre, sends
+        // out one ripple and disappears; the name writes itself in its place.
+        const release = eInOut(prog(t, 60.0, 60.35));
         $("#s8-mark").style.transform =
-          `translate(${lerp(0, left - gap - dot / 2 - 960, slide)}px, ${lerp(0, 340 + 96 - 540, slide)}px) scale(${lerp(1, dot / ((20 / 64) * 400), slide)})`;
+          `translateY(${eInOut(prog(t, 59.9, 60.3)) * -114}px)`;
         let beat = 0;
         S8_BEATS.forEach((h) => {
           beat = Math.max(beat, hit(t, h, 8), 0.5 * hit(t, h + 0.22, 11));
         });
         $("#s8-dot").setAttribute(
           "r",
-          (10 * eBack(prog(t, 58.4, 58.8)) * (1 + beat * 0.14)).toFixed(3),
+          (
+            10 *
+            eBack(prog(t, 58.4, 58.8)) *
+            (1 + beat * 0.14) *
+            (1 - release)
+          ).toFixed(3),
         );
         S8_BEATS.forEach((h, i) => {
-          const x = prog(t, h, h + 1.8);
-          s8rip[i].setAttribute(
-            "r",
-            (10 + eOut(x) * (h >= 60 ? 9 : 30)).toFixed(3),
-          );
+          // The final beat has no dot left to ripple from.
+          const x = prog(t, h, h + (h >= 60 ? 0.5 : 1.8));
+          s8rip[i].setAttribute("r", (10 + eOut(x) * 30).toFixed(3));
           s8rip[i].setAttribute(
             "opacity",
-            (x > 0 && x < 1 ? (1 - x) * 0.6 : 0).toFixed(3),
+            (h < 61 && x > 0 && x < 1 ? (1 - x) * 0.6 : 0).toFixed(3),
           );
         });
         lettersIn(s8chars, t, 60.45);
