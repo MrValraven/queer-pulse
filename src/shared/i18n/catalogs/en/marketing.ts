@@ -2938,6 +2938,10 @@ export const marketing: Catalog = {
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Opening a page after using the keyboard no longer draws a focus frame across the whole screen.",
+  "changelog.entries.cohost-picker-reaches-every-connection.title":
+    "Add a cohost now reaches everyone you're connected to",
+  "changelog.entries.cohost-picker-reaches-every-connection.body":
+    "Typing a name searches all your connections, and what you typed stays when you pick someone else.",
   "changelog.entries.gathering-goes-live-screen.title":
     "A new celebration screen when your gathering goes live",
   "changelog.entries.gathering-goes-live-screen.body":

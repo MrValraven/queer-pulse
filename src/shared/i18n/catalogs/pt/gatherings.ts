@@ -1476,6 +1476,8 @@ export const gatherings: Catalog = {
     "Uma pessoa coanfitriã pode editar a página, enviar mensagens às pessoas convidadas e gerir as inscrições contigo. Escolhe alguém em quem confies. Vai receber um pedido para aceitar.",
   "cohost.addModal.searchLabel":
     "Procurar pessoas para adicionar como coanfitriã",
+  "cohost.addModal.allListedCohosting":
+    "Toda a gente na lista já está a co-organizar.",
   "cohost.addModal.step2Eyebrow": "Convite para co-organizar",
   "cohost.addModal.step2Title": "Convidar <em>{name}</em>",
   "cohost.addModal.step2Sub":

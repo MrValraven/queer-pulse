@@ -3011,6 +3011,10 @@ export const marketing: Catalog = {
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Abrir uma página depois de usares o teclado já não desenha uma moldura de foco a toda a largura do ecrã.",
+  "changelog.entries.cohost-picker-reaches-every-connection.title":
+    "Adicionar pessoa coanfitriã chega agora a todas as tuas conexões",
+  "changelog.entries.cohost-picker-reaches-every-connection.body":
+    "Escrever um nome pesquisa todas as tuas conexões, e o que escreveste fica quando escolhes outra pessoa.",
   "changelog.entries.gathering-goes-live-screen.title":
     "Um novo ecrã de celebração quando o teu convívio fica no ar",
   "changelog.entries.gathering-goes-live-screen.body":

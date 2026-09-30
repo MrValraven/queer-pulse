@@ -66,6 +66,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "cohost-picker-reaches-every-connection",
+        category: "improvement",
+        date: "30 Sep 2026",
+        ...entryKeys("cohost-picker-reaches-every-connection"),
+      },
+      {
         id: "gathering-goes-live-screen",
         category: "improvement",
         date: "30 Sep 2026",

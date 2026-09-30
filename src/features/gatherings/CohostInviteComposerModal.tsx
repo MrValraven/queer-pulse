@@ -1,10 +1,9 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   DatePicker,
   FormField,
   MemberIdentity,
-  MemberSelectList,
   Modal,
   Select,
   type MemberSelectPerson,
@@ -16,13 +15,12 @@ import {
 } from "../../shared/components/ui/plainDate";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useStaffMap } from "../../shared/staff/useStaffRole";
-import { useConnectionsList } from "../connect/api/useConnectionsList";
 import {
   COHOST_INVITE_COMMITMENTS,
   COHOST_INVITE_ROLES,
 } from "./cohostInviteOptions";
 import { useSendCohostInvite } from "./api/useEventMutations";
+import { CohostInvitePickStep } from "./CohostInvitePickStep";
 import styles from "./CohostInviteComposerModal.module.css";
 
 /** Mirrors `CreateCohostInviteDto`'s `@MaxLength(500)` on the note, so the
@@ -48,28 +46,15 @@ export function CohostInviteComposerModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const staffMap = useStaffMap();
-  const { views: connections } = useConnectionsList("all");
   const sendInvite = useSendCohostInvite(slug);
 
+  // Held here, above the pick step, so "Pick someone else" keeps the query.
+  const [searchQuery, setSearchQuery] = useState("");
   const [picked, setPicked] = useState<MemberSelectPerson | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [commitment, setCommitment] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [replyByDate, setReplyByDate] = useState<string | null>(null);
-
-  const people = useMemo<MemberSelectPerson[]>(
-    () =>
-      connections.map((c) => ({
-        slug: c.slug,
-        name: c.name,
-        avatarUrl: c.photo,
-        pronouns: c.pron,
-        staffRole: staffMap[c.slug]?.tier ?? undefined,
-        staffBadgedRoles: staffMap[c.slug]?.badgedStaffRoles,
-      })),
-    [connections, staffMap],
-  );
 
   const roleOptions: SelectOption[] = COHOST_INVITE_ROLES.map((r) => ({
     value: r.id,
@@ -92,11 +77,6 @@ export function CohostInviteComposerModal({
     (c) => c.id === commitment,
   )?.descriptionKey;
 
-  const pick = (candidateSlug: string) => {
-    const person = people.find((p) => p.slug === candidateSlug);
-    if (person) setPicked(person);
-  };
-
   const send = () => {
     if (!picked || !role || !commitment) return;
     sendInvite.mutate({
@@ -111,26 +91,13 @@ export function CohostInviteComposerModal({
 
   if (!picked) {
     return (
-      <Modal
-        eyebrow={t("gatherings:cohost.addModal.eyebrow")}
-        title={
-          <Translation
-            i18nKey="gatherings:cohost.addModal.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("gatherings:cohost.addModal.sub")}
+      <CohostInvitePickStep
+        excludeSlugs={excludeSlugs}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onPick={setPicked}
         onClose={onClose}
-      >
-        <MemberSelectList
-          people={people}
-          selected={new Set()}
-          onToggle={pick}
-          multiSelect={false}
-          excludeSlugs={excludeSlugs}
-          searchPlaceholder={t("gatherings:cohost.addModal.searchLabel")}
-        />
-      </Modal>
+      />
     );
   }
 

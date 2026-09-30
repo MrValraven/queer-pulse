@@ -1448,6 +1448,7 @@ export const gatherings: Catalog = {
   "cohost.addModal.sub":
     "A cohost can edit the page, message guests and manage RSVPs alongside you. Pick someone you trust. They'll be asked to accept.",
   "cohost.addModal.searchLabel": "Search members to add as cohost",
+  "cohost.addModal.allListedCohosting": "Everyone listed is already cohosting.",
   "cohost.addModal.step2Eyebrow": "Co-host invite",
   "cohost.addModal.step2Title": "Invite <em>{name}</em>",
   "cohost.addModal.step2Sub":
