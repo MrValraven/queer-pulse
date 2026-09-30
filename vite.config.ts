@@ -25,8 +25,7 @@ const APP_VERSION = latestRelease.version;
  * Publish this build's version at `/version.json` as `{"version":"v1.43.0"}`.
  *
  * WHY. When a new build is waiting, PwaUpdateCard is rendered by the OLD
- * bundle, which only knows its own version (`__APP_VERSION__`, defined below).
- * The server is the one place that knows what the new build calls itself, so
+ * bundle, which cannot know what the new build is called. The server is the one place that knows what the new build calls itself, so
  * the card asks it: useNextBuildVersion fetches this file the moment the card
  * appears and names the version in the headline.
  *
@@ -136,12 +135,6 @@ function keepWebmanifestOffPrecache(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  define: {
-    // The running bundle's own version, for useNextBuildVersion to compare
-    // against /version.json. Injected as a string literal so the 10k-line
-    // changelog data stays in the Changelog route's lazy chunk.
-    __APP_VERSION__: JSON.stringify(APP_VERSION),
-  },
   build: {
     // No source maps in the production bundle.
     //

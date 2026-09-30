@@ -2938,6 +2938,10 @@ export const marketing: Catalog = {
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Opening a page after using the keyboard no longer draws a focus frame across the whole screen.",
+  "changelog.entries.update-card-version-every-deploy.title":
+    "The update card always names the version",
+  "changelog.entries.update-card-version-every-deploy.body":
+    "Every update now shows its version in the card, including later ones shipped on the same day.",
   "changelog.entries.sign-in-welcome-home.title":
     "Sign-in welcomes you home with a living Q",
   "changelog.entries.sign-in-welcome-home.body":

@@ -24,9 +24,12 @@ function readVersion(payload: unknown): string | undefined {
  *
  * Returns `undefined` until a valid answer arrives, and stays `undefined` on
  * any failure (offline, 404, malformed JSON): the card then shows its generic
- * headline, which is a perfectly good fallback, so there are no retries. It
- * also stays `undefined` when the server reports the version this bundle
- * already runs, which is what a same-day redeploy looks like.
+ * headline, which is a perfectly good fallback, so there are no retries.
+ *
+ * A version the running bundle already carries is still named. Versions are
+ * per shipping day, so every deploy after the first one that day reports the
+ * same version, and that release on the Changelog has grown since this bundle
+ * was built. Hiding it there left most updates on the generic headline.
  */
 export function useNextBuildVersion(
   isUpdateWaiting: boolean,
@@ -44,7 +47,7 @@ export function useNextBuildVersion(
       .then((response) => (response.ok ? response.json() : undefined))
       .then((payload: unknown) => {
         const version = readVersion(payload);
-        if (version && version !== __APP_VERSION__) setNextVersion(version);
+        if (version) setNextVersion(version);
       })
       .catch(() => {
         // Offline, aborted, or a body that is not JSON. The generic headline

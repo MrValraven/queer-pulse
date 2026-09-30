@@ -3011,6 +3011,10 @@ export const marketing: Catalog = {
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Abrir uma página depois de usares o teclado já não desenha uma moldura de foco a toda a largura do ecrã.",
+  "changelog.entries.update-card-version-every-deploy.title":
+    "O cartão de atualização mostra sempre a versão",
+  "changelog.entries.update-card-version-every-deploy.body":
+    "Cada atualização mostra agora a versão no cartão, incluindo as publicadas mais tarde no mesmo dia.",
   "changelog.entries.sign-in-welcome-home.title":
     "O início de sessão dá-te as boas-vindas com um Q vivo",
   "changelog.entries.sign-in-welcome-home.body":

@@ -14,8 +14,7 @@ interface PwaUpdateCardProps {
   updating: boolean;
   /**
    * The waiting build's version (e.g. "v1.43.0"), once /version.json has
-   * answered with one that differs from this bundle's. Named in the headline
-   * accent when set.
+   * answered with a well-formed one. Named in the headline accent when set.
    */
   nextVersion?: string;
 }
