@@ -7,6 +7,7 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { toMenuDraft } from "../../listingMenu.data";
+import { normalizeOwnedBy } from "../../listingOwnedBy.data";
 
 /**
  * A draft read back from local storage, made safe to compare.
@@ -146,8 +147,8 @@ export function healListingDraft(draft: ListingDraft): ListingDraft {
   healed.social = { ...EMPTY_SOCIAL, ...draft.social };
   healed.photos = { ...EMPTY_PHOTO_SLOTS, ...draft.photos };
   healed.alt = { ...EMPTY_PHOTO_SLOTS, ...draft.alt };
-  // Absent on a draft saved before the field existed, which meant "no".
-  if (typeof healed.womenOwned !== "boolean") healed.womenOwned = false;
+  // Absent on a draft saved before the field existed, which meant "none".
+  healed.ownedBy = normalizeOwnedBy(draft.ownedBy);
   if (typeof healed.latitude !== "number") healed.latitude = null;
   if (typeof healed.longitude !== "number") healed.longitude = null;
   return healed;

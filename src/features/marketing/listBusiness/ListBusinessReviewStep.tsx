@@ -14,6 +14,7 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import { listingTagLabel } from "./listingTags.data";
+import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
@@ -54,19 +55,11 @@ function descriptionSummary(draft: ListingDraft): string {
     .trim();
 }
 
-/** The ownership row: the queer-owned / friendly choice, then the separate
- *  women-owned tick when it is on. Empty until a badge is picked. */
-function ownershipSummary(t: TFunction, draft: ListingDraft): string {
-  const badge =
-    draft.badge === "owned"
-      ? t("marketing:listBusiness.step1.owned.tag")
-      : draft.badge === "friendly"
-        ? t("marketing:listBusiness.step1.friendly.tag")
-        : "";
-  if (!badge) return "";
-  return draft.womenOwned
-    ? `${badge} · ${t("marketing:listBusiness.step1.womenOwned.tag")}`
-    : badge;
+/** The owner's own "who owns and runs it" tags, joined; empty when none. */
+function ownedBySummary(t: TFunction, draft: ListingDraft): string {
+  return normalizeOwnedBy(draft.ownedBy)
+    .map((value) => t(OWNED_BY_TAG_KEYS[value]))
+    .join(", ");
 }
 
 function onlineSummary(t: TFunction, draft: ListingDraft): string {
@@ -227,7 +220,11 @@ export function StepReview({
           {draft.hood}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.ownership")}>
-          {ownershipSummary(t, draft)}
+          {draft.badge === "owned"
+            ? t("marketing:listBusiness.step1.owned.tag")
+            : draft.badge === "friendly"
+              ? t("marketing:listBusiness.step1.friendly.tag")
+              : ""}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.price")}>
           {draft.price ? optionLabel(t, PRICES, draft.price) : ""}
@@ -296,6 +293,9 @@ export function StepReview({
               : draft.visibility === "role"
                 ? t("marketing:listBusiness.step5.nameShown.role")
                 : t("marketing:listBusiness.step5.nameShown.anon")}
+          </Row>
+          <Row k={t("marketing:listBusiness.step5.row.ownedBy")}>
+            {ownedBySummary(t, draft)}
           </Row>
         </Group>
       )}

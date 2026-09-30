@@ -7,6 +7,7 @@ import {
   type ListingDraft,
   type PhotoKey,
 } from "./listBusiness.data";
+import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
 import { ListBusinessPreviewDetails } from "./ListBusinessPreviewDetails";
 import styles from "./ListBusinessPage.module.css";
 
@@ -60,11 +61,14 @@ export function ListBusinessFullPreview({
                   {t("marketing:listBusiness.step1.friendly.tag")}
                 </span>
               )}
-              {draft.womenOwned && (
-                <span className={`${styles.dirBadge} ${styles.dirBadgeViolet}`}>
-                  {t("marketing:listBusiness.step1.womenOwned.tag")}
+              {normalizeOwnedBy(draft.ownedBy).map((value) => (
+                <span
+                  key={value}
+                  className={`${styles.dirBadge} ${styles.dirBadgeViolet}`}
+                >
+                  {t(OWNED_BY_TAG_KEYS[value])}
                 </span>
-              )}
+              ))}
               {price && (
                 <span className={`${styles.dirBadge} ${styles.dirBadgePrice}`}>
                   {price.sym}

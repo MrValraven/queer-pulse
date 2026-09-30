@@ -5,6 +5,7 @@ import {
   type OwnerPersonalField,
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
+import { normalizeOwnedBy } from "./listingOwnedBy.data";
 import {
   emptyMenuDraft,
   menuForPayload,
@@ -65,7 +66,7 @@ function pricingPayload(draft: ListingDraft) {
  * and the bulk of the owner's.
  *
  * Its return type is `CoManagerUpdateListingDto`, which is `UpdateListingDto`
- * with the seven owner-personal keys removed. Because this returns an object
+ * with the eight owner-personal keys removed. Because this returns an object
  * literal, TypeScript's excess-property check makes adding one of those keys
  * back here a compile error, so the co-manager's body cannot silently regain a
  * field the API answers 403 to.
@@ -86,7 +87,6 @@ export function businessPayload(
     hood: draft.hood,
     badge: draft.badge,
     evidence: draft.evidence.trim(),
-    womenOwned: draft.womenOwned === true,
     price: draft.price,
     blurb: draft.blurb.trim(),
     tagline: draft.tagline.trim(),
@@ -120,7 +120,7 @@ export function businessPayload(
   };
 }
 
-/** The owner's own seven fields. Only ever spread into an OWNER's payload. */
+/** The owner's own eight fields. Only ever spread into an OWNER's payload. */
 function ownerPersonalPayload(
   draft: ListingDraft,
 ): Pick<UpdateListingDto, OwnerPersonalField> {
@@ -130,6 +130,9 @@ function ownerPersonalPayload(
     ownerBio: draft.ownerBio.trim(),
     visibility: draft.visibility,
     linkToProfile: draft.linkToProfile,
+    // Always an array, canonical and deduplicated: a draft saved before the
+    // field existed has none, and the API rejects unknown or repeated values.
+    ownedBy: normalizeOwnedBy(draft.ownedBy),
     consentOuting: draft.consentOuting,
     consentGuide: draft.consentGuide,
   };
@@ -177,7 +180,7 @@ export function draftToDto(
  * A CO-MANAGER's save gets `businessPayload` alone, run through
  * `stripOwnerPersonalFields` on the way out. The allow-list is what makes the
  * body correct; the strip is what makes it guaranteed, including against a
- * future edit that spreads a whole draft in here. One of those seven keys in
+ * future edit that spreads a whole draft in here. One of those eight keys in
  * the body 403s the whole save.
  *
  * `path` is fixed at creation and the API ignores it on a PATCH, so it is

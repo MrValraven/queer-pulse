@@ -23,6 +23,7 @@ import { LOCAL_CATEGORIES, categoryLabel } from "../localCategories";
 import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
 import type { ListingMenuDraft, ListingPricingMode } from "./listingMenu.data";
 import type { ListingServiceRow } from "./listingServices.data";
+import type { ListingOwnedBy } from "./listingOwnedBy.data";
 
 export const TOTAL_STEPS = 6;
 
@@ -82,6 +83,7 @@ export const ANCHOR = {
   ownerBio: "lb-owner-bio",
   ownerVisibility: "lb-owner-visibility",
   linkProfile: "lb-link-profile",
+  ownedBy: "lb-owned-by",
   consent: "lb-consent",
   pricingMode: "lb-pricing-mode",
   services: "lb-services",
@@ -473,7 +475,7 @@ export type OwnerVisibility = "public" | "role" | "anon";
 export type ManagementRole = "owner" | "co_manager";
 
 /**
- * The seven fields that belong to the OWNER as a person rather than to the
+ * The eight fields that belong to the OWNER as a person rather than to the
  * business. A co-manager never receives them (the API leaves the keys out of
  * its response entirely) and a PATCH carrying any of them is refused with a
  * 403, so this list is the single place the client names them: the payload
@@ -490,6 +492,7 @@ export const OWNER_PERSONAL_FIELDS = [
   "ownerBio",
   "visibility",
   "linkToProfile",
+  "ownedBy",
   "consentOuting",
   "consentGuide",
 ] as const;
@@ -551,11 +554,6 @@ export interface ListingDraft {
   hood: string;
   badge: OwnerBadge | "";
   evidence: string; // owned only
-  /** The owner says women (cis and trans) own and run the business. A plain
-   *  self-declaration, independent of `badge`: a women-owned place can be
-   *  queer-owned or queer-friendly. Optional so a draft saved before the
-   *  field existed stays valid; absent reads as false. */
-  womenOwned?: boolean;
   price: string; // PRICES id
   blurb: string; // one-liner, <=140
   tagline: string;
@@ -606,6 +604,11 @@ export interface ListingDraft {
   ownerBio: string;
   visibility: OwnerVisibility; // VIS id
   linkToProfile: boolean;
+  /** Who owns and runs it, in the owner's own words (women, trans,
+   *  non-binary). OWNER-PERSONAL: saying it publicly can out the owner, so
+   *  only they set it. Optional so a draft saved before the field existed
+   *  stays valid; read it through `normalizeOwnedBy`. */
+  ownedBy?: ListingOwnedBy[];
   consentOuting: boolean;
   consentGuide: boolean;
   /** The submitter agrees to the LGBTQ+ affirming baseline. Required to be

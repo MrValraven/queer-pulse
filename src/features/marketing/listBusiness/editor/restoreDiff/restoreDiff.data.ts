@@ -40,7 +40,6 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   hood: "basics",
   badge: "basics",
   evidence: "basics",
-  womenOwned: "basics",
   price: "basics",
   blurb: "basics",
   tagline: "story",
@@ -69,6 +68,7 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   ownerBio: "aboutYou",
   visibility: "aboutYou",
   linkToProfile: "aboutYou",
+  ownedBy: "aboutYou",
   consentOuting: "permissions",
   consentGuide: "permissions",
   // Fixed at creation or by who is signed in. An edit leaves them alone, so a

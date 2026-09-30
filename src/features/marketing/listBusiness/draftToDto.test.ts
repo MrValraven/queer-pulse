@@ -19,15 +19,25 @@ describe("draftToDto", () => {
     expect(dto.name).toBe("Bar");
   });
 
-  it("always sends women-owned as a boolean, false when never ticked", () => {
-    const { womenOwned: _womenOwned, ...legacyDraft } = {
+  it("never carries ownership tags on a suggestion: that could out someone", () => {
+    const draft = {
+      ...blankDraft(),
+      path: "suggest" as const,
+      ownedBy: ["trans" as const],
+    };
+    const dto = draftToDto(draft) as unknown as Record<string, unknown>;
+    expect(dto.ownedBy).toBeUndefined();
+  });
+
+  it("sends the owner's tags canonical, and an empty list when none", () => {
+    const { ownedBy: _ownedBy, ...legacyDraft } = {
       ...blankDraft(),
       path: "claim" as const,
     };
-    expect(draftToDto(legacyDraft)).toHaveProperty("womenOwned", false);
+    expect(draftToDto(legacyDraft)).toHaveProperty("ownedBy", []);
     expect(
-      draftToDto({ ...legacyDraft, path: "suggest", womenOwned: true }),
-    ).toHaveProperty("womenOwned", true);
+      draftToDto({ ...legacyDraft, ownedBy: ["nonbinary", "women"] }),
+    ).toHaveProperty("ownedBy", ["women", "nonbinary"]);
   });
 
   it("on a claim draft keeps the owner's name and the affirming agreement", () => {
@@ -72,13 +82,17 @@ describe("draftToUpdateDto", () => {
     expect(payload.ownerName).toBeUndefined();
   });
 
-  it("lets a co-manager change women-owned: it describes the business", () => {
+  it("never sends ownership tags from a co-manager: they are the owner's", () => {
     const draft = {
       ...blankDraft(),
       path: "claim" as const,
       managementRole: "co_manager" as const,
-      womenOwned: true,
+      ownedBy: ["women" as const],
     };
-    expect(draftToUpdateDto(draft)).toHaveProperty("womenOwned", true);
+    const payload = draftToUpdateDto(draft) as unknown as Record<
+      string,
+      unknown
+    >;
+    expect(payload.ownedBy).toBeUndefined();
   });
 });

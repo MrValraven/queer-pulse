@@ -12,6 +12,10 @@ import {
 } from "../directoryPlaces";
 import type { AccessibilitySlug } from "../listBusiness/listingAccessibility.data";
 import {
+  normalizeOwnedBy,
+  type ListingOwnedBy,
+} from "../listBusiness/listingOwnedBy.data";
+import {
   cardDtoToPlace,
   detailDtoToPlace,
   submittedToPlace,
@@ -20,7 +24,6 @@ import {
   getDirectory,
   getDirectoryPage,
   getDirectorySpace,
-  type DirectoryOwnedFilter,
 } from "./directory.api";
 import { DIRECTORY_KEY } from "./directoryQueryKey";
 
@@ -97,9 +100,9 @@ export interface DirectoryPlacesPageFilters {
    * ignoring it, which is the behaviour that keeps a filter honest.
    */
   access?: AccessibilitySlug[];
-  /** `"women"` keeps only women-owned listings — sent server-side as `owned`.
-   * `null`/absent = no restriction. */
-  owned?: DirectoryOwnedFilter | null;
+  /** Ownership tags, ANY of which a listing must carry — sent server-side as
+   * `owned`. Empty/absent = no restriction. */
+  owned?: ListingOwnedBy[];
 }
 
 export interface DirectoryPlacesPageResult {
@@ -160,7 +163,10 @@ export function useDirectoryPlacesPage(
   // ticked the boxes in, and so two identical filter sets share one page cache.
   const access = [...(filters.access ?? [])].sort();
   const accessKey = access.join(",");
-  const owned = filters.owned ?? undefined;
+  // Canonical order, so the cache key is stable whatever order they were
+  // picked in.
+  const owned = normalizeOwnedBy(filters.owned);
+  const ownedKey = owned.join(",");
 
   const query = useInfiniteQuery<DirectoryPageVM>({
     queryKey: [
@@ -170,7 +176,7 @@ export function useDirectoryPlacesPage(
       trimmedQuery,
       safe,
       accessKey,
-      owned,
+      ownedKey,
     ],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
@@ -186,7 +192,7 @@ export function useDirectoryPlacesPage(
           q: trimmedQuery || undefined,
           safe,
           access: access.length > 0 ? access : undefined,
-          owned,
+          owned: owned.length > 0 ? owned : undefined,
           page: pageParam as number,
         }),
       );

@@ -313,10 +313,10 @@
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.1);
 }
-/* Self-declared by the owner, so it wears a plain tint rather than anything
-   that could pass for the verified marks. `--violet` is lifted for contrast
-   in dark mode. */
-.pillWomenOwned {
+/* The owner's own "who runs it" tags. Self-declared, so they wear a plain
+   tint rather than anything that could pass for the verified marks.
+   `--violet` is lifted for contrast in dark mode. */
+.pillOwnedBy {
   color: var(--violet);
   background: rgba(var(--violet-rgb), 0.1);
 }

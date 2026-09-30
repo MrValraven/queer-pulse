@@ -5,9 +5,10 @@ import {
   type OwnerPersonalField,
 } from "./listBusiness.data";
 import type { ManagedListingDTO } from "./api/listings.api";
+import { normalizeOwnedBy } from "./listingOwnedBy.data";
 
 /**
- * The one place the client handles the owner's seven personal fields.
+ * The one place the client handles the owner's eight personal fields.
  *
  * The API leaves those keys OUT of a co-manager's response entirely and
  * answers 403 to a PATCH that carries any of them, so a co-manager's save has
@@ -37,6 +38,7 @@ export const BLANK_OWNER_PERSONAL_FIELDS: OwnerPersonalDraftFields = {
   ownerBio: "",
   visibility: "public",
   linkToProfile: false,
+  ownedBy: [],
   consentOuting: false,
   consentGuide: false,
 };
@@ -49,7 +51,7 @@ export function isCoManaged(subject: {
 }
 
 /**
- * The owner's seven fields as a draft carries them. Narrowing on
+ * The owner's eight fields as a draft carries them. Narrowing on
  * `managementRole` is what lets this read them at all: on the co-managed arm
  * of `ManagedListingDTO` those keys do not exist, so the compiler would refuse.
  */
@@ -65,6 +67,8 @@ export function ownerPersonalFieldsFrom(
     ownerBio: listing.ownerBio,
     visibility: listing.visibility,
     linkToProfile: listing.linkToProfile,
+    // Absent on a row from before the field existed; unknown ids dropped.
+    ownedBy: normalizeOwnedBy(listing.ownedBy),
     consentOuting: listing.consentOuting,
     consentGuide: listing.consentGuide,
   };

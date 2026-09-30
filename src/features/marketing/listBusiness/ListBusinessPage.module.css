@@ -1240,7 +1240,8 @@
 }
 
 /* consent checks reuse a coral-flagged variant */
-.consentChecks {
+.consentChecks,
+.ownedByChecks {
   display: flex;
   flex-direction: column;
   gap: 11px;

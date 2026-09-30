@@ -28,7 +28,6 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   timezone: `${KEY_PREFIX}.field.timezone`,
   badge: `${KEY_PREFIX}.field.badge`,
   evidence: `${KEY_PREFIX}.field.evidence`,
-  womenOwned: `${KEY_PREFIX}.field.womenOwned`,
   price: `${KEY_PREFIX}.field.price`,
   blurb: `${KEY_PREFIX}.field.blurb`,
   tagline: `${KEY_PREFIX}.field.tagline`,
@@ -57,6 +56,7 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   ownerBio: `${KEY_PREFIX}.field.ownerBio`,
   visibility: `${KEY_PREFIX}.field.visibility`,
   linkToProfile: `${KEY_PREFIX}.field.linkToProfile`,
+  ownedBy: `${KEY_PREFIX}.field.ownedBy`,
   // No longer collected, but history rows from past edits still name it.
   contactEmail: `${KEY_PREFIX}.field.contactEmail`,
   consentOuting: `${KEY_PREFIX}.field.consentOuting`,

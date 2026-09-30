@@ -21,7 +21,12 @@ import {
 } from "./nearMePlaces";
 import { VIBE_LABEL_KEYS } from "./map.data";
 import type { ActiveFilter } from "../../shared/components/ui";
-import type { DirectoryOwnedFilter } from "./api/directory.api";
+import {
+  normalizeOwnedBy,
+  OWNED_BY_TAG_KEYS,
+  toggleOwnedBy,
+  type ListingOwnedBy,
+} from "./listBusiness/listingOwnedBy.data";
 
 const SORT_VALUES: LocalSort[] = ["default", "name", "hood"];
 
@@ -78,6 +83,15 @@ function toCategories(raw: string | null): string[] {
   return LOCAL_CATEGORIES.filter((categoryId) => wanted.has(categoryId));
 }
 
+/**
+ * Read `?owned=` into the chosen ownership tags. Same rules as `toAccess`: an
+ * unknown value is dropped rather than forwarded into a 400, duplicates
+ * collapse, and the order is canonical so equivalent URLs share a cache key.
+ */
+function toOwned(raw: string | null): ListingOwnedBy[] {
+  return raw ? normalizeOwnedBy(raw.split(",")) : [];
+}
+
 /** Read `?vibe=` into the chosen vibes, in the order they were picked. */
 function toVibes(raw: string | null): string[] {
   return raw?.split(",").filter(Boolean) ?? [];
@@ -118,8 +132,9 @@ export interface DirectoryFilterParams {
   sort: LocalSort;
   vibes: string[];
   safe: "verified" | null;
-  /** `"women"` keeps only women-owned businesses (`?owned=women`). */
-  owned: DirectoryOwnedFilter | null;
+  /** Ownership tags (`?owned=`), ANY of which a place must carry, in
+   *  canonical order. Empty means no restriction. */
+  owned: ListingOwnedBy[];
   /** Only places open right now, on their own clock. */
   openNow: boolean;
   /** Accessibility needs that must ALL be met, in canonical question order. */
@@ -131,7 +146,7 @@ export interface DirectoryFilterParams {
   setSort: (next: string) => void;
   toggleVibe: (vibe: string) => void;
   setSafe: (next: boolean) => void;
-  setWomenOwned: (next: boolean) => void;
+  toggleOwned: (value: ListingOwnedBy) => void;
   setOpenNow: (next: boolean) => void;
   toggleAccess: (slug: AccessibilitySlug) => void;
   clearFilters: () => void;
@@ -160,9 +175,8 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const rawVibes = searchParams.get("vibe");
   const vibes = useMemo(() => toVibes(rawVibes), [rawVibes]);
   const safe = searchParams.get("safe") === "verified" ? "verified" : null;
-  // Only the one value the endpoint accepts is read; anything else in a
-  // hand-edited URL is ignored rather than forwarded into a 400.
-  const owned = searchParams.get("owned") === "women" ? "women" : null;
+  const rawOwned = searchParams.get("owned");
+  const owned = useMemo(() => toOwned(rawOwned), [rawOwned]);
   const openNow = searchParams.get("open") === "now";
   const access = useAccessFilter();
 
@@ -247,9 +261,13 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     (next: boolean) => setParam("safe", "verified", !next),
     [setParam],
   );
-  const setWomenOwned = useCallback(
-    (next: boolean) => setParam("owned", "women", !next),
-    [setParam],
+  const toggleOwned = useCallback(
+    (value: ListingOwnedBy) =>
+      mutateParams((params) => {
+        const current = toOwned(params.get("owned"));
+        setListParam(params, "owned", toggleOwnedBy(current, value));
+      }),
+    [mutateParams],
   );
   const setOpenNow = useCallback(
     (next: boolean) => setParam("open", "now", !next),
@@ -299,7 +317,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     setSort,
     toggleVibe,
     setSafe,
-    setWomenOwned,
+    toggleOwned,
     setOpenNow,
     toggleAccess,
     clearFilters,
@@ -342,7 +360,7 @@ export function useDirectoryFilterResults(
     toggleCategory,
     toggleVibe,
     setSafe,
-    setWomenOwned,
+    toggleOwned,
     setOpenNow,
     toggleAccess,
     setQuery,
@@ -448,13 +466,13 @@ export function useDirectoryFilterResults(
         onRemove: () => setSafe(false),
       });
     }
-    if (owned === "women") {
+    owned.forEach((value) => {
       list.push({
-        key: "owned",
-        label: t("marketing:local.filter.womenOwned"),
-        onRemove: () => setWomenOwned(false),
+        key: `owned:${value}`,
+        label: t(OWNED_BY_TAG_KEYS[value]),
+        onRemove: () => toggleOwned(value),
       });
-    }
+    });
     if (openNow) {
       list.push({
         key: "open",
@@ -489,7 +507,7 @@ export function useDirectoryFilterResults(
     toggleCategory,
     toggleVibe,
     setSafe,
-    setWomenOwned,
+    toggleOwned,
     setOpenNow,
     toggleAccess,
     setQuery,

@@ -1,16 +1,11 @@
-import {
-  CheckLine,
-  FormField,
-  RadioCardGroup,
-} from "../../../shared/components/ui";
+import { FormField, RadioCardGroup } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR, type OwnerBadge } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import styles from "./ListBusinessPage.module.css";
 
-/** "How are you connected to this place?" ownership badge picker, the
- *  evidence reveal that only shows for the "owned" choice, and the separate
- *  women-owned tick, which sits beside either choice rather than inside one. */
+/** "How are you connected to this place?" ownership badge picker, plus the
+ *  evidence reveal that only shows for the "owned" choice. */
 export function StepBasicsBadgeField({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, set, pickBadge } = form;
@@ -75,12 +70,6 @@ export function StepBasicsBadgeField({ form }: { form: ListingForm }) {
           </FormField>
         </div>
       )}
-      <CheckLine
-        checked={draft.womenOwned === true}
-        onChange={(womenOwned) => set({ womenOwned })}
-        title={t("marketing:listBusiness.step1.womenOwned.title")}
-        sub={t("marketing:listBusiness.step1.womenOwned.sub")}
-      />
     </>
   );
 }

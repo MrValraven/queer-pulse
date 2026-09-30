@@ -4,8 +4,8 @@ import { VENUES } from "./map.data";
 import {
   businessToLocal,
   filterLocalPlaces,
-  isPlaceWomenOwned,
   mergeLocalPlaces,
+  placeMatchesOwnedBy,
   normalizeName,
   venueToLocal,
 } from "./localPlaces";
@@ -200,18 +200,53 @@ describe("filterLocalPlaces", () => {
     expect(result.some((place) => place.kind === "business")).toBe(true);
   });
 
-  it('keeps only women-owned businesses when owned is "women"', () => {
+  const ownedByOf = (place: (typeof places)[number]) =>
+    place.kind === "business"
+      ? ((place.source as (typeof DIRECTORY_PLACES)[number]).ownedBy ?? [])
+      : [];
+
+  it("keeps only places whose owner gave the chosen tag", () => {
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "",
       vibes: [],
-      owned: "women",
+      owned: ["trans"],
     });
     expect(result.length).toBeGreaterThan(0);
-    expect(result.every(isPlaceWomenOwned)).toBe(true);
-    // A demo venue carries no ownership, so it is never assumed to qualify.
+    expect(result.every((place) => ownedByOf(place).includes("trans"))).toBe(
+      true,
+    );
+    // A demo venue says nothing about its owners, so it never qualifies.
     expect(result.some((place) => place.kind === "venue")).toBe(false);
-    // Independent of the queer-owned badge: an allied place can qualify too.
+  });
+
+  it("treats several tags as an OR, never an AND", () => {
+    const filtersFor = (owned: ("women" | "trans" | "nonbinary")[]) => ({
+      categories: [],
+      query: "",
+      vibes: [],
+      owned,
+    });
+    const trans = filterLocalPlaces(places, filtersFor(["trans"]));
+    const nonbinary = filterLocalPlaces(places, filtersFor(["nonbinary"]));
+    const either = filterLocalPlaces(
+      places,
+      filtersFor(["trans", "nonbinary"]),
+    );
+    const union = new Set([...trans, ...nonbinary].map((place) => place.id));
+    expect(either.map((place) => place.id).sort()).toEqual([...union].sort());
+    expect(either.length).toBeGreaterThan(
+      Math.max(trans.length, nonbinary.length),
+    );
+  });
+
+  it("is independent of the queer-owned badge: an allied place can qualify", () => {
+    const result = filterLocalPlaces(places, {
+      categories: [],
+      query: "",
+      vibes: [],
+      owned: ["women"],
+    });
     expect(
       result.some(
         (place) =>
@@ -221,7 +256,7 @@ describe("filterLocalPlaces", () => {
     ).toBe(true);
   });
 
-  it("leaves the list untouched when owned is null", () => {
+  it("leaves the list untouched when no tag is chosen", () => {
     const unfiltered = filterLocalPlaces(places, {
       categories: [],
       query: "",
@@ -231,26 +266,28 @@ describe("filterLocalPlaces", () => {
       categories: [],
       query: "",
       vibes: [],
-      owned: null,
+      owned: [],
     });
     expect(result).toHaveLength(unfiltered.length);
   });
 });
 
-describe("isPlaceWomenOwned", () => {
+describe("placeMatchesOwnedBy", () => {
   const salon = DIRECTORY_PLACES.find(
     (place) => place.slug === "salao-mouraria",
   )!;
 
-  it("reads the business's own flag", () => {
-    expect(isPlaceWomenOwned(businessToLocal(salon, true))).toBe(true);
-    expect(
-      isPlaceWomenOwned(businessToLocal({ ...salon, womenOwned: false }, true)),
-    ).toBe(false);
+  it("matches any of the chosen tags on the business's own list", () => {
+    const local = businessToLocal({ ...salon, ownedBy: ["women"] }, true);
+    expect(placeMatchesOwnedBy(local, ["women"])).toBe(true);
+    expect(placeMatchesOwnedBy(local, ["trans", "women"])).toBe(true);
+    expect(placeMatchesOwnedBy(local, ["trans"])).toBe(false);
   });
 
-  it("treats an absent flag (older payload) as not women-owned", () => {
-    const { womenOwned: _womenOwned, ...withoutFlag } = salon;
-    expect(isPlaceWomenOwned(businessToLocal(withoutFlag, true))).toBe(false);
+  it("treats an absent list (older payload) as no tags", () => {
+    const { ownedBy: _ownedBy, ...withoutTags } = salon;
+    expect(
+      placeMatchesOwnedBy(businessToLocal(withoutTags, true), ["women"]),
+    ).toBe(false);
   });
 });

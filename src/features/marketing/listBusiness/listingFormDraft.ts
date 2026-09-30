@@ -26,7 +26,6 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     hood: "",
     badge: "",
     evidence: "",
-    womenOwned: false,
     price: "",
     blurb: "",
     tagline: "",
@@ -56,6 +55,7 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     ownerBio: seed?.ownerBio ?? "",
     visibility: "public",
     linkToProfile: true,
+    ownedBy: [],
     consentOuting: false,
     consentGuide: false,
     // Agreeing is the condition of listing at all, so a fresh draft starts
