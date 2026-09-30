@@ -10,6 +10,7 @@ import {
   type OwnerVisibility,
 } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
+import { OwnedByField } from "./OwnedByField";
 import { OwnerNameField } from "./OwnerNameField";
 import { OwnerRoleField } from "./OwnerRoleField";
 import { RadioStack } from "./RadioStack";
@@ -17,9 +18,10 @@ import styles from "../ListBusinessPage.module.css";
 
 /**
  * The "about you" field body: the member's connection to the place, the name
- * and role shown on the listing, how much of that identity is public, whether
- * the listing links to their profile, and a note on how the team reaches them
- * (in-app notifications and messages).
+ * and role shown on the listing, how much of that identity is public, who owns
+ * and runs it (women, trans, non-binary), whether the listing links to their
+ * profile, and a note on how the team reaches them (in-app notifications and
+ * messages).
  *
  * Shared by the create wizard's step 4 pane (`StepPhotosYou`) and the owner
  * editor's About-you section. Fragment, so each field stays a direct child of
@@ -87,6 +89,8 @@ export function OwnerFields({
           label={t("marketing:listBusiness.step4.visAria")}
         />
       </FormField>
+
+      <OwnedByField form={form} />
 
       <FormField
         className={styles.lbField}

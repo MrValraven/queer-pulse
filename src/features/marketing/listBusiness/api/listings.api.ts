@@ -75,7 +75,7 @@ export interface CreateListingDto extends UpdateListingDto {
 /**
  * POST body for a member's suggestion: the business payload, and nothing
  * about the suggester. The platform holds the listing until someone
- * claims it, so the create body carries none of the owner's seven personal
+ * claims it, so the create body carries none of the owner's eight personal
  * keys, no `ownerRole` (there is no owner yet to hold one), and no
  * `affirmingBaselineAccepted` (nobody has agreed to anything).
  */
@@ -156,7 +156,7 @@ export interface ListingDTO extends Omit<
  *
  * The two arms are a discriminated union rather than one shape with nullable
  * fields, because the difference is real: a co-manager's payload does not
- * carry the owner's seven personal keys at all. Narrowing on `managementRole`
+ * carry the owner's eight personal keys at all. Narrowing on `managementRole`
  * is therefore what unlocks reading them, and the compiler refuses any code
  * path that reads `ownerName` (or the other six) off a listing that might be
  * co-managed.
@@ -182,7 +182,7 @@ export type ManagedListingDTO = OwnedListingDTO | CoManagedListingDTO;
 /**
  * The PATCH body a CO-MANAGER may send: everything about the business, and
  * none of the owner's own details. Built by its own allow-list in
- * `draftToDto.ts`, so re-adding one of the seven keys there is a compile
+ * `draftToDto.ts`, so re-adding one of the eight keys there is a compile
  * error rather than a 403 the member only meets at save time.
  */
 export type CoManagerUpdateListingDto = Omit<

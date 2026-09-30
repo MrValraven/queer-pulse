@@ -7,6 +7,7 @@ import {
 } from "./directoryPlaces";
 import { categoryLabel } from "./localCategories";
 import { listingTagLabel } from "./listBusiness/listingTags.data";
+import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectoryQueerOwnedProvenance } from "./DirectoryQueerOwnedProvenance";
@@ -80,6 +81,13 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
               >
                 {t(OWNERSHIP_PILL_KEYS[ownership])}
               </span>
+              {/* The owner's own words, never checked by a moderator, so they
+                  take the plain pill style of the listing's other tags. */}
+              {(place.ownedBy ?? []).map((value) => (
+                <span key={value} className={s.pill}>
+                  {t(OWNED_BY_TAG_KEYS[value])}
+                </span>
+              ))}
               {place.pills.map((pill) => (
                 <span key={pill} className={s.pill}>
                   {listingTagLabel(t, pill)}

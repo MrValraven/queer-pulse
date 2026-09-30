@@ -233,6 +233,9 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
         ? hidden("ownerVisibilityAnon")
         : preview("ownerVisibility", "owner", "host"),
     [ANCHOR.linkProfile]: linkProfilePlacement,
+    // Public whatever the name visibility: the card's pill row and the
+    // detail page's pills both print the tags.
+    [ANCHOR.ownedBy]: preview("ownedBy", "pills"),
     [ANCHOR.consent]: hidden("consent"),
     [ANCHOR.pricingMode]: fullPage("pricingMode"),
     [ANCHOR.services]: fullPage("services"),

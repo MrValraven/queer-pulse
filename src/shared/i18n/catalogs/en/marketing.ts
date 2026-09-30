@@ -1774,6 +1774,19 @@ export const marketing: Catalog = {
   "listBusiness.step4.linkProfileDesc":
     "Puts a familiar, verified face on the listing. You're signed in as {name}.",
   "listBusiness.step4.linkProfileToggleLabel": "Link to member profile",
+  "listBusiness.step4.ownedByLabel": "Who owns and runs it? (optional)",
+  "listBusiness.step4.ownedByHelper":
+    "Tick any that fit, or none. Each shows as a tag on the listing, and people can filter the directory by it.",
+  "listBusiness.step4.ownedByAria": "Who owns and runs it",
+  "listBusiness.step4.ownedBy.women.title": "Women",
+  "listBusiness.step4.ownedBy.women.sub": "Cis and trans women alike.",
+  "listBusiness.step4.ownedBy.trans.title": "Trans people",
+  "listBusiness.step4.ownedBy.trans.sub": "Trans people of any gender.",
+  "listBusiness.step4.ownedBy.nonbinary.title": "Non-binary people",
+  "listBusiness.step4.ownedBy.nonbinary.sub":
+    "Including genderqueer, agender and genderfluid people.",
+  "listBusiness.step4.ownedByPublicNote":
+    "These tags are public, even if you keep your name private. On a small business a tag can point straight to you, so only tick what you're happy for anyone to know. You can change it any time.",
   "listBusiness.step4.loopHeading": "Staying in the loop",
   "listBusiness.step4.notifyNote":
     "A QueerPulse notification tells you when your listing goes live, and the team's questions arrive as a QueerPulse message.",
@@ -1828,6 +1841,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.category": "Category",
   "listBusiness.step5.row.neighbourhood": "Neighbourhood",
   "listBusiness.step5.row.ownership": "Ownership",
+  "listBusiness.step5.row.ownedBy": "Owned and run by",
   "listBusiness.step5.row.price": "Price",
   "listBusiness.step5.row.oneLiner": "Short description",
   "listBusiness.step5.row.tagline": "Tagline",
@@ -2037,6 +2051,8 @@ export const marketing: Catalog = {
     "Anonymous keeps you off your listing. The review team still sees your name.",
   "listBusiness.livePreview.caption.linkProfile":
     "Your card gets your first name, a Member-run pill and your photo, if you show it.",
+  "listBusiness.livePreview.caption.ownedBy":
+    "Your tags show here and on your listing's page, whatever you chose for your name.",
   "listBusiness.livePreview.caption.linkProfileUnused":
     "This only counts when you show your name. For now nothing links to your profile.",
   "listBusiness.livePreview.caption.pricingMode":
@@ -2199,6 +2215,7 @@ export const marketing: Catalog = {
     "what the listing shows about the owner",
   "listBusiness.editor.history.field.linkToProfile":
     "the link to the owner's profile",
+  "listBusiness.editor.history.field.ownedBy": "who owns and runs it",
   "listBusiness.editor.history.field.contactEmail": "the contact email",
   "listBusiness.editor.history.field.consentOuting":
     "the public-listing confirmation",
@@ -2639,6 +2656,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.field.visibility": "Who can see your name",
   "listBusiness.editor.restore.diff.field.linkToProfile":
     "Link to your member profile",
+  "listBusiness.editor.restore.diff.field.ownedBy": "Who owns and runs it",
   "listBusiness.editor.restore.diff.field.consentOuting":
     "Public listing confirmation",
   "listBusiness.editor.restore.diff.field.consentGuide":
@@ -8494,6 +8512,9 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Queer-owned",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
+  "directory.ownedBy.women": "Women-owned",
+  "directory.ownedBy.trans": "Trans-owned",
+  "directory.ownedBy.nonbinary": "Non-binary-owned",
   "directory.card.online": "Online",
   "directory.card.visit": "Visit",
   "directory.card.verifiedBadge": "Verified safe space",
@@ -9552,6 +9573,9 @@ export const marketing: Catalog = {
   "local.filter.vibeLabel": "Vibe",
   "local.filter.vibeVenueNote": "Vibe filters apply to venues",
   "local.filter.verifiedSafeSpaces": "Verified safe spaces",
+  "local.filter.ownedByLabel": "Who runs it",
+  "local.filter.ownedByNote":
+    "In the owner's own words. Pick more than one to see places matching any of them.",
   "local.filter.filters": "Filters",
   "local.filter.quickFiltersLabel": "Quick filters",
   "local.filter.openNow": "Open now",

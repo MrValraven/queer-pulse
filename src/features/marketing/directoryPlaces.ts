@@ -14,6 +14,7 @@ import type {
   ListingPricingMode,
 } from "./listBusiness/listingMenu.data";
 import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
+import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 
 export type Tint = "coral" | "jade" | "plum";
 
@@ -220,6 +221,10 @@ export interface DirectoryPlace {
    * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. Optional so
    * the static demo fixtures below don't all need updating; absent ⇒ false. */
   queerOwnedVerified?: boolean;
+  /** Who owns and runs it, in the owner's own words (women, trans,
+   * non-binary), canonical order. Self-declared and never verified, so shown
+   * as plain tags, never beside the verified marks. Absent ⇒ none. */
+  ownedBy?: ListingOwnedBy[];
   member?: string;
   av: string;
   tint: Tint;
@@ -1460,6 +1465,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "culture",
     hood: "Marvila",
     owned: true,
+    ownedBy: ["trans", "nonbinary"],
     av: "GL",
     tint: C,
     desc: "Artist-run gallery in a Marvila warehouse. Programming focuses on queer and feminist artists, emphasis on emerging work.",
@@ -1661,6 +1667,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "grooming",
     hood: "Mouraria",
     owned: false,
+    ownedBy: ["women"],
     av: "SM",
     tint: J,
     desc: "Neighbourhood salon adopted by the queer community. Bilingual, trans-welcoming, affordable.",
@@ -1726,6 +1733,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "grooming",
     hood: "Intendente",
     owned: true,
+    ownedBy: ["women", "trans"],
     av: "SC",
     tint: P,
     desc: "Gender-neutral pricing on every service, the same whatever your hair length or gender. Clean space, good music.",
@@ -1865,6 +1873,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "fitness",
     hood: "Bairro Alto",
     owned: true,
+    ownedBy: ["women", "nonbinary"],
     av: "CL",
     tint: P,
     desc: "Feminist and queer-centred fitness studio. Small classes, no mirrors, no scales. Body-neutral by design.",

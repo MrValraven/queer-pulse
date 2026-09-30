@@ -8,6 +8,7 @@ import { DirectoryCardRating } from "./DirectoryCardRating";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
 import { categoryLabel } from "./localCategories";
 import { listingTagLabel } from "./listBusiness/listingTags.data";
+import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import {
   openStatus,
   operatingStateOf,
@@ -245,14 +246,21 @@ export function LocalBusinessCardBody({
       <div className={s.desc} data-preview-region="desc">
         {place.desc}
       </div>
-      {/* One row at most: "Member-run" leads so it is the pill that survives
-          a narrow column, and the tags fill whatever room is left. */}
+      {/* One row at most: "Member-run" and the owner's own "who runs it" tags
+          lead so they are the pills that survive a narrow column (someone
+          filtering for a trans-owned place must be able to see why each card
+          matched), and the listing's tags fill whatever room is left. */}
       <div className={s.pillsRow} data-preview-region="pills">
         {place.member && (
           <span className={`${s.pill} ${s.pillMember}`}>
             {t("marketing:directory.card.memberRun")}
           </span>
         )}
+        {(place.ownedBy ?? []).map((value) => (
+          <span key={value} className={`${s.pill} ${s.pillOwnedBy}`}>
+            {t(OWNED_BY_TAG_KEYS[value])}
+          </span>
+        ))}
         {place.pills.slice(0, 3).map((pill) => (
           <span key={pill} className={s.pill}>
             {listingTagLabel(t, pill)}

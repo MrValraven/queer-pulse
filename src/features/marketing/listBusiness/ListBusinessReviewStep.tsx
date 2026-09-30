@@ -14,6 +14,7 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import { listingTagLabel } from "./listingTags.data";
+import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
@@ -52,6 +53,13 @@ function descriptionSummary(draft: ListingDraft): string {
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+/** The owner's own "who owns and runs it" tags, joined; empty when none. */
+function ownedBySummary(t: TFunction, draft: ListingDraft): string {
+  return normalizeOwnedBy(draft.ownedBy)
+    .map((value) => t(OWNED_BY_TAG_KEYS[value]))
+    .join(", ");
 }
 
 function onlineSummary(t: TFunction, draft: ListingDraft): string {
@@ -285,6 +293,9 @@ export function StepReview({
               : draft.visibility === "role"
                 ? t("marketing:listBusiness.step5.nameShown.role")
                 : t("marketing:listBusiness.step5.nameShown.anon")}
+          </Row>
+          <Row k={t("marketing:listBusiness.step5.row.ownedBy")}>
+            {ownedBySummary(t, draft)}
           </Row>
         </Group>
       )}

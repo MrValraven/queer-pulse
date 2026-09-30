@@ -10,11 +10,13 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { pricingModeOf } from "../../listingMenu.data";
+import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "../../listingOwnedBy.data";
 import type { RestoreFieldChange } from "./restoreDiff.types";
 import {
   choiceField,
   fieldLabelKey,
   isFieldChanged,
+  LIST_SEPARATOR,
   mapPinField,
   paragraphsField,
   rowsField,
@@ -146,6 +148,12 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
   linkToProfile: (context) =>
     choiceField(context, "linkToProfile", (draft) =>
       yesNoLabel(context.t, draft.linkToProfile),
+    ),
+  ownedBy: (context) =>
+    choiceField(context, "ownedBy", (draft) =>
+      normalizeOwnedBy(draft.ownedBy)
+        .map((value) => context.t(OWNED_BY_TAG_KEYS[value]))
+        .join(LIST_SEPARATOR),
     ),
   consentOuting: (context) =>
     choiceField(context, "consentOuting", (draft) =>

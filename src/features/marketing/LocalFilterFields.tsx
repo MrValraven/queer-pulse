@@ -9,11 +9,13 @@ import { useRefineDrawer } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LocalAccessFilter } from "./LocalAccessFilter";
 import { LocalCategoryFilter } from "./LocalCategoryFilter";
+import { LocalOwnedByFilter } from "./LocalOwnedByFilter";
 import { LocalQuickFilters } from "./LocalQuickFilters";
 import { LocalSortFilter } from "./LocalSortFilter";
 import { LocalVibeFilter } from "./LocalVibeFilter";
 import type { LocalSort } from "./localPlaces";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
+import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 import s from "./LocalFilterBar.module.css";
 
 export interface LocalFilterFieldsProps {
@@ -37,6 +39,10 @@ export interface LocalFilterFieldsProps {
    *  place must meet to appear. */
   access: AccessibilitySlug[];
   onToggleAccess: (slug: AccessibilitySlug) => void;
+  /** Ownership tags currently filtered on (`?owned=`), any of which a place
+   *  must carry. */
+  owned: ListingOwnedBy[];
+  onToggleOwned: (value: ListingOwnedBy) => void;
   /** How the results are ordered. Sorting is a refinement, so the control lives
    *  inside the drawer with the filters rather than out on the results header,
    *  which leaves that header to say what it found. */
@@ -80,8 +86,8 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 
 /**
  * The filter set itself: search, then the groups. Place type, the two one-tap
- * narrowings (open now, verified safe spaces), access needs, and (demo-only)
- * vibe. Rendered inline in the desktop bar behind the "Refine" toggle, or flat
+ * narrowings (open now, verified safe spaces), who runs it, access needs, and
+ * (demo-only) vibe. Rendered inline in the desktop bar behind the "Refine" toggle, or flat
  * inside the mobile "Filters" sheet; one markup source so the two layouts never
  * diverge in behaviour.
  */
@@ -100,6 +106,8 @@ export function LocalFilterFields({
   onToggleOpenNow,
   access,
   onToggleAccess,
+  owned,
+  onToggleOwned,
   sort,
   onSortChange,
   isLocationOn,
@@ -134,6 +142,7 @@ export function LocalFilterFields({
     access.length +
     categories.length +
     (safeOnly ? 1 : 0) +
+    owned.length +
     (openNow ? 1 : 0);
   // The field holds its own text. `query` lives in the URL, and the router
   // commits a URL change inside a transition, so a field bound straight to it
@@ -211,6 +220,7 @@ export function LocalFilterFields({
           onToggleSafeOnly={onToggleSafeOnly}
         />
       </RefineSplit>
+      <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />
       <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />
       {showVibeFilter && (
         <LocalVibeFilter vibes={vibes} onToggleVibe={onToggleVibe} />

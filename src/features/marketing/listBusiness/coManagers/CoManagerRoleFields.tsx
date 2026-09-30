@@ -10,7 +10,7 @@ import styles from "./CoManagers.module.css";
  * The owner's name, short bio, how much of their identity the
  * listing shows, whether it links to their profile, their connection to the
  * business, and the two permissions they granted are all theirs. The API does
- * not send those seven fields to a co-manager and refuses a save that carries
+ * not send those eight fields to a co-manager and refuses a save that carries
  * one, so they are not rendered as disabled inputs here: they are absent, and
  * the line below says why.
  *

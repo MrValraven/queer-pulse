@@ -5,6 +5,7 @@ import type {
   Tint,
 } from "../../marketing/directoryPlaces";
 import { normalizeAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
+import { normalizeOwnedBy } from "../../marketing/listBusiness/listingOwnedBy.data";
 import {
   menuForDisplay,
   pricingModeOf,
@@ -147,6 +148,8 @@ export function listingDtoToPreviewPlace(
     // want this listing shown on their profile), and answers the "run by"
     // line only.
     owned: dto.badge === "owned",
+    // Absent on a queue row that withholds owner-personal fields.
+    ownedBy: normalizeOwnedBy(dto.ownedBy),
     member: dto.linkToProfile ? identity.first || undefined : undefined,
     av: initialsForName(dto.name),
     tint: tintForSlug(dto.slug),

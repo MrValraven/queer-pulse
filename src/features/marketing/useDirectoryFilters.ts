@@ -21,6 +21,12 @@ import {
 } from "./nearMePlaces";
 import { VIBE_LABEL_KEYS } from "./map.data";
 import type { ActiveFilter } from "../../shared/components/ui";
+import {
+  normalizeOwnedBy,
+  OWNED_BY_TAG_KEYS,
+  toggleOwnedBy,
+  type ListingOwnedBy,
+} from "./listBusiness/listingOwnedBy.data";
 
 const SORT_VALUES: LocalSort[] = ["default", "name", "hood"];
 
@@ -77,6 +83,15 @@ function toCategories(raw: string | null): string[] {
   return LOCAL_CATEGORIES.filter((categoryId) => wanted.has(categoryId));
 }
 
+/**
+ * Read `?owned=` into the chosen ownership tags. Same rules as `toAccess`: an
+ * unknown value is dropped rather than forwarded into a 400, duplicates
+ * collapse, and the order is canonical so equivalent URLs share a cache key.
+ */
+function toOwned(raw: string | null): ListingOwnedBy[] {
+  return raw ? normalizeOwnedBy(raw.split(",")) : [];
+}
+
 /** Read `?vibe=` into the chosen vibes, in the order they were picked. */
 function toVibes(raw: string | null): string[] {
   return raw?.split(",").filter(Boolean) ?? [];
@@ -117,6 +132,9 @@ export interface DirectoryFilterParams {
   sort: LocalSort;
   vibes: string[];
   safe: "verified" | null;
+  /** Ownership tags (`?owned=`), ANY of which a place must carry, in
+   *  canonical order. Empty means no restriction. */
+  owned: ListingOwnedBy[];
   /** Only places open right now, on their own clock. */
   openNow: boolean;
   /** Accessibility needs that must ALL be met, in canonical question order. */
@@ -128,6 +146,7 @@ export interface DirectoryFilterParams {
   setSort: (next: string) => void;
   toggleVibe: (vibe: string) => void;
   setSafe: (next: boolean) => void;
+  toggleOwned: (value: ListingOwnedBy) => void;
   setOpenNow: (next: boolean) => void;
   toggleAccess: (slug: AccessibilitySlug) => void;
   clearFilters: () => void;
@@ -156,6 +175,8 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const rawVibes = searchParams.get("vibe");
   const vibes = useMemo(() => toVibes(rawVibes), [rawVibes]);
   const safe = searchParams.get("safe") === "verified" ? "verified" : null;
+  const rawOwned = searchParams.get("owned");
+  const owned = useMemo(() => toOwned(rawOwned), [rawOwned]);
   const openNow = searchParams.get("open") === "now";
   const access = useAccessFilter();
 
@@ -240,6 +261,14 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     (next: boolean) => setParam("safe", "verified", !next),
     [setParam],
   );
+  const toggleOwned = useCallback(
+    (value: ListingOwnedBy) =>
+      mutateParams((params) => {
+        const current = toOwned(params.get("owned"));
+        setListParam(params, "owned", toggleOwnedBy(current, value));
+      }),
+    [mutateParams],
+  );
   const setOpenNow = useCallback(
     (next: boolean) => setParam("open", "now", !next),
     [setParam],
@@ -264,6 +293,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         params.delete("q");
         params.delete("vibe");
         params.delete("safe");
+        params.delete("owned");
         params.delete("open");
         params.delete("access");
       }),
@@ -277,6 +307,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     sort,
     vibes,
     safe,
+    owned,
     openNow,
     access,
     selectView,
@@ -286,6 +317,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     setSort,
     toggleVibe,
     setSafe,
+    toggleOwned,
     setOpenNow,
     toggleAccess,
     clearFilters,
@@ -295,10 +327,10 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
 /**
  * Derives the displayed list, chip counts, and active-filter pills from an
  * already-fetched `places` array plus the URL state from
- * `useDirectoryFilterParams`. `query`/`safe`/`access` are ALSO applied here
- * (even though the network fetch already filtered by them server-side) purely
- * as a cheap, harmless no-op safety net, and so the demo fixture answers the
- * same filters with no backend at all. `cat`/`vibe`/`open` are the three
+ * `useDirectoryFilterParams`. `query`/`safe`/`access`/`owned` are ALSO applied
+ * here (even though the network fetch already filtered by them server-side)
+ * purely as a cheap, harmless no-op safety net, and so the demo fixture
+ * answers the same filters with no backend at all. `cat`/`vibe`/`open` are the three
  * that genuinely only ever apply here client-side: the first two for the
  * reasons in that hook's doc comment, and `open` because the grid is CDN-cached
  * and a server-computed open state would go stale in the dangerous direction.
@@ -321,12 +353,14 @@ export function useDirectoryFilterResults(
     query,
     vibes,
     safe,
+    owned,
     openNow,
     access,
     sort,
     toggleCategory,
     toggleVibe,
     setSafe,
+    toggleOwned,
     setOpenNow,
     toggleAccess,
     setQuery,
@@ -340,12 +374,13 @@ export function useDirectoryFilterResults(
           query,
           vibes,
           safe,
+          owned,
           openNow,
           access,
         }),
         sort,
       ),
-    [places, categories, query, vibes, safe, openNow, access, sort],
+    [places, categories, query, vibes, safe, owned, openNow, access, sort],
   );
 
   // Distances are measured only over what is already on screen, and only once
@@ -392,6 +427,7 @@ export function useDirectoryFilterResults(
       query,
       vibes,
       safe,
+      owned,
       openNow,
       access,
     });
@@ -400,7 +436,7 @@ export function useDirectoryFilterResults(
       counts[place.category] = (counts[place.category] ?? 0) + 1;
     }
     return counts;
-  }, [places, query, vibes, safe, openNow, access]);
+  }, [places, query, vibes, safe, owned, openNow, access]);
 
   const mappableCount = useMemo(
     () => filtered.filter((place) => place.coords !== null).length,
@@ -430,6 +466,13 @@ export function useDirectoryFilterResults(
         onRemove: () => setSafe(false),
       });
     }
+    owned.forEach((value) => {
+      list.push({
+        key: `owned:${value}`,
+        label: t(OWNED_BY_TAG_KEYS[value]),
+        onRemove: () => toggleOwned(value),
+      });
+    });
     if (openNow) {
       list.push({
         key: "open",
@@ -456,6 +499,7 @@ export function useDirectoryFilterResults(
     categories,
     vibes,
     safe,
+    owned,
     openNow,
     access,
     query,
@@ -463,6 +507,7 @@ export function useDirectoryFilterResults(
     toggleCategory,
     toggleVibe,
     setSafe,
+    toggleOwned,
     setOpenNow,
     toggleAccess,
     setQuery,

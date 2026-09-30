@@ -74,6 +74,28 @@ describe("dtoToDraft", () => {
     expect(draft.photos).toEqual({ wide: "", d1: "", d2: "", vibe: "" });
   });
 
+  it("reads an absent ownership list (a row from before it existed) as none", () => {
+    expect(dtoToDraft(makeDto()).ownedBy).toEqual([]);
+  });
+
+  it("keeps only known ownership tags, in canonical order", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        ownedBy: ["nonbinary", "future-tag", "women", "women"] as never,
+      }),
+    );
+    expect(draft.ownedBy).toEqual(["women", "nonbinary"]);
+    expect(draftToDto(draft)).toHaveProperty("ownedBy", ["women", "nonbinary"]);
+  });
+
+  it("blanks the ownership list for a co-manager, who never received it", () => {
+    const draft = dtoToDraft({
+      ...makeDto({ ownedBy: ["trans"] }),
+      managementRole: "co_manager",
+    } as never);
+    expect(draft.ownedBy).toEqual([]);
+  });
+
   it("drops server-only fields (no ref/status/slug/submittedBy/createdAt)", () => {
     const draft = dtoToDraft(makeDto()) as unknown as Record<string, unknown>;
     expect(draft.ref).toBeUndefined();

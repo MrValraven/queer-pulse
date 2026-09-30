@@ -305,24 +305,27 @@
   flex: 1;
 }
 
-/* ── Access needs ──────────────────────────────────────────────────────────
-   A real fieldset, so the six questions are announced as one named group.
+/* ── Access needs, and who runs it ─────────────────────────────────────────
+   A real fieldset, so each set of chips is announced as one named group.
    The browser's default fieldset chrome is dropped; the legend keeps the same
    uppercase treatment as the other group labels in this bar. */
-.accessGroup {
+.accessGroup,
+.ownedByGroup {
   margin: 14px 0 0;
   padding: 0;
   border: 0;
   min-inline-size: 0;
 }
-.accessNote {
+.accessNote,
+.ownedByNote {
   margin: 0 0 9px;
   max-width: 46ch;
   font-size: var(--text-11-5);
   line-height: 1.5;
   color: var(--ink-40);
 }
-.accessChips {
+.accessChips,
+.ownedByChips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;

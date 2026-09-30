@@ -7,6 +7,7 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
+import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
@@ -247,6 +248,28 @@ export interface LocalFilters {
   openNow?: boolean;
   /** Accessibility needs that must all be met. Empty/absent = no restriction. */
   access?: AccessibilitySlug[];
+  /** Ownership tags, ANY of which a place must carry. Empty/absent = no
+   *  restriction. */
+  owned?: ListingOwnedBy[];
+}
+
+/**
+ * Whether the owner has said ANY of these about who owns and runs the place.
+ *
+ * Several tags are an OR, like place types and unlike access needs: someone
+ * picking "Trans-owned" and "Non-binary-owned" wants places run by either.
+ * Only a business can carry a tag: a demo-only venue says nothing about its
+ * owners, so it drops out once the filter is on rather than being assumed
+ * either way.
+ */
+export function placeMatchesOwnedBy(
+  place: LocalPlace,
+  owned: readonly ListingOwnedBy[],
+): boolean {
+  if (owned.length === 0) return true;
+  if (place.kind !== "business") return false;
+  const ownedBy = (place.source as DirectoryPlace).ownedBy ?? [];
+  return owned.some((value) => ownedBy.includes(value));
 }
 
 /**
@@ -317,7 +340,8 @@ export function placeMeetsAccess(
  *
  * `openNow` and `access` are hard filters too, and both refuse to guess: a
  * place with no published hours is never "open now", and a need nobody has
- * answered is never "met". See `isPlaceOpenNow` / `placeMeetsAccess`.
+ * answered is never "met". See `isPlaceOpenNow` / `placeMeetsAccess`. `owned`
+ * is a hard filter too, an OR across its tags (see `placeMatchesOwnedBy`).
  */
 export function filterLocalPlaces(
   places: LocalPlace[],
@@ -350,6 +374,9 @@ export function filterLocalPlaces(
       return false;
     }
     if (!placeMeetsAccess(place, filters.access ?? [])) {
+      return false;
+    }
+    if (!placeMatchesOwnedBy(place, filters.owned ?? [])) {
       return false;
     }
     return true;

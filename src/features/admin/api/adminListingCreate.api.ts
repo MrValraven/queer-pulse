@@ -80,7 +80,7 @@ type AdminListingBusinessPayload = Omit<
 /**
  * Every key this body may not carry, named so it can be deleted by name.
  *
- * The seven owner-personal ones come from the canonical list, so this stays in
+ * The eight owner-personal ones come from the canonical list, so this stays in
  * step with it. Three more are named here: `affirmingBaselineAccepted`, which
  * `draftToDto` adds on the member create; `ownerRole`, which belongs to the
  * business (hence its absence from `OWNER_PERSONAL_FIELDS`) while the server's

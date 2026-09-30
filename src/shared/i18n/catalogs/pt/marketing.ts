@@ -1822,6 +1822,20 @@ export const marketing: Catalog = {
   "listBusiness.step4.linkProfileDesc":
     "Põe um rosto familiar e verificado no anúncio. Tens sessão iniciada como {name}.",
   "listBusiness.step4.linkProfileToggleLabel": "Ligar ao perfil",
+  "listBusiness.step4.ownedByLabel": "De quem é e quem o gere? (opcional)",
+  "listBusiness.step4.ownedByHelper":
+    "Marca o que se aplicar, ou nada. Cada uma aparece como etiqueta no anúncio, e dá para filtrar o diretório por ela.",
+  "listBusiness.step4.ownedByAria": "De quem é e quem o gere",
+  "listBusiness.step4.ownedBy.women.title": "Mulheres",
+  "listBusiness.step4.ownedBy.women.sub":
+    "Mulheres cis e trans, sem distinção.",
+  "listBusiness.step4.ownedBy.trans.title": "Pessoas trans",
+  "listBusiness.step4.ownedBy.trans.sub": "Pessoas trans de qualquer género.",
+  "listBusiness.step4.ownedBy.nonbinary.title": "Pessoas não binárias",
+  "listBusiness.step4.ownedBy.nonbinary.sub":
+    "Incluindo pessoas genderqueer, agénero e de género fluido.",
+  "listBusiness.step4.ownedByPublicNote":
+    "Estas etiquetas são públicas, mesmo que mantenhas o teu nome privado. Num negócio pequeno, uma etiqueta pode apontar diretamente para ti, por isso marca só o que te sentes bem em que toda a gente saiba. Podes mudar isto quando quiseres.",
   "listBusiness.step4.loopHeading": "Manteres-te a par",
   "listBusiness.step4.notifyNote":
     "Uma notificação da QueerPulse avisa-te quando o teu anúncio ficar no ar, e as perguntas da equipa chegam por mensagem na QueerPulse.",
@@ -1877,6 +1891,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.category": "Categoria",
   "listBusiness.step5.row.neighbourhood": "Bairro",
   "listBusiness.step5.row.ownership": "Propriedade",
+  "listBusiness.step5.row.ownedBy": "De quem é e quem gere",
   "listBusiness.step5.row.price": "Preço",
   "listBusiness.step5.row.oneLiner": "Descrição curta",
   "listBusiness.step5.row.tagline": "Lema",
@@ -2088,6 +2103,8 @@ export const marketing: Catalog = {
     "O anonimato tira-te do anúncio. A equipa de revisão continua a ver o teu nome.",
   "listBusiness.livePreview.caption.linkProfile":
     "O cartão mostra o teu primeiro nome, a etiqueta da comunidade e a foto, se visível.",
+  "listBusiness.livePreview.caption.ownedBy":
+    "As tuas etiquetas aparecem aqui e na página do anúncio, seja qual for a escolha que fizeste para o teu nome.",
   "listBusiness.livePreview.caption.linkProfileUnused":
     "Isto só conta quando mostras o teu nome. Por agora, nada liga ao teu perfil.",
   "listBusiness.livePreview.caption.pricingMode":
@@ -2255,6 +2272,7 @@ export const marketing: Catalog = {
     "o que o anúncio mostra sobre quem é proprietário",
   "listBusiness.editor.history.field.linkToProfile":
     "a ligação ao perfil de quem é proprietário",
+  "listBusiness.editor.history.field.ownedBy": "quem é dono e gere o negócio",
   "listBusiness.editor.history.field.contactEmail": "o email de contacto",
   "listBusiness.editor.history.field.consentOuting":
     "a confirmação de anúncio público",
@@ -2704,6 +2722,7 @@ export const marketing: Catalog = {
     "Quem pode ver o teu nome",
   "listBusiness.editor.restore.diff.field.linkToProfile":
     "Ligação ao teu perfil",
+  "listBusiness.editor.restore.diff.field.ownedBy": "De quem é e quem o gere",
   "listBusiness.editor.restore.diff.field.consentOuting":
     "Confirmação de anúncio público",
   "listBusiness.editor.restore.diff.field.consentGuide":
@@ -8608,6 +8627,9 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "Acolhe pessoas LGBTQ+",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
+  "directory.ownedBy.women": "Negócio de mulheres",
+  "directory.ownedBy.trans": "Negócio de pessoas trans",
+  "directory.ownedBy.nonbinary": "Negócio de pessoas não binárias",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
@@ -9682,6 +9704,9 @@ export const marketing: Catalog = {
   "local.filter.vibeLabel": "Ambiente",
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
+  "local.filter.ownedByLabel": "Quem gere",
+  "local.filter.ownedByNote":
+    "Nas palavras de quem é dono. Escolhe mais do que uma para ver os sítios que correspondem a qualquer uma.",
   "local.filter.filters": "Filtros",
   "local.filter.quickFiltersLabel": "Filtros rápidos",
   "local.filter.openNow": "Aberto agora",
