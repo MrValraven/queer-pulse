@@ -1,15 +1,15 @@
 # QueerPulse launch film
 
-A 67-second 1080p launch film, built as code. The picture is an HTML
+A 65-second 1080p launch film, built as code. The picture is an HTML
 composition (`scene.html`), the music is synthesised (`score.js`), and both
-are rendered frame-accurately by Chromium and encoded with ffmpeg. Nothing
-here is licensed stock: the screens are the real app in demo mode, the type is
-the app's own Fraunces and DM Sans, and the score is generated from scratch.
+are rendered frame-accurately by Chromium and encoded with ffmpeg. The product
+appears as six designed moments recreated in the app's own design language,
+with the demo's content, and every person in the film has an illustrated
+avatar (`avatars/`).
 
 ## Render it
 
 ```sh
-node scripts/launch-video/capture.mjs   # shoot the app screens → .cache/shots
 node scripts/launch-video/render.mjs    # → out/queerpulse-launch.mp4
 ```
 
@@ -18,35 +18,44 @@ Playwright's own Chromium isn't installed, point `CHROMIUM_PATH` at one.
 
 `render.mjs` options: `--fps 60` for a smoother master, `--from 19 --to 34` to
 render a slice, `--workers 4` to use more cores, `--score-only` to write just
-`out/score.wav`. A full 30 fps render takes about 12 minutes on 4 cores.
+`out/score.wav`. A full 30 fps render takes about 10 minutes on 4 cores.
 
 ## Work on it
 
-Open `scene.html` through any static server rooted at the repo (it loads fonts
-from `node_modules` and screens from `.cache/shots`):
+Open `scene.html` through any static server rooted at the repo (it loads its
+fonts from `node_modules`):
 
 - `scene.html?t=21.5` shows that exact frame
 - `scene.html?play` plays it in real time, without sound
 
 Every frame is a pure function of time (`window.seek(t)`), so what you scrub
 is what renders. Scenes start on bar lines of the 100 BPM score (a bar is
-2.4s); `window.CUES` exposes the moments the music plays to (network nodes
-joining, trust cards landing, each feature change), so moving a cue in the
-picture moves its note too.
+2.4s); `window.CUES` exposes the moments the music plays to (each card, each
+avatar popping in, each person joining the network or the map), so moving a
+cue in the picture moves its note too.
 
 ## The cut
 
-| Time | Scene         | Line                                                                                   |
-| ---- | ------------- | -------------------------------------------------------------------------------------- |
-| 0:00 | Pulse         | The coral dot beats like a heart; the mark draws itself. _Live in Lisboa._             |
-| 0:05 | Scattered     | The homepage's "why we built this" voices; _scattered across group chats…_ blows apart |
-| 0:14 | We built      | _We built the community we wanted to find._                                            |
-| 0:19 | So we built   | Eight real screens, one every three beats; cinema and studio marked _Soon_             |
-| 0:34 | Vouch network | _Everyone here arrived through someone._ The network grows node by node                |
-| 0:43 | Trust         | _Invite-only. Vouched for. No ads, no algorithm._ The five assurances                  |
-| 0:50 | Lisbon        | _A queer network, rooted in Lisbon_, over a row of phone screens                       |
-| 0:58 | Belong        | _Walk in where you already belong._ The mark gathers, then the lockup                  |
+| Time | Scene   | On screen                                                                                       |
+| ---- | ------- | ----------------------------------------------------------------------------------------------- |
+| 0:00 | Pulse   | The coral dot beats like a heart; the mark draws itself                                         |
+| 0:05 | Night   | _Somewhere in Lisbon tonight, there’s a room full of your people._ Group-chat fragments scatter |
+| 0:14 | Turn    | _So we gathered it in one place._ The pieces become the mark, then the name                     |
+| 0:19 | Moments | Vouches, gatherings, messages, safe spaces, forum, housing: one card per bar                    |
+| 0:34 | Network | _Every member is vouched for. So there’s always someone in common._                             |
+| 0:41 | Promise | _No ads. No algorithm. Just your people._ The five promises                                     |
+| 0:48 | Lisbon  | _Rooted in Lisbon._ Real neighbourhoods, with people crossing the city to meet                  |
+| 0:55 | Invite  | _Walk in where you already belong._ The heartbeat returns and lands on the lockup               |
 
-Copy comes from `src/shared/i18n/catalogs/en/homepage.ts` wherever a line
-exists there. Colours mirror `src/styles/tokens/colors.css` by hand, as the
-OG-image generator does, because this renders outside the token pipeline.
+## The cast
+
+`avatars/cast.json` sets every person's look explicitly (skin tone, hair,
+glasses, facial hair, pronouns) so the cast stays broad on purpose, and
+`avatars/generate.mjs` redraws the SVGs from it. The art is DiceBear's
+"Micah" style, based on Avatar Illustration System by Micah Lanier, licensed
+CC BY 4.0: **credit it wherever the film is published.** Café Norte is a
+made-up venue on purpose; showing a real venue as "visited in person" needs
+its agreement.
+
+Colours mirror `src/styles/tokens/colors.css` by hand, as the OG-image
+generator does, because this renders outside the token pipeline.

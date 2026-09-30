@@ -32,9 +32,9 @@
   function chordAt(n) {
     if (n < 2) return null;
     if (n < 6) return ["Dm9", "Bbmaj7", "Gm9", "Csus"][n - 2];
-    if (n < 24) return LOOP[(n - 6) % 4];
-    if (n === 24) return "Bbmaj9";
-    if (n === 25) return "Csus";
+    if (n < 23) return LOOP[(n - 6) % 4];
+    if (n === 23) return "Bbmaj9";
+    if (n === 24) return "Csus";
     return "Fmaj9";
   }
 
@@ -348,35 +348,34 @@
       g.connect(verb);
     }
 
-    /* ── Arrangement ── */
+    /* ── Arrangement ── (bar numbers match the scene starts in scene.html) */
     const kicks = [];
     const K = (t, v) => {
       kick(t, v);
       kicks.push(t);
     };
 
-    // 1 · Pulse — only a heartbeat and a low drone.
+    // Pulse (bars 0–1): only a heartbeat and a low drone.
     drone(0, bar(6));
     CUES.heart.forEach((t) => heartbeat(t, 0.95));
-    // 2 · Scattered — the heart slows under a minor pad that opens up.
+
+    // Night (bars 2–5): the heart slows under a minor pad that opens up.
     [4.8, 7.2, 9.6, 12.0].forEach((t) => heartbeat(t + 0.6, 0.6));
-    for (let n = 2; n < 28; n++) {
-      const c = CHORDS[chordAt(n)],
-        t0 = bar(n),
-        t1 = bar(n + 1);
+    for (let n = 2; n < 27; n++) {
+      const c = CHORDS[chordAt(n)];
+      const soft = n >= 14 && n < 17;
       const cutoff =
         n < 6
           ? 500 + (n - 2) * 260
           : n < 8
             ? 1400
-            : n < 24
-              ? n >= 14 && n < 18
+            : n < 23
+              ? soft
                 ? 1500
                 : 2300
               : 1700;
-      pad(t0, t1, c.pad, cutoff, n < 6 ? 0.04 : 0.05);
+      pad(bar(n), bar(n + 1), c.pad, cutoff, n < 6 ? 0.04 : 0.05);
     }
-    // Pluck motif enters sparse in the scattered section, like thoughts.
     [
       [5.4, 69],
       [6.6, 72],
@@ -389,31 +388,30 @@
     riser(bar(4.5), bar(6), 0.22);
     swell(bar(6), 1.4, 0.16);
 
-    // 3 · We built — the first major chord and a half-time pulse.
-    impact(bar(6), 0.9);
-    bell(bar(6), 72, 0.07, -0.2);
-    bell(bar(6) + 0.3, 76, 0.05, 0.2);
-    bell(bar(6) + 0.6, 79, 0.045, 0);
+    // Turn (bars 6–7): the first major chord as the pieces gather, a bell as the name appears.
+    impact(CUES.turn, 0.9);
     for (let n = 6; n < 8; n++) {
       [0, 2].forEach((b) => K(bar(n) + b * BEAT, 0.8));
       bass(bar(n), BAR, CHORDS[chordAt(n)].bass, 0.22);
     }
+    [72, 76, 79].forEach((m, i) =>
+      bell(CUES.name + i * 0.12, m, 0.07 - i * 0.01, -0.2 + i * 0.2),
+    );
     riser(bar(7), bar(8), 0.26);
     for (let i = 0; i < 8; i++) clap(bar(7) + 1.2 + i * 0.15, 0.1 + i * 0.03);
 
-    // 4–7 · The drive: four-on-the-floor, arps, a note on every feature change.
+    // Moments (bars 8–13), network (14–16), promise (17–19), Lisbon (20–22).
     impact(bar(8), 0.8);
     const ARP = [0, 2, 1, 3, 2, 0, 3, 1, 0, 2, 1, 3, 2, 3, 1, 2];
-    for (let n = 8; n < 24; n++) {
+    for (let n = 8; n < 23; n++) {
       const c = CHORDS[chordAt(n)];
-      const soft = n >= 14 && n < 18; // the vouch-network section breathes a little
+      const soft = n >= 14 && n < 17; // the vouch network breathes a little
       for (let b = 0; b < 4; b++) {
         const t = bar(n) + b * BEAT;
         K(t, soft ? 0.72 : 0.9);
         hat(t + BEAT / 2, soft ? 0.07 : 0.12, false, 0.25);
-        if (!soft && (n >= 18 || n < 14))
-          hat(t + BEAT * 0.25, 0.04, false, -0.3);
-        if (!soft && (b === 1 || b === 3)) clap(t, n >= 18 ? 0.42 : 0.3);
+        if (!soft) hat(t + BEAT * 0.25, 0.04, false, -0.3);
+        if (!soft && (b === 1 || b === 3)) clap(t, n >= 17 ? 0.42 : 0.3);
         bass(t + 0.08, BEAT / 2 - 0.1, c.bass, 0.22);
         bass(t + BEAT / 2, BEAT / 2 - 0.04, c.bass, 0.26);
       }
@@ -422,20 +420,21 @@
         pluck(
           bar(n) + s * (BEAT / 4),
           m,
-          (s % 4 === 0 ? 0.075 : 0.05) * (soft ? 0.8 : 1),
+          (s % 4 === 0 ? 0.07 : 0.045) * (soft ? 0.8 : 1),
           s % 2 ? 0.35 : -0.35,
         );
       }
     }
-    CUES.items.forEach((t, i) => {
-      if (i > 0) {
-        bell(t, [72, 76, 79, 81, 84, 79, 81, 84][i], 0.05, i % 2 ? 0.4 : -0.4);
-        hat(t, 0.08, true, 0);
-      }
+    // Each new card lands on an open hat and a bell; each avatar or line inside it ticks.
+    CUES.moments.forEach((t, i) => {
+      if (i > 0) hat(t, 0.08, true, 0);
+      bell(t, [72, 76, 79, 81, 84, 79][i], 0.05, i % 2 ? 0.4 : -0.4);
     });
-    impact(bar(14), 0.55);
-    // Every node in the vouch network pings as it joins, in F-major pentatonic.
     const PENTA = [77, 79, 81, 84, 86, 89, 91, 93];
+    CUES.pops.forEach((t, i) =>
+      pluck(t, PENTA[(i * 3) % PENTA.length], 0.03, (i % 3) - 1, 6500),
+    );
+    impact(bar(14), 0.55);
     CUES.nodes.forEach((n, i) =>
       pluck(
         n.t,
@@ -445,33 +444,29 @@
         6000,
       ),
     );
-    impact(bar(18), 0.75);
-    CUES.cards.forEach((t, i) =>
+    impact(bar(17), 0.75);
+    CUES.promises.forEach((t, i) =>
       bell(t, [72, 74, 76, 79, 81][i], 0.07, -0.5 + i * 0.25),
     );
-    riser(bar(22), bar(24), 0.3);
-    for (let i = 0; i < 16; i++) clap(bar(23) + i * 0.15, 0.08 + i * 0.022);
-    swell(bar(24), 1.2, 0.18);
+    impact(bar(20), 0.6);
+    CUES.city.forEach((t, i) =>
+      pluck(t, PENTA[(i * 2 + 1) % PENTA.length], 0.05, -0.6 + i * 0.17, 6500),
+    );
+    riser(bar(21.5), bar(23), 0.3);
+    for (let i = 0; i < 16; i++) clap(bar(22) + i * 0.15, 0.08 + i * 0.022);
+    swell(bar(23), 1.2, 0.18);
 
-    // 8 · Belong — the drums fall away; the logo lands on the home chord.
-    impact(bar(24), 1);
-    bass(bar(24), BAR * 2, CHORDS.Bbmaj9.bass, 0.12);
-    CUES.sats.forEach((t, i) =>
-      pluck(
-        t,
-        [84, 86, 88, 91, 93, 96, 98, 100][i],
-        0.04,
-        -0.6 + i * 0.17,
-        7000,
-      ),
-    );
-    swell(62.4, 0.8, 0.14);
-    impact(62.4, 0.85);
-    bass(62.4, 4.8, 29, 0.14);
+    // Invite (bars 23–26): the drums fall away, the heartbeat returns, the logo lands on the home chord.
+    impact(bar(23), 1);
+    bass(bar(23), BAR * 2, CHORDS.Bbmaj9.bass, 0.12);
+    CUES.endBeats.slice(0, 1).forEach((t) => heartbeat(t, 0.8));
+    swell(CUES.lockup, 0.8, 0.14);
+    impact(CUES.lockup, 0.85);
+    bass(CUES.lockup, 4.8, 29, 0.14);
     [65, 69, 72, 76, 79].forEach((m, i) =>
-      bell(62.4 + i * 0.09, m, 0.06, -0.4 + i * 0.2),
+      bell(CUES.lockup + 0.2 + i * 0.09, m, 0.06, -0.4 + i * 0.2),
     );
-    CUES.endBeats.slice(1).forEach((t) => heartbeat(t, 0.9));
+    CUES.endBeats.slice(2).forEach((t) => heartbeat(t, 0.9));
 
     // Duck the pads/bass under every kick.
     pump.gain.setValueAtTime(1, 0);

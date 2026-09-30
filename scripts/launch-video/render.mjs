@@ -1,7 +1,7 @@
 /**
  * Render the QueerPulse launch film to MP4.
  *
- *   node scripts/launch-video/render.mjs [--fps 30] [--workers 3] [--from 0 --to 67.2]
+ *   node scripts/launch-video/render.mjs [--fps 30] [--workers 3] [--from 0 --to 64.8]
  *
  * Steps: serve the repo root, open scene.html in Chromium, render the score
  * (score.js) to a WAV, then step every frame through `window.seek(t)` in a few
@@ -10,9 +10,8 @@
  *
  * `--score-only` stops after writing out/score.wav, for working on the music.
  *
- * Needs ffmpeg with libx264 on PATH (or FFMPEG=/path/to/ffmpeg), and the app
- * screenshots in .cache/shots — run capture.mjs first. CHROMIUM_PATH points
- * Playwright at a specific Chromium binary when its own isn't installed.
+ * Needs ffmpeg with libx264 on PATH (or FFMPEG=/path/to/ffmpeg). CHROMIUM_PATH
+ * points Playwright at a specific Chromium binary when its own isn't installed.
  */
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
@@ -43,6 +42,7 @@ const TYPES = {
   ".js": "text/javascript",
   ".png": "image/png",
   ".woff2": "font/woff2",
+  ".svg": "image/svg+xml",
 };
 const server = createServer(async (req, res) => {
   try {
