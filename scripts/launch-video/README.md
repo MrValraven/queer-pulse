@@ -36,16 +36,16 @@ cue in the picture moves its note too.
 
 ## The cut
 
-| Time | Scene   | On screen                                                                                       |
-| ---- | ------- | ----------------------------------------------------------------------------------------------- |
-| 0:00 | Pulse   | The coral dot beats like a heart; the mark draws itself                                         |
-| 0:05 | Night   | _Somewhere in Lisbon tonight, there’s a room full of your people._ Group-chat fragments scatter |
-| 0:14 | Turn    | _So we gathered it in one place._ Then the name, with its slogan                                |
-| 0:19 | Moments | Vouches, gatherings, messages, safe spaces, forum, housing: one card per bar                    |
-| 0:34 | Network | _Every member is vouched for. So there’s always someone in common._                             |
-| 0:41 | Promise | _No ads. No algorithm. Just your people._ The five promises                                     |
-| 0:48 | Lisbon  | _Find your community all over the city._ Real neighbourhoods, people crossing the city to meet  |
-| 0:55 | Invite  | _Walk in where you already belong._ The heartbeat returns and lands on the lockup               |
+| Time | Scene   | On screen                                                                                      |
+| ---- | ------- | ---------------------------------------------------------------------------------------------- |
+| 0:00 | Pulse   | The coral dot beats like a heart; the mark draws itself                                        |
+| 0:05 | Night   | _Queer Lisbon is everywhere. Just never in one place._ Group-chat fragments scatter            |
+| 0:14 | Turn    | _So we gathered it in one place._ Then the name, with its slogan                               |
+| 0:19 | Moments | Vouches, gatherings, messages, safe spaces, forum, housing: one card per bar                   |
+| 0:34 | Network | _Every member is vouched for. So there’s always someone in common._                            |
+| 0:41 | Promise | _No ads. No algorithm. Just your people._ The five promises                                    |
+| 0:48 | Lisbon  | _Find your community all over the city._ Real neighbourhoods, people crossing the city to meet |
+| 0:55 | Invite  | _Walk in where you already belong._ The heartbeat returns and lands on the lockup              |
 
 ## The cast
 

@@ -1120,6 +1120,41 @@
         top: 160px;
         font-size: 92px;
       }
+      /* Opening: two short lines, stacked as one thought. */
+      .night {
+        font-size: 96px;
+      }
+      #n1 {
+        top: 400px;
+      }
+      #n2 {
+        top: 522px;
+      }
+      #n3 {
+        top: 830px;
+        font-size: 56px;
+      }
+      /* Venue badge: level, with a checkmark over the label. */
+      .stamp {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 152px;
+        height: 152px;
+        top: 144px;
+        font-size: 15px;
+      }
+      .stamp svg {
+        width: 34px;
+        height: 34px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
     </style>
   </head>
   <body>
@@ -1168,16 +1203,13 @@
         <div id="particles"></div>
         <div id="frags"></div>
         <p class="center night serif" id="n1">
-          <span class="l">Somewhere in Lisbon tonight,</span><br /><span
-            class="l"
-            >there’s a room full of <em>your people.</em></span
-          >
+          Queer Lisbon is <em>everywhere.</em>
         </p>
         <p class="center night serif" id="n2">
-          You just haven’t <em>met them</em> yet.
+          Just never <em>in one place.</em>
         </p>
         <p class="center night serif" id="n3">
-          It’s all out there, <em>scattered.</em>
+          Scattered across group chats, <em>posters and word of mouth.</em>
         </p>
       </section>
 
@@ -1582,8 +1614,7 @@
           `<svg viewBox="0 0 24 24">${FRAG_ICONS[ic]}</svg>${text}`,
         ),
       }));
-      const n1a = splitWords($("#n1 .l:first-child")),
-        n1b = splitWords($("#n1 .l:last-child"));
+      const n1w = splitWords($("#n1"));
       const n2w = splitWords($("#n2")),
         n3w = splitWords($("#n3"));
 
@@ -1600,11 +1631,12 @@
             prog(lt, -0.4, 0.2);
           p.node.style.transform = `translate(${lerp(cx, 960, gather)}px, ${lerp(cy, 540, gather)}px)`;
         });
-        wordsIn(n1a, t, 5.0, 0.07, 0.9, 24, 12);
-        wordsIn(n1b, t, 6.1, 0.07, 0.9, 24, 12);
-        fadeOut($("#n1"), t, 8.7, 9.3);
-        wordsIn(n2w, t, 9.4, 0.08, 0.8, 24, 12);
-        fadeOut($("#n2"), t, 11.2, 11.7);
+        // The two lines read as one thought: the second arrives under the
+        // first and they leave together.
+        wordsIn(n1w, t, 5.1, 0.09, 0.9, 24, 12);
+        wordsIn(n2w, t, 7.6, 0.09, 0.9, 24, 12);
+        fadeOut($("#n1"), t, 10.9, 11.5);
+        fadeOut($("#n2"), t, 10.95, 11.55);
         wordsIn(n3w, t, 11.9, 0.07, 0.8, 20, 10);
         fadeOut($("#n3"), t, 13.4, 14.0);
         // Fragments of how people find each other now: they drift, then get pulled together.
@@ -1778,7 +1810,7 @@
             </div>
             <div class="foot row meta s" style="gap: 12px" data-a="1.2"><span class="stack">${av("noor", 40, ring())}${av("sam", 40, ring() + "; margin-left: -10px")}</span>Checked in person by Noor and Sam</div>
           </div>
-          <div class="stamp" data-stamp>Visited<br/>in person</div>
+          <div class="stamp" data-stamp><svg viewBox="0 0 24 24"><polyline points="5 12.5 10 17 19 7.5"/></svg><span>Visited<br />in person</span></div>
         </div>`,
         // Forum: a hard question, answered by people who have done it.
         () => `<div class="card">
@@ -1886,7 +1918,7 @@
             const st = $("[data-stamp]", m.v),
               x = prog(lx, 0.72, 1.05);
             st.style.opacity = eOut(x);
-            st.style.transform = `rotate(${lerp(-40, -12, eOut5(x))}deg) scale(${lerp(1.8, 1, eOut5(x)) * (1 + hit(lx, 1.05, 10) * 0.06)})`;
+            st.style.transform = `scale(${lerp(1.5, 1, eOut5(x)) * (1 + hit(lx, 1.05, 10) * 0.06)})`;
           }
           if (i === 4)
             $("[data-count]", m.v).textContent = String(
