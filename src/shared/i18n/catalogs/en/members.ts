@@ -157,7 +157,7 @@ export const members: Catalog = {
   "profile.hero.vouchedShort": "Vouched",
   // The profile hero's top-right toolbar (Edit, View as visitor, "...").
   "profile.hero.toolbarAria": "Profile actions",
-  "profile.hero.sayHelloCta": "Say hello",
+  "profile.hero.connectCta": "Connect",
   // PRD-03. When this member has already asked to connect, the hero answers
   // them instead of offering another hello the server would refuse.
   "profile.hero.acceptRequestCta": "Accept {first}'s request",
@@ -2371,6 +2371,10 @@ export const members: Catalog = {
     "Optional, and it helps us do better",
   "profile.accountData.stepAway.dependency.transferCta": "Transfer",
   "profile.accountData.stepAway.dependency.deleteCta": "Delete listing",
+  "profile.accountData.stepAway.dependency.checkFailed":
+    "We couldn't check whether any of your communities or listings still depend on you. You can still ask for erasure, and we'll sort out anything you own when your account is erased.",
+  "profile.accountData.stepAway.dependency.informationalIntro":
+    "While your account isn't active, you can't hand these over or close them yourself, and you can still ask for erasure. When your account is erased, each community you own passes to its longest-standing co-owner, or to its longest-standing mod if it has none. A space with neither passes to the owner of its parent community, and a community nobody can take on is flagged for our team to review. Your listings stay live without an owner, and whoever runs the place can claim them.",
   "profile.accountData.stepAway.pending.banner":
     "<strong>Your account is scheduled for deletion.</strong> Everything is hidden now and will be permanently erased on <strong>{date}</strong>. Changed your mind? You can still cancel.",
   "profile.accountData.stepAway.pending.cancelling": "Cancelling…",

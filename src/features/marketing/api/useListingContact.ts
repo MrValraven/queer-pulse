@@ -4,7 +4,7 @@ import {
   getListingContact,
   type ListingContactDTO,
 } from "./listingEnquiries.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
 /** Query key segment for the per-caller contact read, so the send mutation can
  *  invalidate it by slug after a message lands or a cap bites. */

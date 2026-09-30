@@ -291,6 +291,9 @@ export function useFeedPage() {
     hasNextPage: feed.hasNextPage,
     fetchNextPage: feed.fetchNextPage,
     isFetchingNextPage: feed.isFetchingNextPage,
+    // True when only the NEXT page failed (react-query sets `isError` too).
+    // The page keeps the loaded cards and retries that page from the pager.
+    isFetchNextPageError: feed.isFetchNextPageError,
     sidebarLoading:
       pageLoading ||
       (!demoMode &&

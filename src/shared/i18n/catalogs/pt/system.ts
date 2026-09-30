@@ -1,7 +1,7 @@
 import type { Catalog } from "../../types";
 
 /**
- * Sistema — pt-PT inclusivo. Mesmas chaves que `en/system.ts`.
+ * Sistema: pt-PT inclusivo. Mesmas chaves que `en/system.ts`.
  *
  * Notas de tradução:
  * - Registo `tu`, caloroso, nunca `você`.
@@ -10,12 +10,12 @@ import type { Catalog } from "../../types";
  * - Onde uma frase teria de genderizar um particípio dirigido a quem lê
  *   ("convidado/a", "avisado/a"), preferimos reformular sem participio
  *   (verbo pessoal: "convidou-te", "vais receber um aviso") em vez de recorrer
- *   à forma neutra em -e — só se usa -e quando a reformulação não funciona
+ *   à forma neutra em -e; só se usa -e quando a reformulação não funciona
  *   (ver `docs/i18n/glossary-pt.md`).
- * - "Sustainer" (nível de subscrição) e "QueerPulse" ficam em inglês — nomes
- *   de produto/marca, nunca traduzidos.
+ * - "Sustainer" (nível de subscrição) e "QueerPulse" ficam em inglês (nomes
+ *   de produto/marca, nunca traduzidos).
  * - Nomes próprios, emails, IDs de caso/incidente e o texto que a pessoa que
- *   convida escreve (`view.note`) não passam por aqui — ficam como dados no
+ *   convida escreve (`view.note`) não passam por aqui; ficam como dados no
  *   componente.
  */
 export const system: Catalog = {
@@ -71,7 +71,7 @@ export const system: Catalog = {
   // O encerramento da conta não agenda eliminação nenhuma: só acontece a teu
   // pedido, com um período de {erasureDays} dias. Ver a nota em en/system.ts.
   "accountBanned.whatNow.row2.body":
-    "Consulta a nossa <a>política de privacidade</a>. Pede a eliminação abaixo e a tua conta fica logo escondida, e os dados são apagados definitivamente {erasureDays} dias depois. As publicações que escreveste nas comunidades ficam no lugar sem o teu nome. As tuas publicações no fórum são apagadas, e as conversas que começaste ficam no lugar, sem o teu nome, quando outras pessoas lhes responderam ou quando deste crédito de coautoria a alguém.",
+    "Consulta a nossa <a>política de privacidade</a>. Pede a eliminação abaixo e a tua conta fica logo escondida, e os dados são apagados definitivamente {erasureDays} dias depois. As publicações e respostas que escreveste nas comunidades continuam visíveis, sem o teu nome. As tuas publicações no fórum são apagadas definitivamente. As conversas que começaste ficam abertas, sem o teu nome, quando outras pessoas lhes responderam ou quando deste crédito de coautoria a alguém, e o que escreveram continua legível.",
   "accountBanned.whatNow.row3.title": "Não ficam registos públicos desta ação",
   // Dizia: "O processo existe internamente durante 36 meses. As tuas ligações
   // foram notificadas de que saíste." Nada disso existe no código.
@@ -82,6 +82,7 @@ export const system: Catalog = {
     "A <wellbeingLink>biblioteca de recursos</wellbeingLink> está aberta a todas as pessoas, sejam ou não da comunidade.",
   "accountBanned.actions.appealCta": "Apresentar o recurso",
   "accountBanned.actions.eraseCta": "Pedir a eliminação total dos dados",
+  "accountBanned.actions.exportCta": "Descarrega os teus dados",
   "accountBanned.foot":
     "Se achas que isto resultou de denúncias falsas coordenadas, inclui no recurso os nomes que suspeitas. Investigamos isto com cuidado. <a>Relê o Código de Conduta</a>",
 
@@ -115,7 +116,7 @@ export const system: Catalog = {
   "accountSuspended.headingLive": "A tua conta está <em>suspensa.</em>",
   "accountSuspended.lead":
     "Uma pessoa moderadora reviu uma denúncia e decidiu que a tua mensagem recente em <b>{channel}</b> violou o §02·02 do Código de Conduta (<em>identificação de género incorreta repetida</em>). Esta é uma <b>suspensão temporária no nível 3</b> da escala de moderação.",
-  // Texto de introdução em modo real (membro mesmo suspenso) — os detalhes ficam
+  // Texto de introdução em modo real (membro mesmo suspenso); os detalhes ficam
   // no bloco de motivo abaixo, vindos da nota de moderação, por isso é geral.
   "accountSuspended.leadLive":
     "A tua conta está em pausa enquanto uma decisão de moderação se mantém. Aqui está o que aconteceu, e como responder.",
@@ -495,7 +496,7 @@ export const system: Catalog = {
   // brief, para evitar uma chave duplicada no mesmo objeto (erro de tsc).
   "maintenance.brandEyebrow": "QueerPulse",
   "maintenance.title": "Já voltamos",
-  // Só usado como recurso — quando a administração define a própria
+  // Só usado como recurso, quando a administração define a própria
   // mensagem, é essa que aparece.
   "maintenance.body":
     "A QueerPulse está temporariamente indisponível. Volta a passar por aqui em breve.",

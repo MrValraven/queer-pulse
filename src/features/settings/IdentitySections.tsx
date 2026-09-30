@@ -4,7 +4,11 @@ import { useProfileEdit } from "../../app/providers/useProfile";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDiscoverableIdentities } from "./api/useDiscoverableIdentities";
-import { IDENTITIES, publishableIdentities } from "./interests.data";
+import {
+  IDENTITIES,
+  identityLabel,
+  publishableIdentities,
+} from "./interests.data";
 import styles from "./InterestsPane.module.css";
 
 /**
@@ -22,6 +26,12 @@ export function PrivateIdentitiesSection({
   const { draft, updateDraft } = useProfileEdit();
   const uid = useId();
   const hasIdentities = draft.identities.length > 0;
+  // The chip's stored `value` stays the raw English string (see the NOTE in
+  // interests.data.ts); only the `label` shown on screen is translated.
+  const identityChipOptions = IDENTITIES.options.map((value) => ({
+    value,
+    label: identityLabel(t, value),
+  }));
 
   return (
     <div className={styles.prefSection}>
@@ -50,17 +60,19 @@ export function PrivateIdentitiesSection({
       <div className={styles.psHelper}>
         {t("settings:interests.identities.helper")}
       </div>
-      {/* IDENTITIES.options are the literal stored value of draft.identities —
-          see the NOTE in interests.data.ts. Left untranslated on purpose. */}
+      {/* IDENTITIES.options are the literal stored value of draft.identities,
+          see the NOTE in interests.data.ts. The chip's stored value stays
+          untranslated; identityChipOptions carries the translated label
+          alongside it. */}
       <ChipSelect
         tick={false}
         labelledBy={`${uid}-identities`}
-        options={IDENTITIES.options}
+        options={identityChipOptions}
         selected={new Set(draft.identities)}
-        onToggle={(label) => {
-          const next = draft.identities.includes(label)
-            ? draft.identities.filter((x) => x !== label)
-            : [...draft.identities, label];
+        onToggle={(value) => {
+          const next = draft.identities.includes(value)
+            ? draft.identities.filter((x) => x !== value)
+            : [...draft.identities, value];
           updateDraft({ identities: next });
           onChange();
         }}
@@ -69,8 +81,9 @@ export function PrivateIdentitiesSection({
   );
 }
 
-/** One published-identity switch. Title is the identity itself; the description
- *  states the current consequence in plain terms, both directions. */
+/** One published-identity switch. Title is the identity's translated label;
+ *  the description states the current consequence in plain terms, both
+ *  directions. */
 function IdentityToggleRow({
   identity,
   published,
@@ -83,10 +96,13 @@ function IdentityToggleRow({
   onChange: (next: boolean) => void;
 }) {
   const { t } = useTranslation();
+  // `identity` is the raw stored value (see the NOTE in interests.data.ts);
+  // `label` is only the translated text shown and read aloud.
+  const label = identityLabel(t, identity);
   return (
     <div className={styles.discoverRow}>
       <div>
-        <div className={styles.discoverTitle}>{identity}</div>
+        <div className={styles.discoverTitle}>{label}</div>
         <div className={styles.discoverDesc}>
           {published
             ? t("settings:discoverable.rowOn")
@@ -98,7 +114,7 @@ function IdentityToggleRow({
           tone="coral"
           checked={published}
           onChange={onChange}
-          label={t("settings:discoverable.toggleLabel", { label: identity })}
+          label={t("settings:discoverable.toggleLabel", { label })}
         />
       </div>
     </div>

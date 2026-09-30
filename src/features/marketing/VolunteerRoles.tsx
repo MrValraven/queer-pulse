@@ -1,11 +1,16 @@
 import { FiHeart } from "react-icons/fi";
-import { Button, EmptyState, LoadErrorState } from "../../shared/components/ui";
+import {
+  EmptyState,
+  LoadErrorState,
+  LoadMoreFooter,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
 import { CAUSE_FILTERS, COMMITMENT_FILTERS } from "./volunteerPage.data";
 import { VolunteerCardSkeleton, VolunteerRoleCard } from "./VolunteerRoleCard";
 import s from "./VolunteerPage.module.css";
+import rolesStyles from "./VolunteerRoles.module.css";
 
 export interface VolunteerRolesProps {
   /** Active chip id: "all", a commitment level, or a cause. */
@@ -19,7 +24,8 @@ export interface VolunteerRolesProps {
   isLoading: boolean;
   /** True when the opportunities read failed (DES-22). It takes precedence
    *  over both empty states: an outage must never read as "nobody needs help
-   *  right now". */
+   *  right now". With roles already loaded it is the next page failing
+   *  (ENG-501), and the footer retries that page alone. */
   isError: boolean;
   /** Re-runs the failed read, for the error panel's retry. */
   onRetry: () => void;
@@ -42,6 +48,13 @@ export function VolunteerRoles({
   onLoadMore,
 }: VolunteerRolesProps) {
   const { t } = useTranslation();
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  // The error panel is for a grid with nothing loaded; roles already loaded
+  // stay, and the footer below retries the page that failed.
+  // Broader than react-query's own flag: any failed read with roles loaded
+  // counts, so a failed background refresh also reads as a failed next page.
+  const isFetchNextPageError = isError && loadedCount > 0;
+  const hasNothingLoadedError = isError && !isFetchNextPageError;
 
   return (
     <section className={s.body}>
@@ -88,7 +101,7 @@ export function VolunteerRoles({
           ))}
         </div>
 
-        {isError ? (
+        {hasNothingLoadedError ? (
           <LoadErrorState onRetry={onRetry} />
         ) : !isLoading && visibleOpportunities.length === 0 ? (
           loadedCount === 0 ? (
@@ -128,19 +141,17 @@ export function VolunteerRoles({
           </div>
         )}
 
-        {hasNextPage && !isError && (
-          <div className={s.loadMore}>
-            <Button
-              type="button"
-              variant="ghost"
-              disabled={isFetchingNextPage}
-              onClick={onLoadMore}
-            >
-              {isFetchingNextPage
-                ? t("marketing:volunteer.loadingMore")
-                : t("marketing:volunteer.loadMoreCta")}
-            </Button>
-          </div>
+        {hasNextPage && !hasNothingLoadedError && (
+          <LoadMoreFooter
+            className={rolesStyles.footer}
+            messageClassName={rolesStyles.loadMoreError}
+            isFetchingNextPage={isFetchingNextPage}
+            isFetchNextPageError={isFetchNextPageError}
+            onLoadMore={onLoadMore}
+            errorMessage={t("marketing:volunteer.loadMoreError")}
+            label={t("marketing:volunteer.loadMoreCta")}
+            loadingLabel={t("marketing:volunteer.loadingMore")}
+          />
         )}
       </div>
     </section>

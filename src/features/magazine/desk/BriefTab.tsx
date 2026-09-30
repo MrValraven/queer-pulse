@@ -78,10 +78,16 @@ export function BriefTab({ record }: BriefTabProps) {
           ))}
         </ul>
         <div className={styles.note}>
-          <b>{t("magazine:piece.brief.avoidLabel")}</b> {brief.avoid}
+          <b className={styles.noteLabel}>
+            {t("magazine:piece.brief.avoidLabel")}
+          </b>{" "}
+          {brief.avoid}
         </div>
         <div className={styles.note}>
-          <b>{t("magazine:piece.brief.artLabel")}</b> {brief.art}
+          <b className={styles.noteLabel}>
+            {t("magazine:piece.brief.artLabel")}
+          </b>{" "}
+          {brief.art}
         </div>
         <div className={styles.row}>
           <Button size="sm" variant="ghost">

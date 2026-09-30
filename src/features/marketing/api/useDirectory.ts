@@ -21,8 +21,9 @@ import {
   getDirectoryPage,
   getDirectorySpace,
 } from "./directory.api";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
-export const DIRECTORY_KEY = "directory";
+export { DIRECTORY_KEY };
 
 /**
  * Whole-catalog source for callers that need every live business client-side

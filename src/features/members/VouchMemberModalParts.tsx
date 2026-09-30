@@ -7,7 +7,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { vouchErrorMessageKey } from "./api/vouchErrorMessageKey";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
-import { currentUser, type MemberProfile } from "./data/memberProfiles";
+import { currentUser } from "./data/demoCurrentUser";
+import type { MemberProfile } from "./data/memberProfiles";
 import {
   RELATIONSHIPS,
   RELATIONSHIP_LABEL_KEY,

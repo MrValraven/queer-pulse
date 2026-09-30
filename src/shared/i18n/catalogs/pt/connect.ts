@@ -20,18 +20,18 @@ export const connect: Catalog = {
   "page.eyebrow": "A tua rede",
   "page.title": "Pessoas que <em>conheceste mesmo.</em>",
   "page.lead":
-    "O teu perfil principal não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
+    "O teu perfil principal não faz seguidores. Conectas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
   "page.note":
-    "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te ligares primeiro? É para isso que servem as personas. As conexões são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
+    "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te conectares primeiro? É para isso que servem as personas. As conexões são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
   "page.loadMoreLoading": "A carregar…",
   "page.loadMore": "Carregar mais",
   "page.loadError.title": "Não conseguimos carregar <em>as tuas conexões</em>",
   "page.loadError.body":
-    "Quem está ligado a ti continua lá. O pedido não chegou de volta, tenta outra vez daqui a pouco.",
+    "Quem está conectado a ti continua lá. O pedido não chegou de volta, tenta outra vez daqui a pouco.",
 
   // Toasts das ações da ConnectionsPage
-  "toast.connected": "Ligaste-te a {name}",
+  "toast.connected": "Conectaste-te a {name}",
   "toast.declined": "Pedido recusado, com delicadeza",
   "toast.withdrawn": "Pedido retirado",
   "toast.unblocked": "Desbloqueaste {name}",
@@ -47,9 +47,9 @@ export const connect: Catalog = {
   "moreMenu.removeConnection": "Terminar a conexão com {name}",
   "moreMenu.removeConfirm.title": "Queres terminar a tua conexão com {name}?",
   "moreMenu.removeConfirm.body":
-    "{name} não recebe qualquer aviso, e nada do que já disseram um ao outro é apagado. A vossa conversa continua na tua caixa de entrada, mas nenhum dos dois pode enviar mensagens novas enquanto não voltarem a estar ligados. Qualquer um de vocês pode pedir conexão outra vez quando quiser.",
+    "{name} não recebe qualquer aviso, e nada do que já disseram um ao outro é apagado. A vossa conversa continua na tua caixa de entrada, mas nenhum dos dois pode enviar mensagens novas enquanto não voltarem a estar conectados. Qualquer um de vocês pode pedir conexão outra vez quando quiser.",
   "moreMenu.removeConfirm.action": "Terminar conexão",
-  "moreMenu.toastRemoved": "Tu e {name} já não estão ligados.",
+  "moreMenu.toastRemoved": "Tu e {name} já não estão conectados.",
   "moreMenu.block": "Bloquear {name}",
   "moreMenu.unblock": "Desbloquear {name}",
   "moreMenu.report": "Denunciar",
@@ -107,7 +107,7 @@ export const connect: Catalog = {
   "allTab.sortClosestMutuals": "Mais em comum",
   "allTab.emptyTitle": "Ainda sem conexões",
   "allTab.emptyDescription":
-    "A tua rede começa com um simples olá. Conhece pessoas num convívio ou procura quem já conheces e liga-te depois de se terem encontrado.",
+    "A tua rede começa com um simples olá. Conhece pessoas num convívio ou procura quem já conheces e conecta-te depois de se terem encontrado.",
   "allTab.findMembers": "Encontrar pessoas",
   "allTab.emptySearchTitle": "Nada corresponde à tua pesquisa",
   "allTab.emptySearchDescription":
@@ -118,7 +118,7 @@ export const connect: Catalog = {
   // Estados vazios de pedidos recebidos / enviados / bloqueios (ConnectionsPanels)
   "panels.requestsEmptyTitle": "Sem pedidos por agora",
   "panels.incomingEmptyDescription":
-    "Quando alguém que conheceste pedir para se ligar, aparece aqui para aceitares ou recusares com delicadeza.",
+    "Quando alguém que conheceste pedir para se conectar, aparece aqui para aceitares ou recusares com delicadeza.",
   "panels.sentEmptyDescription":
     "Os pedidos que envias ficam aqui até serem aceites. Explora pessoas e contacta alguém com quem já te cruzaste.",
   "panels.blockedEmptyTitle": "Ainda não bloqueaste ninguém",
@@ -145,14 +145,14 @@ export const connect: Catalog = {
   "ago.unknown": "há pouco",
 
   // Modal de contacto (ConnectModal)
-  "modal.ariaLabel": "Dizer olá",
+  "modal.ariaLabel": "Pedir conexão",
   "modal.close": "Fechar",
   "modal.loading": "A carregar…",
   "modal.error":
     "Não conseguimos carregar este membro agora. Fecha e tenta novamente daqui a pouco.",
 
   // Formulário de contacto (ConnectForm)
-  "form.title": "Diz <em>olá.</em>",
+  "form.title": "Pede <em>conexão.</em>",
   "form.reasonLabel": "Sobre o que é?",
   "form.reasonPlaceholder": "Escolhe um motivo, ou deixa em aberto",
   "form.reasonOpenToGroup": "Ao que {first} está disponível",
@@ -204,9 +204,9 @@ export const connect: Catalog = {
   "notice.alreadyPending.title": "Já <em>lhe escreveste.</em>",
   "notice.alreadyPending.body":
     "A tua mensagem já está à espera de {name}. Vão abrir a conversa quando quiserem. Não precisas de enviar outra vez.",
-  "notice.alreadyConnected.title": "Já estão <em>ligados.</em>",
+  "notice.alreadyConnected.title": "Já estão <em>conectados.</em>",
   "notice.alreadyConnected.body":
-    "Tu e {name} já estão ligados. Abre as mensagens para continuar a conversa.",
+    "Tu e {name} já estão conectados. Abre as mensagens para continuar a conversa.",
   "notice.youBlocked.title": "<em>Bloqueaste</em> {name}.",
   "notice.youBlocked.body":
     "Precisas de desbloquear esta pessoa antes de dizer olá. Podes fazê-lo no perfil dela.",
@@ -215,7 +215,7 @@ export const connect: Catalog = {
   "notice.notAccepting.body":
     "Colocaram os pedidos de contacto em pausa. Podes tentar noutra altura.",
   "notice.needsIntro.title":
-    "{name} liga-se através de <em>apresentações.</em>",
+    "{name} conecta-se através de <em>apresentações.</em>",
   "notice.needsIntro.body":
     "Chegam a novas pessoas através de quem já conhecem. Pede a uma conexão em comum para te apresentar.",
   "notice.cannotConnect.title":
@@ -242,7 +242,8 @@ export const connect: Catalog = {
   "suggested.reasonOpenTo": "Também tem disponibilidade para {label}",
   "suggested.reasonTag": "Também tem interesse em {label}",
   "suggested.reasonProfession": "Também trabalha em {label}",
-  "suggested.sayHello": "Dizer olá",
+  "suggested.connect": "Conectar",
+  "suggested.pending": "Pendente",
   "suggested.dismissAria": "Deixar de sugerir {name}",
   "suggested.hideStripAria": "Esconder pessoas que talvez conheças",
   "suggested.browseMembers": "Ver todas as pessoas",

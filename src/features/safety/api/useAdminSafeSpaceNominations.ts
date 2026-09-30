@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import {
   DEMO_ADMIN_NOMINATIONS,
   DEMO_NOMINATION_AUDIT,
@@ -45,7 +46,7 @@ function filterDemoNominations(
     if (query.assignedOnly && !nomination.listingId) return false;
     if (
       query.search &&
-      !nomination.placeName.toLowerCase().includes(query.search.toLowerCase())
+      !foldForSearch(nomination.placeName).includes(foldForSearch(query.search))
     ) {
       return false;
     }

@@ -313,6 +313,14 @@ export const shared: Catalog = {
   "apiError.generic": "Algo correu mal.",
   "apiError.genericRetry": "Algo correu mal. Tenta outra vez.",
   "apiError.tryAgainTail": " Tenta outra vez.",
+  "apiError.reasonInvalid":
+    "Alguns dados não foram aceites. Verifica-os e tenta outra vez.",
+  "apiError.reasonConflict":
+    "Isto mudou ou já existe. Atualiza e tenta outra vez.",
+  "apiError.reasonGone": "Isto já não está disponível.",
+  "apiError.reasonTooLarge": "Isso é demasiado grande para enviar.",
+  "apiError.reasonRateLimited":
+    "Demasiadas tentativas. Espera um momento e tenta outra vez.",
 
   // PullToRefresh live region
 

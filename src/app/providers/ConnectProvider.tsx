@@ -1,6 +1,21 @@
-import { useCallback, useMemo, useState, type ReactNode } from "react";
-import { ConnectModal } from "../../features/connect/ConnectModal";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { ConnectContext } from "./useConnect";
+import { lazyModal } from "./lazyModal";
+import { ModalLoadBoundary } from "./ModalLoadBoundary";
+
+// Code-split, warmed at idle: the modal's demo fallback reads the whole member
+// registry, which would otherwise ride along in first paint.
+const connectModal = lazyModal(() =>
+  import("../../features/connect/ConnectModal").then(
+    (module) => module.ConnectModal,
+  ),
+);
 
 export function ConnectProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{
@@ -15,6 +30,14 @@ export function ConnectProvider({ children }: { children: ReactNode }) {
   const close = useCallback(() => {
     setState({ open: false });
   }, []);
+  const handleLoadFailure = useCallback(() => {
+    connectModal.retryAfterFailure();
+    setState({ open: false });
+  }, []);
+
+  useEffect(() => {
+    connectModal.warmWhenIdle();
+  }, []);
 
   const value = useMemo(() => ({ openConnect }), [openConnect]);
 
@@ -22,7 +45,13 @@ export function ConnectProvider({ children }: { children: ReactNode }) {
     <ConnectContext.Provider value={value}>
       {children}
       {state.open && (
-        <ConnectModal slug={state.slug} reason={state.reason} onClose={close} />
+        <ModalLoadBoundary onFailure={handleLoadFailure}>
+          <connectModal.Component
+            slug={state.slug}
+            reason={state.reason}
+            onClose={close}
+          />
+        </ModalLoadBoundary>
       )}
     </ConnectContext.Provider>
   );

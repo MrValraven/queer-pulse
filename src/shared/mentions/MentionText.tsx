@@ -7,7 +7,7 @@ import {
   thread,
   businessPath,
 } from "../../app/routeMap";
-import { gatheringPath } from "../../features/gatherings/data";
+import { gatheringPath } from "../../features/gatherings/gatheringPaths";
 import { parseMentions, type MentionSegment } from "./parseMentions";
 import { mentionNameKey } from "./mentionNameKey";
 import { useIsMemberMentionInert } from "./MentionLinkPolicyContext";

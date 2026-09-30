@@ -200,6 +200,105 @@
   color: var(--accent-text);
 }
 
+/* Amendment history (ENG-487). Sits below the facts, set off by a hairline so
+   "what the record says now" and "how it got there" read as two blocks. */
+.history {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.historyHeading {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.historyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.historyEntry {
+  padding: 14px 16px;
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  min-width: 0;
+}
+
+.historyMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+
+.historyActor {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* An author whose account is gone reads as a note about the entry. */
+.historyActorErased {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--ink-60);
+}
+
+.historyTime {
+  font-size: var(--text-13-5);
+  color: var(--ink-40);
+}
+
+.historyChanges {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.historyChange {
+  margin: 2px 0 0;
+  min-width: 0;
+}
+
+/* Long free text (an internal note, a withheld reason) wraps inside the
+   drawer: each value can shrink to the row and break anywhere. */
+.historyValues {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+
+.historyFrom,
+.historyTo {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.historyFrom {
+  color: var(--ink-60);
+}
+
+.historyTo {
+  color: var(--ink);
+}
+
+/* The arrow leads the new value, so a wrapped value still opens with it. */
+.historyArrow {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 6px;
+  color: var(--ink-40);
+}
+
 /* ── Editor ─────────────────────────────────────────────────────────────── */
 
 .formGrid {

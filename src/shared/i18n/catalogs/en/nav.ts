@@ -24,6 +24,9 @@ export const nav: Catalog = {
   updateEyebrow: "Update ready",
   updateHeadline: "We've been busy.",
   updateHeadlineAccent: "Come see what's new",
+  // Used instead of updateHeadlineAccent once the new build's version is known
+  // (useNextBuildVersion reads it from /version.json).
+  updateHeadlineAccentVersion: "Come see what's new in {version}",
   updateBody:
     "We've added a few fixes, improvements, and some new things since you last opened QueerPulse.",
   updateWhatChanged: "What changed",

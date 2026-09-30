@@ -1,6 +1,7 @@
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { currentUser, fullName } from "../../../features/members/data/members";
+import { currentUser } from "../../../features/members/data/demoCurrentUser";
+import { fullName } from "../../../features/members/data/fullName";
 import { initialsFromName } from "../../lib/initials";
 
 export interface AccountIdentity {

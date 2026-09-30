@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
 import {
   FiInbox,
   FiUsers,
@@ -34,8 +35,8 @@ import {
   ArticleCard,
 } from "./FeedCards";
 import { FeedBlockConfirmHost } from "./FeedBlockConfirmHost";
-import { FeedLoadMore } from "./FeedLoadMore";
 import { FeedMasonryGrid } from "./FeedMasonryGrid";
+import { FeedPager } from "./FeedPager";
 import { useFeedPage } from "./useFeedPage";
 import { FeedSidebar } from "./FeedSidebar";
 import { SuggestedPeopleStrip } from "./SuggestedPeopleStrip";
@@ -277,12 +278,22 @@ export function FeedPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     sidebarLoading,
     sidebarMembers,
     sidebarGatherings,
     sidebarConnections,
     tabCopy,
   } = useFeedPage();
+  // ENG-501: react-query also sets `isError` when only a NEXT page failed. The
+  // full error panel is for a feed with nothing loaded; once cards are on
+  // screen they stay, and the pager below carries its own inline retry.
+  const hasNothingLoadedError = isError && liveItems.length === 0;
+  // Stable, because it reaches `FeedLoadMore`'s IntersectionObserver effect
+  // deps; an inline arrow reconnected the observer on every render.
+  const requestFeedNextPage = useCallback(() => {
+    void fetchNextPage();
+  }, [fetchNextPage]);
 
   const emptyPanel = (
     <div className={styles.cardReveal}>
@@ -399,7 +410,7 @@ export function FeedPage() {
                         <FeedListBody
                           loading={loading}
                           demoMode={demoMode}
-                          isError={isError}
+                          isError={hasNothingLoadedError}
                           empty={empty}
                           emptyPanel={emptyPanel}
                           errorPanel={errorPanel}
@@ -411,18 +422,21 @@ export function FeedPage() {
                         {/* Live-only infinite-scroll pager. Self-guards on
                             `hasNextPage` (false in demo mode, where the feed hook is
                             disabled), so it renders nothing until there's a real
-                            next cursor page to fetch. */}
-                        {!demoMode && !loading && !isError && !empty && (
-                          <div data-masonry-full>
-                            <FeedLoadMore
-                              hasNextPage={hasNextPage}
-                              fetchNextPage={() => {
-                                void fetchNextPage();
-                              }}
-                              isFetchingNextPage={isFetchingNextPage}
-                            />
-                          </div>
-                        )}
+                            next cursor page to fetch. A failed next page turns it
+                            into an inline retry under the cards already loaded. */}
+                        {!demoMode &&
+                          !loading &&
+                          !hasNothingLoadedError &&
+                          !empty && (
+                            <div data-masonry-full>
+                              <FeedPager
+                                hasNextPage={hasNextPage}
+                                fetchNextPage={requestFeedNextPage}
+                                isFetchingNextPage={isFetchingNextPage}
+                                isFetchNextPageError={isFetchNextPageError}
+                              />
+                            </div>
+                          )}
                       </FeedMasonryGrid>
                     </PullToRefresh>
                   </div>

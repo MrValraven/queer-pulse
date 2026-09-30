@@ -222,6 +222,68 @@ export function voidLegalRequest(
   });
 }
 
+/** The fields of a register row an admin can amend, in the order the backend's
+ *  amendment diff walks them. Mirrors `LEGAL_REQUEST_AMENDABLE_FIELDS` in
+ *  `queerpulse-backend/src/legal-requests/entities/legal-request-amendment.entity.ts`.
+ *  The void columns are absent: striking a record has its own route and stamps
+ *  its own actor. */
+export const LEGAL_REQUEST_AMENDABLE_FIELDS = [
+  "requestingBody",
+  "jurisdiction",
+  "requestType",
+  "receivedOn",
+  "accountsAffected",
+  "outcome",
+  "dataDisclosed",
+  "memberNotifiedOn",
+  "accountsNotified",
+  "notificationWithheldReason",
+  "isUnderGagOrder",
+  "internalNote",
+] as const;
+
+export type LegalRequestAmendableField =
+  (typeof LEGAL_REQUEST_AMENDABLE_FIELDS)[number];
+
+/** A stored value of one amendable field, as it reads back from the row. */
+export type LegalRequestFieldValue =
+  string | number | boolean | string[] | null;
+
+/** One field's stored value before and after the amendment. */
+export interface LegalRequestFieldChange {
+  from: LegalRequestFieldValue;
+  to: LegalRequestFieldValue;
+}
+
+/** Only the fields whose stored value actually changed carry an entry. */
+export type LegalRequestAmendmentChanges = Partial<
+  Record<LegalRequestAmendableField, LegalRequestFieldChange>
+>;
+
+/**
+ * One entry in a record's amendment history (ENG-487): who amended it, when,
+ * and exactly which stored values moved. Mirrors `LegalRequestAmendmentDTO`
+ * (`legal-request-response.ts`). `actorUserId` stays server-side and the pane
+ * reads `actorName`, the write-time snapshot.
+ */
+export interface LegalRequestAmendmentDTO {
+  id: string;
+  /** Null on an entry whose author has since erased their account. */
+  actorName: string | null;
+  changes: LegalRequestAmendmentChanges;
+  createdAt: string;
+}
+
+/** GET /admin/legal-requests/:id/amendments. The whole history in one array,
+ *  newest first, admin-only like the record itself. 404 for an unknown id. */
+export function getLegalRequestAmendments(
+  id: string,
+): Promise<LegalRequestAmendmentDTO[]> {
+  return apiGet<LegalRequestAmendmentDTO[]>(
+    `/admin/legal-requests/${id}/amendments`,
+  );
+}
+
 /** True when the backend refused a write because the record had already been
  *  struck. A conflict, never a fault, and worth its own wording. */
 export function isLegalRequestConflict(error: unknown): boolean {

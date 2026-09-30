@@ -74,7 +74,11 @@ export function SubprofileEndorse({
         )}
 
         {endorsers.length > 0 && (
-          <div className={styles.cluster}>
+          <div className={`${styles.cluster} pp-endorsers`}>
+            {/* `pp-endorsers` is a global hook so a persona skin can restyle
+                the stack. The faces are decorative (the visually hidden line
+                below names every endorser), so they stay out of the
+                accessibility tree. */}
             {endorsers.slice(0, MAX_CLUSTER_FACES).map((endorser) => (
               <Avatar
                 key={endorser.slug}
@@ -85,6 +89,7 @@ export function SubprofileEndorse({
                 tint="plum"
                 size={28}
                 className={styles.clusterFace}
+                aria-hidden="true"
               />
             ))}
             <span className="visuallyHidden">

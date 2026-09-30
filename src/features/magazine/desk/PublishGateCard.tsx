@@ -11,6 +11,7 @@ import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { PublishGateItemDto } from "../api/pieces.api";
 import { CARE_GATE_OPEN_CODE } from "../api/piecePublish.api";
+import { publishGateLabel, publishRefusalReasons } from "./publishGateReason";
 import type { PiecePublishAction } from "./usePiecePublishAction";
 import styles from "./pieceTabs.module.css";
 
@@ -43,7 +44,7 @@ export function PublishGateCard({
   action,
   onOpenCare,
 }: PublishGateCardProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const reasonId = useId();
   const { isPublished, isScheduled, publishedAtLabel, publicHref, refusal } =
     action;
@@ -63,7 +64,7 @@ export function PublishGateCard({
             ) : (
               <FiX className={styles.openIcon} aria-hidden />
             )}
-            <span>{item.label}</span>
+            <span>{publishGateLabel(item.label, item.done, t, language)}</span>
           </div>
         ))}
       </div>
@@ -147,7 +148,12 @@ export function PublishGateCard({
           </b>
           {refusal.openGateItems.length > 0 ? (
             <ul className={styles.ticks}>
-              {refusal.openGateItems.map((reason) => (
+              {publishRefusalReasons(
+                refusal.openGateItems,
+                refusal.code,
+                t,
+                language,
+              ).map((reason) => (
                 <li key={reason} className={styles.open}>
                   <FiX aria-hidden />
                   {reason}

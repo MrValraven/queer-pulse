@@ -334,7 +334,7 @@ export const communities: Catalog = {
   "detail.leave.confirm.confirmCta": "Leave community",
   "detail.hero.andMore": "and {count} more",
   "detail.sidebar.organiser": "Organiser",
-  "detail.sidebar.messageCta": "Send a message",
+  "detail.sidebar.connectCta": "Connect",
   "detail.sidebar.nextGathering": "Next gathering",
   "detail.sidebar.rsvpCta": "RSVP",
   "detail.sidebar.relatedCommunities": "Related communities",
@@ -431,7 +431,7 @@ export const communities: Catalog = {
     "Search members by name, role or neighbourhood…",
   "detail.roster.verified": "Verified",
   "detail.roster.alsoIn": "Also a member of {names}",
-  "detail.roster.messageCta": "Message",
+  "detail.roster.connectCta": "Connect",
   "detail.roster.showingOf_one": "Showing {shown} of {count} member",
   "detail.roster.showingOf_other": "Showing {shown} of {count} members",
   "detail.roster.searchScopeNote":

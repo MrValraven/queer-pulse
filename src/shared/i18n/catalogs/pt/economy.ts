@@ -2623,7 +2623,7 @@ export const economy: Catalog = {
   "solidarityDirectory.badgeMember": "Comunidade",
   "solidarityDirectory.badgeVerified": "Perfil verificado",
   "solidarityDirectory.slidingScaleLabel": "Escala variável",
-  "solidarityDirectory.contactCta": "Contactar",
+  "solidarityDirectory.connectCta": "Conectar",
   "solidarityDirectory.empty.title": "Sem resultados para essa procura",
   "solidarityDirectory.empty.description":
     "Ainda ninguém corresponde a essa pesquisa. Tenta outra profissão ou limpa a pesquisa para ver todas as pessoas que oferecem cuidado em escala variável.",
@@ -3623,7 +3623,7 @@ export const economy: Catalog = {
     "{name} é uma pessoa membro em situação regular. Cada pessoa membro tem o voto de confiança de alguém que já está na comunidade.",
   "offerBoard.sidebarNoteVerified":
     "{name} é uma pessoa membro em situação regular e foi verificada pela equipa. Cada pessoa membro tem o voto de confiança de alguém que já está na comunidade.",
-  "offerBoard.sayHelloCta": "Diz olá a {name}",
+  "offerBoard.connectCta": "Conectar com {name}",
   "offerBoard.moreFromBoard": "Mais do <em>quadro</em>",
   "offerBoard.comingSoon.title": "Pedidos & Ofertas está a caminho",
   "offerBoard.comingSoon.body":
@@ -3829,9 +3829,9 @@ export const economy: Catalog = {
   // ── Localização do anúncio — área aproximada vs morada exata (Wave A) ──
   "housingListing.section.location": "Onde fica",
   "housingListing.location.approxNote":
-    "Por agora vês a área aproximada. A morada exata aparece assim que tu e a pessoa ficarem ligados.",
+    "Por agora vês a área aproximada. A morada exata aparece assim que tu e a pessoa ficarem conectados.",
   "housingListing.location.exactNote":
-    "Estão ligados, por isso esta é a localização exata.",
+    "Estão conectados, por isso esta é a localização exata.",
   // PRD-241, o terceiro estado: quem já tem acesso mas o anúncio não tem morada.
   "housingListing.location.noAddressOnFileNote":
     "Tens acesso à morada exata e quem anunciou ainda não a adicionou. Pede-lha quando combinares a visita.",

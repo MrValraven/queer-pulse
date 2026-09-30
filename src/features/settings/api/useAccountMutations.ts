@@ -49,7 +49,7 @@ export function useReauth() {
   );
   const beginReauth = useCallback(() => {
     if (demoMode) return;
-    beginReauthRedirect();
+    void beginReauthRedirect();
   }, [demoMode]);
   return { getReauthToken, beginReauth };
 }

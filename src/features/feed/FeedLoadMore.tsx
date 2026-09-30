@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button, Sending } from "../../shared/components/ui";
+import { LoadMoreButton, Sending } from "../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./FeedPage.module.css";
@@ -51,18 +51,15 @@ export function FeedLoadMore({
 
   return (
     <div ref={sentinelRef} className={styles.loadMore}>
-      <Button
-        type="button"
-        variant="ghost"
-        disabled={isFetchingNextPage}
-        onClick={() => fetchNextPage()}
-      >
-        {isFetchingNextPage ? (
-          <Sending label={t("feed:loadMore.loading")} />
-        ) : (
-          t("feed:loadMore.cta")
-        )}
-      </Button>
+      {/* Mounted only while no page has failed (FeedPager swaps it for its
+          Retry row), so its error state is always false here. */}
+      <LoadMoreButton
+        isFetchingNextPage={isFetchingNextPage}
+        isFetchNextPageError={false}
+        onLoadMore={fetchNextPage}
+        label={t("feed:loadMore.cta")}
+        loadingLabel={<Sending label={t("feed:loadMore.loading")} />}
+      />
     </div>
   );
 }

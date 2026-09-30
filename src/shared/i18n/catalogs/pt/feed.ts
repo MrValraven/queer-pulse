@@ -45,8 +45,8 @@ export const feed: Catalog = {
 
   "tab.connections.empty.title": "Ainda nada das tuas conexões",
   "tab.connections.empty.description":
-    "Assim que te ligares a pessoas aqui, o que publicarem ou organizarem aparece nesta aba.",
-  "tab.connections.empty.action": "Encontrar pessoas para te ligares",
+    "Assim que te conectares a pessoas aqui, o que publicarem ou organizarem aparece nesta aba.",
+  "tab.connections.empty.action": "Encontrar pessoas para te conectares",
   "tab.connections.error.title":
     "Não foi possível carregar o feed das tuas conexões",
   "tab.connections.error.description":
@@ -82,6 +82,8 @@ export const feed: Catalog = {
   // ── Paginação por scroll (FeedLoadMore) ─────────────────────────────────
   "loadMore.cta": "Carregar mais",
   "loadMore.loading": "A carregar mais…",
+  "loadMore.error": "Não conseguimos carregar mais do teu feed.",
+  "loadMore.footerAria": "Mais do teu feed",
 
   // ── Saudação ─────────────────────────────────────────────────────────────
   "greeting.morning": "Bom dia",
@@ -100,7 +102,7 @@ export const feed: Catalog = {
   "card.recap.eyebrow": "Resumo do convívio",
 
   // ── Etiquetas de ação partilhadas ────────────────────────────────────────
-  "action.connect": "Ligar",
+  "action.connect": "Conectar",
   "action.cancel": "Cancelar",
   "action.reply": "Responder",
   "action.done": "Concluído",
@@ -171,7 +173,7 @@ export const feed: Catalog = {
   "sidebar.newMembersEmpty": "Ainda não há pessoas novas para mostrar.",
   "sidebar.browseMembers": "Ver todas as pessoas",
   "sidebar.connectionsHeading": "As tuas conexões",
-  "sidebar.connectionsEmpty": "Ainda não te ligaste a ninguém.",
+  "sidebar.connectionsEmpty": "Ainda não te conectaste a ninguém.",
   "sidebar.connectionsCount_one": "{count} conexão",
   "sidebar.connectionsCount_other": "{count} conexões",
   "sidebar.manage": "Gerir",
@@ -192,7 +194,6 @@ export const feed: Catalog = {
   "card.forumThread.unlikeAria": "Remover gosto do tópico",
   "card.communityPost.flatContext": "Publicado para toda a gente",
   "action.viewProfileAria": "Ver o perfil de {name}",
-  "action.sayHi": "Dizer olá",
   "action.follow": "Seguir",
   "action.following": "A seguir",
   "action.profile": "Perfil",

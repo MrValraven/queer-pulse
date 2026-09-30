@@ -78,10 +78,13 @@ export function AdminDsarDrawer({
       foot={<AdminDsarOutcomeForm request={request} onUpdated={onUpdated} />}
     >
       <DetailRow label={t("admin:adminDsar.drawer.member")}>
-        {request.member?.name ?? t("admin:adminDsar.unknownMember")}
+        {request.member?.name ??
+          (request.isRequesterErased
+            ? t("admin:adminDsar.erasedMember")
+            : t("admin:adminDsar.unknownMember"))}
       </DetailRow>
       <DetailRow label={t("admin:adminDsar.drawer.asked")}>
-        {request.details}
+        {request.details || t("admin:adminDsar.detailsErased")}
       </DetailRow>
       {request.scopes.length > 0 && (
         <DetailRow label={t("admin:adminDsar.drawer.scopes")}>

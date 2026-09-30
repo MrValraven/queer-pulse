@@ -38,6 +38,7 @@ function AffiliationRow({
         alt=""
         tint="plum"
         size={30}
+        aria-hidden="true"
       />
       {affiliation.name}
       <span>{roleKey ? t(roleKey) : affiliation.role}</span>
@@ -104,6 +105,7 @@ export function SubprofileAffiliations({
                   alt=""
                   tint="plum"
                   size={26}
+                  aria-hidden="true"
                 />
                 {endorser.name}
               </>

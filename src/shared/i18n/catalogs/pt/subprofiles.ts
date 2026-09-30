@@ -40,6 +40,7 @@ export const subprofiles: Catalog = {
   "directory.showMore": "Ver mais",
   "directory.shownOfTotal": "{shown} de {total}",
   "directory.showMoreLoading": "A carregar…",
+  "directory.showMoreError": "Não conseguimos carregar mais personas.",
 
   // Separador "personas que segues" (PRD-208). Seguir nao dava nada a quem
   // seguia: a unica consequencia era uma notificacao para quem e dona da

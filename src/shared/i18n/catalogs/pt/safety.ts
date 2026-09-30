@@ -513,6 +513,8 @@ export const safety: Catalog = {
   "appealSubmit.success.filedLabel": "Registado",
   "appealSubmit.success.trackCta": "Acompanhar este recurso",
   "appealSubmit.success.howCta": "Como funciona a moderação",
+  "appealSubmit.awaitingReview":
+    "Já tens um recurso à espera de revisão. Alguém da moderação vai tratar dele.",
 
   // ── HateCrimePage.tsx ──────────────────────────────────────────────────
   "hateCrime.meta.title":

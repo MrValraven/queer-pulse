@@ -3,6 +3,7 @@ import { useRegisterSW } from "virtual:pwa-register/react";
 import { routes } from "../../../app/routeMap";
 import { useConsent } from "../../../app/providers/useConsent";
 import { PwaUpdateCard } from "./PwaUpdateCard";
+import { useNextBuildVersion } from "./useNextBuildVersion";
 
 /**
  * How long an open session may go without asking the server whether a newer
@@ -56,6 +57,9 @@ export function PwaUpdatePrompt() {
   // most of the screen. Showing both covered the banner's Reject button, so the
   // card waits its turn until the visitor has chosen.
   const { status: consentStatus } = useConsent();
+  // Fetched as soon as a build is waiting, so the version is usually in hand by
+  // the time consent lets the card show.
+  const nextVersion = useNextBuildVersion(needRefresh);
   const lastCheckedAtRef = useRef(0);
 
   useEffect(() => {
@@ -107,6 +111,7 @@ export function PwaUpdatePrompt() {
   return (
     <PwaUpdateCard
       updating={updating}
+      nextVersion={nextVersion}
       onReload={applyUpdate}
       onShowChanges={() => {
         // Point the URL at the Changelog first, so that reload lands there on

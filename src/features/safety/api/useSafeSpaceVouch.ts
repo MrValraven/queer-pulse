@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { DIRECTORY_KEY } from "../../marketing/api/useDirectory";
+import { DIRECTORY_KEY } from "../../marketing/api/directoryQueryKey";
 import type { SafeSpaceVouchRelationship } from "../vouchModal.data";
 import { vouchForSafeSpace } from "./safeSpaceVouch.api";
 import { SAFE_SPACES_KEY } from "./useSafeSpaces";

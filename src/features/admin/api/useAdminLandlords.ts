@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { ItemsPage } from "../../../shared/api/pagination";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import {
   ADMIN_LANDLORDS_DEMO,
   ADMIN_LANDLORD_INTRO_REQUESTS_DEMO,
@@ -49,13 +50,13 @@ export function useAdminLandlords(
     initialPageParam: 1,
     queryFn: ({ pageParam, signal }) => {
       if (demoMode) {
-        const needle = search.trim().toLowerCase();
+        const needle = foldForSearch(search.trim());
         return Promise.resolve(
           singlePage(
             ADMIN_LANDLORDS_DEMO.filter(
               (landlord) =>
                 (filter === "all" || landlord.status === filter) &&
-                (!needle || landlord.name.toLowerCase().includes(needle)),
+                (!needle || foldForSearch(landlord.name).includes(needle)),
             ),
           ),
         );

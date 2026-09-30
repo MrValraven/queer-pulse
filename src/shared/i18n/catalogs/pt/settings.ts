@@ -88,12 +88,40 @@ export const settings: Catalog = {
     "Todas as preferências foram repostas",
 
   // ── InterestsPane.tsx ─────────────────────────────────────────────────────
-  // NOTA: IDENTITIES.options / LOOKING_FOR.options (interests.data.ts) são o
-  // valor *guardado* de draft.identities / draft.lookingFor, lido noutros
-  // pontos da app (tipo Member, diretório) fora do âmbito desta varredura.
-  // Traduzir a etiqueta sem uma divisão id/label-key no mesmo âmbito
-  // dessincronizaria silenciosamente o valor guardado da sua apresentação —
-  // ficam em inglês, sinalizado no relatório para um follow-up coordenado.
+  // IDENTITIES.options / LOOKING_FOR.options (interests.data.ts) continuam a
+  // ser os valores guardados. As etiquetas resolvem-se por identityLabel /
+  // lookingForLabel para as chaves abaixo (DES-430).
+  "identity.chip.gay": "Gay",
+  "identity.chip.lesbian": "Lésbica",
+  "identity.chip.bisexual": "Bissexual",
+  "identity.chip.pansexual": "Pansexual",
+  "identity.chip.queer": "Queer",
+  "identity.chip.trans": "Trans",
+  "identity.chip.nonBinary": "Não-binárie",
+  "identity.chip.genderqueer": "Genderqueer",
+  "identity.chip.genderfluid": "Género fluido",
+  "identity.chip.asexual": "Assexual",
+  "identity.chip.aromantic": "Aromântique",
+  "identity.chip.intersex": "Intersexo",
+  "identity.chip.twoSpirit": "Two-spirit",
+  "identity.chip.questioning": "Em questionamento",
+  "identity.chip.ally": "Aliade",
+  "identity.chip.queerPersonOfColour": "Pessoa queer racializada",
+  "identity.chip.disabledOrChronicallyIll": "Com deficiência ou doença crónica",
+  "identity.chip.preferNotToSay": "Prefiro não dizer",
+  "lookingFor.chip.communityFriendship": "Comunidade e amizade",
+  "lookingFor.chip.professionalNetworking": "Rede profissional",
+  "lookingFor.chip.gatheringsEvents": "Convívios e eventos",
+  "lookingFor.chip.creativeCollaboration": "Colaboração criativa",
+  "lookingFor.chip.housingFlatmates": "Habitação e colegas de casa",
+  "lookingFor.chip.resourcesSupport": "Recursos e apoio",
+  "lookingFor.chip.activismOrganising": "Ativismo e organização",
+  "lookingFor.chip.datingRelationships": "Encontros e relações",
+  "lookingFor.chip.mentorshipGiving": "Mentoria (a dar)",
+  "lookingFor.chip.mentorshipSeeking": "Mentoria (a receber)",
+  "lookingFor.chip.readingCulture": "Leitura e cultura",
+  "lookingFor.chip.queerParenting": "Parentalidade queer",
+  "lookingFor.chip.nightlife": "Vida noturna",
   "interests.title": "Molda o que <em>vês.</em>",
   "interests.sub":
     "Isto é privado (não aparece no teu perfil). Ajuda-nos a mostrar-te convívios, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
@@ -220,7 +248,7 @@ export const settings: Catalog = {
     "Quando alguém te envia uma mensagem direta",
   "notifications.volume.connections.title": "Pedidos de conexão",
   "notifications.volume.connections.desc":
-    "Quando alguém pede para se ligar, envia um olá com o pedido, ou aceita o teu",
+    "Quando alguém pede para se conectar, envia um olá com o pedido, ou aceita o teu",
   "notifications.volume.vouches.title": "Votos de confiança",
   "notifications.volume.vouches.desc":
     "Quando alguém te dá um voto de confiança, ou a um espaço que geres",
@@ -857,56 +885,67 @@ export const settings: Catalog = {
 
   // ── dataExport.data.ts — DATA_TYPES (form checklist) ─────────────────────
   "dataExport.type.profile.label": "Perfil e identidade",
-  "dataExport.type.profile.sub": "Nome, pronomes, biografia, foto",
+  "dataExport.type.profile.sub":
+    "Nome, pronomes, biografia, foto, secções, @nomes, quadro, verificação e definições de privacidade",
   "dataExport.type.messages.label": "Mensagens",
-  "dataExport.type.messages.sub": "Todas as conversas diretas e de grupo",
   "dataExport.type.messages.subDetailed":
-    "As tuas mensagens e as conversas que denunciaste",
+    "As tuas mensagens, reações e estrelas, e as conversas que denunciaste",
   "dataExport.type.forumPosts.label": "Publicações no fórum",
-  "dataExport.type.forumPosts.sub": "Todas as publicações, respostas, reações",
+  "dataExport.type.forumPosts.sub":
+    "Os tópicos que começaste, as tuas respostas e versões anteriores, e votos e tópicos seguidos",
   "dataExport.type.events.label": "Eventos",
   "dataExport.type.events.sub":
-    "Confirmações de presença, histórico de participação",
+    "Os eventos que organizaste, as tuas confirmações e o que disseste a quem organiza, guardados, convites e definições",
   "dataExport.type.connections.label": "Conexões",
   "dataExport.type.connections.sub":
-    "Pessoas que segues ou com quem tens uma conexão",
+    "As tuas conexões, votos de confiança, bloqueios, silenciamentos, pessoas ocultadas, sugestões afastadas e convites",
   "dataExport.type.activityLog.label": "Registo de atividade",
   "dataExport.type.activityLog.sub":
-    "Histórico de início de sessão, sessões em dispositivos",
+    "O teu feed de atividade, sessões iniciadas, distintivos, XP, histórico de visualização e pedidos sobre a conta e os dados",
   "dataExport.type.subprofiles.label": "Personas",
   "dataExport.type.subprofiles.sub":
-    "Todas as personas que criaste, incluindo as não associadas",
+    "Todas as personas que tens, e recomendações, personas seguidas e convites",
   "dataExport.type.listings.label": "Anúncios no diretório local",
   "dataExport.type.listings.sub":
-    "Anúncios de negócios ou espaços que submeteste",
+    "Anúncios que és dono ou geres, nomeações de espaços seguros, anúncios de troca e as tuas ofertas de emprego",
   "dataExport.type.housing.label": "Habitação",
   "dataExport.type.housing.sub":
-    "Anúncios de habitação, perfil de colega de casa, pedidos de visita",
+    "Anúncios de habitação e em grupos, perfil de colega de casa, visitas, procuras guardadas e apresentações a senhorios",
   "dataExport.type.saved.label": "Itens guardados",
-  "dataExport.type.saved.sub": "Marcadores e coleções guardadas",
+  "dataExport.type.saved.sub":
+    "Tudo o que guardaste, com uma ligação para cada item, e as tuas listas, coleções e rascunhos",
   "dataExport.type.notifications.label": "Notificações",
   "dataExport.type.notifications.sub":
-    "O teu histórico e preferências de notificações",
+    "O teu histórico e definições de notificações, e os dispositivos onde recebes notificações push",
   "dataExport.type.consent.label": "Registos de consentimento",
   "dataExport.type.consent.sub": "A que deste consentimento, e quando",
   "dataExport.type.magazine.label": "Escrita na revista",
   "dataExport.type.magazine.sub":
-    "Os teus artigos e rascunhos, na íntegra, e tudo o que submeteste",
+    "Os teus artigos e rascunhos, submissões, comentários, propostas e traduções",
   "dataExport.type.communities.label": "Comunidades",
   "dataExport.type.communities.sub":
-    "Comunidades que geres, e todas as publicações que escreveste numa delas",
+    "Comunidades que geres ou a que pertences, as tuas publicações, reações, pedidos e escolhas do feed",
   "dataExport.type.volunteering.label": "Voluntariado",
   "dataExport.type.volunteering.sub":
-    "Funções a que te candidataste, e o que aconteceu a cada uma",
+    "Funções a que te candidataste, funções que publicaste e encomendas em que mostraste interesse",
   "dataExport.type.governance.label": "Governação",
   "dataExport.type.governance.sub":
-    "Os teus votos e as propostas que apresentaste",
+    "Os teus votos, propostas, subscrições, ideias para o roteiro, nomeações e formulários enviados",
   "dataExport.type.reviews.label": "Avaliações que escreveste",
   "dataExport.type.reviews.sub":
-    "Avaliações de espaços, de empregadores e de visitas a casas",
+    "Avaliações de espaços, empregadores, visitas e senhorios, e feedback sobre guias de recursos",
   "dataExport.type.media.label": "Ficheiros carregados",
   "dataExport.type.media.sub":
     "As tuas fotografias e imagens. Os ficheiros vêm com os formatos CSV e Ambos, que chegam num zip. O JSON lista-os sem os ficheiros.",
+  "dataExport.type.nowHistory.label": "Histórico do Agora",
+  "dataExport.type.nowHistory.sub":
+    "Todos os estados Agora que tiveste antes do atual",
+  "dataExport.type.membershipCards.label": "Cartões de membro",
+  "dataExport.type.membershipCards.sub":
+    "Os cartões que tens nas comunidades a que pertences, e quando cada um foi verificado à entrada",
+  "dataExport.type.reports.label": "Denúncias que fizeste",
+  "dataExport.type.reports.sub":
+    "O que denunciaste, porquê, em que ponto está cada denúncia, e os recursos que apresentaste",
 
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "O teu arquivo está pronto",
@@ -929,67 +968,139 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportIncluded ──────────────────────────
   "dataExport.included.title": "O que está <em>incluído</em>",
   "dataExport.included.sub":
-    "Um resumo de cada categoria de dados que guardamos e o que cada uma contém.",
+    "Tudo o que o teu arquivo pode conter, agrupado pelo que abrange.",
 
   // ── dataExport.data.ts — ACCORDION_ITEMS ─────────────────────────────────
   "dataExport.accordion.profile.title": "Perfil e identidade",
   "dataExport.accordion.profile.body":
-    "O teu nome de apresentação, nome de utilizador, pronomes, biografia, ocupação, foto de perfil e quaisquer ligações que tenhas adicionado ao teu perfil.",
+    "O teu email, nome, pronúncia, pronomes, frase de apresentação, biografia em inglês e português, localização, foto de perfil, identidades e etiquetas (incluindo quais são descobríveis), aquilo para que não estás aqui, quem pode ver o teu perfil, quando concluíste o registo, e quem te convidou (pelo id). O teu estado Agora atual e todos os anteriores, todas as personas que tens, incluindo as não associadas e as partilhadas, as recomendações, seguimentos e convites ligados a elas, e os itens, ligações sociais e afiliações das personas que são tuas. As tuas secções de perfil (competências, ligações, trabalho, o que te formou, comunidades em destaque, grupos e recortes de imagem), o teu histórico de @nomes, as publicações e respostas que deixaste no quadro, os teus níveis e pedidos de verificação com o histórico de alterações, quaisquer funções de staff que tenhas, a candidatura que submeteste para entrar, se for anterior à tua conta, e as tuas definições de privacidade e segurança.",
   "dataExport.accordion.messages.title": "Mensagens",
-  "dataExport.accordion.messages.body":
-    "Todas as mensagens diretas e conversas de grupo em que participaste. Inclui o conteúdo das mensagens, datas/horas e confirmações de leitura. As mensagens de pessoas que eliminaram a conta são anonimizadas.",
   "dataExport.accordion.messages.bodyDetailed":
-    "Todas as mensagens que enviaste, com a conversa a que pertencem, o tipo, qualquer anexo e se eram uma resposta ou um reencaminhamento. Para cada conversa em que denunciaste uma mensagem ou uma pessoa, o arquivo guarda também as mensagens de todas as pessoas nessa conversa, para teres a tua própria cópia do que aconteceu. Históricos muito longos guardam as mensagens mais recentes e ficam marcados como truncados. Quem eliminou a conta aparece como “Antigo membro”.",
-  "dataExport.accordion.forumPosts.title": "Publicações e respostas no fórum",
-  "dataExport.accordion.forumPosts.body":
-    "Cada publicação e resposta que fizeste no fórum, incluindo o tópico a que pertence, quaisquer edições e reações que deste ou recebeste.",
-  "dataExport.accordion.events.title": "Eventos",
-  "dataExport.accordion.events.body":
-    "Eventos a que confirmaste presença, eventos que marcaste como tendo interesse, confirmação de participação quando aplicável, e quaisquer mensagens relacionadas com eventos.",
+    'Todas as mensagens que enviaste, com a conversa a que pertencem, o tipo, qualquer anexo e se eram uma resposta ou um reencaminhamento. Para cada conversa em que denunciaste uma mensagem ou uma pessoa, o arquivo guarda também as mensagens de todas as pessoas nessa conversa, para teres a tua própria cópia do que aconteceu. Históricos muito longos guardam as mensagens mais recentes e ficam marcados como truncados. Quem eliminou a conta aparece como "Antigo membro". As tuas reações e estrelas em mensagens, as mensagens que ocultaste para ti, os convites para conversas em grupo que enviaste e recebeste, e se o teu nome aparece nas respostas que envias a partir de uma caixa de correio de negócio.',
   "dataExport.accordion.connections.title": "Conexões",
   "dataExport.accordion.connections.body":
-    "Uma lista das pessoas que segues, das pessoas que te seguem, e quaisquer relações de conexão explícitas. Não inclui os contactos de outras pessoas.",
-  "dataExport.accordion.activitySessions.title": "Atividade e sessões",
-  "dataExport.accordion.activitySessions.body":
-    "Datas/horas de início de sessão, tipos de dispositivo (navegador/SO), endereços IP (apenas dos últimos 90 dias) e informação de sessões ativas. Não registamos o histórico de navegação dentro da plataforma.",
-  "dataExport.accordion.preferences.title": "Preferências e definições",
-  "dataExport.accordion.preferences.body":
-    "As tuas preferências de notificações, definições de privacidade, seleção de idioma e qualquer outra configuração de conta que tenhas definido.",
-  "dataExport.accordion.payments.title": "Pagamentos (se aplicável)",
-  "dataExport.accordion.payments.body":
-    "Se contribuíste para eventos pagos ou para o fundo da comunidade, um registo das datas e montantes das transações. Não guardamos dados de cartão. Os pagamentos são processados pela Stripe.",
+    "Cada pedido de conexão que enviaste ou recebeste, com o estado, qualquer mensagem que o acompanhou e quando foi respondido. Os votos de confiança que deste e recebeste, com as respetivas notas. As outras pessoas aparecem apenas pelo seu id, porque cabe a elas partilhar os seus dados. As notas privadas que mantêns sobre as tuas conexões, e os convites para a plataforma que enviaste, com a tua nota e voto de confiança.",
 
   // ── dataExport.data.ts — shared accordion tag dictionary ─────────────────
+  "dataExport.accordion.posts.title": "Publicações no fórum e nas comunidades",
+  "dataExport.accordion.posts.body":
+    "Cada tópico que começaste no fórum e cada resposta que escreveste. Cada comunidade que geres, com o propósito, as regras e a mensagem de boas-vindas que escreveste para ela. Cada publicação e resposta que escreveste em qualquer comunidade, incluindo as que foram removidas depois, com a data em que foram removidas. Os teus votos em respostas e sondagens do fórum, os tópicos que segues, as versões anteriores das tuas publicações, os tópicos que co-escreveste, e as sondagens feitas nos tópicos que começaste. Cada comunidade a que pertences, com o teu papel, o nível de notificações e a data de entrada. As tuas reações a publicações de comunidades, os convites que enviaste e recebeste, os recursos que adicionaste, e as versões anteriores das tuas publicações e respostas em comunidades. Os pedidos que enviaste a uma comunidade ou à equipa da plataforma (para entrar, para ativar um espaço, uma nova etiqueta, ou uma proposta de clube de leitura, entre outros), as comunidades e os tópicos que afastaste do teu feed, e os tópicos que segues.",
+  "dataExport.accordion.gatherings.title": "Eventos e Vamos juntes",
+  "dataExport.accordion.gatherings.body":
+    "Os eventos que organizaste, com os seus detalhes, e cada confirmação de presença que fizeste, com o estado e qualquer lugar na lista de espera. O teu questionário do Vamos juntes, os eventos em que te inscreveste, as respostas que deste sobre as pessoas e os grupos que conheceste, e as tuas escolhas privadas de Não é para mim. O que disseste a quem organiza em cada confirmação (acompanhantes, necessidades de acesso e alimentares, pronomes, e a tua resposta personalizada), os eventos que guardaste, que coorganizas ou em que apareces na escalação, os convites de eventos que enviaste e recebeste, os anúncios que enviaste como organizador, as legendas das fotos que carregaste, as séries recorrentes que organizas, e as tuas definições de eventos (antecedência do lembrete, visibilidade predefinida e emails de eventos).",
+  "dataExport.accordion.safety.title":
+    "Segurança: bloqueios, silenciamentos e denúncias",
+  "dataExport.accordion.safety.body":
+    "As pessoas, personas e negócios que bloqueaste, e quando. As pessoas que silenciaste, ocultaste ou pediste para deixar de te ser sugeridas. Cada denúncia que fizeste: sobre o que era, o motivo que escolheste, as palavras que escreveste, em que ponto está e as suas datas. Os recursos que apresentaste contra uma decisão de moderação, com o teu argumento e a decisão que recebeste. Quem te bloqueou fica em privado, e as notas internas da moderação ficam com a equipa de moderação.",
+  "dataExport.accordion.housing.title": "Habitação, grupos e senhorios",
+  "dataExport.accordion.housing.body":
+    "Os anúncios de habitação que publicaste, o teu perfil de colega de casa completo, os perfis de colega de casa que marcaste com gosto ou recusaste, as visitas que pediste e as visitas aos teus anúncios, as tuas procuras de casa guardadas, e os teus pedidos para entrar em grupos de habitação e cooperativas. Nas visitas aos teus anúncios, quem pediu aparece apenas pelo id. Os anúncios que publicaste num grupo de habitação, com o ponto em que cada um está. As apresentações a senhorios que pediste, com o nome, a nota e o email de contacto que deste e a resposta da equipa, e os senhorios que submeteste ao diretório.",
+  "dataExport.accordion.writing.title": "Escrita na revista e avaliações",
+  "dataExport.accordion.writing.body":
+    "Os teus artigos e rascunhos da revista na íntegra, as histórias que submeteste com a decisão da redação sobre cada uma, e as peças que te foram atribuídas. Cada avaliação que escreveste de um espaço local, de um empregador ou de uma visita a uma casa, com qualquer resposta que quem gere o espaço tenha publicado. Os comentários que deixaste sob artigos e na margem editorial, as mensagens que enviaste numa peça da redação, as propostas e candidaturas de escrita que enviaste com a resposta da redação, e os artigos que traduziste. Os pagamentos pelas peças que escreveste, e o ponto em que cada um está. As recomendações de senhorios que escreveste, com qualquer resposta que o senhorio tenha publicado, e as tuas classificações de guias e as sugestões que enviaste, com a resposta da equipa.",
+  "dataExport.accordion.participation.title":
+    "Voluntariado, governação e cartões de membro",
+  "dataExport.accordion.participation.body":
+    "As funções de voluntariado a que te candidataste e o que aconteceu a cada uma. Os teus votos, cada um com a proposta a que respondia, e as propostas que apresentaste. Os cartões de membro que tens, com a comunidade e o estado de cada um. As propostas que subscreveste, as ideias para o roteiro que submeteste, os teus comentários e votos no roteiro, os changemakers que nomeaste, e os formulários que enviaste à equipa. As funções que publicaste para outras pessoas se voluntariarem, as equipas de oportunidades a que pertences, e as encomendas em que mostraste interesse. Cada vez que um dos teus cartões foi verificado numa porta, com o evento e o resultado.",
+  "dataExport.accordion.activity.title":
+    "Atividade, itens guardados e notificações",
+  "dataExport.accordion.activity.body":
+    "Os momentos que o teu feed de atividade registou, como publicações, eventos e leituras. Tudo o que guardaste, com uma ligação de volta. O teu histórico de notificações, se leste cada uma, e as tuas definições de notificações. As listas em que organizaste os teus itens guardados, as coleções que fizeste, e os teus rascunhos por terminar. As vezes que desativaste a tua conta, os pedidos de eliminação que fizeste, e os pedidos sobre os teus direitos de dados que apresentaste. Os distintivos que ganhaste, se ocultaste cada um do teu perfil, os prémios que resgataste, e cada entrada no teu registo de XP. Até onde chegaste em cada título do cinema, e quando uma visualização contou como vista.",
+  "dataExport.accordion.consent.title":
+    "Consentimento e aceitação de políticas",
+  "dataExport.accordion.consent.body":
+    "Cada escolha que fizeste sobre análise e monitorização de erros, com a versão da política e quando a fizeste. As versões dos Termos e das Diretrizes da Comunidade associadas à tua conta, e cada aceitação que registámos, com a data.",
+  "dataExport.accordion.media.title": "Ficheiros carregados",
+  "dataExport.accordion.media.body":
+    "Uma lista de todos os ficheiros que carregaste, como fotografias e as imagens e documentos que enviaste em mensagens, com o tamanho e a data de cada um. Os ficheiros vêm com os formatos CSV e Ambos, que chegam num zip. Uma coleção muito grande tem um limite, e o arquivo lista o que ficou de fora.",
+  "dataExport.tag.email": "email",
+  "dataExport.tag.personas": "personas",
+  "dataExport.tag.nowHistory": "estados Agora anteriores",
+  "dataExport.tag.threads": "tópicos",
+  "dataExport.tag.communitiesYouRun": "comunidades que geres",
+  "dataExport.tag.communityPosts": "publicações em comunidades",
+  "dataExport.tag.hostedEvents": "eventos que organizaste",
+  "dataExport.tag.goTogether": "Vamos juntes",
+  "dataExport.tag.vouches": "votos de confiança",
+  "dataExport.tag.reportsFiled": "denúncias que fizeste",
+  "dataExport.tag.housingListings": "anúncios de habitação",
+  "dataExport.tag.flatmateProfile": "perfil de colega de casa",
+  "dataExport.tag.viewings": "visitas",
+  "dataExport.tag.joinRequests": "pedidos de entrada",
+  "dataExport.tag.directoryListings": "anúncios no diretório",
+  "dataExport.tag.articles": "artigos",
+  "dataExport.tag.drafts": "rascunhos",
+  "dataExport.tag.submissions": "submissões",
+  "dataExport.tag.reviews": "avaliações",
+  "dataExport.tag.volunteering": "voluntariado",
+  "dataExport.tag.votes": "votos",
+  "dataExport.tag.proposals": "propostas",
+  "dataExport.tag.membershipCards": "cartões de membro",
+  "dataExport.tag.activityFeed": "feed de atividade",
+  "dataExport.tag.savedItems": "itens guardados",
+  "dataExport.tag.privacyChoices": "escolhas de privacidade",
+  "dataExport.tag.policyAcceptances": "aceitação de políticas",
+  "dataExport.tag.photos": "fotografias",
+  "dataExport.tag.fileList": "lista de ficheiros",
+  "dataExport.accordion.devices.title": "Sessões e dispositivos",
+  "dataExport.accordion.devices.body":
+    "Cada sessão iniciada na tua conta: o dispositivo e o navegador em que correu, quando começou, quando foi usada pela última vez, e quando expirou ou foi terminada. Os dispositivos onde recebes notificações push, com o nome do dispositivo e as datas. Os códigos de sessão e as chaves push ficam fora do arquivo, porque permitiriam a alguém agir como tu.",
+  "dataExport.tag.mutedMembers": "pessoas silenciadas",
+  "dataExport.tag.hiddenMembers": "pessoas ocultadas",
+  "dataExport.tag.flatmateLikes": "gostos e recusas de colegas de casa",
+  "dataExport.tag.savedSearches": "procuras guardadas",
+  "dataExport.tag.notificationSettings": "definições de notificações",
+  "dataExport.tag.signInSessions": "sessões iniciadas",
+  "dataExport.tag.pushDevices": "dispositivos push",
+  "dataExport.accordion.listings.title":
+    "Anúncios do diretório, espaços seguros e trabalho",
+  "dataExport.accordion.listings.body":
+    "Os anúncios do diretório que são teus ou que ajudas a gerir, com as tuas reivindicações de propriedade, sugestões de edição, lugares de cogestão, ofertas de propriedade com a nota da equipa, pedidos e perguntas públicas que enviaste ou respondeste, os votos de utilidade que deste, e os teus rascunhos de anúncios por terminar. As nomeações de espaços seguros que fizeste, com a resposta da equipa, os sinalizadores que levantaste, e os votos de confiança que deste. Os teus anúncios de troca e as propostas que fizeste, e as empresas, ofertas de emprego, candidaturas e ligações a parceiros de que fazes parte.",
+  "dataExport.tag.profileSections": "secções de perfil",
+  "dataExport.tag.handles": "histórico de @nomes",
+  "dataExport.tag.board": "publicações no quadro",
+  "dataExport.tag.verification": "verificação",
+  "dataExport.tag.privacySettings": "definições de privacidade e segurança",
+  "dataExport.tag.joinApplication": "a tua candidatura original",
+  "dataExport.tag.staffRoles": "funções de staff",
+  "dataExport.tag.reactionsAndStars": "reações e estrelas",
+  "dataExport.tag.votesAndFollows": "votos e tópicos seguidos",
+  "dataExport.tag.communityRoles": "papéis em comunidades",
+  "dataExport.tag.feedChoices": "escolhas do feed",
+  "dataExport.tag.rsvpDetails": "detalhes das confirmações",
+  "dataExport.tag.eventSettings": "definições de eventos",
+  "dataExport.tag.connectionNotes": "notas sobre as tuas conexões",
+  "dataExport.tag.invitesSent": "convites que enviaste",
+  "dataExport.tag.dismissedSuggestions": "sugestões afastadas",
+  "dataExport.tag.appeals": "recursos que apresentaste",
+  "dataExport.tag.groupListings": "anúncios em grupos",
+  "dataExport.tag.landlordIntros": "apresentações a senhorios",
+  "dataExport.tag.safeSpaces": "nomeações de espaços seguros",
+  "dataExport.tag.barter": "anúncios de troca",
+  "dataExport.tag.work": "empresas e ofertas de emprego",
+  "dataExport.tag.magazineContributions": "contribuições para a revista",
+  "dataExport.tag.magazinePayments": "pagamentos pela tua escrita",
+  "dataExport.tag.landlordRecommendations": "recomendações de senhorios",
+  "dataExport.tag.resourceFeedback": "feedback sobre guias de recursos",
+  "dataExport.tag.roadmapAndNominations": "ideias para o roteiro e nomeações",
+  "dataExport.tag.cardScans": "verificações de cartão",
+  "dataExport.tag.volunteerRoles": "funções que publicaste",
+  "dataExport.tag.listsAndCollections": "listas e coleções",
+  "dataExport.tag.accountRequests": "pedidos sobre a conta e os dados",
+  "dataExport.tag.badgesAndXp": "distintivos e XP",
+  "dataExport.tag.watchHistory": "histórico de visualização",
   "dataExport.tag.name": "nome",
   "dataExport.tag.pronouns": "pronomes",
   "dataExport.tag.bio": "biografia",
   "dataExport.tag.photo": "foto",
-  "dataExport.tag.occupation": "ocupação",
-  "dataExport.tag.links": "ligações",
   "dataExport.tag.content": "conteúdo",
   "dataExport.tag.timestamps": "datas e horas",
-  "dataExport.tag.readReceipts": "confirmações de leitura",
   "dataExport.tag.attachments": "anexos",
-  "dataExport.tag.posts": "publicações",
   "dataExport.tag.replies": "respostas",
-  "dataExport.tag.edits": "edições",
-  "dataExport.tag.reactions": "reações",
   "dataExport.tag.rsvps": "confirmações de presença",
-  "dataExport.tag.attendance": "presença",
-  "dataExport.tag.interest": "interesse",
-  "dataExport.tag.follows": "quem segues",
   "dataExport.tag.connections": "conexões",
   "dataExport.tag.blockedList": "lista de bloqueados",
-  "dataExport.tag.logins": "inícios de sessão",
-  "dataExport.tag.deviceTypes": "tipos de dispositivo",
-  "dataExport.tag.ipAddresses": "endereços IP",
-  "dataExport.tag.sessions": "sessões",
   "dataExport.tag.notifications": "notificações",
-  "dataExport.tag.privacy": "privacidade",
-  "dataExport.tag.language": "idioma",
-  "dataExport.tag.appearance": "aparência",
-  "dataExport.tag.transactions": "transações",
-  "dataExport.tag.amounts": "montantes",
   "dataExport.tag.dates": "datas",
   "dataExport.tag.reportedThreads": "conversas denunciadas",
   "dataExport.demoArchiveNote":
@@ -1091,7 +1202,7 @@ export const settings: Catalog = {
   "deleteAccount.wh.delete.messagesDeleted":
     "As mensagens que enviaste <strong>são eliminadas de todas as conversas</strong>. Quem as recebeu também as perde.",
   "deleteAccount.wh.delete.postsRemoved":
-    "As tuas publicações no fórum são <strong>apagadas definitivamente</strong>. As conversas que começaste ficam abertas, sem o teu nome, quando outras pessoas lhes responderam ou quando deste crédito de coautoria a alguém, e o que escreveram continua lá.",
+    "As publicações e respostas que escreveste nas comunidades continuam visíveis, sem o teu nome. As tuas publicações no fórum são <strong>apagadas definitivamente</strong>. As conversas que começaste ficam abertas, sem o teu nome, quando outras pessoas lhes responderam ou quando deste crédito de coautoria a alguém, e o que escreveram continua lá.",
   "deleteAccount.wh.delete.emailSuppressed":
     "O teu endereço de email é <strong>adicionado a uma lista de supressão</strong> para não recriarmos a tua conta por acidente.",
   "deleteAccount.wh.delete.exportFirst":

@@ -30,7 +30,11 @@ export function AdminDsarRow({
   const { t } = useTranslation();
   const fmt = useFormat();
   const clock = dsarClockView(request);
-  const memberName = request.member?.name ?? t("admin:adminDsar.unknownMember");
+  const memberName =
+    request.member?.name ??
+    (request.isRequesterErased
+      ? t("admin:adminDsar.erasedMember")
+      : t("admin:adminDsar.unknownMember"));
   const rowClassName = [
     styles.row,
     request.isOverdue
@@ -61,7 +65,9 @@ export function AdminDsarRow({
         <div className={styles.rowMeta}>
           {t("admin:adminDsar.row.filedBy", { name: memberName })}
         </div>
-        <p className={styles.rowDetails}>{request.details}</p>
+        <p className={styles.rowDetails}>
+          {request.details || t("admin:adminDsar.detailsErased")}
+        </p>
         <div className={styles.rowDates}>
           {t("admin:adminDsar.row.dueBy", {
             date: shortDate(fmt, request.dueBy),

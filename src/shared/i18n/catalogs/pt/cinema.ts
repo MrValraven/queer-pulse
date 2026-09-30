@@ -364,7 +364,7 @@ export const cinema: Catalog = {
   "filmmaker.hero.tipCta":
     "Dar gorjeta a {name} · 100% vai diretamente para essa pessoa",
   "filmmaker.hero.requestScreeningCta": "Pedir uma exibição",
-  "filmmaker.hero.connectCta": "Ligar-te na QueerPulse",
+  "filmmaker.hero.connectCta": "Conectar na QueerPulse",
   "filmmaker.main.filmographyTitle": "Filmografia <em>no Cinema</em>",
   "filmmaker.main.filmsTotal_one": "{count} filme no total",
   "filmmaker.main.filmsTotal_other": "{count} filmes no total",

@@ -56,7 +56,7 @@ export function ProfileHeroActions({
           // preview mode doesn't leave an empty, misleading action row.
           <>
             <Button size="lg" disabled>
-              {t("members:profile.hero.sayHelloCta")}
+              {t("members:profile.hero.connectCta")}
             </Button>
             <Button size="lg" variant="ghost" disabled>
               {t("members:profile.hero.vouchForCta", {
@@ -100,7 +100,7 @@ export function ProfileHeroActions({
               >
                 {connected
                   ? t("connect:contact.message")
-                  : t("members:profile.hero.sayHelloCta")}
+                  : t("members:profile.hero.connectCta")}
               </Button>
             )}
             {/* Vouching steps aside while a request is waiting: three large

@@ -4,6 +4,7 @@ import { FiCheck } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { ApiError } from "../../shared/api/client";
 import { describeError } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -214,11 +215,23 @@ function AppealForm({
             setIsAlreadyDecided(true);
             return;
           }
-          // Everything else stays a toast carrying the specific backend reason
-          // (e.g. a 409 "you already have an appeal awaiting review") rather
-          // than faking success.
+          // The other 409 `POST /appeals` sends: an appeal on this decision is
+          // already awaiting review. It carries no `code`, and the only coded
+          // 409 (APPEAL_ALREADY_DECIDED) is handled above, so the status alone
+          // names it, in the member's language.
+          if (error instanceof ApiError && error.status === 409) {
+            showToast(t("safety:appealSubmit.awaitingReview"), "error", 6000);
+            return;
+          }
+          // Everything else stays a toast carrying the reason `describeError`
+          // resolves for the member's language, so a failure never fakes
+          // success.
           showToast(
-            describeError(t("safety:appealSubmit.errorFrame"), error),
+            describeError(
+              t("safety:appealSubmit.errorFrame"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
             "error",
             6000,
           );

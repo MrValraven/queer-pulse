@@ -1,35 +1,103 @@
 /* Quest persona skin palette. Lives in tokens/ so persona-skins.css only
    references var().
 
-   One palette serves both Quest concepts behind `?questSkin=`: the character
-   sheet (parchment ground, stat-block panels) and the hex map (map ground,
-   inked lines). Every text role is measured against the ground it sits on;
-   the ratios in the comments are WCAG 2 contrast, light then dark.
+   The Quest skin borrows the look of a digital adventurer's handbook: a
+   blue-black ground with gold-framed panels in the dark theme, and a
+   parchment compendium page with white panels in the light theme. The values
+   are the primitive steps of that look (the grey, red, gold and parchment
+   ramps), picked per role. Every text role is measured against the ground it
+   sits on; the ratios in the comments are WCAG 2 contrast on the panel, then
+   on the page ground, unless the comment names another surface.
 
    `:root` shares its block with `[data-theme="light"]` for the same reason
    tokens/colors.css does: a subtree that opts back into light inside a dark
-   document re-declares these values instead of inheriting the dark ones. */
+   document re-declares the light values for itself. */
 :root,
 [data-theme="light"] {
-  --skin-quest-ground: #f3ead6; /* parchment */
-  --skin-quest-ink: #2b2118; /* 13.2:1 on ground, 14.4:1 on panel */
-  --skin-quest-ink-rgb: 43, 33, 24;
-  --skin-quest-rule: #b89a6a; /* ruled lines and panel borders, decorative */
-  --skin-quest-accent: #7a2e1f; /* oxblood headings and checks, 7.8:1 */
-  --skin-quest-panel: #faf4e6; /* stat-block panel fill */
-  --skin-quest-map-ground: #e9e2cf;
-  --skin-quest-map-line: #8c7b5a; /* inked borders, 3.2:1 (the hex grid uses the ink token) */
-  --skin-quest-map-sea: #24505c; /* map labels and compass corners, 6.8:1 */
+  /* Surfaces: the compendium page. */
+  --skin-quest-ground: #f5f3ee; /* parchment-50 */
+  --skin-quest-panel: #ffffff; /* white panel, lifted by --shadow-e2 */
+  --skin-quest-frame: #e8e5d9; /* parchment-100 panel edge, decorative */
+  --skin-quest-rule: #ee8600; /* compendium amber hairline under headings, decorative */
+  /* The warm edge that sets "At the table" apart as a callout, decorative. */
+  --skin-quest-callout-frame: #d9d2c0;
+  /* The 1px edge of the more-menu popover: the callout's warm edge. */
+  --skin-quest-popover-edge: var(--skin-quest-callout-frame);
+  --skin-quest-stripe: #f5f3ee; /* table row stripe inside a white panel */
+  /* Text. Headings and body share the ink on the page. */
+  --skin-quest-ink: #12181c; /* headings: 17.9:1, 16.1:1 */
+  --skin-quest-ink-rgb: 18, 24, 28;
+  --skin-quest-text: #12181c; /* body: 17.9:1, 16.1:1 */
+  --skin-quest-muted: #525c63; /* grey-600: 6.8:1, 6.2:1, 5.8:1 on a chip */
+  --skin-quest-label: #885d1e; /* gold-700 caps labels: 5.8:1, 5.2:1 */
+  --skin-quest-link: #a7080b; /* red-700: 7.8:1, 7.1:1 */
+  --skin-quest-accent: #a7080b; /* ticks and emphasis, same red-700 */
+  /* Chips. */
+  --skin-quest-chip: #ecedee; /* grey-100 */
+  --skin-quest-chip-ink: #12181c; /* 15.3:1 on the chip */
+  /* Buttons. The white label sits on the fill, so the ratios are label on
+     fill. red-400 (#fe4736) is 3.4:1 under white and never carries a label. */
+  --skin-quest-button: #e40712; /* red-500 signature red: 4.8:1 */
+  --skin-quest-button-hover: #a7080b; /* red-700: 7.8:1 */
+  --skin-quest-button-kept: #885d1e; /* gold-700, Following/Endorsed: 5.8:1 */
+  --skin-quest-on-button-rgb: 255, 255, 255;
+  --skin-quest-button-line: #12181c; /* ghost outline: 17.9:1, 16.1:1 */
+  --skin-quest-button-line-hover: #a7080b; /* 7.8:1 */
+  /* "Report" in the more-menu panel: 7.8:1 on the panel, 7.0:1 on its
+     hover wash. */
+  --skin-quest-danger: #a7080b;
+  /* Avatar frame. */
+  --skin-quest-avatar-ring: #c19429; /* gold-500 ring, decorative */
+  --skin-quest-avatar-fill: #e8e5d9; /* initials in ink: 14.2:1 */
+  --skin-quest-avatar-ink: #12181c;
+  /* Small avatar discs (the endorser stack, the quotes, the affiliation
+     rows), initials in the avatar ink: 14.2:1. */
+  --skin-quest-face-fill: #e8e5d9;
+  /* Text selection, gold-300. Selected text turns ink: 14.3:1 over it on
+     the panel, 13.6:1 on the ground. */
+  --skin-quest-selection: rgba(236, 207, 131, 0.55);
 }
 
 [data-theme="dark"] {
-  --skin-quest-ground: #1d1812;
-  --skin-quest-ink: #efe4cc; /* 14.0:1 on ground, 12.8:1 on panel */
-  --skin-quest-ink-rgb: 239, 228, 204;
-  --skin-quest-rule: #6f5c3d;
-  --skin-quest-accent: #e0937f; /* 7.3:1 on ground, 6.6:1 on panel */
-  --skin-quest-panel: #26201a;
-  --skin-quest-map-ground: #1a1712;
-  --skin-quest-map-line: #8a7853; /* 4.2:1 on the map ground */
-  --skin-quest-map-sea: #8fc3cf; /* 9.3:1 */
+  /* Surfaces: the homepage. */
+  --skin-quest-ground: #12181c; /* grey-900 */
+  --skin-quest-panel: #232b2f; /* grey-800 */
+  --skin-quest-frame: #c3a76e; /* border gold: 6.2:1 on the panel, 7.7:1 on the ground */
+  --skin-quest-rule: #374045; /* grey-700 hairline under headings, decorative */
+  --skin-quest-callout-frame: #c3a76e; /* the same gold frame as every panel */
+  --skin-quest-popover-edge: var(--skin-quest-callout-frame);
+  --skin-quest-stripe: #1c2327; /* one step between grey-900 and grey-800 */
+  /* Text. Near-white headings over light grey body copy. */
+  --skin-quest-ink: #f5f3ee; /* headings: 13.0:1, 16.1:1 */
+  --skin-quest-ink-rgb: 245, 243, 238;
+  --skin-quest-text: #c4cbce; /* grey-300 body: 8.8:1, 10.9:1, 9.7:1 on a stripe */
+  --skin-quest-muted: #a2acb2; /* grey-400: 6.2:1, 7.7:1, 4.6:1 on a chip */
+  --skin-quest-label: #c3a76e; /* border gold caps labels: 6.2:1, 7.7:1 */
+  --skin-quest-link: #eccf83; /* gold-300: 9.5:1, 11.8:1 */
+  /* red-400 ticks, 4.2:1 on the panel and 5.3:1 on the ground: a graphic, so
+     3:1 is its floor. Emphasis text reads the label gold. */
+  --skin-quest-accent: #fe4736;
+  /* Chips. */
+  --skin-quest-chip: #374045; /* grey-700 */
+  --skin-quest-chip-ink: #ecedee; /* 9.0:1 on the chip */
+  /* Buttons: the same fills as light, label on fill. */
+  --skin-quest-button: #e40712; /* 4.8:1 */
+  --skin-quest-button-hover: #a7080b; /* 7.8:1 */
+  --skin-quest-button-kept: #885d1e; /* 5.8:1 */
+  --skin-quest-on-button-rgb: 255, 255, 255;
+  --skin-quest-button-line: #c3a76e; /* ghost outline: 6.2:1, 7.7:1 */
+  --skin-quest-button-line-hover: #eccf83; /* 9.5:1, 11.8:1 */
+  /* "Report" in the more-menu panel, a lifted red-400: 5.7:1 on the panel,
+     4.9:1 on its hover wash. */
+  --skin-quest-danger: #ff7a6b;
+  /* Avatar frame. */
+  --skin-quest-avatar-ring: #c3a76e;
+  --skin-quest-avatar-fill: #232b2f; /* initials in gold-300: 9.5:1 */
+  --skin-quest-avatar-ink: #eccf83;
+  /* Small avatar discs, a step lighter than the panel so they read on it:
+     grey-700, initials in gold-300 at 7.0:1. */
+  --skin-quest-face-fill: #374045;
+  /* Text selection, gold-500. Selected text turns ink: 7.9:1 over it on
+     the panel. */
+  --skin-quest-selection: rgba(193, 148, 41, 0.3);
 }

@@ -8,8 +8,8 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
 import { logError } from "../../shared/observability/logger";
-import { currentUser, currentUserEmail } from "./data/members";
 import { DATA_TYPES } from "../settings/dataExport.data";
 import {
   getExportJob,
@@ -45,30 +45,55 @@ function isPolling(status: ExportStatus | undefined): boolean {
 }
 
 /**
- * A small, genuinely machine-readable JSON archive of the mock user for the
- * DEMO-mode staged simulation below, so "Download" yields a real file even
- * with no backend — mirrors `useExportFlow.ts`'s `buildDemoArchive`, kept
- * separate because this sheet's poll loop (react-query `refetchInterval`)
- * drives the staged queued→processing→ready transitions differently.
+ * The demo-mode staged job update: `queued` -> `processing` -> a real
+ * downloadable blob, on the same three-poll cadence the component always
+ * used. Kept outside the component (and taking its refs as arguments) so
+ * `AccountDataExport` stays under the 200-line component budget; `jobQuery`'s
+ * `queryFn` below calls it unchanged in demo mode.
  */
-function buildDemoExportUrl(): string {
-  const archive = {
-    manifest: {
-      exportedAt: new Date().toISOString(),
-      schemaVersion: "1.0",
-      format: "json",
-      categories: DATA_TYPES.map((type) => type.id),
-    },
-    profile: {
-      name: `${currentUser.first} ${currentUser.last}`,
-      pronouns: currentUser.pronouns,
-      email: currentUserEmail,
-    },
-  };
-  const blob = new Blob([JSON.stringify(archive, null, 2)], {
-    type: "application/json",
-  });
-  return URL.createObjectURL(blob);
+async function buildDemoJobUpdate(
+  demoStageRef: { current: number },
+  demoBlobRef: { current: string | null },
+  jobId: string,
+  t: TFunction,
+): Promise<ExportJob> {
+  demoStageRef.current += 1;
+  const now = new Date().toISOString();
+  if (demoStageRef.current <= 1) {
+    return { jobId, status: "queued", requestedAt: now };
+  }
+  if (demoStageRef.current === 2) {
+    return { jobId, status: "processing", requestedAt: now };
+  }
+  if (demoBlobRef.current) URL.revokeObjectURL(demoBlobRef.current);
+  try {
+    const { buildDemoArchiveManifest } =
+      await import("../settings/demoExportArchive.data");
+    const archive = buildDemoArchiveManifest(
+      DATA_TYPES.map((type) => type.id),
+      "json",
+      t("settings:dataExport.demoArchiveNote"),
+    );
+    const blob = new Blob([JSON.stringify(archive, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    demoBlobRef.current = url;
+    return {
+      jobId,
+      status: "ready",
+      requestedAt: now,
+      downloadUrl: url,
+      sizeBytes: 2048,
+      expiresAt: new Date(Date.now() + 7 * DAY_MS).toISOString(),
+    };
+  } catch (err) {
+    // A chunk that fails to load must not leave the sheet polling forever
+    // off the last "processing" data. Rethrow so the component's `isJobGone`
+    // resets it exactly as a live 404 or network failure does.
+    logError(err, { where: "AccountDataExport.demoArchive" });
+    throw err;
+  }
 }
 
 /**
@@ -148,38 +173,28 @@ export function AccountDataExport() {
   const jobQuery = useQuery<ExportJob>({
     queryKey: ["account-export-job", jobId, demoMode],
     enabled: jobId != null,
-    queryFn: async () => {
-      if (demoMode) {
-        demoStageRef.current += 1;
-        const now = new Date().toISOString();
-        if (demoStageRef.current <= 1) {
-          return { jobId: jobId!, status: "queued", requestedAt: now };
-        }
-        if (demoStageRef.current === 2) {
-          return { jobId: jobId!, status: "processing", requestedAt: now };
-        }
-        if (demoBlobRef.current) URL.revokeObjectURL(demoBlobRef.current);
-        const url = buildDemoExportUrl();
-        demoBlobRef.current = url;
-        return {
-          jobId: jobId!,
-          status: "ready",
-          requestedAt: now,
-          downloadUrl: url,
-          sizeBytes: 2048,
-          expiresAt: new Date(Date.now() + 7 * DAY_MS).toISOString(),
-        };
-      }
-      return getExportJob(jobId!);
-    },
+    queryFn: async () =>
+      demoMode
+        ? buildDemoJobUpdate(demoStageRef, demoBlobRef, jobId!, t)
+        : getExportJob(jobId!),
     // A stored id can outlive its job (the archive is purged after a week), so
     // don't sit retrying a 404 — clear it below and offer a fresh request.
     retry: false,
     refetchInterval: (query: Query<ExportJob>) =>
-      isPolling(query.state.data?.status) ? POLL_MS : false,
+      // A failed fetch (demo import/build failure or a live 404) must stop
+      // the interval itself: it leaves `data` on its last "processing" value,
+      // which would otherwise read as still-polling forever.
+      query.state.error
+        ? false
+        : isPolling(query.state.data?.status)
+          ? POLL_MS
+          : false,
   });
 
-  const isJobGone = !demoMode && jobQuery.isError;
+  // Demo mode included: a demo archive build can fail the same way a live
+  // lookup can (see the `catch` above), and both must reset to the initial
+  // "Download" button so the sheet never sits on a stale "processing" badge.
+  const isJobGone = jobQuery.isError;
   useEffect(() => {
     if (isJobGone) setJobId(null);
   }, [isJobGone, setJobId]);

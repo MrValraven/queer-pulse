@@ -103,7 +103,7 @@ export const homepage: Catalog = {
     "Alguém te envia um convite e põe o nome dela nele. Esse nome fica no teu perfil, por isso ninguém aqui é um completo desconhecido.",
   "painPoints.network.modal.b.title": "O que ganhas com isto",
   "painPoints.network.modal.b.body":
-    "Antes de mandares mensagem a alguém, vês como estão ligados: quem lhe deu um voto de confiança e quem já conhecem os dois.",
+    "Antes de mandares mensagem a alguém, vês como estão conectados: quem lhe deu um voto de confiança e quem já conhecem os dois.",
   "painPoints.network.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.network.modal.c.body":
     "A habitação, os convívios e o diretório assentam nisto. Dar a tua morada a alguém é outra decisão quando um membro em quem confias deu um voto de confiança a essa pessoa.",

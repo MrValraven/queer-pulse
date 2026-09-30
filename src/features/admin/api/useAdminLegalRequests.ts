@@ -9,11 +9,13 @@ import {
   createLegalRequest,
   getAdminLegalRequest,
   getAdminLegalRequests,
+  getLegalRequestAmendments,
   updateLegalRequest,
   voidLegalRequest,
   type AdminLegalRequestDTO,
   type AdminLegalRequestPageDTO,
   type CreateLegalRequestBody,
+  type LegalRequestAmendmentDTO,
   type LegalRequestOutcome,
   type LegalRequestRegisterState,
   type LegalRequestType,
@@ -151,6 +153,35 @@ export function useAdminLegalRequest(id: string | null) {
         return row;
       }
       return getAdminLegalRequest(recordId);
+    },
+  });
+}
+
+/**
+ * One record's amendment history, newest first (the backend owns that order).
+ *
+ * Keyed under {@link ADMIN_LEGAL_REQUESTS_KEY}, so the prefix invalidation
+ * every amend and void already runs refetches the history with the row.
+ *
+ * Demo mode reads the colocated fixture and never touches the network; a
+ * record with no fixture entry has an empty history. `retry: false` for the
+ * same reason as the detail read: a failed history read has to surface as a
+ * failure straight away, because a blank one reads as "never amended".
+ */
+export function useAdminLegalRequestAmendments(id: string | null) {
+  const { demoMode } = useDemoMode();
+  return useQuery<LegalRequestAmendmentDTO[]>({
+    queryKey: [...ADMIN_LEGAL_REQUESTS_KEY, "amendments", demoMode, id ?? ""],
+    enabled: id !== null,
+    retry: false,
+    queryFn: async () => {
+      const recordId = id as string;
+      if (demoMode) {
+        const { ADMIN_LEGAL_REQUEST_AMENDMENTS_DEMO } =
+          await import("../adminLegalRequestAmendments.data");
+        return ADMIN_LEGAL_REQUEST_AMENDMENTS_DEMO[recordId] ?? [];
+      }
+      return getLegalRequestAmendments(recordId);
     },
   });
 }

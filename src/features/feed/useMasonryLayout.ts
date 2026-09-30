@@ -33,8 +33,9 @@ import { planMasonry } from "./masonryPlan";
  *  floor the old `auto-fill` / `minmax(320px, 1fr)` grid used. */
 const MIN_COLUMN_WIDTH = 320;
 
-/** Space between cards, both across and down. Mirrors the `gap` on `.grid` in
- *  FeedPage.module.css, which the one-column fallback uses. */
+/** Space between cards, both across and down. Mirrors `--feed-grid-gap` on
+ *  `.grid` in FeedPage.module.css (its `gap`, which the one-column fallback
+ *  uses). */
 const COLUMN_GAP = 14;
 
 /** Marks a direct child as a full-width row (the empty/error panels and the

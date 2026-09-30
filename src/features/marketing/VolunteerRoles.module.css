@@ -1,0 +1,14 @@
+/* The "Load more" footer (the shared stacked `LoadMoreFooter`, its line and
+   button centred as one group) sits `--gap-sm` under the grid. */
+.footer {
+  margin-block-start: var(--gap-sm);
+}
+/* A failed "Load more": the loaded roles stay above, this line says why. It
+   sits `--gap-xs` above its Retry and `--gap-sm` + `--gap-xs` below the cards
+   (the footer's top margin plus this line's own). */
+.loadMoreError {
+  margin: var(--gap-xs) 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+  text-align: center;
+}

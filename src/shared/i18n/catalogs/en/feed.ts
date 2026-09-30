@@ -76,6 +76,8 @@ export const feed: Catalog = {
   // ── Infinite-scroll pager (FeedLoadMore) ────────────────────────────────
   "loadMore.cta": "Load more",
   "loadMore.loading": "Loading more…",
+  "loadMore.error": "We couldn't load more of your feed.",
+  "loadMore.footerAria": "More from your feed",
 
   // ── Greeting ────────────────────────────────────────────────────────────
   "greeting.morning": "Good morning",
@@ -190,7 +192,6 @@ export const feed: Catalog = {
   "card.forumThread.unlikeAria": "Remove your like",
   "card.communityPost.flatContext": "Posted to everyone",
   "action.viewProfileAria": "View {name}'s profile",
-  "action.sayHi": "Say hi",
   "action.follow": "Follow",
   "action.following": "Following",
   "action.profile": "Profile",

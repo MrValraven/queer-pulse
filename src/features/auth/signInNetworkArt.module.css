@@ -1,0 +1,273 @@
+/* The animated "queer network" that fills the sign-in card's art column (a
+   240px band on phones). The canvas paints its own plum night; the plum fill
+   here only shows for the moment before the first frame. */
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--plum);
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: networkArtIn 900ms var(--ease-out) both;
+}
+
+@keyframes networkArtIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Carries the wordmark and the caption over the foot of the art: near-solid
+   plum under the two lines, then gone well below the Q's tail. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.94) 0%,
+    rgba(var(--plum-rgb), 0.86) 14%,
+    rgba(var(--plum-rgb), 0.4) 25%,
+    rgba(var(--plum-rgb), 0) 36%
+  );
+}
+
+.captionStack {
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 30px;
+}
+
+/* Hugs the wordmark, so its sweep and the writing light run over the word
+   itself. */
+.wordmarkRow {
+  position: relative;
+  width: fit-content;
+}
+
+/* The brand wordmark, as in the auth lockup: serif, "Pulse" in italic. The
+   right padding keeps the italic's overhang inside the sweep's mask. */
+.wordmark {
+  margin: 0 0 4px;
+  padding-right: 0.25em;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-28);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: rgba(var(--cream-rgb), 0.98);
+}
+
+.wordmark em {
+  font-style: italic;
+}
+
+.caption {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-19);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: rgba(var(--cream-rgb), 0.96);
+}
+
+.caption em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ── The text reveal (see signInNetworkArt.textReveal.ts) ──
+   `waiting`: the Q is forming, the text and its scrim are clear.
+   `writing`: the Q's last light has landed at the start of the wordmark.
+   The scrim fades in with the sweep, a soft-edged mask writes the wordmark
+   left to right behind a small light, then the caption fades up.
+   `shown`: revealed without the light (a failsafe, or reduced motion); the
+   transitions below fade it in, or do nothing when it starts shown. Every
+   state keeps the text in the DOM; only opacity, mask and transform move. */
+.scrim,
+.wordmarkRow,
+.caption {
+  transition:
+    opacity 500ms var(--ease),
+    transform 500ms var(--ease);
+}
+
+.root[data-text-phase="waiting"] .scrim,
+.root[data-text-phase="waiting"] .wordmarkRow {
+  opacity: 0;
+}
+.root[data-text-phase="waiting"] .caption {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.root[data-text-phase="writing"] .scrim {
+  animation: textScrimIn 450ms var(--ease) both;
+}
+/* The row shows at once: from here the mask does the revealing, and the
+   writing light inside it must be bright the moment the Q's light lands. */
+.root[data-text-phase="writing"] .wordmarkRow {
+  transition: none;
+}
+/* The mask is 2.24 times the word's width, black to its left and clear to
+   its right, with a feathered edge a quarter of the word wide between them.
+   Sliding it from 100% to 0% carries that edge from just before the first
+   letter to just past the last, so the word starts fully clear and ends
+   fully written. The standard ease starts it gently, the landing light
+   having just come to rest there. */
+.root[data-text-phase="writing"] .wordmark {
+  -webkit-mask-image: linear-gradient(to right, black 44.6%, transparent 55.4%);
+  mask-image: linear-gradient(to right, black 44.6%, transparent 55.4%);
+  -webkit-mask-size: 224% 100%;
+  mask-size: 224% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: wordmarkWrite 800ms var(--ease-std) both;
+}
+.root[data-text-phase="writing"] .writingLight {
+  animation:
+    writingLightTravel 800ms var(--ease-std) both,
+    writingLightFade 1050ms linear both;
+}
+.root[data-text-phase="writing"] .caption {
+  animation: captionIn 550ms var(--ease) 1000ms both;
+}
+
+/* The light that writes the wordmark: its glow sits on the row's left edge
+   at the baseline (80% down, as in measureTextAnchor), where the Q's light
+   lands, and travels the row's width with the mask's edge. */
+.writingLight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.writingLight::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 80%;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--cream-rgb), 1) 0%,
+    rgba(var(--cream-rgb), 0.7) 16%,
+    rgba(var(--accent-rgb), 0.4) 38%,
+    rgba(var(--accent-rgb), 0) 70%
+  );
+}
+
+@keyframes textScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes wordmarkWrite {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+    transform: translateY(3px);
+  }
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+    transform: none;
+  }
+}
+
+@keyframes writingLightTravel {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Bright as it lands, carried through the word, then settling away. */
+@keyframes writingLightFade {
+  0% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes captionIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The phone band is a poster: the Q with clear night above it, then the
+   name, then the line, with the same handoff as on desktop. The bottom
+   padding is the text zone: the engine reads it and centres the Q in the
+   space above. The text starts on the content's left line below, from the
+   column width and gutter signInCard.module.css shares. */
+@media (--lg) {
+  .root {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: var(--section-y-88);
+  }
+  .scrim {
+    background: linear-gradient(
+      to top,
+      rgba(var(--plum-rgb), 0.95) 0%,
+      rgba(var(--plum-rgb), 0.9) 20%,
+      rgba(var(--plum-rgb), 0.45) 30%,
+      rgba(var(--plum-rgb), 0) 42%
+    );
+  }
+  .captionStack {
+    left: calc(
+      max(0px, (100% - var(--flat-column-width, 480px)) / 2) +
+        var(--flat-gutter, 24px)
+    );
+    right: var(--flat-gutter, 24px);
+    bottom: 22px;
+  }
+  .wordmark {
+    font-size: var(--text-24);
+  }
+  .caption {
+    font-size: var(--text-19);
+  }
+  .writingLight::before {
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    animation: none;
+  }
+}

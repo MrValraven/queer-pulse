@@ -89,8 +89,25 @@ export function AccountBannedPage() {
             <Button to={routes.appealSubmit}>
               {t("system:accountBanned.actions.appealCta")}
             </Button>
-            <Button variant="ghost" to={routes.dataExport}>
+            {/* Was pointed at `routes.dataExport`, which only downloads a
+                copy: the erasure this button promises actually starts on the
+                delete-account page, and `authGate.ts` exempts this exact path
+                from the suspended/banned bounce for exactly this reason. The
+                export link below is new, so a banned member who only wants a
+                copy of their data still has a direct way to get it. */}
+            <Button
+              variant="ghost"
+              to={routes.deleteAccount}
+              className={styles.wrapCta}
+            >
               {t("system:accountBanned.actions.eraseCta")}
+            </Button>
+            <Button
+              variant="ghost"
+              to={routes.dataExport}
+              className={styles.wrapCta}
+            >
+              {t("system:accountBanned.actions.exportCta")}
             </Button>
           </>
         }

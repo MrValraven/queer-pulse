@@ -51,7 +51,11 @@ export function SubmitPartnerApplicationPage() {
       onSuccess: () => window.scrollTo({ top: 0, behavior: "smooth" }),
       onError: (error) =>
         showToast(
-          describeError("Couldn't send your application", error),
+          describeError(
+            t("marketing:submitPartner.errorFrame"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
           "error",
         ),
     });

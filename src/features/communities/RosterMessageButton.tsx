@@ -1,11 +1,11 @@
-import { FiMessageCircle } from "react-icons/fi";
+import { FiMessageCircle, FiUserPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMemberContact } from "../connect/useMemberContact";
 import type { RosterMember } from "./community.model";
 import styles from "./CommunityHubTabs.module.css";
 
 /**
- * The roster card's "Message" affordance: a `span role="button"` (no `<button>`
+ * The roster card's "Connect" / "Message" affordance: a `span role="button"` (no `<button>`
  * inside the profile `<Link>`, per the design rule). Its own component so
  * `useMemberContact` runs at a component top level rather than inside
  * RosterTab's `shown.map`, where a hook call would be illegal.
@@ -26,10 +26,10 @@ export function RosterMessageButton({ member }: { member: RosterMember }) {
         (event.preventDefault(), reachOut())
       }
     >
-      <FiMessageCircle aria-hidden />{" "}
+      {connected ? <FiMessageCircle aria-hidden /> : <FiUserPlus aria-hidden />}{" "}
       {connected
         ? t("connect:contact.message")
-        : t("communities:detail.roster.messageCta")}
+        : t("communities:detail.roster.connectCta")}
     </span>
   );
 }

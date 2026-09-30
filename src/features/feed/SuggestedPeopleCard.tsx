@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { FiX } from "react-icons/fi";
+import { FiClock, FiUserPlus, FiX } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useConnectionsHydrated } from "../../app/providers/useConnections";
 import { useMemberContact } from "../connect/useMemberContact";
 import { openToLabel, type OpenToId } from "../members/openTo.data";
 import type { SuggestedPerson } from "./SuggestedPeople.api";
@@ -61,8 +62,12 @@ function SuggestionReason({ person }: { person: SuggestedPerson }) {
 }
 
 /**
- * One suggested person: face, name, the reason, a way to say hello and a way
+ * One suggested person: face, name, the reason, a way to connect and a way
  * to say no thanks.
+ *
+ * The action reads the way it does on LinkedIn: "Connect" until a request
+ * goes out, "Pending" while it waits (opening it again lands on the modal's
+ * "already reached out" notice), "Message" once the pair is connected.
  *
  * The dismiss control is a real button with its own accessible name (the
  * a11y budget is zero, so an unlabelled icon control fails the build), and it
@@ -78,6 +83,8 @@ export function SuggestedPeopleCard({
 }) {
   const { t } = useTranslation();
   const { connected, contact } = useMemberContact(person.slug);
+  const { isPending } = useConnectionsHydrated();
+  const hasSentRequest = !connected && isPending(person.slug);
 
   return (
     <article className={styles.card}>
@@ -108,9 +115,17 @@ export function SuggestedPeopleCard({
         className={styles.action}
         onClick={() => contact({ slug: person.slug, name: person.name })}
       >
-        {connected
-          ? t("connect:contact.message")
-          : t("connect:suggested.sayHello")}
+        {connected ? (
+          t("connect:contact.message")
+        ) : hasSentRequest ? (
+          <>
+            <FiClock aria-hidden /> {t("connect:suggested.pending")}
+          </>
+        ) : (
+          <>
+            <FiUserPlus aria-hidden /> {t("connect:suggested.connect")}
+          </>
+        )}
       </Button>
     </article>
   );

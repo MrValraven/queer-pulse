@@ -256,6 +256,12 @@ export function useSubprofileDirectoryFilters() {
     /** True when the directory fetch failed: a retryable outage, distinct
      *  from a refinement that matched nobody. */
     isError: directoryQuery.isError,
+    /** ENG-501: true when a fetch failed while personas were already loaded,
+     *  which is "Show more" failing on the next page. The loaded cards stay on
+     *  screen and the pager retries that page. Derived from the loaded count
+     *  because `useSubprofileDirectory` keeps react-query's own flag to
+     *  itself. */
+    isFetchNextPageError: directoryQuery.isError && cards.length > 0,
     refetch: directoryQuery.refetch,
     /** True while the cards on screen belong to the PREVIOUS search term,
      *  held there by `keepPreviousData` until the new page lands. */

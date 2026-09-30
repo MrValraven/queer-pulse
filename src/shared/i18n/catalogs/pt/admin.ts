@@ -4748,6 +4748,12 @@ export const admin: Catalog = {
   "adminDsar.row.filedBy": "Submetido por {name}",
   "adminDsar.row.dueBy": "Resposta devida até {date}",
   "adminDsar.unknownMember": "Um membro",
+  "adminDsar.erasedMember": "Membro que apagou a conta",
+  "adminDsar.detailsErased": "Removido quando o membro apagou a conta.",
+  "adminDsar.outcome.notifyHintErased":
+    "Este membro apagou a conta, por isso ninguém será notificado.",
+  "adminDsar.outcome.closedHintErased":
+    "Este pedido está fechado. O membro entretanto apagou a conta.",
   "adminDsar.drawer.label": "Pedido de dados {reference}",
   "adminDsar.drawer.member": "Submetido por",
   "adminDsar.drawer.asked": "O que pediram",
@@ -6151,7 +6157,18 @@ export const admin: Catalog = {
   "legalRequests.detail.noInternalNote": "Sem nota.",
   "legalRequests.detail.recordedBy": "Registado por",
   "legalRequests.detail.recorderErased": "Essa conta foi entretanto apagada.",
-  "legalRequests.detail.lastUpdated": "Última alteração",
+  "legalRequests.detail.lastUpdated": "Última atualização",
+  "legalRequests.history.title": "Histórico de alterações",
+  "legalRequests.history.loadError":
+    "Não conseguimos ler o histórico de alterações. Abre o registo outra vez antes de confiares nele.",
+  "legalRequests.history.empty":
+    "Sem alterações desde que este registo foi criado.",
+  "legalRequests.history.actorErased": "Uma conta entretanto apagada",
+  "legalRequests.history.emptyValue": "Nada registado",
+  "legalRequests.history.yes": "Sim",
+  "legalRequests.history.no": "Não",
+  "legalRequests.history.nothingDisclosed": "Nada entregue",
+  "legalRequests.history.changeSpoken": "Alterado de {from} para {to}.",
   "legalRequests.void.eyebrow": "Retirar um registo",
   "legalRequests.void.title": "Anular este registo",
   "legalRequests.void.warning":

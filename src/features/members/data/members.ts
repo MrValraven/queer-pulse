@@ -19,6 +19,7 @@ import type { WorkLink } from "../workLink.data";
 import type { FeaturedCommunityRef } from "../profileCommunities.types";
 import type { RespondsWithin } from "../api/nowInsights.api";
 import { REAL_ENTRIES } from "./realMembers";
+import { fullName } from "./fullName";
 
 export interface ShapingItem {
   title: string;
@@ -3842,10 +3843,8 @@ export function getMember(slug: string): Member | undefined {
   return MEMBERS[slug];
 }
 
-/** Full display name for a member object. */
-export function fullName(member: Pick<Member, "first" | "last">): string {
-  return `${member.first} ${member.last}`;
-}
+/** Full display name for a member object (defined in `./fullName`). */
+export { fullName };
 
 /** Full display name by slug (falls back to the slug if unknown). */
 export function memberName(slug: string): string {

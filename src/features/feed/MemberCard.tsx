@@ -67,7 +67,7 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
 
   const sayHi = (
     <Button variant="primary" size="sm" onClick={() => contact({ slug, name })}>
-      {connected ? t("connect:contact.message") : t("feed:action.sayHi")}
+      {connected ? t("connect:contact.message") : t("feed:action.connect")}
     </Button>
   );
   // Follow is a demo-only affordance — gated off in live mode (no

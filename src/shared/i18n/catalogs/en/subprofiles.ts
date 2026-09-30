@@ -48,6 +48,7 @@ export const subprofiles: Catalog = {
   "directory.showMore": "Show more",
   "directory.shownOfTotal": "{shown} of {total}",
   "directory.showMoreLoading": "Loading…",
+  "directory.showMoreError": "We couldn't load more personas.",
   // Shown only when a browser-side facet is active AND further pages exist.
   // The endpoint has no `tags` param and its `kind` takes one value, so those
   // three chips cut the pages already fetched rather than the whole

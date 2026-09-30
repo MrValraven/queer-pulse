@@ -33,6 +33,13 @@
   /* Anchored popovers: dropdown menus, comboboxes, tooltips. Above nav so a
      menu opened from the nav is not clipped by it. */
   --z-popover: 200;
+  /* The cookie consent banner (ConsentBanner). Over app chrome and anchored
+     popovers as before, and under every modal tier: the banner never blocks
+     the app, while a modal does, so a modal opened while the banner waits (the
+     policy re-acceptance sheet above all, which a member must act on) paints
+     over it and stays fully usable. Lightboxes and the safety quick exit clear
+     it too. */
+  --z-consent-banner: 210;
   /* The shared Modal and ModalSheet scrim + dialog. */
   --z-modal: 220;
   /* A dialog opened FROM a modal (a confirm on top of an editor sheet). */

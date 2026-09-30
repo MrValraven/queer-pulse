@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { DirectoryPlace } from "../directoryPlaces";
 import { apiPatch } from "../../../shared/api/client";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
 /** Body for `PATCH /listings/:ref/reviews/:reviewId/reply`. */
 export interface ReplyToReviewInput {

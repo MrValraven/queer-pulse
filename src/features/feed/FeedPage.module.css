@@ -87,9 +87,20 @@
    what renders without ResizeObserver): a plain column in normal flow with the
    same gap, where every child is already full width. */
 .grid {
+  --feed-grid-gap: 14px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--feed-grid-gap);
+}
+/* The feed's true end (FeedPager marks its footer `data-feed-end`): the
+   pager row is empty and zero-height, so in the one-column flex layout it
+   pulls the grid gap back and adds no room under the last card. Once the
+   footer holds keyboard focus its padded box returns, and so does the gap.
+   The masonry layout already skips the gap for a zero-height row; there the
+   wrapper is absolutely positioned, so the negative margin only lifts the
+   zero-height row inside the container, which is harmless. */
+.grid > [data-masonry-full]:has(> [data-feed-end]:not(:focus-visible)) {
+  margin-block-start: calc(-1 * var(--feed-grid-gap));
 }
 
 /* Feed hero banner: a small pill under the greeting summarizing recent

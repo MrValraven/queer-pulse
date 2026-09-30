@@ -4,6 +4,8 @@
    the nudge instead of the nudge landing on top of it. */
 .nudge {
   position: fixed;
+  /* No `--consent-inset` term: InstallNudge.tsx holds the nudge back while the
+     consent banner is up, so the two never share the bottom edge. */
   bottom: calc(16px + env(safe-area-inset-bottom));
   inset-inline-end: calc(16px + env(safe-area-inset-right));
   z-index: var(--z-sticky);

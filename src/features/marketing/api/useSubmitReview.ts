@@ -3,7 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../../app/providers/useProfile";
 import type { DirectoryPlace, Review } from "../directoryPlaces";
 import { submitReview, type SubmitReviewInput } from "./directory.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
 /** Mean of a review set to one decimal, as the detail page displays it. */
 function recomputeRating(reviews: Review[]): { score: string; count: number } {

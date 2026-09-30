@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import {
   getEvents,
   type EventBrowseFilters,
@@ -114,7 +115,7 @@ function filterDemoEvents(
   browse: EventBrowseFilters | undefined,
 ): CalendarEvent[] {
   if (!browse) return events;
-  const term = browse.q?.trim().toLowerCase() ?? "";
+  const term = foldForSearch(browse.q?.trim() ?? "");
   const from = browse.from ? new Date(browse.from).getTime() : null;
   const to = browse.to ? new Date(browse.to).getTime() : null;
   return events.filter((event) => {
@@ -135,9 +136,9 @@ function filterDemoEvents(
     if (browse.cost === "paid" && !event.ticketed) return false;
     if (
       term &&
-      !event.title.toLowerCase().includes(term) &&
-      !event.hood.toLowerCase().includes(term) &&
-      !event.org.toLowerCase().includes(term)
+      !foldForSearch(event.title).includes(term) &&
+      !foldForSearch(event.hood).includes(term) &&
+      !foldForSearch(event.org).includes(term)
     ) {
       return false;
     }

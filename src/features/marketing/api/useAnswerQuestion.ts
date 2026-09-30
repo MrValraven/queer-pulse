@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { DirectoryPlace, ListingPublicQuestion } from "../directoryPlaces";
 import { answerListingQuestion } from "./directory.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 import { DIRECTORY_QUESTIONS_KEY } from "./useListingQuestions";
 
 export interface AnswerQuestionVariables {

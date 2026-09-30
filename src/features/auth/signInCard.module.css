@@ -1,0 +1,243 @@
+/* The sign-in card: AuthLayout's two-column mode, with the sign-in content
+   on the left and the network art on the right (a full-bleed band on top
+   of a flat screen on phones). The left column spreads a top, a middle and
+   a bottom over the card's full height.
+
+   `main > .twoColumnCard` outranks `.card` in auth.module.css, so the padding
+   and width overrides hold whatever order the two modules load in. */
+main > .twoColumnCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 46%);
+  max-width: 940px;
+  min-height: 560px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: var(--section-y-48) 52px;
+}
+
+/* The art fills its column edge to edge; the card's radius and
+   `overflow: hidden` clip its outer corners. */
+.media {
+  position: relative;
+  min-width: 0;
+}
+
+/* Fills the content column and spreads the three blocks over its full
+   height. */
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  min-width: 0;
+}
+
+/* ── Top: back to home ── */
+.backHome {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-13);
+  font-weight: 500;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.backHome:hover {
+  color: var(--text-strong);
+}
+.backHomeIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Middle: heading, lede, actions, ways in ── */
+.middle {
+  display: flex;
+  flex-direction: column;
+}
+/* `.column .title` outranks `.card h1` in auth.module.css, which keeps the
+   serif face, weight, colour and coral <em>. */
+.column .title {
+  font-size: var(--text-52);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+  text-wrap: balance;
+}
+.lede {
+  max-width: 36ch;
+  margin: 0 0 26px;
+  font-size: var(--text-15-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 12px;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(var(--line-rgb), 0.14);
+}
+
+.secondaryPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+/* Quiet paper tiles over the shared ghost Button: `.secondaryPair
+   .secondaryButton` outranks `.ghost`, and the dark rule below outranks the
+   dark `.ghost`. The label may wrap to a second line in the narrow half. */
+.secondaryPair .secondaryButton {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  color: var(--text-strong);
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  white-space: normal;
+  text-wrap: balance;
+}
+:global([data-theme="dark"]) .secondaryPair .secondaryButton {
+  border-color: rgba(var(--line-rgb), 0.22);
+  color: var(--text-strong);
+}
+
+/* ── Bottom: trust line ── */
+.trust {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-wrap: balance;
+}
+.trustIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 2px;
+}
+
+/* ── Phones: a flat, edge-to-edge screen ──
+   The card chrome goes and the page is the surface: the art is a
+   full-bleed band on top, reaching under the status bar, and the content
+   sits on the cream page below it. The page fills at least the screen
+   (`dvh`, after a `vh` fallback, as in base.css) as a flex column, so the
+   heading stays under the band and the trust line settles at the foot when
+   there is room; taller content simply scrolls. Only the two-column mode
+   carries these classes, so the other auth pages keep their card. */
+@media (--lg) {
+  div.twoColumnRoot {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0;
+  }
+  /* The drifting orbs belong to the floating card; the flat page drops
+     them. */
+  .pageDecoration {
+    display: none;
+  }
+  /* A fade only: a rise would read as a card sliding in. */
+  .twoColumnRoot > main {
+    flex: 1 0 auto;
+    animation-name: flatScreenEnter;
+  }
+  /* The content column's width and side gutter, shared with the band's
+     text (signInNetworkArt.module.css), so both start on one left line. */
+  main > .twoColumnCard {
+    --flat-column-width: 480px;
+    --flat-gutter: 24px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    max-width: none;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--cream);
+  }
+  .media {
+    order: -1;
+    /* A poster below the status bar: the Q with clear plum night above
+       it, then the name, then the line. */
+    height: calc(336px + env(safe-area-inset-top));
+  }
+  .content {
+    justify-self: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: var(--flat-column-width);
+    padding: 28px var(--flat-gutter) calc(28px + env(safe-area-inset-bottom));
+  }
+  .column {
+    justify-content: flex-start;
+    gap: 26px;
+  }
+  /* Spare height gathers above the trust line, which settles at the foot. */
+  .trust {
+    margin-top: auto;
+  }
+  .column .title {
+    font-size: var(--text-40);
+  }
+}
+
+@keyframes flatScreenEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Outranks the phone fade above; auth.module.css already stills `.enter`
+   on wider screens. */
+@media (prefers-reduced-motion: reduce) {
+  .twoColumnRoot > main {
+    animation: none;
+  }
+}
+
+@media (--xs) {
+  main > .twoColumnCard {
+    --flat-gutter: 20px;
+  }
+  .column .title {
+    font-size: var(--text-36);
+  }
+  .secondaryPair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

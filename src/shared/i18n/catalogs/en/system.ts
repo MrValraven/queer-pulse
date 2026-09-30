@@ -1,12 +1,12 @@
 import type { Catalog } from "../../types";
 
 /**
- * System — error/maintenance/status chrome and account-state screens
+ * System: error/maintenance/status chrome and account-state screens
  * (`src/features/system/`), plus the two generic route fallbacks in
- * `src/pages/` (`system:notFound.*`, `system:placeholder.*` — that folder has
+ * `src/pages/` (`system:notFound.*`, `system:placeholder.*`; that folder has
  * no namespace of its own, per the extraction brief).
  *
- * Scope: almost entirely platform-authored chrome — these are utility/error
+ * Scope: almost entirely platform-authored chrome; these are utility/error
  * pages, not content surfaces. Exceptions kept in English/untranslated and
  * NOT put through t(): the invite `note` a member writes to their invitee
  * (user-authored, fetched from the API in live mode), people's names, emails,
@@ -42,7 +42,7 @@ export const system: Catalog = {
   "notFound.links.contact.sub": "Tell us about a broken link",
 
   // ── src/pages/PlaceholderPage.tsx ─────────────────────────────────────────
-  // `{title}` is derived from the URL slug (titleFromPath) — an unmapped route
+  // `{title}` is derived from the URL slug (titleFromPath); an unmapped route
   // name, not authored copy, so it stays English regardless of locale.
   "placeholder.title": "{title} is <em>on the way.</em>",
 
@@ -71,7 +71,7 @@ export const system: Catalog = {
   // used to read "removed from the platform within 30 days", as though a ban
   // triggered it.
   "accountBanned.whatNow.row2.body":
-    "Per our <a>privacy policy</a>. Ask for erasure below and your account is hidden straight away, then permanently deleted {erasureDays} days later. Community posts you authored stay up with your name removed. Your forum posts are deleted, and threads you started stay up without your name wherever other members replied or you credited a co-author.",
+    "Per our <a>privacy policy</a>. Ask for erasure below and your account is hidden straight away, then permanently deleted {erasureDays} days later. Posts and replies you wrote in communities stay up with your name removed. Your forum posts are permanently removed. Threads you started stay open without your name wherever other members replied or you credited a co-author, so their words stay readable.",
   "accountBanned.whatNow.row3.title":
     "Public records of this action are not kept",
   // Was: "The case file exists internally for 36 months. Your connections were
@@ -84,6 +84,7 @@ export const system: Catalog = {
     "The <wellbeingLink>resource library</wellbeingLink> is open to everyone, member or not.",
   "accountBanned.actions.appealCta": "File the appeal",
   "accountBanned.actions.eraseCta": "Request full data erasure",
+  "accountBanned.actions.exportCta": "Download your data",
   "accountBanned.foot":
     "If you believe this was the result of coordinated false reports, please include the names you suspect in the appeal. We investigate this carefully. <a>Re-read the Code of Conduct</a>",
 
@@ -117,7 +118,7 @@ export const system: Catalog = {
   "accountSuspended.headingLive": "Your account is <em>suspended.</em>",
   "accountSuspended.lead":
     "A moderator reviewed a report and decided your recent message in <b>{channel}</b> crossed §02·02 of the Code of Conduct (<em>repeated misgendering</em>). This is a <b>temporary suspension at rung 3</b> of the moderation ladder.",
-  // Live-mode lead (real suspended member) — the specifics live in the reason
+  // Live-mode lead (real suspended member); the specifics live in the reason
   // block below, sourced from the moderator's note, so this stays general.
   "accountSuspended.leadLive":
     "Your account is paused while a moderation decision stands. Here's what happened, and how to respond.",
@@ -503,7 +504,7 @@ export const system: Catalog = {
   // verbatim from the brief.
   "maintenance.brandEyebrow": "QueerPulse",
   "maintenance.title": "We’ll be right back",
-  // Fallback only — the admin's own message is shown when they set one.
+  // Fallback only: the admin's own message is shown when they set one.
   "maintenance.body":
     "QueerPulse is temporarily unavailable. Please check back soon.",
   "maintenance.stillSignedIn":

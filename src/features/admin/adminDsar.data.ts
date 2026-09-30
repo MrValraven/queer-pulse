@@ -35,7 +35,9 @@ function demoRequest(
  * fully with no backend. Fabricated data: it must never appear as platform
  * truth in live mode (the hook only serves this when `demoMode` is on).
  * Deliberately spans the whole clock, one row past its deadline and one with
- * days to spare, so the overdue treatment is visible in demo.
+ * days to spare, so the overdue treatment is visible in demo. `dsar_2006` is
+ * an open request whose requester has since erased their account: no member,
+ * free text wiped, and the outcome form says nobody will be notified.
  */
 export const ADMIN_DSAR_REQUESTS: AdminDsarRequestDTO[] = [
   demoRequest({
@@ -48,6 +50,7 @@ export const ADMIN_DSAR_REQUESTS: AdminDsarRequestDTO[] = [
       "I would like a copy of every message I sent through the platform last year, plus the RSVPs attached to my account.",
     context: "/account/data",
     member: { slug: "marco", name: "Marco Vieira" },
+    isRequesterErased: false,
     respondedAt: null,
     outcomeNote: null,
     daysAgo: 34,
@@ -62,6 +65,7 @@ export const ADMIN_DSAR_REQUESTS: AdminDsarRequestDTO[] = [
       "My legal name is still attached to two old forum posts. Please correct them to the name on my profile.",
     context: "/account/profile",
     member: { slug: "ines", name: "Inês Marques" },
+    isRequesterErased: false,
     respondedAt: null,
     outcomeNote: "Located both posts, confirming with the forum team.",
     daysAgo: 27,
@@ -76,6 +80,7 @@ export const ADMIN_DSAR_REQUESTS: AdminDsarRequestDTO[] = [
       "I object to my activity being used to build the recommendations I keep seeing on the feed.",
     context: null,
     member: { slug: "joana", name: "Joana Reis" },
+    isRequesterErased: false,
     respondedAt: null,
     outcomeNote: null,
     daysAgo: 6,
@@ -90,6 +95,7 @@ export const ADMIN_DSAR_REQUESTS: AdminDsarRequestDTO[] = [
       "Please erase the two reviews I left on business listings. I no longer want them attached to me.",
     context: "/local/directory",
     member: { slug: "rui", name: "Rui Bettencourt" },
+    isRequesterErased: false,
     respondedAt: isoDaysFromNow(-9),
     outcomeNote:
       "Both reviews removed and the cached copies cleared. Confirmed with a follow-up notification.",
@@ -105,9 +111,24 @@ export const ADMIN_DSAR_REQUESTS: AdminDsarRequestDTO[] = [
       "I want the messages another member sent about me in a group thread.",
     context: null,
     member: { slug: "sofia", name: "Sofia Almeida" },
+    isRequesterErased: false,
     respondedAt: isoDaysFromNow(-16),
     outcomeNote:
       "Declined: the request covers another member's own words, which are their personal data, so we cannot hand them over. Explained the appeal route.",
     daysAgo: 24,
+  }),
+  demoRequest({
+    id: "dsar_2006",
+    reference: "DSAR-C4E8917D",
+    article: 15,
+    status: "in_review",
+    scopes: ["profile", "messages"],
+    details: "",
+    context: null,
+    member: null,
+    isRequesterErased: true,
+    respondedAt: null,
+    outcomeNote: null,
+    daysAgo: 12,
   }),
 ];

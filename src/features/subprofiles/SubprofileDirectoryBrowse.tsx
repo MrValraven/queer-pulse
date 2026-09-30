@@ -1,7 +1,8 @@
 import { FiLayers, FiAlertTriangle } from "react-icons/fi";
 import {
-  Button,
   EmptyState,
+  LoadMoreButton,
+  LoadMoreStatus,
   Reveal,
   SkeletonAvatar,
   SkeletonLine,
@@ -34,6 +35,7 @@ export function SubprofileDirectoryBrowse() {
   const {
     isLoading,
     isError,
+    isFetchNextPageError,
     refetch,
     total,
     isNarrowedInBrowser,
@@ -43,17 +45,21 @@ export function SubprofileDirectoryBrowse() {
     onShowMore,
     onClearFilters,
   } = directory;
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  // The error panel is for a directory with nothing loaded; loaded cards stay
+  // and the pager below retries the page that failed.
+  const hasNothingLoadedError = isError && !isFetchNextPageError;
 
   return (
     <>
       <SubprofileDirectoryToolbar
         directory={directory}
-        isCountKnown={!isLoading && !isError}
+        isCountKnown={!isLoading && !hasNothingLoadedError}
       />
 
       {isLoading ? (
         <DirectoryLoadingGrid />
-      ) : isError ? (
+      ) : hasNothingLoadedError ? (
         // Distinct from the empty state: a failed fetch must not read as
         // "no personas yet". Per docs/STYLE-RULES.md an error surface is the
         // plum panel (never a light card) — the same `SuccessPanel`
@@ -134,18 +140,24 @@ export function SubprofileDirectoryBrowse() {
                 }}
               />
             </span>
+            {/* The failure line sits between the count and its Retry. */}
+            <LoadMoreStatus
+              className={styles.pagerStatus}
+              messageClassName={styles.pagerStatusMessage}
+              isFetchingNextPage={isFetchingMore}
+              isFetchNextPageError={hasMore && isFetchNextPageError}
+              errorMessage={t("subprofiles:directory.showMoreError")}
+            />
             {hasMore && (
-              <Button
-                variant="ghost"
+              <LoadMoreButton
                 size="sm"
                 className={styles.pagerShowMore}
-                onClick={onShowMore}
-                disabled={isFetchingMore}
-              >
-                {isFetchingMore
-                  ? t("subprofiles:directory.showMoreLoading")
-                  : t("subprofiles:directory.showMore")}
-              </Button>
+                isFetchingNextPage={isFetchingMore}
+                isFetchNextPageError={isFetchNextPageError}
+                onLoadMore={onShowMore}
+                label={t("subprofiles:directory.showMore")}
+                loadingLabel={t("subprofiles:directory.showMoreLoading")}
+              />
             )}
           </div>
           {/* Profession, tags and availability have no server param yet, so

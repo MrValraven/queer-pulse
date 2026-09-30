@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
-import { DIRECTORY_KEY } from "../../api/useDirectory";
+import { DIRECTORY_KEY } from "../../api/directoryQueryKey";
 import {
   confirmListingDetails,
   setListingDirectoryVisibility,

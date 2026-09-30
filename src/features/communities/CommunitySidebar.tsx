@@ -3,10 +3,10 @@ import { FiArrowRight } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useConnect } from "../../app/providers/useConnect";
 import { routes, communityPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { useMemberContact } from "../connect/useMemberContact";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Tint } from "./communityDetails";
 import { photoOf } from "./communityPeople";
@@ -39,8 +39,9 @@ export function CommunitySidebar({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { openConnect } = useConnect();
   const org = detail.organiser;
+  const { connected: isOrganiserConnected, contact: contactOrganiser } =
+    useMemberContact(org.slug ?? "");
   // `Community.slug` is typed optional for sources that genuinely have none
   // yet (a founding draft); every related community here comes from either
   // the demo registry or a live card DTO, both of which always carry one.
@@ -111,9 +112,13 @@ export function CommunitySidebar({
           <Button
             variant="ghost"
             className={styles.sbFull}
-            onClick={() => openConnect(org.slug!)}
+            onClick={() =>
+              contactOrganiser({ slug: org.slug!, name: org.name })
+            }
           >
-            {t("communities:detail.sidebar.messageCta")}
+            {isOrganiserConnected
+              ? t("connect:contact.message")
+              : t("communities:detail.sidebar.connectCta")}
           </Button>
         )}
       </div>

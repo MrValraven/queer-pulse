@@ -4,7 +4,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { routes } from "../../app/routeMap";
 import { useDiscoverableIdentities } from "../settings/api/useDiscoverableIdentities";
-import { publishableIdentities } from "../settings/interests.data";
+import {
+  identityLabel,
+  publishableIdentities,
+} from "../settings/interests.data";
 import styles from "./WhoSeesWhatSheet.module.css";
 
 /**
@@ -70,25 +73,29 @@ export function WhoSeesWhatIdentities() {
 
       {!loading && rows.length > 0 && (
         <div className={styles.rowList}>
-          {rows.map((identity) => (
-            <div className={styles.row} key={identity}>
-              <div>
-                <div className={styles.rowTitle}>{identity}</div>
-                <div className={styles.rowDesc}>
-                  {published.includes(identity)
-                    ? t("settings:discoverable.rowOn")
-                    : t("settings:discoverable.rowOff")}
+          {rows.map((identity) => {
+            // `identity` is the raw stored value (see the NOTE in
+            // interests.data.ts); `label` is only the translated text shown
+            // and read aloud.
+            const label = identityLabel(t, identity);
+            return (
+              <div className={styles.row} key={identity}>
+                <div>
+                  <div className={styles.rowTitle}>{label}</div>
+                  <div className={styles.rowDesc}>
+                    {published.includes(identity)
+                      ? t("settings:discoverable.rowOn")
+                      : t("settings:discoverable.rowOff")}
+                  </div>
                 </div>
+                <Toggle
+                  checked={published.includes(identity)}
+                  onChange={(next) => void handleToggle(identity, next)}
+                  label={t("settings:discoverable.toggleLabel", { label })}
+                />
               </div>
-              <Toggle
-                checked={published.includes(identity)}
-                onChange={(next) => void handleToggle(identity, next)}
-                label={t("settings:discoverable.toggleLabel", {
-                  label: identity,
-                })}
-              />
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

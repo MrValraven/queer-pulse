@@ -19,9 +19,10 @@ const trimmedText = (value: unknown): string =>
   typeof value === "string" ? value.trim() : "";
 
 /** Quest `afterBio` slot: how the table runs (`skinData.atTheTable`), read
- *  like the rules box on a character sheet. Every list goes through the fixed
- *  vocabularies, so an unknown stored value is skipped. `null` when nothing
- *  known is set, so a cosplayer who never fills it in shows no empty box. */
+ *  like a rules panel in an adventurer's handbook. Every list goes through
+ *  the fixed vocabularies, so an unknown stored value is skipped. `null` when
+ *  nothing known is set, so a cosplayer who never fills it in shows no empty
+ *  box. */
 export function AtTheTableBlock({ persona }: { persona: SkinExtrasPersona }) {
   const { t } = useTranslation();
   const headingId = useId();

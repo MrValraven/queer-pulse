@@ -61,7 +61,8 @@ export function WorkRightsFooter({
           {isPageVariant ? shieldIcon : null}
           {t("subprofiles:rights.copyright", { year })}
         </p>
-        <p className={styles.provenance}>
+        {/* `pp-provenance` is a global hook for the persona skins. */}
+        <p className={`${styles.provenance} pp-provenance`}>
           {t("subprofiles:rights.firstPublished", { date: formattedDate })}
         </p>
       </div>

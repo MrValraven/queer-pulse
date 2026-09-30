@@ -1,4 +1,4 @@
-import { Button } from "../../shared/components/ui";
+import { LoadMoreFooter } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./JobsPage.module.css";
 
@@ -19,26 +19,15 @@ export function JobsLoadMore({
   onLoadMore,
 }: JobsLoadMoreProps) {
   const { t } = useTranslation();
-  const label = isFetchingNextPage
-    ? t("economy:jobs.loadingMore")
-    : isFetchNextPageError
-      ? t("common:error.retry")
-      : t("economy:jobs.loadMoreCta");
   return (
-    <div className={styles.loadMore}>
-      {isFetchNextPageError && (
-        <p className={styles.loadMoreError} role="alert">
-          {t("economy:jobs.loadMoreError")}
-        </p>
-      )}
-      <Button
-        type="button"
-        variant="ghost"
-        disabled={isFetchingNextPage}
-        onClick={onLoadMore}
-      >
-        {label}
-      </Button>
-    </div>
+    <LoadMoreFooter
+      className={styles.jobsLoadMore}
+      isFetchingNextPage={isFetchingNextPage}
+      isFetchNextPageError={isFetchNextPageError}
+      onLoadMore={onLoadMore}
+      errorMessage={t("economy:jobs.loadMoreError")}
+      label={t("economy:jobs.loadMoreCta")}
+      loadingLabel={t("economy:jobs.loadingMore")}
+    />
   );
 }

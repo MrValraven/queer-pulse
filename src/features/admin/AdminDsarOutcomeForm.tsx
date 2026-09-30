@@ -58,10 +58,13 @@ export function AdminDsarOutcomeForm({
     );
   };
 
+  // An erased requester has nobody to notify, so both hints say so.
   if (isClosed) {
     return (
       <p className={styles.outcomeHint}>
-        {t("admin:adminDsar.outcome.closedHint")}
+        {request.isRequesterErased
+          ? t("admin:adminDsar.outcome.closedHintErased")
+          : t("admin:adminDsar.outcome.closedHint")}
       </p>
     );
   }
@@ -80,7 +83,9 @@ export function AdminDsarOutcomeForm({
         onChange={(event) => setOutcomeNote(event.target.value)}
       />
       <p className={styles.outcomeHint}>
-        {t("admin:adminDsar.outcome.notifyHint")}
+        {request.isRequesterErased
+          ? t("admin:adminDsar.outcome.notifyHintErased")
+          : t("admin:adminDsar.outcome.notifyHint")}
       </p>
       <div className={styles.footActions}>
         {request.status === "received" && (

@@ -1,6 +1,64 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { CHANGELOG_DATA } from "./src/features/marketing/changelog.data";
+import { buildReleases } from "./src/features/marketing/changelogReleases";
+
+/**
+ * The version this build ships as: the newest release on the Changelog,
+ * numbered exactly the way ChangelogPage numbers it, so the update card and the
+ * Changelog always agree. Imported straight from the app modules, which are
+ * plain data (changelog.data.ts pulls in only routeMap.ts, which imports
+ * nothing), so the config can run them at build time.
+ */
+const latestRelease = buildReleases(
+  CHANGELOG_DATA.flatMap((year) => year.entries),
+)[0];
+if (!latestRelease) {
+  throw new Error(
+    "vite.config.ts: the Changelog has no releases, so this build has no version to publish.",
+  );
+}
+const APP_VERSION = latestRelease.version;
+
+/**
+ * Publish this build's version at `/version.json` as `{"version":"v1.43.0"}`.
+ *
+ * WHY. When a new build is waiting, PwaUpdateCard is rendered by the OLD
+ * bundle, which only knows its own version (`__APP_VERSION__`, defined below).
+ * The server is the one place that knows what the new build calls itself, so
+ * the card asks it: useNextBuildVersion fetches this file the moment the card
+ * appears and names the version in the headline.
+ *
+ * The file has to reach the network on every read, and it does: it is absent
+ * from `injectManifest.globPatterns`, every route in src/sw.ts matches a
+ * script, style, font, or navigation request (a plain fetch is none of those),
+ * and Vercel serves static files with `max-age=0`.
+ *
+ * No `apply`: `generateBundle` only runs in a build, and `configureServer`
+ * only under `vite`, where the middleware answers the same path so the card
+ * reads the same file in development.
+ */
+function emitVersionJson(): Plugin {
+  const versionJson = JSON.stringify({ version: APP_VERSION });
+  return {
+    name: "qp:version-json",
+    configureServer(server) {
+      server.middlewares.use("/version.json", (_request, response) => {
+        response.setHeader("Content-Type", "application/json");
+        response.setHeader("Cache-Control", "no-store");
+        response.end(versionJson);
+      });
+    },
+    generateBundle() {
+      this.emitFile({
+        type: "asset",
+        fileName: "version.json",
+        source: versionJson,
+      });
+    },
+  };
+}
 
 /** The one file this plugin exists to keep OUT of the precache. */
 const WEBMANIFEST = "manifest.webmanifest";
@@ -78,6 +136,12 @@ function keepWebmanifestOffPrecache(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    // The running bundle's own version, for useNextBuildVersion to compare
+    // against /version.json. Injected as a string literal so the 10k-line
+    // changelog data stays in the Changelog route's lazy chunk.
+    __APP_VERSION__: JSON.stringify(APP_VERSION),
+  },
   build: {
     // No source maps in the production bundle.
     //
@@ -149,6 +213,7 @@ export default defineConfig({
     // Position in this array is not load-bearing: it looks vite-plugin-pwa up
     // by name at buildStart, by which point every plugin's config has resolved.
     keepWebmanifestOffPrecache(),
+    emitVersionJson(),
     VitePWA({
       strategies: "injectManifest",
       srcDir: "src",
@@ -251,13 +316,16 @@ export default defineConfig({
         // Each precached file (see globPatterns below) must stay under
         // Workbox's default 2 MiB cap or `pnpm build` fails. (Was under
         // `workbox.maximumFileSizeToCacheInBytes` in generateSW mode.) Measured
-        // 2026-09-29 (ENG-504) from `vite build`'s own chunk table: the entry
-        // chunk is ~624 KB raw / ~186 KB gzip and is the largest precached
-        // file, ahead of vendor-react at ~409 KB raw. Nothing precached comes
-        // close to 2 MiB. The first-paint JS as a whole (entry plus the 39
-        // modulepreloads in index.html) is ~1.95 MB raw. The override stays
-        // as headroom for whichever precached file grows next; re-check the
-        // chunk table before assuming a specific file justifies it.
+        // 2026-09-30 (ENG-504) from `vite build`'s own chunk table: the entry
+        // chunk is 587.94 kB raw / 174.59 kB gzip and is the largest precached
+        // file, ahead of vendor-react at 408.94 kB raw. Nothing precached comes
+        // close to 2 MiB. The first-paint JS as a whole (entry plus the 38
+        // modulepreloads in index.html) is ~1.77 MB raw; the members and
+        // directory-places demo data load only with the pages and modals that
+        // use them.
+        // The override stays as headroom for whichever precached file grows
+        // next; re-check the chunk table before assuming a specific file
+        // justifies it.
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // Precache diet. The default globs would precache all ~470 built chunks
         // on the first visit (the whole app, ~13 MB). Instead precache only the

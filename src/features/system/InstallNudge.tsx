@@ -5,6 +5,7 @@ import { FiArrowRight, FiPlusSquare, FiX } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { useDisplayMode } from "../../app/providers/displayModeContext";
+import { useConsent } from "../../app/providers/useConsent";
 import {
   detectPlatform,
   useInstallPrompt,
@@ -49,6 +50,7 @@ export function InstallNudge() {
   const { loggedIn } = useAuth();
   const { isInstalled } = useDisplayMode();
   const { canInstall } = useInstallPrompt();
+  const { status: consentStatus } = useConsent();
   const prefersReducedMotion = usePrefersReducedMotion();
   const isMobile = useMediaQuery(mediaMax("mobile"));
   const [snoozedAt, setSnoozedAt] = useLocalStorage<number>(
@@ -89,9 +91,15 @@ export function InstallNudge() {
   const isIosBrowserTab = detectPlatform() === "ios" && !isInstalled;
 
   // Never to someone who already installed, and never before the session knows
-  // who it is talking to.
+  // who it is talking to. The consent banner is also a fixed bottom decision,
+  // and on a phone it fills most of the screen, so the nudge waits its turn
+  // until the visitor has chosen (the same idiom as PwaUpdatePrompt).
   const shouldShow =
-    loggedIn && !isInstalled && isRevealed && (canInstall || isIosBrowserTab);
+    loggedIn &&
+    !isInstalled &&
+    isRevealed &&
+    consentStatus !== "unknown" &&
+    (canInstall || isIosBrowserTab);
 
   if (!shouldShow) return null;
 

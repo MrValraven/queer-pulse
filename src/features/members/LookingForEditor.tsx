@@ -1,7 +1,7 @@
 import { ChipSelect, Toggle } from "../../shared/components/ui";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { LOOKING_FOR } from "../settings/interests.data";
+import { LOOKING_FOR, lookingForLabel } from "../settings/interests.data";
 import { Section } from "./ProfileSections";
 import styles from "./ProfilePage.module.css";
 
@@ -15,22 +15,31 @@ import styles from "./ProfilePage.module.css";
 export function LookingForEditor() {
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfileEdit();
+  // The chip's stored `value` stays the raw English string (see the NOTE in
+  // ../settings/interests.data.ts); only the `label` shown on screen is
+  // translated.
+  const lookingForChipOptions = LOOKING_FOR.options.map((value) => ({
+    value,
+    label: lookingForLabel(t, value),
+  }));
   return (
     <Section title={t("members:profileEdit.lookingFor.heading")}>
       <p className={styles.lookingForHelper}>
         {t("members:profileEdit.lookingFor.helper")}
       </p>
-      {/* LOOKING_FOR.options are the literal stored values — untranslated. */}
+      {/* LOOKING_FOR.options are the literal stored values; the chip's
+          stored value stays untranslated, and lookingForChipOptions carries
+          the translated label alongside it. */}
       <ChipSelect
         tick={false}
         label={t("members:profileEdit.lookingFor.heading")}
-        options={LOOKING_FOR.options}
+        options={lookingForChipOptions}
         selected={new Set(draft.lookingFor)}
-        onToggle={(label) =>
+        onToggle={(value) =>
           updateDraft({
-            lookingFor: draft.lookingFor.includes(label)
-              ? draft.lookingFor.filter((entry) => entry !== label)
-              : [...draft.lookingFor, label],
+            lookingFor: draft.lookingFor.includes(value)
+              ? draft.lookingFor.filter((entry) => entry !== value)
+              : [...draft.lookingFor, value],
           })
         }
       />

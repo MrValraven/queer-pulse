@@ -333,8 +333,8 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
   },
   quest: {
     name: "Quest",
-    face: "Cinzel + Alegreya SC",
-    note: "A character sheet or a hex map. Boxed stat panels, ruled fields, and the table's rules written down before anyone rolls.",
+    face: "Alegreya + Roboto Condensed + Roboto Flex",
+    note: "A digital adventurer's handbook. Framed panels, condensed caps labels, a red call to action, and the table's rules set out before anyone rolls.",
     kinds: [
       "Game master (DM/GM)",
       "TTRPG writer",

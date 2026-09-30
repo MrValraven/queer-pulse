@@ -4755,6 +4755,12 @@ export const admin: Catalog = {
   "adminDsar.row.filedBy": "Filed by {name}",
   "adminDsar.row.dueBy": "Answer due by {date}",
   "adminDsar.unknownMember": "A member",
+  "adminDsar.erasedMember": "Erased member",
+  "adminDsar.detailsErased": "Removed when the member erased their account.",
+  "adminDsar.outcome.notifyHintErased":
+    "This member has erased their account, so nobody will be notified.",
+  "adminDsar.outcome.closedHintErased":
+    "This request is closed. The member has since erased their account.",
   "adminDsar.drawer.label": "Data request {reference}",
   "adminDsar.drawer.member": "Filed by",
   "adminDsar.drawer.asked": "What they asked for",
@@ -6136,7 +6142,17 @@ export const admin: Catalog = {
   "legalRequests.detail.noInternalNote": "No note.",
   "legalRequests.detail.recordedBy": "Recorded by",
   "legalRequests.detail.recorderErased": "That account has since been erased.",
-  "legalRequests.detail.lastUpdated": "Last amended",
+  "legalRequests.detail.lastUpdated": "Last updated",
+  "legalRequests.history.title": "Amendment history",
+  "legalRequests.history.loadError":
+    "The amendment history could not be read. Open the record again before you rely on it.",
+  "legalRequests.history.empty": "No amendments since this record was created.",
+  "legalRequests.history.actorErased": "An account since erased",
+  "legalRequests.history.emptyValue": "Nothing on file",
+  "legalRequests.history.yes": "Yes",
+  "legalRequests.history.no": "No",
+  "legalRequests.history.nothingDisclosed": "Nothing handed over",
+  "legalRequests.history.changeSpoken": "Changed from {from} to {to}.",
   "legalRequests.void.eyebrow": "Strike a record",
   "legalRequests.void.title": "Void this record",
   "legalRequests.void.warning":

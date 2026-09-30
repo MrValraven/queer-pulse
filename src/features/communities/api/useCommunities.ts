@@ -3,6 +3,7 @@ import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import {
   getCommunities,
   type CommunitiesQuery,
@@ -152,16 +153,16 @@ export function useCommunities(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        // Mirror the live endpoint's ILIKE-over-name/tagline search client-side
+        // Mirror the live endpoint's accent-folded name/tagline search client-side
         // (the mock registry has no separate "purpose" field). Demo has no
         // pagination, so a fresh search always yields its own single page —
         // there's nothing to reset.
-        const needle = params.q?.trim().toLowerCase();
+        const needle = foldForSearch(params.q?.trim() ?? "");
         const searched = needle
           ? demoSource.filter((community) =>
-              `${community.name} ${community.description}`
-                .toLowerCase()
-                .includes(needle),
+              foldForSearch(
+                `${community.name} ${community.description}`,
+              ).includes(needle),
             )
           : demoSource;
         // Mirror the live endpoint's `type=` filter (COM-3) — applied

@@ -7,10 +7,28 @@ import { routes } from "../../../app/routeMap";
 import { useConsent } from "../../../app/providers/useConsent";
 import styles from "./Consent.module.css";
 
-/** CSS custom property other fixed-bottom chrome (e.g. a mobile action bar)
- * reads to clear this banner while it's showing — same idiom as
- * `--bottom-inset` for the installed tab bar, but transient. */
+/** CSS custom property other fixed-bottom chrome (the install nudge, the
+ * settings save bars) reads to clear this banner while it's showing. Same idiom
+ * as `--bottom-inset` for the installed tab bar, but transient. It holds the
+ * distance from the viewport's bottom edge to the banner's top edge, so an
+ * element offset by it clears the banner's padding and border as well. */
 const CONSENT_INSET_PROPERTY = "--consent-inset";
+
+/** The banner's footprint from the viewport's bottom edge: its border-box
+ * height plus its CSS `bottom` offset (0 today; counted so a banner that
+ * floats above the edge still publishes the right value). Read from layout
+ * boxes, so the entrance animation's `translateY` never skews it. */
+function measureConsentInset(
+  element: HTMLElement,
+  entry: ResizeObserverEntry,
+): number {
+  const borderBox = entry.borderBoxSize?.[0];
+  const borderBoxHeight = borderBox
+    ? borderBox.blockSize
+    : element.getBoundingClientRect().height;
+  const bottomOffset = parseFloat(getComputedStyle(element).bottom) || 0;
+  return Math.ceil(borderBoxHeight + Math.max(0, bottomOffset));
+}
 
 /**
  * App-wide consent banner (spec 07). A quiet bottom sheet on cream — never a
@@ -37,10 +55,10 @@ export function ConsentBanner() {
       if (!entry) return;
       root.style.setProperty(
         CONSENT_INSET_PROPERTY,
-        `${entry.contentRect.height}px`,
+        `${measureConsentInset(element, entry)}px`,
       );
     });
-    observer.observe(element);
+    observer.observe(element, { box: "border-box" });
     return () => {
       observer.disconnect();
       root.style.removeProperty(CONSENT_INSET_PROPERTY);

@@ -1,5 +1,5 @@
 // src/features/messages/StarredMessagesLoadMore.tsx
-import { Button } from "../../shared/components/ui";
+import { LoadMoreFooter } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./StarredMessagesModal.module.css";
 
@@ -25,28 +25,18 @@ export function StarredMessagesLoadMore({
   onLoadMore,
 }: StarredMessagesLoadMoreProps) {
   const { t } = useTranslation();
-  const label = isFetchingNextPage
-    ? t("messages:starred.loadingMore")
-    : isFetchNextPageError
-      ? t("common:error.retry")
-      : t("messages:starred.loadMore");
   return (
-    <div className={styles.footer} aria-busy={isFetchingNextPage}>
-      {isFetchNextPageError && (
-        <p className={styles.statusText} role="alert">
-          {t("messages:mediaGallery.loadMoreError")}
-        </p>
-      )}
-      <Button
-        variant="ghost"
-        size="sm"
-        aria-disabled={isFetchingNextPage || undefined}
-        onClick={() => {
-          if (!isFetchingNextPage) onLoadMore();
-        }}
-      >
-        {label}
-      </Button>
-    </div>
+    <LoadMoreFooter
+      className={styles.footer}
+      messageClassName={styles.footerStatusText}
+      aria-busy={isFetchingNextPage}
+      size="sm"
+      isFetchingNextPage={isFetchingNextPage}
+      isFetchNextPageError={isFetchNextPageError}
+      onLoadMore={onLoadMore}
+      errorMessage={t("messages:mediaGallery.loadMoreError")}
+      label={t("messages:starred.loadMore")}
+      loadingLabel={t("messages:starred.loadingMore")}
+    />
   );
 }

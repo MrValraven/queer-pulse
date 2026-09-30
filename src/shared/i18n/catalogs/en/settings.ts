@@ -90,12 +90,40 @@ export const settings: Catalog = {
   "personalisation.accessibility.resetToast": "All preferences reset",
 
   // ── InterestsPane.tsx ─────────────────────────────────────────────────────
-  // NOTE: IDENTITIES.options / LOOKING_FOR.options (interests.data.ts) are the
-  // literal *stored* values of draft.identities / draft.lookingFor, read
-  // elsewhere in the app (Member type, directory) outside this sweep's scope.
-  // Translating the label without a same-scope id/label-key split would
-  // silently desync the stored value from its own display — left in English,
-  // flagged in the sweep report for a coordinated follow-up.
+  // IDENTITIES.options / LOOKING_FOR.options (interests.data.ts) stay the
+  // literal stored values. Their display labels resolve through
+  // identityLabel / lookingForLabel to the keys below (DES-430).
+  "identity.chip.gay": "Gay",
+  "identity.chip.lesbian": "Lesbian",
+  "identity.chip.bisexual": "Bisexual",
+  "identity.chip.pansexual": "Pansexual",
+  "identity.chip.queer": "Queer",
+  "identity.chip.trans": "Trans",
+  "identity.chip.nonBinary": "Non-binary",
+  "identity.chip.genderqueer": "Genderqueer",
+  "identity.chip.genderfluid": "Genderfluid",
+  "identity.chip.asexual": "Asexual",
+  "identity.chip.aromantic": "Aromantic",
+  "identity.chip.intersex": "Intersex",
+  "identity.chip.twoSpirit": "Two-spirit",
+  "identity.chip.questioning": "Questioning",
+  "identity.chip.ally": "Ally",
+  "identity.chip.queerPersonOfColour": "Queer person of colour",
+  "identity.chip.disabledOrChronicallyIll": "Disabled or chronically ill",
+  "identity.chip.preferNotToSay": "Prefer not to say",
+  "lookingFor.chip.communityFriendship": "Community & friendship",
+  "lookingFor.chip.professionalNetworking": "Professional networking",
+  "lookingFor.chip.gatheringsEvents": "Gatherings & events",
+  "lookingFor.chip.creativeCollaboration": "Creative collaboration",
+  "lookingFor.chip.housingFlatmates": "Housing & flatmates",
+  "lookingFor.chip.resourcesSupport": "Resources & support",
+  "lookingFor.chip.activismOrganising": "Activism & organising",
+  "lookingFor.chip.datingRelationships": "Dating & relationships",
+  "lookingFor.chip.mentorshipGiving": "Mentorship (giving)",
+  "lookingFor.chip.mentorshipSeeking": "Mentorship (seeking)",
+  "lookingFor.chip.readingCulture": "Reading & culture",
+  "lookingFor.chip.queerParenting": "Queer parenting",
+  "lookingFor.chip.nightlife": "Nightlife",
   "interests.title": "Shape what you <em>see.</em>",
   "interests.sub":
     "These are private (not shown on your profile). They help us surface gatherings, members, and content that's relevant to you. Change them any time.",
@@ -856,52 +884,67 @@ export const settings: Catalog = {
 
   // ── dataExport.data.ts — DATA_TYPES (form checklist) ─────────────────────
   "dataExport.type.profile.label": "Profile & identity",
-  "dataExport.type.profile.sub": "Name, pronouns, bio, photo",
+  "dataExport.type.profile.sub":
+    "Name, pronouns, bio, photo, sections, handles, board, verification and privacy settings",
   "dataExport.type.messages.label": "Messages",
-  "dataExport.type.messages.sub": "All direct & group conversations",
   "dataExport.type.messages.subDetailed":
-    "Your messages, plus the threads you reported",
+    "Your messages, reactions and stars, plus the threads you reported",
   "dataExport.type.forumPosts.label": "Forum posts",
-  "dataExport.type.forumPosts.sub": "All posts, replies, reactions",
+  "dataExport.type.forumPosts.sub":
+    "Threads you started, your replies and their earlier versions, plus votes and follows",
   "dataExport.type.events.label": "Events",
-  "dataExport.type.events.sub": "RSVPs, attendance history",
+  "dataExport.type.events.sub":
+    "Events you hosted, your RSVPs and what you told the host, plus bookmarks, invites, settings",
   "dataExport.type.connections.label": "Connections",
-  "dataExport.type.connections.sub": "Members you follow or are connected to",
+  "dataExport.type.connections.sub":
+    "Your connections, vouches, blocks, mutes, hidden members, dismissed suggestions and invites",
   "dataExport.type.activityLog.label": "Activity log",
-  "dataExport.type.activityLog.sub": "Login history, device sessions",
+  "dataExport.type.activityLog.sub":
+    "Your activity feed, sign-ins, badges, XP, watch history and account and data requests",
   "dataExport.type.subprofiles.label": "Personas",
   "dataExport.type.subprofiles.sub":
-    "Every persona you've created, including unlinked ones",
+    "Every persona you have, plus endorsements, follows and invites",
   "dataExport.type.listings.label": "Local directory listings",
-  "dataExport.type.listings.sub": "Business or venue listings you've submitted",
+  "dataExport.type.listings.sub":
+    "Listings you own or manage, safe-space nominations, barter posts and your jobs",
   "dataExport.type.housing.label": "Housing",
   "dataExport.type.housing.sub":
-    "Housing listings, flatmate profile, viewing requests",
+    "Housing and group listings, flatmate profile, viewings, saved searches and landlord intros",
   "dataExport.type.saved.label": "Saved items",
-  "dataExport.type.saved.sub": "Bookmarks and saved collections",
+  "dataExport.type.saved.sub":
+    "Everything you saved, with a link back to each, plus your lists, collections and drafts",
   "dataExport.type.notifications.label": "Notifications",
   "dataExport.type.notifications.sub":
-    "Your notification history and preferences",
+    "Your notification history and settings, and the devices you get push notifications on",
   "dataExport.type.consent.label": "Consent records",
   "dataExport.type.consent.sub": "What you've agreed to, and when",
   "dataExport.type.magazine.label": "Magazine writing",
   "dataExport.type.magazine.sub":
-    "Your articles and drafts, in full, plus anything you submitted",
+    "Your articles and drafts, submissions, comments, pitches and translations",
   "dataExport.type.communities.label": "Communities",
   "dataExport.type.communities.sub":
-    "Communities you run, and every post you wrote in one",
+    "Communities you run or belong to, your posts, reactions, requests and feed choices",
   "dataExport.type.volunteering.label": "Volunteering",
   "dataExport.type.volunteering.sub":
-    "Roles you signed up for, and what came of each",
+    "Roles you signed up for, roles you posted and commissions you're interested in",
   "dataExport.type.governance.label": "Governance",
   "dataExport.type.governance.sub":
-    "Your votes and the proposals you put forward",
+    "Your votes, proposals, cosignatures, roadmap ideas, nominations and forms sent",
   "dataExport.type.reviews.label": "Reviews you wrote",
   "dataExport.type.reviews.sub":
-    "Reviews of listings, employers, and housing viewings",
+    "Reviews of listings, employers, viewings and landlords, plus resource feedback",
   "dataExport.type.media.label": "Uploaded files",
   "dataExport.type.media.sub":
     "Your photos and images. The files themselves come with the CSV and Both formats, which arrive as a zip. JSON lists them without the files.",
+  "dataExport.type.nowHistory.label": "Now history",
+  "dataExport.type.nowHistory.sub":
+    "Every Now status you had before your current one",
+  "dataExport.type.membershipCards.label": "Membership cards",
+  "dataExport.type.membershipCards.sub":
+    "Cards you hold for the communities you belong to, and when each was checked at a door",
+  "dataExport.type.reports.label": "Reports you filed",
+  "dataExport.type.reports.sub":
+    "What you reported, why, where each report stands, and the appeals you filed",
 
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "Your archive is ready",
@@ -924,67 +967,137 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportIncluded ──────────────────────────
   "dataExport.included.title": "What's <em>included</em>",
   "dataExport.included.sub":
-    "A breakdown of every data category we hold and what each contains.",
+    "Everything your archive can contain, grouped by what it covers.",
 
   // ── dataExport.data.ts — ACCORDION_ITEMS ─────────────────────────────────
   "dataExport.accordion.profile.title": "Profile & identity",
   "dataExport.accordion.profile.body":
-    "Your display name, username, pronouns, bio, occupation, profile photo, and any links you've added to your profile.",
+    "Your email, name, pronunciation, pronouns, tagline, bio in English and Portuguese, location, profile photo, identities and tags (including which are discoverable), what you're not here for, who can see your profile, when you onboarded, and who invited you (by id). Your current Now status and every one before it, every persona you have, including unlinked and shared ones, the endorsements, follows and invites tied to them, and the items, social links and affiliations on personas you own. Your profile sections (skills, links, work, what shaped you, featured communities, groups and image crops), your @handle history, the board posts and responses you left, your verification levels and requests with their history of changes, any staff roles you hold, the application you submitted to join if it predates your account, and your privacy and safety settings.",
   "dataExport.accordion.messages.title": "Messages",
-  "dataExport.accordion.messages.body":
-    "All direct messages and group conversations you participated in. Includes message content, timestamps, and read receipts. Messages from members who have deleted their accounts are anonymised.",
   "dataExport.accordion.messages.bodyDetailed":
-    "Every message you sent, with the conversation it belongs to, its type, any attachment, and whether it was a reply or a forward. For each conversation where you reported a message or a person, the archive also keeps that thread's messages from everyone in it, so you hold your own copy of what happened. Very long histories keep the newest messages and are marked as truncated. Members who deleted their account appear as “Former member”.",
-  "dataExport.accordion.forumPosts.title": "Forum posts & replies",
-  "dataExport.accordion.forumPosts.body":
-    "Every post and reply you made in the forum, including the thread it belongs to, any edits, and reactions you gave or received.",
-  "dataExport.accordion.events.title": "Events",
-  "dataExport.accordion.events.body":
-    "Events you RSVPd to, events you marked as interested, attendance confirmation where applicable, and any event-related messages.",
+    'Every message you sent, with the conversation it belongs to, its type, any attachment, and whether it was a reply or a forward. For each conversation where you reported a message or a person, the archive also keeps that thread\'s messages from everyone in it, so you hold your own copy of what happened. Very long histories keep the newest messages and are marked as truncated. Members who deleted their account appear as "Former member". Your reactions and stars on messages, the messages you hid for yourself, the group chat invites you sent and received, and whether your name shows on replies you send from a business mailbox.',
   "dataExport.accordion.connections.title": "Connections",
   "dataExport.accordion.connections.body":
-    "A list of members you follow, members who follow you, and any explicit connection relationships. Does not include the contact details of other members.",
-  "dataExport.accordion.activitySessions.title": "Activity & sessions",
-  "dataExport.accordion.activitySessions.body":
-    "Login timestamps, device types (browser/OS), IP addresses (last 90 days only), and active session information. We do not log browsing history within the platform.",
-  "dataExport.accordion.preferences.title": "Preferences & settings",
-  "dataExport.accordion.preferences.body":
-    "Your notification preferences, privacy settings, language selection, and any other account configuration you've set.",
-  "dataExport.accordion.payments.title": "Payments (if applicable)",
-  "dataExport.accordion.payments.body":
-    "If you have contributed to any paid events or the community fund, a record of transaction dates and amounts. No card details are stored. Payments are processed by Stripe.",
+    "Every connection request you sent or received, with its status, any message sent with it, and when it was answered. Vouches you gave and received, with their notes. Other members appear by their id only, because their details are theirs to share. The private notes you keep on your connections, and the platform invites you sent, with your note and vouch.",
 
   // ── dataExport.data.ts — shared accordion tag dictionary ─────────────────
+  "dataExport.accordion.posts.title": "Forum and community posts",
+  "dataExport.accordion.posts.body":
+    "Every forum thread you started and every reply you wrote. Every community you run, with the purpose, rules and welcome message you wrote for it. Every post and reply you wrote in any community, including ones that were later removed, with the date they came down. Your votes on forum replies and polls, the threads you follow, earlier versions of your own posts, threads you co-wrote, and the polls run on threads you started. Every community you belong to, with your role, notification level and join date. Your reactions to community posts, the invites you sent and received, resources you added, and earlier versions of your own community posts and replies. Requests you sent a community or the platform team (to join, to switch on a space, a new tag, or a reading-group proposal, among others), the communities and threads you turned down in your feed, and the topics you follow.",
+  "dataExport.accordion.gatherings.title": "Events and Go together",
+  "dataExport.accordion.gatherings.body":
+    "Events you hosted, with their details, and every RSVP you made, with its status and any waitlist place. Your Go together questionnaire, the events you opted into, the answers you gave about the people and groups you met, and your private Not for me choices. What you told the host with each RSVP (guests, access and dietary needs, pronouns, and your custom answer), events you bookmarked, co-host or appear on the lineup of, event invites you sent and received, announcements you sent as a host, captions on photos you uploaded, the recurring series you run, and your event settings (reminder lead time, default visibility and event emails).",
+  "dataExport.accordion.safety.title": "Safety: blocks, mutes and reports",
+  "dataExport.accordion.safety.body":
+    "The members, personas and businesses you blocked, and when. The members you muted, hid or asked to stop being suggested to you. Every report you filed: what it was about, the reason you picked, the words you wrote, where it stands, and its dates. The appeals you filed against a moderation decision, with your argument and the decision you received. Who blocked you stays private to them, and moderators' internal notes stay with the moderation team.",
+  "dataExport.accordion.housing.title": "Housing, groups and landlords",
+  "dataExport.accordion.housing.body":
+    "Housing listings you posted, your flatmate profile in full, the flatmate profiles you liked or passed on, viewings you asked for and viewings on your own listings, your saved housing searches, and your requests to join housing groups and co-ops. On viewings of your listings, the person asking appears by id only. The listings you posted to a housing group, with where each stands. The landlord introductions you asked for, with the name, note and contact email you gave and the team's reply, and the landlords you submitted to the directory.",
+  "dataExport.accordion.writing.title": "Magazine writing and reviews",
+  "dataExport.accordion.writing.body":
+    "Your magazine articles and drafts in full, the stories you submitted with the desk's decision on each, and the pieces you were assigned to write. Every review you wrote of a local listing, an employer or a housing viewing, with any reply the listing's owner posted. Comments you left under articles and in the editorial margin, messages you sent on a desk piece, the pitches and writer applications you sent with the desk's reply, and the articles you translated. The payments for pieces you wrote, and where each stands. The landlord recommendations you wrote, with any reply the landlord posted, and your resource guide ratings and the suggestions you sent, with the team's reply.",
+  "dataExport.accordion.participation.title":
+    "Volunteering, governance and membership cards",
+  "dataExport.accordion.participation.body":
+    "Volunteering roles you signed up for and what came of each. Your votes, each with the proposal it was on, and the proposals you put forward. The membership cards you hold, with their community and status. Proposals you co-signed, roadmap ideas you submitted, your roadmap comments and votes, the changemakers you nominated, and the forms you sent the team. Roles you posted for others to volunteer for, the opportunity teams you sit on, and the commissions you showed interest in. Each time one of your cards was checked at a door, with the event and the result.",
+  "dataExport.accordion.activity.title":
+    "Activity, saved items and notifications",
+  "dataExport.accordion.activity.body":
+    "The moments your activity feed recorded, like posts, events and readings. Everything you saved, with a link back to it. Your notification history, whether you read each one, and your notification settings. The lists you sorted your saved items into, the collections you made, and your unfinished drafts. The times you deactivated your account, the deletion requests you made, and the data-rights requests you filed. The badges you earned, whether you hid each from your profile, the perks you claimed, and every entry in your XP ledger. How far you got into each cinema title, and when a watch counted as a view.",
+  "dataExport.accordion.consent.title": "Consent and policy acceptances",
+  "dataExport.accordion.consent.body":
+    "Every choice you made about analytics and error monitoring, with the policy version and when you made it. The Terms and Community Guidelines versions on your account, and every acceptance we recorded, with its date.",
+  "dataExport.accordion.media.title": "Uploaded files",
+  "dataExport.accordion.media.body":
+    "A list of every file you uploaded, like photos and the images and documents you sent in messages, with each one's size and date. The files themselves come with the CSV and Both formats, which arrive as a zip. A very large collection is capped, and the archive lists anything left out.",
+  "dataExport.tag.email": "email",
+  "dataExport.tag.personas": "personas",
+  "dataExport.tag.nowHistory": "past Now statuses",
+  "dataExport.tag.threads": "threads",
+  "dataExport.tag.communitiesYouRun": "communities you run",
+  "dataExport.tag.communityPosts": "community posts",
+  "dataExport.tag.hostedEvents": "events you hosted",
+  "dataExport.tag.goTogether": "Go together",
+  "dataExport.tag.vouches": "vouches",
+  "dataExport.tag.reportsFiled": "reports you filed",
+  "dataExport.tag.housingListings": "housing listings",
+  "dataExport.tag.flatmateProfile": "flatmate profile",
+  "dataExport.tag.viewings": "viewings",
+  "dataExport.tag.joinRequests": "join requests",
+  "dataExport.tag.directoryListings": "directory listings",
+  "dataExport.tag.articles": "articles",
+  "dataExport.tag.drafts": "drafts",
+  "dataExport.tag.submissions": "submissions",
+  "dataExport.tag.reviews": "reviews",
+  "dataExport.tag.volunteering": "volunteering",
+  "dataExport.tag.votes": "votes",
+  "dataExport.tag.proposals": "proposals",
+  "dataExport.tag.membershipCards": "membership cards",
+  "dataExport.tag.activityFeed": "activity feed",
+  "dataExport.tag.savedItems": "saved items",
+  "dataExport.tag.privacyChoices": "privacy choices",
+  "dataExport.tag.policyAcceptances": "policy acceptances",
+  "dataExport.tag.photos": "photos",
+  "dataExport.tag.fileList": "file list",
+  "dataExport.accordion.devices.title": "Sign-ins and devices",
+  "dataExport.accordion.devices.body":
+    "Every sign-in session on your account: the device and browser it ran on, when it started, when it was last used, and when it expired or was signed out. The devices you get push notifications on, with the device name and dates. Sign-in tokens and push keys stay out of the archive, because they would let someone act as you.",
+  "dataExport.tag.mutedMembers": "muted members",
+  "dataExport.tag.hiddenMembers": "hidden members",
+  "dataExport.tag.flatmateLikes": "flatmate likes and passes",
+  "dataExport.tag.savedSearches": "saved searches",
+  "dataExport.tag.notificationSettings": "notification settings",
+  "dataExport.tag.signInSessions": "sign-in sessions",
+  "dataExport.tag.pushDevices": "push devices",
+  "dataExport.accordion.listings.title":
+    "Directory listings, safe spaces and work",
+  "dataExport.accordion.listings.body":
+    "Directory listings you own or help manage, with your ownership claims, edit suggestions, co-manager seats, ownership offers with the team's note, enquiries and public questions you asked or answered, helpful votes you gave, and your unfinished listing drafts. Safe-space nominations you made, with the team's reply, flags you raised, and vouches you gave. Your barter listings and proposals, and the companies, jobs, job applications and partner ties you're part of.",
+  "dataExport.tag.profileSections": "profile sections",
+  "dataExport.tag.handles": "@handle history",
+  "dataExport.tag.board": "board posts",
+  "dataExport.tag.verification": "verification",
+  "dataExport.tag.privacySettings": "privacy and safety settings",
+  "dataExport.tag.joinApplication": "your original application",
+  "dataExport.tag.staffRoles": "staff roles",
+  "dataExport.tag.reactionsAndStars": "reactions and stars",
+  "dataExport.tag.votesAndFollows": "votes and follows",
+  "dataExport.tag.communityRoles": "community roles",
+  "dataExport.tag.feedChoices": "feed choices",
+  "dataExport.tag.rsvpDetails": "RSVP details",
+  "dataExport.tag.eventSettings": "event settings",
+  "dataExport.tag.connectionNotes": "notes on your connections",
+  "dataExport.tag.invitesSent": "invites you sent",
+  "dataExport.tag.dismissedSuggestions": "dismissed suggestions",
+  "dataExport.tag.appeals": "appeals you filed",
+  "dataExport.tag.groupListings": "group listings",
+  "dataExport.tag.landlordIntros": "landlord introductions",
+  "dataExport.tag.safeSpaces": "safe-space nominations",
+  "dataExport.tag.barter": "barter posts",
+  "dataExport.tag.work": "companies and jobs",
+  "dataExport.tag.magazineContributions": "magazine contributions",
+  "dataExport.tag.magazinePayments": "payments for your writing",
+  "dataExport.tag.landlordRecommendations": "landlord recommendations",
+  "dataExport.tag.resourceFeedback": "resource guide feedback",
+  "dataExport.tag.roadmapAndNominations": "roadmap ideas and nominations",
+  "dataExport.tag.cardScans": "card scans",
+  "dataExport.tag.volunteerRoles": "roles you posted",
+  "dataExport.tag.listsAndCollections": "lists and collections",
+  "dataExport.tag.accountRequests": "account and data requests",
+  "dataExport.tag.badgesAndXp": "badges and XP",
+  "dataExport.tag.watchHistory": "watch history",
   "dataExport.tag.name": "name",
   "dataExport.tag.pronouns": "pronouns",
   "dataExport.tag.bio": "bio",
   "dataExport.tag.photo": "photo",
-  "dataExport.tag.occupation": "occupation",
-  "dataExport.tag.links": "links",
   "dataExport.tag.content": "content",
   "dataExport.tag.timestamps": "timestamps",
-  "dataExport.tag.readReceipts": "read receipts",
   "dataExport.tag.attachments": "attachments",
-  "dataExport.tag.posts": "posts",
   "dataExport.tag.replies": "replies",
-  "dataExport.tag.edits": "edits",
-  "dataExport.tag.reactions": "reactions",
   "dataExport.tag.rsvps": "RSVPs",
-  "dataExport.tag.attendance": "attendance",
-  "dataExport.tag.interest": "interest",
-  "dataExport.tag.follows": "follows",
   "dataExport.tag.connections": "connections",
   "dataExport.tag.blockedList": "blocked list",
-  "dataExport.tag.logins": "logins",
-  "dataExport.tag.deviceTypes": "device types",
-  "dataExport.tag.ipAddresses": "IP addresses",
-  "dataExport.tag.sessions": "sessions",
   "dataExport.tag.notifications": "notifications",
-  "dataExport.tag.privacy": "privacy",
-  "dataExport.tag.language": "language",
-  "dataExport.tag.appearance": "appearance",
-  "dataExport.tag.transactions": "transactions",
-  "dataExport.tag.amounts": "amounts",
   "dataExport.tag.dates": "dates",
   "dataExport.tag.reportedThreads": "reported threads",
   "dataExport.demoArchiveNote":
@@ -1096,7 +1209,7 @@ export const settings: Catalog = {
   "deleteAccount.wh.delete.messagesDeleted":
     "Messages you sent <strong>are deleted from all conversations</strong>. Recipients lose them too.",
   "deleteAccount.wh.delete.postsRemoved":
-    "Your forum posts are <strong>permanently removed</strong>. Threads you started stay open without your name wherever other members replied or you credited a co-author, so their words stay readable.",
+    "Posts and replies you wrote in communities stay up with your name removed. Your forum posts are <strong>permanently removed</strong>. Threads you started stay open without your name wherever other members replied or you credited a co-author, so their words stay readable.",
   "deleteAccount.wh.delete.emailSuppressed":
     "Your email address is <strong>added to a suppression list</strong> so we don't accidentally re-create your account.",
   "deleteAccount.wh.delete.exportFirst":

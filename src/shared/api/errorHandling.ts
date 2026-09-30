@@ -1,5 +1,5 @@
 import { ApiError } from "./client";
-import { reasonFor } from "./errorMessage";
+import { ACCOUNT_RESTRICTED_COPY, reasonFor } from "./errorMessage";
 import { logError } from "../observability/logger";
 
 type ToastType = "success" | "error" | "info";
@@ -58,11 +58,7 @@ const COPY = {
     key: "shared:apiError.forbidden",
     fallback: "You don't have access to that.",
   },
-  accountRestricted: {
-    key: "shared:apiError.accountRestricted",
-    fallback:
-      "You can't do that while a moderation restriction is in effect. You can appeal it from your account settings.",
-  },
+  accountRestricted: ACCOUNT_RESTRICTED_COPY,
   generic: {
     key: "shared:apiError.generic",
     fallback: "Something went wrong.",
@@ -73,7 +69,9 @@ const COPY = {
   },
 } satisfies Record<string, ErrorCopy>;
 
-/** A `reasonFor` string is already the backend's own text — never translated. */
+/** A `reasonFor` string is final as it stands: the backend's own sentence in
+ *  English, or the translated status line `reasonFor` picks for every other
+ *  language (PRD-467). */
 function resolve(copy: ErrorCopy | string): string {
   if (typeof copy === "string") return copy;
   return translate ? translate(copy.key, copy.fallback) : copy.fallback;
@@ -93,8 +91,8 @@ function messageFor(error: unknown): string | null {
     if (error.status === 403) {
       // A moderation restriction gets its own translated copy naming the
       // appeal, because the appeal is the only route out of a restriction.
-      // Otherwise the member reads the backend's English sentence, which
-      // `reasonFor` deliberately passes through untranslated.
+      // Otherwise the member reads `reasonFor`'s reason: the backend's own
+      // sentence in English, a translated status line in any other language.
       if (
         (error.data as { code?: string } | null)?.code === "ACCOUNT_RESTRICTED"
       ) {

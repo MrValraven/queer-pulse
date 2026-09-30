@@ -9,7 +9,6 @@ import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { PersonaRightsFooter } from "./rights/PersonaRightsFooter";
 import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
-import { useQuestSkinVariant } from "./useQuestSkinVariant";
 import { PracticeBody } from "./skins/PracticeBody";
 import { TherapistBody } from "./skins/therapist/TherapistBody";
 // The global `.pp*` skin styles for the whole persona tree. Imported here (the
@@ -73,7 +72,6 @@ export function SubprofilePageBody({
 }) {
   const { t } = useTranslation();
   const rootRef = usePersonaMotion();
-  const questVariant = useQuestSkinVariant();
   const runheadName = personaNameBesideCraft({
     displayName: data.displayName,
     kind: data.kind,
@@ -84,7 +82,6 @@ export function SubprofilePageBody({
     <article
       className="pp"
       data-skin={skin}
-      data-quest-variant={skin === "quest" ? questVariant : undefined}
       data-kind={data.kind}
       data-cover-bleed={
         data.coverUrl && data.skinData?.coverBleed ? "true" : undefined

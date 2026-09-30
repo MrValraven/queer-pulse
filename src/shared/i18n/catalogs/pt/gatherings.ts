@@ -115,7 +115,7 @@ export const gatherings: Catalog = {
   "common.hostedBy": "Organização de",
   "common.hostRemoved": "Uma pessoa que já não está por cá",
   "common.timeRangeTo": "às",
-  "common.connectCta": "Ligar",
+  "common.connectCta": "Conectar",
 
   // GatheringPage
   "gathering.badge.event": "Evento QueerPulse",
@@ -1715,7 +1715,7 @@ export const gatherings: Catalog = {
   "sharePlans.searchLabel": "Procurar nas tuas conexões",
   "sharePlans.loadingConnections": "A procurar as tuas conexões…",
   "sharePlans.noConnections":
-    "Ainda não tens conexões. Liga-te a alguém e essa pessoa aparece aqui.",
+    "Ainda não tens conexões. Conecta-te a alguém e essa pessoa aparece aqui.",
   "sharePlans.messageLabel": "O que essa pessoa vai receber",
   "sharePlans.messageHint": "Muda o texto como quiseres antes de enviar.",
   "sharePlans.sendCta": "Enviar",

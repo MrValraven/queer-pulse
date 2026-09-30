@@ -75,9 +75,11 @@ Polaris). Before drawing, fix a small vocabulary and reuse it everywhere:
 - **One idea per illustration.** If it needs a caption to be understood, it's doing
   too much. Negative space is required, not leftover.
 
-Reference example already in the repo: `src/features/auth/CommunityArt.tsx` — an
-abstract "constellation of members" built from token fills, ≤2 stroke weights,
-`aria-label`, the pulse-ring brand motif. Mirror its shape for new art.
+Reference examples already in the repo: `src/shared/components/layout/megaNavArtIcons.tsx`,
+small monoline spot illustrations on plum (cream strokes, exactly one coral accent,
+token colours, decorative `aria-hidden`), and `src/features/auth/SignInNetworkArt.tsx`,
+the animated canvas "Q constellation" on the sign-in page (colours read from tokens at
+runtime, a reduced-motion still frame, pauses when hidden). Mirror them for new art.
 
 ---
 
@@ -219,7 +221,7 @@ tokenize.
   static and reused everywhere, it's a candidate for an external `<img>` asset
   instead of inline.
 - Data belongs in a colocated `*.data.ts` when it's a real dataset; a short inline
-  array of shape coords (like `CommunityArt`) stays in the component. Keep each
+  array of shape coords (like the meganav art) stays in the component. Keep each
   component **<200 lines** (repo rule).
 
 ---

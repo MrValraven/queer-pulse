@@ -6,9 +6,10 @@ import { useDirectoryListingsActions } from "../../app/providers/useDirectoryLis
 import { useRoster } from "../communities/api/useRoster";
 import { TransferOwnershipModal } from "../communities/TransferOwnershipModal";
 import { ListingDeleteFlow } from "../marketing/listBusiness/delete/ListingDeleteFlow";
-import type {
-  AccountDependencyCommunity,
-  AccountDependencyListing,
+import {
+  useAccountDependenciesCheck,
+  type AccountDependencyCommunity,
+  type AccountDependencyListing,
 } from "../members/api/useAccountDependencies";
 import styles from "../members/AccountData.module.css";
 
@@ -19,11 +20,17 @@ import styles from "../members/AccountData.module.css";
  * requires an owner and there is no anonymous-owner state, so this is a real
  * precondition rather than informational copy. The roster only loads once the
  * modal is actually opened (`useRoster` is disabled until `slug` is set).
+ *
+ * `onTransferClosed` re-reads the dependency check when the modal closes: the
+ * transfer invalidates the communities caches only, and the row should leave
+ * once the server agrees it is gone.
  */
 function CommunityDependencyRow({
   community,
+  onTransferClosed,
 }: {
   community: AccountDependencyCommunity;
+  onTransferClosed: () => void;
 }) {
   const { t } = useTranslation();
   const [isTransferOpen, setTransferOpen] = useState(false);
@@ -42,7 +49,10 @@ function CommunityDependencyRow({
           slug={community.slug}
           name={community.name}
           roster={roster}
-          onClose={() => setTransferOpen(false)}
+          onClose={() => {
+            setTransferOpen(false);
+            onTransferClosed();
+          }}
         />
       )}
     </>
@@ -130,6 +140,43 @@ export function ListingDependencyRow({
 }
 
 /**
+ * The gate for a member whose account is not active. Every remedy (transfer,
+ * the roster read its picker needs, listing delete) sits behind the
+ * active-member guard, so the rows carry no buttons. The intro says what
+ * erasure itself does with each kind of row, and erasure stays available.
+ */
+function InformationalDependencyList({
+  communities,
+  listings,
+}: {
+  communities: AccountDependencyCommunity[];
+  listings: AccountDependencyListing[];
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.block}>
+      <p className={styles.dependencyIntro}>
+        {t(
+          "members:profile.accountData.stepAway.dependency.informationalIntro",
+        )}
+      </p>
+      <ul className={styles.dependencyList}>
+        {communities.map((community) => (
+          <li key={community.slug} className={styles.dependencyRow}>
+            <span>{community.name}</span>
+          </li>
+        ))}
+        {listings.map((listing) => (
+          <li key={listing.ref} className={styles.dependencyRow}>
+            <span>{listing.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/**
  * Everything that would be stranded by erasing this account, each row with its
  * own real remedy.
  *
@@ -144,6 +191,13 @@ export function ListingDependencyRow({
  * After a listing delete, focus goes to this gate's container while other
  * blockers remain. When that listing was the last one, the gate renders
  * nothing, so focus goes to `fallbackFocusRef` (the page title).
+ *
+ * When the live check itself failed, both lists arrive empty and mean
+ * "unknown". The gate then says the check could not load and leaves erasure
+ * available: the backend hands on or releases whatever the member owns.
+ *
+ * A member who cannot act (`isInformational`) sees the same rows without
+ * remedies; see `InformationalDependencyList`.
  */
 export function AccountDependencyGate({
   communities,
@@ -158,12 +212,34 @@ export function AccountDependencyGate({
 }) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    isError: isCheckFailed,
+    isInformational,
+    refresh,
+  } = useAccountDependenciesCheck();
   const focusStableTargetAfterDelete = () =>
     focusAfterListingRowRemoved(
       () => containerRef.current ?? fallbackFocusRef?.current ?? null,
     );
 
-  if (communities.length === 0 && listings.length === 0) return null;
+  if (communities.length === 0 && listings.length === 0) {
+    if (!isCheckFailed) return null;
+    return (
+      <div role="status" className={styles.block}>
+        <p className={styles.dependencyIntro}>
+          {t("members:profile.accountData.stepAway.dependency.checkFailed")}
+        </p>
+      </div>
+    );
+  }
+  if (isInformational) {
+    return (
+      <InformationalDependencyList
+        communities={communities}
+        listings={listings}
+      />
+    );
+  }
   return (
     <div ref={containerRef} tabIndex={-1} className={styles.block}>
       <p className={styles.dependencyIntro}>
@@ -175,6 +251,7 @@ export function AccountDependencyGate({
             <CommunityDependencyRow
               key={community.slug}
               community={community}
+              onTransferClosed={refresh}
             />
           ))}
         </ul>

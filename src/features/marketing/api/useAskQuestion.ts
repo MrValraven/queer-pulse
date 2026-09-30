@@ -4,7 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import type { DirectoryPlace, ListingPublicQuestion } from "../directoryPlaces";
 import { askListingQuestion } from "./directory.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 import { DIRECTORY_QUESTIONS_KEY } from "./useListingQuestions";
 
 /**

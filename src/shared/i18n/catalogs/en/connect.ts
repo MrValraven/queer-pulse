@@ -146,14 +146,14 @@ export const connect: Catalog = {
   "ago.unknown": "recently",
 
   // Connect modal shell (ConnectModal)
-  "modal.ariaLabel": "Reach out",
+  "modal.ariaLabel": "Ask to connect",
   "modal.close": "Close",
   "modal.loading": "Loading…",
   "modal.error":
     "We couldn't load this member right now. Close this and try again in a moment.",
 
   // Reach-out form (ConnectForm)
-  "form.title": "Say <em>hello.</em>",
+  "form.title": "Ask to <em>connect.</em>",
   "form.reasonLabel": "What's this about?",
   "form.reasonPlaceholder": "Pick a reason, or leave it open",
   "form.reasonOpenToGroup": "What {first} is open to",
@@ -242,7 +242,8 @@ export const connect: Catalog = {
   "suggested.reasonOpenTo": "You are both open to {label}",
   "suggested.reasonTag": "You both listed {label}",
   "suggested.reasonProfession": "You both work in {label}",
-  "suggested.sayHello": "Say hello",
+  "suggested.connect": "Connect",
+  "suggested.pending": "Pending",
   "suggested.dismissAria": "Stop suggesting {name}",
   "suggested.hideStripAria": "Hide people you might know",
   "suggested.browseMembers": "Browse all members",

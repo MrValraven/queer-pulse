@@ -17,8 +17,12 @@ export const auth: Catalog = {
   "common.optionalSuffix": "(opcional)",
 
   // ── Entrar ──
-  "signIn.title": "Bem-vinde de <em>volta</em>",
-  "signIn.subtitle": "Entra para continuar de onde ficaste.",
+  "signIn.title": "Bem-vinde a <em>casa</em>",
+  "signIn.lede":
+    "Volta para junto das tuas pessoas e vamos descobrir o que é possível, em conjunto.",
+  "signIn.newHere": "Primeira vez no QueerPulse?",
+  "signIn.trust":
+    "Só por convite. O teu feed, mensagens e comunidades são só para membros.",
   "signIn.artCaption": "Uma rede queer, <em>enraizada em Lisboa.</em>",
   "signIn.connecting": "A ligar…",
   "signIn.googleCta": "Continuar com o Google",
@@ -27,7 +31,7 @@ export const auth: Catalog = {
     "O QueerPulse funciona só por convite. Pede a alguém que já conheças, ou pede um convite e tratamos do resto.",
   "signIn.notice.accountSuppressed.title": "Esta conta foi eliminada",
   "signIn.notice.accountSuppressed.body":
-    "Pediste-nos para eliminar esta conta, por isso não a vamos recriar em silêncio. Se quiseres voltar, pede um novo convite a alguém da comunidade, ou fala connosco que ajudamos.",
+    "Pediste-nos para eliminar esta conta, por isso não a vamos recriar em silêncio. Se quiseres voltar, fala connosco aqui em baixo. Podemos levantar o bloqueio deste endereço e, a partir daí, o teu convite traz-te de volta, ou um novo, se já tiver expirado.",
   "signIn.notice.ageAttestationRequired.title": "Falta confirmar uma coisa",
   "signIn.notice.ageAttestationRequired.body":
     "A QueerPulse é para maiores de 18 anos. Volta ao teu link de convite e confirma que tens 18 anos ou mais para entrares.",
@@ -86,10 +90,6 @@ export const auth: Catalog = {
   "signIn.closed.title": "Novas contas em pausa",
   "signIn.closed.body":
     "Podes continuar a entrar numa conta já existente, aqui em baixo.",
-
-  // ── Ilustração "lareira" na página de entrada ──
-  "communityArt.ariaLabel":
-    "Ilustração de pessoas da comunidade a aproximarem-se de um centro acolhedor e caloroso",
 
   // ── Convidar (painel de envio + compositor + email/link) ──
   "invite.eyebrow": "Convida alguém a entrar",
@@ -610,7 +610,7 @@ export const auth: Catalog = {
 
   "onboarding.stepPhoto.heading": "Põe um rosto ao <em>nome</em>",
   "onboarding.stepPhoto.body":
-    "Uma foto e alguns detalhes rápidos ajudam as pessoas a sentirem-se confortáveis a ligar-se a ti. Podes sempre adicionar ou mudar isto depois.",
+    "Uma foto e alguns detalhes rápidos ajudam as pessoas a sentirem-se confortáveis a conectar-se a ti. Podes sempre adicionar ou mudar isto depois.",
   "onboarding.stepPhoto.captionPreview":
     "Ótimo aspeto. Toca na foto para a alterar",
   "onboarding.stepPhoto.captionGoogle":
@@ -810,9 +810,9 @@ export const auth: Catalog = {
     "Deste um voto de confiança. Obrigade por manteres tudo genuíno.",
   "gettingStarted.steps.vouch.cta":
     "Encontrar alguém a quem dar um voto de confiança",
-  "gettingStarted.steps.connect.title": "Liga-te a alguém",
+  "gettingStarted.steps.connect.title": "Conecta-te a alguém",
   "gettingStarted.steps.connect.desc":
-    "Fala com alguém que gostavas de conhecer. Ligares-te abre as mensagens.",
+    "Fala com alguém que gostavas de conhecer. Conectares-te abre as mensagens.",
   "gettingStarted.steps.connect.done": "Fizeste a tua primeira conexão.",
   "gettingStarted.steps.connect.cta": "Ver membros",
   "gettingStarted.steps.post.title": "Publica pela primeira vez",

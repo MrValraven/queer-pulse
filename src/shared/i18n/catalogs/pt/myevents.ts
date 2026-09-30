@@ -223,7 +223,7 @@ export const myevents: Catalog = {
   "tools.tellHostToast": "A abrir uma nota para quem organiza…",
   "tools.thankHost": "Agradecer a quem organiza",
   "tools.thankedToast": "Agradecimento enviado a quem organiza",
-  "tools.connectWithMet": "Ligar-te a quem conheceste",
+  "tools.connectWithMet": "Conectar-te a quem conheceste",
   "tools.connectWithMetToast": "A mostrar pessoas que conheceste aqui…",
   "tools.sendNudge": "Enviar um lembrete",
   "tools.nudgeSentToast": "Lembrete enviado a {invitee}",
@@ -349,7 +349,7 @@ export const myevents: Catalog = {
   "moreMenu.requestRefund": "Pedir reembolso",
   "moreMenu.refundToast":
     "Reembolso pedido: 3 a 5 dias até voltar ao teu cartão",
-  "moreMenu.connectWithMet": "Ligar-te a quem conheceste",
+  "moreMenu.connectWithMet": "Conectar-te a quem conheceste",
   "moreMenu.connectWithMetToast": "A mostrar pessoas que conheceste aqui…",
   "moreMenu.reportEvent": "Denunciar este evento",
   "moreMenu.blockHost": "Bloquear quem organiza",

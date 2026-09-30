@@ -534,6 +534,8 @@ export const safety: Catalog = {
   "appealSubmit.success.filedLabel": "Filed",
   "appealSubmit.success.trackCta": "Track this appeal",
   "appealSubmit.success.howCta": "How moderation works",
+  "appealSubmit.awaitingReview":
+    "You already have an appeal awaiting review. A moderator will get to it.",
 
   // ── HateCrimePage.tsx ──────────────────────────────────────────────────
   "hateCrime.meta.title":

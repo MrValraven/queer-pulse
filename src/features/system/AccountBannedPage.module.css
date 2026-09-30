@@ -37,3 +37,17 @@
 .whatNow {
   margin-top: 24px;
 }
+
+/* Design review MUST-FIX: a long ghost label (erase, export) ran past the
+   card's edge at 320-375px, so these two buttons let the label wrap. The
+   doubled selector below beats `.button`'s single-class specificity
+   outright, so this holds regardless of which module's CSS lands first in
+   the bundle, with `!important` skipped and the shared Button and
+   StatusCard left exactly as they were. `min-height` holds Button's
+   tap-target floor here, since Button sets no height of its own. */
+.wrapCta.wrapCta {
+  white-space: normal;
+  text-align: center;
+  min-height: var(--tap-min);
+  line-height: 1.25;
+}

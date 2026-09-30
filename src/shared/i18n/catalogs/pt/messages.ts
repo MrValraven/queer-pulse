@@ -298,7 +298,7 @@ export const messages: Catalog = {
   "conversation.connectionRequiredPendingNotice":
     "O teu pedido de conexão a {name} continua à espera de resposta.",
   "conversation.connectionRequiredIncomingNotice":
-    "{name} quer ligar-se a ti. Aceita para continuarem esta conversa.",
+    "{name} quer conectar-se a ti. Aceita para continuarem esta conversa.",
   "conversation.connectionRequiredAcceptCta": "Aceitar e responder",
   "conversation.connectionRequiredDeclineCta": "Agora não",
   "conversation.send": "Enviar",
@@ -462,9 +462,9 @@ export const messages: Catalog = {
   // NewMessageModal mostra para um membro escolhido que ainda não é uma
   // ligação — POST /messages/request, que entrega diretamente se afinal já
   // estiverem ligados, ou cria um pedido de ligação caso contrário.
-  "request.notConnectedYet": "Ainda não estão ligados",
+  "request.notConnectedYet": "Ainda não estão conectados",
   "request.composeIntro":
-    "Apresenta-te. Se aceitar, ficam ligados e esta torna-se a vossa primeira conversa.",
+    "Apresenta-te. Se aceitar, ficam conectados e esta torna-se a vossa primeira conversa.",
   "request.composePlaceholder": "Diz olá a {name}…",
   "request.composeAria": "A tua mensagem",
   "request.sendCta": "Enviar pedido",
@@ -481,9 +481,9 @@ export const messages: Catalog = {
   // (responder a um pedido de um estranho, em que enviar É aceitar).
   // "notConnectedYet"/"composeIntro" são partilhadas pelas duas portas de
   // ENVIO; "replyAccepts", etc. são a moldura honesta da porta de resposta.
-  "firstContact.notConnectedYet": "Ainda não estão ligados",
+  "firstContact.notConnectedYet": "Ainda não estão conectados",
   "firstContact.composeIntro":
-    "Apresenta-te. Se {name} aceitar, ficam ligados e esta torna-se a vossa primeira conversa.",
+    "Apresenta-te. Se {name} aceitar, ficam conectados e esta torna-se a vossa primeira conversa.",
   "firstContact.composePlaceholder": "Diz olá a {name}…",
   "firstContact.composeAria": "A tua mensagem",
   "firstContact.sendCta": "Enviar pedido",

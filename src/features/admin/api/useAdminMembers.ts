@@ -13,6 +13,7 @@ import { useDemoAwareMutation } from "./demoAwareMutation";
 import { useDebouncedValue } from "../../../shared/hooks/useDebouncedValue";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import {
   ACTIVE_MEMBER_COUNT,
   cardForFlagged,
@@ -68,13 +69,15 @@ interface AdminMembersPageVM {
 const ADMIN_MEMBERS_SEARCH_DEBOUNCE_MS = 300;
 
 /** Name/pronoun match used for demo mode and for the brief typing window
- *  before the server answers. Plain lowercase, so it can be slightly narrower
- *  than the server's accent-folded match: a row can drop out while typing and
- *  come back once the server answers. */
-function matchesMemberSearch(member: AdminMember, lowercaseSearch: string) {
+ *  before the server answers. Folds case and accents on both sides, so "joao"
+ *  keeps "João" on screen while typing. The server's haystack is wider
+ *  (first_name, last_name, slug, pronouns), so a row that matches only by its
+ *  handle can drop out while typing and come back once the server answers. */
+function matchesMemberSearch(member: AdminMember, search: string) {
+  const foldedSearch = foldForSearch(search);
   return (
-    member.name.toLowerCase().includes(lowercaseSearch) ||
-    member.pronoun.toLowerCase().includes(lowercaseSearch)
+    foldForSearch(member.name).includes(foldedSearch) ||
+    foldForSearch(member.pronoun).includes(foldedSearch)
   );
 }
 
@@ -126,14 +129,13 @@ export function useAdminMembers(
     placeholderData: keepPreviousData,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const lowercaseSearch = debouncedSearch.toLowerCase();
         const filteredMembers = MEMBERS.filter(
           (member) =>
             (filter === "verified"
               ? member.verified
               : filter === "new"
                 ? member.newThisWeek
-                : true) && matchesMemberSearch(member, lowercaseSearch),
+                : true) && matchesMemberSearch(member, debouncedSearch),
         );
         // pageSize === ACTIVE_MEMBER_COUNT so getNextPageParam yields
         // undefined (no page 2 in demo) while the header still shows the
@@ -170,9 +172,8 @@ export function useAdminMembers(
     trimmedSearch !== debouncedSearch || query.isPlaceholderData;
   const visibleMembers = useMemo(() => {
     if (!isSearchPending || !trimmedSearch) return members;
-    const lowercaseSearch = trimmedSearch.toLowerCase();
     return members.filter((member) =>
-      matchesMemberSearch(member, lowercaseSearch),
+      matchesMemberSearch(member, trimmedSearch),
     );
   }, [members, isSearchPending, trimmedSearch]);
 

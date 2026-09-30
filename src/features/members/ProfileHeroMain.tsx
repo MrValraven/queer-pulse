@@ -7,6 +7,7 @@ import { MemberAmbassadorTag } from "../../shared/ambassadors/MemberAmbassadorTa
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { type MemberProfile } from "./data/memberProfiles";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
+import { lookingForLabel } from "../settings/interests.data";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileBioLanguageToggle } from "./ProfileBioLanguageToggle";
 import { ProfileHeroActions } from "./ProfileHeroActions";
@@ -126,7 +127,7 @@ export function ProfileHeroMain({
             </span>
             {profile.lookingFor.map((intentLabel) => (
               <span key={intentLabel} className={pageStyles.hereForChip}>
-                {intentLabel}
+                {lookingForLabel(t, intentLabel)}
               </span>
             ))}
             {isSelf && (

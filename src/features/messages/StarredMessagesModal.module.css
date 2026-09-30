@@ -1,10 +1,9 @@
 /* src/features/messages/StarredMessagesModal.module.css */
 /* PRD-374: the load-more footer and the error state for the Starred
    messages list. `.list`/`.row`/etc. stay in `NewMessageModal.module.css`
-   (shared with that modal); these two classes are new and starred-only, so
-   they get their own small dedicated module here. */
+   (shared with that modal); the classes below are starred-only, so they get
+   their own small dedicated module here. */
 
-.footer,
 .errorState {
   display: flex;
   flex-direction: column;
@@ -13,9 +12,21 @@
   padding: 16px 8px 4px;
 }
 
+/* The older-stars footer (the shared stacked `LoadMoreFooter`, already a
+   centred column). Its live region is always mounted, so the 8px between the
+   line and the button lives on the line itself. */
+.footer {
+  padding: 16px 8px 4px;
+}
+
 .statusText {
   margin: 0;
   font-size: var(--text-body-sm);
   color: var(--ink-60);
   text-align: center;
+}
+
+.footerStatusText {
+  composes: statusText;
+  margin: 0 0 8px;
 }

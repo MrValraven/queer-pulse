@@ -7,6 +7,7 @@ import {
   setQueryErrorDemoMode,
   setQueryErrorTranslator,
 } from "../../api/errorHandling";
+import { setErrorReasonLocale } from "../../api/errorMessage";
 
 /**
  * Bridges the live toast function + demo flag into the React Query cache-level
@@ -16,7 +17,7 @@ import {
 export function QueryErrorToastBridge() {
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   // `t()` returns the key itself when the catalog has no entry for it, which
   // would put a raw `shared:apiError.server` in front of a member. Fall back to
@@ -39,6 +40,14 @@ export function QueryErrorToastBridge() {
     setQueryErrorTranslator(translate);
     return () => setQueryErrorTranslator(null);
   }, [translate]);
+
+  // `reasonFor` / `describeError` (PRD-467): the same resolver plus the
+  // language, so a member reading anything but English gets a translated
+  // reason in every toast and inline error built from a failed request.
+  useEffect(() => {
+    setErrorReasonLocale({ translate, getLanguage: () => language });
+    return () => setErrorReasonLocale(null);
+  }, [translate, language]);
 
   useEffect(() => {
     setQueryErrorDemoMode(demoMode);

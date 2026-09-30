@@ -2800,6 +2800,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-30.headline":
+    "A new sign-in page with a living Q, and your data export covers nearly all your account.",
   "changelog.releases.2026-09-29.headline":
     "A redesigned editor desk, Blip and Tea stickers, and takedown notices with appeals.",
   "changelog.releases.2026-09-28.headline":
@@ -2932,6 +2934,73 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+  "changelog.entries.no-focus-frame-around-pages.title":
+    "No more stray red lines around the page",
+  "changelog.entries.no-focus-frame-around-pages.body":
+    "Opening a page after using the keyboard no longer draws a focus frame across the whole screen.",
+  "changelog.entries.sign-in-welcome-home.title":
+    "Sign-in welcomes you home with a living Q",
+  "changelog.entries.sign-in-welcome-home.body":
+    "People drift in and link up one handshake at a time to form the QueerPulse Q, beside a warmer welcome.",
+  "changelog.entries.sign-in-back-to-home.title": "Sign-in has a way back home",
+  "changelog.entries.sign-in-back-to-home.body":
+    "Sign-in now has a Back to home link in place of the brand header.",
+  "changelog.entries.export-covers-nearly-everything.title":
+    "Your data export now covers nearly all of your account",
+  "changelog.entries.export-covers-nearly-everything.body":
+    "Settings, profile sections, community and event activity, listings and writing now come in your archive.",
+  "changelog.entries.erasure-page-for-paused-accounts.title":
+    "Paused accounts see what erasure will hand on",
+  "changelog.entries.erasure-page-for-paused-accounts.body":
+    "If your account is paused, the erasure page lists what you own and what happens to it, and lets you go ahead.",
+  "changelog.entries.editor-desk-fits-on-phones.title":
+    "Editor desk pieces fit on a phone",
+  "changelog.entries.editor-desk-fits-on-phones.body":
+    "The piece page no longer runs off a narrow screen, and brief notes stay readable in dark mode.",
+  "changelog.entries.quest-personas-adventurer-look.title":
+    "Quest personas get an adventurer's handbook look",
+  "changelog.entries.quest-personas-adventurer-look.body":
+    "Framed panels, bold serif names and a red call to action, in a light and a dark face that follow your theme.",
+  "changelog.entries.export-covers-your-whole-account.title":
+    "Your data export covers far more of your account",
+  "changelog.entries.export-covers-your-whole-account.body":
+    "Housing, blocks and reports, sign-in sessions, devices and policy acceptances now come with your archive.",
+  "changelog.entries.erasure-leaves-no-trace.title":
+    "Erasing your account leaves no trace behind",
+  "changelog.entries.erasure-leaves-no-trace.body":
+    "Invites no longer reveal an erased address, and your data requests keep none of your words after erasure.",
+  "changelog.entries.identity-check-after-a-break.title":
+    "Confirming it's you works after a break",
+  "changelog.entries.identity-check-after-a-break.body":
+    "The check before exporting or deleting your data now refreshes your session first, so a long pause is fine.",
+  "changelog.entries.identity-chips-in-portuguese.title":
+    "Identities and interests show in Portuguese",
+  "changelog.entries.identity-chips-in-portuguese.body":
+    "Your identities and what you're here for now read in Portuguese across settings and profiles.",
+  "changelog.entries.consent-banner-stays-clear.title":
+    "The cookie banner stays clear of other buttons",
+  "changelog.entries.consent-banner-stays-clear.body":
+    "Quick exit and save bars now sit above the consent banner, and policy prompts cover it until you answer.",
+  "changelog.entries.accent-folded-search.title":
+    "Search finds words with or without accents",
+  "changelog.entries.accent-folded-search.body":
+    "Joao finds João and saude finds saúde in communities, events, places, guides, personas and the magazine.",
+  "changelog.entries.paged-lists-keep-loaded-items.title":
+    "Lists keep what you loaded when more fails to load",
+  "changelog.entries.paged-lists-keep-loaded-items.body":
+    "The feed, persona directory and volunteer roles show an inline Try again and keep every loaded item.",
+  "changelog.entries.camera-and-location-restored.title":
+    "Door scanner, chat camera and Near me work again",
+  "changelog.entries.camera-and-location-restored.body":
+    "A site header was blocking the camera and location for QueerPulse itself; it now allows both here.",
+  "changelog.entries.error-messages-in-portuguese.title":
+    "Error messages in Portuguese",
+  "changelog.entries.error-messages-in-portuguese.body":
+    "When something is refused, Portuguese members read why in Portuguese, publish checks included.",
+  "changelog.entries.update-card-names-version.title":
+    "The update card names the new version",
+  "changelog.entries.update-card-names-version.body":
+    "When an update is ready, the card now says which version you are about to get.",
   "changelog.entries.magazine-desk-writer-picker.title":
     "Choose the writer when you commission or hand off a piece",
   "changelog.entries.magazine-desk-writer-picker.body":
@@ -2971,7 +3040,7 @@ export const marketing: Catalog = {
   "changelog.entries.lighter-first-load.title":
     "Pages start faster on a first visit",
   "changelog.entries.lighter-first-load.body":
-    "About 300 KB less JavaScript loads before the first screen, and demo inboxes now load only in demo mode.",
+    "About 480 KB less JavaScript loads before the first screen, since demo data now loads only where it is used.",
   "changelog.entries.dark-mode-chip-washes.title":
     "Forum, event and partner chips show up in dark mode",
   "changelog.entries.dark-mode-chip-washes.body":
@@ -7818,6 +7887,7 @@ export const marketing: Catalog = {
   "volunteer.filter.medium": "Medium commitment",
   "volunteer.filter.commitmentGroup": "Filter by commitment",
   "volunteer.filter.causeGroup": "Filter by cause",
+  "volunteer.loadMoreError": "We couldn't load more opportunities.",
   // The volunteering cause taxonomy, one key set shared by the board's filter
   // chips, the post/edit form's picker and the label on a card. It replaced two
   // parallel sets ("volunteer.filter.*" and "postOpportunity.cause.*") that held
@@ -9877,6 +9947,7 @@ export const marketing: Catalog = {
   "submitPartner.tips.whatNext.title": "What happens next",
   "submitPartner.tips.whatNext.body":
     "Your application arrives as pending. A member of the team reviews it, and we'll be in touch, whether it's a yes, a not-yet, or a question.",
+  "submitPartner.errorFrame": "Couldn't send your application",
 
   "changelog.entries.resource-listings-and-suggestions.title":
     "Real resource listings for Legal Aid & Sexual Health Testing",

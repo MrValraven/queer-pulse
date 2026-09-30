@@ -1328,6 +1328,26 @@ export const magazine: Catalog = {
   "piece.gate.notAdvisory":
     "O portão não é uma sugestão. Nada aqui pode ser ultrapassado por uma só pessoa.",
   "piece.gate.publish": "Publicar",
+  "piece.gateReason.careNotStarted": "Registo de cuidado por iniciar",
+  "piece.gateReason.sensitivityNotStarted":
+    "Leitura de sensibilidade por iniciar",
+  "piece.gateReason.contentNotes": "Notas de conteúdo escritas",
+  "piece.gateReason.consent": "Consentimento: {name}",
+  "piece.gateReason.sensitivityCheck": "Leitura de sensibilidade: {check}",
+  "piece.gateReason.articleStandfirst": "O artigo precisa de um resumo.",
+  "piece.gateReason.articleImageAlt":
+    "Todas as imagens precisam de texto alternativo.",
+  "piece.gateReason.deckNotStarted": "O deck ainda não foi iniciado.",
+  "piece.gateReason.deckNoSlides": "O deck ainda não tem slides.",
+  "piece.gateReason.deckSlideAlt":
+    "Todos os slides com imagem precisam de texto alternativo.",
+  "piece.gateReason.deckCoverDescription":
+    "A imagem de capa precisa de uma descrição.",
+  "piece.gateReason.unknownCareItem":
+    "Ainda há um item aberto no registo de cuidado.",
+  "piece.gateReason.unknownCareItemDone":
+    "Item do registo de cuidado concluído.",
+  "piece.gateReason.unknownNotReady": "Ainda falta terminar algo na peça.",
 
   // ── Publish / unpublish from the piece record (PRD-119, PRD-120) ─────────
   // O controlo de cuidado é imposto no servidor, por isso este texto tem duas

@@ -3,7 +3,9 @@
 .banner {
   position: fixed;
   inset: auto 0 0 0;
-  z-index: var(--z-lightbox);
+  /* Under every modal tier (see layers.css): a blocking dialog such as the
+     policy re-acceptance sheet stays fully usable while the banner waits. */
+  z-index: var(--z-consent-banner);
   background: var(--cream);
   border-top: 1px solid rgba(var(--line-rgb), 0.14);
   box-shadow: var(--shadow-toast);

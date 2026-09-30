@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { TFunction } from "../../../shared/i18n/types";
 import { logError } from "../../../shared/observability/logger";
-import { currentUser, currentUserEmail } from "../../members/data/members";
 import {
   getExportJob,
   requestExport,
@@ -13,44 +11,6 @@ import {
 import { useReauth } from "./useAccountMutations";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-/**
- * Build a small, genuinely machine-readable JSON archive of the mock user in
- * DEMO mode, so the "Download" actually yields a file (no backend). Live mode
- * gets a real signed `.zip` from the worker instead.
- */
-function buildDemoArchive(
-  categories: string[],
-  format: ExportFormat,
-  t: TFunction,
-): string {
-  const now = new Date().toISOString();
-  const archive: Record<string, unknown> = {
-    manifest: {
-      exportedAt: now,
-      schemaVersion: "1.0",
-      format,
-      categories,
-      note: t("settings:dataExport.demoArchiveNote"),
-    },
-    profile: categories.includes("profile")
-      ? {
-          name: `${currentUser.first} ${currentUser.last}`,
-          pronouns: currentUser.pronouns,
-          email: currentUserEmail,
-        }
-      : undefined,
-    messages: categories.includes("messages") ? [] : undefined,
-    posts: categories.includes("forumPosts") ? [] : undefined,
-    events: categories.includes("events") ? [] : undefined,
-    connections: categories.includes("connections") ? [] : undefined,
-    activity: categories.includes("activityLog") ? [] : undefined,
-  };
-  const blob = new Blob([JSON.stringify(archive, null, 2)], {
-    type: "application/json",
-  });
-  return URL.createObjectURL(blob);
-}
 
 type StartArgs = {
   categories: string[];
@@ -88,6 +48,12 @@ export function useExportFlow() {
   // Demo-mode progression timers, kept so they can be cancelled: they used to
   // fire into an unmounted hook.
   const demoTimersRef = useRef<number[]>([]);
+  // Bumped on every demo start and reset. The dynamic import in the demo
+  // build runs after a timer fires, so clearing the timer alone can miss it
+  // once it's already loading; the async block reads this id before each
+  // `setJob` and drops the write once a newer run (or a reset) has replaced
+  // it, so a restart while the import loads can't land stale categories.
+  const demoRunIdRef = useRef(0);
 
   const stopPoll = useCallback(() => {
     if (pollRef.current !== null) {
@@ -112,30 +78,64 @@ export function useExportFlow() {
       if (isStartingRef.current) return;
       stopPoll();
       if (demoMode) {
+        demoRunIdRef.current += 1;
+        const runId = demoRunIdRef.current;
         setJob({
           jobId: "demo-export",
           status: "queued",
           requestedAt: new Date().toISOString(),
         });
         demoTimersRef.current.push(
-          window.setTimeout(
-            () => setJob((j) => (j ? { ...j, status: "processing" } : j)),
-            800,
-          ),
+          window.setTimeout(() => {
+            if (demoRunIdRef.current !== runId) return;
+            setJob((j) => (j ? { ...j, status: "processing" } : j));
+          }, 800),
         );
         demoTimersRef.current.push(
           window.setTimeout(() => {
-            if (blobRef.current) URL.revokeObjectURL(blobRef.current);
-            const url = buildDemoArchive(categories, format, t);
-            blobRef.current = url;
-            setJob({
-              jobId: "demo-export",
-              status: "ready",
-              requestedAt: new Date().toISOString(),
-              downloadUrl: url,
-              sizeBytes: 2048,
-              expiresAt: new Date(Date.now() + 7 * DAY_MS).toISOString(),
-            });
+            void (async () => {
+              try {
+                if (blobRef.current) URL.revokeObjectURL(blobRef.current);
+                const { buildDemoArchiveManifest } =
+                  await import("../demoExportArchive.data");
+                if (demoRunIdRef.current !== runId) return;
+                const archive = buildDemoArchiveManifest(
+                  categories,
+                  format,
+                  t("settings:dataExport.demoArchiveNote"),
+                );
+                const blob = new Blob([JSON.stringify(archive, null, 2)], {
+                  type: "application/json",
+                });
+                const url = URL.createObjectURL(blob);
+                blobRef.current = url;
+                if (demoRunIdRef.current !== runId) {
+                  URL.revokeObjectURL(url);
+                  return;
+                }
+                setJob({
+                  jobId: "demo-export",
+                  status: "ready",
+                  requestedAt: new Date().toISOString(),
+                  downloadUrl: url,
+                  sizeBytes: 2048,
+                  expiresAt: new Date(Date.now() + 7 * DAY_MS).toISOString(),
+                });
+              } catch (err) {
+                // Same shape as the live poll's catch below: a chunk that
+                // fails to load leaves the job stuck on "processing" forever
+                // otherwise, and the sheet only offers a retry from
+                // failed/expired.
+                logError(err, { where: "useExportFlow.demoArchive" });
+                if (demoRunIdRef.current !== runId) return;
+                setJob({
+                  jobId: "demo-export",
+                  status: "failed",
+                  requestedAt: new Date().toISOString(),
+                  error: err instanceof Error ? err.message : "Request failed",
+                });
+              }
+            })();
           }, 2200),
         );
         return;
@@ -208,6 +208,7 @@ export function useExportFlow() {
 
   const reset = useCallback(() => {
     stopPoll();
+    demoRunIdRef.current += 1;
     setJob(null);
   }, [stopPoll]);
 

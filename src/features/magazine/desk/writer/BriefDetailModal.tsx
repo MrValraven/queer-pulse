@@ -101,7 +101,10 @@ export function BriefDetailModal({
 
           {assignment.avoid.length > 0 && (
             <div className={pieceStyles.note}>
-              <b>{t("magazine:writer.brief.avoidLabel")}</b> {assignment.avoid}
+              <b className={pieceStyles.noteLabel}>
+                {t("magazine:writer.brief.avoidLabel")}
+              </b>{" "}
+              {assignment.avoid}
             </div>
           )}
         </div>

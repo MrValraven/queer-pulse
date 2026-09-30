@@ -16,6 +16,7 @@ import {
   setQueryErrorDemoMode,
   setQueryErrorToastEmitter,
 } from "./errorHandling";
+import { setErrorReasonLocale } from "./errorMessage";
 
 const query = { queryKey: ["jobs"] };
 const mutation = { options: { mutationKey: ["applyToJob"] } };
@@ -208,6 +209,32 @@ describe("handleMutationError", () => {
     );
     expect(emit).toHaveBeenCalledWith(
       "You are blocked from this community",
+      "error",
+      6000,
+    );
+  });
+});
+
+// PRD-467: the mutation toast speaks the member's language for a 4xx whose
+// backend sentence is English only.
+describe("handleMutationError with a non-English locale", () => {
+  afterEach(() => {
+    setErrorReasonLocale(null);
+  });
+
+  it("shows the translated status reason for a server sentence", () => {
+    setErrorReasonLocale({
+      translate: (key) => `[${key}]`,
+      getLanguage: () => "pt",
+    });
+    handleMutationError(
+      new ApiError(409, "That name is taken"),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      "[shared:apiError.reasonConflict]",
       "error",
       6000,
     );

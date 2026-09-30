@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { DirectoryPlace, Review } from "../directoryPlaces";
 import { editReview, type EditReviewInput } from "./directory.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
 /** Mean of a review set to one decimal, as the detail page displays it. */
 function recomputeRating(reviews: Review[]): { score: string; count: number } {

@@ -3,7 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { ListingPublicQuestion } from "../directoryPlaces";
 import { getListingQuestions } from "./directory.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
 /** Query key root for the paged public-questions list, so the ask/answer
  *  mutations can invalidate it by slug. */

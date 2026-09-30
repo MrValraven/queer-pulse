@@ -2873,6 +2873,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-30.headline":
+    "Um novo início de sessão com um Q vivo, e a exportação dos teus dados cobre quase toda a tua conta.",
   "changelog.releases.2026-09-29.headline":
     "Uma redação de editores redesenhada, stickers do Blip e do Chá, e avisos de remoção com recurso.",
   "changelog.releases.2026-09-28.headline":
@@ -3005,6 +3007,74 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+  "changelog.entries.no-focus-frame-around-pages.title":
+    "Acabaram as linhas vermelhas soltas à volta da página",
+  "changelog.entries.no-focus-frame-around-pages.body":
+    "Abrir uma página depois de usares o teclado já não desenha uma moldura de foco a toda a largura do ecrã.",
+  "changelog.entries.sign-in-welcome-home.title":
+    "O início de sessão dá-te as boas-vindas com um Q vivo",
+  "changelog.entries.sign-in-welcome-home.body":
+    "Pessoas chegam e ligam-se, um aperto de mão de cada vez, até formarem o Q do QueerPulse, com boas-vindas mais calorosas.",
+  "changelog.entries.sign-in-back-to-home.title":
+    "O início de sessão tem um caminho de volta",
+  "changelog.entries.sign-in-back-to-home.body":
+    "O início de sessão tem agora uma ligação Voltar ao início no lugar do cabeçalho da marca.",
+  "changelog.entries.export-covers-nearly-everything.title":
+    "A exportação dos teus dados cobre agora quase toda a tua conta",
+  "changelog.entries.export-covers-nearly-everything.body":
+    "Definições, secções do perfil, atividade em comunidades e eventos, anúncios e escrita já vêm no teu arquivo.",
+  "changelog.entries.erasure-page-for-paused-accounts.title":
+    "Contas pausadas veem o que a eliminação vai passar",
+  "changelog.entries.erasure-page-for-paused-accounts.body":
+    "Se a tua conta estiver pausada, a página de eliminação mostra o que é teu e o que lhe acontece, e deixa-te avançar.",
+  "changelog.entries.editor-desk-fits-on-phones.title":
+    "As peças da mesa de edição cabem no telemóvel",
+  "changelog.entries.editor-desk-fits-on-phones.body":
+    "A página da peça já não sai de um ecrã estreito, e as notas do briefing leem-se bem no modo escuro.",
+  "changelog.entries.quest-personas-adventurer-look.title":
+    "As personas Quest ganham um visual de manual de aventureiro",
+  "changelog.entries.quest-personas-adventurer-look.body":
+    "Painéis emoldurados, nomes em serifa forte e um botão vermelho, numa versão clara e noutra escura que seguem o teu tema.",
+  "changelog.entries.export-covers-your-whole-account.title":
+    "A exportação dos teus dados cobre muito mais da tua conta",
+  "changelog.entries.export-covers-your-whole-account.body":
+    "Habitação, bloqueios e denúncias, sessões, dispositivos e aceitação de políticas já vêm no teu arquivo.",
+  "changelog.entries.erasure-leaves-no-trace.title":
+    "Apagar a tua conta não deixa rasto",
+  "changelog.entries.erasure-leaves-no-trace.body":
+    "Os convites já não revelam um endereço apagado, e os teus pedidos de dados não guardam as tuas palavras depois.",
+  "changelog.entries.identity-check-after-a-break.title":
+    "Confirmar que és tu funciona depois de uma pausa",
+  "changelog.entries.identity-check-after-a-break.body":
+    "A verificação antes de exportares ou apagares os teus dados renova primeiro a sessão, por isso uma pausa longa não faz mal.",
+  "changelog.entries.identity-chips-in-portuguese.title":
+    "Identidades e interesses aparecem em português",
+  "changelog.entries.identity-chips-in-portuguese.body":
+    "As tuas identidades e o que procuras aqui já aparecem em português nas definições e nos perfis.",
+  "changelog.entries.consent-banner-stays-clear.title":
+    "O aviso de cookies deixa os outros botões livres",
+  "changelog.entries.consent-banner-stays-clear.body":
+    "A saída rápida e as barras de guardar ficam acima do aviso de cookies, e os avisos de políticas tapam-no até responderes.",
+  "changelog.entries.accent-folded-search.title":
+    "A pesquisa encontra palavras com ou sem acentos",
+  "changelog.entries.accent-folded-search.body":
+    "Joao encontra João e saude encontra saúde em comunidades, eventos, sítios, guias, personas e na revista.",
+  "changelog.entries.paged-lists-keep-loaded-items.title":
+    "As listas guardam o que já carregaste se falhar carregar mais",
+  "changelog.entries.paged-lists-keep-loaded-items.body":
+    "O feed, o diretório de personas e as vagas de voluntariado mostram Tentar de novo e mantêm tudo o que já carregou.",
+  "changelog.entries.camera-and-location-restored.title":
+    "O leitor à porta, a câmara no chat e o Perto de mim voltam a funcionar",
+  "changelog.entries.camera-and-location-restored.body":
+    "Um cabeçalho do site bloqueava a câmara e a localização no próprio QueerPulse; agora permite ambas aqui.",
+  "changelog.entries.error-messages-in-portuguese.title":
+    "Mensagens de erro em português",
+  "changelog.entries.error-messages-in-portuguese.body":
+    "Quando algo é recusado, lês o motivo em português, incluindo as verificações antes de publicar.",
+  "changelog.entries.update-card-names-version.title":
+    "O cartão de atualização mostra a nova versão",
+  "changelog.entries.update-card-names-version.body":
+    "Quando há uma atualização pronta, o cartão diz-te qual é a versão que vais receber.",
   "changelog.entries.magazine-desk-writer-picker.title":
     "Escolhe quem escreve ao encomendar ou passar uma peça",
   "changelog.entries.magazine-desk-writer-picker.body":
@@ -3044,7 +3114,7 @@ export const marketing: Catalog = {
   "changelog.entries.lighter-first-load.title":
     "As páginas abrem mais depressa na primeira visita",
   "changelog.entries.lighter-first-load.body":
-    "Cerca de 300 KB a menos de JavaScript antes do primeiro ecrã, e as caixas de demonstração só carregam no modo demo.",
+    "Cerca de 480 KB a menos de JavaScript antes do primeiro ecrã, porque os dados de demonstração só carregam onde são usados.",
   "changelog.entries.dark-mode-chip-washes.title":
     "As etiquetas do fórum, eventos e parceiros aparecem no modo escuro",
   "changelog.entries.dark-mode-chip-washes.body":
@@ -6248,9 +6318,9 @@ export const marketing: Catalog = {
     "Aparece uma nota de segurança ao contactares sobre um espaço, e a página Segurança na habitação cobre os teus direitos.",
 
   "changelog.entries.housing-map-area-privacy.title":
-    "Vê primeiro a zona, a morada exata só quando estiverem ligados",
+    "Vê primeiro a zona, a morada exata só quando estiverem conectados",
   "changelog.entries.housing-map-area-privacy.body":
-    "Os anúncios mostram um mapa ao nível do bairro que passa ao ponto exato e à morada completa quando ficarem ligados.",
+    "Os anúncios mostram um mapa ao nível do bairro que passa ao ponto exato e à morada completa quando ficarem conectados.",
 
   "changelog.entries.messaging-safety-block-report-pii.title":
     "Bloquear, denunciar e um lembrete antes de partilhares demais",
@@ -7931,6 +8001,7 @@ export const marketing: Catalog = {
   "volunteer.filter.medium": "Compromisso médio",
   "volunteer.filter.commitmentGroup": "Filtrar por compromisso",
   "volunteer.filter.causeGroup": "Filtrar por causa",
+  "volunteer.loadMoreError": "Não conseguimos carregar mais oportunidades.",
   // A taxonomia de causas do voluntariado, um conjunto de chaves partilhado
   // pelos filtros do quadro, pelo seletor do formulário e pela etiqueta do
   // cartão. Substituiu dois conjuntos paralelos ("volunteer.filter.*" e
@@ -8218,7 +8289,7 @@ export const marketing: Catalog = {
   "volunteerDetail.main.teamTitle": "Quem <em>já está cá</em>",
   "volunteerDetail.sidebar.appliedTitle": "Estás <em>na lista.</em>",
   // PRD-262 / PRD-260: ver a nota no catálogo EN.
-  "volunteerDetail.sidebar.connectToMessage": "Ligar à equipa",
+  "volunteerDetail.sidebar.connectToMessage": "Conectar com a equipa",
   "volunteerDetail.sidebar.signInToApply": "Inicia sessão para te candidatares",
   "volunteerDetail.sidebar.messageTeam": "Enviar mensagem à equipa",
   "volunteerDetail.sidebar.withdrawing": "A retirar…",
@@ -10009,6 +10080,7 @@ export const marketing: Catalog = {
   "submitPartner.tips.whatNext.title": "O que acontece a seguir",
   "submitPartner.tips.whatNext.body":
     "A tua candidatura chega como pendente. Uma pessoa da equipa revê-a, e entraremos em contacto, seja um sim, um ainda não, ou uma pergunta.",
+  "submitPartner.errorFrame": "Não foi possível enviar a tua candidatura",
 
   "changelog.entries.resource-listings-and-suggestions.title":
     "Recursos reais para Apoio Jurídico e Testagem de Saúde Sexual",

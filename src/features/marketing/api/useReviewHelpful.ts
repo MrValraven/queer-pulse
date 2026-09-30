@@ -6,7 +6,7 @@ import {
   voteReviewHelpful,
   type ReviewHelpfulResponse,
 } from "./directory.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 
 export interface ReviewHelpfulVariables {
   reviewId: string;

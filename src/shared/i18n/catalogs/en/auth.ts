@@ -20,8 +20,12 @@ export const auth: Catalog = {
   "common.optionalSuffix": "(optional)",
 
   // ── Sign in ──
-  "signIn.title": "Welcome <em>back</em>",
-  "signIn.subtitle": "Sign in to pick up where you left off.",
+  "signIn.title": "Welcome <em>home</em>",
+  "signIn.lede":
+    "Come back to your people and let's discover what's possible, together.",
+  "signIn.newHere": "New to QueerPulse?",
+  "signIn.trust":
+    "Invite-only. Your feed, messages and communities are for members only.",
   "signIn.artCaption": "A queer network, <em>rooted in Lisbon.</em>",
   "signIn.connecting": "Connecting…",
   "signIn.googleCta": "Continue with Google",
@@ -30,7 +34,7 @@ export const auth: Catalog = {
     "QueerPulse is invite-only. Ask a member you know, or request an invite and we'll take it from there.",
   "signIn.notice.accountSuppressed.title": "This account was deleted",
   "signIn.notice.accountSuppressed.body":
-    "You asked us to erase this account, so we won't quietly re-create it. If you'd like to come back, ask a member for a fresh invite, or get in touch and we'll help.",
+    "You asked us to erase this account, so we won't quietly re-create it. If you'd like to come back, contact us below. We can lift the block on this address, and then your invite will bring you in, or a fresh one if it has lapsed.",
   "signIn.notice.ageAttestationRequired.title": "One box left to tick",
   "signIn.notice.ageAttestationRequired.body":
     "QueerPulse is 18+. Head back to your invite link and confirm you're 18 or older, then you're in.",
@@ -89,10 +93,6 @@ export const auth: Catalog = {
   // nobody round-trips through Google only to be rejected at the callback.
   "signIn.closed.title": "New accounts are paused",
   "signIn.closed.body": "You can still sign in to an existing account below.",
-
-  // ── The abstract "gathered hearth" illustration on the sign-in art tile ──
-  "communityArt.ariaLabel":
-    "Illustration of community members drifting toward a warm, welcoming centre",
 
   // ── Invite (send-invite dashboard + composer + link/email panels) ──
   "invite.eyebrow": "Invite someone in",

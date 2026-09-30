@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../../app/providers/authContext";
-import { DIRECTORY_KEY } from "../../api/useDirectory";
+import { DIRECTORY_KEY } from "../../api/directoryQueryKey";
 import type { ListingDraft, PendingListing } from "../listBusiness.data";
 import {
   createListing,

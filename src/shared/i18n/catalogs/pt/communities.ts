@@ -322,7 +322,7 @@ export const communities: Catalog = {
   "detail.leave.confirm.confirmCta": "Sair da comunidade",
   "detail.hero.andMore": "e mais {count}",
   "detail.sidebar.organiser": "Organização",
-  "detail.sidebar.messageCta": "Enviar mensagem",
+  "detail.sidebar.connectCta": "Conectar",
   "detail.sidebar.nextGathering": "Próximo convívio",
   "detail.sidebar.rsvpCta": "Confirmar presença",
   "detail.sidebar.relatedCommunities": "Comunidades relacionadas",
@@ -419,7 +419,7 @@ export const communities: Catalog = {
     "Pesquisar pessoas por nome, papel ou bairro…",
   "detail.roster.verified": "Verificade",
   "detail.roster.alsoIn": "Também é membro de {names}",
-  "detail.roster.messageCta": "Mensagem",
+  "detail.roster.connectCta": "Conectar",
   "detail.roster.showingOf_one": "A mostrar {shown} de {count} pessoa",
   "detail.roster.showingOf_other": "A mostrar {shown} de {count} pessoas",
   "detail.roster.searchScopeNote":
@@ -1587,15 +1587,16 @@ export const communities: Catalog = {
   "start.running.removeAria": "Remover {name}",
   "start.running.addCta": "Adicionar corresponsável",
   "start.running.addStewardModal.eyebrow": "Adicionar corresponsável",
-  "start.running.addStewardModal.title": "Escolhe alguém a quem estás ligada",
+  "start.running.addStewardModal.title":
+    "Escolhe alguém a quem estás conectada",
   "start.running.addStewardModal.sub":
-    "As pessoas corresponsáveis só podem ser membros a quem já estás ligada. Pesquisa nas tuas conexões abaixo.",
+    "As pessoas corresponsáveis só podem ser membros a quem já estás conectada. Pesquisa nas tuas conexões abaixo.",
   "start.running.addStewardModal.searchLabel": "Pesquisar nas tuas conexões",
   "start.running.addStewardModal.loadMore": "Mostrar mais conexões",
   "start.running.addStewardModal.searchPlaceholder":
     "Pesquisa por nome ou @slug…",
   "start.running.addStewardModal.empty":
-    "Podes adicionar pessoas corresponsáveis assim que estiveres ligada a outros membros. Vai a Conexões para aumentar o teu círculo primeiro.",
+    "Podes adicionar pessoas corresponsáveis assim que estiveres conectada a outros membros. Vai a Conexões para aumentar o teu círculo primeiro.",
   "start.running.insideHeading": "O que está incluído",
   "start.running.insideSub":
     "Ativa o que fizer sentido. Podes sempre adicionar mais depois de estares em funcionamento.",
@@ -1670,7 +1671,7 @@ export const communities: Catalog = {
   "start.people.hint":
     "Vão receber um convite caloroso quando abrires: sem pressão, sem spam.",
   "start.people.empty":
-    "Ainda não estás em contacto com ninguém. Assim que te ligares a pessoas, poderás convidá-las aqui.",
+    "Ainda não estás em contacto com ninguém. Assim que te conectares a pessoas, poderás convidá-las aqui.",
   "start.people.loadMore": "Mostrar mais conexões",
   "start.people.seedNote":
     "Também podes partilhar o link da tua comunidade assim que abrir. É muitas vezes assim que as primeiras dez pessoas chegam de verdade.",

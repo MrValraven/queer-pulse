@@ -1,4 +1,4 @@
-/* QueerPulse global style entry — import once at app root. */
+/* QueerPulse global style entry: import once at app root. */
 @import "./tokens/colors.css";
 @import "./tokens/typography.css";
 @import "./tokens/spacing.css";
@@ -16,5 +16,5 @@
    imported here: together ~108KB that would ship on every one of ~140 routes.
    Each is imported instead from its lazy consumer (SubprofilePageBody,
    MySubprofilesPage, SubprofileEditorShell) so Vite folds it into that route's
-   own chunk. persona-fonts.css stays global — its @font-face declarations are
+   own chunk. persona-fonts.css stays global: its @font-face declarations are
    cheap and referenced by the skin classes wherever they render. */

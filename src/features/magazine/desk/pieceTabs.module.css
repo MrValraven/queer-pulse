@@ -90,6 +90,21 @@
   color: var(--text-strong);
 }
 
+/* Plum does not flip, so the light tint above vanishes on the dark card.
+   `--wash` flips to cream channels. Kept above `.note.warn` so the equally
+   specific warn tint still wins in dark. */
+:global([data-theme="dark"]) .note {
+  background: var(--wash);
+}
+
+/* A short run-in label ("Avoid.", "Art.") before the note's text. As a flex
+   item under the body's `overflow-wrap: anywhere` it could shrink to a
+   sliver and split mid-word ("Evita / r."), so it keeps its own width. */
+.noteLabel {
+  flex: none;
+  white-space: nowrap;
+}
+
 .note.warn {
   background: rgba(var(--accent-rgb), 0.09);
   color: var(--accent-ink);

@@ -2650,7 +2650,7 @@ export const economy: Catalog = {
   "solidarityDirectory.badgeMember": "Member",
   "solidarityDirectory.badgeVerified": "Verified",
   "solidarityDirectory.slidingScaleLabel": "Sliding scale",
-  "solidarityDirectory.contactCta": "Contact",
+  "solidarityDirectory.connectCta": "Connect",
   "solidarityDirectory.empty.title": "No practitioners match",
   "solidarityDirectory.empty.description":
     "No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care.",
@@ -3631,7 +3631,7 @@ export const economy: Catalog = {
     "{name} is a member in good standing. Every member is vouched for by someone already in the community.",
   "offerBoard.sidebarNoteVerified":
     "{name} is a member in good standing and has been verified by the team. Every member is vouched for by someone already in the community.",
-  "offerBoard.sayHelloCta": "Say hello to {name}",
+  "offerBoard.connectCta": "Connect with {name}",
   "offerBoard.moreFromBoard": "More from <em>the board</em>",
   "offerBoard.comingSoon.title": "Asks & Offers is on its way",
   "offerBoard.comingSoon.body":

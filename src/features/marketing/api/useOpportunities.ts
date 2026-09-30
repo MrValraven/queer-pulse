@@ -16,6 +16,12 @@ export interface OpportunitiesResult {
   fetchNextPage: () => void;
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
+  /**
+   * True when only the NEXT page failed (ENG-501). react-query sets `isError`
+   * as well, so the page keeps the roles already loaded and retries that page
+   * from its footer with `fetchNextPage`.
+   */
+  isFetchNextPageError: boolean;
   /** True while the first page is in flight. */
   isLoading: boolean;
   /**
@@ -87,6 +93,7 @@ export function useOpportunities(
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),

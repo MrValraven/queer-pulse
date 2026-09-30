@@ -447,7 +447,8 @@ span.navIcon svg {
 /* Save bar */
 .saveBar {
   position: fixed;
-  bottom: 0;
+  /* Rests on the consent banner's top edge while it shows (0 otherwise). */
+  bottom: var(--consent-inset, 0px);
   left: 260px;
   right: 0;
   background: var(--paper);
@@ -495,7 +496,7 @@ span.navIcon svg {
 /* Saved confirmation banner */
 .savedBar {
   position: fixed;
-  bottom: 0;
+  bottom: var(--consent-inset, 0px);
   left: 260px;
   right: 0;
   background: var(--plum);

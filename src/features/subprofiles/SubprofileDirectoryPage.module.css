@@ -255,6 +255,37 @@
   font-size: var(--text-13);
   color: var(--ink-60);
 }
+/* ENG-501: a failed "Show more", said beside the Retry it belongs to. It
+   grows into the row's free space and hugs the button. */
+.pagerStatus {
+  flex: 1 1 16ch;
+  text-align: end;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+/* Empty, the live region leaves the flex flow: absolutely placed with no
+   content it has no size, so it adds no gap and the row lays out as if it
+   were absent. It stays in the accessibility tree, so a failure still lands
+   in a live region that already exists. */
+.pagerStatus:empty {
+  position: absolute;
+}
+.pagerStatusMessage {
+  margin: 0;
+}
+/* On a phone the line takes its own full-width row under the count and the
+   button, right-aligned under Retry, `--gap-xs` below it like the stacked
+   footers elsewhere. The tighter row gap applies only while the line shows,
+   so a count and button that wrap on their own keep the 16px gap. */
+@media (--sm) {
+  .pager:has(.pagerStatus:not(:empty)) {
+    row-gap: var(--gap-xs);
+  }
+  .pagerStatus {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
 /* Says that the profession/tag/availability chips cut the personas loaded so
    far rather than the whole directory. Only rendered while one of them is on
    and there are further pages to pull. */

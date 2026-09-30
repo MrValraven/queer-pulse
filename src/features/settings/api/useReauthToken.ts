@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+import { routes } from "../../../app/routeMap";
 import { API_BASE_URL } from "../../../shared/api/config";
+import { refreshSession } from "../../../shared/api/client";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 
@@ -79,10 +81,41 @@ export function readReauthLandingToken(): string | null {
 }
 
 /**
- * Navigates the browser to `GET /auth/google?reauth=1&redirect=<here>` to
- * begin the step-up round trip. Full-page navigation, not an API call — has
- * no return value because the page is about to unload. The member lands back
- * on this exact path (`useReauthCompletion` picks up the result).
+ * Refreshes the session, then navigates the browser to
+ * `GET /auth/google?reauth=1&redirect=<here>` to begin the step-up round
+ * trip. This is a full-page navigation: the returned promise exists only so
+ * a caller can await the refresh before the browser leaves, resolves right
+ * before the page unloads, and otherwise carries nothing useful. The member
+ * lands back on this exact path (`useReauthCompletion` picks up the result).
+ *
+ * THE REFRESH COMES FIRST, ENG-497: the backend identifies the member for
+ * this round trip from the `access_token` cookie alone (`AuthController.
+ * googleCallback`'s reauth branch), whose maxAge is the short access-token
+ * TTL (`auth.config.ts`). A member idle on the delete or export page past
+ * that TTL would otherwise leave with a stale cookie and land back on
+ * `reauth_failed` even though their session is perfectly good. `refreshSession`
+ * is the same cross-tab, single-flight refresh every other 401 recovery in
+ * the app shares (`shared/api/client.ts`), so this never double-spends the
+ * rotating refresh token against a concurrent tab or an in-flight request.
+ *
+ * `refreshSession` reporting failure covers a few different causes:
+ * the member's own refresh token has lapsed, the server refused it (a 5xx or
+ * 429 counts as `rejected` too), the request hit a network fault, or the
+ * cross-tab refresh lock timed out waiting on another tab (`RefreshOutcome`
+ * in `shared/api/client.ts`). None of those tell this function apart from an
+ * actually-dead session, so the safe assumption is that there may be no
+ * session left to step up from, and the honest outcome is a full sign-in:
+ * this redirects to `routes.signIn` with a `next` back to the current path,
+ * matching the pattern `authGate.ts` already uses for a signed-out visitor
+ * hitting a gated route. Sending the browser to Google from here would only
+ * land back on `reauth_failed`. For an active member whose session was fine
+ * all along, this lands on the sign-in screen still signed in, and
+ * `authGate.ts`'s guest-only handling (`isGuestOnlyPath`) bounces them
+ * straight back to that same `next` path, so a transient network blip costs
+ * at most one extra hop and the flow keeps moving. A suspended or banned
+ * member takes `authGate.ts`'s earlier suspended branch instead, which finds
+ * the sign-in path ungated and returns before that guest-only check runs, so
+ * they stay on the sign-in screen.
  *
  * THE QUERY STRING SURVIVES THE ROUND TRIP, so a caller may park state in it
  * and find it intact on landing. Traced hop by hop: `redirect` is packed into
@@ -99,8 +132,13 @@ export function readReauthLandingToken(): string | null {
  * inside Google's `state` parameter) and re-validate it on landing, because it
  * came back through an external redirect and is untrusted input.
  */
-export function beginReauth(): void {
+export async function beginReauth(): Promise<void> {
   const returnPath = window.location.pathname + window.location.search;
+  const refreshed = await refreshSession();
+  if (!refreshed) {
+    window.location.href = `${routes.signIn}?next=${encodeURIComponent(returnPath)}`;
+    return;
+  }
   const url = new URL(`${API_BASE_URL}/auth/google`);
   url.searchParams.set("reauth", "1");
   url.searchParams.set("redirect", returnPath);

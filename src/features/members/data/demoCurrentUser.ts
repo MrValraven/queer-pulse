@@ -3,22 +3,23 @@ import type { Member } from "./members";
 import { routes } from "../../../app/routeMap";
 
 // ── The demo-mode signed-in user, standalone ────────────────────────────────
-// `members.ts` builds `currentUser`/`currentUserSlug` off its full ~3,400-line
-// MEMBERS registry (every seed + real member, ~120KB) just to pick out the one
-// "tiago" record — but two root providers (AuthProvider, ProfileProvider)
-// import `currentUser`/`currentUserSlug` from there and are
-// ALWAYS mounted (src/app/App.tsx's RootProviders/DataProviders, never behind
-// a lazy route), so that whole registry rode along in the entry chunk purely
-// for this one persona. This file holds only tiago's own record — a verbatim
-// copy of `MEMBERS.tiago` from members.ts — so those providers (and any
-// other always-mounted demo-identity read) never pull in the other members.
-// `data/members.ts` itself is untouched and still exports the same values (for
-// its own `currentUser`/`currentUserSlug`) for every already-lazy route/hook
-// that reads the full registry.
+// A light module for first paint. `members.ts` builds `currentUser` and
+// `currentUserSlug` off its full MEMBERS registry (every seed and real member,
+// ~120KB), and two root providers (AuthProvider, ProfileProvider) that are
+// always mounted (src/app/App.tsx's RootProviders/DataProviders, outside any
+// lazy route) need the demo identity. Importing it from `members.ts` put the
+// whole registry in the entry chunk for one persona, so this file holds only
+// tiago's record and those providers (and any other always-mounted
+// demo-identity read) import from here. `data/members.ts` still exports its
+// own `currentUser`/`currentUserSlug` for the already-lazy routes and hooks
+// that read the full registry.
 //
-// Keep this file's `currentUser` in sync by hand if `MEMBERS.tiago` in
-// members.ts changes — there's no shared source, by design (sharing one would
-// re-import the registry this file exists to avoid).
+// Kept in sync by hand with `MEMBERS.tiago` in members.ts: every field
+// (including the registration `id`) except the two below. Those two are set
+// here on purpose and differ from the registry entry: `respondsWithin` (so
+// the demo "me" shows a reply-time hint) and `ambassador: null` (explained
+// inline below). There is no shared source by design, since sharing one would
+// re-import the registry this file exists to avoid.
 
 /** Slug of the currently logged-in (demo-mode) user. Mirrors `currentUserSlug`
  *  in members.ts. */
@@ -28,12 +29,12 @@ export const currentUserSlug = "tiago";
  *  `currentUserEmail` in members.ts. */
 export const currentUserEmail = `${currentUserSlug}@queerpulse.app`;
 
-/** The demo-mode logged-in user's full profile record. A verbatim copy of
+/** The demo-mode logged-in user's full profile record. Mirrors
  *  `MEMBERS.tiago` in members.ts, including its registration-order `id`
- *  (21 — tiago is the 21st and last entry of `SEED_ENTRIES`, and `REAL_ENTRIES`
+ *  (21: tiago is the 21st and last entry of `SEED_ENTRIES`, and `REAL_ENTRIES`
  *  carries no `tiago` key to shift it; recompute if that ordering ever
- *  changes). See the file-level comment above for why this is a standalone
- *  copy instead of an import off `MEMBERS`. */
+ *  changes). The file-level comment above lists the synced fields and the two
+ *  that differ on purpose. */
 export const currentUser: Member = {
   id: 21,
   slug: "tiago",
@@ -105,8 +106,8 @@ export const currentUser: Member = {
       title: "Web development & mentorship for community projects",
       slug: "web-dev-help",
       status: "open",
-      expiresAt: "2026-08-23T12:00:00.000Z",
-      createdAt: "2026-05-25T12:00:00.000Z",
+      expiresAt: "2026-09-10T12:00:00.000Z",
+      createdAt: "2026-06-12T12:00:00.000Z",
     },
   ],
   vouchers: ["ines", "rui"],

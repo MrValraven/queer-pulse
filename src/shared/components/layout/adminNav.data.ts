@@ -44,7 +44,7 @@ import {
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
 import type { StaffRoleId } from "../../../features/admin/staffRoles.registry";
-import { currentUser } from "../../../features/members/data/members";
+import { currentUser } from "../../../features/members/data/demoCurrentUser";
 
 /** Live pending-count source for a nav pill, resolved in AdminSidebar. */
 export type AdminNavBadge =

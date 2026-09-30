@@ -18,6 +18,7 @@ import {
   DEFAULT_FREQ,
   FREQ_OPTIONS,
   LOOKING_FOR,
+  lookingForLabel,
   READING_PREFS,
 } from "./interests.data";
 import styles from "./InterestsPane.module.css";
@@ -28,7 +29,7 @@ export function InterestsPane({
   onChange: (key?: string) => void;
 }) {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfileEdit();
+  const { draft } = useProfileEdit();
   const uid = useId();
   const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
   const [freq, setFreq] = useState(DEFAULT_FREQ);
@@ -54,41 +55,7 @@ export function InterestsPane({
 
       <ProfessionalDetailsSection onChange={onChange} />
 
-      <div className={styles.prefSection}>
-        <div className={styles.psHead} id={`${uid}-lookingFor`}>
-          {t("settings:interests.lookingFor.heading")}
-        </div>
-        <div className={styles.psHelper}>
-          {t("settings:interests.lookingFor.helper")}
-        </div>
-        {/* LOOKING_FOR.options are the literal stored value of
-            draft.lookingFor — see the NOTE in interests.data.ts. Left
-            untranslated on purpose. */}
-        <ChipSelect
-          tick={false}
-          labelledBy={`${uid}-lookingFor`}
-          options={LOOKING_FOR.options}
-          selected={new Set(draft.lookingFor)}
-          onToggle={(label) => {
-            const next = draft.lookingFor.includes(label)
-              ? draft.lookingFor.filter((x) => x !== label)
-              : [...draft.lookingFor, label];
-            updateDraft({ lookingFor: next });
-            onChange("interests.lookingFor");
-          }}
-        />
-        <div className={styles.showOnProfileRow}>
-          <Toggle
-            checked={draft.lookingForPublic}
-            onChange={(checked) => {
-              updateDraft({ lookingForPublic: checked });
-              onChange("interests.lookingFor");
-            }}
-            label={t("settings:interests.lookingFor.showOnProfile")}
-          />
-          <span>{t("settings:interests.lookingFor.showOnProfile")}</span>
-        </div>
-      </div>
+      <LookingForSection onChange={onChange} />
 
       <div className={styles.prefSection}>
         <div className={styles.psHead}>
@@ -204,6 +171,64 @@ export function InterestsPane({
 
       <ContentSettingsSection />
     </Pane>
+  );
+}
+
+/**
+ * The "looking for" chip picker and its show-on-profile toggle. Its own
+ * component so it can own its translated chip options and the `uid` for its
+ * `aria-labelledby` pairing without pushing `InterestsPane` past the repo's
+ * 200-line rule; it takes only `onChange` and reads `draft`/`updateDraft`
+ * itself, matching the other self-contained sections in this pane.
+ */
+function LookingForSection({ onChange }: { onChange: (key?: string) => void }) {
+  const { t } = useTranslation();
+  const { draft, updateDraft } = useProfileEdit();
+  const uid = useId();
+  // The chip's stored `value` stays the raw English string (see the NOTE in
+  // interests.data.ts); only the `label` shown on screen is translated.
+  const lookingForChipOptions = LOOKING_FOR.options.map((value) => ({
+    value,
+    label: lookingForLabel(t, value),
+  }));
+
+  return (
+    <div className={styles.prefSection}>
+      <div className={styles.psHead} id={`${uid}-lookingFor`}>
+        {t("settings:interests.lookingFor.heading")}
+      </div>
+      <div className={styles.psHelper}>
+        {t("settings:interests.lookingFor.helper")}
+      </div>
+      {/* LOOKING_FOR.options are the literal stored value of
+          draft.lookingFor: see the NOTE in interests.data.ts. The chip's
+          stored value stays untranslated; lookingForChipOptions carries
+          the translated label alongside it. */}
+      <ChipSelect
+        tick={false}
+        labelledBy={`${uid}-lookingFor`}
+        options={lookingForChipOptions}
+        selected={new Set(draft.lookingFor)}
+        onToggle={(value) => {
+          const next = draft.lookingFor.includes(value)
+            ? draft.lookingFor.filter((x) => x !== value)
+            : [...draft.lookingFor, value];
+          updateDraft({ lookingFor: next });
+          onChange("interests.lookingFor");
+        }}
+      />
+      <div className={styles.showOnProfileRow}>
+        <Toggle
+          checked={draft.lookingForPublic}
+          onChange={(checked) => {
+            updateDraft({ lookingForPublic: checked });
+            onChange("interests.lookingFor");
+          }}
+          label={t("settings:interests.lookingFor.showOnProfile")}
+        />
+        <span>{t("settings:interests.lookingFor.showOnProfile")}</span>
+      </div>
+    </div>
   );
 }
 

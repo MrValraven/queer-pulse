@@ -118,7 +118,8 @@ export function DataExportPage() {
 
   // Stable ids, never the translated label. This array is sent to the live
   // `POST /account/export` endpoint as well as matched locally in
-  // `buildDemoArchive`, so it must not change with the active language.
+  // `buildDemoArchiveManifest` (demoExportArchive.data.ts), so it must not
+  // change with the active language.
   const selectedCategoryIds = DATA_TYPES.filter(
     (_, index) => checked[index],
   ).map((dataType) => dataType.id);

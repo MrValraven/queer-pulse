@@ -5,7 +5,7 @@ import {
   sendListingEnquiry,
   type ListingEnquirySentDTO,
 } from "./listingEnquiries.api";
-import { DIRECTORY_KEY } from "./useDirectory";
+import { DIRECTORY_KEY } from "./directoryQueryKey";
 import { LISTING_CONTACT_KEY } from "./useListingContact";
 
 /** The backend's own minimum on an enquiry body (`CreateListingEnquiryDto`).

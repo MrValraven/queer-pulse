@@ -12,7 +12,7 @@ import styles from "./MobileProfile.module.css";
 
 /**
  * Visitor action cluster for the mobile member profile: the primary CTA
- * ("Say hello" / "Message" / "Accept") and the secondary control (Vouch /
+ * ("Connect" / "Message" / "Accept") and the secondary control (Vouch /
  * Decline / the vouched pill) side by side at equal width, with the "…"
  * safety menu as a quiet 44px icon at the end of the same row. Mirrors the
  * live-visitor data branch of the desktop's `ProfileHeroActions` (same
@@ -56,7 +56,7 @@ export function MobileProfileActions({
 
   const primary = asVisitor ? (
     <Button size="md" className={styles.actionButton} disabled>
-      {t("members:profile.hero.sayHelloCta")}
+      {t("members:profile.hero.connectCta")}
     </Button>
   ) : hasIncomingRequest ? (
     // They asked first: the primary answers them. Decline sits beside it,
@@ -82,7 +82,7 @@ export function MobileProfileActions({
     >
       {connected
         ? t("connect:contact.message")
-        : t("members:profile.hero.sayHelloCta")}
+        : t("members:profile.hero.connectCta")}
     </Button>
   );
 

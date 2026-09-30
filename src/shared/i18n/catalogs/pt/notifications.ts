@@ -11,9 +11,9 @@ import type { Catalog } from "../../types";
  * "bem-vinde" como forma neutra.
  */
 export const notifications: Catalog = {
-  "type.connection_request.text": "Alguém quer ligar-se a ti.",
+  "type.connection_request.text": "Alguém quer conectar-se a ti.",
   "type.connection_request.textNamed":
-    "<profile>{name}</profile> quer ligar-se a ti.",
+    "<profile>{name}</profile> quer conectar-se a ti.",
   "type.connection_request.meta": "Pedido de conexão",
 
   "type.connection_accepted.text": "O teu pedido de conexão foi aceite.",
@@ -1019,9 +1019,9 @@ export const notifications: Catalog = {
   "actions.viewProfile": "Ver perfil",
   "actions.accept": "Aceitar",
   "actions.decline": "Recusar",
-  // PRD-15. Confirmações das duas respostas que a linha "quer ligar-se" passa
+  // PRD-15. Confirmações das duas respostas que a linha "quer conectar-se" passa
   // a oferecer.
-  "actions.acceptedToast": "Ligaste-te a {name}",
+  "actions.acceptedToast": "Conectaste-te a {name}",
   "actions.declinedToast": "Recusado com delicadeza",
   "actions.readNow": "Ler agora",
   "actions.seeDetails": "Ver detalhes",

@@ -4,6 +4,7 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { AdminChip, AdminDrawer } from "./ui";
+import { AdminLegalRequestAmendments } from "./AdminLegalRequestAmendments";
 import { AdminLegalRequestDetailFacts } from "./AdminLegalRequestDetailFacts";
 import { AdminLegalRequestVoidModal } from "./AdminLegalRequestVoidModal";
 import { useAdminLegalRequest } from "./api/useAdminLegalRequests";
@@ -114,6 +115,7 @@ export function AdminLegalRequestDetail({
               </div>
             )}
             <AdminLegalRequestDetailFacts record={record} />
+            <AdminLegalRequestAmendments recordId={record.id} />
           </>
         )}
       </AdminDrawer>

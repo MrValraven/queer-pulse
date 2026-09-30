@@ -565,10 +565,8 @@
   gap: var(--gap-xs);
   margin-top: 12px;
 }
-/* A failed "Load more": the loaded roles stay above, this line says why. */
-.loadMoreError {
-  margin: 0;
-  font-size: var(--text-body-sm);
-  color: var(--ink-60);
-  text-align: center;
+/* The "Load more roles" footer (the shared stacked `LoadMoreFooter`): the
+   same offset as `.loadMore`, its failure line `--gap-xs` above the button. */
+.jobsLoadMore {
+  margin-top: 12px;
 }

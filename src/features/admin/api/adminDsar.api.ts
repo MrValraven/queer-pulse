@@ -36,11 +36,17 @@ export interface AdminDsarRequestDTO {
   status: AdminDsarStatus;
   /** Which parts of their data the member named on the intake form. */
   scopes: string[];
-  /** What they asked for, in their own words. */
+  /** What they asked for, in their own words. Empty once the requester has
+   *  erased their account: erasure wipes their free text from the row. */
   details: string;
   /** Where in the product they filed it from, when intake captured that. */
   context: string | null;
+  /** Null once the requester has erased their account, or when their profile
+   *  cannot be resolved. */
   member: AdminDsarMemberDTO | null;
+  /** True once the requester has erased their account. The request stays as
+   *  a statutory record, and closing it notifies nobody. */
+  isRequesterErased: boolean;
   submittedAt: string;
   /** The statutory deadline: submitted + 30 days. */
   dueBy: string;

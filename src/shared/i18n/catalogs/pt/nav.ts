@@ -23,6 +23,7 @@ export const nav: Catalog = {
   updateEyebrow: "Atualização pronta",
   updateHeadline: "Andámos ocupados.",
   updateHeadlineAccent: "Vem ver o que há de novo",
+  updateHeadlineAccentVersion: "Vem ver o que há de novo na {version}",
   updateBody:
     "Juntámos algumas correções, melhorias e umas quantas novidades desde a última vez que abriste o QueerPulse.",
   updateWhatChanged: "O que mudou",

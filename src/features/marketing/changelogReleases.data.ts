@@ -8,6 +8,11 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "30 Sep 2026": {
+      // Seven entries this day, so two highlights: the sign-in redesign first,
+      // since every member sees it, then the export coverage.
+      highlights: ["sign-in-welcome-home", "export-covers-nearly-everything"],
+    },
     "29 Sep 2026": {
       // Well over seven entries this day, so three highlights; features first,
       // the editor desk redesign leads as the largest build of the day, and

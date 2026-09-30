@@ -1,10 +1,25 @@
-import { useCallback, useMemo, useState, type ReactNode } from "react";
-import { VouchMemberModal } from "../../features/members/VouchMemberModal";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useAuth } from "./authContext";
 import { useVouchMutations } from "../../features/members/api/useVouchMutations";
 import { useScopedLocalStorage } from "./useScopedLocalStorage";
 import { useStorageScope } from "./useStorageScope";
 import { VouchContext, type VouchStore } from "./useVouch";
+import { lazyModal } from "./lazyModal";
+import { ModalLoadBoundary } from "./ModalLoadBoundary";
+
+// Code-split, warmed at idle: the modal's demo fallback reads the whole member
+// registry, which would otherwise ride along in first paint.
+const vouchMemberModal = lazyModal(() =>
+  import("../../features/members/VouchMemberModal").then(
+    (module) => module.VouchMemberModal,
+  ),
+);
 
 const STORAGE_KEY = "qp.vouches.v1";
 
@@ -60,6 +75,14 @@ export function VouchProvider({ children }: { children: ReactNode }) {
 
   const openVouch = useCallback((slug: string) => setOpenSlug(slug), []);
   const close = useCallback(() => setOpenSlug(null), []);
+  const handleLoadFailure = useCallback(() => {
+    vouchMemberModal.retryAfterFailure();
+    setOpenSlug(null);
+  }, []);
+
+  useEffect(() => {
+    vouchMemberModal.warmWhenIdle();
+  }, []);
 
   const value = useMemo<VouchStore>(
     () => ({
@@ -76,20 +99,22 @@ export function VouchProvider({ children }: { children: ReactNode }) {
     <VouchContext.Provider value={value}>
       {children}
       {openSlug && (
-        <VouchMemberModal
-          slug={openSlug}
-          onClose={close}
-          // The modal performs the real vouch write itself (useVouchMember).
-          // onVouched only records it in the optimistic list that drives
-          // `hasVouched` + the face-row — it must NOT fire its own POST here, or
-          // the endpoint would 409 (the modal already created the row) and the
-          // failure would roll this entry back out. Prepend without a network write.
-          onVouched={() =>
-            setVouched((prev) =>
-              prev.includes(openSlug) ? prev : [openSlug, ...prev],
-            )
-          }
-        />
+        <ModalLoadBoundary onFailure={handleLoadFailure}>
+          <vouchMemberModal.Component
+            slug={openSlug}
+            onClose={close}
+            // The modal performs the real vouch write itself (useVouchMember).
+            // onVouched only records it in the optimistic list that drives
+            // `hasVouched` + the face-row: it must NOT fire its own POST here, or
+            // the endpoint would 409 (the modal already created the row) and the
+            // failure would roll this entry back out. Prepend without a network write.
+            onVouched={() =>
+              setVouched((prev) =>
+                prev.includes(openSlug) ? prev : [openSlug, ...prev],
+              )
+            }
+          />
+        </ModalLoadBoundary>
       )}
     </VouchContext.Provider>
   );

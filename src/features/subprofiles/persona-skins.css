@@ -401,8 +401,7 @@
    of a centred headline). */
 .pp[data-skin="table"] .pp-taglineRow,
 .pp[data-skin="chart"] .pp-taglineRow,
-.pp[data-skin="chair"] .pp-taglineRow,
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-taglineRow {
+.pp[data-skin="chair"] .pp-taglineRow {
   align-items: center;
 }
 .pp-acts {
@@ -6294,330 +6293,438 @@ button.pp-row {
   margin-top: 3px;
 }
 
-/* ═══════════ QUEST: a character sheet, or a hex map ═══════════
-   Two concepts drawn from one block, picked by `data-quest-variant` on `.pp`
-   (`useQuestSkinVariant`, the `?questSkin=` comparison switch):
-   • sheet (the default): a parchment character sheet. Sections are boxed
-     stat-block panels under a double rule, each label set into the top border
-     like a fieldset legend, and "At the table" reads as the sheet's rules box.
-   • map: a hex-grid map sheet. Single inked borders with compass-corner ticks,
-     small-caps headings in Alegreya SC, and a centred title cartouche.
-   The shared rules read four concept variables (`--qs-display`, `--qs-panel`,
-   `--qs-frame`, `--qs-mark`), so each concept restates only the structure it
-   changes. Every colour is a token from tokens/skin-quest.css; those tokens
-   flip with the theme, so the dark counterparts further down need no Quest
-   entry. */
+/* ═══════════ QUEST: the adventurer's handbook ═══════════
+   One concept with two faces that follow the app theme:
+   • dark, the handbook's front page: a blue-black ground, grey-800 panels
+     inside a thin gold frame with cut corners, heavy near-white serif
+     headings, light grey body copy and small gold caps labels.
+   • light, a compendium page: a parchment ground, white panels on a soft
+     shadow, an amber hairline under each heading, and "At the table" set
+     apart by a warm edge and a deeper lift, like a quick-build callout.
+   Three families carry the type: Alegreya for display, Roboto Condensed caps
+   for labels, chips and buttons, Roboto Flex for reading text. The shared
+   rules read the concept variables below (`--qs-*`), so the dark face only
+   restates the frame. Every colour is a token from tokens/skin-quest.css,
+   whose dark block reassigns them. */
 .pp[data-skin="quest"] {
   background: var(--skin-quest-ground);
-  color: var(--skin-quest-ink);
-  --ink: var(--skin-quest-ink);
-  --ink-60: rgba(var(--skin-quest-ink-rgb), 0.74);
-  /* 0.66 for AA: 4.77:1 on the parchment and 4.93:1 on a panel (0.61 lands
-     at 4.2:1). The map concept raises it again for its darker ground. */
-  --ink-40: rgba(var(--skin-quest-ink-rgb), 0.66);
+  color: var(--skin-quest-text);
+  --ink: var(--skin-quest-text);
+  --ink-60: var(--skin-quest-muted);
+  --ink-40: var(--skin-quest-muted);
   --text-strong: var(--skin-quest-ink);
   --sk-ink: var(--skin-quest-ink);
-  --line: rgba(var(--skin-quest-ink-rgb), 0.16);
+  --sk-tint: var(--skin-quest-link);
+  --accent-ink: var(--skin-quest-label);
+  --line-rgb: var(--skin-quest-ink-rgb);
+  --line: rgba(var(--skin-quest-ink-rgb), 0.14);
+  --line-strong: var(--skin-quest-muted);
   --wash: rgba(var(--skin-quest-ink-rgb), 0.05);
-  --qs-display: "Cinzel", "Newsreader", var(--serif);
-  --qs-body: "Newsreader", var(--serif);
+  --qs-display: "Alegreya", var(--serif);
+  --qs-label: "Roboto Condensed", var(--sans);
+  --qs-body: "Roboto Flex Variable", "Roboto Flex", var(--sans);
   --qs-panel: var(--skin-quest-panel);
-  --qs-frame: var(--skin-quest-rule);
-  --qs-mark: var(--skin-quest-accent);
+  --qs-frame: var(--skin-quest-frame);
+  --qs-mark: var(--skin-quest-label);
+  /* The corner cut of a framed panel, and the lift under it. The light face
+     draws square panels on a shadow; the dark face cuts the corners and
+     lets the gold frame do the lifting. */
+  --qs-notch: 0px;
+  --qs-row-notch: 0px;
+  --qs-lift: var(--shadow-e2);
+  --qs-callout-lift: var(--shadow-e3), var(--shadow-e1);
+  /* The space between the hero, the callout and each panel: tighter than
+     the base rhythm, closer to a handbook page's density. */
+  --qs-gap: clamp(var(--gap-lg), 4cqw, var(--section-y-48));
+  /* The keyboard ring, in the shape of the app's `--focus-ring` token and
+     painted in the link colour: red-700 on the compendium page (7.8:1 on a
+     panel), gold-300 on the dark face (9.5:1). The offset and the cream halo
+     stay the app's. */
+  --qs-focus: var(--skin-quest-link);
+  --focus-ring: 3px solid var(--qs-focus);
+  font-family: var(--qs-body);
 }
-.pp[data-skin="quest"][data-quest-variant="map"] {
-  background-color: var(--skin-quest-map-ground);
-  isolation: isolate;
-  /* 0.70 on the map ground: 5.15:1 on clear paper and 4.8:1 where a grid line
-     runs under the text (0.66 lands at 4.57:1 and dips below AA on a line). */
-  --ink-40: rgba(var(--skin-quest-ink-rgb), 0.7);
-  --qs-display: "Alegreya SC", "Newsreader", var(--serif);
-  --qs-panel: color-mix(in srgb, var(--skin-quest-panel) 55%, transparent);
-  --qs-frame: var(--skin-quest-map-line);
-  --qs-mark: var(--skin-quest-map-sea);
+[data-theme="dark"] .pp[data-skin="quest"] {
+  --qs-notch: 12px;
+  --qs-row-notch: 6px;
+  --qs-lift: none;
+  --qs-callout-lift: none;
 }
-/* The hex grid. A true pointy-top hex outline cannot be cut from gradients
-   (a gradient line crosses its whole tile, and a hex edge is a segment), so
-   the outline is a colourless SVG mask stencil and the ink is a token fill
-   behind it: the grid follows the theme through `--skin-quest-ink-rgb` like
-   every other Quest line. `isolation: isolate` on the map `.pp` makes it the
-   stacking context (Chrome does not treat its container-type as one), so
-   `z-index: -1` keeps the grid above the page ground and under every panel
-   and line of text instead of sliding behind the ground itself. */
-.pp[data-skin="quest"][data-quest-variant="map"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: rgba(var(--skin-quest-ink-rgb), 0.08);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34.64' height='60' viewBox='0 0 34.64 60'%3E%3Cpath d='M17.32 0V10L0 20V40L17.32 50V60M17.32 10L34.64 20V40L17.32 50' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E")
-    0 0 / 34.64px 60px repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34.64' height='60' viewBox='0 0 34.64 60'%3E%3Cpath d='M17.32 0V10L0 20V40L17.32 50V60M17.32 10L34.64 20V40L17.32 50' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E")
-    0 0 / 34.64px 60px repeat;
+/* The owner's accent arrives as inline custom properties: `--sk-tint` on
+   `.pp` itself (which outranks the declaration above) and `--accent-tint`
+   on the availability chip and the social row. Quest paints one palette
+   whatever the accent, so both are redeclared a level down, where the inline
+   values no longer apply. */
+.pp[data-skin="quest"] > * {
+  --sk-tint: var(--skin-quest-link);
+}
+.pp[data-skin="quest"] :is(.pp-avail, .pp-social-row) > * {
+  --accent-tint: var(--skin-quest-label);
 }
 .pp[data-skin="quest"] .wrap {
   max-width: 920px;
 }
-/* A bare sheet or map needs no empty banner: the band shows only once the
-   owner has uploaded a cover. */
+/* A bare page needs no empty banner: the band shows only once the owner has
+   uploaded a cover. */
 .pp[data-skin="quest"] .pp-cover:not([data-has-cover]) {
   display: none;
 }
 .pp[data-skin="quest"] .pp-cover {
   --pp-cover-h: clamp(120px, 18cqw, 200px);
 }
-.pp[data-skin="quest"] .art img {
-  filter: sepia(0.14) saturate(0.95);
-}
 
-/* ── Hero: the sheet's header block, or the map's title cartouche ── */
+/* ── Hero: open on the ground, like the handbook's landing banner ── */
 .pp[data-skin="quest"] .pp-hero {
   margin-top: var(--gap-lg);
-  padding: clamp(22px, 3.6cqw, 40px);
-  background: var(--qs-panel);
-}
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-hero {
-  border: 4px double var(--qs-frame);
-  border-radius: var(--radius-3);
-}
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-hero {
-  border: 1px solid var(--qs-frame);
+  padding-top: clamp(8px, 2cqw, 24px);
 }
 .pp[data-skin="quest"] .pp-id {
   padding-top: 0;
   gap: 24px;
 }
+/* The base round avatar inside a gold ring: the border is the ring, and an
+   offset outline draws a second, finer ring outside it. The focus rule at
+   the foot of this file replaces the outline while the avatar is focused. */
 .pp[data-skin="quest"] .pp-av {
   margin-top: 0;
-  width: 3.5em; /* 77 / 22 */
+  width: 3.5em; /* 84 / 24 */
   height: 3.5em;
-  font-size: var(--text-22);
-  border: 3px double var(--qs-frame);
+  font-size: var(--text-24);
+  border: 2px solid var(--skin-quest-avatar-ring);
+  outline: 1px solid var(--skin-quest-avatar-ring);
+  outline-offset: 3px;
   box-shadow: none;
-  background: none;
-  color: var(--qs-mark);
+  background: var(--skin-quest-avatar-fill);
+}
+/* The initials disc inside the frame (Avatar's inner circle) sets its own
+   tint, hairline and serif, so the frame's fill and type land on it. */
+.pp[data-skin="quest"] .pp-av > * {
+  border: 0;
+  background: var(--skin-quest-avatar-fill);
+  color: var(--skin-quest-avatar-ink);
   font-family: var(--qs-display);
+  font-weight: 800;
 }
 .pp[data-skin="quest"] .pp-name {
   font-family: var(--qs-display);
-  font-weight: 700;
-  font-size: clamp(var(--text-30), 5.4cqw, var(--text-54));
-  line-height: 1.1;
-  letter-spacing: 0.02em;
-  color: var(--ink);
+  font-weight: 800;
+  font-size: clamp(var(--text-40), 6.4cqw, var(--text-64));
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--skin-quest-ink);
+  text-wrap: balance;
+  hyphens: auto;
 }
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-name {
-  font-weight: 400;
-  letter-spacing: 0.01em;
-}
+/* The craft is a category tag: a boxed gold caps label. */
 .pp[data-skin="quest"] .pp-kind {
-  font-family: var(--qs-display);
-  font-size: var(--text-13);
+  font-family: var(--qs-label);
+  font-size: var(--text-12-5);
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: none;
-  color: var(--qs-mark);
-  background: none;
-}
-/* On the sheet the craft is the character's class, stamped in a box. */
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-kind {
-  padding: 4px 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
   border: 1px solid var(--qs-mark);
   border-radius: var(--radius-2);
-}
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-kind {
-  padding: 0;
-  font-size: var(--text-15);
-}
-.pp[data-skin="quest"] .pp-tagline {
-  font-family: var(--qs-body);
-  font-style: italic;
-  font-size: clamp(var(--text-17), 2.1cqw, var(--text-21));
-  color: var(--ink-60);
-  max-width: 44ch;
-}
-.pp[data-skin="quest"] .pp-owner em {
+  background: none;
   color: var(--qs-mark);
 }
-/* The bio is the sheet's backstory field: ruled off from the identity block
-   and set in the body serif. The rule spans the whole panel while the text
-   keeps a 60ch measure: the measure is an end padding, so the box (and its
-   border) stays full width instead of stopping where the text does. */
+/* Roboto Flex ships no italic, so the tagline stands apart by weight and the
+   muted colour. */
+.pp[data-skin="quest"] .pp-tagline {
+  font-family: var(--qs-body);
+  font-weight: 500;
+  font-size: clamp(var(--text-17), 2cqw, var(--text-20));
+  color: var(--skin-quest-muted);
+  max-width: 48ch;
+}
+.pp[data-skin="quest"] .pp-owner {
+  font-family: var(--qs-label);
+  font-weight: 500;
+}
+.pp[data-skin="quest"] .pp-owner em {
+  font-style: normal;
+  color: var(--qs-mark);
+}
+.pp[data-skin="quest"] .pp-meta {
+  font-family: var(--qs-label);
+  font-size: var(--text-14);
+  letter-spacing: 0.02em;
+}
+.pp[data-skin="quest"] .pp-meta b {
+  color: var(--skin-quest-ink);
+  font-weight: 700;
+}
+@media (hover: hover) {
+  .pp[data-skin="quest"] .pp-metabtn:not(:disabled):hover {
+    color: var(--skin-quest-link);
+  }
+}
+/* Under 640px the base grows each count and the owner line to a 44px hit
+   area with a negative block bleed, which leaves 22px of visible line per
+   row; a 22px row gap keeps the wrapped owner line clear of the counts'
+   hit areas. */
+@container (max-width:640px) {
+  .pp[data-skin="quest"] .pp-meta {
+    row-gap: var(--gap-grid);
+  }
+}
+/* The bio reads as the handbook's intro paragraph, ruled off from the
+   identity block. The rule spans the whole column while the text keeps a 62ch
+   measure: the measure is an end padding, so the box (and its border) stays
+   full width. */
 .pp[data-skin="quest"] .pp-bio {
   font-family: var(--qs-body);
   font-size: var(--text-17);
   line-height: 1.7;
+  color: var(--skin-quest-text);
   max-width: none;
-  padding-inline-end: max(0px, calc(100% - 60ch));
-  margin-top: 22px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
+  padding-inline-end: max(0px, calc(100% - 62ch));
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--skin-quest-rule);
 }
 /* Under 640px the base centres the bio; an end padding would pull the centred
-   text off axis, and the narrow panel keeps the measure short anyway. */
+   text off axis, and the narrow column keeps the measure short anyway. */
 @container (max-width:640px) {
   .pp[data-skin="quest"] .pp-bio {
     padding-inline-end: 0;
   }
 }
-/* The map centres its cartouche at every width (the base only centres the
-   identity column under 640px). The tagline row is centred with the other
-   centred skins near the top of this file. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-id {
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-/* `flex: none`: the base `flex-basis: 340px` reads as a minimum HEIGHT once
-   the identity block runs as a column, and left a dead band under the meta
-   line at wide widths. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-text {
-  flex: none;
-  align-self: stretch;
-  align-items: center;
-}
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-acts,
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-meta,
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-social-row {
-  justify-content: center;
-}
-/* The availability status takes its own centred line at every width (the
-   base does this under 640px), so the button row stays centred on its own. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-acts {
-  row-gap: 12px;
-}
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-acts > .pp-avail {
-  flex: 0 0 100%;
-  justify-content: center;
-}
-/* The cartouche stays centred; the bio is prose, so it reads from the left
-   edge like the ruled fields below it. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-bio {
-  margin-inline: 0;
-  text-align: start;
-}
-/* The compass point on the cartouche's top edge: a small inked diamond. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-hero::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 11px;
-  height: 11px;
-  border: 1px solid var(--qs-mark);
-  background: var(--skin-quest-map-ground);
-  transform: translate(-50%, -50%) rotate(45deg);
-  pointer-events: none;
-}
 
-/* ── Panels: sections, the spotlight and the "At the table" box ── */
-.pp[data-skin="quest"] .pp-sec,
-.pp[data-skin="quest"] .quest-table {
-  position: relative;
-  background: var(--qs-panel);
+/* ── Actions: square caps buttons, a red primary and gold-lined ghosts ──
+   The buttons are the shared `Button`, whose classes are hashed, so the
+   colours travel through the custom properties it reads: the primary fill
+   and its hover, the Following/Endorsed fill, and the label channel (white
+   here, 4.8:1 on the red). Shape and type land structurally, on the hero
+   row and on the spotlight's call to action. `a[class]` keeps a plain "open
+   the thread" link out, `:not(.pp-social-row > *)` keeps the spotlight's
+   social icons out, and the open more-menu panel's items are styled with
+   the panel further down. */
+.pp[data-skin="quest"] :is(.pp-acts, .pp-spot .txt) {
+  --accent-fill: var(--skin-quest-button);
+  --accent-deep: var(--skin-quest-button-hover);
+  --jade-fill: var(--skin-quest-button-kept);
+  --cream-rgb: var(--skin-quest-on-button-rgb);
+  /* The light ghost's own hover tint is plum; point it at the page ink. */
+  --plum-rgb: var(--skin-quest-ink-rgb);
 }
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-sec,
-.pp[data-skin="quest"][data-quest-variant="sheet"] .quest-table {
-  border: 4px double var(--qs-frame);
-  border-radius: var(--radius-3);
-  padding: 0 clamp(18px, 3cqw, 30px) clamp(16px, 2.6cqw, 26px);
-}
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-sec,
-.pp[data-skin="quest"][data-quest-variant="map"] .quest-table {
-  border: 1px solid var(--qs-frame);
-  padding: clamp(20px, 3cqw, 32px);
-}
-/* The sheet's panel label sits IN the top border, legend style: pulled up by
-   half its own line plus half the 4px border, on a panel-coloured backing
-   that breaks the double rule behind it. Cinzel has no lowercase, so the
-   label reads as small caps with no text-transform. */
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-sec > header,
-.pp[data-skin="quest"][data-quest-variant="sheet"] .quest-table-title {
-  width: fit-content;
-  font-size: var(--text-14);
-  line-height: 1.2;
-  margin: calc(-0.6em - 2px) 0 0 -10px;
-  padding: 0 10px;
-  background: var(--skin-quest-panel);
-}
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-sec > header {
-  margin-bottom: 14px;
-}
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-sec h2,
-.pp[data-skin="quest"][data-quest-variant="sheet"] .quest-table-title {
-  font-family: var(--qs-display);
+.pp[data-skin="quest"]
+  :is(.pp-acts, .pp-spot .txt)
+  :is(a[class], button):not([role="menuitem"], .pp-social-row > *) {
+  border-radius: var(--radius-2);
+  border-width: 1px;
+  border-color: var(--skin-quest-button-line);
+  box-shadow: none;
+  font-family: var(--qs-label);
   font-size: var(--text-14);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
-  color: var(--qs-mark);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-.pp[data-skin="quest"] .pp-sec .count {
-  font-size: var(--text-12);
+/* The more-menu trigger's glyph is sized by its font-size. The shared rule
+   above sets 14px for the button labels, so this rule outranks it (an extra
+   attribute and class) to put the glyph back at the 18px its module sets. */
+.pp[data-skin="quest"]
+  .pp-acts
+  .pp-moreMenu
+  > button[aria-haspopup]:not([role="menuitem"], .pp-social-row > *) {
+  font-size: var(--text-18);
 }
-/* The map's heading sits inside the frame, with an inked rule running out
-   from it to the far edge like a legend line. "At the table" has no header
-   wrapper, so its title carries the same flex row and rule itself. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-sec > header {
-  align-items: center;
-  padding-bottom: 14px;
+/* The hover wash is the page ink at a low alpha, laid as a background image
+   so it sits over whatever fill the Button paints: a tint on a ghost, a
+   slight shift on the red. White on the washed red stays above 6:1. The
+   more-menu trigger paints its own hover fill in its module, so that fill
+   is cleared here and the trigger shows the one wash. */
+@media (hover: hover) {
+  .pp[data-skin="quest"]
+    :is(.pp-acts, .pp-spot .txt)
+    :is(a[class], button):not([role="menuitem"], .pp-social-row > *):not(
+      :disabled
+    ):hover {
+    border-color: var(--skin-quest-button-line-hover);
+    background-image: linear-gradient(
+      rgba(var(--skin-quest-ink-rgb), 0.08),
+      rgba(var(--skin-quest-ink-rgb), 0.08)
+    );
+  }
+  .pp[data-skin="quest"]
+    .pp-acts
+    .pp-moreMenu
+    > button[aria-haspopup]:not([role="menuitem"], .pp-social-row > *):not(
+      :disabled
+    ):hover {
+    background-color: transparent;
+  }
 }
-.pp[data-skin="quest"][data-quest-variant="map"] .quest-table-title {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+/* The flat rule above outranks the Button's own focus halo, so restate the
+   focus triple here. */
+.pp[data-skin="quest"]
+  :is(.pp-acts, .pp-spot .txt)
+  :is(a[class], button):not(
+    [role="menuitem"],
+    .pp-social-row > *
+  ):focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-sec > header::after,
-.pp[data-skin="quest"][data-quest-variant="map"] .quest-table-title::after {
+/* Availability: a caps status chip, the dot still carrying the state. */
+.pp[data-skin="quest"] .pp-acts > .pp-avail {
+  padding: 6px 10px;
+  border-radius: var(--radius-2);
+  background: var(--skin-quest-chip);
+  color: var(--skin-quest-chip-ink);
+  font-family: var(--qs-label);
+  font-size: var(--text-12-5);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* Under 640px the base stretches the status across its own line, where a
+   full-width grey chip reads as a disabled button. Quest keeps it at its own
+   width, centred by the row. */
+@container (max-width:640px) {
+  .pp[data-skin="quest"] .pp-acts > .pp-avail {
+    flex: 0 0 auto;
+  }
+}
+/* The more-menu panel, restyled from the app popover to a Quest panel: the
+   panel colour, a 1px frame, square corners, the body font and page ink,
+   and a Report red that clears 4.5:1 on the panel in both themes. */
+.pp[data-skin="quest"] .pp-moreMenuPanel {
+  --danger: var(--skin-quest-danger);
+  background: var(--qs-panel);
+  border: 1px solid var(--skin-quest-popover-edge);
+  border-radius: var(--radius-2);
+  font-family: var(--qs-body);
+}
+.pp[data-skin="quest"] .pp-moreMenuPanel [role="menuitem"],
+.pp[data-skin="quest"] .pp-moreMenuPanel [role="menuitem"]:focus-visible {
+  border-radius: var(--radius-2);
+}
+/* Share comes first; Report, last, keeps the danger red above. */
+.pp[data-skin="quest"] .pp-moreMenuPanel [role="menuitem"]:first-child {
+  color: var(--skin-quest-ink);
+}
+/* Social links are quiet borderless icons in their DOM place above the
+   actions, so the tab order matches the reading order. Each keeps its 44px
+   hit area; the row's negative inline margin lines the first glyph up with
+   the text edge, and stays symmetric so a centred hero stays centred. `> *`
+   also reaches the static `span` icons (the editor preview, a handle with no
+   link), whose module fade would drop the muted colour under 4.5:1, so they
+   keep full opacity. */
+.pp[data-skin="quest"] .pp-social-row {
+  gap: 0;
+  margin-inline: -13px;
+}
+.pp[data-skin="quest"] .pp-social-row > * {
+  border-radius: var(--radius-2);
+  border: 0;
+  background: transparent;
+  color: var(--skin-quest-muted);
+}
+.pp[data-skin="quest"] .pp-social-row > span {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .pp[data-skin="quest"] .pp-social-row > a:hover {
+    background: transparent;
+    color: var(--skin-quest-link);
+  }
+}
+.pp[data-skin="quest"] .pp-social-row > a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Panels: sections, the spotlight, "At the table" and endorsements ──
+   The frame is two stacked layers behind the content, cut to one octagon:
+   `::before` is the frame colour at full size and `::after` is the panel
+   colour inset 1px, so a 1px frame line shows all the way round, diagonals
+   included. A border on the panel itself would be sliced away at the cut
+   corners by the clip-path. The inner cut is 0.59px shallower (2 minus the
+   square root of 2) so the diagonal keeps the same 1px width as the sides.
+   `isolation: isolate` makes the panel the stacking context, so `z-index:
+   -1` keeps both layers above the page ground and under the content. At the
+   light face's 0px notch the octagon is a plain rectangle. The "Part of"
+   rows further down reuse the two layers with a smaller notch. */
+.pp[data-skin="quest"] :is(.pp-sec, .pp-spot, .quest-table, .endo) {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(20px, 3.2cqw, 36px);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: var(--qs-lift);
+}
+.pp[data-skin="quest"]
+  :is(.pp-sec, .pp-spot, .quest-table, .endo, .partof > *)::before,
+.pp[data-skin="quest"]
+  :is(.pp-sec, .pp-spot, .quest-table, .endo, .partof > *)::after {
   content: "";
-  flex: 1;
-  height: 1px;
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  clip-path: polygon(
+    var(--qs-cut) 0,
+    calc(100% - var(--qs-cut)) 0,
+    100% var(--qs-cut),
+    100% calc(100% - var(--qs-cut)),
+    calc(100% - var(--qs-cut)) 100%,
+    var(--qs-cut) 100%,
+    0 calc(100% - var(--qs-cut)),
+    0 var(--qs-cut)
+  );
+}
+.pp[data-skin="quest"]
+  :is(.pp-sec, .pp-spot, .quest-table, .endo, .partof > *)::before {
+  --qs-cut: var(--qs-notch);
+  inset: 0;
   background: var(--qs-frame);
 }
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-sec h2,
-.pp[data-skin="quest"][data-quest-variant="map"] .quest-table-title {
+.pp[data-skin="quest"]
+  :is(.pp-sec, .pp-spot, .quest-table, .endo, .partof > *)::after {
+  --qs-cut: max(0px, calc(var(--qs-notch) - 0.59px));
+  inset: 1px;
+  background: var(--qs-panel);
+}
+/* Each heading sits over a hairline: amber on the compendium page, grey-700
+   inside the dark frame. "At the table" has no header wrapper, so its title
+   carries the rule itself. */
+.pp[data-skin="quest"] .pp-sec > header,
+.pp[data-skin="quest"] .quest-table-title {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--skin-quest-rule);
+}
+.pp[data-skin="quest"] .pp-sec > header {
+  margin-bottom: 8px;
+}
+.pp[data-skin="quest"] .pp-sec h2,
+.pp[data-skin="quest"] .quest-table-title {
   font-family: var(--qs-display);
-  font-weight: 700;
-  font-size: clamp(var(--text-22), 3cqw, var(--text-29));
+  font-weight: 800;
+  font-size: clamp(var(--text-26), 3.4cqw, var(--text-36));
   line-height: 1.1;
-  letter-spacing: 0.03em;
+  letter-spacing: -0.005em;
+  color: var(--skin-quest-ink);
+}
+.pp[data-skin="quest"] .pp-sec .count {
+  font-family: var(--qs-label);
+  font-size: var(--text-12-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--qs-mark);
 }
-/* Compass-corner ticks on every map frame: eight 2px strokes, one pair per
-   corner, painted as sized gradient layers on a box 4px outside the border. */
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-hero::before,
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-sec::before,
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-spot::before,
-.pp[data-skin="quest"][data-quest-variant="map"] .quest-table::before {
-  --qs-tick: 14px;
-  content: "";
-  position: absolute;
-  inset: -4px;
-  pointer-events: none;
-  background:
-    linear-gradient(var(--qs-mark) 0 0) top left / var(--qs-tick) 2px,
-    linear-gradient(var(--qs-mark) 0 0) top left / 2px var(--qs-tick),
-    linear-gradient(var(--qs-mark) 0 0) top right / var(--qs-tick) 2px,
-    linear-gradient(var(--qs-mark) 0 0) top right / 2px var(--qs-tick),
-    linear-gradient(var(--qs-mark) 0 0) bottom left / var(--qs-tick) 2px,
-    linear-gradient(var(--qs-mark) 0 0) bottom left / 2px var(--qs-tick),
-    linear-gradient(var(--qs-mark) 0 0) bottom right / var(--qs-tick) 2px,
-    linear-gradient(var(--qs-mark) 0 0) bottom right / 2px var(--qs-tick);
-  background-repeat: no-repeat;
-}
 
-/* ── Rows: the ruled fields of a panel ── */
+/* ── Rows: entries under a hairline ── */
 .pp[data-skin="quest"] .pp-row {
   padding: 16px 0;
   border-top: 1px solid var(--line);
 }
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-row {
-  border-top-style: dashed;
-}
 .pp[data-skin="quest"] .pp-row:first-child {
   border-top: none;
-  padding-top: 4px;
 }
 .pp[data-skin="quest"] .pp-row:last-child {
   border-bottom: none;
@@ -6625,36 +6732,39 @@ button.pp-row {
 }
 .pp[data-skin="quest"] .pp-row b {
   font-family: var(--qs-body);
-  font-weight: 400;
-  font-size: var(--text-21);
-  line-height: 1.25;
+  font-weight: 650;
+  font-size: var(--text-19);
+  line-height: 1.3;
+  color: var(--skin-quest-ink);
 }
 .pp[data-skin="quest"] .pp-row small {
-  font-family: var(--qs-display);
-  font-size: var(--text-13-5);
+  font-family: var(--qs-label);
+  font-size: var(--text-13);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--qs-mark);
 }
 .pp[data-skin="quest"] .pp-row .when {
-  font-family: var(--qs-display);
-  font-size: var(--text-13-5);
-  letter-spacing: 0.04em;
-  color: var(--ink-60);
+  font-family: var(--qs-label);
+  font-size: var(--text-13);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--skin-quest-muted);
 }
 /* No max-width here: a capped paragraph stops filling its `flex-basis:100%`
-   line, joins the title's line instead, and squeezes the flexible title down
-   to one letter per line. The 920px column already keeps the measure sane. */
+   line, joins the title's line, and squeezes the flexible title down to one
+   letter per line. The 920px column already keeps the measure sane. */
 .pp[data-skin="quest"] .pp-row p {
   font-family: var(--qs-body);
   font-size: var(--text-16);
   line-height: 1.6;
+  color: var(--skin-quest-muted);
 }
 /* On a narrow container the base rule gives the title and the subtitle their
-   own lines, which left the subtitle and the date on two further lines with
-   the row's full 18px between each. The Quest meta is short, small-caps text,
-   so the subtitle and the date share one line under the title, and the lines
-   sit closer together. */
+   own lines. The Quest meta is a short caps label, so the subtitle and the
+   date share one line under the title, and the lines sit closer together. */
 @container (max-width:540px) {
   .pp[data-skin="quest"] .pp-row {
     row-gap: 6px;
@@ -6665,87 +6775,90 @@ button.pp-row {
 }
 .pp[data-skin="quest"] .pp-tile .art,
 .pp[data-skin="quest"] .pp-gallery-cell {
-  border-radius: var(--radius-3);
+  border-radius: var(--radius-2);
   border: 1px solid var(--qs-frame);
 }
-/* An item without a picture collapses to a text tile: no "Image" placeholder
-   frame, a ruled top instead, so the grid still reads as a set of entries. */
+/* An item without a picture collapses to a text tile: a ruled top in the
+   heading-rule colour keeps the grid reading as a set of entries. */
 .pp[data-skin="quest"] .pp-tile:not([data-has-image]) .art {
   display: none;
 }
 .pp[data-skin="quest"] .pp-tile:not([data-has-image]) {
   padding-top: 12px;
-  border-top: 1px solid var(--qs-frame);
+  border-top: 1px solid var(--skin-quest-rule);
 }
 .pp[data-skin="quest"] .pp-tile b {
   font-family: var(--qs-body);
-  font-weight: 400;
-  font-size: var(--text-19);
+  font-weight: 650;
+  font-size: var(--text-17);
   line-height: 1.3;
+  color: var(--skin-quest-ink);
 }
 .pp[data-skin="quest"] .pp-tile small {
   font-family: var(--qs-body);
   font-size: var(--text-15);
+  color: var(--skin-quest-muted);
+}
+.pp[data-skin="quest"] .pp-tile-btn:focus-visible {
+  border-radius: var(--radius-2);
 }
 .pp[data-skin="quest"] .ph {
-  background: color-mix(in srgb, var(--qs-frame) 24%, var(--skin-quest-panel));
-  color: var(--ink-40);
+  background: var(--skin-quest-chip);
+  color: var(--skin-quest-muted);
 }
 
-/* ── Spotlight: the featured quest, a panel of its own ── */
-.pp[data-skin="quest"] .pp-spot {
-  position: relative;
-  background: var(--qs-panel);
-  border-radius: var(--radius-3);
-}
-.pp[data-skin="quest"][data-quest-variant="sheet"] .pp-spot {
-  border: 4px double var(--qs-frame);
-}
-.pp[data-skin="quest"][data-quest-variant="map"] .pp-spot {
-  border: 1px solid var(--qs-frame);
-  border-radius: 0;
-}
+/* ── Spotlight: the featured adventure ── */
 .pp[data-skin="quest"] .pp-spot .art {
-  border-radius: var(--radius-3);
+  border-radius: var(--radius-2);
   border: 1px solid var(--qs-frame);
 }
-/* A featured quest without a picture is text only, as the practice skin
-   does: the empty frame would otherwise show the "Image" placeholder. */
+/* A featured item without a picture is text only: the empty frame would
+   otherwise show the "Image" placeholder. */
 .pp[data-skin="quest"] .pp-spot:not([data-has-image]) .art {
   display: none;
 }
 .pp[data-skin="quest"] .pp-spot .pp-spot-eyebrow {
-  font-family: var(--qs-display);
+  font-family: var(--qs-label);
   font-size: var(--text-12-5);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--qs-mark);
 }
 .pp[data-skin="quest"] .pp-spot h2 {
   font-family: var(--qs-display);
-  font-weight: 700;
-  font-size: clamp(var(--text-24), 3.4cqw, var(--text-34));
-  line-height: 1.12;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  font-size: clamp(var(--text-28), 4cqw, var(--text-40));
+  line-height: 1.08;
+  letter-spacing: -0.005em;
+  color: var(--skin-quest-ink);
 }
 .pp[data-skin="quest"] .pp-spot p {
   font-family: var(--qs-body);
   font-size: var(--text-17);
   line-height: 1.6;
+  color: var(--skin-quest-text);
 }
 
-/* ── "At the table": the sheet's rules box ── */
-/* The box sits on the same rhythm as the panels in `.pp-body` (its gap, see
-   `.pp-body` near the top of this file), so hero, box, spotlight and every
-   section are one even column. */
+/* ── "At the table": the quick-build callout ── */
+/* Hero, box, spotlight, every section and the foot share one gap
+   (`--qs-gap`), so the page reads as one even column. On the light face the
+   box lifts a step higher than the sections and takes a warm visible edge;
+   on the dark face it wears the same gold frame as every panel. */
 .pp[data-skin="quest"] .quest-table {
+  --qs-frame: var(--skin-quest-callout-frame);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-top: clamp(44px, 6cqw, 72px);
+  gap: 20px;
+  margin-top: var(--qs-gap);
+  box-shadow: var(--qs-callout-lift);
 }
 .pp[data-skin="quest"] .pp-body {
-  padding-top: clamp(44px, 6cqw, 72px);
+  gap: var(--qs-gap);
+  padding-top: var(--qs-gap);
+}
+.pp[data-skin="quest"] .pp-foot {
+  padding-top: var(--qs-gap);
 }
 .pp[data-skin="quest"] .quest-vibe {
   list-style: none;
@@ -6755,51 +6868,88 @@ button.pp-row {
   margin: 0;
   padding: 0;
 }
-/* Each vibe is a bordered stat chip. */
+/* Each vibe is a small caps tag on a grey fill. */
 .pp[data-skin="quest"] .quest-vibe li {
-  padding: 5px 12px;
-  border: 1px solid var(--qs-mark);
+  padding: 5px 9px;
   border-radius: var(--radius-2);
-  background: color-mix(in srgb, var(--qs-mark) 8%, transparent);
-  color: var(--qs-mark);
-  font-family: var(--qs-display);
-  font-size: var(--text-13);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-.pp[data-skin="quest"] .quest-table dl {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: 18px 28px;
-  margin: 0;
-}
-.pp[data-skin="quest"] .quest-table dl > div {
-  min-width: 0;
-}
-.pp[data-skin="quest"] .quest-table dt,
-.pp[data-skin="quest"] .quest-safety h3 {
-  font-family: var(--qs-display);
+  background: var(--skin-quest-chip);
+  color: var(--skin-quest-chip-ink);
+  font-family: var(--qs-label);
   font-size: var(--text-12-5);
   font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--ink-60);
-  margin-bottom: 6px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-/* A filled-in field: the value written on a ruled line. */
+/* The facts read as a two-column class table: a caps label column sized to
+   its longest label, a value column, hairlines between rows and a stripe on
+   every other one. Each row `div` is a subgrid, so both columns line up
+   across rows. Under 420px the label sits over its value. */
+.pp[data-skin="quest"] .quest-table dl {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, max-content) 1fr;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.pp[data-skin="quest"] .quest-table dl > div {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+}
+.pp[data-skin="quest"] .quest-table dl > div:nth-child(odd) {
+  background: var(--skin-quest-stripe);
+}
+.pp[data-skin="quest"] .quest-table dt,
 .pp[data-skin="quest"] .quest-table dd {
   margin: 0;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--qs-frame);
+  padding: 10px 14px;
+}
+.pp[data-skin="quest"] .quest-table dt {
+  font-family: var(--qs-label);
+  font-size: var(--text-13);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--skin-quest-ink);
+}
+.pp[data-skin="quest"] .quest-table dd {
   font-family: var(--qs-body);
-  font-size: var(--text-17);
-  line-height: 1.45;
+  font-size: var(--text-16);
+  line-height: 1.5;
+  color: var(--skin-quest-text);
   overflow-wrap: anywhere;
+}
+@container (max-width:420px) {
+  .pp[data-skin="quest"] .quest-table dl {
+    grid-template-columns: 1fr;
+  }
+  .pp[data-skin="quest"] .quest-table dt {
+    padding-bottom: 0;
+  }
+  .pp[data-skin="quest"] .quest-table dd {
+    padding-top: 2px;
+  }
+}
+.pp[data-skin="quest"] .quest-safety h3 {
+  font-family: var(--qs-label);
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--qs-mark);
+  margin-bottom: 10px;
 }
 .pp[data-skin="quest"] .quest-safety ul {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
-  gap: 10px 28px;
+  /* A rem track grows with the reader's text size, so a tool name wraps
+     between words at 200% text. */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
+  gap: var(--gap-xs) var(--gap-sm);
   margin: 0;
   padding: 0;
 }
@@ -6810,41 +6960,141 @@ button.pp-row {
   font-family: var(--qs-body);
   font-size: var(--text-16);
   line-height: 1.45;
+  color: var(--skin-quest-text);
 }
-/* A plain accent tick on both concepts: a boxed tick read as a form checkbox,
-   and nothing here is clickable. */
+/* A plain accent tick: a boxed tick reads as a form checkbox, and nothing
+   here is clickable. */
 .pp[data-skin="quest"] .quest-safety li svg {
   flex: none;
   width: 1.125em;
   height: 1.125em;
   margin-top: 2px;
-  color: var(--qs-mark);
+  color: var(--skin-quest-accent);
 }
-/* No measure cap: the dashed rule spans the box like the ruled fields above
-   it, and the 920px column keeps the line length readable. */
+/* No measure cap: the rule spans the box like the table above it, and the
+   920px column keeps the line length readable. Roboto Flex ships no italic,
+   so the note, like the tagline and the quotes below, is set upright in the
+   muted colour. */
 .pp[data-skin="quest"] .quest-note {
   margin: 0;
   padding-top: 14px;
-  border-top: 1px dashed var(--qs-frame);
+  border-top: 1px solid var(--line);
   font-family: var(--qs-body);
-  font-style: italic;
-  font-size: var(--text-17);
+  font-size: var(--text-16);
   line-height: 1.55;
-  color: var(--ink-60);
+  color: var(--skin-quest-muted);
 }
 
 /* ── Foot: endorsements and affiliations ── */
-.pp[data-skin="quest"] .endo,
-.pp[data-skin="quest"] .partof > * {
-  border-radius: var(--radius-3);
-  border-color: var(--qs-frame);
-  background: var(--qs-panel);
-}
 .pp[data-skin="quest"] .endo-q {
   font-family: var(--qs-body);
   font-weight: 400;
-  font-size: var(--text-19);
-  line-height: 1.5;
+  font-size: var(--text-18);
+  line-height: 1.55;
+  color: var(--skin-quest-text);
+}
+/* The endorser's name is a link sized to itself: an inline-flex box at the
+   44px touch floor, so its focus ring hugs the name and clears the quote
+   above. */
+.pp[data-skin="quest"] .endo-who {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 4px;
+  font-family: var(--qs-label);
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--qs-mark);
+}
+@media (hover: hover) {
+  .pp[data-skin="quest"] a.endo-who:hover {
+    color: var(--skin-quest-link);
+  }
+}
+/* The "See all" link under the quotes, and the "Part of" eyebrow over the
+   affiliations: caps labels, the link in the link colour and the eyebrow in
+   the label gold. */
+.pp[data-skin="quest"] .endo > button,
+.pp[data-skin="quest"] .pp-foot :has(> .partof) > :first-child {
+  font-family: var(--qs-label);
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* A 44px touch target; the negative block margin gives the extra height
+   back, so the gap under the last quote reads as before. */
+.pp[data-skin="quest"] .endo > button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block: -12px;
+  color: var(--skin-quest-link);
+}
+/* Every avatar in the endorsements and affiliations, and the endorser stack
+   in the hero, is an opaque disc in the display type, so overlapping faces
+   never show each other's initials through. The disc takes the small-face
+   fill, which in the dark face sits a step above the panel so it still
+   reads there. The stack's faces take a ring in the page ground colour. */
+.pp[data-skin="quest"] .pp-endorsers > * {
+  border-color: var(--skin-quest-ground);
+}
+.pp[data-skin="quest"] :is(.pp-endorsers > *, .endo-who > :first-child) > *,
+.pp[data-skin="quest"] .partof > * > :first-child > * {
+  border: 0;
+  background: var(--skin-quest-face-fill);
+  color: var(--skin-quest-avatar-ink);
+  font-family: var(--qs-display);
+  font-weight: 800;
+}
+.pp[data-skin="quest"] .pp-foot :has(> .partof) > :first-child {
+  color: var(--qs-mark);
+}
+/* Each affiliation is a small framed row on the panel layers above, with a
+   6px cut in the dark face. Hover swaps the frame colour. */
+.pp[data-skin="quest"] .partof > * {
+  --qs-notch: var(--qs-row-notch);
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: var(--qs-lift);
+  color: var(--skin-quest-ink);
+  font-family: var(--qs-body);
+  font-weight: 600;
+}
+/* The lift above outranks the global focus halo, so restate the triple. */
+.pp[data-skin="quest"] .partof > a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* The role label stays on one line, so the name beside it is the part that
+   wraps. */
+.pp[data-skin="quest"] .partof span {
+  flex: none;
+  white-space: nowrap;
+  font-family: var(--qs-label);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--qs-mark);
+}
+@media (hover: hover) {
+  .pp[data-skin="quest"] .partof > *:hover {
+    --qs-frame: var(--skin-quest-button-line-hover);
+    background: none;
+  }
+}
+/* The rights footer's provenance line fades to 0.85 in its module, which
+   takes the muted colour under 4.5:1 on the light ground; at full opacity
+   it reads 6.2:1 light and 7.7:1 dark. */
+.pp[data-skin="quest"] .pp-provenance {
+  opacity: 1;
 }
 
 /* ═══════════ second-set: selection · motion · photo grade ═══════════ */
@@ -6868,7 +7118,8 @@ button.pp-row {
   background: rgba(36, 56, 47, 0.16);
 }
 .pp[data-skin="quest"] *::selection {
-  background: color-mix(in srgb, var(--skin-quest-accent) 22%, transparent);
+  background: var(--skin-quest-selection);
+  color: var(--skin-quest-ink);
 }
 .pp[data-skin="chair"] .pp-tile .art .ph {
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -7126,8 +7377,9 @@ button.pp-row {
 }
 /* Quest has no entry here on purpose: every colour it paints is a token from
    tokens/skin-quest.css, whose `[data-theme="dark"]` block reassigns the
-   ground, ink channel, rules and accents, and its alphas already clear AA on
-   both grounds (see the ratios beside each token). */
+   ground, text, frame and accents (see the ratios beside each token). The
+   dark face's one structural change, the cut-corner frame, sits with the
+   Quest block above as a `--qs-notch` value. */
 
 /* ═══════════ second-set: reduced motion ═══════════ */
 @media (prefers-reduced-motion: reduce) {

@@ -1,10 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { ApiError } from "./client";
 import {
   describeError,
   isAccountRestricted,
   isInviteBlocked,
   reasonFor,
+  setErrorReasonLocale,
 } from "./errorMessage";
 
 describe("reasonFor", () => {
@@ -176,5 +177,106 @@ describe("isAccountRestricted", () => {
   it("is false for a non-ApiError", () => {
     expect(isAccountRestricted(new Error("ACCOUNT_RESTRICTED"))).toBe(false);
     expect(isAccountRestricted(null)).toBe(false);
+  });
+});
+
+// PRD-467: a member reading a language other than English gets a translated
+// reason chosen by status, where English shows the backend's sentence. The
+// stub translator tags each key so the assertions name the copy it chose.
+describe("reasonFor and describeError with a registered locale", () => {
+  const taggedTranslate = (key: string) => `[${key}]`;
+
+  afterEach(() => {
+    setErrorReasonLocale(null);
+  });
+
+  function registerLanguage(language: string) {
+    setErrorReasonLocale({
+      translate: taggedTranslate,
+      getLanguage: () => language,
+    });
+  }
+
+  it("keeps the server sentence byte-identical in English", () => {
+    registerLanguage("en");
+    expect(reasonFor(new ApiError(409, "That name is taken"))).toBe(
+      "That name is taken",
+    );
+    expect(
+      reasonFor(
+        new ApiError(403, "Your account is restricted. Appeal at /appeal.", {
+          code: "ACCOUNT_RESTRICTED",
+        }),
+      ),
+    ).toBe("Your account is restricted. Appeal at /appeal.");
+  });
+
+  it("picks a translated reason by status in Portuguese", () => {
+    registerLanguage("pt");
+    const cases: [number, string][] = [
+      [400, "shared:apiError.reasonInvalid"],
+      [422, "shared:apiError.reasonInvalid"],
+      [403, "shared:apiError.forbidden"],
+      [409, "shared:apiError.reasonConflict"],
+      [410, "shared:apiError.reasonGone"],
+      [413, "shared:apiError.reasonTooLarge"],
+      [429, "shared:apiError.reasonRateLimited"],
+      [418, "shared:apiError.generic"],
+    ];
+    for (const [status, key] of cases) {
+      expect(reasonFor(new ApiError(status, "An English sentence"))).toBe(
+        `[${key}]`,
+      );
+    }
+  });
+
+  it("returns the translated appeal copy for ACCOUNT_RESTRICTED in Portuguese", () => {
+    registerLanguage("pt");
+    expect(
+      reasonFor(
+        new ApiError(403, "Your account is restricted.", {
+          code: "ACCOUNT_RESTRICTED",
+        }),
+      ),
+    ).toBe("[shared:apiError.accountRestricted]");
+  });
+
+  it("keeps every null case null in Portuguese", () => {
+    registerLanguage("pt");
+    expect(reasonFor(new ApiError(401, "Not authenticated"))).toBeNull();
+    expect(reasonFor(new ApiError(404, "Missing"))).toBeNull();
+    expect(reasonFor(new ApiError(500, "boom"))).toBeNull();
+    expect(reasonFor(new ApiError(409, "Conflict"))).toBeNull();
+    expect(
+      reasonFor(new ApiError(503, "Locked", { code: "PLATFORM_LOCKED" })),
+    ).toBeNull();
+    expect(
+      reasonFor(
+        new ApiError(400, "Gone", { code: "SUBPROFILE_INVITE_BLOCKED" }),
+      ),
+    ).toBeNull();
+    expect(reasonFor(new TypeError("Failed to fetch"))).toBeNull();
+  });
+
+  it("translates the default retry tail once a translator is registered", () => {
+    registerLanguage("pt");
+    expect(describeError("Frame", new TypeError("Failed to fetch"))).toBe(
+      "Frame.[shared:apiError.tryAgainTail]",
+    );
+    expect(
+      describeError("Frame", new TypeError("Failed to fetch"), " Own tail."),
+    ).toBe("Frame. Own tail.");
+  });
+
+  it("keeps the English retry tail with an English translator registered", () => {
+    // A translator that returns each fallback stands in for the EN catalog,
+    // so this pins the tail's English wording and its leading space.
+    setErrorReasonLocale({
+      translate: (_key, fallback) => fallback,
+      getLanguage: () => "en",
+    });
+    expect(describeError("Frame", new ApiError(409, "Conflict"))).toBe(
+      "Frame. Please try again.",
+    );
   });
 });

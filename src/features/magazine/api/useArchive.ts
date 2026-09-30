@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import { getArchive, type ArchiveEntryDto } from "./pieces.api";
 import { DEMO_ARCHIVE } from "../data/issueProduction.data";
 
@@ -8,16 +9,16 @@ function matchesQuery(
   normalizedQuery: string,
 ): boolean {
   if (!normalizedQuery) return true;
-  const haystack = [entry.title, entry.by, ...entry.tags]
-    .join(" ")
-    .toLowerCase();
+  const haystack = foldForSearch(
+    [entry.title, entry.by, ...entry.tags].join(" "),
+  );
   return haystack.includes(normalizedQuery);
 }
 
 /**
  * The issue-production Archive tab's "have we run this before?" search.
  * Demo mode filters the static `DEMO_ARCHIVE` fixture client-side by `q`
- * (title/byline/tags, case-insensitive substring). Live mode calls
+ * (title/byline/tags, case- and accent-insensitive substring). Live mode calls
  * `GET /magazine/admin/archive?q=` (published articles + decks only, per
  * `magazine-piece.service.ts` `searchArchive`).
  *
@@ -32,7 +33,7 @@ export function useArchive(q: string) {
     queryKey: ["magazine-archive", demoMode, q],
     queryFn: async () => {
       if (demoMode) {
-        const normalizedQuery = q.trim().toLowerCase();
+        const normalizedQuery = foldForSearch(q.trim());
         return DEMO_ARCHIVE.filter((entry) =>
           matchesQuery(entry, normalizedQuery),
         );

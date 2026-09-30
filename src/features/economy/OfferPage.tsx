@@ -199,7 +199,7 @@ export function OfferPage() {
               >
                 {connected
                   ? t("connect:contact.message")
-                  : t("economy:offerBoard.sayHelloCta", { name: owner.first })}
+                  : t("economy:offerBoard.connectCta", { name: owner.first })}
               </Button>
             </aside>
           </div>

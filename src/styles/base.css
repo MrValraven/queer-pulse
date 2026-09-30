@@ -111,6 +111,17 @@ a {
   border-radius: var(--radius-4);
 }
 
+/* The one exception to the rule above. RouteAnnouncer (and the skip link)
+   move focus to the `<main tabIndex={-1}>` landmark after every navigation so
+   screen readers start at the page. It is never a Tab stop, and when the last
+   input was a key press the browser draws the ring above around the whole
+   full-width landmark: two red lines across the sign-in page. */
+main[tabindex="-1"]:focus,
+main[tabindex="-1"]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 img {
   display: block;
   max-width: 100%;

@@ -1,0 +1,33 @@
+/* The pager footer. Its padding keeps two focus rings whole: a button's outer
+   ring clears `.viewport`'s clipped bottom edge, and the footer's own inward
+   ring clears the failure line and the button. The matching negative top
+   margin reaches into the 14px card gap, so the gap to the cards is unchanged. */
+.footer {
+  padding: var(--gap-xs);
+  margin-block-start: calc(-1 * var(--gap-xs));
+}
+
+/* The feed's true end: nothing left to load and nothing failed. The footer
+   stays mounted as the live region's home and the keyboard hand-off target,
+   and adds no room under the last card until it holds that focus, when the
+   padded box returns so its ring shows whole. */
+.footerAtEnd:not(:focus-visible) {
+  padding: 0;
+  margin-block-start: 0;
+}
+
+/* The Retry row: the shared failure line above already spaces it by
+   `--gap-xs`. */
+.retryRow {
+  display: flex;
+  justify-content: center;
+}
+
+/* The footer takes focus after a keyboard retry lands the last page, so the
+   member keeps their place at the list's end. `.viewport` clips outside
+   it, so the ring is drawn inward, the same way `.list` draws its own. */
+.footer:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-2 * var(--focus-ring-offset));
+  box-shadow: inset var(--ring-cream);
+}

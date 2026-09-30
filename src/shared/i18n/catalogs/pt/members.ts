@@ -158,7 +158,7 @@ export const members: Catalog = {
   "profile.hero.vouchedShort": "Voto dado",
   // The profile hero's top-right toolbar (Edit, View as visitor, "...").
   "profile.hero.toolbarAria": "Ações do perfil",
-  "profile.hero.sayHelloCta": "Dizer olá",
+  "profile.hero.connectCta": "Conectar",
   // PRD-03. Quando esta pessoa já pediu ligação, o cabeçalho responde-lhe em
   // vez de oferecer outro olá que o servidor recusaria.
   "profile.hero.acceptRequestCta": "Aceitar o pedido de {first}",
@@ -181,7 +181,7 @@ export const members: Catalog = {
   "profile.limited.ariaLabel": "Sobre este perfil",
   "profile.limited.network.title": "{name} partilha mais com quem tem conexão",
   "profile.limited.network.body":
-    "O resto deste perfil abre-se assim que ficarem ligados.",
+    "O resto deste perfil abre-se assim que ficarem conectados.",
   "profile.limited.private.title": "{name} mantém o perfil privado",
   "profile.limited.private.body":
     "Isto é o que toda a gente vê. Ligarem-se não abre o resto, mas permite que troquem mensagens.",
@@ -1791,7 +1791,7 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.vouchesDesc":
     "Dares um voto de confiança a outra pessoa.",
   "badges.xpBreakdown.sources.connections": "Conexões feitas",
-  "badges.xpBreakdown.sources.connectionsDesc": "Ligares-te a outro membro.",
+  "badges.xpBreakdown.sources.connectionsDesc": "Conectares-te a outro membro.",
   "badges.xpBreakdown.sources.events": "Convívios em que participaste",
   "badges.xpBreakdown.sources.eventsDesc":
     "Participares num convívio organizado por outra pessoa.",
@@ -2013,8 +2013,8 @@ export const members: Catalog = {
   "badges.catalog.threadStarter.locked": "Começa uma conversa na comunidade",
   "badges.catalog.threadStarter.earned": "Começaste uma conversa na comunidade",
   "badges.catalog.networker.name": "Rede Alargada",
-  "badges.catalog.networker.locked": "Liga-te a 50 membros",
-  "badges.catalog.networker.earned": "Ligaste-te a 50 membros",
+  "badges.catalog.networker.locked": "Conecta-te a 50 membros",
+  "badges.catalog.networker.earned": "Conectaste-te a 50 membros",
   "badges.catalog.contributor.name": "Quem Contribui",
   "badges.catalog.contributor.locked": "Envia uma história de membro",
   "badges.catalog.contributor.earned": "Enviaste uma história de membro",
@@ -2257,7 +2257,7 @@ export const members: Catalog = {
 
   "profile.whoSeesWhat.hiddenFrom.heading": "Escondido de",
   "profile.whoSeesWhat.hiddenFrom.sub":
-    "O teu perfil fica invisível para quem estiver nesta lista, mesmo que estejam ligados a ti.",
+    "O teu perfil fica invisível para quem estiver nesta lista, mesmo que estejam conectados a ti.",
   "profile.whoSeesWhat.hiddenFrom.demoNote":
     "Esta é uma conta de demonstração, por isso esconder o teu perfil de alguém não está simulado aqui.",
   "profile.whoSeesWhat.hiddenFrom.empty":
@@ -2344,6 +2344,10 @@ export const members: Catalog = {
     "Opcional, e ajuda-nos a melhorar",
   "profile.accountData.stepAway.dependency.transferCta": "Transferir",
   "profile.accountData.stepAway.dependency.deleteCta": "Eliminar anúncio",
+  "profile.accountData.stepAway.dependency.checkFailed":
+    "Não conseguimos verificar se alguma das tuas comunidades ou anúncios ainda depende de ti. Podes pedir a eliminação na mesma, e tratamos de tudo o que é teu quando a tua conta for eliminada.",
+  "profile.accountData.stepAway.dependency.informationalIntro":
+    "Enquanto a tua conta não estiver ativa, não podes passar nem fechar isto por ti, e podes pedir a eliminação na mesma. Quando a tua conta for eliminada, cada comunidade de que és responsável passa para quem é cotitular há mais tempo, ou para quem é mod há mais tempo se não houver cotitular. Um espaço sem nenhum dos dois passa para quem é responsável pela comunidade-mãe, e uma comunidade que ninguém possa assumir fica sinalizada para a nossa equipa rever. Os teus anúncios continuam publicados sem responsável, e quem gere o espaço pode reivindicá-los.",
   "profile.accountData.stepAway.pending.banner":
     "<strong>A tua conta está agendada para eliminação.</strong> Está tudo oculto agora e será permanentemente apagado a <strong>{date}</strong>. Mudaste de ideias? Ainda podes cancelar.",
   "profile.accountData.stepAway.pending.cancelling": "A cancelar…",

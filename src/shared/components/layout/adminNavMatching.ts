@@ -3,6 +3,7 @@ import type {
   AdminNavItem,
   AdminNavSection,
 } from "./adminNav.data";
+import { foldForSearch } from "../../lib/foldForSearch";
 
 /** Live pending count per queue, resolved once in AdminSidebar and passed down. */
 export type AdminNavBadgeCounts = Record<AdminNavBadge, number>;
@@ -23,11 +24,7 @@ export function pendingCount(
  * marks come off both sides rather than only the query's.
  */
 export function normalizeSearchText(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+  return foldForSearch(value.trim());
 }
 
 /** Matches for one section, in rail order. */

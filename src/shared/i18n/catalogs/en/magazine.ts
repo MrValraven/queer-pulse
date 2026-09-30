@@ -1317,6 +1317,23 @@ export const magazine: Catalog = {
   "piece.gate.notAdvisory":
     "The gate is not advisory. Nothing here can be overridden by one person alone.",
   "piece.gate.publish": "Publish",
+  "piece.gateReason.careNotStarted": "Care record not started",
+  "piece.gateReason.sensitivityNotStarted": "Sensitivity read not started",
+  "piece.gateReason.contentNotes": "Content notes written",
+  "piece.gateReason.consent": "Consent: {name}",
+  "piece.gateReason.sensitivityCheck": "Sensitivity read: {check}",
+  "piece.gateReason.articleStandfirst": "The article needs a standfirst.",
+  "piece.gateReason.articleImageAlt": "Every image needs alt text.",
+  "piece.gateReason.deckNotStarted": "The deck has not been started yet.",
+  "piece.gateReason.deckNoSlides": "The deck has no slides yet.",
+  "piece.gateReason.deckSlideAlt": "Every image slide needs alt text.",
+  "piece.gateReason.deckCoverDescription":
+    "The cover image needs a description.",
+  "piece.gateReason.unknownCareItem":
+    "An item in the care record is still open.",
+  "piece.gateReason.unknownCareItemDone": "A care record item is done.",
+  "piece.gateReason.unknownNotReady":
+    "Something in the piece still needs finishing.",
 
   // ── Publish / unpublish from the piece record (PRD-119, PRD-120) ─────────
   // The care gate is enforced server-side, so the client copy has two jobs:

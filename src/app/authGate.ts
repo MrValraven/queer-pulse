@@ -826,12 +826,13 @@ export function useAuthGateRedirect(): string | null {
       // Leaving and taking your data with you are the two things moderation
       // state may never take away. They are also the two things the banned page
       // itself sends people to do: its "Request full data erasure" button
-      // targets `routes.dataExport`, and its copy tells a removed member to
-      // request deletion. Without these two entries that button was a loop
-      // (bounce to /system/account-banned, press, bounce again) with no way
-      // through for the one class of member who most needs it, since a
-      // permanent ban is `status === "suspended"` with no `suspendedUntil` and
-      // therefore lands on exactly that page.
+      // targets `routes.deleteAccount`, and a separate button targets
+      // `routes.dataExport` for a plain data download. Without these two
+      // entries that erasure button was a loop (bounce to
+      // /system/account-banned, press, bounce again) with no way through for
+      // the one class of member who most needs it, since a permanent ban is
+      // `status === "suspended"` with no `suspendedUntil` and therefore lands
+      // on exactly that page.
       //
       // The server already agrees and always has: `AccountController` carries
       // no `ActiveMemberGuard` precisely so that "account lifecycle actions

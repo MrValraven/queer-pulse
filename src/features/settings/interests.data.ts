@@ -1,3 +1,4 @@
+import type { TFunction } from "../../shared/i18n/types";
 import type { ContentSettingId } from "./api/useContentSensitivity";
 
 export interface ChipGroup {
@@ -5,43 +6,83 @@ export interface ChipGroup {
   defaults: string[];
 }
 
-// NOTE (i18n sweep — stored-value corruption trap): IDENTITIES.options and
-// LOOKING_FOR.options below are the literal *stored* values of
-// draft.identities / draft.lookingFor, persisted on the Member record and
-// read elsewhere in the app (member directory filtering) outside this
-// sweep's scope. Translating the label without a same-scope id/label-key
-// split — which would require touching the Member type + directory
-// filtering together — would silently desync the stored value from its own
-// display in pt mode. Left in English on purpose; flagged in the sweep
-// report for a coordinated follow-up.
+// i18n sweep (DES-430): IDENTITIES.options and LOOKING_FOR.options below stay
+// the literal *stored* values of draft.identities / draft.lookingFor,
+// persisted on the Member record and read elsewhere in the app (member
+// directory filtering) outside this sweep's scope. The stored value itself
+// is never translated, or the directory filtering and the backend's
+// canonical list would silently desync from what a pt member typed. Display
+// goes through the *_LABEL_KEYS maps below: a same-scope render-time lookup
+// that leaves the stored value alone, resolved with identityLabel /
+// lookingForLabel.
+const IDENTITY_VALUES = [
+  "Gay",
+  "Lesbian",
+  "Bisexual",
+  "Pansexual",
+  "Queer",
+  "Trans",
+  "Non-binary",
+  "Genderqueer",
+  "Genderfluid",
+  "Asexual",
+  "Aromantic",
+  "Intersex",
+  "Two-spirit",
+  "Questioning",
+  "Ally",
+  // Added alongside the discoverability work: the member directory offers
+  // "QPOC / queer of colour" and "Disabled / chronic illness" as filter
+  // facets, but there was no way to declare either privately, so those two
+  // filters could never have matched anyone. Both are also in the backend's
+  // canonical list (src/profiles/identities.ts).
+  "Queer person of colour",
+  "Disabled or chronically ill",
+  "Prefer not to say",
+] as const;
+
+export type IdentityValue = (typeof IDENTITY_VALUES)[number];
+
 export const IDENTITIES: ChipGroup = {
-  options: [
-    "Gay",
-    "Lesbian",
-    "Bisexual",
-    "Pansexual",
-    "Queer",
-    "Trans",
-    "Non-binary",
-    "Genderqueer",
-    "Genderfluid",
-    "Asexual",
-    "Aromantic",
-    "Intersex",
-    "Two-spirit",
-    "Questioning",
-    "Ally",
-    // Added alongside the discoverability work: the member directory offers
-    // "QPOC / queer of colour" and "Disabled / chronic illness" as filter
-    // facets, but there was no way to declare either privately — so those two
-    // filters could never have matched anyone. Both are also in the backend's
-    // canonical list (src/profiles/identities.ts).
-    "Queer person of colour",
-    "Disabled or chronically ill",
-    "Prefer not to say",
-  ],
+  options: [...IDENTITY_VALUES],
   defaults: ["Gay", "Bisexual", "Queer"],
 };
+
+/** Render-time label key for each stored identity value (Pattern A). A full
+ *  Record, so adding a value to IDENTITY_VALUES without a label here fails
+ *  typecheck, catching an untranslated chip before it ships. */
+export const IDENTITY_LABEL_KEYS: Record<IdentityValue, string> = {
+  Gay: "settings:identity.chip.gay",
+  Lesbian: "settings:identity.chip.lesbian",
+  Bisexual: "settings:identity.chip.bisexual",
+  Pansexual: "settings:identity.chip.pansexual",
+  Queer: "settings:identity.chip.queer",
+  Trans: "settings:identity.chip.trans",
+  "Non-binary": "settings:identity.chip.nonBinary",
+  Genderqueer: "settings:identity.chip.genderqueer",
+  Genderfluid: "settings:identity.chip.genderfluid",
+  Asexual: "settings:identity.chip.asexual",
+  Aromantic: "settings:identity.chip.aromantic",
+  Intersex: "settings:identity.chip.intersex",
+  "Two-spirit": "settings:identity.chip.twoSpirit",
+  Questioning: "settings:identity.chip.questioning",
+  Ally: "settings:identity.chip.ally",
+  "Queer person of colour": "settings:identity.chip.queerPersonOfColour",
+  "Disabled or chronically ill":
+    "settings:identity.chip.disabledOrChronicallyIll",
+  "Prefer not to say": "settings:identity.chip.preferNotToSay",
+};
+
+/** Render-time label for any *stored* identity value, including a legacy
+ *  value no longer offered as a chip. A mapped value is translated through
+ *  `t()`; an unmapped one renders the raw stored value directly, without
+ *  going through `t()` at all, so it neither logs a missing key on every
+ *  render nor risks being parsed as a namespaced key (see
+ *  `shared/i18n/translate.ts`'s `parseKey`). */
+export function identityLabel(t: TFunction, value: string): string {
+  const key = (IDENTITY_LABEL_KEYS as Partial<Record<string, string>>)[value];
+  return key ? t(key) : value;
+}
 
 /**
  * "Prefer not to say" is a refusal to disclose. Offering it as something you
@@ -62,22 +103,26 @@ export function publishableIdentities(identities: string[]): string[] {
   );
 }
 
+const LOOKING_FOR_VALUES = [
+  "Community & friendship",
+  "Professional networking",
+  "Gatherings & events",
+  "Creative collaboration",
+  "Housing & flatmates",
+  "Resources & support",
+  "Activism & organising",
+  "Dating & relationships",
+  "Mentorship (giving)",
+  "Mentorship (seeking)",
+  "Reading & culture",
+  "Queer parenting",
+  "Nightlife",
+] as const;
+
+export type LookingForValue = (typeof LOOKING_FOR_VALUES)[number];
+
 export const LOOKING_FOR: ChipGroup = {
-  options: [
-    "Community & friendship",
-    "Professional networking",
-    "Gatherings & events",
-    "Creative collaboration",
-    "Housing & flatmates",
-    "Resources & support",
-    "Activism & organising",
-    "Dating & relationships",
-    "Mentorship (giving)",
-    "Mentorship (seeking)",
-    "Reading & culture",
-    "Queer parenting",
-    "Nightlife",
-  ],
+  options: [...LOOKING_FOR_VALUES],
   defaults: [
     "Community & friendship",
     "Professional networking",
@@ -86,6 +131,34 @@ export const LOOKING_FOR: ChipGroup = {
     "Reading & culture",
   ],
 };
+
+/** Render-time label key for each stored "looking for" value (Pattern A),
+ *  mirroring IDENTITY_LABEL_KEYS above. A full Record. */
+export const LOOKING_FOR_LABEL_KEYS: Record<LookingForValue, string> = {
+  "Community & friendship": "settings:lookingFor.chip.communityFriendship",
+  "Professional networking": "settings:lookingFor.chip.professionalNetworking",
+  "Gatherings & events": "settings:lookingFor.chip.gatheringsEvents",
+  "Creative collaboration": "settings:lookingFor.chip.creativeCollaboration",
+  "Housing & flatmates": "settings:lookingFor.chip.housingFlatmates",
+  "Resources & support": "settings:lookingFor.chip.resourcesSupport",
+  "Activism & organising": "settings:lookingFor.chip.activismOrganising",
+  "Dating & relationships": "settings:lookingFor.chip.datingRelationships",
+  "Mentorship (giving)": "settings:lookingFor.chip.mentorshipGiving",
+  "Mentorship (seeking)": "settings:lookingFor.chip.mentorshipSeeking",
+  "Reading & culture": "settings:lookingFor.chip.readingCulture",
+  "Queer parenting": "settings:lookingFor.chip.queerParenting",
+  Nightlife: "settings:lookingFor.chip.nightlife",
+};
+
+/** Render-time label for any stored "looking for" value, falling back to the
+ *  raw stored value for a legacy option no longer offered, the same way
+ *  `identityLabel` above does. */
+export function lookingForLabel(t: TFunction, value: string): string {
+  const key = (LOOKING_FOR_LABEL_KEYS as Partial<Record<string, string>>)[
+    value
+  ];
+  return key ? t(key) : value;
+}
 
 // Only the index (DEFAULT_AGE_INDEX) is stored anywhere; the labels
 // themselves are display-only, so they resolve through a catalog key

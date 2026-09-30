@@ -1,6 +1,12 @@
 .wrap {
   position: fixed;
-  bottom: calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset));
+  /* While the consent banner shows, sit 24px above its top edge. Its inset
+     already spans the tab bar and home indicator, so `max` keeps them from
+     being counted twice. */
+  bottom: max(
+    calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset)),
+    calc(var(--consent-inset, 0px) + 24px)
+  );
   left: 50%;
   transform: translateX(-50%);
   z-index: var(--z-sticky);

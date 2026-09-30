@@ -4,7 +4,13 @@
    chrome: there is no grabber, no X, and Escape does nothing. Dismissing it
    would either have to count as agreement (which would be a lie) or drop the
    member into an app they have not agreed to be in. The way out is one of the
-   real controls inside it: read the documents, agree, or sign out. */
+   real controls inside it: read the documents, agree, or sign out.
+
+   The sheet leaves `--consent-inset` out of its offsets on purpose. The consent
+   banner stacks under every modal tier (`--z-consent-banner`, layers.css), so
+   this scrim already covers it; lifting the sheet above the banner as well
+   would squeeze a dialog the member must act on into the sliver left over on
+   a small phone, where the banner fills most of the screen. */
 .scrim {
   position: fixed;
   inset: 0;

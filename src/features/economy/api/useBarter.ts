@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import { BARTERS, type Barter, type Mode } from "../barter.data";
 import type {
   BarterProposalRow,
@@ -53,17 +54,17 @@ function matchesDemoFilters(barter: Barter, filters: BarterBoardFilters) {
   if (filters.category !== "all" && barter.category !== filters.category) {
     return false;
   }
-  const term = filters.query.trim().toLowerCase();
+  const term = foldForSearch(filters.query.trim());
   if (!term) return true;
-  const haystack = [
-    barter.offer,
-    barter.want,
-    barter.offerDetail,
-    barter.wantDetail,
-    barter.tags.join(" "),
-  ]
-    .join(" ")
-    .toLowerCase();
+  const haystack = foldForSearch(
+    [
+      barter.offer,
+      barter.want,
+      barter.offerDetail,
+      barter.wantDetail,
+      barter.tags.join(" "),
+    ].join(" "),
+  );
   return haystack.includes(term);
 }
 

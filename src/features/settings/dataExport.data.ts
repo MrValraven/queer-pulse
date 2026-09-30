@@ -13,6 +13,18 @@ export const DATA_TYPES: DataType[] = [
     defaultChecked: true,
   },
   {
+    id: "subprofiles",
+    labelKey: "settings:dataExport.type.subprofiles.label",
+    subKey: "settings:dataExport.type.subprofiles.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "nowHistory",
+    labelKey: "settings:dataExport.type.nowHistory.label",
+    subKey: "settings:dataExport.type.nowHistory.sub",
+    defaultChecked: false,
+  },
+  {
     id: "messages",
     labelKey: "settings:dataExport.type.messages.label",
     subKey: "settings:dataExport.type.messages.subDetailed",
@@ -25,10 +37,22 @@ export const DATA_TYPES: DataType[] = [
     defaultChecked: true,
   },
   {
+    id: "communities",
+    labelKey: "settings:dataExport.type.communities.label",
+    subKey: "settings:dataExport.type.communities.sub",
+    defaultChecked: false,
+  },
+  {
     id: "events",
     labelKey: "settings:dataExport.type.events.label",
     subKey: "settings:dataExport.type.events.sub",
     defaultChecked: true,
+  },
+  {
+    id: "goTogether",
+    labelKey: "settings:dataExport.type.goTogether.label",
+    subKey: "settings:dataExport.type.goTogether.sub",
+    defaultChecked: false,
   },
   {
     id: "connections",
@@ -37,15 +61,15 @@ export const DATA_TYPES: DataType[] = [
     defaultChecked: false,
   },
   {
-    id: "activityLog",
-    labelKey: "settings:dataExport.type.activityLog.label",
-    subKey: "settings:dataExport.type.activityLog.sub",
+    id: "reports",
+    labelKey: "settings:dataExport.type.reports.label",
+    subKey: "settings:dataExport.type.reports.sub",
     defaultChecked: false,
   },
   {
-    id: "subprofiles",
-    labelKey: "settings:dataExport.type.subprofiles.label",
-    subKey: "settings:dataExport.type.subprofiles.sub",
+    id: "housing",
+    labelKey: "settings:dataExport.type.housing.label",
+    subKey: "settings:dataExport.type.housing.sub",
     defaultChecked: false,
   },
   {
@@ -55,9 +79,39 @@ export const DATA_TYPES: DataType[] = [
     defaultChecked: false,
   },
   {
-    id: "housing",
-    labelKey: "settings:dataExport.type.housing.label",
-    subKey: "settings:dataExport.type.housing.sub",
+    id: "magazine",
+    labelKey: "settings:dataExport.type.magazine.label",
+    subKey: "settings:dataExport.type.magazine.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "reviews",
+    labelKey: "settings:dataExport.type.reviews.label",
+    subKey: "settings:dataExport.type.reviews.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "volunteering",
+    labelKey: "settings:dataExport.type.volunteering.label",
+    subKey: "settings:dataExport.type.volunteering.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "governance",
+    labelKey: "settings:dataExport.type.governance.label",
+    subKey: "settings:dataExport.type.governance.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "membershipCards",
+    labelKey: "settings:dataExport.type.membershipCards.label",
+    subKey: "settings:dataExport.type.membershipCards.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "activityLog",
+    labelKey: "settings:dataExport.type.activityLog.label",
+    subKey: "settings:dataExport.type.activityLog.sub",
     defaultChecked: false,
   },
   {
@@ -76,42 +130,6 @@ export const DATA_TYPES: DataType[] = [
     id: "consent",
     labelKey: "settings:dataExport.type.consent.label",
     subKey: "settings:dataExport.type.consent.sub",
-    defaultChecked: false,
-  },
-  {
-    id: "goTogether",
-    labelKey: "settings:dataExport.type.goTogether.label",
-    subKey: "settings:dataExport.type.goTogether.sub",
-    defaultChecked: false,
-  },
-  {
-    id: "magazine",
-    labelKey: "settings:dataExport.type.magazine.label",
-    subKey: "settings:dataExport.type.magazine.sub",
-    defaultChecked: false,
-  },
-  {
-    id: "communities",
-    labelKey: "settings:dataExport.type.communities.label",
-    subKey: "settings:dataExport.type.communities.sub",
-    defaultChecked: false,
-  },
-  {
-    id: "volunteering",
-    labelKey: "settings:dataExport.type.volunteering.label",
-    subKey: "settings:dataExport.type.volunteering.sub",
-    defaultChecked: false,
-  },
-  {
-    id: "governance",
-    labelKey: "settings:dataExport.type.governance.label",
-    subKey: "settings:dataExport.type.governance.sub",
-    defaultChecked: false,
-  },
-  {
-    id: "reviews",
-    labelKey: "settings:dataExport.type.reviews.label",
-    subKey: "settings:dataExport.type.reviews.sub",
     defaultChecked: false,
   },
   // `media` is the one category whose contents are files rather than rows. The
@@ -133,6 +151,64 @@ export interface AccordionItem {
   tagKeys: string[];
 }
 
+/**
+ * "What's included": a readable map of what the archive really contains,
+ * grouped so the list stays short. Every item names only data a builder in
+ * `queerpulse-backend/src/account` writes (`account-export.service.ts` for the
+ * six core categories, `data-export-contributors*.ts` for the rest, including
+ * `data-export-contributors-more.ts`, ENG-495b), and every category in
+ * `DATA_TYPES` is covered by one item. The archive keys each item describes:
+ *
+ *   profile        profile, subprofiles, nowHistory, preferences,
+ *                  profileSections, handles, board, verification,
+ *                  personaActivity, personaContent, joinApplication,
+ *                  staffRoles
+ *   messages       messages, reportedConversations, messageActivity
+ *   posts          posts, communities, forumActivity, communityMemberships,
+ *                  communityActivity, communityRequests, feedPreferences
+ *   gatherings     events, go-together, eventPreferences, eventParticipation
+ *   connections    connections, connectionNotes, invitesSent
+ *   safety         blocks, mutes, hiddenMembers, reportsFiled,
+ *                  suggestionDismissals, appeals
+ *   housing        housing, flatmateProfile, flatmateLikes, viewings,
+ *                  groupJoinRequests, coopJoinRequests, savedSearches,
+ *                  groupListings, landlords
+ *   listings       listings, listingActivity, safeSpaces, barter, work
+ *   writing        magazine, reviews, magazineContributions,
+ *                  magazinePayments, landlordRecommendations,
+ *                  resourceFeedback
+ *   participation  volunteering, governance, membershipCards,
+ *                  governanceActivity, cardScans, volunteeringRoles
+ *   activity       activity, saved, notifications, notificationPreferences,
+ *                  savedLists, collections, drafts, accountRequests,
+ *                  recognition, watchHistory
+ *   devices        sessions, pushDevices
+ *   consent        consent, policyAcceptances, policyStatus
+ *   media          media
+ *
+ * `listings` (ENG-495b) got its own item: once it also carried safe-space
+ * nominations, barter posts and companies/jobs/partners, it outgrew being a
+ * housing-adjacent footnote and needed its own accurate description. Every
+ * other new key joined the item that already matches its category, so the
+ * item count only grew by that one.
+ *
+ * A follow-up review of ENG-495b (still reflected above) dropped the private,
+ * moderator-side rows from `listingActivity` (only public listing questions
+ * and their answers travel) and confirmed several rows gained new fields:
+ * `verification` now carries level-change history, `forumActivity` includes
+ * polls run on threads the member started, and the landlord-intro, magazine
+ * writer-application, resource-suggestion and safe-space-nomination rows each
+ * carry the team's reply. `listingActivity`'s ownership offers are unsolicited
+ * staff offers addressed to the member from the start, so those carry the
+ * team's note. The core `profile` key also gained pronunciation, a Portuguese
+ * bio, "not here for", which identities are discoverable, and the onboarding
+ * date.
+ *
+ * A tag or a sentence here is a promise about the archive. Add one only once
+ * the backend exports that data. PRD-464 kept IP addresses out of the
+ * archive; payments for pieces the member wrote now come back through
+ * `magazinePayments` (ENG-495b).
+ */
 export const ACCORDION_ITEMS: AccordionItem[] = [
   {
     id: "profile",
@@ -143,8 +219,16 @@ export const ACCORDION_ITEMS: AccordionItem[] = [
       "settings:dataExport.tag.pronouns",
       "settings:dataExport.tag.bio",
       "settings:dataExport.tag.photo",
-      "settings:dataExport.tag.occupation",
-      "settings:dataExport.tag.links",
+      "settings:dataExport.tag.email",
+      "settings:dataExport.tag.personas",
+      "settings:dataExport.tag.nowHistory",
+      "settings:dataExport.tag.profileSections",
+      "settings:dataExport.tag.handles",
+      "settings:dataExport.tag.board",
+      "settings:dataExport.tag.verification",
+      "settings:dataExport.tag.privacySettings",
+      "settings:dataExport.tag.joinApplication",
+      "settings:dataExport.tag.staffRoles",
     ],
   },
   {
@@ -156,28 +240,33 @@ export const ACCORDION_ITEMS: AccordionItem[] = [
       "settings:dataExport.tag.timestamps",
       "settings:dataExport.tag.attachments",
       "settings:dataExport.tag.reportedThreads",
+      "settings:dataExport.tag.reactionsAndStars",
     ],
   },
   {
-    id: "forumPosts",
-    titleKey: "settings:dataExport.accordion.forumPosts.title",
-    bodyKey: "settings:dataExport.accordion.forumPosts.body",
+    id: "posts",
+    titleKey: "settings:dataExport.accordion.posts.title",
+    bodyKey: "settings:dataExport.accordion.posts.body",
     tagKeys: [
-      "settings:dataExport.tag.posts",
+      "settings:dataExport.tag.threads",
       "settings:dataExport.tag.replies",
-      "settings:dataExport.tag.edits",
-      "settings:dataExport.tag.reactions",
-      "settings:dataExport.tag.timestamps",
+      "settings:dataExport.tag.communitiesYouRun",
+      "settings:dataExport.tag.communityPosts",
+      "settings:dataExport.tag.votesAndFollows",
+      "settings:dataExport.tag.communityRoles",
+      "settings:dataExport.tag.feedChoices",
     ],
   },
   {
-    id: "events",
-    titleKey: "settings:dataExport.accordion.events.title",
-    bodyKey: "settings:dataExport.accordion.events.body",
+    id: "gatherings",
+    titleKey: "settings:dataExport.accordion.gatherings.title",
+    bodyKey: "settings:dataExport.accordion.gatherings.body",
     tagKeys: [
+      "settings:dataExport.tag.hostedEvents",
       "settings:dataExport.tag.rsvps",
-      "settings:dataExport.tag.attendance",
-      "settings:dataExport.tag.interest",
+      "settings:dataExport.tag.goTogether",
+      "settings:dataExport.tag.rsvpDetails",
+      "settings:dataExport.tag.eventSettings",
     ],
   },
   {
@@ -185,41 +274,123 @@ export const ACCORDION_ITEMS: AccordionItem[] = [
     titleKey: "settings:dataExport.accordion.connections.title",
     bodyKey: "settings:dataExport.accordion.connections.body",
     tagKeys: [
-      "settings:dataExport.tag.follows",
       "settings:dataExport.tag.connections",
+      "settings:dataExport.tag.vouches",
+      "settings:dataExport.tag.connectionNotes",
+      "settings:dataExport.tag.invitesSent",
+    ],
+  },
+  {
+    id: "safety",
+    titleKey: "settings:dataExport.accordion.safety.title",
+    bodyKey: "settings:dataExport.accordion.safety.body",
+    tagKeys: [
       "settings:dataExport.tag.blockedList",
+      "settings:dataExport.tag.mutedMembers",
+      "settings:dataExport.tag.hiddenMembers",
+      "settings:dataExport.tag.reportsFiled",
+      "settings:dataExport.tag.dismissedSuggestions",
+      "settings:dataExport.tag.appeals",
     ],
   },
   {
-    id: "activitySessions",
-    titleKey: "settings:dataExport.accordion.activitySessions.title",
-    bodyKey: "settings:dataExport.accordion.activitySessions.body",
+    id: "housing",
+    titleKey: "settings:dataExport.accordion.housing.title",
+    bodyKey: "settings:dataExport.accordion.housing.body",
     tagKeys: [
-      "settings:dataExport.tag.logins",
-      "settings:dataExport.tag.deviceTypes",
-      "settings:dataExport.tag.ipAddresses",
-      "settings:dataExport.tag.sessions",
+      "settings:dataExport.tag.housingListings",
+      "settings:dataExport.tag.flatmateProfile",
+      "settings:dataExport.tag.flatmateLikes",
+      "settings:dataExport.tag.viewings",
+      "settings:dataExport.tag.joinRequests",
+      "settings:dataExport.tag.savedSearches",
+      "settings:dataExport.tag.groupListings",
+      "settings:dataExport.tag.landlordIntros",
     ],
   },
   {
-    id: "preferences",
-    titleKey: "settings:dataExport.accordion.preferences.title",
-    bodyKey: "settings:dataExport.accordion.preferences.body",
+    id: "listings",
+    titleKey: "settings:dataExport.accordion.listings.title",
+    bodyKey: "settings:dataExport.accordion.listings.body",
     tagKeys: [
+      "settings:dataExport.tag.directoryListings",
+      "settings:dataExport.tag.safeSpaces",
+      "settings:dataExport.tag.barter",
+      "settings:dataExport.tag.work",
+    ],
+  },
+  {
+    id: "writing",
+    titleKey: "settings:dataExport.accordion.writing.title",
+    bodyKey: "settings:dataExport.accordion.writing.body",
+    tagKeys: [
+      "settings:dataExport.tag.articles",
+      "settings:dataExport.tag.drafts",
+      "settings:dataExport.tag.submissions",
+      "settings:dataExport.tag.reviews",
+      "settings:dataExport.tag.magazineContributions",
+      "settings:dataExport.tag.magazinePayments",
+      "settings:dataExport.tag.landlordRecommendations",
+      "settings:dataExport.tag.resourceFeedback",
+    ],
+  },
+  {
+    id: "participation",
+    titleKey: "settings:dataExport.accordion.participation.title",
+    bodyKey: "settings:dataExport.accordion.participation.body",
+    tagKeys: [
+      "settings:dataExport.tag.volunteering",
+      "settings:dataExport.tag.votes",
+      "settings:dataExport.tag.proposals",
+      "settings:dataExport.tag.membershipCards",
+      "settings:dataExport.tag.roadmapAndNominations",
+      "settings:dataExport.tag.cardScans",
+      "settings:dataExport.tag.volunteerRoles",
+    ],
+  },
+  {
+    id: "activity",
+    titleKey: "settings:dataExport.accordion.activity.title",
+    bodyKey: "settings:dataExport.accordion.activity.body",
+    tagKeys: [
+      "settings:dataExport.tag.activityFeed",
+      "settings:dataExport.tag.savedItems",
       "settings:dataExport.tag.notifications",
-      "settings:dataExport.tag.privacy",
-      "settings:dataExport.tag.language",
-      "settings:dataExport.tag.appearance",
+      "settings:dataExport.tag.notificationSettings",
+      "settings:dataExport.tag.listsAndCollections",
+      "settings:dataExport.tag.drafts",
+      "settings:dataExport.tag.accountRequests",
+      "settings:dataExport.tag.badgesAndXp",
+      "settings:dataExport.tag.watchHistory",
     ],
   },
   {
-    id: "payments",
-    titleKey: "settings:dataExport.accordion.payments.title",
-    bodyKey: "settings:dataExport.accordion.payments.body",
+    id: "devices",
+    titleKey: "settings:dataExport.accordion.devices.title",
+    bodyKey: "settings:dataExport.accordion.devices.body",
     tagKeys: [
-      "settings:dataExport.tag.transactions",
-      "settings:dataExport.tag.amounts",
+      "settings:dataExport.tag.signInSessions",
+      "settings:dataExport.tag.pushDevices",
+    ],
+  },
+  {
+    id: "consent",
+    titleKey: "settings:dataExport.accordion.consent.title",
+    bodyKey: "settings:dataExport.accordion.consent.body",
+    tagKeys: [
+      "settings:dataExport.tag.privacyChoices",
+      "settings:dataExport.tag.policyAcceptances",
       "settings:dataExport.tag.dates",
+    ],
+  },
+  {
+    id: "media",
+    titleKey: "settings:dataExport.accordion.media.title",
+    bodyKey: "settings:dataExport.accordion.media.body",
+    tagKeys: [
+      "settings:dataExport.tag.photos",
+      "settings:dataExport.tag.attachments",
+      "settings:dataExport.tag.fileList",
     ],
   },
 ];

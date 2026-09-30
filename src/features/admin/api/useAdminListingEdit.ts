@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
-import { DIRECTORY_KEY } from "../../marketing/api/useDirectory";
+import { DIRECTORY_KEY } from "../../marketing/api/directoryQueryKey";
 import { listingDtoToPending } from "../../marketing/listBusiness/api/listings.adapters";
 import type { ManagedListingDTO } from "../../marketing/listBusiness/api/listings.api";
 import {

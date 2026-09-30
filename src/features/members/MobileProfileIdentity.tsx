@@ -1,6 +1,7 @@
 import { ExpandableText, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
+import { lookingForLabel } from "../settings/interests.data";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfileWorkRow } from "./ProfileWorkRow";
 import { SocialLinksRow } from "./SocialLinksRow";
@@ -46,7 +47,7 @@ export function MobileProfileIdentity({
             </span>
             {profile.lookingFor.map((intentLabel) => (
               <span key={intentLabel} className={styles.identityHereForChip}>
-                {intentLabel}
+                {lookingForLabel(t, intentLabel)}
               </span>
             ))}
             {isSelf && (

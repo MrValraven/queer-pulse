@@ -12,6 +12,12 @@ interface PwaUpdateCardProps {
   onDismiss: () => void;
   /** True once Reload was tapped: swaps the label to "Updating…". */
   updating: boolean;
+  /**
+   * The waiting build's version (e.g. "v1.43.0"), once /version.json has
+   * answered with one that differs from this bundle's. Named in the headline
+   * accent when set.
+   */
+  nextVersion?: string;
 }
 
 /**
@@ -24,13 +30,17 @@ interface PwaUpdateCardProps {
  *
  * The body copy stays generic on purpose: this bundle is the OLD build, so it
  * cannot know what the new one ships. "What changed" reloads onto the
- * Changelog, where the new build describes itself.
+ * Changelog, where the new build describes itself. The headline accent does
+ * name the new build's version, read from /version.json by
+ * useNextBuildVersion, and falls back to the generic accent until (or unless)
+ * that answer arrives.
  */
 export function PwaUpdateCard({
   onReload,
   onShowChanges,
   onDismiss,
   updating,
+  nextVersion,
 }: PwaUpdateCardProps) {
   const { t } = useTranslation();
 
@@ -54,7 +64,11 @@ export function PwaUpdateCard({
 
       <p className={styles.headline}>
         {t("nav:updateHeadline")}{" "}
-        <em className={styles.accent}>{t("nav:updateHeadlineAccent")}</em>
+        <em className={styles.accent}>
+          {nextVersion
+            ? t("nav:updateHeadlineAccentVersion", { version: nextVersion })
+            : t("nav:updateHeadlineAccent")}
+        </em>
       </p>
       <p className={styles.body}>
         {t("nav:updateBody")}{" "}

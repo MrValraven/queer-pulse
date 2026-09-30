@@ -47,7 +47,7 @@ function PractitionerContactButton({
         t("connect:contact.message")
       ) : (
         <>
-          {t("economy:solidarityDirectory.contactCta")}{" "}
+          {t("economy:solidarityDirectory.connectCta")}{" "}
           <FiArrowRight aria-hidden />
         </>
       )}
