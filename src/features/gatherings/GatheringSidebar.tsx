@@ -76,11 +76,14 @@ function resolveHost(
 export function GatheringSidebar({
   gathering,
   connected,
+  isViewerHost,
   contact,
   rsvp,
 }: {
   gathering: GatheringDetail;
   connected: boolean;
+  /** The viewer IS the host: no "Connect"/"Message" button to themselves. */
+  isViewerHost: boolean;
   contact: ContactAction;
   /** The page's single RSVP state machine, shared with the hero's button so
    *  the two can never disagree — see `GatheringDetailBody`. */
@@ -170,6 +173,7 @@ export function GatheringSidebar({
       <GatheringRsvpControl
         gathering={gathering}
         connected={connected}
+        isViewerHost={isViewerHost}
         contact={contact}
         rsvp={rsvp}
       />

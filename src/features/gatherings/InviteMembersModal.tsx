@@ -3,6 +3,7 @@ import {
   Button,
   Modal,
   MemberSelectList,
+  type MemberSelectListProps,
   type MemberSelectPerson,
 } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
@@ -12,8 +13,9 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useConnectionsList } from "../connect/api/useConnectionsList";
+import { useConnectionsSearch } from "../connect/api/useConnectionsSearch";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
+import { InviteMembersListFooter } from "./InviteMembersListFooter";
 import { InviteMembersSelectedCount } from "./InviteMembersSelectedCount";
 import { MEMBER_POOL } from "./manageCohosts.data";
 import { useInviteMembers } from "./api/useEventMutations";
@@ -24,7 +26,7 @@ const MAX_INVITES = 100;
 
 export function InviteMembersModal({
   slug,
-  /** Slugs already going / already invited — hidden from the pool. */
+  /** Slugs already going or already invited, hidden from the pool. */
   excludeSlugs = [],
   onClose,
 }: {
@@ -40,13 +42,14 @@ export function InviteMembersModal({
   const inviteMembers = useInviteMembers(slug);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [sent, setSent] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Who a host can invite: their own accepted connections. Live mode must never
-  // fall through to `MEMBER_POOL`, which is the demo registry — a real host
-  // would be offered invented people, and inviting one would 404 on a slug the
-  // backend has never heard of.
-  const { views: connections, loading: connectionsLoading } =
-    useConnectionsList("all");
+  // Who a host can invite: their own accepted connections. Live mode never
+  // falls back to the demo registry `MEMBER_POOL`, whose invented slugs would
+  // 404. Live search runs on the server across every page, and a pick made
+  // under an earlier search stays in `selected` and is sent with the rest.
+  const connectionsSearch = useConnectionsSearch(searchQuery);
+  const { views: connections, isSearchPending } = connectionsSearch;
 
   const people = useMemo<MemberSelectPerson[]>(() => {
     const candidates = demoMode
@@ -56,12 +59,7 @@ export function InviteMembersModal({
           photo: candidate.photo,
           pron: candidate.pronouns,
         }))
-      : connections.map((connection) => ({
-          slug: connection.slug,
-          name: connection.name,
-          photo: connection.photo,
-          pron: connection.pron,
-        }));
+      : connections;
     return candidates.map((candidate) => ({
       slug: candidate.slug,
       name: candidate.name,
@@ -71,6 +69,22 @@ export function InviteMembersModal({
       staffBadgedRoles: staffMap[candidate.slug]?.badgedStaffRoles,
     }));
   }, [demoMode, connections, staffMap]);
+
+  // Demo keeps the list's own local search over `MEMBER_POOL`. Live hands the
+  // query to the server, and names why the list is empty once it has answered.
+  const liveListProps: Partial<MemberSelectListProps> = demoMode
+    ? {}
+    : {
+        searchQuery,
+        onSearchChange: setSearchQuery,
+        isSearching: isSearchPending && searchQuery.trim() !== "",
+        emptyMessage: connectionsSearch.isError
+          ? t("gatherings:create.v2.who.cohostsLoadError")
+          : !isSearchPending && people.length > 0
+            ? t("gatherings:manage.invite.allListedInvited")
+            : undefined,
+        listFooter: <InviteMembersListFooter connections={connectionsSearch} />,
+      };
 
   const toggle = (memberSlug: string) => {
     setSelected((previous) => {
@@ -168,10 +182,11 @@ export function InviteMembersModal({
         excludeSlugs={excludeSlugs}
         searchPlaceholder={t("gatherings:manage.invite.searchLabel")}
         emptyHint={
-          connectionsLoading
+          isSearchPending
             ? t("gatherings:manage.invite.loadingPeople")
             : t("gatherings:manage.invite.noConnections")
         }
+        {...liveListProps}
       />
 
       <div className={styles.pickerFooter}>

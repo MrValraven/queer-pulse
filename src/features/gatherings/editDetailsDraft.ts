@@ -40,6 +40,11 @@ export interface GatheringDetailsDraft {
    *  `useGatheringForm`'s `communitySlug` convention (the same "no community"
    *  empty-string sentinel), since it is settable in both create and edit. */
   communitySlug: string;
+  /** How many people can go, as typed in the stepper, or `""` for no limit.
+   *  The same string convention the wizard's `form.cap` uses, since the two
+   *  share `CapacityStepper`. `buildEditPatch` sends it only when it differs
+   *  from the saved capacity, and `""` goes on the wire as `null`. */
+  capacity: string;
   /** The gathering's family, or `""` for a gathering nobody has classified.
    *  Same empty-string sentinel `communitySlug` uses. */
   gatheringFamily: GatheringFamily | "";

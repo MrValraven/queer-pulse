@@ -3,32 +3,22 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useClipboard } from "../../../shared/hooks/useClipboard";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  downloadBlob,
-  downloadBlobFile,
-} from "../../../shared/lib/downloadBlob";
 import { gatheringShareDisplayUrl, gatheringShareUrl } from "../data";
 import type { GatheringForm } from "../useGatheringForm";
-import {
-  buildGatheringCalendarEvents,
-  buildMultiEventIcs,
-} from "./gatheringCalendar";
-import { CALENDAR_MIME_TYPE, COPY_FALLBACK_TOAST_MS } from "./shareKit.data";
-import {
-  calendarFileName,
-  storyImageFileName,
-  whatsAppShareUrl,
-} from "./shareLinks";
-import { gatheringPlaceLabel } from "./shareText";
+import { COPY_FALLBACK_TOAST_MS } from "./shareKit.data";
+import { whatsAppShareUrl } from "./shareLinks";
 import { buildStoryContent } from "./storyContent";
 import { renderStoryImageBlob } from "./storyImage";
+import { useShareKitCalendar } from "./useShareKitCalendar";
 
 /**
  * The four share actions on the published screen, for the gathering the
  * backend just created under `slug` (its first date). The link, WhatsApp and
- * the story image point at that first date. The calendar file links each date
- * to its own slug from `occurrenceSlugs` when the backend returned one per
- * date.
+ * the story image point at that first date. The story image renders once and
+ * waits in `storyPreviewBlob` for the preview dialog, which downloads or shares
+ * it. `calendarSheet` feeds the "Add to calendar" picker, whose downloaded file
+ * links each date to its own slug from `occurrenceSlugs` when the backend
+ * returned one per date.
  */
 export function useShareKitActions(
   form: GatheringForm,
@@ -40,6 +30,8 @@ export function useShareKitActions(
   const { showToast } = useToast();
   const { copy } = useClipboard();
   const [isStoryImageBusy, setIsStoryImageBusy] = useState(false);
+  const [storyPreviewBlob, setStoryPreviewBlob] = useState<Blob | null>(null);
+  const calendarSheet = useShareKitCalendar(form, slug, occurrenceSlugs);
   // The running instance's origin plus the gathering's path, so a link copied
   // in dev opens in dev.
   const shareUrl = gatheringShareUrl(slug);
@@ -59,7 +51,7 @@ export function useShareKitActions(
     );
   };
 
-  const downloadStoryImage = async () => {
+  const openStoryPreview = async () => {
     if (isStoryImageBusy) return;
     setIsStoryImageBusy(true);
     try {
@@ -69,8 +61,7 @@ export function useShareKitActions(
         displayUrl: gatheringShareDisplayUrl(slug),
       });
       const blob = await renderStoryImageBlob(content);
-      downloadBlobFile(storyImageFileName(slug), blob);
-      showToast(t("gatherings:create.v2.success.storyDownloaded"), "success");
+      setStoryPreviewBlob(blob);
     } catch {
       showToast(t("gatherings:create.v2.success.storyFailed"), "error");
     } finally {
@@ -78,28 +69,13 @@ export function useShareKitActions(
     }
   };
 
-  const downloadCalendar = () => {
-    const events = buildGatheringCalendarEvents({
-      form,
-      slug,
-      occurrenceSlugs,
-      urlForSlug: gatheringShareUrl,
-      location: gatheringPlaceLabel(form, t),
-    });
-    if (events.length === 0) return;
-    downloadBlob(
-      calendarFileName(slug),
-      buildMultiEventIcs(events),
-      CALENDAR_MIME_TYPE,
-    );
-    showToast(t("gatherings:create.v2.success.calendarDownloaded"), "success");
-  };
-
   return {
     whatsAppHref: whatsAppShareUrl(form.title, shareUrl),
     copyLink,
-    downloadStoryImage,
+    openStoryPreview,
+    closeStoryPreview: () => setStoryPreviewBlob(null),
+    storyPreviewBlob,
     isStoryImageBusy,
-    downloadCalendar,
+    calendarSheet,
   };
 }

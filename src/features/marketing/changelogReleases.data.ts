@@ -9,9 +9,14 @@
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
     "30 Sep 2026": {
-      // Seven entries this day, so two highlights: the sign-in redesign first,
-      // since every member sees it, then the export coverage.
-      highlights: ["sign-in-welcome-home", "export-covers-nearly-everything"],
+      // More than seven entries this day, so three highlights: the sign-in
+      // redesign first, since every member sees it, then the export coverage,
+      // then the review step every host now passes before publishing.
+      highlights: [
+        "sign-in-welcome-home",
+        "export-covers-nearly-everything",
+        "gathering-review-step",
+      ],
     },
     "29 Sep 2026": {
       // Well over seven entries this day, so three highlights; features first,

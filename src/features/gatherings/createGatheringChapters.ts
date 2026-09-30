@@ -9,6 +9,7 @@ import {
   GATE_ANCHOR,
   hoodLabelKey,
   CREATE_GATHERING_CHAPTERS,
+  PLEDGE_TEXT_KEYS,
   chapterHeadId,
 } from "./createGathering.data";
 import { COST_KIND_LABEL_KEYS } from "./gatheringExtras";
@@ -17,13 +18,13 @@ import type { GatheringForm } from "./useGatheringForm";
 
 /**
  * Create Gathering v2: what each chapter asks of the host, what the collapsed
- * chapter says about itself, and what the ready panel lists.
+ * chapter says about itself, and what the review chapter lists as missing.
  *
  * This file answers "can this chapter continue, and if not, why" for the
  * Continue button and the "Still needed" line alike, so both always read the
  * same gate. Chapters 0 (What) and 1 (When and where) hold everything the
  * backend refuses to create a gathering without; chapters 2 to 4 ask nothing
- * required.
+ * required, and chapter 5 (the review) asks nothing of its own.
  */
 
 /** One unmet thing standing between a chapter and its Continue. */
@@ -37,7 +38,7 @@ export interface ChapterNeed {
   anchor: string;
 }
 
-/** One row of the ready panel. */
+/** One readiness row: a thing publishing needs, or a soft one it would like. */
 export interface ReadinessItem {
   key: string;
   labelKey: string;
@@ -117,7 +118,7 @@ export function isChapterComplete(
 }
 
 /**
- * The ready panel's rows: the required ones first, then the soft ones.
+ * The readiness rows: the required ones first, then the soft ones.
  *
  * The join link row appears only while the link is malformed. An empty link is
  * valid (the host can add it after publishing), and a green tick against a
@@ -198,6 +199,28 @@ export function readinessItems(form: GatheringForm): ReadinessItem[] {
     },
   );
   return items;
+}
+
+/** Where publishing stands: the readiness rows, the required ones among
+ *  them, how many of those are met, and whether every required row is met
+ *  and both pledges are ticked. */
+export interface PublishReadiness {
+  items: ReadinessItem[];
+  requiredItems: ReadinessItem[];
+  metRequiredCount: number;
+  isReady: boolean;
+}
+
+export function publishReadiness(form: GatheringForm): PublishReadiness {
+  const items = readinessItems(form);
+  const requiredItems = items.filter((item) => !item.isOptional);
+  const metRequiredCount = requiredItems.filter((item) => item.isMet).length;
+  return {
+    items,
+    requiredItems,
+    metRequiredCount,
+    isReady: metRequiredCount === requiredItems.length && form.allChecked,
+  };
 }
 
 // ── Collapsed chapter summaries ──────────────────────────────────────────
@@ -318,12 +341,25 @@ function careSummary(form: GatheringForm, { t }: SummaryContext): string {
     : t("gatherings:create.v2.summary.care.empty");
 }
 
+function reviewSummary(form: GatheringForm, { t }: SummaryContext): string {
+  const readiness = publishReadiness(form);
+  if (readiness.isReady) return t("gatherings:create.v2.summary.review.ready");
+  return t("gatherings:create.v2.summary.review.progress", {
+    met: readiness.metRequiredCount,
+    total: readiness.requiredItems.length,
+    checked: form.checkedCount,
+    pledges: PLEDGE_TEXT_KEYS.length,
+  });
+}
+
+/** Index-aligned with `CREATE_GATHERING_CHAPTERS`. */
 const SUMMARY_BY_CHAPTER = [
   whatSummary,
   whenWhereSummary,
   whoSummary,
   accessSummary,
   careSummary,
+  reviewSummary,
 ];
 
 /** The line a collapsed chapter shows about itself. */

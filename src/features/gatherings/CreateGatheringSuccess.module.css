@@ -1,48 +1,130 @@
 /* The published screen (design `.cg-done`) on the plum-panel success pattern
-   (docs/STYLE-RULES.md, ruling R9). The keyframe lives here: a CSS module
-   localises animation names, so only a keyframe declared in this file runs. */
+   (docs/STYLE-RULES.md, ruling R9). The keyframes live here: a CSS module
+   localises animation names, so only a keyframe declared in this file runs.
 
-@keyframes successRise {
+   One arrival, staged by delay: the panel, the check (its tick drawing a
+   beat later), the title and then its coral words, the lead, share row and
+   actions in a cascade, and the card last. Every base rule below is the
+   finished state and the keyframes hold only the starting values, so
+   `animation: none` under reduced motion shows the finished screen. */
+
+@keyframes successArrive {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px) scale(0.97);
+  }
+}
+
+@keyframes successFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes successDrift {
+  to {
+    transform: translate(4%, -3%) scale(1.08);
+  }
+}
+
+@keyframes successPop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+/* The dash sits 3 units clear of the tick's start, so its round cap never
+   shows as a dot before the draw begins. */
+@keyframes successDraw {
+  from {
+    stroke-dashoffset: 27;
+  }
+}
+
+@keyframes successRing {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
   }
   to {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+/* The text is see-through while the highlight crosses it, then fills back
+   to coral, so the resting em is today's plain coral type. */
+@keyframes successShimmer {
+  from {
+    color: transparent;
+    background-position: 100% 0;
+  }
+  80% {
+    color: transparent;
+    background-position: 0% 0;
+  }
+}
+
+@keyframes successGlow {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes successCardLand {
+  from {
+    opacity: 0;
+    transform: translateY(28px) rotate(-6deg);
+  }
+}
+
+/* The stacked card has less room to swing before the panel clips it. */
+@keyframes successCardLandStacked {
+  from {
+    opacity: 0;
+    transform: translateY(28px) rotate(-3deg);
   }
 }
 
 .success {
   position: relative;
   overflow: hidden;
-  max-width: 46rem;
+  container-type: inline-size;
+  max-width: 72rem;
   margin: 0 auto;
   padding: var(--section-y-48) 44px;
   border-radius: var(--radius-card);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  text-align: center;
-  animation: successRise var(--dur-slow) var(--ease-out) both;
+  animation: successArrive 700ms var(--ease-out) both;
 }
 
-/* Coral and jade orbs behind the content. */
+/* Coral and jade orbs behind the content. The layer overhangs the panel by
+   a fifth on every side, so its slow drift never reveals an edge. */
 .success::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -20%;
   pointer-events: none;
   background:
     radial-gradient(
-      circle at 100% 0%,
+      circle at 86% 14%,
       rgba(var(--accent-rgb), 0.18),
-      transparent 45%
+      transparent 38%
     ),
     radial-gradient(
-      circle at 0% 100%,
+      circle at 14% 86%,
       rgba(var(--jade-rgb), 0.16),
-      transparent 45%
+      transparent 38%
     );
+  animation: successDrift 22s var(--ease-in-out) 700ms infinite alternate both;
 }
 
 /* Positioned after the orb layer in paint order, so content sits above it. */
@@ -50,7 +132,23 @@
   position: relative;
 }
 
+/* Stacked, the copy box steps aside so its children and the card share one
+   centred column, and the card rises to sit under the lead as on the original
+   screen. The DOM keeps the copy first; the card is not interactive, so the
+   visual order can differ from the reading order. */
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.copy {
+  display: contents;
+}
+
 .icon {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,29 +157,71 @@
   margin-bottom: 18px;
   border-radius: var(--radius-avatar);
   font-size: var(--text-34);
-  color: var(--jade);
-  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-light);
+  background: rgba(var(--jade-rgb), 0.24);
+  animation: successPop 550ms var(--ease) 200ms both;
+}
+
+/* FiCheck's polyline measures about 22.6 units, so a 24 dash covers it. */
+.icon svg polyline {
+  stroke-dasharray: 24 30;
+  animation: successDraw 450ms var(--ease-out) 450ms both;
+}
+
+/* One soft ring pulses out once the tick is drawn. Its resting state is
+   invisible, so it needs no fill outside the run. */
+.icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--jade-light);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  animation: successRing 700ms var(--ease-out) 850ms;
 }
 
 .title {
   margin: 0 0 14px;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: var(--text-title);
+  font-size: var(--text-display);
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
+  animation: successFadeUp 600ms var(--ease-out) 350ms both;
 }
 
+/* Inline-block so the words can rise on their own. The gradient is clipped
+   to the glyphs and only shows while the shimmer clears the text colour;
+   the small padding keeps the italic overhang inside the painted box. */
 .title em {
+  display: inline-block;
+  margin: -0.05em -0.12em;
+  padding: 0.05em 0.12em;
   font-style: italic;
   font-weight: 400;
   color: var(--accent);
+  background-image: linear-gradient(
+    100deg,
+    var(--accent) 40%,
+    rgba(var(--cream-rgb), 0.95) 50%,
+    var(--accent) 60%
+  );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation:
+    successFadeUp 600ms var(--ease-out) 500ms both,
+    successShimmer 800ms var(--ease-in-out) 850ms both;
 }
 
-/* Focus lands here on arrival for screen readers; no ring for that. */
-.title:focus:not(:focus-visible) {
+/* A programmatic focus target for screen readers, never a Tab stop. */
+.title:focus,
+.title:focus-visible {
   outline: none;
+  box-shadow: none;
 }
 
 .lead {
@@ -91,63 +231,179 @@
   line-height: 1.7;
   color: rgba(var(--cream-rgb), 0.8);
   text-wrap: pretty;
+  animation: successFadeUp 500ms var(--ease-out) 650ms both;
 }
 
-.previewSlot {
-  max-width: 25rem;
-  margin: 0 auto;
-  text-align: left;
+/* Stacked, the share row follows the card, so the slot carries the gap above
+   it and the row's own top margin is cleared. */
+.shareSlot {
+  order: 2;
+  margin-top: 28px;
+  animation: successFadeUp 500ms var(--ease-out) 720ms both;
 }
 
-.access {
-  max-width: 46ch;
-  margin: 28px auto 0;
-}
-
-.accessLabel {
-  display: block;
-  margin: 0 0 10px;
-  font-size: var(--text-10-5);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
-}
-
-.accessTags {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.accessTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border: 1px solid rgba(var(--jade-rgb), 0.4);
-  border-radius: var(--radius-tag);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--jade-rgb), 0.28);
-}
-
-.accessTag svg {
-  flex: none;
-  color: var(--jade-light);
+.shareSlot > [role="group"] {
+  margin-top: 0;
 }
 
 .actions {
+  order: 2;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
   margin-top: 30px;
+  animation: successFadeUp 500ms var(--ease-out) 790ms both;
+}
+
+/* Sized to the card, so the glow keeps the card's proportions in both
+   layouts. */
+.cardColumn {
+  position: relative;
+  order: 1;
+  width: 100%;
+  max-width: 25rem;
+}
+
+/* A soft coral glow the card lands on, wide enough to read past its edges. */
+.cardColumn::before {
+  content: "";
+  position: absolute;
+  inset: -18% -24%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--accent-rgb), 0.38),
+    rgba(var(--accent-rgb), 0.12) 55%,
+    transparent
+  );
+  animation: successGlow 900ms var(--ease-out) 750ms both;
+}
+
+/* The board card at its board width. The plum-panel lift stacks on the
+   card's own e4 lift, which alone barely reads on the plum ground. Filled
+   backwards only, so once it lands the hover transition owns the transform. */
+.card {
+  position: relative;
+  max-width: 25rem;
+  margin: 0 auto;
+  text-align: left;
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-card-on-plum);
+  transform: translateY(0) rotate(0deg);
+  transition: transform var(--dur-slow) var(--ease);
+  animation: successCardLandStacked 900ms var(--ease) 750ms backwards;
+}
+
+/* Two columns once the panel's content box can hold the 25rem card, the
+   gap and a copy column of about 24rem. A container query, so the sidebar
+   nav's rail is accounted for too. */
+@container (min-width: 52rem) {
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 34rem) 25rem;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: clamp(var(--gap-lg), 6cqi, 72px);
+    padding-inline: clamp(0px, 3cqi, 32px);
+  }
+
+  /* A block again, so the copy is one grid cell beside the card. */
+  .copy {
+    display: block;
+    text-align: left;
+  }
+
+  .title {
+    text-wrap: balance;
+  }
+
+  /* The coral words take their own line. */
+  .title em {
+    display: block;
+    width: fit-content;
+  }
+
+  .lead {
+    margin-inline: 0;
+  }
+
+  /* The lead's bottom margin already spaces the row here. */
+  .shareSlot {
+    margin-top: 0;
+  }
+
+  /* Beats the share row's own centring on specificity. */
+  .shareSlot > [role="group"],
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .card {
+    transform: translateY(0) rotate(-2deg);
+    animation-name: successCardLand;
+  }
+
+  @media (hover: hover) {
+    .card:hover {
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+}
+
+/* Once the copy column clears the widest pair of share pills in either
+   locale, the four sit as a deliberate two by two, so no single pill wraps
+   onto a row alone. */
+@container (min-width: 60rem) {
+  .shareSlot > [role="group"] {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
+  }
+}
+
+/* A narrow copy column beside the card stacks the two ways at one width,
+   the primary on top, and lets each row of share pills fill the column. */
+@container (min-width: 52rem) and (max-width: 60rem) {
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .actions > :is(a, button) {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .shareSlot > [role="group"] > * {
+    flex: 1 1 auto;
+  }
+}
+
+/* Narrow panels stack the two ways on full width, the primary on top, and
+   the share pills fill each row to match. */
+@container (max-width: 30rem) {
+  .actions {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-self: stretch;
+    align-items: stretch;
+  }
+
+  /* Out-specifies the button's own nowrap, so a long label wraps inside the
+     pill and stays centred. */
+  .actions > :is(a, button) {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .shareSlot {
+    align-self: stretch;
+  }
+
+  .shareSlot > [role="group"] > * {
+    flex: 1 1 auto;
+  }
 }
 
 @media (--mobile) {
@@ -157,7 +413,39 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .success {
+  .success,
+  .success::before,
+  .icon,
+  .icon::after,
+  .icon svg polyline,
+  .title,
+  .title em,
+  .lead,
+  .shareSlot,
+  .actions,
+  .cardColumn::before,
+  .card {
     animation: none;
   }
+
+  .card {
+    transition: none;
+  }
+}
+
+/* The in-app "Reduce motion" toggle, which base.css only shortens. */
+:global(html[data-reduce-motion="true"]) .success,
+:global(html[data-reduce-motion="true"]) .success::before,
+:global(html[data-reduce-motion="true"]) .icon,
+:global(html[data-reduce-motion="true"]) .icon::after,
+:global(html[data-reduce-motion="true"]) .icon svg polyline,
+:global(html[data-reduce-motion="true"]) .title,
+:global(html[data-reduce-motion="true"]) .title em,
+:global(html[data-reduce-motion="true"]) .lead,
+:global(html[data-reduce-motion="true"]) .shareSlot,
+:global(html[data-reduce-motion="true"]) .actions,
+:global(html[data-reduce-motion="true"]) .cardColumn::before,
+:global(html[data-reduce-motion="true"]) .card {
+  animation: none;
+  transition: none;
 }

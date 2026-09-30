@@ -35,19 +35,20 @@ export interface CreateGatheringChapterProps {
    *  before. */
   hasBeenContinued: boolean;
   isOptional: boolean;
-  /** The last chapter's button reads "Looks good". */
-  isLast: boolean;
   /** What the footer lists after a Continue that could not go on. Empty
    *  hides the line. */
   visibleNeeds: ChapterNeed[];
   onToggle: () => void;
-  /** Returns whether the chapter moved on. `false` shakes the button. */
-  onContinue: () => boolean;
+  /** Returns whether the chapter moved on. `false` shakes the button. The
+   *  review chapter passes none: its body ends with its own Publish button,
+   *  so the chapter shows no Continue footer. */
+  onContinue?: () => boolean;
   children: ReactNode;
 }
 
 /** One accordion chapter: the head button, and the body with its intro, the
- *  chapter's own fields and the Continue footer. */
+ *  chapter's own fields and, when it has somewhere to go, the Continue
+ *  footer. */
 export function CreateGatheringChapter({
   chapterIndex,
   titleKey,
@@ -57,7 +58,6 @@ export function CreateGatheringChapter({
   isDone,
   hasBeenContinued,
   isOptional,
-  isLast,
   visibleNeeds,
   onToggle,
   onContinue,
@@ -75,6 +75,7 @@ export function CreateGatheringChapter({
       : "";
 
   const handleContinue = (event: MouseEvent<HTMLButtonElement>) => {
+    if (!onContinue) return;
     const button = event.currentTarget;
     const hasMovedOn = onContinue();
     if (!hasMovedOn && !prefersReducedMotionNow()) {
@@ -139,31 +140,23 @@ export function CreateGatheringChapter({
       >
         <p className={styles.chapterIntro}>{t(introKey)}</p>
         {children}
-        <div className={styles.chapterFoot}>
-          <p className={styles.chapterNeed} aria-live="polite">
-            {needsText && (
-              <>
-                <FiAlertCircle aria-hidden />
-                {t("gatherings:create.v2.chapter.stillNeeded", {
-                  items: needsText,
-                })}
-              </>
-            )}
-          </p>
-          <Button className={styles.continueButton} onClick={handleContinue}>
-            {isLast ? (
-              <>
-                {t("gatherings:create.v2.chapter.looksGood")}{" "}
-                <FiCheck aria-hidden />
-              </>
-            ) : (
-              <>
-                {t("gatherings:create.nav.continue")}{" "}
-                <FiArrowRight aria-hidden />
-              </>
-            )}
-          </Button>
-        </div>
+        {onContinue && (
+          <div className={styles.chapterFoot}>
+            <p className={styles.chapterNeed} aria-live="polite">
+              {needsText && (
+                <>
+                  <FiAlertCircle aria-hidden />
+                  {t("gatherings:create.v2.chapter.stillNeeded", {
+                    items: needsText,
+                  })}
+                </>
+              )}
+            </p>
+            <Button className={styles.continueButton} onClick={handleContinue}>
+              {t("gatherings:create.nav.continue")} <FiArrowRight aria-hidden />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

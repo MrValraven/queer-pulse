@@ -5,26 +5,41 @@ import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions"
 import { AudienceScopeField } from "./AudienceScopeField";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { EditDetailsSection } from "./EditDetailsSection";
+import { CapacityStepper } from "./fields/CapacityStepper";
+import {
+  editCapacityProblem,
+  isEditCapacityLowered,
+} from "./manageGatheringState";
+import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
+import styles from "./EditDetailsModal.module.css";
 
 /**
  * "Who it's for" in the edit-details modal: the community the gathering is
- * filed to and who can see it.
+ * filed to, who can see it, and how many people can go.
  *
  * Split out of `EditDetailsModal` so both stay inside the 200-line rule. The
- * two fields are one decision: the "Community members" tier exists only while
- * a community is attached.
+ * first two fields are one decision: the "Community members" tier exists only
+ * while a community is attached. The capacity is the wizard's own stepper, in
+ * the same chapter the wizard asks it.
  */
 export function EditDetailsAudience({
   draft,
+  openedWithCapacity,
   onChange,
 }: {
   draft: GatheringDetailsDraft;
+  /** The capacity the modal opened with, which is the saved one. The field
+   *  compares against it to say what a lower number means, and a legacy
+   *  number outside the stepper's range still saves while it is unchanged. */
+  openedWithCapacity: string;
   /** Merged into the draft by the modal. */
   onChange: (patch: Partial<GatheringDetailsDraft>) => void;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const myCommunityOptions = useMyCommunityOptions();
+  const isCapacityOutOfRange =
+    editCapacityProblem(draft, openedWithCapacity) === "outOfRange";
 
   // Mirrors `useGatheringForm`'s `setCommunitySlug`: clearing the community
   // while "Community members" is the chosen audience would leave it pointing
@@ -70,6 +85,29 @@ export function EditDetailsAudience({
         value={draft.visibility}
         onChange={(value) => onChange({ visibility: value })}
         communityAvailable={draft.communitySlug !== ""}
+      />
+      <CapacityStepper
+        className={styles.capacityField}
+        label={t("gatherings:create.step3.capLabel")}
+        value={draft.capacity}
+        onChange={(value) => onChange({ capacity: value })}
+        // The server keeps everyone already going when the number drops, so
+        // a host lowering it hears that before saving. An out-of-range number
+        // says why the save is held instead.
+        hint={
+          !isCapacityOutOfRange &&
+          isEditCapacityLowered(draft, openedWithCapacity)
+            ? t("gatherings:manage.editModal.capacityLowerHint")
+            : undefined
+        }
+        error={
+          isCapacityOutOfRange
+            ? t("gatherings:manage.editModal.capacityRangeError", {
+                min: MIN_CAPACITY,
+                max: MAX_CAPACITY,
+              })
+            : undefined
+        }
       />
     </EditDetailsSection>
   );

@@ -63,8 +63,11 @@ export function EditDetailsModal({
   // Lives in `manageGatheringState` beside the patch builder it gates, so the
   // rule that decides whether a draft may be saved and the code that puts it
   // on the wire cannot drift apart. `EditDetailsSchedule` reads the schedule
-  // half of the same rule through `editScheduleProblem`.
-  const canSave = canSaveEditDraft(draft);
+  // half of the same rule through `editScheduleProblem`, and
+  // `EditDetailsAudience` the capacity half through `editCapacityProblem`.
+  // `initial` is seeded from the saved gathering, so `initial.capacity` is the
+  // capacity the gathering holds now.
+  const canSave = canSaveEditDraft(draft, initial.capacity);
 
   const save = () => {
     if (!canSave) return;
@@ -164,7 +167,11 @@ export function EditDetailsModal({
             onChange={merge}
           />
         </EditDetailsSection>
-        <EditDetailsAudience draft={draft} onChange={merge} />
+        <EditDetailsAudience
+          draft={draft}
+          openedWithCapacity={initial.capacity}
+          onChange={merge}
+        />
         <EditDetailsCare draft={draft} onChange={merge} />
         <EditDetailsRsvp draft={draft} onChange={merge} />
       </div>

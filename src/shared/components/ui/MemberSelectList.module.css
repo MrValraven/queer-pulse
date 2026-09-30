@@ -12,6 +12,13 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+/* With a `listFooter`, `.list` becomes the scroll area and the listbox inside
+   it keeps the same row rhythm. */
+.listRows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 .row {
   display: flex;
   align-items: center;

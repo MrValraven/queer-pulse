@@ -25,8 +25,10 @@ import {
 } from "./gatheringCatalog";
 import { gatheringWhen } from "./gatheringSchedule";
 import { daysUntil } from "./manageGatheringDates";
+import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
 import {
   ATTENDEE_COUNT,
+  GATHERING_CAPACITY,
   GATHERING_DATE,
   GATHERING_DESCRIPTION,
   GATHERING_DETAILS,
@@ -74,6 +76,10 @@ export interface GatheringState {
    *  in the edit modal now, same "" sentinel `useGatheringForm` uses. Absent
    *  (`""`) in the demo prototype. */
   communitySlug: string;
+  /** How many people can go as PERSISTED, or `null` for no limit. Same
+   *  pre-edit-snapshot role `communitySlug` plays: `buildEditPatch` compares
+   *  against it and sends a capacity only on a change. */
+  capacity: number | null;
   /** The gathering's family as PERSISTED, so the edit modal opens on the
    *  family the gathering already carries. Same pre-edit-snapshot role
    *  `communitySlug` plays. */
@@ -156,6 +162,8 @@ export function demoInitialState(): GatheringState {
     // (Public) matches the wizard's default and prior behaviour.
     visibility: "members",
     communitySlug: "",
+    // The number its "capacity" details row shows.
+    capacity: GATHERING_CAPACITY,
     // The static prototype predates families and carries none of it.
     gatheringFamily: null,
     eventType: null,
@@ -190,8 +198,9 @@ function persistedCostKind(gathering: GatheringDetail): CostKind {
 }
 
 /** The live dashboard's starting state, seeded from the fetched event. Only the
- *  fields the event DTO actually carries (date, venue, description) become
- *  editable rows — time/capacity aren't on the detail view-model. */
+ *  date and venue become details rows here; the capacity the view-model
+ *  carries is kept as `capacity`, which the edit modal opens on and the
+ *  attendees bar reads from its own query. */
 export function liveInitialState(
   gathering: GatheringDetail,
   fmt: Formatters,
@@ -222,6 +231,7 @@ export function liveInitialState(
     venueListing: gathering.venueListing ?? null,
     visibility: gathering.visibility ?? "members",
     communitySlug: gathering.communitySlug ?? "",
+    capacity: gathering.capacity ?? null,
     gatheringFamily: gathering.gatheringFamily ?? null,
     eventType: gathering.type || null,
     formatDetails: gathering.formatDetails ?? null,
@@ -270,13 +280,14 @@ export function editDraftFormatFields(
 }
 
 /**
- * The cover, care and RSVP half of an edit draft, read off the persisted
- * state. Shared by both surfaces that open the edit modal, beside
+ * The cover, care, capacity and RSVP half of an edit draft, read off the
+ * persisted state. Shared by both surfaces that open the edit modal, beside
  * `editDraftFormatFields`, so the two read a saved gathering the same way.
  *
  * Themes are narrowed against the saved family, and access needs open on
  * (ruling R8) whatever an older row stored, since the modal shows that switch
- * locked on.
+ * locked on. A gathering with no limit opens on an empty stepper, the `""`
+ * the draft reads as no limit.
  */
 export function editDraftCareFields(
   state: GatheringState,
@@ -288,11 +299,13 @@ export function editDraftCareFields(
   | "houseRules"
   | "costKind"
   | "cost"
+  | "capacity"
   | "rsvpCutoff"
   | "rsvpQuestions"
   | "customRsvpQuestion"
 > {
   return {
+    capacity: state.capacity === null ? "" : String(state.capacity),
     coverImageUrl: state.coverImageUrl,
     themes: sanitizeThemes(state.themes, state.gatheringFamily),
     contentNotes: [...state.contentNotes],
@@ -458,10 +471,82 @@ export function editScheduleProblem(
   return null;
 }
 
+/** A capacity as the stepper holds it, read as a number, or `null` for the
+ *  empty field (no limit) and for anything that does not read as a number. */
+function parsedCapacity(value: string): number | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+/** The draft's capacity as it goes on the wire: a number, or `null` for no
+ *  limit. `canSaveEditDraft` holds a save until the field reads as one. */
+function draftCapacity(draft: GatheringDetailsDraft): number | null {
+  return parsedCapacity(draft.capacity);
+}
+
+/** Why a draft's capacity cannot be saved, or `null` when it can. */
+export type EditCapacityProblem = "outOfRange";
+
+/**
+ * The edit modal's capacity gate, and the reason it refuses.
+ *
+ * An empty field is no limit and always saves. A number saves when it is a
+ * whole number inside the stepper's own range (`MIN_CAPACITY` to
+ * `MAX_CAPACITY`, the range the wizard offers), or when it is exactly the
+ * number the modal opened with: a gathering saved before that range existed
+ * (a capacity of 1, or 500) can still save its other edits with the capacity
+ * left as it is.
+ *
+ * `openedWithCapacity` is the draft value the modal was seeded with. Without
+ * it, only the range applies.
+ */
+export function editCapacityProblem(
+  draft: GatheringDetailsDraft,
+  openedWithCapacity?: string,
+): EditCapacityProblem | null {
+  if (!draft.capacity.trim()) return null;
+  const capacity = parsedCapacity(draft.capacity);
+  if (capacity === null) return "outOfRange";
+  if (
+    openedWithCapacity !== undefined &&
+    capacity === parsedCapacity(openedWithCapacity)
+  ) {
+    return null;
+  }
+  return Number.isInteger(capacity) &&
+    capacity >= MIN_CAPACITY &&
+    capacity <= MAX_CAPACITY
+    ? null
+    : "outOfRange";
+}
+
+/**
+ * Whether the draft lets fewer people go than the gathering allowed when the
+ * modal opened: a lower number, or a first limit on a gathering that had
+ * none. The server keeps everyone already going when the number drops, and
+ * only new RSVPs meet the new limit, so the field says so.
+ */
+export function isEditCapacityLowered(
+  draft: GatheringDetailsDraft,
+  openedWithCapacity: string,
+): boolean {
+  const capacity = draftCapacity(draft);
+  if (capacity === null) return false;
+  const openedCapacity = parsedCapacity(openedWithCapacity);
+  return openedCapacity === null || capacity < openedCapacity;
+}
+
 /** Everything the edit modal needs before it will let a host save: the three
  *  fields a gathering cannot go without, the words that go with "Something
- *  else", and a schedule the API will take. */
-export function canSaveEditDraft(draft: GatheringDetailsDraft): boolean {
+ *  else", a schedule the API will take, and a capacity the stepper allows.
+ *  `openedWithCapacity` is the capacity the modal opened with (see
+ *  `editCapacityProblem`). */
+export function canSaveEditDraft(
+  draft: GatheringDetailsDraft,
+  openedWithCapacity?: string,
+): boolean {
   return (
     draft.title.trim().length > 0 &&
     draft.startAt.trim().length > 0 &&
@@ -473,7 +558,8 @@ export function canSaveEditDraft(draft: GatheringDetailsDraft): boolean {
     // A draft that names no format at all stays saveable, as it was before:
     // a gathering may carry none, and clearing one is a real choice.
     (draft.format !== OTHER_FORMAT_KEY || draft.otherText.trim().length > 0) &&
-    editScheduleProblem(draft) === null
+    editScheduleProblem(draft) === null &&
+    editCapacityProblem(draft, openedWithCapacity) === null
   );
 }
 
@@ -529,6 +615,25 @@ function hasCoverChanged(
   return draft.coverImageUrl !== current.coverImageUrl;
 }
 
+/** Whether the host changed how many people can go. Under a series
+ *  `scope: "future"` edit the server copies what the patch carries onto every
+ *  later date, so an untouched capacity stays off the wire and each date
+ *  keeps its own. */
+function hasCapacityChanged(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): boolean {
+  return draftCapacity(draft) !== current.capacity;
+}
+
+/** The "capacity" details row's text for a capacity: "45 people", or "No
+ *  limit" for `null`. */
+function capacityDisplay(capacity: number | null, t: TFunction): string {
+  return capacity === null
+    ? t("gatherings:manage.details.capacityUnlimited")
+    : t("gatherings:manage.details.capacityValue", { count: capacity });
+}
+
 /** The saved edit, folded into the dashboard's own state. */
 export function applyEditDraft(
   current: GatheringState,
@@ -539,6 +644,8 @@ export function applyEditDraft(
   const newStartAt = draftStartAt(draft);
   const newEndAt = draftEndAt(draft);
   const newDateDisplay = dateDisplay(newStartAt, newEndAt, fmt, t);
+  const newCapacity = draftCapacity(draft);
+  const isCapacityChanged = hasCapacityChanged(current, draft);
   return {
     ...current,
     title: draft.title,
@@ -571,13 +678,19 @@ export function applyEditDraft(
     ...(hasLocationChanged(current, draft)
       ? { venueListingId: null, venueListing: null }
       : {}),
-    details: current.details.map((detail) =>
-      detail.id === "date"
-        ? { ...detail, value: newDateDisplay }
-        : detail.id === "venue"
-          ? { ...detail, value: draft.location }
-          : detail,
-    ),
+    // As it goes on the wire, so the next edit compares against what the
+    // server holds. Unchanged, it is the value already here.
+    capacity: newCapacity,
+    details: current.details.map((detail) => {
+      if (detail.id === "date") return { ...detail, value: newDateDisplay };
+      if (detail.id === "venue") return { ...detail, value: draft.location };
+      // Only the demo prototype has this row. It is rewritten only when the
+      // number changed, so an untouched row keeps the text it arrived with.
+      if (detail.id === "capacity" && isCapacityChanged) {
+        return { ...detail, value: capacityDisplay(newCapacity, t) };
+      }
+      return detail;
+    }),
   };
 }
 
@@ -654,6 +767,13 @@ export function buildEditPatch(
     // free gathering sends `cost: null` (ruling F11).
     ...(hasCostChanged(current, draft)
       ? { costKind: draft.costKind, cost: draftCost(draft) }
+      : {}),
+    // The capacity, only when the host changed it (see `hasCapacityChanged`).
+    // A cleared field sends `null`, which the server stores as no limit. A
+    // higher number on a published gathering promotes people off the
+    // waitlist; a lower one keeps everyone already going.
+    ...(hasCapacityChanged(current, draft)
+      ? { capacity: draftCapacity(draft) }
       : {}),
     // Only include `communitySlug` when it actually changed from the PERSISTED
     // value (`current.communitySlug`, the pre-edit snapshot — never compare

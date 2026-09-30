@@ -9,7 +9,6 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useMemberContact } from "../connect/useMemberContact";
 import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import { routes } from "../../app/routeMap";
-import { JoinVouchCallout } from "./JoinVouchCallout";
 import { MeetTheTable } from "./table/MeetTheTable";
 import { GatheringSidebar } from "./GatheringSidebar";
 import { GatheringHeroActions } from "./GatheringHeroActions";
@@ -118,7 +117,7 @@ function GatheringDetailBody({
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
-  const { connected, contact } = useMemberContact(gathering.hostSlug);
+  const { connected, isSelf, contact } = useMemberContact(gathering.hostSlug);
   const rsvp = useGatheringRsvp(gathering);
 
   const kind = gatheringKind(gathering);
@@ -266,10 +265,6 @@ function GatheringDetailBody({
                 />
               )}
 
-              <div className={styles.calloutWrap}>
-                <JoinVouchCallout />
-              </div>
-
               <GatheringLineupSection gathering={gathering} />
 
               {/* PRD-284. Reporting a gathering used to live only in the
@@ -305,6 +300,7 @@ function GatheringDetailBody({
             <GatheringSidebar
               gathering={gathering}
               connected={connected}
+              isViewerHost={isSelf}
               contact={contact}
               rsvp={rsvp}
             />

@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../app/providers/authContext";
 import { useConnect } from "../../app/providers/useConnect";
 import { useConnectionsHydrated } from "../../app/providers/useConnections";
 import { routes } from "../../app/routeMap";
@@ -21,11 +22,17 @@ import { routes } from "../../app/routeMap";
  * a cap and a block with one indistinguishable conflict), so no client surface
  * may claim to know about one. Those members stay on "Say hello", which is what
  * that design intends.
+ *
+ * `isSelf` flags the signed-in member's own slug, so a surface that lists
+ * someone (a gathering's host, a roster) can drop the affordance entirely
+ * instead of offering you a connection to yourself.
  */
 export function useMemberContact(slug: string) {
   const { isConnected, isIncoming } = useConnectionsHydrated();
   const { openConnect } = useConnect();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const isSelf = slug !== "" && user?.profile.slug === slug;
   const connected = isConnected(slug);
   // Accepted wins: once a request is answered the pair is simply connected.
   const hasIncomingRequest = !connected && isIncoming(slug);
@@ -46,5 +53,5 @@ export function useMemberContact(slug: string) {
     [isConnected, navigate, openConnect],
   );
 
-  return { connected, hasIncomingRequest, contact };
+  return { connected, hasIncomingRequest, isSelf, contact };
 }

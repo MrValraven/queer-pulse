@@ -3011,6 +3011,30 @@ export const marketing: Catalog = {
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Abrir uma página depois de usares o teclado já não desenha uma moldura de foco a toda a largura do ecrã.",
+  "changelog.entries.gathering-goes-live-screen.title":
+    "Um novo ecrã de celebração quando o teu convívio fica no ar",
+  "changelog.entries.gathering-goes-live-screen.body":
+    "O teu cartão aterra ao lado de um painel mais largo, o visto desenha-se sozinho e a partilha fica junto ao título.",
+  "changelog.entries.edit-gathering-capacity.title":
+    "Muda a capacidade de um convívio depois de publicar",
+  "changelog.entries.edit-gathering-capacity.body":
+    "Editar detalhes tem agora o seletor de capacidade, e se a aumentares, quem está na lista de espera sobe.",
+  "changelog.entries.gathering-invite-reaches-every-connection.title":
+    "Convidar membros chega agora a todas as tuas conexões",
+  "changelog.entries.gathering-invite-reaches-every-connection.body":
+    "A pesquisa procura em todas as tuas conexões, e Carregar mais mostra quem fica além das primeiras vinte.",
+  "changelog.entries.share-kit-story-preview-calendar-picker.title":
+    "Pré-visualiza a imagem para story e escolhe o calendário depois de publicar",
+  "changelog.entries.share-kit-story-preview-calendar-picker.body":
+    "Adicionar ao calendário tem Google, Outlook e Yahoo, e a imagem para story aparece primeiro com Descarregar e Partilhar.",
+  "changelog.entries.gathering-review-step.title":
+    "Uma última revisão antes de o teu encontro ir para o ar",
+  "changelog.entries.gathering-review-step.body":
+    "Um sexto passo mostra tudo o que definiste, com Editar em cada parte, e o botão Publicar passa para lá.",
+  "changelog.entries.no-connect-to-yourself.title":
+    "O teu próprio encontro já não te propõe ligares-te a ti",
+  "changelog.entries.no-connect-to-yourself.body":
+    "Quando és tu a organizar, o painel de RSVP deixa de mostrar o botão de contacto com a pessoa anfitriã.",
   "changelog.entries.gathering-preview-stays-whole.title":
     "A pré-visualização do encontro mantém a altura toda",
   "changelog.entries.gathering-preview-stays-whole.body":

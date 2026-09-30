@@ -1,0 +1,195 @@
+/* Create Gathering v2, chapter 6: the review. A recap grouped by chapter,
+   each group with a way back, then what publishing still needs, the pledges
+   (CreateGatheringShell.module.css) and Publish. Follows the business
+   listing's review step, on the chapter's paper ground, so every colour here
+   reads a flipping token. */
+
+.review {
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+}
+
+/* ── Recap ── */
+.recap {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.group {
+  padding-top: 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.group:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+/* The same 12px eyebrow as the "Before you publish" label, in coral as
+   text: --accent-text holds AA at this size on paper in light mode and flips
+   to the brighter accent in dark mode. */
+.groupTitle {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+/* A text-weight way back to the chapter, sized as a touch target. */
+.edit {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: -8px -10px -8px auto;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.3);
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-9);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .edit:hover {
+    background: var(--wash);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .edit {
+    transition: background var(--dur-fast) var(--ease);
+  }
+}
+
+.rows {
+  margin: 0;
+}
+.row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.rowLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.rowValue {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+/* The description and house rules keep the host's own line breaks. */
+.rowMultiline {
+  white-space: pre-line;
+}
+.missing {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-60);
+}
+/* A required field publishing still waits on: a way to it, in coral text. */
+.needed {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 6px;
+  min-height: 44px;
+  margin: -10px -8px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-text);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-9);
+  cursor: pointer;
+}
+.needed svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .needed:hover {
+    background: var(--wash);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .needed {
+    transition: background var(--dur-fast) var(--ease);
+  }
+}
+
+/* The format's "Good to know" answers, under the What rows. */
+.goodToKnow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.subLabel {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* ── What publishing still needs ── */
+.missingItems {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+/* ── Publish ── */
+.publish {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 22px;
+}
+.publishHint {
+  margin: 10px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-align: right;
+}
+
+@media (--sm) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .publish {
+    align-items: stretch;
+  }
+  .publishButton {
+    justify-content: center;
+  }
+  .publishHint {
+    text-align: center;
+  }
+}

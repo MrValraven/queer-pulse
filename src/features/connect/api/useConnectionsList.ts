@@ -53,6 +53,12 @@ export interface ConnectionsListResult {
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
   /**
+   * True when the latest next-page fetch failed (live only; false in
+   * demo/blocked). The pages already loaded stay in `views`; a paged footer
+   * reads this to say so and offer a retry of that page.
+   */
+  isFetchNextPageError: boolean;
+  /**
    * How many entries this tab holds in total — the server `total` from the
    * paginated envelope in live mode, the exact local count in demo / blocked.
    * `undefined` only while the first live page is still in flight, i.e. when no
@@ -198,6 +204,7 @@ export function useConnectionsList(
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      isFetchNextPageError: false,
       total: blocksQuery.data?.total,
       isError: blocksQuery.isError,
       refetch: () => void blocksQuery.refetch(),
@@ -212,6 +219,7 @@ export function useConnectionsList(
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      isFetchNextPageError: false,
       total: demoViews.length,
       // Local state, so there is no request to fail.
       isError: false,
@@ -226,6 +234,7 @@ export function useConnectionsList(
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
     // Every page echoes the same server total; take the freshest one.
     total: query.data?.pages.at(-1)?.total,
     // Only a first page that never landed is an error the list must own. A

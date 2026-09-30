@@ -255,9 +255,6 @@
   line-height: 1.5;
   margin-top: 3px;
 }
-.calloutWrap {
-  margin-top: 40px;
-}
 /* PRD-284: the "Report this gathering" trigger at the foot of the main column.
    `ReportSubjectControl` centres its own text, so this only sets the hairline
    that separates it from the content above and the space around it. */

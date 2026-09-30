@@ -17,7 +17,6 @@ export const WHATSAPP_SHARE_BASE_URL = "https://wa.me/?text=";
  *  refuses, long enough to select the URL inside it. */
 export const COPY_FALLBACK_TOAST_MS = 12000;
 
-export const CALENDAR_MIME_TYPE = "text/calendar;charset=utf-8";
 export const STORY_IMAGE_MIME_TYPE = "image/png";
 
 /** Identifies the generator in the .ics file. */

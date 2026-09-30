@@ -57,7 +57,7 @@ function GoodToKnowRow({
  * door checks age, there is something good to drink without alcohol, the
  * ground is steep, the film runs ninety minutes.
  *
- * The create wizard's ready panel reads these same rows back
+ * The create wizard's review chapter reads these same rows back
  * (`GatheringGoodToKnowRows`), so a host finds on the page the same sentences
  * they checked before publishing. Bring and terrain read
  * differently here: each renders as its catalog label over the value, since a
@@ -89,8 +89,8 @@ export function GatheringGoodToKnow({
 /**
  * The answered format details as rows, one per fact, with no heading. The
  * gathering page shows them under "Good to know", and the create wizard's
- * ready panel reads the same rows back to the host before publishing
- * (`CreateGatheringReadback`), so the host checks the sentences a reader
+ * review chapter reads the same rows back to the host before publishing
+ * (`CreateGatheringReviewRecap`), so the host checks the sentences a reader
  * will see.
  */
 export function GatheringGoodToKnowRows({

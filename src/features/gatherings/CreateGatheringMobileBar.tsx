@@ -10,14 +10,15 @@ export interface CreateGatheringMobileBarProps {
   checkedCount: number;
   pledgeCount: number;
   isReady: boolean;
-  isPublishing: boolean;
-  /** Same handler as the ready panel's publish button. */
-  onPublish: () => void;
+  /** Open the review chapter with focus on its head. */
+  onReview: () => void;
 }
 
 /**
  * The plum bar pinned to the bottom of a narrow screen: progress on the left,
- * Publish on the right. The page mounts it only at or under 900px.
+ * and on the right Review, which opens the review chapter. The page mounts it
+ * only at or under 900px and while the review chapter is closed, since that
+ * chapter carries its own Publish and hint.
  *
  * Portalled to `document.body`, so no transformed ancestor can turn its
  * `position: fixed` into a position inside the page.
@@ -28,8 +29,7 @@ export function CreateGatheringMobileBar({
   checkedCount,
   pledgeCount,
   isReady,
-  isPublishing,
-  onPublish,
+  onReview,
 }: CreateGatheringMobileBarProps) {
   const { t } = useTranslation();
   if (typeof document === "undefined") return null;
@@ -58,14 +58,8 @@ export function CreateGatheringMobileBar({
           />
         )}
       </p>
-      <Button
-        className={styles.mobileBarButton}
-        aria-disabled={!isReady || isPublishing}
-        onClick={onPublish}
-      >
-        {isPublishing
-          ? t("gatherings:create.v2.ready.publishing")
-          : t("gatherings:create.v2.mobileBar.publish")}
+      <Button className={styles.mobileBarButton} onClick={onReview}>
+        {t("gatherings:create.v2.mobileBar.review")}
       </Button>
     </div>,
     document.body,

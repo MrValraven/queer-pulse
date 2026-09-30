@@ -1,3 +1,8 @@
+/** How many people the demo prototype lets go. Seeds `GatheringState.capacity`
+ *  and the "capacity" details row below, so the edit modal opens on the number
+ *  the row shows. */
+export const GATHERING_CAPACITY = 45;
+
 // i18n note: `id` is a stable lookup key (never rendered); `labelKey` is the
 // chrome field name shown beside it; `value` is the event-specific data a
 // live fetch would return, so it stays a plain string, never translated.
@@ -20,7 +25,7 @@ export const GATHERING_DETAILS = [
   {
     id: "capacity",
     labelKey: "gatherings:manage.details.capacity",
-    value: "45 people",
+    value: `${GATHERING_CAPACITY} people`,
   },
 ];
 

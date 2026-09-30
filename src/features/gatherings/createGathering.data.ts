@@ -99,11 +99,11 @@ export function langLabelKey(value: string): string | undefined {
  * it jumps to, put on the field GROUP (label, control and hint together) so
  * the flash marks the thing the row names rather than a bare input.
  *
- * Create Gathering v2 keeps all five chapter bodies mounted (a closed chapter
- * is `hidden`), and each field is rendered exactly once, so a constant id per
+ * Create Gathering v2 keeps every chapter body mounted (a closed chapter is
+ * `hidden`), and each field is rendered exactly once, so a constant id per
  * field is still unique on the page. Ids are attached by the chapter bodies
- * and read by `jumpToAnchor` (createGatheringChapters.ts), which the ready
- * panel and the chapter footers call.
+ * and read by `jumpToAnchor` (createGatheringChapters.ts), which the review
+ * chapter and the chapter footers call.
  */
 export const GATE_ANCHOR = {
   type: "cg-gate-type",
@@ -128,10 +128,10 @@ export function confirmAnchor(index: number): string {
   return `cg-gate-confirm-${index}`;
 }
 
-// ── Create Gathering v2: chapters, ready panel, drafts ────────────────────
+// ── Create Gathering v2: chapters, review, drafts ────────────────────────
 
 export type CreateGatheringChapterId =
-  "what" | "whenWhere" | "who" | "access" | "care";
+  "what" | "whenWhere" | "who" | "access" | "care" | "review";
 
 export interface CreateGatheringChapterDefinition {
   id: CreateGatheringChapterId;
@@ -143,7 +143,8 @@ export interface CreateGatheringChapterDefinition {
   isOptional: boolean;
 }
 
-/** The five chapters, in page order. Index-aligned with the gates and
+/** The six chapters, in page order: five that ask, then the review that
+ *  reads it all back and publishes. Index-aligned with the gates and
  *  summaries in `createGatheringChapters.ts`. */
 export const CREATE_GATHERING_CHAPTERS: readonly CreateGatheringChapterDefinition[] =
   [
@@ -177,7 +178,24 @@ export const CREATE_GATHERING_CHAPTERS: readonly CreateGatheringChapterDefinitio
       introKey: "gatherings:create.v2.chapter.care.intro",
       isOptional: true,
     },
+    {
+      id: "review",
+      titleKey: "gatherings:create.v2.chapter.review.title",
+      introKey: "gatherings:create.v2.chapter.review.intro",
+      isOptional: false,
+    },
   ];
+
+/** A chapter's 0-based index in page order. */
+export function chapterIndexOf(chapterId: CreateGatheringChapterId): number {
+  return CREATE_GATHERING_CHAPTERS.findIndex(
+    (chapter) => chapter.id === chapterId,
+  );
+}
+
+/** The review chapter's index: the last one, which asks nothing of its own
+ *  and holds the pledges and the publish button. */
+export const REVIEW_CHAPTER_INDEX = chapterIndexOf("review");
 
 /** The `<section>` of one chapter (0-based). Continue scrolls to it. */
 export function chapterSectionId(chapterIndex: number): string {
@@ -194,10 +212,7 @@ export function chapterBodyId(chapterIndex: number): string {
   return `cg-chapter-${chapterIndex}-body`;
 }
 
-/** The ready panel. "Looks good" on the last chapter scrolls to it. */
-export const READY_PANEL_ANCHOR = "cg-ready";
-
-/** The two publish pledges shown in the ready panel, index-aligned with
+/** The two publish pledges shown in the review chapter, index-aligned with
  *  `form.checks` and `confirmAnchor(index)`. */
 export const PLEDGE_TEXT_KEYS = [
   "gatherings:create.v2.confirm.codeOfCare",
@@ -212,9 +227,8 @@ export const PLEDGE_LINK_LABEL_KEYS: readonly (string | null)[] = [
   null,
 ];
 
-/** At or under this width the rail stacks above the form, the ready panel
- *  moves under the chapters and the mobile publish bar appears. Matches the
- *  `--wide` breakpoint token. */
+/** At or under this width the rail stacks above the form and the mobile
+ *  review bar appears. Matches the `--wide` breakpoint token. */
 export const COMPACT_LAYOUT_QUERY = "(max-width: 900px)";
 
 /** A draft is stored under `${prefix}:${memberId or "anon"}`. */

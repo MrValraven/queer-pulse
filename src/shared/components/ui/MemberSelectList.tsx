@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { useMemo, useState, type ReactNode } from "react";
 import { SearchInput } from "./SearchInput";
-import { MemberIdentity } from "./MemberIdentity";
+import { MemberSelectRow } from "./MemberSelectRow";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MemberSelectList.module.css";
 
@@ -50,6 +49,17 @@ export interface MemberSelectListProps {
   /** Shown in place of "no results" before a controlled search has anything
    *  to answer, e.g. "type a name to look somebody up". */
   emptyHint?: string;
+  /**
+   * Replaces the whole empty-list line when set, for a caller that knows why
+   * nothing is showing (a failed load, or rows that are all excluded).
+   */
+  emptyMessage?: string;
+  /**
+   * Rendered after the rows inside the scrolling list, e.g. a "Load more"
+   * button, and also when no row is visible. It sits beside the listbox, which
+   * may own options only. Omit it and the list renders exactly as before.
+   */
+  listFooter?: ReactNode;
 }
 
 /**
@@ -73,6 +83,8 @@ export function MemberSelectList({
   onSearchChange,
   isSearching = false,
   emptyHint,
+  emptyMessage,
+  listFooter,
 }: MemberSelectListProps) {
   const { t } = useTranslation();
   const [localQuery, setLocalQuery] = useState("");
@@ -96,11 +108,50 @@ export function MemberSelectList({
   }, [people, excluded, query, isSearchControlled]);
 
   const atCap = multiSelect && cap != null && selected.size >= cap;
+  const showsRadioIndicator = !multiSelect && selectedIndicator === "radio";
   const isIdleControlledSearch =
     isSearchControlled &&
     !emptyHint &&
+    !emptyMessage &&
     !isSearching &&
     query.trim().length === 0;
+
+  // A controlled search with an empty box has not asked the server anything
+  // yet, so "no members match" would be a lie. Callers that want to fill that
+  // space pass an `emptyHint`; the rest get nothing.
+  const emptyLine = isIdleControlledSearch ? null : (
+    <p className={styles.empty} aria-live="polite">
+      {emptyMessage ??
+        (isSearching
+          ? t("shared:memberSelect.searching")
+          : emptyHint && query.trim().length === 0
+            ? emptyHint
+            : t("shared:memberSelect.noResults"))}
+    </p>
+  );
+
+  const renderListbox = (className: string | undefined) => (
+    <div
+      className={className}
+      role="listbox"
+      aria-multiselectable={multiSelect || undefined}
+    >
+      {visible.map((person) => {
+        const isSelected = selected.has(person.slug);
+        return (
+          <MemberSelectRow
+            key={person.slug}
+            person={person}
+            isSelected={isSelected}
+            isDisabled={atCap && !isSelected}
+            multiSelect={multiSelect}
+            showsRadioIndicator={showsRadioIndicator}
+            onToggle={onToggle}
+          />
+        );
+      })}
+    </div>
+  );
 
   return (
     <div className={styles.wrap}>
@@ -110,71 +161,17 @@ export function MemberSelectList({
         placeholder={searchPlaceholder}
         ariaLabel={searchAriaLabel}
       />
-      {visible.length === 0 ? (
-        // A controlled search with an empty box has not asked the server
-        // anything yet, so "no members match" would be a lie. Callers that
-        // want to fill that space pass an `emptyHint`; the rest get nothing.
-        isIdleControlledSearch ? null : (
-          <p className={styles.empty} aria-live="polite">
-            {isSearching
-              ? t("shared:memberSelect.searching")
-              : emptyHint && query.trim().length === 0
-                ? emptyHint
-                : t("shared:memberSelect.noResults")}
-          </p>
-        )
-      ) : (
-        <div
-          className={styles.list}
-          role="listbox"
-          aria-multiselectable={multiSelect || undefined}
-        >
-          {visible.map((person) => {
-            const isSelected = selected.has(person.slug);
-            const disabled = atCap && !isSelected;
-            const showsRadioIndicator =
-              !multiSelect && selectedIndicator === "radio";
-            return (
-              <button
-                key={person.slug}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                disabled={disabled}
-                className={[
-                  styles.row,
-                  isSelected &&
-                    (showsRadioIndicator
-                      ? styles.rowSelectedRadio
-                      : styles.rowSelected),
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => onToggle(person.slug)}
-              >
-                <MemberIdentity
-                  person={person}
-                  secondary={person.pronouns}
-                  size={38}
-                />
-                {(multiSelect || showsRadioIndicator) && (
-                  <span
-                    className={[
-                      styles.check,
-                      multiSelect ? styles.checkBox : styles.checkRadio,
-                      isSelected && styles.checkOn,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    aria-hidden
-                  >
-                    {isSelected && multiSelect && <FiCheck />}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+      {listFooter !== undefined ? (
+        // The scroll area holds the rows and the footer after them, so the
+        // footer is reached by scrolling to the end of the list.
+        <div className={styles.list}>
+          {visible.length === 0 ? emptyLine : renderListbox(styles.listRows)}
+          {listFooter}
         </div>
+      ) : visible.length === 0 ? (
+        emptyLine
+      ) : (
+        renderListbox(styles.list)
       )}
     </div>
   );

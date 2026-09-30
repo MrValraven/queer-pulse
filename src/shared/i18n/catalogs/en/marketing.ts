@@ -2938,6 +2938,30 @@ export const marketing: Catalog = {
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Opening a page after using the keyboard no longer draws a focus frame across the whole screen.",
+  "changelog.entries.gathering-goes-live-screen.title":
+    "A new celebration screen when your gathering goes live",
+  "changelog.entries.gathering-goes-live-screen.body":
+    "Your card lands beside a wider panel, the check draws itself, and sharing sits right by the headline.",
+  "changelog.entries.edit-gathering-capacity.title":
+    "Change a gathering's capacity after publishing",
+  "changelog.entries.edit-gathering-capacity.body":
+    "Edit details now has the capacity stepper, and raising it moves people up from the waitlist.",
+  "changelog.entries.gathering-invite-reaches-every-connection.title":
+    "Invite members now reaches everyone you're connected to",
+  "changelog.entries.gathering-invite-reaches-every-connection.body":
+    "Search looks through all your connections, and Load more brings in anyone past the first twenty.",
+  "changelog.entries.share-kit-story-preview-calendar-picker.title":
+    "Preview your story image and pick a calendar after publishing",
+  "changelog.entries.share-kit-story-preview-calendar-picker.body":
+    "Add to calendar offers Google, Outlook and Yahoo, and the story image shows first with Download and Share.",
+  "changelog.entries.gathering-review-step.title":
+    "A last review step before your gathering goes live",
+  "changelog.entries.gathering-review-step.body":
+    "A sixth step reads back everything you set, with Edit on each part, and Publish now sits there.",
+  "changelog.entries.no-connect-to-yourself.title":
+    "Your own gathering no longer offers to connect you to yourself",
+  "changelog.entries.no-connect-to-yourself.body":
+    "When you host, the RSVP panel drops the host contact button instead of pointing it at you.",
   "changelog.entries.gathering-preview-stays-whole.title":
     "The gathering preview keeps its full height",
   "changelog.entries.gathering-preview-stays-whole.body":

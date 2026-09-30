@@ -55,7 +55,8 @@ export function RsvpClosedPanel({
   /** For `rsvpClosed`: when RSVPs closed, already in words. */
   rsvpClosedNote?: string;
   messageLabel: string;
-  onMessageHost: () => void;
+  /** Absent when the viewer is the host. */
+  onMessageHost?: () => void;
 }) {
   const { t } = useTranslation();
   const titleKey = closedTitleKey(reason);
@@ -74,15 +75,17 @@ export function RsvpClosedPanel({
           <Translation i18nKey={titleKey} components={{ em: <em /> }} />
         </div>
         <p className={styles.rsvpConfirmNote}>{note}</p>
-        <div className={styles.rsvpActions}>
-          <Button
-            variant="ghost-dark"
-            className={styles.fullBtn}
-            onClick={onMessageHost}
-          >
-            {messageLabel}
-          </Button>
-        </div>
+        {onMessageHost && (
+          <div className={styles.rsvpActions}>
+            <Button
+              variant="ghost-dark"
+              className={styles.fullBtn}
+              onClick={onMessageHost}
+            >
+              {messageLabel}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -132,7 +135,8 @@ export function RsvpConfirmedPanel({
   onGoing: () => void;
   onCancel: () => void;
   onOpenDetails: () => void;
-  onMessageHost: () => void;
+  /** Absent when the viewer is the host. */
+  onMessageHost?: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -216,13 +220,15 @@ export function RsvpConfirmedPanel({
           >
             {t("gatherings:rsvpControl.cancelCta")}
           </Button>
-          <Button
-            variant="ghost-dark"
-            className={styles.fullBtn}
-            onClick={onMessageHost}
-          >
-            {messageLabel}
-          </Button>
+          {onMessageHost && (
+            <Button
+              variant="ghost-dark"
+              className={styles.fullBtn}
+              onClick={onMessageHost}
+            >
+              {messageLabel}
+            </Button>
+          )}
         </div>
       </div>
     </div>

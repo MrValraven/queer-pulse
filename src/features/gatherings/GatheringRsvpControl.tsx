@@ -36,7 +36,8 @@ type ContactAction = (
  * - Going / waitlisted / maybe → a plum-panel confirmed state with the live
  *   going count or the viewer's waitlist place, "Your details" (plus-one and
  *   access needs, PRD-187) and "Cancel RSVP".
- * - "Message/Connect with the host" stays available in every state.
+ * - "Message/Connect with the host" stays available in every state, except
+ *   when the viewer is the host: there is nobody to reach.
  *
  * The RSVP state machine itself lives in `useGatheringRsvp`, shared with the
  * page hero so the two affordances can never disagree.
@@ -44,11 +45,13 @@ type ContactAction = (
 export function GatheringRsvpControl({
   gathering,
   connected,
+  isViewerHost,
   contact,
   rsvp,
 }: {
   gathering: GatheringDetail;
   connected: boolean;
+  isViewerHost: boolean;
   contact: ContactAction;
   /** Shared with the hero's RSVP button — see `GatheringDetailBody`. */
   rsvp: GatheringRsvpState;
@@ -70,8 +73,9 @@ export function GatheringRsvpControl({
   );
   const goingCount = attendees?.goingCount ?? gathering.goingCount ?? 0;
 
-  const messageHost = () =>
-    contact({ slug: gathering.hostSlug, name: gathering.host });
+  const messageHost = isViewerHost
+    ? undefined
+    : () => contact({ slug: gathering.hostSlug, name: gathering.host });
   const messageLabel = connected
     ? t("connect:contact.message")
     : t("gatherings:common.connectCta");
@@ -167,9 +171,15 @@ export function GatheringRsvpControl({
           {t("gatherings:rsvpControl.maybeCta")}
         </Button>
       )}
-      <Button variant="ghost" className={styles.fullBtn} onClick={messageHost}>
-        {messageLabel}
-      </Button>
+      {messageHost && (
+        <Button
+          variant="ghost"
+          className={styles.fullBtn}
+          onClick={messageHost}
+        >
+          {messageLabel}
+        </Button>
+      )}
     </div>
   );
 }

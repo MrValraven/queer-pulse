@@ -1,0 +1,91 @@
+/* The capacity stepper (CapacityStepper), shared by the create wizard's
+   chapter 3 and the edit-details modal.
+   Design source: qp-create-gathering.css (.stepper), raw values mapped to
+   tokens. */
+
+.stepper {
+  display: flex;
+  align-items: stretch;
+  max-width: 220px;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+/* The same accent edge and soft ring the shared `.input` shows on focus, drawn
+   on the tray because the number input inside it has no border of its own. */
+.stepper:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+}
+.stepperButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  padding: 0;
+  font-size: var(--text-18);
+  color: var(--text-strong);
+  background: var(--wash);
+  border: 0;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .stepperButton:hover {
+    background: rgba(var(--line-rgb), 0.09);
+  }
+}
+.stepperButton[aria-disabled="true"] {
+  color: var(--ink-40);
+  cursor: not-allowed;
+}
+.stepperButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -3px;
+}
+.stepper .stepperInput {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  text-align: center;
+  border: 0;
+  border-radius: 0;
+  appearance: textfield;
+}
+.stepper .stepperInput::placeholder {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 400;
+}
+.stepper .stepperInput::-webkit-inner-spin-button,
+.stepper .stepperInput::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+.stepper .stepperInput:focus {
+  box-shadow: none;
+}
+/* An out-of-range number marks the input invalid. The input has no border of
+   its own, so the tray carries the accent edge the shared `.input` shows. */
+.stepper:has(.stepperInput[aria-invalid="true"]) {
+  border-color: var(--accent);
+}
+/* The shared `.input[aria-invalid]` rule would draw the input's own edges
+   inside the tray; the tray's edge above is the one invalid mark. */
+.stepper .stepperInput[aria-invalid="true"] {
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepper,
+  .stepperButton {
+    transition: none;
+  }
+}

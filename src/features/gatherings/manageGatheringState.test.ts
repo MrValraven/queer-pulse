@@ -57,6 +57,8 @@ function draftOf(
     description: "A long table and a slow evening.",
     visibility: "members",
     communitySlug: "",
+    // No limit, matching `stateOf`, so a default patch carries no capacity.
+    capacity: "",
     // Neutral by default: an unclassified gathering, which is what every case
     // about the schedule is about.
     gatheringFamily: "",
@@ -100,6 +102,7 @@ function stateOf(overrides: Partial<GatheringState> = {}): GatheringState {
     venueListing: null,
     visibility: "members",
     communitySlug: "",
+    capacity: null,
     gatheringFamily: null,
     eventType: null,
     formatDetails: null,
@@ -457,6 +460,7 @@ describe("editDraftCareFields", () => {
         houseRules: "Ask before hugging.",
         costKind: "pay-what-you-can",
         cost: "5 to 15 EUR",
+        capacity: 30,
         rsvpCutoff: "day-before",
         rsvpQuestions: { dietary: true, pronouns: true, access: true },
         customRsvpQuestion: "What will you bring?",
@@ -469,6 +473,7 @@ describe("editDraftCareFields", () => {
       houseRules: "Ask before hugging.",
       costKind: "pay-what-you-can",
       cost: "5 to 15 EUR",
+      capacity: "30",
       rsvpCutoff: "day-before",
       rsvpQuestions: { dietary: true, pronouns: true, access: true },
       customRsvpQuestion: "What will you bring?",
@@ -521,5 +526,55 @@ describe("applyEditDraft: cover, care and RSVPs", () => {
     );
     const reopened = { ...draftOf(), ...editDraftCareFields(saved) };
     expect("coverImageUrl" in buildEditPatch(saved, reopened)).toBe(false);
+  });
+});
+
+describe("capacity", () => {
+  it("keeps an untouched capacity off the patch", () => {
+    // Under a series `scope: "future"` edit the server copies what the patch
+    // carries onto every later date, so an unchanged number stays home.
+    const patch = buildEditPatch(
+      stateOf({ capacity: 30 }),
+      draftOf({ capacity: "30" }),
+    );
+    expect("capacity" in patch).toBe(false);
+  });
+
+  it("sends a changed capacity as a number", () => {
+    const patch = buildEditPatch(
+      stateOf({ capacity: 30 }),
+      draftOf({ capacity: "24" }),
+    );
+    expect(patch.capacity).toBe(24);
+  });
+
+  it("sends an explicit null when the host lifted the limit", () => {
+    const patch = buildEditPatch(
+      stateOf({ capacity: 30 }),
+      draftOf({ capacity: "" }),
+    );
+    expect(patch.capacity).toBeNull();
+    expect("capacity" in patch).toBe(true);
+  });
+
+  it("holds a save outside the stepper's range, and lets a legacy number stand", () => {
+    expect(canSaveEditDraft(draftOf({ capacity: "500" }), "")).toBe(false);
+    expect(canSaveEditDraft(draftOf({ capacity: "1" }), "")).toBe(false);
+    expect(canSaveEditDraft(draftOf({ capacity: "200" }), "")).toBe(true);
+    // Stored before the range existed: other edits still save untouched.
+    expect(canSaveEditDraft(draftOf({ capacity: "500" }), "500")).toBe(true);
+  });
+
+  it("folds a saved capacity in, so the next patch leaves it off", () => {
+    const saved = applyEditDraft(
+      stateOf({ capacity: 30 }),
+      draftOf({ capacity: "40" }),
+      fmt,
+      t,
+    );
+    expect(saved.capacity).toBe(40);
+    const reopened = { ...draftOf(), ...editDraftCareFields(saved) };
+    expect(reopened.capacity).toBe("40");
+    expect("capacity" in buildEditPatch(saved, reopened)).toBe(false);
   });
 });

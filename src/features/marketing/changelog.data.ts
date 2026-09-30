@@ -66,6 +66,42 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "gathering-goes-live-screen",
+        category: "improvement",
+        date: "30 Sep 2026",
+        ...entryKeys("gathering-goes-live-screen"),
+      },
+      {
+        id: "edit-gathering-capacity",
+        category: "improvement",
+        date: "30 Sep 2026",
+        ...entryKeys("edit-gathering-capacity"),
+      },
+      {
+        id: "gathering-invite-reaches-every-connection",
+        category: "fix",
+        date: "30 Sep 2026",
+        ...entryKeys("gathering-invite-reaches-every-connection"),
+      },
+      {
+        id: "share-kit-story-preview-calendar-picker",
+        category: "improvement",
+        date: "30 Sep 2026",
+        ...entryKeys("share-kit-story-preview-calendar-picker"),
+      },
+      {
+        id: "gathering-review-step",
+        category: "improvement",
+        date: "30 Sep 2026",
+        ...entryKeys("gathering-review-step"),
+      },
+      {
+        id: "no-connect-to-yourself",
+        category: "fix",
+        date: "30 Sep 2026",
+        ...entryKeys("no-connect-to-yourself"),
+      },
+      {
         id: "gathering-preview-stays-whole",
         category: "fix",
         date: "30 Sep 2026",

@@ -91,9 +91,19 @@ export function useUpdateEvent(slug: string) {
     // The detail query is keyed on the raw route param (`<slug>-<shortId>`),
     // which may differ from this mutation's `slug`, so invalidate the whole
     // detail root — guaranteed to match the mounted detail regardless of mode.
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+      // A new capacity moves the attendees bar ("N of capacity spots
+      // filled"), and a higher one promotes people off the waitlist on the
+      // server. Scoped to THIS event's attendees (see useRsvp), and only when
+      // the patch carried a capacity, so a title edit leaves the list's
+      // `loadMore` paging alone.
+      if (variables.capacity !== undefined) {
+        void queryClient.invalidateQueries({
+          queryKey: eventKeys.attendees(slug, demoMode),
+        });
+      }
     },
   });
 }

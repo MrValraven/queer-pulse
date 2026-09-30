@@ -21,6 +21,14 @@
   line-height: 1.5;
   color: var(--ink-60);
 }
+/* The optional note under the subtitle: one step smaller and quieter, so it
+   reads as a footnote to the date line above it. */
+.note {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
 
 .list {
   display: flex;
@@ -40,8 +48,8 @@
   align-items: center;
   gap: var(--gap-sm);
   width: 100%;
-  /* ~52px: two token gaps (--gap-xs) around the 34px icon circle, not an
-     arbitrary min-height number. */
+  /* ~52px: two token gaps (--gap-xs) around the 34px icon circle, so the
+     min-height follows the tokens. */
   min-height: calc(2 * var(--gap-xs) + 34px);
   padding: var(--gap-xs) 14px;
   border: none;
@@ -94,12 +102,37 @@
   overflow-wrap: anywhere;
 }
 
-/* The generic .ics fallback: a small subordinate link under the row list,
-   not a fifth identical-looking row. Reuses the shared ghost Button (per
-   STYLE-RULES — never a bare ad-hoc <button>), whose pill shape and smaller
-   footprint already read as secondary next to the full-width rows above. */
+/* The generic .ics fallback sits under the row list as a small subordinate
+   link. It reuses the shared ghost Button per STYLE-RULES, whose pill shape
+   and smaller footprint read as secondary beside the full-width rows above. */
 .icsRow {
   display: flex;
   justify-content: center;
   margin-top: var(--gap-sm);
+}
+/* The shared Button keeps its label on one line, so a long translation (PT)
+   ran past both edges of the sheet on a phone. Here the label wraps inside
+   the sheet width: the pill grows in height, keeps the 44px tap floor, and
+   the looser line-height plus block padding give a two-line label room.
+   `.icsRow` in the selector outranks the Button module's own rules whatever
+   order the two stylesheets load in. */
+.icsRow .icsButton {
+  max-width: 100%;
+  height: auto;
+  min-height: var(--tap-min);
+  padding-block: var(--gap-xs);
+  white-space: normal;
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+/* The download icon keeps its size while the label wraps beside it. */
+.icsRow .icsButton svg {
+  flex: none;
+}
+/* A label wrapped to two or three lines reads as a rounded box on a phone. */
+@media (--sm) {
+  .icsRow .icsButton {
+    border-radius: var(--radius-card);
+  }
 }

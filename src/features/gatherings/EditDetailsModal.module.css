@@ -56,3 +56,19 @@
   flex-wrap: wrap;
   max-width: 100%;
 }
+
+/* The capacity stepper draws the wizard's `Field`, whose real `<label for>`
+   names the number input. Here its label takes the modal's uppercase look
+   and the section's gap spaces it, so it reads as one of this form's fields.
+   The hint and error stay under the stepper. */
+.section .capacityField {
+  margin-top: 0;
+}
+.capacityField > label {
+  margin-bottom: 6px;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}

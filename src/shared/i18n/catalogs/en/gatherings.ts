@@ -132,13 +132,6 @@ export const gatherings: Catalog = {
   "gathering.attendeesPreview.heading": "Who's going",
   "gathering.attendeesPreview.moreLabel": "+{count} more",
 
-  // JoinVouchCallout
-  "vouchCallout.title": "New here? <em>Get vouched in.</em>",
-  "vouchCallout.body":
-    "QueerPulse gatherings are members-only. To join, someone in the network vouches for you, or you request an invite and a member follows up. It keeps every gathering safe.",
-  "vouchCallout.requestInviteCta": "Request an invite",
-  "vouchCallout.safetyCta": "How we keep it safe",
-
   // GatheringSuccessPanel
   "successPanel.ariaLabel": "Confirmation",
   "successPanel.closeAriaLabel": "Close",
@@ -628,7 +621,6 @@ export const gatherings: Catalog = {
   "create.toast.publishError": "Couldn't publish your gathering. Try again.",
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
-  "create.success.accessLabel": "Accessibility shown to attendees",
   "create.success.viewCta": "View on board",
   "create.success.eventCta": "See your gathering page",
   "create.nav.cancel": "Cancel",
@@ -637,11 +629,11 @@ export const gatherings: Catalog = {
   "create.nav.publish": "Publish gathering",
   "create.nav.continue": "Continue",
 
-  // ── Create-gathering v2: five chapters, live preview, publish rail ────────
+  // ── Create-gathering v2: six chapters, live preview, review and publish ───
   // CreateGatheringPage.tsx / CreateGatheringFields.tsx: the page lead, the rail, field chrome
   "create.v2.lead":
-    "Five short chapters. The card on the right fills in as you go, so you can see exactly what the board will show.",
-  "create.v2.rail.label": "Preview and publish",
+    "Five short chapters, then one last look before it goes live. The card on the right fills in as you go, so you can see exactly what the board will show.",
+  "create.v2.rail.label": "Live preview",
   "create.v2.field.optional": "optional",
 
   // DraftResumeStrip.tsx / useCreateGatheringDraft.ts: saving and resuming a draft
@@ -667,7 +659,7 @@ export const gatherings: Catalog = {
   "create.v2.toast.cohostInviteFailed_other":
     "Your gathering is live, but {count} co-host invites didn't go through. You can invite them again from the manage page.",
 
-  // CreateGatheringChapter.tsx / createGathering.data.ts: the five chapter heads
+  // CreateGatheringChapter.tsx / createGathering.data.ts: the six chapter heads
   "create.v2.chapter.what.title": "What are you <em>hosting?</em>",
   "create.v2.chapter.what.intro":
     "Pick the format that comes most naturally to you. The best gatherings are the ones hosts actually enjoy running.",
@@ -683,12 +675,14 @@ export const gatherings: Catalog = {
   "create.v2.chapter.care.title": "Taking <em>care.</em>",
   "create.v2.chapter.care.intro":
     "Two lines that set the tone. They show on your gathering page, so people know what to expect before they RSVP.",
+  "create.v2.chapter.review.title": "Review and <em>publish.</em>",
+  "create.v2.chapter.review.intro":
+    "Everything you set, in one place. Check it over, and use Edit to change a part. Once you publish, it shows on the board straight away.",
   "create.v2.chapter.open": "Open",
   "create.v2.chapter.edit": "Edit",
   "create.v2.chapter.optional": "optional",
   "create.v2.chapter.done": "Done.",
   "create.v2.chapter.stillNeeded": "Still needed: {items}",
-  "create.v2.chapter.looksGood": "Looks good",
 
   // createGatheringChapters.ts: what Continue still needs, joined into chapter.stillNeeded
   "create.v2.need.format": "a format",
@@ -714,10 +708,45 @@ export const gatherings: Catalog = {
   "create.v2.summary.care.questions_one": "{count} RSVP question",
   "create.v2.summary.care.questions_other": "{count} RSVP questions",
   "create.v2.summary.care.empty": "Optional: rules, notes, RSVP questions",
+  "create.v2.summary.review.ready": "Ready to publish",
+  "create.v2.summary.review.progress":
+    "{met} of {total} details · {checked} of {pledges} confirmed",
 
-  // CreateGatheringReadyPanel.tsx: the readiness checklist and the two pledges
-  "create.v2.ready.title": "Ready to <em>publish?</em>",
-  "create.v2.ready.count": "{met} of {total}",
+  // CreateGatheringReviewRecap.tsx / CreateGatheringReviewGroups.tsx / CreateGatheringReviewParts.tsx / reviewRecapReadings.ts: chapter 6's recap
+  "create.v2.review.group.what": "What",
+  "create.v2.review.group.whenWhere": "When and where",
+  "create.v2.review.group.who": "Who",
+  "create.v2.review.group.access": "Access",
+  "create.v2.review.group.care": "Care",
+  "create.v2.review.edit": "Edit",
+  "create.v2.review.editLabel": "Edit: {section}",
+  "create.v2.review.notAdded": "Not added",
+  "create.v2.review.needed": "Needed",
+  "create.v2.review.row.format": "Format",
+  "create.v2.review.row.description": "Description",
+  "create.v2.review.row.cover": "Cover image",
+  "create.v2.review.row.when": "Date and time",
+  "create.v2.review.row.repeats": "Repeats",
+  "create.v2.review.row.where": "Where",
+  "create.v2.review.row.joinLink": "Join link",
+  "create.v2.review.row.language": "Language",
+  "create.v2.review.row.spots": "Spots",
+  "create.v2.review.row.visibility": "Who can see it",
+  "create.v2.review.row.community": "Community",
+  "create.v2.review.row.cohosts": "Co-hosts",
+  "create.v2.review.row.houseRules": "House rules",
+  "create.v2.review.row.contentNotes": "Content notes",
+  "create.v2.review.row.rsvpQuestions": "Asked on RSVP",
+  "create.v2.review.value.added": "Added",
+  "create.v2.review.value.oneDate": "One date only",
+  "create.v2.review.value.on": "On",
+  "create.v2.review.value.off": "Off",
+  "create.v2.review.value.alwaysAsked": "{question} (always asked)",
+  "create.v2.review.value.quoted": "“{text}”",
+  // CreateGatheringReview.tsx: the list above the pledges
+  "create.v2.review.missingLabel": "Still needed to publish",
+
+  // CreateGatheringReview.tsx / CreateGatheringPublishParts.tsx: what publishing still needs, the two pledges, Publish
   "create.v2.ready.item.format": "Pick a format",
   "create.v2.ready.item.title": "Name your gathering",
   "create.v2.ready.item.date": "Date and start time in the future",
@@ -739,9 +768,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.hintConfirms_one": "{count} confirmation to tick",
   "create.v2.ready.hintConfirms_other": "{count} confirmations to tick",
   "create.v2.ready.publishing": "Publishing…",
-  // CreateGatheringReadback.tsx: the host's own answers, read back before publishing
-  "create.v2.ready.readbackTitle": "Check your answers",
-  "create.v2.ready.accessLabel": "Accessibility",
+  // CreateGatheringReadback.tsx: the host's accessibility answers, read back before publishing
   "create.v2.ready.accessAnswer": "{question}: {answer}",
   "create.v2.ready.accessNoteLabel": "Your note",
   "create.v2.ready.accessUnanswered_one": "{count} question not answered yet",
@@ -753,12 +780,12 @@ export const gatherings: Catalog = {
   "create.v2.confirm.accessibility":
     "The accessibility answers I gave are accurate to the best of my knowledge.",
 
-  // CreateGatheringMobileBar.tsx: the sticky publish bar on small screens
+  // CreateGatheringMobileBar.tsx: the sticky review and publish bar on small screens
   "create.v2.mobileBar.label": "Publish progress",
   "create.v2.mobileBar.ready": "<strong>Ready to publish</strong>",
   "create.v2.mobileBar.progress":
     "<strong>{met}/{total}</strong> details · <strong>{checked}/{pledges}</strong> confirmed",
-  "create.v2.mobileBar.publish": "Publish",
+  "create.v2.mobileBar.review": "Review",
 
   // preview/*: the live card, as the board and as confirmed attendees see it
   "create.v2.preview.eyebrow": "How it looks on the board",
@@ -947,6 +974,19 @@ export const gatherings: Catalog = {
     "The story image could not be made. Try again.",
   "create.v2.success.addToCalendar": "Add to calendar",
   "create.v2.success.calendarDownloaded": "Calendar file downloaded",
+  "create.v2.success.calendarSeriesNote_one":
+    "Google, Outlook and Yahoo add the first date. Apple or the calendar file adds {count} date.",
+  "create.v2.success.calendarSeriesNote_other":
+    "Google, Outlook and Yahoo add the first date. Apple or the calendar file adds all {count}.",
+  "create.v2.success.storyPreviewTitle": "Your story image",
+  "create.v2.success.storyPreviewSub":
+    "Sized for Instagram and WhatsApp stories.",
+  "create.v2.success.storyPreviewAlt": "Story image for {title}",
+  "create.v2.success.storyDownload": "Download",
+  "create.v2.success.storyShare": "Share",
+  "create.v2.success.storyShareFailed":
+    "Sharing did not work. You can still download the image.",
+  "create.v2.success.storyClose": "Close",
   "create.v2.success.storySpots_one": "{count} spot",
   "create.v2.success.storySpots_other": "{count} spots",
   "create.v2.success.storyPlaceFallback": "Lisbon",
@@ -1202,6 +1242,9 @@ export const gatherings: Catalog = {
   "manage.details.time": "Time",
   "manage.details.venue": "Venue",
   "manage.details.capacity": "Capacity",
+  "manage.details.capacityValue_one": "{count} person",
+  "manage.details.capacityValue_other": "{count} people",
+  "manage.details.capacityUnlimited": "No limit",
   "manage.overview.editCta": "Edit",
   "manage.overview.descriptionLabel": "Description",
   "manage.overview.descriptionNoun": "description",
@@ -1297,6 +1340,10 @@ export const gatherings: Catalog = {
     "The end needs to come after the start. Move the start earlier, the end later, or clear the end.",
   "manage.editModal.endSpanError":
     "A gathering can run for up to {days} days. Bring the end closer to the start.",
+  "manage.editModal.capacityLowerHint":
+    "Everyone already going keeps their spot. New RSVPs stop at this number.",
+  "manage.editModal.capacityRangeError":
+    "Choose a number from {min} to {max}, or clear the field for no limit.",
   "manage.editModal.fieldLocation": "Location",
   "manage.editModal.fieldDescription": "Description",
   "manage.editModal.saveCta": "Save changes",
@@ -1346,6 +1393,9 @@ export const gatherings: Catalog = {
   "manage.invite.loadingPeople": "Finding the people you are connected to.",
   "manage.invite.noConnections":
     "You can invite the people you are connected to. Once you have connections, they show up here.",
+  "manage.invite.allListedInvited":
+    "Everyone here is already going or has an invite.",
+  "manage.invite.loadMoreError": "We couldn't load more of your connections.",
   "manage.invite.noneSelected": "No one selected yet",
   "manage.invite.selectedCount_one": "<b>{count}</b> selected",
   "manage.invite.selectedCount_other": "<b>{count}</b> selected",

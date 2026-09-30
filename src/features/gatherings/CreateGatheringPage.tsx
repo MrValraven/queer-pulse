@@ -1,4 +1,4 @@
-import { useMemo, useState, type ComponentType } from "react";
+import { useMemo, type ComponentType, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
@@ -11,13 +11,13 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEvent } from "./api/useEvent";
 import { CreateGatheringChapter } from "./CreateGatheringChapter";
 import { CreateGatheringMobileBar } from "./CreateGatheringMobileBar";
-import { CreateGatheringReadyPanel } from "./CreateGatheringReadyPanel";
+import { CreateGatheringReview } from "./CreateGatheringReview";
 import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
 import {
   COMPACT_LAYOUT_QUERY,
   CREATE_GATHERING_CHAPTERS,
   PLEDGE_TEXT_KEYS,
-  READY_PANEL_ANCHOR,
+  REVIEW_CHAPTER_INDEX,
   chapterHeadId,
   chapterSectionId,
   confirmAnchor,
@@ -29,10 +29,8 @@ import {
   chapterSummary,
   focusOpenChapterHead,
   isChapterComplete,
-  jumpToAnchor,
-  readinessItems,
+  publishReadiness,
   revealSection,
-  revealSectionIfAbove,
 } from "./createGatheringChapters";
 import {
   CREATE_GATHERING_COMMUNITY_PARAM,
@@ -47,6 +45,10 @@ import { WhatChapter } from "./steps/WhatChapter";
 import { WhenWhereChapter } from "./steps/WhenWhereChapter";
 import { WhoChapter } from "./steps/WhoChapter";
 import {
+  useCreateGatheringChapterFlow,
+  type CreateGatheringChapterFlow,
+} from "./useCreateGatheringChapterFlow";
+import {
   createGatheringDraftKey,
   removeStoredDraft,
   useCreateGatheringDraft,
@@ -56,9 +58,11 @@ import { useGatheringForm, type GatheringForm } from "./useGatheringForm";
 import { usePublishGathering } from "./usePublishGathering";
 import styles from "./CreateGatheringShell.module.css";
 
-/** Each chapter's body. Every body receives `{ form }` and nothing else. */
+/** Each asking chapter's body. Every body receives `{ form }` and nothing
+ *  else. The review chapter's body is built by the page, since it also
+ *  carries the readiness and the publish handler. */
 const CHAPTER_BODIES: Record<
-  CreateGatheringChapterId,
+  Exclude<CreateGatheringChapterId, "review">,
   ComponentType<{ form: GatheringForm }>
 > = {
   what: WhatChapter,
@@ -67,97 +71,6 @@ const CHAPTER_BODIES: Record<
   access: AccessChapter,
   care: CareChapter,
 };
-
-function noChapterFlags(): boolean[] {
-  return CREATE_GATHERING_CHAPTERS.map(() => false);
-}
-
-function withChapterFlag(flags: boolean[], chapterIndex: number): boolean[] {
-  return flags.map((flag, index) => (index === chapterIndex ? true : flag));
-}
-
-/**
- * Which chapter is open, and what the host has done in each.
- *
- * One chapter is open at a time, and pressing an open head closes it.
- * Continue checks the chapter's gate (`createGatheringChapters.ts`): unmet, it
- * lists what is missing and reports back so the button shakes; met, it opens
- * the next chapter with focus on its head, or after the last chapter closes
- * them all and brings the ready panel into view.
- */
-function useChapterFlow(form: GatheringForm) {
-  const [openChapterIndex, setOpenChapterIndex] = useState<number | null>(0);
-  const [continuedChapters, setContinuedChapters] = useState(noChapterFlags);
-  const [attemptedChapters, setAttemptedChapters] = useState(noChapterFlags);
-  const [isOpeningAfterResume, setIsOpeningAfterResume] = useState(false);
-  // A resume restores the form in the same batch that sets this flag, so this
-  // render already reads the restored values: open the first chapter still
-  // asking for something, or none when nothing is missing.
-  if (isOpeningAfterResume) {
-    setIsOpeningAfterResume(false);
-    const firstIncompleteIndex = CREATE_GATHERING_CHAPTERS.findIndex(
-      (_chapter, chapterIndex) => !isChapterComplete(form, chapterIndex),
-    );
-    setOpenChapterIndex(
-      firstIncompleteIndex === -1 ? null : firstIncompleteIndex,
-    );
-  }
-
-  /** Open a chapter from its head, or close it when it is already open. A
-   *  long chapter closing above can leave the one just opened starting above
-   *  the viewport, so its top is brought back into view. */
-  const toggleChapter = (chapterIndex: number) => {
-    const isOpening = openChapterIndex !== chapterIndex;
-    setOpenChapterIndex(isOpening ? chapterIndex : null);
-    if (isOpening) {
-      afterRender(() =>
-        revealSectionIfAbove(
-          chapterSectionId(chapterIndex),
-          chapterHeadId(chapterIndex),
-        ),
-      );
-    }
-  };
-
-  const continueFromChapter = (chapterIndex: number): boolean => {
-    if (!isChapterComplete(form, chapterIndex)) {
-      setAttemptedChapters((previous) =>
-        withChapterFlag(previous, chapterIndex),
-      );
-      return false;
-    }
-    setContinuedChapters((previous) => withChapterFlag(previous, chapterIndex));
-    const nextIndex = chapterIndex + 1;
-    if (nextIndex < CREATE_GATHERING_CHAPTERS.length) {
-      setOpenChapterIndex(nextIndex);
-      afterRender(() =>
-        revealSection(chapterSectionId(nextIndex), chapterHeadId(nextIndex)),
-      );
-    } else {
-      setOpenChapterIndex(null);
-      afterRender(() => revealSection(READY_PANEL_ANCHOR, READY_PANEL_ANCHOR));
-    }
-    return true;
-  };
-
-  /** Open a chapter and send the host to one of its fields, flashing it. */
-  const openChapterAtField = (chapterIndex: number, anchor: string) => {
-    setOpenChapterIndex(chapterIndex);
-    afterRender(() => jumpToAnchor(anchor, styles.gateFlash));
-  };
-
-  return {
-    openChapterIndex,
-    continuedChapters,
-    attemptedChapters,
-    toggleChapter,
-    continueFromChapter,
-    openChapterAtField,
-    openAfterResume: () => setIsOpeningAfterResume(true),
-  };
-}
-
-type ChapterFlow = ReturnType<typeof useChapterFlow>;
 
 /** Eyebrow, serif title, lead, the draft's saved line, and Cancel. */
 function CreateGatheringHead({ saveStatus }: { saveStatus: DraftSaveStatus }) {
@@ -186,20 +99,24 @@ function CreateGatheringHead({ saveStatus }: { saveStatus: DraftSaveStatus }) {
   );
 }
 
-/** The five chapters, each wrapped around its own body. */
+/** The six chapters, each wrapped around its own body. The review chapter
+ *  has no Continue: its body ends with Publish. */
 function ChapterList({
   form,
   chapterFlow,
+  reviewBody,
 }: {
   form: GatheringForm;
-  chapterFlow: ChapterFlow;
+  chapterFlow: CreateGatheringChapterFlow;
+  reviewBody: ReactNode;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
     <>
       {CREATE_GATHERING_CHAPTERS.map((chapter, chapterIndex) => {
-        const ChapterBody = CHAPTER_BODIES[chapter.id];
+        const ChapterBody =
+          chapter.id === "review" ? null : CHAPTER_BODIES[chapter.id];
         const hasBeenContinued =
           chapterFlow.continuedChapters[chapterIndex] === true;
         return (
@@ -209,7 +126,6 @@ function ChapterList({
             titleKey={chapter.titleKey}
             introKey={chapter.introKey}
             isOptional={chapter.isOptional}
-            isLast={chapterIndex === CREATE_GATHERING_CHAPTERS.length - 1}
             isOpen={chapterFlow.openChapterIndex === chapterIndex}
             isDone={hasBeenContinued && isChapterComplete(form, chapterIndex)}
             hasBeenContinued={hasBeenContinued}
@@ -220,9 +136,14 @@ function ChapterList({
                 : []
             }
             onToggle={() => chapterFlow.toggleChapter(chapterIndex)}
-            onContinue={() => chapterFlow.continueFromChapter(chapterIndex)}
+            {...(ChapterBody
+              ? {
+                  onContinue: () =>
+                    chapterFlow.continueFromChapter(chapterIndex),
+                }
+              : {})}
           >
-            <ChapterBody form={form} />
+            {ChapterBody ? <ChapterBody form={form} /> : reviewBody}
           </CreateGatheringChapter>
         );
       })}
@@ -255,7 +176,7 @@ export function CreateGatheringPage() {
     communitySlug: communitySlugParam,
     ...(seed ? { seed } : {}),
   });
-  const chapterFlow = useChapterFlow(form);
+  const chapterFlow = useCreateGatheringChapterFlow(form);
   const draftKey = createGatheringDraftKey(user?.id);
   const publishing = usePublishGathering({
     form,
@@ -278,14 +199,12 @@ export function CreateGatheringPage() {
     confirmMessage: t("gatherings:create.nav.leaveConfirm"),
   });
 
-  const readiness = readinessItems(form);
-  const requiredItems = readiness.filter((item) => !item.isOptional);
-  const metRequiredCount = requiredItems.filter((item) => item.isMet).length;
-  const isReady = metRequiredCount === requiredItems.length && form.allChecked;
+  const readiness = publishReadiness(form);
+  const { requiredItems, metRequiredCount, isReady } = readiness;
 
   // Publish stays pressable while not ready (`aria-disabled`), and a press
   // then sends the host to the first thing missing: a required field, else
-  // the first unticked pledge.
+  // the first unticked pledge in the review chapter.
   const handlePublish = () => {
     if (publishing.isPending) return;
     if (isReady) {
@@ -304,16 +223,35 @@ export function CreateGatheringPage() {
       (isChecked) => !isChecked,
     );
     if (firstUncheckedIndex !== -1) {
-      jumpToAnchor(confirmAnchor(firstUncheckedIndex), styles.gateFlash);
+      chapterFlow.openChapterAtField(
+        REVIEW_CHAPTER_INDEX,
+        confirmAnchor(firstUncheckedIndex),
+      );
     }
   };
 
   // Both strip answers remove the strip with focus on it, so focus moves to
-  // the chapter head the host continues from.
+  // the chapter head the host continues from. A complete draft resumes on the
+  // review chapter, which is revealed like Continue reveals it, so its recap
+  // and Publish come into view with its head. The chapter the resume opens is
+  // only known once it renders, so the head's `aria-expanded` tells.
   const handleResume = () => {
     draft.resume();
     chapterFlow.openAfterResume();
-    afterRender(focusOpenChapterHead);
+    afterRender(() => {
+      const isReviewOpen =
+        document
+          .getElementById(chapterHeadId(REVIEW_CHAPTER_INDEX))
+          ?.getAttribute("aria-expanded") === "true";
+      if (isReviewOpen) {
+        revealSection(
+          chapterSectionId(REVIEW_CHAPTER_INDEX),
+          chapterHeadId(REVIEW_CHAPTER_INDEX),
+        );
+        return;
+      }
+      focusOpenChapterHead();
+    });
   };
 
   const handleStartFresh = () => {
@@ -337,12 +275,12 @@ export function CreateGatheringPage() {
     );
   }
 
-  const readyPanel = (
-    <CreateGatheringReadyPanel
+  const reviewBody = (
+    <CreateGatheringReview
       form={form}
-      items={readiness}
-      isReady={isReady}
+      readiness={readiness}
       isPublishing={publishing.isPending}
+      onEditChapter={chapterFlow.openChapter}
       onJumpToItem={(item) =>
         chapterFlow.openChapterAtField(item.chapterIndex, item.anchor)
       }
@@ -364,30 +302,32 @@ export function CreateGatheringPage() {
           )}
           <div className={styles.grid}>
             <div className={styles.formColumn}>
-              <ChapterList form={form} chapterFlow={chapterFlow} />
-              {/* At 900px and under the rail stacks above the form, so the
-                  ready panel moves under the chapters it reports on. */}
-              {isCompact && readyPanel}
+              <ChapterList
+                form={form}
+                chapterFlow={chapterFlow}
+                reviewBody={reviewBody}
+              />
             </div>
             <aside
               className={styles.rail}
               aria-label={t("gatherings:create.v2.rail.label")}
             >
               <GatheringPreviewPanel form={form} variant="rail" />
-              {!isCompact && readyPanel}
             </aside>
           </div>
         </div>
       </section>
-      {isCompact && (
+      {/* The review chapter ends with its own Publish and hint, so the bar
+          steps aside while it is open. The page keeps its bottom padding
+          either way, so nothing jumps. */}
+      {isCompact && chapterFlow.openChapterIndex !== REVIEW_CHAPTER_INDEX && (
         <CreateGatheringMobileBar
           metRequiredCount={metRequiredCount}
           requiredCount={requiredItems.length}
           checkedCount={form.checkedCount}
           pledgeCount={PLEDGE_TEXT_KEYS.length}
           isReady={isReady}
-          isPublishing={publishing.isPending}
-          onPublish={handlePublish}
+          onReview={() => chapterFlow.openChapter(REVIEW_CHAPTER_INDEX)}
         />
       )}
     </PageShell>

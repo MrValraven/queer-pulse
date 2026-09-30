@@ -1,0 +1,59 @@
+/* Story image preview on the published screen. The 9:16 image gets whatever
+   height the dialog has left after its head and footer, so the three fit
+   together without scrolling. Figures come from Modal.module.css.
+
+   Desktop card: max-height min(86svh, 760px). Chrome around the image is
+   about 200px: head 89 (20 + 14 padding, title and sub), body padding 4 + 8,
+   image margins 4 + 9, footer 77 (16 + 16 padding, 1px rule, 44px buttons),
+   2px of card border. The image takes that cap minus 208px (8px of slack),
+   and 60svh keeps it modest on tall screens.
+     1440x900: min(540, 760 - 208 = 552) = 540; dialog 740 of 760.
+     1280x720: min(432, 619 - 208 = 411) = 411; dialog 611 of 619.
+
+   Phone sheet: max-height 92svh. Chrome is about 293px at 375px wide (head
+   135 with the sub wrapped, footer 131 on two rows, body padding 12, image
+   margins 13, border 2) and about 318px at 320px wide, where the title
+   wraps too. The image takes 92svh minus 310px minus the footer's bottom
+   padding, which grows past 16px on phones with a home indicator. A 120px
+   floor keeps the image readable on the shortest screens.
+     375x667: min(333, 614 - 326 = 288) = 288; sheet 581 of 614.
+     320x568: min(284, 523 - 326 = 197) = 197; sheet 514 of 523.
+     667x375: 345 - 326 = 19, so the floor gives 120; one-row footer and
+              unwrapped head make the chrome about 204, sheet 324 of 345. */
+.image {
+  display: block;
+  margin: 4px auto var(--gap-xs);
+  height: max(120px, min(60svh, calc(min(86svh, 760px) - 208px)));
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: auto 9 / 16;
+  object-fit: contain;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  box-shadow: var(--shadow-e3);
+}
+
+/* Close sits on the start edge, Share and Download group on the end. */
+.closeButton {
+  margin-inline-end: auto;
+}
+
+/* Mirrors the Modal's cutover to a bottom sheet (Modal.module.css), so the
+   card keeps its desktop layout right up to the point it becomes a sheet. */
+@media (max-width: 719.98px) {
+  .image {
+    height: max(
+      120px,
+      min(
+        50svh,
+        calc(92svh - 310px - max(16px, env(safe-area-inset-bottom)))
+      )
+    );
+  }
+
+  /* A zero basis splits each row evenly; the labels never wrap, so their
+     width still decides where a row breaks. */
+  .footerButton {
+    flex: 1 1 0;
+  }
+}

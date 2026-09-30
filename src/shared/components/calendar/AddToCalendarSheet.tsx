@@ -3,6 +3,7 @@ import { FiCalendar, FiDownload } from "react-icons/fi";
 import { SiApple, SiGoogle } from "react-icons/si";
 import { Button, ModalSheet } from "../ui";
 import { useTranslation } from "../../i18n/useTranslation";
+import { downloadBlob } from "../../lib/downloadBlob";
 import {
   downloadIcsFile,
   googleCalendarUrl,
@@ -15,8 +16,8 @@ import styles from "./AddToCalendarSheet.module.css";
 /**
  * True on Apple platforms, so Apple Calendar can lead the row order there
  * (everyone else sees Google first). Same UA-sniff convention as
- * `useInstallPrompt.detectPlatform` — presentation order only, never used to
- * gate behaviour.
+ * `useInstallPrompt.detectPlatform`. It sets presentation order only; every
+ * platform gets the same behaviour.
  */
 function isApplePlatform(): boolean {
   return (
@@ -50,14 +51,14 @@ function CalendarOptionRow({
 }
 
 /**
- * "Add to calendar" — the calendar-app picker, for any subject that can be
+ * "Add to calendar": the calendar-app picker, for any subject that can be
  * expressed as a `CalendarEventInput`.
  *
  * Google, Outlook and Yahoo each open a pre-filled "create event" link; Apple
  * has no web deep-link scheme, so it downloads an .ics file instead (as does
  * the generic fallback below the list, for any other calendar app).
  *
- * Shared rather than owned by My Events (where it started) because the moment
+ * It lives in the shared layer (it started in My Events) because the moment
  * a member most wants a gathering in their calendar is the moment they confirm
  * a seat, which happens on the gathering's own page (PRD-189). It takes its
  * subject and its toast callback as props and reads no feature context, so
@@ -67,17 +68,26 @@ export function AddToCalendarSheet({
   input,
   subtitle,
   filename,
+  icsContent,
+  note,
   onToast,
   onClose,
 }: {
   /** The event being added: title, start, end, optional location. */
   input: CalendarEventInput;
-  /** The line under the heading — "Sat, 6 Jun · 19:30 · Mouraria". */
+  /** The line under the heading, e.g. "Sat, 6 Jun · 19:30 · Mouraria". */
   subtitle: string;
   /** Filename for the .ics download, including the extension. */
   filename: string;
+  /** A ready calendar file for the Apple row and the .ics fallback to
+   *  download, such as a repeating series with one event per date. When it is
+   *  absent, both download a single-event file built from `input`. */
+  icsContent?: string;
+  /** A short muted line under the subtitle, such as the note that the web
+   *  calendar links add the first date of a series. */
+  note?: string;
   /** Confirmation after a row is chosen. The caller owns its own toast
-   *  surface, so this stays a callback rather than a `useToast()` in here. */
+   *  surface, so the sheet takes this callback and calls no `useToast()`. */
   onToast: (message: string) => void;
   onClose: () => void;
 }) {
@@ -93,7 +103,11 @@ export function AddToCalendarSheet({
     confirm(toastKey);
   };
   const downloadIcs = (toastKey: string) => {
-    downloadIcsFile(filename, input);
+    if (icsContent === undefined) {
+      downloadIcsFile(filename, input);
+    } else {
+      downloadBlob(filename, icsContent, "text/calendar");
+    }
     confirm(toastKey);
   };
 
@@ -136,6 +150,7 @@ export function AddToCalendarSheet({
       <header className={styles.head}>
         <h3 className={styles.title}>{title}</h3>
         <p className={styles.sub}>{subtitle}</p>
+        {note && <p className={styles.note}>{note}</p>}
       </header>
       <ul className={styles.list}>
         {rows.map((row) => (
@@ -151,6 +166,7 @@ export function AddToCalendarSheet({
         <Button
           variant="ghost"
           size="sm"
+          className={styles.icsButton}
           onClick={() => downloadIcs("shared:addToCalendar.toastIcs")}
         >
           <FiDownload size={14} aria-hidden />

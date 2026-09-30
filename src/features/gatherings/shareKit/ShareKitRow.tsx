@@ -1,15 +1,20 @@
+import { useState } from "react";
 import { FaWhatsapp } from "react-icons/fa6";
 import { FiCalendar, FiImage, FiLink } from "react-icons/fi";
+import { AddToCalendarSheet } from "../../../shared/components/calendar/AddToCalendarSheet";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { GatheringForm } from "../useGatheringForm";
+import { StoryImagePreviewModal } from "./StoryImagePreviewModal";
 import { useShareKitActions } from "./useShareKitActions";
 import styles from "./ShareKitRow.module.css";
 
 /**
  * The share row on the published screen: copy the link, share on WhatsApp,
- * download a story image, add every date to a calendar. Rendered only once
- * the backend has returned the gathering's slug.
+ * preview a story image and then download or share it, and open the "Add to
+ * calendar" picker (web links add the first date, the downloaded file holds
+ * every date). Rendered only once the backend has returned the gathering's
+ * slug.
  */
 export function ShareKitRow({
   form,
@@ -24,6 +29,8 @@ export function ShareKitRow({
 }) {
   const { t } = useTranslation();
   const actions = useShareKitActions(form, slug, occurrenceSlugs);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const { calendarSheet } = actions;
   return (
     <div
       role="group"
@@ -53,7 +60,7 @@ export function ShareKitRow({
       <Button
         variant="ghost-dark"
         size="sm"
-        onClick={() => void actions.downloadStoryImage()}
+        onClick={() => void actions.openStoryPreview()}
         aria-disabled={actions.isStoryImageBusy}
         aria-busy={actions.isStoryImageBusy}
       >
@@ -62,10 +69,28 @@ export function ShareKitRow({
           ? t("gatherings:create.v2.success.storyImageBusy")
           : t("gatherings:create.v2.success.storyImage")}
       </Button>
-      <Button variant="ghost-dark" size="sm" onClick={actions.downloadCalendar}>
+      <Button
+        variant="ghost-dark"
+        size="sm"
+        onClick={() => setIsCalendarOpen(calendarSheet !== null)}
+      >
         <FiCalendar aria-hidden />{" "}
         {t("gatherings:create.v2.success.addToCalendar")}
       </Button>
+      {actions.storyPreviewBlob && (
+        <StoryImagePreviewModal
+          blob={actions.storyPreviewBlob}
+          slug={slug}
+          gatheringTitle={form.title}
+          onClose={actions.closeStoryPreview}
+        />
+      )}
+      {isCalendarOpen && calendarSheet && (
+        <AddToCalendarSheet
+          {...calendarSheet}
+          onClose={() => setIsCalendarOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -1,0 +1,10 @@
+/* The invite picker's list footer: a centred retry or "Load more" after the
+   last row, inside the list's scroll area. Tokens only. */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.action {
+  margin: var(--gap-xs) 0;
+}

@@ -1,36 +1,10 @@
-/* The ready panel's readback: the host's answers, above the pledges. It sits
-   on the panel's paper ground, which flips with the theme, so every colour
-   here reads a flipping token. */
-.readback {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.08);
-}
-
-/* Matches the pledges label below it. */
-.title {
-  margin: 0;
-  font-size: var(--text-12);
-  font-weight: 600;
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-
+/* The review chapter's accessibility readback: the host's answers, above the
+   pledges. It sits on the chapter's paper ground, which flips with the theme,
+   so every colour here reads a flipping token. */
 .group {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.groupLabel {
-  margin: 0;
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--ink);
 }
 
 .answers {

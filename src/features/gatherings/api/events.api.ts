@@ -506,7 +506,10 @@ export interface CreateEventDto {
  *  community / unlink its venue from a listing — create-time has no such
  *  concept; omitting the field there just means "none". */
 export type UpdateEventDto = Partial<
-  Omit<CreateEventDto, "communitySlug" | "listingId" | "recurrence" | "endAt">
+  Omit<
+    CreateEventDto,
+    "communitySlug" | "listingId" | "recurrence" | "endAt" | "capacity"
+  >
 > & {
   communitySlug?: string | null;
   listingId?: string | null;
@@ -517,6 +520,13 @@ export type UpdateEventDto = Partial<
    *  untouched. Create-time has no such concept, so `CreateEventDto.endAt` is
    *  string-or-omitted. */
   endAt?: string | null;
+  /** `null` explicitly LIFTS a gathering's limit, the way the edit modal's
+   *  capacity stepper does when a host empties it (`buildEditPatch`). The
+   *  backend stores `dto.capacity ?? null` whenever the key is present, and
+   *  promotes the waitlist when a published gathering's capacity grows.
+   *  Create-time omits the key for no limit, so `CreateEventDto.capacity` is
+   *  number-or-omitted. */
+  capacity?: number | null;
 };
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────

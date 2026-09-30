@@ -302,6 +302,9 @@
      exact same literal also appears in AdminShell.module.css's own drawer,
      untouched here since AdminShell is out of this fix's file list. */
   --shadow-overlay-ambient: 0 0 60px rgba(0, 0, 0, 0.32);
+  /* The lift for a light card resting on a plum panel, with a coral halo. */
+  --shadow-card-on-plum:
+    0 28px 60px -24px rgba(0, 0, 0, 0.5), 0 0 70px rgba(var(--accent-rgb), 0.22);
 
   /* Role names re-pointed at the scale. Values unchanged. */
   --shadow-card: var(--shadow-e1);

@@ -133,13 +133,6 @@ export const gatherings: Catalog = {
   "gathering.attendeesPreview.heading": "Quem vai",
   "gathering.attendeesPreview.moreLabel": "+{count} mais",
 
-  // JoinVouchCallout
-  "vouchCallout.title": "Chegaste agora? <em>Pede um voto de confiança.</em>",
-  "vouchCallout.body":
-    "Os convívios da QueerPulse são só para pessoas da comunidade. Para entrares, alguém da rede dá-te um voto de confiança, ou pedes um convite e alguém trata do resto. Isto mantém todos os convívios seguros.",
-  "vouchCallout.requestInviteCta": "Pedir um convite",
-  "vouchCallout.safetyCta": "Como mantemos isto seguro",
-
   // GatheringSuccessPanel
   "successPanel.ariaLabel": "Confirmação",
   "successPanel.closeAriaLabel": "Fechar",
@@ -631,8 +624,6 @@ export const gatherings: Catalog = {
     "Não foi possível publicar o teu convívio. Tenta novamente.",
   "create.toast.published": "O teu convívio está no ar",
   "create.success.title": "O teu convívio <em>está no ar.</em>",
-  "create.success.accessLabel":
-    "Acessibilidade mostrada às pessoas participantes",
   "create.success.viewCta": "Ver no quadro",
   "create.success.eventCta": "Ver a página do teu convívio",
   "create.nav.cancel": "Cancelar",
@@ -641,11 +632,11 @@ export const gatherings: Catalog = {
   "create.nav.publish": "Publicar convívio",
   "create.nav.continue": "Continuar",
 
-  // ── Create-gathering v2: five chapters, live preview, publish rail ────────
+  // ── Create-gathering v2: six chapters, live preview, review and publish ───
   // CreateGatheringPage.tsx / CreateGatheringFields.tsx: the page lead, the rail, field chrome
   "create.v2.lead":
-    "Cinco capítulos curtos. O cartão à direita preenche-se à medida que avanças, para veres exatamente o que aparece no quadro.",
-  "create.v2.rail.label": "Pré-visualização e publicação",
+    "Cinco capítulos curtos e uma última vista de olhos antes de ir para o ar. O cartão à direita preenche-se à medida que avanças, para veres exatamente o que aparece no quadro.",
+  "create.v2.rail.label": "Pré-visualização ao vivo",
   "create.v2.field.optional": "opcional",
 
   // DraftResumeStrip.tsx / useCreateGatheringDraft.ts: saving and resuming a draft
@@ -671,7 +662,7 @@ export const gatherings: Catalog = {
   "create.v2.toast.cohostInviteFailed_other":
     "O teu convívio está no ar, mas {count} convites de coanfitrião não foram enviados. Podes voltar a convidar na página de gestão.",
 
-  // CreateGatheringChapter.tsx / createGathering.data.ts: the five chapter heads
+  // CreateGatheringChapter.tsx / createGathering.data.ts: the six chapter heads
   "create.v2.chapter.what.title": "O que vais <em>organizar?</em>",
   "create.v2.chapter.what.intro":
     "Escolhe o formato que te sai naturalmente. Os melhores convívios são os que quem organiza gosta mesmo de fazer.",
@@ -687,12 +678,14 @@ export const gatherings: Catalog = {
   "create.v2.chapter.care.title": "Cuidar de quem <em>vem.</em>",
   "create.v2.chapter.care.intro":
     "Duas linhas que dão o tom. Aparecem na página do teu convívio, para as pessoas saberem o que esperar antes de confirmarem presença.",
+  "create.v2.chapter.review.title": "Rever e <em>publicar.</em>",
+  "create.v2.chapter.review.intro":
+    "Tudo o que definiste, num só sítio. Revê com calma e usa Editar para mudar uma parte. Assim que publicares, aparece no quadro de imediato.",
   "create.v2.chapter.open": "Abrir",
   "create.v2.chapter.edit": "Editar",
   "create.v2.chapter.optional": "opcional",
   "create.v2.chapter.done": "Concluído.",
   "create.v2.chapter.stillNeeded": "Falta: {items}",
-  "create.v2.chapter.looksGood": "Está bom",
 
   // createGatheringChapters.ts: what Continue still needs, joined into chapter.stillNeeded
   "create.v2.need.format": "um formato",
@@ -719,10 +712,45 @@ export const gatherings: Catalog = {
   "create.v2.summary.care.questions_one": "{count} pergunta ao confirmar",
   "create.v2.summary.care.questions_other": "{count} perguntas ao confirmar",
   "create.v2.summary.care.empty": "Opcional: regras, avisos, perguntas",
+  "create.v2.summary.review.ready": "Tudo pronto para publicar",
+  "create.v2.summary.review.progress":
+    "{met} de {total} detalhes · {checked} de {pledges} confirmadas",
 
-  // CreateGatheringReadyPanel.tsx: the readiness checklist and the two pledges
-  "create.v2.ready.title": "Tudo pronto para <em>publicar?</em>",
-  "create.v2.ready.count": "{met} de {total}",
+  // CreateGatheringReviewRecap.tsx / CreateGatheringReviewGroups.tsx / CreateGatheringReviewParts.tsx / reviewRecapReadings.ts: chapter 6's recap
+  "create.v2.review.group.what": "O quê",
+  "create.v2.review.group.whenWhere": "Quando e onde",
+  "create.v2.review.group.who": "Para quem",
+  "create.v2.review.group.access": "Acesso",
+  "create.v2.review.group.care": "Cuidado",
+  "create.v2.review.edit": "Editar",
+  "create.v2.review.editLabel": "Editar: {section}",
+  "create.v2.review.notAdded": "Por preencher",
+  "create.v2.review.needed": "Em falta",
+  "create.v2.review.row.format": "Formato",
+  "create.v2.review.row.description": "Descrição",
+  "create.v2.review.row.cover": "Imagem de capa",
+  "create.v2.review.row.when": "Data e hora",
+  "create.v2.review.row.repeats": "Repetição",
+  "create.v2.review.row.where": "Onde",
+  "create.v2.review.row.joinLink": "Link de entrada",
+  "create.v2.review.row.language": "Língua",
+  "create.v2.review.row.spots": "Lugares",
+  "create.v2.review.row.visibility": "Quem pode ver",
+  "create.v2.review.row.community": "Comunidade",
+  "create.v2.review.row.cohosts": "Coanfitriões",
+  "create.v2.review.row.houseRules": "Regras da casa",
+  "create.v2.review.row.contentNotes": "Avisos de conteúdo",
+  "create.v2.review.row.rsvpQuestions": "Perguntas ao confirmar",
+  "create.v2.review.value.added": "Adicionada",
+  "create.v2.review.value.oneDate": "Só uma data",
+  "create.v2.review.value.on": "Ligada",
+  "create.v2.review.value.off": "Desligada",
+  "create.v2.review.value.alwaysAsked": "{question} (pergunta-se sempre)",
+  "create.v2.review.value.quoted": "“{text}”",
+  // CreateGatheringReview.tsx: the list above the pledges
+  "create.v2.review.missingLabel": "Falta para publicares",
+
+  // CreateGatheringReview.tsx / CreateGatheringPublishParts.tsx: what publishing still needs, the two pledges, Publish
   "create.v2.ready.item.format": "Escolhe um formato",
   "create.v2.ready.item.title": "Dá nome ao convívio",
   "create.v2.ready.item.date": "Data e hora de início no futuro",
@@ -745,9 +773,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.hintConfirms_one": "{count} confirmação por marcar",
   "create.v2.ready.hintConfirms_other": "{count} confirmações por marcar",
   "create.v2.ready.publishing": "A publicar…",
-  // CreateGatheringReadback.tsx: the host's own answers, read back before publishing
-  "create.v2.ready.readbackTitle": "Revê as tuas respostas",
-  "create.v2.ready.accessLabel": "Acessibilidade",
+  // CreateGatheringReadback.tsx: the host's accessibility answers, read back before publishing
   "create.v2.ready.accessAnswer": "{question}: {answer}",
   "create.v2.ready.accessNoteLabel": "A tua nota",
   "create.v2.ready.accessUnanswered_one":
@@ -760,12 +786,12 @@ export const gatherings: Catalog = {
   "create.v2.confirm.accessibility":
     "As respostas de acessibilidade que dei são exatas, tanto quanto sei.",
 
-  // CreateGatheringMobileBar.tsx: the sticky publish bar on small screens
+  // CreateGatheringMobileBar.tsx: the sticky review and publish bar on small screens
   "create.v2.mobileBar.label": "Progresso da publicação",
   "create.v2.mobileBar.ready": "<strong>Tudo pronto para publicar</strong>",
   "create.v2.mobileBar.progress":
     "<strong>{met}/{total}</strong> detalhes · <strong>{checked}/{pledges}</strong> confirmadas",
-  "create.v2.mobileBar.publish": "Publicar",
+  "create.v2.mobileBar.review": "Rever",
 
   // preview/*: the live card, as the board and as confirmed attendees see it
   "create.v2.preview.eyebrow": "Como fica no quadro",
@@ -957,6 +983,19 @@ export const gatherings: Catalog = {
     "Não foi possível criar a imagem para story. Tenta outra vez.",
   "create.v2.success.addToCalendar": "Adicionar ao calendário",
   "create.v2.success.calendarDownloaded": "Ficheiro de calendário descarregado",
+  "create.v2.success.calendarSeriesNote_one":
+    "O Google, o Outlook e o Yahoo adicionam a primeira data. O Apple ou o ficheiro de calendário adicionam {count} data.",
+  "create.v2.success.calendarSeriesNote_other":
+    "O Google, o Outlook e o Yahoo adicionam a primeira data. O Apple ou o ficheiro de calendário adicionam as {count}.",
+  "create.v2.success.storyPreviewTitle": "A tua imagem para story",
+  "create.v2.success.storyPreviewSub":
+    "No tamanho certo para stories do Instagram e do WhatsApp.",
+  "create.v2.success.storyPreviewAlt": "Imagem para story de {title}",
+  "create.v2.success.storyDownload": "Descarregar",
+  "create.v2.success.storyShare": "Partilhar",
+  "create.v2.success.storyShareFailed":
+    "Não deu para partilhar. Podes descarregar a imagem na mesma.",
+  "create.v2.success.storyClose": "Fechar",
   "create.v2.success.storySpots_one": "{count} lugar",
   "create.v2.success.storySpots_other": "{count} lugares",
   "create.v2.success.storyPlaceFallback": "Lisboa",
@@ -1221,6 +1260,9 @@ export const gatherings: Catalog = {
   "manage.details.time": "Hora",
   "manage.details.venue": "Local",
   "manage.details.capacity": "Capacidade",
+  "manage.details.capacityValue_one": "{count} pessoa",
+  "manage.details.capacityValue_other": "{count} pessoas",
+  "manage.details.capacityUnlimited": "Sem limite",
   "manage.overview.editCta": "Editar",
   "manage.overview.descriptionLabel": "Descrição",
   "manage.overview.descriptionNoun": "descrição",
@@ -1323,6 +1365,10 @@ export const gatherings: Catalog = {
     "O fim tem de vir depois do início. Recua o início, adia o fim ou limpa-o.",
   "manage.editModal.endSpanError":
     "Um convívio pode durar até {days} dias. Aproxima o fim do início.",
+  "manage.editModal.capacityLowerHint":
+    "Quem já vai mantém o lugar. As novas confirmações param neste número.",
+  "manage.editModal.capacityRangeError":
+    "Escolhe um número entre {min} e {max}, ou limpa o campo para não haver limite.",
   "manage.editModal.fieldLocation": "Local",
   "manage.editModal.fieldDescription": "Descrição",
   "manage.editModal.saveCta": "Guardar alterações",
@@ -1373,6 +1419,10 @@ export const gatherings: Catalog = {
   "manage.invite.loadingPeople": "A procurar as pessoas com quem tens conexão.",
   "manage.invite.noConnections":
     "Podes convidar as pessoas com quem tens conexão. Assim que tiveres conexões, aparecem aqui.",
+  "manage.invite.allListedInvited":
+    "Toda a gente aqui já vai ou já tem convite.",
+  "manage.invite.loadMoreError":
+    "Não conseguimos carregar mais das tuas conexões.",
   "manage.invite.noneSelected": "Ainda não escolheste ninguém",
   "manage.invite.selectedCount_one": "Selecionaste <b>{count}</b>",
   "manage.invite.selectedCount_other": "Selecionaste <b>{count}</b>",

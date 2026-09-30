@@ -1,5 +1,6 @@
 /* Create Gathering v2: the wizard shell. Page head, action strips, the
-   chapter frame, the rail, the ready panel and the mobile publish bar.
+   chapter frame, the rail, the review chapter's readiness rows and pledges,
+   and the mobile review bar.
    Design source: qp-create-gathering.css + qp-create-gathering-v2.css, raw
    values mapped to tokens. Chapter bodies style their fields through
    CreateGatheringFields.module.css. */
@@ -138,8 +139,7 @@
   min-width: 0;
 }
 /* Sticky, and at most as tall as the viewport below the nav: once the preview
-   card and the ready panel together outgrow a short laptop screen, the rail
-   scrolls on its own, so Publish stays reachable. */
+   card outgrows a short laptop screen, the rail scrolls on its own. */
 .rail {
   position: sticky;
   top: calc(var(--sticky-top) + 16px);
@@ -311,43 +311,12 @@
   animation: shellGateFlash 1.4s var(--ease);
 }
 
-/* ── Ready panel ── */
-.ready {
-  scroll-margin-top: calc(var(--sticky-top) + 16px);
-  padding: 20px 22px 22px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-e1);
-}
-.readyTitle {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 400;
-  letter-spacing: var(--ls-heading);
-  color: var(--text-strong);
-}
-.readyTitle em {
-  font-style: italic;
-  color: var(--accent);
-}
-.readyCount {
-  margin-left: auto;
-  font-family: var(--sans);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--ink-40);
-  font-variant-numeric: tabular-nums;
-}
+/* ── Review chapter: what publishing still needs, and the pledges ── */
 .readyList {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -373,6 +342,12 @@ button.readyRow {
 button.readyRow:hover {
   background: var(--wash);
 }
+/* A finger has no hover, so a row still owed gets a full-size target. */
+@media (pointer: coarse) {
+  button.readyRow {
+    min-height: 44px;
+  }
+}
 .readyRowMet {
   color: var(--ink-60);
 }
@@ -397,6 +372,18 @@ button.readyRow:hover {
   background: var(--jade);
   border-color: var(--jade);
 }
+/* A row still owed: an alert mark the size of the met dot, so the list reads
+   as things to fix and stays clear of the pledge checkboxes below. */
+.readyAlert {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: var(--text-18);
+  color: var(--accent-ink);
+}
 .readyOptional {
   color: var(--ink-40);
 }
@@ -406,13 +393,13 @@ button.readyRow:hover {
   gap: 4px;
   margin-left: auto;
   font-size: var(--text-12);
-  color: var(--ink-40);
-  opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease);
+  font-weight: 600;
+  color: var(--ink-60);
+  transition: color var(--dur-fast) var(--ease);
 }
 button.readyRow:hover .readyGo,
 button.readyRow:focus-visible .readyGo {
-  opacity: 1;
+  color: var(--accent-ink);
 }
 .confirms {
   display: flex;
@@ -485,20 +472,19 @@ button.readyRow:focus-visible .readyGo {
   text-decoration-color: rgba(var(--line-rgb), 0.3);
   text-underline-offset: 3px;
 }
-.publishButton {
-  justify-content: center;
-  width: 100%;
-  margin-top: 16px;
-}
-.publishHint {
-  margin: 10px 0 0;
-  font-size: var(--text-12-5);
-  line-height: 1.5;
-  color: var(--ink-40);
-  text-align: center;
+/* A finger gets a 44px target (WCAG 2.5.8 asks 24px). The top padding only
+   covers the pledge row's own bottom padding, the rest hangs below into the
+   gap before the next pledge, and the margins give the space back, so the
+   link and the rows around it keep their places. */
+@media (pointer: coarse) {
+  .pledgeLink {
+    margin-top: -9px;
+    margin-bottom: -16px;
+    padding-block: 5px 20px;
+  }
 }
 
-/* ── Mobile publish bar ── */
+/* ── Mobile review bar ── */
 .mobileBar {
   position: fixed;
   left: 12px;
@@ -594,14 +580,29 @@ button.readyRow:focus-visible .readyGo {
     width: 100%;
     margin-left: 0;
   }
+  /* A closed head wraps: the title keeps the row beside its number and the
+     summary drops to its own line under the title (number 36px + gap 18px). */
   .chapterHead {
+    flex-wrap: wrap;
+    row-gap: 8px;
     padding: 16px 18px;
   }
   .chapterBody {
     padding: 0 18px 20px;
   }
   .chapterTitle {
+    flex: 1 1 0;
+    min-width: 0;
     font-size: var(--text-20);
+  }
+  .chapterSummary {
+    flex: 1 0 calc(100% - 54px);
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 6px;
+    max-width: none;
+    margin-left: 54px;
+    text-align: left;
   }
 }
 @media (prefers-reduced-motion: reduce) {

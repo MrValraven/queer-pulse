@@ -13,10 +13,10 @@ import styles from "./GatheringModals.module.css";
  *
  * An edit's stashed patch (`buildEditPatch`) always carries the title,
  * description, place, audience, format, care and RSVP settings, and carries
- * the cover, cost and community only when the host changed them. The server
- * copies what the patch carries, except the start and end, onto every future
- * date. The edit sub copy says so, since "future" replaces care a host set on
- * those dates one by one.
+ * the cover, cost, capacity and community only when the host changed them.
+ * The server copies what the patch carries, except the start and end, onto
+ * every future date. The edit sub copy says so, since "future" replaces care
+ * a host set on those dates one by one.
  */
 export function SeriesEditScopeModal({
   mode,
