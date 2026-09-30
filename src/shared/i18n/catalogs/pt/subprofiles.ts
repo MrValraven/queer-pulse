@@ -168,6 +168,8 @@ export const subprofiles: Catalog = {
   "kind.performer": "Performance",
   "kind.photographer": "Fotografia",
   "kind.videomaker": "Videografia",
+  "kind.video_creator": "Vídeo e YouTube",
+  "kind.short_form_creator": "Vídeo curto",
   "kind.chef": "Cozinha",
   "kind.mixologist": "Coquetelaria",
   "kind.therapist": "Terapia",
@@ -267,6 +269,8 @@ export const subprofiles: Catalog = {
   "kind.prop_maker": "Adereços e armaduras",
   "kind.puzzle_designer": "Puzzles e escape rooms",
   "kind.podcaster": "Podcast",
+  "kind.podcast_producer": "Produção de podcast",
+  "kind.radio_host": "Rádio",
   "kind.voice_actor": "Dobragem e voz",
   "kind.fanfic_writer": "Fanfic",
   "kind.game_critic": "Crítica de videojogos",
@@ -796,6 +800,9 @@ export const subprofiles: Catalog = {
   "newModal.searchEmptyDescription":
     "Escolhe o ofício mais próximo do teu. Depois de entrares, podes mudar o nome da persona e moldar cada secção.",
   "newModal.searchEmptyClear": "Limpar pesquisa",
+  "newModal.suggestedLabel": "Do teu trabalho",
+  "newModal.suggestedNote":
+    "Escolhidos a partir do trabalho no teu perfil. Qualquer ofício abaixo também serve.",
 
   // Duplicar uma persona — seletor de método inicial (StartMethodPicker) e
   // seletor de fonte/modo de cópia (CopySourcePicker, CopyModePreview),

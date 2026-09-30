@@ -99,7 +99,9 @@ export function KindFamilyCard({
   shouldKindsPopIn,
   t,
 }: {
-  familyGroup: KindFamily;
+  /** Only the heading is read, so the picker's "suggested for your work"
+   *  group can reuse the card without being a real family. */
+  familyGroup: Pick<KindFamily, "labelKey" | "noteKey">;
   visibleKinds: SubprofileKind[];
   selectedKind: SubprofileKind | null;
   onChangeKind: (kind: SubprofileKind) => void;

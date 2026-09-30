@@ -181,6 +181,8 @@ export const subprofiles: Catalog = {
   "kind.performer": "Performer",
   "kind.photographer": "Photographer",
   "kind.videomaker": "Videomaker",
+  "kind.video_creator": "Video creator / YouTuber",
+  "kind.short_form_creator": "Short-form creator",
   "kind.chef": "Chef",
   "kind.mixologist": "Mixologist",
   "kind.therapist": "Therapist",
@@ -280,6 +282,8 @@ export const subprofiles: Catalog = {
   "kind.prop_maker": "Prop and armour maker",
   "kind.puzzle_designer": "Puzzle and escape room designer",
   "kind.podcaster": "Podcaster",
+  "kind.podcast_producer": "Podcast producer",
+  "kind.radio_host": "Radio host",
   "kind.voice_actor": "Voice actor",
   "kind.fanfic_writer": "Fanfic writer",
   "kind.game_critic": "Video game critic",
@@ -799,6 +803,9 @@ export const subprofiles: Catalog = {
   "newModal.searchEmptyDescription":
     "Pick the craft closest to yours. You can rename the persona and shape every section once you're in.",
   "newModal.searchEmptyClear": "Clear search",
+  "newModal.suggestedLabel": "From your work",
+  "newModal.suggestedNote":
+    "Picked from the work on your profile. Any craft below works too.",
 
   // Duplicate a persona — start-method picker (StartMethodPicker) and
   // copy-source/mode picker (CopySourcePicker, CopyModePreview), both used

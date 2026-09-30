@@ -7,6 +7,7 @@ import type { SubprofileKind } from "./api/subprofiles.api";
 import { KIND_FAMILIES } from "./kindFamilies.data";
 import { KindFamilyCard } from "./KindFamilyCard";
 import { kindsMatchingWordPrefix } from "./kindSearch";
+import { useSuggestedPersonaKinds } from "./useSuggestedPersonaKinds";
 import styles from "./NewSideModal.module.css";
 
 /** How long the query rests before the list narrows: short enough to feel
@@ -40,6 +41,14 @@ function visibleKindsByFamily(
   }
   return kindsByFamily;
 }
+
+/** The heading of the row of kinds the member's own work profile suggests
+ *  (`useSuggestedPersonaKinds`). It folds away while a search is running, so
+ *  the families below own the results. */
+const SUGGESTED_GROUP = {
+  labelKey: "subprofiles:newModal.suggestedLabel",
+  noteKey: "subprofiles:newModal.suggestedNote",
+};
 
 /** False while the picker still shows the kinds it opened with, and true for
  *  good from the first search on. Stored during render, so the render that
@@ -84,6 +93,7 @@ export function KindFamilyPicker({
   const isSearching = filterQuery !== "";
   const hasNoMatches = isSearching && kindsByFamily.size === 0;
   const shouldKindsPopIn = useHasSearched(filterQuery);
+  const suggestedKinds = useSuggestedPersonaKinds();
   let matchCount = 0;
   for (const familyKinds of kindsByFamily.values()) {
     matchCount += familyKinds.length;
@@ -127,6 +137,18 @@ export function KindFamilyPicker({
             }}
           />
         </Collapse>
+        {suggestedKinds.length > 0 && (
+          <Collapse isOpen={!isSearching}>
+            <KindFamilyCard
+              familyGroup={SUGGESTED_GROUP}
+              visibleKinds={suggestedKinds}
+              selectedKind={kind}
+              onChangeKind={onChangeKind}
+              shouldKindsPopIn={false}
+              t={t}
+            />
+          </Collapse>
+        )}
         {KIND_FAMILIES.map((familyGroup) => {
           const visibleKinds = kindsByFamily.get(familyGroup.family);
           return (

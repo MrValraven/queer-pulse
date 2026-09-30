@@ -106,6 +106,8 @@ export type SubprofileKind =
   | "performer"
   | "photographer"
   | "videomaker"
+  | "video_creator"
+  | "short_form_creator"
   | "chef"
   | "mixologist"
   | "therapist"
@@ -217,6 +219,8 @@ export type SubprofileKind =
   | "prop_maker"
   | "puzzle_designer"
   | "podcaster"
+  | "podcast_producer"
+  | "radio_host"
   | "voice_actor"
   | "fanfic_writer"
   | "game_critic";

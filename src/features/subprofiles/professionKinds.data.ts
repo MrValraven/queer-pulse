@@ -1,0 +1,575 @@
+import type { SubprofileKind } from "./api/subprofiles.api";
+
+/**
+ * The crosswalk between the two taxonomies: the work professions a member
+ * picks for their profile (`members/workTaxonomy.data.ts`, mirroring the
+ * backend's `profiles/professions.ts`) and the persona kinds they can create
+ * a side as (`subprofile-kinds.ts`, contract C1).
+ *
+ * The two lists answer different questions (what you do for work vs. what a
+ * public showcase of that work looks like), so they stay separate. This map
+ * connects them: each profession lists the persona kinds that fit it, best
+ * fit first. The create flow reads it to suggest kinds from a member's own
+ * work profile.
+ *
+ * Every listed profession id must appear either here or in
+ * `PROFESSIONS_WITHOUT_PERSONA_KIND` below, so a profession added to the
+ * taxonomy fails `professionKinds.data.test.ts` until someone decides where it
+ * belongs. Unlisted fields (`adultWork`) never appear in either list: nothing
+ * may suggest them.
+ *
+ * Import-free apart from a type, so `scripts/check-work-taxonomy.mjs` can
+ * transpile and load it alone.
+ */
+export const PERSONA_KINDS_BY_PROFESSION: Readonly<
+  Record<string, readonly SubprofileKind[]>
+> = {
+  // design
+  graphicDesigner: ["designer"],
+  uxDesigner: ["designer"],
+  illustrator: ["illustrator"],
+  artDirector: ["designer"],
+  productDesigner: ["designer"],
+  webDesigner: ["designer", "developer"],
+  motionDesigner: ["animator", "designer"],
+  animator: ["animator"],
+  comicArtist: ["comic_artist"],
+  uxResearcher: ["designer"],
+  industrialDesigner: ["designer", "maker"],
+  // fashion
+  fashionDesigner: ["fashion_designer"],
+  stylist: ["stylist"],
+  model: ["model"],
+  costumeDesigner: ["costume_designer"],
+  tailor: ["fashion_designer", "maker"],
+  patternCutter: ["fashion_designer"],
+  shoemaker: ["maker"],
+  // editorial
+  editor: ["editor"],
+  journalist: ["journalist"],
+  copywriter: ["writer"],
+  poet: ["poet"],
+  podcaster: ["podcaster", "podcast_producer"],
+  author: ["writer"],
+  contentCreator: ["video_creator", "short_form_creator"],
+  zinester: ["zinester"],
+  publisher: ["editor"],
+  // languages
+  translator: ["translator"],
+  interpreter: ["translator"],
+  signLanguageInterpreter: ["translator"],
+  subtitler: ["translator"],
+  localisationSpecialist: ["translator"],
+  // tech
+  softwareEngineer: ["developer"],
+  backendEngineer: ["developer"],
+  dataScientist: ["data_scientist"],
+  frontendEngineer: ["developer"],
+  fullStackEngineer: ["developer"],
+  mobileEngineer: ["developer"],
+  devOpsEngineer: ["developer"],
+  qaEngineer: ["developer"],
+  securityEngineer: ["developer"],
+  dataAnalyst: ["data_scientist"],
+  machineLearningEngineer: ["developer", "data_scientist"],
+  technicalWriter: ["writer"],
+  engineeringManager: ["developer"],
+  dataEngineer: ["developer", "data_scientist"],
+  sysAdmin: ["developer"],
+  databaseAdministrator: ["developer"],
+  gameDeveloper: ["game_designer", "developer"],
+  // science
+  biologist: ["academic"],
+  ecologist: ["academic"],
+  labResearcher: ["academic"],
+  chemist: ["academic"],
+  physicist: ["academic"],
+  environmentalScientist: ["academic"],
+  mathematician: ["academic"],
+  researcher: ["academic"],
+  statistician: ["data_scientist", "academic"],
+  geologist: ["academic"],
+  marineScientist: ["academic"],
+  socialScientist: ["academic"],
+  economist: ["academic"],
+  // architecture
+  architect: ["designer"],
+  urbanDesigner: ["designer"],
+  interiorArchitect: ["designer"],
+  landscapeArchitect: ["designer"],
+  interiorDesigner: ["designer"],
+  // healthcare
+  therapist: ["therapist"],
+  psychologist: ["therapist"],
+  physiotherapist: ["bodyworker"],
+  peerCounsellor: ["peer_support"],
+  communityHealthWorker: ["peer_support"],
+  psychiatrist: ["therapist"],
+  doula: ["doula"],
+  midwife: ["doula"],
+  nutritionist: ["nutritionist"],
+  sexTherapist: ["therapist", "sex_educator"],
+  sexualHealthWorker: ["sex_educator"],
+  harmReductionWorker: ["peer_support"],
+  occupationalTherapist: ["therapist"],
+  speechTherapist: ["therapist"],
+  osteopath: ["bodyworker"],
+  acupuncturist: ["bodyworker"],
+  // education
+  teacher: ["teacher"],
+  workshopFacilitator: ["facilitator"],
+  tutor: ["tutor"],
+  lecturer: ["lecturer", "academic"],
+  sexEducator: ["sex_educator"],
+  languageTeacher: ["teacher", "tutor"],
+  earlyYearsEducator: ["teacher"],
+  specialNeedsTeacher: ["teacher"],
+  vocationalTrainer: ["teacher", "facilitator"],
+  teachingAssistant: ["teacher"],
+  careersAdviser: ["coach"],
+  // people
+  learningDevelopment: ["facilitator"],
+  deiLead: ["facilitator"],
+  // retail
+  florist: ["florist"],
+  // food
+  chef: ["chef"],
+  barista: ["barista"],
+  baker: ["baker"],
+  supperClubHost: ["chef", "caterer"],
+  bartender: ["mixologist"],
+  cook: ["chef"],
+  sommelier: ["sommelier"],
+  brewer: ["brewer"],
+  caterer: ["caterer"],
+  pastryChef: ["baker", "chef"],
+  // hospitality
+  tourGuide: ["docent"],
+  // nightlife
+  promoter: ["promoter"],
+  eventProducer: ["event_producer"],
+  eventPlanner: ["event_producer"],
+  celebrant: ["host"],
+  // photo
+  portraitPhotographer: ["photographer"],
+  photojournalist: ["photographer", "journalist"],
+  retoucher: ["photographer"],
+  eventPhotographer: ["photographer"],
+  fashionPhotographer: ["photographer"],
+  // film
+  documentaryFilmmaker: ["filmmaker"],
+  filmmaker: ["filmmaker"],
+  cinematographer: ["filmmaker", "videomaker"],
+  filmEditor: ["videomaker", "filmmaker"],
+  screenwriter: ["screenwriter"],
+  filmProducer: ["filmmaker"],
+  videographer: ["videomaker", "video_creator"],
+  radioPresenter: ["radio_host", "podcaster"],
+  cameraOperator: ["videomaker"],
+  // performance
+  choreographer: ["dancer"],
+  dancer: ["dancer"],
+  theatreMaker: ["performer"],
+  performanceArtist: ["performer"],
+  voiceActor: ["voice_actor"],
+  actor: ["performer"],
+  dragPerformer: ["drag"],
+  comedian: ["comedian"],
+  burlesquePerformer: ["burlesque"],
+  circusArtist: ["circus"],
+  hostEmcee: ["host"],
+  voguer: ["voguer"],
+  poleDancer: ["pole_dancer"],
+  spokenWordArtist: ["spoken_word"],
+  danceTeacher: ["dancer", "teacher"],
+  // music
+  musicProducer: ["musician"],
+  dj: ["dj"],
+  sessionMusician: ["musician"],
+  soundDesigner: ["podcast_producer", "musician"],
+  singer: ["vocalist"],
+  songwriter: ["musician"],
+  composer: ["musician"],
+  musicTeacher: ["musician", "teacher"],
+  soundEngineer: ["podcast_producer", "musician"],
+  // curation
+  curator: ["curator"],
+  archivist: ["archivist"],
+  galleryDirector: ["gallerist"],
+  librarian: ["archivist"],
+  historian: ["historian"],
+  conservator: ["conservator"],
+  artCritic: ["art_critic"],
+  exhibitionDesigner: ["exhibition_designer"],
+  museumEducator: ["docent"],
+  archaeologist: ["historian"],
+  culturalProgrammer: ["curator", "event_producer"],
+  // craft
+  ceramicist: ["ceramicist"],
+  woodworker: ["woodworker"],
+  textileArtist: ["textile_artist"],
+  jeweller: ["jeweler"],
+  printmaker: ["printmaker"],
+  leatherworker: ["maker"],
+  visualArtist: ["visual_artist"],
+  tilePainter: ["visual_artist", "maker"],
+  furnitureRestorer: ["woodworker", "conservator"],
+  bookbinder: ["maker"],
+  luthier: ["woodworker", "maker"],
+  // beauty
+  barber: ["barber"],
+  hairdresser: ["hair_stylist"],
+  makeupArtist: ["makeup_artist"],
+  nailTechnician: ["nail_artist"],
+  beautician: ["esthetician"],
+  tattooArtist: ["tattoo_artist"],
+  piercer: ["piercer"],
+  wigMaker: ["hair_stylist"],
+  lashBrowTechnician: ["esthetician"],
+  // wellness
+  personalTrainer: ["personal_trainer"],
+  yogaTeacher: ["yoga_teacher"],
+  massageTherapist: ["bodyworker"],
+  lifeCoach: ["coach"],
+  pilatesInstructor: ["personal_trainer"],
+  meditationTeacher: ["yoga_teacher", "coach"],
+  astrologer: ["astrologer"],
+  // sport
+  sportsCoach: ["personal_trainer", "coach"],
+  surfInstructor: ["personal_trainer"],
+  climbingInstructor: ["personal_trainer"],
+  swimmingInstructor: ["personal_trainer"],
+  // trades
+  carpenter: ["woodworker"],
+  metalworker: ["maker"],
+  // community
+  communityOrganiser: ["organizer"],
+  housingOrganiser: ["organizer"],
+  housingAdvocate: ["activist"],
+  accessibilityAdvocate: ["activist"],
+  activist: ["activist"],
+  communityCentreCoordinator: ["organizer"],
+  youthWorker: ["facilitator"],
+  nonprofitDirector: ["organizer"],
+  ngoProgrammeLead: ["organizer"],
+  volunteerCoordinator: ["organizer"],
+  fundraiser: ["organizer"],
+  socioculturalAnimator: ["facilitator", "event_producer"],
+  interculturalMediator: ["facilitator"],
+  // games
+  gameMaster: ["game_master"],
+  ttrpgWriter: ["ttrpg_designer"],
+  gameDesigner: ["game_designer"],
+  boardGameReviewer: ["board_game_reviewer"],
+  gameNightHost: ["game_night_host"],
+  larpOrganiser: ["larp_organizer"],
+  miniaturePainter: ["miniature_painter"],
+  cosplayer: ["cosplayer"],
+  streamer: ["streamer", "video_creator"],
+  tournamentOrganiser: ["tournament_organizer"],
+  actualPlayPerformer: ["actual_play"],
+  fantasyCartographer: ["cartographer"],
+  diceMaker: ["dice_maker"],
+  propMaker: ["prop_maker"],
+  puzzleDesigner: ["puzzle_designer"],
+  speedrunner: ["speedrunner"],
+  modder: ["modder"],
+  fanficWriter: ["fanfic_writer"],
+  gameCritic: ["game_critic"],
+};
+
+/**
+ * Listed professions that deliberately suggest no persona kind: work whose
+ * public showcase isn't a portfolio of pieces (most employed, clinical,
+ * trades and public-service roles). A member in one of them can still make a
+ * `generic` side, or pick any kind by hand; this only stops the create flow
+ * from guessing.
+ */
+export const PROFESSIONS_WITHOUT_PERSONA_KIND: readonly string[] = [
+  // fashion
+  "fashionBuyer",
+  "vintageReseller",
+  // marketing
+  "marketingManager",
+  "brandStrategist",
+  "socialMediaManager",
+  "contentStrategist",
+  "prCommunications",
+  "growthMarketer",
+  "communityManager",
+  "mediaPlanner",
+  "marketResearcher",
+  // tech
+  "productManager",
+  "itSupport",
+  "erpConsultant",
+  "hardwareTechnician",
+  // engineering
+  "civilEngineer",
+  "mechanicalEngineer",
+  "electricalEngineer",
+  "environmentalEngineer",
+  "aerospaceEngineer",
+  "biomedicalEngineer",
+  "industrialEngineer",
+  "chemicalEngineer",
+  "telecomsEngineer",
+  "energyEngineer",
+  "qualityEngineer",
+  "engineeringTechnician",
+  // science
+  "labTechnician",
+  "clinicalResearchAssociate",
+  // architecture
+  "landSurveyor",
+  "draughtsperson",
+  "quantitySurveyor",
+  // healthcare
+  "nurse",
+  "gp",
+  "hospitalDoctor",
+  "pharmacist",
+  "dentist",
+  "paramedic",
+  "healthcareAssistant",
+  "radiographer",
+  "clinicalLabTechnician",
+  "pharmacyTechnician",
+  "dentalHygienist",
+  "optometrist",
+  "audiologist",
+  // care
+  "homeCareWorker",
+  "childcareWorker",
+  "disabilitySupportWorker",
+  "funeralDirector",
+  "careHomeAssistant",
+  "nanny",
+  // education
+  "schoolLeader",
+  // legal
+  "immigrationLawyer",
+  "familyLawyer",
+  "paralegal",
+  "legalAdvocate",
+  "humanRightsLawyer",
+  "employmentLawyer",
+  "criminalLawyer",
+  "notary",
+  "mediator",
+  "solicitor",
+  "judge",
+  "corporateLawyer",
+  "complianceOfficer",
+  "legalSecretary",
+  // finance
+  "accountant",
+  "bookkeeper",
+  "financialAnalyst",
+  "financialAdviser",
+  "taxAdviser",
+  "auditor",
+  "bankClerk",
+  "bankRelationshipManager",
+  "creditAnalyst",
+  "insuranceAgent",
+  "claimsHandler",
+  "actuary",
+  "financialController",
+  // people
+  "hrGeneralist",
+  "recruiter",
+  "hrBusinessPartner",
+  "payrollBenefits",
+  "hrAdministrator",
+  // operations
+  "operationsManager",
+  "projectManager",
+  "programmeCoordinator",
+  "officeManager",
+  "executiveAssistant",
+  "receptionist",
+  "adminAssistant",
+  "dataEntryClerk",
+  "procurementSpecialist",
+  "qualityManager",
+  "healthSafetyOfficer",
+  // management
+  "consultant",
+  "managingDirector",
+  "businessAnalyst",
+  "strategyLead",
+  // sales
+  "accountExecutive",
+  "businessDevelopment",
+  "salesRepresentative",
+  "salesManager",
+  "keyAccountManager",
+  "medicalRep",
+  // customerService
+  "customerSupport",
+  "customerSuccessManager",
+  "callCentreAgent",
+  "contactCentreTeamLead",
+  "technicalSupportAgent",
+  // realEstate
+  "estateAgent",
+  "propertyManager",
+  "propertyValuer",
+  "condominiumManager",
+  // retail
+  "shopAssistant",
+  "bookseller",
+  "storeManager",
+  "visualMerchandiser",
+  "cashier",
+  "marketTrader",
+  "ecommerceManager",
+  // food
+  "waiter",
+  "restaurantManager",
+  "kitchenAssistant",
+  "butcher",
+  "counterAssistant",
+  // hospitality
+  "hotelManager",
+  "frontDeskAgent",
+  "housekeeper",
+  "travelAgent",
+  "guesthouseHost",
+  "concierge",
+  "reservationsAgent",
+  "tourismAnimator",
+  // nightlife
+  "venueManager",
+  "doorHost",
+  "stageTechnician",
+  "eventOperations",
+  "eventStaff",
+  // performance
+  "stageManager",
+  // music
+  "musicIndustryAR",
+  // sport
+  "athlete",
+  "referee",
+  // animals
+  "vet",
+  "vetNurse",
+  "dogWalker",
+  "petGroomer",
+  "dogTrainer",
+  "animalShelterWorker",
+  // trades
+  "electrician",
+  "plumber",
+  "mechanic",
+  "painterDecorator",
+  "constructionWorker",
+  "gardener",
+  "welder",
+  "tiler",
+  "handyperson",
+  "mason",
+  "hvacTechnician",
+  "maintenanceTechnician",
+  "siteManager",
+  "telecomsInstaller",
+  "solarInstaller",
+  // manufacturing
+  "productionOperator",
+  "cncOperator",
+  "assembler",
+  "productionSupervisor",
+  "productionManager",
+  "qualityInspector",
+  "sewingMachinist",
+  "foodProductionOperator",
+  "plantOperator",
+  "mouldMaker",
+  // transport
+  "driver",
+  "deliveryRider",
+  "warehouseWorker",
+  "pilot",
+  "flightAttendant",
+  "logisticsCoordinator",
+  "truckDriver",
+  "busDriver",
+  "trainDriver",
+  "forkliftOperator",
+  "postalWorker",
+  "stockController",
+  "supplyChainManager",
+  "freightForwarder",
+  "seafarer",
+  "drivingInstructor",
+  // farming
+  "farmer",
+  "winemaker",
+  "permacultureDesigner",
+  "beekeeper",
+  "fisher",
+  "forestryWorker",
+  "agronomist",
+  "farmWorker",
+  // facilities
+  "cleaner",
+  "domesticWorker",
+  "laundryWorker",
+  "buildingCaretaker",
+  "facilitiesManager",
+  "wasteWorker",
+  // security
+  "securityGuard",
+  "firefighter",
+  "policeOfficer",
+  "militaryPersonnel",
+  "prisonOfficer",
+  "lifeguard",
+  "emergencyDispatcher",
+  // community
+  "supportCoordinator",
+  "socialWorker",
+  "socialCareTechnician",
+  // publicSector
+  "policyAdvisor",
+  "civilServant",
+  "electedOfficial",
+  "diplomat",
+  "taxCustomsOfficer",
+  "publicInspector",
+  // faith
+  "clergy",
+  "chaplain",
+  "pastoralWorker",
+  // ownBusiness
+  "founder",
+  "smallBusinessOwner",
+  "freelancer",
+  "coopMember",
+  // lifeStage
+  "student",
+  "apprentice",
+  "betweenJobs",
+  "fullTimeCarer",
+  "retired",
+];
+
+/**
+ * The persona kinds a member's professions suggest, best fit first, without
+ * repeats. Professions keep the member's own order (their first pick leads),
+ * and within one profession the map's order wins. Unknown or unmapped ids are
+ * skipped.
+ */
+export function personaKindsForProfessions(
+  professionIds: readonly string[],
+): SubprofileKind[] {
+  const kinds: SubprofileKind[] = [];
+  for (const professionId of professionIds) {
+    for (const kind of PERSONA_KINDS_BY_PROFESSION[professionId] ?? []) {
+      if (!kinds.includes(kind)) kinds.push(kind);
+    }
+  }
+  return kinds;
+}

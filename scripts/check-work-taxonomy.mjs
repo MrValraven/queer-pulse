@@ -20,6 +20,12 @@
  *      group id has its `jobs.fieldGroup.<id>` label in EN and PT `economy`
  *   7. every commitment and seniority id has its `postJob.option.*` label in
  *      EN and PT `economy`
+ *   8. persona kinds (contract C1): backend `KIND_SECTIONS` against the
+ *      frontend `kindSections.data.ts`, kind by kind and section by section
+ *   9. the profession → persona kind crosswalk
+ *      (`subprofiles/professionKinds.data.ts`) names only listed professions
+ *      and backend kinds, and every listed profession is either mapped or
+ *      deliberately left out
  *
  * Exit codes: 0 in sync, 1 on any difference, 2 when the backend repo is not
  * checked out beside this one. It stays out of `build-gates.mjs` because the
@@ -59,6 +65,15 @@ const SOURCE_PATHS = {
   frontendJobVocabulary: join(
     frontendRoot,
     "src/features/economy/jobVocabulary.data.ts",
+  ),
+  backendKinds: join(backendRoot, "src/subprofiles/subprofile-kinds.ts"),
+  frontendKinds: join(
+    frontendRoot,
+    "src/features/subprofiles/kindSections.data.ts",
+  ),
+  frontendCrosswalk: join(
+    frontendRoot,
+    "src/features/subprofiles/professionKinds.data.ts",
   ),
   membersEnglish: join(frontendRoot, "src/shared/i18n/catalogs/en/members.ts"),
   membersPortuguese: join(
@@ -350,6 +365,84 @@ try {
     requireLabel(economyCatalogs, `postJob.option.seniority.${seniorityId}`);
   }
 
+  // 8. Persona kinds and their sections, backend against frontend.
+  const backendKinds = await loadModule(
+    "backend persona kinds",
+    SOURCE_PATHS.backendKinds,
+  );
+  const frontendKinds = await loadModule(
+    "frontend persona kinds",
+    SOURCE_PATHS.frontendKinds,
+  );
+  const backendSectionsByKind = backendKinds?.KIND_SECTIONS ?? {};
+  const frontendSectionsByKind = frontendKinds?.KIND_SECTIONS ?? {};
+  // Kind order carries no meaning in either record (the create picker orders
+  // kinds by `KIND_LABEL_KEYS`), so kinds compare as a set. Section order is
+  // the persona page's layout, so it compares strictly below.
+  for (const kind of Object.keys(backendSectionsByKind)) {
+    if (!(kind in frontendSectionsByKind)) {
+      differences.push(`persona kinds: "${kind}" is missing on the frontend`);
+    }
+  }
+  for (const kind of Object.keys(frontendSectionsByKind)) {
+    if (!(kind in backendSectionsByKind)) {
+      differences.push(`persona kinds: "${kind}" is missing on the backend`);
+    }
+  }
+  for (const kind of Object.keys(backendSectionsByKind)) {
+    if (!(kind in frontendSectionsByKind)) continue;
+    compareOrderedIds(
+      `persona kind "${kind}" sections`,
+      backendSectionsByKind[kind],
+      frontendSectionsByKind[kind],
+    );
+  }
+
+  // 9. The profession → persona kind crosswalk.
+  const crosswalk = await loadModule(
+    "frontend profession → persona kind crosswalk",
+    SOURCE_PATHS.frontendCrosswalk,
+  );
+  const kindsByProfession = crosswalk?.PERSONA_KINDS_BY_PROFESSION ?? {};
+  const professionsWithoutKind = [
+    ...(crosswalk?.PROFESSIONS_WITHOUT_PERSONA_KIND ?? []),
+  ];
+  const unlistedFieldIds = backendProfessions?.UNLISTED_DISCIPLINE_IDS ?? [];
+  const listedProfessionIds = Object.entries(backendByField)
+    .filter(([fieldId]) => !unlistedFieldIds.includes(fieldId))
+    .flatMap(([, ids]) => ids);
+  for (const [professionId, kinds] of Object.entries(kindsByProfession)) {
+    if (!listedProfessionIds.includes(professionId)) {
+      differences.push(
+        `crosswalk: "${professionId}" is not a listed backend profession`,
+      );
+    }
+    for (const kind of kinds) {
+      if (!(kind in backendSectionsByKind)) {
+        differences.push(
+          `crosswalk: "${professionId}" points at "${kind}", which is not a backend persona kind`,
+        );
+      }
+    }
+  }
+  for (const professionId of professionsWithoutKind) {
+    if (!listedProfessionIds.includes(professionId)) {
+      differences.push(
+        `crosswalk: "${professionId}" (left without a kind) is not a listed backend profession`,
+      );
+    }
+  }
+  for (const professionId of listedProfessionIds) {
+    if (
+      !(professionId in kindsByProfession) &&
+      !professionsWithoutKind.includes(professionId)
+    ) {
+      differences.push(
+        `crosswalk: profession "${professionId}" is neither mapped to a persona kind nor left out on purpose`,
+      );
+    }
+  }
+
   if (differences.length > 0) {
     for (const difference of differences) console.error(difference);
     console.error(
@@ -359,7 +452,7 @@ try {
   } else {
     const professionCount = Object.values(frontendByField).flat().length;
     console.log(
-      `work taxonomy in sync (${Object.keys(frontendByField).length} fields, ${professionCount} professions, ${jobFieldIds.length} job fields)`,
+      `work taxonomy in sync (${Object.keys(frontendByField).length} fields, ${professionCount} professions, ${jobFieldIds.length} job fields, ${Object.keys(frontendSectionsByKind).length} persona kinds, ${Object.keys(kindsByProfession).length} professions mapped to persona kinds)`,
     );
   }
 } finally {

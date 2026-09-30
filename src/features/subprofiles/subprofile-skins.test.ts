@@ -53,4 +53,11 @@ describe("subprofile-skins", () => {
     expect(SKIN_OF.fanfic_writer).toBe("page");
     expect(SKIN_OF.game_critic).toBe("page");
   });
+
+  it("groups the video creators with video and the audio kinds on stage", () => {
+    expect(SKIN_OF.video_creator).toBe("studio");
+    expect(SKIN_OF.short_form_creator).toBe("studio");
+    expect(SKIN_OF.podcast_producer).toBe("stage");
+    expect(SKIN_OF.radio_host).toBe("stage");
+  });
 });
