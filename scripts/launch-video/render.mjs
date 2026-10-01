@@ -8,7 +8,9 @@
  * parallel pages, piping PNG screenshots into one ffmpeg per page. The
  * segments are joined and muxed with the audio at the end.
  *
- * `--score-only` stops after writing out/score.wav, for working on the music.
+ * `--score-only` stops after writing the WAV, for working on the music.
+ * `--variant pop` renders the upbeat cut (scene-pop.html + score-pop.js) to
+ * out/queerpulse-launch-pop.mp4; without it, the original cut renders.
  *
  * Needs ffmpeg with libx264 on PATH (or FFMPEG=/path/to/ffmpeg). CHROMIUM_PATH
  * points Playwright at a specific Chromium binary when its own isn't installed.
@@ -35,6 +37,9 @@ const args = Object.fromEntries(
     ),
 );
 const FPS = Number(args.fps || 30);
+// Each cut is a scene + score pair; the original is the unnamed default.
+const VARIANT = args.variant || "";
+const SUFFIX = VARIANT ? `-${VARIANT}` : "";
 const WORKERS = Number(args.workers || 3);
 
 const TYPES = {
@@ -62,7 +67,7 @@ const server = createServer(async (req, res) => {
   }
 });
 await new Promise((ok) => server.listen(0, "127.0.0.1", ok));
-const SCENE = `http://127.0.0.1:${server.address().port}/scripts/launch-video/scene.html`;
+const SCENE = `http://127.0.0.1:${server.address().port}/scripts/launch-video/scene${SUFFIX}.html`;
 
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || undefined,
@@ -97,10 +102,10 @@ await mkdir(OUT, { recursive: true });
 /* ── Score ── */
 {
   const page = await openScene();
-  await page.addScriptTag({ path: join(HERE, "score.js") });
+  await page.addScriptTag({ path: join(HERE, `score${SUFFIX}.js`) });
   const t0 = Date.now();
   const wav = await page.evaluate(() => window.renderScore());
-  await writeFile(join(OUT, "score.wav"), Buffer.from(wav, "base64"));
+  await writeFile(join(OUT, `score${SUFFIX}.wav`), Buffer.from(wav, "base64"));
   console.log(`score rendered in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
   await page.close();
 }
@@ -127,7 +132,7 @@ const segments = await Promise.all(
     const a = first + w * per;
     const b = Math.min(first + total, a + per);
     if (a >= b) return null;
-    const file = join(OUT, `seg-${w}.mp4`);
+    const file = join(OUT, `seg${SUFFIX}-${w}.mp4`);
     const { child, done } = run(
       FFMPEG,
       [
@@ -186,7 +191,7 @@ await browser.close();
 server.close();
 
 /* ── Join + mux ── */
-const list = join(OUT, "segments.txt");
+const list = join(OUT, `segments${SUFFIX}.txt`);
 await writeFile(
   list,
   segments
@@ -196,8 +201,8 @@ await writeFile(
 );
 const name =
   from === 0 && to === duration
-    ? "queerpulse-launch.mp4"
-    : `queerpulse-launch-${from}-${to}.mp4`;
+    ? `queerpulse-launch${SUFFIX}.mp4`
+    : `queerpulse-launch${SUFFIX}-${from}-${to}.mp4`;
 await run(FFMPEG, [
   "-y",
   "-loglevel",
@@ -213,7 +218,7 @@ await run(FFMPEG, [
   "-t",
   String(to - from),
   "-i",
-  join(OUT, "score.wav"),
+  join(OUT, `score${SUFFIX}.wav`),
   "-map",
   "0:v",
   "-map",

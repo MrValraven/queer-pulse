@@ -1,6 +1,15 @@
 # QueerPulse launch film
 
-A 65-second 1080p launch film, built as code. The picture is an HTML
+Two cuts of the launch film, built as code:
+
+- **Cinematic** (`scene.html` + `score.js`): 65 seconds at 100 BPM, slow and
+  warm. The rest of this README describes it unless it says otherwise.
+- **Upbeat** (`scene-pop.html` + `score-pop.js`): 48 seconds at 120 BPM. Bold
+  caps with one italic line, a colour field per feature, sticker pills,
+  outlined marquee words and two confetti drops on the name. Same cast, cards
+  and promises, so both cuts say the same things.
+
+The cinematic cut is a 65-second 1080p launch film. The picture is an HTML
 composition (`scene.html`), the music is synthesised (`score.js`), and both
 are rendered frame-accurately by Chromium and encoded with ffmpeg. The product
 appears as six designed moments recreated in the app's own design language,
@@ -10,7 +19,8 @@ avatar (`avatars/`).
 ## Render it
 
 ```sh
-node scripts/launch-video/render.mjs    # → out/queerpulse-launch.mp4
+node scripts/launch-video/render.mjs                 # → out/queerpulse-launch.mp4
+node scripts/launch-video/render.mjs --variant pop   # → out/queerpulse-launch-pop.mp4
 ```
 
 Needs `ffmpeg` with libx264 on `PATH` (or `FFMPEG=/path/to/ffmpeg`). If
@@ -18,7 +28,7 @@ Playwright's own Chromium isn't installed, point `CHROMIUM_PATH` at one.
 
 `render.mjs` options: `--fps 60` for a smoother master, `--from 19 --to 34` to
 render a slice, `--workers 4` to use more cores, `--score-only` to write just
-`out/score.wav`. A full 30 fps render takes about 10 minutes on 4 cores.
+`out/score.wav` (`out/score-pop.wav` with `--variant pop`). A full 30 fps render takes about 10 minutes on 4 cores.
 
 ## Work on it
 
@@ -46,6 +56,23 @@ cue in the picture moves its note too.
 | 0:41 | Promise | _No ads. No algorithm. Just your people._ The five promises                                    |
 | 0:48 | Lisbon  | _Find your community all over the city._ Real neighbourhoods, people crossing the city to meet |
 | 0:55 | Invite  | _Walk in where you already belong._ The heartbeat returns and lands on the lockup              |
+
+## The upbeat cut
+
+Scenes start on bar lines of the 120 BPM score (a bar is 2s, a cut every
+bar or two). `scene-pop.html?t=9` and `?play` work the same way.
+
+| Time | Scene   | On screen                                                               |
+| ---- | ------- | ----------------------------------------------------------------------- |
+| 0:00 | Hook    | _Queer Lisbon is everywhere._ Plum flips to coral, the cast pops in     |
+| 0:04 | Gap     | _Just never in one place._ Stickers fly in, then _So we gathered it…_   |
+| 0:08 | Drop    | Ring burst and confetti, the name with its slogan                       |
+| 0:12 | Moments | Six cards, one colour each, a giant outlined word behind every card     |
+| 0:24 | Network | _Everyone here is vouched for._ The network pops in on the beat         |
+| 0:28 | Promise | _No ads. No algorithm. Just your people._ Marquee bands, the five pills |
+| 0:32 | Lisbon  | _Find your community all over the city._ Neighbourhood stickers         |
+| 0:36 | Belong  | _Walk in where you already belong._                                     |
+| 0:40 | Invite  | The second drop: name, slogan, invite and the illustration credit       |
 
 ## The cast
 
