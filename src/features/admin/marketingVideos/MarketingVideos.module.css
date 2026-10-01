@@ -171,6 +171,39 @@
   pointer-events: none;
 }
 
+/* Colour calibration (render/colorCalibration.ts): known colours shown over
+   the film for one captured frame before recording. */
+.calibration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  background: var(--plum-deep);
+}
+
+.calibration[hidden] {
+  display: none;
+}
+
+.patchCoral,
+.patchJade,
+.patchViolet {
+  position: absolute;
+}
+
+.patchCoral {
+  background: var(--accent);
+}
+
+.patchJade {
+  background: var(--jade);
+}
+
+.patchViolet {
+  background: var(--violet);
+}
+
 /* The frame-sync strip (render/frameMarker.ts): pure black and white, so the
    code reads back exactly whatever the theme. */
 .marker {

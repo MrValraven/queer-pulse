@@ -5,6 +5,11 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { filmUrl, type MarketingVideo } from "./marketingVideos.data";
 import { MarketingVideoRenderBar } from "./MarketingVideoRenderSteps";
 import { detectRenderSupport } from "./render/captureApis";
+import {
+  CALIBRATION_PATCHES,
+  parseCssRgb,
+  type Rgb,
+} from "./render/colorCalibration";
 import { filmIn, iframeLoaded } from "./render/filmWindow";
 import {
   MARKER_HEIGHT,
@@ -18,6 +23,10 @@ import styles from "./MarketingVideos.module.css";
 // Every step code the render can paint is below MAX_MARKER_INDEX, so the
 // strip's resting code can never be mistaken for a real step.
 const RESTING_MARKER = markerPattern(MAX_MARKER_INDEX);
+
+// Saturated brand colours: a wrong colour matrix shifts these the most.
+const PATCH_CLASSES = [styles.patchCoral, styles.patchJade, styles.patchViolet];
+const PATCH_SIZE = 240;
 
 /**
  * Full-screen render surface. The film plays at 1920x1080 (scaled so one film
@@ -38,6 +47,8 @@ export function MarketingVideoRenderStudio({
   const boxRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const cellRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const calibrationRef = useRef<HTMLDivElement>(null);
+  const patchRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [isFilmReady, setIsFilmReady] = useState(false);
   const support = useMemo(() => detectRenderSupport(), []);
   const { scale, isSoft } = useStudioScale();
@@ -82,7 +93,21 @@ export function MarketingVideoRenderStudio({
     const box = boxRef.current;
     const iframe = iframeRef.current;
     if (!box || !iframe) return;
-    render.start({ box, iframe, showMarker });
+    render.start({
+      box,
+      iframe,
+      showMarker,
+      showCalibration: (isShown) => {
+        if (calibrationRef.current) calibrationRef.current.hidden = !isShown;
+      },
+      calibrationColours: () =>
+        patchRefs.current.map(
+          (node): Rgb =>
+            (node && parseCssRgb(getComputedStyle(node).backgroundColor)) ?? [
+              0, 0, 0,
+            ],
+        ),
+    });
   };
 
   const handleFullScreen = () => {
@@ -119,6 +144,28 @@ export function MarketingVideoRenderStudio({
               height={1080}
               tabIndex={-1}
             />
+            <div
+              ref={calibrationRef}
+              className={styles.calibration}
+              hidden
+              aria-hidden
+            >
+              {CALIBRATION_PATCHES.map(({ x, y }, patch) => (
+                <span
+                  key={`${x}-${y}`}
+                  ref={(node) => {
+                    patchRefs.current[patch] = node;
+                  }}
+                  className={PATCH_CLASSES[patch]}
+                  style={{
+                    left: x - PATCH_SIZE / 2,
+                    top: y - PATCH_SIZE / 2,
+                    width: PATCH_SIZE,
+                    height: PATCH_SIZE,
+                  }}
+                />
+              ))}
+            </div>
             <div className={styles.marker} aria-hidden>
               {RESTING_MARKER.map((isLight, cell) => (
                 <span

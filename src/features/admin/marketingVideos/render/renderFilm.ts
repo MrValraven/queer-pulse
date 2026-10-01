@@ -11,7 +11,8 @@ import {
   canEncodeVideo,
 } from "mediabunny";
 import { composeScore, filmIn } from "./filmWindow";
-import { MARKER_HEIGHT } from "./frameMarker";
+import type { Rgb } from "./colorCalibration";
+import { MARKER_HEIGHT, MAX_MARKER_INDEX } from "./frameMarker";
 import { captureFilmBox, filmRect } from "./tabCapture";
 
 const WIDTH = 1920;
@@ -23,7 +24,14 @@ export interface RenderStage {
   box: HTMLElement;
   iframe: HTMLIFrameElement;
   showMarker(index: number): void;
+  /** Shows or hides the colour patches over the film. */
+  showCalibration(isShown: boolean): void;
+  /** The patches' true colours, in CALIBRATION_PATCHES order. */
+  calibrationColours(): Rgb[];
 }
+
+/** Marker for the calibration frame: above every step, below the resting code. */
+const CALIBRATION_STEP = MAX_MARKER_INDEX - 1;
 
 export type RenderProgress =
   | { step: "score" }
@@ -99,6 +107,19 @@ export async function renderFilm({
     null;
   try {
     onProgress({ step: "score" });
+    // Measure how this browser's capture handles colour before recording.
+    stage.showCalibration(true);
+    stage.showMarker(CALIBRATION_STEP);
+    const calibrationFrame = await capture.frameWithMarker(
+      CALIBRATION_STEP,
+      signal,
+    );
+    try {
+      await capture.calibrate(calibrationFrame, stage.calibrationColours());
+    } finally {
+      calibrationFrame.close();
+      stage.showCalibration(false);
+    }
     const score = await composeScore(film, scoreUrl);
     signal.throwIfAborted();
     const format = await pickFormat();
@@ -137,7 +158,8 @@ export async function renderFilm({
         const step = frameIndex * shutter + subFrame;
         film.seek(Math.max(0, (frameIndex + offset) / FPS));
         stage.showMarker(step);
-        const frame = await capture.frameWithMarker(step, signal);
+        const captured = await capture.frameWithMarker(step, signal);
+        const frame = await capture.correct(captured);
         try {
           const source = filmRect(frame);
           // A running average: sub-frame k weighs 1/(k+1) over the blend so far.
@@ -154,7 +176,8 @@ export async function renderFilm({
             HEIGHT,
           );
         } finally {
-          frame.close();
+          if (frame !== captured) frame.close();
+          captured.close();
         }
       }
       await videoSource.add(frameIndex / FPS, 1 / FPS);
