@@ -1217,6 +1217,9 @@
           img.data[i + 3] = 255;
         }
         g.putImageData(img, 0, 0);
+        // Fixed, not moving: it still dithers the dark gradients against
+        // banding, and the encoder can reuse it frame to frame. Moving grain
+        // made the MP4 six times larger.
         $("#grain").style.backgroundImage = `url(${c.toDataURL()})`;
       }
       function stage(t) {
@@ -1239,10 +1242,6 @@
         $("#glow-c").style.transform = `translate(260px, 90px)`;
         $("#glow-c").style.opacity = lockGlow(t);
         $("#glow-a").style.opacity = 0.6 + 0.4 * g;
-        // Grain moves at 12 fps, like film, from one pre-drawn tile.
-        const f = Math.floor(t * 12);
-        $("#grain").style.backgroundPosition =
-          `${(f * 37) % 256}px ${(f * 53) % 256}px`;
         // The HUD rides along while the product is on screen.
         const hud = eOut(prog(t, 12.4, 13.2)) * (1 - eIn(prog(t, 39.4, 39.9)));
         $("#hud").style.opacity = hud;
