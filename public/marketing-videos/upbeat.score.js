@@ -3,11 +3,11 @@
  *
  * 120 BPM house-pop in A major (A, E, F#m, D): four-on-the-floor, an
  * octave-bouncing bass, offbeat chord stabs and a two-bar lead hook, with a
- * note on every word slam, card and pop-in listed in scene-pop.html's
- * window.CUES. The synth voices are the same as score.js; only the music and
+ * note on every word slam, card and pop-in listed in upbeat.html's
+ * window.CUES. The synth voices are the same as cinematic.score.js; only the music and
  * the arrangement differ.
  *
- * Loaded into scene-pop.html by render.mjs (--variant pop);
+ * Loaded into upbeat.html by render.mjs (--video upbeat) and the admin renderer;
  * `window.renderScore()` resolves to a base64 16-bit stereo WAV.
  */
 (function () {
@@ -335,7 +335,7 @@
       g.connect(verb);
     }
 
-    /* ── Arrangement ── (bar numbers match the scene starts in scene-pop.html) */
+    /* ── Arrangement ── (bar numbers match the scene starts in upbeat.html) */
     const kicks = [];
     const K = (t, v) => {
       kick(t, v, 48, 165, 0.32);

@@ -6,6 +6,10 @@ const TopicsAdminPage = lazyNamed(
   () => import("./TopicsAdminPage"),
   "TopicsAdminPage",
 );
+const AdminMarketingVideosPage = lazyNamed(
+  () => import("./marketingVideos/AdminMarketingVideosPage"),
+  "AdminMarketingVideosPage",
+);
 const AdminDashboardPage = lazyNamed(
   () => import("./AdminDashboardPage"),
   "AdminDashboardPage",
@@ -244,6 +248,23 @@ const AdminStatusIncidentsPage = lazyNamed(
   "AdminStatusIncidentsPage",
 );
 
+/**
+ * What the public sees of QueerPulse, curated from admin: the landing page,
+ * the press kit and the marketing films (the "editorial" group in authGate).
+ */
+function publicFaceRoutes() {
+  return (
+    <>
+      <Route path={routes.adminLanding} element={<AdminLandingPage />} />
+      <Route path={routes.adminPressKit} element={<AdminPressKitPage />} />
+      <Route
+        path={routes.adminMarketingVideos}
+        element={<AdminMarketingVideosPage />}
+      />
+    </>
+  );
+}
+
 /** The admin & moderation panels (role-gated in authGate.ts). */
 export function adminRoutes() {
   return (
@@ -365,8 +386,7 @@ export function adminRoutes() {
         path={routes.adminCommunitySpaceRequests}
         element={<AdminCommunitySpaceRequestsPage />}
       />
-      <Route path={routes.adminLanding} element={<AdminLandingPage />} />
-      <Route path={routes.adminPressKit} element={<AdminPressKitPage />} />
+      {publicFaceRoutes()}
       <Route
         path={routes.adminPartnerApplications}
         element={<AdminPartnerApplicationsPage />}

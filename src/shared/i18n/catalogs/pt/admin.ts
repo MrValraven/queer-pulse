@@ -7318,4 +7318,72 @@ export const admin: Catalog = {
   "ambassadors.history.empty": "Não há estatutos registados para esta pessoa.",
   "ambassadors.circle.notFounded":
     "O círculo abre quando for atribuído o estatuto à primeira pessoa embaixadora.",
+  "marketingVideos.header.eyebrow": "Marketing",
+  "marketingVideos.header.sub":
+    "Os nossos filmes de lançamento, guardados como código. Vê um aqui e transforma-o num ficheiro de vídeo no teu computador sempre que precisares.",
+  "marketingVideos.films.cinematic.title": "Cinematográfico",
+  "marketingVideos.films.cinematic.summary":
+    "Lento e caloroso, a 100 BPM. O produto em seis momentos, depois a cidade e o convite.",
+  "marketingVideos.films.upbeat.title": "Animado",
+  "marketingVideos.films.upbeat.summary":
+    "Letra forte, uma cor para cada funcionalidade e duas chuvas de confetes no nome. Feito para as redes sociais.",
+  "marketingVideos.films.pro.title": "Pro",
+  "marketingVideos.films.pro.summary":
+    "Filmado como um lançamento de produto: palco escuro, uma câmara a percorrer os seis cartões e um mapa de Lisboa em pontos.",
+  "marketingVideos.card.meta": "{duration} · 1080p · 30 fps",
+  "marketingVideos.card.motionBlur":
+    "Com desfoque de movimento, por isso demora mais a gerar",
+  "marketingVideos.card.preview": "Pré-visualizar",
+  "marketingVideos.card.render": "Gerar vídeo",
+  "marketingVideos.card.frameTitle": "{title}, imagem fixa",
+  "marketingVideos.preview.eyebrow": "Pré-visualização",
+  "marketingVideos.preview.frameTitle": "{title}, a reproduzir",
+  "marketingVideos.preview.play": "Reproduzir",
+  "marketingVideos.preview.pause": "Pausa",
+  "marketingVideos.preview.restart": "Voltar ao início",
+  "marketingVideos.preview.scrub": "Posição no filme",
+  "marketingVideos.preview.soundLoading": "A preparar o som…",
+  "marketingVideos.preview.soundOn": "Som ligado",
+  "marketingVideos.preview.soundFailed":
+    "Reproduz sem som: a banda sonora não carregou.",
+  "marketingVideos.preview.note":
+    "A pré-visualização corre ao vivo no teu navegador. Gerar o vídeo cria o ficheiro perfeito, imagem a imagem.",
+  "marketingVideos.studio.eyebrow": "Gerar",
+  "marketingVideos.studio.title": "{title} em vídeo",
+  "marketingVideos.studio.frameTitle": "{title}, a gerar",
+  "marketingVideos.studio.intro":
+    "O teu navegador reproduz o filme imagem a imagem e grava um vídeo em 1080p com som. Quando to pedir, partilha este separador. Mantém-no aberto e à frente até terminar, cerca de {minutes} minutos.",
+  "marketingVideos.studio.soft":
+    "A tua janela mostra o filme abaixo de 1080p, por isso o ficheiro ficaria um pouco desfocado. Passa a ecrã inteiro ou aumenta a janela para um resultado nítido.",
+  "marketingVideos.studio.fullScreen": "Ecrã inteiro",
+  "marketingVideos.studio.start": "Começar a gerar",
+  "marketingVideos.studio.stop": "Parar",
+  "marketingVideos.studio.close": "Fechar",
+  "marketingVideos.studio.again": "Gerar de novo",
+  "marketingVideos.studio.step.sharing":
+    "Escolhe este separador para partilhar…",
+  "marketingVideos.studio.step.score": "A compor a banda sonora…",
+  "marketingVideos.studio.step.frames": "A gravar a imagem {done} de {total}",
+  "marketingVideos.studio.step.finishing": "A terminar o ficheiro…",
+  "marketingVideos.studio.timeLeft": "Faltam cerca de {time}",
+  "marketingVideos.studio.progress": "Progresso da geração",
+  "marketingVideos.studio.done.title": "O teu vídeo está <em>pronto.</em>",
+  "marketingVideos.studio.done.download": "Descarregar {fileName}",
+  "marketingVideos.studio.done.meta": "{size} · gravado a {width}×{height}",
+  "marketingVideos.studio.done.notMp4":
+    "Este navegador não consegue criar MP4, por isso o ficheiro é WebM. O Chrome ou o Edge no Windows ou no Mac criam MP4.",
+  "marketingVideos.studio.error.denied":
+    "A partilha foi cancelada, por isso nada foi gravado. Começa de novo e escolhe este separador.",
+  "marketingVideos.studio.error.wrongTab":
+    "Esse não era este separador. Começa de novo e partilha este separador, não uma janela nem o ecrã.",
+  "marketingVideos.studio.error.stopped":
+    "A partilha parou antes de o filme terminar. Começa de novo para o gravar desde o início.",
+  "marketingVideos.studio.error.stalled":
+    "A gravação parou, normalmente porque este separador passou para segundo plano. Mantém-no à frente e começa de novo.",
+  "marketingVideos.studio.error.encoder":
+    "Este navegador não consegue codificar vídeo. Experimenta o Chrome ou o Edge num computador.",
+  "marketingVideos.studio.error.failed":
+    "Algo correu mal ao gerar o vídeo. Começa de novo e, se continuar a acontecer, avisa a equipa técnica.",
+  "marketingVideos.studio.unsupported":
+    "Para gerar vídeos precisas do Chrome ou do Edge num computador. Podes pré-visualizar todos os filmes aqui na mesma.",
 };

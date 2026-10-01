@@ -27,6 +27,7 @@ import {
   FiMessageSquare,
   FiPhoneCall,
   FiPlusSquare,
+  FiFilm,
   FiRadio,
   FiServer,
   FiSettings,
@@ -501,6 +502,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminPressKit,
         capabilities: ["editorial"],
         icon: FiRadio,
+      },
+      {
+        labelKey: "shared:adminNav.items.marketingVideos",
+        to: routes.adminMarketingVideos,
+        capabilities: ["editorial"],
+        icon: FiFilm,
       },
       {
         labelKey: "shared:adminNav.items.roadmap",

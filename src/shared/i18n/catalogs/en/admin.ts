@@ -7282,4 +7282,70 @@ export const admin: Catalog = {
   "ambassadors.history.empty": "No grants on record for this member.",
   "ambassadors.circle.notFounded":
     "The circle opens when the first ambassador is granted.",
+  "marketingVideos.header.eyebrow": "Marketing",
+  "marketingVideos.header.sub":
+    "Our launch films, kept as code. Watch one here, then turn it into a video file on your computer whenever you need it.",
+  "marketingVideos.films.cinematic.title": "Cinematic",
+  "marketingVideos.films.cinematic.summary":
+    "Slow and warm, at 100 BPM. The product as six moments, then the city and the invitation.",
+  "marketingVideos.films.upbeat.title": "Upbeat",
+  "marketingVideos.films.upbeat.summary":
+    "Bold type, a colour for every feature and two confetti drops on the name. Made for social.",
+  "marketingVideos.films.pro.title": "Pro",
+  "marketingVideos.films.pro.summary":
+    "Filmed like a product launch: a dark stage, one camera across all six cards and a dot map of Lisbon.",
+  "marketingVideos.card.meta": "{duration} · 1080p · 30 fps",
+  "marketingVideos.card.motionBlur": "Motion blur, so it renders more slowly",
+  "marketingVideos.card.preview": "Preview",
+  "marketingVideos.card.render": "Render video",
+  "marketingVideos.card.frameTitle": "{title}, still frame",
+  "marketingVideos.preview.eyebrow": "Preview",
+  "marketingVideos.preview.frameTitle": "{title}, playing",
+  "marketingVideos.preview.play": "Play",
+  "marketingVideos.preview.pause": "Pause",
+  "marketingVideos.preview.restart": "Back to the start",
+  "marketingVideos.preview.scrub": "Position in the film",
+  "marketingVideos.preview.soundLoading": "Getting the sound ready…",
+  "marketingVideos.preview.soundOn": "Sound on",
+  "marketingVideos.preview.soundFailed":
+    "Plays without sound: the score didn't load.",
+  "marketingVideos.preview.note":
+    "The preview plays live in your browser. Rendering makes the frame-perfect file.",
+  "marketingVideos.studio.eyebrow": "Render",
+  "marketingVideos.studio.title": "{title} to video",
+  "marketingVideos.studio.frameTitle": "{title}, rendering",
+  "marketingVideos.studio.intro":
+    "Your browser plays the film frame by frame and records a 1080p video with sound. When it asks, share this tab. Keep the tab open and in front until it's done, about {minutes} minutes.",
+  "marketingVideos.studio.soft":
+    "Your window shows the film smaller than 1080p, so the file would be a little soft. Go full screen or enlarge the window for a sharp one.",
+  "marketingVideos.studio.fullScreen": "Full screen",
+  "marketingVideos.studio.start": "Start rendering",
+  "marketingVideos.studio.stop": "Stop",
+  "marketingVideos.studio.close": "Close",
+  "marketingVideos.studio.again": "Render again",
+  "marketingVideos.studio.step.sharing": "Choose this tab to share…",
+  "marketingVideos.studio.step.score": "Composing the score…",
+  "marketingVideos.studio.step.frames": "Recording frame {done} of {total}",
+  "marketingVideos.studio.step.finishing": "Finishing the file…",
+  "marketingVideos.studio.timeLeft": "About {time} left",
+  "marketingVideos.studio.progress": "Rendering progress",
+  "marketingVideos.studio.done.title": "Your video is <em>ready.</em>",
+  "marketingVideos.studio.done.download": "Download {fileName}",
+  "marketingVideos.studio.done.meta": "{size} · recorded at {width}×{height}",
+  "marketingVideos.studio.done.notMp4":
+    "This browser can't make MP4, so it's a WebM file. Chrome or Edge on Windows or Mac make MP4.",
+  "marketingVideos.studio.error.denied":
+    "Sharing was cancelled, so nothing was recorded. Start again and choose this tab.",
+  "marketingVideos.studio.error.wrongTab":
+    "That wasn't this tab. Start again and share this tab, not a window or your screen.",
+  "marketingVideos.studio.error.stopped":
+    "Sharing stopped before the film finished. Start again to record it from the beginning.",
+  "marketingVideos.studio.error.stalled":
+    "The recording stalled, usually because this tab went to the background. Keep it in front and start again.",
+  "marketingVideos.studio.error.encoder":
+    "This browser can't encode video. Try Chrome or Edge on a computer.",
+  "marketingVideos.studio.error.failed":
+    "Something went wrong while rendering. Start again, and if it keeps happening, tell the tech team.",
+  "marketingVideos.studio.unsupported":
+    "Rendering needs Chrome or Edge on a computer. You can still preview every film here.",
 };

@@ -1,31 +1,43 @@
 # QueerPulse launch film
 
-Three cuts of the launch film, built as code:
+Three cuts of the launch film, built as code. The films live in
+`public/marketing-videos/`, served with the site, and admins preview and render
+them from **Admin › Marketing videos** (`/admin/marketing-videos`): the page
+plays each film live and turns it into an MP4 in the admin's own browser (Chrome
+or Edge on a computer). This folder holds the headless renderer, the cast and
+the notes.
 
-- **Cinematic** (`scene.html` + `score.js`): 65 seconds at 100 BPM, slow and
+Each film is three files: `<id>.html` (styles and markup), `<id>.scene.js` (the
+picture: `window.seek(t)`, `ready()`, `DURATION`, `CUES`) and `<id>.score.js`
+(the music, `renderScore()`). Scripts stay out of the HTML because the site's
+Content-Security-Policy allows no inline scripts. To add a film, add its three
+files and an entry in `src/features/admin/marketingVideos/marketingVideos.data.ts`.
+
+- **Cinematic** (`cinematic`): 65 seconds at 100 BPM, slow and
   warm. The rest of this README describes it unless it says otherwise.
-- **Upbeat** (`scene-pop.html` + `score-pop.js`): 48 seconds at 120 BPM. Bold
+- **Upbeat** (`upbeat`): 48 seconds at 120 BPM. Bold
   caps with one italic line, a colour field per feature, sticker pills,
   outlined marquee words and two confetti drops on the name. Same cast, cards
   and promises, so every cut says the same things.
-- **Pro** (`scene-pro.html` + `score-pro.js`): 48 seconds at 120 BPM, filmed
+- **Pro** (`pro`): 48 seconds at 120 BPM, filmed
   like a product launch. A dark stage with a hairline grid and grain, type
   that rises line by line out of a mask, one camera flying across a board of
   all six cards, a dot-matrix Lisbon, and deep house with interface sound.
 
 The cinematic cut is a 65-second 1080p launch film. The picture is an HTML
-composition (`scene.html`), the music is synthesised (`score.js`), and both
+composition (`cinematic.html` + `cinematic.scene.js`), the music is synthesised
+(`cinematic.score.js`), and both
 are rendered frame-accurately by Chromium and encoded with ffmpeg. The product
 appears as six designed moments recreated in the app's own design language,
 with the demo's content, and every person in the film has an illustrated
-avatar (`avatars/`).
+avatar (`public/marketing-videos/avatars/`).
 
 ## Render it
 
 ```sh
-node scripts/launch-video/render.mjs                 # → out/queerpulse-launch.mp4
-node scripts/launch-video/render.mjs --variant pop   # → out/queerpulse-launch-pop.mp4
-node scripts/launch-video/render.mjs --variant pro   # → out/queerpulse-launch-pro.mp4
+node scripts/launch-video/render.mjs                  # → out/queerpulse-cinematic.mp4
+node scripts/launch-video/render.mjs --video upbeat   # → out/queerpulse-upbeat.mp4
+node scripts/launch-video/render.mjs --video pro      # → out/queerpulse-pro.mp4
 ```
 
 Needs `ffmpeg` with libx264 on `PATH` (or `FFMPEG=/path/to/ffmpeg`). If
@@ -33,7 +45,7 @@ Playwright's own Chromium isn't installed, point `CHROMIUM_PATH` at one.
 
 `render.mjs` options: `--fps 60` for a smoother master, `--from 19 --to 34` to
 render a slice, `--workers 4` to use more cores, `--score-only` to write just
-`out/score.wav` (`out/score-<variant>.wav` with `--variant`). A full 30 fps render takes about 10 minutes on 4 cores.
+`out/score-<id>.wav`. A full 30 fps render takes about 10 minutes on 4 cores.
 
 A scene can also set two render hints. `window.CAPTURE = "jpeg"` captures
 frames as JPEG, much faster for scenes full of grain or soft gradients.
@@ -43,11 +55,11 @@ strobing. The pro cut uses both; its full render takes about 16 minutes.
 
 ## Work on it
 
-Open `scene.html` through any static server rooted at the repo (it loads its
-fonts from `node_modules`):
+Open a film through `pnpm dev` or any static server rooted at `public/` (it
+loads its fonts from `public/marketing-videos/fonts/`):
 
-- `scene.html?t=21.5` shows that exact frame
-- `scene.html?play` plays it in real time, without sound
+- `/marketing-videos/cinematic.html?t=21.5` shows that exact frame
+- `/marketing-videos/cinematic.html?play` plays it in real time, without sound
 
 Every frame is a pure function of time (`window.seek(t)`), so what you scrub
 is what renders. Scenes start on bar lines of the 100 BPM score (a bar is
@@ -71,7 +83,7 @@ cue in the picture moves its note too.
 ## The upbeat cut
 
 Scenes start on bar lines of the 120 BPM score (a bar is 2s, a cut every
-bar or two). `scene-pop.html?t=9` and `?play` work the same way.
+bar or two). `upbeat.html?t=9` and `?play` work the same way.
 
 | Time | Scene   | On screen                                                               |
 | ---- | ------- | ----------------------------------------------------------------------- |
@@ -87,7 +99,7 @@ bar or two). `scene-pop.html?t=9` and `?play` work the same way.
 
 ## The pro cut
 
-`scene-pro.html?t=14` and `?play` work the same way.
+`pro.html?t=14` and `?play` work the same way.
 
 | Time | Scene   | On screen                                                                          |
 | ---- | ------- | ---------------------------------------------------------------------------------- |

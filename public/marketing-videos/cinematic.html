@@ -1,0 +1,1368 @@
+<!doctype html>
+<!--
+  QueerPulse launch film — the composition.
+
+  Every frame is a pure function of time: `window.seek(t)` lays the whole stage
+  out for second `t`, so render.mjs can step through it frame by frame and get
+  the same picture every time, at any frame rate. Nothing here runs on a clock.
+
+  Open it through a static server rooted at the repo to scrub:
+  cinematic.html?t=21.5 renders that moment, cinematic.html?play plays it (no audio).
+
+  The product moments are recreations of real features, drawn in the app's own
+  design language with the demo's content. The people are illustrated
+  (avatars/, DiceBear "Micah" by Micah Lanier, CC BY 4.0). Colours mirror
+  src/styles/tokens/colors.css by hand: this file renders outside the app's
+  token pipeline, like scripts/generate-og-image.mjs.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QueerPulse launch film</title>
+    <style>
+      @font-face {
+        font-family: "Fraunces";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("./fonts/fraunces.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces";
+        font-style: italic;
+        font-weight: 100 900;
+        src: url("./fonts/fraunces-italic.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 100 1000;
+        src: url("./fonts/dm-sans.woff2") format("woff2");
+      }
+
+      :root {
+        --plum: #2d1b3d;
+        --plum-deep: #241430;
+        --plum-vivid: #3a2553;
+        --night: #150b1d;
+        --coral: #e8775a;
+        --coral-ink: #c85a40;
+        --coral-fill: #d5431e;
+        --cream: #f7f3ee;
+        --paper: #ffffff;
+        --ink: #1a1a1f;
+        --ink-60: rgba(26, 26, 31, 0.6);
+        --line: rgba(45, 27, 61, 0.1);
+        --jade: #4a8c6f;
+        --jade-ink: #3c7159;
+        --jade-light: #9be0bd;
+        --jade-tint: #dcefe5;
+        --amber: #e8b44a;
+        --map: #e8ecdf;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--night);
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--cream);
+        -webkit-font-smoothing: antialiased;
+      }
+      .serif {
+        font-family: "Fraunces", serif;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+      }
+      em {
+        font-style: italic;
+      }
+
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        visibility: hidden;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+      }
+      .eyebrow {
+        font-size: 19px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .live {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--jade);
+        margin-right: 14px;
+        vertical-align: 1px;
+      }
+      .line {
+        display: block;
+        overflow: hidden;
+        padding: 0 0.08em 0.16em;
+        margin: 0 -0.08em -0.16em;
+      }
+      .line > span {
+        display: inline-block;
+        will-change: transform;
+      }
+      .w {
+        display: inline-block;
+        will-change: transform, opacity, filter;
+      }
+      .av {
+        display: block;
+        border-radius: 50%;
+      }
+      .center {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+
+      /* ── 1 · Pulse ── */
+      #s1 {
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          #2a1839 0%,
+          var(--plum-deep) 38%,
+          var(--night) 100%
+        );
+      }
+      #s1 svg {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 520px;
+        height: 520px;
+        margin: -260px 0 0 -260px;
+        overflow: visible;
+      }
+
+      /* ── 2 · Night ── */
+      #s2 {
+        background: radial-gradient(
+          ellipse at 50% 55%,
+          #26152f 0%,
+          var(--night) 100%
+        );
+      }
+      .particle {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+      }
+      .night {
+        font-size: 84px;
+        font-weight: 300;
+        line-height: 1.14;
+        letter-spacing: -0.01em;
+        color: rgba(247, 243, 238, 0.95);
+      }
+      .night em {
+        color: var(--coral);
+        font-weight: 340;
+      }
+      #n1 {
+        top: 380px;
+      }
+      #n2 {
+        top: 460px;
+      }
+      #n3 {
+        top: 820px;
+        font-size: 64px;
+      }
+      .frag {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 22px 14px 16px;
+        border-radius: 18px;
+        background: rgba(247, 243, 238, 0.08);
+        box-shadow: inset 0 0 0 1px rgba(247, 243, 238, 0.14);
+        font-size: 22px;
+        color: rgba(247, 243, 238, 0.82);
+        white-space: nowrap;
+      }
+      .frag svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--coral);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ── 3 · Turn ── */
+      #s3 {
+        background: var(--cream);
+        color: var(--plum);
+      }
+      #s3 svg.mark {
+        position: absolute;
+        left: 50%;
+        top: 250px;
+        width: 260px;
+        height: 260px;
+        margin-left: -130px;
+        overflow: visible;
+      }
+      #turn {
+        top: 560px;
+        font-size: 104px;
+        font-weight: 360;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+      }
+      #turn em {
+        color: var(--coral-ink);
+      }
+      .word {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-weight: 560;
+        line-height: 1;
+        white-space: nowrap;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 0,
+          "WONK" 1;
+        letter-spacing: -0.012em;
+      }
+      .word .p {
+        font-style: italic;
+      }
+      .word .ch {
+        display: inline-block;
+      }
+      #s3 .word {
+        font-size: 150px;
+        color: var(--plum);
+      }
+      #s3-lock {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 370px;
+        height: 170px;
+      }
+      .slogan {
+        font-size: 56px;
+        font-weight: 330;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+      #s3-sub {
+        top: 570px;
+        color: var(--plum);
+      }
+      #s3-sub em {
+        color: var(--coral-ink);
+      }
+
+      /* ── 4 · Moments ──
+         One card system: every card is the same 760×640 frame with 48px
+         padding, four type roles (title, body, meta, label) and a footer
+         pinned to the bottom. Headline and card share the frame's midline and
+         its 130px side margins. */
+      #s4 {
+        background: radial-gradient(
+          ellipse at 80% 20%,
+          var(--plum-vivid) 0%,
+          var(--plum) 50%,
+          var(--plum-deep) 100%
+        );
+      }
+      #s4 .left {
+        position: absolute;
+        left: 130px;
+        top: 416px;
+        width: 760px;
+      }
+      #s4 .lab {
+        position: relative;
+        height: 30px;
+        margin-bottom: 28px;
+      }
+      #s4 .head {
+        position: relative;
+        height: 190px;
+      }
+      #s4 .lab span,
+      #s4 .head span {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      #s4 .lab span {
+        color: var(--coral);
+        white-space: nowrap;
+      }
+      #s4 .head span {
+        width: 760px;
+        font-size: 84px;
+        font-weight: 340;
+        line-height: 1.06;
+        letter-spacing: -0.015em;
+      }
+      #s4 .head em {
+        color: var(--coral);
+      }
+      #s4 .progress {
+        position: absolute;
+        left: 130px;
+        top: 856px;
+        display: flex;
+        gap: 10px;
+      }
+      #s4 .progress i {
+        display: block;
+        width: 70px;
+        height: 4px;
+        border-radius: 4px;
+        background: rgba(247, 243, 238, 0.14);
+        overflow: hidden;
+      }
+      #s4 .progress b {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background: var(--coral);
+        transform-origin: left;
+        transform: scaleX(0);
+      }
+      .vig {
+        position: absolute;
+        left: 1030px;
+        top: 220px;
+        width: 760px;
+        height: 640px;
+      }
+      .card {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 48px;
+        overflow: hidden;
+        border-radius: 32px;
+        background: var(--paper);
+        color: var(--ink);
+        box-shadow:
+          0 60px 120px -30px rgba(10, 4, 16, 0.65),
+          0 0 0 1px rgba(45, 27, 61, 0.06);
+      }
+      .card.flush {
+        padding: 0;
+      }
+      .card .body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: 36px 48px 48px;
+      }
+      .foot {
+        margin-top: auto;
+      }
+      .ttl {
+        font-family: "Fraunces", serif;
+        font-weight: 420;
+        font-size: 44px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        color: var(--plum);
+        font-variation-settings: "opsz" 72;
+        text-wrap: balance;
+      }
+      .ttl.sm {
+        font-size: 38px;
+      }
+      .sub {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 340;
+        font-size: 28px;
+        line-height: 1.2;
+        color: rgba(26, 26, 31, 0.62);
+      }
+      .meta {
+        font-size: 22px;
+        line-height: 1.35;
+        color: var(--ink-60);
+      }
+      .meta.s {
+        font-size: 20px;
+      }
+      .txt {
+        font-size: 24px;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+      .label {
+        font-size: 16px;
+        font-weight: 650;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 31, 0.5);
+      }
+      .name {
+        font-size: 24px;
+        font-weight: 650;
+        color: var(--plum);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .hr {
+        flex: none;
+        height: 1px;
+        margin: 32px 0;
+        background: var(--line);
+      }
+      .tile {
+        padding: 18px 20px;
+        border-radius: 22px;
+        background: var(--cream);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 18px;
+        border-radius: 999px;
+        background: var(--cream);
+        font-size: 19px;
+        font-weight: 600;
+        color: rgba(26, 26, 31, 0.72);
+        white-space: nowrap;
+      }
+      .tag.jade {
+        background: var(--jade-tint);
+        color: var(--jade-ink);
+      }
+      .tick {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--jade);
+      }
+      .tick svg {
+        width: 16px;
+        height: 16px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .tag .tick {
+        width: 22px;
+        height: 22px;
+      }
+      .tag .tick svg {
+        width: 13px;
+        height: 13px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 60px;
+        padding: 0 30px;
+        border-radius: 999px;
+        font-size: 21px;
+        font-weight: 650;
+        white-space: nowrap;
+      }
+      .btn.coral {
+        background: var(--coral-fill);
+        color: #fff;
+      }
+      .btn.jadeb {
+        background: var(--jade-ink);
+        color: #fff;
+      }
+      .stack {
+        display: flex;
+      }
+      .more {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--plum);
+        color: var(--cream);
+        font-size: 17px;
+        font-weight: 700;
+        box-shadow: 0 0 0 4px var(--paper);
+      }
+      .date {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 104px;
+        height: 112px;
+        border-radius: 22px;
+        background: var(--cream);
+      }
+      .date b {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: var(--coral-ink);
+      }
+      .date span {
+        font-family: "Fraunces", serif;
+        font-size: 34px;
+        font-weight: 450;
+        line-height: 1.1;
+        color: var(--plum);
+      }
+      .thread {
+        flex: 1;
+        display: grid;
+        gap: 14px;
+        align-content: end;
+        padding: 32px 40px;
+      }
+      .bubble {
+        max-width: 470px;
+        padding: 16px 22px;
+        border-radius: 24px;
+        font-size: 24px;
+        line-height: 1.35;
+      }
+      .bubble.them {
+        justify-self: start;
+        border-bottom-left-radius: 8px;
+        background: var(--cream);
+        color: var(--ink);
+      }
+      .bubble.me {
+        justify-self: end;
+        border-bottom-right-radius: 8px;
+        background: var(--plum);
+        color: var(--cream);
+      }
+      .dots {
+        display: inline-flex;
+        gap: 8px;
+        padding: 22px 24px;
+        border-radius: 24px;
+        border-bottom-left-radius: 8px;
+        background: var(--cream);
+      }
+      .dots i {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: rgba(26, 26, 31, 0.4);
+      }
+      .composer {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px 32px 28px;
+        border-top: 1px solid var(--line);
+      }
+      .field {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        padding: 0 26px;
+        border-radius: 999px;
+        background: var(--cream);
+        font-size: 22px;
+        color: rgba(26, 26, 31, 0.45);
+      }
+      .send {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--coral-fill);
+      }
+      .send svg {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .art {
+        flex: none;
+        display: block;
+        width: 100%;
+        height: 220px;
+      }
+      .stamp {
+        position: absolute;
+        right: 48px;
+        top: 150px;
+        display: grid;
+        place-items: center;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: var(--jade-ink);
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        line-height: 1.3;
+        text-transform: uppercase;
+        box-shadow:
+          0 0 0 6px var(--paper),
+          0 20px 40px -10px rgba(60, 113, 89, 0.5);
+      }
+      .reply {
+        display: grid;
+        grid-template-columns: 48px 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      .reply .who {
+        margin-bottom: 2px;
+        font-size: 18px;
+        font-weight: 650;
+        color: var(--ink-60);
+      }
+      .reply p {
+        font-size: 24px;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+      .ic18 {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
+      }
+
+      /* ── 5 · Network ── */
+      #s5 {
+        background: var(--cream);
+        color: var(--plum);
+      }
+      #s5 h2 {
+        position: absolute;
+        left: 130px;
+        top: 190px;
+        font-size: 92px;
+        font-weight: 360;
+        line-height: 1.04;
+        letter-spacing: -0.015em;
+      }
+      #s5 h2 em {
+        color: var(--coral-ink);
+      }
+      #net {
+        position: absolute;
+        inset: 0;
+        transform-origin: 1300px 560px;
+      }
+      #net svg {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: visible;
+      }
+      .node {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+      }
+      .node .av {
+        width: 100%;
+        height: 100%;
+        box-shadow:
+          0 0 0 4px var(--cream),
+          0 14px 28px -12px rgba(45, 27, 61, 0.45);
+      }
+      #s5-chip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 12px 20px;
+        border-radius: 999px;
+        background: var(--plum);
+        color: var(--cream);
+        font-size: 20px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 16px 30px -12px rgba(45, 27, 61, 0.5);
+      }
+
+      /* ── 6 · Promise ── */
+      #s6 {
+        background: radial-gradient(
+          ellipse at 70% 0%,
+          var(--plum-vivid) 0%,
+          var(--plum) 45%,
+          var(--plum-deep) 100%
+        );
+      }
+      #s6 h2 {
+        top: 230px;
+        font-size: 118px;
+        font-weight: 330;
+        line-height: 1.04;
+        letter-spacing: -0.02em;
+      }
+      #s6 h2 em {
+        color: var(--coral);
+      }
+      #s6 .promises {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 640px;
+        display: flex;
+        justify-content: center;
+        gap: 22px;
+      }
+      .promise {
+        width: 318px;
+        height: 190px;
+        border-radius: 24px;
+        padding: 30px 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: linear-gradient(
+          160deg,
+          rgba(247, 243, 238, 0.08),
+          rgba(247, 243, 238, 0.03)
+        );
+        box-shadow: inset 0 0 0 1px rgba(247, 243, 238, 0.13);
+      }
+      .promise .ic {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: rgba(74, 140, 111, 0.22);
+        display: grid;
+        place-items: center;
+      }
+      .promise .ic svg {
+        width: 26px;
+        height: 26px;
+        stroke: var(--jade-light);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .promise h3 {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: 30px;
+        line-height: 1.12;
+        font-variation-settings: "opsz" 72;
+      }
+
+      /* ── 7 · Lisbon ── */
+      #s7 {
+        background: var(--cream);
+        color: var(--plum);
+      }
+      #s7 .eyebrow {
+        top: 110px;
+        color: var(--jade-ink);
+      }
+      #s7 h2 {
+        top: 150px;
+        font-size: 120px;
+        font-weight: 360;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+      #s7 h2 em {
+        color: var(--coral-ink);
+      }
+      #map {
+        position: absolute;
+        inset: 0;
+      }
+      #map svg {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      .hood {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 19px;
+        font-weight: 600;
+        color: rgba(45, 27, 61, 0.55);
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+      }
+      .hood::before {
+        content: "";
+        position: absolute;
+        left: -16px;
+        top: 8px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--plum);
+        opacity: 0.5;
+      }
+      .cluster {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+      }
+      .cluster .av {
+        width: 60px;
+        height: 60px;
+        margin-left: -16px;
+        box-shadow:
+          0 0 0 4px var(--cream),
+          0 12px 24px -10px rgba(45, 27, 61, 0.45);
+      }
+      .cluster .av:first-child {
+        margin-left: 0;
+      }
+
+      /* ── 8 · Invite ── */
+      #s8 {
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          #2e1a3f 0%,
+          var(--plum-deep) 45%,
+          var(--night) 100%
+        );
+      }
+      #s8 h2 {
+        top: 360px;
+        font-size: 136px;
+        font-weight: 320;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+      }
+      #s8 h2 em {
+        color: var(--coral);
+      }
+      #s8 svg.mark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 400px;
+        height: 400px;
+        margin: -200px 0 0 -200px;
+        overflow: visible;
+      }
+      #s8-lock {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 340px;
+        height: 200px;
+      }
+      #s8 .word {
+        font-size: 172px;
+        color: var(--cream);
+      }
+      #tag {
+        top: 562px;
+        font-size: 60px;
+        color: var(--cream);
+      }
+      #tag em {
+        color: var(--coral);
+      }
+      #cta {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 712px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 26px;
+      }
+      #cta .btn {
+        font-size: 26px;
+        height: 72px;
+        padding: 0 38px;
+        box-shadow: 0 20px 50px -14px rgba(213, 67, 30, 0.6);
+      }
+      #cta .url {
+        font-size: 28px;
+        color: rgba(247, 243, 238, 0.85);
+        font-weight: 500;
+      }
+
+      /* ── Film finish ── */
+      #vignette {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          transparent 55%,
+          rgba(10, 4, 16, 0.4) 100%
+        );
+        mix-blend-mode: multiply;
+      }
+      #grain {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+        opacity: 0.08;
+      }
+      #fade {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        pointer-events: none;
+      }
+      /* ── Review pass overrides ── */
+      .orb {
+        filter: none;
+      }
+      #n2 {
+        top: 428px;
+      }
+      .frag {
+        gap: 14px;
+        padding: 16px 26px 16px 18px;
+        border-radius: 20px;
+        background: rgba(247, 243, 238, 0.1);
+        box-shadow: inset 0 0 0 1px rgba(247, 243, 238, 0.18);
+        font-size: 26px;
+        color: rgba(247, 243, 238, 0.92);
+      }
+      .frag svg {
+        width: 28px;
+        height: 28px;
+      }
+      #net {
+        transform-origin: 1360px 560px;
+      }
+      #s5-chip {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 22px 8px 8px;
+        font-size: 22px;
+      }
+      #s6 h2 {
+        top: 280px;
+      }
+      #s6 .promises {
+        top: 612px;
+      }
+      .promise {
+        position: relative;
+        overflow: hidden;
+        height: 172px;
+        background: linear-gradient(
+          160deg,
+          rgba(247, 243, 238, 0.11),
+          rgba(247, 243, 238, 0.05)
+        );
+        box-shadow: inset 0 0 0 1px rgba(247, 243, 238, 0.18);
+      }
+      .promise h3 {
+        font-size: 32px;
+      }
+      .promise .sheen {
+        position: absolute;
+        top: -20%;
+        bottom: -20%;
+        left: 0;
+        width: 140px;
+        transform: translateX(-200px);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(247, 243, 238, 0.14),
+          transparent
+        );
+      }
+      .hood {
+        font-size: 22px;
+        color: rgba(45, 27, 61, 0.62);
+      }
+      .cluster .av {
+        width: 64px;
+        height: 64px;
+        margin-left: -18px;
+      }
+      /* Promise tiles: icon over title, centred as one group. */
+      .promise {
+        width: 300px;
+        height: 212px;
+        padding: 30px 24px;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        border-radius: 28px;
+        text-align: center;
+      }
+      .promise .ic {
+        width: 64px;
+        height: 64px;
+        flex: none;
+      }
+      .promise .ic svg {
+        width: 28px;
+        height: 28px;
+      }
+      .promise h3 {
+        font-size: 30px;
+        line-height: 1.15;
+        text-wrap: balance;
+      }
+      #s6 .promises {
+        gap: 24px;
+      }
+      /* Fragment pills: a true pill, the icon in its own soft coral circle. */
+      .frag {
+        gap: 14px;
+        padding: 10px 28px 10px 10px;
+        border-radius: 999px;
+      }
+      .frag svg {
+        width: 22px;
+        height: 22px;
+        padding: 10px;
+        box-sizing: content-box;
+        border-radius: 50%;
+        background: rgba(232, 119, 90, 0.16);
+      }
+      /* "Live in Lisboa": dot and label as one row with a real gap, so the
+         pulsing halo never touches the text. */
+      #s7 .eyebrow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        top: 104px;
+      }
+      #s7 .eyebrow .live {
+        margin-right: 0;
+        flex: none;
+      }
+      #s7 h2 {
+        top: 160px;
+        font-size: 92px;
+      }
+      /* Opening: two short lines, stacked as one thought. */
+      .night {
+        font-size: 96px;
+      }
+      #n1 {
+        top: 400px;
+      }
+      #n2 {
+        top: 522px;
+      }
+      #n3 {
+        top: 830px;
+        font-size: 56px;
+      }
+      /* Venue badge: level, with a checkmark over the label. */
+      .stamp {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 152px;
+        height: 152px;
+        top: 144px;
+        font-size: 15px;
+      }
+      .stamp svg {
+        width: 34px;
+        height: 34px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <section class="scene" id="s1">
+        <svg viewBox="0 0 64 64">
+          <g id="s1-ripples"></g>
+          <path
+            id="s1-arc"
+            d="M48.55 19.07 A21 21 0 1 1 34.92 11.21"
+            fill="none"
+            stroke="#f7f3ee"
+            stroke-width="1.1"
+            stroke-linecap="round"
+            opacity=".32"
+            pathLength="1"
+            stroke-dasharray="1 1"
+          />
+          <circle
+            id="s1-ring"
+            cx="32"
+            cy="32"
+            r="15"
+            fill="none"
+            stroke="#f7f3ee"
+            stroke-width="1.2"
+            opacity=".55"
+            pathLength="1"
+            stroke-dasharray="1 1"
+            transform="rotate(-90 32 32)"
+          />
+          <circle
+            id="s1-glow"
+            cx="32"
+            cy="32"
+            r="14"
+            fill="#e8775a"
+            opacity="0"
+            style="filter: blur(6px)"
+          />
+          <circle id="s1-dot" cx="32" cy="32" r="10" fill="#e8775a" />
+        </svg>
+      </section>
+
+      <section class="scene" id="s2">
+        <div id="particles"></div>
+        <div id="frags"></div>
+        <p class="center night serif" id="n1">
+          Queer Lisbon is <em>everywhere.</em>
+        </p>
+        <p class="center night serif" id="n2">
+          Just never <em>in one place.</em>
+        </p>
+        <p class="center night serif" id="n3">
+          Scattered across group chats, <em>posters and word of mouth.</em>
+        </p>
+      </section>
+
+      <section class="scene" id="s3">
+        <div
+          class="orb"
+          style="
+            left: -200px;
+            top: -260px;
+            width: 900px;
+            height: 900px;
+            background: rgba(232, 119, 90, 0.16);
+          "
+        ></div>
+        <div
+          class="orb"
+          style="
+            right: -240px;
+            bottom: -320px;
+            width: 1000px;
+            height: 1000px;
+            background: rgba(74, 140, 111, 0.13);
+          "
+        ></div>
+        <svg class="mark" viewBox="0 0 64 64" id="s3-mark">
+          <g id="s3-sats"></g>
+          <circle id="s3-dot" cx="32" cy="32" r="9" fill="#e8775a" />
+        </svg>
+        <h1 class="center serif" id="turn">
+          <span class="line"><span>So we gathered it</span></span
+          ><span class="line"
+            ><span><em>in one place.</em></span></span
+          >
+        </h1>
+        <div id="s3-lock"><div class="word serif" id="s3-word"></div></div>
+        <p class="center serif slogan" id="s3-sub">
+          A queer network, <em>rooted in Lisbon.</em>
+        </p>
+      </section>
+
+      <section class="scene" id="s4">
+        <div
+          class="orb"
+          id="s4-o1"
+          style="
+            width: 1000px;
+            height: 1000px;
+            background: rgba(232, 119, 90, 0.13);
+          "
+        ></div>
+        <div class="left">
+          <div class="lab eyebrow" id="s4-lab"></div>
+          <div class="head serif" id="s4-head"></div>
+        </div>
+        <div class="progress" id="s4-progress"></div>
+        <div id="s4-vigs"></div>
+      </section>
+
+      <section class="scene" id="s5">
+        <div
+          class="orb"
+          style="
+            left: 900px;
+            top: 60px;
+            width: 900px;
+            height: 900px;
+            background: rgba(232, 119, 90, 0.12);
+          "
+        ></div>
+        <div id="net">
+          <svg id="net-lines"></svg>
+          <div id="net-nodes"></div>
+          <div id="s5-chip"></div>
+        </div>
+        <h2 class="serif">
+          <span class="line"><span>Every member</span></span
+          ><span class="line"><span>is vouched for.</span></span
+          ><span class="line"><span>So there’s always</span></span
+          ><span class="line"
+            ><span><em>someone in common.</em></span></span
+          >
+        </h2>
+      </section>
+
+      <section class="scene" id="s6">
+        <div
+          class="orb"
+          style="
+            left: 1200px;
+            top: -300px;
+            width: 900px;
+            height: 900px;
+            background: rgba(232, 119, 90, 0.12);
+          "
+        ></div>
+        <h2 class="center serif">
+          <span class="line"><span>No ads. No algorithm.</span></span
+          ><span class="line"
+            ><span>Just <em>your people.</em></span></span
+          >
+        </h2>
+        <div class="promises" id="s6-promises"></div>
+      </section>
+
+      <section class="scene" id="s7">
+        <div
+          class="orb"
+          style="
+            left: -240px;
+            top: -200px;
+            width: 900px;
+            height: 900px;
+            background: rgba(232, 119, 90, 0.12);
+          "
+        ></div>
+        <div id="map">
+          <svg id="map-svg"></svg>
+          <div id="map-hoods"></div>
+          <div id="map-people"></div>
+        </div>
+        <div class="center eyebrow">
+          <span class="live" id="s7-live"></span>Live in Lisboa
+        </div>
+        <h2 class="center serif">
+          <span class="line"
+            ><span>Find your community <em>all over the city.</em></span></span
+          >
+        </h2>
+      </section>
+
+      <section class="scene" id="s8">
+        <h2 class="center serif">
+          <span class="line"><span>Walk in where you</span></span
+          ><span class="line"
+            ><span><em>already belong.</em></span></span
+          >
+        </h2>
+        <svg class="mark" viewBox="0 0 64 64" id="s8-mark">
+          <g id="s8-ripples"></g>
+          <circle id="s8-dot" cx="32" cy="32" r="10" fill="#e8775a" />
+        </svg>
+        <div id="s8-lock"><div class="word serif" id="s8-word"></div></div>
+        <p id="tag" class="center serif slogan">
+          A queer network, <em>rooted in Lisbon.</em>
+        </p>
+        <div id="cta">
+          <span class="btn coral">Request an invite</span
+          ><span class="url">queerpulse.com</span>
+        </div>
+      </section>
+
+      <div id="vignette"></div>
+      <canvas id="grain" width="960" height="540"></canvas>
+      <div id="fade"></div>
+    </div>
+
+    <script src="./cinematic.scene.js"></script>
+  </body>
+</html>

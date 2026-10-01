@@ -1,16 +1,19 @@
 /**
- * Render the QueerPulse launch film to MP4.
+ * Render a QueerPulse marketing film to MP4 from the command line.
  *
- *   node scripts/launch-video/render.mjs [--fps 30] [--workers 3] [--from 0 --to 64.8]
+ *   node scripts/launch-video/render.mjs [--video pro] [--fps 30] [--workers 3] [--from 0 --to 48]
  *
- * Steps: serve the repo root, open scene.html in Chromium, render the score
- * (score.js) to a WAV, then step every frame through `window.seek(t)` in a few
- * parallel pages, piping PNG screenshots into one ffmpeg per page. The
- * segments are joined and muxed with the audio at the end.
+ * The films live in public/marketing-videos/ (<id>.html + <id>.scene.js +
+ * <id>.score.js), the same files the admin dashboard's Marketing videos page
+ * previews and renders in the browser. This script is the headless path.
  *
- * `--score-only` stops after writing the WAV, for working on the music.
- * `--variant pop` renders the upbeat cut (scene-pop.html + score-pop.js) to
- * out/queerpulse-launch-pop.mp4; without it, the original cut renders.
+ * Steps: serve the repo root, open the film in Chromium, render its score to a
+ * WAV, then step every frame through `window.seek(t)` in a few parallel pages,
+ * piping screenshots into one ffmpeg per page. The segments are joined and
+ * muxed with the audio at the end.
+ *
+ * `--video cinematic|upbeat|pro` picks the film (cinematic by default; the old
+ * `--variant pop|pro` names still work). `--score-only` stops after the WAV.
  *
  * Needs ffmpeg with libx264 on PATH (or FFMPEG=/path/to/ffmpeg). CHROMIUM_PATH
  * points Playwright at a specific Chromium binary when its own isn't installed.
@@ -37,9 +40,11 @@ const args = Object.fromEntries(
     ),
 );
 const FPS = Number(args.fps || 30);
-// Each cut is a scene + score pair; the original is the unnamed default.
-const VARIANT = args.variant || "";
-const SUFFIX = VARIANT ? `-${VARIANT}` : "";
+// Each film is an <id>.html + <id>.score.js pair in public/marketing-videos.
+const LEGACY = { pop: "upbeat", pro: "pro" };
+const VIDEO = args.video || LEGACY[args.variant] || "cinematic";
+const FILMS = join(ROOT, "public/marketing-videos");
+const SUFFIX = `-${VIDEO}`;
 const WORKERS = Number(args.workers || 3);
 
 const TYPES = {
@@ -67,7 +72,7 @@ const server = createServer(async (req, res) => {
   }
 });
 await new Promise((ok) => server.listen(0, "127.0.0.1", ok));
-const SCENE = `http://127.0.0.1:${server.address().port}/scripts/launch-video/scene${SUFFIX}.html`;
+const SCENE = `http://127.0.0.1:${server.address().port}/public/marketing-videos/${VIDEO}.html`;
 
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || undefined,
@@ -102,7 +107,7 @@ await mkdir(OUT, { recursive: true });
 /* ── Score ── */
 {
   const page = await openScene();
-  await page.addScriptTag({ path: join(HERE, `score${SUFFIX}.js`) });
+  await page.addScriptTag({ path: join(FILMS, `${VIDEO}.score.js`) });
   const t0 = Date.now();
   const wav = await page.evaluate(() => window.renderScore());
   await writeFile(join(OUT, `score${SUFFIX}.wav`), Buffer.from(wav, "base64"));
@@ -227,8 +232,8 @@ await writeFile(
 );
 const name =
   from === 0 && to === duration
-    ? `queerpulse-launch${SUFFIX}.mp4`
-    : `queerpulse-launch${SUFFIX}-${from}-${to}.mp4`;
+    ? `queerpulse${SUFFIX}.mp4`
+    : `queerpulse${SUFFIX}-${from}-${to}.mp4`;
 await run(FFMPEG, [
   "-y",
   "-loglevel",

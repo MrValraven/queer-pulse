@@ -18,6 +18,10 @@ import { createAvatar } from "@dicebear/core";
 import { micah } from "@dicebear/collection";
 
 const DIR = fileURLToPath(new URL(".", import.meta.url));
+// The SVGs are served with the films from public/marketing-videos/avatars.
+const OUT = fileURLToPath(
+  new URL("../../../public/marketing-videos/avatars/", import.meta.url),
+);
 const { people } = JSON.parse(readFileSync(`${DIR}cast.json`, "utf8"));
 // Line colour that stays visible on the deepest skin tones.
 const DEEP = ["4a2617", "6b3a24", "8d5438"];
@@ -51,6 +55,6 @@ for (const p of people) {
     mouthColor: ["1f1a1c"],
     eyesColor: ["1f1a1c"],
   }).toString();
-  writeFileSync(`${DIR}${p.id}.svg`, svg);
+  writeFileSync(`${OUT}${p.id}.svg`, svg);
 }
 console.log(`drew ${people.length} avatars`);

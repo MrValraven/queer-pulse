@@ -3,11 +3,11 @@
  *
  * Synthesised from scratch with an OfflineAudioContext, so the film has no
  * licensed music to clear and the soundtrack is cut to the picture by
- * construction: the same cue times scene.html animates to (window.CUES) are
+ * construction: the same cue times cinematic.html animates to (window.CUES) are
  * where the notes fall. 100 BPM, F major, with a D-minor opening while the
  * film is still on the lonely part of the story.
  *
- * Loaded into scene.html by render.mjs; `window.renderScore()` resolves to a
+ * Loaded into cinematic.html by render.mjs and the admin renderer; `window.renderScore()` resolves to a
  * base64 16-bit stereo WAV.
  */
 (function () {
@@ -348,7 +348,7 @@
       g.connect(verb);
     }
 
-    /* ── Arrangement ── (bar numbers match the scene starts in scene.html) */
+    /* ── Arrangement ── (bar numbers match the scene starts in cinematic.html) */
     const kicks = [];
     const K = (t, v) => {
       kick(t, v);

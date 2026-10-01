@@ -5,9 +5,9 @@
  * four-on-the-floor, off-beat bass, a filtered sixteenth arpeggio, and
  * interface sound design on top: a click on every line of type, air on every
  * camera move, a glass note on every card close-up, person and pin listed in
- * scene-pro.html's window.CUES. The synth voices are the same as score.js.
+ * pro.html's window.CUES. The synth voices are the same as cinematic.score.js.
  *
- * Loaded into scene-pro.html by render.mjs (--variant pro);
+ * Loaded into pro.html by render.mjs (--video pro) and the admin renderer;
  * `window.renderScore()` resolves to a base64 16-bit stereo WAV.
  */
 (function () {
@@ -335,7 +335,7 @@
       g.connect(verb);
     }
 
-    /* ── Arrangement ── (bar numbers match the scene starts in scene-pro.html) */
+    /* ── Arrangement ── (bar numbers match the scene starts in pro.html) */
     const kicks = [];
     const K = (t, v = 0.9) => {
       kick(t, v, 42, 125, 0.38);
