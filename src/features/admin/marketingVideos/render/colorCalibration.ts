@@ -23,7 +23,7 @@ export const CALIBRATION_PATCHES = [
 const CANDIDATE_MATRICES: VideoMatrixCoefficients[] = [
   "bt709",
   "smpte170m",
-  "bt2020-ncl",
+  "bt470bg",
 ];
 
 /** "rgb(232, 119, 90)" (getComputedStyle's form) to [232, 119, 90]. */
