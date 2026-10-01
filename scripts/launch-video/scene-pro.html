@@ -1454,10 +1454,13 @@
       ];
       const GX = 840,
         GY = 720;
-      const cardAt = (i) => ({
-        cx: (i % 3) * GX + 380,
-        cy: Math.floor(i / 3) * GY + 320,
-      });
+      // A snake: 0 1 2 along the top, 3 4 5 back along the bottom, so every
+      // camera move goes to a neighbouring card.
+      const cardAt = (i) => {
+        const row = Math.floor(i / 3),
+          col = row ? 2 - (i % 3) : i % 3;
+        return { cx: col * GX + 380, cy: row * GY + 320 };
+      };
       const cards = FEATS.map(([label, l1, l2], i) => {
         const node = el("div", "bc", $("#board"), VIG[i]());
         const { cx, cy } = cardAt(i);
@@ -1505,6 +1508,7 @@
         rx: 30,
         ry: 0,
         rz: -10,
+        w: 1, // how much the shot shows the whole board, separate from zoom
       };
       const FAR = { ...WIDE, s: 0.4, rx: 40, rz: -15, sy: 610 };
       const LAST = { ...WIDE, sy: 660, s: 0.46, rx: 34 };
@@ -1516,6 +1520,7 @@
         rx: 2,
         ry: -8,
         rz: 0,
+        w: 0,
       });
       const mix = (a, b, p) => {
         const o = {};
@@ -1525,8 +1530,8 @@
       const MOVES = [[13.5, 14.3, WIDE, FOCUS(0), false]];
       for (let i = 1; i < 6; i++)
         MOVES.push([
-          14 + i * BAR - 0.45,
-          14 + i * BAR + 0.35,
+          14 + i * BAR - 0.55,
+          14 + i * BAR + 0.45,
           FOCUS(i - 1),
           FOCUS(i),
           true,
@@ -1556,12 +1561,16 @@
         const b = $("#board");
         b.style.transformOrigin = `${c.cx}px ${c.cy}px`;
         b.style.transform = `translate(${c.sx - c.cx}px, ${c.sy - c.cy}px) rotateX(${c.rx}deg) rotateY(${c.ry}deg) rotateZ(${c.rz}deg) scale(${c.s})`;
-        const wide = clamp((1 - c.s) / 0.36);
+        // Brightness follows the shot, not the zoom: the dip in the middle of a
+        // move must not light the whole board up (that read as a flash).
+        const wide = c.w;
         $("#scrim").style.opacity = 1 - wide;
         $("#cam").style.opacity = 1 - eIn(prog(t, 27.55, 28.0));
         cards.forEach((k, i) => {
           const d = Math.hypot(c.cx - k.cx, c.cy - k.cy) / GX;
-          const op = lerp(0.06, 1, Math.max(wide, clamp(1 - d * 1.5)));
+          // Neighbours are a card apart (d = 1): the card you leave and the card
+          // you reach cross-fade through the move instead of both going dark.
+          const op = lerp(0.06, 1, Math.max(wide, clamp(1 - d * 1.1)));
           const enter = eOut5(prog(t, 12.05 + i * 0.1, 12.95 + i * 0.1));
           k.node.style.opacity = op * enter;
           k.node.style.transform = `translateY(${(1 - enter) * 120}px)`;
@@ -1575,7 +1584,7 @@
               : `translateY(${(1 - p) * 18}px)`;
           });
           // Headline and label for the card in focus.
-          const out = i === 5 ? 25.4 : k.focus + BAR - 0.5;
+          const out = i === 5 ? 25.4 : k.focus + BAR - 0.65;
           type(k.words, t, k.focus + 0.05, out, 0.06, 0.8);
         });
         const cur = clamp(Math.floor((t - 13.9) / BAR), 0, 5);
@@ -1587,7 +1596,7 @@
         const ebOut =
           cur === 5
             ? eIn(prog(t, 25.3, 25.6))
-            : eIn(prog(t, cards[cur].focus + 1.5, cards[cur].focus + 1.85));
+            : eIn(prog(t, cards[cur].focus + 1.35, cards[cur].focus + 1.7));
         eb.style.opacity = t < 13.9 ? 0 : ebIn * (1 - ebOut);
         eb.style.transform = `translateY(${(1 - ebIn) * 12}px)`;
         type(boardAll, t, 26.35, 27.5, 0.06, 0.9);
@@ -2029,6 +2038,7 @@
         return { duration: DURATION };
       };
       window.DURATION = DURATION;
+      window.SHUTTER = 4; // render.mjs averages 4 sub-frames: motion blur for the camera
       window.CAPTURE = "jpeg"; // grain and glows make PNG frames slow to encode
 
       const q = new URLSearchParams(location.search);

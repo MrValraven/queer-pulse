@@ -35,6 +35,12 @@ Playwright's own Chromium isn't installed, point `CHROMIUM_PATH` at one.
 render a slice, `--workers 4` to use more cores, `--score-only` to write just
 `out/score.wav` (`out/score-<variant>.wav` with `--variant`). A full 30 fps render takes about 10 minutes on 4 cores.
 
+A scene can also set two render hints. `window.CAPTURE = "jpeg"` captures
+frames as JPEG, much faster for scenes full of grain or soft gradients.
+`window.SHUTTER = 4` renders four sub-frames across half of each frame and
+averages them: motion blur, so fast camera moves smear like film instead of
+strobing. The pro cut uses both; its full render takes about 16 minutes.
+
 ## Work on it
 
 Open `scene.html` through any static server rooted at the repo (it loads its

@@ -123,6 +123,22 @@ const duration = await probe.evaluate(() => window.DURATION);
 const capture = await probe.evaluate(() => window.CAPTURE || "png");
 const shot =
   capture === "jpeg" ? { type: "jpeg", quality: 95 } : { type: "png" };
+// Motion blur: a scene with fast camera moves can ask for several sub-frames
+// per frame. They are spread over half a frame (a 180° shutter) and ffmpeg
+// averages them, so a whip pan smears like film instead of strobing.
+const shutter = Math.max(
+  1,
+  Math.round(await probe.evaluate(() => window.SHUTTER || 1)),
+);
+const blur =
+  shutter > 1
+    ? [
+        "-vf",
+        `tmix=frames=${shutter},select=not(mod(n+1\\,${shutter})),setpts=N/(${FPS}*TB)`,
+        "-r",
+        String(FPS),
+      ]
+    : [];
 await probe.close();
 const from = Number(args.from || 0);
 const to = Math.min(Number(args.to || duration), duration);
@@ -147,11 +163,12 @@ const segments = await Promise.all(
         "-f",
         "image2pipe",
         "-framerate",
-        String(FPS),
+        String(FPS * shutter),
         "-c:v",
         capture === "jpeg" ? "mjpeg" : "png",
         "-i",
         "-",
+        ...blur,
         "-c:v",
         "libx264",
         "-preset",
@@ -174,10 +191,14 @@ const segments = await Promise.all(
     );
     const page = await openScene();
     for (let f = a; f < b; f++) {
-      await page.evaluate((t) => window.seek(t), f / FPS);
-      const frame = await page.screenshot(shot);
-      if (!child.stdin.write(frame))
-        await new Promise((ok) => child.stdin.once("drain", ok));
+      for (let k = 0; k < shutter; k++) {
+        const off = shutter > 1 ? ((k + 0.5) / shutter - 0.5) * 0.5 : 0;
+        const t = Math.max(0, (f + off) / FPS);
+        await page.evaluate((t) => window.seek(t), t);
+        const frame = await page.screenshot(shot);
+        if (!child.stdin.write(frame))
+          await new Promise((ok) => child.stdin.once("drain", ok));
+      }
       rendered++;
       if (rendered % 60 === 0) {
         const rate = rendered / ((Date.now() - started) / 1000);
