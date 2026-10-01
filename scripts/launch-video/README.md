@@ -1,13 +1,17 @@
 # QueerPulse launch film
 
-Two cuts of the launch film, built as code:
+Three cuts of the launch film, built as code:
 
 - **Cinematic** (`scene.html` + `score.js`): 65 seconds at 100 BPM, slow and
   warm. The rest of this README describes it unless it says otherwise.
 - **Upbeat** (`scene-pop.html` + `score-pop.js`): 48 seconds at 120 BPM. Bold
   caps with one italic line, a colour field per feature, sticker pills,
   outlined marquee words and two confetti drops on the name. Same cast, cards
-  and promises, so both cuts say the same things.
+  and promises, so every cut says the same things.
+- **Pro** (`scene-pro.html` + `score-pro.js`): 48 seconds at 120 BPM, filmed
+  like a product launch. A dark stage with a hairline grid and grain, type
+  that rises line by line out of a mask, one camera flying across a board of
+  all six cards, a dot-matrix Lisbon, and deep house with interface sound.
 
 The cinematic cut is a 65-second 1080p launch film. The picture is an HTML
 composition (`scene.html`), the music is synthesised (`score.js`), and both
@@ -21,6 +25,7 @@ avatar (`avatars/`).
 ```sh
 node scripts/launch-video/render.mjs                 # → out/queerpulse-launch.mp4
 node scripts/launch-video/render.mjs --variant pop   # → out/queerpulse-launch-pop.mp4
+node scripts/launch-video/render.mjs --variant pro   # → out/queerpulse-launch-pro.mp4
 ```
 
 Needs `ffmpeg` with libx264 on `PATH` (or `FFMPEG=/path/to/ffmpeg`). If
@@ -28,7 +33,7 @@ Playwright's own Chromium isn't installed, point `CHROMIUM_PATH` at one.
 
 `render.mjs` options: `--fps 60` for a smoother master, `--from 19 --to 34` to
 render a slice, `--workers 4` to use more cores, `--score-only` to write just
-`out/score.wav` (`out/score-pop.wav` with `--variant pop`). A full 30 fps render takes about 10 minutes on 4 cores.
+`out/score.wav` (`out/score-<variant>.wav` with `--variant`). A full 30 fps render takes about 10 minutes on 4 cores.
 
 ## Work on it
 
@@ -73,6 +78,27 @@ bar or two). `scene-pop.html?t=9` and `?play` work the same way.
 | 0:32 | Lisbon  | _Find your community all over the city._ Neighbourhood stickers         |
 | 0:36 | Belong  | _Walk in where you already belong._                                     |
 | 0:40 | Invite  | The second drop: name, slogan, invite and the illustration credit       |
+
+## The pro cut
+
+`scene-pro.html?t=14` and `?play` work the same way.
+
+| Time | Scene   | On screen                                                                          |
+| ---- | ------- | ---------------------------------------------------------------------------------- |
+| 0:00 | Open    | _Queer Lisbon is everywhere. Just never in one place._ Glass chips drift           |
+| 0:06 | Gather  | _So we gathered it in one place._ The chips collapse into one point                |
+| 0:08 | Name    | The point opens into a ring; the name tracks in with its slogan                    |
+| 0:12 | Board   | All six cards on one tilted board, then the camera flies to each in turn           |
+| 0:26 | All     | _All of it, in one place._ The camera pulls back to the whole board                |
+| 0:28 | Network | _Everyone here is vouched for._ A vouch tree in orbit                              |
+| 0:32 | Promise | _No ads._ rolls to _No algorithm._, then _Just your people._ and the five promises |
+| 0:36 | Lisbon  | _Find your community all over the city._ A dot map with real positions             |
+| 0:40 | Belong  | _Walk in where you already belong._                                                |
+| 0:42 | Invite  | The name, the slogan, the invite and the illustration credit                       |
+
+The map is stylised on purpose: the riverfront and the neighbourhood pins
+use real coordinates, but there are no streets. A street map needs
+OpenStreetMap data, which this environment couldn't reach.
 
 ## The cast
 
