@@ -118,6 +118,11 @@ if ("score-only" in args) {
 /* ── Picture ── */
 const probe = await openScene();
 const duration = await probe.evaluate(() => window.DURATION);
+// A scene full of grain or soft gradients can ask for JPEG frames: PNG
+// encoding of noise is what makes such a render crawl.
+const capture = await probe.evaluate(() => window.CAPTURE || "png");
+const shot =
+  capture === "jpeg" ? { type: "jpeg", quality: 95 } : { type: "png" };
 await probe.close();
 const from = Number(args.from || 0);
 const to = Math.min(Number(args.to || duration), duration);
@@ -144,7 +149,7 @@ const segments = await Promise.all(
         "-framerate",
         String(FPS),
         "-c:v",
-        "png",
+        capture === "jpeg" ? "mjpeg" : "png",
         "-i",
         "-",
         "-c:v",
@@ -170,8 +175,8 @@ const segments = await Promise.all(
     const page = await openScene();
     for (let f = a; f < b; f++) {
       await page.evaluate((t) => window.seek(t), f / FPS);
-      const png = await page.screenshot({ type: "png" });
-      if (!child.stdin.write(png))
+      const frame = await page.screenshot(shot);
+      if (!child.stdin.write(frame))
         await new Promise((ok) => child.stdin.once("drain", ok));
       rendered++;
       if (rendered % 60 === 0) {

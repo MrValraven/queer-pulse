@@ -2030,6 +2030,7 @@
         return { duration: DURATION };
       };
       window.DURATION = DURATION;
+      window.CAPTURE = "jpeg"; // grain and glows make PNG frames slow to encode
 
       const q = new URLSearchParams(location.search);
       window.ready().then(() => {
