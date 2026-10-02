@@ -256,33 +256,49 @@ describe("useForwardGroupSearch in live mode", () => {
   });
 
   it("aborts the request of a term the member typed past", async () => {
+    // The shared setup strips `signal` before MSW sees a request (the
+    // jsdom/Node AbortSignal realm mismatch, `src/test/setup.ts`), so a
+    // handler's `request.signal` never fires. The signal is read one layer
+    // up instead, where `client.ts` hands it to `fetch`.
     const superseded: { signal: AbortSignal | null } = { signal: null };
-    server.use(
-      http.get(`${API_V1}/conversations`, async ({ request }) => {
-        const term = new URL(request.url).searchParams.get("q");
-        if (term === "lis") {
-          superseded.signal = request.signal;
-          await new Promise<void>((resolve) =>
-            request.signal.addEventListener("abort", () => resolve()),
-          );
-        }
-        return HttpResponse.json({
-          data: [],
-          pageInfo: { nextCursor: null, hasMore: false },
-        });
-      }),
-    );
-    const { useForwardGroupSearch: useLive, wrapper } = await loadLive();
+    const strippingFetch = globalThis.fetch;
+    globalThis.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = new URL(input instanceof Request ? input.url : String(input));
+      if (url.searchParams.get("q") === "lis" && init?.signal) {
+        superseded.signal = init.signal;
+      }
+      return strippingFetch(input, init);
+    };
+    try {
+      server.use(
+        http.get(`${API_V1}/conversations`, async ({ request }) => {
+          const term = new URL(request.url).searchParams.get("q");
+          if (term === "lis") {
+            // Held open until the hook gives up on it.
+            await new Promise<void>((resolve) =>
+              superseded.signal?.addEventListener("abort", () => resolve()),
+            );
+          }
+          return HttpResponse.json({
+            data: [],
+            pageInfo: { nextCursor: null, hasMore: false },
+          });
+        }),
+      );
+      const { useForwardGroupSearch: useLive, wrapper } = await loadLive();
 
-    const { rerender } = renderHook(
-      ({ query }: { query: string }) =>
-        useLive(query, LOADED_GROUPS, PERSONAL_SCOPE),
-      { wrapper, initialProps: { query: "lis" } },
-    );
-    await waitFor(() => expect(superseded.signal).not.toBeNull());
+      const { rerender } = renderHook(
+        ({ query }: { query: string }) =>
+          useLive(query, LOADED_GROUPS, PERSONAL_SCOPE),
+        { wrapper, initialProps: { query: "lis" } },
+      );
+      await waitFor(() => expect(superseded.signal).not.toBeNull());
 
-    rerender({ query: "lisboa" });
+      rerender({ query: "lisboa" });
 
-    await waitFor(() => expect(superseded.signal?.aborted).toBe(true));
+      await waitFor(() => expect(superseded.signal?.aborted).toBe(true));
+    } finally {
+      globalThis.fetch = strippingFetch;
+    }
   });
 });

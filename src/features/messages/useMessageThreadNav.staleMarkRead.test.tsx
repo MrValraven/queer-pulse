@@ -299,6 +299,10 @@ describe("openThread: a stale cached thread tail never sends a stale read waterm
   it("still sends the read POST when the cached tail already covers the list row's own updatedAt", async () => {
     registerSessionHandlers();
     const readCalls: { conversationId: string; body: unknown }[] = [];
+    // B starts read so the first open only seeds its thread cache (an
+    // already-read thread posts nothing), then turns unread at the SAME
+    // `updatedAt` its cached tail already covers.
+    let isThreadBUnread = false;
 
     server.use(
       http.get(`${API_V1}/conversations`, () =>
@@ -307,7 +311,7 @@ describe("openThread: a stale cached thread tail never sends a stale read waterm
             conversationRow(THREAD_A, { title: "Thread A" }),
             conversationRow(THREAD_B, {
               title: "Thread B",
-              unreadCount: 1,
+              unreadCount: isThreadBUnread ? 1 : 0,
               updatedAt: "2026-09-14T10:00:00Z",
             }),
           ],
@@ -349,6 +353,23 @@ describe("openThread: a stale cached thread tail never sends a stale read waterm
     const { result } = renderHook(() => useMessagesController(), { wrapper });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
+    act(() => result.current.openThread(THREAD_B));
+    await waitFor(() =>
+      expect(result.current.messageGroups.flatMap((g) => g.items)).toHaveLength(
+        1,
+      ),
+    );
+    act(() => result.current.openThread(THREAD_A));
+    await waitFor(() => expect(result.current.active?.id).toBe(THREAD_A));
+
+    isThreadBUnread = true;
+    act(() => result.current.refetchInbox());
+    await waitFor(() =>
+      expect(
+        result.current.visibleThreads.find((t) => t.id === THREAD_B)?.unread,
+      ).toBe(true),
+    );
+
     act(() => result.current.openThread(THREAD_B));
     await waitFor(() => expect(result.current.active?.id).toBe(THREAD_B));
 

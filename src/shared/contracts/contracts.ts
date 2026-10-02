@@ -141,8 +141,11 @@ export interface AuthorSummary {
 
 /** The kind of identity a message can be sent as, and a mailbox belongs to:
  *  the member's own profile, a persona (`subprofile`), a directory listing,
- *  or a company. */
-export type IdentityKind = "profile" | "subprofile" | "listing" | "company";
+ *  a company, or `official`: the one platform-wide QueerPulse Team identity
+ *  whose mailbox holds every member's official thread, answered by the staff
+ *  `GET /identities/mailboxes` lists it for. */
+export type IdentityKind =
+  "profile" | "subprofile" | "listing" | "company" | "official";
 
 export interface CommunityPostResponse {
   id: string;
@@ -553,6 +556,11 @@ export interface ConversationResponse {
    *  to account erasure and renders as a former member. Absent on an older
    *  response, where a null counterpart still means official. */
   isOfficial?: boolean;
+  /** OFFICIAL only, from the member's side: whether the member may reply in
+   *  their official thread, which the QueerPulse Team mailbox's staff then
+   *  read and answer. Absent from an older server, or false, keeps the thread
+   *  read-only, so the composer never offers a send the server refuses. */
+  isOfficialReplyOpen?: boolean;
   /** ISO timestamp the caller and a DM's counterpart became accepted
    *  connections (DES-225). Null for groups, official threads and a DM
    *  between members who aren't connected; absent on an older response. */
@@ -646,8 +654,11 @@ export interface ConversationResponse {
   /** Business mailboxes: the business, persona or company identity this
    *  thread belongs to, the mailbox the claim routes act on. Present for a
    *  direct, non-official thread with a business side, for staff and
-   *  customer alike; absent on a member-to-member DM, a group and an
-   *  official thread. */
+   *  customer alike; absent on a member-to-member DM and a group. An
+   *  official thread carries it only on the staff side, read from the
+   *  QueerPulse Team mailbox (`?as=` its `official` identity), where the
+   *  member is `otherParticipant`; the member's own view never carries it,
+   *  so the thread stays in their personal inbox even when they are staff. */
   mailboxIdentityId?: string;
   /** STAFF ONLY: the staff member holding this thread, as their own profile
    *  summary. Null while unclaimed, and always null for a customer. Absent

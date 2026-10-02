@@ -65,6 +65,13 @@ vi.mock("../../marketing/api/useDirectory", () => ({
   }),
 }));
 
+// A recipient row carries the member's ambassador tag, which reads the demo
+// mode, auth and staff-roster contexts this suite doesn't mount. No fixture
+// recipient is an ambassador, so the tag renders nothing here anyway.
+vi.mock("../../../shared/ambassadors/MemberAmbassadorTag", () => ({
+  MemberAmbassadorTag: () => null,
+}));
+
 const FAKE_CATALOG: Record<string, string> = {
   "messages:share.modalTitle": "Send in a message",
   "messages:share.searchPlaceholder": "Search conversations",
@@ -207,9 +214,13 @@ describe("ShareToChatModal", () => {
     );
 
     for (let index = 0; index < 5; index += 1) {
-      await user.click(screen.getByRole("option", { name: `Member ${index}` }));
+      // A row's name also carries its initials and pronouns, so match on the
+      // member's name the way the other cases here do.
+      await user.click(
+        screen.getByRole("option", { name: new RegExp(`Member ${index}\\b`) }),
+      );
     }
-    expect(screen.getByRole("option", { name: "Member 5" })).toBeDisabled();
+    expect(screen.getByRole("option", { name: /Member 5\b/ })).toBeDisabled();
   });
 
   it("names which conversation failed on a partial send", async () => {

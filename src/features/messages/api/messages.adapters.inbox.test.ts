@@ -13,6 +13,7 @@ import {
   groupMessages,
   previewForMessage,
 } from "./messages.adapters";
+import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
 
 // Coverage for the inbox/conversation adapters NOT already covered by
 // `messages.adapters.test.ts` (which owns `clockLabel`/`timeLabel`/the
@@ -74,6 +75,43 @@ describe("conversationToView: official thread (no counterpart)", () => {
     expect(view.official).toBe(true);
     expect(view.initials).toBe("QP");
     expect(view.name).toBe(fakeT("messages:conversation.officialName"));
+  });
+
+  it("wears the app icon as the QueerPulse Team avatar", () => {
+    const view = conversationToView(
+      conversation({ otherParticipant: null, otherParticipantId: null }),
+      fakeT,
+    );
+    expect(view.avatarUrl).toBe(OFFICIAL_AVATAR_URL);
+  });
+
+  it("stays read-only until the server opens it to replies", () => {
+    const official = { otherParticipant: null, otherParticipantId: null };
+    expect(
+      conversationToView(conversation(official), fakeT).isOfficialReplyOpen,
+    ).toBe(false);
+    expect(
+      conversationToView(
+        conversation({ ...official, isOfficialReplyOpen: true }),
+        fakeT,
+      ).isOfficialReplyOpen,
+    ).toBe(true);
+  });
+
+  it("reads as an ordinary mailbox thread from the QueerPulse Team mailbox", () => {
+    const view = conversationToView(
+      conversation({
+        isOfficial: true,
+        isOfficialReplyOpen: true,
+        mailboxIdentityId: "identity-queerpulse-team",
+        otherParticipant: author({ displayName: "Inês Pinheiro" }),
+      }),
+      fakeT,
+    );
+    expect(view.official).toBe(false);
+    expect(view.isOfficialReplyOpen).toBe(false);
+    expect(view.name).toBe("Inês Pinheiro");
+    expect(view.mailboxIdentityId).toBe("identity-queerpulse-team");
   });
 });
 

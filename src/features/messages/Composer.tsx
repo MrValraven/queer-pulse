@@ -216,7 +216,9 @@ export function Composer({
   const isBlocked = isComposerBlocked(active, blocked);
   const composerPlaceholder = active.isGroup
     ? t("messages:conversation.composerGroupPlaceholder")
-    : t("messages:conversation.composerPlaceholder", { name: firstName });
+    : active.official
+      ? t("messages:conversation.composerOfficialPlaceholder")
+      : t("messages:conversation.composerPlaceholder", { name: firstName });
 
   return isBlocked ? (
     <ComposerBlockedState

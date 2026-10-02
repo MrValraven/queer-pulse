@@ -10,7 +10,12 @@ import { useCachedMailboxAttribution } from "../api/useMailboxAttribution";
 import { useMailboxes } from "../api/useMailboxes";
 import type { Conversation } from "../data";
 import { useMessageViewer } from "../useMessageViewer";
-import { isMemberNamedToCustomers, memberFirstNameOf } from "./mailboxLabels";
+import {
+  isMemberNamedToCustomers,
+  mailboxAvatarUrl,
+  mailboxInitials,
+  memberFirstNameOf,
+} from "./mailboxLabels";
 import styles from "./ComposerMailboxBar.module.css";
 
 interface TakeOverConfirmDialogProps {
@@ -81,6 +86,8 @@ export function ComposerMailboxBar({ active }: { active: Conversation }) {
     (candidate) => candidate.identityId === active.mailboxSeatIdentityId,
   );
   const mailboxName = mailbox?.displayName ?? t("messages:mailbox.untitled");
+  // The QueerPulse Team answers members, not customers.
+  const isOfficialMailbox = mailbox?.kind === "official";
   const memberFirstName = memberFirstNameOf(mailboxes);
   const namedFirstName =
     mailbox && isMemberNamedToCustomers(mailbox, cachedAttribution)
@@ -110,8 +117,12 @@ export function ComposerMailboxBar({ active }: { active: Conversation }) {
     <div className={styles.bar}>
       <span className={styles.chip}>
         <Avatar
-          initials={initialsFromName(mailboxName)}
-          src={mailbox?.avatarUrl ?? undefined}
+          initials={
+            isOfficialMailbox
+              ? mailboxInitials(mailboxName, "official")
+              : initialsFromName(mailboxName)
+          }
+          src={mailbox ? mailboxAvatarUrl(mailbox) : undefined}
           size={20}
           tint="plum"
         />
@@ -120,9 +131,12 @@ export function ComposerMailboxBar({ active }: { active: Conversation }) {
         </span>
         {namedFirstName && (
           <span className={styles.chipNaming}>
-            {t("messages:mailbox.composer.customersSee", {
-              firstName: namedFirstName,
-            })}
+            {t(
+              isOfficialMailbox
+                ? "messages:mailbox.composer.membersSee"
+                : "messages:mailbox.composer.customersSee",
+              { firstName: namedFirstName },
+            )}
           </span>
         )}
       </span>

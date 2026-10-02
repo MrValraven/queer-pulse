@@ -6471,6 +6471,9 @@ export const admin: Catalog = {
   "officialMessages.title": "Mensagens oficiais",
   "officialMessages.subtitle":
     "Fala como QueerPulse, na conversa oficial de cada membro. Só para admins.",
+  // Só aparece quando as caixas deste membro da equipa incluem a da Equipa
+  // QueerPulse, onde chegam as respostas dos membros às mensagens oficiais.
+  "officialMessages.openInbox": "Abrir a caixa da equipa",
   "officialMessages.member.title": "Enviar mensagem a um membro",
   "officialMessages.member.subtitle":
     "Chega à conversa oficial da QueerPulse, fixada no topo da caixa de entrada. Não é enviada nenhuma notificação para o telemóvel.",

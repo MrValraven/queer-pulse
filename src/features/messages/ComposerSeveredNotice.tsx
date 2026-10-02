@@ -1,6 +1,7 @@
 // src/features/messages/ComposerSeveredNotice.tsx
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Conversation } from "./data";
+import { isOfficialReadOnly } from "./isComposerBlocked";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerSeveredNoticeProps {
@@ -10,7 +11,7 @@ interface ComposerSeveredNoticeProps {
 }
 
 /**
- * The composer's severed-to-a-notice-bar states: an official thread, a
+ * The composer's severed-to-a-notice-bar states: a read-only official thread, a
  * blocked counterpart, or a group the member is no longer active in (read
  * access stays, but the server also rejects a post from a non-active
  * member), split out of `Composer` to keep it under the line cap. Rendered
@@ -25,7 +26,7 @@ export function ComposerSeveredNotice({
   firstName,
 }: ComposerSeveredNoticeProps) {
   const { t } = useTranslation();
-  if (active.official) {
+  if (isOfficialReadOnly(active)) {
     return (
       <div className={styles.officialBar}>
         {t("messages:conversation.officialNotice")}

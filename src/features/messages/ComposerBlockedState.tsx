@@ -5,6 +5,7 @@ import { useMailboxes } from "./api/useMailboxes";
 import { ComposerConnectionNotice } from "./ComposerConnectionNotice";
 import { ComposerSeveredNotice } from "./ComposerSeveredNotice";
 import type { Conversation } from "./data";
+import { isOfficialReadOnly } from "./isComposerBlocked";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerBlockedStateProps {
@@ -39,7 +40,8 @@ interface ComposerBlockedStateProps {
  *      this thread could ever complete).
  *   1b. A business mailbox moderation removed (`isMailboxReadOnly`): its
  *      threads stay readable, and nothing can be sent as it.
- *   2. Official thread, blocked counterpart, or a group the member has left:
+ *   2. A read-only official thread (one the server has not opened to
+ *      replies), a blocked counterpart, or a group the member has left:
  *      `ComposerSeveredNotice` says which.
  *   3. PRD-220: a cold enquiry (housing/flatmate, etc.) opened this DM
  *      between two members who aren't accepted connections yet, so the
@@ -84,7 +86,11 @@ export function ComposerBlockedState({
       </div>
     );
   }
-  if (active.official || blocked || (active.isGroup && active.hasLeft)) {
+  if (
+    isOfficialReadOnly(active) ||
+    blocked ||
+    (active.isGroup && active.hasLeft)
+  ) {
     return (
       <div className={styles.composer}>
         {pendingStrip}

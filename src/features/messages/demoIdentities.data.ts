@@ -3,6 +3,7 @@ import type {
   IdentityKind,
 } from "../../shared/contracts/contracts";
 import type { MailboxSummary } from "../../shared/api/mailboxViewer";
+import { OFFICIAL_AVATAR_URL } from "./officialAvatar";
 
 /** Demo identity ids. Readable on purpose: they appear in `?as=` URLs. */
 export const DEMO_IDENTITY = {
@@ -11,6 +12,7 @@ export const DEMO_IDENTITY = {
   atelierPulso: "demo-identity-atelier-pulso",
   estudioNorte: "demo-identity-estudio-norte",
   livrariaAurora: "demo-identity-livraria-aurora",
+  queerPulseTeam: "demo-identity-queerpulse-team",
 } as const;
 
 interface DemoIdentityEntry {
@@ -40,6 +42,11 @@ const DEMO_IDENTITY_DIRECTORY: Record<string, DemoIdentityEntry> = {
     kind: "listing",
     displayName: "Livraria Aurora",
     handle: "livraria-aurora",
+  },
+  [DEMO_IDENTITY.queerPulseTeam]: {
+    kind: "official",
+    displayName: "QueerPulse Team",
+    handle: "queerpulse",
   },
 };
 
@@ -101,12 +108,29 @@ export const DEMO_MAILBOX_SUMMARIES: MailboxSummary[] = [
     shouldAllowMyName: true,
     staffNamesLockedReason: null,
   },
+  // The QueerPulse Team mailbox: members' replies to their official thread,
+  // answered by staff. The demo viewer is a maintainer, so they staff it.
+  // Last, so the fixtures that index the business mailboxes keep their slots.
+  {
+    identityId: DEMO_IDENTITY.queerPulseTeam,
+    kind: "official",
+    displayName: "QueerPulse Team",
+    handle: "queerpulse",
+    avatarUrl: null,
+    unreadCount: 0,
+    isOwner: false,
+    isReadOnly: false,
+    shouldShowStaffNames: true,
+    shouldAllowMyName: true,
+    staffNamesLockedReason: null,
+  },
 ];
 
 export const DEMO_STAFFED_IDENTITY_IDS: ReadonlySet<string> = new Set([
   DEMO_IDENTITY.cafeLisboa,
   DEMO_IDENTITY.atelierPulso,
   DEMO_IDENTITY.estudioNorte,
+  DEMO_IDENTITY.queerPulseTeam,
 ]);
 
 /** The sender a demo message sent AS an identity renders under, in the
@@ -128,7 +152,7 @@ export function demoIdentityAuthor(
   return {
     handle: entry.handle,
     displayName: entry.displayName,
-    avatarUrl: null,
+    avatarUrl: entry.kind === "official" ? OFFICIAL_AVATAR_URL : null,
     identityId,
     identityKind: entry.kind,
     ...(staffFirstName ? { staffFirstName } : {}),

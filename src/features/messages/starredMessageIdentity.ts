@@ -3,6 +3,7 @@ import { initialsOf, tintForSlug } from "../../shared/api/refs";
 import type { TFunction } from "../../shared/i18n/types";
 import type { MessageSearchConversationGroup } from "../../shared/contracts/contracts";
 import { groupInitials } from "./api/messages.adapters";
+import { OFFICIAL_AVATAR_URL } from "./officialAvatar";
 
 /** Identity for a starred hit's conversation: a group (its own name/avatar),
  *  an official thread (the org identity), a DM counterpart, or a DM whose
@@ -45,6 +46,7 @@ export function groupIdentity(
       // The brand mark for the official thread; nothing for a former member,
       // whose label names a state, so there are no initials to take.
       initials: isOfficial ? "QP" : "",
+      avatarUrl: isOfficial ? OFFICIAL_AVATAR_URL : undefined,
       tint: "plum" as const,
     };
   }
