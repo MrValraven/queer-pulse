@@ -9,10 +9,9 @@
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
     "2 Oct 2026": {
-      // Twenty entries this day, so three highlights. The Online tab and the
-      // who-runs-it tags change the directory every member uses. The third is
-      // what admins can now see of an unfinished listing draft: it is about
-      // members' own data, so it sits up front rather than in the list.
+      // Nineteen entries this day, so three highlights. The Online tab and the
+      // who-runs-it tags change the directory every member uses; podcast feed
+      // import is the largest new tool for creators.
       // The who-runs-it tags, podcast import and the new persona kinds went
       // live late on 30 Sep, after that day's notes (v1.52.1) were written.
       // They are listed here, each saying so in its details, so 30 Sep keeps
@@ -21,7 +20,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
       highlights: [
         "directory-online-tab",
         "who-owns-and-runs-it-tags",
-        "admins-see-unfinished-listing-drafts",
+        "podcast-feed-import",
       ],
     },
     "30 Sep 2026": {

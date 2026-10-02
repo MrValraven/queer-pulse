@@ -89,13 +89,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("online-only-businesses-no-blank-location"),
       },
       {
-        id: "admins-see-unfinished-listing-drafts",
-        category: "feature",
-        date: "2 Oct 2026",
-        ...entryKeys("admins-see-unfinished-listing-drafts"),
-        hasDetails: true,
-      },
-      {
         id: "item-editor-drawer-redesign",
         category: "improvement",
         date: "2 Oct 2026",

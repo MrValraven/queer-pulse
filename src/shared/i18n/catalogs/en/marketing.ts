@@ -2970,12 +2970,6 @@ export const marketing: Catalog = {
     "Online-only businesses no longer show a blank location",
   "changelog.entries.online-only-businesses-no-blank-location.body":
     "Their page header reads Online only instead of two stray dots, and they never take a pin on the map.",
-  "changelog.entries.admins-see-unfinished-listing-drafts.title":
-    "Admins can see that you've started a listing",
-  "changelog.entries.admins-see-unfinished-listing-drafts.body":
-    "They see the place's name and how far you've got, never the rest of your draft, and can message you to offer a hand.",
-  "changelog.entries.admins-see-unfinished-listing-drafts.details":
-    "If you start listing a business and leave it unfinished, admins (and no other staff role) now see a summary: the place's name and neighbourhood, whether it's your own place or a suggestion, the step you reached, when you started and last edited it, and who started it. A draft that has been quiet for seven days is marked as stalled. They never see what the draft holds, including your consent choices and your bio, and they can't finish or submit it for you, because publishing needs your own consent. If they write to you, it arrives in your official QueerPulse thread. The saved-drafts panel on the listing form now says all of this too.",
   "changelog.entries.item-editor-drawer-redesign.title":
     "A clearer drawer for editing persona items",
   "changelog.entries.item-editor-drawer-redesign.body":

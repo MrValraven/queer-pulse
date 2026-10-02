@@ -3044,12 +3044,6 @@ export const marketing: Catalog = {
     "Os negócios só online já não mostram uma localização em branco",
   "changelog.entries.online-only-businesses-no-blank-location.body":
     "O cabeçalho da página diz Só online em vez de dois pontos soltos, e nunca recebem um pin no mapa.",
-  "changelog.entries.admins-see-unfinished-listing-drafts.title":
-    "A administração consegue ver que começaste a adicionar um espaço",
-  "changelog.entries.admins-see-unfinished-listing-drafts.body":
-    "Vê o nome do espaço e até onde chegaste, nunca o resto do rascunho, e pode escrever-te para oferecer ajuda.",
-  "changelog.entries.admins-see-unfinished-listing-drafts.details":
-    "Se começares a adicionar um negócio e o deixares a meio, a administração (e nenhuma outra função da equipa) vê agora um resumo: o nome e o bairro do espaço, se é o teu próprio espaço ou uma sugestão, o passo a que chegaste, quando começaste e quando editaste pela última vez, e quem o começou. Um rascunho parado há sete dias fica marcado como parado. Nunca vê o conteúdo do rascunho, incluindo as tuas escolhas de consentimento e a tua bio, e não o pode terminar nem submeter por ti, porque publicar precisa do teu próprio consentimento. Se te escreverem, a mensagem chega à tua conversa oficial com a QueerPulse. O painel de rascunhos guardados no formulário já diz tudo isto.",
   "changelog.entries.item-editor-drawer-redesign.title":
     "Uma gaveta mais clara para editar os itens da persona",
   "changelog.entries.item-editor-drawer-redesign.body":
