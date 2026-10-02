@@ -1371,12 +1371,32 @@ html[data-reduce-motion="true"] .ed-prev-page [data-preview-focus] {
   padding: 22px 26px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
+  overscroll-behavior: contain;
+}
+/* The content column: one field per row. Pairing unrelated fields two-up
+   used to leave a short input stranded beside a tall one (a title next to a
+   status with chips under it), so the eye zig-zagged and the rows never
+   lined up. A single column reads top to bottom, and its measure is capped
+   so a description stays a comfortable line length. */
+.drawer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+/* FormField's own bottom margin would double the column gap. (Two classes
+   so it outranks the CSS-module `.field` rule whatever the load order.) */
+.drawer-body .drawer-main > * {
+  margin-bottom: 0;
 }
 .drawer-foot {
-  padding: 16px 26px;
+  padding: 14px 26px;
+  /* The phone's home indicator sits under a bottom sheet. */
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 10px 16px;
   align-items: center;
   border-top: 1px solid var(--line);
 }
@@ -1387,37 +1407,27 @@ html[data-reduce-motion="true"] .ed-prev-page [data-preview-focus] {
    so a `@container` rule at this selector silently never matches. The
    viewport is the only sizing signal available for a body-level portal.
 
-   Above the mobile breakpoint the wide sheet lays its fields two-up. Below
-   it, `.drawer-body` stays the single-column flex stack declared above — a
-   phone is too narrow for two field columns. */
-@media (min-width: 761px) {
-  /* Above the mobile breakpoint widen the sheet to 80% of the viewport (capped
-     so the two-up form stays readable on very wide monitors). Below 761px the
-     base `.drawer` rule keeps it a full-width bottom sheet — 80% would leave
-     awkward side gaps on a phone. */
+   Above the point where a readable field column AND the settings rail both
+   fit, the body splits: content on the leading side, settings beside it.
+   Below it, the rail simply follows the fields. */
+@media (min-width: 900px) {
   .drawer {
-    width: min(80vw, 1400px);
+    width: min(1120px, calc(100vw - 48px));
+  }
+  .drawer-head,
+  .drawer-body,
+  .drawer-foot {
+    padding-inline: 32px;
   }
   .drawer-body {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 22px;
-    row-gap: 18px;
-    align-content: start;
-    /* short field next to a tall description textarea: keep each field at its
-       own height instead of stretching the short one to match. */
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    column-gap: 32px;
     align-items: start;
+    padding-block: 26px 32px;
   }
-  /* Full-bleed rows within the two-column form: the image, the collaborator
-     and per-item-link editors, and the feature toggle each span both columns;
-     the short text fields (title/description/link/…) flow two-up between them. */
-  .drawer-body > .pe-field-wide {
-    grid-column: 1 / -1;
-  }
-  /* On the wide sheet the actions read better anchored to the trailing edge,
-     under the last field column, rather than floating at the far left. */
-  .drawer-foot {
-    justify-content: flex-end;
+  .drawer-main {
+    max-width: 68ch;
   }
 }
 @media (prefers-reduced-motion: reduce) {

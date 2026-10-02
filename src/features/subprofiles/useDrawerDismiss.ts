@@ -50,6 +50,9 @@ export function useDrawerDismiss(onClose: () => void) {
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        // A control inside the drawer already used this press (the
+        // collaborator search closing its results list).
+        if (e.defaultPrevented) return;
         // Only the topmost dialog dismisses — a confirm dialog opened from
         // inside the drawer shouldn't also close the drawer on one press.
         if (isTopmostModal(drawerId)) onCloseRef.current();

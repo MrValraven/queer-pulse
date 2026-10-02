@@ -554,6 +554,32 @@
   flex-direction: column;
   gap: 10px;
 }
+/* Same voice as FormField's label, so a quick-answer field reads as one of
+   the form's fields rather than a stray chip row. */
+.pickLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+/* The "own words" input under the chips needs no extra gap of its own. */
+.fieldWithPicks > :last-child {
+  margin-bottom: 0;
+}
+
+/* A multi-line item field (a description) that grows with its text from a
+   five-line floor. Doubled class: outranks FormField's descendant textarea
+   rule (0,1,1) without !important. */
+.growTextarea.growTextarea {
+  min-height: calc(5 * 1.6em + 29px);
+  overflow-wrap: anywhere;
+}
+@supports (field-sizing: content) {
+  .growTextarea.growTextarea {
+    field-sizing: content;
+  }
+}
 
 .quickPicks {
   display: flex;

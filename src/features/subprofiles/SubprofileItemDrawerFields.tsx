@@ -9,10 +9,10 @@ import {
   itemFieldMeta,
 } from "./subprofileEditor.data";
 import { SubprofileItemTextField } from "./SubprofileItemTextField";
+import { SkinAutoGrowTextarea } from "./SkinAutoGrowTextarea";
 import { useEditorPersonaKind } from "./useEditorPersonaKind";
 import { ImageUploadField } from "./ImageUploadField";
 import styles from "./SubprofileEditor.module.css";
-import { CollaboratorSelect } from "./CollaboratorSelect";
 import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
 import {
   RICH_FIELDS_FOR_SECTION,
@@ -50,16 +50,17 @@ function RichFieldControl({
     const value = draft.structured?.snippet?.join("\n") ?? "";
     return (
       <FormField label={t(descriptor.labelKey)}>
-        <textarea
+        <SkinAutoGrowTextarea
+          className={styles.growTextarea}
           value={value}
           placeholder={
             descriptor.placeholderKey ? t(descriptor.placeholderKey) : undefined
           }
-          onChange={(e) =>
+          onChange={(text) =>
             onPatch({
               structured: {
                 ...(draft.structured ?? {}),
-                snippet: parseSnippetLines(e.target.value),
+                snippet: parseSnippetLines(text),
               },
             })
           }
@@ -117,9 +118,9 @@ function RichFieldControl({
  * Renders one item's editable fields inside the drawer: the base
  * `SECTION_META[section].fields` (image / text / tags — moved here verbatim
  * from the retired `SubprofileItemEditor`), then the section's rich-field
- * overlay from `richFields.data.ts` (Task 2), then the universal collaborator
- * chip input — except for the `gallery` section (image-only: a gallery photo
- * has no collaborators and the public view never shows them).
+ * overlay from `richFields.data.ts` (Task 2). Collaborators, the spotlight
+ * and the authorship record live in the drawer's settings rail
+ * (`ItemDrawerSettings`), apart from what the piece itself says.
  * `structured.courses` is intentionally never rendered — it
  * round-trips untouched via `itemsToInputDto` (deferred, see the Phase 3 plan).
  */
@@ -152,7 +153,7 @@ export function SubprofileItemDrawerFields({
   return (
     <>
       {fields.includes("imageUrl") && (
-        <div className="pe-field-wide">
+        <div>
           <ImageUploadField
             value={draft.imageUrl}
             kind="work-image"
@@ -186,7 +187,7 @@ export function SubprofileItemDrawerFields({
       })}
 
       {isPoems && (
-        <div className="pe-field-wide">
+        <div>
           <PoemVersionsEditor
             value={draft.structured?.poemVersions ?? null}
             legacyPoem={draft.structured?.poem ?? null}
@@ -242,17 +243,8 @@ export function SubprofileItemDrawerFields({
         />
       ))}
 
-      {draft.section !== "gallery" && (
-        <div className="pe-field-wide">
-          <CollaboratorSelect
-            collaborators={draft.collaborators}
-            onChange={(collaborators) => onPatch({ collaborators })}
-          />
-        </div>
-      )}
-
       {ITEM_LINKS_SECTIONS.has(draft.section) && (
-        <div className="pe-field-wide">
+        <div>
           <SubprofileItemLinksField
             links={draft.structured?.links ?? []}
             onChange={(links) =>

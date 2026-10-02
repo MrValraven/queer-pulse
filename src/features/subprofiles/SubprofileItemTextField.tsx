@@ -1,6 +1,8 @@
+import { useId } from "react";
 import { DatePicker, FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ItemFieldMeta } from "./subprofileEditor.data";
+import { SkinAutoGrowTextarea } from "./SkinAutoGrowTextarea";
 import styles from "./SubprofileEditor.module.css";
 
 /** Seed value for a month picker (`yyyy-mm`). A bare `yyyy-mm` passes through;
@@ -28,8 +30,14 @@ function toDayValue(raw: string): string {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** One-tap answers under a text field. The chip matching the value shows
- *  as picked; a tap writes the chip's text, a tap on the picked one clears. */
+/** Whether `value` is exactly one of the quick answers (case aside). */
+function isQuickPick(value: string, pickTexts: string[]): boolean {
+  const current = value.trim().toLocaleLowerCase();
+  return pickTexts.some((text) => text.toLocaleLowerCase() === current);
+}
+
+/** One-tap answers for a text field. The chip matching the value shows as
+ *  picked; a tap writes the chip's text, a tap on the picked one clears. */
 function QuickPicks({
   pickKeys,
   label,
@@ -42,7 +50,6 @@ function QuickPicks({
   onPick: (text: string) => void;
 }) {
   const { t } = useTranslation();
-  const current = value.trim().toLocaleLowerCase();
   return (
     <div
       role="group"
@@ -51,7 +58,7 @@ function QuickPicks({
     >
       {pickKeys.map((key) => {
         const text = t(key);
-        const isPicked = text.toLocaleLowerCase() === current;
+        const isPicked = isQuickPick(value, [text]);
         return (
           <button
             key={key}
@@ -69,10 +76,64 @@ function QuickPicks({
 }
 
 /**
+ * A text field with common answers (a campaign's table status): the answers
+ * ARE the control, as chips, with a small "or in your own words" input under
+ * them for anything else. It used to be a full text input with the same
+ * answers repeated as chips below it, so every pick showed up twice and the
+ * field read as two competing controls. The input now holds only a value the
+ * chips don't — picking a chip empties it, typing in it un-picks the chip.
+ */
+function QuickPickField({
+  label,
+  helper,
+  pickKeys,
+  value,
+  onChange,
+}: {
+  label: string;
+  helper?: string;
+  pickKeys: string[];
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const { t } = useTranslation();
+  const labelId = useId();
+  const isPicked = isQuickPick(
+    value,
+    pickKeys.map((key) => t(key)),
+  );
+  return (
+    <div
+      className={styles.fieldWithPicks}
+      role="group"
+      aria-labelledby={labelId}
+    >
+      <span id={labelId} className={styles.pickLabel}>
+        {label}
+      </span>
+      <QuickPicks
+        pickKeys={pickKeys}
+        label={label}
+        value={value}
+        onPick={onChange}
+      />
+      <FormField helper={helper}>
+        <input
+          value={isPicked ? "" : value}
+          aria-label={t("subprofiles:itemField.ownWords", { label })}
+          placeholder={t("subprofiles:itemField.ownWordsPlaceholder")}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </FormField>
+    </div>
+  );
+}
+
+/**
  * One base text field of the item drawer (`SECTION_META[section].fields`),
- * in the input its `meta` asks for: a textarea, a month or day picker, or a
- * plain input, with any quick picks under it. The meta already carries the
- * kind's own wording (`itemFieldMeta`).
+ * in the input its `meta` asks for: a growing textarea, a month or day
+ * picker, a set of quick answers, or a plain input. The meta already carries
+ * the kind's own wording (`itemFieldMeta`).
  */
 export function SubprofileItemTextField({
   meta,
@@ -90,15 +151,29 @@ export function SubprofileItemTextField({
   const helper = meta.helperKey ? t(meta.helperKey) : undefined;
   const isPlainText =
     !meta.multiline && inputType !== "month" && inputType !== "date";
-  const quickPickKeys = isPlainText ? meta.quickPickKeys : undefined;
 
-  const field = (
+  if (isPlainText && meta.quickPickKeys) {
+    return (
+      <QuickPickField
+        label={t(labelKey)}
+        helper={helper}
+        pickKeys={meta.quickPickKeys}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
+  return (
     <FormField label={t(labelKey)} required={isRequired} helper={helper}>
       {meta.multiline ? (
-        <textarea
+        // Grows with the text: a fixed-height box clipped a campaign's
+        // pitch mid-line and hid most of what was being edited.
+        <SkinAutoGrowTextarea
+          className={styles.growTextarea}
           value={value}
           placeholder={t(placeholderKey)}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={onChange}
         />
       ) : inputType === "month" || inputType === "date" ? (
         <DatePicker
@@ -118,18 +193,5 @@ export function SubprofileItemTextField({
         />
       )}
     </FormField>
-  );
-  // `FormField` wires one control child, so the picks sit beside it.
-  if (!quickPickKeys) return field;
-  return (
-    <div className={styles.fieldWithPicks}>
-      {field}
-      <QuickPicks
-        pickKeys={quickPickKeys}
-        label={t(labelKey)}
-        value={value}
-        onPick={onChange}
-      />
-    </div>
   );
 }

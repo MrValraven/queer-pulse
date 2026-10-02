@@ -13,3 +13,10 @@ export function collaboratorHref(collaborator: CollaboratorDTO): string {
     ? `${routes.members}/${collaborator.slug}`
     : personaPath(collaborator.handle);
 }
+
+/** How many connections the collaborator search lists at once. */
+export const COLLABORATOR_RESULT_LIMIT = 6;
+
+/** How long the collaborator search waits after the last keystroke before it
+ *  asks the server. */
+export const COLLABORATOR_SEARCH_DEBOUNCE_MS = 300;
