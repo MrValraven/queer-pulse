@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ActiveFilters } from "../../shared/components/ui";
 import {
   useMediaQuery,
@@ -8,6 +8,7 @@ import {
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useLocalPlaces } from "./api/useLocalPlaces";
+import { isOnlinePlace } from "./localPlaces";
 import {
   useDirectoryFilterParams,
   useDirectoryFilterResults,
@@ -74,13 +75,25 @@ export function useDirectoryPageState() {
       layout={isMobile ? "stack" : "inline"}
     />
   );
+  // The Online tab is a lens on a narrower pool, not a filter laid over the
+  // whole one: scoping BEFORE the filters run keeps the place-type chip counts,
+  // the "showing X of Y" sentence and the empty states all counting the same
+  // online-only businesses. A position means nothing to a business with no
+  // door, so distance never reorders this pool.
+  const isOnlineView = view === "online";
+  const onlinePlaces = useMemo(() => places.filter(isOnlinePlace), [places]);
+  const scopedPlaces = isOnlineView ? onlinePlaces : places;
   const {
     filtered,
     categoryCounts,
     mappableCount,
     activeFilters,
     distanceById,
-  } = useDirectoryFilterResults(places, filterParams, myLocation.coordinates);
+  } = useDirectoryFilterResults(
+    scopedPlaces,
+    filterParams,
+    isOnlineView ? null : myLocation.coordinates,
+  );
   // `useSimulatedLoad` is a DEMO device (ENG-172). The demo registry resolves
   // in the same tick, so without a short fake beat the grid pops in with no
   // loading state at all. Live mode has a real one in `placesLoading`, and the
@@ -118,16 +131,19 @@ export function useDirectoryPageState() {
     onToggleAccess: toggleAccess,
     sort,
     onSortChange: setSort,
-    isLocationOn: myLocation.coordinates !== null,
+    isLocationOn: !isOnlineView && myLocation.coordinates !== null,
+    isOnlineScope: isOnlineView,
   };
 
   // Map view has no scroll-driven "load more" of its own (unlike the list's
   // incremental reveal in `DirectoryListView`), and wants every matching pin
-  // on screen — so keep pulling pages while the map tab is active. This
+  // on screen — so keep pulling pages while the map tab is active. The Online
+  // tab does the same: online-only businesses are scattered across every page
+  // of the registry, so its pool is only whole once every page is in. This
   // terminates naturally once the server reports no more pages (a curated,
   // bounded city registry), never an unbounded fetch loop.
   useEffect(() => {
-    if (view !== "map") return;
+    if (view === "list") return;
     if (!hasNextPage || isFetchingNextPage) return;
     fetchNextPage();
   }, [view, hasNextPage, isFetchingNextPage, fetchNextPage, places.length]);
@@ -145,7 +161,9 @@ export function useDirectoryPageState() {
     isFetchingNextPage,
     myLocation,
     isMobile,
-    nearMe,
+    // No "use my location" on the Online tab: there is nothing to walk to.
+    nearMe: isOnlineView ? undefined : nearMe,
+    onlineTotal: onlinePlaces.length,
     filtered,
     mappableCount,
     activeFilters,

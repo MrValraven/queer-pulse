@@ -39,7 +39,8 @@ export function DirectoryResultsHeader({
    *  failed read knows no totals, and "Showing 0 of 0 places" would contradict
    *  the error panel below it. */
   isError?: boolean;
-  /** Only read for the map view's "N of these are on the map" note. */
+  /** Read for the map view's "N of these are on the map" note, and to give
+   *  the Online tab its own sentence. */
   view: string;
   /** The "use my location" control, passed in rather than built here so this
    *  header stays presentational and the member's position never travels
@@ -60,7 +61,13 @@ export function DirectoryResultsHeader({
   // the registry total separately, so the sentence stops implying that `shown`
   // and `total` were measured over the same places. When nothing is narrowing,
   // or everything is loaded, the plain sentence is already true: keep it.
-  const isCountingLoadedOnly = hasMoreFromServer && shown < loadedCount;
+  //
+  // The Online tab counts a pool that is already narrowed to online-only
+  // businesses (`total` is that pool's size) and pulls every page while it is
+  // open, so it gets its own noun and never the loaded-so-far sentence.
+  const isOnlineView = view === "online";
+  const isCountingLoadedOnly =
+    !isOnlineView && hasMoreFromServer && shown < loadedCount;
   return (
     <div className={s.resultsHeader}>
       <div className="wrap">
@@ -77,9 +84,11 @@ export function DirectoryResultsHeader({
                 <>
                   <Translation
                     i18nKey={
-                      isCountingLoadedOnly
-                        ? "marketing:directory.countLoaded"
-                        : "marketing:directory.count"
+                      isOnlineView
+                        ? "marketing:directory.countOnline"
+                        : isCountingLoadedOnly
+                          ? "marketing:directory.countLoaded"
+                          : "marketing:directory.count"
                     }
                     components={{ b: <b /> }}
                     // `count` is what drives CLDR selection in `resolveEntry`,

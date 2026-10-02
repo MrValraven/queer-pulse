@@ -3,6 +3,8 @@ import { type MyLocation } from "../../shared/hooks";
 import { DirectoryNearMe } from "./DirectoryNearMe";
 import { DirectoryListView } from "./DirectoryListView";
 import { DirectoryMapFallback } from "./DirectoryMapFallback";
+import { DirectoryOnlineView } from "./DirectoryOnlineView";
+import { type DirectoryView } from "./useDirectoryFilters";
 import {
   LocalFilterFields,
   type LocalFilterFieldsProps,
@@ -18,10 +20,12 @@ const DirectoryMapView = lazy(() =>
 );
 
 interface DirectoryResultsViewProps {
-  view: "list" | "map";
+  view: DirectoryView;
   filtered: LocalPlace[];
   distanceById: ReadonlyMap<string, number> | null;
   serverTotal: number;
+  /** How many online-only businesses are loaded, before any filter. */
+  onlineTotal: number;
   loadedCount: number;
   loading: boolean;
   hasPlacesError: boolean;
@@ -38,14 +42,16 @@ interface DirectoryResultsViewProps {
   activeFilterChips: ReactNode;
 }
 
-/** The directory's main results area: the incremental-reveal list, or, on the
+/** The directory's main results area: the incremental-reveal list; on the
  *  map tab, the code-split map view (with its own loading stage that hands
- *  off to the real view mid-animation). */
+ *  off to the real view mid-animation); or, on the online tab, the
+ *  constellation of businesses that have no door to pin. */
 export function DirectoryResultsView({
   view,
   filtered,
   distanceById,
   serverTotal,
+  onlineTotal,
   loadedCount,
   loading,
   hasPlacesError,
@@ -61,6 +67,20 @@ export function DirectoryResultsView({
   myLocation,
   activeFilterChips,
 }: DirectoryResultsViewProps) {
+  if (view === "online") {
+    return (
+      <DirectoryOnlineView
+        places={filtered}
+        total={onlineTotal}
+        loading={loading || (hasNextPage && onlineTotal === 0)}
+        isError={hasPlacesError}
+        onRetry={refetchPlaces}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearFilters}
+      />
+    );
+  }
+
   if (view === "list") {
     return (
       <DirectoryListView

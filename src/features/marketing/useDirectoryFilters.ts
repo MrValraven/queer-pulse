@@ -123,8 +123,12 @@ export function useAccessFilter(): AccessibilitySlug[] {
   return useMemo(() => toAccess(raw), [raw]);
 }
 
+/** The directory's three lenses. `list` is everything, `map` is every place
+ *  with a door to pin, and `online` is every business that has none. */
+export type DirectoryView = "list" | "map" | "online";
+
 export interface DirectoryFilterParams {
-  view: "list" | "map";
+  view: DirectoryView;
   /** Place types to show, in chip order. Empty means every type; otherwise a
    *  place matches when its type is any one of them. */
   categories: string[];
@@ -164,7 +168,9 @@ export interface DirectoryFilterParams {
 export function useDirectoryFilterParams(): DirectoryFilterParams {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const view = searchParams.get("view") === "map" ? "map" : "list";
+  const rawView = searchParams.get("view");
+  const view: DirectoryView =
+    rawView === "map" || rawView === "online" ? rawView : "list";
   const rawCategories = searchParams.get("cat");
   const categories = useMemo(
     () => toCategories(rawCategories),
@@ -214,7 +220,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const selectView = useCallback(
     (next: string) =>
       mutateParams((params) => {
-        if (next === "map") params.set("view", "map");
+        if (next === "map" || next === "online") params.set("view", next);
         else params.delete("view");
       }, true),
     [mutateParams],

@@ -145,13 +145,15 @@ export function businessToLocal(
   // Prefer the pin the owner placed when listing. The hand-placed BUSINESS_COORDS
   // table is demo-only seed data — consulting it in live mode would give a real
   // listing without stored coordinates fake coords on a slug collision.
+  // An online-only business has no door to pin. Its stored coordinates are
+  // ignored even when an old payload still carries some, so it can never
+  // surface on the map under a stale address.
   const listedCoords =
-    place.latitude != null && place.longitude != null
+    !place.online && place.latitude != null && place.longitude != null
       ? { latitude: place.latitude, longitude: place.longitude }
       : null;
-  const fallbackCoords = demoMode
-    ? (BUSINESS_COORDS[place.slug] ?? null)
-    : null;
+  const fallbackCoords =
+    demoMode && !place.online ? (BUSINESS_COORDS[place.slug] ?? null) : null;
   const coords = listedCoords ?? fallbackCoords;
   return {
     id: `business:${place.slug}`,
@@ -159,11 +161,15 @@ export function businessToLocal(
     name: place.name,
     category: normalizeCategory(place.cat),
     neighbourhood: place.hood,
-    freguesia: placeFreguesia(
-      coords,
-      HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
-      `business "${place.name}"`,
-    ),
+    // No parish to count it under, and no warning either: an empty parish is
+    // the truth for an online-only business, not a typo to surface.
+    freguesia: place.online
+      ? ""
+      : placeFreguesia(
+          coords,
+          HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
+          `business "${place.name}"`,
+        ),
     coords,
     detailPath: `${routes.directory}/${place.slug}`,
     safeSpaceStatus: place.safeSpaceStatus ?? "none",
@@ -201,6 +207,15 @@ export function venueToLocal(venue: Venue): LocalPlace {
     ]),
     source: venue,
   };
+}
+
+/** Whether a place is an online-only business: no door, no pin, reached
+ *  through its website, socials or inbox instead. Venues are always physical. */
+export function isOnlinePlace(place: LocalPlace): boolean {
+  return (
+    place.kind === "business" &&
+    (place.source as DirectoryPlace).online === true
+  );
 }
 
 /**

@@ -8597,6 +8597,37 @@ export const marketing: Catalog = {
   "directory.countLoaded_other":
     "A mostrar <b>{shown}</b> de {loaded} lugares carregados até agora",
   "directory.countLoadedTotal": "{total} em todo o diretório",
+  // O separador Online conta só negócios online e carrega todas as páginas
+  // enquanto está aberto, por isso nunca precisa da variante acima.
+  "directory.countOnline":
+    "A mostrar <b>{shown}</b> de {total} negócios online",
+  "directory.countOnline_one":
+    "A mostrar <b>{shown}</b> de {total} negócio online",
+  "directory.countOnline_other":
+    "A mostrar <b>{shown}</b> de {total} negócios online",
+  // O painel de constelação do separador Online e os seus cartões.
+  "directory.online.eyebrow": "Só online",
+  "directory.online.title": "Negócios que vão até <em>ti</em>.",
+  "directory.online.body":
+    "Lojas, estúdios e consultórios queer e queer-friendly que vivem online, avaliados pela mesma comunidade que os lugares do mapa.",
+  "directory.online.stat.businesses": "negócios online",
+  "directory.online.stat.businesses_one": "negócio online",
+  "directory.online.stat.businesses_other": "negócios online",
+  "directory.online.stat.verified": "queer-owned verificados",
+  "directory.online.stat.kinds": "tipos de trabalho",
+  "directory.online.stat.kinds_one": "tipo de trabalho",
+  "directory.online.stat.kinds_other": "tipos de trabalho",
+  "directory.online.constellationLabel":
+    "Negócios só online à volta da comunidade QueerPulse",
+  "directory.online.nodeLabel": "{name}, {category}",
+  "directory.online.more": "+{count} mais abaixo",
+  "directory.online.reach": "Encontra-os em",
+  "directory.online.empty.title": "Ainda não há negócios só online",
+  "directory.online.empty.body":
+    "Tens uma loja, estúdio ou consultório queer que vive online? Adiciona-o e aparece aqui para toda a comunidade.",
+  "directory.online.emptyFiltered.title": "Nenhum negócio online corresponde",
+  "directory.online.emptyFiltered.body":
+    "Tenta um tipo de lugar mais amplo ou outra pesquisa, ou limpa os filtros para ver todos os negócios online.",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
     "Tenta uma categoria mais ampla, menos ambientes ou outra pesquisa, ou limpa os filtros para ver tudo.",
@@ -9698,7 +9729,8 @@ export const marketing: Catalog = {
   "local.cat.nightlife": "Noite",
   "local.view.list": "Lista",
   "local.view.map": "Mapa",
-  "local.view.toggleAria": "Escolher vista de lista ou mapa",
+  "local.view.online": "Online",
+  "local.view.toggleAria": "Escolher vista de lista, mapa ou online",
   "local.card.seeFullDetails": "Ver detalhes",
   "local.filter.searchPlaceholder": "Procurar espaços e locais…",
   "local.filter.categoryLabel": "Tipo de lugar",

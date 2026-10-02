@@ -15,6 +15,7 @@ import type {
 } from "./listBusiness/listingMenu.data";
 import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
+import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
 
 export type Tint = "coral" | "jade" | "plum";
 
@@ -2015,6 +2016,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       },
     ],
   },
+  // Businesses with no door: the directory's Online tab.
+  ...ONLINE_DIRECTORY_PLACES,
 ];
 
 // Enrich every member-authored review with its author's profile slug + photo so
