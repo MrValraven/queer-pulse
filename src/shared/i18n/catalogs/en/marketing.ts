@@ -1489,6 +1489,8 @@ export const marketing: Catalog = {
     "We couldn't save your draft just now. Check your connection and try again.",
   "listBusiness.drafts.title": "Pick up where you left off",
   "listBusiness.drafts.count": "{count} in progress",
+  "listBusiness.drafts.teamNote":
+    "Our team can see the place's name and how far you've got, never the rest of your draft, so we can offer a hand if you get stuck.",
   "listBusiness.drafts.untitled": "Untitled place",
   "listBusiness.drafts.updated": "Last edited {when}",
   "listBusiness.drafts.resume": "Resume",

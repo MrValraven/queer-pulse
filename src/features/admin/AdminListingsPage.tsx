@@ -17,6 +17,9 @@ import { BulkActionBar } from "./BulkActionBar";
 import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
 import { EditSuggestionsSection } from "./EditSuggestionsSection";
 import { ListingClaimsSection } from "./ListingClaimsSection";
+import { ListingDraftsSection } from "./ListingDraftsSection";
+import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   AdminListingsHeader,
   type AdminListingsHeaderValue,
@@ -32,8 +35,19 @@ import {
 } from "./api/adminListings.api";
 import styles from "./AdminListingsPage.module.css";
 
-type ViewTab = "queue" | "editSuggestions" | "claims";
+type ViewTab = "queue" | "editSuggestions" | "claims" | "drafts";
 const VIEWS: ViewTab[] = ["queue", "editSuggestions", "claims"];
+
+/** The views this viewer may open. Unfinished drafts are Admin only
+ *  (`GET /admin/listing-drafts` is `@Roles(Admin)`, and reaching out goes
+ *  through the Admin-only official thread), so a moderator or a
+ *  `directory_moderator` grant holder is never offered a tab the API refuses.
+ *  Gated like `ListingPreviewDrawer`'s delegation section. */
+function useListingViews(): ViewTab[] {
+  const { role } = useAuth();
+  const { demoMode } = useDemoMode();
+  return demoMode || role === "admin" ? [...VIEWS, "drafts"] : VIEWS;
+}
 
 /**
  * Moderator queue for member-submitted directory listings: filter by review
@@ -220,10 +234,8 @@ export function AdminListingsPage() {
             />
           )}
         </>
-      ) : view === "editSuggestions" ? (
-        <EditSuggestionsSection />
       ) : (
-        <ListingClaimsSection />
+        <ListingSecondaryView view={view} />
       )}
 
       {openRowLive && (
@@ -252,6 +264,7 @@ function ListingViewSwitch({
   onChange: (nextView: ViewTab) => void;
 }) {
   const { t } = useTranslation();
+  const views = useListingViews();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const hasHiddenViewsAtEnd = useHasHiddenEndContent(scrollerRef);
 
@@ -273,7 +286,7 @@ function ListingViewSwitch({
       <SegmentedControl
         className={styles.viewSwitch}
         label={t("admin:adminListings.view.ariaLabel")}
-        options={VIEWS.map((viewOption) => ({
+        options={views.map((viewOption) => ({
           value: viewOption,
           label: t(`admin:adminListings.view.${viewOption}`),
         }))}
@@ -282,6 +295,14 @@ function ListingViewSwitch({
       />
     </FadeIn>
   );
+}
+
+/** Every view but the submissions queue: each is a self-contained section
+ *  that owns its own query and filters. */
+function ListingSecondaryView({ view }: { view: Exclude<ViewTab, "queue"> }) {
+  if (view === "editSuggestions") return <EditSuggestionsSection />;
+  if (view === "claims") return <ListingClaimsSection />;
+  return <ListingDraftsSection />;
 }
 
 /** Branded, retryable error state, mirroring `QueueErrorPane` in

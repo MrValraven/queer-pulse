@@ -49,6 +49,11 @@ function PanelShell({
         </span>
       </div>
       <div className={styles.list}>{children}</div>
+      {/* Admins see unfinished drafts (name, step reached, dates) so they can
+          offer help; members are told, rather than finding out from a message. */}
+      <p className={styles.teamNote}>
+        {t("marketing:listBusiness.drafts.teamNote")}
+      </p>
     </div>
   );
 }
