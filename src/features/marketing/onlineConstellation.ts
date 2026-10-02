@@ -3,9 +3,11 @@ import { websiteLabel } from "./directoryPlaces";
 /** How many businesses each orbit holds before the next one starts. */
 export const ORBIT_CAPACITY = [5, 9] as const;
 
-/** The two orbits' radii, as a percentage of the stage's width. The outer one
- *  stops short of 50 so a node centred on it never pokes past the edge. */
-export const ORBIT_RADII = [25, 40] as const;
+/** The two orbits' radii, as a percentage of the stage's width. Far enough
+ *  apart that a full set of nodes (each 18% of the stage wide) never
+ *  overlaps across orbits, and the outer one stops short of 50 so a node's
+ *  centre always sits on the stage. */
+export const ORBIT_RADII = [24, 42] as const;
 
 /** The most businesses the constellation draws; the rest wait in the grid. */
 export const CONSTELLATION_LIMIT = ORBIT_CAPACITY[0] + ORBIT_CAPACITY[1];

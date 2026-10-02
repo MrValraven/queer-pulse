@@ -8607,7 +8607,7 @@ export const marketing: Catalog = {
   "directory.online.eyebrow": "Só online",
   "directory.online.title": "Sem porta para a rua. <em>Continuam nossos.</em>",
   "directory.online.body":
-    "Lojas, estúdios e consultórios queer que vivem online. Avaliados pela mesma comunidade que os lugares do mapa, e tão perto como a tua caixa de entrada, estejas onde estiveres.",
+    "Lojas, estúdios e consultórios queer que vivem online, avaliados pela mesma comunidade que os lugares do mapa.",
   "directory.online.stat.businesses": "negócios online",
   "directory.online.stat.businesses_one": "negócio online",
   "directory.online.stat.businesses_other": "negócios online",

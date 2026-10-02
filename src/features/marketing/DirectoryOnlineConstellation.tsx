@@ -20,11 +20,12 @@ import s from "./DirectoryOnline.module.css";
 const HEARTBEAT_PATH = "M4 26h9l3-5 4 12 5-24 4 17 3-5h12";
 
 /**
- * The Online tab's centrepiece: a plum panel where the community's pulse sits
- * at the centre and every online-only business orbits it, each one wired back
- * by a faint signal line. It is the counterpart of the Lisbon map: the map
- * says where a place is; this says that a business with no door is still
- * part of the same community.
+ * The Online tab's lead-in: a compact band, on the same plum-tinted surface as
+ * the map's frame, where the community's pulse sits at the centre of a small
+ * constellation and every online-only business orbits it, wired back by a
+ * faint signal line. It is the counterpart of the Lisbon map, and deliberately
+ * not a second hero: the page already has one, so this stays one short line of
+ * copy beside the picture and lets the cards start high on the page.
  *
  * Nodes stay still on purpose. Only decoration moves (the pulse rings and the
  * outer orbit's slow turn), so nothing clickable ever drifts from under a
@@ -73,18 +74,29 @@ export function DirectoryOnlineConstellation({
           />
         </h2>
         <p className={s.body}>{t("marketing:directory.online.body")}</p>
-        <dl className={s.stats}>
-          {stats.map((stat) => (
-            <div key={stat.key} className={s.stat}>
-              <dt>
-                {t(`marketing:directory.online.stat.${stat.key}`, {
-                  count: stat.count,
-                })}
-              </dt>
-              <dd>{rolling(stat.count)}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className={s.meta}>
+          <dl className={s.stats}>
+            {stats.map((stat) => (
+              <div key={stat.key} className={s.stat}>
+                <dt>
+                  {t(`marketing:directory.online.stat.${stat.key}`, {
+                    count: stat.count,
+                  })}
+                </dt>
+                <dd>{rolling(stat.count)}</dd>
+              </div>
+            ))}
+          </dl>
+          {overflow > 0 && (
+            <p className={s.overflow}>
+              <Translation
+                i18nKey="marketing:directory.online.more"
+                values={{ count: overflow }}
+                slots={{ count: rolling(overflow) }}
+              />
+            </p>
+          )}
+        </div>
       </div>
 
       <div className={s.stage}>
@@ -142,7 +154,6 @@ export function DirectoryOnlineConstellation({
                   to={`${routes.directory}/${place.slug}`}
                   className={s.node}
                   data-tint={place.tint}
-                  data-orbit={node.orbit}
                   data-active={place.slug === activeSlug ? "true" : undefined}
                   aria-label={t("marketing:directory.online.nodeLabel", {
                     name: place.name,
@@ -169,16 +180,6 @@ export function DirectoryOnlineConstellation({
             );
           })}
         </ul>
-
-        {overflow > 0 && (
-          <p className={s.overflow}>
-            <Translation
-              i18nKey="marketing:directory.online.more"
-              values={{ count: overflow }}
-              slots={{ count: rolling(overflow) }}
-            />
-          </p>
-        )}
       </div>
     </section>
   );
