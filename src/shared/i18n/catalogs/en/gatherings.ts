@@ -112,6 +112,8 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
+  // GatheringCommunity.tsx: the hero line reads "With Queer Runners Lisboa".
+  "common.hostedWith": "With",
   "common.hostRemoved": "A former member",
   "common.connectCta": "Connect",
   "common.timeRangeTo": "to",
@@ -120,6 +122,8 @@ export const gatherings: Catalog = {
   "gathering.badge.event": "QueerPulse event",
   "gathering.badge.gathering": "Member gathering",
   "gathering.spotsRemainingLabel": "spots remaining",
+  "gathering.hostedWithHeading": "Hosted with",
+  "gathering.hostedWithRole": "Community",
   "gathering.spotsUrgencyNote": "Move quickly if this speaks to you",
   "gathering.locationNote":
     "Full location shared with confirmed guests after you RSVP.",
@@ -1042,7 +1046,7 @@ export const gatherings: Catalog = {
   "create.step3.communityLabel": "Host it with a community (optional)",
   "create.step3.communityNone": "No community",
   "create.step3.communityHint":
-    "Links the gathering to one of your communities. It doesn't change who can see it; you choose that just below.",
+    "Shows the community's name on the gathering. Only communities you run or moderate are listed. It doesn't change who can see it; you choose that just below.",
 
   // AudienceScopeField.tsx: shared by the create wizard (chapter 3) and the
   // manage-gathering edit modal.

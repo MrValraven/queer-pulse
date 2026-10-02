@@ -113,6 +113,8 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
+  // GatheringCommunity.tsx: the hero line reads "Com Queer Runners Lisboa".
+  "common.hostedWith": "Com",
   "common.hostRemoved": "Uma pessoa que já não está por cá",
   "common.timeRangeTo": "às",
   "common.connectCta": "Conectar",
@@ -121,6 +123,8 @@ export const gatherings: Catalog = {
   "gathering.badge.event": "Evento QueerPulse",
   "gathering.badge.gathering": "Convívio da comunidade",
   "gathering.spotsRemainingLabel": "vagas restantes",
+  "gathering.hostedWithHeading": "Organizado com",
+  "gathering.hostedWithRole": "Comunidade",
   "gathering.spotsUrgencyNote": "Não percas tempo se isto te chamar",
   "gathering.locationNote":
     "A localização completa é partilhada com quem confirmar presença.",
@@ -1050,7 +1054,7 @@ export const gatherings: Catalog = {
   "create.step3.communityLabel": "Organizar com uma comunidade (opcional)",
   "create.step3.communityNone": "Nenhuma comunidade",
   "create.step3.communityHint":
-    "Liga o convívio a uma das tuas comunidades. Não muda quem o pode ver; isso escolhes logo abaixo.",
+    "Mostra o nome da comunidade no convívio. Só aparecem comunidades que geres ou moderas. Não muda quem o pode ver; isso escolhes logo abaixo.",
 
   // AudienceScopeField.tsx: partilhado pelo assistente de criação (capítulo 3)
   // e pelo modal de edição do convívio.

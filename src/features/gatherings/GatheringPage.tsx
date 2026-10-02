@@ -32,6 +32,7 @@ import { useGatheringRsvp } from "./useGatheringRsvp";
 import { eventZoneFormat } from "./eventTimezone";
 import { gatheringWhen } from "./gatheringSchedule";
 import { useEvent } from "./api/useEvent";
+import { GatheringHeroCommunity } from "./GatheringCommunity";
 
 import styles from "./GatheringPage.module.css";
 
@@ -225,6 +226,7 @@ function GatheringDetailBody({
                   <span className={styles.metaDot} />
                   {t("gatherings:common.hostedBy")} {gathering.host}
                 </span>
+                <GatheringHeroCommunity gathering={gathering} />
               </div>
               <p className={styles.body}>{gathering.body}</p>
               <GatheringHeroActions gathering={gathering} rsvp={rsvp} />

@@ -7,6 +7,7 @@ import {
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
+import type { AccessTier } from "../../communities/membership.types";
 import type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
 import type {
   ContentNoteKey,
@@ -94,6 +95,24 @@ export interface EventSeriesDTO {
  *  `"future"` also applies to every later occurrence in its series. See
  *  `SeriesScopeQuery` (backend). */
 export type SeriesScope = "this" | "future";
+
+/**
+ * The community a gathering is hosted with, as the event page shows it
+ * ("with Queer Runners Lisboa"). Backend `EventDetail.community`.
+ *
+ * Contract: for a `private` community, the server sends `null` here, and in
+ * `communityId`/`communitySlug`, to any viewer who is neither on that
+ * community's roster nor one of the gathering's organizers, even when the
+ * gathering itself is Public. A private community's existence is withheld
+ * everywhere else, and the slug alone would give it away. The page also hides a
+ * private community from non-members, but only as a second line: anything in
+ * the response is readable by the viewer.
+ */
+export interface EventCommunityDTO {
+  slug: string;
+  name: string;
+  accessTier: AccessTier;
+}
 
 export interface EventHostDTO {
   slug: string;
@@ -271,6 +290,11 @@ export interface EventDetailDTO extends EventCardDTO {
   communityId?: string | null;
   /** Slug counterpart of `communityId`. */
   communitySlug?: string | null;
+  /** The hosting community's display fields, for the event page. Same
+   *  community as `communitySlug`, withheld under the rule on
+   *  `EventCommunityDTO`. Absent from an older server, which simply shows no
+   *  community on the page. */
+  community?: EventCommunityDTO | null;
   /** The directory listing this gathering's venue is linked to, or `null`/
    *  absent for a free-text venue. Settable via the venue picker (PATCH
    *  `/events/:slug` with `listingId`, see `UpdateEventDto` below). */

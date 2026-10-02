@@ -170,6 +170,7 @@ export function EditDetailsModal({
         <EditDetailsAudience
           draft={draft}
           openedWithCapacity={initial.capacity}
+          savedCommunitySlug={initial.communitySlug}
           onChange={merge}
         />
         <EditDetailsCare draft={draft} onChange={merge} />

@@ -422,7 +422,7 @@ export const communities: Catalog = {
   "detail.events.recapCta": "Read recap",
   "detail.events.rsvpCta": "RSVP",
   "detail.events.host.lead":
-    "Anyone here can put something on the calendar. Pick a date, a place and a size, and this community will see it.",
+    "You help run this community, so you can put something on its calendar. Pick a date, a place and a size, then choose who gets to see it.",
   "detail.events.host.cta": "Host a gathering here",
 
   // ── Roster / members tab (living hub) ─────────────────────────────────────

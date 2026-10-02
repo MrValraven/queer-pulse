@@ -69,8 +69,9 @@ function EventRowSkeleton() {
  * "Host a gathering here" — the Events tab's way out of a read-only calendar.
  * Deep-links the create-gathering wizard with this community preselected
  * (`createGatheringPath`), so the new gathering is filed here by default.
- * Members only: the wizard's community picker and the backend both require a
- * membership, so offering it to anyone else would fail on publish.
+ * Owners, co-owners and mods only: hosting puts the community's name on the
+ * gathering, so the wizard's picker and the backend both require someone who
+ * can speak for it, and offering it to anyone else would fail on publish.
  */
 function HostGatheringCta({
   communitySlug,
@@ -103,6 +104,7 @@ export function EventsTab({
   events,
   communitySlug,
   isMember,
+  isStaff,
   isLoading = false,
   isError = false,
   onRetry,
@@ -111,9 +113,11 @@ export function EventsTab({
   /** This community's slug, used to preselect it in the create-gathering
    *  wizard behind the "host a gathering here" call to action. */
   communitySlug: string;
-  /** Whether the viewer belongs to this community. Only members are offered
-   *  the host call to action. */
+  /** Whether the viewer belongs to this community. */
   isMember: boolean;
+  /** Whether the viewer owns, co-owns or moderates this community. Only they
+   *  are offered the host call to action. */
+  isStaff: boolean;
   /** True while the live-mode fetch is in flight (always `false` in demo). */
   isLoading?: boolean;
   /** True when the live-mode fetch failed (always `false` in demo). */
@@ -121,7 +125,7 @@ export function EventsTab({
   onRetry?: () => void;
 }) {
   const { t } = useTranslation();
-  const canHost = isMember && communitySlug.length > 0;
+  const canHost = isStaff && communitySlug.length > 0;
   // PRD-145. A prospective member's gatherings are paged at 10 by their own
   // endpoint, and only this tab has anywhere to put a "show more" control.
   // Subscribing here shares the query the detail state hook already started

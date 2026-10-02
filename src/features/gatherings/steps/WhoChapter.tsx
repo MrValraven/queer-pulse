@@ -1,7 +1,6 @@
 import { useId } from "react";
 import { SegmentedControl, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { useMyCommunityOptions } from "../../communities/api/useMyCommunityOptions";
 import { AudienceScopeField } from "../AudienceScopeField";
 import { Field, FieldRow, SwitchRow } from "../CreateGatheringFields";
 import { LANGS } from "../createGathering.data";
@@ -10,6 +9,7 @@ import {
   rsvpCutoffToOptionValue,
 } from "../gatheringExtras";
 import type { GatheringForm } from "../useGatheringForm";
+import { useHostableCommunities } from "../useHostableCommunities";
 import { CapacityStepperField } from "./CapacityStepperField";
 import { CohostPickerField } from "./CohostPickerField";
 import { CostKindField } from "./CostKindField";
@@ -27,7 +27,9 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
   const languageLabelId = `${fieldId}-language`;
   const rsvpCutoffId = `${fieldId}-rsvp-cutoff`;
   const communityId = `${fieldId}-community`;
-  const myCommunityOptions = useMyCommunityOptions();
+  // Only the communities this host runs or moderates: hosting with one puts
+  // its name on the event page.
+  const { options: myCommunityOptions } = useHostableCommunities();
   const languageLabel = t("gatherings:create.step3.langLabel");
 
   return (
