@@ -506,8 +506,8 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     capabilities: ["resource_curator"],
   },
   {
-    // Story submissions, writer applications, commission interest, and the two
-    // public-face content surfaces (press kit, landing slots).
+    // Story submissions, writer applications, commission interest, and the
+    // public-face content surfaces (press kit, landing slots, marketing films).
     patterns: [
       routes.adminMagazineSubmissions,
       `${routes.adminMagazineSubmissions}/*`,
@@ -517,6 +517,8 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       `${routes.adminCommissionInterests}/*`,
       routes.adminPressKit,
       `${routes.adminPressKit}/*`,
+      routes.adminMarketingVideos,
+      `${routes.adminMarketingVideos}/*`,
       routes.adminLanding,
       `${routes.adminLanding}/*`,
     ],

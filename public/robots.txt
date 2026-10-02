@@ -27,6 +27,7 @@ Disallow: /account
 Disallow: /work
 Disallow: /economy
 Disallow: /admin
+Disallow: /marketing-videos/
 Disallow: /mod
 Disallow: /feed
 Disallow: /search

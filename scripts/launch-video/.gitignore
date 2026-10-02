@@ -1,0 +1,3 @@
+# Rendered output and old captures are regenerated, never committed.
+.cache/
+out/

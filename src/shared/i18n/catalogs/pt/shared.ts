@@ -266,6 +266,7 @@ export const shared: Catalog = {
   "adminNav.items.featureUsage": "Utilização de funcionalidades",
   "adminNav.items.landing": "Página inicial",
   "adminNav.items.pressKit": "Kit de imprensa",
+  "adminNav.items.marketingVideos": "Vídeos de marketing",
   "adminNav.items.queues": "Todas as filas",
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.forumReview": "Revisão do fórum",
