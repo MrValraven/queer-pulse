@@ -230,6 +230,7 @@ export function detailToGathering(
     // `null` (no community) and `undefined` (field absent) both collapse to
     // undefined here, matching GatheringDetail's "unset" representation.
     communitySlug: dto.communitySlug ?? undefined,
+    community: dto.community ?? undefined,
     venueListingId: dto.listingId ?? null,
     venueListing: dto.venueListing ?? null,
     cohosts: dto.cohosts,

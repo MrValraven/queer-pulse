@@ -410,7 +410,7 @@ export const communities: Catalog = {
   "detail.events.recapCta": "Ler retrospetiva",
   "detail.events.rsvpCta": "Confirmar presença",
   "detail.events.host.lead":
-    "Qualquer pessoa daqui pode pôr algo no calendário. Escolhe uma data, um sítio e um tamanho, e esta comunidade vai ver.",
+    "Ajudas a gerir esta comunidade, por isso podes pôr algo no calendário dela. Escolhe uma data, um sítio e um tamanho, e depois quem o pode ver.",
   "detail.events.host.cta": "Organizar um convívio aqui",
 
   // ── Separador de pessoas / lista (hub completo) ───────────────────────────

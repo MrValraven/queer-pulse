@@ -55,6 +55,7 @@ import {
   type DraftSaveStatus,
 } from "./useCreateGatheringDraft";
 import { useGatheringForm, type GatheringForm } from "./useGatheringForm";
+import { useDropUnhostableCommunity } from "./useHostableCommunities";
 import { usePublishGathering } from "./usePublishGathering";
 import styles from "./CreateGatheringShell.module.css";
 
@@ -176,6 +177,7 @@ export function CreateGatheringPage() {
     communitySlug: communitySlugParam,
     ...(seed ? { seed } : {}),
   });
+  useDropUnhostableCommunity(form);
   const chapterFlow = useCreateGatheringChapterFlow(form);
   const draftKey = createGatheringDraftKey(user?.id);
   const publishing = usePublishGathering({

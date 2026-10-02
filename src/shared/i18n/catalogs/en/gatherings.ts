@@ -112,6 +112,8 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
+  // GatheringCommunity.tsx: the hero line reads "With Queer Runners Lisboa".
+  "common.hostedWith": "With",
   "common.hostRemoved": "A former member",
   "common.connectCta": "Connect",
   "common.timeRangeTo": "to",
@@ -120,6 +122,8 @@ export const gatherings: Catalog = {
   "gathering.badge.event": "QueerPulse event",
   "gathering.badge.gathering": "Member gathering",
   "gathering.spotsRemainingLabel": "spots remaining",
+  "gathering.hostedWithHeading": "Hosted with",
+  "gathering.hostedWithRole": "Community",
   "gathering.spotsUrgencyNote": "Move quickly if this speaks to you",
   "gathering.locationNote":
     "Full location shared with confirmed guests after you RSVP.",
@@ -931,7 +935,7 @@ export const gatherings: Catalog = {
   "create.v2.who.waitlistDescription":
     "People queue for a spot and get told the moment one opens.",
   "create.v2.who.rsvpCutoffLabel": "RSVPs close",
-  "create.v2.who.communityLabel": "Post to a community",
+  "create.v2.who.communityLabel": "Host it with a community",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Six questions",
@@ -1039,8 +1043,10 @@ export const gatherings: Catalog = {
   "create.step3.langLabel": "Language",
   "create.step3.notesPlaceholder":
     "Anything else attendees should know: steps, parking, sound level…",
-  "create.step3.communityLabel": "Post to a community (optional)",
-  "create.step3.communityNone": "None (public gathering)",
+  "create.step3.communityLabel": "Host it with a community (optional)",
+  "create.step3.communityNone": "No community",
+  "create.step3.communityHint":
+    "Shows the community's name on the gathering. Only communities you run or moderate are listed. It doesn't change who can see it; you choose that just below.",
 
   // AudienceScopeField.tsx: shared by the create wizard (chapter 3) and the
   // manage-gathering edit modal.
@@ -1057,7 +1063,7 @@ export const gatherings: Catalog = {
   "audienceScope.network.helper": "Only people you're connected to.",
   "audienceScope.community.label": "Community members",
   "audienceScope.community.helper":
-    "Only members of the community you're posting to.",
+    "Only members of the community you're hosting it with.",
   "audienceScope.inviteOnly.label": "Invite only",
   "audienceScope.inviteOnly.helper": "Only the people you invite.",
 

@@ -12,6 +12,7 @@ import { GatheringRsvpControl } from "./GatheringRsvpControl";
 import type { GatheringRsvpState } from "./useGatheringRsvp";
 import { eventZoneFormat } from "./eventTimezone";
 import { spotsText, type GatheringDetail } from "./data";
+import { GatheringCommunityCard } from "./GatheringCommunity";
 import styles from "./GatheringPage.module.css";
 
 /** The contact affordance returned by `useMemberContact` (connect vs. message). */
@@ -169,6 +170,8 @@ export function GatheringSidebar({
           </div>
         </div>
       )}
+
+      <GatheringCommunityCard gathering={gathering} />
 
       <GatheringRsvpControl
         gathering={gathering}

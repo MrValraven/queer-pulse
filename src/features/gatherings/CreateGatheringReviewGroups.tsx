@@ -1,6 +1,5 @@
 import { useId } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import type { ReadinessItem } from "./createGatheringChapters";
 import { CreateGatheringAccessReadback } from "./CreateGatheringReadback";
 import {
@@ -20,6 +19,7 @@ import {
   reviewVisibilityText,
 } from "./reviewRecapReadings";
 import type { GatheringForm } from "./useGatheringForm";
+import { useHostableCommunities } from "./useHostableCommunities";
 
 /** What every recap group receives from the recap. */
 export interface ReviewGroupProps {
@@ -34,12 +34,12 @@ export interface ReviewGroupProps {
 
 /**
  * Chapter 3 read back: spots, language, cost, who can see it, the waitlist,
- * when RSVPs close, the community (only for a member who has one to pick, as
- * the chapter itself shows the field) and the co-hosts picked.
+ * when RSVPs close, the community (only for a host who runs or moderates one,
+ * as the chapter itself shows the field) and the co-hosts picked.
  */
 export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
   const { t } = useTranslation();
-  const myCommunityOptions = useMyCommunityOptions();
+  const { options: myCommunityOptions } = useHostableCommunities();
   const communityName = form.communitySlug
     ? (myCommunityOptions.find(
         (community) => community.slug === form.communitySlug,

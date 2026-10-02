@@ -291,6 +291,7 @@ function LivingHubTabContent({
           events={living.events}
           communitySlug={living.slug}
           isMember={isMember}
+          isStaff={isStaff}
           isLoading={communityPulse.isLoading}
           isError={communityPulse.isError}
           onRetry={communityPulse.refetch}

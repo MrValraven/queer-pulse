@@ -11,20 +11,23 @@ import {
   isEditCapacityLowered,
 } from "./manageGatheringState";
 import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
+import { useHostableCommunities } from "./useHostableCommunities";
 import styles from "./EditDetailsModal.module.css";
 
 /**
  * "Who it's for" in the edit-details modal: the community the gathering is
- * filed to, who can see it, and how many people can go.
+ * hosted with, who can see it, and how many people can go.
  *
  * Split out of `EditDetailsModal` so both stay inside the 200-line rule. The
- * first two fields are one decision: the "Community members" tier exists only
- * while a community is attached. The capacity is the wizard's own stepper, in
- * the same chapter the wizard asks it.
+ * first two fields are separate choices that touch at one point: the
+ * "Community members" tier exists only while a community is attached, but
+ * attaching one never narrows who can see the gathering. The capacity is the
+ * wizard's own stepper, in the same chapter the wizard asks it.
  */
 export function EditDetailsAudience({
   draft,
   openedWithCapacity,
+  savedCommunitySlug,
   onChange,
 }: {
   draft: GatheringDetailsDraft;
@@ -32,12 +35,34 @@ export function EditDetailsAudience({
    *  compares against it to say what a lower number means, and a legacy
    *  number outside the stepper's range still saves while it is unchanged. */
   openedWithCapacity: string;
+  /** The community the gathering is hosted with now ("" for none). */
+  savedCommunitySlug: string;
   /** Merged into the draft by the modal. */
   onChange: (patch: Partial<GatheringDetailsDraft>) => void;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const { options: hostableOptions } = useHostableCommunities();
   const myCommunityOptions = useMyCommunityOptions();
+  // Only communities the editor runs or moderates can be picked. The one the
+  // gathering is already hosted with stays listed even when they don't (a
+  // co-host, or a host who has since stepped down), so the field shows the
+  // truth and they can still clear it, just not move it somewhere else.
+  const isSavedHostable =
+    savedCommunitySlug === "" ||
+    hostableOptions.some((community) => community.slug === savedCommunitySlug);
+  const communityOptions = isSavedHostable
+    ? hostableOptions
+    : [
+        {
+          slug: savedCommunitySlug,
+          name:
+            myCommunityOptions.find(
+              (community) => community.slug === savedCommunitySlug,
+            )?.name ?? savedCommunitySlug,
+        },
+        ...hostableOptions,
+      ];
   const isCapacityOutOfRange =
     editCapacityProblem(draft, openedWithCapacity) === "outOfRange";
 
@@ -59,15 +84,18 @@ export function EditDetailsAudience({
     <EditDetailsSection
       title={t("gatherings:manage.editModal.section.audience")}
     >
-      {myCommunityOptions.length > 0 && (
-        <FormField label={t("gatherings:create.step3.communityLabel")}>
+      {communityOptions.length > 0 && (
+        <FormField
+          label={t("gatherings:create.step3.communityLabel")}
+          helper={t("gatherings:create.step3.communityHint")}
+        >
           <Select
             options={[
               {
                 value: "",
                 label: t("gatherings:create.step3.communityNone"),
               },
-              ...myCommunityOptions.map((community) => ({
+              ...communityOptions.map((community) => ({
                 value: community.slug,
                 label: community.name,
               })),

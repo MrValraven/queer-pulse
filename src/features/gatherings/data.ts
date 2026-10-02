@@ -5,6 +5,7 @@ import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
 import type {
   EventAccessibilityAnswers,
   EventAnnouncementDTO,
+  EventCommunityDTO,
   EventHostDTO,
   EventSeriesDTO,
   EventVisibility,
@@ -112,13 +113,17 @@ export interface GatheringDetail {
    *  Absent in the demo registry, where the manage dashboard defaults it to
    *  "members" (Public), matching the wizard's own default. */
   visibility?: EventVisibility;
-  /** Live mode only: the community this gathering is filed to, if any —
-   *  settable at creation and changeable afterwards via the edit modal's
-   *  community picker. Absent in the demo registry (the demo gathering isn't
-   *  filed to a community), which is fine: the manage dashboard's
-   *  "Community members" audience-scope tier simply stays unoffered there,
-   *  same as any other event with no community. */
+  /** The community this gathering is hosted with, if any. Settable at
+   *  creation and changeable afterwards via the edit modal's community picker,
+   *  both by the community's owners and mods only. Independent of
+   *  `visibility`: a Public gathering can still be hosted with a community.
+   *  The manage dashboard offers the "Community members" audience tier only
+   *  while it is set. */
   communitySlug?: string;
+  /** The hosting community's name and access tier, for the "with <community>"
+   *  line on the event page. Withheld by the server from a viewer who may not
+   *  know a private community exists (see `EventCommunityDTO`). */
+  community?: EventCommunityDTO;
   /** Live mode only: the directory listing this gathering's venue is linked
    *  to, or null/absent for a free-text venue. Settable via the manage
    *  dashboard's venue picker. Absent in the demo registry (no demo
@@ -407,6 +412,12 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     hood: "Tejo path",
     host: "Queer Runners",
     hostSlug: "",
+    communitySlug: "queer-runners",
+    community: {
+      slug: "queer-runners",
+      name: "Queer Runners Lisboa",
+      accessTier: "public",
+    },
     spots: { key: "gatherings:spots.allPaces" },
     ctaKey: "gatherings:cta.rsvp",
     body: "A flat, friendly 5K along the river to close out the month: all paces, walkers included, no one left behind. We meet by the water, run loose, and finish with coffee. First-timers, say hi when you arrive and we'll pair you up.",
@@ -645,6 +656,12 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     hood: "Marvila",
     host: "Trans DJs Lisboa",
     hostSlug: "",
+    communitySlug: "trans-hub",
+    community: {
+      slug: "trans-hub",
+      name: "Trans & Non-Binary Hub",
+      accessTier: "request",
+    },
     spots: { key: "gatherings:spots.going", values: { count: 62 } },
     ctaKey: "gatherings:cta.illBeThere",
     body: "A night in a Marvila warehouse with a trans-only booth and a door policy that is actually enforced. Trained welfare staff are on site until the end, there is a quiet room upstairs whenever you need it, and water stays free all night. The address goes out to confirmed guests on the day. Bring your people and look after each other.",

@@ -84,6 +84,24 @@
   align-items: center;
   gap: 8px;
 }
+/* "With <community>": a link that reads as part of the meta line, so it
+   keeps the line's colour and says it is a link with an underline. */
+.metaLink {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.25);
+  text-underline-offset: 3px;
+  transition:
+    color 0.2s var(--ease),
+    text-decoration-color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .metaLink:hover {
+    color: var(--accent-ink);
+    text-decoration-color: currentColor;
+  }
+}
 .metaDot {
   width: 6px;
   height: 6px;
@@ -221,6 +239,33 @@
   font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 2px;
+}
+/* The "Hosted with" community block: an icon disc the size of the host's
+   avatar, so the two rows line up. */
+.communityIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  color: var(--ink);
+  font-size: var(--text-18);
+}
+.communityName {
+  color: var(--ink);
+}
+@media (hover: hover) {
+  .communityName:hover {
+    color: var(--accent-ink);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .metaLink {
+    transition: none;
+  }
 }
 .locReveal {
   margin-top: 18px;

@@ -1013,8 +1013,9 @@ function useGatheringWhereState(initialCommunitySlug: string) {
     slug: string;
     name: string;
   } | null>(null);
-  // The community this gathering is posted to, or "" for a public gathering
-  // visible to everyone (the wizard's default, matching prior behaviour).
+  // The community this gathering is hosted with, or "" for none (the wizard's
+  // default). Independent of `audienceScope`: a Public gathering can still be
+  // hosted with a community; only the "Community members" tier needs one.
   // Seeded from `initial.communitySlug` when the host arrived through a
   // community's "host a gathering here" link.
   const [communitySlug, setCommunitySlugValue] = useState(initialCommunitySlug);
