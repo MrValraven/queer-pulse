@@ -8605,9 +8605,9 @@ export const marketing: Catalog = {
     "A mostrar <b>{shown}</b> de {total} negócios online",
   // O painel de constelação do separador Online e os seus cartões.
   "directory.online.eyebrow": "Só online",
-  "directory.online.title": "Sem porta para a rua. <em>Continuam nossos.</em>",
+  "directory.online.title": "Negócios que vão até <em>ti</em>.",
   "directory.online.body":
-    "Lojas, estúdios e consultórios queer que vivem online, avaliados pela mesma comunidade que os lugares do mapa.",
+    "Lojas, estúdios e consultórios queer e queer-friendly que vivem online, avaliados pela mesma comunidade que os lugares do mapa.",
   "directory.online.stat.businesses": "negócios online",
   "directory.online.stat.businesses_one": "negócio online",
   "directory.online.stat.businesses_other": "negócios online",

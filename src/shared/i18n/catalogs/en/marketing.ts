@@ -8487,9 +8487,9 @@ export const marketing: Catalog = {
     "Showing <b>{shown}</b> of {total} online businesses",
   // The Online tab's constellation panel and its cards.
   "directory.online.eyebrow": "Online only",
-  "directory.online.title": "No front door. <em>Still ours.</em>",
+  "directory.online.title": "Businesses that come to <em>you</em>.",
   "directory.online.body":
-    "Queer-owned shops, studios and practices that live online, vetted by the same community as the places on the map.",
+    "Queer-owned and queer-friendly shops, studios and practices that live online, vetted by the same community as the places on the map.",
   "directory.online.stat.businesses": "online businesses",
   "directory.online.stat.businesses_one": "online business",
   "directory.online.stat.businesses_other": "online businesses",
