@@ -4,11 +4,11 @@
  * toggle list. Add a role here + on the backend and it appears automatically.
  *
  * Ids must stay identical to `users/staff-roles.registry.ts` on the backend:
- * they travel on `/auth/me` and on the grant/revoke calls. The five domain
- * grants below (directory, resources, editorial, communities, partnerships)
- * open exactly the admin sections listed against them in
- * `shared/components/layout/adminNav.data.ts`; nothing else in the console
- * moves with them.
+ * they travel on `/auth/me` and on the grant/revoke calls. The seven domain
+ * grants below (directory, resources, editorial, communities, partnerships,
+ * product manager, cultural producer) open exactly the admin sections listed
+ * against them in `shared/components/layout/adminNav.data.ts`; nothing else in
+ * the console moves with them.
  */
 export type StaffRoleId =
   | "magazine_editor"
@@ -18,7 +18,9 @@ export type StaffRoleId =
   | "resource_curator"
   | "editorial"
   | "communities"
-  | "partnerships";
+  | "partnerships"
+  | "product_manager"
+  | "cultural_producer";
 
 export interface StaffRoleMeta {
   id: StaffRoleId;
@@ -66,6 +68,16 @@ export const STAFF_ROLES: StaffRoleMeta[] = [
     id: "partnerships",
     labelKey: "admin:staffRoles.partnerships.label",
     descriptionKey: "admin:staffRoles.partnerships.desc",
+  },
+  {
+    id: "product_manager",
+    labelKey: "admin:staffRoles.productManager.label",
+    descriptionKey: "admin:staffRoles.productManager.desc",
+  },
+  {
+    id: "cultural_producer",
+    labelKey: "admin:staffRoles.culturalProducer.label",
+    descriptionKey: "admin:staffRoles.culturalProducer.desc",
   },
 ];
 

@@ -791,6 +791,12 @@ export const admin: Catalog = {
   "staffRoles.partnerships.label": "Parcerias",
   "staffRoles.partnerships.desc":
     "Analisa candidaturas de parceiros e mantém o diretório de parceiros, os níveis de organização e os changemakers atualizados.",
+  "staffRoles.productManager.label": "Gestão de produto",
+  "staffRoles.productManager.desc":
+    "Gere o roteiro, incluindo as ideias enviadas por membros, e lê a utilização de funcionalidades. Os relatórios da plataforma e a moderação continuam com a administração e a moderação.",
+  "staffRoles.culturalProducer.label": "Produção cultural",
+  "staffRoles.culturalProducer.desc":
+    "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked":

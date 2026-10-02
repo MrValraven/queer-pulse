@@ -506,8 +506,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     capabilities: ["resource_curator"],
   },
   {
-    // Story submissions, writer applications, commission interest, and the
-    // public-face content surfaces (press kit, landing slots, marketing films).
+    // Story submissions, writer applications and commission interest.
     patterns: [
       routes.adminMagazineSubmissions,
       `${routes.adminMagazineSubmissions}/*`,
@@ -515,6 +514,16 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       `${routes.adminWriterApplications}/*`,
       routes.adminCommissionInterests,
       `${routes.adminCommissionInterests}/*`,
+    ],
+    capabilities: ["editorial"],
+  },
+  {
+    // The public-face content surfaces (press kit, landing slots, marketing
+    // films), shared by `editorial` and `cultural_producer`. A separate entry
+    // from the editorial queues above because `elevatingCapabilities` stops at
+    // the first match: folded into that entry, a cultural producer would
+    // either be bounced from these or let into the submission queues too.
+    patterns: [
       routes.adminPressKit,
       `${routes.adminPressKit}/*`,
       routes.adminMarketingVideos,
@@ -522,7 +531,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminLanding,
       `${routes.adminLanding}/*`,
     ],
-    capabilities: ["editorial"],
+    capabilities: ["editorial", "cultural_producer"],
   },
   {
     // Community care work. The last-resort overrides (freeze, archive,
@@ -557,16 +566,31 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     capabilities: ["partnerships"],
   },
   {
+    // Product insight: the roadmap board (`AdminRoadmapController`) and the
+    // feature usage panel (`AdminFeatureUsageController`). `/admin/reports` is
+    // deliberately absent: it carries governance finance history, which the
+    // backend's staff-roles registry says no grant ever opens.
+    patterns: [
+      routes.adminRoadmap,
+      `${routes.adminRoadmap}/*`,
+      routes.adminFeatureUsage,
+      `${routes.adminFeatureUsage}/*`,
+    ],
+    capabilities: ["product_manager"],
+  },
+  {
     // PRD-282, the triage console over every staff queue. `AdminQueuesController`
     // spreads `@StaffRoles(...)` from every grant that owns at least one queue
-    // and then filters the RESPONSE BODY per queue, so any one of these six
+    // and then filters the RESPONSE BODY per queue, so any one of these
     // reaches the screen and sees only the queues it can work. This is the entry
-    // that needed a list rather than a single grant: as six sibling entries only
-    // the first would ever be consulted, and the other five holders would be
+    // that needed a list rather than a single grant: as sibling entries only
+    // the first would ever be consulted, and every other holder would be
     // bounced from the one screen that tells them their queue is late.
     //
-    // `magazine_editor` and `magazine_writer` are deliberately absent. Neither
-    // owns a queue in `ADMIN_QUEUE_REGISTRY`, so neither reaches the endpoint.
+    // `product_manager` owns the roadmap-ideas queue. `magazine_editor`,
+    // `magazine_writer` and `cultural_producer` are deliberately absent. None
+    // of them owns a queue in `ADMIN_QUEUE_REGISTRY`, so none of them reaches
+    // the endpoint.
     patterns: [routes.adminQueues],
     capabilities: [
       "housing_moderator",
@@ -575,6 +599,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       "editorial",
       "communities",
       "partnerships",
+      "product_manager",
     ],
   },
 ];

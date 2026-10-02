@@ -789,6 +789,12 @@ export const admin: Catalog = {
   "staffRoles.partnerships.label": "Partnerships",
   "staffRoles.partnerships.desc":
     "Reviews partner applications and keeps the partner directory, organisation tiers and changemakers current.",
+  "staffRoles.productManager.label": "Product Manager",
+  "staffRoles.productManager.desc":
+    "Runs the roadmap board, including member-submitted ideas, and reads feature usage. Platform reports and moderation stay with admins and moderators.",
+  "staffRoles.culturalProducer.label": "Cultural Producer",
+  "staffRoles.culturalProducer.desc":
+    "Keeps the landing page, press kit and marketing videos current. Story submissions and writer applications stay with Editorial.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
