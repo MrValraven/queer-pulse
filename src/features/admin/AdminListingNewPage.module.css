@@ -99,3 +99,26 @@
 
 /* The wizard's own CSS module owns the 422 flash, and `flashField` adds that
    class to whichever element carries the anchor id. Nothing to add here. */
+
+/* Opening a member's unfinished draft: says whose work this is and what was
+   left behind (their own answers), above the admin block. A tinted note
+   rather than a card, so it reads as context for the form below. */
+.handoverNote {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 20px 0 0;
+  padding: 16px 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+.handoverTitle {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}

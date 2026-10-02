@@ -1,7 +1,10 @@
 import { apiGet } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
-import type { ListingPath } from "../../marketing/listBusiness/listBusiness.data";
+import type {
+  ListingDraft,
+  ListingPath,
+} from "../../marketing/listBusiness/listBusiness.data";
 
 /** Days without an autosave after which a draft reads as stalled, i.e. the
  *  member has most likely stopped rather than paused. */
@@ -17,12 +20,11 @@ export interface ListingDraftOwnerDTO extends MemberRefDTO {
 }
 
 /**
- * One unfinished list-a-business draft, as staff see it. Deliberately a
- * SUMMARY, never the wizard payload: the stored `ListingDraftPayload` holds the
- * owner's outing and guide consent decisions and their personal bio, which the
- * moderation queue already withholds from staff (`ModeratedListingDTO`). The
- * backend reads these four fields out of the opaque payload JSON and returns
- * nothing else from it.
+ * One unfinished list-a-business draft, as it appears in the admin list. A
+ * SUMMARY: the backend reads these four fields out of the opaque payload JSON
+ * and returns nothing else from it. The business half of one draft is only
+ * fetched when an admin opens it to finish as a team listing
+ * (`getAdminListingDraft`).
  */
 export interface AdminListingDraftDTO {
   id: string;
@@ -60,6 +62,34 @@ export const getAdminListingDrafts = async (
   >(`/admin/listing-drafts${querySuffix ? `?${querySuffix}` : ""}`);
   return toItemsPage(response);
 };
+
+/**
+ * One draft opened to be finished as a team listing: the summary plus the
+ * BUSINESS half of the member's wizard payload.
+ *
+ * The member's own answers never come back: the eight owner-personal fields,
+ * `ownerRole`, the affirming pledge, and the queer-owned `badge` with its
+ * `evidence` (a claim about the owner that outs them as much as `ownedBy`
+ * does). The server leaves those keys out, and `teamDraftFromMemberDraft`
+ * blanks them again on this side, so a server that sent one anyway still
+ * could not put it on a listing. The member supplies them when they accept
+ * the offer, as on any team-written listing.
+ */
+export interface AdminListingDraftDetailDTO extends AdminListingDraftDTO {
+  payload: Partial<ListingDraft>;
+}
+
+/**
+ * GET /admin/listing-drafts/:id — Admin only, like the list. Read-only: the
+ * member's draft row is never written to from the console, so finishing it
+ * as a team listing leaves their own copy exactly as they left it.
+ */
+export const getAdminListingDraft = (
+  id: string,
+): Promise<AdminListingDraftDetailDTO> =>
+  apiGet<AdminListingDraftDetailDTO>(
+    `/admin/listing-drafts/${encodeURIComponent(id)}`,
+  );
 
 /** Whole days since the draft was last autosaved. */
 export function draftIdleDays(draft: AdminListingDraftDTO, now = Date.now()) {

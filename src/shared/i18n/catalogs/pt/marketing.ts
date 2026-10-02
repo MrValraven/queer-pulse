@@ -1532,7 +1532,7 @@ export const marketing: Catalog = {
   "listBusiness.drafts.title": "Retoma onde ficaste",
   "listBusiness.drafts.count": "{count} em curso",
   "listBusiness.drafts.teamNote":
-    "A nossa equipa vê o nome do espaço e até onde chegaste, nunca o resto do rascunho, para te poder ajudar se encontrares alguma dificuldade.",
+    "A nossa equipa vê os dados do negócio no teu rascunho e até onde chegaste, nunca as tuas respostas sobre ti. Se encontrares alguma dificuldade, podemos oferecer ajuda ou terminar o registo para tu aceitares.",
   "listBusiness.drafts.untitled": "Espaço sem título",
   "listBusiness.drafts.updated": "Última edição {when}",
   "listBusiness.drafts.resume": "Retomar",
@@ -2894,6 +2894,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-02.headline":
+    "O diretório ganha um separador Online e etiquetas sobre quem gere um negócio, e as personas podem importar o feed de um podcast.",
   "changelog.releases.2026-09-30.headline":
     "Um novo início de sessão com um Q vivo, e a exportação dos teus dados cobre quase toda a tua conta.",
   "changelog.releases.2026-09-29.headline":
@@ -3028,6 +3030,98 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+  "changelog.entries.tags-and-snippets-type-normally.title":
+    "As tags de um item aceitam vírgulas, e os trechos de código uma nova linha",
+  "changelog.entries.tags-and-snippets-type-normally.body":
+    "Uma vírgula ou um Enter que acabaste de escrever já não desaparece, por isso podes escrever várias tags e trechos com várias linhas, não só colá-los.",
+  "changelog.entries.directory-online-tab.title":
+    "O diretório ganha um separador Online",
+  "changelog.entries.directory-online-tab.body":
+    "Os negócios queer e queer-friendly que só existem online têm agora a sua própria vista, ao lado de Lista e Mapa.",
+  "changelog.entries.directory-online-tab.details":
+    "Estes negócios já estavam no diretório, mas misturados na lista e deixados de fora do mapa sem aviso. O separador Online abre com uma pequena constelação destes negócios à volta do pulso da comunidade, e ao apontares para um deles o cartão correspondente acende-se. Os cartões mostram o endereço web do próprio negócio e onde o encontrar, em vez de um bairro ou de um horário. Os filtros que só uma porta para a rua consegue responder, como aberto agora, acessibilidade, ambiente e a tua localização, ficam de fora neste separador. A constelação deixa de se mexer se tiveres pedido menos movimento.",
+  "changelog.entries.online-only-businesses-no-blank-location.title":
+    "Os negócios só online já não mostram uma localização em branco",
+  "changelog.entries.online-only-businesses-no-blank-location.body":
+    "O cabeçalho da página diz Só online em vez de dois pontos soltos, e nunca recebem um pin no mapa.",
+  "changelog.entries.item-editor-drawer-redesign.title":
+    "Uma gaveta mais clara para editar os itens da persona",
+  "changelog.entries.item-editor-drawer-redesign.body":
+    "O conteúdo fica numa coluna e as definições numa barra lateral, e o rodapé diz porque é que Guardar está ou não pronto.",
+  "changelog.entries.item-editor-drawer-redesign.details":
+    "As descrições crescem com o texto em vez de ficarem cortadas a meio de uma linha. As respostas rápidas, como o estado da mesa de uma campanha, são opções que tocas, com espaço para escreveres à tua maneira. O Destaque é um interruptor a sério, que diz se está ligado ou desligado. Protege este trabalho fica recolhido numa linha discreta até o abrires. Guardar fica desligado quando nada mudou, e Cmd ou Ctrl + Enter guarda.",
+  "changelog.entries.collaborators-from-your-connections.title":
+    "Credita colaborações a partir das tuas conexões",
+  "changelog.entries.collaborators-from-your-connections.body":
+    "O seletor de colaborações procura agora só entre as pessoas com quem estás conectade. Os créditos que já deste a outras pessoas ficam, e podes removê-los.",
+  "changelog.entries.new-sections-show-in-preview.title":
+    "As secções novas aparecem na pré-visualização ao vivo",
+  "changelog.entries.new-sections-show-in-preview.body":
+    "O primeiro item acrescentado a uma secção vazia, ou um novo Destaque, já não fica invisível na pré-visualização.",
+  "changelog.entries.product-manager-and-cultural-producer-roles.title":
+    "Duas novas funções na equipa: Gestão de produto e Produção cultural",
+  "changelog.entries.product-manager-and-cultural-producer-roles.body":
+    "Gestão de produto cuida do roadmap, do uso das funcionalidades e da fila de ideias; Produção cultural, da página inicial, do kit de imprensa e dos filmes.",
+  "changelog.entries.product-manager-and-cultural-producer-roles.details":
+    "Passam a ser dez funções na equipa. Gestão de produto pode abrir o roadmap e o uso das funcionalidades na administração, e trata da fila de ideias para o roadmap. Os relatórios ficam com a administração, porque guardam o histórico financeiro da governança, que nenhuma função da equipa recebe. Produção cultural pode abrir a página inicial, o kit de imprensa e os vídeos de marketing, mas não as histórias submetidas nem as candidaturas de escrita, que ficam com a Editorial. Nenhuma das duas funções mostra um distintivo no perfil.",
+  "changelog.entries.persona-preview-shows-every-edit.title":
+    "A pré-visualização da persona mostra cada alteração enquanto a fazes",
+  "changelog.entries.persona-preview-shows-every-edit.body":
+    "As redes sociais e os links de Parte de aparecem antes de guardares, e a pré-visualização vai até ao bloco que estás a preencher.",
+  "changelog.entries.descriptions-keep-line-breaks.title":
+    "As descrições dos itens mantêm as mudanças de linha",
+  "changelog.entries.descriptions-keep-line-breaks.body":
+    "Na tua página de persona, na pré-visualização e na vista ampliada do Studio, as linhas e os parágrafos leem-se como os escreveste.",
+  "changelog.entries.game-master-page-blocks.title":
+    "As páginas de mestre de jogo são mais fáceis de preencher",
+  "changelog.entries.game-master-page-blocks.body":
+    "À mesa divide-se em cartões com título, os formatos e as ferramentas de segurança explicam cada opção, e os sistemas trazem sugestões a um toque.",
+  "changelog.entries.campaigns-and-sessions-in-your-words.title":
+    "Campanhas e sessões à medida de como as mesas funcionam",
+  "changelog.entries.campaigns-and-sessions-in-your-words.body":
+    "Uma campanha diz quando jogas por palavras tuas, como Domingos, de 15 em 15 dias. As sessões têm seletores de dia e hora e dizem Mesa cheia quando enchem.",
+  "changelog.entries.second-starred-item-stays.title":
+    "Um segundo item com estrela já não desaparece",
+  "changelog.entries.second-starred-item-stays.body":
+    "Só o item em Destaque sai da sua secção. Qualquer outro item com estrela fica na tua página.",
+  "changelog.entries.gathering-names-its-community.title":
+    "A página de um convívio diz com que comunidade é organizado",
+  "changelog.entries.gathering-names-its-community.body":
+    "Aparece no cabeçalho e por baixo de quem organiza, com link. O nome de uma comunidade privada só aparece a quem é membro e a quem organiza.",
+  "changelog.entries.hosting-with-a-community-is-for-its-team.title":
+    "Só quem é dono, co-dono ou modera uma comunidade pode organizar com ela",
+  "changelog.entries.hosting-with-a-community-is-for-its-team.body":
+    "Organizar com uma comunidade põe o nome dela no convívio, por isso o seletor só mostra comunidades que ajudas a gerir.",
+  "changelog.entries.hosting-with-a-community-is-for-its-team.details":
+    "O botão Organizar um convívio aqui, no separador Eventos de uma comunidade também só aparece a essas pessoas. Uma comunidade em nome da qual não podes falar, vinda de um link editado, de um convívio duplicado ou de um rascunho retomado, é retirada do formulário. Se editares um convívio que já está organizado com uma comunidade que não geres, continuas a vê-la e podes removê-la.",
+  "changelog.entries.host-with-a-community-is-not-visibility.title":
+    "Organizar com uma comunidade já não parece uma definição de visibilidade",
+  "changelog.entries.host-with-a-community-is-not-visibility.body":
+    "O seletor diz agora Organizar com uma comunidade, e que isso não muda quem o pode ver. Um convívio Público também pode ter uma.",
+  "changelog.entries.launch-films-and-marketing-videos.title":
+    "Filmes de lançamento, feitos a partir da própria QueerPulse",
+  "changelog.entries.launch-films-and-marketing-videos.body":
+    "Três filmes curtos feitos com o design e as palavras da app, com uma banda sonora gerada em código, que a equipa vê na administração.",
+  "changelog.entries.launch-films-and-marketing-videos.details":
+    "Há um filme de 65 segundos e duas versões de 48 segundos. Cada cena é desenhada no navegador a partir do nosso sistema de design e dos nossos textos, e a música é sintetizada, não licenciada. As pessoas que aparecem são avatares ilustrados (DiceBear Micah, CC BY 4.0), escolhidos para um elenco propositadamente diverso; nenhuma delas é membro. A página Vídeos de marketing, na administração, reproduz cada filme com a sua banda sonora e exporta-o para MP4 no navegador de quem está na equipa, por isso nada é enviado para um servidor. Os filmes estão no site mas fora dos motores de busca, e só a própria QueerPulse os pode incorporar.",
+  "changelog.entries.podcast-feed-import.title":
+    "Importa os episódios de um podcast a partir do feed",
+  "changelog.entries.podcast-feed-import.body":
+    "Cola o teu feed no editor da persona. Os episódios novos esperam que os publiques, ou publicam-se sozinhos se ligares essa opção.",
+  "changelog.entries.podcast-feed-import.details":
+    "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. As personas com formato de podcast, de podcasts e rádio a actual play e criação de vídeo, ganham um painel Importar: vês o programa e os episódios mais recentes, escolhes uma secção, decides se trazes os episódios antigos, e ligas. Os episódios novos chegam a uma fila de revisão onde os publicas, dispensas ou recuperas, vários de uma vez, e uma notificação avisa-te quando há episódios à espera. A publicação automática só se aplica a episódios lançados depois de a ligares. Os episódios na tua página ganham um link Ouvir, ou Ver para quem cria vídeo, e podem mostrar a temporada e o episódio e a duração.",
+  "changelog.entries.video-and-audio-persona-kinds.title":
+    "Personas para criação de vídeo, produção de podcast e rádio",
+  "changelog.entries.video-and-audio-persona-kinds.body":
+    "Quatro tipos novos, e o seletor de criação sugere agora os tipos que encaixam no trabalho do teu perfil.",
+  "changelog.entries.video-and-audio-persona-kinds.details":
+    "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. Os tipos novos são Vídeo e YouTube, Vídeo curto, Produção de podcast e Rádio, e pesquisar palavras como youtuber, tiktok, podcast ou rádio encontra-os. O seletor abre com Do teu trabalho, a partir das profissões que indicas.",
+  "changelog.entries.who-owns-and-runs-it-tags.title":
+    "Mostra quem é dono e gere um negócio",
+  "changelog.entries.who-owns-and-runs-it-tags.body":
+    "Quem é dono pode marcar um espaço como gerido por mulheres, pessoas trans ou pessoas não binárias, e o diretório pode filtrar por isso.",
+  "changelog.entries.who-owns-and-runs-it-tags.details":
+    "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. Uma etiqueta trans ou não binária diz algo sobre a identidade de género da própria pessoa dona, por isso só ela as pode definir. Ficam na secção Um pouco sobre ti, só da pessoa dona, e as pessoas que cogerem, as sugestões e os espaços escritos pela equipa nunca lhes tocam. As etiquetas são públicas mesmo quando o nome da pessoa dona está escondido, e o formulário diz com clareza que, num negócio pequeno, podem apontar diretamente para ti. Cada uma aparece como uma etiqueta simples, nunca com o estilo de uma marca verificada, e é independente do selo queer-owned. No diretório, Quem gere filtra por qualquer uma das etiquetas que escolheres.",
   "changelog.entries.no-focus-frame-around-pages.title":
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":

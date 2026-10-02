@@ -6921,6 +6921,23 @@ export const admin: Catalog = {
   "listingNew.success.closeCta": "Voltar à fila de espaços",
   "listingNew.success.viewLiveCta": "Ver no diretório",
   "listingNew.success.addAnotherCta": "Adicionar outro espaço",
+  "listingNew.fromDraft.noteAria": "Sobre este rascunho",
+  "listingNew.fromDraft.title": "A terminar o rascunho de {name}",
+  "listingNew.fromDraft.titleNoOwner":
+    "A terminar o rascunho de uma pessoa que entretanto saiu",
+  "listingNew.fromDraft.body":
+    "Os dados do negócio já estão preenchidos. As respostas pessoais não são copiadas: quem a pessoa é, os consentimentos, o compromisso e qualquer indicação de espaço queer-owned. Isto sai como um espaço da equipa, oferecido de volta à pessoa, que acrescenta essas respostas quando aceitar. O rascunho dela fica como estava, por isso, se também o terminar, aparecem os dois na fila.",
+  "listingNew.fromDraft.offerNote":
+    "Olá, {firstName}! Pegámos onde deixaste {name} e terminámos o registo. Dá uma vista de olhos e, se estiver certo, aceita-o para acrescentares os teus dados. Fica com a equipa até aceitares.",
+  "listingNew.fromDraft.offerNoteUntitled":
+    "Olá, {firstName}! Pegámos no espaço que começaste a registar e terminámo-lo. Dá uma vista de olhos e, se estiver certo, aceita-o para acrescentares os teus dados. Fica com a equipa até aceitares.",
+  "listingNew.fromDraft.gone.title": "Este rascunho já não está aqui",
+  "listingNew.fromDraft.gone.body":
+    "A pessoa pode tê-lo enviado ou deitado fora desde que a lista carregou.",
+  "listingNew.fromDraft.gone.backCta": "Voltar aos espaços",
+  "listingNew.fromDraft.loadError.title": "Este rascunho não carregou",
+  "listingNew.fromDraft.loadError.body":
+    "Verifica a ligação e tenta outra vez.",
 
   // ── Edição pela administração de um espaço ao cuidado da plataforma
   // (`/admin/listings/:ref/edit`) ────────────────────────────────────────────
@@ -7395,7 +7412,7 @@ export const admin: Catalog = {
     "Para gerar vídeos precisas do Chrome ou do Edge num computador. Podes pré-visualizar todos os filmes aqui na mesma.",
   // ── Rascunhos de espaços por acabar (só Admin, separador de /admin/listings)
   "listingDrafts.intro":
-    "Espaços que as pessoas começaram a registar mas ainda não enviaram. Vês o nome e até onde chegaram, nunca o rascunho em si. Oferece ajuda se uma pessoa parecer ter encontrado alguma dificuldade.",
+    "Espaços que as pessoas começaram a registar mas ainda não enviaram. Vês o nome e até onde chegaram. Oferece ajuda se uma pessoa parecer ter encontrado alguma dificuldade, ou termina os dados do negócio como um espaço da equipa que ela pode aceitar.",
   "listingDrafts.count_one": "{count} rascunho em curso",
   "listingDrafts.count_other": "{count} rascunhos em curso",
   "listingDrafts.empty": "Sem rascunhos por acabar, por agora.",
@@ -7416,6 +7433,7 @@ export const admin: Catalog = {
   "listingDrafts.unknownOwner": "uma pessoa que entretanto saiu",
   "listingDrafts.profileCta": "Ver perfil",
   "listingDrafts.messageCta": "Escrever a {name}",
+  "listingDrafts.finishCta": "Terminar como espaço da equipa",
   "listingDrafts.message.eyebrow": "Oferecer ajuda",
   "listingDrafts.message.title": "Escrever a {name}",
   "listingDrafts.message.sub":

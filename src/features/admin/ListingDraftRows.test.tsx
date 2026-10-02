@@ -49,6 +49,17 @@ describe("ListingDraftRows", () => {
     ).toBeInTheDocument();
   });
 
+  it("links to finishing the draft as a team listing", async () => {
+    renderRows([makeDraft({ id: "listing-draft-0004" })]);
+    const link = await screen.findByRole("link", {
+      name: /Finish as a team listing/,
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "/admin/listings/new?fromDraft=listing-draft-0004",
+    );
+  });
+
   it("marks a draft untouched for a week or more as stalled", async () => {
     renderRows([
       makeDraft({
@@ -65,6 +76,11 @@ describe("ListingDraftRows", () => {
       screen.getByText("Started by a member who has since left"),
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Message/ })).toBeNull();
+    // The business details can still be finished; there is just nobody to
+    // offer the listing to.
+    expect(
+      screen.getByRole("link", { name: /Finish as a team listing/ }),
+    ).toBeInTheDocument();
   });
 
   it("opens the message modal pre-filled with a starter message", async () => {

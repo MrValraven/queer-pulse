@@ -8,6 +8,21 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "2 Oct 2026": {
+      // Nineteen entries this day, so three highlights. The Online tab and the
+      // who-runs-it tags change the directory every member uses; podcast feed
+      // import is the largest new tool for creators.
+      // The who-runs-it tags, podcast import and the new persona kinds went
+      // live late on 30 Sep, after that day's notes (v1.52.1) were written.
+      // They are listed here, each saying so in its details, so 30 Sep keeps
+      // the version it shipped under instead of being renumbered after the
+      // fact.
+      highlights: [
+        "directory-online-tab",
+        "who-owns-and-runs-it-tags",
+        "podcast-feed-import",
+      ],
+    },
     "30 Sep 2026": {
       // More than seven entries this day, so three highlights: the sign-in
       // redesign first, since every member sees it, then the export coverage,

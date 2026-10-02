@@ -1490,7 +1490,7 @@ export const marketing: Catalog = {
   "listBusiness.drafts.title": "Pick up where you left off",
   "listBusiness.drafts.count": "{count} in progress",
   "listBusiness.drafts.teamNote":
-    "Our team can see the place's name and how far you've got, never the rest of your draft, so we can offer a hand if you get stuck.",
+    "Our team can see your draft's business details and how far you've got, never your answers about yourself. If you get stuck, we may offer a hand, or finish the listing for you to accept.",
   "listBusiness.drafts.untitled": "Untitled place",
   "listBusiness.drafts.updated": "Last edited {when}",
   "listBusiness.drafts.resume": "Resume",
@@ -2820,6 +2820,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-02.headline":
+    "The directory gets an Online tab and tags for who runs a business, and personas can import a podcast feed.",
   "changelog.releases.2026-09-30.headline":
     "A new sign-in page with a living Q, and your data export covers nearly all your account.",
   "changelog.releases.2026-09-29.headline":
@@ -2954,6 +2956,98 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+  "changelog.entries.tags-and-snippets-type-normally.title":
+    "Item tags take a comma, and code snippets a new line",
+  "changelog.entries.tags-and-snippets-type-normally.body":
+    "A comma or Enter you just typed no longer vanishes, so several tags and multi-line snippets can be typed, not only pasted.",
+  "changelog.entries.directory-online-tab.title":
+    "The directory gets an Online tab",
+  "changelog.entries.directory-online-tab.body":
+    "Queer-owned and queer-friendly businesses that only exist online get their own view beside List and Map.",
+  "changelog.entries.directory-online-tab.details":
+    "These businesses were already listed, but mixed into the list and silently left off the map. The Online tab opens on a small constellation of them around the community's pulse, and pointing at one lights up its card. Storefront cards show the business's own web address and where to find it, instead of a neighbourhood or opening hours. Filters only a front door can answer, like open now, access needs, vibe and your location, are left out on this tab. The constellation stops moving if you've asked for reduced motion.",
+  "changelog.entries.online-only-businesses-no-blank-location.title":
+    "Online-only businesses no longer show a blank location",
+  "changelog.entries.online-only-businesses-no-blank-location.body":
+    "Their page header reads Online only instead of two stray dots, and they never take a pin on the map.",
+  "changelog.entries.item-editor-drawer-redesign.title":
+    "A clearer drawer for editing persona items",
+  "changelog.entries.item-editor-drawer-redesign.body":
+    "Content sits in one column with settings in a side rail, and the footer says why Save is or isn't ready.",
+  "changelog.entries.item-editor-drawer-redesign.details":
+    "Descriptions grow with their text instead of cutting off mid-line. Quick answers, like a campaign's table status, are chips you tap, with room to write your own. Spotlight is a real on and off switch that says which it is. Protect this work folds into one quiet row until you open it. Save stays off when nothing has changed, and Cmd or Ctrl + Enter saves.",
+  "changelog.entries.collaborators-from-your-connections.title":
+    "Credit collaborators from your connections",
+  "changelog.entries.collaborators-from-your-connections.body":
+    "The collaborator picker now searches only people you're connected with. Credits you already gave others stay, and you can remove them.",
+  "changelog.entries.new-sections-show-in-preview.title":
+    "New sections appear in the live preview",
+  "changelog.entries.new-sections-show-in-preview.body":
+    "The first item added to an empty section, or a new Spotlight, no longer stays invisible in the preview.",
+  "changelog.entries.product-manager-and-cultural-producer-roles.title":
+    "Two new staff roles: Product Manager and Cultural Producer",
+  "changelog.entries.product-manager-and-cultural-producer-roles.body":
+    "Product Manager looks after the roadmap, feature usage and ideas queue; Cultural Producer, the landing page, press kit and films.",
+  "changelog.entries.product-manager-and-cultural-producer-roles.details":
+    "That makes ten staff roles. Product Manager can open the admin roadmap and feature usage, and works the roadmap ideas queue. Reports stay with admins, because they hold governance finance history that no staff role is given. Cultural Producer can open the landing page, press kit and marketing videos, but not story submissions or writer applications, which stay with Editorial. Neither role shows a badge on a profile.",
+  "changelog.entries.persona-preview-shows-every-edit.title":
+    "The persona preview shows every edit as you make it",
+  "changelog.entries.persona-preview-shows-every-edit.body":
+    "Social links and Part of links now appear before you save, and the preview scrolls to the block you're filling in.",
+  "changelog.entries.descriptions-keep-line-breaks.title":
+    "Item descriptions keep their line breaks",
+  "changelog.entries.descriptions-keep-line-breaks.body":
+    "On your persona page, in the preview and in the Studio lightbox, lines and paragraphs read the way you wrote them.",
+  "changelog.entries.game-master-page-blocks.title":
+    "Game master pages are easier to fill in",
+  "changelog.entries.game-master-page-blocks.body":
+    "At the table splits into titled cards, formats and safety tools say what each option means, and systems offer one-tap suggestions.",
+  "changelog.entries.campaigns-and-sessions-in-your-words.title":
+    "Campaigns and sessions fit how tables actually run",
+  "changelog.entries.campaigns-and-sessions-in-your-words.body":
+    "A campaign says when you play in your own words, like Sundays, fortnightly. Sessions get day and time pickers and read Table full when full.",
+  "changelog.entries.second-starred-item-stays.title":
+    "A second starred item no longer disappears",
+  "changelog.entries.second-starred-item-stays.body":
+    "Only the item in your Spotlight leaves its section. Any other starred item stays on your page.",
+  "changelog.entries.gathering-names-its-community.title":
+    "A gathering's page names the community it's hosted with",
+  "changelog.entries.gathering-names-its-community.body":
+    "It shows in the header and under the host, linked. A private community's name shows only to its members and the organisers.",
+  "changelog.entries.hosting-with-a-community-is-for-its-team.title":
+    "Only a community's owners, co-owners and mods can host with it",
+  "changelog.entries.hosting-with-a-community-is-for-its-team.body":
+    "Hosting with a community puts its name on the gathering, so the picker lists only communities you help run.",
+  "changelog.entries.hosting-with-a-community-is-for-its-team.details":
+    "The Host a gathering here button on a community's Events tab shows only to them too. A community you can't speak for, arriving from an edited link, a duplicated gathering or a resumed draft, is cleared from the form. If you edit a gathering that is already hosted with a community you don't run, you still see that community and can remove it.",
+  "changelog.entries.host-with-a-community-is-not-visibility.title":
+    "Hosting with a community no longer reads as a visibility setting",
+  "changelog.entries.host-with-a-community-is-not-visibility.body":
+    "The picker now says Host it with a community, and that this doesn't change who can see it. A Public gathering can have one too.",
+  "changelog.entries.launch-films-and-marketing-videos.title":
+    "Launch films, made from QueerPulse itself",
+  "changelog.entries.launch-films-and-marketing-videos.body":
+    "Three short films built from the app's own design and words, with a score generated in code, that staff preview in Admin.",
+  "changelog.entries.launch-films-and-marketing-videos.details":
+    "There is a 65-second film and two 48-second cuts. Every scene is drawn in the browser from our design system and copy, and the music is synthesised rather than licensed. The people on screen are illustrated avatars (DiceBear Micah, CC BY 4.0), chosen for a deliberately broad cast; none of them is a member. The Marketing videos page in the admin area plays each film with its score and renders it to an MP4 in the staff member's own browser, so nothing is uploaded to a server. The films are served from the site but kept out of search engines, and only QueerPulse itself may embed them.",
+  "changelog.entries.podcast-feed-import.title":
+    "Import a podcast's episodes from its feed",
+  "changelog.entries.podcast-feed-import.body":
+    "Paste your feed in the persona editor. New episodes wait for you to publish them, or publish themselves if you switch that on.",
+  "changelog.entries.podcast-feed-import.details":
+    "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. Podcast-shaped personas, from podcasters and radio hosts to actual play and video creators, get an Import pane: preview the show and its newest episodes, pick a section, choose whether to bring in the back catalogue, then connect. New episodes land in a review queue where you publish, dismiss or restore them, several at once, and a notification tells you when some are waiting. Auto-publish only applies to episodes released after you turn it on. Episodes on your page get a Listen link, or Watch for video creators, and can carry a season and episode line and a running time.",
+  "changelog.entries.video-and-audio-persona-kinds.title":
+    "Personas for video creators, podcast producers and radio hosts",
+  "changelog.entries.video-and-audio-persona-kinds.body":
+    "Four new kinds, and the create picker now suggests kinds that fit the work on your profile.",
+  "changelog.entries.video-and-audio-persona-kinds.details":
+    "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. The new kinds are Video creator / YouTuber, Short-form creator, Podcast producer and Radio host, and searching for words like youtuber, tiktok, podcast or radio finds them. The picker opens with From your work, drawn from the professions you list.",
+  "changelog.entries.who-owns-and-runs-it-tags.title":
+    "Show who owns and runs a business",
+  "changelog.entries.who-owns-and-runs-it-tags.body":
+    "Owners can tag a listing as run by women, trans or non-binary people, and the directory can filter by it.",
+  "changelog.entries.who-owns-and-runs-it-tags.details":
+    "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. A trans or non-binary tag says something about the owner's own gender identity, so only the owner can set these tags. They sit in the owner's own A little about you section, and co-managers, suggestions and listings the team writes never touch them. The tags are public even when the owner's name is hidden, and the form says plainly that on a small business they can point straight to you. Each shows as a plain pill, never styled like a verified mark, and is separate from the queer-owned badge. In the directory, Who runs it filters by any of the tags you pick.",
   "changelog.entries.no-focus-frame-around-pages.title":
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
