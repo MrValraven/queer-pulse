@@ -145,6 +145,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
           "editorial",
           "communities",
           "partnerships",
+          "product_manager",
         ],
       },
       {
@@ -494,25 +495,26 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
       {
         labelKey: "shared:adminNav.items.landing",
         to: routes.adminLanding,
-        capabilities: ["editorial"],
+        capabilities: ["editorial", "cultural_producer"],
         icon: FiHome,
       },
       {
         labelKey: "shared:adminNav.items.pressKit",
         to: routes.adminPressKit,
-        capabilities: ["editorial"],
+        capabilities: ["editorial", "cultural_producer"],
         icon: FiRadio,
       },
       {
         labelKey: "shared:adminNav.items.marketingVideos",
         to: routes.adminMarketingVideos,
-        capabilities: ["editorial"],
+        capabilities: ["editorial", "cultural_producer"],
         icon: FiFilm,
       },
       {
         labelKey: "shared:adminNav.items.roadmap",
         to: routes.adminRoadmap,
         icon: FiMap,
+        capabilities: ["product_manager"],
       },
     ],
   },
@@ -547,15 +549,17 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiBarChart2,
       },
       {
-        // `isAdminOnly` because `AdminFeatureUsageController` is
-        // `@Roles(Admin)` alone, and `routes.adminFeatureUsage` is not in
-        // `MOD_ACCESSIBLE_ADMIN_PATTERNS` (`authGate.ts`) either, so it falls
-        // under the same blanket admin-only match; without the flag a
-        // moderator saw this link and bounced off the route it points to.
+        // `AdminFeatureUsageController` is `@Roles(Admin)` plus
+        // `@StaffRoles('product_manager')`, and `routes.adminFeatureUsage` is
+        // not in `MOD_ACCESSIBLE_ADMIN_PATTERNS` (`authGate.ts`). The grant
+        // replaces the old `isAdminOnly` flag: a moderator without
+        // `product_manager` is still kept off the link by the capability
+        // filter in `visibleAdminNavSections`, while `isAdminOnly` would also
+        // have hidden it from the grant holder it now exists for.
         labelKey: "shared:adminNav.items.featureUsage",
         to: routes.adminFeatureUsage,
         icon: FiBarChart2,
-        isAdminOnly: true,
+        capabilities: ["product_manager"],
       },
       {
         // SUS-05: confirmed volunteer sessions and hours. Filed beside Reports
