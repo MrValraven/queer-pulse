@@ -73,6 +73,13 @@
   gap: 6px;
 }
 
+.teamNote {
+  margin-top: 12px;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
 .error {
   font-size: var(--text-body-sm);
   color: var(--ink-60);

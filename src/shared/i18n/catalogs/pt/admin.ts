@@ -1533,6 +1533,7 @@ export const admin: Catalog = {
   "adminListings.view.queue": "Submissões",
   "adminListings.view.editSuggestions": "Sugestões de edição",
   "adminListings.view.claims": "Reivindicações",
+  "adminListings.view.drafts": "Rascunhos por acabar",
   "adminListings.remove.cta": "Eliminar",
   "adminListings.actions.moreAriaLabel": "Mais ações para {name}",
   "adminListings.remove.toast.removed": "Anúncio eliminado: {name}.",
@@ -7392,4 +7393,43 @@ export const admin: Catalog = {
     "Algo correu mal ao gerar o vídeo. Começa de novo e, se continuar a acontecer, avisa a equipa técnica.",
   "marketingVideos.studio.unsupported":
     "Para gerar vídeos precisas do Chrome ou do Edge num computador. Podes pré-visualizar todos os filmes aqui na mesma.",
+  // ── Rascunhos de espaços por acabar (só Admin, separador de /admin/listings)
+  "listingDrafts.intro":
+    "Espaços que as pessoas começaram a registar mas ainda não enviaram. Vês o nome e até onde chegaram, nunca o rascunho em si. Oferece ajuda se uma pessoa parecer ter encontrado alguma dificuldade.",
+  "listingDrafts.count_one": "{count} rascunho em curso",
+  "listingDrafts.count_other": "{count} rascunhos em curso",
+  "listingDrafts.empty": "Sem rascunhos por acabar, por agora.",
+  "listingDrafts.loadError.title": "A lista de rascunhos não carregou",
+  "listingDrafts.loadError.body":
+    "Não conseguimos chegar ao servidor. Nada mudou. Tenta de novo daqui a pouco.",
+  "listingDrafts.loadMore": "Carregar mais rascunhos",
+  "listingDrafts.loadingMore": "A carregar…",
+  "listingDrafts.untitled": "Espaço sem nome",
+  "listingDrafts.path.claim": "O próprio espaço",
+  "listingDrafts.path.suggest": "Sugestão de espaço",
+  "listingDrafts.active": "Editado há pouco",
+  "listingDrafts.stalled_one": "Parado há {count} dia",
+  "listingDrafts.stalled_other": "Parado há {count} dias",
+  "listingDrafts.progress": "Passo {step} de {total}: {label}",
+  "listingDrafts.dates": "Começado a {started} · editado a {edited}",
+  "listingDrafts.startedBy": "Começado por {name}",
+  "listingDrafts.unknownOwner": "uma pessoa que entretanto saiu",
+  "listingDrafts.profileCta": "Ver perfil",
+  "listingDrafts.messageCta": "Escrever a {name}",
+  "listingDrafts.message.eyebrow": "Oferecer ajuda",
+  "listingDrafts.message.title": "Escrever a {name}",
+  "listingDrafts.message.sub":
+    "Chega à conversa oficial da QueerPulse, fixada na caixa de entrada. Não faz vibrar o telemóvel.",
+  "listingDrafts.message.label": "A tua mensagem",
+  "listingDrafts.message.helper":
+    "Já começámos por ti. Torna-a tua e mantém-na uma oferta, não uma pressão.",
+  "listingDrafts.message.template":
+    "Olá, {firstName}! Vimos que começaste a registar {name} na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
+  "listingDrafts.message.templateUntitled":
+    "Olá, {firstName}! Vimos que começaste a registar um espaço na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
+  "listingDrafts.message.send": "Enviar mensagem",
+  "listingDrafts.message.sending": "A enviar…",
+  "listingDrafts.message.cancel": "Cancelar",
+  "listingDrafts.message.sent": "Enviada a {name}.",
+  "listingDrafts.message.action": "enviar a tua mensagem",
 };

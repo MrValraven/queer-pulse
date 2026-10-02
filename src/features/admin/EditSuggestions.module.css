@@ -73,6 +73,19 @@
   flex-shrink: 0;
 }
 
+/* Unfinished-draft rows carry two actions, which would squeeze the text to a
+   sliver on a phone, so there they drop below it and may wrap. */
+@media (max-width: 600px) {
+  .rowStacking {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rowStacking .rowActions {
+    flex-wrap: wrap;
+  }
+}
+
 /* ── Paginated queue chrome (ENG-41: the listing-claim queue) ──────────── */
 .queueCount {
   margin: 20px 0 0;

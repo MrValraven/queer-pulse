@@ -1531,6 +1531,8 @@ export const marketing: Catalog = {
     "Não conseguimos guardar o teu rascunho agora. Verifica a ligação e tenta de novo.",
   "listBusiness.drafts.title": "Retoma onde ficaste",
   "listBusiness.drafts.count": "{count} em curso",
+  "listBusiness.drafts.teamNote":
+    "A nossa equipa vê o nome do espaço e até onde chegaste, nunca o resto do rascunho, para te poder ajudar se encontrares alguma dificuldade.",
   "listBusiness.drafts.untitled": "Espaço sem título",
   "listBusiness.drafts.updated": "Última edição {when}",
   "listBusiness.drafts.resume": "Retomar",

@@ -1536,6 +1536,7 @@ export const admin: Catalog = {
   "adminListings.view.queue": "Submissions",
   "adminListings.view.editSuggestions": "Edit suggestions",
   "adminListings.view.claims": "Ownership claims",
+  "adminListings.view.drafts": "Unfinished drafts",
   "adminListings.remove.cta": "Delete",
   "adminListings.actions.moreAriaLabel": "More actions for {name}",
   "adminListings.remove.toast.removed": "{name} was deleted.",
@@ -7354,4 +7355,43 @@ export const admin: Catalog = {
     "Something went wrong while rendering. Start again, and if it keeps happening, tell the tech team.",
   "marketingVideos.studio.unsupported":
     "Rendering needs Chrome or Edge on a computer. You can still preview every film here.",
+  // ── Unfinished listing drafts (Admin only, a tab of /admin/listings) ─────
+  "listingDrafts.intro":
+    "Listings members started but haven't sent yet. You see the name and how far they got, never the draft itself. Offer a hand if someone looks stuck.",
+  "listingDrafts.count_one": "{count} draft in progress",
+  "listingDrafts.count_other": "{count} drafts in progress",
+  "listingDrafts.empty": "No unfinished drafts right now.",
+  "listingDrafts.loadError.title": "The drafts list didn't load",
+  "listingDrafts.loadError.body":
+    "We couldn't reach the server. Nothing has changed. Try again in a moment.",
+  "listingDrafts.loadMore": "Load more drafts",
+  "listingDrafts.loadingMore": "Loading…",
+  "listingDrafts.untitled": "Untitled place",
+  "listingDrafts.path.claim": "Their own place",
+  "listingDrafts.path.suggest": "Suggesting a place",
+  "listingDrafts.active": "Recently edited",
+  "listingDrafts.stalled_one": "Quiet for {count} day",
+  "listingDrafts.stalled_other": "Quiet for {count} days",
+  "listingDrafts.progress": "Step {step} of {total}: {label}",
+  "listingDrafts.dates": "Started {started} · last edited {edited}",
+  "listingDrafts.startedBy": "Started by {name}",
+  "listingDrafts.unknownOwner": "a member who has since left",
+  "listingDrafts.profileCta": "View profile",
+  "listingDrafts.messageCta": "Message {name}",
+  "listingDrafts.message.eyebrow": "Offer a hand",
+  "listingDrafts.message.title": "Message {name}",
+  "listingDrafts.message.sub":
+    "This lands in their official QueerPulse thread, pinned in their inbox. It doesn't buzz their phone.",
+  "listingDrafts.message.label": "Your message",
+  "listingDrafts.message.helper":
+    "We've started it for you. Make it yours, and keep it an offer, not a nudge.",
+  "listingDrafts.message.template":
+    "Hi {firstName}! We noticed you started listing {name} on QueerPulse. If something got in the way, or you'd like a hand finishing it, just reply here and we'll help. No rush at all.",
+  "listingDrafts.message.templateUntitled":
+    "Hi {firstName}! We noticed you started a listing on QueerPulse. If something got in the way, or you'd like a hand finishing it, just reply here and we'll help. No rush at all.",
+  "listingDrafts.message.send": "Send message",
+  "listingDrafts.message.sending": "Sending…",
+  "listingDrafts.message.cancel": "Cancel",
+  "listingDrafts.message.sent": "Sent to {name}.",
+  "listingDrafts.message.action": "send your message",
 };
