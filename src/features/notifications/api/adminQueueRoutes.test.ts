@@ -42,7 +42,7 @@ const EXPECTED_CAPABILITIES: Record<string, string[]> = {
   commission_interests: ["editorial"],
   partner_applications: ["partnerships"],
   changemaker_nominations: ["partnerships"],
-  roadmap_ideas: [],
+  roadmap_ideas: ["product_manager"],
   guide_reviews: ["resource_curator"],
   housing_group_join_requests: ["housing_moderator"],
 };
