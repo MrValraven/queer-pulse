@@ -6,7 +6,10 @@ import {
   CREDENTIAL_PHOTO_SECTIONS,
   FIELD_META,
   ITEM_LINKS_SECTIONS,
+  itemFieldMeta,
 } from "./subprofileEditor.data";
+import { SubprofileItemTextField } from "./SubprofileItemTextField";
+import { useEditorPersonaKind } from "./useEditorPersonaKind";
 import { ImageUploadField } from "./ImageUploadField";
 import styles from "./SubprofileEditor.module.css";
 import { CollaboratorSelect } from "./CollaboratorSelect";
@@ -30,18 +33,6 @@ function parseSnippetLines(raw: string): string[] | null {
     .map((line) => line.trim())
     .filter(Boolean);
   return lines.length > 0 ? lines : null;
-}
-
-/** Seed value for a month picker (`yyyy-mm`). A bare `yyyy-mm` passes through;
- *  a legacy free-text date ("July 2025") is best-effort parsed so the picker
- *  opens on the stored month; anything unparseable ("Ongoing") shows empty and
- *  the stored value is left untouched until the user picks a month. */
-function toMonthValue(raw: string): string {
-  if (/^\d{4}-\d{2}$/.test(raw)) return raw;
-  const parsed = Date.parse(raw);
-  if (Number.isNaN(parsed)) return "";
-  const date = new Date(parsed);
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
 
 function RichFieldControl({
@@ -80,6 +71,19 @@ function RichFieldControl({
   const richKey = descriptor.key;
   const rawValue =
     (draft[richKey as keyof SubprofileItemView] as string | null) ?? "";
+
+  if (descriptor.kind === "time") {
+    return (
+      <FormField label={t(descriptor.labelKey)}>
+        <DatePicker
+          mode="time"
+          label={t(descriptor.labelKey)}
+          value={/^\d{2}:\d{2}$/.test(rawValue) ? rawValue : null}
+          onChange={(time) => onPatch({ [richKey]: time })}
+        />
+      </FormField>
+    );
+  }
 
   if (descriptor.kind === "select") {
     return (
@@ -129,6 +133,9 @@ export function SubprofileItemDrawerFields({
   onPatch: (patch: Partial<SubprofileItemView>) => void;
 }) {
   const { t } = useTranslation();
+  // The kind words some sections' fields its own way (a game master's
+  // campaign schedule, a session's day).
+  const kind = useEditorPersonaKind();
   const isPoems = draft.section === "poems";
   const textFields = fields.filter(
     (field) =>
@@ -165,39 +172,16 @@ export function SubprofileItemDrawerFields({
       )}
 
       {textFields.map((field) => {
-        const meta = FIELD_META[field];
+        const meta = itemFieldMeta(field, draft.section, kind);
         if (!meta) return null;
-        const value = (draft[field] as string) ?? "";
-        const { labelKey, placeholderKey } = meta;
         return (
-          <FormField
+          <SubprofileItemTextField
             key={field}
-            label={t(labelKey)}
-            required={field === "title"}
-          >
-            {meta.multiline ? (
-              <textarea
-                value={value}
-                placeholder={t(placeholderKey)}
-                onChange={(e) => onPatch({ [field]: e.target.value })}
-              />
-            ) : meta.inputType === "month" ? (
-              <DatePicker
-                mode="month"
-                label={t(labelKey)}
-                value={toMonthValue(value) || null}
-                onChange={(monthValue) =>
-                  onPatch({ [field]: monthValue ?? "" })
-                }
-              />
-            ) : (
-              <input
-                value={value}
-                placeholder={t(placeholderKey)}
-                onChange={(e) => onPatch({ [field]: e.target.value })}
-              />
-            )}
-          </FormField>
+            meta={meta}
+            value={(draft[field] as string) ?? ""}
+            isRequired={field === "title"}
+            onChange={(value) => onPatch({ [field]: value })}
+          />
         );
       })}
 

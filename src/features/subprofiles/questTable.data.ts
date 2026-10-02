@@ -1,3 +1,5 @@
+import type { IconType } from "react-icons";
+import { FiLayers, FiMapPin, FiMonitor } from "react-icons/fi";
 import type {
   CardTableSummary,
   SafetyTool,
@@ -41,6 +43,17 @@ export const TABLE_FORMAT_LABEL_KEY: Record<TableFormat, string> = {
   in_person: "subprofiles:quest.format.in_person",
   both: "subprofiles:quest.format.both",
 };
+/** What each format means at the table, under its tile in the editor. */
+export const TABLE_FORMAT_DESCRIPTION_KEY: Record<TableFormat, string> = {
+  online: "subprofiles:quest.formatDescription.online",
+  in_person: "subprofiles:quest.formatDescription.in_person",
+  both: "subprofiles:quest.formatDescription.both",
+};
+export const TABLE_FORMAT_ICON: Record<TableFormat, IconType> = {
+  online: FiMonitor,
+  in_person: FiMapPin,
+  both: FiLayers,
+};
 export const TABLE_VIBE_LABEL_KEY: Record<TableVibe, string> = {
   queer_led: "subprofiles:quest.vibe.queer_led",
   trans_led: "subprofiles:quest.vibe.trans_led",
@@ -57,6 +70,37 @@ export const SAFETY_TOOL_LABEL_KEY: Record<SafetyTool, string> = {
   check_ins: "subprofiles:quest.safety.check_ins",
   content_warnings: "subprofiles:quest.safety.content_warnings",
 };
+
+/** One line per safety tool, under its tile in the editor: someone new to
+ *  running a table may not know what "lines and veils" asks of them. */
+export const SAFETY_TOOL_DESCRIPTION_KEY: Record<SafetyTool, string> = {
+  session_zero: "subprofiles:quest.safetyDescription.session_zero",
+  lines_and_veils: "subprofiles:quest.safetyDescription.lines_and_veils",
+  x_card: "subprofiles:quest.safetyDescription.x_card",
+  open_door: "subprofiles:quest.safetyDescription.open_door",
+  check_ins: "subprofiles:quest.safetyDescription.check_ins",
+  content_warnings: "subprofiles:quest.safetyDescription.content_warnings",
+};
+
+/** Game systems offered as one-tap chips under "Systems you run": the ones
+ *  queer tables in Lisbon run most, plus the big names. Proper names, so
+ *  they are not translated; an owner's own system is typed in as before. */
+export const POPULAR_SYSTEMS: readonly string[] = [
+  "D&D 5e",
+  "Pathfinder 2e",
+  "Daggerheart",
+  "Call of Cthulhu",
+  "Blades in the Dark",
+  "Monsterhearts",
+  "Thirsty Sword Lesbians",
+  "Masks",
+  "Dungeon World",
+  "Vampire: The Masquerade",
+  "Mothership",
+  "Wanderhome",
+  "Avatar Legends",
+  "Delta Green",
+];
 
 export const isQuestKind = (kind: SubprofileKind): boolean =>
   SKIN_OF[kind] === "quest";

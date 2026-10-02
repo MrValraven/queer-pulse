@@ -68,7 +68,15 @@ vi.mock("./subprofileEditorContext", () => ({
     },
     skinBlocks: { buildSkinBlocks: () => ({}) },
     sectionRows: {},
+    socialRows: [],
+    affiliationRows: [],
   }),
+}));
+
+// The preview names a freshly picked "Part of" target from the picker's
+// cached options; these tests pick none, so an empty cache stands in.
+vi.mock("@tanstack/react-query", () => ({
+  useQueryClient: () => ({ getQueriesData: () => [] }),
 }));
 
 function makeSubprofile(overrides: Partial<SubprofileView>): SubprofileView {

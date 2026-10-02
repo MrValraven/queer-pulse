@@ -81,6 +81,27 @@ function blocksChapter(
   if (!onlyBlock) return null;
   const isSingleBlockChapter = blocks.length === 1;
   const helperLedeKey = isSingleBlockChapter ? onlyBlock.helperKey : undefined;
+  const fitControl = (control: SkinBlockControl) =>
+    fitControlToSections(control, sections);
+  // A block that fills its chapter alone and declares cards reads as those
+  // titled cards rather than one long one ("At the table").
+  if (isSingleBlockChapter && onlyBlock.cards) {
+    return {
+      key: entry.key,
+      titleKey: onlyBlock.titleKey,
+      ledeKey: helperLedeKey ?? derivedKey(entry.key, "lede"),
+      groups: onlyBlock.cards.map((card) => ({
+        titleKey: card.titleKey,
+        helperKey: card.helperKey,
+        controls: card.paths
+          .map((path) =>
+            onlyBlock.controls.find((control) => control.path === path),
+          )
+          .filter((control): control is SkinBlockControl => Boolean(control))
+          .map(fitControl),
+      })),
+    };
+  }
   return {
     key: entry.key,
     titleKey: isSingleBlockChapter
@@ -94,9 +115,7 @@ function blocksChapter(
     groups: blocks.map((block) => ({
       titleKey: isSingleBlockChapter ? undefined : block.titleKey,
       helperKey: helperLedeKey ? undefined : block.helperKey,
-      controls: block.controls.map((control) =>
-        fitControlToSections(control, sections),
-      ),
+      controls: block.controls.map(fitControl),
     })),
   };
 }

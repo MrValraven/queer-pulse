@@ -47,6 +47,25 @@ export function formatDate(
 /** A bare `yyyy-mm` — what an `<input type="month">` emits. */
 const MONTH_ONLY_PATTERN = /^\d{4}-\d{2}$/;
 
+/** A bare `yyyy-mm-dd` — what a day picker emits. */
+const DAY_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Format a stored item date for display: a `yyyy-mm-dd` day as a short
+ * localized date ("17 Oct 2026" / "17/10/2026"), a `yyyy-mm` month through
+ * `formatMonthYear`, and anything else (free text like "Sundays") unchanged.
+ */
+export function formatItemDate(value: string, locale?: string): string {
+  if (!DAY_ONLY_PATTERN.test(value)) return formatMonthYear(value, locale);
+  const parsed = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toLocaleDateString(locale, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 /**
  * Format a `yyyy-mm` month value (what `<input type="month">` emits) as a
  * localized "Month Year" — `2025-07` → "July 2025" / "julho de 2025". Anything

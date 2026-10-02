@@ -1,9 +1,14 @@
+import type { IconType } from "react-icons";
 import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 import { skinFor, type SkinFamily } from "./subprofile-skins";
 import {
+  POPULAR_SYSTEMS,
   SAFETY_TOOLS,
+  SAFETY_TOOL_DESCRIPTION_KEY,
   SAFETY_TOOL_LABEL_KEY,
   TABLE_FORMATS,
+  TABLE_FORMAT_DESCRIPTION_KEY,
+  TABLE_FORMAT_ICON,
   TABLE_FORMAT_LABEL_KEY,
   TABLE_VIBES,
   TABLE_VIBE_LABEL_KEY,
@@ -107,6 +112,12 @@ export interface SkinSelectOption {
   value: string;
   labelKey: string;
   tone?: SkinOptionTone;
+  /** `choice` / `multiChoice` with `optionLayout: "tiles"`: a line under the
+   *  label saying what the option means (what an X-card is). */
+  descriptionKey?: string;
+  /** `choice` / `multiChoice` with `optionLayout: "tiles"`: the tile's icon,
+   *  shown in place of the hollow indicator. */
+  icon?: IconType;
 }
 
 /** One field within a `pairs` or `entries` item (e.g. a first-session step's
@@ -207,6 +218,14 @@ export interface SkinBlockControl {
   /** Chapter `multiSelect` only: option values shown as inline toggle chips;
    *  the rest stay in the full list. */
   featuredValues?: string[];
+  /** `choice` / `multiChoice` only: `tiles` lays the options out as a grid
+   *  of cards, each with its icon and `descriptionKey` line, for choices an
+   *  owner may need explained (safety tools). Default `chips`. */
+  optionLayout?: "chips" | "tiles";
+  /** `chips` only: common entries offered as one-tap chips under the add
+   *  input, minus those already on the list (game systems). Proper names,
+   *  stored exactly as written. */
+  suggestions?: readonly string[];
   /** `sectionItems` and `sectionList`: the persona section this control edits. */
   section?: SubprofileSection;
   /** `sectionList` only: hide the spotlight star, for a page that never
@@ -246,6 +265,18 @@ export interface SkinBlockDescriptor {
   /** Optional helper line under the heading. */
   helperKey?: string;
   controls: SkinBlockControl[];
+  /** A block with many controls, split into titled cards when it fills a
+   *  chapter on its own (`derivedSkinChapters.ts`). Each card lists its
+   *  controls by `path`, in order; a card holding one control can reuse that
+   *  control's `labelKey` as its title, and the control then drops its own
+   *  label. Every control should sit in exactly one card. */
+  cards?: SkinBlockCard[];
+}
+
+export interface SkinBlockCard {
+  titleKey: string;
+  helperKey?: string;
+  paths: string[];
 }
 
 // ── Block builders ──────────────────────────────────────────────────────────
@@ -621,65 +652,101 @@ const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
 
 /** Quest: how the table runs. One block so the pending-changes list names it
  *  once; format and vibe are fixed vocabularies because the directory filters
- *  on them. */
+ *  on them. Its chapter splits it into cards, in the order a player decides:
+ *  how and where, which games, who it's for, how it stays safe. */
+const questLabel = (field: string) => label("quest", "atTheTable", field);
+
 const QUEST_BLOCKS: SkinBlockDescriptor[] = [
   {
     blockKey: "atTheTable",
     titleKey: title("quest", "atTheTable"),
-    helperKey: label("quest", "atTheTable", "helper"),
+    helperKey: questLabel("helper"),
     controls: [
       {
         path: "atTheTable.format",
         kind: "choice",
-        labelKey: label("quest", "atTheTable", "format"),
+        labelKey: questLabel("format"),
+        optionLayout: "tiles",
         options: TABLE_FORMATS.map((value) => ({
           value,
           labelKey: TABLE_FORMAT_LABEL_KEY[value],
+          descriptionKey: TABLE_FORMAT_DESCRIPTION_KEY[value],
+          icon: TABLE_FORMAT_ICON[value],
         })),
       },
       {
         path: "atTheTable.where",
         kind: "text",
-        labelKey: label("quest", "atTheTable", "where"),
-        placeholderKey: label("quest", "atTheTable", "wherePlaceholder"),
+        labelKey: questLabel("where"),
+        placeholderKey: questLabel("wherePlaceholder"),
+        isWrapping: true,
+      },
+      {
+        path: "atTheTable.price",
+        kind: "text",
+        labelKey: questLabel("price"),
+        placeholderKey: questLabel("pricePlaceholder"),
         isWrapping: true,
       },
       {
         path: "atTheTable.systems",
-        kind: "lines",
-        labelKey: label("quest", "atTheTable", "systems"),
-        placeholderKey: label("quest", "atTheTable", "systemsPlaceholder"),
-        addLabelKey: label("quest", "atTheTable", "systemsAdd"),
-      },
-      {
-        path: "atTheTable.safetyTools",
-        kind: "multiChoice",
-        labelKey: label("quest", "atTheTable", "safetyTools"),
-        options: SAFETY_TOOLS.map((value) => ({
-          value,
-          labelKey: SAFETY_TOOL_LABEL_KEY[value],
-        })),
+        kind: "chips",
+        labelKey: questLabel("systems"),
+        placeholderKey: questLabel("systemsPlaceholder"),
+        suggestions: POPULAR_SYSTEMS,
       },
       {
         path: "atTheTable.vibe",
         kind: "multiChoice",
-        labelKey: label("quest", "atTheTable", "vibe"),
+        labelKey: questLabel("vibe"),
         options: TABLE_VIBES.map((value) => ({
           value,
           labelKey: TABLE_VIBE_LABEL_KEY[value],
         })),
       },
       {
-        path: "atTheTable.price",
-        kind: "text",
-        labelKey: label("quest", "atTheTable", "price"),
-        placeholderKey: label("quest", "atTheTable", "pricePlaceholder"),
-        isWrapping: true,
+        path: "atTheTable.safetyTools",
+        kind: "multiChoice",
+        labelKey: questLabel("safetyTools"),
+        optionLayout: "tiles",
+        options: SAFETY_TOOLS.map((value) => ({
+          value,
+          labelKey: SAFETY_TOOL_LABEL_KEY[value],
+          descriptionKey: SAFETY_TOOL_DESCRIPTION_KEY[value],
+        })),
       },
       {
         path: "atTheTable.note",
         kind: "textarea",
-        labelKey: label("quest", "atTheTable", "note"),
+        labelKey: questLabel("note"),
+        placeholderKey: questLabel("notePlaceholder"),
+      },
+    ],
+    cards: [
+      {
+        titleKey: questLabel("howTitle"),
+        helperKey: questLabel("howHelper"),
+        paths: ["atTheTable.format", "atTheTable.where", "atTheTable.price"],
+      },
+      {
+        titleKey: questLabel("systems"),
+        helperKey: questLabel("systemsHelper"),
+        paths: ["atTheTable.systems"],
+      },
+      {
+        titleKey: questLabel("vibe"),
+        helperKey: questLabel("vibeHelper"),
+        paths: ["atTheTable.vibe"],
+      },
+      {
+        titleKey: questLabel("safetyTools"),
+        helperKey: questLabel("safetyHelper"),
+        paths: ["atTheTable.safetyTools"],
+      },
+      {
+        titleKey: questLabel("note"),
+        helperKey: questLabel("noteHelper"),
+        paths: ["atTheTable.note"],
       },
     ],
   },

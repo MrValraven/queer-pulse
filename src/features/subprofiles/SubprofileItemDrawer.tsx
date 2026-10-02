@@ -10,6 +10,7 @@ import type {
 } from "./api/subprofiles.adapters";
 import { SubprofileItemDrawerFields } from "./SubprofileItemDrawerFields";
 import { useDrawerDismiss } from "./useDrawerDismiss";
+import { SECTION_DRAWER_TITLE_KEYS } from "./subprofileEditor.data";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { ProtectWorkSection } from "./rights/ProtectWorkSection";
 import { ItemRevisionHistoryModal } from "./rights/ItemRevisionHistoryModal";
@@ -120,9 +121,10 @@ export function SubprofileItemDrawer({
     setDraft((cur) => ({ ...cur, isFeatured: !cur.isFeatured }));
   }
 
+  const sectionTitleKeys = SECTION_DRAWER_TITLE_KEYS[section.section];
   const titleKey = isNew
-    ? "subprofiles:itemDrawer.addTitle"
-    : "subprofiles:itemDrawer.editTitle";
+    ? (sectionTitleKeys?.add ?? "subprofiles:itemDrawer.addTitle")
+    : (sectionTitleKeys?.edit ?? "subprofiles:itemDrawer.editTitle");
 
   return createPortal(
     <div

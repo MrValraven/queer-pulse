@@ -1,5 +1,6 @@
 import type {
   LinkVisibility,
+  SubprofileKind,
   SubprofileSection,
   Visibility,
 } from "./api/subprofiles.api";
@@ -84,17 +85,23 @@ export const LINK_HELP_KEY: Record<LinkVisibility, string> = {
 // choices (the field NAMES title/subtitle/… are fixed, only their labels
 // translate), still resolved via `t()` for consistency.
 
-export const FIELD_META: Record<
-  string,
-  {
-    labelKey: string;
-    placeholderKey: string;
-    multiline?: boolean;
-    /** `"month"` renders a month+year picker (stored as `yyyy-mm`)
-     *  instead of the default free-text input. */
-    inputType?: "text" | "month";
-  }
-> = {
+export interface ItemFieldMeta {
+  labelKey: string;
+  placeholderKey: string;
+  multiline?: boolean;
+  /** `"month"` renders a month+year picker (stored as `yyyy-mm`), `"date"` a
+   *  day picker (stored as `yyyy-mm-dd`), instead of the default free-text
+   *  input. */
+  inputType?: "text" | "month" | "date";
+  /** Optional helper line under the field. */
+  helperKey?: string;
+  /** Text field only: common answers offered as one-tap chips under the
+   *  input. A tap writes that chip's text into the field, in the language
+   *  the owner is writing in. */
+  quickPickKeys?: string[];
+}
+
+export const FIELD_META: Record<string, ItemFieldMeta> = {
   title: {
     labelKey: "subprofiles:field.title.label",
     placeholderKey: "subprofiles:field.title.placeholder",
@@ -124,5 +131,87 @@ export const FIELD_META: Record<
   tags: {
     labelKey: "subprofiles:field.tags.label",
     placeholderKey: "subprofiles:field.tags.placeholder",
+  },
+};
+
+// ── Per-kind item fields ─────────────────────────────────────────────────────
+
+const gm = (section: string, field: string, part: string) =>
+  `subprofiles:itemField.gameMaster.${section}.${field}.${part}`;
+
+/**
+ * Where a kind words a section's item fields its own way, over `FIELD_META`.
+ * A game master's campaign keeps its seats in `subtitle` and its schedule in
+ * `date`, where a month picker would hide "Sundays, fortnightly"; a session
+ * is one evening, so its date is a day.
+ */
+export const KIND_ITEM_FIELD_META: Partial<
+  Record<
+    SubprofileKind,
+    Partial<Record<SubprofileSection, Record<string, Partial<ItemFieldMeta>>>>
+  >
+> = {
+  game_master: {
+    campaigns: {
+      title: { placeholderKey: gm("campaigns", "title", "placeholder") },
+      subtitle: {
+        labelKey: gm("campaigns", "subtitle", "label"),
+        placeholderKey: gm("campaigns", "subtitle", "placeholder"),
+        quickPickKeys: [
+          "subprofiles:itemField.gameMaster.campaigns.subtitle.pick.recruiting",
+          "subprofiles:itemField.gameMaster.campaigns.subtitle.pick.oneSeat",
+          "subprofiles:itemField.gameMaster.campaigns.subtitle.pick.twoSeats",
+          "subprofiles:itemField.gameMaster.campaigns.subtitle.pick.full",
+          "subprofiles:itemField.gameMaster.campaigns.subtitle.pick.waitlist",
+          "subprofiles:itemField.gameMaster.campaigns.subtitle.pick.break",
+        ],
+      },
+      date: {
+        labelKey: gm("campaigns", "date", "label"),
+        placeholderKey: gm("campaigns", "date", "placeholder"),
+        inputType: "text",
+      },
+      description: {
+        placeholderKey: gm("campaigns", "description", "placeholder"),
+      },
+    },
+    sessions: {
+      title: { placeholderKey: gm("sessions", "title", "placeholder") },
+      date: { inputType: "date" },
+      url: {
+        labelKey: gm("sessions", "url", "label"),
+        helperKey: gm("sessions", "url", "helper"),
+      },
+      description: {
+        placeholderKey: gm("sessions", "description", "placeholder"),
+      },
+    },
+  },
+};
+
+/** An item field's wording and input for this kind and section. */
+export function itemFieldMeta(
+  field: string,
+  section: SubprofileSection,
+  kind: SubprofileKind | undefined,
+): ItemFieldMeta | undefined {
+  const base = FIELD_META[field];
+  if (!base) return undefined;
+  const override = kind && KIND_ITEM_FIELD_META[kind]?.[section]?.[field];
+  return override ? { ...base, ...override } : base;
+}
+
+/** The item drawer's heading for sections that read better with their own
+ *  noun ("Add a campaign") than the generic "Add to Campaigns". */
+export const SECTION_DRAWER_TITLE_KEYS: Partial<
+  Record<SubprofileSection, { add: string; edit: string }>
+> = {
+  campaigns: {
+    add: "subprofiles:itemDrawer.section.campaigns.add",
+    edit: "subprofiles:itemDrawer.section.campaigns.edit",
+  },
+  sessions: {
+    add: "subprofiles:itemDrawer.section.sessions.add",
+    edit: "subprofiles:itemDrawer.section.sessions.edit",
   },
 };

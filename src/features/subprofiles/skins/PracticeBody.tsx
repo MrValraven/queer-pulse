@@ -114,7 +114,7 @@ export function PracticeBody({
   const sectionProps = {
     skin: "practice" as const,
     mode,
-    featuredHidden: Boolean(data.featured),
+    featuredId: data.featured?.id ?? null,
     onOpenWork: onOpenWorkItem,
     onOpenGalleryPhoto,
     onOpenPoem,

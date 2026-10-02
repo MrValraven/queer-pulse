@@ -181,14 +181,14 @@ function SectionBody({
  * upcoming+`.pp-past`) comes from
  * `sectionShape()` (Task 2) — same markup for every skin, `data-skin` on the
  * page's `.pp` ancestor decides how it looks.
- * `featuredHidden` drops the item already shown in the page's Spotlight (or,
+ * `featuredId` drops the item already shown in the page's Spotlight (or,
  * for the table skin, its `MenuCard`) from its own section list.
  */
 export function SubprofileSections({
   persona,
   skin,
   mode,
-  featuredHidden,
+  featuredId,
   onOpenWork,
   onOpenGalleryPhoto,
   onOpenPoem,
@@ -196,7 +196,8 @@ export function SubprofileSections({
   persona: PublicSubprofileView;
   skin: SkinFamily;
   mode: PersonaViewMode;
-  featuredHidden: boolean;
+  /** The item the Spotlight (or MenuCard) already shows, if any. */
+  featuredId: string | null;
   /** Opens the studio lightbox on a clicked tile — only meaningful (and only
    *  read) for `skin === "studio"`'s visual sections; see
    *  `SubprofileItemTile`. */
@@ -214,13 +215,23 @@ export function SubprofileSections({
   return (
     <>
       {persona.sections.map((section) => {
-        const items = featuredHidden
-          ? section.items.filter((item) => !item.isFeatured)
-          : section.items;
+        // Only the one item the Spotlight shows leaves its list. Matching on
+        // `isFeatured` alone dropped a second starred item from the page
+        // entirely, shown neither in the Spotlight nor in its own section.
+        const items =
+          featuredId !== null
+            ? section.items.filter(
+                (item) => !(item.isFeatured && item.id === featuredId),
+              )
+            : section.items;
         if (items.length === 0) return null;
         const shape = sectionShape(section.section, skin, items);
         return (
-          <section key={section.section} className="pp-sec">
+          <section
+            key={section.section}
+            className="pp-sec"
+            data-preview-anchor={`section:${section.section}`}
+          >
             <header>
               <h2>{t(section.labelKey)}</h2>
               {items.length > 1 && (

@@ -115,6 +115,13 @@
   inherits: false;
   initial-value: 100%;
 }
+/* An item's description keeps the owner's line breaks: a campaign premise
+   written in short lines or paragraphs reads that way on the page, in every
+   skin, the editor's preview and the studio lightbox alike. */
+.pp-item-desc {
+  white-space: pre-line;
+}
+
 /* Owner opt-in (persona settings → Presence → Banner edge): fade the cover
    out at its bottom edge so it dissolves into the page background below
    instead of ending on a hard seam. Masking the container melts the cover

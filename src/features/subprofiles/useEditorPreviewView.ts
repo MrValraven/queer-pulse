@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import type { AffiliationOptionDTO } from "./api/subprofiles.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
 import {
@@ -20,6 +22,7 @@ import type { SubprofileKind } from "./api/subprofiles.api";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { overlaySectionRows } from "./editorPreviewSections";
+import { previewAffiliations, previewSocialLinks } from "./editorPreviewRows";
 import { usePreviewFit, type PreviewDevice } from "./usePreviewFit";
 
 /** Kinds that render their own layout instead of their skin family's (see
@@ -52,7 +55,10 @@ export function useEditorPreviewView(
     meta: editor,
     skinBlocks,
     sectionRows,
+    socialRows,
+    affiliationRows,
   } = useSubprofileEditorContext();
+  const queryClient = useQueryClient();
 
   // Overlay the in-progress section rows onto the saved persona's sections,
   // re-deriving `featured` the same way the DTO-to-view adapter does. Cheap:
@@ -90,6 +96,19 @@ export function useEditorPreviewView(
     handle: editor.handle || null,
     sections: sectionsOverlay.sections,
     featured: sectionsOverlay.featured,
+    // The Presence pane's social links and the "Part of" list, as the Save
+    // chain would write them. A freshly picked target is named from the
+    // picker's cached options, which its pane fetched to offer it.
+    socialLinks: previewSocialLinks(socialRows),
+    affiliations: previewAffiliations(
+      affiliationRows,
+      queryClient
+        .getQueriesData<AffiliationOptionDTO[]>({
+          queryKey: ["subprofileAffiliationOptions"],
+        })
+        .flatMap(([, options]) => options ?? []),
+      subprofile.affiliations,
+    ),
     // Overlay the in-progress Page blocks draft and bleed toggle onto the
     // saved skinData, so skin-block edits and `data-cover-bleed` show here
     // live, before save.

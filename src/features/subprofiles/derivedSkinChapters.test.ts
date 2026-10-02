@@ -75,13 +75,38 @@ describe("deriveSkinChapters", () => {
     );
   });
 
-  it("makes a single block's helper the chapter lede, shown once", () => {
+  it("makes a single block's helper the chapter lede", () => {
     const [topChapter] = deriveSkinChapters("game_master");
     expect(topChapter?.key).toBe("top");
     expect(topChapter?.ledeKey).toBe(
       "subprofiles:skinBlock.quest.atTheTable.helper",
     );
-    expect(topChapter?.groups[0]?.helperKey).toBeUndefined();
+  });
+
+  it("splits a block with cards into titled cards, each control once", () => {
+    const [topChapter] = deriveSkinChapters("game_master");
+    const groups = topChapter?.groups ?? [];
+    expect(groups.map((group) => group.titleKey)).toEqual([
+      "subprofiles:skinBlock.quest.atTheTable.howTitle",
+      "subprofiles:skinBlock.quest.atTheTable.systems",
+      "subprofiles:skinBlock.quest.atTheTable.vibe",
+      "subprofiles:skinBlock.quest.atTheTable.safetyTools",
+      "subprofiles:skinBlock.quest.atTheTable.note",
+    ]);
+    const paths = groups.flatMap((group) =>
+      group.controls.map((control) => control.path),
+    );
+    expect([...paths].sort()).toEqual(
+      [
+        "atTheTable.format",
+        "atTheTable.note",
+        "atTheTable.price",
+        "atTheTable.safetyTools",
+        "atTheTable.systems",
+        "atTheTable.vibe",
+        "atTheTable.where",
+      ].sort(),
+    );
   });
 
   it("puts one sectionList control in each section chapter", () => {

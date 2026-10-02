@@ -47,7 +47,11 @@ export function SubprofileSpotlight({
     // `data-has-image` marks a real picture, the same way the cover band's
     // `data-has-cover` does, so a skin can drop the empty frame instead of
     // showing the "Image" placeholder (the Quest skin hides `.art` on it).
-    <div className="pp-spot" data-has-image={item.imageUrl ? "" : undefined}>
+    <div
+      className="pp-spot"
+      data-has-image={item.imageUrl ? "" : undefined}
+      data-preview-anchor={`section:${item.section}`}
+    >
       <div className="art">
         <ImageSlot
           src={item.imageUrl || undefined}
@@ -70,7 +74,7 @@ export function SubprofileSpotlight({
         {/* Render subtitle and description as separate lines — an item with
             both must not drop the description. */}
         {item.subtitle && <p>{item.subtitle}</p>}
-        {item.description && <p>{item.description}</p>}
+        {item.description && <p className="pp-item-desc">{item.description}</p>}
 
         {skin === "workshop" && <WorkshopSnippet item={item} />}
 

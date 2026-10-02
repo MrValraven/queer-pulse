@@ -19,7 +19,12 @@ export function ItemStateChip({ item }: { item: SubprofileItemView }) {
     <>
       {item.gigState && (
         <span className={`gigstate ${item.gigState}`}>
-          {t(GIG_STATE_LABEL[item.gigState])}
+          {t(
+            // A game master's full session is a full table, not a sell-out.
+            item.section === "sessions" && item.gigState === "sold_out"
+              ? "subprofiles:gigState.tableFull"
+              : GIG_STATE_LABEL[item.gigState],
+          )}
         </span>
       )}
       {item.workState && (

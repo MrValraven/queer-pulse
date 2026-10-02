@@ -1702,6 +1702,8 @@ export const subprofiles: Catalog = {
   // Docked live preview (EditorPreview) — mirrors the persona's public page
   // inside the editor shell.
   "editorPreview.label": "Live preview",
+  "editorPreview.chapterEmpty":
+    "{title} isn't on your page yet. Add something and it shows up here.",
   "editorPreview.openLive": "Open live",
   "editorPreview.openDraftPage": "Open draft page",
   // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
@@ -1818,6 +1820,41 @@ export const subprofiles: Catalog = {
   "richField.doors.placeholder": "e.g. 9pm",
   "richField.ticketUrl.label": "Ticket link",
   "richField.ticketUrl.placeholder": "https://",
+  "itemField.quickPicks": "Quick answers for {label}",
+  "itemField.gameMaster.campaigns.title.placeholder": "e.g. The Thornwood Debt",
+  "itemField.gameMaster.campaigns.subtitle.label": "Table status",
+  "itemField.gameMaster.campaigns.subtitle.placeholder": "e.g. 2 seats open",
+  "itemField.gameMaster.campaigns.subtitle.pick.recruiting": "Recruiting",
+  "itemField.gameMaster.campaigns.subtitle.pick.oneSeat": "1 seat open",
+  "itemField.gameMaster.campaigns.subtitle.pick.twoSeats": "2 seats open",
+  "itemField.gameMaster.campaigns.subtitle.pick.full": "Full table",
+  "itemField.gameMaster.campaigns.subtitle.pick.waitlist": "Waitlist open",
+  "itemField.gameMaster.campaigns.subtitle.pick.break": "On a break",
+  "itemField.gameMaster.campaigns.date.label": "When you play",
+  "itemField.gameMaster.campaigns.date.placeholder":
+    "e.g. Sundays, fortnightly",
+  "itemField.gameMaster.campaigns.description.placeholder":
+    "The premise, the system, and who it's a good fit for.",
+  "itemField.gameMaster.sessions.title.placeholder":
+    "e.g. One-shot night: Thirsty Sword Lesbians",
+  "itemField.gameMaster.sessions.url.label": "Session page",
+  "itemField.gameMaster.sessions.url.helper":
+    "Optional. Where players read more. The sign-up link goes below.",
+  "itemField.gameMaster.sessions.description.placeholder":
+    "What you'll play, how long it runs, and whether characters are ready-made.",
+  "itemDrawer.section.campaigns.add": "Add a campaign",
+  "itemDrawer.section.campaigns.edit": "Edit campaign",
+  "itemDrawer.section.sessions.add": "Add a session",
+  "itemDrawer.section.sessions.edit": "Edit session",
+  "richField.session.state.label": "Seats",
+  "richField.session.state.open": "Seats open",
+  "richField.session.state.full": "Table full",
+  "richField.session.venue.label": "Where",
+  "richField.session.venue.placeholder":
+    "e.g. Biblioteca dos Anjos, or Foundry VTT",
+  "richField.session.doors.label": "Starts at",
+  "richField.session.ticketUrl.label": "Sign-up link",
+  "gigState.tableFull": "Table full",
   "richField.medium.label": "Medium",
   "richField.medium.placeholder": "e.g. Oil on canvas",
   "richField.dimensions.label": "Dimensions",
@@ -2773,12 +2810,43 @@ export const subprofiles: Catalog = {
   "skinBlock.quest.atTheTable.wherePlaceholder": "Lisbon, or Foundry + Discord",
   "skinBlock.quest.atTheTable.systems": "Systems you run",
   "skinBlock.quest.atTheTable.systemsPlaceholder": "D&D 5e",
-  "skinBlock.quest.atTheTable.systemsAdd": "Add a system",
   "skinBlock.quest.atTheTable.safetyTools": "Safety tools",
   "skinBlock.quest.atTheTable.vibe": "Table vibe",
   "skinBlock.quest.atTheTable.price": "Price",
   "skinBlock.quest.atTheTable.pricePlaceholder": "Free, or €15 per session",
   "skinBlock.quest.atTheTable.note": "Anything else players should know",
+  "skinBlock.quest.atTheTable.howTitle": "How and where you play",
+  "skinBlock.quest.atTheTable.howHelper":
+    "Players filter the directory by format, so pick one even if the details are still settling.",
+  "skinBlock.quest.atTheTable.systemsHelper":
+    "The games you'd happily run next week. Tap one below or type your own and press Enter.",
+  "skinBlock.quest.atTheTable.vibeHelper":
+    "Who your table is for. Players filter on these too, so only pick what's true every session.",
+  "skinBlock.quest.atTheTable.safetyHelper":
+    "The tools you actually use. Someone deciding whether to sit down reads these first.",
+  "skinBlock.quest.atTheTable.noteHelper":
+    "One or two lines: house rules, pronouns, food, how to ask for a seat.",
+  "skinBlock.quest.atTheTable.notePlaceholder":
+    "Pronouns go on the character sheet. Snacks are shared.",
+  "quest.formatDescription.online": "Video call and a virtual tabletop",
+  "quest.formatDescription.in_person": "Dice on a real table, in one place",
+  "quest.formatDescription.both": "Some sessions of each",
+  "quest.safetyDescription.session_zero":
+    "A first talk about tone, limits and expectations, before anyone plays.",
+  "quest.safetyDescription.lines_and_veils":
+    "Lines never happen in the story. Veils happen off-screen.",
+  "quest.safetyDescription.x_card":
+    "Anyone can tap it to skip something, no reason needed.",
+  "quest.safetyDescription.open_door":
+    "Anyone can step out or take a break, any time.",
+  "quest.safetyDescription.check_ins":
+    "You pause now and then to ask how everyone's doing.",
+  "quest.safetyDescription.content_warnings":
+    "Heavy themes are named before a session, not sprung during it.",
+  "skinChips.suggestionsLabel": "Popular",
+  "skinChips.addSuggestion": "Add {text}",
+  "skinChips.moreSuggestions_one": "{count} more",
+  "skinChips.moreSuggestions_other": "{count} more",
   "skinBlock.therapist.openSlots.chipHelper":
     "Write each slot the way it should read on your page, like Tue 30 Sep · 18:00.",
   "skinBlock.therapist.hours.valueTimes": "Times",

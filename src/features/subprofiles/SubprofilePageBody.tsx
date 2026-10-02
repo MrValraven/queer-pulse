@@ -154,7 +154,7 @@ export function SubprofilePageBody({
                 (data.featured.structured?.courses?.length ?? 0) > 0 ? (
                   // Table skin's MenuCard only has markup for `structured.courses`;
                   // a featured item without courses would otherwise render
-                  // nowhere (still hidden from its section by `featuredHidden`
+                  // nowhere (still hidden from its section by `featuredId`
                   // below), so fall back to the generic Spotlight for it.
                   <SubprofileSkinExtras
                     persona={data}
@@ -176,7 +176,7 @@ export function SubprofilePageBody({
                 persona={data}
                 skin={skin}
                 mode={mode}
-                featuredHidden={Boolean(data.featured)}
+                featuredId={data.featured?.id ?? null}
                 onOpenWork={onOpenWorkItem}
                 onOpenGalleryPhoto={onOpenGalleryPhoto}
                 onOpenPoem={onOpenPoem}

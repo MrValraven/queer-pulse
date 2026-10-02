@@ -4,6 +4,7 @@ import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor
 import { useSkinChipsField } from "./useSkinChipsField";
 import { SkinChipItems } from "./SkinChip";
 import { SkinRefinedField } from "./SkinRefinedField";
+import { SkinChipSuggestions } from "./SkinChipSuggestions";
 import {
   refinedSurfaceClassName,
   useRefinedPlaceholder,
@@ -16,7 +17,8 @@ import styles from "./SkinChipsControl.module.css";
  * picked from options), then the add input on the refined surface with an
  * "e.g." example. The frame's `<label htmlFor>` points at the add input, so
  * a click on the label focuses it, and its id names the chip list too.
- * Keyboard, drag and editing come from `useSkinChipsField`.
+ * Keyboard, drag and editing come from `useSkinChipsField`. A control with
+ * `suggestions` offers them as one-tap chips under the input.
  */
 export function SkinChipsRefined({
   control,
@@ -56,43 +58,53 @@ export function SkinChipsRefined({
       }
     >
       {(frame) => (
-        <div onFocus={field.onFieldFocus} onBlur={field.onFieldBlur}>
-          <div
-            role="list"
-            ref={listRef}
-            className={[
-              styles.refinedList,
-              draggingIndex === null ? null : styles.refinedListDragging,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            aria-labelledby={frame.labelId}
-            onClickCapture={swallowClickAfterDrag}
-          >
-            <SkinChipItems field={field} />
+        <>
+          <div onFocus={field.onFieldFocus} onBlur={field.onFieldBlur}>
+            <div
+              role="list"
+              ref={listRef}
+              className={[
+                styles.refinedList,
+                draggingIndex === null ? null : styles.refinedListDragging,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              aria-labelledby={frame.labelId}
+              onClickCapture={swallowClickAfterDrag}
+            >
+              <SkinChipItems field={field} />
+            </div>
+            <input
+              id={frame.controlId}
+              ref={inputRef}
+              className={addInputClassName}
+              value={draft}
+              placeholder={placeholder}
+              autoComplete="off"
+              aria-describedby={[frame.describedBy, ids.addHintId]
+                .filter(Boolean)
+                .join(" ")}
+              {...addInputHandlers}
+            />
+            <span id={ids.addHintId} hidden>
+              {addHint}
+            </span>
+            <span id={ids.chipHintId} hidden>
+              {chipHint}
+            </span>
+            <span className="visuallyHidden" role="status" aria-live="polite">
+              {list.announcement}
+            </span>
           </div>
-          <input
-            id={frame.controlId}
-            ref={inputRef}
-            className={addInputClassName}
-            value={draft}
-            placeholder={placeholder}
-            autoComplete="off"
-            aria-describedby={[frame.describedBy, ids.addHintId]
-              .filter(Boolean)
-              .join(" ")}
-            {...addInputHandlers}
-          />
-          <span id={ids.addHintId} hidden>
-            {addHint}
-          </span>
-          <span id={ids.chipHintId} hidden>
-            {chipHint}
-          </span>
-          <span className="visuallyHidden" role="status" aria-live="polite">
-            {list.announcement}
-          </span>
-        </div>
+          {/* Outside the focus zone above, so a suggestion's focus never shows
+            the chip-editing key hint. */}
+          {control.suggestions && (
+            <SkinChipSuggestions
+              suggestions={control.suggestions}
+              field={field}
+            />
+          )}
+        </>
       )}
     </SkinRefinedField>
   );

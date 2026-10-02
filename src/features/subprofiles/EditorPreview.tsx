@@ -7,6 +7,7 @@ import type { PersonaViewMode } from "./personaSkinRender";
 import { PreviewDeviceToggle } from "./PreviewDeviceToggle";
 import type { PreviewDevice } from "./usePreviewFit";
 import { useEditorPreviewView } from "./useEditorPreviewView";
+import { usePreviewChapterFocus } from "./usePreviewChapterFocus";
 
 /** No-op: the tree is fully inert in `mode="preview"` (Task 3), so these
  *  handlers exist only to satisfy `SubprofilePageBody`'s prop contract and
@@ -35,6 +36,10 @@ const PREVIEW_MODE: PersonaViewMode = "preview";
  * outline.
  * The Mobile / Desktop switch shows only when the viewport has room for the
  * wider Desktop dock (`canPreviewDesktop`, decided by the shell).
+ *
+ * While Page blocks is open the preview follows the chapter on screen: it
+ * scrolls to that chapter's blocks and rings them (`usePreviewChapterFocus`),
+ * and an empty list chapter says it shows once it has something in it.
  */
 export function EditorPreview({
   subprofile,
@@ -59,6 +64,7 @@ export function EditorPreview({
     liveHref,
     isDraftHref,
   } = useEditorPreviewView(subprofile, device);
+  const focus = usePreviewChapterFocus({ scrollRef, pageRef });
 
   return (
     <>
@@ -94,6 +100,15 @@ export function EditorPreview({
         )}
       </div>
       <div className="ed-prev-scroll" ref={scrollRef}>
+        {/* An empty list chapter has nothing on the page to point at, so the
+            preview says where it will appear instead of staying silent. */}
+        {focus.chapter && focus.isChapterEmpty && (
+          <p className="ed-prev-note" role="status">
+            {t("subprofiles:editorPreview.chapterEmpty", {
+              title: t(focus.chapter.titleKey),
+            })}
+          </p>
+        )}
         {/* `usePreviewFit` writes the page's layout width and `zoom` onto
             `.ed-prev-page`, morphs the card's width during a device swap,
             and stamps the swap's phase on the scroller, so the fade, the
