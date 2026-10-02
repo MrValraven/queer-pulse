@@ -1,26 +1,86 @@
+/* "Protect this work" — a collapsed disclosure at the foot of the item
+   drawer's settings rail. Quiet until opened: it is a rare, after-the-fact
+   tool and must not compete with the drawer's Save. */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 0.25rem;
-  padding-top: 1rem;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
 }
-.heading {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-15);
-  font-weight: 700;
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 0;
+  font: inherit;
   color: var(--ink);
+  text-align: start;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-10);
+  cursor: pointer;
 }
+.toggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.toggleIcon {
+  flex-shrink: 0;
+  color: var(--jade-ink);
+}
+
+.heading {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.chevron {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  color: var(--ink-60);
+  transition: rotate 0.22s var(--ease);
+}
+.toggle[aria-expanded="true"] .chevron {
+  rotate: 180deg;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+  animation: protectPanelIn 0.2s var(--ease) both;
+}
+@keyframes protectPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
 .blurb {
   margin: 0;
-  font-size: var(--text-13-5);
+  font-size: var(--text-13);
+  line-height: 1.55;
   color: var(--ink-60);
 }
+
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+  .panel {
+    animation: none;
+  }
 }

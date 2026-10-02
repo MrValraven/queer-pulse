@@ -1,5 +1,11 @@
-import { useState } from "react";
-import { FiCopy, FiDownload, FiMail } from "react-icons/fi";
+import { useId, useState } from "react";
+import {
+  FiChevronDown,
+  FiCopy,
+  FiDownload,
+  FiMail,
+  FiShield,
+} from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useToast } from "../../../shared/components/feedback/useToast";
@@ -32,6 +38,10 @@ export interface ProtectWorkSectionProps {
  *
  * The caller (`SubprofileItemDrawer`) only renders this once the item is
  * already saved, since a brand-new draft has no real `createdAt` yet.
+ *
+ * It is a rare, after-the-fact tool, so it sits collapsed at the foot of the
+ * drawer's settings rail: one quiet row until it is asked for, rather than
+ * three full-size buttons competing with Save.
  */
 export function ProtectWorkSection({
   item,
@@ -40,6 +50,8 @@ export function ProtectWorkSection({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [isBuildingRecord, setIsBuildingRecord] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
 
   async function withAuthorshipRecord(
     action: (record: string) => void | Promise<void>,
@@ -104,32 +116,51 @@ export function ProtectWorkSection({
   }
 
   return (
-    <section className={`${styles.section} pe-field-wide`}>
-      <h4 className={styles.heading}>{t("subprofiles:protect.heading")}</h4>
-      <p className={styles.blurb}>{t("subprofiles:protect.blurb")}</p>
-      <div className={styles.actions}>
-        <Button
-          variant="ghost"
-          disabled={isBuildingRecord}
-          onClick={() => void withAuthorshipRecord(downloadRecord)}
-        >
-          <FiDownload aria-hidden /> {t("subprofiles:protect.download")}
-        </Button>
-        <Button
-          variant="ghost"
-          disabled={isBuildingRecord}
-          onClick={() => void withAuthorshipRecord(copyRecord)}
-        >
-          <FiCopy aria-hidden /> {t("subprofiles:protect.copy")}
-        </Button>
-        <Button
-          variant="ghost"
-          disabled={isBuildingRecord}
-          onClick={() => void withAuthorshipRecord(emailRecord)}
-        >
-          <FiMail aria-hidden /> {t("subprofiles:protect.email")}
-        </Button>
-      </div>
+    <section className={styles.section}>
+      <button
+        type="button"
+        className={styles.toggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <FiShield className={styles.toggleIcon} aria-hidden />
+        <span className={styles.heading}>
+          {t("subprofiles:protect.heading")}
+        </span>
+        <FiChevronDown className={styles.chevron} aria-hidden />
+      </button>
+      {isOpen && (
+        <div id={panelId} className={styles.panel}>
+          <p className={styles.blurb}>{t("subprofiles:protect.blurb")}</p>
+          <div className={styles.actions}>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isBuildingRecord}
+              onClick={() => void withAuthorshipRecord(downloadRecord)}
+            >
+              <FiDownload aria-hidden /> {t("subprofiles:protect.download")}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isBuildingRecord}
+              onClick={() => void withAuthorshipRecord(copyRecord)}
+            >
+              <FiCopy aria-hidden /> {t("subprofiles:protect.copy")}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isBuildingRecord}
+              onClick={() => void withAuthorshipRecord(emailRecord)}
+            >
+              <FiMail aria-hidden /> {t("subprofiles:protect.email")}
+            </Button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

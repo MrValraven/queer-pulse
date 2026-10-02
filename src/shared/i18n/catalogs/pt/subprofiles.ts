@@ -691,18 +691,33 @@ export const subprofiles: Catalog = {
   "itemEditor.tagsHelper": "Separa com vírgulas",
   "itemEditor.feature": "Tornar isto o destaque",
   "itemEditor.unfeature": "Remover do destaque",
+  // Interruptor de destaque na coluna de definições da gaveta (ItemDrawerSettings)
+  "itemEditor.spotlightLabel": "Destaque",
+  "itemEditor.spotlightOffHelp":
+    "Mostra isto primeiro na tua página, num cartão maior. Só uma peça pode estar em destaque.",
+  "itemEditor.spotlightOnHelp":
+    "É o que as visitas veem primeiro. Ligar aqui tira o destaque de qualquer outra peça.",
 
-  // Seletor de pessoas colaboradoras (CollaboratorSelect, dentro de SubprofileItemDrawerFields)
+  // Seletor de pessoas colaboradoras (CollaboratorPicker, na coluna de
+  // definições da gaveta). Só as tuas conexões podem ser creditadas.
   "itemEditor.collaboratorsLabel": "Pessoas colaboradoras",
-  "itemEditor.collaboratorsPlaceholder": "Pesquisar pessoas para creditar",
-  "itemEditor.collaboratorsSearchPlaceholder":
-    "Pesquisar por nome ou @identificador",
+  "itemEditor.collaboratorsCount": "{taken} de {max}",
+  "itemEditor.collaboratorsPlaceholder": "Pesquisar nas tuas conexões",
   "itemEditor.collaboratorsEmpty":
-    "Nenhuma pessoa corresponde a essa pesquisa.",
+    "Nenhuma das tuas conexões corresponde a isso.",
   "itemEditor.collaboratorsHelper":
-    "Pesquisa pessoas e escolhe-as para creditar o trabalho delas aqui.",
+    "Credita quem fez isto contigo. Podes marcar qualquer pessoa com quem estejas conectade.",
   "itemEditor.collaboratorsCapHint":
     "É o máximo de pessoas colaboradoras que podes acrescentar.",
+  "itemEditor.collaboratorsLoading": "A procurar nas tuas conexões…",
+  "itemEditor.collaboratorsLoadError": "As tuas conexões não carregaram.",
+  "itemEditor.collaboratorsNoConnections":
+    "Ainda não tens conexões. Quando alguém aceitar, podes creditar essa pessoa aqui.",
+  "itemEditor.collaboratorsFindPeople": "Encontrar a tua gente",
+  "itemEditor.collaboratorsResultsLabel": "As tuas conexões",
+  "itemEditor.collaboratorsAdd": "Creditar {name}",
+  "itemEditor.collaboratorsPickedLabel": "Creditades",
+  "itemEditor.collaboratorsRemove": "Remover {name}",
 
   // Editor de links sociais (SubprofileSocialLinksEditor)
   "socialEditor.title": "Links sociais",
@@ -1796,7 +1811,15 @@ export const subprofiles: Catalog = {
     "Escreveste aqui alguma coisa e ainda não foi guardada. Se fechares, desaparece.",
   "itemDrawer.discardConfirm": "Deitar fora",
   "itemDrawer.discardKeep": "Continuar a editar",
-  "itemDrawer.saveItem": "Guardar item",
+  "itemDrawer.saveNew": "Acrescentar",
+  "itemDrawer.saveChanges": "Guardar alterações",
+  "itemDrawer.settingsLabel": "Como aparece e quem é creditade",
+  // Linha de estado no rodapé da gaveta (ItemDrawerFooter)
+  "itemDrawer.status.new": "Ainda não acrescentado",
+  "itemDrawer.status.dirty": "Alterações por guardar",
+  "itemDrawer.status.clean": "Sem alterações",
+  "itemDrawer.status.needsTitle": "Dá-lhe um título para guardar",
+  "itemDrawer.status.needsPhoto": "Acrescenta uma foto para guardar",
   "itemRow.edit": "Editar",
 
   // Proteja este trabalho (ProtectWorkSection): descarregar/copiar/enviar
@@ -1854,6 +1877,8 @@ export const subprofiles: Catalog = {
   "richField.ticketUrl.label": "Link de bilhetes",
   "richField.ticketUrl.placeholder": "https://",
   "itemField.quickPicks": "Respostas rápidas para {label}",
+  "itemField.ownWords": "{label}, por palavras tuas",
+  "itemField.ownWordsPlaceholder": "Ou escreve à tua maneira",
   "itemField.gameMaster.campaigns.title.placeholder":
     "ex. A Dívida de Thornwood",
   "itemField.gameMaster.campaigns.subtitle.label": "Estado da mesa",

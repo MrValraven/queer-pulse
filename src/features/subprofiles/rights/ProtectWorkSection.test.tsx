@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { ProtectWorkSection } from "./ProtectWorkSection";
@@ -38,14 +38,24 @@ const SAVED_ITEM = {
 } satisfies SubprofileItemView;
 
 describe("ProtectWorkSection", () => {
-  it("renders the protect heading and a download control", async () => {
+  it("starts collapsed and reveals the download control when opened", async () => {
     render(
       <TestProviders>
         <ProtectWorkSection item={SAVED_ITEM} authorName="Tiago" />
       </TestProviders>,
     );
 
-    expect(await screen.findByText(/Protect this work/i)).toBeInTheDocument();
+    const toggle = await screen.findByRole("button", {
+      name: /Protect this work/i,
+    });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(
+      screen.queryByRole("button", { name: /Download authorship record/i }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
     expect(
       await screen.findByRole("button", {
         name: /Download authorship record/i,

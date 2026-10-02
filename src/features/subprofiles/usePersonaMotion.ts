@@ -6,6 +6,8 @@ import { usePrefersReducedMotion } from "../../shared/hooks/usePrefersReducedMot
 const COVER_PARALLAX_FACTOR = 0.12;
 /** Hard cap on the cover shift so the motion stays a gentle nudge, never a slide. */
 const COVER_SHIFT_MAX_PX = 24;
+/** The blocks that start hidden and fade up on scroll-in. */
+const REVEAL_TARGETS = ".pp-sec, .pp-spot, .pp-foot";
 
 /**
  * Drives the persona page's scroll motion imperatively and returns a ref for the
@@ -55,9 +57,31 @@ export function usePersonaMotion(): RefObject<HTMLElement | null> {
       // until ~12% of the section has entered the viewport.
       { threshold: 0.12, rootMargin: "0px" },
     );
-    root
-      .querySelectorAll(".pp-sec, .pp-spot, .pp-foot")
-      .forEach((section) => observer.observe(section));
+    const observeTargets = (scope: Element) => {
+      if (scope.matches(REVEAL_TARGETS)) observer.observe(scope);
+      scope
+        .querySelectorAll(REVEAL_TARGETS)
+        .forEach((section) => observer.observe(section));
+    };
+    observeTargets(root);
+
+    // Sections that mount AFTER this effect must be watched too, or they sit
+    // at opacity:0 forever. On the public page the tree is complete on first
+    // render, but the editor's live preview keeps this same `.pp` mounted
+    // while the owner edits: the first item added to an empty section
+    // (a section with no items renders nothing) or a newly starred item's
+    // Spotlight mounts a brand-new block, which used to stay invisible —
+    // "my campaign doesn't show in the preview". `IntersectionObserver`
+    // reports a newly observed node's state straight away, so one already in
+    // view fades in at once, which also reads as feedback for the edit.
+    const mutationObserver = new MutationObserver((records) => {
+      records.forEach((record) =>
+        record.addedNodes.forEach((node) => {
+          if (node instanceof Element) observeTargets(node);
+        }),
+      );
+    });
+    mutationObserver.observe(root, { childList: true, subtree: true });
 
     // Cover parallax: only wire the scroll listener when a cover is present AND
     // actually rendered. The `page` and `workshop` skins set `.pp-cover {
@@ -96,6 +120,7 @@ export function usePersonaMotion(): RefObject<HTMLElement | null> {
 
     return () => {
       observer.disconnect();
+      mutationObserver.disconnect();
       if (scrollListener) window.removeEventListener("scroll", scrollListener);
       if (pendingFrame !== null) cancelAnimationFrame(pendingFrame);
       root.style.removeProperty("--pp-cover-shift");
