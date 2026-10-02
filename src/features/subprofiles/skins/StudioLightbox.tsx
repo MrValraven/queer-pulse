@@ -97,7 +97,9 @@ export function StudioLightbox({
           <span className="plate-n">{plateLabel}</span>
           <b>{item.title}</b>
           {meta && <span>{meta}</span>}
-          {item.description && <p>{item.description}</p>}
+          {item.description && (
+            <p className="pp-item-desc">{item.description}</p>
+          )}
           {item.section !== "poems" && (
             <WorkRightsFooter createdAtISO={item.createdAt} />
           )}

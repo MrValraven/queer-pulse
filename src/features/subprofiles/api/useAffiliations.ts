@@ -2,38 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   replaceAffiliations,
-  type AffiliationDTO,
   type AffiliationInputDTO,
   type AffiliationOptionDTO,
   type SubprofileDTO,
 } from "./subprofiles.api";
 import { subprofileToView } from "./subprofiles.adapters";
-
-/** Resolve an owner-edited affiliation input to its display `name`/`imageUrl`
- *  in demo mode. A newly picked target resolves from the picker's options (the
- *  cached `useAffiliationOptions` lists), then from the persona's
- *  already-resolved affiliations (edits, reorders, removals), and only as a
- *  last resort from its raw slug. */
-function demoResolveAffiliation(
-  item: AffiliationInputDTO,
-  pickerOptions: readonly AffiliationOptionDTO[],
-  known: readonly AffiliationDTO[],
-): AffiliationDTO {
-  const isSameTarget = (candidate: {
-    targetType: string;
-    targetSlug: string;
-  }) =>
-    candidate.targetType === item.targetType &&
-    candidate.targetSlug === item.targetSlug;
-  const resolved = pickerOptions.find(isSameTarget) ?? known.find(isSameTarget);
-  return {
-    targetType: item.targetType,
-    targetSlug: item.targetSlug,
-    role: item.role,
-    name: resolved?.name ?? item.targetSlug,
-    imageUrl: resolved?.imageUrl ?? null,
-  };
-}
+import { resolveAffiliation } from "../editorPreviewRows";
 
 /**
  * Owner mutation for one persona's event/community affiliations ("Part of").
@@ -84,11 +58,7 @@ export function useAffiliations(subprofileId: string) {
       return {
         ...current,
         affiliations: items.map((item) =>
-          demoResolveAffiliation(
-            item,
-            pickerOptions,
-            current.affiliations ?? [],
-          ),
+          resolveAffiliation(item, pickerOptions, current.affiliations ?? []),
         ),
         editVersion: mockBumpEditVersion(subprofileId),
       };

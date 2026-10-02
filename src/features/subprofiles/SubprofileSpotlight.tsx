@@ -74,7 +74,7 @@ export function SubprofileSpotlight({
         {/* Render subtitle and description as separate lines — an item with
             both must not drop the description. */}
         {item.subtitle && <p>{item.subtitle}</p>}
-        {item.description && <p>{item.description}</p>}
+        {item.description && <p className="pp-item-desc">{item.description}</p>}
 
         {skin === "workshop" && <WorkshopSnippet item={item} />}
 

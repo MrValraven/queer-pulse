@@ -94,7 +94,9 @@ export function SubprofileItemRow({
           interactive={interactive}
         />
       )}
-      {!hideBody && item.description && <p>{item.description}</p>}
+      {!hideBody && item.description && (
+        <p className="pp-item-desc">{item.description}</p>
+      )}
       <SubprofileSocialRow
         links={item.structured?.links ?? []}
         accent={accent ?? DEFAULT_ACCENT}
