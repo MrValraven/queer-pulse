@@ -60,7 +60,10 @@ export function EditDetailsAudience({
       title={t("gatherings:manage.editModal.section.audience")}
     >
       {myCommunityOptions.length > 0 && (
-        <FormField label={t("gatherings:create.step3.communityLabel")}>
+        <FormField
+          label={t("gatherings:create.step3.communityLabel")}
+          helper={t("gatherings:create.step3.communityHint")}
+        >
           <Select
             options={[
               {

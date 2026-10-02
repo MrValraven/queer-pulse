@@ -940,7 +940,7 @@ export const gatherings: Catalog = {
   "create.v2.who.waitlistDescription":
     "As pessoas ficam em fila e são avisadas assim que abre um lugar.",
   "create.v2.who.rsvpCutoffLabel": "As confirmações fecham",
-  "create.v2.who.communityLabel": "Publicar numa comunidade",
+  "create.v2.who.communityLabel": "Organizar com uma comunidade",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Seis perguntas",
@@ -1047,8 +1047,10 @@ export const gatherings: Catalog = {
   "create.step3.langLabel": "Idioma",
   "create.step3.notesPlaceholder":
     "Mais alguma coisa que as pessoas devam saber: degraus, estacionamento, nível de som…",
-  "create.step3.communityLabel": "Publicar numa comunidade (opcional)",
-  "create.step3.communityNone": "Nenhuma (convívio público)",
+  "create.step3.communityLabel": "Organizar com uma comunidade (opcional)",
+  "create.step3.communityNone": "Nenhuma comunidade",
+  "create.step3.communityHint":
+    "Liga o convívio a uma das tuas comunidades. Não muda quem o pode ver; isso escolhes logo abaixo.",
 
   // AudienceScopeField.tsx: partilhado pelo assistente de criação (capítulo 3)
   // e pelo modal de edição do convívio.
@@ -1065,7 +1067,7 @@ export const gatherings: Catalog = {
   "audienceScope.network.helper": "Só pessoas com quem já tens uma conexão.",
   "audienceScope.community.label": "Membros da comunidade",
   "audienceScope.community.helper":
-    "Só membros da comunidade onde estás a publicar.",
+    "Só membros da comunidade com quem o organizas.",
   "audienceScope.inviteOnly.label": "Só por convite",
   "audienceScope.inviteOnly.helper": "Só as pessoas que convidares.",
 

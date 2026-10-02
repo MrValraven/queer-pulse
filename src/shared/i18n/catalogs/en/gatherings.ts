@@ -931,7 +931,7 @@ export const gatherings: Catalog = {
   "create.v2.who.waitlistDescription":
     "People queue for a spot and get told the moment one opens.",
   "create.v2.who.rsvpCutoffLabel": "RSVPs close",
-  "create.v2.who.communityLabel": "Post to a community",
+  "create.v2.who.communityLabel": "Host it with a community",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Six questions",
@@ -1039,8 +1039,10 @@ export const gatherings: Catalog = {
   "create.step3.langLabel": "Language",
   "create.step3.notesPlaceholder":
     "Anything else attendees should know: steps, parking, sound level…",
-  "create.step3.communityLabel": "Post to a community (optional)",
-  "create.step3.communityNone": "None (public gathering)",
+  "create.step3.communityLabel": "Host it with a community (optional)",
+  "create.step3.communityNone": "No community",
+  "create.step3.communityHint":
+    "Links the gathering to one of your communities. It doesn't change who can see it; you choose that just below.",
 
   // AudienceScopeField.tsx: shared by the create wizard (chapter 3) and the
   // manage-gathering edit modal.
@@ -1057,7 +1059,7 @@ export const gatherings: Catalog = {
   "audienceScope.network.helper": "Only people you're connected to.",
   "audienceScope.community.label": "Community members",
   "audienceScope.community.helper":
-    "Only members of the community you're posting to.",
+    "Only members of the community you're hosting it with.",
   "audienceScope.inviteOnly.label": "Invite only",
   "audienceScope.inviteOnly.helper": "Only the people you invite.",
 

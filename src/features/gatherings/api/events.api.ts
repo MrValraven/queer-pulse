@@ -261,8 +261,9 @@ export interface EventDetailDTO extends EventCardDTO {
   /** True when the event is at capacity — drives the "Join the waitlist"
    *  affordance. Backend `EventSummary.isFull`. */
   isFull?: boolean;
-  /** The community this gathering is filed to, or `null` for a
-   *  public/network-scoped gathering with no community. Settable at creation
+  /** The community this gathering is filed to, or `null` for none. Orthogonal
+   *  to `visibility`: a `members` (Public) gathering can be filed to a
+   *  community too; only the `community` tier requires one. Settable at creation
    *  and changeable afterwards via the edit modal's community picker (PATCH
    *  `/events/:slug` with `communitySlug`, see `UpdateEventDto` below) — the
    *  edit modal also uses this to decide whether the "Community members"

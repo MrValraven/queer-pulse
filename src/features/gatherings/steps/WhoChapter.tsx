@@ -96,9 +96,14 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
             label={t("gatherings:create.v2.who.communityLabel")}
             htmlFor={communityId}
             isOptional
+            hint={t("gatherings:create.step3.communityHint")}
           >
+            {/* Which community this is hosted with, independent of who can
+                see it: a public party can still be Bimosaic's. The hint says
+                so, because the two read alike. */}
             <Select
               id={communityId}
+              aria-describedby={`${communityId}-hint`}
               options={[
                 {
                   value: "",
