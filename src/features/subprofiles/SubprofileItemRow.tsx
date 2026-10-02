@@ -1,6 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
-import { formatMonthYear } from "../../shared/lib/date";
+import { formatItemDate } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CredentialProofThumb } from "./CredentialProofThumb";
 import { ItemStateChip } from "./ItemStateChip";
@@ -72,7 +72,7 @@ export function SubprofileItemRow({
         </span>
       )}
       {item.date && (
-        <span className="when">{formatMonthYear(item.date, language)}</span>
+        <span className="when">{formatItemDate(item.date, language)}</span>
       )}
       {CREDENTIAL_PHOTO_SECTIONS.has(item.section) && (
         <CredentialProofThumb

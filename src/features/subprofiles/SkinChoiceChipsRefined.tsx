@@ -4,7 +4,13 @@ import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { useSkinChoiceChips, type ChoiceChipItem } from "./useSkinChoiceChips";
 import { SkinRefinedField } from "./SkinRefinedField";
+import { SkinChoiceTile } from "./SkinChoiceTile";
 import styles from "./SkinChoiceChipsRefined.module.css";
+import tileStyles from "./SkinChoiceTiles.module.css";
+
+/** Up to this many tiles share one row (table format's three), each a
+ *  narrower card; more wrap two to a row at most. */
+const COMPACT_TILE_COUNT = 3;
 
 /** The leading icon of an unpicked chip: a hollow circle for a single choice,
  *  a plus for a multi choice (the multiSelect chip's own icon). Every icon is
@@ -72,7 +78,9 @@ function RefinedChoiceChip({
  * language as the multiSelect chip row (plum and a check once picked, paper
  * and an outline before). The group is named by the frame's label through
  * `aria-labelledby`; the note about an older answer sits under the chips and
- * joins the description. Selection rules are `useSkinChoiceChips`.
+ * joins the description. Selection rules are `useSkinChoiceChips`. With
+ * `optionLayout: "tiles"` the options are cards that say what each means
+ * (`SkinChoiceTile`), over the same inputs and selection rules.
  */
 export function SkinChoiceChipsRefined({
   control,
@@ -95,6 +103,8 @@ export function SkinChoiceChipsRefined({
     legacyNote,
     clearHint,
   } = useSkinChoiceChips(control, editor);
+  const isTiles = control.optionLayout === "tiles";
+  const Option = isTiles ? SkinChoiceTile : RefinedChoiceChip;
 
   return (
     <SkinRefinedField
@@ -118,12 +128,20 @@ export function SkinChoiceChipsRefined({
           <>
             <div
               role="group"
-              className={styles.chips}
+              className={
+                isTiles
+                  ? `${tileStyles.tiles} ${
+                      items.length <= COMPACT_TILE_COUNT
+                        ? tileStyles.tilesCompact
+                        : ""
+                    }`
+                  : styles.chips
+              }
               aria-labelledby={frame.labelId}
               aria-describedby={describedBy}
             >
               {items.map((item) => (
-                <RefinedChoiceChip
+                <Option
                   key={item.value}
                   item={item}
                   type={isMulti ? "checkbox" : "radio"}

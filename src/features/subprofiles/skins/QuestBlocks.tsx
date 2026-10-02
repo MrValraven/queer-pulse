@@ -57,7 +57,11 @@ export function AtTheTableBlock({ persona }: { persona: SkinExtrasPersona }) {
   if (!hasContent) return null;
 
   return (
-    <section className="quest-table" aria-labelledby={headingId}>
+    <section
+      className="quest-table"
+      aria-labelledby={headingId}
+      data-preview-anchor="block:atTheTable"
+    >
       <h2 id={headingId} className="quest-table-title">
         {t("subprofiles:skinExtras.quest.title")}
       </h2>

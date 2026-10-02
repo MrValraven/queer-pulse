@@ -1729,6 +1729,8 @@ export const subprofiles: Catalog = {
   // Pré-visualização ao vivo (EditorPreview) — mostra a página pública da
   // persona dentro do próprio editor.
   "editorPreview.label": "Pré-visualização ao vivo",
+  "editorPreview.chapterEmpty":
+    "{title} ainda não aparece na tua página. Adiciona algo e surge aqui.",
   "editorPreview.openLive": "Abrir ao vivo",
   "editorPreview.openDraftPage": "Abrir página do rascunho",
   // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
@@ -1851,6 +1853,44 @@ export const subprofiles: Catalog = {
   "richField.doors.placeholder": "por ex. 21h",
   "richField.ticketUrl.label": "Link de bilhetes",
   "richField.ticketUrl.placeholder": "https://",
+  "itemField.quickPicks": "Respostas rápidas para {label}",
+  "itemField.gameMaster.campaigns.title.placeholder":
+    "ex. A Dívida de Thornwood",
+  "itemField.gameMaster.campaigns.subtitle.label": "Estado da mesa",
+  "itemField.gameMaster.campaigns.subtitle.placeholder":
+    "por ex. 2 lugares livres",
+  "itemField.gameMaster.campaigns.subtitle.pick.recruiting": "A recrutar",
+  "itemField.gameMaster.campaigns.subtitle.pick.oneSeat": "1 lugar livre",
+  "itemField.gameMaster.campaigns.subtitle.pick.twoSeats": "2 lugares livres",
+  "itemField.gameMaster.campaigns.subtitle.pick.full": "Mesa cheia",
+  "itemField.gameMaster.campaigns.subtitle.pick.waitlist":
+    "Lista de espera aberta",
+  "itemField.gameMaster.campaigns.subtitle.pick.break": "Em pausa",
+  "itemField.gameMaster.campaigns.date.label": "Quando jogas",
+  "itemField.gameMaster.campaigns.date.placeholder":
+    "ex. Domingos, de 15 em 15 dias",
+  "itemField.gameMaster.campaigns.description.placeholder":
+    "A premissa, o sistema e para quem é indicada.",
+  "itemField.gameMaster.sessions.title.placeholder":
+    "ex. Noite de one-shot: Thirsty Sword Lesbians",
+  "itemField.gameMaster.sessions.url.label": "Página da sessão",
+  "itemField.gameMaster.sessions.url.helper":
+    "Opcional. Onde quem joga lê mais. O link de inscrição vai mais abaixo.",
+  "itemField.gameMaster.sessions.description.placeholder":
+    "O que vão jogar, quanto tempo dura e se as personagens já vêm feitas.",
+  "itemDrawer.section.campaigns.add": "Adicionar campanha",
+  "itemDrawer.section.campaigns.edit": "Editar campanha",
+  "itemDrawer.section.sessions.add": "Adicionar sessão",
+  "itemDrawer.section.sessions.edit": "Editar sessão",
+  "richField.session.state.label": "Lugares",
+  "richField.session.state.open": "Há lugares",
+  "richField.session.state.full": "Mesa cheia",
+  "richField.session.venue.label": "Onde",
+  "richField.session.venue.placeholder":
+    "ex. Biblioteca dos Anjos, ou Foundry VTT",
+  "richField.session.doors.label": "Começa às",
+  "richField.session.ticketUrl.label": "Link de inscrição",
+  "gigState.tableFull": "Mesa cheia",
   "richField.medium.label": "Suporte",
   "richField.medium.placeholder": "por ex. Óleo sobre tela",
   "richField.dimensions.label": "Dimensões",
@@ -2832,13 +2872,44 @@ export const subprofiles: Catalog = {
   "skinBlock.quest.atTheTable.wherePlaceholder": "Lisboa, ou Foundry + Discord",
   "skinBlock.quest.atTheTable.systems": "Sistemas que orientas",
   "skinBlock.quest.atTheTable.systemsPlaceholder": "D&D 5e",
-  "skinBlock.quest.atTheTable.systemsAdd": "Adicionar sistema",
   "skinBlock.quest.atTheTable.safetyTools": "Ferramentas de segurança",
   "skinBlock.quest.atTheTable.vibe": "Ambiente da mesa",
   "skinBlock.quest.atTheTable.price": "Preço",
   "skinBlock.quest.atTheTable.pricePlaceholder": "Grátis, ou 15 € por sessão",
   "skinBlock.quest.atTheTable.note":
     "Mais alguma coisa que quem joga deva saber",
+  "skinBlock.quest.atTheTable.howTitle": "Como e onde jogas",
+  "skinBlock.quest.atTheTable.howHelper":
+    "Quem joga filtra o diretório pelo formato, por isso escolhe um mesmo que os detalhes ainda estejam por fechar.",
+  "skinBlock.quest.atTheTable.systemsHelper":
+    "Os jogos que orientavas com gosto já na próxima semana. Toca num abaixo ou escreve o teu e carrega em Enter.",
+  "skinBlock.quest.atTheTable.vibeHelper":
+    "Para quem é a tua mesa. Quem joga também filtra por isto, por isso escolhe só o que é verdade em todas as sessões.",
+  "skinBlock.quest.atTheTable.safetyHelper":
+    "As ferramentas que usas mesmo. Quem está a decidir se se senta à mesa lê isto primeiro.",
+  "skinBlock.quest.atTheTable.noteHelper":
+    "Uma ou duas linhas: regras da casa, pronomes, comida, como pedir um lugar.",
+  "skinBlock.quest.atTheTable.notePlaceholder":
+    "Os pronomes vão na ficha de personagem. Os snacks são partilhados.",
+  "quest.formatDescription.online": "Videochamada e uma mesa virtual",
+  "quest.formatDescription.in_person": "Dados numa mesa a sério, num sítio",
+  "quest.formatDescription.both": "Algumas sessões de cada",
+  "quest.safetyDescription.session_zero":
+    "Uma primeira conversa sobre tom, limites e expectativas, antes de se jogar.",
+  "quest.safetyDescription.lines_and_veils":
+    "As linhas nunca acontecem na história. Os véus acontecem fora de cena.",
+  "quest.safetyDescription.x_card":
+    "Qualquer pessoa pode tocar nele para saltar algo, sem explicar porquê.",
+  "quest.safetyDescription.open_door":
+    "Qualquer pessoa pode sair ou fazer uma pausa, a qualquer momento.",
+  "quest.safetyDescription.check_ins":
+    "Paras de vez em quando para perguntar como está toda a gente.",
+  "quest.safetyDescription.content_warnings":
+    "Os temas pesados são avisados antes da sessão, não a meio dela.",
+  "skinChips.suggestionsLabel": "Populares",
+  "skinChips.addSuggestion": "Adicionar {text}",
+  "skinChips.moreSuggestions_one": "Mais {count}",
+  "skinChips.moreSuggestions_other": "Mais {count}",
   "skinBlock.therapist.openSlots.chipHelper":
     "Escreve cada vaga como deve aparecer na tua página, por exemplo Ter 30 set · 18:00.",
   "skinBlock.therapist.hours.valueTimes": "Horário",

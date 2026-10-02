@@ -47,7 +47,11 @@ export function SubprofileSpotlight({
     // `data-has-image` marks a real picture, the same way the cover band's
     // `data-has-cover` does, so a skin can drop the empty frame instead of
     // showing the "Image" placeholder (the Quest skin hides `.art` on it).
-    <div className="pp-spot" data-has-image={item.imageUrl ? "" : undefined}>
+    <div
+      className="pp-spot"
+      data-has-image={item.imageUrl ? "" : undefined}
+      data-preview-anchor={`section:${item.section}`}
+    >
       <div className="art">
         <ImageSlot
           src={item.imageUrl || undefined}

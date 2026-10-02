@@ -1,3 +1,4 @@
+import type { IconType } from "react-icons";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
@@ -13,6 +14,9 @@ const CHOICE_CLEAR_HINT_KEY = "subprofiles:skinBlock.choiceClearHint";
  *  option (an earlier answer), shown exactly as stored. */
 export interface ChoiceChipItem extends ChoiceOptionLabel {
   isExtra: boolean;
+  /** Tiles only: the option's translated `descriptionKey`, and its icon. */
+  description?: string;
+  icon?: IconType;
 }
 
 /**
@@ -50,7 +54,12 @@ export function useSkinChoiceChips(
     typeof legacyStored === "string" ? legacyStored.trim() : "";
   const items: ChoiceChipItem[] = [
     ...extraValues.map((value) => ({ value, label: value, isExtra: true })),
-    ...options.map((option) => ({ ...option, isExtra: false })),
+    ...(control.options ?? []).map((option, index) => ({
+      ...options[index]!,
+      isExtra: false,
+      description: option.descriptionKey ? t(option.descriptionKey) : undefined,
+      icon: option.icon,
+    })),
   ];
 
   function toggle(value: string, isClearing: boolean): void {

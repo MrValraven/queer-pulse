@@ -68,7 +68,11 @@ export function applyZoom(
   availableWidth: number,
 ) {
   if (!pageElement || availableWidth <= 0) return;
-  pageElement.style.zoom = String(fitZoom(device, availableWidth));
+  const zoom = String(fitZoom(device, availableWidth));
+  pageElement.style.zoom = zoom;
+  // Read by the focus ring (`[data-preview-focus]`), which divides its width
+  // by the zoom so it stays two screen pixels at any device size.
+  pageElement.style.setProperty("--prev-zoom", zoom);
 }
 
 export function applyLayoutWidth(

@@ -21,7 +21,9 @@ import type {
  */
 export interface RichFieldDescriptor {
   key: keyof SubprofileItemInputDTO | "snippet";
-  kind: "text" | "select" | "textarea";
+  /** `time`: a time-of-day picker stored as `HH:mm`; an older free-text
+   *  value ("9pm") shows empty and stays stored until a time is picked. */
+  kind: "text" | "select" | "textarea" | "time";
   labelKey: string;
   placeholderKey?: string;
   options?: { value: string; labelKey: string }[];
@@ -80,6 +82,46 @@ const GIG_FIELDS: RichFieldDescriptor[] = [
     key: "ticketUrl",
     kind: "text",
     labelKey: "subprofiles:richField.ticketUrl.label",
+    placeholderKey: "subprofiles:richField.ticketUrl.placeholder",
+  },
+];
+
+/** A game master's `sessions`: one evening at a table. The same stored
+ *  fields as a gig, worded for play: whether seats are left, where, when it
+ *  starts, where to sign up. "Guest set" means nothing here, so it is not
+ *  offered. */
+const SESSION_FIELDS: RichFieldDescriptor[] = [
+  {
+    key: "gigState",
+    kind: "select",
+    labelKey: "subprofiles:richField.session.state.label",
+    options: [
+      { value: "", labelKey: "subprofiles:richField.session.state.open" },
+      {
+        value: "sold_out",
+        labelKey: "subprofiles:richField.session.state.full",
+      },
+      {
+        value: "cancelled",
+        labelKey: "subprofiles:richField.gigState.option.cancelled",
+      },
+    ],
+  },
+  {
+    key: "venue",
+    kind: "text",
+    labelKey: "subprofiles:richField.session.venue.label",
+    placeholderKey: "subprofiles:richField.session.venue.placeholder",
+  },
+  {
+    key: "doors",
+    kind: "time",
+    labelKey: "subprofiles:richField.session.doors.label",
+  },
+  {
+    key: "ticketUrl",
+    kind: "text",
+    labelKey: "subprofiles:richField.session.ticketUrl.label",
     placeholderKey: "subprofiles:richField.ticketUrl.placeholder",
   },
 ];
@@ -160,7 +202,7 @@ export const RICH_FIELDS_FOR_SECTION: Partial<
   projects: PROJECT_FIELDS,
   open_source: PROJECT_FIELDS,
   // Quest personas
-  sessions: GIG_FIELDS,
+  sessions: SESSION_FIELDS,
   larps: GIG_FIELDS,
   cons: GIG_FIELDS,
   playthroughs: VISUAL_WORK_FIELDS,

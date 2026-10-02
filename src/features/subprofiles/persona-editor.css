@@ -765,6 +765,52 @@ html[data-reduce-motion="true"]
   scrollbar-gutter: stable;
   padding: 14px;
 }
+/* The blocks of the Page blocks chapter on screen (`usePreviewChapterFocus`):
+   an accent ring two screen pixels wide at any zoom, and one soft pulse as
+   the preview arrives on them. Every length is divided by the page's zoom,
+   which `applyZoom` mirrors into `--prev-zoom`. */
+.ed-prev-page [data-preview-focus] {
+  outline: calc(2px / var(--prev-zoom, 1)) solid var(--accent);
+  outline-offset: calc(5px / var(--prev-zoom, 1));
+  animation: ed-prev-focus-pulse 1.2s var(--ease-out) 1;
+}
+@keyframes ed-prev-focus-pulse {
+  from {
+    box-shadow: 0 0 0 calc(2px / var(--prev-zoom, 1))
+      rgba(var(--accent-rgb), 0.35);
+  }
+  to {
+    box-shadow: 0 0 0 calc(18px / var(--prev-zoom, 1))
+      rgba(var(--accent-rgb), 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ed-prev-page [data-preview-focus] {
+    animation: none;
+  }
+}
+html[data-reduce-motion="true"] .ed-prev-page [data-preview-focus] {
+  animation: none;
+}
+/* An empty list chapter's note, pinned to the top of the dock over the
+   page: the chapter has nothing on the page yet to ring. */
+.ed-prev-note {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 12px;
+  padding: 8px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  line-height: 1.4;
+  text-align: center;
+  color: rgb(var(--cream-rgb));
+  background: var(--plum);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-soft);
+}
 /* A device swap morphs the card against the width the dock's observer last
    recorded, which trails a narrowing dock by a frame, so the card can stand
    a pixel or two wider than the dock for a moment. Clipping sideways for the

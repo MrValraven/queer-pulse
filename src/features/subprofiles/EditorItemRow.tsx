@@ -5,7 +5,7 @@ import { m } from "motion/react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { reorderLayoutTransition } from "./reorderMotion";
-import { formatMonthYear } from "../../shared/lib/date";
+import { formatItemDate } from "../../shared/lib/date";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { EditorItemRowThumbnail } from "./EditorItemRowThumbnail";
 import { EditorItemRowActions } from "./EditorItemRowActions";
@@ -84,7 +84,7 @@ export function EditorItemRow({
   const subtitle = [
     item.subtitle,
     item.meta,
-    formatMonthYear(item.date, language),
+    formatItemDate(item.date, language),
   ]
     .filter(Boolean)
     .join(" · ");

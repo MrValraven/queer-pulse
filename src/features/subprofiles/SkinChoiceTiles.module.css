@@ -1,0 +1,190 @@
+/* SkinChoiceTile: a `choice` / `multiChoice` option as a card with an icon,
+   a label and a line saying what it means (table format, safety tools). It
+   speaks the pill chip's colours (SkinChoiceChipsRefined.module.css): paper
+   and a hairline before it is picked, plum and cream type once it is. */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 196px), 1fr));
+  gap: 10px;
+}
+
+/* Three or fewer short options share one row. Their head stacks the icon
+   over the label so a two-word label still fits a narrow third. */
+.tilesCompact {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 118px), 1fr));
+}
+
+.tilesCompact .head {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.tilesCompact .icon {
+  order: -2;
+}
+
+.tilesCompact .mark {
+  order: -1;
+  margin-left: auto;
+}
+
+.tilesCompact .label {
+  flex-basis: 100%;
+}
+
+/* On a phone a third of the row is too narrow to read: the short set
+   stacks as full-width rows, the icon beside the label again. */
+@media (--sm) {
+  .tilesCompact {
+    grid-template-columns: 1fr;
+  }
+
+  .tilesCompact .head {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .tilesCompact .icon,
+  .tilesCompact .mark {
+    order: 0;
+  }
+
+  .tilesCompact .label {
+    flex-basis: auto;
+  }
+}
+
+.tile {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 12px 14px 13px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-14);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-size: var(--text-16);
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-pill);
+  transition:
+    color 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.mark {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+
+.description {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.tileSelected {
+  color: rgb(var(--cream-rgb));
+  background: var(--plum);
+  border-color: var(--plum);
+  box-shadow: var(--shadow-soft);
+}
+
+.tileSelected .icon {
+  color: rgb(var(--cream-rgb));
+  background: rgba(var(--accent-rgb), 0.85);
+}
+
+.tileSelected .mark {
+  color: var(--jade-light);
+}
+
+.tileSelected .description {
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+@media (hover: hover) {
+  .tile:not(.tileSelected):hover {
+    border-color: var(--line-strong);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  :global([data-theme="dark"]) .tile:not(.tileSelected):hover {
+    border-color: rgba(var(--line-rgb), 0.8);
+  }
+}
+
+/* Plum barely separates from the dark page: the picked tile takes the pill
+   chip's coral tint and soft coral edge instead. */
+:global([data-theme="dark"]) .tileSelected {
+  background: rgba(var(--accent-rgb), 0.18);
+  border-color: var(--accent-soft);
+  box-shadow: none;
+}
+
+/* An earlier answer that is no option, written in the owner's own words. */
+.tileLegacy {
+  border-style: dashed;
+}
+
+.tileLegacy .label {
+  font-style: italic;
+}
+
+.tile:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .icon {
+    transition: none;
+  }
+
+  .tile:not(.tileSelected):hover {
+    transform: none;
+  }
+}
