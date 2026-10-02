@@ -1,12 +1,10 @@
-import { type FocusEvent, type ReactNode, type SyntheticEvent } from "react";
+import { type FocusEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FadeIn } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
-import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import { LocalBusinessCardBody } from "./LocalBusinessCardBody";
+import { useListingSaveToggle } from "./useListingSaveToggle";
 import type { DirectoryPlace } from "./directoryPlaces";
 import s from "./DirectoryPage.module.css";
 
@@ -22,32 +20,7 @@ export function LocalBusinessCard({
    *  the walking distance so its cards match the directory grid exactly. */
   photoTag?: ReactNode;
 }) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { isSaved, toggleSave } = useSaved();
-  const savedId = `listing:${place.slug}`;
-  const saved = isSaved(savedId);
-
-  function handleSave(event: SyntheticEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    const nowSaved = toggleSave({
-      id: savedId,
-      kind: "listing",
-      title: place.name,
-      href: `${routes.directory}/${place.slug}`,
-      meta: place.hood,
-    });
-    showToast(
-      t(
-        nowSaved
-          ? "marketing:directory.card.savedToast"
-          : "marketing:directory.card.unsavedToast",
-        { name: place.name },
-      ),
-      nowSaved ? "success" : "info",
-    );
-  }
+  const saveControl = useListingSaveToggle(place);
 
   /**
    * Brings the card fully into view when the keyboard lands on it. In the
@@ -78,7 +51,7 @@ export function LocalBusinessCard({
     >
       <LocalBusinessCardBody
         place={place}
-        saveControl={{ saved, onSave: handleSave }}
+        saveControl={saveControl}
         photoTag={photoTag}
       />
     </FadeIn>

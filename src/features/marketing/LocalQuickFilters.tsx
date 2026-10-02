@@ -11,11 +11,14 @@ import s from "./LocalFilterBar.module.css";
  * needs a name for the set as a whole.
  */
 export function LocalQuickFilters({
+  showOpenNow = true,
   openNow,
   onToggleOpenNow,
   safeOnly,
   onToggleSafeOnly,
 }: {
+  /** Off on the Online tab, where no business keeps opening hours. */
+  showOpenNow?: boolean;
   openNow: boolean;
   onToggleOpenNow: () => void;
   safeOnly: boolean;
@@ -35,16 +38,18 @@ export function LocalQuickFilters({
       aria-labelledby={quickLabelId}
     >
       <m.div {...glide.row} className={s.safeRow}>
-        <m.button
-          {...glide.chip}
-          type="button"
-          aria-pressed={openNow}
-          className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
-          onClick={onToggleOpenNow}
-        >
-          <FiClock aria-hidden />
-          {t("marketing:local.filter.openNow")}
-        </m.button>
+        {showOpenNow && (
+          <m.button
+            {...glide.chip}
+            type="button"
+            aria-pressed={openNow}
+            className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
+            onClick={onToggleOpenNow}
+          >
+            <FiClock aria-hidden />
+            {t("marketing:local.filter.openNow")}
+          </m.button>
+        )}
         <m.button
           {...glide.chip}
           type="button"

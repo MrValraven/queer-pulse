@@ -64,6 +64,11 @@ export interface LocalFilterFieldsProps {
    *  variant only: on phones the switcher lives in the sticky toolbar, where it
    *  stays reachable while scrolled deep into the list. */
   viewSlot?: ReactNode;
+  /** True on the Online tab. Every business there has no door, so the
+   *  questions that only a door can answer (is it open right now, is the
+   *  entrance step-free, what's the room like) are left out rather than
+   *  offered as filters that could only ever empty the results. */
+  isOnlineScope?: boolean;
 }
 
 interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
@@ -113,6 +118,7 @@ export function LocalFilterFields({
   isLocationOn,
   nearMeSlot,
   viewSlot,
+  isOnlineScope = false,
   variant = "bar",
   activeFiltersSlot,
 }: LocalFilterFieldsVariantProps) {
@@ -133,7 +139,7 @@ export function LocalFilterFields({
   // (gap-audit HSG-8), matching this folder's existing `useDemoMode` gates
   // (`DirectoryAsideExtras`, `DirectoryAsideFooter`) until/unless a real
   // vibe-tag field exists on live businesses.
-  const showVibeFilter = demoMode;
+  const showVibeFilter = demoMode && !isOnlineScope;
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.
   // Every chosen place type counts as one filter, the same way each vibe and
   // each access need does, so the badge matches the chips applied.
@@ -214,6 +220,7 @@ export function LocalFilterFields({
           isLocationOn={isLocationOn}
         />
         <LocalQuickFilters
+          showOpenNow={!isOnlineScope}
           openNow={openNow}
           onToggleOpenNow={onToggleOpenNow}
           safeOnly={safeOnly}
@@ -221,7 +228,9 @@ export function LocalFilterFields({
         />
       </RefineSplit>
       <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />
-      <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />
+      {!isOnlineScope && (
+        <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />
+      )}
       {showVibeFilter && (
         <LocalVibeFilter vibes={vibes} onToggleVibe={onToggleVibe} />
       )}

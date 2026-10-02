@@ -8477,6 +8477,37 @@ export const marketing: Catalog = {
   "directory.countLoaded_other":
     "Showing <b>{shown}</b> of the {loaded} places loaded so far",
   "directory.countLoadedTotal": "{total} in the whole directory",
+  // The Online tab counts only online-only businesses, and pulls every page
+  // while it is open, so it never needs the loaded-so-far variant above.
+  "directory.countOnline":
+    "Showing <b>{shown}</b> of {total} online businesses",
+  "directory.countOnline_one":
+    "Showing <b>{shown}</b> of {total} online business",
+  "directory.countOnline_other":
+    "Showing <b>{shown}</b> of {total} online businesses",
+  // The Online tab's constellation panel and its cards.
+  "directory.online.eyebrow": "Online only",
+  "directory.online.title": "No front door. <em>Still ours.</em>",
+  "directory.online.body":
+    "Queer-owned shops, studios and practices that live online. Vetted by the same community as the places on the map, and as close as your inbox, wherever you are.",
+  "directory.online.stat.businesses": "online businesses",
+  "directory.online.stat.businesses_one": "online business",
+  "directory.online.stat.businesses_other": "online businesses",
+  "directory.online.stat.verified": "verified queer-owned",
+  "directory.online.stat.kinds": "kinds of work",
+  "directory.online.stat.kinds_one": "kind of work",
+  "directory.online.stat.kinds_other": "kinds of work",
+  "directory.online.constellationLabel":
+    "Online-only businesses around the QueerPulse community",
+  "directory.online.nodeLabel": "{name}, {category}",
+  "directory.online.more": "+{count} more below",
+  "directory.online.reach": "Find them on",
+  "directory.online.empty.title": "No online-only businesses yet",
+  "directory.online.empty.body":
+    "Run a queer-owned shop, studio or practice that lives online? List it, and it shows up here for the whole community.",
+  "directory.online.emptyFiltered.title": "No online businesses match",
+  "directory.online.emptyFiltered.body":
+    "Try a broader place type or a different search, or clear the filters to see every online business.",
   "directory.empty.title": "No places match those filters",
   "directory.empty.body":
     "Try a broader category, fewer vibes, or a different search, or clear the filters to see everything.",
@@ -9565,7 +9596,8 @@ export const marketing: Catalog = {
   "local.cat.nightlife": "Nightlife",
   "local.view.list": "List",
   "local.view.map": "Map",
-  "local.view.toggleAria": "Choose list or map view",
+  "local.view.online": "Online",
+  "local.view.toggleAria": "Choose list, map or online view",
   "local.card.seeFullDetails": "See full details",
   "local.filter.searchPlaceholder": "Search places and venues…",
   "local.filter.categoryLabel": "Place type",

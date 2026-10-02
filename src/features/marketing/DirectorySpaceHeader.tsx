@@ -62,8 +62,12 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
         <header className={s.spaceHead}>
           <div className={s.spaceHeadIdentity}>
             <div className={s.eyebrow}>
-              {categoryLabel(t, place.cat)} · {place.hood} ·{" "}
-              {place.city ?? "Lisbon"}
+              {categoryLabel(t, place.cat)} ·{" "}
+              {/* An online-only business has no neighbourhood or city to
+                  name, and printing them left a bare "· ·" in the line. */}
+              {place.online
+                ? t("marketing:directory.detail.onlineBusiness")
+                : `${place.hood} · ${place.city ?? "Lisbon"}`}
             </div>
             <h1 className={s.h1}>
               {lead && `${lead} `}

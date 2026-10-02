@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { FiList, FiMap, FiSliders } from "react-icons/fi";
+import { FiGlobe, FiList, FiMap, FiSliders } from "react-icons/fi";
 import {
   Button,
   ModalSheet,
@@ -33,7 +33,7 @@ export function LocalFilterBar({
   activeFiltersSlot,
   ...fields
 }: LocalFilterFieldsProps & {
-  /** Current List/Map view — the switcher rides in the mobile sticky bar. */
+  /** Current List/Map/Online view — the switcher rides in the mobile sticky bar. */
   view: string;
   onViewChange: (next: string) => void;
   /** Total active filters, surfaced on the collapsed "Filters" control. */
@@ -59,13 +59,28 @@ export function LocalFilterBar({
       options={[
         {
           value: "list",
-          label: t("marketing:local.view.list"),
+          label: (
+            <span className={s.viewLabel}>
+              {t("marketing:local.view.list")}
+            </span>
+          ),
           icon: <FiList />,
         },
         {
           value: "map",
-          label: t("marketing:local.view.map"),
+          label: (
+            <span className={s.viewLabel}>{t("marketing:local.view.map")}</span>
+          ),
           icon: <FiMap />,
+        },
+        {
+          value: "online",
+          label: (
+            <span className={s.viewLabel}>
+              {t("marketing:local.view.online")}
+            </span>
+          ),
+          icon: <FiGlobe />,
         },
       ]}
       value={view}

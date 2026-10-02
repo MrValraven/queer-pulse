@@ -24,6 +24,7 @@ export function DirectoryPage() {
     myLocation,
     isMobile,
     nearMe,
+    onlineTotal,
     filtered,
     mappableCount,
     activeFilters,
@@ -56,7 +57,7 @@ export function DirectoryPage() {
 
       <DirectoryResultsHeader
         shown={filtered.length}
-        total={serverTotal}
+        total={view === "online" ? onlineTotal : serverTotal}
         loadedCount={places.length}
         hasMoreFromServer={hasNextPage}
         mappableCount={mappableCount}
@@ -72,6 +73,7 @@ export function DirectoryPage() {
         filtered={filtered}
         distanceById={distanceById}
         serverTotal={serverTotal}
+        onlineTotal={onlineTotal}
         loadedCount={places.length}
         loading={loading}
         hasPlacesError={hasPlacesError}
