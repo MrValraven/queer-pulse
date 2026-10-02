@@ -699,16 +699,32 @@ export const subprofiles: Catalog = {
   "itemEditor.tagsHelper": "Separate with commas",
   "itemEditor.feature": "Make this the spotlight",
   "itemEditor.unfeature": "Remove from spotlight",
+  // Spotlight switch in the item drawer's settings rail (ItemDrawerSettings)
+  "itemEditor.spotlightLabel": "Spotlight",
+  "itemEditor.spotlightOffHelp":
+    "Show this first on your page, in a bigger card. Only one piece can hold the spotlight.",
+  "itemEditor.spotlightOnHelp":
+    "Visitors see this first. Turning it on here moves the spotlight off anything else.",
 
-  // Collaborator member picker (CollaboratorSelect, inside SubprofileItemDrawerFields)
+  // Collaborator picker (CollaboratorPicker, in the item drawer's settings
+  // rail). Only your connections can be credited.
   "itemEditor.collaboratorsLabel": "Collaborators",
-  "itemEditor.collaboratorsPlaceholder": "Search members to credit",
-  "itemEditor.collaboratorsSearchPlaceholder": "Search by name or @handle",
-  "itemEditor.collaboratorsEmpty": "No members match that search.",
+  "itemEditor.collaboratorsCount": "{taken} of {max}",
+  "itemEditor.collaboratorsPlaceholder": "Search your connections",
+  "itemEditor.collaboratorsEmpty": "None of your connections match that.",
   "itemEditor.collaboratorsHelper":
-    "Search for members and pick them to credit their work here.",
+    "Credit people who made this with you. You can tag anyone you're connected with.",
   "itemEditor.collaboratorsCapHint":
     "That's the most collaborators you can add.",
+  "itemEditor.collaboratorsLoading": "Looking through your connections…",
+  "itemEditor.collaboratorsLoadError": "Your connections didn't load.",
+  "itemEditor.collaboratorsNoConnections":
+    "You're not connected with anyone yet. Once someone accepts, you can credit them here.",
+  "itemEditor.collaboratorsFindPeople": "Find your people",
+  "itemEditor.collaboratorsResultsLabel": "Your connections",
+  "itemEditor.collaboratorsAdd": "Credit {name}",
+  "itemEditor.collaboratorsPickedLabel": "Credited",
+  "itemEditor.collaboratorsRemove": "Remove {name}",
 
   // Social links editor (SubprofileSocialLinksEditor)
   "socialEditor.title": "Social links",
@@ -1768,7 +1784,15 @@ export const subprofiles: Catalog = {
     "You've written something here and it hasn't been saved yet. Close this and it's gone.",
   "itemDrawer.discardConfirm": "Throw it away",
   "itemDrawer.discardKeep": "Keep editing",
-  "itemDrawer.saveItem": "Save item",
+  "itemDrawer.saveNew": "Add",
+  "itemDrawer.saveChanges": "Save changes",
+  "itemDrawer.settingsLabel": "How it's shown and who's credited",
+  // Live save-status line in the drawer footer (ItemDrawerFooter)
+  "itemDrawer.status.new": "Not added yet",
+  "itemDrawer.status.dirty": "Unsaved changes",
+  "itemDrawer.status.clean": "No changes yet",
+  "itemDrawer.status.needsTitle": "Add a title to save",
+  "itemDrawer.status.needsPhoto": "Add a photo to save",
   "itemRow.edit": "Edit",
 
   // Protect this work (ProtectWorkSection): owner-only download/copy/email
@@ -1821,6 +1845,8 @@ export const subprofiles: Catalog = {
   "richField.ticketUrl.label": "Ticket link",
   "richField.ticketUrl.placeholder": "https://",
   "itemField.quickPicks": "Quick answers for {label}",
+  "itemField.ownWords": "{label}, in your own words",
+  "itemField.ownWordsPlaceholder": "Or write your own",
   "itemField.gameMaster.campaigns.title.placeholder": "e.g. The Thornwood Debt",
   "itemField.gameMaster.campaigns.subtitle.label": "Table status",
   "itemField.gameMaster.campaigns.subtitle.placeholder": "e.g. 2 seats open",

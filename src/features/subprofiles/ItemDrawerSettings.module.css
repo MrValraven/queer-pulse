@@ -1,0 +1,130 @@
+/* The item drawer's settings rail (spotlight, collaborators, protect).
+   A tinted column beside the content fields on a wide sheet; a tinted block
+   after them on a phone. The tint is what separates "how it's shown" from
+   "what it is" — no extra borders needed. */
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  padding: 18px;
+  background: var(--wash);
+  border-radius: var(--radius-18);
+}
+
+/* ── spotlight switch ── */
+.spotlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  font: inherit;
+  color: var(--ink);
+  text-align: start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.spotlight:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+@media (hover: hover) {
+  .spotlight:hover {
+    border-color: var(--line-strong);
+  }
+}
+.spotlight[aria-checked="true"] {
+  background: color-mix(in srgb, var(--amber) 12%, var(--paper));
+  border-color: color-mix(in srgb, var(--amber) 45%, transparent);
+}
+
+.spotlightIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  color: var(--ink-60);
+  background: var(--wash);
+  border-radius: 50%;
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.spotlight[aria-checked="true"] .spotlightIcon {
+  color: var(--amber-ink);
+  background: color-mix(in srgb, var(--amber) 22%, transparent);
+}
+.spotlight[aria-checked="true"] .spotlightIcon svg {
+  fill: currentColor;
+}
+
+.spotlightText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.spotlightTitle {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.spotlightHelp {
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* The switch itself: a track and a thumb that slides. */
+.track {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 24px;
+  margin-top: 4px;
+  background: rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  transition: background 0.2s var(--ease);
+}
+.thumb {
+  position: absolute;
+  top: 3px;
+  inset-inline-start: 3px;
+  width: 18px;
+  height: 18px;
+  background: var(--paper);
+  border-radius: 50%;
+  box-shadow: var(--shadow-e1);
+  transition: translate 0.22s var(--ease);
+}
+.spotlight[aria-checked="true"] .track {
+  background: var(--plum);
+}
+.spotlight[aria-checked="true"] .thumb {
+  translate: 16px 0;
+}
+:global([dir="rtl"]) .spotlight[aria-checked="true"] .thumb {
+  translate: -16px 0;
+}
+:global([data-theme="dark"]) .spotlight[aria-checked="true"] .track {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight,
+  .spotlightIcon,
+  .track,
+  .thumb {
+    transition: none;
+  }
+}

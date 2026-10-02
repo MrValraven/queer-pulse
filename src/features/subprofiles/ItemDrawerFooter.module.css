@@ -1,0 +1,77 @@
+/* Item drawer footer: a live save-status line on the leading edge, Cancel +
+   Save on the trailing edge. */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  margin-inline-end: auto;
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.3);
+  transition: background 0.2s var(--ease);
+}
+.status[data-state="dirty"] .dot {
+  background: var(--accent);
+}
+.status[data-state="blocked"] {
+  color: var(--accent-text);
+}
+.status[data-state="blocked"] .dot {
+  background: var(--accent-text);
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+/* The shortcut hint only means something with a real keyboard. */
+.shortcut {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shortcut {
+    display: inline;
+    margin-inline-start: 10px;
+    padding: 2px 6px;
+    font-family: var(--sans);
+    font-size: var(--text-11-5);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: inherit;
+    background: rgba(var(--cream-rgb), 0.2);
+    border-radius: var(--radius-6);
+    opacity: 0.85;
+  }
+}
+
+/* On a phone the status takes its own line above full-width buttons. */
+@media (max-width: 520px) {
+  .status {
+    flex-basis: 100%;
+  }
+  .actions {
+    flex: 1;
+  }
+  .actions > * {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition: none;
+  }
+}

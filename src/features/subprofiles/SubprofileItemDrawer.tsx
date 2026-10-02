@@ -1,7 +1,7 @@
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useState, type KeyboardEvent } from "react";
 import { createPortal } from "react-dom";
 import { FiClock, FiX } from "react-icons/fi";
-import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   SubprofileItemView,
@@ -12,8 +12,10 @@ import { SubprofileItemDrawerFields } from "./SubprofileItemDrawerFields";
 import { useDrawerDismiss } from "./useDrawerDismiss";
 import { SECTION_DRAWER_TITLE_KEYS } from "./subprofileEditor.data";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
-import { ProtectWorkSection } from "./rights/ProtectWorkSection";
 import { ItemRevisionHistoryModal } from "./rights/ItemRevisionHistoryModal";
+import { ItemDrawerSettings } from "./ItemDrawerSettings";
+import { ItemDrawerFooter } from "./ItemDrawerFooter";
+import { itemDrawerSaveState } from "./itemDrawerSave";
 import styles from "./SubprofileEditor.module.css";
 
 interface SubprofileItemDrawerProps {
@@ -37,11 +39,13 @@ interface SubprofileItemDrawerProps {
 /**
  * The item drawer (Task 5): a wide bottom-anchored `.drawer` sheet (global
  * classes from `persona-editor.css`, portaled to `document.body`) that rises
- * from the bottom edge and lays its fields two-up on desktop, finally
- * exposing the Phase-0 rich fields per section on top of the base
- * `SECTION_META` fields every section already showed. Field rendering lives
- * in `SubprofileItemDrawerFields` (moved here from the retired
- * `SubprofileItemEditor`) to keep this shell under the line cap.
+ * from the bottom edge. Its body splits in two on a wide screen: what the
+ * piece IS (title, description, details — one readable column, in
+ * `SubprofileItemDrawerFields`) beside how it's SHOWN and who shares it
+ * (spotlight, collaborators, authorship record — the tinted
+ * `ItemDrawerSettings` rail). On a phone the rail follows the fields. The
+ * footer says in words why Save is or isn't ready (`ItemDrawerFooter`), and
+ * `⌘/Ctrl + Enter` saves from any field.
  *
  * Edits a LOCAL draft copy — nothing reaches the section's working `rows`
  * list until Save. Cancel discards outright (an explicit choice), while the
@@ -117,8 +121,30 @@ export function SubprofileItemDrawer({
     setDraft((cur) => ({ ...cur, ...p }));
   }
 
-  function toggleFeature() {
-    setDraft((cur) => ({ ...cur, isFeatured: !cur.isFeatured }));
+  // A gallery photo is its image; everything else needs a title.
+  const missingRequiredKey =
+    section.section === "gallery"
+      ? draft.imageUrl?.trim()
+        ? null
+        : "subprofiles:itemDrawer.status.needsPhoto"
+      : draft.title.trim()
+        ? null
+        : "subprofiles:itemDrawer.status.needsTitle";
+  const canSave =
+    itemDrawerSaveState({
+      isNew,
+      isDirty: isDraftDirty,
+      isMissingRequired: missingRequiredKey !== null,
+    }) === "dirty";
+
+  function save() {
+    if (canSave) onSave(draft);
+  }
+
+  function handleShortcut(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Enter" || !(event.metaKey || event.ctrlKey)) return;
+    event.preventDefault();
+    save();
   }
 
   const sectionTitleKeys = SECTION_DRAWER_TITLE_KEYS[section.section];
@@ -134,6 +160,7 @@ export function SubprofileItemDrawer({
         if (e.target === e.currentTarget) requestClose();
       }}
     >
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- WAI-ARIA modal dialog: ⌘/Ctrl+Enter from any field inside saves it. */}
       <div
         ref={dialogRef}
         tabIndex={-1}
@@ -141,6 +168,7 @@ export function SubprofileItemDrawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onKeyDown={handleShortcut}
       >
         <div className="drawer-head">
           <h2 id={titleId}>{t(titleKey, { section: t(section.labelKey) })}</h2>
@@ -169,56 +197,29 @@ export function SubprofileItemDrawer({
         </div>
 
         <div className="drawer-body">
-          <SubprofileItemDrawerFields
+          <div className="drawer-main">
+            <SubprofileItemDrawerFields
+              draft={draft}
+              fields={section.fields}
+              onPatch={patch}
+            />
+          </div>
+          <ItemDrawerSettings
             draft={draft}
-            fields={section.fields}
+            canFeature={canFeature}
+            isNew={isNew}
+            authorName={authorName}
             onPatch={patch}
           />
-          {canFeature && (
-            <button
-              type="button"
-              className={`${
-                draft.isFeatured
-                  ? `${styles.featureBtn} ${styles.featureBtnActive}`
-                  : styles.featureBtn
-              } pe-field-wide`}
-              onClick={toggleFeature}
-              aria-pressed={draft.isFeatured}
-            >
-              {t(
-                draft.isFeatured
-                  ? "subprofiles:itemEditor.unfeature"
-                  : "subprofiles:itemEditor.feature",
-              )}
-            </button>
-          )}
-          {/* Owner-only "Protect this work" (Task 5): only meaningful once the
-              item has a real, server-assigned `createdAt`. Guard on `isNew`,
-              the drawer's own new-vs-existing signal, not on `createdAt`
-              itself: an unsaved draft's `createdAt` is just a client-stamped
-              placeholder from `emptyItem`, so guarding on the field's
-              truthiness alone would wrongly show this for a brand-new item. */}
-          {!isNew && (
-            <ProtectWorkSection item={draft} authorName={authorName} />
-          )}
         </div>
 
-        <div className="drawer-foot">
-          <Button variant="ghost" onClick={onClose}>
-            {t("subprofiles:itemDrawer.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => onSave(draft)}
-            disabled={
-              section.section === "gallery"
-                ? !draft.imageUrl?.trim()
-                : !draft.title.trim()
-            }
-          >
-            {t("subprofiles:itemDrawer.saveItem")}
-          </Button>
-        </div>
+        <ItemDrawerFooter
+          isNew={isNew}
+          isDirty={isDraftDirty}
+          missingRequiredKey={missingRequiredKey}
+          onCancel={onClose}
+          onSave={save}
+        />
       </div>
 
       {/* Both of these portal themselves to document.body via the shared
