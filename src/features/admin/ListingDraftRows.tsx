@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiMessageCircle } from "react-icons/fi";
+import { FiEdit3, FiMessageCircle } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
@@ -11,6 +11,7 @@ import {
 } from "../marketing/listBusiness/listBusiness.data";
 import { AdminChip, AdminAvatar, type AvatarTone } from "./ui";
 import { ListingDraftMessageModal } from "./ListingDraftMessageModal";
+import { teamListingFromDraftPath } from "./listingDraftHandover";
 import {
   LISTING_DRAFT_STALLED_DAYS,
   draftIdleDays,
@@ -107,21 +108,34 @@ function ListingDraftRow({
           </span>
         </div>
       </div>
-      {owner && (
-        <div className={styles.rowActions}>
-          <Button
-            variant="ghost"
-            size="md"
-            to={`${routes.members}/${owner.slug}`}
-          >
-            {t("admin:listingDrafts.profileCta")}
-          </Button>
-          <Button variant="jade" size="md" onClick={() => onMessage(draft)}>
-            <FiMessageCircle aria-hidden />
-            {t("admin:listingDrafts.messageCta", { name: owner.firstName })}
-          </Button>
-        </div>
-      )}
+      <div className={styles.rowActions}>
+        {owner && (
+          <>
+            <Button
+              variant="ghost"
+              size="md"
+              to={`${routes.members}/${owner.slug}`}
+            >
+              {t("admin:listingDrafts.profileCta")}
+            </Button>
+            <Button variant="jade" size="md" onClick={() => onMessage(draft)}>
+              <FiMessageCircle aria-hidden />
+              {t("admin:listingDrafts.messageCta", { name: owner.firstName })}
+            </Button>
+          </>
+        )}
+        {/* Opens the add-a-listing form on this draft's business details.
+            It goes out as a team listing offered back to the member, who
+            adds their own answers when they accept. */}
+        <Button
+          variant="ghost"
+          size="md"
+          to={teamListingFromDraftPath(draft.id)}
+        >
+          <FiEdit3 aria-hidden />
+          {t("admin:listingDrafts.finishCta")}
+        </Button>
+      </div>
     </div>
   );
 }

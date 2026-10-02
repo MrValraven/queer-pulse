@@ -1532,7 +1532,7 @@ export const marketing: Catalog = {
   "listBusiness.drafts.title": "Retoma onde ficaste",
   "listBusiness.drafts.count": "{count} em curso",
   "listBusiness.drafts.teamNote":
-    "A nossa equipa vê o nome do espaço e até onde chegaste, nunca o resto do rascunho, para te poder ajudar se encontrares alguma dificuldade.",
+    "A nossa equipa vê os dados do negócio no teu rascunho e até onde chegaste, nunca as tuas respostas sobre ti. Se encontrares alguma dificuldade, podemos oferecer ajuda ou terminar o registo para tu aceitares.",
   "listBusiness.drafts.untitled": "Espaço sem título",
   "listBusiness.drafts.updated": "Última edição {when}",
   "listBusiness.drafts.resume": "Retomar",

@@ -1490,7 +1490,7 @@ export const marketing: Catalog = {
   "listBusiness.drafts.title": "Pick up where you left off",
   "listBusiness.drafts.count": "{count} in progress",
   "listBusiness.drafts.teamNote":
-    "Our team can see the place's name and how far you've got, never the rest of your draft, so we can offer a hand if you get stuck.",
+    "Our team can see your draft's business details and how far you've got, never your answers about yourself. If you get stuck, we may offer a hand, or finish the listing for you to accept.",
   "listBusiness.drafts.untitled": "Untitled place",
   "listBusiness.drafts.updated": "Last edited {when}",
   "listBusiness.drafts.resume": "Resume",

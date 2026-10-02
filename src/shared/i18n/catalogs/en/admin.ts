@@ -6899,6 +6899,22 @@ export const admin: Catalog = {
   "listingNew.success.closeCta": "Back to the listings queue",
   "listingNew.success.viewLiveCta": "See the live listing",
   "listingNew.success.addAnotherCta": "Add another listing",
+  "listingNew.fromDraft.noteAria": "About this draft",
+  "listingNew.fromDraft.title": "Finishing {name}'s draft",
+  "listingNew.fromDraft.titleNoOwner":
+    "Finishing a draft from a member who has since left",
+  "listingNew.fromDraft.body":
+    "Their business details are filled in. Their own answers are not copied: who they are, their consents, the pledge and any queer-owned claim. This goes out as a team listing offered back to them, and they add those when they accept. Their draft stays as they left it, so if they finish it too, both show up in the queue.",
+  "listingNew.fromDraft.offerNote":
+    "Hi {firstName}! We picked up where you left off with {name} and finished the listing. Have a look, and if it's right, accept it to add your own details. It stays with the team until you do.",
+  "listingNew.fromDraft.offerNoteUntitled":
+    "Hi {firstName}! We picked up the listing you started and finished it. Have a look, and if it's right, accept it to add your own details. It stays with the team until you do.",
+  "listingNew.fromDraft.gone.title": "This draft is no longer here",
+  "listingNew.fromDraft.gone.body":
+    "The member may have sent it or thrown it away since the list loaded.",
+  "listingNew.fromDraft.gone.backCta": "Back to the listings queue",
+  "listingNew.fromDraft.loadError.title": "This draft didn't load",
+  "listingNew.fromDraft.loadError.body": "Check your connection and try again.",
 
   // ── Admin edit of a platform-held listing (`/admin/listings/:ref/edit`) ───
   // A listing nobody owns yet, edited by staff on QueerPulse's behalf. If the
@@ -7357,7 +7373,7 @@ export const admin: Catalog = {
     "Rendering needs Chrome or Edge on a computer. You can still preview every film here.",
   // ── Unfinished listing drafts (Admin only, a tab of /admin/listings) ─────
   "listingDrafts.intro":
-    "Listings members started but haven't sent yet. You see the name and how far they got, never the draft itself. Offer a hand if someone looks stuck.",
+    "Listings members started but haven't sent yet. You see the name and how far they got. Offer a hand if someone looks stuck, or finish the business details as a team listing they can accept.",
   "listingDrafts.count_one": "{count} draft in progress",
   "listingDrafts.count_other": "{count} drafts in progress",
   "listingDrafts.empty": "No unfinished drafts right now.",
@@ -7378,6 +7394,7 @@ export const admin: Catalog = {
   "listingDrafts.unknownOwner": "a member who has since left",
   "listingDrafts.profileCta": "View profile",
   "listingDrafts.messageCta": "Message {name}",
+  "listingDrafts.finishCta": "Finish as a team listing",
   "listingDrafts.message.eyebrow": "Offer a hand",
   "listingDrafts.message.title": "Message {name}",
   "listingDrafts.message.sub":
