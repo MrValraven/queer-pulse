@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { DatePicker, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
@@ -35,6 +36,86 @@ function parseSnippetLines(raw: string): string[] | null {
   return lines.length > 0 ? lines : null;
 }
 
+/**
+ * The snippet textarea keeps the text exactly as typed and only stores the
+ * cleaned-up lines. Rendering the stored lines straight back (joined) threw
+ * away a new line the moment it was typed — the trailing empty line was
+ * dropped on every keystroke — so a second line could never be started.
+ */
+function SnippetField({
+  descriptor,
+  draft,
+  onPatch,
+}: {
+  descriptor: RichFieldDescriptor;
+  draft: SubprofileItemView;
+  onPatch: (patch: Partial<SubprofileItemView>) => void;
+}) {
+  const { t } = useTranslation();
+  const [text, setText] = useState(
+    () => draft.structured?.snippet?.join("\n") ?? "",
+  );
+  return (
+    <FormField label={t(descriptor.labelKey)}>
+      <textarea
+        value={text}
+        placeholder={
+          descriptor.placeholderKey ? t(descriptor.placeholderKey) : undefined
+        }
+        onChange={(e) => {
+          setText(e.target.value);
+          onPatch({
+            structured: {
+              ...(draft.structured ?? {}),
+              snippet: parseSnippetLines(e.target.value),
+            },
+          });
+        }}
+      />
+    </FormField>
+  );
+}
+
+/** Split the tags input on commas — trimmed, blanks dropped. */
+function parseTags(raw: string): string[] {
+  return raw
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+/**
+ * The comma-separated tags input, holding the text as typed for the same
+ * reason as `SnippetField`: re-joining the parsed tags on every keystroke
+ * swallowed the comma as soon as it was typed, so a second tag could only
+ * ever be pasted in.
+ */
+function TagsField({
+  tags,
+  onChange,
+}: {
+  tags: string[];
+  onChange: (tags: string[]) => void;
+}) {
+  const { t } = useTranslation();
+  const [text, setText] = useState(() => tags.join(", "));
+  return (
+    <FormField
+      label={t(FIELD_META.tags!.labelKey)}
+      helper={t("subprofiles:itemEditor.tagsHelper")}
+    >
+      <input
+        value={text}
+        placeholder={t(FIELD_META.tags!.placeholderKey)}
+        onChange={(e) => {
+          setText(e.target.value);
+          onChange(parseTags(e.target.value));
+        }}
+      />
+    </FormField>
+  );
+}
+
 function RichFieldControl({
   descriptor,
   draft,
@@ -47,24 +128,8 @@ function RichFieldControl({
   const { t } = useTranslation();
 
   if (descriptor.key === "snippet") {
-    const value = draft.structured?.snippet?.join("\n") ?? "";
     return (
-      <FormField label={t(descriptor.labelKey)}>
-        <textarea
-          value={value}
-          placeholder={
-            descriptor.placeholderKey ? t(descriptor.placeholderKey) : undefined
-          }
-          onChange={(e) =>
-            onPatch({
-              structured: {
-                ...(draft.structured ?? {}),
-                snippet: parseSnippetLines(e.target.value),
-              },
-            })
-          }
-        />
-      </FormField>
+      <SnippetField descriptor={descriptor} draft={draft} onPatch={onPatch} />
     );
   }
 
@@ -214,23 +279,7 @@ export function SubprofileItemDrawerFields({
       )}
 
       {fields.includes("tags") && (
-        <FormField
-          label={t(FIELD_META.tags!.labelKey)}
-          helper={t("subprofiles:itemEditor.tagsHelper")}
-        >
-          <input
-            value={draft.tags.join(", ")}
-            placeholder={t(FIELD_META.tags!.placeholderKey)}
-            onChange={(e) =>
-              onPatch({
-                tags: e.target.value
-                  .split(",")
-                  .map((tag) => tag.trim())
-                  .filter(Boolean),
-              })
-            }
-          />
-        </FormField>
+        <TagsField tags={draft.tags} onChange={(tags) => onPatch({ tags })} />
       )}
 
       {richFields.map((descriptor) => (
