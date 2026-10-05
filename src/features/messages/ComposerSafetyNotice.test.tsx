@@ -42,7 +42,8 @@ describe("ComposerSafetyNotice", () => {
     await waitFor(() => {
       expect(screen.getByRole("note")).toBeInTheDocument();
     });
-    expect(screen.getByText(noticeText)).toBeInTheDocument();
+    // The `messages` catalog loads lazily, so wait for the translated text.
+    expect(await screen.findByText(noticeText)).toBeInTheDocument();
   });
 
   it("has a close button reachable by its accessible name, and dismissing hides the notice", async () => {
@@ -144,7 +145,8 @@ describe("ComposerSafetyNotice", () => {
     await waitFor(() => {
       expect(screen.getByRole("note")).toBeInTheDocument();
     });
-    expect(screen.getByText(noticeText)).toBeInTheDocument();
+    // The `messages` catalog loads lazily, so wait for the translated text.
+    expect(await screen.findByText(noticeText)).toBeInTheDocument();
   });
 
   it("remembers a dismissal across a remount for the same conversation (session persistence)", async () => {

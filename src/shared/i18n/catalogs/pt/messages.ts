@@ -257,6 +257,10 @@ export const messages: Catalog = {
   "conversation.activeNow": "Ativo/a agora",
   "conversation.officialMeta":
     "Oficial · Não é possível responder nesta conversa",
+  // A mesma linha quando o servidor abre a conversa oficial a respostas
+  // (`isOfficialReplyOpen`): a equipa da caixa QueerPulse lê-as.
+  "conversation.officialMetaReplyOpen":
+    "Oficial · As respostas chegam à nossa equipa",
   // Nome de apresentação para uma conversa oficial/de sistema sem perfil
   // associado (messages.adapters.ts's conversationToView).
   "conversation.officialName": "Equipa QueerPulse",
@@ -280,6 +284,7 @@ export const messages: Catalog = {
     "Bloqueaste {name}. Desbloqueia esta pessoa a partir do perfil dela para enviares uma mensagem.",
   "conversation.composerPlaceholder": "Mensagem para {name}…",
   "conversation.composerGroupPlaceholder": "Mensagem para o grupo…",
+  "conversation.composerOfficialPlaceholder": "Escreve à equipa QueerPulse…",
   "conversation.leftGroupNotice":
     "Saíste deste grupo. O histórico fica aqui, mas já não podes enviar mensagens novas.",
   // DES-227: as versões "removida/o" e "terminado" do aviso de saída acima,
@@ -729,6 +734,7 @@ export const messages: Catalog = {
   "mailbox.kind.listing": "Ficha do diretório",
   "mailbox.kind.subprofile": "Persona",
   "mailbox.kind.company": "Empresa",
+  "mailbox.kind.official": "Oficial",
   "mailbox.role.owner": "Titular",
   "mailbox.role.team": "Equipa",
   "mailbox.readOnly.tag": "Só leitura",
@@ -742,6 +748,8 @@ export const messages: Catalog = {
     "{name} responde a conversas que os membros começam. Muda para a tua caixa de mensagens para escreveres a alguém.",
   "mailbox.composer.replyingAs": "A responder como {name}",
   "mailbox.composer.customersSee": "Os clientes veem “{firstName}”",
+  // A caixa da Equipa QueerPulse responde a membros, nunca a clientes.
+  "mailbox.composer.membersSee": "Os membros veem “{firstName}”",
   "mailbox.composer.readOnly":
     "A moderação removeu {name}. As conversas ficam aqui para leres, e as respostas estão desligadas.",
   "mailbox.claim.unclaimed": "Por atribuir",

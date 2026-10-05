@@ -49,7 +49,11 @@ export function conversationHeaderMeta(
   if (active.isGroup) {
     return t("messages:group.memberCount", { count: active.memberCount ?? 0 });
   }
-  if (active.official) return t("messages:conversation.officialMeta");
+  if (active.official) {
+    return active.isOfficialReplyOpen
+      ? t("messages:conversation.officialMetaReplyOpen")
+      : t("messages:conversation.officialMeta");
+  }
   if (active.isCounterpartFormerBusiness) return null;
   const kind = active.counterpartIdentityKind;
   if (kind && kind !== "profile") return t(MAILBOX_KIND_LABEL_KEYS[kind]);

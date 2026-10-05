@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { expect, it } from "vitest";
 import { Composer } from "./Composer";
 import type { Conversation } from "./data";
@@ -48,7 +48,7 @@ it("grows the textarea height with content", () => {
   expect(textarea.style.height).toBe("84px");
 });
 
-it("renders a connection-request notice instead of the input for a thread the server flags replyRequiresConnection (PRD-220)", () => {
+it("renders a connection-request notice instead of the input for a thread the server flags replyRequiresConnection (PRD-220)", async () => {
   // e.g. a housing/flatmate enquiry that opened this DM cold — the ordinary
   // send path 403s a reply from either side until the two connect, so the
   // composer must not render as if a normal send would work.
@@ -69,5 +69,14 @@ it("renders a connection-request notice instead of the input for a thread the se
     { wrapper: TestProviders },
   );
   expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
-  expect(screen.getByRole("status")).toBeInTheDocument();
+  // `TestProviders` mounts the toast live regions too, so the notice is the
+  // status that names the counterpart (every connection variant does), once
+  // the lazily loaded `messages` catalog has filled it in.
+  await waitFor(() =>
+    expect(
+      screen
+        .getAllByRole("status")
+        .some((status) => status.textContent?.includes("Alina")),
+    ).toBe(true),
+  );
 });

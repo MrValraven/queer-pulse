@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useDraftSync } from "./useDraftSync";
 
 /**
@@ -25,6 +25,12 @@ vi.mock("./api/messages.api", () => ({
 // A UUID-shaped id, the only shape `isServerConversationId` treats as
 // syncable (see `useMessagesController.helpers.ts`).
 const SERVER_CONVERSATION_ID = "11111111-1111-1111-1111-111111111111";
+
+// The shared setup's `vi.restoreAllMocks()` drops the resolved value after
+// every test, so it is re-armed per test: `writeThrough` chains `.catch` on it.
+beforeEach(() => {
+  mocks.updateConversationPrefs.mockResolvedValue({});
+});
 
 afterEach(() => {
   state.demoMode = false;

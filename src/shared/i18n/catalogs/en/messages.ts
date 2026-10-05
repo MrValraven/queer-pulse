@@ -260,6 +260,9 @@ export const messages: Catalog = {
   // Conversation panel (ConversationPanel)
   "conversation.activeNow": "Active now",
   "conversation.officialMeta": "Official · Cannot reply to this thread",
+  // The same line once the server opens the official thread to replies
+  // (`isOfficialReplyOpen`): the QueerPulse Team mailbox's staff read them.
+  "conversation.officialMetaReplyOpen": "Official · Replies go to our team",
   // Fallback display name for an official/system DM whose DTO carries no
   // counterpart profile (messages.adapters.ts's conversationToView).
   "conversation.officialName": "QueerPulse Team",
@@ -283,6 +286,7 @@ export const messages: Catalog = {
     "You blocked {name}. Unblock them from their profile to send a message.",
   "conversation.composerPlaceholder": "Message {name}…",
   "conversation.composerGroupPlaceholder": "Message the group…",
+  "conversation.composerOfficialPlaceholder": "Write to the QueerPulse team…",
   "conversation.leftGroupNotice":
     "You left this group. Its history stays here, but you can't send new messages.",
   // DES-227: the removed/dissolved severed-composer siblings of the left
@@ -728,6 +732,7 @@ export const messages: Catalog = {
   "mailbox.kind.listing": "Directory listing",
   "mailbox.kind.subprofile": "Persona",
   "mailbox.kind.company": "Company",
+  "mailbox.kind.official": "Official",
   "mailbox.role.owner": "Owner",
   "mailbox.role.team": "Team",
   "mailbox.readOnly.tag": "Read only",
@@ -741,6 +746,8 @@ export const messages: Catalog = {
     "{name} answers conversations members start. Switch to your own mailbox to write to someone.",
   "mailbox.composer.replyingAs": "Replying as {name}",
   "mailbox.composer.customersSee": "Customers see “{firstName}”",
+  // The QueerPulse Team mailbox answers members, never customers.
+  "mailbox.composer.membersSee": "Members see “{firstName}”",
   "mailbox.composer.readOnly":
     "Moderation removed {name}. Its conversations stay here to read, and replies are switched off.",
   "mailbox.claim.unclaimed": "Unclaimed",

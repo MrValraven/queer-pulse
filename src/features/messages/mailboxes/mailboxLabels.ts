@@ -3,6 +3,7 @@ import type { MailboxSummary } from "../../../shared/api/mailboxViewer";
 import { initialsOf } from "../../../shared/api/refs";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { MailboxAttribution } from "../api/mailboxes.api";
+import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
 
 /** The catalog key naming each kind of mailbox. */
 export const MAILBOX_KIND_LABEL_KEYS: Record<IdentityKind, string> = {
@@ -10,7 +11,12 @@ export const MAILBOX_KIND_LABEL_KEYS: Record<IdentityKind, string> = {
   listing: "messages:mailbox.kind.listing",
   subprofile: "messages:mailbox.kind.subprofile",
   company: "messages:mailbox.kind.company",
+  official: "messages:mailbox.kind.official",
 };
+
+/** The QueerPulse Team mailbox wears the same "QP" mark as the member's own
+ *  official thread, rather than the "QT" its name's initials would give. */
+const OFFICIAL_MAILBOX_INITIALS = "QP";
 
 /** The name a mailbox shows. The server sends a null name when the row that
  *  owns the mailbox vanished mid-request. */
@@ -21,8 +27,21 @@ export function mailboxDisplayName(
   return mailbox.displayName ?? t("messages:mailbox.untitled");
 }
 
-/** Avatar initials for a mailbox name: its first and last words. */
-export function mailboxInitials(name: string): string {
+/** The avatar a mailbox shows: its own, or the app icon for the QueerPulse
+ *  Team mailbox when the server sends none. */
+export function mailboxAvatarUrl(
+  mailbox: Pick<MailboxSummary, "avatarUrl" | "kind">,
+): string | undefined {
+  return (
+    mailbox.avatarUrl ??
+    (mailbox.kind === "official" ? OFFICIAL_AVATAR_URL : undefined)
+  );
+}
+
+/** Avatar initials for a mailbox name: its first and last words, or the
+ *  official mark for the QueerPulse Team mailbox. */
+export function mailboxInitials(name: string, kind?: IdentityKind): string {
+  if (kind === "official") return OFFICIAL_MAILBOX_INITIALS;
   const words = name.trim().split(/\s+/).filter(Boolean);
   const firstWord = words[0] ?? "";
   const lastWord = words.length > 1 ? (words[words.length - 1] ?? "") : "";

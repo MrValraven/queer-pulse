@@ -104,6 +104,29 @@ describe("demo business mailboxes", () => {
     ).toBeUndefined();
   });
 
+  it("files members' official replies in the QueerPulse Team mailbox", () => {
+    const team = demoMailboxSummaries(conversations).find(
+      (mailbox) => mailbox.identityId === DEMO_IDENTITY.queerPulseTeam,
+    );
+    expect(team?.kind).toBe("official");
+    expect(team?.unreadCount).toBe(1);
+    const teamThreads = conversations.filter(
+      (conversation) =>
+        conversation.mailboxIdentityId === DEMO_IDENTITY.queerPulseTeam,
+    );
+    expect(teamThreads).toHaveLength(2);
+    // The staff side reads as a member's thread, never as the official one.
+    expect(teamThreads.every((thread) => !thread.official)).toBe(true);
+  });
+
+  it("keeps the viewer's own official thread personal and open to replies", () => {
+    const ownOfficial = conversations.find(
+      (conversation) => conversation.official,
+    )!;
+    expect(ownOfficial.mailboxIdentityId).toBeUndefined();
+    expect(ownOfficial.isOfficialReplyOpen).toBe(true);
+  });
+
   it("stamps every staffed thread's seat for the demo viewer", () => {
     for (const conversation of conversations) {
       if (

@@ -6459,6 +6459,9 @@ export const admin: Catalog = {
   "officialMessages.title": "Official messages",
   "officialMessages.subtitle":
     "Speak as QueerPulse, in each member's official thread. Admins only.",
+  // Shown only when this staff member's mailboxes include the QueerPulse
+  // Team one, where members' replies to official messages land.
+  "officialMessages.openInbox": "Open the team inbox",
   "officialMessages.member.title": "Message one member",
   "officialMessages.member.subtitle":
     "It lands in their official QueerPulse thread, pinned at the top of their inbox. No phone notification is sent.",

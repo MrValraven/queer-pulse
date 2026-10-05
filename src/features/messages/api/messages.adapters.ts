@@ -16,6 +16,7 @@ import {
   type MessageViewer,
 } from "../../../shared/api/mailboxViewer";
 import { toConversationClaimant } from "../../../shared/api/conversationClaim";
+import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
 
 /**
  * ENG-253: `conversationToView`'s return, extended with the trimmed preview
@@ -238,6 +239,12 @@ function groupPreview(
     last.sender.isFormerMember && formerMemberLabel
       ? formerMemberLabel
       : (last.sender.displayName.trim().split(/\s+/)[0] ?? "");
+  // A system message with no `systemEvent` (an older frame) carries only its
+  // verb phrase ("created the group"), so the actor reads as its subject
+  // rather than as the sender of a quoted line.
+  if (last.kind === "system") {
+    return first ? `${first} ${last.body}` : last.body;
+  }
   const displayText = messageDisplayText(last, t);
   return first ? `${first}: ${displayText}` : displayText;
 }
@@ -421,7 +428,9 @@ export function conversationToView(
   // A null counterpart is the official thread, or a DM whose counterpart
   // erased their account (ENG-243). `isOfficial` tells them apart; an older
   // response without it keeps the historical reading (null means official).
-  const isOfficial = dto.isOfficial ?? !counterpart;
+  // Read from the QueerPulse Team mailbox (it names a mailbox), the member is
+  // the counterpart and the thread renders as any other mailbox thread.
+  const isOfficial = (dto.isOfficial ?? !counterpart) && !dto.mailboxIdentityId;
   // A deleted business keeps a summary with the server's English fallback
   // name, so the row names it in the viewer's language with no initials.
   const isCounterpartFormerBusiness = counterpart?.isFormerIdentity === true;
@@ -444,7 +453,8 @@ export function conversationToView(
           ? "QP"
           : "",
     tint,
-    avatarUrl: counterpart?.avatarUrl ?? undefined,
+    avatarUrl:
+      counterpart?.avatarUrl ?? (isOfficial ? OFFICIAL_AVATAR_URL : undefined),
     name,
     // Only ever rendered when `official` is false — `ConversationHeader`
     // shows a dedicated translated "Official" meta line instead of this field
@@ -485,6 +495,8 @@ export function conversationToView(
     myLastReadAt: dto.myLastReadAt ?? null,
     otherParticipantId: dto.otherParticipantId ?? undefined,
     official: isOfficial,
+    // Server-authoritative; see `Conversation.isOfficialReplyOpen`.
+    isOfficialReplyOpen: isOfficial && (dto.isOfficialReplyOpen ?? false),
     // Set when the DM's counterpart erased their account: nobody is left to
     // read a reply, so the composer is replaced by a notice.
     isCounterpartErased: !counterpart && !isOfficial,

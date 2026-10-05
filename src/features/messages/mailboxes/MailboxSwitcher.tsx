@@ -65,7 +65,7 @@ export function MailboxSwitcher({
       >
         <span className={styles.triggerName}>{activeName}</span>
         <span className={styles.triggerInitials}>
-          {mailboxInitials(activeName)}
+          {mailboxInitials(activeName, active.kind)}
         </span>
         {hasUnreadElsewhere && (
           <span className={styles.unreadDot} aria-hidden />

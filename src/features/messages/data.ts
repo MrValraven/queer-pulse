@@ -37,6 +37,10 @@ import {
   transJoyPicnicConversation,
 } from "./demoGroupThreads.data";
 import { mariaConversation } from "./demoLongThread.data";
+import {
+  officialInesConversation,
+  officialJoanaConversation,
+} from "./demoOfficialMailboxThreads.data";
 
 /** The resolved system-event a `kind: "system"` message renders as a centred
  *  pill. Names are already resolved (never user ids); the pill text is built
@@ -419,7 +423,15 @@ export interface Conversation {
   myLastReadAt?: string | null;
   /** Counterpart's user id (live) — correlates presence events. */
   otherParticipantId?: string;
+  /** The member's own view of their official thread: QueerPulse is the
+   *  counterpart, with no profile behind it. False on the staff side of the
+   *  same thread, read from the QueerPulse Team mailbox, where the member is
+   *  the counterpart and it reads as any other mailbox thread. */
   official?: boolean;
+  /** SERVER-AUTHORITATIVE, official threads only: the member may reply, and
+   *  the QueerPulse Team mailbox's staff read it. Absent keeps the thread
+   *  read-only behind `messages:conversation.officialNotice`. */
+  isOfficialReplyOpen?: boolean;
   /** ENG-243 (live): a DM whose counterpart erased their account. The thread
    *  stays readable, renders as "Former member", and the composer is replaced
    *  by a notice. Absent for official threads, groups and demo rows. */
@@ -564,6 +576,8 @@ export const conversations: Conversation[] = [
   livrariaAuroraConversation,
   estudioNorteDanielConversation,
   formerBusinessConversation,
+  officialInesConversation,
+  officialJoanaConversation,
   mariaConversation,
   priyaConversation,
   jordanConversation,

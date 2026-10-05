@@ -9,6 +9,7 @@ import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   MAILBOX_KIND_LABEL_KEYS,
+  mailboxAvatarUrl,
   mailboxDisplayName,
   mailboxInitials,
 } from "./mailboxLabels";
@@ -44,8 +45,8 @@ function MailboxSwitcherRow({
         onClick={() => onSelect(mailbox.identityId)}
       >
         <Avatar
-          initials={mailboxInitials(name)}
-          src={mailbox.avatarUrl ?? undefined}
+          initials={mailboxInitials(name, mailbox.kind)}
+          src={mailboxAvatarUrl(mailbox)}
           size={40}
         />
         <span className={styles.rowText}>

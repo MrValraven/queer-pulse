@@ -1,6 +1,7 @@
 // src/features/messages/demoDirectThreads.data.ts
 import type { Conversation } from "./data";
 import { isDemoPresenceOnline } from "./demoSignalSimulation";
+import { OFFICIAL_AVATAR_URL } from "./officialAvatar";
 import {
   daysAgoAt,
   demoConversation,
@@ -185,9 +186,11 @@ export const kaiConversation: Conversation = demoConversation({
 const teamLine =
   "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming gatherings, and the member directory. We're glad you're here.";
 
-/** The official thread (PRD-372): severed composer, no counterpart profile,
- *  pinned so the welcome stays at the top of the inbox. It is the member's one
- *  official thread, the same one `/admin/official-messages` posts into.
+/** The official thread (PRD-372): no counterpart profile, pinned so the
+ *  welcome stays at the top of the inbox. It is the member's one official
+ *  thread, the same one `/admin/official-messages` posts into. Replies are
+ *  open (`isOfficialReplyOpen`): they land in the QueerPulse Team mailbox,
+ *  whose staff side `demoOfficialMailboxThreads.data.ts` seeds.
  *
  *  `pinnedAt` is the NEWEST of the demo pins on purpose: the inbox sorts
  *  pinned rows by `pinnedAt` descending (`useMessageThreadList.ts`), so the
@@ -197,11 +200,13 @@ export const teamConversation: Conversation = demoConversation({
   id: "team",
   initials: "QP",
   tint: "plum",
+  avatarUrl: OFFICIAL_AVATAR_URL,
   name: "QueerPulse Team",
   pronouns: "Official",
   preview: teamLine,
   unread: false,
   official: true,
+  isOfficialReplyOpen: true,
   pinnedAt: daysAgoAt(1, 20, 0),
   messages: demoThread([
     {

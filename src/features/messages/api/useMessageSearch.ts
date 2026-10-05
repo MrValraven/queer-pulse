@@ -23,6 +23,7 @@ import {
 } from "../mailboxes/mailboxScope";
 import { useActiveMailbox } from "../mailboxes/useActiveMailbox";
 import { useMessageViewer } from "../useMessageViewer";
+import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
 import { colleagueSenderLabel, isTypedByViewer } from "../viewerSideSender";
 import { groupInitials } from "./messages.adapters";
 import { searchMessages } from "./messages.api";
@@ -114,7 +115,9 @@ function toGroups(
       const meta = metaByConversation.get(hit.conversationId);
       const isGroupConversation = meta?.kind === "group";
       const other = meta?.otherParticipant ?? null;
-      const official = meta?.isOfficial ?? !other;
+      // A hit from the QueerPulse Team mailbox names the member as `other`,
+      // so it files under them, not under the official name.
+      const official = (meta?.isOfficial ?? !other) && !other;
       const name = isGroupConversation
         ? (meta?.title ?? t("messages:group.untitled"))
         : official
@@ -141,7 +144,7 @@ function toGroups(
             : tintForSlug(other.handle),
         avatarUrl: isGroupConversation
           ? (meta?.avatarUrl ?? undefined)
-          : (other?.avatarUrl ?? undefined),
+          : (other?.avatarUrl ?? (official ? OFFICIAL_AVATAR_URL : undefined)),
         official,
         hits: [],
       };
