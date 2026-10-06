@@ -67,7 +67,8 @@ export function CoHostInviteFromCard({
 
 /**
  * The gathering itself: date block, title, when/where, and how many people are
- * already coming — plus the host's personal note, when they wrote one.
+ * already coming, plus the host's personal note, when they wrote one. The
+ * tally line is left out when the host hid the attendee count (null counts).
  *
  * Times read on the gathering's OWN clock (`event.timezone`), labelled when
  * that clock differs from the reader's: a co-host invited from another country
@@ -97,12 +98,14 @@ export function CoHostInviteEventCard({
   );
   return (
     <div className={styles.eventCard}>
-      <div className={styles.eventH}>
+      <div
+        className={`${styles.eventH} ${message ? styles.eventHWithNote : ""}`}
+      >
         <div className={styles.eventDate}>
-          <div className="d">
+          <div className={styles.dateDay}>
             {fmt.date(startAt, { day: "2-digit", ...zone.dateOptions })}
           </div>
-          <div className="m">
+          <div className={styles.dateMonth}>
             {fmt.date(startAt, { month: "short", ...zone.dateOptions })}
           </div>
         </div>
@@ -119,13 +122,17 @@ export function CoHostInviteEventCard({
                 <b>{event.venue}</b>
               </>
             )}
-            <span className={styles.dot} />
-            <span>
-              {t("gatherings:cohostInvite.rsvpsAndWaitlist", {
-                rsvps: event.goingCount,
-                waitlist: event.waitlistCount,
-              })}
-            </span>
+            {event.goingCount !== null && event.waitlistCount !== null && (
+              <>
+                <span className={styles.dot} />
+                <span>
+                  {t("gatherings:cohostInvite.rsvpsAndWaitlist", {
+                    rsvps: event.goingCount,
+                    waitlist: event.waitlistCount,
+                  })}
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>

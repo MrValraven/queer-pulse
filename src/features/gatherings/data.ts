@@ -274,12 +274,96 @@ export interface GatheringDetail {
   customRsvpQuestion?: string | null;
 }
 
+/**
+ * A local Date `dayOffset` days from today at the given clock time. The demo
+ * gatherings on the Events board are dated relative to the day they load, so
+ * the page always has a "Next up" and an upcoming board to show. Offsets keep
+ * the order and spacing of the original fixed season, counted in days from
+ * 6 June. Detail entries with no board row keep their fixed dates, because
+ * their recap, photos, cancelled, manage and invite demo pages are dated too.
+ */
+function daysFromToday(dayOffset: number, hour: number, minute: number): Date {
+  const today = new Date();
+  return new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + dayOffset,
+    hour,
+    minute,
+  );
+}
+
+interface DemoStartTime {
+  dayOffset: number;
+  hour: number;
+  minute: number;
+}
+
+/**
+ * When each demo gathering on the board starts, keyed by slug. The one source
+ * both `calendarEvents` and `gatheringDetails` read, so a card and the detail
+ * page it opens always agree on the day and the clock time.
+ */
+const DEMO_START_TIMES = {
+  "supper-club-12": { dayOffset: 0, hour: 19, minute: 30 },
+  "trans-hub-meetup": { dayOffset: 4, hour: 18, minute: 30 },
+  "skills-exchange-intro": { dayOffset: 6, hour: 18, minute: 0 },
+  "portfolio-night": { dayOffset: 8, hour: 19, minute: 0 },
+  "queer-parent-network": { dayOffset: 11, hour: 10, minute: 30 },
+  "lgbtq-support-circle": { dayOffset: 12, hour: 18, minute: 30 },
+  "trans-mutual-aid": { dayOffset: 14, hour: 18, minute: 0 },
+  "studio-visit": { dayOffset: 15, hour: 15, minute: 0 },
+  "queer-elders-social": { dayOffset: 18, hour: 17, minute: 0 },
+  "queer-film-moonlight": { dayOffset: 19, hour: 20, minute: 0 },
+  "wellbeing-ama": { dayOffset: 20, hour: 19, minute: 0 },
+  "queer-runners-run": { dayOffset: 22, hour: 9, minute: 0 },
+  "founders-breakfast": { dayOffset: 26, hour: 8, minute: 30 },
+  "queer-karaoke-night": { dayOffset: 27, hour: 21, minute: 0 },
+  "queer-youth-gathering": { dayOffset: 29, hour: 17, minute: 0 },
+  "queer-youth-monthly": { dayOffset: 31, hour: 18, minute: 0 },
+  "disability-access-talk": { dayOffset: 33, hour: 18, minute: 30 },
+  "legal-clinic": { dayOffset: 35, hour: 14, minute: 0 },
+  "queer-choir-rehearsal": { dayOffset: 38, hour: 19, minute: 0 },
+  "resource-library-launch": { dayOffset: 40, hour: 19, minute: 0 },
+  "peer-support-circle": { dayOffset: 43, hour: 18, minute: 30 },
+  "micro-grants-office-hours": { dayOffset: 46, hour: 12, minute: 0 },
+  "queer-of-colour-gathering": { dayOffset: 50, hour: 17, minute: 30 },
+} satisfies Record<string, DemoStartTime>;
+
+/** The one past gathering on the demo board. Its recap, manage and dashboard
+ *  demo pages are all dated 21 June, so it keeps that fixed date, and it gives
+ *  the create flow's "Same as last time?" strip a gathering that went ahead. */
+const PRIDE_BRUNCH_JUNE_START = new Date(2026, 5, 21);
+
+/** The start of a demo board gathering, from `DEMO_START_TIMES`. */
+function demoStartOf(slug: keyof typeof DEMO_START_TIMES): Date {
+  const { dayOffset, hour, minute } = DEMO_START_TIMES[slug];
+  return daysFromToday(dayOffset, hour, minute);
+}
+
+/**
+ * The local `YYYY-MM-DD` day a demo board gathering starts on, moved on by
+ * `extraDays` (an overnight gathering's end day is `extraDays: 1`). Other demo
+ * registries that point at a board slug, such as the My Events mock, date
+ * their cards from this so a card and the detail page it opens agree.
+ */
+export function demoStartIsoDate(
+  slug: keyof typeof DEMO_START_TIMES,
+  extraDays = 0,
+): string {
+  const { dayOffset } = DEMO_START_TIMES[slug];
+  const day = daysFromToday(dayOffset + extraDays, 0, 0);
+  const month = String(day.getMonth() + 1).padStart(2, "0");
+  const dayOfMonth = String(day.getDate()).padStart(2, "0");
+  return `${day.getFullYear()}-${month}-${dayOfMonth}`;
+}
+
 export const gatheringDetails: Record<string, GatheringDetail> = {
   "supper-club-12": {
     slug: "supper-club-12",
     type: "supper-club",
     gatheringFamily: "eat",
-    date: new Date(2026, 5, 6),
+    date: demoStartOf("supper-club-12"),
     title: "Queer Supper Club №12",
     hood: "Mouraria",
     host: memberName("tomas"),
@@ -294,7 +378,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "portfolio-night",
     type: "mixer",
     gatheringFamily: "meet",
-    date: new Date(2026, 5, 14),
+    date: demoStartOf("portfolio-night"),
     title: "Portfolio Night: Designers & Photographers",
     hood: "Príncipe Real",
     host: "QueerPulse",
@@ -309,7 +393,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "studio-visit",
     type: "studio-visit",
     gatheringFamily: "make",
-    date: new Date(2026, 5, 21),
+    date: demoStartOf("studio-visit"),
     title: "Inside Beatriz's Ceramics Studio",
     hood: "Graça",
     host: memberName("beatriz"),
@@ -324,7 +408,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "founders-breakfast",
     type: "brunch",
     gatheringFamily: "eat",
-    date: new Date(2026, 6, 2),
+    date: demoStartOf("founders-breakfast"),
     title: "Founders & Builders Breakfast",
     hood: "Marvila",
     host: "QueerPulse",
@@ -339,7 +423,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "trans-hub-meetup",
     type: "meetup",
     gatheringFamily: "meet",
-    date: new Date(2026, 5, 10),
+    date: demoStartOf("trans-hub-meetup"),
     title: "Trans & NB Hub: Monthly Meetup",
     hood: "Arroios",
     host: "Trans & NB Hub",
@@ -354,7 +438,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "skills-exchange-intro",
     type: "workshop",
     gatheringFamily: "learn",
-    date: new Date(2026, 5, 12),
+    date: demoStartOf("skills-exchange-intro"),
     title: "Skills Exchange: Intro Session",
     hood: "Príncipe Real",
     host: "QueerPulse",
@@ -369,7 +453,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-parent-network",
     type: "meetup",
     gatheringFamily: "meet",
-    date: new Date(2026, 5, 17),
+    date: demoStartOf("queer-parent-network"),
     title: "Queer Parent Network: First Meetup",
     hood: "Estrela",
     host: "QueerPulse",
@@ -384,7 +468,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "trans-mutual-aid",
     type: "mutual-aid",
     gatheringFamily: "care",
-    date: new Date(2026, 5, 20),
+    date: demoStartOf("trans-mutual-aid"),
     title: "Trans Mutual Aid: Open Meeting",
     hood: "Mouraria",
     host: "Trans Mutual Aid Lisboa",
@@ -399,7 +483,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-elders-social",
     type: "mixer",
     gatheringFamily: "meet",
-    date: new Date(2026, 5, 24),
+    date: demoStartOf("queer-elders-social"),
     title: "Queer Elders: Monthly Social",
     hood: "Chiado",
     host: "Queer Elders Lisboa",
@@ -414,7 +498,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "wellbeing-ama",
     type: "talk-or-panel",
     gatheringFamily: "learn",
-    date: new Date(2026, 5, 26),
+    date: demoStartOf("wellbeing-ama"),
     title: "Wellbeing Q&A: Therapist AMA",
     hood: "Online",
     host: "QueerPulse",
@@ -429,7 +513,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-runners-run",
     type: "run-club",
     gatheringFamily: "move",
-    date: new Date(2026, 5, 28),
+    date: demoStartOf("queer-runners-run"),
     title: "Queer Runners: End-of-Month Run",
     hood: "Tejo path",
     host: "Queer Runners",
@@ -450,7 +534,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-youth-gathering",
     type: "meetup",
     gatheringFamily: "meet",
-    date: new Date(2026, 6, 5),
+    date: demoStartOf("queer-youth-gathering"),
     title: "Queer Youth Network: First Gathering",
     hood: "Arroios",
     host: "Queer Youth Network",
@@ -465,7 +549,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "disability-access-talk",
     type: "discussion",
     gatheringFamily: "learn",
-    date: new Date(2026, 6, 9),
+    date: demoStartOf("disability-access-talk"),
     title: "Disability & Access: Open Conversation",
     hood: "Online",
     host: "QueerPulse",
@@ -480,7 +564,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "legal-clinic",
     type: "clinic",
     gatheringFamily: "care",
-    date: new Date(2026, 6, 11),
+    date: demoStartOf("legal-clinic"),
     title: "Free Legal Clinic",
     hood: "Intendente",
     host: "Community legal volunteers",
@@ -495,7 +579,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-choir-rehearsal",
     type: "open-rehearsal",
     gatheringFamily: "watch",
-    date: new Date(2026, 6, 14),
+    date: demoStartOf("queer-choir-rehearsal"),
     title: "Queer Choir: Monthly Rehearsal",
     hood: "Príncipe Real",
     host: "Lisbon Queer Choir",
@@ -510,7 +594,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "resource-library-launch",
     type: "launch",
     gatheringFamily: "organise",
-    date: new Date(2026, 6, 16),
+    date: demoStartOf("resource-library-launch"),
     title: "Resource Library Launch: Live Q&A",
     hood: "Online",
     host: "QueerPulse",
@@ -525,7 +609,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "micro-grants-office-hours",
     type: "office-hours",
     gatheringFamily: "care",
-    date: new Date(2026, 6, 22),
+    date: demoStartOf("micro-grants-office-hours"),
     title: "Micro-Grants: Q3 Open Office Hours",
     hood: "Online",
     host: "QueerPulse",
@@ -540,7 +624,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-of-colour-gathering",
     type: "meetup",
     gatheringFamily: "meet",
-    date: new Date(2026, 6, 26),
+    date: demoStartOf("queer-of-colour-gathering"),
     title: "Queer & of Colour: Monthly Gathering",
     hood: "Intendente",
     host: "Queer & of Colour Collective",
@@ -587,7 +671,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "lgbtq-support-circle",
     type: "support-circle",
     gatheringFamily: "care",
-    date: new Date(2026, 5, 18),
+    date: demoStartOf("lgbtq-support-circle"),
     title: "LGBTQ+ Support Circle",
     hood: "Intendente",
     host: "Lisbon Queer Support",
@@ -602,7 +686,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-film-moonlight",
     type: "screening",
     gatheringFamily: "watch",
-    date: new Date(2026, 5, 25),
+    date: demoStartOf("queer-film-moonlight"),
     title: "Queer Film Screening: “Moonlight”",
     hood: "Príncipe Real",
     host: "QueerPulse Cinema",
@@ -620,7 +704,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-youth-monthly",
     type: "meetup",
     gatheringFamily: "meet",
-    date: new Date(2026, 6, 7),
+    date: demoStartOf("queer-youth-monthly"),
     title: "Queer Youth: Monthly Gathering",
     hood: "Lisbon",
     host: "Queer Youth Network",
@@ -635,7 +719,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "peer-support-circle",
     type: "support-circle",
     gatheringFamily: "care",
-    date: new Date(2026, 6, 19),
+    date: demoStartOf("peer-support-circle"),
     title: "Peer Support Circle: Open Session",
     hood: "Estrela",
     host: "Lisbon Queer Support",
@@ -716,7 +800,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "pride-brunch-jun",
     type: "brunch",
     gatheringFamily: "eat",
-    date: new Date(2026, 5, 21),
+    date: PRIDE_BRUNCH_JUNE_START,
     title: "Pride Brunch: June Edition",
     hood: "Príncipe Real",
     host: "Sofia Rodrigues",
@@ -789,7 +873,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     slug: "queer-karaoke-night",
     type: "karaoke",
     gatheringFamily: "party",
-    date: new Date(2026, 6, 3),
+    date: demoStartOf("queer-karaoke-night"),
     title: "Queer Karaoke Night",
     hood: "Bairro Alto",
     host: "QueerPulse Nightlife",
@@ -1077,6 +1161,12 @@ export interface CalendarEvent {
   /** How the gathering is paid for. DISPLAY ONLY, exactly like `cost`. Absent
    *  for a gathering written before the field existed. */
   costKind?: CostKind;
+  /** The gathering's own slug, the one `to` was built from. What a card needs
+   *  to act on the gathering in place (the hero's save toggle). */
+  slug?: string;
+  /** Whether the viewer has saved (bookmarked) this gathering. Absent reads
+   *  as unsaved. */
+  isBookmarked?: boolean;
 }
 
 const ACCENT = "var(--accent)";
@@ -1095,11 +1185,25 @@ export const orgColors = {
 
 export const calendarEvents: CalendarEvent[] = [
   {
-    date: new Date(2026, 5, 6, 19, 30),
+    date: PRIDE_BRUNCH_JUNE_START,
+    org: "Community",
+    orgColor: COMMUNITY,
+    title: "Pride Brunch: June Edition",
+    hood: "Príncipe Real",
+    slug: "pride-brunch-jun",
+    to: gatheringPath("pride-brunch-jun"),
+    kind: "gathering",
+    eventType: "brunch",
+    gatheringFamily: "eat",
+    attendeeCount: 38,
+  },
+  {
+    date: demoStartOf("supper-club-12"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Queer Supper Club №12",
     hood: "Mouraria",
+    slug: "supper-club-12",
     to: gatheringPath("supper-club-12"),
     kind: "gathering",
     eventType: "supper-club",
@@ -1112,11 +1216,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 42,
   },
   {
-    date: new Date(2026, 5, 10, 18, 30),
+    date: demoStartOf("trans-hub-meetup"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Trans & NB Hub: Monthly Meetup",
     hood: "Arroios",
+    slug: "trans-hub-meetup",
     to: gatheringPath("trans-hub-meetup"),
     kind: "gathering",
     eventType: "meetup",
@@ -1126,11 +1231,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 28,
   },
   {
-    date: new Date(2026, 5, 12, 18, 0),
+    date: demoStartOf("skills-exchange-intro"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Skills Exchange: Intro Session",
     hood: "Príncipe Real",
+    slug: "skills-exchange-intro",
     to: gatheringPath("skills-exchange-intro"),
     kind: "event",
     eventType: "workshop",
@@ -1140,11 +1246,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 19,
   },
   {
-    date: new Date(2026, 5, 14, 19, 0),
+    date: demoStartOf("portfolio-night"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Portfolio Night: Designers & Photogs",
     hood: "Príncipe Real",
+    slug: "portfolio-night",
     to: gatheringPath("portfolio-night"),
     kind: "event",
     eventType: "mixer",
@@ -1156,11 +1263,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 61,
   },
   {
-    date: new Date(2026, 5, 17, 10, 30),
+    date: demoStartOf("queer-parent-network"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Queer Parent Network: First Meetup",
     hood: "Estrela",
+    slug: "queer-parent-network",
     to: gatheringPath("queer-parent-network"),
     kind: "event",
     eventType: "meetup",
@@ -1170,11 +1278,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 15,
   },
   {
-    date: new Date(2026, 5, 18, 18, 30),
+    date: demoStartOf("lgbtq-support-circle"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "LGBTQ+ Support Circle",
     hood: "Intendente",
+    slug: "lgbtq-support-circle",
     to: gatheringPath("lgbtq-support-circle"),
     kind: "gathering",
     eventType: "support-circle",
@@ -1183,11 +1292,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1591115765373-5207764f72e7?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 5, 20, 18, 0),
+    date: demoStartOf("trans-mutual-aid"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Trans Mutual Aid Open Meeting",
     hood: "Mouraria",
+    slug: "trans-mutual-aid",
     to: gatheringPath("trans-mutual-aid"),
     kind: "gathering",
     eventType: "mutual-aid",
@@ -1197,11 +1307,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 24,
   },
   {
-    date: new Date(2026, 5, 21, 15, 0),
+    date: demoStartOf("studio-visit"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Inside Beatriz's Ceramics Studio",
     hood: "Graça",
+    slug: "studio-visit",
     to: gatheringPath("studio-visit"),
     kind: "gathering",
     eventType: "studio-visit",
@@ -1211,11 +1322,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 12,
   },
   {
-    date: new Date(2026, 5, 24, 17, 0),
+    date: demoStartOf("queer-elders-social"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Elders: Monthly Social",
     hood: "Chiado",
+    slug: "queer-elders-social",
     to: gatheringPath("queer-elders-social"),
     kind: "gathering",
     eventType: "mixer",
@@ -1225,11 +1337,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 20,
   },
   {
-    date: new Date(2026, 5, 25, 20, 0),
+    date: demoStartOf("queer-film-moonlight"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Film Screening: Moonlight",
     hood: "Príncipe Real",
+    slug: "queer-film-moonlight",
     to: gatheringPath("queer-film-moonlight"),
     kind: "gathering",
     eventType: "screening",
@@ -1241,11 +1354,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 55,
   },
   {
-    date: new Date(2026, 5, 26, 19, 0),
+    date: demoStartOf("wellbeing-ama"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Wellbeing Q&A: Therapist AMA",
     hood: "Online",
+    slug: "wellbeing-ama",
     to: gatheringPath("wellbeing-ama"),
     kind: "event",
     eventType: "talk-or-panel",
@@ -1254,11 +1368,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 5, 28, 9, 0),
+    date: demoStartOf("queer-runners-run"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Runners: End-of-Month Run",
     hood: "Tejo path",
+    slug: "queer-runners-run",
     to: gatheringPath("queer-runners-run"),
     kind: "gathering",
     eventType: "run-club",
@@ -1268,11 +1383,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 33,
   },
   {
-    date: new Date(2026, 6, 2, 8, 30),
+    date: demoStartOf("founders-breakfast"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Founders & Builders Breakfast",
     hood: "Marvila",
+    slug: "founders-breakfast",
     to: gatheringPath("founders-breakfast"),
     kind: "event",
     eventType: "brunch",
@@ -1284,11 +1400,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 38,
   },
   {
-    date: new Date(2026, 6, 3, 21, 0),
+    date: demoStartOf("queer-karaoke-night"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Karaoke Night",
     hood: "Bairro Alto",
+    slug: "queer-karaoke-night",
     to: gatheringPath("queer-karaoke-night"),
     kind: "gathering",
     eventType: "karaoke",
@@ -1298,11 +1415,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 28,
   },
   {
-    date: new Date(2026, 6, 5, 17, 0),
+    date: demoStartOf("queer-youth-gathering"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Youth Network: First Gathering",
     hood: "Arroios",
+    slug: "queer-youth-gathering",
     to: gatheringPath("queer-youth-gathering"),
     kind: "gathering",
     eventType: "meetup",
@@ -1312,11 +1430,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 26,
   },
   {
-    date: new Date(2026, 6, 7, 18, 0),
+    date: demoStartOf("queer-youth-monthly"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Youth: Monthly Gathering",
     hood: "Lisbon",
+    slug: "queer-youth-monthly",
     to: gatheringPath("queer-youth-monthly"),
     kind: "gathering",
     eventType: "meetup",
@@ -1325,11 +1444,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 6, 9, 18, 30),
+    date: demoStartOf("disability-access-talk"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Disability & Access: Open Conversation",
     hood: "Online",
+    slug: "disability-access-talk",
     to: gatheringPath("disability-access-talk"),
     kind: "event",
     eventType: "discussion",
@@ -1338,11 +1458,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 6, 11, 14, 0),
+    date: demoStartOf("legal-clinic"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Free Legal Clinic",
     hood: "Intendente",
+    slug: "legal-clinic",
     to: gatheringPath("legal-clinic"),
     kind: "gathering",
     eventType: "clinic",
@@ -1351,11 +1472,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 6, 14, 19, 0),
+    date: demoStartOf("queer-choir-rehearsal"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer Choir Monthly Rehearsal",
     hood: "Príncipe Real",
+    slug: "queer-choir-rehearsal",
     to: gatheringPath("queer-choir-rehearsal"),
     kind: "gathering",
     eventType: "open-rehearsal",
@@ -1365,11 +1487,12 @@ export const calendarEvents: CalendarEvent[] = [
     attendeeCount: 22,
   },
   {
-    date: new Date(2026, 6, 16, 19, 0),
+    date: demoStartOf("resource-library-launch"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Resource Library Launch: Live Q&A",
     hood: "Online",
+    slug: "resource-library-launch",
     to: gatheringPath("resource-library-launch"),
     kind: "event",
     eventType: "launch",
@@ -1378,11 +1501,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1487956382158-bb926046304a?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 6, 19, 18, 30),
+    date: demoStartOf("peer-support-circle"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Peer Support Circle: Open Session",
     hood: "Estrela",
+    slug: "peer-support-circle",
     to: gatheringPath("peer-support-circle"),
     kind: "gathering",
     eventType: "support-circle",
@@ -1391,11 +1515,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 6, 22, 12, 0),
+    date: demoStartOf("micro-grants-office-hours"),
     org: "QueerPulse",
     orgColor: ACCENT,
     title: "Micro-Grants: Q3 Open Office Hours",
     hood: "Online",
+    slug: "micro-grants-office-hours",
     to: gatheringPath("micro-grants-office-hours"),
     kind: "event",
     eventType: "office-hours",
@@ -1404,11 +1529,12 @@ export const calendarEvents: CalendarEvent[] = [
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    date: new Date(2026, 6, 26, 17, 30),
+    date: demoStartOf("queer-of-colour-gathering"),
     org: "Community",
     orgColor: COMMUNITY,
     title: "Queer & of Colour: Monthly Gathering",
     hood: "Intendente",
+    slug: "queer-of-colour-gathering",
     to: gatheringPath("queer-of-colour-gathering"),
     kind: "gathering",
     eventType: "meetup",

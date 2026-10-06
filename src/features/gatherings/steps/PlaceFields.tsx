@@ -7,6 +7,8 @@ import { GATE_ANCHOR, HOODS } from "../createGathering.data";
 import type { GatheringForm } from "../useGatheringForm";
 import { VenuePicker } from "../VenuePicker";
 import { ONLINE_HOOD_VALUE } from "./dateNotes.data";
+import { LinkedVenueAddress } from "./LinkedVenueAddress";
+import { useVenueAddress } from "./useVenueAddress";
 import styles from "./WhenWhereChapter.module.css";
 
 /** The join link an online gathering asks for, with the same validation and
@@ -50,10 +52,16 @@ function JoinLinkField({ form }: { form: GatheringForm }) {
 }
 
 /** The street address and arrival directions a gathering with a door asks
- *  for. Both are shared only with confirmed attendees. */
+ *  for. Both are shared only with confirmed attendees. A venue linked from
+ *  the directory supplies the address, so the host only adds directions. */
 function AddressFields({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const addressId = `${fieldId}-address`;
+  const { venueAddress } = useVenueAddress(form);
+  // Only a resolved, non-empty address replaces the input: while the
+  // listing loads, or when it lists no address, the host types one.
+  const linkedVenue = venueAddress === "" ? null : form.venueListing;
   return (
     <>
       <Field
@@ -65,16 +73,25 @@ function AddressFields({ form }: { form: GatheringForm }) {
             </span>
           </>
         }
-        htmlFor={`${fieldId}-address`}
+        htmlFor={linkedVenue ? undefined : addressId}
+        labelId={`${addressId}-label`}
       >
-        <TextInput
-          id={`${fieldId}-address`}
-          type="text"
-          autoComplete="off"
-          placeholder={t("gatherings:create.step2.addressPlaceholder")}
-          value={form.address}
-          onChange={(event) => form.setAddress(event.target.value)}
-        />
+        {linkedVenue ? (
+          <LinkedVenueAddress
+            labelId={`${addressId}-label`}
+            address={venueAddress}
+            venueName={linkedVenue.name}
+          />
+        ) : (
+          <TextInput
+            id={addressId}
+            type="text"
+            autoComplete="off"
+            placeholder={t("gatherings:create.step2.addressPlaceholder")}
+            value={form.address}
+            onChange={(event) => form.setAddress(event.target.value)}
+          />
+        )}
       </Field>
       <Field
         label={t("gatherings:create.v2.when.directionsLabel")}

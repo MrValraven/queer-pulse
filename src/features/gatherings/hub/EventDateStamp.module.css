@@ -1,0 +1,109 @@
+/* EventDateStamp: a printed date stamp. Month on top, the day numeral large in
+   Fraunces, the weekday below, all centred in one narrow column. */
+
+.stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+
+.month,
+.weekday {
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.day {
+  font-family: var(--serif);
+  font-weight: 500;
+  letter-spacing: var(--ls-heading);
+  line-height: 1;
+}
+
+/* ── Sizes ── */
+.card {
+  gap: 3px;
+  min-inline-size: 3.25rem;
+}
+
+.card .month,
+.card .weekday {
+  font-size: var(--text-10);
+}
+
+.card .day {
+  font-size: var(--text-28);
+}
+
+.hero {
+  gap: 5px;
+  min-inline-size: 4.75rem;
+}
+
+.hero .month,
+.hero .weekday {
+  font-size: var(--text-12);
+}
+
+.hero .day {
+  font-size: var(--text-46);
+}
+
+/* The hero's bare stamp sits flush with the copy column under it, so its
+   type hangs from the leading edge. The centred column above stays for every
+   chip, where the stamp is its own box. */
+.hero.paper {
+  align-items: flex-start;
+  text-align: start;
+  min-inline-size: 0;
+}
+
+/* ── Surfaces ── */
+
+/* Bare type on a card or row surface: the month takes the coral accent, the
+   numeral the strong ink, the weekday the quiet ink. All three flip in dark
+   mode with the surface under them. */
+.paper .month {
+  color: var(--accent-text);
+}
+
+.paper .day {
+  color: var(--text-strong);
+}
+
+.paper .weekday {
+  color: var(--ink-60);
+}
+
+/* A cream ticket stub pinned over cover artwork. The fill is locked light in
+   both themes so the stub reads over any photo, which means its type must stay
+   dark in both themes too. */
+.onImage {
+  padding: 7px 10px 8px;
+  border-radius: var(--radius-badge);
+  background: rgb(var(--cream-rgb));
+  box-shadow: var(--shadow-e2);
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
+  color: var(--plum);
+}
+
+.hero.onImage {
+  padding: 10px 14px 12px;
+  border-radius: var(--radius-card);
+}
+
+.onImage .month {
+  color: var(--accent-deep);
+}
+
+.onImage .weekday {
+  opacity: 0.72;
+}

@@ -146,6 +146,7 @@ export const gatherings: Catalog = {
   // GoingAttendeesPreview (MSG-12)
   "gathering.attendeesPreview.heading": "Who's going",
   "gathering.attendeesPreview.hostTag": "Host",
+  "gathering.attendeesPreview.cohostTag": "Co-host",
   "gathering.attendeesPreview.moreLabel": "+{count} more",
 
   // GatheringSuccessPanel
@@ -876,6 +877,7 @@ export const gatherings: Catalog = {
   // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
   "create.v2.when.addressLabel": "Full address",
   "create.v2.when.addressNote": "shared only with confirmed attendees",
+  "create.v2.when.addressFromListing": "From the {name} listing",
   "create.v2.when.directionsLabel": "Getting there",
 
   // steps/DateNotes.tsx: chapter 2, notes on the chosen date
@@ -1547,6 +1549,8 @@ export const gatherings: Catalog = {
   "hub.highlights.heading": "Worth showing up for",
   "hub.browse.heading": "Everything that's on",
   "hub.browse.loadMore": "Show more",
+  "hub.browse.monthCount_one": "{count} gathering",
+  "hub.browse.monthCount_other": "{count} gatherings",
   "hub.browse.searchLabel": "Search events",
   "hub.browse.searchPlaceholder": "Search by name or neighbourhood",
   "hub.browse.noMatch.title": "Nothing matches those filters.",
@@ -1562,25 +1566,80 @@ export const gatherings: Catalog = {
   "hub.empty.body":
     "New gatherings turn up here all the time. You could host the first.",
   "hub.card.cta": "See it",
+  "hub.card.moreThemes": "+{count}",
   "hub.loading": "Finding what's on…",
 
-  // ── Lineup editor (GatheringLineupEditor + GatheringLineupRow, on
-  // GatheringPage) — host/co-host tagging who's on the bill, plus the
-  // post-gathering persona nudge (GatheringPerformerNudge). Personas
-  // discovery Phase 5, Moment 5.
+  // ── Lineup (GatheringLineupEditor, LineupInviteComposerModal,
+  // LineupInvitePage, GatheringLineupViewerPanel). The lineup is
+  // invite-based: a host invites, the member accepts or declines, and only
+  // accepted rows show publicly. Plus the post-gathering persona nudge
+  // (GatheringPerformerNudge).
   "lineup.title": "Lineup",
   "lineup.description":
-    "Tag who's performing, hosting or working this gathering.",
-  "lineup.empty": "Nobody's tagged yet.",
-  "lineup.addCta": "Tag someone",
+    "Invite who's performing, hosting or working this gathering. They show on the lineup once they accept.",
+  "lineup.empty": "Nobody's on the lineup yet.",
+  "lineup.inviteCta": "Invite to lineup",
   "lineup.roleLabel": "Their role",
   "lineup.removeAria": "Remove {name} from the lineup",
-  "lineup.pickerTitle": "Tag someone",
-  "lineup.pickerSearchPlaceholder": "Search people who are going",
-  "lineup.saveCta": "Save lineup",
-  "lineup.saving": "Saving…",
-  "lineup.savedToast": "Lineup saved",
+  "lineup.pickerTitle": "Invite to lineup",
+  "lineup.pickerSub":
+    "Invite your connections or anyone going to this gathering.",
+  "lineup.pickerSearchPlaceholder": "Search people",
+  "lineup.pickerEmpty":
+    "Nobody by that name among your connections or people going.",
+  "lineup.removedToast": "{name} is off the lineup",
+  "lineup.pickerAllListed": "Everyone you can invite is already on the lineup.",
+  "lineup.pickerLoadError":
+    "We couldn't load your connections. People going are still listed.",
+  "lineup.roleStepTitle": "What will they do?",
+  "lineup.roleStepBack": "Pick someone else",
+  "lineup.sendCta": "Send invite",
+  "lineup.sentToast": "Invite sent to {name}",
+  "lineup.status.pending": "Invited",
+  "lineup.status.accepted": "Confirmed",
+  "lineup.status.declined": "Declined",
+  "lineup.inviteAgain": "Invite again",
+  "lineup.countConfirmed_one": "{count} confirmed",
+  "lineup.countConfirmed_other": "{count} confirmed",
+  "lineup.countInvited_one": "{count} invited",
+  "lineup.countInvited_other": "{count} invited",
+  "lineup.atCapHint":
+    "The lineup is full at {max}. Remove someone to invite more.",
+  "lineup.removeConfirmTitle": "Take {name} off the lineup?",
+  "lineup.removeConfirmBody":
+    "They accepted, so they'll disappear from the gathering's page.",
+  "lineup.removeConfirmCta": "Remove",
   "lineup.errorToast": "We couldn't save that just now. Try again.",
+
+  "lineupInvite.eyebrow": "Lineup invite",
+  "lineupInvite.title": "<em>{host}</em> wants you on the lineup",
+  "lineupInvite.titleNoInviter": "You're invited to the lineup",
+  "lineupInvite.roleLine": "You'd be on the bill as {role}.",
+  "lineupInvite.acceptCta": "Join the lineup",
+  "lineupInvite.declineCta": "Decline",
+  "lineupInvite.acceptedToast": "You're on the lineup",
+  "lineupInvite.declinedToast": "Invite declined",
+  "lineupInvite.closedTitle": "This invite is no longer open",
+  "lineupInvite.acceptedTitle": "You're on this lineup",
+  "lineupInvite.acceptedDescription":
+    "The gathering's page shows the full lineup.",
+  "lineupInvite.declinedTitle": "You declined this invite",
+  "lineupInvite.declinedDescription":
+    "The host can invite you again if plans change.",
+  "lineupInvite.notFoundDescription": "It may have been withdrawn by the host.",
+  "lineupInvite.loadErrorTitle": "We couldn't load this invite",
+  "lineupInvite.loadErrorDescription":
+    "Check your connection and try again in a moment.",
+  "lineupInvite.openGathering": "Open the gathering",
+  "lineupInvite.back": "Back to notifications",
+  "lineupInvite.bannerText": "You're invited to the lineup as {role}.",
+  "lineupInvite.onLineupText": "You're on the lineup as {role}.",
+  "lineupInvite.leaveCta": "Leave lineup",
+  "lineupInvite.leaveConfirmTitle": "Leave the lineup?",
+  "lineupInvite.leaveConfirmBody":
+    "You'll disappear from this gathering's lineup. The host can invite you again.",
+  "lineupInvite.leftToast": "You left the lineup",
+  "lineupInvite.errorToast": "That didn't go through. Try again.",
 
   "performerNudge.body":
     "You performed as {name}, {craft}. Want a page for that?",
@@ -1991,10 +2050,13 @@ export const gatherings: Catalog = {
   // Save, add to calendar and share, moved up beside the type label so the
   // RSVP is the one button in the hero.
   "headerToolbar.aria": "Gathering actions",
-  "headerToolbar.shareCta": "Share",
-  "headerToolbar.shareCopiedToast": "Link copied",
-  "headerToolbar.shareCopyFailedToast":
-    "Your browser wouldn't let us copy that. Here is the link: {url}",
+  // The shared message (gatheringShareMessage.ts): the title, then these
+  // lines, then the link. The place is the public one, venue and
+  // neighbourhood; the street address stays with the people going.
+  "headerToolbar.share.message.cancelled": "This gathering has been cancelled",
+  "headerToolbar.share.message.when": "{date} · {time}",
+  "headerToolbar.share.message.timeWithNote": "{time} {note}",
+  "headerToolbar.share.message.venueAndHood": "{venue}, {neighbourhood}",
 
   // ── Taking care panel (GatheringTakingCare.tsx) ───────────────────────────
   // House rules, content notes and themes, as a host set them in chapter 5.

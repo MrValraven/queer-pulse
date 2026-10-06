@@ -466,7 +466,7 @@
    optical centre is about 5px above that, at 58px. A 44px button centres 22px
    into its own box, so the row starts at 58 - 22 = 36px. Scoped to the
    app-wide `--mobile-up` cutover (860px), which holds steady across the
-   whole range of the row's width: `DirectoryActionBar` renders 2 to 5
+   whole range of the row's width: `DirectoryActionBar` renders 2 to 4
    buttons depending on the listing and the viewer, so the row's own wrap
    point moves with that count. Below the threshold the row has already
    dropped to its own line, where the flex row's own gap is the only spacing

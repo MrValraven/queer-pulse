@@ -82,14 +82,31 @@
   top: 0;
   left: 0;
   border: 0;
+  /* FilmFrame writes the real scale once it has measured the box. */
+  transform: scale(0);
   transform-origin: 0 0;
   pointer-events: none;
 }
 
 /* ── Preview ───────────────────────────────────────────────────────────────── */
 .previewFrame {
+  /* Positioned, so it paints above the veil (below) on the way out. */
+  position: relative;
   overflow: hidden;
   border-radius: var(--radius-panel);
+}
+
+/* Leaving full screen, the whole dialog shrinks from the full-screen film
+   back into place (useFilmFullscreen). The dialog's transform makes it this
+   fixed layer's containing block, so the veil covers exactly the dialog, under
+   the film, and fades out as it lands. At rest it is invisible. Same ground
+   as the full-screen stage below. */
+.veil {
+  position: fixed;
+  inset: 0;
+  background: var(--film-ground);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .transport {
@@ -119,6 +136,70 @@
   margin-top: 10px;
   font-size: var(--text-body-sm);
   color: var(--ink-60);
+}
+
+/* ── Preview in full screen ──────────────────────────────────────────────────
+   The stage (film and transport) is what goes full screen. Its ground lives
+   on ::before so useFilmFullscreen can fade it in under the growing film; the
+   backdrop stays clear, so the dialog shows until it does. The ground is
+   --film-ground, sampled from the films' vignetted edges, so letterbox bands
+   read as part of the frame. */
+.stage:fullscreen {
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  background: transparent;
+}
+
+.stage:fullscreen::backdrop {
+  background: transparent;
+}
+
+.stage:fullscreen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--film-ground);
+}
+
+.stage:fullscreen .previewFrame {
+  width: min(100vw, 100dvh * 16 / 9);
+  border-radius: 0;
+}
+
+.stage:fullscreen .transport {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 40px max(24px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.86),
+    rgba(var(--plum-rgb), 0)
+  );
+  color: rgba(var(--cream-rgb), 0.96);
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease);
+}
+
+.stage:fullscreen .clock {
+  color: rgba(var(--cream-rgb), 0.8);
+}
+
+/* Idle while playing: controls and cursor step aside. Keyboard focus in the
+   controls keeps them on screen. */
+.stage[data-controls-hidden] {
+  cursor: none;
+}
+
+.stage[data-controls-hidden] .transport:not(:has(:focus-visible)) {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .previewNote {

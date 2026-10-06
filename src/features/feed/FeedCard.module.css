@@ -307,6 +307,24 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
+/* ── Gathering cover banner ──────────────────────────────────────────────
+   The gathering's cover photo, edge to edge across the top of the card. The
+   negative margins cancel the shell's 18px padding on the top and both sides,
+   and the top corners take the shell's inner radius (its outer radius less
+   the 1px border) so the photo follows the curve with no gap or overhang. The
+   shell's 12px gap still spaces it from the eyebrow below. */
+.gatheringBanner {
+  margin: -18px -18px 0;
+  overflow: hidden;
+  border-radius: calc(var(--radius-18) - var(--radius-1))
+    calc(var(--radius-18) - var(--radius-1)) 0 0;
+}
+/* The card's own border already frames the photo, so the slot's hairline
+   would draw a second line just inside it. */
+.gatheringBanner .gatheringBannerImage {
+  border: 0;
+}
+
 /* The byline credit inside the card's meta line. Reads as text until it is
    hovered or focused, so the headline stays the card's loudest thing. */
 .bylineLink {

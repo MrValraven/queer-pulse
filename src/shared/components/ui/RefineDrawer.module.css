@@ -7,6 +7,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  /* The 44px tap target on every pointer. The flex centring keeps the icon,
+     label and count on the middle line of the taller pill. */
+  min-height: var(--tap-min);
   font-family: var(--sans);
   font-size: var(--text-12-5);
   font-weight: 600;
@@ -29,12 +32,6 @@
   .toggle:hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
-  }
-}
-/* Touch: lift the ~29px toggle to the ≥44px target minimum, ink unchanged. */
-@media (pointer: coarse) {
-  .toggle {
-    min-height: 44px;
   }
 }
 :global([data-theme="dark"]) .toggle {

@@ -166,6 +166,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* The linked name line, wrapping in full: used by the wizard's read-only
+   venue address, which must never be cut off. */
+.linkedNameWrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 .linkedMeta {
   font-size: var(--text-12);
   color: var(--ink-40);

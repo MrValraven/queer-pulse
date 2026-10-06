@@ -1,17 +1,21 @@
 import { FiBookmark } from "react-icons/fi";
 import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { communityPath } from "../../app/routeMap";
+import type { Community } from "../homepage/data/types";
+import { ShareMenu } from "../messages/share/ShareMenu";
 import type { Person } from "./communityDetails";
 import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
 import { CommunityNotificationControl } from "./CommunityNotificationControl";
 import { CommunityReportControl } from "../safety/CommunityReportControl";
-import { CommunityShareMenu } from "./CommunityShareMenu";
+import { buildCommunityShareMessage } from "./communityShareMessage";
 
 /**
  * The hero's trailing action row: edit (owner/mod only), then one run of
- * icons (save, the share menu with "Send in a message" inside it, and the
- * notification + report controls), then the member avatar stack. Split out of
- * `CommunityDetailHero` purely to keep that component under the repo's
+ * icons (save, the shared `ShareMenu` with every way to pass the community
+ * on, and the notification + report controls), then the member avatar stack.
+ * The Share icon waits for the slug, since every item needs the link. Split
+ * out of `CommunityDetailHero` purely to keep that component under the repo's
  * 200-line limit; it carries no state of its own.
  */
 export function CommunityHeroSecondaryActions({
@@ -19,8 +23,7 @@ export function CommunityHeroSecondaryActions({
   onEdit,
   saved,
   onToggleSave,
-  onShare,
-  communityName,
+  community,
   communitySlug,
   joined,
   heroAvatars,
@@ -31,8 +34,9 @@ export function CommunityHeroSecondaryActions({
   onEdit: () => void;
   saved: boolean;
   onToggleSave: () => void;
-  onShare: () => void;
-  communityName: string;
+  /** Its name labels the icons; the share message reads the name, tagline
+   *  and member count the hero already shows. */
+  community: Community;
   communitySlug: string | undefined;
   joined: boolean;
   heroAvatars: Person[];
@@ -40,6 +44,7 @@ export function CommunityHeroSecondaryActions({
   hasCount: boolean;
 }) {
   const { t } = useTranslation();
+  const communityName = community.name;
   return (
     <>
       {canEdit && (
@@ -49,7 +54,8 @@ export function CommunityHeroSecondaryActions({
       )}
       {/* Every icon sits together from here on, each named by a tooltip, so
           Join (and Edit, when shown) stay the only labelled actions competing
-          for attention. Send in a message lives inside the Share menu. */}
+          for attention. Send in a message lives inside the Share menu,
+          beside WhatsApp, the device share sheet and the two copy items. */}
       <Tooltip
         label={t(
           saved
@@ -71,11 +77,21 @@ export function CommunityHeroSecondaryActions({
           <FiBookmark aria-hidden fill={saved ? "currentColor" : "none"} />
         </IconButton>
       </Tooltip>
-      <CommunityShareMenu
-        communityName={communityName}
-        communitySlug={communitySlug}
-        onShare={onShare}
-      />
+      {communitySlug && (
+        <ShareMenu
+          tone="dark"
+          triggerLabel={t("communities:detail.share.cta")}
+          triggerAriaLabel={t("communities:detail.share.ariaLabel", {
+            name: communityName,
+          })}
+          content={{
+            path: communityPath(communitySlug),
+            title: communityName,
+            kind: "community",
+            text: buildCommunityShareMessage(community, t),
+          }}
+        />
+      )}
       {/* Two more quiet icons follow: the member's own notification level for
           this community, and reporting the space itself. A tooltip names each
           one, the same as Save and Share. */}

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import type { CalView } from "./myEvents.types";
-import { TODAY } from "./myEvents.data";
+import { clockToday } from "./myEvents.clock";
 import { mondayOf } from "./myEvents.helpers";
 
 export interface MyEventsCalendar {
@@ -20,9 +20,11 @@ export interface MyEventsCalendar {
 
 /** Calendar view state (month/week/year) + navigation actions. */
 export function useMyEventsCalendar(): MyEventsCalendar {
-  const [viewY, setViewY] = useState(TODAY.getFullYear());
-  const [viewM, setViewM] = useState(TODAY.getMonth());
-  const [weekStart, setWeekStart] = useState(() => mondayOf(TODAY));
+  // Initialisers run after `useMyEventsState` has set the clock's mode, so
+  // live mode opens on the real month and demo mode on June 2026.
+  const [viewY, setViewY] = useState(() => clockToday().getFullYear());
+  const [viewM, setViewM] = useState(() => clockToday().getMonth());
+  const [weekStart, setWeekStart] = useState(() => mondayOf(clockToday()));
   const [calView, setCalViewState] = useState<CalView>("month");
 
   const shiftMonth = useCallback(
@@ -55,9 +57,10 @@ export function useMyEventsCalendar(): MyEventsCalendar {
     [calView],
   );
   const goToday = useCallback(() => {
-    setViewY(TODAY.getFullYear());
-    setViewM(TODAY.getMonth());
-    setWeekStart(mondayOf(TODAY));
+    const today = clockToday();
+    setViewY(today.getFullYear());
+    setViewM(today.getMonth());
+    setWeekStart(mondayOf(today));
   }, []);
   const setCalView = useCallback((v: CalView) => setCalViewState(v), []);
   const jumpMonth = useCallback((m: number) => {

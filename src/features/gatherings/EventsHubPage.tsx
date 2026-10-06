@@ -8,6 +8,7 @@ import { useEvents } from "./api/useEvents";
 import { eventKeys } from "./api/eventKeys";
 import { pickHighlights } from "./hub/pickHighlights";
 import { FeaturedEventCard } from "./hub/FeaturedEventCard";
+import { FeaturedEventSkeleton } from "./hub/FeaturedEventSkeleton";
 import { useEventsHubView } from "./hub/useEventsHubView";
 import { HighlightsView } from "./hub/HighlightsView";
 import { BrowseView } from "./hub/BrowseView";
@@ -78,7 +79,14 @@ export function EventsDiscover() {
 
   return (
     <div className={styles.root}>
-      <FeaturedEventCard lead={lead} />
+      {/* The hero is tall, so a placeholder holds its place while the list
+          loads and the view below never jumps. A load that finds no lead
+          renders nothing, as before. */}
+      {isLoading ? (
+        <FeaturedEventSkeleton />
+      ) : (
+        <FeaturedEventCard lead={lead} now={now} />
+      )}
       <div
         role="tabpanel"
         id={`events-hub-panel-${view}`}

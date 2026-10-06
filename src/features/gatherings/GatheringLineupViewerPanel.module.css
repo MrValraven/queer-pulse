@@ -1,0 +1,129 @@
+/* The viewer's own lineup state. The open-invite banner sits above the public
+   lineup and copies its row surface (GatheringLineup.module.css): paper on
+   cream with the standard hairline. The on-lineup line sits inside the Lineup
+   section, under the list: quiet muted text with a text-button Leave, styled
+   like the performer nudge's dismiss link. */
+
+/* The always-rendered focus anchor above the Lineup section. Holding the
+   banner, its box is the banner's box, so the ring hugs the banner. Empty, it
+   has no box to ring; focus lands there only when the lineup has emptied and
+   the toast has already announced why. */
+.anchor:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.anchor:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-12);
+}
+
+.anchor:empty:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.banner {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+
+.icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+
+.banner .text {
+  flex: 1 1 220px;
+  min-width: 0;
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Pushed to the right, and onto its own line on narrow screens. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Hugs its text so the focus ring after Join wraps the line alone. The
+   padding gives the ring room; the negative inline margin keeps the text on
+   the column's edge. */
+.line {
+  width: fit-content;
+  max-width: calc(100% + 16px);
+  margin: 10px -8px 0;
+  padding: 4px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  border-radius: var(--radius-badge);
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.line .text {
+  margin: 0;
+}
+
+.line:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.line:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.leaveLink {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* A 44px hit area on touch screens without growing the 17px link. */
+@media (pointer: coarse) {
+  .leaveLink::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}
+
+@media (hover: hover) {
+  .leaveLink:hover {
+    color: var(--ink);
+  }
+}
+
+.leaveLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}

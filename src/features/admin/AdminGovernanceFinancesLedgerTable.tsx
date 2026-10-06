@@ -1,12 +1,13 @@
 import { FiPlus } from "react-icons/fi";
-import { Button, Toggle } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { FinanceSourceBadge } from "./FinanceSourceBadge";
-import { AmountInput } from "./AdminGovernanceFinancesEditCells";
-import { lossClass, rowClass } from "./adminGovernanceFinancesEditRow";
 import {
-  isLineChanged,
+  LedgerRow,
+  type LedgerColumns,
+} from "./AdminGovernanceFinancesLedgerRow";
+import { lossClass } from "./adminGovernanceFinancesEditRow";
+import {
   parseNumber,
   sumEnabledLines,
   type LineDraft,
@@ -17,7 +18,8 @@ import styles from "./AdminGovernanceFinancesEdit.module.css";
 /** One ledger (income or spending) as a table: a row per line with its
  *  visibility switch, name, provenance, stored amount, new amount and note.
  *  PRD-447: the name is editable and "Add a line" appends a row, so a newly
- *  opened quarter can be filled in with no SQL. */
+ *  opened quarter can be filled in with no SQL. With `hasBreakdown` (the
+ *  spending ledger) each line can also be split into items. */
 export function LedgerTable({
   titleKey,
   lines,
@@ -25,6 +27,7 @@ export function LedgerTable({
   onChange,
   onAdd,
   isSpending = false,
+  hasBreakdown = false,
 }: {
   titleKey: string;
   lines: LineDraft[];
@@ -33,17 +36,26 @@ export function LedgerTable({
   onAdd: () => void;
   /** The spending ledger: every amount reads in red. */
   isSpending?: boolean;
+  /** Each line gets a "Breakdown" item editor. */
+  hasBreakdown?: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const shownCount = lines.filter((line) => line.enabled).length;
+  // Whole euros read without decimals, the same as a line's breakdown sum.
+  const formatEuros = (value: number): string =>
+    fmt.currency(
+      value,
+      "EUR",
+      Number.isInteger(value) ? { maximumFractionDigits: 0 } : undefined,
+    );
   // Stored amounts are pre-formatted strings ("€1,840" from the seed, "23150"
   // from demo mode); show them in the reader's locale when they parse.
   const formatStored = (amount: string): string => {
     const parsed = parseNumber(amount);
-    return parsed === undefined ? amount : fmt.currency(parsed, "EUR");
+    return parsed === undefined ? amount : formatEuros(parsed);
   };
-  const columns = {
+  const columns: LedgerColumns = {
     shown: t("admin:governance.finances.edit.col.shown"),
     line: t("admin:governance.finances.edit.col.line"),
     source: t("admin:governance.finances.edit.col.source"),
@@ -81,101 +93,28 @@ export function LedgerTable({
               </th>
             </tr>
           </thead>
-          <tbody>
-            {lines.map((line, index) => {
-              const source = original[index];
-              const isChanged = source ? isLineChanged(line, source) : true;
-              // Names every control on the row for assistive tech, including
-              // a just-added row that has no name yet.
-              const rowName =
-                line.label.trim() ||
-                t("admin:governance.finances.edit.field.newLine", {
-                  position: index + 1,
-                });
-              return (
-                <tr key={index} className={rowClass(isChanged, !line.enabled)}>
-                  <td data-label={columns.shown} className={styles.colShown}>
-                    <Toggle
-                      checked={line.enabled}
-                      onChange={(enabled) => onChange(index, { enabled })}
-                      label={t(
-                        "admin:governance.finances.edit.field.lineEnabled",
-                        { label: rowName },
-                      )}
-                    />
-                  </td>
-                  <th scope="row" data-label={columns.line}>
-                    <input
-                      type="text"
-                      className={styles.noteInput}
-                      aria-label={t(
-                        "admin:governance.finances.edit.aria.lineName",
-                        { position: index + 1 },
-                      )}
-                      aria-invalid={!line.label.trim() || undefined}
-                      value={line.label}
-                      maxLength={80}
-                      onChange={(event) =>
-                        onChange(index, { label: event.target.value })
-                      }
-                    />
-                    {!line.enabled && (
-                      <span className={styles.rowHint}>
-                        {t(
-                          "admin:governance.finances.edit.field.lineDisabledHint",
-                        )}
-                      </span>
-                    )}
-                  </th>
-                  <td data-label={columns.source}>
-                    <FinanceSourceBadge source={source?.source ?? "manual"} />
-                  </td>
-                  <td
-                    data-label={columns.current}
-                    className={lossClass(styles.colNumber, isSpending)}
-                  >
-                    {source ? formatStored(source.amount) : ""}
-                  </td>
-                  <td data-label={columns.newAmount}>
-                    <AmountInput
-                      ariaLabel={t(
-                        "admin:governance.finances.edit.aria.newAmount",
-                        { label: rowName },
-                      )}
-                      value={line.amount}
-                      isBlankAllowed={false}
-                      disabled={!line.enabled}
-                      unit="currency"
-                      isLoss={isSpending}
-                      onChange={(amount) => onChange(index, { amount })}
-                    />
-                  </td>
-                  <td data-label={columns.note} className={styles.colNote}>
-                    <input
-                      type="text"
-                      className={styles.noteInput}
-                      aria-label={t(
-                        "admin:governance.finances.edit.aria.note",
-                        { label: rowName },
-                      )}
-                      value={line.note}
-                      disabled={!line.enabled}
-                      onChange={(event) =>
-                        onChange(index, { note: event.target.value })
-                      }
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+          {/* Each line renders its own <tbody>, grouping it with its
+              breakdown rows. */}
+          {lines.map((line, index) => (
+            <LedgerRow
+              key={index}
+              line={line}
+              index={index}
+              source={original[index]}
+              columns={columns}
+              isSpending={isSpending}
+              hasBreakdown={hasBreakdown}
+              formatStored={formatStored}
+              onChange={(patch) => onChange(index, patch)}
+            />
+          ))}
           <tfoot>
             <tr>
               <th scope="row" colSpan={3} className={styles.footLabel}>
                 {t("admin:governance.finances.edit.foot.sumShown")}
               </th>
               <td colSpan={3} className={lossClass(styles.footSum, isSpending)}>
-                {fmt.currency(sumEnabledLines(lines), "EUR")}
+                {formatEuros(sumEnabledLines(lines))}
               </td>
             </tr>
           </tfoot>

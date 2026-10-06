@@ -219,6 +219,20 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> invited you to co-host a gathering.",
   "type.event_cohost_invite.meta": "Co-host invitation",
 
+  "type.event_lineup_invite.text":
+    "You've been invited to a gathering's lineup.",
+  "type.event_lineup_invite.textNamed":
+    "<profile>{name}</profile> invited you to a gathering's lineup.",
+  "type.event_lineup_invite.meta": "Lineup invitation",
+  "type.event_lineup_accepted.text": "Someone joined your gathering's lineup.",
+  "type.event_lineup_accepted.textNamed":
+    "<profile>{name}</profile> joined your gathering's lineup.",
+  "type.event_lineup_accepted.meta": "Lineup",
+  "type.event_lineup_declined.text": "Someone declined your lineup invite.",
+  "type.event_lineup_declined.textNamed":
+    "<profile>{name}</profile> declined your lineup invite.",
+  "type.event_lineup_declined.meta": "Lineup",
+
   // PRD-18. Reaches members who saved a gathering or said maybe, never anyone
   // who already holds a seat. Pluralised on `count`, mirrored from the
   // payload's `seatsRemaining`.

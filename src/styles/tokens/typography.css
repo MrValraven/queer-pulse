@@ -19,6 +19,16 @@
   --text-display: clamp(2.125rem, 4.4vw, 3.625rem); /* 34 → 58px */
   --text-title: clamp(1.75rem, 3.5vw, 2.875rem); /* 28 → 46px */
   --text-heading: clamp(1.375rem, 2.4vw, 2rem); /* 22 → 32px */
+  /* A poster title sized by its own copy column. The middle term is `cqi`, so
+     the element using it must sit inside an inline-size container: the Events
+     "Next up" hero's copy column is one. 30 → 46px, and it stays clear of the
+     22px section headings around it at every width. */
+  --text-poster-title: clamp(1.875rem, 11cqi, 2.875rem);
+  /* The same poster title while the hero is stacked under its cover. The copy
+     column is then the full card width, where 11cqi would hit the 46px cap
+     and a long title would push the call to action off the first screen, so
+     it stops at 36px. */
+  --text-poster-title-stacked: min(var(--text-poster-title), var(--text-36));
 
   /* The role names (--text-body, --text-caption, --text-label, --text-eyebrow,
      --text-subhead) are defined ONCE, at the bottom of this file, where they

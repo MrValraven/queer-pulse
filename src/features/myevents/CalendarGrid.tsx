@@ -5,7 +5,7 @@ import { useFormat, type Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import { useMyEvents } from "./MyEventsContext";
 import { eventDays, isInMonth, ymd, dotClass } from "./myEvents.helpers";
-import { TODAY } from "./myEvents.data";
+import { clockToday } from "./myEvents.clock";
 import type { MyEvent } from "./myEvents.types";
 
 /** Mon–Sun short weekday labels for the month grid's header row, localized. */
@@ -53,13 +53,14 @@ function CalendarYearView({
   jumpMonth: (m: number) => void;
 }) {
   const gridRef = useRef<HTMLDivElement>(null);
+  const today = clockToday();
   return (
     <div className={sx("cal-grid cal-year")} ref={gridRef}>
       {Array.from({ length: 12 }, (_, m) => {
         // Every month the gathering touches, so one that runs across a month
         // boundary marks both rather than only the one it opened in.
         const evs = events.filter((event) => isInMonth(event, viewY, m));
-        const now = viewY === TODAY.getFullYear() && m === TODAY.getMonth();
+        const now = viewY === today.getFullYear() && m === today.getMonth();
         const name = fmt.date(new Date(viewY, m, 1), { month: "short" });
         return (
           <button
@@ -98,6 +99,7 @@ function CalendarWeekView({
   selectDay: (ds: string) => void;
 }) {
   const gridRef = useRef<HTMLDivElement>(null);
+  const todayTime = clockToday().getTime();
   const days = Array.from({ length: 7 }, (_, i) => {
     const dt = new Date(weekStart);
     dt.setDate(dt.getDate() + i);
@@ -108,7 +110,7 @@ function CalendarWeekView({
       {days.map((dt) => {
         const ds = ymd(dt);
         const evs = byDate[ds] || [];
-        const isTd = dt.getTime() === TODAY.getTime();
+        const isTd = dt.getTime() === todayTime;
         const inner = (
           <>
             <div className={sx("cw-date")}>
@@ -200,6 +202,7 @@ function CalendarMonthView({
     });
   };
 
+  const todayTime = clockToday().getTime();
   const first = new Date(viewY, viewM, 1);
   const startOffset = (first.getDay() + 6) % 7;
   const days = new Date(viewY, viewM + 1, 0).getDate();
@@ -223,12 +226,12 @@ function CalendarMonthView({
         {cells.map((dn, i) => {
           if (dn === null)
             return (
-              <div key={`e${i}`} className={sx("cal-cell empty")} aria-hidden />
+              <div key={`e${i}`} className={sx("cal-cell blank")} aria-hidden />
             );
           const ds = `${viewY}-${String(viewM + 1).padStart(2, "0")}-${String(dn).padStart(2, "0")}`;
           const dt = new Date(viewY, viewM, dn);
           const evs = byDate[ds] || [];
-          const isTd = dt.getTime() === TODAY.getTime();
+          const isTd = dt.getTime() === todayTime;
           const sel = selectedDate === ds;
           const dayLabel = fmt.date(dt, {
             day: "numeric",

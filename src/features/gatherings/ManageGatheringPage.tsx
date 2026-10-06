@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCalendar } from "react-icons/fi";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useShareLink } from "../../shared/hooks/useClipboard";
@@ -39,6 +39,10 @@ import { useEvent } from "./api/useEvent";
 import { useAttendees } from "./api/useAttendees";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
 import { dateToDatetimeValue } from "./manageGatheringDates";
+import {
+  MANAGE_GATHERING_TAB_PARAM,
+  manageGatheringTabFromParam,
+} from "./gatheringPaths";
 import { useCancelGatheringFlow } from "./useCancelGatheringFlow";
 import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
 import { useManageGatheringState } from "./useManageGatheringState";
@@ -148,6 +152,13 @@ function ManageGatheringMain({
   const { t } = useTranslation();
   const fmt = useFormat();
   const navigate = useNavigate();
+  // `?tab=attendees` (a lineup reply notification) opens that tab, also when
+  // it arrives while mounted (the tabs remount on it); other values open the
+  // default.
+  const [searchParams] = useSearchParams();
+  const initialTab = manageGatheringTabFromParam(
+    searchParams.get(MANAGE_GATHERING_TAB_PARAM),
+  );
   // The share card's Copy button writes the real public link to the clipboard
   // — it used to only raise the "Link copied!" toast without copying anything.
   const { share } = useShareLink({
@@ -242,6 +253,8 @@ function ManageGatheringMain({
 
           <div className={styles.layout}>
             <ManageGatheringTabs
+              key={initialTab ?? "default"}
+              initialTab={initialTab}
               slug={slug}
               onCancel={cancelGathering}
               onDelete={requestDelete}
@@ -272,6 +285,7 @@ function ManageGatheringMain({
                 updateEvent.mutate({
                   venue: selection.text,
                   listingId: selection.listingId,
+                  ...(selection.address ? { address: selection.address } : {}),
                 });
               }}
               onUpdateDescription={(value) => {

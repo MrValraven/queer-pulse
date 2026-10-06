@@ -90,8 +90,8 @@ export function useCommunityUpcomingGatherings(
           endAt: gathering.endAt,
           venue: gathering.venue,
           isOnline: gathering.isOnline,
-          // The pulse lane's count is never null; this one is, and null means
-          // the host turned the attendee count off. Both null and zero read as
+          // Null means the host turned the attendee count off, on this lane
+          // and on the pulse lane alike. Both null and zero read as
           // "open to all" rather than as "0 going", which would be a number
           // this response deliberately does not carry.
           goingCount: gathering.goingCount ?? 0,

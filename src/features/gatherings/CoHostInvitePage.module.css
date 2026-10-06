@@ -147,6 +147,8 @@
   grid-template-columns: auto 1fr;
   gap: 22px;
   align-items: center;
+}
+.eventHWithNote {
   padding-bottom: 18px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
@@ -154,7 +156,7 @@
   width: 78px;
   text-align: center;
 }
-.eventDate .d {
+.eventDate .dateDay {
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-44);
@@ -162,7 +164,7 @@
   letter-spacing: -0.02em;
   line-height: 0.95;
 }
-.eventDate .m {
+.eventDate .dateMonth {
   font-size: var(--text-11);
   letter-spacing: 0.14em;
   text-transform: uppercase;

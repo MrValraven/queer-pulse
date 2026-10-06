@@ -108,8 +108,8 @@ export function myEventWhen(
  * Its own function because it runs on every card in the list. A gathering that
  * opens and closes on one stored day can carry no note, so it answers before
  * building any `Intl` formatter. Those stored days are the same ones
- * `isOnDay`, `eventDays` and `inPill` read, so the short-circuit agrees with
- * the rest of the surface.
+ * `isOnDay` and `eventDays` read, so the short-circuit agrees with the rest of
+ * the surface.
  */
 export function myEventSpanNote(
   ev: MyEvent,

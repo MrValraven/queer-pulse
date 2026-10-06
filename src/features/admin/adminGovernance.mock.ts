@@ -1,3 +1,4 @@
+import type { FinLine } from "../governance/governance.data";
 import type {
   AuditEntry,
   LedgerRow,
@@ -10,7 +11,12 @@ import type {
 // out of the live bundle (live mode calls GET /admin/governance/finances and
 // GET /mod/audit instead).
 
-export const LEDGER: LedgerRow[] = [
+/** A spending row with an optional saved breakdown, so demo mode shows the
+ *  Finances editor's item breakdown out of the box. Item amounts are
+ *  canonical number strings that add up to the row's `amount`. */
+export type DemoLedgerRow = LedgerRow & { items?: FinLine["items"] };
+
+export const LEDGER: DemoLedgerRow[] = [
   {
     labelKey: "governance.ledger.moderatorHonoraria",
     demoLabel: "Moderator honoraria",
@@ -24,6 +30,12 @@ export const LEDGER: LedgerRow[] = [
     amount: 7200,
     width: 75,
     color: "plum",
+    items: [
+      { name: "Hosting", period: "€1,200/mo", amount: "3600" },
+      { name: "AI tools", period: "€600/mo", amount: "1800" },
+      { name: "Database hosting", period: "€480/mo", amount: "1440" },
+      { name: "Domain and email", period: "€120/mo", amount: "360" },
+    ],
   },
   {
     labelKey: "governance.ledger.mutualAid",
@@ -45,6 +57,11 @@ export const LEDGER: LedgerRow[] = [
     amount: 2400,
     width: 25,
     color: "amber",
+    items: [
+      { name: "Writer fees", period: "6 pieces", amount: "1500" },
+      { name: "Illustration", period: "", amount: "600" },
+      { name: "Print run", period: "Summer zine", amount: "300" },
+    ],
   },
 ];
 

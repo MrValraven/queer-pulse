@@ -61,6 +61,10 @@ export const eventKeys = {
   lineupRoot: ["event-lineup"] as const,
   lineup: (slug: string | undefined, demoMode: boolean) =>
     ["event-lineup", slug, demoMode] as const,
+  /** Prefix matching every lineup-invite query (any id, any mode). */
+  lineupInviteRoot: ["lineup-invite"] as const,
+  lineupInvite: (id: string | undefined, demoMode: boolean) =>
+    ["lineup-invite", id, demoMode] as const,
 
   /** Prefix matching every cohost-invite query (any id, any mode). */
   cohostInviteRoot: ["cohost-invite"] as const,

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { scoreUrl, type MarketingVideo } from "./marketingVideos.data";
+import { filmUrl, scoreUrl, type MarketingVideo } from "./marketingVideos.data";
 import {
   EncoderUnavailableError,
   renderFilm,
@@ -82,6 +82,7 @@ export function useFilmRender(video: MarketingVideo) {
           stream = await requestTabShare();
           const film = await renderFilm({
             id: video.id,
+            filmUrl: filmUrl(video.id),
             scoreUrl: scoreUrl(video.id),
             stream,
             stage,

@@ -844,7 +844,9 @@ export interface CommunityPulseEventDTO {
   startAt: string;
   venue: string | null;
   isOnline: boolean;
-  goingCount: number;
+  /** `null` when the host turned "Show attendee count" off and the viewer is
+   *  not the host. Render no figure for it. */
+  goingCount: number | null;
 }
 
 export interface CommunityPulseAuthorDTO {

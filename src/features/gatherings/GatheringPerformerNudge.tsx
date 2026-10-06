@@ -19,11 +19,11 @@ import styles from "./GatheringPerformerNudge.module.css";
  * (`GatheringRecapPage` is 100% demo-mock with no real slug or backend
  * counterpart, so it can't host a live nudge; see the Task 5 build notes.)
  *
- * Fires only when ALL of: the viewer is on the host-tagged lineup
- * (`viewerEntry`), the event has ended, their lineup role maps to a
- * recognised persona craft (`lineupRoleToKind`), they don't already run a
- * persona of that craft, and the shared dismissal store hasn't
- * dismissed/capped `post_gathering`.
+ * Fires only when ALL of: the viewer is a member who accepted their lineup
+ * invite (`viewerEntry` with status `accepted`), the event has ended, their
+ * lineup role maps to a recognised persona craft (`lineupRoleToKind`), they
+ * don't already run a persona of that craft, and the shared dismissal store
+ * hasn't dismissed/capped `post_gathering`.
  *
  * v1 scope: accepting only pre-fills the craft on persona creation
  * (`?create=1&kind=`) — linking the gathering itself as a `role:"performing"`
@@ -45,9 +45,10 @@ export function GatheringPerformerNudge({
     enabled: demoMode || activeSession,
   });
 
-  if (!lineup?.viewerEntry) return null;
+  const viewerEntry = lineup?.viewerEntry;
+  if (!viewerEntry || viewerEntry.status !== "accepted") return null;
   if (!gatheringHasEnded(gathering)) return null;
-  const kind = lineupRoleToKind(lineup.viewerEntry.role);
+  const kind = lineupRoleToKind(viewerEntry.role);
   if (!kind) return null;
   if ((personas ?? []).some((persona) => persona.kind === kind)) return null;
   if (isDismissed("post_gathering") || isCapped) return null;
@@ -58,7 +59,7 @@ export function GatheringPerformerNudge({
       <div className={styles.body}>
         <p className={styles.text}>
           {t("gatherings:performerNudge.body", {
-            name: lineup.viewerEntry.name,
+            name: viewerEntry.name,
             craft: t(KIND_LABEL_KEYS[kind]),
           })}
         </p>

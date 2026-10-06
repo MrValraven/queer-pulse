@@ -49,8 +49,10 @@ interface EventsPageVM {
  * appends each page, stopping once the loaded count reaches the server `total`.
  *
  * The `filter` maps the EventsPage / My-Events tabs onto the backend's
- * upcoming|going|hosting|waitlisted|past|saved dimension. In demo mode the
- * filter is ignored (the page's own category chips do the client-side split).
+ * upcoming|going|hosting|waitlisted|past|saved dimension. In demo mode only
+ * `upcoming` and `past` are applied (see `filterDemoEvents`); the others
+ * return the whole registry, since a demo row carries no RSVP, host or
+ * bookmark standing to split on.
  */
 export function useEvents(
   params: { filter?: EventFilter; browse?: EventBrowseFilters } = {},
@@ -63,7 +65,12 @@ export function useEvents(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const items = filterDemoEvents(calendarEvents, browse);
+        const items = filterDemoEvents(
+          calendarEvents,
+          params.filter,
+          browse,
+          new Date(),
+        );
         // `total` is the FILTERED length, so `getNextPageParam` never asks the
         // synthetic single page for a page 2 that does not exist.
         return { items, total: items.length, page: 1 };
@@ -109,44 +116,77 @@ export function useEvents(
  * `hood` matches the mock's own neighbourhood string; `cost` reads the mock's
  * `ticketed` flag, which is the closest thing the registry has to a door
  * price. `family` and `type` match `gatheringFamily` and `eventType`, which
- * all 22 `calendarEvents` rows carry: each was backfilled from the
+ * every `calendarEvents` row carries: each was backfilled from the
  * `gatheringDetails` entry with the same slug, so a demo row and its detail
  * page agree, and every stored key is a real `GATHERING_FORMATS` key whose
  * family matches its row. A demo row that ever loses them drops out of a
  * family- or format-filtered board rather than leaking into it.
+ *
+ * The time `filter` is honoured the way live honours it, so the one past demo
+ * row (the June Pride Brunch, there for the create flow's "Same as last
+ * time?" strip) stays off every upcoming surface. `upcoming` keeps a row that
+ * starts on or after the start of today, which stands in for "still running"
+ * on demo rows with no end (tonight's supper club stays on the board after
+ * its doors open), and a row with an `endAt` while that end is still ahead.
+ * `past` is the complement. Every other filter value returns the registry
+ * unsplit, as before.
  */
 function filterDemoEvents(
   events: CalendarEvent[],
+  filter: EventFilter | undefined,
   browse: EventBrowseFilters | undefined,
+  now: Date,
 ): CalendarEvent[] {
-  if (!browse) return events;
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
+  const isStillAhead = (event: CalendarEvent) =>
+    event.endAt
+      ? event.endAt.getTime() > now.getTime()
+      : event.date.getTime() >= startOfToday;
+  const timed =
+    filter === "upcoming"
+      ? events.filter(isStillAhead)
+      : filter === "past"
+        ? events.filter((event) => !isStillAhead(event))
+        : events;
+  if (!browse) return timed;
+  return timed.filter((event) => matchesDemoBrowse(event, browse));
+}
+
+/** One demo row against the browse filters (date range, place, kind, cost,
+ *  free text). */
+function matchesDemoBrowse(
+  event: CalendarEvent,
+  browse: EventBrowseFilters,
+): boolean {
   const term = foldForSearch(browse.q?.trim() ?? "");
   const from = browse.from ? new Date(browse.from).getTime() : null;
   const to = browse.to ? new Date(browse.to).getTime() : null;
-  return events.filter((event) => {
-    const startedAt = event.date.getTime();
-    if (from !== null && startedAt < from) return false;
-    if (to !== null && startedAt > to) return false;
-    if (browse.hood && event.hood.toLowerCase() !== browse.hood.toLowerCase()) {
-      return false;
-    }
-    if (browse.family && event.gatheringFamily !== browse.family) return false;
-    if (
-      browse.type &&
-      (event.eventType ?? "").toLowerCase() !== browse.type.toLowerCase()
-    ) {
-      return false;
-    }
-    if (browse.cost === "free" && event.ticketed) return false;
-    if (browse.cost === "paid" && !event.ticketed) return false;
-    if (
-      term &&
-      !foldForSearch(event.title).includes(term) &&
-      !foldForSearch(event.hood).includes(term) &&
-      !foldForSearch(event.org).includes(term)
-    ) {
-      return false;
-    }
-    return true;
-  });
+  const startedAt = event.date.getTime();
+  if (from !== null && startedAt < from) return false;
+  if (to !== null && startedAt > to) return false;
+  if (browse.hood && event.hood.toLowerCase() !== browse.hood.toLowerCase()) {
+    return false;
+  }
+  if (browse.family && event.gatheringFamily !== browse.family) return false;
+  if (
+    browse.type &&
+    (event.eventType ?? "").toLowerCase() !== browse.type.toLowerCase()
+  ) {
+    return false;
+  }
+  if (browse.cost === "free" && event.ticketed) return false;
+  if (browse.cost === "paid" && !event.ticketed) return false;
+  if (
+    term &&
+    !foldForSearch(event.title).includes(term) &&
+    !foldForSearch(event.hood).includes(term) &&
+    !foldForSearch(event.org).includes(term)
+  ) {
+    return false;
+  }
+  return true;
 }

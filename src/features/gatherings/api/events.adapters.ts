@@ -79,6 +79,12 @@ function hostName(
  * a going member who declared two guests occupies three seats, so a 20-seat
  * gathering where ten people each bring a plus-one has nothing left, however
  * many rows the attendee table holds.
+ *
+ * A list card or detail whose host hid the attendee count carries
+ * `seatsTaken` and `goingCount` as null for a viewer who is not an organiser.
+ * Null reads exactly like absent: both `typeof` checks below fail, so the
+ * card says "open to all" and states no figure, and no "spots left" either,
+ * which `capacity` would turn back into a headcount.
  */
 function spotsLabel(dto: EventCardDTO): SpotsLabel {
   const seatsTaken = dto.seatsTaken ?? dto.goingCount;
@@ -150,6 +156,12 @@ export function cardToCalendarEvent(
     title: dto.title,
     hood: onlineAwareHood(dto, t),
     to: gatheringPath(dto.slug),
+    // The slug and the viewer's saved state, so a card can offer the save
+    // toggle in place without fetching the detail first.
+    slug: dto.slug,
+    ...(dto.isBookmarked !== undefined
+      ? { isBookmarked: dto.isBookmarked }
+      : {}),
     kind: dto.host ? "gathering" : "event",
     // The host's profile slug, so a surface can pick out the signed-in
     // member's own gatherings (the create wizard's clash notes). Cards carry
@@ -175,6 +187,8 @@ export function cardToCalendarEvent(
     ticketed: dto.ticketed,
     ...priceRange(dto.price),
     ...(dto.coverImageUrl ? { coverImageUrl: dto.coverImageUrl } : {}),
+    // A hidden count arrives as null and leaves `attendeeCount` unset, so the
+    // homepage's `LiveGatherings` row and every card print no going line.
     ...(typeof dto.goingCount === "number"
       ? { attendeeCount: dto.goingCount }
       : {}),
@@ -192,6 +206,10 @@ export function detailToGathering(
   // dashboard, not the public-facing card). `undefined` (an older/absent
   // field) defaults to "show", matching the backend column's own default.
   const hideCount = dto.isOrganizer !== true && dto.showAttendeeCount === false;
+  // The server sends the tallies as null under that same rule. A null is a
+  // withheld figure, so it never becomes a 0 on the view-model.
+  const isTallyWithheld =
+    hideCount || dto.goingCount === null || dto.seatsTaken === null;
   return {
     slug: dto.slug,
     // The stored format, verbatim. NOT a label: the detail page runs it
@@ -259,12 +277,14 @@ export function detailToGathering(
     cost: dto.cost ?? null,
     isFree: dto.isFree ?? true,
     announcements: dto.announcements ?? [],
-    seatsTaken: dto.seatsTaken ?? dto.goingCount ?? 0,
-    // Withheld under the same `hideCount` rule as the `spots` line above
-    // (ENG-140), so no consumer of this view-model can render a head count the
-    // host has chosen to keep private — the wire still carries `goingCount`
-    // on the summary, and this is where that stops mattering to the UI.
-    goingCount: hideCount ? undefined : (dto.goingCount ?? 0),
+    // Both withheld under the same rule as the `spots` line above (ENG-140),
+    // so no consumer of this view-model can render a head count the host has
+    // chosen to keep private. The server already sends them as null to such
+    // a viewer; this keeps an older payload from leaking them either.
+    seatsTaken: isTallyWithheld
+      ? undefined
+      : (dto.seatsTaken ?? dto.goingCount ?? 0),
+    goingCount: isTallyWithheld ? undefined : (dto.goingCount ?? 0),
     // The gathering has been called off (PRD-181). Without this the detail
     // page rendered a live-looking RSVP button that the server answered 400.
     ...(dto.status === "cancelled" ? { cancelled: true } : {}),

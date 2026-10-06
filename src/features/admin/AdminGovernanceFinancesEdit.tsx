@@ -12,6 +12,7 @@ import {
   countChanges,
   emptyLineDraft,
   hasBlankLineLabel,
+  hasRejectedBreakdownItem,
   hasRejectedLineAmount,
   isAmountRejected,
   parseNumber,
@@ -68,11 +69,15 @@ export function AdminGovernanceFinancesEdit({
     hasRejectedLineAmount(income) ||
     hasRejectedLineAmount(expense);
   const hasBlankLabel = hasBlankLineLabel(income) || hasBlankLineLabel(expense);
+  const hasRejectedItem =
+    hasRejectedBreakdownItem(income) || hasRejectedBreakdownItem(expense);
   const blockedMessage = hasRejectedAmount
     ? t("admin:governance.finances.edit.blockedByAmounts")
     : hasBlankLabel
       ? t("admin:governance.finances.edit.blockedByLabels")
-      : null;
+      : hasRejectedItem
+        ? t("admin:governance.finances.edit.breakdown.blocked")
+        : null;
 
   const setScalar = (key: ScalarKey, value: string): void => {
     setScalars((prev) => ({ ...prev, [key]: value }));
@@ -152,6 +157,7 @@ export function AdminGovernanceFinancesEdit({
           lines={expense}
           original={latest.expense}
           isSpending
+          hasBreakdown
           onChange={(index, patch) => patchLine(setExpense, index, patch)}
           onAdd={() => setExpense((prev) => [...prev, emptyLineDraft()])}
         />

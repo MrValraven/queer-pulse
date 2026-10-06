@@ -12,15 +12,11 @@ import {
 /**
  * Everything currently narrowing the browse board, as removable chips.
  *
- * Four of the five axes live behind the "Refine" toggle, so this row is what
- * keeps a shut drawer from hiding what is applied. Family is the exception: it
- * shows in its own open row, and it is repeated here so that "Clear all" reads
- * as dropping the whole board's narrowing rather than only the drawer's part
- * of it. Each chip removes its own axis back
- * to the neutral value the URL drops, never to nothing, which is why this
- * takes the whole state rather than a list of set keys. The search term is
- * here too even though the field shows it, so "Clear all" reads as dropping
- * everything on the row.
+ * All five axes live behind the "Refine" toggle, so this row is what keeps a
+ * shut drawer from hiding what is applied. Each chip resets its own axis to
+ * the neutral value the URL drops, which is why this takes the whole filter
+ * state. The search term is here too even though the field shows it, so
+ * "Clear all" reads as dropping everything on the row.
  *
  * A `hood`, `family` or `type` from a shared link may no longer be in the
  * vocabulary, and a `type` may be a host's own words rather than a catalog
@@ -92,13 +88,14 @@ export function useBrowseActiveFilters({
   }, [filters, onChange, t]);
 }
 
-/** How many axes the shut drawer is hiding. The search term and the family
- *  row are excluded: both read on screen beside the toggle, so counting them
- *  would double up. */
+/** How many axes the shut drawer is hiding: all five filter axes. The search
+ *  term is the one left out, since it reads in the field beside the toggle
+ *  and counting it would double up. */
 export function countHiddenBrowseFilters(filters: BrowseFilterState): number {
   return (
     (filters.when === "any" ? 0 : 1) +
     (filters.hood ? 1 : 0) +
+    (filters.family ? 1 : 0) +
     (filters.type ? 1 : 0) +
     (filters.cost === "any" ? 0 : 1)
   );

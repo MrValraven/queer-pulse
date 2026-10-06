@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { TFunction } from "../../shared/i18n/types";
-import { TODAY } from "./myEvents.data";
+import { DEMO_TODAY } from "./myEvents.data";
 import {
   conflictFor,
   endDateOf,
   eventDays,
+  hasEnded,
   inPill,
   isInMonth,
   isOnDay,
@@ -30,10 +31,12 @@ import type { MyEvent } from "./myEvents.types";
  *  the assertions about the branch taken rather than about the catalog. */
 const t: TFunction = (key: string) => key;
 
-/** `TODAY` is the dashboard's anchor (Mon 29 Jun 2026), so every fixture below
- *  is written relative to it rather than to the wall clock the suite runs on. */
+/** `DEMO_TODAY` is the dashboard's demo anchor (Mon 29 Jun 2026), and the
+ *  helpers read the demo clock when no provider has switched it, so every
+ *  fixture below is written relative to it and the suite holds on any day it
+ *  runs. */
 function dayOffsetFromToday(offset: number): string {
-  const day = new Date(TODAY);
+  const day = new Date(DEMO_TODAY);
   day.setDate(day.getDate() + offset);
   return `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
 }
@@ -88,14 +91,17 @@ describe("a festival already under way", () => {
     endDate: dayOffsetFromToday(1),
   });
 
-  it("stays in the Upcoming pill while it is still running", () => {
+  it("stays in the Upcoming pill, still running, while it is on", () => {
     expect(inPill(festival, "upcoming")).toBe(true);
     expect(inPill(festival, "going")).toBe(true);
+    expect(hasEnded(festival)).toBe(false);
   });
 
-  it("leaves the Upcoming pill only once its closing day has passed", () => {
+  it("counts as ended once its closing day has passed, keeping its pill", () => {
     const finished = { ...festival, endDate: dayOffsetFromToday(-1) };
-    expect(inPill(finished, "upcoming")).toBe(false);
+    expect(hasEnded(finished)).toBe(true);
+    // The agenda files it into the pill's trailing ended group.
+    expect(inPill(finished, "upcoming")).toBe(true);
   });
 
   it("appears in every day cell it spans", () => {
@@ -172,11 +178,10 @@ describe("a gathering with no stated end", () => {
     expect(isOnDay(openEnded, dayOffsetFromToday(1))).toBe(false);
   });
 
-  it("holds its place in the Upcoming pill for the whole of that day", () => {
+  it("ends at its start, matching gatheringHasEnded", () => {
     expect(inPill(openEnded, "upcoming")).toBe(true);
-    expect(
-      inPill({ ...openEnded, date: dayOffsetFromToday(-1) }, "upcoming"),
-    ).toBe(false);
+    expect(hasEnded(openEnded)).toBe(false);
+    expect(hasEnded({ ...openEnded, date: dayOffsetFromToday(-1) })).toBe(true);
   });
 
   it("never clashes with anything, since it occupies no interval", () => {
@@ -189,7 +194,7 @@ describe("a gathering with no stated end", () => {
   });
 
   it("reports how long until it starts rather than happening now", () => {
-    const twoHoursBefore = new Date(TODAY);
+    const twoHoursBefore = new Date(DEMO_TODAY);
     twoHoursBefore.setHours(17, 0, 0, 0);
     expect(soonLabel(openEnded, t, twoHoursBefore)).toBe(
       "myevents:soon.startsInHours",
@@ -304,7 +309,7 @@ describe("shouldShowDayOf", () => {
       start: "19:00",
       end: "21:00",
     });
-    const lateAfternoon = new Date(TODAY);
+    const lateAfternoon = new Date(DEMO_TODAY);
     lateAfternoon.setHours(16, 30, 0, 0);
     expect(shouldShowDayOf(laterToday, lateAfternoon)).toBe(true);
   });
@@ -315,7 +320,7 @@ describe("shouldShowDayOf", () => {
       date: dayOffsetFromToday(0),
       start: "19:00",
     });
-    const lateNight = new Date(TODAY);
+    const lateNight = new Date(DEMO_TODAY);
     lateNight.setHours(23, 30, 0, 0);
     expect(shouldShowDayOf(openEnded, lateNight)).toBe(true);
   });

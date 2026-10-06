@@ -1,6 +1,6 @@
 import type { MyEvent, Pill } from "./myEvents.types";
 import type { TFunction } from "../../shared/i18n/types";
-import { TODAY, NOW } from "./myEvents.data";
+import { clockNow, clockToday } from "./myEvents.clock";
 import { zonedWallTimeToUtc } from "../../shared/lib/zonedTime";
 import { MAX_GATHERING_SPAN_DAYS } from "../gatherings/createGathering.data";
 
@@ -34,9 +34,9 @@ export function daysBetween(from: Date, to: Date): number {
   );
 }
 
-/** Whole-day difference from TODAY (0 = today, >0 = future). */
+/** Whole-day difference from today (0 = today, >0 = future). */
 export function dayDiff(dt: Date): number {
-  return daysBetween(TODAY, dt);
+  return daysBetween(clockToday(), dt);
 }
 
 /**
@@ -128,7 +128,7 @@ export function atTime(ev: MyEvent, which: "start" | "end"): Date {
  *  (check in, the join link, the ticket, the day-of panel) hang off this, so a
  *  member keeps them for as long as the gathering is actually running. */
 export function isToday(ev: MyEvent): boolean {
-  return isOnDay(ev, ymd(TODAY));
+  return isOnDay(ev, ymd(clockToday()));
 }
 
 /**
@@ -158,7 +158,7 @@ export function isInMonth(
  * stated end has no known finish, so it holds the whole day exactly as it did
  * before spans existed.
  */
-export function shouldShowDayOf(ev: MyEvent, now: Date = NOW): boolean {
+export function shouldShowDayOf(ev: MyEvent, now: Date = clockNow()): boolean {
   if (!isToday(ev)) return false;
   if (!ev.end) return true;
   return atTime(ev, "end") >= now;
@@ -176,7 +176,7 @@ export function isOnline(ev: MyEvent): boolean {
 export function soonLabel(
   ev: MyEvent,
   t: TFunction,
-  now: Date = NOW,
+  now: Date = clockNow(),
 ): string | null {
   const s = atTime(ev, "start");
   const e = atTime(ev, "end");
@@ -234,23 +234,41 @@ export function conflictFor(ev: MyEvent, events: MyEvent[]): MyEvent | null {
   return null;
 }
 
-/** Whether an event belongs to a given pill bucket. */
+/**
+ * Whether the gathering is over: its end instant is behind `now`. With no
+ * stated end it ends at its start, matching `gatheringHasEnded` and `atTime`.
+ * A gathering that finished this morning counts as over all afternoon.
+ */
+export function hasEnded(ev: MyEvent, now: Date = clockNow()): boolean {
+  return atTime(ev, "end").getTime() < now.getTime();
+}
+
+/**
+ * The pills whose agenda moves ended gatherings into one trailing, greyed
+ * "Already happened" group, and whose counts leave them out.
+ */
+export const PILLS_WITH_ENDED_GROUP: ReadonlySet<Pill> = new Set<Pill>([
+  "upcoming",
+  "going",
+  "hosting",
+  "waitlisted",
+]);
+
+/**
+ * Whether an event belongs to a given pill bucket. Ended gatherings stay in
+ * their RSVP's pill: the agenda files them into its trailing ended group, and
+ * the pill counts skip them through `hasEnded`.
+ */
 export function inPill(ev: MyEvent, p: Pill): boolean {
-  // Judged on the day the gathering ENDS, so a festival that began yesterday
-  // stays in the member's upcoming list while it is still running. Day
-  // granularity on purpose: a gathering holds its place for the whole of its
-  // closing day, which is what these pills did before spans existed.
-  const isStillAhead = dayDiff(parseDate(endDateOf(ev))) >= 0;
   switch (p) {
     case "upcoming":
       return (
-        (ev.category === "going" ||
-          ev.category === "hosting" ||
-          ev.category === "waitlisted") &&
-        isStillAhead
+        ev.category === "going" ||
+        ev.category === "hosting" ||
+        ev.category === "waitlisted"
       );
     case "going":
-      return ev.category === "going" && isStillAhead;
+      return ev.category === "going";
     case "hosting":
       return ev.category === "hosting";
     case "waitlisted":
@@ -288,7 +306,7 @@ export interface YearInsights {
  * as an empty state rather than fake numbers.
  */
 export function yearInsights(events: MyEvent[]): YearInsights {
-  const year = TODAY.getFullYear();
+  const year = clockToday().getFullYear();
   const attendedEvents = events.filter(
     (ev) =>
       ev.category === "past" &&

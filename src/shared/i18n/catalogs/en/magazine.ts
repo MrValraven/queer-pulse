@@ -165,7 +165,6 @@ export const magazine: Catalog = {
   "toolbar.saveToReadingListAriaLabel": "Save to reading list",
   "toolbar.savedCta": "Saved",
   "toolbar.saveCta": "Save",
-  "toolbar.copyLinkAriaLabel": "Copy a link to this article",
   "toolbar.shareCta": "Share",
   "toolbar.savedHint": "In your list",
   "toolbar.savedToast": "Saved to your reading list",
@@ -173,6 +172,8 @@ export const magazine: Catalog = {
   "toolbar.linkCopiedToast": "Link copied to clipboard",
   "toolbar.linkCopyErrorToast": "Could not copy the link",
   "toolbar.fallbackTitle": "This article",
+  // The last line of a shared article's message, above the link.
+  "toolbar.shareMessage.byline": "By {byline}",
 
   // ── Deck reader chrome — DeckViewer, DeckControls, DeckPresentButton,
   // slide components, and the FeaturedDeck block ──────────────────────────

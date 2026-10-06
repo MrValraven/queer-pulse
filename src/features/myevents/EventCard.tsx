@@ -24,7 +24,19 @@ import {
 } from "./EventCardExtras";
 import type { MyEvent } from "./myEvents.types";
 
-export function EventCard({ ev }: { ev: MyEvent }) {
+/**
+ * One gathering on the agenda. `isEnded` marks a card in the trailing group of
+ * gatherings that are already over: it renders greyed out and drops every
+ * extra that looks ahead (the soon bar, the day-of panel, alerts and clashes,
+ * directions, calendar exports), keeping the listing, Manage and the menu.
+ */
+export function EventCard({
+  ev,
+  isEnded = false,
+}: {
+  ev: MyEvent;
+  isEnded?: boolean;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { selected, toggleSelect, removingId } = useMyEvents();
@@ -33,6 +45,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
 
   const dt = parseDate(ev.date);
   const soon = !!(
+    !isEnded &&
     isToday(ev) &&
     COMMITTED[ev.category] &&
     !ev.cancelled &&
@@ -42,7 +55,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
   const isOn = !!selected[ev.id];
 
   const cardCls = sx(
-    `ev-card ${ev.category}${ev.cancelled ? " cancelled" : ""}${soon ? " soon" : ""}${removingId === ev.id ? " removing" : ""}`,
+    `ev-card ${ev.category}${ev.cancelled ? " cancelled" : ""}${soon ? " soon" : ""}${isEnded ? " ended" : ""}${removingId === ev.id ? " removing" : ""}`,
   );
 
   return (
@@ -71,31 +84,34 @@ export function EventCard({ ev }: { ev: MyEvent }) {
       </div>
 
       <div className={sx("ev-body")}>
-        <SoonBar ev={ev} />
+        {!isEnded && <SoonBar ev={ev} />}
         <StatusBadges ev={ev} />
         <div className={sx("ev-name")}>{ev.title}</div>
-        <EventMeta ev={ev} links={ev.category !== "past"} />
+        <EventMeta ev={ev} links={ev.category !== "past" && !isEnded} />
         {showExtras && (
           <>
             <AccessRow ev={ev} />
-            <AlertStrip ev={ev} />
-            <ConflictNote ev={ev} />
+            {!isEnded && <AlertStrip ev={ev} />}
+            {!isEnded && <ConflictNote ev={ev} />}
             <EdgeNote ev={ev} />
             <SeriesLine ev={ev} />
-            {shouldShowDayOf(ev) && <DayOfPanel ev={ev} show={dayofShown} />}
+            {!isEnded && shouldShowDayOf(ev) && (
+              <DayOfPanel ev={ev} show={dayofShown} />
+            )}
           </>
         )}
         {ev.category === "going" && !ev.cancelled && <FriendsLine ev={ev} />}
         <EventFoot ev={ev} />
         <EventTools
           ev={ev}
+          isEnded={isEnded}
           dayofShown={dayofShown}
           onToggleDayof={() => setDayofShown((s) => !s)}
         />
       </div>
 
       <div className={sx("ev-side")}>
-        <EventSide ev={ev} />
+        <EventSide ev={ev} isEnded={isEnded} />
       </div>
     </div>
   );

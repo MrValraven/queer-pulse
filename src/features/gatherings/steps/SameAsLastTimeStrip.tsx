@@ -17,26 +17,37 @@ import { SERIES_DAY_FORMAT } from "./dateNotes.data";
 const SUB_LINE_SEPARATOR = " · ";
 
 /**
- * The host's most recent gathering that has already started, as a route param
+ * The host's most recent gathering that is already over, as a route param
  * `useEvent` reads (ruling F3).
  *
  * `events` is the hosting list asked for with `to=now`: the gatherings the
  * member hosts or co-hosts that started by then, newest start first, cancelled
- * ones included. The newest one that went ahead is "last time". The start is
- * checked against `nowMilliseconds` here too, so a gathering still ahead stays
- * out even from a list that arrives unbounded. A host with no started
- * gathering gets no offer.
+ * ones included. The newest one that went ahead and is over is "last time".
+ * A gathering still under way is "this time", so one with an `endAt` counts
+ * once that end has passed, and one with no stated end counts once it started
+ * before the start of today: tonight's supper club, doors already open, is not
+ * offered as the previous gathering. The check runs here too, so a gathering
+ * still ahead stays out even from a list that arrives unbounded. A host with
+ * no finished gathering gets no offer.
  */
 function lastHostedRouteParam(
   events: readonly CalendarEvent[],
   nowMilliseconds: number,
 ): string | undefined {
-  const lastStarted = events
-    .filter(
-      (event) => !event.cancelled && event.date.getTime() <= nowMilliseconds,
-    )
+  const now = new Date(nowMilliseconds);
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
+  const isOver = (event: CalendarEvent) =>
+    event.endAt
+      ? event.endAt.getTime() <= nowMilliseconds
+      : event.date.getTime() < startOfToday;
+  const lastFinished = events
+    .filter((event) => !event.cancelled && isOver(event))
     .sort((first, second) => second.date.getTime() - first.date.getTime())[0];
-  return lastStarted?.to.split("/").pop() || undefined;
+  return lastFinished?.to.split("/").pop() || undefined;
 }
 
 /** The offer itself, once the previous gathering's detail has landed. */

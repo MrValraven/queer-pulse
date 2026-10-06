@@ -305,12 +305,18 @@
 }
 /* Carried for the single commit before the first measurement lands. Also
    `fixed`, so an unplaced panel never takes flow space at the end of
-   `<body>` and lengthens the page. */
+   `<body>` and lengthens the page. Hidden through opacity: the focus effects
+   that open these panels (`Calendar`'s `autoFocusDate`, `TimeOptionsList`,
+   `RangeDatePicker` focusing its dialog) run while the panel is still in
+   this state, and an element under `visibility: hidden` refuses focus. A
+   `visibility` flip also transitions under reduced motion, which gives every
+   element a 0.01ms transition on `all`. */
 .popoverUnplaced {
   position: fixed;
   top: 0;
   right: 0;
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .popover {

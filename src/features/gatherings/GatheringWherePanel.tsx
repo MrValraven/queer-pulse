@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import {
+  FiArrowUpRight,
   FiCompass,
   FiGift,
   FiGlobe,
@@ -9,6 +11,7 @@ import {
   FiVideo,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
+import { businessPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetail } from "./data";
 import styles from "./GatheringDetailPanels.module.css";
@@ -43,8 +46,58 @@ function WhereRow({
   );
 }
 
+/** The panel's lead row: the venue, which is what most readers come here for.
+ *  The name is set large in the serif on its own line with the neighbourhood
+ *  beneath it, on a faintly accent-tinted card. When the host linked a
+ *  directory listing, the name opens that listing. */
+function WhereVenueRow({
+  label,
+  venueName,
+  neighbourhood,
+  listingSlug,
+}: {
+  label: string;
+  venueName: string;
+  neighbourhood: string;
+  listingSlug: string | null;
+}) {
+  // Whichever of the two exists leads; the neighbourhood only drops to the
+  // second line when there is a venue name above it.
+  const hasVenueName = venueName !== "";
+  const leadText = hasVenueName ? venueName : neighbourhood;
+  const secondaryText = hasVenueName ? neighbourhood : "";
+  const listingPath =
+    hasVenueName && listingSlug ? businessPath(listingSlug) : null;
+
+  return (
+    <div className={[styles.row, styles.rowFeatured].join(" ")}>
+      <span className={styles.rowIcon} aria-hidden>
+        <FiMapPin />
+      </span>
+      <span className={styles.rowText}>
+        <span className={styles.rowLabel}>{label}</span>
+        <span className={styles.venueName}>
+          {listingPath ? (
+            <Link className={styles.venueLink} to={listingPath}>
+              {leadText}
+              <FiArrowUpRight className={styles.venueLinkIcon} aria-hidden />
+            </Link>
+          ) : (
+            leadText
+          )}
+        </span>
+        {secondaryText && (
+          <span className={styles.venueHood}>{secondaryText}</span>
+        )}
+      </span>
+    </div>
+  );
+}
+
 /**
- * Where the gathering is, what it costs, and what language it runs in.
+ * Where the gathering is, what it costs, and what language it runs in. The
+ * venue is drawn as the panel's lead row, larger and accent-tinted, since it
+ * is the fact most readers open this panel for.
  *
  * ADDRESS PRIVACY. The venue name and the neighbourhood are for everybody:
  * they are what makes a gathering findable at all. The exact door is disclosed
@@ -79,9 +132,16 @@ export function GatheringWherePanel({
   // The venue and the neighbourhood are for everybody: they are what makes a
   // gathering findable at all. Prefer the linked listing's own name when the
   // host attached one, and fall back to whatever they typed.
-  const place = [gathering.venueListing?.name ?? gathering.venue, neighbourhood]
-    .filter(Boolean)
-    .join(" · ");
+  const venueName = (
+    gathering.venueListing?.name ??
+    gathering.venue ??
+    ""
+  ).trim();
+  // `hood` can fall back to the venue name in the demo registry, so a
+  // neighbourhood that only repeats the venue is dropped from the second line.
+  const venueHood =
+    neighbourhood && neighbourhood !== venueName ? neighbourhood : "";
+  const hasPlace = venueName !== "" || venueHood !== "";
 
   return (
     <section className={styles.panel}>
@@ -89,13 +149,13 @@ export function GatheringWherePanel({
         {t("gatherings:gathering.where.heading")}
       </h2>
       <div className={styles.rows}>
-        {place && (
-          <WhereRow
-            icon={FiMapPin}
+        {hasPlace && (
+          <WhereVenueRow
             label={t("gatherings:gathering.where.placeLabel")}
-          >
-            {place}
-          </WhereRow>
+            venueName={venueName}
+            neighbourhood={venueHood}
+            listingSlug={gathering.venueListing?.slug ?? null}
+          />
         )}
 
         {isOnline ? (
@@ -105,7 +165,7 @@ export function GatheringWherePanel({
               label={t("gatherings:gathering.where.joinLinkLabel")}
             >
               {/* An external video room, so it opens in a new tab and carries
-                  `noreferrer` — the host's meeting URL should not learn which
+                  `noreferrer`: the host's meeting URL should not learn which
                   QueerPulse page an attendee came from. */}
               <a
                 className={styles.joinLink}

@@ -13,7 +13,7 @@ export type ShareTextForm = Pick<
 const DETAIL_SEPARATOR = " · ";
 
 /** The neighbourhood as a reader sees it; empty for "Other in Lisbon". */
-function hoodDisplayName(hood: string, t: TFunction): string {
+export function hoodDisplayName(hood: string, t: TFunction): string {
   const labelKey = hoodLabelKey(hood);
   if (!labelKey) return hood.trim();
   return labelKey === GENERIC_HOOD_LABEL_KEY ? "" : t(labelKey);

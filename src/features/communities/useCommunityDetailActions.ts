@@ -15,7 +15,7 @@ import { useDeclineCommunityInvite } from "./api/useCommunityInvites";
 
 /**
  * Everything the community detail page can DO, and the confirm-dialog state
- * each destructive action sits behind: save, share, join, leave, withdraw a
+ * each destructive action sits behind: save, join, leave, withdraw a
  * pending request (PRD-148) and decline a standing invitation (PRD-140).
  *
  * Split out of `useCommunityDetailState` so both stay under the repo's
@@ -168,36 +168,9 @@ export function useCommunityDetailActions({
     );
   };
 
-  // Share this community: the native share sheet on devices that support it
-  // (mobile), else copy the link to the clipboard and confirm with a toast.
-  const onShare = async () => {
-    if (!community) return;
-    const url = `${window.location.origin}${communityPath(slug ?? "")}`;
-    const shareData = {
-      title: community.name,
-      text: community.description,
-      url,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        // The member dismissed the share sheet. Not an error, so stay silent.
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t("communities:detail.share.copiedToast"), "success");
-    } catch {
-      showToast(t("communities:common.error"), "error");
-    }
-  };
-
   return {
     saved,
     onToggleSave,
-    onShare,
     onJoined,
     onRequested,
     performLeave,

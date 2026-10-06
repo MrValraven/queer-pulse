@@ -262,12 +262,22 @@
   border-color: var(--line-strong);
   box-shadow: var(--ring-plum-soft);
 }
+/* The base `outline: none` above would leave keyboard focus invisible on the
+   dark surface, so restate the repo focus ring (tokens/effects.css). */
+.amountInput:focus-visible,
+.noteInput:focus-visible,
+.reason:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
 .amountInput:disabled,
 .noteInput:disabled {
   background: var(--paper);
   cursor: not-allowed;
 }
-.amountInput[aria-invalid="true"] {
+.amountInput[aria-invalid="true"],
+.noteInput[aria-invalid="true"] {
   border-color: var(--accent-text);
 }
 .cellError {
@@ -301,6 +311,114 @@
   min-height: 72px;
   line-height: 1.5;
   resize: vertical;
+}
+
+/* ── Breakdown (spending lines) ──────────────────────────────────────────── */
+/* A quiet text control under the line's name. It is a ghost <Button>, so the
+   selectors carry extra weight to outrank the shared ghost styles, the
+   dark-theme ghost hover included. */
+.tableLedger tbody .breakdownToggle {
+  min-height: 24px;
+  margin-top: 2px;
+  /* Equal to the inline padding, so the text lines up with the name input. */
+  margin-inline-start: -8px;
+  padding: 2px 8px;
+  gap: 6px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+/* The line holds an item the save refuses: the toggle takes the colour of an
+   invalid input's border, so the line stays findable while collapsed. */
+.tableLedger tbody .breakdownToggleRejected {
+  color: var(--accent-text);
+}
+@media (hover: hover) {
+  .tableLedger tbody .breakdownToggle:hover:not(:disabled) {
+    border-color: transparent;
+    background: transparent;
+    color: var(--ink);
+    transform: none;
+  }
+  .tableLedger tbody .breakdownToggleRejected:hover:not(:disabled) {
+    color: var(--accent-text);
+  }
+}
+@media (pointer: coarse) {
+  .tableLedger tbody .breakdownToggle,
+  .tableLedger tbody .breakdownAdd {
+    min-height: 44px;
+  }
+}
+.breakdownChevron {
+  transition: transform 0.22s var(--ease);
+}
+.breakdownChevronOpen {
+  transform: rotate(180deg);
+}
+/* A line with items: its sum stands where the amount input would, on the
+   same text edge as the inputs above and below it. */
+.breakdownSum {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: end;
+}
+.breakdownSumValue {
+  padding-inline-end: 13.5px;
+  font-size: var(--text-15);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+/* How an item amount like "12.345" is read, under its input's text edge. */
+/* Ends on the amount input's text edge (its padding plus border), clear of
+   the focus ring above it. */
+.breakdownReadsAs {
+  margin-top: 6px;
+  padding-inline-end: 13.5px;
+  text-align: end;
+}
+/* The item rows sit in the ledger's own columns: name under Line, detail
+   across Source and Current, amount under New amount, remove under Note.
+   The [hidden] rule outranks the phone card grid. */
+.table tbody tr.breakdownRow[hidden] {
+  display: none;
+}
+.table tbody .breakdownRow > th,
+.table tbody .breakdownRow > td {
+  padding-block: 6px;
+  vertical-align: top;
+  border-bottom: 0;
+  background: rgba(var(--plum-rgb), 0.03);
+}
+.table tbody .breakdownCaption > td {
+  padding-block: 12px 2px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.table tbody .breakdownCaption > .breakdownCaptionAmount {
+  text-align: end;
+}
+/* The closing row draws the line group's bottom rule. */
+.table tbody .breakdownFoot > td {
+  padding-block: 6px 12px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.breakdownFootBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.breakdownHint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
@@ -431,6 +549,97 @@
   .rowChanged > :first-child {
     box-shadow: none;
   }
+  /* Ledger: each line's <tbody> is the card, so its breakdown rows read as
+     the lower half of the line above them. */
+  .tableLedger tbody.lineGroup {
+    margin-bottom: 10px;
+    border: 1px solid rgba(var(--line-rgb), 0.1);
+    border-radius: var(--radius-12);
+    background: var(--paper);
+  }
+  .tableLedger tbody.lineGroupChanged {
+    border-color: rgba(var(--accent-rgb), 0.55);
+    background: rgba(var(--accent-rgb), 0.06);
+  }
+  .tableLedger .lineGroup > tr,
+  .tableLedger .lineGroup > tr.rowChanged {
+    margin-bottom: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .tableLedger .lineGroup > tr.breakdownRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+    gap: 8px 14px;
+    padding: 12px 14px;
+  }
+  /* A hairline under the line itself, then one between items. */
+  .tableLedger .lineGroup > tr:first-child + tr,
+  .tableLedger .lineGroup > tr.breakdownItem + tr.breakdownItem {
+    border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  }
+  .tableLedger .lineGroup > tr.breakdownCaption {
+    padding-bottom: 0;
+  }
+  .tableLedger .lineGroup > tr.breakdownFoot {
+    padding-top: 4px;
+    padding-bottom: 14px;
+  }
+  .table tbody .breakdownRow > th,
+  .table tbody .breakdownRow > td,
+  .table tbody .breakdownCaption > td,
+  .table tbody .breakdownFoot > td {
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  /* Phone keeps the Detail / Amount captions; the name input spans the card. */
+  .tableLedger .breakdownRow > .breakdownSpacer,
+  .tableLedger .breakdownRow > .breakdownCaptionName {
+    display: none;
+  }
+  .tableLedger .breakdownRow > .breakdownNameCell,
+  .tableLedger .breakdownRow > .breakdownFootCell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  /* The breakdown toggle moves to the foot of the line's card, right above
+     the items it opens; a reserved last grid row holds its place. In the
+     DOM it stays under the name, ahead of the item rows. */
+  .tableLedger .lineGroup > tr.lineRowWithToggle {
+    position: relative;
+  }
+  .tableLedger .lineGroup > tr.lineRowWithToggle::after {
+    content: "";
+    grid-column: 1 / -1;
+    height: 24px;
+  }
+  .tableLedger tbody .breakdownToggle {
+    position: absolute;
+    bottom: 14px;
+    inset-inline-start: 14px;
+    margin-top: 0;
+  }
+  /* A newly focused field keeps clear of the dialog's sticky footer. */
+  .body input,
+  .body button {
+    scroll-margin-bottom: var(--section-y-96);
+  }
+  .breakdownSum {
+    align-items: flex-start;
+    text-align: start;
+  }
+  .breakdownSumValue {
+    padding-inline-end: 0;
+  }
+  :global([data-theme="dark"]) .tableLedger tbody.lineGroupChanged {
+    background: rgba(var(--accent-rgb), 0.12);
+  }
+  :global([data-theme="dark"]) .tableLedger .lineGroup > tr.rowChanged,
+  :global([data-theme="dark"]) .tableLedger .lineGroup .breakdownRow > th,
+  :global([data-theme="dark"]) .tableLedger .lineGroup .breakdownRow > td {
+    background: transparent;
+  }
   .table tfoot tr {
     display: flex;
     flex-wrap: wrap;
@@ -463,10 +672,19 @@
   }
 }
 
+/* A phone with touch: the toggle's reserved row matches its 44px target. */
+@media (max-width: 719.98px) and (pointer: coarse) {
+  .tableLedger .lineGroup > tr.lineRowWithToggle::after {
+    height: 44px;
+  }
+}
+
 /* ── Dark theme ──────────────────────────────────────────────────────────
    --plum-rgb does not flip, so a plum tint vanishes on the dark surface;
    the cream channel gives the same "slightly lifted" read. */
 :global([data-theme="dark"]) .rowComputed,
+:global([data-theme="dark"]) .table tbody .breakdownRow th,
+:global([data-theme="dark"]) .table tbody .breakdownRow td,
 :global([data-theme="dark"]) .table tfoot th,
 :global([data-theme="dark"]) .table tfoot td,
 :global([data-theme="dark"]) .table tfoot tr {

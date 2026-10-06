@@ -3,6 +3,7 @@ import {
   useLayoutEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import { DisplayModeContext } from "./displayModeContext";
@@ -16,12 +17,23 @@ const INSTALLED_KEY = "qp-installed";
  * `fullscreen` counts as installed; `minimal-ui` deliberately does not — it
  * still renders browser chrome, so a bottom tab bar there would stack against
  * the browser's own toolbar, which is the cramped look we're avoiding.
+ * An element shown full screen (a film preview, the render studio) also
+ * matches `fullscreen`, so the provider holds its earlier answer until it ends.
  */
 const STANDALONE_QUERY =
   "(display-mode: standalone), (display-mode: fullscreen)";
 
 /** A positive "we are in a browser tab" signal, distinct from "query unsupported". */
 const BROWSER_QUERY = "(display-mode: browser)";
+
+function subscribeToFullscreen(onChange: () => void): () => void {
+  document.addEventListener("fullscreenchange", onChange);
+  return () => document.removeEventListener("fullscreenchange", onChange);
+}
+
+function readIsElementFullscreen(): boolean {
+  return document.fullscreenElement != null;
+}
 
 /** iOS Safari's non-standard home-screen flag. Fixed for the session. */
 function readIosStandalone(): boolean {
@@ -80,8 +92,31 @@ export function DisplayModeProvider({ children }: { children: ReactNode }) {
     setStickyInstalled(false);
   }, [matchesBrowserQuery]);
 
-  const isInstalled =
+  const isInstalledBySignals =
     matchesStandaloneQuery || iosStandalone || stickyInstalled;
+
+  // While an element is full screen (requestFullscreen), the display-mode
+  // queries describe that element's presentation while the way the app was
+  // launched stays the same. Hold the answer from before it went full screen
+  // until it leaves. Read through useSyncExternalStore so a query change and
+  // the full-screen element land in the same render, whichever event fires
+  // first.
+  const isElementFullscreen = useSyncExternalStore(
+    subscribeToFullscreen,
+    readIsElementFullscreen,
+    () => false,
+  );
+  const [wasInstalledOutsideFullscreen, setWasInstalledOutsideFullscreen] =
+    useState(isInstalledBySignals);
+  if (
+    !isElementFullscreen &&
+    wasInstalledOutsideFullscreen !== isInstalledBySignals
+  )
+    setWasInstalledOutsideFullscreen(isInstalledBySignals);
+
+  const isInstalled = isElementFullscreen
+    ? wasInstalledOutsideFullscreen
+    : isInstalledBySignals;
 
   // `useLayoutEffect`, not `useEffect`: index.html's installed-app boot cover
   // hides #root for as long as this attribute is missing, and an ordinary

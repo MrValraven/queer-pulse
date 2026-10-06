@@ -1,0 +1,109 @@
+/* The shared Share menu. The default trigger is a shared <IconButton>, so it
+   carries no styles of its own here; the menu matches `GatheringHostMenu`
+   (paper, hairline, e3 shadow, 44px items) so a toolbar holding both reads as
+   one family. */
+
+.trigger {
+  display: inline-flex;
+  flex: none;
+}
+.triggerOpen {
+  composes: trigger;
+}
+/* A custom trigger keeps the layout its caller gave it: this wrapper only
+   carries the open state down to a tooltip inside. */
+.triggerSlot {
+  display: contents;
+}
+.triggerSlotOpen {
+  composes: triggerSlot;
+}
+/* The trigger's tooltip drops below it, where the menu opens. */
+.triggerOpen [role="tooltip"],
+.triggerSlotOpen [role="tooltip"] {
+  visibility: hidden;
+}
+
+/* Portalled to `document.body` and placed by `useAnchoredPopover`, so
+   `position` and the offsets come from that hook's inline style. */
+.menu {
+  position: fixed;
+  z-index: var(--z-popover-portal);
+  min-width: 220px;
+  max-width: calc(100vw - 2 * var(--gap-sm));
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
+  transform-origin: top right;
+  animation: qpMenuIn var(--dur-fast) var(--ease);
+}
+/* Opened upward for lack of room below, so it grows from its bottom edge. */
+.menuFlipped {
+  composes: menu;
+  transform-origin: bottom right;
+}
+
+/* Carried for the single commit before the first measurement lands, `fixed`
+   so an unplaced menu never takes flow space at the end of `<body>`. Hidden
+   through opacity: reduced motion gives every element a 0.01ms transition on
+   `all`, so a `visibility` flip would still read as hidden, to the menu and
+   to each item inheriting it, when the first item asks for focus. */
+.menuUnplaced {
+  composes: menu;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-13);
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.itemIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--ink-60);
+}
+.itemIcon svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+
+/* Local copy of the shared keyframe in src/styles/tokens/effects.css. CSS
+   Modules hashes every animation name it sees here, so a keyframe used from a
+   module has to be declared in that module (see Select.module.css). */
+@keyframes qpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

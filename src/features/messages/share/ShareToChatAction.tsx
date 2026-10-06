@@ -19,11 +19,10 @@ export interface ShareToChatActionProps {
  * Self-contained "Send in a message" drop-in (PRD-347): a trigger button plus
  * the picker modal it opens, owning its own open/close state like every other
  * modal-holding component in the app. Hidden outright for a signed-out
- * visitor: there's no inbox to pick a thread from. For a surface whose
- * action row already has its own bespoke button markup (e.g. `ArticleToolbar`,
- * `DirectoryActionBar`), wire `useShareToChat` + `ShareToChatModal` directly
- * instead so the trigger matches that row's own idiom; this component is for
- * surfaces happy with an ordinary `<Button>`.
+ * visitor: there's no inbox to pick a thread from. A surface with a Share
+ * control uses `ShareMenu`, which carries "Send in a message" among every
+ * other way to share; this component is for surfaces that want the one
+ * labelled `<Button>` on its own.
  */
 export function ShareToChatAction({
   url,

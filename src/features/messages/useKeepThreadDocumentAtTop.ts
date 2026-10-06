@@ -19,7 +19,8 @@ const PINCH_ZOOM_SCALE_TOLERANCE = 0.01;
  * The hook is scoped to the phone thread. Other routes are real scrolling
  * documents, where iOS's reveal-scroll is wanted.
  *
- * Every trigger coalesces through one `requestAnimationFrame`.
+ * Every trigger coalesces through one `requestAnimationFrame`, and the snap is
+ * always instant (see the comment at the `scrollTo` call).
  */
 export function useKeepThreadDocumentAtTop(isActive: boolean): void {
   useEffect(() => {
@@ -35,7 +36,12 @@ export function useKeepThreadDocumentAtTop(isActive: boolean): void {
         visualViewport !== null &&
         Math.abs(visualViewport.scale - 1) > PINCH_ZOOM_SCALE_TOLERANCE;
       if (isPinchZoomed) return;
-      window.scrollTo(0, 0);
+      // `behavior: "instant"`: a bare `scrollTo(0, 0)` defers to the global
+      // `html { scroll-behavior: smooth }` (base.css) and animates. Every frame
+      // of that animation fires `scroll`, which lands back here and restarts
+      // it from the current offset, so the thread crept down over ~5 seconds
+      // after the keyboard opened (reported on iPhone, 2026-10-06).
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     };
 
     const scheduleSnap = () => {

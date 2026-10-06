@@ -210,11 +210,13 @@
   font-family: var(--sans);
 }
 @media (hover: hover) {
-  .cal-cell:hover:not(.empty) {
+  .cal-cell:hover:not(.blank) {
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
-.cal-cell.empty {
+/* Lead-in cells before day 1. Named `blank` because `.empty` is the dashed
+   empty-state panel below, and its padding blew the grid out of the card. */
+.cal-cell.blank {
   cursor: default;
   pointer-events: none;
 }
@@ -817,6 +819,13 @@ button.cal-cell.has {
 }
 .grp-label:first-child {
   margin-top: 6px;
+}
+/* A quieter line under a group label (the ended group says what it holds).
+   It tucks up under the label, which keeps its own bottom margin. */
+.grp-sub {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  margin: -8px 0 14px;
 }
 .ev-list {
   display: flex;
@@ -2330,6 +2339,48 @@ button.cal-cell.has {
   .undo-btn:hover {
     background: rgba(var(--cream-rgb), 0.3);
   }
+}
+
+/* ---------- Ended: the trailing "Already happened" group ----------
+   Greyed by taking colour away: a half-cream surface, no coral hosting accent,
+   the tile, badges and avatars desaturated, and the title and links dropped
+   to --ink-60. Text keeps full opacity so every line still clears WCAG AA in
+   both themes (--ink-40 on this surface is the lowest pair, about 4.6:1). It
+   sits after every category rule so it wins at equal specificity. */
+.ev-card.ended {
+  background: color-mix(in srgb, var(--paper) 50%, var(--cream));
+  border-color: rgba(var(--line-rgb), 0.09);
+  border-style: solid;
+  box-shadow: none;
+}
+@media (hover: hover) {
+  .ev-card.ended:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}
+.ev-card.ended .ev-tile {
+  background: rgba(var(--line-rgb), 0.04);
+  border-color: rgba(var(--line-rgb), 0.06);
+}
+.ev-card.ended .ev-tile,
+.ev-card.ended .ev-badges,
+.ev-card.ended .av-stack {
+  filter: grayscale(1);
+}
+.ev-card.ended .et-dow {
+  color: var(--ink-40);
+}
+.ev-card.ended .et-day,
+.ev-card.ended .ev-name,
+.ev-card.ended .ev-link {
+  color: var(--ink-60);
+}
+.ev-card.ended .av-stack .av {
+  border-color: color-mix(in srgb, var(--paper) 50%, var(--cream));
+}
+.ev-card.ended .card-tools {
+  border-top-color: rgba(var(--line-rgb), 0.07);
 }
 
 /* ---------- Removing card animation ---------- */

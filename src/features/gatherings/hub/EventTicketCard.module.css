@@ -1,0 +1,306 @@
+/* EventTicketCard: the Browse tab's event card. A 4:3 cover carrying a cream
+   date stamp, then a paper body. The Link itself only draws the focus ring and
+   the hover shadow; the visible card is `.surface`, which clips the cover to
+   the card's corners. */
+
+.card {
+  --ticket-max-inline: 26rem;
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: var(--ticket-max-inline);
+  block-size: 100%;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-card);
+  transition: transform var(--dur-base) var(--ease);
+}
+
+/* The lifted shadow, painted at rest and faded in on hover. Fading a layer's
+   opacity keeps the lift on the compositor; an outer shadow never paints over
+   the card's own content. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.card:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  block-size: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+}
+
+/* ── Media ── */
+.media {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+.media img,
+.media [data-cover-fallback] {
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+/* A plum wash along the bottom. The chip zone (the bottom sixth or so) sits
+   on at least 0.7 plum, so the badges there read over a bright photo even
+   before their own backing; the top of the cover stays untouched. A
+   coverless card skips it: the fallback field is dark enough already. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.78) 0%,
+    rgba(var(--plum-rgb), 0.7) 18%,
+    rgba(var(--plum-rgb), 0.22) 40%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.stamp {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-start: var(--gap-sm);
+  display: flex;
+}
+
+/* The urgent ribbon moves to the top trailing corner: the stamp owns the top
+   leading one. Doubled with `.media` so it outranks the poster's `.ribbon`
+   placement whatever order the two stylesheets load in. */
+.media .ribbon {
+  inset-inline-start: auto;
+  inset-inline-end: var(--gap-sm);
+}
+
+.mediaFoot {
+  position: absolute;
+  inset-inline: var(--gap-sm);
+  inset-block-end: var(--gap-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+}
+
+/* Element-qualified so it outranks the price pill's own column alignment. */
+.mediaFoot > span {
+  align-self: center;
+  margin-block-start: 0;
+}
+
+/* ── Body ── */
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+  padding: var(--gap-sm) var(--gap-sm) var(--card-pad);
+}
+
+.title {
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  font-weight: 500;
+  letter-spacing: var(--ls-heading);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+}
+
+.meta {
+  display: block;
+  min-width: 0;
+  color: var(--ink-60);
+}
+
+/* The bottom group: who is going, then the theme tags. `margin-block-start:
+   auto` drops it to the foot of the body, so cards sharing a grid row line
+   their counts and tags up whatever their titles' lengths. The alignment
+   comes from the flex column, so an empty group costs no height. */
+.foot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+  margin-block-start: auto;
+}
+
+/* Who is going, with the "See it" pill on the trailing edge. */
+.footRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding-block-start: 4px;
+}
+
+.going {
+  min-inline-size: 0;
+}
+
+/* No going count: the row would hold only the pill, which is invisible at
+   rest, and reserve a blank line for it. It leaves the flow instead and
+   floats the pill at the group's trailing bottom corner, over the end of the
+   theme strip. */
+.footRow:not(:has(> .going)) {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  padding-block-start: 0;
+}
+
+/* No going count and no theme tags either: a floated pill would have a
+   0px group under it and rise over the where and when lines. Where the pill
+   can show (a precise pointer hovers it in), the row stays in the flow and
+   keeps the pill's own height. A touch screen never reveals it at rest, so
+   there the group stays empty and costs no height. */
+@media (hover: hover) and (pointer: fine) {
+  .foot:has(> .themeStrip:empty) > .footRow {
+    position: static;
+    padding-block-start: 4px;
+  }
+}
+
+/* "See it" affordance. Invisible at rest on every device, so a touch screen
+   never shows a promise it cannot hover into; a precise pointer reveals it on
+   hover and keyboard focus reveals it everywhere. Decorative and inert: the
+   whole card is the link. */
+.cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-inline-start: auto;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  /* The coral tint over a paper ground, so a pill floated over the end of
+     the theme strip covers the tags under it. */
+  background:
+    linear-gradient(
+      rgba(var(--accent-rgb), 0.14),
+      rgba(var(--accent-rgb), 0.14)
+    ),
+    var(--paper);
+  color: var(--accent-text);
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* At most two theme tags and a "+N" (see `ThemeTags`' `maxVisible`). Each
+   tag keeps its words whole; when two still do not fit the card, the row
+   wraps to a second line and stops there. The strip takes the tags' own
+   font size, so `2lh` is two tag lines of text: add each tag's 3px block
+   padding and the one wrap gap. */
+.themeStrip {
+  display: block;
+  min-inline-size: 0;
+  max-block-size: calc(2lh + 4 * 3px + var(--gap-xs));
+  overflow: hidden;
+  font-size: var(--text-11);
+}
+
+.themeStrip:empty {
+  display: none;
+}
+
+/* A single tag wider than the whole card ends in an ellipsis. */
+.themeStrip > span > span {
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Hover and focus ── */
+@media (hover: hover) and (pointer: fine) {
+  .cta {
+    transform: translateX(8px);
+    transition-property: opacity, transform;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card:hover::after {
+    opacity: 1;
+  }
+
+  .card:hover .media img,
+  .card:hover .media [data-cover-fallback] {
+    transform: scale(1.04);
+  }
+
+  .card:hover .cta {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.card:focus-visible .cta {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* The loading placeholder reuses `.card` for its footprint. It is inert, so
+   it takes no pointer: no lift, shadow or "See it" reveal on hover. */
+.isSkeleton {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .media img,
+  .media [data-cover-fallback] {
+    transition-property: none;
+  }
+
+  .card:hover,
+  .card:hover .media img,
+  .card:hover .media [data-cover-fallback],
+  .card:hover .cta,
+  .card:focus-visible .cta {
+    transform: none;
+  }
+
+  .cta {
+    transform: none;
+    transition-property: opacity;
+  }
+}

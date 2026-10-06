@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { FinLine } from "./governance.data";
 import styles from "./GovernancePage.module.css";
 
@@ -11,14 +12,28 @@ const CANONICAL_AMOUNT = /^-?\d+(\.\d+)?$/;
 function FinanceRow({ line, color }: { line: FinLine; color: string }) {
   const [open, setOpen] = useState(false);
   const fmt = useFormat();
+  const { t } = useTranslation();
   // PRD-447: an entered figure is shown in the reader's locale; a
-  // pre-formatted one is shown as it was written.
-  const amount = CANONICAL_AMOUNT.test(line.amount)
-    ? fmt.currency(Number(line.amount), "EUR")
-    : line.amount;
-  // The public report carries no line-item breakdown (PRD-447), so a row with
-  // nothing to reveal renders as a plain row with no toggle.
+  // pre-formatted one is shown as it was written. Breakdown amounts and the
+  // breakdown total follow the same rule. A whole number drops its cents
+  // ("€520"), matching the pre-formatted rows beside it.
+  const formatAmount = (value: string): string => {
+    if (!CANONICAL_AMOUNT.test(value)) return value;
+    const parsed = Number(value);
+    return fmt.currency(
+      parsed,
+      "EUR",
+      Number.isInteger(parsed) ? { maximumFractionDigits: 0 } : undefined,
+    );
+  };
+  const amount = formatAmount(line.amount);
+  // The public report carries a breakdown only once an admin saved one, so a
+  // row with nothing to reveal renders as a plain row with no toggle.
   const hasBreakdown = line.items.length > 0;
+  // A saved breakdown's total carries no label; it reads as the item count.
+  const totalLabel =
+    line.total.label ||
+    t("governance:sections.finances.itemCount", { count: line.items.length });
   const summary = (
     <>
       <div className={styles.finLineTop}>
@@ -67,16 +82,23 @@ function FinanceRow({ line, color }: { line: FinLine; color: string }) {
       <div className={styles.finDetailWrap}>
         <div className={styles.finDetailInner}>
           <div className={styles.finDetail}>
-            {line.items.map((it) => (
-              <div key={it.name} className={styles.finDetailItem}>
-                <span>{it.name}</span>
-                <span className={styles.fdiPeriod}>{it.period}</span>
-                <span className={styles.fdiAmount}>{it.amount}</span>
+            {line.items.map((item, index) => (
+              // Names may repeat, so the position keeps each key unique.
+              <div
+                key={`${index}-${item.name}`}
+                className={styles.finDetailItem}
+              >
+                <span>{item.name}</span>
+                {/* An empty detail leaves its grid slot blank. */}
+                <span className={styles.fdiPeriod}>{item.period}</span>
+                <span className={styles.fdiAmount}>
+                  {formatAmount(item.amount)}
+                </span>
               </div>
             ))}
             <div className={styles.finDetailTotal}>
-              <span>{line.total.label}</span>
-              <span>{line.total.amount}</span>
+              <span>{totalLabel}</span>
+              <span>{formatAmount(line.total.amount)}</span>
             </div>
           </div>
         </div>

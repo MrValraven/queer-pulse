@@ -193,6 +193,21 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> convidou-te para coanfitriar um convívio.",
   "type.event_cohost_invite.meta": "Convite para coanfitriar",
 
+  "type.event_lineup_invite.text":
+    "Tens um convite para o lineup de um convívio.",
+  "type.event_lineup_invite.textNamed":
+    "<profile>{name}</profile> convidou-te para o lineup de um convívio.",
+  "type.event_lineup_invite.meta": "Convite para o lineup",
+  "type.event_lineup_accepted.text": "Alguém entrou no lineup do teu convívio.",
+  "type.event_lineup_accepted.textNamed":
+    "<profile>{name}</profile> entrou no lineup do teu convívio.",
+  "type.event_lineup_accepted.meta": "Lineup",
+  "type.event_lineup_declined.text":
+    "Alguém recusou o teu convite para o lineup.",
+  "type.event_lineup_declined.textNamed":
+    "<profile>{name}</profile> recusou o teu convite para o lineup.",
+  "type.event_lineup_declined.meta": "Lineup",
+
   // PRD-18. Chega a quem guardou o convívio ou respondeu talvez, nunca a quem
   // já tem lugar. Plural em `count`, espelhado de `seatsRemaining`.
   // Forma simples para uma linha sem contagem de lugares: tem de continuar a

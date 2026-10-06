@@ -19,8 +19,17 @@ import type {
  *  typed it; `computed` means derived (surplus), never edited directly. */
 export type FinanceMetricSource = "seeded" | "manual" | "computed";
 
-/** A ledger row plus the provenance of its `amount`. */
-export type AdminFinLine = FinLine & { source?: FinanceMetricSource };
+/** One entry in a ledger row's breakdown ("Hosting", "€15/mo", "45"). The
+ *  editor writes `amount` as a canonical plain number string. */
+export type FinanceLineItem = FinLine["items"][number];
+
+/** A ledger row plus the provenance of its `amount` and of its breakdown.
+ *  `itemsSource` is `manual` once an admin saved the breakdown; absent means
+ *  seeded, and the editor then starts that breakdown empty. */
+export type AdminFinLine = FinLine & {
+  source?: FinanceMetricSource;
+  itemsSource?: "seeded" | "manual";
+};
 
 /** Provenance of each editable scalar figure. */
 export interface AdminFinanceSources {
@@ -77,13 +86,16 @@ export interface AdminFinanceResponseDTO {
 /** One correction to a single income/expense ledger row, addressed by index.
  *  `enabled` toggles whether the row renders on the dashboard at all. An
  *  index one past the last row appends a new row (PRD-447), which then needs
- *  a `label` and an `amount`. */
+ *  a `label` and an `amount`. `items` replaces the row's whole breakdown
+ *  (`[]` clears it); when it holds items the backend recomputes `amount` as
+ *  their sum, and the editor sends that same sum alongside. */
 export interface FinanceLedgerEdit {
   index: number;
   label?: string;
   amount?: string;
   note?: string;
   enabled?: boolean;
+  items?: FinanceLineItem[];
 }
 
 /** Partial update — only the fields present are written and audited. `surplus`

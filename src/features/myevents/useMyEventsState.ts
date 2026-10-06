@@ -7,7 +7,8 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Pill } from "./myEvents.types";
 import type { MyEventsValue } from "./MyEventsContext";
 import { PILLS } from "./myEvents.data";
-import { inPill } from "./myEvents.helpers";
+import { hasEnded, inPill, PILLS_WITH_ENDED_GROUP } from "./myEvents.helpers";
+import { setMyEventsDemoClock } from "./myEvents.clock";
 import { useMyEventsCalendar } from "./useMyEventsCalendar";
 import { useMyEventsToolbar } from "./useMyEventsToolbar";
 import { useMyEventsSelection } from "./useMyEventsSelection";
@@ -20,6 +21,9 @@ import { useMyEventsSync } from "./useMyEventsSync";
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
   const { demoMode } = useDemoMode();
+  // Set during render, ahead of every reader below and in the subtree: the
+  // calendar's first view month and the agenda's grouping both read it.
+  setMyEventsDemoClock(demoMode);
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
@@ -84,11 +88,14 @@ export function useMyEventsState(): MyEventsValue {
     t,
   });
 
-  // derived
+  // derived. A pill counts what is still ahead; the gatherings that are
+  // already over sit in its trailing ended group and add nothing here.
   const counts = useMemo(() => {
     const c = {} as Record<Pill, number>;
     PILLS.forEach((p) => {
-      c[p] = events.filter((e) => inPill(e, p)).length;
+      c[p] = events.filter(
+        (e) => inPill(e, p) && !(PILLS_WITH_ENDED_GROUP.has(p) && hasEnded(e)),
+      ).length;
     });
     return c;
   }, [events]);

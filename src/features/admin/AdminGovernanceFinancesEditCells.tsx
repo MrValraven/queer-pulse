@@ -22,6 +22,7 @@ export function AmountInput({
   disabled = false,
   unit,
   isLoss = false,
+  errorMessageKey,
 }: {
   ariaLabel: string;
   value: string;
@@ -31,11 +32,23 @@ export function AmountInput({
   unit: AmountUnit;
   /** Spending or a negative figure: the typed value reads in red. */
   isLoss?: boolean;
+  /** A caller with its own rules (a breakdown item) decides the error: a
+   *  catalog key shows that message, null shows none. Left out, the cell
+   *  checks the value itself. */
+  errorMessageKey?: string | null;
 }) {
   const { t } = useTranslation();
   const errorId = useId();
   const status = parseAmountInput(value).status;
-  const isRejected = !disabled && isAmountRejected(value, isBlankAllowed);
+  const hasCallerError = errorMessageKey !== undefined;
+  const isRejected = hasCallerError
+    ? errorMessageKey !== null
+    : !disabled && isAmountRejected(value, isBlankAllowed);
+  const errorMessage =
+    errorMessageKey ??
+    (status === "blank"
+      ? "admin:governance.finances.edit.field.amountRequired"
+      : "admin:governance.finances.edit.field.amountInvalid");
   const adornment = unit === "currency" ? "€" : unit === "percent" ? "%" : "";
 
   return (
@@ -71,11 +84,7 @@ export function AmountInput({
       </div>
       {isRejected && (
         <p id={errorId} className={styles.cellError}>
-          {t(
-            status === "blank"
-              ? "admin:governance.finances.edit.field.amountRequired"
-              : "admin:governance.finances.edit.field.amountInvalid",
-          )}
+          {t(errorMessage)}
         </p>
       )}
     </div>

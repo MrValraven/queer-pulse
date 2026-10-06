@@ -23,7 +23,7 @@
    card boxes/borders) so it reads lighter than the full landing-page grid
    this data also feeds. ── */
 .waysSection {
-  padding-block: 24px var(--section-y-72);
+  padding-block: var(--section-y-64) var(--section-y-72);
 }
 
 .waysHeading {

@@ -1,0 +1,20 @@
+/* GoingCount: "{count} going" with a small people icon in the coral accent. */
+
+.going {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
+  inline-size: 1em;
+  block-size: 1em;
+  color: var(--accent-text);
+}

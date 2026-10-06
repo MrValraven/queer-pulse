@@ -284,6 +284,16 @@ describe("formatNotification", () => {
     expect(result.kind).toBe("event_cohost_invite");
   });
 
+  it.each([
+    "event_lineup_invite",
+    "event_lineup_accepted",
+    "event_lineup_declined",
+  ] as const)("formats %s under the events category", (kind) => {
+    const result = formatNotification(kind, {}, t);
+    expect(result.kind).toBe(kind);
+    expect(result.category).toBe("events");
+  });
+
   it("treats the retired `new_message` kind as unknown, not a known kind", () => {
     // DM alerts no longer render in the notifications centre. `new_message` is
     // no longer a known kind, so it resolves to the generic fallback (and is
@@ -1484,5 +1494,47 @@ describe("formatNotification: safe_space_review", () => {
     );
     expect(result.meta).toBe("Moderation decision");
     expect(result.reason).toBe("Please keep it kind.");
+  });
+});
+
+// "Last few spots" (PRD-18). A host who hid the attendee count still has the
+// alert sent, but the backend leaves `seatsRemaining` off: with a public
+// capacity it would spell out the seats taken. The row must then read as the
+// plain "almost full" sentence.
+describe("formatNotification: event_nearly_full", () => {
+  const basePayload = {
+    source: "event",
+    eventSlug: "queer-book-club",
+    title: "Queer Book Club",
+  };
+
+  it("counts the spots left when the payload carries them", () => {
+    const result = formatNotification(
+      "event_nearly_full",
+      { ...basePayload, seatsRemaining: 2 },
+      t,
+    );
+    expect(result.text).toBe(
+      "A gathering you were looking at has 2 spots left.",
+    );
+    expect(result.category).toBe("events");
+  });
+
+  it("reads as the almost-full variant when the host hid the count", () => {
+    const result = formatNotification("event_nearly_full", basePayload, t);
+    expect(result.text).toBe("A gathering you were looking at is nearly full.");
+    expect(result.text).not.toContain("{seatsRemaining}");
+    expect(result.meta).toBe("Last few spots");
+  });
+
+  it("reads as the almost-full variant in Portuguese too", () => {
+    const result = formatNotification(
+      "event_nearly_full",
+      basePayload,
+      makeT("pt"),
+    );
+    expect(result.text).toBe(
+      "Um convívio que estavas a ponderar está quase cheio.",
+    );
   });
 });

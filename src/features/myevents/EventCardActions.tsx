@@ -31,8 +31,15 @@ const photosPath = (ev: MyEvent) =>
   ev.slug ? gatheringPhotosPath(ev.slug) : PHOTOS;
 const RECEIPT = linkToPath("QueerPulse Receipt.html");
 
-/** Right-hand action column, varying by category. */
-export function EventSide({ ev }: { ev: MyEvent }) {
+/** Right-hand action column, varying by category. An ended card drops the
+ *  ticket and quiets Manage to a ghost button. */
+export function EventSide({
+  ev,
+  isEnded = false,
+}: {
+  ev: MyEvent;
+  isEnded?: boolean;
+}) {
   const { t } = useTranslation();
   const {
     rsvpSaved,
@@ -51,7 +58,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
           </Button>
         ) : (
           <>
-            {ev.ticket && (
+            {ev.ticket && !isEnded && (
               <Button variant="ghost" onClick={() => openTicket(ev.id)}>
                 {t("myevents:side.viewTicket")}
               </Button>
@@ -64,7 +71,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
 
       {ev.category === "hosting" && (
         <>
-          <Button variant="primary" to={managePath(ev)}>
+          <Button variant={isEnded ? "ghost" : "primary"} to={managePath(ev)}>
             {t("myevents:side.manageCta")}
           </Button>
           <Link className={sx("ev-link")} to={detailPath(ev)}>
@@ -175,10 +182,12 @@ function ToolBtn({
 /** The card-tools row, varying by category. */
 export function EventTools({
   ev,
+  isEnded = false,
   dayofShown,
   onToggleDayof,
 }: {
   ev: MyEvent;
+  isEnded?: boolean;
   dayofShown: boolean;
   onToggleDayof: () => void;
 }) {
@@ -227,6 +236,11 @@ export function EventTools({
       {t("myevents:tools.more")}
     </button>
   );
+  // Once it is over, only the menu stays: every other tool looks ahead.
+  if (isEnded) {
+    if (ev.category === "going" && ev.cancelled) return null;
+    return <div className={sx("card-tools")}>{MoreBtn}</div>;
+  }
   const DayofBtn =
     shouldShowDayOf(ev) && ev.dayof ? (
       <ToolBtn on={dayofShown} onClick={onToggleDayof}>

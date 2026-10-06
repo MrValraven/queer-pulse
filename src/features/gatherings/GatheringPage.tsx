@@ -16,7 +16,8 @@ import { GatheringHostBar } from "./GatheringHostBar";
 import { GatheringHeaderToolbar } from "./GatheringHeaderToolbar";
 import { GatheringCover } from "./GatheringCover";
 import { GatheringMoreRail } from "./GatheringMoreRail";
-import { GatheringLineupSection } from "./GatheringLineupSection";
+import { GatheringLineup } from "./GatheringLineup";
+import { GatheringPerformerNudge } from "./GatheringPerformerNudge";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
 import { GoTogetherCard } from "../goTogether/card/GoTogetherCard";
 import { GatheringDetailPanels } from "./GatheringDetailPanels";
@@ -273,7 +274,15 @@ function GatheringDetailBody({
                 />
               )}
 
-              <GatheringLineupSection gathering={gathering} />
+              {/* Who accepted an invite to the lineup, with each person's craft,
+                  and the viewer's own invite or place on it. Renders nothing
+                  while loading, for visitors, or when the lineup is empty. */}
+              <GatheringLineup slug={gathering.slug} />
+
+              {/* Post-gathering persona nudge for a member who accepted their
+                  lineup invite. The host's lineup editor lives on the Manage
+                  page's Attendees tab, so an empty lineup adds nothing here. */}
+              <GatheringPerformerNudge gathering={gathering} />
 
               {/* PRD-284. Reporting a gathering used to live only in the
                   member's own "My events" list, so raising a suspicious event

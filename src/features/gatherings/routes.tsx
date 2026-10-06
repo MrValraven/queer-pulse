@@ -31,6 +31,10 @@ const CoHostInvitePage = lazyNamed(
   () => import("./CoHostInvitePage"),
   "CoHostInvitePage",
 );
+const LineupInvitePage = lazyNamed(
+  () => import("./LineupInvitePage"),
+  "LineupInvitePage",
+);
 const RsvpPage = lazyNamed(() => import("./RsvpPage"), "RsvpPage");
 const RsvpRedirect = lazyNamed(() => import("./RsvpRedirect"), "RsvpRedirect");
 const HostPage = lazyNamed(() => import("./HostPage"), "HostPage");
@@ -95,6 +99,10 @@ export function gatheringRoutes(demoMode: boolean) {
       <Route
         path={`${routes.gatherings}/:slug/co-host-invite/:inviteId`}
         element={<CoHostInvitePage />}
+      />
+      <Route
+        path={`${routes.gatherings}/:slug/lineup-invite/:entryId`}
+        element={<LineupInvitePage />}
       />
       {/* The standalone `/event` prototype detail page is retired: it was
           pinned to a single mock gathering with no live subject, and the real

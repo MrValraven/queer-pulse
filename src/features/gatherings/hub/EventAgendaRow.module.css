@@ -1,0 +1,217 @@
+/* EventAgendaRow: the alternate Browse layout, a printed programme. Stamp
+   column, 16:9 cover, body, trailing arrow, with a hairline between rows.
+   Below 640px it stacks into a card: cover on top with the stamp on it. */
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto clamp(10rem, 22vw, 15rem) minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--card-pad);
+  padding: var(--gap-sm) var(--gap-xs);
+  border-block-end: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The hover tint, painted at rest and faded in, so the row never animates
+   its own background. The rounding lives here alone: on the row itself it
+   bent the hairline divider up at both ends. */
+.row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.04);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+/* Rounded while focused only, so the ring keeps the app's soft corners. */
+.row:focus-visible {
+  border-radius: var(--radius-badge);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.stampColumn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  align-items: center;
+  padding-inline-end: var(--gap-sm);
+  border-inline-end: 1px solid var(--line);
+}
+
+/* ── Cover ── */
+.cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+.cover img,
+.cover [data-cover-fallback] {
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+/* The cream stub only shows once the row has stacked; see the narrow block. */
+.coverStamp {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-start: var(--gap-sm);
+  display: none;
+}
+
+/* ── Body ── */
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-inline-size: 0;
+}
+
+.title {
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  font-weight: 500;
+  letter-spacing: var(--ls-heading);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+}
+
+.meta {
+  display: block;
+  min-width: 0;
+  color: var(--ink-60);
+}
+
+/* Price first, then up to two theme tags and a "+N" beside it. */
+.tagRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  inline-size: 100%;
+  min-width: 0;
+  margin-block-start: 2px;
+}
+
+/* Nothing to show: neither a price nor a theme. */
+.tagRow:not(:has(> :not(:empty))) {
+  display: none;
+}
+
+/* Element-qualified so it outranks the price pill's own column alignment. */
+.tagRow > span {
+  flex-shrink: 0;
+  align-self: center;
+  margin-block-start: 0;
+}
+
+/* The strip takes the room the price leaves: a zero basis that grows, so
+   its tags wrap inside that room and never widen the row. */
+.tagRow > .themeStrip {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* Each tag keeps its words whole; when the tags do not fit beside the price
+   they wrap to a second line and stop there. The strip takes the tags' own
+   font size, so `2lh` is two tag lines of text: add each tag's 3px block
+   padding and the one wrap gap. */
+.themeStrip {
+  display: block;
+  max-block-size: calc(2lh + 4 * 3px + var(--gap-xs));
+  overflow: hidden;
+  font-size: var(--text-11);
+}
+
+.themeStrip:empty {
+  display: none;
+}
+
+/* A single tag wider than the whole strip ends in an ellipsis. */
+.themeStrip > span > span {
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrow {
+  position: relative;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  color: var(--accent-text);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+/* ── Narrow: stack into a card ── */
+@media (--md) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--gap-sm);
+    padding: var(--gap-sm) 0 var(--card-pad);
+  }
+
+  .stampColumn,
+  .arrow {
+    display: none;
+  }
+
+  .coverStamp {
+    display: flex;
+  }
+}
+
+/* ── Hover ── */
+@media (hover: hover) and (pointer: fine) {
+  .row:hover::before {
+    opacity: 1;
+  }
+
+  .row:hover .cover img,
+  .row:hover .cover [data-cover-fallback] {
+    transform: scale(1.04);
+  }
+
+  .row:hover .arrow {
+    transform: translateX(4px);
+  }
+}
+
+.row:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+/* The loading placeholder reuses `.row` for its footprint. It is inert, so it
+   takes no pointer: no hover tint or arrow nudge. */
+.isSkeleton {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover img,
+  .cover [data-cover-fallback],
+  .arrow {
+    transition-property: none;
+  }
+
+  .row:hover .cover img,
+  .row:hover .cover [data-cover-fallback],
+  .row:hover .arrow,
+  .row:focus-visible .arrow {
+    transform: none;
+  }
+}

@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Tabs } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EventHostDTO } from "./api/events.api";
+import {
+  MANAGE_GATHERING_TABS,
+  type ManageGatheringTab,
+} from "./gatheringPaths";
 import { OverviewTab } from "./ManageOverviewTab";
 import type { GatheringDetail, OverviewCounts } from "./ManageOverviewTab";
 import { AttendeesTab } from "./ManageAttendeesTab";
@@ -12,7 +16,7 @@ import styles from "./ManageGatheringPage.module.css";
 
 export { ManageGatheringSidebar } from "./ManageGatheringSidebar";
 
-type Tab = "overview" | "attendees" | "messages" | "settings";
+type Tab = ManageGatheringTab;
 
 interface ManageGatheringTabsProps {
   initialTab?: Tab;
@@ -54,7 +58,7 @@ interface ManageGatheringTabsProps {
   }) => void;
 }
 
-const TAB_ORDER: Tab[] = ["overview", "attendees", "messages", "settings"];
+const TAB_ORDER: readonly Tab[] = MANAGE_GATHERING_TABS;
 
 const TAB_LABEL_KEYS: Record<Tab, string> = {
   overview: "gatherings:manage.tabs.overview",

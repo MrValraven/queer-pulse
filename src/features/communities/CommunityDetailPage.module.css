@@ -4,8 +4,8 @@
   padding: 16px 0 var(--section-y-56);
   position: relative;
   /* Sideways only, so nothing can widen the page. The bottom edge stays open
-     for the Share menu (`CommunityShareMenu`), which hangs below the action
-     row past the 56px bottom padding. */
+     for the icon row's tooltips, which drop below the action row. The Share
+     menu is portalled to the body, so this clip never reaches it. */
   overflow-x: clip;
 }
 /* The two glows fill the hero exactly and paint their circles as positioned

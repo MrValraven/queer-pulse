@@ -1,3 +1,4 @@
+import { demoStartIsoDate } from "../gatherings/data";
 import type { MyEvent } from "./myEvents.types";
 
 // Heavy demo-only My Events registries. Imported *only* via the demo-gated
@@ -89,12 +90,14 @@ export const INITIAL_EVENTS: MyEvent[] = [
     slug: "queer-karaoke-night",
     maybe: true,
     title: "Queer Karaoke Night",
-    date: "2026-07-03",
+    // Dated from the gatherings demo board, so this card and the detail page
+    // it opens name the same day.
+    date: demoStartIsoDate("queer-karaoke-night"),
     start: "21:00",
-    // Runs past midnight into the Saturday. The shape could only say "23:59"
+    // Runs past midnight into the next day. The shape could only say "23:59"
     // before spans existed, which quietly cut the night short.
     end: "02:30",
-    endDate: "2026-07-04",
+    endDate: demoStartIsoDate("queer-karaoke-night", 1),
     venue: "Purex, Bairro Alto",
     going: 28,
     reminder: false,

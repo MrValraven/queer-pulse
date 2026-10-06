@@ -147,6 +147,7 @@ export const gatherings: Catalog = {
   // GoingAttendeesPreview (MSG-12)
   "gathering.attendeesPreview.heading": "Quem vai",
   "gathering.attendeesPreview.hostTag": "Organização",
+  "gathering.attendeesPreview.cohostTag": "Coorganização",
   "gathering.attendeesPreview.moreLabel": "+{count} mais",
 
   // GatheringSuccessPanel
@@ -886,6 +887,7 @@ export const gatherings: Catalog = {
   // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
   "create.v2.when.addressLabel": "Morada completa",
   "create.v2.when.addressNote": "só partilhada com quem confirmar",
+  "create.v2.when.addressFromListing": "Da ficha de {name}",
   "create.v2.when.directionsLabel": "Como chegar",
 
   // steps/DateNotes.tsx: chapter 2, notes on the chosen date
@@ -1565,7 +1567,7 @@ export const gatherings: Catalog = {
   "hub.tabs.highlights": "Destaques",
   "hub.tabs.browse": "Explorar",
   "hub.tabs.calendar": "Calendário",
-  "hub.hero.rsvp": "Dá uma vista de olhos",
+  "hub.hero.rsvp": "Espreita",
   "hub.featured.eyebrow": "A seguir",
   "hub.bucket.now": "A acontecer agora",
   "hub.bucket.tonight": "Hoje à noite",
@@ -1575,6 +1577,8 @@ export const gatherings: Catalog = {
   "hub.highlights.heading": "Vale a pena aparecer",
   "hub.browse.heading": "Tudo o que há",
   "hub.browse.loadMore": "Mostrar mais",
+  "hub.browse.monthCount_one": "{count} convívio",
+  "hub.browse.monthCount_other": "{count} convívios",
   "hub.browse.searchLabel": "Procurar eventos",
   "hub.browse.searchPlaceholder": "Procura por nome ou zona",
   "hub.browse.noMatch.title": "Nada corresponde a esses filtros.",
@@ -1590,25 +1594,81 @@ export const gatherings: Catalog = {
   "hub.empty.body":
     "Aparecem coisas novas por aqui a toda a hora. Podias organizar a primeira.",
   "hub.card.cta": "Vê",
+  "hub.card.moreThemes": "+{count}",
   "hub.loading": "A ver o que há…",
 
-  // ── Editor de lineup (GatheringLineupEditor + GatheringLineupRow, na
-  // GatheringPage) — quem organiza marca quem atua, organiza ou trabalha no
-  // convívio, mais o lembrete pós-convívio de persona (GatheringPerformerNudge).
-  // Descoberta de personas, Fase 5, Momento 5.
+  // ── Lineup (GatheringLineupEditor, LineupInviteComposerModal,
+  // LineupInvitePage, GatheringLineupViewerPanel). O lineup funciona por
+  // convite: quem organiza convida, a pessoa aceita ou recusa, e só as linhas
+  // aceites aparecem em público. Mais o lembrete pós-convívio de persona
+  // (GatheringPerformerNudge).
   "lineup.title": "Lineup",
   "lineup.description":
-    "Marca quem vai atuar, organizar ou trabalhar neste convívio.",
-  "lineup.empty": "Ainda ninguém foi marcado.",
-  "lineup.addCta": "Marcar alguém",
+    "Convida quem vai atuar, organizar ou trabalhar neste convívio. Aparecem no lineup quando aceitarem.",
+  "lineup.empty": "Ainda ninguém está no lineup.",
+  "lineup.inviteCta": "Convidar para o lineup",
   "lineup.roleLabel": "O papel da pessoa",
   "lineup.removeAria": "Remover {name} do lineup",
-  "lineup.pickerTitle": "Marcar alguém",
-  "lineup.pickerSearchPlaceholder": "Procura entre quem vai",
-  "lineup.saveCta": "Guardar lineup",
-  "lineup.saving": "A guardar…",
-  "lineup.savedToast": "Lineup guardado",
+  "lineup.pickerTitle": "Convidar para o lineup",
+  "lineup.pickerSub": "Convida as tuas ligações ou quem vai a este convívio.",
+  "lineup.pickerSearchPlaceholder": "Procurar pessoas",
+  "lineup.pickerEmpty":
+    "Ninguém com esse nome entre as tuas ligações ou quem vai.",
+  "lineup.removedToast": "{name} saiu do lineup",
+  "lineup.pickerAllListed":
+    "Todas as pessoas que podes convidar já estão no lineup.",
+  "lineup.pickerLoadError":
+    "Não conseguimos carregar as tuas ligações. Quem vai continua na lista.",
+  "lineup.roleStepTitle": "O que vai fazer esta pessoa?",
+  "lineup.roleStepBack": "Escolher outra pessoa",
+  "lineup.sendCta": "Enviar convite",
+  "lineup.sentToast": "Convite enviado a {name}",
+  "lineup.status.pending": "Convite enviado",
+  "lineup.status.accepted": "Confirmou",
+  "lineup.status.declined": "Recusou",
+  "lineup.inviteAgain": "Convidar outra vez",
+  "lineup.countConfirmed_one": "{count} confirmou",
+  "lineup.countConfirmed_other": "{count} confirmaram",
+  "lineup.countInvited_one": "{count} convite enviado",
+  "lineup.countInvited_other": "{count} convites enviados",
+  "lineup.atCapHint":
+    "O lineup está cheio ({max}). Remove alguém para convidar mais.",
+  "lineup.removeConfirmTitle": "Tirar {name} do lineup?",
+  "lineup.removeConfirmBody":
+    "Esta pessoa aceitou, por isso deixa de aparecer na página do convívio.",
+  "lineup.removeConfirmCta": "Remover",
   "lineup.errorToast": "Não conseguimos guardar isso agora. Tenta outra vez.",
+
+  "lineupInvite.eyebrow": "Convite para o lineup",
+  "lineupInvite.title": "<em>{host}</em> quer-te no lineup",
+  "lineupInvite.titleNoInviter": "Tens um convite para o lineup",
+  "lineupInvite.roleLine": "Ficas no cartaz, na área de {role}.",
+  "lineupInvite.acceptCta": "Entrar no lineup",
+  "lineupInvite.declineCta": "Recusar",
+  "lineupInvite.acceptedToast": "Estás no lineup",
+  "lineupInvite.declinedToast": "Convite recusado",
+  "lineupInvite.closedTitle": "Este convite já não está aberto",
+  "lineupInvite.acceptedTitle": "Estás neste lineup",
+  "lineupInvite.acceptedDescription":
+    "A página do convívio mostra o lineup completo.",
+  "lineupInvite.declinedTitle": "Recusaste este convite",
+  "lineupInvite.declinedDescription":
+    "Quem organiza pode convidar-te outra vez se os planos mudarem.",
+  "lineupInvite.notFoundDescription": "Quem organiza pode tê-lo retirado.",
+  "lineupInvite.loadErrorTitle": "Não conseguimos carregar este convite",
+  "lineupInvite.loadErrorDescription":
+    "Verifica a tua ligação e tenta outra vez daqui a pouco.",
+  "lineupInvite.openGathering": "Abrir o convívio",
+  "lineupInvite.back": "Voltar às notificações",
+  "lineupInvite.bannerText":
+    "Tens um convite para o lineup, na área de {role}.",
+  "lineupInvite.onLineupText": "Estás no lineup, na área de {role}.",
+  "lineupInvite.leaveCta": "Sair do lineup",
+  "lineupInvite.leaveConfirmTitle": "Sair do lineup?",
+  "lineupInvite.leaveConfirmBody":
+    "Deixas de aparecer no lineup deste convívio. Quem organiza pode convidar-te outra vez.",
+  "lineupInvite.leftToast": "Saíste do lineup",
+  "lineupInvite.errorToast": "Não deu. Tenta outra vez.",
 
   "performerNudge.body":
     "Atuaste como {name}, {craft}. Queres uma página para isso?",
@@ -2007,10 +2067,13 @@ export const gatherings: Catalog = {
   // Guardar, adicionar ao calendário e partilhar, junto ao tipo de convívio,
   // para que o RSVP seja o único botão em destaque.
   "headerToolbar.aria": "Ações do convívio",
-  "headerToolbar.shareCta": "Partilhar",
-  "headerToolbar.shareCopiedToast": "Link copiado",
-  "headerToolbar.shareCopyFailedToast":
-    "O teu navegador não nos deixou copiar. Aqui fica o link: {url}",
+  // A mensagem partilhada (gatheringShareMessage.ts): o título, depois estas
+  // linhas, depois o link. O local é o público, espaço e bairro; a morada
+  // fica com quem vai.
+  "headerToolbar.share.message.cancelled": "Este convívio foi cancelado",
+  "headerToolbar.share.message.when": "{date} · {time}",
+  "headerToolbar.share.message.timeWithNote": "{time} {note}",
+  "headerToolbar.share.message.venueAndHood": "{venue}, {neighbourhood}",
 
   // ── Painel "Cuidar de quem vem" (GatheringTakingCare.tsx) ─────────────────
   // Regras da casa, avisos de conteúdo e temas, como quem organiza os definiu.

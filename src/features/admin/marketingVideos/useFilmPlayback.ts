@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FilmPlayer } from "./filmPlayer";
-import { scoreUrl, type MarketingVideo } from "./marketingVideos.data";
-import { composeScore, filmIn } from "./render/filmWindow";
+import { filmUrl, scoreUrl, type MarketingVideo } from "./marketingVideos.data";
+import { filmScore } from "./render/filmScore";
+import { filmIn } from "./render/filmWindow";
 
 export type SoundState = "loading" | "on" | "failed";
 
@@ -11,11 +12,13 @@ const TICK_SECONDS = 1 / 15;
 /**
  * Real-time playback of a film in an iframe, for the preview. The film plays
  * as soon as it loads; its score is composed in the background (a few
- * seconds) and joins in when ready.
+ * seconds, or at once when this session already composed it) and joins in
+ * when ready, whichever of the two finishes first.
  */
 export function useFilmPlayback(video: MarketingVideo) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<FilmPlayer | null>(null);
+  const scoreRef = useRef<AudioBuffer | null>(null);
   const isMountedRef = useRef(true);
   const lastReportedRef = useRef(0);
   const [isReady, setIsReady] = useState(false);
@@ -31,6 +34,24 @@ export function useFilmPlayback(video: MarketingVideo) {
       playerRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    let isCurrent = true;
+    filmScore(filmUrl(video.id), scoreUrl(video.id))
+      .then((score) => {
+        if (!isCurrent) return;
+        scoreRef.current = score;
+        playerRef.current?.setScore(score);
+        // A film that failed to load keeps its failed status.
+        setSound((current) => (current === "failed" ? current : "on"));
+      })
+      .catch(() => {
+        if (isCurrent) setSound("failed");
+      });
+    return () => {
+      isCurrent = false;
+    };
+  }, [video.id]);
 
   const handleTick = useCallback((seconds: number, playing: boolean) => {
     if (!isMountedRef.current) return;
@@ -52,18 +73,14 @@ export function useFilmPlayback(video: MarketingVideo) {
         if (!isMountedRef.current) return;
         const player = new FilmPlayer(film, handleTick);
         playerRef.current = player;
+        if (scoreRef.current) player.setScore(scoreRef.current);
         player.seek(0);
         setIsReady(true);
-        return composeScore(film, scoreUrl(video.id)).then((score) => {
-          if (!isMountedRef.current) return;
-          player.setScore(score);
-          setSound("on");
-        });
       })
       .catch(() => {
         if (isMountedRef.current) setSound("failed");
       });
-  }, [handleTick, video.id]);
+  }, [handleTick]);
 
   const togglePlay = useCallback(() => {
     const player = playerRef.current;

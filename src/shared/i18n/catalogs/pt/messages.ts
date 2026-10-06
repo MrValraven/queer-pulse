@@ -962,6 +962,21 @@ export const messages: Catalog = {
   "share.previewTo": "Para",
   "share.previewEmptyRecipients": "Escolhe alguém para enviar isto",
   "share.previewTime": "agora",
+  // O menu Partilhar (messages/share/ShareMenu) nos convívios e noutras
+  // páginas: todas as formas de passar algo. "Enviar numa mensagem" usa share.cta.
+  "shareMenu.triggerLabel": "Partilhar",
+  "shareMenu.menuAria": "Partilhar {title}",
+  "shareMenu.whatsApp": "WhatsApp",
+  "shareMenu.nativeShare": "Partilhar numa app",
+  "shareMenu.copyMessage": "Copiar mensagem",
+  "shareMenu.copyLink": "Copiar link",
+  "shareMenu.opensInNewTab": "(abre num novo separador)",
+  "shareMenu.messageCopiedToast": "Mensagem copiada",
+  "shareMenu.linkCopiedToast": "Link copiado",
+  "shareMenu.copyFallbackToast":
+    "O teu navegador não nos deixou copiar a mensagem. Aqui fica o link: {url}",
+  "shareMenu.linkCopyFallbackToast":
+    "O teu navegador não nos deixou copiar. Aqui fica o link: {url}",
   "search.loadErrorBody":
     "A pesquisa não voltou. A falha é nossa. Tenta outra vez daqui a um momento.",
   "newMessage.strangersSearching": "A procurar essa pessoa…",

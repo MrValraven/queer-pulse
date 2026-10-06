@@ -32,3 +32,21 @@ export function clampDescription(text: string): string {
   const clean = text.replace(/\s+/g, " ").trim();
   return clean.length > 200 ? `${clean.slice(0, 197).trimEnd()}…` : clean;
 }
+
+/**
+ * A headline as a sentence a person would type: a `<br />` reads as a space
+ * and whitespace is collapsed, so the two-line cover title "The city
+ * changed.<br />Did we?" keeps its words apart in a shared message.
+ */
+export function nodeToSentenceText(node: ReactNode): string {
+  const flatten = (part: ReactNode): string => {
+    if (isValidElement(part) && part.type === "br") return " ";
+    if (Array.isArray(part)) return part.map(flatten).join("");
+    if (isValidElement(part)) {
+      const { children } = part.props as { children?: ReactNode };
+      return flatten(children);
+    }
+    return nodeToText(part);
+  };
+  return flatten(node).replace(/\s+/g, " ").trim();
+}

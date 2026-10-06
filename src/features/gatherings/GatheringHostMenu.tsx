@@ -98,9 +98,9 @@ export function GatheringHostMenu({
   const placement = useAnchoredPopover(triggerRef, panelRef, isOpen);
   const isPlaced = placement !== null;
 
-  // The panel is `visibility: hidden` for the one commit before its first
-  // measurement, and a hidden element refuses focus, so the first item takes
-  // focus once the panel is placed.
+  // The panel is transparent for the one commit before its first measurement
+  // (see `.panelUnplaced`), so the first item takes focus once the panel is
+  // placed, where the keyboard user can see it.
   useEffect(() => {
     if (!isOpen || !isPlaced) return;
     panelRef.current?.querySelector<HTMLElement>(MENU_ITEM_SELECTOR)?.focus();

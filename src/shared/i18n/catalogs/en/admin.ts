@@ -5029,6 +5029,34 @@ export const admin: Catalog = {
   "governance.finances.edit.blockedByAmounts":
     "Saving is on hold until every highlighted amount reads as a number.",
   "governance.finances.edit.addLine": "Add a line",
+  "governance.finances.edit.breakdown.toggle": "Split into items",
+  "governance.finances.edit.breakdown.toggleCount_one": "{count} item",
+  "governance.finances.edit.breakdown.toggleCount_other": "{count} items",
+  "governance.finances.edit.breakdown.readsAs": "Reads as {amount}",
+  "governance.finances.edit.breakdown.amountRequired":
+    "Add an amount, or remove this item.",
+  "governance.finances.edit.breakdown.amountNegative":
+    "Use an amount of zero or more.",
+  "governance.finances.edit.breakdown.amountTooPrecise":
+    "Use at most two decimals and up to 12 digits.",
+  "governance.finances.edit.breakdown.sumCaption_one": "Sum of {count} item",
+  "governance.finances.edit.breakdown.sumCaption_other": "Sum of {count} items",
+  "governance.finances.edit.breakdown.empty":
+    "Add items and this line's amount becomes their total.",
+  "governance.finances.edit.breakdown.col.name": "Name",
+  "governance.finances.edit.breakdown.col.period": "Detail",
+  "governance.finances.edit.breakdown.col.amount": "Amount",
+  "governance.finances.edit.breakdown.newItem": "Item {position}",
+  "governance.finances.edit.breakdown.aria.name": "Item {position}: name",
+  "governance.finances.edit.breakdown.aria.period": "{label}: detail",
+  "governance.finances.edit.breakdown.aria.amount": "{label}: amount",
+  "governance.finances.edit.breakdown.namePlaceholder": "e.g. Hosting",
+  "governance.finances.edit.breakdown.periodPlaceholder": "e.g. €15/mo",
+  "governance.finances.edit.breakdown.remove": "Remove {label}",
+  "governance.finances.edit.breakdown.add": "Add an item",
+  "governance.finances.edit.breakdown.full": "A line holds up to {max} items.",
+  "governance.finances.edit.breakdown.blocked":
+    "Fix the highlighted breakdown items before saving.",
   "governance.finances.edit.blockedByLabels":
     "Every ledger line needs a name before you can save.",
   "governance.finances.status.public":
@@ -7876,6 +7904,8 @@ export const admin: Catalog = {
   "marketingVideos.preview.pause": "Pause",
   "marketingVideos.preview.restart": "Back to the start",
   "marketingVideos.preview.scrub": "Position in the film",
+  "marketingVideos.preview.fullScreen": "Full screen",
+  "marketingVideos.preview.exitFullScreen": "Exit full screen",
   "marketingVideos.preview.soundLoading": "Getting the sound ready…",
   "marketingVideos.preview.soundOn": "Sound on",
   "marketingVideos.preview.soundFailed":

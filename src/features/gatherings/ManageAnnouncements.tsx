@@ -112,11 +112,13 @@ export function ManageAnnouncements({ slug }: { slug: string }) {
                 </div>
               </div>
               <div className={styles.msgPreview}>{announcement.body}</div>
-              <div className={styles.openRate}>
-                {t("gatherings:manage.announcements.reached", {
-                  count: announcement.recipientCount,
-                })}
-              </div>
+              {typeof announcement.recipientCount === "number" && (
+                <div className={styles.openRate}>
+                  {t("gatherings:manage.announcements.reached", {
+                    count: announcement.recipientCount,
+                  })}
+                </div>
+              )}
             </div>
           ))}
         </div>

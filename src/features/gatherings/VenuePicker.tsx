@@ -14,6 +14,9 @@ export interface VenueSelection {
   text: string;
   listingId: string | null;
   venueListing: { slug: string; name: string } | null;
+  /** The linked listing's street address. Set only by the manage page's
+   *  "Edit venue" modal, and only when the listing has one. */
+  address?: string;
 }
 
 const MAX_RESULTS = 8;

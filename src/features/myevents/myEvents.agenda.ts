@@ -1,17 +1,25 @@
 import type { MyEvent, Pill, SortBy, FilterKey } from "./myEvents.types";
 import type { TFunction } from "../../shared/i18n/types";
 import {
+  atTime,
   parseDate,
   dayDiff,
+  hasEnded,
   inPill,
   isInMonth,
   isOnDay,
   isOnline,
 } from "./myEvents.helpers";
+import { clockNow } from "./myEvents.clock";
 
 export interface AgendaGroup {
   label: string | null;
+  /** A quieter line under the label, saying what the group holds. */
+  subtitle?: string;
   events: MyEvent[];
+  /** Whether this is the trailing group of gatherings that are already over,
+   *  whose cards render greyed out. */
+  isEnded?: boolean;
 }
 
 export interface AgendaState {
@@ -63,6 +71,12 @@ function applySecondary(list: MyEvent[], st: AgendaState): MyEvent[] {
 const byDateAsc = (a: MyEvent, b: MyEvent) =>
   +parseDate(a.date) - +parseDate(b.date);
 
+/** How many more to reveal per "Show N more" press, once `pastShown` caps a
+ *  list of history. */
+function loadMoreFor(total: number, shown: number): number {
+  return total > shown ? Math.min(5, total - shown) : 0;
+}
+
 /** Build the grouped agenda for the current state. Chrome group labels
  * ("Today", "Recently attended", …) resolve through `t`; a community name
  * used as a sort-by-community group label is content and stays as-is. */
@@ -106,10 +120,7 @@ export function buildAgenda(
     return {
       ...empty,
       groups: [{ label: t("myevents:agenda.recentlyAttended"), events: shown }],
-      loadMoreCount:
-        sorted.length > st.pastShown
-          ? Math.min(5, sorted.length - st.pastShown)
-          : 0,
+      loadMoreCount: loadMoreFor(sorted.length, st.pastShown),
     };
   }
 
@@ -131,11 +142,16 @@ export function buildAgenda(
     return { ...empty, groups };
   }
 
-  // upcoming / going / hosting / waitlisted
+  // upcoming / going / hosting / waitlisted. Gatherings that are already over
+  // leave the running groups for one greyed group at the very end.
+  const currentTime = clockNow();
+  const active: MyEvent[] = [];
+  const ended: MyEvent[] = [];
+  list.forEach((e) => (hasEnded(e, currentTime) ? ended : active).push(e));
   let groups: AgendaGroup[];
   if (st.sortBy === "community") {
     const byc: Record<string, MyEvent[]> = {};
-    list.forEach((e) => {
+    active.forEach((e) => {
       const c = e.community || t("myevents:agenda.otherCommunity");
       (byc[c] = byc[c] || []).push(e);
     });
@@ -150,17 +166,17 @@ export function buildAgenda(
     };
     groups = (["hosting", "going", "waitlisted"] as const).map((category) => ({
       label: labels[category]!,
-      events: list.filter((e) => e.category === category).sort(byDateAsc),
+      events: active.filter((e) => e.category === category).sort(byDateAsc),
     }));
   } else {
-    const sorted = [...list].sort(byDateAsc);
+    const sorted = [...active].sort(byDateAsc);
     const today: MyEvent[] = [];
     const week: MyEvent[] = [];
     const later: MyEvent[] = [];
     sorted.forEach((e) => {
       // Off the day it OPENED. A gathering already under way is something the
       // member is at now, so a festival that began on Friday stays under Today
-      // through Sunday. `inPill` is what drops it once it has closed.
+      // through Sunday. `hasEnded` moves it to the ended group once it closes.
       const startDiff = dayDiff(parseDate(e.date));
       if (startDiff <= 0) today.push(e);
       else if (startDiff < 7) week.push(e);
@@ -173,8 +189,22 @@ export function buildAgenda(
     ];
   }
   groups = groups.filter((g) => g.events.length);
+  if (!ended.length) return { ...empty, groups };
+
+  // Most recently ended first, capped like the Past pill so years of history
+  // arrive five at a time.
+  const endedByRecency = [...ended].sort(
+    (a, b) => +atTime(b, "end") - +atTime(a, "end"),
+  );
+  groups.push({
+    label: t("myevents:agenda.ended"),
+    subtitle: t("myevents:agenda.endedSub"),
+    events: endedByRecency.slice(0, st.pastShown),
+    isEnded: true,
+  });
   return {
     ...empty,
     groups,
+    loadMoreCount: loadMoreFor(endedByRecency.length, st.pastShown),
   };
 }

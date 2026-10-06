@@ -71,6 +71,8 @@ export const myevents: Catalog = {
   "agenda.savedForLater": "Saved for later",
   "agenda.invitesSent": "Invites you've sent",
   "agenda.otherCommunity": "Other",
+  "agenda.ended": "Already happened",
+  "agenda.endedSub": "These gatherings have already gone by.",
   "agenda.showMore_one": "Show {count} more",
   "agenda.showMore_other": "Show {count} more",
   // Distinct error/retry state when the live events fetch fails (never a false

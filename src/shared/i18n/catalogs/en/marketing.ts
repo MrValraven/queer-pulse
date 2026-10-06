@@ -3193,6 +3193,70 @@ export const marketing: Catalog = {
     "Newcomers grouped by the week they joined",
   "changelog.entries.new-members-grouped-by-week.body":
     "Each week gets its own card on the All tab, and Show all now unfolds smoothly.",
+  "changelog.entries.gathering-venue-fills-address.title":
+    "Linking a venue fills in its address",
+  "changelog.entries.gathering-venue-fills-address.body":
+    "Pick a place from the directory and its street address comes with it, so you only add how to get in.",
+  "changelog.entries.gathering-cohosts-and-venue-stand-out.title":
+    "Co-hosts are tagged and the venue leads on a gathering",
+  "changelog.entries.gathering-cohosts-and-venue-stand-out.body":
+    "Who's going marks co-hosts beside the host, and the venue name now opens Getting there in large type.",
+  "changelog.entries.lineup-invites.title":
+    "Performers accept a lineup invite before they're listed",
+  "changelog.entries.lineup-invites.body":
+    "Hosts invite connections or anyone going, and the performer joins or declines from their notification.",
+  "changelog.entries.lineup-editor-in-manage.title":
+    "Guests can see a gathering's lineup",
+  "changelog.entries.lineup-editor-in-manage.body":
+    "Hosts tag people from the Manage page, and the gathering page lists them once someone is tagged.",
+  "changelog.entries.date-pickers-take-keyboard-focus.title":
+    "Date pickers and host tools work from the keyboard",
+  "changelog.entries.date-pickers-take-keyboard-focus.body":
+    "Opening a date picker or the host menu now puts focus inside it, so the arrow keys work straight away.",
+  "changelog.entries.gathering-share-menu.title":
+    "Share gatherings, communities, places and articles any way you like",
+  "changelog.entries.gathering-share-menu.body":
+    "One Share menu: send in a message, on WhatsApp or to any app, or copy a ready message with the link.",
+  "changelog.entries.events-browse-poster-cards.title":
+    "Browsing events feels like a poster wall",
+  "changelog.entries.events-browse-poster-cards.body":
+    "Next up becomes a big poster you can save, and each gathering gets a ticket card with its date and who is going.",
+  "changelog.entries.hidden-going-counts-stay-hidden.title":
+    "Hidden going counts stay hidden on lists",
+  "changelog.entries.hidden-going-counts-stay-hidden.body":
+    "When a host turns off the attendee count, lists, the homepage and the event page stop sending the number.",
+  "changelog.entries.calendar-fits-every-month.title":
+    "Your events calendar fits every month",
+  "changelog.entries.calendar-fits-every-month.body":
+    "Months that start midweek no longer spill the day grid past the edge of the calendar card.",
+  "changelog.entries.gathering-description-keeps-line-breaks.title":
+    "Gathering descriptions keep their paragraphs",
+  "changelog.entries.gathering-description-keeps-line-breaks.body":
+    "Line breaks and spacing a host types now show on the gathering page exactly as written.",
+  "changelog.entries.my-events-ended-greyed-at-bottom.title":
+    "See finished gatherings greyed out at the bottom of My events",
+  "changelog.entries.my-events-ended-greyed-at-bottom.body":
+    "The page now reads today's real date, so a gathering that has ended stops showing as upcoming.",
+  "changelog.entries.gathering-live-card-sits-straight.title":
+    "A straight preview when your gathering goes live",
+  "changelog.entries.gathering-live-card-sits-straight.body":
+    'The card beside "Your gathering is live" now sits level, so it reads like it will on the board.',
+  "changelog.entries.film-preview-full-screen.title":
+    "Watch marketing films full screen",
+  "changelog.entries.film-preview-full-screen.body":
+    "The film grows smoothly out of the preview and glides back, and the controls step aside while it plays.",
+  "changelog.entries.film-preview-closes-at-once.title":
+    "Closing a film preview no longer freezes the page",
+  "changelog.entries.film-preview-closes-at-once.body":
+    "The soundtrack is composed out of sight and kept, so reopening a film plays it with sound at once.",
+  "changelog.entries.spending-lines-split-into-items.title":
+    "Spending lines split into items",
+  "changelog.entries.spending-lines-split-into-items.body":
+    "Admins list what each spending line covers, like hosting and AI tools, and the public breakdown adds them up.",
+  "changelog.entries.feed-gatherings-show-their-photo.title":
+    "Gatherings in the feed show their photo",
+  "changelog.entries.feed-gatherings-show-their-photo.body":
+    "A gathering with a cover photo now leads its feed card with it, and each card has one Details button.",
   "changelog.entries.feed-cards-keep-their-column.title":
     "Feed cards stay put when one expands",
   "changelog.entries.feed-cards-keep-their-column.body":
@@ -9518,8 +9582,6 @@ export const marketing: Catalog = {
   "directory.detail.action.share": "Share",
   "directory.detail.action.save": "Save",
   "directory.detail.action.saved": "Saved",
-  "directory.detail.action.linkCopied": "Link copied",
-  "directory.detail.action.shareError": "Couldn't share. Try copying the link",
   "directory.detail.action.saveSignIn": "Sign in to save this space",
 
   // ── Moderator band (`DirectoryStaffBand`), the plum strip above the

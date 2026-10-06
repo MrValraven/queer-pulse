@@ -1,18 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
-import { Avatar, Button, ImageSlot, Outro } from "../../shared/components/ui";
+import { Button, ImageSlot, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { defaultArticleId, firstPlainText } from "./data/articles";
-import { ArticleReaderBody } from "./ArticleReaderBody";
-import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
-import { AuthorLink } from "./AuthorLink";
+import type { TextSize } from "./articleTextSize.data";
+import { ArticlePageBody } from "./ArticlePageBody";
 import { ArticleHeader } from "./ArticleHeader";
 import { useArticle } from "./api/useArticle";
 import { ApiError } from "../../shared/api/client";
@@ -21,12 +20,9 @@ import {
   ArticleNotFound,
   ArticleSignInRequired,
 } from "./ArticleStates";
-import { ArticleContentNotes, ArticleCorrections } from "./ArticleNotes";
-import { ArticleLifecycleBanner } from "./ArticleLifecycleBanner";
 import { ArticleRelatedRail } from "./ArticleRelatedRail";
-import { clampDescription, nodeToText } from "./nodeText";
+import { clampDescription, nodeToSentenceText } from "./nodeText";
 import { ArticleComments } from "./comments/ArticleComments";
-import { ArticleReadingAids } from "./ArticleReadingAids";
 
 import styles from "./ArticlePage.module.css";
 
@@ -35,9 +31,6 @@ export function ArticlePage() {
   const { demoMode } = useDemoMode();
   const [params, setParams] = useSearchParams();
   const [textSize, setTextSize] = useState<TextSize>("md");
-  // PRD-113: the element the reading aids measure: progress, the resume
-  // point and the contents list all address the body, never the whole page.
-  const bodyRef = useRef<HTMLDivElement>(null);
   const simLoading = useSimulatedLoad();
   // PRD-101 — a bare `/magazine/article` with no `?id=`. Demo mode keeps the
   // curated default piece, which is the prototype's own front door. Live mode
@@ -100,7 +93,7 @@ export function ArticlePage() {
   // exactly this slot, or the dek when there is no standfirst.
   const standfirst = article.standfirst?.trim() || article.dek?.trim() || "";
 
-  const plainTitle = nodeToText(article.title).replace(/\s+/g, " ").trim();
+  const plainTitle = nodeToSentenceText(article.title);
 
   // CON-17 — the SEO rail's three fields, each falling back to what the page
   // derived before they were served: the first paragraph, the hero image, and
@@ -141,53 +134,15 @@ export function ArticlePage() {
         <div className={styles.heroStrip} />
       </div>
 
-      <div className={styles.bodyWrap}>
-        <article className={styles.bodyInner}>
-          <ArticleToolbar
-            textSize={textSize}
-            onTextSize={setTextSize}
-            articleId={id}
-            articleTitle={
-              typeof article.title === "string" ? article.title : undefined
-            }
-            articleMeta={`${article.byline} · ${article.readTime}`}
-            articleDescription={blurb}
-            articleReadTime={article.readTime}
-          />
-          {/* CON-16 — where the desk stands on this piece today. A live piece
-              draws nothing; an archived or superseded one stays readable and
-              carries a dated note instead of disappearing. */}
-          <ArticleLifecycleBanner
-            lifecycle={article.lifecycle}
-            notice={article.lifecycleNotice}
-            publishedLabel={article.date}
-          />
-          <ArticleContentNotes notes={article.contentNotes ?? []} />
-          {/* PRD-113: the long-read aids: a progress bar, a contents list
-              built from the piece's own headings, and the point this reader
-              left off at. Above the body so a returning reader meets the
-              resume prompt before the first paragraph. */}
-          <ArticleReadingAids article={article} bodyRef={bodyRef} />
-          {/* DES-102: the chosen size rides a data attribute and the CSS maps
-              it onto rem tokens. Writing px here ignored the reader's own
-              browser font size and capped "A+" at 22px. */}
-          <div className={styles.body} data-text-size={textSize} ref={bodyRef}>
-            <ArticleReaderBody article={article} />
-          </div>
-
-          <ArticleCorrections corrections={article.corrections ?? []} />
-
-          <div className={styles.bio}>
-            <Avatar initials={article.initials} tint={article.tint} size={48} />
-            <div>
-              <div className={styles.bioName}>
-                <AuthorLink name={article.byline} />
-              </div>
-              <p className={styles.bioText}>{article.authorBio}</p>
-            </div>
-          </div>
-        </article>
-      </div>
+      <ArticlePageBody
+        article={article}
+        articleId={id}
+        plainTitle={plainTitle}
+        blurb={blurb}
+        standfirst={standfirst}
+        textSize={textSize}
+        onTextSize={setTextSize}
+      />
 
       <ArticleRelatedRail
         article={article}

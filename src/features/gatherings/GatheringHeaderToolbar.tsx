@@ -1,22 +1,24 @@
 import { useState, type ReactNode } from "react";
-import { FiCalendar, FiShare2 } from "react-icons/fi";
+import { FiCalendar } from "react-icons/fi";
 import { IconButton, Tooltip } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AddToCalendarSheet } from "../../shared/components/calendar/AddToCalendarSheet";
+import { ShareMenu } from "../messages/share/ShareMenu";
 import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
 import {
   gatheringCalendarSubtitle,
   toCalendarInput,
 } from "./gatheringCalendarInput";
-import { shareGathering } from "./shareGathering";
+import { buildGatheringShareMessage } from "./gatheringShareMessage";
+import { gatheringPath } from "./gatheringPaths";
 import type { GatheringDetail } from "./data";
 import styles from "./GatheringHeaderToolbar.module.css";
 
 /**
  * The quiet icon row at the top-right of the gathering header: Save, "Add to
- * calendar", Share, and then whatever host controls the page hands in.
+ * calendar", the Share menu, and then whatever host controls the page hands in.
  *
  * WHY ICONS. These used to be full-size buttons in the hero beside the RSVP,
  * and four buttons of equal weight made the one action that matters (taking a
@@ -49,7 +51,7 @@ export function GatheringHeaderToolbar({
   const { showToast } = useToast();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const calendarLabel = t("shared:addToCalendar.title");
-  const shareLabel = t("gatherings:headerToolbar.shareCta");
+  const shareText = buildGatheringShareMessage(gathering, t, formatters);
 
   return (
     <>
@@ -75,14 +77,14 @@ export function GatheringHeaderToolbar({
             </IconButton>
           </Tooltip>
         )}
-        <Tooltip label={shareLabel} placement="bottom">
-          <IconButton
-            aria-label={shareLabel}
-            onClick={() => void shareGathering(gathering, t, showToast)}
-          >
-            <FiShare2 aria-hidden />
-          </IconButton>
-        </Tooltip>
+        <ShareMenu
+          content={{
+            path: gatheringPath(gathering.slug),
+            title: gathering.title,
+            kind: "gathering",
+            text: shareText,
+          }}
+        />
         {hostMenu}
       </div>
       {isCalendarOpen && (

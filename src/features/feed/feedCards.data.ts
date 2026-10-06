@@ -2,7 +2,7 @@ import type { AvatarTint } from "../../shared/components/ui";
 
 /**
  * Scripted enrichment for the redesigned demo feed cards. English,
- * untranslated — this is prototype persona content (like `FEED_POST` in
+ * untranslated: this is prototype persona content (like `FEED_POST` in
  * `feed.data.ts`), NOT UI chrome. Live mode never reads this; its cards
  * render from the thin `FeedItem` instead (see `api/feed.adapters.ts`).
  *
@@ -45,7 +45,9 @@ export const DEMO_MEMBER = {
 
 /** Gathering card. Day/month/title/venue/host match the real
  *  `GATHERINGS["queer-book-club"]` record; `going`/`capacity`/`price`/`tags`
- *  are scripted card enrichment. */
+ *  are scripted card enrichment. So is `coverImageUrl`: that record carries no
+ *  cover, and the card needs one to show the cover banner a live gathering
+ *  with a photo gets. */
 export const DEMO_GATHERING = {
   slug: "queer-book-club",
   day: "19",
@@ -53,6 +55,8 @@ export const DEMO_GATHERING = {
   title: "Queer Book Club: July",
   venue: "LX Factory, Alcântara",
   host: "QueerPulse",
+  coverImageUrl:
+    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop",
   quote:
     "This month: a queer classic in the courtyard. Come even if you didn't finish. Nobody checks.",
   going: 12,
@@ -84,5 +88,5 @@ export const DEMO_COMMUNITY = {
   activity: "Active daily",
 };
 
-/** Feed sidebar/hero banner counts — invented, platform-voice social proof. */
+/** Feed sidebar/hero banner counts: invented, platform-voice social proof. */
 export const DEMO_BANNER = { joined: 5, sharing: 2 };

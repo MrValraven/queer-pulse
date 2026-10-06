@@ -32,7 +32,6 @@ export function CommunityDetailHero({
   hasCount,
   saved,
   onToggleSave,
-  onShare,
   onJoin,
   onLeave,
   onAcceptInvite,
@@ -61,7 +60,6 @@ export function CommunityDetailHero({
   hasCount: boolean;
   saved: boolean;
   onToggleSave: () => void;
-  onShare: () => void;
   onJoin: () => void;
   onLeave: () => void;
   onAcceptInvite: () => void;
@@ -169,8 +167,7 @@ export function CommunityDetailHero({
             onEdit={onEdit}
             saved={saved}
             onToggleSave={onToggleSave}
-            onShare={onShare}
-            communityName={community.name}
+            community={community}
             communitySlug={communitySlug}
             joined={joined}
             heroAvatars={heroAvatars}

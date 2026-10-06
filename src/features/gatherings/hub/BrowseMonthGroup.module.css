@@ -1,0 +1,108 @@
+/* BrowseMonthGroup: one month of the Browse board. A sticky italic heading
+   with a quiet count, then the events in the active layout: a responsive grid
+   of ticket cards, or one agenda column. */
+
+.monthGroup {
+  margin-block-end: var(--section-y-48);
+}
+
+/* A flex row on the text baseline, so the small sans count sits on the same
+   line as the big italic month whatever their sizes. On a narrow phone the
+   count wraps to its own line and the month name keeps its full width. */
+.monthHeading {
+  position: sticky;
+  /* Parks below the app's fixed nav (`--sticky-top`, which each nav layout
+     sets for itself) plus whatever sticky chrome sits above the hub's content
+     (see EventsHubPage.module.css `.root { --hub-tabs-h }`). The hub offset
+     falls back to 0 for any context that renders the board without that
+     property in scope. */
+  inset-block-start: calc(var(--sticky-top) + var(--hub-tabs-h, 0px));
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--gap-sm);
+  background: var(--cream);
+  padding-block: 6px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: var(--text-heading);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--card-pad);
+}
+
+/* The band's cream reaches up past its own top edge, behind the heading's
+   text, so cards scrolling under it never peek through between the floating
+   nav pill and the band. */
+.monthHeading::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--gap-lg)) 0 0;
+  z-index: -1;
+  background: var(--cream);
+  pointer-events: none;
+}
+
+.monthCount {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 500;
+  font-size: var(--text-caption);
+  letter-spacing: 0;
+  color: var(--ink-60);
+}
+
+/* ── Tickets: 1 column on a phone, 2 from --md-up, 3 from --wide-up ──
+   Three columns wait for 900px: at 760px a third of the row is about 220px,
+   too narrow for a 4:3 cover and a two-line Fraunces title. */
+.ticketGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-grid);
+  align-items: stretch;
+}
+
+@media (--md-up) {
+  .ticketGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (--wide-up) {
+  .ticketGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The cell fills its track and the row's height; the card inside caps its own
+   inline size (`--ticket-max-inline`) and sits at the start of the cell, so a
+   month with a single gathering never stretches it across the board. As a
+   grid itself, the cell hands the card a definite height for its
+   `block-size: 100%`, which is what lines up the cards sharing a row. Its
+   one track is `minmax(0, 1fr)`: an implicit `auto` track grew to the card's
+   min-content width, so a long theme strip pushed the card over its
+   neighbour. */
+.ticketCell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  min-inline-size: 0;
+}
+
+/* ── Agenda: one column of programme rows ── */
+.agendaList {
+  display: flex;
+  flex-direction: column;
+}
+
+.agendaItem {
+  min-width: 0;
+}
+
+/* Each row draws a hairline under itself. The month's last one has nothing
+   below it to divide from, and the next month's heading is its own break. */
+.agendaItem:last-child > * {
+  border-block-end-color: transparent;
+}

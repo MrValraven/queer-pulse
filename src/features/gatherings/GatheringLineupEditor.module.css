@@ -1,4 +1,5 @@
-/* Host lineup ("who performed") editor — mounted on the gathering detail page. */
+/* Host lineup editor on the Manage page's Attendees tab, plus the two-step
+   invite composer it opens. */
 
 .panel {
   margin-top: var(--wrap-px);
@@ -21,6 +22,13 @@
   font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.01em;
+  /* Focus lands here after a row leaves; hug the text so the ring does too. */
+  width: fit-content;
+}
+.panelTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .panelDesc {
   font-size: var(--text-13);
@@ -29,12 +37,20 @@
   max-width: 46ch;
   margin-top: 4px;
 }
+.counts {
+  margin-top: var(--gap-xs);
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
 .empty {
   font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
+/* --lineup-control-w is the one width the role select and "Invite again"
+   share, so their left edges line up down the list whatever the label. */
 .rows {
+  --lineup-control-w: 11rem;
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
@@ -49,11 +65,34 @@
   border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: var(--radius-badge);
 }
-.roleSelect {
+/* Identity and status badge. */
+.rowLead {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rowLead > :first-child {
+  min-width: 0;
+}
+/* Role select (or "Invite again") and the remove control. */
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
   margin-left: auto;
+}
+.roleSelect {
   font-size: var(--text-13);
 }
+.roleSelect,
+.inviteAgain {
+  flex: none;
+  width: var(--lineup-control-w);
+}
 .removeBtn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,28 +105,79 @@
   cursor: pointer;
   flex: none;
 }
-.removeBtn:hover {
+.removeBtn:hover:not(:disabled) {
   background: rgba(var(--line-rgb), 0.08);
   color: var(--ink);
 }
-
-.saveRow {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: var(--gap-sm);
+/* Waits while the invite that creates the row is still in flight. */
+.removeBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+/* The visible button stays 28px; on touch screens an invisible square
+   centred on it takes the hit area to the 44px minimum (as ChipSelect). */
+@media (pointer: coarse) {
+  .removeBtn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    transform: translate(-50%, -50%);
+  }
 }
 
-/* Below 560px the identity + role select + remove button no longer fit one
-   line. Give the identity its own full-width row, and share the second row
-   between the select (grows) and the remove control (fixed). */
+/* Step two of the invite composer: who, then their craft. */
+.composerBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+.composerFooter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  width: 100%;
+}
+
+/* The picker's list footer line when connections failed to load while
+   people going are still listed. The status region stays mounted, so it
+   takes no room while it has nothing to say. */
+.pickerError {
+  padding: var(--gap-xs) var(--gap-sm) 0;
+  text-align: center;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.pickerError:empty {
+  padding: 0;
+}
+
+/* Below 560px the identity, status, role select and remove button no longer
+   fit one line. The identity and its status badge keep the first line; the
+   select or "Invite again" takes the second line's full width beside the
+   remove control. The composer's two footer buttons stack full width, Send
+   on top. */
 @media (--sm) {
-  .row > :first-child {
-    flex: 1 1 100%;
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rowLead > :first-child {
+    flex: 1 1 auto;
+  }
+  .rowActions {
+    margin-left: 0;
+  }
+  .roleSelect,
+  .inviteAgain {
+    flex: 1 1 auto;
+    width: auto;
     min-width: 0;
   }
-  .roleSelect {
-    margin-left: 0;
-    flex: 1 1 auto;
-    min-width: 0;
+  .composerFooter {
+    flex-direction: column-reverse;
   }
 }

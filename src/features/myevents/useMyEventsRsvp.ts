@@ -8,6 +8,15 @@ import { joinWhenParts, myEventWhen } from "./myEvents.when";
 import { useMyEventsRsvpMutations } from "./useMyEventsRsvpMutations";
 import { useMyEventsSoftRemove } from "./useMyEventsSoftRemove";
 
+/** The "N going" attendee line, or nothing when the count is hidden. */
+function goingWhoText(
+  goingCount: number | undefined,
+  t: TFunction,
+): string | undefined {
+  if (typeof goingCount !== "number") return undefined;
+  return t("myevents:badges.goingCount", { count: goingCount });
+}
+
 interface RsvpDeps {
   events: MyEvent[];
   setEvents: Dispatch<SetStateAction<MyEvent[]>>;
@@ -133,8 +142,9 @@ export function useMyEventsRsvp({
         ...e,
         category: "going",
         // Same key the card badges already use, so the attendee line renders
-        // in the member's language and pluralizes properly.
-        whoText: t("myevents:badges.goingCount", { count: e.going }),
+        // in the member's language and pluralizes properly. A gathering whose
+        // host hid the count carries no `going`, and gets no attendee line.
+        whoText: goingWhoText(e.going, t),
         who: [["YOU", "coral"]],
       }));
       rsvpMutation.mutate(
@@ -182,7 +192,7 @@ export function useMyEventsRsvp({
             patch(id, (e) => ({
               ...e,
               category: "going",
-              whoText: t("myevents:badges.goingCount", { count: e.going }),
+              whoText: goingWhoText(e.going, t),
               who: [["YOU", "coral"]],
             }));
           },

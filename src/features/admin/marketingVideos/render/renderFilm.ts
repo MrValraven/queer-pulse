@@ -10,7 +10,8 @@ import {
   canEncodeAudio,
   canEncodeVideo,
 } from "mediabunny";
-import { composeScore, filmIn } from "./filmWindow";
+import { filmScore } from "./filmScore";
+import { filmIn } from "./filmWindow";
 import type { Rgb } from "./colorCalibration";
 import { MARKER_HEIGHT, MAX_MARKER_INDEX } from "./frameMarker";
 import { captureFilmBox, filmRect } from "./tabCapture";
@@ -88,6 +89,7 @@ async function pickFormat(): Promise<FilmFormat> {
  */
 export async function renderFilm({
   id,
+  filmUrl,
   scoreUrl,
   stream,
   stage,
@@ -95,6 +97,8 @@ export async function renderFilm({
   onProgress,
 }: {
   id: string;
+  /** The film's page, loaded again in a hidden frame to compose the score. */
+  filmUrl: string;
   scoreUrl: string;
   stream: MediaStream;
   stage: RenderStage;
@@ -120,7 +124,7 @@ export async function renderFilm({
       calibrationFrame.close();
       stage.showCalibration(false);
     }
-    const score = await composeScore(film, scoreUrl);
+    const score = await filmScore(filmUrl, scoreUrl);
     signal.throwIfAborted();
     const format = await pickFormat();
 

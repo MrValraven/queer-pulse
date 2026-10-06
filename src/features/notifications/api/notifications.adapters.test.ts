@@ -9,6 +9,10 @@ import {
 import { communityPostPath } from "../../communities/communityPostPath";
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
+import {
+  lineupInvitePath,
+  manageGatheringPath,
+} from "../../gatherings/gatheringPaths";
 import { writerTabHref } from "../../magazine/writerTabs";
 import type { TFunction } from "../../../shared/i18n/types";
 import { createFormatters } from "../../../shared/i18n/format";
@@ -786,5 +790,51 @@ describe("notificationDtoToView: decision reasons", () => {
     );
     expect(view.reason).toBe("The owner has not answered anyone in months.");
     expect(view.isReasonFromMember).toBe(true);
+  });
+});
+
+// Lineup invites (2026-10-06). A sibling top-level describe, like the blocks
+// above, to stay under the function line cap.
+describe("notificationDtoToView: lineup source href", () => {
+  it("opens the invite page for a lineup invite", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "event_lineup_invite",
+        payload: {
+          source: "lineup_invite",
+          eventSlug: "tea-dance",
+          inviteId: "entry-1",
+        },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(lineupInvitePath("tea-dance", "entry-1"));
+  });
+
+  it("opens the Manage page's Attendees tab for a lineup reply", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "event_lineup_accepted",
+        payload: { source: "lineup_reply", eventSlug: "tea-dance" },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(
+      `${manageGatheringPath("tea-dance")}?tab=attendees`,
+    );
+  });
+
+  it("builds no link for a lineup invite without an invite id", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "event_lineup_invite",
+        payload: { source: "lineup_invite", eventSlug: "tea-dance" },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBeUndefined();
   });
 });

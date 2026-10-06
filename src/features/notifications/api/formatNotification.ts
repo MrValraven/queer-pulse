@@ -150,6 +150,12 @@ export type NotificationKind =
   // `AddEventCohostInviteNotificationType1790500000000`, SDD 2026-08-18
   // "cohost invite flow").
   | "event_cohost_invite"
+  // Lineup invites (2026-10-06): the invite reaches the member; the two
+  // replies reach the organizer who sent it (mirrors the backend values added
+  // in `AddLineupNotificationTypes1830100100000`).
+  | "event_lineup_invite"
+  | "event_lineup_accepted"
+  | "event_lineup_declined"
   // Sent to a member the first time a save newly credits their handle as a
   // collaborator on someone else's persona item (mirrors the backend
   // `notifications_type_enum` value added in
@@ -501,7 +507,9 @@ export type NotificationKind =
   // `EventCapacityAlertsService`). System-driven, no actor: a room filling up
   // is nobody's act. Payload carries `{ source: "event", eventSlug, title,
   // seatsRemaining }`; `seatsRemaining` is a NUMBER, mirrored onto `count` for
-  // CLDR pluralisation the same way `daysRemaining` is.
+  // CLDR pluralisation the same way `daysRemaining` is. It is absent when the
+  // host hid the attendee count; with no `count` the flat
+  // `type.event_nearly_full.text` ("nearly full") renders.
   | "event_nearly_full"
   // PRD-31, the two rows that close the ban-evasion loop. A community's
   // moderators get a one-bit "this applicant matches somebody THIS community
@@ -726,6 +734,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   event_cancelled: "events",
   event_updated: "events",
   event_cohost_invite: "events",
+  event_lineup_invite: "events",
+  event_lineup_accepted: "events",
+  event_lineup_declined: "events",
   event_rsvp: "events",
   community_reply: "community",
   community_banned: "community",

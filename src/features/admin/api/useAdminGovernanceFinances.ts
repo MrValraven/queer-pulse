@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 import { useDemoAwareMutation } from "./demoAwareMutation";
+import { financeAmountOrZero } from "../adminFinanceAmount";
 import {
   getAdminFinances,
   openFinanceQuarter,
@@ -10,16 +11,29 @@ import {
   type AdminFinanceLatest,
   type AdminFinanceResponseDTO,
   type AdminFinLine,
+  type FinanceLedgerEdit,
+  type FinanceLineItem,
   type UpdateAdminFinancesBody,
 } from "./adminGovernanceFinances.api";
+
+/** A breakdown's total as the backend writes it: summed in whole cents, then
+ *  written back as a canonical number string. */
+function sumItemAmounts(items: FinanceLineItem[]): string {
+  const cents = items.reduce(
+    (total, item) => total + Math.round(financeAmountOrZero(item.amount) * 100),
+    0,
+  );
+  return String(Math.round(cents) / 100);
+}
 
 // Demo mode reshapes the admin page's own `adminGovernance.data` mock into
 // the backend response shape so demo and live render through the same
 // component. The mock is imported on demand inside the demo queryFn (see
 // below) so it never ships in the live bundle. Ledger rows carry a
-// `demoLabel` (plain-English text) used as the final `FinLine.label` — the
-// mock has no per-row notes or line-item breakdown, so those fields are left
-// empty, and the fictional MRR/sustainer/solidarity headline figures are
+// `demoLabel` (plain-English text) used as the final `FinLine.label`. The
+// mock has no per-row notes, so those are left empty; a row with sample
+// `items` carries them as a saved (`manual`) breakdown whose sum is the row's
+// amount. The fictional MRR/sustainer/solidarity headline figures are
 // hardcoded below.
 async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
   const { QUARTERS, INCOME_LEDGER, LEDGER } =
@@ -49,16 +63,23 @@ async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
     demoLabel: string;
     amount: number;
     width: number;
-  }): AdminFinLine => ({
-    label: ledgerRow.demoLabel,
-    amount: String(ledgerRow.amount),
-    note: "",
-    width: ledgerRow.width,
-    items: [],
-    total: { label: "", amount: String(ledgerRow.amount) },
-    source: "seeded",
-    enabled: true,
-  });
+    items?: FinanceLineItem[];
+  }): AdminFinLine => {
+    const items = ledgerRow.items ?? [];
+    const amount =
+      items.length > 0 ? sumItemAmounts(items) : String(ledgerRow.amount);
+    return {
+      label: ledgerRow.demoLabel,
+      amount,
+      note: "",
+      width: ledgerRow.width,
+      items,
+      total: { label: "", amount },
+      source: "seeded",
+      ...(items.length > 0 && { itemsSource: "manual" as const }),
+      enabled: true,
+    };
+  };
 
   const latest: AdminFinanceLatest = {
     quarter: lastQuarter.label,
@@ -118,6 +139,14 @@ const SCALAR_KEYS = [
   "expenseTotal",
 ] as const;
 
+/** The amount an edit leaves a line with, as the backend decides it: a
+ *  non-empty breakdown's sum wins over any `amount` sent beside it. */
+function editedAmount(edit: FinanceLedgerEdit): string | undefined {
+  return edit.items && edit.items.length > 0
+    ? sumItemAmounts(edit.items)
+    : edit.amount;
+}
+
 function applyLedgerEdits(
   lines: AdminFinLine[],
   edits: UpdateAdminFinancesBody["income"],
@@ -128,9 +157,18 @@ function applyLedgerEdits(
     if (!edit) return line;
     const next: AdminFinLine = { ...line };
     if (edit.label !== undefined) next.label = edit.label;
-    if (edit.amount !== undefined && edit.amount !== line.amount) {
-      next.amount = edit.amount;
+    const amount = editedAmount(edit);
+    if (amount !== undefined && amount !== line.amount) {
+      next.amount = amount;
       next.source = "manual";
+    }
+    // A saved breakdown replaces the old one whole; `[]` clears it and the
+    // amount stays as set above. The total follows the amount either way,
+    // as the backend writes it.
+    if (edit.items !== undefined) {
+      next.items = edit.items;
+      next.itemsSource = "manual";
+      next.total = { label: "", amount: next.amount };
     }
     if (edit.note !== undefined) next.note = edit.note;
     if (edit.enabled !== undefined) next.enabled = edit.enabled;
@@ -140,16 +178,21 @@ function applyLedgerEdits(
   const appended = edits
     .filter((edit) => edit.index >= lines.length)
     .sort((first, second) => first.index - second.index)
-    .map((edit): AdminFinLine => ({
-      label: edit.label ?? "",
-      amount: edit.amount ?? "0",
-      note: edit.note ?? "",
-      width: 0,
-      items: [],
-      total: { label: "", amount: edit.amount ?? "0" },
-      source: "manual",
-      enabled: edit.enabled ?? true,
-    }));
+    .map((edit): AdminFinLine => {
+      const amount = editedAmount(edit) ?? "0";
+      const items = edit.items ?? [];
+      return {
+        label: edit.label ?? "",
+        amount,
+        note: edit.note ?? "",
+        width: 0,
+        items,
+        total: { label: "", amount },
+        source: "manual",
+        ...(items.length > 0 && { itemsSource: "manual" as const }),
+        enabled: edit.enabled ?? true,
+      };
+    });
   return [...corrected, ...appended];
 }
 
@@ -159,17 +202,20 @@ function isEnteredByPeople(sources: AdminFinanceLatest["sources"]): boolean {
   return SCALAR_KEYS.every((key) => sources[key] !== "seeded");
 }
 
-/** Mirrors the backend's ledger `isFigureChanged`: an amount that moved, or a
- *  row appended. A label, note or on/off switch is words. */
+/** Mirrors the backend's ledger `isFigureChanged`: an amount that moved
+ *  (a breakdown whose sum moved included), or a row appended. A label, note
+ *  or on/off switch is words. */
 function hasLedgerFigureEdit(
   lines: AdminFinLine[],
   edits: UpdateAdminFinancesBody["income"],
 ): boolean {
-  return (edits ?? []).some(
-    (edit) =>
+  return (edits ?? []).some((edit) => {
+    const amount = editedAmount(edit);
+    return (
       edit.index >= lines.length ||
-      (edit.amount !== undefined && edit.amount !== lines[edit.index]?.amount),
-  );
+      (amount !== undefined && amount !== lines[edit.index]?.amount)
+    );
+  });
 }
 
 /**

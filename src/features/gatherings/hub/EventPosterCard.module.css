@@ -24,8 +24,11 @@
     box-shadow var(--dur-base) var(--ease);
 }
 
+/* A `<span>` in the markup, so it needs a block box: `aspect-ratio` does
+   nothing on an inline box, and the poster collapsed to no height. */
 .frame {
   position: relative;
+  display: block;
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-card);
@@ -88,6 +91,20 @@
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
   transition: transform var(--dur-fast) var(--ease);
+}
+
+/* The urgent ribbon ("Happening now", "Tonight") on the Browse ticket cards
+   and the hero: a coral fill that stands off a dark cover where the plum one
+   sank into it. Added beside `.ribbon`, and after it in this file so it wins
+   on equal specificity whatever the load order. The Highlights posters keep
+   the plum `.ribbon` alone. Plum on --accent is 5.5:1. */
+.urgentRibbon {
+  background: var(--accent);
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     coral fill in both themes, so it must stay dark. --text-strong would
+     flip. */
+  color: var(--plum);
+  box-shadow: var(--shadow-accent);
 }
 
 /* "See it →" affordance — featured overlay corner pill. Visible by default
@@ -237,10 +254,19 @@
   font-weight: 700;
 }
 
-.pricePillScrim {
-  background: rgba(var(--cream-rgb), 0.18);
-  border: 1px solid rgba(var(--cream-rgb), 0.32);
+/* The on-cover chips (price, "Gathering", theme tags) sit straight on the
+   photo, which may be bright where the scrim is thin. A plum backing at 0.72
+   with a light blur keeps cream type legible over a white wall or a sunlit
+   table. --plum-rgb and --cream-rgb do not flip, so this reads the same in
+   both themes. */
+.pricePillScrim,
+.kindGatheringScrim,
+.themeTagScrim {
+  background: rgba(var(--plum-rgb), 0.72);
+  border: 1px solid rgba(var(--cream-rgb), 0.28);
   color: rgb(var(--cream-rgb));
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
 }
 
 .pricePill {
@@ -276,9 +302,21 @@
   color: var(--plum);
 }
 
-.kindGatheringScrim {
-  background: rgba(var(--cream-rgb), 0.2);
-  border: 1px solid rgba(var(--cream-rgb), 0.4);
+/* `Tag.module.css` restyles every `.tag` under `[data-theme="dark"]` at
+   (0,2,0), which outranked the on-cover chips above and turned them a dim
+   grey. A cover is the same photo in both themes, so its chips keep the
+   light-theme look there too. `.pricePillScrim` is a plain span outside
+   `Tag`, so it needs no override. */
+:global([data-theme="dark"]) .kindEventScrim {
+  background: rgb(var(--cream-rgb));
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
+  color: var(--plum);
+}
+
+:global([data-theme="dark"]) .kindGatheringScrim,
+:global([data-theme="dark"]) .themeTagScrim {
+  background: rgba(var(--plum-rgb), 0.72);
   color: rgb(var(--cream-rgb));
 }
 
@@ -532,8 +570,11 @@
   color: var(--text-strong);
 }
 
-.themeTagScrim {
-  background: rgba(var(--cream-rgb), 0.2);
-  border: 1px solid rgba(var(--cream-rgb), 0.4);
-  color: rgb(var(--cream-rgb));
+/* `.themeTagScrim`'s fill sits with the other on-cover chips, under
+   `.pricePillScrim` above. */
+
+/* Loading placeholders reuse the live cards' classes for their footprint.
+   They are inert, so they take no pointer: no hover lift, tint or shadow. */
+.isSkeleton {
+  pointer-events: none;
 }

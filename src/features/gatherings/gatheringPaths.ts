@@ -89,12 +89,44 @@ export const gatheringCancelledPath = (slug: string): string =>
   `${gatheringPath(slug)}/cancelled`;
 export const gatheringDashboardPath = (slug: string): string =>
   `${gatheringPath(slug)}/dashboard`;
-export const manageGatheringPath = (slug: string): string =>
-  `${gatheringPath(slug)}/manage`;
+
+/** The Manage page's tabs, in the order the tab bar shows them. */
+export const MANAGE_GATHERING_TABS = [
+  "overview",
+  "attendees",
+  "messages",
+  "settings",
+] as const;
+export type ManageGatheringTab = (typeof MANAGE_GATHERING_TABS)[number];
+
+/** Query param that opens the Manage page on one of its tabs. */
+export const MANAGE_GATHERING_TAB_PARAM = "tab";
+
+/** The Manage tab a `?tab=` value names, or undefined for any other value so
+ *  the page opens on its default tab. */
+export function manageGatheringTabFromParam(
+  value: string | null,
+): ManageGatheringTab | undefined {
+  return MANAGE_GATHERING_TABS.find((tabId) => tabId === value);
+}
+
+/** The Manage page, opened on `tab` when one is given. */
+export const manageGatheringPath = (
+  slug: string,
+  tab?: ManageGatheringTab,
+): string => {
+  const path = `${gatheringPath(slug)}/manage`;
+  if (!tab) return path;
+  const query = new URLSearchParams({ [MANAGE_GATHERING_TAB_PARAM]: tab });
+  return `${path}?${query.toString()}`;
+};
 export const gatheringPhotosPath = (slug: string): string =>
   `${gatheringPath(slug)}/photos`;
 export const coHostInvitePath = (slug: string, inviteId: string): string =>
   `${gatheringPath(slug)}/co-host-invite/${inviteId}`;
+
+export const lineupInvitePath = (slug: string, entryId: string): string =>
+  `${gatheringPath(slug)}/lineup-invite/${entryId}`;
 
 /**
  * The gathering's public link, built off the running instance's origin (see

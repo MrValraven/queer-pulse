@@ -10,10 +10,13 @@ export const PILLS: Pill[] = [
   "saved",
 ];
 
-/** Mock "now" — the prototype is anchored to Mon 29 Jun 2026, 16:30. */
-export const TODAY = new Date(2026, 5, 29);
-TODAY.setHours(0, 0, 0, 0);
-export const NOW = new Date(2026, 5, 29, 16, 30);
+/**
+ * The demo clock: the prototype is anchored to Mon 29 Jun 2026, 16:30. Live
+ * mode reads the real clock instead; `myEvents.clock.ts` picks between them.
+ */
+export const DEMO_TODAY = new Date(2026, 5, 29);
+DEMO_TODAY.setHours(0, 0, 0, 0);
+export const DEMO_NOW = new Date(2026, 5, 29, 16, 30);
 
 /** Avatar tint inline-styles, keyed by tint name. */
 export const TINT_STYLE: Record<string, { background: string; color: string }> =

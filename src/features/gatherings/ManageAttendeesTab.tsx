@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { BarFromGatheringModal } from "./BarFromGatheringModal";
 import { InviteMembersModal } from "./InviteMembersModal";
+import { GatheringLineupEditor } from "./GatheringLineupEditor";
 import { ManageBarredList } from "./ManageBarredList";
 import {
   GoingAttendeeActions,
@@ -192,6 +193,8 @@ export function AttendeesTab({
           <WaitlistAttendeeActions slug={slug} attendee={attendee} />
         )}
       />
+
+      <GatheringLineupEditor slug={slug} />
 
       <ManageBarredList slug={slug} demoMode={demoMode} />
 

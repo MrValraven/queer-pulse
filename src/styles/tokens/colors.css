@@ -254,6 +254,12 @@
   /* Cinema is dark by design, like Studio: this surface is intentionally the
      same in both themes and must NOT follow --paper, which flips. */
   --cinema-surface: #1a1030;
+
+  /* ── Marketing films (admin preview in full screen) ── */
+  /* The ground around a film shown full screen, sampled from the films'
+     vignetted edges so letterbox bands read as part of the frame. Fixed in
+     both themes, like --plum-deep. */
+  --film-ground: #1a0e24;
 }
 
 /* ── Dark mode overrides ── */

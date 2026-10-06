@@ -5042,6 +5042,35 @@ export const admin: Catalog = {
   "governance.finances.edit.blockedByAmounts":
     "Só podes guardar quando todos os valores assinalados forem números.",
   "governance.finances.edit.addLine": "Adicionar uma linha",
+  "governance.finances.edit.breakdown.toggle": "Dividir em itens",
+  "governance.finances.edit.breakdown.toggleCount_one": "{count} item",
+  "governance.finances.edit.breakdown.toggleCount_other": "{count} itens",
+  "governance.finances.edit.breakdown.readsAs": "Lê-se como {amount}",
+  "governance.finances.edit.breakdown.amountRequired":
+    "Adiciona um montante ou remove este item.",
+  "governance.finances.edit.breakdown.amountNegative":
+    "Usa um montante igual ou superior a zero.",
+  "governance.finances.edit.breakdown.amountTooPrecise":
+    "Usa no máximo duas casas decimais e até 12 dígitos.",
+  "governance.finances.edit.breakdown.sumCaption_one": "Soma de {count} item",
+  "governance.finances.edit.breakdown.sumCaption_other":
+    "Soma de {count} itens",
+  "governance.finances.edit.breakdown.empty":
+    "Adiciona itens e o montante desta linha passa a ser o total deles.",
+  "governance.finances.edit.breakdown.col.name": "Nome",
+  "governance.finances.edit.breakdown.col.period": "Detalhe",
+  "governance.finances.edit.breakdown.col.amount": "Montante",
+  "governance.finances.edit.breakdown.newItem": "Item {position}",
+  "governance.finances.edit.breakdown.aria.name": "Item {position}: nome",
+  "governance.finances.edit.breakdown.aria.period": "{label}: detalhe",
+  "governance.finances.edit.breakdown.aria.amount": "{label}: montante",
+  "governance.finances.edit.breakdown.namePlaceholder": "ex.: Alojamento",
+  "governance.finances.edit.breakdown.periodPlaceholder": "ex.: 15 €/mês",
+  "governance.finances.edit.breakdown.remove": "Remover {label}",
+  "governance.finances.edit.breakdown.add": "Adicionar um item",
+  "governance.finances.edit.breakdown.full": "Uma linha leva até {max} itens.",
+  "governance.finances.edit.breakdown.blocked":
+    "Corrige os itens da discriminação assinalados antes de guardar.",
   "governance.finances.edit.blockedByLabels":
     "Cada linha precisa de um nome antes de poderes guardar.",
   "governance.finances.status.public":
@@ -7942,6 +7971,8 @@ export const admin: Catalog = {
   "marketingVideos.preview.pause": "Pausa",
   "marketingVideos.preview.restart": "Voltar ao início",
   "marketingVideos.preview.scrub": "Posição no filme",
+  "marketingVideos.preview.fullScreen": "Ecrã inteiro",
+  "marketingVideos.preview.exitFullScreen": "Sair do ecrã inteiro",
   "marketingVideos.preview.soundLoading": "A preparar o som…",
   "marketingVideos.preview.soundOn": "Som ligado",
   "marketingVideos.preview.soundFailed":

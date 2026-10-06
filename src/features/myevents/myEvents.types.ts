@@ -53,7 +53,9 @@ export interface MyEvent {
    *  mock registry doesn't model one. */
   hostSlug?: string;
   hostName?: string;
-  going: number;
+  /** Members going. Absent when the host hid the attendee count from this
+   *  viewer: every surface then prints no count line at all. */
+  going?: number;
   /** state flags */
   reminder?: boolean;
   maybe?: boolean;

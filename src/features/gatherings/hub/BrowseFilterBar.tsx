@@ -1,4 +1,6 @@
 import { useId } from "react";
+import type { IconType } from "react-icons";
+import { FiGrid } from "react-icons/fi";
 import {
   ActiveFilters,
   RefineGroup,
@@ -33,49 +35,63 @@ import {
 } from "./useBrowseActiveFilters";
 import styles from "./BrowseFilterBar.module.css";
 
+interface ChipOption<Value extends string> {
+  value: Value;
+  label: string;
+  /** Drawn before the label, decorative. Only the family row carries one. */
+  icon?: IconType;
+}
+
 /** One row of chips that behave as a single-choice group. */
 function ChipRow<Value extends string>({
   options,
   active,
   onChange,
 }: {
-  options: readonly { value: Value; label: string }[];
+  options: readonly ChipOption<Value>[];
   active: Value;
   onChange: (value: Value) => void;
 }) {
   return (
     <div className={styles.group}>
-      {options.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          aria-pressed={active === option.value}
-          className={styles.chip}
-          onClick={() => onChange(option.value)}
-        >
-          {option.label}
-        </button>
-      ))}
+      {options.map((option) => {
+        const Icon = option.icon;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={active === option.value}
+            className={styles.chip}
+            onClick={() => onChange(option.value)}
+          >
+            {Icon && <Icon className={styles.chipIcon} aria-hidden />}
+            {option.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
 /**
  * The browse board's whole control block: a search field and one "Refine"
- * toggle on a single row, the family chips always open beneath it, the four
- * remaining filter axes (when, where in Lisbon, which format, what it costs)
- * as bands in the drawer below, and the chip row saying which are currently
- * on.
+ * toggle on a single row, all five filter axes (kind of gathering, when, where
+ * in Lisbon, which format, what it costs) as bands in the drawer below, and
+ * the chip row saying which are currently on.
  *
- * Family sits above the drawer because it is the coarse question a member
- * answers first, and answering it narrows the format select from the whole
- * fifty-six-entry catalog to the six or seven formats inside that family.
+ * Family is the drawer's first band because it is the coarse question a
+ * member answers first, and answering it narrows the format select from the
+ * whole fifty-six-entry catalog to the six or seven formats inside that family.
+ * "Any kind" carries `FiGrid`: a grid of tiles reads as "every category",
+ * where a star would suggest a curated or favourite pick the board does not
+ * make.
  *
- * The other axes live behind the toggle for the reason the communities grid's
- * and My events' do: five when-chips, three cost-chips and two selects
- * standing open pushed the first poster row most of the way down the fold, for
- * choices most visitors make once or never. What stays on screen is what is
- * applied, so a shut drawer hides the controls without hiding their state.
+ * The axes live behind the toggle for the reason the communities grid's and
+ * My events' do: ten family chips, five when-chips, three cost-chips and two
+ * selects standing open pushed the first poster row most of the way down the
+ * fold, for choices most visitors make once or never. What stays on screen is
+ * what is applied, so a shut drawer hides the controls and keeps their state
+ * in view.
  *
  * All five axes are real columns the server narrows on. They used to be three
  * chips keyed off `orgColor`, a colour the demo registry assigns, which meant
@@ -89,14 +105,14 @@ export function BrowseFilterBar({
 }: {
   filters: BrowseFilterState;
   onChange: (next: BrowseFilterState) => void;
-  /** The search box's own value — it outruns the debounced `filters.query`. */
+  /** The search box's own value. It outruns the debounced `filters.query`. */
   searchDraft: string;
   onSearchDraftChange: (next: string) => void;
 }) {
   const { t } = useTranslation();
   const refine = useRefineDrawer("qp.events.browse.refineOpen");
-  const whenLabelId = useId();
   const familyLabelId = useId();
+  const whenLabelId = useId();
   const hoodLabelId = useId();
   const typeLabelId = useId();
   const costLabelId = useId();
@@ -118,46 +134,47 @@ export function BrowseFilterBar({
         />
       </div>
 
-      {/* The family row stays open. It is the one facet worth a member's first
-          glance: nine words that say what kind of evening each gathering is,
-          where the four axes behind "Refine" are things most visitors set once
-          or never. */}
-      <div
-        className={styles.familyRow}
-        role="group"
-        aria-labelledby={familyLabelId}
-      >
-        <span className={styles.familyRowLabel} id={familyLabelId}>
-          {t("gatherings:hub.browse.familyLabel")}
-        </span>
-        <ChipRow<GatheringFamily | "">
-          active={filters.family}
-          options={[
-            { value: "", label: t("gatherings:hub.browse.familyAny") },
-            ...GATHERING_FAMILIES.map((family) => ({
-              value: family.key,
-              label: t(family.nameKey),
-            })),
-          ]}
-          onChange={(family) => {
-            // A format only means something inside its own family, so a family
-            // change that orphans the chosen format clears it rather than
-            // leaving a board narrowed to nothing.
-            const shouldKeepFormat =
-              !family ||
-              formatsForFamily(family).some(
-                (format) => format.key === filters.type,
-              );
-            onChange({
-              ...filters,
-              family,
-              type: shouldKeepFormat ? filters.type : "",
-            });
-          }}
-        />
-      </div>
-
       <RefinePanel {...refine.panelProps}>
+        {/* Family leads the drawer: it is the first question a member answers,
+            and the format select further down narrows to its answer. */}
+        <RefineGroup
+          label={t("gatherings:hub.browse.familyLabel")}
+          labelId={familyLabelId}
+          role="group"
+          aria-labelledby={familyLabelId}
+        >
+          <ChipRow<GatheringFamily | "">
+            active={filters.family}
+            options={[
+              {
+                value: "",
+                label: t("gatherings:hub.browse.familyAny"),
+                icon: FiGrid,
+              },
+              ...GATHERING_FAMILIES.map((family) => ({
+                value: family.key,
+                label: t(family.nameKey),
+                icon: family.icon,
+              })),
+            ]}
+            onChange={(family) => {
+              // A format only means something inside its own family. A family
+              // change that orphans the chosen format clears it, which keeps
+              // the board from narrowing to nothing.
+              const shouldKeepFormat =
+                !family ||
+                formatsForFamily(family).some(
+                  (format) => format.key === filters.type,
+                );
+              onChange({
+                ...filters,
+                family,
+                type: shouldKeepFormat ? filters.type : "",
+              });
+            }}
+          />
+        </RefineGroup>
+
         <RefineGroup
           label={t("gatherings:hub.browse.when.groupLabel")}
           labelId={whenLabelId}

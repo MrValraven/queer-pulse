@@ -10,7 +10,6 @@ import type { FeedItem } from "./api/feed.api";
 import { FeedReasonLine } from "./FeedPostActions";
 import styles from "./FeedCard.module.css";
 import {
-  FeedActionLink,
   FeedActions,
   FeedCardHead,
   FeedCardShell,
@@ -149,11 +148,6 @@ export function ArticleCard({ item }: { item: FeedItem }) {
           <Button variant="ghost" size="sm" to={item.link}>
             {t("feed:action.readPiece")}
           </Button>
-        }
-        link={
-          <FeedActionLink to={item.link}>
-            {t("feed:action.readPiece")}
-          </FeedActionLink>
         }
       />
     </FeedCardShell>

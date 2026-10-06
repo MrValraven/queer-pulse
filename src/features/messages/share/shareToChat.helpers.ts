@@ -12,7 +12,7 @@ export type ShareableKind =
  * Absolute-ize a same-origin path so the message body always carries a link
  * the recipient's existing link-preview can unfurl, regardless of whether the
  * calling surface already had `window.location.href` on hand (most do) or
- * only a router-relative path (`ArticleToolbar`'s derived `href`). An
+ * only a router-relative path (every `ShareMenu` caller's `path`). An
  * already-absolute URL passes through unchanged.
  */
 export function toAbsoluteShareUrl(url: string): string {

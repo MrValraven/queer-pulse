@@ -39,12 +39,16 @@ function badgeContent(ev: MyEvent, t: TFunction) {
               ? t("myevents:badges.coHosting")
               : t("myevents:badges.hosting")}
           </span>
-          <span className={sx("ev-count")}>
-            {t("myevents:badges.goingCount", { count: ev.going })}
-            {ev.waitlist
-              ? t("myevents:badges.waitlistSuffix", { count: ev.waitlist })
-              : ""}
-          </span>
+          {/* `going` is absent when the host hid the count (a co-host's list
+              row): print no count line. */}
+          {typeof ev.going === "number" && (
+            <span className={sx("ev-count")}>
+              {t("myevents:badges.goingCount", { count: ev.going })}
+              {ev.waitlist
+                ? t("myevents:badges.waitlistSuffix", { count: ev.waitlist })
+                : ""}
+            </span>
+          )}
           <PriceChip ev={ev} />
         </>
       );
@@ -55,9 +59,11 @@ function badgeContent(ev: MyEvent, t: TFunction) {
             <span className={sx("sd")} />
             {t("myevents:badges.waitlistedPosition", { position: ev.position })}
           </span>
-          <span className={sx("ev-count")}>
-            {t("myevents:badges.goingFull", { count: ev.going })}
-          </span>
+          {typeof ev.going === "number" && (
+            <span className={sx("ev-count")}>
+              {t("myevents:badges.goingFull", { count: ev.going })}
+            </span>
+          )}
           <PriceChip ev={ev} />
         </>
       );

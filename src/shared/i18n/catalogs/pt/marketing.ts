@@ -3269,6 +3269,70 @@ export const marketing: Catalog = {
     "Quem chegou, agrupado pela semana em que se juntou",
   "changelog.entries.new-members-grouped-by-week.body":
     "Cada semana tem o seu cartão no separador Tudo, e Ver todas abre-se com suavidade.",
+  "changelog.entries.gathering-venue-fills-address.title":
+    "Escolher um espaço preenche a morada",
+  "changelog.entries.gathering-venue-fills-address.body":
+    "Escolhe um sítio do diretório e a morada vem com ele, só tens de dizer como se entra.",
+  "changelog.entries.gathering-cohosts-and-venue-stand-out.title":
+    "A coorganização tem etiqueta e o local ganha destaque num encontro",
+  "changelog.entries.gathering-cohosts-and-venue-stand-out.body":
+    "Em Quem vai, a coorganização aparece marcada ao lado de quem organiza, e o nome do local abre o Como chegar em letra grande.",
+  "changelog.entries.lineup-invites.title":
+    "Quem atua aceita o convite antes de aparecer no lineup",
+  "changelog.entries.lineup-invites.body":
+    "Convidas as tuas ligações ou quem vai ao convívio, e a pessoa entra ou recusa a partir da notificação.",
+  "changelog.entries.lineup-editor-in-manage.title":
+    "Quem vai já vê a lineup do convívio",
+  "changelog.entries.lineup-editor-in-manage.body":
+    "Marcas quem atua em Gerir convívio, e a página do convívio mostra essas pessoas quando há alguém marcado.",
+  "changelog.entries.date-pickers-take-keyboard-focus.title":
+    "Seletores de data e ferramentas de anfitrião funcionam com o teclado",
+  "changelog.entries.date-pickers-take-keyboard-focus.body":
+    "Ao abrir um seletor de data ou o menu de anfitrião, o foco entra logo nele e as setas funcionam de imediato.",
+  "changelog.entries.gathering-share-menu.title":
+    "Partilha convívios, comunidades, locais e artigos como quiseres",
+  "changelog.entries.gathering-share-menu.body":
+    "Um só menu Partilhar: envia numa mensagem, no WhatsApp ou para outra app, ou copia uma mensagem pronta com o link.",
+  "changelog.entries.events-browse-poster-cards.title":
+    "Explorar eventos parece uma parede de cartazes",
+  "changelog.entries.events-browse-poster-cards.body":
+    "O A seguir passa a ser um cartaz grande que podes guardar e cada convívio ganha um cartão com a data e quem vai.",
+  "changelog.entries.hidden-going-counts-stay-hidden.title":
+    "Contagens escondidas ficam escondidas nas listas",
+  "changelog.entries.hidden-going-counts-stay-hidden.body":
+    "Quando quem organiza esconde quantas pessoas vão, as listas, a página inicial e a página do evento deixam de enviar o número.",
+  "changelog.entries.calendar-fits-every-month.title":
+    "O calendário dos teus eventos cabe em todos os meses",
+  "changelog.entries.calendar-fits-every-month.body":
+    "Os meses que começam a meio da semana já não fazem a grelha dos dias sair do cartão do calendário.",
+  "changelog.entries.gathering-description-keeps-line-breaks.title":
+    "As descrições dos convívios mantêm os parágrafos",
+  "changelog.entries.gathering-description-keeps-line-breaks.body":
+    "As quebras de linha e os espaços que quem organiza escreve aparecem agora na página tal como foram escritos.",
+  "changelog.entries.my-events-ended-greyed-at-bottom.title":
+    "Vê os convívios que já acabaram a cinzento, no fim de Os meus eventos",
+  "changelog.entries.my-events-ended-greyed-at-bottom.body":
+    "A página lê agora a data real, por isso um convívio que já acabou deixa de aparecer como próximo.",
+  "changelog.entries.gathering-live-card-sits-straight.title":
+    "Pré-visualização direita quando o teu convívio fica no ar",
+  "changelog.entries.gathering-live-card-sits-straight.body":
+    'O cartão ao lado de "O teu convívio está no ar" fica agora direito, tal como aparece no quadro.',
+  "changelog.entries.film-preview-full-screen.title":
+    "Vê os filmes de marketing em ecrã inteiro",
+  "changelog.entries.film-preview-full-screen.body":
+    "O filme cresce suavemente a partir da pré-visualização e volta ao lugar, e os controlos saem da frente enquanto toca.",
+  "changelog.entries.film-preview-closes-at-once.title":
+    "Fechar a pré-visualização de um filme já não bloqueia a página",
+  "changelog.entries.film-preview-closes-at-once.body":
+    "A banda sonora é composta à parte e fica guardada, por isso reabrir um filme toca logo com som.",
+  "changelog.entries.spending-lines-split-into-items.title":
+    "As linhas de despesa dividem-se em itens",
+  "changelog.entries.spending-lines-split-into-items.body":
+    "Os admins listam o que cada linha de despesa cobre, como alojamento e ferramentas de IA, e a discriminação pública soma tudo.",
+  "changelog.entries.feed-gatherings-show-their-photo.title":
+    "Os encontros no feed mostram a foto",
+  "changelog.entries.feed-gatherings-show-their-photo.body":
+    "Um encontro com foto de capa abre o cartão no feed com ela, e cada cartão tem um só botão de Detalhes.",
   "changelog.entries.feed-cards-keep-their-column.title":
     "Os cartões do feed ficam no lugar quando um se abre",
   "changelog.entries.feed-cards-keep-their-column.body":
@@ -9646,9 +9710,6 @@ export const marketing: Catalog = {
   "directory.detail.action.share": "Partilhar",
   "directory.detail.action.save": "Guardar",
   "directory.detail.action.saved": "Guardado",
-  "directory.detail.action.linkCopied": "Link copiado",
-  "directory.detail.action.shareError":
-    "Não foi possível partilhar. Tenta copiar o link",
   "directory.detail.action.saveSignIn":
     "Inicia sessão para guardar este espaço",
 

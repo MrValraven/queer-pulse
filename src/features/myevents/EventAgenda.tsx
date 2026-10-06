@@ -109,12 +109,13 @@ export function EventAgenda() {
   return (
     <div className={sx("agenda")}>
       {result.groups.map((g) => (
-        <div key={g.label ?? "all"}>
+        <div key={g.isEnded ? "ended" : (g.label ?? "all")}>
           {g.label && <div className={sx("grp-label")}>{g.label}</div>}
+          {g.subtitle && <p className={sx("grp-sub")}>{g.subtitle}</p>}
           <div className={sx("ev-list")}>
             {g.events.map((ev) => (
               <FadeIn key={ev.id} delay={Math.min(idx++, 8) * 45}>
-                <EventCard ev={ev} />
+                <EventCard ev={ev} isEnded={g.isEnded} />
               </FadeIn>
             ))}
           </div>

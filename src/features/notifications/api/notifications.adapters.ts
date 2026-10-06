@@ -21,6 +21,10 @@ import {
   thread,
 } from "../../../app/routeMap";
 import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
+import {
+  lineupInvitePath,
+  manageGatheringPath,
+} from "../../gatherings/gatheringPaths";
 import { writerTabHref } from "../../magazine/writerTabs";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
@@ -217,6 +221,9 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "introduction_made",
   "event_invite",
   "event_cohost_invite",
+  "event_lineup_invite",
+  "event_lineup_accepted",
+  "event_lineup_declined",
   "mention",
   "forum_reply",
   // Coverage-sweep kinds that carry a member actor (and so a `textNamed`
@@ -633,6 +640,25 @@ function safeSpaceSourceHref(payload: Record<string, unknown>): string {
 }
 
 /**
+ * Lineup invites. The invite opens its own page by lineup row id; a reply
+ * opens the organizer's Manage page on the Attendees tab, where the lineup
+ * editor lives.
+ */
+function lineupSourceHref(
+  payload: Record<string, unknown>,
+): string | undefined {
+  const eventSlug = payload.eventSlug;
+  if (typeof eventSlug !== "string" || !eventSlug) return undefined;
+  if (payload.source === "lineup_reply") {
+    return manageGatheringPath(eventSlug, "attendees");
+  }
+  const inviteId = payload.inviteId;
+  return typeof inviteId === "string" && inviteId
+    ? lineupInvitePath(eventSlug, inviteId)
+    : undefined;
+}
+
+/**
  * Deep-link to the thread/discussion a notification originated from, built
  * from `payload.source` + its slug field: `thread(threadSlug)` for a forum
  * mention, and for a community one the POST'S OWN PERMALINK,
@@ -896,6 +922,9 @@ function sourceHrefFromPayload(
       inviteId
       ? coHostInvitePath(eventSlug, inviteId)
       : undefined;
+  }
+  if (payload.source === "lineup_invite" || payload.source === "lineup_reply") {
+    return lineupSourceHref(payload);
   }
   // Coverage-sweep sources — each deep-links to the entity the notification is
   // about. A missing slug falls back to no href (the row still shows its text /

@@ -70,6 +70,8 @@ export const myevents: Catalog = {
   "agenda.savedForLater": "Guardados para depois",
   "agenda.invitesSent": "Convites que enviaste",
   "agenda.otherCommunity": "Outra",
+  "agenda.ended": "Já aconteceram",
+  "agenda.endedSub": "Estes eventos já passaram.",
   "agenda.showMore_one": "Mostrar mais {count}",
   "agenda.showMore_other": "Mostrar mais {count}",
   // Estado distinto de erro/repetir quando a procura de eventos live falha

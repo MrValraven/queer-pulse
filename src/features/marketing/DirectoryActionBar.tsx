@@ -1,14 +1,6 @@
-import { useState } from "react";
-import {
-  FiHeart,
-  FiMessageSquare,
-  FiNavigation,
-  FiPhone,
-  FiShare2,
-} from "react-icons/fi";
+import { FiHeart, FiNavigation, FiPhone } from "react-icons/fi";
 import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useShareLink } from "../../shared/hooks";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSaved } from "../../app/providers/useSaved";
@@ -19,8 +11,8 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import { directionsHref } from "./businessCoords";
-import { useShareToChat } from "../messages/share/useShareToChat";
-import { ShareToChatModal } from "../messages/share/ShareToChatModal";
+import { buildDirectoryShareMessage } from "./directoryShareMessage";
+import { ShareMenu } from "../messages/share/ShareMenu";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -30,12 +22,18 @@ interface Props {
 }
 
 /**
- * Primary venue actions (Directions, Call, Share, Send in a message, Save) as
- * one compact row of icon-only buttons sitting to the right of the listing
- * name, at every viewport. Each control carries a tooltip for the sighted
- * reader and its own `aria-label` for everyone else, so the row stays legible
- * without spending a card's worth of the page on five labels. Directions keeps
- * a coral tint so it still reads as first among equals.
+ * Primary venue actions (Directions, Call, Share, Save) as one compact row of
+ * icon-only buttons sitting to the right of the listing name, at every
+ * viewport. Each control carries a tooltip for the sighted reader and its own
+ * `aria-label` for everyone else, so the row stays legible without spending a
+ * card's worth of the page on four labels. Directions keeps a coral tint so it
+ * still reads as first among equals.
+ *
+ * Share opens the shared `ShareMenu`: a message inside QueerPulse (signed-in
+ * members only, since there is no inbox to pick a thread from otherwise),
+ * WhatsApp, the device's share sheet where it has one, the composed message
+ * (name, category and where, from `buildDirectoryShareMessage`) and the bare
+ * link.
  *
  * Operating state gates two of them, on different grounds, and an online-only
  * listing gates one more.
@@ -55,9 +53,9 @@ interface Props {
  *
  * Share and Save survive every state: the page remains a record worth passing
  * on, and stripping Save would strand anybody who had already saved the place.
- * A signed-out visitor keeps Save too, routed to sign-in. "Send in a message"
- * is the one action hidden outright when signed out, since there is no inbox
- * to pick a thread from.
+ * The shared message carries the state too, so a closed or moved business
+ * reaches the recipient as one. A signed-out visitor keeps Save, routed to
+ * sign-in.
  *
  * Preview handling: the admin moderation drawer reuses this whole page body
  * (`DirectorySpaceView`) to show what a listing looks like live. None of
@@ -69,18 +67,9 @@ interface Props {
  */
 export function DirectoryActionBar({ place, preview = false }: Props) {
   const { t } = useTranslation();
-  const shareLink = useShareLink({
-    copied: t("marketing:directory.detail.action.linkCopied"),
-    failed: t("marketing:directory.detail.action.shareError"),
-  });
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
   const { isSaved, toggleSave } = useSaved();
-  const [isSharing, setIsSharing] = useState(false);
-  // `ShareToChatAction` is deliberately not used here: its own JSDoc points a
-  // surface with bespoke action markup at this pair instead, so the trigger
-  // matches the row's idiom, in place of an ordinary pill button.
-  const shareToChat = useShareToChat();
 
   if (preview) return null;
 
@@ -94,33 +83,9 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
 
   const directionsLabel = t("marketing:directory.detail.action.directions");
   const callLabel = t("marketing:directory.detail.action.call");
-  const shareLabel = t("marketing:directory.detail.action.share");
   const saveLabel = saved
     ? t("marketing:directory.detail.action.saved")
     : t("marketing:directory.detail.action.save");
-
-  async function handleShare() {
-    if (typeof navigator === "undefined") return;
-    const url = window.location.href;
-    // Prefer the OS share sheet where available; fall back to the shared
-    // copy-link + toast helper (which owns the clipboard write and success/
-    // failure toasts) everywhere else.
-    if (navigator.share) {
-      try {
-        setIsSharing(true);
-        await navigator.share({ title: place.name, url });
-        return;
-      } catch (error) {
-        // User-cancelled share sheets throw AbortError, which is not a
-        // failure, so stay silent. Any other native-share failure falls
-        // through to copy.
-        if (error instanceof Error && error.name === "AbortError") return;
-      } finally {
-        setIsSharing(false);
-      }
-    }
-    await shareLink.share(url);
-  }
 
   function handleSave() {
     toggleSave({
@@ -166,34 +131,19 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
           </Button>
         </Tooltip>
       )}
-      <Tooltip label={shareLabel} placement="bottom">
-        <IconButton
-          aria-label={shareLabel}
-          onClick={() => void handleShare()}
-          disabled={isSharing}
-        >
-          <FiShare2 aria-hidden />
-        </IconButton>
-      </Tooltip>
-      {shareToChat.canShare && (
-        <Tooltip label={t("messages:share.cta")} placement="bottom">
-          <IconButton
-            aria-label={t("messages:share.ariaLabel", { title: place.name })}
-            onClick={shareToChat.open}
-          >
-            {/* A message bubble, where the labelled share-to-chat triggers
-                elsewhere (`ShareToChatAction`, `ArticleToolbar`) use FiSend.
-                Two reasons to diverge here. FiSend and the FiNavigation arrow
-                on Directions are both angular shapes pointing up and right,
-                which read as the same glyph at 44px in one row. And this row
-                is icon-only, so each glyph carries its whole meaning, while a
-                paper plane beside the words "Send in a message" has the label
-                to lean on. FiMessageSquare is also what the navbar, the
-                sidebar and the admin nav already use for messaging. */}
-            <FiMessageSquare aria-hidden />
-          </IconButton>
-        </Tooltip>
-      )}
+      <ShareMenu
+        content={{
+          // The listing's canonical path, the one "Send in a message" always
+          // sent, so every item shares the same link whatever URL the page
+          // was reached by.
+          path: businessPath(place.slug),
+          title: place.name,
+          kind: "directory",
+          text: buildDirectoryShareMessage(place, t),
+        }}
+        triggerLabel={t("marketing:directory.detail.action.share")}
+        tooltipPlacement="bottom"
+      />
       {user ? (
         <Tooltip label={saveLabel} placement="bottom">
           <IconButton
@@ -225,14 +175,6 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
             <FiHeart aria-hidden className={s.actionBarHeartHollow} />
           </Button>
         </Tooltip>
-      )}
-      {shareToChat.isOpen && (
-        <ShareToChatModal
-          url={businessPath(place.slug)}
-          title={place.name}
-          kind="directory"
-          onClose={shareToChat.close}
-        />
       )}
     </div>
   );

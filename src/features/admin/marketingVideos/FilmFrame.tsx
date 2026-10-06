@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type Ref } from "react";
+import { useLayoutEffect, useRef, type Ref } from "react";
 import styles from "./MarketingVideos.module.css";
 
 const FILM_WIDTH = 1920;
@@ -25,14 +25,18 @@ export function FilmFrame({
   loading = "lazy",
 }: FilmFrameProps) {
   const boxRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0);
 
-  useEffect(() => {
+  // The scale is written straight onto the iframe from the observer, which
+  // runs after layout and before paint. Going through React state would paint
+  // one frame late, so a resized box (the preview going full screen) would
+  // briefly show the film at its old size.
+  useLayoutEffect(() => {
     const box = boxRef.current;
     if (!box) return;
     const observer = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? 0;
-      setScale(width / FILM_WIDTH);
+      const iframe = box.querySelector("iframe");
+      if (iframe) iframe.style.transform = `scale(${width / FILM_WIDTH})`;
     });
     observer.observe(box);
     return () => observer.disconnect();
@@ -50,7 +54,6 @@ export function FilmFrame({
         loading={loading}
         tabIndex={-1}
         onLoad={onLoad}
-        style={{ transform: `scale(${scale})` }}
       />
     </div>
   );

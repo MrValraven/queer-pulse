@@ -29,12 +29,16 @@
 
 /* Carried for the single commit before the first measurement lands. Also
    `fixed`, so an unplaced panel never takes flow space at the end of
-   `<body>`. */
+   `<body>`. Hidden through opacity: reduced motion gives every element a
+   0.01ms transition on `all`, so a `visibility` flip would still read as
+   hidden, to the panel and to each item inheriting it, when the first item
+   asks for focus. */
 .panelUnplaced {
   composes: panel;
   top: 0;
   right: 0;
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Says whose tools these are, the job the old strip's label did, as a quiet

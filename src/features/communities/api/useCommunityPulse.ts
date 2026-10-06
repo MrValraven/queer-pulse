@@ -80,7 +80,8 @@ export function useCommunityPulse(
         event,
         fmt,
         t,
-        event.goingCount > 0
+        // A hidden count (null) reads as "open to all", exactly like zero.
+        event.goingCount !== null && event.goingCount > 0
           ? t("gatherings:spots.going", { count: event.goingCount })
           : t("gatherings:spots.openToAll"),
         onlineLabel,

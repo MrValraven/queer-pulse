@@ -1,65 +1,428 @@
-/* FeaturedEventCard — compact "Next up" card. A calm --paper surface on the
-   --cream page, replacing the old full-bleed poster hero. Stacked (thumb
-   above text) on narrow viewports, horizontal (thumb inline-start) from
-   640px up. */
+/* FeaturedEventCard: the "Next up" poster hero. A full-width --paper card on
+   the --cream page: from 900px up the cover fills the leading half or more of
+   the card edge to edge; below that it stacks on top as a wide band, 8:3 on
+   phones and 21:9 on tablets (never taller than 26% of the viewport), with
+   the cream date stub pinned to it. A blurred copy of the same
+   cover glows behind the card, so each lead tints the page with its own
+   colours. FeaturedEventSkeleton reuses these classes, so the loading box and
+   the loaded one are the same size. */
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
-  padding: var(--card-pad);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
+/* The full-width band the hero lives in. It owns the space below the card, so
+   the next view heading never sits flush against it, and it is the box the
+   glow is confined to. `isolation` keeps the glow's negative z-index local:
+   it paints under the card and over nothing outside this band. On phones the
+   page header above already leaves room, so while the hero is stacked the
+   card starts right under it and its call to action reaches the first
+   screen, even under a header that wraps onto extra rows. */
+.stage {
+  position: relative;
+  isolation: isolate;
+  padding-block: 0 var(--section-y-48);
 }
 
 @media (--md-up) {
-  .card {
-    flex-direction: row;
-    align-items: stretch;
+  .stage {
+    padding-block-end: var(--section-y-64);
   }
 }
 
-.thumb {
-  position: relative;
-  flex-shrink: 0;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+@media (--wide-up) {
+  .stage {
+    padding-block-start: var(--gap-lg);
+  }
+}
+
+/* ── Ambient glow ── */
+
+/* Confined to the band on every axis (`inset: 0` plus `overflow: hidden`), so
+   the scaled, blurred image can never widen the page. The radial mask fades it
+   out toward the band's edges, so the clip never shows as a hard line.
+   Under the image sits a coral wash. The card covers most of the band, so on
+   cream the wash and the mask both hold full strength out past the card's
+   edges and fade only across the margin beside it: the warm colour sits
+   right beside the card, where a muted or dark cover blurred on its own would
+   read as a grey haze. */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   overflow: hidden;
-  border-radius: var(--radius-badge);
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--accent-rgb), 0.3) 84%,
+    transparent
+  );
+  mask-image: radial-gradient(closest-side, black 80%, transparent);
+}
+
+/* On a dark page the wash only needs to warm the cover's own colours, and the
+   image can burn brighter without turning muddy, so both fade sooner. */
+:global([data-theme="dark"]) .glow {
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--accent-rgb), 0.16) 70%,
+    transparent
+  );
+  mask-image: radial-gradient(closest-side, black 62%, transparent);
+}
+
+/* The heavy saturation keeps the blur reading as the cover's colour. The image
+   stays faint on cream so the warm wash under it shows through. */
+.glow img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+  filter: blur(56px) saturate(1.8);
+  transform: scale(1.15);
+}
+
+:global([data-theme="dark"]) .glow img {
+  opacity: 0.45;
+}
+
+/* ── Card ── */
+
+/* An inline-size container, so the stacked cover can size its height from the
+   card's own width (`cqi` in `.media`) and still take a viewport cap. */
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e2);
+  container-type: inline-size;
+}
+
+/* Side by side only from 900px: below that the copy column would be too narrow
+   for a poster title, so the hero stays stacked. Both tracks are fixed
+   fractions of the card, and neither child has a content minimum (see
+   `min-inline-size: 0` below), so nothing inside one can push the other. */
+@media (--wide-up) {
+  .card {
+    grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
+  }
+}
+
+/* Up to 1223px the copy column takes a bigger share, so the call to action and
+   Save keep one line in either language at 900px and a long title has room
+   for whole words. */
+@media (--wide-up) and (--desk-split) {
+  .card {
+    grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+  }
+}
+
+/* ── Media ── */
+
+/* Stacked, the cover is a wide band: 8:3 of the card's width on phones, 21:9
+   on tablets, and never taller than 26% of the viewport, so on a short screen
+   the call to action still lands on the first screen. The height is written
+   out from the card's width (`cqi`, see `.card`) so the cap trims the band's
+   height alone and the cover keeps the full card width. */
+.media {
+  position: relative;
+  min-inline-size: 0;
+  block-size: min(calc(100cqi * 3 / 8), 26svh);
+  overflow: hidden;
   background: rgba(var(--plum-rgb), 0.06);
 }
 
 @media (--md-up) {
-  .thumb {
-    width: 220px;
-    aspect-ratio: 4 / 3;
+  .media {
+    block-size: min(calc(100cqi * 9 / 21), 26svh);
   }
 }
 
-.body {
+/* Side by side, the cover's width is its grid track and its height is the
+   row's: a floor that grows with the viewport, stretched further by a copy
+   column taller than that. */
+@media (--wide-up) {
+  .media {
+    align-self: stretch;
+    block-size: auto;
+    min-block-size: clamp(18rem, 32vw, 30rem);
+  }
+}
+
+.media img {
+  transition-property: transform;
+  transition-duration: var(--dur-reveal);
+  transition-timing-function: var(--ease-out);
+}
+
+/* The cream date stub, pinned top-left on the stacked cover exactly as the
+   Browse ticket cards wear it. Side by side, the copy column carries the
+   date instead (see `.paperStamp`). */
+.coverStamp {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-start: var(--gap-sm);
   display: flex;
-  flex: 1;
+}
+
+@media (--wide-up) {
+  .coverStamp {
+    display: none;
+  }
+}
+
+/* The time bucket ribbon on a coral fill, so "Tonight" lifts off a dark cover
+   as well as a bright one. Doubled with `.media` so it outranks the poster's
+   `.ribbon` look whatever order the two stylesheets load in. Stacked, it takes
+   the top trailing corner, since the date stub owns the leading one. */
+.media .ribbon {
+  inset-block-start: var(--gap-sm);
+  inset-inline-start: auto;
+  inset-inline-end: var(--gap-sm);
+  background: var(--accent);
+  box-shadow: var(--shadow-e2);
+  /* css-scale-allow: non-flipping-text. The coral fill is the same in both
+     themes, so its label stays plum in both (5.4:1 on --accent). */
+  color: var(--plum);
+}
+
+@media (--wide-up) {
+  .media .ribbon {
+    inset-block-start: var(--card-pad);
+    inset-inline-start: var(--card-pad);
+    inset-inline-end: auto;
+  }
+}
+
+/* ── Copy column ── */
+
+/* An inline-size container, so the title can size itself by this column's
+   width (`--text-poster-title` reads `cqi`) wherever the column sits. The
+   custom properties are the title's size and line budget, shared with
+   FeaturedEventSkeleton, and the number of title lines the skeleton holds
+   for a typical lead at each width, so the view below holds still when the
+   real hero lands. */
+.body {
+  --hero-title-size: var(--text-poster-title-stacked);
+  --hero-title-lines: 2;
+  --hero-skeleton-title-lines: 2;
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: var(--gap-xs);
-  min-width: 0;
+  min-inline-size: 0;
+  padding: var(--gap-sm) var(--card-pad) var(--card-pad);
+  container-type: inline-size;
 }
 
+@media (--md-up) {
+  .body {
+    --hero-skeleton-title-lines: 1;
+    gap: var(--gap-sm);
+    padding: var(--card-pad) var(--card-pad-lg);
+  }
+}
+
+@media (--wide-up) {
+  .body {
+    --hero-title-size: var(--text-poster-title);
+    --hero-title-lines: 3;
+    --hero-skeleton-title-lines: 2;
+    padding: var(--gap-lg) var(--card-pad-lg);
+  }
+}
+
+/* The bare printed stamp heads the copy column once it sits beside the
+   cover. Stacked, the cover's stub carries the date. */
+.paperStamp {
+  display: none;
+}
+
+@media (--wide-up) {
+  .paperStamp {
+    display: flex;
+  }
+}
+
+/* The coral "Next up" line and the title read as one unit. */
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--triage-gap-tight);
+  max-inline-size: 100%;
+}
+
+/* Doubled with `.heading` so it outranks the Eyebrow primitive's grey. */
+.heading .eyebrow {
+  color: var(--accent-text);
+}
+
+/* Stacked, two lines at most at no more than 36px, so a long title ends in an
+   ellipsis before it can push the call to action off the first screen. Side
+   by side the copy column has the height to spare, so it takes three, and
+   `text-wrap: balance` evens the lines out. */
 .title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--hero-title-lines);
+  overflow: hidden;
   margin: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: var(--text-heading);
+  font-size: var(--hero-title-size);
   letter-spacing: var(--ls-heading);
   line-height: var(--lh-title);
   color: var(--text-strong);
 }
 
-.meta {
+.when {
   margin: 0;
   font-family: var(--sans);
-  font-size: var(--text-caption);
-  color: var(--ink-60);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: var(--lh-body);
+  color: var(--text-strong);
+}
+
+/* Side by side, the printed stamp above the title already carries the day, so
+   the line keeps the time span and the neighbourhood. The date stays in the
+   text for assistive tech (the stamp is decorative), hidden only from view. */
+@media (--wide-up) {
+  .whenDate {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* The quiet metadata line: format, price and theme tags in one wrapping row.
+   Hidden outright when the host set none of them. */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  max-inline-size: 100%;
+}
+
+.facts:empty {
+  display: none;
+}
+
+/* Element-qualified so it outranks the price pill's own column alignment. */
+.facts > span,
+.themes > span {
+  align-self: center;
+  margin-block-start: 0;
+}
+
+/* The theme tags wait for the side by side layout: stacked, they would wrap
+   onto a row of their own and push the call to action under a phone's tab
+   bar. From 900px their wrapper steps out of the layout, so the tags wrap
+   with the rest of the row. */
+.themes {
+  display: none;
+}
+
+/* A row that would hold nothing but the hidden tags goes too, so it leaves no
+   empty gap. */
+.facts:not(:has(> :not(.themes))) {
+  display: none;
+}
+
+@media (--wide-up) {
+  .themes {
+    display: contents;
+  }
+
+  .facts:has(> .themes) {
+    display: flex;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-block-start: var(--gap-xs);
+}
+
+/* ── Skeleton slots ──
+   Each FeaturedEventSkeleton placeholder sits in a box exactly the height of
+   the line it stands in for, read from the same tokens and the same per-width
+   custom properties as the copy, so the view below holds still when the
+   real hero lands. The title holds the lines a typical lead fills at each
+   width (`--hero-skeleton-title-lines`) and the date line one. */
+.skeletonHeading {
+  align-self: stretch;
+}
+
+.skeletonEyebrow,
+.skeletonGoing,
+.skeletonTitle,
+.skeletonWhen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-self: stretch;
+}
+
+.skeletonEyebrow {
+  block-size: calc(var(--text-eyebrow) * var(--lh-body));
+}
+
+.skeletonTitle {
+  block-size: calc(
+    var(--hero-title-size) * var(--lh-title) * var(--hero-skeleton-title-lines)
+  );
+}
+
+.skeletonWhen {
+  block-size: calc(var(--text-body) * var(--lh-body));
+}
+
+.skeletonGoing {
+  block-size: calc(var(--text-caption) * var(--lh-body));
+}
+
+/* The title's second bar, shown wherever the skeleton holds two lines. */
+@media (--md-up) {
+  .skeletonTitleWrap {
+    display: none;
+  }
+}
+
+@media (--wide-up) {
+  .skeletonTitleWrap {
+    display: block;
+  }
+}
+
+/* ── Hover ── */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .media img {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media img {
+    transition-property: none;
+  }
+
+  .card:hover .media img {
+    transform: none;
+  }
 }

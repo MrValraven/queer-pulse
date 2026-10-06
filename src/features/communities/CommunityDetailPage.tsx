@@ -86,7 +86,6 @@ export function CommunityDetailPage() {
     avatarImageUrl,
     saved,
     onToggleSave,
-    onShare,
     posts,
     discussionPaging,
     rosterResult,
@@ -142,9 +141,6 @@ export function CommunityDetailPage() {
         hasCount={hasCount}
         saved={saved}
         onToggleSave={onToggleSave}
-        onShare={() => {
-          void onShare();
-        }}
         onJoin={() => setJoining(true)}
         onLeave={() => setConfirmingLeave(true)}
         // Accepting is the ordinary front door: the same wizard, so the house

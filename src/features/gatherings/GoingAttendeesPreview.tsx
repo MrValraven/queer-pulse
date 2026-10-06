@@ -52,6 +52,8 @@ function resolvePreview(
  *
  * The host holds a Going RSVP of their own (saved when the gathering is
  * created), so they can appear here too, marked with a small "Host" chip.
+ * Going co-hosts get a matching "Co-host" chip (live only; demo has no
+ * co-host data). The host chip wins if a slug somehow matches both.
  */
 export function GoingAttendeesPreview({
   gathering,
@@ -66,6 +68,9 @@ export function GoingAttendeesPreview({
 
   const { attendees, total } = preview;
   const moreCount = Math.max(0, total - attendees.length);
+  const cohostSlugs = new Set(
+    (gathering.cohosts ?? []).map((cohost) => cohost.slug),
+  );
 
   return (
     <div className={styles.wrap}>
@@ -76,6 +81,8 @@ export function GoingAttendeesPreview({
       <div className={styles.list}>
         {attendees.map((attendee) => {
           const name = `${attendee.firstName} ${attendee.lastName}`.trim();
+          const isHost = attendee.slug === gathering.hostSlug;
+          const isCohost = !isHost && cohostSlugs.has(attendee.slug);
           return (
             <Link
               key={attendee.slug}
@@ -93,9 +100,14 @@ export function GoingAttendeesPreview({
                 name={name}
               />
               <span>{attendee.firstName}</span>
-              {attendee.slug === gathering.hostSlug && (
-                <KindChip kind="feature" className={styles.hostChip}>
+              {isHost && (
+                <KindChip kind="feature" className={styles.roleChip}>
                   {t("gatherings:gathering.attendeesPreview.hostTag")}
+                </KindChip>
+              )}
+              {isCohost && (
+                <KindChip kind="feature" className={styles.roleChip}>
+                  {t("gatherings:gathering.attendeesPreview.cohostTag")}
                 </KindChip>
               )}
             </Link>

@@ -145,17 +145,23 @@ export function eventCardToMyEvent(
     hostName: dto.host
       ? `${dto.host.firstName} ${dto.host.lastName}`.trim()
       : undefined,
-    going: dto.goingCount ?? 0,
-    waitlist: dto.waitlistCount,
+    // `goingCount` is null when the host hid the attendee count from this
+    // viewer. `going` then stays unset so no card prints "0 going".
+    going: dto.goingCount === null ? undefined : (dto.goingCount ?? 0),
+    waitlist: dto.waitlistCount ?? undefined,
     online: dto.isOnline,
     timezone: dto.timezone,
     ticket: dto.ticketed,
     paid: dto.price,
     spotsLeft: dto.spotsLeft,
+    // The server's `isFull` counts seats (guests included) and is sent even
+    // when the tallies are withheld, so it wins. The member-count comparison
+    // only serves a payload from before the field existed.
     soldOut:
-      typeof dto.capacity === "number" && typeof dto.goingCount === "number"
+      dto.isFull ??
+      (typeof dto.capacity === "number" && typeof dto.goingCount === "number"
         ? dto.goingCount >= dto.capacity
-        : undefined,
+        : undefined),
     maybe: dto.myRsvp === "maybe",
     // The gathering has been called off (PRD-181). The card already knows how
     // to render this — a cancelled badge, a struck-through row, no day-of

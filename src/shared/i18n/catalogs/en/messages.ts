@@ -962,6 +962,21 @@ export const messages: Catalog = {
   "share.previewTo": "To",
   "share.previewEmptyRecipients": "Pick someone to send this to",
   "share.previewTime": "now",
+  // The Share menu (messages/share/ShareMenu) on gatherings and other pages:
+  // every way to pass a thing on. "Send in a message" reuses share.cta.
+  "shareMenu.triggerLabel": "Share",
+  "shareMenu.menuAria": "Share {title}",
+  "shareMenu.whatsApp": "WhatsApp",
+  "shareMenu.nativeShare": "Share to an app",
+  "shareMenu.copyMessage": "Copy message",
+  "shareMenu.copyLink": "Copy link",
+  "shareMenu.opensInNewTab": "(opens in a new tab)",
+  "shareMenu.messageCopiedToast": "Message copied",
+  "shareMenu.linkCopiedToast": "Link copied",
+  "shareMenu.copyFallbackToast":
+    "Your browser wouldn't let us copy the message. Here is the link: {url}",
+  "shareMenu.linkCopyFallbackToast":
+    "Your browser wouldn't let us copy that. Here is the link: {url}",
   "search.loadErrorBody":
     "The search didn't come back. This one is on us. Try again in a moment.",
   "newMessage.strangersSearching": "Looking for that member…",

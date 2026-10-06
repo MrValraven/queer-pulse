@@ -331,9 +331,9 @@ export function useCommunityDetailState() {
     // "" for a community with no mark, in either mode, which is the hero's
     // signal to draw the generated initial instead.
     avatarImageUrl: editable?.avatarImageUrl ?? "",
-    // `saved` / `onToggleSave` / `onShare` / `onJoined` / `onRequested` /
-    // `performLeave` / `performWithdrawRequest` / `performDeclineInvite`, the
-    // three mutations and the three confirm-dialog flags all ride in here.
+    // `saved` / `onToggleSave` / `onJoined` / `onRequested` / `performLeave` /
+    // `performWithdrawRequest` / `performDeclineInvite`, the three mutations
+    // and the three confirm-dialog flags all ride in here.
     ...actions,
     // Overrides `actions.onJoined`/`onRequested` with the parent-membership
     // gate above, so a coded 403 updates `isParentMembershipRequired` too.

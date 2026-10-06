@@ -1,9 +1,9 @@
 /* The browse board's search row, its "Refine" drawer and the chips saying what
-   is on. Inside the drawer: chips for the two small closed sets (when, cost)
-   and selects for the two long ones (neighbourhood, type), so a thumb reaches
-   the common choices without opening a second thing. */
+   is on. Inside the drawer: chips for the three small closed sets (family,
+   when, cost) and selects for the two long ones (neighbourhood, type), so a
+   thumb reaches the common choices without opening a second thing. */
 .bar {
-  margin-block: 4px 22px;
+  margin-block: 4px var(--gap-lg);
 }
 
 /* The one row that is always on screen. No grid gap on `.bar` around it: the
@@ -28,21 +28,36 @@
   gap: 8px;
 }
 
+/* A paper pill on the cream ground, roomy enough for a thumb, that dips a
+   touch under a press. The drawer's family, when and cost rows share it, so
+   the three read as one control set. */
 .chip {
-  min-height: 40px;
-  padding: 0 14px;
+  --chip-icon-size: var(--text-16);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 0 16px;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: transparent;
+  background: var(--paper);
   color: var(--ink-60);
   font: inherit;
   font-size: var(--text-13-5);
+  font-weight: 500;
   cursor: pointer;
   touch-action: manipulation;
-  transition:
-    background var(--dur-fast, 150ms) var(--ease),
-    color var(--dur-fast, 150ms) var(--ease),
-    border-color var(--dur-fast, 150ms) var(--ease);
+  transition-property: background-color, color, border-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* 16px at the default root, in rem so it grows with the member's font size
+   alongside the label. Decorative: the label names the chip. */
+.chipIcon {
+  flex: none;
+  inline-size: var(--chip-icon-size);
+  block-size: var(--chip-icon-size);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -50,6 +65,10 @@
     border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
+}
+
+.chip:active {
+  transform: scale(0.97);
 }
 
 .chip:focus-visible {
@@ -64,59 +83,27 @@
   color: rgba(var(--cream-rgb), 1);
 }
 
-/* The always-open family row, above the search row's "Refine" drawer. The
-   chips are the same `.chip` the drawer's own rows use, so the two read as one
-   control set; only the label and the sideways scroll are new. */
-.familyRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-top: 12px;
-  /* Both sides, so `overflow-x: auto` does not crop the focus ring off the
-     chip the keyboard is on. */
-  padding-top: 4px;
-  padding-bottom: 4px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+/* In dark mode --plum stays the same deep plum and sits almost on top of the
+   dark --paper chips, so a picked chip turns over to a locked-light pair: the
+   raw cream channel (light in both themes) as the fill, with plum type on it
+   (about 14:1). The focus ring triple comes from `.chip:focus-visible`
+   unchanged. */
+:global([data-theme="dark"]) .chip[aria-pressed="true"] {
+  background: rgba(var(--cream-rgb), 1);
+  border-color: rgba(var(--cream-rgb), 1);
+  /* css-scale-allow: non-flipping-text. Plum type on a cream fill that is
+     light in both themes. */
+  color: var(--plum);
 }
 
-.familyRow::-webkit-scrollbar {
-  display: none;
-}
-
-.familyRowLabel {
-  flex: none;
-  /* Sits on the first chip line when the group wraps to two. */
-  line-height: 40px;
-  font-size: var(--text-11-5);
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-
-/* `.group` wraps everywhere else, which the drawer's rows want. Ten family
-   chips on a phone would wrap into four stacked lines and push the first
-   poster off the fold, so inside this row they run on one line and the row
-   scrolls instead. Scoped to `.familyRow` so the drawer keeps its wrapping. */
-/* Nine chips wrap at desktop widths; narrow screens get one scrolling line,
-   the same rule the wizard's family row follows. */
-@media (max-width: 620px) {
-  .familyRow {
-    overflow-x: auto;
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition-property: background-color, color, border-color;
   }
-  .familyRow .group {
-    flex-wrap: nowrap;
-  }
-}
-.familyRow .group {
-  min-width: 0;
-  flex: 1 1 auto;
-}
 
-.familyRow .chip {
-  flex: none;
-  white-space: nowrap;
+  .chip:active {
+    transform: none;
+  }
 }
 
 /* The split's second column is a 1fr track, so a lone select in it would

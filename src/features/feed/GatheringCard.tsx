@@ -1,13 +1,14 @@
 import { FiCalendar } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar, Button, ImageSlot } from "../../shared/components/ui";
 import { gatheringPath } from "../gatherings/data";
 import { tintForSlug } from "../../shared/api/refs";
 import { initials, relativeTime } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
 import { FeedReasonLine } from "./FeedPostActions";
 import { DEMO_GATHERING as g } from "./feedCards.data";
+import styles from "./FeedCard.module.css";
 import {
   FeedActionLink,
   FeedActions,
@@ -22,17 +23,45 @@ import {
   FeedTagRow,
 } from "./FeedCard";
 
+/** The cover banner's rendered height. Passed to `ImageSlot` as a number so
+ *  the slot reserves the box before the file arrives and the card never jumps. */
+const BANNER_HEIGHT = 160;
+
+/** The widest a feed card's banner is ever rendered, at 2x, for hosts that
+ *  can resize on request. */
+const BANNER_SRC_WIDTH = 720;
+
+/** The gathering's cover photo, full bleed across the top of the card. */
+function GatheringBanner({ src }: { src: string }) {
+  return (
+    <div className={styles.gatheringBanner}>
+      <ImageSlot
+        src={src}
+        /* Decorative: the title below names the gathering, so an alt would
+           only repeat it to a screen reader. */
+        alt=""
+        width="100%"
+        height={BANNER_HEIGHT}
+        srcSize={BANNER_SRC_WIDTH}
+        radius={0}
+        className={styles.gatheringBannerImage}
+      />
+    </div>
+  );
+}
+
 /**
  * "Gathering" card for the feed's Gatherings tab. With no `item`, renders the
  * demo prototype's scripted `DEMO_GATHERING` mock UNCHANGED (day/month date
- * block, capacity meter, tags, save-my-spot/maybe actions — none of which
- * the live aggregate carries). With a live `FeedItem` (`type: "gathering"`),
+ * block, capacity meter, tags, save-my-spot/maybe actions, all of which the
+ * live aggregate lacks). With a live `FeedItem` (`type: "gathering"`),
  * renders straight off its fields: title = event title, summary = truncated
  * description, link = `/gatherings/{slug}`, actor = the event's host (mirrors
  * `GatheringResponse.host`). The capacity meter, date block, and tag row are
  * demo-only enrichment the aggregate doesn't carry, so a live item renders a
  * plainer card (eyebrow + relative time, host avatar, title, blurb, a single
- * "Details" action) rather than guessing at them.
+ * "Details" action) rather than guessing at them. Either branch leads with the
+ * cover photo as a full-bleed banner when there is one.
  */
 export function GatheringCard({ item }: { item?: FeedItem } = {}) {
   const { t } = useTranslation();
@@ -47,6 +76,7 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
     const timestamp = relativeTime(item.createdAt, fmt);
     return (
       <FeedCardShell accent="ink">
+        {item.imageUrl && <GatheringBanner src={item.imageUrl} />}
         <FeedCardHead
           label={t("feed:card.eyebrow.gathering")}
           timestamp={timestamp}
@@ -78,11 +108,6 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
               {t("feed:action.details")}
             </Button>
           }
-          link={
-            <FeedActionLink to={item.link}>
-              {t("feed:action.details")}
-            </FeedActionLink>
-          }
         />
       </FeedCardShell>
     );
@@ -92,6 +117,7 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
   const to = gatheringPath(g.slug);
   return (
     <FeedCardShell accent="ink">
+      <GatheringBanner src={g.coverImageUrl} />
       <FeedCardHead label={t("feed:card.eyebrow.gathering")} />
       <FeedIdentity
         lead={<FeedDateBlock day={g.day} month={g.month} />}

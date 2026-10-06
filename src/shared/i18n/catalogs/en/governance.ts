@@ -163,6 +163,8 @@ export const governance: Catalog = {
     "Finance reports appear here once the first quarter is published.",
   "sections.finances.provenance":
     "Figures entered by the governance team on {date}.",
+  "sections.finances.itemCount_one": "{count} item",
+  "sections.finances.itemCount_other": "{count} items",
 
   // ── Proposals & votes ────────────────────────────────────────────────────
   "sections.proposals.eyebrow": "Proposals & votes",

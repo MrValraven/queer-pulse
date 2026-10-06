@@ -292,9 +292,9 @@ export const communities: Catalog = {
   "detail.save.unsaveAriaLabel": "Remover {name} dos guardados",
   "detail.share.cta": "Partilhar",
   "detail.share.ariaLabel": "Partilhar {name}",
-  "detail.share.copiedToast": "Link copiado para a área de transferência.",
-  "detail.share.copyLink": "Copiar link",
-  "detail.share.nativeShare": "Partilhar numa app",
+  // The share message's tagline line when a long description is cut at a
+  // whole word.
+  "detail.share.message.shortened": "{text}…",
   // PRD-140. Holding an invitation: the hero offers the door instead of a
   // request, and declining is the member's own act that nobody is told about.
   "detail.invite.banner": "Foste convidade para esta comunidade.",

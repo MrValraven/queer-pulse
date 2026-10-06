@@ -164,7 +164,6 @@ export const magazine: Catalog = {
   "toolbar.saveToReadingListAriaLabel": "Guardar na lista de leitura",
   "toolbar.savedCta": "Guardado",
   "toolbar.saveCta": "Guardar",
-  "toolbar.copyLinkAriaLabel": "Copiar um link para este artigo",
   "toolbar.shareCta": "Partilhar",
   "toolbar.savedHint": "Na tua lista",
   "toolbar.savedToast": "Guardado na tua lista de leitura",
@@ -172,6 +171,8 @@ export const magazine: Catalog = {
   "toolbar.linkCopiedToast": "Link copiado",
   "toolbar.linkCopyErrorToast": "Não foi possível copiar o link",
   "toolbar.fallbackTitle": "Este artigo",
+  // A última linha da mensagem de um artigo partilhado, por cima do link.
+  "toolbar.shareMessage.byline": "Por {byline}",
 
   // ── Chrome do leitor de deck — DeckViewer, DeckControls, DeckPresentButton,
   // componentes de slide, e o bloco FeaturedDeck ───────────────────────────

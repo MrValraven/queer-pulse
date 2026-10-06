@@ -3,7 +3,6 @@ import {
   apiGetText,
   apiPost,
   apiPatch,
-  apiPut,
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
@@ -181,14 +180,24 @@ export interface EventCardDTO {
   costKind?: string | null;
   /** Seats the going RSVPs actually occupy: one per going member plus every
    *  declared extra guest (LOC-07). This, never `goingCount`, is the number
-   *  capacity is measured against. */
-  seatsTaken?: number;
-  /** True when the gathering is at capacity (`seatsTaken >= capacity`). */
+   *  capacity is measured against.
+   *
+   *  `null` on a list card or a detail whose host turned "Show attendee
+   *  count" off, for every viewer who is not an organiser (host or co-host;
+   *  backend `withholdHiddenAttendeeCounts`). Read null exactly like absent:
+   *  the card shows neither a "spots left" line nor any figure. */
+  seatsTaken?: number | null;
+  /** True when the gathering is at capacity (`seatsTaken >= capacity`).
+   *  Sent even when the tallies are withheld. */
   isFull?: boolean;
   host?: EventHostDTO;
   capacity?: number;
-  goingCount?: number;
-  waitlistCount?: number;
+  /** Members holding a "going" RSVP. `null` under the same rule as
+   *  `seatsTaken`: the card renders no count line at all. */
+  goingCount?: number | null;
+  /** Members on the waitlist. The detail sends `null` under the same rule as
+   *  `seatsTaken`; read it like absent. */
+  waitlistCount?: number | null;
   spotsLeft?: number;
   ticketed?: boolean;
   price?: string;
@@ -241,11 +250,19 @@ export interface EventAnnouncementDTO {
   /** ISO 8601. */
   createdAt: string;
   author: EventHostDTO | null;
-  /** How many members the fan-out reached at send time. */
-  recipientCount: number;
+  /** How many members the fan-out reached at send time. `null` on the
+   *  detail's copy when the host hid the attendee count from this viewer:
+   *  render no figure for it. */
+  recipientCount: number | null;
 }
 
 export interface EventDetailDTO extends EventCardDTO {
+  /** Both tallies arrive as `null` when the host hid the attendee count and
+   *  the viewer is not an organiser (backend `EventDetail`). An organiser,
+   *  co-hosts included, always gets numbers. `detailToGathering`'s
+   *  `hideCount` keeps the page's copy aligned with the same flag. */
+  goingCount?: number | null;
+  seatsTaken?: number | null;
   description?: string;
   language?: string | null;
   guidelines?: string;
@@ -801,39 +818,80 @@ export const removeEventPhoto = (slug: string, photoId: string) =>
   apiDelete<{ ok: true }>(`/events/${slug}/photos/${photoId}`);
 
 // ── Event lineup ("who performed") ──────────────────────────────────────────
-// Backend `EventLineupEntryView`/`EventLineupDTO` (Personas Phase 5, Moment 5).
+// Backend `EventLineupService` (lineup invites, 2026-10-06). An organizer
+// invites; the member accepts or declines; only accepted rows are public.
 
-/** One resolved row of an event's lineup. */
+export type LineupEntryStatus = "pending" | "accepted" | "declined";
+
+/** One row of an event's lineup. Organizers receive every status; everyone
+ *  else receives accepted rows only. */
 export interface EventLineupEntryDTO {
+  id: string;
   slug: string;
   name: string;
   avatarUrl: string | null;
-  /** Free-ish craft/role label the host assigned — not backend-enum-
-   *  constrained, see `PutLineupDto`. The FE only ever writes one of
+  /** Craft label the organizer picked. The FE only writes one of
    *  `LINEUP_ROLES` (`eventLineup.data.ts`). */
   role: string;
+  status: LineupEntryStatus;
 }
 
-/** GET/PUT `/events/:slug/lineup` response. `viewerEntry` is the caller's
- *  own row, or `null` if they're not on the bill. */
+/** `GET /events/:slug/lineup` and the organizer writes. `viewerEntry` is the
+ *  caller's own row in any status, or `null`. */
 export interface EventLineupDTO {
   entries: EventLineupEntryDTO[];
   viewerEntry: EventLineupEntryDTO | null;
 }
 
-export interface LineupEntryInput {
-  memberSlug: string;
+/** `GET /event-lineup-invites/:id`, the invited member only. Event and
+ *  inviter reuse the co-host invite shapes; counts are always null. */
+export interface LineupInviteDTO {
+  id: string;
+  status: LineupEntryStatus;
   role: string;
+  createdAt: string;
+  event: CohostInviteEventSummaryDTO;
+  inviter: CohostInviteInviterDTO | null;
 }
 
-/** GET /events/:slug/lineup — participant/organizer visibility (mirrors
- *  attendee visibility; 404s for a non-visible event). */
 export const getEventLineup = (slug: string) =>
   apiGet<EventLineupDTO>(`/events/${slug}/lineup`);
 
-/** PUT /events/:slug/lineup — host/co-host only, replace-all. */
-export const replaceEventLineup = (slug: string, entries: LineupEntryInput[]) =>
-  apiPut<EventLineupDTO>(`/events/${slug}/lineup`, { entries });
+export const inviteToLineup = (
+  slug: string,
+  body: { memberSlug: string; role: string },
+) => apiPost<EventLineupDTO>(`/events/${slug}/lineup`, body);
+
+export const changeLineupRole = (
+  slug: string,
+  memberSlug: string,
+  role: string,
+) =>
+  apiPatch<EventLineupDTO>(
+    `/events/${slug}/lineup/${encodeURIComponent(memberSlug)}`,
+    { role },
+  );
+
+export const removeFromLineup = (slug: string, memberSlug: string) =>
+  apiDelete<EventLineupDTO>(
+    `/events/${slug}/lineup/${encodeURIComponent(memberSlug)}`,
+  );
+
+export const leaveLineup = (slug: string) =>
+  apiPost<{ ok: true }>(`/events/${slug}/lineup/leave`);
+
+export const getLineupInvite = (entryId: string) =>
+  apiGet<LineupInviteDTO>(`/event-lineup-invites/${entryId}`);
+
+export const acceptLineupInvite = (entryId: string) =>
+  apiPost<{ id: string; status: LineupEntryStatus }>(
+    `/event-lineup-invites/${entryId}/accept`,
+  );
+
+export const declineLineupInvite = (entryId: string) =>
+  apiPost<{ id: string; status: LineupEntryStatus }>(
+    `/event-lineup-invites/${entryId}/decline`,
+  );
 
 // ── Cohost invites (real invite → accept/decline lifecycle) ────────────────
 // Backend `CohostInviteDetailView` / `EventCohostInvitesService`.
@@ -848,8 +906,10 @@ export interface CohostInviteEventSummaryDTO {
   timezone: string;
   venue: string | null;
   isOnline: boolean;
-  goingCount: number;
-  waitlistCount: number;
+  /** Both null when the host hid the attendee count and the viewer is not an
+   *  organiser yet (an invitee before accepting). Render nothing for null. */
+  goingCount: number | null;
+  waitlistCount: number | null;
 }
 
 export interface CohostInviteInviterDTO {

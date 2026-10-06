@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
-import {
-  LoadErrorState,
-  LoadMoreFooter,
-  Reveal,
-} from "../../../shared/components/ui";
+import { LoadErrorState, LoadMoreFooter } from "../../../shared/components/ui";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CalendarEvent } from "../data";
 import { useEvents } from "../api/useEvents";
 import { BrowseFilterBar } from "./BrowseFilterBar";
+import { BrowseSkeleton, MonthGroup } from "./BrowseMonthGroup";
 import {
   hasActiveBrowseFilters,
   readBrowseFilters,
@@ -18,53 +15,19 @@ import {
   writeBrowseFilters,
   type BrowseFilterState,
 } from "./browseFilters";
-import { EventPosterCard } from "./EventPosterCard";
-import { EventPosterSkeleton } from "./EventPosterSkeleton";
 import { HubEmptyState, HubLoadingLine } from "./HubEmptyState";
+import { useBrowseLayout } from "./useBrowseLayout";
 import styles from "./BrowseView.module.css";
 
 /** How long the search box waits before it becomes a request. Long enough that
  *  typing a neighbourhood name is one query, short enough to feel live. */
 const SEARCH_DEBOUNCE_MS = 350;
 
-/** One month's worth of events — a sticky subhead over a column of poster rows. */
-function MonthGroup({
-  label,
-  events,
-}: {
-  label: string;
-  events: CalendarEvent[];
-}) {
-  return (
-    <section className={styles.monthGroup}>
-      <h2 className={styles.monthHeading}>{label}</h2>
-      <div className={styles.rows}>
-        {events.map((event, index) => (
-          <Reveal
-            key={`${event.title}-${event.date.toISOString()}`}
-            as="div"
-            className={styles.row}
-            delay={Math.min(index, 8) * 40}
-          >
-            <EventPosterCard event={event} variant="list" />
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function SkeletonRows({ count }: { count: number }) {
-  return (
-    <div className={styles.rows} aria-hidden>
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className={styles.row}>
-          <EventPosterSkeleton variant="list" />
-        </div>
-      ))}
-    </div>
-  );
-}
+/** Placeholders while the first page loads: two full rows of the three-up
+ *  ticket grid, or a screenful of agenda rows. */
+const INITIAL_SKELETON_COUNT = 6;
+/** Placeholders while a later page loads: one full ticket row. */
+const NEXT_PAGE_SKELETON_COUNT = 3;
 
 function groupByMonth(
   events: CalendarEvent[],
@@ -81,7 +44,9 @@ function groupByMonth(
 }
 
 /**
- * Browse tab — filters, then a month-grouped, infinitely-scrolling list.
+ * Browse tab: filters, then a month-grouped, infinitely-scrolling board of
+ * ticket cards (or agenda rows under `?browseLayout=agenda`, see
+ * `useBrowseLayout`).
  *
  * FILTERING HAPPENS ON THE SERVER (LOC-17). This view used to receive the
  * hub's already-loaded pages and narrow them in JavaScript, keyed partly off
@@ -98,6 +63,7 @@ export function BrowseView() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const layout = useBrowseLayout();
   const [params, setParams] = useSearchParams();
   const filters = useMemo(() => readBrowseFilters(params), [params]);
   // Captured once so the date presets resolve against a stable "now" instead
@@ -190,14 +156,25 @@ export function BrowseView() {
         {isLoading ? (
           <>
             <HubLoadingLine labelKey="gatherings:hub.loading" />
-            <SkeletonRows count={5} />
+            <BrowseSkeleton layout={layout} count={INITIAL_SKELETON_COUNT} />
           </>
         ) : hasNothingLoadedError ? (
           <LoadErrorState onRetry={refetch} />
         ) : (
           <>
-            {months.map(([label, monthEvents]) => (
-              <MonthGroup key={label} label={label} events={monthEvents} />
+            {months.map(([label, monthEvents], monthIndex) => (
+              <MonthGroup
+                key={label}
+                label={label}
+                events={monthEvents}
+                layout={layout}
+                now={now}
+                isFirstMonth={monthIndex === 0}
+                // The last loaded month may continue on the next page.
+                isCountShown={
+                  !(hasNextPage && monthIndex === months.length - 1)
+                }
+              />
             ))}
 
             {/* Two different nothings, and saying the wrong one is a lie: with
@@ -220,7 +197,12 @@ export function BrowseView() {
                 />
               ))}
 
-            {isFetchingNextPage && <SkeletonRows count={3} />}
+            {isFetchingNextPage && (
+              <BrowseSkeleton
+                layout={layout}
+                count={NEXT_PAGE_SKELETON_COUNT}
+              />
+            )}
 
             <div ref={sentinelRef} aria-hidden className={styles.sentinel} />
 
