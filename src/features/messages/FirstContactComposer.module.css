@@ -42,7 +42,10 @@
   width: 100%;
   box-sizing: border-box;
   font: inherit;
-  font-size: var(--text-15);
+  /* 16px, never less: iOS zooms the page into any field under 16px when it is
+     focused, and stays zoomed after the sheet closes, leaving the fixed tab
+     bar half off-screen (see base.css's input font-size floor). */
+  font-size: var(--text-16);
   line-height: 1.5;
   color: var(--text-strong);
   background: var(--paper);

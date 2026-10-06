@@ -11,6 +11,7 @@ import {
 import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminVerifyDecided } from "./AdminVerifyDecided";
 import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
+import { JoinRequestApproveModal } from "./JoinRequestApproveModal";
 import { JoinRequestDeclineModal } from "./JoinRequestDeclineModal";
 import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
 import { AdminTabs } from "./ui";
@@ -134,6 +135,14 @@ export function AdminVerifyQueue() {
           pending={decisions.isPending}
           onConfirm={decisions.confirmDecline}
           onClose={decisions.closeDecline}
+        />
+      )}
+      {decisions.approvingItem && (
+        <JoinRequestApproveModal
+          applicantName={decisions.approvingItem.name}
+          pending={decisions.isPending}
+          onConfirm={decisions.confirmApprove}
+          onClose={decisions.closeApprove}
         />
       )}
     </div>

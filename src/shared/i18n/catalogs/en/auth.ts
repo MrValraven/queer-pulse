@@ -188,6 +188,12 @@ export const auth: Catalog = {
     "Only an expired invite can be sent again. This one's already been used, withdrawn, or is still live.",
   "invite.sentList.resendError.generic":
     "Couldn't send that one again just now. Give it another try in a moment.",
+  "invite.sentList.showMore": "Show more",
+  "invite.sentList.loadingMore": "Loading…",
+  "invite.sentList.loadMoreError": "We couldn't load more of your invites.",
+  "invite.sentList.loadError": "We couldn't load your invites",
+  "invite.sentList.loadErrorBody":
+    "Check your connection, then give it another try.",
 
   // ── Invite unfurl preview card (mirrors the static Open Graph tags) ──
   "sharePreview.heroTitle.line1": "Walk into a room",

@@ -35,6 +35,10 @@ emphasis treatment as the manifesto/gatherings/outro and the create-gathering su
 
 Don't render a success as a big empty white card.
 
+Inside a `<Modal>` the success state is flat: the dialog is already the surface, so
+`<SuccessPanel>` drops the plum card on its own and uses the modal's theme ink with a
+`ghost` close button. Never nest a plum card inside a small dialog.
+
 ## Type
 
 - Display/H1–H3, pull quotes → **Fraunces** serif, weight 300–500, italic `<em>` = coral.

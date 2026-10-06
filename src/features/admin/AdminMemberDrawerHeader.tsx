@@ -31,7 +31,9 @@ export function AdminMemberDrawerHeader({ member }: { member: AdminMember }) {
       <div>
         <h2 className={styles.dName}>{member.name}</h2>
         <div className={styles.dChips}>
-          <AdminChip tone="plum">{member.pronoun}</AdminChip>
+          {member.pronoun.trim() !== "" && (
+            <AdminChip tone="plum">{member.pronoun}</AdminChip>
+          )}
           <AdminChip tone={member.verified ? "jade" : member.statusTone} dot>
             {member.verified
               ? t("admin:members.drawer.verifiedChip")

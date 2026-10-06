@@ -1,50 +1,18 @@
-.rows {
+/* ── Page frame ─────────────────────────────────────────── */
+/* Summary, coverage and roster stack with the same generous step between
+   them; each part keeps its own tighter rhythm inside. */
+.board {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 14px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-}
-
-.rowMain {
-  flex: 1 1 auto;
+  gap: var(--gap-lg);
   min-width: 0;
+  container-type: inline-size;
 }
 
-.rowTop {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.rowName {
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.rowHandle {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-}
-
-.empty,
 .notice {
   padding: 8px 0;
 }
 
-.emptyText,
 .noticeText {
   max-width: 60ch;
   margin: 0;
@@ -54,19 +22,138 @@
   color: var(--ink-60);
 }
 
-/* Additive staff grants under a roster row's name (OPS-03): who has been
-   handed which admin domain, read at a glance next to their account tier. */
-.rowGrants {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
+/* ── Summary tiles ──────────────────────────────────────── */
+/* Two by two until the board can give four tiles a comfortable width. Each
+   tile spans three shared rows (label, value, hint), so a label that wraps
+   to two lines moves its whole row down together and every number stays
+   level with its neighbours. */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-xs);
 }
 
-.rowGrantsLabel {
+@container (min-width: 52rem) {
+  .summary {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gap-sm);
+  }
+}
+
+.tile,
+.tileSkeleton {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  justify-items: start;
+  align-items: start;
+  row-gap: 6px;
+  min-width: 0;
+  padding: 16px 18px 15px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+}
+
+.tile {
+  font: inherit;
+  text-align: start;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .tile:hover {
+    border-color: var(--line-2);
+    box-shadow: var(--shadow-e2);
+  }
+}
+
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A tier tile whose filter is applied to the roster below: the same accent
+   edge, wash and check as a pressed coverage card. */
+.tile[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.tileTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  justify-self: stretch;
+}
+
+.tileCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--paper);
   font-size: var(--text-12);
-  letter-spacing: 0.04em;
+}
+
+.tileLabel {
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-60);
+}
+
+.tileValue {
+  font-family: var(--serif);
+  font-size: var(--text-38);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="dark"] .tileValue {
+  color: var(--ink);
+}
+
+.tileHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-12-5);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+
+.tileHintIcon {
+  flex: none;
+  font-size: var(--text-13);
+}
+
+/* At least one grant has nobody active to act on it. */
+.tileWarn {
+  border-color: rgba(var(--amber-rgb), 0.55);
+  background: rgba(var(--amber-rgb), 0.08);
+}
+
+.tileWarn .tileValue,
+.tileWarn .tileHint {
+  color: var(--amber-ink);
+}
+
+.tileCalm .tileHintIcon {
+  color: var(--jade-ink);
 }

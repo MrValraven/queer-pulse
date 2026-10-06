@@ -1,6 +1,7 @@
 import type { PendingListing, PhotoKey } from "../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "../listingMenu.data";
+import { normalizeOwnerIdentities } from "../listingOwnerIdentities.data";
 import { toServiceRows } from "../listingServices.data";
 import { ownerPersonalFieldsFrom } from "../ownerPersonalFields";
 import type { ManagedListingDTO } from "./listings.api";
@@ -41,6 +42,7 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
     // the editable one: the note loses its null and each service row gains the
     // client-only key its React list needs.
     accessibility: normalizeAccessibilityDraft(dto.accessibility),
+    ownerIdentities: normalizeOwnerIdentities(dto.ownerIdentities),
     services: toServiceRows(dto.services),
     pricingMode: pricingModeOf({
       pricingMode: dto.pricingMode,

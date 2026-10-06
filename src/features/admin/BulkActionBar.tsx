@@ -7,6 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { describeError } from "../../shared/api/errorMessage";
 import { useBulkListingAction } from "./api/useBulkListingAction";
+import { BulkPublishConfirmModal } from "./BulkPublishConfirmModal";
 import { BulkRemoveConfirmModal } from "./BulkRemoveConfirmModal";
 import { LISTING_BULK_ACTION_CAP } from "./api/adminListings.api";
 import styles from "./AdminListingsPage.module.css";
@@ -45,8 +46,9 @@ function usePublishedBarHeight(barRef: RefObject<HTMLDivElement | null>) {
  * action here succeeds. All three actions run through `useBulkListingAction`,
  * whose unified `isPending` disables every button here together, the same
  * unified-disabled contract `useListingModeration` gives the single-row
- * cluster. Remove routes through its own confirm dialog (`BulkRemoveConfirmModal`)
- * since it's destructive; the other two fire immediately.
+ * cluster. Publish and Remove each confirm first (`BulkPublishConfirmModal`,
+ * `BulkRemoveConfirmModal`), since one puts listings in front of members and
+ * the other is destructive; Back to review fires immediately.
  */
 export function BulkActionBar({
   selectedRefs,
@@ -59,15 +61,17 @@ export function BulkActionBar({
   const fmt = useFormat();
   const { showToast } = useToast();
   const { bulkSetStatus, bulkRemove, isPending } = useBulkListingAction();
+  const [confirmingPublish, setConfirmingPublish] = useState(false);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
   usePublishedBarHeight(barRef);
   const refs = Array.from(selectedRefs);
   const count = refs.length;
 
-  async function publishLive() {
+  async function confirmPublish() {
     try {
       await bulkSetStatus(refs, "live");
+      setConfirmingPublish(false);
       onClear();
     } catch (caught) {
       showToast(
@@ -151,7 +155,7 @@ export function BulkActionBar({
         <div className={styles.bulkActions}>
           <Button
             variant="jade"
-            onClick={() => void publishLive()}
+            onClick={() => setConfirmingPublish(true)}
             disabled={isPending}
           >
             {t("admin:adminListings.bulk.publishCta")}
@@ -172,6 +176,14 @@ export function BulkActionBar({
           </Button>
         </div>
       </div>
+      {confirmingPublish && (
+        <BulkPublishConfirmModal
+          count={count}
+          pending={isPending}
+          onConfirm={() => void confirmPublish()}
+          onClose={() => setConfirmingPublish(false)}
+        />
+      )}
       {confirmingRemove && (
         <BulkRemoveConfirmModal
           count={count}

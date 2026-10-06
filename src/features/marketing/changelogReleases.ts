@@ -60,18 +60,40 @@ export function releaseDateSlug(date: string): string {
 }
 
 /**
- * Version rule: the first shipping day is v1.0.0. A day that ships at least
- * one feature bumps the minor and resets the patch; any other day bumps the
- * patch. Versions are assigned oldest-first so filtering never renumbers them.
+ * First shipping day (a {@link releaseDateSlug} slug) whose version bumps once
+ * per push. Days before it keep the legacy per-day rule, so the version
+ * numbers already published for that history stay the same.
+ */
+export const PER_PUSH_VERSIONING_FROM = "2026-10-05";
+
+/** Per-day input to {@link assignVersions}. */
+export interface ReleaseDayVersionInput {
+  /** The day ships at least one `feature` entry (legacy rule only). */
+  hasFeature: boolean;
+  /** The day falls on or after {@link PER_PUSH_VERSIONING_FROM}. */
+  isPerPush: boolean;
+  /** Commits pushed that day; read only when `isPerPush` is set. */
+  pushes: number;
+}
+
+/**
+ * Version rule: the first shipping day is v1.0.0. A per-push day bumps the
+ * minor once for each push (at least once) and resets the patch. Before the
+ * per-push cutover, a day that ships at least one feature bumps the minor and
+ * resets the patch, and any other day bumps the patch. Versions are assigned
+ * oldest-first so filtering never renumbers them.
  */
 export function assignVersions(
-  daysOldestFirst: { hasFeature: boolean }[],
+  daysOldestFirst: ReleaseDayVersionInput[],
 ): string[] {
   let minor = 0;
   let patch = 0;
   return daysOldestFirst.map((day, index) => {
     if (index === 0) return "v1.0.0";
-    if (day.hasFeature) {
+    if (day.isPerPush) {
+      minor += Math.max(1, day.pushes);
+      patch = 0;
+    } else if (day.hasFeature) {
       minor += 1;
       patch = 0;
     } else {
@@ -120,6 +142,8 @@ export function buildReleases(entries: ChangelogEntry[]): ChangelogRelease[] {
   const versionsOldestFirst = assignVersions(
     [...days].reverse().map((day) => ({
       hasFeature: day.entries.some((entry) => entry.category === "feature"),
+      isPerPush: releaseDateSlug(day.date) >= PER_PUSH_VERSIONING_FROM,
+      pushes: CHANGELOG_RELEASE_NOTES[day.date]?.pushes ?? 1,
     })),
   );
   return days.map((day, index) => {

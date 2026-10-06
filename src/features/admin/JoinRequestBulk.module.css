@@ -119,4 +119,7 @@
   font-family: var(--sans);
   font-size: var(--text-14);
   color: var(--ink);
+  /* The modals scroll this line into view once a reason is picked; keep the
+     dialog body's usual gap above the footer when they do. */
+  scroll-margin-bottom: 12px;
 }

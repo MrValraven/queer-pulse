@@ -14,6 +14,7 @@ import { GatheringSidebar } from "./GatheringSidebar";
 import { GatheringHeroActions } from "./GatheringHeroActions";
 import { GatheringHostBar } from "./GatheringHostBar";
 import { GatheringHeaderToolbar } from "./GatheringHeaderToolbar";
+import { GatheringCover } from "./GatheringCover";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
@@ -183,6 +184,7 @@ function GatheringDetailBody({
                   }
                 />
               </div>
+              <GatheringCover gathering={gathering} />
               <div className={styles.typeRow}>
                 {/* The stored value is a catalog key or the host's own words.
                     `formatLabel` resolves the first, leaves the
@@ -229,7 +231,11 @@ function GatheringDetailBody({
                 <GatheringHeroCommunity gathering={gathering} />
               </div>
               <p className={styles.body}>{gathering.body}</p>
-              <GatheringHeroActions gathering={gathering} rsvp={rsvp} />
+              <GatheringHeroActions
+                gathering={gathering}
+                rsvp={rsvp}
+                isViewerHost={isSelf}
+              />
 
               <GoingAttendeesPreview gathering={gathering} />
               {/* Go together reads the optimistic RSVP, so the card shows the

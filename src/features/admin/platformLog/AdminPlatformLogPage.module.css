@@ -1,0 +1,288 @@
+/* Platform log. The row styles follow the dashboard's "Live activity" feed
+   (AdminDashboardPage.module.css, .fItem/.fIco/.fTx) so the two read as one
+   family: the dashboard shows the latest few, this page the full record. */
+
+/* ── Filter bar ──────────────────────────────────────────────────────────── */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+  margin-bottom: 22px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.filterLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.rangeSelect {
+  min-width: 180px;
+}
+
+.memberChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: var(--wash);
+  font-size: var(--text-13);
+  color: var(--ink);
+}
+
+.memberChip b {
+  font-weight: 700;
+}
+
+.memberIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-60);
+}
+
+.memberClear {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: background 0.16s var(--ease);
+}
+
+@media (hover: hover) {
+  .memberClear:hover {
+    background: rgba(var(--line-rgb), 0.08);
+    color: var(--ink);
+  }
+}
+
+.filterBar:focus-visible,
+.memberChip:focus-visible,
+.memberClear:focus-visible,
+.partyButton:focus-visible,
+.noteToggle:focus-visible,
+.subject:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Log card ────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 8px 20px 16px;
+}
+
+.day + .day {
+  margin-top: 10px;
+}
+
+.dayHeading {
+  margin: 18px 6px 4px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 11px 6px;
+}
+
+.row + .row {
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+
+.icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-top: 1px;
+  border-radius: var(--radius-9);
+}
+
+.icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.icon_coral {
+  background: rgba(var(--accent-rgb), 0.13);
+  color: var(--accent-ink);
+}
+
+.icon_plum {
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--text-strong);
+}
+
+.icon_amber {
+  background: rgba(var(--amber-rgb), 0.2);
+  color: var(--amber-ink);
+}
+
+.icon_jade {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+
+.icon_violet {
+  background: rgba(var(--violet-rgb), 0.13);
+  color: var(--violet);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sentence {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.party {
+  font-weight: 700;
+}
+
+.partyButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.18);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .partyButton:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.separator {
+  color: var(--ink-40);
+}
+
+.subject {
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+/* The generic "View" reads as an action, so it drops the italic that marks a
+   named thing. */
+.subjectFallback {
+  font-style: normal;
+  font-weight: 600;
+}
+
+a.subject {
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  a.subject:hover {
+    text-decoration: underline;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 3px 0 0;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.noteToggle {
+  /* The negative margin keeps the larger tap area out of the meta line's
+     layout. */
+  padding: 6px 4px;
+  margin: -6px -4px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-text);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .noteToggle:hover {
+    text-decoration: underline;
+  }
+}
+
+.note {
+  max-width: 68ch;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-9);
+  background: var(--wash);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.skeletonRow {
+  padding: 11px 6px;
+}
+
+.loadMore {
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 4px 12px 12px;
+  }
+
+  .filterGroup,
+  .rangeSelect {
+    flex: 1 1 100%;
+  }
+}

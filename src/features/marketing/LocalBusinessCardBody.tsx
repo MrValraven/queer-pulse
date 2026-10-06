@@ -4,6 +4,7 @@ import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { DirectoryCardAccess } from "./DirectoryCardAccess";
+import { DirectoryCardOwners } from "./DirectoryCardOwners";
 import { DirectoryCardRating } from "./DirectoryCardRating";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
 import { categoryLabel } from "./localCategories";
@@ -268,6 +269,7 @@ export function LocalBusinessCardBody({
         ))}
       </div>
       <DirectoryCardAccess place={place} />
+      <DirectoryCardOwners place={place} />
       <div className={s.foot}>
         <DirectoryCardStatus place={place} />
         {/* No name means nobody to show: a listing submitted anonymously (or

@@ -184,13 +184,15 @@
   /* ── Magazine desk shell phone bar (`MagazineDeskShell.module.css`) ──
      --desk-shell-bar-pad-y is the sticky phone bar's vertical padding and
      --desk-shell-bar-rule its bottom rule. --desk-shell-bar-h is the bar's
-     whole height (its --tap-min menu button, the padding, the rule), which
-     the desk page reads so its sticky group headers and rail sit under it. */
+     whole height (the notch inset it pads down past, its --tap-min menu
+     button, the padding, the rule), which the desk page reads so its sticky
+     group headers and rail sit under it. The inset is zero outside an
+     installed iPhone. */
   --desk-shell-bar-pad-y: 12px;
   --desk-shell-bar-rule: 1px;
   --desk-shell-bar-h: calc(
-    var(--tap-min) + 2 * var(--desk-shell-bar-pad-y) +
-      var(--desk-shell-bar-rule)
+    env(safe-area-inset-top, 0px) + var(--tap-min) + 2 *
+      var(--desk-shell-bar-pad-y) + var(--desk-shell-bar-rule)
   );
 }
 

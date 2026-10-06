@@ -64,9 +64,14 @@ export function DirectoryRelatedPlaces({ place }: { place: DirectoryPlace }) {
   return (
     <section className={s.related}>
       <h2 className={s.relatedTitle}>
-        {t("marketing:directory.detail.relatedTitle", {
-          category: categoryText,
-        })}
+        {t(
+          place.online
+            ? "marketing:directory.detail.relatedTitleOnline"
+            : "marketing:directory.detail.relatedTitle",
+          {
+            category: categoryText,
+          },
+        )}
       </h2>
       <div className={s.relatedGrid}>
         {shortlist.map((relatedPlace, index) => (

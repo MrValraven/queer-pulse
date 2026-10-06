@@ -28,11 +28,9 @@ import styles from "./CommunitiesToolbar.module.css";
  * the page header rather than in either tab's body: one bar over both pools,
  * so switching tabs moves the cards under it and leaves the controls alone.
  *
- * Two pieces went instead of moving. The "How communities work" button became
- * the deeper-explainer action inside the ⓘ beside the title, which was already
- * the page's "explain this screen" affordance; two of those side by side was
- * the redundancy, and dropping one is what frees the width for a single row.
- * And the results line is gone: unrefined, the active tab's own pill is the
+ * Two pieces went instead of moving. The "How communities work" button left
+ * the page entirely, which is what frees the width for a single row. And the
+ * results line is gone: unrefined, the active tab's own pill is the
  * count, so a separate "1 community" under "My communities 1" said it twice.
  * Once something IS narrowing, the count rides the chip row, where it sits
  * beside the chips that explain it.

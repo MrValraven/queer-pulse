@@ -27,14 +27,14 @@ function toCandidate(member: Member): CohostCandidate {
 }
 
 /** Cycles through the same three avatar tints the attendee rows use
- *  (`AV_TINTS` in `api/events.adapters.ts`) — cohosts carry no tint of their
+ *  (`AV_TINTS` in `api/events.adapters.ts`). Cohosts carry no tint of their
  *  own on the wire, so a stable per-row tint just needs to vary visually. */
 const COHOST_TINTS: Member["tint"][] = ["coral", "jade", "plum"];
 
 /** `GET /events/:slug`'s real `cohosts` (`EventOrganizerView[]`, no per-person
  *  role/bio text) -> the light shape `CohostManager` renders. `roleLabel` is
  *  pre-translated by the caller (`t("gatherings:cohost.roleCohost")`) since
- *  this is a plain data mapper, not a component. */
+ *  this is a plain data mapper. */
 export function hostDtoToCandidate(
   dto: EventHostDTO,
   index: number,
@@ -51,14 +51,7 @@ export function hostDtoToCandidate(
 }
 
 /**
- * The full pool the host picks from — every recurring person on the platform,
- * sourced from the canonical member registry so names/avatars stay in sync.
- */
-export const MEMBER_POOL: CohostCandidate[] =
-  Object.values(MEMBERS).map(toCandidate);
-
-/**
- * Cohosts already on this gathering (Pride Brunch — June). Seeded here because
+ * Cohosts already on this gathering (Pride Brunch, June). Seeded here because
  * the static event data doesn't carry a cohost list; the manage panel treats
  * this as its starting local state.
  */

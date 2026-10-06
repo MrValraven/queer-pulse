@@ -14,6 +14,7 @@ import type { MessageSearchResponse } from "../../../shared/contracts/contracts"
 import type { TFunction } from "../../../shared/i18n/types";
 import { conversations as mockConversations, type ChatMessage } from "../data";
 import { demoIdentityAuthor } from "../demoIdentities.data";
+import { authorInitialsName, authorTitleName } from "../personaAuthorName";
 import { attachmentCaption } from "../messageCopy";
 import { isCaptionEditKind } from "../messageEditKinds";
 import {
@@ -122,8 +123,14 @@ function toGroups(
         ? (meta?.title ?? t("messages:group.untitled"))
         : official
           ? t("messages:conversation.officialName")
-          : (other?.displayName ?? "Member");
-      const parts = name.trim().split(/\s+/);
+          : other
+            ? authorTitleName(other)
+            : "Member";
+      // A persona titled "Owner Name | Poet" takes its initials from the
+      // owner's name, matching the inbox row.
+      const parts = (other ? authorInitialsName(other) : name)
+        .trim()
+        .split(/\s+/);
       group = {
         conversationId: hit.conversationId,
         name,
@@ -151,17 +158,21 @@ function toGroups(
       groupByConversation.set(hit.conversationId, group);
       order.push(hit.conversationId);
     }
+    // A reply sent as a business the viewer staffs is on the viewer's side.
+    const isViewerSide = isFromViewerSide(hit.sender, viewer);
     group.hits.push({
       id: hit.id,
       conversationId: hit.conversationId,
       snippet: hit.snippet,
       time: shortTime(hit.createdAt),
-      // A reply sent as a business the viewer staffs is on the viewer's side.
-      from: isFromViewerSide(hit.sender, viewer) ? "me" : "them",
+      from: isViewerSide ? "me" : "them",
       // ENG-243: an erased sender's hit is labelled in the viewer's language.
+      // A counterpart persona is titled as the thread's own label is.
       senderName: hit.sender.isFormerMember
         ? t("messages:formerMember")
-        : hit.sender.displayName,
+        : isViewerSide
+          ? hit.sender.displayName
+          : authorTitleName(hit.sender),
     });
   }
   return order.map((conversationId) =>

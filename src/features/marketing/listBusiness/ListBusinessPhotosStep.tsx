@@ -1,4 +1,3 @@
-import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
@@ -13,14 +12,9 @@ import styles from "./ListBusinessPage.module.css";
 export function StepPhotosYou({
   form,
   userName,
-  uploadPhoto,
 }: {
   form: ListingForm;
   userName: string;
-  uploadPhoto: (
-    file: File,
-    options?: { crop?: CropRect },
-  ) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
   // A suggestion and a staff-authored draft both leave off the owner block
@@ -47,7 +41,7 @@ export function StepPhotosYou({
         )}
       />
 
-      <PhotosFields form={form} uploadPhoto={uploadPhoto} />
+      <PhotosFields form={form} />
 
       {/* The owner half is written in the first person about whoever is
           filling the form in, so a staff-authored draft and a suggestion both

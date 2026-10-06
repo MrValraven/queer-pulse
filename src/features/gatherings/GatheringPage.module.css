@@ -38,6 +38,11 @@
   min-width: 0;
   margin-bottom: var(--gap-sm);
 }
+/* The host's cover banner (GatheringCover). Its shape, width and radius ride
+   inline on ImageSlot; this only spaces it off the type row below. */
+.cover {
+  margin-bottom: var(--gap-lg);
+}
 .typeRow {
   display: flex;
   align-items: center;

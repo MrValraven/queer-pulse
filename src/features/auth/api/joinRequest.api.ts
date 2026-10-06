@@ -69,6 +69,10 @@ export interface JoinRequestDTO {
   /** Closed-set reason key the reviewer picked when declining. Null for
    *  approvals, waitlists, and legacy declines that predate this field. */
   declineReason: string | null;
+  /** Closed-set reason key the reviewer picked when approving (see
+   *  `joinRequestApprovalReason.ts`). Staff-only. Null on every other status
+   *  and on approvals that predate this field. */
+  approvalReason: string | null;
   /** Confidence-tiered triage signals — surfaced to a human reviewer, never
    *  acted on automatically. See the backend's `join-request-flags.ts`. */
   flags: string[];
@@ -97,6 +101,21 @@ export interface JoinRequestDTO {
    * carry none.
    */
   dueAt: string | null;
+  /**
+   * A free-text note staff keep on a DECLINED request, for each other only:
+   * the applicant never sees it, and the public status endpoint never carries
+   * it. Null when nobody has written one, or after it was cleared. Set through
+   * {@link updateJoinRequestNote}.
+   */
+  internalNote: string | null;
+  /** ISO timestamp of the note's last edit, or null when there is no note. */
+  internalNoteUpdatedAt: string | null;
+  /** The id of the staff member who last edited the note, or null when there
+   *  is no note (and after that staff member's erasure). */
+  internalNoteUpdatedBy: string | null;
+  /** That staff member's display name, resolved server-side the same way as
+   *  `reviewedByName`. Absent when it cannot be resolved. */
+  internalNoteUpdatedByName?: string;
 }
 
 /** Payload for a prospective member's request to join. */
@@ -444,10 +463,12 @@ export const reviewJoinRequest = (
   id: string,
   status: "approved" | "declined" | "waitlisted",
   declineReason?: string,
+  approvalReason?: string,
 ) =>
   apiPatch<JoinRequestDTO>(`/join-requests/${encodeURIComponent(id)}`, {
     status,
     declineReason,
+    approvalReason,
   });
 
 export const JOIN_REQUEST_BULK_ACTION_CAP = 50;
@@ -464,11 +485,13 @@ export const bulkReviewJoinRequests = (
   ids: string[],
   status: "approved" | "declined" | "waitlisted",
   declineReason?: string,
+  approvalReason?: string,
 ) =>
   apiPost<BulkReviewResult>("/join-requests/bulk", {
     ids,
     status,
     declineReason,
+    approvalReason,
   });
 
 /**
@@ -502,6 +525,23 @@ export const revokeJoinRequestInvite = (id: string) =>
   apiPost<JoinRequestDTO>(
     `/join-requests/${encodeURIComponent(id)}/invite/revoke`,
   );
+
+/** The longest staff note the backend accepts on a declined request. */
+export const JOIN_REQUEST_NOTE_MAX_LENGTH = 2000;
+
+/**
+ * Write, rewrite or clear the staff-only note on a DECLINED join request
+ * (Mod/Admin only). An empty string clears it. Returns the whole updated row.
+ * Failure modes, each with its own message:
+ * - `404`: unknown request;
+ * - `409`: the request is not declined, so it takes no note;
+ * - `400`: the note is longer than {@link JOIN_REQUEST_NOTE_MAX_LENGTH};
+ * - `403`: the caller is not a moderator or admin.
+ */
+export const updateJoinRequestNote = (id: string, note: string) =>
+  apiPatch<JoinRequestDTO>(`/join-requests/${encodeURIComponent(id)}/note`, {
+    note,
+  });
 
 /** A random sample of past-reviewed requests, for the periodic peer quality
  *  pass (Mod/Admin only). */

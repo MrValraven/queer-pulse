@@ -30,6 +30,9 @@ interface WorkProfessionAreaProps {
   groups: ProfessionGroup[];
   /** The member's fields, whose roles show when there are no results. */
   discipline: string[];
+  /** Whether the picker shows only the member's picks, which narrows the
+   *  roles view to the selected roles. */
+  isShowingOnlyPicks: boolean;
   /** `id` of the picker's "Your role" heading, which names the chip rows. */
   roleHeadingId: string;
   selected: Set<string>;
@@ -55,6 +58,7 @@ interface WorkProfessionAreaProps {
 export function WorkProfessionArea({
   groups,
   discipline,
+  isShowingOnlyPicks,
   roleHeadingId,
   selected,
   onToggle,
@@ -81,10 +85,14 @@ export function WorkProfessionArea({
               <ChipSelect
                 isPresenceAnimated
                 labelledBy={roleHeadingId}
-                options={professionsForFields(discipline).map((option) => ({
-                  value: option.id,
-                  label: t(option.labelKey),
-                }))}
+                options={professionsForFields(discipline)
+                  .filter(
+                    (option) => !isShowingOnlyPicks || selected.has(option.id),
+                  )
+                  .map((option) => ({
+                    value: option.id,
+                    label: t(option.labelKey),
+                  }))}
                 selected={selected}
                 onToggle={onToggle}
               />

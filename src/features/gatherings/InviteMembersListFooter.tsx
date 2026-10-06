@@ -7,6 +7,18 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ConnectionsSearchResult } from "../connect/api/useConnectionsSearch";
 import styles from "./InviteMembersListFooter.module.css";
 
+/** The paging fields the footer reads. Any paged list of connections that
+ *  carries them can reuse it, e.g. the community invite picker's candidates. */
+export type InviteMembersListPaging = Pick<
+  ConnectionsSearchResult,
+  | "isError"
+  | "refetch"
+  | "hasNextPage"
+  | "fetchNextPage"
+  | "isFetchingNextPage"
+  | "isFetchNextPageError"
+>;
+
 /**
  * The end of the invite picker's scrolling list in live mode: the retry for a
  * list that failed to load, or the button that brings in the next page of
@@ -15,7 +27,7 @@ import styles from "./InviteMembersListFooter.module.css";
 export function InviteMembersListFooter({
   connections,
 }: {
-  connections: ConnectionsSearchResult;
+  connections: InviteMembersListPaging;
 }) {
   const { t } = useTranslation();
   const {

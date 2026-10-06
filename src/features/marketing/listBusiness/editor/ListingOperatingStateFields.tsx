@@ -4,13 +4,15 @@ import type { ListingOperatingState } from "../api/listings.api";
 import {
   MOVED_ADDRESS_MAX,
   OPERATING_STATE_NOTE_MAX,
-  OPERATING_STATE_OPTIONS,
+  operatingStateOptionsFor,
 } from "./listingOperatingState.data";
 import styles from "./ListingTrading.module.css";
 
 /**
  * The choice itself: four state cards, the owner's public explanation, and the
- * forwarding address a moved business owes its readers.
+ * forwarding address a moved business owes its readers. With
+ * `isMovedOffered` false (an online-only listing that has not already moved)
+ * the "moved" card is left out, leaving three.
  *
  * Nothing here commits anything. The parent section holds the staged choice and
  * only sends it when the owner presses the button, which is what lets
@@ -24,6 +26,7 @@ export function ListingOperatingStateFields({
   onChangeState,
   onChangeNote,
   onChangeMovedToAddress,
+  isMovedOffered = true,
 }: {
   chosenState: ListingOperatingState;
   note: string;
@@ -31,6 +34,8 @@ export function ListingOperatingStateFields({
   onChangeState: (state: ListingOperatingState) => void;
   onChangeNote: (note: string) => void;
   onChangeMovedToAddress: (address: string) => void;
+  /** Whether the "moved" card is among the choices. */
+  isMovedOffered?: boolean;
 }) {
   const { t } = useTranslation();
   const isMoved = chosenState === "moved";
@@ -45,7 +50,7 @@ export function ListingOperatingStateFields({
         className={styles.stateGrid}
         optionClassName={styles.stateCard}
         checkedClassName={styles.stateCardOn}
-        options={OPERATING_STATE_OPTIONS.map((option) => {
+        options={operatingStateOptionsFor(isMovedOffered).map((option) => {
           const OptionIcon = option.icon;
           return {
             id: option.id,

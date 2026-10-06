@@ -1,16 +1,20 @@
 import { useId } from "react";
-import { type ImageSlotTint } from "../../../shared/components/ui";
-import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { type PhotoKey } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { ListingPhotoField } from "./ListingPhotoField";
 import styles from "./ListBusinessPage.module.css";
 
+/** The directory card's photo band: 168px tall (`LocalBusinessCardBody`) on a
+ *  392px card (the live preview's column), so 7:3. The cover slot uses the same
+ *  frame so the uploader crops the photo exactly like the card does. */
+const CARD_COVER_ASPECT = "7 / 3";
+
 const GALLERY: {
   key: PhotoKey;
-  tint: ImageSlotTint;
   height: number;
+  /** Overrides `height` with a fluid frame of this ratio. */
+  aspectRatio?: string;
   wide?: boolean;
   captionKey: string;
   /** Standing note above the frame — only the cover slot carries one. */
@@ -18,8 +22,8 @@ const GALLERY: {
 }[] = [
   {
     key: "wide",
-    tint: "coral",
     height: 150,
+    aspectRatio: CARD_COVER_ASPECT,
     wide: true,
     captionKey: "marketing:listBusiness.step4.gallery.wide",
     // The wide shot IS the directory cover: the backend's `coverPhoto` is the
@@ -29,19 +33,16 @@ const GALLERY: {
   },
   {
     key: "d1",
-    tint: "jade",
     height: 110,
     captionKey: "marketing:listBusiness.step4.gallery.detail",
   },
   {
     key: "d2",
-    tint: "plum",
     height: 110,
     captionKey: "marketing:listBusiness.step4.gallery.detail",
   },
   {
     key: "vibe",
-    tint: "coral",
     height: 110,
     captionKey: "marketing:listBusiness.step4.gallery.vibe",
   },
@@ -54,17 +55,8 @@ const ALT_LABEL_KEYS: Record<PhotoKey, string> = {
   vibe: "marketing:listBusiness.step4.alt.vibe",
 };
 
-/** Step-4 photo gallery: four upload/URL slots + their alt-text inputs. */
-export function ListingPhotoGallery({
-  form,
-  uploadPhoto,
-}: {
-  form: ListingForm;
-  uploadPhoto: (
-    file: File,
-    options?: { crop?: CropRect },
-  ) => Promise<{ key: string; previewUrl: string }>;
-}) {
+/** Step-4 photo gallery: four photo slots + their alt-text inputs. */
+export function ListingPhotoGallery({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const {
@@ -82,13 +74,13 @@ export function ListingPhotoGallery({
         {GALLERY.map((slot) => (
           <ListingPhotoField
             key={slot.key}
-            tint={slot.tint}
             height={slot.height}
+            aspectRatio={slot.aspectRatio}
             wide={slot.wide}
             placeholder={t(slot.captionKey)}
             note={slot.noteKey ? t(slot.noteKey) : undefined}
             displayValue={photoPreviews[slot.key] || draft.photos[slot.key]}
-            uploadPhoto={uploadPhoto}
+            persistedValue={draft.photos[slot.key]}
             isRejectedByServer={rejectedPhotoSlots.includes(slot.key)}
             onResolved={(persist, preview) => {
               setPhoto(slot.key, persist);

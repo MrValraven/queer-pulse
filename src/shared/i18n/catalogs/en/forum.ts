@@ -349,9 +349,9 @@ export const forum: Catalog = {
 
   // ── Nested replies (reply action + collapse/expand + continue thread) ──
   "replies.reply": "Reply",
-  "replies.collapseAria": "Collapse thread",
-  "replies.expandAria": "Expand thread",
+  "replies.collapseAria": "Collapse replies to {name} ({count})",
   "replies.continueThread": "Continue this thread ({count})",
+  "replies.replyingTo": "Replying to {name}",
   "replies.hiddenCount_one": "{count} hidden reply",
   "replies.hiddenCount_other": "{count} hidden replies",
 
@@ -810,6 +810,12 @@ export const forum: Catalog = {
     "Nobody to add yet. Co-authors come from the members you already write with.",
 
   // ── The preview card ─────────────────────────────────────────────────────
+  "composePage.postingAs.coAuthorSearch": "Search your connections",
+  "composePage.postingAs.coAuthorLoading": "Loading your connections",
+  "composePage.postingAs.coAuthorLoadError": "Your connections didn't load.",
+  "composePage.postingAs.coAuthorChange": "Change",
+  "composePage.postingAs.coAuthorRemove": "Remove {name} as co-author",
+  "composePage.postingAs.coAuthorKeep": "Keep {name}",
   "composePage.preview.heading": "How it will look",
   "composePage.preview.titlePlaceholder": "Your title shows here",
   "composePage.preview.excerptPlaceholder":

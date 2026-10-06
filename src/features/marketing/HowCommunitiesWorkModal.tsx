@@ -10,8 +10,8 @@ import { COMMUNITY_STEPS } from "./communitiesAbout.data";
 import styles from "./HowCommunitiesWorkModal.module.css";
 
 /**
- * "How communities work" explainer, opened from CTAs on the homepage and the
- * communities hub instead of navigating to a standalone page. Built to fit one
+ * "How communities work" explainer, opened from CTAs on the homepage instead
+ * of navigating to a standalone page. Built to fit one
  * desktop screen without scrolling: a one-line lede, the three-step journey
  * side by side, and the invite CTA (a link to the hub once signed in). It goes wider than the default sheet (see
  * `.sheet` in the module) so the steps can sit in a row instead of stacking. Rendered only while open (owns no state itself), so

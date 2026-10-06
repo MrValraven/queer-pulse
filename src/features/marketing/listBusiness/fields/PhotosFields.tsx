@@ -1,5 +1,4 @@
 import { FormField } from "../../../../shared/components/ui";
-import type { CropRect } from "../../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ANCHOR } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
@@ -13,16 +12,7 @@ import styles from "../ListBusinessPage.module.css";
  * editor's Photos section. Carries `ANCHOR.photos`, so the "add alt text"
  * chip in the still-needed bar has a field to scroll to on both surfaces.
  */
-export function PhotosFields({
-  form,
-  uploadPhoto,
-}: {
-  form: ListingForm;
-  uploadPhoto: (
-    file: File,
-    options?: { crop?: CropRect },
-  ) => Promise<{ key: string; previewUrl: string }>;
-}) {
+export function PhotosFields({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   return (
     <FormField
@@ -31,7 +21,7 @@ export function PhotosFields({
       label={t("marketing:listBusiness.step4.photosLabel")}
       helper={t("marketing:listBusiness.step4.photosHelper")}
     >
-      <ListingPhotoGallery form={form} uploadPhoto={uploadPhoto} />
+      <ListingPhotoGallery form={form} />
     </FormField>
   );
 }

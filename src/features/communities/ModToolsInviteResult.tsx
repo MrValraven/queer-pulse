@@ -8,14 +8,9 @@ import styles from "./ModToolsPanels.module.css";
 
 /**
  * Every skip reason the server can answer with, keyed to the line an owner
- * reads for it.
- *
- * `already_invited` (PRD-140, they already hold a pending invitation here so
- * re-inviting sends no second bell) is widened in ON TOP of
- * `CommunityInviteSkipReason` rather than added to it: that union lives in a
- * file another effort holds open, and until it lands the row for a re-invited
- * person rendered a blank reason. The lookup is total either way, and the
- * widening becomes a no-op the moment the union carries the member.
+ * reads for it. The Record is total over `CommunityInviteSkipReason`, so a
+ * reason the union gains fails the typecheck here until it has a line, and a
+ * skipped row never renders a blank reason.
  */
 const SKIP_REASON_KEY: Record<CommunityInviteSkipReason, string> = {
   unknown_member: "communities:detail.modtools.invites.skip.unknownMember",
@@ -25,6 +20,8 @@ const SKIP_REASON_KEY: Record<CommunityInviteSkipReason, string> = {
   already_invited: "communities:detail.modtools.invites.skip.alreadyInvited",
   pending_request: "communities:detail.modtools.invites.skip.pendingRequest",
   banned: "communities:detail.modtools.invites.skip.banned",
+  not_connected: "communities:detail.modtools.invites.skip.notConnected",
+  not_parent_member: "communities:detail.modtools.invites.skip.notParentMember",
 };
 
 /**

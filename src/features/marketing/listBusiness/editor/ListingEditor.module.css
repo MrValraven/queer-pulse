@@ -263,7 +263,10 @@
 
 .saveBar {
   position: sticky;
-  bottom: 0;
+  /* Rest on top of the mobile bottom tab bar. `--bottom-inset` is the bar's
+     full occupied height (home indicator included) at the mobile breakpoint
+     and 0px on desktop, where the bar is absent. */
+  bottom: var(--bottom-inset, 0px);
   z-index: var(--z-sticky);
   padding: 14px 18px;
   background: var(--paper);

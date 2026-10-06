@@ -266,7 +266,10 @@
 
 /* DES-229: the "N of max selected" hint above a capped MemberSelectList, and
    the full-group notice that replaces the list entirely once cap reaches 0. */
+/* The line stays one line tall while empty, so the first tick fills it in
+   place and the list below holds still. */
 .capHint {
+  min-height: 1lh;
   margin: 0 0 8px;
   text-align: right;
   font-size: var(--text-12-5);

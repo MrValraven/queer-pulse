@@ -27,8 +27,11 @@ import {
 } from "./memberDirectoryFilter.data";
 import { type SectionKey } from "./filterSectionKeys";
 import type { MemberDirectorySearch } from "./useMemberDirectoryQuery";
-import { FiltersSidebar, MemberResultSkeleton } from "./MemberFilterCards";
-import { MemberResultsGrid } from "./MemberResultsGrid";
+import { FiltersSidebar } from "./MemberFilterCards";
+import {
+  MemberResultsGrid,
+  MemberResultsSkeletonGrid,
+} from "./MemberResultsGrid";
 import { SHUFFLE_SPRING } from "./shuffleMotion";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
@@ -307,11 +310,7 @@ export function MemberResultsColumn({
       </m.div>
 
       {loading ? (
-        <div className={styles.mGrid}>
-          {Array.from({ length: 6 }).map((_, index) => (
-            <MemberResultSkeleton key={index} />
-          ))}
-        </div>
+        <MemberResultsSkeletonGrid />
       ) : shown.length === 0 ? (
         hasActiveFilters ? (
           <EmptyState

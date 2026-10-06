@@ -1,0 +1,19 @@
+/* The edit page's "Editing QPL-…" line with its status chip, between the page
+   header and the wizard. */
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0 0 var(--card-pad);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.ref {
+  font-weight: 600;
+  color: var(--ink);
+}

@@ -225,7 +225,8 @@
     [data-skin="workshop"],
     [data-skin="table"],
     [data-skin="runway"],
-    [data-skin="history"]
+    [data-skin="history"],
+    [data-skin="quest"]
   )
   .pp-cover[data-has-cover] {
   --pp-cover-rise-on: var(--pp-cover-rise);
@@ -237,7 +238,7 @@
    app's cream body ground — while `.pp` directly below it paints its own
    family ground, and not one of the thirteen is cream. That seam is the
    cream stripe across the top of a persona page. The rise above only closes
-   it for the five full-bleed-banner skins, and only once an image has been
+   it for the six full-bleed-banner skins, and only once an image has been
    uploaded; every other persona shows it.
 
    Paint it from `.pp` itself, as a strip pinned directly above its own box,

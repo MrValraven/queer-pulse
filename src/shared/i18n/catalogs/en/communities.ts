@@ -121,7 +121,6 @@ export const communities: Catalog = {
     "Here's what's been happening across your {count} communities.",
   "hub.discoverCta": "Discover communities",
   "hub.startCta": "Start a community",
-  "hub.howItWorksCta": "How communities work",
   "hub.empty.title": "You haven't joined any communities yet",
   "hub.empty.description":
     "Browse by interest and find where you belong. There's no rush.",
@@ -995,7 +994,7 @@ export const communities: Catalog = {
     "We could not send those invitations. Try again.",
   "detail.modtools.invites.empty.title": "Nobody left to invite",
   "detail.modtools.invites.empty.description":
-    "Everyone you are connected to is already on this roster.",
+    "Everyone you are connected to is already here or has an invitation or request open.",
   "detail.modtools.invites.result.invited": "Invitations sent ({total})",
   "detail.modtools.invites.result.skipped": "Skipped ({total})",
   "detail.modtools.invites.result.skipRow": "{name}: {reason}",
@@ -1036,6 +1035,9 @@ export const communities: Catalog = {
   "detail.modtools.invites.skip.alreadyInvited":
     "They already have an invitation waiting.",
   "detail.modtools.invites.skip.banned": "Barred from this community.",
+  "detail.modtools.invites.skip.notConnected": "Not one of your connections.",
+  "detail.modtools.invites.skip.notParentMember":
+    "Not a member of the main community.",
 
   // ── Mod tools · governance history (PRD-26) ───────────────────────────────
   // This community's own read of `community_governance_log`. The trail had one
@@ -1616,10 +1618,11 @@ export const communities: Catalog = {
   "start.running.addStewardModal.sub":
     "Co-stewards can only be members you're already connected with. Search your connections below.",
   "start.running.addStewardModal.searchLabel": "Search your connections",
-  "start.running.addStewardModal.loadMore": "Show more connections",
   "start.running.addStewardModal.searchPlaceholder": "Search by name or @slug…",
   "start.running.addStewardModal.empty":
     "You can add co-stewards once you're connected with other members. Head to Connections to grow your circle first.",
+  "start.running.addStewardModal.allListedStewarding":
+    "Everyone who matches is already a co-steward.",
   "start.running.insideHeading": "What's inside",
   "start.running.insideSub":
     "Turn on what fits. You can always add more once you're up and running.",

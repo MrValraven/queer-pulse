@@ -1,0 +1,168 @@
+/* ── One roster row ─────────────────────────────────────── */
+/* The group heading above names the tier, so a row carries three parts:
+   who they are, what they hold, and the ways onward. Phone: stacked, with
+   grants and actions indented under the name. Mid width: identity and
+   actions share the first line, grants run underneath. Wide: three aligned
+   columns, so every row's grants and Manage button sit on the same
+   verticals. */
+.row,
+.rowSkeleton {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+}
+
+.row {
+  /* Avatar (40px) plus the gap beside it: where the name starts. */
+  --row-name-indent: 52px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "identity"
+    "grants"
+    "actions";
+  align-items: center;
+  gap: 10px 14px;
+  padding: 14px 16px;
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    border-color: var(--line-2);
+  }
+}
+
+.identity {
+  grid-area: identity;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.nameLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.metaLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.handle {
+  overflow-wrap: anywhere;
+}
+
+.joined {
+  color: var(--ink-40);
+}
+
+.grants {
+  grid-area: grants;
+  min-width: 0;
+  padding-inline-start: var(--row-name-indent);
+}
+
+.grantList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.noGrants {
+  font-size: var(--text-13);
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+.actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-inline-start: var(--row-name-indent);
+}
+
+/* A thumb gets the full tap floor on both ways onward. */
+@media (pointer: coarse) {
+  .actions .actionButton {
+    min-height: var(--tap-min);
+  }
+}
+
+/* Mid width: identity and actions on the first line, grants on a second
+   line that starts where the name does. */
+@container (min-width: 36rem) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "identity actions"
+      "grants grants";
+    gap: 4px 16px;
+    padding: 10px 16px;
+  }
+
+  .actions {
+    justify-content: flex-end;
+    padding-inline-start: 0;
+  }
+}
+
+/* Wide: one line per person. The identity column keeps room for a name, a
+   status chip and "Joined …" without wrapping. */
+@container (min-width: 880px) {
+  .row {
+    grid-template-columns: minmax(15rem, 1.5fr) minmax(0, 2fr) auto;
+    grid-template-areas: "identity grants actions";
+    gap: 20px;
+    padding: 14px 18px;
+  }
+
+  .grants {
+    padding-inline-start: 0;
+  }
+}
+
+/* ── Skeleton row ───────────────────────────────────────── */
+.rowSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.rowSkeletonText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}

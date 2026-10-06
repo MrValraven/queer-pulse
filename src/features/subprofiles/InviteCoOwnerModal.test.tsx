@@ -19,22 +19,34 @@ vi.mock("../../shared/i18n/useTranslation", () => ({
   }),
 }));
 
-const { mutateAsync, connectionViews } = vi.hoisted(() => ({
+const { mutateAsync, connectionViews, searchCalls } = vi.hoisted(() => ({
   mutateAsync: vi.fn(),
   connectionViews: [
     { slug: "sofia", name: "Sofia Reyes", photo: undefined, pron: "she/her" },
     { slug: "amara", name: "Amara Cole", photo: undefined, pron: "they/them" },
   ],
+  searchCalls: [] as string[],
 }));
 
-vi.mock("../connect/api/useConnectionsList", () => ({
-  useConnectionsList: () => ({
-    views: connectionViews,
-    loading: false,
-    hasNextPage: false,
-    fetchNextPage: vi.fn(),
-    isFetchingNextPage: false,
-  }),
+// Stands in for the server: answers each term at once with the connections
+// whose name contains it, and records every term the modal asked about.
+vi.mock("../connect/api/useConnectionsSearch", () => ({
+  useConnectionsSearch: (searchQuery: string) => {
+    searchCalls.push(searchQuery);
+    const searchTerm = searchQuery.trim().toLowerCase();
+    return {
+      views: connectionViews.filter((connection) =>
+        connection.name.toLowerCase().includes(searchTerm),
+      ),
+      isSearchPending: false,
+      hasNextPage: false,
+      fetchNextPage: vi.fn(),
+      isFetchingNextPage: false,
+      isFetchNextPageError: false,
+      isError: false,
+      refetch: vi.fn(),
+    };
+  },
 }));
 
 vi.mock("./api/useSubprofileInvites", () => ({
@@ -72,14 +84,15 @@ const SUBPROFILE: SubprofileView = {
 
 afterEach(() => {
   mutateAsync.mockReset();
+  searchCalls.length = 0;
 });
 
-function renderModal() {
+function renderModal(excludedSlugs: string[] = []) {
   return render(
     <TestProviders>
       <InviteCoOwnerModal
         subprofile={SUBPROFILE}
-        excludedSlugs={[]}
+        excludedSlugs={excludedSlugs}
         onClose={vi.fn()}
       />
     </TestProviders>,
@@ -167,5 +180,65 @@ describe("InviteCoOwnerModal", () => {
     expect(
       screen.queryByText("subprofiles:invite.toastBlocked"),
     ).not.toBeInTheDocument();
+  });
+
+  it("asks the connections search for the typed term and lists its answer as sent", async () => {
+    renderModal();
+    fireEvent.change(
+      await screen.findByPlaceholderText(
+        "subprofiles:invite.searchPlaceholder",
+      ),
+      { target: { value: "amara" } },
+    );
+
+    expect(searchCalls).toContain("amara");
+    expect(await screen.findByText("Amara Cole")).toBeInTheDocument();
+    expect(screen.queryByText("Sofia Reyes")).not.toBeInTheDocument();
+  });
+
+  it("hides owners and pending invitees and says so when they are everyone listed", async () => {
+    renderModal(["sofia", "amara"]);
+
+    expect(
+      await screen.findByText("subprofiles:invite.allListedTaken"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Sofia Reyes")).not.toBeInTheDocument();
+    expect(screen.queryByText("Amara Cole")).not.toBeInTheDocument();
+  });
+
+  it("keeps showing the picked person on the confirm step after the search answer drops them", async () => {
+    const [pickedConnection] = connectionViews;
+    if (!pickedConnection) throw new Error("fixture has no connections");
+    renderModal();
+    fireEvent.click(await screen.findByText("Sofia Reyes"));
+    connectionViews.splice(0, 1);
+    try {
+      // Ticking the checkbox re-renders the modal against the new answer.
+      fireEvent.click(await screen.findByRole("checkbox"));
+      expect(screen.getByText("Sofia Reyes")).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "subprofiles:invite.confirmSend" }),
+      ).toBeEnabled();
+    } finally {
+      connectionViews.unshift(pickedConnection);
+    }
+  });
+
+  it("returns to the typed search when stepping back from the confirm step", async () => {
+    renderModal();
+    const searchBox = await screen.findByPlaceholderText(
+      "subprofiles:invite.searchPlaceholder",
+    );
+    fireEvent.change(searchBox, { target: { value: "sofia" } });
+    fireEvent.click(await screen.findByText("Sofia Reyes"));
+    fireEvent.click(
+      screen.getByRole("button", { name: "subprofiles:invite.confirmBack" }),
+    );
+
+    expect(
+      await screen.findByPlaceholderText(
+        "subprofiles:invite.searchPlaceholder",
+      ),
+    ).toHaveValue("sofia");
   });
 });

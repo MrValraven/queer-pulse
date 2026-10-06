@@ -37,13 +37,17 @@ interface Props {
  * without spending a card's worth of the page on five labels. Directions keeps
  * a coral tint so it still reads as first among equals.
  *
- * Operating state gates two of them, on different grounds.
+ * Operating state gates two of them, on different grounds, and an online-only
+ * listing gates one more.
  *
  * Directions goes away for a `permanently_closed` or `moved` business: the
  * address on this page no longer leads anywhere worth going, and routing
  * somebody across the city to a shuttered door is the exact failure this
  * gating exists to prevent. A `temporarily_closed` business keeps Directions,
  * because it is still that place at that address and will open again.
+ * Directions also goes away for an online-only business (`place.online`),
+ * which has no door at all: it carries no address or pin, so the link could
+ * only route somebody to an empty search.
  *
  * Call goes away only for a `permanently_closed` business, where the line is
  * as dead as the door. A moved business kept trading and almost certainly
@@ -83,6 +87,7 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
   // "Gone" = permanently closed or moved: whatever else is still true, the
   // address on this page is no longer where the business is.
   const isGone = isPlaceGone(place);
+  const hasPlaceToGo = !isGone && !place.online;
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
   const savedId = `listing:${place.slug}`;
   const saved = isSaved(savedId);
@@ -123,7 +128,9 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
       kind: "listing",
       title: place.name,
       href: businessPath(place.slug),
-      meta: place.hood,
+      // The saved list's subline, matching the directory card: an online-only
+      // business's hood is the "Elsewhere in" catch-all, which says nothing.
+      meta: place.online ? t("marketing:directory.card.online") : place.hood,
     });
   }
 
@@ -131,7 +138,7 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
   // so a bubble above it would land on the nav.
   return (
     <div className={s.actionBar}>
-      {!isGone && (
+      {hasPlaceToGo && (
         <Tooltip label={directionsLabel} placement="bottom">
           {/* `IconButton` is typed as a <button> only and Directions is an
               external href, so this uses the same `Button variant="icon"` that

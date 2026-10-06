@@ -176,7 +176,7 @@ export const shared: Catalog = {
   // than `nav:communities` in the menu's narrow columns; EN keeps the nav's.
   "accountMenu.items.communities": "Communities & Collectives",
   "accountMenu.items.events": "Events",
-  "accountMenu.items.cards": "Cards",
+  "accountMenu.items.cards": "Membership cards",
   "accountMenu.items.drafts": "Drafts",
   "accountMenu.items.saved": "Saved",
   "accountMenu.items.settings": "Settings",
@@ -431,9 +431,10 @@ export const shared: Catalog = {
   // Stars — read-only rating accessible label
   "stars.ariaLabel": "{value} out of {max} stars",
 
-  // MemberSelectList — empty search result
+  // MemberSelectList: empty search result and the picked group
   "memberSelect.noResults": "No matches",
   "memberSelect.searching": "Looking...",
+  "memberSelect.pickedGroup": "Picked",
 
   // VisibilityBadge
   "visibilityBadge.open": "Open to connect",

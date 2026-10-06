@@ -22,6 +22,16 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 
+/* Below --wide MagazineDeskShell pins its own phone bar at the top, above
+   this one in the stacking order, so pinning at 0 slid this bar's title row
+   behind it. --desk-shell-bar-h is that bar's whole height, notch included;
+   it replaces a literal 64px that guessed the bar short and ignored the notch. */
+@media (--wide) {
+  .ebar {
+    top: var(--desk-shell-bar-h);
+  }
+}
+
 .title {
   display: flex;
   flex-direction: column;
@@ -89,7 +99,6 @@
 
 @media (max-width: 700px) {
   .ebar {
-    top: 64px;
     flex-wrap: wrap;
   }
 

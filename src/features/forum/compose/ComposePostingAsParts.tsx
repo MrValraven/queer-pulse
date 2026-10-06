@@ -1,18 +1,14 @@
-import { useId } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ForumAvatar } from "../ForumAuthor";
-import type {
-  ComposeCoAuthorOption,
-  ComposePostingAsAuthor,
-} from "./ComposePostingAs";
+import type { ComposePostingAsAuthor } from "./ComposePostingAs";
 import { swapFadeProps } from "./composeSwapFade";
 import styles from "./ComposePostingAs.module.css";
 
 // ── Pieces of "Posting as" that move ────────────────────────────────────────
 // The identity in the author row fades out and back in when the byline
-// changes, and the co-author picker below it is split out so
+// changes. The co-author picker below it lives in `ComposeCoAuthorPicker`, so
 // `ComposePostingAs` can fold it away while posting anonymously.
 
 /** The avatar and the two lines beside it. Keyed by which identity is
@@ -60,66 +56,6 @@ export function PostingAsIdentity({
   );
 }
 
-/** Who else the post credits. Hidden while posting anonymously. */
-export function CoAuthorPicker({
-  coAuthorSlug,
-  coAuthorOptions,
-  onCoAuthorChange,
-}: {
-  coAuthorSlug: string | null;
-  coAuthorOptions: readonly ComposeCoAuthorOption[];
-  onCoAuthorChange: (coAuthorSlug: string | null) => void;
-}) {
-  const { t } = useTranslation();
-  const coAuthorLabelId = useId();
-  return (
-    <div className={styles.coAuthor}>
-      <span className={styles.optionText}>
-        <span className={styles.optionLabel} id={coAuthorLabelId}>
-          {t("forum:composePage.postingAs.coAuthorLabel")}
-        </span>
-        <span className={styles.optionHint}>
-          {t("forum:composePage.postingAs.coAuthorHint")}
-        </span>
-      </span>
-      {coAuthorOptions.length === 0 ? (
-        <p className={styles.optionHint}>
-          {t("forum:composePage.postingAs.coAuthorEmpty")}
-        </p>
-      ) : (
-        <div
-          className={styles.coAuthorPicker}
-          aria-labelledby={coAuthorLabelId}
-          role="group"
-        >
-          {coAuthorOptions.map((option) => {
-            const isPicked = option.slug === coAuthorSlug;
-            return (
-              <button
-                key={option.slug}
-                type="button"
-                className={styles.coAuthorChip}
-                aria-pressed={isPicked}
-                onClick={() => onCoAuthorChange(isPicked ? null : option.slug)}
-              >
-                <ForumAvatar
-                  className={styles.coAuthorAvatar}
-                  person={{
-                    initials: option.initials,
-                    name: option.name,
-                    photo: option.photo,
-                  }}
-                />
-                {option.name}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
 /** The identity the row shows: the institutional account, an unnamed member,
  *  or the member themselves. */
 function bylinePerson(
@@ -130,7 +66,7 @@ function bylinePerson(
 ) {
   if (isOfficial)
     return {
-      // The institutional account wears the brand mark instead of letters.
+      // The institutional account wears the brand mark in place of letters.
       initials: "",
       name: translate("forum:composePage.preview.officialName"),
       official: true,

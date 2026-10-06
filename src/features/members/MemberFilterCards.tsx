@@ -1,4 +1,4 @@
-import { useId, useMemo } from "react";
+import { useId, useMemo, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -396,17 +396,20 @@ function ClearAllRow({
   );
 }
 
-/** Loading placeholder mirroring MemberResultCard exactly — no layout shift. */
-export function MemberResultSkeleton() {
+/** The skeleton's name and pronouns lines. */
+function MemberResultSkeletonIdentity({ style }: { style?: CSSProperties }) {
   return (
-    <div className={styles.mCard} aria-hidden>
-      <div className={styles.mHead}>
-        <SkeletonAvatar size={48} />
-        <div style={{ flex: 1 }}>
-          <SkeletonLine width="62%" height={17} />
-          <SkeletonLine width="40%" height={11} style={{ marginTop: 7 }} />
-        </div>
-      </div>
+    <div style={style}>
+      <SkeletonLine width="62%" height={17} />
+      <SkeletonLine width="40%" height={11} style={{ marginTop: 7 }} />
+    </div>
+  );
+}
+
+/** The skeleton's blurb, tags and footer lines, shared by both shapes. */
+function MemberResultSkeletonDetails() {
+  return (
+    <>
       <div>
         <SkeletonLine width="90%" height={13} />
         <SkeletonLine width="60%" height={13} style={{ marginTop: 6 }} />
@@ -420,11 +423,58 @@ export function MemberResultSkeleton() {
         <SkeletonLine width="35%" height={11} />
         <SkeletonLine width="22%" height={11} />
       </div>
+    </>
+  );
+}
+
+/** Loading placeholder mirroring MemberResultCard exactly, so the real card
+ *  swaps in without shifting the layout. When split it mirrors the split card: a shimmer block filling the portrait
+ *  column beside the text lines. */
+export function MemberResultSkeleton({
+  isSplit = false,
+}: {
+  isSplit?: boolean;
+}) {
+  const className = [styles.mCard, isSplit && styles.mCardSplit]
+    .filter(Boolean)
+    .join(" ");
+  if (isSplit) {
+    return (
+      <div className={className} aria-hidden>
+        <div className={styles.mPortraitCell}>
+          <SkeletonLine
+            width="100%"
+            height="100%"
+            style={{ position: "absolute", inset: 0, borderRadius: 0 }}
+          />
+        </div>
+        <div className={styles.mSplitBody}>
+          <MemberResultSkeletonIdentity />
+          <MemberResultSkeletonDetails />
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={className} aria-hidden>
+      <div className={styles.mHead}>
+        <SkeletonAvatar size={48} />
+        <MemberResultSkeletonIdentity style={{ flex: 1 }} />
+      </div>
+      <MemberResultSkeletonDetails />
     </div>
   );
 }
 
-export function MemberResultCard({ member }: { member: MemberCard }) {
+export function MemberResultCard({
+  member,
+  isSplit = false,
+}: {
+  member: MemberCard;
+  /** Split card or compact card, resolved once by the grid
+   *  (`useIsMemberCardSplit`) so every card matches the grid's columns. */
+  isSplit?: boolean;
+}) {
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
   // The signed-in member sees their own card marked "You" — for now they may be
@@ -470,7 +520,11 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
   return (
     <Link
       to={`/members/${member.slug}`}
-      className={[styles.mCard, isMe && styles.mCardMe]
+      className={[
+        styles.mCard,
+        isSplit && styles.mCardSplit,
+        isMe && styles.mCardMe,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
@@ -487,6 +541,7 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
         vouchCount={member.vouchCount}
         mutualsCount={member.mutualsCount}
         activityBand={member.activityBand}
+        isSplit={isSplit}
       />
     </Link>
   );

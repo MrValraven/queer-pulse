@@ -16,6 +16,7 @@ import {
   menuForDisplay,
   pricingModeOf,
 } from "../listBusiness/listingMenu.data";
+import { normalizeOwnerIdentities } from "../listBusiness/listingOwnerIdentities.data";
 import { servicesForPayload } from "../listBusiness/listingServices.data";
 import { normalizeOwnedBy } from "../listBusiness/listingOwnedBy.data";
 import type {
@@ -135,6 +136,9 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // The six accessibility answers, so a card can show what it meets and the
     // grid can be filtered on real needs. `unknown` travels through intact.
     accessibility: cardAccessibility(dto.accessibilityAnswers),
+    // "Who runs it" tags, canonical order. Public on the card regardless of
+    // owner visibility mode.
+    ownerIdentities: normalizeOwnerIdentities(dto.ownerIdentities),
     // The pill row under the blurb: price band first when set, then the tags,
     // so the real card matches the wizard preview. Absent on older payloads,
     // which the card reads as an empty row.
@@ -219,6 +223,9 @@ export function detailDtoToPlace(
     // baseline work simply carries none of them, and every consumer treats an
     // absent block as "this listing has said nothing" rather than as a "no".
     accessibility: dto.accessibility,
+    // "Who runs it" tags, canonical order. Public on the detail page
+    // regardless of owner visibility mode.
+    ownerIdentities: normalizeOwnerIdentities(dto.ownerIdentities),
     services: dto.services ?? [],
     pricingMode: dto.pricingMode ?? "services",
     menu: dto.menu ?? emptyMenu(),
@@ -414,6 +421,7 @@ export function submittedToPlace(
       answers: normalizeAccessibilityAnswers(listing.accessibility?.answers),
       note: listing.accessibility?.note?.trim() || null,
     },
+    ownerIdentities: normalizeOwnerIdentities(listing.ownerIdentities),
     services: servicesForPayload(listing.services ?? []),
     pricingMode: pricingModeOf(listing),
     menu: menuForDisplay(listing.menu),

@@ -899,9 +899,8 @@ export const THREADS: Thread[] = [
       }),
       // Nested demo seed (Task 4): jordan is a direct reply to catarina-vaz's
       // daytime-space idea ("Seconding the daytime idea…"), and diogo's closing
-      // OP reply is a direct reply to jordan's café-library suggestion — a
-      // natural depth-2 chain (catarina-vaz -> jordan -> diogo) with no copy
-      // changes needed.
+      // OP reply is a direct reply to jordan's café-library suggestion. The
+      // chain continues under diogo below, down to depth 6.
       reply("jordan", {
         id: "reply-thread6-jordan",
         parentPostId: "reply-thread6-catarina-vaz",
@@ -921,6 +920,56 @@ export const THREADS: Thread[] = [
           "The café-library keeps coming up in DMs too. I am going to pull these into a proper proposal and tag the governance thread. Keep them coming.",
         ],
         reactions: 6,
+      }),
+      // A second answer to catarina-vaz, so her branch has two children and
+      // the thread line runs on past the first one.
+      reply("nuno", {
+        id: "reply-thread6-nuno",
+        parentPostId: "reply-thread6-catarina-vaz",
+        time: "4 days ago",
+        body: [
+          "Yes to 3pm. Make it step-free, with real wifi and one corner with soft light, and I will be your most loyal laptop regular.",
+        ],
+        reactions: 9,
+      }),
+      // A deep chain under diogo's proposal reply (depth 3 to 6), so the
+      // indent cap and the flattened "continue this thread" column both show
+      // up in demo mode.
+      reply("luisa", {
+        id: "reply-thread6-luisa",
+        parentPostId: "reply-thread6-diogo",
+        time: "4 days ago",
+        body: [
+          "Put me in the proposal. The archive can lend the café a shelf: flyers and zines from the old Príncipe Real bars. A space like this should hold its own history.",
+        ],
+        reactions: 8,
+      }),
+      reply("rita", {
+        id: "reply-thread6-rita",
+        parentPostId: "reply-thread6-luisa",
+        time: "3 days ago",
+        body: [
+          "And a shelf of old zines wants new ones beside it. I could bring the riso from Mouraria one Saturday a month. Paper and ink on me.",
+        ],
+        reactions: 7,
+      }),
+      reply("tomas", {
+        id: "reply-thread6-tomas",
+        parentPostId: "reply-thread6-rita",
+        time: "3 days ago",
+        body: [
+          "Someone has to feed the people at the riso table. A pay-what-you-can soup on those Saturdays, bread from the bakery on my street. I will bring the big pot.",
+        ],
+        reactions: 11,
+      }),
+      reply("mariana", {
+        id: "reply-thread6-mariana",
+        parentPostId: "reply-thread6-tomas",
+        time: "2 days ago",
+        body: [
+          "Soup, paper and daylight is exactly the kind of place people find each other without needing a drink first. I would hold a quiet listening corner there one afternoon a week.",
+        ],
+        reactions: 10,
       }),
     ],
   },

@@ -15,9 +15,16 @@ import s from "./LocalFilterBar.module.css";
 export function LocalVibeFilter({
   vibes,
   onToggleVibe,
+  vibeCounts,
+  isLoadedSetComplete,
 }: {
   vibes: string[];
   onToggleVibe: (vibe: string) => void;
+  /** How many loaded places would remain with each vibe added to the chosen
+   *  ones. */
+  vibeCounts: Record<string, number>;
+  /** True once every page of places has loaded, so a zero count is final. */
+  isLoadedSetComplete: boolean;
 }) {
   const { t } = useTranslation();
   const vibeLabelId = useId();
@@ -35,20 +42,28 @@ export function LocalVibeFilter({
       <span className={s.vibeLabel} id={vibeLabelId}>
         {t("marketing:local.filter.vibeLabel")}
       </span>
-      {VIBES.map((vibe) => (
-        <m.button
-          {...glide.chip}
-          type="button"
-          key={vibe}
-          aria-pressed={vibes.includes(vibe)}
-          className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => onToggleVibe(vibe)}
-        >
-          {t(VIBE_LABEL_KEYS[vibe]!)}
-        </m.button>
-      ))}
+      {VIBES.map((vibe) => {
+        const isOn = vibes.includes(vibe);
+        // A vibe that would empty the list goes unpickable once the whole set
+        // has loaded. A chosen vibe stays clickable so it can be undone.
+        const isDisabled =
+          isLoadedSetComplete && !isOn && (vibeCounts[vibe] ?? 0) === 0;
+        return (
+          <m.button
+            {...glide.chip}
+            type="button"
+            key={vibe}
+            aria-pressed={isOn}
+            disabled={isDisabled}
+            className={[s.chip, s.vibe, isOn && s.chipOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => onToggleVibe(vibe)}
+          >
+            {t(VIBE_LABEL_KEYS[vibe]!)}
+          </m.button>
+        );
+      })}
       {vibes.length > 0 && (
         <span className={s.vibeNote}>
           {t("marketing:local.filter.vibeVenueNote")}

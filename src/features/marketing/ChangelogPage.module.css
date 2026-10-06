@@ -322,38 +322,6 @@
 .entryBody {
   color: var(--ink-60);
 }
-.entryMore {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--ink-40);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-@media (hover: hover) {
-  .entryMore:hover {
-    color: var(--text-strong);
-  }
-}
-.entryMore:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-  border-radius: var(--radius-4);
-}
-.entryDetails {
-  margin: 6px 0 4px;
-  font-size: var(--text-13-5);
-  line-height: 1.65;
-  color: var(--ink-60);
-  max-width: 66ch;
-  padding-left: 12px;
-  border-left: 2px solid rgba(var(--accent-rgb), 0.35);
-}
 .tag {
   display: inline-flex;
   align-items: center;

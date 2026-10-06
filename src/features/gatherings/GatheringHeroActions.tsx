@@ -3,6 +3,7 @@ import { FiAlertCircle, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetail } from "./data";
+import { manageGatheringPath } from "./gatheringPaths";
 import type { GatheringRsvpState } from "./useGatheringRsvp";
 import styles from "./GatheringPage.module.css";
 
@@ -22,21 +23,32 @@ import styles from "./GatheringPage.module.css";
  * (`GatheringHeaderToolbar`) as icons, so the RSVP stands alone here. Once the
  * member holds a seat, the button turns to a quieter ghost "Cancel RSVP": the
  * page's headline action is done, and undoing it should not shout.
+ *
+ * THE HOST gets "Manage gathering" in this slot. They are going by
+ * definition and the server refuses their cancel, so an RSVP or "Cancel RSVP"
+ * button here would be an offer they cannot take. The slot still carries the
+ * page's one next step, the same one the sidebar's hosting panel offers, which
+ * matters on a phone: the sidebar stacks below the whole main column there.
+ * The RSVP-cutoff banner is a guest's fact, so the host does not see it; a
+ * cancelled or finished gathering still says so.
  */
 export function GatheringHeroActions({
   gathering,
   rsvp,
+  isViewerHost,
 }: {
   gathering: GatheringDetail;
   /** Shared with the sidebar's RSVP panel. See `GatheringDetailBody`. */
   rsvp: GatheringRsvpState;
+  /** The viewer is this gathering's own host (co-hosts RSVP like guests). */
+  isViewerHost: boolean;
 }) {
   const { t } = useTranslation();
   const stateBannerId = useId();
   // Past the host's RSVP cutoff, a member already holding a seat can still
   // cancel it. Everyone else meets a disabled button, with the banner above
   // it as the reason (Create Gathering v2).
-  const isJoinClosed = rsvp.isRsvpClosed && !rsvp.isConfirmed;
+  const isJoinClosed = !isViewerHost && rsvp.isRsvpClosed && !rsvp.isConfirmed;
   const stateBannerKey = rsvp.isCancelled
     ? "gatherings:gathering.cancelledBanner"
     : rsvp.hasEnded
@@ -53,7 +65,15 @@ export function GatheringHeroActions({
           <span>{t(stateBannerKey)}</span>
         </div>
       )}
-      {rsvp.canRsvp && (
+      {rsvp.canRsvp && isViewerHost && (
+        <div className={styles.cta}>
+          <Button size="lg" to={manageGatheringPath(gathering.slug)}>
+            {t("gatherings:rsvpControl.hostingManageCta")}{" "}
+            <FiArrowRight aria-hidden />
+          </Button>
+        </div>
+      )}
+      {rsvp.canRsvp && !isViewerHost && (
         <div className={styles.cta}>
           <Button
             size="lg"

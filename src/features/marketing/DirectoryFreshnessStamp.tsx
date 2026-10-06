@@ -6,7 +6,10 @@ import { listingFreshnessOf } from "./listingFreshness";
 import s from "./DirectorySpacePage.module.css";
 
 /**
- * "Details confirmed by Ana on 3 March 2026", sitting under the hours.
+ * "Details confirmed by Ana on 3 March 2026", sitting under the hours, or in
+ * the visit card for an online-only business, which has no hours card. The
+ * never-confirmed line asks an online reader to check before they order, and
+ * everyone else before they travel.
  *
  * The three cases are deliberately different sentences, because an unconfirmed
  * listing and a freshly confirmed one are not the same claim:
@@ -22,7 +25,7 @@ import s from "./DirectorySpacePage.module.css";
  * confirmation stopped counting.
  *
  * The date always goes through the repo's localized `fmt.date`. `venueNow` is
- * the venue's own clock, passed down from the hours section so "how long ago
+ * the venue's own clock, passed down from whichever card holds the stamp so "how long ago
  * was that?" is measured on the same calendar the hours are, and so this stays
  * a pure render.
  */
@@ -47,7 +50,11 @@ export function DirectoryFreshnessStamp({
     return (
       <p className={`${s.freshness} ${s.freshnessUnknown}`}>
         <FiHelpCircle aria-hidden />
-        {t("marketing:directory.detail.freshness.unconfirmed")}
+        {t(
+          place.online
+            ? "marketing:directory.detail.freshness.unconfirmedOnline"
+            : "marketing:directory.detail.freshness.unconfirmed",
+        )}
       </p>
     );
   }

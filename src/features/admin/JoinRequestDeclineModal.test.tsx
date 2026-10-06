@@ -6,7 +6,7 @@ import { JoinRequestDeclineModal } from "./JoinRequestDeclineModal";
 
 /**
  * Contract: a reviewer can't confirm a decline without picking a reason
- * (guideline audit D5) — the closed-set `Select` stands in for
+ * (guideline audit D5): a closed-set `RadioCardGroup` stands in for
  * `ConfirmDialog`'s usual free-text `reason` textarea. Renders with
  * `TestProviders` so the lazily-loaded `admin:` i18n namespace resolves,
  * same pattern as `AdminHealthModal.test.tsx` and `Select.test.tsx`.
@@ -44,13 +44,13 @@ describe("JoinRequestDeclineModal", () => {
       />,
     );
 
-    // The Select's trigger is labelled "Reason" via FormField's native
-    // <label for>, same wiring Select.test.tsx exercises for FormField.
-    const trigger = await screen.findByRole("button", { name: "Reason" });
-    await user.click(trigger);
-    await user.click(
-      await screen.findByRole("option", { name: "Looks like spam" }),
-    );
+    // RadioCardGroup renders each reason as a role="radio" button inside a
+    // role="radiogroup" labelled by the manual legend; the accessible name
+    // includes both the label and the new description text, so match loosely.
+    const spamOption = await screen.findByRole("radio", {
+      name: /looks like spam/i,
+    });
+    await user.click(spamOption);
 
     const confirmButton = screen.getByRole("button", {
       name: "Decline request",

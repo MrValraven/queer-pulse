@@ -8,6 +8,7 @@ import { MissingFieldsBar } from "./MissingFieldsBar";
 import {
   PILL_LABEL_KEYS,
   TOTAL_STEPS,
+  firstWizardStep,
   type MissingField,
 } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
@@ -20,27 +21,43 @@ import chrome from "./ListBusinessChrome.module.css";
  *  clipping or forcing page scroll) with the active pill scrolled into view, and
  *  a compact "Step N of N — Label" line names the current step + announces it.
  *
- *  Pill jump-back: pass `onJump` to turn every VISITED (completed) pill into a
- *  button that returns to that step. The caller already has `goToStep` — wire it
- *  through as `onJump={goToStep}` from WizardFormPane. Omitted → pills are inert
- *  (current behaviour), so this is a no-op until wired. */
+ *  Pill jump: pass `onJump` to turn every VISITED (completed) pill into a
+ *  button that returns to that step. WizardFormPane wires its `goToStep` through
+ *  as `onJump={goToStep}`. Without it, pills are inert. `canJumpTo` widens which
+ *  pills jump: a pill ahead of the current step for which it returns true also
+ *  becomes a button, keeping its not-yet-visited look with a "Go to step" label.
+ *  Omitted, only visited pills jump.
+ *
+ *  Edit mode: `isEdit` drops the create-only "Path" pill, so the row shows
+ *  steps 1 to 5 numbered 1 to 5 and the bar runs from the first of them.
+ *  Pill index `i` then stands for wizard step `i + 1`; `onJump` and
+ *  `canJumpTo` always receive the WIZARD step. */
 export function WizardChrome({
   step,
   savedAt,
   onJump,
+  canJumpTo,
+  isEdit = false,
 }: {
   step: number;
   savedAt: number | null;
-  /** Jump back to a visited step. When absent, pills stay non-interactive. */
+  /** Jump to another step. When absent, pills stay non-interactive. */
   onJump?: (step: number) => void;
+  /** Whether wizard step `index` is reachable. Defaults to visited steps
+   *  only (`index < step`). */
+  canJumpTo?: (index: number) => boolean;
+  /** Whether this is an edit of an existing listing, which has no Path step.
+   *  Defaults to false: all six pills, as in a new submission. */
+  isEdit?: boolean;
 }) {
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const activePillRef = useRef<HTMLDivElement | null>(null);
-  const pills = PILL_LABEL_KEYS;
-  const lastStep = TOTAL_STEPS - 1;
-  const fill = (step / lastStep) * 100;
-  const currentIndex = step; // pill position (0-based) of the current step
+  const firstStep = firstWizardStep(isEdit);
+  const pills = PILL_LABEL_KEYS.slice(firstStep);
+  const lastIndex = TOTAL_STEPS - 1 - firstStep;
+  const currentIndex = step - firstStep; // pill position (0-based) of the current step
+  const fill = (currentIndex / lastIndex) * 100;
 
   // Keep the active pill visible when the row is a narrow horizontal scroller.
   // block:"nearest" avoids yanking the page vertically when it's already in view.
@@ -63,8 +80,9 @@ export function WizardChrome({
       </p>
       <div className={chrome.pillRow}>
         {pills.map((labelKey, index) => {
-          const isDone = index < step;
-          const isCurrent = index === step;
+          const pillStep = index + firstStep; // the wizard step this pill stands for
+          const isDone = index < currentIndex;
+          const isCurrent = index === currentIndex;
           const cls = isDone
             ? styles.wpDone
             : isCurrent
@@ -84,19 +102,25 @@ export function WizardChrome({
               <span className={styles.wpL}>{label}</span>
             </>
           );
-          // Only a VISITED step is reachable by tapping its pill.
-          const canJump = isDone && Boolean(onJump);
+          // A visited step is reachable by tapping its pill, and so is a step
+          // ahead whenever `canJumpTo` allows it.
+          const isJumpable =
+            !isCurrent &&
+            Boolean(onJump) &&
+            (canJumpTo ? canJumpTo(pillStep) : isDone);
           return (
             <Fragment key={labelKey}>
-              {canJump ? (
+              {isJumpable ? (
                 <button
                   type="button"
                   className={[pillClass, chrome.jumpable].join(" ")}
-                  onClick={() => onJump?.(index)}
-                  aria-label={t("marketing:listBusiness.wizard.stepJumpAria", {
-                    number: index + 1,
-                    label,
-                  })}
+                  onClick={() => onJump?.(pillStep)}
+                  aria-label={t(
+                    isDone
+                      ? "marketing:listBusiness.wizard.stepJumpAria"
+                      : "marketing:listBusiness.wizard.stepGoToAria",
+                    { number: index + 1, label },
+                  )}
                 >
                   {inner}
                 </button>
@@ -216,30 +240,105 @@ export function SendingPanel({ isEdit = false }: { isEdit?: boolean }) {
   );
 }
 
-/** Back / next footer with the "what's still needed" hint. */
+/** Back / next footer with the "what's still needed" hint.
+ *
+ *  Pass `saveLabel` with `onSave` to add a primary save button after "Next",
+ *  which then steps down to a ghost button. The save is never disabled by
+ *  this step's gaps: the caller validates every step when it fires. Left out,
+ *  the footer is the plain back / next pair. In a narrow footer the save-mode
+ *  row stacks: Back on top, then Next and the save at full width, the save
+ *  last where a thumb reaches it.
+ *
+ *  `neededBarFocus` makes the "a few things left" bar a focus target: when
+ *  `isPending` is true the bar takes focus and scrolls into view, then
+ *  `onFocused` runs so the caller can clear the request. */
 export function PaneActions({
   onBack,
   backLabel,
   onNext,
   nextLabel,
   missing,
+  saveLabel,
+  onSave,
+  shouldShowNextArrow = true,
+  neededBarFocus,
 }: {
   onBack: () => void;
   backLabel?: string;
   onNext: () => void;
   nextLabel: string;
   missing: MissingField[];
+  /** The save-now button's label. Shown only together with `onSave`. */
+  saveLabel?: string;
+  /** Saves from any step. Shown only together with `saveLabel`. */
+  onSave?: () => void;
+  /** Whether "Next" carries its trailing arrow. Defaults to true. A caller
+   *  whose next button saves passes false, since a save goes nowhere. */
+  shouldShowNextArrow?: boolean;
+  /** Set, the missing-fields bar can take focus on request. */
+  neededBarFocus?: { isPending: boolean; onFocused?: () => void };
 }) {
   const { t } = useTranslation();
+  const reducedMotion = usePrefersReducedMotion();
+  const neededBarRef = useRef<HTMLDivElement>(null);
+  const isNeededBarFocusPending = neededBarFocus?.isPending === true;
+  const onNeededBarFocused = neededBarFocus?.onFocused;
+  // Runs after the (re)mounted step renders its bar. Focus goes first with
+  // preventScroll, so the scroll that follows is the only viewport move.
+  useEffect(() => {
+    if (!isNeededBarFocusPending) return;
+    const bar = neededBarRef.current;
+    if (bar) {
+      bar.focus({ preventScroll: true });
+      bar.scrollIntoView({
+        behavior: reducedMotion ? "auto" : "smooth",
+        block: "center",
+      });
+    }
+    onNeededBarFocused?.();
+  }, [isNeededBarFocusPending, onNeededBarFocused, reducedMotion]);
   const blocked = missing.length > 0;
   // A custom backLabel (e.g. step 0's "Cancel") isn't a step-back affordance,
   // so the back arrow only rides the default "Back".
   const isDefaultBack = backLabel === undefined;
   const back = backLabel ?? t("marketing:listBusiness.paneActions.back");
+  const isSaveVisible = saveLabel !== undefined && onSave !== undefined;
+  const nextButton = (
+    <Button
+      variant={isSaveVisible ? "ghost" : "primary"}
+      onClick={onNext}
+      disabled={blocked}
+      title={
+        blocked
+          ? t("marketing:listBusiness.paneActions.blockedTitle")
+          : undefined
+      }
+    >
+      {nextLabel}
+      {shouldShowNextArrow && (
+        <>
+          {" "}
+          <FiArrowRight aria-hidden />
+        </>
+      )}
+    </Button>
+  );
   return (
-    <div className={styles.paneFooter}>
-      <MissingFieldsBar missing={missing} />
-      <div className={styles.paneActions}>
+    <div
+      className={[styles.paneFooter, isSaveVisible && chrome.saveModeFooter]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <MissingFieldsBar
+        missing={missing}
+        barRef={neededBarRef}
+        isFocusTarget={neededBarFocus !== undefined}
+      />
+      <div
+        className={[styles.paneActions, isSaveVisible && chrome.saveModeActions]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <Button variant="ghost" onClick={onBack}>
           {isDefaultBack ? (
             <>
@@ -249,18 +348,16 @@ export function PaneActions({
             back
           )}
         </Button>
-        <Button
-          variant="primary"
-          onClick={onNext}
-          disabled={blocked}
-          title={
-            blocked
-              ? t("marketing:listBusiness.paneActions.blockedTitle")
-              : undefined
-          }
-        >
-          {nextLabel} <FiArrowRight aria-hidden />
-        </Button>
+        {isSaveVisible ? (
+          <div className={chrome.paneActionsEnd}>
+            {nextButton}
+            <Button variant="primary" onClick={onSave}>
+              {saveLabel}
+            </Button>
+          </div>
+        ) : (
+          nextButton
+        )}
       </div>
     </div>
   );

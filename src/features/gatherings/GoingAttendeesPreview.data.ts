@@ -7,8 +7,9 @@ import type { GatheringDetail } from "./data";
  * gathering in `gatheringDetails` carries a real going-attendee list (the
  * registry predates this feature), so rather than hand-author one per entry,
  * this derives a small, stable preview from the real member registry —
- * excluding the gathering's own host, since a host doesn't RSVP to their own
- * gathering. Live mode never touches this file; it reads
+ * excluding the gathering's own host, so the demo preview stays a glance at
+ * the guests (live can list the host, who holds a Going RSVP, with a "Host"
+ * chip). Live mode never touches this file; it reads
  * `gathering.goingAttendeesPreview` straight off the server response, which
  * is already privacy/block-filtered — see `GoingAttendeesPreview.tsx`.
  */

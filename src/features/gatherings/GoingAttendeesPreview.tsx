@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiUsers } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, KindChip } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -49,6 +49,9 @@ function resolvePreview(
  * "Who can see you're going?" answer leaves this viewer out. The backend is
  * the privacy gate; this component only ever renders what it's given. The
  * "+N more" total counts hidden attendees as a number, with no face.
+ *
+ * The host holds a Going RSVP of their own (saved when the gathering is
+ * created), so they can appear here too, marked with a small "Host" chip.
  */
 export function GoingAttendeesPreview({
   gathering,
@@ -90,6 +93,11 @@ export function GoingAttendeesPreview({
                 name={name}
               />
               <span>{attendee.firstName}</span>
+              {attendee.slug === gathering.hostSlug && (
+                <KindChip kind="feature" className={styles.hostChip}>
+                  {t("gatherings:gathering.attendeesPreview.hostTag")}
+                </KindChip>
+              )}
             </Link>
           );
         })}

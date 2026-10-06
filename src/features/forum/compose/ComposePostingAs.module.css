@@ -1,7 +1,7 @@
 /* ── Rail block: "Posting as" ──────────────────────────────────────────────
    The author row is the only carded surface here; the two switches under it
-   sit on the rail's own ground, tucked close so proximity says they belong to
-   the row above rather than to the preview below. */
+   sit on the rail's own ground, tucked close so proximity ties them to the
+   row above. */
 
 .block {
   display: flex;
@@ -36,7 +36,7 @@
 
 /* The byline changed, so the row changes with it: coral for the institutional
    voice, violet for a post going out without a name. The words in the row say
-   the same thing, so the wash is reinforcement rather than the signal. */
+   the same thing, so the wash only reinforces it. */
 .authorRowOfficial {
   background: rgba(var(--accent-rgb), 0.08);
   border-color: rgba(var(--accent-rgb), 0.25);
@@ -158,57 +158,33 @@
   padding: 14px 4px 0;
 }
 
-.coAuthorPicker {
+/* The open picker: the compact search list, then "Keep" under it while the
+   member is changing an existing credit. */
+.coAuthorSearch {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 6px;
 }
 
-.coAuthorChip {
-  position: relative;
-  display: inline-flex;
+.coAuthorKeep {
+  align-self: flex-start;
+}
+
+/* The folded picker: one row naming the credited person, sized to the rail's
+   13px labels so it reads as part of the block. */
+.coAuthorChosen {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 11px 3px 3px;
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-pill);
-  background: var(--paper);
-  font-family: var(--sans);
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--text-strong);
-  cursor: pointer;
-  transition:
-    border-color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
-}
-
-.coAuthorChip:active {
-  transform: scale(0.97);
-}
-
-/* Grows the tap area to 44px without moving the chip's ink. */
-.coAuthorChip::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 50%;
-  height: var(--tap-min);
-  transform: translateY(-50%);
-}
-
-.coAuthorChip[aria-pressed="true"] {
-  border-color: rgba(var(--accent-rgb), 0.6);
-  background: rgba(var(--accent-rgb), 0.08);
+  gap: 8px;
+  min-height: var(--tap-min);
 }
 
 .coAuthorAvatar {
   flex: none;
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border-radius: var(--radius-avatar);
   overflow: hidden;
   background: rgba(var(--jade-rgb), 0.18);
@@ -223,19 +199,18 @@
   object-fit: cover;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .coAuthorChip:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
-  }
-
-  .coAuthorChip[aria-pressed="true"]:hover {
-    border-color: rgba(var(--accent-rgb), 0.75);
-  }
+.coAuthorName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-13);
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .authorRow,
-  .coAuthorChip {
+  .authorRow {
     transition: none;
   }
 }

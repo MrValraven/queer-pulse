@@ -18,11 +18,19 @@ const FIELDS: SuggestEditField[] = [
   "other",
 ];
 
+/** The buckets that describe a physical place. An online-only listing shows
+ *  neither (no hours card, no street address), so offering them would invite
+ *  a correction to something the page never claimed. */
+const PLACE_ONLY_FIELDS: ReadonlySet<SuggestEditField> =
+  new Set<SuggestEditField>(["hours", "address"]);
+const ONLINE_FIELDS = FIELDS.filter((option) => !PLACE_ONLY_FIELDS.has(option));
+
 const MESSAGE_MAX_LENGTH = 2000;
 
 /**
  * The "Suggest an edit" form itself, opened by `DirectorySuggestEditControl`.
- * A non-owner member picks which of the 6 backend-recognized fields is off,
+ * A non-owner member picks which of the 6 backend-recognized fields is off
+ * (4 for an online-only listing, which has no hours or address to correct),
  * writes a note, and may also hand over the actual corrected value; submits
  * through `useSuggestEdit`, which POSTs in live mode and just resolves in demo
  * (there's no owner inbox to patch here).
@@ -36,16 +44,21 @@ const MESSAGE_MAX_LENGTH = 2000;
 export function DirectorySuggestEditModal({
   slug,
   placeName,
+  isOnline = false,
   onClose,
 }: {
   slug: string;
   placeName: string;
+  /** The listing is online-only (`place.online`): hours and address leave the
+   *  picker, and the first remaining bucket opens selected. */
+  isOnline?: boolean;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const suggestEdit = useSuggestEdit(slug);
-  const [field, setField] = useState<SuggestEditField>("hours");
+  const fieldOptions = isOnline ? ONLINE_FIELDS : FIELDS;
+  const [field, setField] = useState<SuggestEditField>(fieldOptions[0]!);
   const [message, setMessage] = useState("");
   const [proposedValue, setProposedValue] = useState("");
   const [valueRejection, setValueRejection] = useState<string | null>(null);
@@ -135,7 +148,7 @@ export function DirectorySuggestEditModal({
       </label>
       <Select
         id={selectId}
-        options={FIELDS.map((option) => ({
+        options={fieldOptions.map((option) => ({
           value: option,
           label: t(`marketing:directory.detail.suggestEdit.field.${option}`),
         }))}

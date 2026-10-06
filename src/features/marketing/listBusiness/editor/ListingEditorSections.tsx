@@ -1,4 +1,3 @@
-import type { CropRect } from "../../../../shared/components/ui/cropGeometry";
 import { VerifiedBadgeEditNotice } from "../../EditListingStatusHeader";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { CoManagerRoleFields } from "../coManagers/CoManagerRoleFields";
@@ -22,6 +21,7 @@ import { ListingOperatingStateSection } from "./ListingOperatingStateSection";
 import { ListingHistorySection } from "./history/ListingHistorySection";
 import {
   editorSectionByKeyFor,
+  isSectionShownForListing,
   pricingSectionDefinition,
 } from "./listingEditor.data";
 
@@ -47,6 +47,12 @@ import {
  * it renders only once its jump-nav entry is pressed.
  * Everything else about the business is identical for both roles.
  *
+ * An online-only listing skips the Accessibility block: its six questions
+ * are about entrances and toilets, which an online business does not have.
+ * The answers are left alone in the draft, so they come back as they were
+ * if the listing is switched back to a physical one. The jump nav drops the
+ * entry by the same rule (`editorSectionsFor`).
+ *
  * Trading state and directory visibility share ONE section on purpose. They
  * are different questions with similar-sounding answers ("we are shut for
  * August" versus "take my entry down for a while"), and the only reliable way
@@ -57,17 +63,12 @@ export function ListingEditorSections({
   form,
   listing,
   userName,
-  uploadPhoto,
   isDangerZoneOpen,
   onConfirmDelete,
 }: {
   form: ListingForm;
   listing: ManagedListingDTO;
   userName: string;
-  uploadPhoto: (
-    file: File,
-    options?: { crop?: CropRect },
-  ) => Promise<{ key: string; previewUrl: string }>;
   /** The Danger zone stays off the page until its jump-nav entry opens it. */
   isDangerZoneOpen: boolean;
   /** The Danger zone's delete: resolves once the server has deleted the
@@ -80,6 +81,10 @@ export function ListingEditorSections({
   const isBadgeNoticeVisible = listing.queerOwnedVerified === true;
   const isCoManagerView = listing.managementRole === "co_manager";
   const section = editorSectionByKeyFor(isCoManagerView);
+  const isAccessibilityShown = isSectionShownForListing(
+    "accessibility",
+    form.draft.online,
+  );
 
   return (
     <>
@@ -108,9 +113,11 @@ export function ListingEditorSections({
         />
       </ListingEditorSection>
 
-      <ListingEditorSection section={section.accessibility}>
-        <ListingAccessibilityFields form={form} />
-      </ListingEditorSection>
+      {isAccessibilityShown && (
+        <ListingEditorSection section={section.accessibility}>
+          <ListingAccessibilityFields form={form} />
+        </ListingEditorSection>
+      )}
 
       <ListingEditorSection section={section.trading}>
         <ListingOperatingStateSection listing={listing} />
@@ -118,7 +125,7 @@ export function ListingEditorSections({
       </ListingEditorSection>
 
       <ListingEditorSection section={section.photos}>
-        <PhotosFields form={form} uploadPhoto={uploadPhoto} />
+        <PhotosFields form={form} />
       </ListingEditorSection>
 
       <ListingEditorSection section={section.aboutYou}>

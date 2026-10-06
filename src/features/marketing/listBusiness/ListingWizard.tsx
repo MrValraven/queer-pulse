@@ -5,9 +5,9 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useDirectoryListingsActions } from "../../../app/providers/useDirectoryListingsActions";
 import { useProfileData } from "../../../app/providers/useProfile";
-import { useUploadImage } from "../../members/api/useUploadImage";
 import {
   TOTAL_STEPS,
+  firstWizardStep,
   type ListingDraft,
   type PendingListing,
 } from "./listBusiness.data";
@@ -19,7 +19,10 @@ import { ListBusinessSuccess } from "./ListBusinessSuccess";
 import { WizardFormChrome } from "./WizardExtras";
 import { useListingDraftBanner } from "./useListingDraftBanner";
 import { useListingSubmit } from "./useListingSubmit";
-import { useListingWizardSubmit } from "./useListingWizardSubmit";
+import {
+  useListingWizardSubmit,
+  useWizardSaveNow,
+} from "./useListingWizardSubmit";
 import styles from "./ListBusinessPage.module.css";
 
 type Phase = "form" | "sending" | "success";
@@ -82,6 +85,31 @@ export interface ListingWizardProps {
    *  submission. Defaults to false, the member behaviour, which renders
    *  `SendingPanel`'s create copy. True renders `<SendingPanel isEdit />`. */
   isEditSave?: boolean;
+  /** Whether step pills ahead of the current step are reachable. Defaults to
+   *  false, the member behaviour, where only visited pills jump. An admin
+   *  console editing a listing that already exists passes true, so every pill
+   *  ahead is reachable while each step before it passes its gate. */
+  isJumpAheadEnabled?: boolean;
+  /** The ref of the listing being edited. Defaults to undefined, a new
+   *  submission. An admin console editing an existing listing passes it, so
+   *  the duplicate-name check skips the listing itself and the create-only
+   *  Path step (0) disappears: no pill, never reachable, and Back on Basics
+   *  leaves the wizard through `onCancel` under the "Cancel" label. */
+  editRef?: string;
+  /** The label of a save button on every step's footer. Defaults to
+   *  undefined: no such button, the member behaviour. Set, each step before
+   *  the last shows it beside "Next", and the final step's single button uses
+   *  it when `submitLabel` is absent. A save jumps to the first step with
+   *  missing required fields, or sends when there is none. */
+  saveNowLabel?: string;
+  /** The line under the live preview. Defaults to the member flow's note
+   *  that the listing goes live only after review. */
+  previewFootnote?: string;
+  /** The toast after a successful send. Undefined shows the member flow's
+   *  "with the community team" toast, a string shows that text, and null
+   *  shows no toast, for a console whose own success panel already confirms
+   *  the save. */
+  successToast?: string | null;
 }
 
 export function ListingWizard({
@@ -98,6 +126,11 @@ export function ListingWizard({
   renderSuccess,
   submitLabel,
   isEditSave,
+  isJumpAheadEnabled,
+  editRef,
+  saveNowLabel,
+  previewFootnote,
+  successToast,
 }: ListingWizardProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -124,12 +157,19 @@ export function ListingWizard({
   );
   const form = useListingForm(initialDraft, resolvedSeed);
   const { draft } = form;
-  const uploadPhoto = useUploadImage("listing-photo");
   // A draft resumed from the landing list / a `?draft` deep link.
   const isResumed = Boolean(initialDraft);
-  const [step, setStep] = useState(initialStep ?? 0);
+  const firstStep = firstWizardStep(editRef !== undefined);
+  const [storedStep, setStep] = useState(initialStep ?? firstStep);
+  // Every path that sets a step (a resume, a 422 routed to its field, the
+  // review step's "edit" links) can name step 0, which an edit does not have.
+  // Reading through the floor keeps all of them on a real step.
+  const step = Math.max(storedStep, firstStep);
   const [phase, setPhase] = useState<Phase>("form");
   const [listing, setListing] = useState<PendingListing | null>(null);
+  // An edit opens on the listing's own name, which can look like another
+  // directory entry. The duplicate hint waits until that name changes.
+  const loadedName = editRef !== undefined ? initialDraft?.name : undefined;
 
   const isAutosaveOn = isDraftAutosaveEnabled ?? true;
   // A resumed draft keeps autosaving but doesn't re-offer the in-wizard banner.
@@ -180,10 +220,11 @@ export function ListingWizard({
     routeSubmitError,
     setServerError,
     scrollUp,
+    successToast,
   });
 
   const goToStep = (n: number) => {
-    setStep(n);
+    setStep(Math.max(n, firstStep));
     setServerError(null);
     scrollUp();
   };
@@ -197,8 +238,18 @@ export function ListingWizard({
     await send(draft);
   };
 
-  // Both exits land on the directory by default: cancelling from step 0 and
-  // finishing after a withdrawal.
+  // Save from any step: jumps to the first step with gaps and focuses its
+  // bar, or sends when there are none.
+  const saveNowFlow = useWizardSaveNow({
+    firstStep,
+    canAdvance: form.canAdvance,
+    setStep,
+    setServerError,
+    send,
+  });
+
+  // Both exits land on the directory by default: cancelling from the first
+  // step and finishing after a withdrawal.
   const goToDirectory = useCallback(
     () => void navigate(routes.directory),
     [navigate],
@@ -206,7 +257,7 @@ export function ListingWizard({
   const leaveWizard = onCancel ?? goToDirectory;
   const finishWizard = onDone ?? goToDirectory;
   const back = () => {
-    if (step === 0) leaveWizard();
+    if (step === firstStep) leaveWizard();
     else goToStep(step - 1);
   };
   const editSubmission = () => {
@@ -254,8 +305,15 @@ export function ListingWizard({
               goToStep={goToStep}
               onBack={back}
               onNext={() => void next()}
-              uploadPhoto={uploadPhoto}
               submitLabel={submitLabel}
+              isJumpAheadEnabled={isJumpAheadEnabled}
+              editRef={editRef}
+              saveNowLabel={saveNowLabel}
+              onSave={() => void saveNowFlow.saveNow(draft)}
+              previewFootnote={previewFootnote}
+              isNeededBarFocusPending={saveNowFlow.neededBarFocusStep === step}
+              onNeededBarFocused={saveNowFlow.clearNeededBarFocus}
+              duplicateCheckBaselineName={loadedName}
             />
           </>
         )}

@@ -46,3 +46,10 @@
   color: var(--ink-40);
   padding: 4px 6px;
 }
+
+/* The "Host" chip beside the host's first name: the shared feature chip,
+   pulled in so it sits inside the pill without growing it. Scoped under
+   `.list` so it outranks the chip's own padding whatever the load order. */
+.list .hostChip {
+  padding: 2px 7px;
+}

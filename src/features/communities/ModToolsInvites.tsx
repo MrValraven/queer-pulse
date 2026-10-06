@@ -1,24 +1,14 @@
-import { useMemo, useState } from "react";
-import { FiUserPlus } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  MemberSelectList,
-  type MemberSelectPerson,
-} from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { useState } from "react";
+import type { MemberSelectPerson } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { useSocial } from "../../app/providers/useSocial";
-import { useConnectionsList } from "../connect/api/useConnectionsList";
 import {
   MAX_INVITES_PER_CALL,
   type CommunityInvitesResponseDTO,
 } from "./api/communityInvites.api";
-import { useInviteCommunityMembers } from "./api/useCommunityInvites";
-import { useRoster } from "./api/useRoster";
 import { isCommunityStaff } from "./communityStaff";
 import type { CommunityRole } from "./membership.types";
+import { ModToolsInvitePicker } from "./ModToolsInvitePicker";
 import { ModToolsInviteResult } from "./ModToolsInviteResult";
 import { ModToolsPendingInvites } from "./ModToolsPendingInvites";
 import detail from "./CommunityDetailPage.module.css";
@@ -31,7 +21,9 @@ import styles from "./ModToolsPanels.module.css";
  * founder typed on the create form, which capped every community at whoever
  * happened to be around on day one. The pool is the sender's own connections,
  * the same source the persona co-owner invite uses: a staff role is not a
- * reason to hand someone the whole member directory to page through.
+ * reason to hand someone the whole member directory to page through. The
+ * server searches and pages that pool and leaves out everyone who could not
+ * be invited here anyway (`ModToolsInvitePicker`).
  *
  * An invitation is an invitation. Nobody selected here joins anything; the
  * result panel reports exactly who was reached and who was passed over.
@@ -47,66 +39,22 @@ export function ModToolsInvites({
 }: {
   slug: string;
   /** The viewer's own role on this roster, straight from the detail DTO's
-   *  `myRole`. It gates the pending-invitations read, which the server serves
-   *  to owner, co-owner and moderator alone. */
+   *  `myRole`. It gates the candidates and pending-invitations reads, which
+   *  the server serves to owner, co-owner and moderator alone. */
   role: CommunityRole | null;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
-  const { isBlocked } = useSocial();
-  const { roster } = useRoster(slug);
-  const { views, loading } = useConnectionsList("all");
-  const invite = useInviteCommunityMembers(slug);
-
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [result, setResult] = useState<CommunityInvitesResponseDTO | null>(
-    null,
-  );
-
-  const rosterSlugs = useMemo(
-    () => new Set(roster.map((member) => member.slug).filter(Boolean)),
-    [roster],
-  );
-
-  const candidates = useMemo<MemberSelectPerson[]>(
-    () =>
-      views
-        .filter((view) => !isBlocked(view.slug) && !rosterSlugs.has(view.slug))
-        .map((view) => ({
-          slug: view.slug,
-          name: view.name,
-          avatarUrl: view.photo,
-          pronouns: view.pron,
-        })),
-    [views, isBlocked, rosterSlugs],
-  );
+  const isStaff = isCommunityStaff(role);
+  // The last answer, with the people it named. The picker's rows change with
+  // every search, so the names are kept from the selection that was sent.
+  const [sent, setSent] = useState<{
+    response: CommunityInvitesResponseDTO;
+    sentPeople: ReadonlyMap<string, MemberSelectPerson>;
+  } | null>(null);
 
   const nameForSlug = (memberSlug: string) =>
-    candidates.find((candidate) => candidate.slug === memberSlug)?.name ??
-    memberSlug;
-
-  const toggle = (memberSlug: string) => {
-    setSelected((previous) => {
-      const next = new Set(previous);
-      if (next.has(memberSlug)) next.delete(memberSlug);
-      else if (next.size < MAX_INVITES_PER_CALL) next.add(memberSlug);
-      return next;
-    });
-  };
-
-  const send = () => {
-    const memberSlugs = [...selected];
-    if (memberSlugs.length === 0) return;
-    invite.mutate(memberSlugs, {
-      onSuccess: (response) => {
-        setResult(response);
-        setSelected(new Set());
-      },
-      onError: () =>
-        showToast(t("communities:detail.modtools.invites.errorToast"), "error"),
-    });
-  };
+    sent?.sentPeople.get(memberSlug)?.name ?? memberSlug;
 
   return (
     <div style={{ marginBottom: 32 }}>
@@ -119,50 +67,20 @@ export function ModToolsInvites({
         })}
       </p>
 
-      {!loading && candidates.length === 0 ? (
-        <EmptyState
-          compact
-          icon={<FiUserPlus />}
-          title={t("communities:detail.modtools.invites.empty.title")}
-          description={t(
-            "communities:detail.modtools.invites.empty.description",
-          )}
+      <ModToolsInvitePicker
+        slug={slug}
+        isStaff={isStaff}
+        onSent={(response, sentPeople) => setSent({ response, sentPeople })}
+      />
+
+      {sent && (
+        <ModToolsInviteResult
+          result={sent.response}
+          nameForSlug={nameForSlug}
         />
-      ) : (
-        <div className={styles.picker}>
-          <MemberSelectList
-            people={candidates}
-            selected={selected}
-            onToggle={toggle}
-            cap={MAX_INVITES_PER_CALL}
-            searchPlaceholder={t(
-              "communities:detail.modtools.invites.searchPlaceholder",
-            )}
-          />
-          <div className={styles.pickerFoot}>
-            <p className={styles.hint}>
-              {t("communities:detail.modtools.invites.selectedCount", {
-                selected: fmt.number(selected.size),
-                max: fmt.number(MAX_INVITES_PER_CALL),
-              })}
-            </p>
-            <Button
-              onClick={send}
-              disabled={selected.size === 0 || invite.isPending}
-            >
-              {invite.isPending
-                ? t("communities:common.loading")
-                : t("communities:detail.modtools.invites.sendCta")}
-            </Button>
-          </div>
-        </div>
       )}
 
-      {result && (
-        <ModToolsInviteResult result={result} nameForSlug={nameForSlug} />
-      )}
-
-      <ModToolsPendingInvites slug={slug} isStaff={isCommunityStaff(role)} />
+      <ModToolsPendingInvites slug={slug} isStaff={isStaff} />
     </div>
   );
 }

@@ -1,36 +1,35 @@
-import { useState } from "react";
+import { useState, type Ref } from "react";
 import {
   FiStar,
   FiHeart,
-  FiPlus,
-  FiMinus,
   FiCheckCircle,
+  FiCornerDownRight,
 } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useMediaQuery } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Reply } from "./forum.data";
-import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
+import { ProfileLink, OfficialBadge } from "./ForumAuthor";
 import { authorHref } from "./forumAuthor.helpers";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { MarkdownLite } from "../../shared/markdown";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { PostActionsMenu } from "./PostActionsMenu";
+import { type PostMenuAction } from "./usePostAuthorSafety";
 import { ForumPostPhotos } from "./ForumPostPhotos";
 import { ForumLinkPreview } from "./ForumLinkPreview";
 import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
 import { ModeratorByline } from "./ThreadReplies";
+import {
+  ReplyCollapseButton,
+  ReplyGutter,
+  type ReplyGutterCollapse,
+} from "./ReplyGutter";
+import { useIsReplyBranchHidden } from "./replyBranchVisibility";
 import styles from "./ThreadPage.module.css";
-
-/** Nested-replies collapse affordance for one reply. `count` is the number of
- *  descendant replies hidden while `collapsed` is true (ThreadReplyNode owns
- *  the actual show/hide of the subtree; this only renders the toggle). */
-export interface ThreadReplyCollapseProps {
-  collapsed: boolean;
-  count: number;
-  onToggle: () => void;
-}
 
 export function ThreadReplyItem({
   reply,
@@ -51,7 +50,10 @@ export function ThreadReplyItem({
   onReport,
   onAcceptAnswer,
   onQuote,
+  hasBranchBelow = false,
   collapse,
+  collapseToggleRef,
+  replyingToName,
 }: {
   reply: Reply;
   index: number;
@@ -74,15 +76,24 @@ export function ThreadReplyItem({
    *  the report subject. Omitted keeps the actions row report-free. */
   onReport?: (reply: Reply) => void;
   /** Renders "Mark as answer" / "Unmark answer" (SOC-13). Omitted for a viewer
-   *  who is neither the thread's author nor a moderator, which is what hides
-   *  the action rather than showing one the server would refuse. */
+   *  who is neither the thread's author nor a moderator, so the row only ever
+   *  offers an action the server will accept. */
   onAcceptAnswer?: (reply: Reply) => void;
   /** Renders "Quote", which opens a reply to this one prefilled with its text
    *  as a blockquote. Omitted where replying itself is withheld. */
   onQuote?: (reply: Reply) => void;
-  /** Nested-replies feature: renders a compact collapse/expand toggle near the
-   *  author line when the reply has descendants. */
-  collapse?: ThreadReplyCollapseProps;
+  /** True when anything renders under this reply in the tree (nested
+   *  replies, a collapsed-branch row, or the inline composer), which is what
+   *  draws the thread rail down from the avatar. */
+  hasBranchBelow?: boolean;
+  /** Collapse controls for a reply with nested replies: the clickable rail
+   *  and the circled toggle in the gutter. */
+  collapse?: ReplyGutterCollapse;
+  collapseToggleRef?: Ref<HTMLButtonElement>;
+  /** Set on a reply shown in a flattened "continue this thread" column whose
+   *  parent is another row of that column: names who it answers, since the
+   *  indent no longer shows it. */
+  replyingToName?: string;
 }) {
   const { t } = useTranslation();
   const replyIdentity = reply.postId ?? replyKey(reply);
@@ -96,78 +107,54 @@ export function ThreadReplyItem({
     ? demoOwns(reply) && !!reply.deleted
     : !!reply.canRestore;
   const canViewHistory = demoMode ? false : !!reply.canViewHistory;
-  // PRD-171: at most the FIRST link in this reply, and nothing is requested
-  // until the reply is near the viewport. A twenty-reply thread where every
-  // reply carries a link must not fire twenty unfurls on load — see the rate
-  // budget note in `useForumLinkPreview`.
+  // PRD-171: at most the FIRST link in this reply, requested only once the
+  // reply nears the viewport (see the rate budget in `useForumLinkPreview`),
+  // and never inside a collapsed branch, which stays mounted while hidden.
   const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
   const firstLink = firstLinkIn(reply.body);
+  const isBranchHidden = useIsReplyBranchHidden();
+  // On a phone Quote, the answer mark and Report move from the actions row
+  // into the "..." menu; one set renders at a time, never a hidden duplicate.
+  const isCompact = useMediaQuery(mediaMax("md"));
+  const hasActionsRow = !reply.deleted && !isEditing;
+  const overflow =
+    isCompact && hasActionsRow ? { onQuote, onAcceptAnswer, onReport } : {};
   return (
     <FadeIn
       delay={Math.min(index, 8) * 60}
       className={[
         styles.reply,
         (reply.helpful || reply.accepted) && styles.replyHighlighted,
+        reply.accepted
+          ? styles.replyAccepted
+          : reply.helpful && styles.replyHelpful,
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <ProfileLink
-        to={authorHref(reply)}
-        name={reply.name}
-        official={reply.official}
-        className={styles.avLink}
-      >
-        <ForumAvatar
-          className={styles.replyAv}
-          style={{ background: reply.background, color: reply.color }}
-          person={{
-            slug: reply.slug,
-            photo: reply.photo,
-            initials: reply.avatar,
-            name: reply.name,
-            official: reply.official,
-          }}
-        />
-      </ProfileLink>
-      <div>
+      <ReplyGutter
+        reply={reply}
+        hasBranchBelow={hasBranchBelow}
+        collapse={collapse}
+      />
+      <div className={styles.replyContent}>
         <div className={styles.replyTop}>
-          <ReplyCollapseToggle collapse={collapse} />
-          <span className={styles.replyName}>
-            <ProfileLink
-              to={authorHref(reply)}
-              name={reply.name}
-              official={reply.official}
-              className={styles.authorLink}
-            >
-              {reply.name}
-            </ProfileLink>
-          </span>
-          <MemberStaffBadge slug={reply.slug} />
-          {reply.official && <OfficialBadge />}
-          <ReplyBadges reply={reply} />
-          <span className={styles.replyTime}>{reply.time}</span>
-          <span className={styles.replyMenu}>
-            <PostActionsMenu
-              canEdit={canEdit}
-              canDelete={canDelete}
-              canRestore={canRestore}
-              canViewHistory={canViewHistory}
-              // Adds Mute / Block for this reply's author (no-op on your own
-              // replies and on the QueerPulse Official account).
-              author={{
-                slug: reply.slug,
-                name: reply.name,
-                official: reply.official,
-              }}
-              onEdit={() => onStartEdit(reply)}
-              onDelete={() => onDelete(reply)}
-              onRestore={() => onRestore(reply)}
-              onHistory={() => onHistory(reply)}
-            />
-          </span>
+          <ReplyAuthorLine reply={reply} />
+          <ReplyMenu
+            reply={reply}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            canRestore={canRestore}
+            canViewHistory={canViewHistory}
+            onStartEdit={onStartEdit}
+            onDelete={onDelete}
+            onRestore={onRestore}
+            onHistory={onHistory}
+            {...overflow}
+          />
         </div>
         {reply.official && reply.mod && <ModeratorByline mod={reply.mod} />}
+        {replyingToName && <ReplyingToLine name={replyingToName} />}
         {reply.deleted ? (
           <div className={styles.replyBody}>
             <p className={styles.tombstone}>
@@ -199,7 +186,7 @@ export function ThreadReplyItem({
                   split form, and `join("\n")` is what the inline editor below
                   already treats as the raw body. One markdown-lite pass over
                   the whole reply is what makes a multi-line list or quote
-                  render as one block instead of a run of paragraphs. */}
+                  render as one block. */}
               <MarkdownLite text={reply.body.join("\n")} />
               {/* ONE gallery, up to four. The backend folds a reply's legacy
                   single `image` into `photos` before it leaves the server, so
@@ -209,7 +196,10 @@ export function ThreadReplyItem({
                 photos={reply.photos}
                 legacyImage={reply.image}
               />
-              <ForumLinkPreview url={firstLink} isEnabled={isInView} />
+              <ForumLinkPreview
+                url={firstLink}
+                isEnabled={isInView && !isBranchHidden}
+              />
               {reply.editedAt && (
                 <span className={styles.editedMark}>
                   {t("forum:edited.mark")}
@@ -221,14 +211,123 @@ export function ThreadReplyItem({
               isLiked={isLiked}
               toggleReplyLike={toggleReplyLike}
               onReply={onReply}
-              onReport={onReport}
-              onAcceptAnswer={onAcceptAnswer}
-              onQuote={onQuote}
+              onReport={isCompact ? undefined : onReport}
+              onAcceptAnswer={isCompact ? undefined : onAcceptAnswer}
+              onQuote={isCompact ? undefined : onQuote}
             />
           </>
         )}
       </div>
+      {collapse && (
+        <ReplyCollapseButton
+          authorName={reply.name}
+          descendantCount={collapse.descendantCount}
+          isHidden={collapse.isCollapsed}
+          onToggle={collapse.onToggle}
+          buttonRef={collapseToggleRef}
+        />
+      )}
     </FadeIn>
+  );
+}
+
+/** The reply's "..." menu: edit, history, restore, delete and Mute / Block,
+ *  plus, on a phone, the Quote / answer / Report actions the compact actions
+ *  row leaves out (passed only then). */
+function ReplyMenu({
+  reply,
+  canEdit,
+  canDelete,
+  canRestore,
+  canViewHistory,
+  onStartEdit,
+  onDelete,
+  onRestore,
+  onHistory,
+  onQuote,
+  onAcceptAnswer,
+  onReport,
+}: {
+  reply: Reply;
+  canEdit: boolean;
+  canDelete: boolean;
+  canRestore: boolean;
+  canViewHistory: boolean;
+  onStartEdit: (reply: Reply) => void;
+  onDelete: (reply: Reply) => void;
+  onRestore: (reply: Reply) => void;
+  onHistory: (reply: Reply) => void;
+  onQuote?: (reply: Reply) => void;
+  onAcceptAnswer?: (reply: Reply) => void;
+  onReport?: (reply: Reply) => void;
+}) {
+  const { t } = useTranslation();
+  const overflowActions: PostMenuAction[] = [
+    onQuote && {
+      key: "reply-quote",
+      label: t("forum:replies.quote"),
+      run: () => onQuote(reply),
+    },
+    onAcceptAnswer && {
+      key: "reply-accept",
+      label: t(
+        reply.accepted
+          ? "forum:replies.unmarkAnswer"
+          : "forum:replies.markAnswer",
+      ),
+      run: () => onAcceptAnswer(reply),
+    },
+    onReport && {
+      key: "reply-report",
+      label: t("forum:threadOp.report"),
+      run: () => onReport(reply),
+    },
+  ].filter((action): action is PostMenuAction => Boolean(action));
+  return (
+    <span className={styles.replyMenu}>
+      <PostActionsMenu
+        canEdit={canEdit}
+        canDelete={canDelete}
+        canRestore={canRestore}
+        canViewHistory={canViewHistory}
+        // Adds Mute / Block for this reply's author (no-op on your own
+        // replies and on the QueerPulse Official account).
+        author={{
+          slug: reply.slug,
+          name: reply.name,
+          official: reply.official,
+        }}
+        onEdit={() => onStartEdit(reply)}
+        onDelete={() => onDelete(reply)}
+        onRestore={() => onRestore(reply)}
+        onHistory={() => onHistory(reply)}
+        extraActions={overflowActions}
+      />
+    </span>
+  );
+}
+
+/** Name, staff and official marks, badges and time. Wraps as one group, so on
+ *  a narrow deep reply the badges and time drop to a second line while the
+ *  actions menu stays pinned at the right of the row. */
+function ReplyAuthorLine({ reply }: { reply: Reply }) {
+  return (
+    <span className={styles.replyMeta}>
+      <span className={styles.replyName}>
+        <ProfileLink
+          to={authorHref(reply)}
+          name={reply.name}
+          official={reply.official}
+          className={styles.authorLink}
+        >
+          {reply.name}
+        </ProfileLink>
+      </span>
+      <MemberStaffBadge slug={reply.slug} />
+      {reply.official && <OfficialBadge />}
+      <ReplyBadges reply={reply} />
+      <span className={styles.replyTime}>{reply.time}</span>
+    </span>
   );
 }
 
@@ -291,7 +390,7 @@ function ReplyActionsRow({
           .join(" ")}
         onClick={() => toggleReplyLike(reply)}
       >
-        {/* Raw server count — the vote mutation patches `reactions` in place,
+        {/* Raw server count: the vote mutation patches `reactions` in place,
             so a local `+1` here would double-count. */}
         <FiHeart aria-hidden="true" />{" "}
         <RollingNumber
@@ -349,38 +448,15 @@ function ReplyActionsRow({
   );
 }
 
-/** Expand/collapse a reply's nested subtree, plus the count of what's hidden
- *  while collapsed. Renders nothing for a reply with no descendants. */
-function ReplyCollapseToggle({
-  collapse,
-}: {
-  collapse?: ThreadReplyCollapseProps;
-}) {
+/** "Replying to Ana", the small muted line a flattened reply carries above its
+ *  body so the conversation still reads in order without the indent. */
+function ReplyingToLine({ name }: { name: string }) {
   const { t } = useTranslation();
-  if (!collapse) return null;
   return (
-    <>
-      <button
-        type="button"
-        className={styles.collapseToggle}
-        aria-expanded={!collapse.collapsed}
-        aria-label={t(
-          collapse.collapsed
-            ? "forum:replies.expandAria"
-            : "forum:replies.collapseAria",
-        )}
-        onClick={collapse.onToggle}
-      >
-        {collapse.collapsed ? (
-          <FiPlus aria-hidden="true" />
-        ) : (
-          <FiMinus aria-hidden="true" />
-        )}
-      </button>
-      {collapse.collapsed && (
-        <span className={styles.collapsedCount}>{collapse.count}</span>
-      )}
-    </>
+    <p className={styles.replyingTo}>
+      <FiCornerDownRight aria-hidden="true" />
+      {t("forum:replies.replyingTo", { name })}
+    </p>
   );
 }
 

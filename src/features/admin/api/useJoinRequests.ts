@@ -81,6 +81,11 @@ export interface JoinRequestView {
   /** The closed-set reason key a reviewer picked when declining. Null on every
    *  other status. Rendered through `declineReasonLabelKey`. */
   declineReason: string | null;
+  /** The closed-set reason key a reviewer picked when approving. STAFF-ONLY:
+   *  the applicant never sees it. Null on every other status, and on
+   *  approvals made before reasons were asked for. Rendered through
+   *  `approvalReasonLabelKey`. */
+  approvalReason: string | null;
   /** Confidence-tiered triage flags, already localized labels — computed here
    *  so the card never has to know the raw flag keys. */
   flagLabels: string[];
@@ -103,6 +108,40 @@ export interface JoinRequestView {
   /** ISO timestamp the request should have been answered by, or null when it
    *  carries no clock. Read through `queueClock.ts`, never compared inline. */
   dueAt: string | null;
+  /** The staff-only note on a declined request, or null when there is none.
+   *  The applicant never sees it. */
+  internalNote: string | null;
+  /** ISO timestamp of the note's last edit, or null when there is no note. */
+  internalNoteUpdatedAt: string | null;
+  /** The id of whoever last edited the note. Compared with the signed-in
+   *  reviewer to say "you". */
+  internalNoteUpdatedBy: string | null;
+  /** Their display name; absent when there is no editor id to resolve, in
+   *  which case the row shows a generic "a staff member". */
+  internalNoteUpdatedByName?: string;
+}
+
+/**
+ * The note fields of a row, copied off a DTO. Shared by the mapper below and
+ * by the note mutation's cache patch, which lays a saved note onto rows that
+ * are already on screen. The name is set explicitly (undefined when absent) so
+ * a patch never leaves the previous editor's name behind.
+ */
+export function noteFieldsFromDto(
+  dto: JoinRequestDTO,
+): Pick<
+  JoinRequestView,
+  | "internalNote"
+  | "internalNoteUpdatedAt"
+  | "internalNoteUpdatedBy"
+  | "internalNoteUpdatedByName"
+> {
+  return {
+    internalNote: dto.internalNote ?? null,
+    internalNoteUpdatedAt: dto.internalNoteUpdatedAt ?? null,
+    internalNoteUpdatedBy: dto.internalNoteUpdatedBy ?? null,
+    internalNoteUpdatedByName: dto.internalNoteUpdatedByName || undefined,
+  };
 }
 
 const TONES: AvatarTone[] = ["coral", "jade", "violet", "amber", "plum"];
@@ -200,6 +239,7 @@ export function dtoToView(
     reviewedBy: dto.reviewedBy,
     ...(dto.reviewedByName ? { reviewedByName: dto.reviewedByName } : {}),
     declineReason: dto.declineReason,
+    approvalReason: dto.approvalReason ?? null,
     flagLabels,
     priorDeclineLine,
     referenceLine,
@@ -210,6 +250,12 @@ export function dtoToView(
       ? { assignedStaffName: dto.assignedStaffName }
       : {}),
     dueAt: dto.dueAt ?? null,
+    internalNote: dto.internalNote ?? null,
+    internalNoteUpdatedAt: dto.internalNoteUpdatedAt ?? null,
+    internalNoteUpdatedBy: dto.internalNoteUpdatedBy ?? null,
+    ...(dto.internalNoteUpdatedByName
+      ? { internalNoteUpdatedByName: dto.internalNoteUpdatedByName }
+      : {}),
   };
 }
 

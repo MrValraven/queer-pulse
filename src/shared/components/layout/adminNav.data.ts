@@ -21,6 +21,7 @@ import {
   FiKey,
   FiLayers,
   FiLayout,
+  FiList,
   FiMail,
   FiMap,
   FiMapPin,
@@ -527,6 +528,14 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.governance",
         to: routes.adminGovernance,
         icon: FiAward,
+      },
+      {
+        // Visible to moderators: `PlatformLogController` admits them and
+        // returns staff actions only, and `routes.adminLog` is listed in
+        // MOD_ACCESSIBLE_ADMIN_PATTERNS (`authGate.ts`).
+        labelKey: "admin:platformLog.navLabel",
+        to: routes.adminLog,
+        icon: FiList,
       },
       {
         // PRD-32: the legal and government request register. Filed under

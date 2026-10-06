@@ -160,6 +160,7 @@ export function DirectoryReviewComposer({
       />
       <DirectoryReviewPhotoField
         previewUrl={photoPreviewUrl}
+        currentValue={photoValue}
         isDisabled={isPending}
         onUploaded={(key, previewUrl) => {
           setPhotoValue(key);

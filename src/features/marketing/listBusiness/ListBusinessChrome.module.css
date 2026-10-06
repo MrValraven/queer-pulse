@@ -68,7 +68,7 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .jumpable:hover {
-    background: rgba(var(--plum-rgb), 0.06);
+    background: var(--wash);
   }
 }
 
@@ -79,7 +79,8 @@
   height: 2px;
   flex: none;
   border-radius: var(--radius-2);
-  background: rgba(var(--plum-rgb), 0.1);
+  /* --line-rgb flips to cream in dark mode, so the hairline keeps showing. */
+  background: rgba(var(--line-rgb), 0.14);
 }
 
 /* Compact "Step N of N — Label" fallback. Hidden on wide screens (the labelled
@@ -97,5 +98,42 @@
     font-weight: 600;
     line-height: 1.4;
     color: var(--text-strong);
+  }
+}
+
+/* The right-hand pair of a footer that can save from any step: "Next" then
+   the save button. It grows into the free space and hugs the right edge. In
+   a footer under 460px it stacks instead (see .saveModeFooter below). */
+.paneActionsEnd {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+/* Save-mode footers only (the plain back / next pair never gets these). The
+   footer measures its own width, so the stack follows the form column in the
+   admin console as well as on a phone. Under 460px the row stacks: Back on
+   top at its own width, then Next and the save at full width, the primary
+   save last where a thumb reaches it. Long labels wrap inside their button. */
+.saveModeFooter {
+  container-type: inline-size;
+  container-name: pane-footer;
+}
+@container pane-footer (max-width: 460px) {
+  .saveModeFooter .saveModeActions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .saveModeFooter .paneActionsEnd {
+    flex-direction: column;
+    align-items: stretch;
+    align-self: stretch;
+  }
+  .saveModeFooter .paneActionsEnd > * {
+    width: 100%;
+    white-space: normal;
   }
 }

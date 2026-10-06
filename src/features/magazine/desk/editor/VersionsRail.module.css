@@ -1,0 +1,261 @@
+/* The History rail. Sits on the shared `.card` from pieceTabs.module.css (so it
+   matches the Notes card above it) and adds its own timeline here, because the
+   shared `.trail` classes are used by dozens of other surfaces.
+
+   The card is the size container, named so the queries below measure the
+   rail's own width. A container cannot restyle itself from its own query, so
+   everything that changes lives on its children. */
+.rail {
+  container: versions-rail / inline-size;
+}
+
+/* ---------- header ---------- */
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.count {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--ink-60);
+  background: var(--wash);
+  border-radius: var(--radius-pill);
+  padding: 3px 8px;
+}
+
+.saveButton {
+  margin-left: auto;
+}
+
+/* ---------- timeline ---------- */
+
+/* The geometry every row shares. The dot is centred on the label's first line,
+   and the connecting line starts at that same point, so both read these. */
+.list {
+  --row-pad-y: 6px;
+  --row-pad-start: 6px;
+  --row-gap: 2px;
+  --gutter: 14px;
+  --label-line: 1.25rem;
+  --body-nudge: 3px;
+  --dot-center: calc(
+    var(--row-pad-y) + var(--body-nudge) + var(--label-line) / 2
+  );
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--row-gap);
+}
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--gutter) minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 10px;
+  padding: var(--row-pad-y) 2px var(--row-pad-y) var(--row-pad-start);
+  border-radius: var(--radius-12);
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.item:focus-within {
+  background-color: var(--wash);
+}
+
+@media (hover: hover) {
+  .item:hover {
+    background-color: var(--wash);
+  }
+}
+
+/* Drawn per row, from this row's dot down to the next row's dot, so the line
+   stops at the last version instead of trailing past it. */
+.item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--row-pad-start) + var(--gutter) / 2 - 0.75px);
+  top: var(--dot-center);
+  width: 1.5px;
+  height: calc(100% + var(--row-gap));
+  background: rgba(var(--line-rgb), 0.12);
+  pointer-events: none;
+}
+
+.marker {
+  height: calc(var(--label-line) + var(--body-nudge) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.35);
+}
+
+.dotLatest {
+  background: var(--jade);
+  border-color: var(--jade);
+  box-shadow: var(--ring-jade);
+}
+
+.body {
+  min-width: 0;
+  padding-block: var(--body-nudge);
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: var(--text-13-5);
+  line-height: var(--label-line);
+  font-weight: 700;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.latest {
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: 1px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  padding: 0 7px;
+}
+
+.meta {
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- row actions ---------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Narrow rail: the IconButton stays a 44px square and the word is announced
+   through the aria-label only. */
+.actionText {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Wide rail: the same control grows into a small outlined pill with the word
+   beside the icon, mirroring Button's sm ghost. Three classes so it outranks
+   the `.icon.sm` sizing from Button.module.css regardless of load order. */
+@container versions-rail (min-width: 420px) {
+  .rail .actions .action {
+    width: auto;
+    padding: 0 14px;
+    gap: 6px;
+    font-size: var(--text-13-5);
+    color: var(--text-strong);
+    border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  }
+
+  .actions {
+    gap: 6px;
+  }
+
+  .actionText {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+  }
+}
+
+/* ---------- long histories ---------- */
+
+.toggle {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-12);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.toggle:focus-visible {
+  border-radius: var(--radius-12);
+}
+
+@media (hover: hover) {
+  .toggle:hover {
+    background-color: var(--wash);
+    color: var(--text-strong);
+  }
+}
+
+/* ---------- loading ---------- */
+
+.skeletonRow {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: start;
+  padding: 6px;
+}
+
+.skeletonDot {
+  width: 9px;
+  height: 9px;
+  margin: 8px auto 0;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.12);
+}
+
+.skeletonBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+}

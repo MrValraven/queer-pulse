@@ -96,7 +96,7 @@ To find the file for a route, reverse `linkToPath`: a page named `QueerPulse <Ti
 
 - **Design tokens only** (`var(--plum)`, `--accent`, `--cream`, `--jade`, `--ink`, …) — never hardcode hex.
 - **Page/section backgrounds are `--cream`. Never a pure-white page background.** `--paper` (#FFFFFF) is only for small/medium card surfaces on cream, with the standard `1px solid rgba(var(--line-rgb), .09)` border. **Never write the raw channels `rgba(45,27,61,…)` in a CSS Module** — `scripts/check-design-tokens.mjs` fails the build on it. Hairlines and borders use `--line-rgb`, which flips to cream in dark mode; backgrounds and drop shadows use `--plum-rgb`, which does not.
-- **Success / confirmation surfaces use the plum-panel pattern**: `background: var(--plum)`, cream text, serif title with an italic `<em>` in coral, jade success icon, `ghost-dark` buttons. Never a big empty white card.
+- **Success / confirmation surfaces use the plum-panel pattern**: `background: var(--plum)`, cream text, serif title with an italic `<em>` in coral, jade success icon, `ghost-dark` buttons. Never a big empty white card. Inside a `<Modal>` the success state is flat (`SuccessPanel` does this itself through `IsInsideModalContext`); never a card inside the dialog.
 - Type: Fraunces serif for display/headings/pull-quotes (italic `<em>` = coral emphasis); DM Sans for body/UI/buttons. No monospace.
 - Buttons: always the `<Button>` component (`variant="primary|ghost|ghost-dark|jade"`, `size`, polymorphic via `to`/`href`) — never `class="btn btn-*"` or ad-hoc `<button>`.
 - Never nest a `<button>` inside a router `<Link>`; use `<span role="button" tabIndex={0}>` with `onClick` (preventDefault + stopPropagation) + `onKeyDown`.

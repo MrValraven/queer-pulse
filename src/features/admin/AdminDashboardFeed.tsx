@@ -63,6 +63,9 @@ export function AdminDashboardFeed({
                 ),
               )}
         </div>
+        <Link to={routes.adminLog} className={styles.feedAll}>
+          {t("admin:dashboard.feed.seeAllCta")} <FiArrowRight aria-hidden />
+        </Link>
       </div>
 
       <div className={styles.transpCard}>
@@ -72,7 +75,7 @@ export function AdminDashboardFeed({
             i18nKey="admin:dashboard.feed.transparency"
             components={{ strong: <b /> }}
           />{" "}
-          <Link to={routes.adminGovernance} className={styles.transpLink}>
+          <Link to={routes.adminLog} className={styles.transpLink}>
             {t("admin:dashboard.feed.auditLinkCta")}{" "}
             <FiArrowRight aria-hidden />
           </Link>

@@ -1,22 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, type RefObject } from "react";
 import { useParams } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes, thread as threadPath } from "../../app/routeMap";
 import { nestedReplyDraftId } from "./api/forumDrafts.api";
 import { type Reply } from "./forum.data";
-import { countDescendants, type ReplyNode } from "./buildReplyTree";
+import {
+  countDescendants,
+  flattenReplyDescendants,
+  type ReplyNode,
+} from "./buildReplyTree";
 import { ThreadReplyItem } from "./ThreadReplyItem";
+import { ReplyBranchToggleRow } from "./ReplyBranchToggle";
+import { ReplyBranchRegion } from "./ReplyBranchRegion";
+import { replyBranchRowClassName } from "./replyBranchVisibility";
+import { useReplyBranchFocus } from "./useReplyBranchFocus";
 import { ThreadComposer } from "./ThreadComposer";
 import type { StagedPostImage } from "../communities/usePostImageAttach";
 import styles from "./ThreadPage.module.css";
 
-/** Past this depth the visual indent stops nudging further right — deep
- *  branches stay legible instead of running off the edge — and a "continue
- *  this thread" branch-off takes over from further recursion. */
+/** The depth where nesting stops. A node here hides its subtree behind
+ *  "Continue this thread", and once that opens, the rest of the branch renders
+ *  as one flat column under it, so deep threads stay legible on a phone. */
 const MAX_INDENT_DEPTH = 4;
-/** Left indent per depth level, in rem (clamped at MAX_INDENT_DEPTH). */
-const INDENT_STEP_REM = 1.25;
 
 interface ThreadReplyNodeProps {
   node: ReplyNode;
@@ -50,76 +55,119 @@ interface ThreadReplyNodeProps {
   onQuote: (reply: Reply) => void;
   inlineDraft: string;
   setInlineDraft: (value: string) => void;
+  /** Set on a row of a flattened "continue this thread" column whose parent
+   *  is another row of that column. */
+  replyingToName?: string;
 }
 
-/** One reply plus its subtree, Reddit-style. Renders the existing
- *  ThreadReplyItem unchanged (forwarding every prop it already takes, plus
- *  the onReply/collapse pair it grew for this feature), then recurses into
- *  `node.children` — indenting each level, clamped at MAX_INDENT_DEPTH so
- *  deep threads never crowd off-screen. A collapsed node hides its subtree
- *  behind a "N hidden replies" toggle; a node stuck at the indent cap hides
- *  its subtree behind a "continue this thread" branch-off until clicked. */
-export function ThreadReplyNode({
-  node,
-  index,
-  replyKey,
-  isLocked,
-  likedReplies,
-  toggleReplyLike,
-  demoMode,
-  demoOwns,
-  editingReplyPostId,
-  onStartEdit,
-  onCancelEdit,
-  onSaveEdit,
-  onDelete,
-  onRestore,
-  onHistory,
-  collapsedIds,
-  onToggleCollapse,
-  activeReplyTargetId,
-  onStartReply,
-  onCancelReply,
-  onPostReply,
-  onReport,
-  onAcceptAnswer,
-  onQuote,
-  inlineDraft,
-  setInlineDraft,
-}: ThreadReplyNodeProps) {
+/** One reply plus its subtree, Reddit-style. The reply row (ThreadReplyItem)
+ *  draws the rail down from its avatar; `.replyChildren` sits on that rail and
+ *  each row inside it draws an elbow into the next avatar, so every level
+ *  indents by structure alone. Below the reply, in order: the inline composer
+ *  when this reply is the reply target, then the "N hidden replies" row, and
+ *  then the children, or past the indent cap the "continue this thread" row
+ *  and the flat column it opens. Each of those sits in a ReplyBranchRegion
+ *  that stays mounted and animates open and shut, so collapsing, expanding
+ *  and continuing all move smoothly. */
+export function ThreadReplyNode(props: ThreadReplyNodeProps) {
+  const { node, replyingToName, ...sharedProps } = props;
+  const {
+    index,
+    replyKey,
+    isLocked,
+    likedReplies,
+    toggleReplyLike,
+    demoMode,
+    editingReplyPostId,
+    collapsedIds,
+    onToggleCollapse,
+    activeReplyTargetId,
+    onStartReply,
+    onQuote,
+  } = sharedProps;
   const { t } = useTranslation();
-  // Which thread this reply belongs to, read from the route rather than
-  // threaded down through every recursion level. It scopes the inline
-  // composer's draft, so two threads' answers can never share a key.
-  const { id: threadRouteId } = useParams<{ id: string }>();
-  // Once a branch-off past the indent cap is opened, it stays open for the
-  // rest of this node's lifetime (no reason to re-collapse it automatically).
-  const [continued, setContinued] = useState(false);
-  const inlineTextareaRef = useRef<HTMLTextAreaElement>(null);
+  // Once "Continue this thread" opens the branch, it stays open for good.
+  const [isContinued, setIsContinued] = useState(false);
 
-  const indent = Math.min(node.depth, MAX_INDENT_DEPTH);
   const hasChildren = node.children.length > 0;
   const isCollapsed = hasChildren && collapsedIds.has(node.reply.id);
   const descendantCount = countDescendants(node);
   const isReplyTarget = activeReplyTargetId === node.reply.id;
-  const atIndentCap = node.depth >= MAX_INDENT_DEPTH;
-  const showChildren =
-    hasChildren && !isCollapsed && (!atIndentCap || continued);
+  const isShowingComposer = isReplyTarget && !isLocked;
+  const isAtIndentCap = node.depth >= MAX_INDENT_DEPTH;
+  const hasBranchBelow = isShowingComposer || hasChildren;
+  // Live replies nest by BACKEND post id. A reply still waiting for its create
+  // response has only a client uuid, which the server rejects as a
+  // `parentPostId`, so replying (and quoting, which is a reply) is withheld
+  // until the id lands, and everywhere on a closed thread.
+  const isReplyWithheld = isLocked || (!demoMode && !node.reply.postId);
 
-  // Move focus into the inline composer when it opens for THIS node — not on
-  // every render, only the transition into being the active reply target.
-  useEffect(() => {
-    if (isReplyTarget) {
-      inlineTextareaRef.current?.focus();
-    }
-  }, [isReplyTarget]);
+  const {
+    nodeRef,
+    inlineTextareaRef,
+    gutterToggleRef,
+    branchToggleRef,
+    firstFlattenedRowRef,
+    toggleBranch,
+  } = useReplyBranchFocus({
+    isCollapsed,
+    isContinued,
+    isReplyTarget,
+    onToggleCollapse: () => onToggleCollapse(node.reply.id),
+  });
+
+  // One row under this reply. An invisible strip over the row's stretch of
+  // line makes the whole line clickable: a click collapses this branch.
+  const renderBranchNode = (
+    branchNode: ReplyNode,
+    isLastRow: boolean,
+    branchReplyingToName?: string,
+    isFirstFlattenedRow = false,
+  ) => (
+    <div
+      key={branchNode.reply.id}
+      ref={isFirstFlattenedRow ? firstFlattenedRowRef : undefined}
+      tabIndex={isFirstFlattenedRow ? -1 : undefined}
+      className={replyBranchRowClassName(isLastRow)}
+    >
+      <button
+        type="button"
+        tabIndex={-1}
+        aria-hidden="true"
+        className={styles.branchLineHit}
+        // A mouse click never moves focus onto this aria-hidden button.
+        onMouseDown={(event) => event.preventDefault()}
+        onClick={() => toggleBranch("scrollIntoView")}
+      />
+      <ThreadReplyNode
+        {...sharedProps}
+        node={branchNode}
+        replyingToName={branchReplyingToName}
+      />
+    </div>
+  );
+
+  // Past the cap the rest of the branch is one flat column of childless rows,
+  // each naming its parent whenever that parent is not the row above.
+  const renderFlattenedRows = () => {
+    const flattenedRows = flattenReplyDescendants(node);
+    return flattenedRows.map((flattened, rowIndex) =>
+      renderBranchNode(
+        { ...flattened.node, children: [] },
+        rowIndex === flattenedRows.length - 1,
+        flattened.parentName ?? undefined,
+        rowIndex === 0,
+      ),
+    );
+  };
 
   return (
     <div
-      className={[styles.replyNode, node.depth > 0 && styles.threadLine]
-        .filter(Boolean)
-        .join(" ")}
-      style={{ marginLeft: `${indent * INDENT_STEP_REM}rem` }}
+      ref={nodeRef}
+      className={[
+        styles.replyNode,
+        node.depth === 0 ? styles.replyRoot : styles.replyNested,
+      ].join(" ")}
     >
       <ThreadReplyItem
         reply={node.reply}
@@ -128,149 +176,149 @@ export function ThreadReplyNode({
         isLiked={!!likedReplies[replyKey(node.reply)]}
         toggleReplyLike={toggleReplyLike}
         demoMode={demoMode}
-        demoOwns={demoOwns}
+        demoOwns={sharedProps.demoOwns}
         isEditing={
           editingReplyPostId === (node.reply.postId ?? replyKey(node.reply))
         }
-        onStartEdit={onStartEdit}
-        onCancelEdit={onCancelEdit}
-        onSaveEdit={onSaveEdit}
-        onDelete={onDelete}
-        onRestore={onRestore}
-        onHistory={onHistory}
-        // Live replies nest by BACKEND post id. A reply still waiting for its
-        // create response has only a client uuid, which the server rejects as
-        // a `parentPostId`, so the action is withheld until the id lands.
-        onReply={
-          isLocked || (!demoMode && !node.reply.postId)
-            ? undefined
-            : onStartReply
-        }
-        onReport={onReport}
-        onAcceptAnswer={onAcceptAnswer}
-        // Quoting is a reply, so it is withheld exactly where replying is:
-        // a closed thread, or a reply whose backend id has not landed yet.
-        onQuote={
-          isLocked || (!demoMode && !node.reply.postId) ? undefined : onQuote
-        }
+        onStartEdit={sharedProps.onStartEdit}
+        onCancelEdit={sharedProps.onCancelEdit}
+        onSaveEdit={sharedProps.onSaveEdit}
+        onDelete={sharedProps.onDelete}
+        onRestore={sharedProps.onRestore}
+        onHistory={sharedProps.onHistory}
+        onReply={isReplyWithheld ? undefined : onStartReply}
+        onReport={sharedProps.onReport}
+        onAcceptAnswer={sharedProps.onAcceptAnswer}
+        onQuote={isReplyWithheld ? undefined : onQuote}
+        hasBranchBelow={hasBranchBelow}
         collapse={
           hasChildren
             ? {
-                collapsed: isCollapsed,
-                count: descendantCount,
-                onToggle: () => onToggleCollapse(node.reply.id),
+                isCollapsed,
+                descendantCount,
+                onToggle: () => toggleBranch("branchToggle"),
+                onRailToggle: () =>
+                  toggleBranch(isCollapsed ? "gutterToggle" : "scrollIntoView"),
               }
             : undefined
         }
+        collapseToggleRef={gutterToggleRef}
+        replyingToName={replyingToName}
       />
 
-      {isReplyTarget && !isLocked && (
-        <div className={styles.inlineCompose}>
-          <ThreadComposer
-            authorName={node.reply.name}
-            reply={inlineDraft}
-            setReply={setInlineDraft}
-            onPost={onPostReply}
-            textareaRef={inlineTextareaRef}
-            // PRD-166 — the inline composer autosaves like the bottom one, but
-            // keyed to (thread, parent post): a mis-tap on another reply's
-            // "Reply" no longer throws away half a paragraph, and two answers
-            // under two different replies cannot overwrite each other.
-            draft={{
-              draftId: nestedReplyDraftId(
-                threadRouteId ?? "unsaved",
-                node.reply.postId ?? node.reply.id,
-              ),
-              title: t("forum:draft.inlineReplyTitle", {
-                name: node.reply.name,
-              }),
-              href: threadRouteId ? threadPath(threadRouteId) : routes.forum,
-            }}
-          />
-          <Button
-            variant="ghost"
-            type="button"
-            className={styles.inlineCancel}
-            onClick={onCancelReply}
-          >
-            {t("forum:replyEdit.cancel")}
-          </Button>
+      {hasBranchBelow && (
+        <div className={styles.replyChildren}>
+          {isShowingComposer && (
+            <InlineReplyComposer
+              isLastRow={!hasChildren}
+              parentReply={node.reply}
+              textareaRef={inlineTextareaRef}
+              inlineDraft={sharedProps.inlineDraft}
+              setInlineDraft={sharedProps.setInlineDraft}
+              onPostReply={sharedProps.onPostReply}
+              onCancelReply={sharedProps.onCancelReply}
+            />
+          )}
+          {hasChildren && (
+            <>
+              <ReplyBranchToggleRow
+                isOpen={isCollapsed}
+                isLastRow={isCollapsed}
+                variant="hidden"
+                buttonRef={branchToggleRef}
+                label={t("forum:replies.hiddenCount", {
+                  count: descendantCount,
+                })}
+                onClick={() => toggleBranch("gutterToggle")}
+              />
+              {isAtIndentCap ? (
+                <>
+                  <ReplyBranchToggleRow
+                    isOpen={!isCollapsed && !isContinued}
+                    isLastRow={!isContinued}
+                    variant="continue"
+                    label={t("forum:replies.continueThread", {
+                      count: descendantCount,
+                    })}
+                    onClick={() => setIsContinued(true)}
+                  />
+                  {isContinued && (
+                    <ReplyBranchRegion
+                      isOpen={!isCollapsed}
+                      shouldAnimateOnMount
+                    >
+                      {renderFlattenedRows()}
+                    </ReplyBranchRegion>
+                  )}
+                </>
+              ) : (
+                <ReplyBranchRegion isOpen={!isCollapsed}>
+                  {node.children.map((child, childIndex) =>
+                    renderBranchNode(
+                      child,
+                      childIndex === node.children.length - 1,
+                    ),
+                  )}
+                </ReplyBranchRegion>
+              )}
+            </>
+          )}
         </div>
       )}
-
-      {hasChildren && isCollapsed && (
-        <ReplyBranchToggle
-          variant="hidden"
-          label={t("forum:replies.hiddenCount", { count: descendantCount })}
-          onClick={() => onToggleCollapse(node.reply.id)}
-        />
-      )}
-
-      {hasChildren && !isCollapsed && atIndentCap && !continued && (
-        <ReplyBranchToggle
-          variant="continue"
-          label={t("forum:replies.continueThread", { count: descendantCount })}
-          onClick={() => setContinued(true)}
-        />
-      )}
-
-      {showChildren &&
-        node.children.map((child) => (
-          <ThreadReplyNode
-            key={child.reply.id}
-            node={child}
-            index={index}
-            replyKey={replyKey}
-            isLocked={isLocked}
-            likedReplies={likedReplies}
-            toggleReplyLike={toggleReplyLike}
-            demoMode={demoMode}
-            demoOwns={demoOwns}
-            editingReplyPostId={editingReplyPostId}
-            onStartEdit={onStartEdit}
-            onCancelEdit={onCancelEdit}
-            onSaveEdit={onSaveEdit}
-            onDelete={onDelete}
-            onRestore={onRestore}
-            onHistory={onHistory}
-            collapsedIds={collapsedIds}
-            onToggleCollapse={onToggleCollapse}
-            activeReplyTargetId={activeReplyTargetId}
-            onStartReply={onStartReply}
-            onCancelReply={onCancelReply}
-            onPostReply={onPostReply}
-            onReport={onReport}
-            onAcceptAnswer={onAcceptAnswer}
-            onQuote={onQuote}
-            inlineDraft={inlineDraft}
-            setInlineDraft={setInlineDraft}
-          />
-        ))}
     </div>
   );
 }
 
-/** The full-width ghost bar standing in for a hidden/deferred subtree — either
- *  "N hidden replies" (collapsed) or "Continue this thread → (N)" (indent
- *  cap reached). Kept tiny and colocated rather than a separate file. */
-function ReplyBranchToggle({
-  variant,
-  label,
-  onClick,
+/** The inline reply composer as the first branch row under the reply it
+ *  answers, so the thread line's elbow runs straight into it. */
+function InlineReplyComposer({
+  isLastRow,
+  parentReply,
+  textareaRef,
+  inlineDraft,
+  setInlineDraft,
+  onPostReply,
+  onCancelReply,
 }: {
-  variant: "hidden" | "continue";
-  label: string;
-  onClick: () => void;
+  isLastRow: boolean;
+  parentReply: Reply;
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+  inlineDraft: string;
+  setInlineDraft: (value: string) => void;
+  onPostReply: (body: string, image?: StagedPostImage) => void;
+  onCancelReply: () => void;
 }) {
+  const { t } = useTranslation();
+  // Which thread this reply belongs to, read straight from the route so it
+  // never has to be threaded down through every recursion level. It scopes
+  // the inline composer's draft, so two threads' answers never share a key.
+  const { id: threadRouteId } = useParams<{ id: string }>();
   return (
-    <button
-      type="button"
-      className={
-        variant === "continue" ? styles.continueThread : styles.branchToggle
-      }
-      onClick={onClick}
+    <div
+      className={`${replyBranchRowClassName(isLastRow, styles.replyBranchCompose)} ${styles.inlineCompose}`}
     >
-      {label}
-    </button>
+      <ThreadComposer
+        authorName={parentReply.name}
+        reply={inlineDraft}
+        setReply={setInlineDraft}
+        onPost={onPostReply}
+        textareaRef={textareaRef}
+        // PRD-166: the inline composer autosaves like the bottom one, but
+        // keyed to (thread, parent post): a mis-tap on another reply's
+        // "Reply" no longer throws away half a paragraph, and two answers
+        // under two different replies cannot overwrite each other.
+        draft={{
+          draftId: nestedReplyDraftId(
+            threadRouteId ?? "unsaved",
+            parentReply.postId ?? parentReply.id,
+          ),
+          title: t("forum:draft.inlineReplyTitle", {
+            name: parentReply.name,
+          }),
+          href: threadRouteId ? threadPath(threadRouteId) : routes.forum,
+        }}
+        onCancel={onCancelReply}
+      />
+    </div>
   );
 }

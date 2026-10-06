@@ -6,6 +6,7 @@ import type { GatheringDetail } from "./data";
 import { useAttendees } from "./api/useAttendees";
 import type { GatheringRsvpState } from "./useGatheringRsvp";
 import { GatheringRsvpDetailsModal } from "./GatheringRsvpDetailsModal";
+import { GatheringHostingPanel } from "./GatheringHostingPanel";
 import {
   RsvpClosedPanel,
   RsvpClosesNote,
@@ -38,6 +39,10 @@ type ContactAction = (
  *   access needs, PRD-187) and "Cancel RSVP".
  * - "Message/Connect with the host" stays available in every state, except
  *   when the viewer is the host: there is nobody to reach.
+ * - The viewer IS the host → `GatheringHostingPanel` while the gathering is
+ *   still on. The host is going by definition and the server refuses their
+ *   maybe or cancel, so RSVP, Maybe and the cutoff note have nothing to offer
+ *   them. A cancelled or finished gathering keeps the closed panel above.
  *
  * The RSVP state machine itself lives in `useGatheringRsvp`, shared with the
  * page hero so the two affordances can never disagree.
@@ -87,6 +92,17 @@ export function GatheringRsvpControl({
         wasAttending={rsvp.isConfirmed || rsvp.isMaybe}
         messageLabel={messageLabel}
         onMessageHost={messageHost}
+      />
+    );
+  }
+
+  if (isViewerHost) {
+    return (
+      <GatheringHostingPanel
+        gatheringSlug={gathering.slug}
+        capacity={gathering.capacity}
+        goingCount={goingCount}
+        isCountVisible={isCountVisible}
       />
     );
   }

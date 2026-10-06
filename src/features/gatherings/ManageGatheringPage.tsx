@@ -256,6 +256,7 @@ function ManageGatheringMain({
               allowWaitlist={gathering?.allowWaitlist}
               showAttendeeCount={gathering?.showAttendeeCount}
               customRsvpQuestion={gathering?.customRsvpQuestion}
+              hostSlug={gathering?.hostSlug}
               onUpdateSettings={(patch) => {
                 if (!demoMode) updateEvent.mutate(patch);
               }}

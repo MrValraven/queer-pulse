@@ -151,6 +151,7 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
         <DirectorySuggestEditModal
           slug={place.slug}
           placeName={place.name}
+          isOnline={place.online === true}
           onClose={close}
         />
       )}

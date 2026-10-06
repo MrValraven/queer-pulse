@@ -26,6 +26,7 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     hood: "",
     badge: "",
     evidence: "",
+    ownerIdentities: [],
     price: "",
     blurb: "",
     tagline: "",

@@ -754,13 +754,10 @@ export const economy: Catalog = {
   "listSpace.photos.hint":
     "Up to {max}. The first one is the photo people see on the board. Location data is removed from every photo before it leaves your device.",
   "listSpace.photos.add": "Add a photo",
-  "listSpace.photos.uploading": "Adding…",
   "listSpace.photos.full": "That's all the photos this listing can hold",
   "listSpace.photos.cover": "Cover",
   "listSpace.photos.remove": "Remove photo {position}",
   "listSpace.photos.previewAlt": "Photo {position} of your listing",
-  "listSpace.photos.error":
-    "Couldn't add that photo. Check your connection and try again.",
   "listSpace.feature.furnished": "Furnished",
   "listSpace.feature.light": "Natural light",
   "listSpace.feature.balcony": "Balcony",

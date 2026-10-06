@@ -1,25 +1,8 @@
-/* InviteCoOwnerModal — rendered inside the shared <Modal>, and the member
-   picker itself is the shared <MemberSelectList>, so only the loading/empty
-   fallback needs its own rule here. */
+/* InviteCoOwnerModal is rendered inside the shared <Modal>, and the member
+   picker (step 1) is the shared <MemberSelectList> with its own empty lines
+   and paging footer, so only the confirm step needs rules here. */
 
-.empty {
-  display: flex;
-  justify-content: center;
-  font-size: var(--text-13-5);
-  color: var(--ink-40);
-  padding: 20px 8px;
-  text-align: center;
-}
-
-/* On-demand pagination control below the picker (pages no longer all load on
-   mount). */
-.loadMore {
-  display: flex;
-  justify-content: center;
-  padding-block-start: var(--gap-sm);
-}
-
-/* Step 2 — disclosure/confirm screen shown before an invite actually sends
+/* Step 2: the disclosure/confirm screen shown before an invite actually sends
    (IDN-2). `.notice.warn`/`.warnbody` are global classes from
    persona-editor.css (already loaded by the editor shell that hosts this
    modal), matching AddressChangeWarningModal's warning-notice pattern. */

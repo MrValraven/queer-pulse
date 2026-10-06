@@ -417,6 +417,11 @@
   margin: 4px 0 24px;
   max-width: 320px;
 }
+/* The split card (desktop) previews at the directory's minimum split card
+   width, `.mGridSplit`'s 420px, so its portrait column keeps the same share. */
+.previewWrapSplit {
+  max-width: 420px;
+}
 .previewCaption {
   font-size: var(--text-11);
   font-weight: 700;

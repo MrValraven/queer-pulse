@@ -1,6 +1,7 @@
 /* The decided (history) half of the join-request queue. Rows themselves come
    from AdminSubmissionList.module.css, the shared admin row family; this file
-   owns only the search header and the invite block inside an approved row. */
+   owns only the search header, the invite block inside an approved row and
+   the staff note inside a declined one. */
 
 .intro {
   max-width: 60ch;
@@ -89,6 +90,12 @@
   display: block;
 }
 
+/* An approval from before reasons were asked for: an absence, so it reads
+   quieter than a recorded reason. */
+.reasonMissing {
+  color: var(--ink-60);
+}
+
 /* Rotation only, named explicitly: base.css's reduced-motion rule shortens
    every transition, and a transition on `all` would drag other properties
    along with it. */
@@ -168,6 +175,101 @@
 }
 
 .inviteError {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--accent-text);
+}
+
+/* The staff-only note under a declined row's reason. A hairline box with no
+   tint marks it as an internal layer of the row. The padding keeps focus rings inside clear of the
+   Collapse wrapper, which clips while it animates. */
+.staffNote {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+
+/* Same dark-mode hairline as the invite actions above. */
+:global([data-theme="dark"]) .staffNote {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* Matches the shared form label, so the heading reads the same whether the
+   note is open for editing or not. */
+.staffNoteLabel {
+  margin: 0;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.staffNoteHint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+/* Staff write these over several lines, and a pasted link or address must
+   wrap inside the box. */
+.staffNoteText {
+  margin: 4px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 72ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.staffNoteMeta {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+.staffNoteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 4px;
+}
+
+.staffNoteEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-self: stretch;
+}
+
+/* The shared field adds a bottom margin for stacked forms; the editor's own
+   gap spaces it here. Two classes, so it wins over the field's one. */
+.staffNoteEditor .staffNoteField {
+  margin-bottom: 0;
+}
+
+/* A note can run to 2000 characters, so the box grows with the text up to a
+   cap instead of scrolling a fixed window, and can still be dragged taller. */
+.staffNoteEditor .staffNoteField textarea {
+  field-sizing: content;
+  min-height: 7lh;
+  max-height: min(60vh, 22lh);
+  resize: vertical;
+}
+
+.staffNoteError {
   margin: 0;
   font-size: var(--text-13);
   line-height: 1.5;

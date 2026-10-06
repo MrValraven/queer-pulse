@@ -37,9 +37,13 @@ import {
 export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   name: "basics",
   cats: "basics",
+  // The online-only toggle renders with the basics, just above the
+  // neighbourhood it decides on, so it is restored with them too.
+  online: "basics",
   hood: "basics",
   badge: "basics",
   evidence: "basics",
+  ownerIdentities: "basics",
   price: "basics",
   blurb: "basics",
   tagline: "story",
@@ -50,7 +54,6 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   services: "services",
   pricingMode: "services",
   menu: "services",
-  online: "practical",
   address: "practical",
   geocoded: "practical",
   latitude: "practical",

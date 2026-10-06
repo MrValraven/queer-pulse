@@ -53,6 +53,15 @@
   color: var(--jade);
 }
 
+/* AdminNotSet carries its own ink-40 color, tuned for the light paper
+   surfaces it's used on elsewhere (CommitmentSection, CardMeta,
+   SlipReasonModal). On this dark plum hero tile that reads as near-black
+   on near-black, so the span is pulled back to the tile's own cream
+   value here instead of touching the shared component's default. */
+.heroValue span {
+  color: inherit;
+}
+
 .heroLabel {
   margin: 0;
   font-size: var(--text-12-5);

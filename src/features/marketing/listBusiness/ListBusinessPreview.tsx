@@ -15,6 +15,7 @@ export function ListBusinessPreview({
   photoPreviews,
   formColumnRef,
   onAddPhoto,
+  footnote,
 }: {
   draft: ListingDraft;
   userName: string;
@@ -25,6 +26,9 @@ export function ListBusinessPreview({
   /** Jumps the wizard to the photos step: wired to the preview's "add cover
    *  photo" call to action when there's no photo yet. */
   onAddPhoto: () => void;
+  /** The line under the preview. Defaults to the new-submission note that
+   *  the listing goes live after review; an edit passes its own. */
+  footnote?: string;
 }) {
   const { t } = useTranslation();
   const [showFull, setShowFull] = useState(false);
@@ -66,7 +70,7 @@ export function ListBusinessPreview({
       </div>
 
       <div className={styles.pvFoot}>
-        {t("marketing:listBusiness.preview.foot")}
+        {footnote ?? t("marketing:listBusiness.preview.foot")}
       </div>
 
       {showFull && (

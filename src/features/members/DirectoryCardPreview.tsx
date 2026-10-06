@@ -2,6 +2,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/useProfile";
 import { directoryBlurb, isBlurbBorrowedFromBio } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
+import { useIsMemberCardSplit } from "./memberCardLayout";
 import card from "./MemberDirectoryFilterPage.module.css";
 import styles from "./ProfileEdit.module.css";
 
@@ -11,11 +12,14 @@ import styles from "./ProfileEdit.module.css";
  * while they type, instead of being discovered later by strangers.
  *
  * It renders the real `MemberCardBody` on purpose. If this ever becomes a
- * lookalike, it stops being a preview.
+ * lookalike, it stops being a preview. For the same reason it follows the
+ * directory's viewport rule: the split card on desktop, at the directory's
+ * minimum split card width, and the compact card on phones.
  */
 export function DirectoryCardPreview() {
   const { t } = useTranslation();
   const { profile, draft } = useProfile();
+  const isSplit = useIsMemberCardSplit();
 
   const name = `${draft.first} ${draft.last}`.trim();
   const initials =
@@ -29,11 +33,24 @@ export function DirectoryCardPreview() {
   const borrowedFromBio = isBlurbBorrowedFromBio(draft.role, borrowableBio);
 
   return (
-    <div className={styles.previewWrap}>
+    <div
+      className={[styles.previewWrap, isSplit && styles.previewWrapSplit]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <span className={styles.previewCaption}>
         {t("members:directory.preview.caption")}
       </span>
-      <div className={`${card.mCard} ${card.mCardMe} ${card.mCardStatic}`}>
+      <div
+        className={[
+          card.mCard,
+          isSplit && card.mCardSplit,
+          card.mCardMe,
+          card.mCardStatic,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <MemberCardBody
           name={name}
           slug={profile.slug}
@@ -44,6 +61,7 @@ export function DirectoryCardPreview() {
           blurb={blurb}
           tags={draft.tags.map((label) => ({ label }))}
           isMe
+          isSplit={isSplit}
         />
       </div>
       {borrowedFromBio && (

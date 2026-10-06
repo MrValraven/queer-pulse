@@ -3,7 +3,7 @@ import type { ConnectionView } from "../../connect/connections.data";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TintKey } from "./startCommunity.data";
 
-/** Map an accepted-connection view onto the shape MemberPicker consumes. */
+/** Map an accepted-connection view onto the cohost candidate shape the steward card reads. */
 export function connectionToCandidate(view: ConnectionView): CohostCandidate {
   return {
     slug: view.slug,

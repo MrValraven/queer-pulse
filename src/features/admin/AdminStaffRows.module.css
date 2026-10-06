@@ -1,0 +1,340 @@
+/* ── Roster section ─────────────────────────────────────── */
+.roster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.rosterTitle {
+  margin: 0;
+  scroll-margin-top: calc(var(--sticky-top) + 16px);
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+
+[data-theme="dark"] .rosterTitle {
+  color: var(--ink);
+}
+
+/* ── Toolbar ────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.toolbarMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  min-width: 0;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 16rem;
+  max-width: 26rem;
+  min-height: var(--tap-min);
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  color: var(--ink-40);
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+.search:focus-within {
+  border-color: var(--line-strong);
+  color: var(--ink-60);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.searchIcon {
+  flex: none;
+  font-size: var(--text-16);
+}
+
+.searchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+/* The pill around it carries the focus ring, through `:focus-within`, so the
+   input itself drops both halves of the global ring. */
+.searchInput:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.searchInput::placeholder {
+  color: var(--ink-40);
+}
+
+/* WebKit's own clear control is blue and unlabelled; .searchClear takes its
+   place. */
+.searchInput::-webkit-search-cancel-button,
+.searchInput::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.searchClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin-inline-end: -8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-40);
+  font-size: var(--text-16);
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .searchClear:hover {
+    color: var(--ink);
+  }
+}
+
+.tierControl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tierLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* On a phone the four options can outgrow the row; they scroll sideways
+   inside this strip, with room left for the focus ring. Labels never break
+   mid-word: the group takes its natural width. */
+.tierScroll {
+  max-width: 100%;
+  padding: 3px;
+  margin: -3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tierScroll [role="group"] {
+  inline-size: max-content;
+}
+
+.tierScroll button {
+  white-space: nowrap;
+}
+
+/* Narrow phones: tighter buttons, so all four labels fit a 375px screen in
+   English and in Portuguese without scrolling. */
+@media (max-width: 26rem) {
+  .tierScroll button {
+    padding-inline: 9px;
+  }
+}
+
+.toolbarMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 32px;
+}
+
+.showing {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.grantChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 10px 4px 12px;
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-text);
+  font: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .grantChip:hover {
+    background: rgba(var(--accent-rgb), 0.18);
+  }
+}
+
+.grantChipIcon {
+  flex: none;
+  font-size: var(--text-13);
+}
+
+.clearLink {
+  min-height: 32px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .clearLink:hover {
+    color: var(--ink);
+  }
+}
+
+.grantChip:focus-visible,
+.clearLink:focus-visible,
+.searchClear:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-pill);
+}
+
+/* A thumb gets the full tap floor on every toolbar control, and the search
+   text reaches 16px so iOS does not zoom the page on focus. */
+@media (pointer: coarse) {
+  .grantChip,
+  .clearLink,
+  .filteredEmpty .filteredEmptyClear {
+    min-height: var(--tap-min);
+  }
+
+  .searchClear {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    margin-inline-end: -14px;
+  }
+
+  .searchInput {
+    font-size: var(--text-16);
+  }
+}
+
+/* ── Filtered-empty state ───────────────────────────────── */
+.filteredEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 60ch;
+  padding: var(--card-pad);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+}
+
+.filteredEmptyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.filteredEmptyBody {
+  margin: 0 0 6px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Groups ─────────────────────────────────────────────── */
+/* The row layout answers to the roster's own width, so it holds up beside
+   an open admin sidebar as well as on a bare 2000px console. */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  container-type: inline-size;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.groupCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink-60);
+  font-size: var(--text-11);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rowItem {
+  min-width: 0;
+}

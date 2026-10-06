@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheck, FiGlobe } from "react-icons/fi";
-import { Button, CheckLine, FormField } from "../../../shared/components/ui";
+import { Button, FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { LocationPickerMap } from "../LocationPickerMap";
@@ -168,7 +168,10 @@ function MapLinkSection({
  *  in live mode; (2) paste a Google Maps link; (3) a neighbourhood-centroid
  *  fallback drops an approximate pin once a neighbourhood is chosen. A draggable
  *  pin appears once coordinates exist, to fine-tune whichever way they arrived.
- *  Extracted from StepPractical to keep that component under the 200-line cap. */
+ *  Extracted from StepPractical to keep that component under the 200-line cap.
+ *
+ *  An online-only business (the toggle lives with the basics, in
+ *  `BasicsFields`) gets a short note here in place of all of that. */
 export function ListBusinessLocationField({
   draft,
   set,
@@ -269,15 +272,6 @@ export function ListBusinessLocationField({
 
   return (
     <>
-      <div id={ANCHOR.online} className={styles.onlineToggleRow}>
-        <CheckLine
-          checked={draft.online}
-          onChange={(online) => set({ online })}
-          title={t("marketing:listBusiness.step3.onlineOnly.title")}
-          sub={t("marketing:listBusiness.step3.onlineOnly.sub")}
-        />
-      </div>
-
       {draft.online ? (
         <div className={styles.onlineNote} role="note">
           <FiGlobe aria-hidden />

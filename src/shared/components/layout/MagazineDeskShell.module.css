@@ -49,7 +49,14 @@
   align-items: center;
   /* Menu toggle on the left, the Write button on the right. */
   justify-content: space-between;
-  padding-block: var(--desk-shell-bar-pad-y);
+  /* Installed on iOS the status bar is translucent and drawn over the page
+     (index.html: black-translucent + viewport-fit=cover), so the inset is
+     added on top: the cream runs up behind the clock and the buttons sit
+     below it, where taps reach them. --desk-shell-bar-h counts it too. */
+  padding-block-start: calc(
+    var(--desk-shell-bar-pad-y) + env(safe-area-inset-top, 0px)
+  );
+  padding-block-end: var(--desk-shell-bar-pad-y);
   /* 18px matches this same gutter's own mobile value (--wrap-px under 640px,
      tokens/spacing.css), kept literal rather than swapped to the token
      itself: this bar is also visible above 640px up to the mobile-shell

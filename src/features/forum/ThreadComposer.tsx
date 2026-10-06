@@ -25,6 +25,7 @@ export function ThreadComposer({
   onPost,
   textareaRef,
   draft,
+  onCancel,
 }: {
   authorName: string;
   reply: string;
@@ -41,6 +42,10 @@ export function ThreadComposer({
    *  answers get written, and used to lose them on a mis-tap (PRD-166).
    *  Omitted only while a composer has no thread to belong to yet. */
   draft?: { draftId: string; title: string; href: string };
+  /** Adds a ghost "Cancel" beside "Post reply" in the footer. The inline
+   *  nested-reply composer passes it; the bottom composer leaves it out and
+   *  renders exactly as before. */
+  onCancel?: () => void;
 }) {
   const { t } = useTranslation();
   // The signed-in member, mode-aware: the real user in live, the mock persona in
@@ -68,6 +73,12 @@ export function ThreadComposer({
     attach.remove();
     void clearDraft();
   }
+
+  const postButton = (
+    <Button disabled={!reply.trim() || attach.uploading} onClick={post}>
+      {t("forum:threadComposer.postReplyCta")}
+    </Button>
+  );
 
   return (
     <div className={styles.compose}>
@@ -104,9 +115,16 @@ export function ThreadComposer({
           buttonLabel={t("forum:compose.imageAttachReplyAria")}
         />
         <ComposerDraftStatus status={draftStatus} />
-        <Button disabled={!reply.trim() || attach.uploading} onClick={post}>
-          {t("forum:threadComposer.postReplyCta")}
-        </Button>
+        {onCancel ? (
+          <span className={styles.crFooterActions}>
+            <Button variant="ghost" type="button" onClick={onCancel}>
+              {t("forum:replyEdit.cancel")}
+            </Button>
+            {postButton}
+          </span>
+        ) : (
+          postButton
+        )}
       </div>
     </div>
   );

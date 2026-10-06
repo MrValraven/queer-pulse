@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useAuth } from "../../app/providers/authContext";
 import {
   FilterChips,
   SearchInput,
@@ -113,6 +114,10 @@ export function AdminVerifyDecided({
   displayedDecided: (serverRows: JoinRequestView[]) => JoinRequestView[];
 }) {
   const { t } = useTranslation();
+  // Read once here and handed to every row, so each row can say "by you" on
+  // the signed-in reviewer's own calls without subscribing to the session.
+  const { user } = useAuth();
+  const currentUserId = user?.id ?? null;
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<DecidedRequestFilter>("all");
   const approvedQuery = useJoinRequests("approved", {
@@ -210,7 +215,11 @@ export function AdminVerifyDecided({
 
       <div className={rowStyles.rows}>
         {matches.map((row) => (
-          <JoinRequestDecidedRow key={row.id} item={row} />
+          <JoinRequestDecidedRow
+            key={row.id}
+            item={row}
+            currentUserId={currentUserId}
+          />
         ))}
       </div>
     </div>

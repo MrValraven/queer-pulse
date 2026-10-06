@@ -77,16 +77,23 @@
   border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
+  /* Ink and fill flip in one frame when a chip is ticked or cleared. Easing
+     both makes them cross: the label fades toward cream as the fill fades
+     toward plum, and halfway through the label vanishes into a grey pill.
+     The tick pop and the neighbours' glide already carry the change. */
+  transition: border-color 0.18s var(--ease);
 }
 @media (hover: hover) {
-  .chip:not(.chipOn):hover {
+  .chip:not(.chipOn):not(:disabled):hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
   }
+}
+/* A chip that would empty the list once every place has loaded. Dimmed and
+   unpickable, matching `.chipEmpty` in the shared ChipSelect. */
+.chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 /* Touch: lift the ~30px vibe/safe chips to the ≥44px target minimum (they sit in
    the mobile Filters sheet); padding is unchanged so the resting ink stays compact. */

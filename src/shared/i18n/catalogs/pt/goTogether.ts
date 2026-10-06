@@ -310,6 +310,7 @@ export const goTogether: Catalog = {
     "Ainda não tens conexões para escolher. Podes ir sozinhe e conhecer o grupo.",
   "card.partner.hint":
     "Escolhe uma conexão que também vai. Recebe um convite para ir contigo.",
+  "card.partner.loadError": "As tuas conexões não carregaram.",
   "card.partner.loading": "A carregar as tuas conexões",
   "card.partner.search": "Procurar nas tuas conexões",
   "card.partner.title": "Com quem vais?",

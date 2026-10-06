@@ -14,7 +14,9 @@ import styles from "./Tooltip.module.css";
 
 export interface TooltipProps {
   label: string;
-  placement?: "top" | "bottom" | "right";
+  /** `floating-top` is `top` drawn through the same portal as `right`, for a
+   * trigger whose ancestors clip (see below). */
+  placement?: "top" | "bottom" | "right" | "floating-top";
   /** Keeps the wrapper mounted but never reveals the bubble. For a trigger
    * that needs its label only in some states (a rail's icon strip): toggling
    * this, rather than dropping the wrapper, keeps the trigger from remounting,
@@ -42,6 +44,10 @@ export interface TooltipProps {
  *   with a transform or `will-change: transform` (FadeIn, the preview's scale
  *   wrapper) becomes its containing block. That placement portals the bubble to
  *   `<body>` and anchors it to the trigger's measured rect instead.
+ * - `floating-top` uses that same portal to sit above the trigger, for a
+ *   trigger inside a clipping column on any side (the listing editor's live
+ *   preview card). It keeps clear of both viewport edges and drops below the
+ *   trigger when there is no room above.
  */
 export function Tooltip({
   label,
@@ -50,8 +56,12 @@ export function Tooltip({
   align = "center",
   children,
 }: TooltipProps) {
-  return placement === "right" ? (
-    <FloatingTooltip label={label} isDisabled={isDisabled}>
+  return placement === "right" || placement === "floating-top" ? (
+    <FloatingTooltip
+      label={label}
+      isDisabled={isDisabled}
+      side={placement === "floating-top" ? "top" : "right"}
+    >
       {children}
     </FloatingTooltip>
   ) : (
@@ -88,6 +98,16 @@ function measureViewportShift(
   const naturalLeft = isEndAligned
     ? wrapRect.right - bubbleWidth
     : wrapRect.left + wrapRect.width / 2 - bubbleWidth / 2;
+  const shift = clampShiftToViewport(naturalLeft, bubbleWidth);
+  // `shift` is in viewport px; the transform runs in the bubble's own px.
+  return scale > 0 ? shift / scale : 0;
+}
+
+/**
+ * The sideways slide, in viewport px, that keeps a bubble starting at
+ * `naturalLeft` VIEWPORT_EDGE_GAP inside both viewport edges; 0 when it fits.
+ */
+function clampShiftToViewport(naturalLeft: number, bubbleWidth: number) {
   const naturalRight = naturalLeft + bubbleWidth;
   const maxRight = document.documentElement.clientWidth - VIEWPORT_EDGE_GAP;
   let shift = 0;
@@ -97,8 +117,7 @@ function measureViewportShift(
   if (naturalLeft + shift < VIEWPORT_EDGE_GAP) {
     shift = VIEWPORT_EDGE_GAP - naturalLeft;
   }
-  // `shift` is in viewport px; the transform runs in the bubble's own px.
-  return scale > 0 ? shift / scale : 0;
+  return shift;
 }
 
 /**
@@ -213,10 +232,37 @@ interface TooltipAnchor {
   right: number | "auto";
   /** True when there was no room on the right and it flipped to the left. */
   isFlipped: boolean;
+  /** `floating-top` only: the trigger's bottom edge, for the drop below. */
+  triggerBottom?: number;
 }
 
 /** Gap between the trigger and the bubble, in px. */
 const FLOATING_GAP = 10;
+
+/** Gap between the trigger and a `floating-top` bubble, in px; the same as
+ * the anchored `top` / `bottom` placements in Tooltip.module.css. */
+const FLOATING_TOP_GAP = 6;
+
+/**
+ * Places a portaled `floating-top` bubble once it has rendered and has a
+ * width: centred over the trigger, slid sideways to stay inside the viewport,
+ * and dropped below the trigger when the top of the viewport leaves no room.
+ * Written straight to the bubble in a layout effect, so it paints in place.
+ */
+function placeFloatingTopBubble(bubble: HTMLElement, anchor: TooltipAnchor) {
+  const centerX = typeof anchor.left === "number" ? anchor.left : 0;
+  const bubbleWidth = bubble.offsetWidth;
+  const shift = clampShiftToViewport(centerX - bubbleWidth / 2, bubbleWidth);
+  const isBelow =
+    anchor.top - FLOATING_TOP_GAP - bubble.offsetHeight < VIEWPORT_EDGE_GAP;
+  const top = isBelow
+    ? (anchor.triggerBottom ?? anchor.top) + FLOATING_TOP_GAP
+    : anchor.top - FLOATING_TOP_GAP;
+  bubble.style.left = `${centerX}px`;
+  bubble.style.top = `${top}px`;
+  bubble.style.setProperty("--tooltip-shift", `${shift}px`);
+  bubble.toggleAttribute("data-below", isBelow);
+}
 
 /** The bubble's own cap, from Tooltip.module.css. Used to decide whether the
  * right side has room before the bubble has been measured. */
@@ -255,14 +301,18 @@ function isKeyboardFocus(focusedElement: EventTarget): boolean {
 function FloatingTooltip({
   label,
   isDisabled,
+  side = "right",
   children,
 }: {
   label: string;
   isDisabled: boolean;
+  /** `top` is the `floating-top` placement; `right` the rail's. */
+  side?: "right" | "top";
   children: ReactNode;
 }) {
   const [anchor, setAnchor] = useState<TooltipAnchor | null>(null);
   const wrapRef = useRef<HTMLSpanElement>(null);
+  const topBubbleRef = useRef<HTMLSpanElement>(null);
   const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearDismissTimer = () => {
@@ -281,6 +331,16 @@ function FloatingTooltip({
     if (isDisabled) return;
     const rect = wrapRef.current?.getBoundingClientRect();
     if (!rect) return;
+    if (side === "top") {
+      setAnchor({
+        top: rect.top,
+        left: rect.left + rect.width / 2,
+        right: "auto",
+        isFlipped: false,
+        triggerBottom: rect.bottom,
+      });
+      return;
+    }
     // A rail pinned to the right edge of the page has no room beside it, so the
     // bubble flips rather than running off screen and clipping its own label.
     const isFlipped =
@@ -291,7 +351,13 @@ function FloatingTooltip({
       right: isFlipped ? window.innerWidth - rect.left + FLOATING_GAP : "auto",
       isFlipped,
     });
-  }, [isDisabled]);
+  }, [isDisabled, side]);
+
+  useLayoutEffect(() => {
+    if (anchor && topBubbleRef.current) {
+      placeFloatingTopBubble(topBubbleRef.current, anchor);
+    }
+  }, [anchor]);
 
   // The rect is measured once, at reveal. Scrolling the rail (or the window)
   // would leave the bubble pointing at nothing, so any scroll dismisses it
@@ -355,6 +421,21 @@ function FloatingTooltip({
       </span>
       {anchor !== null &&
         !isDisabled &&
+        side === "top" &&
+        createPortal(
+          <span
+            ref={topBubbleRef}
+            role="tooltip"
+            aria-hidden
+            className={`${styles.bubble} ${styles.floatingTop}`}
+          >
+            {label}
+          </span>,
+          document.body,
+        )}
+      {anchor !== null &&
+        !isDisabled &&
+        side === "right" &&
         createPortal(
           <span
             role="tooltip"

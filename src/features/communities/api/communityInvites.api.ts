@@ -1,5 +1,5 @@
 import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
-import type { MemberRefDTO } from "../../../shared/api/refs";
+import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { CommunityCardDTO } from "./communities.api";
 
 /** How many members one `POST /communities/:slug/invites` call may name. */
@@ -20,7 +20,13 @@ export type CommunityInviteSkipReason =
   // PRD-140. They already hold a pending invitation here, so re-inviting
   // writes no second row and sends no second bell. Only meaningful since an
   // invitation became a durable record rather than a notification.
-  | "already_invited";
+  | "already_invited"
+  // Staff may invite only people they are connected to. The picker offers
+  // nobody else, so this answers a slug that reached the call another way.
+  | "not_connected"
+  // A space invites only members of its parent community, so somebody
+  // outside the parent is passed over here.
+  | "not_parent_member";
 
 export interface CommunityInviteSkipDTO {
   slug: string;
@@ -62,6 +68,45 @@ export const inviteCommunityMembers = (slug: string, memberSlugs: string[]) =>
   apiPost<CommunityInvitesResponseDTO>(`/communities/${slug}/invites`, {
     memberSlugs,
   });
+
+/**
+ * One person the invite picker may offer: a connection of the caller's who
+ * could be invited here right now.
+ */
+export interface CommunityInviteCandidateDTO extends MemberRefDTO {
+  pronouns: string | null;
+}
+
+/** The optional search and page the candidates endpoint accepts. */
+export interface CommunityInviteCandidatesParams {
+  /** Free text over the person's name. Matched server-side. */
+  searchTerm?: string;
+  page?: number;
+}
+
+/**
+ * `GET /communities/:slug/invites/candidates?q=&page=`: the caller's
+ * connections who could be invited here, most recently connected first, 20 a
+ * page (owner, co-owner or moderator; 403 otherwise).
+ *
+ * The server owns the whole answer. It leaves out the roster, the banned, the
+ * people with a join request or a live invitation, blocks either way, and
+ * anyone not on the parent's roster when this is a space. The caller renders
+ * the rows as sent: filtering them again would hide people the server matched.
+ */
+export function getCommunityInviteCandidates(
+  slug: string,
+  params?: CommunityInviteCandidatesParams,
+) {
+  const query = new URLSearchParams();
+  if (params?.page) query.set("page", String(params.page));
+  const searchTerm = params?.searchTerm?.trim();
+  if (searchTerm) query.set("q", searchTerm);
+  const queryString = query.toString();
+  return apiGet<Paginated<CommunityInviteCandidateDTO>>(
+    `/communities/${slug}/invites/candidates${queryString ? `?${queryString}` : ""}`,
+  );
+}
 
 /**
  * `GET /me/community-invites` — every invitation still waiting on the caller,

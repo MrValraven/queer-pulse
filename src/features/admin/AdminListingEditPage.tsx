@@ -33,6 +33,7 @@ import {
   AdminListingEditNotFound,
   AdminListingEditSuccess,
 } from "./AdminListingEditStates";
+import { AdminListingEditStatusLine } from "./AdminListingEditStatusLine";
 
 /** The wizard's basics step, where an admin editing a listing starts. Step 0
  *  only picks the path, which the staff draft already fixes. */
@@ -54,15 +55,25 @@ function isListingNotFoundError(error: unknown): boolean {
  * draft carrying any other path would leave step 0 with nothing selected. A
  * listing stored as `claim` therefore still shows the staff path here. The
  * value never reaches the server, because `adminDraftToUpdateDto` drops it.
+ *
+ * `editRef` makes it an edit of this listing: the wizard skips its path step
+ * and offers the save on every step. The save never moves `status`, so on a
+ * live listing it publishes the changes at once and is labelled that way; a
+ * listing in review stays in the queue.
+ *
+ * `onSaved` fires once the save has landed, so the page can drop the status
+ * line that the wizard's success panel now supersedes.
  */
 function AdminListingEditWizard({
   listingRef,
   listing,
   onHasOwner,
+  onSaved,
 }: {
   listingRef: string;
   listing: ManagedListingDTO;
   onHasOwner: () => void;
+  onSaved: () => void;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -79,7 +90,9 @@ function AdminListingEditWizard({
   const handleSubmit = useCallback(
     async (draft: ListingDraft) => {
       try {
-        return await updateListing({ ref: listingRef, draft });
+        const savedListing = await updateListing({ ref: listingRef, draft });
+        onSaved();
+        return savedListing;
       } catch (error) {
         // Committed synchronously: the has-owner notice replaces the wizard
         // before the rethrow reaches its catch, which then sees itself
@@ -89,7 +102,7 @@ function AdminListingEditWizard({
         throw error;
       }
     },
-    [updateListing, listingRef, onHasOwner],
+    [updateListing, listingRef, onHasOwner, onSaved],
   );
 
   const goToQueue = useCallback(
@@ -97,12 +110,25 @@ function AdminListingEditWizard({
     [navigate],
   );
 
+  const isLive = listing.status === "live";
+  const saveLabel = t(
+    isLive ? "admin:listingEdit.publishCta" : "admin:listingEdit.submitCta",
+  );
+
   return (
     <ListingWizard
       initialDraft={initialDraft}
       initialStep={BASICS_STEP}
-      submitLabel={t("admin:listingEdit.submitCta")}
+      editRef={listingRef}
+      submitLabel={saveLabel}
+      saveNowLabel={saveLabel}
+      previewFootnote={t(
+        isLive
+          ? "admin:listingEdit.previewFoot.live"
+          : "admin:listingEdit.previewFoot.unpublished",
+      )}
       isEditSave
+      isJumpAheadEnabled
       seed={BLANK_OWNER_PERSONAL_FIELDS}
       userName=""
       userInitials=""
@@ -112,6 +138,9 @@ function AdminListingEditWizard({
       submit={handleSubmit}
       onCancel={goToQueue}
       onDone={goToQueue}
+      // The default toast is member copy about the community team; the plum
+      // success panel below already confirms the admin's save on its own.
+      successToast={null}
       renderSuccess={(saved) => <AdminListingEditSuccess saved={saved} />}
     />
   );
@@ -123,9 +152,10 @@ function AdminListingEditWizard({
  *
  * Built like `AdminListingNewPage`: the form IS the member wizard, fed a
  * staff-authored draft, and the save goes to `PATCH /admin/listings/:ref`.
- * Once the listing has an owner (the loaded listing names a submitter, or the
- * save is refused with `LISTING_HAS_OWNER`), the page shows that in place of
- * the wizard.
+ * A status line under the header names the listing's ref and status, so the
+ * page reads as an edit of an existing listing. Once the listing has an owner
+ * (the loaded listing names a submitter, or the save is refused with
+ * `LISTING_HAS_OWNER`), the page shows that in place of the wizard.
  */
 export function AdminListingEditPage() {
   const { t } = useTranslation();
@@ -138,6 +168,10 @@ export function AdminListingEditPage() {
   } = useAdminEditableListing(ref);
   const [hasOwnerNow, setHasOwnerNow] = useState(false);
   const markHasOwner = useCallback(() => setHasOwnerNow(true), []);
+  // Once the save lands, the wizard's success panel names the outcome, and
+  // the "Editing" status line above it would read stale.
+  const [isSaved, setIsSaved] = useState(false);
+  const markSaved = useCallback(() => setIsSaved(true), []);
   const hasOwnerNoticeRef = useRef<HTMLElement>(null);
 
   // A refused save swaps the notice in under the admin's cursor, and the
@@ -160,11 +194,20 @@ export function AdminListingEditPage() {
     );
   } else if (listing) {
     body = (
-      <AdminListingEditWizard
-        listingRef={ref}
-        listing={listing}
-        onHasOwner={markHasOwner}
-      />
+      <>
+        {!isSaved && (
+          <AdminListingEditStatusLine
+            listingRef={ref}
+            status={listing.status}
+          />
+        )}
+        <AdminListingEditWizard
+          listingRef={ref}
+          listing={listing}
+          onHasOwner={markHasOwner}
+          onSaved={markSaved}
+        />
+      </>
     );
   } else if (isError && isListingNotFoundError(error)) {
     body = <AdminListingEditNotFound />;

@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FiImage, FiTrash2 } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ImageProcessingError } from "../members/api/uploadProcessing";
-import { useUploadImage } from "../members/api/useUploadImage";
+import { PhotoPickerModal } from "../members/PhotoPickerModal";
 import { LIST_SPACE_MAX_PHOTOS, type ListSpaceForm } from "./useListSpaceForm";
 import styles from "./ListSpaceFields.module.css";
 
@@ -12,47 +11,58 @@ import styles from "./ListSpaceFields.module.css";
  * {@link LIST_SPACE_MAX_PHOTOS} photos, the first one being the cover the
  * board shows.
  *
- * Every photo goes through the shared `useUploadImage("listing-photo")`
- * pipeline, the same presigned direct-to-storage path every other image slot
- * in the product uses. That helper is also where image metadata is stripped,
- * and it FAILS CLOSED: `processImage` re-encodes the pixels and throws
+ * "Add a photo" opens the shared `PhotoPickerModal`, the same picker every
+ * other photo slot in the product uses: the lister uploads from their device
+ * or reuses a past upload from "Your photos". The picker skips its reframe
+ * step here because a listing gallery stores no crop.
+ *
+ * A device upload still runs through `useUploadImage("listing-photo")` inside
+ * the picker. That helper strips image metadata and FAILS CLOSED:
+ * `processImage` re-encodes the pixels and throws
  * `members:upload.error.stripFailed` if it cannot, so a photo whose EXIF could
- * not be removed is never uploaded. A home listing is exactly the photo set
- * where an embedded GPS tag would publish where a member lives, so this path
- * must never be worked around.
+ * not be removed is never uploaded. A reused past upload was stripped the same
+ * way when it was first uploaded. A home listing is exactly the photo set
+ * where an embedded GPS tag would publish where a member lives, so no path
+ * into this gallery may skip that pipeline.
+ *
+ * Removing a photo asks for confirmation first, like `ImageUploadField`.
  */
 export function ListSpacePhotoField({ form }: { form: ListSpaceForm }) {
   const { t } = useTranslation();
-  const uploadPhoto = useUploadImage("listing-photo");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [pendingRemovalReference, setPendingRemovalReference] = useState<
+    string | null
+  >(null);
 
   const photos = form.values.photos;
   const isAtCap = photos.length >= LIST_SPACE_MAX_PHOTOS;
 
-  async function handleFilePicked(file: File) {
-    setErrorMessage(null);
-    setIsUploading(true);
-    try {
-      const uploaded = await uploadPhoto(file);
-      form.addPhoto({
-        reference: uploaded.key,
-        previewUrl: uploaded.previewUrl,
-      });
-    } catch (uploadFailure) {
-      setErrorMessage(
-        uploadFailure instanceof ImageProcessingError
-          ? t(uploadFailure.i18nKey, uploadFailure.values)
-          : t("economy:listSpace.photos.error"),
-      );
-    } finally {
-      setIsUploading(false);
-    }
+  /** The gallery entry holding this storage key. On the edit flow a stored
+   *  photo is seeded with its resolved `<apiBaseUrl>/files/<key>` URL, so the
+   *  bare key the picker hands back is matched against that form too. */
+  function findPhotoReference(key: string): string | undefined {
+    return photos.find(
+      (photo) =>
+        photo.reference === key || photo.reference.endsWith(`/files/${key}`),
+    )?.reference;
+  }
+
+  function handlePick(key: string, previewUrl: string) {
+    // Picking a photo the gallery already holds would show the same photo
+    // twice, so a repeat pick is ignored.
+    if (findPhotoReference(key) !== undefined) return;
+    form.addPhoto({ reference: key, previewUrl });
+  }
+
+  function handleDeleted(key: string) {
+    // The lister deleted this past upload from "Your photos": drop it from the
+    // gallery too, so the listing never points at a deleted file.
+    const matchingReference = findPhotoReference(key);
+    if (matchingReference !== undefined) form.removePhoto(matchingReference);
   }
 
   return (
-    <div className={styles.photoField}>
+    <div className={styles.photoField} aria-busy={isPickerOpen || undefined}>
       <p className={styles.photoLabel} id="ls-photos-label">
         {t("economy:listSpace.photos.label")}
       </p>
@@ -80,7 +90,7 @@ export function ListSpacePhotoField({ form }: { form: ListSpaceForm }) {
               <button
                 type="button"
                 className={styles.photoRemove}
-                onClick={() => form.removePhoto(photo.reference)}
+                onClick={() => setPendingRemovalReference(photo.reference)}
                 aria-label={t("economy:listSpace.photos.remove", {
                   position: photoIndex + 1,
                 })}
@@ -95,35 +105,40 @@ export function ListSpacePhotoField({ form }: { form: ListSpaceForm }) {
       <Button
         variant="ghost"
         size="md"
-        disabled={isUploading || isAtCap}
-        onClick={() => fileInputRef.current?.click()}
+        disabled={isAtCap}
+        onClick={() => setIsPickerOpen(true)}
       >
         <FiImage aria-hidden />
-        {isUploading
-          ? t("economy:listSpace.photos.uploading")
-          : isAtCap
-            ? t("economy:listSpace.photos.full")
-            : t("economy:listSpace.photos.add")}
+        {isAtCap
+          ? t("economy:listSpace.photos.full")
+          : t("economy:listSpace.photos.add")}
       </Button>
 
-      {errorMessage && (
-        <p className={styles.fieldError} role="alert">
-          {errorMessage}
-        </p>
-      )}
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        aria-label={t("economy:listSpace.photos.add")}
-        hidden
-        onChange={(event) => {
-          const file = event.target.files?.[0];
-          if (file) void handleFilePicked(file);
-          event.target.value = "";
+      <ConfirmDialog
+        open={pendingRemovalReference !== null}
+        tone="destructive"
+        onClose={() => setPendingRemovalReference(null)}
+        onConfirm={() => {
+          if (pendingRemovalReference !== null) {
+            form.removePhoto(pendingRemovalReference);
+          }
+          setPendingRemovalReference(null);
         }}
+        title={t("subprofiles:imageUpload.removeConfirm.title")}
+        description={t("subprofiles:imageUpload.removeConfirm.body")}
+        confirmLabel={t("subprofiles:imageUpload.removeConfirm.confirm")}
+        cancelLabel={t("subprofiles:imageUpload.removeConfirm.cancel")}
       />
+
+      {isPickerOpen && (
+        <PhotoPickerModal
+          kind="listing-photo"
+          shouldReframe={false}
+          onPick={(key, previewUrl) => handlePick(key, previewUrl)}
+          onDeleted={handleDeleted}
+          onClose={() => setIsPickerOpen(false)}
+        />
+      )}
     </div>
   );
 }

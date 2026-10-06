@@ -46,12 +46,16 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
       "I run a small queer zine in Porto and keep hearing this is where the good people are. I'd love a quieter place to actually talk.",
     mutualMemberEmail: null,
     declineReason: null,
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: dueDaysFromNow(-2),
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   {
     id: "jr-rui",
@@ -75,6 +79,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // leaving it blank.
     mutualMemberEmail: "devon@example.com",
     declineReason: null,
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -82,6 +87,9 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     assignedStaffId: "mod-ines",
     assignedStaffName: "Inês Duarte",
     dueAt: dueDaysFromNow(1),
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   {
     id: "jr-nadia",
@@ -106,12 +114,16 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
       "Trans organiser, been doing mutual-aid work for years. I want somewhere I can be off the clock and still queer.",
     mutualMemberEmail: null,
     declineReason: null,
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: dueDaysFromNow(2),
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   // Demonstrates a non-trivial state for visual/manual testing: a flagged,
   // previously-declined applicant asking again.
@@ -134,12 +146,16 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     message: "Second time asking. Things have changed for me since last time.",
     mutualMemberEmail: null,
     declineReason: null,
+    approvalReason: null,
     flags: ["disposable_email"],
     priorDeclineCount: 1,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: dueDaysFromNow(3),
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   // Already-reviewed rows, so the quality-sampling page (Task 7) has
   // something to show in demo mode: one approved, one declined.
@@ -169,12 +185,18 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
       "A friend from the reading group told me about this place. I'd like to find people nearby who share the same books.",
     mutualMemberEmail: "devon@example.com",
     declineReason: null,
+    // Approved on the strength of the vouch: the reference resolved to a
+    // real member, which is the call this reason records.
+    approvalReason: "member_vouched",
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: "Devon Okoro",
     referenceMemberSlug: "devon",
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   {
     id: "jr-sample-declined",
@@ -196,12 +218,21 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     message: "let me in please",
     mutualMemberEmail: null,
     declineReason: "spam_pattern",
+    approvalReason: null,
     flags: ["disposable_email"],
     priorDeclineCount: 0,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: null,
+    // A staff-only note, so the decided tab shows a declined row with one.
+    // Written by a different reviewer from the one who declined, which is how
+    // these notes get used: a second look, left for whoever opens it next.
+    internalNote:
+      "Same wording as three other requests from throwaway inboxes that week.\nIf they write again from a real address, judge that one fresh.",
+    internalNoteUpdatedAt: "2026-06-17T11:40:00.000Z",
+    internalNoteUpdatedBy: "mod-ana",
+    internalNoteUpdatedByName: "Ana Reis",
   },
   // The decided tab's three approval outcomes. The reviewer's job is the same
   // every time — carry the link over by hand — but what they can still do about
@@ -218,8 +249,10 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     source: "magazine",
     heardFrom: "The housing co-ops piece in the magazine",
     reviewedAt: "2026-05-31T17:45:00.000Z",
-    reviewedBy: "mod-ana",
-    reviewedByName: "Ana Reis",
+    // The demo session's own id (`DEMO_USER.id` in AuthProvider), so the
+    // decided tab and the quality sample both show a call read as "you".
+    reviewedBy: "demo",
+    reviewedByName: "Inês Duarte",
     inviteCode: "QP-M4NB-2026",
     // Approved, then nobody sent the link on. This is the case the decided tab
     // exists for: the reissue action makes the same code work again.
@@ -229,12 +262,16 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
       "I read the piece on housing co-ops and would like to meet the people behind it.",
     mutualMemberEmail: null,
     declineReason: null,
+    approvalReason: "clear_request",
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   {
     id: "jr-decided-used",
@@ -259,12 +296,18 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
       "A friend vouched for me at a gathering last month. I would like to stay in touch with people I met there.",
     mutualMemberEmail: "devon@example.com",
     declineReason: null,
+    // Approved before reasons were asked for, so demo mode covers the
+    // legacy "no reason on record" line as well as a recorded reason.
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: "Devon Okoro",
     referenceMemberSlug: "devon",
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
   // Two more declines, so the decided tab shows more than one reason label.
   {
@@ -290,12 +333,20 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     message: "I want to see who is in there.",
     mutualMemberEmail: null,
     declineReason: "safety_concern",
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 1,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: null,
+    // A note whose author has since erased their account, like this row's
+    // reviewer: the id goes with them and no name comes back, so demo mode
+    // covers the "a staff member" fallback as well as a named editor.
+    internalNote:
+      "Second request after a decline in March. Message reads like they want to find someone specific. Talk to the safety lead before approving anything from this address.",
+    internalNoteUpdatedAt: "2026-05-09T10:20:00.000Z",
+    internalNoteUpdatedBy: null,
   },
   {
     id: "jr-decided-implausible",
@@ -321,12 +372,16 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     message: "Hello, I am from Faro and also from Berlin and also a student.",
     mutualMemberEmail: "nobody@example.com",
     declineReason: "implausible",
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
     referenceMemberSlug: null,
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   },
 ];
 

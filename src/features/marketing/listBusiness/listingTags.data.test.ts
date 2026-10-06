@@ -21,15 +21,14 @@ const translate: TFunction = (key) => PORTUGUESE_LABELS[key] ?? key;
 const ALL_TAGS = LISTING_TAG_GROUPS.flatMap((group) => group.tags);
 
 describe("LISTING_TAG_GROUPS", () => {
-  it("holds the five groups in display order", () => {
+  it("holds the four groups in display order", () => {
     expect(LISTING_TAG_GROUPS.map((group) => group.id)).toEqual([
       "visiting",
       "happening",
       "foodDrink",
       "pricing",
-      "languages",
     ]);
-    expect(ALL_TAGS).toHaveLength(32);
+    expect(ALL_TAGS).toHaveLength(27);
   });
 
   it("gives every tag an i18n key", () => {
@@ -81,13 +80,13 @@ describe("filterTagGroups", () => {
   });
 
   it("matches the stored string case-insensitively and drops empty groups", () => {
-    const groups = filterTagGroups(LISTING_TAG_GROUPS, "SPOKEN", translate);
-    expect(groups.map((group) => group.id)).toEqual(["languages"]);
+    const groups = filterTagGroups(LISTING_TAG_GROUPS, "OPTIONS", translate);
+    expect(groups.map((group) => group.id)).toEqual(["foodDrink"]);
     expect(groups[0]?.tags).toEqual([
-      "Portuguese spoken",
-      "English spoken",
-      "Spanish spoken",
-      "French spoken",
+      "Vegan options",
+      "Vegetarian options",
+      "Gluten-free options",
+      "Alcohol-free options",
     ]);
   });
 

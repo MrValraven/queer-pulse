@@ -23,9 +23,23 @@ import { LOCAL_CATEGORIES, categoryLabel } from "../localCategories";
 import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
 import type { ListingMenuDraft, ListingPricingMode } from "./listingMenu.data";
 import type { ListingServiceRow } from "./listingServices.data";
+<<<<<<< Updated upstream
 import type { ListingOwnedBy } from "./listingOwnedBy.data";
+=======
+import type { OwnerIdentitySlug } from "./listingOwnerIdentities.data";
+>>>>>>> Stashed changes
 
 export const TOTAL_STEPS = 6;
+
+/** The first wizard step an edit shows. An existing listing already has its
+ *  path, so an edit opens on Basics and the create-only "Path" step (0) is
+ *  skipped: no pill, no pane, no way back to it. */
+export const EDIT_FIRST_STEP = 1;
+
+/** The first wizard step: 0 for a new listing, `EDIT_FIRST_STEP` for an edit. */
+export function firstWizardStep(isEdit: boolean): number {
+  return isEdit ? EDIT_FIRST_STEP : 0;
+}
 
 /** Step-pill labels, as catalog keys — resolved with `t()` by the consumer. */
 export const PILL_LABEL_KEYS = [
@@ -62,6 +76,7 @@ export const ANCHOR = {
   hood: "lb-hood",
   badge: "lb-badge",
   evidence: "lb-evidence",
+  ownerIdentities: "lb-owner-identities",
   price: "lb-price",
   blurb: "lb-blurb",
   tagline: "lb-tagline",
@@ -554,6 +569,9 @@ export interface ListingDraft {
   hood: string;
   badge: OwnerBadge | "";
   evidence: string; // owned only
+  /** "Who runs it" tags. Optional so drafts saved before the field existed
+   *  stay valid; read it through `normalizeOwnerIdentities`. */
+  ownerIdentities?: OwnerIdentitySlug[];
   price: string; // PRICES id
   blurb: string; // one-liner, <=140
   tagline: string;

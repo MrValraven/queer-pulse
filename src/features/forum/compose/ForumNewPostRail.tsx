@@ -5,6 +5,7 @@ import { ComposePreviewCard } from "./ComposePreviewCard";
 import { ComposeRail } from "./ComposeRail";
 import { ComposeSimilarThreads } from "./ComposeSimilarThreads";
 import type { ComposeThreadPage } from "./useComposeThreadPage";
+import { useComposeCoAuthor } from "./useComposeCoAuthor";
 import type { ComposeIdentity } from "./useComposeIdentity";
 import type { SimilarThread } from "./useSimilarThreads";
 
@@ -26,14 +27,14 @@ export function ForumNewPostRail({
   const { t } = useTranslation();
   const { state, setters } = page;
   // Compose is auth-gated, so a missing profile is a session that has not
-  // resolved rather than an anonymous writer: name the member as themselves
-  // instead of leaving the byline blank.
+  // resolved yet: name the member as themselves so the byline always reads.
   const author = identity.author ?? {
     name: t("forum:author.you"),
     initials: "",
   };
-  const coAuthor = identity.coAuthorOptions.find(
-    (candidate) => candidate.slug === state.coAuthorSlug,
+  const { coAuthor, changeCoAuthor } = useComposeCoAuthor(
+    state.coAuthorSlug,
+    setters.setCoAuthorSlug,
   );
   const requiredItems = page.checklist.filter((item) => item.isRequired);
 
@@ -49,8 +50,8 @@ export function ForumNewPostRail({
           onAnonymousChange={setters.setIsAnonymous}
           category={state.category}
           coAuthorSlug={state.coAuthorSlug}
-          coAuthorOptions={identity.coAuthorOptions}
-          onCoAuthorChange={setters.setCoAuthorSlug}
+          coAuthor={coAuthor}
+          onCoAuthorChange={changeCoAuthor}
         />
       }
       preview={

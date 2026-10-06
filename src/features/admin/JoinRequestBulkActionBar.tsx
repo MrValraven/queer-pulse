@@ -4,6 +4,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
+import { JoinRequestBulkApproveModal } from "./JoinRequestBulkApproveModal";
 import { JoinRequestBulkDeclineModal } from "./JoinRequestBulkDeclineModal";
 import { JoinRequestBulkResult } from "./JoinRequestBulkResult";
 import { useJoinRequestBulkDecision } from "./useJoinRequestBulkDecision";
@@ -15,8 +16,8 @@ import styles from "./AdminMembersPage.module.css";
  * waitlist and decline, matching the three decisions already on a single card.
  *
  * Every one of them goes through a confirmation naming the count and the action
- * before anything reaches the server, and a decline names the reason that will
- * be recorded against all of them. These are real people's applications and no
+ * before anything reaches the server, and an approve or a decline names the
+ * reason that will be recorded against all of them. These are real people's applications and no
  * decision here is undoable from this screen.
  *
  * The decision itself lives in `useJoinRequestBulkDecision`, which keeps the
@@ -42,10 +43,11 @@ export function JoinRequestBulkActionBar({
   const count = ids.length;
   const decision = useJoinRequestBulkDecision({ ids, onOutcome });
   const isDecliningOpen = decision.confirming === "declined";
-  // Approve and waitlist share the plain ConfirmDialog; a decline needs the
-  // reason picker, so it gets its own modal below.
+  const isApprovingOpen = decision.confirming === "approved";
+  // Only a waitlist uses the plain ConfirmDialog; an approve and a decline
+  // both need the reason picker, so each gets its own modal below.
   const simpleConfirmStatus =
-    decision.confirming !== null && !isDecliningOpen
+    decision.confirming !== null && !isDecliningOpen && !isApprovingOpen
       ? decision.confirming
       : null;
   const simpleConfirmCopyKey = simpleConfirmStatus
@@ -127,6 +129,17 @@ export function JoinRequestBulkActionBar({
           description={t(`${simpleConfirmCopyKey}.body`, { count })}
           confirmLabel={t(`${simpleConfirmCopyKey}.confirmCta`)}
           cancelLabel={t("admin:common.cancel")}
+        />
+      )}
+
+      {isApprovingOpen && (
+        <JoinRequestBulkApproveModal
+          count={count}
+          pending={decision.pending}
+          onConfirm={(reason) =>
+            void decision.run("approved", undefined, reason)
+          }
+          onClose={decision.cancel}
         />
       )}
 

@@ -48,8 +48,12 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   // Step 1 — basics
   name: { step: 1, anchor: ANCHOR.name },
   cats: { step: 1, anchor: ANCHOR.cats },
+  // The online-only toggle sits with the basics, just above the neighbourhood
+  // it decides on.
+  online: { step: 1, anchor: ANCHOR.online },
   hood: { step: 1, anchor: ANCHOR.hood },
   badge: { step: 1, anchor: ANCHOR.badge },
+  ownerIdentities: { step: 1, anchor: ANCHOR.ownerIdentities },
   price: { step: 1, anchor: ANCHOR.price },
   blurb: { step: 1, anchor: ANCHOR.blurb },
   // Step 2 — story

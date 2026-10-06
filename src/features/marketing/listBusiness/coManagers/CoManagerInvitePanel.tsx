@@ -5,7 +5,9 @@ import type { MemberSelectPerson } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../../shared/i18n/format";
-import { useStrangerMemberSearch } from "../../../messages/api/useStrangerMemberSearch";
+import { useStaffMap } from "../../../../shared/staff/useStaffRole";
+import { useConnectionsSearch } from "../../../connect/api/useConnectionsSearch";
+import { InviteMembersListFooter } from "../../../gatherings/InviteMembersListFooter";
 import {
   CO_MANAGER_SEAT_CAP,
   type ListingCoManagerDTO,
@@ -17,12 +19,14 @@ import styles from "./CoManagers.module.css";
 /**
  * The owner asking one member to help run their listing.
  *
- * Search reaches every member rather than the owner's own connections: the
- * person who runs a bar with you is not necessarily somebody you follow here.
+ * The candidates are the owner's own connections, listed as soon as the panel
+ * opens and searched on the server once typing pauses, with paging and a retry
+ * at the end of the list. Demo mode takes the same path, since
+ * `useConnectionsList` serves and searches the demo connections itself. People
+ * already on the roster, and the owner, are hidden from the list.
  *
- * How many places are left is said BEFORE the picker, so the cap is something
- * an owner plans around instead of something they discover when the send is
- * refused. If a 409 still arrives (somebody else filled the last place, or the
+ * How many places are left is said BEFORE the picker, so the owner can plan
+ * around the cap from the start. If a 409 still arrives (somebody else filled the last place, or the
  * person was invited from another tab), it is explained in words.
  */
 export function CoManagerInvitePanel({
@@ -41,48 +45,86 @@ export function CoManagerInvitePanel({
   const { showToast } = useToast();
   const invite = useInviteCoManager(listingRef);
 
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  // The pick is held as the whole person, captured at tap time, so it stays
+  // on screen (pinned above the results) after a new search leaves it out.
+  const [pickedPerson, setPickedPerson] = useState<MemberSelectPerson | null>(
+    null,
+  );
+  // Everyone picked in this panel, by slug. An unticked pinned row stays on
+  // screen until the query changes while the current results may leave it
+  // out, so tapping it again resolves the person from here.
+  const [earlierPicks, setEarlierPicks] = useState<
+    Map<string, MemberSelectPerson>
+  >(() => new Map());
   const [query, setQuery] = useState("");
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
-  const takenSlugs = useMemo(() => {
-    const slugs = new Set<string>();
+  const excludeSlugs = useMemo(() => {
+    const slugs: string[] = [];
     for (const coManager of coManagers) {
-      if (coManager.member) slugs.add(coManager.member.slug);
+      if (coManager.member) slugs.push(coManager.member.slug);
     }
-    if (ownerSlug) slugs.add(ownerSlug);
+    if (ownerSlug) slugs.push(ownerSlug);
     return slugs;
   }, [coManagers, ownerSlug]);
 
-  const { results, loading } = useStrangerMemberSearch(query, takenSlugs);
+  const staffMap = useStaffMap();
+  const connectionsSearch = useConnectionsSearch(query);
+  const { views: connections, isSearchPending } = connectionsSearch;
   const seatsUsed = coManagers.length;
   const isSeatCapReached = seatsUsed >= CO_MANAGER_SEAT_CAP;
 
   const people = useMemo<MemberSelectPerson[]>(
     () =>
-      results.map((result) => ({
-        slug: result.slug,
-        name: result.name,
-        avatarUrl: result.avatarUrl,
-        pronouns: result.sub,
+      connections.map((connection) => ({
+        slug: connection.slug,
+        name: connection.name,
+        avatarUrl: connection.photo,
+        pronouns: connection.pron,
+        staffRole: staffMap[connection.slug]?.tier ?? undefined,
+        staffBadgedRoles: staffMap[connection.slug]?.badgedStaffRoles,
       })),
-    [results],
+    [connections, staffMap],
+  );
+
+  // A pick who has since joined the roster no longer counts, so Send can only
+  // ever reach a person still shown in the list.
+  const activePick =
+    pickedPerson && !excludeSlugs.includes(pickedPerson.slug)
+      ? pickedPerson
+      : null;
+  const selected = useMemo(
+    () => new Set(activePick ? [activePick.slug] : []),
+    [activePick],
+  );
+  const pinnedPeople = useMemo(
+    () => (activePick ? [activePick] : []),
+    [activePick],
   );
 
   const toggle = (memberSlug: string) => {
     setErrorKey(null);
-    setSelected((previous) =>
-      previous.has(memberSlug) ? new Set() : new Set([memberSlug]),
-    );
+    if (activePick?.slug === memberSlug) {
+      setPickedPerson(null);
+      return;
+    }
+    // Single select: tapping somebody else replaces the pick.
+    const person =
+      people.find((candidate) => candidate.slug === memberSlug) ??
+      earlierPicks.get(memberSlug);
+    if (!person) return;
+    setPickedPerson(person);
+    if (!earlierPicks.has(person.slug)) {
+      setEarlierPicks((previous) => new Map(previous).set(person.slug, person));
+    }
   };
 
   const send = () => {
-    const [memberSlug] = [...selected];
-    if (!memberSlug) return;
+    if (!activePick) return;
     setErrorKey(null);
-    invite.mutate(memberSlug, {
+    invite.mutate(activePick.slug, {
       onSuccess: () => {
-        setSelected(new Set());
+        setPickedPerson(null);
         setQuery("");
         showToast(
           t("marketing:listBusiness.coManagers.invitedToast"),
@@ -124,13 +166,30 @@ export function CoManagerInvitePanel({
               selected={selected}
               onToggle={toggle}
               multiSelect={false}
+              selectedIndicator="radio"
+              pinnedPeople={pinnedPeople}
+              excludeSlugs={excludeSlugs}
               searchQuery={query}
               onSearchChange={setQuery}
-              isSearching={loading}
-              emptyHint={t("marketing:listBusiness.coManagers.searchHint")}
+              isSearching={isSearchPending && query.trim() !== ""}
+              emptyHint={
+                isSearchPending
+                  ? t("marketing:listBusiness.coManagers.loadingConnections")
+                  : t("marketing:listBusiness.coManagers.noConnections")
+              }
+              emptyMessage={
+                connectionsSearch.isError
+                  ? t("marketing:listBusiness.coManagers.connectionsLoadError")
+                  : !isSearchPending && people.length > 0
+                    ? t("marketing:listBusiness.coManagers.allListedHelping")
+                    : undefined
+              }
               searchPlaceholder={t(
                 "marketing:listBusiness.coManagers.searchPlaceholder",
               )}
+              listFooter={
+                <InviteMembersListFooter connections={connectionsSearch} />
+              }
             />
           </div>
           <div className={styles.pickerFoot}>

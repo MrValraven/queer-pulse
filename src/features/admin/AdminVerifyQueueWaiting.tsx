@@ -137,9 +137,9 @@ export function AdminVerifyQueueWaiting({
         decidingId={decisions.decidingId}
         selectedIds={decisions.selection.selectedIds}
         isAtSelectionCap={decisions.selection.atSelectionCap}
-        onApprove={(item) => decisions.resolve(item, "approved")}
+        onApprove={decisions.requestApprove}
         onDecline={decisions.requestDecline}
-        onWaitlist={(item) => decisions.resolve(item, "waitlisted")}
+        onWaitlist={decisions.waitlist}
         onToggleSelect={decisions.selection.toggleSelected}
         banEvasionBySubjectId={banEvasionBySubjectId}
         currentUserId={user?.id ?? null}
@@ -161,7 +161,7 @@ export function AdminVerifyQueueWaiting({
         <AdminVerifyQueueWaitlist
           items={waitlistedRows}
           decidingId={decisions.decidingId}
-          onApprove={(item) => decisions.resolve(item, "approved")}
+          onApprove={decisions.requestApprove}
           onDecline={decisions.requestDecline}
           banEvasionBySubjectId={banEvasionBySubjectId}
           currentUserId={user?.id ?? null}

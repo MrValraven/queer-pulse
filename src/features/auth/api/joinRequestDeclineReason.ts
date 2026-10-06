@@ -37,6 +37,18 @@ export function declineReasonLabelKey(reason: string | null): string {
 }
 
 /**
+ * The i18n key for a decline reason's one-line admin-facing detail: a touch
+ * more context than `declineReasonLabelKey`'s bare label, shown under it in
+ * the reviewer's reason card. Same closed key set and fallback as above.
+ */
+export function declineReasonDetailKey(reason: string | null): string {
+  if (reason && KNOWN.has(reason)) {
+    return `admin:members.verify.declineReasonDetail.${reason}`;
+  }
+  return "admin:members.verify.declineReasonDetail.other";
+}
+
+/**
  * The i18n key for a decline reason as the APPLICANT should read it.
  *
  * Same closed key set, deliberately different words: the admin labels above are

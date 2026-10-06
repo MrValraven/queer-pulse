@@ -27,6 +27,15 @@ import {
 } from "../adminMembers.data";
 import type { StaffRoleId } from "../staffRoles.registry";
 import {
+  ADMIN_STAFF_ROSTER_ROWS_DEMO,
+  cardForStaffRosterRow,
+} from "../adminStaffRoster.data";
+import {
+  inStaffRegistryOrder,
+  type AdminStaffRosterRowDTO,
+} from "./adminStaffRoster.api";
+import { ADMIN_STAFF_ROSTER_ROWS_KEY } from "./useAdminStaffRoster";
+import {
   cardDtoToMember,
   detailDtoToMember,
   detailDtoToMemberCard,
@@ -282,13 +291,20 @@ export function useMemberSignInEmail(
 }
 
 /**
- * The demo `AdminMember` card behind one id. The roster fixture answers first;
- * a flagged-only member (the queue lists people the roster fixture never
+ * The demo `AdminMember` card behind one id. The staff roster rows answer
+ * first, by their own `staff-<slug>` id, which no other fixture uses: the
+ * demo slug `ines` names Inês Martins in `MEMBERS`, so the staff page's Inês
+ * Tavares carries a distinct id. The members roster fixture answers next; a
+ * flagged-only member (the queue lists people the roster fixture never
  * carries) is synthesized from their own `FLAGGED` entry by
  * {@link cardForFlagged}. Flagged fixtures use the handle without its "@" as
  * both id and slug, so a row that passes either resolves.
  */
 function demoMemberCard(memberId: string): AdminMember | undefined {
+  const staffRosterRow = ADMIN_STAFF_ROSTER_ROWS_DEMO.find(
+    (row) => row.id === memberId,
+  );
+  if (staffRosterRow) return cardForStaffRosterRow(staffRosterRow);
   const rosterMember = MEMBERS.find((member) => member.id === memberId);
   if (rosterMember) return rosterMember;
   const flaggedMember = FLAGGED.find(
@@ -359,11 +375,25 @@ export function useUpdateMemberRole() {
       isSystem,
     }),
     live: ({ memberId, role }) => patchAdminMemberRole(memberId, role),
+    // The staff page's demo rows live in the cache, so demo mode moves the
+    // tier there directly.
+    onSuccess: (_data, { memberId, role }) => {
+      if (!demoMode) return;
+      patchDemoStaffRosterRow(queryClient, memberId, (row) => ({
+        ...row,
+        platformRole: role,
+      }));
+    },
     // Demo mode holds its roster in fixtures, not the cache — invalidating would
     // refetch nothing and needlessly churn. Live mode re-reads both the roster
     // and the drawer detail off the same key prefix.
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_STAFF_ROSTER_ROWS_KEY],
+      });
     },
   });
 }
@@ -376,7 +406,9 @@ export function useUpdateMemberRole() {
  * `PATCH /mod/users/:userId/suspension` (liftSuspension); the backend enforces
  * the guardrails and answers 403 with a specific reason, surfaced by the global
  * mutation-error toast. On success live mode invalidates the shared
- * `["admin-members"]` prefix so the drawer re-reads the member as reinstated.
+ * `["admin-members"]` prefix so the drawer re-reads the member as reinstated,
+ * and refetches the staff roster on settle so `/admin/staff` drops the
+ * suspended chip. Demo mode marks the cached staff roster row active.
  */
 export function useLiftSuspension() {
   const { demoMode } = useDemoMode();
@@ -389,8 +421,20 @@ export function useLiftSuspension() {
     live: async ({ memberId }) => {
       await liftUserSuspension(memberId);
     },
+    onSuccess: (_data, { memberId }) => {
+      if (!demoMode) return;
+      patchDemoStaffRosterRow(queryClient, memberId, (row) => ({
+        ...row,
+        status: "active",
+      }));
+    },
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_STAFF_ROSTER_ROWS_KEY],
+      });
     },
   });
 }
@@ -492,7 +536,9 @@ export function useVerifyMember() {
  * backend enforces the guardrails (not yourself, not a staff/house account) and
  * 403/404s otherwise, surfaced by the global mutation-error toast. On success
  * both the roster and the open drawer re-read off the shared `["admin-members"]`
- * key prefix so the member shows as limited/suspended everywhere.
+ * key prefix so the member shows as limited/suspended everywhere, and the staff
+ * roster refetches on settle. Demo mode marks the cached staff roster row
+ * suspended.
  */
 export function useRestrictMember() {
   const { demoMode } = useDemoMode();
@@ -511,8 +557,20 @@ export function useRestrictMember() {
       suspendedUntil: input.duration ? new Date().toISOString() : null,
     }),
     live: ({ memberId, input }) => restrictMember(memberId, input),
+    onSuccess: (_data, { memberId }) => {
+      if (!demoMode) return;
+      patchDemoStaffRosterRow(queryClient, memberId, (row) => ({
+        ...row,
+        status: "suspended",
+      }));
+    },
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_STAFF_ROSTER_ROWS_KEY],
+      });
     },
   });
 }
@@ -665,6 +723,60 @@ export async function patchStaffRolesInCache(
   return previousQueries;
 }
 
+/** True for a row the live staff roster leaves out: an ordinary member who
+ *  holds no grant is not staff, so the server drops them. */
+function isOffStaffRosterRow(row: AdminStaffRosterRowDTO): boolean {
+  return row.platformRole === "member" && row.grants.length === 0;
+}
+
+/**
+ * Demo mode only: rewrite one person's row in the cached staff roster
+ * (`useAdminStaffRosterRows`), so `/admin/staff` follows a grant, revoke,
+ * tier change or suspension made from the drawer it opens. Live mode refetches
+ * that roster on settle. Matches on `row.id` alone, since a demo slug can name
+ * someone else in `MEMBERS`.
+ *
+ * A row the patch leaves as an ungranted member is dropped, the way the live
+ * refetch drops it. A person dropped earlier in the session comes back from
+ * their fixture row (as the grantless member they were when dropped) once a
+ * grant or a staff tier puts them on the roster again. Returns the
+ * pre-patch rows in the snapshot shape {@link restoreStaffRolesSnapshot} rolls
+ * back, or an empty snapshot when nothing changed.
+ */
+function patchDemoStaffRosterRow(
+  queryClient: QueryClient,
+  memberId: string,
+  updater: (row: AdminStaffRosterRowDTO) => AdminStaffRosterRowDTO,
+): StaffRolesSnapshot {
+  const queryKey: QueryKey = [ADMIN_STAFF_ROSTER_ROWS_KEY, true];
+  const currentRows =
+    queryClient.getQueryData<AdminStaffRosterRowDTO[]>(queryKey);
+  if (!currentRows) return [];
+  const cachedRow = currentRows.find((row) => row.id === memberId);
+  const fixtureRow = ADMIN_STAFF_ROSTER_ROWS_DEMO.find(
+    (row) => row.id === memberId,
+  );
+  const baseRow: AdminStaffRosterRowDTO | undefined =
+    cachedRow ??
+    (fixtureRow && { ...fixtureRow, platformRole: "member", grants: [] });
+  if (!baseRow) return [];
+  const patchedRow = updater(baseRow);
+  const isPatchedRowListed = !isOffStaffRosterRow(patchedRow);
+  if (!cachedRow && !isPatchedRowListed) return [];
+
+  const otherRows = currentRows.filter((row) => row.id !== memberId);
+  const fixtureOrder = ADMIN_STAFF_ROSTER_ROWS_DEMO.map((row) => row.id);
+  const nextRows = isPatchedRowListed
+    ? [...otherRows, patchedRow].sort(
+        (firstRow, secondRow) =>
+          fixtureOrder.indexOf(firstRow.id) -
+          fixtureOrder.indexOf(secondRow.id),
+      )
+    : otherRows;
+  queryClient.setQueryData(queryKey, nextRows);
+  return [[queryKey, currentRows]];
+}
+
 /** Restore a snapshot taken by {@link patchStaffRolesInCache}, e.g. after a
  *  failed grant/revoke mutation. */
 export function restoreStaffRolesSnapshot(
@@ -723,14 +835,36 @@ export function useGrantStaffRole() {
     }),
     live: ({ memberId, role, reason }) =>
       grantStaffRole(memberId, role, reason),
-    onMutate: ({ memberId, role }) =>
-      patchStaffRolesInCache(queryClient, demoMode, memberId, (current) =>
-        current.includes(role) ? current : [...current, role],
-      ),
+    onMutate: async ({ memberId, role }) => [
+      ...(await patchStaffRolesInCache(
+        queryClient,
+        demoMode,
+        memberId,
+        (current) => (current.includes(role) ? current : [...current, role]),
+      )),
+      ...(demoMode
+        ? patchDemoStaffRosterRow(queryClient, memberId, (row) =>
+            row.grants.some((grant) => grant.role === role)
+              ? row
+              : {
+                  ...row,
+                  grants: inStaffRegistryOrder([
+                    ...row.grants,
+                    { role, grantedAt: new Date().toISOString() },
+                  ]),
+                },
+          )
+        : []),
+    ],
     onError: (_error, _vars, context) =>
       restoreStaffRolesSnapshot(queryClient, context),
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_STAFF_ROSTER_ROWS_KEY],
+      });
     },
   });
 }
@@ -760,14 +894,29 @@ export function useRevokeStaffRole() {
     }),
     live: ({ memberId, role, reason }) =>
       revokeStaffRole(memberId, role, reason),
-    onMutate: ({ memberId, role }) =>
-      patchStaffRolesInCache(queryClient, demoMode, memberId, (current) =>
-        current.filter((heldRole) => heldRole !== role),
-      ),
+    onMutate: async ({ memberId, role }) => [
+      ...(await patchStaffRolesInCache(
+        queryClient,
+        demoMode,
+        memberId,
+        (current) => current.filter((heldRole) => heldRole !== role),
+      )),
+      ...(demoMode
+        ? patchDemoStaffRosterRow(queryClient, memberId, (row) => ({
+            ...row,
+            grants: row.grants.filter((grant) => grant.role !== role),
+          }))
+        : []),
+    ],
     onError: (_error, _vars, context) =>
       restoreStaffRolesSnapshot(queryClient, context),
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_STAFF_ROSTER_ROWS_KEY],
+      });
     },
   });
 }

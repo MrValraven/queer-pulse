@@ -350,9 +350,9 @@ export const forum: Catalog = {
 
   // ── Respostas encadeadas (ação responder + recolher/expandir + continuar) ─
   "replies.reply": "Responder",
-  "replies.collapseAria": "Recolher conversa",
-  "replies.expandAria": "Expandir conversa",
+  "replies.collapseAria": "Recolher respostas a {name} ({count})",
   "replies.continueThread": "Continuar esta conversa ({count})",
+  "replies.replyingTo": "Em resposta a {name}",
   "replies.hiddenCount_one": "{count} resposta escondida",
   "replies.hiddenCount_other": "{count} respostas escondidas",
 
@@ -820,6 +820,12 @@ export const forum: Catalog = {
     "Ainda não há ninguém para juntar. Os coautores vêm dos membros com quem já escreves.",
 
   // ── O cartão de pré-visualização ─────────────────────────────────────────
+  "composePage.postingAs.coAuthorSearch": "Procurar nas tuas conexões",
+  "composePage.postingAs.coAuthorLoading": "A carregar as tuas conexões",
+  "composePage.postingAs.coAuthorLoadError": "As tuas conexões não carregaram.",
+  "composePage.postingAs.coAuthorChange": "Mudar",
+  "composePage.postingAs.coAuthorRemove": "Tirar {name} da coautoria",
+  "composePage.postingAs.coAuthorKeep": "Manter {name}",
   "composePage.preview.heading": "Como vai ficar",
   "composePage.preview.titlePlaceholder": "O teu título aparece aqui",
   "composePage.preview.excerptPlaceholder":

@@ -178,11 +178,51 @@ export interface SentInviteDTO {
   } | null;
 }
 
+/** One page request for GET /invites: which status (omit for every status),
+ *  how many rows, and how many to skip. The backend caps `limit` at 100. */
+export interface SentInvitesPageQuery {
+  status?: SentInviteDTO["status"];
+  limit: number;
+  offset: number;
+}
+
 /**
- * List the invites the authenticated member has sent (their status + expiry).
- * The backend scopes this to the current session; no member id needed.
+ * One page of the invites the authenticated member has sent (status + expiry),
+ * newest first (`createdAt DESC`). The backend scopes this to the current
+ * session, so no member id is needed. `status` narrows the page to one
+ * lifecycle state on the server, so each filter tab pages through its own rows.
+ * The response is a bare array; a page shorter than `limit` is the last one.
  */
-export const getSentInvites = () => apiGet<SentInviteDTO[]>("/invites");
+export function getSentInvites(
+  { status, limit, offset }: SentInvitesPageQuery,
+  signal?: AbortSignal,
+): Promise<SentInviteDTO[]> {
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+  if (status) params.set("status", status);
+  return apiGet<SentInviteDTO[]>(
+    `/invites?${params.toString()}`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+/** How many invites the member has sent in total and per status, as returned
+ *  by GET /invites/counts. These are the real totals behind the filter tabs. */
+export interface SentInviteCountsDTO {
+  all: number;
+  valid: number;
+  used: number;
+  expired: number;
+  revoked: number;
+}
+
+/** The current member's sent-invite totals, overall and per status. */
+export const getSentInviteCounts = (signal?: AbortSignal) =>
+  apiGet<SentInviteCountsDTO>("/invites/counts", undefined, undefined, signal);
 
 /**
  * Re-mint an expired invite the current member owns: the backend resets its

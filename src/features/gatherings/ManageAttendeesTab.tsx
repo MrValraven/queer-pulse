@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
@@ -26,10 +26,13 @@ interface BarTarget {
 export function AttendeesTab({
   slug,
   customRsvpQuestion,
+  hostSlug,
 }: {
   slug: string;
   /** The host's own RSVP question, which labels each attendee's answer. */
   customRsvpQuestion?: string | null;
+  /** Marks the host's own going row; see `AttendeeSection`. */
+  hostSlug?: string;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -46,7 +49,7 @@ export function AttendeesTab({
   const goingCount = data?.goingCount ?? going.length;
   const waitlistCount = data?.waitlistCount ?? waitlist.length;
   const capacity = data?.capacity ?? 20;
-  // Seats, never rows (LOC-07). "Ten going" on a twenty-seat gathering can
+  // The bar counts seats (LOC-07). "Ten going" on a twenty-seat gathering can
   // mean thirty people once the declared plus-ones are counted, so the bar
   // measures what capacity actually measures.
   const seatsTaken = data?.seatsTaken ?? goingCount;
@@ -55,6 +58,14 @@ export function AttendeesTab({
     : 0;
   const hasMoreGoing = data?.hasMoreGoing ?? false;
   const hasMoreWaitlist = data?.hasMoreWaitlist ?? false;
+  // Everyone already going is hidden from the invite picker. The attendee
+  // list carries no invited status, so only the going rows loaded so far
+  // are known here.
+  const goingRows = data?.going;
+  const goingSlugs = useMemo(
+    () => (goingRows ?? []).map((attendee) => attendee.slug),
+    [goingRows],
+  );
   const exportAttendees = async () => {
     if (demoMode) {
       showToast(t("gatherings:manage.attendees.exportDemoToast"), "info");
@@ -95,8 +106,8 @@ export function AttendeesTab({
         {/* A real download (PRD-190). This button used to raise a "Exported"
             toast and produce no file, so a host who needed the door list
             offline had to read it off their phone. Demo has no roster behind
-            it, so it keeps the toast rather than downloading a mock guest
-            list as if it were real people. */}
+            it, so it keeps the toast and leaves the mock guest list off the
+            host's disk. */}
         <Button
           variant="ghost"
           className={styles.actionBtn}
@@ -153,6 +164,7 @@ export function AttendeesTab({
           count: goingCount,
         })}
         attendees={going}
+        hostSlug={hostSlug}
         customRsvpQuestion={customRsvpQuestion}
         hasMore={hasMoreGoing}
         loadingMore={loadingMoreGoing}
@@ -184,7 +196,11 @@ export function AttendeesTab({
       <ManageBarredList slug={slug} demoMode={demoMode} />
 
       {inviteOpen && (
-        <InviteMembersModal slug={slug} onClose={() => setInviteOpen(false)} />
+        <InviteMembersModal
+          slug={slug}
+          excludeSlugs={goingSlugs}
+          onClose={() => setInviteOpen(false)}
+        />
       )}
       {barTarget && (
         <BarFromGatheringModal

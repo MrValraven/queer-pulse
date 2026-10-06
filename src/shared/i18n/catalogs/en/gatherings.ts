@@ -86,6 +86,13 @@ export const gatherings: Catalog = {
   // confirmed "you're going" / waitlist state, and cancellation.
   "rsvpControl.waitlistCta": "Join the waitlist",
   "rsvpControl.pendingCta": "One moment…",
+  "rsvpControl.hostingTitle": "You're <em>hosting</em>",
+  "rsvpControl.hostingNote":
+    "You're on the guest list too, so you take one of the spots.",
+  "rsvpControl.hostingNoteUncapped": "You're on the guest list too.",
+  "rsvpControl.hostingCount_one": "Just you so far.",
+  "rsvpControl.hostingCount_other": "{count} going so far, you included.",
+  "rsvpControl.hostingManageCta": "Manage gathering",
   "rsvpControl.goingTitle": "You're <em>going</em>",
   "rsvpControl.waitlistTitle": "You're on the <em>waitlist</em>",
   "rsvpControl.goingCount_one": "{count} member going so far",
@@ -125,15 +132,20 @@ export const gatherings: Catalog = {
   "gathering.hostedWithHeading": "Hosted with",
   "gathering.hostedWithRole": "Community",
   "gathering.spotsUrgencyNote": "Move quickly if this speaks to you",
+  "gathering.spotsHostNote": "Still open for your guests",
+  "gathering.locationHostNote":
+    "Guests see the full address once they're going.",
   "gathering.locationNote":
     "Full location shared with confirmed guests after you RSVP.",
   "gathering.moreTitle": "More <em>gatherings</em>",
+  "gathering.coverAlt": "Cover photo for {title}",
   "gathering.notFoundTitle": "We couldn't find this gathering",
   "gathering.notFoundDescription":
     "It may have been cancelled, or the link might be out of date.",
 
   // GoingAttendeesPreview (MSG-12)
   "gathering.attendeesPreview.heading": "Who's going",
+  "gathering.attendeesPreview.hostTag": "Host",
   "gathering.attendeesPreview.moreLabel": "+{count} more",
 
   // GatheringSuccessPanel
@@ -590,6 +602,8 @@ export const gatherings: Catalog = {
   // steps/WhatChapter.tsx, CapacityStepperField.tsx, WhoChapter.tsx: the
   // family's own questions, and the two defaults it set
   "create.step3.formatDetailsLabel": "Format details",
+  "create.step3.capHostHint": "This number includes you.",
+  "create.step3.capIncludesHostHint": "This number includes the host.",
   "create.step3.capDefaultHint":
     "{count} is the usual size for this format. Change it freely.",
   "create.step3.attendeeCountLabel": "Show how many people are going",
@@ -1268,6 +1282,7 @@ export const gatherings: Catalog = {
   "manage.attendees.loadMoreCta": "Load more",
   "manage.attendees.loadingMore": "Loading…",
   "manage.attendees.removeAria": "Remove {name} from guest list",
+  "manage.attendees.hostTag": "Host",
   "manage.attendees.removeCta": "Remove",
   "manage.attendees.removedToast": "Removed from guest list",
   "manage.attendees.promoteAria": "Promote {name} to guest list",
@@ -1400,7 +1415,7 @@ export const gatherings: Catalog = {
   "manage.invite.noConnections":
     "You can invite the people you are connected to. Once you have connections, they show up here.",
   "manage.invite.allListedInvited":
-    "Everyone here is already going or has an invite.",
+    "Everyone who matches is already going or has an invite.",
   "manage.invite.loadMoreError": "We couldn't load more of your connections.",
   "manage.invite.noneSelected": "No one selected yet",
   "manage.invite.selectedCount_one": "<b>{count}</b> selected",
@@ -1434,7 +1449,7 @@ export const gatherings: Catalog = {
   "venuePicker.fromDirectory": "From the local directory",
   "venuePicker.change": "Change",
 
-  // ── Cohosts (CohostManager / AddCohostModal / MemberPicker) ─────────────────────
+  // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Cohosts",
   "cohost.addCta": "Add cohost",
   "cohost.panelDesc":
@@ -1454,7 +1469,8 @@ export const gatherings: Catalog = {
   "cohost.addModal.sub":
     "A cohost can edit the page, message guests and manage RSVPs alongside you. Pick someone you trust. They'll be asked to accept.",
   "cohost.addModal.searchLabel": "Search members to add as cohost",
-  "cohost.addModal.allListedCohosting": "Everyone listed is already cohosting.",
+  "cohost.addModal.allListedCohosting":
+    "Everyone who matches is already cohosting.",
   "cohost.addModal.step2Eyebrow": "Co-host invite",
   "cohost.addModal.step2Title": "Invite <em>{name}</em>",
   "cohost.addModal.step2Sub":
@@ -1473,9 +1489,6 @@ export const gatherings: Catalog = {
     "Optional. They see this date on the invite and can still answer sooner.",
   "cohost.addModal.sendCta": "Send invite",
   "cohost.addModal.backCta": "Pick someone else",
-  "cohost.picker.searchLabelDefault": "Search members",
-  "cohost.picker.placeholder": "Search by name or role…",
-  "cohost.picker.noResults": 'No members match "{query}".',
 
   // ── QR check-in scanner (QrScanModal) ──────────────────────────────────────────
   "qr.eyebrow": "Check-in",
@@ -1650,6 +1663,8 @@ export const gatherings: Catalog = {
   "gathering.where.heading": "Getting there",
   "gathering.where.placeLabel": "Where",
   "gathering.where.addressLabel": "Address",
+  "gathering.where.addressMissing":
+    "The exact address hasn't been added yet. The people going will look for it here.",
   "gathering.where.addressWithheld":
     "The exact address is shared with the people who are going. RSVP and it appears here.",
   "gathering.where.arrivalLabel": "Finding the door",
@@ -1814,6 +1829,7 @@ export const gatherings: Catalog = {
     "You haven't added a join link yet. Attendees will look for it here.",
   "gathering.where.joinLinkWithheld":
     "The join link is shared with the people who are going.",
+  "gathering.joinLinkHostNote": "Guests get the join link once they're going.",
   "gathering.joinLinkNote":
     "Join link shared with confirmed guests after you RSVP.",
 

@@ -156,3 +156,8 @@
 :global([data-theme="dark"]) .row {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+/* "Show more" sits a step below the last row. */
+.loadMore {
+  margin-top: var(--gap-sm);
+}

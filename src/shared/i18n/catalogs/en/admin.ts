@@ -315,6 +315,282 @@ export const admin: Catalog = {
   "dashboard.feed.transparency":
     "Every action here is <strong>logged and shown</strong> to the member it affects. No silent removals, ever.",
   "dashboard.feed.auditLinkCta": "See the audit log",
+  "dashboard.feed.seeAllCta": "See all activity",
+  "platformLog.navLabel": "Platform log",
+  "platformLog.title": "Platform <em>log</em>",
+  "platformLog.eyebrow": "Oversight",
+  "platformLog.header.title": "Platform <em>log</em>",
+  "platformLog.filters.label": "Filter the log",
+  "platformLog.filters.categories": "Categories",
+  "platformLog.filters.range": "Time range",
+  "platformLog.filters.memberPrefix": "Involving",
+  "platformLog.filters.memberUnknown": "the selected member",
+  "platformLog.filters.clearMember": "Clear the member filter",
+  "platformLog.category.moderation": "Moderation",
+  "platformLog.category.staff": "Staff & access",
+  "platformLog.category.governance": "Governance & settings",
+  "platformLog.category.reviews": "Reviews",
+  "platformLog.category.members": "Members",
+  "platformLog.range.today": "Today",
+  "platformLog.range.week": "This week",
+  "platformLog.range.month": "This month",
+  "platformLog.range.quarter": "This quarter",
+  "platformLog.range.all": "All time",
+  "platformLog.day.today": "Today",
+  "platformLog.day.yesterday": "Yesterday",
+  "platformLog.party.anonymous": "Anonymous member",
+  "platformLog.party.erased": "Erased account",
+  "platformLog.party.system": "System",
+  "platformLog.party.filterHint": "Show everything involving {name}",
+  "platformLog.subject.view": "View",
+  "platformLog.note.show": "Show note",
+  "platformLog.note.hide": "Hide note",
+  "platformLog.empty.title": "Nothing logged in this window",
+  "platformLog.empty.body": "Try a wider time range or clear a filter.",
+  "platformLog.empty.clearFilters": "Clear filters",
+  "platformLog.error.title": "The log didn't load",
+  "platformLog.error.body": "Check your connection and try again.",
+  "platformLog.loadMore": "Load more",
+  "platformLog.loadingMore": "Loading more entries",
+  "platformLog.loadMoreError": "More entries didn't load. Try again.",
+  "platformLog.governanceSection.health": "Health",
+  "platformLog.governanceSection.moderationSteps": "Moderation steps",
+  "platformLog.governanceSection.council": "Council",
+  "platformLog.governanceSection.principles": "Principles",
+  "platformLog.governanceSection.decisions": "Decisions",
+  "platformLog.kind.generic.moderation": "took a moderation action",
+  "platformLog.kind.generic.staff": "took a staff action",
+  "platformLog.kind.generic.governance": "changed a platform setting",
+  "platformLog.kind.generic.reviews": "made a review decision",
+  "platformLog.kind.generic.members": "made an update",
+  "platformLog.kind.generic.moderation.target":
+    "took a moderation action involving",
+  "platformLog.kind.generic.staff.target": "took a staff action involving",
+  "platformLog.kind.generic.governance.target":
+    "changed a platform setting involving",
+  "platformLog.kind.generic.reviews.target": "made a review decision about",
+  "platformLog.kind.generic.members.target": "made an update involving",
+  "platformLog.kind.mod.dismiss": "dismissed a report",
+  "platformLog.kind.mod.dismiss.target": "dismissed a report about",
+  "platformLog.kind.mod.warn": "issued a warning",
+  "platformLog.kind.mod.warn.target": "warned",
+  "platformLog.kind.mod.hide_content": "hid reported content",
+  "platformLog.kind.mod.hide_content.target": "hid content posted by",
+  "platformLog.kind.mod.remove_content": "removed reported content",
+  "platformLog.kind.mod.remove_content.target": "removed content posted by",
+  "platformLog.kind.mod.restrict": "restricted an account",
+  "platformLog.kind.mod.restrict.target": "restricted",
+  "platformLog.kind.mod.suspend": "suspended an account",
+  "platformLog.kind.mod.suspend.target": "suspended",
+  "platformLog.kind.mod.ban": "banned an account",
+  "platformLog.kind.mod.ban.target": "banned",
+  "platformLog.kind.mod.escalate": "escalated a report",
+  "platformLog.kind.mod.escalate.target": "escalated a report about",
+  "platformLog.kind.mod.ban_pending_ratification": "proposed a ban",
+  "platformLog.kind.mod.ban_pending_ratification.target": "proposed banning",
+  "platformLog.kind.mod.ban_declined": "declined a proposed ban",
+  "platformLog.kind.mod.ban_declined.target": "declined the proposed ban on",
+  "platformLog.kind.mod.ban_hold_expired": "let a ban hold expire",
+  "platformLog.kind.mod.ban_hold_expired.target": "let the ban hold expire for",
+  "platformLog.kind.mod.appeal_upheld": "upheld an appeal",
+  "platformLog.kind.mod.appeal_upheld.target": "upheld the appeal from",
+  "platformLog.kind.mod.appeal_overturned": "overturned a decision on appeal",
+  "platformLog.kind.mod.appeal_overturned.target":
+    "overturned the decision on appeal for",
+  "platformLog.kind.mod.content_restored": "restored content",
+  "platformLog.kind.mod.content_restored.target": "restored content posted by",
+  "platformLog.kind.mod.restriction_lifted": "lifted a restriction",
+  "platformLog.kind.mod.restriction_lifted.target": "lifted the restriction on",
+  "platformLog.kind.mod.suspension_lifted": "lifted a suspension",
+  "platformLog.kind.mod.suspension_lifted.target": "lifted the suspension on",
+  "platformLog.kind.mod.member_verified": "verified a member",
+  "platformLog.kind.mod.member_verified.target": "verified",
+  "platformLog.kind.mod.evidence_cited": "cited evidence",
+  "platformLog.kind.mod.evidence_cited.target": "cited evidence about",
+  "platformLog.kind.mod.conversation_context_viewed":
+    "viewed a reported conversation",
+  "platformLog.kind.mod.conversation_context_viewed.target":
+    "viewed a reported conversation involving",
+  "platformLog.kind.mod.report_message_attachment_viewed":
+    "opened a reported attachment",
+  "platformLog.kind.mod.report_message_attachment_viewed.target":
+    "opened an attachment reported about",
+  "platformLog.kind.mod.thread_locked": "locked a forum thread",
+  "platformLog.kind.mod.thread_locked.target": "locked a thread by",
+  "platformLog.kind.mod.thread_unlocked": "unlocked a forum thread",
+  "platformLog.kind.mod.thread_unlocked.target": "unlocked a thread by",
+  "platformLog.kind.mod.thread_pinned": "pinned a forum thread",
+  "platformLog.kind.mod.thread_pinned.target": "pinned a thread by",
+  "platformLog.kind.mod.thread_unpinned": "unpinned a forum thread",
+  "platformLog.kind.mod.thread_unpinned.target": "unpinned a thread by",
+  "platformLog.kind.mod.thread_official_set": "marked a thread as official",
+  "platformLog.kind.mod.thread_official_set.target":
+    "marked as official a thread by",
+  "platformLog.kind.mod.thread_official_cleared":
+    "removed a thread's official mark",
+  "platformLog.kind.mod.thread_official_cleared.target":
+    "removed the official mark from a thread by",
+  "platformLog.kind.mod.thread_deleted": "deleted a forum thread",
+  "platformLog.kind.mod.thread_deleted.target": "deleted a thread by",
+  "platformLog.kind.mod.thread_review_approved": "approved a held thread",
+  "platformLog.kind.mod.thread_review_approved.target":
+    "approved a held thread by",
+  "platformLog.kind.mod.thread_review_rejected": "rejected a held thread",
+  "platformLog.kind.mod.thread_review_rejected.target":
+    "rejected a held thread by",
+  "platformLog.kind.mod.topic_hard_delete": "permanently deleted a topic",
+  "platformLog.kind.mod.topic_hard_delete.target":
+    "permanently deleted a topic by",
+  "platformLog.kind.mod.media_force_delete": "force-deleted an upload",
+  "platformLog.kind.mod.media_force_delete.target":
+    "force-deleted an upload by",
+  "platformLog.kind.mod.housing_coop_delete": "deleted a housing co-op",
+  "platformLog.kind.mod.housing_coop_delete.target":
+    "deleted a housing co-op run by",
+  "platformLog.kind.mod.housing_coop_join_request_triage":
+    "triaged a co-op join request",
+  "platformLog.kind.mod.housing_coop_join_request_triage.target":
+    "triaged a co-op join request from",
+  "platformLog.kind.mod.housing_group_delete": "deleted a housing group",
+  "platformLog.kind.mod.housing_group_delete.target":
+    "deleted a housing group run by",
+  "platformLog.kind.mod.housing_group_join_request_triage":
+    "triaged a housing group join request",
+  "platformLog.kind.mod.housing_group_join_request_triage.target":
+    "triaged a housing group join request from",
+  "platformLog.kind.mod.housing_group_listing_hide":
+    "hid a housing group listing",
+  "platformLog.kind.mod.housing_group_listing_hide.target":
+    "hid a housing group listing by",
+  "platformLog.kind.mod.housing_group_listing_unhide":
+    "restored a housing group listing",
+  "platformLog.kind.mod.housing_group_listing_unhide.target":
+    "restored a housing group listing by",
+  "platformLog.kind.mod.housing_listing_approved": "approved a housing listing",
+  "platformLog.kind.mod.housing_listing_approved.target":
+    "approved a housing listing by",
+  "platformLog.kind.mod.housing_listing_changes_requested":
+    "asked for changes to a housing listing",
+  "platformLog.kind.mod.housing_listing_changes_requested.target":
+    "asked for changes to a housing listing by",
+  "platformLog.kind.mod.housing_listing_rejected": "rejected a housing listing",
+  "platformLog.kind.mod.housing_listing_rejected.target":
+    "rejected a housing listing by",
+  "platformLog.kind.mod.housing_listing_taken_down":
+    "took down a housing listing",
+  "platformLog.kind.mod.housing_listing_taken_down.target":
+    "took down a housing listing by",
+  "platformLog.kind.mod.role_changed": "changed a member's role",
+  "platformLog.kind.mod.role_changed.target": "changed the role of",
+  "platformLog.kind.mod.staff_role_granted": "granted a staff role",
+  "platformLog.kind.mod.staff_role_granted.target": "granted a staff role to",
+  "platformLog.kind.mod.staff_role_revoked": "revoked a staff role",
+  "platformLog.kind.mod.staff_role_revoked.target": "revoked a staff role from",
+  "platformLog.kind.mod.invite_quota_changed": "changed an invite quota",
+  "platformLog.kind.mod.invite_quota_changed.target":
+    "changed the invite quota of",
+  "platformLog.kind.mod.invite_revoked": "revoked an invite",
+  "platformLog.kind.mod.invite_revoked.target": "revoked an invite from",
+  "platformLog.kind.mod.sign_in_identity_relinked":
+    "relinked a sign-in identity",
+  "platformLog.kind.mod.sign_in_identity_relinked.target":
+    "relinked the sign-in identity of",
+  "platformLog.kind.mod.sign_in_identity_candidate_dismissed":
+    "dismissed a sign-in identity match",
+  "platformLog.kind.mod.sign_in_identity_candidate_dismissed.target":
+    "dismissed a sign-in identity match for",
+  "platformLog.kind.mod.account_reactivated_by_admin": "reactivated an account",
+  "platformLog.kind.mod.account_reactivated_by_admin.target":
+    "reactivated the account of",
+  "platformLog.kind.mod.email_suppression_lifted":
+    "lifted an email suppression",
+  "platformLog.kind.mod.email_suppression_lifted.target":
+    "lifted the email suppression for",
+  "platformLog.kind.mod.member_sign_in_email_viewed":
+    "viewed a member's sign-in email",
+  "platformLog.kind.mod.member_sign_in_email_viewed.target":
+    "viewed the sign-in email of",
+  "platformLog.kind.mod.message_deleted_by_staff": "deleted a message",
+  "platformLog.kind.mod.message_deleted_by_staff.target":
+    "deleted a message from",
+  "platformLog.kind.mod.official_message_sent": "sent an official message",
+  "platformLog.kind.mod.official_message_sent.target":
+    "sent an official message to",
+  "platformLog.kind.mod.official_broadcast_sent": "sent an official broadcast",
+  "platformLog.kind.mod.official_broadcast_sent.target":
+    "sent an official broadcast to",
+  "platformLog.kind.mod.community_ban_applied": "applied a community ban",
+  "platformLog.kind.mod.community_ban_applied.target":
+    "applied a community ban to",
+  "platformLog.kind.mod.community_ban_lifted": "lifted a community ban",
+  "platformLog.kind.mod.community_ban_lifted.target":
+    "lifted the community ban on",
+  "platformLog.kind.mod.community_member_removed": "removed a community member",
+  "platformLog.kind.mod.community_member_removed.target":
+    "removed a community member:",
+  "platformLog.kind.governance.section_changed":
+    "updated the {section} section of governance",
+  "platformLog.kind.governance.finance_changed":
+    "updated the finances ({field})",
+  "platformLog.kind.settings.changed": "changed a platform setting",
+  "platformLog.kind.roadmap.changed": "updated the roadmap: {action}",
+  "platformLog.kind.verification.submitted": "asked to be verified",
+  "platformLog.kind.verification.approved": "approved a verification",
+  "platformLog.kind.verification.approved.target":
+    "approved the verification of",
+  "platformLog.kind.verification.rejected": "rejected a verification",
+  "platformLog.kind.verification.rejected.target":
+    "rejected the verification of",
+  "platformLog.kind.verification.overridden": "overrode a verification level",
+  "platformLog.kind.verification.overridden.target":
+    "overrode the verification level of",
+  "platformLog.kind.verification.downgraded": "downgraded a verification",
+  "platformLog.kind.verification.downgraded.target":
+    "downgraded the verification of",
+  "platformLog.kind.verification.appealed": "appealed a verification decision",
+  "platformLog.kind.verification.withdrawn": "withdrew a verification request",
+  "platformLog.kind.safe_space.nomination_acknowledged":
+    "acknowledged a safe space nomination",
+  "platformLog.kind.safe_space.nomination_assigned":
+    "assigned a safe space nomination",
+  "platformLog.kind.safe_space.nomination_awarded":
+    "awarded a safe space badge",
+  "platformLog.kind.safe_space.nomination_declined":
+    "declined a safe space nomination",
+  "platformLog.kind.safe_space.nomination_reopened":
+    "reopened a safe space nomination",
+  "platformLog.kind.safe_space.flag_raised": "raised a safe space concern",
+  "platformLog.kind.safe_space.flag_withdrawn": "withdrew a safe space concern",
+  "platformLog.kind.safe_space.flag_resolved": "resolved a safe space concern",
+  "platformLog.kind.safe_space.badge_suspended": "suspended a safe space badge",
+  "platformLog.kind.safe_space.badge_restored": "restored a safe space badge",
+  "platformLog.kind.listing.status_changed": "changed a listing's status",
+  "platformLog.kind.listing.removed": "removed a listing",
+  "platformLog.kind.listing.question_asked": "asked a listing owner a question",
+  "platformLog.kind.listing.answered":
+    "answered a staff question on their listing",
+  "platformLog.kind.listing.bulk_status": "changed listing statuses in bulk",
+  "platformLog.kind.listing.ownership_transferred":
+    "transferred a listing's ownership",
+  "platformLog.kind.listing.owner_edited": "edited their listing",
+  "platformLog.kind.listing.co_manager_added": "joined a listing's team",
+  "platformLog.kind.listing.co_manager_removed": "ended a listing team seat",
+  "platformLog.kind.listing.staff_created": "created a listing",
+  "platformLog.kind.listing.suggestion_applied":
+    "applied a suggested listing edit",
+  "platformLog.kind.listing.directory_paused":
+    "paused their listing in the directory",
+  "platformLog.kind.listing.directory_resumed":
+    "put their listing back in the directory",
+  "platformLog.kind.listing.staff_edited": "edited a listing",
+  "platformLog.kind.member.joined": "joined the platform",
+  "platformLog.kind.member.vouch_given": "vouched for",
+  "platformLog.kind.member.vouch_given.target": "vouched for",
+  "platformLog.kind.member.community_joined": "joined a community",
+  "platformLog.kind.member.report_filed": "filed a report",
+  "platformLog.kind.member.report_filed_emergency": "filed an emergency report",
+  "platformLog.kind.member.join_requested": "asked to join the platform",
+  "platformLog.kind.member.thread_started": "started a forum thread",
 
   // Live-feed sentence fragments, composed per `feed[].type` from the DTO's
   // actor/target/community/count around these; see adminOverview.adapters.ts.
@@ -475,12 +751,44 @@ export const admin: Catalog = {
   "members.verify.declineReason.implausible": "Details don't add up",
   "members.verify.declineReason.safety_concern": "Safety concern",
   "members.verify.declineReason.other": "Other",
+  "members.verify.declineReasonDetail.spam_pattern":
+    "Signup looks automated or clearly fake.",
+  "members.verify.declineReasonDetail.underage":
+    "The applicant appears to be under 18.",
+  "members.verify.declineReasonDetail.implausible":
+    "The answers don't add up or seem made up.",
+  "members.verify.declineReasonDetail.safety_concern":
+    "Something about this request raises a safety flag.",
+  "members.verify.declineReasonDetail.other":
+    "A decline for a reason the other options don't capture.",
+  "members.verify.declineModal.eyebrow": "Membership request",
   "members.verify.declineModal.title": "Decline {name}'s request?",
   "members.verify.declineModal.body":
     "Pick the closest reason. Nothing is sent to the applicant. If they check their request status themselves, they see a short, generic note instead of this.",
   "members.verify.declineModal.reasonLabel": "Reason",
-  "members.verify.declineModal.reasonPlaceholder": "Choose a reason",
   "members.verify.declineModal.confirmCta": "Decline request",
+  "members.verify.approvalReason.member_vouched": "A member vouched",
+  "members.verify.approvalReason.clear_request": "Clear, genuine request",
+  "members.verify.approvalReason.known_to_team": "Known to the team",
+  "members.verify.approvalReason.partner_or_event":
+    "Came through a partner or event",
+  "members.verify.approvalReason.other": "Other",
+  "members.verify.approvalReasonDetail.member_vouched":
+    "A member they named backs them up.",
+  "members.verify.approvalReasonDetail.clear_request":
+    "What they wrote reads as a real person who wants to be here.",
+  "members.verify.approvalReasonDetail.known_to_team":
+    "Someone on the team knows them or has met them.",
+  "members.verify.approvalReasonDetail.partner_or_event":
+    "They found us through a partner group, a gathering or an event.",
+  "members.verify.approvalReasonDetail.other":
+    "An approval for a reason the other options don't capture.",
+  "members.verify.approveModal.eyebrow": "Membership request",
+  "members.verify.approveModal.title": "Welcome {name} in?",
+  "members.verify.approveModal.body":
+    "Pick the closest reason. Only staff see it. Approving mints an invite link that you copy and send to them yourself.",
+  "members.verify.approveModal.reasonLabel": "Reason",
+  "members.verify.approveModal.confirmCta": "Welcome in",
   "members.verify.waitlistCta": "Waitlist",
   "members.verify.waitlistedToast": "{name} moved to the waitlist",
   "members.verify.waitlistedSectionTitle": "Waitlisted",
@@ -515,6 +823,12 @@ export const admin: Catalog = {
   "members.verify.bulk.confirmApprove.body":
     "Each approval mints an invite link. Nothing is sent to anyone: you copy each link from the Decided tab and pass it on yourself.",
   "members.verify.bulk.confirmApprove.confirmCta": "Approve all",
+  "members.verify.bulk.confirmApprove.reasonBody":
+    "Pick the closest reason. It applies to all {count} selected requests, and only staff see it.",
+  "members.verify.bulk.confirmApprove.reasonLine_one":
+    "This records “{reason}” against the {count} request selected.",
+  "members.verify.bulk.confirmApprove.reasonLine_other":
+    "This records “{reason}” against all {count} selected requests.",
   "members.verify.bulk.confirmWaitlist.title": "Waitlist {count} requests?",
   "members.verify.bulk.confirmWaitlist.body":
     "They stay open and move to the waitlist, so you can come back to them.",
@@ -583,7 +897,38 @@ export const admin: Catalog = {
   "members.verify.decided.appliedOn": "Applied {date}",
   "members.verify.decided.decidedOn": "Decided {date}",
   "members.verify.decided.decidedUnknown": "Decision date not recorded",
+  "members.verify.decided.note.label": "Staff note",
+  "members.verify.decided.note.hint":
+    "Only staff can see this. The applicant never does.",
+  "members.verify.decided.note.editedBy": "Edited by {name} · {date}",
+  "members.verify.decided.note.editedByUndated": "Edited by {name}",
+  "members.verify.decided.note.editorYou": "you",
+  "members.verify.decided.note.editorUnknown": "a staff member",
+  "members.verify.decided.note.add": "Add a note",
+  "members.verify.decided.note.edit": "Edit note",
+  "members.verify.decided.note.save": "Save",
+  "members.verify.decided.note.saving": "Saving",
+  "members.verify.decided.note.cancel": "Cancel",
+  "members.verify.decided.note.savedToast": "Note saved",
+  "members.verify.decided.note.removedToast": "Note removed",
+  "members.verify.decided.note.error.tooLong":
+    "That note is over 2000 characters. Shorten it and save again.",
+  "members.verify.decided.note.error.forbidden":
+    "Notes on requests are for moderators and admins. Ask someone on that team.",
+  "members.verify.decided.note.error.notFound":
+    "This request isn't here any more. Refresh the tab and look again.",
+  "members.verify.decided.note.error.notDeclined":
+    "Only declined requests take a note, and this one has changed. Refresh the tab to see where it stands.",
+  "members.verify.decided.note.error.generic":
+    "The note didn't save. Your text is still here, so try again.",
   "members.verify.decided.declineReasonLine": "Reason: {reason}",
+  "members.verify.decided.decidedOnBy": "Decided {date} by {name}",
+  "members.verify.decided.decidedUnknownBy":
+    "Decided by {name}, date not recorded",
+  "members.verify.decided.reviewerYou": "you",
+  "members.verify.decided.approvalReasonLine": "Reason: {reason}",
+  "members.verify.decided.approvalReasonMissing":
+    "No reason on record. This was approved before reasons were asked for.",
   "members.verify.decided.showDetails": "Show details for {name}",
   "members.verify.decided.hideDetails": "Hide details for {name}",
   "members.verify.decided.filter.groupLabel": "Filter decided requests",
@@ -741,15 +1086,66 @@ export const admin: Catalog = {
     "{name} will get full admin access to the platform right away: staff and role management, moderation actions on every report, and every other admin tool. This is the highest level of access QueerPulse has. It's recorded in the audit log under your name.",
   "members.role.grantConfirm.confirmCta": "Grant admin access",
 
-  // ── Staff roster (/admin/staff) — read-only list of every moderator/admin ─
+  // ── Staff roster (/admin/staff): every admin, moderator and grant holder ─
   "staff.title": "Staff & <em>roles</em>",
   "staff.header.eyebrow": "Who runs QueerPulse",
   "staff.header.sub":
-    "Every moderator and admin on the platform, plus everyone holding a staff grant. To change a role or a grant, open that person's profile in Members.",
+    "Every admin, moderator and grant holder, and who holds each grant today. Manage opens a person's record here to change their tier or grants.",
   "staff.grantsLabel": "Grants",
-  "staff.tier.member": "Member",
   "staff.empty": "Nobody holds a staff role right now.",
   "staff.loadError": "Couldn't load the staff roster.",
+  "staff.summary.heading": "At a glance",
+  "staff.summary.admins": "Admins",
+  "staff.summary.adminsHint": "Full platform access",
+  "staff.summary.moderators": "Moderators",
+  "staff.summary.moderatorsHint": "Reports and safety",
+  "staff.summary.grantHolders": "Grant holders",
+  "staff.summary.grantHoldersHint": "One domain each",
+  "staff.summary.uncovered": "Uncovered grants",
+  "staff.summary.uncoveredHint": "See which ones need a holder",
+  "staff.summary.uncoveredHintNone": "Every grant has a holder",
+  "staff.coverage.heading": "Grant coverage",
+  "staff.coverage.sub":
+    "Who holds each staff grant today. Pick a grant to see its holders below.",
+  "staff.coverage.holders_one": "{count} holder",
+  "staff.coverage.holders_other": "{count} holders",
+  "staff.coverage.nobody": "Nobody holds this",
+  "staff.coverage.inactive_one": "{count} suspended or deactivated holder",
+  "staff.coverage.inactive_other": "{count} suspended or deactivated holders",
+  "staff.coverage.more": "+{count}",
+  "staff.roster.heading": "Everyone on staff",
+  "staff.toolbar.searchLabel": "Search staff",
+  "staff.toolbar.searchPlaceholder": "Name or @handle",
+  "staff.toolbar.searchClear": "Clear search",
+  "staff.toolbar.tierLabel": "Show",
+  "staff.toolbar.tier.all": "All",
+  "staff.toolbar.tier.admin": "Admins",
+  "staff.toolbar.tier.moderator": "Moderators",
+  "staff.toolbar.tier.member": "Grant holders",
+  "staff.toolbar.grantChipRemove": "Remove the {grant} filter",
+  "staff.toolbar.clear": "Clear filters",
+  "staff.toolbar.showing": "Showing {shown} of {total}",
+  "staff.group.admin": "Admins",
+  "staff.group.moderator": "Moderators",
+  "staff.group.member": "Grant holders",
+  "staff.row.status.suspended": "Suspended",
+  "staff.row.status.deactivated": "Deactivated",
+  "staff.row.joined": "Joined {date}",
+  "staff.row.grantedOn": "Granted {date}",
+  // Read after the grant's name inside its chip, for anyone the title
+  // tooltip never reaches.
+  "staff.row.grantedOnSpoken": ", granted {date}",
+  "staff.row.allAccess": "Every staff capability",
+  "staff.row.tierOnly": "Tier access only",
+  "staff.row.manage": "Manage",
+  "staff.row.manageAria": "Manage {name}",
+  "staff.row.viewProfile": "View {name}'s profile",
+  "staff.filteredEmpty.title": "Nobody matches these filters",
+  "staff.filteredEmpty.body":
+    "Try another name or @handle, or widen the tier and grant filters.",
+  "staff.filteredEmpty.unheldTitle": "Nobody holds {grant} yet",
+  "staff.filteredEmpty.unheldBody":
+    "Open someone's record with Manage to grant it.",
 
   // ── Members: staff roles (additive functional grants, e.g. magazine desk) ─
   "staffRoles.title": "Roles & access",
@@ -1548,6 +1944,8 @@ export const admin: Catalog = {
   "adminListings.columns.status": "Status",
   "adminListings.columns.actions": "Actions",
   "adminListings.row.openAriaLabel": "Open {name}",
+  "adminListings.row.editCta": "Edit",
+  "adminListings.row.editAriaLabel": "Edit {name}",
   "adminListings.noMatch.title": "No listings match “{query}”",
   "adminListings.noMatch.body":
     "Try a place name, a submitter, or a reference like QPL-2026-0008.",
@@ -1580,6 +1978,15 @@ export const admin: Catalog = {
   "adminListings.bulk.confirmRemove.reasonPlaceholder":
     "Add a note for the record…",
   "adminListings.bulk.confirmRemove.confirmCta": "Remove listings",
+  "adminListings.bulk.confirmPublish.title_one":
+    "Publish {count} listing live?",
+  "adminListings.bulk.confirmPublish.title_other":
+    "Publish {count} listings live?",
+  "adminListings.bulk.confirmPublish.body_one":
+    "The selected listing appears in the directory straight away, where members can find it. You can send it back to review later.",
+  "adminListings.bulk.confirmPublish.body_other":
+    "All {count} selected listings appear in the directory straight away, where members can find them. You can send them back to review later.",
+  "adminListings.bulk.confirmPublish.confirmCta": "Publish live",
   "adminListings.sendBack.confirm.title": "Send {name} back to review?",
   "adminListings.sendBack.confirm.body":
     "{name} moves back into the review queue. Add a quick note if it helps the next pass.",
@@ -1587,6 +1994,10 @@ export const admin: Catalog = {
   "adminListings.sendBack.confirm.reasonPlaceholder":
     "What needs another look…",
   "adminListings.sendBack.confirm.confirmCta": "Send back to review",
+  "adminListings.publish.confirm.title": "Publish {name} live?",
+  "adminListings.publish.confirm.body":
+    "{name} appears in the directory straight away, where members can find it. You can send it back to review later from its menu.",
+  "adminListings.publish.confirm.confirmCta": "Publish live",
   // ── Drawer history + Q&A thread ───────────────────────────────────────────
   "adminListings.history.eventsHeading": "Moderation history",
   "adminListings.history.questionsHeading": "Questions",
@@ -6886,7 +7297,9 @@ export const admin: Catalog = {
   "listingNew.owner.label": "Offer it to someone",
   "listingNew.owner.hint":
     "Optional. They hold the listing in their own name once they accept, and everything about the owner is theirs to fill in.",
-  "listingNew.owner.slugLabel": "Member profile slug",
+  "listingNew.owner.memberLabel": "Member",
+  "listingNew.owner.memberSearchAria":
+    "Search members to offer this listing to",
   "listingNew.owner.slugHelper":
     "Leave this empty to keep the listing with the team for now.",
   "listingNew.owner.noteLabel": "Message to them",
@@ -6929,6 +7342,12 @@ export const admin: Catalog = {
     "QueerPulse holds this listing until someone takes it over. On a live listing, your changes show in the directory as soon as you save.",
   "listingEdit.queueBreadcrumb": "Listings",
   "listingEdit.submitCta": "Save changes",
+  "listingEdit.publishCta": "Save and publish",
+  "listingEdit.editingRef": "Editing {ref}",
+  "listingEdit.previewFoot.live":
+    "Your changes go live in the directory as soon as you save.",
+  "listingEdit.previewFoot.unpublished":
+    "This listing isn't published yet. Saving keeps it in the review queue.",
   "listingEdit.hasOwner.title": "This listing has an owner now",
   "listingEdit.hasOwner.body":
     "Someone has taken this listing over, so they edit it from now on. To change something, suggest an edit from its page in the directory.",
@@ -6941,7 +7360,19 @@ export const admin: Catalog = {
     "It may have been removed. Head back to the queue to pick another.",
   "listingEdit.success.title": "Saved",
   "listingEdit.success.body": "Your changes to {ref} are saved.",
+  "listingEdit.success.publishedTitle": "Saved and published",
+  "listingEdit.success.publishedBody":
+    "Your changes to {ref} are live in the directory.",
   "listingEdit.success.closeCta": "Back to the listings queue",
+
+  // ── Admin member picker (AdminMemberPickerField) ─────────────────────────
+  // The member search an admin form uses to pick one person by name; a pick
+  // collapses into a clearable chip.
+  "memberPicker.placeholder": "Search members by name",
+  "memberPicker.emptyHint": "Type at least two letters of their name.",
+  "memberPicker.searchError":
+    "Member search isn't answering right now. Try again in a moment.",
+  "memberPicker.clearAria": "Remove {name} and pick someone else",
 
   // ── Delegation panel on a listing ─────────────────────────────────────────
   // Who runs a listing the house authored: its owner, any ownership offer
@@ -6951,9 +7382,8 @@ export const admin: Catalog = {
   "listingDelegation.intro":
     "Who runs this page: the owner, any open ownership offer, and the people seated to help.",
   "listingDelegation.unknownMember": "A member who has since left",
-  "listingDelegation.slugPlaceholder": "member-profile-slug",
-  "listingDelegation.unknownSlugError":
-    "No active member answers to that slug. Check it on their profile page.",
+  "listingDelegation.unknownMemberError":
+    "That member isn't active anymore, so this can't go to them. Pick someone else.",
   "listingDelegation.loadError.title": "The delegation panel could not load",
   "listingDelegation.loadError.body":
     "The open offer and the co-manager roster are both missing from this view. Try again.",
@@ -6974,7 +7404,9 @@ export const admin: Catalog = {
   "listingDelegation.offer.awaitingReply": "waiting on their answer",
   "listingDelegation.offer.oneAtATime":
     "A listing carries one open offer at a time. To offer it to somebody else, withdraw this one first.",
-  "listingDelegation.offer.slugLabel": "Member profile slug",
+  "listingDelegation.offer.memberLabel": "Offer it to",
+  "listingDelegation.offer.memberSearchAria":
+    "Search members to offer this listing to",
   "listingDelegation.offer.noteLabel": "A note for them (optional)",
   "listingDelegation.offer.notePlaceholder":
     "Say why you are offering them this listing.",
@@ -6985,7 +7417,7 @@ export const admin: Catalog = {
   "listingDelegation.offer.revokeConfirmBody":
     "They lose the offer straight away. Once it is withdrawn you can offer this listing to somebody else.",
   "listingDelegation.offer.revokeConfirmCta": "Withdraw",
-  "listingDelegation.offer.sentToast": "Ownership offered to @{slug}.",
+  "listingDelegation.offer.sentToast": "Ownership offered to {name}.",
   "listingDelegation.offer.revokedToast": "The ownership offer is withdrawn.",
   "listingDelegation.offer.conflictError":
     "This listing already has an owner, or it already carries an open offer. Reopen the drawer to see where it stands.",
@@ -7013,10 +7445,12 @@ export const admin: Catalog = {
     "A seat opened on a listing that already has an owner leaves when that owner does.",
   "listingDelegation.roster.seatsFullNotice":
     "Every seat on this listing is taken. Free one up before inviting anybody else.",
-  "listingDelegation.roster.inviteLabel": "Member profile slug",
+  "listingDelegation.roster.inviteMemberLabel": "Invite a co-manager",
+  "listingDelegation.roster.inviteSearchAria":
+    "Search members to invite as a co-manager",
   "listingDelegation.roster.inviteCta": "Send invitation",
   "listingDelegation.roster.invitingCta": "Sending…",
-  "listingDelegation.roster.invitedToast": "Invitation sent to @{slug}.",
+  "listingDelegation.roster.invitedToast": "Invitation sent to {name}.",
   "listingDelegation.roster.removeCta": "Remove seat",
   "listingDelegation.roster.cancelInviteCta": "Cancel invitation",
   "listingDelegation.roster.removeConfirmTitle":

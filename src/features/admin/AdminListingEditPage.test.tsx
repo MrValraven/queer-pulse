@@ -35,6 +35,9 @@ vi.mock("../marketing/listBusiness/ListingWizard", () => ({
     initialDraft,
     initialStep,
     submitLabel,
+    saveNowLabel,
+    editRef,
+    previewFootnote,
     isEditSave,
     submit,
   }: ListingWizardProps) => (
@@ -43,6 +46,9 @@ vi.mock("../marketing/listBusiness/ListingWizard", () => ({
       <p>{`path:${initialDraft?.path ?? ""}`}</p>
       <p>{`step:${initialStep ?? ""}`}</p>
       <p>{`submitLabel:${submitLabel ?? ""}`}</p>
+      <p>{`saveNowLabel:${saveNowLabel ?? ""}`}</p>
+      <p>{`editRef:${editRef ?? ""}`}</p>
+      <p>{`previewFootnote:${previewFootnote ?? ""}`}</p>
       <p>{`isEditSave:${String(Boolean(isEditSave))}`}</p>
       <button
         type="button"
@@ -163,7 +169,32 @@ describe("AdminListingEditPage", () => {
 
     expect(await screen.findByText("step:1")).toBeInTheDocument();
     expect(screen.getByText("submitLabel:Save changes")).toBeInTheDocument();
+    expect(screen.getByText("saveNowLabel:Save changes")).toBeInTheDocument();
+    expect(screen.getByText(`editRef:${LISTING_REF}`)).toBeInTheDocument();
     expect(screen.getByText("isEditSave:true")).toBeInTheDocument();
+    // The status line names the edited listing and its review status.
+    expect(screen.getByText(`Editing ${LISTING_REF}`)).toBeInTheDocument();
+    expect(screen.getByText("In review")).toBeInTheDocument();
+  });
+
+  it("labels the save as publishing when the listing is already live", async () => {
+    vi.spyOn(adminListingEditApi, "getAdminEditableListing").mockResolvedValue(
+      editableListing({ status: "live" }),
+    );
+    renderPage();
+
+    expect(
+      await screen.findByText("submitLabel:Save and publish"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("saveNowLabel:Save and publish"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "previewFootnote:Your changes go live in the directory as soon as you save.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Live")).toBeInTheDocument();
   });
 
   it("offers the directory page from the has-owner state when the listing is live", async () => {

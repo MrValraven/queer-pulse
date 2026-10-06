@@ -53,3 +53,4 @@ export {
   type RovingRadioProps,
 } from "./useRovingRadioGroup";
 export { useAutoGrowTextarea } from "./useAutoGrowTextarea";
+export { useOneLineFit, countFittingItems } from "./useOneLineFit";

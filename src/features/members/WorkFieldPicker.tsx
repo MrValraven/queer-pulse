@@ -16,6 +16,7 @@ import {
 } from "./workFieldPicker.data";
 import { WorkProfessionArea } from "./WorkProfessionArea";
 import { ResultChipGlide } from "./WorkProfessionResults";
+import { WorkPickerShowAllToggle } from "./WorkPickerShowAllToggle";
 import styles from "./WorkFieldPicker.module.css";
 
 interface WorkFieldPickerProps extends WorkFieldSelection {
@@ -44,6 +45,11 @@ interface WorkFieldPickerProps extends WorkFieldSelection {
  * `toggleWorkProfession` adds the parent field, which keeps a searched pick
  * coherent with the field chips.
  *
+ * A member who already has a field and a role opens on just their picks,
+ * with the search box folded away and a quiet toggle under them to show every
+ * field and role. Any pick or search keeps the full list open, so it never
+ * folds away under a member who is still choosing.
+ *
  * Values are the ids the member directory filters on, so anything picked here
  * is immediately findable under "What they do" / "Profession" in /members.
  */
@@ -67,7 +73,14 @@ export function WorkFieldPicker({
   // fade. A toggle keeps the glide, which carries a chip's neighbours over as
   // its tick changes its width.
   const [shouldChipsGlide, setShouldChipsGlide] = useState(true);
-  const isSearching = foldForSearch(query) !== "";
+  // Whether the member opened the full list. It only counts once a field and
+  // a role are both picked, so a draft that loads late with both still opens
+  // folded, and onboarding (nothing picked yet) shows everything. While folded
+  // the query is set aside, so the role area shows the member's own roles.
+  const [isExpanded, setIsExpanded] = useState(false);
+  const hasFieldAndRole = discipline.length > 0 && profession.length > 0;
+  const isShowingOnlyPicks = hasFieldAndRole && !isExpanded;
+  const isSearching = !isShowingOnlyPicks && foldForSearch(query) !== "";
   const headingClass = headingClassName ?? styles.head;
   const selection = { discipline, profession };
   const selectedProfessions = new Set(profession);
@@ -80,10 +93,18 @@ export function WorkFieldPicker({
     setQuery(nextQuery);
     setKeptFieldIds(discipline);
     setShouldChipsGlide(false);
+    setIsExpanded(true);
   };
   const toggleField = (fieldId: string) => {
     setShouldChipsGlide(true);
+    setIsExpanded(true);
     onChange(toggleWorkField(selection, fieldId));
+  };
+  const toggleShowAll = () => {
+    setShouldChipsGlide(true);
+    // Folding clears the query, so opening again shows the plain list.
+    if (isExpanded) setQuery("");
+    setIsExpanded(!isExpanded);
   };
 
   // Matched against the resolved `t()` labels, so the search works in the
@@ -103,10 +124,9 @@ export function WorkFieldPicker({
     [isSearching, query, t, keptFieldIds, discipline],
   );
 
-  const fieldOptions = (search?.fields ?? DISCIPLINES).map((field) => ({
-    value: field.id,
-    label: t(field.labelKey),
-  }));
+  const fieldOptions = (search?.fields ?? DISCIPLINES)
+    .filter((field) => !isShowingOnlyPicks || discipline.includes(field.id))
+    .map((field) => ({ value: field.id, label: t(field.labelKey) }));
   const professionGroups = search?.professionGroups ?? [];
   // Every field holds roles, and a matching field brings all of them, so a
   // search has results exactly when it has groups. With none, the message sits
@@ -116,70 +136,85 @@ export function WorkFieldPicker({
   const shouldShowProfessionSection = !hasNoMatch || discipline.length > 0;
   const toggleProfession = (professionId: string) => {
     setShouldChipsGlide(true);
+    setIsExpanded(true);
     onChange(toggleWorkProfession(selection, professionId));
   };
 
   return (
     <div className={className}>
-      <SearchInput
-        className={styles.searchField}
-        placeholder={t("members:workPicker.searchPlaceholder")}
-        value={query}
-        onChange={changeQuery}
-        ariaLabel={t("members:workPicker.searchAriaLabel")}
-      />
-      {/* Always mounted so the live region exists before its text arrives.
+      <div id={`${uid}-body`}>
+        {/* The search folds away while the picker shows only the member's
+          picks. The live region below stays mounted either way. */}
+        <Collapse isOpen={!isShowingOnlyPicks}>
+          <SearchInput
+            className={styles.searchField}
+            placeholder={t("members:workPicker.searchPlaceholder")}
+            value={query}
+            onChange={changeQuery}
+            ariaLabel={t("members:workPicker.searchAriaLabel")}
+          />
+        </Collapse>
+        {/* Always mounted so the live region exists before its text arrives.
           The message folds open and closed inside it; empty, it takes no
           space. */}
-      <div role="status">
-        <Collapse isOpen={hasNoMatch}>
-          <p className={`${styles.prompt} ${styles.noMatch}`}>
-            {t("members:workPicker.noMatch", { query: query.trim() })}
-          </p>
-        </Collapse>
-      </div>
-      {/* The heading and its row fold away together once a search leaves
+        <div role="status">
+          <Collapse isOpen={hasNoMatch}>
+            <p className={`${styles.prompt} ${styles.noMatch}`}>
+              {t("members:workPicker.noMatch", { query: query.trim() })}
+            </p>
+          </Collapse>
+        </div>
+        {/* The heading and its row fold away together once a search leaves
           no field to show, so the heading never stands alone, and the row's
           last chips fold with it. The frame eases the row's height as it
           gains or loses a line. The fold sits outside the frame, where the
           frame never chases it. */}
-      <Collapse isOpen={fieldOptions.length > 0}>
-        <div className={headingClass} id={`${uid}-field`}>
-          {t("members:workPicker.fieldHeading")}
-        </div>
-        <MeasuredHeightFrame>
-          <ChipSelect
-            isPresenceAnimated
-            shouldGlide={shouldChipsGlide}
-            labelledBy={`${uid}-field`}
-            options={fieldOptions}
-            selected={new Set(discipline)}
-            onToggle={toggleField}
-          />
-        </MeasuredHeightFrame>
-      </Collapse>
-
-      <Collapse isOpen={shouldShowProfessionSection}>
-        <div className={styles.professionGroup}>
-          <div className={headingClass} id={`${uid}-profession`}>
-            {t("members:workPicker.professionHeading")}
+        <Collapse isOpen={fieldOptions.length > 0}>
+          <div className={headingClass} id={`${uid}-field`}>
+            {t("members:workPicker.fieldHeading")}
           </div>
-          <ResultChipGlide shouldGlide={shouldChipsGlide}>
-            <WorkProfessionArea
-              groups={professionGroups}
-              discipline={discipline}
-              roleHeadingId={`${uid}-profession`}
-              selected={selectedProfessions}
-              onToggle={toggleProfession}
+          <MeasuredHeightFrame>
+            <ChipSelect
+              isPresenceAnimated
+              shouldGlide={shouldChipsGlide}
+              labelledBy={`${uid}-field`}
+              options={fieldOptions}
+              selected={new Set(discipline)}
+              onToggle={toggleField}
             />
-          </ResultChipGlide>
-          <Collapse isOpen={hasSelectedUnlistedWork}>
-            <p className={`${styles.prompt} ${styles.unlistedNote}`}>
-              {t("members:workPicker.unlistedNote")}
-            </p>
-          </Collapse>
-        </div>
-      </Collapse>
+          </MeasuredHeightFrame>
+        </Collapse>
+
+        <Collapse isOpen={shouldShowProfessionSection}>
+          <div className={styles.professionGroup}>
+            <div className={headingClass} id={`${uid}-profession`}>
+              {t("members:workPicker.professionHeading")}
+            </div>
+            <ResultChipGlide shouldGlide={shouldChipsGlide}>
+              <WorkProfessionArea
+                groups={professionGroups}
+                discipline={discipline}
+                isShowingOnlyPicks={isShowingOnlyPicks}
+                roleHeadingId={`${uid}-profession`}
+                selected={selectedProfessions}
+                onToggle={toggleProfession}
+              />
+            </ResultChipGlide>
+            <Collapse isOpen={hasSelectedUnlistedWork}>
+              <p className={`${styles.prompt} ${styles.unlistedNote}`}>
+                {t("members:workPicker.unlistedNote")}
+              </p>
+            </Collapse>
+          </div>
+        </Collapse>
+      </div>
+      {hasFieldAndRole && (
+        <WorkPickerShowAllToggle
+          isShowingOnlyPicks={isShowingOnlyPicks}
+          controlsId={`${uid}-body`}
+          onToggle={toggleShowAll}
+        />
+      )}
     </div>
   );
 }

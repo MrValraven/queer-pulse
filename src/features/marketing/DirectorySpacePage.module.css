@@ -603,6 +603,12 @@
   text-transform: uppercase;
   font-size: var(--text-11);
 }
+/* The owner's "who runs it" tags: plain pills in full ink, a step stronger
+   than the listing's own tag pills, so they read with the ownership pill
+   beside them. */
+.ownerIdentityPill {
+  color: var(--ink);
+}
 /* Empty-state trust chip: a brand-new listing reads as "New", not as a hollow
    zero-star rating. */
 .newChip {
@@ -2119,7 +2125,8 @@
 }
 /* The address heads the details column. The contact rows below it each carry a
    top hairline, and the first of those doubles as the rule dividing the two. */
-.visitBody > .addr {
+.visitBody > .addr,
+.visitBody > .onlinePlace {
   margin-bottom: 14px;
 }
 /* Saved-count and the primary action close the column, pinned to its foot so
@@ -2133,6 +2140,23 @@
 }
 .visitFoot > .savedSignal + .cta {
   margin-top: 12px;
+}
+/* Online listings only: the freshness stamp, moved here because they never
+   render the hours card it usually closes. It keeps the hairline rhythm of the
+   contact routes above it (the same rule and spacing as the "Message this
+   business" block). The stamp is a <p>, so `.sec p` would set it in 16px body
+   ink with a trailing 1em; two classes outrank that and restore the stamp's
+   own quiet type. */
+.visitFreshness {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.visitFreshness > .freshness {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
 }
 /* ── "Access & languages" section (main column) ─────────────────────────────
    Reuses the .contactRow presentation the two lines already had, minus the
@@ -2330,25 +2354,27 @@
   flex-wrap: wrap;
   gap: 8px;
 }
+/* Matches `.smallBtn` in SubprofileEditor.module.css, the button every other
+   photo slot on the platform uses. */
 .reviewPhotoBtn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-height: 34px;
-  padding: 7px 12px;
+  padding: 7px 13px;
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-10);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: border-color 0.15s var(--ease);
+  transition: border-color 0.2s var(--ease);
 }
-@media (hover: hover) and (pointer: fine) {
-  .reviewPhotoBtn:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
+@media (hover: hover) {
+  .reviewPhotoBtn:not(:disabled):hover {
+    border-color: var(--line-strong);
   }
 }
 .reviewPhotoBtn:focus-visible {
@@ -2358,10 +2384,5 @@
 }
 .reviewPhotoBtn:disabled {
   opacity: 0.6;
-  cursor: default;
-}
-.reviewPhotoError {
-  font-size: var(--text-12-5);
-  line-height: 1.5;
-  color: var(--danger);
+  cursor: not-allowed;
 }

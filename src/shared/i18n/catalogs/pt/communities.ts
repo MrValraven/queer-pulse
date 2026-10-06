@@ -116,7 +116,6 @@ export const communities: Catalog = {
     "Isto é o que tem estado a acontecer nas tuas {count} comunidades.",
   "hub.discoverCta": "Descobrir comunidades",
   "hub.startCta": "Começar uma comunidade",
-  "hub.howItWorksCta": "Como funcionam as comunidades",
   "hub.empty.title": "Ainda não te juntaste a nenhuma comunidade",
   "hub.empty.description":
     "Explora por interesse e encontra o teu lugar. Sem pressa.",
@@ -969,7 +968,7 @@ export const communities: Catalog = {
     "Não foi possível enviar esses convites. Tenta novamente.",
   "detail.modtools.invites.empty.title": "Não há mais ninguém para convidar",
   "detail.modtools.invites.empty.description":
-    "Todas as pessoas com quem tens conexão já estão nesta comunidade.",
+    "Todas as tuas conexões já estão cá ou têm um convite ou pedido em aberto.",
   "detail.modtools.invites.result.invited": "Convites enviados ({total})",
   "detail.modtools.invites.result.skipped": "Ignoradas ({total})",
   "detail.modtools.invites.result.skipRow": "{name}: {reason}",
@@ -1005,6 +1004,9 @@ export const communities: Catalog = {
   // Ver o comentario na versao EN.
   "detail.modtools.invites.skip.alreadyInvited": "Já tem um convite à espera.",
   "detail.modtools.invites.skip.banned": "Está barrade desta comunidade.",
+  "detail.modtools.invites.skip.notConnected": "Não é uma das tuas conexões.",
+  "detail.modtools.invites.skip.notParentMember":
+    "Não está na comunidade principal.",
 
   // ── Zona de perigo · o teu papel + ausência de quem é responsável ─────────
 
@@ -1592,11 +1594,12 @@ export const communities: Catalog = {
   "start.running.addStewardModal.sub":
     "As pessoas corresponsáveis só podem ser membros a quem já estás conectada. Pesquisa nas tuas conexões abaixo.",
   "start.running.addStewardModal.searchLabel": "Pesquisar nas tuas conexões",
-  "start.running.addStewardModal.loadMore": "Mostrar mais conexões",
   "start.running.addStewardModal.searchPlaceholder":
     "Pesquisa por nome ou @slug…",
   "start.running.addStewardModal.empty":
     "Podes adicionar pessoas corresponsáveis assim que estiveres conectada a outros membros. Vai a Conexões para aumentar o teu círculo primeiro.",
+  "start.running.addStewardModal.allListedStewarding":
+    "Quem corresponde à pesquisa já é corresponsável.",
   "start.running.insideHeading": "O que está incluído",
   "start.running.insideSub":
     "Ativa o que fizer sentido. Podes sempre adicionar mais depois de estares em funcionamento.",

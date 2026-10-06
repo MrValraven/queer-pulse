@@ -513,9 +513,13 @@
    condition beside the neutral price/tag pills above it; the tick means the
    state is never carried by colour alone. Only positives appear here, so the
    row is short and the listing keeps the honest three-state account. */
+/* Always one line, so a card with long labels never stretches its grid row:
+   `useOneLineFit` decides how many pills fit and the rest fold into the "+N"
+   chip. The row is left unclipped so that chip's tooltip can rise above it. */
 .accessRow {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
   margin: 0;
   padding: 0;
@@ -548,14 +552,68 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.accessMore {
+/* The "+N" chip both one-line card rows end with. It never shrinks, so the
+   room `useOneLineFit` reserved for it is the room it takes. */
+.moreChip {
   display: inline-flex;
+  flex: none;
   align-items: center;
   font-size: var(--text-11-5);
   font-weight: 600;
+  line-height: 16px;
   color: var(--ink-40);
   padding-block: 4px;
   white-space: nowrap;
+  cursor: default;
+}
+/* The measuring copy of a row: an empty clipping box holding an unwrapped,
+   invisible strip of every item at its natural width. */
+.fitMeasureClip {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.fitMeasureLayer {
+  display: flex;
+  inline-size: max-content;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.fitMeasureLayer > * {
+  flex: none;
+  max-width: none;
+}
+
+/* ── Who runs it on the card ─────────────────────────────────────────────
+   The owner's own tags, as one quiet line under the access row. Each tag
+   after the first carries its own " · ", kept by `white-space: pre`, and the
+   tags that do not fit fold into the same "+N" chip as the access row. */
+.ownersRow {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--ink-60);
+}
+.ownersItem {
+  min-width: 0;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: ellipsis;
+}
+.ownersRow .moreChip {
+  padding-block: 0;
+  padding-inline-start: 6px;
 }
 
 /* ── "Use my location" ─────────────────────────────────────────────────────

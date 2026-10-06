@@ -13,6 +13,7 @@ import type {
   ListingMenu,
   ListingPricingMode,
 } from "./listBusiness/listingMenu.data";
+import type { OwnerIdentitySlug } from "./listBusiness/listingOwnerIdentities.data";
 import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
@@ -243,6 +244,8 @@ export interface DirectoryPlace {
    * All six questions always arrive, `unknown` included. Absent on demo
    * fixtures and older payloads, which simply show no accessibility section. */
   accessibility?: ListingAccessibilityView;
+  /** "Who runs it" tags, canonical order. Absent means none. */
+  ownerIdentities?: OwnerIdentitySlug[];
   /** What the business sells and what it costs, in the owner's own words.
    * Absent/empty when it prices nothing; the `pills` price band is unchanged. */
   services?: ListingServiceOffering[];
@@ -546,34 +549,34 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     slug: "estudio-beatriz-pinto",
     name: "Estúdio Beatriz Pinto",
     cat: "design",
-    hood: "Graça",
+    // The demo's one online-only listing, shaped the way the live API sends
+    // one: the wizard's "Elsewhere in" catch-all for a hood, an empty address,
+    // and no pin (so no BUSINESS_COORDS entry either). Keeps the online paths
+    // on the detail page (eyebrow, visit card, access section, action bar,
+    // suggest-an-edit picker) exercised in demo.
+    hood: "Elsewhere in Lisbon",
     owned: true,
+    ownerIdentities: ["women"],
     member: "beatriz",
     av: "BP",
     tint: P,
-    desc: "Ceramics studio producing functional pieces with a slow aesthetic. Workshop sessions monthly. Spare desks to share.",
-    tagline:
-      "A slow ceramics studio in Graça, and a couple of spare wheels for the right people.",
-    pills: ["Ceramics studio", "Workshops monthly", "€€", "Step-free"],
+    desc: "Functional ceramics with a slow aesthetic, sold online: mugs, plates and the odd commissioned set, posted anywhere in Portugal.",
+    tagline: "Slow, functional ceramics, sold online and posted to your door.",
+    pills: ["Ceramics", "Online shop", "€€", "Ships in Portugal"],
     rating: { score: "4.8", count: 19 },
-    gallery: [
-      "The wheels",
-      "Drying shelves",
-      "Graça window light",
-      "Glaze tests",
-    ],
+    gallery: ["The wheel", "Drying shelves", "Packing table", "Glaze tests"],
     whatItIs: [
-      "Beatriz makes functional ceramics (mugs, plates, the odd commission) with an unhurried hand, and runs the studio as a quietly social place rather than a sealed workshop.",
-      "Once a month she opens it for a beginners' workshop, and there are usually a couple of spare desks to rent if you have your own practice and want company while you work.",
+      "Beatriz makes functional ceramics (mugs, plates, the odd commission) with an unhurried hand, and sells every piece through her own online shop, packed by hand and posted to your door.",
+      "A new batch goes up once a month and tends to go quickly. Commissions are open for sets, and she answers questions about sizes, glazes and dishwashers by email or in a QueerPulse message.",
     ],
     goodFor: [
-      { label: "A first pottery workshop", yes: true },
-      { label: "Renting a desk for your practice", yes: true },
+      { label: "Everyday mugs and plates", yes: true },
       { label: "Commissioning a set", yes: true },
-      { label: "Drop-in without booking", yes: false },
+      { label: "Gifts posted anywhere in Portugal", yes: true },
+      { label: "Picking up in person", yes: false },
     ],
     hoursType: "studio",
-    hoursNote: "Studio hours Tue–Sat; workshops monthly. Book ahead.",
+    hoursNote: "A new batch monthly. Commissions by email.",
     owner: {
       name: memberName("beatriz"),
       initials: MEMBERS.beatriz!.initials,
@@ -588,16 +591,18 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       website: "beatrizpinto.pt",
       email: "estudio@beatrizpinto.pt",
     },
-    address: "R. da Senhora do Monte 12 · Graça",
+    address: "",
+    online: true,
+    langs: ["pt", "en"],
     reviews: [
       {
         id: "estudio-beatriz-pinto-review-1",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: J,
-        byline: "she/her · workshop",
+        byline: "she/her · customer",
         stars: 5,
-        text: "Did her beginners' day having never touched clay. Came home with two wonky bowls I use every day and a standing invitation to come back.",
+        text: "Ordered four mugs as a housewarming present. They arrived wrapped like they mattered, and one of them never made it out of my own kitchen.",
         helpful: 9,
       },
       {
@@ -605,9 +610,9 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         initials: "BA",
         name: "Bairro Alto Studio",
         tint: J,
-        byline: "desk-mate",
+        byline: "commission",
         stars: 4,
-        text: "Rented a desk for three months. Calm, generous, good music. Only docked a star because I never wanted to leave.",
+        text: "Commissioned a set of cups for the studio. Beatriz checked every size twice by email and they turned up a week early. Docked a star only for the waiting list.",
         helpful: 4,
       },
     ],
@@ -697,6 +702,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "culture",
     hood: "Príncipe Real",
     owned: true,
+    ownerIdentities: ["women", "trans"],
     av: "LB",
     tint: P,
     desc: "Queer-run independent bookshop with a strong feminist and LGBTQ+ section. Regular readings, launches, and community events.",
@@ -858,6 +864,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "food",
     hood: "Mouraria",
     owned: false,
+    ownerIdentities: ["women"],
     av: "CM",
     tint: J,
     desc: "Family-run café known among the community for warmth and a complete absence of hostility. Excellent pastéis.",
@@ -1558,6 +1565,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "grooming",
     hood: "Príncipe Real",
     owned: true,
+    ownerIdentities: ["trans", "non-binary"],
     av: "NV",
     tint: C,
     desc: "Queer-owned barbershop known for trans haircuts done right. No awkward questions. No gendered pricing.",
@@ -1734,7 +1742,11 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "grooming",
     hood: "Intendente",
     owned: true,
+<<<<<<< Updated upstream
     ownedBy: ["women", "trans"],
+=======
+    ownerIdentities: ["women", "bipoc"],
+>>>>>>> Stashed changes
     av: "SC",
     tint: P,
     desc: "Gender-neutral pricing on every service, the same whatever your hair length or gender. Clean space, good music.",
@@ -1874,7 +1886,11 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "fitness",
     hood: "Bairro Alto",
     owned: true,
+<<<<<<< Updated upstream
     ownedBy: ["women", "nonbinary"],
+=======
+    ownerIdentities: ["trans"],
+>>>>>>> Stashed changes
     av: "CL",
     tint: P,
     desc: "Feminist and queer-centred fitness studio. Small classes, no mirrors, no scales. Body-neutral by design.",

@@ -70,11 +70,31 @@ export function NavDrawerProvider({ children }: { children: ReactNode }) {
     setActiveSheet(null);
   }, []);
 
-  // Give the Back gesture something to consume.
+  // Give the Back gesture something to consume. The entry carries React
+  // Router's fields with `idx` one past the current entry's: a drawer link
+  // `replace`s this entry, and the router reads the new page's `idx` from it.
+  // Without one, that page and every push after it got `idx: NaN`, and
+  // `canGoBack` hid the app bar's back chevron for the rest of the session.
+  // Same shape as useUnsavedChangesGuard's `pushSentinelEntry`.
   useEffect(() => {
     if (!isAnyOpen || historyEntryPushedRef.current) return;
     historyEntryPushedRef.current = true;
-    window.history.pushState(DRAWER_HISTORY_STATE, "");
+    const currentState = window.history.state as {
+      usr?: unknown;
+      key?: string;
+      idx?: number;
+    } | null;
+    const currentIndex =
+      typeof currentState?.idx === "number" ? currentState.idx : 0;
+    window.history.pushState(
+      {
+        usr: currentState?.usr ?? null,
+        key: currentState?.key,
+        idx: currentIndex + 1,
+        ...DRAWER_HISTORY_STATE,
+      },
+      "",
+    );
   }, [isAnyOpen]);
 
   // ...and close on it, instead of letting the router navigate underneath an

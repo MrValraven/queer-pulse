@@ -12,6 +12,27 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+/* Everything under the search field. While a search is typed it keeps at
+   least the height it had with an empty box (an inline min-height from
+   `useHeldResultsHeight`). With nothing to show it leaves the column, so the
+   gap above it goes too. */
+.results:empty {
+  display: none;
+}
+/* Opt-in (`isCompact`): about three rows, with a sliver of the fourth showing
+   so the list reads as scrollable. */
+.listCompact {
+  max-height: 140px;
+}
+/* Picks made under an earlier search, set apart from the results below. */
+.pinnedGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.16);
+}
 /* With a `listFooter`, `.list` becomes the scroll area and the listbox inside
    it keeps the same row rhythm. */
 .listRows {

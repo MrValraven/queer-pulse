@@ -7,6 +7,7 @@ import type {
   SkinChapterGroup,
 } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import {
   useChapterArrival,
   useSkinChapter,
@@ -36,11 +37,14 @@ function ChapterFooter({
   nextChapter,
   onSelect,
   onPublish,
+  onAdvance,
 }: {
   previousChapter: SkinChapterDescriptor | undefined;
   nextChapter: SkinChapterDescriptor | undefined;
   onSelect: (key: string) => void;
   onPublish: () => void;
+  /** Runs as Next is pressed, before it moves on. */
+  onAdvance: () => void;
 }) {
   const { t } = useTranslation();
   const nextTitle = nextChapter
@@ -62,7 +66,11 @@ function ChapterFooter({
         variant="primary"
         type="button"
         className={styles.footerNext}
-        onClick={() => (nextChapter ? onSelect(nextChapter.key) : onPublish())}
+        onClick={() => {
+          onAdvance();
+          if (nextChapter) onSelect(nextChapter.key);
+          else onPublish();
+        }}
       >
         {t("subprofiles:skinChapter.next", { title: nextTitle })}
         <FiArrowRight aria-hidden />
@@ -75,7 +83,11 @@ function ChapterFooter({
  * The chaptered "Page blocks" editor (every kind): a map of every
  * chapter, then the active chapter alone, held in `?chapter=`. Every control
  * writes the shared draft, so switching chapters never loses an edit, and all
- * of it saves with the global "Save all".
+ * of it saves with the global "Save all". Next saves too, so the chapter just
+ * finished is committed as the owner moves on; it runs the same `saveAll`,
+ * skipped when the savebar's own button would be off (nothing changed, a
+ * blocked name or handle, an edit conflict). Back and the chapter map only
+ * switch.
  *
  * A switch scrolls back up to the chapter map when it has scrolled away, and
  * moves focus to the chapter heading (`useChapterArrival`); the first render
@@ -90,6 +102,10 @@ export function SkinChapterEditor({
   const chapters = editor.chapters;
   const { activeChapter, activeIndex, selectChapter, goToPublish } =
     useSkinChapter(chapters);
+  const { canSave, saveAll } = useSubprofileEditorContext();
+  const saveOnAdvance = () => {
+    if (canSave) void saveAll();
+  };
   const rootRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -146,6 +162,7 @@ export function SkinChapterEditor({
           nextChapter={chapters[activeIndex + 1]}
           onSelect={selectChapter}
           onPublish={goToPublish}
+          onAdvance={saveOnAdvance}
         />
       </section>
     </div>

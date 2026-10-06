@@ -262,22 +262,69 @@
   color: rgba(var(--cream-rgb), 1);
 }
 
+/* One reply row: the gutter (avatar + thread rail) and the content column.
+   No padding and no border of its own: spacing and the hairline between
+   conversations live on `.replyRoot`, and the thread lines need the row's box
+   to start exactly at the avatar. The avatar size comes from the enclosing
+   `.replyNode`; the fallback is the top-level size.
+
+   The collapse toggle comes AFTER the content in the DOM, so Tab reaches the
+   author and the actions first, and the grid lays it back over the foot of
+   the gutter. Every child is placed explicitly for that reason: an auto-placed
+   gutter would skip the cell the toggle claims. */
 .reply {
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 14px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+  grid-template-columns: var(--reply-av, 40px) 1fr;
+  gap: 0 12px;
 }
+.replyGutter {
+  grid-column: 1;
+  grid-row: 1;
+}
+.replyContent {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+/* Accepted or most-helpful reply: a soft wash painted on a pseudo-element
+   behind the row, so the row's own box (and the avatar every thread line is
+   aligned to) stays where an ordinary reply's would be. It reaches 6px left of
+   the avatar and stops at the column's right edge; the content keeps 8px
+   clear of that edge. At rest the row is no longer a stacking context (see
+   `.replyNode > .reply` below), so `isolation` is what keeps the wash's
+   z-index -1 inside the row. Jade for the author's accepted answer,
+   coral for "most helpful", matching each one's badge. */
 .replyHighlighted {
-  background: rgba(var(--jade-rgb), 0.05);
-  border-radius: var(--radius-14);
-  padding: 20px 18px;
-  border-bottom: none;
+  position: relative;
+  isolation: isolate;
+}
+.replyHighlighted::before {
+  content: "";
+  position: absolute;
+  inset: -8px 0 -8px -6px;
+  background: var(--reply-wash);
+  border-radius: var(--radius-12);
+  z-index: -1;
+  pointer-events: none;
+}
+.replyHighlighted > .replyContent {
+  padding-right: 8px;
+}
+.replyAccepted {
+  --reply-wash: rgba(var(--jade-rgb), 0.05);
+}
+.replyHelpful {
+  --reply-wash: rgba(var(--accent-rgb), 0.05);
+}
+:global([data-theme="dark"]) .replyAccepted {
+  --reply-wash: rgba(var(--jade-rgb), 0.08);
+}
+:global([data-theme="dark"]) .replyHelpful {
+  --reply-wash: rgba(var(--accent-rgb), 0.08);
 }
 .replyAv {
-  width: 2.857em; /* 40 / 14 */
-  height: 2.857em;
+  width: var(--reply-av, 40px);
+  height: var(--reply-av, 40px);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -287,11 +334,24 @@
   font-size: var(--text-14);
   flex: none;
 }
+/* As tall as the avatar, so the author line sits on the avatar's centre. */
 .replyTop {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: var(--reply-av, 40px);
   margin-bottom: 6px;
+}
+/* Name, badges and time wrap as one group, so a deep reply on a phone moves
+   its badges and time to a second line, keeps the author's name whole, and
+   leaves the actions menu at the right of the first. */
+.replyMeta {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  min-width: 0;
 }
 .replyName {
   font-size: var(--text-14);
@@ -334,50 +394,31 @@
   color: var(--jade);
   font-weight: 600;
 }
+/* The 44px menu trigger overhangs the author line by the same amount above
+   and below, so the line keeps the avatar's height. */
 .replyMenu {
   margin-left: auto;
+  margin-block: calc((var(--reply-av, 40px) - 44px) / 2);
 }
-/* Each reply row IS a <FadeIn>, whose `will-change: transform` makes it a
-   stacking context for the life of the element, clamping the open menu's
-   z-index inside its own row so the NEXT reply paints over the dropdown.
-   Raise the row itself while its menu is open. Scoped to `.replyMenu` so the
-   nested-replies collapse toggle (also `aria-expanded`) never matches. */
+/* Each reply row IS a <FadeIn>. FadeIn sets `will-change: opacity, transform`
+   for good, which keeps every row on its own compositor layer. A layer's
+   origin snaps to a device pixel on its own, so at some zoom levels the rail
+   drawn inside the row and the elbows drawn outside it landed one device
+   pixel apart and the thread line looked broken. The entrance animation
+   still promotes the row while it runs; at rest the row paints with its
+   parent, on the same pixel grid as the elbows. */
+.replyNode > .reply {
+  will-change: auto;
+  animation-fill-mode: backwards;
+}
+/* While the entrance runs, the row is still a stacking context, which clamps
+   the open menu's z-index inside its own row so the NEXT reply would paint
+   over the dropdown. Raise the row itself while its menu is open. Scoped to
+   `.replyMenu` so the gutter's collapse toggle (also `aria-expanded`) never
+   matches. */
 .reply:has(.replyMenu [aria-expanded="true"]) {
   position: relative;
   z-index: 3;
-}
-
-/* ── Nested replies (collapse toggle + hidden-branch count) ── */
-.collapseToggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.538em; /* 20 / 13 */
-  height: 1.538em;
-  min-width: 1.846em; /* 24 / 13 */
-  min-height: 1.846em;
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--ink-40);
-  background: none;
-  border: none;
-  border-radius: var(--radius-6);
-  cursor: pointer;
-  transition:
-    color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease);
-}
-@media (hover: hover) {
-  .collapseToggle:hover {
-    color: var(--accent-ink);
-    background: rgba(var(--accent-rgb), 0.08);
-  }
-}
-.collapsedCount {
-  font-size: var(--text-12);
-  color: var(--ink-40);
 }
 
 .inlineEdit {
@@ -432,16 +473,21 @@
 }
 /* Wraps the like + reply actions with `gap` (not per-child margins) so the
  * row's own top spacing is set once, here, on the row. */
+/* As tall as the circled collapse toggle, so the row's centre and the
+   toggle's centre line up (32px on a phone, where both grow). */
 .replyActions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 4px 16px;
+  min-height: var(--reply-actions-h, 24px);
   margin-top: 4px;
 }
 .replyReact {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: var(--reply-actions-h, 24px);
   font-size: var(--text-12-5);
   font-weight: 600;
   font-family: var(--sans);
@@ -471,6 +517,7 @@
   transform: scale(1.12);
 }
 .replyReplyBtn {
+  min-height: var(--reply-actions-h, 24px);
   font-size: var(--text-12-5);
   font-weight: 600;
   font-family: var(--sans);
@@ -585,8 +632,12 @@
   font-family: var(--sans);
   font-size: var(--text-16);
   color: var(--ink);
+  background: var(--cream);
   resize: vertical;
   outline: none;
+}
+.crTextarea::placeholder {
+  color: var(--ink-40);
 }
 .crTextarea:focus {
   border-color: var(--line-strong);
@@ -603,6 +654,12 @@
    status line lead. */
 .crFooter > :last-child {
   margin-left: auto;
+}
+/* The inline composer's Cancel, grouped with Post at the far end. */
+.crFooterActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ── Composer photo attach (SOC-13) ───────────────────────────────────── */
@@ -694,17 +751,6 @@
   .opCard {
     padding: 22px 18px;
   }
-  .reply {
-    grid-template-columns: 34px 1fr;
-    gap: 11px;
-  }
-  .replyHighlighted {
-    padding: 16px 14px;
-  }
-  .branchToggle,
-  .continueThread {
-    min-height: 44px;
-  }
 }
 
 .loadMore {
@@ -720,79 +766,429 @@
   height: 1px;
 }
 
-/* ── Nested replies: indent, thread-line, collapse/continue affordances ── */
-
-/* One reply + its subtree. Depth 0 stays flush-left (no line, no indent;
- * the indent itself is applied inline via marginLeft, clamped in TSX). */
+/* ── Nested replies: Reddit-style thread lines ──
+ *
+ * Every node draws its own lines. The rail runs down the gutter under its
+ * avatar. `.replyChildren` is shifted right by half an avatar, so its left edge
+ * sits exactly on that rail, and each row inside it (`.replyBranch`) draws two
+ * lines from that edge: a curved elbow into its own avatar (::before), and a
+ * straight continuation down to the next sibling (::after), hidden on the last
+ * row so the line ends at the last reply's elbow. Each level indents by this
+ * structure alone. */
 .replyNode {
+  --reply-av: 32px;
+  --reply-av-nested: 32px;
+  --reply-actions-h: 24px;
+  --elbow-w: 16px;
+  --elbow-radius: var(--radius-12);
+  --branch-gap: 14px;
+  --branch-toggle-h: 32px;
+  --reply-line: rgba(var(--line-rgb), 0.24);
+  --reply-line-hot: rgba(var(--accent-rgb), 0.7);
   position: relative;
+  scroll-margin-top: calc(var(--nav-band) + 16px);
+}
+/* Cream hairlines read stronger on the dark page, so the line steps back. */
+:global([data-theme="dark"]) .replyNode {
+  --reply-line: rgba(var(--line-rgb), 0.18);
+}
+/* A top-level conversation: the whole tree under it reads as one unit, with
+   one hairline under each conversation, and nested replies carry none. */
+.replyRoot {
+  --reply-av: 40px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.replyNested .replyAv {
+  font-size: var(--text-12);
 }
 
-/* Left rail marking "this is a reply to the item above/left of it," drawn
- * only past depth 0. Reuses the same hairline token as every other border
- * in this file (`--line-rgb`), just at a slightly lower opacity so a long
- * thread's rails stay quiet beside the content. */
-.threadLine {
-  padding-left: 14px;
+/* The avatar column. The rail grows to fill whatever height the content
+   column gives the row. When the branch is open, an empty slot at its foot
+   holds the place where the grid lays the circled toggle, level with the
+   actions row; the slot carries the line on above and below the circle. */
+.replyGutter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.threadLine::before {
+.replyRail,
+.replyRailStatic {
+  position: relative;
+  flex: 1 1 auto;
+  width: 16px;
+  min-height: 8px;
+  margin-top: 4px;
+}
+.replyRail {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.replyRail::before,
+.replyRailStatic::before,
+.gutterToggleSlot::before,
+.gutterToggleSlot::after {
   content: "";
   position: absolute;
-  left: 0;
+  /* A whole-pixel offset: the 16px box sits on a whole pixel in every
+     avatar size, so this line lands at x = avatar / 2 - 1, the same x
+     `.replyChildren` uses. Every thread-line segment is a 1px border, the
+     same primitive as the curved elbow: borders snap to whole device pixels,
+     while a 1px background fill is anti-aliased across columns at fractional
+     zoom, so mixing the two broke the line by a device pixel at some page
+     zoom levels. */
+  left: 7px;
+  width: 0;
+  border-left: 1px solid var(--reply-line);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.replyRail::before,
+.replyRailStatic::before {
   top: 0;
   bottom: 0;
-  width: 1px;
-  background: rgba(var(--line-rgb), 0.09);
 }
-
-/* Full-width ghost bar standing in for a hidden or deferred subtree. Margin
- * on the left roughly aligns it under the reply's own text column (avatar
- * width + gap, matching `.reply`'s grid-template-columns above). */
-.branchToggle,
-.continueThread {
+.gutterToggleSlot {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: var(--reply-actions-h);
+}
+/* ::after draws the line above and below the circle (both zero on desktop,
+   where the slot is exactly the circle's height). ::before is the line
+   straight through, faded in while the branch is collapsed and the circle
+   is gone, so the rail reads as one unbroken line. */
+.gutterToggleSlot::after {
+  top: 0;
+  bottom: 0;
+  --slot-segment: calc((var(--reply-actions-h) - 24px) / 2);
+  /* The border runs the slot's full height; the mask keeps only the two
+     stretches above and below the circle. */
+  mask:
+    linear-gradient(black, black) top / 100% var(--slot-segment) no-repeat,
+    linear-gradient(black, black) bottom / 100% var(--slot-segment) no-repeat;
+}
+.gutterToggleSlot::before {
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-base) var(--ease-std);
+}
+.gutterToggleSlotCollapsed::before {
+  opacity: 1;
+}
+.gutterToggle {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  justify-self: center;
+  position: relative;
+  margin-bottom: calc((var(--reply-actions-h) - 24px) / 2);
+  cursor: pointer;
+}
+/* Collapsed: the circle fades and shrinks onto the line while the "N hidden
+   replies" row grows in below. It stays mounted (and `inert`) so it can come
+   back the same way. */
+.gutterToggleHidden {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+}
+.gutterToggle,
+.branchToggleCircle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 4px 0 4px 54px;
-  padding: 8px 12px;
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: none;
-  border: none;
-  border-radius: var(--radius-10);
-  cursor: pointer;
+  justify-content: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: var(--text-14);
+  color: var(--ink-40);
+  background: transparent;
+  border: 1px solid var(--reply-line);
+  border-radius: 50%;
   transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-base) var(--ease-std),
+    transform var(--dur-base) var(--ease-std);
 }
-@media (hover: hover) {
-  .branchToggle:hover,
-  .continueThread:hover {
-    background: rgba(var(--accent-rgb), 0.08);
+.gutterToggle:focus-visible,
+.branchToggle:focus-visible,
+.replyBranch:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.gutterToggle:focus-visible {
+  border-radius: 50%;
+}
+
+.replyChildren {
+  margin-left: calc(var(--reply-av) / 2 - 1px);
+}
+.replyBranch {
+  --elbow-y: calc(var(--branch-gap) + var(--reply-av-nested) / 2);
+  position: relative;
+  padding-top: var(--branch-gap);
+  padding-left: var(--elbow-w);
+}
+/* The first row of a "continue this thread" column takes focus when the
+   column opens; the ring shows only for keyboard focus. */
+.replyBranch:focus:not(:focus-visible) {
+  outline: none;
+}
+.replyBranch::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--elbow-w) - 3px);
+  /* Whole pixels only, like every other thread-line offset: the 1px bottom
+     border sits just above --elbow-y, as the vertical line sits just left of
+     the avatar's centre. */
+  height: var(--elbow-y);
+  border-left: 1px solid var(--reply-line);
+  border-bottom: 1px solid var(--reply-line);
+  border-bottom-left-radius: var(--elbow-radius);
+  pointer-events: none;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+/* Starts where the elbow begins to curve, so the two translucent lines never
+   overlap into a darker segment. */
+.replyBranch::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--elbow-y) - var(--elbow-radius));
+  bottom: 0;
+  left: 0;
+  width: 0;
+  border-left: 1px solid var(--reply-line);
+  pointer-events: none;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-base) var(--ease-std);
+}
+/* The row that ends the line (set in TSX, see `replyBranchRowClassName`).
+   The continuation fades, so when the "N hidden replies" row takes over as
+   the last row the line below it dissolves along with the closing branch. */
+.replyBranchLast::after {
+  opacity: 0;
+}
+/* The click target over this row's stretch of thread line: 16px wide and
+   centred on the 1px line at x 0 to 1. On the last row the line stops at the
+   elbow, and so does the target. */
+.branchLineHit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -7px;
+  z-index: 1;
+  width: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.replyBranchLast > .branchLineHit {
+  bottom: auto;
+  height: var(--elbow-y);
+}
+/* ── Animated branch regions (ReplyBranchRegion) ──
+   The rows under a reply sit in regions that open and close by animating
+   `grid-template-rows` between 0fr and 1fr, with a fade. The height uses ONE
+   curve both ways (ease-out: a quick start and a soft landing), because a
+   collapse is two regions swapping: the "N hidden replies" row grows in while
+   the branch shrinks away. On matching curves their sum only ever shrinks;
+   on different curves the page below dips down before it rises. The fade
+   is quicker on close, so rows are gone before they are squeezed. The inner
+   box clips while closed or moving, which also keeps every
+   thread line and elbow inside it from poking out below. Once a region has
+   finished opening, the clip switches off (a discrete `overflow` transition
+   delayed by the open duration), so a row's menu and focus ring can spill
+   past the region again. `overflow-anchor: none` stops scroll anchoring from
+   latching onto a shrinking row and dragging the page with it. */
+.branchRegion {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow-anchor: none;
+  transition:
+    grid-template-rows var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-std);
+}
+.branchRegionOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+.branchRegionInner {
+  min-height: 0;
+  overflow: hidden;
+}
+.branchRegionOpen > .branchRegionInner {
+  overflow: visible;
+  transition: overflow 0s var(--dur-base);
+  transition-behavior: allow-discrete;
+}
+/* A region mounted already open ("Continue this thread") starts from shut, so
+   it opens in. Browsers without @starting-style show it at once. */
+@starting-style {
+  .branchRegionOpen.branchRegionEnters {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  .branchRegionOpen.branchRegionEnters > .branchRegionInner {
+    overflow: hidden;
   }
 }
 
-/* Inline reply composer, mounted directly beneath the reply it targets. */
-.inlineCompose {
-  margin: 10px 0 10px 54px;
+/* The elbow lands on the composer's upper edge and on the toggle's circle. */
+.replyBranchCompose {
+  --elbow-y: calc(var(--branch-gap) + 20px);
 }
+.replyBranchToggle {
+  --elbow-y: calc(var(--branch-gap) + var(--branch-toggle-h) / 2);
+}
+
+/* Hovering any stretch of a node's line (the rail under its avatar or a strip
+   over a child row), or hovering or focusing the circled toggle, lights that
+   node's rail and its own branch lines in the accent: the whole stretch a
+   click would fold away. The colour is set as a custom property on this node
+   only; every nested node declares its own `--reply-line`, so descendants'
+   lines stay quiet. */
+.replyNode:has(> .reply > .gutterToggle:focus-visible) {
+  --reply-line: var(--reply-line-hot);
+}
+@media (hover: hover) {
+  .replyNode:has(
+      > .reply .replyRail:hover,
+      > .reply > .gutterToggle:hover,
+      > .replyChildren
+        > .branchRegion
+        > .branchRegionInner
+        > .replyBranch
+        > .branchLineHit:hover
+    ) {
+    --reply-line: var(--reply-line-hot);
+  }
+  .gutterToggle:hover,
+  .branchToggle:hover .branchToggleCircle {
+    color: var(--accent-ink);
+    border-color: var(--reply-line-hot);
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+  .branchToggle:hover .branchToggleLabel {
+    text-decoration: underline;
+  }
+}
+
+/* "N hidden replies" / "Continue this thread": the circle sits where the next
+   avatar would, with the elbow running into it, then the label. The circle is
+   pinned to the elbow's height and a long label wraps beside it, so a wrapped
+   label never pulls the circle off the line. */
+.branchToggle {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 100%;
+  min-height: var(--branch-toggle-h);
+  padding: 0 10px 0 0;
+  vertical-align: top;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 18px;
+  text-align: left;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  border-radius: var(--radius-12);
+  cursor: pointer;
+}
+.branchToggleCircle {
+  margin-top: calc((var(--branch-toggle-h) - 24px) / 2);
+}
+.branchToggleLabel {
+  padding-block: calc((var(--branch-toggle-h) - 18px) / 2);
+  text-underline-offset: 2px;
+}
+
+/* "Replying to Ana", above the body of a reply in a flattened column. */
+.replyingTo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+.replyingTo svg {
+  flex: none;
+}
+
+/* Inline reply composer, the first branch row under the reply it targets. */
 .inlineCompose .compose {
   margin-top: 0;
 }
-.inlineCancel {
-  margin-top: 8px;
+
+/* Phones: smaller nested avatars and a tighter elbow keep a depth-6 reply's
+   column readable; the actions row grows to a 32px touch height, and the
+   toggle's 24px circle gets an invisible 44px target. */
+@media (--md) {
+  .replyNode {
+    --reply-av: 24px;
+    --reply-av-nested: 24px;
+    --reply-actions-h: 32px;
+    --elbow-w: 8px;
+    --elbow-radius: var(--radius-5);
+    --branch-toggle-h: 44px;
+  }
+  .replyRoot {
+    --reply-av: 34px;
+  }
+  .reply {
+    gap: 0 10px;
+  }
+  .replyNested > .reply {
+    gap: 0 8px;
+  }
+  .replyNested .replyAv {
+    font-size: var(--text-10);
+  }
+  .replyActions {
+    flex-wrap: nowrap;
+  }
+  .gutterToggle::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .collapseToggle,
   .replyReplyBtn,
-  .branchToggle,
-  .continueThread,
   .reaction,
   .replyReact,
-  .replyReact svg {
+  .replyReact svg,
+  .replyRail::before,
+  .replyRailStatic::before,
+  .gutterToggleSlot::before,
+  .gutterToggleSlot::after,
+  .branchRegion,
+  .branchRegionOpen,
+  .replyBranch::before,
+  .replyBranch::after,
+  .gutterToggle,
+  .branchToggleCircle,
+  .branchRegionOpen > .branchRegionInner {
     transition: none;
   }
   /* Hold the "voted" heart at rest size, with no scale pop on toggle. */

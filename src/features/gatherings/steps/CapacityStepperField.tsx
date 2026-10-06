@@ -28,20 +28,25 @@ export function CapacityStepperField({ form }: { form: GatheringForm }) {
     form.cap === String(form.capacityDefault)
       ? form.capacityDefault
       : null;
+  // The host holds one of the spots themselves (the server saves their Going
+  // RSVP on publish), so a cap of 8 means 7 guests. Said only while there is
+  // a cap to count against.
+  const hintLines = [
+    formatDefaultCapacity === null
+      ? null
+      : t("gatherings:create.step3.capDefaultHint", {
+          count: formatDefaultCapacity,
+        }),
+    form.cap === "" ? null : t("gatherings:create.step3.capHostHint"),
+  ].filter(Boolean);
 
   return (
     <CapacityStepper
       label={t("gatherings:create.step3.capLabel")}
-      // Only while the number on screen is still the format's own suggestion.
-      // Once the host changes it, the hint goes: a line claiming a default
-      // that no longer applies is worse than none.
-      hint={
-        formatDefaultCapacity === null
-          ? undefined
-          : t("gatherings:create.step3.capDefaultHint", {
-              count: formatDefaultCapacity,
-            })
-      }
+      // The default line shows only while the number on screen is still the
+      // format's own suggestion. Once the host changes it, that line goes: a
+      // line claiming a default that no longer applies is worse than none.
+      hint={hintLines.length > 0 ? hintLines.join(" ") : undefined}
       value={form.cap}
       onChange={(value) => form.setCapTouched(value)}
     />

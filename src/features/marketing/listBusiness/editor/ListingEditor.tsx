@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { useProfileData } from "../../../../app/providers/useProfile";
 import { usePrefersReducedMotion } from "../../../../shared/hooks/usePrefersReducedMotion";
-import { useUploadImage } from "../../../members/api/useUploadImage";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { dtoToDraft } from "../dtoToDraft";
 import { pricingModeOf } from "../listingMenu.data";
@@ -37,6 +36,10 @@ import styles from "./ListingEditor.module.css";
  * It serves both roles. A CO-MANAGER gets the same page minus the owner's own
  * personal fields and the owner-only Danger zone. The role is said plainly at
  * the top, because otherwise somebody else's business reads exactly like yours.
+ *
+ * An online-only listing also loses the Accessibility section, whose questions
+ * are all about a physical place. The answers stay in the draft, so turning
+ * the toggle back off shows them again unchanged.
  */
 export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const { profile } = useProfileData();
@@ -48,18 +51,20 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const form = useListingForm(initialDraft);
   const { draft } = form;
   const pricingMode = pricingModeOf(draft);
+  // Read from the draft, so flipping the online-only toggle in Basics drops
+  // or restores the accessibility section and its nav entry straight away.
+  const isOnline = draft.online;
   const sections = useMemo(
     () =>
       withPricingModeLabel(
-        editorSectionsFor(listing.managementRole === "co_manager"),
+        editorSectionsFor(listing.managementRole === "co_manager", isOnline),
         pricingMode,
       ),
-    [listing.managementRole, pricingMode],
+    [listing.managementRole, isOnline, pricingMode],
   );
-  const uploadPhoto = useUploadImage("listing-photo");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { isDangerZoneOpen, spySectionIds, jumpToSection } =
-    useDangerZoneReveal(prefersReducedMotion);
+    useDangerZoneReveal(prefersReducedMotion, isOnline);
   const activeSectionId = useActiveEditorSection(spySectionIds);
   useEditorHashLanding(sections, prefersReducedMotion);
   // The fields column, so the live preview can outline where a field shows.
@@ -144,7 +149,6 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
                 form={form}
                 listing={listing}
                 userName={userName}
-                uploadPhoto={uploadPhoto}
                 isDangerZoneOpen={isDangerZoneOpen}
                 onConfirmDelete={deleteExit.confirmDelete}
               />

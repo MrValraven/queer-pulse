@@ -3,13 +3,24 @@ import { flushSync } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { jumpToEditorSection } from "./jumpToEditorSection";
 import {
+  isSectionShownForListing,
   LISTING_EDITOR_SECTION_BY_KEY,
+  LISTING_EDITOR_SECTIONS,
   LISTING_EDITOR_SECTION_IDS,
 } from "./listingEditor.data";
 
 const DANGER_ZONE_SECTION_ID = LISTING_EDITOR_SECTION_BY_KEY.dangerZone.id;
 
 const SECTION_IDS_WITHOUT_DANGER_ZONE = LISTING_EDITOR_SECTION_IDS.filter(
+  (sectionId) => sectionId !== DANGER_ZONE_SECTION_ID,
+);
+
+/** The section ids an online-only listing renders (no accessibility). */
+const ONLINE_SECTION_IDS = LISTING_EDITOR_SECTIONS.filter((section) =>
+  isSectionShownForListing(section.key, true),
+).map((section) => section.id);
+
+const ONLINE_SECTION_IDS_WITHOUT_DANGER_ZONE = ONLINE_SECTION_IDS.filter(
   (sectionId) => sectionId !== DANGER_ZONE_SECTION_ID,
 );
 
@@ -26,20 +37,32 @@ const SECTION_IDS_WITHOUT_DANGER_ZONE = LISTING_EDITOR_SECTION_IDS.filter(
  * scroll target measured against the page that will actually stay. The
  * returned section ids feed the scroll-spy, which only observes elements that
  * exist when it registers, so it re-registers each time the section appears.
+ *
+ * The same goes for the accessibility section, which an online-only listing
+ * does not render: `isOnline` picks a list without it, so switching the
+ * toggle back off hands the spy a new list and the section is observed again
+ * once it is back on the page. All four lists are module-level, so the spy
+ * only re-registers when one of the two answers actually changes.
  */
-export function useDangerZoneReveal(prefersReducedMotion: boolean) {
+export function useDangerZoneReveal(
+  prefersReducedMotion: boolean,
+  isOnline = false,
+) {
   const { hash } = useLocation();
   const [isDangerZoneOpen, setIsDangerZoneOpen] = useState(
     () => hash === `#${DANGER_ZONE_SECTION_ID}`,
   );
 
-  const spySectionIds = useMemo(
-    () =>
-      isDangerZoneOpen
-        ? LISTING_EDITOR_SECTION_IDS
-        : SECTION_IDS_WITHOUT_DANGER_ZONE,
-    [isDangerZoneOpen],
-  );
+  const spySectionIds = useMemo(() => {
+    if (isOnline) {
+      return isDangerZoneOpen
+        ? ONLINE_SECTION_IDS
+        : ONLINE_SECTION_IDS_WITHOUT_DANGER_ZONE;
+    }
+    return isDangerZoneOpen
+      ? LISTING_EDITOR_SECTION_IDS
+      : SECTION_IDS_WITHOUT_DANGER_ZONE;
+  }, [isDangerZoneOpen, isOnline]);
 
   const jumpToSection = useCallback(
     (sectionId: string) => {

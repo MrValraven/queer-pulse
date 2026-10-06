@@ -100,13 +100,15 @@ export function FeedIdentity({
   lead,
   name,
   meta,
+  className,
 }: {
   lead: ReactNode;
   name: ReactNode;
   meta?: ReactNode;
+  className?: string;
 }) {
   return (
-    <div className={styles.identity}>
+    <div className={[styles.identity, className].filter(Boolean).join(" ")}>
       <div className={styles.lead}>{lead}</div>
       <div className={styles.identityText}>
         <div className={styles.name}>{name}</div>

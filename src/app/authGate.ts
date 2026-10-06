@@ -393,6 +393,11 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // the reviewing have to reach the page. No `/*` sibling: it has no child
   // routes.
   routes.adminForumReview,
+  // The platform log. `PlatformLogController` is `@Roles(Moderator, Admin)`
+  // and drops member events for a moderator on the server, so a moderator
+  // opening it sees the staff-action trail they already read at /mod/audit.
+  // No `/*` sibling: the page has no child routes.
+  routes.adminLog,
 ];
 
 /**

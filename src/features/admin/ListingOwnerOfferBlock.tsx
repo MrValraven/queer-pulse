@@ -3,6 +3,8 @@ import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
+import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
+import { AdminMemberPickerField } from "./AdminMemberPickerField";
 import {
   isDelegationConflictError,
   isDelegationNotFoundError,
@@ -44,9 +46,8 @@ export function ListingOwnerOfferBlock({
 }) {
   const { t, language } = useTranslation();
   const { showToast } = useToast();
-  const slugFieldId = useId();
   const noteFieldId = useId();
-  const [memberSlug, setMemberSlug] = useState("");
+  const [picked, setPicked] = useState<StrangerMemberResult | null>(null);
   const [note, setNote] = useState("");
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -59,18 +60,18 @@ export function ListingOwnerOfferBlock({
   );
 
   function send() {
-    const trimmedSlug = memberSlug.trim();
-    if (!trimmedSlug) return;
+    if (!picked) return;
+    const offeree = picked;
     setErrorKey(null);
     offer.mutate(
-      { memberSlug: trimmedSlug, note: note.trim() || undefined },
+      { memberSlug: offeree.slug, note: note.trim() || undefined },
       {
         onSuccess: () => {
-          setMemberSlug("");
+          setPicked(null);
           setNote("");
           showToast(
             t("admin:listingDelegation.offer.sentToast", {
-              slug: trimmedSlug,
+              name: offeree.name,
             }),
             "success",
           );
@@ -142,16 +143,15 @@ export function ListingOwnerOfferBlock({
             {t("admin:listingDelegation.offer.none")}
           </p>
           <div className={styles.form}>
-            <label className={styles.meta} htmlFor={slugFieldId}>
-              {t("admin:listingDelegation.offer.slugLabel")}
-            </label>
-            <input
-              id={slugFieldId}
-              className={styles.input}
-              value={memberSlug}
-              autoComplete="off"
-              placeholder={t("admin:listingDelegation.slugPlaceholder")}
-              onChange={(event) => setMemberSlug(event.target.value)}
+            <AdminMemberPickerField
+              label={t("admin:listingDelegation.offer.memberLabel")}
+              searchAriaLabel={t(
+                "admin:listingDelegation.offer.memberSearchAria",
+              )}
+              labelClassName={styles.meta}
+              picked={picked}
+              onPick={setPicked}
+              isDisabled={offer.isPending}
             />
             <label className={styles.meta} htmlFor={noteFieldId}>
               {t("admin:listingDelegation.offer.noteLabel")}
@@ -167,7 +167,7 @@ export function ListingOwnerOfferBlock({
             <div className={styles.formActions}>
               <Button
                 size="sm"
-                disabled={memberSlug.trim().length === 0 || offer.isPending}
+                disabled={picked === null || offer.isPending}
                 onClick={send}
               >
                 {t(
@@ -210,7 +210,7 @@ function offerErrorKey(error: unknown): string {
     return "admin:listingDelegation.offer.conflictError";
   }
   if (isDelegationNotFoundError(error)) {
-    return "admin:listingDelegation.unknownSlugError";
+    return "admin:listingDelegation.unknownMemberError";
   }
   return "admin:listingDelegation.offer.failedError";
 }

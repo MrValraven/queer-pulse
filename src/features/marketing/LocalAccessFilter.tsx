@@ -34,10 +34,17 @@ import s from "./LocalFilterBar.module.css";
 export function LocalAccessFilter({
   access,
   onToggleAccess,
+  accessCounts,
+  isLoadedSetComplete,
 }: {
   /** The needs currently filtered on, in canonical question order. */
   access: AccessibilitySlug[];
   onToggleAccess: (slug: AccessibilitySlug) => void;
+  /** How many loaded places would remain with each need added to the ticked
+   *  ones. */
+  accessCounts: Record<AccessibilitySlug, number>;
+  /** True once every page of places has loaded, so a zero count is final. */
+  isLoadedSetComplete: boolean;
 }) {
   const { t } = useTranslation();
   // Inside the Refine drawer a ticked chip pops its tick in and its
@@ -53,12 +60,17 @@ export function LocalAccessFilter({
       <m.div {...glide.row} className={s.accessChips}>
         {ACCESSIBILITY_QUESTIONS.map((question) => {
           const isOn = access.includes(question.slug);
+          // A need no remaining place meets goes unpickable once the whole
+          // set has loaded. A ticked need stays clickable so it can be undone.
+          const isDisabled =
+            isLoadedSetComplete && !isOn && accessCounts[question.slug] === 0;
           return (
             <m.button
               {...glide.chip}
               key={question.slug}
               type="button"
               aria-pressed={isOn}
+              disabled={isDisabled}
               className={[s.chip, isOn && s.chipOn].filter(Boolean).join(" ")}
               onClick={() => onToggleAccess(question.slug)}
             >

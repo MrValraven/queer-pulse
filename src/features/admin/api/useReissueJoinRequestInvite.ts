@@ -39,6 +39,7 @@ export function demoRow(id: string): JoinRequestDTO {
     inviteStatus: "expired",
     inviteExpiresAt: now,
     declineReason: null,
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -47,6 +48,9 @@ export function demoRow(id: string): JoinRequestDTO {
     // there is no queue row behind it to have made a promise about.
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   };
 }
 

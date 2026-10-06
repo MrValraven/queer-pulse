@@ -65,6 +65,20 @@ export function EditDetailsAudience({
       ];
   const isCapacityOutOfRange =
     editCapacityProblem(draft, openedWithCapacity) === "outOfRange";
+  // The server keeps everyone already going when the number drops, so a host
+  // lowering it hears that before saving; an out-of-range number says why the
+  // save is held instead. Any cap also counts the host, who holds a spot. The
+  // modal is open to co-hosts too, so that line names the host neutrally.
+  const capacityHintLines = isCapacityOutOfRange
+    ? []
+    : [
+        isEditCapacityLowered(draft, openedWithCapacity)
+          ? t("gatherings:manage.editModal.capacityLowerHint")
+          : null,
+        draft.capacity.trim() === ""
+          ? null
+          : t("gatherings:create.step3.capIncludesHostHint"),
+      ].filter(Boolean);
 
   // Mirrors `useGatheringForm`'s `setCommunitySlug`: clearing the community
   // while "Community members" is the chosen audience would leave it pointing
@@ -119,14 +133,8 @@ export function EditDetailsAudience({
         label={t("gatherings:create.step3.capLabel")}
         value={draft.capacity}
         onChange={(value) => onChange({ capacity: value })}
-        // The server keeps everyone already going when the number drops, so
-        // a host lowering it hears that before saving. An out-of-range number
-        // says why the save is held instead.
         hint={
-          !isCapacityOutOfRange &&
-          isEditCapacityLowered(draft, openedWithCapacity)
-            ? t("gatherings:manage.editModal.capacityLowerHint")
-            : undefined
+          capacityHintLines.length > 0 ? capacityHintLines.join(" ") : undefined
         }
         error={
           isCapacityOutOfRange

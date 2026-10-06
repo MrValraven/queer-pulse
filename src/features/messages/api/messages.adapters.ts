@@ -16,7 +16,11 @@ import {
   type MessageViewer,
 } from "../../../shared/api/mailboxViewer";
 import { toConversationClaimant } from "../../../shared/api/conversationClaim";
+<<<<<<< Updated upstream
 import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
+=======
+import { authorInitialsName, authorTitleName } from "../personaAuthorName";
+>>>>>>> Stashed changes
 
 /**
  * ENG-253: `conversationToView`'s return, extended with the trimmed preview
@@ -434,13 +438,18 @@ export function conversationToView(
   // A deleted business keeps a summary with the server's English fallback
   // name, so the row names it in the viewer's language with no initials.
   const isCounterpartFormerBusiness = counterpart?.isFormerIdentity === true;
+  // A persona still named after its craft is titled "Owner Name | Poet", as
+  // on its persona page, while its initials come from the owner's name alone.
   const name = isCounterpartFormerBusiness
     ? t("messages:mailbox.formerBusiness")
-    : (counterpart?.displayName ??
-      (isOfficial
+    : counterpart
+      ? authorTitleName(counterpart)
+      : isOfficial
         ? t("messages:conversation.officialName")
-        : t("messages:formerMember")));
-  const { first, last } = splitName(name);
+        : t("messages:formerMember");
+  const { first, last } = splitName(
+    counterpart ? authorInitialsName(counterpart) : name,
+  );
   const slug = counterpart?.handle;
   const tint: AvatarTint = slug ? tintForSlug(slug) : "plum";
   return {
@@ -644,7 +653,14 @@ export function messageToChat(
     // know this event yet) still shows something plausible. A client that DOES
     // know the event must never let that server-side placeholder reach a pill
     // or a run, so every sender field below is left undefined for a system row.
-    senderName: dto.kind === "system" ? undefined : dto.sender.displayName,
+    // A counterpart persona still named after its craft is titled as its
+    // persona page titles it; the viewer's own side keeps its mailbox name.
+    senderName:
+      dto.kind === "system"
+        ? undefined
+        : isMe
+          ? dto.sender.displayName
+          : authorTitleName(dto.sender),
     senderHandle:
       dto.kind === "system" ? undefined : dto.sender.handle || undefined,
     senderTint:

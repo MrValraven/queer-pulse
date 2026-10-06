@@ -721,6 +721,57 @@
     border-color: rgba(var(--jade-rgb), 0.4);
   }
 }
+/* The split card (desktop only; `useIsMemberCardSplit` keeps the compact
+   card at the mobile cutover and below). The card becomes two columns: a
+   portrait filling 30% of the width, flush with its top, left and bottom
+   edges, and the usual content beside it. Declared after `.mCard` so these
+   win at equal specificity. `overflow: hidden` lets the card's rounded
+   corners clip the portrait; the Link's own focus outline is drawn outside
+   its box, so it stays whole. `height: 100%` fills the virtualized row's cell
+   so every card in a row shares one height, and the 200px floor keeps the
+   portrait from reading as a squat strip. */
+.mCardSplit {
+  display: grid;
+  grid-template-columns: 30% minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  min-height: 200px;
+}
+.mPortraitCell {
+  position: relative;
+}
+/* Two classes deep so it beats MemberPortrait's own `position: relative`
+   whatever order the two modules load in. */
+.mPortraitCell .mPortraitFill {
+  position: absolute;
+  inset: 0;
+}
+.mSplitBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px 20px;
+}
+/* The details column is narrower than a whole card, so the footer wraps
+   whole items onto a second line, each one kept on a single line. */
+.mSplitBody .mFoot {
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 6px;
+}
+.mSplitBody .mFoot > * {
+  white-space: nowrap;
+}
+/* A portrait column needs a wider card than the avatar row: at 420px the
+   results area holds two cards from 1280 to 1440 with the filters open, and
+   three only when the filters collapse on a wide screen. Mirrored by
+   `MIN_CARD_WIDTH_PX` in `useMemberDirectoryVirtualizer.ts`. */
+.mGridSplit {
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+}
 .mPron {
   font-size: var(--text-11-5);
   color: var(--ink-40);

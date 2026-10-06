@@ -42,12 +42,17 @@ export function useInviteCommunityMembers(slug: string) {
     },
     onSuccess: () => {
       // Kept deliberately narrow. An invitation moves the notifications badge
-      // for its recipient, never for the sender, and it moves exactly one
-      // surface on this side: the pending list below the send form, which
-      // reads under this same key (PRD-140). No roster and no join-request
-      // queue changes, because nobody was added to anything.
+      // for its recipient, never for the sender, and it moves exactly two
+      // surfaces on this side: the pending list below the send form, which
+      // reads under this same key (PRD-140), and the picker's candidate pool,
+      // which the server answers without anybody holding a live invitation,
+      // so the people just invited drop out of it. No roster and no
+      // join-request queue changes, because nobody was added to anything.
       void queryClient.invalidateQueries({
         queryKey: ["community-invites", slug],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-invite-candidates", slug],
       });
     },
   });

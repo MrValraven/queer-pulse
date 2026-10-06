@@ -48,6 +48,24 @@ export const OPERATING_STATE_OPTIONS: OperatingStateOption[] = [
   },
 ];
 
+const OPERATING_STATE_OPTIONS_WITHOUT_MOVED = OPERATING_STATE_OPTIONS.filter(
+  (option) => option.id !== "moved",
+);
+
+/**
+ * The cards an owner is offered. "Moved" asks for a forwarding street
+ * address, which an online-only listing has no use for, so the caller leaves
+ * it out for one. The caller keeps it whenever it is already the saved (or
+ * staged) state, so the owner can still see what is set and move off it.
+ */
+export function operatingStateOptionsFor(
+  isMovedOffered: boolean,
+): OperatingStateOption[] {
+  return isMovedOffered
+    ? OPERATING_STATE_OPTIONS
+    : OPERATING_STATE_OPTIONS_WITHOUT_MOVED;
+}
+
 /** Catalog key for a state's short name, used by the "currently" line. */
 export const OPERATING_STATE_LABEL_KEYS: Record<ListingOperatingState, string> =
   Object.fromEntries(

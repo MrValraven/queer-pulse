@@ -9,13 +9,22 @@ import { useRefineDrawer } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LocalAccessFilter } from "./LocalAccessFilter";
 import { LocalCategoryFilter } from "./LocalCategoryFilter";
+<<<<<<< Updated upstream
 import { LocalOwnedByFilter } from "./LocalOwnedByFilter";
+=======
+import { LocalOwnerIdentityFilter } from "./LocalOwnerIdentityFilter";
+>>>>>>> Stashed changes
 import { LocalQuickFilters } from "./LocalQuickFilters";
 import { LocalSortFilter } from "./LocalSortFilter";
 import { LocalVibeFilter } from "./LocalVibeFilter";
 import type { LocalSort } from "./localPlaces";
+import type { LocalChipCounts } from "./useDirectoryFilters";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
+<<<<<<< Updated upstream
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
+=======
+import type { OwnerIdentitySlug } from "./listBusiness/listingOwnerIdentities.data";
+>>>>>>> Stashed changes
 import s from "./LocalFilterBar.module.css";
 
 export interface LocalFilterFieldsProps {
@@ -25,6 +34,13 @@ export interface LocalFilterFieldsProps {
   onClearCategories: () => void;
   /** Live count per category id (+ "all"), reflecting the other active filters. */
   categoryCounts: Record<string, number>;
+  /** How many loaded places each one-tap chip (open now, verified, each access
+   *  need, each vibe) would leave if turned on, with the other filters kept. */
+  chipCounts: LocalChipCounts;
+  /** True once every page of places has loaded without error, which is when a
+   *  zero count is final and its chip can go unpickable. Until then a zero may
+   *  only mean the matching place sits on a page still to come. */
+  isLoadedSetComplete: boolean;
   query: string;
   onQueryChange: (value: string) => void;
   vibes: string[];
@@ -39,10 +55,17 @@ export interface LocalFilterFieldsProps {
    *  place must meet to appear. */
   access: AccessibilitySlug[];
   onToggleAccess: (slug: AccessibilitySlug) => void;
+<<<<<<< Updated upstream
   /** Ownership tags currently filtered on (`?owned=`), any of which a place
    *  must carry. */
   owned: ListingOwnedBy[];
   onToggleOwned: (value: ListingOwnedBy) => void;
+=======
+  /** "Who runs it" tags currently filtered on (`?owner=`), any one of which a
+   *  place must carry to appear. */
+  ownerIdentities: OwnerIdentitySlug[];
+  onToggleOwnerIdentity: (slug: OwnerIdentitySlug) => void;
+>>>>>>> Stashed changes
   /** How the results are ordered. Sorting is a refinement, so the control lives
    *  inside the drawer with the filters rather than out on the results header,
    *  which leaves that header to say what it found. */
@@ -91,16 +114,25 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 
 /**
  * The filter set itself: search, then the groups. Place type, the two one-tap
+<<<<<<< Updated upstream
  * narrowings (open now, verified safe spaces), who runs it, access needs, and
  * (demo-only) vibe. Rendered inline in the desktop bar behind the "Refine" toggle, or flat
  * inside the mobile "Filters" sheet; one markup source so the two layouts never
  * diverge in behaviour.
+=======
+ * narrowings (open now, verified safe spaces), access needs, "who runs it",
+ * and (demo-only) vibe. Rendered inline in the desktop bar behind the
+ * "Refine" toggle, or flat inside the mobile "Filters" sheet; one markup
+ * source so the two layouts never diverge in behaviour.
+>>>>>>> Stashed changes
  */
 export function LocalFilterFields({
   categories,
   onToggleCategory,
   onClearCategories,
   categoryCounts,
+  chipCounts,
+  isLoadedSetComplete,
   query,
   onQueryChange,
   vibes,
@@ -111,8 +143,13 @@ export function LocalFilterFields({
   onToggleOpenNow,
   access,
   onToggleAccess,
+<<<<<<< Updated upstream
   owned,
   onToggleOwned,
+=======
+  ownerIdentities,
+  onToggleOwnerIdentity,
+>>>>>>> Stashed changes
   sort,
   onSortChange,
   isLocationOn,
@@ -146,6 +183,7 @@ export function LocalFilterFields({
   const activeRefineCount =
     vibes.length +
     access.length +
+    ownerIdentities.length +
     categories.length +
     (safeOnly ? 1 : 0) +
     owned.length +
@@ -209,6 +247,7 @@ export function LocalFilterFields({
         onToggleCategory={onToggleCategory}
         onClearCategories={onClearCategories}
         categoryCounts={categoryCounts}
+        isLoadedSetComplete={isLoadedSetComplete}
       />
       {/* Ordering and the two one-tap narrowings share a band: all three are
           short controls, and side by side they fill a line the place-type chips
@@ -225,14 +264,36 @@ export function LocalFilterFields({
           onToggleOpenNow={onToggleOpenNow}
           safeOnly={safeOnly}
           onToggleSafeOnly={onToggleSafeOnly}
+          chipCounts={chipCounts}
+          isLoadedSetComplete={isLoadedSetComplete}
         />
       </RefineSplit>
+<<<<<<< Updated upstream
       <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />
       {!isOnlineScope && (
         <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />
       )}
+=======
+      <LocalOwnerIdentityFilter
+        ownerIdentities={ownerIdentities}
+        onToggleOwnerIdentity={onToggleOwnerIdentity}
+        ownerIdentityCounts={chipCounts.ownerIdentities}
+        isLoadedSetComplete={isLoadedSetComplete}
+      />
+      <LocalAccessFilter
+        access={access}
+        onToggleAccess={onToggleAccess}
+        accessCounts={chipCounts.access}
+        isLoadedSetComplete={isLoadedSetComplete}
+      />
+>>>>>>> Stashed changes
       {showVibeFilter && (
-        <LocalVibeFilter vibes={vibes} onToggleVibe={onToggleVibe} />
+        <LocalVibeFilter
+          vibes={vibes}
+          onToggleVibe={onToggleVibe}
+          vibeCounts={chipCounts.vibes}
+          isLoadedSetComplete={isLoadedSetComplete}
+        />
       )}
     </>
   );

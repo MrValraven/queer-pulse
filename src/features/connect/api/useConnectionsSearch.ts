@@ -61,7 +61,9 @@ export interface ConnectionsSearchResult {
 export function useConnectionsSearch(
   searchQuery: string,
 ): ConnectionsSearchResult {
-  const trimmedSearchTerm = searchQuery.trim();
+  // A leading "@" is how members write a handle; the server haystack holds
+  // the bare slug, so "@sofia" searches for "sofia".
+  const trimmedSearchTerm = searchQuery.trim().replace(/^@+/, "");
   const debouncedSearchTerm = useDebouncedValue(
     trimmedSearchTerm,
     CONNECTIONS_SEARCH_DEBOUNCE_MS,

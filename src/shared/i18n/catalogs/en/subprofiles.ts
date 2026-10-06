@@ -1333,7 +1333,8 @@ export const subprofiles: Catalog = {
   "invite.title": "Invite a co-owner",
   "invite.sub": "They'll need to accept before they can manage this persona.",
   "invite.searchPlaceholder": "Search your connections",
-  "invite.empty": "No connections left to invite.",
+  "invite.allListedTaken":
+    "Everyone who matches is already a co-owner or invited.",
   "invite.inviting": "Inviting…",
   "invite.toastSent":
     "Invite sent. They'll need to accept before they can manage this persona.",
@@ -2012,8 +2013,6 @@ export const subprofiles: Catalog = {
     '{count} "Part of" links didn\'t carry over. Only your own communities and events come with a copy.',
   "newModal.toastAffiliationsSaveFailed":
     'We couldn\'t copy the "Part of" links. Add them from the editor.',
-  "invite.loadMore": "Show more connections",
-  "invite.loadingMore": "Loading…",
 
   "editorSavebar.mobilePreview": "Preview",
   "mobilePreview.ariaLabel": "Live preview of your persona page",

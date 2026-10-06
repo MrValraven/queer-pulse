@@ -181,14 +181,14 @@ export function ThreadReplies({
 
   // `nodes` accumulates every page fetched so far (each "Load more" click
   // appends a server page and every reply loaded stays mounted, expanded, and
-  // nested — never re-collapsed by default). A long, well-commented thread can
+  // nested until the member collapses it). A long, well-commented thread can
   // realistically reach the high hundreds of mounted reply subtrees. Window the
   // TOP-LEVEL list the same way MemberDirectoryFilterPage windows its card
   // grid: a capped initial slice grown via an IntersectionObserver sentinel,
   // independent of the server-side "Load more" pagination below. This caps how
-  // many top-level trees mount at once; it does not cap a single expanded
-  // node's own descendant count, which the existing collapse/"continue this
-  // thread" affordances already bound (see ThreadReplyNode).
+  // many top-level trees mount at once. Inside one tree, a branch deeper than
+  // the indent cap waits behind "Continue this thread" until asked for, and
+  // once opened it mounts as one flat column (see ThreadReplyNode).
   const {
     visible: nodesWindowed,
     sentinelRef,

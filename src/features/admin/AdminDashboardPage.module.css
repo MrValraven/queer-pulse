@@ -491,6 +491,29 @@
   margin-top: 3px;
 }
 
+.feedAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 6px 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .feedAll:hover {
+    text-decoration: underline;
+  }
+}
+
+.feedAll:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
 /* ── Transparency note ───────────────────────────────────────────────────── */
 .transpCard {
   display: flex;
@@ -509,7 +532,7 @@
   margin-top: 1px;
 }
 .transpLink {
-  color: var(--accent-ink);
+  color: var(--accent-text);
   font-weight: 600;
   text-decoration: none;
 }

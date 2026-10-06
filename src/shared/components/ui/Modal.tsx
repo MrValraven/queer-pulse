@@ -11,6 +11,7 @@ import { useTranslation } from "../../i18n/useTranslation";
 import { useDismiss, useScrimDismiss } from "./useDismiss";
 import { useInertWhileCovered } from "./modalStack";
 import { useFocusHandBack, useModalExit } from "./useModalExit";
+import { IsInsideModalContext } from "./modalBodyContext";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
@@ -112,7 +113,11 @@ export function Modal({
             <FiX />
           </button>
         </div>
-        <div className={styles.modalBody}>{children}</div>
+        <div className={styles.modalBody}>
+          <IsInsideModalContext.Provider value={true}>
+            {children}
+          </IsInsideModalContext.Provider>
+        </div>
         {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
     </div>,
@@ -241,7 +246,11 @@ export function ModalSheet({
             </button>
           </>
         )}
-        {children}
+        {/* Reset for a sheet opened from inside a <Modal>: its success sheet
+            is plum, so the SuccessPanel in it keeps the plum styling. */}
+        <IsInsideModalContext.Provider value={false}>
+          {children}
+        </IsInsideModalContext.Provider>
       </div>
     </div>,
     document.body,

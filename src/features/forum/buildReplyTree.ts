@@ -13,7 +13,7 @@ export interface ReplyNode {
  * replies it was handed: "Newest" reversed them and "Most helpful" ranked them
  * on a demo-only `helpful` flag with a like-count fallback. Replies arrive in
  * pages, so on a sixty-reply thread "Newest" reversed the twenty OLDEST replies
- * and labelled them the newest — a sort that only sorts the current page is not
+ * and labelled them the newest. A sort that only sorts the current page is not
  * a sort. The ordering is now the server's `ORDER BY`
  * (`?sort=oldest|newest|top`), applied across the whole thread and at every
  * depth, and this function preserves it exactly: the sibling bucket under each
@@ -38,13 +38,12 @@ export function buildReplyTree(replies: Reply[]): ReplyNode[] {
     childrenByParent.set(parentKey, bucket);
   }
   // `visited` is the set of reply ids on the CURRENT recursion path (root to
-  // this node), not the whole tree — a fresh, path-scoped copy is threaded
-  // into each branch below, so it only ever blocks a reply from becoming its
-  // own ancestor (a cycle). It never drops a legitimate sibling or a reply
+  // this node): a fresh, path-scoped copy is threaded into each branch below,
+  // so it only ever blocks a reply from becoming its own ancestor (a cycle). It never drops a legitimate sibling or a reply
   // that reappears in an unrelated branch. Defense-in-depth: ids are unique
   // by construction today, but this util consumes API data with no
   // validation, and an unbounded cycle here is an unbounded recursive
-  // render — a stack overflow — so the guard costs one Set per depth level
+  // render (a stack overflow), so the guard costs one Set per depth level
   // to make that structurally impossible.
   const build = (
     parentKey: string,
@@ -88,4 +87,39 @@ export function countDescendants(node: ReplyNode): number {
     (total, child) => total + 1 + countDescendants(child),
     0,
   );
+}
+
+/** One reply in a flattened branch, paired with the name of the reply it
+ *  answers. `parentName` is null when that parent is the row right above it
+ *  (the flattened node itself counts as the row above the first one), so only
+ *  a row that answers someone further up carries a label. */
+export interface FlattenedReply {
+  node: ReplyNode;
+  parentName: string | null;
+}
+
+/**
+ * Every descendant of `node`, depth-first in reading order (pre-order), each
+ * paired with its parent's name when the parent is not the previous row. The
+ * thread page uses this past the indent cap: "Continue this thread" opens the
+ * whole remaining branch as one flat column, and the name lets a row say who
+ * it answers. With children A and B, and A1 under A, the column reads A, A1,
+ * B, and B is labelled with the flattened node's name, since it follows A1.
+ */
+export function flattenReplyDescendants(node: ReplyNode): FlattenedReply[] {
+  const flattened: FlattenedReply[] = [];
+  let previousRowId = node.reply.id;
+  const visit = (parent: ReplyNode) => {
+    for (const child of parent.children) {
+      flattened.push({
+        node: child,
+        parentName:
+          parent.reply.id === previousRowId ? null : parent.reply.name,
+      });
+      previousRowId = child.reply.id;
+      visit(child);
+    }
+  };
+  visit(node);
+  return flattened;
 }

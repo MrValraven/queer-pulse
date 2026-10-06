@@ -10,7 +10,14 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { pricingModeOf } from "../../listingMenu.data";
+<<<<<<< Updated upstream
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "../../listingOwnedBy.data";
+=======
+import {
+  normalizeOwnerIdentities,
+  ownerIdentityLabelKey,
+} from "../../listingOwnerIdentities.data";
+>>>>>>> Stashed changes
 import type { RestoreFieldChange } from "./restoreDiff.types";
 import {
   choiceField,
@@ -75,6 +82,12 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
       return labelKey ? context.t(labelKey) : "";
     }),
   evidence: (context) => textField(context, "evidence"),
+  ownerIdentities: (context) =>
+    choiceField(context, "ownerIdentities", (draft) =>
+      normalizeOwnerIdentities(draft.ownerIdentities)
+        .map((slug) => context.t(ownerIdentityLabelKey(slug)))
+        .join(LIST_SEPARATOR),
+    ),
   price: (context) =>
     choiceField(context, "price", (draft) =>
       optionLabel(context.t, PRICES, draft.price),

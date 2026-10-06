@@ -133,7 +133,7 @@ function SelectOptionList({
   // An option button that stays out of the tab order: the combobox keeps
   // focus on the input and drives selection via aria-activedescendant, so
   // each option carries tabIndex=-1 and is reached by pointer or the input's
-  // key handler. Mirrors MemberPicker's role="option".
+  // key handler.
   const renderOptionRow = (option: SelectOption, index: number) => {
     const isSelected = selected.has(option.value);
     const isActive = index === activeIndex;

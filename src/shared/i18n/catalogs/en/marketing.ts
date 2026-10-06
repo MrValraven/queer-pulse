@@ -1453,6 +1453,7 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepAriaDone": "Step {number}: {label} (done)",
   "listBusiness.wizard.stepAriaCurrent": "Step {number}: {label} (current)",
   "listBusiness.wizard.stepJumpAria": "Go back to step {number}: {label}",
+  "listBusiness.wizard.stepGoToAria": "Go to step {number}: {label}",
   "listBusiness.wizard.stepOf": "Step {number} of {total}: {label}",
   "listBusiness.wizard.draftSaved": "Draft saved",
   "listBusiness.draftBanner.text":
@@ -1532,12 +1533,17 @@ export const marketing: Catalog = {
   "listBusiness.step1.catsAria": "Category",
   "listBusiness.step1.hoodLabel": "Which neighbourhood?",
   "listBusiness.step1.hoodPlaceholder": "Pick a Lisbon neighbourhood…",
-  "listBusiness.step1.hoodOnlineHelper":
-    "Optional for online-only spaces. Pick one if you have roots in a neighbourhood.",
   "listBusiness.step1.badgeLabel": "Who runs it?",
   "listBusiness.step1.badgeHelper":
     "Queer-owned, or a place that genuinely welcomes us? Both belong here. This is a welcome, open to everyone.",
   "listBusiness.step1.badgeAria": "Ownership",
+  "listBusiness.ownerIdentity.women": "Women-owned",
+  "listBusiness.ownerIdentity.trans": "Trans-owned",
+  "listBusiness.ownerIdentity.nonBinary": "Non-binary-owned",
+  "listBusiness.ownerIdentity.bipoc": "BIPOC-owned",
+  "listBusiness.step1.ownerIdentityLabel": "Anything else about who runs it?",
+  "listBusiness.step1.ownerIdentityHelper":
+    "Optional. Pick any that fit the people who own or lead it. They show on your listing for everyone and help people find you.",
   "listBusiness.step1.owned.tag": "Queer-owned",
   "listBusiness.step1.owned.title": "Owned or led by our community",
   "listBusiness.step1.owned.desc":
@@ -1611,7 +1617,6 @@ export const marketing: Catalog = {
   "listBusiness.tagGroup.happening": "What happens there",
   "listBusiness.tagGroup.foodDrink": "Food and drink",
   "listBusiness.tagGroup.pricing": "Pricing",
-  "listBusiness.tagGroup.languages": "Languages",
   "listBusiness.tag.byAppointment": "By appointment",
   "listBusiness.tag.bookingRecommended": "Booking recommended",
   "listBusiness.tag.membersOnly": "Members only",
@@ -1639,11 +1644,6 @@ export const marketing: Catalog = {
   "listBusiness.tag.slidingScale": "Sliding scale",
   "listBusiness.tag.payWhatYouCan": "Pay what you can",
   "listBusiness.tag.studentDiscount": "Student discount",
-  "listBusiness.tag.portugueseSpoken": "Portuguese spoken",
-  "listBusiness.tag.englishSpoken": "English spoken",
-  "listBusiness.tag.spanishSpoken": "Spanish spoken",
-  "listBusiness.tag.frenchSpoken": "French spoken",
-  "listBusiness.tag.portugueseSignLanguage": "Portuguese Sign Language",
   // Languages (endonyms stay as-is; only "Other" and the LGP gloss translate)
   "listBusiness.lang.portugues": "Português",
   "listBusiness.lang.english": "English",
@@ -1656,6 +1656,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.em": "practical",
   "listBusiness.step3.sub":
     "How people find you, when you're open, and where to reach you. Share only what you want public.",
+  "listBusiness.step3.subOnline":
+    "Where people find you online and how to reach you. Share only what you want public.",
   "listBusiness.step3.onlineOnly.title": "This business is online only",
   "listBusiness.step3.onlineOnly.sub":
     "Share where people find you online instead of a street address.",
@@ -1747,12 +1749,9 @@ export const marketing: Catalog = {
     "Required: describe it for blind & low-vision members",
   "listBusiness.step4.photo.upload": "Upload",
   "listBusiness.step4.photo.change": "Change",
-  "listBusiness.step4.photo.uploading": "Uploading…",
   "listBusiness.step4.photo.remove": "Remove photo",
   "listBusiness.step4.photo.serverRejected":
     "We couldn't save this photo. Upload it again or pick a different one.",
-  "listBusiness.step4.photo.uploadError":
-    "Couldn't upload that image. Try again",
   "listBusiness.step4.aboutYouHeading": "A little about you",
   "listBusiness.step4.relLabel": "Your connection to the place",
   "listBusiness.step4.relAria": "Your connection",
@@ -1828,6 +1827,10 @@ export const marketing: Catalog = {
   "listBusiness.step5.em": "before it goes to the team.",
   "listBusiness.step5.sub":
     "Here's everything you've told us. Edit any part by jumping back. Nothing's locked until you send.",
+  "listBusiness.step5.edit.title": "One last look",
+  "listBusiness.step5.edit.em": "at your changes.",
+  "listBusiness.step5.edit.sub":
+    "Here's the listing as it will read once you save. Jump back to change any part.",
   "listBusiness.step5.slugLabel": "Your listing will live at",
   "listBusiness.step5.slugDomain": "queerpulse.app/directory/",
   "listBusiness.step5.editCta": "Edit",
@@ -1977,6 +1980,8 @@ export const marketing: Catalog = {
     "Your neighbourhood shows here, beside your category.",
   "listBusiness.livePreview.caption.badge":
     "Your badge shows here, on your card's photo.",
+  "listBusiness.livePreview.caption.ownerIdentities":
+    "Shows on your card and your listing page, for everyone.",
   "listBusiness.livePreview.caption.evidence":
     "Only this listing's managers and the review team see this. It backs up the badge.",
   "listBusiness.livePreview.caption.price":
@@ -2029,8 +2034,6 @@ export const marketing: Catalog = {
     "Your name and role will show here.",
   "listBusiness.livePreview.caption.willShow":
     "This shows on your card once your listing has a name.",
-  "listBusiness.livePreview.caption.hoodOnline":
-    "Your card says Online here. Your page shows the neighbourhood at the top.",
   "listBusiness.livePreview.caption.online":
     "When on, your card says Online here. Your page leaves out the map and the hours.",
   "listBusiness.livePreview.caption.hoursNote":
@@ -2194,6 +2197,7 @@ export const marketing: Catalog = {
     "the accessibility answers",
   "listBusiness.editor.history.field.accessibilityNote":
     "the accessibility note",
+  "listBusiness.editor.history.field.ownerIdentities": "the ownership tags",
   "listBusiness.editor.history.field.services": "the services and prices",
   "listBusiness.editor.history.field.menu": "the menu",
   "listBusiness.editor.history.field.pricingMode":
@@ -2335,14 +2339,21 @@ export const marketing: Catalog = {
     "We couldn't make that change just now. Try again.",
   "listBusiness.coManagers.inviteHeading": "Invite someone to help",
   "listBusiness.coManagers.inviteIntro":
-    "Find the member you have in mind and send the invitation. Nothing changes for them until they accept.",
+    "Pick someone you are connected to and send the invitation. Nothing changes for them until they accept.",
   "listBusiness.coManagers.seats":
     "{used} of {cap} places taken. An invitation holds a place while it waits for an answer.",
   "listBusiness.coManagers.seatsFullNotice":
     "All the places are taken. Remove someone, or cancel an invitation, to free one up.",
-  "listBusiness.coManagers.searchPlaceholder": "Search members by name",
-  "listBusiness.coManagers.searchHint":
-    "Type a name to find the person you have in mind.",
+  "listBusiness.coManagers.searchPlaceholder":
+    "Search your connections by name",
+  "listBusiness.coManagers.loadingConnections":
+    "Finding the people you are connected to.",
+  "listBusiness.coManagers.noConnections":
+    "You can invite anyone you are connected to. Once you have connections, they show up here.",
+  "listBusiness.coManagers.allListedHelping":
+    "Everyone who matches already helps run this listing or has an invitation waiting.",
+  "listBusiness.coManagers.connectionsLoadError":
+    "Your connections didn't load.",
   "listBusiness.coManagers.sendCta": "Send invitation",
   "listBusiness.coManagers.sendingCta": "Sending...",
   "listBusiness.coManagers.invitedToast": "Invitation sent.",
@@ -2624,6 +2635,7 @@ export const marketing: Catalog = {
     "Category order (the first is the main one)",
   "listBusiness.editor.restore.diff.field.hood": "Neighbourhood",
   "listBusiness.editor.restore.diff.field.badge": "Who runs it",
+  "listBusiness.editor.restore.diff.field.ownerIdentities": "Ownership tags",
   "listBusiness.editor.restore.diff.field.evidence": "How it is queer-owned",
   "listBusiness.editor.restore.diff.field.price": "Price band",
   "listBusiness.editor.restore.diff.field.blurb": "Short description",
@@ -2817,11 +2829,14 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_one": "{count} infrastructure change",
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
-  "changelog.entry.more": "More",
-  "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+<<<<<<< Updated upstream
   "changelog.releases.2026-10-02.headline":
     "The directory gets an Online tab and tags for who runs a business, and personas can import a podcast feed.",
+=======
+  "changelog.releases.2026-10-05.headline":
+    "Chats you have read stay read, and you can now find places by who runs them.",
+>>>>>>> Stashed changes
   "changelog.releases.2026-09-30.headline":
     "A new sign-in page with a living Q, and your data export covers nearly all your account.",
   "changelog.releases.2026-09-29.headline":
@@ -2956,6 +2971,7 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+<<<<<<< Updated upstream
   "changelog.entries.tags-and-snippets-type-normally.title":
     "Item tags take a comma, and code snippets a new line",
   "changelog.entries.tags-and-snippets-type-normally.body":
@@ -3048,10 +3064,168 @@ export const marketing: Catalog = {
     "Owners can tag a listing as run by women, trans or non-binary people, and the directory can filter by it.",
   "changelog.entries.who-owns-and-runs-it-tags.details":
     "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. A trans or non-binary tag says something about the owner's own gender identity, so only the owner can set these tags. They sit in the owner's own A little about you section, and co-managers, suggestions and listings the team writes never touch them. The tags are public even when the owner's name is hidden, and the form says plainly that on a small business they can point straight to you. Each shows as a plain pill, never styled like a verified mark, and is separate from the queer-owned badge. In the directory, Who runs it filters by any of the tags you pick.",
+=======
+  "changelog.entries.listing-photos-use-the-photo-picker.title":
+    "Listing, review and space photos use the photo picker",
+  "changelog.entries.listing-photos-use-the-photo-picker.body":
+    "Pick from past uploads or add a new one, confirm before removing, and see the cover cropped like your card.",
+  "changelog.entries.persona-next-saves-chapter.title":
+    "Next saves your persona's page blocks",
+  "changelog.entries.persona-next-saves-chapter.body":
+    "Moving on to the next chapter, or to Get it live, saves what you just changed.",
+  "changelog.entries.publish-listing-confirm.title":
+    "Confirm a listing before it goes live",
+  "changelog.entries.publish-listing-confirm.body":
+    "Publish live now asks first, from a queue row, the preview or a bulk selection, before members can see it.",
+  "changelog.entries.every-sent-invite-shows.title":
+    "Every invite you have sent shows in your list",
+  "changelog.entries.every-sent-invite-shows.body":
+    "Show more loads your older sent invites 20 at a time, and each tab counts every invite it holds.",
+  "changelog.entries.forum-replies-read-as-a-tree.title":
+    "Forum replies connect like a conversation tree",
+  "changelog.entries.forum-replies-read-as-a-tree.body":
+    "Lines link each reply to the one it answers. Tap a line to fold that branch; long threads open in place.",
+  "changelog.entries.persona-chats-name-the-person.title":
+    "Chats with a persona named after its craft show who is behind it",
+  "changelog.entries.persona-chats-name-the-person.body":
+    'A linked persona still named after its craft reads "Owner Name | Craft" in chats, quotes and push alerts.',
+  "changelog.entries.listing-wizard-phone-and-dark-fixes.title":
+    "Listing forms fit small phones and read in dark mode",
+  "changelog.entries.listing-wizard-phone-and-dark-fixes.body":
+    "The step bar shows in dark mode, stays on screen at 375px, and the editor's save bar clears the tab bar.",
+  "changelog.entries.admin-listing-edits-save-anywhere.title":
+    "Editing a listing in admin saves from any step",
+  "changelog.entries.admin-listing-edits-save-anywhere.body":
+    "Live listings get Save and publish, and the page names the listing and its status.",
+  "changelog.entries.listing-languages-asked-once.title":
+    "Languages asked once when listing a place",
+  "changelog.entries.listing-languages-asked-once.body":
+    "Spoken languages now sit only in their own field, so the tag picker keeps all six slots for other things.",
+>>>>>>> Stashed changes
   "changelog.entries.no-focus-frame-around-pages.title":
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Opening a page after using the keyboard no longer draws a focus frame across the whole screen.",
+  "changelog.entries.flat-success-in-dialogs.title":
+    "Confirmations inside a dialog sit flat",
+  "changelog.entries.flat-success-in-dialogs.body":
+    "Sending a message or flagging a safe space now ends on a done state drawn right on the dialog.",
+  "changelog.entries.listing-queue-row-edit.title":
+    "Edit a listing straight from the review queue",
+  "changelog.entries.listing-queue-row-edit.body":
+    "Admins get an Edit button on every listing nobody owns yet, beside View live.",
+  "changelog.entries.admin-listing-edit-jump-ahead.title":
+    "Staff can skip straight to any step when editing a listing",
+  "changelog.entries.admin-listing-edit-jump-ahead.body":
+    "Every step pill on the edit page opens its step, while the steps before it are complete.",
+  "changelog.entries.notes-on-declined-invite-requests.title":
+    "Staff can keep notes on declined invite requests",
+  "changelog.entries.notes-on-declined-invite-requests.body":
+    "A private note on each declined request records the why, with who edited it last. Applicants never see it.",
+  "changelog.entries.member-cards-full-photo.title":
+    "Member cards lead with a full-height photo",
+  "changelog.entries.member-cards-full-photo.body":
+    "On desktop, feed and directory cards show the photo beside the details, or big initials when there is none.",
+  "changelog.entries.online-listings-drop-place-fields.title":
+    "Online-only businesses get a page that fits them",
+  "changelog.entries.online-listings-drop-place-fields.body":
+    "No directions, neighbourhood, hours or step-free questions; the online-only choice now comes first when you list.",
+  "changelog.entries.community-invite-search-every-connection.title":
+    "Community invites search all your connections",
+  "changelog.entries.community-invite-search-every-connection.body":
+    "Anyone past the first twenty is reachable, and invitations go only to people you are connected to.",
+  "changelog.entries.draft-history-compact-timeline.title":
+    "A tidier version history in the article editor",
+  "changelog.entries.draft-history-compact-timeline.body":
+    "Each saved version fits on one line, the newest is marked, and long histories fold away.",
+  "changelog.entries.directory-cards-one-line.title":
+    "Directory cards line up again",
+  "changelog.entries.directory-cards-one-line.body":
+    "Accessibility and who-runs-it rows stay on one line; hover the +N to see the rest.",
+  "changelog.entries.local-who-runs-it-tags.title":
+    "Find places by who runs them",
+  "changelog.entries.local-who-runs-it-tags.body":
+    "Listings can say they are women-, trans-, non-binary- or BIPOC-owned, and Local filters by it.",
+  "changelog.entries.local-filters-skip-empty-results.title":
+    "Local filters that would find nothing are greyed out",
+  "changelog.entries.local-filters-skip-empty-results.body":
+    "Once every place has loaded, a place type, access need or quick filter with no matches can't be picked.",
+  "changelog.entries.approvals-record-who-and-why.title":
+    "Approvals now record who and why",
+  "changelog.entries.approvals-record-who-and-why.body":
+    "Welcoming someone in asks for a reason, and the Decided tab names the reviewer and that reason.",
+  "changelog.entries.local-filter-chips-stop-flickering.title":
+    "Local filter chips no longer blank out when ticked",
+  "changelog.entries.local-filter-chips-stop-flickering.body":
+    "Ticking or clearing a filter switches it in one step, so its label never fades into the fill.",
+  "changelog.entries.bigger-new-member-photos.title":
+    "See bigger faces on new member cards",
+  "changelog.entries.bigger-new-member-photos.body":
+    "On phones, the feed's new member card shows a larger photo with the name and pronouns stacked beside it.",
+  "changelog.entries.admin-platform-log.title":
+    "See every staff action in one log",
+  "changelog.entries.admin-platform-log.body":
+    "Filter it by category, time range or member, and admins also see members' public record events.",
+  "changelog.entries.admin-platform-log.tag": "Open the platform log",
+  "changelog.entries.back-arrow-after-the-more-menu.title":
+    "The back arrow shows again after you open a page from More",
+  "changelog.entries.back-arrow-after-the-more-menu.body":
+    "Opening a page from More used to hide the arrow for the rest of the visit, on every profile you tapped next.",
+  "changelog.entries.saying-hello-no-longer-zooms-iphone.title":
+    "Saying hello no longer zooms the page on iPhone",
+  "changelog.entries.saying-hello-no-longer-zooms-iphone.body":
+    "The message box now uses 16px text, so the tab bar stays fully on screen once you close it.",
+  "changelog.entries.dropdowns-reach-every-option-on-phones.title":
+    "Dropdowns open taller and reach every option on phones",
+  "changelog.entries.dropdowns-reach-every-option-on-phones.body":
+    "The last choice no longer hides under the home indicator, and the list shows more rows before scrolling.",
+  "changelog.entries.invite-pickers-search-every-connection.title":
+    "Invite pickers search all your connections",
+  "changelog.entries.invite-pickers-search-every-connection.body":
+    "Group chats, gatherings, personas, communities, listings and forum posts now search every connection you have.",
+  "changelog.entries.own-messages-stay-yours-after-rename.title":
+    "Your messages stay on your side after a username change",
+  "changelog.entries.own-messages-stay-yours-after-rename.body":
+    "Chats pick up your new @username straight away, so nothing you sent shows as the other person's.",
+  "changelog.entries.inbox-no-stale-selection-on-phones.title":
+    "Phones no longer highlight the last chat you opened",
+  "changelog.entries.inbox-no-stale-selection-on-phones.body":
+    "The inbox only marks the open chat when the list and the chat sit side by side, so it never looks unread.",
+  "changelog.entries.gathering-page-shows-cover.title":
+    "Gathering pages show their cover photo",
+  "changelog.entries.gathering-page-shows-cover.body":
+    "The photo the host uploaded now opens the page as a wide banner above the title, on phones too.",
+  "changelog.entries.admin-listing-offers-search-members.title":
+    "Offer a listing by searching for the member",
+  "changelog.entries.admin-listing-offers-search-members.body":
+    "Ownership offers and co-manager invites on admin listings find people by name, with no profile slug to type.",
+  "changelog.entries.dropdowns-clear-sticky-bars.title":
+    "Open dropdowns stay above sticky bars",
+  "changelog.entries.dropdowns-clear-sticky-bars.body":
+    "The Go together area picker no longer hides its search field under the Back and Next bar.",
+  "changelog.entries.read-state-sticks.title": "Chats you have read stay read",
+  "changelog.entries.read-state-sticks.body":
+    "The unread badge stays cleared after you reopen the app, and each chat opens where you stopped reading.",
+  "changelog.entries.staff-page-manage-in-place.title":
+    "Staff & roles page you can act on",
+  "changelog.entries.staff-page-manage-in-place.body":
+    "Photos, search, tier filters, a coverage panel that flags unheld grants, and a Manage drawer on each row.",
+  "changelog.entries.communities-header-drops-explainer-link.title":
+    "The communities header is shorter",
+  "changelog.entries.communities-header-drops-explainer-link.body":
+    "The How communities work link under the greeting is gone from My communities and Discover.",
+  "changelog.entries.quest-banner-under-nav.title":
+    "Quest persona banners reach the top of the page",
+  "changelog.entries.quest-banner-under-nav.body":
+    "Game master and other quest personas left a dark strip above the cover; it now runs up behind the nav.",
+  "changelog.entries.admin-menu-clears-status-bar.title":
+    "Staff console and editor desk menus are easy to tap on iPhone",
+  "changelog.entries.admin-menu-clears-status-bar.body":
+    "In the installed app their top bars sat under the clock and battery; they now start below them.",
+  "changelog.entries.hosts-are-going-to-their-own-gathering.title":
+    "Hosts are going to their own gatherings",
+  "changelog.entries.hosts-are-going-to-their-own-gathering.body":
+    "Creating a gathering saves your seat, and your page shows a hosting panel with a way to Manage.",
   "changelog.entries.cohost-picker-reaches-every-connection.title":
     "Add a cohost now reaches everyone you're connected to",
   "changelog.entries.cohost-picker-reaches-every-connection.body":
@@ -3171,8 +3345,6 @@ export const marketing: Catalog = {
     "Get one appeal per moderation decision",
   "changelog.entries.one-appeal-per-decision.body":
     "A moderator who was not part of the original decision reviews it, and that outcome is final.",
-  "changelog.entries.one-appeal-per-decision.details":
-    "You can appeal a moderation decision once. A moderator who was not part of the original decision reviews it, and that outcome is final. The advisory council oversees how moderation and appeals are run across QueerPulse. Open the appeal page for a decision that was already appealed and it says so plainly, pointing you to the outcome and to the moderation team. Governance, About, the Constitution and the banned-account page now describe this the same way.",
   "changelog.entries.safer-report-forms.title":
     "Report and block forms stop pre-picking a reason",
   "changelog.entries.safer-report-forms.body":
@@ -4155,38 +4327,26 @@ export const marketing: Catalog = {
     "A library of shared values to choose from",
   "changelog.entries.a-library-of-shared-values-to-choose-from.body":
     "Browse eighty shared values under ten themes and tick the ones that fit, when founding or editing a community.",
-  "changelog.entries.a-library-of-shared-values-to-choose-from.details":
-    "Founding a community no longer starts at an empty field. Browse eighty shared values grouped under ten themes, from consent and privacy to access, money, conflict and repair, search them by wording, and tick the ones that fit. Writing your own is still there and still first. The same picker is in the edit panel, so an existing community can pick up a value it never got around to writing down.",
   "changelog.entries.find-any-admin-page-by-name.title":
     "Find any admin page by name",
   "changelog.entries.find-any-admin-page-by-name.body":
     "A search field at the top of the admin menu narrows it to matching pages, and Enter opens the first result.",
-  "changelog.entries.find-any-admin-page-by-name.details":
-    "The admin menu opens with a search field. Type part of a page name and the menu narrows to what matches, section headings and all, so nothing stays hidden inside a closed group. Enter opens the first result.",
   "changelog.entries.delete-a-piece-from-the-desk.title":
     "Delete a piece from the magazine desk",
   "changelog.entries.delete-a-piece-from-the-desk.body":
     "Each row's menu has Delete, with a confirmation listing what goes; a pitch behind it returns to the inbox.",
-  "changelog.entries.delete-a-piece-from-the-desk.details":
-    "A piece commissioned by mistake, or a draft that went nowhere, had no way off the desk: it sat in the pipeline for good. Every row now carries a menu at its end with Delete in it, behind a confirmation that says exactly what goes with the piece, which is the draft, its saved versions and its reader comments. If the piece came from a pitch, that pitch returns to the inbox as waiting, so the idea survives the draft it became. A piece whose article or deck is already published stays put until it is unpublished, because published reading should never disappear as a side effect of tidying the desk.",
   "changelog.entries.the-homepage-card-walks-itself.title":
     "The homepage card walks through what we built",
   "changelog.entries.the-homepage-card-walks-itself.body":
     "The card moves on by itself every twenty seconds and stops for good the moment you pick a row.",
-  "changelog.entries.the-homepage-card-walks-itself.details":
-    "The card that opens the homepage lists eleven things we built, one under the other, and it only ever showed the first one's story until you clicked a row. It now moves on by itself roughly every twenty seconds, so the forum, the map, the magazine and the rest each get their turn. It holds still while the card is off screen and while your pointer or keyboard focus is inside it, and the moment you pick a row yourself it stops for good and stays where you put it. Anyone browsing with reduced motion turned on gets the card exactly as it was.",
   "changelog.entries.tap-what-is-missing-to-go-straight-to-it.title":
     "Tap what is missing to go straight to it",
   "changelog.entries.tap-what-is-missing-to-go-straight-to-it.body":
     "Each checklist line is a button that scrolls to the field, puts your cursor in it and rings it briefly.",
-  "changelog.entries.tap-what-is-missing-to-go-straight-to-it.details":
-    "The checklist above the Continue button named what a step was still waiting on and then left you to find it: on the first step that is a scroll back past a grid of eight formats, and on the review step past the whole recap. Every line in that checklist is now a button. Press it and the wizard scrolls to the field, puts your cursor in it, and rings it for a moment so you can see which one it meant. It works on the publish pledges too, landing you on the exact box left to tick.",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.title":
     "The gathering wizard says what it needs",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.body":
     "Each step says whether it is required or optional, and a checklist above Continue lists what is missing.",
-  "changelog.entries.the-gathering-wizard-says-what-it-needs.details":
-    "Setting up a gathering runs through five steps. Two of them, repeats and capacity, are entirely skippable, and nothing on screen said so: the Continue button just sat dark and its only explanation was a tooltip that never appears on a phone. Every step now opens with a line saying whether it is required or optional, and a checklist above the button lists what is still missing, ticking each line off as you fill it in. On the review step it names the exact pledge you have left to confirm. The button is reachable by keyboard as well, so a screen reader can read out why it is not ready.",
   "changelog.entries.bio-mentions-read-as-names.title":
     "Bio mentions read as names",
   "changelog.entries.bio-mentions-read-as-names.body":
@@ -4270,8 +4430,6 @@ export const marketing: Catalog = {
     "Spot a risky link or request in a chat",
   "changelog.entries.spot-a-risky-link-or-request.body":
     "A warning appears when a message moves you to another app, asks for payment or dresses up a link.",
-  "changelog.entries.spot-a-risky-link-or-request.details":
-    "When a message pushes the conversation to WhatsApp or Telegram, or asks you for money, a quiet warning appears so you can slow down before you answer. Links get the same treatment when they hide behind a shortener, a look-alike domain or a raw address. Documents sent by someone you are not connected with now download instead of opening, and ask you first.",
   "changelog.entries.moderators-read-a-report-in-context.title":
     "Moderators read a report in context",
   "changelog.entries.moderators-read-a-report-in-context.body":
@@ -4284,8 +4442,6 @@ export const marketing: Catalog = {
     "Report a message and block in one move",
   "changelog.entries.report-and-block-in-one-move.body":
     "A reason on its own is enough, you can report anonymously, and blocking offers the recent messages.",
-  "changelog.entries.report-and-block-in-one-move.details":
-    "Reporting a message asks you for a reason and nothing more, and in the same step you can stay anonymous or block the person. Blocking from a chat offers to report that person's recent messages first, so a moderator sees what actually happened. Only people in the conversation can report its messages. Undoing a block restores the connection you had before it, so the conversation works again.",
   "changelog.entries.a-deleted-message-can-still-be-reported.title":
     "A deleted message can still be reported",
   "changelog.entries.a-deleted-message-can-still-be-reported.body":
@@ -4456,8 +4612,6 @@ export const marketing: Catalog = {
     "Your Now card shows what your openness does",
   "changelog.entries.your-now-card-shows-what-your-openness-does.body":
     "Your boundary note lives here too, plus hello counts per chip and a nudge to swap the quiet ones.",
-  "changelog.entries.your-now-card-shows-what-your-openness-does.details":
-    "The card now carries your status, your boundary note and what you're open to in one place, updated together from a single button. As the owner, you also see how many hellos each chip drew in the last 90 days and how many you answered, a nudge to swap one nobody has knocked on, and the statuses you've since moved on from. There's no view count. Everyone else sees the same card without those figures, and can still tap a chip to reach you with the reason already filled in. Every number comes from connection requests you already had. Nothing new about how you use the app is recorded to make this possible.",
   "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.title":
     "The installed app opens on your feed, not a blank screen",
   "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.body":
@@ -4574,20 +4728,14 @@ export const marketing: Catalog = {
     "Housing explains itself before asking you to sign in",
   "changelog.entries.housing-explains-itself-before-the-door.body":
     "Signed out, the homepage housing button now opens what housing here is instead of a sign-in screen.",
-  "changelog.entries.housing-explains-itself-before-the-door.details":
-    "The housing board and the flatmate board are both members-only, so a signed-out visitor who clicked either one landed on a sign-in screen with no explanation. The homepage section now carries a single button that opens a short explainer: the vetted housing groups that screen their own members, how a viewing releases the exact address and ends in a two-sided blind review, and why the board has a door at all. It also links the housing co-ops page, which anyone can read without an account.",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.title":
     "Pick the gathering you actually want to host",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.body":
     "Nine kinds and fifty-six formats replace the old eight, and the format now sets a sensible size and asks its own questions.",
-  "changelog.entries.pick-the-gathering-you-actually-want-to-host.details":
-    "The wizard used to offer eight formats, of which one was Other. A picnic, a collage night, a karaoke evening and a run club had nowhere to go, so the hosts who would run the warmest gatherings picked Other or gave up. There are nine kinds now, each one a distinct energy you can read at a glance, and fifty-six formats inside them, with a search box across all of them and a text field for whatever nobody thought of. The step now does what it always looked like it did: the format sets a sensible size for the gathering, decides whether the page counts the people coming, and asks the one or two questions it genuinely raises. A potluck asks what to bring. A club night asks about the door and about sober options. A walk asks about the ground. A screening asks how long the film runs. The answers show on the gathering's own page under Good to know, and the browse board leads with the nine kinds so you can find a Tuesday you would like without reading fifty titles.",
   "changelog.entries.a-gathering-can-run-past-midnight.title":
     "A gathering can run past midnight",
   "changelog.entries.a-gathering-can-run-past-midnight.body":
     "Say when yours ends, even when that is four in the morning or three days later.",
-  "changelog.entries.a-gathering-can-run-past-midnight.details":
-    "A gathering could only start and end on the same date, so a party running from 11pm to 4am had nowhere to say so and a weekend festival was impossible. The wizard now asks for an end date as well as an end time, filling it in for you and rolling it forward on its own when the end time lands before the start. Every page that shows a schedule says when a gathering carries on into the next morning, and the ones that print a range now name both days. Hosts can change the end after publishing, which until now sent them into a dead end: moving the start past the stored end was refused with nothing on the form to fix. A gathering that is under way also stays where you would look for it, in browse, on its community and venue pages, on the hub and in your own list of plans, instead of disappearing the moment it began.",
   "changelog.entries.the-changelog-reads-as-releases.title":
     "The changelog reads as releases",
   "changelog.entries.the-changelog-reads-as-releases.body":
@@ -4596,26 +4744,18 @@ export const marketing: Catalog = {
     "Run your gathering from its own page",
   "changelog.entries.run-your-gathering-from-its-own-page.body":
     "A host strip under the RSVP row lets you edit, cancel or delete the gathering you are standing on.",
-  "changelog.entries.run-your-gathering-from-its-own-page.details":
-    "Standing on a gathering you host, you could see everything a guest sees and do none of it: editing it or calling it off meant going back to My Events and finding the link. Your own gathering page now carries a host strip under the RSVP row. Edit the details in place, cancel it, or delete it outright, with Manage still there for attendees, announcements and the day-of dashboard. Cancelling keeps the gathering on the board marked off and tells everyone holding a seat. Deleting removes it for good and notifies nobody, so it is offered only once a gathering has been cancelled or while nobody has signed up yet. With people already coming, the platform asks you to cancel first so they hear about it.",
   "changelog.entries.a-persona-page-is-one-colour-again.title":
     "Persona pages open on their own colour",
   "changelog.entries.a-persona-page-is-one-colour-again.body":
     "The strip behind the floating navigation now takes the persona's own ground, in light and dark alike.",
-  "changelog.entries.a-persona-page-is-one-colour-again.details":
-    "Every craft skin paints its own background, but the strip the floating navigation sits in kept the site cream, so most persona pages opened with a band across the top that clashed with the page under it. That strip now takes the persona's own ground, in both light and dark, so a yoga teacher's page, an astrologer's chart and a chef's menu each read as one surface from the very top. Pages whose banner already ran up behind the navigation look exactly as they did.",
   "changelog.entries.link-people-and-places-from-your-bio.title":
     "Link people and places from your bio",
   "changelog.entries.link-people-and-places-from-your-bio.body":
     "Type @, c/, e/ or t/ in your bio to link a member, community, event or forum thread; nobody is notified.",
-  "changelog.entries.link-people-and-places-from-your-bio.details":
-    "Your bio now takes the same shortcuts messages and the forum already had. Type @ for a member, c/ for a community, e/ for an event or t/ for a forum thread, pick from the list that appears, and the name becomes a link on your profile. It works on your Portuguese bio and on every persona page too. Nobody gets a notification when you name them: a bio is standing text, so it stays quiet however often you edit it.",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.title":
     "See what a save will change before you save it",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.body":
     "The settings form lists what Save will write, and a values change says every member must agree again.",
-  "changelog.entries.see-what-a-save-will-change-before-you-save-it.details":
-    "The community settings form now lists what pressing Save is about to write, right above the button. Shared values name the ones going in and the ones coming out, and the form says plainly that changing them asks every member to agree again. The governance trail reads the same way: a values edit shows what was added and what was removed instead of printing the whole list twice.",
   "changelog.entries.the-tag-list-folds-away-once-you-have-picked.title":
     "The tag list folds away once you have picked",
   "changelog.entries.the-tag-list-folds-away-once-you-have-picked.body":
@@ -5151,8 +5291,6 @@ export const marketing: Catalog = {
     "Studio and Cinema speak Portuguese in more places",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
     "Buttons, headings, tabs and empty states follow your language; the work itself stays as its author wrote it.",
-  "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.details":
-    "Buttons, headings, tabs and empty states across Studio and Cinema now follow the language you picked. The work itself stays as its author wrote it: track titles, lyrics, biographies, synopses and credits.",
   "changelog.tag.magazineSearch": "Search the magazine",
   "changelog.tag.resources": "Browse the guides",
   "changelog.tag.readingGroups": "Find a reading group",
@@ -5803,9 +5941,6 @@ export const marketing: Catalog = {
     "Communities now show their real events, discussions, and volunteer opportunities",
   "changelog.entries.community-pulse-and-insights.body":
     "The Events tab lists real upcoming gatherings, the sidebar shows recent discussions, and mods get insights.",
-  "changelog.entries.community-pulse-and-insights.details":
-    "A community's Events tab now lists its real upcoming gatherings, and the sidebar shows recent discussions and open volunteer opportunities. Owners and mods get a new insights panel on growth and posts.",
-
   "changelog.entries.onboarding-identity-and-notifications.title":
     "Onboarding now asks for pronouns and notification preferences",
   "changelog.entries.onboarding-identity-and-notifications.body":
@@ -6323,9 +6458,6 @@ export const marketing: Catalog = {
     "Therapist directories, powered by real profiles",
   "changelog.entries.therapist-personas-directory.body":
     "Each community-verified profile shows how they work, fees, availability, where they practise and vouches.",
-  "changelog.entries.therapist-personas-directory.details":
-    "The queer-affirming therapist directories now show real, community-verified profiles: how each therapist works, fees, availability, where they practise, and vouches. Therapists manage their own profile.",
-
   "changelog.entries.concern-intake-live.title":
     "Raise a concern, and we'll actually see it",
   "changelog.entries.concern-intake-live.body":
@@ -7279,9 +7411,6 @@ export const marketing: Catalog = {
     "Removed content stays hidden everywhere",
   "changelog.entries.removed-content-stays-hidden.body":
     "Takedowns now vanish from DMs, business and housing listings and personas, and no longer count as unread.",
-  "changelog.entries.removed-content-stays-hidden.details":
-    "Content a moderator takes down now disappears everywhere it could show, including direct messages, business and housing listings, and personas. Removed messages stop counting toward your unread badges.",
-
   "changelog.entries.help-demo-example-live-hidden.title":
     "Help panels no longer show demo examples in live mode",
   "changelog.entries.help-demo-example-live-hidden.body":
@@ -7377,9 +7506,6 @@ export const marketing: Catalog = {
     "Editors can now build their own interactive decks",
   "changelog.entries.magazine-deck-authoring.body":
     "Five slide layouts, byline and metadata, reader preview, drafts, and publishing with the “Interactive” tag.",
-  "changelog.entries.magazine-deck-authoring.details":
-    "Editors can now build interactive slide decks in the dashboard: five slide layouts, byline and metadata, a reader preview, saved drafts, and publishing with the “Interactive” tag on the magazine's front page.",
-
   "changelog.entries.listings-moderation-console.title":
     "The listings queue is now a real moderation console",
   "changelog.entries.listings-moderation-console.body":
@@ -7398,8 +7524,6 @@ export const marketing: Catalog = {
     "Search now covers the whole platform",
   "changelog.entries.platform-wide-search.body":
     "Results add magazine articles, jobs, housing, resources, workshops and subprofiles, in English and Portuguese.",
-  "changelog.entries.platform-wide-search.details":
-    "Global search now spans magazine articles, jobs, housing listings, resources, workshops and subprofiles, alongside members, communities, events, forum threads and businesses, in both English and Portuguese.",
   "changelog.entries.save-events-communities.title":
     "Save events and communities, and saves that really stick",
   "changelog.entries.save-events-communities.body":
@@ -7475,8 +7599,6 @@ export const marketing: Catalog = {
     "Three new persona types: chef, mixologist and therapist",
   "changelog.entries.chef-mixologist-therapist-personas.body":
     "Build a subprofile as a chef, mixologist or therapist, each with a starter template and directory filter.",
-  "changelog.entries.chef-mixologist-therapist-personas.details":
-    "You can now build a subprofile as a chef (menus and residencies), a mixologist (cocktails and residencies) or a therapist (specialisms and credentials), each with its own starter template and directory filter.",
   "changelog.entries.connections-card-polish.title": "Tidier connection cards",
   "changelog.entries.connections-card-polish.body":
     "The mutuals line renders properly, and the Connected date shows the day and time down to the minute.",
@@ -8667,8 +8789,7 @@ export const marketing: Catalog = {
   // complete account: a "no" and a "nobody has told us" are different answers
   // that both need the room the listing page gives them.
   "directory.card.access": "Accessibility this place has confirmed",
-  "directory.card.accessMore_one": "{count} more",
-  "directory.card.accessMore_other": "{count} more",
+  "directory.card.moreCount": "+{count}",
   "directory.card.savedToast": "Saved {name}",
   "directory.card.unsavedToast": "Removed {name} from saved",
   "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
@@ -8691,6 +8812,7 @@ export const marketing: Catalog = {
     "No badge is permanent. Any member can flag a space, and it can be pulled.",
   "directory.detail.breadcrumbAria": "Breadcrumb",
   "directory.detail.breadcrumbHome": "Directory",
+  "directory.detail.relatedTitleOnline": "More {category} to discover",
   "directory.detail.relatedTitle": "More {category} nearby",
   "directory.detail.badge.verifiedOwned": "Verified queer-owned",
   "directory.detail.badge.owned": "Queer-owned",
@@ -8698,6 +8820,7 @@ export const marketing: Catalog = {
   "directory.detail.reviewsCount": "· {count} reviews",
   "directory.detail.newBadge": "New",
   "directory.detail.onlineBusiness": "Online only",
+  "directory.detail.offersTitleOnline": "What it <em>offers</em>",
   "directory.detail.offersTitle": "What this place <em>offers</em>",
   "directory.detail.goodForSub": "As {name} describes it.",
   "directory.detail.hoursTitle": "Hours",
@@ -8735,6 +8858,8 @@ export const marketing: Catalog = {
     "{name} last confirmed these details on {date}. They may have changed since.",
   "directory.detail.freshness.stale":
     "These details were last confirmed on {date}. They may have changed since.",
+  "directory.detail.freshness.unconfirmedOnline":
+    "Nobody has confirmed these details yet. Worth a quick check before you order.",
   "directory.detail.freshness.unconfirmed":
     "Nobody has confirmed these details yet. Worth a quick check before you travel.",
   "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
@@ -8769,9 +8894,6 @@ export const marketing: Catalog = {
   "directory.detail.review.photo.add": "Add a photo",
   "directory.detail.review.photo.change": "Change photo",
   "directory.detail.review.photo.remove": "Remove",
-  "directory.detail.review.photo.uploading": "Uploading…",
-  "directory.detail.review.photo.error":
-    "Couldn't upload that photo. Please try again.",
   "directory.detail.review.photo.previewAlt":
     "The photo you are attaching to this review",
   "directory.detail.reply.ownerResponseTitle": "Response from the owner",
@@ -8825,7 +8947,9 @@ export const marketing: Catalog = {
   "directory.detail.reviews.readMore": "Read more",
   "directory.detail.reviews.showLess": "Show less",
   "directory.detail.visitTitle": "Where it is",
+  "directory.detail.visitTitleOnline": "Where to find it online",
   "directory.detail.accessTitle": "Getting in, and being understood",
+  "directory.detail.languagesTitle": "Being understood",
   "directory.detail.accessSub":
     "As {name} declared it. Ask if you need to be sure.",
 
@@ -8923,6 +9047,8 @@ export const marketing: Catalog = {
   "directory.detail.questions.sub_one": "{count} question, newest first.",
   "directory.detail.questions.sub_other": "{count} questions, newest first.",
   "directory.detail.questions.emptySub": "Nobody has asked anything here yet.",
+  "directory.detail.questions.emptyBodyOnline":
+    "Ask the first question. Anything you would want to know before you buy: where they ship, how long it takes, which ways you can pay.",
   "directory.detail.questions.emptyBody":
     "Ask the first question. Anything you would want to know before you go: how to get in, what the room is like, whether the kitchen is still open at ten.",
   "directory.detail.questions.askLabel": "Ask something in public",
@@ -9710,6 +9836,9 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Access needs",
   "local.filter.accessNote":
     "Shows places that have answered yes to everything you pick. A place nobody has asked about stays out of the results.",
+  "local.filter.ownerIdentityLabel": "Who runs it",
+  "local.filter.ownerIdentityNote":
+    "In the owner's own words. Pick more than one to see places matching any of them.",
   // Shown under the sort control while "use my location" is on, saying what the
   // position is doing for the sort the member picked. The two work together;
   // neither replaces the other.
@@ -11208,8 +11337,6 @@ export const marketing: Catalog = {
     "Choose who can add you to a group",
   "changelog.entries.choose-who-can-add-you-to-a-group.body":
     "Invitations land in Requests with Accept and Decline, a notification and a push, and no silent re-adds.",
-  "changelog.entries.choose-who-can-add-you-to-a-group.details":
-    "A new setting under privacy lets you allow your connections to add you straight into a group, or require an invitation instead. Invitations arrive as a request you can accept or decline, with a notification and a push either way, and nobody who left or was removed from a group can be quietly put back into it.",
   "changelog.entries.end-a-group-or-hand-it-to-someone-else.title":
     "End a group, or hand it to someone else",
   "changelog.entries.end-a-group-or-hand-it-to-someone-else.body":
@@ -11222,14 +11349,10 @@ export const marketing: Catalog = {
     "Block and report now reach into groups",
   "changelog.entries.block-and-report-now-reach-into-groups.body":
     "Blocked members can't see each other in a group, every row offers Block and Report, groups can be reported.",
-  "changelog.entries.block-and-report-now-reach-into-groups.details":
-    "Two members who have blocked each other no longer see one another's messages in a shared group, and can't be seated together by an invite, a link or an add. Every member row now carries Block and Report, and a group itself can be reported straight to moderators, who see the group, its owner and its full roster.",
   "changelog.entries.group-timelines-explain-what-changed.title":
     "Group timelines explain what changed",
   "changelog.entries.group-timelines-explain-what-changed.body":
     "New messages mark admin, ownership, photo and description changes, and speak to you when it's about you.",
-  "changelog.entries.group-timelines-explain-what-changed.details":
-    'The timeline now says when someone is made or removed as an admin, when ownership changes hands, when the photo or description changes, when someone joins by link or invitation, and when a group ends. These messages read as "you" when they\'re about you, for example "Ana removed you", instead of naming you in the third person.',
   "changelog.entries.sanctioned-members-lose-their-group-powers.title":
     "Sanctioned members lose their group powers",
   "changelog.entries.sanctioned-members-lose-their-group-powers.body":

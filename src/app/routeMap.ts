@@ -130,6 +130,11 @@ export const routes = {
   adminEmailTemplateEdit: "/admin/email-templates/edit",
   adminGovernance: "/admin/governance",
   adminRoadmap: "/admin/roadmap",
+  /** The platform log: staff actions plus public-record member events.
+   *  `PlatformLogController` is `@Roles(Moderator, Admin)` and scopes a
+   *  moderator to staff actions server-side, so the path is listed in
+   *  MOD_ACCESSIBLE_ADMIN_PATTERNS. */
+  adminLog: "/admin/log",
   adminHousingCoops: "/admin/housing",
   adminHousingGroups: "/admin/housing-groups",
   /** LOC-19: pre-publication review of rooms posted into a vetted housing

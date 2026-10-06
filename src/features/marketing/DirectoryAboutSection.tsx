@@ -40,7 +40,11 @@ export function DirectoryAboutSection({ place }: { place: DirectoryPlace }) {
               reason (see goodForSub). */}
           <h2>
             <Translation
-              i18nKey="marketing:directory.detail.offersTitle"
+              i18nKey={
+                place.online
+                  ? "marketing:directory.detail.offersTitleOnline"
+                  : "marketing:directory.detail.offersTitle"
+              }
               components={{ em: <em /> }}
             />
           </h2>

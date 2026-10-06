@@ -65,8 +65,19 @@ import type {
   SubprofileKind,
   SubprofileSection,
 } from "./api/subprofiles.api";
+<<<<<<< Updated upstream
 import type { Language } from "../../shared/i18n/types";
 import { KIND_SECTIONS } from "./kindSections.data";
+=======
+export {
+  KIND_LABELS,
+  KIND_LABELS_BY_LANGUAGE,
+  personaAddressName,
+  isBareProfessionName,
+  personaTitleName,
+  personaNameBesideCraft,
+} from "./personaTitleName";
+>>>>>>> Stashed changes
 
 // ── Kinds & sections config (contract C1 — verbatim, mirrored on the backend) ─
 // `KIND_SECTIONS` lives in `kindSections.data.ts` (import-free, so the
@@ -960,6 +971,7 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   game_critic: "subprofiles:kind.game_critic",
 };
 
+<<<<<<< Updated upstream
 /**
  * English fallback names, kept ONLY for the "no display name typed" case: when
  * a persona is created with a blank name, its `displayName` — a PERSISTED
@@ -1375,6 +1387,8 @@ export function personaNameBesideCraft({
   return ownerName?.trim() || trimmedName;
 }
 
+=======
+>>>>>>> Stashed changes
 /** Turn any label into a URL-safe slug: lowercase, non-alphanumerics → hyphens. */
 export function slugify(value: string): string {
   return value

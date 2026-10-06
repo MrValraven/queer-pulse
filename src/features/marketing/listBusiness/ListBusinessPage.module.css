@@ -129,7 +129,14 @@
 }
 
 /* ===== Layout ===== */
+/* The page is a container so the form/preview split follows the room the
+   page actually has. Inside the admin console a 248px sidebar takes width a
+   viewport query cannot see, and the form column would squeeze to ~220px.
+   On the member page (.wrap, 28px gutters) 880px of container falls at a
+   936px viewport, so every width above 960px keeps the two columns. */
 .page {
+  container-type: inline-size;
+  container-name: listing-page;
   padding: 18px 0 var(--section-y-64);
 }
 .grid {
@@ -138,9 +145,11 @@
   gap: 46px;
   align-items: flex-start;
 }
-@media (max-width: 960px) {
+@container listing-page (max-width: 880px) {
   .grid {
-    grid-template-columns: 1fr;
+    /* minmax(0, ...) keeps a min-content child (the step pill row) from
+       widening the single track past the page on a phone. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
   }
 }
@@ -165,7 +174,9 @@
   width: 2.16em;
   height: 2.16em;
   border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.09);
+  /* --line-rgb flips to cream in dark mode so the empty circle still shows
+     on the dark page; in light it is the same plum channel. */
+  background: rgba(var(--line-rgb), 0.12);
   color: var(--ink-40);
   font-weight: 700;
   font-size: var(--text-12-5);
@@ -180,6 +191,15 @@
 .wpActive .wpN {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
+}
+/* Plum sits almost on top of the dark page colour, so the current step takes
+   the brand coral there, with plum numerals (about 5:1 on coral). */
+:global([data-theme="dark"]) .wpActive .wpN {
+  background: var(--accent);
+  /* css-scale-allow: non-flipping-text. The ground under this numeral is a
+     coral fill, light in both themes, so it must stay dark. --text-strong
+     would flip. */
+  color: var(--plum);
 }
 .wpDone .wpN {
   background: var(--jade);
@@ -199,7 +219,7 @@
 .wpBar {
   width: 18px;
   height: 2px;
-  background: rgba(var(--plum-rgb), 0.1);
+  background: rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-2);
 }
 @media (max-width: 680px) {
@@ -221,7 +241,8 @@
 .progress {
   flex: 1;
   height: 4px;
-  background: rgba(var(--plum-rgb), 0.08);
+  /* A track, so --line-rgb: it flips to cream and stays visible in dark. */
+  background: rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
@@ -906,7 +927,7 @@
   color: var(--accent);
 }
 
-/* ===== Photo slot (upload / URL) ===== */
+/* ===== Photo slot ===== */
 .photoField {
   display: flex;
   flex-direction: column;
@@ -915,28 +936,38 @@
 .photoActions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
+/* Mirrors `.smallBtn` in SubprofileEditor.module.css, so a listing photo slot
+   reads the same as every other photo uploader on the platform. */
 .photoBtn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px;
-  font: inherit;
+  font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-10);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  padding: 7px 13px;
   cursor: pointer;
-  transition: border-color 0.15s var(--ease);
-}
-.photoBtn:hover {
-  border-color: rgba(var(--line-rgb), 0.3);
+  transition: border-color 0.2s var(--ease);
 }
 .photoBtn:disabled {
   opacity: 0.6;
-  cursor: default;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .photoBtn:not(:disabled):hover {
+    border-color: var(--line-strong);
+  }
+}
+.photoBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .photoError {
   margin: 0;
@@ -1299,7 +1330,8 @@
   position: sticky;
   top: 96px;
 }
-@media (max-width: 960px) {
+/* Unstuck on the same container width that stacks it under the form. */
+@container listing-page (max-width: 880px) {
   .previewCol {
     position: static;
     top: auto;

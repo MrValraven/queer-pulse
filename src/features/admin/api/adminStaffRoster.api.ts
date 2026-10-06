@@ -1,62 +1,60 @@
 import { apiGet } from "../../../shared/api/client";
 import type { PlatformStaffRowDTO } from "../../../shared/staff/staff.api";
-import { isBadgedStaffRoleId } from "../../../shared/staff/badgedStaffRoles";
-import type { StaffRoleId } from "../staffRoles.registry";
-import { STAFF_ROLE_IDS } from "../staffRoles.registry";
+import { STAFF_ROLE_IDS, type StaffRoleId } from "../staffRoles.registry";
 
 export type { PlatformStaffRowDTO };
 
-/** One member holding at least one additive staff grant. */
-export interface AdminStaffRoleHolderDTO {
+/** One additive staff grant on a roster row, with when it was handed over. */
+export interface AdminStaffGrantDTO {
+  role: StaffRoleId;
+  grantedAt: string;
+}
+
+/** One person on the admin staff roster, with everything the page shows. */
+export interface AdminStaffRosterRowDTO {
   id: string;
   slug: string;
   firstName: string;
   lastName: string;
+  avatarUrl: string | null;
   platformRole: "member" | "moderator" | "admin";
-  staffRoles: StaffRoleId[];
+  status: "active" | "suspended" | "deactivated";
+  /** ISO timestamp of when the account was created. */
+  joinedAt: string;
+  /** Every grant the person holds, in registry order. */
+  grants: AdminStaffGrantDTO[];
+}
+
+/** Sorts grants into the order `STAFF_ROLES` lists them, which is the order
+ *  the roster renders them in. Used by demo patches that add a grant. */
+export function inStaffRegistryOrder(
+  grants: AdminStaffGrantDTO[],
+): AdminStaffGrantDTO[] {
+  return [...grants].sort(
+    (firstGrant, secondGrant) =>
+      STAFF_ROLE_IDS.indexOf(firstGrant.role) -
+      STAFF_ROLE_IDS.indexOf(secondGrant.role),
+  );
 }
 
 /**
- * The full staff roster for the admin console's staff page — the same
- * `GET /platform/staff` the member-facing `StaffBadge` map (`useStaffMap`)
- * reads, fetched here as the raw rows instead of reduced to a slug map: the
- * roster renders every row (name, handle, role), not just one lookup.
- *
- * It carries the moderator and admin tiers plus every member holding a
- * badge-earning grant, so a row can arrive with `platformRole: null`. That is
- * someone on the ordinary member tier who is here for what they were handed.
- * Grant ids this build has no label for are dropped rather than rendered raw.
+ * `GET /admin/members/staff-roster`: one row per staff person (moderators,
+ * admins, and every member holding an additive grant) with the photo, account
+ * status, join date and dated grants the staff page renders. Admin-only.
+ * Grant ids this build does not know yet are dropped so the page only renders
+ * roles it has a label for.
  */
-export async function getAdminStaffRoster(): Promise<PlatformStaffRowDTO[]> {
-  const rows = await apiGet<PlatformStaffRowDTO[]>("/platform/staff");
-  if (!Array.isArray(rows)) return [];
-  return rows.map((row) => ({
-    ...row,
-    badgedStaffRoles: (row.badgedStaffRoles ?? []).filter(isBadgedStaffRoleId),
-  }));
-}
-
-/**
- * `GET /admin/members/staff-roles`: everyone holding an additive staff grant,
- * with what they hold. Deliberately a different endpoint from the roster
- * above: `/platform/staff` is readable by every active member (it badges
- * moderators and admins across the app), while who holds which functional
- * grant is operational information and stays behind the admin-only members
- * controller. Unknown role ids (a backend that shipped a grant this build does
- * not know yet) are dropped rather than rendered as raw keys.
- */
-export async function getAdminStaffRoleHolders(): Promise<
-  AdminStaffRoleHolderDTO[]
+export async function getAdminStaffRosterRows(): Promise<
+  AdminStaffRosterRowDTO[]
 > {
-  const rows = await apiGet<AdminStaffRoleHolderDTO[]>(
-    "/admin/members/staff-roles",
+  const rows = await apiGet<AdminStaffRosterRowDTO[]>(
+    "/admin/members/staff-roster",
   );
   if (!Array.isArray(rows)) return [];
   return rows.map((row) => ({
     ...row,
-    staffRoles: (row.staffRoles ?? []).filter(
-      (staffRole): staffRole is StaffRoleId =>
-        STAFF_ROLE_IDS.includes(staffRole),
+    grants: (row.grants ?? []).filter((grant) =>
+      STAFF_ROLE_IDS.includes(grant.role),
     ),
   }));
 }

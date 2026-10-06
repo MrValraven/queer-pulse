@@ -45,6 +45,9 @@ interface ManageGatheringTabsProps {
   /** The host's own RSVP question, which labels each attendee's answer in the
    *  Attendees tab. Absent in demo, where a generic label stands in. */
   customRsvpQuestion?: string | null;
+  /** The host's own slug, so the Attendees tab can mark the host's row and
+   *  keep Remove and Bar off it. Absent in demo, whose roster is all guests. */
+  hostSlug?: string;
   onUpdateSettings?: (patch: {
     allowWaitlist?: boolean;
     showAttendeeCount?: boolean;
@@ -79,6 +82,7 @@ export function ManageGatheringTabs({
   allowWaitlist,
   showAttendeeCount,
   customRsvpQuestion,
+  hostSlug,
   onUpdateSettings,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
@@ -110,7 +114,11 @@ export function ManageGatheringTabs({
         />
       )}
       {tab === "attendees" && (
-        <AttendeesTab slug={slug} customRsvpQuestion={customRsvpQuestion} />
+        <AttendeesTab
+          slug={slug}
+          customRsvpQuestion={customRsvpQuestion}
+          hostSlug={hostSlug}
+        />
       )}
       {tab === "messages" && <MessagesTab slug={slug} />}
       {tab === "settings" && (

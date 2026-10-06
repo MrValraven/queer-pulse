@@ -309,6 +309,7 @@ export const goTogether: Catalog = {
     "No connections to pick yet. You can go solo and meet the group.",
   "card.partner.hint":
     "Pick one connection who's also going. They'll get an invite to join you.",
+  "card.partner.loadError": "Your connections didn't load.",
   "card.partner.loading": "Loading your connections",
   "card.partner.search": "Search your connections",
   "card.partner.title": "Who are you going with?",

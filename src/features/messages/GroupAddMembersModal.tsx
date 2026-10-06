@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   Button,
   MemberSelectList,
@@ -11,8 +11,9 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
-import { useConnectionsList } from "../connect/api/useConnectionsList";
+import { useConnectionsSearch } from "../connect/api/useConnectionsSearch";
 import type { ConnectionView } from "../connect/connections.data";
+import { InviteMembersListFooter } from "../gatherings/InviteMembersListFooter";
 import { MAX_GROUP_MEMBERS, remainingGroupSlots } from "./groupLimits";
 import type { GroupMemberPick } from "./NewGroupModal";
 import styles from "./NewMessageModal.module.css";
@@ -31,9 +32,11 @@ interface GroupAddMembersModalProps {
 }
 
 /**
- * Add-members picker for an existing group: the same connection pool + drain-
- * all-pages behaviour as NewGroupModal, minus the group-name field, and with the
- * current roster filtered out. Multi-select; confirms with the picked members.
+ * Add-members picker for an existing group: the same server-searched
+ * connection pool as NewGroupModal (`useConnectionsSearch`, demo mode
+ * included), minus the group-name field, and with the current roster filtered
+ * out. Multi-select; picks are kept by slug, so one made under an earlier
+ * search still reaches `onAdd`. Confirms with the picked members.
  * Adds are owner/admin-gated server-side (each member must also be a connection +
  * not blocked), this UI only surfaces for a caller whose can-flags allow it.
  * Built on the shared `Modal` and `MemberSelectList`.
@@ -49,45 +52,59 @@ export function GroupAddMembersModal({
   const fmt = useFormat();
   const { isBlocked } = useSocial();
   const staffMap = useStaffMap();
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  // Picks keyed by slug, filled at toggle time, so a pick stays named and
+  // tinted after a new search drops it from the rows on screen.
+  const [picksBySlug, setPicksBySlug] = useState<Map<string, ConnectionView>>(
+    () => new Map(),
+  );
+  // Everyone picked in this modal session, kept through an untick, so an
+  // unticked pinned row that has left the results can be ticked again.
+  const everPickedBySlugRef = useRef<Map<string, ConnectionView>>(new Map());
+  // The picks that still count: one blocked or added to the group since it was
+  // ticked drops out of the count, the cap, the pinned rows and the payload
+  // alike.
+  const activePicks = useMemo(() => {
+    const existingSlugSet = new Set(existingSlugs);
+    return [...picksBySlug.values()].filter(
+      (view) => !isBlocked(view.slug) && !existingSlugSet.has(view.slug),
+    );
+  }, [picksBySlug, isBlocked, existingSlugs]);
+  const selected = useMemo(
+    () => new Set(activePicks.map((view) => view.slug)),
+    [activePicks],
+  );
   const cap = remainingGroupSlots(activeMemberCount);
   const isGroupFull = cap === 0;
   const isAtCap = cap > 0 && selected.size >= cap;
 
-  const { views, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useConnectionsList("all");
-
-  useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const connectionsSearch = useConnectionsSearch(searchQuery);
+  const { views: connections, isSearchPending } = connectionsSearch;
 
   const candidates = useMemo(
-    () => views.filter((view) => !isBlocked(view.slug)),
-    [views, isBlocked],
+    () => connections.filter((connection) => !isBlocked(connection.slug)),
+    [connections, isBlocked],
   );
-  const bySlug = useMemo(() => {
-    const map = new Map<string, ConnectionView>();
-    for (const view of candidates) map.set(view.slug, view);
-    return map;
-  }, [candidates]);
   const people = useMemo<MemberSelectPerson[]>(
-    () =>
-      candidates.map((view) => ({
-        slug: view.slug,
-        name: view.name,
-        avatarUrl: view.photo,
-        pronouns: view.pron,
-        staffRole: staffMap[view.slug]?.tier ?? undefined,
-        staffBadgedRoles: staffMap[view.slug]?.badgedStaffRoles,
-      })),
+    () => candidates.map((view) => toMemberSelectPerson(view, staffMap)),
     [candidates, staffMap],
+  );
+  // Every pick stays listed above the results, so one made under an earlier
+  // search can still be seen and unticked.
+  const pinnedPeople = useMemo<MemberSelectPerson[]>(
+    () => activePicks.map((view) => toMemberSelectPerson(view, staffMap)),
+    [activePicks, staffMap],
   );
 
   function toggle(slug: string) {
-    setSelected((previous) => {
-      const next = new Set(previous);
+    const candidate =
+      candidates.find((connection) => connection.slug === slug) ??
+      everPickedBySlugRef.current.get(slug);
+    if (candidate) everPickedBySlugRef.current.set(slug, candidate);
+    setPicksBySlug((previous) => {
+      const next = new Map(previous);
       if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
+      else if (candidate) next.set(slug, candidate);
       return next;
     });
   }
@@ -102,15 +119,12 @@ export function GroupAddMembersModal({
   );
 
   function add() {
-    const picks: GroupMemberPick[] = [...selected]
-      .map((slug) => bySlug.get(slug))
-      .filter((view): view is ConnectionView => !!view)
-      .map((view) => ({
-        slug: view.slug,
-        name: view.name,
-        initials: view.initials,
-        tint: view.tint,
-      }));
+    const picks: GroupMemberPick[] = activePicks.map((view) => ({
+      slug: view.slug,
+      name: view.name,
+      initials: view.initials,
+      tint: view.tint,
+    }));
     onAdd(picks);
   }
 
@@ -161,14 +175,48 @@ export function GroupAddMembersModal({
           </p>
           <MemberSelectList
             people={people}
+            pinnedPeople={pinnedPeople}
             selected={selected}
             onToggle={toggle}
             excludeSlugs={existingSlugs}
             cap={cap}
             searchPlaceholder={t("messages:group.searchPlaceholder")}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            isSearching={isSearchPending && searchQuery.trim() !== ""}
+            emptyHint={
+              isSearchPending
+                ? t("messages:newMessage.loading")
+                : t("messages:newMessage.none")
+            }
+            emptyMessage={
+              connectionsSearch.isError
+                ? t("messages:group.connectionsLoadError")
+                : !isSearchPending && people.length > 0
+                  ? t("messages:group.allListedInGroup")
+                  : undefined
+            }
+            listFooter={
+              <InviteMembersListFooter connections={connectionsSearch} />
+            }
           />
         </>
       )}
     </Modal>
   );
+}
+
+/** One connection as a picker row, staff badge included. */
+function toMemberSelectPerson(
+  view: ConnectionView,
+  staffMap: ReturnType<typeof useStaffMap>,
+): MemberSelectPerson {
+  return {
+    slug: view.slug,
+    name: view.name,
+    avatarUrl: view.photo,
+    pronouns: view.pron,
+    staffRole: staffMap[view.slug]?.tier ?? undefined,
+    staffBadgedRoles: staffMap[view.slug]?.badgedStaffRoles,
+  };
 }

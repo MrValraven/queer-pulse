@@ -14,7 +14,14 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import { listingTagLabel } from "./listingTags.data";
+<<<<<<< Updated upstream
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
+=======
+import {
+  normalizeOwnerIdentities,
+  ownerIdentityLabelKey,
+} from "./listingOwnerIdentities.data";
+>>>>>>> Stashed changes
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
@@ -73,6 +80,23 @@ function onlineSummary(t: TFunction, draft: ListingDraft): string {
   if (draft.social.phone)
     bits.push(t("marketing:listBusiness.step5.online.phone"));
   return bits.join(" · ");
+}
+
+/** The ownership badge label plus the optional who-runs-it tags, joined on
+ *  one line. Both parts are optional, so empties drop out before joining. */
+function ownershipSummary(t: TFunction, draft: ListingDraft): string {
+  return [
+    draft.badge === "owned"
+      ? t("marketing:listBusiness.step1.owned.tag")
+      : draft.badge === "friendly"
+        ? t("marketing:listBusiness.step1.friendly.tag")
+        : "",
+    ...normalizeOwnerIdentities(draft.ownerIdentities).map((slug) =>
+      t(ownerIdentityLabelKey(slug)),
+    ),
+  ]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 function Row({
@@ -155,16 +179,63 @@ function SuggestNote() {
   );
 }
 
+/** The address a new listing will get, derived from the name typed so far. */
+function SlugBox({ name }: { name: string }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.slugBox}>
+      <div className={styles.sbK}>
+        {t("marketing:listBusiness.step5.slugLabel")}
+      </div>
+      <div className={styles.sbUrl}>
+        {t("marketing:listBusiness.step5.slugDomain")}
+        <b>{slugify(name)}</b>
+      </div>
+    </div>
+  );
+}
+
+/** Recaps the step 0 path choice; its edit link jumps back to that step. */
+function PathPlaceGroup({
+  path,
+  onEdit,
+}: {
+  path: ListingDraft["path"];
+  onEdit: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <Group
+      title={t("marketing:listBusiness.step5.group.pathPlace")}
+      onEdit={onEdit}
+    >
+      <Row k={t("marketing:listBusiness.step5.row.listingAs")}>
+        {path === "claim"
+          ? t("marketing:listBusiness.step5.listingAs.claim")
+          : path === "suggest"
+            ? t("marketing:listBusiness.step5.listingAs.suggest")
+            : ""}
+      </Row>
+    </Group>
+  );
+}
+
 export function StepReview({
   form,
   userName,
   userInitials,
   onEdit,
+  isEdit = false,
 }: {
   form: ListingForm;
   userName: string;
   userInitials: string;
   onEdit: (step: number) => void;
+  /** Reviewing changes to an existing listing (admin console). The header
+   *  switches to edit copy, and the slug box and the path group are left
+   *  out: the listing already has its address, which `slugify(draft.name)`
+   *  may no longer match, and an edit has no path step to go back to. */
+  isEdit?: boolean;
 }) {
   const { t } = useTranslation();
   const { draft } = form;
@@ -179,34 +250,23 @@ export function StepReview({
   const isMemberSuggestion = draft.path === "suggest" && !draft.isStaffAuthored;
   return (
     <div className={styles.stepBody}>
-      <PaneHeader
-        title={t("marketing:listBusiness.step5.title")}
-        em={t("marketing:listBusiness.step5.em")}
-        sub={t("marketing:listBusiness.step5.sub")}
-      />
+      {isEdit ? (
+        <PaneHeader
+          title={t("marketing:listBusiness.step5.edit.title")}
+          em={t("marketing:listBusiness.step5.edit.em")}
+          sub={t("marketing:listBusiness.step5.edit.sub")}
+        />
+      ) : (
+        <PaneHeader
+          title={t("marketing:listBusiness.step5.title")}
+          em={t("marketing:listBusiness.step5.em")}
+          sub={t("marketing:listBusiness.step5.sub")}
+        />
+      )}
 
-      <div className={styles.slugBox}>
-        <div className={styles.sbK}>
-          {t("marketing:listBusiness.step5.slugLabel")}
-        </div>
-        <div className={styles.sbUrl}>
-          {t("marketing:listBusiness.step5.slugDomain")}
-          <b>{slugify(draft.name)}</b>
-        </div>
-      </div>
+      {!isEdit && <SlugBox name={draft.name} />}
 
-      <Group
-        title={t("marketing:listBusiness.step5.group.pathPlace")}
-        onEdit={() => onEdit(0)}
-      >
-        <Row k={t("marketing:listBusiness.step5.row.listingAs")}>
-          {draft.path === "claim"
-            ? t("marketing:listBusiness.step5.listingAs.claim")
-            : draft.path === "suggest"
-              ? t("marketing:listBusiness.step5.listingAs.suggest")
-              : ""}
-        </Row>
-      </Group>
+      {!isEdit && <PathPlaceGroup path={draft.path} onEdit={() => onEdit(0)} />}
 
       <Group
         title={t("marketing:listBusiness.step5.group.basics")}
@@ -216,15 +276,15 @@ export function StepReview({
         <Row k={t("marketing:listBusiness.step5.row.category")}>
           {draft.cats.map((c) => catLabel(t, c)).join(", ")}
         </Row>
-        <Row k={t("marketing:listBusiness.step5.row.neighbourhood")}>
-          {draft.hood}
-        </Row>
+        {/* An online-only listing has no neighbourhood: the field is hidden
+            and the payload sends it blank. */}
+        {!draft.online && (
+          <Row k={t("marketing:listBusiness.step5.row.neighbourhood")}>
+            {draft.hood}
+          </Row>
+        )}
         <Row k={t("marketing:listBusiness.step5.row.ownership")}>
-          {draft.badge === "owned"
-            ? t("marketing:listBusiness.step1.owned.tag")
-            : draft.badge === "friendly"
-              ? t("marketing:listBusiness.step1.friendly.tag")
-              : ""}
+          {ownershipSummary(t, draft)}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.price")}>
           {draft.price ? optionLabel(t, PRICES, draft.price) : ""}

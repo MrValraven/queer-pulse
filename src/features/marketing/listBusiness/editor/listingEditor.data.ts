@@ -194,11 +194,56 @@ const CO_MANAGER_EDITOR_SECTION_BY_KEY = Object.fromEntries(
   CO_MANAGER_SECTION_DEFINITIONS.map((section) => [section.key, section]),
 ) as Record<ListingEditorSectionKey, ListingEditorSectionDefinition>;
 
-/** The section list to render and to jump between, for this member's role. */
+/**
+ * The accessibility questions are all about a physical place (step-free
+ * entrance, toilets, a quiet corner), so an online-only listing has nothing
+ * to answer there and the section leaves the page with its jump-nav entry.
+ * Its stored answers stay in the draft untouched, so switching the listing
+ * back to a physical one brings them back as they were.
+ */
+const ONLINE_HIDDEN_SECTION_KEYS: ReadonlySet<ListingEditorSectionKey> =
+  new Set(["accessibility"]);
+
+function withoutOnlineHiddenSections(
+  sections: ListingEditorSectionDefinition[],
+): ListingEditorSectionDefinition[] {
+  return sections.filter(
+    (section) => !ONLINE_HIDDEN_SECTION_KEYS.has(section.key),
+  );
+}
+
+/** The owner's and the co-manager's lists as an online-only listing shows
+ *  them. Module-level for the same stable identity. */
+const ONLINE_LISTING_EDITOR_SECTIONS = withoutOnlineHiddenSections(
+  LISTING_EDITOR_SECTIONS,
+);
+const ONLINE_CO_MANAGER_EDITOR_SECTIONS = withoutOnlineHiddenSections(
+  CO_MANAGER_EDITOR_SECTIONS,
+);
+
+/** Whether this section renders for a listing, online-only or not. */
+export function isSectionShownForListing(
+  sectionKey: ListingEditorSectionKey,
+  isOnline: boolean,
+): boolean {
+  return !isOnline || !ONLINE_HIDDEN_SECTION_KEYS.has(sectionKey);
+}
+
+/**
+ * The section list to render and to jump between, for this member's role and
+ * for whether the listing is online only. Always one of four module-level
+ * arrays, so the scroll-spy keeps a stable identity across renders.
+ */
 export function editorSectionsFor(
   isCoManagerView: boolean,
+  isOnline = false,
 ): ListingEditorSectionDefinition[] {
-  return isCoManagerView ? CO_MANAGER_EDITOR_SECTIONS : LISTING_EDITOR_SECTIONS;
+  if (isCoManagerView) {
+    return isOnline
+      ? ONLINE_CO_MANAGER_EDITOR_SECTIONS
+      : CO_MANAGER_EDITOR_SECTIONS;
+  }
+  return isOnline ? ONLINE_LISTING_EDITOR_SECTIONS : LISTING_EDITOR_SECTIONS;
 }
 
 /** The same definitions keyed by name, for this member's role. */

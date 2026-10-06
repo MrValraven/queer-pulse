@@ -1,7 +1,11 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { ListingDraft, PendingListing } from "./listBusiness.data";
+import {
+  TOTAL_STEPS,
+  type ListingDraft,
+  type PendingListing,
+} from "./listBusiness.data";
 
 // Floor for the "sending" ring so it's always visible; live mode also waits
 // for the real POST round-trip, whichever is longer.
@@ -32,6 +36,7 @@ export function useListingWizardSubmit({
   routeSubmitError,
   setServerError,
   scrollUp,
+  successToast,
 }: {
   /** Persist the finished draft and resolve with the created record. */
   submit: (draft: ListingDraft) => Promise<PendingListing>;
@@ -43,6 +48,10 @@ export function useListingWizardSubmit({
   routeSubmitError: (error: unknown, showGenericError: () => void) => void;
   setServerError: (message: string | null) => void;
   scrollUp: () => void;
+  /** The toast after a successful send. Undefined shows the member flow's
+   *  "with the community team" toast, a string shows that text, and null
+   *  shows no toast at all. */
+  successToast?: string | null;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -71,7 +80,12 @@ export function useListingWizardSubmit({
         setListing(created);
         clearDraft();
         setPhase("success");
-        showToast(t("marketing:listBusiness.toast.submitted"), "success");
+        if (successToast !== null) {
+          showToast(
+            successToast ?? t("marketing:listBusiness.toast.submitted"),
+            "success",
+          );
+        }
         scrollUp();
       } catch (error) {
         if (!mountedRef.current) return;
@@ -89,10 +103,56 @@ export function useListingWizardSubmit({
       routeSubmitError,
       setServerError,
       scrollUp,
+      successToast,
       showToast,
       t,
     ],
   );
 
   return { send };
+}
+
+/**
+ * The save-now path of a wizard that can save from any step. The first step
+ * still missing a required field takes the user there and asks for its
+ * "a few things left" bar to take focus, which also scrolls it into view (so
+ * there is no scroll to the top here). With no gaps, the draft is sent.
+ *
+ * `neededBarFocusStep` names the step whose bar should take focus once it
+ * renders, or null when nothing is pending. The pane remounts per step, so
+ * the request outlives the jump and the new step's footer consumes it,
+ * calling `clearNeededBarFocus` when done.
+ */
+export function useWizardSaveNow({
+  firstStep,
+  canAdvance,
+  setStep,
+  setServerError,
+  send,
+}: {
+  firstStep: number;
+  canAdvance: (step: number) => boolean;
+  setStep: (step: number) => void;
+  setServerError: (message: string | null) => void;
+  send: (draft: ListingDraft) => Promise<void>;
+}) {
+  const [neededBarFocusStep, setNeededBarFocusStep] = useState<number | null>(
+    null,
+  );
+  const saveNow = async (draft: ListingDraft) => {
+    for (let wizardStep = firstStep; wizardStep < TOTAL_STEPS; wizardStep++) {
+      if (!canAdvance(wizardStep)) {
+        setStep(wizardStep);
+        setServerError(null);
+        setNeededBarFocusStep(wizardStep);
+        return;
+      }
+    }
+    await send(draft);
+  };
+  const clearNeededBarFocus = useCallback(
+    () => setNeededBarFocusStep(null),
+    [],
+  );
+  return { saveNow, neededBarFocusStep, clearNeededBarFocus };
 }

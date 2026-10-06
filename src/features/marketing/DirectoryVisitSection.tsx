@@ -6,6 +6,7 @@ import {
   operatingStateOf,
   type DirectoryPlace,
   websiteHref,
+  zonedNow,
 } from "./directoryPlaces";
 import {
   DirectoryPlaceAddress,
@@ -14,6 +15,7 @@ import {
 } from "./DirectoryPlaceLocation";
 import { placeAreaParts } from "./placeArea";
 import { DirectoryContactRows } from "./DirectoryContactRows";
+import { DirectoryFreshnessStamp } from "./DirectoryFreshnessStamp";
 import { DirectoryMessageBusiness } from "./DirectoryMessageBusiness";
 import { DirectoryVisitCardProvider } from "./DirectoryVisitCardProvider";
 import { useOptionalDirectoryVisitCard } from "./directoryVisitCardContext";
@@ -66,6 +68,14 @@ interface Props {
  * action to the foot of the details column. Getting back to the directory is
  * the breadcrumb's job at the top of the page, so the card carries no link of
  * its own for it.
+ *
+ * An online-only business (`place.online`) keeps the card and changes what it
+ * holds: no map, a "where to find it online" heading, and the online block in
+ * place of the street address. It also takes over the freshness stamp
+ * ("details last confirmed by ..."). That stamp normally closes the hours
+ * card, which an online listing never renders, so without this home the page
+ * would lose its only word on how current the contact details are. The stamp
+ * reads the venue's own clock, exactly as the hours card passes it.
  */
 export function DirectoryVisitSection(props: Props) {
   // `DirectorySpaceView` provides the state owner for the whole page. A caller
@@ -107,7 +117,9 @@ function DirectoryVisitCard({
     // Focusable from script only: the fallback target when focus sat in the
     // map as the card changed column (see visitCardFocusCarry).
     <h2 ref={headingRef} tabIndex={-1}>
-      {t("marketing:directory.detail.visitTitle")}
+      {place.online
+        ? t("marketing:directory.detail.visitTitleOnline")
+        : t("marketing:directory.detail.visitTitle")}
     </h2>
   );
 
@@ -140,6 +152,17 @@ function DirectoryVisitCard({
               preview={preview}
               ownerRef={ownerRef}
             />
+            {/* Online listings only: the hours card that normally carries the
+                stamp never renders for them (see the JSDoc above). It sits
+                with the contact routes it vouches for, above the foot. */}
+            {place.online && (
+              <div className={s.visitFreshness}>
+                <DirectoryFreshnessStamp
+                  place={place}
+                  venueNow={zonedNow(place.timezone)}
+                />
+              </div>
+            )}
             {(hasSavedSignal || primaryAction) && (
               <div className={s.visitFoot}>
                 {hasSavedSignal && (

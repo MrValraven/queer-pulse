@@ -1,4 +1,4 @@
-/* Body styling on top of the shared <ModalSheet> — the sheet owns the overlay,
+/* Body styling on top of the shared <ModalSheet>. The sheet owns the overlay,
    scroll-lock, focus-trap, grabber and close chrome. Tokens only. */
 
 .eyebrow {
@@ -20,12 +20,4 @@
   margin: 8px 0 18px;
   color: var(--ink-60);
   line-height: 1.5;
-}
-
-.empty {
-  margin: 8px 0 4px;
-  padding: 20px 16px;
-  text-align: center;
-  color: var(--ink-60);
-  line-height: 1.55;
 }

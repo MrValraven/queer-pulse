@@ -127,6 +127,17 @@ export interface AuthorSummary {
   identityId?: string;
   /** The kind of `identityId`, with the same presence rule. */
   identityKind?: IdentityKind;
+  /** A persona's craft (a `SubprofileKind`, e.g. "poet"), present only when
+   *  `identityKind` is `"subprofile"`. Typed as a plain string because these
+   *  shared contracts import nothing from `features/`; read it through
+   *  `features/messages/personaAuthorName.ts`, which narrows it to a known
+   *  kind before titling the persona. */
+  personaKind?: string;
+  /** The persona owner's full name, present only for a LINKED persona so a
+   *  chat can title one still named after its craft "Owner Name | Poet".
+   *  Absent on an unlinked persona, which never reveals its owner; never
+   *  null or a blank string. */
+  personaOwnerName?: string;
   /** A business reply's staff first name. Present only when both
    *  attribution switches allow this reader to see it, or the reader is
    *  staff of the same mailbox; never a blank string. Never set on a

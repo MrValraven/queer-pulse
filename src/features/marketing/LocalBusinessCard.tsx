@@ -20,7 +20,36 @@ export function LocalBusinessCard({
    *  the walking distance so its cards match the directory grid exactly. */
   photoTag?: ReactNode;
 }) {
+<<<<<<< Updated upstream
   const saveControl = useListingSaveToggle(place);
+=======
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+  const { isSaved, toggleSave } = useSaved();
+  const savedId = `listing:${place.slug}`;
+  const saved = isSaved(savedId);
+
+  function handleSave(event: SyntheticEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    const nowSaved = toggleSave({
+      id: savedId,
+      kind: "listing",
+      title: place.name,
+      href: `${routes.directory}/${place.slug}`,
+      meta: place.online ? t("marketing:directory.card.online") : place.hood,
+    });
+    showToast(
+      t(
+        nowSaved
+          ? "marketing:directory.card.savedToast"
+          : "marketing:directory.card.unsavedToast",
+        { name: place.name },
+      ),
+      nowSaved ? "success" : "info",
+    );
+  }
+>>>>>>> Stashed changes
 
   /**
    * Brings the card fully into view when the keyboard lands on it. In the

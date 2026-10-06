@@ -1,12 +1,39 @@
 import { FiCheck } from "react-icons/fi";
+import { useOneLineFit } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  DirectoryCardHiddenItems,
+  DirectoryCardMeasureLayer,
+  DirectoryCardMoreChip,
+  type DirectoryCardRowItem,
+} from "./DirectoryCardOverflow";
 import type { DirectoryPlace } from "./directoryPlaces";
 import { ACCESSIBILITY_QUESTIONS } from "./listBusiness/listingAccessibility.data";
 import { useAccessFilter } from "./useDirectoryFilters";
 import s from "./DirectoryPage.module.css";
 
-/** Three keeps the card a card. The rest are one tap away on the listing. */
-const MAX_SHOWN = 3;
+/** One accessibility pill; the visible row and its measuring copy share it. */
+function AccessPill({
+  label,
+  isMeasureCopy = false,
+}: {
+  label: string;
+  isMeasureCopy?: boolean;
+}) {
+  const content = (
+    <>
+      <FiCheck aria-hidden />
+      <span className={s.accessLabel}>{label}</span>
+    </>
+  );
+  return isMeasureCopy ? (
+    <span className={s.accessPill} data-fit-item="">
+      {content}
+    </span>
+  ) : (
+    <li className={s.accessPill}>{content}</li>
+  );
+}
 
 /**
  * What this place has said YES to about getting in and being comfortable,
@@ -22,46 +49,56 @@ const MAX_SHOWN = 3;
  * what this place says it has", never as a complete account, and the label
  * names it that way. A listing that has answered nothing shows nothing.
  *
- * The needs the member is currently filtering on come first, so the answer
- * they asked for is the one they see when only three fit.
+ * The row stays on one line so every card in a grid row keeps the same
+ * height: it shows as many pills as the card's width holds and folds the rest
+ * into a "+N" chip that names them on hover. The needs the member is currently
+ * filtering on come first, so the answer they asked for is the one they see.
  */
 export function DirectoryCardAccess({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const asked = useAccessFilter();
   const answers = place.accessibility?.answers;
-  if (!answers) return null;
 
-  const met = ACCESSIBILITY_QUESTIONS.filter(
-    (question) => answers[question.slug] === "yes",
-  );
-  if (met.length === 0) return null;
-
+  const met = answers
+    ? ACCESSIBILITY_QUESTIONS.filter(
+        (question) => answers[question.slug] === "yes",
+      )
+    : [];
   // A stable sort, so the needs the member asked for move to the front and
   // everything else keeps the canonical question order behind them.
-  const ordered = [...met].sort(
-    (first, second) =>
-      Number(asked.includes(second.slug)) - Number(asked.includes(first.slug)),
-  );
-  const shown = ordered.slice(0, MAX_SHOWN);
-  const hiddenCount = ordered.length - shown.length;
+  const orderedItems: DirectoryCardRowItem[] = [...met]
+    .sort(
+      (first, second) =>
+        Number(asked.includes(second.slug)) -
+        Number(asked.includes(first.slug)),
+    )
+    .map((question) => ({ slug: question.slug, label: t(question.labelKey) }));
 
+  const { rowRef, measureLayerRef, visibleCount } =
+    useOneLineFit<HTMLUListElement>(orderedItems.length);
+  if (orderedItems.length === 0) return null;
+
+  const hiddenItems = orderedItems.slice(visibleCount);
   return (
     <ul
+      ref={rowRef}
       className={s.accessRow}
       aria-label={t("marketing:directory.card.access")}
       data-preview-region="access"
     >
-      {shown.map((question) => (
-        <li key={question.slug} className={s.accessPill}>
-          <FiCheck aria-hidden />
-          <span className={s.accessLabel}>{t(question.labelKey)}</span>
-        </li>
+      {orderedItems.slice(0, visibleCount).map((item) => (
+        <AccessPill key={item.slug} label={item.label} />
       ))}
-      {hiddenCount > 0 && (
-        <li className={s.accessMore}>
-          {t("marketing:directory.card.accessMore", { count: hiddenCount })}
-        </li>
-      )}
+      <DirectoryCardHiddenItems items={hiddenItems} />
+      <DirectoryCardMoreChip hiddenItems={hiddenItems} />
+      <DirectoryCardMeasureLayer
+        layerRef={measureLayerRef}
+        itemCount={orderedItems.length}
+      >
+        {orderedItems.map((item) => (
+          <AccessPill key={item.slug} label={item.label} isMeasureCopy />
+        ))}
+      </DirectoryCardMeasureLayer>
     </ul>
   );
 }

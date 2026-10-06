@@ -50,24 +50,33 @@ function AdminListingEditNotice({
   );
 }
 
-/** What the console tells the admin once the save lands. */
+/** What the console tells the admin once the save lands. A save on a live
+ *  listing is already in the directory, so it reads as published. */
 export function AdminListingEditSuccess({ saved }: { saved: PendingListing }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isLive = saved.status === "live";
   const steps = [
-    t(
-      `admin:listingNew.success.step.${saved.status === "live" ? "live" : "review"}`,
-    ),
+    t(`admin:listingNew.success.step.${isLive ? "live" : "review"}`),
   ];
   return (
     <SuccessPanel
-      title={t("admin:listingEdit.success.title")}
+      title={t(
+        isLive
+          ? "admin:listingEdit.success.publishedTitle"
+          : "admin:listingEdit.success.title",
+      )}
       em={saved.name}
       steps={steps}
       onClose={() => void navigate(routes.adminListings)}
       closeLabel={t("admin:listingEdit.success.closeCta")}
     >
-      {t("admin:listingEdit.success.body", { ref: saved.ref })}
+      {t(
+        isLive
+          ? "admin:listingEdit.success.publishedBody"
+          : "admin:listingEdit.success.body",
+        { ref: saved.ref },
+      )}
     </SuccessPanel>
   );
 }

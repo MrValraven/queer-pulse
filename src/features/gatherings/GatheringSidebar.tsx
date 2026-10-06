@@ -74,6 +74,19 @@ function resolveHost(
   };
 }
 
+/** The line under the neighbourhood: what the RSVP unlocks, said to a guest
+ *  about themselves and to the host about their guests. */
+function locationNoteKey(isOnline: boolean, isViewerHost: boolean): string {
+  if (isOnline) {
+    return isViewerHost
+      ? "gatherings:gathering.joinLinkHostNote"
+      : "gatherings:gathering.joinLinkNote";
+  }
+  return isViewerHost
+    ? "gatherings:gathering.locationHostNote"
+    : "gatherings:gathering.locationNote";
+}
+
 export function GatheringSidebar({
   gathering,
   connected,
@@ -83,7 +96,8 @@ export function GatheringSidebar({
 }: {
   gathering: GatheringDetail;
   connected: boolean;
-  /** The viewer IS the host: no "Connect"/"Message" button to themselves. */
+  /** The viewer IS the host: the hosting panel in place of the RSVP control,
+   *  and the location note speaks about their guests. */
   isViewerHost: boolean;
   contact: ContactAction;
   /** The page's single RSVP state machine, shared with the hero's button so
@@ -125,7 +139,13 @@ export function GatheringSidebar({
           <div className={styles.spotsLbl}>
             {t("gatherings:gathering.spotsRemainingLabel")}
             <br />
-            <span>{t("gatherings:gathering.spotsUrgencyNote")}</span>
+            <span>
+              {t(
+                isViewerHost
+                  ? "gatherings:gathering.spotsHostNote"
+                  : "gatherings:gathering.spotsUrgencyNote",
+              )}
+            </span>
           </div>
         </div>
       ) : (
@@ -184,7 +204,8 @@ export function GatheringSidebar({
       {/* An online gathering has no door to reveal, so it says what it
           actually withholds: the join link, on the same gate (PRD-182). This
           row used to promise every reader "the exact location is shared once
-          you RSVP" even when there was no location to share. */}
+          you RSVP" even when there was no location to share. The host has
+          nothing to RSVP to, so they read what their guests will get. */}
       <div className={styles.locReveal}>
         <div className={styles.locHead}>
           <span className={styles.locIcon} aria-hidden>
@@ -193,11 +214,7 @@ export function GatheringSidebar({
           <div>
             <div className={styles.locHood}>{gathering.hood}</div>
             <div className={styles.locNote}>
-              {t(
-                gathering.isOnline
-                  ? "gatherings:gathering.joinLinkNote"
-                  : "gatherings:gathering.locationNote",
-              )}
+              {t(locationNoteKey(gathering.isOnline === true, isViewerHost))}
             </div>
           </div>
         </div>

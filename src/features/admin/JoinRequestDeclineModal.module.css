@@ -1,0 +1,85 @@
+/* JoinRequestDeclineModal: the decline-reason confirm for a single join
+   request. The intro paragraph, the manual legend standing in for FormField's
+   (RadioCardGroup isn't a wireable FormField control), and the one-column
+   reason card stack. Card geometry mirrors ModJoinRequestRow.module.css's
+   `.kind`/`.kindChecked`/`.kindLabel`/`.kindDesc` (the app's existing
+   closed-set reviewer decision pattern) so the two surfaces read as one
+   system. */
+
+.body {
+  margin: 0 0 18px;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.legend {
+  display: block;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 8px;
+}
+
+.req {
+  /* Matches FormField.module.css's `.req`: --accent-ink is 3.81:1 on cream
+     (fails AA), --accent-text is 5.38:1. */
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+.reasons {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.reason {
+  display: block;
+  text-align: left;
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  padding: 12px 14px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+
+.reasonChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+
+/* The approve modal's picked card: jade, matching its "Welcome in" confirm,
+   so a positive call never wears the decline modal's coral. */
+.reasonCheckedJade {
+  border-color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.07);
+}
+
+.reasonLabel {
+  display: block;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reasonDesc {
+  display: block;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reason {
+    transition: none;
+  }
+}

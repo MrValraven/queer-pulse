@@ -11,6 +11,7 @@ export interface ReviewJoinRequestVars {
   id: string;
   status: "approved" | "declined" | "waitlisted";
   declineReason?: string;
+  approvalReason?: string;
 }
 
 /** The stand-in row demo mode reviews when an id isn't in the mock queue. */
@@ -37,6 +38,7 @@ function demoRow(id: string): JoinRequestDTO {
     inviteStatus: null,
     inviteExpiresAt: null,
     declineReason: null,
+    approvalReason: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -45,6 +47,9 @@ function demoRow(id: string): JoinRequestDTO {
     // there is no queue row behind it to have made a promise about.
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
   };
 }
 
@@ -68,10 +73,11 @@ export function useReviewJoinRequest() {
     demoLatencyMs: 0,
     // AdminVerifyQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    demoResult: ({ id, status, declineReason }) => ({
+    demoResult: ({ id, status, declineReason, approvalReason }) => ({
       ...demoRow(id),
       status,
       declineReason: status === "declined" ? (declineReason ?? null) : null,
+      approvalReason: status === "approved" ? (approvalReason ?? null) : null,
       reviewedAt: new Date().toISOString(),
       reviewedBy: "demo-moderator",
       // The name the live backend resolves from `reviewedBy`, so a decision
@@ -88,8 +94,8 @@ export function useReviewJoinRequest() {
           ? new Date(Date.now() + 7 * 86_400_000).toISOString()
           : null,
     }),
-    live: ({ id, status, declineReason }) =>
-      reviewJoinRequest(id, status, declineReason),
+    live: ({ id, status, declineReason, approvalReason }) =>
+      reviewJoinRequest(id, status, declineReason, approvalReason),
     // Invalidates in BOTH modes: the demo queue is served by a mock queryFn that
     // re-derives from the (now updated) registry on refetch, so the reviewed row
     // must drop there too — hence onSuccess, not onLiveSuccess.

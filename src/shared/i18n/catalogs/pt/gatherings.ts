@@ -87,6 +87,13 @@ export const gatherings: Catalog = {
   // confirmado "vais estar lá" / lista de espera, e o cancelamento.
   "rsvpControl.waitlistCta": "Entrar na lista de espera",
   "rsvpControl.pendingCta": "Um momento…",
+  "rsvpControl.hostingTitle": "És tu quem <em>organiza</em>",
+  "rsvpControl.hostingNote":
+    "Também estás na lista de convidados, por isso ocupas um dos lugares.",
+  "rsvpControl.hostingNoteUncapped": "Também estás na lista de convidados.",
+  "rsvpControl.hostingCount_one": "Por agora, só tu.",
+  "rsvpControl.hostingCount_other": "{count} vão até agora, contando contigo.",
+  "rsvpControl.hostingManageCta": "Gerir convívio",
   "rsvpControl.goingTitle": "Vais <em>estar lá</em>",
   "rsvpControl.waitlistTitle": "Estás na <em>lista de espera</em>",
   "rsvpControl.goingCount_one": "{count} pessoa confirmada até agora",
@@ -126,15 +133,20 @@ export const gatherings: Catalog = {
   "gathering.hostedWithHeading": "Organizado com",
   "gathering.hostedWithRole": "Comunidade",
   "gathering.spotsUrgencyNote": "Não percas tempo se isto te chamar",
+  "gathering.spotsHostNote": "Ainda livres para quem vier",
+  "gathering.locationHostNote":
+    "Quem confirmar que vai passa a ver a morada completa.",
   "gathering.locationNote":
     "A localização completa é partilhada com quem confirmar presença.",
   "gathering.moreTitle": "Mais <em>convívios</em>",
+  "gathering.coverAlt": "Foto de capa de {title}",
   "gathering.notFoundTitle": "Não encontrámos este convívio",
   "gathering.notFoundDescription":
     "Pode ter sido cancelado, ou o link pode estar desatualizado.",
 
   // GoingAttendeesPreview (MSG-12)
   "gathering.attendeesPreview.heading": "Quem vai",
+  "gathering.attendeesPreview.hostTag": "Organização",
   "gathering.attendeesPreview.moreLabel": "+{count} mais",
 
   // GatheringSuccessPanel
@@ -592,6 +604,8 @@ export const gatherings: Catalog = {
   // steps/WhatChapter.tsx, CapacityStepperField.tsx, WhoChapter.tsx: as
   // perguntas da família e os dois valores que definiu
   "create.step3.formatDetailsLabel": "Detalhes do formato",
+  "create.step3.capHostHint": "Este número inclui-te.",
+  "create.step3.capIncludesHostHint": "Este número inclui quem organiza.",
   "create.step3.capDefaultHint":
     "{count} é o tamanho habitual para este formato. Muda à vontade.",
   "create.step3.attendeeCountLabel": "Mostrar quantas pessoas vão",
@@ -1287,6 +1301,7 @@ export const gatherings: Catalog = {
   "manage.attendees.loadingMore": "A carregar…",
   "manage.attendees.removeAria":
     "Remover {name} da lista de pessoas convidadas",
+  "manage.attendees.hostTag": "Organização",
   "manage.attendees.removeCta": "Remover",
   "manage.attendees.removedToast": "Já não está na lista de pessoas convidadas",
   "manage.attendees.promoteAria":
@@ -1426,7 +1441,7 @@ export const gatherings: Catalog = {
   "manage.invite.noConnections":
     "Podes convidar as pessoas com quem tens conexão. Assim que tiveres conexões, aparecem aqui.",
   "manage.invite.allListedInvited":
-    "Toda a gente aqui já vai ou já tem convite.",
+    "Quem corresponde à pesquisa já vai ou já tem convite.",
   "manage.invite.loadMoreError":
     "Não conseguimos carregar mais das tuas conexões.",
   "manage.invite.noneSelected": "Ainda não escolheste ninguém",
@@ -1461,7 +1476,7 @@ export const gatherings: Catalog = {
   "venuePicker.fromDirectory": "Do diretório local",
   "venuePicker.change": "Alterar",
 
-  // ── Cohosts (CohostManager / AddCohostModal / MemberPicker) ─────────────────────
+  // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Pessoas coanfitriãs",
   "cohost.addCta": "Adicionar pessoa coanfitriã",
   "cohost.panelDesc":
@@ -1483,7 +1498,7 @@ export const gatherings: Catalog = {
   "cohost.addModal.searchLabel":
     "Procurar pessoas para adicionar como coanfitriã",
   "cohost.addModal.allListedCohosting":
-    "Toda a gente na lista já está a co-organizar.",
+    "Quem corresponde à pesquisa já está a co-organizar.",
   "cohost.addModal.step2Eyebrow": "Convite para co-organizar",
   "cohost.addModal.step2Title": "Convidar <em>{name}</em>",
   "cohost.addModal.step2Sub":
@@ -1502,9 +1517,6 @@ export const gatherings: Catalog = {
     "Opcional. A pessoa vê esta data no convite e pode responder antes.",
   "cohost.addModal.sendCta": "Enviar convite",
   "cohost.addModal.backCta": "Escolher outra pessoa",
-  "cohost.picker.searchLabelDefault": "Procurar pessoas",
-  "cohost.picker.placeholder": "Procurar por nome ou função…",
-  "cohost.picker.noResults": 'Nenhuma pessoa corresponde a "{query}".',
 
   // ── QR check-in scanner (QrScanModal) ──────────────────────────────────────────
   "qr.eyebrow": "Check-in",
@@ -1678,6 +1690,8 @@ export const gatherings: Catalog = {
   "gathering.where.heading": "Como chegar",
   "gathering.where.placeLabel": "Onde",
   "gathering.where.addressLabel": "Morada",
+  "gathering.where.addressMissing":
+    "A morada exata ainda não foi adicionada. É aqui que quem vai a procura.",
   "gathering.where.addressWithheld":
     "A morada exata é partilhada com quem vai. Confirma presença e aparece aqui.",
   "gathering.where.arrivalLabel": "Encontrar a porta",
@@ -1840,6 +1854,8 @@ export const gatherings: Catalog = {
     "Ainda não adicionaste um link de entrada. É aqui que quem vai o procura.",
   "gathering.where.joinLinkWithheld":
     "O link de entrada é partilhado com quem vai.",
+  "gathering.joinLinkHostNote":
+    "Quem confirmar que vai recebe o link de entrada.",
   "gathering.joinLinkNote":
     "O link de entrada é partilhado com quem confirma presença.",
 

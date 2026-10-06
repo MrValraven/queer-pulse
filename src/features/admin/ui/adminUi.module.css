@@ -302,6 +302,12 @@
   background: rgba(var(--violet-rgb), 0.18);
   color: var(--violet);
 }
+/* Dark violet text on its own violet wash sits too close in tone; mixing in
+   ink lifts it clear of the tint. */
+[data-theme="dark"] .chip_violet,
+[data-theme="dark"] .av_violet {
+  color: color-mix(in srgb, var(--violet) 80%, var(--ink));
+}
 .av_amber {
   background: rgba(var(--amber-rgb), 0.24);
   color: var(--amber-ink);

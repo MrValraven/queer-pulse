@@ -1,9 +1,10 @@
-import { useId, useState } from "react";
+import { useMemo, useState } from "react";
 import { Badge, Button, ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { CO_MANAGER_SEAT_CAP } from "../marketing/listBusiness/api/listingCoManagers.api";
+import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
 import {
   isDelegationConflictError,
   isDelegationNotFoundError,
@@ -13,11 +14,12 @@ import {
   useInviteListingCoManager,
   useRevokeListingCoManager,
 } from "./api/useAdminListingDelegation";
+import { AdminMemberPickerField } from "./AdminMemberPickerField";
 import { delegationMemberName } from "./listingDelegation.helpers";
 import styles from "./ListingDelegationSection.module.css";
 
 /**
- * The co-manager roster for one listing, with a seat-by-slug control.
+ * The co-manager roster for one listing, with a member search to seat someone.
  *
  * Two things the seats do NOT all do alike are said out loud, so an admin
  * reads them here:
@@ -45,22 +47,30 @@ export function ListingCoManagerRoster({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const slugFieldId = useId();
-  const [memberSlug, setMemberSlug] = useState("");
+  const [picked, setPicked] = useState<StrangerMemberResult | null>(null);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const invite = useInviteListingCoManager(listingRef);
   const isSeatCapReached = coManagers.length >= CO_MANAGER_SEAT_CAP;
+  // Everyone already holding or invited to a seat, so the search never offers
+  // them a second one.
+  const seatedSlugs = useMemo(
+    () =>
+      new Set(
+        coManagers.flatMap((seat) => (seat.member ? [seat.member.slug] : [])),
+      ),
+    [coManagers],
+  );
 
   function send() {
-    const trimmedSlug = memberSlug.trim();
-    if (!trimmedSlug) return;
+    if (!picked) return;
+    const invitee = picked;
     setErrorKey(null);
-    invite.mutate(trimmedSlug, {
+    invite.mutate(invitee.slug, {
       onSuccess: () => {
-        setMemberSlug("");
+        setPicked(null);
         showToast(
           t("admin:listingDelegation.roster.invitedToast", {
-            slug: trimmedSlug,
+            name: invitee.name,
           }),
           "success",
         );
@@ -116,21 +126,21 @@ export function ListingCoManagerRoster({
                 : "admin:listingDelegation.roster.ownerSeatNotice",
             )}
           </p>
-          <label className={styles.meta} htmlFor={slugFieldId}>
-            {t("admin:listingDelegation.roster.inviteLabel")}
-          </label>
-          <input
-            id={slugFieldId}
-            className={styles.input}
-            value={memberSlug}
-            autoComplete="off"
-            placeholder={t("admin:listingDelegation.slugPlaceholder")}
-            onChange={(event) => setMemberSlug(event.target.value)}
+          <AdminMemberPickerField
+            label={t("admin:listingDelegation.roster.inviteMemberLabel")}
+            searchAriaLabel={t(
+              "admin:listingDelegation.roster.inviteSearchAria",
+            )}
+            labelClassName={styles.meta}
+            picked={picked}
+            onPick={setPicked}
+            excludeSlugs={seatedSlugs}
+            isDisabled={invite.isPending}
           />
           <div className={styles.formActions}>
             <Button
               size="sm"
-              disabled={memberSlug.trim().length === 0 || invite.isPending}
+              disabled={picked === null || invite.isPending}
               onClick={send}
             >
               {t(
@@ -258,7 +268,7 @@ function inviteErrorKey(error: unknown): string {
     return "admin:listingDelegation.roster.conflictError";
   }
   if (isDelegationNotFoundError(error)) {
-    return "admin:listingDelegation.unknownSlugError";
+    return "admin:listingDelegation.unknownMemberError";
   }
   return "admin:listingDelegation.roster.failedError";
 }

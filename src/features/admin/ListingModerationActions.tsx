@@ -10,6 +10,8 @@ import {
   ListingOverflowMenu,
   type OverflowMenuItem,
 } from "./ListingOverflowMenu";
+import { ListingRowEditButton } from "./ListingRowEditButton";
+import { PublishListingConfirmModal } from "./PublishListingConfirmModal";
 import { RemoveListingConfirmModal } from "./RemoveListingConfirmModal";
 import { SendBackReasonModal } from "./SendBackReasonModal";
 import type { ListingQueueRow } from "./api/adminListings.api";
@@ -24,7 +26,7 @@ import menuStyles from "./ListingOverflowMenu.module.css";
  * waits, "View live" once it is live) and carries the rest in the `⋮` menu:
  * Ask a question or Back to review, the queer-owned toggle, then Delete under
  * a divider. The drawer keeps the full button set, with only Delete in its
- * menu.
+ * menu. "Publish live" opens `PublishListingConfirmModal` first, in both.
  *
  * Renders an unwrapped fragment: the row's actions cell and the drawer's
  * `Modal` footer both lay the controls out as a flex row.
@@ -42,15 +44,17 @@ export function ListingModerationActions({
   const [asking, setAsking] = useState(false);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [sendingBack, setSendingBack] = useState(false);
+  const [confirmingPublish, setConfirmingPublish] = useState(false);
   const moderation = useListingModeration(row, {
-    // `remove`/`sendBack` both resolve through this: close whichever local
-    // confirm dialog is open so a moderator on a status tab that keeps
+    // `remove`/`sendBack`/publish all resolve through this: close whichever
+    // local confirm dialog is open so a moderator on a status tab that keeps
     // showing the row after the move (e.g. "All") sees the dialog go away.
-    // Both start `false`, so the rest of the time this changes nothing; the
+    // All start `false`, so the rest of the time this changes nothing; the
     // drawer's own `onClose` still fires after.
     onDone: () => {
       setConfirmingRemove(false);
       setSendingBack(false);
+      setConfirmingPublish(false);
       onDone?.();
     },
   });
@@ -102,12 +106,13 @@ export function ListingModerationActions({
 
   return (
     <>
+      {isRow && <ListingRowEditButton row={row} />}
       {!isLive && (
         <Button
           variant="jade"
           size={buttonSize}
           className={publishClassName}
-          onClick={() => moderation.moveTo("live")}
+          onClick={() => setConfirmingPublish(true)}
           disabled={moderation.isPending}
         >
           {t("admin:adminListings.advance.live")}
@@ -180,6 +185,14 @@ export function ListingModerationActions({
           pending={moderation.isPending}
           onConfirm={(reason) => moderation.sendBack(reason)}
           onClose={() => setSendingBack(false)}
+        />
+      )}
+      {confirmingPublish && (
+        <PublishListingConfirmModal
+          row={row}
+          pending={moderation.isPending}
+          onConfirm={() => moderation.moveTo("live")}
+          onClose={() => setConfirmingPublish(false)}
         />
       )}
     </>

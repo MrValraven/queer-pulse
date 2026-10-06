@@ -41,6 +41,9 @@ interface PastUploadsSectionProps {
   isError: boolean;
   /** Disabled while a device upload or a crop save is in flight. */
   isBusy: boolean;
+  /** False when the picker was opened with `shouldReframe={false}`: the tiles
+   *  then offer no reposition button, since that surface stores no crop. */
+  isReframeOffered: boolean;
   onRetry: () => void;
   onSelect: (item: MyMediaItem) => void;
   onRequestEdit: (item: MyMediaItem) => void;
@@ -58,6 +61,7 @@ function PastUploadsSection({
   isLoading,
   isError,
   isBusy,
+  isReframeOffered,
   onRetry,
   onSelect,
   onRequestEdit,
@@ -121,7 +125,7 @@ function PastUploadsSection({
                 </span>
               )}
               <div className={styles.tileActions}>
-                {canReframe(item) && (
+                {isReframeOffered && canReframe(item) && (
                   <button
                     type="button"
                     className={styles.tileBtn}
@@ -179,6 +183,15 @@ interface PhotoPickerModalProps {
   /** Called when the deleted photo was the one currently applied — the
    * caller should clear the hero the same way its own Remove action does. */
   onDeletedCurrent?: () => void;
+  /** Fired for every past upload deleted successfully from the grid, with its
+   *  key. For multi-photo callers (a gallery) that hold several keys at once
+   *  and so cannot rely on the single `currentValue` comparison above. */
+  onDeleted?: (key: string) => void;
+  /** Defaults to true. Pass false for surfaces that store no crop (review
+   *  photos, space-listing galleries): framing there would be ignored on
+   *  display, so a device upload goes straight up uncropped (the path GIFs
+   *  take) and the grid tiles offer no reposition button. */
+  shouldReframe?: boolean;
 }
 
 /**
@@ -197,6 +210,8 @@ export function PhotoPickerModal({
   onUploaded,
   onPickGoogle,
   onDeletedCurrent,
+  onDeleted,
+  shouldReframe = true,
 }: PhotoPickerModalProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -248,8 +263,9 @@ export function PhotoPickerModal({
 
   async function handleFile(file: File) {
     // GIFs bypass the reframer entirely (animation would be destroyed by the
-    // crop/re-encode path) and upload directly, as before.
-    if (file.type === "image/gif") {
+    // crop/re-encode path) and upload directly, as before. A surface that
+    // stores no crop takes the same direct path for every file.
+    if (!shouldReframe || file.type === "image/gif") {
       await uploadAndFinish(file);
       return;
     }
@@ -292,6 +308,7 @@ export function PhotoPickerModal({
         // If this was the photo currently applied in the editor, clear the
         // hero too — otherwise it'd keep pointing at a deleted upload.
         if (deletedKey === currentValue) onDeletedCurrent?.();
+        onDeleted?.(deletedKey);
       },
       onError: () => {
         showToast(t("members:avatar.picker.deleteError"), "error");
@@ -341,6 +358,7 @@ export function PhotoPickerModal({
         isLoading={isLoading}
         isError={isError}
         isBusy={uploading || saveMediaCrop.isPending}
+        isReframeOffered={shouldReframe}
         onRetry={() => void refetch()}
         onSelect={(item) => {
           onPick(

@@ -55,6 +55,9 @@
  * names — see breakpoints.ts). Preserved at their exact historical px.
  *   --messages : the Messages page's own single-pane cutover (768px). Used only
  *                in MessagesPage.module.css.
+ *   --messages-split : the Messages page's two-pane layout (769px and up), the
+ *                list and the open thread side by side; the complement of
+ *                --messages. Used only in MessagesPage.module.css.
  *   --compact  : an 880px "stack to single column" gate used broadly across ~21
  *                feature pages (cinema, marketing, studio, community, forum, …).
  *                Sits between --mobile (860) and --wide (900). Named neutrally
@@ -82,6 +85,7 @@
  *                shared/components/layout/Navbar.tsx.
  */
 @custom-media --messages (max-width: 768px);
+@custom-media --messages-split (min-width: 769px); /* two-pane messages: list and open thread side by side; complement of --messages */
 @custom-media --compact (max-width: 880px);
 @custom-media --desk-split (max-width: 1223px);
 @custom-media --desk-rail-wide (min-width: 1440px);

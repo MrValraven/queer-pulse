@@ -1,4 +1,4 @@
-/* Cohost-management panel + member-picker rows (used by invite + add-cohost) */
+/* Cohost-management panel plus the invite modal footer */
 
 /* ---- cohost panel (Settings tab) ---- */
 .panel {
@@ -84,90 +84,6 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-14);
   margin-bottom: 4px;
-}
-
-/* ---- member picker (shared by both modals) ---- */
-.pickerList {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-height: 340px;
-  overflow-y: auto;
-  margin: 6px 0 4px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-14);
-  padding: 6px;
-}
-.pickerRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 9px 10px;
-  border: none;
-  background: none;
-  border-radius: var(--radius-11);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .pickerRow:hover {
-    background: rgba(var(--plum-rgb), 0.05);
-  }
-}
-.pickerRow:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-.pickerRowActive {
-  background: rgba(var(--jade-rgb), 0.09);
-}
-@media (hover: hover) {
-  .pickerRowActive:hover {
-    background: rgba(var(--jade-rgb), 0.13);
-  }
-}
-.pickerInfo {
-  flex: 1;
-  min-width: 0;
-}
-.pickerName {
-  font-weight: 600;
-  font-size: var(--text-14);
-  color: var(--ink);
-}
-.pickerRole {
-  font-size: var(--text-12);
-  color: var(--ink-60);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.checkBox {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border-radius: var(--radius-7);
-  border: 1.5px solid rgba(var(--line-rgb), 0.22);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(var(--cream-rgb), 1);
-  font-size: var(--text-13);
-  transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.checkBoxOn {
-  background: var(--jade);
-  border-color: var(--jade);
-}
-.noResults {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  padding: 18px 12px;
-  text-align: center;
 }
 
 .pickerFooter {

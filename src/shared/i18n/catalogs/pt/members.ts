@@ -279,7 +279,7 @@ export const members: Catalog = {
   // ── Linha de estatísticas + separadores de conteúdo (ProfileStatsRow, ProfileTabBar) ──
   "profile.stats.vouches": "Votos de confiança",
   "profile.stats.communities": "Comunidades",
-  "profile.stats.personas": "Também como",
+  "profile.stats.personas": "Personas",
   "profile.tabs.about": "Sobre",
   "profile.tabs.work": "Trabalho",
   "profile.tabs.community": "Comunidade",
@@ -487,6 +487,8 @@ export const members: Catalog = {
   "workPicker.searchPlaceholder": "Pesquisar uma área ou função…",
   "workPicker.searchAriaLabel": "Pesquisar áreas e funções",
   "workPicker.noMatch": "Nenhuma área ou função corresponde a “{query}”.",
+  "workPicker.showAll": "Mostrar todas as áreas e funções",
+  "workPicker.showOnlyPicks": "Mostrar só as minhas escolhas",
   "workPicker.unlistedNote":
     "Só tu e as tuas conexões veem isto. O trabalho sexual ainda carrega estigma, e uma lista que qualquer pessoa pudesse pesquisar poderia expor-te, por isso fica fora da pesquisa de membros, dos filtros, das sugestões e dos cartões do diretório.",
   "profileEdit.field.addSkillPlaceholder": "Procurar competências…",

@@ -83,3 +83,50 @@
   text-transform: none;
   margin: 0 0 6px;
 }
+
+/* The quiet text button under the picker that opens the full list of fields
+   and roles and folds it back to the member's picks. Same affordance as the
+   bio's Read more toggle (`ExpandableText.module.css`): coral text with a
+   chevron, so it reads as a way into the list and leaves the chips as the
+   main thing to act on. */
+.showAllToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .showAllToggle:hover {
+    text-decoration: underline;
+  }
+}
+
+.showAllToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-tag);
+}
+
+/* One chevron that turns over off `aria-expanded`, a compositor-only
+   transform. */
+.showAllToggle svg {
+  width: 14px;
+  height: 14px;
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-std);
+}
+
+.showAllToggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}

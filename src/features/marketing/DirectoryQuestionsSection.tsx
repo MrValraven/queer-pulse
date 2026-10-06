@@ -90,7 +90,11 @@ export function DirectoryQuestionsSection({
       {questions.length === 0 ? (
         <p className={q.empty}>
           <FiHelpCircle aria-hidden />
-          {t("marketing:directory.detail.questions.emptyBody")}
+          {t(
+            place.online
+              ? "marketing:directory.detail.questions.emptyBodyOnline"
+              : "marketing:directory.detail.questions.emptyBody",
+          )}
         </p>
       ) : (
         <div className={q.list}>

@@ -90,6 +90,35 @@
   color: rgba(var(--cream-rgb), 0.7);
 }
 
+/* Flat variant: inside a <Modal> body (set from IsInsideModalContext). The
+   dialog is already the surface, so the panel sheds its plum card and reads in
+   the same theme ink as the Modal's own head. Selectors keep the `.panel`
+   scoping above so page heading rules still cannot reach the title. */
+.panel[data-surface="flat"] {
+  background: none;
+  border-radius: 0;
+  padding: 8px 0 12px;
+  color: var(--ink);
+}
+.panel[data-surface="flat"] .title {
+  color: var(--text-strong);
+}
+[data-theme="dark"] .panel[data-surface="flat"] .title {
+  color: var(--ink);
+}
+.panel[data-surface="flat"] .title em {
+  color: var(--accent-ink);
+}
+.panel[data-surface="flat"] .body {
+  color: var(--ink-60);
+}
+.panel[data-surface="flat"] .step {
+  color: var(--ink);
+}
+.panel[data-surface="flat"] .footer {
+  color: var(--ink-60);
+}
+
 @keyframes panelIn {
   from {
     opacity: 0;

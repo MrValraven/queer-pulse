@@ -11,10 +11,12 @@ import {
   menuForPayload,
   pricingModeOf,
 } from "./listingMenu.data";
+import { normalizeOwnerIdentities } from "./listingOwnerIdentities.data";
 import {
   completeServiceRows,
   servicesForPayload,
 } from "./listingServices.data";
+import { isOwnerBlockHidden } from "./ownerBlock";
 import { stripOwnerPersonalFields } from "./ownerPersonalFields";
 import type {
   CoManagerUpdateListingDto,
@@ -84,9 +86,18 @@ export function businessPayload(
     path: draft.path,
     name: draft.name.trim(),
     cats: draft.cats,
-    hood: draft.hood,
+    // Blank for an online-only listing, like the address below: the field is
+    // hidden once the toggle is on, so a neighbourhood picked before then
+    // must not ship. The API accepts an empty one for an online listing.
+    hood: draft.online ? "" : draft.hood,
     badge: draft.badge,
     evidence: draft.evidence.trim(),
+    // Nobody who owns the business filled this draft in (a staff-authored
+    // draft, or a still-unclaimed suggestion), so a stale picked value can
+    // never ship as a claim about a real owner.
+    ownerIdentities: isOwnerBlockHidden(draft)
+      ? []
+      : normalizeOwnerIdentities(draft.ownerIdentities),
     price: draft.price,
     blurb: draft.blurb.trim(),
     tagline: draft.tagline.trim(),
@@ -102,8 +113,9 @@ export function businessPayload(
     ...pricingPayload(draft),
     langs: draft.langs,
     online: draft.online,
-    // An online-only listing carries no location: never ship a stale address or
-    // pin the member typed before switching the toggle on.
+    // An online-only listing carries no location: never ship a stale address,
+    // pin or neighbourhood (above) the member set before switching the toggle
+    // on.
     address: draft.online ? "" : draft.address.trim(),
     geocoded: draft.online ? false : draft.geocoded,
     latitude: draft.online ? null : draft.latitude,

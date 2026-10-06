@@ -1,7 +1,9 @@
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { approvalReasonLabelKey } from "../auth/api/joinRequestApprovalReason";
 import { declineReasonLabelKey } from "../auth/api/joinRequestDeclineReason";
 import type { JoinRequestView } from "./api/useJoinRequests";
+import { joinRequestReviewer } from "./joinRequestReviewer";
 import { AdminAvatar, AdminChip } from "./ui";
 import styles from "./JoinRequestSample.module.css";
 
@@ -45,14 +47,24 @@ export function JoinRequestSampleCard({
         })
       : t("admin:members.verify.decided.decidedUnknown");
 
-  const reviewerLine = !item.reviewedBy
-    ? t("admin:members.sample.reviewerUnknown")
-    : item.reviewedBy === currentUserId
+  const reviewer = joinRequestReviewer(item, currentUserId);
+  const reviewerLine =
+    reviewer.kind === "self"
       ? t("admin:members.sample.reviewerYou")
-      : (item.reviewedByName ??
-        t("admin:members.sample.reviewerOther", {
-          reference: item.reviewedBy.slice(0, 8),
-        }));
+      : reviewer.kind === "named"
+        ? reviewer.name
+        : reviewer.kind === "unnamed"
+          ? t("admin:members.sample.reviewerOther", {
+              reference: reviewer.reference,
+            })
+          : t("admin:members.sample.reviewerUnknown");
+  // Both decisions carry a reason now. A null one is a legacy approval from
+  // before reasons were asked for, or a decline that never recorded one.
+  const reasonKey = isApproved
+    ? approvalReasonLabelKey(item.approvalReason)
+    : item.declineReason
+      ? declineReasonLabelKey(item.declineReason)
+      : null;
 
   return (
     <div className={styles.card}>
@@ -87,18 +99,14 @@ export function JoinRequestSampleCard({
           </dt>
           <dd className={styles.factValue}>{item.appliedLine}</dd>
         </div>
-        {!isApproved && (
-          <div className={styles.fact}>
-            <dt className={styles.factLabel}>
-              {t("admin:members.sample.reasonLabel")}
-            </dt>
-            <dd className={styles.factValue}>
-              {item.declineReason
-                ? t(declineReasonLabelKey(item.declineReason))
-                : t("admin:members.sample.noReason")}
-            </dd>
-          </div>
-        )}
+        <div className={styles.fact}>
+          <dt className={styles.factLabel}>
+            {t("admin:members.sample.reasonLabel")}
+          </dt>
+          <dd className={styles.factValue}>
+            {t(reasonKey ?? "admin:members.sample.noReason")}
+          </dd>
+        </div>
       </dl>
     </div>
   );

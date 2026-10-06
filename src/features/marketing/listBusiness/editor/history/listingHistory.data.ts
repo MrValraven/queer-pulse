@@ -34,6 +34,7 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   whatItIs: `${KEY_PREFIX}.field.whatItIs`,
   tags: `${KEY_PREFIX}.field.tags`,
   goodFor: `${KEY_PREFIX}.field.goodFor`,
+  ownerIdentities: `${KEY_PREFIX}.field.ownerIdentities`,
   accessibilityAnswers: `${KEY_PREFIX}.field.accessibilityAnswers`,
   accessibilityNote: `${KEY_PREFIX}.field.accessibilityNote`,
   services: `${KEY_PREFIX}.field.services`,

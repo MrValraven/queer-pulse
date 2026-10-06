@@ -6,6 +6,7 @@ import {
   type OwnershipBadgeState,
 } from "./directoryPlaces";
 import { categoryLabel } from "./localCategories";
+import { ownerIdentityLabelKey } from "./listBusiness/listingOwnerIdentities.data";
 import { listingTagLabel } from "./listBusiness/listingTags.data";
 import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import { Stars } from "./DirectoryStars";
@@ -61,12 +62,21 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
       <div className={s.coverInner}>
         <header className={s.spaceHead}>
           <div className={s.spaceHeadIdentity}>
+            {/* An online-only business has no neighbourhood or city to name
+                (its hood arrives as the wizard's "Elsewhere in" catch-all),
+                so the eyebrow says where it does trade, the same word the
+                directory card uses. */}
             <div className={s.eyebrow}>
               {categoryLabel(t, place.cat)} ·{" "}
+<<<<<<< Updated upstream
               {/* An online-only business has no neighbourhood or city to
                   name, and printing them left a bare "· ·" in the line. */}
               {place.online
                 ? t("marketing:directory.detail.onlineBusiness")
+=======
+              {place.online
+                ? t("marketing:directory.card.online")
+>>>>>>> Stashed changes
                 : `${place.hood} · ${place.city ?? "Lisbon"}`}
             </div>
             <h1 className={s.h1}>
@@ -85,11 +95,20 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
               >
                 {t(OWNERSHIP_PILL_KEYS[ownership])}
               </span>
+<<<<<<< Updated upstream
               {/* The owner's own words, never checked by a moderator, so they
                   take the plain pill style of the listing's other tags. */}
               {(place.ownedBy ?? []).map((value) => (
                 <span key={value} className={s.pill}>
                   {t(OWNED_BY_TAG_KEYS[value])}
+=======
+              {(place.ownerIdentities ?? []).map((slug) => (
+                <span
+                  key={slug}
+                  className={[s.pill, s.ownerIdentityPill].join(" ")}
+                >
+                  {t(ownerIdentityLabelKey(slug))}
+>>>>>>> Stashed changes
                 </span>
               ))}
               {place.pills.map((pill) => (

@@ -5,18 +5,26 @@ import {
 } from "@tanstack/react-virtual";
 import type { MemberCard } from "./memberDirectoryFilter.data";
 
-/** Mirrors `.mGrid`'s `repeat(auto-fill, minmax(280px, 1fr))` / `gap: 14px`
- *  (`MemberDirectoryFilterPage.module.css`) so the row grouping below produces
- *  exactly the column count that CSS grid would have laid out on its own;
- *  keep these two in sync if that rule ever changes. */
-const MIN_CARD_WIDTH_PX = 280;
+/** Mirror the grid rules in `MemberDirectoryFilterPage.module.css` so the row
+ *  grouping below produces exactly the column count CSS grid would lay out on
+ *  its own; keep each pair in sync if its rule changes. The compact card
+ *  mirrors `.mGrid`'s `repeat(auto-fill, minmax(280px, 1fr))`. The split card
+ *  mirrors `.mGridSplit`'s `minmax(420px, 1fr)`: its 30% portrait column
+ *  needs a wider card, so the results area holds two cards at 1280 to 1440
+ *  with the filters open, and three once the filters collapse on a wide
+ *  screen. Both grids use `gap: 14px`. */
+const COMPACT_MIN_CARD_WIDTH_PX = 280;
+const SPLIT_MIN_CARD_WIDTH_PX = 420;
 const GRID_GAP_PX = 14;
-/** Rough pre-measurement guess for one row's height (avatar + name + the
- *  two-line-reserved role + a tag row + the footer, per `.mCard`);
- *  `measureElement` (wired in `MemberResultsGrid`) corrects it to the real
- *  rendered height on first paint, same as
+/** Rough pre-measurement guesses for one row's height, including the row's
+ *  14px bottom padding. A compact row is the avatar head, the two-line role,
+ *  a tag row and the footer (`.mCard`). A split row measured 223 to 275px
+ *  at 1024 to 1440, as its narrower details column wraps tags and footer more
+ *  often. `measureElement` (wired in `MemberResultsGrid`) corrects either to
+ *  the real rendered height on first paint, same as
  *  `useMessageRowVirtualizer`'s `estimateRowHeight`. */
-const ESTIMATED_ROW_HEIGHT_PX = 236;
+const COMPACT_ESTIMATED_ROW_HEIGHT_PX = 236;
+const SPLIT_ESTIMATED_ROW_HEIGHT_PX = 240;
 
 export interface MemberDirectoryVirtualizerResult {
   /** How many cards fit per row at the container's current width. */
@@ -56,7 +64,16 @@ export function useMemberDirectoryVirtualizer(
    *  true in the commit before the swap, ahead of the rows the swap commit
    *  mounts and measures. */
   shouldSuspendScrollAdjustment: boolean,
+  /** Whether the cards render split (`useIsMemberCardSplit`), which sets the
+   *  minimum card width and the row-height estimate. */
+  isSplit: boolean,
 ): MemberDirectoryVirtualizerResult {
+  const minCardWidth = isSplit
+    ? SPLIT_MIN_CARD_WIDTH_PX
+    : COMPACT_MIN_CARD_WIDTH_PX;
+  const estimatedRowHeight = isSplit
+    ? SPLIT_ESTIMATED_ROW_HEIGHT_PX
+    : COMPACT_ESTIMATED_ROW_HEIGHT_PX;
   const [columnCount, setColumnCount] = useState(1);
   const [scrollMargin, setScrollMargin] = useState(0);
 
@@ -67,7 +84,7 @@ export function useMemberDirectoryVirtualizer(
     const recomputeColumnCount = () => {
       const width = node.getBoundingClientRect().width;
       const fitted = Math.floor(
-        (width + GRID_GAP_PX) / (MIN_CARD_WIDTH_PX + GRID_GAP_PX),
+        (width + GRID_GAP_PX) / (minCardWidth + GRID_GAP_PX),
       );
       setColumnCount((previous) => Math.max(1, fitted) || previous);
     };
@@ -95,7 +112,7 @@ export function useMemberDirectoryVirtualizer(
       positionObserver.disconnect();
       window.removeEventListener("resize", recomputeScrollMargin);
     };
-  }, [containerRef]);
+  }, [containerRef, minCardWidth]);
 
   const rows = useMemo(() => {
     const grouped: MemberCard[][] = [];
@@ -107,7 +124,7 @@ export function useMemberDirectoryVirtualizer(
 
   const rowVirtualizer = useWindowVirtualizer({
     count: rows.length,
-    estimateSize: () => ESTIMATED_ROW_HEIGHT_PX,
+    estimateSize: () => estimatedRowHeight,
     // A little deeper than the default so a fast scroll or a keyboard "page
     // down" doesn't outrun the mounted window and flash empty space.
     overscan: 4,

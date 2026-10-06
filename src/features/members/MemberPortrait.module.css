@@ -1,0 +1,59 @@
+/* Fills whatever box the parent gives it. `container-type` lets the initials
+   scale with the column's width. */
+.portrait {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: inline-size;
+}
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Faces sit in the upper part of most profile photos; a tall crop centred
+     vertically would cut foreheads. */
+  object-position: 50% 30%;
+}
+.initials {
+  font-family: var(--serif);
+  font-weight: 500;
+  /* About a third of the column's width, so the 30% and 40% columns both read
+     as a monogram. */
+  font-size: max(var(--text-24), 32cqi);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* Same tints as `<Avatar>`, so a member's colour stays theirs across sizes. */
+.default {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--accent);
+}
+.coral {
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--accent-ink);
+}
+.jade {
+  background: rgba(var(--jade-rgb), 0.15);
+  color: var(--jade);
+}
+.plum {
+  background: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
+}
+.auth {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+:global([data-theme="dark"]) .default {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+:global([data-theme="dark"]) .plum {
+  background: rgba(var(--cream-rgb), 0.14);
+}

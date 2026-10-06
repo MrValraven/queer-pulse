@@ -5,9 +5,39 @@ import { AdminPageHeader } from "./ui";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+<<<<<<< Updated upstream
 import { AdminListingFromDraft } from "./AdminListingFromDraft";
 import { AdminListingNewForm } from "./AdminListingNewForm";
 import { FROM_DRAFT_PARAM, staffAuthoredDraft } from "./listingDraftHandover";
+=======
+import { ListingWizard } from "../marketing/listBusiness/ListingWizard";
+import { blankDraft } from "../marketing/listBusiness/listingFormDraft";
+import { BLANK_OWNER_PERSONAL_FIELDS } from "../marketing/listBusiness/ownerPersonalFields";
+import type { ListingDraft } from "../marketing/listBusiness/listBusiness.data";
+import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
+import { AdminListingNewFields } from "./AdminListingNewFields";
+import { AdminListingNewSuccess } from "./AdminListingNewSuccess";
+import {
+  adminDraftToDto,
+  type AdminListingOwnerOfferInput,
+  type ListingPublishState,
+} from "./api/adminListingCreate.api";
+import { useAdminCreateListing } from "./api/useAdminCreateListing";
+
+/**
+ * The wizard opens on the one path that describes what staff are doing here.
+ *
+ * Seeding it is load-bearing twice over. `useListingFormMissing` blocks step 0
+ * while `draft.path` is empty and `blankDraft()` leaves it so, and clicking
+ * the card to fill it runs `pickPath`, which writes a `rel` the admin create
+ * body has no room for. Seeding means that handler never runs. "suggest" is
+ * also the truthful value: "claim" means "this is my business", which an
+ * admin never is.
+ */
+function staffAuthoredDraft(): ListingDraft {
+  return { ...blankDraft(), isStaffAuthored: true, path: "suggest" };
+}
+>>>>>>> Stashed changes
 
 /** The id the page heading carries, so "Add another listing" can move focus
  *  back to the top of a fresh form. */
@@ -29,6 +59,95 @@ function focusListingNewHeadingAfterReset() {
   });
 }
 
+<<<<<<< Updated upstream
+=======
+interface AdminListingNewFormProps {
+  onAddAnother: () => void;
+}
+
+/**
+ * Everything on the page that holds state for one listing: the admin block,
+ * the wizard and the create mutation. The page mounts it under a `key` that
+ * "Add another listing" bumps, so starting over is a clean remount with a
+ * blank draft, the publish state back on "review" and a fresh mutation.
+ */
+function AdminListingNewForm({ onAddAnother }: AdminListingNewFormProps) {
+  const navigate = useNavigate();
+  const { mutateAsync: createListing } = useAdminCreateListing();
+  const [publishState, setPublishState] =
+    useState<ListingPublishState>("review");
+  const [owner, setOwner] = useState<StrangerMemberResult | null>(null);
+  const [ownerNote, setOwnerNote] = useState("");
+  // Set the moment the create resolves, which is what retires the admin
+  // block. The wizard leaves the form behind at the same point: it shows its
+  // sending panel and then the success panel, and it offers no way back to a
+  // form whose success is rendered by this page.
+  const [hasCreatedListing, setHasCreatedListing] = useState(false);
+
+  const initialDraft = useMemo(() => staffAuthoredDraft(), []);
+
+  const handleAdminSubmit = useCallback(
+    async (draft: ListingDraft) => {
+      const memberSlug = owner?.slug;
+      const note = ownerNote.trim();
+      const ownerOffer: AdminListingOwnerOfferInput | undefined = memberSlug
+        ? { memberSlug, ...(note ? { note } : {}) }
+        : undefined;
+      const created = await createListing(
+        adminDraftToDto(draft, { publishState, ownerOffer }),
+      );
+      setHasCreatedListing(true);
+      return created;
+    },
+    [createListing, publishState, owner, ownerNote],
+  );
+
+  const goToQueue = useCallback(
+    () => void navigate(routes.adminListings),
+    [navigate],
+  );
+
+  return (
+    <>
+      {/* The listing is created with the publish state and the offer the
+          admin chose here, and nothing about them can be changed from this
+          page afterwards. Retire the block once it exists, so the console
+          stops offering controls that no longer reach anything. */}
+      {!hasCreatedListing && (
+        <AdminListingNewFields
+          publishState={publishState}
+          onPublishStateChange={setPublishState}
+          owner={owner}
+          onOwnerChange={setOwner}
+          ownerNote={ownerNote}
+          onOwnerNoteChange={setOwnerNote}
+        />
+      )}
+
+      <ListingWizard
+        initialDraft={initialDraft}
+        seed={BLANK_OWNER_PERSONAL_FIELDS}
+        userName=""
+        userInitials=""
+        // Live autosave writes member-scoped draft rows through
+        // `listingDrafts.api`. An admin console has no business minting one
+        // against the admin's own member account.
+        isDraftAutosaveEnabled={false}
+        submit={handleAdminSubmit}
+        onCancel={goToQueue}
+        onDone={goToQueue}
+        renderSuccess={(created) => (
+          <AdminListingNewSuccess
+            created={created}
+            onAddAnother={onAddAnother}
+          />
+        )}
+      />
+    </>
+  );
+}
+
+>>>>>>> Stashed changes
 /**
  * `/admin/listings/new`: staff authoring a directory listing for a business
  * that has not joined yet.

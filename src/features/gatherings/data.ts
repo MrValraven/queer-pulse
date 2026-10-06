@@ -161,9 +161,11 @@ export interface GatheringDetail {
   /** The filtered total behind `goingAttendeesPreview` (NOT the raw
    *  `spots`/`goingCount` number) — drives the "+N more" line. */
   goingAttendeesPreviewTotal?: number;
-  /** Live mode only: the cover the host uploaded, or null when they never set
-   *  one. The manage dashboard's share card shows it; absent (demo registry,
-   *  or a coverless gathering) leaves the tinted placeholder frame. */
+  /** The cover the host uploaded, or null when they never set one. The detail
+   *  page shows it as its hero banner and the manage dashboard's share card
+   *  shows it too. Demo entries carry the same art as their board card in
+   *  `calendarEvents`; absent (a coverless gathering) the detail page shows no
+   *  banner and the share card keeps its tinted placeholder frame. */
   coverImageUrl?: string | null;
 
   // ── Where it actually is (LOC-04) ────────────────────────────────────────
@@ -285,6 +287,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.seatsLeft", values: { count: 8 } },
     ctaKey: "gatherings:cta.reserveSeat",
     body: "Twelve seats, no menu, whatever came in that week. Tomás cooks with whatever is seasonal and beautiful. Guests bring wine. The conversation takes care of itself. Doors open at 7:30pm, dinner at 8. The address is shared on the morning of the event.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop",
   },
   "portfolio-night": {
     slug: "portfolio-night",
@@ -298,6 +302,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.going", values: { count: 32 } },
     ctaKey: "gatherings:cta.illBeThere",
     body: "Bring a portfolio, a laptop, a phone, whatever your work lives on. This is an informal evening for designers and photographers in the network to share work-in-progress and meet each other without an agenda. Drinks from 7pm at a borrowed space in Príncipe Real.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop",
   },
   "studio-visit": {
     slug: "studio-visit",
@@ -311,6 +317,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.spotsLeft", values: { count: 3 } },
     ctaKey: "gatherings:cta.requestSpot",
     body: "A slow Sunday afternoon in Beatriz's studio in Graça. She'll talk through her practice, show the kiln, and there will be clay to touch. Limited to 10 people. Tea provided. The studio is at the top of a steep hill and worth every step.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
   },
   "founders-breakfast": {
     slug: "founders-breakfast",
@@ -324,6 +332,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.casual" },
     ctaKey: "gatherings:cta.rsvp",
     body: "An early-morning gathering for people building things: companies, studios, projects, community organisations. No pitching. No networking. Just good coffee, bread from a bakery in Mouraria, and honest conversation about what it's actually like to build something.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?q=80&w=1200&auto=format&fit=crop",
   },
   "trans-hub-meetup": {
     slug: "trans-hub-meetup",
@@ -337,6 +347,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.openToAll" },
     ctaKey: "gatherings:cta.rsvp",
     body: "A relaxed monthly evening for trans and non-binary folks to land, breathe, and be among people who get it. No agenda beyond company: tea, snacks, and whatever the room wants to talk about. New faces are always welcome; you can sit quietly until you feel like talking.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=1200&auto=format&fit=crop",
   },
   "skills-exchange-intro": {
     slug: "skills-exchange-intro",
@@ -350,6 +362,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.spotsLeft", values: { count: 12 } },
     ctaKey: "gatherings:cta.reserveSpot",
     body: "An introduction to the QueerPulse skills barter: how to offer what you know, ask for what you need, and trade without money changing hands. We'll walk through real examples from the network and help you post your first offer by the end of the hour.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-parent-network": {
     slug: "queer-parent-network",
@@ -363,6 +377,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.familyFriendly" },
     ctaKey: "gatherings:cta.rsvp",
     body: "The first gathering of the Queer Parent Network: for LGBTQ+ parents, carers, and those thinking about it. Kids welcome; there's a corner of the park with shade and space to run. Come swap notes on schools, doctors, and the small daily logistics of raising a family here.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
   },
   "trans-mutual-aid": {
     slug: "trans-mutual-aid",
@@ -376,6 +392,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.openToAll" },
     ctaKey: "gatherings:cta.rsvp",
     body: "An open organising meeting for the trans mutual aid fund: where requests are reviewed, money is pooled, and the next month's priorities get set together. Everyone has a voice. If you need support or want to give it, this is the room where both happen.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1524230572899-a752b3835840?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-elders-social": {
     slug: "queer-elders-social",
@@ -389,6 +407,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.openToAll" },
     ctaKey: "gatherings:cta.rsvp",
     body: "An unhurried afternoon for queer elders and the friends who love them: coffee, cake, and the kind of stories that don't get told often enough. Intergenerational guests welcome. Step-free venue with seating throughout.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1200&auto=format&fit=crop",
   },
   "wellbeing-ama": {
     slug: "wellbeing-ama",
@@ -402,6 +422,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.online" },
     ctaKey: "gatherings:cta.joinOnline",
     body: "A live, anonymous Q&A with a queer-affirming therapist from the QueerPulse wellbeing network. Bring your questions about burnout, anxiety, identity, relationships, or just listen. Submit questions ahead of time or in the chat; nothing is named or recorded.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-runners-run": {
     slug: "queer-runners-run",
@@ -421,6 +443,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.allPaces" },
     ctaKey: "gatherings:cta.rsvp",
     body: "A flat, friendly 5K along the river to close out the month: all paces, walkers included, no one left behind. We meet by the water, run loose, and finish with coffee. First-timers, say hi when you arrive and we'll pair you up.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-youth-gathering": {
     slug: "queer-youth-gathering",
@@ -434,6 +458,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.ages1625" },
     ctaKey: "gatherings:cta.rsvp",
     body: "The opening gathering of the Queer Youth Network, for LGBTQ+ people aged 16–25. A safe, low-key space to meet others, share what you're into, and shape what the group becomes. Facilitated by trained volunteers. Snacks provided.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop",
   },
   "disability-access-talk": {
     slug: "disability-access-talk",
@@ -447,6 +473,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.online" },
     ctaKey: "gatherings:cta.joinOnline",
     body: "An open conversation about disability, access, and chronic illness in queer community: what works, what doesn't, and what we want QueerPulse to do better. Live captions provided. Your input shapes the network's access commitments for the year.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=1200&auto=format&fit=crop",
   },
   "legal-clinic": {
     slug: "legal-clinic",
@@ -460,6 +488,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.byAppointment" },
     ctaKey: "gatherings:cta.bookSlot",
     body: "Free, confidential one-to-one sessions with volunteer lawyers from the queer community: name changes, residency, discrimination, housing, and more. Twenty-minute slots, booked in advance. Bring any relevant paperwork; everything discussed stays private.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-choir-rehearsal": {
     slug: "queer-choir-rehearsal",
@@ -473,6 +503,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.noAudition" },
     ctaKey: "gatherings:cta.rsvp",
     body: "Monthly rehearsal of the Lisbon Queer Choir: no audition, no sheet-music required, every voice welcome. We warm up together, learn by ear, and build toward the season's performances. Come for one song or stay for all of them.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=1200&auto=format&fit=crop",
   },
   "resource-library-launch": {
     slug: "resource-library-launch",
@@ -486,6 +518,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.online" },
     ctaKey: "gatherings:cta.joinOnline",
     body: "A live walkthrough of the new QueerPulse Resource Library (health, legal, housing, and community guides gathered in one place) followed by an open Q&A. Tell us what's missing; the first round of additions comes straight from this call.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1487956382158-bb926046304a?q=80&w=1200&auto=format&fit=crop",
   },
   "micro-grants-office-hours": {
     slug: "micro-grants-office-hours",
@@ -499,6 +533,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.dropIn" },
     ctaKey: "gatherings:cta.joinOnline",
     body: "Drop-in office hours for the Q3 micro-grants round. Bring a half-formed idea or a nearly-finished application and we'll help you shape it. No project is too small. The grants fund community projects up to €500, no strings, quick turnaround.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-of-colour-gathering": {
     slug: "queer-of-colour-gathering",
@@ -512,6 +548,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.openToAll" },
     ctaKey: "gatherings:cta.rsvp",
     body: "A monthly gathering centring QTIBIPOC experiences: food, music, and conversation in a space made by and for queer and trans people of colour. Allies who are invited by a member are welcome. Come as you are; this is a place to exhale.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-night-swim": {
     slug: "queer-night-swim",
@@ -557,6 +595,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.openToAll" },
     ctaKey: "gatherings:cta.rsvp",
     body: "A facilitated evening circle for whatever you are carrying: coming out, family, work, dysphoria, or nothing you can name yet. Two trained facilitators hold the room and read the safer-space norms at the start. Nobody has to speak. Tea from 6:15pm, circle at 6:30, finished by 8.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-film-moonlight": {
     slug: "queer-film-moonlight",
@@ -573,6 +613,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     },
     ctaKey: "gatherings:cta.reserveSeat",
     body: "Barry Jenkins' “Moonlight” on a proper screen, followed by a slow conversation in the bar for anyone who wants to stay. Content note: childhood neglect and a scene of homophobic violence. Doors at 7:30, film at 8. Tickets are €8 in advance or on the door; no one is turned away for lack of funds.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-youth-monthly": {
     slug: "queer-youth-monthly",
@@ -586,6 +628,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.ages1625" },
     ctaKey: "gatherings:cta.rsvp",
     body: "The Queer Youth Network's regular monthly meet, picking up where the opening gathering left off. For LGBTQ+ people aged 16-25: a check-in, games, and whatever the group chose to do this month. Facilitated by trained volunteers. Snacks provided, and the venue goes out to members a week ahead.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
   },
   "peer-support-circle": {
     slug: "peer-support-circle",
@@ -599,6 +643,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.dropIn" },
     ctaKey: "gatherings:cta.rsvp",
     body: "The open-door session of a circle that has run every week for over a year. Confidential, facilitated, and yours to use as you need it: come once, come every week, or sit quietly at the back. No referral and no commitment. Doors from 6:15pm, circle at 6:30. Step-free venue.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=1200&auto=format&fit=crop",
   },
   // ── Subjects for stories and lifecycle demos that link a gathering ──
   // The first four back the "event" posts in `topics.data.tsx`; the last two
@@ -751,6 +797,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     spots: { key: "gatherings:spots.going", values: { count: 28 } },
     ctaKey: "gatherings:cta.rsvp",
     body: "Bring a power ballad, a guilty pleasure, or just your loudest cheering voice. A warm, no-judgement night of queer karaoke at Purex in Bairro Alto: every voice welcome, every key forgiven. Songbook opens at 9. Stay for one number or close the place down.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1200&auto=format&fit=crop",
   },
   "queer-film-tangerine": {
     slug: "queer-film-tangerine",

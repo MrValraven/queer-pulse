@@ -7,6 +7,7 @@ import {
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "./listingMenu.data";
+import { normalizeOwnerIdentities } from "./listingOwnerIdentities.data";
 import { toServiceRows } from "./listingServices.data";
 import type { ManagedListingDTO } from "./api/listings.api";
 import { ownerPersonalFieldsFrom } from "./ownerPersonalFields";
@@ -38,6 +39,7 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     cats: dto.cats.map(normalizeCategory),
     hood: dto.hood,
     badge: dto.badge,
+    ownerIdentities: normalizeOwnerIdentities(dto.ownerIdentities),
     evidence: dto.evidence,
     price: dto.price,
     blurb: dto.blurb,

@@ -10,6 +10,7 @@ interface BulkReviewJoinRequestsVars {
   ids: string[];
   status: "approved" | "declined" | "waitlisted";
   declineReason?: string;
+  approvalReason?: string;
 }
 
 /**
@@ -45,8 +46,8 @@ export function useBulkReviewJoinRequests() {
     logLabel: "admin.joinRequest.bulkReview",
     logContext: ({ ids, status }) => ({ ids, status }),
     demoResult: ({ ids }) => ({ succeeded: ids, failed: [] }),
-    live: ({ ids, status, declineReason }) =>
-      bulkReviewJoinRequests(ids, status, declineReason),
+    live: ({ ids, status, declineReason, approvalReason }) =>
+      bulkReviewJoinRequests(ids, status, declineReason, approvalReason),
     // Invalidates in BOTH modes, same reasoning as the single-row hook: the
     // demo queue's queryFn re-derives from the mock registry on every refetch,
     // so there is nothing this invalidation loses by also running in demo mode.
@@ -72,7 +73,8 @@ export function useBulkReviewJoinRequests() {
       ids: string[],
       status: "approved" | "declined" | "waitlisted",
       declineReason?: string,
-    ) => mutation.mutateAsync({ ids, status, declineReason }),
+      approvalReason?: string,
+    ) => mutation.mutateAsync({ ids, status, declineReason, approvalReason }),
     pending: mutation.isPending,
   };
 }

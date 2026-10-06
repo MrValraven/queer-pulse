@@ -528,6 +528,8 @@ export const messages: Catalog = {
   "group.newTitle": "New group",
   "group.newSub": "Name your group and choose who's in it.",
   "group.namePlaceholder": "Group name",
+  "group.connectionsLoadError": "Your connections didn't load.",
+  "group.allListedInGroup": "Everyone who matches is already in this group.",
   "group.nameAria": "Group name",
   "group.searchPlaceholder": "Search connections to add…",
   "group.createCta": "Create group ({count})",
@@ -857,7 +859,7 @@ export const messages: Catalog = {
     "You've already written here today. Give them a chance to reply first.",
   "mailbox.contact.error.unavailable":
     "{name} can't receive messages right now.",
-  "mailbox.contact.successAria": "Your message to {name} was sent",
+  "mailbox.contact.successAria": "All set",
   "mailbox.contact.successTitle": "Message",
   "mailbox.contact.successEm": "sent",
   "mailbox.contact.successBody": "It's in {name}'s mailbox.",

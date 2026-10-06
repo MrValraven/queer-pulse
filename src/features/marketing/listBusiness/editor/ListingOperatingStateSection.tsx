@@ -23,6 +23,12 @@ import styles from "./ListingTrading.module.css";
  * The choice is staged locally and only sent when the owner presses the button,
  * so choosing "permanently closed" can open a confirmation that spells out what
  * that does before it does it (see `ListingPermanentClosureDialog`).
+ *
+ * An online-only listing has no street address to move from, so it is not
+ * offered "moved". The card stays when "moved" is already the saved state
+ * (or the staged one), so the owner can see what is set and change it.
+ * Read from the SAVED listing, like the rest of this section, which applies
+ * on its own and reports on the listing as it stands.
  */
 export function ListingOperatingStateSection({
   listing,
@@ -69,6 +75,10 @@ export function ListingOperatingStateSection({
   // A "we moved" banner with no destination tells a reader nothing, and the
   // server refuses it, so the button stays out of reach until there is one.
   const isMissingAddress = chosenState === "moved" && trimmedAddress === "";
+  const isMovedOffered =
+    listing.online !== true ||
+    current.state === "moved" ||
+    chosenState === "moved";
   const canApply =
     isChanged && !isMissingAddress && !setOperatingState.isPending;
 
@@ -133,6 +143,7 @@ export function ListingOperatingStateSection({
         onChangeState={setChosenState}
         onChangeNote={setNote}
         onChangeMovedToAddress={setMovedToAddress}
+        isMovedOffered={isMovedOffered}
       />
 
       {failure && (

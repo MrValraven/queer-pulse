@@ -139,6 +139,17 @@ export function GatheringWherePanel({
           >
             {address}
           </WhereRow>
+        ) : gathering.viewerIsOrganizer ? (
+          // The same two absences as the join link. An organiser always
+          // receives the address, so an empty one here means nobody added it:
+          // a fact about their own gathering, drawn as an ordinary row. The
+          // locked, dashed treatment is for a reader who has not earned it.
+          <WhereRow
+            icon={FiMapPin}
+            label={t("gatherings:gathering.where.addressLabel")}
+          >
+            {t("gatherings:gathering.where.addressMissing")}
+          </WhereRow>
         ) : (
           <WhereRow
             icon={FiLock}

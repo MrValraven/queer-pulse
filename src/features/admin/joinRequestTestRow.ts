@@ -27,6 +27,7 @@ export function makeJoinRequestRow(
     reviewedAt: null,
     reviewedBy: null,
     declineReason: null,
+    approvalReason: null,
     flagLabels: [],
     priorDeclineLine: null,
     referenceLine: null,
@@ -34,6 +35,9 @@ export function makeJoinRequestRow(
     status: "pending",
     assignedStaffId: null,
     dueAt: null,
+    internalNote: null,
+    internalNoteUpdatedAt: null,
+    internalNoteUpdatedBy: null,
     ...overrides,
   };
 }

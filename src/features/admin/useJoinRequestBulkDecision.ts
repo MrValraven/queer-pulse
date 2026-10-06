@@ -73,11 +73,20 @@ export function useJoinRequestBulkDecision({
     setConfirming(status);
   }
 
-  async function run(status: BulkDecisionStatus, declineReason?: string) {
+  async function run(
+    status: BulkDecisionStatus,
+    declineReason?: string,
+    approvalReason?: string,
+  ) {
     if (pending || ids.length === 0) return;
     const batch = [...ids];
     try {
-      const result = await bulkReview(batch, status, declineReason);
+      const result = await bulkReview(
+        batch,
+        status,
+        declineReason,
+        approvalReason,
+      );
       setConfirming(null);
       const failedIds = result.failed.map((failure) => failure.id);
       if (result.failed.length === 0) {

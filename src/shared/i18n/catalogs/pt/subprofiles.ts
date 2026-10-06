@@ -1349,7 +1349,8 @@ export const subprofiles: Catalog = {
   "invite.sub":
     "A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
   "invite.searchPlaceholder": "Procura nas tuas conexões",
-  "invite.empty": "Não há mais conexões para convidar.",
+  "invite.allListedTaken":
+    "Quem corresponde à pesquisa já é responsável ou já tem convite.",
   "invite.inviting": "A convidar…",
   "invite.toastSent":
     "Convite enviado. A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
@@ -2049,8 +2050,6 @@ export const subprofiles: Catalog = {
     '{count} links de "Parte de" não passaram para a cópia. Só passam as tuas comunidades e os teus eventos.',
   "newModal.toastAffiliationsSaveFailed":
     'Não conseguimos copiar os links de "Parte de". Acrescenta-os a partir do editor.',
-  "invite.loadMore": "Mostrar mais conexões",
-  "invite.loadingMore": "A carregar…",
 
   "editorSavebar.mobilePreview": "Pré-visualizar",
   "mobilePreview.ariaLabel": "Pré-visualização da tua página de persona",

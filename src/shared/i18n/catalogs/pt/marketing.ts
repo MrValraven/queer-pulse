@@ -1493,6 +1493,7 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepAriaDone": "Passo {number}: {label} (concluído)",
   "listBusiness.wizard.stepAriaCurrent": "Passo {number}: {label} (atual)",
   "listBusiness.wizard.stepJumpAria": "Voltar ao passo {number}: {label}",
+  "listBusiness.wizard.stepGoToAria": "Ir para o passo {number}: {label}",
   "listBusiness.wizard.stepOf": "Passo {number} de {total}: {label}",
   "listBusiness.wizard.draftSaved": "Rascunho guardado",
   "listBusiness.draftBanner.text":
@@ -1574,12 +1575,18 @@ export const marketing: Catalog = {
   "listBusiness.step1.catsAria": "Categoria",
   "listBusiness.step1.hoodLabel": "Que bairro?",
   "listBusiness.step1.hoodPlaceholder": "Escolhe um bairro de Lisboa…",
-  "listBusiness.step1.hoodOnlineHelper":
-    "Opcional para espaços online. Escolhe um se tens raízes num bairro.",
   "listBusiness.step1.badgeLabel": "Quem o gere?",
   "listBusiness.step1.badgeHelper":
     "Queer-owned, ou um lugar que nos acolhe genuinamente? Ambos pertencem aqui. Isto é um acolhimento, aberto a toda a gente.",
   "listBusiness.step1.badgeAria": "Propriedade",
+  "listBusiness.ownerIdentity.women": "Negócio de mulheres",
+  "listBusiness.ownerIdentity.trans": "Negócio de pessoas trans",
+  "listBusiness.ownerIdentity.nonBinary": "Negócio de pessoas não binárias",
+  "listBusiness.ownerIdentity.bipoc": "Negócio de pessoas BIPOC",
+  "listBusiness.step1.ownerIdentityLabel":
+    "Queres dizer mais sobre quem o gere?",
+  "listBusiness.step1.ownerIdentityHelper":
+    "Opcional. Escolhe as que se aplicam a quem detém ou lidera o espaço. Aparecem na tua listagem para toda a gente e ajudam as pessoas a encontrar-te.",
   "listBusiness.step1.owned.tag": "Queer-owned",
   "listBusiness.step1.owned.title": "Gerido ou liderado pela nossa comunidade",
   "listBusiness.step1.owned.desc":
@@ -1657,7 +1664,6 @@ export const marketing: Catalog = {
   "listBusiness.tagGroup.happening": "O que lá acontece",
   "listBusiness.tagGroup.foodDrink": "Comida e bebida",
   "listBusiness.tagGroup.pricing": "Preços",
-  "listBusiness.tagGroup.languages": "Idiomas",
   "listBusiness.tag.byAppointment": "Por marcação",
   "listBusiness.tag.bookingRecommended": "Reserva recomendada",
   "listBusiness.tag.membersOnly": "Só para membros",
@@ -1685,11 +1691,6 @@ export const marketing: Catalog = {
   "listBusiness.tag.slidingScale": "Preço solidário",
   "listBusiness.tag.payWhatYouCan": "Paga o que puderes",
   "listBusiness.tag.studentDiscount": "Desconto para estudantes",
-  "listBusiness.tag.portugueseSpoken": "Fala-se português",
-  "listBusiness.tag.englishSpoken": "Fala-se inglês",
-  "listBusiness.tag.spanishSpoken": "Fala-se espanhol",
-  "listBusiness.tag.frenchSpoken": "Fala-se francês",
-  "listBusiness.tag.portugueseSignLanguage": "Língua Gestual Portuguesa",
   // Idiomas (os endónimos ficam iguais; só "Outro" e a glosa de LGP traduzem)
   "listBusiness.lang.portugues": "Português",
   "listBusiness.lang.english": "English",
@@ -1702,6 +1703,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.em": "prático",
   "listBusiness.step3.sub":
     "Como as pessoas te encontram, quando estás aberto, e onde te contactar. Partilha só o que quiseres público.",
+  "listBusiness.step3.subOnline":
+    "Onde as pessoas te encontram online e como te contactar. Partilha só o que quiseres público.",
   "listBusiness.step3.onlineOnly.title": "Este negócio é só online",
   "listBusiness.step3.onlineOnly.sub":
     "Partilha onde as pessoas te encontram online, em vez de uma morada.",
@@ -1796,12 +1799,9 @@ export const marketing: Catalog = {
     "Obrigatório: descreve para quem é cega ou tem baixa visão",
   "listBusiness.step4.photo.upload": "Carregar",
   "listBusiness.step4.photo.change": "Trocar",
-  "listBusiness.step4.photo.uploading": "A carregar…",
   "listBusiness.step4.photo.remove": "Remover foto",
   "listBusiness.step4.photo.serverRejected":
     "Não conseguimos guardar esta foto. Carrega-a de novo ou escolhe outra.",
-  "listBusiness.step4.photo.uploadError":
-    "Não foi possível carregar essa imagem. Tenta novamente",
   "listBusiness.step4.aboutYouHeading": "Um pouco sobre ti",
   "listBusiness.step4.relLabel": "A tua ligação ao lugar",
   "listBusiness.step4.relAria": "A tua ligação",
@@ -1878,6 +1878,10 @@ export const marketing: Catalog = {
   "listBusiness.step5.em": "antes de ir para a equipa.",
   "listBusiness.step5.sub":
     "Aqui está tudo o que nos contaste. Edita qualquer parte voltando atrás. Nada fica fechado até enviares.",
+  "listBusiness.step5.edit.title": "Uma última vista de olhos",
+  "listBusiness.step5.edit.em": "às tuas alterações.",
+  "listBusiness.step5.edit.sub":
+    "É assim que o espaço vai ficar depois de guardares. Volta atrás para mudar qualquer parte.",
   "listBusiness.step5.slugLabel": "O teu anúncio vai viver em",
   "listBusiness.step5.slugDomain": "queerpulse.app/directory/",
   "listBusiness.step5.editCta": "Editar",
@@ -2029,6 +2033,8 @@ export const marketing: Catalog = {
     "O teu bairro aparece aqui, ao lado da categoria.",
   "listBusiness.livePreview.caption.badge":
     "O teu distintivo aparece aqui, na foto do teu cartão.",
+  "listBusiness.livePreview.caption.ownerIdentities":
+    "Aparece no teu cartão e na página da listagem, para toda a gente.",
   "listBusiness.livePreview.caption.evidence":
     "Só quem gere este anúncio e a equipa de revisão veem isto. Dá sentido ao distintivo.",
   "listBusiness.livePreview.caption.price":
@@ -2081,8 +2087,6 @@ export const marketing: Catalog = {
     "O teu nome e o teu papel vão aparecer aqui.",
   "listBusiness.livePreview.caption.willShow":
     "Isto aparece no teu cartão quando o anúncio tiver nome.",
-  "listBusiness.livePreview.caption.hoodOnline":
-    "O teu cartão diz Online aqui. O teu bairro aparece no topo da tua página.",
   "listBusiness.livePreview.caption.online":
     "Ligado, o cartão diz Online aqui. A tua página deixa de mostrar o mapa e o horário.",
   "listBusiness.livePreview.caption.hoursNote":
@@ -2251,6 +2255,8 @@ export const marketing: Catalog = {
     "as respostas sobre acessibilidade",
   "listBusiness.editor.history.field.accessibilityNote":
     "a nota sobre acessibilidade",
+  "listBusiness.editor.history.field.ownerIdentities":
+    "as etiquetas de quem gere",
   "listBusiness.editor.history.field.services": "os serviços e preços",
   "listBusiness.editor.history.field.menu": "o menu",
   "listBusiness.editor.history.field.pricingMode":
@@ -2398,14 +2404,21 @@ export const marketing: Catalog = {
     "Não conseguimos fazer essa alteração agora. Tenta outra vez.",
   "listBusiness.coManagers.inviteHeading": "Convidar alguém para ajudar",
   "listBusiness.coManagers.inviteIntro":
-    "Encontra a pessoa em quem estás a pensar e envia o convite. Nada muda para ela até aceitar.",
+    "Escolhe alguém com quem tens conexão e envia o convite. Nada muda para essa pessoa até aceitar.",
   "listBusiness.coManagers.seats":
     "{used} de {cap} lugares ocupados. Um convite ocupa um lugar enquanto espera resposta.",
   "listBusiness.coManagers.seatsFullNotice":
     "Os lugares estão todos ocupados. Retira alguém, ou cancela um convite, para libertar um.",
-  "listBusiness.coManagers.searchPlaceholder": "Procurar membros pelo nome",
-  "listBusiness.coManagers.searchHint":
-    "Escreve um nome para encontrar a pessoa em quem estás a pensar.",
+  "listBusiness.coManagers.searchPlaceholder":
+    "Procurar nas tuas conexões pelo nome",
+  "listBusiness.coManagers.loadingConnections":
+    "A procurar as pessoas com quem tens conexão.",
+  "listBusiness.coManagers.noConnections":
+    "Podes convidar qualquer pessoa com quem tens conexão. Assim que tiveres conexões, aparecem aqui.",
+  "listBusiness.coManagers.allListedHelping":
+    "Quem corresponde à pesquisa já ajuda a gerir esta página ou tem um convite à espera.",
+  "listBusiness.coManagers.connectionsLoadError":
+    "As tuas conexões não carregaram.",
   "listBusiness.coManagers.sendCta": "Enviar convite",
   "listBusiness.coManagers.sendingCta": "A enviar...",
   "listBusiness.coManagers.invitedToast": "Convite enviado.",
@@ -2687,6 +2700,8 @@ export const marketing: Catalog = {
     "Ordem das categorias (a primeira é a principal)",
   "listBusiness.editor.restore.diff.field.hood": "Bairro",
   "listBusiness.editor.restore.diff.field.badge": "Quem o gere",
+  "listBusiness.editor.restore.diff.field.ownerIdentities":
+    "Etiquetas de quem gere",
   "listBusiness.editor.restore.diff.field.evidence":
     "Em que sentido é queer-owned",
   "listBusiness.editor.restore.diff.field.price": "Escalão de preço",
@@ -2891,11 +2906,14 @@ export const marketing: Catalog = {
     "{count} alteração de infraestrutura",
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
-  "changelog.entry.more": "Mais",
-  "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+<<<<<<< Updated upstream
   "changelog.releases.2026-10-02.headline":
     "O diretório ganha um separador Online e etiquetas sobre quem gere um negócio, e as personas podem importar o feed de um podcast.",
+=======
+  "changelog.releases.2026-10-05.headline":
+    "As conversas que leste ficam lidas, e já podes encontrar locais por quem os gere.",
+>>>>>>> Stashed changes
   "changelog.releases.2026-09-30.headline":
     "Um novo início de sessão com um Q vivo, e a exportação dos teus dados cobre quase toda a tua conta.",
   "changelog.releases.2026-09-29.headline":
@@ -3030,6 +3048,7 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+<<<<<<< Updated upstream
   "changelog.entries.tags-and-snippets-type-normally.title":
     "As tags de um item aceitam vírgulas, e os trechos de código uma nova linha",
   "changelog.entries.tags-and-snippets-type-normally.body":
@@ -3122,10 +3141,169 @@ export const marketing: Catalog = {
     "Quem é dono pode marcar um espaço como gerido por mulheres, pessoas trans ou pessoas não binárias, e o diretório pode filtrar por isso.",
   "changelog.entries.who-owns-and-runs-it-tags.details":
     "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. Uma etiqueta trans ou não binária diz algo sobre a identidade de género da própria pessoa dona, por isso só ela as pode definir. Ficam na secção Um pouco sobre ti, só da pessoa dona, e as pessoas que cogerem, as sugestões e os espaços escritos pela equipa nunca lhes tocam. As etiquetas são públicas mesmo quando o nome da pessoa dona está escondido, e o formulário diz com clareza que, num negócio pequeno, podem apontar diretamente para ti. Cada uma aparece como uma etiqueta simples, nunca com o estilo de uma marca verificada, e é independente do selo queer-owned. No diretório, Quem gere filtra por qualquer uma das etiquetas que escolheres.",
+=======
+  "changelog.entries.listing-photos-use-the-photo-picker.title":
+    "Fotos de listagens, avaliações e espaços usam o seletor",
+  "changelog.entries.listing-photos-use-the-photo-picker.body":
+    "Escolhe entre os teus carregamentos ou carrega uma nova, confirma antes de remover e vê a capa recortada como no cartão.",
+  "changelog.entries.persona-next-saves-chapter.title":
+    "Seguinte guarda os blocos da página da persona",
+  "changelog.entries.persona-next-saves-chapter.body":
+    "Passar ao capítulo seguinte, ou a Pôr no ar, guarda o que acabaste de mudar.",
+  "changelog.entries.publish-listing-confirm.title":
+    "Confirma um espaço antes de ficar público",
+  "changelog.entries.publish-listing-confirm.body":
+    "Publicar pede agora confirmação, na fila, na pré-visualização ou numa seleção em massa, antes de chegar aos membros.",
+  "changelog.entries.every-sent-invite-shows.title":
+    "Todos os convites que enviaste aparecem na lista",
+  "changelog.entries.every-sent-invite-shows.body":
+    "Mostrar mais carrega os teus convites enviados mais antigos de 20 em 20, e cada separador conta todos os seus.",
+  "changelog.entries.forum-replies-read-as-a-tree.title":
+    "As respostas do fórum ligam-se como uma árvore de conversa",
+  "changelog.entries.forum-replies-read-as-a-tree.body":
+    "Linhas ligam cada resposta àquela a que responde. Toca numa linha para recolher o ramo; conversas longas abrem ali mesmo.",
+  "changelog.entries.persona-chats-name-the-person.title":
+    "Conversas com uma persona com o nome do ofício mostram quem está por trás",
+  "changelog.entries.persona-chats-name-the-person.body":
+    'Uma persona ligada com o nome do ofício aparece como "Nome | Ofício" nas conversas, citações e notificações.',
+  "changelog.entries.listing-wizard-phone-and-dark-fixes.title":
+    "Os formulários de espaços cabem em telemóveis pequenos e leem-se no modo escuro",
+  "changelog.entries.listing-wizard-phone-and-dark-fixes.body":
+    "A barra de passos vê-se no modo escuro e a 375px, e a barra de gravar do editor fica acima dos separadores.",
+  "changelog.entries.admin-listing-edits-save-anywhere.title":
+    "Editar um espaço na administração guarda a partir de qualquer passo",
+  "changelog.entries.admin-listing-edits-save-anywhere.body":
+    "Espaços publicados ganham Guardar e publicar, e a página mostra o espaço e o estado dele.",
+  "changelog.entries.listing-languages-asked-once.title":
+    "Os idiomas são pedidos uma só vez ao listar um espaço",
+  "changelog.entries.listing-languages-asked-once.body":
+    "Os idiomas falados ficam só no campo próprio, por isso as seis etiquetas ficam livres para o resto.",
+>>>>>>> Stashed changes
   "changelog.entries.no-focus-frame-around-pages.title":
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":
     "Abrir uma página depois de usares o teclado já não desenha uma moldura de foco a toda a largura do ecrã.",
+  "changelog.entries.flat-success-in-dialogs.title":
+    "As confirmações dentro de uma janela ficam lisas",
+  "changelog.entries.flat-success-in-dialogs.body":
+    "Enviar uma mensagem ou sinalizar um espaço seguro acaba agora num ecrã de conclusão desenhado na própria janela.",
+  "changelog.entries.listing-queue-row-edit.title":
+    "Edita um espaço diretamente na fila de revisão",
+  "changelog.entries.listing-queue-row-edit.body":
+    "Quem é admin tem um botão Editar em cada espaço que ainda não tem dono, ao lado de Ver página.",
+  "changelog.entries.admin-listing-edit-jump-ahead.title":
+    "A equipa salta direto para qualquer passo ao editar um espaço",
+  "changelog.entries.admin-listing-edit-jump-ahead.body":
+    "Cada passo no topo da edição abre-se com um toque, desde que os passos anteriores estejam completos.",
+  "changelog.entries.notes-on-declined-invite-requests.title":
+    "A equipa pode anotar os pedidos de convite recusados",
+  "changelog.entries.notes-on-declined-invite-requests.body":
+    "Uma nota privada em cada pedido recusado guarda o porquê e quem a editou por último. Quem pediu nunca a vê.",
+  "changelog.entries.member-cards-full-photo.title":
+    "Os cartões de membros abrem com uma foto em altura total",
+  "changelog.entries.member-cards-full-photo.body":
+    "No computador, os cartões do feed e do diretório mostram a foto ao lado dos detalhes, ou as iniciais quando não há.",
+  "changelog.entries.online-listings-drop-place-fields.title":
+    "Os negócios só online têm uma página à medida",
+  "changelog.entries.online-listings-drop-place-fields.body":
+    "Sem direções, bairro, horário nem perguntas de acesso físico; a opção só online aparece logo no início do registo.",
+  "changelog.entries.community-invite-search-every-connection.title":
+    "Os convites de comunidade procuram em todas as tuas conexões",
+  "changelog.entries.community-invite-search-every-connection.body":
+    "Quem fica além das primeiras vinte também aparece, e só podes convidar pessoas com quem tens conexão.",
+  "changelog.entries.draft-history-compact-timeline.title":
+    "Um histórico de versões mais arrumado no editor de artigos",
+  "changelog.entries.draft-history-compact-timeline.body":
+    "Cada versão guardada cabe numa linha, a mais recente fica marcada e os históricos longos recolhem-se.",
+  "changelog.entries.directory-cards-one-line.title":
+    "Os cartões do diretório voltam a alinhar",
+  "changelog.entries.directory-cards-one-line.body":
+    "As linhas de acessibilidade e de quem gere ficam numa só linha; passa o rato no +N para veres o resto.",
+  "changelog.entries.local-who-runs-it-tags.title":
+    "Encontra locais por quem os gere",
+  "changelog.entries.local-who-runs-it-tags.body":
+    "As listagens podem dizer que são negócios de mulheres, pessoas trans, não binárias ou BIPOC, e o Local filtra por isso.",
+  "changelog.entries.local-filters-skip-empty-results.title":
+    "Os filtros do Local que não encontram nada ficam desativados",
+  "changelog.entries.local-filters-skip-empty-results.body":
+    "Com todos os locais carregados, um tipo, necessidade de acesso ou filtro rápido sem resultados deixa de dar para escolher.",
+  "changelog.entries.approvals-record-who-and-why.title":
+    "As aprovações registam quem e porquê",
+  "changelog.entries.approvals-record-who-and-why.body":
+    "Acolher alguém pede um motivo, e o separador Decididos mostra quem decidiu e porquê.",
+  "changelog.entries.local-filter-chips-stop-flickering.title":
+    "Os filtros do Local já não piscam ao escolher",
+  "changelog.entries.local-filter-chips-stop-flickering.body":
+    "Marcar ou desmarcar um filtro muda-o de uma vez, e o nome nunca se perde no fundo.",
+  "changelog.entries.bigger-new-member-photos.title":
+    "Vê fotos maiores nos cartões Nova pessoa",
+  "changelog.entries.bigger-new-member-photos.body":
+    "No telemóvel, o cartão Nova pessoa do feed mostra uma foto maior, com o nome e os pronomes ao lado, um por linha.",
+  "changelog.entries.admin-platform-log.title":
+    "Vê todas as ações da equipa num só registo",
+  "changelog.entries.admin-platform-log.body":
+    "Filtra por categoria, período ou membro, e os admins veem também os eventos públicos dos membros.",
+  "changelog.entries.admin-platform-log.tag": "Abrir o registo da plataforma",
+  "changelog.entries.back-arrow-after-the-more-menu.title":
+    "A seta para voltar aparece outra vez depois de abrires uma página pelo Mais",
+  "changelog.entries.back-arrow-after-the-more-menu.body":
+    "Abrir uma página pelo Mais escondia a seta o resto da visita, em todos os perfis que abrias a seguir.",
+  "changelog.entries.saying-hello-no-longer-zooms-iphone.title":
+    "Dizer olá já não aumenta o zoom da página no iPhone",
+  "changelog.entries.saying-hello-no-longer-zooms-iphone.body":
+    "A caixa da mensagem usa texto de 16px, por isso a barra de baixo fica toda no ecrã quando a fechas.",
+  "changelog.entries.dropdowns-reach-every-option-on-phones.title":
+    "Os menus de escolha abrem mais altos e mostram todas as opções no telemóvel",
+  "changelog.entries.dropdowns-reach-every-option-on-phones.body":
+    "A última opção já não fica tapada no fundo do ecrã, e a lista mostra mais linhas antes de precisares de deslizar.",
+  "changelog.entries.invite-pickers-search-every-connection.title":
+    "Os convites procuram em todas as tuas conexões",
+  "changelog.entries.invite-pickers-search-every-connection.body":
+    "Grupos, convívios, personas, comunidades, listagens e posts no fórum procuram agora em todas as tuas conexões.",
+  "changelog.entries.own-messages-stay-yours-after-rename.title":
+    "As tuas mensagens ficam do teu lado depois de mudares o nome de utilizador",
+  "changelog.entries.own-messages-stay-yours-after-rename.body":
+    "As conversas leem logo o teu novo @username, para nada do que enviaste aparecer como da outra pessoa.",
+  "changelog.entries.inbox-no-stale-selection-on-phones.title":
+    "Os telemóveis já não destacam a última conversa que abriste",
+  "changelog.entries.inbox-no-stale-selection-on-phones.body":
+    "A caixa de entrada só marca a conversa aberta quando a lista e a conversa estão lado a lado, para nunca parecer por ler.",
+  "changelog.entries.gathering-page-shows-cover.title":
+    "As páginas dos convívios mostram a foto de capa",
+  "changelog.entries.gathering-page-shows-cover.body":
+    "A foto que quem organiza carregou abre agora a página como um banner largo por cima do título, também no telemóvel.",
+  "changelog.entries.admin-listing-offers-search-members.title":
+    "Oferece uma listagem procurando a pessoa pelo nome",
+  "changelog.entries.admin-listing-offers-search-members.body":
+    "As ofertas de propriedade e os convites para cogerir nas listagens do admin encontram pessoas pelo nome, sem slug.",
+  "changelog.entries.dropdowns-clear-sticky-bars.title":
+    "As listas abertas ficam por cima das barras fixas",
+  "changelog.entries.dropdowns-clear-sticky-bars.body":
+    "O seletor de zona do Go together já não esconde o campo de pesquisa por baixo da barra Voltar e Seguinte.",
+  "changelog.entries.read-state-sticks.title":
+    "As conversas que leste ficam lidas",
+  "changelog.entries.read-state-sticks.body":
+    "O contador de não lidas já não volta ao reabrir a app, e cada conversa abre onde paraste de ler.",
+  "changelog.entries.staff-page-manage-in-place.title":
+    "Página Equipa e papéis onde podes agir",
+  "changelog.entries.staff-page-manage-in-place.body":
+    "Fotos, pesquisa, filtros por nível, um painel que assinala permissões sem titular e gestão em cada linha.",
+  "changelog.entries.communities-header-drops-explainer-link.title":
+    "O cabeçalho das comunidades ficou mais curto",
+  "changelog.entries.communities-header-drops-explainer-link.body":
+    "A ligação Como funcionam as comunidades saiu de baixo da saudação, em Minhas comunidades e em Descobrir.",
+  "changelog.entries.quest-banner-under-nav.title":
+    "As capas das personas de aventura chegam ao topo da página",
+  "changelog.entries.quest-banner-under-nav.body":
+    "A narração de RPG e outras personas de aventura deixavam uma faixa escura acima da capa; agora sobe até atrás do menu.",
+  "changelog.entries.admin-menu-clears-status-bar.title":
+    "Os menus da consola de equipa e da redação já se tocam bem no iPhone",
+  "changelog.entries.admin-menu-clears-status-bar.body":
+    "Na app instalada, as barras de topo ficavam por baixo da hora e da bateria; agora começam abaixo delas.",
+  "changelog.entries.hosts-are-going-to-their-own-gathering.title":
+    "Quem organiza já vai ao próprio convívio",
+  "changelog.entries.hosts-are-going-to-their-own-gathering.body":
+    "Criar um convívio guarda o teu lugar, e a página mostra um painel de organização com acesso a Gerir.",
   "changelog.entries.cohost-picker-reaches-every-connection.title":
     "Adicionar pessoa coanfitriã chega agora a todas as tuas conexões",
   "changelog.entries.cohost-picker-reaches-every-connection.body":
@@ -3246,8 +3424,6 @@ export const marketing: Catalog = {
     "Cada decisão só pode ser contestada uma vez",
   "changelog.entries.one-appeal-per-decision.body":
     "Uma pessoa moderadora que não fez parte da decisão original revê o caso, e essa decisão é final.",
-  "changelog.entries.one-appeal-per-decision.details":
-    "Podes recorrer de uma decisão de moderação uma vez. Uma pessoa moderadora que não fez parte da decisão original revê o caso, e essa decisão é final. O conselho consultivo acompanha como a moderação e os recursos funcionam em toda a QueerPulse. Se abrires a página de recurso de uma decisão já contestada, ela diz isso com clareza e aponta-te para o resultado e para a equipa de moderação. A Governança, o Sobre, a Constituição e a página de conta banida já descrevem isto da mesma forma.",
   "changelog.entries.safer-report-forms.title":
     "Denúncia e bloqueio deixam de vir com uma razão pré-escolhida",
   "changelog.entries.safer-report-forms.body":
@@ -4234,38 +4410,26 @@ export const marketing: Catalog = {
     "Uma biblioteca de valores partilhados à escolha",
   "changelog.entries.a-library-of-shared-values-to-choose-from.body":
     "Percorre oitenta valores partilhados em dez temas e marca os que encaixam, ao fundar ou ao editar uma comunidade.",
-  "changelog.entries.a-library-of-shared-values-to-choose-from.details":
-    "Fundar uma comunidade já não começa num campo vazio. Podes ver oitenta valores partilhados agrupados em dez temas, do consentimento e privacidade ao acesso, dinheiro, conflito e reparação, procurá-los pelas palavras e marcar os que encaixam. Escrever os teus continua lá e continua em primeiro. O mesmo painel está na edição, para uma comunidade já existente adotar um valor que nunca chegou a escrever.",
   "changelog.entries.find-any-admin-page-by-name.title":
     "Encontra qualquer página de administração pelo nome",
   "changelog.entries.find-any-admin-page-by-name.body":
     "Um campo de procura no topo do menu de administração reduz-o às páginas que correspondem, e Enter abre a primeira.",
-  "changelog.entries.find-any-admin-page-by-name.details":
-    "O menu de administração passa a abrir com um campo de procura. Escreve parte do nome de uma página e o menu reduz-se ao que corresponde, com os títulos de secção, para nada ficar escondido dentro de um grupo fechado. Enter abre o primeiro resultado.",
   "changelog.entries.the-homepage-card-walks-itself.title":
     "O cartão da página inicial percorre o que construímos",
   "changelog.entries.the-homepage-card-walks-itself.body":
     "O cartão avança sozinho a cada vinte segundos e para de vez assim que escolhes uma linha.",
-  "changelog.entries.the-homepage-card-walks-itself.details":
-    "O cartão que abre a página inicial enumera onze coisas que construímos, uma debaixo da outra, e só mostrava a história da primeira até clicares numa linha. Agora avança sozinho a cada vinte segundos, para que o fórum, o mapa, a revista e tudo o resto tenham a sua vez. Fica parado enquanto o cartão está fora do ecrã e enquanto tens lá dentro o rato ou o foco do teclado, e assim que escolhes uma linha para de vez e mantém a tua escolha. Quem navega com o movimento reduzido ativado vê o cartão tal como estava.",
   "changelog.entries.delete-a-piece-from-the-desk.title":
     "Apagar uma peça na redação",
   "changelog.entries.delete-a-piece-from-the-desk.body":
     "Cada linha tem um menu com Apagar; a confirmação diz o que vai com a peça e a proposta de origem volta à caixa de entrada.",
-  "changelog.entries.delete-a-piece-from-the-desk.details":
-    "Uma peça encomendada por engano, ou um rascunho que não foi a lado nenhum, não tinha forma de sair da redação: ficava no fluxo para sempre. Cada linha passa a ter um menu no fim com a opção Apagar, atrás de uma confirmação que diz exatamente o que vai com a peça, ou seja o rascunho, as versões guardadas e os comentários de quem lê. Se a peça veio de uma proposta, essa proposta volta para a caixa de entrada como pendente, para que a ideia sobreviva ao rascunho em que se tornou. Uma peça cujo artigo ou deck já está publicado fica onde está até ser despublicado, porque nada que já se lê deve desaparecer só porque arrumaste a redação.",
   "changelog.entries.tap-what-is-missing-to-go-straight-to-it.title":
     "Toca no que falta para ires direto ao campo",
   "changelog.entries.tap-what-is-missing-to-go-straight-to-it.body":
     "Cada linha da lista é um botão que desliza até ao campo, põe lá o cursor e destaca-o por um momento.",
-  "changelog.entries.tap-what-is-missing-to-go-straight-to-it.details":
-    "A lista por cima do botão Continuar dizia o que ainda faltava numa etapa e depois deixava-te à procura: na primeira etapa isso é voltar atrás por uma grelha de oito formatos, e na revisão por todo o resumo. Cada linha dessa lista passa a ser um botão. Carregas e o assistente desliza até ao campo, põe lá o cursor e destaca-o por um momento para veres qual era. Funciona também nos compromissos de publicação, levando-te à caixa exata que falta assinalar.",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.title":
     "O assistente de convívios diz o que precisa",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.body":
     "Cada etapa abre a dizer se é obrigatória ou opcional, e uma lista por cima de Continuar mostra o que ainda falta.",
-  "changelog.entries.the-gathering-wizard-says-what-it-needs.details":
-    "Criar um convívio passa por cinco etapas. Duas delas, a repetição e a lotação, podem ser saltadas por completo, e nada no ecrã dizia isso: o botão Continuar ficava simplesmente apagado e a única explicação era uma dica que nunca aparece no telemóvel. Cada etapa passa a abrir com uma linha a dizer se é obrigatória ou opcional, e uma lista por cima do botão mostra o que ainda falta, riscando cada linha à medida que a preenches. Na etapa de revisão indica exatamente qual o compromisso que ainda tens de confirmar. O botão passa também a ser acessível pelo teclado, para que um leitor de ecrã possa ler o motivo de ainda não estar pronto.",
   "changelog.entries.bio-mentions-read-as-names.title":
     "As menções na bio leem-se como nomes",
   "changelog.entries.bio-mentions-read-as-names.body":
@@ -4350,8 +4514,6 @@ export const marketing: Catalog = {
     "Repara num link ou pedido arriscado numa conversa",
   "changelog.entries.spot-a-risky-link-or-request.body":
     "Aparece um aviso quando uma mensagem te leva para outra app, pede um pagamento ou disfarça um link.",
-  "changelog.entries.spot-a-risky-link-or-request.details":
-    "Quando uma mensagem empurra a conversa para o WhatsApp ou o Telegram, ou te pede dinheiro, aparece um aviso discreto para abrandares antes de responder. Os links levam o mesmo aviso quando se escondem atrás de um encurtador, de um domínio parecido com outro ou de um endereço em números. Os documentos de quem não tens conexão passam a ser transferidos em vez de abertos, e perguntam-te primeiro.",
   "changelog.entries.moderators-read-a-report-in-context.title":
     "A moderação lê uma denúncia com o contexto",
   "changelog.entries.moderators-read-a-report-in-context.body":
@@ -4364,8 +4526,6 @@ export const marketing: Catalog = {
     "Denuncia uma mensagem e bloqueia num só passo",
   "changelog.entries.report-and-block-in-one-move.body":
     "Basta um motivo, podes denunciar de forma anónima e, ao bloquear, levar contigo as mensagens recentes.",
-  "changelog.entries.report-and-block-in-one-move.details":
-    "Denunciar uma mensagem pede-te um motivo e mais nada, e no mesmo passo podes manter o anonimato ou bloquear a pessoa. Bloquear a partir de uma conversa propõe denunciar primeiro as mensagens recentes dessa pessoa, para que a moderação veja o que aconteceu. Só quem está na conversa pode denunciar as mensagens dela. Desfazer um bloqueio repõe a conexão que existia antes, e a conversa volta a funcionar.",
   "changelog.entries.a-deleted-message-can-still-be-reported.title":
     "Uma mensagem apagada continua a poder ser denunciada",
   "changelog.entries.a-deleted-message-can-still-be-reported.body":
@@ -4536,8 +4696,6 @@ export const marketing: Catalog = {
     "O teu cartão Agora mostra o que a tua disponibilidade faz",
   "changelog.entries.your-now-card-shows-what-your-openness-does.body":
     "A tua nota de limites vive aqui também, com olás por etiqueta e um empurrão para trocares as mais paradas.",
-  "changelog.entries.your-now-card-shows-what-your-openness-does.details":
-    "O cartão passa a reunir o teu estado, a tua nota de limites e a tua disponibilidade num só sítio, atualizados juntos a partir de um único botão. Como dono do perfil, vês também quantos olás cada etiqueta recebeu nos últimos 90 dias e a quantos respondeste, um empurrão para trocares uma que ninguém bateu, e os estados que já deixaste para trás. Não há contagem de visualizações. Quem visita vê o mesmo cartão sem esses números, e continua a poder tocar numa etiqueta para te contactar com o motivo já preenchido. Cada número vem de pedidos de conexão que já existiam. Nada de novo sobre como usas a aplicação passa a ser registado.",
   "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.title":
     "A app instalada abre no teu mural, não num ecrã vazio",
   "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.body":
@@ -4654,20 +4812,14 @@ export const marketing: Catalog = {
     "O alojamento explica-se antes de te pedir para entrares",
   "changelog.entries.housing-explains-itself-before-the-door.body":
     "Sem sessão iniciada, o botão de alojamento da página inicial abre o que é, em vez do ecrã de entrada.",
-  "changelog.entries.housing-explains-itself-before-the-door.details":
-    "O quadro de alojamento e o de colegas de casa são só para membros, por isso quem estava de fora e carregasse em qualquer um deles caía no ecrã de entrada sem explicação nenhuma. A secção da página inicial passa a ter um único botão que abre uma explicação curta: os grupos de habitação triados que escolhem quem entra, como uma visita liberta a morada exata e acaba numa avaliação cega dos dois lados, e porque é que o quadro tem uma porta. Também liga à página das cooperativas de habitação, que qualquer pessoa pode ler sem conta.",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.title":
     "Escolhe o convívio que queres mesmo organizar",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.body":
     "Nove tipos e cinquenta e seis formatos substituem os oito antigos, e agora o formato já define um tamanho sensato e faz as suas próprias perguntas.",
-  "changelog.entries.pick-the-gathering-you-actually-want-to-host.details":
-    "O assistente oferecia oito formatos, e um deles era Outro. Um piquenique, uma noite de colagem, uma noite de karaoke ou um clube de corrida não tinham onde encaixar, por isso quem faria os convívios mais acolhedores escolhia Outro ou desistia. Agora há nove tipos, cada um com a sua própria energia, e cinquenta e seis formatos lá dentro, com uma caixa que procura em todos eles e um campo de texto para o que ninguém se lembrou. O passo agora faz o que sempre pareceu fazer: o formato define um tamanho sensato para o convívio, decide se a página conta quem vai e faz-te uma ou duas perguntas que só ele levanta. Uma mesa partilhada pergunta o que trazer. Uma noite de discoteca pergunta pela porta e por quem não bebe. Uma caminhada pergunta pelo terreno. Uma sessão de cinema pergunta quanto dura o filme. As respostas aparecem na página do convívio em Bom saber, e o quadro de descoberta abre com os nove tipos para encontrares uma terça-feira de que gostes sem leres cinquenta títulos.",
   "changelog.entries.a-gathering-can-run-past-midnight.title":
     "Um convívio pode passar da meia-noite",
   "changelog.entries.a-gathering-can-run-past-midnight.body":
     "Diz quando o teu acaba, mesmo que seja às quatro da manhã ou três dias depois.",
-  "changelog.entries.a-gathering-can-run-past-midnight.details":
-    "Um convívio só podia começar e acabar na mesma data, por isso uma festa das 23h às 4h não tinha onde o dizer e um festival de fim de semana era impossível. O assistente passa a pedir a data de fim além da hora, preenche-a por ti e passa-a para o dia seguinte sozinho quando a hora de fim fica antes da de início. Todas as páginas que mostram um horário dizem quando um convívio entra pela manhã seguinte, e as que mostram um intervalo passam a nomear os dois dias. Podes mudar o fim depois de publicares, coisa que até agora te deixava num beco sem saída: passar o início para depois do fim guardado era recusado sem nada no formulário que desse para corrigir. Um convívio a decorrer fica também onde o irias procurar, na descoberta, nas páginas da comunidade e do espaço, no painel e na tua lista de planos, em vez de desaparecer assim que começava.",
   "changelog.entries.the-changelog-reads-as-releases.title":
     "O registo de alterações lê-se como lançamentos",
   "changelog.entries.the-changelog-reads-as-releases.body":
@@ -4676,26 +4828,18 @@ export const marketing: Catalog = {
     "Gere o teu encontro a partir da página dele",
   "changelog.entries.run-your-gathering-from-its-own-page.body":
     "Uma faixa de anfitrião por baixo do RSVP deixa-te editar, cancelar ou apagar o encontro onde estás.",
-  "changelog.entries.run-your-gathering-from-its-own-page.details":
-    "Na página de um encontro que organizas, vias tudo o que um convidado vê e não podias fazer nada: para editar ou cancelar tinhas de voltar a Os meus eventos e procurar a ligação. A página do teu encontro passa a ter uma faixa de anfitrião por baixo da linha de inscrição. Editas os detalhes ali mesmo, cancelas ou eliminas de vez, e Gerir continua a levar-te às inscrições, aos avisos e ao painel do próprio dia. Cancelar mantém o encontro no quadro marcado como cancelado e avisa quem tem lugar. Eliminar remove-o para sempre sem avisar ninguém, por isso só está disponível depois de o encontro ser cancelado ou enquanto ainda ninguém se inscreveu. Se já houver gente a contar com ele, a plataforma pede-te que canceles primeiro para que sejam avisadas.",
   "changelog.entries.a-persona-page-is-one-colour-again.title":
     "As páginas de persona abrem na cor certa",
   "changelog.entries.a-persona-page-is-one-colour-again.body":
     "A faixa por trás da navegação flutuante passa a ter o fundo da própria persona, no tema claro e no escuro.",
-  "changelog.entries.a-persona-page-is-one-colour-again.details":
-    "Cada estilo de ofício pinta o seu próprio fundo, mas a faixa onde assenta a navegação flutuante mantinha o creme do site, por isso a maioria das páginas de persona abria com uma banda no topo que destoava da página por baixo. Essa faixa passa a ter o fundo da própria persona, no tema claro e no escuro, para que a página de quem ensina yoga, o céu de quem lê astrologia e a ementa de quem cozinha se leiam como uma só superfície desde o topo. As páginas cuja imagem de capa já subia por trás da navegação ficam exatamente na mesma.",
   "changelog.entries.link-people-and-places-from-your-bio.title":
     "Liga pessoas e lugares a partir da tua biografia",
   "changelog.entries.link-people-and-places-from-your-bio.body":
     "Escreve @, c/, e/ ou t/ na biografia para ligar um membro, comunidade, evento ou tópico do fórum; ninguém é notificado.",
-  "changelog.entries.link-people-and-places-from-your-bio.details":
-    "A tua biografia passa a aceitar os mesmos atalhos que as mensagens e o fórum já tinham. Escreve @ para um membro, c/ para uma comunidade, e/ para um evento ou t/ para um tópico do fórum, escolhe da lista que aparece, e o nome fica uma ligação no teu perfil. Funciona também na tua biografia em português e em todas as páginas de persona. Ninguém recebe notificação quando é nomeado: uma biografia é texto permanente, por isso fica em silêncio por mais vezes que a edites.",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.title":
     "Vê o que uma gravação vai alterar antes de gravares",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.body":
     "As definições da comunidade listam o que Guardar vai escrever, e mudar valores avisa que todos concordam outra vez.",
-  "changelog.entries.see-what-a-save-will-change-before-you-save-it.details":
-    "O formulário de definições da comunidade passa a listar o que carregar em Guardar vai escrever, mesmo por cima do botão. Nos valores partilhados são nomeados os que entram e os que saem, e o formulário diz com clareza que alterá-los pede a todos os membros que concordem outra vez. O registo de governação lê-se da mesma forma: uma alteração aos valores mostra o que foi adicionado e o que foi removido, em vez de imprimir a lista inteira duas vezes.",
   "changelog.entries.the-tag-list-folds-away-once-you-have-picked.title":
     "A lista de etiquetas fecha-se depois de escolheres",
   "changelog.entries.the-tag-list-folds-away-once-you-have-picked.body":
@@ -5394,8 +5538,6 @@ export const marketing: Catalog = {
     "O Studio e o Cinema falam portugu\u00eas em mais s\u00edtios",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
     "Botões, títulos, separadores e estados vazios seguem a tua língua; a obra fica como o autor a escreveu.",
-  "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.details":
-    "Botões, títulos, separadores e estados vazios do Studio e do Cinema passam a seguir a língua que escolheste. A obra fica como o autor a escreveu: títulos de faixas, letras, biografias, sinopses e fichas técnicas.",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
     "A tua lista de dispositivos deixa de acumular sess\u00f5es antigas",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
@@ -5884,9 +6026,6 @@ export const marketing: Catalog = {
     "As comunidades já mostram os seus eventos, discussões e oportunidades de voluntariado reais",
   "changelog.entries.community-pulse-and-insights.body":
     "O separador Eventos lista os convívios reais, a barra lateral mostra discussões recentes, e quem gere tem um painel novo.",
-  "changelog.entries.community-pulse-and-insights.details":
-    "O separador Eventos de uma comunidade já lista os próximos convívios reais, e a barra lateral mostra discussões recentes e oportunidades de voluntariado. Quem gere a comunidade tem um novo painel sobre crescimento e publicações.",
-
   "changelog.entries.onboarding-identity-and-notifications.title":
     "A configuração inicial já pergunta pronomes e preferências de notificação",
   "changelog.entries.onboarding-identity-and-notifications.body":
@@ -6402,9 +6541,6 @@ export const marketing: Catalog = {
     "Diretórios de terapeutas, com perfis reais",
   "changelog.entries.therapist-personas-directory.body":
     "Cada perfil verificado pela comunidade mostra como a pessoa trabalha, valores, disponibilidade, onde atende e votos de confiança.",
-  "changelog.entries.therapist-personas-directory.details":
-    "Os diretórios de terapeutas afirmativos mostram agora perfis reais, verificados pela comunidade: como cada pessoa trabalha, valores, disponibilidade, onde atende e votos de confiança. Os terapeutas geram o seu próprio perfil.",
-
   "changelog.entries.concern-intake-live.title":
     "Levanta uma preocupação, e nós vamos mesmo vê-la",
   "changelog.entries.concern-intake-live.body":
@@ -7370,9 +7506,6 @@ export const marketing: Catalog = {
     "O conteúdo removido fica escondido em todo o lado",
   "changelog.entries.removed-content-stays-hidden.body":
     "As remoções desaparecem de mensagens diretas, anúncios de negócios e habitação e personas, e deixam de contar como não lidas.",
-  "changelog.entries.removed-content-stays-hidden.details":
-    "O conteúdo removido pela moderação desaparece agora de todos os sítios onde poderia aparecer, incluindo mensagens diretas, anúncios de negócios e de habitação, e personas. As mensagens removidas deixam de contar nos emblemas de não lidas.",
-
   "changelog.entries.help-demo-example-live-hidden.title":
     "Os painéis de ajuda deixam de mostrar exemplos da demo no modo real",
   "changelog.entries.help-demo-example-live-hidden.body":
@@ -7469,9 +7602,6 @@ export const marketing: Catalog = {
     "As pessoas editoras já podem criar os seus próprios decks interativos",
   "changelog.entries.magazine-deck-authoring.body":
     "Cinco modelos de slide, assinatura e metadados, pré-visualização, rascunhos e publicação com a etiqueta “Interativo”.",
-  "changelog.entries.magazine-deck-authoring.details":
-    "As pessoas editoras podem agora criar decks interativos no painel: cinco modelos de slide, assinatura e metadados, pré-visualização como quem lê, rascunhos guardados, e publicação com a etiqueta “Interativo” na primeira página da revista.",
-
   "changelog.entries.listings-moderation-console.title":
     "A fila de listagens ganhou uma consola de moderação a sério",
   "changelog.entries.listings-moderation-console.body":
@@ -7490,8 +7620,6 @@ export const marketing: Catalog = {
     "A pesquisa passa a abranger toda a plataforma",
   "changelog.entries.platform-wide-search.body":
     "Os resultados juntam artigos da revista, empregos, habitação, recursos, workshops e subperfis, em inglês e em português.",
-  "changelog.entries.platform-wide-search.details":
-    "A pesquisa global abrange agora artigos da revista, empregos, anúncios de habitação, recursos, workshops e subperfis, a par de membros, comunidades, eventos, tópicos do fórum e negócios, em inglês e em português.",
   "changelog.entries.save-events-communities.title":
     "Guarda eventos e comunidades, e guardados que ficam mesmo guardados",
   "changelog.entries.save-events-communities.body":
@@ -7567,8 +7695,6 @@ export const marketing: Catalog = {
     "Três novos tipos de persona: cozinha, coquetelaria e terapia",
   "changelog.entries.chef-mixologist-therapist-personas.body":
     "Cria um subperfil de cozinha, coquetelaria ou terapia, cada um com o seu modelo inicial e filtro no diretório.",
-  "changelog.entries.chef-mixologist-therapist-personas.details":
-    "Já podes criar um subperfil de cozinha (menus e residências), de coquetelaria (cocktails e residências) ou de terapia (especialidades e credenciais), cada um com o seu modelo inicial e filtro no diretório.",
   "changelog.entries.connections-card-polish.title":
     "Cartões de conexão mais arrumados",
   "changelog.entries.connections-card-polish.body":
@@ -8780,8 +8906,7 @@ export const marketing: Catalog = {
   // uma lista completa: um "não" e um "ninguém nos disse" são respostas
   // diferentes e ambas precisam do espaço que a página do local lhes dá.
   "directory.card.access": "Acessibilidade confirmada por este local",
-  "directory.card.accessMore_one": "mais {count}",
-  "directory.card.accessMore_other": "mais {count}",
+  "directory.card.moreCount": "+{count}",
   "directory.card.savedToast": "Guardaste {name}",
   "directory.card.unsavedToast": "Removeste {name} dos guardados",
   "directory.submitStrip.title":
@@ -8805,6 +8930,7 @@ export const marketing: Catalog = {
     "Nenhum selo é permanente. Qualquer membro pode sinalizar um espaço, e o selo pode ser retirado.",
   "directory.detail.breadcrumbAria": "Trilho de navegação",
   "directory.detail.breadcrumbHome": "Diretório",
+  "directory.detail.relatedTitleOnline": "Mais {category} para descobrir",
   "directory.detail.relatedTitle": "Mais {category} por perto",
   "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
   "directory.detail.badge.owned": "Negócio queer",
@@ -8812,6 +8938,7 @@ export const marketing: Catalog = {
   "directory.detail.reviewsCount": "· {count} avaliações",
   "directory.detail.newBadge": "Novo",
   "directory.detail.onlineBusiness": "Só online",
+  "directory.detail.offersTitleOnline": "O que <em>oferece</em>",
   "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
   "directory.detail.goodForSub": "Como {name} descreve.",
   "directory.detail.hoursTitle": "Horário",
@@ -8852,6 +8979,8 @@ export const marketing: Catalog = {
     "{name} confirmou estes dados pela última vez a {date}. Podem ter mudado entretanto.",
   "directory.detail.freshness.stale":
     "Estes dados foram confirmados pela última vez a {date}. Podem ter mudado entretanto.",
+  "directory.detail.freshness.unconfirmedOnline":
+    "Ainda ninguém confirmou estes dados. Vale a pena confirmar antes de encomendar.",
   "directory.detail.freshness.unconfirmed":
     "Ainda ninguém confirmou estes dados. Vale a pena confirmar antes de se deslocar.",
   "directory.detail.reviewsTitle":
@@ -8888,9 +9017,6 @@ export const marketing: Catalog = {
   "directory.detail.review.photo.add": "Adicionar uma foto",
   "directory.detail.review.photo.change": "Mudar a foto",
   "directory.detail.review.photo.remove": "Remover",
-  "directory.detail.review.photo.uploading": "A carregar…",
-  "directory.detail.review.photo.error":
-    "Não foi possível carregar essa foto. Tenta novamente.",
   "directory.detail.review.photo.previewAlt":
     "A foto que vais juntar a esta avaliação",
   "directory.detail.reply.ownerResponseTitle":
@@ -8949,7 +9075,9 @@ export const marketing: Catalog = {
   "directory.detail.reviews.readMore": "Ler mais",
   "directory.detail.reviews.showLess": "Mostrar menos",
   "directory.detail.visitTitle": "Onde fica",
+  "directory.detail.visitTitleOnline": "Onde encontrar online",
   "directory.detail.accessTitle": "Entrar e ser compreendido",
+  "directory.detail.languagesTitle": "Ser compreendido",
   "directory.detail.accessSub":
     "Conforme {name} declarou. Pergunta se precisares de ter a certeza.",
 
@@ -9049,6 +9177,8 @@ export const marketing: Catalog = {
     "{count} perguntas, da mais recente para a mais antiga.",
   "directory.detail.questions.emptySub":
     "Ainda ninguém perguntou nada por aqui.",
+  "directory.detail.questions.emptyBodyOnline":
+    "Faz a primeira pergunta. Tudo o que quiseres saber antes de comprar: para onde enviam, quanto tempo demora, como podes pagar.",
   "directory.detail.questions.emptyBody":
     "Faz a primeira pergunta. Tudo o que quiseres saber antes de ir: como se entra, como é o espaço, se a cozinha ainda serve às dez.",
   "directory.detail.questions.askLabel": "Pergunta em público",
@@ -9841,6 +9971,9 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Necessidades de acesso",
   "local.filter.accessNote":
     "Mostra os locais que responderam sim a tudo o que escolheres. Um local sobre o qual ninguém perguntou fica de fora dos resultados.",
+  "local.filter.ownerIdentityLabel": "Quem gere",
+  "local.filter.ownerIdentityNote":
+    "Nas palavras de quem gere o espaço. Escolhe mais do que uma para veres os locais que correspondem a qualquer uma.",
   // Mostrado sob o controlo de ordenação enquanto a localização está ligada,
   // a dizer o que a posição faz pela ordenação escolhida. As duas funcionam
   // em conjunto; nenhuma substitui a outra.
@@ -11343,8 +11476,6 @@ export const marketing: Catalog = {
     "Escolhe quem te pode juntar a um grupo",
   "changelog.entries.choose-who-can-add-you-to-a-group.body":
     "Os convites chegam aos Pedidos com Aceitar e Recusar, mais uma notificação e um push, e ninguém é readicionado em silêncio.",
-  "changelog.entries.choose-who-can-add-you-to-a-group.details":
-    "Uma nova definição de privacidade deixa-te escolher entre as tuas conexões te poderem juntar direto a um grupo, ou exigir um convite em vez disso. Os convites chegam como um pedido que aceitas ou recusas, com uma notificação e um push nos dois casos, e ninguém que saiu ou foi removido de um grupo pode ser posto lá de volta em silêncio.",
   "changelog.entries.end-a-group-or-hand-it-to-someone-else.title":
     "Termina um grupo, ou passa-o a outra pessoa",
   "changelog.entries.end-a-group-or-hand-it-to-someone-else.body":
@@ -11357,14 +11488,10 @@ export const marketing: Catalog = {
     "Bloquear e denunciar chegam agora aos grupos",
   "changelog.entries.block-and-report-now-reach-into-groups.body":
     "Bloqueados deixam de se ver no grupo, cada membro tem Bloquear e Denunciar, e o grupo também pode ser denunciado.",
-  "changelog.entries.block-and-report-now-reach-into-groups.details":
-    "Duas pessoas que se bloquearam deixam de ver as mensagens uma da outra num grupo partilhado, e não podem ser postas juntas por um convite, uma ligação ou uma adição. Cada membro passa a ter Bloquear e Denunciar, e o próprio grupo pode ser denunciado à moderação, que vê o grupo, o dono e toda a lista de membros.",
   "changelog.entries.group-timelines-explain-what-changed.title":
     "As linhas do tempo dos grupos explicam o que mudou",
   "changelog.entries.group-timelines-explain-what-changed.body":
     "As novas mensagens marcam mudanças de admin, de dono, de foto e de descrição, e falam contigo quando a mudança é sobre ti.",
-  "changelog.entries.group-timelines-explain-what-changed.details":
-    'A linha do tempo passa a dizer quando alguém é tornado ou deixa de ser admin, quando a posse muda de mãos, quando a foto ou a descrição mudam, quando alguém entra por ligação ou convite, e quando um grupo termina. Estas mensagens passam a dizer "tu" quando são sobre ti, por exemplo "A Ana removeu-te", em vez de te nomear na terceira pessoa.',
   "changelog.entries.sanctioned-members-lose-their-group-powers.title":
     "Membros sancionados perdem os poderes no grupo",
   "changelog.entries.sanctioned-members-lose-their-group-powers.body":

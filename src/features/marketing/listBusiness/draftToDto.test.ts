@@ -19,6 +19,7 @@ describe("draftToDto", () => {
     expect(dto.name).toBe("Bar");
   });
 
+<<<<<<< Updated upstream
   it("never carries ownership tags on a suggestion: that could out someone", () => {
     const draft = {
       ...blankDraft(),
@@ -38,6 +39,21 @@ describe("draftToDto", () => {
     expect(
       draftToDto({ ...legacyDraft, ownedBy: ["nonbinary", "women"] }),
     ).toHaveProperty("ownedBy", ["women", "nonbinary"]);
+=======
+  // Final fix wave item #1: a suggestion is written by the suggester about
+  // a business that has not joined yet, so a picked owner-identity tag must
+  // never ship from it, even when the draft still carries one from before
+  // the field was hidden.
+  it("on a suggest draft sends no owner identity tags, even when the draft carries them", () => {
+    const draft = {
+      ...blankDraft(),
+      path: "suggest" as const,
+      name: "Bar",
+      ownerIdentities: ["women" as const],
+    };
+    const dto = draftToDto(draft) as unknown as Record<string, unknown>;
+    expect(dto.ownerIdentities).toEqual([]);
+>>>>>>> Stashed changes
   });
 
   it("on a claim draft keeps the owner's name and the affirming agreement", () => {

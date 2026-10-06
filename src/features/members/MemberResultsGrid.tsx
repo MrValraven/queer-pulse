@@ -6,7 +6,8 @@ import {
   type Transition,
 } from "motion/react";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { MemberResultCard } from "./MemberFilterCards";
+import { useIsMemberCardSplit } from "./memberCardLayout";
+import { MemberResultCard, MemberResultSkeleton } from "./MemberFilterCards";
 import type { MemberCard } from "./memberDirectoryFilter.data";
 import { useMemberDirectoryVirtualizer } from "./useMemberDirectoryVirtualizer";
 import {
@@ -38,9 +39,11 @@ const GHOST_EXIT = { opacity: 0, scale: 0.96 };
 function MemberGhostLayer({
   ghosts,
   onGhostFaded,
+  isSplit,
 }: {
   ghosts: MemberGhost[];
   onGhostFaded: (ghostKey: string) => void;
+  isSplit: boolean;
 }) {
   return (
     <div className={styles.mGridGhostLayer}>
@@ -62,7 +65,7 @@ function MemberGhostLayer({
           transition={GHOST_TRANSITION}
           onAnimationComplete={() => onGhostFaded(ghost.key)}
         >
-          <MemberResultCard member={ghost.member} />
+          <MemberResultCard member={ghost.member} isSplit={isSplit} />
         </m.div>
       ))}
     </div>
@@ -95,6 +98,7 @@ function ShuffleCard({
   changeId,
   isShuffleWindowOpen,
   shouldReduceMotion,
+  isSplit,
 }: {
   member: MemberCard;
   enterFrom: EnterFrom | undefined;
@@ -102,6 +106,7 @@ function ShuffleCard({
   changeId: number;
   isShuffleWindowOpen: boolean;
   shouldReduceMotion: boolean;
+  isSplit: boolean;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -130,7 +135,7 @@ function ShuffleCard({
         animate={SETTLED}
         transition={{ ...SHUFFLE_SPRING, delay: delaySeconds }}
       >
-        <MemberResultCard member={member} />
+        <MemberResultCard member={member} isSplit={isSplit} />
       </m.div>
     </m.div>
   );
@@ -155,6 +160,7 @@ export function MemberResultsGrid({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { reducedMotion } = useMotionPrefs();
+  const isSplit = useIsMemberCardSplit();
   const {
     members,
     enteringFrom,
@@ -169,6 +175,7 @@ export function MemberResultsGrid({
     members,
     containerRef,
     shouldSuspendScrollAdjustment,
+    isSplit,
   );
 
   return (
@@ -183,7 +190,11 @@ export function MemberResultsGrid({
           .join(" ")}
         style={{ height: rowVirtualizer.getTotalSize() }}
       >
-        <MemberGhostLayer ghosts={ghosts} onGhostFaded={removeGhost} />
+        <MemberGhostLayer
+          ghosts={ghosts}
+          onGhostFaded={removeGhost}
+          isSplit={isSplit}
+        />
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const row = rows[virtualRow.index];
           if (!row) return null;
@@ -214,6 +225,7 @@ export function MemberResultsGrid({
                   changeId={changeId}
                   isShuffleWindowOpen={isShuffleWindowOpen}
                   shouldReduceMotion={reducedMotion}
+                  isSplit={isSplit}
                 />
               ))}
             </div>
@@ -221,5 +233,25 @@ export function MemberResultsGrid({
         })}
       </div>
     </LayoutGroup>
+  );
+}
+
+/** How many placeholder cards the loading grid shows. */
+const SKELETON_CARD_COUNT = 6;
+
+/** The loading grid: placeholder cards in the same card shape and column
+ *  width the results will use, so the real grid swaps in without a shift. */
+export function MemberResultsSkeletonGrid() {
+  const isSplit = useIsMemberCardSplit();
+  return (
+    <div
+      className={[styles.mGrid, isSplit && styles.mGridSplit]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {Array.from({ length: SKELETON_CARD_COUNT }).map((_, index) => (
+        <MemberResultSkeleton key={index} isSplit={isSplit} />
+      ))}
+    </div>
   );
 }

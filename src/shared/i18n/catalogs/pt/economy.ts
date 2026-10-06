@@ -750,13 +750,10 @@ export const economy: Catalog = {
   "listSpace.photos.hint":
     "Até {max}. A primeira é a foto que as pessoas veem no quadro. Os dados de localização são removidos de cada foto antes de sair do teu dispositivo.",
   "listSpace.photos.add": "Adicionar foto",
-  "listSpace.photos.uploading": "A adicionar…",
   "listSpace.photos.full": "Este anúncio já tem todas as fotos que cabem",
   "listSpace.photos.cover": "Capa",
   "listSpace.photos.remove": "Remover a foto {position}",
   "listSpace.photos.previewAlt": "Foto {position} do teu anúncio",
-  "listSpace.photos.error":
-    "Não foi possível adicionar essa foto. Verifica a ligação e tenta outra vez.",
   "listSpace.feature.furnished": "Mobilado",
   "listSpace.feature.light": "Luz natural",
   "listSpace.feature.balcony": "Varanda",

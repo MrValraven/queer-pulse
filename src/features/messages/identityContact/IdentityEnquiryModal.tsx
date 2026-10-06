@@ -157,7 +157,7 @@ export function IdentityEnquiryModal({
   if (isSent) {
     return (
       <Modal
-        title={t("messages:mailbox.contact.successAria", { name })}
+        title={t("messages:mailbox.contact.successAria")}
         onClose={onClose}
       >
         <SuccessPanel

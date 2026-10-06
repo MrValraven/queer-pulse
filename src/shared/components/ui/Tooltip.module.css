@@ -138,3 +138,51 @@
     animation: none;
   }
 }
+
+/* ── Floating top placement (a trigger inside a clipping column) ────────────
+   The same portal as `.right`, sitting above the trigger. Tooltip.tsx writes
+   its left (the trigger's centre), top, `--tooltip-shift` (the viewport edge
+   clamp) and `data-below` (no room above, so it drops under the trigger). */
+.bubble.floatingTop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate(calc(-50% + var(--tooltip-shift, 0px)), -100%);
+  transition: none;
+  animation: floatingTopIn var(--dur-fast, 0.12s) var(--ease-out, ease) both;
+}
+.bubble.floatingTop[data-below] {
+  transform: translate(calc(-50% + var(--tooltip-shift, 0px)), 0);
+  animation-name: floatingTopBelowIn;
+}
+
+@keyframes floatingTopIn {
+  from {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--tooltip-shift, 0px)), -100%)
+      translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tooltip-shift, 0px)), -100%);
+  }
+}
+
+@keyframes floatingTopBelowIn {
+  from {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--tooltip-shift, 0px)), -2px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tooltip-shift, 0px)), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble.floatingTop,
+  .bubble.floatingTop[data-below] {
+    animation: none;
+  }
+}

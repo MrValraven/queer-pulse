@@ -1,32 +1,29 @@
-import { useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
-import {
-  ImageSlot,
-  PhotoReframeModal,
-  type ImageSlotTint,
-} from "../../../shared/components/ui";
-import type { CropRect } from "../../../shared/components/ui/cropGeometry";
+import { ConfirmDialog, ImageSlot } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  ImageProcessingError,
-  validateTypeAndSize,
-} from "../../members/api/uploadProcessing";
+import { PhotoPickerModal } from "../../members/PhotoPickerModal";
 import styles from "./ListBusinessPage.module.css";
 
 interface ListingPhotoFieldProps {
-  tint: ImageSlotTint;
   height: number;
+  /** A fluid frame of this ratio in place of the fixed `height`. The cover
+   *  slot passes the directory card's ratio so both crop the photo alike. */
+  aspectRatio?: string;
   wide?: boolean;
   placeholder: string;
   /** Standing caption above the frame. The cover slot uses it to say the photo
-   *  is the one the directory card shows — the `placeholder` caption can't,
-   *  since it vanishes the moment a photo fills the slot. */
+   *  is the one the directory card shows. The `placeholder` caption vanishes
+   *  the moment a photo fills the slot, so it cannot carry that message. */
   note?: string;
+  /** What the frame paints: the form's preview for this slot when it has one,
+   *  else the persisted value. */
   displayValue: string;
-  uploadPhoto: (
-    file: File,
-    options?: { crop?: CropRect },
-  ) => Promise<{ key: string; previewUrl: string }>;
+  /** The value held in `draft.photos` for this slot: a bare storage key for a
+   *  photo picked this session, or the resolved `<apiBaseUrl>/files/<key>` URL
+   *  an edited listing loaded with. Compared against a deleted past upload to
+   *  know when to clear the slot too. */
+  persistedValue: string;
   /** True when the last submit or save came back refusing THIS slot's photo.
    *  The form clears it once the slot's photo changes, so the message never
    *  outlives the photo it was about. */
@@ -36,110 +33,67 @@ interface ListingPhotoFieldProps {
 }
 
 /**
- * One wizard photo slot: an `ImageSlot` preview with an Upload/Change button
- * and a Remove button. Uploading a file is the only way to fill a slot: the
- * file goes through the shared `useUploadImage` pipeline (owned at wizard
- * level, passed in as `uploadPhoto`), which stores it and hands back a storage
- * key. It then calls `onResolved(persist, preview)` — `persist` lands in
- * `draft.photos`, `preview` in `photoPreviews`.
+ * One wizard photo slot, built to look and behave like `ImageUploadField`: an
+ * `ImageSlot` preview with an Upload/Change button and a Remove button. The
+ * Upload/Change button opens the shared `PhotoPickerModal`, where the owner
+ * uploads from their device (with reframe and progress) or reuses a past
+ * upload from "Your photos". A pick calls `onResolved(persist, preview)`:
+ * `persist` lands in `draft.photos`, `preview` in `photoPreviews`. Remove asks
+ * for confirmation first.
  *
- * There is deliberately no "paste an image URL" input. A listing photo is
- * always a file the owner uploaded, so it cannot break later when someone
- * else's site moves or deletes the image, and it goes through the same
- * format/size/reframe pipeline as every other upload.
+ * The form owns the previews, so a picked photo keeps showing across step
+ * changes, in the live preview card and on the Review step. That is why this
+ * slot drives the picker directly: `ImageUploadField` keeps its preview in
+ * local state and revokes it on unmount.
  *
- * Every way a photo can be refused is said on the slot itself: a file in a
- * format or size the upload pipeline refuses, an upload that failed, and a save
- * the server rejected because of this slot.
+ * A save the server rejected because of this slot is said on the slot itself.
  */
 export function ListingPhotoField({
-  tint,
   height,
+  aspectRatio,
   wide,
   placeholder,
   note,
   displayValue,
-  uploadPhoto,
+  persistedValue,
   isRejectedByServer,
   onResolved,
   onRemove,
 }: ListingPhotoFieldProps) {
   const { t } = useTranslation();
   const errorId = useId();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [pendingFile, setPendingFile] = useState<File | null>(null);
-
-  function describeUploadFailure(uploadFailure: unknown): string {
-    return uploadFailure instanceof ImageProcessingError
-      ? t(uploadFailure.i18nKey, uploadFailure.values)
-      : t("marketing:listBusiness.step4.photo.uploadError");
-  }
-
-  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
-  async function uploadAndApply(file: File, crop?: CropRect) {
-    setError(null);
-    setUploading(true);
-    try {
-      const { key, previewUrl } = await uploadPhoto(file, { crop });
-      onResolved(key, previewUrl);
-    } catch (uploadFailure) {
-      setError(describeUploadFailure(uploadFailure));
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  function pickFile(file: File) {
-    // Check the format and size first, so an unsupported file (a HEIC, an SVG,
-    // a PDF) is named on this slot straight away instead of opening the
-    // reframer on an image it cannot show. The upload pipeline checks again.
-    try {
-      validateTypeAndSize(file, "listing-photo");
-    } catch (validationFailure) {
-      setError(describeUploadFailure(validationFailure));
-      return;
-    }
-    setError(null);
-    // GIFs bypass the reframer entirely (animation would be destroyed by the
-    // crop/re-encode path) and upload directly, as before.
-    if (file.type === "image/gif") {
-      void uploadAndApply(file);
-      return;
-    }
-    setPendingFile(file);
-  }
-
-  async function handleCropConfirmed(crop: CropRect) {
-    if (!pendingFile) return;
-    const fileToUpload = pendingFile;
-    setPendingFile(null);
-    await uploadAndApply(fileToUpload, crop);
-  }
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [confirmRemoveOpen, setConfirmRemoveOpen] = useState(false);
 
   function clear() {
-    setError(null);
     onRemove();
   }
 
-  const visibleError =
-    error ??
-    (isRejectedByServer
-      ? t("marketing:listBusiness.step4.photo.serverRejected")
-      : null);
+  function isPersistedPhoto(deletedKey: string): boolean {
+    return (
+      deletedKey === persistedValue ||
+      persistedValue.endsWith(`/files/${deletedKey}`)
+    );
+  }
+
+  const visibleError = isRejectedByServer
+    ? t("marketing:listBusiness.step4.photo.serverRejected")
+    : null;
 
   return (
     <div
       className={[styles.photoField, wide && styles.galWide]
         .filter(Boolean)
         .join(" ")}
+      aria-busy={pickerOpen || undefined}
     >
       {note && <p className={styles.photoNote}>{note}</p>}
       <ImageSlot
-        tint={tint}
+        tint="plum"
         radius={14}
-        height={height}
+        width="100%"
+        height={aspectRatio ? "auto" : height}
+        style={aspectRatio ? { aspectRatio } : undefined}
         srcSize={wide ? 1280 : 640}
         src={displayValue || undefined}
         placeholder={placeholder}
@@ -149,22 +103,19 @@ export function ListingPhotoField({
           type="button"
           className={styles.photoBtn}
           aria-describedby={visibleError ? errorId : undefined}
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
+          onClick={() => setPickerOpen(true)}
         >
           <FiCamera size={14} aria-hidden />
-          {uploading
-            ? t("marketing:listBusiness.step4.photo.uploading")
-            : displayValue
-              ? t("marketing:listBusiness.step4.photo.change")
-              : t("marketing:listBusiness.step4.photo.upload")}
+          {displayValue
+            ? t("marketing:listBusiness.step4.photo.change")
+            : t("marketing:listBusiness.step4.photo.upload")}
         </button>
-        {displayValue && !uploading && (
+        {displayValue && (
           <button
             type="button"
             className={styles.photoBtn}
             aria-label={t("marketing:listBusiness.step4.photo.remove")}
-            onClick={clear}
+            onClick={() => setConfirmRemoveOpen(true)}
           >
             <FiTrash2 size={14} aria-hidden />
           </button>
@@ -175,24 +126,27 @@ export function ListingPhotoField({
           {visibleError}
         </p>
       )}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        aria-label={t("marketing:listBusiness.step4.photo.upload")}
-        hidden
-        onChange={(event) => {
-          const file = event.target.files?.[0];
-          if (file) pickFile(file);
-          event.target.value = "";
+      <ConfirmDialog
+        open={confirmRemoveOpen}
+        tone="destructive"
+        onClose={() => setConfirmRemoveOpen(false)}
+        onConfirm={() => {
+          clear();
+          setConfirmRemoveOpen(false);
         }}
+        title={t("subprofiles:imageUpload.removeConfirm.title")}
+        description={t("subprofiles:imageUpload.removeConfirm.body")}
+        confirmLabel={t("subprofiles:imageUpload.removeConfirm.confirm")}
+        cancelLabel={t("subprofiles:imageUpload.removeConfirm.cancel")}
       />
-      {pendingFile && (
-        <PhotoReframeModal
-          file={pendingFile}
+      {pickerOpen && (
+        <PhotoPickerModal
           kind="listing-photo"
-          onCancel={() => setPendingFile(null)}
-          onConfirm={(crop) => void handleCropConfirmed(crop)}
+          onPick={(key, previewUrl) => onResolved(key, previewUrl)}
+          onDeleted={(deletedKey) => {
+            if (isPersistedPhoto(deletedKey)) clear();
+          }}
+          onClose={() => setPickerOpen(false)}
         />
       )}
     </div>

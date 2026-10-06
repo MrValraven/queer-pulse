@@ -10,6 +10,7 @@ import {
   menuForDisplay,
   pricingModeOf,
 } from "../../marketing/listBusiness/listingMenu.data";
+import { normalizeOwnerIdentities } from "../../marketing/listBusiness/listingOwnerIdentities.data";
 
 // ── Ported from backend `listing-response.ts` so the moderator preview renders
 //    exactly what `GET /directory/:slug` would once the listing is live. Keep
@@ -183,6 +184,7 @@ export function listingDtoToPreviewPlace(
       answers: normalizeAccessibilityAnswers(dto.accessibility?.answers),
       note: dto.accessibility?.note?.trim() || null,
     },
+    ownerIdentities: normalizeOwnerIdentities(dto.ownerIdentities),
     services: (dto.services ?? [])
       .filter((service) => service.name.trim() !== "")
       .map((service) => ({

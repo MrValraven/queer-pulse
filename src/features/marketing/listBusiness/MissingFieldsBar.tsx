@@ -1,3 +1,4 @@
+import { useId, type Ref } from "react";
 import { FiAlertCircle, FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { MissingField } from "./listBusiness.data";
@@ -36,23 +37,52 @@ function jumpToField(anchor: string) {
  * Shared by the create wizard's step footer (`PaneActions`) and the owner
  * editor's save bar, so the single-screen editor keeps the exact same
  * missing-field affordance the stepped flow has.
+ *
+ * `isFocusTarget` lets a caller move focus onto the bar itself (through
+ * `barRef`), as the wizard does after a save lands on a step with gaps. The
+ * bar then becomes a named group, labelled by its heading and described by
+ * its chips, so a screen reader says what is left. Left out, the bar renders
+ * exactly as before.
  */
 export function MissingFieldsBar({
   missing,
   className,
+  barRef,
+  isFocusTarget = false,
 }: {
   missing: MissingField[];
   className?: string;
+  /** The bar's root element, for a caller that focuses it. */
+  barRef?: Ref<HTMLDivElement>;
+  /** Whether the bar can take programmatic focus. Defaults to false. */
+  isFocusTarget?: boolean;
 }) {
   const { t } = useTranslation();
+  const labelId = useId();
+  const chipsId = useId();
   if (missing.length === 0) return null;
   return (
-    <div className={[styles.neededBar, className].filter(Boolean).join(" ")}>
+    <div
+      ref={barRef}
+      className={[styles.neededBar, className].filter(Boolean).join(" ")}
+      {...(isFocusTarget && {
+        tabIndex: -1,
+        role: "group",
+        "aria-labelledby": labelId,
+        "aria-describedby": chipsId,
+      })}
+    >
       <FiAlertCircle size={15} className={styles.neededIcon} aria-hidden />
-      <span className={styles.neededLabel}>
+      <span
+        id={isFocusTarget ? labelId : undefined}
+        className={styles.neededLabel}
+      >
         {t("marketing:listBusiness.paneActions.neededLabel")}
       </span>
-      <span className={styles.neededChips}>
+      <span
+        id={isFocusTarget ? chipsId : undefined}
+        className={styles.neededChips}
+      >
         {missing.map((field) => {
           const label = t(field.labelKey);
           return (

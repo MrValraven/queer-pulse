@@ -5,7 +5,8 @@ import { Collapse, Toggle } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Language } from "../../../shared/i18n/types";
 import { swapFadeProps } from "./composeSwapFade";
-import { CoAuthorPicker, PostingAsIdentity } from "./ComposePostingAsParts";
+import { CoAuthorPicker } from "./ComposeCoAuthorPicker";
+import { PostingAsIdentity } from "./ComposePostingAsParts";
 import {
   ANONYMOUS_CATEGORIES,
   COMPOSE_CATEGORIES,
@@ -18,8 +19,8 @@ import styles from "./ComposePostingAs.module.css";
 //
 // Official and anonymous are mutually exclusive, and `useComposeThreadState`'s
 // setters already enforce that: turning one on turns the other off. This block
-// REFLECTS that rather than re-deriving it, so there is exactly one place in
-// the app where the rule lives.
+// only REFLECTS that, so there is exactly one place in the app where the rule
+// lives.
 //
 // Every switch here changes the byline, so every switch is shown moving: the
 // row's wash eases between tones, the identity fades out and back in, the
@@ -50,8 +51,10 @@ export interface ComposePostingAsProps {
   /** The chosen category id. Anonymity is offered for some of them only. */
   category: string | null;
   coAuthorSlug: string | null;
-  coAuthorOptions: readonly ComposeCoAuthorOption[];
-  onCoAuthorChange: (coAuthorSlug: string | null) => void;
+  /** The credited person, kept by the caller so the picked row survives a
+   *  search that no longer returns them. */
+  coAuthor: ComposeCoAuthorOption | null;
+  onCoAuthorChange: (coAuthor: ComposeCoAuthorOption | null) => void;
   className?: string;
 }
 
@@ -64,7 +67,7 @@ export function ComposePostingAs({
   onAnonymousChange,
   category,
   coAuthorSlug,
-  coAuthorOptions,
+  coAuthor,
   onCoAuthorChange,
   className,
 }: ComposePostingAsProps) {
@@ -154,7 +157,7 @@ export function ComposePostingAs({
       <Collapse isOpen={!isAnonymous} className={styles.coAuthorSlot}>
         <CoAuthorPicker
           coAuthorSlug={coAuthorSlug}
-          coAuthorOptions={coAuthorOptions}
+          coAuthor={coAuthor}
           onCoAuthorChange={onCoAuthorChange}
         />
       </Collapse>
@@ -164,7 +167,7 @@ export function ComposePostingAs({
 
 /**
  * "Health, Housing and Trans" in the reader's language, with the conjunction
- * `Intl` picks rather than a hardcoded "and". Built from the same
+ * `Intl` picks for that language. Built from the same
  * `ANONYMOUS_CATEGORIES` the gate reads, so the sentence can never name a
  * category the switch does not actually open.
  */

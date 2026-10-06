@@ -5,7 +5,7 @@ export const GATHERING_CAPACITY = 45;
 
 // i18n note: `id` is a stable lookup key (never rendered); `labelKey` is the
 // chrome field name shown beside it; `value` is the event-specific data a
-// live fetch would return, so it stays a plain string, never translated.
+// live fetch would return, so it stays a plain, untranslated string.
 export const GATHERING_DETAILS = [
   {
     id: "date",
@@ -47,6 +47,9 @@ export const GATHERING_DATE = new Date(2026, 5, 21);
 // `attendeeMeta()` in `api/events.adapters.ts`, so demo and live mode render
 // the identical translated phrasing.
 
+// A going row's `id` doubles as its member slug in demo (`mockRows()` in
+// `api/useAttendees.ts`), so rows for registry members carry the registry
+// slug and the invite picker can hide them.
 export const GOING_ATTENDEES = [
   {
     id: "going-sr",
@@ -58,7 +61,7 @@ export const GOING_ATTENDEES = [
     rsvpAt: new Date(2026, 5, 2),
   },
   {
-    id: "going-ak",
+    id: "anika",
     initials: "AK",
     background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
@@ -67,7 +70,7 @@ export const GOING_ATTENDEES = [
     rsvpAt: new Date(2026, 5, 1),
   },
   {
-    id: "going-jp",
+    id: "jordan",
     initials: "JP",
     background: "rgba(var(--line-rgb),.1)",
     color: "var(--text-strong)",
@@ -146,11 +149,11 @@ export const PREVIOUS_MESSAGES = [
 // `titleKey`/`descriptionKey` are the chrome copy shown per row.
 //
 // Only these two have a real backend effect (`Event.allowWaitlist`/
-// `showAttendeeCount` — see the `AddEventOptionsFlags` migration's doc). The
+// `showAttendeeCount`; see the `AddEventOptionsFlags` migration's doc). The
 // mock originally had two more ("Allow questions", "Require approval") that
-// persisted nothing and gated no real feature — there is no Q&A or
+// persisted nothing and gated no real feature. There is no Q&A or
 // RSVP-approval workflow anywhere in this app for either to control, so they
-// were removed rather than wired to a flag that would still do nothing.
+// were removed. A flag for either would still do nothing.
 // `on` seeds the DEMO prototype's starting state only; live reads/writes the
 // real event field (see `SettingsTab`).
 export const GATHERING_SETTINGS = [

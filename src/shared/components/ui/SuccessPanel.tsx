@@ -1,6 +1,7 @@
-import { type ReactNode } from "react";
+import { useContext, type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "./Button";
+import { IsInsideModalContext } from "./modalBodyContext";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./SuccessPanel.module.css";
 
@@ -39,6 +40,8 @@ const ICON_TONE_COLOR: Record<
  * Plum-panel confirmation shown after a flow completes: jade tick, serif title
  * with a coral `<em>`, body copy, optional next-steps checklist, and a
  * `ghost-dark` close action. Consolidates the per-feature SuccessPanel copies.
+ * Inside a `<Modal>` body it drops the plum card and renders flat on the
+ * dialog's own surface, with theme ink and a `ghost` close action.
  */
 export function SuccessPanel({
   title,
@@ -53,8 +56,12 @@ export function SuccessPanel({
   iconTone = "jade",
 }: SuccessPanelProps) {
   const { t } = useTranslation();
+  const isInsideModal = useContext(IsInsideModalContext);
   return (
-    <div className={styles.panel}>
+    <div
+      className={styles.panel}
+      data-surface={isInsideModal ? "flat" : undefined}
+    >
       <div className={styles.icon} data-tone={iconTone}>
         {icon ?? (
           <FiCheck size={26} color={ICON_TONE_COLOR[iconTone]} aria-hidden />
@@ -76,7 +83,11 @@ export function SuccessPanel({
       )}
       <div className={styles.actions}>
         {extraActions}
-        <Button size="lg" variant="ghost-dark" onClick={onClose}>
+        <Button
+          size="lg"
+          variant={isInsideModal ? "ghost" : "ghost-dark"}
+          onClick={onClose}
+        >
           {closeLabel ?? t("shared:successPanel.done")}
         </Button>
       </div>

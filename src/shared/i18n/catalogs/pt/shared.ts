@@ -165,7 +165,7 @@ export const shared: Catalog = {
   // `nav:communities` ("Comunidades e Coletivos").
   "accountMenu.items.communities": "Comunidades",
   "accountMenu.items.events": "Eventos",
-  "accountMenu.items.cards": "Cartões",
+  "accountMenu.items.cards": "Cartões de sócio",
   "accountMenu.items.drafts": "Rascunhos",
   "accountMenu.items.saved": "Guardados",
   "accountMenu.items.settings": "Definições",
@@ -403,9 +403,10 @@ export const shared: Catalog = {
   // Stars — read-only rating accessible label
   "stars.ariaLabel": "{value} de {max} estrelas",
 
-  // MemberSelectList — empty search result
+  // MemberSelectList: empty search result and the picked group
   "memberSelect.noResults": "Sem resultados",
   "memberSelect.searching": "A procurar...",
+  "memberSelect.pickedGroup": "Pessoas escolhidas",
 
   // VisibilityBadge (wording matches members:visibility.* precedent)
   "visibilityBadge.open": "Aberto a novos contactos",

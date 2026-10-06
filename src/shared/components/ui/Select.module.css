@@ -12,9 +12,13 @@
    transiently become its own stacking context too (e.g. mid entrance
    animation on opacity/transform), and without this, two same-rank (auto)
    contexts fall back to DOM order, letting a later field win. See the
-   fadein-row-stacking-context-clips-dropdown pattern. */
+   fadein-row-stacking-context-clips-dropdown pattern.
+   The rank is the popover tier itself: the open container is a stacking
+   context, so the panel's own z-index only counts inside it, and a rank of 1
+   let any later `--z-sticky` bar (the Go Together questionnaire's Back / Next
+   bar) paint over the panel's search field. */
 .container.open {
-  z-index: 1;
+  z-index: var(--z-popover);
 }
 
 /* ── Trigger ── */
@@ -44,6 +48,13 @@
   border-color: var(--line-strong);
   background: var(--paper);
   box-shadow: var(--ring-plum-soft);
+}
+/* The plum ring vanishes on the dark surfaces, so dark mode takes the house
+   focus ring instead. */
+:global([data-theme="dark"]) .trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .trigger[aria-expanded="true"] {
   border-color: var(--line-strong);
@@ -154,6 +165,37 @@
   padding: 8px;
   transform-origin: top;
   animation: qpMenuIn var(--dur-fast) var(--ease);
+  /* Clearance kept between the panel's last row and the bottom of the screen
+     once SelectPanel scrolls it into view: the home indicator, plus the tab
+     bar on a mobile page (`--bottom-inset` already carries both there). */
+  --select-panel-gutter: calc(
+    16px + max(var(--bottom-inset, 0px), env(safe-area-inset-bottom, 0px))
+  );
+  scroll-margin-block-end: var(--select-panel-gutter);
+  /* The trigger above the panel (48px plus the 6px gap): when the panel and
+     gutter barely fit, `block: "nearest"` keeps the trigger in view too. */
+  scroll-margin-block-start: 56px;
+}
+/* A dialog covers the tab bar, so inside one only the home indicator needs
+   clearing. Reserving the bar's height there over-scrolls a bottom sheet and
+   pushes the trigger out of its top edge. */
+:global([role="dialog"]) .panel,
+:global([aria-modal="true"]) .panel {
+  --select-panel-gutter: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+/* An absolute panel ends its scroll container's scrollable area at its own
+   bottom edge, so inside a bottom sheet the last row could only ever scroll
+   flush with the screen edge, under the home indicator, and the scroll margin
+   above had no room to act. This invisible strip below the panel extends that
+   area by the gutter, so the container can scroll the whole list clear. */
+.panel::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 1px;
+  height: var(--select-panel-gutter);
+  pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .panel {
@@ -189,10 +231,11 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  /* 280px is the desktop cap; min() drops it to 40svh on a short viewport (a
-     phone's own bottom tab bar can otherwise sit over the tail of the list),
-     so the smaller of the two always wins. */
-  max-height: min(280px, 40svh);
+  /* 360px is the desktop cap; min() drops it to 50svh on a short viewport, so
+     the smaller of the two always wins. The panel's bottom gutter (above) is
+     what keeps the tail of the list clear of a phone's tab bar and home
+     indicator, so the cap no longer has to shrink the list to do that. */
+  max-height: min(360px, 50svh);
   overflow-y: auto;
   outline: none;
 }

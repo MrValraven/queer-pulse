@@ -1,19 +1,26 @@
-import { useState } from "react";
-import { Button, FormField, Modal, Select } from "../../shared/components/ui";
+import { useId, useState } from "react";
+import { Button, Modal, RadioCardGroup } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   DECLINE_REASONS,
+  declineReasonDetailKey,
   declineReasonLabelKey,
+  type DeclineReason,
 } from "../auth/api/joinRequestDeclineReason";
+import styles from "./JoinRequestDeclineModal.module.css";
 
 /**
  * Required-reason decline confirm for a single join request. Built on
  * `Modal` directly rather than `ConfirmDialog`, since the backend's
  * `declineReason` is a closed-set key (see `join-request-flags.ts`'s sibling
- * DTO), not free text — `ConfirmDialog`'s built-in `reason` support is a
- * textarea, which doesn't fit here. Mirrors `ConfirmDialog`'s visual
- * contract (title, footer Cancel/Confirm, Confirm disabled until valid) by
- * hand instead of extending a shared primitive four other callers rely on.
+ * DTO): `ConfirmDialog`'s built-in `reason` support is a free-text textarea,
+ * which doesn't fit here. Mirrors `ConfirmDialog`'s visual contract (title,
+ * footer Cancel/Confirm, Confirm disabled until valid) by hand instead of
+ * extending a shared primitive four other callers rely on.
+ *
+ * The five reasons render as a one-column `RadioCardGroup` stack (the same
+ * closed-set reviewer pattern `ModJoinRequestDecline` already uses), so all
+ * five are visible at once instead of hidden behind a dropdown trigger.
  */
 export function JoinRequestDeclineModal({
   applicantName,
@@ -27,15 +34,13 @@ export function JoinRequestDeclineModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const [reason, setReason] = useState<string | null>(null);
-
-  const options = DECLINE_REASONS.map((key) => ({
-    value: key,
-    label: t(declineReasonLabelKey(key)),
-  }));
+  const [reason, setReason] = useState<DeclineReason | "">("");
+  const legendId = useId();
 
   return (
     <Modal
+      wide
+      eyebrow={t("admin:members.verify.declineModal.eyebrow")}
       title={t("admin:members.verify.declineModal.title", {
         name: applicantName,
       })}
@@ -55,21 +60,37 @@ export function JoinRequestDeclineModal({
         </>
       }
     >
-      <p>{t("admin:members.verify.declineModal.body")}</p>
-      <FormField
-        label={t("admin:members.verify.declineModal.reasonLabel")}
-        required
-      >
-        <Select
-          multiple={false}
-          value={reason}
-          onChange={setReason}
-          options={options}
-          searchable={false}
-          size="md"
-          placeholder={t("admin:members.verify.declineModal.reasonPlaceholder")}
-        />
-      </FormField>
+      <p className={styles.body}>
+        {t("admin:members.verify.declineModal.body")}
+      </p>
+      <span className={styles.legend} id={legendId}>
+        {t("admin:members.verify.declineModal.reasonLabel")}{" "}
+        <span className={styles.req} aria-hidden>
+          *
+        </span>
+      </span>
+      <RadioCardGroup<DeclineReason>
+        value={reason}
+        onChange={setReason}
+        ariaLabelledBy={legendId}
+        ariaLabel={t("admin:members.verify.declineModal.reasonLabel")}
+        className={styles.reasons}
+        optionClassName={styles.reason}
+        checkedClassName={styles.reasonChecked}
+        options={DECLINE_REASONS.map((key) => ({
+          id: key,
+          render: (
+            <>
+              <span className={styles.reasonLabel}>
+                {t(declineReasonLabelKey(key))}
+              </span>
+              <span className={styles.reasonDesc}>
+                {t(declineReasonDetailKey(key))}
+              </span>
+            </>
+          ),
+        }))}
+      />
     </Modal>
   );
 }

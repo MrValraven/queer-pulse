@@ -24,6 +24,7 @@ export function LocalCategoryFilter({
   onToggleCategory,
   onClearCategories,
   categoryCounts,
+  isLoadedSetComplete,
 }: {
   /** The chosen place types. Empty means every type. */
   categories: string[];
@@ -31,6 +32,8 @@ export function LocalCategoryFilter({
   onClearCategories: () => void;
   /** Live count per category id (+ "all"), reflecting the other active filters. */
   categoryCounts: Record<string, number>;
+  /** True once every page of places has loaded, so a zero count is final. */
+  isLoadedSetComplete: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -52,6 +55,8 @@ export function LocalCategoryFilter({
     const Icon = CATEGORY_ICON[categoryId];
     return {
       value: categoryId,
+      isUnavailable:
+        isLoadedSetComplete && (categoryCounts[categoryId] ?? 0) === 0,
       label: (
         <>
           {Icon && (
@@ -91,10 +96,12 @@ export function LocalCategoryFilter({
     else onToggleCategory(value);
   };
 
-  // The counts ride inside each label and stay off ChipSelect's `count`, which
-  // would disable a zero chip. A type with nothing among the loaded places can
-  // still have matches on pages the browser has yet to fetch, so it stays
-  // pickable.
+  // The counts ride inside each label, next to the swatch, so they stay off
+  // ChipSelect's `count`. A type goes unpickable through `isUnavailable` only
+  // when it has no matches AND every page of places has loaded: before that, a
+  // zero may only mean the match sits on a page the browser has yet to fetch.
+  // A chosen type always stays clickable (ChipSelect keeps selected chips
+  // live), and "All" carries no flag, so it is always pickable.
   return (
     <div className={s.group}>
       <span className={s.groupLabel} id={categoryLabelId}>

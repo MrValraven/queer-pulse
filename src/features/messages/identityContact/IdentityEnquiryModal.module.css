@@ -31,10 +31,12 @@
   color: var(--accent-text);
 }
 
-/* On the plum success panel, so it dims toward cream. */
+/* Sits in the flat success panel on the Modal's own surface, so it takes the
+   in-modal link colour (as LegalDocModal's `.fullPageLink a`), which themes. */
 .threadLink {
   font-size: var(--text-14);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--accent-ink);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }

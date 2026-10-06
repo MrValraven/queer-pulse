@@ -3,7 +3,11 @@ import { initialsOf, tintForSlug } from "../../shared/api/refs";
 import type { TFunction } from "../../shared/i18n/types";
 import type { MessageSearchConversationGroup } from "../../shared/contracts/contracts";
 import { groupInitials } from "./api/messages.adapters";
+<<<<<<< Updated upstream
 import { OFFICIAL_AVATAR_URL } from "./officialAvatar";
+=======
+import { authorInitialsName, authorTitleName } from "./personaAuthorName";
+>>>>>>> Stashed changes
 
 /** Identity for a starred hit's conversation: a group (its own name/avatar),
  *  an official thread (the org identity), a DM counterpart, or a DM whose
@@ -50,13 +54,15 @@ export function groupIdentity(
       tint: "plum" as const,
     };
   }
-  const parts = participant.displayName.trim().split(/\s+/);
+  // A persona still named after its craft is titled "Owner Name | Poet", with
+  // initials from the owner's name, matching the inbox row.
+  const parts = authorInitialsName(participant).trim().split(/\s+/);
   const initials = initialsOf(
     parts[0] ?? "",
     parts.length > 1 ? parts.at(-1)! : "",
   );
   return {
-    name: participant.displayName,
+    name: authorTitleName(participant),
     initials,
     tint: tintForSlug(participant.handle),
     avatarUrl: participant.avatarUrl ?? undefined,

@@ -1,32 +1,31 @@
 import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { Collapse } from "../../shared/components/ui";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { approvalReasonLabelKey } from "../auth/api/joinRequestApprovalReason";
 import { declineReasonLabelKey } from "../auth/api/joinRequestDeclineReason";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
+import { JoinRequestDecidedDates } from "./JoinRequestDecidedDates";
 import { JoinRequestDecidedInvitePanel } from "./JoinRequestDecidedInvitePanel";
+import { JoinRequestDeclineNote } from "./JoinRequestDeclineNote";
 import { AdminAvatar, AdminChip } from "./ui";
 import rowStyles from "./AdminSubmissionList.module.css";
 import styles from "./AdminVerifyDecided.module.css";
 
-/** "20 Jun 2026": the absolute dates a history row is read for. */
-function shortDate(value: string | null, format: (at: Date) => string) {
-  if (!value) return null;
-  const at = new Date(value);
-  return Number.isNaN(at.getTime()) ? null : format(at);
-}
-
 /**
  * One settled request in the Decided tab: who asked, how to reach them, when
- * they applied and when it was decided, and then the part the tab exists for.
+ * they applied, when it was decided and by whom, and then the part the tab
+ * exists for.
  *
  * An approval keeps its invite link here, with the link's own status and how
  * long it has left, because QueerPulse delivers no email: handing that link
  * over is the reviewer's job, and until this row existed the link lived only in
  * a card held in React state that a refresh threw away. A lapsed link gets a
- * reissue action, and a live one can be revoked.
+ * reissue action, and a live one can be revoked. Above the link sits the
+ * reason the reviewer approved on, so the people working the queue can read
+ * each other's calls against one bar. A decline shows its reason and, under
+ * it, the note staff keep for each other on it.
  *
  * The row opens collapsed to a one-glance summary (who, the decision, and
  * whether the link was claimed), because a page of fully expanded invite
@@ -34,9 +33,16 @@ function shortDate(value: string | null, format: (at: Date) => string) {
  * everything with a control in it lives in the details below it, so no
  * interactive element ever sits inside the button.
  */
-export function JoinRequestDecidedRow({ item }: { item: JoinRequestView }) {
+export function JoinRequestDecidedRow({
+  item,
+  currentUserId,
+}: {
+  item: JoinRequestView;
+  /** The signed-in reviewer, so their own calls read as "by you". Null while
+   *  the session is still loading. */
+  currentUserId: string | null;
+}) {
   const { t } = useTranslation();
-  const format = useFormat();
   const [isOpen, setIsOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const baseId = useId();
@@ -76,12 +82,7 @@ export function JoinRequestDecidedRow({ item }: { item: JoinRequestView }) {
 
   const isApproved = item.status === "approved";
   const inviteState = joinRequestInviteState(item, t);
-  const appliedOn = shortDate(item.createdAt, (at) =>
-    format.date(at, { day: "numeric", month: "short", year: "numeric" }),
-  );
-  const decidedOn = shortDate(item.reviewedAt, (at) =>
-    format.date(at, { day: "numeric", month: "short", year: "numeric" }),
-  );
+  const approvalReasonKey = approvalReasonLabelKey(item.approvalReason);
 
   return (
     <div className={rowStyles.row}>
@@ -124,19 +125,11 @@ export function JoinRequestDecidedRow({ item }: { item: JoinRequestView }) {
             >
               {item.email}
             </span>
-            <span
+            <JoinRequestDecidedDates
               id={datesId}
-              className={`${rowStyles.rowDates} ${styles.summaryLine}`}
-            >
-              {appliedOn
-                ? t("admin:members.verify.decided.appliedOn", {
-                    date: appliedOn,
-                  })
-                : t("admin:members.verify.appliedRecently")}
-              {decidedOn
-                ? ` · ${t("admin:members.verify.decided.decidedOn", { date: decidedOn })}`
-                : ` · ${t("admin:members.verify.decided.decidedUnknown")}`}
-            </span>
+              item={item}
+              currentUserId={currentUserId}
+            />
           </span>
           <FiChevronDown className={styles.chevron} aria-hidden />
         </button>
@@ -151,10 +144,25 @@ export function JoinRequestDecidedRow({ item }: { item: JoinRequestView }) {
         >
           <Collapse isOpen={isOpen}>
             {!isApproved && (
+              <>
+                <div className={rowStyles.rowNote}>
+                  {t("admin:members.verify.decided.declineReasonLine", {
+                    reason: t(declineReasonLabelKey(item.declineReason)),
+                  })}
+                </div>
+                <JoinRequestDeclineNote item={item} />
+              </>
+            )}
+            {isApproved && approvalReasonKey && (
               <div className={rowStyles.rowNote}>
-                {t("admin:members.verify.decided.declineReasonLine", {
-                  reason: t(declineReasonLabelKey(item.declineReason)),
+                {t("admin:members.verify.decided.approvalReasonLine", {
+                  reason: t(approvalReasonKey),
                 })}
+              </div>
+            )}
+            {isApproved && !approvalReasonKey && (
+              <div className={`${rowStyles.rowNote} ${styles.reasonMissing}`}>
+                {t("admin:members.verify.decided.approvalReasonMissing")}
               </div>
             )}
             {isApproved && inviteState && (

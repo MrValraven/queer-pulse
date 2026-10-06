@@ -187,6 +187,11 @@ export const auth: Catalog = {
     "Só um convite expirado pode ser enviado de novo. Este já foi usado, foi retirado, ou ainda está válido.",
   "invite.sentList.resendError.generic":
     "Não foi possível voltar a enviar agora. Tenta outra vez daqui a pouco.",
+  "invite.sentList.showMore": "Mostrar mais",
+  "invite.sentList.loadingMore": "A carregar…",
+  "invite.sentList.loadMoreError": "Não conseguimos carregar mais convites.",
+  "invite.sentList.loadError": "Não conseguimos carregar os teus convites",
+  "invite.sentList.loadErrorBody": "Verifica a tua ligação e tenta outra vez.",
 
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
   "sharePreview.heroTitle.line1": "Entra numa sala",

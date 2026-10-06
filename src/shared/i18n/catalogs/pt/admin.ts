@@ -318,6 +318,308 @@ export const admin: Catalog = {
   "dashboard.feed.transparency":
     "Cada ação aqui é <strong>registada e mostrada</strong> à pessoa afetada. Nunca há remoções silenciosas.",
   "dashboard.feed.auditLinkCta": "Ver o registo de auditoria",
+  "dashboard.feed.seeAllCta": "Ver toda a atividade",
+  "platformLog.navLabel": "Registo da plataforma",
+  "platformLog.title": "Registo da <em>plataforma</em>",
+  "platformLog.eyebrow": "Supervisão",
+  "platformLog.header.title": "Registo da <em>plataforma</em>",
+  "platformLog.filters.label": "Filtrar o registo",
+  "platformLog.filters.categories": "Categorias",
+  "platformLog.filters.range": "Período",
+  "platformLog.filters.memberPrefix": "Envolvendo",
+  "platformLog.filters.memberUnknown": "o membro selecionado",
+  "platformLog.filters.clearMember": "Limpar o filtro de membro",
+  "platformLog.category.moderation": "Moderação",
+  "platformLog.category.staff": "Equipa e acessos",
+  "platformLog.category.governance": "Governação e definições",
+  "platformLog.category.reviews": "Revisões",
+  "platformLog.category.members": "Membros",
+  "platformLog.range.today": "Hoje",
+  "platformLog.range.week": "Esta semana",
+  "platformLog.range.month": "Este mês",
+  "platformLog.range.quarter": "Este trimestre",
+  "platformLog.range.all": "Sempre",
+  "platformLog.day.today": "Hoje",
+  "platformLog.day.yesterday": "Ontem",
+  "platformLog.party.anonymous": "Membro anónimo",
+  "platformLog.party.erased": "Conta apagada",
+  "platformLog.party.system": "Sistema",
+  "platformLog.party.filterHint": "Mostrar tudo o que envolve {name}",
+  "platformLog.subject.view": "Ver",
+  "platformLog.note.show": "Mostrar a nota",
+  "platformLog.note.hide": "Ocultar a nota",
+  "platformLog.empty.title": "Nada registado neste período",
+  "platformLog.empty.body": "Experimenta um período maior ou limpa um filtro.",
+  "platformLog.empty.clearFilters": "Limpar filtros",
+  "platformLog.error.title": "O registo não carregou",
+  "platformLog.error.body": "Verifica a tua ligação e tenta novamente.",
+  "platformLog.loadMore": "Carregar mais",
+  "platformLog.loadingMore": "A carregar mais entradas",
+  "platformLog.loadMoreError":
+    "Não foi possível carregar mais entradas. Tenta novamente.",
+  "platformLog.governanceSection.health": "Saúde",
+  "platformLog.governanceSection.moderationSteps": "Etapas de moderação",
+  "platformLog.governanceSection.council": "Conselho",
+  "platformLog.governanceSection.principles": "Princípios",
+  "platformLog.governanceSection.decisions": "Decisões",
+  "platformLog.kind.generic.moderation": "tomou uma ação de moderação",
+  "platformLog.kind.generic.staff": "tomou uma ação de equipa",
+  "platformLog.kind.generic.governance": "alterou uma definição da plataforma",
+  "platformLog.kind.generic.reviews": "tomou uma decisão de revisão",
+  "platformLog.kind.generic.members": "fez uma atualização",
+  "platformLog.kind.generic.moderation.target":
+    "tomou uma ação de moderação que envolve",
+  "platformLog.kind.generic.staff.target":
+    "tomou uma ação de equipa que envolve",
+  "platformLog.kind.generic.governance.target":
+    "alterou uma definição da plataforma que envolve",
+  "platformLog.kind.generic.reviews.target":
+    "tomou uma decisão de revisão sobre",
+  "platformLog.kind.generic.members.target": "fez uma atualização que envolve",
+  "platformLog.kind.mod.dismiss": "dispensou uma denúncia",
+  "platformLog.kind.mod.dismiss.target": "dispensou uma denúncia sobre",
+  "platformLog.kind.mod.warn": "emitiu um aviso",
+  "platformLog.kind.mod.warn.target": "avisou",
+  "platformLog.kind.mod.hide_content": "ocultou conteúdo denunciado",
+  "platformLog.kind.mod.hide_content.target": "ocultou conteúdo publicado por",
+  "platformLog.kind.mod.remove_content": "removeu conteúdo denunciado",
+  "platformLog.kind.mod.remove_content.target":
+    "removeu conteúdo publicado por",
+  "platformLog.kind.mod.restrict": "restringiu uma conta",
+  "platformLog.kind.mod.restrict.target": "restringiu",
+  "platformLog.kind.mod.suspend": "suspendeu uma conta",
+  "platformLog.kind.mod.suspend.target": "suspendeu",
+  "platformLog.kind.mod.ban": "baniu uma conta",
+  "platformLog.kind.mod.ban.target": "baniu",
+  "platformLog.kind.mod.escalate": "encaminhou uma denúncia",
+  "platformLog.kind.mod.escalate.target": "encaminhou uma denúncia sobre",
+  "platformLog.kind.mod.ban_pending_ratification": "propôs um banimento",
+  "platformLog.kind.mod.ban_pending_ratification.target": "propôs banir",
+  "platformLog.kind.mod.ban_declined": "recusou um banimento proposto",
+  "platformLog.kind.mod.ban_declined.target":
+    "recusou o banimento proposto para",
+  "platformLog.kind.mod.ban_hold_expired":
+    "deixou expirar a retenção de um banimento",
+  "platformLog.kind.mod.ban_hold_expired.target":
+    "deixou expirar a retenção do banimento de",
+  "platformLog.kind.mod.appeal_upheld": "deferiu um recurso",
+  "platformLog.kind.mod.appeal_upheld.target": "deferiu o recurso de",
+  "platformLog.kind.mod.appeal_overturned": "reverteu uma decisão em recurso",
+  "platformLog.kind.mod.appeal_overturned.target":
+    "reverteu a decisão em recurso de",
+  "platformLog.kind.mod.content_restored": "restaurou conteúdo",
+  "platformLog.kind.mod.content_restored.target":
+    "restaurou conteúdo publicado por",
+  "platformLog.kind.mod.restriction_lifted": "levantou uma restrição",
+  "platformLog.kind.mod.restriction_lifted.target": "levantou a restrição a",
+  "platformLog.kind.mod.suspension_lifted": "levantou uma suspensão",
+  "platformLog.kind.mod.suspension_lifted.target": "levantou a suspensão a",
+  "platformLog.kind.mod.member_verified": "verificou um membro",
+  "platformLog.kind.mod.member_verified.target": "verificou",
+  "platformLog.kind.mod.evidence_cited": "citou uma prova",
+  "platformLog.kind.mod.evidence_cited.target": "citou uma prova sobre",
+  "platformLog.kind.mod.conversation_context_viewed":
+    "viu uma conversa denunciada",
+  "platformLog.kind.mod.conversation_context_viewed.target":
+    "viu uma conversa denunciada envolvendo",
+  "platformLog.kind.mod.report_message_attachment_viewed":
+    "abriu um anexo denunciado",
+  "platformLog.kind.mod.report_message_attachment_viewed.target":
+    "abriu um anexo denunciado sobre",
+  "platformLog.kind.mod.thread_locked": "trancou um tópico",
+  "platformLog.kind.mod.thread_locked.target": "trancou um tópico de",
+  "platformLog.kind.mod.thread_unlocked": "destrancou um tópico",
+  "platformLog.kind.mod.thread_unlocked.target": "destrancou um tópico de",
+  "platformLog.kind.mod.thread_pinned": "fixou um tópico",
+  "platformLog.kind.mod.thread_pinned.target": "fixou um tópico de",
+  "platformLog.kind.mod.thread_unpinned": "desafixou um tópico",
+  "platformLog.kind.mod.thread_unpinned.target": "desafixou um tópico de",
+  "platformLog.kind.mod.thread_official_set": "marcou um tópico como oficial",
+  "platformLog.kind.mod.thread_official_set.target":
+    "marcou como oficial um tópico de",
+  "platformLog.kind.mod.thread_official_cleared":
+    "retirou a marca de oficial de um tópico",
+  "platformLog.kind.mod.thread_official_cleared.target":
+    "retirou a marca de oficial de um tópico de",
+  "platformLog.kind.mod.thread_deleted": "eliminou um tópico",
+  "platformLog.kind.mod.thread_deleted.target": "eliminou um tópico de",
+  "platformLog.kind.mod.thread_review_approved": "aprovou um tópico retido",
+  "platformLog.kind.mod.thread_review_approved.target":
+    "aprovou um tópico retido de",
+  "platformLog.kind.mod.thread_review_rejected": "rejeitou um tópico retido",
+  "platformLog.kind.mod.thread_review_rejected.target":
+    "rejeitou um tópico retido de",
+  "platformLog.kind.mod.topic_hard_delete": "eliminou um tema de vez",
+  "platformLog.kind.mod.topic_hard_delete.target": "eliminou de vez um tema de",
+  "platformLog.kind.mod.media_force_delete": "eliminou um ficheiro à força",
+  "platformLog.kind.mod.media_force_delete.target":
+    "eliminou à força um ficheiro de",
+  "platformLog.kind.mod.housing_coop_delete":
+    "eliminou uma cooperativa de habitação",
+  "platformLog.kind.mod.housing_coop_delete.target":
+    "eliminou uma cooperativa de habitação gerida por",
+  "platformLog.kind.mod.housing_coop_join_request_triage":
+    "triou um pedido de entrada na cooperativa",
+  "platformLog.kind.mod.housing_coop_join_request_triage.target":
+    "triou um pedido de entrada na cooperativa enviado por",
+  "platformLog.kind.mod.housing_group_delete": "eliminou um grupo de habitação",
+  "platformLog.kind.mod.housing_group_delete.target":
+    "eliminou um grupo de habitação gerido por",
+  "platformLog.kind.mod.housing_group_join_request_triage":
+    "triou um pedido de entrada num grupo de habitação",
+  "platformLog.kind.mod.housing_group_join_request_triage.target":
+    "triou um pedido de entrada num grupo de habitação enviado por",
+  "platformLog.kind.mod.housing_group_listing_hide":
+    "ocultou um anúncio de grupo de habitação",
+  "platformLog.kind.mod.housing_group_listing_hide.target":
+    "ocultou um anúncio de grupo de habitação de",
+  "platformLog.kind.mod.housing_group_listing_unhide":
+    "restaurou um anúncio de grupo de habitação",
+  "platformLog.kind.mod.housing_group_listing_unhide.target":
+    "restaurou um anúncio de grupo de habitação de",
+  "platformLog.kind.mod.housing_listing_approved":
+    "aprovou um anúncio de habitação",
+  "platformLog.kind.mod.housing_listing_approved.target":
+    "aprovou um anúncio de habitação de",
+  "platformLog.kind.mod.housing_listing_changes_requested":
+    "pediu alterações a um anúncio de habitação",
+  "platformLog.kind.mod.housing_listing_changes_requested.target":
+    "pediu alterações a um anúncio de habitação de",
+  "platformLog.kind.mod.housing_listing_rejected":
+    "rejeitou um anúncio de habitação",
+  "platformLog.kind.mod.housing_listing_rejected.target":
+    "rejeitou um anúncio de habitação de",
+  "platformLog.kind.mod.housing_listing_taken_down":
+    "retirou um anúncio de habitação",
+  "platformLog.kind.mod.housing_listing_taken_down.target":
+    "retirou um anúncio de habitação de",
+  "platformLog.kind.mod.role_changed": "alterou o papel de um membro",
+  "platformLog.kind.mod.role_changed.target": "alterou o papel de",
+  "platformLog.kind.mod.staff_role_granted": "concedeu um papel de equipa",
+  "platformLog.kind.mod.staff_role_granted.target":
+    "concedeu um papel de equipa a",
+  "platformLog.kind.mod.staff_role_revoked": "revogou um papel de equipa",
+  "platformLog.kind.mod.staff_role_revoked.target":
+    "revogou um papel de equipa a",
+  "platformLog.kind.mod.invite_quota_changed": "alterou uma quota de convites",
+  "platformLog.kind.mod.invite_quota_changed.target":
+    "alterou a quota de convites de",
+  "platformLog.kind.mod.invite_revoked": "revogou um convite",
+  "platformLog.kind.mod.invite_revoked.target": "revogou um convite de",
+  "platformLog.kind.mod.sign_in_identity_relinked":
+    "reassociou uma identidade de acesso",
+  "platformLog.kind.mod.sign_in_identity_relinked.target":
+    "reassociou a identidade de acesso de",
+  "platformLog.kind.mod.sign_in_identity_candidate_dismissed":
+    "recusou uma correspondência de identidade de acesso",
+  "platformLog.kind.mod.sign_in_identity_candidate_dismissed.target":
+    "recusou uma correspondência de identidade de acesso de",
+  "platformLog.kind.mod.account_reactivated_by_admin": "reativou uma conta",
+  "platformLog.kind.mod.account_reactivated_by_admin.target":
+    "reativou a conta de",
+  "platformLog.kind.mod.email_suppression_lifted":
+    "levantou um bloqueio de e-mail",
+  "platformLog.kind.mod.email_suppression_lifted.target":
+    "levantou o bloqueio de e-mail de",
+  "platformLog.kind.mod.member_sign_in_email_viewed":
+    "viu o e-mail de acesso de um membro",
+  "platformLog.kind.mod.member_sign_in_email_viewed.target":
+    "viu o e-mail de acesso de",
+  "platformLog.kind.mod.message_deleted_by_staff": "eliminou uma mensagem",
+  "platformLog.kind.mod.message_deleted_by_staff.target":
+    "eliminou uma mensagem de",
+  "platformLog.kind.mod.official_message_sent": "enviou uma mensagem oficial",
+  "platformLog.kind.mod.official_message_sent.target":
+    "enviou uma mensagem oficial a",
+  "platformLog.kind.mod.official_broadcast_sent": "enviou uma difusão oficial",
+  "platformLog.kind.mod.official_broadcast_sent.target":
+    "enviou uma difusão oficial a",
+  "platformLog.kind.mod.community_ban_applied":
+    "aplicou um banimento da comunidade",
+  "platformLog.kind.mod.community_ban_applied.target":
+    "aplicou um banimento da comunidade a",
+  "platformLog.kind.mod.community_ban_lifted":
+    "levantou um banimento da comunidade",
+  "platformLog.kind.mod.community_ban_lifted.target":
+    "levantou o banimento da comunidade a",
+  "platformLog.kind.mod.community_member_removed":
+    "removeu um membro da comunidade",
+  "platformLog.kind.mod.community_member_removed.target":
+    "removeu um membro da comunidade:",
+  "platformLog.kind.governance.section_changed":
+    "atualizou a secção {section} da governação",
+  "platformLog.kind.governance.finance_changed":
+    "atualizou as finanças ({field})",
+  "platformLog.kind.settings.changed": "alterou uma definição da plataforma",
+  "platformLog.kind.roadmap.changed": "atualizou o roteiro: {action}",
+  "platformLog.kind.verification.submitted": "pediu verificação",
+  "platformLog.kind.verification.approved": "aprovou uma verificação",
+  "platformLog.kind.verification.approved.target": "aprovou a verificação de",
+  "platformLog.kind.verification.rejected": "rejeitou uma verificação",
+  "platformLog.kind.verification.rejected.target": "rejeitou a verificação de",
+  "platformLog.kind.verification.overridden":
+    "substituiu um nível de verificação",
+  "platformLog.kind.verification.overridden.target":
+    "substituiu o nível de verificação de",
+  "platformLog.kind.verification.downgraded":
+    "reduziu o nível de uma verificação",
+  "platformLog.kind.verification.downgraded.target":
+    "reduziu o nível de verificação de",
+  "platformLog.kind.verification.appealed":
+    "recorreu de uma decisão de verificação",
+  "platformLog.kind.verification.withdrawn": "retirou um pedido de verificação",
+  "platformLog.kind.safe_space.nomination_acknowledged":
+    "reconheceu uma nomeação de espaço seguro",
+  "platformLog.kind.safe_space.nomination_assigned":
+    "atribuiu uma nomeação de espaço seguro",
+  "platformLog.kind.safe_space.nomination_awarded":
+    "atribuiu um selo de espaço seguro",
+  "platformLog.kind.safe_space.nomination_declined":
+    "recusou uma nomeação de espaço seguro",
+  "platformLog.kind.safe_space.nomination_reopened":
+    "reabriu uma nomeação de espaço seguro",
+  "platformLog.kind.safe_space.flag_raised":
+    "levantou uma sinalização sobre um espaço seguro",
+  "platformLog.kind.safe_space.flag_withdrawn":
+    "retirou uma sinalização sobre um espaço seguro",
+  "platformLog.kind.safe_space.flag_resolved":
+    "resolveu uma sinalização sobre um espaço seguro",
+  "platformLog.kind.safe_space.badge_suspended":
+    "suspendeu um selo de espaço seguro",
+  "platformLog.kind.safe_space.badge_restored":
+    "restaurou um selo de espaço seguro",
+  "platformLog.kind.listing.status_changed": "mudou o estado de uma listagem",
+  "platformLog.kind.listing.removed": "removeu uma listagem",
+  "platformLog.kind.listing.question_asked":
+    "fez uma pergunta à pessoa responsável por uma listagem",
+  "platformLog.kind.listing.answered":
+    "respondeu a uma pergunta da equipa sobre a sua listagem",
+  "platformLog.kind.listing.bulk_status":
+    "alterou estados de listagens em massa",
+  "platformLog.kind.listing.ownership_transferred":
+    "transferiu a propriedade de uma listagem",
+  "platformLog.kind.listing.owner_edited": "editou a sua listagem",
+  "platformLog.kind.listing.co_manager_added":
+    "juntou-se à equipa de uma listagem",
+  "platformLog.kind.listing.co_manager_removed":
+    "terminou um lugar na equipa de uma listagem",
+  "platformLog.kind.listing.staff_created": "criou uma listagem",
+  "platformLog.kind.listing.suggestion_applied":
+    "aplicou uma correção sugerida a uma listagem",
+  "platformLog.kind.listing.directory_paused":
+    "pausou a sua listagem no diretório",
+  "platformLog.kind.listing.directory_resumed":
+    "repôs a sua listagem no diretório",
+  "platformLog.kind.listing.staff_edited": "editou uma listagem",
+  "platformLog.kind.member.joined": "entrou na plataforma",
+  "platformLog.kind.member.vouch_given": "deu um voto de confiança a",
+  "platformLog.kind.member.vouch_given.target": "deu um voto de confiança a",
+  "platformLog.kind.member.community_joined": "entrou numa comunidade",
+  "platformLog.kind.member.report_filed": "apresentou uma denúncia",
+  "platformLog.kind.member.report_filed_emergency":
+    "apresentou uma denúncia de emergência",
+  "platformLog.kind.member.join_requested": "pediu para entrar na plataforma",
+  "platformLog.kind.member.thread_started": "iniciou um tópico",
 
   "dashboard.feed.type.reportFiled.body": "apresentou uma denúncia",
   "dashboard.feed.type.reportFiled.anonymousLead": "Uma denúncia",
@@ -481,12 +783,44 @@ export const admin: Catalog = {
   "members.verify.declineReason.implausible": "Os detalhes não batem certo",
   "members.verify.declineReason.safety_concern": "Preocupação de segurança",
   "members.verify.declineReason.other": "Outro",
+  "members.verify.declineReasonDetail.spam_pattern":
+    "O registo parece automatizado ou claramente falso.",
+  "members.verify.declineReasonDetail.underage":
+    "A pessoa candidata parece ter menos de 18 anos.",
+  "members.verify.declineReasonDetail.implausible":
+    "As respostas não batem certo ou parecem inventadas.",
+  "members.verify.declineReasonDetail.safety_concern":
+    "Há algo neste pedido que levanta uma preocupação de segurança.",
+  "members.verify.declineReasonDetail.other":
+    "Uma recusa por um motivo que as outras opções não cobrem.",
+  "members.verify.declineModal.eyebrow": "Pedido de adesão",
   "members.verify.declineModal.title": "Recusar o pedido de {name}?",
   "members.verify.declineModal.body":
     "Escolhe o motivo mais próximo. Não é enviado nada à pessoa candidata. Se ela própria for ver o estado do pedido, encontra uma nota curta e genérica em vez disto.",
   "members.verify.declineModal.reasonLabel": "Motivo",
-  "members.verify.declineModal.reasonPlaceholder": "Escolhe um motivo",
   "members.verify.declineModal.confirmCta": "Recusar pedido",
+  "members.verify.approvalReason.member_vouched": "Recomendação de um membro",
+  "members.verify.approvalReason.clear_request": "Pedido claro e genuíno",
+  "members.verify.approvalReason.known_to_team": "Alguém da equipa conhece",
+  "members.verify.approvalReason.partner_or_event":
+    "Chegou por um parceiro ou evento",
+  "members.verify.approvalReason.other": "Outro",
+  "members.verify.approvalReasonDetail.member_vouched":
+    "Um membro indicado no pedido confirma quem é.",
+  "members.verify.approvalReasonDetail.clear_request":
+    "O que escreveu soa a uma pessoa real que quer estar cá.",
+  "members.verify.approvalReasonDetail.known_to_team":
+    "Alguém da equipa conhece esta pessoa ou já esteve com ela.",
+  "members.verify.approvalReasonDetail.partner_or_event":
+    "Chegou até nós por um grupo parceiro, um encontro ou um evento.",
+  "members.verify.approvalReasonDetail.other":
+    "Uma aprovação por um motivo que as outras opções não cobrem.",
+  "members.verify.approveModal.eyebrow": "Pedido de adesão",
+  "members.verify.approveModal.title": "Acolher {name}?",
+  "members.verify.approveModal.body":
+    "Escolhe o motivo mais próximo. Só a equipa o vê. Aprovar cria uma ligação de convite que copias e envias tu a essa pessoa.",
+  "members.verify.approveModal.reasonLabel": "Motivo",
+  "members.verify.approveModal.confirmCta": "Acolher",
   "members.verify.waitlistCta": "Lista de espera",
   "members.verify.waitlistedToast": "{name} passou para a lista de espera",
   "members.verify.waitlistedSectionTitle": "Lista de espera",
@@ -524,6 +858,12 @@ export const admin: Catalog = {
   "members.verify.bulk.confirmApprove.body":
     "Cada aprovação cria uma ligação de convite. Não é enviado nada a ninguém: copias cada ligação no separador Decididos e entrega-la tu.",
   "members.verify.bulk.confirmApprove.confirmCta": "Aprovar todos",
+  "members.verify.bulk.confirmApprove.reasonBody":
+    "Escolhe o motivo mais próximo. Aplica-se a todos os {count} pedidos selecionados, e só a equipa o vê.",
+  "members.verify.bulk.confirmApprove.reasonLine_one":
+    "Isto regista “{reason}” no {count} pedido selecionado.",
+  "members.verify.bulk.confirmApprove.reasonLine_other":
+    "Isto regista “{reason}” em todos os {count} pedidos selecionados.",
   "members.verify.bulk.confirmWaitlist.title":
     "Colocar {count} pedidos em lista de espera?",
   "members.verify.bulk.confirmWaitlist.body":
@@ -593,7 +933,38 @@ export const admin: Catalog = {
   "members.verify.decided.appliedOn": "Candidatou-se a {date}",
   "members.verify.decided.decidedOn": "Decidido a {date}",
   "members.verify.decided.decidedUnknown": "Data da decisão não registada",
+  "members.verify.decided.note.label": "Nota da equipa",
+  "members.verify.decided.note.hint":
+    "Só a equipa vê isto. A pessoa que fez o pedido nunca vê.",
+  "members.verify.decided.note.editedBy": "Editada por {name} · {date}",
+  "members.verify.decided.note.editedByUndated": "Editada por {name}",
+  "members.verify.decided.note.editorYou": "ti",
+  "members.verify.decided.note.editorUnknown": "alguém da equipa",
+  "members.verify.decided.note.add": "Adicionar nota",
+  "members.verify.decided.note.edit": "Editar nota",
+  "members.verify.decided.note.save": "Guardar",
+  "members.verify.decided.note.saving": "A guardar",
+  "members.verify.decided.note.cancel": "Cancelar",
+  "members.verify.decided.note.savedToast": "Nota guardada",
+  "members.verify.decided.note.removedToast": "Nota removida",
+  "members.verify.decided.note.error.tooLong":
+    "Essa nota passa dos 2000 caracteres. Encurta-a e guarda outra vez.",
+  "members.verify.decided.note.error.forbidden":
+    "As notas nos pedidos são para moderadores e admins. Pede a alguém dessa equipa.",
+  "members.verify.decided.note.error.notFound":
+    "Este pedido já não está aqui. Atualiza o separador e vê outra vez.",
+  "members.verify.decided.note.error.notDeclined":
+    "Só os pedidos recusados levam nota, e este mudou. Atualiza o separador para veres em que ponto está.",
+  "members.verify.decided.note.error.generic":
+    "A nota não foi guardada. O teu texto continua aqui, tenta outra vez.",
   "members.verify.decided.declineReasonLine": "Motivo: {reason}",
+  "members.verify.decided.decidedOnBy": "Decidido a {date} por {name}",
+  "members.verify.decided.decidedUnknownBy":
+    "Decidido por {name}, data não registada",
+  "members.verify.decided.reviewerYou": "ti",
+  "members.verify.decided.approvalReasonLine": "Motivo: {reason}",
+  "members.verify.decided.approvalReasonMissing":
+    "Sem motivo registado. Foi aprovado antes de se pedirem motivos.",
   "members.verify.decided.showDetails": "Mostrar detalhes de {name}",
   "members.verify.decided.hideDetails": "Esconder detalhes de {name}",
   "members.verify.decided.filter.groupLabel": "Filtrar pedidos decididos",
@@ -748,15 +1119,64 @@ export const admin: Catalog = {
     "{name} vai ter acesso total de admin à plataforma de imediato: gestão de equipa e de papéis, ações de moderação sobre qualquer denúncia e todas as outras ferramentas de admin. Este é o nível de acesso mais alto que a QueerPulse tem. Fica registado no histórico de auditoria em teu nome.",
   "members.role.grantConfirm.confirmCta": "Conceder acesso de admin",
 
-  // ── Equipa (/admin/staff) — lista só de leitura de todos os moderadores/admins
+  // ── Equipa (/admin/staff): admins, moderadores e titulares de atribuições
   "staff.title": "Equipa e <em>papéis</em>",
   "staff.header.eyebrow": "Quem gere a QueerPulse",
   "staff.header.sub":
-    "Todos os moderadores e admins da plataforma, e ainda quem tem papéis de equipa atribuídos. Para alterar um papel ou uma atribuição, abre o perfil dessa pessoa em Membros.",
+    "Todos os admins, moderadores e titulares de atribuições da plataforma, e que atribuições têm hoje alguém que possa agir. Gerir abre o registo da pessoa aqui mesmo, para mudares o nível ou as atribuições nesta página.",
   "staff.grantsLabel": "Atribuições",
-  "staff.tier.member": "Membro",
   "staff.empty": "Ninguém tem um papel de equipa neste momento.",
   "staff.loadError": "Não foi possível carregar a lista de equipa.",
+  "staff.summary.heading": "Num relance",
+  "staff.summary.admins": "Admins",
+  "staff.summary.adminsHint": "Acesso total à plataforma",
+  "staff.summary.moderators": "Moderadores",
+  "staff.summary.moderatorsHint": "Denúncias e segurança",
+  "staff.summary.grantHolders": "Titulares de atribuições",
+  "staff.summary.grantHoldersHint": "Uma área cada",
+  "staff.summary.uncovered": "Atribuições sem titular",
+  "staff.summary.uncoveredHint": "Vê quais precisam de titular",
+  "staff.summary.uncoveredHintNone": "Todas as atribuições têm titular",
+  "staff.coverage.heading": "Cobertura das atribuições",
+  "staff.coverage.sub":
+    "Quem tem cada atribuição de equipa hoje. Escolhe uma para veres os titulares abaixo.",
+  "staff.coverage.holders_one": "{count} titular",
+  "staff.coverage.holders_other": "{count} titulares",
+  "staff.coverage.nobody": "Ninguém tem esta atribuição",
+  "staff.coverage.inactive_one": "{count} titular suspenso ou desativado",
+  "staff.coverage.inactive_other": "{count} titulares suspensos ou desativados",
+  "staff.coverage.more": "+{count}",
+  "staff.roster.heading": "Toda a equipa",
+  "staff.toolbar.searchLabel": "Pesquisar na equipa",
+  "staff.toolbar.searchPlaceholder": "Nome ou @utilizador",
+  "staff.toolbar.searchClear": "Limpar a pesquisa",
+  "staff.toolbar.tierLabel": "Mostrar",
+  "staff.toolbar.tier.all": "Todos",
+  "staff.toolbar.tier.admin": "Admins",
+  "staff.toolbar.tier.moderator": "Moderadores",
+  "staff.toolbar.tier.member": "Titulares",
+  "staff.toolbar.grantChipRemove": "Remover o filtro {grant}",
+  "staff.toolbar.clear": "Limpar filtros",
+  "staff.toolbar.showing": "A mostrar {shown} de {total}",
+  "staff.group.admin": "Admins",
+  "staff.group.moderator": "Moderadores",
+  "staff.group.member": "Titulares de atribuições",
+  "staff.row.status.suspended": "Conta suspensa",
+  "staff.row.status.deactivated": "Conta desativada",
+  "staff.row.joined": "Na QueerPulse desde {date}",
+  "staff.row.grantedOn": "Atribuído a {date}",
+  "staff.row.grantedOnSpoken": ", atribuído a {date}",
+  "staff.row.allAccess": "Todas as capacidades de equipa",
+  "staff.row.tierOnly": "Só o acesso do nível",
+  "staff.row.manage": "Gerir",
+  "staff.row.manageAria": "Gerir {name}",
+  "staff.row.viewProfile": "Ver o perfil de {name}",
+  "staff.filteredEmpty.title": "Ninguém corresponde a estes filtros",
+  "staff.filteredEmpty.body":
+    "Experimenta outro nome ou @utilizador, ou alarga os filtros de nível e de atribuição.",
+  "staff.filteredEmpty.unheldTitle": "Ainda ninguém tem a atribuição {grant}",
+  "staff.filteredEmpty.unheldBody":
+    "Abre o registo de alguém com Gerir para a atribuíres.",
 
   // ── Membros: papéis de equipa (concessões funcionais adicionais, ex. desk da revista)
   "staffRoles.title": "Papéis e acesso",
@@ -1545,6 +1965,8 @@ export const admin: Catalog = {
   "adminListings.columns.status": "Estado",
   "adminListings.columns.actions": "Ações",
   "adminListings.row.openAriaLabel": "Abrir {name}",
+  "adminListings.row.editCta": "Editar",
+  "adminListings.row.editAriaLabel": "Editar {name}",
   "adminListings.noMatch.title": "Nenhum espaço corresponde a “{query}”",
   "adminListings.noMatch.body":
     "Experimenta o nome do espaço, o autor, ou uma referência como QPL-2026-0008.",
@@ -1580,6 +2002,14 @@ export const admin: Catalog = {
   "adminListings.bulk.confirmRemove.reasonPlaceholder":
     "Adiciona uma nota para o registo…",
   "adminListings.bulk.confirmRemove.confirmCta": "Remover listagens",
+  "adminListings.bulk.confirmPublish.title_one": "Publicar {count} listagem?",
+  "adminListings.bulk.confirmPublish.title_other":
+    "Publicar {count} listagens?",
+  "adminListings.bulk.confirmPublish.body_one":
+    "A listagem selecionada aparece de imediato no diretório, à vista dos membros. Podes devolvê-la a revisão mais tarde.",
+  "adminListings.bulk.confirmPublish.body_other":
+    "As {count} listagens selecionadas aparecem de imediato no diretório, à vista dos membros. Podes devolvê-las a revisão mais tarde.",
+  "adminListings.bulk.confirmPublish.confirmCta": "Publicar",
   "adminListings.sendBack.confirm.title": "Devolver {name} a revisão?",
   "adminListings.sendBack.confirm.body":
     "{name} volta para a fila de revisão. Adiciona uma nota rápida se ajudar na próxima passagem.",
@@ -1587,6 +2017,10 @@ export const admin: Catalog = {
   "adminListings.sendBack.confirm.reasonPlaceholder":
     "O que precisa de outro olhar…",
   "adminListings.sendBack.confirm.confirmCta": "Devolver a revisão",
+  "adminListings.publish.confirm.title": "Publicar {name}?",
+  "adminListings.publish.confirm.body":
+    "{name} aparece de imediato no diretório, à vista dos membros. Podes devolver a listagem a revisão mais tarde, no menu dela.",
+  "adminListings.publish.confirm.confirmCta": "Publicar",
   // ── Histórico da gaveta + fio de perguntas e respostas ────────────────────────
   "adminListings.history.eventsHeading": "Histórico de moderação",
   "adminListings.history.questionsHeading": "Perguntas",
@@ -6908,7 +7342,9 @@ export const admin: Catalog = {
   "listingNew.owner.label": "Oferecer a alguém",
   "listingNew.owner.hint":
     "Opcional. A pessoa fica com o espaço em nome dela depois de aceitar, e tudo o que diz respeito a quem o gere fica para ela preencher.",
-  "listingNew.owner.slugLabel": "Slug do perfil do membro",
+  "listingNew.owner.memberLabel": "Pessoa",
+  "listingNew.owner.memberSearchAria":
+    "Procura a pessoa a quem queres oferecer este espaço",
   "listingNew.owner.slugHelper":
     "Deixa vazio para o espaço ficar com a equipa por agora.",
   "listingNew.owner.noteLabel": "Mensagem para a pessoa",
@@ -6953,6 +7389,12 @@ export const admin: Catalog = {
     "A QueerPulse cuida deste espaço até alguém o assumir. Num espaço publicado, as tuas alterações aparecem no diretório assim que gravares.",
   "listingEdit.queueBreadcrumb": "Espaços",
   "listingEdit.submitCta": "Guardar alterações",
+  "listingEdit.publishCta": "Guardar e publicar",
+  "listingEdit.editingRef": "A editar {ref}",
+  "listingEdit.previewFoot.live":
+    "As tuas alterações aparecem no diretório assim que guardares.",
+  "listingEdit.previewFoot.unpublished":
+    "Este espaço ainda não está publicado. Ao guardar, continua na fila de revisão.",
   "listingEdit.hasOwner.title": "Este espaço já tem proprietário",
   "listingEdit.hasOwner.body":
     "Alguém assumiu este espaço, por isso passa a ser essa pessoa a editá-lo. Para mudar alguma coisa, sugere uma edição na página dele no diretório.",
@@ -6965,7 +7407,19 @@ export const admin: Catalog = {
     "Pode ter sido removido. Volta à fila para escolher outro.",
   "listingEdit.success.title": "Guardado",
   "listingEdit.success.body": "As tuas alterações a {ref} estão guardadas.",
+  "listingEdit.success.publishedTitle": "Guardado e publicado",
+  "listingEdit.success.publishedBody":
+    "As tuas alterações a {ref} já estão no diretório.",
   "listingEdit.success.closeCta": "Voltar à fila de espaços",
+
+  // ── Seletor de membros da administração (AdminMemberPickerField) ─────────
+  // A pesquisa que um formulário da administração usa para escolher uma
+  // pessoa pelo nome; a escolha fica num chip que se pode limpar.
+  "memberPicker.placeholder": "Procura pelo nome",
+  "memberPicker.emptyHint": "Escreve pelo menos duas letras do nome.",
+  "memberPicker.searchError":
+    "A pesquisa de membros não está a responder agora. Tenta daqui a pouco.",
+  "memberPicker.clearAria": "Tirar {name} e escolher outra pessoa",
 
   // ── Painel de delegação de um espaço ──────────────────────────────────────
   // Quem trata de um espaço escrito pela equipa: quem é proprietário, a
@@ -6975,9 +7429,8 @@ export const admin: Catalog = {
   "listingDelegation.intro":
     "Quem trata deste espaço: quem é proprietário, qualquer oferta de propriedade em aberto, e as pessoas com lugar para ajudar.",
   "listingDelegation.unknownMember": "Alguém que entretanto saiu",
-  "listingDelegation.slugPlaceholder": "slug-do-perfil",
-  "listingDelegation.unknownSlugError":
-    "Nenhum membro ativo responde a esse slug. Confirma-o na página de perfil dessa pessoa.",
+  "listingDelegation.unknownMemberError":
+    "Essa pessoa já não está ativa, por isso isto não pode ir para ela. Escolhe outra pessoa.",
   "listingDelegation.loadError.title": "O painel de delegação não carregou",
   "listingDelegation.loadError.body":
     "A oferta em aberto e a lista de cogestores faltam as duas nesta vista. Tenta outra vez.",
@@ -6999,7 +7452,9 @@ export const admin: Catalog = {
   "listingDelegation.offer.awaitingReply": "à espera da resposta",
   "listingDelegation.offer.oneAtATime":
     "Um espaço tem uma oferta em aberto de cada vez. Para o oferecer a outra pessoa, retira esta primeiro.",
-  "listingDelegation.offer.slugLabel": "Slug do perfil do membro",
+  "listingDelegation.offer.memberLabel": "Oferecer a",
+  "listingDelegation.offer.memberSearchAria":
+    "Procura a pessoa a quem queres oferecer este espaço",
   "listingDelegation.offer.noteLabel": "Um recado para a pessoa (opcional)",
   "listingDelegation.offer.notePlaceholder":
     "Diz porque lhe estás a oferecer este espaço.",
@@ -7010,7 +7465,7 @@ export const admin: Catalog = {
   "listingDelegation.offer.revokeConfirmBody":
     "A pessoa perde a oferta de imediato. Depois de retirada, podes oferecer este espaço a outra pessoa.",
   "listingDelegation.offer.revokeConfirmCta": "Retirar",
-  "listingDelegation.offer.sentToast": "Propriedade oferecida a @{slug}.",
+  "listingDelegation.offer.sentToast": "Propriedade oferecida a {name}.",
   "listingDelegation.offer.revokedToast":
     "A oferta de propriedade foi retirada.",
   "listingDelegation.offer.conflictError":
@@ -7043,10 +7498,12 @@ export const admin: Catalog = {
     "Um lugar aberto num espaço que já tem proprietário sai quando essa pessoa sai.",
   "listingDelegation.roster.seatsFullNotice":
     "Todos os lugares deste espaço estão ocupados. Liberta um antes de convidares mais alguém.",
-  "listingDelegation.roster.inviteLabel": "Slug do perfil do membro",
+  "listingDelegation.roster.inviteMemberLabel": "Convidar alguém para cogerir",
+  "listingDelegation.roster.inviteSearchAria":
+    "Procura a pessoa que queres convidar para cogerir",
   "listingDelegation.roster.inviteCta": "Enviar convite",
   "listingDelegation.roster.invitingCta": "A enviar…",
-  "listingDelegation.roster.invitedToast": "Convite enviado a @{slug}.",
+  "listingDelegation.roster.invitedToast": "Convite enviado a {name}.",
   "listingDelegation.roster.removeCta": "Retirar lugar",
   "listingDelegation.roster.cancelInviteCta": "Cancelar convite",
   "listingDelegation.roster.removeConfirmTitle": "Retirar {name} deste espaço?",

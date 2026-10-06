@@ -15,11 +15,17 @@ import {
   type AccessibilitySlug,
 } from "./listBusiness/listingAccessibility.data";
 import {
+  OWNER_IDENTITY_SLUGS,
+  normalizeOwnerIdentities,
+  ownerIdentityLabelKey,
+  type OwnerIdentitySlug,
+} from "./listBusiness/listingOwnerIdentities.data";
+import {
   distancesFrom,
   sortByDistance,
   sortByNeighbourhoodDistance,
 } from "./nearMePlaces";
-import { VIBE_LABEL_KEYS } from "./map.data";
+import { VIBES, VIBE_LABEL_KEYS } from "./map.data";
 import type { ActiveFilter } from "../../shared/components/ui";
 import {
   normalizeOwnedBy,
@@ -27,6 +33,26 @@ import {
   toggleOwnedBy,
   type ListingOwnedBy,
 } from "./listBusiness/listingOwnedBy.data";
+
+/**
+ * How many of the LOADED places each one-tap chip would leave on screen if it
+ * were turned on, with every other current filter kept. The drawer reads it to
+ * disable a chip that would empty the list, and only once the whole set has
+ * loaded (see `isLoadedSetComplete` in `useDirectoryPageState`).
+ */
+export interface LocalChipCounts {
+  /** Matches with "Open now" turned on. */
+  openNow: number;
+  /** Matches with "Verified safe spaces" turned on. */
+  safe: number;
+  /** Matches with each access need added to the ones already ticked. */
+  access: Record<AccessibilitySlug, number>;
+  /** Matches with each vibe added to the ones already chosen. */
+  vibes: Record<string, number>;
+  /** Matches with only this tag chosen, other filters kept, so a tag no
+   *  loaded place carries goes unpickable; same rule as place types. */
+  ownerIdentities: Record<OwnerIdentitySlug, number>;
+}
 
 const SORT_VALUES: LocalSort[] = ["default", "name", "hood"];
 
@@ -97,6 +123,16 @@ function toVibes(raw: string | null): string[] {
   return raw?.split(",").filter(Boolean) ?? [];
 }
 
+/**
+ * Read `?owner=` into the chosen "who runs it" tags. Same rules as
+ * `toCategories`: unknown tags drop so a stale link still loads, repeats
+ * collapse, canonical order.
+ */
+export function toOwnerIdentities(raw: string | null): OwnerIdentitySlug[] {
+  if (!raw) return [];
+  return normalizeOwnerIdentities(raw.split(","));
+}
+
 /** Write a list filter into the params, dropping the key when the list is
  *  empty so the URL carries only the filters that are on. */
 function setListParam(
@@ -143,6 +179,8 @@ export interface DirectoryFilterParams {
   openNow: boolean;
   /** Accessibility needs that must ALL be met, in canonical question order. */
   access: AccessibilitySlug[];
+  /** "Who runs it" tags currently filtered on, in canonical order. */
+  ownerIdentities: OwnerIdentitySlug[];
   selectView: (next: string) => void;
   toggleCategory: (categoryId: string) => void;
   clearCategories: () => void;
@@ -153,6 +191,7 @@ export interface DirectoryFilterParams {
   toggleOwned: (value: ListingOwnedBy) => void;
   setOpenNow: (next: boolean) => void;
   toggleAccess: (slug: AccessibilitySlug) => void;
+  toggleOwnerIdentity: (slug: OwnerIdentitySlug) => void;
   clearFilters: () => void;
 }
 
@@ -185,6 +224,11 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const owned = useMemo(() => toOwned(rawOwned), [rawOwned]);
   const openNow = searchParams.get("open") === "now";
   const access = useAccessFilter();
+  const rawOwnerIdentities = searchParams.get("owner");
+  const ownerIdentities = useMemo(
+    () => toOwnerIdentities(rawOwnerIdentities),
+    [rawOwnerIdentities],
+  );
 
   // The params the last edit wrote, until a render reflects them. React
   // Router's functional `setSearchParams` starts from the params of the last
@@ -292,6 +336,17 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
       }),
     [mutateParams],
   );
+  const toggleOwnerIdentity = useCallback(
+    (slug: OwnerIdentitySlug) =>
+      mutateParams((params) => {
+        const current = toOwnerIdentities(params.get("owner"));
+        const next = current.includes(slug)
+          ? current.filter((entry) => entry !== slug)
+          : normalizeOwnerIdentities([...current, slug]);
+        setListParam(params, "owner", next);
+      }),
+    [mutateParams],
+  );
   const clearFilters = useCallback(
     () =>
       mutateParams((params) => {
@@ -302,6 +357,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         params.delete("owned");
         params.delete("open");
         params.delete("access");
+        params.delete("owner");
       }),
     [mutateParams],
   );
@@ -316,6 +372,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     owned,
     openNow,
     access,
+    ownerIdentities,
     selectView,
     toggleCategory,
     clearCategories,
@@ -326,6 +383,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     toggleOwned,
     setOpenNow,
     toggleAccess,
+    toggleOwnerIdentity,
     clearFilters,
   };
 }
@@ -362,6 +420,7 @@ export function useDirectoryFilterResults(
     owned,
     openNow,
     access,
+    ownerIdentities,
     sort,
     toggleCategory,
     toggleVibe,
@@ -369,6 +428,7 @@ export function useDirectoryFilterResults(
     toggleOwned,
     setOpenNow,
     toggleAccess,
+    toggleOwnerIdentity,
     setQuery,
   } = params;
 
@@ -383,10 +443,25 @@ export function useDirectoryFilterResults(
           owned,
           openNow,
           access,
+          ownerIdentities,
         }),
         sort,
       ),
+<<<<<<< Updated upstream
     [places, categories, query, vibes, safe, owned, openNow, access, sort],
+=======
+    [
+      places,
+      categories,
+      query,
+      vibes,
+      safe,
+      openNow,
+      access,
+      ownerIdentities,
+      sort,
+    ],
+>>>>>>> Stashed changes
   );
 
   // Distances are measured only over what is already on screen, and only once
@@ -436,13 +511,66 @@ export function useDirectoryFilterResults(
       owned,
       openNow,
       access,
+      ownerIdentities,
     });
     const counts: Record<string, number> = { all: base.length };
     for (const place of base) {
       counts[place.category] = (counts[place.category] ?? 0) + 1;
     }
     return counts;
+<<<<<<< Updated upstream
   }, [places, query, vibes, safe, owned, openNow, access]);
+=======
+  }, [places, query, vibes, safe, openNow, access, ownerIdentities]);
+
+  // The same "what would this chip leave" question for the other chips: each
+  // count runs the full filter over the loaded places with that one chip
+  // turned on and everything else as it stands, chosen place types included.
+  const chipCounts = useMemo<LocalChipCounts>(() => {
+    const current = {
+      categories,
+      query,
+      vibes,
+      safe,
+      openNow,
+      access,
+      ownerIdentities,
+    };
+    const countWith = (overrides: Partial<typeof current>) =>
+      filterLocalPlaces(places, { ...current, ...overrides }).length;
+    return {
+      openNow: countWith({ openNow: true }),
+      safe: countWith({ safe: "verified" }),
+      access: Object.fromEntries(
+        ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [
+          slug,
+          countWith({ access: [...access, slug] }),
+        ]),
+      ) as Record<AccessibilitySlug, number>,
+      vibes: Object.fromEntries(
+        VIBES.map((vibe) => [vibe, countWith({ vibes: [...vibes, vibe] })]),
+      ),
+      // Each tag alone, like place types above: the count that tag would
+      // leave if it were the only one chosen, every other group's filters
+      // kept as they stand.
+      ownerIdentities: Object.fromEntries(
+        OWNER_IDENTITY_SLUGS.map((slug) => [
+          slug,
+          countWith({ ownerIdentities: [slug] }),
+        ]),
+      ) as Record<OwnerIdentitySlug, number>,
+    };
+  }, [
+    places,
+    categories,
+    query,
+    vibes,
+    safe,
+    openNow,
+    access,
+    ownerIdentities,
+  ]);
+>>>>>>> Stashed changes
 
   const mappableCount = useMemo(
     () => filtered.filter((place) => place.coords !== null).length,
@@ -493,6 +621,13 @@ export function useDirectoryFilterResults(
         onRemove: () => toggleAccess(slug),
       });
     });
+    ownerIdentities.forEach((slug) => {
+      list.push({
+        key: `owner:${slug}`,
+        label: t(ownerIdentityLabelKey(slug)),
+        onRemove: () => toggleOwnerIdentity(slug),
+      });
+    });
     if (query.trim()) {
       list.push({
         key: "query",
@@ -508,6 +643,7 @@ export function useDirectoryFilterResults(
     owned,
     openNow,
     access,
+    ownerIdentities,
     query,
     t,
     toggleCategory,
@@ -516,12 +652,14 @@ export function useDirectoryFilterResults(
     toggleOwned,
     setOpenNow,
     toggleAccess,
+    toggleOwnerIdentity,
     setQuery,
   ]);
 
   return {
     filtered,
     categoryCounts,
+    chipCounts,
     mappableCount,
     activeFilters,
     distanceById,

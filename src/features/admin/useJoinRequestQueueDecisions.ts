@@ -1,9 +1,21 @@
 import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { JoinRequestDTO } from "../auth/api/joinRequest.api";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { useReviewJoinRequest } from "./api/useReviewJoinRequest";
 import { useJoinRequestQueueSelection } from "./useJoinRequestQueueSelection";
+
+/** Who decided and when, copied off the review response so the Decided tab
+ *  can name the reviewer straight away. `reviewedByName` stays absent when the
+ *  server sent none, the same rule `useJoinRequests` maps rows by. */
+function reviewerFieldsFrom(dto: JoinRequestDTO) {
+  return {
+    reviewedAt: dto.reviewedAt,
+    reviewedBy: dto.reviewedBy,
+    ...(dto.reviewedByName ? { reviewedByName: dto.reviewedByName } : {}),
+  };
+}
 
 /**
  * Every decision a reviewer can take on the platform join-request queue, plus
@@ -47,6 +59,10 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
   const [decidedLocally, setDecidedLocally] = useState<JoinRequestView[]>([]);
   // The row a reviewer just clicked "decline" on, still waiting on a reason.
   const [decliningItem, setDecliningItem] = useState<JoinRequestView | null>(
+    null,
+  );
+  // The row a reviewer just clicked "welcome in" on, still waiting on a reason.
+  const [approvingItem, setApprovingItem] = useState<JoinRequestView | null>(
     null,
   );
   // Rows a bulk action already resolved — dropped from the pending view the
@@ -114,50 +130,73 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     });
   }
 
-  function resolve(item: JoinRequestView, status: "approved" | "waitlisted") {
+  /** Waitlisting needs no reason, so it keeps the direct one-click path. */
+  function waitlist(item: JoinRequestView) {
     if (reviewJoinRequest.isPending) return;
     setDecidingId(item.id);
     reviewJoinRequest.mutate(
-      { id: item.id, status },
+      { id: item.id, status: "waitlisted" },
       {
-        onSuccess: (dto) => {
-          if (status === "approved") {
-            // The server's own decision fields, not a guess: the invite's
-            // lifecycle and expiry are what the approved card and the Decided
-            // tab both print, and only the response knows them.
-            const approvedRow: JoinRequestView = {
-              ...item,
-              status: dto.status,
-              reviewedAt: dto.reviewedAt,
-              inviteCode: dto.inviteCode,
-              inviteStatus: dto.inviteStatus,
-              inviteExpiresAt: dto.inviteExpiresAt,
-            };
-            setApproved((list) =>
-              list.some((row) => row.id === item.id)
-                ? list
-                : [approvedRow, ...list],
-            );
-            rememberDecision(approvedRow);
-            showToast(
-              t("admin:members.verify.approvedToast", { name: item.name }),
-              "success",
-            );
-          } else {
-            setWaitlistedLocally((list) =>
-              list.some((row) => row.id === item.id) ? list : [item, ...list],
-            );
-            showToast(
-              t("admin:members.verify.waitlistedToast", { name: item.name }),
-              "info",
-            );
-          }
+        onSuccess: () => {
+          setWaitlistedLocally((list) =>
+            list.some((row) => row.id === item.id) ? list : [item, ...list],
+          );
+          showToast(
+            t("admin:members.verify.waitlistedToast", { name: item.name }),
+            "info",
+          );
           removeFromSelection(item.id);
         },
         onError: () => showToast(t("admin:members.verify.errorToast"), "error"),
         onSettled: () => setDecidingId(null),
       },
     );
+  }
+
+  /** "Welcome in" opens the reason picker; nothing is sent until it confirms. */
+  function requestApprove(item: JoinRequestView) {
+    setApprovingItem(item);
+  }
+
+  function confirmApprove(reason: string) {
+    const item = approvingItem;
+    if (!item || reviewJoinRequest.isPending) return;
+    setDecidingId(item.id);
+    reviewJoinRequest.mutate(
+      { id: item.id, status: "approved", approvalReason: reason },
+      {
+        onSuccess: (dto) => {
+          // The server's own decision fields, read off the response: the
+          // invite's lifecycle and expiry are what the approved card and the
+          // Decided tab both print, and only the response knows them. Who
+          // decided and why ride along so the Decided tab can show them
+          // straight away.
+          const approvedRow: JoinRequestView = {
+            ...item,
+            status: dto.status,
+            ...reviewerFieldsFrom(dto),
+            approvalReason: dto.approvalReason,
+            inviteCode: dto.inviteCode,
+            inviteStatus: dto.inviteStatus,
+            inviteExpiresAt: dto.inviteExpiresAt,
+          };
+          setApproved((list) =>
+            list.some((row) => row.id === item.id)
+              ? list
+              : [approvedRow, ...list],
+          );
+          rememberDecision(approvedRow);
+          showToast(
+            t("admin:members.verify.approvedToast", { name: item.name }),
+            "success",
+          );
+          removeFromSelection(item.id);
+        },
+        onError: () => showToast(t("admin:members.verify.errorToast"), "error"),
+        onSettled: () => setDecidingId(null),
+      },
+    );
+    setApprovingItem(null);
   }
 
   function requestDecline(item: JoinRequestView) {
@@ -180,7 +219,7 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
           rememberDecision({
             ...item,
             status: dto.status,
-            reviewedAt: dto.reviewedAt,
+            ...reviewerFieldsFrom(dto),
             declineReason: dto.declineReason,
           });
           showToast(
@@ -235,12 +274,16 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     leaving,
     decidingId,
     decliningItem,
+    approvingItem,
     selection,
     isPending: reviewJoinRequest.isPending,
     displayedWaitlisted,
     displayedDecided,
     handleBulkOutcome,
-    resolve,
+    waitlist,
+    requestApprove,
+    confirmApprove,
+    closeApprove: () => setApprovingItem(null),
     requestDecline,
     confirmDecline,
     closeDecline: () => setDecliningItem(null),

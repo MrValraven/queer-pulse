@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { normalizeHandle } from "../../shared/handles";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfileData } from "../../app/providers/useProfile";
+import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -40,6 +42,8 @@ export function UsernameSection() {
   const { profile } = useProfileData();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { refresh } = useAuth();
+  const queryClient = useQueryClient();
 
   // The committed username. Baseline for "this is your handle" and the
   // unchanged check; updated locally once a save lands (demo persists nothing).
@@ -67,6 +71,14 @@ export function UsernameSection() {
         await new Promise((r) => setTimeout(r, 600));
       } else {
         await updateUsername(normalized);
+        // Pull the new handle onto the cached session. Chat decides which side
+        // a bubble sits on by comparing each sender's handle with
+        // `useAuth().user.profile.slug`, and the server now sends the new one,
+        // so a stale session put every message the member wrote on the other
+        // person's side until the next page load. `refresh()` never throws.
+        await refresh();
+        void queryClient.invalidateQueries({ queryKey: ["profile"] });
+        void queryClient.invalidateQueries({ queryKey: ["members"] });
       }
       setSavedName(normalized);
       showToast(t("settings:editProfile.username.toast.updated"), "success");

@@ -24,6 +24,11 @@ export interface ChipOption {
    *  which must always stay clickable or a member could trap themselves in a
    *  filter they cannot undo. */
   count?: number;
+  /** Marks the chip dimmed and unpickable for a reason the caller knows and
+   *  `count` cannot carry, such as a count rendered inside the label. Same
+   *  rule as a zero `count`: a selected chip stays clickable whatever this
+   *  says (`ChipSelect` only). */
+  isUnavailable?: boolean;
   /** Accessible name for the chip. Required alongside `count`: the badge is
    *  `aria-hidden`, so without this a screen reader hears the bare label and
    *  loses the number entirely (and with the badge exposed it would hear
@@ -231,7 +236,8 @@ export function ChipSelect({
     // already full and this is not one of the chips on. Disabled rather
     // than merely dimmed, so the affordance matches the outcome, but never
     // while it is selected, or unticking it would be impossible.
-    const isUnavailable = (option.count === 0 || isAtCap) && !isOn;
+    const isUnavailable =
+      (option.count === 0 || option.isUnavailable === true || isAtCap) && !isOn;
     const isTicked = tick && isOn;
     const chipClassName = [
       chipClass(isOn, tone, tint, isTouchSized),

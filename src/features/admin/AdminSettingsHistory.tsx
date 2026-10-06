@@ -3,24 +3,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { usePlatformSettingChanges } from "./api/usePlatformSettings";
 import type { PlatformSettingChangeDTO } from "./api/platformSettings.api";
-import { SETTING_LABEL_KEYS } from "./adminSettings.data";
+import { settingLabel } from "./settingLabel";
 import styles from "./AdminSettingsPage.module.css";
-
-/**
- * A `settingKey` the frontend doesn't recognize yet — the backend can ship a
- * new kill switch before `SETTING_LABEL_KEYS` is updated for it — falls back to
- * a humanized version of the raw camelCase name (`lockdownEnabled` →
- * `Lockdown Enabled`) rather than crashing or printing the machine key as-is.
- */
-function fallbackLabel(key: string): string {
-  const spaced = key.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
-}
-
-function settingLabel(key: string, t: TFunction): string {
-  const labelKey = SETTING_LABEL_KEYS[key];
-  return labelKey ? t(labelKey) : fallbackLabel(key);
-}
 
 /**
  * Values arrive as raw strings — booleans as the literal `"true"`/`"false"`,

@@ -324,10 +324,24 @@
   flex: 1;
   min-width: 0;
 }
+/* Flex so the host's "Host" chip sits centred beside the name and drops
+   under it on a narrow row. A plain name is one flex item and reads as
+   before. */
 .attName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
   font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
+}
+/* The "Host" chip after the host's own name in the going list, trimmed to
+   the going preview's chip (GoingAttendeesPreview.module.css). Scoped under
+   `.attName` so it outranks the shared chip's padding whatever the load
+   order. */
+.attName .attHostChip {
+  padding: 2px 7px;
 }
 .attMeta {
   font-size: var(--text-12);

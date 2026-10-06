@@ -1,13 +1,21 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { readableTextIs } from "../../test/readableText";
 import { TestProviders } from "../../test/TestProviders";
 import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
+import { JoinRequestApproveModal } from "./JoinRequestApproveModal";
 import { makeJoinRequestRow } from "./joinRequestTestRow";
 import { useJoinRequestAssignment } from "./useJoinRequestAssignment";
 import { useJoinRequestQueueDecisions } from "./useJoinRequestQueueDecisions";
 import type { JoinRequestView } from "./api/useJoinRequests";
+
+// The single-row review write, stubbed so a test can see exactly what an
+// approve sends and when.
+const reviewMutate = vi.fn();
+vi.mock("./api/useReviewJoinRequest", () => ({
+  useReviewJoinRequest: () => ({ mutate: reviewMutate, isPending: false }),
+}));
 
 /**
  * Selection is the gate on every bulk action, so it is exercised through the
@@ -29,16 +37,27 @@ function Harness({
   const assignment = useJoinRequestAssignment();
   const decisions = useJoinRequestQueueDecisions(rows);
   return (
-    <AdminVerifyQueueWaiting
-      pending={rows}
-      waitlisted={[]}
-      isLoading={false}
-      hasLoadError={hasLoadError}
-      isRetrying={isRetrying}
-      onRetry={onRetry}
-      decisions={decisions}
-      assignment={assignment}
-    />
+    <>
+      <AdminVerifyQueueWaiting
+        pending={rows}
+        waitlisted={[]}
+        isLoading={false}
+        hasLoadError={hasLoadError}
+        isRetrying={isRetrying}
+        onRetry={onRetry}
+        decisions={decisions}
+        assignment={assignment}
+      />
+      {/* Mounted the way AdminVerifyQueue mounts it. */}
+      {decisions.approvingItem && (
+        <JoinRequestApproveModal
+          applicantName={decisions.approvingItem.name}
+          pending={decisions.isPending}
+          onConfirm={decisions.confirmApprove}
+          onClose={decisions.closeApprove}
+        />
+      )}
+    </>
   );
 }
 
@@ -127,6 +146,41 @@ describe("AdminVerifyQueueWaiting selection", () => {
     expect(
       screen.queryByRole("region", { name: "Bulk actions" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("AdminVerifyQueueWaiting approve", () => {
+  it("asks for a reason before welcoming anyone in, then sends it", async () => {
+    const user = userEvent.setup();
+    reviewMutate.mockReset();
+    renderQueue();
+
+    const welcomeButtons = await screen.findAllByRole("button", {
+      name: "Welcome in",
+    });
+    await user.click(welcomeButtons[0]!);
+
+    // The click opens the confirm; nothing reaches the server yet.
+    const dialog = await screen.findByRole("dialog", {
+      name: "Welcome Kai Mendes in?",
+    });
+    expect(reviewMutate).not.toHaveBeenCalled();
+
+    const confirmButton = within(dialog).getByRole("button", {
+      name: "Welcome in",
+    });
+    expect(confirmButton).toBeDisabled();
+
+    await user.click(
+      within(dialog).getByRole("radio", { name: /a member vouched/i }),
+    );
+    await user.click(confirmButton);
+
+    expect(reviewMutate).toHaveBeenCalledTimes(1);
+    expect(reviewMutate).toHaveBeenCalledWith(
+      { id: "req-1", status: "approved", approvalReason: "member_vouched" },
+      expect.anything(),
+    );
   });
 });
 

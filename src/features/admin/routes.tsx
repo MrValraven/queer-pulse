@@ -174,6 +174,10 @@ const AdminGovernancePage = lazyNamed(
   () => import("./AdminGovernancePage"),
   "AdminGovernancePage",
 );
+const AdminPlatformLogPage = lazyNamed(
+  () => import("./platformLog/AdminPlatformLogPage"),
+  "AdminPlatformLogPage",
+);
 const AdminRoadmapPage = lazyNamed(
   () => import("./AdminRoadmapPage"),
   "AdminRoadmapPage",
@@ -443,6 +447,7 @@ export function adminRoutes() {
         element={<AdminResourceSuggestionsPage />}
       />
       <Route path={routes.adminGovernance} element={<AdminGovernancePage />} />
+      <Route path={routes.adminLog} element={<AdminPlatformLogPage />} />
       <Route path={routes.adminRoadmap} element={<AdminRoadmapPage />} />
       <Route path={routes.adminSettings} element={<AdminSettingsPage />} />
       <Route path={routes.adminReports} element={<AdminReportsPage />} />

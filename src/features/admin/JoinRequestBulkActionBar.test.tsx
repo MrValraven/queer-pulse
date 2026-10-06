@@ -11,6 +11,7 @@ import { makeJoinRequestRow } from "./joinRequestTestRow";
  *
  * 1. NOTHING FIRES WITHOUT A CONFIRMATION. Approve, waitlist and decline all
  *    close applications from real people, and none of them is undoable here.
+ *    An approve and a decline also require one reason for the whole batch.
  * 2. A PARTIAL RESULT IS REPORTED AS ONE. `POST /admin/join-requests/bulk`
  *    reviews each id independently, so a batch routinely half-lands, and the
  *    reviewer has to see which applicant was refused and why rather than a
@@ -52,6 +53,16 @@ beforeEach(() => {
   showToast.mockReset();
 });
 
+/** Opens the bulk approve confirm and picks a reason, which it requires. Each
+ *  reason is a role="radio" card whose accessible name also carries its detail
+ *  line, so the name is matched loosely. */
+async function openApproveWithReason(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(await screen.findByRole("button", { name: "Approve" }));
+  await user.click(
+    await screen.findByRole("radio", { name: /a member vouched/i }),
+  );
+}
+
 describe("JoinRequestBulkActionBar", () => {
   it("shows the selection count and the three decisions", async () => {
     renderBar();
@@ -69,16 +80,31 @@ describe("JoinRequestBulkActionBar", () => {
     expect(screen.getByRole("button", { name: "Decline" })).toBeInTheDocument();
   });
 
-  it("confirms before approving, and calls nothing until confirmed", async () => {
+  it("confirms before approving, requires a reason, and calls nothing until confirmed", async () => {
     const user = userEvent.setup();
     bulkReview.mockResolvedValue({ succeeded: ["req-1", "req-2"], failed: [] });
     renderBar();
 
     await user.click(await screen.findByRole("button", { name: "Approve" }));
 
-    // The confirmation names the count and the action before anything is sent.
+    // The confirmation names the count and the action before anything is sent,
+    // and stays shut until a reason for the whole batch is picked.
     expect(
       await screen.findByRole("heading", { name: "Approve 2 requests?" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Approve all" })).toBeDisabled();
+    expect(bulkReview).not.toHaveBeenCalled();
+
+    await user.click(
+      await screen.findByRole("radio", { name: /a member vouched/i }),
+    );
+
+    // The reason that will be recorded against every selected request is
+    // named before the reviewer confirms.
+    expect(
+      await screen.findByText(
+        "This records “A member vouched” against all 2 selected requests.",
+      ),
     ).toBeInTheDocument();
     expect(bulkReview).not.toHaveBeenCalled();
 
@@ -89,6 +115,7 @@ describe("JoinRequestBulkActionBar", () => {
         ["req-1", "req-2"],
         "approved",
         undefined,
+        "member_vouched",
       ),
     );
   });
@@ -122,7 +149,7 @@ describe("JoinRequestBulkActionBar", () => {
     });
     const onOutcome = renderBar();
 
-    await user.click(await screen.findByRole("button", { name: "Approve" }));
+    await openApproveWithReason(user);
     await user.click(
       await screen.findByRole("button", { name: "Approve all" }),
     );
@@ -150,7 +177,7 @@ describe("JoinRequestBulkActionBar", () => {
     bulkReview.mockResolvedValue({ succeeded: ["req-1", "req-2"], failed: [] });
     const onOutcome = renderBar();
 
-    await user.click(await screen.findByRole("button", { name: "Approve" }));
+    await openApproveWithReason(user);
     await user.click(
       await screen.findByRole("button", { name: "Approve all" }),
     );
@@ -174,15 +201,15 @@ describe("JoinRequestBulkActionBar", () => {
     });
     expect(confirmDecline).toBeDisabled();
 
-    // The Select's trigger is named by its FormField label, same wiring
-    // JoinRequestDeclineModal.test.tsx exercises.
-    await user.click(await screen.findByRole("button", { name: "Reason" }));
+    // Each reason is a role="radio" card, same wiring
+    // JoinRequestDeclineModal.test.tsx exercises; the accessible name carries
+    // the detail line too, so it is matched loosely.
     await user.click(
-      await screen.findByRole("option", { name: "Looks like spam" }),
+      await screen.findByRole("radio", { name: /looks like spam/i }),
     );
 
     // The confirmation states the reason that will be recorded against all of
-    // them, so the reviewer confirms against the record rather than a dropdown.
+    // them, so the reviewer confirms against the record itself.
     expect(
       await screen.findByText(
         "This records “Looks like spam” against all 2 selected requests.",
@@ -195,6 +222,7 @@ describe("JoinRequestBulkActionBar", () => {
         ["req-1", "req-2"],
         "declined",
         "spam_pattern",
+        undefined,
       ),
     );
   });

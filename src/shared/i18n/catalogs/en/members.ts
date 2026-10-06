@@ -285,7 +285,7 @@ export const members: Catalog = {
   // ── Profile stat row + content tabs (ProfileStatsRow, ProfileTabBar) ───────
   "profile.stats.vouches": "Vouches",
   "profile.stats.communities": "Communities",
-  "profile.stats.personas": "Also as",
+  "profile.stats.personas": "Personas",
   "profile.tabs.about": "About",
   "profile.tabs.work": "Work",
   "profile.tabs.community": "Community",
@@ -501,6 +501,8 @@ export const members: Catalog = {
   "workPicker.searchPlaceholder": "Search a field or role…",
   "workPicker.searchAriaLabel": "Search fields and roles",
   "workPicker.noMatch": "No field or role matches “{query}”.",
+  "workPicker.showAll": "Show all fields and roles",
+  "workPicker.showOnlyPicks": "Show only my picks",
   "workPicker.unlistedNote":
     "Only you and your connections see this. Sex work still carries stigma, and a list anyone could search might out you, so it stays out of member search, filters, suggestions and directory cards.",
   "profileEdit.field.addSkillPlaceholder": "Search skills…",

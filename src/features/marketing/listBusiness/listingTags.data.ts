@@ -11,7 +11,7 @@
 import type { TFunction } from "../../../shared/i18n/types";
 
 export type ListingTagGroupId =
-  "visiting" | "happening" | "foodDrink" | "pricing" | "languages";
+  "visiting" | "happening" | "foodDrink" | "pricing";
 
 /** Any tag group: the local vocabulary or the server's copy of it. */
 export interface ListingTagGroupShape {
@@ -73,16 +73,6 @@ export const LISTING_TAG_GROUPS: readonly ListingTagGroup[] = [
       "Student discount",
     ],
   },
-  {
-    id: "languages",
-    tags: [
-      "Portuguese spoken",
-      "English spoken",
-      "Spanish spoken",
-      "French spoken",
-      "Portuguese Sign Language",
-    ],
-  },
 ];
 
 /** The most tags one listing can carry (`addTag` in useListingForm enforces it). */
@@ -93,7 +83,6 @@ export const LISTING_TAG_GROUP_LABEL_KEYS: Record<string, string> = {
   happening: "marketing:listBusiness.tagGroup.happening",
   foodDrink: "marketing:listBusiness.tagGroup.foodDrink",
   pricing: "marketing:listBusiness.tagGroup.pricing",
-  languages: "marketing:listBusiness.tagGroup.languages",
 };
 
 export const LISTING_TAG_LABEL_KEYS: Record<string, string> = {
@@ -124,12 +113,6 @@ export const LISTING_TAG_LABEL_KEYS: Record<string, string> = {
   "Sliding scale": "marketing:listBusiness.tag.slidingScale",
   "Pay what you can": "marketing:listBusiness.tag.payWhatYouCan",
   "Student discount": "marketing:listBusiness.tag.studentDiscount",
-  "Portuguese spoken": "marketing:listBusiness.tag.portugueseSpoken",
-  "English spoken": "marketing:listBusiness.tag.englishSpoken",
-  "Spanish spoken": "marketing:listBusiness.tag.spanishSpoken",
-  "French spoken": "marketing:listBusiness.tag.frenchSpoken",
-  "Portuguese Sign Language":
-    "marketing:listBusiness.tag.portugueseSignLanguage",
 };
 
 /** Display label for a stored tag. Falls back to the stored string. */

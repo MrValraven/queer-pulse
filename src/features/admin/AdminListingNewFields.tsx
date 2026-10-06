@@ -2,7 +2,9 @@ import { useId } from "react";
 import { FormField, RadioCardGroup } from "../../shared/components/ui";
 import type { RadioCardOption } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
 import type { ListingPublishState } from "./api/adminListingCreate.api";
+import { AdminMemberPickerField } from "./AdminMemberPickerField";
 import styles from "./AdminListingNewPage.module.css";
 
 /**
@@ -16,7 +18,6 @@ export const ADMIN_LISTING_FIELDS_ANCHOR = "lb-admin-fields";
 
 /** Server ceilings, mirrored so the console can stop an admin before the API
  *  has to (`CreateListingOwnerOfferDto`). */
-const MEMBER_SLUG_MAX_LENGTH = 120;
 const OFFER_NOTE_MAX_LENGTH = 1000;
 
 const PUBLISH_STATES: ListingPublishState[] = ["review", "live"];
@@ -24,10 +25,11 @@ const PUBLISH_STATES: ListingPublishState[] = ["review", "live"];
 export interface AdminListingNewFieldsProps {
   publishState: ListingPublishState;
   onPublishStateChange: (publishState: ListingPublishState) => void;
-  /** The member being offered the listing, by public profile slug. Empty
-   *  means the listing stays in the team's hands for now. */
-  ownerSlug: string;
-  onOwnerSlugChange: (ownerSlug: string) => void;
+  /** The member being offered the listing, picked from a member search. The
+   *  page sends their public profile slug. Null means the listing stays in
+   *  the team's hands for now. */
+  owner: StrangerMemberResult | null;
+  onOwnerChange: (owner: StrangerMemberResult | null) => void;
   ownerNote: string;
   onOwnerNoteChange: (ownerNote: string) => void;
 }
@@ -43,15 +45,15 @@ export interface AdminListingNewFieldsProps {
 export function AdminListingNewFields({
   publishState,
   onPublishStateChange,
-  ownerSlug,
-  onOwnerSlugChange,
+  owner,
+  onOwnerChange,
   ownerNote,
   onOwnerNoteChange,
 }: AdminListingNewFieldsProps) {
   const { t } = useTranslation();
   const publishLabelId = useId();
   const publishHintId = useId();
-  const hasOwnerSlug = ownerSlug.trim() !== "";
+  const hasOwner = owner !== null;
 
   const publishOptions: RadioCardOption<ListingPublishState>[] =
     PUBLISH_STATES.map((state) => ({
@@ -97,20 +99,16 @@ export function AdminListingNewFields({
       <div className={styles.group}>
         <div className={styles.label}>{t("admin:listingNew.owner.label")}</div>
         <p className={styles.hint}>{t("admin:listingNew.owner.hint")}</p>
-        <FormField
-          label={t("admin:listingNew.owner.slugLabel")}
+        <AdminMemberPickerField
+          label={t("admin:listingNew.owner.memberLabel")}
+          searchAriaLabel={t("admin:listingNew.owner.memberSearchAria")}
           helper={t("admin:listingNew.owner.slugHelper")}
-        >
-          <input
-            value={ownerSlug}
-            maxLength={MEMBER_SLUG_MAX_LENGTH}
-            autoComplete="off"
-            onChange={(event) => onOwnerSlugChange(event.target.value)}
-          />
-        </FormField>
+          picked={owner}
+          onPick={onOwnerChange}
+        />
         {/* The note rides with the offer, so it only has somewhere to go once
-            a member is named. */}
-        {hasOwnerSlug && (
+            a member is picked. */}
+        {hasOwner && (
           <FormField
             label={t("admin:listingNew.owner.noteLabel")}
             helper={t("admin:listingNew.owner.noteHelper")}

@@ -2,7 +2,6 @@ import { SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
-import { useHowCommunitiesWorkModal } from "../marketing/useHowCommunitiesWorkModal";
 import { Link } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import { CommunitiesToolbar } from "./CommunitiesToolbar";
@@ -17,30 +16,12 @@ import type { TopTab } from "./useCommunitiesTopTab";
 import styles from "./CommunitiesHubHeader.module.css";
 
 /**
- * The quiet text button under the lead line that opens "How communities
- * work". Both heading variants render it in the same place, so the explainer
- * is one tap away on either tab.
- */
-function HowItWorksButton({ onOpen }: { onOpen: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <button type="button" className={styles.howItWorksButton} onClick={onOpen}>
-      {t("communities:hub.howItWorksCta")}
-    </button>
-  );
-}
-
-/**
  * The "My communities" heading block: the page name steps down to an eyebrow
  * so the greeting can carry the h1. Its own component because it is the only
  * part of the header that needs the membership map — mounted on this tab
  * alone, so Discover never pays for `GET /me/communities`.
  */
-function HubMineHeading({
-  onOpenHowItWorks,
-}: {
-  onOpenHowItWorks: () => void;
-}) {
+function HubMineHeading() {
   const { t } = useTranslation();
   const { profile } = useProfileData();
   const memberships = useMyCommunities();
@@ -68,7 +49,6 @@ function HubMineHeading({
           {t("communities:hub.sub", { count: Object.keys(memberships).length })}
         </p>
       )}
-      <HowItWorksButton onOpen={onOpenHowItWorks} />
       <HubInvitationsLink />
     </div>
   );
@@ -101,11 +81,7 @@ function HubInvitationsLink() {
 }
 
 /** Discover's heading block: the platform-wide title and its standing lead. */
-function HubDiscoverHeading({
-  onOpenHowItWorks,
-}: {
-  onOpenHowItWorks: () => void;
-}) {
+function HubDiscoverHeading() {
   const { t } = useTranslation();
 
   return (
@@ -115,20 +91,8 @@ function HubDiscoverHeading({
         <em>{t("communities:hubShell.titleEm")}</em>
       </h1>
       <p className={styles.lead}>{t("communities:hubShell.subtitle")}</p>
-      <HowItWorksButton onOpen={onOpenHowItWorks} />
     </div>
   );
-}
-
-/**
- * The "How communities work" explainer, the page's one explain-this-page
- * affordance. It opens from a quiet text button directly under the lead line
- * on both tabs, which keeps the control row free for the toolbar alone. The
- * header renders `modalElement` once for whichever tab is showing.
- */
-function useHowItWorksExplainer() {
-  const { openModal, modalElement } = useHowCommunitiesWorkModal();
-  return { openExplainer: openModal, modalElement };
 }
 
 /**
@@ -149,16 +113,10 @@ export function CommunitiesHubHeader({
   active: TopTab;
   onChange: (next: TopTab) => void;
 }) {
-  const explainer = useHowItWorksExplainer();
-
   return (
     <header className={styles.header}>
       <div className="wrap">
-        {active === "mine" ? (
-          <HubMineHeading onOpenHowItWorks={explainer.openExplainer} />
-        ) : (
-          <HubDiscoverHeading onOpenHowItWorks={explainer.openExplainer} />
-        )}
+        {active === "mine" ? <HubMineHeading /> : <HubDiscoverHeading />}
         <div className={styles.controls}>
           <CommunitiesToolbar
             discover={discover}
@@ -167,7 +125,6 @@ export function CommunitiesHubHeader({
           />
         </div>
       </div>
-      {explainer.modalElement}
     </header>
   );
 }

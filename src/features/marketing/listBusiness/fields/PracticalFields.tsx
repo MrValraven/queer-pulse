@@ -10,7 +10,8 @@ import styles from "../ListBusinessPage.module.css";
 
 /**
  * The practical field body: where the place is, when it is open, and how to
- * reach it online.
+ * reach it online. An online-only business (the toggle sits with the basics)
+ * gets a short note in place of the address and no hours at all.
  *
  * Shared by the create wizard's step 3 pane (`StepPractical`) and the owner
  * editor's Practical section. Fragment, so each field stays a direct child of
