@@ -552,7 +552,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* The "+N" chip both one-line card rows end with. It never shrinks, so the
+/* The "+N" chip a one-line card row ends with. It never shrinks, so the
    room `useOneLineFit` reserved for it is the room it takes. */
 .moreChip {
   display: inline-flex;
@@ -587,33 +587,6 @@
 .fitMeasureLayer > * {
   flex: none;
   max-width: none;
-}
-
-/* ── Who runs it on the card ─────────────────────────────────────────────
-   The owner's own tags, as one quiet line under the access row. Each tag
-   after the first carries its own " · ", kept by `white-space: pre`, and the
-   tags that do not fit fold into the same "+N" chip as the access row. */
-.ownersRow {
-  position: relative;
-  display: flex;
-  flex-wrap: nowrap;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  line-height: 16px;
-  color: var(--ink-60);
-}
-.ownersItem {
-  min-width: 0;
-  overflow: hidden;
-  white-space: pre;
-  text-overflow: ellipsis;
-}
-.ownersRow .moreChip {
-  padding-block: 0;
-  padding-inline-start: 6px;
 }
 
 /* ── "Use my location" ─────────────────────────────────────────────────────

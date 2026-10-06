@@ -14,14 +14,7 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import { listingTagLabel } from "./listingTags.data";
-<<<<<<< Updated upstream
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
-=======
-import {
-  normalizeOwnerIdentities,
-  ownerIdentityLabelKey,
-} from "./listingOwnerIdentities.data";
->>>>>>> Stashed changes
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
@@ -80,23 +73,6 @@ function onlineSummary(t: TFunction, draft: ListingDraft): string {
   if (draft.social.phone)
     bits.push(t("marketing:listBusiness.step5.online.phone"));
   return bits.join(" · ");
-}
-
-/** The ownership badge label plus the optional who-runs-it tags, joined on
- *  one line. Both parts are optional, so empties drop out before joining. */
-function ownershipSummary(t: TFunction, draft: ListingDraft): string {
-  return [
-    draft.badge === "owned"
-      ? t("marketing:listBusiness.step1.owned.tag")
-      : draft.badge === "friendly"
-        ? t("marketing:listBusiness.step1.friendly.tag")
-        : "",
-    ...normalizeOwnerIdentities(draft.ownerIdentities).map((slug) =>
-      t(ownerIdentityLabelKey(slug)),
-    ),
-  ]
-    .filter(Boolean)
-    .join(" · ");
 }
 
 function Row({
@@ -284,7 +260,11 @@ export function StepReview({
           </Row>
         )}
         <Row k={t("marketing:listBusiness.step5.row.ownership")}>
-          {ownershipSummary(t, draft)}
+          {draft.badge === "owned"
+            ? t("marketing:listBusiness.step1.owned.tag")
+            : draft.badge === "friendly"
+              ? t("marketing:listBusiness.step1.friendly.tag")
+              : ""}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.price")}>
           {draft.price ? optionLabel(t, PRICES, draft.price) : ""}

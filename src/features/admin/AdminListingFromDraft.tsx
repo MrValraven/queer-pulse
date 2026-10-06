@@ -7,10 +7,15 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
+import { initialsOf, tintForSlug } from "../../shared/api/refs";
 import { routes } from "../../app/routeMap";
+import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
 import { AdminListingNewForm } from "./AdminListingNewForm";
 import { teamDraftFromMemberDraft } from "./listingDraftHandover";
-import type { AdminListingDraftDetailDTO } from "./api/adminListingDrafts.api";
+import type {
+  AdminListingDraftDetailDTO,
+  ListingDraftOwnerDTO,
+} from "./api/adminListingDrafts.api";
 import { useAdminListingDraft } from "./api/useAdminListingDrafts";
 import styles from "./AdminListingNewPage.module.css";
 
@@ -20,6 +25,21 @@ function isDraftGoneError(error: unknown): boolean {
   return (
     error instanceof ApiError && (error.status === 404 || error.status === 403)
   );
+}
+
+/** The draft's member, shaped as a pick from the owner field's member
+ *  search, so the offer opens already addressed to them as a clearable chip. */
+function pickedOwnerFromDraftOwner(
+  draftOwner: ListingDraftOwnerDTO,
+): StrangerMemberResult {
+  return {
+    slug: draftOwner.slug,
+    name: `${draftOwner.firstName} ${draftOwner.lastName}`.trim(),
+    sub: "",
+    avatarUrl: draftOwner.avatarUrl ?? undefined,
+    initials: initialsOf(draftOwner.firstName, draftOwner.lastName),
+    tint: tintForSlug(draftOwner.slug),
+  };
 }
 
 interface AdminListingFromDraftProps {
@@ -84,10 +104,14 @@ function DraftHandoverForm({
     () => teamDraftFromMemberDraft(draft.payload),
     [draft.payload],
   );
+  // Read once by the form on mount, so a fresh object each render is fine.
+  const initialOwner = draft.owner
+    ? pickedOwnerFromDraftOwner(draft.owner)
+    : null;
   const placeName = draft.name.trim();
   const ownerName = draft.owner?.firstName ?? "";
   // An erased member can't be offered anything, so the offer starts empty
-  // and the listing stays with the team unless the admin names someone.
+  // and the listing stays with the team unless the admin picks someone.
   const initialOwnerNote = draft.owner
     ? placeName
       ? t("admin:listingNew.fromDraft.offerNote", {
@@ -114,7 +138,7 @@ function DraftHandoverForm({
       </section>
       <AdminListingNewForm
         initialDraft={initialDraft}
-        initialOwnerSlug={draft.owner?.slug ?? ""}
+        initialOwner={initialOwner}
         initialOwnerNote={initialOwnerNote}
         onAddAnother={onAddAnother}
       />

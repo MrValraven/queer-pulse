@@ -290,41 +290,11 @@ describe("placeMatchesOwnedBy", () => {
       placeMatchesOwnedBy(businessToLocal(withoutTags, true), ["women"]),
     ).toBe(false);
   });
-});
 
-describe("filterLocalPlaces owner identities", () => {
-  const noFilters = { categories: [], query: "", vibes: [] };
-  // Three fixed demo businesses, already tagged in directoryPlaces.ts:
-  // "Estúdio Beatriz Pinto" carries ["women"], "Navalha" carries
-  // ["trans", "non-binary"], and "Atelier Pulso" carries no tags at all.
-  const womenOwnedName = "Estúdio Beatriz Pinto";
-  const transNonBinaryName = "Navalha";
-  const untaggedName = "Atelier Pulso";
-  const places = [womenOwnedName, transNonBinaryName, untaggedName].map(
-    (name) =>
-      businessToLocal(
-        DIRECTORY_PLACES.find((place) => place.name === name)!,
-        true,
-      ),
-  );
-
-  it("keeps every place when no tag is chosen", () => {
-    expect(
-      filterLocalPlaces(places, { ...noFilters, ownerIdentities: [] }),
-    ).toHaveLength(3);
-  });
-
-  it("matches any chosen tag", () => {
-    const names = filterLocalPlaces(places, {
-      ...noFilters,
-      ownerIdentities: ["women", "non-binary"],
-    }).map((place) => place.name);
-    expect(names).toEqual([womenOwnedName, transNonBinaryName]);
-  });
-
-  it("drops untagged places while a tag is chosen", () => {
-    expect(
-      filterLocalPlaces(places, { ...noFilters, ownerIdentities: ["bipoc"] }),
-    ).toHaveLength(0);
+  it("matches the bipoc tag like any other", () => {
+    const local = businessToLocal({ ...salon, ownedBy: ["bipoc"] }, true);
+    expect(placeMatchesOwnedBy(local, ["bipoc"])).toBe(true);
+    expect(placeMatchesOwnedBy(local, ["women", "bipoc"])).toBe(true);
+    expect(placeMatchesOwnedBy(local, ["women"])).toBe(false);
   });
 });

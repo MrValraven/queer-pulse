@@ -14,17 +14,14 @@ import {
   PRICES,
 } from "../listBusiness.data";
 import { useSimilarListings } from "../api/useSimilarListings";
-import { isOwnerBlockHidden } from "../ownerBlock";
 import type { ListingForm } from "../useListingForm";
 import { DuplicateNotice } from "../DuplicateNotice";
 import { StepBasicsBadgeField } from "../StepBasicsBadgeField";
-import { StepBasicsOwnerIdentityField } from "../StepBasicsOwnerIdentityField";
 import styles from "../ListBusinessPage.module.css";
 
 /**
  * The basics field body: name, categories, the online-only toggle and the
- * neighbourhood, ownership badge and its optional who-runs-it tags, price
- * band and the one-line blurb.
+ * neighbourhood, ownership badge, price band and the one-line blurb.
  *
  * The online-only toggle sits here, directly above the neighbourhood, because
  * it decides whether a neighbourhood is asked for at all. It used to live on
@@ -152,9 +149,6 @@ export function BasicsFields({
       )}
 
       <StepBasicsBadgeField form={form} />
-      {!isOwnerBlockHidden(draft) && (
-        <StepBasicsOwnerIdentityField form={form} />
-      )}
 
       <FormField
         className={styles.lbField}

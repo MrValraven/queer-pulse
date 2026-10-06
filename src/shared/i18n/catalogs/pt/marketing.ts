@@ -1579,14 +1579,6 @@ export const marketing: Catalog = {
   "listBusiness.step1.badgeHelper":
     "Queer-owned, ou um lugar que nos acolhe genuinamente? Ambos pertencem aqui. Isto é um acolhimento, aberto a toda a gente.",
   "listBusiness.step1.badgeAria": "Propriedade",
-  "listBusiness.ownerIdentity.women": "Negócio de mulheres",
-  "listBusiness.ownerIdentity.trans": "Negócio de pessoas trans",
-  "listBusiness.ownerIdentity.nonBinary": "Negócio de pessoas não binárias",
-  "listBusiness.ownerIdentity.bipoc": "Negócio de pessoas BIPOC",
-  "listBusiness.step1.ownerIdentityLabel":
-    "Queres dizer mais sobre quem o gere?",
-  "listBusiness.step1.ownerIdentityHelper":
-    "Opcional. Escolhe as que se aplicam a quem detém ou lidera o espaço. Aparecem na tua listagem para toda a gente e ajudam as pessoas a encontrar-te.",
   "listBusiness.step1.owned.tag": "Queer-owned",
   "listBusiness.step1.owned.title": "Gerido ou liderado pela nossa comunidade",
   "listBusiness.step1.owned.desc":
@@ -1836,6 +1828,9 @@ export const marketing: Catalog = {
   "listBusiness.step4.ownedBy.nonbinary.title": "Pessoas não binárias",
   "listBusiness.step4.ownedBy.nonbinary.sub":
     "Incluindo pessoas genderqueer, agénero e de género fluido.",
+  "listBusiness.step4.ownedBy.bipoc.title": "Pessoas BIPOC",
+  "listBusiness.step4.ownedBy.bipoc.sub":
+    "Pessoas negras, indígenas e racializadas.",
   "listBusiness.step4.ownedByPublicNote":
     "Estas etiquetas são públicas, mesmo que mantenhas o teu nome privado. Num negócio pequeno, uma etiqueta pode apontar diretamente para ti, por isso marca só o que te sentes bem em que toda a gente saiba. Podes mudar isto quando quiseres.",
   "listBusiness.step4.loopHeading": "Manteres-te a par",
@@ -2033,8 +2028,6 @@ export const marketing: Catalog = {
     "O teu bairro aparece aqui, ao lado da categoria.",
   "listBusiness.livePreview.caption.badge":
     "O teu distintivo aparece aqui, na foto do teu cartão.",
-  "listBusiness.livePreview.caption.ownerIdentities":
-    "Aparece no teu cartão e na página da listagem, para toda a gente.",
   "listBusiness.livePreview.caption.evidence":
     "Só quem gere este anúncio e a equipa de revisão veem isto. Dá sentido ao distintivo.",
   "listBusiness.livePreview.caption.price":
@@ -2255,8 +2248,6 @@ export const marketing: Catalog = {
     "as respostas sobre acessibilidade",
   "listBusiness.editor.history.field.accessibilityNote":
     "a nota sobre acessibilidade",
-  "listBusiness.editor.history.field.ownerIdentities":
-    "as etiquetas de quem gere",
   "listBusiness.editor.history.field.services": "os serviços e preços",
   "listBusiness.editor.history.field.menu": "o menu",
   "listBusiness.editor.history.field.pricingMode":
@@ -2700,8 +2691,6 @@ export const marketing: Catalog = {
     "Ordem das categorias (a primeira é a principal)",
   "listBusiness.editor.restore.diff.field.hood": "Bairro",
   "listBusiness.editor.restore.diff.field.badge": "Quem o gere",
-  "listBusiness.editor.restore.diff.field.ownerIdentities":
-    "Etiquetas de quem gere",
   "listBusiness.editor.restore.diff.field.evidence":
     "Em que sentido é queer-owned",
   "listBusiness.editor.restore.diff.field.price": "Escalão de preço",
@@ -2907,13 +2896,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
-<<<<<<< Updated upstream
+  "changelog.releases.2026-10-05.headline":
+    "As conversas que leste ficam lidas, etiquetas BIPOC nos espaços e um registo de cada ação da equipa.",
   "changelog.releases.2026-10-02.headline":
     "O diretório ganha um separador Online e etiquetas sobre quem gere um negócio, e as personas podem importar o feed de um podcast.",
-=======
-  "changelog.releases.2026-10-05.headline":
-    "As conversas que leste ficam lidas, e já podes encontrar locais por quem os gere.",
->>>>>>> Stashed changes
   "changelog.releases.2026-09-30.headline":
     "Um novo início de sessão com um Q vivo, e a exportação dos teus dados cobre quase toda a tua conta.",
   "changelog.releases.2026-09-29.headline":
@@ -3048,7 +3034,6 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
-<<<<<<< Updated upstream
   "changelog.entries.tags-and-snippets-type-normally.title":
     "As tags de um item aceitam vírgulas, e os trechos de código uma nova linha",
   "changelog.entries.tags-and-snippets-type-normally.body":
@@ -3057,8 +3042,6 @@ export const marketing: Catalog = {
     "O diretório ganha um separador Online",
   "changelog.entries.directory-online-tab.body":
     "Os negócios queer e queer-friendly que só existem online têm agora a sua própria vista, ao lado de Lista e Mapa.",
-  "changelog.entries.directory-online-tab.details":
-    "Estes negócios já estavam no diretório, mas misturados na lista e deixados de fora do mapa sem aviso. O separador Online abre com uma pequena constelação destes negócios à volta do pulso da comunidade, e ao apontares para um deles o cartão correspondente acende-se. Os cartões mostram o endereço web do próprio negócio e onde o encontrar, em vez de um bairro ou de um horário. Os filtros que só uma porta para a rua consegue responder, como aberto agora, acessibilidade, ambiente e a tua localização, ficam de fora neste separador. A constelação deixa de se mexer se tiveres pedido menos movimento.",
   "changelog.entries.online-only-businesses-no-blank-location.title":
     "Os negócios só online já não mostram uma localização em branco",
   "changelog.entries.online-only-businesses-no-blank-location.body":
@@ -3067,8 +3050,6 @@ export const marketing: Catalog = {
     "Uma gaveta mais clara para editar os itens da persona",
   "changelog.entries.item-editor-drawer-redesign.body":
     "O conteúdo fica numa coluna e as definições numa barra lateral, e o rodapé diz porque é que Guardar está ou não pronto.",
-  "changelog.entries.item-editor-drawer-redesign.details":
-    "As descrições crescem com o texto em vez de ficarem cortadas a meio de uma linha. As respostas rápidas, como o estado da mesa de uma campanha, são opções que tocas, com espaço para escreveres à tua maneira. O Destaque é um interruptor a sério, que diz se está ligado ou desligado. Protege este trabalho fica recolhido numa linha discreta até o abrires. Guardar fica desligado quando nada mudou, e Cmd ou Ctrl + Enter guarda.",
   "changelog.entries.collaborators-from-your-connections.title":
     "Credita colaborações a partir das tuas conexões",
   "changelog.entries.collaborators-from-your-connections.body":
@@ -3081,8 +3062,6 @@ export const marketing: Catalog = {
     "Duas novas funções na equipa: Gestão de produto e Produção cultural",
   "changelog.entries.product-manager-and-cultural-producer-roles.body":
     "Gestão de produto cuida do roadmap, do uso das funcionalidades e da fila de ideias; Produção cultural, da página inicial, do kit de imprensa e dos filmes.",
-  "changelog.entries.product-manager-and-cultural-producer-roles.details":
-    "Passam a ser dez funções na equipa. Gestão de produto pode abrir o roadmap e o uso das funcionalidades na administração, e trata da fila de ideias para o roadmap. Os relatórios ficam com a administração, porque guardam o histórico financeiro da governança, que nenhuma função da equipa recebe. Produção cultural pode abrir a página inicial, o kit de imprensa e os vídeos de marketing, mas não as histórias submetidas nem as candidaturas de escrita, que ficam com a Editorial. Nenhuma das duas funções mostra um distintivo no perfil.",
   "changelog.entries.persona-preview-shows-every-edit.title":
     "A pré-visualização da persona mostra cada alteração enquanto a fazes",
   "changelog.entries.persona-preview-shows-every-edit.body":
@@ -3111,8 +3090,6 @@ export const marketing: Catalog = {
     "Só quem é dono, co-dono ou modera uma comunidade pode organizar com ela",
   "changelog.entries.hosting-with-a-community-is-for-its-team.body":
     "Organizar com uma comunidade põe o nome dela no convívio, por isso o seletor só mostra comunidades que ajudas a gerir.",
-  "changelog.entries.hosting-with-a-community-is-for-its-team.details":
-    "O botão Organizar um convívio aqui, no separador Eventos de uma comunidade também só aparece a essas pessoas. Uma comunidade em nome da qual não podes falar, vinda de um link editado, de um convívio duplicado ou de um rascunho retomado, é retirada do formulário. Se editares um convívio que já está organizado com uma comunidade que não geres, continuas a vê-la e podes removê-la.",
   "changelog.entries.host-with-a-community-is-not-visibility.title":
     "Organizar com uma comunidade já não parece uma definição de visibilidade",
   "changelog.entries.host-with-a-community-is-not-visibility.body":
@@ -3121,27 +3098,18 @@ export const marketing: Catalog = {
     "Filmes de lançamento, feitos a partir da própria QueerPulse",
   "changelog.entries.launch-films-and-marketing-videos.body":
     "Três filmes curtos feitos com o design e as palavras da app, com uma banda sonora gerada em código, que a equipa vê na administração.",
-  "changelog.entries.launch-films-and-marketing-videos.details":
-    "Há um filme de 65 segundos e duas versões de 48 segundos. Cada cena é desenhada no navegador a partir do nosso sistema de design e dos nossos textos, e a música é sintetizada, não licenciada. As pessoas que aparecem são avatares ilustrados (DiceBear Micah, CC BY 4.0), escolhidos para um elenco propositadamente diverso; nenhuma delas é membro. A página Vídeos de marketing, na administração, reproduz cada filme com a sua banda sonora e exporta-o para MP4 no navegador de quem está na equipa, por isso nada é enviado para um servidor. Os filmes estão no site mas fora dos motores de busca, e só a própria QueerPulse os pode incorporar.",
   "changelog.entries.podcast-feed-import.title":
     "Importa os episódios de um podcast a partir do feed",
   "changelog.entries.podcast-feed-import.body":
     "Cola o teu feed no editor da persona. Os episódios novos esperam que os publiques, ou publicam-se sozinhos se ligares essa opção.",
-  "changelog.entries.podcast-feed-import.details":
-    "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. As personas com formato de podcast, de podcasts e rádio a actual play e criação de vídeo, ganham um painel Importar: vês o programa e os episódios mais recentes, escolhes uma secção, decides se trazes os episódios antigos, e ligas. Os episódios novos chegam a uma fila de revisão onde os publicas, dispensas ou recuperas, vários de uma vez, e uma notificação avisa-te quando há episódios à espera. A publicação automática só se aplica a episódios lançados depois de a ligares. Os episódios na tua página ganham um link Ouvir, ou Ver para quem cria vídeo, e podem mostrar a temporada e o episódio e a duração.",
   "changelog.entries.video-and-audio-persona-kinds.title":
     "Personas para criação de vídeo, produção de podcast e rádio",
   "changelog.entries.video-and-audio-persona-kinds.body":
     "Quatro tipos novos, e o seletor de criação sugere agora os tipos que encaixam no trabalho do teu perfil.",
-  "changelog.entries.video-and-audio-persona-kinds.details":
-    "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. Os tipos novos são Vídeo e YouTube, Vídeo curto, Produção de podcast e Rádio, e pesquisar palavras como youtuber, tiktok, podcast ou rádio encontra-os. O seletor abre com Do teu trabalho, a partir das profissões que indicas.",
   "changelog.entries.who-owns-and-runs-it-tags.title":
     "Mostra quem é dono e gere um negócio",
   "changelog.entries.who-owns-and-runs-it-tags.body":
     "Quem é dono pode marcar um espaço como gerido por mulheres, pessoas trans ou pessoas não binárias, e o diretório pode filtrar por isso.",
-  "changelog.entries.who-owns-and-runs-it-tags.details":
-    "Isto ficou disponível ao fim do dia 30 de setembro, depois de escritas as notas desse dia (v1.52.1), por isso aparece nesta versão. Uma etiqueta trans ou não binária diz algo sobre a identidade de género da própria pessoa dona, por isso só ela as pode definir. Ficam na secção Um pouco sobre ti, só da pessoa dona, e as pessoas que cogerem, as sugestões e os espaços escritos pela equipa nunca lhes tocam. As etiquetas são públicas mesmo quando o nome da pessoa dona está escondido, e o formulário diz com clareza que, num negócio pequeno, podem apontar diretamente para ti. Cada uma aparece como uma etiqueta simples, nunca com o estilo de uma marca verificada, e é independente do selo queer-owned. No diretório, Quem gere filtra por qualquer uma das etiquetas que escolheres.",
-=======
   "changelog.entries.listing-photos-use-the-photo-picker.title":
     "Fotos de listagens, avaliações e espaços usam o seletor",
   "changelog.entries.listing-photos-use-the-photo-picker.body":
@@ -3178,7 +3146,6 @@ export const marketing: Catalog = {
     "Os idiomas são pedidos uma só vez ao listar um espaço",
   "changelog.entries.listing-languages-asked-once.body":
     "Os idiomas falados ficam só no campo próprio, por isso as seis etiquetas ficam livres para o resto.",
->>>>>>> Stashed changes
   "changelog.entries.no-focus-frame-around-pages.title":
     "Acabaram as linhas vermelhas soltas à volta da página",
   "changelog.entries.no-focus-frame-around-pages.body":
@@ -3218,11 +3185,11 @@ export const marketing: Catalog = {
   "changelog.entries.directory-cards-one-line.title":
     "Os cartões do diretório voltam a alinhar",
   "changelog.entries.directory-cards-one-line.body":
-    "As linhas de acessibilidade e de quem gere ficam numa só linha; passa o rato no +N para veres o resto.",
-  "changelog.entries.local-who-runs-it-tags.title":
-    "Encontra locais por quem os gere",
-  "changelog.entries.local-who-runs-it-tags.body":
-    "As listagens podem dizer que são negócios de mulheres, pessoas trans, não binárias ou BIPOC, e o Local filtra por isso.",
+    "As etiquetas de acessibilidade ficam numa só linha; passa o rato no +N para veres o resto.",
+  "changelog.entries.who-runs-it-bipoc-tag.title":
+    "Os espaços podem mostrar que são geridos por pessoas BIPOC",
+  "changelog.entries.who-runs-it-bipoc-tag.body":
+    "Quem é dono pode agora marcar um espaço como gerido por pessoas BIPOC, e o filtro Quem gere do diretório encontra-o.",
   "changelog.entries.local-filters-skip-empty-results.title":
     "Os filtros do Local que não encontram nada ficam desativados",
   "changelog.entries.local-filters-skip-empty-results.body":
@@ -8883,6 +8850,7 @@ export const marketing: Catalog = {
   "directory.ownedBy.women": "Negócio de mulheres",
   "directory.ownedBy.trans": "Negócio de pessoas trans",
   "directory.ownedBy.nonbinary": "Negócio de pessoas não binárias",
+  "directory.ownedBy.bipoc": "Negócio de pessoas BIPOC",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
@@ -9971,9 +9939,6 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Necessidades de acesso",
   "local.filter.accessNote":
     "Mostra os locais que responderam sim a tudo o que escolheres. Um local sobre o qual ninguém perguntou fica de fora dos resultados.",
-  "local.filter.ownerIdentityLabel": "Quem gere",
-  "local.filter.ownerIdentityNote":
-    "Nas palavras de quem gere o espaço. Escolhe mais do que uma para veres os locais que correspondem a qualquer uma.",
   // Mostrado sob o controlo de ordenação enquanto a localização está ligada,
   // a dizer o que a posição faz pela ordenação escolhida. As duas funcionam
   // em conjunto; nenhuma substitui a outra.

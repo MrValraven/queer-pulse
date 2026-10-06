@@ -7,6 +7,10 @@ import {
   type LocalFilterFieldsProps,
 } from "./LocalFilterFields";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
+import {
+  ACCESSIBILITY_QUESTION_SLUGS,
+  type AccessibilitySlug,
+} from "./listBusiness/listingAccessibility.data";
 
 function renderDirectory(search: string) {
   return render(<DirectoryPage />, {
@@ -66,6 +70,17 @@ describe("LocalFilterFields, online scope", () => {
     onToggleCategory: noop,
     onClearCategories: noop,
     categoryCounts: { all: 0 },
+    // An incomplete loaded set keeps every chip pickable whatever the counts
+    // say, and each count above zero would keep a chip pickable on its own.
+    chipCounts: {
+      openNow: 1,
+      safe: 1,
+      access: Object.fromEntries(
+        ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [slug, 1]),
+      ) as Record<AccessibilitySlug, number>,
+      vibes: {},
+    },
+    isLoadedSetComplete: false,
     query: "",
     onQueryChange: noop,
     vibes: [],

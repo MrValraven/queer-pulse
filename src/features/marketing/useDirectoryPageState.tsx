@@ -36,7 +36,6 @@ export function useDirectoryPageState() {
     owned,
     openNow,
     access,
-    ownerIdentities,
     query,
     selectView,
     toggleCategory,
@@ -48,7 +47,6 @@ export function useDirectoryPageState() {
     toggleOwned,
     setOpenNow,
     toggleAccess,
-    toggleOwnerIdentity,
     clearFilters,
   } = filterParams;
   const {
@@ -92,21 +90,17 @@ export function useDirectoryPageState() {
     mappableCount,
     activeFilters,
     distanceById,
-<<<<<<< Updated upstream
   } = useDirectoryFilterResults(
     scopedPlaces,
     filterParams,
     isOnlineView ? null : myLocation.coordinates,
   );
-=======
-  } = useDirectoryFilterResults(places, filterParams, myLocation.coordinates);
   // The chip counts only cover the places fetched so far, and a zero over a
   // partial load can hide a match on a page that has yet to arrive. So a chip
   // goes unpickable only once the whole set is in: nothing loading (a server
   // filter change refetches from scratch, with no placeholder data), no error,
   // and no further page to fetch.
   const isLoadedSetComplete = !placesLoading && !hasPlacesError && !hasNextPage;
->>>>>>> Stashed changes
   // `useSimulatedLoad` is a DEMO device (ENG-172). The demo registry resolves
   // in the same tick, so without a short fake beat the grid pops in with no
   // loading state at all. Live mode has a real one in `placesLoading`, and the
@@ -144,8 +138,6 @@ export function useDirectoryPageState() {
     onToggleOpenNow: () => setOpenNow(!openNow),
     access,
     onToggleAccess: toggleAccess,
-    ownerIdentities,
-    onToggleOwnerIdentity: toggleOwnerIdentity,
     sort,
     onSortChange: setSort,
     isLocationOn: !isOnlineView && myLocation.coordinates !== null,

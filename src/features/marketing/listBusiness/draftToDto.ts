@@ -11,12 +11,10 @@ import {
   menuForPayload,
   pricingModeOf,
 } from "./listingMenu.data";
-import { normalizeOwnerIdentities } from "./listingOwnerIdentities.data";
 import {
   completeServiceRows,
   servicesForPayload,
 } from "./listingServices.data";
-import { isOwnerBlockHidden } from "./ownerBlock";
 import { stripOwnerPersonalFields } from "./ownerPersonalFields";
 import type {
   CoManagerUpdateListingDto,
@@ -92,12 +90,6 @@ export function businessPayload(
     hood: draft.online ? "" : draft.hood,
     badge: draft.badge,
     evidence: draft.evidence.trim(),
-    // Nobody who owns the business filled this draft in (a staff-authored
-    // draft, or a still-unclaimed suggestion), so a stale picked value can
-    // never ship as a claim about a real owner.
-    ownerIdentities: isOwnerBlockHidden(draft)
-      ? []
-      : normalizeOwnerIdentities(draft.ownerIdentities),
     price: draft.price,
     blurb: draft.blurb.trim(),
     tagline: draft.tagline.trim(),

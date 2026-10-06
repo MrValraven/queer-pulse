@@ -52,12 +52,12 @@ export function LocalQuickFilters({
       aria-labelledby={quickLabelId}
     >
       <m.div {...glide.row} className={s.safeRow}>
-<<<<<<< Updated upstream
         {showOpenNow && (
           <m.button
             {...glide.chip}
             type="button"
             aria-pressed={openNow}
+            disabled={isOpenNowDisabled}
             className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
             onClick={onToggleOpenNow}
           >
@@ -65,19 +65,6 @@ export function LocalQuickFilters({
             {t("marketing:local.filter.openNow")}
           </m.button>
         )}
-=======
-        <m.button
-          {...glide.chip}
-          type="button"
-          aria-pressed={openNow}
-          disabled={isOpenNowDisabled}
-          className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
-          onClick={onToggleOpenNow}
-        >
-          <FiClock aria-hidden />
-          {t("marketing:local.filter.openNow")}
-        </m.button>
->>>>>>> Stashed changes
         <m.button
           {...glide.chip}
           type="button"

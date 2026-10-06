@@ -7,11 +7,7 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
-<<<<<<< Updated upstream
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
-=======
-import type { OwnerIdentitySlug } from "./listBusiness/listingOwnerIdentities.data";
->>>>>>> Stashed changes
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
@@ -267,7 +263,6 @@ export interface LocalFilters {
   openNow?: boolean;
   /** Accessibility needs that must all be met. Empty/absent = no restriction. */
   access?: AccessibilitySlug[];
-<<<<<<< Updated upstream
   /** Ownership tags, ANY of which a place must carry. Empty/absent = no
    *  restriction. */
   owned?: ListingOwnedBy[];
@@ -290,11 +285,6 @@ export function placeMatchesOwnedBy(
   if (place.kind !== "business") return false;
   const ownedBy = (place.source as DirectoryPlace).ownedBy ?? [];
   return owned.some((value) => ownedBy.includes(value));
-=======
-  /** "Who runs it" tags; a place passes with ANY of them. Empty/absent = no
-   *  restriction. */
-  ownerIdentities?: OwnerIdentitySlug[];
->>>>>>> Stashed changes
 }
 
 /**
@@ -342,21 +332,6 @@ export function placeMeetsAccess(
   const answers = (place.source as DirectoryPlace).accessibility?.answers;
   if (!answers) return false;
   return access.every((slug) => answers[slug] === "yes");
-}
-
-/**
- * Whether a place carries any of the chosen "who runs it" tags. Several tags
- * combine as an OR, like place types. A place with no tags (a demo venue, or
- * a listing that picked none) matches nothing while a tag is chosen.
- */
-export function placeHasOwnerIdentity(
-  place: LocalPlace,
-  wanted: readonly OwnerIdentitySlug[],
-): boolean {
-  if (wanted.length === 0) return true;
-  if (place.kind !== "business") return false;
-  const identities = (place.source as DirectoryPlace).ownerIdentities ?? [];
-  return wanted.some((slug) => identities.includes(slug));
 }
 
 /**
@@ -416,11 +391,7 @@ export function filterLocalPlaces(
     if (!placeMeetsAccess(place, filters.access ?? [])) {
       return false;
     }
-<<<<<<< Updated upstream
     if (!placeMatchesOwnedBy(place, filters.owned ?? [])) {
-=======
-    if (!placeHasOwnerIdentity(place, filters.ownerIdentities ?? [])) {
->>>>>>> Stashed changes
       return false;
     }
     return true;

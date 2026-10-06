@@ -11,7 +11,7 @@ import s from "./LocalFilterBar.module.css";
 
 /**
  * "Who runs it": narrow the directory to places whose owner has said women,
- * trans people or non-binary people own and run them.
+ * trans people, non-binary people or BIPOC people own and run them.
  *
  * Several tags are an OR, the opposite of the access needs below it: someone
  * picking "Trans-owned" and "Non-binary-owned" wants places run by either,

@@ -11,8 +11,8 @@ import type { ListingForm } from "../useListingForm";
 import styles from "../ListBusinessPage.module.css";
 
 /**
- * "Who owns and runs it?": the owner's own tags (women, trans, non-binary),
- * any combination or none.
+ * "Who owns and runs it?": the owner's own tags (women, trans, non-binary,
+ * BIPOC), any combination or none.
  *
  * OWNER ONLY, and rendered only inside `OwnerFields`, which a suggestion, a
  * staff-authored draft and a co-manager never see. Saying one of these

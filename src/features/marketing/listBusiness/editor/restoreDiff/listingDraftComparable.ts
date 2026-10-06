@@ -10,7 +10,6 @@ import {
   pricingModeOf,
   type ListingMenuDraft,
 } from "../../listingMenu.data";
-import { normalizeOwnerIdentities } from "../../listingOwnerIdentities.data";
 import { healListingDraft } from "./healListingDraft";
 
 /**
@@ -89,14 +88,6 @@ const COMPARABLE_NORMALISERS: Partial<
   Record<keyof ListingDraft, (draft: ListingDraft) => unknown>
 > = {
   whatItIs: (draft) => draft.whatItIs.map(withoutId),
-  // An empty list reads as `undefined` here, so a fingerprint hashed before
-  // this field existed (the key absent entirely) still matches a healed
-  // draft that now carries an empty array for it. `stableStringify` drops
-  // `undefined` object entries, same as `JSON.stringify`.
-  ownerIdentities: (draft) => {
-    const identities = normalizeOwnerIdentities(draft.ownerIdentities);
-    return identities.length > 0 ? identities : undefined;
-  },
   services: (draft) => (draft.services ?? []).map(withoutId),
   menu: (draft) => comparableMenu(draft.menu),
   hours: (draft) => comparableHours(draft.hours),

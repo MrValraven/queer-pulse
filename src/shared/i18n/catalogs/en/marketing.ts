@@ -1537,13 +1537,6 @@ export const marketing: Catalog = {
   "listBusiness.step1.badgeHelper":
     "Queer-owned, or a place that genuinely welcomes us? Both belong here. This is a welcome, open to everyone.",
   "listBusiness.step1.badgeAria": "Ownership",
-  "listBusiness.ownerIdentity.women": "Women-owned",
-  "listBusiness.ownerIdentity.trans": "Trans-owned",
-  "listBusiness.ownerIdentity.nonBinary": "Non-binary-owned",
-  "listBusiness.ownerIdentity.bipoc": "BIPOC-owned",
-  "listBusiness.step1.ownerIdentityLabel": "Anything else about who runs it?",
-  "listBusiness.step1.ownerIdentityHelper":
-    "Optional. Pick any that fit the people who own or lead it. They show on your listing for everyone and help people find you.",
   "listBusiness.step1.owned.tag": "Queer-owned",
   "listBusiness.step1.owned.title": "Owned or led by our community",
   "listBusiness.step1.owned.desc":
@@ -1786,6 +1779,9 @@ export const marketing: Catalog = {
   "listBusiness.step4.ownedBy.nonbinary.title": "Non-binary people",
   "listBusiness.step4.ownedBy.nonbinary.sub":
     "Including genderqueer, agender and genderfluid people.",
+  "listBusiness.step4.ownedBy.bipoc.title": "BIPOC people",
+  "listBusiness.step4.ownedBy.bipoc.sub":
+    "Black, Indigenous and people of colour.",
   "listBusiness.step4.ownedByPublicNote":
     "These tags are public, even if you keep your name private. On a small business a tag can point straight to you, so only tick what you're happy for anyone to know. You can change it any time.",
   "listBusiness.step4.loopHeading": "Staying in the loop",
@@ -1980,8 +1976,6 @@ export const marketing: Catalog = {
     "Your neighbourhood shows here, beside your category.",
   "listBusiness.livePreview.caption.badge":
     "Your badge shows here, on your card's photo.",
-  "listBusiness.livePreview.caption.ownerIdentities":
-    "Shows on your card and your listing page, for everyone.",
   "listBusiness.livePreview.caption.evidence":
     "Only this listing's managers and the review team see this. It backs up the badge.",
   "listBusiness.livePreview.caption.price":
@@ -2197,7 +2191,6 @@ export const marketing: Catalog = {
     "the accessibility answers",
   "listBusiness.editor.history.field.accessibilityNote":
     "the accessibility note",
-  "listBusiness.editor.history.field.ownerIdentities": "the ownership tags",
   "listBusiness.editor.history.field.services": "the services and prices",
   "listBusiness.editor.history.field.menu": "the menu",
   "listBusiness.editor.history.field.pricingMode":
@@ -2635,7 +2628,6 @@ export const marketing: Catalog = {
     "Category order (the first is the main one)",
   "listBusiness.editor.restore.diff.field.hood": "Neighbourhood",
   "listBusiness.editor.restore.diff.field.badge": "Who runs it",
-  "listBusiness.editor.restore.diff.field.ownerIdentities": "Ownership tags",
   "listBusiness.editor.restore.diff.field.evidence": "How it is queer-owned",
   "listBusiness.editor.restore.diff.field.price": "Price band",
   "listBusiness.editor.restore.diff.field.blurb": "Short description",
@@ -2830,13 +2822,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
-<<<<<<< Updated upstream
+  "changelog.releases.2026-10-05.headline":
+    "Chats you have read stay read, BIPOC-run listing tags, and one log of every staff action.",
   "changelog.releases.2026-10-02.headline":
     "The directory gets an Online tab and tags for who runs a business, and personas can import a podcast feed.",
-=======
-  "changelog.releases.2026-10-05.headline":
-    "Chats you have read stay read, and you can now find places by who runs them.",
->>>>>>> Stashed changes
   "changelog.releases.2026-09-30.headline":
     "A new sign-in page with a living Q, and your data export covers nearly all your account.",
   "changelog.releases.2026-09-29.headline":
@@ -2971,7 +2960,6 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
-<<<<<<< Updated upstream
   "changelog.entries.tags-and-snippets-type-normally.title":
     "Item tags take a comma, and code snippets a new line",
   "changelog.entries.tags-and-snippets-type-normally.body":
@@ -2980,8 +2968,6 @@ export const marketing: Catalog = {
     "The directory gets an Online tab",
   "changelog.entries.directory-online-tab.body":
     "Queer-owned and queer-friendly businesses that only exist online get their own view beside List and Map.",
-  "changelog.entries.directory-online-tab.details":
-    "These businesses were already listed, but mixed into the list and silently left off the map. The Online tab opens on a small constellation of them around the community's pulse, and pointing at one lights up its card. Storefront cards show the business's own web address and where to find it, instead of a neighbourhood or opening hours. Filters only a front door can answer, like open now, access needs, vibe and your location, are left out on this tab. The constellation stops moving if you've asked for reduced motion.",
   "changelog.entries.online-only-businesses-no-blank-location.title":
     "Online-only businesses no longer show a blank location",
   "changelog.entries.online-only-businesses-no-blank-location.body":
@@ -2990,8 +2976,6 @@ export const marketing: Catalog = {
     "A clearer drawer for editing persona items",
   "changelog.entries.item-editor-drawer-redesign.body":
     "Content sits in one column with settings in a side rail, and the footer says why Save is or isn't ready.",
-  "changelog.entries.item-editor-drawer-redesign.details":
-    "Descriptions grow with their text instead of cutting off mid-line. Quick answers, like a campaign's table status, are chips you tap, with room to write your own. Spotlight is a real on and off switch that says which it is. Protect this work folds into one quiet row until you open it. Save stays off when nothing has changed, and Cmd or Ctrl + Enter saves.",
   "changelog.entries.collaborators-from-your-connections.title":
     "Credit collaborators from your connections",
   "changelog.entries.collaborators-from-your-connections.body":
@@ -3004,8 +2988,6 @@ export const marketing: Catalog = {
     "Two new staff roles: Product Manager and Cultural Producer",
   "changelog.entries.product-manager-and-cultural-producer-roles.body":
     "Product Manager looks after the roadmap, feature usage and ideas queue; Cultural Producer, the landing page, press kit and films.",
-  "changelog.entries.product-manager-and-cultural-producer-roles.details":
-    "That makes ten staff roles. Product Manager can open the admin roadmap and feature usage, and works the roadmap ideas queue. Reports stay with admins, because they hold governance finance history that no staff role is given. Cultural Producer can open the landing page, press kit and marketing videos, but not story submissions or writer applications, which stay with Editorial. Neither role shows a badge on a profile.",
   "changelog.entries.persona-preview-shows-every-edit.title":
     "The persona preview shows every edit as you make it",
   "changelog.entries.persona-preview-shows-every-edit.body":
@@ -3034,8 +3016,6 @@ export const marketing: Catalog = {
     "Only a community's owners, co-owners and mods can host with it",
   "changelog.entries.hosting-with-a-community-is-for-its-team.body":
     "Hosting with a community puts its name on the gathering, so the picker lists only communities you help run.",
-  "changelog.entries.hosting-with-a-community-is-for-its-team.details":
-    "The Host a gathering here button on a community's Events tab shows only to them too. A community you can't speak for, arriving from an edited link, a duplicated gathering or a resumed draft, is cleared from the form. If you edit a gathering that is already hosted with a community you don't run, you still see that community and can remove it.",
   "changelog.entries.host-with-a-community-is-not-visibility.title":
     "Hosting with a community no longer reads as a visibility setting",
   "changelog.entries.host-with-a-community-is-not-visibility.body":
@@ -3044,27 +3024,18 @@ export const marketing: Catalog = {
     "Launch films, made from QueerPulse itself",
   "changelog.entries.launch-films-and-marketing-videos.body":
     "Three short films built from the app's own design and words, with a score generated in code, that staff preview in Admin.",
-  "changelog.entries.launch-films-and-marketing-videos.details":
-    "There is a 65-second film and two 48-second cuts. Every scene is drawn in the browser from our design system and copy, and the music is synthesised rather than licensed. The people on screen are illustrated avatars (DiceBear Micah, CC BY 4.0), chosen for a deliberately broad cast; none of them is a member. The Marketing videos page in the admin area plays each film with its score and renders it to an MP4 in the staff member's own browser, so nothing is uploaded to a server. The films are served from the site but kept out of search engines, and only QueerPulse itself may embed them.",
   "changelog.entries.podcast-feed-import.title":
     "Import a podcast's episodes from its feed",
   "changelog.entries.podcast-feed-import.body":
     "Paste your feed in the persona editor. New episodes wait for you to publish them, or publish themselves if you switch that on.",
-  "changelog.entries.podcast-feed-import.details":
-    "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. Podcast-shaped personas, from podcasters and radio hosts to actual play and video creators, get an Import pane: preview the show and its newest episodes, pick a section, choose whether to bring in the back catalogue, then connect. New episodes land in a review queue where you publish, dismiss or restore them, several at once, and a notification tells you when some are waiting. Auto-publish only applies to episodes released after you turn it on. Episodes on your page get a Listen link, or Watch for video creators, and can carry a season and episode line and a running time.",
   "changelog.entries.video-and-audio-persona-kinds.title":
     "Personas for video creators, podcast producers and radio hosts",
   "changelog.entries.video-and-audio-persona-kinds.body":
     "Four new kinds, and the create picker now suggests kinds that fit the work on your profile.",
-  "changelog.entries.video-and-audio-persona-kinds.details":
-    "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. The new kinds are Video creator / YouTuber, Short-form creator, Podcast producer and Radio host, and searching for words like youtuber, tiktok, podcast or radio finds them. The picker opens with From your work, drawn from the professions you list.",
   "changelog.entries.who-owns-and-runs-it-tags.title":
     "Show who owns and runs a business",
   "changelog.entries.who-owns-and-runs-it-tags.body":
     "Owners can tag a listing as run by women, trans or non-binary people, and the directory can filter by it.",
-  "changelog.entries.who-owns-and-runs-it-tags.details":
-    "This went live late on 30 Sep, after that day's notes (v1.52.1) were written, so it is listed in this release instead. A trans or non-binary tag says something about the owner's own gender identity, so only the owner can set these tags. They sit in the owner's own A little about you section, and co-managers, suggestions and listings the team writes never touch them. The tags are public even when the owner's name is hidden, and the form says plainly that on a small business they can point straight to you. Each shows as a plain pill, never styled like a verified mark, and is separate from the queer-owned badge. In the directory, Who runs it filters by any of the tags you pick.",
-=======
   "changelog.entries.listing-photos-use-the-photo-picker.title":
     "Listing, review and space photos use the photo picker",
   "changelog.entries.listing-photos-use-the-photo-picker.body":
@@ -3101,7 +3072,6 @@ export const marketing: Catalog = {
     "Languages asked once when listing a place",
   "changelog.entries.listing-languages-asked-once.body":
     "Spoken languages now sit only in their own field, so the tag picker keeps all six slots for other things.",
->>>>>>> Stashed changes
   "changelog.entries.no-focus-frame-around-pages.title":
     "No more stray red lines around the page",
   "changelog.entries.no-focus-frame-around-pages.body":
@@ -3141,11 +3111,11 @@ export const marketing: Catalog = {
   "changelog.entries.directory-cards-one-line.title":
     "Directory cards line up again",
   "changelog.entries.directory-cards-one-line.body":
-    "Accessibility and who-runs-it rows stay on one line; hover the +N to see the rest.",
-  "changelog.entries.local-who-runs-it-tags.title":
-    "Find places by who runs them",
-  "changelog.entries.local-who-runs-it-tags.body":
-    "Listings can say they are women-, trans-, non-binary- or BIPOC-owned, and Local filters by it.",
+    "The accessibility row stays on one line; hover the +N to see the rest.",
+  "changelog.entries.who-runs-it-bipoc-tag.title":
+    "Listings can show they are BIPOC-run",
+  "changelog.entries.who-runs-it-bipoc-tag.body":
+    "Owners can now also tag a listing as BIPOC-run, and the directory's Who runs it filter finds it.",
   "changelog.entries.local-filters-skip-empty-results.title":
     "Local filters that would find nothing are greyed out",
   "changelog.entries.local-filters-skip-empty-results.body":
@@ -8764,6 +8734,7 @@ export const marketing: Catalog = {
   "directory.ownedBy.women": "Women-owned",
   "directory.ownedBy.trans": "Trans-owned",
   "directory.ownedBy.nonbinary": "Non-binary-owned",
+  "directory.ownedBy.bipoc": "BIPOC-owned",
   "directory.card.online": "Online",
   "directory.card.visit": "Visit",
   "directory.card.verifiedBadge": "Verified safe space",
@@ -9836,9 +9807,6 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Access needs",
   "local.filter.accessNote":
     "Shows places that have answered yes to everything you pick. A place nobody has asked about stays out of the results.",
-  "local.filter.ownerIdentityLabel": "Who runs it",
-  "local.filter.ownerIdentityNote":
-    "In the owner's own words. Pick more than one to see places matching any of them.",
   // Shown under the sort control while "use my location" is on, saying what the
   // position is doing for the sort the member picked. The two work together;
   // neither replaces the other.

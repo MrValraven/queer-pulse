@@ -3,7 +3,6 @@ import {
   ACCESSIBILITY_QUESTIONS,
   normalizeAccessibilityAnswers,
 } from "../listingAccessibility.data";
-import { normalizeOwnerIdentities } from "../listingOwnerIdentities.data";
 import { isCoManaged } from "../ownerPersonalFields";
 
 /**
@@ -31,8 +30,7 @@ export type ListingPreviewRegion =
   | "goodFor"
   | "languages"
   | "hours"
-  | "owner"
-  | "owners";
+  | "owner";
 
 export type ListingFieldPlacement =
   | {
@@ -72,7 +70,6 @@ export const LISTING_PREVIEW_RENDERED_REGIONS: readonly ListingPreviewRegion[] =
     "languages",
     "hours",
     "owner",
-    "owners",
   ];
 
 const CAPTION = "marketing:listBusiness.livePreview.caption";
@@ -203,7 +200,6 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     [ANCHOR.badge]: preview("badge", "badge"),
     // Co-managers receive the evidence too: it is no owner-personal field.
     [ANCHOR.evidence]: hidden("evidence"),
-    [ANCHOR.ownerIdentities]: preview("ownerIdentities", "owners"),
     [ANCHOR.price]: preview("price", "pills"),
     [ANCHOR.blurb]: preview("blurb", "desc"),
     [ANCHOR.tagline]: preview("tagline", "tagline"),
@@ -341,10 +337,6 @@ export function renderedPreviewRegions(
   // Every draft carries a weekday grid, so the card always has a status line.
   if (Object.keys(draft.hours).length > 0) regions.add("status");
   if (hasCardAccessAnswers(draft)) regions.add("access");
-  // The card prints the tag line only when at least one tag is picked.
-  if (normalizeOwnerIdentities(draft.ownerIdentities).length > 0) {
-    regions.add("owners");
-  }
   // The real card names the owner only for a public, profile-linked listing.
   if (
     draft.linkToProfile &&

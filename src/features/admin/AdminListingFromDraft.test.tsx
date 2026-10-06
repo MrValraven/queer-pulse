@@ -62,8 +62,18 @@ describe("AdminListingNewPage from a member's draft", () => {
 
   it("offers the listing back to the member who started it", async () => {
     renderAt("/admin/listings/new?fromDraft=listing-draft-0004");
-    const slug = await screen.findByLabelText("Member profile slug");
-    expect(slug).toHaveValue("marta");
+    // The draft's member opens already picked, as the picker's clearable chip.
+    expect(
+      await screen.findByRole("button", {
+        name: "Remove Marta Fonseca and pick someone else",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("@marta")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("searchbox", {
+        name: "Search members to offer this listing to",
+      }),
+    ).toBeNull();
     const note = screen.getByLabelText<HTMLTextAreaElement>("Message to them");
     expect(note.value).toContain("Tasca da Graça");
     expect(note.value).toContain("finished the listing");
@@ -76,7 +86,15 @@ describe("AdminListingNewPage from a member's draft", () => {
         "Finishing a draft from a member who has since left",
       ),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText("Member profile slug")).toHaveValue("");
+    // An erased member is never picked, so the picker opens on its search.
+    expect(
+      screen.getByRole("searchbox", {
+        name: "Search members to offer this listing to",
+      }),
+    ).toHaveValue("");
+    expect(
+      screen.queryByRole("button", { name: /and pick someone else$/ }),
+    ).toBeNull();
   });
 
   it("says so when the draft is gone", async () => {

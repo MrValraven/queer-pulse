@@ -13,7 +13,6 @@ import type {
   ListingMenu,
   ListingPricingMode,
 } from "./listBusiness/listingMenu.data";
-import type { OwnerIdentitySlug } from "./listBusiness/listingOwnerIdentities.data";
 import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
@@ -224,8 +223,8 @@ export interface DirectoryPlace {
    * the static demo fixtures below don't all need updating; absent ⇒ false. */
   queerOwnedVerified?: boolean;
   /** Who owns and runs it, in the owner's own words (women, trans,
-   * non-binary), canonical order. Self-declared and never verified, so shown
-   * as plain tags, never beside the verified marks. Absent ⇒ none. */
+   * non-binary, BIPOC), canonical order. Self-declared and never verified, so
+   * shown as plain tags, never beside the verified marks. Absent ⇒ none. */
   ownedBy?: ListingOwnedBy[];
   member?: string;
   av: string;
@@ -244,8 +243,6 @@ export interface DirectoryPlace {
    * All six questions always arrive, `unknown` included. Absent on demo
    * fixtures and older payloads, which simply show no accessibility section. */
   accessibility?: ListingAccessibilityView;
-  /** "Who runs it" tags, canonical order. Absent means none. */
-  ownerIdentities?: OwnerIdentitySlug[];
   /** What the business sells and what it costs, in the owner's own words.
    * Absent/empty when it prices nothing; the `pills` price band is unchanged. */
   services?: ListingServiceOffering[];
@@ -549,14 +546,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     slug: "estudio-beatriz-pinto",
     name: "Estúdio Beatriz Pinto",
     cat: "design",
-    // The demo's one online-only listing, shaped the way the live API sends
-    // one: the wizard's "Elsewhere in" catch-all for a hood, an empty address,
-    // and no pin (so no BUSINESS_COORDS entry either). Keeps the online paths
-    // on the detail page (eyebrow, visit card, access section, action bar,
-    // suggest-an-edit picker) exercised in demo.
+    // An online-only listing shaped exactly the way the live API sends one:
+    // the wizard's "Elsewhere in" catch-all for a hood, an empty address, and
+    // no pin (so no BUSINESS_COORDS entry either). Keeps the online paths on
+    // the detail page (eyebrow, visit card, access section, action bar,
+    // suggest-an-edit picker) exercised in demo, alongside the Online tab's
+    // own fixtures in `directoryOnlinePlaces.data.ts`.
     hood: "Elsewhere in Lisbon",
     owned: true,
-    ownerIdentities: ["women"],
     member: "beatriz",
     av: "BP",
     tint: P,
@@ -702,7 +699,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "culture",
     hood: "Príncipe Real",
     owned: true,
-    ownerIdentities: ["women", "trans"],
     av: "LB",
     tint: P,
     desc: "Queer-run independent bookshop with a strong feminist and LGBTQ+ section. Regular readings, launches, and community events.",
@@ -864,7 +860,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "food",
     hood: "Mouraria",
     owned: false,
-    ownerIdentities: ["women"],
     av: "CM",
     tint: J,
     desc: "Family-run café known among the community for warmth and a complete absence of hostility. Excellent pastéis.",
@@ -1565,7 +1560,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "grooming",
     hood: "Príncipe Real",
     owned: true,
-    ownerIdentities: ["trans", "non-binary"],
     av: "NV",
     tint: C,
     desc: "Queer-owned barbershop known for trans haircuts done right. No awkward questions. No gendered pricing.",
@@ -1742,11 +1736,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "grooming",
     hood: "Intendente",
     owned: true,
-<<<<<<< Updated upstream
-    ownedBy: ["women", "trans"],
-=======
-    ownerIdentities: ["women", "bipoc"],
->>>>>>> Stashed changes
+    ownedBy: ["women", "trans", "bipoc"],
     av: "SC",
     tint: P,
     desc: "Gender-neutral pricing on every service, the same whatever your hair length or gender. Clean space, good music.",
@@ -1886,11 +1876,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     cat: "fitness",
     hood: "Bairro Alto",
     owned: true,
-<<<<<<< Updated upstream
     ownedBy: ["women", "nonbinary"],
-=======
-    ownerIdentities: ["trans"],
->>>>>>> Stashed changes
     av: "CL",
     tint: P,
     desc: "Feminist and queer-centred fitness studio. Small classes, no mirrors, no scales. Body-neutral by design.",

@@ -4,6 +4,7 @@ import { routes } from "../../app/routeMap";
 import { ListingWizard } from "../marketing/listBusiness/ListingWizard";
 import { BLANK_OWNER_PERSONAL_FIELDS } from "../marketing/listBusiness/ownerPersonalFields";
 import type { ListingDraft } from "../marketing/listBusiness/listBusiness.data";
+import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
 import { AdminListingNewFields } from "./AdminListingNewFields";
 import { AdminListingNewSuccess } from "./AdminListingNewSuccess";
 import {
@@ -18,8 +19,9 @@ export interface AdminListingNewFormProps {
    *  half of a member's unfinished draft (`teamDraftFromMemberDraft`). Read
    *  once on mount, like the wizard's own `initialDraft`. */
   initialDraft: ListingDraft;
-  /** Who the offer goes to before the admin types anything. */
-  initialOwnerSlug?: string;
+  /** Who the offer goes to before the admin picks anyone. Null or absent
+   *  leaves the listing in the team's hands until the admin picks a member. */
+  initialOwner?: StrangerMemberResult | null;
   initialOwnerNote?: string;
   onAddAnother: () => void;
 }
@@ -32,7 +34,7 @@ export interface AdminListingNewFormProps {
  */
 export function AdminListingNewForm({
   initialDraft,
-  initialOwnerSlug = "",
+  initialOwner = null,
   initialOwnerNote = "",
   onAddAnother,
 }: AdminListingNewFormProps) {
@@ -40,7 +42,7 @@ export function AdminListingNewForm({
   const { mutateAsync: createListing } = useAdminCreateListing();
   const [publishState, setPublishState] =
     useState<ListingPublishState>("review");
-  const [ownerSlug, setOwnerSlug] = useState(initialOwnerSlug);
+  const [owner, setOwner] = useState<StrangerMemberResult | null>(initialOwner);
   const [ownerNote, setOwnerNote] = useState(initialOwnerNote);
   // Set the moment the create resolves, which is what retires the admin
   // block. The wizard leaves the form behind at the same point: it shows its
@@ -53,7 +55,7 @@ export function AdminListingNewForm({
 
   const handleAdminSubmit = useCallback(
     async (draft: ListingDraft) => {
-      const memberSlug = ownerSlug.trim();
+      const memberSlug = owner?.slug;
       const note = ownerNote.trim();
       const ownerOffer: AdminListingOwnerOfferInput | undefined = memberSlug
         ? { memberSlug, ...(note ? { note } : {}) }
@@ -64,7 +66,7 @@ export function AdminListingNewForm({
       setHasCreatedListing(true);
       return created;
     },
-    [createListing, publishState, ownerSlug, ownerNote],
+    [createListing, publishState, owner, ownerNote],
   );
 
   const goToQueue = useCallback(
@@ -82,8 +84,8 @@ export function AdminListingNewForm({
         <AdminListingNewFields
           publishState={publishState}
           onPublishStateChange={setPublishState}
-          ownerSlug={ownerSlug}
-          onOwnerSlugChange={setOwnerSlug}
+          owner={owner}
+          onOwnerChange={setOwner}
           ownerNote={ownerNote}
           onOwnerNoteChange={setOwnerNote}
         />

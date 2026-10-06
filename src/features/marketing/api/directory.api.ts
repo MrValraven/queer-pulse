@@ -78,7 +78,7 @@ export interface DirectoryCardDTO {
    * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. */
   queerOwnedVerified: boolean;
   /** Who owns and runs it, in the owner's own words: any of `"women"`,
-   * `"trans"`, `"nonbinary"`. Self-declared, never moderator-checked, so it
+   * `"trans"`, `"nonbinary"`, `"bipoc"`. Self-declared, never moderator-checked, so it
    * must never read as verified. Raw strings on the wire: the adapter keeps
    * only the ids this build knows. Optional so a payload from before the
    * field shipped still validates; absent ⇒ none. */
@@ -153,9 +153,6 @@ export interface DirectoryCardDTO {
    * `no`. Absent on older payloads and on the demo/session card sources, which
    * the card then reads as "this listing has said nothing at all". */
   accessibilityAnswers?: AccessibilityAnswerMap;
-  /** "Who runs it" tags, canonical order. Absent on payloads from before the
-   * field existed, which read as none. */
-  ownerIdentities?: string[];
   /** The card's pill row: the price band first when one is set, then the
    * listing's tags, the same order the listing wizard's preview builds.
    * Absent on older payloads and on the demo/session card sources, which the

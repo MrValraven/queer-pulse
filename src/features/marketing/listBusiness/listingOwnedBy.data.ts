@@ -1,6 +1,7 @@
 /**
  * Who owns and runs a business, in the owner's own words: women, trans people,
- * non-binary people. Any combination, or none.
+ * non-binary people, Black, Indigenous and people of colour (BIPOC). Any
+ * combination, or none.
  *
  * These tags say something about the OWNER as a person, not about the
  * business, and saying one publicly can out them. So they are owner-personal
@@ -13,7 +14,12 @@
  * The ids are the wire values the API stores and the `?owned=` filter sends;
  * labels resolve through `t()` only at render.
  */
-export const LISTING_OWNED_BY = ["women", "trans", "nonbinary"] as const;
+export const LISTING_OWNED_BY = [
+  "women",
+  "trans",
+  "nonbinary",
+  "bipoc",
+] as const;
 
 export type ListingOwnedBy = (typeof LISTING_OWNED_BY)[number];
 
@@ -24,6 +30,7 @@ export const OWNED_BY_TAG_KEYS: Record<ListingOwnedBy, string> = {
   women: "marketing:directory.ownedBy.women",
   trans: "marketing:directory.ownedBy.trans",
   nonbinary: "marketing:directory.ownedBy.nonbinary",
+  bipoc: "marketing:directory.ownedBy.bipoc",
 };
 
 /**

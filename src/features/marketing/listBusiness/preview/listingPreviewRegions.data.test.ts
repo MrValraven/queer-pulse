@@ -388,27 +388,6 @@ describe("other draft-aware placements", () => {
   });
 });
 
-describe("owner identity tags", () => {
-  it("points the owner-identity field at the card's tag line", () => {
-    expect(placementForAnchor(ANCHOR.ownerIdentities, blankDraft())).toEqual({
-      kind: "preview",
-      regions: ["owners"],
-      captionKey: `${CAPTION_PREFIX}ownerIdentities`,
-    });
-  });
-
-  it("draws the tag line only once a tag is picked", () => {
-    const named = draftWith({
-      name: "Livraria Rosa",
-      ownerIdentities: ["women"],
-    });
-    expect(renderedPreviewRegions(named).has("owners")).toBe(true);
-    expect(
-      renderedPreviewRegions({ ...named, ownerIdentities: [] }).has("owners"),
-    ).toBe(false);
-  });
-});
-
 describe("hasCardAccessAnswers", () => {
   it("is false until some answer is yes", () => {
     expect(hasCardAccessAnswers(blankDraft())).toBe(false);

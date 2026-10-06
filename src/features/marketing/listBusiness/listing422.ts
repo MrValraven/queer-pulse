@@ -53,7 +53,6 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   online: { step: 1, anchor: ANCHOR.online },
   hood: { step: 1, anchor: ANCHOR.hood },
   badge: { step: 1, anchor: ANCHOR.badge },
-  ownerIdentities: { step: 1, anchor: ANCHOR.ownerIdentities },
   price: { step: 1, anchor: ANCHOR.price },
   blurb: { step: 1, anchor: ANCHOR.blurb },
   // Step 2 — story

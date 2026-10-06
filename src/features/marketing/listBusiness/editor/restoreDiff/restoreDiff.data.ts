@@ -43,7 +43,6 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   hood: "basics",
   badge: "basics",
   evidence: "basics",
-  ownerIdentities: "basics",
   price: "basics",
   blurb: "basics",
   tagline: "story",

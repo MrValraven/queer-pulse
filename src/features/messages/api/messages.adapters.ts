@@ -16,11 +16,8 @@ import {
   type MessageViewer,
 } from "../../../shared/api/mailboxViewer";
 import { toConversationClaimant } from "../../../shared/api/conversationClaim";
-<<<<<<< Updated upstream
 import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
-=======
 import { authorInitialsName, authorTitleName } from "../personaAuthorName";
->>>>>>> Stashed changes
 
 /**
  * ENG-253: `conversationToView`'s return, extended with the trimmed preview

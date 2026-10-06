@@ -7,11 +7,7 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { toMenuDraft } from "../../listingMenu.data";
-<<<<<<< Updated upstream
 import { normalizeOwnedBy } from "../../listingOwnedBy.data";
-=======
-import { normalizeOwnerIdentities } from "../../listingOwnerIdentities.data";
->>>>>>> Stashed changes
 
 /**
  * A draft read back from local storage, made safe to compare.
@@ -133,9 +129,6 @@ export function healListingDraft(draft: ListingDraft): ListingDraft {
   }
   for (const key of STRING_LIST_KEYS) {
     healed[key] = stringList(draft[key]);
-  }
-  if (draft.ownerIdentities !== undefined) {
-    healed.ownerIdentities = normalizeOwnerIdentities(draft.ownerIdentities);
   }
   if (typeof healed.visibility !== "string") healed.visibility = "public";
   healed.whatItIs = Array.isArray(draft.whatItIs)

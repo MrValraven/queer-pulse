@@ -3,11 +3,8 @@ import { initialsOf, tintForSlug } from "../../shared/api/refs";
 import type { TFunction } from "../../shared/i18n/types";
 import type { MessageSearchConversationGroup } from "../../shared/contracts/contracts";
 import { groupInitials } from "./api/messages.adapters";
-<<<<<<< Updated upstream
 import { OFFICIAL_AVATAR_URL } from "./officialAvatar";
-=======
 import { authorInitialsName, authorTitleName } from "./personaAuthorName";
->>>>>>> Stashed changes
 
 /** Identity for a starred hit's conversation: a group (its own name/avatar),
  *  an official thread (the org identity), a DM counterpart, or a DM whose

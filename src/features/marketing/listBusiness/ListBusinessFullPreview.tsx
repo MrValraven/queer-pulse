@@ -7,14 +7,7 @@ import {
   type ListingDraft,
   type PhotoKey,
 } from "./listBusiness.data";
-<<<<<<< Updated upstream
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
-=======
-import {
-  normalizeOwnerIdentities,
-  ownerIdentityLabelKey,
-} from "./listingOwnerIdentities.data";
->>>>>>> Stashed changes
 import { ListBusinessPreviewDetails } from "./ListBusinessPreviewDetails";
 import styles from "./ListBusinessPage.module.css";
 
@@ -69,18 +62,12 @@ export function ListBusinessFullPreview({
                   {t("marketing:listBusiness.step1.friendly.tag")}
                 </span>
               )}
-<<<<<<< Updated upstream
               {normalizeOwnedBy(draft.ownedBy).map((value) => (
                 <span
                   key={value}
                   className={`${styles.dirBadge} ${styles.dirBadgeViolet}`}
                 >
                   {t(OWNED_BY_TAG_KEYS[value])}
-=======
-              {normalizeOwnerIdentities(draft.ownerIdentities).map((slug) => (
-                <span key={slug} className={styles.dirBadge}>
-                  {t(ownerIdentityLabelKey(slug))}
->>>>>>> Stashed changes
                 </span>
               ))}
               {price && (

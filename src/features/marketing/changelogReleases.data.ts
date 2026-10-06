@@ -10,343 +10,36 @@
  * From 5 Oct 2026 on, each push bumps the minor version, so raise it by one
  * on every new push of the day.
  */
-<<<<<<< Updated upstream
-export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
-  {
-    "2 Oct 2026": {
-      // Nineteen entries this day, so three highlights. The Online tab and the
-      // who-runs-it tags change the directory every member uses; podcast feed
-      // import is the largest new tool for creators.
-      // The who-runs-it tags, podcast import and the new persona kinds went
-      // live late on 30 Sep, after that day's notes (v1.52.1) were written.
-      // They are listed here, each saying so in its details, so 30 Sep keeps
-      // the version it shipped under instead of being renumbered after the
-      // fact.
-      highlights: [
-        "directory-online-tab",
-        "who-owns-and-runs-it-tags",
-        "podcast-feed-import",
-      ],
-    },
-    "30 Sep 2026": {
-      // More than seven entries this day, so three highlights: the sign-in
-      // redesign first, since every member sees it, then the export coverage,
-      // then the review step every host now passes before publishing.
-      highlights: [
-        "sign-in-welcome-home",
-        "export-covers-nearly-everything",
-        "gathering-review-step",
-      ],
-    },
-    "29 Sep 2026": {
-      // Well over seven entries this day, so three highlights; features first,
-      // the editor desk redesign leads as the largest build of the day, and
-      // takedown notices with appeals outrank group history from join as a
-      // trust and safety feature.
-      highlights: [
-        "editor-desk-redesign",
-        "blip-and-tea-sticker-packs",
-        "takedown-notices-and-appeals",
-      ],
-    },
-    "28 Sep 2026": {
-      // More than seven entries this day, so three highlights; features first.
-      highlights: ["go-together", "queerpulse-ambassadors", "quest-personas"],
-    },
-    "25 Sep 2026": {
-      // Thirty-one entries this day, so three highlights; the features come first.
-      highlights: [
-        "forum-four-new-categories",
-        "listing-change-history",
-        "chat-app-links-stay-in-app",
-      ],
-    },
-    "24 Sep 2026": {
-      // Eleven entries this day, so three highlights; the feature comes first.
-      highlights: [
-        "therapist-persona-profile",
-        "persona-part-of-real-links",
-        "smooth-directory-map-expand",
-      ],
-    },
-    "23 Sep 2026": {
-      // Twenty entries this day, so the rule in the file header asks for
-      // curated highlights; the feature comes first.
-      highlights: [
-        "space-requests",
-        "directory-map-full-screen",
-        "share-to-chat-shows-a-preview",
-      ],
-    },
-    "22 Sep 2026": {
-      // Five entries this day, so the rule in the file header asks for
-      // curated highlights; the two features come first.
-      highlights: ["reply-as-your-business", "community-spaces"],
-    },
-    "20 Sep 2026": {
-      // Six entries this day, so the rule in the file header asks for two
-      // curated highlights; both features come first.
-      highlights: ["admin-authored-listings", "stickers-in-messages"],
-    },
-    "18 Sep 2026": {
-      highlights: [
-        "chat-camera-in-one-screen",
-        "back-from-a-chat-returns-to-your-chats",
-      ],
-    },
-    "16 Sep 2026": {
-      highlights: [
-        "choose-who-can-add-you-to-a-group",
-        "end-a-group-or-hand-it-to-someone-else",
-        "block-and-report-now-reach-into-groups",
-      ],
-    },
-    "15 Sep 2026": {
-      highlights: [
-        "scroll-back-through-a-whole-conversation",
-        "choose-what-your-chats-reveal",
-        "send-several-photos-and-files-at-once",
-      ],
-    },
-    "14 Sep 2026": {
-      highlights: [
-        "chat-photo-viewer",
-        "closed-communities-stay-closed",
-        "board-posts-that-breathe",
-      ],
-    },
-    "12 Sep 2026": {
-      highlights: [
-        "your-now-card-shows-what-your-openness-does",
-        "people-close-by-cards-say-why",
-      ],
-    },
-    "11 Sep 2026": {
-      highlights: [
-        "create-a-gathering-in-five-short-chapters",
-        "guide-editor-workspace",
-        "the-bell-opens-your-recent-notifications",
-      ],
-    },
-    "10 Sep 2026": {
-      // One entry this day, so the page shows it in full and needs no
-      // curated highlights (see the rule in the file header).
-      highlights: [],
-    },
-    "9 Sep 2026": {
-      highlights: [
-        "run-your-gathering-from-its-own-page",
-        "delete-a-piece-from-the-desk",
-        "the-changelog-reads-as-releases",
-      ],
-    },
-    "8 Sep 2026": {
-      highlights: [
-        "link-people-and-places-from-your-bio",
-        "a-library-of-shared-values-to-choose-from",
-        "switch-language-from-your-account-menu",
-      ],
-    },
-    "6 Sep 2026": {
-      highlights: [
-        "send-a-document-in-a-message",
-        "online-gatherings-now-have-a-join-link",
-        "reporting-without-an-account",
-      ],
-    },
-    "3 Sep 2026": {
-      highlights: [
-        "the-installed-app-now-opens-on-a-heartbeat",
-        "the-installed-app-now-opens-on-your-feed",
-        "a-community-page-now-fits-a-phone-screen",
-      ],
-    },
-    "1 Sep 2026": {
-      highlights: [
-        "what-you-submit-now-reaches-a-person",
-        "browse-the-professional-directory-by-profession",
-        "the-app-follows-your-browsers-text-size",
-      ],
-    },
-    "31 Aug 2026": {
-      highlights: [
-        "one-place-for-everything-you-have-sent",
-        "message-a-business-without-leaving",
-        "losing-your-google-account-is-no-longer-final",
-      ],
-    },
-    "30 Aug 2026": { highlights: [] },
-    "29 Aug 2026": {
-      highlights: [
-        "pages-open-the-moment-you-click-them",
-        "member-filters-show-how-many-people-are-behind-each-one",
-        "the-nomination-form-becomes-a-form",
-      ],
-    },
-    "28 Aug 2026": {
-      highlights: [
-        "the-communities-filters-fold-away",
-        "your-sort-and-your-location-both-count",
-        "pages-that-get-to-the-point",
-      ],
-    },
-    "27 Aug 2026": { highlights: [] },
-    "26 Aug 2026": {
-      highlights: [
-        "the-housing-board-is-open",
-        "members-can-put-something-to-a-vote",
-        "hosts-run-their-own-door",
-      ],
-    },
-    "25 Aug 2026": {
-      highlights: [
-        "listing-pages-rebuild",
-        "say-what-you-do-on-your-profile",
-        "magazine-issues-run-the-desk",
-      ],
-    },
-    "24 Aug 2026": {
-      highlights: ["community-card-live-preview", "card-co-owner-role"],
-    },
-    "23 Aug 2026": {
-      highlights: [
-        "community-co-owners",
-        "community-announcements",
-        "community-notification-levels",
-      ],
-    },
-    "22 Aug 2026": {
-      highlights: [
-        "membership-cards",
-        "card-designer",
-        "printed-membership-cards",
-      ],
-    },
-    "21 Aug 2026": {
-      highlights: [
-        "push-preview-privacy",
-        "community-tags-discovery",
-        "account-menu-install-app",
-      ],
-    },
-    "20 Aug 2026": {
-      highlights: [
-        "messages-message-requests",
-        "myevents-calendar-feed-subscribe",
-        "governance-proposals-voting",
-      ],
-    },
-    "19 Aug 2026": { highlights: [] },
-    "18 Aug 2026": {
-      highlights: [
-        "profile-who-sees-what-controls",
-        "directory-ownership-claims",
-        "add-to-calendar-modal",
-      ],
-    },
-    "14 Aug 2026": { highlights: ["recognition-xp", "reframe-your-photos"] },
-    "13 Aug 2026": {
-      highlights: [
-        "housing-listing-discovery",
-        "verification-request-review",
-        "getting-started-checklist",
-      ],
-    },
-    "12 Aug 2026": {
-      highlights: [
-        "vetted-housing-groups",
-        "flatmate-explainable-matching",
-        "messaging-safety-block-report-pii",
-      ],
-    },
-    "11 Aug 2026": {
-      highlights: [
-        "poet-rich-poems",
-        "persona-photo-gallery",
-        "profile-your-network",
-      ],
-    },
-    "10 Aug 2026": {
-      highlights: [
-        "persona-pages-redesigned",
-        "magazine-article-editor",
-        "my-uploads",
-      ],
-    },
-    "9 Aug 2026": {
-      highlights: ["vouch-for-a-safe-space", "invite-only-community-tier"],
-    },
-    "5 Aug 2026": {
-      highlights: [
-        "collections-are-here",
-        "follow-topics-you-care-about",
-        "your-mentions-in-one-place",
-      ],
-    },
-    "4 Aug 2026": {
-      highlights: [
-        "community-activity-in-your-feed",
-        "forum-upvotes-tags-search",
-        "instagram-style-mobile-profile",
-      ],
-    },
-    "3 Aug 2026": {
-      highlights: [
-        "platform-wide-search",
-        "real-notification-settings",
-        "save-events-communities",
-      ],
-    },
-    "31 Jul 2026": {
-      highlights: ["directory-detail-polish", "review-author-avatars"],
-    },
-    "30 Jul 2026": {
-      highlights: [
-        "global-search",
-        "safe-spaces-in-directory",
-        "cinema-live-streaming",
-      ],
-    },
-    "29 Jul 2026": {
-      highlights: ["group-chats", "message-search", "events-hub"],
-    },
-    "28 Jul 2026": { highlights: ["event-photos", "push-notifications"] },
-    "25 Jul 2026": { highlights: [] },
-    "23 Jul 2026": { highlights: [] },
-    "22 Jul 2026": { highlights: [] },
-    "21 Jul 2026": { highlights: [] },
-    "20 Jul 2026": { highlights: [] },
-    "19 Jul 2026": { highlights: [] },
-    "18 Jul 2026": { highlights: [] },
-    "17 Jul 2026": { highlights: [] },
-    "16 Jul 2026": { highlights: [] },
-    "15 Jul 2026": { highlights: [] },
-    "6 Jul 2026": { highlights: [] },
-    "5 Jul 2026": { highlights: [] },
-    "3 Jul 2026": { highlights: [] },
-    "1 Jul 2026": { highlights: [] },
-    "30 Jun 2026": { highlights: [] },
-    "29 Jun 2026": { highlights: [] },
-    "28 Jun 2026": { highlights: [] },
-    "20 Jun 2026": { highlights: [] },
-    "10 Jun 2026": { highlights: [] },
-  };
-=======
 export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
   "5 Oct 2026": {
-    // First day of per-push versioning: one push so far, which is v1.53.0.
+    // First day of per-push versioning: one push so far, which is v1.54.0.
     pushes: 1,
-    // More than seven entries this day, so three highlights: chats staying
-    // read first, since every member who messages sees it, then finding
-    // places by who runs them, then the new Platform log, the bigger of the
-    // day's two admin-only features.
+    // More than seven entries this day, so three highlights, features first:
+    // the Platform log of every staff action leads as the largest build, then
+    // the Staff & roles page staff can act on, then approvals that record who
+    // decided and why. The headline also names chats staying read, the
+    // change most members will notice, and the new BIPOC-run tag.
     highlights: [
-      "read-state-sticks",
-      "local-who-runs-it-tags",
       "admin-platform-log",
+      "staff-page-manage-in-place",
+      "approvals-record-who-and-why",
+    ],
+  },
+  "2 Oct 2026": {
+    // Nineteen entries this day, so three highlights. The Online tab and the
+    // who-runs-it tags change the directory every member uses; podcast feed
+    // import is the largest new tool for creators.
+    // The who-runs-it tags, podcast import and the new persona kinds went
+    // live late on 30 Sep, after that day's notes (v1.52.1) were written.
+    // They are listed here so 30 Sep keeps the version it shipped under
+    // instead of being renumbered after the fact.
+    highlights: [
+      "directory-online-tab",
+      "who-owns-and-runs-it-tags",
+      "podcast-feed-import",
     ],
   },
   "30 Sep 2026": {
@@ -652,4 +345,3 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   "20 Jun 2026": { highlights: [] },
   "10 Jun 2026": { highlights: [] },
 };
->>>>>>> Stashed changes

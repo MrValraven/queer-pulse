@@ -603,12 +603,6 @@
   text-transform: uppercase;
   font-size: var(--text-11);
 }
-/* The owner's "who runs it" tags: plain pills in full ink, a step stronger
-   than the listing's own tag pills, so they read with the ownership pill
-   beside them. */
-.ownerIdentityPill {
-  color: var(--ink);
-}
 /* Empty-state trust chip: a brand-new listing reads as "New", not as a hollow
    zero-star rating. */
 .newChip {

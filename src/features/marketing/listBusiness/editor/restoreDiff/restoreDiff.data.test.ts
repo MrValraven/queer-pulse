@@ -143,12 +143,6 @@ describe("buildRestoreDiff", () => {
     expect(diff(current, saved)).toEqual([]);
   });
 
-  it("treats a missing stored owner-identities key as the same as an empty list", () => {
-    const current = listingDraft({ ownerIdentities: [] });
-    const saved = listingDraft({ ownerIdentities: undefined });
-    expect(diff(current, saved)).toEqual([]);
-  });
-
   it("reports one name change as the basics area with one text field", () => {
     const current = listingDraft();
     const saved = listingDraft({ name: "Livraria Rosa Choque" });
