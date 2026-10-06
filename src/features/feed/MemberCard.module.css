@@ -3,7 +3,7 @@
    neither needs a media query: the split card above the mobile cutover and
    the stacked phone card's identity row at the cutover and below.
 
-   Split card. The portrait takes 30% of the card's width and sits flush with
+   Split card. The portrait takes 35% of the card's width and sits flush with
    its top, left and bottom edges, where the shell's rounded corners clip it;
    the details fill the remaining column and carry the shell's padding.
 
@@ -13,7 +13,7 @@ article.split {
   display: grid;
   padding: 0;
   gap: 0;
-  grid-template-columns: 30% minmax(0, 1fr);
+  grid-template-columns: 35% minmax(0, 1fr);
   overflow: hidden;
   /* A short card would otherwise show a squat sliver of photo. */
   min-height: 200px;
