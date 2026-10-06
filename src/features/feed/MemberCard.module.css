@@ -1,15 +1,20 @@
-/* ── "New member" card ──
-   Two layouts share this module, and `MemberCard` picks one in script, so
-   neither needs a media query: the split card above the mobile cutover and
-   the stacked phone card's identity row at the cutover and below.
+/* ── Feed "New member" card (desktop portrait split, phone avatar row) ──
+   The shell is FeedCard's `.shell`: its padding, border, radius, hover and
+   12px gap between groups. Rhythm runs on two values only, 4px inside a group
+   (name row and meta line, bio and tags) and 12px between groups (head,
+   identity, body, action). Coral appears once, on the action button.
 
-   Split card. The portrait takes 35% of the card's width and sits flush with
-   its top, left and bottom edges, where the shell's rounded corners clip it;
-   the details fill the remaining column and carry the shell's padding.
-
-   `article.split` outranks FeedCard's `.shell` whatever order the two CSS
+   Element-qualified selectors (`article.portraitSplit`, `span.badge`,
+   `a.avatarLink`) outrank the single-class rules they override in FeedCard,
+   Tag, StaffBadge, AmbassadorTag and the global focus ring, whatever order the
    modules load in. */
-article.split {
+
+/* ── Desktop: full-height photo column beside the details ──
+   Above the mobile cutover only (phones get the avatar row below, chosen in
+   script). The photo takes 35% of the card's width and sits flush with its
+   top, left and bottom edges, where the shell's rounded corners clip it; the
+   details column carries the shell's padding and 12px rhythm. */
+article.portraitSplit {
   display: grid;
   padding: 0;
   gap: 0;
@@ -18,10 +23,10 @@ article.split {
   /* A short card would otherwise show a squat sliver of photo. */
   min-height: 200px;
 }
-
 /* The grid cell stretches to the row's full height, and the portrait fills it
    absolutely so the photo never adds height of its own: the details column
-   alone sets how tall the card is. */
+   alone sets how tall the card is. The initials fallback fills it the same
+   way. */
 .portraitCell {
   position: relative;
   display: block;
@@ -34,35 +39,10 @@ article.split {
   transition: opacity 0.15s var(--ease);
 }
 @media (hover: hover) {
-  .portraitLink:hover .portraitFill {
+  a.portraitCell:hover .portraitFill {
     opacity: 0.85;
   }
 }
-/* The card clips anything outside its edge, so the ring is drawn inward on an
-   overlay above the photo: the outline runs just inside the cell's edge and
-   the cream halo becomes an inset band between it and the photo, the same two
-   tones as the global ring. The overlay's left corners follow the card's, so
-   the clip never cuts the ring. */
-.portraitLink::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  border-radius: var(--radius-18) 0 0 var(--radius-18);
-}
-.portraitLink:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
-.portraitLink:focus-visible::after {
-  outline: var(--focus-ring);
-  outline-offset: calc(-1 * var(--focus-ring-offset));
-  box-shadow: inset 0 0 0 calc(2 * var(--focus-ring-offset))
-    rgba(var(--cream-rgb), 0.95);
-}
-
-/* The details column carries the padding and rhythm `.shell` had. */
 .details {
   display: flex;
   flex-direction: column;
@@ -71,28 +51,173 @@ article.split {
   padding: 18px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .portraitCell .portraitFill {
-    transition: none;
+/* ── Phones: round photo beside the name block ── */
+.identityRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.avatarLink {
+  display: inline-flex;
+  flex: none;
+  border-radius: var(--radius-avatar);
+  transition: opacity 0.15s var(--ease);
+}
+a.avatarLink:focus-visible {
+  border-radius: var(--radius-avatar);
+}
+@media (hover: hover) {
+  a.avatarLink:hover {
+    opacity: 0.85;
   }
 }
+/* Faces sit in the upper part of most photos, as in MemberPortrait. */
+.avatarPhoto img {
+  object-position: 50% 30%;
+}
 
-/* ── Stacked phone card: identity row ──
-   An 80px avatar with the name block beside it, top aligned with the photo:
-   name and staff badge, then the pronouns on their own line, then the meta
-   line. `div.identityStacked` and `span.pronounStacked` outrank FeedCard's
-   `.identity` and `.pronoun` whatever order the modules load in. */
-div.identityStacked {
+/* ── Head: context line and joined time ──
+   The eyebrow keeps FeedCard's eyebrow type in a neutral ink, with no dot.
+   It holds to one line and ellipsises (the full text is its `title`), while
+   the time never shrinks. */
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.eyebrow {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.time {
+  flex: none;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* ── Identity: name row, then the meta line ── */
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+/* A wrapping flex line, as MemberStaffBadge asks, so a second pill or the
+   pronouns drop to the next line instead of squeezing the name. */
+.nameRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  min-width: 0;
+}
+.nameLink {
+  min-width: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-18);
+  line-height: 1.2;
+  color: var(--ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+@media (hover: hover) {
+  a.nameLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+.pronouns {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.meta {
+  display: flex;
   align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
 }
-/* The text column (FeedIdentity's last child) trims its first line down to
-   the cap height, so the name's capitals start level with the avatar's top
-   edge. Browsers without `text-box` keep the line's half-leading above. */
-div.identityStacked > :last-child {
-  text-box: trim-start cap alphabetic;
+/* Centred on the first line, so a wrapped place name keeps the pin on top. */
+.metaIcon {
+  flex: none;
+  margin-block-start: calc((1lh - 1em) / 2);
 }
-span.pronounStacked {
-  display: block;
-  margin-top: 2px;
-  margin-left: 0;
+
+/* ── Badge: the interest chip's shape ──
+   The staff or ambassador badge takes the interest chip's height, radius,
+   type size and padding (MemberInterestTags.module.css), and keeps its own
+   tone. The badge's transparent border (AmbassadorTag) goes, so both pills
+   measure the same. */
+span.badge {
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: normal;
+  padding: 5px 10px;
+  border-width: 0;
+  border-radius: var(--radius-tag);
+}
+span.badge {
+  gap: 5px;
+}
+span.badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Body: bio, then tags ──
+   ExpandableText's Read more toggle takes the muted ink here, so coral stays
+   on the one action. 4.86:1 on light paper, 6.82:1 on dark. */
+.body {
+  --expandable-text-toggle-ink: var(--ink-60);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+/* FeedQuote's serif italic, shown as written: the member's own line breaks
+   stay. ExpandableText folds it to four lines and brings the toggle. */
+.bio {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-16);
+  line-height: 1.45;
+  color: var(--ink);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.emptyPrompt {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+/* ── Action: one button, left aligned, no divider ── */
+.action {
+  display: flex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portraitCell .portraitFill,
+  .avatarLink {
+    transition: none;
+  }
 }

@@ -636,6 +636,8 @@ export const economy: Catalog = {
     "A tua mensagem está a caminho de <strong>{toName}</strong>, que costuma responder <strong>{responseTime}</strong>. Vais receber aqui uma notificação quando o fizer. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
   "housingModal.message.successBodyNoReplyTime":
     "A tua mensagem está a caminho de <strong>{toName}</strong>. Vais receber aqui uma notificação quando responder. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
+  "housingModal.message.unavailable":
+    "Esta casa já não está no quadro, por isso a tua mensagem não foi enviada.",
   "housingModal.message.body":
     "Sobre <strong>{listingTitle}</strong>. Mantém um tom humano, uma frase sobre quem és e porque te interessa já ajuda muito. O teu perfil é partilhado com a mensagem.",
   "housingModal.message.note":
@@ -826,7 +828,8 @@ export const economy: Catalog = {
     "Edita o anúncio com isto resolvido e volta para a fila.",
   "myHousingListings.postedOn": "Publicado {date}",
   "myHousingListings.expiresOn": "Expira {date}",
-  "myHousingListings.expiredHint": "Expirado, prolonga para voltar a publicar",
+  "myHousingListings.expiredHint":
+    "Esta casa saiu do quadro. Prolonga para a voltares a publicar.",
   // PRD-244. O único aviso que chega ANTES de o anúncio expirar.
   "myHousingListings.expiringInDays_one":
     "Expira em {count} dia, prolonga para o manteres no quadro",
@@ -841,9 +844,10 @@ export const economy: Catalog = {
   "myHousingListings.actions.delete": "Eliminar",
   "myHousingListings.delete.confirmTitle": "Eliminar este anúncio?",
   "myHousingListings.delete.confirmBody":
-    "Isto remove-o do quadro definitivamente, quem tiver o link vê uma página de não encontrado. Não é possível desfazer.",
+    "Isto tira-o do quadro definitivamente e quem tiver o link vê uma página de não encontrado. Quem tiver uma visita marcada é avisado de que foi cancelada. Não é possível desfazer.",
   "myHousingListings.delete.confirmCta": "Eliminar anúncio",
-  "myHousingListings.toast.filled": "Marcado como ocupado",
+  "myHousingListings.toast.filled":
+    "Marcado como ocupado. Quem tinha uma visita marcada foi avisado de que está cancelada.",
   "myHousingListings.toast.available": "Marcado como disponível outra vez",
   "myHousingListings.toast.extended": "Anúncio prolongado",
   "myHousingListings.toast.deleted": "Anúncio eliminado",
@@ -1078,6 +1082,8 @@ export const economy: Catalog = {
   "housingViewing.request.successTitle": "Visita <em>pedida.</em>",
   "housingViewing.request.successBody":
     "Quem anuncia vai escolher uma hora ou sugerir outra. Vais encontrá-la em As tuas visitas.",
+  "housingViewing.request.unavailable":
+    "Esta casa já não aceita visitas. Pode ter sido ocupada ou retirada do quadro.",
 
   // ── As tuas visitas (P2.3) ─────────────────────────────────────────────
   "housingViewing.list.back": "Mural de habitação",
@@ -1103,6 +1109,30 @@ export const economy: Catalog = {
   "housingViewing.list.decline": "Recusar",
   "housingViewing.list.waiting": "À espera da resposta de {name}",
   "housingViewing.list.cancel": "Cancelar",
+  "housingViewing.list.cancelViewing": "Cancelar visita",
+  "housingViewing.cancelConfirm.title": "Cancelar esta visita?",
+  "housingViewing.cancelConfirm.bodyAsRequester":
+    "{name} recebe uma notificação de que a visita foi cancelada.",
+  "housingViewing.cancelConfirm.bodyAsLister":
+    "{name} recebe uma notificação de que a visita foi cancelada, e a morada exata deixa de aparecer para essa pessoa, a menos que estejam conectados.",
+  "housingViewing.cancelConfirm.confirm": "Cancelar visita",
+  "housingViewing.cancelConfirm.keep": "Manter",
+  "housingViewing.list.completeAfter":
+    "Podes marcá-la como feita depois da visita.",
+  "housingViewing.list.withdrawRequest": "Retirar pedido",
+  "housingViewing.withdrawConfirm.title": "Retirar este pedido?",
+  "housingViewing.withdrawConfirm.body":
+    "{name} recebe uma notificação de que retiraste o pedido.",
+  "housingViewing.withdrawConfirm.confirm": "Retirar pedido",
+  "housingViewing.declineConfirm.title": "Recusar este pedido?",
+  "housingViewing.declineConfirm.body":
+    "{name} recebe uma notificação de que recusaste o pedido.",
+  "housingViewing.declineConfirm.confirm": "Recusar pedido",
+  "housingViewing.list.offHint":
+    "Esta visita já não vai acontecer. Podes pedir outra hora a partir do anúncio.",
+  "housingViewing.list.requestAgain": "Pedir outra hora",
+  "housingViewing.list.actionError":
+    "Não foi possível concluir. Tenta outra vez.",
   "housingViewing.list.markCompleted": "Marcar como feita",
   "housingViewing.list.leaveReview": "Deixar avaliação",
   "housingViewing.status.requested": "Pedida",
@@ -1248,13 +1278,13 @@ export const economy: Catalog = {
   "landlordPage.intro.title": "Pedir uma",
   "landlordPage.intro.em": "apresentação.",
   "landlordPage.intro.sub":
-    "Vamos transmitir uma nota simpática a {name} da tua parte. Conta um pouco sobre o que procuras e quando gostarias de te mudar.",
+    "A equipa de habitação da QueerPulse lê a tua nota e trata da apresentação a {name}. Conta um pouco sobre o que procuras e quando gostarias de te mudar.",
   "landlordPage.intro.preset":
     "Olá {firstName}, encontrei-te através do quadro de habitação da QueerPulse. Procuro um lugar em ",
   "landlordPage.intro.successTitle": "Apresentação",
   "landlordPage.intro.successEm": "pedida.",
   "landlordPage.intro.successBody":
-    "Já enviámos a tua nota a <strong>{firstName}</strong>. Se tiver algo que corresponda, vai entrar em contacto por aqui, sem pressão de qualquer forma.",
+    "A tua nota está com a equipa de habitação da QueerPulse, que trata das apresentações a <strong>{firstName}</strong>. Vais receber aqui uma notificação assim que a equipa a tiver visto.",
   "landlordPage.intro.sendLabel": "Pedir apresentação",
   "landlordPage.intro.fallbackName": "Uma pessoa da comunidade",
   "landlordPage.save": "Guardar",
@@ -1601,84 +1631,6 @@ export const economy: Catalog = {
     "Logótipo do Orgulho sem acompanhamento real, RH que não sabia como ajudar…",
   "writeReviewModal.success.body":
     "Obrigade, a tua avaliação anónima de {company} já está publicada. O teu nome nunca é guardado com ela, e a {company} não pode editar nem remover o que escreveste.",
-
-  // ── GrantsPage (+ guia / barra lateral) ────────────────────────────────
-  // Nota de âmbito: os anúncios de bolsas em grants.data.tsx (nomes, entidades,
-  // montantes, descrições) são um diretório curado de programas de financiamento
-  // externos reais — conteúdo informativo, não interface da plataforma. Em modo
-  // live viriam de um diretório mantido/obtido da API. Ficam em inglês.
-  "grants.hero.eyebrow": "Bolsas e financiamento",
-  "grants.hero.title": "Dinheiro para <em>trabalho queer.</em>",
-  "grants.hero.lead":
-    "Guia feito pela comunidade sobre bolsas, residências e financiamento para pessoas e organizações LGBTQ+, em Portugal e por toda a Europa. Mantido por quem já se candidatou com sucesso.",
-  "grants.hero.stat.tracked": "oportunidades acompanhadas",
-  "grants.hero.stat.open": "abertas neste momento",
-  "grants.hero.stat.communityLabel": "Comunidade",
-  "grants.hero.stat.maintained": "mantido por",
-
-  "grants.filter.all": "Tudo",
-  "grants.filter.individual": "Para pessoas",
-  "grants.filter.org": "Para organizações",
-  "grants.filter.arts": "Artes e cultura",
-  "grants.filter.community": "Projetos comunitários",
-  "grants.filter.eu": "UE / Internacional",
-
-  "grants.section.qp": "Da <em>QueerPulse</em>",
-  "grants.section.pt": "<em>Portugal</em>, programas nacionais",
-  "grants.section.eu": "<em>UE e Internacional</em>",
-
-  "grants.status.open": "Aberta agora",
-  "grants.status.rolling": "Em contínuo",
-  "grants.status.closed": "Fechada",
-
-  "grants.card.learnMore": "Saber mais",
-
-  "grants.empty.title": "Nada corresponde ao teu filtro",
-  "grants.empty.description":
-    "Não há oportunidades nessa categoria neste momento. Limpa o filtro para ver todas as bolsas e residências que a comunidade está a acompanhar.",
-  "grants.empty.clearFilters": "Limpar filtros",
-  "grants.emptyLive.title": "O acompanhamento de bolsas está a chegar",
-  "grants.emptyLive.description":
-    "Estamos a construir um feed vivo, mantido pela comunidade, de bolsas e residências para trabalho queer. Volta em breve, ou candidata-te entretanto a uma das nossas Micro Bolsas.",
-
-  "grants.guide.title": "Escrever uma <em>candidatura forte</em>",
-  "grants.guide.sub":
-    "Conselhos de pessoas da comunidade que já conseguiram financiamento, de micro a grande.",
-  "grants.guide.step.criteria.title": "Lê os critérios duas vezes",
-  "grants.guide.step.criteria.body":
-    "A maioria das recusas vem de candidaturas que encaixam tecnicamente mas não espelham a linguagem de quem financia. Mapeia o teu projeto sobre as palavras concretas que usam.",
-  "grants.guide.step.story.title": "Conta uma história concreta",
-  "grants.guide.step.story.body":
-    "Quem financia lê centenas de candidaturas. Uma única história concreta e humana de impacto fica melhor do que afirmações genéricas.",
-  "grants.guide.step.community.title": "Mostra a tua comunidade",
-  "grants.guide.step.community.body":
-    "Quem financia trabalho queer quer ver a comunidade lá dentro, a participar e a decidir.",
-  "grants.guide.step.review.title": "Pede uma leitura",
-  "grants.guide.step.review.body":
-    "Antes de submeteres, pede a alguém de fora do projeto que leia a tua candidatura. Um olhar novo apanha os pressupostos que já deixaste de ver.",
-
-  "grants.outro.title": "O teu projeto <em>merece apoio.</em>",
-  "grants.outro.sub":
-    "Encontraste algo que encaixa? Candidata-te com confiança, e se conseguires, retribui: acrescenta a oportunidade para a próxima pessoa.",
-  "grants.outro.cta": "Ver bolsas abertas",
-
-  "grants.subpages.title": "Também em bolsas",
-  "grants.subpages.microGrants.label": "Micro Bolsas",
-  "grants.subpages.microGrants.blurb":
-    "Bolsas pequenas e rápidas da comunidade, candidata-te em minutos.",
-
-  "grants.sidebar.microGrants.title": "As nossas <em>Micro Bolsas</em>",
-  "grants.sidebar.microGrants.body":
-    "A QueerPulse tem o seu próprio programa de micro bolsas (200 €–2 000 €) para projetos comunitários em Lisboa. Mais rápido e mais simples do que a maioria das bolsas externas.",
-  "grants.sidebar.microGrants.cta": "Candidata-te",
-  "grants.sidebar.skillsExchange.title": "Troca de competências",
-  "grants.sidebar.skillsExchange.body":
-    "Se precisas de apoio mas as bolsas te parecem formais demais, o quadro de trocas liga pessoas que trocam competências entre si, sem dinheiro pelo meio.",
-  "grants.sidebar.skillsExchange.cta": "Explorar as trocas",
-  "grants.sidebar.appHelp.title": "Ajuda com a <em>candidatura</em>",
-  "grants.sidebar.appHelp.body":
-    "Pessoas da comunidade com experiência em candidaturas dão apoio individual através da mentoria.",
-  "grants.sidebar.appHelp.cta": "Encontrar mentoria",
 
   // ── JobApplyPage (+ cabeçalho / formulário / barra lateral) ────────────
   "jobApply.backToJob": "Voltar à vaga",
@@ -3826,9 +3778,15 @@ export const economy: Catalog = {
   // ── Localização do anúncio — área aproximada vs morada exata (Wave A) ──
   "housingListing.section.location": "Onde fica",
   "housingListing.location.approxNote":
-    "Por agora vês a área aproximada. A morada exata aparece assim que tu e a pessoa ficarem conectados.",
+    "Por agora vês a área aproximada. A morada exata aparece quando estiverem conectados ou uma visita for aceite.",
   "housingListing.location.exactNote":
-    "Estão conectados, por isso esta é a localização exata.",
+    "Estão conectados, por isso podes ver a morada exata.",
+  "housingListing.location.viewingExactNote":
+    "A tua visita foi aceite, por isso podes ver a morada exata.",
+  "housingListing.location.unlockedExactNote":
+    "Podes ver a morada exata desta casa.",
+  "housingListing.location.areaPinNote":
+    "O círculo no mapa mostra o bairro. A morada é o sítio exato.",
   // PRD-241, o terceiro estado: quem já tem acesso mas o anúncio não tem morada.
   "housingListing.location.noAddressOnFileNote":
     "Tens acesso à morada exata e quem anunciou ainda não a adicionou. Pede-lha quando combinares a visita.",
@@ -3922,6 +3880,12 @@ export const economy: Catalog = {
   "housingGroups.listings.accessLabel": "Acessibilidade:",
   "housingGroups.listings.empty":
     "Sem quartos listados de momento. Entra para seres o primeiro a ver o próximo.",
+  "housingGroups.listings.postedBy": "Publicado por {name}",
+  "housingGroups.listings.message": "Enviar mensagem a {name}",
+  "housingGroups.listings.report": "Denunciar",
+  "housingGroups.listings.reportAria": "Denunciar {title}",
+  "housingGroups.listings.yourRoom": "Publicaste este quarto",
+  "housingGroups.listings.yourRoomLink": "Vê-o nos teus quartos",
 
   // ── Entrar num grupo de habitação — pedido triado (Wave A) ──
   "joinGroup.ariaLabel": "Pedir para entrar em {name}",
@@ -3941,6 +3905,9 @@ export const economy: Catalog = {
   "joinGroup.sending": "A enviar…",
   "joinGroup.sendCta": "Enviar pedido",
   "joinGroup.error": "Não foi possível enviar. Tenta daqui a pouco.",
+  "joinGroup.alreadyPending":
+    "Já pediste para entrar neste grupo. Vais receber uma notificação quando houver resposta.",
+  "joinGroup.alreadyMember": "Já és membro deste grupo.",
   "joinGroup.success.title": "O teu pedido está <em>feito.</em>",
   "joinGroup.success.closeLabel": "Concluído",
   "joinGroup.success.body":

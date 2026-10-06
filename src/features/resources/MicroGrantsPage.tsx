@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { FiArrowRight, FiCheck } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
+import { HOW, RULES } from "./microGrants.data";
 import {
-  CRITERIA_KEYS,
-  CURRENT,
-  HOW,
-  PANEL,
-  PAST,
-  RULES,
-} from "./microGrants.data";
-import { GrantCard, GrantSkeleton } from "./GrantCard";
+  MicroGrantsLiveApplyCard,
+  MicroGrantsPanelCard,
+  MicroGrantsRoundCard,
+  MicroGrantsShowcase,
+} from "./MicroGrantsRound";
 import { GrantApplicationModal } from "./GrantApplicationModal";
 import { PanelSignupModal } from "./PanelSignupModal";
 import { ContributeStrip, MicroGrantsHero } from "./MicroGrantsSections";
@@ -24,6 +23,7 @@ const INVITE = requestInvitePath("micro_grants");
 
 export function MicroGrantsPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [open, setOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const loading = useSimulatedLoad();
@@ -50,107 +50,14 @@ export function MicroGrantsPage() {
         <div className="wrap">
           <div className={styles.layout}>
             <div>
-              <div className={styles.roundCard}>
-                <div className={styles.rcLabel}>
-                  <span className={styles.rcDot} />
-                  {t("resources:microGrants.round.statusLabel")}
-                </div>
-                <div className={styles.rcTitle}>
-                  <Translation
-                    i18nKey="resources:microGrants.round.title"
-                    components={{ em: <em /> }}
-                  />
-                </div>
-                <p className={styles.rcDesc}>
-                  {t("resources:microGrants.round.desc")}
-                </p>
-                <div className={styles.rcMeta}>
-                  <div className={styles.rcm}>
-                    <strong>€200 – €2,000</strong>
-                    <span>
-                      {t("resources:microGrants.round.meta.amountLabel")}
-                    </span>
-                  </div>
-                  <div className={styles.rcm}>
-                    <strong>
-                      {t("resources:microGrants.round.meta.deadlineValue")}
-                    </strong>
-                    <span>
-                      {t("resources:microGrants.round.meta.deadlineLabel")}
-                    </span>
-                  </div>
-                  <div className={styles.rcm}>
-                    <strong>
-                      {t("resources:microGrants.round.meta.decisionValue")}
-                    </strong>
-                    <span>
-                      {t("resources:microGrants.round.meta.decisionLabel")}
-                    </span>
-                  </div>
-                </div>
-                <div className={styles.rcCriteria}>
-                  <div className={styles.rcCritTitle}>
-                    {t("resources:microGrants.round.criteriaTitle")}
-                  </div>
-                  <div className={styles.critList}>
-                    {CRITERIA_KEYS.map((criteriaKey) => (
-                      <div className={styles.crit} key={criteriaKey}>
-                        <span className={styles.critCheck}>
-                          <FiCheck />
-                        </span>
-                        <span>{t(criteriaKey)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => setOpen(true)}
-                >
-                  {t("resources:microGrants.round.applyCta")}
-                </Button>
-              </div>
-
-              <div className={styles.grantsSection}>
-                <div className={styles.gsHead}>
-                  <Translation
-                    i18nKey="resources:microGrants.section.currentTitle"
-                    components={{ em: <em /> }}
-                  />
-                </div>
-                <div className={styles.grantsGrid} aria-busy={loading}>
-                  {loading
-                    ? Array.from({ length: CURRENT.length }).map((_, i) => (
-                        <GrantSkeleton key={i} />
-                      ))
-                    : CURRENT.map((g, i) => (
-                        <FadeIn key={g.name} delay={Math.min(i, 8) * 60}>
-                          <GrantCard g={g} />
-                        </FadeIn>
-                      ))}
-                </div>
-              </div>
-
-              <div className={styles.grantsSection}>
-                <div className={styles.gsHead}>
-                  <Translation
-                    i18nKey="resources:microGrants.section.pastTitle"
-                    components={{ em: <em /> }}
-                  />
-                </div>
-                <div className={styles.grantsGrid} aria-busy={loading}>
-                  {loading
-                    ? Array.from({ length: PAST.length }).map((_, i) => (
-                        <GrantSkeleton key={i} />
-                      ))
-                    : PAST.map((g, i) => (
-                        <FadeIn key={g.name} delay={Math.min(i, 8) * 60}>
-                          <GrantCard g={g} />
-                        </FadeIn>
-                      ))}
-                </div>
-              </div>
+              {demoMode ? (
+                <>
+                  <MicroGrantsRoundCard onApply={() => setOpen(true)} />
+                  <MicroGrantsShowcase isLoading={loading} />
+                </>
+              ) : (
+                <MicroGrantsLiveApplyCard onApply={() => setOpen(true)} />
+              )}
             </div>
 
             <aside className={styles.sidebar}>
@@ -165,17 +72,7 @@ export function MicroGrantsPage() {
                   </div>
                 ))}
               </div>
-              <div className={styles.sbCard}>
-                <div className={styles.sbcTitle}>
-                  {t("resources:microGrants.sidebar.panelTitle")}
-                </div>
-                {PANEL.map((p) => (
-                  <div className={styles.sbcRule} key={p.title}>
-                    <div className={styles.sbcRuleTitle}>{p.title}</div>
-                    <div className={styles.sbcRuleBody}>{p.body}</div>
-                  </div>
-                ))}
-              </div>
+              {demoMode && <MicroGrantsPanelCard />}
               <Button
                 type="button"
                 variant="ghost"

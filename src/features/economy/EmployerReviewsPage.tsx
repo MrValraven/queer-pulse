@@ -37,6 +37,9 @@ export function EmployerReviewsPage() {
     demoMode ? COMPANIES : [],
   );
   const liveEmployers = useCompanies();
+  // ENG-501: a failed "Load more" also sets `isError`; the grid keeps its rows.
+  const hasNothingLoadedError =
+    liveEmployers.isError && liveEmployers.items.length === 0;
   // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
   const [writeFor, setWriteFor] = useState<string | null>(null);
 
@@ -144,7 +147,7 @@ export function EmployerReviewsPage() {
                     </FadeIn>
                   ))}
             </div>
-          ) : liveEmployers.isError ? (
+          ) : hasNothingLoadedError ? (
             // The employer grid is this section's whole content, so a failed
             // fetch says so instead of "no employers reviewed yet" (DES-22).
             <LoadErrorState
@@ -173,6 +176,7 @@ export function EmployerReviewsPage() {
               hasNextPage={liveEmployers.hasNextPage}
               fetchNextPage={liveEmployers.fetchNextPage}
               isFetchingNextPage={liveEmployers.isFetchingNextPage}
+              isFetchNextPageError={liveEmployers.isFetchNextPageError}
             />
           )}
 

@@ -23,7 +23,7 @@ export interface SoberEvent {
  * i18n Pattern A. Reason chips are platform-authored chrome. `EVENTS` below
  * keep organizer-authored `name`/`meta` in English (content, per the scope
  * rule); `typeLabel` used to be repeated per-event chrome baked into the mock
- * — lifted out to `TYPE_LABEL_KEY` since it's really a function of `type`.
+ * lifted out to `TYPE_LABEL_KEY` since it's really a function of `type`.
  */
 export const REASON_KEYS = [
   "resources:sober.reason.recovery",
@@ -63,7 +63,7 @@ export const EVENTS: SoberEvent[] = [
     type: "Culture",
     name: "Book club meetup: Giovanni's Room",
     meta: [
-      { icon: FiCoffee, text: "Linha d'Água café, Príncipe Real" },
+      { icon: FiCoffee, text: "Café Meridiano, Príncipe Real" },
       { text: "18:30" },
       { text: "11 going" },
     ],
@@ -128,31 +128,32 @@ export const STATS = [
   },
 ];
 
+// Demo-only fictional venues. Identity and access labels sit on invented names only.
 export const VENUES = [
   {
     neighbourhood: "Príncipe Real",
-    name: "Linha d'Água",
+    name: "Café Meridiano (demo)",
     description:
       "A calm, queer-owned café. Excellent coffee and non-alcoholic options. Community notice board, good for a long conversation or quiet work. Fully accessible.",
     tags: ["Queer-owned", "No alcohol", "Accessible"],
   },
   {
     neighbourhood: "Cais do Sodré",
-    name: "Copenhagen Coffee Lab",
+    name: "Torrefação Estaleiro (demo)",
     description:
       "Speciality coffee, relaxed atmosphere, queer-staffed. A go-to for a first meeting or first date that doesn't involve alcohol. Gender-neutral bathroom.",
     tags: ["No alcohol", "Gender-neutral bathroom"],
   },
   {
     neighbourhood: "Bairro Alto",
-    name: "ZDB: Zé dos Bois",
+    name: "Sala Lusco-Fusco (demo)",
     description:
       "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus. Many events are entirely sober in practice. Consistently queer-safe.",
     tags: ["Alcohol present", "Never the focus", "Arts-led"],
   },
   {
     neighbourhood: "Mouraria",
-    name: "Chapitô",
+    name: "Casa do Miradouro (demo)",
     description:
       "Restaurant and cultural space with terrace views. Good non-alcoholic drinks menu, not just water and Coke. Staff don't push alcohol. Popular for community dinners.",
     tags: ["Good NA menu", "Community dinners"],
@@ -182,8 +183,8 @@ export const VOICES = [
     quote:
       "\"The morning walk group changed things for me. I'd been so isolated, not because I didn't want connection, but because every social option seemed to start at midnight in a bar.\"",
     avatar: "CF",
-    avatarBackground: "rgba(45,27,61,.1)",
-    avatarColor: "var(--plum)",
+    avatarBackground: "rgba(var(--line-rgb), .10)",
+    avatarColor: "var(--text-strong)",
     name: "Catarina Faria",
     role: "Architect · Estrela",
   },

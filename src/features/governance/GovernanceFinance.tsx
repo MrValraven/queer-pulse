@@ -1,10 +1,55 @@
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
+import { useFormat } from "../../shared/i18n/format";
 import type { FinLine } from "./governance.data";
 import styles from "./GovernancePage.module.css";
 
+/** A ledger amount the admin Finances editor saved is a plain number string
+ *  ("1840.5"); older rows hold a pre-formatted one ("€1,840"). */
+const CANONICAL_AMOUNT = /^-?\d+(\.\d+)?$/;
+
 function FinanceRow({ line, color }: { line: FinLine; color: string }) {
   const [open, setOpen] = useState(false);
+  const fmt = useFormat();
+  // PRD-447: an entered figure is shown in the reader's locale; a
+  // pre-formatted one is shown as it was written.
+  const amount = CANONICAL_AMOUNT.test(line.amount)
+    ? fmt.currency(Number(line.amount), "EUR")
+    : line.amount;
+  // The public report carries no line-item breakdown (PRD-447), so a row with
+  // nothing to reveal renders as a plain row with no toggle.
+  const hasBreakdown = line.items.length > 0;
+  const summary = (
+    <>
+      <div className={styles.finLineTop}>
+        <span className={styles.finLineLabel}>{line.label}</span>
+        <span className={styles.finLineRight}>
+          <span className={styles.finLineAmount}>{amount}</span>
+          {hasBreakdown && (
+            <span className={styles.finChevron} aria-hidden>
+              <FiChevronDown />
+            </span>
+          )}
+        </span>
+      </div>
+      <div className={styles.finLineNote}>{line.note}</div>
+      <div className={styles.finTrack}>
+        <div
+          className={styles.finFill}
+          style={{ width: `${line.width}%`, background: color }}
+        />
+      </div>
+    </>
+  );
+  if (!hasBreakdown) {
+    return (
+      <div className={styles.finLine}>
+        <div className={`${styles.finSummary} ${styles.finSummaryStatic}`}>
+          {summary}
+        </div>
+      </div>
+    );
+  }
   return (
     <div
       className={[styles.finLine, open && styles.finLineOpen]
@@ -17,22 +62,7 @@ function FinanceRow({ line, color }: { line: FinLine; color: string }) {
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        <div className={styles.finLineTop}>
-          <span className={styles.finLineLabel}>{line.label}</span>
-          <span className={styles.finLineRight}>
-            <span className={styles.finLineAmount}>{line.amount}</span>
-            <span className={styles.finChevron} aria-hidden>
-              <FiChevronDown />
-            </span>
-          </span>
-        </div>
-        <div className={styles.finLineNote}>{line.note}</div>
-        <div className={styles.finTrack}>
-          <div
-            className={styles.finFill}
-            style={{ width: `${line.width}%`, background: color }}
-          />
-        </div>
+        {summary}
       </button>
       <div className={styles.finDetailWrap}>
         <div className={styles.finDetailInner}>
@@ -66,8 +96,8 @@ export function FinanceLines({
 }) {
   return (
     <>
-      {lines.map((line) => (
-        <FinanceRow key={line.label} line={line} color={color} />
+      {lines.map((line, index) => (
+        <FinanceRow key={`${index}-${line.label}`} line={line} color={color} />
       ))}
       <div className={styles.finTotalLine}>
         <span className={styles.finTotalLabel}>{total}</span>

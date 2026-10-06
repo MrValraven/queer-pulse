@@ -12,10 +12,12 @@ import type { CreateReportInput } from "../safety/api/reports.api";
  * carry copy written for a member to read:
  *
  *  - the rolling flood caps refuse with a typed body carrying
- *    `code: "REPORT_FLOOD_CAP"`, whose `message` IS the refusal (it tells the
- *    member the reports they already sent are with moderators). Discarding it
- *    and toasting the generic "couldn't send that flag" throws the explanation
- *    away and invites a retry the server will keep refusing;
+ *    `code: "REPORT_FLOOD_CAP"`, and the member is told the reports they
+ *    already sent are with moderators. That explanation renders as
+ *    `safety:report.floodCap` in the member's own language (PRD-467: the
+ *    server's `message` is English only). Toasting the generic "couldn't send
+ *    that flag" throws the explanation away and invites a retry the server
+ *    will keep refusing;
  *  - the 60-second burst throttle raises `@nestjs/throttler`'s own
  *    `ThrottlerException`, which carries NO `code`, and whose message is
  *    framework wording that must never reach a member.
@@ -96,7 +98,7 @@ function renderModal() {
 }
 
 describe("MessageReportModal: a refused report", () => {
-  it("surfaces the server's own explanation when a rolling flood cap refuses the filing", async () => {
+  it("explains a rolling flood cap in the member's language", async () => {
     refuseWith(
       new ApiError(429, DAILY_CAP_MESSAGE, {
         statusCode: 429,
@@ -111,9 +113,13 @@ describe("MessageReportModal: a refused report", () => {
 
     await fillAndSubmit();
 
-    // The refusal's own words reach the member, in a toast that is a live
-    // region, so it is announced rather than only shown.
-    expect(await screen.findByText(DAILY_CAP_MESSAGE)).toBeInTheDocument();
+    // The cap's translated explanation reaches the member, in a toast that is
+    // a live region, so it is announced as well as shown.
+    expect(
+      await screen.findByText(/reached the limit for reports/i),
+    ).toBeInTheDocument();
+    // The server's English sentence stays out of the toast.
+    expect(screen.queryByText(DAILY_CAP_MESSAGE)).not.toBeInTheDocument();
     // ...replacing the generic line rather than sitting next to it.
     expect(screen.queryByText(GENERIC_MESSAGE)).not.toBeInTheDocument();
   });

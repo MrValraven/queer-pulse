@@ -33,10 +33,6 @@ const VerificationNeededPage = lazyNamed(
 );
 const StatusPage = lazyNamed(() => import("./StatusPage"), "StatusPage");
 const GenesisPage = lazyNamed(() => import("./GenesisPage"), "GenesisPage");
-const NewsletterUnsubscribePage = lazyNamed(
-  () => import("./NewsletterUnsubscribePage"),
-  "NewsletterUnsubscribePage",
-);
 
 /** System, error & account-state screens, plus the one-time founder bootstrap. */
 export function systemRoutes() {
@@ -61,10 +57,6 @@ export function systemRoutes() {
       />
       <Route path={routes.status} element={<StatusPage />} />
       <Route path={routes.genesis} element={<GenesisPage />} />
-      <Route
-        path={routes.newsletterUnsubscribe}
-        element={<NewsletterUnsubscribePage />}
-      />
     </>
   );
 }

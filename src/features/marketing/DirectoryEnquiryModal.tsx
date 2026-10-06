@@ -74,7 +74,7 @@ export function DirectoryEnquiryModal({
   onClose,
   onCapReached,
 }: Props) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { demoMode } = useDemoMode();
   const sendEnquiry = useSendListingEnquiry(slug);
   const [body, setBody] = useState("");
@@ -103,7 +103,7 @@ export function DirectoryEnquiryModal({
           setErrorMessage(t(firstContactKey, { name: placeName }));
           return;
         }
-        const refusal = readListingEnquiryRefusal(error);
+        const refusal = readListingEnquiryRefusal(error, language);
         const message = refusal.serverReason ?? t(REFUSAL_KEYS[refusal.kind]);
         setErrorMessage(message);
         if (refusal.kind === "rate_limited") onCapReached(message);

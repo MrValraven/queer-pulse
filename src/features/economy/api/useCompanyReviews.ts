@@ -19,6 +19,12 @@ export interface CompanyReviewsResult {
    * "no reviews yet", which reads as an employer nobody has reviewed.
    */
   isError: boolean;
+  /**
+   * True when the latest "Load more" failed. React-query sets `isError` then
+   * too; the tab keeps the loaded reviews and its footer retries the page
+   * through `fetchNextPage` (ENG-501). Always false in demo, one page.
+   */
+  isFetchNextPageError: boolean;
   /** Re-runs the failed fetch. Wire it to the error state's retry. */
   refetch: () => void;
   /** True when another page is available (always false in demo/disabled). */
@@ -83,6 +89,7 @@ export function useCompanyReviews(
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),

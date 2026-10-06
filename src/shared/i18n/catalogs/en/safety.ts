@@ -84,6 +84,7 @@ export const safety: Catalog = {
   "myReports.subject.volunteering": "About a volunteering opportunity",
   "myReports.subject.conversation": "About a group chat",
   "myReports.subject.identity": "About a business chat",
+  "myReports.subject.group_listing": "About a room in a housing group",
   "report.guide.meta.title": "How reporting works on QueerPulse",
   "report.guide.meta.description":
     "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and a public log of past moderation outcomes.",
@@ -200,10 +201,14 @@ export const safety: Catalog = {
     "Couldn't send your report. It didn't reach us. Check your connection and try again.",
   // Shown when POST /reports is refused by the 60-second burst throttle, whose
   // own message is framework wording no member should ever read. The rolling
-  // flood caps carry their own member-facing copy from the server instead, so
-  // this string covers the burst case only. See api/reportSubmissionError.ts.
+  // flood caps have their own line, `report.floodCap`, so this string covers
+  // the burst case only. See api/reportSubmissionError.ts.
   "report.tooFast":
     "You're sending reports faster than we can take them in. Wait a moment, then send this one again.",
+  // PRD-467: the daily and per-subject flood caps share one code, so this line
+  // names neither window.
+  "report.floodCap":
+    "You've reached the limit for reports for now. The ones you already sent are with the safety team. If something is urgent, use the Contact page.",
   "report.notParticipant":
     "This message isn't in a conversation you're part of, so it can't be reported.",
   // Scan section 9: the message was deleted long enough ago that its evidence
@@ -312,6 +317,7 @@ export const safety: Catalog = {
   "reason.venueAccessibility": "An accessibility problem",
   "reason.housingUnsafe": "Unsafe, discriminatory, or misrepresented housing",
   "reason.housingScam": "Scam or fake listing",
+  "reason.fundingScam": "Scam, fake fundraiser or fake grant",
   "reason.notAffirming": "Not LGBTQ+ affirming: broke the community pledge",
   "reason.offPlatform": "Asked to pay or move off-platform",
   // System-filed by the listings pipeline, never offered to a member. Read

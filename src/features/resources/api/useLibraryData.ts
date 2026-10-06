@@ -4,6 +4,10 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { Guide } from "../library.data";
 import { getResources } from "./resources.api";
 import { resourceToGuide } from "./resources.adapters";
+import {
+  hasFailedWithoutData,
+  isRetryingFailedRead,
+} from "../../admin/queryLoadFailure";
 
 export interface LibraryDataResult {
   /** All guides fetched so far, flattened across loaded pages. */
@@ -16,9 +20,18 @@ export interface LibraryDataResult {
   fetchNextPage: () => void;
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
+  /** ENG-501: the latest next page failed (`isError` is true then too), so a
+   *  footer can retry that page under the guides already loaded. Always false
+   *  in demo mode, which answers in one page. */
+  isFetchNextPageError: boolean;
   /** True when the guide fetch failed, so the page can say so instead of
    *  rendering an empty library (DES-22). */
   isError: boolean;
+  /** The read failed and nothing ever loaded, including while a Retry of that
+   *  failure runs (react-query clears `isError` the moment it refetches). */
+  hasFailedWithoutData: boolean;
+  /** A Retry of that failed read is in flight. */
+  isRetrying: boolean;
   /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
   refetch: () => void;
 }
@@ -88,7 +101,10 @@ export function useLibraryData(): LibraryDataResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
     isError: query.isError,
+    hasFailedWithoutData: hasFailedWithoutData(query),
+    isRetrying: isRetryingFailedRead(query),
     refetch: () => void query.refetch(),
   };
 }

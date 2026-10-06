@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Button, Modal } from "../../shared/components/ui";
+import { Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HeadlineTable } from "./AdminGovernanceFinancesHeadlineTable";
 import { LedgerTable } from "./AdminGovernanceFinancesLedgerTable";
+import { FinancesEditFooter } from "./AdminGovernanceFinancesEditCells";
 import {
   SCALAR_KEYS,
   buildUpdateBody,
   countChanges,
+  emptyLineDraft,
+  hasBlankLineLabel,
   hasRejectedLineAmount,
   isAmountRejected,
   parseNumber,
@@ -64,6 +67,12 @@ export function AdminGovernanceFinancesEdit({
     SCALAR_KEYS.some((key) => isAmountRejected(scalars[key], true)) ||
     hasRejectedLineAmount(income) ||
     hasRejectedLineAmount(expense);
+  const hasBlankLabel = hasBlankLineLabel(income) || hasBlankLineLabel(expense);
+  const blockedMessage = hasRejectedAmount
+    ? t("admin:governance.finances.edit.blockedByAmounts")
+    : hasBlankLabel
+      ? t("admin:governance.finances.edit.blockedByLabels")
+      : null;
 
   const setScalar = (key: ScalarKey, value: string): void => {
     setScalars((prev) => ({ ...prev, [key]: value }));
@@ -115,45 +124,13 @@ export function AdminGovernanceFinancesEdit({
         </span>
       }
       footer={
-        <div className={styles.foot}>
-          <div className={styles.footStatus} aria-live="polite">
-            <span
-              className={[
-                styles.footCount,
-                changeCount > 0 && styles.footCountActive,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {changeCount > 0
-                ? t("admin:governance.finances.edit.changes", {
-                    count: changeCount,
-                  })
-                : t("admin:governance.finances.edit.noChangesYet")}
-            </span>
-            {hasRejectedAmount && (
-              <span className={styles.footBlocked} role="alert">
-                {t("admin:governance.finances.edit.blockedByAmounts")}
-              </span>
-            )}
-          </div>
-          <div className={styles.footActions}>
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              disabled={update.isPending}
-            >
-              {t("admin:governance.finances.edit.cancel")}
-            </Button>
-            <Button
-              variant="primary"
-              onClick={onSave}
-              disabled={update.isPending || hasRejectedAmount}
-            >
-              {t("admin:governance.finances.edit.save")}
-            </Button>
-          </div>
-        </div>
+        <FinancesEditFooter
+          changeCount={changeCount}
+          blockedMessage={blockedMessage}
+          isPending={update.isPending}
+          onCancel={onClose}
+          onSave={onSave}
+        />
       }
     >
       <div className={styles.body}>
@@ -168,12 +145,14 @@ export function AdminGovernanceFinancesEdit({
           lines={income}
           original={latest.income}
           onChange={(index, patch) => patchLine(setIncome, index, patch)}
+          onAdd={() => setIncome((prev) => [...prev, emptyLineDraft()])}
         />
         <LedgerTable
           titleKey="governance.finances.edit.section.spend"
           lines={expense}
           original={latest.expense}
           onChange={(index, patch) => patchLine(setExpense, index, patch)}
+          onAdd={() => setExpense((prev) => [...prev, emptyLineDraft()])}
         />
 
         <section className={styles.section}>

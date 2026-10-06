@@ -233,6 +233,12 @@
   line-height: 1.68;
   flex: 1;
 }
+.icBody p {
+  margin: 0;
+}
+.icBody p + p {
+  margin-top: 10px;
+}
 .icTag {
   display: inline-flex;
   align-items: center;
@@ -413,6 +419,13 @@
   color: var(--ink-60);
   line-height: 1.68;
   margin: 0 0 20px;
+}
+/* The Button primitive is nowrap; a long PT label must wrap inside the card
+   at 375px. Scoped under the card so it outranks the primitive's rule. */
+.lawyerEmpty .lawyerCta {
+  white-space: normal;
+  max-width: 100%;
+  text-align: center;
 }
 
 @media (--md) {

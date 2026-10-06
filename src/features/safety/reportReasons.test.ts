@@ -193,6 +193,7 @@ describe("SUBJECT_REASONS", () => {
       "volunteering",
       "conversation",
       "identity",
+      "group_listing",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),

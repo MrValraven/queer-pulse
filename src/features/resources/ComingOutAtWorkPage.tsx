@@ -2,6 +2,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
@@ -13,6 +14,30 @@ import {
   VOICES,
 } from "./comingOutAtWork.data";
 import styles from "./resources.module.css";
+
+/**
+ * Peer quotes under "If it goes badly". They are invented demo content
+ * (PRD-451), so they render in demo mode only.
+ */
+function PeerVoices() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return null;
+  return (
+    <div style={{ marginTop: 32 }}>
+      {VOICES.map((voice) => (
+        <Reveal key={voice.text} className={styles.qaItem}>
+          <div
+            className={styles.qaQ}
+            style={{ fontStyle: "italic", fontWeight: 400 }}
+          >
+            "{voice.text}"
+          </div>
+          <div className={styles.archiveMeta}>{voice.who}</div>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
 
 export function ComingOutAtWorkPage() {
   const { t } = useTranslation();
@@ -159,7 +184,8 @@ export function ComingOutAtWorkPage() {
               components={{ em: <em /> }}
             />
           </Reveal>
-          <div className={styles.grid}>
+          {/* No lead paragraph here, so the grid takes the heading gap itself. */}
+          <div className={styles.grid} style={{ marginTop: "var(--gap-lg)" }}>
             {IF_BAD.map((b, i) => (
               <Reveal key={b.titleKey} className={styles.card} delay={i * 55}>
                 <div className={styles.cardName} style={{ fontSize: 19 }}>
@@ -169,19 +195,7 @@ export function ComingOutAtWorkPage() {
               </Reveal>
             ))}
           </div>
-          <div style={{ marginTop: 32 }}>
-            {VOICES.map((v) => (
-              <Reveal key={v.who} className={styles.qaItem}>
-                <div
-                  className={styles.qaQ}
-                  style={{ fontStyle: "italic", fontWeight: 400 }}
-                >
-                  "{v.text}"
-                </div>
-                <div className={styles.archiveMeta}>{v.who}</div>
-              </Reveal>
-            ))}
-          </div>
+          <PeerVoices />
         </div>
       </section>
 

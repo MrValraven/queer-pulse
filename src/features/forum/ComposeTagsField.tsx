@@ -4,8 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ComposeTagsField.module.css";
 import { ForumTagBrowseList } from "./ForumTagBrowseList";
 import { FORUM_TAG_OPTIONS, POPULAR_FORUM_TAGS } from "./forumTags.data";
-
-const MAX_TAGS = 5;
+import { COMPOSE_TAG_LIMIT } from "./compose/composeThread.types";
 
 /**
  * Tag picker for the thread's "Edit tags" modal: choose from the curated
@@ -31,13 +30,16 @@ const MAX_TAGS = 5;
 export function ComposeTagsField({
   tags,
   onChange,
+  maxTags = COMPOSE_TAG_LIMIT,
 }: {
   tags: string[];
   onChange: (tags: string[]) => void;
+  /** Four on a call: the server puts `open-call` first and keeps four more. */
+  maxTags?: number;
 }) {
   const { t } = useTranslation();
   const [isBrowseOpen, setIsBrowseOpen] = useState(false);
-  const isAtCap = tags.length >= MAX_TAGS;
+  const isAtCap = tags.length >= maxTags;
 
   function add(candidate: string) {
     if (!FORUM_TAG_OPTIONS.includes(candidate)) return;
@@ -64,7 +66,7 @@ export function ComposeTagsField({
         tags={tags}
         options={FORUM_TAG_OPTIONS}
         suggestions={POPULAR_FORUM_TAGS}
-        limit={MAX_TAGS}
+        limit={maxTags}
         formatTag={(tag) => `#${tag}`}
         onAdd={add}
         onRemove={remove}
@@ -84,14 +86,14 @@ export function ComposeTagsField({
           add: (tag) => t("forum:compose.addTagAria", { tag }),
           suggestions: t("forum:compose.popularTagsLabel"),
           noMatch: (query) => t("forum:compose.tagsNoMatch", { query }),
-          full: t("forum:composePage.tags.full", { max: MAX_TAGS }),
+          full: t("forum:composePage.tags.full", { max: maxTags }),
         }}
       />
       <Collapse isOpen={isBrowseOpen}>
         <ForumTagBrowseList tags={tags} isAtCap={isAtCap} onToggle={toggle} />
       </Collapse>
       <span className={styles.tagsHint}>
-        {t("forum:compose.tagsHint", { max: MAX_TAGS })}
+        {t("forum:compose.tagsHint", { max: maxTags })}
       </span>
     </div>
   );

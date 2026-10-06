@@ -21,7 +21,6 @@ import type {
   AdminRoadmapIdeaDTO,
   AdminRoadmapItemDTO,
   AdminVoteBreakdownDTO,
-  RoadmapAdminHeroStatDTO,
   RoadmapAuditEntryDTO,
   RoadmapColumn,
   RoadmapConfidence,
@@ -1146,42 +1145,13 @@ function buildRoadmapAudit(): RoadmapAuditEntryDTO[] {
   ];
 }
 
-// ── Hero stats ───────────────────────────────────────────────────────────────
-
-function buildRoadmapHeroStats(): RoadmapAdminHeroStatDTO[] {
-  return [
-    {
-      label: "Resource guides live",
-      value: "6",
-      note: "Counts published guides only",
-      jade: true,
-    },
-    {
-      label: "Members vouched in",
-      value: "8,412",
-      note: "Rounded down, updated nightly",
-    },
-    {
-      label: "Shipped this quarter",
-      value: "5",
-      note: "Auto-counted from the board",
-    },
-    {
-      label: "Member ideas on the board",
-      value: "11",
-      note: "Ideas promoted to board items",
-    },
-  ];
-}
-
 /** The full demo-mode seed — 24 items, 12 ideas (5 published, 5 pending, 2
- *  dismissed), 5 team members, 4 audit entries, 4 hero stats. */
+ *  dismissed), 5 team members, 4 audit entries. */
 export function buildRoadmapSeed(): DemoRoadmapState {
   return {
     items: buildRoadmapItems(),
     ideas: buildRoadmapIdeas(),
     team: buildRoadmapTeam(),
     audit: buildRoadmapAudit(),
-    heroStats: buildRoadmapHeroStats(),
   };
 }

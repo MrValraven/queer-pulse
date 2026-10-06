@@ -9,7 +9,11 @@ export const LEGAL = routes.legal;
 export const GOVERNANCE = routes.governance;
 export const CONTACT = routes.contact;
 
-/** Attributed member quotes — content, stays English (wellbeing/soberPage VOICES precedent). */
+/**
+ * Illustrative member quotes for DEMO MODE ONLY (PRD-451). These people are
+ * invented, so live mode renders none of them: the page shows them only
+ * when `useDemoMode().demoMode` is true. Content, stays English.
+ */
 export interface Voice {
   initials: string;
   background: string;
@@ -28,8 +32,8 @@ export interface InfoCard {
 export const RACE_VOICES: Voice[] = [
   {
     initials: "AM",
-    background: "rgba(45,27,61,.12)",
-    color: "var(--plum)",
+    background: "rgba(var(--line-rgb), 0.12)",
+    color: "var(--text-strong)",
     name: "Amara M.",
     context: "Black British queer woman · Mouraria · Member since 2024",
     quote:
@@ -37,7 +41,7 @@ export const RACE_VOICES: Voice[] = [
   },
   {
     initials: "RS",
-    background: "rgba(74,140,111,.16)",
+    background: "rgba(var(--jade-rgb), 0.16)",
     color: "var(--jade)",
     name: "Ravi S.",
     context: "South Asian non-binary · Arroios · Member since 2023",
@@ -46,7 +50,7 @@ export const RACE_VOICES: Voice[] = [
   },
   {
     initials: "DF",
-    background: "rgba(232,119,90,.16)",
+    background: "rgba(var(--accent-rgb), 0.16)",
     color: "var(--accent-ink)",
     name: "Diallo F.",
     context: "Afro-Portuguese queer man · Cais do Sodré · Member since 2022",
@@ -83,8 +87,8 @@ export const RACE_INFO: InfoCard[] = [
 export const FAITH_VOICES: Voice[] = [
   {
     initials: "LK",
-    background: "rgba(45,27,61,.12)",
-    color: "var(--plum)",
+    background: "rgba(var(--line-rgb), 0.12)",
+    color: "var(--text-strong)",
     name: "Leila K.",
     context: "Queer Muslim · Graça · Member since 2024",
     quote:
@@ -92,7 +96,7 @@ export const FAITH_VOICES: Voice[] = [
   },
   {
     initials: "MT",
-    background: "rgba(74,140,111,.16)",
+    background: "rgba(var(--jade-rgb), 0.16)",
     color: "var(--jade)",
     name: "Marco T.",
     context: "Queer Catholic · Estrela · Member since 2022",
@@ -149,7 +153,7 @@ export const CLASS_INFO: InfoCard[] = [
 ];
 export const CLASS_VOICE: Voice = {
   initials: "JB",
-  background: "rgba(232,119,90,.16)",
+  background: "rgba(var(--accent-rgb), 0.16)",
   color: "var(--accent-ink)",
   name: "Joana B.",
   context: "Queer woman · Porto-born, Lisbon resident · Member since 2023",

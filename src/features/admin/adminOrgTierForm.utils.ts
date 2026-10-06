@@ -5,6 +5,14 @@ import type {
 import type { OrgTierCtaType } from "../marketing/api/orgTiers.api";
 
 /**
+ * The CTA types an admin can pick. `toast` is retired: its button only showed
+ * a toast repeating its own label, so an organisation clicking it reached
+ * nobody. The backend no longer accepts it, and a tier still stored with it
+ * opens here as `propose`, the behaviour the public page already gives it.
+ */
+export type ChoosableOrgTierCtaType = Exclude<OrgTierCtaType, "toast">;
+
+/**
  * Controlled-form mirror of `OrgTierWriteBody`. `bullets` is one bullet per
  * line here (split/joined on newline in the converters below) and `sortOrder`
  * stays a string so the input can be a simple controlled `<input>` —
@@ -17,7 +25,7 @@ export interface OrgTierFormDraft {
   dek: string;
   bullets: string;
   footnote: string;
-  ctaType: OrgTierCtaType;
+  ctaType: ChoosableOrgTierCtaType;
   ctaLabel: string;
   ctaTarget: string;
   featured: boolean;
@@ -32,7 +40,7 @@ export const BLANK_ORG_TIER_DRAFT: OrgTierFormDraft = {
   dek: "",
   bullets: "",
   footnote: "",
-  ctaType: "toast",
+  ctaType: "propose",
   ctaLabel: "",
   ctaTarget: "",
   featured: false,
@@ -52,7 +60,7 @@ export function draftFromOrgTier(
     dek: tier.dek,
     bullets: tier.bullets.join("\n"),
     footnote: tier.footnote,
-    ctaType: tier.ctaType,
+    ctaType: tier.ctaType === "link" ? "link" : "propose",
     ctaLabel: tier.ctaLabel,
     ctaTarget: tier.ctaTarget ?? "",
     featured: tier.featured,

@@ -2,6 +2,7 @@ import { createElement, type ReactNode } from "react";
 import { renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
+import { I18nProvider } from "../../../app/providers/I18nProvider";
 import { useSearchData } from "./useSearchData";
 import { SEARCH_DATA } from "../search.data";
 
@@ -25,16 +26,24 @@ vi.mock("../../../app/providers/authContext", () => ({
   }),
 }));
 
-// No JSX here — this file is `.ts`, not `.tsx`.
+// No JSX here: this file is `.ts`. The hook translates its page and topic
+// rows, so the wrapper carries the real I18nProvider under the query client.
 const wrapper = ({ children }: { children: ReactNode }) =>
-  createElement(QueryClientProvider, { client: new QueryClient() }, children);
+  createElement(
+    QueryClientProvider,
+    { client: new QueryClient() },
+    createElement(I18nProvider, null, children),
+  );
 
 describe("useSearchData", () => {
   it("serves the mock corpus in demo mode", () => {
     demoState.demoMode = true;
     const { result } = renderHook(() => useSearchData(""), { wrapper });
     expect(result.current.signInRequired).toBe(false);
-    expect(result.current.data).toBe(SEARCH_DATA);
+    // The translated quick destinations lead, and the mock corpus closes the
+    // list unchanged.
+    expect(result.current.data.some((item) => item.t === "page")).toBe(true);
+    expect(result.current.data.slice(-SEARCH_DATA.length)).toEqual(SEARCH_DATA);
     expect(result.current.recents.length).toBeGreaterThan(0);
   });
 

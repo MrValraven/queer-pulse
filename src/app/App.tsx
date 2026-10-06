@@ -33,6 +33,7 @@ import { ProfileThemeProvider } from "./providers/ProfileThemeProvider";
 import { VouchProvider } from "./providers/VouchProvider";
 import { SessionBootstrapProvider } from "./providers/SessionBootstrapProvider";
 import { PushPreviewMirrorProvider } from "../features/push/PushPreviewMirrorProvider";
+import { LanguagePreferenceSyncProvider } from "../features/settings/LanguagePreferenceSyncProvider";
 import { WorkProfileProvider } from "./providers/WorkProfileProvider";
 import { EmployerAffiliationProvider } from "./providers/EmployerAffiliationProvider";
 import { PostedJobsProvider } from "./providers/PostedJobsProvider";
@@ -55,6 +56,7 @@ import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { OfflineGate } from "../features/system/OfflineGate";
 import { AppLaunch } from "../features/system/AppLaunch";
 import { ScrollManager } from "./ScrollManager";
+import { StaffOnlyBounceToast } from "./StaffOnlyBounceToast";
 import { RouteAnnouncer } from "./RouteAnnouncer";
 import { AppRoutes } from "./routes";
 import { RoutePrefetcher } from "./routePrefetch";
@@ -161,6 +163,11 @@ const DataProviders = composeProviders([
   // member onto this device (ID-13). Renders nothing and, on a browser with no
   // service worker, fetches nothing.
   PushPreviewMirrorProvider,
+  // Reads the member's stored interface language once per signed-in session
+  // and adopts it, or writes this device's language up when none is stored,
+  // then writes every later switch through (PRD-325). Renders nothing; demo
+  // mode makes no calls.
+  LanguagePreferenceSyncProvider,
   WorkProfileProvider,
   EmployerAffiliationProvider,
   PostedJobsProvider,
@@ -291,6 +298,7 @@ export function App() {
               themselves — see usePolicyReacceptanceRequired in app/authGate.ts. */}
           <PolicyReacceptanceGate />
           <AuthErrorToast />
+          <StaffOnlyBounceToast />
           <PwaUpdatePrompt />
           <QueryErrorToastBridge />
         </BrowserRouter>

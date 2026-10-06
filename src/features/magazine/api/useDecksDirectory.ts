@@ -23,6 +23,10 @@ export interface DecksDirectoryResult {
   /** Fetch and append the next page. */
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
+  /** ENG-501: the latest next page failed. `isError` is true then too, so the
+   *  page keeps the decks already loaded and the footer retries that page.
+   *  Always false in demo mode, which answers in one page. */
+  isFetchNextPageError: boolean;
   isLoading: boolean;
   isError: boolean;
   /** The thrown error, so the page can tell a 401 (every magazine read sits
@@ -85,6 +89,7 @@ export function useDecksDirectory(): DecksDirectoryResult {
     hasNextPage: decksQuery.hasNextPage,
     fetchNextPage: () => void decksQuery.fetchNextPage(),
     isFetchingNextPage: decksQuery.isFetchingNextPage,
+    isFetchNextPageError: decksQuery.isFetchNextPageError,
     isLoading: decksQuery.isLoading,
     isError: decksQuery.isError,
     error: decksQuery.error,

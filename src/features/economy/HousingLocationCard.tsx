@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { FiLock, FiMapPin } from "react-icons/fi";
+import { FiInfo, FiLock, FiMapPin } from "react-icons/fi";
 import { MapLoading } from "../marketing/MapLoading";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { HousingLocation } from "./housingListings";
@@ -35,7 +35,9 @@ interface HousingLocationCardProps {
  *  1. LOCKED. You are a stranger to this lister: an approximate neighbourhood
  *     pin, and a note that the exact address is shared once you connect.
  *  2. UNLOCKED WITH AN ADDRESS. You own the listing, you and the lister are
- *     connected, or they accepted your viewing: the precise pin + the address.
+ *     connected, or they accepted your viewing: the address, on the precise
+ *     pin when the address geocoded, on the neighbourhood pin when it did not
+ *     (ENG-469: the address still shows, with a note saying what the pin is).
  *  3. UNLOCKED WITH NO ADDRESS ON FILE. You passed the gate, but the lister
  *     never typed a street address, so there is nothing precise to show.
  *
@@ -51,7 +53,8 @@ interface HousingLocationCardProps {
  * they were "connected" to themselves, and told them "this lister has not added
  * an address" about their own blank field. `isUnlocked` cannot separate the two
  * (it is true for the owner, the connected member and the accepted viewing
- * alike), so ownership is resolved by the caller.
+ * alike), so ownership is resolved by the caller. For everyone else the note
+ * names the relationship the backend says opened the gate (DES-419).
  */
 export function HousingLocationCard({
   location,
@@ -60,6 +63,10 @@ export function HousingLocationCard({
 }: HousingLocationCardProps) {
   const { t } = useTranslation();
   const exact = location.precision === "exact";
+  // ENG-469: the address shows to anyone through the gate, whatever pin we
+  // hold. A failed geocode leaves an unlocked reader with the area pin, and
+  // keying this on `exact` used to hide an address they were entitled to.
+  const hasAddress = location.isUnlocked && Boolean(location.addressLine);
   // Passed the gate, but there is no address behind it. Keyed on the address
   // rather than on `precision`, so a row that somehow holds coordinates with no
   // address line (a legacy row whose point was set out of band) lands here too
@@ -99,7 +106,7 @@ export function HousingLocationCard({
         </div>
       )}
 
-      {exact && location.addressLine ? (
+      {hasAddress ? (
         <div className={s.address}>
           <span className={s.addressLabel}>
             {t("economy:housingListing.location.addressLabel")}
@@ -125,19 +132,42 @@ export function HousingLocationCard({
         </p>
       )}
 
-      {exact && (
+      {hasAddress && (
         <p className={s.note}>
           <FiMapPin className={s.noteIcon} aria-hidden />
-          {/* An owner is not "connected" to themselves, and telling them they
-              are is the app claiming a relationship that does not exist. They
-              are simply reading back the address they saved. */}
-          {t(
-            isOwnListing
-              ? "economy:housingListing.location.ownExactNote"
-              : "economy:housingListing.location.exactNote",
-          )}
+          {t(relationshipNoteKey(location, isOwnListing))}
+        </p>
+      )}
+
+      {hasAddress && !exact && (
+        <p className={s.note}>
+          <FiInfo className={s.noteIcon} aria-hidden />
+          {t("economy:housingListing.location.areaPinNote")}
         </p>
       )}
     </div>
   );
+}
+
+/**
+ * The line under an unlocked address, naming the relationship that opened it
+ * (DES-419). An owner is told they are reading back their own address: the
+ * app must never claim a connection that does not exist. A backend that does
+ * not say which relationship it was gets the neutral "you have access" line.
+ */
+function relationshipNoteKey(
+  location: HousingLocation,
+  isOwnListing: boolean,
+): string {
+  if (isOwnListing || location.unlockedVia === "owner") {
+    return "economy:housingListing.location.ownExactNote";
+  }
+  switch (location.unlockedVia) {
+    case "viewing":
+      return "economy:housingListing.location.viewingExactNote";
+    case "connection":
+      return "economy:housingListing.location.exactNote";
+    default:
+      return "economy:housingListing.location.unlockedExactNote";
+  }
 }

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { Button, SkeletonLine } from "../../shared/components/ui";
+import { LoadMoreFooter, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ArticleTagList } from "./ArticleTagList";
 import { firstPlainText, type Article } from "./data/articles";
@@ -67,6 +67,9 @@ export function MagazineArticleRow({
  * the backend's 20-row page the same way, and a reader who is told "43 pieces
  * found" can reach all 43. A caller that has nothing more to load simply omits
  * `onLoadMore` and the footer never renders.
+ *
+ * ENG-501: a failed next page keeps every row above on screen. The footer
+ * says so in its own live region, and its button retries that page.
  */
 export function MagazineArticleRows({
   articles,
@@ -74,6 +77,7 @@ export function MagazineArticleRows({
   activeTag,
   hasMore = false,
   isLoadingMore = false,
+  isFetchNextPageError = false,
   onLoadMore,
 }: {
   articles: Article[];
@@ -82,6 +86,8 @@ export function MagazineArticleRows({
   /** True while the server still holds pieces this list has not fetched. */
   hasMore?: boolean;
   isLoadingMore?: boolean;
+  /** The latest next-page fetch failed; the footer offers a retry. */
+  isFetchNextPageError?: boolean;
   onLoadMore?: () => void;
 }) {
   const { t } = useTranslation();
@@ -103,18 +109,15 @@ export function MagazineArticleRows({
       </div>
 
       {!isLoading && hasMore && onLoadMore && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={isLoadingMore}
-            onClick={onLoadMore}
-          >
-            {isLoadingMore
-              ? t("magazine:articleRows.loadingMore")
-              : t("magazine:articleRows.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          isFetchingNextPage={isLoadingMore}
+          isFetchNextPageError={isFetchNextPageError}
+          onLoadMore={onLoadMore}
+          errorMessage={t("common:error.loadMore")}
+          label={t("magazine:articleRows.loadMoreCta")}
+          loadingLabel={t("magazine:articleRows.loadingMore")}
+        />
       )}
     </>
   );

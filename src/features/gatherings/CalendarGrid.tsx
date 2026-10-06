@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight, FiCalendar } from "react-icons/fi";
 import {
-  Button,
   EmptyState,
   FadeIn,
+  LoadMoreFooter,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
@@ -189,6 +189,7 @@ export function AllUpcomingEvents({
   upcoming,
   hasMore = false,
   isLoadingMore = false,
+  isLoadMoreError = false,
   onLoadMore,
 }: {
   loading: boolean;
@@ -197,6 +198,9 @@ export function AllUpcomingEvents({
    *  (PRD-184). Without this the list silently ended at the soonest 20. */
   hasMore?: boolean;
   isLoadingMore?: boolean;
+  /** The latest next page failed (ENG-501): the footer says so inline and
+   *  its button retries that page, with the loaded gatherings kept above. */
+  isLoadMoreError?: boolean;
   onLoadMore?: () => void;
 }) {
   const { t } = useTranslation();
@@ -225,20 +229,16 @@ export function AllUpcomingEvents({
         )}
       </div>
       {hasMore && (
-        <div className={styles.loadMore}>
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={isLoadingMore}
-            onClick={onLoadMore}
-          >
-            {t(
-              isLoadingMore
-                ? "gatherings:calendar.loadingMore"
-                : "gatherings:calendar.loadMore",
-            )}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          size="sm"
+          isFetchingNextPage={isLoadingMore}
+          isFetchNextPageError={isLoadMoreError}
+          onLoadMore={() => onLoadMore?.()}
+          errorMessage={t("common:error.loadMore")}
+          label={t("gatherings:calendar.loadMore")}
+          loadingLabel={t("gatherings:calendar.loadingMore")}
+        />
       )}
     </div>
   );

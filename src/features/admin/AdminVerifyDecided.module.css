@@ -1,7 +1,8 @@
 /* The decided (history) half of the join-request queue. Rows themselves come
    from AdminSubmissionList.module.css, the shared admin row family; this file
-   owns only the search header, the invite block inside an approved row and
-   the staff note inside a declined one. */
+   owns only the search header, what the applicant sent inside an open row,
+   the invite block inside an approved row and the staff note inside a
+   declined one. */
 
 .intro {
   max-width: 60ch;
@@ -274,4 +275,30 @@
   font-size: var(--text-13);
   line-height: 1.5;
   color: var(--accent-text);
+}
+
+/* What the applicant sent, first in the open details: their request reads
+   before our decision on it. A hairline closes it off from the decision and
+   the link below. */
+.application {
+  margin-top: 12px;
+  margin-bottom: 5px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* Same dark-mode hairline as the invite actions above. */
+:global([data-theme="dark"]) .application {
+  border-bottom-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* The same quiet label as the staff note's, so both sections of a decided
+   row are named in one voice. */
+.applicationLabel {
+  margin: 0 0 10px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
 }

@@ -9,13 +9,20 @@ import type {
   CommunityType,
 } from "../../communities/api/communities.api";
 
-export type LandingSection = "member" | "community" | "changemaker";
+export type LandingSection =
+  "member" | "community" | "changemaker" | "gathering" | "story";
 
 /** Why an already-featured target no longer renders on the public landing
  *  page — surfaced so admins can spot and clear stale slots instead of the
  *  slot silently going empty. `null` = still eligible. */
 export type LandingHiddenReason =
-  "consent_revoked" | "went_private" | "unpublished" | "not_public" | "deleted";
+  | "consent_revoked"
+  | "went_private"
+  | "unpublished"
+  | "not_public"
+  | "deleted"
+  | "cancelled"
+  | "ended";
 
 export interface AdminLandingFeatureDTO {
   id: string;
@@ -91,10 +98,46 @@ export interface LandingChangemakerFeatureDTO {
   tags: string[];
 }
 
+/** A curated public gathering. The place is area-level only: the
+ *  neighbourhood or the online flag. The street address, venue, host and
+ *  attendees never ride on this public payload. */
+export interface LandingGatheringFeatureDTO {
+  id: string;
+  slug: string;
+  title: string;
+  /** ISO 8601 start instant. */
+  startAt: string;
+  /** IANA zone the host scheduled it in. */
+  timezone: string;
+  area: string | null;
+  isOnline: boolean;
+  coverImageUrl: string | null;
+  /** The admin's optional kicker line, shown above the title. */
+  blurb: string | null;
+}
+
+/** A curated published magazine story, with the byline as the article
+ *  prints it. */
+export interface LandingStoryFeatureDTO {
+  id: string;
+  slug: string;
+  title: string;
+  dek: string;
+  coverImageUrl: string | null;
+  authorName: string;
+  readMinutes: number;
+  /** The admin's optional kicker line, shown above the title. */
+  blurb: string | null;
+}
+
 export interface LandingFeaturesResponseDTO {
   members: LandingMemberFeatureDTO[];
   communities: LandingCommunityFeatureDTO[];
   changemakers: LandingChangemakerFeatureDTO[];
+  /** Optional on the wire so a client reading an older deploy that predates
+   *  these two slices reads them as empty. */
+  gatherings?: LandingGatheringFeatureDTO[];
+  stories?: LandingStoryFeatureDTO[];
 }
 
 export const getLandingFeaturesPublic = () =>

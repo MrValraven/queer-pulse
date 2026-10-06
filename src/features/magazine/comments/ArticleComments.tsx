@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
-  Button,
   ConfirmDialog,
+  LoadMoreFooter,
   SkeletonLine,
 } from "../../../shared/components/ui";
 import { useReaderComments } from "./useReaderComments";
@@ -28,6 +28,7 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
     loadMore,
     isLoading,
     isLoadingMore,
+    isFetchNextPageError,
   } = useReaderComments(articleSlug);
   const { create, edit, remove } = useReaderCommentMutations(articleSlug);
   const [reportTarget, setReportTarget] = useState<ReaderCommentDTO | null>(
@@ -97,19 +98,18 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
               ))}
             </div>
 
+            {/* ENG-501: a failed next page keeps the threads above on
+                screen; the footer says so and its button retries that page. */}
             {hasMore && (
-              <div className={styles.loadMore}>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={isLoadingMore}
-                  onClick={loadMore}
-                >
-                  {isLoadingMore
-                    ? t("magazine:comments.loadingMore")
-                    : t("magazine:comments.loadMore")}
-                </Button>
-              </div>
+              <LoadMoreFooter
+                className={styles.loadMore}
+                isFetchingNextPage={isLoadingMore}
+                isFetchNextPageError={isFetchNextPageError}
+                onLoadMore={loadMore}
+                errorMessage={t("common:error.loadMore")}
+                label={t("magazine:comments.loadMore")}
+                loadingLabel={t("magazine:comments.loadingMore")}
+              />
             )}
           </>
         )}

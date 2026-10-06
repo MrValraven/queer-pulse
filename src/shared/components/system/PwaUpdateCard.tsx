@@ -3,6 +3,13 @@ import { Button, IconButton } from "../ui";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./PwaUpdateCard.module.css";
 
+/**
+ * Where a tapped Reload stands. "activating" waits for the new worker to take
+ * over, which can honestly take several seconds; "reloading" is the moment the
+ * page reloads onto it.
+ */
+export type UpdatePhase = "idle" | "activating" | "reloading";
+
 interface PwaUpdateCardProps {
   /** Apply the waiting worker and reload onto the new build. */
   onReload: () => void;
@@ -10,8 +17,12 @@ interface PwaUpdateCardProps {
   onShowChanges: () => void;
   /** Dismiss the card until the next time a new build is detected. */
   onDismiss: () => void;
-  /** True once Reload was tapped: swaps the label to "Updating…". */
-  updating: boolean;
+  /**
+   * Anything past "idle" means Reload was tapped: the label reads
+   * "Updating…", the other controls lock, and the divider above the buttons
+   * fills as a progress line.
+   */
+  phase: UpdatePhase;
   /**
    * The waiting build's version (e.g. "v1.43.0"), once /version.json has
    * answered with a well-formed one. Named in the headline accent when set.
@@ -38,10 +49,11 @@ export function PwaUpdateCard({
   onReload,
   onShowChanges,
   onDismiss,
-  updating,
+  phase,
   nextVersion,
 }: PwaUpdateCardProps) {
   const { t } = useTranslation();
+  const isUpdating = phase !== "idle";
 
   return (
     <div className={styles.card} role="status" aria-live="polite">
@@ -55,7 +67,7 @@ export function PwaUpdateCard({
           className={styles.close}
           aria-label={t("nav:updateDismiss")}
           onClick={onDismiss}
-          disabled={updating}
+          disabled={isUpdating}
         >
           <FiX aria-hidden />
         </IconButton>
@@ -75,26 +87,30 @@ export function PwaUpdateCard({
           type="button"
           className={styles.link}
           onClick={onShowChanges}
-          disabled={updating}
+          disabled={isUpdating}
         >
           {t("nav:updateWhatChanged")}
         </button>
       </p>
 
       <div className={styles.actions}>
+        {/* The divider above the buttons doubles as the progress line. It is
+            decoration only: the button label and this card's live region
+            already announce the update. */}
+        <span className={styles.progress} data-phase={phase} aria-hidden />
         <Button
           variant="primary"
           className={styles.reload}
           onClick={onReload}
-          disabled={updating}
+          disabled={isUpdating}
         >
-          {updating ? t("nav:updating") : t("nav:updateReload")}
+          {isUpdating ? t("nav:updating") : t("nav:updateReload")}
         </Button>
         <button
           type="button"
           className={styles.later}
           onClick={onDismiss}
-          disabled={updating}
+          disabled={isUpdating}
         >
           {t("nav:updateLater")}
         </button>

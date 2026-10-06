@@ -26,6 +26,30 @@ export interface HousingViewingDTO {
   responseNote: string | null;
   createdAt: string;
   updatedAt: string;
+  /**
+   * ENG-467: either side may call the viewing off while it is requested or
+   * accepted. Optional so an older backend still parses; when absent, only a
+   * request can be cancelled, as before.
+   */
+  canCancel?: boolean;
+  /**
+   * PRD-446: true once the viewing is accepted AND its slot has passed. When
+   * absent, an accepted viewing offers "Mark completed" straight away, as
+   * before.
+   */
+  canComplete?: boolean;
+  /**
+   * True while the home can still be booked from your side: live, present,
+   * unfilled, unexpired, clear of a takedown, and with no block either way
+   * between you and the lister. "Request another time" shows only when this is
+   * true, so an older backend that leaves it out hides the offer.
+   */
+  isListingOpen?: boolean;
+  /**
+   * True once the lister deleted the home. A completed viewing on a deleted
+   * home offers no review, while a filled home stays reviewable.
+   */
+  isListingDeleted?: boolean;
 }
 
 export interface RequestViewingBody {

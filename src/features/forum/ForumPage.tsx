@@ -1,3 +1,4 @@
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
@@ -6,6 +7,11 @@ import { FirstPostPrompt } from "./FirstPostPrompt";
 import { ForumEditHistoryModal } from "./ForumEditHistoryModal";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
+import { FundingCategoryBar } from "./funding/FundingCategoryBar";
+import { FUNDING_CATEGORY_ID } from "./funding/funding.data";
+import { FundingEmptyState } from "./funding/FundingEmptyState";
+import { FundingFollowButton } from "./funding/FundingFollowButton";
+import { isFundingAuthor } from "./funding/fundingPermissions";
 import { ForumHero } from "./ForumHero";
 import { MoveCategoryModal } from "./MoveCategoryModal";
 import { ForumLoadMore } from "./ForumLoadMore";
@@ -15,6 +21,16 @@ import styles from "./ForumPage.module.css";
 export function ForumPage() {
   const page = useForumPageState();
   const { moderation } = page;
+  const { demoMode } = useDemoMode();
+  // A search or a tag narrows the view further, so the generic "nothing
+  // matches" state speaks for those; the view's own copy needs neither.
+  const fundingEmptyView =
+    page.cat === FUNDING_CATEGORY_ID &&
+    page.fundingView !== "all" &&
+    !page.q &&
+    !page.tag
+      ? page.fundingView
+      : null;
 
   return (
     <PageShell>
@@ -34,6 +50,18 @@ export function ForumPage() {
                 <FadeIn>
                   <FirstPostPrompt onDismiss={page.dismissPrompt} />
                 </FadeIn>
+              )}
+              {page.cat === FUNDING_CATEGORY_ID && (
+                <FundingCategoryBar
+                  view={page.fundingView}
+                  onViewChange={page.setFundingView}
+                  eligibility={page.eligibility}
+                  onToggleEligibility={page.toggleEligibility}
+                  scope={page.scope}
+                  onScopeChange={page.setScope}
+                  onClearFilters={page.clearFundingFilters}
+                  followSlot={<FundingFollowButton />}
+                />
               )}
               {page.hasThreadsError ? (
                 <LoadErrorState onRetry={page.retryThreads} />
@@ -62,6 +90,17 @@ export function ForumPage() {
                   onRestore={moderation.requestRestore}
                   onHistory={moderation.requestHistory}
                   onTogglePin={moderation.requestTogglePin}
+                  hasServerOrder={page.hasServerOrder}
+                  emptyStateSlot={
+                    fundingEmptyView && (
+                      <FundingEmptyState
+                        view={fundingEmptyView}
+                        hasFilters={page.eligibility.length > 0 || !!page.scope}
+                        onClearFilters={page.clearFundingFilters}
+                        onSeeAll={() => page.setFundingView("all")}
+                      />
+                    )
+                  }
                 />
               )}
 
@@ -81,6 +120,10 @@ export function ForumPage() {
           busy={page.editingTitleThreadIsBusy}
           onSave={page.saveThreadTitle}
           onClose={page.closeEditTitle}
+          shouldShowAskReviewNote={
+            page.editingThread.kind === "ask" &&
+            isFundingAuthor(page.editingThread, demoMode)
+          }
         />
       )}
 

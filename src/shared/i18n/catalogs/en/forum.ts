@@ -26,6 +26,7 @@ export const forum: Catalog = {
   "cat.meetups": "Meetups & Introductions",
   "cat.legal": "Legal & Migration",
   "cat.relationships": "Love & Relationships",
+  "cat.funding": "Funding & Grants",
   "cat.platform": "Platform & Feedback",
 
   // ── The three moderators who post under the official QueerPulse account ─
@@ -178,6 +179,9 @@ export const forum: Catalog = {
     "A moderator will take a look. Reports stay private, and {name} won't know it came from you.",
   "reportReply.done": "Done",
   "reportReply.title": "Report this reply",
+  "reportReply.titlePost": "Report this post",
+  "reportReply.subPost":
+    "Let a moderator know what's wrong with {name}'s post. This is private. No one is notified that you reported it.",
   "reportReply.sub":
     "Let a moderator know what's wrong with {name}'s reply. This is private. No one is notified that you reported it.",
   "reportReply.reasonGroupAria": "Reason for reporting",
@@ -569,6 +573,24 @@ export const forum: Catalog = {
   "composePage.kind.none.bodyPlaceholder":
     "Write your post. Say what happened, what you need, or what you know.",
   "composePage.kind.none.tip": "Pick one and the page adapts to it.",
+  "composePage.kind.call.name": "Open call",
+  "composePage.kind.call.titlePlaceholder":
+    "e.g. Arts residency 2027, applications open",
+  "composePage.kind.call.bodyPlaceholder":
+    "Who it is for, what it funds, and anything you learned applying.",
+  "composePage.kind.call.tip":
+    "Add the deadline and the call leaves Open calls by itself once it passes.",
+  "composePage.kind.call.scaffold":
+    "**Who can apply**\n\n\n**What it funds**\n\n\n**Tips from applying**\n",
+  "composePage.kind.ask.name": "Fundraiser",
+  "composePage.kind.ask.titlePlaceholder":
+    "Say what the money is for, e.g. “Help Rui cover his surgery recovery”",
+  "composePage.kind.ask.bodyPlaceholder":
+    "Who it is for, what happened, and what the money will cover.",
+  "composePage.kind.ask.tip":
+    "Moderators check every fundraiser before it goes live.",
+  "composePage.kind.ask.scaffold":
+    "**What happened**\n\n\n**What the money covers**\n\n\n**Other ways to help**\n",
 
   // ── Starter prompts (an empty composer) ──────────────────────────────────
   "composePage.prompts.asking": "People are asking about…",
@@ -709,8 +731,7 @@ export const forum: Catalog = {
   "composePage.category.health.description":
     "GPs, clinics, therapy, mental health",
   "composePage.category.arts.description": "Film, music, exhibitions, making",
-  "composePage.category.activism.description":
-    "Ideas, campaigns, the community fund",
+  "composePage.category.activism.description": "Ideas, campaigns and proposals",
   "composePage.category.guides.description": "How-tos and living indexes",
   "composePage.category.jobs.description": "Openings, skills, trades",
   "composePage.category.trans.description": "Healthcare, legal, community",
@@ -720,6 +741,8 @@ export const forum: Catalog = {
     "Visas, residency, name changes, rights",
   "composePage.category.relationships.description":
     "Dating, partners, family, friendship",
+  "composePage.category.funding.description":
+    "Open calls, applications, fundraising, and how to get your project funded.",
   "composePage.category.platform.description":
     "Bugs, ideas, how the site works",
   "composePage.category.fallbackDescription": "A place for posts on this topic",
@@ -803,6 +826,8 @@ export const forum: Catalog = {
     "Offered in {categories}, where a name can cost someone their home, their care or their safety.",
   "composePage.postingAs.anonymousBlockedByOfficial":
     "Turn the QueerPulse Official byline off to post without your name.",
+  "composePage.postingAs.anonymousBlockedByAsk":
+    "Fundraisers always carry your name, so donors know who they're trusting.",
   "composePage.postingAs.coAuthorLabel": "Write it with someone",
   "composePage.postingAs.coAuthorHint":
     "They can edit the draft and appear on the byline.",
@@ -877,6 +902,7 @@ export const forum: Catalog = {
 
   // ── The footer, and what stops a publish ─────────────────────────────────
   "composePage.foot.ready": "Ready to publish",
+  "composePage.foot.seeAbove": "Check the note above to publish.",
   "composePage.foot.notReady":
     "Add a title, enough context and a category to publish.",
   "composePage.foot.shortcutHint": "to publish",
@@ -889,6 +915,26 @@ export const forum: Catalog = {
     "A poll needs at least two options.",
   "composePage.blocker.tooManyPhotos":
     "Four photos is the limit. Remove one to publish.",
+  "composePage.blocker.fundingIncomplete":
+    "Add the link, the funder, where it applies and the deadline (or tick No fixed deadline).",
+  "composePage.blocker.fundingAskIncomplete":
+    "Add the link, the goal, what it's for and who it's for.",
+  "composePage.blocker.fundingLinkInvalid":
+    "The link needs to start with https://.",
+  "composePage.blocker.fundingAmountOrder":
+    "Use whole euros, with the top amount at least the starting one.",
+  "composePage.blocker.fundingDeadlineRange":
+    "Pick a deadline between now and two years from now.",
+  "composePage.blocker.fundingEndsOnRange":
+    "Pick a last day within the next year.",
+  "composePage.blocker.fundingDuplicate":
+    "This call is already posted. Choose Post anyway to publish it again.",
+  "composePage.blocker.fundingHostNotAllowed":
+    "Fundraisers can only link to {hosts}.",
+  "composePage.blocker.fundingPaymentDetails":
+    "Take the IBAN or phone number out. Donations go through the fundraising page.",
+  "composePage.blocker.fundingVerification":
+    "Fundraisers need a verified phone.",
 
   // ── The publish menu ─────────────────────────────────────────────────────
   // Built as t(`…publishMenu.${mode}.label`) over `PublishMode`, so all three
@@ -991,4 +1037,170 @@ export const forum: Catalog = {
   "composePage.success.postToCommunity": "Also post to a community",
   "composePage.success.followReplies": "Tell me when someone replies",
   "composePage.success.viewPost": "View post",
+
+  // ── Funding & Grants (open calls, fundraisers) ───────────────────────────
+  "funding.eligibility.individuals": "Individuals",
+  "funding.eligibility.collectives": "Collectives",
+  "funding.eligibility.associations": "Associations (incl. IPSS)",
+  "funding.eligibility.companies": "Companies",
+  "funding.eligibility.students": "Students",
+  "funding.scope.local": "Local",
+  "funding.scope.national": "National",
+  "funding.scope.eu": "EU",
+  "funding.scope.international": "International",
+  "funding.purpose.healthcare": "Healthcare",
+  "funding.purpose.housing": "Housing",
+  "funding.purpose.legal": "Legal costs",
+  "funding.purpose.emergency": "Emergency",
+  "funding.purpose.project": "A project",
+  "funding.purpose.event": "An event",
+  "funding.beneficiary.self": "For me",
+  "funding.beneficiary.someoneIKnow": "For someone I know",
+  "funding.beneficiary.project": "The project itself",
+  "funding.view.heading": "Find funding",
+  "funding.view.all": "All",
+  "funding.view.open": "Open calls",
+  "funding.view.closing": "Closing soon",
+  "funding.view.asks": "Fundraisers",
+  "funding.view.discussion": "Discussion",
+  "funding.filter.eligibilityLabel": "Who can apply",
+  "funding.filter.scopeLabel": "Where",
+  "funding.filter.anyScope": "Anywhere",
+  "funding.filter.clear": "Clear filters",
+  "funding.amount.range": "{min} to {max}",
+  "funding.amount.upTo": "Up to {max}",
+  "funding.amount.from": "From {min}",
+  "funding.deadline.rolling": "Rolling, no fixed deadline",
+  "funding.deadline.stale": "Rolling, last updated {date}",
+  "funding.deadline.closesOn": "Closes {date}",
+  "funding.deadline.closesInDays_one": "Closes in {count} day",
+  "funding.deadline.closesInDays_other": "Closes in {count} days",
+  "funding.deadline.closesInHours_one": "Closes in {count} hour",
+  "funding.deadline.closesInHours_other": "Closes in {count} hours",
+  "funding.deadline.closesWithinHour": "Closes within the hour",
+  "funding.deadline.closed": "Closed {date}",
+  "funding.row.eligibilityAria": "Who can apply",
+  "funding.facts.heading": "About this call",
+  "funding.facts.funder": "Funder",
+  "funding.facts.amount": "Amount",
+  "funding.facts.deadline": "Deadline",
+  "funding.facts.lisbonTime": "{date}, Lisbon time",
+  "funding.facts.yourTime": "Your time: {date}",
+  "funding.facts.eligibility": "Who can apply",
+  "funding.facts.scope": "Where",
+  "funding.facts.openCall": "Open the call",
+  "funding.facts.seeCall": "See the call",
+  "funding.facts.seeCallAria": "See the call on {host} (opens in a new tab)",
+  "funding.facts.openCallAria": "Open the call on {host} (opens in a new tab)",
+  "funding.facts.saveHint":
+    "Save it and we'll remind you 7 days and 1 day before.",
+  "funding.facts.editDetails": "Edit details",
+  "funding.compose.heading": "About the call",
+  "funding.compose.link": "Link to the call",
+  "funding.compose.linkHint": "The funder's own page, starting with https://",
+  "funding.compose.funder": "Funder",
+  "funding.compose.amountMin": "From (€)",
+  "funding.compose.amountMax": "Up to (€)",
+  "funding.compose.amountHint":
+    "Whole euros. Leave blank if the call doesn't say.",
+  "funding.compose.deadline": "Deadline, Lisbon time",
+  "funding.compose.rolling": "No fixed deadline",
+  "funding.compose.eligibility": "Who can apply",
+  "funding.compose.scope": "Where",
+  "funding.compose.callGuidance": "Genuine grants never charge a fee to apply.",
+  "funding.compose.checking": "Checking whether this call is already posted…",
+  "funding.compose.duplicate":
+    "This call is already posted: {title}. Reply there instead?",
+  "funding.compose.goToIt": "Go to it",
+  "funding.compose.postAnyway": "Post anyway",
+  "funding.compose.askHeading": "About the fundraiser",
+  "funding.compose.askLink": "Link to the fundraising page",
+  "funding.compose.askLinkHint": "One of: {hosts}",
+  "funding.compose.goal": "Goal (€)",
+  "funding.compose.purpose": "What it's for",
+  "funding.compose.beneficiary": "Who it's for",
+  "funding.compose.endsOn": "Last day (optional)",
+  "funding.compose.endsOnHint":
+    "Without one, it ends by itself 90 days after approval.",
+  "funding.compose.askReview":
+    "Moderators check every fundraiser before it goes live.",
+  "funding.gate.title": "Verify your phone to start a fundraiser",
+  "funding.gate.body":
+    "Fundraisers need a verified phone so donors know who they're trusting.",
+  "funding.gate.cta": "Request verification",
+  "funding.gate.checking": "Checking your verification…",
+  "funding.ask.heading": "About this fundraiser",
+  "funding.ask.goal": "Goal",
+  "funding.ask.purpose": "For",
+  "funding.ask.endsOn": "Last day",
+  "funding.ask.safetyStrip":
+    "QueerPulse never handles money. Donations go to {host}. Checked by moderators on {date}.",
+  "funding.ask.safetyStripPending":
+    "QueerPulse never handles money. Donations go to {host}. A moderator checks it before it goes live.",
+  "funding.ask.donate": "Donate on {host}",
+  "funding.ask.donateAria": "Donate on {host} (opens in a new tab)",
+  "funding.ask.markGoalReached": "Mark goal reached",
+  "funding.ask.close": "Close fundraiser",
+  "funding.ask.confirmGoalTitle": "Mark this fundraiser as goal reached?",
+  "funding.ask.confirmCloseTitle": "Close this fundraiser?",
+  "funding.ask.confirmBody":
+    "It leaves the Fundraisers list and the donate button goes away. This can't be undone.",
+  "funding.ask.confirmGoal": "Mark goal reached",
+  "funding.ask.confirmClose": "Close it",
+  "funding.ask.endedGoal": "Goal reached. Thank you to everyone who gave.",
+  "funding.ask.ended": "This fundraiser has ended.",
+  "funding.ask.sentBack":
+    "Sent back to moderators. Your edit hides the fundraiser until a moderator checks it again.",
+  "funding.ask.goalToast": "Marked as goal reached",
+  "funding.ask.closedToast": "Fundraiser closed",
+  "funding.ask.endFailed": "That didn't save. Try again.",
+  "funding.row.goal": "{amount} goal",
+  "funding.row.onHost": "on {host}",
+  "funding.row.checked": "Checked by moderators",
+  "funding.row.ended": "Ended",
+  "funding.error.kindCategory":
+    "Open calls and fundraisers stay in Funding & Grants.",
+  "funding.error.detailsRequired":
+    "Some details are missing. Check the fields above.",
+  "funding.error.detailsNotAllowed":
+    "Only open calls and fundraisers carry these details.",
+  "funding.error.linkInvalid":
+    "That link didn't work. Use the full address, starting with https://.",
+  "funding.error.linkHostNotAllowed": "Fundraisers can only link to {hosts}.",
+  "funding.error.paymentDetails":
+    "Take the IBAN or phone number out. Donations go through the fundraising page.",
+  "funding.error.askNotAnonymous":
+    "Fundraisers can't be anonymous, so donors know who they're trusting.",
+  "funding.error.verificationRequired":
+    "Fundraisers need a verified phone so donors know who they're trusting.",
+  "funding.error.askLimit":
+    "You already have a fundraiser open or waiting for review. End it before starting another.",
+  "funding.edit.title": "Edit call details",
+  "funding.edit.save": "Save details",
+  "funding.edit.cancel": "Cancel",
+  "funding.edit.saved": "Details saved",
+  "funding.edit.failed": "Those details didn't save. Try again.",
+  "funding.edit.titleAsk": "Edit fundraiser details",
+  "funding.edit.askReviewNote":
+    "Saving sends your fundraiser back to moderators before it shows again.",
+  "funding.follow.follow": "Follow new calls",
+  "funding.follow.following": "Following new calls",
+  "funding.empty.open.title": "No open calls right now",
+  "funding.empty.open.body":
+    "When someone shares a grant, bolsa or residency, it shows up here.",
+  "funding.empty.closing.title": "Nothing closing this week",
+  "funding.empty.closing.body":
+    "Calls with a deadline in the next 7 days show up here.",
+  "funding.empty.asks.title": "No fundraisers right now",
+  "funding.empty.asks.body":
+    "Verified members can ask the community for support. Moderators check every one first.",
+  "funding.empty.discussion.title": "No discussions yet",
+  "funding.empty.discussion.body":
+    "Questions about applications, budgets and associations go here.",
+  "funding.empty.clearFilters": "Clear filters",
+  "funding.empty.seeAll": "See all funding posts",
+  "funding.empty.postCall": "Share an open call",
+  "funding.ask.authorControls": "Your fundraiser",
+  "funding.follow.followedToast": "You'll hear about new open calls",
+  "funding.follow.unfollowedToast": "You won't hear about new open calls now",
 };

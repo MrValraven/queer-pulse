@@ -1,10 +1,20 @@
 import {
   apiDelete,
   apiGet,
+  apiGetNullable,
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
+import type {
+  ForumFundingView,
+  FundingEligibility,
+  FundingEndReason,
+  FundingInput,
+  FundingLookupResult,
+  FundingScope,
+  FundingWireView,
+} from "../funding/funding.types";
 import type {
   AuthorSummary,
   ForumPostHistoryResponse,
@@ -112,6 +122,10 @@ export interface ForumThreadResponse extends BaseForumThreadResponse {
    *  tombstone or a takedown blanks the photos exactly as it blanks the
    *  excerpt, because a photo is content. */
   opPhotos: ForumPostPhotoView[];
+  /** An open call's or a fundraiser's details, every state computed by the
+   *  server. Null on every other thread. Optional, so an older backend and
+   *  every existing fixture read as "no funding". */
+  funding?: ForumFundingView | null;
 }
 
 /** One photo on a post, already resolved to a URL the browser can fetch. */
@@ -211,6 +225,11 @@ export interface GetThreadsOptions {
   sort?: ForumSort;
   tag?: string;
   q?: string;
+  /** Funding & Grants only: which slice of the category. Ignored elsewhere. */
+  fundingView?: FundingWireView;
+  /** Any-of match on a call's eligibility. Repeated in the query string. */
+  eligibility?: readonly FundingEligibility[];
+  scope?: FundingScope;
 }
 
 /** GET /forum/threads?category=&cursor=&sort=&tag=&q= — a cursor page of
@@ -226,6 +245,12 @@ export async function getThreads(
   if (opts?.sort) params.set("sort", opts.sort);
   if (opts?.tag) params.set("tag", opts.tag);
   if (opts?.q) params.set("q", opts.q);
+  if (category === "funding" && opts?.fundingView) {
+    params.set("fundingView", opts.fundingView);
+  }
+  for (const value of opts?.eligibility ?? [])
+    params.append("eligibility", value);
+  if (opts?.scope) params.set("scope", opts.scope);
   const qs = params.toString();
   const res = await apiGet<
     ForumThreadResponse[] | Paginated<ForumThreadResponse>
@@ -395,9 +420,9 @@ export interface CreateThreadDto {
    *  Never both. */
   image?: string;
   /** What the thread IS. A closed vocabulary server-side: anything outside the
-   *  four values is a 400, and omitting it stores NULL ("unclassified"), which
+   *  six values is a 400, and omitting it stores NULL ("unclassified"), which
    *  is a real state rather than a missing one. */
-  kind?: "question" | "guide" | "proposal" | "share";
+  kind?: "question" | "guide" | "proposal" | "share" | "call" | "ask";
   /** The author's own warnings about what is inside, rendered ahead of the
    *  body. Up to 8, each ≤ 40 characters. */
   contentWarnings?: string[];
@@ -433,6 +458,8 @@ export interface CreateThreadDto {
   submitForReview?: boolean;
   /** An optional ballot, created in the same transaction as the thread. */
   poll?: CreateThreadPollDto;
+  /** Required with `kind: 'call'` or `'ask'`, refused on every other kind. */
+  funding?: FundingInput;
   /** Up to four photos on the opening post, in the order the author arranged
    *  them. The ARRAY POSITION is the ordering — there is no `position` field,
    *  because two sources of truth for one ordering is how a gallery ends up
@@ -553,6 +580,30 @@ export const followThread = (slug: string) =>
 /** POST /forum/threads/:slug/unfollow — stop hearing about new replies. */
 export const unfollowThread = (slug: string) =>
   apiPost<ForumThreadResponse>(`/forum/threads/${slug}/unfollow`);
+
+/** How long the duplicate lookup may take before the composer stops waiting.
+ *  A slow answer must never hold a member up: the prompt is advice. */
+const FUNDING_LOOKUP_TIMEOUT_MS = 8000;
+
+/** GET /forum/funding/lookup?link=: the newest visible open call with the
+ *  same normalised link, or null on a 204. */
+export const lookupFundingLink = (link: string, signal?: AbortSignal) =>
+  apiGetNullable<FundingLookupResult>(
+    `/forum/funding/lookup?link=${encodeURIComponent(link)}`,
+    FUNDING_LOOKUP_TIMEOUT_MS,
+    signal,
+  );
+
+/** PATCH /forum/threads/:slug with the WHOLE funding object (the server
+ *  replaces it). An approved fundraiser comes back `askState: 'pending'`. */
+export const updateThreadFunding = (slug: string, funding: FundingInput) =>
+  apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { funding });
+
+/** POST /forum/threads/:slug/funding/end: the author ends their fundraiser. */
+export const endFundingAsk = (slug: string, reason: FundingEndReason) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/funding/end`, {
+    reason,
+  });
 
 /** POST /forum/threads/:slug/lock — moderator closes the thread to replies,
  *  with an optional note explaining why (shown on the locked banner). Returns

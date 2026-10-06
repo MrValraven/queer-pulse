@@ -15,7 +15,7 @@ export const PUBLIC_ROADMAP_KEY = "roadmap";
 
 export const roadmapKeys = {
   root: [ADMIN_ROADMAP_KEY] as const,
-  /** The full admin bundle (items/ideas/team/audit/heroStats), scoped by
+  /** The full admin bundle (items/ideas/team/audit), scoped by
    *  demo-vs-live so switching modes never serves the other mode's cache. */
   admin: (demoMode: boolean) => [ADMIN_ROADMAP_KEY, demoMode] as const,
 };

@@ -9,6 +9,7 @@ import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
+import { intlLocale } from "../../shared/i18n/locale";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { CATEGORIES, type Guide } from "../resources/library.data";
@@ -46,7 +47,8 @@ export function ResourceFilterBar({
   onQuery: (value: string) => void;
   cat: string;
   onCat: (value: string) => void;
-  resultCount: number;
+  /** Null hides the count (a failed read has no honest number). */
+  resultCount: number | null;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -86,20 +88,22 @@ export function ResourceFilterBar({
               {t(category.labelKey)}
             </button>
           ))}
-          <div className={s.count}>
-            <Translation
-              i18nKey="marketing:resourceLibrary.results"
-              values={{ count: resultCount }}
-              slots={{
-                count: (
-                  <RollingNumber
-                    value={fmt.number(resultCount)}
-                    numericValue={resultCount}
-                  />
-                ),
-              }}
-            />
-          </div>
+          {resultCount !== null && (
+            <div className={s.count}>
+              <Translation
+                i18nKey="marketing:resourceLibrary.results"
+                values={{ count: resultCount }}
+                slots={{
+                  count: (
+                    <RollingNumber
+                      value={fmt.number(resultCount)}
+                      numericValue={resultCount}
+                    />
+                  ),
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -108,7 +112,7 @@ export function ResourceFilterBar({
 
 /** A single editorial guide, real backend data via `useLibraryData`. */
 export function GuideCard({ guide, index }: { guide: Guide; index: number }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   return (
     <FadeIn delay={Math.min(index, 8) * 60} style={{ height: "100%" }}>
       <Link to={guide.to} className={s.card} style={{ height: "100%" }}>
@@ -131,7 +135,7 @@ export function GuideCard({ guide, index }: { guide: Guide; index: number }) {
             <>
               <FiCheckCircle aria-hidden />
               {t("resources:library.card.verifiedOn", {
-                date: formatDate(guide.lastVerifiedAt),
+                date: formatDate(guide.lastVerifiedAt, intlLocale(language)),
               })}
             </>
           ) : (

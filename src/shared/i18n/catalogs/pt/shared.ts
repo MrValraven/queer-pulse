@@ -140,6 +140,8 @@ export const shared: Catalog = {
     "Não conseguimos contactar a QueerPulse para carregar a tua conta. Verifica a tua ligação e tenta outra vez daqui a pouco.",
   "auth.error.expired":
     "A tua sessão expirou. Inicia sessão outra vez para continuares de onde ficaste.",
+  // Desvio por papel ou permissão para o feed (StaffOnlyBounceToast.tsx).
+  "auth.gate.noAccess": "A tua conta não tem acesso a essa página.",
 
   // Provider-level fallback error toasts
   "profile.saveError": "Não conseguimos guardar o teu perfil. Tenta outra vez.",
@@ -559,7 +561,7 @@ export const shared: Catalog = {
   "megaNav.work.col.economy.head": "Economia",
   "megaNav.work.col.economy.skillsExchange": "Troca de competências",
   "megaNav.work.col.economy.solidarityPricing": "Preços solidários",
-  "megaNav.work.col.economy.grants": "Bolsas e apoios",
+  "megaNav.work.col.economy.grants": "Financiamento e apoios",
   "megaNav.work.col.economy.howItWorks": "Como funciona a nossa economia",
   "megaNav.work.col.economy.offerSkill": "Oferecer uma competência",
 

@@ -1,0 +1,37 @@
+/* ── Flat primary for the member card's "Connect" ──
+   The card's one coral element, so it drops the primary's glow and hover lift
+   and sits on the card as a plain fill. Button.module.css stays untouched.
+
+   `button.flat` outranks every `.primary` rule it overrides (rest, focus and
+   hover) whatever order the two modules load in. The focus state restates the
+   global cream halo, which `.primary:focus-visible` would otherwise pair with
+   the glow, and the focused hover keeps it, since the plain hover rule here
+   clears the shadow. The press rule comes last so pressing still sinks the
+   button, since the hover rule here would otherwise win over `.button:active`. */
+button.flat {
+  box-shadow: none;
+}
+button.flat:focus-visible {
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  button.flat:hover:not(:disabled):not([aria-disabled="true"]) {
+    box-shadow: none;
+    transform: none;
+  }
+  button.flat:focus-visible:hover:not(:disabled):not([aria-disabled="true"]) {
+    box-shadow: var(--ring-cream);
+  }
+}
+button.flat:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+/* ── Touch target ──
+   `.sm` lowers the button floor to 40px. On a touch screen the card's one
+   action takes the full 44px back, in every tone. */
+@media (pointer: coarse) {
+  button.contact {
+    min-height: 44px;
+  }
+}

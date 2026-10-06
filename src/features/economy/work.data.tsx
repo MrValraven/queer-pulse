@@ -108,7 +108,7 @@ export const NEXT_ACTIONS: NextAction[] = [
     labelKey: "economy:workHub.next.grant.label",
     contextKey: "economy:workHub.next.grant.context",
     urgencyKey: "economy:workHub.next.grant.urgency",
-    to: routes.grants,
+    to: routes.microGrants,
     ctaKey: "economy:workHub.next.grant.cta",
   },
   {

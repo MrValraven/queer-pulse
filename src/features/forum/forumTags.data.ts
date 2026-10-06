@@ -89,6 +89,7 @@ export const FORUM_TAG_CATEGORIES: readonly ForumTagCategory[] = [
       "protest",
       "grants",
       "fund",
+      "open-call",
       "proposal",
       "vote",
       "research",
@@ -102,11 +103,21 @@ export const FORUM_TAG_CATEGORIES: readonly ForumTagCategory[] = [
 ];
 
 /**
+ * Tags only the SERVER adds and removes: the backend puts
+ * `open-call` on every open call and strips it from everything else, which is
+ * what drives "Follow new calls". Browsable and filterable like any tag, and
+ * never offered in the picker.
+ */
+export const SERVER_OWNED_FORUM_TAGS: readonly string[] = ["open-call"];
+
+/**
  * Flat allow-list, derived from the categories above. The type-ahead search and
  * the canonical lookup in `ComposeTagsField` both read this.
  */
 export const FORUM_TAG_OPTIONS: readonly string[] =
-  FORUM_TAG_CATEGORIES.flatMap((category) => category.tags);
+  FORUM_TAG_CATEGORIES.flatMap((category) => category.tags).filter(
+    (tag) => !SERVER_OWNED_FORUM_TAGS.includes(tag),
+  );
 
 /**
  * A short set surfaced as one-tap quick-add chips before anyone searches.

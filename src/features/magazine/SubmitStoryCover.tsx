@@ -3,6 +3,7 @@ import { FiImage, FiX } from "react-icons/fi";
 import { PhotoReframeModal } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUploadImage } from "../members/api/useUploadImage";
 import styles from "./SubmitStoryPage.module.css";
 import upload from "./SubmitStoryCover.module.css";
@@ -49,9 +50,11 @@ export function SubmitStoryCover({
       setCover({ previewUrl, name: file.name });
       onChange(key);
     } catch (err) {
+      // The upload hook throws an `ImageProcessingError` whose message is a
+      // catalog key, so the line resolves that key in the member's language.
       setError(
-        err instanceof Error && err.message
-          ? err.message
+        err instanceof ImageProcessingError
+          ? t(err.i18nKey, err.values)
           : t("magazine:submitStory.cover.errorFallback"),
       );
     } finally {

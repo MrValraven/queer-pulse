@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
+import { reasonFor } from "../../../shared/api/errorMessage";
 import {
   sendListingEnquiry,
   type ListingEnquirySentDTO,
@@ -30,42 +31,37 @@ export type ListingEnquiryRefusalKind =
 export interface ListingEnquiryRefusal {
   kind: ListingEnquiryRefusalKind;
   /**
-   * The backend's own sentence when it wrote one worth repeating: the cap
-   * messages name which cap was hit and what to do about it ("You have already
-   * written to this business today. Give them a chance to reply first."), which
-   * is more useful than any generic line the frontend could offer. `null` when
-   * the body carried nothing, or nothing but the throttler's own exception
-   * name, and the caller falls back to its localized copy.
-   *
-   * Same trade `readAskQuestionReason` already makes on the public-question
-   * form: the backend has no i18n layer, so these arrive in English.
+   * The backend's own sentence behind a 400 (`unavailable`), for an English
+   * reader only: it names the specific reason, such as an unclaimed listing.
+   * PRD-467: the backend writes it in English, so every other language gets
+   * `null` here and the caller's translated copy for the kind. Also `null` for
+   * every other kind, including a cap or throttle refusal (`rate_limited`),
+   * and for a 400 with nothing worth showing.
    */
   serverReason: string | null;
 }
 
-/** Nest's throttler answers with its exception name, which is not copy. */
-function readServerReason(error: ApiError): string | null {
-  const reason = error.message.trim();
-  if (reason.length === 0) return null;
-  if (reason.startsWith("ThrottlerException")) return null;
-  return reason;
-}
-
-/** Classify a failed send into something the composer can say out loud. */
+/** Classify a failed send into something the composer can say out loud.
+ *  `language` is the reader's UI language, from `useTranslation()`. */
 export function readListingEnquiryRefusal(
   error: unknown,
+  language: string,
 ): ListingEnquiryRefusal {
   if (!(error instanceof ApiError)) {
     return { kind: "generic", serverReason: null };
   }
-  const serverReason = readServerReason(error);
   switch (error.status) {
     case 429:
-      return { kind: "rate_limited", serverReason };
+      return { kind: "rate_limited", serverReason: null };
     case 403:
       return { kind: "not_allowed", serverReason: null };
     case 400:
-      return { kind: "unavailable", serverReason };
+      return {
+        kind: "unavailable",
+        serverReason: language.toLowerCase().startsWith("en")
+          ? reasonFor(error)
+          : null,
+      };
     case 404:
       return { kind: "gone", serverReason: null };
     default:

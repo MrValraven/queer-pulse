@@ -109,6 +109,14 @@ export interface FeedItem extends ContractFeedItem {
    *  card. Absent from an older server, which the card reads as "use
    *  `summary`". */
   category?: string;
+  /** `new_member` only: how many of the viewer's accepted connections are
+   *  also connected to this member. Absent from an older backend or with no
+   *  signed-in viewer; 0 means nobody in common. */
+  mutualConnectionCount?: number;
+  /** `new_member` only: the member's public interests the viewer also lists,
+   *  in the member's own order. Absent from an older backend or with no
+   *  signed-in viewer; empty when nothing is shared. */
+  sharedInterests?: string[];
   // PRD-167's `excerpt` (a `forum_thread`'s opening post) is inherited from the
   // shared contract, which is where it is documented.
 }

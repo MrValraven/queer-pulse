@@ -1,6 +1,6 @@
 import { FaRainbow } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { LoadMoreFooter } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { EmployerCard } from "./api/companies.adapters";
@@ -11,18 +11,22 @@ import styles from "./JobsPage.module.css";
  * Each card links through to its `CompanyPage` (`/work/companies/:slug`) where
  * the full profile and reviews live — cards carry no inline reviews, so live
  * mode never fabricates any. "Load more" is driven by the caller's paginated
- * `useCompanies()` result and stays hidden when there is no further page.
+ * `useCompanies()` result and stays hidden when there is no further page. A
+ * failed page keeps every loaded card; the footer says so and retries it.
  */
 export function EmployerGrid({
   employers,
   hasNextPage,
   fetchNextPage,
   isFetchingNextPage,
+  isFetchNextPageError,
 }: {
   employers: EmployerCard[];
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
+  /** True when the latest "Load more" failed (ENG-501). */
+  isFetchNextPageError: boolean;
 }) {
   const { t } = useTranslation();
 
@@ -65,18 +69,15 @@ export function EmployerGrid({
         ))}
       </div>
       {hasNextPage && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={isFetchingNextPage}
-            onClick={fetchNextPage}
-          >
-            {isFetchingNextPage
-              ? t("economy:jobs.employers.loadingMore")
-              : t("economy:jobs.employers.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.jobsLoadMore}
+          isFetchingNextPage={isFetchingNextPage}
+          isFetchNextPageError={isFetchNextPageError}
+          onLoadMore={fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("economy:jobs.employers.loadMoreCta")}
+          loadingLabel={t("economy:jobs.employers.loadingMore")}
+        />
       )}
     </>
   );

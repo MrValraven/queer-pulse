@@ -98,12 +98,49 @@
 }
 
 .actions {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
+}
+
+/* The divider above the buttons doubles as the progress line once Reload is
+   tapped. Absolutely positioned over the border, so the row never shifts, and
+   2px tall so the fill reads against the 1px hairline.
+
+   The stages are honest about what is known. While the new worker activates
+   there is no real percentage to show, so the fill creeps towards 85% on a
+   long decelerating curve and never looks finished. Once the takeover lands
+   it snaps to full just before the reload. Under reduced motion the global
+   rule shrinks these durations to nothing, and the line simply jumps from
+   stage to stage. */
+.progress {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+  pointer-events: none;
+}
+
+.progress[data-phase="activating"] {
+  transform: scaleX(0.85);
+  transition-duration: 6s;
+}
+
+.progress[data-phase="reloading"] {
+  transform: scaleX(1);
+  transition-duration: 200ms;
 }
 
 .reload {

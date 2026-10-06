@@ -28,22 +28,19 @@ function matches(item: SearchItem, q: string) {
  * shortcut works on every page; also opens on the OPEN_SEARCH_EVENT window event.
  * Enter on a result navigates to it; Enter with no active row goes to the full
  * /search page with the query preserved in the URL.
+ *
+ * The closed palette is only the shortcut listener. Everything that reads the
+ * search corpus lives in `CommandPaletteDialog`, which mounts on open, so a
+ * page where nobody opens search never resolves a `members:` catalog key and
+ * never queues that namespace's chunk (PRD-327). Unmounting the
+ * dialog on close also resets its query and active row.
  */
 export function CommandPalette() {
-  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [active, setActive] = useState(0);
-  const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useScrollLock(open);
 
-  const close = useCallback(() => {
-    setOpen(false);
-    setQuery("");
-    setActive(0);
-  }, []);
+  const close = useCallback(() => setOpen(false), []);
 
   const openPalette = useCallback(() => setOpen(true), []);
 
@@ -52,7 +49,7 @@ export function CommandPalette() {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((v) => !v);
+        setOpen((isOpen) => !isOpen);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -63,10 +60,22 @@ export function CommandPalette() {
     };
   }, [openPalette]);
 
-  // Focus the input when it opens.
+  if (!open) return null;
+  return <CommandPaletteDialog close={close} />;
+}
+
+/** The open palette: input, live results and footer, portalled to the body. */
+function CommandPaletteDialog({ close }: { close: () => void }) {
+  const { t } = useTranslation();
+  const [query, setQuery] = useState("");
+  const [active, setActive] = useState(0);
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus the input as the dialog mounts, which is the moment it opens.
   useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
+    inputRef.current?.focus();
+  }, []);
 
   const {
     data: searchData,
@@ -126,8 +135,6 @@ export function CommandPalette() {
       else goToAll();
     }
   };
-
-  if (!open) return null;
 
   return createPortal(
     <div

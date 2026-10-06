@@ -18,6 +18,22 @@ export function gatheringShortId(slug: string): string {
   return h.toString(36).slice(0, 5).padStart(5, "0");
 }
 
+/**
+ * The real slug behind a `:slug` route param. Our own links carry
+ * `<slug>-<shortId>`, but backend-built links (feed items, notifications,
+ * reminders, profile activity) carry the bare slug, and backend slugs hold
+ * hyphens of their own (`queerpulse-gamenight`, `my-event-a1b2c3`). So only a
+ * final segment that IS the prefix's own short id is stripped; any other param
+ * is already the slug and comes back unchanged.
+ */
+export function gatheringSlugFromParam(param: string): string {
+  const lastHyphenIndex = param.lastIndexOf("-");
+  if (lastHyphenIndex <= 0) return param;
+  const slugPrefix = param.slice(0, lastHyphenIndex);
+  const suffix = param.slice(lastHyphenIndex + 1);
+  return suffix === gatheringShortId(slugPrefix) ? slugPrefix : param;
+}
+
 /** Canonical path for a gathering detail page. */
 export function gatheringPath(slug: string): string {
   return `/gatherings/${slug}-${gatheringShortId(slug)}`;

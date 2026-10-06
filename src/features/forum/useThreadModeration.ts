@@ -19,6 +19,10 @@ import {
 } from "./threadModeration.helpers";
 import { useOpModeration } from "./useOpModeration";
 import { useReplyModeration } from "./useReplyModeration";
+import {
+  FUNDING_ERROR_MESSAGE_VALUES,
+  fundingAwareErrorKey,
+} from "./funding/fundingErrors";
 
 export type { ForumReportTarget };
 export { deriveOpView };
@@ -87,7 +91,16 @@ export function useThreadModeration({
   const confirmDeleteSubject: ConfirmDeleteSubject =
     confirmDelete?.isOp && isThreadLevelDelete ? "thread" : "post";
 
-  const onMutateError = () => showToast(t("forum:toast.error"), "error");
+  // A refused edit of a funding thread says why (a payment detail in the body,
+  // a link host); every other failure keeps the generic line.
+  const onMutateError = (error?: unknown) =>
+    showToast(
+      t(
+        fundingAwareErrorKey(error, "forum:toast.error"),
+        FUNDING_ERROR_MESSAGE_VALUES,
+      ),
+      "error",
+    );
 
   const {
     editingOp,

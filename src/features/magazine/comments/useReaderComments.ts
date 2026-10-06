@@ -33,6 +33,10 @@ export interface ReaderCommentsResult {
   isLoading: boolean;
   isLoadingMore: boolean;
   isError: boolean;
+  /** ENG-501: the latest next page failed (`isError` is true then too), so the
+   *  footer retries that page under the threads already loaded. Always false
+   *  in demo mode, which answers in one page. */
+  isFetchNextPageError: boolean;
 }
 
 /**
@@ -88,5 +92,6 @@ export function useReaderComments(articleSlug: string): ReaderCommentsResult {
     isLoading: query.isLoading,
     isLoadingMore: query.isFetchingNextPage,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
   };
 }

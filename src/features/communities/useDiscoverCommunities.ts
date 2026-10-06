@@ -63,7 +63,8 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     fetchNextPage,
     isFetchingNextPage,
     isLoading: isFetchingFirstPage,
-    isError: hasListFailed,
+    isError: isListError,
+    isFetchNextPageError,
     refetch: retryList,
     facets,
     isShowingPreviousResults: isShowingStaleResults,
@@ -96,6 +97,10 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
       shouldKeepPreviousResults: true,
     },
   );
+  // ENG-501: react-query also sets `isError` when only the next page failed,
+  // or a background refetch did. The error panel is for a directory with
+  // nothing loaded; loaded cards stay and the footer retries the failed page.
+  const hasListFailed = isListError && communities.length === 0;
   // The 600ms placeholder skeleton is a demo-prototype device; live mode waits
   // on the real first page instead of adding half a second to every visit.
   const isSimulatedLoading = useSimulatedLoad();
@@ -201,6 +206,7 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     visible,
     gridItems,
     // Kept apart from "nothing matched": a failed directory read must not be

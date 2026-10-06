@@ -21,11 +21,12 @@ import styles from "./SexualHealthPage.module.css";
 
 /** The "what to expect" info cards sitting above the testing directory. */
 function TestingInfoCards() {
+  const { t } = useTranslation();
   return (
     <div className={styles.infoGrid}>
       {TESTING_INFO.map((card) => (
         <div
-          key={card.title}
+          key={card.titleKey}
           className={styles.infoCard}
           style={{ background: card.background, borderColor: card.border }}
         >
@@ -33,9 +34,9 @@ function TestingInfoCards() {
             <card.icon />
           </div>
           <div className={styles.infoTitle} style={{ color: card.color }}>
-            {card.title}
+            {t(card.titleKey)}
           </div>
-          <div className={styles.infoBody}>{card.body}</div>
+          <div className={styles.infoBody}>{t(card.bodyKey)}</div>
         </div>
       ))}
     </div>
@@ -96,13 +97,15 @@ export function PrepTab() {
         </div>
       </div>
       <div className={styles.prepSteps}>
-        {PREP_STEPS.map((s, i) => (
-          <div className={styles.prepStep} key={s.title}>
-            <div className={styles.psNum}>{i + 1}</div>
+        {PREP_STEPS.map((step, index) => (
+          <div className={styles.prepStep} key={step.titleKey}>
+            <div className={styles.psNum}>{index + 1}</div>
             <div className={styles.psBody}>
-              <div className={styles.psTitle}>{s.title}</div>
-              <div className={styles.psDesc}>{s.description}</div>
-              {s.note && <div className={styles.psNote}>{s.note}</div>}
+              <div className={styles.psTitle}>{t(step.titleKey)}</div>
+              <div className={styles.psDesc}>{t(step.descriptionKey)}</div>
+              {step.noteKey && (
+                <div className={styles.psNote}>{t(step.noteKey)}</div>
+              )}
             </div>
           </div>
         ))}
@@ -114,24 +117,26 @@ export function PrepTab() {
         />
       </h3>
       <div className={styles.faq}>
-        {PREP_FAQ.map((f, i) => (
+        {PREP_FAQ.map((faqItem, index) => (
           <div
-            key={f.q}
-            className={[styles.faqItem, openFaq === i && styles.faqItemOpen]
+            key={faqItem.questionKey}
+            className={[styles.faqItem, openFaq === index && styles.faqItemOpen]
               .filter(Boolean)
               .join(" ")}
           >
             <button
               type="button"
               className={styles.faqQ}
-              onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              onClick={() => setOpenFaq(openFaq === index ? null : index)}
             >
-              <span className={styles.faqQText}>{f.q}</span>
+              <span className={styles.faqQText}>{t(faqItem.questionKey)}</span>
               <span className={styles.faqArrow} aria-hidden>
                 <FiPlus />
               </span>
             </button>
-            {openFaq === i && <div className={styles.faqA}>{f.a}</div>}
+            {openFaq === index && (
+              <div className={styles.faqA}>{t(faqItem.answerKey)}</div>
+            )}
           </div>
         ))}
       </div>
@@ -187,21 +192,21 @@ export function HivTab() {
         </div>
       </div>
       <div className={styles.infoGrid}>
-        {HIV_INFO.map((c) => (
-          <div className={styles.infoCard} key={c.title}>
+        {HIV_INFO.map((card) => (
+          <div className={styles.infoCard} key={card.titleKey}>
             <div className={styles.infoIcon}>
-              <c.icon />
+              <card.icon />
             </div>
-            <div className={styles.infoTitle}>{c.title}</div>
-            <div className={styles.infoBody}>{c.body}</div>
-            {c.link &&
-              (c.link.external ? (
-                <a href={c.link.href} className={styles.infoLink}>
-                  {c.link.label} <FiArrowRight aria-hidden />
+            <div className={styles.infoTitle}>{t(card.titleKey)}</div>
+            <div className={styles.infoBody}>{t(card.bodyKey)}</div>
+            {card.link &&
+              (card.link.external ? (
+                <a href={card.link.href} className={styles.infoLink}>
+                  {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                 </a>
               ) : (
-                <Link to={c.link.href} className={styles.infoLink}>
-                  {c.link.label} <FiArrowRight aria-hidden />
+                <Link to={card.link.href} className={styles.infoLink}>
+                  {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                 </Link>
               ))}
           </div>
@@ -226,19 +231,19 @@ export function GuidesTab() {
       </h2>
       <p className={styles.sub}>{t("resources:sexualHealth.guides.lead")}</p>
       <div className={styles.infoGrid}>
-        {GUIDES.map((g) => (
-          <div className={styles.infoCard} key={g.title}>
+        {GUIDES.map((guide) => (
+          <div className={styles.infoCard} key={guide.contentKey}>
             <div className={styles.infoIcon}>
-              <g.icon />
+              <guide.icon />
             </div>
-            <div className={styles.infoTitle}>{g.title}</div>
-            <div className={styles.infoBody}>{g.body}</div>
-            {g.link && (
-              <Link to={g.link.href} className={styles.infoLink}>
-                {g.link.label} <FiArrowRight aria-hidden />
+            <div className={styles.infoTitle}>{t(guide.titleKey)}</div>
+            <div className={styles.infoBody}>{t(guide.bodyKey)}</div>
+            {guide.link && (
+              <Link to={guide.link.href} className={styles.infoLink}>
+                {t(guide.link.labelKey)} <FiArrowRight aria-hidden />
               </Link>
             )}
-            <GuideRatingWidget contentKey={g.contentKey} />
+            <GuideRatingWidget contentKey={guide.contentKey} />
           </div>
         ))}
       </div>

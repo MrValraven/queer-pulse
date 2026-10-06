@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import type { IconType } from "react-icons";
 import {
   FiArrowRight,
-  FiCheck,
   FiMail,
   FiShield,
   FiFileText,
@@ -27,6 +26,7 @@ import {
   LISTING_CORRECTION_TOPIC,
   listingRefFromParam,
 } from "./contactPrefill";
+import { ContactSentPanel } from "./ContactSentPanel";
 import s from "./ContactPage.module.css";
 
 /** The topic selector's values. Each one has a `contact.form.topic.<value>`
@@ -47,6 +47,11 @@ const TOPICS = [
   // success panel and the suggested-listing notifications deep-link here as
   // `?topic=listing_correction&ref=<listing ref>`.
   LISTING_CORRECTION_TOPIC,
+  // ENG-473: the route the data-request page (/policies/privacy/data-request)
+  // gives a visitor with no account (an invite requester, an earlier contact
+  // sender, a former member). It deep-links here as `?topic=privacy`, so this
+  // value is part of that page's contract.
+  "privacy",
   "other",
 ] as const;
 
@@ -164,6 +169,47 @@ function ContactMessageField({
   );
 }
 
+/**
+ * The four route cards, each preselecting its topic in the form below.
+ *
+ * PRD-272. These cards were `mailto:` links carrying the card title as a
+ * subject line, on a page whose own form writes a tracked `inquiries` row with
+ * exactly that topic on it. They now preselect the topic and jump to the form,
+ * so a "Safety concern" or "Press & media" arrives in the queue staff actually
+ * work.
+ */
+function ContactRouteCards({
+  onChoose,
+}: {
+  onChoose: (topic: ContactTopic) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={s.routes}>
+      {ROUTES.map((r) => (
+        <button
+          key={r.titleKey}
+          type="button"
+          className={`${s.route} ${s.routeButton}`}
+          onClick={() => onChoose(r.topic)}
+          aria-label={t(r.titleKey)}
+        >
+          <span className={s.routeIcon} style={{ background: r.background }}>
+            <r.icon />
+          </span>
+          <div>
+            <h3>{t(r.titleKey)}</h3>
+            <p>{t(r.descKey)}</p>
+            <span className={s.rLink}>
+              {t("marketing:contact.routes.cta")} <FiArrowRight aria-hidden />
+            </span>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function ContactPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -200,6 +246,9 @@ export function ContactPage() {
         name: form.name.trim(),
         email: form.email.trim(),
         subject: t(`marketing:contact.form.topic.${form.topic}`),
+        // PRD-452: the topic id beside its translated label, so the backend
+        // can raise a safety concern to priority in any locale.
+        topic: form.topic,
         body: correctionNote
           ? `${correctionNote}\n\n${form.message.trim()}`
           : form.message.trim(),
@@ -235,57 +284,20 @@ export function ContactPage() {
               />
             </h1>
             <p>{t("marketing:contact.hero.body")}</p>
-            {/* PRD-272. These four cards were `mailto:` links carrying the
-                card title as a subject line, on a page whose own form writes a
-                tracked `inquiries` row with exactly that topic on it. They now
-                preselect the topic and jump to the form, so a "Safety concern"
-                or "Press & media" arrives in the queue staff actually work
-                instead of in a shared mailbox. */}
-            <div className={s.routes}>
-              {ROUTES.map((r) => (
-                <button
-                  key={r.titleKey}
-                  type="button"
-                  className={`${s.route} ${s.routeButton}`}
-                  onClick={() => chooseTopic(r.topic)}
-                  aria-label={t(r.titleKey)}
-                >
-                  <span
-                    className={s.routeIcon}
-                    style={{ background: r.background }}
-                  >
-                    <r.icon />
-                  </span>
-                  <div>
-                    <h3>{t(r.titleKey)}</h3>
-                    <p>{t(r.descKey)}</p>
-                    <span className={s.rLink}>
-                      {t("marketing:contact.routes.cta")}{" "}
-                      <FiArrowRight aria-hidden />
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <ContactRouteCards onChoose={chooseTopic} />
           </Reveal>
 
-          <Reveal className={s.form} delay={90}>
+          {/* The confirmation is its own plum surface, so the paper card
+              frames the form alone. */}
+          <Reveal className={sent ? undefined : s.form} delay={90}>
             {sent ? (
-              <div className={s.sent}>
-                <div className={s.tyIcon}>
-                  <FiCheck aria-hidden />
-                </div>
-                <h2>
-                  <Translation
-                    i18nKey="marketing:contact.sent.title"
-                    components={{ em: <em /> }}
-                  />
-                </h2>
-                <p>{t("marketing:contact.sent.body")}</p>
-                <Button variant="ghost" to={routes.homepage}>
-                  {t("marketing:contact.sent.backCta")}
-                </Button>
-              </div>
+              <ContactSentPanel
+                isSafety={form.topic === "safety"}
+                onWriteAnother={() => {
+                  setForm((previous) => ({ ...previous, message: "" }));
+                  setSent(false);
+                }}
+              />
             ) : (
               <form
                 id={CONTACT_FORM_ID}

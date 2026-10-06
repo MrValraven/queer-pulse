@@ -1,5 +1,7 @@
+// The two CTA behaviours a tier card renders. A tier stored with the retired
+// `toast` type (a button that only echoed its own label) maps to `propose`
+// in `orgTiers.adapters.ts`.
 export type OrgTierCta =
-  | { kind: "toast"; label: string }
   | { kind: "link"; label: string; to: string }
   | { kind: "propose"; label: string };
 
@@ -32,7 +34,7 @@ export const ORG_TIERS_DEMO: OrgTier[] = [
     ],
     footnote: "Reviewed annually. Either side can end it.",
     featured: false,
-    cta: { kind: "toast", label: "Request a review" },
+    cta: { kind: "propose", label: "Request a review" },
   },
   {
     slug: "partner",
@@ -66,6 +68,6 @@ export const ORG_TIERS_DEMO: OrgTier[] = [
     ],
     footnote: "Multi-year commitments preferred.",
     featured: false,
-    cta: { kind: "toast", label: "Discuss funding" },
+    cta: { kind: "propose", label: "Discuss funding" },
   },
 ];

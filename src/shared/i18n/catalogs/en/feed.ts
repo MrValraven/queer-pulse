@@ -89,7 +89,6 @@ export const feed: Catalog = {
   // ── FeedCards: GatheringCard ────────────────────────────────────────────
 
   // ── FeedCards: NewMemberCard ────────────────────────────────────────────
-  "card.newMember.today": "today",
 
   // ── FeedCards: SavedArticleCard / RecapCard ─────────────────────────────
   "card.savedArticle.eyebrow": "From your saves",
@@ -177,7 +176,6 @@ export const feed: Catalog = {
   "sidebar.manage": "Manage",
 
   // ── Redesigned card chrome (eyebrows, actions, proof/stat templates) ──
-  "card.eyebrow.newMember": "New member",
   "card.eyebrow.gathering": "Gathering",
   "card.eyebrow.community": "Community",
   "card.eyebrow.communityPost": "From a community you're in",
@@ -192,9 +190,6 @@ export const feed: Catalog = {
   "card.forumThread.unlikeAria": "Remove your like",
   "card.communityPost.flatContext": "Posted to everyone",
   "action.viewProfileAria": "View {name}'s profile",
-  "action.follow": "Follow",
-  "action.following": "Following",
-  "action.profile": "Profile",
   "action.join": "Join",
   "action.peekInside": "Peek inside",
   "action.about": "About",
@@ -203,7 +198,6 @@ export const feed: Catalog = {
   "action.details": "Details",
   "action.countMeIn": "Count me in · {count}",
   "action.openThread": "Open thread",
-  "proof.communitiesInCommon": "{count} communities in common",
   "gathering.spots": "{going} going · {spots} spots left",
   "gathering.full": "{going} going · full",
   "gathering.hostedBy": "Hosted by {host}",
@@ -264,4 +258,31 @@ export const feed: Catalog = {
   "article.byline": "By {name}",
   "article.inLanguage": "This piece is in {language}.",
   "action.readPiece": "Read the piece",
+
+  // ── New member card ─────────────────────────────────────────────────────
+  "memberCard.context.connected": "You're connected",
+  "memberCard.context.sharedCommunity": "Also in {community}",
+  "memberCard.context.mutualConnections_one": "{count} mutual connection",
+  "memberCard.context.mutualConnections_other": "{count} mutual connections",
+  "memberCard.context.sharedInterest": "You both like {interest}",
+  "memberCard.context.sharedTopic": "Also into {topic}",
+  "memberCard.context.newcomer": "New to QueerPulse",
+  "memberCard.time.justNow": "just now",
+  "memberCard.time.hours": "{count}h",
+  "memberCard.time.days": "{count}d",
+  "memberCard.action.sayHi": "Say hi",
+  "memberCard.action.sayHiAria": "Say hi to {name}",
+  "memberCard.action.connectAria": "Connect with {name}",
+  "memberCard.emptyPrompt": "Just arrived. A quick hello goes a long way.",
+  "memberCard.emptyPromptConnected":
+    "Already connected. Say hi and welcome them in.",
+  "memberCard.group.title_one": "{count} person joined recently",
+  "memberCard.group.title_other": "{count} people joined recently",
+  "memberCard.group.showAll": "Show all {count}",
+  "memberCard.group.showFewer": "Show fewer",
+  "memberCard.tags.inCommon": "in common",
+  "memberCard.tags.more": "+{count}",
+  "memberCard.tags.moreAria_one": "+1 more interest",
+  "memberCard.tags.moreAria_other": "+{count} more interests",
+  "memberCard.tags.less": "Fewer",
 };

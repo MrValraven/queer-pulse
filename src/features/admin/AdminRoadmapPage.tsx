@@ -29,7 +29,6 @@ import { GuidesView } from "./roadmap/views/GuidesView";
 import { CapacityView } from "./roadmap/views/CapacityView";
 import { IdeasView } from "./roadmap/views/IdeasView";
 import { NotBuildingView } from "./roadmap/views/NotBuildingView";
-import { HeroStatsView } from "./roadmap/views/HeroStatsView";
 import { PublicPreviewView } from "./roadmap/views/PublicPreviewView";
 import { ArchiveView } from "./roadmap/views/ArchiveView";
 import styles from "./AdminRoadmapPage.module.css";
@@ -50,8 +49,6 @@ function renderView(tab: RoadmapTabId, data: AdminRoadmapView) {
       return <IdeasView ideas={data.ideas} />;
     case "notBuilding":
       return <NotBuildingView ideas={data.ideas} />;
-    case "heroStats":
-      return <HeroStatsView heroStats={data.heroStats} />;
     case "publicPreview":
       return <PublicPreviewView items={data.items} ideas={data.ideas} />;
     case "archive":
@@ -84,7 +81,7 @@ export function AdminRoadmapPage() {
 function AdminRoadmapPageContent() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<RoadmapTabId>("board");
-  const { items, ideas, team, audit, heroStats, loading } = useAdminRoadmap();
+  const { items, ideas, team, audit, loading } = useAdminRoadmap();
   const itemDrawer = useItemDrawer();
   const modals = useRoadmapModals();
 
@@ -175,7 +172,6 @@ function AdminRoadmapPageContent() {
               ideas,
               team,
               audit,
-              heroStats,
               loading,
             })}
           </div>

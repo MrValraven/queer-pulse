@@ -4,7 +4,6 @@ import {
   EmptyState,
   LoadErrorState,
   SkeletonLine,
-  Sending,
 } from "../../shared/components/ui";
 import { useIncrementalList } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -12,6 +11,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type LocalPlace } from "./localPlaces";
 import { LocalPlaceCard } from "./LocalPlaceCard";
+import { DirectoryServerPageFooter } from "./DirectoryServerPageFooter";
 import s from "./DirectoryPage.module.css";
 
 function DirectoryCardSkeleton() {
@@ -56,6 +56,7 @@ export function DirectoryListView({
   onClearFilters,
   hasMoreFromServer = false,
   isLoadingMoreFromServer = false,
+  isFetchNextPageError = false,
   onLoadMoreFromServer,
 }: {
   places: LocalPlace[];
@@ -71,8 +72,9 @@ export function DirectoryListView({
    *  checked when pages remain unfetched. */
   loadedCount?: number;
   loading: boolean;
-  /** True when the directory read failed (DES-25). Rendered as its own state,
-   *  so an outage never reads as "no places listed yet". */
+  /** True when the directory read failed with nothing loaded (DES-25,
+   *  ENG-501). Rendered as its own state, so an outage never reads as "no
+   *  places listed yet". */
   isError?: boolean;
   /** Re-run the failed read, wired to the error state's retry. */
   onRetry?: () => void;
@@ -84,6 +86,9 @@ export function DirectoryListView({
   hasMoreFromServer?: boolean;
   /** True while the next server page is in flight. */
   isLoadingMoreFromServer?: boolean;
+  /** True when the latest server page failed. The loaded cards stay; the
+   *  footer reports it and retries that page (ENG-501). */
+  isFetchNextPageError?: boolean;
   /** Fetch the next server page. */
   onLoadMoreFromServer?: () => void;
 }) {
@@ -106,15 +111,18 @@ export function DirectoryListView({
 
   // Once every already-loaded place has been revealed locally, pull the next
   // server page (if any) so scrolling to the end of the list keeps growing it
-  // instead of dead-ending at whatever page happened to load first.
+  // through every page the server holds. A failed page waits for the footer's
+  // Retry, so an outage is asked once.
   useEffect(() => {
     if (hasMore) return;
     if (!hasMoreFromServer || isLoadingMoreFromServer) return;
+    if (isFetchNextPageError) return;
     onLoadMoreFromServer?.();
   }, [
     hasMore,
     hasMoreFromServer,
     isLoadingMoreFromServer,
+    isFetchNextPageError,
     onLoadMoreFromServer,
   ]);
 
@@ -214,13 +222,21 @@ export function DirectoryListView({
                 aria-hidden="true"
               />
             )}
-            {!hasMore && isLoadingMoreFromServer && (
-              <div className={s.loadingMore} aria-live="polite">
-                <Sending label={t("marketing:directory.loadingMore")} />
-              </div>
-            )}
           </>
         )}
+        {/* Under the cards, or under a filtered-empty state while pages remain
+            unfetched, so a failed page always has its Retry. */}
+        {!loading &&
+          !isError &&
+          !hasMore &&
+          hasMoreFromServer &&
+          onLoadMoreFromServer && (
+            <DirectoryServerPageFooter
+              isFetchingNextPage={isLoadingMoreFromServer}
+              isFetchNextPageError={isFetchNextPageError}
+              onLoadMore={onLoadMoreFromServer}
+            />
+          )}
       </div>
     </section>
   );

@@ -37,7 +37,7 @@ const MAX_QUESTION_LENGTH = 500;
  * failure toast, so it is rendered inline as the form's error.
  */
 export function DirectoryQuestionAskForm({ slug }: { slug: string }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { user } = useAuth();
   const { showToast } = useToast();
   const askQuestion = useAskQuestion(slug);
@@ -148,7 +148,7 @@ export function DirectoryQuestionAskForm({ slug }: { slug: string }) {
       },
       onError: (error) =>
         setErrorMessage(
-          readAskQuestionReason(error) ??
+          readAskQuestionReason(error, t, language) ??
             t("marketing:directory.detail.questions.errorGeneric"),
         ),
     });

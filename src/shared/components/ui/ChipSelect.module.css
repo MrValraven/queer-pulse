@@ -77,6 +77,16 @@
     color: rgba(var(--cream-rgb), 1);
   }
 }
+/* Dark mode: the plum fill does not flip (see tokens/colors.css), so on the
+   dark paper the selected chip vanishes into its ground. Same treatment as
+   the `.dark` tint. `[data-theme]` because ThemeProvider stamps it on <html>
+   and the app ignores the system preference. */
+[data-theme="dark"] .chipOn,
+[data-theme="dark"] .chipOn:hover {
+  background: rgba(var(--cream-rgb), 0.14);
+  border-color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 1);
+}
 .chip svg {
   width: 14px;
   height: 14px;

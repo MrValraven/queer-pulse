@@ -12,6 +12,7 @@ import {
   useRoadmapVote,
   useSubmitRoadmapIdea,
 } from "./api/useRoadmapMutations";
+import { MembersExplainerModal } from "../homepage/sections/MembersExplainerModal";
 import { NotBuildingCard, PlannedCard } from "./RoadmapCards";
 import styles from "./RoadmapPage.module.css";
 
@@ -89,14 +90,19 @@ function IdeaRow({ idea }: { idea: IdeaItem }) {
   const fmt = useFormat();
   const { showToast } = useToast();
   const myVotes = useMyRoadmapVotes();
-  const { demoMode, vote: castVote } = useRoadmapVote();
+  const { demoMode, isSignInRequired, vote: castVote } = useRoadmapVote();
   const [justVoted, setJustVoted] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   const voted = justVoted || myVotes.has(idea.id);
   const voteCount = idea.votes + (demoMode && justVoted ? 1 : 0);
 
   function vote() {
     if (voted) return;
+    if (isSignInRequired) {
+      setIsSignInOpen(true);
+      return;
+    }
     setJustVoted(true);
     if (demoMode) {
       showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
@@ -107,9 +113,12 @@ function IdeaRow({ idea }: { idea: IdeaItem }) {
       // Roll back the optimistic "voted" state on failure so the button
       // re-enables and the member can retry (the global error toast already
       // fires since this mutation doesn't set meta.silentError).
-      { onError: () => setJustVoted(false) },
+      {
+        onSuccess: () =>
+          showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success"),
+        onError: () => setJustVoted(false),
+      },
     );
-    showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
   }
 
   return (
@@ -130,6 +139,12 @@ function IdeaRow({ idea }: { idea: IdeaItem }) {
           ? t("marketing:roadmap.topIdeas.voted")
           : t("marketing:roadmap.topIdeas.vote")}
       </button>
+      {isSignInOpen && (
+        <MembersExplainerModal
+          context="roadmap"
+          onClose={() => setIsSignInOpen(false)}
+        />
+      )}
     </div>
   );
 }

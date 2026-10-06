@@ -131,6 +131,14 @@ export interface ForumThreadDraftSnapshot {
   pollAllowMultiple?: boolean;
   /** The chosen `PollCloses`. */
   pollCloses?: string;
+  /**
+   * An open call's or a fundraiser's details, as the positional string array
+   * `fundingToDraftFields` writes (`compose/composeFunding.ts`), or null. One
+   * key for twelve fields, because the bag allows 32 keys and holds 23.
+   * Optional: a bag written before Funding & Grants reads as no details,
+   * which is why the version stays 2.
+   */
+  fundingFields?: string[] | null;
 }
 
 /**
@@ -223,7 +231,8 @@ function areComposePageFieldsValid(
     isAbsentOr(candidate.photoAlts, isStringArray) &&
     isAbsentOr(candidate.pollOptions, isNullableStringArray) &&
     isAbsentOr(candidate.pollAllowMultiple, isBoolean) &&
-    isAbsentOr(candidate.pollCloses, isString)
+    isAbsentOr(candidate.pollCloses, isString) &&
+    isAbsentOr(candidate.fundingFields, isNullableStringArray)
   );
 }
 
@@ -247,6 +256,7 @@ function composePageFields(
     pollOptions: candidate.pollOptions as string[] | null | undefined,
     pollAllowMultiple: candidate.pollAllowMultiple as boolean | undefined,
     pollCloses: candidate.pollCloses as string | undefined,
+    fundingFields: candidate.fundingFields as string[] | null | undefined,
   };
 }
 
@@ -332,7 +342,7 @@ export function threadDraftSnapshotToMeta(
     imagePreviewUrl: snapshot.imagePreviewUrl,
     // Normalized rather than spread: `meta` accepts null but not `undefined`,
     // and a composer that keeps none of these fields (the older modal) must
-    // still produce a bag the server accepts. Twenty-two keys in total, well
+    // still produce a bag the server accepts. Twenty-three keys in total, well
     // inside the thirty-two `@IsDraftMeta` allows.
     kind: snapshot.kind ?? null,
     crossPost: snapshot.crossPost ?? false,
@@ -349,6 +359,7 @@ export function threadDraftSnapshotToMeta(
     pollOptions: snapshot.pollOptions ?? null,
     pollAllowMultiple: snapshot.pollAllowMultiple ?? false,
     pollCloses: snapshot.pollCloses ?? "never",
+    fundingFields: snapshot.fundingFields ?? null,
   };
 }
 

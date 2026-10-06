@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { ApiError } from "../../shared/api/client";
-import { isAccountRestricted } from "../../shared/api/errorMessage";
+import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -470,7 +470,9 @@ export function useEditorSaveGraph(
     // collaborator/affiliation entry, a 403 a permission the viewer lacks (e.g.
     // only the persona's creator may link it), a 409 a taken address. Surface
     // that message when a single area failed; for multi-area failures (or
-    // opaque 5xx) fall back to listing the areas.
+    // opaque 5xx) fall back to listing the areas. PRD-467: `reasonFor` keeps
+    // the server's sentence in English and gives every other language a
+    // translated line.
     const rejection = outcome.firstFailure;
     const refusalKey = personaRefusalMessageKey(rejection);
     const isSingleFailure = failed.length === 1;
@@ -480,7 +482,7 @@ export function useEditorSaveGraph(
         : isSingleFailure &&
             rejection instanceof ApiError &&
             [400, 403, 409, 422].includes(rejection.status)
-          ? rejection.message
+          ? reasonFor(rejection)
           : null;
     showToast(
       detail ??

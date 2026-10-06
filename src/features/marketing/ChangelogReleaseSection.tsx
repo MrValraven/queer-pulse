@@ -1,5 +1,6 @@
 import { FiChevronDown } from "react-icons/fi";
 import { Collapse } from "../../shared/components/ui/Collapse";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ChangelogEntryRow } from "./ChangelogEntryRow";
 import {
@@ -23,6 +24,10 @@ const COUNT_KEYS: Record<ChangelogCategory, string> = {
   infrastructure: "marketing:changelog.release.count.infrastructure",
 };
 
+/** A release slug that is a real day (`releaseDateSlug` builds it from the
+ *  English "9 Sep 2026" label). Anything else keeps its label as written. */
+const ISO_DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
 interface ChangelogReleaseSectionProps {
   release: ChangelogRelease;
   isOpen: boolean;
@@ -40,6 +45,13 @@ export function ChangelogReleaseSection({
   onToggle,
 }: ChangelogReleaseSectionProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
+  const isIsoDay = ISO_DAY_PATTERN.test(release.slug);
+  // Local midnight, so the day never renders one early west of Greenwich. The
+  // default long form keeps PT readable: a short month gives "9/09/2026".
+  const dateLabel = isIsoDay
+    ? fmt.date(new Date(`${release.slug}T00:00:00`))
+    : release.date;
   const toggleId = `changelog-release-${release.slug}`;
   const panelId = `${toggleId}-panel`;
 
@@ -56,7 +68,12 @@ export function ChangelogReleaseSection({
         >
           <span className={styles.version}>{release.version}</span>
           <span className={styles.releaseMeta}>
-            <span className={styles.releaseDate}>{release.date}</span>
+            <time
+              className={styles.releaseDate}
+              dateTime={isIsoDay ? release.slug : undefined}
+            >
+              {dateLabel}
+            </time>
             <span className={styles.headline}>{t(release.headlineKey)}</span>
             <span className={styles.counts}>
               {RELEASE_GROUP_ORDER.filter(

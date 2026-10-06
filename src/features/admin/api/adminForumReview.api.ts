@@ -2,6 +2,7 @@ import { ApiError, apiGet, apiPost } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type { Paginated } from "../../../shared/contracts/contracts";
 import type { ForumThreadResponse } from "../../forum/api/forum.api";
+import type { VerificationLevel } from "../../economy/api/verification.api";
 
 /**
  * The staff forum review queue (PRD-461): `/admin/forum/review` and
@@ -16,6 +17,15 @@ export interface AdminForumReviewCommunity {
   name: string;
 }
 
+/** What a reviewer needs to judge who is asking for money. Sent on
+ *  fundraiser rows only (Plan 1, spec delta 11). */
+export interface AdminFundingReview {
+  linkHost: string;
+  posterVerificationLevel: VerificationLevel;
+  /** Whole days since the poster's account was created. */
+  posterAccountAgeDays: number;
+}
+
 /**
  * One thread waiting on a decision. The ordinary thread response, read with the
  * moderator view: `author` is the real author even when `isAnonymous` is true,
@@ -26,6 +36,9 @@ export interface AdminForumReviewCommunity {
  */
 export interface AdminForumReviewThread extends ForumThreadResponse {
   community?: AdminForumReviewCommunity | null;
+  /** Fundraiser checks, set on ask rows only (`funding` arrives from
+   *  `ForumThreadResponse`). */
+  fundingReview?: AdminFundingReview | null;
 }
 
 /** The two verbs the review route accepts (`ReviewThreadDto.decision`). */

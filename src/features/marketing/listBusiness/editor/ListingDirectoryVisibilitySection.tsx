@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiCheck, FiEye, FiEyeOff, FiInfo } from "react-icons/fi";
+import { reasonFor } from "../../../../shared/api/errorMessage";
 import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useFormat } from "../../../../shared/i18n/format";
@@ -60,7 +61,8 @@ export function ListingDirectoryVisibilitySection({
         },
         onError: (error) => {
           setFailure(
-            error.message || t("marketing:listBusiness.visibility.saveError"),
+            reasonFor(error) ??
+              t("marketing:listBusiness.visibility.saveError"),
           );
         },
       },

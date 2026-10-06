@@ -37,6 +37,40 @@ export const notifications: Catalog = {
   "type.safe_space_vouch.textNamed":
     "<profile>{name}</profile> vouched for your safe space.",
   "type.safe_space_vouch.meta": "Safe space",
+  "type.safe_space_review.text": "There's an update on a safe-space review.",
+  "type.safe_space_review.meta": "Safe-space review",
+  "type.safe_space_review.nomination_acknowledged.text":
+    "Your nomination of {placeName} is with a reviewer.",
+  "type.safe_space_review.nomination_acknowledged.meta":
+    "Safe-space nomination",
+  "type.safe_space_review.nomination_declined.text":
+    "We reviewed {placeName} and aren't adding the badge for now.",
+  "type.safe_space_review.nomination_declined.meta": "Safe-space nomination",
+  "type.safe_space_review.nomination_awarded.text":
+    "{placeName} is now a verified safe space. Thank you for nominating it.",
+  "type.safe_space_review.nomination_awarded.meta": "Safe-space nomination",
+  "type.safe_space_review.nomination_awarded.owner.text":
+    "{placeName} now carries the QueerPulse safe-space badge.",
+  "type.safe_space_review.nomination_awarded.owner.meta": "Safe-space badge",
+  "type.safe_space_review.badge_suspended.text":
+    "The safe-space badge on {placeName} is paused while we review it. Someone from the review team will be in touch.",
+  "type.safe_space_review.badge_suspended.meta": "Safe-space badge",
+  "type.safe_space_review.badge_restored.text":
+    "The review of {placeName} is finished. Thank you for raising it.",
+  "type.safe_space_review.badge_restored.meta": "Safe-space review",
+  "type.safe_space_review.badge_restored.owner.text":
+    "The review is finished and the safe-space badge on {placeName} is live again.",
+  "type.safe_space_review.badge_restored.owner.meta": "Safe-space badge",
+  "type.safe_space_review.flag_review_opened.text":
+    "The safe-space badge on {placeName} is paused while we look into what you raised.",
+  "type.safe_space_review.flag_review_opened.meta": "Safe-space review",
+  "type.safe_space_review.flag_resolved.text":
+    "The review team has finished looking at what you raised about {placeName}.",
+  "type.safe_space_review.flag_resolved.meta": "Safe-space review",
+  "type.safe_space_review.queue_overdue.text":
+    "The safe-space review queue has items waiting past their deadline.",
+  "type.safe_space_review.queue_overdue.meta": "Safe-space queue",
+  "type.safe_space_review.placeNameFallback": "this place",
 
   // Sent when a new home goes live that matches a saved search with alerts on.
   // System-driven (no actor); `title`/`area` come from the payload.
@@ -108,6 +142,22 @@ export const notifications: Catalog = {
   "type.housing_listing_expiring.text":
     "Your listing {title} is about to expire. Extend it to keep it on the board.",
   "type.housing_listing_expiring.meta": "Housing",
+
+  "type.funding_deadline_soon.text": "{threadTitle} closes soon ({date}).",
+  "type.funding_deadline_soon.meta": "Funding",
+  "type.funding_deadline_soon.7d.text":
+    "{threadTitle} closes in 7 days ({date}).",
+  "type.funding_deadline_soon.7d.meta": "Funding",
+  "type.funding_deadline_soon.1d.text":
+    "{threadTitle} closes tomorrow ({date}).",
+  "type.funding_deadline_soon.1d.meta": "Funding",
+  "type.funding_deadline_soon.threadTitleFallback": "A call you saved",
+  "type.funding_deadline_soon.dateFallback": "date to be confirmed",
+  "type.funding_deadline_changed.text":
+    "{threadTitle}: deadline moved to {date}.",
+  "type.funding_deadline_changed.meta": "Funding",
+  "type.funding_deadline_changed.threadTitleFallback": "A call you saved",
+  "type.funding_deadline_changed.dateFallback": "a new date",
 
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
   "type.promoted_to_member.meta": "Membership",
@@ -230,6 +280,7 @@ export const notifications: Catalog = {
   "type.topic_new_post.textNamed":
     "<profile>{name}</profile> posted in a topic you follow: {topicLabel}.",
   "type.topic_new_post.meta": "Topic update",
+  "type.topic_new_post.openCallsLabel": "Open funding calls",
 
   "type.join_request_received.text": "Someone asked to join your community.",
   "type.join_request_received.textNamed":
@@ -673,6 +724,9 @@ export const notifications: Catalog = {
   "type.moderation_outcome.restriction_lifted.text":
     "Your restriction has been lifted.",
   "type.moderation_outcome.restriction_lifted.meta": "Moderation decision",
+  "type.moderation_outcome.safe_space.text":
+    "There's an update on a safe-space review.",
+  "type.moderation_outcome.safe_space.meta": "Safe-space review",
 
   // A fellow member credited a persona of yours as a collaborator on one of
   // their items (personas discovery Phase 5, Moment 6). The first live kind

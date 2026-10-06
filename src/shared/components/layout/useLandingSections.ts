@@ -49,9 +49,11 @@ function readPresentKey(): string {
  * The subset of `LANDING_SECTIONS` actually on the page right now.
  *
  * Half the landing is conditional. In live mode `LiveGatherings`,
- * `LiveStories`, `LiveCommunities` and `LiveChangeMakers` render nothing for a
- * signed-out visitor or while nothing has been curated (see `HomePage`'s header
- * comment), so a hardcoded link row would offer anchors that lead nowhere. The
+ * `LiveStories`, `LiveCommunities` and `LiveChangeMakers` render nothing while
+ * their data loads or when their source is empty: for a signed-out visitor
+ * that source is the admin-curated `/landing/features`, so an uncurated section
+ * stays absent (see `HomePage`'s header comment). A hardcoded link row would
+ * then offer anchors that lead nowhere. The
  * nav therefore reads the DOM, and a `MutationObserver` re-reads it as those
  * queries resolve and their sections mount, so a link appears only once its
  * section exists.

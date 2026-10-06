@@ -45,4 +45,13 @@ export const DEMO_MY_GROUP_JOIN_REQUESTS: MyHousingJoinRequest[] = [
     status: "accepted",
     createdAt: "2026-04-02T09:00:00.000Z",
   },
+  // Still waiting, so this group's page shows the request as sent and offers
+  // no second join form.
+  {
+    id: "demo-group-join-2",
+    name: "Queer flatshares",
+    slug: "porto-queer-flatshares",
+    status: "pending",
+    createdAt: "2026-05-27T17:40:00.000Z",
+  },
 ];

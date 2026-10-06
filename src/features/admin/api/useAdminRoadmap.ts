@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   readDemoRoadmap,
-  type AdminRoadmapHeroStat,
   type AdminRoadmapIdea,
   type AdminRoadmapItem,
 } from "../adminRoadmap.data";
@@ -30,7 +29,6 @@ export interface AdminRoadmapView {
   ideas: AdminRoadmapIdea[];
   team: RoadmapTeamMemberDTO[];
   audit: RoadmapAuditEntryDTO[];
-  heroStats: AdminRoadmapHeroStat[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
 }
@@ -43,7 +41,6 @@ function fromDto(
     ideas: dto.ideas,
     team: dto.team,
     audit: dto.audit,
-    heroStats: dto.heroStats,
   };
 }
 
@@ -52,7 +49,6 @@ const EMPTY: Omit<AdminRoadmapView, "loading"> = {
   ideas: [],
   team: [],
   audit: [],
-  heroStats: [],
 };
 
 /**

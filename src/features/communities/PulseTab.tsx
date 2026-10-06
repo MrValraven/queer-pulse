@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import {
-  Button,
   EmptyState,
   FadeIn,
+  LoadMoreFooter,
   SearchInput,
   SkeletonAvatar,
   SkeletonLine,
@@ -185,7 +185,11 @@ function PulseSearchResults({
 
   if (search.isLoading) return <PulseFeedSkeleton />;
 
-  if (search.isError) {
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  // The error state is for a search with nothing loaded; loaded matches stay
+  // and the footer below retries the page that failed.
+  const hasNothingLoadedError = search.isError && search.matches.length === 0;
+  if (hasNothingLoadedError) {
     return (
       <EmptyState
         icon={<FiSearch />}
@@ -229,18 +233,15 @@ function PulseSearchResults({
         </FadeIn>
       ))}
       {search.hasNextPage && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={search.isFetchingNextPage}
-            onClick={search.fetchNextPage}
-          >
-            {search.isFetchingNextPage
-              ? t("communities:detail.pulse.loadingMore")
-              : t("communities:detail.pulse.search.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          isFetchingNextPage={search.isFetchingNextPage}
+          isFetchNextPageError={search.isFetchNextPageError}
+          onLoadMore={search.fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("communities:detail.pulse.search.loadMoreCta")}
+          loadingLabel={t("communities:detail.pulse.loadingMore")}
+        />
       )}
     </>
   );

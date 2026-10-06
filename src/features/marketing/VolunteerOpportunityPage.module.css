@@ -241,10 +241,15 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  /* A 44px touch target; the pill keeps its look and centres in the row. */
+  min-height: 44px;
   padding: 5px 11px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-pill);
+  /* `font: inherit` so the signed-out button variant (PRD-454) matches the
+     link; it resets the weight too, hence before the size. */
+  font: inherit;
   font-size: var(--text-13);
   color: var(--ink);
   text-decoration: none;
@@ -347,10 +352,11 @@
   margin-top: 10px;
   line-height: 1.55;
 }
+/* Underlined so the inline link reads as tappable in this muted footnote. */
 .footNote a {
   color: var(--text-strong);
   font-weight: 600;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .cardLabel {

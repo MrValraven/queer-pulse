@@ -232,7 +232,7 @@ export const resources: Catalog = {
     "We handle every report with discretion. You will not be identified to the person you're reporting unless you choose to be. We will follow up.",
   "safety.report.boxTitle": "Report a concern",
   "safety.report.boxBody":
-    "Use the report form. It reaches the team directly, and we aim to respond within 24 hours.",
+    "Use the report form. It reaches the moderation team directly, and a moderator reads every report.",
   "safety.report.formCta": "Open the report form",
   "safety.report.trackCta": "Your reports",
 
@@ -637,7 +637,7 @@ export const resources: Catalog = {
     "Using more safely: practical, non-judgemental guidance.",
   "wellbeing.subpage.sober.label": "Sober",
   "wellbeing.subpage.sober.blurb":
-    "Sober and social: meetups and support that don't revolve around drinking.",
+    "Sober and social: background and support for life without alcohol.",
 
   "wellbeing.therapists.title": "Queer-affirming <em>therapists in Lisbon</em>",
   "wellbeing.therapists.lead":
@@ -1145,10 +1145,9 @@ export const resources: Catalog = {
     "Non-alcoholic options",
   "harmReduction.section.sober.item.nonAlcoholic.body":
     "Most Lisbon venues serve water and soft drinks. Ask for sparkling water with lime if you would rather it not be obvious. It is no one else's business.",
-  "harmReduction.section.sober.item.qpCommunity.title":
-    "QueerPulse Sober community",
+  "harmReduction.section.sober.item.qpCommunity.title": "QueerPulse Sober page",
   "harmReduction.section.sober.item.qpCommunity.body":
-    "The Sober page connects community members who are sober or sober-curious. You are not alone in wanting to be part of the night without the substances.",
+    "The Sober page gathers background and support options for being part of the night without the substances. You are not alone in that.",
   "harmReduction.section.sober.linkCta": "Visit the Sober page",
 
   "harmReduction.section.services.label": "Support & services",
@@ -1185,6 +1184,10 @@ export const resources: Catalog = {
     "Sober and queer in Lisbon: alcohol-free events and venues",
   "sober.meta.description":
     "A full queer social life without alcohol: sober and alcohol-free events in Lisbon, venues that don't centre the bar, and peer support for recovery or sober-curious members.",
+  "sober.meta.descriptionLive":
+    "A full queer social life without alcohol: background on alcohol and queer communities, and pointers to recovery and sober-curious support.",
+  "sober.meta.titleLive":
+    "Sober and queer in Lisbon: alcohol-free social life and recovery support",
 
   "sober.hero.eyebrow": "Sober & social",
   "sober.hero.title": "A full social life, without <em>alcohol.</em>",
@@ -1218,7 +1221,10 @@ export const resources: Catalog = {
   "sober.gatherings.title": "Sober <em>gatherings.</em>",
   "sober.gatherings.lead":
     "Alcohol-free events, or events where alcohol is present but not the point. All QueerPulse gatherings are marked if they're alcohol-free.",
-  "sober.gatherings.hostCta": "+ Host or attend a meeting",
+  "sober.gatherings.hostCta": "Host or attend a meeting",
+  "sober.gatherings.leadLive":
+    "No gatherings are listed on QueerPulse yet. If you would like to host an alcohol-free meet-up, tell the team and they will review your request.",
+  "sober.gatherings.hostCtaLive": "Host a meeting",
   "sober.type.alcoholFree": "Alcohol-free",
   "sober.type.supportGroup": "Support group",
   "sober.rsvp.going": "Going",
@@ -1261,11 +1267,11 @@ export const resources: Catalog = {
 
   "sober.host.modalTitle": "Sober gatherings",
   "sober.host.success.hostTitle": "Gathering <em>submitted.</em>",
-  "sober.host.success.attendTitle": "You're <em>in.</em>",
+  "sober.host.success.attendTitle": "Request <em>sent.</em>",
   "sober.host.success.hostSub":
-    "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. The host checklist reaches you as a QueerPulse message.",
+    "Your request has reached the QueerPulse team. They review it and follow up with you in QueerPulse.",
   "sober.host.success.attendSub":
-    "We've saved your spot. The private location and a gentle reminder will reach you the day before, and nothing is shared publicly.",
+    "Your request has reached the QueerPulse team. They review it and follow up with you in QueerPulse. Nothing is shared publicly.",
   "sober.host.intro":
     "Start an alcohol-free meet-up, or join an existing peer meeting. Either way, you decide how visible you are.",
   "sober.host.modeLabel": "What would you like to do?",
@@ -1286,6 +1292,10 @@ export const resources: Catalog = {
   "sober.host.cancelCta": "Cancel",
   "sober.host.submitCta.host": "Submit gathering",
   "sober.host.submitCta.attend": "Request to attend",
+  "sober.host.submitCta.hostLive": "Send request",
+  "sober.host.introLive":
+    "Tell the team about an alcohol-free gathering you would like to host. You decide how much to share.",
+  "sober.host.modalTitleLive": "Host a sober gathering",
 
   // ── Guide library grid — shared by marketing/ResourceLibraryPage (the
   // canonical, nav-linked "/resources", CNT-11's consolidated real,
@@ -1312,22 +1322,19 @@ export const resources: Catalog = {
   "library.card.notYetVerified": "Not yet verified",
 
   // ── SexualHealthPage (+ SexualHealthTabs.tsx + sexualHealth.data.ts) ────
-  // Flagged for native review — sexual-health/HIV/PrEP information. CLINICS
-  // entries (desc/details/hours/meta), PREP_STEPS, PREP_FAQ, HIV_INFO, and
-  // GUIDES bodies are dense clinical/procedural content (dosing protocols,
-  // drug names, epidemiological stats, crisis contact numbers) — left
-  // English rather than risk an imprecise medical translation. Only the
-  // structural chrome around them (headings, tab/filter labels, buttons,
-  // empty states, generic CTAs) is translated here; see the sweep report.
+  // Flagged for native review: sexual-health/HIV/PrEP information. Since
+  // 6 Oct 2026 (DES-421) the TESTING_INFO, PREP_STEPS, PREP_FAQ, HIV_INFO and
+  // GUIDES copy is translated below; the demo-only CLINICS entries
+  // (desc/details/hours/meta) stay English.
   "sexualHealth.meta.title":
     "Sexual health in Lisbon: testing, PrEP and HIV resources",
   "sexualHealth.meta.description":
-    "A practical guide to sexual health in Lisbon: where to get tested, how to access free PrEP through the SNS, HIV resources and U=U, and a community-reviewed clinic directory.",
+    "A practical guide to sexual health in Lisbon: where to get tested, how to access PrEP through the SNS, and HIV resources including U=U.",
 
   "sexualHealth.hero.cat": "Sexual health",
   "sexualHealth.hero.title": "Your health, on your <em>own terms.</em>",
   "sexualHealth.hero.lead":
-    "Direct, queer-specific, non-judgmental. Testing, PrEP, HIV resources, and a community-reviewed provider directory, all in one place.",
+    "Direct, queer-specific, non-judgmental. Where to get tested, how PrEP works, and HIV resources, all in one place.",
   "sexualHealth.outro.title": "Your health <em>matters.</em>",
   "sexualHealth.outro.sub":
     "Questions, concerns, or just not sure where to start: the community is here.",
@@ -1341,7 +1348,7 @@ export const resources: Catalog = {
 
   "sexualHealth.testing.title": "Where to get <em>tested</em> in Lisbon.",
   "sexualHealth.testing.lead":
-    "Community-reviewed clinics and services. Last updated by members June 2025.",
+    "Clinics and services for sexual health testing in Lisbon. Opening times change, so check each service's own website before you go.",
   "sexualHealth.testing.filter.all": "All",
   "sexualHealth.testing.filter.public": "Free / SNS",
   "sexualHealth.testing.filter.ngo": "NGO",
@@ -1376,6 +1383,42 @@ export const resources: Catalog = {
   "sexualHealth.prep.tip":
     "<strong>Portugal was one of the first European countries to make PrEP free.</strong> You don't need private insurance. The process involves a simple eligibility check, blood tests, and a prescription. The whole pathway takes about 4–6 weeks the first time.",
   "sexualHealth.prep.faqTitle": "Common <em>questions.</em>",
+  "sexualHealth.prep.step1.title":
+    "Book an appointment at a CAD or sexual health clinic",
+  "sexualHealth.prep.step1.description":
+    "Tell them you're interested in PrEP. CheckpointLx and GAT can help you navigate the referral if you're unsure where to start.",
+  "sexualHealth.prep.step1.note":
+    "CheckpointLx offers PrEP counselling. Opening times change, so check the clinic's own website for the current schedule before you go.",
+  "sexualHealth.prep.step2.title":
+    "Initial eligibility assessment & blood tests",
+  "sexualHealth.prep.step2.description":
+    "A counsellor will discuss your situation and arrange blood tests: HIV, hepatitis B, creatinine (kidney function), and STI panel. Results in 5–10 days.",
+  "sexualHealth.prep.step2.note": "You must be HIV-negative to start PrEP.",
+  "sexualHealth.prep.step3.title":
+    "Prescription issued: collect your medication",
+  "sexualHealth.prep.step3.description":
+    "If eligible, you'll receive a prescription for tenofovir/emtricitabine. With a prescription from an SNS hospital consultation, you collect it free from the hospital pharmacy. With a prescription from your GP, a community organisation or a private clinic, you can collect it at a community pharmacy, where the SNS covers most of the price and you pay the rest.",
+  "sexualHealth.prep.step3.note":
+    "No SNS number? GAT Lisboa can advise on alternative pathways.",
+  "sexualHealth.prep.step4.title": "Quarterly check-ins",
+  "sexualHealth.prep.step4.description":
+    "Every 3 months: HIV test, STI screen, and kidney function check. This is also where you get your next prescription. Appointments are 20–30 minutes.",
+  "sexualHealth.prep.faq.snsNumber.question":
+    "Do I need a Portuguese SNS number?",
+  "sexualHealth.prep.faq.snsNumber.answer":
+    "EU citizens can access SNS services with their EHIC card. Non-EU residents should register with the SNS. You're entitled to do this if you're legally resident in Portugal. If you're in a more complex situation, GAT Lisboa specialises in supporting people without straightforward documentation.",
+  "sexualHealth.prep.faq.onDemand.question":
+    "Can I take PrEP only when I need it (on-demand dosing)?",
+  "sexualHealth.prep.faq.onDemand.answer":
+    "Yes, for anal sex. The 2-1-1 protocol (two pills 2 to 24 hours before sex, then one pill 24 hours after the first dose and one more 48 hours after the first dose) is supported in Portugal. For vaginal or frontal sex, and for trans women taking oestrogen, daily dosing is the recommended option. Talk with your clinician about which schedule is right for you.",
+  "sexualHealth.prep.faq.otherStis.question":
+    "Does PrEP protect against other STIs?",
+  "sexualHealth.prep.faq.otherStis.answer":
+    "PrEP only prevents HIV. It doesn't protect against syphilis, gonorrhoea, chlamydia, herpes, HPV, or hepatitis C. Condoms remain useful for STI prevention, and regular testing every 3 months is part of the PrEP programme for this reason.",
+  "sexualHealth.prep.faq.transHormones.question":
+    "I'm trans and taking hormones. Does this affect PrEP?",
+  "sexualHealth.prep.faq.transHormones.answer":
+    "For trans women on oestrogen, some studies suggest slightly lower drug levels, so daily dosing is the recommended option. PrEP and hormone therapy are generally safe to take together. Discuss with a clinician who has experience with trans patients; CheckpointLx has trans-experienced staff.",
 
   "sexualHealth.hiv.title": "HIV: what you need to <em>know.</em>",
   "sexualHealth.hiv.lead":
@@ -1390,11 +1433,26 @@ export const resources: Catalog = {
   "sexualHealth.hiv.uu.stat.free.value": "Free",
   "sexualHealth.hiv.uu.stat.free.label":
     "HIV treatment (antiretrovirals) is free for all residents through the SNS.",
-  "sexualHealth.hiv.findServicesCta": "Find HIV support services",
+  "sexualHealth.hiv.findServicesCta": "Browse communities",
+  "sexualHealth.hiv.info.positive.title": "Just tested positive?",
+  "sexualHealth.hiv.info.positive.body":
+    "Take a breath. Modern HIV treatment is effective and straightforward. The CAD service or your GP can refer you immediately to an infectious disease specialist. Treatment usually begins within days of diagnosis.",
+  "sexualHealth.hiv.info.positive.link": "SNS 24: 808 24 24 24",
+  "sexualHealth.hiv.info.pep.title": "PEP: after potential exposure",
+  "sexualHealth.hiv.info.pep.body":
+    "Post-exposure prophylaxis must be started within 72 hours (ideally 24). Go to any hospital A&E and ask for PEP. Do not wait. It's free through the SNS and highly effective when taken on time.",
+  "sexualHealth.hiv.info.peerSupport.title": "Community peer support",
+  "sexualHealth.hiv.info.peerSupport.body":
+    "Talking with people who have been there helps. Organisations such as GAT and Abraço offer support from people living with HIV, and you can browse QueerPulse communities to find one that fits you.",
+  "sexualHealth.hiv.info.peerSupport.link": "Browse communities",
+  "sexualHealth.hiv.info.rights.title": "Rights & non-disclosure",
+  "sexualHealth.hiv.info.rights.body":
+    "Portuguese law on HIV criminalisation is nuanced. You are not legally obligated to disclose to every partner in every situation. The legal reality is complex. Talk to GAT or get legal advice if you have concerns.",
+  "sexualHealth.hiv.info.rights.link": "Legal resources",
 
   "sexualHealth.guides.title": "Guides & <em>questions.</em>",
   "sexualHealth.guides.lead":
-    "Short guides and a place to ask anything anonymously. Answered by community members with relevant experience, every one of them a person.",
+    "Short guides on vaccination, STIs, talking to partners, substance use and more.",
   "sexualHealth.guides.ask.doneTitle": "Your question is <em>in.</em>",
   "sexualHealth.guides.ask.doneBody":
     "A member with relevant experience will answer it, with no name, no account, and nothing linked back to you. Check back here in a day or two.",
@@ -1414,7 +1472,7 @@ export const resources: Catalog = {
   // precedent) — left English as content. Everything describing the
   // platform's own grant *process* (how it works, criteria, rules, the
   // application-wizard copy) is chrome and translated below.
-  "microGrants.hero.backLink": "Grants",
+  "microGrants.hero.backLink": "Funding & grants",
   "microGrants.hero.eyebrow": "Community fund",
   "microGrants.hero.title.line1": "Small money.",
   "microGrants.hero.title.line2": "<em>Real impact.</em>",
@@ -1459,6 +1517,11 @@ export const resources: Catalog = {
   "microGrants.criteria.impact":
     "The money will genuinely change what is possible, rather than only make it faster",
   "microGrants.round.applyCta": "Apply for this round",
+  "microGrants.live.applyTitle": "Apply to the <em>community fund</em>",
+  "microGrants.live.applyBody":
+    "Tell us what you want to make and what it would cost. People from the community read every application.",
+  "microGrants.live.applyCta": "Start an application",
+  "microGrants.apply.modalTitleLive": "Apply to the community fund",
 
   "microGrants.section.currentTitle": "Current <em>recipients</em>",
   "microGrants.section.pastTitle": "Past <em>projects</em>",
@@ -1789,7 +1852,7 @@ export const resources: Catalog = {
   "artCritGuide.outro.cta": "Find the next crit",
 
   // ── ComingOutAtWorkPage (+ comingOutAtWork.data.ts) ─────────────────────
-  // VOICES stay English — attributed peer quotes (a member's own words).
+  // VOICES stay English: invented demo-only quotes (they never render in live).
   "comingOutAtWork.meta.title":
     "Coming out at work: timing, scripts and your rights",
   "comingOutAtWork.meta.description":
@@ -1855,7 +1918,7 @@ export const resources: Catalog = {
     "You cannot be lawfully dismissed or harassed for being queer. The ACT handles workplace discrimination complaints, and you can report anonymously. Our legal aid page has the templates.",
   "comingOutAtWork.bad3.title": "You are not alone in it",
   "comingOutAtWork.bad3.body":
-    "The coming-out space and the wider community have walked people through exactly this. Bring it to the forum, where you'll find people who've survived the same manager.",
+    "You don't have to work through it alone. Bring it to the forum, where you can talk it through with people who have faced a difficult manager too.",
 
   "comingOutAtWork.outro.title": "Your timeline is <em>yours.</em>",
   "comingOutAtWork.outro.sub":
@@ -1867,7 +1930,7 @@ export const resources: Catalog = {
   // STEPS are administrative/navigational guidance (registering
   // accommodations, referrals, choosing GPs, insurance paperwork) — same
   // register as the already-swept legal.healthcare.* guidance, translated.
-  // TIPS stay English — attributed peer quotes (a member's own words).
+  // TIPS stay English: invented demo-only quotes (they never render in live).
   "disabilityHealthcare.meta.title":
     "Disability and chronic illness care in Portugal",
   "disabilityHealthcare.meta.description":
@@ -1890,18 +1953,18 @@ export const resources: Catalog = {
     "You are entitled to a specialist referral without it becoming an appointment about your identity. A short written summary of your history, handed over at the start, keeps the visit on the actual reason you came.",
   "disabilityHealthcare.step3.title": "Choose accessibility-aware GPs",
   "disabilityHealthcare.step3.body":
-    "Some Lisbon practices are noticeably better: step-free, unhurried, willing to write things down. The group keeps a peer-maintained list; ask in the space for current names.",
+    "Some Lisbon practices are noticeably better: step-free, unhurried, willing to write things down. Ask in the forum for current recommendations.",
   "disabilityHealthcare.step4.title": "Navigate the insurance paperwork",
   "disabilityHealthcare.step4.body":
-    "Reimbursement and atestado de incapacidade paperwork is its own maze. Keep copies of everything, ask for decisions in writing, and lean on the group, where someone has filled in the same form.",
+    "Reimbursement and atestado de incapacidade paperwork is its own maze. Keep copies of everything, ask for decisions in writing, and ask in the forum when a form has you stuck.",
 
   "disabilityHealthcare.tips.title": "Peer <em>tips</em>",
 
   "disabilityHealthcare.outro.title": "You set the <em>terms.</em>",
   "disabilityHealthcare.outro.sub":
-    "Know your rights, and never navigate it alone. The legal page and the group are both here.",
+    "Know your rights, and you don't have to navigate it alone. The legal page and the forum are both here.",
   "disabilityHealthcare.outro.rightsCta": "Know your rights",
-  "disabilityHealthcare.outro.askCta": "Ask the group",
+  "disabilityHealthcare.outro.askCta": "Ask in the forum",
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
   "firstMeetupGuide.meta.title": "Your first QueerPulse meetup: what to expect",
@@ -2076,7 +2139,7 @@ export const resources: Catalog = {
   "lgbtqAgingGuide.outro.cta": "Find affirming support",
 
   // ── OralHistoryProjectPage (+ oralHistoryProject.data.ts) ───────────────
-  // VOICES stay English — attributed peer quotes (a member's own words).
+  // VOICES stay English: invented demo-only quotes (they never render in live).
   "oralHistoryProject.meta.title":
     "LGBTQ+ oral history project in Lisbon: share your story",
   "oralHistoryProject.meta.description":
@@ -2302,7 +2365,7 @@ export const resources: Catalog = {
   // recognition). Official form terms ("encarregado de educação", "mãe /
   // pai") are domain terms already in Portuguese in the source and are kept
   // byte-identical in both catalogs — flag any doubt to a native reviewer.
-  // VOICES stay English — attributed peer quotes (a member's own words).
+  // VOICES stay English: invented demo-only quotes (they never render in live).
   "schoolFormsGuide.meta.title":
     "School intake forms for queer families in Lisbon",
   "schoolFormsGuide.meta.description":
@@ -2465,7 +2528,7 @@ export const resources: Catalog = {
   "intersectionality.meta.title":
     "Race, faith and class in Lisbon's queer community",
   "intersectionality.meta.description":
-    "How race, faith, class, and disability intersect with queerness in Lisbon: member voices and resources for people navigating more than one identity at once.",
+    "How race, faith, class, and disability intersect with queerness in Lisbon: context and resources for people navigating more than one identity at once.",
   "intersectionality.hero.backLabel": "Resource Library",
   "intersectionality.hero.cat": "Intersectionality",
   "intersectionality.hero.title": "More than one thing <em>at once.</em>",
@@ -2487,17 +2550,17 @@ export const resources: Catalog = {
   "intersectionality.race.info1.eyebrow": "Navigating queer spaces",
   "intersectionality.race.info1.title": "When queer isn't enough",
   "intersectionality.race.info1.body":
-    "Queer spaces in Lisbon, like most cities, can replicate the racial dynamics of the wider world. Fetishisation, exclusion, and micro-aggressions don't disappear because a space is queer. The community's guidelines explicitly address this, and the forum has threads for discussing specific situations.",
+    "Queer spaces in Lisbon, like most cities, can replicate the racial dynamics of the wider world. Fetishisation, exclusion, and micro-aggressions don't disappear because a space is queer. The community's guidelines explicitly address this, and the forum is a place to discuss specific situations.",
   "intersectionality.race.info1.link": "Community guidelines",
   "intersectionality.race.info2.eyebrow": "Portugal's colonial history",
   "intersectionality.race.info2.title": "What to know arriving here",
   "intersectionality.race.info2.body":
     "Portugal has a specific and often unprocessed relationship with its colonial history. Afro-Portuguese, Brazilian, Cape Verdean, and Angolan communities are significant and complex. Arriving as a person of colour from outside this history means learning a new set of dynamics. This takes time and the community can help.",
   "intersectionality.race.info3.eyebrow": "Community groups",
-  "intersectionality.race.info3.title": "Spaces for QTIPOC members",
+  "intersectionality.race.info3.title": "Finding QTIPOC community",
   "intersectionality.race.info3.body":
-    "QueerPulse has a closed community group for QTIPOC (queer, trans, and intersex people of colour) members: a space for the conversations that the broader community isn't always the right container for. Join via the Communities page.",
-  "intersectionality.race.info3.link": "QTIPOC community group",
+    "Look through the Communities page for spaces for QTIPOC (queer, trans, and intersex people of colour) members, or start the conversation in the forum.",
+  "intersectionality.race.info3.link": "Browse communities",
 
   "intersectionality.faith.heading": "Faith & <em>religion</em>",
   "intersectionality.faith.intro":
@@ -2505,13 +2568,13 @@ export const resources: Catalog = {
   "intersectionality.faith.info1.eyebrow": "Catholic context",
   "intersectionality.faith.info1.title": "A changing church",
   "intersectionality.faith.info1.body":
-    "The Portuguese Catholic Church is conservative institutionally but increasingly varied in practice. Some parishes are actively welcoming; others are not. There are priests in Lisbon who are known to be affirming, and the community knows who they are. Ask in the forum.",
+    "The Portuguese Catholic Church is conservative institutionally but increasingly varied in practice. Some parishes are actively welcoming; others are not. Some priests in Lisbon are known to be affirming, and you can ask about them in the forum.",
   "intersectionality.faith.info2.eyebrow": "Other traditions",
   "intersectionality.faith.info2.title":
     "Islam, Judaism, evangelical, and others",
   "intersectionality.faith.info2.body":
-    "Lisbon has growing Muslim and Jewish communities, and a range of Protestant and evangelical churches. The relationship between each community and its LGBTQ+ members varies enormously. The forum has threads for navigating faith questions in each of these contexts.",
-  "intersectionality.faith.info2.link": "Forum: faith & queerness",
+    "Lisbon has growing Muslim and Jewish communities, and a range of Protestant and evangelical churches. The relationship between each community and its LGBTQ+ members varies enormously. The forum is open for faith questions in any of these contexts.",
+  "intersectionality.faith.info2.link": "Go to the forum",
   "intersectionality.faith.info3.eyebrow": "Not religious",
   "intersectionality.faith.info3.title": "Secularism is also valid",
   "intersectionality.faith.info3.body":
@@ -2551,14 +2614,14 @@ export const resources: Catalog = {
   "intersectionality.community.info2.eyebrow": "Community groups",
   "intersectionality.community.info2.title": "Finding your specific community",
   "intersectionality.community.info2.body":
-    "Beyond the main community, QueerPulse has closed groups for QTIPOC members, disabled and chronically ill members, queer parents, and sober members. These exist so that people can have the conversations that the broader space isn't always suited for.",
-  "intersectionality.community.info2.link": "Browse community groups",
+    "Beyond the main community, browse the Communities page for a space that fits you, whether that is around race, disability, parenting, sobriety or something else.",
+  "intersectionality.community.info2.link": "Browse communities",
   "intersectionality.community.info3.eyebrow": "The forum",
   "intersectionality.community.info3.title":
     "Where harder conversations happen",
   "intersectionality.community.info3.body":
-    "The forum's Intersectionality thread is one of the more active on the platform. It's where members raise specific experiences, share resources, challenge each other, and support each other. It's moderated but not sanitised.",
-  "intersectionality.community.info3.link": "Forum: intersectionality",
+    "The forum is open for intersectional conversations: raising specific experiences, sharing resources, challenging each other and supporting each other. It's moderated, and honest conversations are welcome there.",
+  "intersectionality.community.info3.link": "Go to the forum",
 
   "intersectionality.commit.heading": "What QueerPulse <em>commits to.</em>",
   "intersectionality.commit.sub":
@@ -2568,9 +2631,9 @@ export const resources: Catalog = {
   "intersectionality.commitment1.title": "Active moderation",
   "intersectionality.commitment1.text":
     "The platform is actively moderated for racism, transphobia, classism, and ableism alongside homophobia. Reports are taken seriously and followed up.",
-  "intersectionality.commitment2.title": "Intersectional community groups",
+  "intersectionality.commitment2.title": "Communities open to all of you",
   "intersectionality.commitment2.text":
-    "Closed spaces for QTIPOC, disabled, sober, and other communities within the community are maintained as a genuine resource.",
+    "Any member can browse the Communities page for a space that fits them, and moderation applies the same standards in every one.",
   "intersectionality.commitment3.title": "Economic accessibility",
   "intersectionality.commitment3.text":
     "No member is excluded from community events or resources due to cost. Sliding-scale and free options are available for everything we run.",
@@ -2584,11 +2647,11 @@ export const resources: Catalog = {
   "intersectionality.org1.focus": "QTIPOC",
   "intersectionality.org1.text":
     "Portuguese organisation working on LGBTQ+ rights with an explicit focus on the intersection of race, migration, and queerness in Portugal.",
-  "intersectionality.org1.link": "Discussion thread",
+  "intersectionality.org1.link": "Discuss in the forum",
   "intersectionality.org2.focus": "Faith",
   "intersectionality.org2.text":
     "Queer-affirming Christian community based in Lisbon. Open to all denominations and traditions, focused on reconciling faith and queer identity.",
-  "intersectionality.org2.link": "Forum: faith thread",
+  "intersectionality.org2.link": "Discuss in the forum",
   "intersectionality.org3.focus": "Race & migration",
   "intersectionality.org3.text":
     "Portugal's main LGBTQ+ rights organisation. Works explicitly on the intersection of LGBTQ+ rights and migration/race. Legal support and advocacy.",
@@ -2597,7 +2660,7 @@ export const resources: Catalog = {
   "intersectionality.outro.title": "All of you <em>belongs here.</em>",
   "intersectionality.outro.sub":
     "Not the parts that are easiest to hold. All of it.",
-  "intersectionality.outro.findCta": "Find your community group",
+  "intersectionality.outro.findCta": "Find your community",
   "intersectionality.outro.forumCta": "Forum",
 
   // ── Section J: live-mode honesty — no fabricated "verified" providers or
@@ -2621,6 +2684,30 @@ export const resources: Catalog = {
     "We're verifying which testing services are genuinely queer- and trans-friendly before we list them here, so every clinic is one you can trust.",
   "sexualHealth.guides.ask.liveBody":
     "Anonymous questions aren't open yet. We're setting up a safe way for the community's health volunteers to answer them. Check back soon.",
+  "sexualHealth.guides.card.vaccination.title": "HPV & hepatitis B vaccination",
+  "sexualHealth.guides.card.vaccination.body":
+    "Both are free through the SNS for certain groups, and strongly recommended. HPV vaccination is now available up to age 45 through some clinics. Ask your GP or CheckpointLx.",
+  "sexualHealth.guides.card.mpox.title": "Mpox: what to know",
+  "sexualHealth.guides.card.mpox.body":
+    "Mpox can affect anyone, but some queer networks have higher exposure. Vaccination is available via SNS for close contacts and higher-risk individuals. CheckpointLx maintains an up-to-date guide.",
+  "sexualHealth.guides.card.bacterialStis.title":
+    "Bacterial STIs: syphilis, gonorrhoea, chlamydia",
+  "sexualHealth.guides.card.bacterialStis.body":
+    "All are curable with antibiotics and all are on the rise across Europe. Many have no symptoms. Testing every 3 months if sexually active is the most reliable way to catch them early.",
+  "sexualHealth.guides.card.talkingToPartners.title":
+    "Talking to partners about testing",
+  "sexualHealth.guides.card.talkingToPartners.body":
+    "Asking a partner about testing can feel awkward. Keep it simple and practical: when you last tested, what you tested for, and what you would both like to do next.",
+  "sexualHealth.guides.card.substanceUse.title":
+    "Sexual health & substance use",
+  "sexualHealth.guides.card.substanceUse.body":
+    "Practical harm reduction for people who use substances in sexual contexts: chemsex, MDMA, alcohol. Judgment-free, practical information about risk reduction.",
+  "sexualHealth.guides.card.substanceUse.link": "Read the guide",
+  "sexualHealth.guides.card.transNonbinary.title":
+    "Sexual health for trans & non-binary people",
+  "sexualHealth.guides.card.transNonbinary.body":
+    "Bodies vary, practices vary, and most sexual health guidance is written for cisgender people. A community-written guide to navigating the system and finding clinicians who understand.",
+  "sexualHealth.guides.card.transNonbinary.link": "Trans Hub",
 
   // ── Failed-fetch panels for the resource directories (DES-22 / DES-24) ──
   // Rendered through the shared `LoadErrorState`. These are kept apart from
@@ -2632,6 +2719,15 @@ export const resources: Catalog = {
     "We couldn't load the <em>clinic directory.</em>",
   "sexualHealth.testing.loadError.body":
     "The list of testing services didn't come back. This is a fault on our side, and the clinics are still there. Try again in a moment, and use the crisis lines at the top of this page if you need help right now.",
+  "sexualHealth.testing.info.frequency.title": "How often?",
+  "sexualHealth.testing.info.frequency.body":
+    "If you have multiple partners: every 3 months. Single partner, both tested: less frequently. HIV rapid test at participating pharmacies takes 15 minutes.",
+  "sexualHealth.testing.info.confidential.title": "Confidential",
+  "sexualHealth.testing.info.confidential.body":
+    "All public SNS sexual health services are confidential. No results are shared without your consent, including with your GP.",
+  "sexualHealth.testing.info.cost.title": "Cost",
+  "sexualHealth.testing.info.cost.body":
+    "SNS CAD centres are free. Rapid HIV tests at pharmacies cost €15–25. NGO services (CheckpointLx, GAT) are free and anonymous.",
 
   "legal.lawyers.loadError.title":
     "We couldn't load the <em>lawyer directory.</em>",

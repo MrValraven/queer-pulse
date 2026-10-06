@@ -4,6 +4,7 @@ import type { MemberRefDTO } from "../../../shared/api/refs";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 import {
   getAdminFinances,
+  openFinanceQuarter,
   updateAdminFinances,
   type AdminFinanceHistoryPoint,
   type AdminFinanceLatest,
@@ -23,6 +24,15 @@ import {
 async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
   const { QUARTERS, INCOME_LEDGER, LEDGER } =
     await import("../adminGovernance.mock");
+  // The public page's demo report, so the "Edit public report" dialog opens
+  // on the same tiles, notes and partners the demo Governance page shows.
+  const {
+    EVENTS,
+    FINANCE_PARTNERS,
+    FIN_STATS,
+    RESERVE_CURRENT,
+    RESERVE_TARGET,
+  } = await import("../../governance/governance.data");
 
   const history: AdminFinanceHistoryPoint[] = QUARTERS.map((quarterPoint) => ({
     quarter: quarterPoint.label,
@@ -60,6 +70,13 @@ async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
     solidarityRate: 18,
     income: INCOME_LEDGER.map(toDemoLine),
     expense: LEDGER.map(toDemoLine),
+    stats: FIN_STATS,
+    eventNotes: EVENTS.map(([title, body]) => ({ title, body })),
+    partners: FINANCE_PARTNERS,
+    reserve: { current: RESERVE_CURRENT, target: RESERVE_TARGET },
+    // Every headline figure starts unverified, so the demo report starts off
+    // the public page, exactly as a freshly opened live quarter does.
+    isPublic: false,
     publishedAt: "",
     // Every demo figure starts as an unverified placeholder, so the tab
     // demonstrates the provenance badges out of the box; editing flips a
@@ -106,10 +123,11 @@ function applyLedgerEdits(
   edits: UpdateAdminFinancesBody["income"],
 ): AdminFinLine[] {
   if (!edits || edits.length === 0) return lines;
-  return lines.map((line, index) => {
+  const corrected = lines.map((line, index) => {
     const edit = edits.find((candidate) => candidate.index === index);
     if (!edit) return line;
     const next: AdminFinLine = { ...line };
+    if (edit.label !== undefined) next.label = edit.label;
     if (edit.amount !== undefined && edit.amount !== line.amount) {
       next.amount = edit.amount;
       next.source = "manual";
@@ -118,6 +136,27 @@ function applyLedgerEdits(
     if (edit.enabled !== undefined) next.enabled = edit.enabled;
     return next;
   });
+  // PRD-447: edits past the last row append new rows, as the backend does.
+  const appended = edits
+    .filter((edit) => edit.index >= lines.length)
+    .sort((first, second) => first.index - second.index)
+    .map((edit): AdminFinLine => ({
+      label: edit.label ?? "",
+      amount: edit.amount ?? "0",
+      note: edit.note ?? "",
+      width: 0,
+      items: [],
+      total: { label: "", amount: edit.amount ?? "0" },
+      source: "manual",
+      enabled: edit.enabled ?? true,
+    }));
+  return [...corrected, ...appended];
+}
+
+/** Mirrors the backend's `isEnteredByPeople`: public once no headline figure
+ *  is still unverified. */
+function isEnteredByPeople(sources: AdminFinanceLatest["sources"]): boolean {
+  return SCALAR_KEYS.every((key) => sources[key] !== "seeded");
 }
 
 /**
@@ -143,7 +182,10 @@ export function applyFinanceEdits(
 
   for (const key of SCALAR_KEYS) {
     const value = body[key];
-    if (value !== undefined && value !== latest[key]) {
+    if (
+      value !== undefined &&
+      (value !== latest[key] || latest.sources[key] === "seeded")
+    ) {
       next[key] = value;
       next.sources[key] = "manual";
       touched = true;
@@ -159,8 +201,21 @@ export function applyFinanceEdits(
     touched = true;
   }
   if (body.incomeTotal !== undefined || body.expenseTotal !== undefined) {
-    next.surplus = next.incomeTotal - next.expenseTotal;
+    next.surplus = (next.incomeTotal ?? 0) - (next.expenseTotal ?? 0);
   }
+  if (body.stats) next.stats = body.stats;
+  if (body.eventNotes) next.eventNotes = body.eventNotes;
+  if (body.partners) next.partners = body.partners;
+  if (body.reserve !== undefined) next.reserve = body.reserve;
+  if (
+    body.stats ||
+    body.eventNotes ||
+    body.partners ||
+    body.reserve !== undefined
+  ) {
+    touched = true;
+  }
+  next.isPublic = isEnteredByPeople(next.sources);
 
   if (touched) {
     next.editor = editor;
@@ -255,6 +310,75 @@ export function useUpdateAdminFinances() {
     live: (body) => updateAdminFinances(body),
     logLabel: "admin.governance.finances.update",
     logContext: (body) => ({ fields: Object.keys(body) }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKey, data);
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({ queryKey });
+    },
+  });
+}
+
+/** The empty report a newly opened quarter starts as, for demo mode. */
+function openDemoQuarter(
+  current: AdminFinanceResponseDTO,
+  quarter: string,
+): AdminFinanceResponseDTO {
+  const latest: AdminFinanceLatest = {
+    quarter,
+    incomeTotal: null,
+    expenseTotal: null,
+    surplus: 0,
+    mrr: null,
+    sustainerCount: null,
+    solidarityRate: null,
+    income: [],
+    expense: [],
+    stats: [],
+    eventNotes: [],
+    partners: [],
+    reserve: null,
+    isPublic: false,
+    publishedAt: new Date().toISOString(),
+    sources: {
+      mrr: "seeded",
+      sustainerCount: "seeded",
+      solidarityRate: "seeded",
+      incomeTotal: "seeded",
+      expenseTotal: "seeded",
+      surplus: "computed",
+    },
+    editor: null,
+    editedAt: null,
+  };
+  // No history point yet: the chart plots a quarter once its totals are
+  // entered, so an opened quarter never reads as a real €0.
+  return { latest, history: current.history };
+}
+
+/**
+ * PRD-447. Opens an empty report for the next quarter. Live mode POSTs to
+ * `/admin/governance/finances/quarters`; demo mode adds the empty quarter to
+ * the cached payload for the session.
+ */
+export function useOpenFinanceQuarter() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const queryKey = financesQueryKey(demoMode);
+
+  return useDemoAwareMutation<AdminFinanceResponseDTO, Error, string>({
+    demoMode,
+    demoResult: (quarter) =>
+      openDemoQuarter(
+        queryClient.getQueryData<AdminFinanceResponseDTO>(queryKey) ?? {
+          latest: null,
+          history: [],
+        },
+        quarter,
+      ),
+    live: (quarter) => openFinanceQuarter(quarter),
+    logLabel: "admin.governance.finances.openQuarter",
+    logContext: (quarter) => ({ quarter }),
     onSuccess: (data) => {
       queryClient.setQueryData(queryKey, data);
     },

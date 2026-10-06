@@ -2,23 +2,41 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
+import { reasonFor } from "../../../shared/api/errorMessage";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { DirectoryPlace, ListingPublicQuestion } from "../directoryPlaces";
 import { askListingQuestion } from "./directory.api";
 import { DIRECTORY_KEY } from "./directoryQueryKey";
 import { DIRECTORY_QUESTIONS_KEY } from "./useListingQuestions";
 
+const RATE_LIMITED_KEY =
+  "marketing:directory.detail.questions.errorRateLimited";
+
 /**
- * The backend's own words for why an ask was refused, when it said something
- * worth repeating. A 429 carries a plain quota reason (how many, how long) that
- * is far more useful than "something went wrong", and a 400 says you cannot ask
- * your own listing a public question. Anything else, or a body with no message,
+ * Why an ask was refused, when there is something more useful to say than
+ * "something went wrong". A 429 is a quota (open questions on this listing, or
+ * questions per day, or the route throttle), and it always gets this form's own
+ * translated quota line, in every language. A 400 says you cannot ask your own
+ * listing a public question: English readers get the server's sentence through
+ * `reasonFor`, and every other language gets null so the caller's translated
+ * line shows. Anything else
  * returns null and the caller falls back to its generic error copy.
  */
-export function readAskQuestionReason(error: unknown): string | null {
+export function readAskQuestionReason(
+  error: unknown,
+  t: TFunction,
+  language: string,
+): string | null {
   if (!(error instanceof ApiError)) return null;
-  if (error.status !== 429 && error.status !== 400) return null;
-  const reason = error.message.trim();
-  return reason.length > 0 ? reason : null;
+  if (error.status === 429) {
+    const rateLimitedMessage = t(RATE_LIMITED_KEY);
+    // `t()` echoes the key while a catalog lacks it; the generic line beats it.
+    return rateLimitedMessage === RATE_LIMITED_KEY ? null : rateLimitedMessage;
+  }
+  if (error.status !== 400) return null;
+  // The backend words a 400 in English only: other languages get the form's
+  // own translated line from the caller.
+  return language.toLowerCase().startsWith("en") ? reasonFor(error) : null;
 }
 
 /**

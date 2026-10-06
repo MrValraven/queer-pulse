@@ -18,6 +18,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { formatDate } from "../../shared/lib/date";
 import { FILTERS } from "./housing.data";
 import type { MyHousingListingRow } from "./myHousingListings.data";
+import { isHiddenByExpiry } from "./myHousingListingState";
 import styles from "./MyHousingListingsPage.module.css";
 
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
@@ -69,19 +70,20 @@ const MODERATION_PILLS: Partial<
 };
 
 /** Status pill shown on a row. "Filled" wins outright (the owner said they
- * found someone), then the moderation state, then the TTL. */
+ * found someone), then the moderation state, then the TTL. A `filledAt` the
+ * expiry sweep stamped is the TTL speaking, so that row reads as expired. */
 function StatusPill({ listing }: { listing: MyHousingListingRow }) {
   const { t } = useTranslation();
   let labelKey = "economy:myHousingListings.status.live";
   let tone: BadgeTone = "jade";
   const moderationPill = MODERATION_PILLS[listing.status];
-  if (listing.filledAt !== null) {
+  if (listing.filledAt !== null && !isHiddenByExpiry(listing)) {
     labelKey = "economy:myHousingListings.status.filled";
     tone = "plum";
   } else if (moderationPill) {
     labelKey = moderationPill.labelKey;
     tone = moderationPill.tone;
-  } else if (listing.expired) {
+  } else if (listing.expired || isHiddenByExpiry(listing)) {
     labelKey = "economy:myHousingListings.status.expired";
     tone = "danger";
   }
@@ -143,6 +145,9 @@ export function MyHousingListingCard({
   const { t, language } = useTranslation();
   const fmt = useFormat();
   const hidden = listing.filledAt !== null || listing.expired;
+  // PRD-444. A home the sweep hid is expired: Extend is the one way back, so
+  // the filled/available toggle stays off this card.
+  const isHiddenBySweep = isHiddenByExpiry(listing);
   // PRD-244. Every other expiry signal on this card is a post-mortem: the
   // danger pill and the expired hint both only appear once the home has
   // already dropped out of public browse. This is the one signal that arrives
@@ -161,6 +166,23 @@ export function MyHousingListingCard({
   const typeLabel = t(
     FILTERS.find((filterOption) => filterOption.value === listing.type)
       ?.labelKey ?? "economy:housing.filter.all",
+  );
+
+  // Extend brings back a listing that lapsed while still looking and one the
+  // sweep hid, so it leads the row as the primary action there, and the
+  // expired hint below says so. An owner fill stays filled through Extend, so
+  // that row keeps the filled hint and Mark available.
+  const shouldLeadWithExtend =
+    (listing.expired && listing.filledAt === null) || isHiddenBySweep;
+  const extendButton = (
+    <Button
+      size="md"
+      variant={shouldLeadWithExtend ? "primary" : "ghost"}
+      onClick={onExtend}
+      disabled={busy}
+    >
+      {t("economy:myHousingListings.actions.extend")}
+    </Button>
   );
 
   return (
@@ -192,7 +214,7 @@ export function MyHousingListingCard({
       {hidden ? (
         <p className={styles.cardHint}>
           {t(
-            listing.expired
+            shouldLeadWithExtend
               ? "economy:myHousingListings.expiredHint"
               : "economy:myHousingListings.filledHint",
           )}
@@ -213,13 +235,12 @@ export function MyHousingListingCard({
       )}
 
       <div className={styles.cardActions}>
+        {shouldLeadWithExtend && extendButton}
         <Button size="md" variant="ghost" onClick={onEdit} disabled={busy}>
           {t("economy:myHousingListings.actions.edit")}
         </Button>
-        <Button size="md" variant="ghost" onClick={onExtend} disabled={busy}>
-          {t("economy:myHousingListings.actions.extend")}
-        </Button>
-        {hidden ? (
+        {!shouldLeadWithExtend && extendButton}
+        {isHiddenBySweep ? null : hidden ? (
           <Button
             size="md"
             variant="ghost"

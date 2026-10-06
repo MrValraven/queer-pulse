@@ -86,7 +86,13 @@ export type ReportSubjectType =
   // 403, and nobody else can even open the thread this report grows out of.
   // Mirrors the backend `ReportSubjectType.Identity`, backed by migration
   // `AddIdentityReportSubject1821281000000`.
-  | "identity";
+  | "identity"
+  // PRD-443: ONE room shared inside a housing group (`group_listings`),
+  // addressed by the room's uuid. `housing` names a member listing by slug in
+  // a different table, so a group room had no report control at all. Mirrors
+  // the backend `ReportSubjectType.GroupListing`, backed by migration
+  // `AddGroupListingReportSubject1829500200000`.
+  | "group_listing";
 
 export type ReasonCode =
   | "outing"
@@ -103,6 +109,7 @@ export type ReasonCode =
   | "venue_accessibility"
   | "housing_unsafe"
   | "housing_scam"
+  | "funding_scam"
   | "not_affirming"
   | "off_platform"
   // System-filed listing codes, NEVER member-selectable. `ListingsService`
@@ -134,6 +141,7 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   venue_accessibility: "An accessibility problem",
   housing_unsafe: "Unsafe, discriminatory, or misrepresented housing",
   housing_scam: "Scam or fake listing",
+  funding_scam: "Scam, fake fundraiser or fake grant",
   not_affirming: "Not LGBTQ+ affirming: broke the community pledge",
   off_platform: "Asked to pay or move off-platform",
   // System-filed (see the `ReasonCode` union). Labelled so any code to label
@@ -166,6 +174,7 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   venue_accessibility: "safety:reason.venueAccessibility",
   housing_unsafe: "safety:reason.housingUnsafe",
   housing_scam: "safety:reason.housingScam",
+  funding_scam: "safety:reason.fundingScam",
   not_affirming: "safety:reason.notAffirming",
   off_platform: "safety:reason.offPlatform",
   listing_dispute: "safety:reason.listingDispute",
@@ -201,6 +210,9 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "harassment",
     "hate_speech",
     "discrimination",
+    // Funding & Grants: a fake fundraiser or a grant that asks for a fee. Same
+    // severity band as `housing_scam` server-side.
+    "funding_scam",
     "spam",
     "off_topic",
     "other",
@@ -213,6 +225,10 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "spam",
     "off_topic",
+    // Funding & Grants: a reply under a fundraiser or an open call can push
+    // its own payment route or a fake grant. Mirrors the backend's `Reply`
+    // set; shown only on Funding & Grants threads (`withFundingScamFor`).
+    "funding_scam",
     "other",
   ],
   venue: [
@@ -489,11 +505,40 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "other",
   ],
+  // PRD-443: one room inside a housing group. Mirrors the backend's
+  // `SUBJECT_REASONS[ReportSubjectType.GroupListing]`, which is the `housing`
+  // set unchanged: a group room is the same kind of advert for the same kind
+  // of home, so a reader raises the same concerns about it.
+  group_listing: [
+    "outing",
+    "doxxing",
+    "housing_scam",
+    "housing_unsafe",
+    "not_affirming",
+    "discrimination",
+    "off_platform",
+    "harassment",
+    "other",
+  ],
 };
 
 export interface ReasonOption {
   code: ReasonCode;
   label: string;
+}
+
+/**
+ * `funding_scam` is offered on posts and replies server-side, and belongs on
+ * Funding & Grants threads alone: every other surface reporting a post or a
+ * reply leaves it out.
+ */
+export function withFundingScamFor<Option extends { code: string }>(
+  options: readonly Option[],
+  isFundingThread: boolean,
+): Option[] {
+  return isFundingThread
+    ? [...options]
+    : options.filter((option) => option.code !== "funding_scam");
 }
 
 /** The reason options a given surface should render, as `{ code, label }`. */

@@ -436,6 +436,16 @@ export const homepage: Catalog = {
   "liveStories.byline": "{author} · leitura de {minutes} min",
   "liveStories.issueKicker": "Edição {number}",
   "liveStories.magazineKicker": "Da revista",
+  // Linha por cima de um encontro escolhido pela equipa, mostrado a visitantes sem sessão (PRD-323).
+  "liveGatherings.curatedKicker": "Encontro da comunidade",
+  // Linhas de encontros escolhidos abrem o explicador para visitantes sem sessão (PRD-323).
+  "membersExplainer.ledeGathering":
+    "Os detalhes dos encontros abrem quando entras. Vê porque é assim e como podes entrar.",
+  "membersExplainer.ledeRoadmap":
+    "Votar no que construímos a seguir é para membros. Aqui tens como entrar ou iniciar sessão.",
+  "membersExplainer.ledeRating":
+    "Avaliar um guia é para membros. Aqui tens como entrar ou iniciar sessão.",
+  "liveGatherings.joinCta": "Como entrar",
 
   // ── ChangeMakers ───────────────────────────────────────────────────────────
   "changeMakers.eyebrow": "Agentes de mudança",

@@ -1,4 +1,5 @@
 /** Static roadmap content for the /about/roadmap page (mock data). */
+import type { HeroStatDTO } from "./api/roadmap.api";
 
 /** The most recent target-date move for a committed card — a public-safe
  *  reason only (no who/when — those stay admin-only). Matches the backend's
@@ -72,20 +73,10 @@ export interface NotBuildingItem {
   votes: number;
 }
 
-export const HERO_STATS: {
-  label: string;
-  value?: string;
-  note?: string;
-  jade?: boolean;
-}[] = [
-  {
-    label: "12 shipped this year",
-    value: "12",
-    note: "since launch",
-    jade: true,
-  },
-  { label: "5 in progress", value: "5", note: "building now" },
-  { label: "5 planned", value: "5", note: "next up" },
+export const HERO_STATS: HeroStatDTO[] = [
+  { kind: "shipped", count: 12 },
+  { kind: "building", count: 5 },
+  { kind: "planned", count: 5 },
 ];
 
 export const SHIPPED: ShippedItem[] = [

@@ -1,13 +1,18 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { isComingSoonLink, isDemoOnlyNavLink } from "../../../app/authGate";
 import { useDebouncedValue } from "../../../shared/hooks";
+import { isBeingBuiltLink } from "../../../shared/components/layout/navMenus";
+import { useFormat } from "../../../shared/i18n/format";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   SEARCH_DATA,
   RECENTS,
-  PAGE_SEARCH_ITEMS,
+  PAGE_SEARCH_ENTRIES,
   NO_LIVE_SEARCH_TYPES,
+  demoTopicSearchItems,
   topicResponseToSearchItem,
   type ResultType,
   type SearchItem,
@@ -57,6 +62,61 @@ const isLiveSearchType = (type: ResultType): type is LiveResultType =>
 const SEE_ALL_LIMIT = 50;
 
 /**
+ * True when a quick destination leads somewhere launched in this mode: the
+ * same checks the nav applies (Work & Economy in shipped builds, Culture and
+ * the being-built Cinema and Studio in live mode). A launch lifts the check
+ * there, and the search row comes back with it (PRD-327).
+ */
+const isPageLaunched = (href: string, demoMode: boolean) =>
+  !isComingSoonLink(href) &&
+  (demoMode || !isDemoOnlyNavLink(href)) &&
+  !isBeingBuiltLink(href, demoMode);
+
+/**
+ * The quick-destination rows and the topic sub line, both in the member's
+ * language (PRD-327). Page names and subs are catalog keys in
+ * `PAGE_SEARCH_ENTRIES`; resolving them here, before any filtering, lets a
+ * member find "Eventos" by typing in Portuguese.
+ */
+function useLocalizedStaticRows(demoMode: boolean) {
+  const { t } = useTranslation();
+  const format = useFormat();
+  const describeTopicPosts = useCallback(
+    (totalPosts: number) =>
+      t("members:search.topicPosts", {
+        count: totalPosts,
+        posts: format.number(totalPosts),
+      }),
+    [t, format],
+  );
+  const pageItems = useMemo<SearchItem[]>(
+    () =>
+      PAGE_SEARCH_ENTRIES.filter((entry) =>
+        isPageLaunched(entry.href, demoMode),
+      ).map((entry) => ({
+        t: "page",
+        name: t(entry.nameKey),
+        sub: t(entry.subKey),
+        href: entry.href,
+        icon: entry.icon,
+        kw: entry.kw,
+      })),
+    [t, demoMode],
+  );
+  // The demo corpus: translated pages and topics ahead of the mock content,
+  // the order the static list always had.
+  const demoData = useMemo<SearchItem[]>(
+    () => [
+      ...pageItems,
+      ...demoTopicSearchItems(describeTopicPosts),
+      ...SEARCH_DATA,
+    ],
+    [pageItems, describeTopicPosts],
+  );
+  return { pageItems, describeTopicPosts, demoData };
+}
+
+/**
  * Source for the ⌘K palette and the /search page. Demo serves the colocated
  * mock corpus (client-side filtering, `query` and `type` ignored). Live is
  * query-driven: a debounced GET /search (every result type, topics included,
@@ -73,6 +133,8 @@ export function useSearchData(
   const needle = query.trim().toLowerCase();
   const debounced = useDebouncedValue(needle, 200);
   const liveType = type !== "all" && isLiveSearchType(type) ? type : undefined;
+  const { pageItems, describeTopicPosts, demoData } =
+    useLocalizedStaticRows(demoMode);
 
   const searchQuery = useQuery({
     queryKey: ["search", demoMode, debounced, liveType],
@@ -120,7 +182,7 @@ export function useSearchData(
   if (demoMode) {
     // Demo serves the mock corpus synchronously: there is no request to fail.
     return {
-      data: SEARCH_DATA,
+      data: demoData,
       recents: RECENTS,
       signInRequired: false,
       loading: false,
@@ -150,10 +212,12 @@ export function useSearchData(
   }
 
   const staticHits = needle
-    ? PAGE_SEARCH_ITEMS.filter((item) => matchesStatic(item, needle))
+    ? pageItems.filter((item) => matchesStatic(item, needle))
     : [
-        ...PAGE_SEARCH_ITEMS,
-        ...(topicsQuery.data ?? []).map(topicResponseToSearchItem),
+        ...pageItems,
+        ...(topicsQuery.data ?? []).map((topic) =>
+          topicResponseToSearchItem(topic, describeTopicPosts),
+        ),
       ];
   // Each server row carries the query it answered in `kw`, so the palette's
   // client-side name/sub/kw filter never hides a server match on a field the

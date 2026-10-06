@@ -1,4 +1,5 @@
 import { ApiError } from "../../shared/api/client";
+import { reasonFor } from "../../shared/api/errorMessage";
 import type { TFunction } from "../../shared/i18n/types";
 
 /**
@@ -18,7 +19,9 @@ import type { TFunction } from "../../shared/i18n/types";
  * the two is not readable from the outside either.
  *
  * A 400 is a state fact about the gathering itself (it is closed, it is full
- * with no waitlist) and is safe to pass through as the server phrased it.
+ * with no waitlist). The backend writes it in English only, so an English
+ * reader gets the server's sentence through `reasonFor`, and every other
+ * language gets the generic retry line in the reader's own language.
  * The one the page can predict, the host's RSVP cutoff having passed, is
  * matched and said in the reader's own language.
  * Anything else falls back to the generic retry line.
@@ -49,11 +52,20 @@ export function rsvpDetailsSaveErrorMessage(
     : t("gatherings:rsvpDetails.saveErrorToast");
 }
 
-export function rsvpErrorMessage(error: unknown, t: TFunction): string {
+/** `language` is the reader's UI language, from `useTranslation()`. */
+export function rsvpErrorMessage(
+  error: unknown,
+  t: TFunction,
+  language: string,
+): string {
   if (isRsvpsClosedError(error)) return t("gatherings:rsvpControl.closedToast");
   if (error instanceof ApiError) {
     if (error.status === 403) return t("gatherings:rsvpControl.refusedToast");
-    if (error.status === 400 && error.message) return error.message;
+    if (error.status === 400) {
+      const isEnglishReader = language.toLowerCase().startsWith("en");
+      const serverReason = isEnglishReader ? reasonFor(error) : null;
+      return serverReason ?? t("gatherings:rsvpControl.errorToast");
+    }
     if (error.status === 404) return t("gatherings:rsvpControl.goneToast");
   }
   return t("gatherings:rsvpControl.errorToast");

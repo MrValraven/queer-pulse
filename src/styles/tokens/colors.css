@@ -70,6 +70,9 @@
   /* Jade as a FILLED BUTTON background with a white label: 4.52:1 against #fff
      (--jade itself is 3.98:1 — large text only). */
   --jade-fill: #458267;
+  /* Jade button fill under the fixed light cream label (--cream-rgb, not
+     theme-switched): 5.14:1, so it holds in light and dark. */
+  --jade-button: #3c7159;
   /* Pale jade for marks and labels sitting ON a dark (plum/deep) surface.
      Promoted here from 17 studio stylesheets that each redeclared the same
      literal locally, so a jade change had to be made in 18 places. Decorative

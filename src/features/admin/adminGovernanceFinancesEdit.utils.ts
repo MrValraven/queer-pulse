@@ -40,7 +40,8 @@ export const SCALAR_UNIT: Record<ScalarKey, "currency" | "count" | "percent"> =
  *  typed, so no notation is thrown away before it can be parsed. */
 export type ScalarDrafts = Record<ScalarKey, string>;
 
-/** A ledger row while it is being edited. `label` is read-only context. */
+/** A ledger row while it is being edited. A draft past the end of the stored
+ *  ledger is a row the admin added in this dialog (PRD-447). */
 export interface LineDraft {
   label: string;
   amount: string;
@@ -48,13 +49,25 @@ export interface LineDraft {
   enabled: boolean;
 }
 
+/**
+ * PRD-447. A figure nobody has confirmed (still `seeded`, or never entered)
+ * starts as an empty field; its stored value stays visible in the "Current"
+ * column. Saving the dialog therefore confirms only the figures an admin
+ * actually typed.
+ */
 export function toScalarDrafts(latest: AdminFinanceLatest): ScalarDrafts {
+  const toDraft = (key: ScalarKey): string => {
+    const value = latest[key];
+    return value === null || latest.sources[key] === "seeded"
+      ? ""
+      : String(value);
+  };
   return {
-    mrr: String(latest.mrr),
-    sustainerCount: String(latest.sustainerCount),
-    solidarityRate: String(latest.solidarityRate),
-    incomeTotal: String(latest.incomeTotal),
-    expenseTotal: String(latest.expenseTotal),
+    mrr: toDraft("mrr"),
+    sustainerCount: toDraft("sustainerCount"),
+    solidarityRate: toDraft("solidarityRate"),
+    incomeTotal: toDraft("incomeTotal"),
+    expenseTotal: toDraft("expenseTotal"),
   };
 }
 
@@ -85,6 +98,16 @@ export function isAmountRejected(
   return status === "invalid" || (status === "blank" && !isBlankAllowed);
 }
 
+/** A fresh row for the "Add a line" button. */
+export function emptyLineDraft(): LineDraft {
+  return { label: "", amount: "", note: "", enabled: true };
+}
+
+/** A row the admin must name before saving. */
+export function hasBlankLineLabel(lines: LineDraft[]): boolean {
+  return lines.some((line) => !line.label.trim());
+}
+
 export function hasRejectedLineAmount(lines: LineDraft[]): boolean {
   return lines.some(
     (line) => line.enabled && isAmountRejected(line.amount, false),
@@ -109,11 +132,18 @@ export function isScalarChanged(
   latest: AdminFinanceLatest,
 ): boolean {
   const parsed = parseNumber(drafts[key]);
-  return parsed !== undefined && parsed !== latest[key];
+  // PRD-447: an unconfirmed figure's draft starts empty, so it counts as
+  // changed only once the admin types a number into it (0 included); saving
+  // that confirms it and flips it to "Edited".
+  return (
+    parsed !== undefined &&
+    (parsed !== latest[key] || latest.sources[key] === "seeded")
+  );
 }
 
 export function isLineChanged(draft: LineDraft, source: AdminFinLine): boolean {
   return (
+    draft.label.trim() !== source.label ||
     isAmountChanged(draft.amount, source.amount) ||
     draft.note !== source.note ||
     draft.enabled !== (source.enabled ?? true)
@@ -127,12 +157,29 @@ export function ledgerDiff(
   const edits: FinanceLedgerEdit[] = [];
   drafts.forEach((draft, index) => {
     const source = original[index];
-    if (!source) return;
+    const draftAmount = parseAmountInput(draft.amount);
+    // A row added in this dialog is sent whole; the backend appends it.
+    if (!source) {
+      edits.push({
+        index,
+        label: draft.label.trim(),
+        amount:
+          draftAmount.status === "ok"
+            ? toCanonicalAmount(draftAmount.value)
+            : draft.amount,
+        note: draft.note,
+        enabled: draft.enabled,
+      });
+      return;
+    }
     const edit: FinanceLedgerEdit = { index };
     let changed = false;
+    if (draft.label.trim() !== source.label) {
+      edit.label = draft.label.trim();
+      changed = true;
+    }
     // Written back as plain number strings, so what we store carries no
     // locale of its own.
-    const draftAmount = parseAmountInput(draft.amount);
     if (
       draftAmount.status === "ok" &&
       isAmountChanged(draft.amount, source.amount)

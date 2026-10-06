@@ -47,12 +47,10 @@ export const governance: Catalog = {
   "subpageIndex.title": "Read the fine print.",
 
   // ── Community health ────────────────────────────────────────────────────
-  "sections.health.eyebrow": "Q2 2026 Community Health Report",
+  "sections.health.eyebrow": "Community health report",
   "sections.health.title": "The <em>numbers,</em> honestly.",
-  "sections.health.prose1":
-    "Twelve reports were filed this quarter. All were reviewed within 48 hours. Three resulted in member removal (repeated Code of Care violations after warning). Eight were resolved with direct communication and no formal action.",
-  "sections.health.prose2":
-    "Two moderation appeals were filed. One was upheld. We had made the wrong call and reversed it. We publish this because transparency is how trust gets built.",
+  "sections.health.notPublished":
+    "Community health figures appear here once the governance team publishes the first report.",
 
   "health.stat.activeMembers.label": "Active members",
   "health.stat.retention.label": "Member retention rate",
@@ -86,9 +84,9 @@ export const governance: Catalog = {
   "steps.reportFiled.title": "Report filed",
   "steps.reportFiled.text":
     "Any member can report another member, a gathering, a board post, or any content. Reports are confidential. The reported person is not told who filed the report.",
-  "steps.review.title": "Review within 48 hours",
+  "steps.review.title": "Review by the moderation team",
   "steps.review.text":
-    "The moderation team reviews the report within 48 hours. For urgent safety issues, same-day. The person who filed is updated at each stage.",
+    "The moderation team reviews every report, starting with urgent safety issues.",
   "steps.decision.title": "Decision and communication",
   "steps.decision.text":
     "Possible outcomes: no action (with explanation), direct communication, warning, temporary suspension, permanent removal. The reported person is informed of the outcome but not the reporter.",
@@ -134,7 +132,7 @@ export const governance: Catalog = {
     "A sliding scale for all paid gatherings. No one is excluded for financial circumstances.",
 
   // ── Finances ────────────────────────────────────────────────────────────
-  "sections.finances.eyebrow": "Q2 2026 · Financial transparency",
+  "sections.finances.eyebrow": "Financial transparency",
   "sections.finances.title":
     "What it costs, what comes in, <em>where it goes.</em>",
   "sections.finances.intro":
@@ -159,6 +157,12 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.communityEvents": "community events",
   "sections.finances.noCorporateFunding":
     "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first, and put it to a community vote. See Proposals & votes below.",
+  "sections.finances.eyebrowPeriod": "{period} · Financial transparency",
+  "sections.finances.quarterLabel": "Q{quarter} {year}",
+  "sections.finances.notPublished":
+    "Finance reports appear here once the first quarter is published.",
+  "sections.finances.provenance":
+    "Figures entered by the governance team on {date}.",
 
   // ── Proposals & votes ────────────────────────────────────────────────────
   "sections.proposals.eyebrow": "Proposals & votes",
@@ -269,14 +273,14 @@ export const governance: Catalog = {
   "decisions.slidingScale.lead":
     "May 2026: Sliding scale introduced for gatherings.",
   "decisions.slidingScale.body":
-    "Following a forum discussion by Catarina Vaz, the council agreed to implement a sliding scale for all paid gatherings. 23 members participated.",
+    "Following a forum discussion, the council agreed to implement a sliding scale for all paid gatherings.",
   "decisions.forumLaunched.lead": "April 2026: Forum launched.",
   "decisions.forumLaunched.body":
-    "Following member requests for a place to discuss longer-form topics. Categories and guidelines co-designed with 12 members over three weeks.",
+    "Following member requests for a place to discuss longer-form topics. Categories and guidelines were co-designed with members.",
   "decisions.visibilityDefaults.lead":
     "March 2026: Visibility defaults made more conservative.",
   "decisions.visibilityDefaults.body":
-    'New members now default to "network only" instead of "open", and can open up when comfortable.',
+    'New members now start on "network only" and can open up when comfortable.',
   "decisions.languageToggle.lead": "February 2026: Language toggle added.",
   "decisions.languageToggle.body":
     "PT/EN toggle added to all pages following requests from Portuguese-speaking members.",
@@ -285,12 +289,11 @@ export const governance: Catalog = {
   "sections.raise.eyebrow": "Raise a concern",
   "sections.raise.title": "Something isn't <em>right?</em> Tell us.",
   // PRD-261: the old copy promised a confirmation within 48 hours and an
-  // emailed update. QueerPulse sends no email, and `intake-sla.ts` enforces
-  // three days rather than 48 hours, which is the number the staff queue
-  // reddens on. Both strings now describe what actually happens: a reference
-  // code, and a three-day first look.
+  // emailed update. QueerPulse sends no email. Since 6 Oct 2026 the strings
+  // promise no reply time either (the staff queue still reddens at the
+  // three-day SLA in `intake-sla.ts`): a reference code, and a person reads it.
   "sections.raise.intro":
-    "Use this form to report a member, a piece of content, a platform decision, or a concern about how QueerPulse is run. Every submission is confidential, and we hold ourselves to answering within three days.",
+    "Use this form to report a member, a piece of content, a platform decision, or a concern about how QueerPulse is run. Every submission is confidential, and a member of the governance team reads each one.",
   "sections.raise.cardTitle": "Submit a concern",
   "sections.raise.cardText":
     "Your identity stays confidential. QueerPulse sends no email, so when you submit this you get a reference code instead: keep it, and you can check what happened to your concern at any time.",
@@ -520,7 +523,7 @@ export const governance: Catalog = {
     "Save this code somewhere you can get to it. We keep no copy you can be given back, and QueerPulse sends no email, so this is the only way to look your concern up later.",
   "concernStatus.submitted.checkCta": "Check on this concern",
   "concernStatus.submitted.whatHappensNext":
-    "A member of the governance team reads every concern. We hold ourselves to three days for a first look. Come back with your code to see when someone picked it up and how it ended.",
+    "A member of the governance team reads every concern. Come back with your code to see when someone picked it up and how it ended.",
   "concernStatus.submitted.anotherCta": "Raise another concern",
 
   "concernStatus.meta.title": "Check a concern | QueerPulse",
@@ -538,7 +541,7 @@ export const governance: Catalog = {
 
   "concernStatus.received.title": "We have it",
   "concernStatus.received.body":
-    "Your concern is recorded and waiting. Nobody has opened it yet. We hold ourselves to three days for a first look, so check back with this code.",
+    "Your concern is recorded and waiting. Nobody has opened it yet. Check back with this code to see when someone picks it up.",
   "concernStatus.reviewing.title": "Someone is looking at it",
   "concernStatus.reviewing.body":
     "A member of the governance team has picked your concern up and is working on it. Come back with this code to see how it ends.",

@@ -4,10 +4,21 @@ import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { isAccountRestricted } from "../../shared/api/errorMessage";
 import { useSubmitGroupJoinRequest } from "./api/useSubmitGroupJoinRequest";
+import {
+  groupJoinDuplicateStandingFrom,
+  type GroupJoinDuplicateStanding,
+} from "./api/housingGroups.api";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import type { VettedGroup } from "./housingGroups.data";
 import styles from "./ApplicationModals.module.css";
+
+/** What a member who already asked is told (ENG-472): wait, or you're in. */
+const DUPLICATE_REQUEST_KEY: Record<GroupJoinDuplicateStanding, string> = {
+  pending: "economy:joinGroup.alreadyPending",
+  member: "economy:joinGroup.alreadyMember",
+};
 
 export function JoinGroupModal({
   group,
@@ -51,6 +62,20 @@ export function JoinGroupModal({
       {
         onError: (error) => {
           if (handlePledgeError(error, handleSubmit)) return;
+          // A second request is an answer to give, so the modal closes on it:
+          // sending the same form again cannot change what it says. The hook
+          // has already refetched the group and the caller's applications, so
+          // the page behind it shows the same standing the toast names.
+          const duplicateStanding = groupJoinDuplicateStandingFrom(error);
+          if (duplicateStanding) {
+            showToast(t(DUPLICATE_REQUEST_KEY[duplicateStanding]), "info");
+            onClose();
+            return;
+          }
+          if (isAccountRestricted(error)) {
+            showToast(t("shared:apiError.accountRestricted"), "error");
+            return;
+          }
           showToast(t("economy:joinGroup.error"), "error");
         },
       },

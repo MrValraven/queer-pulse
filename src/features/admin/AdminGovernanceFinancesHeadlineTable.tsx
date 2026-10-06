@@ -30,10 +30,13 @@ export function HeadlineTable({
   const { t } = useTranslation();
   const fmt = useFormat();
   const formatCurrent = (key: ScalarKey): string => {
+    const value = latest[key];
+    // A figure nobody entered yet has no current value to show.
+    if (value === null) return "";
     const unit = SCALAR_UNIT[key];
-    if (unit === "currency") return fmt.currency(latest[key], "EUR");
-    if (unit === "percent") return `${fmt.number(latest[key])}%`;
-    return fmt.number(latest[key]);
+    if (unit === "currency") return fmt.currency(value, "EUR");
+    if (unit === "percent") return `${fmt.number(value)}%`;
+    return fmt.number(value);
   };
   const columns = {
     figure: t("admin:governance.finances.edit.col.figure"),

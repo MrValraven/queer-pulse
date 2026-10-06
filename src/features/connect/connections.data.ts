@@ -110,7 +110,14 @@ export const CONNECTION_META: Record<string, ConnectionMeta> = {
       '"Hi Tiago, we met briefly at the harm-reduction workshop. I\'d love to stay in touch and compare notes sometime."',
   },
   "mariana-costa": { pron: "she/her", mutuals: 2, sentAgo: "yesterday" },
-  "bilal-kaya": { pron: "he/him", mutuals: 3, sentAgo: "3 days ago" },
+  "bilal-kaya": {
+    pron: "he/him",
+    mutuals: 3,
+    sentAgo: "3 days ago",
+    requestMessage:
+      "\"Hi Tiago, I'm doing the sound for a small queer theatre piece in Marvila and a friend said we should talk. I think there's something we could make together. Fancy a coffee and a listen to what I have so far?\"",
+    requestReason: "collaborate",
+  },
   "ines-fonseca": { pron: "she/her", mutuals: 0, sentAgo: "5 days ago" },
   // — sent —
   // PRD-344: one read, one unread, so the demo shows both request-read states.

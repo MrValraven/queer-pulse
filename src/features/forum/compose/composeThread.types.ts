@@ -1,4 +1,10 @@
 import type { TranslateOptions } from "../../../shared/i18n/types";
+import type {
+  AskBeneficiary,
+  AskPurpose,
+  FundingEligibility,
+  FundingScope,
+} from "../funding/funding.types";
 
 // ── The full-page composer's contract ────────────────────────────────────────
 // `/forum/new` replaces `ComposeThreadModal`, and it carries far more than the
@@ -15,9 +21,10 @@ import type { TranslateOptions } from "../../../shared/i18n/types";
 /**
  * What the member says they are writing. Chosen first, because it changes the
  * title placeholder, the body placeholder, the outline scaffold and (for two
- * of the four) the default category.
+ * of the six) the default category.
  */
-export type PostKind = "question" | "guide" | "proposal" | "share";
+export type PostKind =
+  "question" | "guide" | "proposal" | "share" | "call" | "ask";
 
 /**
  * The language the thread is written in. `auto` lets the page detect it from
@@ -70,6 +77,31 @@ export interface ComposePhoto {
   alt: string;
 }
 
+/**
+ * An open call's or a fundraiser's details while they are being typed. One
+ * shape for both kinds, so switching between Call and Fundraiser keeps the
+ * link. Amounts stay strings until publish: a half-typed "1 5" is a state the
+ * field must hold.
+ */
+export interface ComposeFunding {
+  linkUrl: string;
+  funderName: string;
+  /** Whole euros as typed; "" is "the call does not say". */
+  amountMin: string;
+  amountMax: string;
+  /** "yyyy-mm-ddThh:mm" read as Lisbon time, or "" while unset. */
+  deadlineLocal: string;
+  /** Applications are open on a rolling basis: no deadline is sent. */
+  isRolling: boolean;
+  eligibility: FundingEligibility[];
+  scope: FundingScope | null;
+  goalAmount: string;
+  askPurpose: AskPurpose | null;
+  beneficiary: AskBeneficiary | null;
+  /** "yyyy-mm-dd", the fundraiser's last day in Lisbon, or "" for none. */
+  endsOnLocal: string;
+}
+
 /** Everything the composer holds. One object, so a draft save is one snapshot. */
 export interface ComposeThreadState {
   /** The chosen kind, or null before the member has picked one. */
@@ -105,6 +137,9 @@ export interface ComposeThreadState {
    *  only for the categories in `NEIGHBOURHOOD_CATEGORIES`. */
   neighbourhood: string | null;
   closeAfter: CloseAfter;
+  /** Call or fundraiser details. Kept while the member tries another kind or
+   *  category, and sent only while the kind is `call` or `ask`. */
+  funding: ComposeFunding | null;
 }
 
 /** The empty composer. Exported so a reset and a first mount agree exactly. */
@@ -125,6 +160,7 @@ export const EMPTY_COMPOSE_THREAD_STATE: ComposeThreadState = {
   language: "auto",
   neighbourhood: null,
   closeAfter: "never",
+  funding: null,
 };
 
 /** Hard cap on the title, matching the prototype's `maxlength`. */
@@ -132,6 +168,15 @@ export const COMPOSE_TITLE_MAX_LENGTH = 120;
 
 /** How many tags one thread may carry. */
 export const COMPOSE_TAG_LIMIT = 5;
+
+/** The server puts `open-call` first on every call and keeps four member
+ *  tags after it, so a call's author picks at most four. */
+export const COMPOSE_CALL_MEMBER_TAG_LIMIT = COMPOSE_TAG_LIMIT - 1;
+
+/** How many tags a member may pick for a thread of this kind. */
+export function memberTagLimitFor(kind: string | null | undefined): number {
+  return kind === "call" ? COMPOSE_CALL_MEMBER_TAG_LIMIT : COMPOSE_TAG_LIMIT;
+}
 
 /** How many photos one opening post may carry. */
 export const COMPOSE_PHOTO_LIMIT = 4;
@@ -263,7 +308,15 @@ export type ComposeBlockerId =
   | "duplicateTitle"
   | "unacknowledgedDoxxing"
   | "pollNeedsTwoOptions"
-  | "tooManyPhotos";
+  | "tooManyPhotos"
+  | "fundingIncomplete"
+  | "fundingLinkInvalid"
+  | "fundingAmountOrder"
+  | "fundingDateOutOfRange"
+  | "fundingDuplicate"
+  | "fundingHostNotAllowed"
+  | "fundingPaymentDetails"
+  | "fundingVerification";
 
 /**
  * One reason the Publish button stays disabled, in the order the footer should

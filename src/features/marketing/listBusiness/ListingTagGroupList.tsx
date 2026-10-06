@@ -4,7 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   listingTagGroupLabel,
   listingTagLabel,
-  type ListingTagGroupShape,
+  type ListingTagAudienceGroup,
 } from "./listingTags.data";
 import pageStyles from "./ListBusinessPage.module.css";
 import styles from "./ListingTagPicker.module.css";
@@ -13,7 +13,9 @@ interface ListingTagGroupListProps {
   /** The search box's `aria-controls` target. */
   id: string;
   labelledBy: string;
-  groups: readonly ListingTagGroupShape[];
+  groups: readonly ListingTagAudienceGroup[];
+  /** Online listings read the online heading where a group has one. */
+  isOnline: boolean;
   selectedTags: readonly string[];
   isAtCap: boolean;
   /** The trimmed search text, for the no-match line. */
@@ -30,6 +32,7 @@ export function ListingTagGroupList({
   id,
   labelledBy,
   groups,
+  isOnline,
   selectedTags,
   isAtCap,
   query,
@@ -40,10 +43,14 @@ export function ListingTagGroupList({
 
   return (
     <div id={id} role="group" aria-labelledby={labelledBy}>
+      {/* With a blank query an empty list means the audience is offered no
+          tags at all (an older server without `onlineTags`), so say nothing. */}
       {groups.length === 0 ? (
-        <p className={styles.noMatch}>
-          {t("marketing:listBusiness.step2.tagsNoMatch", { query })}
-        </p>
+        query.length > 0 && (
+          <p className={styles.noMatch}>
+            {t("marketing:listBusiness.step2.tagsNoMatch", { query })}
+          </p>
+        )
       ) : (
         <div className={styles.groups}>
           {groups.map((group) => {
@@ -56,7 +63,7 @@ export function ListingTagGroupList({
                 className={styles.group}
               >
                 <span id={headingId} className={styles.groupHeading}>
-                  {listingTagGroupLabel(t, group.id)}
+                  {listingTagGroupLabel(t, group.id, isOnline)}
                 </span>
                 <div className={styles.chipWrap}>
                   {group.tags.map((tag) => {

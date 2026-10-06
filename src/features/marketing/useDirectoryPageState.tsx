@@ -53,12 +53,17 @@ export function useDirectoryPageState() {
     places,
     total: serverTotal,
     isLoading: placesLoading,
-    isError: hasPlacesError,
+    isError: isPlacesError,
+    isFetchNextPageError,
     refetch: refetchPlaces,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useLocalPlaces({ query, safe, access, owned });
+  // ENG-501: a failed next page also sets `isError`. The full error state is
+  // for a read that loaded nothing; once places are on screen they stay, and
+  // the grid's footer reports the failed page and retries it.
+  const hasPlacesError = isPlacesError && places.length === 0;
   // Opt-in, memory-only, never sent anywhere. Held here so one position serves
   // both the ordering and the walking times, and so turning it off is a single
   // state change that hands the previous ordering straight back.
@@ -100,7 +105,7 @@ export function useDirectoryPageState() {
   // goes unpickable only once the whole set is in: nothing loading (a server
   // filter change refetches from scratch, with no placeholder data), no error,
   // and no further page to fetch.
-  const isLoadedSetComplete = !placesLoading && !hasPlacesError && !hasNextPage;
+  const isLoadedSetComplete = !placesLoading && !isPlacesError && !hasNextPage;
   // `useSimulatedLoad` is a DEMO device (ENG-172). The demo registry resolves
   // in the same tick, so without a short fake beat the grid pops in with no
   // loading state at all. Live mode has a real one in `placesLoading`, and the
@@ -146,16 +151,24 @@ export function useDirectoryPageState() {
 
   // Map view has no scroll-driven "load more" of its own (unlike the list's
   // incremental reveal in `DirectoryListView`), and wants every matching pin
-  // on screen — so keep pulling pages while the map tab is active. The Online
+  // on screen, so it keeps pulling pages while the map tab is active. The Online
   // tab does the same: online-only businesses are scattered across every page
-  // of the registry, so its pool is only whole once every page is in. This
-  // terminates naturally once the server reports no more pages (a curated,
-  // bounded city registry), never an unbounded fetch loop.
+  // of the registry, so its pool is only whole once every page is in. The pull
+  // ends once the server reports its last page (a curated, bounded city
+  // registry). A failed page pauses it until the member presses Retry, so an
+  // outage is asked once.
   useEffect(() => {
     if (view === "list") return;
-    if (!hasNextPage || isFetchingNextPage) return;
+    if (!hasNextPage || isFetchingNextPage || isFetchNextPageError) return;
     fetchNextPage();
-  }, [view, hasNextPage, isFetchingNextPage, fetchNextPage, places.length]);
+  }, [
+    view,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetchNextPageError,
+    fetchNextPage,
+    places.length,
+  ]);
   const mapFallback = useMapFallbackShownAt(view === "map");
 
   return {
@@ -168,6 +181,7 @@ export function useDirectoryPageState() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     myLocation,
     isMobile,
     // No "use my location" on the Online tab: there is nothing to walk to.

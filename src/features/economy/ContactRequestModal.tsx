@@ -7,10 +7,11 @@ import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { ScamSafetyBanner } from "./ScamSafetyBanner";
 import { useSubmitFlow } from "./modalFlow";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
+import { useStepUpVerificationGate } from "./useStepUpVerificationGate";
 import styles from "./ApplicationModals.module.css";
 
 interface ContactRequestModalProps {
-  /** Who the request goes to — used in the heading and success copy. */
+  /** Who the request goes to, used in the heading and success copy. */
   toName: string;
   /** Optional small eyebrow above the title (e.g. "Housing · Introduction"). */
   eyebrow?: string;
@@ -70,6 +71,7 @@ export function ContactRequestModal({
   const { showToast } = useToast();
   const [message, setMessage] = useState(preset);
   const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
+  const { handleStepUpError, stepUpGate } = useStepUpVerificationGate();
   const timerFlow = useSubmitFlow();
   const [customSending, setCustomSending] = useState(false);
   const [customDone, setCustomDone] = useState(false);
@@ -79,27 +81,34 @@ export function ContactRequestModal({
   const sending = onSend ? customSending : timerFlow.sending;
   const done = onSend ? customDone : timerFlow.done;
 
-  const submit = async () => {
-    if (!onSend) {
-      timerFlow.submit();
-      return;
-    }
+  const sendMessage = async (body: string) => {
+    if (!onSend) return;
     setCustomSending(true);
     try {
-      await onSend(message.trim());
+      await onSend(body);
       setCustomDone(true);
     } catch (error) {
-      // A pledge gate isn't a send failure — open the affirming-pledge prompt so
-      // the member can accept and retry, rather than a dead-end error toast.
-      if (!handlePledgeError(error, () => void submit())) {
-        showToast(t("economy:contactRequest.sendError"), "error");
-      }
+      // The affirming pledge and the phone step-up each open their own prompt;
+      // passing it sends the same note again.
+      const retry = () => void sendMessage(body);
+      if (handlePledgeError(error, retry)) return;
+      if (handleStepUpError(error, retry)) return;
+      showToast(t("economy:contactRequest.sendError"), "error");
     } finally {
       setCustomSending(false);
     }
   };
 
-  if (pledgeGate) return pledgeGate;
+  const submit = async () => {
+    if (!onSend) {
+      timerFlow.submit();
+      return;
+    }
+    await sendMessage(message.trim());
+  };
+
+  const gate = pledgeGate ?? stepUpGate;
+  if (gate) return gate;
 
   return (
     <ModalShell onClose={onClose} success={done}>

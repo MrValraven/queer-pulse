@@ -44,7 +44,11 @@ const GuidelinesPage = lazyNamed(
   () => import("./GuidelinesPage"),
   "GuidelinesPage",
 );
-const AboutPage = lazyNamed(() => import("./AboutPage"), "AboutPage");
+const AboutPage = lazyNamed(
+  () => import("./AboutPage"),
+  "AboutPage",
+  routes.about,
+);
 const ContactPage = lazyNamed(() => import("./ContactPage"), "ContactPage");
 const HelpPage = lazyNamed(() => import("./HelpPage"), "HelpPage");
 const VolunteerPage = lazyNamed(

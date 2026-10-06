@@ -65,6 +65,7 @@ export function useRoster(slug: string | undefined): RosterResult {
       fetchNextPage: () => {},
       isFetchingNextPage: false,
       isError: false,
+      isFetchNextPageError: false,
       refetch: () => {},
     };
   }
@@ -77,6 +78,8 @@ export function useRoster(slug: string | undefined): RosterResult {
     // then backfilled with the organiser alone — a community that looks like
     // it has one member (DES-22).
     isError: query.isError,
+    // ENG-501: also sets `isError`, so the Members tab tells the two apart.
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
   };
 }

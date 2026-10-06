@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import {
   Avatar,
-  Button,
   LoadErrorState,
+  LoadMoreFooter,
   SearchInput,
 } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
@@ -63,10 +63,13 @@ export function RosterTab({
     );
   }, [roster, q]);
 
-  // A failed roster read reaches this tab as the organiser alone (the detail
-  // page's fallback), which reads as a community of one. Say the list did not
-  // load instead (DES-22).
-  if (paging.isError) {
+  // A failed first roster read reaches this tab as an empty roster, which
+  // would read as a community with no members. Say the list did not load
+  // (DES-22). ENG-501: react-query also sets `isError` when only
+  // the next page failed, so the panel is for a roster with nothing loaded;
+  // loaded members stay and the footer below retries the page that failed.
+  const hasNothingLoadedError = Boolean(paging.isError) && roster.length === 0;
+  if (hasNothingLoadedError) {
     return <LoadErrorState onRetry={paging.refetch} />;
   }
 
@@ -162,18 +165,15 @@ export function RosterTab({
         </p>
       )}
       {paging.hasNextPage && (
-        <div className={styles.loadMoreRoster}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={paging.isFetchingNextPage}
-            onClick={paging.fetchNextPage}
-          >
-            {paging.isFetchingNextPage
-              ? t("communities:detail.roster.loadingMore")
-              : t("communities:detail.roster.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMoreRoster}
+          isFetchingNextPage={paging.isFetchingNextPage}
+          isFetchNextPageError={Boolean(paging.isFetchNextPageError)}
+          onLoadMore={paging.fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("communities:detail.roster.loadMoreCta")}
+          loadingLabel={t("communities:detail.roster.loadingMore")}
+        />
       )}
     </div>
   );

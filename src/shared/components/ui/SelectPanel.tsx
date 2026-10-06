@@ -335,7 +335,11 @@ export function SelectPanel({
         break;
       }
       case "Escape":
+        // This Escape belongs to the open panel. Stopping it here keeps it
+        // from reaching a surrounding dialog's document listener (useDismiss),
+        // which would otherwise close the whole modal and lose its draft.
         event.preventDefault();
+        event.stopPropagation();
         onClose();
         break;
       default:

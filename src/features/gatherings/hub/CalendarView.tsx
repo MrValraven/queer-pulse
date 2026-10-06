@@ -28,6 +28,7 @@ export function CalendarView({
   now,
   hasMore = false,
   isLoadingMore = false,
+  isLoadMoreError = false,
   onLoadMore,
 }: {
   events: CalendarEvent[];
@@ -35,6 +36,9 @@ export function CalendarView({
   /** Another page of upcoming gatherings is available server-side. */
   hasMore?: boolean;
   isLoadingMore?: boolean;
+  /** The latest next page failed (ENG-501). The loaded months stay; the
+   *  upcoming list's footer says so and retries that page. */
+  isLoadMoreError?: boolean;
   onLoadMore?: () => void;
 }) {
   const { t } = useTranslation();
@@ -59,12 +63,18 @@ export function CalendarView({
     59,
     59,
   ).getTime();
+  // A failed page holds the walk until the footer's Retry succeeds (ENG-501):
+  // the failure leaves `loadedThrough` where it was, so without this guard
+  // the effect below would ask again on every failure, forever.
   const needsMore =
-    hasMore && !isLoadingMore && viewedMonthEnd >= loadedThrough;
+    hasMore &&
+    !isLoadingMore &&
+    !isLoadMoreError &&
+    viewedMonthEnd >= loadedThrough;
   useEffect(() => {
     if (needsMore) onLoadMore?.();
     // `onLoadMore` is a fresh closure each render; `needsMore` is the real
-    // trigger and already folds in `hasMore`/`isLoadingMore`.
+    // trigger and already folds in `hasMore`/`isLoadingMore`/`isLoadMoreError`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [needsMore]);
 
@@ -134,6 +144,7 @@ export function CalendarView({
               upcoming={upcoming}
               hasMore={hasMore}
               isLoadingMore={isLoadingMore}
+              isLoadMoreError={isLoadMoreError}
               onLoadMore={onLoadMore}
             />
           </div>

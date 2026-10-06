@@ -5,6 +5,7 @@ import {
   type ComposeThreadState,
 } from "./composeThread.types";
 import { hasAddressWording } from "./composeNudges";
+import { fundingBlockers } from "./composeFunding";
 
 // ── What stops a publish ────────────────────────────────────────────────────
 // A nudge is advice the member may ignore. A blocker is not: publishing stays
@@ -26,6 +27,11 @@ export interface ComposeBlockerInput {
   duplicateTitle?: string | null;
   /** Has the member ticked the doxxing nudge's acknowledgement? */
   isDoxxingAcknowledged: boolean;
+  /** The duplicate-link lookup found an open call and the member has not yet
+   *  chosen "Post anyway". */
+  isFundingDuplicateUnconfirmed?: boolean;
+  /** A fundraiser from a member below phone verification. */
+  isAskVerificationMissing?: boolean;
 }
 
 export function composeBlockers({
@@ -33,6 +39,8 @@ export function composeBlockers({
   isDuplicateTitle,
   duplicateTitle,
   isDoxxingAcknowledged,
+  isFundingDuplicateUnconfirmed = false,
+  isAskVerificationMissing = false,
 }: ComposeBlockerInput): ComposeBlocker[] {
   const blockers: ComposeBlocker[] = [];
 
@@ -71,6 +79,17 @@ export function composeBlockers({
       values: { count: COMPOSE_PHOTO_LIMIT },
     });
   }
+
+  blockers.push(
+    ...fundingBlockers({
+      kind: state.kind,
+      funding: state.funding,
+      title: state.title,
+      body: state.body,
+      isDuplicateUnconfirmed: isFundingDuplicateUnconfirmed,
+      isAskVerificationMissing,
+    }),
+  );
 
   return blockers;
 }

@@ -1,9 +1,9 @@
 import type { IconType } from "react-icons";
 import { FiHelpCircle, FiBookOpen, FiShare2 } from "react-icons/fi";
-import { LuMegaphone } from "react-icons/lu";
+import { LuBadgeEuro, LuHeartHandshake, LuMegaphone } from "react-icons/lu";
 import type { PostKind } from "./composeThread.types";
 
-// ── The four kinds of post ───────────────────────────────────────────────────
+// ── The six kinds of post ────────────────────────────────────────────────────
 // Picking a kind is the first thing the page asks for, because it changes four
 // things at once: what the title field asks for, what the body field asks for,
 // the tip under the chips, and the outline the "Start from an outline" pill
@@ -71,6 +71,24 @@ export const COMPOSE_KINDS: readonly ComposeKind[] = [
     // be in the way.
     scaffoldKey: null,
   },
+  {
+    id: "call",
+    icon: LuBadgeEuro,
+    nameKey: "forum:composePage.kind.call.name",
+    titlePlaceholderKey: "forum:composePage.kind.call.titlePlaceholder",
+    bodyPlaceholderKey: "forum:composePage.kind.call.bodyPlaceholder",
+    tipKey: "forum:composePage.kind.call.tip",
+    scaffoldKey: "forum:composePage.kind.call.scaffold",
+  },
+  {
+    id: "ask",
+    icon: LuHeartHandshake,
+    nameKey: "forum:composePage.kind.ask.name",
+    titlePlaceholderKey: "forum:composePage.kind.ask.titlePlaceholder",
+    bodyPlaceholderKey: "forum:composePage.kind.ask.bodyPlaceholder",
+    tipKey: "forum:composePage.kind.ask.tip",
+    scaffoldKey: "forum:composePage.kind.ask.scaffold",
+  },
 ];
 
 /** The kind's whole definition, or undefined before one is picked. */
@@ -83,12 +101,16 @@ export function composeKindById(
 
 /**
  * The category a kind files itself under, applied only while the member has
- * chosen none. Two of the four have an obvious home and the other two do not,
- * so this is a partial map rather than a full one.
+ * chosen none. Four of the six have an obvious home and the other two do not,
+ * so this is a partial map rather than a full one. For `call` and `ask` the
+ * home is mandatory and `useComposeThreadState` applies it whatever the member
+ * chose.
  */
 export const KIND_DEFAULT_CATEGORY: Partial<Record<PostKind, string>> = {
   guide: "guides",
   proposal: "activism",
+  call: "funding",
+  ask: "funding",
 };
 
 /** The placeholders and tip shown before a kind is picked. */

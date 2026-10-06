@@ -21,7 +21,10 @@ import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import type { ReportDTO } from "../safety/api/reports.api";
-import type { ReportSubjectType } from "../safety/reportReasons";
+import {
+  withFundingScamFor,
+  type ReportSubjectType,
+} from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./FeedPage.module.css";
 
@@ -448,7 +451,9 @@ export function ReportModal({
   const describeReportError = useReportSubmissionError();
   // Server-owned taxonomy, falling back to the local one instantly and
   // silently, so the reason list is always on screen at once.
-  const reasons = useReportReasons(subjectType);
+  // A feed post is never a Funding & Grants thread, so `funding_scam` stays
+  // off this list.
+  const reasons = withFundingScamFor(useReportReasons(subjectType), false);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {

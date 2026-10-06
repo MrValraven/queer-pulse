@@ -32,7 +32,10 @@ import styles from "./ModToolsShell.module.css";
 
 type RosterPaging = Pick<
   PulsePaging,
-  "hasNextPage" | "fetchNextPage" | "isFetchingNextPage"
+  | "hasNextPage"
+  | "fetchNextPage"
+  | "isFetchingNextPage"
+  | "isFetchNextPageError"
 >;
 
 /**

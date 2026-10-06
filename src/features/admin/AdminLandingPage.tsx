@@ -10,14 +10,20 @@ import { AdminLandingPreview } from "./AdminLandingPreview";
 import type { LandingSection } from "./api/landingFeatures.api";
 import styles from "./AdminLandingPage.module.css";
 
-const SECTIONS: LandingSection[] = ["member", "community", "changemaker"];
+const SECTIONS: LandingSection[] = [
+  "member",
+  "community",
+  "changemaker",
+  "gathering",
+  "story",
+];
 
 /**
  * Admin-curated live landing page (`/admin/landing`) — lets an admin choose
- * and order the members, communities and changemakers signed-out visitors
- * see on the homepage. Three tabs, one per section; each tab pairs a search
- * picker (add someone not yet featured) with the ordered, currently-featured
- * list (reorder, toggle active, edit copy, remove).
+ * and order the members, communities, changemakers, gatherings and stories
+ * signed-out visitors see on the homepage. Five tabs, one per section; each
+ * tab pairs a search picker (add someone not yet featured) with the ordered,
+ * currently-featured list (reorder, toggle active, edit copy, remove).
  */
 export function AdminLandingPage() {
   const { t } = useTranslation();

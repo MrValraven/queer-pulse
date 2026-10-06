@@ -747,6 +747,9 @@
   justify-content: center;
   margin: 8px 0 4px;
 }
+.loadMoreThreads {
+  margin-top: 12px;
+}
 .replyBar {
   display: flex;
   gap: 10px;

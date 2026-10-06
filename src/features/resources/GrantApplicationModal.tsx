@@ -142,7 +142,11 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
       >
         <div className={styles.sheetHead}>
           <div className={styles.sheetTitle}>
-            {t("resources:microGrants.apply.modalTitle")}
+            {t(
+              demoMode
+                ? "resources:microGrants.apply.modalTitle"
+                : "resources:microGrants.apply.modalTitleLive",
+            )}
           </div>
           <button
             type="button"

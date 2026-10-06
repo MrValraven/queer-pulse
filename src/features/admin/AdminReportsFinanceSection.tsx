@@ -18,6 +18,14 @@ export function AdminReportsFinanceSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { latest, history, loading } = useAdminGovernanceFinances();
+  // A figure nobody has entered yet (a freshly opened quarter) reads as "not
+  // entered", so staff never mistake it for a real €0 (PRD-447).
+  const formatFigure = (value: number | null | undefined): string =>
+    value == null ? t("admin:reports.finance.notEntered") : fmt.currency(value);
+  const isSurplusEntered =
+    latest != null &&
+    latest.incomeTotal !== null &&
+    latest.expenseTotal !== null;
 
   return (
     <Card className={styles.card}>
@@ -43,17 +51,19 @@ export function AdminReportsFinanceSection() {
               </span>
               <span>
                 {t("admin:reports.finance.income", {
-                  amount: fmt.currency(latest.incomeTotal),
+                  amount: formatFigure(latest.incomeTotal),
                 })}
               </span>
               <span>
                 {t("admin:reports.finance.expense", {
-                  amount: fmt.currency(latest.expenseTotal),
+                  amount: formatFigure(latest.expenseTotal),
                 })}
               </span>
               <span>
                 {t("admin:reports.finance.surplus", {
-                  amount: fmt.currency(latest.surplus),
+                  amount: formatFigure(
+                    isSurplusEntered ? latest.surplus : null,
+                  ),
                 })}
               </span>
             </div>

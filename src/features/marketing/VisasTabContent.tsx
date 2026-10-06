@@ -30,7 +30,11 @@ export function VisasTabContent({
             <div className={styles.infoCard} key={card.titleKey}>
               <div className={styles.icEyebrow}>{t(card.eyebrowKey)}</div>
               <div className={styles.icTitle}>{t(card.titleKey)}</div>
-              <div className={styles.icBody}>{t(card.bodyKey)}</div>
+              <div className={styles.icBody}>
+                {[card.bodyKey, ...(card.moreBodyKeys ?? [])].map((key) => (
+                  <p key={key}>{t(key)}</p>
+                ))}
+              </div>
               {card.tag && (
                 <span
                   className={[

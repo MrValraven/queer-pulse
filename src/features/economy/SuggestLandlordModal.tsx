@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CreateLandlordBody } from "./api/landlord.api";
 import { useSuggestLandlord } from "./api/useSuggestLandlord";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import styles from "./ApplicationModals.module.css";
 
 function splitLines(value: string): string[] {
@@ -26,24 +27,35 @@ export function SuggestLandlordModal({ onClose }: { onClose: () => void }) {
   const [areas, setAreas] = useState("");
   const [done, setDone] = useState(false);
   const suggestLandlord = useSuggestLandlord();
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const sending = suggestLandlord.isPending;
   const valid = name.trim().length > 1;
 
+  // The board asks for the affirming pledge before a suggestion; taking it
+  // sends the same suggestion again.
+  const submitSuggestion = (body: CreateLandlordBody) => {
+    suggestLandlord.mutate(body, {
+      onSuccess: () => setDone(true),
+      onError: (error) => {
+        if (handlePledgeError(error, () => submitSuggestion(body))) return;
+        showToast(t("economy:suggestLandlord.error"), "error");
+      },
+    });
+  };
+
   const handleSubmit = () => {
     if (!valid) return;
-    const body: CreateLandlordBody = {
+    submitSuggestion({
       name: name.trim(),
       hood: hood.trim() || undefined,
       tagline: tagline.trim() || undefined,
       note: note.trim() || undefined,
       about: about.trim() ? [about.trim()] : undefined,
       areas: splitLines(areas),
-    };
-    suggestLandlord.mutate(body, {
-      onSuccess: () => setDone(true),
-      onError: () => showToast(t("economy:suggestLandlord.error"), "error"),
     });
   };
+
+  if (pledgeGate) return pledgeGate;
 
   return (
     <ModalShell

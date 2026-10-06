@@ -9,6 +9,7 @@ import { PostOpportunityRichFields } from "./PostOpportunityRichFields";
 import { PostOpportunityWhyFields } from "./PostOpportunityWhyFields";
 import { POST_TIPS } from "./postVolunteerOpportunity.data";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
+import type { EditedOpportunityState } from "./editedOpportunityHandoff";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
 /**
@@ -54,8 +55,9 @@ export function PostVolunteerOpportunityForm({
   saveAndCloseLabel?: string;
   /** Which button's save is pending, so only that one says "Saving…". */
   isSubmittingClose?: boolean;
-  /** Router state the Cancel link carries back to the detail page. */
-  cancelState?: unknown;
+  /** Router state the Cancel link carries back to the detail page. A plain
+   *  marker, since `history.pushState` clones it (`editedOpportunityHandoff`). */
+  cancelState?: EditedOpportunityState;
 }) {
   const { t } = useTranslation();
   const formRef = useRef<HTMLFormElement>(null);

@@ -1,13 +1,21 @@
 import { useMemo } from "react";
 import { LegalDoc } from "./LegalDoc";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { TERMS_TOC, buildTermsSections } from "./TermsPage.data";
 
+/** When the terms first took effect and when it last changed. Built
+ *  from local date parts so the meta line never shows a day early west of
+ *  Greenwich, then formatted in the reader's language. */
+const EFFECTIVE_ON = new Date(2023, 1, 1);
+const LAST_UPDATED_ON = new Date(2026, 5, 1);
+
 export function TermsPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const sections = useMemo(() => buildTermsSections(t), [t]);
   const toc = useMemo(
     () =>
@@ -38,8 +46,12 @@ export function TermsPage() {
           />
         }
         meta={[
-          t("marketing:terms.meta.effective", { date: "1 February 2023" }),
-          t("marketing:terms.meta.lastUpdated", { date: "1 June 2026" }),
+          t("marketing:terms.meta.effective", {
+            date: fmt.date(EFFECTIVE_ON),
+          }),
+          t("marketing:terms.meta.lastUpdated", {
+            date: fmt.date(LAST_UPDATED_ON),
+          }),
           t("marketing:terms.meta.version", { version: "2.4" }),
         ]}
         plain={{

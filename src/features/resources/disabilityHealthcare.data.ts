@@ -4,8 +4,9 @@ export interface NavStep {
   bodyKey: string;
 }
 
-// Attributed peer quotes (a member's own words) — stay English per the
-// scope rule, same precedent as therapist bios. Not routed through i18n.
+// Illustrative peer tips for DEMO MODE ONLY (PRD-451): the names are
+// invented, so live mode renders neither the tips nor their section.
+// Content, stays English.
 export interface Tip {
   text: string;
   who: string;

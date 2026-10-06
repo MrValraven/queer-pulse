@@ -692,6 +692,16 @@ export const marketing: Catalog = {
   "dsar.toast.submitted": "Request submitted: reference {ref}",
   "dsar.toast.submitError":
     "We couldn't record that request. Nothing was sent. Mind trying again?",
+  "dsar.meta.title": "Request your data: QueerPulse data rights under GDPR",
+  "dsar.meta.description":
+    "Ask QueerPulse for a copy of your data, a correction, its deletion, or an objection to how it's used, under GDPR and at no cost.",
+  "dsar.signedOut.title": "Sign in to <em>file a request.</em>",
+  "dsar.signedOut.body":
+    "A request is filed against the account you're signed in to, so we know whose data it covers. Sign in and you'll come straight back to this page.",
+  "dsar.signedOut.signInCta": "Sign in",
+  "dsar.signedOut.noAccount":
+    "<b>No account with us?</b> If you asked for an invite, wrote to us, or used to be a member, send your request through the Contact form and tell us the email you used.",
+  "dsar.signedOut.contactCta": "Write to us about your data",
 
   // ── Community Guidelines ──────────────────────────────────────────────
   "guidelines.meta.title": "QueerPulse Community Guidelines",
@@ -1405,11 +1415,11 @@ export const marketing: Catalog = {
     "Three founding members are available for press comment. Quote them on their stated topics; don't paraphrase. <em>Other members are not available without explicit consent</em>. Please don't approach members directly through the platform.",
   "pressKit.facts.section.title": "Quick <em>facts</em> · as of {date}",
   "pressKit.facts.section.lead":
-    "Sourced from the 2025 transparency report. <em>Please link to the transparency page when citing.</em>",
+    "Counted live from the platform. <em>Please link to the transparency page when citing.</em>",
   "pressKit.facts.founded": "Founded · Lisbon",
-  "pressKit.facts.activeMembers": "Active members at year-end 2025",
+  "pressKit.facts.activeMembers": "Active members today",
   "pressKit.facts.communities": "Communities on the platform",
-  "pressKit.facts.gatherings": "Gatherings held in 2025",
+  "pressKit.facts.gatherings": "Gatherings held so far",
   "pressKit.facts.safeSpaces": "Verified safe spaces in Lisbon",
   "pressKit.facts.magazineIssues": "Magazine issues to date",
   "pressKit.coverage.section.title": "Recent <em>coverage</em>",
@@ -1585,7 +1595,7 @@ export const marketing: Catalog = {
   "listBusiness.step2.tagsAvailableLabel": "Choose from what's available",
   "listBusiness.step2.tagsChosenCount": "{count} of 6 chosen",
   "listBusiness.step2.tagsNoMatch": "No tag matches “{query}”",
-  "listBusiness.step2.tagsLegacyLabel": "Older tags",
+  "listBusiness.step2.tagsLegacyLabel": "Other tags on this listing",
   "listBusiness.step2.tagsCapHint": "Six tags is the most a listing can have",
   "listBusiness.step2.tagRemoveAria": "Remove {tag}",
   "listBusiness.step2.goodForLabel": "Good for… (tick what's true)",
@@ -1605,11 +1615,17 @@ export const marketing: Catalog = {
   "listBusiness.goodFor.hostsCommunityEvents": "Hosts community events",
   "listBusiness.goodFor.budgetFriendly": "Budget-friendly",
   "listBusiness.goodFor.accessibleBathroom": "Accessible bathroom",
+  "listBusiness.goodFor.beginnerFriendly": "Beginner-friendly",
+  "listBusiness.goodFor.goodForGifts": "Good for gifts",
   // Listing tag vocabulary: group headings, then one key per tag
   "listBusiness.tagGroup.visiting": "How to visit",
   "listBusiness.tagGroup.happening": "What happens there",
   "listBusiness.tagGroup.foodDrink": "Food and drink",
   "listBusiness.tagGroup.pricing": "Pricing",
+  "listBusiness.tagGroup.ordering": "Ordering and delivery",
+  "listBusiness.tagGroup.payment": "Ways to pay",
+  "listBusiness.tagGroup.sessions": "Sessions",
+  "listBusiness.tagGroup.visitingOnline": "How to book",
   "listBusiness.tag.byAppointment": "By appointment",
   "listBusiness.tag.bookingRecommended": "Booking recommended",
   "listBusiness.tag.membersOnly": "Members only",
@@ -1637,6 +1653,20 @@ export const marketing: Catalog = {
   "listBusiness.tag.slidingScale": "Sliding scale",
   "listBusiness.tag.payWhatYouCan": "Pay what you can",
   "listBusiness.tag.studentDiscount": "Student discount",
+  "listBusiness.tag.shipsToPortugal": "Ships to Portugal",
+  "listBusiness.tag.shipsAcrossEu": "Ships across the EU",
+  "listBusiness.tag.shipsWorldwide": "Ships worldwide",
+  "listBusiness.tag.pickUpInLisbon": "Pick-up in Lisbon",
+  "listBusiness.tag.madeToOrder": "Made to order",
+  "listBusiness.tag.customCommissions": "Custom commissions",
+  "listBusiness.tag.digitalDownloads": "Digital downloads",
+  "listBusiness.tag.giftCards": "Gift cards",
+  "listBusiness.tag.mbWay": "MB WAY",
+  "listBusiness.tag.multibanco": "Multibanco",
+  "listBusiness.tag.payPal": "PayPal",
+  "listBusiness.tag.videoSessions": "Video sessions",
+  "listBusiness.tag.phoneSessions": "Phone sessions",
+  "listBusiness.tag.freeFirstCall": "Free first call",
   // Languages (endonyms stay as-is; only "Other" and the LGP gloss translate)
   "listBusiness.lang.portugues": "Português",
   "listBusiness.lang.english": "English",
@@ -2803,6 +2833,7 @@ export const marketing: Catalog = {
   "changelog.hero.titleLine2": "and when.",
   "changelog.hero.sub":
     "Every update to QueerPulse, in reverse order. We publish changes here so you always know what's different and why. Nothing happens without a record.",
+  "changelog.hero.backText": "Back to Roadmap",
   "changelog.filterAria": "Filter updates by type",
   "changelog.filter.all": "All",
   "changelog.filter.feature": "Features",
@@ -2822,6 +2853,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-06.headline":
+    "Funding calls, fundraisers, real gatherings for visitors and a language that follows you.",
   "changelog.releases.2026-10-05.headline":
     "Chats you have read stay read, BIPOC-run listing tags, and one log of every staff action.",
   "changelog.releases.2026-10-02.headline":
@@ -3108,6 +3141,159 @@ export const marketing: Catalog = {
     "A tidier version history in the article editor",
   "changelog.entries.draft-history-compact-timeline.body":
     "Each saved version fits on one line, the newest is marked, and long histories fold away.",
+  "changelog.entries.decided-requests-show-what-they-sent.title":
+    "Decided requests keep what the applicant sent",
+  "changelog.entries.decided-requests-show-what-they-sent.body":
+    "Open a decided request to re-read their message, city, how they heard about us and who vouched.",
+  "changelog.entries.iphone-push-keeps-arriving.title":
+    "iPhone notifications keep arriving",
+  "changelog.entries.iphone-push-keeps-arriving.body":
+    "Push notifications on iPhone keep arriving after days away from the app, for messages and everything else.",
+  "changelog.entries.lists-survive-failed-page.title":
+    "Lists keep what they loaded",
+  "changelog.entries.lists-survive-failed-page.body":
+    "When loading more fails, the rows you have stay put and a Retry appears under them.",
+  "changelog.entries.errors-follow-your-language.title":
+    "Error messages follow your language",
+  "changelog.entries.errors-follow-your-language.body":
+    "Portuguese readers see refusals in Portuguese, and daily limits say plainly what happened.",
+  "changelog.entries.update-always-finishes.title": "Updating never gets stuck",
+  "changelog.entries.update-always-finishes.body":
+    "The update card shows a progress line and always reloads, even in a tab opened with a hard refresh.",
+  // 6 Oct 2026: carried scan rows (PRD-320, PRD-323, PRD-325, PRD-327, PRD-329, ENG-190).
+  "changelog.entries.gathering-links-from-feed-open.title":
+    "Gathering links from the feed now open",
+  "changelog.entries.gathering-links-from-feed-open.body":
+    "Links in the feed and notifications open the right gathering, past ones included, which show that they ended.",
+  "changelog.entries.new-member-cards-show-what-you-share.title":
+    "New member cards show what you have in common",
+  "changelog.entries.new-member-cards-show-what-you-share.body":
+    "Their own words lead, shared interests come first, and several newcomers fold into one card.",
+  "changelog.entries.connect-request-note-when-answering.title":
+    "See what someone wrote before answering their request",
+  "changelog.entries.connect-request-note-when-answering.body":
+    'The "asked you first" panel now quotes their message and reason, with all three answers on one row.',
+  "changelog.entries.dropdown-escape-keeps-dialog-open.title":
+    "Escape in a dropdown closes just the dropdown",
+  "changelog.entries.dropdown-escape-keeps-dialog-open.body":
+    "Your draft stays in the dialog, and Ask to connect keeps its close button in reach as you scroll.",
+  "changelog.entries.connect-request-preview.title":
+    "See your connection request before you send it",
+  "changelog.entries.connect-request-preview.body":
+    "On wide screens the request card they'll receive sits beside the form and updates as you type.",
+  "changelog.entries.connect-dialog-centred-on-desktop.title":
+    "Ask to connect opens in the middle of the screen on desktop",
+  "changelog.entries.connect-dialog-centred-on-desktop.body":
+    "Wide screens get a centred dialog with rounded corners; phones keep the bottom sheet.",
+  "changelog.entries.funding-grants-forum.title":
+    "Share open funding calls in the new Funding & Grants forum",
+  "changelog.entries.funding-grants-forum.body":
+    "Calls show funder, amount and Lisbon deadline, close on time, and saved ones remind you 7 days and 1 day out.",
+  "changelog.entries.community-fundraisers.title":
+    "Ask the community to back your fundraiser",
+  "changelog.entries.community-fundraisers.body":
+    "Moderators check every crowdfunding page before it goes live, and QueerPulse never handles the money.",
+  "changelog.entries.online-listings-get-their-own-tags.title":
+    "Online businesses get tags that fit them",
+  "changelog.entries.online-listings-get-their-own-tags.body":
+    "Shipping, ways to pay and sessions replace terraces and DJ nights on online-only listings.",
+  "changelog.entries.governance-shows-entered-figures.title":
+    "Governance shows only figures people entered",
+  "changelog.entries.governance-shows-entered-figures.body":
+    "Sample finances and community health figures are off the page until the team publishes a real quarter.",
+
+  "changelog.entries.sober-page-lists-what-exists.title":
+    "The Sober page lists only what exists",
+  "changelog.entries.sober-page-lists-what-exists.body":
+    "Sample gatherings, RSVPs and venue labels are gone, and you can still offer to host one.",
+
+  "changelog.entries.sexual-health-guide-in-portuguese.title":
+    "Sexual health guide in Portuguese",
+  "changelog.entries.sexual-health-guide-in-portuguese.body":
+    "PrEP, testing and HIV information reads in Portuguese, with up-to-date rules on where to collect PrEP.",
+
+  "changelog.entries.safety-messages-reach-team-first.title":
+    "Safety messages reach the team first",
+  "changelog.entries.safety-messages-reach-team-first.body":
+    "A safety concern sent from the contact page now alerts the team and sorts to the top of the inbox.",
+
+  "changelog.entries.data-requests-work-signed-out.title":
+    "Data requests explain what to do when signed out",
+  "changelog.entries.data-requests-work-signed-out.body":
+    "Visitors without a session get a sign-in link back to the form, or a privacy route through Contact.",
+
+  "changelog.entries.volunteer-pages-in-portuguese.title":
+    "Volunteer pages in Portuguese",
+  "changelog.entries.volunteer-pages-in-portuguese.body":
+    "Opportunity pages read fully in Portuguese, and visitors see an explainer before member-only links.",
+
+  "changelog.entries.volunteer-teams-respect-blocks.title":
+    "Volunteer pages respect blocks",
+  "changelog.entries.volunteer-teams-respect-blocks.body":
+    "Public pages name no members to visitors, and a team list leaves out anyone you blocked.",
+
+  "changelog.entries.roadmap-counts-the-board.title":
+    "Roadmap numbers count the board",
+  "changelog.entries.roadmap-counts-the-board.body":
+    "The roadmap header counts shipped, in-progress and planned items live, and visitors sign in before voting.",
+
+  "changelog.entries.newsletter-signup-removed.title":
+    "Unused newsletter signup removed",
+  "changelog.entries.newsletter-signup-removed.body":
+    "The signup stored email addresses with no purpose, so its endpoint and every stored address are gone.",
+
+  "changelog.entries.changemaker-stories-members-only.title":
+    "Change maker stories stay members-only",
+  "changelog.entries.changemaker-stories-members-only.body":
+    "The stories API now asks for a member session, matching the members-only page.",
+
+  "changelog.entries.dates-follow-your-language.title":
+    "Dates follow your language",
+  "changelog.entries.dates-follow-your-language.body":
+    "Privacy, Terms and changelog dates now print in Portuguese for Portuguese readers.",
+
+  "changelog.entries.homepage-shows-real-gatherings.title":
+    "Visitors see real gatherings and stories",
+  "changelog.entries.homepage-shows-real-gatherings.body":
+    "The team can feature public gatherings and published stories on the homepage for people who haven't joined.",
+  "changelog.entries.group-join-shows-your-standing.title":
+    "Housing groups show where your request stands",
+  "changelog.entries.group-join-shows-your-standing.body":
+    "Once you've asked to join, the group shows your request is waiting, and Your rooms marks report takedowns.",
+  "changelog.entries.expired-listings-come-back-right.title":
+    "Expired listings come back the right way",
+  "changelog.entries.expired-listings-come-back-right.body":
+    "Extend leads when it can relist, lapsed homes close pending viewing requests, and saved homes honour blocks.",
+  "changelog.entries.message-rooms-in-housing-groups.title":
+    "Message and report rooms in housing groups",
+  "changelog.entries.message-rooms-in-housing-groups.body":
+    "Rooms in housing groups now show who posted them, with buttons to message the poster or report the room.",
+  "changelog.entries.call-off-accepted-viewing.title":
+    "Call off an accepted viewing",
+  "changelog.entries.call-off-accepted-viewing.body":
+    "Either side can cancel a confirmed viewing, and blocking, filling or relisting a home closes its address.",
+  "changelog.entries.housing-respects-blocks.title":
+    "Housing respects blocks and keeps its record",
+  "changelog.entries.housing-respects-blocks.body":
+    "Blocked members' homes leave your board and alerts, and a deleted listing keeps its reviews on record.",
+  "changelog.entries.safe-space-updates-read-right.title":
+    "Safe-space updates read as updates",
+  "changelog.entries.safe-space-updates-read-right.body":
+    "Nomination and badge updates now arrive in your language, worded as the review news they are.",
+  "changelog.entries.language-follows-you.title": "Your language follows you",
+  "changelog.entries.language-follows-you.body":
+    "Pick English or Portuguese once and every new phone or browser opens in it, push notifications included.",
+  "changelog.entries.search-speaks-your-language.title":
+    "Search speaks your language",
+  "changelog.entries.search-speaks-your-language.body":
+    "Page shortcuts are translated, an empty search offers a way forward, and tapped results join your recents.",
+  "changelog.entries.lighter-app-install.title": "A lighter app install",
+  "changelog.entries.lighter-app-install.body":
+    "A first visit now downloads about 3.7 MB less, so the app is ready sooner on mobile data.",
+  "changelog.entries.sign-in-keeps-your-link.title":
+    "Signing in keeps the link you opened",
+  "changelog.entries.sign-in-keeps-your-link.body":
+    "Links with a tab, filter or search land exactly where they pointed once you sign in.",
   "changelog.entries.directory-cards-one-line.title":
     "Directory cards line up again",
   "changelog.entries.directory-cards-one-line.body":
@@ -3136,7 +3322,7 @@ export const marketing: Catalog = {
     "See every staff action in one log",
   "changelog.entries.admin-platform-log.body":
     "Filter it by category, time range or member, and admins also see members' public record events.",
-  "changelog.entries.admin-platform-log.tag": "Open the platform log",
+  "changelog.entries.admin-platform-log.tag": "Staff tool: the platform log",
   "changelog.entries.back-arrow-after-the-more-menu.title":
     "The back arrow shows again after you open a page from More",
   "changelog.entries.back-arrow-after-the-more-menu.body":
@@ -5175,7 +5361,7 @@ export const marketing: Catalog = {
   "changelog.tag.roadmap": "Open the roadmap",
   "changelog.tag.magazine": "Open the magazine",
   "changelog.tag.magazineSections": "Browse by section",
-  "changelog.tag.magazineWriter": "Open your workspace",
+  "changelog.tag.magazineWriter": "Staff tool: the writer workspace",
   "changelog.tag.badges": "See badges & levels",
   "changelog.tag.safety": "See our safety approach",
   "changelog.tag.editProfile": "Edit your profile",
@@ -5189,7 +5375,7 @@ export const marketing: Catalog = {
   "changelog.tag.comingOut": "Read the coming-out guide",
   "changelog.tag.notifications": "Open your notifications",
   "changelog.tag.connections": "Open your connections",
-  "changelog.tag.trustNetwork": "Open the trust network",
+  "changelog.tag.trustNetwork": "Staff tool: the trust network",
   "changelog.tag.invite": "Invite someone",
   "changelog.tag.imprint": "Read the legal notice",
   "changelog.tag.terms": "Read the terms",
@@ -5200,7 +5386,7 @@ export const marketing: Catalog = {
   "changelog.tag.cookies": "See the full list",
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.pushDevices": "Manage your devices",
-  "changelog.tag.magazineDesk": "Open the desk",
+  "changelog.tag.magazineDesk": "Staff tool: the editorial desk",
   "changelog.tag.guidelines": "Read the community guidelines",
   "changelog.tag.guideIndex": "Browse every guide",
   "changelog.tag.requestInvite": "Ask to come in",
@@ -6241,10 +6427,9 @@ export const marketing: Catalog = {
     "Play and skip reflect what is actually live, and Become a curator opens the real playlist-submission form.",
 
   "changelog.entries.newsletter-unsubscribe.title":
-    "Unsubscribe from the newsletter yourself",
-  // Body corrected on 26 Aug 2026: the original implied a confirmation email.
+    "The newsletter signup is gone",
   "changelog.entries.newsletter-unsubscribe.body":
-    "Open the unsubscribe page with your unsubscribe token and your address comes off the list.",
+    "QueerPulse sends no email, so the newsletter signup and its unsubscribe page are removed.",
 
   "changelog.entries.resources-crisis-hotline-coverage.title":
     "Crisis hotlines now show on every crisis-adjacent resource page",
@@ -7029,7 +7214,8 @@ export const marketing: Catalog = {
   "changelog.entries.richer-push-notifications.body":
     "A message shows its sender and photo, a reminder shows the event cover, and messages group by conversation.",
 
-  "changelog.entries.admin-uploaded-images.tag": "Open admin",
+  "changelog.entries.admin-uploaded-images.tag":
+    "Staff tool: the admin console",
   "changelog.entries.admin-uploaded-images.title":
     "Admins can browse every uploaded image",
   "changelog.entries.admin-uploaded-images.body":
@@ -7230,7 +7416,7 @@ export const marketing: Catalog = {
   // Body corrected on 26 Aug 2026: "send" read as email. They store; the team
   // picks the submissions up in the app.
   "changelog.entries.forms-that-really-submit.body":
-    "Newsletter, contact, grant, panel and safe-space nomination forms keep what you write for the team to pick up.",
+    "Contact, grant, panel and safe-space nomination forms keep what you write for the team to pick up.",
 
   "changelog.entries.save-events-for-later.title": "Save events for later",
   "changelog.entries.save-events-for-later.body":
@@ -8032,6 +8218,12 @@ export const marketing: Catalog = {
   "roadmap.hero.title": "The <em>roadmap</em>",
   "roadmap.hero.sub":
     "QueerPulse is built by a small team in Lisbon. Here's what we're working on, what's shipped, and what you can vote on next.",
+  "roadmap.hero.stat.shipped_one": "shipped this year",
+  "roadmap.hero.stat.shipped_other": "shipped this year",
+  "roadmap.hero.stat.building_one": "in progress",
+  "roadmap.hero.stat.building_other": "in progress",
+  "roadmap.hero.stat.planned_one": "planned",
+  "roadmap.hero.stat.planned_other": "planned",
   "roadmap.col.done": "Done",
   "roadmap.col.buildingNow": "Building now",
   "roadmap.col.planned": "Planned",
@@ -8408,6 +8600,7 @@ export const marketing: Catalog = {
   "volunteerDetail.main.commitmentTitle": "The <em>commitment</em>, honestly",
   "volunteerDetail.main.goodForTitle": "Who's <em>good for this</em>",
   "volunteerDetail.main.teamTitle": "Who's <em>already in</em>",
+  "volunteerDetail.main.teamSignedOutCta": "See who's on the team",
   "volunteerDetail.sidebar.appliedTitle": "You're <em>on the list.</em>",
   // PRD-262: shown when the reader is not yet connected to the poster, so the
   // button does not promise a message it will answer with a connection
@@ -8446,6 +8639,36 @@ export const marketing: Catalog = {
   "volunteerDetail.signupModal.sending": "Sending…",
   "volunteerDetail.report.cta": "Report this opportunity",
   "volunteerDetail.report.ariaLabel": "Report the opportunity {role} at {org}",
+  "volunteerDetail.chrome.eyebrow": "Volunteer · {org}",
+  "volunteerDetail.chrome.recruiting": "Recruiting now",
+  "volunteerDetail.chrome.closed": "Closed · not recruiting",
+  "volunteerDetail.chrome.perWeek": "Per week",
+  "volunteerDetail.chrome.commitment": "Commitment",
+  "volunteerDetail.chrome.spotsOpen": "Spots still open",
+  "volunteerDetail.chrome.role": "Role",
+  "volunteerDetail.chrome.location": "Location",
+  "volunteerDetail.chrome.partnerText": "In partnership with {name}.",
+  "volunteerDetail.chrome.applyConfirm":
+    "Application sent for <strong>{role}</strong>. You'll get a notification here once the team decides.",
+
+  // ── VolunteerExplainerModal (PRD-454: signed-out volunteer CTAs) ──
+  "volunteerExplainer.eyebrow": "Members-only",
+  "volunteerExplainer.title": "Organising happens <em>among members</em>",
+  "volunteerExplainer.titlePlain": "Organising happens among members",
+  "volunteerExplainer.lede":
+    "Anyone can browse the roles here. Posting one and meeting the change makers both happen once you're a member. Here's what that side offers, and how to join.",
+  "volunteerExplainer.pillars.post.title": "Post a role, review who applies",
+  "volunteerExplainer.pillars.post.body":
+    "Put out a call for your organisation or community, read each applicant's note, and accept or decline from one dashboard.",
+  "volunteerExplainer.pillars.record.title": "A record of what you gave",
+  "volunteerExplainer.pillars.record.body":
+    "Each session a poster confirms adds to your own tally of sessions and hours, kept with your account.",
+  "volunteerExplainer.pillars.changemakers.title":
+    "Profiles of the people doing the work",
+  "volunteerExplainer.pillars.changemakers.body":
+    "Read how change makers in Lisbon got started, and nominate someone whose work belongs there.",
+  "volunteerExplainer.requestInviteCta": "Request an invite",
+  "volunteerExplainer.signInCta": "I'm already a member",
 
   // ── Partner Detail — page chrome. About/joint-work/timeline/how-we-work
   //    copy, stats, and contact details are each partner org's own content
@@ -8482,17 +8705,21 @@ export const marketing: Catalog = {
     "Anything that doesn't fit elsewhere, questions, feedback, introductions, ideas you think we should hear about.",
   "contact.routes.safety.title": "Safety concern",
   "contact.routes.safety.desc":
-    "If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. We respond within 24 hours.",
+    "If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. Safety messages go to the team's priority queue and are read first.",
   "contact.routes.press.title": "Press & media",
   "contact.routes.press.desc":
     "Journalists, researchers, documentary makers. We're happy to talk about what we're building and why. We ask that you share your draft before publication.",
   "contact.routes.partnerships.title": "Partnerships",
   "contact.routes.partnerships.desc":
     "Organisations, spaces, and communities who want to work with QueerPulse. We're selective but we're genuinely interested in the right collaborations.",
-  "contact.sent.title": "Message <em>received.</em>",
-  "contact.sent.body":
-    "We'll read it and write back, usually within a day or two. If it's a safety concern, we'll be in touch within 24 hours.",
-  "contact.sent.backCta": "Back to QueerPulse",
+  "contact.sent.body": "We'll read it and write back.",
+  "contact.sent.safetyBody":
+    "It's in the team's priority queue, where safety messages are read first. We'll write back with full discretion.",
+  "contact.sent.heading": "Message",
+  "contact.sent.headingEm": "received.",
+  "contact.sent.writeAnotherCta": "Write another message",
+  "contact.sent.urgentHelp":
+    "If you're in danger right now, call <b>112</b>. You can also reach <link>free, confidential crisis lines</link>.",
   "contact.form.title": "Write to <em>us.</em>",
   "contact.form.sub":
     "If you prefer a form to an email, use this. We read it the same way.",
@@ -8510,6 +8737,7 @@ export const marketing: Catalog = {
   "contact.form.topic.partnership": "Partnership proposal",
   "contact.form.topic.other": "Something else",
   "contact.form.topic.listing_correction": "Correction to a directory listing",
+  "contact.form.topic.privacy": "Privacy or data request",
   "contact.form.correctionNote": "About listing {ref}",
   "contact.form.messageLabel": "Your message",
   "contact.form.messagePlaceholder":
@@ -8590,6 +8818,7 @@ export const marketing: Catalog = {
   "forOrgs.tiers.funder.list3": "No platform-wide placement, no co-branding",
   "forOrgs.tiers.funder.list4": "Annual independent audit included",
   "forOrgs.tiers.funder.list5": "Public itemisation in the transparency report",
+  "forOrgs.tiers.featuredBadge": "Most chosen",
   // PRD-266: the For Organisations partner ask now hands over to the real
   // /about/partners/apply flow instead of writing a parallel inquiry row.
   "forOrgs.apply.lead":
@@ -9034,6 +9263,8 @@ export const marketing: Catalog = {
   "directory.detail.questions.successToast": "Your question is up.",
   "directory.detail.questions.errorGeneric":
     "Couldn't send your question. Please try again.",
+  "directory.detail.questions.errorRateLimited":
+    "You've asked as many questions as you can for now. Give the business a chance to answer, then try again later.",
   "directory.detail.questions.signInPrompt":
     "Sign in to ask this space a question.",
   "directory.detail.questions.signInCta": "Sign in",
@@ -9584,11 +9815,11 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card2.eyebrow": "Your rights",
   "visas.tabs.eu.card2.title": "What EU residency gives you",
   "visas.tabs.eu.card2.body":
-    "Full access to the SNS health system (with NISS), the right to work without restriction, the right to vote in local and European elections, and the right to bring family members. After 5 years of continuous legal residence, you can apply for permanent residency or citizenship.",
+    "Full access to the SNS health system (with NISS), the right to work without restriction, the right to vote in local and European elections, and the right to bring family members. After 5 years of continuous legal residence, you can apply for permanent residency. Citizenship by naturalisation asks EU nationals for 7 years of legal residence since the Nationality Law changed in 2026: see the Citizenship tab.",
   "visas.tabs.eu.card3.eyebrow": "Non-EU partner",
   "visas.tabs.eu.card3.title": "Family reunification for same-sex partners",
   "visas.tabs.eu.card3.body":
-    "If you're an EU citizen and your partner is not, they can join you in Portugal under EU free movement rules, including same-sex spouses and registered partners. The EU Court of Justice (Coman ruling, 2018) established that EU member states must recognise same-sex spouses for free movement purposes even if they don't have same-sex marriage domestically.",
+    "Once you hold your Certificado de Registo, your non-EU spouse or partner applies at AIMA for a residence card as the family member of an EU citizen (Cartão de Residência de familiar de cidadão da União). They will need your certificate, proof of the relationship and their passport. This runs under EU free-movement rules, which set no minimum residence period before your partner can apply, and the law gives AIMA up to 3 months to issue the card. Check the current documents and waiting times at aima.gov.pt.",
   "visas.tabs.eu.card3.tag": "Full partner rights",
   "visas.tabs.eu.card3.link": "Partner visa details",
 
@@ -9640,7 +9871,7 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card2.eyebrow": "Process",
   "visas.tabs.d8.card2.title": "How to apply",
   "visas.tabs.d8.card2.body":
-    "Like the D7, applications are made at the Portuguese consulate before arrival. On arrival, you exchange for a 2-year residency permit. Family members (including same-sex partners) can be included on the application or apply for family reunification after you receive your permit.",
+    "Like the D7, applications are made at the Portuguese consulate before arrival. On arrival, you exchange for a 2-year residency permit. Family members (including same-sex partners) can be included on the application, or join you later through family reunification, which usually asks you to hold your permit for 2 years first: see the “Bringing a Partner” tab.",
   "visas.tabs.d8.card3.eyebrow": "IFICI / Tax",
   "visas.tabs.d8.card3.title": "Tax treatment",
   "visas.tabs.d8.card3.body":
@@ -9672,7 +9903,7 @@ export const marketing: Catalog = {
   "visas.tabs.partner.card1.eyebrow": "Same-sex marriage",
   "visas.tabs.partner.card1.title": "Portugal fully recognises your marriage",
   "visas.tabs.partner.card1.body":
-    "Portugal has recognised same-sex marriage since 2010. A legal marriage anywhere in the world is recognised for residency purposes in Portugal. Your spouse is entitled to join you under family reunification, regardless of their nationality or the country where you married.",
+    "Portugal has recognised same-sex marriage since 2010. A legal marriage anywhere in the world is recognised for residency purposes in Portugal. Your spouse qualifies for family reunification whatever their nationality or the country where you married. When you can apply depends on how long you have held your own residence permit: see “The process for partners”.",
   "visas.tabs.partner.card1.tag": "Full legal recognition",
   "visas.tabs.partner.card2.eyebrow": "Not married",
   "visas.tabs.partner.card2.title": "Partners without formal status",
@@ -9687,26 +9918,31 @@ export const marketing: Catalog = {
   "visas.tabs.partner.card4.eyebrow": "Family reunification",
   "visas.tabs.partner.card4.title": "The process for partners",
   "visas.tabs.partner.card4.body":
-    "Once you have your own residency permit, your partner applies for family reunification at AIMA. They'll need your AR card, proof of the relationship, proof of accommodation, and income evidence. Processing takes 60–90 days. During this time they can usually remain in Portugal on a short-stay visa.",
+    "Once you hold your own residence permit, you apply at AIMA for family reunification with your partner. Since the Foreigners Law changed in October 2025, you usually need 2 years of legal residence before you can apply. That drops to 15 months if you lived together for at least 18 months before you moved, and there is no wait if you have children under 18 together or hold a highly qualified, EU Blue Card or investment permit. AIMA asks for your residence card, proof of the relationship, adequate housing and enough income without social support, and has up to 9 months to decide, extendable once in exceptional cases. Check the rules in force at aima.gov.pt before you plan around a date.",
 
   "visas.tabs.citizenship.label": "Citizenship",
   "visas.tabs.citizenship.headTitle":
     "Citizenship & <em>permanent residency</em>",
   "visas.tabs.citizenship.headText":
-    "Portugal offers one of the clearer paths to citizenship in Europe. After 5 years of legal residency, you can apply for either permanent residency or naturalisation as a Portuguese citizen.",
+    "Permanent residency opens after 5 years of legal residence. Naturalisation as a Portuguese citizen takes longer: the Nationality Law changed in 2026 and now asks for 10 years, or 7 for EU and Portuguese-speaking nationals.",
   "visas.tabs.citizenship.card1.eyebrow": "Timeline",
-  "visas.tabs.citizenship.card1.title": "5 years to citizenship",
+  "visas.tabs.citizenship.card1.title": "7 to 10 years to citizenship",
   "visas.tabs.citizenship.card1.body":
-    "After 5 years of continuous legal residency, you're eligible to apply for Portuguese citizenship. Requirements: basic Portuguese language (A2 level), clean criminal record, proof of ties to Portugal, and no absence of more than 6 consecutive months or 8 months total during the 5 years.",
+    "You can apply for Portuguese citizenship after 10 years of legal residence, or 7 if you hold the nationality of an EU country or a Portuguese-speaking country. Periods with a valid residence title add up even with gaps between them, as long as they all fall within a 12-year window (9 for EU and Portuguese-speaking nationals).",
   "visas.tabs.citizenship.card1.tag": "EU passport included",
+  "visas.tabs.citizenship.card1.link": "Read the Nationality Law in force",
+  "visas.tabs.citizenship.card1.body2":
+    "You also need a test or certificate in Portuguese language and culture, knowledge of the rights and duties of citizens, and no final prison sentence of more than 3 years for the serious crimes the law lists.",
+  "visas.tabs.citizenship.card1.body3":
+    "Applications already pending when the new rules took effect in May 2026 keep the earlier 5-year rule. These rules were rewritten in 2025 and 2026, so read the text in force before you plan around a date.",
   "visas.tabs.citizenship.card2.eyebrow": "Permanent residency",
   "visas.tabs.citizenship.card2.title": "Alternative to citizenship",
   "visas.tabs.citizenship.card2.body":
-    "You can also apply for permanent residency (Autorização de Residência Permanente) after 5 years. This gives you indefinite right to remain without the language and citizenship requirements. Some people prefer this route while maintaining their original nationality.",
+    "You can also apply for permanent residency (Autorização de Residência Permanente) after 5 years of legal residence. It gives you an indefinite right to stay, asks for basic Portuguese, and leaves your nationality as it is. Some people choose this route to keep only their original passport.",
   "visas.tabs.citizenship.card3.eyebrow": "Portuguese language",
-  "visas.tabs.citizenship.card3.title": "A2 requirement",
+  "visas.tabs.citizenship.card3.title": "Language and culture test",
   "visas.tabs.citizenship.card3.body":
-    "The Portuguese language requirement for citizenship is A2 (basic), conversational rather than fluent. You can demonstrate this via an approved CAPLE or CIPLE test, or by showing Portuguese-medium education. The community forum has recommendations for Portuguese teachers who are queer-friendly.",
+    "Citizenship now asks for a test or certificate showing you know the Portuguese language and culture, its history and national symbols. Nationals of Portuguese-speaking countries are presumed to meet the language part. The CAPLE and CIPLE exams have long been the usual proof, at A2 level; the government is updating the regulation, so check which tests and levels count today. The community forum has recommendations for queer-friendly Portuguese teachers.",
   "visas.tabs.citizenship.card3.link": "Language learning resources",
 
   "visas.ground.title": "On the <em>ground</em>",
@@ -10087,6 +10323,9 @@ export const marketing: Catalog = {
   "resourceLibrary.subpages.intersectionality.label": "Intersectionality",
   "resourceLibrary.subpages.intersectionality.blurb":
     "How overlapping identities shape our experiences, and our organising.",
+  "resourceLibrary.loadError.title": "We could not load the guides",
+  "resourceLibrary.loadError.description":
+    "The library did not load. This is a connection problem and says nothing about what we have reviewed. Try again in a moment.",
 
   // ── Platforms (the wider queer web) — page/filter chrome. `PLATFORMS`
   //    entries (name/desc — named third-party apps/orgs) are directory-style
@@ -10825,7 +11064,7 @@ export const marketing: Catalog = {
     "It reaches this listing's mailbox, and the reply comes from the business.",
   "directory.detail.enquiry.cancel": "Cancel",
   "directory.detail.enquiry.error.rateLimited":
-    "You have already written to this business today. Give them a chance to reply first.",
+    "You've reached the limit for messages to businesses for now. Give them a chance to reply, then try again later.",
   "directory.detail.enquiry.error.notAllowed":
     "This business cannot be reached from your account.",
   "directory.detail.enquiry.error.unavailable":

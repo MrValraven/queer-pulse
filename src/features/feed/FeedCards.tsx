@@ -1,6 +1,6 @@
 /**
  * Barrel for the feed's card components. Preserves the historical import
- * path (`./FeedCards`) now that each card lives in its own colocated file —
+ * path (`./FeedCards`) now that each card lives in its own colocated file:
  * see `MemberCard.tsx`, `GatheringCard.tsx`, `CommunityCard.tsx`,
  * `CommunityPostCard.tsx`, `ForumThreadCard.tsx`, `ArticleCard.tsx`, and
  * `LightCards.tsx`.

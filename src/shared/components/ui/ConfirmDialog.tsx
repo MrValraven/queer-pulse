@@ -36,8 +36,9 @@ export interface ConfirmDialogProps {
   description?: ReactNode;
   confirmLabel?: ReactNode;
   cancelLabel?: ReactNode;
-  /** `destructive` renders the confirm action in the danger variant. */
-  tone?: "default" | "destructive";
+  /** `destructive` renders the confirm action in the danger variant;
+   *  `positive` in the jade one, for a confirmation that marks a success. */
+  tone?: "default" | "destructive" | "positive";
   /** True while the confirmed action is in flight — disables both buttons. */
   loading?: boolean;
   reason?: ConfirmDialogReason;
@@ -67,6 +68,12 @@ export interface ConfirmDialogProps {
  * Mount only while open (the caller gates on `open`, and `Modal`'s a11y setup
  * runs per open) — this component also returns `null` when closed as a guard.
  */
+const CONFIRM_VARIANT_BY_TONE = {
+  default: "primary",
+  destructive: "danger",
+  positive: "jade",
+} as const;
+
 export function ConfirmDialog({
   open,
   onClose,
@@ -108,7 +115,7 @@ export function ConfirmDialog({
             {cancelLabel ?? t("shared:confirmDialog.cancel")}
           </Button>
           <Button
-            variant={tone === "destructive" ? "danger" : "primary"}
+            variant={CONFIRM_VARIANT_BY_TONE[tone]}
             onClick={onConfirm}
             disabled={confirmDisabled}
           >

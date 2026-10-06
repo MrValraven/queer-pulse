@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { AvatarStack, Tag, type AvatarTint } from "../../shared/components/ui";
+import { Tag } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberPath } from "../forum/forumAuthor.helpers";
 import styles from "./FeedCard.module.css";
@@ -147,21 +147,6 @@ export function FeedTagRow({
           {tag.label}
         </Tag>
       ))}
-    </div>
-  );
-}
-
-export function FeedProofStack({
-  avatars,
-  label,
-}: {
-  avatars: { initials: string; tint?: AvatarTint; src?: string }[];
-  label: string;
-}) {
-  return (
-    <div className={styles.proof}>
-      <AvatarStack avatars={avatars} size={22} />
-      <span className={styles.proofLabel}>{label}</span>
     </div>
   );
 }

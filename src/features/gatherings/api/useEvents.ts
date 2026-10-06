@@ -28,6 +28,10 @@ export interface EventsResult {
   /** True when the (live) fetch failed — the page shows an error state, not
    *  an empty "nothing in Lisbon". Demo mode never errors. */
   isError: boolean;
+  /** ENG-501: the latest next-page fetch failed. react-query also sets
+   *  `isError` then, so a view keeps the rows already loaded and lets its
+   *  footer retry the page. Demo's single synthetic page never sets it. */
+  isFetchNextPageError: boolean;
   /** Re-run the query — wired to the error state's "Try again" action. */
   refetch: () => void;
 }
@@ -90,6 +94,7 @@ export function useEvents(
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
   };
 }

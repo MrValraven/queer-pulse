@@ -43,7 +43,14 @@ function followErrorKey(error: unknown): string {
  * The success toast fires in both modes and reflects the NEW state (follow /
  * unfollow), matching the pre-existing `topics:header.followToast` copy.
  */
-export function useTopicFollow(tag: string) {
+export interface TopicFollowOptions {
+  /** Success copy in place of the topic's own "#tag" lines, for a surface
+   *  that names the topic in its own words (Funding & Grants' open calls). */
+  successToastKeys?: { follow: string; unfollow: string };
+}
+
+export function useTopicFollow(tag: string, options: TopicFollowOptions = {}) {
+  const { successToastKeys } = options;
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -93,15 +100,10 @@ export function useTopicFollow(tag: string) {
       showToast(t(followErrorKey(error)), "error");
     },
     onSuccess: (_data, nextFollowing) => {
-      showToast(
-        t(
-          nextFollowing
-            ? "topics:header.followToast"
-            : "topics:header.unfollowToast",
-          { tag },
-        ),
-        "success",
-      );
+      const followKey = successToastKeys?.follow ?? "topics:header.followToast";
+      const unfollowKey =
+        successToastKeys?.unfollow ?? "topics:header.unfollowToast";
+      showToast(t(nextFollowing ? followKey : unfollowKey, { tag }), "success");
     },
   });
 

@@ -175,119 +175,144 @@ export const CLINIC_FILTERS: { id: ClinicType | "all"; labelKey: string }[] = [
   { id: "private", labelKey: "resources:sexualHealth.testing.filter.private" },
 ];
 
-export const TESTING_INFO: {
+/**
+ * The guide's own prose below renders in both modes, so every string is an
+ * i18n key (DES-421). This guide is a metadata-only row in the database
+ * (`sections: []` in the CON-08 backfill), so its words live in the
+ * `resources` catalogs, like every other hardcoded guide page.
+ */
+export interface TestingInfoCard {
   icon: IconType;
-  title: string;
+  titleKey: string;
+  bodyKey: string;
   color: string;
   background: string;
   border: string;
-  body: string;
-}[] = [
+}
+
+export const TESTING_INFO: TestingInfoCard[] = [
   {
     icon: FiClock,
-    title: "How often?",
+    titleKey: "resources:sexualHealth.testing.info.frequency.title",
+    bodyKey: "resources:sexualHealth.testing.info.frequency.body",
     color: "var(--jade)",
-    background: "rgba(74,140,111,.06)",
-    border: "rgba(74,140,111,.18)",
-    body: "If you have multiple partners: every 3 months. Single partner, both tested: less frequently. HIV rapid test at any pharmacy takes 15 minutes.",
+    background: "rgba(var(--jade-rgb), 0.06)",
+    border: "rgba(var(--jade-rgb), 0.18)",
   },
   {
     icon: FiLock,
-    title: "Confidential",
+    titleKey: "resources:sexualHealth.testing.info.confidential.title",
+    bodyKey: "resources:sexualHealth.testing.info.confidential.body",
     color: "var(--accent-ink)",
-    background: "rgba(232,119,90,.05)",
-    border: "rgba(232,119,90,.18)",
-    body: "All public SNS sexual health services are confidential. No results are shared without your consent, including with your GP.",
+    background: "rgba(var(--accent-rgb), 0.05)",
+    border: "rgba(var(--accent-rgb), 0.18)",
   },
   {
     icon: FiDollarSign,
-    title: "Cost",
-    color: "var(--plum)",
-    background: "rgba(45,27,61,.04)",
-    border: "rgba(45,27,61,.12)",
-    body: "SNS CAD centres are free. Rapid HIV tests at pharmacies cost €15–25. NGO services (CheckpointLx, GAT) are free and anonymous.",
+    titleKey: "resources:sexualHealth.testing.info.cost.title",
+    bodyKey: "resources:sexualHealth.testing.info.cost.body",
+    // --text-strong and --line-rgb are plum in light mode and flip in dark.
+    color: "var(--text-strong)",
+    background: "rgba(var(--line-rgb), 0.04)",
+    border: "rgba(var(--line-rgb), 0.12)",
   },
 ];
 
-export const PREP_STEPS = [
+export interface PrepStep {
+  titleKey: string;
+  descriptionKey: string;
+  noteKey?: string;
+}
+
+export const PREP_STEPS: PrepStep[] = [
   {
-    title: "Book an appointment at a CAD or sexual health clinic",
-    description:
-      "Tell them you're interested in PrEP. CheckpointLx and GAT can help you navigate the referral if you're unsure where to start.",
-    note: "CheckpointLx offers PrEP counselling every Tuesday evening. No appointment needed.",
+    titleKey: "resources:sexualHealth.prep.step1.title",
+    descriptionKey: "resources:sexualHealth.prep.step1.description",
+    // Points to the clinic's own site for times, which change without a deploy.
+    noteKey: "resources:sexualHealth.prep.step1.note",
   },
   {
-    title: "Initial eligibility assessment & blood tests",
-    description:
-      "A counsellor will discuss your situation and arrange blood tests: HIV, hepatitis B, creatinine (kidney function), and STI panel. Results in 5–10 days.",
-    note: "You must be HIV-negative to start PrEP.",
+    titleKey: "resources:sexualHealth.prep.step2.title",
+    descriptionKey: "resources:sexualHealth.prep.step2.description",
+    noteKey: "resources:sexualHealth.prep.step2.note",
   },
   {
-    title: "Prescription issued: medication collected free from SNS pharmacy",
-    description:
-      "If eligible, you'll receive a prescription for tenofovir/emtricitabine. Collect from any SNS-contracted pharmacy at no cost with your SNS number.",
-    note: "No SNS number? GAT Lisboa can advise on alternative pathways.",
+    titleKey: "resources:sexualHealth.prep.step3.title",
+    descriptionKey: "resources:sexualHealth.prep.step3.description",
+    noteKey: "resources:sexualHealth.prep.step3.note",
   },
   {
-    title: "Quarterly check-ins",
-    description:
-      "Every 3 months: HIV test, STI screen, and kidney function check. This is also where you get your next prescription. Appointments are 20–30 minutes.",
+    titleKey: "resources:sexualHealth.prep.step4.title",
+    descriptionKey: "resources:sexualHealth.prep.step4.description",
   },
 ];
 
-export const PREP_FAQ = [
+export interface PrepQuestion {
+  questionKey: string;
+  answerKey: string;
+}
+
+export const PREP_FAQ: PrepQuestion[] = [
   {
-    q: "Do I need a Portuguese SNS number?",
-    a: "EU citizens can access SNS services with their EHIC card. Non-EU residents should register with the SNS. You're entitled to do this if you're legally resident in Portugal. If you're in a more complex situation, GAT Lisboa specialises in supporting people without straightforward documentation.",
+    questionKey: "resources:sexualHealth.prep.faq.snsNumber.question",
+    answerKey: "resources:sexualHealth.prep.faq.snsNumber.answer",
   },
   {
-    q: "Can I take PrEP on-demand (event-based) rather than daily?",
-    a: "Yes, the 2-1-1 protocol (two pills 2–24 hours before sex, one 24 hours after, one 48 hours after) is supported in Portugal and is effective for receptive anal sex. Discuss with your clinician whether daily or on-demand is right for you.",
+    questionKey: "resources:sexualHealth.prep.faq.onDemand.question",
+    answerKey: "resources:sexualHealth.prep.faq.onDemand.answer",
   },
   {
-    q: "Does PrEP protect against other STIs?",
-    a: "PrEP only prevents HIV. It doesn't protect against syphilis, gonorrhoea, chlamydia, herpes, HPV, or hepatitis C. Condoms remain useful for STI prevention, and regular testing every 3 months is part of the PrEP programme for this reason.",
+    questionKey: "resources:sexualHealth.prep.faq.otherStis.question",
+    answerKey: "resources:sexualHealth.prep.faq.otherStis.answer",
   },
   {
-    q: "I'm trans and taking hormones. Does this affect PrEP?",
-    a: "For trans women on oestrogen, some studies suggest slightly lower drug levels. Daily dosing (rather than on-demand) is recommended. PrEP and HRT are generally safe to take together. Discuss with a clinician who has experience with trans patients; CheckpointLx has trans-experienced staff.",
+    questionKey: "resources:sexualHealth.prep.faq.transHormones.question",
+    answerKey: "resources:sexualHealth.prep.faq.transHormones.answer",
   },
 ];
 
 export interface InfoCard {
   icon: IconType;
-  title: string;
-  body: string;
-  link?: { label: string; href: string; external?: boolean };
+  titleKey: string;
+  bodyKey: string;
+  link?: { labelKey: string; href: string; external?: boolean };
 }
 
 export const HIV_INFO: InfoCard[] = [
   {
     icon: FiHeart,
-    title: "Just tested positive?",
-    body: "Take a breath. Modern HIV treatment is effective and straightforward. The CAD service or your GP can refer you immediately to an infectious disease specialist. Treatment usually begins within days of diagnosis.",
+    titleKey: "resources:sexualHealth.hiv.info.positive.title",
+    bodyKey: "resources:sexualHealth.hiv.info.positive.body",
     link: {
-      label: "Linha SIDA: 800 210 008 (free)",
-      href: "tel:800210008",
+      labelKey: "resources:sexualHealth.hiv.info.positive.link",
+      // SNS 24, the national health line (sns.gov.pt, "Linhas de
+      // Atendimento Gerais"). The old Linha SIDA number has closed.
+      href: "tel:808242424",
       external: true,
     },
   },
   {
     icon: FiActivity,
-    title: "PEP: after potential exposure",
-    body: "Post-exposure prophylaxis must be started within 72 hours (ideally 24). Go to any hospital A&E and ask for PEP. Do not wait. It's free through the SNS and highly effective when taken on time.",
+    titleKey: "resources:sexualHealth.hiv.info.pep.title",
+    bodyKey: "resources:sexualHealth.hiv.info.pep.body",
   },
   {
     icon: FiUsers,
-    title: "Community peer support",
-    body: "The QueerPulse HIV+ peer support group is private, moderated, and limited to members who have opted in. A space to share experience without stigma or unsolicited advice.",
-    link: { label: "Find the group", href: routes.communities },
+    titleKey: "resources:sexualHealth.hiv.info.peerSupport.title",
+    bodyKey: "resources:sexualHealth.hiv.info.peerSupport.body",
+    link: {
+      labelKey: "resources:sexualHealth.hiv.info.peerSupport.link",
+      href: routes.communities,
+    },
   },
   {
     icon: LuScale,
-    title: "Rights & non-disclosure",
-    body: "Portuguese law on HIV criminalisation is nuanced. You are not legally obligated to disclose to every partner in every situation. The legal reality is complex. Talk to GAT or a lawyer if you have concerns.",
-    link: { label: "Legal resources", href: routes.legal },
+    titleKey: "resources:sexualHealth.hiv.info.rights.title",
+    bodyKey: "resources:sexualHealth.hiv.info.rights.body",
+    link: {
+      labelKey: "resources:sexualHealth.hiv.info.rights.link",
+      href: routes.legal,
+    },
   },
 ];
 
@@ -295,42 +320,47 @@ export const GUIDES: (InfoCard & { contentKey: string })[] = [
   {
     icon: FaSyringe,
     contentKey: "sexualHealth.guides.vaccination",
-    title: "HPV & hepatitis B vaccination",
-    body: "Both are free through the SNS for certain groups, and strongly recommended. HPV vaccination is now available up to age 45 through some clinics. Ask your GP or CheckpointLx.",
+    titleKey: "resources:sexualHealth.guides.card.vaccination.title",
+    bodyKey: "resources:sexualHealth.guides.card.vaccination.body",
   },
   {
     icon: FaVirus,
     contentKey: "sexualHealth.guides.mpox",
-    title: "Mpox: what to know",
-    body: "Mpox can affect anyone, but some queer networks have higher exposure. Vaccination is available via SNS for close contacts and higher-risk individuals. CheckpointLx maintains an up-to-date guide.",
+    titleKey: "resources:sexualHealth.guides.card.mpox.title",
+    bodyKey: "resources:sexualHealth.guides.card.mpox.body",
   },
   {
     icon: LuMicroscope,
     contentKey: "sexualHealth.guides.bacterialStis",
-    title: "Bacterial STIs: syphilis, gonorrhoea, chlamydia",
-    body: "All are curable with antibiotics and all are on the rise across Europe. Many have no symptoms. Testing every 3 months if sexually active is the most reliable way to catch them early.",
+    titleKey: "resources:sexualHealth.guides.card.bacterialStis.title",
+    bodyKey: "resources:sexualHealth.guides.card.bacterialStis.body",
   },
   {
     icon: FiMessageCircle,
     contentKey: "sexualHealth.guides.talkingToPartners",
-    title: "Talking to partners about testing",
-    body: "A practical guide to having the conversation: different scripts for different situations. Written by community members, not clinical guidelines.",
-    // No standalone guide page exists yet, so we render no CTA rather than a
-    // dead "Read the guide →" link (href:"#"). Add a `link` here once the
-    // guide has a real route.
+    titleKey: "resources:sexualHealth.guides.card.talkingToPartners.title",
+    bodyKey: "resources:sexualHealth.guides.card.talkingToPartners.body",
+    // No standalone guide page exists yet, so this card renders without a
+    // CTA. Add a `link` here once the guide has a real route.
   },
   {
     icon: LuLeaf,
     contentKey: "sexualHealth.guides.substanceUse",
-    title: "Sexual health & substance use",
-    body: "Practical harm reduction for people who use substances in sexual contexts: chemsex, MDMA, alcohol. No judgment, practical information about risk reduction.",
-    link: { label: "Read the guide", href: routes.harmReduction },
+    titleKey: "resources:sexualHealth.guides.card.substanceUse.title",
+    bodyKey: "resources:sexualHealth.guides.card.substanceUse.body",
+    link: {
+      labelKey: "resources:sexualHealth.guides.card.substanceUse.link",
+      href: routes.harmReduction,
+    },
   },
   {
     icon: LuDna,
     contentKey: "sexualHealth.guides.transNonbinary",
-    title: "Sexual health for trans & non-binary people",
-    body: "Bodies vary, practices vary, and most sexual health guidance is written for cisgender people. A community-written guide to navigating the system and finding clinicians who understand.",
-    link: { label: "Trans Hub", href: routes.transHub },
+    titleKey: "resources:sexualHealth.guides.card.transNonbinary.title",
+    bodyKey: "resources:sexualHealth.guides.card.transNonbinary.body",
+    link: {
+      labelKey: "resources:sexualHealth.guides.card.transNonbinary.link",
+      href: routes.transHub,
+    },
   },
 ];

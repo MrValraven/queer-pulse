@@ -20,6 +20,7 @@ export function useCommunityDiscussions(slug: string | undefined): {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     isError,
     refetch,
   } = useCommunityPosts(slug);
@@ -37,6 +38,7 @@ export function useCommunityDiscussions(slug: string | undefined): {
       hasNextPage,
       fetchNextPage,
       isFetchingNextPage,
+      isFetchNextPageError,
       isError,
       refetch,
     },

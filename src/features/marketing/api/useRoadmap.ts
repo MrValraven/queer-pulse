@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getRoadmap, type RoadmapResponseDTO } from "./roadmap.api";
+import {
+  getRoadmap,
+  type HeroStatDTO,
+  type RoadmapResponseDTO,
+} from "./roadmap.api";
 import type {
   BacklogItem,
   BuildingItem,
@@ -16,7 +20,7 @@ import type {
 // default to "") lives in this one adapter, never in the page or cards.
 
 export interface RoadmapView {
-  heroStats: { label: string; value?: string; note?: string; jade?: boolean }[];
+  heroStats: HeroStatDTO[];
   shipped: ShippedItem[];
   building: BuildingItem[];
   planned: PlannedItem[];
@@ -68,12 +72,7 @@ async function buildDemo(): Promise<RoadmapData> {
 
 function fromDto(dto: RoadmapResponseDTO): RoadmapData {
   return {
-    heroStats: dto.heroStats.map((stat) => ({
-      label: stat.label,
-      value: stat.value,
-      note: stat.note,
-      jade: stat.jade,
-    })),
+    heroStats: dto.heroStats,
     shipped: dto.shipped.map((item) => ({ ...item, date: item.date ?? "" })),
     building: dto.building.map((item) => ({
       ...item,

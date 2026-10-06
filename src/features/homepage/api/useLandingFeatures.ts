@@ -5,7 +5,9 @@ import {
   type LandingChangemakerFeatureDTO,
   type LandingCommunityFeatureDTO,
   type LandingFeaturesResponseDTO,
+  type LandingGatheringFeatureDTO,
   type LandingMemberFeatureDTO,
+  type LandingStoryFeatureDTO,
 } from "../../admin/api/landingFeatures.api";
 import { spotlights } from "../sections/Discovery.data";
 import {
@@ -40,6 +42,12 @@ export interface LandingFeaturesResult {
   members: LandingMemberFeatureDTO[];
   communities: LandingCommunityFeatureDTO[];
   changemakers: LandingChangemakerFeatureDTO[];
+  /** Curated public gatherings: what a signed-out visitor's live homepage
+   *  shows in the "what's on" row (see `useHomepageGatherings`). */
+  gatherings: LandingGatheringFeatureDTO[];
+  /** Curated published stories: what a signed-out visitor's live homepage
+   *  shows in the stories row (see `useHomepageStories`). */
+  stories: LandingStoryFeatureDTO[];
   isLoading: boolean;
   /** True when the request failed. Each `Live*` section renders nothing on an
    *  empty slice, so without this an outage and "nothing curated yet" would be
@@ -119,6 +127,10 @@ function demoLandingFeatures(): LandingFeaturesResponseDTO {
       blurb: person.blurb,
       tags: person.tags,
     })),
+    // Demo mode renders the static `Gatherings` and `Stories` sections, which
+    // read their own fixtures, so the demo feed carries neither slice.
+    gatherings: [],
+    stories: [],
   };
 }
 
@@ -146,6 +158,8 @@ export function useLandingFeaturesPublic(): LandingFeaturesResult {
     members: query.data?.members ?? [],
     communities: query.data?.communities ?? [],
     changemakers: query.data?.changemakers ?? [],
+    gatherings: query.data?.gatherings ?? [],
+    stories: query.data?.stories ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),

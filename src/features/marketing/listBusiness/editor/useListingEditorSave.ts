@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ManagedListingDTO } from "../api/listings.api";
+import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { flashField, resolveListing422 } from "../listing422";
 import type { MissingField } from "../listBusiness.data";
 import { useEditListingSave } from "../useEditListingSave";
@@ -36,6 +37,7 @@ export function useListingEditorSave({
     editSlug: listing.slug,
     editStatus: listing.status,
   });
+  const { t, language } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   // Guards against setState after an unmount mid-save.
@@ -45,7 +47,7 @@ export function useListingEditorSave({
   const showSaveFailure = (error: unknown) => {
     // A validation error (400/422) names the offending field: surface the
     // server's message and flash that field, all the routing one screen needs.
-    const target = resolveListing422(error);
+    const target = resolveListing422(error, { t, language });
     if (target) {
       setServerError(target.message);
       form.setRejectedPhotoSlots(target.photoSlots);

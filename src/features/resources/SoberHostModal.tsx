@@ -16,7 +16,9 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const fieldId = useId();
-  const [mode, setMode] = useState<Mode>("host");
+  const [selectedMode, setSelectedMode] = useState<Mode>("host");
+  // Live mode has no attend flow (no gatherings are listed), so only hosting is offered.
+  const mode: Mode = demoMode ? selectedMode : "host";
   const [name, setName] = useState("");
   const [detail, setDetail] = useState("");
   const [phase, setPhase] = useState<"form" | "loading" | "done">("form");
@@ -47,7 +49,15 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ResourceModal
-      title={phase === "done" ? "" : t("resources:sober.host.modalTitle")}
+      title={
+        phase === "done"
+          ? ""
+          : t(
+              demoMode
+                ? "resources:sober.host.modalTitle"
+                : "resources:sober.host.modalTitleLive",
+            )
+      }
       onClose={onClose}
     >
       {phase === "done" ? (
@@ -72,43 +82,53 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
       ) : (
         <>
           <div className={styles.body}>
-            <p className={styles.sub}>{t("resources:sober.host.intro")}</p>
+            <p className={styles.sub}>
+              {t(
+                demoMode
+                  ? "resources:sober.host.intro"
+                  : "resources:sober.host.introLive",
+              )}
+            </p>
 
-            <span className={styles.label}>
-              {t("resources:sober.host.modeLabel")}
-            </span>
-            <div className={styles.options}>
-              <button
-                type="button"
-                className={`${styles.option} ${mode === "host" ? styles.optionSelected : ""}`}
-                onClick={() => setMode("host")}
-              >
-                <span className={styles.optIcon}>
-                  <FiPlusCircle />
-                </span>
-                <span className={styles.optName}>
-                  {t("resources:sober.host.mode.host.name")}
-                </span>
-                <span className={styles.optDesc}>
-                  {t("resources:sober.host.mode.host.desc")}
-                </span>
-              </button>
-              <button
-                type="button"
-                className={`${styles.option} ${mode === "attend" ? styles.optionSelected : ""}`}
-                onClick={() => setMode("attend")}
-              >
-                <span className={styles.optIcon}>
-                  <FiUsers />
-                </span>
-                <span className={styles.optName}>
-                  {t("resources:sober.host.mode.attend.name")}
-                </span>
-                <span className={styles.optDesc}>
-                  {t("resources:sober.host.mode.attend.desc")}
-                </span>
-              </button>
-            </div>
+            {demoMode && (
+              <span className={styles.label}>
+                {t("resources:sober.host.modeLabel")}
+              </span>
+            )}
+            {demoMode && (
+              <div className={styles.options}>
+                <button
+                  type="button"
+                  className={`${styles.option} ${mode === "host" ? styles.optionSelected : ""}`}
+                  onClick={() => setSelectedMode("host")}
+                >
+                  <span className={styles.optIcon}>
+                    <FiPlusCircle />
+                  </span>
+                  <span className={styles.optName}>
+                    {t("resources:sober.host.mode.host.name")}
+                  </span>
+                  <span className={styles.optDesc}>
+                    {t("resources:sober.host.mode.host.desc")}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.option} ${mode === "attend" ? styles.optionSelected : ""}`}
+                  onClick={() => setSelectedMode("attend")}
+                >
+                  <span className={styles.optIcon}>
+                    <FiUsers />
+                  </span>
+                  <span className={styles.optName}>
+                    {t("resources:sober.host.mode.attend.name")}
+                  </span>
+                  <span className={styles.optDesc}>
+                    {t("resources:sober.host.mode.attend.desc")}
+                  </span>
+                </button>
+              </div>
+            )}
 
             <label className={styles.label} htmlFor={`${fieldId}-name`}>
               {t(
@@ -164,7 +184,9 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
               ) : (
                 t(
                   mode === "host"
-                    ? "resources:sober.host.submitCta.host"
+                    ? demoMode
+                      ? "resources:sober.host.submitCta.host"
+                      : "resources:sober.host.submitCta.hostLive"
                     : "resources:sober.host.submitCta.attend",
                 )
               )}

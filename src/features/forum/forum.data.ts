@@ -11,12 +11,18 @@ import {
   FiHeart,
   FiLifeBuoy,
 } from "react-icons/fi";
-import { LuPalette, LuScale } from "react-icons/lu";
+import { LuHandCoins, LuPalette, LuScale } from "react-icons/lu";
 import { FaHandFist } from "react-icons/fa6";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { tintForSlug, initialsOf } from "../../shared/api/refs";
 import { MEMBERS, fullName, currentUser } from "../members/data/members";
 import type { ReplySort } from "./api/forum.api";
+import type { ForumFundingView } from "./funding/funding.types";
+import { previewFundingView } from "./funding/fundingPreview";
+import {
+  isoToLisbonWallClock,
+  lisbonEndOfDayIso,
+} from "./funding/fundingDates";
 
 /**
  * i18n Pattern A + label-key indirection: `id` is the canonical value the rest
@@ -36,6 +42,7 @@ export const CATS: { id: string; nameKey: string; icon: IconType }[] = [
   { id: "meetups", nameKey: "forum:cat.meetups", icon: FiUsers },
   { id: "legal", nameKey: "forum:cat.legal", icon: LuScale },
   { id: "relationships", nameKey: "forum:cat.relationships", icon: FiHeart },
+  { id: "funding", nameKey: "forum:cat.funding", icon: LuHandCoins },
   { id: "platform", nameKey: "forum:cat.platform", icon: FiLifeBuoy },
 ];
 
@@ -63,6 +70,7 @@ export const CAT_TONE: Record<string, CategoryTone> = {
   meetups: "jade",
   legal: "violet",
   relationships: "coral",
+  funding: "jade",
   platform: "neutral",
 };
 
@@ -88,6 +96,7 @@ export const CAT_STYLE: Record<string, { color: string }> = {
   meetups: { color: "var(--jade-ink)" },
   legal: { color: "var(--violet)" },
   relationships: { color: "var(--accent-ink)" },
+  funding: { color: "var(--jade-ink)" },
   platform: { color: "var(--text-strong)" },
 };
 
@@ -397,6 +406,12 @@ export interface Thread {
    *  the thread genuinely has no `is_op` post): the OP card says so plainly
    *  and every post that DID come back is rendered as a reply. */
   isOpAvailable?: boolean;
+  /** What the thread IS (a composer `PostKind`), or null for unclassified.
+   *  Live-provided; the demo funding threads set it. */
+  kind?: string | null;
+  /** An open call's or a fundraiser's details, states included, or null/absent
+   *  on every other thread. */
+  funding?: ForumFundingView | null;
 }
 
 // ── Author / reply identity, driven by the member registry ──────────────────
@@ -610,14 +625,35 @@ export function selfAuthorFromProfile(profile: {
   };
 }
 
+// ── Demo funding threads (Funding & Grants) ─────────────────────────────────
+// DEMO CORPUS ONLY. Deadlines are computed from the moment the module loads,
+// so "closes in 3 days" reads true whenever the demo runs. The funders and
+// links are invented, and every link uses example.org.
+
+const DEMO_DAY_MS = 24 * 60 * 60 * 1000;
+const demoNow = Date.now();
+const daysFromNow = (days: number) =>
+  new Date(demoNow + days * DEMO_DAY_MS).toISOString();
+/** The end of the Lisbon calendar day `days` from now: a demo deadline reads
+ *  23:59 Lisbon time, the way a real call states it. */
+const lisbonDayEndInDays = (days: number) =>
+  lisbonEndOfDayIso(
+    (isoToLisbonWallClock(daysFromNow(days)) ?? "").slice(0, 10),
+  ) ?? daysFromNow(days);
+
+/** The open call the demo duplicate-link prompt finds. */
+export const DEMO_DUPLICATE_CALL_LINK =
+  "https://example.org/lumen/apoio-projetos-2026";
+
 /**
  * Scripted demo threads. Each carries a SYNTHETIC `opPostId` (`demo-op-<id>`) so
  * the demo upvote button toggles: the demo thread list is cached via
  * `useThreads`' `queryFn`, and `useVotePost`'s optimistic `onMutate` finds the
  * card by `opPostId` and flips `myVote`/`upvotes` in place (demo makes no API
- * call). These ids are demo-only — live never reads `THREADS` for the list — so
- * they cannot reach a production request. None of these threads is authored by
- * the demo persona, so the synthetic id never surfaces a moderation menu.
+ * call). These ids are demo-only. Live never reads `THREADS` for the list, so
+ * they cannot reach a production request. Thread 36 is the persona's own
+ * fundraiser, so demo shows the author's controls; its menu actions run on
+ * local state only, like every demo write.
  */
 export const THREADS: Thread[] = [
   {
@@ -1412,6 +1448,249 @@ export const THREADS: Thread[] = [
         reactions: 18,
       }),
     ],
+  },
+  {
+    id: 30,
+    opPostId: "demo-op-30",
+    category: "funding",
+    kind: "call",
+    title:
+      "Fundação Exemplo Lumen: project support for queer collectives, 2026",
+    excerpt:
+      "Up to €2,000 for collectives and associations running something for the community in Portugal. One page, plain language, no fee.",
+    author: author("sofia"),
+    posted: "2 days ago",
+    views: 310,
+    upvotes: 24,
+    comments: 1,
+    tags: ["grants", "open-call"],
+    body: [
+      "Lumen's yearly support round is open. It funds events, publications and small spaces run by collectives and registered associations, anywhere in Portugal.",
+      "The form is one page and they say plainly that they want to hear from first-time applicants. I applied last year and got a reply in five weeks.",
+    ],
+    replies: [
+      reply("rita", {
+        id: "reply-thread30-rita",
+        parentPostId: null,
+        time: "1 day ago",
+        body: [
+          "Applied last round too. They answered my budget questions by email within a week.",
+        ],
+        reactions: 3,
+      }),
+    ],
+    funding: previewFundingView(
+      "call",
+      {
+        linkUrl: DEMO_DUPLICATE_CALL_LINK,
+        funderName: "Fundação Exemplo Lumen",
+        amountMin: 500,
+        amountMax: 2000,
+        deadline: lisbonDayEndInDays(21),
+        eligibility: ["collectives", "associations"],
+        scope: "national",
+      },
+      demoNow,
+    ),
+  },
+  {
+    id: 31,
+    opPostId: "demo-op-31",
+    category: "funding",
+    kind: "call",
+    title: "Lisbon Arts Micro-Fund closes this week",
+    excerpt:
+      "€300 to €800 for individual artists living in Lisbon. Short form, decision within a month.",
+    author: author("nuno"),
+    posted: "5 days ago",
+    views: 188,
+    upvotes: 15,
+    comments: 0,
+    tags: ["grants", "open-call"],
+    body: [
+      "A reminder that the micro-fund round ends in a few days. It suits a first exhibition, a zine run or studio time.",
+    ],
+    replies: [],
+    funding: previewFundingView(
+      "call",
+      {
+        linkUrl: "https://example.org/lisbon-arts/micro-fund",
+        funderName: "Lisbon Arts Micro-Fund",
+        amountMin: 300,
+        amountMax: 800,
+        deadline: lisbonDayEndInDays(3),
+        eligibility: ["individuals"],
+        scope: "local",
+      },
+      demoNow,
+    ),
+  },
+  {
+    id: 32,
+    opPostId: "demo-op-32",
+    category: "funding",
+    kind: "call",
+    title: "Rolling travel grants for trans researchers and students",
+    excerpt:
+      "Covers conference travel inside Europe. Applications are read every month, with no fixed deadline.",
+    author: author("luisa"),
+    posted: "3 weeks ago",
+    views: 402,
+    upvotes: 31,
+    comments: 0,
+    tags: ["grants", "open-call"],
+    body: [
+      "These travel grants run all year. Students and early-career researchers can apply once per academic year.",
+    ],
+    replies: [],
+    funding: previewFundingView(
+      "call",
+      {
+        linkUrl: "https://example.org/coletivo-demo/travel",
+        funderName: "Coletivo Demo de Investigação",
+        amountMax: 1200,
+        deadline: null,
+        eligibility: ["individuals", "students"],
+        scope: "eu",
+      },
+      demoNow,
+      { updatedAt: daysFromNow(-20) },
+    ),
+  },
+  {
+    id: 33,
+    opPostId: "demo-op-33",
+    category: "funding",
+    kind: "call",
+    title: "Community spaces fund: last year's round",
+    excerpt:
+      "Funded rent and fit-out for community spaces. This round has closed, and the post keeps notes for the next one.",
+    author: author("diogo"),
+    posted: "2 months ago",
+    views: 640,
+    upvotes: 42,
+    comments: 0,
+    tags: ["grants", "open-call"],
+    body: [
+      "Posting the results thread here so the next round has notes from people who applied.",
+    ],
+    replies: [],
+    funding: previewFundingView(
+      "call",
+      {
+        linkUrl: "https://example.org/spaces-fund/2025",
+        funderName: "Spaces Fund",
+        amountMin: 1000,
+        amountMax: 5000,
+        deadline: lisbonDayEndInDays(-10),
+        eligibility: ["associations"],
+        scope: "national",
+      },
+      demoNow,
+    ),
+  },
+  {
+    id: 34,
+    opPostId: "demo-op-34",
+    category: "funding",
+    kind: "call",
+    title: "European call for LGBTQ+ media projects",
+    excerpt:
+      "Larger grants for podcasts, documentaries and publications made by queer collectives or companies.",
+    author: author("kai"),
+    posted: "1 week ago",
+    views: 255,
+    upvotes: 19,
+    comments: 0,
+    tags: ["grants", "open-call"],
+    body: [
+      "A bigger application with a budget template. Worth starting early: they ask for two letters of support.",
+    ],
+    replies: [],
+    funding: previewFundingView(
+      "call",
+      {
+        linkUrl: "https://example.org/eu-queer-media/call-2026",
+        funderName: "European Queer Media Fund",
+        amountMin: 5000,
+        amountMax: 25000,
+        deadline: lisbonDayEndInDays(45),
+        eligibility: ["collectives", "companies"],
+        scope: "international",
+      },
+      demoNow,
+    ),
+  },
+  {
+    id: 35,
+    opPostId: "demo-op-35",
+    category: "funding",
+    kind: "ask",
+    title: "Help Rui cover his top surgery recovery",
+    excerpt:
+      "Rui needs six weeks off work after surgery in November. The fundraiser covers rent and food for that time.",
+    author: author("ines"),
+    posted: "4 days ago",
+    views: 520,
+    upvotes: 63,
+    comments: 1,
+    tags: ["fund", "trans"],
+    body: [
+      "Rui has a date for top surgery in November and no sick pay from his job. Six weeks of rent and food is what stands between him and going back to work too early.",
+      "I am his flatmate and I set this up with him. Every euro goes to the GoFundMe page linked above, and I will post an update here when the goal is reached.",
+    ],
+    replies: [
+      reply("luisa", {
+        id: "reply-thread35-luisa",
+        parentPostId: null,
+        time: "3 days ago",
+        body: ["Shared it with my collective. Wishing Rui a gentle recovery."],
+        reactions: 5,
+      }),
+    ],
+    funding: previewFundingView(
+      "ask",
+      {
+        linkUrl: "https://www.gofundme.com/f/rui-recovery-lisbon",
+        goalAmount: 2400,
+        askPurpose: "healthcare",
+        beneficiary: "someone_i_know",
+        endsAt: lisbonDayEndInDays(40),
+      },
+      demoNow,
+      { askState: "active", approvedAt: daysFromNow(-4) },
+    ),
+  },
+  {
+    id: 36,
+    opPostId: "demo-op-36",
+    category: "funding",
+    kind: "ask",
+    title: "Table fees for the Arroios queer print collective at the zine fair",
+    excerpt:
+      "We have a table at the spring zine fair and need help with the fee and the printing.",
+    author: author(currentUser.slug),
+    posted: "2 days ago",
+    views: 140,
+    upvotes: 18,
+    comments: 0,
+    tags: ["fund", "art"],
+    body: [
+      "Our collective prints a zine every season. The fair table and a print run come to €450, and anything above that goes to the next issue.",
+    ],
+    replies: [],
+    funding: previewFundingView(
+      "ask",
+      {
+        linkUrl: "https://ko-fi.com/arroiosprint",
+        goalAmount: 450,
+        askPurpose: "project",
+        beneficiary: "project",
+        endsAt: null,
+      },
+      demoNow,
+      { askState: "active", approvedAt: daysFromNow(-2) },
+    ),
   },
 ];
 

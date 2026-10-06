@@ -587,10 +587,15 @@
 .threadMeta {
   display: flex;
   align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 4px 10px;
   margin-top: 12px;
   font-size: var(--text-12-5);
   color: var(--ink-40);
+}
+/* Reply count and time-ago never split mid-word; the row wraps between items. */
+.threadMeta > span {
+  white-space: nowrap;
 }
 .tmWho {
   position: relative;

@@ -4,7 +4,6 @@ import type {
   DemoRoadmapState,
 } from "./adminRoadmap.data";
 import type {
-  RoadmapAdminHeroStatDTO,
   RoadmapBulkAction,
   RoadmapColumn,
   RoadmapDeclineReason,
@@ -621,20 +620,4 @@ export function demoDeleteTeamMember(
     `Removed "${member.name}" from the team`,
   );
   return { state: nextState, result: undefined };
-}
-
-// ── Settings ─────────────────────────────────────────────────────────────────
-
-export function demoUpdateSettings(
-  state: DemoRoadmapState,
-  heroStats: RoadmapAdminHeroStatDTO[],
-): {
-  state: DemoRoadmapState;
-  result: { heroStats: RoadmapAdminHeroStatDTO[] };
-} {
-  const nextState = appendAudit(
-    { ...state, heroStats },
-    "Updated roadmap hero stats",
-  );
-  return { state: nextState, result: { heroStats } };
 }

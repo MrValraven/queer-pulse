@@ -10,7 +10,7 @@ import type { MemberRole } from "../auth/api/auth.api";
  * `"staff"` — a value that isn't even in the backend's role enum. Because it
  * defaulted to staff for *everyone*, every signed-in member in live mode was
  * shown the Magazine-editor and Admin links in their account menu, all of which
- * dead-end at the `useAuthGateRedirect` bounce back to the homepage. Live mode
+ * dead-end at the `useAuthGateRedirect` bounce to the feed. Live mode
  * now reads the real `useAuth().role`, the same value the route gate and the
  * backend `RolesGuard` enforce, so the links appear only where they work.
  *

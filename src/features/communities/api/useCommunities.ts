@@ -35,6 +35,10 @@ export interface CommunitiesResult {
    * as a directory that never loaded (DES-22).
    */
   isError: boolean;
+  /** ENG-501: the latest next-page fetch failed. react-query also sets
+   *  `isError` then, so a grid keeps the cards already loaded and lets its
+   *  footer retry the page. Demo's single synthetic page never sets it. */
+  isFetchNextPageError: boolean;
   /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
   refetch: () => void;
   /**
@@ -296,6 +300,7 @@ export function useCommunities(
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
     facets: pages[0]?.facets,
     isShowingPreviousResults: query.isPlaceholderData,

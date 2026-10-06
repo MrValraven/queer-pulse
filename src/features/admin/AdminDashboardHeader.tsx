@@ -63,10 +63,8 @@ export function AdminDashboardHeader({
         {isLoadError ? (
           <>
             <h1 className={styles.h1}>
-              {t("admin:dashboard.header.titleErrorLine1")}
-              <br />
               <Translation
-                i18nKey="admin:dashboard.header.titleErrorLine2"
+                i18nKey="admin:dashboard.header.titleError"
                 components={{ em: <em /> }}
               />
             </h1>
@@ -93,34 +91,23 @@ export function AdminDashboardHeader({
           </>
         ) : triage === undefined ? (
           <>
-            <SkeletonLine width={240} height={40} style={{ marginTop: 4 }} />
-            <SkeletonLine width={190} height={40} style={{ marginTop: 10 }} />
+            <SkeletonLine width={420} height={40} style={{ marginTop: 4 }} />
             <SkeletonLine width={360} height={15} style={{ marginTop: 20 }} />
           </>
         ) : (
           <>
             <h1 className={styles.h1}>
               {isCaughtUp ? (
-                <>
-                  {t("admin:dashboard.header.titleClearLine1")}
-                  <br />
-                  <Translation
-                    i18nKey="admin:dashboard.header.titleClearLine2"
-                    components={{ em: <em /> }}
-                  />
-                </>
+                <Translation
+                  i18nKey="admin:dashboard.header.titleClear"
+                  components={{ em: <em /> }}
+                />
               ) : (
-                <>
-                  {t("admin:dashboard.header.titleLine1", {
-                    count: totalNeedsHuman,
-                  })}
-                  <br />
-                  <Translation
-                    i18nKey="admin:dashboard.header.titleLine2"
-                    components={{ em: <em /> }}
-                    values={{ count: totalNeedsHuman }}
-                  />
-                </>
+                <Translation
+                  i18nKey="admin:dashboard.header.title"
+                  components={{ em: <em /> }}
+                  values={{ count: totalNeedsHuman }}
+                />
               )}
             </h1>
             <p className={styles.phSub}>

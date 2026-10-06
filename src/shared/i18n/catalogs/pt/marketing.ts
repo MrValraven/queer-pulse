@@ -712,6 +712,17 @@ export const marketing: Catalog = {
   "dsar.toast.submitted": "Pedido submetido: referência {ref}",
   "dsar.toast.submitError":
     "Não conseguimos registar esse pedido. Nada foi enviado. Importas-te de tentar outra vez?",
+  "dsar.meta.title":
+    "Pede os teus dados: direitos sobre os dados na QueerPulse ao abrigo do RGPD",
+  "dsar.meta.description":
+    "Pede à QueerPulse uma cópia dos teus dados, uma correção, a sua eliminação ou uma oposição ao seu uso, ao abrigo do RGPD e sem qualquer custo.",
+  "dsar.signedOut.title": "Inicia sessão para <em>fazer um pedido.</em>",
+  "dsar.signedOut.body":
+    "Um pedido fica associado à conta com que tens sessão iniciada, para sabermos de quem são os dados. Inicia sessão e voltas diretamente a esta página.",
+  "dsar.signedOut.signInCta": "Iniciar sessão",
+  "dsar.signedOut.noAccount":
+    "<b>Não tens conta connosco?</b> Se pediste um convite, nos escreveste ou já foste membro, envia o teu pedido pelo formulário de contacto e diz-nos o email que usaste.",
+  "dsar.signedOut.contactCta": "Escreve-nos sobre os teus dados",
 
   // ── Diretrizes da Comunidade ───────────────────────────────────────────
   "guidelines.meta.title": "Diretrizes da Comunidade QueerPulse",
@@ -1444,11 +1455,11 @@ export const marketing: Catalog = {
     "Três pessoas fundadoras estão disponíveis para comentário à imprensa. Cita-as sobre os temas indicados; não parafraseies. <em>As restantes pessoas da comunidade não estão disponíveis sem consentimento explícito</em>. Por favor não as contactes diretamente através da plataforma.",
   "pressKit.facts.section.title": "<em>Factos</em> rápidos · a {date}",
   "pressKit.facts.section.lead":
-    "Fonte: relatório de transparência de 2025. <em>Por favor liga à página de transparência quando citares.</em>",
+    "Contagem em direto da plataforma. <em>Por favor liga à página de transparência quando citares.</em>",
   "pressKit.facts.founded": "Fundada · Lisboa",
-  "pressKit.facts.activeMembers": "Pessoas ativas no final de 2025",
+  "pressKit.facts.activeMembers": "Pessoas ativas hoje",
   "pressKit.facts.communities": "Comunidades na plataforma",
-  "pressKit.facts.gatherings": "Convívios realizados em 2025",
+  "pressKit.facts.gatherings": "Convívios realizados até agora",
   "pressKit.facts.safeSpaces": "Espaços seguros verificados em Lisboa",
   "pressKit.facts.magazineIssues": "Edições da revista até hoje",
   "pressKit.coverage.section.title": "<em>Cobertura</em> recente",
@@ -1629,7 +1640,7 @@ export const marketing: Catalog = {
   "listBusiness.step2.tagsAvailableLabel": "Escolhe entre as disponíveis",
   "listBusiness.step2.tagsChosenCount": "{count} de 6 escolhidas",
   "listBusiness.step2.tagsNoMatch": "Nenhuma etiqueta corresponde a “{query}”",
-  "listBusiness.step2.tagsLegacyLabel": "Etiquetas antigas",
+  "listBusiness.step2.tagsLegacyLabel": "Outras etiquetas desta listagem",
   "listBusiness.step2.tagsCapHint":
     "Seis etiquetas é o máximo que um anúncio pode ter",
   "listBusiness.step2.tagRemoveAria": "Remover {tag}",
@@ -1651,11 +1662,17 @@ export const marketing: Catalog = {
   "listBusiness.goodFor.hostsCommunityEvents": "Acolhe eventos da comunidade",
   "listBusiness.goodFor.budgetFriendly": "Amigo da carteira",
   "listBusiness.goodFor.accessibleBathroom": "Casa de banho acessível",
+  "listBusiness.goodFor.beginnerFriendly": "Bom para principiantes",
+  "listBusiness.goodFor.goodForGifts": "Bom para presentes",
   // Vocabulário de etiquetas: títulos dos grupos, depois uma chave por etiqueta
   "listBusiness.tagGroup.visiting": "Como visitar",
   "listBusiness.tagGroup.happening": "O que lá acontece",
   "listBusiness.tagGroup.foodDrink": "Comida e bebida",
   "listBusiness.tagGroup.pricing": "Preços",
+  "listBusiness.tagGroup.ordering": "Encomendas e envios",
+  "listBusiness.tagGroup.payment": "Formas de pagamento",
+  "listBusiness.tagGroup.sessions": "Sessões",
+  "listBusiness.tagGroup.visitingOnline": "Como marcar",
   "listBusiness.tag.byAppointment": "Por marcação",
   "listBusiness.tag.bookingRecommended": "Reserva recomendada",
   "listBusiness.tag.membersOnly": "Só para membros",
@@ -1683,6 +1700,20 @@ export const marketing: Catalog = {
   "listBusiness.tag.slidingScale": "Preço solidário",
   "listBusiness.tag.payWhatYouCan": "Paga o que puderes",
   "listBusiness.tag.studentDiscount": "Desconto para estudantes",
+  "listBusiness.tag.shipsToPortugal": "Envia para Portugal",
+  "listBusiness.tag.shipsAcrossEu": "Envia para toda a UE",
+  "listBusiness.tag.shipsWorldwide": "Envia para todo o mundo",
+  "listBusiness.tag.pickUpInLisbon": "Levantamento em Lisboa",
+  "listBusiness.tag.madeToOrder": "Feito por encomenda",
+  "listBusiness.tag.customCommissions": "Peças por encomenda personalizada",
+  "listBusiness.tag.digitalDownloads": "Downloads digitais",
+  "listBusiness.tag.giftCards": "Cartões-oferta",
+  "listBusiness.tag.mbWay": "MB WAY",
+  "listBusiness.tag.multibanco": "Multibanco",
+  "listBusiness.tag.payPal": "PayPal",
+  "listBusiness.tag.videoSessions": "Sessões por vídeo",
+  "listBusiness.tag.phoneSessions": "Sessões por telefone",
+  "listBusiness.tag.freeFirstCall": "Primeira conversa grátis",
   // Idiomas (os endónimos ficam iguais; só "Outro" e a glosa de LGP traduzem)
   "listBusiness.lang.portugues": "Português",
   "listBusiness.lang.english": "English",
@@ -2876,6 +2907,7 @@ export const marketing: Catalog = {
   "changelog.hero.titleLine2": "e quando.",
   "changelog.hero.sub":
     "Todas as atualizações da QueerPulse, da mais recente para a mais antiga. Publicamos as alterações aqui para saberes sempre o que é diferente e porquê. Nada acontece sem ficar registado.",
+  "changelog.hero.backText": "Voltar ao Roteiro",
   "changelog.filterAria": "Filtrar atualizações por tipo",
   "changelog.filter.all": "Tudo",
   "changelog.filter.feature": "Funcionalidades",
@@ -2896,6 +2928,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-06.headline":
+    "Concursos de financiamento e angariações, encontros reais para quem visita e o teu idioma contigo.",
   "changelog.releases.2026-10-05.headline":
     "As conversas que leste ficam lidas, etiquetas BIPOC nos espaços e um registo de cada ação da equipa.",
   "changelog.releases.2026-10-02.headline":
@@ -3182,6 +3216,160 @@ export const marketing: Catalog = {
     "Um histórico de versões mais arrumado no editor de artigos",
   "changelog.entries.draft-history-compact-timeline.body":
     "Cada versão guardada cabe numa linha, a mais recente fica marcada e os históricos longos recolhem-se.",
+  "changelog.entries.decided-requests-show-what-they-sent.title":
+    "Os pedidos decididos guardam o que a pessoa enviou",
+  "changelog.entries.decided-requests-show-what-they-sent.body":
+    "Abre um pedido decidido para reler a mensagem, a cidade, como soube de nós e quem a recomendou.",
+  "changelog.entries.iphone-push-keeps-arriving.title":
+    "As notificações no iPhone continuam a chegar",
+  "changelog.entries.iphone-push-keeps-arriving.body":
+    "As notificações no iPhone continuam a chegar mesmo depois de dias sem abrir a app, nas mensagens e no resto.",
+  "changelog.entries.lists-survive-failed-page.title":
+    "As listas guardam o que já carregaram",
+  "changelog.entries.lists-survive-failed-page.body":
+    "Quando falha carregar mais, o que já tens fica no ecrã e aparece um Tentar de novo por baixo.",
+  "changelog.entries.errors-follow-your-language.title":
+    "As mensagens de erro seguem a tua língua",
+  "changelog.entries.errors-follow-your-language.body":
+    "Quem lê em português vê as recusas em português, e os limites diários dizem claramente o que aconteceu.",
+  "changelog.entries.update-always-finishes.title":
+    "A atualização já não fica presa",
+  "changelog.entries.update-always-finishes.body":
+    "O cartão de atualização mostra uma linha de progresso e recarrega sempre, mesmo num separador aberto com recarga forçada.",
+  // 6 Oct 2026: linhas transitadas das análises (PRD-320, PRD-323, PRD-325, PRD-327, PRD-329, ENG-190).
+  "changelog.entries.gathering-links-from-feed-open.title":
+    "As ligações para encontros no feed já abrem",
+  "changelog.entries.gathering-links-from-feed-open.body":
+    "As ligações no feed e nas notificações abrem o encontro certo, incluindo os que já passaram, marcados como terminados.",
+  "changelog.entries.new-member-cards-show-what-you-share.title":
+    "Os cartões de novas pessoas mostram o que têm em comum",
+  "changelog.entries.new-member-cards-show-what-you-share.body":
+    "O que a pessoa escreveu vem primeiro, os interesses em comum à frente e várias chegadas num só cartão.",
+  "changelog.entries.connect-request-note-when-answering.title":
+    "Vê o que te escreveram antes de responder ao pedido",
+  "changelog.entries.connect-request-note-when-answering.body":
+    'O painel "pediu-te primeiro" mostra a mensagem e o motivo, com as três respostas na mesma linha.',
+  "changelog.entries.dropdown-escape-keeps-dialog-open.title":
+    "Escape numa lista fecha só a lista",
+  "changelog.entries.dropdown-escape-keeps-dialog-open.body":
+    "O teu rascunho fica na janela, e Pedir conexão mantém o botão de fechar à mão enquanto fazes scroll.",
+  "changelog.entries.connect-request-preview.title":
+    "Vê o teu pedido de conexão antes de o enviares",
+  "changelog.entries.connect-request-preview.body":
+    "Em ecrãs largos, o cartão que a pessoa vai receber aparece ao lado do formulário e muda enquanto escreves.",
+  "changelog.entries.connect-dialog-centred-on-desktop.title":
+    "Pedir conexão abre a meio do ecrã no computador",
+  "changelog.entries.connect-dialog-centred-on-desktop.body":
+    "Em ecrãs largos aparece uma janela centrada com cantos redondos; no telemóvel fica a folha de baixo.",
+  "changelog.entries.funding-grants-forum.title":
+    "Partilha concursos abertos no novo fórum Financiamento e Apoios",
+  "changelog.entries.funding-grants-forum.body":
+    "Os concursos mostram financiador, valor e prazo à hora de Lisboa, fecham a horas e os guardados avisam 7 dias e 1 dia antes.",
+  "changelog.entries.community-fundraisers.title":
+    "Pede à comunidade que apoie a tua angariação",
+  "changelog.entries.community-fundraisers.body":
+    "Os moderadores verificam cada página de crowdfunding antes de ir ao ar e a QueerPulse nunca mexe no dinheiro.",
+  "changelog.entries.online-listings-get-their-own-tags.title":
+    "Negócios online ganham etiquetas à medida",
+  "changelog.entries.online-listings-get-their-own-tags.body":
+    "Envios, formas de pagamento e sessões substituem esplanadas e noites com DJ nas listagens só online.",
+  "changelog.entries.governance-shows-entered-figures.title":
+    "A governação mostra só números introduzidos pela equipa",
+  "changelog.entries.governance-shows-entered-figures.body":
+    "Os números de exemplo das finanças e da saúde da comunidade saíram até a equipa publicar um trimestre real.",
+
+  "changelog.entries.sober-page-lists-what-exists.title":
+    "A página Sóbrie mostra só o que existe",
+  "changelog.entries.sober-page-lists-what-exists.body":
+    "Os encontros de exemplo, as inscrições e as etiquetas de espaços saíram, e ainda podes propor organizar um.",
+
+  "changelog.entries.sexual-health-guide-in-portuguese.title":
+    "Guia de saúde sexual em português",
+  "changelog.entries.sexual-health-guide-in-portuguese.body":
+    "A informação sobre PrEP, testes e VIH está em português, com as regras atuais sobre onde levantar a PrEP.",
+
+  "changelog.entries.safety-messages-reach-team-first.title":
+    "As mensagens de segurança chegam primeiro à equipa",
+  "changelog.entries.safety-messages-reach-team-first.body":
+    "Uma preocupação de segurança enviada pela página de contacto avisa a equipa e fica no topo da caixa de entrada.",
+
+  "changelog.entries.data-requests-work-signed-out.title":
+    "Os pedidos de dados explicam o que fazer sem sessão",
+  "changelog.entries.data-requests-work-signed-out.body":
+    "Quem não tem sessão iniciada recebe um link para entrar e voltar ao formulário, ou o caminho de privacidade no Contacto.",
+
+  "changelog.entries.volunteer-pages-in-portuguese.title":
+    "Páginas de voluntariado em português",
+  "changelog.entries.volunteer-pages-in-portuguese.body":
+    "As páginas de oportunidades estão todas em português, e quem visita vê uma explicação antes dos links só para membros.",
+
+  "changelog.entries.volunteer-teams-respect-blocks.title":
+    "As páginas de voluntariado respeitam bloqueios",
+  "changelog.entries.volunteer-teams-respect-blocks.body":
+    "As páginas públicas não mostram membros a quem visita, e a lista da equipa deixa de fora quem bloqueaste.",
+
+  "changelog.entries.roadmap-counts-the-board.title":
+    "Os números do roteiro contam o quadro",
+  "changelog.entries.roadmap-counts-the-board.body":
+    "O topo do roteiro conta em direto o que foi entregue, está em curso ou planeado, e quem visita entra antes de votar.",
+
+  "changelog.entries.newsletter-signup-removed.title":
+    "Registo na newsletter sem uso retirado",
+  "changelog.entries.newsletter-signup-removed.body":
+    "O registo guardava endereços de email sem propósito, por isso o endpoint e todos os endereços guardados foram apagados.",
+
+  "changelog.entries.changemaker-stories-members-only.title":
+    "As histórias de quem faz a mudança ficam só para membros",
+  "changelog.entries.changemaker-stories-members-only.body":
+    "A API das histórias pede agora uma sessão de membro, tal como a página.",
+
+  "changelog.entries.dates-follow-your-language.title":
+    "As datas seguem o teu idioma",
+  "changelog.entries.dates-follow-your-language.body":
+    "As datas da Privacidade, dos Termos e do registo de alterações aparecem agora em português.",
+
+  "changelog.entries.homepage-shows-real-gatherings.title":
+    "Quem visita vê encontros e histórias reais",
+  "changelog.entries.homepage-shows-real-gatherings.body":
+    "A equipa pode destacar encontros públicos e histórias publicadas na página inicial para quem ainda não entrou.",
+  "changelog.entries.group-join-shows-your-standing.title":
+    "Os grupos de habitação mostram o estado do teu pedido",
+  "changelog.entries.group-join-shows-your-standing.body":
+    "Depois de pedires para entrar, o grupo mostra que o pedido está à espera, e Os teus quartos assinalam remoções.",
+  "changelog.entries.expired-listings-come-back-right.title":
+    "Anúncios expirados voltam da forma certa",
+  "changelog.entries.expired-listings-come-back-right.body":
+    "Prolongar vem primeiro quando volta a publicar, casas expiradas fecham pedidos de visita e os guardados respeitam bloqueios.",
+  "changelog.entries.message-rooms-in-housing-groups.title":
+    "Envia mensagem ou denuncia quartos em grupos de habitação",
+  "changelog.entries.message-rooms-in-housing-groups.body":
+    "Os quartos dos grupos de habitação mostram agora quem os publicou, com botões para enviar mensagem ou denunciar.",
+  "changelog.entries.call-off-accepted-viewing.title":
+    "Cancela uma visita já aceite",
+  "changelog.entries.call-off-accepted-viewing.body":
+    "Qualquer das partes pode cancelar uma visita confirmada, e bloquear, ocupar ou republicar uma casa fecha a morada.",
+  "changelog.entries.housing-respects-blocks.title":
+    "A habitação respeita bloqueios e guarda o histórico",
+  "changelog.entries.housing-respects-blocks.body":
+    "As casas de quem bloqueaste saem do teu quadro e dos alertas, e um anúncio apagado mantém as avaliações registadas.",
+  "changelog.entries.safe-space-updates-read-right.title":
+    "Novidades de espaços seguros com texto próprio",
+  "changelog.entries.safe-space-updates-read-right.body":
+    "As novidades de nomeações e selos chegam agora no teu idioma, escritas como notícias da revisão.",
+  "changelog.entries.language-follows-you.title": "O teu idioma acompanha-te",
+  "changelog.entries.language-follows-you.body":
+    "Escolhe inglês ou português uma vez e cada telemóvel ou navegador novo abre nesse idioma, notificações incluídas.",
+  "changelog.entries.search-speaks-your-language.title":
+    "A pesquisa fala a tua língua",
+  "changelog.entries.search-speaks-your-language.body":
+    "Os atalhos de páginas estão traduzidos, uma pesquisa vazia sugere o próximo passo e os resultados tocados ficam nos recentes.",
+  "changelog.entries.lighter-app-install.title": "Instalar a app pesa menos",
+  "changelog.entries.lighter-app-install.body":
+    "A primeira visita descarrega agora cerca de 3,7 MB a menos, por isso a app fica pronta mais cedo com dados móveis.",
+  "changelog.entries.sign-in-keeps-your-link.title":
+    "Iniciar sessão mantém o link que abriste",
+  "changelog.entries.sign-in-keeps-your-link.body":
+    "Links com separador, filtro ou pesquisa levam-te exatamente onde apontavam depois de iniciares sessão.",
   "changelog.entries.directory-cards-one-line.title":
     "Os cartões do diretório voltam a alinhar",
   "changelog.entries.directory-cards-one-line.body":
@@ -3210,7 +3398,8 @@ export const marketing: Catalog = {
     "Vê todas as ações da equipa num só registo",
   "changelog.entries.admin-platform-log.body":
     "Filtra por categoria, período ou membro, e os admins veem também os eventos públicos dos membros.",
-  "changelog.entries.admin-platform-log.tag": "Abrir o registo da plataforma",
+  "changelog.entries.admin-platform-log.tag":
+    "Ferramenta da equipa: o registo da plataforma",
   "changelog.entries.back-arrow-after-the-more-menu.title":
     "A seta para voltar aparece outra vez depois de abrires uma página pelo Mais",
   "changelog.entries.back-arrow-after-the-more-menu.body":
@@ -5256,7 +5445,7 @@ export const marketing: Catalog = {
   "changelog.tag.roadmap": "Abrir o roteiro",
   "changelog.tag.magazine": "Abrir a revista",
   "changelog.tag.magazineSections": "Navegar por seção",
-  "changelog.tag.magazineWriter": "Abrir o teu espaço",
+  "changelog.tag.magazineWriter": "Ferramenta da equipa: o espaço de escrita",
   "changelog.tag.badges": "Ver emblemas e níveis",
   "changelog.tag.safety": "Ver a nossa abordagem à segurança",
   "changelog.tag.editProfile": "Editar o teu perfil",
@@ -5269,7 +5458,7 @@ export const marketing: Catalog = {
   "changelog.tag.postVolunteer": "Publicar oportunidade",
   "changelog.tag.notifications": "Abrir as tuas notificações",
   "changelog.tag.connections": "Abrir as tuas conexões",
-  "changelog.tag.trustNetwork": "Abrir a rede de confiança",
+  "changelog.tag.trustNetwork": "Ferramenta da equipa: a rede de confiança",
   "changelog.tag.invite": "Convidar alguém",
   "changelog.tag.imprint": "Ler o aviso legal",
   "changelog.tag.terms": "Ler os termos",
@@ -5280,7 +5469,7 @@ export const marketing: Catalog = {
   "changelog.tag.cookies": "Ver a lista completa",
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.pushDevices": "Gerir os teus dispositivos",
-  "changelog.tag.magazineDesk": "Abrir a redação",
+  "changelog.tag.magazineDesk": "Ferramenta da equipa: a redação",
   "changelog.tag.comingOut": "Ler o guia de sair do armário",
   "changelog.tag.guidelines": "Ler as diretrizes da comunidade",
   "changelog.tag.guideIndex": "Ver todos os guias",
@@ -6321,10 +6510,9 @@ export const marketing: Catalog = {
     "Reproduzir e avançar refletem o que está mesmo no ar, e Tornar-me curador abre o formulário real de submissão de playlist.",
 
   "changelog.entries.newsletter-unsubscribe.title":
-    "Cancela tu a subscrição da newsletter",
-  // Ver a nota em en/marketing.ts: corpo corrigido a 26 de agosto de 2026.
+    "O registo na newsletter acabou",
   "changelog.entries.newsletter-unsubscribe.body":
-    "Abre a página de cancelamento com o teu código e o teu endereço sai da lista.",
+    "A QueerPulse não envia emails, por isso o registo na newsletter e a página para o cancelar foram retirados.",
 
   "changelog.entries.resources-crisis-hotline-coverage.title":
     "Linhas de crise aparecem agora em todas as páginas próximas de crise",
@@ -7115,7 +7303,8 @@ export const marketing: Catalog = {
   "changelog.entries.richer-push-notifications.body":
     "Uma mensagem mostra de quem é, com a foto, um lembrete mostra a capa do evento, e as mensagens agrupam-se por conversa.",
 
-  "changelog.entries.admin-uploaded-images.tag": "Abrir admin",
+  "changelog.entries.admin-uploaded-images.tag":
+    "Ferramenta da equipa: a consola de administração",
   "changelog.entries.admin-uploaded-images.title":
     "As administradoras podem ver todas as imagens enviadas",
   "changelog.entries.admin-uploaded-images.body":
@@ -7318,7 +7507,7 @@ export const marketing: Catalog = {
     "Os formulários da aplicação passam a enviar mesmo",
   // Ver a nota em en/marketing.ts: corpo corrigido a 26 de agosto de 2026.
   "changelog.entries.forms-that-really-submit.body":
-    "Newsletter, contactos, candidaturas a bolsas e painéis e nomeações de espaços seguros guardam o que escreves para a equipa.",
+    "Contactos, candidaturas a bolsas e painéis e nomeações de espaços seguros guardam o que escreves para a equipa.",
 
   "changelog.entries.save-events-for-later.title":
     "Guarda convívios para mais tarde",
@@ -8141,6 +8330,12 @@ export const marketing: Catalog = {
   "roadmap.hero.title": "O <em>roteiro</em>",
   "roadmap.hero.sub":
     "A QueerPulse é feita por uma pequena equipa em Lisboa. Eis o que estamos a fazer, o que já lançámos, e no que podes votar a seguir.",
+  "roadmap.hero.stat.shipped_one": "entregue este ano",
+  "roadmap.hero.stat.shipped_other": "entregues este ano",
+  "roadmap.hero.stat.building_one": "em curso",
+  "roadmap.hero.stat.building_other": "em curso",
+  "roadmap.hero.stat.planned_one": "planeada",
+  "roadmap.hero.stat.planned_other": "planeadas",
   "roadmap.col.done": "Feito",
   "roadmap.col.buildingNow": "Em construção",
   "roadmap.col.planned": "Planeado",
@@ -8531,6 +8726,7 @@ export const marketing: Catalog = {
     "O <em>compromisso</em>, com honestidade",
   "volunteerDetail.main.goodForTitle": "Para <em>quem é indicada</em>",
   "volunteerDetail.main.teamTitle": "Quem <em>já está cá</em>",
+  "volunteerDetail.main.teamSignedOutCta": "Vê quem está na equipa",
   "volunteerDetail.sidebar.appliedTitle": "Estás <em>na lista.</em>",
   // PRD-262 / PRD-260: ver a nota no catálogo EN.
   "volunteerDetail.sidebar.connectToMessage": "Conectar com a equipa",
@@ -8569,6 +8765,37 @@ export const marketing: Catalog = {
   "volunteerDetail.report.cta": "Denunciar esta oportunidade",
   "volunteerDetail.report.ariaLabel":
     "Denunciar a oportunidade {role} em {org}",
+  "volunteerDetail.chrome.eyebrow": "Voluntariado · {org}",
+  "volunteerDetail.chrome.recruiting": "A recrutar",
+  "volunteerDetail.chrome.closed": "Fechada · sem recrutamento",
+  "volunteerDetail.chrome.perWeek": "Por semana",
+  "volunteerDetail.chrome.commitment": "Compromisso",
+  "volunteerDetail.chrome.spotsOpen": "Vagas ainda abertas",
+  "volunteerDetail.chrome.role": "Função",
+  "volunteerDetail.chrome.location": "Local",
+  "volunteerDetail.chrome.partnerText": "Em parceria com {name}.",
+  "volunteerDetail.chrome.applyConfirm":
+    "Candidatura enviada para <strong>{role}</strong>. Recebes aqui uma notificação quando a equipa decidir.",
+
+  // ── VolunteerExplainerModal (PRD-454: signed-out volunteer CTAs) ──
+  "volunteerExplainer.eyebrow": "Só para a comunidade",
+  "volunteerExplainer.title": "A organização acontece <em>na comunidade</em>",
+  "volunteerExplainer.titlePlain": "A organização acontece na comunidade",
+  "volunteerExplainer.lede":
+    "Qualquer pessoa pode ver as funções aqui. Publicar uma e conhecer quem faz a mudança acontece quando já fazes parte. Eis o que esse lado oferece, e como podes entrar.",
+  "volunteerExplainer.pillars.post.title":
+    "Publica uma oportunidade, revê quem se candidata",
+  "volunteerExplainer.pillars.post.body":
+    "Lança um apelo pela tua organização ou comunidade, lê a nota de cada candidatura e aceita ou recusa a partir de um só painel.",
+  "volunteerExplainer.pillars.record.title": "Um registo do que deste",
+  "volunteerExplainer.pillars.record.body":
+    "Cada sessão que quem publicou confirma soma-se à tua contagem de sessões e horas, guardada com a tua conta.",
+  "volunteerExplainer.pillars.changemakers.title":
+    "Perfis de quem faz o trabalho",
+  "volunteerExplainer.pillars.changemakers.body":
+    "Lê como quem faz a mudança em Lisboa começou, e nomeia alguém cujo trabalho merece estar lá.",
+  "volunteerExplainer.requestInviteCta": "Pedir um convite",
+  "volunteerExplainer.signInCta": "Já faço parte",
 
   // ── Detalhe do Parceiro — chrome da página. O conteúdo sobre/trabalho
   //    conjunto/linha do tempo/como trabalhamos, as estatísticas, e os
@@ -8607,17 +8834,21 @@ export const marketing: Catalog = {
     "Tudo o que não encaixa noutro lado: perguntas, feedback, apresentações, ideias que achas que devíamos ouvir.",
   "contact.routes.safety.title": "Preocupação de segurança",
   "contact.routes.safety.desc":
-    "Se alguma coisa na rede te fez sentir insegurança ou desconforto. Tratamos com total discrição. Respondemos dentro de 24 horas.",
+    "Se alguma coisa na rede te fez sentir insegurança ou desconforto. Tratamos com total discrição. As mensagens de segurança vão para a fila prioritária da equipa e são lidas primeiro.",
   "contact.routes.press.title": "Imprensa e media",
   "contact.routes.press.desc":
     "Jornalistas, equipas de investigação, documentaristas. Temos todo o gosto em falar sobre o que estamos a construir e porquê. Pedimos que partilhes o teu rascunho antes da publicação.",
   "contact.routes.partnerships.title": "Parcerias",
   "contact.routes.partnerships.desc":
     "Organizações, espaços e comunidades que querem trabalhar com a QueerPulse. Somos seletivos, mas genuinamente interessados nas colaborações certas.",
-  "contact.sent.title": "Mensagem <em>recebida.</em>",
-  "contact.sent.body":
-    "Vamos lê-la e responder, normalmente dentro de um ou dois dias. Se for uma preocupação de segurança, entramos em contacto dentro de 24 horas.",
-  "contact.sent.backCta": "Voltar à QueerPulse",
+  "contact.sent.body": "Vamos lê-la e responder.",
+  "contact.sent.safetyBody":
+    "Está na fila prioritária da equipa, onde as mensagens de segurança são lidas primeiro. Vamos responder com total discrição.",
+  "contact.sent.heading": "Mensagem",
+  "contact.sent.headingEm": "recebida.",
+  "contact.sent.writeAnotherCta": "Escrever outra mensagem",
+  "contact.sent.urgentHelp":
+    "Se estás em perigo agora, liga para o <b>112</b>. Também podes contactar <link>linhas de crise gratuitas e confidenciais</link>.",
   "contact.form.title": "Escreve-<em>nos.</em>",
   "contact.form.sub":
     "Se preferires um formulário a um email, usa este. Lemos da mesma forma.",
@@ -8636,6 +8867,7 @@ export const marketing: Catalog = {
   "contact.form.topic.other": "Outra coisa",
   "contact.form.topic.listing_correction":
     "Correção de um anúncio do diretório",
+  "contact.form.topic.privacy": "Privacidade ou pedido de dados",
   "contact.form.correctionNote": "Sobre o anúncio {ref}",
   "contact.form.messageLabel": "A tua mensagem",
   "contact.form.messagePlaceholder":
@@ -8720,6 +8952,7 @@ export const marketing: Catalog = {
   "forOrgs.tiers.funder.list4": "Auditoria independente anual incluída",
   "forOrgs.tiers.funder.list5":
     "Discriminação pública no relatório de transparência",
+  "forOrgs.tiers.featuredBadge": "Mais escolhido",
   // PRD-266: ver a nota no catálogo EN.
   "forOrgs.apply.lead":
     "Diz-nos quem és e levamos-te à candidatura de parceria. É um formulário só, entra na fila de parcerias, e podes ver em que ponto está a partir da tua conta quando quiseres.",
@@ -9161,6 +9394,8 @@ export const marketing: Catalog = {
   "directory.detail.questions.successToast": "A tua pergunta está publicada.",
   "directory.detail.questions.errorGeneric":
     "Não foi possível enviar a tua pergunta. Tenta novamente.",
+  "directory.detail.questions.errorRateLimited":
+    "Já fizeste todas as perguntas que podes por agora. Dá tempo a quem gere este espaço para responder e tenta mais tarde.",
   "directory.detail.questions.signInPrompt":
     "Inicia sessão para fazer uma pergunta a este espaço.",
   "directory.detail.questions.signInCta": "Iniciar sessão",
@@ -9714,12 +9949,12 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card2.eyebrow": "Os teus direitos",
   "visas.tabs.eu.card2.title": "O que a residência na UE te dá",
   "visas.tabs.eu.card2.body":
-    "Acesso total ao SNS (com NISS), o direito de trabalhar sem restrições, o direito de votar em eleições locais e europeias, e o direito de trazer familiares. Após 5 anos de residência legal contínua, podes candidatar-te à residência permanente ou à cidadania.",
+    "Acesso total ao SNS (com NISS), o direito de trabalhar sem restrições, o direito de votar em eleições locais e europeias, e o direito de trazer familiares. Após 5 anos de residência legal contínua, podes pedir a residência permanente. A cidadania por naturalização pede 7 anos de residência legal a nacionais da UE desde a alteração da Lei da Nacionalidade em 2026: vê o separador Cidadania.",
   "visas.tabs.eu.card3.eyebrow": "Pessoa parceira de fora da UE",
   "visas.tabs.eu.card3.title":
     "Reunificação familiar para casais do mesmo sexo",
   "visas.tabs.eu.card3.body":
-    "Se és cidadã ou cidadão da UE e a tua pessoa parceira não é, ela pode juntar-se a ti em Portugal ao abrigo das regras de livre circulação da UE, incluindo cônjuges do mesmo sexo e uniões de facto registadas. O Tribunal de Justiça da União Europeia (acórdão Coman, 2018) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo para efeitos de livre circulação, mesmo que não tenham casamento entre pessoas do mesmo sexo a nível interno.",
+    "Quando já tiveres o teu Certificado de Registo, o teu cônjuge ou pessoa parceira de fora da UE pede na AIMA o cartão de residência de familiar de cidadão da União. Vai precisar do teu certificado, de prova da relação e do passaporte. Este processo segue as regras europeias de livre circulação, que não fixam um prazo mínimo de residência antes do pedido, e a lei dá à AIMA até 3 meses para emitir o cartão. Confirma os documentos e os tempos de espera atuais em aima.gov.pt.",
   "visas.tabs.eu.card3.tag": "Direitos plenos de parceria",
   "visas.tabs.eu.card3.link": "Detalhes do visto para pessoa parceira",
 
@@ -9770,7 +10005,7 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card2.eyebrow": "Processo",
   "visas.tabs.d8.card2.title": "Como pedir",
   "visas.tabs.d8.card2.body":
-    "Tal como o D7, os pedidos são feitos no consulado português antes da chegada. À chegada, trocas por uma autorização de residência de 2 anos. Familiares (incluindo pessoas parceiras do mesmo sexo) podem ser incluídos no pedido ou pedir reunificação familiar depois de receberes a tua autorização.",
+    "Tal como o D7, os pedidos são feitos no consulado português antes da chegada. À chegada, trocas por uma autorização de residência de 2 anos. Familiares (incluindo pessoas parceiras do mesmo sexo) podem ser incluídos no pedido, ou juntar-se a ti mais tarde por reagrupamento familiar, que normalmente pede que tenhas a tua autorização há 2 anos: vê o separador “Trazer uma Pessoa Parceira”.",
   "visas.tabs.d8.card3.eyebrow": "IFICI / Impostos",
   "visas.tabs.d8.card3.title": "Tratamento fiscal",
   "visas.tabs.d8.card3.body":
@@ -9803,7 +10038,7 @@ export const marketing: Catalog = {
   "visas.tabs.partner.card1.title":
     "Portugal reconhece plenamente o teu casamento",
   "visas.tabs.partner.card1.body":
-    "Portugal reconhece o casamento entre pessoas do mesmo sexo desde 2010. Um casamento legal celebrado em qualquer parte do mundo é reconhecido para efeitos de residência em Portugal. O teu cônjuge tem direito a juntar-se a ti através de reunificação familiar, independentemente da sua nacionalidade ou do país onde casaram.",
+    "Portugal reconhece o casamento entre pessoas do mesmo sexo desde 2010. Um casamento legal celebrado em qualquer parte do mundo é reconhecido para efeitos de residência em Portugal. O teu cônjuge pode pedir o reagrupamento familiar, seja qual for a sua nacionalidade ou o país onde casaram. Quando podes fazer o pedido depende de há quanto tempo tens a tua autorização de residência: vê “O processo para pessoas parceiras”.",
   "visas.tabs.partner.card1.tag": "Reconhecimento legal pleno",
   "visas.tabs.partner.card2.eyebrow": "Sem casamento",
   "visas.tabs.partner.card2.title": "Pessoas parceiras sem estatuto formal",
@@ -9820,26 +10055,31 @@ export const marketing: Catalog = {
   "visas.tabs.partner.card4.eyebrow": "Reunificação familiar",
   "visas.tabs.partner.card4.title": "O processo para pessoas parceiras",
   "visas.tabs.partner.card4.body":
-    "Depois de teres a tua própria autorização de residência, a tua pessoa parceira pede reunificação familiar na AIMA. Vai precisar do teu cartão AR, comprovativo da relação, comprovativo de alojamento e prova de rendimento. O processamento demora 60 a 90 dias. Durante este período, pode normalmente permanecer em Portugal com um visto de curta duração.",
+    "Quando já tiveres a tua autorização de residência, pedes na AIMA o reagrupamento familiar com a tua pessoa parceira. Desde a alteração à Lei de Estrangeiros em outubro de 2025, precisas normalmente de 2 anos de residência legal antes de fazeres o pedido. O prazo desce para 15 meses se viveram juntos pelo menos 18 meses antes da mudança, e não há espera se tiverem filhos menores em comum ou se tiveres uma autorização para atividade altamente qualificada, um Cartão Azul UE ou uma autorização de residência para investimento. A AIMA pede o teu título de residência, prova da relação, alojamento adequado e meios de subsistência sem apoios sociais, e tem até 9 meses para decidir, prorrogáveis uma vez em casos excecionais. Confirma as regras em vigor em aima.gov.pt antes de planeares à volta de uma data.",
 
   "visas.tabs.citizenship.label": "Cidadania",
   "visas.tabs.citizenship.headTitle":
     "Cidadania & <em>residência permanente</em>",
   "visas.tabs.citizenship.headText":
-    "Portugal oferece um dos caminhos mais claros para a cidadania na Europa. Após 5 anos de residência legal, podes candidatar-te à residência permanente ou à naturalização como cidadã ou cidadão português.",
+    "A residência permanente abre ao fim de 5 anos de residência legal. A naturalização como cidadã ou cidadão português demora mais: a Lei da Nacionalidade mudou em 2026 e pede agora 10 anos, ou 7 para nacionais da UE e de países de língua oficial portuguesa.",
   "visas.tabs.citizenship.card1.eyebrow": "Prazo",
-  "visas.tabs.citizenship.card1.title": "5 anos até à cidadania",
+  "visas.tabs.citizenship.card1.title": "7 a 10 anos até à cidadania",
   "visas.tabs.citizenship.card1.body":
-    "Após 5 anos de residência legal contínua, tens direito a candidatar-te à cidadania portuguesa. Requisitos: português básico (nível A2), registo criminal limpo, prova de ligação a Portugal, e nenhuma ausência superior a 6 meses consecutivos ou 8 meses no total durante os 5 anos.",
+    "Podes pedir a cidadania portuguesa após 10 anos de residência legal, ou 7 se tiveres a nacionalidade de um país da UE ou de um país de língua oficial portuguesa. Os períodos com título de residência válido somam-se mesmo com interrupções, desde que caibam todos num intervalo de 12 anos (9 para nacionais da UE e de países de língua oficial portuguesa).",
   "visas.tabs.citizenship.card1.tag": "Inclui passaporte da UE",
+  "visas.tabs.citizenship.card1.link": "Ler a Lei da Nacionalidade em vigor",
+  "visas.tabs.citizenship.card1.body2":
+    "Precisas também de um teste ou certificado de língua e cultura portuguesas, de conhecer os direitos e deveres de cidadania e de não teres condenação transitada em julgado em pena de prisão superior a 3 anos pelos crimes graves que a lei enumera.",
+  "visas.tabs.citizenship.card1.body3":
+    "Os pedidos que já estavam pendentes quando as novas regras entraram em vigor, em maio de 2026, seguem a regra anterior dos 5 anos. Estas regras foram reescritas em 2025 e 2026, por isso lê o texto em vigor antes de planeares à volta de uma data.",
   "visas.tabs.citizenship.card2.eyebrow": "Residência permanente",
   "visas.tabs.citizenship.card2.title": "Alternativa à cidadania",
   "visas.tabs.citizenship.card2.body":
-    "Também podes candidatar-te à residência permanente (Autorização de Residência Permanente) após 5 anos. Isto dá-te o direito indefinido de permanecer, sem os requisitos de língua e de cidadania. Algumas pessoas preferem esta via, mantendo a sua nacionalidade original.",
+    "Também podes pedir a residência permanente (Autorização de Residência Permanente) após 5 anos de residência legal. Dá-te o direito de ficar por tempo indeterminado, pede português básico e mantém a tua nacionalidade tal como está. Algumas pessoas escolhem esta via para ficarem só com o passaporte de origem.",
   "visas.tabs.citizenship.card3.eyebrow": "Língua portuguesa",
-  "visas.tabs.citizenship.card3.title": "Requisito de A2",
+  "visas.tabs.citizenship.card3.title": "Teste de língua e cultura",
   "visas.tabs.citizenship.card3.body":
-    "O requisito de língua portuguesa para a cidadania é o nível A2 (básico), conversacional em vez de fluente. Podes comprová-lo através de um teste CAPLE ou CIPLE aprovado, ou mostrando escolaridade em português. O fórum da comunidade tem recomendações de professoras e professores de português queer-friendly.",
+    "A cidadania pede agora um teste ou certificado que mostre que conheces a língua e a cultura portuguesas, a história e os símbolos nacionais. Presume-se que nacionais de países de língua oficial portuguesa cumprem a parte da língua. Os exames CAPLE e CIPLE têm sido a prova habitual, ao nível A2; o Governo está a atualizar o regulamento, por isso confirma que testes e níveis contam hoje. O fórum da comunidade tem recomendações de professoras e professores de português queer-friendly.",
   "visas.tabs.citizenship.card3.link": "Recursos de aprendizagem da língua",
 
   "visas.ground.title": "No <em>terreno</em>",
@@ -9866,7 +10106,7 @@ export const marketing: Catalog = {
     "Advocacia de imigração <em>avaliada pela comunidade</em>",
   "visas.lawyers.emptyBody":
     "Estamos a construir um diretório de advogados de imigração LGBTQ+-friendly avaliado pela comunidade. Ainda não está pronto. Até estar, as melhores recomendações vêm de membros que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
-  "visas.lawyers.forumCta": "Pergunta no tópico do fórum sobre vistos",
+  "visas.lawyers.forumCta": "Pergunta no fórum de vistos",
 
   "visas.outro.title": "Estás a construir uma vida <em>aqui.</em>",
   "visas.outro.sub": "A papelada é temporária. A comunidade é permanente.",
@@ -10220,6 +10460,9 @@ export const marketing: Catalog = {
   "resourceLibrary.subpages.intersectionality.label": "Interseccionalidade",
   "resourceLibrary.subpages.intersectionality.blurb":
     "Como as identidades sobrepostas moldam as nossas experiências, e a nossa organização coletiva.",
+  "resourceLibrary.loadError.title": "Não conseguimos carregar os guias",
+  "resourceLibrary.loadError.description":
+    "A biblioteca não carregou. É um problema de ligação e não diz nada sobre o que revimos. Tenta outra vez daqui a pouco.",
 
   // ── Plataformas (a rede queer mais alargada) — chrome de página/filtros.
   //    Os registos de `PLATFORMS` (nome/descrição — apps/organizações
@@ -10960,7 +11203,7 @@ export const marketing: Catalog = {
     "Chega à caixa de mensagens desta ficha, e a resposta vem do negócio.",
   "directory.detail.enquiry.cancel": "Cancelar",
   "directory.detail.enquiry.error.rateLimited":
-    "Já escreveste a este negócio hoje. Dá-lhes tempo para responder primeiro.",
+    "Chegaste ao limite de mensagens a negócios por agora. Dá-lhes tempo para responder e tenta mais tarde.",
   "directory.detail.enquiry.error.notAllowed":
     "Não é possível contactar este negócio a partir da tua conta.",
   "directory.detail.enquiry.error.unavailable":

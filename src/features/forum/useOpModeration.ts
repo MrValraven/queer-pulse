@@ -10,7 +10,7 @@ import { type OpOverride } from "./threadModeration.helpers";
 
 type PostIdMutate = (
   variables: { postId: string },
-  options: { onSuccess: () => void; onError: () => void },
+  options: { onSuccess: () => void; onError: (error: unknown) => void },
 ) => void;
 
 /**
@@ -29,7 +29,7 @@ export function useOpModeration({
   demoMode: boolean;
   editTitle: ReturnType<typeof useEditThreadTitle>;
   editPost: ReturnType<typeof useEditPost>;
-  onMutateError: () => void;
+  onMutateError: (error?: unknown) => void;
 }) {
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -106,7 +106,7 @@ export function useOpModeration({
       );
     void Promise.all(pending).then(
       () => showToast(t("forum:toast.editSaved"), "success"),
-      () => onMutateError(),
+      (error: unknown) => onMutateError(error),
     );
   }
 

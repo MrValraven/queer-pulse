@@ -67,12 +67,23 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
   const fmt = useFormat();
-  const { sort, tag, q } = options ?? {};
+  const { sort, tag, q, fundingView, eligibility, scope } = options ?? {};
 
   const query = useInfiniteQuery<ThreadListPage>({
     // sort/tag/q are part of the key so each live filter combination caches
     // independently and never bleeds into another.
-    queryKey: ["forum-threads", demoMode, category, language, sort, tag, q],
+    queryKey: [
+      "forum-threads",
+      demoMode,
+      category,
+      language,
+      sort,
+      tag,
+      q,
+      fundingView ?? null,
+      (eligibility ?? []).join(","),
+      scope ?? null,
+    ],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       if (demoMode) return { items: THREADS, nextCursor: null };
@@ -80,6 +91,9 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
         sort,
         tag,
         q,
+        fundingView,
+        eligibility,
+        scope,
       });
       return {
         items: res.data.map((dto) => threadToCard(dto, t, fmt)),

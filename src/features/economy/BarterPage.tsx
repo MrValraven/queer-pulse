@@ -7,6 +7,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  LoadMoreFooter,
   Outro,
   Reveal,
   SkeletonAvatar,
@@ -75,17 +76,23 @@ export function BarterPage() {
   const listingsQuery = useBarterListings({ category: cat, mode, query });
   const board = listingsQuery.listings;
   const items = demoMode ? [...posted, ...board] : board;
-  // A "Show more" fetch must not swap the whole grid for skeletons — only a
-  // first load (or a filter change) does.
+  // Skeletons only while nothing for these filters is loaded yet: the first
+  // load, or a filter change with no cached page (the previous filter's swaps
+  // are placeholder data until it lands). A "Show more" fetch or a background
+  // refetch keeps the loaded swaps on screen (ENG-501).
   const loading = demoMode
     ? simulatedLoading
-    : listingsQuery.isFetching && !listingsQuery.isFetchingNextPage;
+    : listingsQuery.isLoading ||
+      (listingsQuery.isPlaceholderData && listingsQuery.isFetching);
   // Live counts the whole board, not just the pages loaded so far, so the
   // number above the grid never shrinks to "what you can currently see".
   const total = demoMode ? items.length : listingsQuery.total;
   // Whether any control is narrowing the board — it decides which empty state
   // reads true: "nothing matches" versus "nothing posted yet".
   const hasFilters = mode !== "all" || cat !== "all" || query.trim() !== "";
+  // ENG-501: a failed "Show more" also sets `isError`. The swaps already on
+  // screen stay; the footer reports that page and retries it.
+  const hasNothingLoadedError = listingsQuery.isError && items.length === 0;
 
   return (
     <PageShell>
@@ -145,7 +152,7 @@ export function BarterPage() {
               ))
             ) : (
               <>
-                {listingsQuery.isError && (
+                {hasNothingLoadedError && (
                   <EmptyState
                     icon={<FiRepeat />}
                     title={t("economy:barter.errorLive.title")}
@@ -189,20 +196,15 @@ export function BarterPage() {
           </div>
 
           {!loading && listingsQuery.hasNextPage && (
-            <div className={styles.loadMoreRow}>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => void listingsQuery.fetchNextPage()}
-                disabled={listingsQuery.isFetchingNextPage}
-              >
-                {t(
-                  listingsQuery.isFetchingNextPage
-                    ? "economy:barter.loadingMore"
-                    : "economy:barter.loadMore",
-                )}
-              </Button>
-            </div>
+            <LoadMoreFooter
+              className={styles.loadMoreRow}
+              isFetchingNextPage={listingsQuery.isFetchingNextPage}
+              isFetchNextPageError={listingsQuery.isFetchNextPageError}
+              onLoadMore={() => void listingsQuery.fetchNextPage()}
+              errorMessage={t("common:error.loadMore")}
+              label={t("economy:barter.loadMore")}
+              loadingLabel={t("economy:barter.loadingMore")}
+            />
           )}
 
           <BarterPostStrip onPost={(b) => setPosted((prev) => [b, ...prev])} />

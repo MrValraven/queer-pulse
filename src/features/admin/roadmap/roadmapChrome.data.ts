@@ -12,7 +12,6 @@ export type RoadmapTabId =
   | "capacity"
   | "ideas"
   | "notBuilding"
-  | "heroStats"
   | "publicPreview"
   | "archive";
 
@@ -46,11 +45,6 @@ export const ROADMAP_TABS: RoadmapTabDef[] = [
   {
     id: "notBuilding",
     labelKey: "admin:roadmap.tabs.notBuilding",
-    showsToolbar: false,
-  },
-  {
-    id: "heroStats",
-    labelKey: "admin:roadmap.tabs.heroStats",
     showsToolbar: false,
   },
   {

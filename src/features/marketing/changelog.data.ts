@@ -7,15 +7,20 @@ export type ChangelogCategory =
 export interface ChangelogEntryTag {
   /** Catalog key for the "See X →" label. */
   labelKey: string;
-  /** Destination route (from `routes`). */
-  to: string;
+  /** Destination route (from `routes`). Left out for a staff tool, whose tag
+   *  renders as a plain label: the changelog is public, and a visitor
+   *  following a link into `/admin` or the magazine desk meets a sign-in or
+   *  403 wall. `ChangelogEntryRow` also drops the link for any staff-gated
+   *  route, so a future entry pointing at one still renders as a label. */
+  to?: string;
 }
 
 export interface ChangelogEntry {
   /** Stable slug; also the i18n sub-namespace for this entry. */
   id: string;
   category: ChangelogCategory;
-  /** Display date label, rendered as-is (e.g. "28 Jul 2026"). */
+  /** Date label in English short form (e.g. "28 Jul 2026"). The release
+   *  header parses it through its slug and formats it per locale. */
   date: string;
   /** Catalog key: `marketing:changelog.entries.<id>.title`. */
   titleKey: string;
@@ -58,6 +63,228 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "dropdown-escape-keeps-dialog-open",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("dropdown-escape-keeps-dialog-open"),
+      },
+      {
+        id: "connect-request-preview",
+        category: "feature",
+        date: "6 Oct 2026",
+        ...entryKeys("connect-request-preview"),
+        tag: {
+          labelKey: "marketing:changelog.tag.connections",
+          to: routes.connections,
+        },
+      },
+      {
+        id: "new-member-cards-show-what-you-share",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("new-member-cards-show-what-you-share"),
+      },
+      {
+        id: "connect-request-note-when-answering",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("connect-request-note-when-answering"),
+      },
+      {
+        id: "connect-dialog-centred-on-desktop",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("connect-dialog-centred-on-desktop"),
+      },
+      {
+        id: "funding-grants-forum",
+        category: "feature",
+        date: "6 Oct 2026",
+        ...entryKeys("funding-grants-forum"),
+        tag: { labelKey: "marketing:changelog.tag.forum", to: routes.forum },
+      },
+      {
+        id: "community-fundraisers",
+        category: "feature",
+        date: "6 Oct 2026",
+        ...entryKeys("community-fundraisers"),
+        tag: { labelKey: "marketing:changelog.tag.forum", to: routes.forum },
+      },
+      {
+        id: "online-listings-get-their-own-tags",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("online-listings-get-their-own-tags"),
+      },
+      {
+        id: "governance-shows-entered-figures",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("governance-shows-entered-figures"),
+      },
+      {
+        id: "sober-page-lists-what-exists",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("sober-page-lists-what-exists"),
+      },
+      {
+        id: "sexual-health-guide-in-portuguese",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("sexual-health-guide-in-portuguese"),
+      },
+      {
+        id: "safety-messages-reach-team-first",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("safety-messages-reach-team-first"),
+      },
+      {
+        id: "data-requests-work-signed-out",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("data-requests-work-signed-out"),
+      },
+      {
+        id: "volunteer-pages-in-portuguese",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("volunteer-pages-in-portuguese"),
+      },
+      {
+        id: "volunteer-teams-respect-blocks",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("volunteer-teams-respect-blocks"),
+      },
+      {
+        id: "roadmap-counts-the-board",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("roadmap-counts-the-board"),
+      },
+      {
+        id: "newsletter-signup-removed",
+        category: "infrastructure",
+        date: "6 Oct 2026",
+        ...entryKeys("newsletter-signup-removed"),
+      },
+      {
+        id: "changemaker-stories-members-only",
+        category: "infrastructure",
+        date: "6 Oct 2026",
+        ...entryKeys("changemaker-stories-members-only"),
+      },
+      {
+        id: "dates-follow-your-language",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("dates-follow-your-language"),
+      },
+      {
+        id: "gathering-links-from-feed-open",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("gathering-links-from-feed-open"),
+      },
+      {
+        id: "message-rooms-in-housing-groups",
+        category: "feature",
+        date: "6 Oct 2026",
+        ...entryKeys("message-rooms-in-housing-groups"),
+      },
+      {
+        id: "homepage-shows-real-gatherings",
+        category: "feature",
+        date: "6 Oct 2026",
+        ...entryKeys("homepage-shows-real-gatherings"),
+      },
+      {
+        id: "call-off-accepted-viewing",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("call-off-accepted-viewing"),
+      },
+      {
+        id: "housing-respects-blocks",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("housing-respects-blocks"),
+      },
+      {
+        id: "group-join-shows-your-standing",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("group-join-shows-your-standing"),
+      },
+      {
+        id: "expired-listings-come-back-right",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("expired-listings-come-back-right"),
+      },
+      {
+        id: "safe-space-updates-read-right",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("safe-space-updates-read-right"),
+      },
+      {
+        id: "language-follows-you",
+        category: "feature",
+        date: "6 Oct 2026",
+        ...entryKeys("language-follows-you"),
+      },
+      {
+        id: "search-speaks-your-language",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("search-speaks-your-language"),
+      },
+      {
+        id: "lighter-app-install",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("lighter-app-install"),
+      },
+      {
+        id: "sign-in-keeps-your-link",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("sign-in-keeps-your-link"),
+      },
+      {
+        id: "decided-requests-show-what-they-sent",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("decided-requests-show-what-they-sent"),
+      },
+      {
+        id: "iphone-push-keeps-arriving",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("iphone-push-keeps-arriving"),
+      },
+      {
+        id: "lists-survive-failed-page",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("lists-survive-failed-page"),
+      },
+      {
+        id: "errors-follow-your-language",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("errors-follow-your-language"),
+      },
+      {
+        id: "update-always-finishes",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("update-always-finishes"),
+      },
+      {
         id: "directory-cards-one-line",
         category: "fix",
         date: "5 Oct 2026",
@@ -76,7 +303,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("admin-platform-log"),
         tag: {
           labelKey: "marketing:changelog.entries.admin-platform-log.tag",
-          to: routes.adminLog,
         },
       },
       {
@@ -1102,7 +1328,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("editor-desk-redesign"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -1112,7 +1337,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("editor-desk-planning-tools"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -1122,7 +1346,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("editor-desk-workflow"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -1132,7 +1355,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("editor-desk-due-dates-and-shortcuts"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -1378,7 +1600,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("submissions-join-writer-workspace"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -2759,7 +2980,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         tag: {
           labelKey:
             "marketing:changelog.entries.staff-roles-fold-into-one-panel.tag",
-          to: routes.adminMembers,
+          to: routes.members,
         },
       },
       {
@@ -4180,7 +4401,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("a-piece-can-no-longer-go-live-with-consent-unresolved"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4190,7 +4410,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("the-desk-can-see-what-is-published-and-take-it-down"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4202,7 +4421,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -4212,7 +4430,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("an-issue-dated-for-later-now-ships-on-that-morning"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4224,7 +4441,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4236,7 +4452,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4264,7 +4479,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("two-editors-can-no-longer-overwrite-each-other-silently"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4276,7 +4490,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -4288,7 +4501,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4298,7 +4510,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("issue-cover-art-can-be-uploaded-from-the-desk"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -4308,7 +4519,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("the-writer-workspace-reads-in-plain-language"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -6283,7 +6493,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-issues-run-the-desk"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -7016,7 +7225,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-writer-read-brief"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -7376,7 +7584,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-writer-draft-paste-fix"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -7858,7 +8065,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("article-editor-header-and-send-on"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -8940,7 +9146,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-desk-two-tracks"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -9098,7 +9303,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-desk-workspace-nav"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineDesk",
-          to: routes.magazineEditor,
         },
       },
       {
@@ -9118,7 +9322,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("admin-uploaded-images"),
         tag: {
           labelKey: "marketing:changelog.entries.admin-uploaded-images.tag",
-          to: routes.adminMedia,
         },
       },
       {
@@ -9128,7 +9331,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-desk-polish-sweep"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9138,7 +9341,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-piece-messaging"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9174,7 +9377,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-article-versions"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9184,7 +9387,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-article-comments"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9194,7 +9397,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-desk-live-notifications"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9204,7 +9407,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-desk-wave-b-fixes"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9214,7 +9417,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-commission-editor-fix"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9234,7 +9437,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-writer-workspace"),
         tag: {
           labelKey: "marketing:changelog.tag.magazineWriter",
-          to: routes.magazineWriter,
         },
       },
       {
@@ -9244,7 +9446,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-issue-production"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9264,7 +9466,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-deck-editor-redesign"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9294,7 +9496,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-article-editor"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9324,7 +9526,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-piece-record"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9350,7 +9552,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("magazine-desk-redesign"),
         tag: {
           labelKey: "marketing:changelog.tag.magazine",
-          to: routes.magazineEditor,
+          to: routes.magazine,
         },
       },
       {
@@ -9586,7 +9788,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("assignable-staff-roles"),
         tag: {
           labelKey: "marketing:changelog.entries.assignable-staff-roles.tag",
-          to: routes.adminMembers,
+          to: routes.members,
         },
       },
       {
@@ -9982,7 +10184,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("trust-network-invite-vs-vouch"),
         tag: {
           labelKey: "marketing:changelog.tag.trustNetwork",
-          to: routes.adminMembers,
         },
       },
       {
@@ -10050,7 +10251,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("trust-network-replay-by-joins"),
         tag: {
           labelKey: "marketing:changelog.tag.trustNetwork",
-          to: routes.adminMembers,
         },
       },
       {

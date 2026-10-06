@@ -1,4 +1,4 @@
-import { gatheringPath, gatheringShortId } from "./gatheringPaths";
+import { gatheringPath, gatheringSlugFromParam } from "./gatheringPaths";
 import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
@@ -893,6 +893,7 @@ export const defaultGatheringSlug = "supper-club-12";
 // re-exported here so existing importers keep working.
 export {
   gatheringShortId,
+  gatheringSlugFromParam,
   gatheringPath,
   CREATE_GATHERING_COMMUNITY_PARAM,
   createGatheringPath,
@@ -953,12 +954,8 @@ function warnIfUnresolvedGathering(param: string): void {
  */
 export function resolveGathering(param: string | undefined): GatheringDetail {
   if (param) {
-    for (const slug of Object.keys(gatheringDetails)) {
-      if (`${slug}-${gatheringShortId(slug)}` === param)
-        return gatheringDetails[slug]!;
-    }
-    const base = param.replace(/-[a-z0-9]+$/i, "");
-    if (gatheringDetails[base]) return gatheringDetails[base];
+    const slug = gatheringSlugFromParam(param);
+    if (gatheringDetails[slug]) return gatheringDetails[slug];
     warnIfUnresolvedGathering(param);
   }
   return gatheringDetails[defaultGatheringSlug]!;

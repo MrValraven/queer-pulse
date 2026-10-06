@@ -8,9 +8,10 @@ import styles from "./PageReviewStamp.module.css";
  * specific line telling the reader to check the live figure themselves.
  *
  * A guidance page carries facts that go stale at different speeds. A statute
- * ("five years to citizenship") holds for years; a euro amount ("the income
- * threshold is X") is wrong the moment the minimum wage is reset, and somebody
- * may have sized a visa application on it. The pages this stamp sits on now
+ * ("90 days in any 180 on a Schengen short stay") holds for years, and even
+ * then it changes: the naturalisation period moved from 5 years to 10 in May
+ * 2026. A euro amount ("the income threshold is X") is wrong the moment the
+ * minimum wage is reset, and somebody may have sized a visa application on it. The pages this stamp sits on now
  * name the rule and the office that publishes the number, and this line says
  * when a person last read the page and that the reader should confirm the
  * figure at the source before they act on it.

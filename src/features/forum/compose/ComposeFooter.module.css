@@ -225,6 +225,14 @@
     opacity var(--dur-base) var(--ease);
 }
 
+/* A fundraiser's footer has no caret, so the button keeps its own round end
+   and its default end padding. */
+.publishGroup[data-review-only="true"] .publishButton {
+  border-start-end-radius: var(--radius-pill);
+  border-end-end-radius: var(--radius-pill);
+  padding-inline-end: 20px;
+}
+
 .publishLabel {
   transition: opacity var(--dur-fast) var(--ease);
 }

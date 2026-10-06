@@ -7,15 +7,16 @@ import type {
 // i18n scope rule (docs/i18n/extraction-brief.md §1): `hiddenReason` is a
 // backend-classified enum, not API content, so its human label is chrome this
 // code resolves through `translate()` — mirroring `ACTIVITY_LABEL_KEY` in
-// `adminCommunities.adapters.ts`. Task 8 owns the `admin` catalog and must
-// define the five keys in `HIDDEN_REASON_KEY` below before this label
-// renders anything but the raw translation key.
+// `adminCommunities.adapters.ts`. The `admin` catalog defines every key in
+// `HIDDEN_REASON_KEY` below.
 const HIDDEN_REASON_KEY: Record<LandingHiddenReason, string> = {
   consent_revoked: "admin:landing.hidden.consent_revoked",
   went_private: "admin:landing.hidden.went_private",
   unpublished: "admin:landing.hidden.unpublished",
   not_public: "admin:landing.hidden.not_public",
   deleted: "admin:landing.hidden.deleted",
+  cancelled: "admin:landing.hidden.cancelled",
+  ended: "admin:landing.hidden.ended",
 };
 
 /** Admin landing-feature-slot view model: the wire DTO plus a human

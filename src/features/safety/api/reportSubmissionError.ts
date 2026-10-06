@@ -16,11 +16,13 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  *  3. The rolling per-subject cap (`REPORT_PER_SUBJECT_LIMIT` filings against
  *     one subject in 7 days).
  *
- * Cases 2 and 3 are the platform's own refusals, and their copy is the entire
- * point: it tells the member that the reports they already sent are with the
- * moderation team. Flattening it into a generic "couldn't send that" toast
- * throws the explanation away and invites them to keep retrying something the
- * server will keep refusing.
+ * Cases 2 and 3 are the platform's own refusals, and what they say is the
+ * entire point: the reports the member already sent are with the moderation
+ * team. Flattening that into a generic "couldn't send that" toast throws the
+ * explanation away and invites them to keep retrying something the server will
+ * keep refusing. PRD-467: the server writes that copy in English only, so the
+ * member sees `safety:report.floodCap`, the same explanation in their own
+ * language, in every language.
  *
  * ## The contract: `code`, never the prose
  *
@@ -29,13 +31,14 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  * ```json
  * { "statusCode": 429, "error": "Too Many Requests",
  *   "code": "REPORT_FLOOD_CAP", "cap": "daily" | "subject",
- *   "message": "<member-facing copy, show verbatim>" }
+ *   "message": "<member-facing copy, English only>" }
  * ```
  *
  * `code === "REPORT_FLOOD_CAP"` is the whole test. It covers BOTH caps, and the
  * throttler's refusal carries no `code` at all, so presence alone separates
- * them. `message` is the human payload and is shown as sent. `cap` is additive
- * detail: do not branch on it and do not show it.
+ * them. The server's English `message` is ignored: what renders is
+ * `safety:report.floodCap`, in every language. `cap` is additive detail: do
+ * not branch on it and do not show it.
  *
  * **Branching on the message text is forbidden here.** Matching English prose
  * breaks the moment the copy is reworded or localized, and it silently starts
@@ -89,8 +92,8 @@ const REPORT_EVIDENCE_EXPIRED_CODE = "REPORT_EVIDENCE_EXPIRED";
 
 /** How a failed report submission should be explained to the member. */
 export type ReportSubmissionRefusal =
-  /** A rolling flood cap. `message` is server-authored member-facing copy. */
-  | { kind: "cap"; message: string }
+  /** A rolling flood cap: shown as `safety:report.floodCap`. */
+  | { kind: "cap" }
   /** The burst throttle: refused, but with no copy worth showing. */
   | { kind: "burst" }
   /** PRD-368: the caller isn't a participant in this message's conversation. */
@@ -151,7 +154,7 @@ export function classifyReportSubmissionError(
   if (code !== REPORT_FLOOD_CAP_CODE) {
     return { kind: "burst" };
   }
-  return { kind: "cap", message: error.message.trim() };
+  return { kind: "cap" };
 }
 
 /**
@@ -164,9 +167,9 @@ export function classifyReportSubmissionError(
  * onError: (error) => showToast(describeReportError(error, t("safety:flag.error")), "error"),
  * ```
  *
- * A flood-cap refusal returns the server's own explanation verbatim; the burst
- * throttle returns a human `safety` string; everything else returns the
- * surface's `fallbackMessage` unchanged, so no existing failure copy moves.
+ * A flood-cap refusal and the burst throttle each return their own human
+ * `safety` string; everything else returns the surface's `fallbackMessage`
+ * unchanged, so no existing failure copy moves.
  *
  * Whatever this returns must be announced, never only shown: `showToast` is
  * already live-region backed, and the surfaces that render an inline panel
@@ -183,6 +186,7 @@ export function useReportSubmissionError(): (
   // chunk lands. Callers KEEP whatever the returned function hands them (a
   // toast string, a panel line), so a value resolved inside the callback would
   // be frozen at whatever the catalog held right then.
+  const floodCapMessage = t("safety:report.floodCap");
   const tooFastMessage = t("safety:report.tooFast");
   const authRefusedMessage = t("safety:report.authRefused");
   const notParticipantMessage = t("safety:report.notParticipant");
@@ -190,7 +194,11 @@ export function useReportSubmissionError(): (
   return useCallback(
     (error: unknown, fallbackMessage: string) => {
       const refusal = classifyReportSubmissionError(error);
-      if (refusal.kind === "cap") return refusal.message;
+      if (refusal.kind === "cap") {
+        return floodCapMessage === "safety:report.floodCap"
+          ? fallbackMessage
+          : floodCapMessage;
+      }
       if (refusal.kind === "notParticipant") {
         return notParticipantMessage === "safety:report.notParticipant"
           ? fallbackMessage
@@ -218,6 +226,7 @@ export function useReportSubmissionError(): (
       return fallbackMessage;
     },
     [
+      floodCapMessage,
       tooFastMessage,
       authRefusedMessage,
       notParticipantMessage,

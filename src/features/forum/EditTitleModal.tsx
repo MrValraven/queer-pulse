@@ -8,11 +8,15 @@ export function EditTitleModal({
   busy,
   onSave,
   onClose,
+  shouldShowAskReviewNote = false,
 }: {
   initialTitle: string;
   busy: boolean;
   onSave: (title: string) => void;
   onClose: () => void;
+  /** The author of a fundraiser: any edit of theirs sends it back to
+   *  moderators, so the modal says so before they save. */
+  shouldShowAskReviewNote?: boolean;
 }) {
   const { t } = useTranslation();
   const [title, setTitle] = useState(initialTitle);
@@ -42,6 +46,9 @@ export function EditTitleModal({
         </>
       }
     >
+      {shouldShowAskReviewNote && (
+        <p className={styles.sub}>{t("forum:funding.edit.askReviewNote")}</p>
+      )}
       <label className={styles.field}>
         <span className={styles.fieldLabel}>
           {t("forum:opEdit.titleLabel")}

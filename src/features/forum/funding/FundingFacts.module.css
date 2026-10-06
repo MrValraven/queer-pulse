@@ -1,0 +1,153 @@
+.panel {
+  margin-bottom: var(--gap-sm);
+  padding: 20px 24px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left: 3px solid var(--jade);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+.eyebrow {
+  margin: 0 0 var(--gap-xs);
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jade-ink);
+}
+
+.facts {
+  display: grid;
+  gap: var(--gap-xs);
+  margin: 0;
+}
+
+.factRow {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  gap: var(--gap-sm);
+}
+
+.factLabel {
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.factValue {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.deadlineFact {
+  display: grid;
+  gap: 2px;
+}
+
+.yourTime {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.toneAccent {
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.toneMuted {
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-top: var(--gap-sm);
+}
+
+/* Every action keeps a full touch target, the small ghost ones included. */
+.actions > * {
+  min-height: var(--tap-min);
+}
+
+/* The author's own controls, set apart from what a donor can do. */
+.authorRow {
+  margin-top: var(--gap-sm);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.authorRow .actions {
+  margin-top: var(--gap-xs);
+}
+
+.authorLabel {
+  margin: 0;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.hint {
+  margin: var(--gap-xs) 0 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+@media (max-width: 480px) {
+  .factRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+.strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: var(--gap-sm) 0 0;
+  padding: 10px 12px;
+  font-size: var(--text-caption);
+  color: var(--ink);
+  background: rgba(var(--jade-rgb), 0.08);
+  border-radius: var(--radius-tag);
+}
+
+.stripIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--jade-ink);
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 var(--gap-xs);
+  padding: 8px 12px;
+  font-size: var(--text-body-sm);
+  background: rgba(var(--amber-rgb), 0.14);
+  border-radius: var(--radius-tag);
+}
+
+/* An ended fundraiser closes on the success pattern: a jade check on a
+   jade-tinted strip, in strong type. */
+.ended {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: var(--gap-sm) 0 0;
+  padding: 10px 12px;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+  background: rgba(var(--jade-rgb), 0.08);
+  border-radius: var(--radius-tag);
+}
+
+.endedIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--jade-ink);
+}

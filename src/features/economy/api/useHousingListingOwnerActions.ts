@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { MyHousingListingRow } from "../myHousingListings.data";
+import { isHiddenByExpiry } from "../myHousingListingState";
 import { economyKeys } from "./economyKeys";
 import { dtoToMyHousingListingRow } from "./housingListing.adapters";
 import {
@@ -31,16 +32,26 @@ function applyDemoTransition(
 ): MyHousingListingRow {
   switch (input.action) {
     case "markFilled":
-      return { ...row, filledAt: NOW_ISO() };
+      // An owner fill replaces a sweep fill, the same as the backend.
+      return { ...row, filledAt: NOW_ISO(), isHiddenBySweep: false };
     case "markAvailable":
       return {
         ...row,
         filledAt: null,
+        isHiddenBySweep: false,
         expiresAt: row.expired ? sixtyDaysFromNow() : row.expiresAt,
         expired: false,
       };
     case "extend":
-      return { ...row, expiresAt: sixtyDaysFromNow(), expired: false };
+      // PRD-444: same as the backend. A `filledAt` the expiry sweep stamped
+      // goes with the old window; an owner's own "filled" stays.
+      return {
+        ...row,
+        filledAt: isHiddenByExpiry(row) ? null : row.filledAt,
+        isHiddenBySweep: false,
+        expiresAt: sixtyDaysFromNow(),
+        expired: false,
+      };
     case "update":
       return {
         ...row,

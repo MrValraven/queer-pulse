@@ -14,13 +14,24 @@ import {
 import styles from "./SearchPage.module.css";
 
 /** One search hit. Shared by the results page and its "load more" pages, so a
- *  paged-in row is indistinguishable from a first-page one. */
-export function ResultCard({ item }: { item: SearchItem }) {
+ *  paged-in row is indistinguishable from a first-page one. `onActivate` runs
+ *  when the row is opened (click, tap or Enter), before the navigation. */
+export function ResultCard({
+  item,
+  onActivate,
+}: {
+  item: SearchItem;
+  onActivate?: () => void;
+}) {
   const { t } = useTranslation();
   const TypeIcon = item.icon ?? TYPE_ICON[item.t];
   const avatar = memberRowAvatar(item);
   return (
-    <Link to={linkToPath(item.href)} className={styles.card}>
+    <Link
+      to={linkToPath(item.href)}
+      className={styles.card}
+      onClick={onActivate}
+    >
       {avatar ? (
         <Avatar
           initials={avatar.initials}
@@ -53,10 +64,13 @@ export function ResultCard({ item }: { item: SearchItem }) {
 export function ResultGrid({
   items,
   fadeOffset = 0,
+  onActivate,
 }: {
   items: SearchItem[];
   /** Continues the stagger across an appended page instead of restarting it. */
   fadeOffset?: number;
+  /** Runs when any row in the grid is opened (see `ResultCard`). */
+  onActivate?: () => void;
 }) {
   return (
     <div className={styles.grid}>
@@ -65,7 +79,7 @@ export function ResultGrid({
           key={`${item.t}-${item.href}-${index}`}
           delay={Math.min(index + fadeOffset, 8) * 60}
         >
-          <ResultCard item={item} />
+          <ResultCard item={item} onActivate={onActivate} />
         </FadeIn>
       ))}
     </div>
@@ -76,6 +90,7 @@ export function Group({
   items,
   label,
   onSeeAll,
+  onActivate,
   children,
 }: {
   items: SearchItem[];
@@ -84,6 +99,8 @@ export function Group({
    *  link that switches to this type's own tab, where the backend is asked
    *  for the full result set instead of the capped one (DISC-10). */
   onSeeAll?: () => void;
+  /** Runs when any row in the group is opened (see `ResultCard`). */
+  onActivate?: () => void;
   /** Rendered under the grid: the type tab's "load more" pager (SOC-08). */
   children?: React.ReactNode;
 }) {
@@ -92,7 +109,7 @@ export function Group({
   return (
     <div className={styles.section}>
       <div className={styles.secHead}>{label}</div>
-      <ResultGrid items={items} />
+      <ResultGrid items={items} onActivate={onActivate} />
       {onSeeAll && (
         <button type="button" className={styles.seeAll} onClick={onSeeAll}>
           {t("members:search.seeAllIn", { category: label })}

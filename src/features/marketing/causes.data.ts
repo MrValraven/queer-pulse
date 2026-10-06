@@ -32,9 +32,11 @@ const CORAL = {
   color: "var(--accent-ink)",
 } as const;
 const JADE = { bg: "rgba(var(--jade-rgb),.14)", color: "var(--jade)" } as const;
+// The "plum" slot is theme-aware: plum text on a plum wash vanished on a
+// dark card, so it takes the strong-text colour on a hairline wash.
 const PLUM = {
-  bg: "rgba(var(--plum-rgb),.10)",
-  color: "var(--plum)",
+  bg: "rgba(var(--line-rgb),.10)",
+  color: "var(--text-strong)",
 } as const;
 
 /** Named so it can double as the fallback below without a non-null assertion

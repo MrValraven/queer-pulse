@@ -238,7 +238,7 @@ export const resources: Catalog = {
     "Tratamos cada denúncia com discrição. Não serás identificade à pessoa que estás a denunciar a menos que escolhas sê-lo. Nós damos seguimento.",
   "safety.report.boxTitle": "Denunciar uma preocupação",
   "safety.report.boxBody":
-    "Usa o formulário de denúncia: chega diretamente à equipa, e procuramos responder dentro de 24 horas.",
+    "Usa o formulário de denúncia: chega diretamente à equipa de moderação, e cada denúncia é lida por uma pessoa da moderação.",
   "safety.report.formCta": "Abrir o formulário de denúncia",
   "safety.report.trackCta": "As tuas denúncias",
 
@@ -646,7 +646,7 @@ export const resources: Catalog = {
     "Consumir com mais segurança: orientação prática e sem julgamentos.",
   "wellbeing.subpage.sober.label": "Sóbrie",
   "wellbeing.subpage.sober.blurb":
-    "Sóbrie e social: convívios e apoio para lá da bebida.",
+    "Sóbrie e social: contexto e apoio para uma vida sem álcool.",
 
   "wellbeing.therapists.title":
     "Terapeutas afirmativos queer <em>em Lisboa</em>",
@@ -1157,9 +1157,9 @@ export const resources: Catalog = {
   "harmReduction.section.sober.item.nonAlcoholic.body":
     "A maioria dos locais em Lisboa serve água e refrigerantes. Pede água com gás e lima se preferires que a tua bebida passe despercebida. O que tens no copo só a ti diz respeito.",
   "harmReduction.section.sober.item.qpCommunity.title":
-    "Comunidade Sóbrie da QueerPulse",
+    "Página Sóbrie da QueerPulse",
   "harmReduction.section.sober.item.qpCommunity.body":
-    "A página Sóbrie liga pessoas da comunidade que são sóbrias ou estão a explorar a sobriedade. Não estás sozinhe em querer fazer parte da noite sem as substâncias.",
+    "A página Sóbrie reúne contexto e opções de apoio para fazeres parte da noite sem as substâncias. Não estás sozinhe nisso.",
   "harmReduction.section.sober.linkCta": "Visitar a página Sóbrie",
 
   "harmReduction.section.services.label": "Apoio e serviços",
@@ -1191,6 +1191,10 @@ export const resources: Catalog = {
   "sober.meta.title": "Sóbrie e queer em Lisboa: eventos e espaços sem álcool",
   "sober.meta.description":
     "Uma vida social queer plena sem álcool: eventos e espaços em Lisboa para lá do bar, e apoio entre pares para quem está em recuperação, a explorar a sobriedade, ou simplesmente não bebe.",
+  "sober.meta.descriptionLive":
+    "Uma vida social queer completa sem álcool: contexto sobre álcool e comunidades queer, e pistas para apoio na recuperação e para quem está sober-curious.",
+  "sober.meta.titleLive":
+    "Sóbrie e queer em Lisboa: vida social sem álcool e apoio na recuperação",
 
   "sober.hero.eyebrow": "Sóbrie e social",
   "sober.hero.title": "Uma vida social plena, sem <em>álcool.</em>",
@@ -1224,7 +1228,10 @@ export const resources: Catalog = {
   "sober.gatherings.title": "Convívios <em>sóbries.</em>",
   "sober.gatherings.lead":
     "Eventos sem álcool, ou eventos onde o álcool está presente mas não é o foco. Todos os convívios da QueerPulse estão assinalados quando são sem álcool.",
-  "sober.gatherings.hostCta": "+ Organizar ou participar num convívio",
+  "sober.gatherings.hostCta": "Organizar ou participar num convívio",
+  "sober.gatherings.leadLive":
+    "Ainda não há encontros listados na QueerPulse. Se queres organizar um encontro sem álcool, fala com a equipa e ela analisa o teu pedido.",
+  "sober.gatherings.hostCtaLive": "Organizar um encontro",
   "sober.type.alcoholFree": "Sem álcool",
   "sober.type.supportGroup": "Grupo de apoio",
   "sober.rsvp.going": "Vou",
@@ -1267,11 +1274,11 @@ export const resources: Catalog = {
 
   "sober.host.modalTitle": "Convívios sóbries",
   "sober.host.success.hostTitle": "Convívio <em>submetido.</em>",
-  "sober.host.success.attendTitle": "Estás <em>dentro.</em>",
+  "sober.host.success.attendTitle": "Pedido <em>enviado.</em>",
   "sober.host.success.hostSub":
-    "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. A checklist de anfitrião chega-te por mensagem na QueerPulse.",
+    "O teu pedido chegou à equipa da QueerPulse. Ela analisa-o e responde-te na QueerPulse.",
   "sober.host.success.attendSub":
-    "Guardámos o teu lugar. A localização privada e um lembrete simpático vão chegar-te no dia anterior, e nada é partilhado publicamente.",
+    "O teu pedido chegou à equipa da QueerPulse. Ela analisa-o e responde-te na QueerPulse. Nada é partilhado publicamente.",
   "sober.host.intro":
     "Começa um convívio sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
   "sober.host.modeLabel": "O que gostarias de fazer?",
@@ -1293,6 +1300,10 @@ export const resources: Catalog = {
   "sober.host.cancelCta": "Cancelar",
   "sober.host.submitCta.host": "Submeter convívio",
   "sober.host.submitCta.attend": "Pedir para participar",
+  "sober.host.submitCta.hostLive": "Enviar pedido",
+  "sober.host.introLive":
+    "Fala à equipa do encontro sem álcool que gostarias de organizar. Tu decides quanto partilhas.",
+  "sober.host.modalTitleLive": "Organizar um convívio sóbrio",
 
   // ── Grade da biblioteca de guias — partilhada por marketing/ResourceLibraryPage
   // (a página real "/resources", ligada à navegação, consolidada pela CNT-11)
@@ -1314,23 +1325,19 @@ export const resources: Catalog = {
   "library.card.notYetVerified": "Ainda não verificado",
 
   // ── SexualHealthPage (+ SexualHealthTabs.tsx + sexualHealth.data.ts) ────
-  // Assinalado para revisão nativa — informação sobre saúde sexual/VIH/PrEP.
-  // As entradas de CLINICS (desc/details/horários/meta), PREP_STEPS,
-  // PREP_FAQ, HIV_INFO e os textos de GUIDES são conteúdo clínico/processual
-  // denso (protocolos de dosagem, nomes de fármacos, estatísticas
-  // epidemiológicas, números de contacto de emergência) — deixados em
-  // inglês em vez de arriscar uma tradução médica imprecisa. Só a estrutura
-  // à volta (títulos, rótulos de separadores/filtros, botões, estados
-  // vazios, CTAs genéricos) está traduzida aqui; ver o relatório da sweep.
+  // Assinalado para revisão nativa: informação sobre saúde sexual/VIH/PrEP.
+  // Desde 6 de outubro de 2026 (DES-421), TESTING_INFO, PREP_STEPS, PREP_FAQ,
+  // HIV_INFO e GUIDES estão traduzidos abaixo; as entradas de CLINICS, só
+  // de demonstração (desc/details/horários/meta), ficam em inglês.
   "sexualHealth.meta.title":
     "Saúde sexual em Lisboa: testes, PrEP e recursos sobre VIH",
   "sexualHealth.meta.description":
-    "Um guia prático de saúde sexual em Lisboa: onde fazer testes, como aceder à PrEP gratuita pelo SNS, recursos sobre VIH e I=I, e um diretório de clínicas avaliado pela comunidade.",
+    "Um guia prático de saúde sexual em Lisboa: onde fazer testes, como aceder à PrEP pelo SNS e recursos sobre VIH, incluindo I=I.",
 
   "sexualHealth.hero.cat": "Saúde sexual",
   "sexualHealth.hero.title": "A tua saúde, <em>nos teus termos.</em>",
   "sexualHealth.hero.lead":
-    "Direto, específico para pessoas queer, sem julgamentos. Testes, PrEP, recursos sobre VIH e um diretório de prestadores avaliado pela comunidade, tudo num só lugar.",
+    "Direto, específico para pessoas queer, sem julgamentos. Onde fazer testes, como funciona a PrEP e recursos sobre VIH, tudo num só lugar.",
   "sexualHealth.outro.title": "A tua saúde <em>importa.</em>",
   "sexualHealth.outro.sub":
     "Perguntas, preocupações, ou simplesmente não sabes por onde começar: a comunidade está aqui.",
@@ -1344,7 +1351,7 @@ export const resources: Catalog = {
 
   "sexualHealth.testing.title": "Onde fazer o <em>teste</em> em Lisboa.",
   "sexualHealth.testing.lead":
-    "Clínicas e serviços avaliados pela comunidade. Última atualização por membros em junho de 2025.",
+    "Clínicas e serviços de testes de saúde sexual em Lisboa. Os horários mudam, por isso confirma no site de cada serviço antes de ires.",
   "sexualHealth.testing.filter.all": "Todas",
   "sexualHealth.testing.filter.public": "Grátis / SNS",
   "sexualHealth.testing.filter.ngo": "ONG",
@@ -1381,6 +1388,42 @@ export const resources: Catalog = {
   "sexualHealth.prep.tip":
     "<strong>Portugal foi um dos primeiros países europeus a tornar a PrEP gratuita.</strong> Não precisas de seguro privado. O processo envolve uma verificação simples de elegibilidade, análises ao sangue e uma prescrição, e todo o percurso demora cerca de 4 a 6 semanas da primeira vez.",
   "sexualHealth.prep.faqTitle": "Perguntas <em>frequentes.</em>",
+  "sexualHealth.prep.step1.title":
+    "Marca uma consulta num CAD ou numa clínica de saúde sexual",
+  "sexualHealth.prep.step1.description":
+    "Diz que tens interesse na PrEP. O CheckpointLx e o GAT podem ajudar-te com o encaminhamento se não souberes por onde começar.",
+  "sexualHealth.prep.step1.note":
+    "O CheckpointLx faz aconselhamento sobre PrEP. Os horários mudam, por isso confirma o horário atual no site da própria clínica antes de ires.",
+  "sexualHealth.prep.step2.title":
+    "Avaliação inicial de elegibilidade e análises ao sangue",
+  "sexualHealth.prep.step2.description":
+    "A equipa de aconselhamento fala contigo sobre a tua situação e pede análises ao sangue: VIH, hepatite B, creatinina (função renal) e um painel de IST. Os resultados chegam em 5–10 dias.",
+  "sexualHealth.prep.step2.note":
+    "Para começares a PrEP, o teu teste de VIH tem de ser negativo.",
+  "sexualHealth.prep.step3.title": "Receita emitida: levanta a medicação",
+  "sexualHealth.prep.step3.description":
+    "Se fores elegível, recebes uma receita de tenofovir/emtricitabina. Com receita de uma consulta hospitalar do SNS, levantas a medicação gratuitamente na farmácia do hospital. Com receita do teu médico de família, de uma organização comunitária ou de uma clínica privada, podes levantá-la numa farmácia comunitária, em que o SNS paga a maior parte do preço e tu pagas o resto.",
+  "sexualHealth.prep.step3.note":
+    "Não tens número de utente do SNS? O GAT Lisboa pode aconselhar-te sobre alternativas.",
+  "sexualHealth.prep.step4.title": "Consultas de acompanhamento trimestrais",
+  "sexualHealth.prep.step4.description":
+    "De 3 em 3 meses: teste de VIH, rastreio de IST e avaliação da função renal. É também aqui que recebes a receita seguinte. As consultas duram 20–30 minutos.",
+  "sexualHealth.prep.faq.snsNumber.question":
+    "Preciso de número de utente do SNS?",
+  "sexualHealth.prep.faq.snsNumber.answer":
+    "Cidadãos da UE podem aceder aos serviços do SNS com o Cartão Europeu de Seguro de Doença. Residentes de fora da UE devem inscrever-se no SNS: tens direito a isso se residires legalmente em Portugal. Se a tua situação for mais complexa, o GAT Lisboa é especializado em apoiar pessoas com situações documentais menos simples.",
+  "sexualHealth.prep.faq.onDemand.question":
+    "Posso tomar a PrEP só quando preciso (toma a pedido)?",
+  "sexualHealth.prep.faq.onDemand.answer":
+    "Sim, para sexo anal. O esquema 2-1-1 (dois comprimidos 2 a 24 horas antes do sexo, depois um comprimido 24 horas após a primeira toma e outro 48 horas após a primeira toma) é aceite em Portugal. Para sexo vaginal ou frontal, e para mulheres trans que fazem estrogénio, a toma diária é a opção recomendada. Fala com a tua equipa clínica sobre o esquema mais indicado para ti.",
+  "sexualHealth.prep.faq.otherStis.question":
+    "A PrEP protege contra outras IST?",
+  "sexualHealth.prep.faq.otherStis.answer":
+    "A PrEP só previne o VIH. Não protege contra sífilis, gonorreia, clamídia, herpes, HPV nem hepatite C. O preservativo continua a ser útil para prevenir IST, e é por isso que os testes regulares de 3 em 3 meses fazem parte do programa de PrEP.",
+  "sexualHealth.prep.faq.transHormones.question":
+    "Sou uma pessoa trans e faço terapia hormonal. Isso afeta a PrEP?",
+  "sexualHealth.prep.faq.transHormones.answer":
+    "Em mulheres trans a fazer estrogénio, alguns estudos sugerem níveis do medicamento ligeiramente mais baixos, por isso a toma diária é a opção recomendada. Em geral, a PrEP e a terapia hormonal podem ser tomadas em conjunto com segurança. Fala com profissionais de saúde com experiência com pessoas trans; o CheckpointLx tem uma equipa com essa experiência.",
 
   "sexualHealth.hiv.title": "VIH: o que precisas de <em>saber.</em>",
   "sexualHealth.hiv.lead":
@@ -1395,11 +1438,28 @@ export const resources: Catalog = {
   "sexualHealth.hiv.uu.stat.free.value": "Grátis",
   "sexualHealth.hiv.uu.stat.free.label":
     "O tratamento do VIH (antirretrovirais) é gratuito para todas as pessoas residentes através do SNS.",
-  "sexualHealth.hiv.findServicesCta": "Encontrar serviços de apoio ao VIH",
+  "sexualHealth.hiv.findServicesCta": "Explorar comunidades",
+  "sexualHealth.hiv.info.positive.title":
+    "Acabaste de ter um resultado positivo?",
+  "sexualHealth.hiv.info.positive.body":
+    "Respira fundo. O tratamento atual do VIH é eficaz e simples. O CAD ou o teu médico de família podem encaminhar-te de imediato para uma consulta de doenças infeciosas. O tratamento costuma começar poucos dias após o diagnóstico.",
+  "sexualHealth.hiv.info.positive.link": "SNS 24: 808 24 24 24",
+  "sexualHealth.hiv.info.pep.title": "PEP: depois de uma possível exposição",
+  "sexualHealth.hiv.info.pep.body":
+    "A profilaxia pós-exposição tem de começar nas primeiras 72 horas (idealmente nas primeiras 24). Vai às urgências de qualquer hospital e pede PEP. Não esperes. É gratuita pelo SNS e muito eficaz quando tomada a tempo.",
+  "sexualHealth.hiv.info.peerSupport.title": "Apoio entre pares na comunidade",
+  "sexualHealth.hiv.info.peerSupport.body":
+    "Falar com quem já passou pelo mesmo ajuda. Organizações como o GAT e a Abraço têm apoio de pessoas que vivem com VIH, e podes explorar as comunidades da QueerPulse para encontrares uma que te faça sentido.",
+  "sexualHealth.hiv.info.peerSupport.link": "Explorar comunidades",
+  "sexualHealth.hiv.info.rights.title":
+    "Direitos e revelação do estado serológico",
+  "sexualHealth.hiv.info.rights.body":
+    "A lei portuguesa sobre a criminalização do VIH tem nuances. Não tens obrigação legal de revelar o teu estado serológico a todas as pessoas parceiras em todas as situações. A realidade jurídica é complexa. Fala com o GAT ou procura aconselhamento jurídico se tiveres dúvidas.",
+  "sexualHealth.hiv.info.rights.link": "Recursos jurídicos",
 
   "sexualHealth.guides.title": "Guias e <em>perguntas.</em>",
   "sexualHealth.guides.lead":
-    "Guias curtos e um espaço para perguntar o que quiseres, de forma anónima. Respondido por membros da comunidade com experiência relevante.",
+    "Guias curtos sobre vacinação, IST, conversas com as pessoas parceiras, consumo de substâncias e muito mais.",
   "sexualHealth.guides.ask.doneTitle": "A tua pergunta foi <em>enviada.</em>",
   "sexualHealth.guides.ask.doneBody":
     "Uma pessoa com experiência relevante vai responder, sem nome, sem conta, nada associado a ti. Volta aqui dentro de um dia ou dois.",
@@ -1417,7 +1477,7 @@ export const resources: Catalog = {
   // Nomes/descrições de CURRENT/PAST e do painel (PANEL) ficam em inglês,
   // como conteúdo (precedente THERAPISTS); o processo da bolsa em si está
   // traduzido abaixo.
-  "microGrants.hero.backLink": "Bolsas",
+  "microGrants.hero.backLink": "Financiamento e apoios",
   "microGrants.hero.eyebrow": "Fundo comunitário",
   "microGrants.hero.title.line1": "Pouco dinheiro.",
   "microGrants.hero.title.line2": "<em>Impacto real.</em>",
@@ -1465,6 +1525,11 @@ export const resources: Catalog = {
   "microGrants.criteria.impact":
     "O dinheiro vai mudar genuinamente o que é possível, para lá de acelerar o que já ias fazer",
   "microGrants.round.applyCta": "Candidatar a esta ronda",
+  "microGrants.live.applyTitle": "Candidata-te ao <em>fundo comunitário</em>",
+  "microGrants.live.applyBody":
+    "Conta-nos o que queres fazer e quanto custaria. Pessoas da comunidade leem todas as candidaturas.",
+  "microGrants.live.applyCta": "Começar uma candidatura",
+  "microGrants.apply.modalTitleLive": "Candidatar ao fundo comunitário",
 
   "microGrants.section.currentTitle": "Projetos <em>apoiados</em> atualmente",
   "microGrants.section.pastTitle": "Projetos <em>anteriores</em>",
@@ -1806,7 +1871,7 @@ export const resources: Catalog = {
     "Sair do armário no trabalho: timing, frases e direitos",
   "comingOutAtWork.meta.description":
     "Um guia prático para sair do armário no trabalho em Portugal: como ler o ambiente, frases para colegas, e o que fazer se correr mal.",
-  // VOICES stay English — attributed peer quotes (a member's own words).
+  // VOICES stay English: invented demo-only quotes (they never render in live).
   "comingOutAtWork.hero.eyebrow": "Saída do Armário · No Trabalho",
   "comingOutAtWork.hero.title": "Sair do armário <em>no trabalho.</em>",
   "comingOutAtWork.hero.lead":
@@ -1868,7 +1933,7 @@ export const resources: Catalog = {
     "Não podes ser legalmente despedide ou assediade por seres queer. A ACT trata queixas de discriminação no trabalho, e podes reportar de forma anónima. A nossa página de apoio jurídico tem os modelos.",
   "comingOutAtWork.bad3.title": "Não estás sozinhe nisto",
   "comingOutAtWork.bad3.body":
-    "O espaço de saída do armário e a comunidade mais alargada já acompanharam pessoas exatamente nisto. Traz o assunto ao fórum: vais encontrar pessoas que sobreviveram à mesma chefia.",
+    "Não tens de passar por isto sozinhe. Traz o assunto ao fórum, onde podes falar com pessoas que também já enfrentaram uma chefia difícil.",
 
   "comingOutAtWork.outro.title": "O teu calendário é <em>teu.</em>",
   "comingOutAtWork.outro.sub":
@@ -1882,7 +1947,7 @@ export const resources: Catalog = {
   "disabilityHealthcare.meta.description":
     "Um guia prático para navegar a saúde portuguesa com deficiência ou doença crónica: adaptações, referenciações, médicos de família acessíveis e seguros.",
   // STEPS are administrative/navigational guidance — translated. TIPS stay
-  // English — attributed peer quotes (a member's own words).
+  // English: invented demo-only quotes (they never render in live).
   "disabilityHealthcare.hero.eyebrow": "Disabled Queers",
   "disabilityHealthcare.hero.title": "O sistema, <em>navegado.</em>",
   "disabilityHealthcare.hero.lead":
@@ -1902,18 +1967,18 @@ export const resources: Catalog = {
   "disabilityHealthcare.step3.title":
     "Escolhe médicos de família atentos à acessibilidade",
   "disabilityHealthcare.step3.body":
-    "Algumas clínicas em Lisboa são visivelmente melhores: sem degraus, sem pressa, dispostas a escrever as coisas. O grupo mantém uma lista feita por pares; pergunta no espaço por nomes atuais.",
+    "Algumas clínicas em Lisboa são visivelmente melhores: sem degraus, sem pressa, dispostas a escrever as coisas. Pergunta no fórum por recomendações atuais.",
   "disabilityHealthcare.step4.title": "Navega a papelada dos seguros",
   "disabilityHealthcare.step4.body":
-    "A papelada de reembolsos e do atestado de incapacidade é um labirinto à parte. Guarda cópias de tudo, pede decisões por escrito, e apoia-te no grupo: alguém já preencheu o mesmo formulário.",
+    "A papelada de reembolsos e do atestado de incapacidade é um labirinto à parte. Guarda cópias de tudo, pede decisões por escrito, e pergunta no fórum quando um formulário te bloquear.",
 
   "disabilityHealthcare.tips.title": "Dicas <em>entre pares</em>",
 
   "disabilityHealthcare.outro.title": "Tu defines os <em>termos.</em>",
   "disabilityHealthcare.outro.sub":
-    "Conhece os teus direitos, e nunca navegues isto sozinhe. A página jurídica e o grupo estão ambos aqui.",
+    "Conhece os teus direitos: não tens de navegar isto sozinhe. A página jurídica e o fórum estão ambos aqui.",
   "disabilityHealthcare.outro.rightsCta": "Conhecer os teus direitos",
-  "disabilityHealthcare.outro.askCta": "Perguntar ao grupo",
+  "disabilityHealthcare.outro.askCta": "Perguntar no fórum",
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
   "firstMeetupGuide.meta.title":
@@ -2092,7 +2157,7 @@ export const resources: Catalog = {
   "lgbtqAgingGuide.outro.cta": "Encontrar apoio afirmativo",
 
   // ── OralHistoryProjectPage (+ oralHistoryProject.data.ts) ───────────────
-  // VOICES stay English — attributed peer quotes (a member's own words).
+  // VOICES stay English: invented demo-only quotes (they never render in live).
   "oralHistoryProject.meta.title":
     "Projeto de histórias orais LGBTQ+ em Lisboa: participa",
   "oralHistoryProject.meta.description":
@@ -2315,7 +2380,7 @@ export const resources: Catalog = {
   // ── SchoolFormsGuidePage (+ schoolFormsGuide.data.ts) ───────────────────
   // Official form terms ("encarregado de educação", "mãe / pai") kept
   // byte-identical to the EN source — they are the real Portuguese terms.
-  // VOICES stay English — attributed peer quotes (a member's own words).
+  // VOICES stay English: invented demo-only quotes (they never render in live).
   "schoolFormsGuide.meta.title":
     "Formulários de matrícula escolar para famílias queer em Lisboa",
   "schoolFormsGuide.meta.description":
@@ -2473,7 +2538,7 @@ export const resources: Catalog = {
   "intersectionality.meta.title":
     "Raça, fé e classe na comunidade queer de Lisboa",
   "intersectionality.meta.description":
-    "Como raça, fé, classe e deficiência se cruzam com a identidade queer em Lisboa: vozes de membros e recursos para quem vive mais do que uma identidade ao mesmo tempo.",
+    "Como raça, fé, classe e deficiência se cruzam com a identidade queer em Lisboa: contexto e recursos para quem vive mais do que uma identidade ao mesmo tempo.",
   "intersectionality.hero.backLabel": "Biblioteca de Recursos",
   "intersectionality.hero.cat": "Interseccionalidade",
   "intersectionality.hero.title":
@@ -2496,17 +2561,17 @@ export const resources: Catalog = {
   "intersectionality.race.info1.eyebrow": "Navegar espaços queer",
   "intersectionality.race.info1.title": "Quando ser queer não chega",
   "intersectionality.race.info1.body":
-    "Os espaços queer em Lisboa, como na maioria das cidades, podem reproduzir as dinâmicas raciais do mundo em geral. A fetichização, a exclusão e as microagressões não desaparecem só porque um espaço é queer. As diretrizes da comunidade abordam isto explicitamente, e o fórum tem tópicos para discutir situações concretas.",
+    "Os espaços queer em Lisboa, como na maioria das cidades, podem reproduzir as dinâmicas raciais do mundo em geral. A fetichização, a exclusão e as microagressões não desaparecem só porque um espaço é queer. As diretrizes da comunidade abordam isto explicitamente, e o fórum é um lugar para discutir situações concretas.",
   "intersectionality.race.info1.link": "Diretrizes da comunidade",
   "intersectionality.race.info2.eyebrow": "A história colonial de Portugal",
   "intersectionality.race.info2.title": "O que é bom saber ao chegar aqui",
   "intersectionality.race.info2.body":
     "Portugal tem uma relação específica e muitas vezes por processar com a sua história colonial. As comunidades afro-portuguesa, brasileira, cabo-verdiana e angolana são significativas e complexas. Chegar como pessoa racializada vinda de fora desta história significa aprender um novo conjunto de dinâmicas. Isto leva tempo e a comunidade pode ajudar.",
   "intersectionality.race.info3.eyebrow": "Grupos da comunidade",
-  "intersectionality.race.info3.title": "Espaços para pessoas QTIPOC",
+  "intersectionality.race.info3.title": "Encontrar comunidade QTIPOC",
   "intersectionality.race.info3.body":
-    "A QueerPulse tem um grupo comunitário fechado para pessoas QTIPOC (queer, trans e intersexo racializadas), um espaço para as conversas que a comunidade mais alargada nem sempre é o contexto certo para ter. Junta-te através da página de Comunidades.",
-  "intersectionality.race.info3.link": "Grupo comunitário QTIPOC",
+    "Procura na página de Comunidades espaços para pessoas QTIPOC (queer, trans e intersexo racializadas), ou começa a conversa no fórum.",
+  "intersectionality.race.info3.link": "Explorar comunidades",
 
   "intersectionality.faith.heading": "Fé e <em>religião</em>",
   "intersectionality.faith.intro":
@@ -2514,13 +2579,13 @@ export const resources: Catalog = {
   "intersectionality.faith.info1.eyebrow": "O contexto católico",
   "intersectionality.faith.info1.title": "Uma igreja em mudança",
   "intersectionality.faith.info1.body":
-    "A Igreja Católica portuguesa é institucionalmente conservadora mas cada vez mais diversa na prática. Algumas paróquias são ativamente acolhedoras; outras não. Há padres em Lisboa conhecidos por serem afirmativos, e a comunidade sabe quem são. Pergunta no fórum.",
+    "A Igreja Católica portuguesa é institucionalmente conservadora mas cada vez mais diversa na prática. Algumas paróquias são ativamente acolhedoras; outras não. Alguns padres em Lisboa são conhecidos por serem afirmativos, e podes perguntar por eles no fórum.",
   "intersectionality.faith.info2.eyebrow": "Outras tradições",
   "intersectionality.faith.info2.title":
     "Islão, judaísmo, evangélicos e outras",
   "intersectionality.faith.info2.body":
-    "Lisboa tem comunidades muçulmana e judaica em crescimento, e uma variedade de igrejas protestantes e evangélicas. A relação entre cada comunidade e os seus membros LGBTQ+ varia imenso. O fórum tem tópicos para navegar questões de fé em cada um destes contextos.",
-  "intersectionality.faith.info2.link": "Fórum: fé e ser queer",
+    "Lisboa tem comunidades muçulmana e judaica em crescimento, e uma variedade de igrejas protestantes e evangélicas. A relação entre cada comunidade e os seus membros LGBTQ+ varia imenso. O fórum está aberto a questões de fé em qualquer um destes contextos.",
+  "intersectionality.faith.info2.link": "Ir para o fórum",
   "intersectionality.faith.info3.eyebrow": "Sem religião",
   "intersectionality.faith.info3.title": "O secularismo também é válido",
   "intersectionality.faith.info3.body":
@@ -2562,14 +2627,14 @@ export const resources: Catalog = {
   "intersectionality.community.info2.title":
     "Encontrar a tua comunidade específica",
   "intersectionality.community.info2.body":
-    "Para além da comunidade principal, a QueerPulse tem grupos fechados para pessoas QTIPOC, pessoas com deficiência ou doença crónica, pais e mães queer, e pessoas sóbrias. Existem para que se possam ter as conversas para as quais o espaço mais alargado nem sempre é o adequado.",
-  "intersectionality.community.info2.link": "Ver grupos da comunidade",
+    "Para além da comunidade principal, explora a página de Comunidades para encontrares um espaço que te faça sentido, seja à volta de raça, deficiência, parentalidade, sobriedade ou outra coisa.",
+  "intersectionality.community.info2.link": "Explorar comunidades",
   "intersectionality.community.info3.eyebrow": "O fórum",
   "intersectionality.community.info3.title":
     "Onde acontecem as conversas mais difíceis",
   "intersectionality.community.info3.body":
-    "O tópico de Interseccionalidade do fórum é um dos mais ativos da plataforma. É onde as pessoas membras levantam experiências específicas, partilham recursos, se desafiam e se apoiam mutuamente. É moderado mas não filtrado.",
-  "intersectionality.community.info3.link": "Fórum: interseccionalidade",
+    "O fórum está aberto a conversas interseccionais: levantar experiências específicas, partilhar recursos, desafiar-se e apoiar-se mutuamente. É moderado, e as conversas honestas são bem-vindas.",
+  "intersectionality.community.info3.link": "Ir para o fórum",
 
   "intersectionality.commit.heading":
     "Aquilo a que a QueerPulse <em>se compromete.</em>",
@@ -2580,9 +2645,9 @@ export const resources: Catalog = {
   "intersectionality.commitment1.title": "Moderação ativa",
   "intersectionality.commitment1.text":
     "A plataforma é ativamente moderada para racismo, transfobia, classismo e capacitismo, a par da homofobia. As denúncias são levadas a sério e têm seguimento.",
-  "intersectionality.commitment2.title": "Grupos comunitários interseccionais",
+  "intersectionality.commitment2.title": "Comunidades abertas a tudo o que és",
   "intersectionality.commitment2.text":
-    "Espaços fechados para pessoas QTIPOC, com deficiência, sóbrias, e outras comunidades dentro da comunidade são mantidos como um recurso genuíno.",
+    "Qualquer membro pode explorar a página de Comunidades para encontrar um espaço que lhe faça sentido, e a moderação aplica os mesmos padrões em todos.",
   "intersectionality.commitment3.title": "Acessibilidade económica",
   "intersectionality.commitment3.text":
     "Ninguém é excluído de eventos ou recursos da comunidade por causa do custo. Existem opções de preço variável e gratuitas para tudo o que organizamos.",
@@ -2596,11 +2661,11 @@ export const resources: Catalog = {
   "intersectionality.org1.focus": "QTIPOC",
   "intersectionality.org1.text":
     "Organização portuguesa que trabalha em direitos LGBTQ+ com um foco explícito na interseção entre raça, migração e ser queer em Portugal.",
-  "intersectionality.org1.link": "Tópico de discussão",
+  "intersectionality.org1.link": "Conversar no fórum",
   "intersectionality.org2.focus": "Fé",
   "intersectionality.org2.text":
     "Comunidade cristã afirmativa de pessoas queer, sediada em Lisboa. Aberta a todas as denominações e tradições, focada em reconciliar fé e identidade queer.",
-  "intersectionality.org2.link": "Fórum: tópico de fé",
+  "intersectionality.org2.link": "Conversar no fórum",
   "intersectionality.org3.focus": "Raça e migração",
   "intersectionality.org3.text":
     "A principal organização de direitos LGBTQ+ de Portugal. Trabalha explicitamente na interseção entre direitos LGBTQ+ e migração/raça. Apoio jurídico e advocacia.",
@@ -2609,7 +2674,7 @@ export const resources: Catalog = {
   "intersectionality.outro.title": "Tudo o que és <em>pertence aqui.</em>",
   "intersectionality.outro.sub":
     "Não só as partes mais fáceis de acolher. Tudo.",
-  "intersectionality.outro.findCta": "Encontrar o teu grupo comunitário",
+  "intersectionality.outro.findCta": "Encontrar a tua comunidade",
   "intersectionality.outro.forumCta": "Fórum",
 
   // ── Section J: honestidade em modo live — sem prestadores "verificados"
@@ -2635,6 +2700,31 @@ export const resources: Catalog = {
     "Estamos a verificar que serviços de rastreio são genuinamente amigos de pessoas queer e trans antes de os listarmos aqui, para que cada clínica seja de confiança.",
   "sexualHealth.guides.ask.liveBody":
     "As perguntas anónimas ainda não estão abertas. Estamos a preparar uma forma segura de os voluntários de saúde da comunidade as responderem. Volta em breve.",
+  "sexualHealth.guides.card.vaccination.title":
+    "Vacinação contra o HPV e a hepatite B",
+  "sexualHealth.guides.card.vaccination.body":
+    "Ambas são gratuitas pelo SNS para certos grupos e fortemente recomendadas. A vacina contra o HPV está agora disponível até aos 45 anos em algumas clínicas. Pergunta ao teu médico de família ou ao CheckpointLx.",
+  "sexualHealth.guides.card.mpox.title": "Mpox: o que precisas de saber",
+  "sexualHealth.guides.card.mpox.body":
+    "A mpox pode afetar qualquer pessoa, mas algumas redes queer têm maior exposição. A vacinação está disponível pelo SNS para contactos próximos e pessoas com risco mais elevado. O CheckpointLx mantém um guia atualizado.",
+  "sexualHealth.guides.card.bacterialStis.title":
+    "IST bacterianas: sífilis, gonorreia, clamídia",
+  "sexualHealth.guides.card.bacterialStis.body":
+    "Todas têm cura com antibióticos e todas estão a aumentar na Europa. Muitas não dão sintomas. Se tens vida sexual ativa, fazer testes de 3 em 3 meses é a forma mais fiável de as detetar cedo.",
+  "sexualHealth.guides.card.talkingToPartners.title":
+    "Falar sobre testes com as pessoas parceiras",
+  "sexualHealth.guides.card.talkingToPartners.body":
+    "Perguntar a uma pessoa parceira sobre testes pode parecer estranho. Mantém a conversa simples e prática: quando fizeste o último teste, que testes fizeste e o que querem fazer a seguir.",
+  "sexualHealth.guides.card.substanceUse.title":
+    "Saúde sexual e consumo de substâncias",
+  "sexualHealth.guides.card.substanceUse.body":
+    "Redução de riscos prática para quem consome substâncias em contextos sexuais: chemsex, MDMA, álcool. Sem julgamentos, com informação prática para reduzir riscos.",
+  "sexualHealth.guides.card.substanceUse.link": "Lê o guia",
+  "sexualHealth.guides.card.transNonbinary.title":
+    "Saúde sexual para pessoas trans e não-binárias",
+  "sexualHealth.guides.card.transNonbinary.body":
+    "Os corpos variam, as práticas variam, e a maior parte da informação sobre saúde sexual é escrita para pessoas cisgénero. Um guia escrito pela comunidade para navegar o sistema e encontrar profissionais de saúde que compreendem.",
+  "sexualHealth.guides.card.transNonbinary.link": "Trans Hub",
 
   // ── Painéis de falha de carregamento dos diretórios (DES-22 / DES-24) ───
   // Renderizados através do `LoadErrorState` partilhado. Ficam separados do
@@ -2644,6 +2734,15 @@ export const resources: Catalog = {
     "Não conseguimos carregar o <em>diretório de clínicas.</em>",
   "sexualHealth.testing.loadError.body":
     "A lista de serviços de rastreio não chegou. A falha é nossa e as clínicas continuam lá. Tenta novamente dentro de instantes e usa as linhas de crise no topo desta página se precisares de ajuda agora.",
+  "sexualHealth.testing.info.frequency.title": "Com que frequência?",
+  "sexualHealth.testing.info.frequency.body":
+    "Se tens várias pessoas parceiras: de 3 em 3 meses. Se tens uma só pessoa parceira e ambas já fizeram o teste: com menos frequência. O teste rápido de VIH nas farmácias aderentes demora 15 minutos.",
+  "sexualHealth.testing.info.confidential.title": "Confidencial",
+  "sexualHealth.testing.info.confidential.body":
+    "Todos os serviços públicos de saúde sexual do SNS são confidenciais. Nenhum resultado é partilhado sem o teu consentimento, incluindo com o teu médico de família.",
+  "sexualHealth.testing.info.cost.title": "Custo",
+  "sexualHealth.testing.info.cost.body":
+    "Os CAD do SNS são gratuitos. Os testes rápidos de VIH nas farmácias custam 15–25 €. Os serviços das ONG (CheckpointLx, GAT) são gratuitos e anónimos.",
 
   "legal.lawyers.loadError.title":
     "Não conseguimos carregar o <em>diretório jurídico.</em>",

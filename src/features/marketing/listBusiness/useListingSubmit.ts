@@ -38,14 +38,14 @@ export function useListingSubmit({
   onPhotosRejected: (slots: PhotoKey[]) => void;
 }) {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { showToast } = useToast();
   const [serverError, setServerError] = useState<string | null>(null);
   const [savingLater, setSavingLater] = useState(false);
 
   const routeSubmitError = useCallback(
     (error: unknown, showGenericError: () => void) => {
-      const target = resolveListing422(error);
+      const target = resolveListing422(error, { t, language });
       if (target) {
         setStep(target.step);
         setServerError(target.message);
@@ -59,7 +59,7 @@ export function useListingSubmit({
       showGenericError();
       scrollToTop();
     },
-    [setStep, flashClass, onPhotosRejected],
+    [setStep, flashClass, onPhotosRejected, t, language],
   );
 
   const saveAndFinishLater = useCallback(async () => {

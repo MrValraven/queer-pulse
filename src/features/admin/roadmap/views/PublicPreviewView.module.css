@@ -283,59 +283,6 @@
   color: var(--ink-40);
 }
 
-/* ── Subscribe strip (visual only) ───────────────────────────────────── */
-.subscribeStrip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 20px 22px;
-  border-radius: var(--radius-card, 22px);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-.subscribeHeading {
-  margin: 0 0 4px;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  font-weight: 400;
-  color: var(--ink);
-}
-
-.subscribeBody {
-  margin: 0;
-  max-width: 48ch;
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-}
-
-.subscribeForm {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.subscribeInput {
-  font: inherit;
-  font-size: var(--text-13-5);
-  padding: 10px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  background: var(--cream);
-  color: var(--ink);
-  min-width: 0;
-}
-
-.subscribeInput:disabled,
-.subscribeButton:disabled,
-.rssButton:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .editButton {
     transition: none;

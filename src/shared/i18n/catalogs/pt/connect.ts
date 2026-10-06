@@ -163,6 +163,8 @@ export const connect: Catalog = {
   "form.reasonShouldMeet": "Acho que devíamos conhecer-nos",
   "form.reasonSomethingElse": "Outra coisa qualquer",
   "form.cancel": "Cancelar",
+  "preview.heading": "O que {first} vai ver",
+  "preview.messagePlaceholder": "A tua mensagem aparece aqui.",
   "form.sendError":
     "Não foi possível enviar. Verifica a ligação e tenta novamente.",
   "form.rateLimitError":
@@ -193,6 +195,7 @@ export const connect: Catalog = {
   "incoming.acceptAndSend": "Aceitar e levar a minha mensagem",
   "incoming.decline": "Recusar com delicadeza",
   "incoming.later": "Decidir mais tarde",
+  "incoming.noteLabel": "{name} escreveu",
   // Guardar uma mensagem escrita quando o contacto não pode seguir (PRD-03).
   "notice.draftKept": "A tua mensagem continua aqui. Leva-a contigo.",
   "notice.copyDraft": "Copiar a minha mensagem",

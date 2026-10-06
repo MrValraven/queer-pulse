@@ -4,6 +4,7 @@ import {
   Button,
   EmptyState,
   LoadErrorState,
+  LoadMoreFooter,
   Stars,
   Tabs,
   type Tab,
@@ -93,6 +94,7 @@ function ReviewsPane({
   hasMore,
   onLoadMore,
   isLoadingMore,
+  isLoadMoreError,
   hasError,
   onRetry,
   isOwner,
@@ -104,6 +106,8 @@ function ReviewsPane({
   hasMore: boolean;
   onLoadMore: () => void;
   isLoadingMore: boolean;
+  /** The latest "Load more" failed; the loaded reviews stay (ENG-501). */
+  isLoadMoreError: boolean;
   hasError: boolean;
   onRetry: () => void;
   /** The viewer owns this company, so they may write the employer reply. False
@@ -224,18 +228,15 @@ function ReviewsPane({
         </div>
       )}
       {hasMore && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={isLoadingMore}
-            onClick={onLoadMore}
-          >
-            {isLoadingMore
-              ? t("economy:company.reviews.loadingMore")
-              : t("economy:company.reviews.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          isFetchingNextPage={isLoadingMore}
+          isFetchNextPageError={isLoadMoreError}
+          onLoadMore={onLoadMore}
+          errorMessage={t("common:error.loadMore")}
+          label={t("economy:company.reviews.loadMoreCta")}
+          loadingLabel={t("economy:company.reviews.loadingMore")}
+        />
       )}
     </>
   );
@@ -268,6 +269,7 @@ export function CompanyTabs({
   hasMoreReviews,
   onLoadMoreReviews,
   isLoadingMoreReviews,
+  isLoadMoreReviewsError,
   hasReviewsError,
   onRetryReviews,
   isOwner,
@@ -282,6 +284,7 @@ export function CompanyTabs({
   hasMoreReviews: boolean;
   onLoadMoreReviews: () => void;
   isLoadingMoreReviews: boolean;
+  isLoadMoreReviewsError: boolean;
   hasReviewsError: boolean;
   onRetryReviews: () => void;
   isOwner: boolean;
@@ -326,6 +329,7 @@ export function CompanyTabs({
           hasMore={hasMoreReviews}
           onLoadMore={onLoadMoreReviews}
           isLoadingMore={isLoadingMoreReviews}
+          isLoadMoreError={isLoadMoreReviewsError}
           hasError={hasReviewsError}
           onRetry={onRetryReviews}
           isOwner={isOwner}

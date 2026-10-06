@@ -14,10 +14,11 @@ import {
   memberProfiles,
 } from "../members/data/memberProfiles";
 import { useConnectionActions } from "./api/useConnectionActions";
-import { ConnectForm } from "./ConnectForm";
+import { ConnectFormLayout } from "./ConnectRequestPreview";
 import { ConnectIncomingPanel } from "./ConnectIncomingPanel";
 import { ConnectNoticePanel } from "./ConnectNoticePanel";
 import { ConnectSentPanel } from "./ConnectSentPanel";
+import { useIncomingRequestNote } from "./useIncomingRequestNote";
 import {
   describeConnectError,
   type ConnectErrorView,
@@ -64,6 +65,7 @@ export function ConnectModal({
   // waiting FROM this member is known before a doomed send is attempted rather
   // than discovered from its 409.
   const { isIncoming, incomingConnectionId } = useConnectionsHydrated();
+  const incomingNote = useIncomingRequestNote(slug);
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<NoticeView | null>(null);
@@ -186,7 +188,7 @@ export function ConnectModal({
         aria-modal="true"
         aria-label={t("connect:modal.ariaLabel")}
         tabIndex={-1}
-        className={`${styles.modal} ${plum ? styles.modalSent : ""}`}
+        className={`${styles.modal} ${plum ? styles.modalSent : ""} ${theyAskedYou ? styles.modalWide : ""}`}
       >
         {!plum && <div className={styles.grabber} aria-hidden />}
         {!isBusy && (
@@ -215,6 +217,8 @@ export function ConnectModal({
           <ConnectIncomingPanel
             firstName={member.first}
             hasDraft={draft.length > 0}
+            requestMessage={incomingNote.message}
+            requestReason={incomingNote.reasonLabel}
             busy={isBusy}
             onAccept={() => void handleAccept()}
             onDecline={() => void handleDecline()}
@@ -232,7 +236,7 @@ export function ConnectModal({
         ) : sent ? (
           <ConnectSentPanel firstName={member.first} onClose={onClose} />
         ) : (
-          <ConnectForm
+          <ConnectFormLayout
             member={member}
             reason={reason}
             message={message}

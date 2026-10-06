@@ -12,6 +12,11 @@ export interface NotificationsResult {
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
+  /** ENG-501: the latest next-page fetch failed. React Query also sets
+   *  `isError` then, so a consumer keeps its loaded rows on screen and lets
+   *  the load-more footer retry that page. Always false in demo, which serves
+   *  one page. */
+  isFetchNextPageError: boolean;
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
@@ -81,6 +86,7 @@ export function useNotifications(unreadOnly = false): NotificationsResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),

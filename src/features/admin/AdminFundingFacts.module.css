@@ -1,0 +1,41 @@
+.facts {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  margin-top: 8px;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-caption);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.item dt {
+  color: var(--ink-60);
+}
+
+.item dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.link {
+  color: var(--accent-ink);
+  overflow-wrap: anywhere;
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

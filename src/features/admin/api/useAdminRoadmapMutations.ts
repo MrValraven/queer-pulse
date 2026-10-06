@@ -66,7 +66,6 @@ export function useAdminRoadmapMutations() {
     createTeam: team.createTeam,
     updateTeam: team.updateTeam,
     deleteTeam: team.deleteTeam,
-    updateSettings: team.updateSettings,
     pending: items.pending || ideas.pending || team.pending,
   };
 }

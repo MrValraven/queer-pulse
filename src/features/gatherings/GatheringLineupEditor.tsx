@@ -6,6 +6,7 @@ import {
   MemberSelectList,
   type MemberSelectPerson,
 } from "../../shared/components/ui";
+import { reasonFor } from "../../shared/api/errorMessage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileKind } from "../subprofiles/api/subprofiles.api";
@@ -114,12 +115,7 @@ export function GatheringLineupEditor({ slug }: { slug: string }) {
       setDirty(false);
       showToast(t("gatherings:lineup.savedToast"), "success");
     } catch (error) {
-      showToast(
-        error instanceof Error && error.message
-          ? error.message
-          : t("gatherings:lineup.errorToast"),
-        "error",
-      );
+      showToast(reasonFor(error) ?? t("gatherings:lineup.errorToast"), "error");
     }
   }
 

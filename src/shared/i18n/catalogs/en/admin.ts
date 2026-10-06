@@ -223,22 +223,18 @@ export const admin: Catalog = {
   "dashboard.titleNameless": "Overview · <em>good morning</em>",
   // Headline count + subtitle are derived from the real triage backlog
   // (`GET /admin/overview` → triage counts); `{count}` drives pluralization.
-  "dashboard.header.titleLine1_one": "{count} thing",
-  "dashboard.header.titleLine1_other": "{count} things",
-  "dashboard.header.titleLine2_one": "needs <em>a human</em>.",
-  "dashboard.header.titleLine2_other": "need <em>a human</em>.",
-  "dashboard.header.titleClearLine1": "You're",
-  "dashboard.header.titleClearLine2": "all <em>caught up</em>.",
+  "dashboard.header.title_one": "{count} decision waiting on <em>you</em>.",
+  "dashboard.header.title_other": "{count} decisions waiting on <em>you</em>.",
+  "dashboard.header.titleClear": "You're all <em>caught up</em>.",
   "dashboard.header.subEmergencies_one":
-    "One is flagged as a safety emergency. Start there. Everything else is steady, and you're holding the whole network together.",
+    "One of them is a safety emergency, so start there. The rest can wait its turn.",
   "dashboard.header.subEmergencies_other":
-    "{count} are flagged as safety emergencies. Start there. Everything else is steady, and you're holding the whole network together.",
+    "{count} of them are safety emergencies, so start there. The rest can wait its turn.",
   "dashboard.header.subCalm":
-    "Nothing's flagged urgent. Work down the queue at your own pace. You're holding the whole network steady.",
+    "No emergencies in the queue. Take it one decision at a time. Every careful call keeps this network safe.",
   "dashboard.header.subClear":
-    "Every open item has a human decision attached. Go rest. The network's safe in your hands.",
-  "dashboard.header.titleErrorLine1": "We couldn't",
-  "dashboard.header.titleErrorLine2": "<em>check the queue</em>.",
+    "Every report has had a human look at it. Step away for a while. The network's in good hands.",
+  "dashboard.header.titleError": "We couldn't <em>check the queue</em>.",
   "dashboard.header.subError":
     "The queue may still hold reports that need you. Check your connection or your staff access, then try again.",
   "dashboard.header.moderationCta": "Open moderation",
@@ -718,6 +714,10 @@ export const admin: Catalog = {
   "members.verify.source.reading_groups": "Reading groups",
   "members.verify.source.direct": "Opened the invite page directly",
   "members.verify.source.other": "Another page",
+  "members.verify.source.volunteer_explainer": "Volunteer explainer",
+  "members.verify.source.gathering_explainer": "Gathering explainer",
+  "members.verify.source.roadmap_explainer": "Roadmap explainer",
+  "members.verify.source.rating_explainer": "Guide rating explainer",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
   // Approved: QueerPulse sends no email, so approval reaches the applicant
@@ -931,6 +931,7 @@ export const admin: Catalog = {
     "No reason on record. This was approved before reasons were asked for.",
   "members.verify.decided.showDetails": "Show details for {name}",
   "members.verify.decided.hideDetails": "Hide details for {name}",
+  "members.verify.decided.applicationHeading": "What they sent",
   "members.verify.decided.filter.groupLabel": "Filter decided requests",
   "members.verify.decided.filter.all": "All",
   "members.verify.decided.filter.unclaimed": "Not claimed",
@@ -2958,7 +2959,7 @@ export const admin: Catalog = {
   "governance.finances.foot.reserve": "Held in the community reserve",
   "governance.finances.foot.solidarityRate": "Members on free or reduced rate",
   "governance.finances.empty":
-    "No published finance report yet. Figures will appear here once one is published.",
+    "No finance report yet. Open a quarter to start entering real figures.",
 
   "governance.finances.provenance.seeded": "Unverified",
   "governance.finances.provenance.manual": "Edited",
@@ -3017,6 +3018,7 @@ export const admin: Catalog = {
   "governance.finances.edit.aria.newValue": "{label}: new value",
   "governance.finances.edit.aria.newAmount": "{label}: new amount",
   "governance.finances.edit.aria.note": "{label}: note",
+  "governance.finances.edit.aria.lineName": "Line {position}: name",
 
   "governance.ledger.moderatorHonoraria": "Moderator honoraria",
   "governance.ledger.platformTools": "Platform & tools",
@@ -3672,7 +3674,6 @@ export const admin: Catalog = {
   "orgTier.field.sortOrder": "Sort order",
   // CTA-behaviour option labels; the stored value is a canonical id
   // (toast/link/propose), never this label.
-  "orgTier.ctaOption.toast": "Toast: informational only",
   "orgTier.ctaOption.link": "Link: navigates to a target",
   "orgTier.ctaOption.propose": "Propose: opens the enquiry flow",
   "orgTier.toggle.featured.sub": "Highlighted as the recommended tier.",
@@ -3839,7 +3840,6 @@ export const admin: Catalog = {
   "roadmap.title": "Roadmap · <em>what's next</em>",
   "roadmap.loading": "Loading the roadmap…",
   "roadmap.tabs.board": "Board",
-  "roadmap.tabs.heroStats": "Hero stats",
 
   // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
   // AdminRoadmapItemModalFields.tsx — the shipped/building/planned kanban.
@@ -3854,15 +3854,9 @@ export const admin: Catalog = {
   // Shared confirm dialog (IdeaQueueConfirmModal) — `kind` is "dismiss" or
   // "delete", interpolated into the key (`roadmap.ideas.${kind}.*`).
 
-  // AdminRoadmapHeroStats.tsx — editable chip row for the public page's hero.
-  // Auto-fill labels — the labels are rendered with a { count } so i18next
-  // resolves the plural form; English doesn't inflect these, so the _one and
-  // _other forms carry identical copy (the PT catalog inflects them). "building"
-  // stays a single bare key since "in progress" reads the same at any count.
-
   // ═══════════════════════════════════════════════════════════════════════
   // Roadmap redesign (9-view board, deep drawer, saved views, modals).
-  // Additive: the flat roadmap.board.*/roadmap.ideas.*/roadmap.heroStats.*
+  // Additive: the flat roadmap.board.*/roadmap.ideas.*
   // keys above stay in place for the current 3-tab UI until it's migrated;
   // everything below is scoped to the new views under fresh sub-paths so
   // neither set collides with or silently reads from the other.
@@ -3889,8 +3883,8 @@ export const admin: Catalog = {
   "roadmap.page.previewPublicCta": "Preview public page",
   "roadmap.page.auditLogCta": "Audit log",
 
-  // ── Tabs — 9 views. tabs.board/tabs.heroStats above already carry the
-  // right copy and are reused as-is; the rest are new.
+  // ── Tabs — 8 views. tabs.board above already carries the right copy and
+  // is reused as-is; the rest are new.
   "roadmap.tabs.timeline": "Timeline",
   "roadmap.tabs.guides": "Guides",
   "roadmap.tabs.capacity": "Capacity",
@@ -4316,16 +4310,6 @@ export const admin: Catalog = {
   "roadmap.archiveView.emptyBody":
     "Archiving keeps the history without cluttering the board. Deleting is forever. Prefer archive.",
 
-  // ── Hero stats view (redesign's editor — see note above roadmap.heroStats.*
-  // for why this is a separate group from the current 3-tab editor) ───────
-  "roadmap.heroStatsView.title": "Public <em>hero stats</em>",
-  "roadmap.heroStatsView.previewLinkCta": "Preview public page",
-  "roadmap.heroStatsView.subtitle":
-    "These four numbers sit at the top of the member-facing roadmap. Keep them honest. If a number needs a caveat, write it in the note and it shows as a tooltip.",
-  "roadmap.heroStatsView.captionPlaceholder": "Caveat / how it is counted",
-  "roadmap.heroStatsView.noGrowthTheatre":
-    "No growth theatre. We publish counts and leave out follower numbers and vanity graphs. Any stat that cannot be explained in one line does not belong here.",
-
   // ── Public preview view ─────────────────────────────────────────────────
   "roadmap.publicPreview.banner_one":
     "This is what members see at /roadmap. {hidden} item hidden · {promises} committed as promises · hover any item to edit it inline.",
@@ -4355,12 +4339,6 @@ export const admin: Catalog = {
   "roadmap.publicPreview.noDateHonest": "No date, honestly",
   "roadmap.publicPreview.liveLabel": "Live",
   "roadmap.publicPreview.editItemTooltip": "Edit this item",
-  "roadmap.publicPreview.subscribeHeading": "Get told when this changes",
-  "roadmap.publicPreview.subscribeBody":
-    "One email a month with what shipped, what moved and what we said no to. No product marketing, ever.",
-  "roadmap.publicPreview.subscribeEmailPlaceholder": "you@email.com",
-  "roadmap.publicPreview.subscribeCta": "Subscribe",
-  "roadmap.publicPreview.rssCta": "RSS",
 
   // ── Toasts — feedback for every mutating action ────────────────────────
   "roadmap.toasts.moved": '"{name}" moved to {column}',
@@ -4426,6 +4404,12 @@ export const admin: Catalog = {
 
   "landing.picker.searchPlaceholder": "Search by name…",
   "landing.picker.searchAriaLabel": "Search who's eligible to feature",
+  // Gathering and story picker search copy (PRD-323).
+  "landing.picker.searchPlaceholder.gathering": "Search gatherings by title…",
+  "landing.picker.searchPlaceholder.story": "Search stories by title…",
+  "landing.picker.searchAriaLabel.gathering":
+    "Search the gatherings you can feature",
+  "landing.picker.searchAriaLabel.story": "Search the stories you can feature",
   "landing.picker.addCta": "Add",
   "landing.picker.submitCta": "Add to homepage",
   "landing.picker.addedToast": "Added to the homepage",
@@ -4468,7 +4452,7 @@ export const admin: Catalog = {
   "landing.list.activeToggleError": "Couldn't update. Try again",
   "landing.list.previewEmpty":
     "No copy yet. Add some so this reads well on the homepage.",
-  "landing.list.unknownTarget": "This profile no longer exists",
+  "landing.list.unknownTarget": "This item no longer exists",
   "landing.list.empty.member.title": "No members featured yet",
   "landing.list.loadError.title": "The featured list didn't load",
   "landing.list.loadError.body":
@@ -4485,7 +4469,7 @@ export const admin: Catalog = {
   "landing.remove.cta": "Remove",
   "landing.remove.title": "Remove from the homepage?",
   "landing.remove.body":
-    "This takes them off the live homepage. You can feature them again anytime.",
+    "This takes it off the live homepage. You can feature it again anytime.",
   "landing.remove.confirm": "Remove",
   "landing.remove.toast": "Removed from the homepage",
   "landing.remove.error": "Couldn't remove. Try again",
@@ -4496,7 +4480,32 @@ export const admin: Catalog = {
   "landing.hidden.went_private": "Hidden: profile went private",
   "landing.hidden.unpublished": "Hidden: unpublished",
   "landing.hidden.not_public": "Hidden: no longer public",
-  "landing.hidden.deleted": "Hidden: profile deleted",
+  "landing.hidden.deleted": "Hidden: deleted",
+  // Gathering and story sections (PRD-323): tabs, helpers, empty states, hidden reasons, kicker field.
+  "landing.tabs.gathering": "Gatherings",
+  "landing.tabs.story": "Stories",
+  "landing.helper.gathering":
+    "Only published gatherings that are open to everyone and still ahead show up here. A gathering leaves the homepage on its own once it ends or is cancelled.",
+  "landing.helper.story":
+    "Published original magazine stories are ready to feature here. A story leaves the homepage on its own if it is unpublished.",
+  "landing.picker.empty.gathering":
+    "No upcoming public gatherings are eligible yet.",
+  "landing.picker.empty.story": "No published stories are eligible yet.",
+  "landing.list.empty.gathering.title": "No gatherings featured yet",
+  "landing.list.empty.gathering.body":
+    "Search for an upcoming public gathering and add it to the homepage.",
+  "landing.list.empty.story.title": "No stories featured yet",
+  "landing.list.empty.story.body":
+    "Search for a published story and add it to the homepage.",
+  "landing.hidden.cancelled": "Hidden: cancelled",
+  "landing.hidden.ended": "Hidden: already ended",
+  "landing.editor.kickerLabel": "Kicker line",
+  "landing.editor.kickerHelper":
+    "Optional: a short line shown above the title, up to {max} characters.",
+  // Live character count under the kicker field.
+  "landing.editor.kickerCount": "{count}/{max}",
+  "landing.editor.kickerPlaceholder.gathering": "e.g. Pick of the month",
+  "landing.editor.kickerPlaceholder.story": "e.g. Editor's pick",
 
   // ── Live homepage preview (AdminLandingPreview) ─────────────────────────
   "landing.preview.eyebrow": "Homepage preview",
@@ -4504,9 +4513,14 @@ export const admin: Catalog = {
     "How this section looks on the signed-out homepage. It updates as you edit.",
   "landing.preview.loading": "Building the preview…",
   "landing.preview.empty":
-    "Nothing featured here yet. Add someone on the left to see the homepage preview.",
+    "Nothing featured here yet. Pick something with the search to see the homepage preview.",
   "landing.preview.pendingTitle": "Added, details still loading",
   "landing.preview.pendingNote":
+    "These show as full cards once their live data loads.",
+  // Per-section pending notes for the gathering and story preview stages.
+  "landing.preview.pendingNote.gathering":
+    "These show as full rows once their live data loads.",
+  "landing.preview.pendingNote.story":
     "These show as full cards once their live data loads.",
 
   // ── Press kit (/admin/press-kit) ──────────────────────────────────────────
@@ -4619,6 +4633,7 @@ export const admin: Catalog = {
   "reports.finance.income": "Income: {amount}",
   "reports.finance.expense": "Spending: {amount}",
   "reports.finance.surplus": "Surplus: {amount}",
+  "reports.finance.notEntered": "not entered yet",
   "reports.communityHealth.title": "Community health",
   "reports.communityHealth.sub":
     "A snapshot of every community's health score.",
@@ -5004,8 +5019,59 @@ export const admin: Catalog = {
     "Write this as a number. 1840, 1840.50 and 1 840,50 all work.",
   "governance.finances.edit.field.amountRequired":
     "This line needs an amount. Switch the line off if it no longer applies.",
+  "governance.finances.edit.field.newLine": "New line {position}",
   "governance.finances.edit.blockedByAmounts":
     "Saving is on hold until every highlighted amount reads as a number.",
+  "governance.finances.edit.addLine": "Add a line",
+  "governance.finances.edit.blockedByLabels":
+    "Every ledger line needs a name before you can save.",
+  "governance.finances.status.public":
+    "{quarter} is shown on the public Governance page.",
+  "governance.finances.status.hidden":
+    "{quarter} stays off the public Governance page until every headline figure is entered.",
+  "governance.finances.report.cta": "Edit public report",
+  "governance.finances.report.title": "Edit the <em>public report</em>",
+  "governance.finances.report.sub":
+    "The tiles, notes, partners and reserve the Governance page shows beside this quarter's figures. Each list is saved whole.",
+  "governance.finances.report.section.stats": "Stat tiles",
+  "governance.finances.report.section.notes": "How event finances work",
+  "governance.finances.report.section.partners": "Disclosed partners",
+  "governance.finances.report.section.reserve": "Operational reserve",
+  "governance.finances.report.col.figure": "Figure",
+  "governance.finances.report.col.label": "Label",
+  "governance.finances.report.col.trend": "Trend",
+  "governance.finances.report.col.rising": "Rising",
+  "governance.finances.report.col.lead": "Lead",
+  "governance.finances.report.col.text": "Text",
+  "governance.finances.report.col.name": "Name",
+  "governance.finances.report.col.amount": "Amount",
+  "governance.finances.report.col.scope": "Restricted to",
+  "governance.finances.report.col.held": "Held now",
+  "governance.finances.report.col.target": "Target",
+  "governance.finances.report.col.remove": "Remove",
+  "governance.finances.report.add.stat": "Add a tile",
+  "governance.finances.report.add.note": "Add a note",
+  "governance.finances.report.add.partner": "Add a partner",
+  "governance.finances.report.remove": "Remove row {position}",
+  "governance.finances.report.empty": "Nothing here yet.",
+  "governance.finances.report.aria.field": "{column}, row {position}",
+  "governance.finances.report.reserveHint":
+    "Leave both empty to hide the reserve.",
+  "governance.finances.report.saved": "Public report updated.",
+  "governance.finances.report.blockedByText":
+    "Every tile needs a figure and a label, every note a lead, and every partner a name and a restriction.",
+  "governance.finances.quarter.cta": "Open next quarter",
+  "governance.finances.quarter.title": "Open a <em>quarter</em>",
+  "governance.finances.quarter.sub":
+    "Starts an empty report for the governance team to fill in. It stays off the public page until every headline figure is entered.",
+  "governance.finances.quarter.field.quarter": "Quarter",
+  "governance.finances.quarter.field.year": "Year",
+  "governance.finances.quarter.option": "Q{quarter}",
+  "governance.finances.quarter.label": "Q{quarter} {year}",
+  "governance.finances.quarter.save": "Open quarter",
+  "governance.finances.quarter.saved": "Quarter opened.",
+  "governance.finances.quarter.error":
+    "Could not open that quarter. Check that the newest quarter has every headline figure entered, and that this one comes after it and has no report yet.",
   "moderation.action.created": "Report received",
   "moderation.action.appealOverturned": "Appeal overturned",
   "moderation.action.conversationContextViewed":
@@ -6207,6 +6273,14 @@ export const admin: Catalog = {
   "adminForumReview.row.anonymous": "Will post anonymously",
   "adminForumReview.row.scheduled": "Goes live {time} once approved",
   "adminForumReview.row.warnings": "Warnings: {warnings}",
+  "adminForumReview.funding.chip": "Fundraiser",
+  "adminForumReview.funding.aria": "Fundraiser checks",
+  "adminForumReview.funding.goal": "Goal",
+  "adminForumReview.funding.link": "Donations go to",
+  "adminForumReview.funding.verification": "Poster's verification",
+  "adminForumReview.funding.accountAge": "Account age",
+  "adminForumReview.funding.accountAgeDays_one": "{count} day",
+  "adminForumReview.funding.accountAgeDays_other": "{count} days",
   "adminForumReview.action.approve": "Approve",
   "adminForumReview.action.reject": "Decline",
   "adminForumReview.rejectModal.title": 'Decline "{title}"?',

@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Button, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ComposeTagsField } from "./ComposeTagsField";
+import { memberTagLimitFor } from "./compose/composeThread.types";
+import { SERVER_OWNED_FORUM_TAGS } from "./forumTags.data";
+import styles from "./forumModals.module.css";
 
 /**
  * Re-file a thread: replace its tag set (SOC-13).
@@ -18,17 +21,29 @@ import { ComposeTagsField } from "./ComposeTagsField";
  * archive's filter links pointing at one word per topic.
  */
 export function ThreadTagsModal({
-  initialTags,
+  initialTags: storedTags,
   busy,
   onSave,
   onClose,
+  threadKind,
+  shouldShowAskReviewNote = false,
 }: {
   initialTags: string[];
   busy: boolean;
   onSave: (tags: string[]) => void;
   onClose: () => void;
+  /** A call keeps four member tags; the server puts `open-call` first. */
+  threadKind?: string | null;
+  /** The author of a fundraiser: any edit of theirs sends it back to
+   *  moderators, so the modal says so before they save. */
+  shouldShowAskReviewNote?: boolean;
 }) {
   const { t } = useTranslation();
+  // The server adds and strips `open-call` itself, so the member edits only
+  // their own tags and the cap counts only those.
+  const [initialTags] = useState<string[]>(() =>
+    storedTags.filter((tag) => !SERVER_OWNED_FORUM_TAGS.includes(tag)),
+  );
   const [tags, setTags] = useState<string[]>(initialTags);
   const isUnchanged =
     tags.length === initialTags.length &&
@@ -59,8 +74,15 @@ export function ThreadTagsModal({
         </>
       }
     >
+      {shouldShowAskReviewNote && (
+        <p className={styles.sub}>{t("forum:funding.edit.askReviewNote")}</p>
+      )}
       <p>{t("forum:tagsEdit.body")}</p>
-      <ComposeTagsField tags={tags} onChange={setTags} />
+      <ComposeTagsField
+        tags={tags}
+        onChange={setTags}
+        maxTags={memberTagLimitFor(threadKind)}
+      />
     </Modal>
   );
 }

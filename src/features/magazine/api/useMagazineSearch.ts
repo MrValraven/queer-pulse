@@ -69,6 +69,10 @@ export interface MagazineSearchResult {
   /** Appends the next page of hits to the ones already shown. */
   loadMore: () => void;
   isLoadingMore: boolean;
+  /** ENG-501: the latest next page failed. `isError` is true then too, so the
+   *  page keeps the hits already loaded and the footer retries that page.
+   *  Always false in demo mode, which answers in one page. */
+  isFetchNextPageError: boolean;
 }
 
 /**
@@ -190,5 +194,6 @@ export function useMagazineSearch({
       void query.fetchNextPage();
     },
     isLoadingMore: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
   };
 }

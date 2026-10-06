@@ -4,7 +4,10 @@ import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { messageRequestErrorKey } from "../messages/api/firstContactError";
 import { StepUpVerificationModal } from "./StepUpVerificationModal";
-import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
+import {
+  useSendHousingEnquiry,
+  type GroupRoomTarget,
+} from "./api/useSendHousingEnquiry";
 import {
   verificationRequiredFrom,
   type VerificationLevel,
@@ -42,6 +45,8 @@ interface HousingEnquirySendState {
  *   open their own prompts and retry the send once passed;
  * - a coded first-contact refusal (a paused account) gets its shared copy;
  * - a restricted account gets the shared appeal copy;
+ * - a 404 means the home or room is off the board (filled, expired, taken
+ *   down or withdrawn) and says so;
  * - any other 4xx with a real sentence (own listing, no lister left) repeats
  *   the backend's words, as the directory door does;
  * - everything else gets the housing generic.
@@ -49,6 +54,8 @@ interface HousingEnquirySendState {
 export function useHousingEnquirySend(
   listingRef: string | null,
   recipientName: string,
+  /** A room inside a housing group (PRD-443): the send goes to its poster. */
+  groupRoom?: GroupRoomTarget,
 ): HousingEnquirySendState {
   const { t } = useTranslation();
   const sendEnquiry = useSendHousingEnquiry();
@@ -69,6 +76,9 @@ export function useHousingEnquirySend(
     if (isAccountRestricted(error)) {
       return t("shared:apiError.accountRestricted");
     }
+    if (error instanceof ApiError && error.status === 404) {
+      return t("economy:housingModal.message.unavailable");
+    }
     const serverReason = isThrottlerNoise(error) ? null : reasonFor(error);
     return serverReason ?? t("economy:housingModal.message.error");
   }
@@ -77,7 +87,7 @@ export function useHousingEnquirySend(
     if (sendEnquiry.isPending) return;
     setErrorMessage(null);
     sendEnquiry.mutate(
-      { ref: listingRef, body },
+      { ref: listingRef, body, groupRoom },
       {
         onSuccess: (result) => {
           setSentConversationId(result?.conversationId ?? null);

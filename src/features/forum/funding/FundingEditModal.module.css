@@ -1,0 +1,37 @@
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+}
+
+.blocker {
+  margin: var(--gap-sm) 0 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+/* The re-review warning, an info callout above the fields. */
+.callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 var(--gap-sm);
+  padding: 10px 12px;
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+  background: rgba(var(--violet-rgb), 0.1);
+  border-radius: var(--radius-tag);
+}
+
+.calloutIcon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--violet);
+}
+
+.error {
+  margin: 0 0 var(--gap-sm);
+  font-size: var(--text-caption);
+  color: var(--danger-ink);
+}

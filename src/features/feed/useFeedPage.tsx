@@ -31,22 +31,44 @@ import {
   RecapCard,
 } from "./FeedCards";
 import { DEMO_BANNER } from "./feedCards.data";
+import { DEMO_NEW_MEMBER_ITEMS } from "./demoNewMembers.data";
 import { useFeed } from "./api/useFeed";
 import { useNewMembersThisWeek } from "./api/useNewMembersThisWeek";
 import type { FeedItem } from "./api/feed.api";
 import { useSequencedTabSwap } from "./useSequencedTabSwap";
 
-/** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
- *  an identifiable author carry `authorSlug` so blocked/muted authors filter out. */
-const FEED_ITEMS: {
+interface DemoFeedItem {
   key: string;
   tab: FeedTab;
   Card: () => React.ReactElement;
   authorSlug?: string;
-}[] = [
+  /** New-member entries only: the `new_member` item the card renders, which
+   *  the page folds into the group card exactly as it does live. */
+  newMemberItem?: FeedItem;
+}
+
+/** One entry per demo new member, rendered from a live-shaped `FeedItem`, so
+ *  the demo runs the same `MemberCard` path as live and block/mute filters
+ *  each person on their own. Built once, so every `Card` keeps its identity. */
+const DEMO_NEW_MEMBER_ENTRIES: DemoFeedItem[] = DEMO_NEW_MEMBER_ITEMS.map(
+  (newMemberItem): DemoFeedItem => {
+    const slug = newMemberItem.actor?.handle ?? newMemberItem.id;
+    return {
+      key: `new-member-${slug}`,
+      tab: "People",
+      Card: () => <MemberCard item={newMemberItem} />,
+      authorSlug: slug,
+      newMemberItem,
+    };
+  },
+);
+
+/** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
+ *  an identifiable author carry `authorSlug` so blocked/muted authors filter out. */
+const FEED_ITEMS: DemoFeedItem[] = [
   { key: "community", tab: "Communities", Card: CommunityCard },
   { key: "gathering", tab: "Gatherings", Card: GatheringCard },
-  { key: "new-member", tab: "People", Card: MemberCard, authorSlug: "kai" },
+  ...DEMO_NEW_MEMBER_ENTRIES,
   {
     key: "post",
     tab: "Posts",

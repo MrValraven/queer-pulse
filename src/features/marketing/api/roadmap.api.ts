@@ -6,11 +6,11 @@ import { apiGet, apiPost } from "../../../shared/api/client";
 // from the admin roadmap tools; this module is the public read (+ member vote
 // / idea submission) surface consumed by the marketing Roadmap page.
 
+/** One hero tile: a count the server derived from the public board. The page
+ *  owns the wording (translated, plural-aware) per `kind`. */
 export interface HeroStatDTO {
-  label: string;
-  value?: string;
-  note?: string;
-  jade: boolean;
+  kind: "shipped" | "building" | "planned";
+  count: number;
 }
 
 /** The most recent target-date move for a committed card — a public-safe

@@ -2,6 +2,11 @@ import {
   TEAM_POOL,
   type VolunteerOpportunity,
 } from "./volunteerOpportunities.types";
+import {
+  applyConfirmation,
+  chromeLabel,
+  volunteerEyebrow,
+} from "./volunteerChrome";
 
 export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
   {
@@ -18,7 +23,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Communication", "Languages", "Event support"],
     description:
       "Help a national LGBTQ+ rights organisation reach more people through community events, tabling, and direct outreach. No experience necessary: training provided on day one.",
-    eyebrow: "Volunteer · rights-org partnership",
+    eyebrow: volunteerEyebrow("rights-org partnership"),
     urgent: "Recruiting now · rolling intake",
     titleLead: "Community outreach · ",
     titleEm: "a local rights association.",
@@ -111,18 +116,14 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     spots: [
       { label: "Intake", value: <b>Rolling</b> },
       { label: "Onboarding", value: <b>~1h · online or in person</b> },
-      { label: "Per week", value: <b>2–4 hours, flexible</b> },
+      { label: chromeLabel("perWeek"), value: <b>2–4 hours, flexible</b> },
       {
         label: "Compensation",
         value: <b style={{ color: "var(--jade)" }}>Travel + materials</b>,
       },
     ],
-    applyConfirm: (
-      <>
-        Application submitted for{" "}
-        <strong>Community Outreach · a local rights association</strong>. The
-        outreach lead will send you the onboarding link within a couple of days.
-      </>
+    applyConfirm: applyConfirmation(
+      "Community Outreach · a local rights association",
     ),
     partner: {
       name: "A national LGBTQ+ rights organisation · founding partner",
@@ -153,7 +154,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Active listening", "Empathy", "Confidentiality"],
     description:
       "Support people through peer-led mental health conversations. Training provided. You don't need to be a professional. You need to care and to listen well.",
-    eyebrow: "Volunteer · Opus Diversus",
+    eyebrow: volunteerEyebrow("Opus Diversus"),
     urgent: "Recruiting · next cohort starts 1 Jul",
     titleLead: "Peer support · ",
     titleEm: "mental health drop-in.",
@@ -258,19 +259,13 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         ),
       },
       { label: "Training", value: <b>Two evenings · pre-start</b> },
-      { label: "Per week", value: <b>4 hours · fixed shift</b> },
+      { label: chromeLabel("perWeek"), value: <b>4 hours · fixed shift</b> },
       {
         label: "Supervision",
         value: <b style={{ color: "var(--jade)" }}>Monthly · provided</b>,
       },
     ],
-    applyConfirm: (
-      <>
-        Application submitted for <strong>Peer Support · Opus Diversus</strong>.
-        The team will reach out to arrange a longer chat and the safeguarding
-        step.
-      </>
-    ),
+    applyConfirm: applyConfirmation("Peer Support · Opus Diversus"),
     partner: {
       name: "Opus Diversus · health partner",
       text: (
@@ -290,8 +285,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     slug: "youth-group-cofacilitator",
     org: "Rede ex aequo",
     avatar: "RA",
-    background: "rgba(45,27,61,.1)",
-    color: "var(--plum)",
+    background: "rgba(var(--line-rgb),.1)",
+    color: "var(--text-strong)",
     role: "Youth Group Co-facilitator",
     causes: ["youth", "education"],
     commit: "medium",
@@ -300,7 +295,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Facilitation", "Youth work", "Care"],
     description:
       "Co-facilitate weekly peer support groups for LGBTQ+ young people. Showing up consistently is the most important thing you can do.",
-    eyebrow: "Volunteer · Rede ex aequo",
+    eyebrow: volunteerEyebrow("Rede ex aequo"),
     urgent: "Recruiting · enhanced check required",
     titleLead: "Co-facilitator · ",
     titleEm: "LGBTQ+ youth group.",
@@ -324,7 +319,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         ),
         label: "Training Saturdays",
       },
-      { value: <b>3–5h</b>, label: "Per week" },
+      { value: <b>3–5h</b>, label: chromeLabel("perWeek") },
       { value: <b>1</b>, label: "School year commitment" },
       {
         value: <b style={{ color: "var(--jade)" }}>Vetted</b>,
@@ -402,7 +397,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     spots: [
       { label: "Intake", value: <b>Before Sept term</b> },
       { label: "Training", value: <b>Two Saturdays</b> },
-      { label: "Per week", value: <b>3–5 hours · evening</b> },
+      { label: chromeLabel("perWeek"), value: <b>3–5 hours · evening</b> },
       {
         label: "Vetting",
         value: (
@@ -412,13 +407,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         ),
       },
     ],
-    applyConfirm: (
-      <>
-        Application submitted for{" "}
-        <strong>Youth Co-facilitator · Rede ex aequo</strong>. Next step is the
-        enhanced background check. They'll email you the form.
-      </>
-    ),
+    applyConfirm: applyConfirmation("Youth Co-facilitator · Rede ex aequo"),
     partner: {
       name: "Rede ex aequo · youth partner",
       text: (
@@ -447,7 +436,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Listening", "Documentation", "Organising"],
     description:
       "Support queer residents navigating housing challenges: documenting situations, connecting people with legal aid, attending community meetings.",
-    eyebrow: "Volunteer · Housing Justice Network",
+    eyebrow: volunteerEyebrow("Housing Justice Network"),
     urgent: "Recruiting · Mouraria-based",
     titleLead: "Housing advocate · ",
     titleEm: "Mouraria.",
@@ -471,7 +460,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         ),
         label: "Training afternoon",
       },
-      { value: <b>2–3h</b>, label: "Per week" },
+      { value: <b>2–3h</b>, label: chromeLabel("perWeek") },
       { value: <b>Monthly</b>, label: "Network meeting" },
       {
         value: <b style={{ color: "var(--jade)" }}>Mentored</b>,
@@ -543,19 +532,13 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     spots: [
       { label: "Intake", value: <b>Rolling</b> },
       { label: "Training", value: <b>One afternoon</b> },
-      { label: "Per week", value: <b>2–3 hours</b> },
+      { label: chromeLabel("perWeek"), value: <b>2–3 hours</b> },
       {
         label: "Support",
         value: <b style={{ color: "var(--jade)" }}>Paired + legal</b>,
       },
     ],
-    applyConfirm: (
-      <>
-        Application submitted for{" "}
-        <strong>Housing Advocate · Justice Network</strong>. You'll be paired
-        with a lead advocate and invited to the next training afternoon.
-      </>
-    ),
+    applyConfirm: applyConfirmation("Housing Advocate · Justice Network"),
     partner: {
       name: "Queer Housing Justice Network",
       text: (
@@ -585,7 +568,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Event logistics", "Hospitality", "Photography"],
     description:
       "Help set up and run exhibitions, crits, and group shows. Event-by-event commitment: pick the ones that work for you.",
-    eyebrow: "Volunteer · Rainbow Arts Collective",
+    eyebrow: volunteerEyebrow("Rainbow Arts Collective"),
     urgent: "Recruiting · pick your shows",
     titleLead: "Production crew · ",
     titleEm: "queer arts shows.",
@@ -678,7 +661,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       { label: "Intake", value: <b>Rolling · per show</b> },
       { label: "Onboarding", value: <b>None · just turn up</b> },
       {
-        label: "Commitment",
+        label: chromeLabel("commitment"),
         value: <b style={{ color: "var(--jade)" }}>Pick your shows</b>,
       },
       { label: "Next show", value: <b>Group show · 28 Jun</b> },
@@ -707,7 +690,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Organisation", "Hospitality", "People skills"],
     description:
       "Help set up, run, and support QueerPulse member gatherings. Every event needs someone making it feel warm. Flexible commitment, instant community.",
-    eyebrow: "Volunteer · QueerPulse",
+    eyebrow: volunteerEyebrow("QueerPulse"),
     urgent: "Recruiting · members welcome",
     titleLead: "Gatherings crew · ",
     titleEm: "QueerPulse events.",
@@ -805,7 +788,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       { label: "Intake", value: <b>Rolling · per event</b> },
       { label: "Onboarding", value: <b>None · shadow one first</b> },
       {
-        label: "Commitment",
+        label: chromeLabel("commitment"),
         value: <b style={{ color: "var(--jade)" }}>Pick your events</b>,
       },
       { label: "Next gathering", value: <b>Welcome dinner · 14 Jun</b> },

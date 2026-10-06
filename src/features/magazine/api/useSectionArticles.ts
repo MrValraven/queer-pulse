@@ -109,5 +109,8 @@ export function useSectionArticles(section: string) {
       void query.fetchNextPage();
     },
     isLoadingMore: query.isFetchingNextPage,
+    /** ENG-501: the latest next page failed (`isError` is true then too), so
+     *  the page keeps the pieces already loaded. Always false in demo mode. */
+    isFetchNextPageError: query.isFetchNextPageError,
   };
 }

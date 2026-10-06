@@ -2,7 +2,7 @@ import { ComposeAudienceList } from "./ComposeAudienceList";
 import { ComposeCategoryGrid } from "./ComposeCategoryGrid";
 import { ComposeDetailsSection } from "./ComposeDetailsSection";
 import { ComposeTagsSection } from "./ComposeTagsSection";
-import type { ComposeAudience } from "./composeThread.types";
+import { memberTagLimitFor, type ComposeAudience } from "./composeThread.types";
 import type { ComposeThreadPage } from "./useComposeThreadPage";
 
 // ── The four filing questions ───────────────────────────────────────────────
@@ -57,6 +57,7 @@ export function ForumNewPostSections({
         onAddTag={setters.addTag}
         onRemoveTag={setters.removeTag}
         suggestedTags={page.suggestedTags}
+        maxTags={memberTagLimitFor(state.kind)}
       />
     </>
   );

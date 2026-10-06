@@ -1118,6 +1118,17 @@
   font-size: var(--text-12-5);
   color: var(--ink-60);
 }
+.finToolbarStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.finToolbarActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
 /* Edit dialog */
 .editGrid {

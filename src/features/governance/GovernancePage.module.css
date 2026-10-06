@@ -345,6 +345,10 @@
   color: inherit;
   cursor: pointer;
 }
+/* A ledger row with no breakdown to open (PRD-447) is not a control. */
+.finSummaryStatic {
+  cursor: default;
+}
 .finLineTop {
   display: flex;
   align-items: baseline;

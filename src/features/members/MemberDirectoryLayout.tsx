@@ -43,6 +43,7 @@ export interface MemberDirectoryLayoutProps {
   filteredCount: number;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  isFetchNextPageError: boolean;
   onFetchNextPage: () => void;
   onRefresh: () => Promise<unknown>;
 }
@@ -77,6 +78,7 @@ export function MemberDirectoryLayout({
   filteredCount,
   hasNextPage,
   isFetchingNextPage,
+  isFetchNextPageError,
   onFetchNextPage,
   onRefresh,
 }: MemberDirectoryLayoutProps) {
@@ -134,6 +136,7 @@ export function MemberDirectoryLayout({
           filteredCount={filteredCount}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
+          isFetchNextPageError={isFetchNextPageError}
           onFetchNextPage={onFetchNextPage}
         />
       </PullToRefresh>

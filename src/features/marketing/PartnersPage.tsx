@@ -6,6 +6,7 @@ import {
   EmptyState,
   FadeIn,
   LoadErrorState,
+  LoadMoreFooter,
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -13,6 +14,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { type Region } from "./partnerDetails";
+import type { Partner } from "./partnerDetails.types";
 import { usePartners } from "./api/usePartners";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
@@ -52,6 +54,48 @@ function PartnerCardSkeleton() {
   );
 }
 
+function PartnerCard({ partner, index }: { partner: Partner; index: number }) {
+  const { t } = useTranslation();
+  return (
+    <FadeIn delay={Math.min(index, 8) * 60} style={{ height: "100%" }}>
+      <Link
+        to={`${routes.partner}/${partner.slug}`}
+        className={s.card}
+        style={{ height: "100%" }}
+      >
+        <div className={s.top}>
+          <span
+            className={s.av}
+            style={{ background: partner.background, color: partner.color }}
+          >
+            {partner.avatar}
+          </span>
+          <span className={`${s.region} ${regionClass[partner.region]}`}>
+            {partner.regionLabel}
+          </span>
+        </div>
+        <div>
+          <div className={s.name}>{partner.name}</div>
+          <div className={s.city}>
+            <FiMapPin /> {partner.city}
+          </div>
+        </div>
+        <div className={s.desc}>{partner.description}</div>
+        <div className={s.tags}>
+          {partner.tags.map((tag) => (
+            <span key={tag} className={s.tag}>
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className={s.foot}>
+          {t("marketing:partners.card.viewCta")} <FiArrowRight aria-hidden />
+        </div>
+      </Link>
+    </FadeIn>
+  );
+}
+
 export function PartnersPage() {
   const { t } = useTranslation();
   const {
@@ -62,6 +106,7 @@ export function PartnersPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
   } = usePartners();
   // Demo mode keeps the prototype's simulated entrance skeleton; live mode also
   // shows it until the query resolves. Approved partners only (the endpoint and
@@ -72,6 +117,10 @@ export function PartnersPage() {
   // DES-22: a failed read is not an empty roster. The error panel takes
   // precedence over both the grid and the "nobody has been approved yet" copy.
   const isRosterEmpty = !loading && !isError && partners.length === 0;
+  // ENG-501: React Query also sets `isError` when only the next page or a
+  // background refetch failed. The error panel is for a roster with nothing
+  // loaded; loaded partners stay and the footer below retries the failed page.
+  const hasNothingLoadedError = isError && partners.length === 0;
   const pageTitle = t("marketing:partners.meta.title");
   const pageDescription = t("marketing:partners.meta.description");
 
@@ -107,11 +156,11 @@ export function PartnersPage() {
                 components={{ em: <em /> }}
               />
             </h2>
-            {!isRosterEmpty && !isError && (
+            {!isRosterEmpty && !hasNothingLoadedError && (
               <p>{t("marketing:partners.section.sub")}</p>
             )}
           </div>
-          {isError ? (
+          {hasNothingLoadedError ? (
             <LoadErrorState onRetry={refetch} />
           ) : isRosterEmpty ? (
             <EmptyState
@@ -130,67 +179,26 @@ export function PartnersPage() {
                 ? Array.from({ length: 6 }).map((_, i) => (
                     <PartnerCardSkeleton key={i} />
                   ))
-                : partners.map((p, i) => (
-                    <FadeIn
-                      key={p.slug}
-                      delay={Math.min(i, 8) * 60}
-                      style={{ height: "100%" }}
-                    >
-                      <Link
-                        to={`${routes.partner}/${p.slug}`}
-                        className={s.card}
-                        style={{ height: "100%" }}
-                      >
-                        <div className={s.top}>
-                          <span
-                            className={s.av}
-                            style={{ background: p.background, color: p.color }}
-                          >
-                            {p.avatar}
-                          </span>
-                          <span
-                            className={`${s.region} ${regionClass[p.region]}`}
-                          >
-                            {p.regionLabel}
-                          </span>
-                        </div>
-                        <div>
-                          <div className={s.name}>{p.name}</div>
-                          <div className={s.city}>
-                            <FiMapPin /> {p.city}
-                          </div>
-                        </div>
-                        <div className={s.desc}>{p.description}</div>
-                        <div className={s.tags}>
-                          {p.tags.map((tag) => (
-                            <span key={tag} className={s.tag}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        <div className={s.foot}>
-                          {t("marketing:partners.card.viewCta")}{" "}
-                          <FiArrowRight aria-hidden />
-                        </div>
-                      </Link>
-                    </FadeIn>
+                : partners.map((partner, index) => (
+                    <PartnerCard
+                      key={partner.slug}
+                      partner={partner}
+                      index={index}
+                    />
                   ))}
             </div>
           )}
 
-          {hasNextPage && (
-            <div className={s.loadMore}>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={isFetchingNextPage}
-                onClick={fetchNextPage}
-              >
-                {isFetchingNextPage
-                  ? t("marketing:partners.loadingMore")
-                  : t("marketing:partners.loadMoreCta")}
-              </Button>
-            </div>
+          {hasNextPage && !hasNothingLoadedError && (
+            <LoadMoreFooter
+              className={s.loadMore}
+              isFetchingNextPage={isFetchingNextPage}
+              isFetchNextPageError={isFetchNextPageError}
+              onLoadMore={fetchNextPage}
+              errorMessage={t("common:error.loadMore")}
+              label={t("marketing:partners.loadMoreCta")}
+              loadingLabel={t("marketing:partners.loadingMore")}
+            />
           )}
 
           <div className={s.why}>

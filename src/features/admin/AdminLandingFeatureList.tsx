@@ -15,6 +15,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName, leadingInitials } from "../../shared/lib/initials";
 import { AdminChip, AdminToggle } from "./ui";
 import { AdminLandingFeatureEditor } from "./AdminLandingFeatureEditor";
+import { isPersonSection } from "./adminLandingCopyFields.utils";
 import {
   useLandingFeatures,
   useReorderLandingFeatures,
@@ -31,9 +32,9 @@ function copyPreview(section: LandingSection, copy: Record<string, unknown>) {
   const text =
     section === "member"
       ? copy.quote
-      : section === "community"
-        ? copy.blurb
-        : copy.blurb || copy.cause;
+      : section === "changemaker"
+        ? copy.blurb || copy.cause
+        : copy.blurb;
   return typeof text === "string" && text.trim() ? text.trim() : null;
 }
 
@@ -192,9 +193,9 @@ function AdminLandingFeatureRow({
       <div className={styles.featureRowMain}>
         <Avatar
           initials={
-            section === "community"
-              ? leadingInitials(name)
-              : initialsFromName(name)
+            isPersonSection(section)
+              ? initialsFromName(name)
+              : leadingInitials(name)
           }
           src={feature.target?.avatarUrl ?? undefined}
           name={feature.target?.name ?? undefined}

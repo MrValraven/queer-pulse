@@ -1,0 +1,151 @@
+/* ── Member interest tags: one calm row, shared interests first ──
+   One line of chips at rest, with whatever does not fit folded into a "+N"
+   chip that opens the full list, wrapped, in place. The fit is measured on
+   `.widthProbe` and `.measureRow` (see MemberInterestTags.tsx), never on the
+   row that renders, so a new count cannot resize what is observed.
+
+   Every chip and the toggle share one box: the same type size, line height
+   and padding, so they all measure the same height. */
+.tags {
+  --interest-tags-gap: 6px;
+  /* The fold's chip motion: how far a revealed chip rises into place, and how
+     far apart the cascade starts each one. */
+  --interest-tags-rise: 4px;
+  --interest-tags-stagger: 20ms;
+  position: relative;
+  min-width: 0;
+}
+
+/* In normal flow with no height: its width is the column's, whatever the
+   row beside it renders. */
+.widthProbe {
+  height: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--interest-tags-gap);
+  min-width: 0;
+}
+.row.wrapped {
+  flex-wrap: wrap;
+}
+
+/* The fold, the same one the bio's "Read more" runs right above (see
+   ExpandableText.module.css): the row's height travels between one line and
+   the full wrapped list while every chip is laid out, and the row clips.
+   It only carries a transition while `data-folding` is set, so at rest there
+   is nothing to recalculate, and the duration comes from the component,
+   scaled to the distance (`--dur-slow` is the fallback for an unmeasured
+   fold). Opening decelerates; closing eases at both ends so the row settles
+   gently onto one line.
+
+   Reduced motion never reaches these rules: the component swaps state
+   instantly and `data-folding` never appears. */
+.row[data-folding] {
+  overflow: hidden;
+  transition: height var(--interest-tags-fold-dur, var(--dur-slow))
+    var(--ease-out);
+}
+.row[data-folding="closing"] {
+  transition-timing-function: var(--ease-in-out);
+}
+
+/* The chips the fold reveals: hidden and a touch low until the component
+   sets `data-fold-shown`, after it has measured. On the way in each one
+   starts a step after the last and all of them land with the height; on the
+   way out they fade together, quickly, ahead of the fold. */
+.row[data-folding] .folded {
+  opacity: 0;
+  transform: translateY(var(--interest-tags-rise));
+  transition-property: opacity, transform;
+  transition-duration: calc(
+    var(--interest-tags-fold-dur, var(--dur-slow)) -
+      var(--interest-tags-fold-step, 0) * var(--interest-tags-stagger)
+  );
+  transition-delay: calc(
+    var(--interest-tags-fold-step, 0) * var(--interest-tags-stagger)
+  );
+  transition-timing-function: var(--ease-out);
+}
+.row[data-folding][data-fold-shown] .folded {
+  opacity: 1;
+  transform: none;
+}
+.row[data-folding="closing"] .folded {
+  transition-duration: var(--dur-base);
+  transition-delay: 0s;
+  transition-timing-function: var(--ease-in);
+}
+
+/* Quieter than the old chip: a fainter fill on the flipping hairline channel
+   and the muted ink. 4.75:1 on light paper, 6.55:1 on dark paper. A chip
+   wider than the whole column (the measurement always keeps at least one)
+   shrinks and ellipsises; its full text is in its `title`. */
+.chip,
+.more {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  line-height: 1.3;
+  padding: 5px 10px;
+  border-radius: var(--radius-tag);
+  color: var(--ink-60);
+  background: rgba(var(--line-rgb), 0.035);
+}
+
+/* "In common": a low jade tint under the jade ink, a step heavier so the
+   difference does not rest on colour alone. 4.95:1 on light paper (#3c7159
+   over jade 12%), 9.29:1 on dark paper (#7cd7ad over jade 12%). */
+.chip.shared {
+  font-weight: 600;
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+
+/* The "+N" / "Show less" toggle: a chip that never shrinks, so its count
+   stays whole. */
+.more {
+  flex: none;
+  overflow: visible;
+  border: 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .more:hover {
+    color: var(--ink);
+    background: var(--wash);
+  }
+}
+button.more:focus-visible {
+  border-radius: var(--radius-tag);
+}
+
+/* The measuring copy: laid out at natural widths on one line, invisible, and
+   clipped to nothing so its width can never add page overflow. */
+.measureClip {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.measureRow {
+  display: flex;
+  gap: var(--interest-tags-gap);
+  width: max-content;
+}
+.measureRow > * {
+  flex: none;
+}

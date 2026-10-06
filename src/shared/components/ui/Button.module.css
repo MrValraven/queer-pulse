@@ -199,6 +199,35 @@
   }
 }
 
+/* Soft: tonal coral. A flat tint with no border, shadow or hover lift, for a
+   secondary action that still carries the brand. The label is --accent-text:
+   --accent-ink over this tint is only 3.74:1 on paper, where --accent-text is
+   5.28:1 on paper and 4.82:1 on cream at rest, and 5.07 / 4.64 on hover. No
+   box-shadow is set, so the global :focus-visible halo applies untouched. */
+.soft {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-text);
+}
+@media (hover: hover) {
+  .soft:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--accent-rgb), 0.16);
+  }
+}
+
+:global([data-theme="dark"]) .soft {
+  /* --accent-text flips to --accent in dark, so only the tint moves: a touch
+     stronger so it still reads on the dark grounds. --accent over it is
+     4.97:1 on dark paper and 5.52:1 on the dark page; 0.2 on hover keeps
+     4.63:1 and 5.15:1. Any deeper and the label drops under AA. */
+  background: rgba(var(--accent-rgb), 0.16);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"])
+    .soft:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--accent-rgb), 0.2);
+  }
+}
+
 :global([data-theme="dark"]) .ghost {
   /* Same rule as the light ghost above: a ghost button's border is its only
      boundary, so it must clear 3:1 (WCAG 1.4.11). On a dark surface 0.22 was

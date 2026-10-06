@@ -166,6 +166,12 @@ export const setConnectionNote = (id: string, body: string) =>
 export interface IncomingConnectionRefDTO {
   slug: string;
   connectionId: string;
+  /** The words they wrote with the request, or null when they sent none.
+   *  Optional so an older backend deploy that omits it still renders. */
+  requestMessage?: string | null;
+  /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id, or
+   *  null when they gave no reason. Optional for the same older deploys. */
+  requestReason?: string | null;
 }
 
 /**

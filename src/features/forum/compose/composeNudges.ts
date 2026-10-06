@@ -5,6 +5,7 @@ import type {
   ComposeThreadState,
 } from "./composeThread.types";
 import { countWords, toPlainText } from "./composeText";
+import { findPaymentDetails } from "../funding/fundingLink";
 
 // ── Advisory rows under the body ────────────────────────────────────────────
 // Six things the composer says out loud before a post goes out, because each
@@ -144,6 +145,14 @@ function crisisNudge(state: ComposeThreadState): ComposeNudge | null {
 
 function contactNudge(state: ComposeThreadState): ComposeNudge | null {
   if (!CONTACT_DETAIL.test(state.body)) return null;
+  // A fundraiser's own payment notice already names the number and blocks
+  // Publish, so the general row would only say it again.
+  if (
+    state.kind === "ask" &&
+    findPaymentDetails(`${state.title}\n${state.body}`) !== null
+  ) {
+    return null;
+  }
   return {
     id: "contact",
     tone: "warn",

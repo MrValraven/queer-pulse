@@ -26,5 +26,6 @@ describe("useReaderComments (demo mode)", () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.hasMore).toBe(false);
     expect(result.current.isLoadingMore).toBe(false);
+    expect(result.current.isFetchNextPageError).toBe(false);
   });
 });

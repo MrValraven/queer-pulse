@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
-import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
+import {
+  EmptyState,
+  LoadMoreFooter,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CommunityGuidelinesNote } from "./CommunityGuidelinesNote";
 import type { LivingCommunity } from "./community.model";
@@ -40,7 +44,10 @@ type Report = NonNullable<LivingCommunity["reports"]>[number];
 type RosterMember = LivingCommunity["roster"][number];
 type RosterPaging = Pick<
   PulsePaging,
-  "hasNextPage" | "fetchNextPage" | "isFetchingNextPage"
+  | "hasNextPage"
+  | "fetchNextPage"
+  | "isFetchingNextPage"
+  | "isFetchNextPageError"
 >;
 
 /** Whether a mod queue is still loading or failed to load, plus its retry. */
@@ -166,17 +173,17 @@ export function ModJoinRequests({
               />
             ))}
             {paging.hasNextPage && (
-              <div className={styles.loadMoreRoster}>
-                <Button
-                  variant="ghost"
-                  disabled={paging.isFetchingNextPage}
-                  onClick={paging.fetchNextPage}
-                >
-                  {paging.isFetchingNextPage
-                    ? t("communities:common.loading")
-                    : t("communities:detail.modtools.joinRequests.loadMoreCta")}
-                </Button>
-              </div>
+              <LoadMoreFooter
+                className={styles.loadMoreRoster}
+                isFetchingNextPage={paging.isFetchingNextPage}
+                isFetchNextPageError={Boolean(paging.isFetchNextPageError)}
+                onLoadMore={paging.fetchNextPage}
+                errorMessage={t("common:error.loadMore")}
+                label={t(
+                  "communities:detail.modtools.joinRequests.loadMoreCta",
+                )}
+                loadingLabel={t("communities:common.loading")}
+              />
             )}
           </>
         )}
@@ -299,17 +306,15 @@ export function ModMemberManagement({
         );
       })}
       {paging.hasNextPage && (
-        <div className={styles.loadMoreRoster}>
-          <Button
-            variant="ghost"
-            disabled={paging.isFetchingNextPage}
-            onClick={paging.fetchNextPage}
-          >
-            {paging.isFetchingNextPage
-              ? t("communities:common.loading")
-              : t("communities:detail.roster.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMoreRoster}
+          isFetchingNextPage={paging.isFetchingNextPage}
+          isFetchNextPageError={Boolean(paging.isFetchNextPageError)}
+          onLoadMore={paging.fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("communities:detail.roster.loadMoreCta")}
+          loadingLabel={t("communities:common.loading")}
+        />
       )}
     </>
   );

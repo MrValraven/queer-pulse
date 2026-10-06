@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { LoadErrorState, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -61,6 +62,13 @@ export function SearchPage() {
   const showLoading = loading || (demoMode && simulatedLoad);
   const setQuery = (value: string) =>
     setSearchParams(value ? { q: value } : {}, { replace: true });
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  // The zero-results state's "clear" action. Its button unmounts with the
+  // empty state, so focus goes back to the search bar, ready for a new word.
+  const clearQuery = () => {
+    setQuery("");
+    searchInputRef.current?.focus();
+  };
 
   return (
     <PageShell>
@@ -75,19 +83,9 @@ export function SearchPage() {
           </h1>
           {!signInRequired && (
             <div className={styles.barWrap}>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
+              <FiSearch size={20} aria-hidden />
               <input
+                ref={searchInputRef}
                 className={styles.barInput}
                 type="text"
                 enterKeyHint="search"
@@ -125,7 +123,15 @@ export function SearchPage() {
                       ]
                         .filter(Boolean)
                         .join(" ")}
-                      onClick={() => setTab(tabOption.id)}
+                      onClick={(event) => {
+                        setTab(tabOption.id);
+                        // On phones the strip scrolls sideways: keep the
+                        // chosen pill fully visible.
+                        event.currentTarget.scrollIntoView({
+                          inline: "nearest",
+                          block: "nearest",
+                        });
+                      }}
                     >
                       {t(tabOption.labelKey)}
                     </button>
@@ -155,6 +161,7 @@ export function SearchPage() {
             query={query}
             tab={tab}
             setQuery={setQuery}
+            onClearQuery={clearQuery}
             onSelectTab={setTab}
             signInRequired={signInRequired}
             loading={showLoading}

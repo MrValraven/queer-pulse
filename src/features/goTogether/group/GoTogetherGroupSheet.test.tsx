@@ -673,7 +673,7 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
     expect(reason.querySelector("svg")).not.toBeNull();
   });
 
-  it("shows a flood cap's own message exactly as the server sent it", async () => {
+  it("explains a flood cap in the member's language", async () => {
     const capMessage =
       "You've sent several reports today. The ones you sent are with the moderators.";
     hookState.reportError = new ApiError(429, capMessage, {
@@ -684,6 +684,13 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Report Sofia" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(capMessage);
+    // PRD-467: the server's sentence is English only, so the alert shows
+    // `safety:report.floodCap` in the member's language. `findByText` retries
+    // until the lazy `safety` namespace has loaded.
+    const explanation = await screen.findByText(
+      /reached the limit for reports/i,
+    );
+    expect(explanation).toHaveAttribute("role", "alert");
+    expect(explanation).not.toHaveTextContent(capMessage);
   });
 });

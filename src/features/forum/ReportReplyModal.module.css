@@ -29,6 +29,8 @@
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-12);
+  font: inherit;
+  text-align: start;
   font-size: var(--text-14);
   font-weight: 500;
   color: var(--ink);

@@ -1,8 +1,9 @@
 import { matchPath, useLocation } from "react-router-dom";
-import { useAuth } from "./providers/authContext";
+import { useAuth, type AuthContextValue } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
 import { isStandaloneLaunch } from "./providers/standaloneLaunch";
 import { linkToPath, routes } from "./routeMap";
+import { LEGACY_REDIRECTS } from "./routes.redirects.data";
 import { safeInternalPath } from "../shared/lib/safeInternalPath";
 import type { StaffRoleId } from "../features/admin/staffRoles.registry";
 import type { AuthUser } from "../features/auth/api/auth.api";
@@ -203,6 +204,7 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
  * inlined to `false` by `vite build`, so every deployed artifact hides it — see
  * `isComingSoonPath`.
  */
+// "/work/grants" left this list on 2026-10-05: it now redirects to the live Funding & Grants view, and this gate runs before any redirect.
 const COMING_SOON_PATTERNS: string[] = [
   // Career column
   "/account/work",
@@ -219,7 +221,6 @@ const COMING_SOON_PATTERNS: string[] = [
   "/work/barter",
   "/work/barter/*",
   "/work/solidarity",
-  "/work/grants",
   "/work/offer",
   "/economy",
   "/economy/*",
@@ -776,6 +777,89 @@ export function useIsLinkVisible(): (href: string) => boolean {
 }
 
 /**
+ * Public legal, help and contact pages a deactivated member can still read
+ * (PRD-330). Someone deciding whether to cancel an erasure needs Terms and
+ * Privacy, and someone stuck in that state needs Help and a way to reach the
+ * team. Every one of them is public, so this grants nothing new.
+ */
+const PUBLIC_READING_PAGES: string[] = [
+  routes.terms,
+  routes.privacy,
+  routes.guidelines,
+  routes.cookies,
+  routes.policiesAccessibility,
+  routes.policiesSecurity,
+  routes.imprint,
+  routes.help,
+  routes.contact,
+];
+
+/**
+ * The pages above plus every short alias that redirects to one of them
+ * (`/terms`, `/help`, `/contact` and the rest). The gate runs before
+ * `LEGACY_REDIRECTS` does, so an alias missing here would bounce a deactivated
+ * member to delete-account before it could redirect. Derived from the redirect
+ * table, so a new alias is covered with no second edit.
+ */
+const READABLE_WHILE_DEACTIVATED: string[] = [
+  ...PUBLIC_READING_PAGES,
+  ...LEGACY_REDIRECTS.filter(([, target]) =>
+    PUBLIC_READING_PAGES.includes(target),
+  ).map(([alias]) => alias),
+];
+
+/**
+ * True when a signed-in member's account tier and staff-role grants fall short
+ * of what `pathname` demands: an admin or mod surface without the role (or an
+ * elevating grant), or a capability-gated surface (e.g. /magazine/editor)
+ * without the matching grant. Admins are a superset of every capability.
+ */
+function isClosedByStaffGate(
+  pathname: string,
+  role: AuthContextValue["role"],
+  staffRoles: readonly string[] | null | undefined,
+): boolean {
+  const grants = staffRoles ?? [];
+  const need = requiredRole(pathname);
+  // An additive grant can satisfy a role requirement on its own, wherever
+  // the backend guard accepts the same union (CAPABILITY_ELEVATED_PATTERNS).
+  const hasElevatingGrant = elevatingCapabilities(pathname).some((capability) =>
+    grants.includes(capability),
+  );
+  if (need === "admin" && role !== "admin" && !hasElevatingGrant) return true;
+  if (
+    need === "mod" &&
+    role !== "moderator" &&
+    role !== "admin" &&
+    !hasElevatingGrant
+  ) {
+    return true;
+  }
+  const capability = requiredCapability(pathname);
+  return Boolean(
+    capability && role !== "admin" && !grants.includes(capability),
+  );
+}
+
+/**
+ * True while the gate is turning a signed-in member away from a staff or admin
+ * surface they followed a link to. `StaffOnlyBounceToast` reads this to tell
+ * them why they landed on their feed. It is true only when the redirect the
+ * gate chose is the staff bounce itself, so the deactivated, suspended and
+ * demo-sandbox branches (which decide first) never raise it.
+ */
+export function useIsStaffOnlyBounce(): boolean {
+  const { loggedIn, role, staffRoles } = useAuth();
+  const { pathname } = useLocation();
+  const gateRedirect = useAuthGateRedirect();
+  return (
+    loggedIn &&
+    gateRedirect === routes.feed &&
+    isClosedByStaffGate(pathname, role, staffRoles)
+  );
+}
+
+/**
  * When a logged-out visitor lands on a gated route, returns the sign-in path
  * with a `?next=` back-link so they return here after authenticating. Returns
  * null when the visitor is allowed through (logged in, or on a public route).
@@ -783,7 +867,7 @@ export function useIsLinkVisible(): (href: string) => boolean {
 export function useAuthGateRedirect(): string | null {
   const { loggedIn, checking, role, status, user, staffRoles } = useAuth();
   const { demoMode } = useDemoMode();
-  const { pathname, search } = useLocation();
+  const { pathname, search, hash } = useLocation();
 
   // Live-mode session probe still in flight: don't decide the gate yet, or we'd
   // bounce a signed-in member reloading a gated page to sign-in before /auth/me
@@ -818,10 +902,13 @@ export function useAuthGateRedirect(): string | null {
       //     is about to be deleted permanently. See the note on the suspended
       //     branch below for why the export and deletion pages are exempt from
       //     every account-state bounce, and please do not tidy this away.
+      //   - The legal, help and contact pages and their short aliases
+      //     (`READABLE_WHILE_DEACTIVATED`, PRD-330).
       const reachableWhileDeactivated: string[] = [
         routes.deleteAccount,
         routes.dataExport,
         routes.status,
+        ...READABLE_WHILE_DEACTIVATED,
       ];
       return reachableWhileDeactivated.includes(pathname)
         ? null
@@ -891,36 +978,16 @@ export function useAuthGateRedirect(): string | null {
     // as well as demo means no shipped build can ever reach the bypass, even one
     // deliberately built with VITE_DEMO=1: `import.meta.env.DEV` is inlined false
     // by `vite build`, so the guard below is unconditional in every artifact.
-    if (!demoMode || !import.meta.env.DEV) {
-      const need = requiredRole(pathname);
-      // An additive grant can satisfy a role requirement on its own, wherever
-      // the backend guard accepts the same union (CAPABILITY_ELEVATED_PATTERNS).
-      const elevatingGrants = elevatingCapabilities(pathname);
-      const hasElevatingGrant = elevatingGrants.some((capability) =>
-        (staffRoles ?? []).includes(capability),
-      );
-      if (need === "admin" && role !== "admin" && !hasElevatingGrant) {
-        return routes.homepage;
-      }
-      if (
-        need === "mod" &&
-        role !== "moderator" &&
-        role !== "admin" &&
-        !hasElevatingGrant
-      ) {
-        return routes.homepage;
-      }
-      // Capability-gated surfaces (e.g. /magazine/editor): the account tier
-      // alone isn't enough — admins are a superset, everyone else needs the
-      // matching additive staff-role grant.
-      const capability = requiredCapability(pathname);
-      if (
-        capability &&
-        role !== "admin" &&
-        !(staffRoles ?? []).includes(capability)
-      ) {
-        return routes.homepage;
-      }
+    //
+    // A member turned away lands on their own feed, where
+    // `StaffOnlyBounceToast` (see `useIsStaffOnlyBounce`) says their account
+    // has no access to that page (PRD-330). The marketing homepage gave them
+    // no reason.
+    if (
+      (!demoMode || !import.meta.env.DEV) &&
+      isClosedByStaffGate(pathname, role, staffRoles)
+    ) {
+      return routes.feed;
     }
     // Nothing to sign into when you're already in — send members on to their
     // feed (or the `?next=` they were headed for) instead of the auth screens.
@@ -970,5 +1037,12 @@ export function useAuthGateRedirect(): string | null {
   }
   if (!isGatedPath(pathname)) return null;
 
-  return `${routes.signIn}?next=${encodeURIComponent(pathname)}`;
+  // The whole location rides along (PRD-320): a deep link such as
+  // `/local/housing?tab=flatmates` or a `?rsvp=` link has to land on the same
+  // tab after sign-in. Both consumers keep the query and hash on the way back:
+  // `safeInternalPath` (sign-in page, guest-only bounce above) returns
+  // `pathname + search + hash` for a same-origin value, and the backend's
+  // `safeRedirectPath` passes a value that starts with a single `/` and holds
+  // no scheme, backslash or whitespace.
+  return `${routes.signIn}?next=${encodeURIComponent(pathname + search + hash)}`;
 }

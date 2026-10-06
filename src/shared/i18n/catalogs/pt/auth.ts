@@ -744,14 +744,15 @@ export const auth: Catalog = {
   "onboarding.stepDone.stampFailed.desc":
     "Estás dentro à mesma. Sem isto, podemos voltar a levar-te por esta mesma configuração da próxima vez.",
   "onboarding.stepDone.stampFailed.retry": "Tentar de novo",
-  "onboarding.quickStart.browseDirectory.title":
-    "Explora o diretório de pessoas",
-  "onboarding.quickStart.browseDirectory.desc": "Membros em Lisboa e não só",
-  "onboarding.quickStart.gatherings.title": "Vê os próximos convívios",
-  "onboarding.quickStart.gatherings.desc": "Eventos reais para a comunidade",
-  "onboarding.quickStart.magazine.title": "Lê a revista da comunidade",
-  "onboarding.quickStart.magazine.desc":
-    "Publicada no primeiro dia de cada mês",
+  "onboarding.quickStart.communities.title": "Descobre comunidades e coletivos",
+  "onboarding.quickStart.communities.desc":
+    "Grupos organizados à volta de interesses em comum",
+  "onboarding.quickStart.businessDirectory.title":
+    "Explora o diretório de negócios locais",
+  "onboarding.quickStart.businessDirectory.desc":
+    "Espaços queer e inclusivos por toda Lisboa",
+  "onboarding.quickStart.forum.title": "Espreita o fórum",
+  "onboarding.quickStart.forum.desc": "Perguntas, conselhos e conversas",
   "onboarding.quickStart.gettingStarted.title":
     "Vê a tua lista de primeiros passos",
   "onboarding.quickStart.gettingStarted.desc":

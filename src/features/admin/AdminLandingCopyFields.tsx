@@ -1,12 +1,18 @@
+import { useId } from "react";
 import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LandingSection } from "./api/landingFeatures.api";
-import type { LandingCopyFieldsValue } from "./adminLandingCopyFields.utils";
+import {
+  isKickerSection,
+  LANDING_KICKER_MAX_LENGTH,
+  type LandingCopyFieldsValue,
+} from "./adminLandingCopyFields.utils";
 import styles from "./AdminLandingPage.module.css";
 
 /**
- * The per-section copy field group — member `quote` / community optional
- * `blurb` / changemaker `cause`+`blurb`+`tags` — shared between
+ * The per-section copy field group (member `quote` / community optional
+ * `blurb` / changemaker `cause`+`blurb`+`tags` / gathering and story
+ * optional short kicker line, stored as `blurb`), shared between
  * `AdminLandingFeatureEditor` (editing an existing slot) and
  * `AdminLandingEligiblePicker` (composing copy before creating one), so the
  * two flows render and validate the exact same fields.
@@ -21,6 +27,7 @@ export function AdminLandingCopyFields({
   onChange: (patch: Partial<LandingCopyFieldsValue>) => void;
 }) {
   const { t } = useTranslation();
+  const kickerCountId = useId();
 
   return (
     <>
@@ -53,6 +60,35 @@ export function AdminLandingCopyFields({
             onChange={(event) => onChange({ blurb: event.target.value })}
           />
         </FormField>
+      )}
+
+      {isKickerSection(section) && (
+        <div className={styles.kickerGroup}>
+          <FormField
+            className={styles.editorField}
+            label={t("admin:landing.editor.kickerLabel")}
+            helper={t("admin:landing.editor.kickerHelper", {
+              max: LANDING_KICKER_MAX_LENGTH,
+            })}
+          >
+            <input
+              type="text"
+              value={value.blurb}
+              maxLength={LANDING_KICKER_MAX_LENGTH}
+              aria-describedby={kickerCountId}
+              placeholder={t(
+                `admin:landing.editor.kickerPlaceholder.${section}`,
+              )}
+              onChange={(event) => onChange({ blurb: event.target.value })}
+            />
+          </FormField>
+          <span id={kickerCountId} className={styles.kickerCount}>
+            {t("admin:landing.editor.kickerCount", {
+              count: value.blurb.length,
+              max: LANDING_KICKER_MAX_LENGTH,
+            })}
+          </span>
+        </div>
       )}
 
       {section === "changemaker" && (

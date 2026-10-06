@@ -5,9 +5,9 @@ import type { FinLine } from "../governance.data";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
 // Shapes the NestJS `governance` domain returns (GET /governance/finances).
-// Read-only + seeded — the rest of the Governance page (moderation steps,
-// advisory council, principles, decision log) is fixed transparency prose with
-// no backend of its own; this is the one section built from structured figures.
+// The governance team enters these figures on the admin Finances tab; the
+// endpoint serves a report only once its headline figures were all entered by
+// people (PRD-447), and the empty report (`quarter: null`) until then.
 
 export interface FinanceStatDTO {
   n: string;
@@ -28,16 +28,28 @@ export interface FinanceReserveDTO {
   target: number;
 }
 
-/** A disclosed restricted-grant partner. `name`/`amount` are data; `scopeKey`
- *  is an i18n key for the restriction description. */
+/** A disclosed restricted-grant partner. `name`/`amount` are data. The
+ *  restriction is either `scopeKey`, an i18n key (older seeded rows), or
+ *  `scope`, the words the governance team typed (PRD-447). */
 export interface FinancePartnerDTO {
   name: string;
   amount: number;
-  scopeKey: string;
+  scopeKey?: string;
+  scope?: string;
+}
+
+/** Where the published figures came from. The page labels the report with
+ *  it: "Figures entered by the governance team on {date}". */
+export interface FinanceProvenanceDTO {
+  source: "seeded" | "manual" | "computed";
+  /** ISO-8601: when a person last saved figures on this report. */
+  enteredAt: string;
 }
 
 export interface GovernanceFinanceResponseDTO {
-  quarter: string;
+  /** "2026-Q3"; null when no report has been published yet, in which case
+   *  every list below is empty. */
+  quarter: string | null;
   stats: FinanceStatDTO[];
   income: FinLine[];
   expense: FinLine[];
@@ -50,7 +62,9 @@ export interface GovernanceFinanceResponseDTO {
    *  label — so localisation or reworded live figures can't break them. */
   incomeTotal?: number | null;
   expenseTotal?: number | null;
-  publishedAt: string;
+  publishedAt: string | null;
+  /** Null on the empty report, and on an older backend that predates it. */
+  provenance?: FinanceProvenanceDTO | null;
 }
 
 export const getGovernanceFinances = (quarter?: string) => {

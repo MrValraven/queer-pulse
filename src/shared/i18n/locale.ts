@@ -9,7 +9,12 @@ import type { Language } from "./types";
 export const STORAGE_KEY = "qp.lang";
 const LEGACY_STORAGE_KEY = "qp-lang";
 
-function isLanguage(value: string | null): value is Language {
+/**
+ * Whether `value` is one of the app's languages. Exported for the server-side
+ * language sync (`useLanguagePreferenceSync`), which validates the stored
+ * value before adopting it.
+ */
+export function isLanguage(value: unknown): value is Language {
   return value === "en" || value === "pt";
 }
 

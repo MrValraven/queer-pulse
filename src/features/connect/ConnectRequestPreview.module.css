@@ -1,0 +1,44 @@
+/* The live request preview beside the connect form on wide screens
+   (ConnectFormLayout). A calm cream surface recessed into the white dialog,
+   holding the real received-request card. It stretches to the row the form
+   sets and never sizes the dialog itself: `contain: size` keeps its content
+   out of the grid row height, and it scrolls on its own if it ever runs
+   longer than the form. */
+.panel {
+  align-self: stretch;
+  contain: size;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: 22px;
+  background: var(--cream);
+  border-radius: var(--radius-panel);
+  animation: previewFadeIn 0.35s var(--ease) both;
+}
+/* The same uppercase tracked eyebrow as the form's field labels (FormField
+   `.label`), so the two columns read as one form. */
+.heading {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+@keyframes previewFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

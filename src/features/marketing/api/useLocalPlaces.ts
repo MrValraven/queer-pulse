@@ -26,6 +26,9 @@ export interface LocalPlacesResult {
   /** True when the businesses read failed (DES-25). Callers must render an
    *  error state rather than "no places listed yet". */
   isError: boolean;
+  /** True when the latest next-page fetch failed (ENG-501); the loaded
+   *  places stay in `places`. */
+  isFetchNextPageError: boolean;
   /** Re-run the failed read, for the error state's retry. */
   refetch: () => void;
   hasNextPage: boolean;
@@ -56,6 +59,7 @@ export function useLocalPlaces(
     total,
     isLoading,
     isError,
+    isFetchNextPageError,
     refetch,
     hasNextPage,
     fetchNextPage,
@@ -84,6 +88,7 @@ export function useLocalPlaces(
     total: demoMode ? places.length : total,
     isLoading,
     isError,
+    isFetchNextPageError,
     refetch,
     hasNextPage,
     fetchNextPage,

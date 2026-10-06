@@ -18,9 +18,16 @@ import {
   bySlug,
   previewChangemakerDTOs,
   previewCommunityDTOs,
+  previewGatheringDTOs,
   previewMemberDTOs,
-  type PendingCommunityPreview,
+  previewStoryDTOs,
 } from "./api/landingPreview.adapters";
+import {
+  GatheringStage,
+  PendingPreviewList,
+  PreviewEmptyState,
+  StoryStage,
+} from "./AdminLandingPreviewFeeds";
 import styles from "./AdminLandingPreview.module.css";
 
 /** The public homepage host, shown in the preview's browser bar so it reads as
@@ -33,7 +40,8 @@ const PUBLIC_HOST = "queerpulse.com";
  * (`useLandingFeatures`) so it reflects every add / remove / reorder / hide /
  * copy edit the instant its mutation settles, with no save round-trip. The
  * public feed (`useLandingFeaturesPublic`) fills in the entity chrome the
- * curation data doesn't author (member tags, community cover / roster / access).
+ * curation data doesn't author (member tags, community cover / roster / access,
+ * a gathering's date and area, a story's byline and lead art).
  *
  * It reuses the real homepage section chrome and cards, so what an admin sees
  * here is what a visitor gets. Only *active* slots render, in position order,
@@ -106,16 +114,21 @@ function PreviewStage({
     return <CommunityStage split={split} />;
   }
 
+  if (section === "gathering") {
+    const split = previewGatheringDTOs(features, bySlug(publicFeed.gatherings));
+    return <GatheringStage split={split} />;
+  }
+
+  if (section === "story") {
+    const split = previewStoryDTOs(features, bySlug(publicFeed.stories));
+    return <StoryStage split={split} />;
+  }
+
   const changemakers = previewChangemakerDTOs(
     features,
     bySlug(publicFeed.changemakers),
   );
   return <ChangemakerStage items={changemakers} />;
-}
-
-function EmptyState() {
-  const { t } = useTranslation();
-  return <p className={styles.state}>{t("admin:landing.preview.empty")}</p>;
 }
 
 function MemberStage({
@@ -126,7 +139,7 @@ function MemberStage({
   const { t } = useTranslation();
   const cardRef = useRef<FeaturedSpotlightCardHandle>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  if (views.length === 0) return <EmptyState />;
+  if (views.length === 0) return <PreviewEmptyState />;
   return (
     <section className={liveStyles.section}>
       <div className="wrap">
@@ -171,7 +184,7 @@ function CommunityStage({
 }) {
   const { t } = useTranslation();
   if (split.enriched.length === 0 && split.pending.length === 0) {
-    return <EmptyState />;
+    return <PreviewEmptyState />;
   }
   const views = split.enriched.map(landingCommunityToView);
   return (
@@ -194,34 +207,9 @@ function CommunityStage({
           </div>
         </div>
         <FeaturedCommunityCard items={views} />
-        <PendingCommunities items={split.pending} />
+        <PendingPreviewList items={split.pending} />
       </div>
     </section>
-  );
-}
-
-function PendingCommunities({ items }: { items: PendingCommunityPreview[] }) {
-  const { t } = useTranslation();
-  if (items.length === 0) return null;
-  return (
-    <div className={styles.pending}>
-      <div className={styles.pendingTitle}>
-        {t("admin:landing.preview.pendingTitle")}
-      </div>
-      <p className={styles.pendingNote}>
-        {t("admin:landing.preview.pendingNote")}
-      </p>
-      <ul className={styles.pendingList}>
-        {items.map((item) => (
-          <li key={item.id} className={styles.pendingItem}>
-            <span className={styles.pendingName}>{item.name}</span>
-            {item.blurb && (
-              <span className={styles.pendingBlurb}>{item.blurb}</span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
 
@@ -231,7 +219,7 @@ function ChangemakerStage({
   items: ReturnType<typeof previewChangemakerDTOs>;
 }) {
   const { t } = useTranslation();
-  if (items.length === 0) return <EmptyState />;
+  if (items.length === 0) return <PreviewEmptyState />;
   return (
     <section className={[liveStyles.section, liveStyles.sectionPlum].join(" ")}>
       <div className="wrap">

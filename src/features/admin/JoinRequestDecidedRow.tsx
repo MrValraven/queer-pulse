@@ -6,6 +6,7 @@ import { approvalReasonLabelKey } from "../auth/api/joinRequestApprovalReason";
 import { declineReasonLabelKey } from "../auth/api/joinRequestDeclineReason";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
+import { JoinRequestDecidedApplication } from "./JoinRequestDecidedApplication";
 import { JoinRequestDecidedDates } from "./JoinRequestDecidedDates";
 import { JoinRequestDecidedInvitePanel } from "./JoinRequestDecidedInvitePanel";
 import { JoinRequestDeclineNote } from "./JoinRequestDeclineNote";
@@ -15,8 +16,8 @@ import styles from "./AdminVerifyDecided.module.css";
 
 /**
  * One settled request in the Decided tab: who asked, how to reach them, when
- * they applied, when it was decided and by whom, and then the part the tab
- * exists for.
+ * they applied, when it was decided and by whom, then what they sent us so a
+ * reviewer can re-read it, and then the part the tab exists for.
  *
  * An approval keeps its invite link here, with the link's own status and how
  * long it has left, because QueerPulse delivers no email: handing that link
@@ -143,6 +144,7 @@ export function JoinRequestDecidedRow({
           onBlur={trackDetailsBlur}
         >
           <Collapse isOpen={isOpen}>
+            <JoinRequestDecidedApplication item={item} />
             {!isApproved && (
               <>
                 <div className={rowStyles.rowNote}>

@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
@@ -133,6 +135,85 @@ function keepWebmanifestOffPrecache(): Plugin {
   };
 }
 
+/**
+ * Precache only the stylesheets the app shell paints with (ENG-190).
+ *
+ * WHY. Vite emits one CSS file per chunk that imports styles: the handful that
+ * index.html links for the entry chunk and its static imports, plus one per
+ * lazy route chunk. A blanket CSS glob put every one of them in the precache
+ * (420 of 482 entries, 6628 KiB in all, on 2026-10-06), so a first
+ * visit, and every deploy that touched any page's styles, downloaded megabytes
+ * of CSS for pages the member may never open. A route's CSS now loads with its
+ * lazy chunk, and src/sw.ts runtime-caches it on that first use, the same as
+ * the route's JS.
+ *
+ * WHY READ index.html. The shell set is exactly the `<link rel="stylesheet">`
+ * tags Vite writes into the built index.html, which it derives from the entry
+ * chunk's static import graph. Reading them back stays correct when chunk
+ * names move, where a glob per chunk name would drift silently. Workbox runs
+ * `manifestTransforms` after the app build has written index.html to outDir,
+ * so the file is on disk by then. The CLI's `--outDir` only reaches the
+ * resolved config, hence the small plugin half that records it.
+ */
+function createShellStylesheetPrecacheFilter() {
+  let builtIndexHtmlPath = "";
+  let basePath = "/";
+
+  const plugin: Plugin = {
+    name: "qp:shell-stylesheet-precache",
+    apply: "build",
+    configResolved(config) {
+      builtIndexHtmlPath = resolve(
+        config.root,
+        config.build.outDir,
+        "index.html",
+      );
+      basePath = config.base;
+    },
+  };
+
+  function readShellStylesheetUrls(): Set<string> {
+    const indexHtml = readFileSync(builtIndexHtmlPath, "utf8");
+    const stylesheetUrls = new Set<string>();
+    for (const [linkTag] of indexHtml.matchAll(/<link\b[^>]*>/g)) {
+      if (!/\brel=["']?stylesheet\b/.test(linkTag)) continue;
+      const href = /\bhref=["']([^"']+)["']/.exec(linkTag)?.[1];
+      if (href?.startsWith(basePath)) {
+        stylesheetUrls.add(href.slice(basePath.length));
+      }
+    }
+    return stylesheetUrls;
+  }
+
+  function manifestTransform<Entry extends PrecacheEntry>(
+    entries: Entry[],
+  ): { manifest: Entry[] } {
+    const shellStylesheetUrls = readShellStylesheetUrls();
+    const manifest = entries.filter(
+      (entry) =>
+        !entry.url.endsWith(".css") || shellStylesheetUrls.has(entry.url),
+    );
+    const hasShellStylesheet = manifest.some((entry) =>
+      entry.url.endsWith(".css"),
+    );
+    if (!hasShellStylesheet) {
+      // Loud on purpose, like keepWebmanifestOffPrecache: zero matches means
+      // the index.html read or the URL shape broke, and the precached shell
+      // would boot offline with no styles at all.
+      throw new Error(
+        "qp:shell-stylesheet-precache: none of the stylesheets linked from " +
+          `${builtIndexHtmlPath} matched a precache entry, so the offline ` +
+          "app shell would have no CSS.",
+      );
+    }
+    return { manifest };
+  }
+
+  return { plugin, manifestTransform };
+}
+
+const shellStylesheetPrecache = createShellStylesheetPrecacheFilter();
+
 // https://vite.dev/config/
 export default defineConfig({
   build: {
@@ -206,6 +287,9 @@ export default defineConfig({
     // Position in this array is not load-bearing: it looks vite-plugin-pwa up
     // by name at buildStart, by which point every plugin's config has resolved.
     keepWebmanifestOffPrecache(),
+    // Records the resolved outDir that its manifestTransform half (wired into
+    // injectManifest below) reads the built index.html from.
+    shellStylesheetPrecache.plugin,
     emitVersionJson(),
     VitePWA({
       strategies: "injectManifest",
@@ -309,11 +393,11 @@ export default defineConfig({
         // Each precached file (see globPatterns below) must stay under
         // Workbox's default 2 MiB cap or `pnpm build` fails. (Was under
         // `workbox.maximumFileSizeToCacheInBytes` in generateSW mode.) Measured
-        // 2026-09-30 (ENG-504) from `vite build`'s own chunk table: the entry
-        // chunk is 587.94 kB raw / 174.59 kB gzip and is the largest precached
-        // file, ahead of vendor-react at 408.94 kB raw. Nothing precached comes
-        // close to 2 MiB. The first-paint JS as a whole (entry plus the 38
-        // modulepreloads in index.html) is ~1.77 MB raw; the members and
+        // 2026-10-06 (ENG-504) from `vite build`'s own chunk table: the entry
+        // chunk is 584.6 kB raw and is the largest precached file, ahead of
+        // vendor-react at 408.94 kB raw. Nothing precached comes close to
+        // 2 MiB. The first paint as a whole (entry plus the 39 modulepreloads
+        // in index.html) is about 1.79 MB raw / 528 KiB gzip; the members and
         // directory-places demo data load only with the pages and modals that
         // use them.
         // The override stays as headroom for whichever precached file grows
@@ -321,21 +405,26 @@ export default defineConfig({
         // justifies it.
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // Precache diet. The default globs would precache all ~470 built chunks
-        // on the first visit (the whole app, ~13 MB). Instead precache only the
-        // *app shell*: index.html, every CSS file, the entry chunk
-        // (assets/index-*.js) and the core react/query vendor chunks, the
-        // manifest, fonts, and icons. The lazy route chunks — including the
-        // heavy vendor-maplibre / vendor-visx buckets (see manualChunks above)
-        // and every per-page bundle — are left out and runtime-cached on first
-        // use by src/sw.ts's script route. Keep this in sync with the vendor
-        // chunk names in manualChunks.
+        // on the first visit (the whole app, ~13 MB). This precaches only the
+        // *app shell*: index.html, the stylesheets index.html links, the entry
+        // chunk (assets/index-*.js) and the core react/query vendor chunks,
+        // fonts, and icons. The lazy route chunks, their CSS files, the heavy
+        // vendor-maplibre / vendor-visx buckets (see manualChunks above) and
+        // every per-page bundle stay out and are runtime-cached on first use
+        // by src/sw.ts's script/style route. Measured 2026-10-06 (ENG-190):
+        // precaching every CSS file made this 482 entries / 6628 KiB, 420 of
+        // them CSS. Keep this in sync with the vendor chunk names in
+        // manualChunks.
         globPatterns: [
           "index.html",
           // NOT "manifest.webmanifest": see keepWebmanifestOffPrecache above.
-          // The file reaches the precache by TWO independent routes — this glob
+          // The file reaches the precache by TWO independent routes (this glob
           // over the emitted dist/, and the entry vite-plugin-pwa appends to
-          // additionalManifestEntries — and closing only one leaves it cached.
-          "**/*.css",
+          // additionalManifestEntries), and closing only one leaves it cached.
+          //
+          // Globs every CSS file; shellStylesheetPrecache's transform below
+          // then keeps only the ones index.html links.
+          "assets/*.css",
           "assets/index-*.js",
           "assets/vendor-react-*.js",
           "assets/vendor-query-*.js",
@@ -344,6 +433,9 @@ export default defineConfig({
           "favicon.ico",
           "icons/*.png",
         ],
+        // ENG-190: of the globbed CSS, keep only the app shell's stylesheets.
+        // See createShellStylesheetPrecacheFilter above.
+        manifestTransforms: [shellStylesheetPrecache.manifestTransform],
       },
     }),
   ],

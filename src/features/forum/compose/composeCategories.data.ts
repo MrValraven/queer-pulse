@@ -53,7 +53,7 @@ const CATEGORY_DETAILS: Record<string, ComposeCategoryDetail> = {
   activism: {
     descriptionKey: "forum:composePage.category.activism.description",
     keyword:
-      /\b(proposal|propos|vote|campaign|grant|fund|protest|march|petition|votação)/i,
+      /\b(proposal|propos|vote|campaign|protest|march|petition|votação)/i,
   },
   guides: {
     descriptionKey: "forum:composePage.category.guides.description",
@@ -83,6 +83,13 @@ const CATEGORY_DETAILS: Record<string, ComposeCategoryDetail> = {
     descriptionKey: "forum:composePage.category.relationships.description",
     keyword:
       /\b(dating|partner|boyfriend|girlfriend|relationship|breakup|break up|polyam|namor|family|parent|friendship)/i,
+  },
+  // Copied verbatim from the Funding & Grants spec. `funding` sits after
+  // `legal` in `CATS`, so "apoio jurídico" is still suggested as Legal.
+  funding: {
+    descriptionKey: "forum:composePage.category.funding.description",
+    keyword:
+      /\b(grant|fund|bolsa|apoio|concurso|candidatura|crowdfund|angaria)/i,
   },
   platform: {
     descriptionKey: "forum:composePage.category.platform.description",
@@ -157,13 +164,20 @@ export const TAG_SUGGESTIONS: Record<string, readonly string[]> = {
   meetups: ["welcome", "intros", "meetups", "events"],
   legal: ["legal", "migration", "rights"],
   relationships: ["dating", "family", "parenting"],
+  funding: ["grants", "fund"],
   platform: ["feedback", "help", "platform"],
 };
 
 /**
- * Where posting without a name is offered. These are the five categories
- * where saying a true thing under your own name can cost a member their
- * housing, their healthcare, their residency status or their safety.
+ * Where posting without a name is offered: the categories where saying a true
+ * thing under your own name can cost a member their housing, their
+ * healthcare, their residency status, their safety or their income.
+ *
+ * LOCKSTEP with the backend list in `forum-threads.service.ts` (Plan 1, P0).
+ * The two lists must stay identical: the server used to honour only three of
+ * these and published the rest under the author's name. A fundraiser (`ask`)
+ * is the one exception inside `funding`: it always carries a name, which
+ * `useComposeThreadState` enforces.
  */
 export const ANONYMOUS_CATEGORIES: readonly string[] = [
   "health",
@@ -171,6 +185,7 @@ export const ANONYMOUS_CATEGORIES: readonly string[] = [
   "trans",
   "legal",
   "relationships",
+  "funding",
 ];
 
 /** Where a neighbourhood is worth asking for: the answer changes by area. */

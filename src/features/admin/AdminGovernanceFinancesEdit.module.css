@@ -64,6 +64,31 @@
 .tableLedger {
   min-width: 880px;
 }
+/* PRD-447: the "Edit public report" lists (tiles, notes, partners). */
+.tableReport {
+  min-width: 640px;
+}
+.colAction {
+  width: 56px;
+  text-align: end;
+}
+.reserveFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 240px));
+  gap: 12px 16px;
+}
+.reserveField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.reserveLabel {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
 .table thead th {
   padding: 11px 14px;
   text-align: start;

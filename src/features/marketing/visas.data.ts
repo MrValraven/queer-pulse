@@ -25,10 +25,24 @@ export const ARRIVING = routes.arriving;
  */
 export const AIMA = "https://aima.gov.pt";
 
+/**
+ * The consolidated Lei da Nacionalidade (Lei n.º 37/81) on Diário da
+ * República, kept current with every amendment. Lei Orgânica n.º 1/2026, in
+ * force since 19 May 2026, moved naturalisation by residence from 5 years to
+ * 10 (7 for EU and Portuguese-speaking nationals) and kept the old rule for
+ * applications already pending that day. The citizenship tab names the period
+ * and points here, so a reader checks the text in force before planning on it.
+ */
+export const NATIONALITY_LAW =
+  "https://diariodarepublica.pt/dr/legislacao-consolidada/lei/1981-34536975";
+
 export interface InfoCard {
   eyebrowKey: string;
   titleKey: string;
   bodyKey: string;
+  /** Further paragraphs after `bodyKey`, for a card with more to say than
+   *  one block reads comfortably at phone width. */
+  moreBodyKeys?: string[];
   tag?: { labelKey: string; kind: "jade" | "accent" };
   link?: {
     labelKey: string;
@@ -283,9 +297,18 @@ export const TABS: Tab[] = [
         eyebrowKey: "marketing:visas.tabs.citizenship.card1.eyebrow",
         titleKey: "marketing:visas.tabs.citizenship.card1.title",
         bodyKey: "marketing:visas.tabs.citizenship.card1.body",
+        moreBodyKeys: [
+          "marketing:visas.tabs.citizenship.card1.body2",
+          "marketing:visas.tabs.citizenship.card1.body3",
+        ],
         tag: {
           labelKey: "marketing:visas.tabs.citizenship.card1.tag",
           kind: "jade",
+        },
+        link: {
+          labelKey: "marketing:visas.tabs.citizenship.card1.link",
+          href: NATIONALITY_LAW,
+          isExternal: true,
         },
       },
       {

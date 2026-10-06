@@ -70,6 +70,10 @@ export interface HousingListingDTO {
   expiresAt: string;
   /** Server-computed `expiresAt < now` — no client clock-skew guesswork. */
   expired: boolean;
+  /** PRD-444. True while the current `filledAt` was written by the daily
+   * expiry sweep, so Extend is the way back. Optional while an older backend
+   * may still omit it; `isHiddenByExpiry` falls back to the timestamp rule. */
+  isHiddenBySweep?: boolean;
   type: "sublet" | "room" | "short" | "studio";
   title: string;
   blurb: string;
@@ -126,6 +130,12 @@ export interface HousingListingDTO {
    * they already did.
    */
   isLocationUnlocked: boolean;
+  /**
+   * DES-419: which relationship unlocked the location for YOU. Null exactly
+   * when `isLocationUnlocked` is false. Optional so a backend that predates the
+   * field still parses; the location card then falls back to a neutral note.
+   */
+  locationUnlockedVia?: "owner" | "connection" | "viewing" | null;
 }
 
 /** The full directory-browse filter set — mirrors the backend's

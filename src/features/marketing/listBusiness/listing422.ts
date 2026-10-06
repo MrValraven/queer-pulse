@@ -1,4 +1,5 @@
 import { ApiError } from "../../../shared/api/client";
+import type { TFunction } from "../../../shared/i18n/types";
 import { ANCHOR, PHOTO_KEYS, type PhotoKey } from "./listBusiness.data";
 
 /* ===========================================================================
@@ -178,6 +179,31 @@ function extractFieldErrors(data: unknown): RawFieldError[] {
   return found;
 }
 
+/** The reader's language and translator, from `useTranslation()`. */
+export interface Listing422Translation {
+  t: TFunction;
+  language: string;
+}
+
+/**
+ * PRD-467: the backend writes these field sentences in English only. An
+ * English reader keeps the field's own sentence; every other language gets
+ * `shared:apiError.reasonInvalid`, the line `reasonFor` gives any refused 400
+ * or 422, read straight from the catalog so it holds before the boot bridge
+ * wires `reasonFor` too. The field is still flashed, so the member sees which
+ * one to fix.
+ */
+function memberFacingMessage(
+  error: ApiError,
+  fieldMessage: string,
+  translation: Listing422Translation,
+): string {
+  if (translation.language.toLowerCase().startsWith("en")) {
+    return fieldMessage.trim() || error.message;
+  }
+  return translation.t("shared:apiError.reasonInvalid");
+}
+
 /**
  * Resolve a caught error into the step/field/message to route to, or `null`
  * when it isn't a field-mapped validation error (the caller then falls back to
@@ -185,7 +211,10 @@ function extractFieldErrors(data: unknown): RawFieldError[] {
  * inspected; a demo fabricated record, a network throw, or any other status
  * returns `null`, so the demo path is entirely unaffected.
  */
-export function resolveListing422(error: unknown): Listing422Target | null {
+export function resolveListing422(
+  error: unknown,
+  translation: Listing422Translation,
+): Listing422Target | null {
   if (!(error instanceof ApiError) || !VALIDATION_STATUSES.has(error.status))
     return null;
   const fieldErrors = extractFieldErrors(error.data);
@@ -203,7 +232,7 @@ export function resolveListing422(error: unknown): Listing422Target | null {
       return {
         step: location.step,
         anchor: location.anchor,
-        message: message.trim() || error.message,
+        message: memberFacingMessage(error, message, translation),
         photoSlots,
       };
     }

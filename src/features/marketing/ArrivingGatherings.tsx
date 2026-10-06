@@ -90,7 +90,8 @@ function UpcomingGatherings() {
 
   if (isLoading) return <GatheringsLoading />;
 
-  if (isError) {
+  // A failed page on the shared hub query keeps the cached gatherings.
+  if (isError && items.length === 0) {
     return (
       <div className={styles.fgNotice} role="alert">
         <p>{t("marketing:arriving.firstStep.error")}</p>

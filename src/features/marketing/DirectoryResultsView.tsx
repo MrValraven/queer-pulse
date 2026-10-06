@@ -28,12 +28,15 @@ interface DirectoryResultsViewProps {
   onlineTotal: number;
   loadedCount: number;
   loading: boolean;
+  /** The read failed with no place loaded (ENG-501). */
   hasPlacesError: boolean;
   refetchPlaces: () => void;
   hasActiveFilters: boolean;
   clearFilters: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  /** The latest next page failed; the loaded places stay on screen. */
+  isFetchNextPageError: boolean;
   fetchNextPage: () => void;
   fallbackShownAt: number | null;
   onMapFallbackShown: (shownAt: number) => void;
@@ -60,6 +63,7 @@ export function DirectoryResultsView({
   clearFilters,
   hasNextPage,
   isFetchingNextPage,
+  isFetchNextPageError,
   fetchNextPage,
   fallbackShownAt,
   onMapFallbackShown,
@@ -68,15 +72,25 @@ export function DirectoryResultsView({
   activeFilterChips,
 }: DirectoryResultsViewProps) {
   if (view === "online") {
+    // Online businesses can sit on any page, so a failed page before the first
+    // one arrives leaves this tab with nothing to show: that reads as the
+    // error state, and its retry fetches the failed page.
+    const hasNoOnlinePlacesError = isFetchNextPageError && onlineTotal === 0;
     return (
       <DirectoryOnlineView
         places={filtered}
         total={onlineTotal}
-        loading={loading || (hasNextPage && onlineTotal === 0)}
-        isError={hasPlacesError}
-        onRetry={refetchPlaces}
+        loading={
+          loading || (hasNextPage && !isFetchNextPageError && onlineTotal === 0)
+        }
+        isError={hasPlacesError || hasNoOnlinePlacesError}
+        onRetry={hasPlacesError ? refetchPlaces : fetchNextPage}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearFilters}
+        hasMoreFromServer={hasNextPage}
+        isLoadingMoreFromServer={isFetchingNextPage}
+        isFetchNextPageError={isFetchNextPageError}
+        onLoadMoreFromServer={fetchNextPage}
       />
     );
   }
@@ -95,6 +109,7 @@ export function DirectoryResultsView({
         onClearFilters={clearFilters}
         hasMoreFromServer={hasNextPage}
         isLoadingMoreFromServer={isFetchingNextPage}
+        isFetchNextPageError={isFetchNextPageError}
         onLoadMoreFromServer={fetchNextPage}
       />
     );
@@ -110,6 +125,10 @@ export function DirectoryResultsView({
         onRetry={refetchPlaces}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearFilters}
+        hasMoreFromServer={hasNextPage}
+        isLoadingMoreFromServer={isFetchingNextPage}
+        isFetchNextPageError={isFetchNextPageError}
+        onLoadMoreFromServer={fetchNextPage}
         fullscreenControls={
           <LocalFilterFields
             {...filterFieldProps}

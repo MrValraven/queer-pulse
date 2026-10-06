@@ -13,6 +13,7 @@ import { ForumCategoryBadge } from "./ForumCategoryBadge";
 import { authorHref, isMaskedByline } from "./forumAuthor.helpers";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "./PostActionsMenu";
+import { FundingRowFacts } from "./funding/FundingRowFacts";
 import {
   ContentWarningPill,
   ContentWarningReveal,
@@ -191,6 +192,7 @@ export function ForumThreadRow({
                 className={styles.warningReveal}
               />
             )}
+            <FundingRowFacts thread={thread} />
             <ThreadRowMeta
               thread={thread}
               authorName={authorName}

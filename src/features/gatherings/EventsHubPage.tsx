@@ -29,7 +29,9 @@ import styles from "./EventsHubPage.module.css";
  *
  * When the (live) `useEvents` fetch fails, `isError` swaps the whole board for a
  * branded error state with a "Try again" action (audit P1-14) — an outage must
- * not read as "nothing on in Lisbon". Demo mode never errors.
+ * not read as "nothing on in Lisbon". Demo mode never errors. That swap is for
+ * a board with nothing loaded (ENG-501): a failed next page or background
+ * refetch keeps every row on screen, and the calendar's footer retries.
  *
  * This module exports two things:
  * - `EventsDiscover` — the shell-less board (no `PageShell`/`AppShell`), for
@@ -46,6 +48,7 @@ export function EventsDiscover() {
     items,
     isLoading,
     isError,
+    isFetchNextPageError,
     refetch,
     hasNextPage,
     fetchNextPage,
@@ -55,8 +58,10 @@ export function EventsDiscover() {
     () => pickHighlights(items, now, { count: 1 })[0] ?? null,
     [items, now],
   );
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  const hasNothingLoadedError = isError && items.length === 0;
 
-  if (isError) {
+  if (hasNothingLoadedError) {
     return (
       <div className={styles.root}>
         <div className="wrap">
@@ -112,6 +117,7 @@ export function EventsDiscover() {
               now={now}
               hasMore={hasNextPage}
               isLoadingMore={isFetchingNextPage}
+              isLoadMoreError={isFetchNextPageError}
               onLoadMore={fetchNextPage}
             />
           )}

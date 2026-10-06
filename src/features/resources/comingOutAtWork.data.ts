@@ -13,8 +13,8 @@ export interface Script {
   lineKey: string;
 }
 
-// Attributed peer quotes (a member's own words) — stay English per the
-// scope rule, same precedent as therapist bios. Not routed through i18n.
+// Illustrative peer quotes for DEMO MODE ONLY (PRD-451): nobody said these,
+// so live mode renders none of them. Content, stays English.
 export interface Voice {
   text: string;
   who: string;

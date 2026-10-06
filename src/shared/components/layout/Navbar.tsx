@@ -1,6 +1,14 @@
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FiMenu } from "react-icons/fi";
+import {
+  FiBell,
+  FiChevronLeft,
+  FiMenu,
+  FiMessageSquare,
+  FiMoon,
+  FiSearch,
+  FiSun,
+} from "react-icons/fi";
 import { Button } from "../ui";
 import { canGoBack, currentHistoryIdx } from "./canGoBack";
 import { tabOf } from "./tabRoots";
@@ -32,17 +40,7 @@ import { useIsLandingVisitor } from "./useIsLandingVisitor";
 import styles from "./Navbar.module.css";
 
 function BackChevronIcon() {
-  return (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M15 5l-7 7 7 7"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <FiChevronLeft size={22} aria-hidden />;
 }
 
 function NotificationsBell({
@@ -60,17 +58,7 @@ function NotificationsBell({
   const { t } = useTranslation();
   const fmt = useFormat();
   const count = unreadCount ?? liveCount;
-  const bellIcon = (
-    <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
-      <path
-        d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6ZM8 16.5a2 2 0 0 0 4 0"
-        stroke="currentColor"
-        strokeWidth={1.6}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  const bellIcon = <FiBell size={20} aria-hidden />;
   // Desktop opens the recent-notifications popover in place. The mobile app
   // bar keeps the link, because on a phone the full page is the roomier home
   // for the list.
@@ -390,59 +378,17 @@ export function Navbar({
 }
 
 function MessageIcon() {
-  // Speech bubble matching the account menu's former Messages glyph
-  // (react-icons FiMessageSquare), redrawn inline to sit with the bell/search
-  // icons that Navbar keeps as hand-authored SVGs.
-  return (
-    <svg width={19} height={19} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-        stroke="currentColor"
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <FiMessageSquare size={19} aria-hidden />;
 }
 
 function SearchIcon() {
-  return (
-    <svg width={19} height={19} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx={11} cy={11} r={7} stroke="currentColor" strokeWidth={2} />
-      <path
-        d="m20 20-3.5-3.5"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+  return <FiSearch size={19} aria-hidden />;
 }
 
 function MoonIcon() {
-  return (
-    <svg width={18} height={18} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <FiMoon size={18} aria-hidden />;
 }
 
 function SunIcon() {
-  return (
-    <svg width={18} height={18} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx={12} cy={12} r={4} stroke="currentColor" strokeWidth={2} />
-      <path
-        d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+  return <FiSun size={18} aria-hidden />;
 }

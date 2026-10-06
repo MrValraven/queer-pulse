@@ -1,5 +1,23 @@
 import type { LandingSection } from "./api/landingFeatures.api";
 
+/** Longest kicker line a gathering or story slot may carry: it renders in the
+ *  small uppercase line above the homepage card title. Mirrors the backend's
+ *  `LANDING_KICKER_MAX_LENGTH` in `landing-copy.validator.ts`. */
+export const LANDING_KICKER_MAX_LENGTH = 80;
+
+/** Member and changemaker slots feature a person, so their avatar fallback
+ *  reads first-and-last initials; communities, gatherings and stories are
+ *  titles, which read their leading initials. */
+export function isPersonSection(section: LandingSection): boolean {
+  return section === "member" || section === "changemaker";
+}
+
+/** Gathering and story slots carry one optional field, a short kicker line
+ *  stored as `copy.blurb`. */
+export function isKickerSection(section: LandingSection): boolean {
+  return section === "gathering" || section === "story";
+}
+
 /** The four raw text fields every section's `copy` is built from — a superset
  *  so one shape can back a controlled form regardless of which section is
  *  active, rather than a per-section union that would force callers to
@@ -39,7 +57,9 @@ export function buildLandingCopy(
   value: LandingCopyFieldsValue,
 ): Record<string, unknown> {
   if (section === "member") return { quote: value.quote.trim() };
-  if (section === "community") return { blurb: value.blurb.trim() };
+  if (section === "community" || isKickerSection(section)) {
+    return { blurb: value.blurb.trim() };
+  }
   return {
     cause: value.cause.trim(),
     blurb: value.blurb.trim(),
@@ -50,10 +70,11 @@ export function buildLandingCopy(
   };
 }
 
-/** Mirrors the backend's `validateLandingCopy` requiredness client-side —
+/** Mirrors the backend's `validateLandingCopy` requiredness client-side:
  *  member `quote` and changemaker `cause`+`blurb` are required, everything
- *  else (community `blurb`, changemaker `tags`) is optional — so a create
- *  request is never even attempted with copy the server would 400 on. */
+ *  else (community `blurb`, changemaker `tags`) is optional, and a gathering
+ *  or story kicker stays within `LANDING_KICKER_MAX_LENGTH`. A create request
+ *  is therefore never attempted with copy the server would 400 on. */
 export function isLandingCopyValid(
   section: LandingSection,
   value: LandingCopyFieldsValue,
@@ -61,6 +82,9 @@ export function isLandingCopyValid(
   if (section === "member") return value.quote.trim().length > 0;
   if (section === "changemaker") {
     return value.cause.trim().length > 0 && value.blurb.trim().length > 0;
+  }
+  if (isKickerSection(section)) {
+    return value.blurb.trim().length <= LANDING_KICKER_MAX_LENGTH;
   }
   return true;
 }

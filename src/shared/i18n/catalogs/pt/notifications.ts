@@ -34,6 +34,43 @@ export const notifications: Catalog = {
   "type.safe_space_vouch.textNamed":
     "<profile>{name}</profile> deu um voto de confiança ao teu espaço seguro.",
   "type.safe_space_vouch.meta": "Espaço seguro",
+  "type.safe_space_review.text":
+    "Há novidades sobre uma revisão de espaço seguro.",
+  "type.safe_space_review.meta": "Revisão de espaço seguro",
+  "type.safe_space_review.nomination_acknowledged.text":
+    "A tua nomeação de {placeName} já está com a equipa de revisão.",
+  "type.safe_space_review.nomination_acknowledged.meta":
+    "Nomeação de espaço seguro",
+  "type.safe_space_review.nomination_declined.text":
+    "Revimos {placeName} e, por agora, não vamos atribuir o selo.",
+  "type.safe_space_review.nomination_declined.meta":
+    "Nomeação de espaço seguro",
+  "type.safe_space_review.nomination_awarded.text":
+    "{placeName} é agora um espaço seguro verificado. Agradecemos a tua nomeação.",
+  "type.safe_space_review.nomination_awarded.meta": "Nomeação de espaço seguro",
+  "type.safe_space_review.nomination_awarded.owner.text":
+    "{placeName} tem agora o selo de espaço seguro da QueerPulse.",
+  "type.safe_space_review.nomination_awarded.owner.meta":
+    "Selo de espaço seguro",
+  "type.safe_space_review.badge_suspended.text":
+    "O selo de espaço seguro de {placeName} está em pausa enquanto o revemos. Alguém da equipa de revisão vai entrar em contacto.",
+  "type.safe_space_review.badge_suspended.meta": "Selo de espaço seguro",
+  "type.safe_space_review.badge_restored.text":
+    "A revisão de {placeName} terminou. Agradecemos o teu aviso.",
+  "type.safe_space_review.badge_restored.meta": "Revisão de espaço seguro",
+  "type.safe_space_review.badge_restored.owner.text":
+    "A revisão terminou e o selo de espaço seguro de {placeName} voltou a estar ativo.",
+  "type.safe_space_review.badge_restored.owner.meta": "Selo de espaço seguro",
+  "type.safe_space_review.flag_review_opened.text":
+    "O selo de espaço seguro de {placeName} está em pausa enquanto analisamos o que levantaste.",
+  "type.safe_space_review.flag_review_opened.meta": "Revisão de espaço seguro",
+  "type.safe_space_review.flag_resolved.text":
+    "A equipa de revisão terminou de analisar o que levantaste sobre {placeName}.",
+  "type.safe_space_review.flag_resolved.meta": "Revisão de espaço seguro",
+  "type.safe_space_review.queue_overdue.text":
+    "A fila de revisão de espaços seguros tem itens à espera para lá do prazo.",
+  "type.safe_space_review.queue_overdue.meta": "Fila de espaços seguros",
+  "type.safe_space_review.placeNameFallback": "este sítio",
 
   // Enviada quando uma nova casa fica disponível e corresponde a uma procura
   // guardada com alertas ativos. Do sistema (sem autor); `title`/`area` vêm do payload.
@@ -77,6 +114,22 @@ export const notifications: Catalog = {
   "type.housing_listing_expiring.text":
     "O teu anúncio {title} está prestes a expirar. Prolonga-o para o manteres no quadro.",
   "type.housing_listing_expiring.meta": "Habitação",
+
+  "type.funding_deadline_soon.text": "{threadTitle} fecha em breve ({date}).",
+  "type.funding_deadline_soon.meta": "Financiamento",
+  "type.funding_deadline_soon.7d.text":
+    "{threadTitle} fecha daqui a 7 dias ({date}).",
+  "type.funding_deadline_soon.7d.meta": "Financiamento",
+  "type.funding_deadline_soon.1d.text": "{threadTitle} fecha amanhã ({date}).",
+  "type.funding_deadline_soon.1d.meta": "Financiamento",
+  "type.funding_deadline_soon.threadTitleFallback": "Um concurso que guardaste",
+  "type.funding_deadline_soon.dateFallback": "data por confirmar",
+  "type.funding_deadline_changed.text":
+    "{threadTitle}: o prazo mudou para {date}.",
+  "type.funding_deadline_changed.meta": "Financiamento",
+  "type.funding_deadline_changed.threadTitleFallback":
+    "Um concurso que guardaste",
+  "type.funding_deadline_changed.dateFallback": "uma nova data",
 
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
   "type.promoted_to_member.meta": "Adesão",
@@ -202,6 +255,7 @@ export const notifications: Catalog = {
   "type.topic_new_post.textNamed":
     "<profile>{name}</profile> publicou num tópico que segues: {topicLabel}.",
   "type.topic_new_post.meta": "Atualização de tópico",
+  "type.topic_new_post.openCallsLabel": "Concursos de financiamento abertos",
 
   "type.join_request_received.text":
     "Alguém pediu para entrar na tua comunidade.",
@@ -632,6 +686,9 @@ export const notifications: Catalog = {
   "type.moderation_outcome.restriction_lifted.text":
     "A tua restrição foi levantada.",
   "type.moderation_outcome.restriction_lifted.meta": "Decisão da moderação",
+  "type.moderation_outcome.safe_space.text":
+    "Há novidades sobre uma revisão de espaço seguro.",
+  "type.moderation_outcome.safe_space.meta": "Revisão de espaço seguro",
 
   // Outro membro creditou uma persona tua como colaboradora num item dele
   // (descoberta de personas, Fase 5, Momento 6). O primeiro tipo ao vivo cujo

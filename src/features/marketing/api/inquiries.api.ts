@@ -10,6 +10,12 @@ export interface CreateInquiryDto {
   email: string;
   /** Topic (contact) / interest (partner) selector. */
   subject?: string;
+  /**
+   * PRD-452. The Contact form's topic id (`safety`, `press`, ...). `subject`
+   * carries the translated label; the backend reads this id to put a safety
+   * concern first in the admin inbox and announce it to staff.
+   */
+  topic?: string;
   body: string;
   /** Organisation name — partner form only. */
   orgName?: string;

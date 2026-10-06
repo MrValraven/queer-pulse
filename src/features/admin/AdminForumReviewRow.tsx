@@ -7,6 +7,7 @@ import { formatRelative } from "../../shared/lib/date";
 import { thread as threadPath } from "../../app/routeMap";
 import { contentWarningLabels } from "../forum/forumWarnings.helpers";
 import { AdminChip } from "./ui";
+import { AdminFundingFacts } from "./AdminFundingFacts";
 import type { AdminForumReviewThread } from "./api/adminForumReview.api";
 import submissionStyles from "./AdminSubmissionList.module.css";
 import styles from "./AdminForumReviewPage.module.css";
@@ -81,6 +82,7 @@ export function AdminForumReviewRow({
           )}
         </div>
         <div className={submissionStyles.rowMeta}>{metaParts.join(" · ")}</div>
+        <AdminFundingFacts thread={thread} />
         {warningLabels.length > 0 && (
           <p className={styles.rowWarnings}>
             {t("admin:adminForumReview.row.warnings", {

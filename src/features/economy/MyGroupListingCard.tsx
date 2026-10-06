@@ -6,7 +6,11 @@ import type { MyGroupListing } from "./housingGroups.data";
 import styles from "./HousingGroupsPage.module.css";
 
 /** The pill each moderation state renders as. A takedown is handled above this
- *  map: it happens AFTER publication, so it overrides whatever `status` says. */
+ *  map: it happens AFTER publication, so it overrides whatever `status` says.
+ *  That covers both kinds: a norm takedown (`hidden`) and one from a report
+ *  (`moderationState`). Only the pill merges them; the note below still reads
+ *  `status` and `decisionReason`, so a question asked after a report
+ *  takedown is never lost. */
 const STATUS_PILLS: Record<
   MyGroupListing["status"],
   { labelKey: string; tone: BadgeTone }
@@ -28,7 +32,8 @@ const STATUS_PILLS: Record<
 
 function StatusPill({ listing }: { listing: MyGroupListing }) {
   const { t } = useTranslation();
-  if (listing.hidden) {
+  const isTakenDown = listing.hidden || Boolean(listing.moderationState);
+  if (isTakenDown) {
     return (
       <Badge tone="danger">
         {t("economy:groupListing.mine.status.takenDown")}

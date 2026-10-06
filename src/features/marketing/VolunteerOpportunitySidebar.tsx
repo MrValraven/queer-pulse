@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import type { Person } from "../../shared/api/refs";
@@ -16,7 +16,6 @@ import { VolunteerOrganizationCard } from "./VolunteerOrganizationCard";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
-const MEMBER = routes.members;
 const MESSAGES = routes.messages;
 const SIGN_IN = routes.signIn;
 
@@ -85,6 +84,58 @@ function PosterContactCta({
     );
   }
   return null;
+}
+
+/**
+ * PRD-454. The "Returning volunteers" footnote points at the member directory.
+ * A signed-in member keeps the direct link. A returning volunteer who is
+ * signed out is already a member, so their link goes to sign-in with a
+ * `?next=` back to this page (the `MagazineSignInWall` pattern).
+ */
+function ReturningVolunteerNote({ isSignedIn }: { isSignedIn: boolean }) {
+  const { pathname, search } = useLocation();
+  const signInHref = `${routes.signIn}?next=${encodeURIComponent(
+    `${pathname}${search}`,
+  )}`;
+  return (
+    <p className={styles.footNote}>
+      <Translation
+        i18nKey="marketing:volunteerDetail.sidebar.footNote"
+        components={{
+          a: <Link to={isSignedIn ? routes.members : signInHref} />,
+        }}
+      />
+    </p>
+  );
+}
+
+/** "Not the right fit?": up to three other open roles. */
+function AlternativesCard({
+  alternatives,
+}: {
+  alternatives: VolunteerOpportunity[];
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.card}>
+      <div className={styles.cardLabel}>
+        {t("marketing:volunteerDetail.sidebar.notRightFit")}
+      </div>
+      <p className={styles.altText}>
+        {t("marketing:volunteerDetail.sidebar.otherWays")}
+      </p>
+      <div className={styles.altList}>
+        {alternatives.map((alternative) => (
+          <Link
+            key={alternative.slug}
+            to={`${routes.volunteer}/opportunity/${alternative.slug}`}
+          >
+            <FiArrowRight aria-hidden /> {alternative.role} · {alternative.org}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export function VolunteerOpportunitySidebar({
@@ -197,10 +248,12 @@ export function VolunteerOpportunitySidebar({
           <div className={styles.spotsBar}>
             <span style={{ width: `${opp.spotsPct}%` }} />
           </div>
-          {opp.spots.map((r) => (
-            <div className={styles.spotsRow} key={r.label}>
-              <span>{r.label}</span>
-              {typeof r.value === "string" ? <b>{r.value}</b> : r.value}
+          {/* Indexed: a live row's label is a translating element (DES-422),
+              which cannot serve as a key. */}
+          {opp.spots.map((row, index) => (
+            <div className={styles.spotsRow} key={index}>
+              <span>{row.label}</span>
+              {typeof row.value === "string" ? <b>{row.value}</b> : row.value}
             </div>
           ))}
           <div className={styles.cta}>
@@ -246,12 +299,7 @@ export function VolunteerOpportunitySidebar({
               onSubmit={(note) => apply(note)}
             />
           )}
-          <p className={styles.footNote}>
-            <Translation
-              i18nKey="marketing:volunteerDetail.sidebar.footNote"
-              components={{ a: <Link to={MEMBER} /> }}
-            />
-          </p>
+          <ReturningVolunteerNote isSignedIn={isSignedIn} />
         </div>
       )}
 
@@ -276,24 +324,7 @@ export function VolunteerOpportunitySidebar({
       <VolunteerOrganizationCard opp={opp} />
 
       {alternatives.length > 0 && (
-        <div className={styles.card}>
-          <div className={styles.cardLabel}>
-            {t("marketing:volunteerDetail.sidebar.notRightFit")}
-          </div>
-          <p className={styles.altText}>
-            {t("marketing:volunteerDetail.sidebar.otherWays")}
-          </p>
-          <div className={styles.altList}>
-            {alternatives.map((a) => (
-              <Link
-                key={a.slug}
-                to={`${routes.volunteer}/opportunity/${a.slug}`}
-              >
-                <FiArrowRight aria-hidden /> {a.role} · {a.org}
-              </Link>
-            ))}
-          </div>
-        </div>
+        <AlternativesCard alternatives={alternatives} />
       )}
     </aside>
   );

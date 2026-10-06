@@ -28,8 +28,8 @@ export function StepStoryDescriptionField({ form }: { form: ListingForm }) {
   );
 }
 
-/** The tag field: pick up to six tags from the curated vocabulary (see
- *  ListingTagPicker). */
+/** The tag field: pick up to six tags from the curated vocabulary for the
+ *  listing's audience, place or online-only (see ListingTagPicker). */
 export function StepStoryTagsField({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, addTag, removeTag } = form;
@@ -39,7 +39,12 @@ export function StepStoryTagsField({ form }: { form: ListingForm }) {
       id={ANCHOR.tags}
       label={t("marketing:listBusiness.step2.tagsLabel")}
     >
-      <ListingTagPicker tags={draft.tags} onAdd={addTag} onRemove={removeTag} />
+      <ListingTagPicker
+        tags={draft.tags}
+        isOnline={draft.online}
+        onAdd={addTag}
+        onRemove={removeTag}
+      />
     </FormField>
   );
 }

@@ -1,14 +1,11 @@
 import { useMemo } from "react";
-import { FiRss } from "react-icons/fi";
-import { Button } from "../../../../shared/components/ui";
+import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type {
   AdminRoadmapIdeaDTO,
   AdminRoadmapItemDTO,
   RoadmapColumn,
 } from "../../api/roadmapAdmin.types";
-import { useAdminRoadmap } from "../../api/useAdminRoadmap";
-import { AdminNotSet } from "../../ui/AdminInlineMarkers";
 import { useItemDrawer } from "../state/itemDrawerHook";
 import { PublicPreviewCard } from "./PublicPreviewCard";
 import { PublicPreviewNotBuildingRow } from "./PublicPreviewNotBuildingRow";
@@ -43,14 +40,34 @@ const SECTIONS: SectionDef[] = [
   },
 ];
 
+const COLUMN_TILES = [
+  { kind: "building", column: "building" },
+  { kind: "planned", column: "planned" },
+] as const;
+
+/** The same three counts the server derives for the public hero. */
+function computePreviewHeroStats(items: AdminRoadmapItemDTO[]) {
+  const year = String(new Date().getFullYear());
+  return [
+    {
+      kind: "shipped" as const,
+      count: items.filter(
+        (item) => item.column === "shipped" && (item.date ?? "").includes(year),
+      ).length,
+    },
+    ...COLUMN_TILES.map(({ kind, column }) => ({
+      kind,
+      count: items.filter((item) => item.column === column).length,
+    })),
+  ];
+}
+
 /**
  * Renders `/roadmap` exactly as members would see it, from live admin data.
  * Hover (or focus) any card to edit it inline via the shared item
  * drawer. `items`/`ideas` both arrive via prop (this view's contract, per
- * plan Task C8); the hero-stat tiles it also needs to preview come from
- * calling `useAdminRoadmap()` directly for `heroStats`; that hook reads
- * the same cached bundle the page already fetched, so this costs no extra
- * request.
+ * plan Task C8); the hero-stat tiles it previews are counted from those
+ * same items, as the public page's server does.
  *
  * "Not building this, and why" mirrors `NotBuildingView.tsx`'s own read of
  * declined ideas (`status === 'dismissed' && declineReason`), but read-only.
@@ -65,12 +82,16 @@ export function PublicPreviewView({
   ideas: AdminRoadmapIdeaDTO[];
 }) {
   const { t } = useTranslation();
-  const { heroStats } = useAdminRoadmap();
+  const fmt = useFormat();
   const itemDrawer = useItemDrawer();
 
   const visibleItems = useMemo(
     () => items.filter((item) => item.isPublic && !item.archived),
     [items],
+  );
+  const heroStats = useMemo(
+    () => computePreviewHeroStats(visibleItems),
+    [visibleItems],
   );
   const hiddenCount = items.length - visibleItems.length;
   const committedCount = visibleItems.filter((item) => item.committed).length;
@@ -96,15 +117,20 @@ export function PublicPreviewView({
         <div className={styles.heroGrid}>
           {heroStats.map((stat) => (
             <div
-              key={stat.label}
-              className={[styles.heroTile, stat.jade && styles.heroTileJade]
+              key={stat.kind}
+              className={[
+                styles.heroTile,
+                stat.kind === "shipped" && styles.heroTileJade,
+              ]
                 .filter(Boolean)
                 .join(" ")}
             >
-              <p className={styles.heroValue}>
-                {stat.value || <AdminNotSet />}
+              <p className={styles.heroValue}>{fmt.number(stat.count)}</p>
+              <p className={styles.heroLabel}>
+                {t(`marketing:roadmap.hero.stat.${stat.kind}`, {
+                  count: stat.count,
+                })}
               </p>
-              <p className={styles.heroLabel}>{stat.label}</p>
             </div>
           ))}
         </div>
@@ -156,42 +182,6 @@ export function PublicPreviewView({
           </ul>
         )}
       </section>
-
-      <div className={styles.subscribeStrip}>
-        <div>
-          <h2 className={styles.subscribeHeading}>
-            {t("admin:roadmap.publicPreview.subscribeHeading")}
-          </h2>
-          <p className={styles.subscribeBody}>
-            {t("admin:roadmap.publicPreview.subscribeBody")}
-          </p>
-        </div>
-        {/* Visual only, per plan Task C8: a real subscribe form belongs to
-            the public page (Phase D), not this admin preview, so the
-            control stays disabled rather than pretending to submit. */}
-        <form
-          className={styles.subscribeForm}
-          onSubmit={(event) => event.preventDefault()}
-        >
-          <input
-            type="email"
-            disabled
-            aria-label={t(
-              "admin:roadmap.publicPreview.subscribeEmailPlaceholder",
-            )}
-            placeholder={t(
-              "admin:roadmap.publicPreview.subscribeEmailPlaceholder",
-            )}
-            className={styles.subscribeInput}
-          />
-          <Button type="submit" disabled className={styles.subscribeButton}>
-            {t("admin:roadmap.publicPreview.subscribeCta")}
-          </Button>
-          <Button variant="ghost" disabled className={styles.rssButton}>
-            <FiRss aria-hidden /> {t("admin:roadmap.publicPreview.rssCta")}
-          </Button>
-        </form>
-      </div>
     </div>
   );
 }

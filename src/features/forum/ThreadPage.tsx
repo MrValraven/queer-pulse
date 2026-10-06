@@ -10,6 +10,7 @@ import {
 } from "./ThreadNotFoundState";
 import { ThreadPageModals } from "./ThreadPageModals";
 import { isMaskedByline } from "./forumAuthor.helpers";
+import { isFundingAuthor } from "./funding/fundingPermissions";
 import { deriveOpView } from "./useThreadModeration";
 import { useThreadPageState } from "./useThreadPageState";
 import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
@@ -192,6 +193,10 @@ export function ThreadPage() {
           isTagsSaving={answerAndTags.isTagsSaving}
           onSaveTags={answerAndTags.saveTags}
           onCloseTags={answerAndTags.closeTagsEditor}
+          threadKind={thread.kind}
+          shouldShowAskReviewNote={
+            thread.kind === "ask" && isFundingAuthor(thread, demoMode)
+          }
         />
       </MentionNamesProvider>
     </PageShell>

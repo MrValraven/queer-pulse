@@ -2,10 +2,11 @@ import { useCallback, useMemo, useState } from "react";
 import {
   COMPOSE_POLL_MAX_OPTIONS,
   COMPOSE_POLL_MIN_OPTIONS,
-  COMPOSE_TAG_LIMIT,
   COMPOSE_TITLE_MAX_LENGTH,
   EMPTY_COMPOSE_THREAD_STATE,
+  memberTagLimitFor,
   type CloseAfter,
+  type ComposeFunding,
   type ComposePoll,
   type ComposeThreadState,
   type PollCloses,
@@ -18,6 +19,9 @@ import {
   NEIGHBOURHOOD_CATEGORIES,
 } from "./composeCategories.data";
 import { KIND_DEFAULT_CATEGORY } from "./composeKinds.data";
+import { EMPTY_COMPOSE_FUNDING, isFundingKind } from "./composeFunding";
+import { FUNDING_CATEGORY_ID } from "../funding/funding.data";
+import type { FundingEligibility } from "../funding/funding.types";
 import { FORUM_TAG_OPTIONS } from "../forumTags.data";
 
 // ── The composer's fields, and the one way to change each of them ───────────
@@ -82,6 +86,8 @@ export interface ComposeThreadSetters {
   setLanguage: (language: PostLanguage) => void;
   setNeighbourhood: (neighbourhood: string | null) => void;
   setCloseAfter: (closeAfter: CloseAfter) => void;
+  setFunding: (patch: Partial<ComposeFunding>) => void;
+  toggleFundingEligibility: (value: FundingEligibility) => void;
   /** Merges a restored draft in, applying each field only where the composer
    *  is still untouched. */
   mergeRestored: (
@@ -127,6 +133,7 @@ function buildSetters(update: Update): ComposeThreadSetters {
     ...buildFieldSetters(update),
     ...buildTagSetters(update),
     ...buildPollSetters(update),
+    ...buildFundingSetters(update),
     mergeRestored: (merge) => update(merge),
     reset: () => update(() => toCoreState(EMPTY_COMPOSE_THREAD_STATE)),
   };
@@ -135,15 +142,7 @@ function buildSetters(update: Update): ComposeThreadSetters {
 function buildFieldSetters(update: Update) {
   return {
     setKind: (kind: PostKind | null) =>
-      update((current) => ({
-        ...current,
-        kind,
-        // Two of the four kinds have an obvious home. Applied only while the
-        // member has chosen no category of their own.
-        category:
-          current.category ??
-          (kind ? (KIND_DEFAULT_CATEGORY[kind] ?? null) : null),
-      })),
+      update((current) => applyKind(current, kind)),
     setTitle: (title: string) =>
       update((current) => ({
         ...current,
@@ -173,10 +172,11 @@ function buildFieldSetters(update: Update) {
     setIsAnonymous: (isAnonymous: boolean) =>
       update((current) => ({
         ...current,
-        isAnonymous,
+        isAnonymous: current.kind === "ask" ? false : isAnonymous,
         // A credited co-author on an unsigned post names the person the
         // anonymity was meant to cover.
-        coAuthorSlug: isAnonymous ? null : current.coAuthorSlug,
+        coAuthorSlug:
+          current.kind !== "ask" && isAnonymous ? null : current.coAuthorSlug,
       })),
     setCoAuthorSlug: (coAuthorSlug: string | null) =>
       update((current) => ({ ...current, coAuthorSlug })),
@@ -199,6 +199,37 @@ function buildFieldSetters(update: Update) {
 }
 
 /**
+ * Picking a kind. An open call and a fundraiser live in Funding & Grants and
+ * nowhere else (the server refuses either outside it), so they move the post
+ * there whatever was chosen, and open their details. A fundraiser always
+ * carries a name, so donors know who they are trusting.
+ */
+function applyKind(
+  current: ComposeThreadCoreState,
+  kind: PostKind | null,
+): ComposeThreadCoreState {
+  if (isFundingKind(kind)) {
+    const filed = applyCategory({ ...current, kind }, FUNDING_CATEGORY_ID);
+    return {
+      ...filed,
+      funding: current.funding ?? { ...EMPTY_COMPOSE_FUNDING },
+      isAnonymous: kind === "ask" ? false : filed.isAnonymous,
+      // A call keeps four member tags (the server adds `open-call` first), so
+      // the counter never reads past its cap.
+      tags: filed.tags.slice(0, memberTagLimitFor(kind)),
+    };
+  }
+  return {
+    ...current,
+    kind,
+    // Four of the six kinds have an obvious home. Applied only while the
+    // member has chosen no category of their own.
+    category:
+      current.category ?? (kind ? (KIND_DEFAULT_CATEGORY[kind] ?? null) : null),
+  };
+}
+
+/**
  * Moving to another category drops the detail fields that category does not
  * offer. Enforced HERE, on the one write path that can invalidate them, so no
  * rendering surface has to remember to do it and none can forget.
@@ -215,6 +246,13 @@ function applyCategory(
   return {
     ...current,
     category,
+    // Leaving Funding & Grants ends a call or a fundraiser. What was typed
+    // stays in `funding`, so coming back restores it; it is only sent while
+    // the kind is a funding kind.
+    kind:
+      isFundingKind(current.kind) && category !== FUNDING_CATEGORY_ID
+        ? null
+        : current.kind,
     neighbourhood: offersNeighbourhood ? current.neighbourhood : null,
     // A poll-tied close survives, because it belongs to the poll rather than
     // to the category.
@@ -223,6 +261,24 @@ function applyCategory(
         ? current.closeAfter
         : "never",
     isAnonymous: offersAnonymous ? current.isAnonymous : false,
+  };
+}
+
+function buildFundingSetters(update: Update) {
+  return {
+    setFunding: (patch: Partial<ComposeFunding>) =>
+      update((current) => ({
+        ...current,
+        funding: { ...(current.funding ?? EMPTY_COMPOSE_FUNDING), ...patch },
+      })),
+    toggleFundingEligibility: (value: FundingEligibility) =>
+      update((current) => {
+        const funding = current.funding ?? EMPTY_COMPOSE_FUNDING;
+        const eligibility = funding.eligibility.includes(value)
+          ? funding.eligibility.filter((entry) => entry !== value)
+          : [...funding.eligibility, value];
+        return { ...current, funding: { ...funding, eligibility } };
+      }),
   };
 }
 
@@ -236,7 +292,9 @@ function buildTagSetters(update: Update) {
         // a restored draft stay put; this guards new additions alone.
         if (!FORUM_TAG_OPTIONS.includes(tag)) return current;
         if (current.tags.includes(tag)) return current;
-        if (current.tags.length >= COMPOSE_TAG_LIMIT) return current;
+        // A call keeps four member tags; the server adds `open-call`.
+        if (current.tags.length >= memberTagLimitFor(current.kind))
+          return current;
         return { ...current, tags: [...current.tags, tag] };
       }),
     removeTag: (tag: string) =>

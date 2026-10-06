@@ -109,6 +109,22 @@
   margin-bottom: 40px;
 }
 
+.subFlush {
+  margin-bottom: 0;
+}
+.gatheringsEmpty {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.gatheringsEmpty .sub {
+  margin: 0;
+}
 .events {
   display: flex;
   flex-direction: column;
@@ -434,8 +450,12 @@
   font-size: var(--text-14);
   font-weight: 600;
   padding: 11px 22px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border-radius: var(--radius-pill);
-  background: var(--jade);
+  background: var(--jade-button);
   color: rgba(var(--cream-rgb), 1);
   border: none;
   cursor: pointer;
@@ -446,7 +466,7 @@
 @media (hover: hover) {
   .primaryBtn:hover {
     /* darker jade for hover depth */
-    background: color-mix(in srgb, var(--jade) 82%, black);
+    background: color-mix(in srgb, var(--jade-button) 82%, black);
     transform: translateY(-1px);
   }
 }

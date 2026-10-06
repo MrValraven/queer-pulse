@@ -37,9 +37,12 @@ const emptyState = (key: string): PagedState => ({
 export function SearchLoadMore({
   query,
   type,
+  onActivate,
 }: {
   query: string;
   type: LiveResultType;
+  /** Runs when a paged-in row is opened, like a first-page row (PRD-329). */
+  onActivate?: () => void;
 }) {
   const { demoMode } = useDemoMode();
   const { t } = useTranslation();
@@ -98,7 +101,7 @@ export function SearchLoadMore({
     <>
       {paged.items.length > 0 && (
         <div className={styles.extraGrid}>
-          <ResultGrid items={paged.items} />
+          <ResultGrid items={paged.items} onActivate={onActivate} />
         </div>
       )}
       <div className={styles.loadMoreRow} aria-live="polite">

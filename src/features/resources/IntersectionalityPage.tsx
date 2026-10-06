@@ -1,5 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   CLASS_INFO,
   CLASS_VOICE,
@@ -9,6 +10,7 @@ import {
   NAV,
   RACE_INFO,
   RACE_VOICES,
+  type Voice,
 } from "./intersectionality.data";
 import { FadeIn, Reveal } from "../../shared/components/ui";
 import { ResourceHero } from "./ResourceHero";
@@ -31,6 +33,34 @@ function scrollToSection(id: string) {
     top: el.getBoundingClientRect().top + window.scrollY - 110,
     behavior: "smooth",
   });
+}
+
+interface VoiceGridProps {
+  voices: Voice[];
+  isLoading: boolean;
+  className?: string;
+}
+
+/**
+ * The member quotes are invented demo content (PRD-451), so this grid only
+ * renders in demo mode. Live mode shows the section's info cards alone.
+ */
+function VoiceGrid({ voices, isLoading, className }: VoiceGridProps) {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return null;
+  return (
+    <div className={[styles.voiceGrid, className].filter(Boolean).join(" ")}>
+      {voices.map((voice, index) =>
+        isLoading ? (
+          <VoiceCardSkeleton key={voice.name} />
+        ) : (
+          <FadeIn key={voice.name} delay={Math.min(index, 8) * 60}>
+            <VoiceCard v={voice} />
+          </FadeIn>
+        ),
+      )}
+    </div>
+  );
 }
 
 export function IntersectionalityPage() {
@@ -102,17 +132,7 @@ export function IntersectionalityPage() {
             </h2>
             <p>{t("resources:intersectionality.race.intro")}</p>
           </div>
-          <div className={styles.voiceGrid}>
-            {loading
-              ? Array.from({ length: 3 }).map((_, i) => (
-                  <VoiceCardSkeleton key={i} />
-                ))
-              : RACE_VOICES.map((v, i) => (
-                  <FadeIn key={v.name} delay={Math.min(i, 8) * 60}>
-                    <VoiceCard v={v} />
-                  </FadeIn>
-                ))}
-          </div>
+          <VoiceGrid voices={RACE_VOICES} isLoading={loading} />
           <InfoCards cards={RACE_INFO} loading={loading} animate={!loading} />
         </div>
       </Reveal>
@@ -128,17 +148,7 @@ export function IntersectionalityPage() {
             </h2>
             <p>{t("resources:intersectionality.faith.intro")}</p>
           </div>
-          <div className={styles.voiceGrid}>
-            {loading
-              ? Array.from({ length: 2 }).map((_, i) => (
-                  <VoiceCardSkeleton key={i} />
-                ))
-              : FAITH_VOICES.map((v, i) => (
-                  <FadeIn key={v.name} delay={Math.min(i, 8) * 60}>
-                    <VoiceCard v={v} />
-                  </FadeIn>
-                ))}
-          </div>
+          <VoiceGrid voices={FAITH_VOICES} isLoading={loading} />
           <InfoCards cards={FAITH_INFO} loading={loading} animate={!loading} />
         </div>
       </Reveal>
@@ -164,15 +174,11 @@ export function IntersectionalityPage() {
             </div>
           </div>
           <InfoCards cards={CLASS_INFO} loading={loading} animate={!loading} />
-          <div className={`${styles.voiceGrid} ${styles.voiceGridTop}`}>
-            {loading ? (
-              <VoiceCardSkeleton />
-            ) : (
-              <FadeIn key={CLASS_VOICE.name}>
-                <VoiceCard v={CLASS_VOICE} />
-              </FadeIn>
-            )}
-          </div>
+          <VoiceGrid
+            voices={[CLASS_VOICE]}
+            isLoading={loading}
+            className={styles.voiceGridTop}
+          />
         </div>
       </Reveal>
 

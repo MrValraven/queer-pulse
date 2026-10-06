@@ -20,6 +20,7 @@ export function JobsEmployers() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
   } = useCompanies();
 
   if (employers.length === 0) return null;
@@ -41,6 +42,7 @@ export function JobsEmployers() {
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
+          isFetchNextPageError={isFetchNextPageError}
         />
       </div>
     </section>

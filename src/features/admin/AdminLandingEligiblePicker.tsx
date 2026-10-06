@@ -13,6 +13,7 @@ import {
   buildLandingCopy,
   emptyLandingCopyValue,
   isLandingCopyValid,
+  isPersonSection,
   type LandingCopyFieldsValue,
 } from "./adminLandingCopyFields.utils";
 import {
@@ -25,6 +26,21 @@ import type {
 } from "./api/landingFeatures.api";
 import styles from "./AdminLandingPage.module.css";
 
+/** Members, communities and changemakers are searched by name. Gatherings and
+ *  stories are searched by title, so they carry their own search wording. */
+function searchCopyKeysFor(section: LandingSection) {
+  if (section === "gathering" || section === "story") {
+    return {
+      placeholder: `admin:landing.picker.searchPlaceholder.${section}`,
+      ariaLabel: `admin:landing.picker.searchAriaLabel.${section}`,
+    };
+  }
+  return {
+    placeholder: "admin:landing.picker.searchPlaceholder",
+    ariaLabel: "admin:landing.picker.searchAriaLabel",
+  };
+}
+
 /**
  * Search-and-add half of the landing curator. Debounces the query into
  * `useLandingEligible`, lists everyone not yet featured in `section`, and
@@ -36,8 +52,9 @@ import styles from "./AdminLandingPage.module.css";
  * `quote` or changemaker `cause`/`blurb` with a 400, so the required copy is
  * collected and validated client-side (`isLandingCopyValid`) BEFORE
  * `useCreateLandingFeature` ever fires — no create request is attempted with
- * copy the server would reject. Community's `blurb` is optional, so its
- * submit button is never disabled by content.
+ * copy the server would reject. Community's `blurb` and the gathering and
+ * story kicker line are optional, so their submit buttons are disabled by
+ * content only when a kicker runs past its length cap.
  */
 export function AdminLandingEligiblePicker({
   section,
@@ -58,6 +75,7 @@ export function AdminLandingEligiblePicker({
   }, [searchInput]);
 
   const { options, isLoading } = useLandingEligible(section, debouncedSearch);
+  const searchCopyKeys = searchCopyKeysFor(section);
   const createFeature = useCreateLandingFeature();
   const [composingId, setComposingId] = useState<string | null>(null);
   const [composingValue, setComposingValue] = useState<LandingCopyFieldsValue>(
@@ -91,8 +109,8 @@ export function AdminLandingEligiblePicker({
       <SearchInput
         value={searchInput}
         onChange={setSearchInput}
-        placeholder={t("admin:landing.picker.searchPlaceholder")}
-        ariaLabel={t("admin:landing.picker.searchAriaLabel")}
+        placeholder={t(searchCopyKeys.placeholder)}
+        ariaLabel={t(searchCopyKeys.ariaLabel)}
       />
       <p className={styles.pickerHelper}>
         {t(`admin:landing.helper.${section}`)}
@@ -162,9 +180,9 @@ function AdminLandingEligibleRow({
       <div className={styles.pickerRowHead}>
         <Avatar
           initials={
-            section === "community"
-              ? leadingInitials(option.name)
-              : initialsFromName(option.name)
+            isPersonSection(section)
+              ? initialsFromName(option.name)
+              : leadingInitials(option.name)
           }
           src={option.avatarUrl ?? undefined}
           name={option.name}

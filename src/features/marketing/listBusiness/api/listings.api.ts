@@ -306,10 +306,14 @@ export function getSimilarListings(
   );
 }
 
-/** One tag already in use on the platform, with how many listings carry it. */
+/** One group of the curated tag vocabulary. `tags` is offered to place
+ *  listings and `onlineTags` to online-only ones. A backend older than the
+ *  online vocabulary omits `onlineTags`; `normalizeServerTagGroups` reads that
+ *  as an empty list. */
 export interface DirectoryTagGroup {
   id: string;
   tags: string[];
+  onlineTags?: string[];
 }
 
 /** GET /directory/tags: the curated tag vocabulary for the wizard's tag

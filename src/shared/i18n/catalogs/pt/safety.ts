@@ -86,6 +86,7 @@ export const safety: Catalog = {
   "myReports.subject.volunteering": "Sobre uma oportunidade de voluntariado",
   "myReports.subject.conversation": "Sobre um grupo de conversa",
   "myReports.subject.identity": "Sobre uma conversa com um negócio",
+  "myReports.subject.group_listing": "Sobre um quarto num grupo de habitação",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
     "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",
@@ -201,6 +202,9 @@ export const safety: Catalog = {
   // Ver o comentário na versão EN: só cobre o limite de rajada de 60 segundos.
   "report.tooFast":
     "Estás a enviar denúncias mais depressa do que conseguimos recebê-las. Espera um momento e envia esta outra vez.",
+  // PRD-467: ver o comentário na versão EN.
+  "report.floodCap":
+    "Chegaste ao limite de denúncias por agora. As que já enviaste estão com a equipa de segurança. Se for urgente, usa a página de Contacto.",
   "report.notParticipant":
     "Esta mensagem não está numa conversa da qual fazes parte, por isso não pode ser denunciada.",
   // Ver o comentário na versão EN: a cópia de prova da mensagem já expirou.
@@ -299,6 +303,7 @@ export const safety: Catalog = {
   "reason.housingUnsafe":
     "Alojamento inseguro, discriminatório, ou com informação enganosa",
   "reason.housingScam": "Burla ou anúncio falso",
+  "reason.fundingScam": "Burla, angariação falsa ou apoio falso",
   "reason.notAffirming":
     "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
   "reason.offPlatform": "Pediram para pagar ou sair da plataforma",

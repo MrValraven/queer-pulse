@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { FiArrowRight, FiX } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { ModalSheet } from "../../../shared/components/ui/Modal";
@@ -8,14 +9,37 @@ import { requestInvitePath } from "../../auth/api/joinRequestSource";
 import { MEMBER_PILLARS } from "./membersExplainer.data";
 import styles from "./ExplainerModal.module.css";
 
+const LEDE_KEYS = {
+  members: "homepage:membersExplainer.lede",
+  gathering: "homepage:membersExplainer.ledeGathering",
+  roadmap: "homepage:membersExplainer.ledeRoadmap",
+  rating: "homepage:membersExplainer.ledeRating",
+} as const;
+
+// Each context tags its invite request so the review queue can tell the
+// surfaces apart (append-only keys in `joinRequestSource.ts`).
+const SOURCES = {
+  members: "members_explainer",
+  gathering: "gathering_explainer",
+  roadmap: "roadmap_explainer",
+  rating: "rating_explainer",
+} as const;
+
 /**
  * Signed-out explainer for the "Explore members" CTA: why the member directory
  * is invite-only, and how to get in. Shown instead of bouncing a logged-out
  * visitor to the sign-in page. Rendered only while open (owns no state itself),
  * so `ModalSheet` runs its scroll-lock/focus-trap once per open.
  */
-export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
+export function MembersExplainerModal({
+  onClose,
+  context = "members",
+}: {
+  onClose: () => void;
+  context?: "members" | "gathering" | "roadmap" | "rating";
+}) {
   const { t } = useTranslation();
+  const { pathname, search } = useLocation();
   return (
     <ModalSheet
       success
@@ -41,7 +65,7 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
             components={{ em: <em /> }}
           />
         </h2>
-        <p className={styles.lede}>{t("homepage:membersExplainer.lede")}</p>
+        <p className={styles.lede}>{t(LEDE_KEYS[context])}</p>
 
         <ul className={styles.pillars}>
           {MEMBER_PILLARS.map(({ id, Icon, titleKey, bodyKey }) => (
@@ -58,11 +82,15 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
         </ul>
 
         <div className={styles.actions}>
-          <Button size="lg" to={requestInvitePath("members_explainer")}>
+          <Button size="lg" to={requestInvitePath(SOURCES[context])}>
             {t("homepage:membersExplainer.requestInviteCta")}{" "}
             <FiArrowRight aria-hidden />
           </Button>
-          <Button size="lg" variant="ghost-dark" to={routes.signIn}>
+          <Button
+            size="lg"
+            variant="ghost-dark"
+            to={`${routes.signIn}?next=${encodeURIComponent(`${pathname}${search}`)}`}
+          >
             {t("homepage:membersExplainer.signInCta")}
           </Button>
         </div>

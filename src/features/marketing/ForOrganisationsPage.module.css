@@ -108,8 +108,9 @@
   border-color: var(--line-strong);
   position: relative;
 }
-.tierFeatured::before {
-  content: "Most chosen";
+/* A real, translated element. Cream on --accent-fill is the primary Button's
+   AA-safe pairing (4.52:1), and --cream-rgb stays light in dark mode. */
+.tierBadge {
   position: absolute;
   top: -12px;
   right: 24px;
@@ -117,8 +118,8 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent-ink);
-  background: var(--accent);
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--accent-fill);
   padding: 6px 12px;
   border-radius: var(--radius-6);
 }

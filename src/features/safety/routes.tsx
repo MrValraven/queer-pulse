@@ -5,6 +5,7 @@ import { lazyNamed } from "../../app/routeHelpers";
 const SafeSpacesPage = lazyNamed(
   () => import("./SafeSpacesPage"),
   "SafeSpacesPage",
+  routes.safeSpaces,
 );
 const SafeSpaceDetailPage = lazyNamed(
   () => import("./SafeSpaceDetailPage"),

@@ -32,6 +32,10 @@ export interface VolunteerRolesProps {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   onLoadMore: () => void;
+  /** PRD-454. Set for a signed-out visitor: the empty board's "Post an
+   *  opportunity" opens the volunteer explainer through it. Unset, the
+   *  action links straight to the post form. */
+  onPostSignedOut?: () => void;
 }
 
 /** Filter chips + the open-roles grid, with its empty states and pagination. */
@@ -46,6 +50,7 @@ export function VolunteerRoles({
   hasNextPage,
   isFetchingNextPage,
   onLoadMore,
+  onPostSignedOut,
 }: VolunteerRolesProps) {
   const { t } = useTranslation();
   // ENG-501: react-query also sets `isError` when only the next page failed.
@@ -111,7 +116,9 @@ export function VolunteerRoles({
               description={t("marketing:volunteer.empty.noneDescription")}
               action={{
                 label: t("marketing:volunteer.empty.noneCta"),
-                to: routes.postVolunteer,
+                ...(onPostSignedOut
+                  ? { onClick: onPostSignedOut }
+                  : { to: routes.postVolunteer }),
               }}
             />
           ) : (

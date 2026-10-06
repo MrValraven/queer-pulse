@@ -13,12 +13,22 @@ function inDays(days: number, hour: number): string {
 }
 
 /**
- * Demo viewings from the signed-in prototype member's perspective — one in each
+ * Demo viewings from the signed-in prototype member's perspective, one in each
  * meaningful state so the surface reads honestly without a backend:
  *  · a request you sent, waiting on the lister,
  *  · a request TO you (as lister) awaiting your response,
- *  · an accepted viewing (which is what unlocks a precise address), and
- *  · a completed viewing ready for a blind review.
+ *  · an accepted viewing (which is what unlocks a precise address); the
+ *    lister offered the slot with a note and you took it; it is still ahead,
+ *    so either side can cancel it and nobody can mark it done yet,
+ *  · an accepted viewing on your own listing whose slot was yesterday, so it
+ *    is ready to mark as completed,
+ *  · a completed viewing ready for a blind review, and
+ *  · a request the lister declined with a note, which points you back to the
+ *    listing to ask for another time.
+ *
+ * Every home here is still on the board (`isListingOpen`) and present, so the
+ * declined row keeps its "Request another time" link and the completed row its
+ * review button.
  */
 export const DEMO_HOUSING_VIEWINGS: HousingViewingDTO[] = [
   {
@@ -38,6 +48,10 @@ export const DEMO_HOUSING_VIEWINGS: HousingViewingDTO[] = [
     responseNote: null,
     createdAt: inDays(-1, 12),
     updatedAt: inDays(-1, 12),
+    canCancel: true,
+    canComplete: false,
+    isListingOpen: true,
+    isListingDeleted: false,
   },
   {
     id: "demo-viewing-incoming",
@@ -56,6 +70,10 @@ export const DEMO_HOUSING_VIEWINGS: HousingViewingDTO[] = [
     responseNote: null,
     createdAt: inDays(-1, 9),
     updatedAt: inDays(-1, 9),
+    canCancel: true,
+    canComplete: false,
+    isListingOpen: true,
+    isListingDeleted: false,
   },
   {
     id: "demo-viewing-accepted",
@@ -66,14 +84,42 @@ export const DEMO_HOUSING_VIEWINGS: HousingViewingDTO[] = [
     counterparty: { slug: "tomas-b", firstName: "Tomás", lastName: "B." },
     mode: "in_person",
     status: "accepted",
-    proposedBy: "requester",
-    youProposedLast: true,
+    // The lister's counter-proposal wrote `responseNote`, so the card credits
+    // it to Tomás (the backend's `proposedBy` rule).
+    proposedBy: "lister",
+    youProposedLast: false,
     proposedSlots: [inDays(6, 18)],
     acceptedSlot: inDays(6, 18),
     note: "Thank you! Looking forward to seeing it.",
-    responseNote: "See you then. I'll send the exact address.",
+    responseNote: "See you then. The address is on the listing now.",
     createdAt: inDays(-3, 15),
     updatedAt: inDays(-2, 10),
+    canCancel: true,
+    canComplete: false,
+    isListingOpen: true,
+    isListingDeleted: false,
+  },
+  {
+    id: "demo-viewing-ready-to-complete",
+    listingRef: "QPH-2026-0009",
+    listingSlug: "your-marvila-room",
+    listingTitle: "Room in your Marvila warehouse flat",
+    role: "lister",
+    counterparty: { slug: "rita-m", firstName: "Rita", lastName: "M." },
+    mode: "in_person",
+    status: "accepted",
+    proposedBy: "requester",
+    youProposedLast: false,
+    proposedSlots: [inDays(-1, 18)],
+    acceptedSlot: inDays(-1, 18),
+    note: "Could I come after work? I finish at five.",
+    responseNote: null,
+    createdAt: inDays(-4, 11),
+    updatedAt: inDays(-3, 9),
+    canCancel: true,
+    canComplete: true,
+    isListingOpen: true,
+    isListingDeleted: false,
   },
   {
     id: "demo-viewing-completed",
@@ -92,10 +138,38 @@ export const DEMO_HOUSING_VIEWINGS: HousingViewingDTO[] = [
     responseNote: null,
     createdAt: inDays(-8, 12),
     updatedAt: inDays(-5, 20),
+    canCancel: false,
+    canComplete: false,
+    isListingOpen: true,
+    isListingDeleted: false,
+  },
+  {
+    id: "demo-viewing-declined",
+    listingRef: "QPH-2026-0003",
+    listingSlug: "graca-studio-shortterm",
+    listingTitle: "Studio in Graça, 2 weeks minimum",
+    role: "requester",
+    counterparty: { slug: "beatriz-p", firstName: "Beatriz", lastName: "P." },
+    mode: "in_person",
+    status: "declined",
+    // A decline leaves `proposedBy` on the party turned down, so the note is
+    // Beatriz's.
+    proposedBy: "requester",
+    youProposedLast: true,
+    proposedSlots: [inDays(-2, 12)],
+    acceptedSlot: null,
+    note: "Is the studio still free from mid-June?",
+    responseNote: "That week is full for me. Ask again for a later date?",
+    createdAt: inDays(-6, 10),
+    updatedAt: inDays(-4, 16),
+    canCancel: false,
+    canComplete: false,
+    isListingOpen: true,
+    isListingDeleted: false,
   },
 ];
 
-/** Demo public reviews for a listing — a small revealed set with an average,
+/** Demo public reviews for a listing: a small revealed set with an average,
  * so the listing display has something honest to show in the prototype. */
 export function demoListingReviews(slug: string): HousingListingReviewsDTO {
   const byListing: Record<string, HousingListingReviewsDTO> = {
@@ -125,7 +199,7 @@ export function demoListingReviews(slug: string): HousingListingReviewsDTO {
   return byListing[slug] ?? { averageRating: null, count: 0, reviews: [] };
 }
 
-/** Demo blind-review pair for a completed viewing — the counterparty has
+/** Demo blind-review pair for a completed viewing: the counterparty has
  * already left theirs, so it unlocks the moment you submit yours. */
 export function demoViewingReviewPair(
   viewingId: string,

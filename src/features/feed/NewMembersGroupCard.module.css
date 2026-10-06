@@ -1,0 +1,164 @@
+/* "People joined recently": every recent joiner in one feed card. The shell
+   (padding, border, 12px gap between head, list and toggle) comes from
+   FeedCardShell. Rhythm runs on two values: 12px between groups and rows,
+   4px inside a group. */
+
+/* ── Head ── */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.title {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-20);
+  line-height: 1.2;
+  color: var(--ink);
+}
+.stack {
+  flex: none;
+}
+
+/* ── Rows ── */
+/* The rows size against the list's own width, so a narrow card stacks them
+   whatever the viewport. */
+.list {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Wide: avatar, text and contact button on one line. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.avatarLink {
+  display: inline-flex;
+  flex: none;
+  border-radius: var(--radius-avatar);
+  transition: opacity 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .avatarLink:hover {
+    opacity: 0.85;
+  }
+}
+.rowText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rowName {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-16);
+  line-height: 1.25;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.nameLink {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .nameLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+.pronouns {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.rowMeta {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+.rowAction {
+  flex: none;
+  margin-left: auto;
+}
+/* MemberContactButton renders nothing for the viewer's own row. */
+.rowAction:empty {
+  display: none;
+}
+/* The separator and the join time wrap as one piece. */
+.joinedTime {
+  white-space: nowrap;
+}
+/* Narrow: the button moves under the text, so the name keeps the whole text
+   column and wraps less. */
+@container (max-width: 340px) {
+  .row {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .rowAction {
+    grid-column: 2;
+    margin-left: 0;
+    justify-self: start;
+  }
+}
+
+/* ── Show all / Show fewer ── */
+.toggle {
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .toggle:hover {
+    text-decoration-color: currentColor;
+  }
+}
+/* A full touch target on phones; it still reads as a text link. */
+@media (pointer: coarse) {
+  .toggle {
+    min-height: 44px;
+  }
+}
+
+.avatarLink:focus-visible,
+.nameLink:focus-visible,
+.toggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.nameLink:focus-visible,
+.toggle:focus-visible {
+  border-radius: var(--radius-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatarLink {
+    transition: none;
+  }
+}

@@ -52,6 +52,15 @@ export interface HydratedConnections extends ConnectionsContextValue {
    * accept/decline never reach the network).
    */
   incomingConnectionId: (slug: string) => string | undefined;
+  /**
+   * The message and reason `slug` sent with their waiting request (each null
+   * when they gave none), or `undefined` when there is no such request. Always
+   * `undefined` in demo mode, which has no server data: demo reads its seeded
+   * request notes from the connections registry instead.
+   */
+  incomingRequest: (
+    slug: string,
+  ) => { message: string | null; reason: string | null } | undefined;
 }
 
 export const ConnectionsContext = createContext<ConnectionsStore | null>(null);
@@ -112,8 +121,22 @@ export function useConnectionsHydrated(): HydratedConnections {
     [relationships],
   );
 
+  const incomingRequest = useCallback(
+    (slug: string) => {
+      const request = relationships?.incoming.find(
+        (candidate) => candidate.slug === slug,
+      );
+      if (!request) return undefined;
+      return {
+        message: request.requestMessage ?? null,
+        reason: request.requestReason ?? null,
+      };
+    },
+    [relationships],
+  );
+
   return useMemo(
-    () => ({ ...store, incomingConnectionId }),
-    [store, incomingConnectionId],
+    () => ({ ...store, incomingConnectionId, incomingRequest }),
+    [store, incomingConnectionId, incomingRequest],
   );
 }

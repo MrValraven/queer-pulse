@@ -263,6 +263,10 @@ export function threadToCard(
     isPublished: dto.isPublished ?? true,
     reviewState: dto.reviewState ?? null,
     publishedAt: dto.publishedAt,
+    // Funding & Grants. Both pass through as served: the call and fundraiser
+    // states are the server's, and a card never recomputes them.
+    kind: dto.kind ?? null,
+    funding: dto.funding ?? null,
   };
 }
 

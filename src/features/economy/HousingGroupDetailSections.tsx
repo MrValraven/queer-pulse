@@ -1,4 +1,5 @@
-import { FiCheck, FiLock, FiUsers } from "react-icons/fi";
+import { FiCheck, FiClock, FiLock, FiUsers } from "react-icons/fi";
+import type { Ref } from "react";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,14 +9,35 @@ import type {
   VettedGroup,
 } from "./housingGroups.data";
 import { GroupListingCard } from "./GroupListingCard";
+import { useCanPostGroupListing } from "./api/useMyGroupListings";
 import styles from "./HousingGroupsPage.module.css";
+
+/**
+ * Where the reader stands with this group, for the join entry. `open` offers
+ * the way in (nobody asked yet, or the last answer was no and they may ask
+ * again), `pending` says the request is waiting, and `member` shows nothing.
+ * The same precedence the backend's duplicate refusal uses, so the page never
+ * offers a form whose submit would answer 409. `unknown` (the reader's own
+ * requests are still loading) shows nothing either, so a member is never
+ * flashed an "Ask to join" they cannot use.
+ */
+export type GroupJoinStanding = "unknown" | "open" | "pending" | "member";
 
 /** Header: name, city, member count, gated badge, and the ask-to-join CTA. */
 export function GroupDetailHeader({
   group,
+  joinStanding,
+  titleId,
+  pendingNoteRef,
   onJoin,
 }: {
   group: VettedGroup;
+  joinStanding: GroupJoinStanding;
+  /** The heading's id. It takes focus (`tabIndex={-1}`) when a join answer
+   *  leaves no join entry behind, so focus never falls to the page. */
+  titleId: string;
+  /** Where focus lands once a request just sent replaces the join button. */
+  pendingNoteRef?: Ref<HTMLParagraphElement>;
   onJoin: () => void;
 }) {
   const { t } = useTranslation();
@@ -27,7 +49,13 @@ export function GroupDetailHeader({
           label={t("economy:housingGroups.detail.backLabel")}
           tone="light"
         />
-        <Reveal as="h1" className={styles.detailTitle} delay={60}>
+        <Reveal
+          as="h1"
+          id={titleId}
+          tabIndex={-1}
+          className={styles.detailTitle}
+          delay={60}
+        >
           {group.name} {group.nameEm && <em>{group.nameEm}</em>}
         </Reveal>
         <div className={styles.detailMeta}>
@@ -42,11 +70,19 @@ export function GroupDetailHeader({
           )}
         </div>
         <p className={styles.detailBlurb}>{group.blurb}</p>
-        <Button variant="primary" size="lg" onClick={onJoin}>
-          {group.isAccessGated
-            ? t("economy:housingGroups.detail.askToJoin")
-            : t("economy:housingGroups.detail.join")}
-        </Button>
+        {joinStanding === "open" && (
+          <Button variant="primary" size="lg" onClick={onJoin}>
+            {group.isAccessGated
+              ? t("economy:housingGroups.detail.askToJoin")
+              : t("economy:housingGroups.detail.join")}
+          </Button>
+        )}
+        {joinStanding === "pending" && (
+          <p className={styles.joinPending} ref={pendingNoteRef} tabIndex={-1}>
+            <FiClock aria-hidden className={styles.joinPendingIcon} />
+            {t("economy:joinGroup.alreadyPending")}
+          </p>
+        )}
       </div>
     </section>
   );
@@ -79,15 +115,6 @@ export function GroupNorms({ norms }: { norms: string[] }) {
   );
 }
 
-/**
- * The group's norm-compliant listings, each carrying the price and the access
- * line the group requires.
- *
- * This grid is the PUBLIC board: every room here has already been cleared by a
- * moderator. A member's own rooms, in whatever state they are in, live in
- * `MyGroupListings` below, where ownership comes from the query rather than
- * from a control that hopes for the best and answers with a 403.
- */
 /** What each standing is told, in place of the rooms. Three sentences rather
  *  than one, because the next step differs: wait, ask, or accept the answer. */
 const LOCKED_BODY_KEY: Record<GroupMembershipStanding, string> = {
@@ -141,8 +168,28 @@ export function GroupListingsLocked({
   );
 }
 
-export function GroupListings({ listings }: { listings: GroupListing[] }) {
+/**
+ * The group's norm-compliant listings, each carrying the price and the access
+ * line the group requires.
+ *
+ * This grid is the PUBLIC board: every room here has already been cleared by a
+ * moderator. A member's own rooms, in whatever state they are in, live in
+ * `MyGroupListings` below, where ownership comes from the query itself, so
+ * every edit and withdraw control there is one the server will honour.
+ *
+ * `groupSlug` addresses each room's "Message" and "Report" (PRD-443).
+ */
+export function GroupListings({
+  listings,
+  groupSlug,
+}: {
+  listings: GroupListing[];
+  groupSlug: string;
+}) {
   const { t } = useTranslation();
+  // The same check the detail page renders `MyGroupListings` on, so a card
+  // links to "Your rooms" only when that section is on the page.
+  const hasYourRoomsSection = useCanPostGroupListing();
   return (
     <section className={styles.listingsSection}>
       <div className="wrap">
@@ -158,7 +205,12 @@ export function GroupListings({ listings }: { listings: GroupListing[] }) {
         ) : (
           <div className={styles.listingsGrid}>
             {listings.map((listing) => (
-              <GroupListingCard key={listing.id} listing={listing} />
+              <GroupListingCard
+                key={listing.id}
+                listing={listing}
+                groupSlug={groupSlug}
+                hasYourRoomsSection={hasYourRoomsSection}
+              />
             ))}
           </div>
         )}

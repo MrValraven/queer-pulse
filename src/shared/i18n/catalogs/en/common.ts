@@ -28,6 +28,8 @@ export const common: Catalog = {
   "error.description":
     "We couldn't load this right now. Check your connection and try again.",
   "error.retry": "Try again",
+  // ENG-501: the inline footer line when only the NEXT page of a list failed.
+  "error.loadMore": "We couldn't load more right now.",
 
   // Interpolation + pluralization examples (proves the helpers, and reusable).
   "greeting.welcome": "Welcome back, {name}",

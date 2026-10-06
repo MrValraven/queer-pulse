@@ -232,22 +232,18 @@ export const admin: Catalog = {
   "dashboard.titleNameless": "Resumo · <em>bom dia</em>",
   // Contagem e subtítulo derivados da fila de triagem real
   // (`GET /admin/overview` → contagens de triagem); `{count}` ativa o plural.
-  "dashboard.header.titleLine1_one": "{count} coisa",
-  "dashboard.header.titleLine1_other": "{count} coisas",
-  "dashboard.header.titleLine2_one": "precisa de <em>uma pessoa</em>.",
-  "dashboard.header.titleLine2_other": "precisam de <em>uma pessoa</em>.",
-  "dashboard.header.titleClearLine1": "Estás",
-  "dashboard.header.titleClearLine2": "totalmente <em>em dia</em>.",
+  "dashboard.header.title_one": "{count} decisão à tua <em>espera</em>.",
+  "dashboard.header.title_other": "{count} decisões à tua <em>espera</em>.",
+  "dashboard.header.titleClear": "Estás totalmente <em>em dia</em>.",
   "dashboard.header.subEmergencies_one":
-    "Uma está sinalizada como emergência de segurança. Começa por aí. Tudo o resto está estável, e estás a manter toda a rede unida.",
+    "Uma delas é uma emergência de segurança, por isso começa por aí. O resto pode esperar a sua vez.",
   "dashboard.header.subEmergencies_other":
-    "{count} estão sinalizadas como emergências de segurança. Começa por aí. Tudo o resto está estável, e estás a manter toda a rede unida.",
+    "{count} delas são emergências de segurança, por isso começa por aí. O resto pode esperar a sua vez.",
   "dashboard.header.subCalm":
-    "Nada está sinalizado como urgente. Trabalha a fila ao teu ritmo. Estás a manter toda a rede estável.",
+    "Não há emergências na fila. Vai uma decisão de cada vez. Cada escolha ponderada mantém esta rede segura.",
   "dashboard.header.subClear":
-    "Cada item aberto tem uma decisão humana associada. Vai descansar. A rede está segura nas tuas mãos.",
-  "dashboard.header.titleErrorLine1": "Não conseguimos",
-  "dashboard.header.titleErrorLine2": "<em>ver a fila</em>.",
+    "Cada denúncia já teve uma pessoa a olhar por ela. Faz uma pausa. A rede está em boas mãos.",
+  "dashboard.header.titleError": "Não conseguimos <em>ver a fila</em>.",
   "dashboard.header.subError":
     "A fila pode ter denúncias à tua espera. Verifica a tua ligação ou o teu acesso de equipa e tenta outra vez.",
   "dashboard.header.moderationCta": "Abrir moderação",
@@ -750,6 +746,10 @@ export const admin: Catalog = {
   "members.verify.source.reading_groups": "Grupos de leitura",
   "members.verify.source.direct": "Abriu a página de pedido diretamente",
   "members.verify.source.other": "Outra página",
+  "members.verify.source.volunteer_explainer": "Explicação do voluntariado",
+  "members.verify.source.gathering_explainer": "Explicação dos convívios",
+  "members.verify.source.roadmap_explainer": "Explicação do roteiro",
+  "members.verify.source.rating_explainer": "Explicação da avaliação de guias",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
   // Aprovado: a QueerPulse não envia emails, por isso a aprovação só chega a
@@ -967,6 +967,7 @@ export const admin: Catalog = {
     "Sem motivo registado. Foi aprovado antes de se pedirem motivos.",
   "members.verify.decided.showDetails": "Mostrar detalhes de {name}",
   "members.verify.decided.hideDetails": "Esconder detalhes de {name}",
+  "members.verify.decided.applicationHeading": "O que enviaram",
   "members.verify.decided.filter.groupLabel": "Filtrar pedidos decididos",
   "members.verify.decided.filter.all": "Todos",
   "members.verify.decided.filter.unclaimed": "Por usar",
@@ -2964,7 +2965,7 @@ export const admin: Catalog = {
   "governance.finances.foot.solidarityRate":
     "Pessoas com tarifa gratuita ou reduzida",
   "governance.finances.empty":
-    "Ainda sem relatório financeiro publicado. Os valores aparecem aqui assim que um for publicado.",
+    "Ainda sem relatório financeiro. Abre um trimestre para começares a introduzir os números reais.",
 
   "governance.finances.provenance.seeded": "Por verificar",
   "governance.finances.provenance.manual": "Editado",
@@ -3025,6 +3026,7 @@ export const admin: Catalog = {
   "governance.finances.edit.aria.newValue": "{label}: novo valor",
   "governance.finances.edit.aria.newAmount": "{label}: novo montante",
   "governance.finances.edit.aria.note": "{label}: nota",
+  "governance.finances.edit.aria.lineName": "Linha {position}: nome",
 
   "governance.ledger.moderatorHonoraria": "Honorários de moderação",
   "governance.ledger.platformTools": "Plataforma e ferramentas",
@@ -3672,7 +3674,6 @@ export const admin: Catalog = {
   "orgTier.field.sortOrder": "Ordem",
   // Etiquetas de opção do comportamento do botão; o valor guardado é um id
   // canónico (toast/link/propose), nunca esta etiqueta.
-  "orgTier.ctaOption.toast": "Brinde: apenas informativo",
   "orgTier.ctaOption.link": "Ligação: navega para um destino",
   "orgTier.ctaOption.propose": "Propor: abre o fluxo de contacto",
   "orgTier.toggle.featured.sub": "Destacado como o escalão recomendado.",
@@ -3840,7 +3841,6 @@ export const admin: Catalog = {
   "roadmap.title": "Roteiro · <em>o que vem a seguir</em>",
   "roadmap.loading": "A carregar o roteiro…",
   "roadmap.tabs.board": "Quadro",
-  "roadmap.tabs.heroStats": "Estatísticas",
 
   // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
   // AdminRoadmapItemModalFields.tsx — o quadro lançado/em construção/planeado.
@@ -3855,14 +3855,10 @@ export const admin: Catalog = {
   // Diálogo de confirmação partilhado (IdeaQueueConfirmModal) — `kind` é
   // "dismiss" ou "delete", interpolado na chave (`roadmap.ideas.${kind}.*`).
 
-  // AdminRoadmapHeroStats.tsx — lista editável de estatísticas do hero público.
-  // Etiquetas de preenchimento automático — "lançado"/"planeado" concordam em
-  // número (_one/_other); "em curso" é invariável, por isso fica só a chave base.
-
   // ═══════════════════════════════════════════════════════════════════════
   // Reformulação do roteiro (quadro de 9 vistas, painel lateral, vistas
   // guardadas, modais). Aditivo: as chaves planas roadmap.board.*/
-  // roadmap.ideas.*/roadmap.heroStats.* acima mantêm-se para a interface
+  // roadmap.ideas.* acima mantêm-se para a interface
   // atual de 3 separadores até ser migrada; tudo abaixo está isolado sob
   // novos sub-caminhos para não colidir com nem ler silenciosamente do
   // conjunto antigo.
@@ -3889,8 +3885,8 @@ export const admin: Catalog = {
   "roadmap.page.previewPublicCta": "Pré-visualizar página pública",
   "roadmap.page.auditLogCta": "Registo de auditoria",
 
-  // ── Separadores — 9 vistas. tabs.board/tabs.heroStats acima já têm o
-  // texto certo e são reutilizadas; o resto é novo.
+  // ── Separadores — 8 vistas. tabs.board acima já tem o texto certo e é
+  // reutilizada; o resto é novo.
   "roadmap.tabs.timeline": "Cronologia",
   "roadmap.tabs.guides": "Guias",
   "roadmap.tabs.capacity": "Capacidade",
@@ -4330,16 +4326,6 @@ export const admin: Catalog = {
   "roadmap.archiveView.emptyBody":
     "Arquivar guarda o histórico sem sobrecarregar o quadro. Eliminar é para sempre. Prefere arquivar.",
 
-  // ── Vista de estatísticas públicas (editor da reformulação — grupo
-  // separado do editor dos 3 separadores, ver nota acima de roadmap.heroStats.*)
-  "roadmap.heroStatsView.title": "Estatísticas <em>públicas</em> do topo",
-  "roadmap.heroStatsView.previewLinkCta": "Pré-visualizar página pública",
-  "roadmap.heroStatsView.subtitle":
-    "Estes quatro números ficam no topo do roteiro visto pelos membros. Mantém-nos honestos. Se um número precisar de uma ressalva, escreve-a na nota e ela aparece como dica.",
-  "roadmap.heroStatsView.captionPlaceholder": "Ressalva / como se conta",
-  "roadmap.heroStatsView.noGrowthTheatre":
-    "Sem teatro de crescimento. Publicamos contagens e deixamos de fora números de seguidores ou gráficos de vaidade. Um número que não se explica numa frase não tem lugar aqui.",
-
   // ── Vista de pré-visualização pública ───────────────────────────────────
   "roadmap.publicPreview.banner_one":
     "É isto que os membros veem em /roadmap. {hidden} item oculto · {promises} assumidos como promessas · passa o rato por cima de qualquer item para o editar.",
@@ -4371,12 +4357,6 @@ export const admin: Catalog = {
   "roadmap.publicPreview.noDateHonest": "Sem data, sinceramente",
   "roadmap.publicPreview.liveLabel": "Ativo",
   "roadmap.publicPreview.editItemTooltip": "Editar este item",
-  "roadmap.publicPreview.subscribeHeading": "Sabe quando isto mudar",
-  "roadmap.publicPreview.subscribeBody":
-    "Um email por mês com o que foi lançado, o que mudou e ao que dissemos não. Nunca marketing de produto.",
-  "roadmap.publicPreview.subscribeEmailPlaceholder": "tu@email.com",
-  "roadmap.publicPreview.subscribeCta": "Subscrever",
-  "roadmap.publicPreview.rssCta": "RSS",
 
   // ── Notificações — resposta para cada ação que altera dados ─────────────
   "roadmap.toasts.moved": '"{name}" passou para {column}',
@@ -4444,6 +4424,14 @@ export const admin: Catalog = {
 
   "landing.picker.searchPlaceholder": "Pesquisar por nome…",
   "landing.picker.searchAriaLabel": "Pesquisar pessoas elegíveis para destaque",
+  // Texto da pesquisa do seletor de encontros e histórias (PRD-323).
+  "landing.picker.searchPlaceholder.gathering":
+    "Pesquisa encontros pelo título…",
+  "landing.picker.searchPlaceholder.story": "Pesquisa histórias pelo título…",
+  "landing.picker.searchAriaLabel.gathering":
+    "Pesquisa os encontros que podes destacar",
+  "landing.picker.searchAriaLabel.story":
+    "Pesquisa as histórias que podes destacar",
   "landing.picker.addCta": "Adicionar",
   "landing.picker.submitCta": "Adicionar à página inicial",
   "landing.picker.addedToast": "Adicionado à página inicial",
@@ -4487,7 +4475,7 @@ export const admin: Catalog = {
     "Não foi possível atualizar. Tenta outra vez",
   "landing.list.previewEmpty":
     "Ainda sem texto. Adiciona algum para ficar bem na página inicial.",
-  "landing.list.unknownTarget": "Este perfil já não existe",
+  "landing.list.unknownTarget": "Este destaque já não existe",
   "landing.list.empty.member.title": "Ainda sem pessoas em destaque",
   "landing.list.loadError.title": "A lista em destaque não carregou",
   "landing.list.loadError.body":
@@ -4505,7 +4493,7 @@ export const admin: Catalog = {
   "landing.remove.cta": "Remover",
   "landing.remove.title": "Remover da página inicial?",
   "landing.remove.body":
-    "Isto tira a pessoa da página inicial pública. Podes voltar a destacá-la quando quiseres.",
+    "Isto tira o destaque da página inicial pública. Podes voltar a destacá-lo quando quiseres.",
   "landing.remove.confirm": "Remover",
   "landing.remove.toast": "Removido da página inicial",
   "landing.remove.error": "Não foi possível remover. Tenta outra vez",
@@ -4516,7 +4504,32 @@ export const admin: Catalog = {
   "landing.hidden.went_private": "Oculto: perfil tornou-se privado",
   "landing.hidden.unpublished": "Oculto: despublicado",
   "landing.hidden.not_public": "Oculto: já não é público",
-  "landing.hidden.deleted": "Oculto: perfil eliminado",
+  "landing.hidden.deleted": "Oculto: eliminado",
+  // Secções de encontros e histórias (PRD-323): separadores, ajudas, estados vazios, motivos de ocultação, linha de destaque.
+  "landing.tabs.gathering": "Encontros",
+  "landing.tabs.story": "Histórias",
+  "landing.helper.gathering":
+    "Só aparecem aqui encontros publicados, abertos a toda a gente e ainda por acontecer. Um encontro sai da página inicial sozinho quando termina ou é cancelado.",
+  "landing.helper.story":
+    "As histórias originais publicadas na revista estão prontas a ser destacadas aqui. Uma história sai da página inicial sozinha se deixar de estar publicada.",
+  "landing.picker.empty.gathering":
+    "Ainda não há encontros públicos futuros elegíveis.",
+  "landing.picker.empty.story": "Ainda não há histórias publicadas elegíveis.",
+  "landing.list.empty.gathering.title": "Ainda sem encontros em destaque",
+  "landing.list.empty.gathering.body":
+    "Procura um encontro público futuro e adiciona-o à página inicial.",
+  "landing.list.empty.story.title": "Ainda sem histórias em destaque",
+  "landing.list.empty.story.body":
+    "Procura uma história publicada e adiciona-a à página inicial.",
+  "landing.hidden.cancelled": "Oculto: cancelado",
+  "landing.hidden.ended": "Oculto: já terminou",
+  "landing.editor.kickerLabel": "Linha de destaque",
+  "landing.editor.kickerHelper":
+    "Opcional: uma linha curta por cima do título, até {max} caracteres.",
+  // Contagem de caracteres por baixo da linha de destaque.
+  "landing.editor.kickerCount": "{count}/{max}",
+  "landing.editor.kickerPlaceholder.gathering": "ex.: Escolha do mês",
+  "landing.editor.kickerPlaceholder.story": "ex.: Escolha da redação",
 
   // ── Pré-visualização da página inicial (AdminLandingPreview) ────────────
   "landing.preview.eyebrow": "Pré-visualização da página inicial",
@@ -4524,10 +4537,15 @@ export const admin: Catalog = {
     "Como esta secção aparece na página inicial para quem não tem sessão. Atualiza à medida que editas.",
   "landing.preview.loading": "A montar a pré-visualização…",
   "landing.preview.empty":
-    "Ainda não há nada em destaque. Adiciona alguém à esquerda para veres a pré-visualização.",
+    "Ainda não há nada em destaque. Escolhe na pesquisa o que queres destacar para veres a pré-visualização.",
   "landing.preview.pendingTitle": "Adicionado, detalhes ainda a carregar",
   "landing.preview.pendingNote":
     "Aparecem como cartões completos assim que os seus dados reais carregarem.",
+  // Notas de pendentes por secção nas pré-visualizações de encontros e histórias.
+  "landing.preview.pendingNote.gathering":
+    "Estes aparecem como linhas completas quando os dados ao vivo carregarem.",
+  "landing.preview.pendingNote.story":
+    "Estes aparecem como cartões completos quando os dados ao vivo carregarem.",
 
   // ── Kit de imprensa (/admin/press-kit) ────────────────────────────────────
   "pressKit.header.eyebrow": "Site público",
@@ -4638,6 +4656,7 @@ export const admin: Catalog = {
   "reports.finance.income": "Receita: {amount}",
   "reports.finance.expense": "Despesa: {amount}",
   "reports.finance.surplus": "Excedente: {amount}",
+  "reports.finance.notEntered": "ainda por introduzir",
   "reports.communityHealth.title": "Saúde das comunidades",
   "reports.communityHealth.sub":
     "Uma fotografia da pontuação de saúde de cada comunidade.",
@@ -5014,8 +5033,60 @@ export const admin: Catalog = {
     "Escreve isto como número. 1840, 1840,50 e 1 840,50 funcionam todos.",
   "governance.finances.edit.field.amountRequired":
     "Esta linha precisa de um valor. Desliga a linha se já não se aplica.",
+  "governance.finances.edit.field.newLine": "Nova linha {position}",
   "governance.finances.edit.blockedByAmounts":
     "Só podes guardar quando todos os valores assinalados forem números.",
+  "governance.finances.edit.addLine": "Adicionar uma linha",
+  "governance.finances.edit.blockedByLabels":
+    "Cada linha precisa de um nome antes de poderes guardar.",
+  "governance.finances.status.public":
+    "{quarter} está visível na página pública de Governação.",
+  "governance.finances.status.hidden":
+    "{quarter} só aparece na página pública de Governação quando todos os números principais estiverem introduzidos.",
+  "governance.finances.report.cta": "Editar relatório público",
+  "governance.finances.report.title": "Editar o <em>relatório público</em>",
+  "governance.finances.report.sub":
+    "Os cartões, notas, parceiros e reserva que a página de Governação mostra ao lado dos números deste trimestre. Cada lista é guardada por inteiro.",
+  "governance.finances.report.section.stats": "Cartões de números",
+  "governance.finances.report.section.notes":
+    "Como funcionam as finanças dos convívios",
+  "governance.finances.report.section.partners": "Parceiros declarados",
+  "governance.finances.report.section.reserve": "Reserva operacional",
+  "governance.finances.report.col.figure": "Número",
+  "governance.finances.report.col.label": "Legenda",
+  "governance.finances.report.col.trend": "Tendência",
+  "governance.finances.report.col.rising": "A subir",
+  "governance.finances.report.col.lead": "Destaque",
+  "governance.finances.report.col.text": "Texto",
+  "governance.finances.report.col.name": "Nome",
+  "governance.finances.report.col.amount": "Montante",
+  "governance.finances.report.col.scope": "Destinado a",
+  "governance.finances.report.col.held": "Valor atual",
+  "governance.finances.report.col.target": "Meta",
+  "governance.finances.report.col.remove": "Remover",
+  "governance.finances.report.add.stat": "Adicionar um cartão",
+  "governance.finances.report.add.note": "Adicionar uma nota",
+  "governance.finances.report.add.partner": "Adicionar um parceiro",
+  "governance.finances.report.remove": "Remover a linha {position}",
+  "governance.finances.report.empty": "Ainda não há nada aqui.",
+  "governance.finances.report.aria.field": "{column}, linha {position}",
+  "governance.finances.report.reserveHint":
+    "Deixa os dois vazios para esconder a reserva.",
+  "governance.finances.report.saved": "Relatório público atualizado.",
+  "governance.finances.report.blockedByText":
+    "Cada cartão precisa de um número e de uma legenda, cada nota de um destaque, e cada parceiro de um nome e de um destino.",
+  "governance.finances.quarter.cta": "Abrir o próximo trimestre",
+  "governance.finances.quarter.title": "Abrir um <em>trimestre</em>",
+  "governance.finances.quarter.sub":
+    "Cria um relatório vazio para a equipa de governação preencher. Só aparece na página pública quando todos os números principais estiverem introduzidos.",
+  "governance.finances.quarter.field.quarter": "Trimestre",
+  "governance.finances.quarter.field.year": "Ano",
+  "governance.finances.quarter.option": "T{quarter}",
+  "governance.finances.quarter.label": "{quarter}.º trimestre de {year}",
+  "governance.finances.quarter.save": "Abrir trimestre",
+  "governance.finances.quarter.saved": "Trimestre aberto.",
+  "governance.finances.quarter.error":
+    "Não foi possível abrir esse trimestre. Confirma que o trimestre mais recente tem todos os números principais introduzidos, e que este vem depois dele e ainda não tem relatório.",
   "moderation.action.created": "Denúncia recebida",
   "moderation.action.appealOverturned": "Recurso revogado",
   "moderation.action.conversationContextViewed":
@@ -6242,6 +6313,14 @@ export const admin: Catalog = {
   "adminForumReview.row.anonymous": "Vai ser publicada em anonimato",
   "adminForumReview.row.scheduled": "Fica visível {time} depois de aprovada",
   "adminForumReview.row.warnings": "Avisos: {warnings}",
+  "adminForumReview.funding.chip": "Angariação",
+  "adminForumReview.funding.aria": "Verificações da angariação",
+  "adminForumReview.funding.goal": "Objetivo",
+  "adminForumReview.funding.link": "As doações vão para",
+  "adminForumReview.funding.verification": "Verificação de quem publica",
+  "adminForumReview.funding.accountAge": "Idade da conta",
+  "adminForumReview.funding.accountAgeDays_one": "{count} dia",
+  "adminForumReview.funding.accountAgeDays_other": "{count} dias",
   "adminForumReview.action.approve": "Aprovar",
   "adminForumReview.action.reject": "Recusar",
   "adminForumReview.rejectModal.title": 'Recusar "{title}"?',

@@ -638,6 +638,32 @@
   animation: qpMapIn var(--dur-slow) var(--ease-out)
     calc(var(--dur-slow) + 50ms) both;
 }
+/* The server-page status (progress, or a failed page with Retry) rides the
+   stage's bottom-left corner in full screen, where the page footer is
+   covered. The phone lifts it above the bottom sheet. */
+.fullscreenPageStatus {
+  position: absolute;
+  inset-block-end: 48px;
+  inset-inline-start: 12px;
+  z-index: var(--z-raised);
+  max-width: calc(100% - 24px);
+  padding: 4px 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e3);
+}
+:global([data-theme="dark"]) .fullscreenPageStatus {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+.fullscreenPageStatus > div {
+  padding: 0;
+}
+@media (max-width: 767px) {
+  .fullscreenPageStatus {
+    inset-block-end: calc(45svh + 12px);
+  }
+}
 :global([data-theme="dark"]) .fullscreenControls {
   border-color: rgba(var(--cream-rgb), 0.1);
 }

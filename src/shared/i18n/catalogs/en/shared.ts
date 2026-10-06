@@ -152,6 +152,8 @@ export const shared: Catalog = {
     "We couldn't reach QueerPulse to load your account. Check your connection and try again in a moment.",
   "auth.error.expired":
     "Your session expired. Please sign in again to pick up where you left off.",
+  // Role or capability bounce to the feed (StaffOnlyBounceToast.tsx).
+  "auth.gate.noAccess": "Your account doesn't have access to that page.",
 
   // Provider-level fallback error toasts (ProfileProvider.tsx / SocialProvider.tsx)
   "profile.saveError": "We couldn't save your profile. Please try again.",
@@ -598,7 +600,7 @@ export const shared: Catalog = {
   "megaNav.work.col.economy.head": "Economy",
   "megaNav.work.col.economy.skillsExchange": "Skills Exchange",
   "megaNav.work.col.economy.solidarityPricing": "Solidarity Pricing",
-  "megaNav.work.col.economy.grants": "Grants",
+  "megaNav.work.col.economy.grants": "Funding & grants",
   "megaNav.work.col.economy.howItWorks": "How our economy works",
   "megaNav.work.col.economy.offerSkill": "Offer a skill",
 

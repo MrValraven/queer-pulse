@@ -1,4 +1,39 @@
 /* Hero migrated to the shared <ResourceHero flushBottom /> (plum tone). */
+
+/* The hero tab row stays on one line and scrolls sideways on narrow screens,
+   like the visas tab bar, so the active underline always sits under its tab.
+   The padding, cancelled by the negative margin, leaves room inside the
+   scroll box for the focus ring and the 44px touch strip, which an overflow
+   box would otherwise clip. */
+.tabScroller {
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 8px;
+  margin: -8px;
+  /* The trailing edge fades out, so a clipped tab reads as "more this way".
+     A mask works on alpha alone, so it holds in light and dark. */
+  mask-image: linear-gradient(
+    to right,
+    black calc(100% - var(--gap-lg)),
+    transparent
+  );
+}
+.tabScroller::-webkit-scrollbar {
+  display: none;
+}
+.tabScroller [role="tablist"] {
+  flex-wrap: nowrap;
+}
+.tabScroller [role="tablist"] > * {
+  flex: none;
+  white-space: nowrap;
+}
+/* Trailing space as wide as the fade, so the last tab scrolls clear of it. */
+.tabScroller [role="tablist"]::after {
+  content: "";
+  flex: none;
+  width: var(--gap-lg);
+}
 .body {
   padding: var(--section-y-80) 0 var(--section-y-104);
 }
@@ -115,7 +150,7 @@
   color: var(--accent-ink);
 }
 .typePrivate {
-  background: rgba(var(--plum-rgb), 0.08);
+  background: rgba(var(--line-rgb), 0.08);
   color: var(--text-strong);
 }
 .typePharmacy {

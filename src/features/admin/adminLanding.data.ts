@@ -11,15 +11,19 @@ import {
   type SpotlightCommunity,
 } from "../homepage/sections/Communities.data";
 import { changemakers } from "../homepage/data/changemakers";
+import { gatherings as homepageGatherings } from "../homepage/data/gatherings";
+import { featureStory, storyCards } from "../homepage/data/stories";
 
 /**
  * Demo fixtures + demo-session mutation registry for the admin landing-page
  * curation surface (`/admin/landing`). Every entity referenced here is a real
- * member/community/changemaker already present in the homepage's static
- * curation data (`homepage/sections/Discovery.data`, `Communities.data`,
- * `homepage/data/changemakers`) — this file only reshapes that curation into
+ * member/community/changemaker/gathering/story already present in the
+ * homepage's static curation data (`homepage/sections/Discovery.data`,
+ * `Communities.data`, `homepage/data/changemakers`, `homepage/data/gatherings`,
+ * `homepage/data/stories`). This file only reshapes that curation into
  * `AdminLandingFeatureDTO`/`AdminEligibleEntityDTO` so the admin picker has
- * something to show without a network, never invents a new persona.
+ * something to show without a network; every persona it lists already
+ * exists in those fixtures.
  */
 
 // ── Section-scoped narrowing helpers ─────────────────────────────────────────
@@ -67,6 +71,14 @@ const featuredMemberKeys = new Set(
 const eligibleMembers = homepageMembers.filter(
   (member) => !featuredMemberKeys.has(member.key),
 );
+
+/** The homepage's static stories carry no slug, so the demo picker keys each
+ *  one by its position in the teaser (feature first, then the two cards). */
+const homepageStories = [featureStory, ...storyCards].map((story, index) => ({
+  slug: `demo-story-${index + 1}`,
+  title: story.title,
+  image: story.image ?? null,
+}));
 
 // ── DEMO_LANDING_FEATURES — the immutable seed ───────────────────────────────
 
@@ -131,6 +143,11 @@ export const DEMO_LANDING_FEATURES: Record<
       hiddenReason: null,
     };
   }),
+  // The demo homepage renders its static Gatherings and Stories sections, so
+  // nothing starts curated here: the picker below offers the same fixtures
+  // for a demo session to try curating.
+  gathering: [],
+  story: [],
 };
 
 // ── DEMO_ELIGIBLE — the "not yet featured" picker pool ───────────────────────
@@ -164,6 +181,18 @@ export const DEMO_ELIGIBLE: Record<LandingSection, AdminEligibleEntityDTO[]> = {
     name: member.name,
     avatarUrl: member.photo ?? null,
   })),
+  gathering: homepageGatherings.map((gathering) => ({
+    targetId: gathering.id,
+    slug: gathering.id,
+    name: gathering.title,
+    avatarUrl: null,
+  })),
+  story: homepageStories.map((story) => ({
+    targetId: story.slug,
+    slug: story.slug,
+    name: story.title,
+    avatarUrl: story.image,
+  })),
 };
 
 // ── Demo-session mutation registry ───────────────────────────────────────────
@@ -195,6 +224,10 @@ function ensureDemoLandingRegistry(): Record<
       changemaker: DEMO_LANDING_FEATURES.changemaker.map((feature) => ({
         ...feature,
       })),
+      gathering: DEMO_LANDING_FEATURES.gathering.map((feature) => ({
+        ...feature,
+      })),
+      story: DEMO_LANDING_FEATURES.story.map((feature) => ({ ...feature })),
     };
   }
   return demoLandingRegistry;

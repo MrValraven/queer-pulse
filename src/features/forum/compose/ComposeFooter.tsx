@@ -25,6 +25,11 @@ export interface ComposeFooterProps {
   onCancel: () => void;
   /** The page owns what each mode does; the footer only names the choice. */
   onPublish: (mode: PublishMode) => void;
+  /**
+   * Moderators read every fundraiser before it shows, so its only way out is
+   * review: the button says so and the schedule menu stays hidden.
+   */
+  isReviewOnly?: boolean;
   className?: string;
 }
 
@@ -44,6 +49,7 @@ export function ComposeFooter({
   isPublishing = false,
   onCancel,
   onPublish,
+  isReviewOnly = false,
   className,
 }: ComposeFooterProps) {
   const { t } = useTranslation();
@@ -66,24 +72,34 @@ export function ComposeFooter({
       >
         {t("forum:compose.cancel")}
       </Button>
-      <span className={styles.publishGroup} data-busy={isPublishing}>
+      <span
+        className={styles.publishGroup}
+        data-busy={isPublishing}
+        data-review-only={isReviewOnly}
+      >
         <Button
           className={styles.publishButton}
           disabled={!isPublishAllowed}
           aria-busy={isPublishing}
-          onClick={() => onPublish("now")}
+          onClick={() => onPublish(isReviewOnly ? "review" : "now")}
         >
           {/* The label only fades while the spinner sits over it, so the
               button keeps its width and its accessible name throughout. */}
           <span className={styles.publishLabel}>
-            {t("forum:compose.publishCta")}
+            {t(
+              isReviewOnly
+                ? "forum:composePage.publishMenu.review.label"
+                : "forum:compose.publishCta",
+            )}
           </span>
           <ComposePublishSpinner isVisible={isPublishing} />
         </Button>
-        <ComposePublishMenu
-          isDisabled={!isPublishAllowed}
-          onSelect={onPublish}
-        />
+        {!isReviewOnly && (
+          <ComposePublishMenu
+            isDisabled={!isPublishAllowed}
+            onSelect={onPublish}
+          />
+        )}
       </span>
     </div>
   );

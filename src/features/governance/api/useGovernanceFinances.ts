@@ -4,6 +4,7 @@ import {
   getGovernanceFinances,
   type FinanceEventNoteDTO,
   type FinancePartnerDTO,
+  type FinanceProvenanceDTO,
   type FinanceReserveDTO,
   type FinanceStatDTO,
   type GovernanceFinanceResponseDTO,
@@ -11,6 +12,14 @@ import {
 import type { FinLine } from "../governance.data";
 
 export interface GovernanceFinancesResult {
+  /** The published quarter ("2026-Q3"), or null when no report has been
+   *  published yet. Drives the section's period label. */
+  quarter: string | null;
+  /** True once a report is published. False on the live empty report, where
+   *  the section renders its "nothing published yet" line (PRD-447). */
+  isPublished: boolean;
+  /** Who entered the figures and when, for the section's provenance line. */
+  provenance: FinanceProvenanceDTO | null;
   stats: FinanceStatDTO[];
   income: FinLine[];
   expense: FinLine[];
@@ -49,7 +58,7 @@ async function buildDemoFinances(): Promise<GovernanceFinanceResponseDTO> {
     RESERVE_TARGET,
   } = await import("../governance.data");
   return {
-    quarter: "",
+    quarter: "2026-Q2",
     stats: FIN_STATS,
     income: INCOME,
     expense: EXPENSE,
@@ -61,11 +70,15 @@ async function buildDemoFinances(): Promise<GovernanceFinanceResponseDTO> {
     // totals from the same DTO field, not a hardcoded label match.
     incomeTotal: 4620,
     expenseTotal: 4150,
-    publishedAt: "",
+    publishedAt: "2026-07-01T00:00:00.000Z",
+    provenance: { source: "manual", enteredAt: "2026-07-01T00:00:00.000Z" },
   };
 }
 
 const EMPTY: Omit<GovernanceFinancesResult, "loading" | "error" | "retry"> = {
+  quarter: null,
+  isPublished: false,
+  provenance: null,
   stats: [],
   income: [],
   expense: [],
@@ -84,7 +97,8 @@ const EMPTY: Omit<GovernanceFinancesResult, "loading" | "error" | "retry"> = {
  *
  * Live mode calls `GET /governance/finances` once (mirrors
  * `useMyEventsData`'s demo/live split) and returns the latest published
- * quarterly transparency snapshot.
+ * quarterly transparency snapshot, or `isPublished: false` while the backend
+ * answers with its empty report.
  */
 export function useGovernanceFinances(): GovernanceFinancesResult {
   const { demoMode } = useDemoMode();
@@ -104,6 +118,15 @@ export function useGovernanceFinances(): GovernanceFinancesResult {
   }
 
   return {
+    quarter: query.data.quarter,
+    // Published needs a quarter AND a provenance a person stands behind. An
+    // older backend sends the seeded report with no provenance at all, so a
+    // frontend that ships first still shows "nothing published yet".
+    isPublished:
+      query.data.quarter !== null &&
+      query.data.provenance != null &&
+      query.data.provenance.source !== "seeded",
+    provenance: query.data.provenance ?? null,
     stats: query.data.stats,
     income: query.data.income,
     expense: query.data.expense,

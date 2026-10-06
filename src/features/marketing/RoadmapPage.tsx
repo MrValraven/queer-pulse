@@ -7,6 +7,7 @@ import {
   SubpageIndex,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
@@ -23,6 +24,7 @@ import styles from "./RoadmapPage.module.css";
 
 export function RoadmapPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const {
     heroStats,
     shipped,
@@ -60,14 +62,15 @@ export function RoadmapPage() {
         <div className={styles.heroStats}>
           {heroStats.map((stat) => (
             <div
-              key={stat.label}
-              className={`${styles.statTile} ${stat.jade ? styles.jade : ""}`}
+              key={stat.kind}
+              className={`${styles.statTile} ${stat.kind === "shipped" ? styles.jade : ""}`}
             >
-              {stat.value && (
-                <div className={styles.statValue}>{stat.value}</div>
-              )}
-              <div className={styles.statLabel}>{stat.label}</div>
-              {stat.note && <div className={styles.statNote}>{stat.note}</div>}
+              <span className={styles.statValue}>{fmt.number(stat.count)}</span>
+              <div className={styles.statLabel}>
+                {t(`marketing:roadmap.hero.stat.${stat.kind}`, {
+                  count: stat.count,
+                })}
+              </div>
             </div>
           ))}
         </div>

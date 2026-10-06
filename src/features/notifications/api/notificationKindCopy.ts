@@ -1,4 +1,7 @@
+import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
+import { OPEN_CALLS_TOPIC_TAG } from "../../forum/funding/funding.data";
+import { formatLisbonDeadline } from "../../forum/funding/fundingDates";
 import type { NotifType } from "../notifications.types";
 
 /**
@@ -61,7 +64,12 @@ export type LifecycleNotificationKind =
   | "subprofile_invite"
   | "subprofile_co_owner_joined"
   | "subprofile_deleted"
-  | "subprofile_member_removed";
+  | "subprofile_member_removed"
+  // Funding & Grants (P3). A saved open call is about to close (stage `7d` or
+  // `1d`), or its deadline moved. System-driven, no actor; the payload carries
+  // `threadSlug`, `threadTitle`, `deadline` and, for the reminder, `stage`.
+  | "funding_deadline_soon"
+  | "funding_deadline_changed";
 
 /**
  * Which tab each of these kinds files under, following the neighbours already
@@ -116,6 +124,9 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   subprofile_co_owner_joined: "community",
   subprofile_deleted: "community",
   subprofile_member_removed: "community",
+  // A saved call's deadline news, the tab housing_listing_expiring uses.
+  funding_deadline_soon: "platform",
+  funding_deadline_changed: "platform",
 };
 
 export function isLifecycleKind(
@@ -163,6 +174,7 @@ const OUTCOME_FIELDS: Partial<
     field: "role",
     values: ["owner", "co_owner", "mod", "member"],
   },
+  funding_deadline_soon: { field: "stage", values: ["7d", "1d"] },
 };
 
 function payloadString(payload: unknown, field: string): string | undefined {
@@ -289,6 +301,8 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   subprofile_co_owner_joined: ["subprofileName"],
   subprofile_deleted: ["subprofileName"],
   subprofile_member_removed: ["subprofileName"],
+  funding_deadline_soon: ["threadTitle"],
+  funding_deadline_changed: ["threadTitle"],
 };
 
 /**
@@ -335,4 +349,38 @@ export function applyLifecycleTokens(
             "notifications:type.listing_edit_suggestion_accepted.fieldFallback",
           );
   }
+}
+
+/**
+ * The deadline a funding notification names, as a Lisbon date and time: the
+ * reminders run on Lisbon time, and the facts panel shows the same clock. A
+ * row with no readable deadline, or rendered without formatters, reads the
+ * kind's own fallback phrase.
+ */
+export function fundingDeadlineToken(
+  type: string,
+  payload: unknown,
+  t: TFunction,
+  fmt?: Formatters,
+): string {
+  const deadline = payloadString(payload, "deadline");
+  if (!fmt || !deadline || Number.isNaN(Date.parse(deadline))) {
+    return t(`notifications:type.${type}.dateFallback`);
+  }
+  return formatLisbonDeadline(fmt, deadline);
+}
+
+/**
+ * The open-calls topic's name in the reader's language, for a
+ * `topic_new_post` row about it; null for every other row.
+ */
+export function openCallsTopicLabel(
+  type: string,
+  payload: unknown,
+  t: TFunction,
+): string | null {
+  if (type !== "topic_new_post") return null;
+  return payloadString(payload, "topicSlug") === OPEN_CALLS_TOPIC_TAG
+    ? t("notifications:type.topic_new_post.openCallsLabel")
+    : null;
 }

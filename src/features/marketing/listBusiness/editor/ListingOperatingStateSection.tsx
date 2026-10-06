@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { reasonFor } from "../../../../shared/api/errorMessage";
 import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
@@ -101,7 +102,7 @@ export function ListingOperatingStateSection({
         onError: (error) => {
           setIsConfirmingClosure(false);
           setFailure(
-            error.message || t("marketing:listBusiness.trading.saveError"),
+            reasonFor(error) ?? t("marketing:listBusiness.trading.saveError"),
           );
         },
       },

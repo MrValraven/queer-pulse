@@ -101,8 +101,9 @@
 }
 .bellBadge {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 1px;
+  right: auto;
+  inset-inline-start: calc(50% + 1px);
   /* 17 / 9, in em so the badge grows with the unread count inside it. */
   min-width: 1.889em;
   height: 1.889em;

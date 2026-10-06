@@ -4,18 +4,15 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell } from "./ModalKit";
+import { ModalShell, SuccessPanel } from "./ModalKit";
+import type { RecommendBody } from "./api/landlord.api";
 import { useRecommendLandlord } from "./api/useRecommendLandlord";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
+import { useStepUpVerificationGate } from "./useStepUpVerificationGate";
 import styles from "./housingModals.module.css";
 
 // "Message the lister" lives in `HousingEnquiryModal.tsx`, on the shared
 // first-contact composer.
-
-const Check = () => (
-  <svg viewBox="0 0 24 24">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
 
 /**
  * PRD-249. What the author of a landlord recommendation attests to: that they
@@ -165,70 +162,73 @@ export function RecommendModal({
   // self-attested and unverified.
   const [attestation, setAttestation] = useState(EMPTY_TENANCY_ATTESTATION);
   const recommendLandlord = useRecommendLandlord(slug);
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
+  const { handleStepUpError, stepUpGate } = useStepUpVerificationGate();
   const canSubmit =
     text.trim().length >= 20 && isTenancyAttestationComplete(attestation);
   const remaining = 20 - text.trim().length;
 
+  // The affirming pledge and the phone step-up each open their own prompt;
+  // passing it sends the same recommendation again.
+  const sendRecommendation = (body: RecommendBody) => {
+    recommendLandlord.mutate(body, {
+      onSuccess: () => {
+        onSubmitted?.(body.stars, body.text);
+        setDone(true);
+      },
+      onError: (error) => {
+        const retry = () => sendRecommendation(body);
+        if (handlePledgeError(error, retry)) return;
+        if (handleStepUpError(error, retry)) return;
+        // The form stays open and filled in so the member can try again.
+        showToast(t("economy:housingModal.recommend.error"), "error");
+      },
+    });
+  };
+
   const submit = () => {
     if (!canSubmit) return;
-    const trimmedText = text.trim();
-    recommendLandlord.mutate(
-      {
-        stars,
-        text: trimmedText,
-        // Always `true` here: the button is disabled until the box is ticked,
-        // and the backend refuses anything else.
-        hasRentedFromThisLandlord: true,
-        tenancyStartedOn: attestation.tenancyStartedOn,
-        // Omitted, never sent empty: "still renting from them" is a real
-        // answer, and it is the absence of an end month that carries it.
-        ...(attestation.isStillRenting
-          ? {}
-          : { tenancyEndedOn: attestation.tenancyEndedOn }),
-      },
-      {
-        onSuccess: () => {
-          onSubmitted?.(stars, trimmedText);
-          setDone(true);
-        },
-        onError: () => {
-          // Leave the form open and filled in so the member can retry —
-          // don't show the success panel for a submission that didn't land.
-          showToast(t("economy:housingModal.recommend.error"), "error");
-        },
-      },
-    );
+    sendRecommendation({
+      stars,
+      text: text.trim(),
+      // Always `true` here: the button is disabled until the box is ticked,
+      // and the backend refuses anything else.
+      hasRentedFromThisLandlord: true,
+      tenancyStartedOn: attestation.tenancyStartedOn,
+      // Included only when the member has ended the tenancy; a missing end
+      // month means they still rent there.
+      ...(attestation.isStillRenting
+        ? {}
+        : { tenancyEndedOn: attestation.tenancyEndedOn }),
+    });
   };
+
+  const gate = pledgeGate ?? stepUpGate;
+  if (gate) return gate;
 
   return (
     <ModalShell
       onClose={onClose}
+      success={done}
       ariaLabel={t("economy:housingModal.recommend.ariaLabel")}
     >
       {done ? (
-        <div className={styles.success}>
-          <div className={styles.successIcon}>
-            <Check />
-          </div>
-          <div className={styles.title}>
+        <SuccessPanel
+          title={
             <Translation
               i18nKey="economy:housingModal.recommend.successTitle"
               components={{ em: <em /> }}
             />
-          </div>
-          <p className={styles.sub}>
-            <Translation
-              i18nKey="economy:housingModal.recommend.successBody"
-              values={{ landlordName }}
-              components={{ strong: <strong /> }}
-            />
-          </p>
-          <div className={styles.actions}>
-            <Button variant="ghost" className={styles.full} onClick={onClose}>
-              {t("economy:housingModal.done")}
-            </Button>
-          </div>
-        </div>
+          }
+          onClose={onClose}
+          closeLabel={t("economy:housingModal.done")}
+        >
+          <Translation
+            i18nKey="economy:housingModal.recommend.successBody"
+            values={{ landlordName }}
+            components={{ strong: <strong /> }}
+          />
+        </SuccessPanel>
       ) : (
         <div>
           <div className={styles.eye}>

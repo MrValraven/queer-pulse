@@ -164,6 +164,8 @@ export const connect: Catalog = {
   "form.reasonShouldMeet": "I think we should meet",
   "form.reasonSomethingElse": "Something else entirely",
   "form.cancel": "Cancel",
+  "preview.heading": "What {first} will see",
+  "preview.messagePlaceholder": "Your message shows up here.",
   "form.sendError":
     "That didn't go through. Check your connection and try again.",
   "form.rateLimitError":
@@ -196,6 +198,7 @@ export const connect: Catalog = {
   "incoming.acceptAndSend": "Accept and take my message",
   "incoming.decline": "Politely decline",
   "incoming.later": "Decide later",
+  "incoming.noteLabel": "{name} wrote",
   // Keeping a composed message when a reach-out can't go through (PRD-03).
   "notice.draftKept": "Your message is still here. Take it with you.",
   "notice.copyDraft": "Copy my message",

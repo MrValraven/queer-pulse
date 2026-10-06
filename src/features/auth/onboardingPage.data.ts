@@ -1,5 +1,5 @@
 import type { IconType } from "react-icons";
-import { FiAward, FiBookOpen, FiCalendar, FiUsers } from "react-icons/fi";
+import { FiAward, FiMapPin, FiMessageSquare, FiUsers } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 
 /**
@@ -105,25 +105,25 @@ export const QUICK_STARTS: {
   descriptionValues?: Record<string, string | number>;
 }[] = [
   {
-    to: routes.members,
+    to: routes.communities,
     icon: FiUsers,
     iconBackground: "rgba(var(--plum-rgb), 0.07)",
-    titleKey: "auth:onboarding.quickStart.browseDirectory.title",
-    descriptionKey: "auth:onboarding.quickStart.browseDirectory.desc",
+    titleKey: "auth:onboarding.quickStart.communities.title",
+    descriptionKey: "auth:onboarding.quickStart.communities.desc",
   },
   {
-    to: routes.calendar,
-    icon: FiCalendar,
+    to: routes.directory,
+    icon: FiMapPin,
     iconBackground: "rgba(var(--accent-rgb), 0.08)",
-    titleKey: "auth:onboarding.quickStart.gatherings.title",
-    descriptionKey: "auth:onboarding.quickStart.gatherings.desc",
+    titleKey: "auth:onboarding.quickStart.businessDirectory.title",
+    descriptionKey: "auth:onboarding.quickStart.businessDirectory.desc",
   },
   {
-    to: routes.magazine,
-    icon: FiBookOpen,
+    to: routes.forum,
+    icon: FiMessageSquare,
     iconBackground: "rgba(var(--jade-rgb), 0.08)",
-    titleKey: "auth:onboarding.quickStart.magazine.title",
-    descriptionKey: "auth:onboarding.quickStart.magazine.desc",
+    titleKey: "auth:onboarding.quickStart.forum.title",
+    descriptionKey: "auth:onboarding.quickStart.forum.desc",
   },
   // The gamified 6-milestone checklist at /account/getting-started — a real
   // next-steps surface a new member currently only discovers by chance via the

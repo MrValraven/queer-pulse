@@ -2,7 +2,12 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Button, Tabs, PullToRefresh } from "../../shared/components/ui";
+import {
+  Button,
+  LoadMoreFooter,
+  Tabs,
+  PullToRefresh,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
@@ -18,6 +23,28 @@ import { bucketNotificationsByDay } from "./notificationDayBuckets";
 import { notificationTabs, type NotifType, type Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
 
+/** The inbox with nothing loaded: a failed fetch must not read as an empty
+ *  inbox, or a real backend fault looks like zero notifications. */
+function NotificationsLoadError({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.empty} role="alert">
+      <div style={{ fontSize: 40 }}>
+        <FiAlertCircle />
+      </div>
+      <div className={styles.emptyTitle}>
+        {t("notifications:page.error.title")}
+      </div>
+      <div>{t("notifications:page.error.description")}</div>
+      <div className={styles.errorAction}>
+        <Button type="button" variant="primary" onClick={onRetry}>
+          {t("notifications:page.error.retry")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function NotificationsPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -27,10 +54,15 @@ export function NotificationsPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     isLoading,
     isError,
     refetch,
   } = useNotifications();
+  // ENG-501: React Query also sets `isError` when only the next page or a
+  // background refetch failed. The error panel is for an inbox with nothing
+  // loaded; loaded rows stay and the footer below retries the failed page.
+  const hasNothingLoadedError = isError && notifications.length === 0;
   const { data: mentionDays = [] } = useMentions();
   const { readIds, resolvedIds, markRead, markAllRead, resolve, dismiss } =
     useNotificationsReadState(notifications);
@@ -148,27 +180,8 @@ export function NotificationsPage() {
             <MentionsPanel />
           ) : isLoading ? (
             <NotificationsListSkeleton count={7} />
-          ) : isError ? (
-            // Distinct from "all caught up": a failed fetch must not read as an
-            // empty inbox, or a real backend fault looks like zero notifications.
-            <div className={styles.empty} role="alert">
-              <div style={{ fontSize: 40 }}>
-                <FiAlertCircle />
-              </div>
-              <div className={styles.emptyTitle}>
-                {t("notifications:page.error.title")}
-              </div>
-              <div>{t("notifications:page.error.description")}</div>
-              <div className={styles.errorAction}>
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => void refetch()}
-                >
-                  {t("notifications:page.error.retry")}
-                </Button>
-              </div>
-            </div>
+          ) : hasNothingLoadedError ? (
+            <NotificationsLoadError onRetry={refetch} />
           ) : visible.length === 0 ? (
             <div className={styles.empty}>
               <div style={{ fontSize: 40 }}>
@@ -205,18 +218,15 @@ export function NotificationsPage() {
                 {earlier.map((n, i) => renderItem(n, recent.length + i))}
               </div>
               {hasNextPage && (
-                <div className={styles.loadMore}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    disabled={isFetchingNextPage}
-                    onClick={fetchNextPage}
-                  >
-                    {isFetchingNextPage
-                      ? t("notifications:page.loadingMore")
-                      : t("notifications:page.loadMoreCta")}
-                  </Button>
-                </div>
+                <LoadMoreFooter
+                  className={styles.loadMore}
+                  isFetchingNextPage={isFetchingNextPage}
+                  isFetchNextPageError={isFetchNextPageError}
+                  onLoadMore={fetchNextPage}
+                  errorMessage={t("common:error.loadMore")}
+                  label={t("notifications:page.loadMoreCta")}
+                  loadingLabel={t("notifications:page.loadingMore")}
+                />
               )}
             </PullToRefresh>
           )}

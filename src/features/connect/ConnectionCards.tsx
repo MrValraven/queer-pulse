@@ -19,6 +19,7 @@ export function CardHead({
   more,
   isAccepted,
   onMessage,
+  isPreview = false,
 }: {
   view: ConnectionView;
   more?: boolean;
@@ -28,6 +29,9 @@ export function CardHead({
   isAccepted?: boolean;
   /** Opens the conversation from the kebab; omit where messaging isn't apt. */
   onMessage?: () => void;
+  /** The sender's own preview of their request (ConnectRequestPreview): the
+   *  identity is plain text, since there is no profile to visit from here. */
+  isPreview?: boolean;
 }) {
   // Staff role is resolved from the shared roster map (same source the message
   // picker uses); MemberIdentity renders the StaffBadge from it.
@@ -44,7 +48,7 @@ export function CardHead({
           staffBadgedRoles: staffMap[view.slug]?.badgedStaffRoles,
         }}
         secondary={secondary}
-        to={profilePath(view.slug)}
+        to={isPreview ? undefined : profilePath(view.slug)}
         size={54}
       />
       {more && (
@@ -237,25 +241,45 @@ export function AllConnectionCard({
   );
 }
 
+type IncomingCardProps =
+  | {
+      view: ConnectionView;
+      onAccept: () => void;
+      onDecline: () => void;
+      isPreview?: false;
+    }
+  | {
+      view: ConnectionView;
+      onAccept?: undefined;
+      onDecline?: undefined;
+      /** The sender's live preview inside the connect modal: the same card the
+       *  recipient gets, minus the kebab, profile link and mutuals, with the
+       *  answers shown but switched off and a placeholder for an empty message. */
+      isPreview: true;
+    };
+
 export function IncomingCard({
   view,
   onAccept,
   onDecline,
-}: {
-  view: ConnectionView;
-  onAccept: () => void;
-  onDecline: () => void;
-}) {
+  isPreview = false,
+}: IncomingCardProps) {
   const { t } = useTranslation();
   const { mutuals, sentAgo, requestMessage, requestReason, introducedBy } =
     view.meta;
   const reason = reasonLabel(requestReason, t);
   return (
-    <div className={`${styles.card} ${styles.pending}`}>
+    <div
+      className={
+        isPreview
+          ? `${styles.card} ${styles.pending} ${styles.cardPreview}`
+          : `${styles.card} ${styles.pending}`
+      }
+    >
       {/* The kebab carries Mute / Block / Report. Without it a member had to
           accept an unwanted request just to reach those actions. No Message
           item here: the conversation only opens once the request is accepted. */}
-      <CardHead view={view} more />
+      <CardHead view={view} more={!isPreview} isPreview={isPreview} />
       {introducedBy && (
         <p className={styles.introBy}>
           <Translation
@@ -266,23 +290,29 @@ export function IncomingCard({
         </p>
       )}
       <div className={styles.meta}>
-        {mutuals != null && mutuals > 0 ? (
-          <Translation
-            i18nKey="connect:card.mutuals"
-            components={{ b: <b /> }}
-            values={{ count: mutuals }}
-          />
+        {/* Each sentence sits in its own span: a bare <Translation> emits its
+            text and <b> as separate flex items, split apart by .meta's gap. */}
+        {isPreview ? null : mutuals != null && mutuals > 0 ? (
+          <span>
+            <Translation
+              i18nKey="connect:card.mutuals"
+              components={{ b: <b /> }}
+              values={{ count: mutuals }}
+            />
+          </span>
         ) : (
           <span className={styles.metaMuted}>
             {t("connect:card.noMutuals")}
           </span>
         )}
         {sentAgo && (
-          <Translation
-            i18nKey="connect:card.sentAgo"
-            components={{ b: <b /> }}
-            values={{ sentAgo }}
-          />
+          <span>
+            <Translation
+              i18nKey="connect:card.sentAgo"
+              components={{ b: <b /> }}
+              values={{ sentAgo }}
+            />
+          </span>
         )}
       </div>
       {reason && (
@@ -295,11 +325,26 @@ export function IncomingCard({
         </p>
       )}
       {requestMessage && <p className={styles.reqMessage}>{requestMessage}</p>}
+      {isPreview && !requestMessage && (
+        <p className={`${styles.reqMessage} ${styles.reqMessagePlaceholder}`}>
+          {t("connect:preview.messagePlaceholder")}
+        </p>
+      )}
       <div className={styles.actions}>
-        <Button type="button" variant="ghost" onClick={onDecline}>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onDecline}
+          disabled={isPreview || undefined}
+        >
           {t("connect:card.decline")}
         </Button>
-        <Button type="button" variant="primary" onClick={onAccept}>
+        <Button
+          type="button"
+          variant="primary"
+          onClick={onAccept}
+          disabled={isPreview || undefined}
+        >
           {t("connect:card.accept")}
         </Button>
       </div>

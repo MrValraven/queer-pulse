@@ -39,6 +39,8 @@ export function ThreadPageModals({
   isTagsSaving,
   onSaveTags,
   onCloseTags,
+  threadKind,
+  shouldShowAskReviewNote,
 }: {
   reportTarget: ForumReportTarget | null;
   onCloseReport: () => void;
@@ -69,6 +71,9 @@ export function ThreadPageModals({
   isTagsSaving: boolean;
   onSaveTags: (tags: string[]) => void;
   onCloseTags: () => void;
+  threadKind?: string | null;
+  /** The viewer wrote this fundraiser, so an edit sends it back to review. */
+  shouldShowAskReviewNote: boolean;
 }) {
   return (
     <>
@@ -77,6 +82,7 @@ export function ThreadPageModals({
           authorName={reportTarget.authorName}
           subjectId={reportTarget.subjectId}
           subjectType={reportTarget.subjectType}
+          isFundingThread={threadCategory === "funding"}
           onClose={onCloseReport}
         />
       )}
@@ -87,6 +93,7 @@ export function ThreadPageModals({
           busy={editBusy}
           onSave={onSaveOp}
           onClose={onCloseOp}
+          shouldShowAskReviewNote={shouldShowAskReviewNote}
         />
       )}
       {confirmDelete && (
@@ -117,6 +124,8 @@ export function ThreadPageModals({
           busy={isTagsSaving}
           onSave={onSaveTags}
           onClose={onCloseTags}
+          threadKind={threadKind}
+          shouldShowAskReviewNote={shouldShowAskReviewNote}
         />
       )}
     </>

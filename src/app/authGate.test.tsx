@@ -7,7 +7,9 @@ import {
   isGatedPath,
   requiredCapability,
   useAuthGateRedirect,
+  useIsStaffOnlyBounce,
 } from "./authGate";
+import { routes } from "./routeMap";
 
 /**
  * `useAuthGateRedirect` reads `useAuth()` and `useDemoMode()` directly, so the
@@ -99,6 +101,16 @@ describe("useAuthGateRedirect: public support pages", () => {
     });
     expect(result.current).toBe("/auth/sign-in?next=%2Ffeed");
   });
+
+  // PRD-320: a deep link has to land on the same tab and anchor after sign-in.
+  it("carries the query string and hash into next", () => {
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt("/feed?tab=following#post-3"),
+    });
+    expect(result.current).toBe(
+      `/auth/sign-in?next=${encodeURIComponent("/feed?tab=following#post-3")}`,
+    );
+  });
 });
 
 describe("useAuthGateRedirect: installed-app launch", () => {
@@ -146,7 +158,7 @@ describe("useAuthGateRedirect: /magazine/editor capability gate", () => {
     const { result } = renderHook(() => useAuthGateRedirect(), {
       wrapper: wrapperAt("/magazine/editor"),
     });
-    expect(result.current).toBe("/");
+    expect(result.current).toBe(routes.feed);
   });
 
   it("admits a member who holds the magazine_editor grant", () => {
@@ -172,7 +184,7 @@ describe("useAuthGateRedirect: /magazine/editor capability gate", () => {
     const { result } = renderHook(() => useAuthGateRedirect(), {
       wrapper: wrapperAt("/magazine/editor"),
     });
-    expect(result.current).toBe("/");
+    expect(result.current).toBe(routes.feed);
   });
 });
 
@@ -331,6 +343,23 @@ describe("useAuthGateRedirect: leaving and exporting under an account sanction",
       });
       expect(result.current).toBe("/account/delete-account");
     });
+
+    // PRD-330: someone deciding whether to cancel an erasure has to be able to
+    // read the terms and reach help, under the canonical paths and the short
+    // aliases that redirect to them (the gate runs before the redirect).
+    it("reads the terms and help pages and their short aliases", () => {
+      for (const readablePath of [
+        routes.terms,
+        routes.help,
+        "/terms",
+        "/help",
+      ]) {
+        const { result } = renderHook(() => useAuthGateRedirect(), {
+          wrapper: wrapperAt(readablePath),
+        });
+        expect(result.current).toBeNull();
+      }
+    });
   });
 
   // Demo mode carries no real account status, so none of these branches may
@@ -340,6 +369,75 @@ describe("useAuthGateRedirect: leaving and exporting under an account sanction",
     accountStatus = "suspended";
     const { result } = renderHook(() => useAuthGateRedirect(), {
       wrapper: wrapperAt("/feed"),
+    });
+    expect(result.current).toBeNull();
+  });
+});
+
+/**
+ * PRD-330. A member following a staff or admin link lands on their feed, and
+ * `useIsStaffOnlyBounce` tells `StaffOnlyBounceToast` to explain why. It must
+ * stay false for every other redirect that also happens to land on the feed or
+ * that fires on a staff path for a different reason.
+ */
+describe("useIsStaffOnlyBounce", () => {
+  beforeEach(() => {
+    loggedIn = true;
+    role = "member";
+    staffRoles = [];
+    demoMode = false;
+    accountStatus = "active";
+  });
+
+  afterEach(() => {
+    accountStatus = "active";
+  });
+
+  it("is true for a plain member sent off the admin console", () => {
+    const { result } = renderHook(() => useIsStaffOnlyBounce(), {
+      wrapper: wrapperAt("/admin"),
+    });
+    expect(result.current).toBe(true);
+  });
+
+  // The deactivated branch decides first and sends them to delete-account.
+  it("is false for a deactivated member on the admin console", () => {
+    accountStatus = "deactivated";
+    const { result } = renderHook(() => useIsStaffOnlyBounce(), {
+      wrapper: wrapperAt("/admin"),
+    });
+    expect(result.current).toBe(false);
+  });
+
+  // The guest-only bounce also lands on the feed, for an unrelated reason.
+  it("is false for a signed-in member bounced off the sign-in page", () => {
+    const { result: redirect } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt(routes.signIn),
+    });
+    expect(redirect.current).toBe(routes.feed);
+    const { result } = renderHook(() => useIsStaffOnlyBounce(), {
+      wrapper: wrapperAt(routes.signIn),
+    });
+    expect(result.current).toBe(false);
+  });
+});
+
+describe("useAuthGateRedirect: mod-accessible admin pages", () => {
+  beforeEach(() => {
+    loggedIn = true;
+    role = "moderator";
+    staffRoles = [];
+    demoMode = false;
+    accountStatus = "active";
+  });
+
+  afterEach(() => {
+    role = "member";
+  });
+
+  it("admits a moderator to the moderation console under /admin", () => {
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt(routes.adminModeration),
     });
     expect(result.current).toBeNull();
   });

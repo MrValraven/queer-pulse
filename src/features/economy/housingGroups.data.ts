@@ -4,7 +4,11 @@
  * reads the API and falls back to these when demo is on. Copy is warm and
  * community-first (see the `queer-community-copywriting` skill).
  */
-import type { GroupMembershipStanding } from "./api/housingGroups.api";
+import type {
+  GroupListingModerationState,
+  GroupMembershipStanding,
+} from "./api/housingGroups.api";
+import type { Tint } from "./housingListings";
 
 export type { GroupMembershipStanding };
 
@@ -15,6 +19,20 @@ export interface GroupScreeningQuestion {
   required: boolean;
 }
 
+/** The member who posted a group room, ready for an avatar and a name
+ *  (PRD-443). Only a signed-in reader is ever told who posted a room. */
+export interface GroupListingPoster {
+  slug: string;
+  /** The first name as the member wrote it, whole, so a compound name such as
+   *  "Maria João" greets in full. */
+  firstName: string;
+  fullName: string;
+  initials: string;
+  tint: Tint;
+  /** The poster's photo, already null when they hid it. */
+  avatarUrl?: string;
+}
+
 /** A norm-compliant listing shared inside a group (price + access required). */
 export interface GroupListing {
   id: string;
@@ -23,6 +41,11 @@ export interface GroupListing {
   neighbourhood: string;
   priceEuros: number;
   accessibilityInfo: string;
+  /** Who posted the room. Absent for an anonymous reader, an older backend,
+   *  or a room whose poster's account is gone; no poster means no "Message". */
+  poster?: GroupListingPoster;
+  /** True on the reader's own room, which offers no "Message" to themselves. */
+  isOwnListing?: boolean;
 }
 
 /**
@@ -101,6 +124,16 @@ export const VETTED_GROUPS: VettedGroup[] = [
         priceEuros: 430,
         accessibilityInfo:
           "Third floor, no lift. Step-free once inside. Bathroom door is 70cm.",
+        // The demo member's own room, the same one `DEMO_MY_GROUP_LISTINGS`
+        // shows as live, so the card says "You posted this room".
+        poster: {
+          slug: "tiago",
+          firstName: "Tiago",
+          fullName: "Tiago Costa",
+          initials: "TC",
+          tint: "coral",
+        },
+        isOwnListing: true,
       },
       {
         id: "l-2",
@@ -111,6 +144,13 @@ export const VETTED_GROUPS: VettedGroup[] = [
         priceEuros: 620,
         accessibilityInfo:
           "Step-free entry from the street. Wet-room shower, no bath lip.",
+        poster: {
+          slug: "ines-duarte",
+          firstName: "Inês",
+          fullName: "Inês Duarte",
+          initials: "ID",
+          tint: "jade",
+        },
       },
     ],
   },
@@ -135,6 +175,13 @@ export const VETTED_GROUPS: VettedGroup[] = [
         priceEuros: 310,
         accessibilityInfo:
           "Second floor, no lift. Narrow stairs. Not step-free.",
+        poster: {
+          slug: "kai-moreira",
+          firstName: "Kai",
+          fullName: "Kai Moreira",
+          initials: "KM",
+          tint: "plum",
+        },
       },
     ],
   },
@@ -170,6 +217,11 @@ export interface MyGroupListing extends GroupListing {
   /** Taken down after publication for a norm the moderator recorded. */
   hidden: boolean;
   hiddenReason: string | null;
+  /** Taken down by a moderator acting on a report. The group page withholds
+   *  the room, so the poster's list says so even while `status` is `live`.
+   *  Optional so a row built on the client before the server answers reads
+   *  as "no report takedown". */
+  moderationState?: GroupListingModerationState;
   decidedAt: string | null;
   decisionReason: string | null;
   createdAt: string;
@@ -178,8 +230,9 @@ export interface MyGroupListing extends GroupListing {
 /**
  * Demo fixtures for "your rooms in this group", keyed by group slug. Live mode
  * reads `GET /housing-groups/:slug/listings/mine` instead and never touches
- * these. Deliberately covers all four states in one group, since the whole
- * point of the surface is that a member can see which one they are in.
+ * these. Deliberately covers all four states in one group, plus a room a
+ * report took down, since the whole point of the surface is that a member can
+ * see which one they are in.
  */
 export const DEMO_MY_GROUP_LISTINGS: Record<string, MyGroupListing[]> = {
   "lisbon-trans-housing": [
@@ -195,6 +248,7 @@ export const DEMO_MY_GROUP_LISTINGS: Record<string, MyGroupListing[]> = {
       status: "live",
       hidden: false,
       hiddenReason: null,
+      moderationState: null,
       decidedAt: "2026-08-19T10:20:00.000Z",
       decisionReason: null,
       createdAt: "2026-08-18T18:04:00.000Z",
@@ -210,6 +264,7 @@ export const DEMO_MY_GROUP_LISTINGS: Record<string, MyGroupListing[]> = {
       status: "question",
       hidden: false,
       hiddenReason: null,
+      moderationState: null,
       decidedAt: "2026-08-24T09:12:00.000Z",
       decisionReason:
         "Could you say whether the 340 covers bills or sits on top of them? The group rule is that the number people read is the number they pay.",
@@ -225,10 +280,29 @@ export const DEMO_MY_GROUP_LISTINGS: Record<string, MyGroupListing[]> = {
       status: "declined",
       hidden: false,
       hiddenReason: null,
+      moderationState: null,
       decidedAt: "2026-08-21T15:02:00.000Z",
       decisionReason:
         "Two house rules are missing here: the real rent has to be in the post, and access has to be described rather than left as a question. Post it again with both and it will go straight up.",
       createdAt: "2026-08-21T11:15:00.000Z",
+    },
+    // Approved, then reported and hidden by a moderator: still `live` on the
+    // row, and off the group page all the same.
+    {
+      id: "mine-4",
+      title: "Double room, deposit up front",
+      description:
+        "Lovely double room. A month's deposit secures it before the viewing.",
+      neighbourhood: "Penha de França, Lisbon",
+      priceEuros: 520,
+      accessibilityInfo: "First floor, six steps to the door.",
+      status: "live",
+      hidden: false,
+      hiddenReason: null,
+      moderationState: "hidden",
+      decidedAt: "2026-08-12T16:30:00.000Z",
+      decisionReason: null,
+      createdAt: "2026-08-11T09:05:00.000Z",
     },
   ],
 };

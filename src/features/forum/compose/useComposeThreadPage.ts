@@ -1,4 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
+import {
+  useAskEligibility,
+  type AskEligibility,
+} from "../funding/useAskEligibility";
+import {
+  useFundingLinkLookup,
+  type FundingLinkLookup,
+} from "../funding/useFundingLinkLookup";
+import type { FundingErrorCode } from "../funding/funding.types";
 import type { ForumDraftStatus } from "../useForumComposerDraft";
 import {
   COMPOSE_BODY_READY_LENGTH,
@@ -28,6 +37,7 @@ import {
   useComposeThreadState,
   type ComposeThreadSetters,
 } from "./useComposeThreadState";
+import { useComposeServerFundingError } from "./useComposeServerFundingError";
 import { useComposeThreadPageDraft } from "./useComposeThreadPageDraft";
 import {
   useSimilarThreads,
@@ -54,6 +64,8 @@ export interface UseComposeThreadPageOptions {
   initialTags?: readonly string[];
   /** Seeds the audience, from a community's own "Post here" CTA. */
   initialCommunitySlug?: string;
+  /** The funding code the server last refused a publish with, if any. */
+  serverFundingErrorCode?: FundingErrorCode | null;
 }
 
 export interface ComposeThreadPage {
@@ -76,6 +88,14 @@ export interface ComposeThreadPage {
   /** True when the three required rows are ticked and nothing blocks. */
   canPublish: boolean;
   similar: SimilarThreadsResult;
+  /** The duplicate-link lookup for an open call's link field. */
+  fundingLookup: FundingLinkLookup;
+  /** Whether this member may write a fundraiser (phone verification). */
+  askEligibility: AskEligibility;
+  /** The server's last funding refusal that still applies to the draft. */
+  serverFundingErrorCode: FundingErrorCode | null;
+  /** The member verified their phone from the fundraiser gate. */
+  confirmAskVerified: () => void;
   /** Hides one dismissible nudge. The crisis row comes back on new matching
    *  text, because its dismissal is keyed on the wording that raised it. */
   dismissNudge: (nudge: ComposeNudge) => void;
@@ -96,6 +116,7 @@ export function useComposeThreadPage(
     initialTitle,
     initialTags,
     initialCommunitySlug,
+    serverFundingErrorCode: rawServerFundingErrorCode = null,
   } = options;
 
   const { core, setters } = useComposeThreadState(
@@ -136,6 +157,13 @@ export function useComposeThreadPage(
   );
 
   const similar = useSimilarThreads(core.title);
+  const fundingLookup = useFundingLinkLookup(core.funding?.linkUrl ?? "");
+  const askEligibility = useAskEligibility(core.kind === "ask");
+  const { serverFundingErrorCode, confirmAskVerified } =
+    useComposeServerFundingError(
+      rawServerFundingErrorCode,
+      core.funding?.linkUrl ?? "",
+    );
 
   const derived = useComposeThreadDerived({
     state,
@@ -143,6 +171,14 @@ export function useComposeThreadPage(
     dismissedKeys,
     isDoxxingAcknowledged,
     similar,
+    isFundingDuplicateUnconfirmed:
+      core.kind === "call" && fundingLookup.isDuplicateUnconfirmed,
+    // The server's own verification refusal holds Publish too, until the
+    // member verifies here.
+    isAskVerificationMissing:
+      core.kind === "ask" &&
+      (askEligibility.status === "needsPhone" ||
+        serverFundingErrorCode === "funding_ask_verification_required"),
   });
 
   const dismissNudge = useCallback((nudge: ComposeNudge) => {
@@ -160,6 +196,10 @@ export function useComposeThreadPage(
     photos,
     community,
     similar,
+    fundingLookup,
+    askEligibility,
+    serverFundingErrorCode,
+    confirmAskVerified,
     dismissNudge,
     setDoxxingAcknowledged,
     isDoxxingAcknowledged,
@@ -175,6 +215,8 @@ interface DerivedInput {
   dismissedKeys: readonly string[];
   isDoxxingAcknowledged: boolean;
   similar: SimilarThreadsResult;
+  isFundingDuplicateUnconfirmed: boolean;
+  isAskVerificationMissing: boolean;
 }
 
 /**
@@ -188,6 +230,8 @@ function useComposeThreadDerived({
   dismissedKeys,
   isDoxxingAcknowledged,
   similar,
+  isFundingDuplicateUnconfirmed,
+  isAskVerificationMissing,
 }: DerivedInput) {
   const plainBody = useMemo(() => toPlainText(state.body), [state.body]);
 
@@ -208,8 +252,17 @@ function useComposeThreadDerived({
         isDuplicateTitle: similar.isDuplicate,
         duplicateTitle: similar.duplicateTitle,
         isDoxxingAcknowledged,
+        isFundingDuplicateUnconfirmed,
+        isAskVerificationMissing,
       }),
-    [state, similar.isDuplicate, similar.duplicateTitle, isDoxxingAcknowledged],
+    [
+      state,
+      similar.isDuplicate,
+      similar.duplicateTitle,
+      isDoxxingAcknowledged,
+      isFundingDuplicateUnconfirmed,
+      isAskVerificationMissing,
+    ],
   );
 
   const canPublish =

@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { parseAmountInput } from "./adminFinanceAmount";
 import { isAmountRejected } from "./adminGovernanceFinancesEdit.utils";
@@ -72,6 +73,64 @@ export function AmountInput({
           )}
         </p>
       )}
+    </div>
+  );
+}
+
+/**
+ * The footer both Finances dialogs share: how many rows changed, why saving is
+ * held back (when it is), and Cancel / Save. `blockedMessage` is null while
+ * the save is allowed.
+ */
+export function FinancesEditFooter({
+  changeCount,
+  blockedMessage,
+  isPending,
+  onCancel,
+  onSave,
+}: {
+  changeCount: number;
+  blockedMessage: string | null;
+  isPending: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.foot}>
+      <div className={styles.footStatus} aria-live="polite">
+        <span
+          className={[
+            styles.footCount,
+            changeCount > 0 && styles.footCountActive,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {changeCount > 0
+            ? t("admin:governance.finances.edit.changes", {
+                count: changeCount,
+              })
+            : t("admin:governance.finances.edit.noChangesYet")}
+        </span>
+        {blockedMessage && (
+          <span className={styles.footBlocked} role="alert">
+            {blockedMessage}
+          </span>
+        )}
+      </div>
+      <div className={styles.footActions}>
+        <Button variant="ghost" onClick={onCancel} disabled={isPending}>
+          {t("admin:governance.finances.edit.cancel")}
+        </Button>
+        <Button
+          variant="primary"
+          onClick={onSave}
+          disabled={isPending || blockedMessage !== null}
+        >
+          {t("admin:governance.finances.edit.save")}
+        </Button>
+      </div>
     </div>
   );
 }

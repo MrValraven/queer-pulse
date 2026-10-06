@@ -125,12 +125,12 @@ describe("ReportReplyModal", () => {
    */
   describe("a 429 refusal", () => {
     /** Verbatim `REPORT_PER_SUBJECT_CAP_MESSAGE` from the backend's
-     *  `report-flood-limits.ts`. Server-authored, member-facing, and the whole
-     *  point of the refusal. */
+     *  `report-flood-limits.ts`. English only, so the panel shows
+     *  `safety:report.floodCap` in the member's language (PRD-467). */
     const PER_SUBJECT_CAP_MESSAGE =
       "You have already reported this a few times recently. Those reports are with the moderation team, so there is no need to send another one. Reach out to a moderator directly if something urgent is happening.";
 
-    it("shows the server's own explanation when a flood cap refuses the filing", async () => {
+    it("explains a flood cap in the member's language", async () => {
       mutate.mockImplementation((_input, opts) =>
         opts?.onError?.(
           new ApiError(429, PER_SUBJECT_CAP_MESSAGE, {
@@ -147,11 +147,18 @@ describe("ReportReplyModal", () => {
 
       await pickReasonAndSubmit();
 
-      const explanation = await screen.findByText(PER_SUBJECT_CAP_MESSAGE);
-      expect(explanation).toBeInTheDocument();
-      // Announced, never only shown.
+      // The reason radios are `safety` strings, so the namespace is resident
+      // by the time the report is sent and the cap copy resolves.
+      const explanation = await screen.findByText(
+        /reached the limit for reports/i,
+      );
+      // Announced as well as shown.
       expect(explanation).toHaveAttribute("role", "alert");
-      // The generic body copy is replaced, not appended to.
+      // The server's English sentence stays out of the panel.
+      expect(screen.getByRole("alert")).not.toHaveTextContent(
+        PER_SUBJECT_CAP_MESSAGE,
+      );
+      // The generic body copy is replaced by the cap line.
       expect(
         screen.queryByText(/check your connection/i),
       ).not.toBeInTheDocument();

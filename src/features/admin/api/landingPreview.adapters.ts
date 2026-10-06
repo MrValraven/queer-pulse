@@ -2,7 +2,9 @@ import type { LandingFeatureVM } from "./landingFeatures.adapters";
 import type {
   LandingChangemakerFeatureDTO,
   LandingCommunityFeatureDTO,
+  LandingGatheringFeatureDTO,
   LandingMemberFeatureDTO,
+  LandingStoryFeatureDTO,
 } from "./landingFeatures.api";
 
 /**
@@ -123,4 +125,49 @@ export function previewCommunityDTOs(
     }
   }
   return { enriched, pending };
+}
+
+export interface TitledPreviewSplit<Item> {
+  /** Slots the public feed carries, with the admin's current kicker line
+   *  overriding the saved one. */
+  enriched: Item[];
+  pending: PendingCommunityPreview[];
+}
+
+/** Gatherings and stories carry a date, a byline and lead art only the public
+ *  feed supplies, so they split like communities do. A slot the backend
+ *  already reports as ineligible (ended, cancelled, unpublished) is left out:
+ *  the public page will never show it, so it is neither a card nor
+ *  "still loading". */
+function splitTitledPreview<Item extends { blurb: string | null }>(
+  features: LandingFeatureVM[],
+  enrichBySlug: Map<string, Item>,
+): TitledPreviewSplit<Item> {
+  const enriched: Item[] = [];
+  const pending: PendingCommunityPreview[] = [];
+  for (const feature of activeInOrder(features)) {
+    if (!feature.eligible) continue;
+    const enrich = enrichBySlug.get(slugOf(feature));
+    const blurb = asString(feature.copy.blurb);
+    if (enrich) {
+      enriched.push({ ...enrich, blurb: blurb || null });
+    } else {
+      pending.push({ id: feature.id, name: feature.target?.name ?? "", blurb });
+    }
+  }
+  return { enriched, pending };
+}
+
+export function previewGatheringDTOs(
+  features: LandingFeatureVM[],
+  enrichBySlug: Map<string, LandingGatheringFeatureDTO>,
+): TitledPreviewSplit<LandingGatheringFeatureDTO> {
+  return splitTitledPreview(features, enrichBySlug);
+}
+
+export function previewStoryDTOs(
+  features: LandingFeatureVM[],
+  enrichBySlug: Map<string, LandingStoryFeatureDTO>,
+): TitledPreviewSplit<LandingStoryFeatureDTO> {
+  return splitTitledPreview(features, enrichBySlug);
 }

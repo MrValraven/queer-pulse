@@ -2,6 +2,16 @@ import { useId, useRef, useState, type RefObject } from "react";
 import { FiCommand } from "react-icons/fi";
 import { Collapse, IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  ComposeAskPaymentNotice,
+  ComposeFundingSection,
+} from "./ComposeFundingSection";
+import {
+  EMPTY_COMPOSE_FUNDING,
+  isFundingKind,
+  withInlineFundingPointers,
+} from "./composeFunding";
+import type { FundingErrorCode } from "../funding/funding.types";
 import { ComposeBlocksRow } from "./ComposeBlocksRow";
 import { ComposeBodyField } from "./ComposeBodyField";
 import { ComposeFooter } from "./ComposeFooter";
@@ -41,6 +51,8 @@ export interface ForumNewPostMainProps {
   onOpenShortcuts: () => void;
   /** Lets the page put the caret in the title after a starter chip seeds it. */
   titleRef: RefObject<HTMLTextAreaElement | null>;
+  /** The funding code the server last refused a publish with, if any. */
+  fundingErrorCode: FundingErrorCode | null;
 }
 
 export function ForumNewPostMain({
@@ -51,6 +63,7 @@ export function ForumNewPostMain({
   onCancel,
   onOpenShortcuts,
   titleRef,
+  fundingErrorCode,
 }: ForumNewPostMainProps) {
   const { t } = useTranslation();
   const { state, setters, photos } = page;
@@ -101,6 +114,23 @@ export function ForumNewPostMain({
           onEnterKey={() => bodyRef.current?.focus()}
         />
 
+        <Collapse isOpen={isFundingKind(state.kind)}>
+          {isFundingKind(state.kind) && (
+            <ComposeFundingSection
+              kind={state.kind}
+              funding={state.funding ?? EMPTY_COMPOSE_FUNDING}
+              onChange={setters.setFunding}
+              onToggleEligibility={setters.toggleFundingEligibility}
+              lookup={page.fundingLookup}
+              serverErrorCode={fundingErrorCode}
+              title={state.title}
+              body={state.body}
+              askEligibility={page.askEligibility}
+              onAskVerified={page.confirmAskVerified}
+            />
+          )}
+        </Collapse>
+
         <ComposeBodyField
           body={state.body}
           onBodyChange={setters.setBody}
@@ -118,6 +148,10 @@ export function ForumNewPostMain({
             />
           }
         />
+
+        {state.kind === "ask" && (
+          <ComposeAskPaymentNotice title={state.title} body={state.body} />
+        )}
 
         <Collapse isOpen={state.photos.length > 0}>
           <ComposePhotoGrid
@@ -173,11 +207,15 @@ export function ForumNewPostMain({
 
       <ComposeFooter
         draftStatus={page.draftStatus}
-        blockers={page.blockers}
+        blockers={withInlineFundingPointers(page.blockers, {
+          isLinkFieldShown:
+            state.kind !== "ask" || page.askEligibility.status === "allowed",
+        })}
         canPublish={page.canPublish}
         isPublishing={isPublishing}
         onCancel={onCancel}
         onPublish={onPublish}
+        isReviewOnly={state.kind === "ask"}
       />
     </div>
   );

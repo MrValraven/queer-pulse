@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiActivity, FiEdit3 } from "react-icons/fi";
+import { FiActivity, FiEdit3, FiFileText, FiPlus } from "react-icons/fi";
 import {
   FadeIn,
   Button,
@@ -15,6 +15,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { AdminGovernanceChart } from "./AdminGovernanceChart";
 import { AdminGovernanceFinancesEdit } from "./AdminGovernanceFinancesEdit";
+import { AdminGovernanceFinancesOpenQuarter } from "./AdminGovernanceFinancesOpenQuarter";
+import { AdminGovernanceFinancesReportEdit } from "./AdminGovernanceFinancesReportEdit";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import { useAdminGovernanceFinances } from "./api/useAdminGovernanceFinances";
 import type {
@@ -23,6 +25,7 @@ import type {
   FinanceMetricSource,
 } from "./api/adminGovernanceFinances.api";
 import { financeAmountOrZero } from "./adminFinanceAmount";
+import { parseQuarter } from "../governance/governanceQuarter";
 import styles from "./AdminGovernancePage.module.css";
 
 /** Fixed colour cycle for ledger meter bars — `FinLine` carries no colour, so
@@ -60,15 +63,15 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStatTile[] {
   return [
     {
       labelKey: "governance.finances.stat.sustainerMrr",
-      value: latest.mrr,
+      value: latest.mrr ?? 0,
       kind: "currency",
       footKey: "governance.finances.foot.sustainersCount",
-      footValues: { count: latest.sustainerCount },
+      footValues: { count: latest.sustainerCount ?? 0 },
       source: latest.sources.mrr,
     },
     {
       labelKey: "governance.finances.stat.totalIncome",
-      value: latest.incomeTotal,
+      value: latest.incomeTotal ?? 0,
       kind: "currency",
       footKey: "governance.finances.foot.sources",
       source: latest.sources.incomeTotal,
@@ -83,7 +86,7 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStatTile[] {
     },
     {
       labelKey: "governance.finances.stat.solidarity",
-      value: latest.solidarityRate,
+      value: latest.solidarityRate ?? 0,
       kind: "percent",
       footKey: "governance.finances.foot.solidarityRate",
       source: latest.sources.solidarityRate,
@@ -91,28 +94,48 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStatTile[] {
   ];
 }
 
+/** Which Finances dialog is open, if any. */
+type FinancesDialog = "figures" | "report" | "quarter" | null;
+
 export function AdminGovernanceFinances() {
   const { latest, history, loading } = useAdminGovernanceFinances();
-  const [editing, setEditing] = useState(false);
+  const [dialog, setDialog] = useState<FinancesDialog>(null);
+  const openFigures = () => setDialog("figures");
+  const closeDialog = () => setDialog(null);
 
   if (loading) {
     return <FinancesSkeleton />;
   }
 
   if (!latest) {
-    return <FinancesEmpty />;
+    return (
+      <>
+        <FinancesEmpty onOpenQuarter={() => setDialog("quarter")} />
+        {dialog === "quarter" && (
+          <AdminGovernanceFinancesOpenQuarter
+            latestQuarter={null}
+            onClose={closeDialog}
+          />
+        )}
+      </>
+    );
   }
 
   const stats = buildFinanceStats(latest);
 
   return (
     <>
-      <FinancesToolbar latest={latest} onEdit={() => setEditing(true)} />
+      <FinancesToolbar
+        latest={latest}
+        onEdit={openFigures}
+        onEditReport={() => setDialog("report")}
+        onOpenQuarter={() => setDialog("quarter")}
+      />
 
       <StatGrid columns={4} className={styles.statGrid}>
         {stats.map((stat, index) => (
           <FadeIn key={stat.labelKey} delay={index * 70}>
-            <FinanceStatCard stat={stat} onEdit={() => setEditing(true)} />
+            <FinanceStatCard stat={stat} onEdit={openFigures} />
           </FadeIn>
         ))}
       </StatGrid>
@@ -123,54 +146,91 @@ export function AdminGovernanceFinances() {
 
       <FadeIn delay={160}>
         <div className={styles.ledgerGrid}>
-          <IncomeLedgerCard latest={latest} onEdit={() => setEditing(true)} />
-          <SpendLedgerCard latest={latest} onEdit={() => setEditing(true)} />
+          <IncomeLedgerCard latest={latest} onEdit={openFigures} />
+          <SpendLedgerCard latest={latest} onEdit={openFigures} />
         </div>
       </FadeIn>
 
       <FadeIn delay={200}>
-        <LiveMrrPanel latest={latest} onEdit={() => setEditing(true)} />
+        <LiveMrrPanel latest={latest} onEdit={openFigures} />
       </FadeIn>
 
-      {editing && (
-        <AdminGovernanceFinancesEdit
+      {dialog === "figures" && (
+        <AdminGovernanceFinancesEdit latest={latest} onClose={closeDialog} />
+      )}
+      {dialog === "report" && (
+        <AdminGovernanceFinancesReportEdit
           latest={latest}
-          onClose={() => setEditing(false)}
+          onClose={closeDialog}
+        />
+      )}
+      {dialog === "quarter" && (
+        <AdminGovernanceFinancesOpenQuarter
+          latestQuarter={latest.quarter}
+          onClose={closeDialog}
         />
       )}
     </>
   );
 }
 
-/** Header row above the figures: who last corrected them, and the entry point
- *  to the edit dialog. */
+/** Header row above the figures: who last corrected them, whether the public
+ *  page shows this quarter (PRD-447), and the entry points to the dialogs. */
 function FinancesToolbar({
   latest,
   onEdit,
+  onEditReport,
+  onOpenQuarter,
 }: {
   latest: AdminFinanceLatest;
   onEdit: () => void;
+  onEditReport: () => void;
+  onOpenQuarter: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const editorName = latest.editor
     ? `${latest.editor.firstName} ${latest.editor.lastName}`.trim()
     : null;
+  const period = parseQuarter(latest.quarter);
+  const quarterLabel = period
+    ? t("admin:governance.finances.quarter.label", period)
+    : latest.quarter;
 
   return (
     <div className={styles.finToolbar}>
-      <span className={styles.finToolbarMeta}>
-        {editorName && latest.editedAt
-          ? t("admin:governance.finances.edit.lastEdited", {
-              name: editorName,
-              date: fmt.date(new Date(latest.editedAt)),
-            })
-          : t("admin:governance.finances.edit.neverEdited")}
-      </span>
-      <Button variant="ghost" onClick={onEdit}>
-        <FiEdit3 aria-hidden />
-        {t("admin:governance.finances.edit.cta")}
-      </Button>
+      <div className={styles.finToolbarStatus}>
+        <span className={styles.finToolbarMeta}>
+          {editorName && latest.editedAt
+            ? t("admin:governance.finances.edit.lastEdited", {
+                name: editorName,
+                date: fmt.date(new Date(latest.editedAt)),
+              })
+            : t("admin:governance.finances.edit.neverEdited")}
+        </span>
+        <span className={styles.finToolbarMeta}>
+          {t(
+            latest.isPublic
+              ? "admin:governance.finances.status.public"
+              : "admin:governance.finances.status.hidden",
+            { quarter: quarterLabel },
+          )}
+        </span>
+      </div>
+      <div className={styles.finToolbarActions}>
+        <Button variant="ghost" onClick={onEdit}>
+          <FiEdit3 aria-hidden />
+          {t("admin:governance.finances.edit.cta")}
+        </Button>
+        <Button variant="ghost" onClick={onEditReport}>
+          <FiFileText aria-hidden />
+          {t("admin:governance.finances.report.cta")}
+        </Button>
+        <Button variant="ghost" onClick={onOpenQuarter}>
+          <FiPlus aria-hidden />
+          {t("admin:governance.finances.quarter.cta")}
+        </Button>
+      </div>
     </div>
   );
 }
@@ -189,13 +249,19 @@ function FinancesSkeleton() {
   );
 }
 
-function FinancesEmpty() {
+function FinancesEmpty({ onOpenQuarter }: { onOpenQuarter: () => void }) {
   const { t } = useTranslation();
   return (
     <div className={styles.statCard}>
       <span className={styles.statFoot}>
         {t("admin:governance.finances.empty")}
       </span>
+      <div>
+        <Button variant="ghost" onClick={onOpenQuarter}>
+          <FiPlus aria-hidden />
+          {t("admin:governance.finances.quarter.cta")}
+        </Button>
+      </div>
     </div>
   );
 }
@@ -305,13 +371,18 @@ function IncomeLedgerCard({
         </h2>
         <p className={styles.cardSub}>
           {t("admin:governance.income.sub", {
-            amount: fmt.currency(latest.incomeTotal, "EUR"),
+            amount: fmt.currency(latest.incomeTotal ?? 0, "EUR"),
           })}
         </p>
       </div>
       <div className={styles.meters}>
         {enabledLines(latest.income).map((line, i) => (
-          <Meter key={line.label} line={line} colorIndex={i} onEdit={onEdit} />
+          <Meter
+            key={`${i}-${line.label}`}
+            line={line}
+            colorIndex={i}
+            onEdit={onEdit}
+          />
         ))}
       </div>
       <p className={styles.ledgerNote}>
@@ -344,13 +415,18 @@ function SpendLedgerCard({
         </h2>
         <p className={styles.cardSub}>
           {t("admin:governance.spend.sub", {
-            amount: fmt.currency(latest.expenseTotal, "EUR"),
+            amount: fmt.currency(latest.expenseTotal ?? 0, "EUR"),
           })}
         </p>
       </div>
       <div className={styles.meters}>
         {enabledLines(latest.expense).map((line, i) => (
-          <Meter key={line.label} line={line} colorIndex={i} onEdit={onEdit} />
+          <Meter
+            key={`${i}-${line.label}`}
+            line={line}
+            colorIndex={i}
+            onEdit={onEdit}
+          />
         ))}
       </div>
     </div>
@@ -405,7 +481,7 @@ function LiveMrrPanel({
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
-  const mrr = Math.round(latest.mrr);
+  const mrr = Math.round(latest.mrr ?? 0);
   // Only verified, enabled expense lines appear here — this panel reads as
   // authoritative ("live"), so it never surfaces an unreviewed placeholder.
   const breakdown = enabledLines(latest.expense)
@@ -446,8 +522,8 @@ function LiveMrrPanel({
         />
       </p>
       <div className={styles.panelBreakdown}>
-        {breakdown.map((line) => (
-          <div key={line.label} className={styles.panelStat}>
+        {breakdown.map((line, index) => (
+          <div key={`${index}-${line.label}`} className={styles.panelStat}>
             <FiActivity className={styles.panelStatIco} aria-hidden />
             <span className={styles.panelStatVal}>
               {fmt.currency(financeAmountOrZero(line.amount), "EUR")}

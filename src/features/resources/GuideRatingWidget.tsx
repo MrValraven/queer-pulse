@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MembersExplainerModal } from "../homepage/sections/MembersExplainerModal";
 import { useGuideRating } from "./api/useGuideRating";
 import styles from "./GuideRatingWidget.module.css";
 
@@ -17,8 +18,20 @@ import styles from "./GuideRatingWidget.module.css";
  */
 export function GuideRatingWidget({ contentKey }: { contentKey: string }) {
   const { t } = useTranslation();
-  const { myVote, isPending, vote } = useGuideRating(contentKey);
+  const { myVote, isPending, isSignInRequired, vote } =
+    useGuideRating(contentKey);
   const [editing, setEditing] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+
+  // A visitor's click opens the sign-in prompt; only members reach the POST.
+  const rate = (value: "helpful" | "not_helpful") => {
+    if (isSignInRequired) {
+      setIsSignInOpen(true);
+      return;
+    }
+    vote(value);
+    setEditing(false);
+  };
 
   if (myVote && !editing) {
     return (
@@ -48,10 +61,7 @@ export function GuideRatingWidget({ contentKey }: { contentKey: string }) {
           className={styles.btn}
           disabled={isPending}
           aria-pressed={myVote === "helpful"}
-          onClick={() => {
-            vote("helpful");
-            setEditing(false);
-          }}
+          onClick={() => rate("helpful")}
         >
           <FiThumbsUp aria-hidden /> {t("resources:rating.helpfulCta")}
         </button>
@@ -60,14 +70,17 @@ export function GuideRatingWidget({ contentKey }: { contentKey: string }) {
           className={styles.btn}
           disabled={isPending}
           aria-pressed={myVote === "not_helpful"}
-          onClick={() => {
-            vote("not_helpful");
-            setEditing(false);
-          }}
+          onClick={() => rate("not_helpful")}
         >
           <FiThumbsDown aria-hidden /> {t("resources:rating.notHelpfulCta")}
         </button>
       </div>
+      {isSignInOpen && (
+        <MembersExplainerModal
+          context="rating"
+          onClose={() => setIsSignInOpen(false)}
+        />
+      )}
     </div>
   );
 }

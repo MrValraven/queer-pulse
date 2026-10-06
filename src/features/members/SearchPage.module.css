@@ -68,7 +68,7 @@
   box-shadow: var(--ring-cream), var(--shadow-e3);
 }
 .barWrap svg {
-  margin-left: 18px;
+  margin-inline-start: 18px;
   flex: none;
   color: var(--ink-40);
 }
@@ -110,6 +110,28 @@
   gap: 6px;
   flex-wrap: wrap;
   margin-bottom: 38px;
+}
+/* Phones: one scrolling row keeps the 14 category pills from stacking into
+   five rows that push the results below the fold. The row bleeds to the
+   viewport edges and pads back by the page gutter; the block padding leaves
+   room for the focus ring. */
+@media (--md) {
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-inline: contain;
+    margin-inline: calc(-1 * var(--wrap-px));
+    padding: 4px var(--wrap-px);
+    margin-bottom: 30px;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tab {
+    flex: none;
+    white-space: nowrap;
+  }
 }
 .tab {
   font-family: var(--sans);
@@ -291,30 +313,6 @@
   font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 3px;
-}
-
-.empty {
-  text-align: center;
-  padding: var(--section-y-80) 24px;
-}
-.empty svg {
-  opacity: 0.18;
-  margin: 0 auto 18px;
-  display: block;
-}
-.empty h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-28);
-  color: var(--text-strong);
-  margin-bottom: 10px;
-}
-.empty p {
-  font-size: var(--text-15);
-  color: var(--ink-60);
-  max-width: 38ch;
-  margin: 0 auto;
-  line-height: 1.6;
 }
 
 .comingSoon {

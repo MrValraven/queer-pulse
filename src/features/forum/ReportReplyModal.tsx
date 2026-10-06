@@ -11,7 +11,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
-import type { ReportSubjectType } from "../safety/reportReasons";
+import {
+  withFundingScamFor,
+  type ReportSubjectType,
+} from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./ReportReplyModal.module.css";
 
@@ -25,6 +28,9 @@ interface ReportReplyModalProps {
   /** What kind of forum content this is: the opening post (`"post"`) or a reply
    *  (`"reply"`). Drives both the report payload and the offered reasons. */
   subjectType: Extract<ReportSubjectType, "post" | "reply">;
+  /** The post sits in Funding & Grants, the one place `funding_scam` is
+   *  offered from this modal. */
+  isFundingThread?: boolean;
   onClose: () => void;
 }
 
@@ -34,6 +40,7 @@ export function ReportReplyModal({
   authorName,
   subjectId,
   subjectType,
+  isFundingThread = false,
   onClose,
 }: ReportReplyModalProps) {
   const { t } = useTranslation();
@@ -53,9 +60,15 @@ export function ReportReplyModal({
   // Server-owned taxonomy, falling back to the local one instantly and
   // silently. Also fixes the labels: `reasonsFor()` returned the plain-English
   // `REASON_LABELS`, so this modal showed English reasons in every locale.
-  const REASONS = useReportReasons(subjectType);
+  const offeredReasons = useReportReasons(subjectType);
+  const REASONS = withFundingScamFor(offeredReasons, isFundingThread);
 
   const firstName = authorName.split(" ")[0] ?? authorName;
+  // The opening post and a reply each get their own title and subtitle.
+  const isPost = subjectType === "post";
+  const titleKey = isPost
+    ? "forum:reportReply.titlePost"
+    : "forum:reportReply.title";
 
   const submit = () => {
     if (!reason) return;
@@ -81,11 +94,7 @@ export function ReportReplyModal({
 
   if (status === "done") {
     return (
-      <ModalSheet
-        onClose={onClose}
-        success
-        ariaLabel={t("forum:reportReply.title")}
-      >
+      <ModalSheet onClose={onClose} success ariaLabel={t(titleKey)}>
         <div className={styles.confirm}>
           <span className={styles.confirmIcon} aria-hidden>
             <FiCheck />
@@ -111,7 +120,7 @@ export function ReportReplyModal({
 
   if (status === "error") {
     return (
-      <ModalSheet onClose={onClose} ariaLabel={t("forum:reportReply.title")}>
+      <ModalSheet onClose={onClose} ariaLabel={t(titleKey)}>
         <div className={styles.errorPanel}>
           <span className={styles.errorIcon} aria-hidden>
             <FiAlertTriangle />
@@ -136,10 +145,12 @@ export function ReportReplyModal({
   }
 
   return (
-    <ModalSheet onClose={onClose} ariaLabel={t("forum:reportReply.title")}>
-      <h2 className={styles.title}>{t("forum:reportReply.title")}</h2>
+    <ModalSheet onClose={onClose} ariaLabel={t(titleKey)}>
+      <h2 className={styles.title}>{t(titleKey)}</h2>
       <p className={styles.sub}>
-        {t("forum:reportReply.sub", { name: firstName })}
+        {t(isPost ? "forum:reportReply.subPost" : "forum:reportReply.sub", {
+          name: firstName,
+        })}
       </p>
       <RadioCardGroup
         className={styles.reasons}

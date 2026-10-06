@@ -31,9 +31,20 @@ export function MagazineSectionArticlesPage() {
   const { t } = useTranslation();
   const { section: sectionParam = "" } = useParams();
   const section = decodeURIComponent(sectionParam);
-  const { articles, isLoading, isError, hasMore, loadMore, isLoadingMore } =
-    useSectionArticles(section);
-  const showEmpty = !isLoading && (isError || articles.length === 0);
+  const {
+    articles,
+    isLoading,
+    isError,
+    hasMore,
+    loadMore,
+    isLoadingMore,
+    isFetchNextPageError,
+  } = useSectionArticles(section);
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  // The error copy is for a section with nothing loaded; pieces already loaded
+  // stay, and the footer under them retries the page that failed.
+  const hasNothingLoadedError = isError && articles.length === 0;
+  const showEmpty = !isLoading && articles.length === 0;
 
   return (
     <PageShell>
@@ -63,12 +74,12 @@ export function MagazineSectionArticlesPage() {
           {showEmpty ? (
             <EmptyState
               title={
-                isError
+                hasNothingLoadedError
                   ? t("magazine:sectionArticles.errorTitle")
                   : t("magazine:sectionArticles.emptyTitle")
               }
               description={
-                isError
+                hasNothingLoadedError
                   ? t("magazine:sectionArticles.errorBody")
                   : t("magazine:sectionArticles.emptyBody")
               }
@@ -79,6 +90,7 @@ export function MagazineSectionArticlesPage() {
               isLoading={isLoading}
               hasMore={hasMore}
               isLoadingMore={isLoadingMore}
+              isFetchNextPageError={isFetchNextPageError}
               onLoadMore={loadMore}
             />
           )}

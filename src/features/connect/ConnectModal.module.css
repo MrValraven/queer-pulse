@@ -10,12 +10,18 @@
   padding: 24px 16px 0;
   padding-block-end: var(--keyboard-inset, 0px);
 }
+/* The dialog's top and side padding live in custom properties so the sticky
+   close button can pull itself back into the corner by exactly that much,
+   whatever width the padding takes. */
 .modal {
+  --modal-pad-top: 44px;
+  --modal-pad-x: var(--dialog-pad-x);
+  --modal-close-inset: 12px;
   background: var(--paper);
   border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 560px;
-  padding: 44px 48px var(--section-y-48);
+  padding: var(--modal-pad-top) var(--modal-pad-x) var(--section-y-48);
   padding-block-end: max(48px, env(safe-area-inset-bottom));
   position: relative;
   max-height: 92svh;
@@ -23,11 +29,29 @@
   overscroll-behavior: contain;
   animation: connectUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
 }
+/* A scrollbar ignores border-radius, so its thumb would poke a square past
+   the rounded corners. Where the webkit scrollbar pseudo-elements exist, the
+   dialog hands its scrollbar back to them (the standard properties switch
+   them off) and the track keeps a corner's radius clear at each end. The
+   thumb colours come from the global ones in base.css. */
+@supports selector(::-webkit-scrollbar) {
+  .modal,
+  :global([data-theme="dark"]) .modal {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+  .modal::-webkit-scrollbar-track {
+    margin-block: var(--radius-28);
+  }
+}
 /* Grabber affordance — signals the sheet is draggable/dismissable. */
 .grabber {
-  /* Sticky so it stays visible as the sheet scrolls. */
+  /* Sticky so it stays visible as the sheet scrolls. A sticky `top` counts
+     from inside the sheet's padding, so it repeats the negative margin below
+     and the grabber holds its resting spot near the top edge. A `top: 0` sat
+     it on the first line of content. */
   position: sticky;
-  top: 0;
+  top: -26px;
   z-index: 2;
   width: 40px;
   height: 4px;
@@ -43,15 +67,54 @@
     transform: translateY(0);
   }
 }
+/* Desktop: a centred dialog instead of a bottom sheet. */
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+    padding-block-end: max(24px, var(--keyboard-inset, 0px));
+  }
+  .modal {
+    border-radius: var(--radius-28);
+    padding-block-end: var(--section-y-48);
+    box-shadow: var(--shadow-e4);
+    animation-name: connectIn;
+  }
+  .grabber {
+    display: none;
+  }
+}
+@keyframes connectIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+/* Pinned to the dialog's top corner while its content scrolls. A sticky float
+   at the start of the content: the negative block-start and inline-end margins
+   pull it out through the padding to the inset, and the block-end margin of
+   minus its own height leaves it no footprint, so the content below neither
+   moves nor wraps around it. A sticky `top` counts from the scroll
+   container's content edge, inside its padding, so the offset subtracts the
+   padding too and the button holds the inset when scrolled. Its fills are
+   opaque mixes onto the dialog's own ground, so text scrolling underneath
+   never shows through the X. */
 .close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  position: sticky;
+  top: calc(var(--modal-close-inset) - var(--modal-pad-top));
+  z-index: 3;
+  float: inline-end;
+  margin-block: calc(var(--modal-close-inset) - var(--modal-pad-top)) -2.444em;
+  margin-inline-end: calc(var(--modal-close-inset) - var(--modal-pad-x));
   /* 44 / 18, in em so the button scales with its glyph. */
   width: 2.444em;
   height: 2.444em;
   border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.07);
+  background: color-mix(in srgb, var(--plum) 7%, var(--paper));
   border: none;
   cursor: pointer;
   font-size: var(--text-18);
@@ -64,7 +127,7 @@
 }
 @media (hover: hover) {
   .close:hover {
-    background: rgba(var(--plum-rgb), 0.14);
+    background: color-mix(in srgb, var(--plum) 14%, var(--paper));
   }
 }
 
@@ -96,13 +159,19 @@
   background: var(--plum);
   transition: background 0.45s var(--ease);
 }
+/* "They asked you first" sheet. Wide enough that Accept, Politely decline and
+   Decide later share one row at size lg inside the 48px side padding, in both
+   languages; the longer "Accept and take my message" label may wrap. */
+.modalWide {
+  max-width: 720px;
+}
 .modalSent .close {
-  background: rgba(var(--cream-rgb), 0.12);
+  background: color-mix(in srgb, rgb(var(--cream-rgb)) 12%, var(--plum));
   color: rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .modalSent .close:hover {
-    background: rgba(var(--cream-rgb), 0.22);
+    background: color-mix(in srgb, rgb(var(--cream-rgb)) 22%, var(--plum));
   }
 }
 .sent {
@@ -171,6 +240,9 @@
 }
 .sent p {
   animation-delay: 0.28s;
+}
+.sent .note {
+  animation: connectRise 0.5s var(--ease) 0.33s both;
 }
 .sent > :last-child {
   animation-delay: 0.38s;
@@ -250,6 +322,7 @@
   .sent h2,
   .sent p,
   .sent > :last-child,
+  .sent .note,
   .autoClose,
   .autoCloseBar {
     animation: none;
@@ -265,6 +338,19 @@
 :global([data-theme="dark"]) .modalSent {
   border-color: transparent;
 }
+/* The plum wash disappears on the dark paper, so the form's close button gets
+   a cream-tinted target there. The plum panels already carry their own. */
+:global([data-theme="dark"]) .grabber {
+  background: rgba(var(--cream-rgb), 0.22);
+}
+:global([data-theme="dark"]) .modal:not(.modalSent) .close {
+  background: color-mix(in srgb, rgb(var(--cream-rgb)) 8%, var(--paper));
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .modal:not(.modalSent) .close:hover {
+    background: color-mix(in srgb, rgb(var(--cream-rgb)) 14%, var(--paper));
+  }
+}
 
 /* Two answers side by side on a plum panel: accept and decline (PRD-03), and
    the "keep your words" pair on a terminal notice. Wraps on a narrow phone so
@@ -276,4 +362,68 @@
   gap: 10px;
   justify-content: center;
   margin-top: 4px;
+}
+
+/* What they wrote with the request (ConnectIncomingPanel): a quiet label, the
+   reason when they picked one, then their own words quoted on a cream-tinted
+   surface behind a coral rule. A message runs up to 2000 characters, so the
+   quote caps its height and scrolls inside itself. */
+.sent .bodyBeforeNote {
+  margin-bottom: 20px;
+}
+.note {
+  margin: 0 0 28px;
+  text-align: left;
+}
+.noteLabel {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(var(--cream-rgb), 0.6);
+  margin-bottom: 8px;
+}
+.noteReason {
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.78);
+  margin-bottom: 10px;
+}
+.noteReason b {
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 1);
+}
+.noteMessage {
+  margin: 0;
+  padding: 16px 20px;
+  background: rgba(var(--cream-rgb), 0.08);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-17);
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.92);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 40svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Wide desktop: the form beside a live preview of the request
+   (ConnectFormLayout always wraps the form in .previewLayout and mounts the
+   preview at this same width). The dialog widens to hold both, the form
+   column keeps its usual width, and the taller top padding clears the close
+   button above the preview panel's corner. */
+@media (min-width: 1040px) {
+  .modal:has(.previewLayout) {
+    max-width: 960px;
+    --modal-pad-top: var(--section-y-64);
+  }
+  .previewLayout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: var(--gap-lg);
+    align-items: start;
+  }
 }

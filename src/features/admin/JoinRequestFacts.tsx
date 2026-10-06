@@ -19,19 +19,29 @@ import styles from "./AdminMembersPage.module.css";
  * 200-line component limit. Same `<dl>`, same rows, same order, same
  * conditions on the two optional rows.
  */
-export function JoinRequestFacts({ item }: { item: JoinRequestView }) {
+export function JoinRequestFacts({
+  item,
+  shouldShowEmail = true,
+}: {
+  item: JoinRequestView;
+  /** False where the email is already on screen, as in a decided row's
+   *  summary. Defaults to true, so the pending card is unchanged. */
+  shouldShowEmail?: boolean;
+}) {
   const { t } = useTranslation();
   return (
     <dl className={styles.queueFacts}>
-      <div className={styles.queueFact}>
-        <dt className={styles.queueFactLabel}>
-          <FiMail aria-hidden />
-          {t("admin:members.verify.emailLabel")}
-        </dt>
-        <dd className={styles.queueFactValue}>
-          <a href={`mailto:${item.email}`}>{item.email}</a>
-        </dd>
-      </div>
+      {shouldShowEmail && (
+        <div className={styles.queueFact}>
+          <dt className={styles.queueFactLabel}>
+            <FiMail aria-hidden />
+            {t("admin:members.verify.emailLabel")}
+          </dt>
+          <dd className={styles.queueFactValue}>
+            <a href={`mailto:${item.email}`}>{item.email}</a>
+          </dd>
+        </div>
+      )}
       <div className={styles.queueFact}>
         <dt className={styles.queueFactLabel}>
           <FiMapPin aria-hidden />

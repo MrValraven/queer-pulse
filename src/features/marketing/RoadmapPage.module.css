@@ -3,6 +3,21 @@
   display: flex;
   flex-wrap: wrap;
   gap: 28px;
+  margin-top: var(--gap-lg);
+}
+/* Below the wrap point the three tiles share one row and drop their
+   dividers, so no tile wraps alone with a stray left rule. */
+@media (--sm) {
+  .heroStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap-sm);
+  }
+  .statTile,
+  .statTile:first-child {
+    padding-left: 0;
+    border-left: none;
+  }
 }
 .statTile {
   display: flex;
@@ -273,6 +288,7 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 5px 12px;
+  min-height: 44px;
   font-family: var(--sans);
   font-size: var(--text-12);
   font-weight: 700;

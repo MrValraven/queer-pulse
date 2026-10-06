@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import {
-  Button,
   FadeIn,
   EmptyState,
   LoadErrorState,
+  LoadMoreFooter,
   SearchInput,
   FilterChips,
 } from "../../shared/components/ui";
@@ -183,17 +183,15 @@ export function DiscussionTab({
       )}
 
       {paging.hasNextPage && (
-        <div style={{ textAlign: "center", marginTop: 12 }}>
-          <Button
-            variant="ghost"
-            disabled={paging.isFetchingNextPage}
-            onClick={paging.fetchNextPage}
-          >
-            {paging.isFetchingNextPage
-              ? t("communities:common.loading")
-              : t("communities:detail.discussion.loadMore")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMoreRoster}
+          isFetchingNextPage={paging.isFetchingNextPage}
+          isFetchNextPageError={Boolean(paging.isFetchNextPageError)}
+          onLoadMore={paging.fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("communities:detail.discussion.loadMore")}
+          loadingLabel={t("communities:common.loading")}
+        />
       )}
 
       {isMember &&

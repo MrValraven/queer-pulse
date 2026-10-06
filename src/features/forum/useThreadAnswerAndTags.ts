@@ -3,6 +3,10 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Reply, type Thread } from "./forum.data";
 import { useAcceptAnswer, useEditThreadTags } from "./api/useForumMutations";
+import {
+  FUNDING_ERROR_MESSAGE_VALUES,
+  fundingAwareErrorKey,
+} from "./funding/fundingErrors";
 
 /**
  * The two thread-level concerns SOC-13 added, kept out of `useThreadPageState`
@@ -91,7 +95,14 @@ export function useThreadAnswerAndTags({
       { tags },
       {
         onSuccess: () => showToast(t("forum:tagsEdit.savedToast"), "success"),
-        onError: () => showToast(t("forum:toast.error"), "error"),
+        onError: (error) =>
+          showToast(
+            t(
+              fundingAwareErrorKey(error, "forum:toast.error"),
+              FUNDING_ERROR_MESSAGE_VALUES,
+            ),
+            "error",
+          ),
       },
     );
   }

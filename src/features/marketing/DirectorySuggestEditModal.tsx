@@ -4,6 +4,7 @@ import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
+import { reasonFor } from "../../shared/api/errorMessage";
 import { useSuggestEdit, type SuggestEditField } from "./api/useSuggestEdit";
 import { DirectorySuggestEditValueField } from "./DirectorySuggestEditValueField";
 import { suggestEditValueShape } from "./directorySuggestEditFields.data";
@@ -101,10 +102,12 @@ export function DirectorySuggestEditModal({
           // column's rules, and its message names the constraint that failed.
           // When a value was offered, that message belongs beside the input
           // that caused it, with the form still open to fix it. Otherwise it
-          // still beats a generic "something went wrong".
+          // still beats a generic "something went wrong". `reasonFor` keeps
+          // the server's sentence in English and gives every other language
+          // a translated line.
           const reason =
             error instanceof ApiError && error.status === 400
-              ? error.message
+              ? reasonFor(error)
               : null;
           if (reason && valueShape && trimmedValue) {
             setValueRejection(reason);

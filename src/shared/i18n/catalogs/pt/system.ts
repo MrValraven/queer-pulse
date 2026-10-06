@@ -504,26 +504,6 @@ export const system: Catalog = {
     "A tua sessão continua iniciada. Está tudo à tua espera quando voltarmos.",
   "maintenance.retry": "Tentar outra vez",
 
-  // ── NewsletterUnsubscribePage.tsx (CNT-19: cancelar subscrição da newsletter) ─
-  "newsletterUnsubscribe.loading.eyebrow": "Newsletter",
-  "newsletterUnsubscribe.loading.heading": "A confirmar o teu pedido…",
-  "newsletterUnsubscribe.success.eyebrow": "Subscrição cancelada",
-  "newsletterUnsubscribe.success.heading": "Saíste da <em>lista.</em>",
-  "newsletterUnsubscribe.success.lead":
-    "Este endereço saiu da lista. A QueerPulse não envia email, por isso nunca chegou nada aqui: isto é sobre o teu endereço não ficar numa lista onde não querias estar. Podes voltar a inscrevê-lo a partir da página inicial sempre que quiseres.",
-  "newsletterUnsubscribe.alreadyUnsubscribed.eyebrow": "Já sem subscrição",
-  "newsletterUnsubscribe.alreadyUnsubscribed.heading":
-    "Já estava <em>tratado.</em>",
-  "newsletterUnsubscribe.alreadyUnsubscribed.lead":
-    "Este endereço já tinha saído da lista, e continua fora. Não está a sair nada para ele, aqui nem em lado nenhum: a QueerPulse não envia email.",
-  "newsletterUnsubscribe.invalid.eyebrow": "Ligação não reconhecida",
-  "newsletterUnsubscribe.invalid.heading":
-    "Não conseguimos <em>reconhecer esta ligação.</em>",
-  "newsletterUnsubscribe.invalid.lead":
-    "Esta ligação para cancelar a subscrição não corresponde a nada do nosso lado. Pode estar desatualizada ou mal copiada. De qualquer forma não está a sair nada para o endereço, porque a QueerPulse não envia email, mas avisa a equipa se algo te parecer errado e nós tratamos disso.",
-  "newsletterUnsubscribe.goHomeCta": "Voltar à página inicial",
-  "newsletterUnsubscribe.contactCta": "Falar com a equipa",
-
   // ── GenesisPage.tsx (arranque único da plataforma; eliminada após o lançamento) ─
   // "Genesis" é o nome interno deste fluxo de arranque, mantido igual em
   // ambas as línguas, como os outros nomes de marca/produto neste catálogo.

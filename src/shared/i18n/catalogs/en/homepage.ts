@@ -421,6 +421,16 @@ export const homepage: Catalog = {
   "liveStories.byline": "{author} · {minutes} min read",
   "liveStories.issueKicker": "Issue {number}",
   "liveStories.magazineKicker": "From the magazine",
+  // Kicker for an admin-curated gathering shown to signed-out visitors (PRD-323).
+  "liveGatherings.curatedKicker": "Community gathering",
+  // Signed-out curated gathering rows open the members explainer (PRD-323).
+  "membersExplainer.ledeGathering":
+    "Gathering details open up once you're in. Here's why we keep it that way, and how to join.",
+  "membersExplainer.ledeRoadmap":
+    "Voting on what we build next is for members. Here's how to join or sign in.",
+  "membersExplainer.ledeRating":
+    "Rating a guide is for members. Here's how to join or sign in.",
+  "liveGatherings.joinCta": "How to join",
 
   // ── ChangeMakers ───────────────────────────────────────────────────────────
   "changeMakers.eyebrow": "Changemakers",

@@ -1,7 +1,7 @@
 /* Shared chrome for the homepage explainer sheets (MembersExplainerModal,
-   HousingReviewsExplainerModal, PersonasExplainerModal): the plum panel, its
-   close button, the eyebrow/title/lede stack, the icon + title + body row list,
-   and the action row. One file so the explainers cannot drift apart visually. */
+   HousingReviewsExplainerModal, PersonasExplainerModal, and the volunteer
+   import): the plum panel, its close button, the eyebrow/title/lede stack, the
+   icon + title + body row list, and the action row. One file so the explainers cannot drift apart visually. */
 .panel {
   position: relative;
   background: var(--plum);
@@ -16,8 +16,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.12);
@@ -25,8 +25,10 @@
   cursor: pointer;
   transition: background var(--dur-base, 0.2s) var(--ease);
 }
-.close:hover {
-  background: rgba(var(--cream-rgb), 0.22);
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--cream-rgb), 0.22);
+  }
 }
 
 .eyebrow {
@@ -104,6 +106,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+@media (--xs) {
+  .actions {
+    flex-direction: column;
+  }
+  .actions > * {
+    width: 100%;
+  }
 }
 
 /* Closing caveat line under the rows, above the actions. Deliberately quieter

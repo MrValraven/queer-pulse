@@ -8,7 +8,6 @@ import { API_BASE_URL } from "../../../shared/api/config";
 import type {
   AdminRoadmapIdeaDTO,
   AdminRoadmapItemDTO,
-  RoadmapAdminHeroStatDTO,
   RoadmapAdminResponseDTO,
   RoadmapAuditEntryDTO,
   RoadmapAuditQueryParams,
@@ -159,11 +158,3 @@ export async function getRoadmapAuditCsv(): Promise<string> {
   }
   return res.text();
 }
-
-// ── Settings ────────────────────────────────────────────────────────────────
-
-export const updateRoadmapSettings = (heroStats: RoadmapAdminHeroStatDTO[]) =>
-  apiPatch<{ heroStats: RoadmapAdminHeroStatDTO[] }>(
-    "/admin/roadmap/settings",
-    { heroStats },
-  );

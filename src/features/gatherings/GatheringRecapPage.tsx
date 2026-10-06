@@ -14,6 +14,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { PhotoUploadModal, type RecapPhoto } from "./PhotoUploadModal";
 import { GatheringRecapMain } from "./GatheringRecapSections";
@@ -175,9 +176,11 @@ function DemoGatheringRecap() {
       uploadedPhoto.current = { key, previewUrl };
       setUploadOpen(true);
     } catch (err) {
+      // The upload hook throws an `ImageProcessingError` whose message is a
+      // catalog key, so the toast resolves that key in the member's language.
       showToast(
-        err instanceof Error && err.message
-          ? err.message
+        err instanceof ImageProcessingError
+          ? t(err.i18nKey, err.values)
           : t("gatherings:recap.uploadErrorToast"),
         "error",
       );

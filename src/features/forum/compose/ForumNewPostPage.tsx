@@ -41,9 +41,13 @@ export function ForumNewPostPage() {
   const seeds = useComposeThreadSeeds();
   const communities = useComposeAudiences();
   const identity = useComposeIdentity();
-  const page = useComposeThreadPage({ communities, ...seeds });
-  const { hasPosted } = useForumCounts();
   const flow = useCreateThreadFlow({ demoMode, user });
+  const page = useComposeThreadPage({
+    communities,
+    ...seeds,
+    serverFundingErrorCode: flow.fundingErrorCode,
+  });
+  const { hasPosted } = useForumCounts();
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   // The backend follows an author to their own thread on create, so the panel
   // opens on the truth and the toggle is a way to opt back out.
@@ -128,6 +132,7 @@ export function ForumNewPostPage() {
           onCancel={overlays.requestCancel}
           onOpenShortcuts={overlays.openShortcuts}
           titleRef={titleRef}
+          fundingErrorCode={page.serverFundingErrorCode}
         />
 
         <ForumNewPostRail

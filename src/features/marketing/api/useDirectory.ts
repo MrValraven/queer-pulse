@@ -120,6 +120,13 @@ export interface DirectoryPlacesPageResult {
    * most misleading thing this surface can say.
    */
   isError: boolean;
+  /**
+   * True when the latest next-page fetch failed. React-query sets `isError`
+   * then too, so a grid shows its full error state only while `places` is
+   * empty, keeps the loaded places, and retries through `fetchNextPage`
+   * (ENG-501). Always false in demo, which is one terminal page.
+   */
+  isFetchNextPageError: boolean;
   /** Re-run the failed read, for the error state's retry. */
   refetch: () => void;
   /** True when another page is available (always false in demo). */
@@ -214,6 +221,7 @@ export function useDirectoryPlacesPage(
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),

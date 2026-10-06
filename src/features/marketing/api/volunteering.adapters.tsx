@@ -15,6 +15,14 @@ import type {
 } from "../volunteerOpportunities.types";
 import { causeTint } from "../causes.data";
 import {
+  applyConfirmation,
+  chromeLabel,
+  commitmentLabel,
+  partnershipText,
+  recruitingBadge,
+  volunteerEyebrow,
+} from "../volunteerChrome";
+import {
   defaultApplyRole,
   type PostOpportunityState,
 } from "../usePostOpportunityForm";
@@ -25,6 +33,9 @@ import {
 // from the DTO or defaulted so nothing renders blank. ReactNode fields are fed
 // plain API strings (wrapped in `<b>` only where the layout needs the styling).
 // `.tsx` because the stat tiles need JSX to pick up the header's `.meta b` rule.
+// The page chrome around those strings (eyebrow, badge, row labels, commitment
+// level, partnership line, confirmation) comes from `volunteerChrome.tsx`,
+// whose elements translate at render (DES-422).
 
 // ── derived display bits ─────────────────────────────────────────────────────
 
@@ -38,11 +49,10 @@ import {
 const TEAM_TINTS = [
   { bg: "rgba(var(--accent-rgb),.14)", color: "var(--accent-ink)" },
   { bg: "rgba(var(--jade-rgb),.16)", color: "var(--jade)" },
-  { bg: "rgba(45,27,61,.10)", color: "var(--plum)" },
+  // Theme-aware, matching `TEAM_POOL`'s plum entry: plum on plum vanished
+  // on a dark card.
+  { bg: "rgba(var(--line-rgb),.10)", color: "var(--text-strong)" },
 ];
-
-const commitLabel = (c: OpportunityCardDTO["commit"]) =>
-  c === "low" ? "Low commitment" : "Medium commitment";
 
 /** Comma-separated input → trimmed, non-empty entries. Mirrors
  *  `usePostOpportunityForm`'s identical (file-local, unexported) helper. */
@@ -120,8 +130,8 @@ export function cardToOpportunity(
     skills: dto.skills ?? [],
     description: dto.desc,
     // ── detail header (defaulted; the card view doesn't read these) ──
-    eyebrow: `Volunteer · ${dto.org}`,
-    urgent: closed ? "Closed · not recruiting" : "Recruiting now",
+    eyebrow: volunteerEyebrow(dto.org),
+    urgent: recruitingBadge(closed),
     titleLead: `${dto.role} · `,
     titleEm: `${dto.org}.`,
     sub: dto.desc,
@@ -165,12 +175,14 @@ export function detailToOpportunity(
   const spotsOpen = Math.max(dto.spotsTotal - dto.spotsFilled, 0);
   return {
     ...base,
-    eyebrow: `Volunteer · ${dto.org}`,
     sub: dto.desc,
     stats: [
-      { value: <b>{dto.time}</b>, label: "Per week" },
-      { value: <b>{commitLabel(dto.commit)}</b>, label: "Commitment" },
-      { value: <b>{spotsOpen}</b>, label: "Spots still open" },
+      { value: <b>{dto.time}</b>, label: chromeLabel("perWeek") },
+      {
+        value: <b>{commitmentLabel(dto.commit)}</b>,
+        label: chromeLabel("commitment"),
+      },
+      { value: <b>{spotsOpen}</b>, label: chromeLabel("spotsOpen") },
     ],
     why: dto.why ?? [],
     tasks: (dto.tasks ?? []).map((task) => ({
@@ -186,16 +198,19 @@ export function detailToOpportunity(
     team: (dto.team ?? []).map(memberToTeam),
     applyRole: dto.applyRole || base.applyRole,
     spots: [
-      { label: "Role", value: dto.applyRole || base.applyRole },
-      { label: "Commitment", value: commitLabel(dto.commit) },
-      { label: "Per week", value: dto.time },
-      { label: "Location", value: dto.location },
+      { label: chromeLabel("role"), value: dto.applyRole || base.applyRole },
+      {
+        label: chromeLabel("commitment"),
+        value: <b>{commitmentLabel(dto.commit)}</b>,
+      },
+      { label: chromeLabel("perWeek"), value: dto.time },
+      { label: chromeLabel("location"), value: dto.location },
     ],
-    applyConfirm: `Application submitted for ${dto.applyRole || base.applyRole}. The team will be in touch with next steps.`,
+    applyConfirm: applyConfirmation(dto.applyRole || base.applyRole),
     partner: dto.partner
       ? {
           name: dto.partner.name,
-          text: `In partnership with ${dto.partner.name}.`,
+          text: partnershipText(dto.partner.name),
           slug: dto.partner.slug,
         }
       : null,
@@ -306,13 +321,16 @@ export function applyFormStateToOpportunity(
     skills,
     description: state.description,
     sub: state.description,
-    eyebrow: `Volunteer · ${state.org}`,
+    eyebrow: volunteerEyebrow(state.org),
     titleLead: `${state.role} · `,
     titleEm: `${state.org}.`,
     stats: [
-      { value: <b>{state.time}</b>, label: "Per week" },
-      { value: <b>{commitLabel(state.commit)}</b>, label: "Commitment" },
-      { value: <b>{spotsOpen}</b>, label: "Spots still open" },
+      { value: <b>{state.time}</b>, label: chromeLabel("perWeek") },
+      {
+        value: <b>{commitmentLabel(state.commit)}</b>,
+        label: chromeLabel("commitment"),
+      },
+      { value: <b>{spotsOpen}</b>, label: chromeLabel("spotsOpen") },
     ],
     why,
     goodFor,
@@ -323,15 +341,18 @@ export function applyFormStateToOpportunity(
     spotsPct: spotsTotal > 0 ? Math.round((filled / spotsTotal) * 100) : 0,
     applyRole,
     spots: [
-      { label: "Role", value: applyRole },
-      { label: "Commitment", value: commitLabel(state.commit) },
-      { label: "Per week", value: state.time },
-      { label: "Location", value: state.location },
+      { label: chromeLabel("role"), value: applyRole },
+      {
+        label: chromeLabel("commitment"),
+        value: <b>{commitmentLabel(state.commit)}</b>,
+      },
+      { label: chromeLabel("perWeek"), value: state.time },
+      { label: chromeLabel("location"), value: state.location },
     ],
     partner: partnerOption
       ? {
           name: partnerOption.name,
-          text: `In partnership with ${partnerOption.name}.`,
+          text: partnershipText(partnerOption.name),
           slug: partnerOption.slug,
         }
       : null,

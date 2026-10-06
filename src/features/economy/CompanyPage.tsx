@@ -121,6 +121,7 @@ export function CompanyPage() {
             hasMoreReviews={reviewsQuery.hasNextPage}
             onLoadMoreReviews={reviewsQuery.fetchNextPage}
             isLoadingMoreReviews={reviewsQuery.isFetchingNextPage}
+            isLoadMoreReviewsError={reviewsQuery.isFetchNextPageError}
             hasReviewsError={reviewsQuery.isError}
             onRetryReviews={reviewsQuery.refetch}
             // Server-decided (`CompanyDetailDTO.isOwner`), and false in demo:

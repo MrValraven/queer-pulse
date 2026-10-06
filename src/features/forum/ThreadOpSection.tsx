@@ -5,6 +5,7 @@ import {
   canDeleteThread,
   canMoveThreadCategory,
 } from "./forumPageState.helpers";
+import { FundingFactsPanel } from "./funding/FundingFactsPanel";
 import { ThreadOpCard } from "./ThreadOpCard";
 import { useThreadPoll } from "./useThreadPoll";
 import {
@@ -66,44 +67,51 @@ export function ThreadOpSection({
     ? t("forum:composePage.preview.anonymousName")
     : thread.author.name;
   return (
-    <ThreadOpCard
-      thread={thread}
-      title={opView.opTitle}
-      body={opView.opBody}
-      editedAt={opView.opEditedAt}
-      deleted={opView.opDeleted}
-      onVote={onVote}
-      bookmarked={bookmarked}
-      onToggleBookmark={onToggleBookmark}
-      onReport={() =>
-        // Report the OP's REAL backend post (`opPostId`), not the FE-synthetic
-        // numeric thread id — the latter targets a non-existent subject and
-        // never reaches moderators. Demo mock threads carry a stub `opPostId`.
-        moderation.setReportTarget({
-          authorName: reportedName,
-          subjectId: thread.opPostId ?? String(thread.id),
-          subjectType: "post",
-        })
-      }
-      canEdit={opView.opCanEdit}
-      canDelete={canDelete}
-      canRestore={opView.opCanRestore}
-      canViewHistory={opView.opCanViewHistory}
-      onEdit={() => {
-        moderation.setEditingOpInitialBody(opView.opBody.join("\n"));
-        moderation.setEditingOp(true);
-      }}
-      onDelete={() => moderation.onOpDelete(thread.opPostId)}
-      onRestore={() => moderation.doRestorePost(thread.opPostId ?? "", true)}
-      onHistory={() =>
-        thread.opPostId && moderation.setHistoryPostId(thread.opPostId)
-      }
-      onMoveCategory={onMoveCategory}
-      onEditTags={onEditTags}
-      poll={poll.poll}
-      onPollVote={poll.vote}
-      isPollVoting={poll.isVoting}
-      pollError={poll.error}
-    />
+    <>
+      <FundingFactsPanel
+        thread={thread}
+        bookmarked={bookmarked}
+        onToggleBookmark={onToggleBookmark}
+      />
+      <ThreadOpCard
+        thread={thread}
+        title={opView.opTitle}
+        body={opView.opBody}
+        editedAt={opView.opEditedAt}
+        deleted={opView.opDeleted}
+        onVote={onVote}
+        bookmarked={bookmarked}
+        onToggleBookmark={onToggleBookmark}
+        onReport={() =>
+          // Report the OP's REAL backend post (`opPostId`), not the FE-synthetic
+          // numeric thread id — the latter targets a non-existent subject and
+          // never reaches moderators. Demo mock threads carry a stub `opPostId`.
+          moderation.setReportTarget({
+            authorName: reportedName,
+            subjectId: thread.opPostId ?? String(thread.id),
+            subjectType: "post",
+          })
+        }
+        canEdit={opView.opCanEdit}
+        canDelete={canDelete}
+        canRestore={opView.opCanRestore}
+        canViewHistory={opView.opCanViewHistory}
+        onEdit={() => {
+          moderation.setEditingOpInitialBody(opView.opBody.join("\n"));
+          moderation.setEditingOp(true);
+        }}
+        onDelete={() => moderation.onOpDelete(thread.opPostId)}
+        onRestore={() => moderation.doRestorePost(thread.opPostId ?? "", true)}
+        onHistory={() =>
+          thread.opPostId && moderation.setHistoryPostId(thread.opPostId)
+        }
+        onMoveCategory={onMoveCategory}
+        onEditTags={onEditTags}
+        poll={poll.poll}
+        onPollVote={poll.vote}
+        isPollVoting={poll.isVoting}
+        pollError={poll.error}
+      />
+    </>
   );
 }

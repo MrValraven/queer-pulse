@@ -6,10 +6,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import { NAV, GOVERNING_DOCS } from "./governance.data";
+import { FinancesSection } from "./GovernanceFinancesSection";
 import {
   CouncilSection,
   DecisionsSection,
-  FinancesSection,
   HealthSection,
   ModerationSection,
   PrinciplesSection,

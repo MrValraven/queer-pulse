@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import { FinancesSection, HealthSection } from "./GovernanceSections";
+import { HealthSection } from "./GovernanceSections";
+import { FinancesSection } from "./GovernanceFinancesSection";
 import type { GovernanceOverviewResult } from "./api/useGovernanceOverview";
 import type { GovernanceFinancesResult } from "./api/useGovernanceFinances";
 
@@ -53,6 +54,9 @@ function overviewOk(): GovernanceOverviewResult {
 
 function financesOk(): GovernanceFinancesResult {
   return {
+    quarter: "2026-Q3",
+    isPublished: true,
+    provenance: { source: "manual", enteredAt: "2026-10-02T09:30:00.000Z" },
     stats: [],
     income: [],
     expense: [],
@@ -123,6 +127,21 @@ describe("HealthSection (governance overview)", () => {
     fireEvent.click(screen.getByRole("button"));
     expect(overviewRetry).toHaveBeenCalledTimes(1);
   });
+
+  // PRD-448: with no entered tiles the section keeps its heading and says the
+  // first report is still to come.
+  it("shows the not-published line when the live overview has no tiles", async () => {
+    overviewState = { ...overviewOk(), health: [] };
+    render(
+      <TestProviders>
+        <HealthSection />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByText(/appear here once the governance team/i),
+    ).toBeInTheDocument();
+    expect(querySectionErrorAlert()).toBeNull();
+  });
 });
 
 describe("FinancesSection (governance finances)", () => {
@@ -138,5 +157,36 @@ describe("FinancesSection (governance finances)", () => {
     fireEvent.click(within(sectionAlert!).getByRole("button"));
     expect(financesRetry).toHaveBeenCalledTimes(1);
     expect(overviewRetry).not.toHaveBeenCalled();
+  });
+
+  // PRD-447: the live endpoint's empty report renders one honest line where
+  // the figures, the intro prose and the provenance label were.
+  it("shows the not-published line when no report has been published", async () => {
+    financesState = {
+      ...financesOk(),
+      quarter: null,
+      isPublished: false,
+      provenance: null,
+    };
+    render(
+      <TestProviders>
+        <FinancesSection />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByText(/once the first quarter is published/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/entered by the governance team/i)).toBeNull();
+  });
+
+  it("labels a published report with who entered the figures", async () => {
+    render(
+      <TestProviders>
+        <FinancesSection />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByText(/entered by the governance team/i),
+    ).toBeInTheDocument();
   });
 });

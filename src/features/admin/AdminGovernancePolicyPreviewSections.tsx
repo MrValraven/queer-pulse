@@ -98,9 +98,6 @@ export function PreviewHealth({ rows }: { rows: PolicyDraft["health"] }) {
           ))}
         </div>
       )}
-      <p className={styles.pageParagraph}>
-        {t("governance:sections.health.prose1")}
-      </p>
     </>
   );
 }

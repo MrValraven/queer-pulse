@@ -1,9 +1,9 @@
 import { FiMessageCircle } from "react-icons/fi";
 import {
-  Button,
   EmptyState,
   FadeIn,
   LoadErrorState,
+  LoadMoreFooter,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Post, PulseMoment } from "./community.model";
@@ -91,18 +91,15 @@ export function PulseFeedList({
       )}
 
       {paging.hasNextPage && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={paging.isFetchingNextPage}
-            onClick={paging.fetchNextPage}
-          >
-            {paging.isFetchingNextPage
-              ? t("communities:detail.pulse.loadingMore")
-              : t("communities:detail.pulse.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          isFetchingNextPage={paging.isFetchingNextPage}
+          isFetchNextPageError={Boolean(paging.isFetchNextPageError)}
+          onLoadMore={paging.fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("communities:detail.pulse.loadMoreCta")}
+          loadingLabel={t("communities:detail.pulse.loadingMore")}
+        />
       )}
     </>
   );

@@ -17,6 +17,10 @@ import {
 import { usePostOpportunityForm } from "./usePostOpportunityForm";
 import { PostVolunteerOpportunityForm } from "./PostVolunteerOpportunityForm";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
+import {
+  rememberEditedOpportunity,
+  type EditedOpportunityState,
+} from "./editedOpportunityHandoff";
 
 /** The organisation the opportunity is already linked to, as picker options,
  *  so the link stays selectable after its poster stops running that
@@ -106,9 +110,11 @@ function EditOpportunityFormPanel({
   );
   const [isClosingSave, setIsClosingSave] = useState(false);
   // Demo mode has no server, so Cancel after a stay-save hands the detail
-  // page the saved view the same way "Save & close" does.
-  const [latestOpportunity, setLatestOpportunity] =
-    useState<VolunteerOpportunity>();
+  // page the saved view the same way "Save & close" does. Router state holds
+  // only the `{ editedSlug }` marker: the view itself carries React elements,
+  // which `history.pushState` cannot clone (`editedOpportunityHandoff.ts`).
+  const [latestEditedState, setLatestEditedState] =
+    useState<EditedOpportunityState>();
   const hasChanges = JSON.stringify(form.toUpdateDto()) !== savedDtoJson;
 
   const submit = (
@@ -136,11 +142,13 @@ function EditOpportunityFormPanel({
       onSuccess: () => {
         showToast(t("marketing:postOpportunity.edit.successToast"), "success");
         if (shouldClose) {
-          void navigate(detailPath, { state: { editedOpportunity: updated } });
+          void navigate(detailPath, {
+            state: rememberEditedOpportunity(updated),
+          });
           return;
         }
         setSavedDtoJson(sentDtoJson);
-        setLatestOpportunity(updated);
+        setLatestEditedState(rememberEditedOpportunity(updated));
       },
       onError: () =>
         showToast(t("marketing:postOpportunity.edit.errorToast"), "error"),
@@ -156,9 +164,7 @@ function EditOpportunityFormPanel({
       submitLabel={t("marketing:postOpportunity.edit.saveCta")}
       submittingLabel={t("marketing:postOpportunity.edit.saving")}
       cancelTo={detailPath}
-      cancelState={
-        latestOpportunity ? { editedOpportunity: latestOpportunity } : undefined
-      }
+      cancelState={latestEditedState}
       hasChanges={hasChanges}
       saveAndCloseLabel={t("marketing:postOpportunity.edit.saveAndCloseCta")}
       isSubmittingClose={isClosingSave}

@@ -1,20 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import {
-  readDemoRoadmap,
-  writeDemoRoadmap,
-  type AdminRoadmapHeroStat,
-} from "../adminRoadmap.data";
+import { readDemoRoadmap, writeDemoRoadmap } from "../adminRoadmap.data";
 import {
   demoCreateTeamMember,
   demoDeleteTeamMember,
-  demoUpdateSettings,
   demoUpdateTeamMember,
 } from "../adminRoadmapDemo";
 import {
   createTeamMember,
   deleteTeamMember,
-  updateRoadmapSettings,
   updateTeamMember,
   type RoadmapTeamMemberUpdateBody,
   type RoadmapTeamMemberWriteBody,
@@ -98,31 +92,13 @@ export function useAdminRoadmapTeamMutations() {
     meta: { silentError: true },
   });
 
-  const updateSettingsMutation = useMutation({
-    mutationFn: async (heroStats: AdminRoadmapHeroStat[]) => {
-      if (demoMode) {
-        const { state, result } = demoUpdateSettings(
-          readDemoRoadmap(),
-          heroStats,
-        );
-        writeDemoRoadmap(state);
-        return result;
-      }
-      return updateRoadmapSettings(heroStats);
-    },
-    onSuccess: invalidate,
-    meta: { silentError: true },
-  });
-
   return {
     createTeam: createTeamMutation.mutate,
     updateTeam: updateTeamMutation.mutate,
     deleteTeam: deleteTeamMutation.mutate,
-    updateSettings: updateSettingsMutation.mutate,
     pending:
       createTeamMutation.isPending ||
       updateTeamMutation.isPending ||
-      deleteTeamMutation.isPending ||
-      updateSettingsMutation.isPending,
+      deleteTeamMutation.isPending,
   };
 }

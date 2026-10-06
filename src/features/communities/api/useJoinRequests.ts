@@ -41,6 +41,8 @@ export interface JoinRequestsResult {
   paging: {
     hasNextPage: boolean;
     isFetchingNextPage: boolean;
+    /** ENG-501: the latest next-page fetch failed; loaded rows stay. */
+    isFetchNextPageError?: boolean;
     fetchNextPage: () => void;
   };
 }
@@ -114,6 +116,7 @@ export function useJoinRequests(slug: string | undefined): JoinRequestsResult {
       paging: {
         hasNextPage: false,
         isFetchingNextPage: false,
+        isFetchNextPageError: false,
         fetchNextPage: () => {},
       },
     };
@@ -126,12 +129,14 @@ export function useJoinRequests(slug: string | undefined): JoinRequestsResult {
     total: query.data?.pages[0]?.total ?? 0,
     state: {
       isLoading: query.isLoading,
-      isError: query.isError,
+      // A failed next page keeps the loaded queue; its footer reports it.
+      isError: query.isError && !query.isFetchNextPageError,
       retry: refetch,
     },
     paging: {
       hasNextPage: query.hasNextPage,
       isFetchingNextPage: query.isFetchingNextPage,
+      isFetchNextPageError: query.isFetchNextPageError,
       fetchNextPage: () => void query.fetchNextPage(),
     },
   };

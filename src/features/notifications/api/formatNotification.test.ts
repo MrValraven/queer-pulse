@@ -1303,3 +1303,186 @@ describe("formatNotification: newly forwarded payload fields", () => {
     },
   );
 });
+
+/**
+ * DES-417. Safe-space review bells used to ride on `moderation_outcome` with
+ * an English sentence, so a nomination thank-you read like a sanction. They
+ * now carry their own kind and structured codes, and the copy is written here.
+ */
+describe("formatNotification: safe_space_review", () => {
+  it.each([
+    [
+      "safe_space_nomination_acknowledged",
+      "nominator",
+      "Your nomination of Lux Cafe is with a reviewer.",
+      "Safe-space nomination",
+    ],
+    [
+      "safe_space_nomination_declined",
+      "nominator",
+      "We reviewed Lux Cafe and aren't adding the badge for now.",
+      "Safe-space nomination",
+    ],
+    [
+      "safe_space_nomination_awarded",
+      "nominator",
+      "Lux Cafe is now a verified safe space. Thank you for nominating it.",
+      "Safe-space nomination",
+    ],
+    [
+      "safe_space_nomination_awarded",
+      "owner",
+      "Lux Cafe now carries the QueerPulse safe-space badge.",
+      "Safe-space badge",
+    ],
+    [
+      "safe_space_badge_suspended",
+      "owner",
+      "The safe-space badge on Lux Cafe is paused while we review it. Someone from the review team will be in touch.",
+      "Safe-space badge",
+    ],
+    [
+      "safe_space_badge_restored",
+      "flagger",
+      "The review of Lux Cafe is finished. Thank you for raising it.",
+      "Safe-space review",
+    ],
+    [
+      "safe_space_badge_restored",
+      "owner",
+      "The review is finished and the safe-space badge on Lux Cafe is live again.",
+      "Safe-space badge",
+    ],
+    [
+      "safe_space_flag_review_opened",
+      "flagger",
+      "The safe-space badge on Lux Cafe is paused while we look into what you raised.",
+      "Safe-space review",
+    ],
+    [
+      "safe_space_flag_resolved",
+      "flagger",
+      "The review team has finished looking at what you raised about Lux Cafe.",
+      "Safe-space review",
+    ],
+  ])("%s to the %s reads its own sentence", (action, audience, text, meta) => {
+    const result = formatNotification(
+      "safe_space_review",
+      { source: "safe-space", action, audience, placeName: "Lux Cafe" },
+      t,
+    );
+    expect(result.text).toBe(text);
+    expect(result.meta).toBe(meta);
+    expect(result.kind).toBe("safe_space_review");
+    expect(result.category).toBe("community");
+  });
+
+  it("tells staff the queue is overdue with no place named", () => {
+    const result = formatNotification(
+      "safe_space_review",
+      {
+        source: "safe-space",
+        action: "safe_space_queue_overdue",
+        audience: "staff",
+      },
+      t,
+    );
+    expect(result.text).toBe(
+      "The safe-space review queue has items waiting past their deadline.",
+    );
+    expect(result.meta).toBe("Safe-space queue");
+  });
+
+  it("names this place when the payload carries no place name", () => {
+    const result = formatNotification(
+      "safe_space_review",
+      {
+        source: "safe-space",
+        action: "safe_space_flag_resolved",
+        audience: "flagger",
+      },
+      t,
+    );
+    expect(result.text).toBe(
+      "The review team has finished looking at what you raised about this place.",
+    );
+  });
+
+  it("falls back to the flat line for an action this client does not know", () => {
+    const result = formatNotification(
+      "safe_space_review",
+      {
+        source: "safe-space",
+        action: "safe_space_something_new",
+        audience: "owner",
+      },
+      t,
+    );
+    expect(result.text).toBe("There's an update on a safe-space review.");
+    expect(result.meta).toBe("Safe-space review");
+  });
+
+  it("carries the moderator's reason on a declined nomination", () => {
+    const reason = "We could not confirm the accessibility details.";
+    const result = formatNotification(
+      "safe_space_review",
+      {
+        source: "safe-space",
+        action: "safe_space_nomination_declined",
+        audience: "nominator",
+        placeName: "Lux Cafe",
+        reason,
+      },
+      t,
+    );
+    expect(result.reason).toBe(reason);
+  });
+
+  it("resolves every action in Portuguese with no brace token", () => {
+    const portugueseT = makeT("pt");
+    for (const action of [
+      "safe_space_nomination_acknowledged",
+      "safe_space_nomination_declined",
+      "safe_space_nomination_awarded",
+      "safe_space_badge_suspended",
+      "safe_space_badge_restored",
+      "safe_space_flag_review_opened",
+      "safe_space_flag_resolved",
+      "safe_space_queue_overdue",
+    ]) {
+      for (const audience of ["nominator", "owner", "flagger", "staff"]) {
+        const result = formatNotification(
+          "safe_space_review",
+          { source: "safe-space", action, audience },
+          portugueseT,
+        );
+        expect(`${result.text} ${result.meta}`).not.toMatch(/[{}]/);
+      }
+    }
+  });
+
+  it("renders a legacy moderation_outcome safe-space row as a neutral update", () => {
+    const result = formatNotification(
+      "moderation_outcome",
+      {
+        source: "safe-space",
+        action: "safe_space_badge_suspended",
+        note: "The safe-space badge on your listing is paused while we review it.",
+      },
+      t,
+    );
+    expect(result.text).toBe("There's an update on a safe-space review.");
+    expect(result.meta).toBe("Safe-space review");
+    expect(result.reason).toBeUndefined();
+  });
+
+  it("keeps the moderation copy for a real moderation action", () => {
+    const result = formatNotification(
+      "moderation_outcome",
+      { action: "warn", note: "Please keep it kind." },
+      t,
+    );
+    expect(result.meta).toBe("Moderation decision");
+    expect(result.reason).toBe("Please keep it kind.");
+  });
+});

@@ -64,244 +64,247 @@ export interface SearchItem {
 /**
  * Build a topic (hashtag) search row from a topic's tag + post count. Shared by
  * the demo corpus (mock `TOPICS`) and the live palette, which feeds real
- * `GET /topics` rows through the same shape — so live search shows real post
- * counts instead of the mock ones.
+ * `GET /topics` rows through the same shape, so live search shows the real post
+ * counts. `describePosts` turns the count into the
+ * row's translated sub line (PRD-327), so the caller owns the language.
  */
-export function topicResponseToSearchItem(topic: {
-  tag: string;
-  totalPosts: number;
-}): SearchItem {
+export function topicResponseToSearchItem(
+  topic: {
+    tag: string;
+    totalPosts: number;
+  },
+  describePosts: (totalPosts: number) => string,
+): SearchItem {
   return {
     t: "topic",
     name: `#${topic.tag}`,
-    sub: `${topic.totalPosts} posts · curated`,
+    sub: describePosts(topic.totalPosts),
     href: topicPath(topic.tag),
     kw: [topic.tag, "hashtag", "topic"].join(" "),
   };
 }
 
 /** Topic (hashtag) rows for DEMO mode, derived from the mock topics registry. */
-const TOPIC_SEARCH_ITEMS: SearchItem[] = Object.values(TOPICS).map((topic) => ({
-  ...topicResponseToSearchItem(topic),
-  // Demo rows also match on related-topic tags for richer local filtering.
-  kw: [
-    topic.tag,
-    ...topic.relatedTopics.map((r) => r.tag),
-    "hashtag",
-    "topic",
-  ].join(" "),
-}));
+export function demoTopicSearchItems(
+  describePosts: (totalPosts: number) => string,
+): SearchItem[] {
+  return Object.values(TOPICS).map((topic) => ({
+    ...topicResponseToSearchItem(topic, describePosts),
+    // Demo rows also match on related-topic tags for richer local filtering.
+    kw: [
+      topic.tag,
+      ...topic.relatedTopics.map((relatedTopic) => relatedTopic.tag),
+      "hashtag",
+      "topic",
+    ].join(" "),
+  }));
+}
+
+/**
+ * A quick destination before translation. Its name and sub are catalog keys
+ * that `useSearchData` resolves in the member's language (PRD-327); `kw` stays
+ * a fixed English keyword list so a member can also find a page by its
+ * English name in either language.
+ */
+export interface PageSearchEntry {
+  nameKey: string;
+  subKey: string;
+  href: string;
+  icon: IconType;
+  kw: string;
+}
 
 // Quick destinations — real navigation targets, so they're safe (and identical)
 // in demo and live. With no query typed these become a jump-to launcher; each
 // carries its own `icon` so the "Pages" group reads at a glance. Grouped by
 // intent below (core places → your account → discovery), but one flat list.
-export const PAGE_SEARCH_ITEMS: SearchItem[] = [
+// An entry whose target is not launched in the current mode (Work & Economy,
+// Culture, and Cinema and Studio in live mode) is filtered out by
+// `useSearchData` through the same helpers the nav uses, so a launch brings
+// its row back with no edit here.
+export const PAGE_SEARCH_ENTRIES: PageSearchEntry[] = [
   // — Core destinations —
   {
-    t: "page",
-    name: "Members",
-    sub: "Find people in the community",
+    nameKey: "members:search.page.members.name",
+    subKey: "members:search.page.members.sub",
     href: routes.members,
     icon: FiUsers,
     kw: "members people directory find profiles neighbours",
   },
   {
-    t: "page",
-    name: "Communities",
-    sub: "Groups to join and belong to",
+    nameKey: "members:search.page.communities.name",
+    subKey: "members:search.page.communities.sub",
     href: routes.communities,
     icon: FiUsers,
     kw: "communities groups circles join belong collectives",
   },
   {
-    t: "page",
-    name: "Events",
-    sub: "What's coming up near you",
+    nameKey: "members:search.page.events.name",
+    subKey: "members:search.page.events.sub",
     href: routes.events,
     icon: FiCalendar,
     kw: "events gatherings calendar rsvp meetups happenings",
   },
   {
-    t: "page",
-    name: "Forum",
-    sub: "Conversations across the community",
+    nameKey: "members:search.page.forum.name",
+    subKey: "members:search.page.forum.sub",
     href: routes.forum,
     icon: FiMessageSquare,
     kw: "forum discussions threads talk conversations posts",
   },
   {
-    t: "page",
-    name: "Local Business directory",
-    sub: "Queer-friendly places and businesses",
+    nameKey: "members:search.page.directory.name",
+    subKey: "members:search.page.directory.sub",
     href: routes.directory,
     icon: FiMapPin,
     kw: "local business directory businesses places venues shops map spaces",
   },
   {
-    t: "page",
-    name: "Verified safe spaces",
-    sub: "Places reviewed and vouched for by the community",
+    nameKey: "members:search.page.safeSpaces.name",
+    subKey: "members:search.page.safeSpaces.sub",
     href: `${routes.directory}?safe=verified`,
     icon: FiShield,
     kw: "safe spaces verified trust badge",
   },
   {
-    t: "page",
-    name: "Messages",
-    sub: "Your direct conversations",
+    nameKey: "members:search.page.messages.name",
+    subKey: "members:search.page.messages.sub",
     href: routes.messages,
     icon: FiMessageSquare,
     kw: "messages dms chat inbox conversations",
   },
   {
-    t: "page",
-    name: "Notifications",
-    sub: "What you've missed",
+    nameKey: "members:search.page.notifications.name",
+    subKey: "members:search.page.notifications.sub",
     href: routes.notifications,
     icon: FiBell,
     kw: "notifications alerts activity updates mentions",
   },
   // — Your account —
   {
-    t: "page",
-    name: "My profile",
-    sub: "How others see you",
+    nameKey: "members:search.page.profile.name",
+    subKey: "members:search.page.profile.sub",
     href: routes.accountProfile,
     icon: FiUser,
     kw: "profile me account my page bio avatar",
   },
   {
-    t: "page",
-    name: "Settings",
-    sub: "Account, privacy and preferences",
+    nameKey: "members:search.page.settings.name",
+    subKey: "members:search.page.settings.sub",
     href: routes.settings,
     icon: FiSettings,
     kw: "settings preferences privacy account notifications options",
   },
   {
-    t: "page",
-    name: "Saved",
-    sub: "Everything you've bookmarked",
+    nameKey: "members:search.page.saved.name",
+    subKey: "members:search.page.saved.sub",
     href: routes.collections,
     icon: FiBookmark,
     kw: "saved bookmarks collections favourites starred",
   },
   {
-    t: "page",
-    name: "My events",
-    sub: "What you're going to",
-    href: routes.events,
+    nameKey: "members:search.page.myEvents.name",
+    subKey: "members:search.page.myEvents.sub",
+    // `/account/events` redirects to the bare board, which opens on Discover
+    // for a member with no RSVPs; an explicit `?tab=mine` always wins there
+    // (`useEventsTopTab`), so the row lands on the member's own events.
+    href: `${routes.events}?tab=mine`,
     icon: FiCalendar,
     kw: "my events rsvps going tickets attending",
   },
   {
-    t: "page",
-    name: "Connections",
-    sub: "The people you're linked with",
+    nameKey: "members:search.page.connections.name",
+    subKey: "members:search.page.connections.sub",
     href: routes.connections,
     icon: FiLink,
     kw: "connections friends network links followers contacts",
   },
   {
-    t: "page",
-    name: "Browse subprofiles",
-    sub: "The persona directory",
+    nameKey: "members:search.page.subprofiles.name",
+    subKey: "members:search.page.subprofiles.sub",
     href: routes.subprofiles,
     icon: FiLayers,
     kw: "subprofiles personas directory professional developer musician writer",
   },
   {
-    t: "page",
-    name: "My subprofiles",
-    sub: "Your professional personas",
+    nameKey: "members:search.page.mySubprofiles.name",
+    subKey: "members:search.page.mySubprofiles.sub",
     href: routes.subprofilesDashboard,
     icon: FiLayers,
     kw: "subprofiles personas manage dashboard professional",
   },
   // — Discovery —
   {
-    t: "page",
-    name: "Magazine",
-    sub: "Stories, culture and voices",
+    nameKey: "members:search.page.magazine.name",
+    subKey: "members:search.page.magazine.sub",
     href: routes.magazine,
     icon: FiBookOpen,
     kw: "magazine articles stories culture reading zine essays",
   },
   {
-    t: "page",
-    name: "Resources",
-    sub: "Guides, support and care",
+    nameKey: "members:search.page.resources.name",
+    subKey: "members:search.page.resources.sub",
     href: routes.resources,
     icon: FiLifeBuoy,
     kw: "resources guides support help care health library",
   },
   {
-    t: "page",
-    name: "Cinema",
-    sub: "Queer film, watched together",
+    nameKey: "members:search.page.cinema.name",
+    subKey: "members:search.page.cinema.sub",
     href: routes.cinema,
     icon: FiFilm,
     kw: "cinema film movies watch screenings shorts",
   },
   {
-    t: "page",
-    name: "Studio",
-    sub: "Music from the community",
+    nameKey: "members:search.page.studio.name",
+    subKey: "members:search.page.studio.sub",
     href: routes.studio,
     icon: FiMusic,
     kw: "studio music sound tracks artists albums",
   },
   {
-    t: "page",
-    name: "Housing",
-    sub: "Homes, flatmates and co-ops",
+    nameKey: "members:search.page.housing.name",
+    subKey: "members:search.page.housing.sub",
     href: routes.housing,
     icon: FiHome,
     kw: "housing homes flatmates rooms rent coop landlords",
   },
   {
-    t: "page",
-    name: "About",
-    sub: "What QueerPulse is and who's behind it",
+    nameKey: "members:search.page.about.name",
+    subKey: "members:search.page.about.sub",
     href: routes.about,
     icon: FiInfo,
     kw: "about mission story team info what is queerpulse",
   },
   {
-    t: "page",
-    name: "Roadmap",
-    sub: "What we're building next",
+    nameKey: "members:search.page.roadmap.name",
+    subKey: "members:search.page.roadmap.sub",
     href: routes.roadmap,
     icon: FiMap,
     kw: "roadmap upcoming plans features vote ideas future",
   },
   {
-    t: "page",
-    name: "Changelog",
-    sub: "What's new lately",
+    nameKey: "members:search.page.changelog.name",
+    subKey: "members:search.page.changelog.sub",
     href: routes.changelog,
     icon: FiFileText,
     kw: "changelog updates releases new shipped history whats new",
   },
   {
-    t: "page",
-    name: "Governance",
-    sub: "How decisions get made",
+    nameKey: "members:search.page.governance.name",
+    subKey: "members:search.page.governance.sub",
     href: routes.governance,
     icon: FiShield,
     kw: "governance policy transparency finances decisions constitution",
   },
 ];
 
-/** Curated, non-user items safe to show in BOTH demo and live (no persona leak). */
-export const STATIC_SEARCH_ITEMS: SearchItem[] = [
-  ...PAGE_SEARCH_ITEMS,
-  ...TOPIC_SEARCH_ITEMS,
-];
-
+/**
+ * The DEMO mock corpus of user content (members, events, communities, posts…).
+ * The translated page and topic rows are joined in front of it by
+ * `useSearchData`, which knows the member's language.
+ */
 export const SEARCH_DATA: SearchItem[] = [
-  ...STATIC_SEARCH_ITEMS,
   {
     t: "member",
     name: memberName("ines"),

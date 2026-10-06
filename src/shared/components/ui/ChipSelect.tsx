@@ -86,6 +86,9 @@ interface FilterChipsProps extends ChipGroupLabelling {
   onChange: (value: string) => void;
   tone?: ChipTone;
   tint?: ChipTint;
+  /** `"touch"` raises every chip to a 44px min-height, like `ChipSelect`.
+   *  Default unchanged. */
+  size?: ChipSize;
   className?: string;
 }
 
@@ -101,6 +104,7 @@ export function FilterChips({
   onChange,
   tone = "plum",
   tint = "light",
+  size = "default",
   className,
   label,
   labelledBy,
@@ -121,7 +125,12 @@ export function FilterChips({
           key={option.value}
           type="button"
           aria-pressed={value === option.value}
-          className={chipClass(value === option.value, tone, tint)}
+          className={chipClass(
+            value === option.value,
+            tone,
+            tint,
+            size === "touch",
+          )}
           onClick={() => onChange(option.value)}
           {...glide.chip}
         >

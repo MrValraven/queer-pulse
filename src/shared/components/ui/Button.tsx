@@ -9,6 +9,9 @@ export type ButtonVariant =
   | "jade"
   | "plum"
   | "danger"
+  /** Tonal: a light coral tint with coral text and no shadow, for a
+   *  secondary action that should still carry the brand colour. */
+  | "soft"
   /** Square, quiet, icon-only. Reach for it through `<IconButton>`, which
    *  makes the `aria-label` mandatory. */
   | "icon"
@@ -23,6 +26,7 @@ const variantClass: Record<ButtonVariant, string | undefined> = {
   jade: styles.jade,
   plum: styles.plum,
   danger: styles.danger,
+  soft: styles.soft,
   icon: styles.icon,
   "icon-dark": `${styles.icon} ${styles.iconDark}`,
 };

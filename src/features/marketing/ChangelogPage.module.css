@@ -333,8 +333,15 @@
   text-decoration: none;
   white-space: nowrap;
 }
+/* A staff-tool tag is a plain label: lighter and italic, so it reads as a
+   note beside the entry. The linked tags keep the bold weight and arrow. */
+span.tag {
+  font-weight: 500;
+  font-style: italic;
+}
 @media (hover: hover) {
-  .tag:hover {
+  /* Only the linked tag reacts: a staff-tool tag renders as a plain label. */
+  a.tag:hover {
     color: var(--text-strong);
   }
 }

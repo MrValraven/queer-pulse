@@ -6,6 +6,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  LoadMoreFooter,
   ModalSheet,
   SearchInput,
   Select,
@@ -163,6 +164,8 @@ export interface MemberResultsColumnProps {
   filteredCount: number;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  /** The latest "Load more" failed; the loaded cards stay (ENG-501). */
+  isFetchNextPageError: boolean;
   onFetchNextPage: () => void;
 }
 
@@ -187,6 +190,7 @@ export function MemberResultsColumn({
   filteredCount,
   hasNextPage,
   isFetchingNextPage,
+  isFetchNextPageError,
   onFetchNextPage,
 }: MemberResultsColumnProps) {
   const { t } = useTranslation();
@@ -334,18 +338,15 @@ export function MemberResultsColumn({
       )}
 
       {hasNextPage && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={isFetchingNextPage}
-            onClick={onFetchNextPage}
-          >
-            {isFetchingNextPage
-              ? t("members:directory.loadingMore")
-              : t("members:directory.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          isFetchingNextPage={isFetchingNextPage}
+          isFetchNextPageError={isFetchNextPageError}
+          onLoadMore={onFetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("members:directory.loadMoreCta")}
+          loadingLabel={t("members:directory.loadingMore")}
+        />
       )}
     </div>
   );

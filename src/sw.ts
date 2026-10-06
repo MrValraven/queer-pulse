@@ -26,6 +26,7 @@ import {
   resolveShownPushCopy,
   sumAppBadgeCount,
 } from "./pushCoalesce";
+import { isWebKitPushEngine } from "./pushEngine";
 import { isAnyWindowViewingConversation, isViewingTarget } from "./pushFocus";
 import { readPushLang } from "./pushLang";
 import { readHidePushPreviews } from "./pushPrivacy";
@@ -58,30 +59,43 @@ self.addEventListener("message", (event) => {
 
 cleanupOutdatedCaches();
 
-// Precache diet: __WB_MANIFEST is scoped by injectManifest.globPatterns
-// (vite.config.ts) to the *app shell only*: index.html, CSS, the entry chunk,
-// the core react/query vendor chunks, fonts, and icons. The ~470 lazy route
-// chunks (Studio, Cinema, maplibre, visx, per-page bundles) are deliberately
-// NOT in the manifest; they are runtime-cached on first use by the script route
-// below, so a first visit no longer downloads the whole app up front.
+// Precache diet: __WB_MANIFEST is scoped by injectManifest.globPatterns and
+// its manifestTransforms (vite.config.ts) to the *app shell only*: index.html,
+// the stylesheets index.html links, the entry chunk, the core react/query
+// vendor chunks, fonts, and icons. The ~470 lazy route chunks (Studio, Cinema,
+// maplibre, visx, per-page bundles) and the ~420 CSS files those routes import
+// stay out of the manifest; the script/style route below runtime-caches each
+// one on first use, so a first visit downloads only what it paints (ENG-190).
+// The offline fallback below needs index.html alone, and OfflinePage is
+// imported eagerly, so its styles ship in the shell stylesheets.
 //
 // directoryIndex: null keeps "/" from being served out of the precached
 // index.html before the NetworkFirst navigation route runs, so a deploy's
 // fresh index.html is picked up.
 precacheAndRoute(self.__WB_MANIFEST, { directoryIndex: null });
 
-// Lazy JS/CSS chunks (everything not precached): stale-while-revalidate so a
-// route that was opened once keeps working offline, and refreshes in the
-// background on the next online visit. Bounded so storage can't grow forever.
+// Lazy JS/CSS chunks (everything not precached): stale-while-revalidate, so a
+// cached chunk serves at once and refreshes in the background on the next
+// online visit. Bounded so storage can't grow forever.
+//
+// Offline, a route opened once keeps working only while BOTH its JS and its
+// CSS survive this cache's LRU eviction. JS and CSS are separate entries and
+// can be evicted apart: when only the CSS is gone, the failed stylesheet load
+// fires vite:preloadError, the app reloads once, and the route then shows the
+// crash panel.
 //
 // maxEntries was 120, which was well under what one session actually touches:
 // the production entry chunk references ~556 lazy chunks, and a page pulls its
 // own JS plus its CSS plus whatever shared chunks it imports, so a member who
 // browses for a while evicted (LRU) chunks they were about to navigate back to.
 // Every eviction turns a would-be instant navigation back into a network round
-// trip. 400 covers a deep session without letting the cache grow without limit,
-// and purgeOnQuotaError below still empties it rather than failing writes if a
-// device is tight on storage.
+// trip. 400 covered a deep session while every CSS file sat in the precache.
+// ENG-190 moved the ~420 route stylesheets out of the precache and into this
+// cache, so each visited page now spends roughly twice the entries here; 800
+// keeps the same depth of session warm. The cap still bounds growth, and
+// purgeOnQuotaError below empties the cache so writes keep succeeding on a
+// device that is tight on storage. Every same-origin /assets/ file is
+// content-hashed, so a cached copy stays valid until its URL changes.
 registerRoute(
   ({ request }) =>
     request.destination === "script" || request.destination === "style",
@@ -89,7 +103,7 @@ registerRoute(
     cacheName: "qp-assets",
     plugins: [
       new ExpirationPlugin({
-        maxEntries: 400,
+        maxEntries: 800,
         maxAgeSeconds: 30 * 24 * 60 * 60,
         purgeOnQuotaError: true,
       }),
@@ -204,6 +218,11 @@ self.addEventListener("push", (event) => {
  * `isReadDismissPush`'s doc for why this marker's tag is namespaced away
  * from it) and re-sync the app badge from what's left, exactly as if the
  * member had opened or dismissed them by hand.
+ *
+ * The backend no longer sends read-dismiss markers to Apple push endpoints:
+ * WebKit refuses `close()` within 30 seconds of showing a persistent
+ * notification (313831@main), so the marker would linger as a blank
+ * notification. This handler stays as is for Chromium and Firefox.
  */
 async function handleReadDismissPush(
   payload: DirectMessagePush,
@@ -240,7 +259,8 @@ async function handleReadDismissPush(
  * Focus-aware suppression: a push for a conversation the recipient is ALREADY
  * looking at, in a focused window, is noise (Signal, WhatsApp and Telegram all
  * suppress it). Only focused windows are considered, so an unfocused or
- * background window never suppresses. Two paths, and either one suppresses:
+ * background window never suppresses. Two paths, and either one reports the
+ * target as on screen:
  *
  * - `isViewingTarget` matches a focused window whose URL is exactly the push's
  *   target. It rarely fires for messages, since the inbox strips `?c=` once a
@@ -253,6 +273,12 @@ async function handleReadDismissPush(
  * `includeUncontrolled: true` for the same reason as openNotificationTarget
  * below: right after a deploy the tabs opened under the previous build are
  * uncontrolled, and they are still the member's open windows.
+ *
+ * Only engines that waive WebKit's silent-push rule may act on a `true` here
+ * by skipping the notification. WebKit revokes every subscription of the origin
+ * after 3 pushes that settle without `showNotification()`, counts cumulatively,
+ * and grants no focused-window exemption (Chromium does). On WebKit the caller
+ * shows the notification quietly (see `showPushNotification`).
  */
 async function isPushTargetOnScreen(
   payload: DirectMessagePush,
@@ -303,19 +329,26 @@ async function showPushNotification(
     // Checked before the localization read below so a suppressed push skips
     // that work entirely. The fallback has no target to match, so it always
     // shows.
-    if (
-      !isFallback &&
-      (await isPushTargetOnScreen(payload, isDirectMessagePush))
-    ) {
-      return;
-    }
+    const isOnScreen =
+      !isFallback && (await isPushTargetOnScreen(payload, isDirectMessagePush));
+    // Engines that waive the silent-push rule (Chromium, while a same-origin
+    // window is focused) skip the notification. WebKit has no such waiver: a
+    // push event that settles without showNotification() counts as one of the
+    // 3 silent pushes after which it revokes every subscription of the origin,
+    // and the counter never resets. So on WebKit an on-screen push continues
+    // down the normal path and shows quietly (see `options` below). It keeps
+    // the payload's own tag, so it folds into the conversation's single
+    // notification, which useCloseReadNotifications closes once the open
+    // thread reads as read.
+    const shouldShowQuietly =
+      isOnScreen && isWebKitPushEngine(self.navigator.userAgent);
+    if (isOnScreen && !shouldShowQuietly) return;
     // The recipient's language lives in IndexedDB (written by the app on
     // boot/language-switch, see pushLang.ts). The payload itself carries no
     // language: the backend stays language-neutral and does not know the
     // recipient's locale. formatPushCopy resolves payload.l10n's key(s) in that
     // language, falling back to the payload's plain English title/body when
-    // there's no l10n block or the key/lang can't be resolved (also what
-    // iOS renders, since it never runs this handler's JS).
+    // there's no l10n block or the key/lang can't be resolved.
     lang = await readPushLang();
     // Lock-screen privacy: when the member has asked for hidden
     // previews, nothing identifying may reach showNotification.
@@ -344,8 +377,9 @@ async function showPushNotification(
     // path there is nothing left here to redact. This substitution stays
     // because it costs nothing and covers what the server cannot: a payload
     // composed by an older backend, or a type that reaches `showNotification`
-    // without having gone through the split. It has never worked on iOS,
-    // which is why the server had to take over.
+    // without having gone through the split. This handler's JS does run on
+    // iOS; the server composes the generic payload so the lock screen never
+    // depends on this client-side pass.
     //
     // Substitute AFTER coalescing so the burst logic still runs (the tag and
     // count are not identifying), but before the options are built so the
@@ -388,12 +422,15 @@ async function showPushNotification(
       // ENG-414: each button label is localised from its `titleKey` with
       // the same lookup and English fallback as the body.
       actions: formatPushActions(payload.actions, lang),
-      renotify: payload.renotify,
+      // A quiet show (on-screen push on WebKit) must not re-alert the open
+      // app, so it neither renotifies, vibrates nor sounds.
+      renotify: shouldShowQuietly ? false : payload.renotify,
       // Per the Notifications spec, `silent` and a vibration pattern conflict;
       // silent wins, so suppress vibrate when the payload asked for silent.
-      vibrate: payload.silent ? undefined : payload.vibrate,
+      vibrate:
+        shouldShowQuietly || payload.silent ? undefined : payload.vibrate,
       requireInteraction: payload.requireInteraction,
-      silent: payload.silent,
+      silent: shouldShowQuietly ? true : payload.silent,
       // The true event time (message createdAt / event start / notification
       // createdAt), which a delayed delivery leaves intact. Every sender now
       // sets this.

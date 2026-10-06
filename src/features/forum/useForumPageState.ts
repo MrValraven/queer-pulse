@@ -9,6 +9,7 @@ import { useForumCounts, usePinnedThreads, useThreads } from "./api/useForum";
 import { useVotePost } from "./api/useForumMutations";
 import { type ForumThreadCounts } from "./api/forum.api";
 import { composeHref } from "./compose/useComposeThreadSeeds";
+import { SERVER_ORDERED_VIEWS } from "./funding/funding.data";
 import { useForumRowModeration } from "./useForumRowModeration";
 import { useForumUrlParams } from "./useForumUrlParams";
 import { useForumFirstPostPrompt } from "./useForumFirstPostPrompt";
@@ -45,12 +46,37 @@ export function useForumPageState() {
   const navigate = useNavigate();
   const simLoading = useSimulatedLoad();
 
-  const { searchParams, tag, setTag, q, setQ, cat, setCat, sort, setSort } =
-    useForumUrlParams();
+  const {
+    searchParams,
+    tag,
+    setTag,
+    q,
+    setQ,
+    cat,
+    setCat,
+    sort,
+    setSort,
+    fundingView,
+    setFundingView,
+    eligibility,
+    toggleEligibility,
+    scope,
+    setScope,
+    clearFundingFilters,
+  } = useForumUrlParams();
+  const wireFundingView = fundingView === "all" ? undefined : fundingView;
+  const hasServerOrder = SERVER_ORDERED_VIEWS.includes(fundingView);
 
   // Thread source: demo returns the full mock as one terminal page, live pages
   // through GET /forum/threads (already sorted/filtered) via "Load more".
-  const threadsQuery = useThreads(cat, { sort, tag, q: q || undefined });
+  const threadsQuery = useThreads(cat, {
+    sort,
+    tag,
+    q: q || undefined,
+    fundingView: wireFundingView,
+    eligibility,
+    scope: scope ?? undefined,
+  });
   const { hasNextPage, fetchNextPage, isFetchingNextPage } = threadsQuery;
   const loading = demoMode ? simLoading : threadsQuery.isLoading;
 
@@ -74,7 +100,7 @@ export function useForumPageState() {
   // thread the search doesn't match would otherwise look like a stray result.
   const pinnedThreadsQuery = usePinnedThreads(cat);
   const pinnedThreads =
-    tag || q
+    tag || q || wireFundingView
       ? []
       : pinnedThreadsQuery.pinned.filter(
           (thread) =>
@@ -131,7 +157,7 @@ export function useForumPageState() {
     closeEditTitle,
   } = useForumThreadTitleEdit({ demoMode, allThreads, setExtraThreads });
 
-  const filtered = cat !== "all" || !!tag || !!q;
+  const filtered = cat !== "all" || !!tag || !!q || !!wireFundingView;
 
   function resetFilters() {
     setCat("all");
@@ -144,8 +170,26 @@ export function useForumPageState() {
       (thread) =>
         !thread.author.slug || !hiddenAuthorHandles.has(thread.author.slug),
     );
-    return filterAndSortThreads(visible, { demoMode, cat, tag, q, sort });
-  }, [demoMode, allThreads, cat, tag, q, sort, hiddenAuthorHandles]);
+    return filterAndSortThreads(visible, {
+      demoMode,
+      cat,
+      tag,
+      q,
+      sort,
+      funding: { view: fundingView, eligibility, scope },
+    });
+  }, [
+    demoMode,
+    allThreads,
+    cat,
+    tag,
+    q,
+    sort,
+    fundingView,
+    eligibility,
+    scope,
+    hiddenAuthorHandles,
+  ]);
 
   // Vote on the list row: acts on the thread's OPENING post. Live threads carry
   // a real `opPostId`; demo threads carry a SYNTHETIC one (`demo-op-<id>`, see
@@ -160,7 +204,13 @@ export function useForumPageState() {
     [votePost],
   );
 
-  const headerCount = cat === "all" ? (counts.all ?? 0) : (counts[cat] ?? 0);
+  // Every Funding & Grants view lists a slice of the category, so the
+  // category total would miscount it: the count shows on the plain list only.
+  const headerCount = wireFundingView
+    ? null
+    : cat === "all"
+      ? (counts.all ?? 0)
+      : (counts[cat] ?? 0);
 
   // Only a failure that leaves nothing on screen becomes a panel: a "Load more"
   // page that fails still has the loaded threads to show.
@@ -171,6 +221,14 @@ export function useForumPageState() {
     setCat,
     sort,
     setSort,
+    fundingView,
+    setFundingView,
+    eligibility,
+    toggleEligibility,
+    scope,
+    setScope,
+    clearFundingFilters,
+    hasServerOrder,
     tag,
     setTag,
     q,

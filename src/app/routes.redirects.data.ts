@@ -1,4 +1,5 @@
 import { writerTabHref } from "../features/magazine/writerTabs";
+import { FUNDING_OPEN_CALLS_HREF } from "../features/forum/funding/funding.data";
 import { routes } from "./routeMap";
 
 /**
@@ -69,7 +70,7 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/jobs", routes.jobs],
   ["/housing", routes.housing],
   ["/housing-coop", routes.housingCoop],
-  ["/grants", routes.grants],
+  ["/grants", FUNDING_OPEN_CALLS_HREF],
   ["/barter", routes.barter],
   ["/offer", routes.offer],
   ["/employer-reviews", routes.employerReviews],
@@ -77,6 +78,9 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/mentorship", routes.mentorship],
   ["/flatmates", `${routes.housing}?tab=flatmates`],
   // Hub re-parenting (2026-07-06): old full paths → new homes
+  // Funding & Grants (2026-10-05): the mock grants board became the forum's
+  // Open calls view, where members post and track real calls.
+  ["/work/grants", FUNDING_OPEN_CALLS_HREF],
   ["/work/housing", routes.housing],
   ["/work/housing-coop", routes.housingCoop],
   ["/work/flatmates", `${routes.housing}?tab=flatmates`],

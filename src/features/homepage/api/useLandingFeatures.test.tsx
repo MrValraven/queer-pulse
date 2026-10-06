@@ -97,6 +97,11 @@ describe("useLandingFeaturesPublic (demo mode)", () => {
     expect(result.current.changemakers).toHaveLength(changemakers.length);
     expect(result.current.changemakers[0]!.name).toBe(changemakers[0]!.name);
     expect(result.current.changemakers[0]!.tags).toEqual(changemakers[0]!.tags);
+
+    // Demo renders the static Gatherings and Stories sections, so the demo
+    // feed carries neither curated slice.
+    expect(result.current.gatherings).toEqual([]);
+    expect(result.current.stories).toEqual([]);
   });
 });
 
@@ -173,5 +178,9 @@ describe("useLandingFeaturesPublic (live mode via MSW)", () => {
     expect(result.current.members).toEqual([]);
     expect(result.current.communities).toEqual([]);
     expect(result.current.changemakers).toEqual([]);
+    // This response predates the gathering and story slices; the hook reads
+    // their absence as empty.
+    expect(result.current.gatherings).toEqual([]);
+    expect(result.current.stories).toEqual([]);
   });
 });

@@ -14,6 +14,16 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "6 Oct 2026": {
+    // Thirty-six entries, so three highlights, features first: Funding &
+    // Grants leads as the largest build, then real gatherings for visitors,
+    // then a language that follows you.
+    highlights: [
+      "funding-grants-forum",
+      "homepage-shows-real-gatherings",
+      "language-follows-you",
+    ],
+  },
   "5 Oct 2026": {
     // First day of per-push versioning: one push so far, which is v1.54.0.
     pushes: 1,

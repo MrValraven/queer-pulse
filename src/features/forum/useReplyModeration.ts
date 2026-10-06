@@ -6,7 +6,7 @@ import { type useEditPost } from "./api/useForumMutations";
 
 type PostIdMutate = (
   variables: { postId: string },
-  options: { onSuccess: () => void; onError: () => void },
+  options: { onSuccess: () => void; onError: (error: unknown) => void },
 ) => void;
 
 /**
@@ -29,7 +29,8 @@ export function useReplyModeration({
   setLocalReplies: React.Dispatch<React.SetStateAction<Reply[]>>;
   replyKey: (reply: Reply) => string;
   editPost: ReturnType<typeof useEditPost>;
-  onMutateError: () => void;
+  /** Gets the request's error, so a funding refusal can say why. */
+  onMutateError: (error?: unknown) => void;
 }) {
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -70,9 +71,9 @@ export function useReplyModeration({
       { postId },
       {
         onSuccess: () => showToast(t(successKey), "success"),
-        onError: () => {
+        onError: (error) => {
           setLocalReplies(snapshot);
-          onMutateError();
+          onMutateError(error);
         },
       },
     );
@@ -101,9 +102,11 @@ export function useReplyModeration({
       { postId, body },
       {
         onSuccess: () => showToast(t("forum:toast.editSaved"), "success"),
-        onError: () => {
+        // A reply under a fundraiser that carries an IBAN or a phone number
+        // is refused with `funding_payment_details_in_body`, which says so.
+        onError: (error) => {
           setLocalReplies(snapshot);
-          onMutateError();
+          onMutateError(error);
         },
       },
     );

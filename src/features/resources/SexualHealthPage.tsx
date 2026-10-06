@@ -57,13 +57,15 @@ export function SexualHealthPage() {
         }
         lead={t("resources:sexualHealth.hero.lead")}
         extras={
-          <Tabs
-            variant="underline"
-            tint="dark"
-            tabs={tabs}
-            active={tab}
-            onChange={(id) => setTab(id as TabId)}
-          />
+          <div className={styles.tabScroller}>
+            <Tabs
+              variant="underline"
+              tint="dark"
+              tabs={tabs}
+              active={tab}
+              onChange={(id) => setTab(id as TabId)}
+            />
+          </div>
         }
       />
 

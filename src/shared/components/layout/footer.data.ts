@@ -94,7 +94,7 @@ export const COLUMNS: FooterColumn[] = [
   {
     headingKey: "nav:members",
     links: [
-      { labelKey: "nav:members", href: "#discovery" },
+      { labelKey: "nav:members", href: routes.members },
       { labelKey: "shared:accountMenu.items.messages", href: routes.messages },
       {
         labelKey: "shared:footerData.col.members.guideLibrary",

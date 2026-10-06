@@ -35,6 +35,27 @@ export interface GroupListingDTO {
   accessibilityInfo: string;
 }
 
+/** The member who posted a group room, as the backend's `MemberRef` carries
+ *  them (PRD-443). */
+export interface GroupListingPosterDTO {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  pronouns: string | null;
+  avatarUrl: string | null;
+}
+
+/**
+ * A room as the group page reads it (PRD-443). `poster` is filled only for a
+ * signed-in reader, and `isOwnListing` marks the reader's own room. Both are
+ * optional so an older backend that sends neither still maps cleanly: no
+ * poster means no "Message" control.
+ */
+export interface PublicGroupListingDTO extends GroupListingDTO {
+  poster?: GroupListingPosterDTO | null;
+  isOwnListing?: boolean;
+}
+
 /**
  * The four states a submitted room moves through. `review` is where every new
  * listing lands, `live` is on the group page, `question` means a moderator
@@ -42,6 +63,13 @@ export interface GroupListingDTO {
  * be published. Mirrors the backend `GroupListingStatus` enum exactly.
  */
 export type GroupListingStatus = "review" | "question" | "live" | "declined";
+
+/**
+ * A takedown from a REPORT (PRD-443), read off the same `content_moderation`
+ * row the group page withholds on. `removed` wins when both are set. Separate
+ * from `hidden`, the moderator's norm takedown with its own reason.
+ */
+export type GroupListingModerationState = "hidden" | "removed" | null;
 
 /**
  * The POSTER's own view of a room they submitted (LOC-19). A superset of the
@@ -59,6 +87,9 @@ export interface MyGroupListingDTO extends GroupListingDTO {
   /** A post-publication takedown, with the norm the moderator recorded. */
   hidden: boolean;
   hiddenReason: string | null;
+  /** Optional so an older backend that never sends it maps as "no report
+   *  takedown". */
+  moderationState?: GroupListingModerationState;
   decidedAt: string | null;
   decisionReason: string | null;
   createdAt: string;
@@ -120,7 +151,22 @@ export const getHousingGroup = (slug: string) =>
  * `groupMembershipStandingFrom` rather than letting it surface as a failure.
  */
 export const getGroupListings = (slug: string) =>
-  apiGet<GroupListingDTO[]>(`/housing-groups/${slug}/listings`);
+  apiGet<PublicGroupListingDTO[]>(`/housing-groups/${slug}/listings`);
+
+/**
+ * Message the member who posted a group room (PRD-443). The same body and
+ * answer as the member-listing enquiry, and the same pledge and phone step-up
+ * gates. A 404 means the room is no longer on the group page.
+ */
+export const sendGroupListingEnquiry = (
+  slug: string,
+  listingId: string,
+  body: { body: string },
+) =>
+  apiPost<{ conversationId: string }>(
+    `/housing-groups/${slug}/listings/${listingId}/enquiries`,
+    body,
+  );
 
 /** Where the caller stands with a group they are not a member of. Mirrors the
  *  backend `GroupMembershipStanding`, and only ever describes the caller's own
@@ -188,6 +234,29 @@ export const updateGroupListing = (
 export const withdrawGroupListing = (slug: string, listingId: string) =>
   apiDelete<void>(`/housing-groups/${slug}/listings/${listingId}`);
 
+/** Where a member already stands when they ask to join a group twice
+ *  (ENG-472): a request still being read, or already in. */
+export type GroupJoinDuplicateStanding = "pending" | "member";
+
+/**
+ * Reads a `GROUP_JOIN_ALREADY_REQUESTED` 409 body and returns the member's own
+ * standing, so the join flow can say "you've already asked" or "you're already
+ * in" from the code. Returns `null` for any other error. Falls back to
+ * `"pending"` when the code arrives without a recognised standing, since
+ * waiting is the honest answer when we cannot tell.
+ */
+export function groupJoinDuplicateStandingFrom(
+  error: unknown,
+): GroupJoinDuplicateStanding | null {
+  if (!(error instanceof ApiError) || error.status !== 409) return null;
+  const data = error.data as
+    { code?: string; membershipStanding?: string } | undefined;
+  if (data?.code !== "GROUP_JOIN_ALREADY_REQUESTED") return null;
+  return data.membershipStanding === "member" ? "member" : "pending";
+}
+
+/** Ask to join a group. Signed-in active members only (ENG-472); a second
+ *  live request answers 409, read through `groupJoinDuplicateStandingFrom`. */
 export const submitGroupJoinRequest = (
   slug: string,
   body: GroupJoinRequestBody,

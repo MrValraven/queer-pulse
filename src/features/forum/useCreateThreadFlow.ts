@@ -23,6 +23,14 @@ import {
 import type { ThreadListPage } from "./api/useForum";
 import { useDeleteThread } from "./api/useForumMutations";
 import type { PublishMode } from "./compose/composeThread.types";
+import { isFundingKind } from "./compose/composeFunding";
+import {
+  fundingErrorCode,
+  FUNDING_ERROR_MESSAGE_KEYS,
+  FUNDING_ERROR_MESSAGE_VALUES,
+} from "./funding/fundingErrors";
+import { previewFundingView } from "./funding/fundingPreview";
+import type { FundingErrorCode } from "./funding/funding.types";
 import {
   toCreateThreadDto,
   type ComposePublishInput,
@@ -91,6 +99,9 @@ export function useCreateThreadFlow({
   const [publishStatus, setPublishStatus] = useState<PublishStatus>("idle");
   const [published, setPublished] = useState<PublishedThread | null>(null);
   const [optimisticId, setOptimisticId] = useState<number | null>(null);
+  const [fundingError, setFundingError] = useState<FundingErrorCode | null>(
+    null,
+  );
 
   const createMutation = useMutation<
     ForumThreadResponse,
@@ -105,11 +116,16 @@ export function useCreateThreadFlow({
 
   const publishThread = useCallback(
     (input: ComposePublishInput) => {
-      const dto = toCreateThreadDto(input);
+      // A fundraiser is reviewed before anyone sees it, whatever was pressed:
+      // an optimistic row or a "published" panel would both be untrue.
+      const mode: PublishMode =
+        input.state.kind === "ask" ? "review" : input.mode;
+      const dto = toCreateThreadDto({ ...input, mode });
+      setFundingError(null);
       // A client-only temp id keys the optimistic row so the create response
       // can reconcile it once it resolves.
       const tempId = Date.now();
-      const isImmediate = input.mode === "now";
+      const isImmediate = mode === "now";
       if (isImmediate) {
         prependThread(
           queryClient,
@@ -129,7 +145,7 @@ export function useCreateThreadFlow({
       if (demoMode) {
         setPublished({
           title: dto.title,
-          mode: input.mode,
+          mode,
           isPublished: isImmediate,
           scheduledAt: dto.publishAt ?? null,
         });
@@ -144,7 +160,7 @@ export function useCreateThreadFlow({
           setPublished({
             slug: created.slug,
             title: created.title,
-            mode: input.mode,
+            mode,
             isPublished: created.isPublished,
             scheduledAt: dto.publishAt ?? null,
           });
@@ -162,7 +178,15 @@ export function useCreateThreadFlow({
           removeThread(queryClient, tempId);
           setOptimisticId(null);
           setPublishStatus("error");
-          showToast(t("forum:toast.error"), "error");
+          const code = fundingErrorCode(error);
+          setFundingError(code);
+          showToast(
+            t(
+              code ? FUNDING_ERROR_MESSAGE_KEYS[code] : "forum:toast.error",
+              FUNDING_ERROR_MESSAGE_VALUES,
+            ),
+            "error",
+          );
         },
       });
     },
@@ -174,6 +198,7 @@ export function useCreateThreadFlow({
     setPublishStatus("idle");
     setPublished(null);
     setOptimisticId(null);
+    setFundingError(null);
   }, []);
 
   /**
@@ -193,6 +218,7 @@ export function useCreateThreadFlow({
     publishStatus,
     published,
     publishThread,
+    fundingErrorCode: fundingError,
     resetPublish,
     withdrawPublished,
   };
@@ -258,6 +284,11 @@ function optimisticThread({
     // refetch swaps in the server's resolved `/files/` URL.
     opImage: previewUrl,
     replies: [],
+    kind: dto.kind ?? null,
+    funding:
+      dto.funding && isFundingKind(dto.kind)
+        ? previewFundingView(dto.kind, dto.funding, Date.now())
+        : null,
   };
 }
 

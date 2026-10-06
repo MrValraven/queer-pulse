@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
-import { Button, Reveal } from "../../../shared/components/ui";
+import {
+  LoadErrorState,
+  LoadMoreFooter,
+  Reveal,
+} from "../../../shared/components/ui";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CalendarEvent } from "../data";
@@ -104,8 +108,19 @@ export function BrowseView() {
     [filters, now],
   );
 
-  const { items, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useEvents({ filter: "upcoming", browse });
+  const {
+    items,
+    isLoading,
+    isError,
+    isFetchNextPageError,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useEvents({ filter: "upcoming", browse });
+  // ENG-501: a failed first page shows the error state, so an outage does not
+  // read as "nothing matches". A failed later page keeps the loaded rows.
+  const hasNothingLoadedError = isError && items.length === 0;
 
   // The search box is typed into far faster than it is worth querying, so the
   // input holds its own value and the URL (and therefore the request) catches
@@ -143,7 +158,14 @@ export function BrowseView() {
     if (!sentinel) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        // A failed page holds the auto-scroll until the member presses Retry
+        // below; re-asking on every observer rebuild would loop on an outage.
+        if (
+          entries[0]?.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage &&
+          !isFetchNextPageError
+        ) {
           fetchNextPage();
         }
       },
@@ -151,7 +173,7 @@ export function BrowseView() {
     );
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage]);
 
   return (
     <div className={styles.body}>
@@ -170,6 +192,8 @@ export function BrowseView() {
             <HubLoadingLine labelKey="gatherings:hub.loading" />
             <SkeletonRows count={5} />
           </>
+        ) : hasNothingLoadedError ? (
+          <LoadErrorState onRetry={refetch} />
         ) : (
           <>
             {months.map(([label, monthEvents]) => (
@@ -200,17 +224,18 @@ export function BrowseView() {
 
             <div ref={sentinelRef} aria-hidden className={styles.sentinel} />
 
+            {/* ENG-501: a failed page says so here and the button retries it;
+                the rows above stay. */}
             {hasNextPage && (
-              <div className={styles.loadMore}>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={isFetchingNextPage}
-                  onClick={fetchNextPage}
-                >
-                  {t("gatherings:hub.browse.loadMore")}
-                </Button>
-              </div>
+              <LoadMoreFooter
+                className={styles.loadMore}
+                isFetchingNextPage={isFetchingNextPage}
+                isFetchNextPageError={isFetchNextPageError}
+                onLoadMore={fetchNextPage}
+                errorMessage={t("common:error.loadMore")}
+                label={t("gatherings:hub.browse.loadMore")}
+                loadingLabel={t("gatherings:calendar.loadingMore")}
+              />
             )}
           </>
         )}

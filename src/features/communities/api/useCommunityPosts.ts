@@ -27,6 +27,11 @@ export interface PulsePaging {
    *  yet" empty state on an outage tells a member the feed is empty when it
    *  never loaded (DES-22), so every paginated source reports its failure. */
   isError?: boolean;
+  /** ENG-501: the latest next-page fetch failed. react-query also sets
+   *  `isError` then, so a tab keeps the rows it already loaded and lets its
+   *  footer retry the page. Optional because a test stub or a source
+   *  without a next page may omit it. */
+  isFetchNextPageError?: boolean;
   /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
   refetch?: () => void;
 }
@@ -119,6 +124,7 @@ export function useCommunityPosts(
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      isFetchNextPageError: false,
       isLoading: false,
       isError: false,
       refetch: () => {},
@@ -130,6 +136,7 @@ export function useCommunityPosts(
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),
@@ -144,6 +151,7 @@ export interface CommunityPostSearchResult extends PulsePaging {
   matches: Post[];
   isLoading: boolean;
   isError: boolean;
+  isFetchNextPageError: boolean;
 }
 
 /**
@@ -201,5 +209,7 @@ export function useCommunityPostSearch(
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
     isError: query.isError,
+    // ENG-501: also sets `isError`; the results keep their loaded matches.
+    isFetchNextPageError: query.isFetchNextPageError,
   };
 }

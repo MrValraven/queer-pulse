@@ -739,14 +739,16 @@ export const auth: Catalog = {
   "onboarding.stepDone.stampFailed.desc":
     "You're in either way. Without this we might walk you through the same setup again next time.",
   "onboarding.stepDone.stampFailed.retry": "Try again",
-  "onboarding.quickStart.browseDirectory.title": "Browse the member directory",
-  "onboarding.quickStart.browseDirectory.desc":
-    "Members across Lisbon and beyond",
-  "onboarding.quickStart.gatherings.title": "See upcoming gatherings",
-  "onboarding.quickStart.gatherings.desc":
-    "Real-world events for the community",
-  "onboarding.quickStart.magazine.title": "Read the community magazine",
-  "onboarding.quickStart.magazine.desc": "Published the first of every month",
+  "onboarding.quickStart.communities.title":
+    "Check out communities and collectives",
+  "onboarding.quickStart.communities.desc":
+    "Groups organised around shared interests",
+  "onboarding.quickStart.businessDirectory.title":
+    "Explore the local business directory",
+  "onboarding.quickStart.businessDirectory.desc":
+    "Queer-owned and affirming places across Lisbon",
+  "onboarding.quickStart.forum.title": "Check out the forum",
+  "onboarding.quickStart.forum.desc": "Questions, advice, and conversations",
   "onboarding.quickStart.gettingStarted.title":
     "See your getting-started checklist",
   "onboarding.quickStart.gettingStarted.desc":

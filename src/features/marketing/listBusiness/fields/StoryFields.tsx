@@ -4,8 +4,8 @@ import { Translation } from "../../../../shared/i18n/Translation";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import {
   ANCHOR,
-  GOODFOR,
   goodForLabel,
+  goodForOptions,
   LANGS,
   langLabel,
 } from "../listBusiness.data";
@@ -18,7 +18,7 @@ import styles from "../ListBusinessPage.module.css";
 
 /**
  * The story field body: tagline, the description, free tags, the
- * good-for accessibility list and spoken languages.
+ * good-for list for the listing's audience and spoken languages.
  *
  * Shared by the create wizard's step 2 pane (`StepStory`) and the owner
  * editor's Story section. Fragment, so each field stays a direct child of the
@@ -27,6 +27,13 @@ import styles from "../ListBusinessPage.module.css";
 export function StoryFields({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, set, toggleIn } = form;
+  // The list for this audience, then any stored value it lacks (a flipped
+  // online toggle, or an older access claim) so the owner can untick it.
+  const offeredGoodFor = goodForOptions(draft.online);
+  const goodForChoices = [
+    ...offeredGoodFor,
+    ...draft.goodFor.filter((value) => !offeredGoodFor.includes(value)),
+  ];
 
   return (
     <>
@@ -66,7 +73,7 @@ export function StoryFields({ form }: { form: ListingForm }) {
           role="group"
           aria-label={t("marketing:listBusiness.step2.goodForAria")}
         >
-          {GOODFOR.map((g) => {
+          {goodForChoices.map((g) => {
             const on = draft.goodFor.includes(g);
             return (
               <button

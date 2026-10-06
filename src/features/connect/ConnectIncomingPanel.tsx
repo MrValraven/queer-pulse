@@ -15,10 +15,16 @@ import styles from "./ConnectModal.module.css";
  * politely decline. When the member had already written something, accepting
  * carries those words straight into the conversation it just opened, so
  * composing before realising the request was there costs nothing.
+ *
+ * When they wrote something with the request (a message, a reason, or both),
+ * it is quoted under the body so the member answers knowing what was asked.
+ * All three actions share one row on a wide sheet, wrapping on a phone.
  */
 export function ConnectIncomingPanel({
   firstName,
   hasDraft,
+  requestMessage,
+  requestReason,
   busy,
   onAccept,
   onDecline,
@@ -27,6 +33,10 @@ export function ConnectIncomingPanel({
   firstName: string;
   /** Whether the member has words waiting; changes the accept label only. */
   hasDraft: boolean;
+  /** The words they sent with the request, already trimmed, or null. */
+  requestMessage: string | null;
+  /** The translated label of the reason they picked, or null. */
+  requestReason: string | null;
   /** An answer is in flight: both buttons wait rather than fire twice. */
   busy: boolean;
   onAccept: () => void;
@@ -34,6 +44,7 @@ export function ConnectIncomingPanel({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const hasNote = Boolean(requestMessage || requestReason);
 
   return (
     <div className={styles.sent}>
@@ -67,12 +78,34 @@ export function ConnectIncomingPanel({
           values={{ name: firstName }}
         />
       </h2>
-      <p>
+      <p className={hasNote ? styles.bodyBeforeNote : undefined}>
         {t(
           hasDraft ? "connect:incoming.bodyWithDraft" : "connect:incoming.body",
           { name: firstName },
         )}
       </p>
+      {hasNote && (
+        <figure className={styles.note}>
+          <figcaption className={styles.noteLabel}>
+            {t("connect:incoming.noteLabel", { name: firstName })}
+          </figcaption>
+          {requestReason && (
+            <div className={styles.noteReason}>
+              <Translation
+                i18nKey="connect:card.reason"
+                components={{ b: <b /> }}
+                values={{ reason: requestReason }}
+              />
+            </div>
+          )}
+          {requestMessage && (
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the quote scrolls past its max height, so it is deliberately focusable: a keyboard-only member can then scroll to the end of a long message. Same justification as AdminFeatureUsagePage.tsx.
+            <blockquote className={styles.noteMessage} tabIndex={0}>
+              {requestMessage}
+            </blockquote>
+          )}
+        </figure>
+      )}
       <div className={styles.panelActions}>
         <Button size="lg" onClick={onAccept} disabled={busy}>
           {t(
@@ -89,10 +122,8 @@ export function ConnectIncomingPanel({
         >
           {t("connect:incoming.decline")}
         </Button>
-      </div>
-      <div className={styles.panelActions}>
         <Button
-          size="sm"
+          size="lg"
           variant="ghost-dark"
           onClick={onClose}
           disabled={busy}

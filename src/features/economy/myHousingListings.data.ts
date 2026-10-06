@@ -27,6 +27,9 @@ export interface MyHousingListingRow {
   /** TTL (HSG-3). */
   expiresAt: string;
   expired: boolean;
+  /** PRD-444. True while the expiry sweep hid the listing (server-stored
+   * marker). Absent from an older backend; see `isHiddenByExpiry`. */
+  isHiddenBySweep?: boolean;
   createdAt: string;
 
   // Editable fields — mirrors `CreateHousingListingBody` (the create form's
@@ -64,8 +67,8 @@ export interface MyHousingListingRow {
 }
 
 /** Demo fixture: three listings covering the states the page needs to render
- * (live, filled, and expired-and-unattended) so the feature screenshots and
- * demos cleanly with no backend. */
+ * (live, filled, and expired-and-unattended, already hidden by the expiry
+ * sweep) so the feature screenshots and demos cleanly with no backend. */
 export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
   {
     ref: "QPH-2026-0142",
@@ -74,6 +77,7 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     filledAt: null,
     expiresAt: new Date(Date.now() + 40 * 24 * 60 * 60 * 1000).toISOString(),
     expired: false,
+    isHiddenBySweep: false,
     createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
     type: "room",
     title: "Sunny room in a queer flatshare",
@@ -106,6 +110,7 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     filledAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     expiresAt: new Date(Date.now() + 50 * 24 * 60 * 60 * 1000).toISOString(),
     expired: false,
+    isHiddenBySweep: false,
     createdAt: new Date(Date.now() - 55 * 24 * 60 * 60 * 1000).toISOString(),
     type: "studio",
     title: "Studio near Anjos, short-let friendly",
@@ -131,9 +136,12 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     ref: "QPH-2025-0311",
     slug: "sublet-graca-2-months",
     status: "live",
-    filledAt: null,
+    // Stamped by the nightly expiry sweep the night after the window closed
+    // (PRD-444), so the card reads as expired and Extend relists it.
+    filledAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
     expiresAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     expired: true,
+    isHiddenBySweep: true,
     createdAt: new Date(Date.now() - 65 * 24 * 60 * 60 * 1000).toISOString(),
     type: "sublet",
     title: "2-month sublet in Graça",

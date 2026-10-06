@@ -311,6 +311,7 @@ export const routes = {
    *  the entire credential. `authGate.ts` gates by denylist and nothing under
    *  `/about` is on it, so this stays reachable logged out. */
   concernStatus: "/about/governance/concern-status",
+  /** Legacy path: redirects to Funding & Grants' Open calls (routes.redirects.data.ts). */
   grants: "/work/grants",
   guidelines: "/policies/guidelines",
   harmReduction: "/resources/harm-reduction",
@@ -379,7 +380,6 @@ export const routes = {
    *  no new gate and no new robots.txt Disallow needed. */
   myReports: "/account/reports",
   microGrants: "/work/grants/micro",
-  newsletterUnsubscribe: "/newsletter/unsubscribe",
   notifications: "/notifications",
   offer: "/work/offer",
   parents: "/parents",

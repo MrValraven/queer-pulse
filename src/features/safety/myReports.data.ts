@@ -55,6 +55,7 @@ export const REPORT_SUBJECT_LABEL_KEY: Record<ReportSubjectType, string> = {
   volunteering: "safety:myReports.subject.volunteering",
   conversation: "safety:myReports.subject.conversation",
   identity: "safety:myReports.subject.identity",
+  group_listing: "safety:myReports.subject.group_listing",
 };
 
 /** Demo-mode fallback for `useMyReports` — a few plausible entries so the page

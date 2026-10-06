@@ -92,15 +92,6 @@
 }
 /* Pronouns sit inline just after the name: DM Sans, muted, kept together so
    they never wrap onto their own line. */
-.pronoun {
-  margin-left: 6px;
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: var(--text-14);
-  color: var(--ink-60);
-  white-space: nowrap;
-}
-
 /* Gathering date block (replaces the avatar in the lead slot). */
 /* Sized in em so the tile grows with .dateDay / .dateMonth when a reader raises
    their browser font size. Both children set their own font-size, so the
@@ -153,17 +144,6 @@
 }
 
 /* ── Proof (avatar stack + label) ── */
-.proof {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-.proofLabel {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  min-width: 0;
-}
-
 /* ── Meter (going / spots left) ── */
 .meterBlock {
   display: flex;

@@ -20,6 +20,13 @@
   --card-pad: 24px;
   --card-pad-lg: 30px;
 
+  /* ── Dialog side padding ──
+     48px sides are a desktop figure. On a 390px phone the pair leaves a
+     bottom sheet about 260px of content, and a select placeholder truncates.
+     This grows fluidly from --card-pad on a small phone to 48px at about
+     700px wide, so a centred dialog keeps its 48px from a 720px cutover up. */
+  --dialog-pad-x: clamp(var(--card-pad), 7.5vw - 5px, 48px);
+
   /* ── Section rhythm ──
      --section-y and --section-y-lg are defined ONCE, at the bottom of this
      file, where they alias the --section-y-* grid. They used to be declared

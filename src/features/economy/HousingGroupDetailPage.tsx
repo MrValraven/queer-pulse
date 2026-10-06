@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { ConfirmDialog } from "../../shared/components/ui";
@@ -16,6 +16,7 @@ import {
   GroupNorms,
   GroupListings,
   GroupListingsLocked,
+  type GroupJoinStanding,
 } from "./HousingGroupDetailSections";
 import { GroupEmptyState } from "./GroupEmptyState";
 import { MyGroupListings } from "./MyGroupListings";
@@ -24,8 +25,69 @@ import { useMyGroupJoinRequests } from "./api/useMyHousingJoinRequests";
 import { EditGroupListingModal } from "./EditGroupListingModal";
 import { PostGroupRoomModal } from "./PostGroupRoomModal";
 import { JoinGroupModal } from "./JoinGroupModal";
-import type { MyGroupListing } from "./housingGroups.data";
+import type {
+  GroupMembershipStanding,
+  MyGroupListing,
+} from "./housingGroups.data";
+import type { MyHousingJoinRequest } from "./housingJoinRequests.data";
 import styles from "./HousingGroupsPage.module.css";
+
+/**
+ * The join entry's state, from the reader's own requests to this group.
+ * Approved wins over pending, as in the backend's duplicate refusal
+ * (`GROUP_JOIN_ALREADY_REQUESTED`). A declined request leaves the way in open,
+ * so a member turned down can ask again. The listings gate's own standing
+ * counts too, so a pending reader is told to wait even when the requests read
+ * has not answered.
+ */
+function joinStandingFrom(
+  requestsHere: MyHousingJoinRequest[],
+  gateStanding: GroupMembershipStanding | undefined,
+): GroupJoinStanding {
+  if (requestsHere.some((request) => request.status === "accepted")) {
+    return "member";
+  }
+  const hasPendingRequest =
+    gateStanding === "pending" ||
+    requestsHere.some((request) => request.status === "pending");
+  return hasPendingRequest ? "pending" : "open";
+}
+
+/** The group heading's id, the focus fallback when the join entry goes away
+ *  with nothing in its place (the reader turned out to be a member). */
+const GROUP_DETAIL_TITLE_ID = "housing-group-detail-title";
+
+/**
+ * Where focus goes once the join modal closes onto a changed header. A request
+ * sent from the modal turns the button that opened it into the pending note
+ * (or, on an "already a member" answer, into nothing), so the dialog's focus
+ * return finds no button and focus drops to the page. Once the modal is closed
+ * and the standing has flipped, focus moves to the note, else to the group
+ * heading. Runs after the commit's cleanups, the dialog's focus return
+ * included, and only when focus has nowhere else to be.
+ */
+function useJoinOutcomeFocus(
+  isJoining: boolean,
+  joinStanding: GroupJoinStanding,
+) {
+  const pendingNoteRef = useRef<HTMLParagraphElement>(null);
+  const hasClosedJoinModalRef = useRef(false);
+  useEffect(() => {
+    if (isJoining || !hasClosedJoinModalRef.current) return;
+    if (joinStanding === "unknown" || joinStanding === "open") return;
+    hasClosedJoinModalRef.current = false;
+    const isFocusLost =
+      document.activeElement === null ||
+      document.activeElement === document.body;
+    if (!isFocusLost) return;
+    if (pendingNoteRef.current) pendingNoteRef.current.focus();
+    else document.getElementById(GROUP_DETAIL_TITLE_ID)?.focus();
+  }, [isJoining, joinStanding]);
+  const markJoinModalClosed = () => {
+    hasClosedJoinModalRef.current = true;
+  };
+  return { pendingNoteRef, markJoinModalClosed };
+}
 
 /** One vetted group: its norms, its public listings, the join-with-screening
  *  flow (P3.1/P3.3), and the member's own rooms here with the state each is
@@ -47,6 +109,16 @@ export function HousingGroupDetailPage() {
     (request) => request.slug === slug,
   );
   const [isJoining, setIsJoining] = useState(false);
+  const joinStanding: GroupJoinStanding = isLoadingMyJoinRequests
+    ? "unknown"
+    : joinStandingFrom(
+        myJoinRequestsHere,
+        group?.listingsGate?.membershipStanding,
+      );
+  const { pendingNoteRef, markJoinModalClosed } = useJoinOutcomeFocus(
+    isJoining,
+    joinStanding,
+  );
   const [isPosting, setIsPosting] = useState(false);
   const [editingListing, setEditingListing] = useState<MyGroupListing | null>(
     null,
@@ -100,7 +172,13 @@ export function HousingGroupDetailPage() {
 
   return (
     <PageShell>
-      <GroupDetailHeader group={group} onJoin={() => setIsJoining(true)} />
+      <GroupDetailHeader
+        group={group}
+        joinStanding={joinStanding}
+        titleId={GROUP_DETAIL_TITLE_ID}
+        pendingNoteRef={pendingNoteRef}
+        onJoin={() => setIsJoining(true)}
+      />
       {/* Held back until the read settles. Having applied here is the exception
           rather than the rule, so a skeleton on every group page would announce
           a section most readers will never have. */}
@@ -124,7 +202,7 @@ export function HousingGroupDetailPage() {
           onJoin={() => setIsJoining(true)}
         />
       ) : (
-        <GroupListings listings={group.listings ?? []} />
+        <GroupListings listings={group.listings ?? []} groupSlug={group.id} />
       )}
 
       {canPost && (
@@ -141,7 +219,13 @@ export function HousingGroupDetailPage() {
       )}
 
       {isJoining && (
-        <JoinGroupModal group={group} onClose={() => setIsJoining(false)} />
+        <JoinGroupModal
+          group={group}
+          onClose={() => {
+            markJoinModalClosed();
+            setIsJoining(false);
+          }}
+        />
       )}
 
       {isPosting && slug && (

@@ -1,0 +1,55 @@
+.bar {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-18);
+  color: var(--text-strong);
+}
+
+/* PT labels run long ("A fechar em breve"): chips wrap, and nothing may push
+   the page wider than a 360px phone. */
+.chips {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.filters {
+  display: grid;
+  gap: var(--gap-xs);
+  padding-top: var(--gap-xs);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.filterGroup {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.filterLabel {
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.clear {
+  justify-self: start;
+}

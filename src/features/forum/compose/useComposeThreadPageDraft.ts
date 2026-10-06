@@ -11,6 +11,7 @@ import {
   type PostKind,
   type PostLanguage,
 } from "./composeThread.types";
+import { fundingFromDraftFields, fundingToDraftFields } from "./composeFunding";
 import { COMPOSE_CATEGORY_IDS } from "./composeCategories.data";
 import { CONTENT_WARNING_IDS } from "./composeWarnings.data";
 import { NEIGHBOURHOOD_IDS } from "./composeNeighbourhoods.data";
@@ -28,7 +29,14 @@ import type {
 // bumped for exactly that, so a version-1 payload is discarded rather than
 // half-understood.
 
-const KINDS: readonly string[] = ["question", "guide", "proposal", "share"];
+const KINDS: readonly string[] = [
+  "question",
+  "guide",
+  "proposal",
+  "share",
+  "call",
+  "ask",
+];
 const LANGUAGES: readonly string[] = ["auto", "pt", "en", "both"];
 const CLOSE_AFTERS: readonly string[] = ["never", "2w", "30d", "90d", "poll"];
 const POLL_CLOSES: readonly string[] = ["never", "3d", "1w", "2w"];
@@ -132,6 +140,7 @@ function toSnapshot(
     pollOptions: core.poll ? core.poll.options : null,
     pollAllowMultiple: core.poll?.allowMultiple ?? false,
     pollCloses: core.poll?.closes ?? "never",
+    fundingFields: fundingToDraftFields(core.funding),
   };
 }
 
@@ -158,6 +167,7 @@ function mergeSnapshot(
     communitySlug: current.communitySlug || stored.communitySlug,
     tags: current.tags.length ? current.tags : stored.tags,
     kind: current.kind ?? storedKind,
+    funding: current.funding ?? fundingFromDraftFields(stored.fundingFields),
     crossPost: current.crossPost || (stored.crossPost ?? false),
     isOfficial: current.isOfficial || (stored.isOfficial ?? false),
     isAnonymous: current.isAnonymous || (stored.isAnonymous ?? false),

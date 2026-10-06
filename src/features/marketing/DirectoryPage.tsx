@@ -21,6 +21,7 @@ export function DirectoryPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     myLocation,
     isMobile,
     nearMe,
@@ -82,6 +83,7 @@ export function DirectoryPage() {
         clearFilters={clearFilters}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
+        isFetchNextPageError={isFetchNextPageError}
         fetchNextPage={fetchNextPage}
         fallbackShownAt={mapFallback.fallbackShownAt}
         onMapFallbackShown={mapFallback.recordFallbackShown}

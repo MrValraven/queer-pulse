@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   fetchGuideRating,
@@ -20,13 +21,15 @@ import {
  */
 export function useGuideRating(contentKey: string) {
   const { demoMode } = useDemoMode();
+  const { loggedIn, checking } = useAuth();
   const queryClient = useQueryClient();
   const queryKey = ["guide-rating", contentKey, demoMode];
 
   const query = useQuery({
     queryKey,
     queryFn: () => fetchGuideRating(contentKey),
-    enabled: !demoMode,
+    // The rating route is member-only: a visitor's read would only 401.
+    enabled: !demoMode && loggedIn && !checking,
     staleTime: Infinity,
   });
 
@@ -41,6 +44,8 @@ export function useGuideRating(contentKey: string) {
 
   const myVote = demoMode ? demoVote : (query.data?.myVote ?? null);
 
+  const isSignInRequired = !demoMode && !checking && !loggedIn;
+
   const vote = (value: GuideRatingValue) => {
     if (demoMode) {
       setDemoVote((current) => (current === value ? null : value));
@@ -49,5 +54,5 @@ export function useGuideRating(contentKey: string) {
     mutation.mutate(value);
   };
 
-  return { myVote, isPending: mutation.isPending, vote };
+  return { myVote, isPending: mutation.isPending, isSignInRequired, vote };
 }

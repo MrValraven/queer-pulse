@@ -14,13 +14,19 @@ import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { VolunteerRoles } from "./VolunteerRoles";
 import { VolunteerContributionCard } from "./VolunteerContributionCard";
+import { VolunteerExplainerModal } from "./VolunteerExplainerModal";
 import s from "./VolunteerPage.module.css";
 
 export function VolunteerPage() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, loggedIn } = useAuth();
   const simLoading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
+  // PRD-454. Posting and the change makers are member surfaces, so a
+  // signed-out visitor gets the explainer from those CTAs; a member keeps the
+  // direct links.
+  const [isExplainerOpen, setIsExplainerOpen] = useState(false);
+  const openExplainer = () => setIsExplainerOpen(true);
 
   // Translate the single chip group into the API's separate cause/commit params.
   // Demo mode ignores these (the client-side `visible` filter below still runs).
@@ -91,9 +97,15 @@ export function VolunteerPage() {
           <span className={s.dot} /> {t("marketing:volunteer.hero.note")}
         </div>
         <div className={s.heroCta}>
-          <Button to={routes.postVolunteer} variant="ghost-dark">
-            <FiPlus aria-hidden /> {t("marketing:volunteer.hero.postCta")}
-          </Button>
+          {loggedIn ? (
+            <Button to={routes.postVolunteer} variant="ghost-dark">
+              <FiPlus aria-hidden /> {t("marketing:volunteer.hero.postCta")}
+            </Button>
+          ) : (
+            <Button onClick={openExplainer} variant="ghost-dark">
+              <FiPlus aria-hidden /> {t("marketing:volunteer.hero.postCta")}
+            </Button>
+          )}
           {user && hasOpportunitiesToManage && (
             <Button to={routes.manageVolunteerApplicants} variant="ghost-dark">
               <FiUsers aria-hidden /> {t("marketing:volunteer.hero.manageCta")}
@@ -146,6 +158,7 @@ export function VolunteerPage() {
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         onLoadMore={fetchNextPage}
+        onPostSignedOut={loggedIn ? undefined : openExplainer}
       />
 
       <Outro
@@ -157,10 +170,19 @@ export function VolunteerPage() {
         }
         sub={t("marketing:volunteer.outro.sub")}
       >
-        <Button size="lg" to={routes.changemakers}>
-          {t("marketing:volunteer.outro.cta")} <FiArrowRight aria-hidden />
-        </Button>
+        {loggedIn ? (
+          <Button size="lg" to={routes.changemakers}>
+            {t("marketing:volunteer.outro.cta")} <FiArrowRight aria-hidden />
+          </Button>
+        ) : (
+          <Button size="lg" onClick={openExplainer}>
+            {t("marketing:volunteer.outro.cta")} <FiArrowRight aria-hidden />
+          </Button>
+        )}
       </Outro>
+      {isExplainerOpen && (
+        <VolunteerExplainerModal onClose={() => setIsExplainerOpen(false)} />
+      )}
     </PageShell>
   );
 }

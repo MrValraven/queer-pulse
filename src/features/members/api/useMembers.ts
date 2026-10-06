@@ -26,6 +26,10 @@ export interface MembersResult {
   /** True when the initial (live) fetch failed — distinct from an empty
    *  directory. The page shows a retryable error state, not a false-empty. */
   isError: boolean;
+  /** True when the latest "Load more" failed. React-query sets `isError` then
+   *  too; the directory keeps the loaded cards and its footer retries the
+   *  page through `fetchNextPage` (ENG-501). Always false in demo, one page. */
+  isFetchNextPageError: boolean;
   /** Re-run the query after a failure — wired to the error state's retry. */
   refetch: () => void;
   /** True while the previous filter run's results and counts are still on
@@ -113,6 +117,7 @@ export function useMembers(
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
     isShowingPreviousResults: query.isPlaceholderData,
   };

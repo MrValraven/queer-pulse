@@ -6,6 +6,7 @@ import { ListingTagGroupList } from "./ListingTagGroupList";
 import {
   filterTagGroups,
   LISTING_TAG_CAP,
+  listingTagLabel,
   splitLegacyTags,
 } from "./listingTags.data";
 import pageStyles from "./ListBusinessPage.module.css";
@@ -13,23 +14,28 @@ import styles from "./ListingTagPicker.module.css";
 
 interface ListingTagPickerProps {
   tags: string[];
+  /** The listing's online-only flag: picks the audience the vocabulary is
+   *  narrowed to. */
+  isOnline: boolean;
   onAdd: (tag: string) => void;
   onRemove: (tag: string) => void;
 }
 
 /**
- * The wizard's tag field: a search box over the curated vocabulary, the
- * grouped vocabulary as toggle chips under "Choose from what's available",
- * and a removable "Older tags" row for tags an older listing carries from
- * outside the vocabulary.
+ * The wizard's tag field: a search box over the curated vocabulary for the
+ * listing's audience (place or online-only), the grouped vocabulary as toggle
+ * chips under "Choose from what's available", and a removable "Older tags"
+ * row for selected tags those groups do not offer: older free-text tags, or
+ * tags picked before the online-only flag flipped.
  */
 export function ListingTagPicker({
   tags,
+  isOnline,
   onAdd,
   onRemove,
 }: ListingTagPickerProps) {
   const { t } = useTranslation();
-  const vocabulary = useListingTagVocabulary();
+  const vocabulary = useListingTagVocabulary(isOnline);
   const listId = useId();
   const availableLabelId = useId();
   const [query, setQuery] = useState("");
@@ -101,6 +107,7 @@ export function ListingTagPicker({
         id={listId}
         labelledBy={availableLabelId}
         groups={visibleGroups}
+        isOnline={isOnline}
         selectedTags={tags}
         isAtCap={isAtCap}
         query={query.trim()}
@@ -115,9 +122,11 @@ export function ListingTagPicker({
           <ChipList
             items={legacyTags}
             getKey={(tag) => tag}
-            renderLabel={(tag) => tag}
+            renderLabel={(tag) => listingTagLabel(t, tag)}
             removeLabel={(tag) =>
-              t("marketing:listBusiness.step2.tagRemoveAria", { tag })
+              t("marketing:listBusiness.step2.tagRemoveAria", {
+                tag: listingTagLabel(t, tag),
+              })
             }
             onRemove={(tag) => onRemove(tag)}
             emptyFocusRef={searchInputRef}

@@ -190,6 +190,7 @@ export function listingDtoToHousingListing(
       addressLine: dto.addressLine,
       precision: dto.locationPrecision,
       isUnlocked: dto.isLocationUnlocked,
+      unlockedVia: dto.locationUnlockedVia ?? undefined,
     },
   };
 }
@@ -207,6 +208,9 @@ export function dtoToMyHousingListingRow(
     filledAt: dto.filledAt,
     expiresAt: dto.expiresAt,
     expired: dto.expired,
+    ...(dto.isHiddenBySweep !== undefined
+      ? { isHiddenBySweep: dto.isHiddenBySweep }
+      : {}),
     createdAt: dto.createdAt,
     type: dto.type,
     title: dto.title,

@@ -29,6 +29,8 @@ export interface ComposeTagsSectionProps {
   /** Tags worth offering for the draft's category, already filtered by the
    *  hook to ones not yet chosen. */
   suggestedTags: readonly string[];
+  /** Four on a call: the server puts `open-call` first and keeps four more. */
+  maxTags?: number;
 }
 
 export function ComposeTagsSection({
@@ -36,12 +38,13 @@ export function ComposeTagsSection({
   onAddTag,
   onRemoveTag,
   suggestedTags,
+  maxTags = COMPOSE_TAG_LIMIT,
 }: ComposeTagsSectionProps) {
   const { t } = useTranslation();
   const headingId = useId();
   const inputHintId = useId();
   const [isBrowseOpen, setIsBrowseOpen] = useState(false);
-  const isAtCap = tags.length >= COMPOSE_TAG_LIMIT;
+  const isAtCap = tags.length >= maxTags;
   const hasCategorySuggestions = suggestedTags.length > 0;
 
   function toggleTag(tag: string) {
@@ -64,7 +67,7 @@ export function ComposeTagsSection({
         <span className={styles.counter} aria-hidden>
           {t("forum:composePage.tags.counter", {
             count: tags.length,
-            max: COMPOSE_TAG_LIMIT,
+            max: maxTags,
           })}
         </span>
       </div>
@@ -78,12 +81,12 @@ export function ComposeTagsSection({
         suggestions={
           hasCategorySuggestions ? suggestedTags : POPULAR_FORUM_TAGS
         }
-        limit={COMPOSE_TAG_LIMIT}
+        limit={maxTags}
         formatTag={(tag) => `#${tag}`}
         inputDescribedBy={inputHintId}
         hint={
           <p id={inputHintId} className={styles.inputHint}>
-            {t("forum:compose.tagsHint", { max: COMPOSE_TAG_LIMIT })}
+            {t("forum:compose.tagsHint", { max: maxTags })}
           </p>
         }
         browse={{
@@ -104,7 +107,7 @@ export function ComposeTagsSection({
             ? t("forum:composePage.tags.suggestLabel")
             : t("forum:compose.popularTagsLabel"),
           noMatch: (query) => t("forum:compose.tagsNoMatch", { query }),
-          full: t("forum:composePage.tags.full", { max: COMPOSE_TAG_LIMIT }),
+          full: t("forum:composePage.tags.full", { max: maxTags }),
         }}
       />
       <Collapse isOpen={isBrowseOpen}>

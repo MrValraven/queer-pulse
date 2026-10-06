@@ -12,6 +12,7 @@ import { type DirectoryPlace } from "./directoryPlaces";
 import { type LocalPlace } from "./localPlaces";
 import { DirectoryOnlineCard } from "./DirectoryOnlineCard";
 import { DirectoryOnlineConstellation } from "./DirectoryOnlineConstellation";
+import { DirectoryServerPageFooter } from "./DirectoryServerPageFooter";
 import card from "./DirectoryPage.module.css";
 import s from "./DirectoryOnline.module.css";
 
@@ -57,15 +58,28 @@ export function DirectoryOnlineView({
   onRetry,
   hasActiveFilters,
   onClearFilters,
+  hasMoreFromServer,
+  isLoadingMoreFromServer,
+  isFetchNextPageError,
+  onLoadMoreFromServer,
 }: {
   places: LocalPlace[];
   /** Every online-only business loaded, before filters. */
   total: number;
   loading: boolean;
+  /** Nothing to show because the read failed (ENG-501). */
   isError: boolean;
   onRetry: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
+  /** The server holds more pages; they are pulled in one after another. */
+  hasMoreFromServer: boolean;
+  /** True while the next server page is in flight. */
+  isLoadingMoreFromServer: boolean;
+  /** True when the latest server page failed; loaded businesses stay. */
+  isFetchNextPageError: boolean;
+  /** Fetches the next server page, or retries the one that failed. */
+  onLoadMoreFromServer: () => void;
 }) {
   const { t } = useTranslation();
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
@@ -83,6 +97,8 @@ export function DirectoryOnlineView({
     content = (
       <LoadErrorState
         onRetry={onRetry}
+        // A failed page's Retry fetches that page; show it in flight.
+        isRetrying={isLoadingMoreFromServer}
         title={
           <Translation
             i18nKey="marketing:directory.loadError.title"
@@ -137,7 +153,16 @@ export function DirectoryOnlineView({
 
   return (
     <section className={s.view}>
-      <div className="wrap">{content}</div>
+      <div className="wrap">
+        {content}
+        {hasMoreFromServer && !loading && !isError && (
+          <DirectoryServerPageFooter
+            isFetchingNextPage={isLoadingMoreFromServer}
+            isFetchNextPageError={isFetchNextPageError}
+            onLoadMore={onLoadMoreFromServer}
+          />
+        )}
+      </div>
     </section>
   );
 }

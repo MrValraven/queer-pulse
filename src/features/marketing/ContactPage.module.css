@@ -128,36 +128,14 @@
   color: var(--ink-60);
   line-height: 1.55;
 }
-.sent {
-  text-align: center;
-  padding: 20px 0;
-}
-.tyIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(var(--jade-rgb), 0.12);
-  /* The success tick (react-icons `FiCheck`, painted with currentColor).
-     --jade-ink rather than --jade: it lightens in dark mode, where plain jade
-     on the dark card is too close to the surface to read. */
-  color: var(--jade-ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-}
-.tyIcon svg {
-  width: 28px;
-  height: 28px;
-}
-.sent h2 {
-  margin-bottom: 8px;
-}
-.sent p {
-  font-size: var(--text-14-5);
-  color: var(--ink-60);
-  line-height: 1.6;
-  margin-bottom: 20px;
+/* The crisis-lines link in the safety confirmation's footer, on the plum
+   SuccessPanel: cream ink inherited from the footer, underlined to read as a
+   link. */
+.urgentLink {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 @media (--compact) {

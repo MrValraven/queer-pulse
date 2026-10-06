@@ -200,7 +200,10 @@ export function ThreadOpCard({
           voted={!!thread.myVote}
           onVote={onVote}
           bookmarked={bookmarked}
-          onToggleBookmark={onToggleBookmark}
+          // A call's facts panel carries the one Save, with its reminder hint.
+          onToggleBookmark={
+            thread.kind === "call" ? undefined : onToggleBookmark
+          }
           onReport={onReport}
         />
       )}
@@ -250,7 +253,8 @@ function OpFooterActions({
   voted: boolean;
   onVote: () => void;
   bookmarked: boolean;
-  onToggleBookmark: () => void;
+  /** Absent hides the save control (an open call saves from its panel). */
+  onToggleBookmark?: () => void;
   onReport: () => void;
 }) {
   const { t } = useTranslation();
@@ -273,16 +277,20 @@ function OpFooterActions({
         <FiHeart aria-hidden="true" />{" "}
         <RollingNumber value={fmt.number(upvotes)} numericValue={upvotes} />
       </button>
-      <button
-        type="button"
-        className={[styles.reaction, bookmarked && styles.reactionOn]
-          .filter(Boolean)
-          .join(" ")}
-        aria-pressed={bookmarked}
-        onClick={onToggleBookmark}
-      >
-        {bookmarked ? t("forum:threadOp.saved") : t("forum:threadOp.bookmark")}
-      </button>
+      {onToggleBookmark && (
+        <button
+          type="button"
+          className={[styles.reaction, bookmarked && styles.reactionOn]
+            .filter(Boolean)
+            .join(" ")}
+          aria-pressed={bookmarked}
+          onClick={onToggleBookmark}
+        >
+          {bookmarked
+            ? t("forum:threadOp.saved")
+            : t("forum:threadOp.bookmark")}
+        </button>
+      )}
       <button type="button" className={styles.report} onClick={onReport}>
         {t("forum:threadOp.report")}
       </button>

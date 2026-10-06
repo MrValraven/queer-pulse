@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { postToReply, threadDetail, threadToCard } from "./forum.adapters";
 import type { ForumPostResponse, ForumThreadResponse } from "./forum.api";
+import type { ForumFundingView } from "../funding/funding.types";
 
 const t = ((k: string) => k) as never;
 const fmt = {
@@ -351,5 +352,48 @@ describe("forum adapters: the OP badge on a thread with no named author (ENG-494
     );
 
     expect(detail.replies.map((reply) => reply.isOP)).toEqual([true, false]);
+  });
+});
+
+const CALL_FUNDING: ForumFundingView = {
+  linkUrl: "https://example.org/mare/apoio-projetos-2026",
+  linkHost: "example.org",
+  funderName: "Fundação Maré",
+  amountMin: 500,
+  amountMax: 2000,
+  deadline: "2026-11-30T17:00:00.000Z",
+  eligibility: ["collectives", "associations"],
+  scope: "national",
+  callState: "open",
+  goalAmount: null,
+  askPurpose: null,
+  beneficiary: null,
+  endsAt: null,
+  endedAt: null,
+  endedReason: null,
+  approvedAt: null,
+  askState: null,
+  updatedAt: "2026-10-01T09:00:00.000Z",
+};
+
+describe("forum adapters: funding (Funding & Grants P2)", () => {
+  it("carries kind and the funding view through untouched", () => {
+    const card = threadToCard(
+      threadResponse({
+        kind: "call",
+        category: "funding",
+        funding: CALL_FUNDING,
+      }),
+      t,
+      fmt,
+    );
+    expect(card.kind).toBe("call");
+    expect(card.funding).toEqual(CALL_FUNDING);
+  });
+
+  it("reads a response without the field as no funding", () => {
+    const card = threadToCard(threadResponse(), t, fmt);
+    expect(card.funding).toBeNull();
+    expect(card.kind).toBeNull();
   });
 });

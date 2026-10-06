@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiClock, FiSearch } from "react-icons/fi";
 import {
   Button,
+  EmptyState,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useMediaQuery } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../app/routeMap";
 import { Group } from "./SearchResultCard";
 import { SearchLoadMore } from "./SearchLoadMore";
+import { pushRecent } from "./searchRecents";
 import type { LiveResultType } from "./api/search.api";
 import {
   TYPE_LABEL_KEY,
@@ -108,17 +111,7 @@ function BrowseView({
                 className={styles.chip}
                 onClick={() => setQuery(recentQuery)}
               >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <polyline points="1 4 1 10 7 10" />
-                  <path d="M3.51 15a9 9 0 1 0 .49-6.93" />
-                </svg>
+                <FiClock size={12} aria-hidden />
                 {recentQuery}
               </button>
             ))}
@@ -163,15 +156,21 @@ function HitsView({
   tab,
   searchData,
   onSelectTab,
+  onClearQuery,
 }: {
   query: string;
   q: string;
   tab: ResultType | "all";
   searchData: SearchItem[];
-  onSelectTab: (type: ResultType) => void;
+  onSelectTab: (type: ResultType | "all") => void;
+  onClearQuery: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const isPhone = useMediaQuery("(max-width: 640px)");
+  // Opening a result is the clearest sign the query was worth keeping, so it
+  // lands in recents the same way an Enter in the search bar does (PRD-329).
+  const recordQuery = () => pushRecent(query);
   const hits = searchData.filter((d) => {
     const isMatch = `${d.name} ${d.sub} ${d.kw}`.toLowerCase().includes(q);
     return isMatch && (tab === "all" || d.t === tab);
@@ -182,7 +181,11 @@ function HitsView({
     ? searchData.find((d) => d.t === "topic" && d.name.toLowerCase() === q)
     : undefined;
   const banner = topicJump ? (
-    <Link to={linkToPath(topicJump.href)} className={styles.jump}>
+    <Link
+      to={linkToPath(topicJump.href)}
+      className={styles.jump}
+      onClick={recordQuery}
+    >
       <span className={styles.jumpText}>
         <Translation
           i18nKey="members:search.jumpTo"
@@ -217,21 +220,28 @@ function HitsView({
       <>
         {banner}
         {countEl}
-        <div className={styles.empty}>
-          <svg
-            width="56"
-            height="56"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--plum)"
-            strokeWidth="1.5"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-          <h3>{t("members:search.empty.title")}</h3>
-          <p>{t("members:search.empty.body")}</p>
-        </div>
+        <EmptyState
+          icon={<FiSearch />}
+          headingLevel={2}
+          title={t("members:search.empty.title")}
+          description={t("members:search.empty.body")}
+          action={{
+            label: t("members:search.empty.clear"),
+            onClick: onClearQuery,
+          }}
+          secondaryAction={
+            tab === "all"
+              ? {
+                  label: t("members:search.empty.browseMembers"),
+                  to: routes.members,
+                }
+              : {
+                  label: t("members:search.empty.searchEverything"),
+                  onClick: () => onSelectTab("all"),
+                }
+          }
+          compact={isPhone}
+        />
       </>
     );
   }
@@ -271,6 +281,7 @@ function HitsView({
               items={typeHits}
               label={t(TYPE_LABEL_KEY[typ])}
               onSeeAll={atCap ? () => onSelectTab(typ) : undefined}
+              onActivate={recordQuery}
             />
           );
         })}
@@ -287,9 +298,17 @@ function HitsView({
     <>
       {banner}
       {countEl}
-      <Group items={hits} label={t(TYPE_LABEL_KEY[tab])}>
+      <Group
+        items={hits}
+        label={t(TYPE_LABEL_KEY[tab])}
+        onActivate={recordQuery}
+      >
         {canPage && (
-          <SearchLoadMore query={query.trim()} type={tab as LiveResultType} />
+          <SearchLoadMore
+            query={query.trim()}
+            type={tab as LiveResultType}
+            onActivate={recordQuery}
+          />
         )}
       </Group>
     </>
@@ -306,6 +325,7 @@ export function SearchResults({
   query,
   tab,
   setQuery,
+  onClearQuery,
   onSelectTab,
   signInRequired,
   loading,
@@ -317,9 +337,12 @@ export function SearchResults({
   query: string;
   tab: ResultType | "all";
   setQuery: (value: string) => void;
+  /** Empties the query and hands focus back to the search bar: the zero
+   *  results state's first way out (PRD-329). */
+  onClearQuery: () => void;
   /** Switches the active tab — wired to the "see all in [category]" links in
    *  the "all" view once a type is at its per-type cap (DISC-10). */
-  onSelectTab: (type: ResultType) => void;
+  onSelectTab: (type: ResultType | "all") => void;
   signInRequired: boolean;
   loading: boolean;
   /** The live GET /search failed. Renders the retryable error panel. */
@@ -371,6 +394,7 @@ export function SearchResults({
       tab={tab}
       searchData={searchData}
       onSelectTab={onSelectTab}
+      onClearQuery={onClearQuery}
     />
   );
 }

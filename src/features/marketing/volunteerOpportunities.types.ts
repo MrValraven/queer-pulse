@@ -35,12 +35,15 @@ export interface VolunteerOpportunity {
   skills: string[];
   description: string;
   /* ---- detail header ---- */
-  eyebrow: string;
-  urgent: string;
+  /** Nodes, so the live adapter can hand over chrome that translates at
+   *  render (`volunteerChrome.tsx`, DES-422) beside the demo's authored copy;
+   *  the same holds for the `label`s below. */
+  eyebrow: ReactNode;
+  urgent: ReactNode;
   titleLead: string;
   titleEm: string;
   sub: ReactNode;
-  stats: { value: ReactNode; label: string }[];
+  stats: { value: ReactNode; label: ReactNode }[];
   /* ---- detail body ---- */
   why: ReactNode[];
   tasks: { title: string; description: string }[];
@@ -52,7 +55,7 @@ export interface VolunteerOpportunity {
   applyRole: string;
   spotsFilled: string;
   spotsPct: number;
-  spots: { label: string; value: ReactNode }[];
+  spots: { label: ReactNode; value: ReactNode }[];
   applyConfirm: ReactNode;
   /* ---- partner card (optional) ---- */
   /** `slug`, when present (live mode), links the card to the partner's page;
@@ -65,7 +68,10 @@ export interface VolunteerOpportunity {
 
 export const C = "var(--accent-ink)";
 export const J = "var(--jade)";
-export const P = "var(--plum)";
+// `--text-strong` and a `--line-rgb` wash flip with the theme; plain plum
+// initials on a plum wash vanished on a dark card. The coral and jade pairs
+// already read on both.
+export const P = "var(--text-strong)";
 
 export const TEAM_POOL: TeamMember[] = [
   {
@@ -82,7 +88,7 @@ export const TEAM_POOL: TeamMember[] = [
   },
   {
     initials: "NA",
-    background: "rgba(45,27,61,.10)",
+    background: "rgba(var(--line-rgb),.10)",
     color: P,
     name: "Nuno A.",
   },
@@ -100,7 +106,7 @@ export const TEAM_POOL: TeamMember[] = [
   },
   {
     initials: "SC",
-    background: "rgba(45,27,61,.10)",
+    background: "rgba(var(--line-rgb),.10)",
     color: P,
     name: "Sofia C.",
   },

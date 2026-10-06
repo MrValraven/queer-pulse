@@ -141,19 +141,31 @@ export const PRICES: PriceBand[] = [
   { id: "€€€", labelKey: "marketing:listBusiness.price.higherEnd", sym: "€€€" },
 ];
 
-export const GOODFOR = [
-  "Wheelchair accessible",
-  "Gender-neutral toilets",
-  "Step-free entrance",
+/** The "Good for" chips offered to a place listing. Access claims live in the
+ *  structured `accessibility` answers, so none appear here. */
+export const GOODFOR_PLACE = [
   "Walk-ins welcome",
-  "Quiet, low-sensory hours",
   "Solo-friendly",
   "Dog-friendly",
-  "Hosts community events",
   "Budget-friendly",
-  "Accessible bathroom",
+  "Hosts community events",
 ];
 
+/** The "Good for" chips offered to an online-only listing. */
+export const GOODFOR_ONLINE = [
+  "Budget-friendly",
+  "Hosts community events",
+  "Beginner-friendly",
+  "Good for gifts",
+];
+
+/** The chips offered to a listing of this audience. */
+export function goodForOptions(isOnline: boolean): readonly string[] {
+  return isOnline ? GOODFOR_ONLINE : GOODFOR_PLACE;
+}
+
+/* The five accessibility ids stay keyed below so a value a listing still
+   stores renders a label, though no list offers them any more. */
 export const GOODFOR_LABEL_KEYS: Record<string, string> = {
   "Wheelchair accessible":
     "marketing:listBusiness.goodFor.wheelchairAccessible",
@@ -168,6 +180,8 @@ export const GOODFOR_LABEL_KEYS: Record<string, string> = {
     "marketing:listBusiness.goodFor.hostsCommunityEvents",
   "Budget-friendly": "marketing:listBusiness.goodFor.budgetFriendly",
   "Accessible bathroom": "marketing:listBusiness.goodFor.accessibleBathroom",
+  "Beginner-friendly": "marketing:listBusiness.goodFor.beginnerFriendly",
+  "Good for gifts": "marketing:listBusiness.goodFor.goodForGifts",
 };
 
 /** Display label for a stored good-for id. Falls back to the id itself. */
@@ -569,7 +583,7 @@ export interface ListingDraft {
   tagline: string;
   whatItIs: WitLine[]; // the description, one entry per paragraph (1-20)
   tags: string[]; // <=6
-  /** Atmosphere tags only (GOODFOR ids). Access claims live in `accessibility`,
+  /** Atmosphere tags only (GOODFOR_PLACE / GOODFOR_ONLINE ids). Access claims live in `accessibility`,
    *  which can answer no; these are all positive claims. */
   goodFor: string[];
   /** The venue's six accessibility answers plus the owner's free-text note.

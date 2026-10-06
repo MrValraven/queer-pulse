@@ -612,3 +612,32 @@
   justify-content: flex-end;
   gap: 8px;
 }
+
+/* The sender's own preview of a request inside the connect modal
+   (IncomingCard isPreview). It holds still under the pointer, its answers stay
+   legible while switched off, a long message scrolls inside a four-line cap,
+   and an empty message shows as an italic placeholder in the message's own
+   fill. */
+@media (hover: hover) {
+  .cardPreview:hover {
+    transform: none;
+    border-color: rgba(var(--accent-rgb), 0.3);
+    box-shadow: none;
+  }
+}
+/* Button renders a bare <button> straight inside .actions; this outranks
+   Button.module.css `.button:disabled`. */
+.cardPreview .actions > button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+/* Four lines plus the message's 10px top and bottom padding. */
+.cardPreview .reqMessage {
+  max-height: calc(4lh + 20px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+.reqMessagePlaceholder {
+  color: var(--ink-60);
+}

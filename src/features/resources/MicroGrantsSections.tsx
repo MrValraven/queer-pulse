@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import styles from "./MicroGrantsPage.module.css";
@@ -13,6 +14,7 @@ const CONTRIBUTE_AMOUNTS = ["€5", "€10", "€20", "€50"];
 
 export function MicroGrantsHero() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <header className={styles.hero}>
       <div className="wrap">
@@ -33,32 +35,43 @@ export function MicroGrantsHero() {
           />
         </h1>
         <p className={styles.sub}>{t("resources:microGrants.hero.lead")}</p>
-        <div className={styles.fund}>
-          <div className={styles.fundItem}>
-            <b>€14,800</b>
-            <span>{t("resources:microGrants.hero.stat.awarded.label")}</span>
-          </div>
-          <div className={styles.fundItem}>
-            <b>18</b>
-            <span>{t("resources:microGrants.hero.stat.projects.label")}</span>
-          </div>
-          <div className={styles.fundItem}>
-            <b>€3,200</b>
-            <span>{t("resources:microGrants.hero.stat.pot.label")}</span>
-          </div>
-        </div>
-        <div className={styles.fundBarWrap}>
-          <div className={styles.fundBarLabel}>
-            <span>{t("resources:microGrants.hero.fundBar.roundLabel")}</span>
-            <span>
-              €3,200 / €4,000{" "}
-              {t("resources:microGrants.hero.fundBar.goalLabel")}
-            </span>
-          </div>
-          <div className={styles.fundBar}>
-            <div className={styles.fundBarFill} />
-          </div>
-        </div>
+        {/* Invented figures: shown in demo only. */}
+        {demoMode && (
+          <>
+            <div className={styles.fund}>
+              <div className={styles.fundItem}>
+                <b>€14,800</b>
+                <span>
+                  {t("resources:microGrants.hero.stat.awarded.label")}
+                </span>
+              </div>
+              <div className={styles.fundItem}>
+                <b>18</b>
+                <span>
+                  {t("resources:microGrants.hero.stat.projects.label")}
+                </span>
+              </div>
+              <div className={styles.fundItem}>
+                <b>€3,200</b>
+                <span>{t("resources:microGrants.hero.stat.pot.label")}</span>
+              </div>
+            </div>
+            <div className={styles.fundBarWrap}>
+              <div className={styles.fundBarLabel}>
+                <span>
+                  {t("resources:microGrants.hero.fundBar.roundLabel")}
+                </span>
+                <span>
+                  €3,200 / €4,000{" "}
+                  {t("resources:microGrants.hero.fundBar.goalLabel")}
+                </span>
+              </div>
+              <div className={styles.fundBar}>
+                <div className={styles.fundBarFill} />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </header>
   );

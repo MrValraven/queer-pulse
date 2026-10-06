@@ -15,6 +15,13 @@ export interface PartnersResult {
   fetchNextPage: () => void;
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
+  /**
+   * ENG-501: the latest next-page fetch failed. React Query also sets
+   * `isError` then, so the page keeps the partners already loaded and lets
+   * the load-more footer retry that page. Always false in demo, which serves
+   * one page.
+   */
+  isFetchNextPageError: boolean;
   /** True while the first page is in flight. */
   isLoading: boolean;
   /**
@@ -74,6 +81,7 @@ export function usePartners(params: { region?: Region } = {}): PartnersResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isFetchNextPageError: query.isFetchNextPageError,
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),

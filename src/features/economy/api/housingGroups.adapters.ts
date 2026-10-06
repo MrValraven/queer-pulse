@@ -1,12 +1,16 @@
+import { initialsFromParts } from "../../../shared/lib/initials";
+import { tintForSlug } from "../../../shared/api/refs";
 import type {
   GroupListing,
+  GroupListingPoster,
   MyGroupListing,
   VettedGroup,
 } from "../housingGroups.data";
 import type {
-  GroupListingDTO,
+  GroupListingPosterDTO,
   HousingGroupDTO,
   MyGroupListingDTO,
+  PublicGroupListingDTO,
 } from "./housingGroups.api";
 
 /** Map a live `HousingGroupDTO` to the `VettedGroup` view-model (no listings —
@@ -25,7 +29,28 @@ export function groupDtoToVettedGroup(dto: HousingGroupDTO): VettedGroup {
   };
 }
 
-export function listingDtoToGroupListing(dto: GroupListingDTO): GroupListing {
+/** The poster's name, initials and avatar tint, with the same helpers the
+ *  member-listing lister block uses (`posterFrom`), so one person keeps one
+ *  colour across housing (PRD-443). */
+function groupListingPosterFrom(
+  poster: GroupListingPosterDTO,
+): GroupListingPoster {
+  return {
+    slug: poster.slug,
+    firstName: poster.firstName.trim(),
+    fullName: `${poster.firstName} ${poster.lastName}`.trim(),
+    initials: initialsFromParts(poster.firstName, poster.lastName),
+    tint: tintForSlug(poster.slug),
+    ...(poster.avatarUrl ? { avatarUrl: poster.avatarUrl } : {}),
+  };
+}
+
+/** Maps a group room. `poster` and `isOwnListing` are set only when the wire
+ *  carried them, so the poster's own `MyGroupListingDTO` rows, which carry
+ *  neither, map exactly as before. */
+export function listingDtoToGroupListing(
+  dto: PublicGroupListingDTO,
+): GroupListing {
   return {
     id: dto.id,
     title: dto.title,
@@ -33,6 +58,8 @@ export function listingDtoToGroupListing(dto: GroupListingDTO): GroupListing {
     neighbourhood: dto.neighbourhood,
     priceEuros: dto.priceEuros,
     accessibilityInfo: dto.accessibilityInfo,
+    ...(dto.poster ? { poster: groupListingPosterFrom(dto.poster) } : {}),
+    ...(dto.isOwnListing ? { isOwnListing: true } : {}),
   };
 }
 
@@ -49,6 +76,7 @@ export function myListingDtoToMyGroupListing(
     status: dto.status,
     hidden: dto.hidden,
     hiddenReason: dto.hiddenReason,
+    moderationState: dto.moderationState ?? null,
     decidedAt: dto.decidedAt,
     decisionReason: dto.decisionReason,
     createdAt: dto.createdAt,

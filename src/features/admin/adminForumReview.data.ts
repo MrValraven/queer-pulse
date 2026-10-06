@@ -36,6 +36,8 @@ function heldThread(
     | "contentWarnings"
     | "isAnonymous"
     | "community"
+    | "funding"
+    | "fundingReview"
   >,
 ): AdminForumReviewThread {
   return {
@@ -77,6 +79,7 @@ function heldThread(
 const firstCreatedAt = hoursFromNow(-3);
 const secondCreatedAt = hoursFromNow(-26);
 const thirdCreatedAt = hoursFromNow(-50);
+const fourthCreatedAt = hoursFromNow(-6);
 
 export const ADMIN_FORUM_REVIEW_THREADS: AdminForumReviewThread[] = [
   heldThread({
@@ -136,5 +139,45 @@ export const ADMIN_FORUM_REVIEW_THREADS: AdminForumReviewThread[] = [
     contentWarnings: [],
     isAnonymous: false,
     community: null,
+  }),
+  heldThread({
+    id: "frv_5004",
+    slug: "35",
+    title: "Help Rui cover his top surgery recovery",
+    author: { handle: "ines", displayName: "Inês Tavares", avatarUrl: null },
+    category: "funding",
+    createdAt: fourthCreatedAt,
+    publishedAt: fourthCreatedAt,
+    excerpt:
+      "Rui needs six weeks off work after surgery in November. The fundraiser covers rent and food for that time.",
+    kind: "ask",
+    contentWarnings: [],
+    isAnonymous: false,
+    community: null,
+    funding: {
+      linkUrl: "https://www.gofundme.com/f/rui-recovery-lisbon",
+      linkHost: "gofundme.com",
+      funderName: null,
+      amountMin: null,
+      amountMax: null,
+      deadline: null,
+      eligibility: [],
+      scope: null,
+      callState: null,
+      goalAmount: 2400,
+      askPurpose: "healthcare",
+      beneficiary: "someone_i_know",
+      endsAt: null,
+      endedAt: null,
+      endedReason: null,
+      approvedAt: null,
+      askState: "pending",
+      updatedAt: fourthCreatedAt,
+    },
+    fundingReview: {
+      linkHost: "gofundme.com",
+      posterVerificationLevel: "phone",
+      posterAccountAgeDays: 400,
+    },
   }),
 ];

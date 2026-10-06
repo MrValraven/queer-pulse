@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import {
-  Button,
   FadeIn,
   LoadErrorState,
+  LoadMoreFooter,
   SectionHead,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -163,24 +163,23 @@ export function CommunitiesGrid({
       )}
 
       {!isShowingSkeletons && discover.hasNextPage && (
-        <div className={styles.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            // Held while the cards on screen still belong to the previous sort
-            // or filter: `hasNextPage` describes that run, so paging now would
-            // append the incoming run's second page under rows it does not
-            // continue. It frees itself as soon as the new first page lands.
-            disabled={
-              discover.isFetchingNextPage || discover.isShowingStaleResults
-            }
-            onClick={discover.fetchNextPage}
-          >
-            {discover.isFetchingNextPage
-              ? t("communities:discover.loadingMore")
-              : t("communities:discover.loadMoreCta")}
-          </Button>
-        </div>
+        <LoadMoreFooter
+          className={styles.loadMore}
+          // Held while the cards on screen still belong to the previous sort
+          // or filter: `hasNextPage` describes that run, so paging now would
+          // append the incoming run's second page under rows it does not
+          // continue. It frees itself as soon as the new first page lands.
+          isFetchingNextPage={
+            discover.isFetchingNextPage || discover.isShowingStaleResults
+          }
+          // ENG-501: a failed page keeps the loaded cards; this line says so
+          // and the button retries that page.
+          isFetchNextPageError={discover.isFetchNextPageError}
+          onLoadMore={discover.fetchNextPage}
+          errorMessage={t("common:error.loadMore")}
+          label={t("communities:discover.loadMoreCta")}
+          loadingLabel={t("communities:discover.loadingMore")}
+        />
       )}
 
       {discover.joining && (

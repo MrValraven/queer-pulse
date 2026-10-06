@@ -4,6 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
 import { LisbonMap } from "./LisbonMap";
 import { DirectoryMapSidebar } from "./DirectoryMapSidebar";
+import { DirectoryServerPageFooter } from "./DirectoryServerPageFooter";
 import { useDirectoryMapView } from "./useDirectoryMapView";
 import { useMapFullscreen } from "./useMapFullscreen";
 import { type MapPanelEdge } from "./useLisbonMap";
@@ -19,6 +20,10 @@ export function DirectoryMapView({
   onRetry,
   hasActiveFilters,
   onClearFilters,
+  hasMoreFromServer = false,
+  isLoadingMoreFromServer = false,
+  isFetchNextPageError = false,
+  onLoadMoreFromServer,
   fullscreenControls,
   fallbackShownAt = null,
 }: {
@@ -31,6 +36,15 @@ export function DirectoryMapView({
   onRetry?: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
+  /** The server holds more pages; the map tab pulls them in one by one. */
+  hasMoreFromServer?: boolean;
+  /** True while the next server page is in flight. */
+  isLoadingMoreFromServer?: boolean;
+  /** True when the latest server page failed. The pins already loaded stay;
+   *  the footer under the map says so and retries that page (ENG-501). */
+  isFetchNextPageError?: boolean;
+  /** Fetches the next server page, or retries the one that failed. */
+  onLoadMoreFromServer?: () => void;
   /** The search row shown inside the map while it is full screen on desktop,
    *  so filtering never means leaving full screen. */
   fullscreenControls?: ReactNode;
@@ -69,6 +83,18 @@ export function DirectoryMapView({
       ? "bottom"
       : null
     : "right";
+
+  // Full screen covers the page, so the footer moves into the stage as a
+  // floating status. It shows while a page is in flight or has failed, which
+  // keeps a failed server page visible with its Retry.
+  const serverPageFooter =
+    hasMoreFromServer && !loading && !isError && onLoadMoreFromServer ? (
+      <DirectoryServerPageFooter
+        isFetchingNextPage={isLoadingMoreFromServer}
+        isFetchNextPageError={isFetchNextPageError}
+        onLoadMore={onLoadMoreFromServer}
+      />
+    ) : null;
 
   return (
     <div className="wrap">
@@ -139,8 +165,15 @@ export function DirectoryMapView({
             hasActiveFilters={hasActiveFilters}
             onClearFilters={onClearFilters}
           />
+
+          {fullscreen.isFullscreen &&
+            serverPageFooter &&
+            (isLoadingMoreFromServer || isFetchNextPageError) && (
+              <div className={s.fullscreenPageStatus}>{serverPageFooter}</div>
+            )}
         </div>
       </div>
+      {!fullscreen.isFullscreen && serverPageFooter}
     </div>
   );
 }

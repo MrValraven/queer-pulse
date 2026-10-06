@@ -72,6 +72,7 @@ export function MemberDirectoryFilterPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     isLoading,
     isError,
     refetch,
@@ -194,6 +195,7 @@ export function MemberDirectoryFilterPage() {
           filteredCount={filtered.length}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
+          isFetchNextPageError={isFetchNextPageError}
           onFetchNextPage={fetchNextPage}
           onRefresh={() =>
             queryClient.invalidateQueries({ queryKey: ["members"] })

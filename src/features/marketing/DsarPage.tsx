@@ -6,7 +6,9 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
+import { PageMeta } from "../../shared/seo";
 import styles from "./DsarPage.module.css";
+import { DsarSignedOutPanel } from "./DsarSignedOutPanel";
 import { Button, FormField, HubBackLink } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -304,7 +306,7 @@ function DsarRequestForm({ right }: { right: Right }) {
       </div>
 
       <div className={styles.actions}>
-        <div className="info">
+        <div className={styles.info}>
           <Translation
             i18nKey="marketing:dsar.actions.info"
             components={{ b: <b /> }}
@@ -414,13 +416,23 @@ function PastRequests() {
 export function DsarPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
+  const { user, checking } = useAuth();
   const [art, setArt] = useState(16);
   const rights = buildRights(t);
   const right = rights.find((r) => r.art === art)!;
+  // ENG-473. A request files against the session's own account, so the picker
+  // and form render for a signed-in member (or demo) only. A live visitor gets
+  // the signed-out panel once the session check settles, and neither shows
+  // while it is still in flight, so a member never sees the panel flash.
+  const isSignedIn = demoMode || !!user;
+  const isSignedOut = !isSignedIn && !checking;
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:dsar.meta.title")}
+        description={t("marketing:dsar.meta.description")}
+      />
       <div className={styles.page}>
         <HubBackLink
           to={routes.privacy}
@@ -447,17 +459,23 @@ export function DsarPage() {
           />
         </div>
 
-        <div className={styles.rightLabel}>
-          {t("marketing:dsar.rightLabel")}
-        </div>
-        <RightPicker rights={rights} art={art} onSelect={setArt} />
+        {isSignedOut && <DsarSignedOutPanel />}
 
-        <DsarRequestForm right={right} />
+        {isSignedIn && (
+          <>
+            <div className={styles.rightLabel}>
+              {t("marketing:dsar.rightLabel")}
+            </div>
+            <RightPicker rights={rights} art={art} onSelect={setArt} />
+
+            <DsarRequestForm right={right} />
+          </>
+        )}
 
         {/* History is per-account: shown in demo, or to a signed-in member in
             live. A logged-out live visitor has no history to fetch (and the
             endpoint is auth-gated), so the section is simply omitted for them. */}
-        {(demoMode || user) && <PastRequests />}
+        {isSignedIn && <PastRequests />}
       </div>
     </PageShell>
   );

@@ -1,7 +1,6 @@
 import { FiCheck } from "react-icons/fi";
 import { useId, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, LoadErrorState, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -51,6 +50,11 @@ export function TiersSection() {
               }
               delay={index * 60}
             >
+              {tier.featured && (
+                <span className={styles.tierBadge}>
+                  {t("marketing:forOrgs.tiers.featuredBadge")}
+                </span>
+              )}
               <div className={styles.tierName}>{tier.name}</div>
               <div>
                 <div className={styles.tierPrice}>{tier.priceDisplay}</div>
@@ -66,7 +70,7 @@ export function TiersSection() {
                 ))}
               </ul>
               <p className={styles.tierFootNote}>{tier.footnote}</p>
-              <OrgTierCtaButton cta={tier.cta} />
+              <OrgTierCtaButton cta={tier.cta} isFeatured={tier.featured} />
             </Reveal>
           ))}
         </div>
@@ -75,34 +79,32 @@ export function TiersSection() {
   );
 }
 
-function OrgTierCtaButton({ cta }: { cta: OrgTier["cta"] }) {
-  const { showToast } = useToast();
+/**
+ * A tier's call to action: a link to its target, or the "propose" anchor down
+ * to the partner application below. A legacy `toast` tier arrives here as
+ * `propose` (the adapter maps it), so every card leads somewhere a person
+ * reads. Only the featured tier, on its plum card, gets the coral primary
+ * button; the cream cards carry a ghost one, so the page keeps one lead ask.
+ * The primary variant already paints cream text on `--accent-fill`, the
+ * AA-safe coral behind a label.
+ */
+function OrgTierCtaButton({
+  cta,
+  isFeatured,
+}: {
+  cta: OrgTier["cta"];
+  isFeatured: boolean;
+}) {
+  const variant = isFeatured ? "primary" : "ghost";
   if (cta.kind === "link") {
     return (
-      <Button to={cta.to} variant="ghost" className={styles.tierBtn}>
-        {cta.label}
-      </Button>
-    );
-  }
-  if (cta.kind === "propose") {
-    return (
-      <Button
-        href="#start"
-        variant="primary"
-        className={styles.tierBtn}
-        style={{ background: "var(--accent)", color: "rgb(var(--cream-rgb))" }}
-      >
+      <Button to={cta.to} variant={variant} className={styles.tierBtn}>
         {cta.label}
       </Button>
     );
   }
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      className={styles.tierBtn}
-      onClick={() => showToast(cta.label, "info")}
-    >
+    <Button href="#start" variant={variant} className={styles.tierBtn}>
       {cta.label}
     </Button>
   );

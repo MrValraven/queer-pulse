@@ -1,4 +1,5 @@
-import { Toggle } from "../../shared/components/ui";
+import { FiPlus } from "react-icons/fi";
+import { Button, Toggle } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
@@ -14,17 +15,21 @@ import type { AdminFinLine } from "./api/adminGovernanceFinances.api";
 import styles from "./AdminGovernanceFinancesEdit.module.css";
 
 /** One ledger (income or spending) as a table: a row per line with its
- *  visibility switch, provenance, stored amount, new amount and note. */
+ *  visibility switch, name, provenance, stored amount, new amount and note.
+ *  PRD-447: the name is editable and "Add a line" appends a row, so a newly
+ *  opened quarter can be filled in with no SQL. */
 export function LedgerTable({
   titleKey,
   lines,
   original,
   onChange,
+  onAdd,
 }: {
   titleKey: string;
   lines: LineDraft[];
   original: AdminFinLine[];
   onChange: (index: number, patch: Partial<LineDraft>) => void;
+  onAdd: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -76,7 +81,14 @@ export function LedgerTable({
           <tbody>
             {lines.map((line, index) => {
               const source = original[index];
-              const isChanged = source ? isLineChanged(line, source) : false;
+              const isChanged = source ? isLineChanged(line, source) : true;
+              // Names every control on the row for assistive tech, including
+              // a just-added row that has no name yet.
+              const rowName =
+                line.label.trim() ||
+                t("admin:governance.finances.edit.field.newLine", {
+                  position: index + 1,
+                });
               return (
                 <tr key={index} className={rowClass(isChanged, !line.enabled)}>
                   <td data-label={columns.shown} className={styles.colShown}>
@@ -85,12 +97,25 @@ export function LedgerTable({
                       onChange={(enabled) => onChange(index, { enabled })}
                       label={t(
                         "admin:governance.finances.edit.field.lineEnabled",
-                        { label: line.label },
+                        { label: rowName },
                       )}
                     />
                   </td>
                   <th scope="row" data-label={columns.line}>
-                    <span className={styles.rowLabel}>{line.label}</span>
+                    <input
+                      type="text"
+                      className={styles.noteInput}
+                      aria-label={t(
+                        "admin:governance.finances.edit.aria.lineName",
+                        { position: index + 1 },
+                      )}
+                      aria-invalid={!line.label.trim() || undefined}
+                      value={line.label}
+                      maxLength={80}
+                      onChange={(event) =>
+                        onChange(index, { label: event.target.value })
+                      }
+                    />
                     {!line.enabled && (
                       <span className={styles.rowHint}>
                         {t(
@@ -100,7 +125,7 @@ export function LedgerTable({
                     )}
                   </th>
                   <td data-label={columns.source}>
-                    <FinanceSourceBadge source={source?.source ?? "seeded"} />
+                    <FinanceSourceBadge source={source?.source ?? "manual"} />
                   </td>
                   <td data-label={columns.current} className={styles.colNumber}>
                     {source ? formatStored(source.amount) : ""}
@@ -109,7 +134,7 @@ export function LedgerTable({
                     <AmountInput
                       ariaLabel={t(
                         "admin:governance.finances.edit.aria.newAmount",
-                        { label: line.label },
+                        { label: rowName },
                       )}
                       value={line.amount}
                       isBlankAllowed={false}
@@ -124,7 +149,7 @@ export function LedgerTable({
                       className={styles.noteInput}
                       aria-label={t(
                         "admin:governance.finances.edit.aria.note",
-                        { label: line.label },
+                        { label: rowName },
                       )}
                       value={line.note}
                       disabled={!line.enabled}
@@ -148,6 +173,12 @@ export function LedgerTable({
             </tr>
           </tfoot>
         </table>
+      </div>
+      <div>
+        <Button variant="ghost" size="sm" onClick={onAdd}>
+          <FiPlus aria-hidden />
+          {t("admin:governance.finances.edit.addLine")}
+        </Button>
       </div>
     </section>
   );

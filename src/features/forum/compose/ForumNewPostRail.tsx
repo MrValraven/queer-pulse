@@ -49,6 +49,7 @@ export function ForumNewPostRail({
           isAnonymous={state.isAnonymous}
           onAnonymousChange={setters.setIsAnonymous}
           category={state.category}
+          kind={state.kind}
           coAuthorSlug={state.coAuthorSlug}
           coAuthor={coAuthor}
           onCoAuthorChange={changeCoAuthor}

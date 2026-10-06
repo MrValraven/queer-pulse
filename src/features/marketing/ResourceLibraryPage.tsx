@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { routes } from "../../app/routeMap";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
@@ -9,14 +8,9 @@ import { Translation } from "../../shared/i18n/Translation";
 import { CATEGORIES } from "../resources/library.data";
 import { useLibraryData } from "../resources/api/useLibraryData";
 import { SuggestEditModal } from "../resources/SuggestEditModal";
-import { SuggestEditTrigger } from "../resources/SuggestEditTrigger";
 import { LIBRARY_SUBPAGES, ORGANISATIONS } from "./resourceLibrary.data";
-import {
-  GuideCard,
-  OrganisationCard,
-  ResourceCardSkeleton,
-  ResourceFilterBar,
-} from "./ResourceLibrarySections";
+import { OrganisationCard, ResourceFilterBar } from "./ResourceLibrarySections";
+import { ResourceLibraryGuides } from "./ResourceLibraryGuides";
 import s from "./ResourceLibraryPage.module.css";
 
 // CNT-11: the canonical, nav-linked "/resources" surface — consolidated onto
@@ -41,8 +35,13 @@ export function ResourceLibraryPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    hasFailedWithoutData,
+    isRetrying,
+    refetch,
   } = useLibraryData();
-  const loading = useSimulatedLoad() || dataLoading;
+  // A Retry of a failed first load puts the query back to pending; the error
+  // panel stays mounted (so focus stays on its button) while it runs.
+  const loading = (useSimulatedLoad() || dataLoading) && !hasFailedWithoutData;
   const pageTitle = t("marketing:resourceLibrary.meta.title");
   const pageDescription = t("marketing:resourceLibrary.meta.description");
 
@@ -82,7 +81,7 @@ export function ResourceLibraryPage() {
       >
         <div className={s.stats}>
           <div className={s.stat}>
-            <b>{loading ? "…" : guides.length}</b>
+            <b>{loading || hasFailedWithoutData ? "…" : guides.length}</b>
             <span>{t("marketing:resourceLibrary.stats.resources")}</span>
           </div>
           <div className={s.stat}>
@@ -101,61 +100,21 @@ export function ResourceLibraryPage() {
         onQuery={setQuery}
         cat={cat}
         onCat={setCat}
-        resultCount={visible.length}
+        resultCount={hasFailedWithoutData ? null : visible.length}
       />
 
       <section className={s.body}>
         <div className="wrap">
-          <div className={s.grid}>
-            {loading &&
-              Array.from({ length: 9 }).map((_, index) => (
-                <ResourceCardSkeleton key={index} />
-              ))}
-            {/* Two different emptinesses, and telling them apart matters: a
-                filter that matches nothing is the reader's to fix, whereas a
-                library holding nothing at all means no guide has passed
-                editorial review yet, and "try a broader filter" would send
-                someone hunting for a filter that would not help. */}
-            {!loading && visible.length === 0 && (
-              <div className={s.empty}>
-                {guides.length === 0
-                  ? t("marketing:resourceLibrary.emptyUnreviewed")
-                  : t("marketing:resourceLibrary.empty")}
-              </div>
-            )}
-            {!loading &&
-              visible.map((guide, index) => (
-                <GuideCard key={guide.title} guide={guide} index={index} />
-              ))}
-          </div>
-
-          {!loading && hasNextPage && (
-            <div className={s.loadMore}>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={isFetchingNextPage}
-                onClick={fetchNextPage}
-              >
-                {isFetchingNextPage
-                  ? t("resources:library.loadingMore")
-                  : t("resources:library.loadMoreCta")}
-              </Button>
-            </div>
-          )}
-
-          {/* CON-10: the library grid only ever linked the guides whose
-              cards it renders. This reaches the full index, including the
-              guides that had no inbound link anywhere in the app. */}
-          <div className={s.loadMore}>
-            <Button to={routes.guideIndex} variant="ghost">
-              {t("resources:guideIndex.linkCta")}
-            </Button>
-          </div>
-
-          <SuggestEditTrigger
-            subjectOptions={guides.map((guide) => guide.title)}
-            context="library"
+          <ResourceLibraryGuides
+            guides={guides}
+            visible={visible}
+            loading={loading}
+            hasFailedWithoutData={hasFailedWithoutData}
+            isRetrying={isRetrying}
+            onRetry={refetch}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            onFetchNextPage={fetchNextPage}
           />
         </div>
       </section>

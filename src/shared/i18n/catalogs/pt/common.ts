@@ -35,6 +35,8 @@ export const common: Catalog = {
   "error.description":
     "Não foi possível carregar isto agora. Verifica a ligação e tenta de novo.",
   "error.retry": "Tentar de novo",
+  // ENG-501: a linha no rodapé quando só a PRÓXIMA página de uma lista falhou.
+  "error.loadMore": "Não conseguimos carregar mais agora.",
 
   // Exemplos de interpolação + pluralização ("bem-vinde": forma neutra -e)
   "greeting.welcome": "Bem-vinde de volta, {name}",

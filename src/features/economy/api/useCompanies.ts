@@ -38,6 +38,13 @@ export interface CompaniesResult {
    * genuinely empty employer list rather than rendering both as nothing.
    */
   isError: boolean;
+  /**
+   * True when the latest "Load more" failed. React-query also sets `isError`
+   * then, so a consumer shows its full error state only while `items` is
+   * empty, keeps the loaded rows, and retries through `fetchNextPage`
+   * (ENG-501). Always false in demo, which never offers another page.
+   */
+  isFetchNextPageError: boolean;
   /** Re-runs the failed fetch. Wire it to the error state's retry. */
   refetch: () => void;
   /** True when another page is available (always false in demo). */
@@ -100,6 +107,7 @@ export function useCompanies(): CompaniesResult {
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
     isError: query.isError,
+    isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),

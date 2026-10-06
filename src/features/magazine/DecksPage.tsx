@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import {
-  Button,
   EmptyState,
   FadeIn,
   ImageSlot,
+  LoadMoreFooter,
   SkeletonCard,
   Tag,
 } from "../../shared/components/ui";
@@ -47,12 +47,17 @@ export function DecksPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     isLoading,
     isError,
     error,
     refetch,
   } = useDecksDirectory();
   const isSignedOut = error instanceof ApiError && error.status === 401;
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  // The error panel is for an index with nothing loaded; decks already loaded
+  // stay, and the footer under them retries the page that failed.
+  const hasNothingLoadedError = isError && decks.length === 0;
   const hasNoDecks = !isLoading && !isError && decks.length === 0;
 
   return (
@@ -75,7 +80,7 @@ export function DecksPage() {
             <div className={styles.eyebrow}>{t("magazine:decks.eyebrow")}</div>
             <h1 className={styles.h1}>{t("magazine:decks.title")}</h1>
             <p className={styles.sub}>{t("magazine:decks.sub")}</p>
-            {!isLoading && !isError && total > 0 && (
+            {!isLoading && !hasNothingLoadedError && total > 0 && (
               <p className={styles.count}>
                 {t("magazine:decks.count", { count: total })}
               </p>
@@ -84,7 +89,7 @@ export function DecksPage() {
 
           {isSignedOut ? (
             <MagazineSignInWall />
-          ) : isError ? (
+          ) : hasNothingLoadedError ? (
             <EmptyState
               title={t("magazine:decks.errorTitle")}
               description={t("magazine:decks.errorBody")}
@@ -108,18 +113,15 @@ export function DecksPage() {
               </div>
 
               {hasNextPage && (
-                <div className={styles.loadMore}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    disabled={isFetchingNextPage}
-                    onClick={fetchNextPage}
-                  >
-                    {isFetchingNextPage
-                      ? t("magazine:decks.loadingMore")
-                      : t("magazine:decks.loadMoreCta")}
-                  </Button>
-                </div>
+                <LoadMoreFooter
+                  className={styles.loadMore}
+                  isFetchingNextPage={isFetchingNextPage}
+                  isFetchNextPageError={isFetchNextPageError}
+                  onLoadMore={fetchNextPage}
+                  errorMessage={t("common:error.loadMore")}
+                  label={t("magazine:decks.loadMoreCta")}
+                  loadingLabel={t("magazine:decks.loadingMore")}
+                />
               )}
             </>
           )}

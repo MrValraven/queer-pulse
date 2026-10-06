@@ -40,6 +40,12 @@ import { FeedPager } from "./FeedPager";
 import { useFeedPage } from "./useFeedPage";
 import { FeedSidebar } from "./FeedSidebar";
 import { SuggestedPeopleStrip } from "./SuggestedPeopleStrip";
+import {
+  demoFeedRenderEntries,
+  feedRenderEntryKey,
+  liveFeedRenderEntries,
+} from "./groupNewMembers";
+import { LiveNewMembersGroupCard } from "./NewMembersGroupCard";
 import styles from "./FeedPage.module.css";
 
 /** react-icons glyph for each tab's empty/error panel. */
@@ -184,6 +190,7 @@ export function FeedListBody({
   pulse,
   staticItems,
   revealDelay,
+  isGroupingNewMembers = false,
 }: {
   loading: boolean;
   demoMode: boolean;
@@ -193,8 +200,14 @@ export function FeedListBody({
   errorPanel: React.ReactNode;
   liveItems: FeedItem[];
   pulse: HubPost[];
-  staticItems: { key: string; Card: () => React.ReactElement }[];
+  staticItems: {
+    key: string;
+    Card: () => React.ReactElement;
+    newMemberItem?: FeedItem;
+  }[];
   revealDelay: (index: number) => string;
+  /** The "All" tab: every new member in one group card. */
+  isGroupingNewMembers?: boolean;
 }) {
   const fmt = useFormat();
 
@@ -213,15 +226,21 @@ export function FeedListBody({
     if (empty) return <div data-masonry-full>{emptyPanel}</div>;
     return (
       <>
-        {liveItems.map((item, index) => (
-          <div
-            key={item.id}
-            className={styles.cardReveal}
-            style={{ animationDelay: revealDelay(index) }}
-          >
-            {renderLiveFeedCard(item, fmt)}
-          </div>
-        ))}
+        {liveFeedRenderEntries(liveItems, isGroupingNewMembers).map(
+          (entry, index) => (
+            <div
+              key={feedRenderEntryKey(entry)}
+              className={styles.cardReveal}
+              style={{ animationDelay: revealDelay(index) }}
+            >
+              {entry.kind === "item" ? (
+                renderLiveFeedCard(entry.item, fmt)
+              ) : (
+                <LiveNewMembersGroupCard items={entry.members} />
+              )}
+            </div>
+          ),
+        )}
       </>
     );
   }
@@ -238,15 +257,21 @@ export function FeedListBody({
           <CommunityPostCard hub={item} />
         </div>
       ))}
-      {staticItems.map(({ key, Card }, index) => (
-        <div
-          key={key}
-          className={styles.cardReveal}
-          style={{ animationDelay: revealDelay(index + pulse.length) }}
-        >
-          <Card />
-        </div>
-      ))}
+      {demoFeedRenderEntries(staticItems, isGroupingNewMembers).map(
+        (entry, index) => (
+          <div
+            key={entry.key}
+            className={styles.cardReveal}
+            style={{ animationDelay: revealDelay(index + pulse.length) }}
+          >
+            {entry.kind === "static" ? (
+              <entry.entry.Card />
+            ) : (
+              <LiveNewMembersGroupCard items={entry.members} />
+            )}
+          </div>
+        ),
+      )}
     </>
   );
 }
@@ -289,6 +314,7 @@ export function FeedPage() {
   // full error panel is for a feed with nothing loaded; once cards are on
   // screen they stay, and the pager below carries its own inline retry.
   const hasNothingLoadedError = isError && liveItems.length === 0;
+  const isGroupingNewMembers = displayTab === "All";
   // Stable, because it reaches `FeedLoadMore`'s IntersectionObserver effect
   // deps; an inline arrow reconnected the observer on every render.
   const requestFeedNextPage = useCallback(() => {
@@ -418,6 +444,7 @@ export function FeedPage() {
                           pulse={pulse}
                           staticItems={staticItems}
                           revealDelay={revealDelay}
+                          isGroupingNewMembers={isGroupingNewMembers}
                         />
                         {/* Live-only infinite-scroll pager. Self-guards on
                             `hasNextPage` (false in demo mode, where the feed hook is

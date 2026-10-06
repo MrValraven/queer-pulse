@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { routes } from "../../../app/routeMap";
 import { useConsent } from "../../../app/providers/useConsent";
-import { PwaUpdateCard } from "./PwaUpdateCard";
+import { PwaUpdateCard, type UpdatePhase } from "./PwaUpdateCard";
 import { useNextBuildVersion } from "./useNextBuildVersion";
 
 /**
@@ -22,6 +22,19 @@ import { useNextBuildVersion } from "./useNextBuildVersion";
  * since the card still waits on the member to accept.
  */
 const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
+
+/**
+ * How long Reload waits for the new worker to take over before reloading
+ * anyway.
+ *
+ * Activation is usually quick, but the browser holds it until the old worker
+ * finishes its in-flight fetches, so a few seconds is normal and the progress
+ * line covers that. Fifteen seconds is well past any healthy activation. If
+ * the old worker is somehow still in charge by then, the reload lands on the
+ * old build and the card offers the update again, which is far better than a
+ * card that says "Updating…" forever.
+ */
+const UPDATE_RELOAD_TIMEOUT_MS = 15_000;
 
 /**
  * Registers the service worker and, when a new build is waiting, offers a
@@ -52,7 +65,11 @@ export function PwaUpdatePrompt() {
   // Dismissal hides the card for the rest of this session; a cold start (or the
   // next genuinely new build after a reload) surfaces it again.
   const [dismissed, setDismissed] = useState(false);
-  const [updating, setUpdating] = useState(false);
+  const [phase, setPhase] = useState<UpdatePhase>("idle");
+  // Several signals can each announce the takeover (the worker's own state,
+  // the page's controller swap, the safety timeout). The first one reloads and
+  // this ref makes the rest no-ops.
+  const hasReloadedRef = useRef(false);
   // The consent banner is also a fixed bottom decision, and on a phone it fills
   // most of the screen. Showing both covered the banner's Reject button, so the
   // card waits its turn until the visitor has chosen.
@@ -102,15 +119,64 @@ export function PwaUpdatePrompt() {
   if (!needRefresh || dismissed || consentStatus === "unknown") return null;
 
   const applyUpdate = () => {
-    setUpdating(true);
-    // Activating the waiting worker fires `controlling`, and the plugin answers
-    // with a plain `location.reload()` of whatever URL is current.
+    setPhase("activating");
+
+    const reloadOnce = () => {
+      if (hasReloadedRef.current) return;
+      hasReloadedRef.current = true;
+      setPhase("reloading");
+      window.location.reload();
+    };
+
+    // No waiting worker means there is nothing left to activate (another tab
+    // may already have applied it), so a reload alone lands on the new build.
+    const waitingWorker = swRegistration?.waiting;
+    if (!waitingWorker) {
+      reloadOnce();
+      return;
+    }
+
+    // We own the reload because the plugin's own one is unreliable. It only
+    // reloads from workbox-window's `controlling` event when `isUpdate` is
+    // true, and workbox-window fixes that flag once, at register time, from
+    // whether the page already had a controller. A tab that started
+    // uncontrolled (a hard reload, or the first visit) never qualifies, and
+    // since sw.ts does not call clients.claim() the new worker never takes
+    // that tab over either, so the card would sit on "Updating…" forever.
+    // "redundant" means a newer worker replaced this one; a reload picks up
+    // whichever build is current.
+    const fallbackTimeoutId = window.setTimeout(
+      reloadOnce,
+      UPDATE_RELOAD_TIMEOUT_MS,
+    );
+    const reloadOnTakeover = () => {
+      window.clearTimeout(fallbackTimeoutId);
+      reloadOnce();
+    };
+    waitingWorker.addEventListener("statechange", () => {
+      if (
+        waitingWorker.state === "activated" ||
+        waitingWorker.state === "redundant"
+      ) {
+        reloadOnTakeover();
+      }
+    });
+    navigator.serviceWorker.addEventListener(
+      "controllerchange",
+      reloadOnTakeover,
+      { once: true },
+    );
+
+    // Posts SKIP_WAITING to the waiting worker. On a tab that was controlled
+    // at load the plugin reloads too; the ref above keeps ours to one, and a
+    // second reload from the plugin is harmless. These listeners need no
+    // cleanup: this page's life ends in the reload they trigger.
     void updateServiceWorker(true);
   };
 
   return (
     <PwaUpdateCard
-      updating={updating}
+      phase={phase}
       nextVersion={nextVersion}
       onReload={applyUpdate}
       onShowChanges={() => {

@@ -1,0 +1,152 @@
+.section {
+  display: grid;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-sm);
+  padding: 18px 20px;
+  background: rgba(var(--jade-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-panel);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-18);
+  color: var(--text-strong);
+}
+
+.fields,
+.group,
+.linkField {
+  display: grid;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+/* One gap between field groups, the same in the composer and the modal. */
+.fields {
+  gap: var(--gap-sm);
+}
+
+/* A chip group or the date, as a fieldset whose legend names it. */
+.group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-sm);
+}
+
+/* The legend reads like every FormField label beside it. A rendered legend
+   sits outside the fieldset's grid, so it carries its own space below. */
+.label {
+  padding: 0;
+  margin-bottom: var(--gap-xs);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.required {
+  margin-left: 2px;
+  /* --accent-ink is 3.81:1 on cream; --accent-text clears AA. */
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-tag);
+}
+
+.input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.checking {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.duplicate {
+  padding: 12px 14px;
+  background: rgba(var(--amber-rgb), 0.14);
+  border-radius: var(--radius-tag);
+  color: var(--ink);
+}
+
+.duplicateText {
+  margin: 0 0 8px;
+  font-size: var(--text-body-sm);
+}
+
+.duplicateActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.guidance {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--jade-ink);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--danger-ink);
+}
+
+@media (max-width: 560px) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.gate {
+  display: grid;
+  justify-items: start;
+  gap: var(--gap-xs);
+  padding: 18px 20px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.gateIcon {
+  color: var(--jade-ink);
+}
+
+.gateTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  color: var(--text-strong);
+}
+
+.gateBody {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}

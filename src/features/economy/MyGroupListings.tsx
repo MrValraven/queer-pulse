@@ -5,6 +5,10 @@ import type { MyGroupListing } from "./housingGroups.data";
 import { MyGroupListingCard } from "./MyGroupListingCard";
 import styles from "./HousingGroupsPage.module.css";
 
+/** The anchor the reader's own room on the public board links to
+ *  (`GroupListingCard`, same literal). */
+const YOUR_ROOMS_ANCHOR_ID = "your-rooms";
+
 /**
  * The member's own rooms in this group, and the way in to post one (LOC-19).
  *
@@ -36,7 +40,7 @@ export function MyGroupListings({
   const { t } = useTranslation();
 
   return (
-    <section className={styles.mineSection}>
+    <section id={YOUR_ROOMS_ANCHOR_ID} className={styles.mineSection}>
       <div className="wrap">
         <div className={styles.mineHead}>
           <div>

@@ -497,15 +497,24 @@
   height: 1px;
 }
 
-/* Shown briefly under the grid while the next SERVER page loads (once every
-   already-loaded place has been revealed locally) — see DirectoryListView's
-   `isLoadingMoreFromServer`. */
+/* DirectoryServerPageFooter, under the list grid, the online grid and the map
+   while the server holds more pages: the progress line while a page loads,
+   or, once a page failed, the failure line beside its Retry (ENG-501). */
 .loadingMore {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   padding: 24px 0 4px;
   color: var(--ink-60);
   font-size: var(--text-14-5);
+}
+
+/* ENG-501: a failed server page. The loaded cards stay above; this line sits
+   beside the Retry that fetches that page again (DirectoryServerPageFooter). */
+.loadMoreError {
+  margin: 0;
+  margin-inline-end: var(--gap-xs);
 }
 
 /* ── Accessibility on the card ─────────────────────────────────────────────

@@ -32,25 +32,25 @@ import {
  * never fabricated ones. A `Live*` section renders nothing when nothing has
  * been curated yet, rather than showing an empty shell.
  *
- * Gatherings and Stories now have `Live*` counterparts too, reading the real
- * events board and the real published magazine rather than the prototype's
- * static `data/*` registries. Neither has a PUBLIC source: `GET /events` and
- * `GET /magazine/articles` both sit behind the active-member guard, and
- * `/landing/features` carries no gatherings or stories slice, so both hooks
- * are gated on a signed-in session and the sections simply don't render for a
- * signed-out visitor (see `useHomepageGatherings` / `useHomepageStories`).
- * Live mode always keeps the platform-authored sections (value proposition,
+ * Gatherings and Stories have `Live*` counterparts too, each reading one of
+ * two real sources depending on who is looking (see `useHomepageGatherings` /
+ * `useHomepageStories`). A signed-in member sees the real events board and
+ * the latest published magazine pieces (`GET /events`, `GET /magazine/articles`,
+ * both behind the active-member guard). A signed-out visitor sees the
+ * gathering and story slices of the same public `GET /landing/features` the
+ * other three sections read: admin-curated, re-checked on every read (a
+ * gathering must stay public, published, upcoming and not taken down; a story
+ * must stay a published original), and carrying an area-level place only. The
+ * response is CDN-cached, so a gathering or story that stops qualifying leaves
+ * the page within a few minutes. With nothing curated, the section renders
+ * nothing for that visitor. Live mode always
+ * keeps the platform-authored sections (value proposition,
  * manifesto, the "gaps we felt" thread, housing, personas) — identical in
  * both modes. HousingShowcase and PersonasShowcase both link to real,
  * already-live features (`/local/housing`, `/subprofiles`); their
  * interactive showcase content (specific example listings/personas) is
  * fabricated illustrative copy shown in BOTH modes by product decision —
  * neither section is backed by real listing/persona data yet.
- *
- * FOLLOW-UP: showing gatherings and stories to SIGNED-OUT visitors needs a
- * public source — either gathering/story slices on `GET /landing/features`
- * (admin-curated, mirroring the three that exist) or a public read of the
- * events board. Until one lands, a signed-out visitor sees neither section.
  */
 export function HomePage() {
   const { t } = useTranslation();

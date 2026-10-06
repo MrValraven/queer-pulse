@@ -1,8 +1,10 @@
 import { AdminCheckLine } from "./ui";
 import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { OrgTierFormDraft } from "./adminOrgTierForm.utils";
-import type { OrgTierCtaType } from "../marketing/api/orgTiers.api";
+import type {
+  ChoosableOrgTierCtaType,
+  OrgTierFormDraft,
+} from "./adminOrgTierForm.utils";
 import styles from "./AdminOrgTiersPage.module.css";
 
 interface FieldsProps {
@@ -86,8 +88,7 @@ export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
 }
 
 // `value` is the canonical stored id; `labelKey` resolves via t() at render.
-const CTA_OPTIONS: { value: OrgTierCtaType; labelKey: string }[] = [
-  { value: "toast", labelKey: "orgTier.ctaOption.toast" },
+const CTA_OPTIONS: { value: ChoosableOrgTierCtaType; labelKey: string }[] = [
   { value: "link", labelKey: "orgTier.ctaOption.link" },
   { value: "propose", labelKey: "orgTier.ctaOption.propose" },
 ];
@@ -108,7 +109,9 @@ export function AdminOrgTierCtaFields({ draft, onChange }: FieldsProps) {
           label: t(`admin:${option.labelKey}`),
         }))}
         onChange={(value) =>
-          onChange({ ctaType: (value ?? draft.ctaType) as OrgTierCtaType })
+          onChange({
+            ctaType: (value ?? draft.ctaType) as ChoosableOrgTierCtaType,
+          })
         }
       />
 

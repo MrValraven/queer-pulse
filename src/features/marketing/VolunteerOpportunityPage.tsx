@@ -25,7 +25,7 @@ import {
 } from "./api/useOpportunityMutations";
 import { VolunteerOpportunityMain } from "./VolunteerOpportunitySections";
 import { VolunteerOpportunitySidebar } from "./VolunteerOpportunitySidebar";
-import type { VolunteerOpportunity } from "./volunteerOpportunities";
+import { editedOpportunityFor } from "./editedOpportunityHandoff";
 import { causeLabelKey } from "./causes.data";
 import styles from "./VolunteerOpportunityPage.module.css";
 
@@ -66,13 +66,15 @@ export function VolunteerOpportunityPage() {
   const signups = useSignups(slug, data?.canReviewApplicants ?? false);
 
   const baseOpp = data?.opportunity;
-  // A freshly-saved edit arrives via router state (EditOpportunityFlow) so
-  // the page reflects it instantly — load-bearing in demo mode, which has
-  // no server to refetch from at all. Guarded by slug so a stale edit from
-  // a previously viewed opportunity can never bleed into this one.
-  const editedOpportunity = (
-    location.state as { editedOpportunity?: VolunteerOpportunity } | null
-  )?.editedOpportunity;
+  // A freshly-saved edit arrives from EditOpportunityFlow so the page
+  // reflects it instantly, which is load-bearing in demo mode (no server to
+  // refetch from). Router state carries only `{ editedSlug }`; the view comes
+  // from `editedOpportunityHandoff`, read once on mount. Guarded by slug here
+  // and below, so a stale edit from a previously viewed opportunity can never
+  // bleed into this one.
+  const [editedOpportunity] = useState(() =>
+    editedOpportunityFor(slug, location.state),
+  );
   const opp =
     editedOpportunity && baseOpp && editedOpportunity.slug === baseOpp.slug
       ? editedOpportunity
@@ -165,7 +167,7 @@ export function VolunteerOpportunityPage() {
         </header>
 
         <div className={styles.grid}>
-          <VolunteerOpportunityMain opp={opp} />
+          <VolunteerOpportunityMain opp={opp} isSignedIn={loggedIn} />
           <VolunteerOpportunitySidebar
             opp={opp}
             applied={applied}

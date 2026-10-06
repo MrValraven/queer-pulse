@@ -68,7 +68,12 @@ export function MagazineSearchPage() {
     hasMore,
     loadMore,
     isLoadingMore,
+    isFetchNextPageError,
   } = useMagazineSearch({ q: term, tag, author });
+  // ENG-501: react-query also sets `isError` when only the next page failed.
+  // The error panel is for a search with nothing loaded; hits already loaded
+  // stay, and the footer under them retries the page that failed.
+  const hasNothingLoadedError = isError && articles.length === 0;
   // Every hit under `?author=` carries the same byline, so the first row names
   // the writer without a second request. The slug is the honest fallback while
   // the first page is still in flight.
@@ -92,7 +97,8 @@ export function MagazineSearchPage() {
     setSearchParams(next);
   }
 
-  const hasNoResults = hasCriteria && !isLoading && !isError && total === 0;
+  const hasNoResults =
+    hasCriteria && !isLoading && !hasNothingLoadedError && total === 0;
 
   return (
     <PageShell>
@@ -130,22 +136,25 @@ export function MagazineSearchPage() {
                 </Link>
               </div>
             )}
-            {hasCriteria && !isLoading && !isError && total > 0 && (
-              <p className={styles.count}>
-                <Translation
-                  i18nKey="magazine:search.resultCount"
-                  values={{ count: total }}
-                  slots={{
-                    count: (
-                      <RollingNumber
-                        value={fmt.number(total)}
-                        numericValue={total}
-                      />
-                    ),
-                  }}
-                />
-              </p>
-            )}
+            {hasCriteria &&
+              !isLoading &&
+              !hasNothingLoadedError &&
+              total > 0 && (
+                <p className={styles.count}>
+                  <Translation
+                    i18nKey="magazine:search.resultCount"
+                    values={{ count: total }}
+                    slots={{
+                      count: (
+                        <RollingNumber
+                          value={fmt.number(total)}
+                          numericValue={total}
+                        />
+                      ),
+                    }}
+                  />
+                </p>
+              )}
           </div>
 
           {!hasCriteria ? (
@@ -155,7 +164,7 @@ export function MagazineSearchPage() {
             />
           ) : isSignedOut ? (
             <MagazineSignInWall />
-          ) : isError ? (
+          ) : hasNothingLoadedError ? (
             <EmptyState
               title={t("magazine:search.errorTitle")}
               description={t("magazine:search.errorBody")}
@@ -176,6 +185,7 @@ export function MagazineSearchPage() {
               activeTag={tag || undefined}
               hasMore={hasMore}
               isLoadingMore={isLoadingMore}
+              isFetchNextPageError={isFetchNextPageError}
               onLoadMore={loadMore}
             />
           )}

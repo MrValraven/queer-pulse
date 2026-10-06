@@ -27,7 +27,17 @@ export interface HousingLocation {
    * real state, and it means the lister never added an address.
    */
   isUnlocked: boolean;
+  /**
+   * Which relationship opened the gate (DES-419), so the location note names
+   * the real one. Absent while the gate is closed, and from a backend that
+   * does not send it yet; the card then uses its neutral "you have access"
+   * line.
+   */
+  unlockedVia?: HousingLocationUnlock;
 }
+
+/** The relationship that unlocked a listing's exact location for the reader. */
+export type HousingLocationUnlock = "owner" | "connection" | "viewing";
 
 export interface Poster {
   initials: string;
@@ -202,6 +212,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       addressLine: "Rua da Escola Politécnica 42, 1250-102 Lisboa",
       precision: "exact",
       isUnlocked: true,
+      unlockedVia: "connection",
     },
   },
   {
@@ -537,7 +548,15 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "Traditional building, no lift: two flights up. Not step-free; narrow tiled hallway.",
     billsIncluded: true,
     bedrooms: 2,
-    location: areaLocation("Santa Maria Maior"),
+    // Demo-only "accepted viewing" state, paired with the accepted viewing in
+    // `housingViewings.data.ts`: the address is unlocked, but it never
+    // geocoded, so the map keeps the neighbourhood pin (ENG-469, DES-419).
+    location: {
+      ...areaLocation("Santa Maria Maior"),
+      addressLine: "Rua do Capelão 14, 1100-115 Lisboa",
+      isUnlocked: true,
+      unlockedVia: "viewing",
+    },
   },
 ];
 

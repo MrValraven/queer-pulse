@@ -32,6 +32,7 @@ export const forum: Catalog = {
   "cat.meetups": "Convívio e Apresentações",
   "cat.legal": "Legal e Migração",
   "cat.relationships": "Amor e Relações",
+  "cat.funding": "Financiamento e Apoios",
   "cat.platform": "Plataforma e Sugestões",
 
   // ── As três pessoas moderadoras que publicam em nome do QueerPulse ───────
@@ -176,6 +177,9 @@ export const forum: Catalog = {
     "Uma pessoa moderadora vai dar uma vista de olhos. As denúncias mantêm-se privadas, e {name} não vai saber que foste tu a denunciar.",
   "reportReply.done": "Concluído",
   "reportReply.title": "Denunciar esta resposta",
+  "reportReply.titlePost": "Denunciar esta publicação",
+  "reportReply.subPost":
+    "Conta a uma pessoa moderadora o que está errado com a publicação de {name}. Isto é privado. Ninguém é notificado de que denunciaste.",
   "reportReply.sub":
     "Conta a uma pessoa moderadora o que está errado com a resposta de {name}. Isto é privado. Ninguém é notificado de que denunciaste.",
   "reportReply.reasonGroupAria": "Motivo da denúncia",
@@ -569,6 +573,24 @@ export const forum: Catalog = {
   "composePage.kind.none.bodyPlaceholder":
     "Escreve. Diz o que aconteceu, o que precisas ou o que sabes.",
   "composePage.kind.none.tip": "Escolhe um e a página adapta-se.",
+  "composePage.kind.call.name": "Concurso aberto",
+  "composePage.kind.call.titlePlaceholder":
+    "por exemplo, Residência artística 2027, candidaturas abertas",
+  "composePage.kind.call.bodyPlaceholder":
+    "Para quem é, o que financia e o que aprendeste ao candidatar-te.",
+  "composePage.kind.call.tip":
+    "Junta o prazo e o concurso sai sozinho dos concursos abertos quando passar.",
+  "composePage.kind.call.scaffold":
+    "**Quem se pode candidatar**\n\n\n**O que financia**\n\n\n**Dicas de quem já se candidatou**\n",
+  "composePage.kind.ask.name": "Angariação",
+  "composePage.kind.ask.titlePlaceholder":
+    "Diz para que é o dinheiro, por exemplo “Ajuda o Rui com a recuperação da cirurgia”",
+  "composePage.kind.ask.bodyPlaceholder":
+    "Para quem é, o que aconteceu e o que o dinheiro vai cobrir.",
+  "composePage.kind.ask.tip":
+    "A moderação verifica cada angariação antes de ser publicada.",
+  "composePage.kind.ask.scaffold":
+    "**O que aconteceu**\n\n\n**O que o dinheiro cobre**\n\n\n**Outras formas de ajudar**\n",
 
   // ── Sugestões de arranque (composição vazia) ─────────────────────────────
   "composePage.prompts.asking": "As pessoas perguntam sobre…",
@@ -716,8 +738,7 @@ export const forum: Catalog = {
     "Médicos, clínicas, terapia, saúde mental",
   "composePage.category.arts.description":
     "Cinema, música, exposições, criação",
-  "composePage.category.activism.description":
-    "Ideias, campanhas, o fundo da comunidade",
+  "composePage.category.activism.description": "Ideias, campanhas e propostas",
   "composePage.category.guides.description": "Manuais e índices vivos",
   "composePage.category.jobs.description": "Vagas, competências, ofícios",
   "composePage.category.trans.description": "Saúde, legal, comunidade",
@@ -726,6 +747,8 @@ export const forum: Catalog = {
     "Vistos, residência, mudança de nome, direitos",
   "composePage.category.relationships.description":
     "Namoro, relações, família, amizade",
+  "composePage.category.funding.description":
+    "Concursos abertos, candidaturas, angariação de fundos e como financiar o teu projeto.",
   "composePage.category.platform.description":
     "Erros, ideias, como funciona o site",
   "composePage.category.fallbackDescription":
@@ -813,6 +836,8 @@ export const forum: Catalog = {
     "Disponível em {categories}, onde um nome pode custar a alguém a casa, os cuidados de saúde ou a segurança.",
   "composePage.postingAs.anonymousBlockedByOfficial":
     "Desliga a assinatura QueerPulse Official para publicares sem o teu nome.",
+  "composePage.postingAs.anonymousBlockedByAsk":
+    "As angariações levam sempre o teu nome, para quem doa saber em quem confia.",
   "composePage.postingAs.coAuthorLabel": "Escreve com outra pessoa",
   "composePage.postingAs.coAuthorHint":
     "Essa pessoa pode editar o rascunho e aparece na assinatura.",
@@ -888,6 +913,7 @@ export const forum: Catalog = {
 
   // ── O rodapé e o que trava a publicação ──────────────────────────────────
   "composePage.foot.ready": "Pronto a publicar",
+  "composePage.foot.seeAbove": "Vê a nota acima para publicares.",
   "composePage.foot.notReady":
     "Adiciona um título, contexto suficiente e uma categoria para publicares.",
   "composePage.foot.shortcutHint": "para publicar",
@@ -900,6 +926,26 @@ export const forum: Catalog = {
     "Uma votação precisa de pelo menos duas opções.",
   "composePage.blocker.tooManyPhotos":
     "Quatro fotos é o limite. Remove uma para publicar.",
+  "composePage.blocker.fundingIncomplete":
+    "Junta o link, a entidade, o âmbito e o prazo (ou marca Sem prazo fixo).",
+  "composePage.blocker.fundingAskIncomplete":
+    "Junta o link, o objetivo, para que é e para quem é.",
+  "composePage.blocker.fundingLinkInvalid":
+    "O link tem de começar por https://.",
+  "composePage.blocker.fundingAmountOrder":
+    "Usa euros inteiros, com o montante máximo igual ou acima do mínimo.",
+  "composePage.blocker.fundingDeadlineRange":
+    "Escolhe um prazo entre agora e daqui a dois anos.",
+  "composePage.blocker.fundingEndsOnRange":
+    "Escolhe um último dia dentro do próximo ano.",
+  "composePage.blocker.fundingDuplicate":
+    "Este concurso já foi publicado. Escolhe Publicar na mesma para o publicares outra vez.",
+  "composePage.blocker.fundingHostNotAllowed":
+    "As angariações só podem ter link para {hosts}.",
+  "composePage.blocker.fundingPaymentDetails":
+    "Tira o IBAN ou o número de telemóvel. As doações passam pela página de angariação.",
+  "composePage.blocker.fundingVerification":
+    "As angariações precisam de um telemóvel verificado.",
 
   // ── O menu de publicação ─────────────────────────────────────────────────
   // Construído com t(`…publishMenu.${mode}.label`) sobre `PublishMode`, por
@@ -1007,4 +1053,175 @@ export const forum: Catalog = {
   "composePage.success.postToCommunity": "Publicar também numa comunidade",
   "composePage.success.followReplies": "Avisa-me quando alguém responder",
   "composePage.success.viewPost": "Ver publicação",
+
+  // ── Financiamento e Apoios (concursos abertos, angariações) ──────────────
+  "funding.eligibility.individuals": "Pessoas a título individual",
+  "funding.eligibility.collectives": "Coletivos",
+  "funding.eligibility.associations": "Associações (incluindo IPSS)",
+  "funding.eligibility.companies": "Empresas",
+  "funding.eligibility.students": "Estudantes",
+  "funding.scope.local": "Local",
+  "funding.scope.national": "Nacional",
+  "funding.scope.eu": "UE",
+  "funding.scope.international": "Internacional",
+  "funding.purpose.healthcare": "Saúde",
+  "funding.purpose.housing": "Habitação",
+  "funding.purpose.legal": "Custos jurídicos",
+  "funding.purpose.emergency": "Emergência",
+  "funding.purpose.project": "Um projeto",
+  "funding.purpose.event": "Um evento",
+  "funding.beneficiary.self": "Para mim",
+  "funding.beneficiary.someoneIKnow": "Para alguém que conheço",
+  "funding.beneficiary.project": "O próprio projeto",
+  "funding.view.heading": "Encontrar financiamento",
+  "funding.view.all": "Tudo",
+  "funding.view.open": "Concursos abertos",
+  "funding.view.closing": "A fechar em breve",
+  "funding.view.asks": "Angariações",
+  "funding.view.discussion": "Conversa",
+  "funding.filter.eligibilityLabel": "Quem se pode candidatar",
+  "funding.filter.scopeLabel": "Onde",
+  "funding.filter.anyScope": "Qualquer lado",
+  "funding.filter.clear": "Limpar filtros",
+  "funding.amount.range": "{min} a {max}",
+  "funding.amount.upTo": "Até {max}",
+  "funding.amount.from": "A partir de {min}",
+  "funding.deadline.rolling": "Sem prazo fixo",
+  "funding.deadline.stale": "Sem prazo fixo, atualizado a {date}",
+  "funding.deadline.closesOn": "Fecha a {date}",
+  "funding.deadline.closesInDays_one": "Fecha daqui a {count} dia",
+  "funding.deadline.closesInDays_other": "Fecha daqui a {count} dias",
+  "funding.deadline.closesInHours_one": "Fecha daqui a {count} hora",
+  "funding.deadline.closesInHours_other": "Fecha daqui a {count} horas",
+  "funding.deadline.closesWithinHour": "Fecha dentro de uma hora",
+  "funding.deadline.closed": "Fechou a {date}",
+  "funding.row.eligibilityAria": "Quem se pode candidatar",
+  "funding.facts.heading": "Sobre este concurso",
+  "funding.facts.funder": "Entidade",
+  "funding.facts.amount": "Montante",
+  "funding.facts.deadline": "Prazo",
+  "funding.facts.lisbonTime": "{date}, hora de Lisboa",
+  "funding.facts.yourTime": "No teu fuso horário: {date}",
+  "funding.facts.eligibility": "Quem se pode candidatar",
+  "funding.facts.scope": "Onde",
+  "funding.facts.openCall": "Abrir o concurso",
+  "funding.facts.seeCall": "Ver o concurso",
+  "funding.facts.seeCallAria":
+    "Ver o concurso em {host} (abre num novo separador)",
+  "funding.facts.openCallAria":
+    "Abrir o concurso em {host} (abre num novo separador)",
+  "funding.facts.saveHint": "Guarda-o e lembramos-te 7 dias e 1 dia antes.",
+  "funding.facts.editDetails": "Editar detalhes",
+  "funding.compose.heading": "Sobre o concurso",
+  "funding.compose.link": "Link para o concurso",
+  "funding.compose.linkHint":
+    "A página da própria entidade, a começar por https://",
+  "funding.compose.funder": "Entidade financiadora",
+  "funding.compose.amountMin": "De (€)",
+  "funding.compose.amountMax": "Até (€)",
+  "funding.compose.amountHint":
+    "Euros inteiros. Deixa em branco se o concurso não disser.",
+  "funding.compose.deadline": "Prazo, hora de Lisboa",
+  "funding.compose.rolling": "Sem prazo fixo",
+  "funding.compose.eligibility": "Quem se pode candidatar",
+  "funding.compose.scope": "Onde",
+  "funding.compose.callGuidance":
+    "Apoios verdadeiros nunca cobram para te candidatares.",
+  "funding.compose.checking": "A ver se este concurso já foi publicado…",
+  "funding.compose.duplicate":
+    "Este concurso já foi publicado: {title}. Queres responder lá?",
+  "funding.compose.goToIt": "Ir para lá",
+  "funding.compose.postAnyway": "Publicar na mesma",
+  "funding.compose.askHeading": "Sobre a angariação",
+  "funding.compose.askLink": "Link para a página de angariação",
+  "funding.compose.askLinkHint": "Uma destas: {hosts}",
+  "funding.compose.goal": "Objetivo (€)",
+  "funding.compose.purpose": "Para que é",
+  "funding.compose.beneficiary": "Para quem é",
+  "funding.compose.endsOn": "Último dia (opcional)",
+  "funding.compose.endsOnHint":
+    "Sem data, termina sozinha 90 dias depois de aprovada.",
+  "funding.compose.askReview":
+    "A moderação verifica cada angariação antes de ser publicada.",
+  "funding.gate.title": "Verifica o teu telemóvel para começar uma angariação",
+  "funding.gate.body":
+    "As angariações precisam de um telemóvel verificado para quem doa saber em quem confia.",
+  "funding.gate.cta": "Pedir verificação",
+  "funding.gate.checking": "A confirmar a tua verificação…",
+  "funding.ask.heading": "Sobre esta angariação",
+  "funding.ask.goal": "Objetivo",
+  "funding.ask.purpose": "Para",
+  "funding.ask.endsOn": "Último dia",
+  "funding.ask.safetyStrip":
+    "O QueerPulse nunca mexe em dinheiro. As doações vão para {host}. Verificada pela moderação a {date}.",
+  "funding.ask.safetyStripPending":
+    "O QueerPulse nunca mexe em dinheiro. As doações vão para {host}. A moderação verifica-a antes de ser publicada.",
+  "funding.ask.donate": "Doar em {host}",
+  "funding.ask.donateAria": "Doar em {host} (abre num novo separador)",
+  "funding.ask.markGoalReached": "Marcar objetivo atingido",
+  "funding.ask.close": "Fechar angariação",
+  "funding.ask.confirmGoalTitle":
+    "Marcar esta angariação como objetivo atingido?",
+  "funding.ask.confirmCloseTitle": "Fechar esta angariação?",
+  "funding.ask.confirmBody":
+    "Sai da lista de angariações e o botão para doar desaparece. Não dá para desfazer.",
+  "funding.ask.confirmGoal": "Marcar objetivo atingido",
+  "funding.ask.confirmClose": "Fechar",
+  "funding.ask.endedGoal": "Objetivo atingido. Agradecemos a quem contribuiu.",
+  "funding.ask.ended": "Esta angariação terminou.",
+  "funding.ask.sentBack":
+    "Enviada de novo para a moderação. A tua edição esconde a angariação até ser verificada outra vez.",
+  "funding.ask.goalToast": "Marcada como objetivo atingido",
+  "funding.ask.closedToast": "Angariação fechada",
+  "funding.ask.endFailed": "Não foi possível guardar. Tenta outra vez.",
+  "funding.row.goal": "Objetivo de {amount}",
+  "funding.row.onHost": "em {host}",
+  "funding.row.checked": "Verificada pela moderação",
+  "funding.row.ended": "Terminada",
+  "funding.error.kindCategory":
+    "Concursos e angariações ficam em Financiamento e Apoios.",
+  "funding.error.detailsRequired":
+    "Faltam alguns detalhes. Revê os campos acima.",
+  "funding.error.detailsNotAllowed":
+    "Só concursos e angariações levam estes detalhes.",
+  "funding.error.linkInvalid":
+    "Esse link não funcionou. Usa o endereço completo, a começar por https://.",
+  "funding.error.linkHostNotAllowed":
+    "As angariações só podem ter link para {hosts}.",
+  "funding.error.paymentDetails":
+    "Tira o IBAN ou o número de telemóvel. As doações passam pela página de angariação.",
+  "funding.error.askNotAnonymous":
+    "As angariações não podem ser anónimas, para quem doa saber em quem confia.",
+  "funding.error.verificationRequired":
+    "As angariações precisam de um telemóvel verificado para quem doa saber em quem confia.",
+  "funding.error.askLimit":
+    "Já tens uma angariação aberta ou à espera de revisão. Termina-a antes de começares outra.",
+  "funding.edit.title": "Editar detalhes do concurso",
+  "funding.edit.save": "Guardar detalhes",
+  "funding.edit.cancel": "Cancelar",
+  "funding.edit.saved": "Detalhes guardados",
+  "funding.edit.failed": "Não foi possível guardar. Tenta outra vez.",
+  "funding.edit.titleAsk": "Editar detalhes da angariação",
+  "funding.edit.askReviewNote":
+    "Ao guardar, a angariação volta à moderação antes de aparecer outra vez.",
+  "funding.follow.follow": "Seguir novos concursos",
+  "funding.follow.following": "A seguir novos concursos",
+  "funding.empty.open.title": "Não há concursos abertos agora",
+  "funding.empty.open.body":
+    "Quando alguém partilha uma bolsa, um apoio ou uma residência, aparece aqui.",
+  "funding.empty.closing.title": "Nada fecha esta semana",
+  "funding.empty.closing.body":
+    "Os concursos com prazo nos próximos 7 dias aparecem aqui.",
+  "funding.empty.asks.title": "Não há angariações agora",
+  "funding.empty.asks.body":
+    "Quem tem a conta verificada pode pedir apoio à comunidade. A moderação revê cada pedido primeiro.",
+  "funding.empty.discussion.title": "Ainda não há conversas",
+  "funding.empty.discussion.body":
+    "Dúvidas sobre candidaturas, orçamentos e associações ficam aqui.",
+  "funding.empty.clearFilters": "Limpar filtros",
+  "funding.empty.seeAll": "Ver todas as publicações de financiamento",
+  "funding.empty.postCall": "Partilhar um concurso aberto",
+  "funding.ask.authorControls": "A tua angariação",
+  "funding.follow.followedToast": "Vais saber dos novos concursos",
+  "funding.follow.unfollowedToast": "Deixas de saber dos novos concursos",
 };

@@ -511,26 +511,6 @@ export const system: Catalog = {
     "You’re still signed in. Everything will be here when we’re back.",
   "maintenance.retry": "Try again",
 
-  // ── NewsletterUnsubscribePage.tsx (CNT-19: self-serve newsletter unsubscribe) ─
-  "newsletterUnsubscribe.loading.eyebrow": "Newsletter",
-  "newsletterUnsubscribe.loading.heading": "Confirming your request…",
-  "newsletterUnsubscribe.success.eyebrow": "Unsubscribed",
-  "newsletterUnsubscribe.success.heading": "You're off the <em>list.</em>",
-  "newsletterUnsubscribe.success.lead":
-    "This address is off the list. QueerPulse sends no email, so nothing was arriving here in the first place: this is about your address not sitting on a list you didn't want to be on. You can add it again from the homepage whenever you like.",
-  "newsletterUnsubscribe.alreadyUnsubscribed.eyebrow": "Already unsubscribed",
-  "newsletterUnsubscribe.alreadyUnsubscribed.heading":
-    "Already <em>taken care of.</em>",
-  "newsletterUnsubscribe.alreadyUnsubscribed.lead":
-    "This address came off the list already, and it has stayed off. Nothing is going out to it here or anywhere else: QueerPulse sends no email.",
-  "newsletterUnsubscribe.invalid.eyebrow": "Link not recognised",
-  "newsletterUnsubscribe.invalid.heading":
-    "We couldn't <em>place this link.</em>",
-  "newsletterUnsubscribe.invalid.lead":
-    "This unsubscribe link doesn't match anything on our side. It may be old or mistyped. Nothing is going out to the address either way, since QueerPulse sends no email, but tell the team if something looks wrong and we'll sort it.",
-  "newsletterUnsubscribe.goHomeCta": "Back to homepage",
-  "newsletterUnsubscribe.contactCta": "Talk to the team",
-
   // ── GenesisPage.tsx (one-time founder bootstrap; deleted post-launch) ────
   // "Genesis" is the internal name for this bootstrap flow, kept identical
   // across languages like the other product/brand nouns in this catalog.

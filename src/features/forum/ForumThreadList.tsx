@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { FiMessageSquare, FiX } from "react-icons/fi";
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -32,6 +33,8 @@ export function ForumThreadList({
   onRestore,
   onHistory,
   onTogglePin,
+  hasServerOrder = false,
+  emptyStateSlot,
 }: {
   loading: boolean;
   threads: Thread[];
@@ -42,7 +45,9 @@ export function ForumThreadList({
   pinnedThreads?: Thread[];
   sort: ForumSort;
   setSort: (sort: ForumSort) => void;
-  headerCount: number;
+  /** Null hides the count: a Funding & Grants view lists a slice of the
+   *  category, so the category total would describe a different list. */
+  headerCount: number | null;
   activeTag?: string;
   onClearTag: () => void;
   onTagClick: (tag: string) => void;
@@ -62,38 +67,48 @@ export function ForumThreadList({
   onRestore: (thread: Thread) => void;
   onHistory: (thread: Thread) => void;
   onTogglePin: (thread: Thread) => void;
+  /** The view is ordered by the server (Open calls, Closing soon,
+   *  Fundraisers), so the sort tabs would change nothing, and the category
+   *  count would describe a different list. Both are hidden. */
+  hasServerOrder?: boolean;
+  /** Replaces both generic empty states, for a view with its own copy. */
+  emptyStateSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
     <div>
-      <div className={styles.top}>
-        <div
-          className={styles.sort}
-          role="group"
-          aria-label={t("forum:threadList.sortAria")}
-        >
-          {SORT_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              aria-pressed={sort === tab.id}
-              className={[styles.sortBtn, sort === tab.id && styles.sortBtnOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setSort(tab.id)}
-            >
-              {t(tab.labelKey)}
-            </button>
-          ))}
+      {!hasServerOrder && (
+        <div className={styles.top}>
+          <div
+            className={styles.sort}
+            role="group"
+            aria-label={t("forum:threadList.sortAria")}
+          >
+            {SORT_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                aria-pressed={sort === tab.id}
+                className={[styles.sortBtn, sort === tab.id && styles.sortBtnOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setSort(tab.id)}
+              >
+                {t(tab.labelKey)}
+              </button>
+            ))}
+          </div>
+          {headerCount !== null && (
+            <span className={styles.count} aria-live="polite">
+              {t("forum:threadList.count", {
+                count: headerCount,
+                formatted: fmt.number(headerCount),
+              })}
+            </span>
+          )}
         </div>
-        <span className={styles.count} aria-live="polite">
-          {t("forum:threadList.count", {
-            count: headerCount,
-            formatted: fmt.number(headerCount),
-          })}
-        </span>
-      </div>
+      )}
 
       {activeTag && (
         <div className={styles.activeTag}>
@@ -137,7 +152,8 @@ export function ForumThreadList({
 
       <div>
         {loading && <ForumThreadListSkeleton count={5} />}
-        {!loading && threads.length === 0 && filtered && (
+        {!loading && threads.length === 0 && emptyStateSlot}
+        {!loading && threads.length === 0 && !emptyStateSlot && filtered && (
           <EmptyState
             icon={<FiMessageSquare />}
             title={t("forum:threadList.emptyFiltered.title")}
@@ -148,7 +164,7 @@ export function ForumThreadList({
             }}
           />
         )}
-        {!loading && threads.length === 0 && !filtered && (
+        {!loading && threads.length === 0 && !emptyStateSlot && !filtered && (
           <EmptyState
             icon={<FiMessageSquare />}
             title={t("forum:threadList.emptyAll.title")}

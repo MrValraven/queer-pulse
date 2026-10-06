@@ -108,6 +108,10 @@
 }
 
 /* ── Pending communities (added, not yet enriched by the public feed) ───── */
+.pendingStage {
+  padding-bottom: var(--gap-lg);
+}
+
 .pending {
   margin-top: 28px;
   padding: 16px 18px;

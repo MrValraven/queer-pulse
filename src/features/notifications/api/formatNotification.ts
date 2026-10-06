@@ -8,12 +8,19 @@ import type { NotifType } from "../notifications.types";
 import { ADMIN_QUEUE_ROUTES } from "./adminQueueRoutes";
 import {
   applyLifecycleTokens,
+  fundingDeadlineToken,
   isLifecycleKind,
   LIFECYCLE_KIND_CATEGORY,
   lifecycleKeyFor,
   type LifecycleNotificationKind,
+  openCallsTopicLabel,
 } from "./notificationKindCopy";
 import { notificationReasonOf } from "./notificationReason";
+import {
+  isLegacySafeSpaceOutcome,
+  safeSpacePlaceNameToken,
+  safeSpaceReviewKeyFor,
+} from "./safeSpaceReviewCopy";
 
 /**
  * The notification kinds the backend's `notifications_type_enum` can serve
@@ -194,6 +201,13 @@ export type NotificationKind =
   // as the actor — omitted for an anonymous vouch, which then reads as
   // "Someone" — plus `spaceName`/`spaceSlug` on the payload.
   | "safe_space_vouch"
+  // DES-417. Every step of a safe-space review, told to the nominator, the
+  // venue's owner, the member who flagged it, or staff (mirrors the backend
+  // value added in `AddSafeSpaceReviewNotificationType1829500400000`, written
+  // by `SafeSpaceNotifierService`). No actor, which keeps a flagger anonymous.
+  // Payload: `{ source: "safe-space", action, audience, placeName?, reason?,
+  // listingSlug? }`; see `safeSpaceReviewCopy.ts` for how the copy branches.
+  | "safe_space_review"
   // Sent to a member when a NEW housing listing goes live that matches one of
   // their saved searches with alerts on (mirrors the backend
   // `notifications_type_enum` value added in
@@ -758,6 +772,8 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // A member vouching for your safe space is community activity, same tab as
   // vouch_received.
   safe_space_vouch: "community",
+  // A safe-space review step sits beside the vouches on the same places.
+  safe_space_review: "community",
   // A saved-search match is the platform telling you about a new home — a
   // platform notification, like listing_approved.
   housing_listing_match: "platform",
@@ -992,6 +1008,9 @@ function mentionKeyFor(type: string, payload: unknown): string {
  */
 function moderationKeyFor(type: string, payload: unknown): string {
   if (type !== "moderation_outcome") return type;
+  // DES-417. A safe-space bell written before `safe_space_review` existed
+  // reads as a neutral update on a review.
+  if (isLegacySafeSpaceOutcome(payload)) return "moderation_outcome.safe_space";
   const action = (payload as { action?: string } | null)?.action;
   return action === "warn" ||
     action === "suspend" ||
@@ -2022,6 +2041,8 @@ export function formatNotification(
     key = FALLBACK_KEY;
   } else if (type === "moderation_outcome") {
     key = moderationKeyFor(type, payload);
+  } else if (type === "safe_space_review") {
+    key = safeSpaceReviewKeyFor(payload);
   } else if (type === "event_updated") {
     key = eventUpdatedKeyFor(type, payload);
   } else if (type === "concern_update") {
@@ -2075,6 +2096,16 @@ export function formatNotification(
   mirrorPluralCount(type, payload, tokens);
   // ENG-409: the defensive tokens of the kinds in `notificationKindCopy.ts`.
   applyLifecycleTokens(type, payload, tokens, t);
+  if (type === "funding_deadline_soon" || type === "funding_deadline_changed") {
+    // Overrides the raw ISO `deadline` that `interpolationTokens` copied
+    // through with a Lisbon date and time a person can read.
+    tokens.date = fundingDeadlineToken(type, payload, t, fmt);
+  }
+  const openCallsLabel = openCallsTopicLabel(type, payload, t);
+  if (openCallsLabel) tokens.topicLabel = openCallsLabel;
+  if (type === "safe_space_review") {
+    tokens.placeName = safeSpacePlaceNameToken(payload, t);
+  }
   if (type === "intake_reviewed") {
     // The copy names the form the member actually filled in; the payload only
     // carries its snake_case identifier, so the readable phrase is resolved
@@ -2197,7 +2228,12 @@ export function formatNotification(
     kind: known ? type : null,
     textValues: tokens,
     // PRD-402: the decision's written reason, shown in full under the
-    // sentence; `meta` above is always the kind's label.
-    reason: notificationReasonOf(type, payload),
+    // sentence; `meta` above is always the kind's label. A legacy safe-space
+    // row's `note` is an English status sentence the backend composed, so it
+    // stays off the "Reason from the moderators" line.
+    reason:
+      type === "moderation_outcome" && isLegacySafeSpaceOutcome(payload)
+        ? undefined
+        : notificationReasonOf(type, payload),
   };
 }

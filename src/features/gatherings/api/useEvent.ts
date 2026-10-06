@@ -4,6 +4,7 @@ import { getEvent } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import { detailToGathering } from "./events.adapters";
 import { resolveGathering, type GatheringDetail } from "../data";
+import { gatheringSlugFromParam } from "../gatheringPaths";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 
 export interface EventResult {
@@ -16,13 +17,15 @@ export interface EventResult {
  * live mode calls GET /events/:slug and adapts it to the same `GatheringDetail`
  * view-model the GatheringPage renders.
  *
- * `param` is the raw route param (`<slug>-<shortId>`); we strip the trailing
- * short-id before hitting the API so the backend gets the real slug.
+ * `param` is the raw route param, either our own `<slug>-<shortId>` or the
+ * bare slug that backend-built links carry. `gatheringSlugFromParam` strips a
+ * trailing segment only when it is that slug's real short id, so the backend
+ * always gets the real slug.
  */
 export function useEvent(param: string | undefined) {
   const { demoMode } = useDemoMode();
   const { t } = useTranslation();
-  const slug = (param ?? "").replace(/-[a-z0-9]+$/i, "") || (param ?? "");
+  const slug = gatheringSlugFromParam(param ?? "");
   return useQuery<EventResult>({
     queryKey: eventKeys.detail(param, demoMode),
     // Never fetch without a slug: `GET /events/` is matched by the *list*

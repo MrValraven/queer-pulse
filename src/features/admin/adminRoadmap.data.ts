@@ -1,7 +1,6 @@
 import type {
   AdminRoadmapIdeaDTO,
   AdminRoadmapItemDTO,
-  RoadmapAdminHeroStatDTO,
   RoadmapAuditEntryDTO,
   RoadmapTeamMemberDTO,
 } from "./api/roadmapAdmin.api";
@@ -16,21 +15,19 @@ import { buildRoadmapSeed } from "./adminRoadmap.seed";
  */
 export type AdminRoadmapItem = AdminRoadmapItemDTO;
 export type AdminRoadmapIdea = AdminRoadmapIdeaDTO;
-export type AdminRoadmapHeroStat = RoadmapAdminHeroStatDTO;
 
 export interface DemoRoadmapState {
   items: AdminRoadmapItem[];
   ideas: AdminRoadmapIdea[];
   team: RoadmapTeamMemberDTO[];
   audit: RoadmapAuditEntryDTO[];
-  heroStats: AdminRoadmapHeroStat[];
 }
 
 // ── Demo-override store ──────────────────────────────────────────────────────
 // The DEMO source of truth for the admin roadmap tools. In live mode the
 // server owns this content (`GET/POST/PATCH/DELETE /admin/roadmap/*`); in
 // demo mode there is no backend, so admin edits (create/update/delete an
-// item/idea/team member, reorder, edit hero stats) persist here instead,
+// item/idea/team member, reorder) persist here instead,
 // keyed to localStorage so they survive a reload (mirrors `outbox.ts` /
 // `DeletedConversationsProvider`'s "demo edits are local fiction" idiom).
 // Seeded once per browser (`buildRoadmapSeed()`, in the colocated
@@ -51,8 +48,7 @@ function isDemoRoadmapState(value: unknown): value is DemoRoadmapState {
     Array.isArray(candidate.items) &&
     Array.isArray(candidate.ideas) &&
     Array.isArray(candidate.team) &&
-    Array.isArray(candidate.audit) &&
-    Array.isArray(candidate.heroStats)
+    Array.isArray(candidate.audit)
   );
 }
 

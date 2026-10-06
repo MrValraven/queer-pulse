@@ -185,7 +185,7 @@ export function VisasPage() {
           </Reveal>
           <Reveal className={styles.lawyerEmpty} delay={60}>
             <p>{t("marketing:visas.lawyers.emptyBody")}</p>
-            <Button to={FORUM} variant="ghost">
+            <Button to={FORUM} variant="ghost" className={styles.lawyerCta}>
               {t("marketing:visas.lawyers.forumCta")}{" "}
               <FiArrowRight aria-hidden />
             </Button>

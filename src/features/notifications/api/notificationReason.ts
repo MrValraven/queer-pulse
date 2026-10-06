@@ -12,6 +12,8 @@ const REASON_FIELD: Record<string, string> = {
   verification_update: "reason",
   // The moderator's member-facing note on a warning, suspension, ban or lift.
   moderation_outcome: "note",
+  // DES-417. The moderator's word to a nominator on a declined nomination.
+  safe_space_review: "reason",
   // The reviewer's note on a partner application, swap proposal or resource.
   submission_decided: "reviewNote",
   // A member's own explanation of why they asked staff to review an owner.

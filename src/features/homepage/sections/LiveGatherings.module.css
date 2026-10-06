@@ -1,0 +1,20 @@
+/* A curated gathering row shown to a signed-out visitor is a button that opens
+   the membership explainer. It wears `.row` from Gatherings.module.css; these
+   rules strip the button's own chrome so it reads exactly like a link row.
+   `.row:hover` out-specifies the background reset, so the hover wash stays. */
+.rowButton {
+  width: 100%;
+  margin: 0;
+  font: inherit;
+  text-align: start;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.16);
+  cursor: pointer;
+}
+
+/* Inside a button only spans are valid, so the wrappers a link row draws as
+   blocks are spans made block-level here. */
+.block {
+  display: block;
+}

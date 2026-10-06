@@ -1,21 +1,92 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import type { VolunteerOpportunity } from "./volunteerOpportunities";
+import { FiCheck } from "react-icons/fi";
+import type {
+  TeamMember,
+  VolunteerOpportunity,
+} from "./volunteerOpportunities";
 import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { MembersExplainerModal } from "../homepage/sections/MembersExplainerModal";
 import styles from "./VolunteerOpportunityPage.module.css";
 
-const MEMBER = routes.members;
-
-const Tick = () => (
-  <svg viewBox="0 0 24 24">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
+/**
+ * PRD-454. "Who's already in": a signed-in member goes straight to each
+ * teammate's profile (the directory, for a demo teammate with no slug). A
+ * signed-out visitor would only meet the sign-in wall there, so each pill
+ * opens the members explainer. A live read names nobody to a signed-out
+ * visitor (ENG-474), so for them an empty team becomes one pill that opens the
+ * same explainer under the team intro.
+ */
+function TeamPills({
+  team,
+  isSignedIn,
+}: {
+  team: TeamMember[];
+  isSignedIn: boolean;
+}) {
+  const { t } = useTranslation();
+  const [isExplainerOpen, setIsExplainerOpen] = useState(false);
+  return (
+    <div className={styles.teamRow}>
+      {!isSignedIn && team.length === 0 && (
+        <button
+          type="button"
+          className={styles.teamPill}
+          onClick={() => setIsExplainerOpen(true)}
+        >
+          {t("marketing:volunteerDetail.main.teamSignedOutCta")}
+        </button>
+      )}
+      {team.map((member, index) => {
+        const pillContent = (
+          <>
+            <span
+              aria-hidden
+              className={styles.av}
+              style={{ background: member.background, color: member.color }}
+            >
+              {member.initials}
+            </span>
+            {member.name}
+          </>
+        );
+        const key = member.slug ?? `${member.name}-${index}`;
+        return isSignedIn ? (
+          <Link
+            to={
+              member.slug ? `${routes.members}/${member.slug}` : routes.members
+            }
+            className={styles.teamPill}
+            key={key}
+          >
+            {pillContent}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className={styles.teamPill}
+            key={key}
+            onClick={() => setIsExplainerOpen(true)}
+          >
+            {pillContent}
+          </button>
+        );
+      })}
+      {isExplainerOpen && (
+        <MembersExplainerModal onClose={() => setIsExplainerOpen(false)} />
+      )}
+    </div>
+  );
+}
 
 export function VolunteerOpportunityMain({
   opp,
+  isSignedIn,
 }: {
   opp: VolunteerOpportunity;
+  isSignedIn: boolean;
 }) {
   return (
     <div>
@@ -42,7 +113,7 @@ export function VolunteerOpportunityMain({
           {opp.tasks.map((task) => (
             <div className={styles.taskRow} key={task.title}>
               <div className={styles.taskIc}>
-                <Tick />
+                <FiCheck aria-hidden />
               </div>
               <div>
                 <b>{task.title}</b>
@@ -95,20 +166,8 @@ export function VolunteerOpportunityMain({
             />
           </h2>
           {opp.teamIntro && <p className={styles.teamIntro}>{opp.teamIntro}</p>}
-          {opp.team.length > 0 && (
-            <div className={styles.teamRow}>
-              {opp.team.map((m) => (
-                <Link to={MEMBER} className={styles.teamPill} key={m.name}>
-                  <div
-                    className={styles.av}
-                    style={{ background: m.background, color: m.color }}
-                  >
-                    {m.initials}
-                  </div>
-                  {m.name}
-                </Link>
-              ))}
-            </div>
+          {(opp.team.length > 0 || !isSignedIn) && (
+            <TeamPills team={opp.team} isSignedIn={isSignedIn} />
           )}
         </section>
       )}

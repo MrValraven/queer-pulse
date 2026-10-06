@@ -632,6 +632,8 @@ export const economy: Catalog = {
   // minus the reply-speed claim we cannot back.
   "housingModal.message.successBodyNoReplyTime":
     "Your message is on its way to <strong>{toName}</strong>. You'll get a notification here when they reply. Contact details are shared once you both agree to take it further.",
+  "housingModal.message.unavailable":
+    "This home isn't on the board any more, so your message wasn't sent.",
   "housingModal.message.body":
     "About <strong>{listingTitle}</strong>. Keep it human, a sentence about who you are and why it suits you goes a long way. Your profile is shared with the message.",
   "housingModal.message.note":
@@ -829,7 +831,8 @@ export const economy: Catalog = {
     "Edit the listing with this sorted and it goes back into the queue.",
   "myHousingListings.postedOn": "Posted {date}",
   "myHousingListings.expiresOn": "Expires {date}",
-  "myHousingListings.expiredHint": "Expired, extend it to relist",
+  "myHousingListings.expiredHint":
+    "This home is off the board. Extend it to put it back up.",
   // PRD-244. The only signal that arrives BEFORE a listing lapses. Every other
   // one is post-mortem: the "Expired" pill and the hint above both wait until
   // the home has already dropped off the board. Replaces the flat
@@ -847,9 +850,10 @@ export const economy: Catalog = {
   "myHousingListings.actions.delete": "Delete",
   "myHousingListings.delete.confirmTitle": "Delete this listing?",
   "myHousingListings.delete.confirmBody":
-    "This removes it from the board for good, anyone with the link will get a not-found page. This can't be undone.",
+    "This takes it off the board for good, and anyone with the link gets a not-found page. Anyone with a viewing booked is told it's cancelled. This can't be undone.",
   "myHousingListings.delete.confirmCta": "Delete listing",
-  "myHousingListings.toast.filled": "Marked as filled",
+  "myHousingListings.toast.filled":
+    "Marked as filled. Anyone with a viewing booked has been told it's off.",
   "myHousingListings.toast.available": "Marked as available again",
   "myHousingListings.toast.extended": "Listing extended",
   "myHousingListings.toast.deleted": "Listing deleted",
@@ -1085,6 +1089,8 @@ export const economy: Catalog = {
   "housingViewing.request.successTitle": "Viewing <em>requested.</em>",
   "housingViewing.request.successBody":
     "The lister will pick a time or suggest another. You'll find it under Your viewings.",
+  "housingViewing.request.unavailable":
+    "This home isn't taking viewings any more. It may have been filled or taken off the board.",
 
   // ── Your viewings surface (P2.3) ───────────────────────────────────────
   "housingViewing.list.back": "Housing board",
@@ -1109,6 +1115,30 @@ export const economy: Catalog = {
   "housingViewing.list.decline": "Decline",
   "housingViewing.list.waiting": "Waiting for {name} to reply",
   "housingViewing.list.cancel": "Cancel",
+  "housingViewing.list.cancelViewing": "Cancel viewing",
+  "housingViewing.cancelConfirm.title": "Cancel this viewing?",
+  "housingViewing.cancelConfirm.bodyAsRequester":
+    "{name} gets a notification that the viewing is off.",
+  "housingViewing.cancelConfirm.bodyAsLister":
+    "{name} gets a notification that the viewing is off, and the exact address stops showing for them unless you're connected.",
+  "housingViewing.cancelConfirm.confirm": "Cancel viewing",
+  "housingViewing.cancelConfirm.keep": "Keep it",
+  "housingViewing.list.completeAfter":
+    "You can mark it as done once the viewing has happened.",
+  "housingViewing.list.withdrawRequest": "Withdraw request",
+  "housingViewing.withdrawConfirm.title": "Withdraw this request?",
+  "housingViewing.withdrawConfirm.body":
+    "{name} gets a notification that you've withdrawn it.",
+  "housingViewing.withdrawConfirm.confirm": "Withdraw request",
+  "housingViewing.declineConfirm.title": "Decline this request?",
+  "housingViewing.declineConfirm.body":
+    "{name} gets a notification that you've declined it.",
+  "housingViewing.declineConfirm.confirm": "Decline request",
+  "housingViewing.list.offHint":
+    "This viewing is off. You can ask for another time from the listing.",
+  "housingViewing.list.requestAgain": "Request another time",
+  "housingViewing.list.actionError":
+    "That didn't go through. Please try again.",
   "housingViewing.list.markCompleted": "Mark as done",
   "housingViewing.list.leaveReview": "Leave a review",
   "housingViewing.status.requested": "Requested",
@@ -1264,13 +1294,13 @@ export const economy: Catalog = {
   "landlordPage.intro.title": "Ask for an",
   "landlordPage.intro.em": "introduction.",
   "landlordPage.intro.sub":
-    "We'll pass a warm note to {name} on your behalf. Say a little about what you're looking for and when you'd like to move.",
+    "The QueerPulse housing team reads your note and arranges the introduction to {name}. Say a little about what you're looking for and when you'd like to move.",
   "landlordPage.intro.preset":
     "Hi {firstName}, I found you through the QueerPulse housing board. I'm looking for a place in ",
   "landlordPage.intro.successTitle": "Introduction",
   "landlordPage.intro.successEm": "requested.",
   "landlordPage.intro.successBody":
-    "We've passed your note to <strong>{firstName}</strong>. If they have something that fits, they'll reach out here, no pressure either way.",
+    "Your note is with the QueerPulse housing team, who arrange introductions to <strong>{firstName}</strong>. You'll get a notification here once they've looked at it.",
   "landlordPage.intro.sendLabel": "Request introduction",
   "landlordPage.intro.fallbackName": "A member",
   "landlordPage.save": "Save",
@@ -1609,84 +1639,6 @@ export const economy: Catalog = {
     "Pride logo with no follow-through, HR that didn't know how to help…",
   "writeReviewModal.success.body":
     "Thank you, your anonymous review of {company} is live. Your name is never stored with it, and {company} can't edit or remove what you wrote.",
-
-  // ── GrantsPage (+ Sections / Sidebar) ───────────────────────────────────
-  // Scope note: grant/fellowship listings in grants.data.tsx (names, orgs,
-  // amounts, descriptions) are a curated directory of real external funding
-  // programmes — informational content, not platform chrome. In live mode
-  // this would be a fetched/maintained directory. Left in English.
-  "grants.hero.eyebrow": "Grants & Funding",
-  "grants.hero.title": "Money for <em>queer work.</em>",
-  "grants.hero.lead":
-    "Community-curated guide to grants, fellowships, and funding for LGBTQ+ individuals and organisations, in Portugal and across Europe. Maintained by members who've successfully applied.",
-  "grants.hero.stat.tracked": "opportunities tracked",
-  "grants.hero.stat.open": "currently open",
-  "grants.hero.stat.communityLabel": "Community",
-  "grants.hero.stat.maintained": "maintained",
-
-  "grants.filter.all": "All",
-  "grants.filter.individual": "For individuals",
-  "grants.filter.org": "For organisations",
-  "grants.filter.arts": "Arts & culture",
-  "grants.filter.community": "Community projects",
-  "grants.filter.eu": "EU / International",
-
-  "grants.section.qp": "From <em>QueerPulse</em>",
-  "grants.section.pt": "<em>Portugal</em>, national programmes",
-  "grants.section.eu": "<em>EU & International</em>",
-
-  "grants.status.open": "Open now",
-  "grants.status.rolling": "Rolling",
-  "grants.status.closed": "Closed",
-
-  "grants.card.learnMore": "Learn more",
-
-  "grants.empty.title": "Nothing matches your filter",
-  "grants.empty.description":
-    "No opportunities fit that category right now. Clear the filter to browse every grant and fellowship members are tracking.",
-  "grants.empty.clearFilters": "Clear filters",
-  "grants.emptyLive.title": "Grant tracking is coming soon",
-  "grants.emptyLive.description":
-    "We're building a live, community-maintained feed of grants and fellowships for queer work. Check back soon, or apply for one of our Micro Grants in the meantime.",
-
-  "grants.guide.title": "Writing a <em>strong application</em>",
-  "grants.guide.sub":
-    "Advice from community members who've successfully secured grants, from micro to major.",
-  "grants.guide.step.criteria.title": "Read the criteria twice",
-  "grants.guide.step.criteria.body":
-    "Most rejections are from applications that technically fit but don't mirror the funder's language. Map your project onto their specific wording.",
-  "grants.guide.step.story.title": "Tell a specific story",
-  "grants.guide.step.story.body":
-    "Funders read hundreds of applications. A single specific, human story of impact will land better than broad claims.",
-  "grants.guide.step.community.title": "Show your community",
-  "grants.guide.step.community.body":
-    "Queer-focused funders want to see the community embedded as participants and decision-makers.",
-  "grants.guide.step.review.title": "Ask for a review",
-  "grants.guide.step.review.body":
-    "Before submitting, ask someone not involved to read your application. Fresh eyes catch the assumptions you've stopped seeing.",
-
-  "grants.outro.title": "Your project <em>deserves support.</em>",
-  "grants.outro.sub":
-    "Found something that fits? Apply with confidence, and if you land it, pay it forward by adding the opportunity for the next member.",
-  "grants.outro.cta": "See open grants",
-
-  "grants.subpages.title": "Also in grants",
-  "grants.subpages.microGrants.label": "Micro Grants",
-  "grants.subpages.microGrants.blurb":
-    "Small, fast community grants, apply in minutes.",
-
-  "grants.sidebar.microGrants.title": "Our <em>Micro Grants</em>",
-  "grants.sidebar.microGrants.body":
-    "QueerPulse runs its own micro grant programme (€200–€2,000) for community projects in Lisbon. Faster and simpler than most external grants.",
-  "grants.sidebar.microGrants.cta": "Apply now",
-  "grants.sidebar.skillsExchange.title": "Skills Exchange",
-  "grants.sidebar.skillsExchange.body":
-    "If you need support but grants feel too formal, the barter board connects members who can swap skills, no money involved.",
-  "grants.sidebar.skillsExchange.cta": "Explore the exchange",
-  "grants.sidebar.appHelp.title": "Get <em>application help</em>",
-  "grants.sidebar.appHelp.body":
-    "Members with grant-writing experience offer one-to-one support through mentorship.",
-  "grants.sidebar.appHelp.cta": "Find a mentor",
 
   // ── JobApplyPage (+ header / form / sidebar) ───────────────────────────
   "jobApply.backToJob": "Back to job",
@@ -3828,9 +3780,15 @@ export const economy: Catalog = {
   // ── Housing listing location — approximate area vs exact address (Wave A) ──
   "housingListing.section.location": "Where it is",
   "housingListing.location.approxNote":
-    "You're seeing the rough area for now. The exact address appears once you and the person are connected.",
+    "You're seeing the rough area for now. The exact address appears once you're connected or a viewing is accepted.",
   "housingListing.location.exactNote":
-    "You're connected, so this is the exact location.",
+    "You're connected, so you can see the exact address.",
+  "housingListing.location.viewingExactNote":
+    "Your viewing was accepted, so you can see the exact address.",
+  "housingListing.location.unlockedExactNote":
+    "You can see the exact address of this home.",
+  "housingListing.location.areaPinNote":
+    "The circle on the map shows the neighbourhood. The address is the exact place.",
   // PRD-241, the third state. Before this there were only two: unlocked with an
   // address, and everything else. So a viewer who WAS connected, or whose
   // viewing had been accepted, fell into `approxNote` above and was told the
@@ -3940,6 +3898,12 @@ export const economy: Catalog = {
   "housingGroups.listings.accessLabel": "Access:",
   "housingGroups.listings.empty":
     "No rooms listed here right now. Join to be first to see the next one.",
+  "housingGroups.listings.postedBy": "Posted by {name}",
+  "housingGroups.listings.message": "Message {name}",
+  "housingGroups.listings.report": "Report",
+  "housingGroups.listings.reportAria": "Report {title}",
+  "housingGroups.listings.yourRoom": "You posted this room",
+  "housingGroups.listings.yourRoomLink": "See it in your rooms",
 
   // ── Join a housing group — screened request (Wave A) ──
   "joinGroup.ariaLabel": "Ask to join {name}",
@@ -3959,6 +3923,9 @@ export const economy: Catalog = {
   "joinGroup.sending": "Sending…",
   "joinGroup.sendCta": "Send request",
   "joinGroup.error": "Couldn't send that. Try again in a moment.",
+  "joinGroup.alreadyPending":
+    "You've already asked to join this group. You'll get a notification when there's an answer.",
+  "joinGroup.alreadyMember": "You're already a member of this group.",
   "joinGroup.success.title": "Your request is <em>in.</em>",
   "joinGroup.success.closeLabel": "Done",
   "joinGroup.success.body":

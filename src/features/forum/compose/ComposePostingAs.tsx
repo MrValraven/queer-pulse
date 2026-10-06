@@ -5,6 +5,7 @@ import { Collapse, Toggle } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Language } from "../../../shared/i18n/types";
 import { swapFadeProps } from "./composeSwapFade";
+import type { PostKind } from "./composeThread.types";
 import { CoAuthorPicker } from "./ComposeCoAuthorPicker";
 import { PostingAsIdentity } from "./ComposePostingAsParts";
 import {
@@ -50,6 +51,8 @@ export interface ComposePostingAsProps {
   onAnonymousChange: (isAnonymous: boolean) => void;
   /** The chosen category id. Anonymity is offered for some of them only. */
   category: string | null;
+  /** A fundraiser always carries a name. */
+  kind: PostKind | null;
   coAuthorSlug: string | null;
   /** The credited person, kept by the caller so the picked row survives a
    *  search that no longer returns them. */
@@ -66,6 +69,7 @@ export function ComposePostingAs({
   isAnonymous,
   onAnonymousChange,
   category,
+  kind,
   coAuthorSlug,
   coAuthor,
   onCoAuthorChange,
@@ -77,16 +81,19 @@ export function ComposePostingAs({
 
   const isCategoryAnonymous =
     category !== null && ANONYMOUS_CATEGORIES.includes(category);
-  const isAnonymousOffered = isCategoryAnonymous && !isOfficial;
+  const isAsk = kind === "ask";
+  const isAnonymousOffered = isCategoryAnonymous && !isOfficial && !isAsk;
   const anonymousCategoryNames = useAnonymousCategoryNames(language);
 
-  const anonymousHint = isOfficial
-    ? t("forum:composePage.postingAs.anonymousBlockedByOfficial")
-    : isCategoryAnonymous
-      ? t("forum:composePage.postingAs.anonymousHint")
-      : t("forum:composePage.postingAs.anonymousElsewhere", {
-          categories: anonymousCategoryNames,
-        });
+  const anonymousHint = isAsk
+    ? t("forum:composePage.postingAs.anonymousBlockedByAsk")
+    : isOfficial
+      ? t("forum:composePage.postingAs.anonymousBlockedByOfficial")
+      : isCategoryAnonymous
+        ? t("forum:composePage.postingAs.anonymousHint")
+        : t("forum:composePage.postingAs.anonymousElsewhere", {
+            categories: anonymousCategoryNames,
+          });
 
   return (
     <section

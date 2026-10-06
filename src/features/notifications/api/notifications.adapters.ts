@@ -598,6 +598,34 @@ function goTogetherSourceHref(
     : undefined;
 }
 
+/** The appeal form, pre-selected on `payload.actionId` when the row has one. */
+function appealSubmitHref(payload: Record<string, unknown>): string {
+  const actionId = payload.actionId;
+  return typeof actionId === "string" && actionId
+    ? `${routes.appealSubmit}?action=${encodeURIComponent(actionId)}`
+    : routes.appealSubmit;
+}
+
+/**
+ * Where a safe-space review row goes (DES-417). Staff open the safe-space
+ * console, where the overdue queue is worked. Everyone else opens the venue
+ * the review is about, and a row with no venue (an early nomination step, or
+ * a flag on a listing since deleted) opens the public safe-spaces page. A
+ * legacy row carries no `audience`, so its overdue action marks it as staff.
+ */
+function safeSpaceSourceHref(payload: Record<string, unknown>): string {
+  if (
+    payload.audience === "staff" ||
+    payload.action === "safe_space_queue_overdue"
+  ) {
+    return routes.adminSafeSpaces;
+  }
+  const listingSlug = payload.listingSlug;
+  return typeof listingSlug === "string" && listingSlug
+    ? businessPath(listingSlug)
+    : routes.safeSpaces;
+}
+
 /**
  * Deep-link to the thread/discussion a notification originated from, built
  * from `payload.source` + its slug field: `thread(threadSlug)` for a forum
@@ -878,6 +906,9 @@ function sourceHrefFromPayload(
       ? `${routes.jobs}/${jobSlug}`
       : undefined;
   }
+  // DES-417. Both `safe_space_review` rows and the legacy
+  // `moderation_outcome` rows written before it carry `source: "safe-space"`.
+  if (payload.source === "safe-space") return safeSpaceSourceHref(payload);
   if (payload.source === "listing") {
     const listingSlug = payload.listingSlug;
     return typeof listingSlug === "string" && listingSlug
@@ -1018,14 +1049,8 @@ function sourceHrefFromPayload(
   // ENG-480: when the backend resolved the audit row's own id onto the
   // payload (`actionId`), the link carries it as `?action=`, so the appeal
   // form opens pre-selected on this exact action. A row written before that
-  // backend change, or a source that never carries one (the safe-space
-  // notifier), keeps the bare link.
-  if (payload.source === "moderation") {
-    const actionId = payload.actionId;
-    return typeof actionId === "string" && actionId
-      ? `${routes.appealSubmit}?action=${encodeURIComponent(actionId)}`
-      : routes.appealSubmit;
-  }
+  // backend change keeps the bare link.
+  if (payload.source === "moderation") return appealSubmitHref(payload);
   // A swap proposal carries no `source` field: its payload allowlist passes
   // `barterListingId` and `listingOffer` only, so it is matched on that id
   // directly. It deep-links to the owner's proposal inbox with the listing

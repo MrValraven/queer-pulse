@@ -11,6 +11,7 @@ import type {
   PollCloses,
   PublishMode,
 } from "./composeThread.types";
+import { isFundingKind, toFundingInput } from "./composeFunding";
 
 // ── The draft, as the wire sees it ──────────────────────────────────────────
 // A PURE function, deliberately: the publish hook already owns a mutation, a
@@ -128,6 +129,11 @@ export function toCreateThreadDto({
   const closesAt = closesAtFor(state.closeAfter, state.poll, anchor);
   const isOfficial = canPostAsOfficial && state.isOfficial;
   const pollDto = toPollDto(state.poll, anchor);
+  const fundingDto =
+    isFundingKind(state.kind) && state.funding
+      ? toFundingInput(state.kind, state.funding)
+      : null;
+  const isAsk = state.kind === "ask";
 
   return {
     title: state.title.trim(),
@@ -141,6 +147,7 @@ export function toCreateThreadDto({
     ...(state.photos.length ? { photos: toPhotoDtos(state.photos) } : {}),
     ...(pollDto ? { poll: pollDto } : {}),
     ...(state.kind ? { kind: state.kind } : {}),
+    ...(fundingDto ? { funding: fundingDto } : {}),
     ...(state.contentWarnings.length
       ? // The catalog IDS travel here, since a warning flagged in
         // English has to read as the same warning in Portuguese, which is
@@ -149,7 +156,7 @@ export function toCreateThreadDto({
       : {}),
     // Anonymity outside the categories that offer it is already cleared by
     // `setCategory`, so a true here is always one the member can still see.
-    ...(state.isAnonymous ? { isAnonymous: true } : {}),
+    ...(state.isAnonymous && !isAsk ? { isAnonymous: true } : {}),
     ...(state.coAuthorSlug ? { coAuthorHandle: state.coAuthorSlug } : {}),
     ...(state.neighbourhood ? { neighbourhood: state.neighbourhood } : {}),
     // `auto` is a composer state that means the member never said, and
@@ -159,7 +166,9 @@ export function toCreateThreadDto({
     ...(communitySlug && state.crossPost ? { crossPosted: true } : {}),
     ...(closesAt ? { closesAt } : {}),
     ...(scheduledAt ? { publishAt: scheduledAt } : {}),
-    ...(mode === "review" ? { submitForReview: true } : {}),
+    // A fundraiser always goes to a moderator first; the server forces it too,
+    // so the composer never promises a live post.
+    ...(mode === "review" || isAsk ? { submitForReview: true } : {}),
   };
 }
 

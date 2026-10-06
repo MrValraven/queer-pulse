@@ -35,10 +35,10 @@ export function useRequestHousingViewing() {
   const queryClient = useQueryClient();
   return useMutation<HousingViewingDTO | null, Error, RequestViewingBody>({
     // RequestViewingModal owns this write's error UI: an
-    // AFFIRMING_PLEDGE_REQUIRED 403 opens the pledge prompt (never a toast),
-    // and anything else gets the modal's own message. Without this the global
-    // MutationCache handler would toast "You don't have access to that."
-    // alongside the pledge modal.
+    // AFFIRMING_PLEDGE_REQUIRED 403 opens the pledge prompt, a phone step-up
+    // 403 opens the phone verification prompt, and anything else gets the
+    // modal's own message. Without this the global MutationCache handler would
+    // toast "You don't have access to that." alongside either prompt.
     meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) {
@@ -64,9 +64,30 @@ export type ViewingAction =
   | { id: string; action: "cancel" }
   | { id: string; action: "complete" };
 
+/** Recomputes the server-derived action flags after a demo transition, by the
+ * same rule `toHousingViewingDTO` applies: cancel while requested or accepted,
+ * complete once accepted and the slot has passed. */
+function withDemoActionFlags(viewing: HousingViewingDTO): HousingViewingDTO {
+  const hasSlotPassed =
+    viewing.acceptedSlot !== null &&
+    new Date(viewing.acceptedSlot).getTime() <= Date.now();
+  return {
+    ...viewing,
+    canCancel: viewing.status === "requested" || viewing.status === "accepted",
+    canComplete: viewing.status === "accepted" && hasSlotPassed,
+  };
+}
+
 /** Locally applies a transition to a demo viewing so the prototype UI responds
  * without a backend — mirrors the server state machine's visible effect. */
 function applyDemoTransition(
+  viewing: HousingViewingDTO,
+  input: ViewingAction,
+): HousingViewingDTO {
+  return withDemoActionFlags(applyDemoStatusChange(viewing, input));
+}
+
+function applyDemoStatusChange(
   viewing: HousingViewingDTO,
   input: ViewingAction,
 ): HousingViewingDTO {

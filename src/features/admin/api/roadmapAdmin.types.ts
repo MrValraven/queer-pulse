@@ -150,19 +150,11 @@ export interface RoadmapAuditEntryDTO {
   createdAt: string;
 }
 
-export interface RoadmapAdminHeroStatDTO {
-  label: string;
-  value?: string;
-  note?: string;
-  jade?: boolean;
-}
-
 export interface RoadmapAdminResponseDTO {
   items: AdminRoadmapItemDTO[];
   ideas: AdminRoadmapIdeaDTO[];
   team: RoadmapTeamMemberDTO[];
   audit: RoadmapAuditEntryDTO[];
-  heroStats: RoadmapAdminHeroStatDTO[];
 }
 
 // ── Write bodies ────────────────────────────────────────────────────────────

@@ -1,5 +1,11 @@
 import { type Thread } from "./forum.data";
 import { type ForumSort } from "./api/forum.api";
+import { CALL_LIST_VIEWS } from "./funding/funding.data";
+import type {
+  FundingEligibility,
+  FundingListView,
+  FundingScope,
+} from "./funding/funding.types";
 // DEMO-ONLY persona — read ONLY inside the `demoMode` branch of `canEditThread`
 // below; the live branch must use solely the DTO's `thread.canEdit` flag.
 import { currentUser } from "../members/data/members";
@@ -70,6 +76,9 @@ const CATEGORY_MOVE_WINDOW_MS = 24 * 60 * 60 * 1000;
  * constant is read on the live path or the demo one.
  */
 export function canMoveThreadCategory(thread: Thread): boolean {
+  // An open call or a fundraiser cannot leave Funding & Grants: the server
+  // answers `funding_kind_category_mismatch`, so the move is never offered.
+  if (thread.kind === "call" || thread.kind === "ask") return false;
   if (thread.isDeleted) return false;
   if (thread.canPin || thread.canLock) return true;
   // `canEditTitle` is the THREAD's author flag. On a list card it is the same
@@ -120,6 +129,56 @@ export function mergeOptimisticThreads(
   return [...optimistic, ...serverThreads];
 }
 
+export interface FundingListFilter {
+  view: FundingListView;
+  eligibility: readonly FundingEligibility[];
+  scope: FundingScope | null;
+}
+
+/** DEMO ONLY: the contract's view rules, applied to the mock. Live renders
+ *  the server's narrowed list as it arrives. */
+function matchesFundingView(
+  thread: Thread,
+  filter: FundingListFilter,
+): boolean {
+  const funding = thread.funding ?? null;
+  const isOpenCall =
+    thread.kind === "call" &&
+    (funding?.callState === "open" || funding?.callState === "closing");
+  let isInView: boolean;
+  if (filter.view === "open") isInView = isOpenCall;
+  else if (filter.view === "closing")
+    isInView = thread.kind === "call" && funding?.callState === "closing";
+  else if (filter.view === "asks")
+    isInView = thread.kind === "ask" && funding?.askState === "active";
+  else if (filter.view === "discussion") isInView = funding === null;
+  else isInView = true;
+  if (!isInView || !CALL_LIST_VIEWS.includes(filter.view) || !funding)
+    return isInView;
+  const matchesEligibility =
+    filter.eligibility.length === 0 ||
+    funding.eligibility.some((value) => filter.eligibility.includes(value));
+  const matchesScope = filter.scope === null || funding.scope === filter.scope;
+  return matchesEligibility && matchesScope;
+}
+
+const timeOf = (iso: string | null | undefined) =>
+  iso ? Date.parse(iso) : Number.POSITIVE_INFINITY;
+
+function byDeadline(first: Thread, second: Thread): number {
+  return (
+    timeOf(first.funding?.deadline) - timeOf(second.funding?.deadline) ||
+    second.id - first.id
+  );
+}
+
+function byApproval(first: Thread, second: Thread): number {
+  return (
+    Date.parse(second.funding?.approvedAt ?? "1970-01-01") -
+    Date.parse(first.funding?.approvedAt ?? "1970-01-01")
+  );
+}
+
 /** Filters then sorts the visible thread list. Live: the server already
  *  applied category + tag + q + sort; render as-is (optimistic posts first).
  *  Demo: no server, so filter + sort the mock here. */
@@ -131,12 +190,14 @@ export function filterAndSortThreads(
     tag,
     q,
     sort,
+    funding,
   }: {
     demoMode: boolean;
     cat: string;
     tag: string | undefined;
     q: string;
     sort: ForumSort;
+    funding?: FundingListFilter;
   },
 ): Thread[] {
   if (!demoMode) return visible;
@@ -147,6 +208,12 @@ export function filterAndSortThreads(
   if (q) {
     const needle = q.toLowerCase();
     list = list.filter((thread) => thread.title.toLowerCase().includes(needle));
+  }
+  if (funding && funding.view !== "all") {
+    list = list.filter((thread) => matchesFundingView(thread, funding));
+    if (funding.view === "open" || funding.view === "closing")
+      return [...list].sort(byDeadline);
+    if (funding.view === "asks") return [...list].sort(byApproval);
   }
   if (sort === "new") return [...list].sort((a, b) => b.id - a.id);
   if (sort === "unanswered")

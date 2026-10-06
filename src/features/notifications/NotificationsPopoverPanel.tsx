@@ -44,7 +44,10 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
 
   function renderBody() {
     if (isLoading) return <NotificationsListSkeleton count={4} />;
-    if (isError) {
+    // ENG-501: React Query also sets `isError` when a background refetch, or a
+    // next page loaded on the full page (same cache), failed. Rows already
+    // shown stay; the panel is for an inbox with nothing loaded.
+    if (isError && notifications.length === 0) {
       // A failed fetch must not read as an empty inbox.
       return (
         <div className={styles.state} role="alert">

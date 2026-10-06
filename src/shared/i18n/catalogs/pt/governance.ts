@@ -50,13 +50,10 @@ export const governance: Catalog = {
   "subpageIndex.title": "Lê a letra pequena.",
 
   // ── Saúde da comunidade ─────────────────────────────────────────────────
-  "sections.health.eyebrow":
-    "Relatório de Saúde da Comunidade, 2.º trimestre 2026",
+  "sections.health.eyebrow": "Relatório de saúde da comunidade",
   "sections.health.title": "Os <em>números,</em> com honestidade.",
-  "sections.health.prose1":
-    "Foram apresentadas doze denúncias este trimestre. Todas foram revistas dentro de 48 horas. Três resultaram no afastamento de pessoas da comunidade (violações repetidas do Código de Cuidado após aviso). Oito foram resolvidas com comunicação direta e sem ação formal.",
-  "sections.health.prose2":
-    "Foram apresentadas duas contestações a decisões de moderação. Uma foi aceite. Tínhamos tomado a decisão errada e revertemo-la. Publicamos isto porque a transparência é como se constrói a confiança.",
+  "sections.health.notPublished":
+    "Os números da saúde da comunidade aparecem aqui quando a equipa de governação publicar o primeiro relatório.",
 
   "health.stat.activeMembers.label": "Pessoas ativas",
   "health.stat.retention.label": "Taxa de retenção de pessoas",
@@ -89,9 +86,9 @@ export const governance: Catalog = {
   "steps.reportFiled.title": "Denúncia apresentada",
   "steps.reportFiled.text":
     "Qualquer pessoa da comunidade pode denunciar outra pessoa, um convívio, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais. A pessoa denunciada não é informada de quem a apresentou.",
-  "steps.review.title": "Revisão em 48 horas",
+  "steps.review.title": "Revisão pela equipa de moderação",
   "steps.review.text":
-    "A equipa de moderação revê a denúncia no prazo de 48 horas. Para questões de segurança urgentes, no mesmo dia. Quem apresentou a denúncia é informado em cada etapa.",
+    "A equipa de moderação revê todas as denúncias, começando pelas questões de segurança urgentes.",
   "steps.decision.title": "Decisão e comunicação",
   "steps.decision.text":
     "Resultados possíveis: nenhuma ação (com explicação), comunicação direta, aviso, suspensão temporária, remoção permanente. A pessoa denunciada é informada do resultado, mas quem denunciou não.",
@@ -139,7 +136,7 @@ export const governance: Catalog = {
     "Uma escala progressiva para todos os convívios pagos. Ninguém é excluído por motivos financeiros.",
 
   // ── Finanças ────────────────────────────────────────────────────────────
-  "sections.finances.eyebrow": "2.º trimestre 2026 · Transparência financeira",
+  "sections.finances.eyebrow": "Transparência financeira",
   "sections.finances.title":
     "Quanto custa, quanto entra, <em>para onde vai.</em>",
   "sections.finances.intro":
@@ -165,6 +162,12 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.communityEvents": "eventos comunitários",
   "sections.finances.noCorporateFunding":
     "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro, e a comunidade vai votar sobre isso. Vê Propostas e votações abaixo.",
+  "sections.finances.eyebrowPeriod": "{period} · Transparência financeira",
+  "sections.finances.quarterLabel": "{quarter}.º trimestre de {year}",
+  "sections.finances.notPublished":
+    "Os relatórios financeiros aparecem aqui quando o primeiro trimestre for publicado.",
+  "sections.finances.provenance":
+    "Números introduzidos pela equipa de governação em {date}.",
 
   // ── Propostas e votações ─────────────────────────────────────────────────
   "sections.proposals.eyebrow": "Propostas e votações",
@@ -277,14 +280,14 @@ export const governance: Catalog = {
   "decisions.slidingScale.lead":
     "Maio de 2026: Introduzida escala progressiva para os convívios.",
   "decisions.slidingScale.body":
-    "Na sequência de uma discussão no fórum iniciada por Catarina Vaz, o conselho concordou em implementar uma escala progressiva para todos os convívios pagos. 23 pessoas participaram.",
+    "Na sequência de uma discussão no fórum, o conselho concordou em implementar uma escala progressiva para todos os convívios pagos.",
   "decisions.forumLaunched.lead": "Abril de 2026: Fórum lançado.",
   "decisions.forumLaunched.body":
-    "Na sequência de pedidos da comunidade por um espaço para discutir temas mais longos. Categorias e diretrizes co-desenhadas com 12 pessoas ao longo de três semanas.",
+    "Na sequência de pedidos da comunidade por um espaço para discutir temas mais longos. Categorias e diretrizes co-desenhadas com pessoas da comunidade.",
   "decisions.visibilityDefaults.lead":
     "Março de 2026: Predefinições de visibilidade tornadas mais conservadoras.",
   "decisions.visibilityDefaults.body":
-    'Quem chega agora à comunidade passa a ter, por predefinição, "apenas rede" em vez de "aberto", podendo abrir mais quando se sentir confortável.',
+    'Quem chega agora à comunidade começa com "apenas rede" por predefinição, e pode abrir mais quando se sentir confortável.',
   "decisions.languageToggle.lead":
     "Fevereiro de 2026: Alternador de idioma adicionado.",
   "decisions.languageToggle.body":
@@ -297,7 +300,7 @@ export const governance: Catalog = {
   // confirmação em 48 horas e uma atualização por email que nunca podia
   // chegar.
   "sections.raise.intro":
-    "Usa este formulário para denunciar uma pessoa, um conteúdo, uma decisão da plataforma, ou uma preocupação sobre como o QueerPulse é gerido. Todas as submissões são confidenciais, e comprometemo-nos a dar resposta no prazo de três dias.",
+    "Usa este formulário para denunciar uma pessoa, um conteúdo, uma decisão da plataforma, ou uma preocupação sobre como o QueerPulse é gerido. Todas as submissões são confidenciais, e alguém da equipa de governação lê cada uma.",
   "sections.raise.cardTitle": "Submeter uma preocupação",
   "sections.raise.cardText":
     "A tua identidade permanece confidencial. O QueerPulse não envia emails, por isso ao submeteres recebes um código de referência: guarda-o, e podes ver a qualquer momento o que aconteceu à tua preocupação.",
@@ -520,7 +523,7 @@ export const governance: Catalog = {
     "Guarda este código num sítio a que consigas voltar. Não guardamos nenhuma cópia que te possa ser devolvida, e o QueerPulse não envia emails, por isso esta é a única forma de consultares a tua preocupação mais tarde.",
   "concernStatus.submitted.checkCta": "Ver esta preocupação",
   "concernStatus.submitted.whatHappensNext":
-    "Alguém da equipa de governação lê todas as preocupações. Comprometemo-nos a dar-lhe uma primeira leitura em três dias. Volta com o teu código para veres quando alguém a pegou e como terminou.",
+    "Alguém da equipa de governação lê todas as preocupações. Volta com o teu código para veres quando alguém a pegou e como terminou.",
   "concernStatus.submitted.anotherCta": "Levantar outra preocupação",
 
   "concernStatus.meta.title": "Consultar uma preocupação | QueerPulse",
@@ -538,7 +541,7 @@ export const governance: Catalog = {
 
   "concernStatus.received.title": "Já a temos",
   "concernStatus.received.body":
-    "A tua preocupação está registada e à espera. Ainda ninguém a abriu. Comprometemo-nos a dar-lhe uma primeira leitura em três dias, por isso volta cá com este código.",
+    "A tua preocupação está registada e à espera. Ainda ninguém a abriu. Volta cá com este código para veres quando alguém a pegar.",
   "concernStatus.reviewing.title": "Alguém está a analisá-la",
   "concernStatus.reviewing.body":
     "Alguém da equipa de governação pegou na tua preocupação e está a trabalhar nela. Volta cá com este código para veres como termina.",

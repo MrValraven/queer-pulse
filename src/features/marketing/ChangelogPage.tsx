@@ -83,6 +83,7 @@ export function ChangelogPage() {
           <HubBackLink
             to={routes.roadmap}
             label={t("marketing:changelog.hero.backLabel")}
+            text={t("marketing:changelog.hero.backText")}
           />
           <div className={styles.header}>
             <div className={styles.eye}>

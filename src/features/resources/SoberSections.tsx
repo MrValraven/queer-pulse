@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { STATS, VENUES, VOICES, RECOVERY_OPTS } from "./soberPage.data";
 import styles from "./SoberPage.module.css";
 
@@ -127,8 +128,18 @@ interface SoberRecoverySectionProps {
   linkMap: Record<string, string>;
 }
 
+// Live mode lists only the options that exist outside the demo: the peer group
+// and one-to-one peer talks are demo fixtures.
+const LIVE_RECOVERY_LINK_KEYS = ["WELLBEING", "RESOURCES"];
+
 export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const recoveryOptions = demoMode
+    ? RECOVERY_OPTS
+    : RECOVERY_OPTS.filter((option) =>
+        LIVE_RECOVERY_LINK_KEYS.includes(option.linkKey),
+      );
   return (
     <div className={`${styles.sec} ${styles.secCream}`}>
       <div className="wrap">
@@ -141,7 +152,7 @@ export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
           </h3>
           <p>{t("resources:sober.recovery.body")}</p>
           <div className={styles.recoveryOpts}>
-            {RECOVERY_OPTS.map((o) => (
+            {recoveryOptions.map((o) => (
               <div className={styles.recOpt} key={o.titleKey}>
                 <div className={styles.recTitle}>{t(o.titleKey)}</div>
                 <div className={styles.recDesc}>{t(o.descriptionKey)}</div>

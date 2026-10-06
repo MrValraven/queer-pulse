@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   castRoadmapVote,
@@ -39,9 +40,12 @@ export interface MyRoadmapVotesResult {
  */
 export function useMyRoadmapVotesQuery(): MyRoadmapVotesResult {
   const { demoMode } = useDemoMode();
+  const { loggedIn, checking } = useAuth();
   const query = useQuery({
     queryKey: ["roadmap-my-votes", demoMode],
     queryFn: async () => (demoMode ? [] : await getMyRoadmapVotes()),
+    // The route is member-only: a visitor's read would only 401.
+    enabled: demoMode || (loggedIn && !checking),
   });
   return {
     votedIds: new Set(query.data ?? []),
@@ -53,6 +57,7 @@ export function useMyRoadmapVotesQuery(): MyRoadmapVotesResult {
 
 export function useRoadmapVote() {
   const { demoMode } = useDemoMode();
+  const { loggedIn, checking } = useAuth();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: ({
@@ -69,7 +74,13 @@ export function useRoadmapVote() {
       });
     },
   });
-  return { demoMode, vote: mutation.mutate, pending: mutation.isPending };
+  return {
+    demoMode,
+    /** A signed-out visitor's vote opens a sign-in prompt and sends no request. */
+    isSignInRequired: !demoMode && !checking && !loggedIn,
+    vote: mutation.mutate,
+    pending: mutation.isPending,
+  };
 }
 
 export function useSubmitRoadmapIdea() {

@@ -11,6 +11,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MembersExplainerModal } from "../homepage/sections/MembersExplainerModal";
 import type {
   BuildingItem,
   NotBuildingItem,
@@ -138,25 +139,35 @@ export function PlannedCard({ item, column = "planned" }: PlannedCardProps) {
   const fmt = useFormat();
   const { showToast } = useToast();
   const myVotes = useMyRoadmapVotes();
-  const { demoMode, vote: castVote } = useRoadmapVote();
+  const { demoMode, isSignInRequired, vote: castVote } = useRoadmapVote();
   const [justVoted, setJustVoted] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   const voted = justVoted || myVotes.has(item.id);
   const count = item.votes + (demoMode && justVoted ? 1 : 0);
 
   function toggleVote() {
     if (voted) return;
+    if (isSignInRequired) {
+      setIsSignInOpen(true);
+      return;
+    }
     setJustVoted(true);
-    showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
-    if (!demoMode) {
-      castVote(
-        { targetType: "item", targetId: item.id },
+    if (demoMode) {
+      showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
+      return;
+    }
+    castVote(
+      { targetType: "item", targetId: item.id },
+      {
+        onSuccess: () =>
+          showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success"),
         // Roll back the optimistic "voted" state on failure so the button
         // re-enables and the member can retry (the global error toast
         // already fires since this mutation doesn't set meta.silentError).
-        { onError: () => setJustVoted(false) },
-      );
-    }
+        onError: () => setJustVoted(false),
+      },
+    );
   }
 
   return (
@@ -194,6 +205,12 @@ export function PlannedCard({ item, column = "planned" }: PlannedCardProps) {
           {t("marketing:roadmap.card.votesSuffix")}
         </button>
       </div>
+      {isSignInOpen && (
+        <MembersExplainerModal
+          context="roadmap"
+          onClose={() => setIsSignInOpen(false)}
+        />
+      )}
     </article>
   );
 }

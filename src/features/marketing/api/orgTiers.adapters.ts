@@ -5,10 +5,9 @@ function toCta(dto: OrgTierDTO): OrgTierCta {
   if (dto.ctaType === "link") {
     return { kind: "link", label: dto.ctaLabel, to: dto.ctaTarget ?? "/" };
   }
-  if (dto.ctaType === "propose") {
-    return { kind: "propose", label: dto.ctaLabel };
-  }
-  return { kind: "toast", label: dto.ctaLabel };
+  // `propose`, plus a legacy `toast` row: that type only echoed its own label
+  // back, so its card now leads to the partner application like `propose`.
+  return { kind: "propose", label: dto.ctaLabel };
 }
 
 export function dtoToOrgTier(dto: OrgTierDTO): OrgTier {

@@ -1,4 +1,4 @@
-/* Mode toggle (video / in person) — a two-option segmented control. */
+/* Mode toggle (video / in person): a two-option segmented control. */
 .modeRow {
   display: flex;
   gap: 10px;
@@ -97,6 +97,9 @@
   text-transform: uppercase;
   color: var(--ink-40);
   margin-block: 26px 12px;
+  /* The heading takes focus after an action moves a card here; fit-content
+     keeps the focus ring hugging the label. */
+  inline-size: fit-content;
 }
 
 .list {
@@ -139,7 +142,7 @@
 }
 .stRequested {
   color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.09);
+  background: rgba(var(--line-rgb), 0.09);
 }
 .stAccepted {
   color: var(--jade);
@@ -174,10 +177,37 @@
   line-height: 1.55;
   margin-bottom: 12px;
 }
+.noteAuthor {
+  font-weight: 600;
+  color: var(--ink);
+}
 .cardActions {
+  --card-actions-gap: 8px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--card-actions-gap);
+}
+@media (pointer: coarse) {
+  .cardActions :is(button, a) {
+    min-height: 44px;
+  }
+}
+/* The accept buttons as one full-width line of the action row, wrapping on
+   the same gap, so the buttons after it start the next line. */
+.acceptRow {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  gap: var(--card-actions-gap);
+}
+/* A short status line sitting in the action row beside the buttons
+   ("Waiting on…", "You can mark it as done once…"): the row's gap spaces it,
+   and it centres on the button line. */
+.actionHint {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.55;
+  align-self: center;
 }
 
 .empty {

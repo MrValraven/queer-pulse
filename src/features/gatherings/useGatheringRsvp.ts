@@ -80,7 +80,7 @@ export interface GatheringRsvpState {
 export function useGatheringRsvp(
   gathering: GatheringDetail,
 ): GatheringRsvpState {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const rsvp = useRsvp(gathering.slug);
@@ -140,7 +140,7 @@ export function useGatheringRsvp(
   // button looking broken. It never names who decided it — see `rsvpErrors.ts`.
   const onError = (error: unknown) => {
     revert();
-    showToast(rsvpErrorMessage(error, t), "error");
+    showToast(rsvpErrorMessage(error, t, language), "error");
   };
 
   const goOrWaitlist = () => {

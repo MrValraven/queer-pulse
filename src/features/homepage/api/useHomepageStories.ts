@@ -1,17 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useReaderLanguage } from "../../magazine/api/useReaderLanguage";
 import {
   getArticles,
   type ArticleListItemDTO,
 } from "../../magazine/api/magazine.api";
+import {
+  articleToStoryCard,
+  landingStoryToStoryCard,
+  type HomepageStoryCard,
+} from "../sections/liveStories.adapters";
+import { useLandingFeaturesPublic } from "./useLandingFeatures";
 
 /** One feature story plus the two cards the `.row` grid holds. */
-const HOMEPAGE_STORY_LIMIT = 3;
+export const HOMEPAGE_STORY_LIMIT = 3;
 
 export interface HomepageStoriesResult {
-  stories: ArticleListItemDTO[];
+  stories: HomepageStoryCard[];
   isLoading: boolean;
   /** True when the request failed. The row renders nothing either way, so this
    *  exists to keep "nothing published yet" and "the request fell over" from
@@ -22,22 +29,27 @@ export interface HomepageStoriesResult {
 }
 
 /**
- * The most recently published magazine pieces, for the homepage's live
- * "told in our own words" row.
+ * The magazine pieces for the homepage's live "told in our own words" row,
+ * from one of two sources depending on who is looking:
  *
- * Same shape of constraint as `useHomepageGatherings`: `GET /magazine/articles`
- * sits behind `ActiveMemberGuard` and the public `GET /landing/features` feed
- * has no stories slice, so this is gated on a signed-in session rather than
- * firing a guaranteed 403 from the public marketing page. A published-story
- * slice on `/landing/features` is what would open it to signed-out visitors.
+ * - **Signed-in member**: the most recently published pieces
+ *   (`GET /magazine/articles`), which sits behind `ActiveMemberGuard`.
+ * - **Signed-out visitor**: the admin-curated story slice of the public
+ *   `GET /landing/features`, in the order the admin set. The backend drops a
+ *   curated story once it is unpublished or deleted, and the CDN-cached
+ *   response catches up within a few minutes. Nothing curated: the row
+ *   renders nothing.
  *
- * Demo mode renders the static `Stories` section instead, so the query stays
- * disabled there and no mock can reach the live path.
+ * While the session check is still running neither source is chosen and the
+ * row stays empty. Demo mode renders the static `Stories` section instead, so
+ * the magazine query stays disabled there and no mock can reach the live path.
  */
 export function useHomepageStories(): HomepageStoriesResult {
   const { demoMode } = useDemoMode();
   const { loggedIn, checking } = useAuth();
-  const isEnabled = !demoMode && loggedIn && !checking;
+  const { t } = useTranslation();
+  const isMemberSource = !demoMode && loggedIn && !checking;
+  const isCuratedSource = !demoMode && !loggedIn && !checking;
 
   // PRD-110 — the same language the magazine's own lists send. Without it a
   // Portuguese reader gets English headlines on the one screen everybody
@@ -45,25 +57,40 @@ export function useHomepageStories(): HomepageStoriesResult {
   // because it changes WHICH rows come back, not just how they are formatted.
   const readerLanguage = useReaderLanguage();
 
-  const query = useQuery<ArticleListItemDTO[]>({
+  const magazineQuery = useQuery<ArticleListItemDTO[]>({
     queryKey: ["homepage-stories", readerLanguage],
-    enabled: isEnabled,
+    enabled: isMemberSource,
     queryFn: async () => {
       const page = await getArticles({ page: 1, lang: readerLanguage });
       return page.items;
     },
   });
+  // Shares its query key with every other `Live*` section on the page, so
+  // this adds no request of its own.
+  const curated = useLandingFeaturesPublic();
+
+  if (isCuratedSource) {
+    return {
+      stories: curated.stories
+        .slice(0, HOMEPAGE_STORY_LIMIT)
+        .map((feature) => landingStoryToStoryCard(feature, t)),
+      isLoading: curated.isLoading,
+      isError: curated.isError,
+      refetch: curated.refetch,
+    };
+  }
 
   // Web-only/unpublished pieces carry a null `publishedAt` — the public
   // homepage only ever shows something that has actually been published.
-  const stories = (query.data ?? [])
+  const stories = (magazineQuery.data ?? [])
     .filter((article) => Boolean(article.publishedAt))
-    .slice(0, HOMEPAGE_STORY_LIMIT);
+    .slice(0, HOMEPAGE_STORY_LIMIT)
+    .map((article) => articleToStoryCard(article, t));
 
   return {
     stories,
-    isLoading: isEnabled && query.isPending,
-    isError: isEnabled && query.isError,
-    refetch: () => void query.refetch(),
+    isLoading: isMemberSource && magazineQuery.isPending,
+    isError: isMemberSource && magazineQuery.isError,
+    refetch: () => void magazineQuery.refetch(),
   };
 }

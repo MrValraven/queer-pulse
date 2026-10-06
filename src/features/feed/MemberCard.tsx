@@ -1,192 +1,150 @@
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { Avatar, Button } from "../../shared/components/ui";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { useMemberContact } from "../connect/useMemberContact";
-import { useSocial } from "../../app/providers/useSocial";
-import { memberAvatar } from "../members/data/members";
-import { useIsMemberCardSplit } from "../members/memberCardLayout";
+import type { AvatarTint } from "../../shared/components/ui";
 import { tintForSlug } from "../../shared/api/refs";
-import { initials, relativeTime } from "./api/feed.adapters";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useMemberContact } from "../connect/useMemberContact";
+import { useIsMemberCardSplit } from "../members/memberCardLayout";
+import { initials as initialsFor } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
-import { FeedReasonLine } from "./FeedPostActions";
-import { DEMO_MEMBER } from "./feedCards.data";
-import { MemberCardSplit } from "./MemberCardSplit";
+import { FeedCardShell } from "./FeedCard";
+import { MemberContactButton } from "./MemberContactButton";
 import {
-  FeedActionLink,
-  FeedActions,
-  FeedAvatarLink,
-  FeedCardHead,
-  FeedCardShell,
-  FeedIdentity,
-  FeedProofStack,
-  FeedQuote,
-  FeedTagRow,
-} from "./FeedCard";
-import styles from "./FeedCard.module.css";
-import memberStyles from "./MemberCard.module.css";
+  compactJoinedTimeLabel,
+  memberContextLabel,
+  resolveMemberContext,
+} from "./memberCardContext";
+import {
+  MemberAvatarLink,
+  MemberCardBody,
+  MemberCardHead,
+  MemberNameBlock,
+  MemberPortraitColumn,
+} from "./MemberCardParts";
+import styles from "./MemberCard.module.css";
+
+/** Everything the card shows, read from its `new_member` feed item. Live and
+ *  demo both pass one (the demo builds live-shaped items in
+ *  `demoNewMembers.data.ts`). */
+function useMemberCardModel(item: FeedItem) {
+  const { t } = useTranslation();
+  const formatters = useFormat();
+  const slug = item.actor?.handle ?? "";
+  const name = item.title;
+  const { connected, isSelf } = useMemberContact(slug);
+
+  const context = resolveMemberContext({
+    reason: item.reason,
+    reasonSubject: item.reasonSubject,
+    mutualConnectionCount: item.mutualConnectionCount,
+    sharedInterests: item.sharedInterests,
+    isConnected: connected,
+  });
+
+  const bio = item.summary.trim() || undefined;
+  const neighbourhood = item.neighbourhood ?? undefined;
+  // Every interest goes through: the tag row folds what does not fit on its
+  // one line into a "+N" chip.
+  const interests = item.interests ?? [];
+  const tint: AvatarTint = slug ? tintForSlug(slug) : "plum";
+
+  return {
+    slug,
+    name,
+    hasAction: slug !== "" && !isSelf,
+    isConnected: connected,
+    contextLabel: memberContextLabel(context, t),
+    timeLabel: compactJoinedTimeLabel(item.createdAt, t, formatters),
+    dateTime: item.createdAt,
+    pronouns: item.actor?.pronouns ?? undefined,
+    neighbourhood,
+    bio,
+    interests,
+    sharedInterests: item.sharedInterests,
+    isEmpty: !bio && !neighbourhood && interests.length === 0,
+    photo: {
+      slug,
+      name,
+      initials: initialsFor(name),
+      tint,
+      src: item.actor?.avatarUrl ?? undefined,
+    },
+  };
+}
 
 /**
- * "New member" card for the feed's People tab. With no `item`, renders the
- * demo prototype's scripted `DEMO_MEMBER` (Kai Larsson) mock, including the
- * Follow affordance (demo-only: `useSocial().followEnabled` is false in live,
- * where there's no member/author-level follow endpoint). With a live
- * `FeedItem`, renders straight off its fields: pronouns come from
- * `actor.pronouns` (shown next to the name), the visibility-gated
- * `neighbourhood` becomes the meta line, and public `interests` become chips.
- * Only the common-communities chips the demo mock shows aren't part of the
- * aggregate, so they're the one thing left out, unguessed.
+ * The feed's "New member" card, in one card per person (the People tab, and
+ * the All tab when only one person joined).
  *
- * Above the mobile cutover the same content goes to `MemberCardSplit`, which
- * puts a full-height portrait in a left column and keeps the pronouns inline
- * after the name. Phones get the stacked card below: an 80px round avatar with
- * the name block beside it, top aligned with the photo, stacking the name and
- * staff badge, then the pronouns on their own line, then the meta line.
+ * Above the mobile cutover (`useIsMemberCardSplit`) the photo fills a left
+ * column at 35% of the card's width, flush with its top, left and bottom
+ * edges, with the head, identity, bio, chips and action in the column beside
+ * it. At the cutover and below, the head sits on top, then a 64px round
+ * avatar beside the name block, then the rest at full width.
+ *
+ * Both layouts lead with one per-person context line in place of a repeated
+ * "New member" label, then put what the member wrote about themselves first:
+ * the bio, up to four lines with a Read more toggle, then their interests on
+ * one row with the ones the viewer shares leading. Coral stays on the single
+ * action, and groups space on two values: 4px inside a group, 12px between
+ * groups.
  */
-export function MemberCard({ item }: { item?: FeedItem } = {}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-
-  const slug = item ? (item.actor?.handle ?? "") : DEMO_MEMBER.slug;
-  const name = item?.title ?? DEMO_MEMBER.name;
-  const { connected, contact } = useMemberContact(slug || "");
-  const { isFollowing, toggleFollow } = useSocial();
+export function MemberCard({ item }: { item: FeedItem }) {
+  const model = useMemberCardModel(item);
   const isSplit = useIsMemberCardSplit();
-
-  const timestamp = item
-    ? relativeTime(item.createdAt, fmt)
-    : t("feed:card.newMember.today");
-  const quote = item ? item.summary : DEMO_MEMBER.quote;
-  // Pronouns render beside the name (inline on desktop, on their own line on
-  // phones), so the demo meta line drops them and keeps just
-  // neighbourhood · occupation. Live items
-  // carry a visibility-gated `neighbourhood` (null when the profile isn't
-  // public) as their meta line, and their public tags as interest chips.
-  const pronouns = item ? (item.actor?.pronouns ?? null) : DEMO_MEMBER.pronouns;
-  const meta = item
-    ? (item.neighbourhood ?? undefined)
-    : `${DEMO_MEMBER.hood} · ${DEMO_MEMBER.occupation}`;
-  // Interest chips: the member's public tags, capped so a long list can't
-  // overrun the card (it's a preview, same spirit as the demo's three chips).
-  const interests = item ? (item.interests ?? []).slice(0, 4) : [];
-  const avatarSrc = item
-    ? (item.actor?.avatarUrl ?? undefined)
-    : memberAvatar(DEMO_MEMBER.slug)?.photo;
-  const avatarInitials = item ? initials(name) : DEMO_MEMBER.initials;
-  const tint = item ? (slug ? tintForSlug(slug) : "plum") : DEMO_MEMBER.tint;
-  const profileLink = item?.link ?? `/profile/${DEMO_MEMBER.slug}`;
-
-  const sayHi = (
-    <Button variant="primary" size="sm" onClick={() => contact({ slug, name })}>
-      {connected ? t("connect:contact.message") : t("feed:action.connect")}
-    </Button>
+  const head = (
+    <MemberCardHead
+      contextLabel={model.contextLabel}
+      timeLabel={model.timeLabel}
+      dateTime={model.dateTime}
+    />
   );
-  // Follow is a demo-only affordance, gated off in live mode (no
-  // member/author-level follow endpoint there), so only render it when
-  // there's no live `item` to render from.
-  const follow = !item ? (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={() => toggleFollow(slug)}
-      aria-pressed={isFollowing(slug)}
-    >
-      {isFollowing(slug) ? t("feed:action.following") : t("feed:action.follow")}
-    </Button>
-  ) : undefined;
-
-  const eyebrowLabel = t("feed:card.eyebrow.newMember");
-  // The desktop split card keeps the pronouns inline after the name.
-  const inlineNameBlock = (
-    <span>
-      {name}
-      {pronouns && <span className={styles.pronoun}>{pronouns}</span>}{" "}
-      <MemberStaffBadge slug={slug || undefined} />
-    </span>
+  const nameBlock = (
+    <MemberNameBlock
+      slug={model.slug}
+      name={model.name}
+      pronouns={model.pronouns}
+      neighbourhood={model.neighbourhood}
+    />
   );
-  // Everything below the identity row, shared by both layouts.
-  const details = (
-    <>
-      {quote && <FeedQuote>{quote}</FeedQuote>}
-      <FeedReasonLine reason={item?.reason} subject={item?.reasonSubject} />
-      {!item && (
-        <FeedTagRow tags={DEMO_MEMBER.tags.map((label) => ({ label }))} />
-      )}
-      {interests.length > 0 && (
-        <FeedTagRow tags={interests.map((label) => ({ label }))} />
-      )}
-      {!item && (
-        <FeedProofStack
-          avatars={DEMO_MEMBER.commonCommunities}
-          label={t("feed:proof.communitiesInCommon", {
-            count: DEMO_MEMBER.commonCommunities.length,
-          })}
-        />
-      )}
-      <FeedActions
-        primary={sayHi}
-        secondary={follow}
-        link={
-          <FeedActionLink to={profileLink}>
-            {t("feed:action.profile")}
-          </FeedActionLink>
-        }
-      />
-    </>
+  const body = (
+    <MemberCardBody
+      bio={model.bio}
+      interests={model.interests}
+      sharedInterests={model.sharedInterests}
+      isEmpty={model.isEmpty}
+      isConnected={model.isConnected}
+    />
+  );
+  // Wrapped so the button keeps its own width in the column instead of
+  // stretching, and left out entirely when there is no button to hold.
+  const action = model.hasAction && (
+    <div className={styles.action}>
+      <MemberContactButton slug={model.slug} name={model.name} />
+    </div>
   );
 
   if (isSplit) {
     return (
-      <MemberCardSplit
-        slug={slug}
-        name={name}
-        initials={avatarInitials}
-        tint={tint}
-        avatarSrc={avatarSrc}
-        label={eyebrowLabel}
-        timestamp={timestamp}
-        nameBlock={inlineNameBlock}
-        meta={meta}
-      >
-        {details}
-      </MemberCardSplit>
+      <FeedCardShell accent="ink" className={styles.portraitSplit}>
+        <MemberPortraitColumn {...model.photo} />
+        <div className={styles.details}>
+          {head}
+          {nameBlock}
+          {body}
+          {action}
+        </div>
+      </FeedCardShell>
     );
   }
-
-  // Phones stack the pronouns on their own line under the name and badge.
-  const stackedNameBlock = (
-    <>
-      <span>
-        {name} <MemberStaffBadge slug={slug || undefined} />
-      </span>
-      {pronouns && (
-        <span className={`${styles.pronoun} ${memberStyles.pronounStacked}`}>
-          {pronouns}
-        </span>
-      )}
-    </>
-  );
-  const avatar = (
-    <FeedAvatarLink slug={slug} name={name}>
-      <Avatar
-        initials={avatarInitials}
-        tint={tint}
-        size={80}
-        src={avatarSrc}
-        alt={name}
-      />
-    </FeedAvatarLink>
-  );
   return (
-    <FeedCardShell accent="coral">
-      <FeedCardHead label={eyebrowLabel} timestamp={timestamp} />
-      <FeedIdentity
-        className={memberStyles.identityStacked}
-        lead={avatar}
-        name={stackedNameBlock}
-        meta={meta}
-      />
-      {details}
+    <FeedCardShell accent="ink">
+      {head}
+      <div className={styles.identityRow}>
+        <MemberAvatarLink {...model.photo} />
+        {nameBlock}
+      </div>
+      {body}
+      {action}
     </FeedCardShell>
   );
 }
