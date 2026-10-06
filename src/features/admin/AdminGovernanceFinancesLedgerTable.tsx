@@ -4,7 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import { AmountInput } from "./AdminGovernanceFinancesEditCells";
-import { rowClass } from "./adminGovernanceFinancesEditRow";
+import { lossClass, rowClass } from "./adminGovernanceFinancesEditRow";
 import {
   isLineChanged,
   parseNumber,
@@ -24,12 +24,15 @@ export function LedgerTable({
   original,
   onChange,
   onAdd,
+  isSpending = false,
 }: {
   titleKey: string;
   lines: LineDraft[];
   original: AdminFinLine[];
   onChange: (index: number, patch: Partial<LineDraft>) => void;
   onAdd: () => void;
+  /** The spending ledger: every amount reads in red. */
+  isSpending?: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -127,7 +130,10 @@ export function LedgerTable({
                   <td data-label={columns.source}>
                     <FinanceSourceBadge source={source?.source ?? "manual"} />
                   </td>
-                  <td data-label={columns.current} className={styles.colNumber}>
+                  <td
+                    data-label={columns.current}
+                    className={lossClass(styles.colNumber, isSpending)}
+                  >
                     {source ? formatStored(source.amount) : ""}
                   </td>
                   <td data-label={columns.newAmount}>
@@ -140,6 +146,7 @@ export function LedgerTable({
                       isBlankAllowed={false}
                       disabled={!line.enabled}
                       unit="currency"
+                      isLoss={isSpending}
                       onChange={(amount) => onChange(index, { amount })}
                     />
                   </td>
@@ -167,7 +174,7 @@ export function LedgerTable({
               <th scope="row" colSpan={3} className={styles.footLabel}>
                 {t("admin:governance.finances.edit.foot.sumShown")}
               </th>
-              <td colSpan={3} className={styles.footSum}>
+              <td colSpan={3} className={lossClass(styles.footSum, isSpending)}>
                 {fmt.currency(sumEnabledLines(lines), "EUR")}
               </td>
             </tr>

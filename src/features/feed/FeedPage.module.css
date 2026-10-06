@@ -78,9 +78,10 @@
 /* The feed cards (posts, new members, gatherings, threads, articles) pack as a
    masonry: at desktop feed width two columns of at least 320px, each card
    directly under the previous card in its column with a 14px gap, so a short
-   card leaves no hole beside a tall one. useMasonryLayout (via FeedMasonryGrid)
-   positions the cards with inline `position: absolute` + `top`/`left` and
-   gives this container an explicit height; the DOM stays in feed order.
+   card leaves no hole beside a tall one. A card the reader has seen keeps its
+   column. useMasonryLayout (via FeedMasonryGrid) positions the cards with
+   inline `position: absolute` + `top`/`left` and gives this container an
+   explicit height; the DOM stays in feed order.
    Rows marked `data-masonry-full` (empty/error panels, the pager) span the full
    width below the tallest column.
    This rule is the one-column layout the hook hands back to on a phone (and
@@ -99,8 +100,7 @@
    became a 0.01ms transition: the frame it was written in painted the old
    spot, and a card that grew overlapped the one below for a frame. The
    wrappers have no transitions of their own; a card class that sets one
-   (the loading skeleton's `.card`) comes later in this file and keeps it.
-   The release glide runs through the Web Animations API, unaffected. */
+   (the loading skeleton's `.card`) comes later in this file and keeps it. */
 .grid > * {
   transition-property: none;
 }

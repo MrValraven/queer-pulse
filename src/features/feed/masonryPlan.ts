@@ -5,10 +5,8 @@
 //
 // Placement rule: every card goes to the column whose next top is currently
 // lowest, ties keep the leftmost column. Full-width rows sit below every
-// column and every column continues underneath them. The planner itself has
-// no memory of where a card sat on a previous pass, so a removal or a height
-// change simply repacks the whole feed from scratch on the next layout, and
-// no card is ever padded down to a stale slot.
+// column and every column continues underneath them. The planner itself
+// keeps no memory between passes; the caller brings any it needs.
 //
 // Order guarantee: this also keeps every card's top at or after the top of
 // the card before it in DOM order (WCAG 2.4.3, focus order matches reading
@@ -17,14 +15,18 @@
 // so the lowest column-next-top available to the second card can never be
 // smaller than the top the first card was given.
 //
-// Held columns, the one exception: while a card animates its own height (a
-// fold opening or closing), the caller may pass the columns of its last
-// resting pass as `heldColumns`. Each card then stays in that column and
-// only the tops restack under it, so the cards below a growing card keep
-// their column and slide down with it, even once its bottom crosses the
-// other column's bottom. The order guarantee can lapse for the
-// length of that animation; the caller drops `heldColumns` as soon as the
-// animation settles, and that next pass is the plain packing above again.
+// Pinned columns: the caller may pass `pinnedColumns`, the column a card
+// must keep this pass. `useMasonryLayout` pins every card the reader has
+// seen to the column it had on the previous pass, so a seen card never
+// changes column. A pinned card is stacked at the bottom of its own column
+// in DOM order, so when a card above it grows or shrinks (a fold opening
+// or closing), only the cards below it in that column slide, and each
+// column stays contiguous. Cards without a pin (below the fold, never
+// seen, or brand new) still go to the shortest column: they sit out of
+// sight, so moving them is invisible, and they settle at their real
+// heights. The order guarantee above holds across a run of freely packed
+// cards. Around pinned cards it can lapse once a card has folded in place,
+// and each column still reads top to bottom.
 
 /** One planning pass over every direct child, in DOM order. Every array is
  *  indexed the same way as the children themselves. */
@@ -37,10 +39,10 @@ export interface MasonryPlanInput {
   columnCount: number;
   /** Space below every card, both across and down columns. */
   gap: number;
-  /** Optional: the column each child must stay in for this pass, in place of
-   *  the shortest one (see "Held columns" at the top). A child with no valid
+  /** Optional: the column each pinned child keeps this pass, in place of the
+   *  shortest one (see "Pinned columns" at the top). A child with no valid
    *  entry here, and every full-width row, is placed by the usual rule. */
-  heldColumns?: number[];
+  pinnedColumns?: (number | undefined)[];
 }
 
 export interface MasonryPlanResult {
@@ -62,19 +64,20 @@ function indexOfShortestColumn(columnNextTops: number[]): number {
   return shortestIndex;
 }
 
-/** The held column for one child, or null when it has none this pass (no
- *  hold, a child the hold has never seen, or a column that no longer
- *  exists). */
-function heldColumnFor(
-  heldColumns: number[] | undefined,
+/** The pinned column for one child, or null when it has none this pass (an
+ *  unpinned child, or a column that no longer exists). */
+function pinnedColumnFor(
+  pinnedColumns: (number | undefined)[] | undefined,
   index: number,
   columnCount: number,
 ): number | null {
-  const heldColumn = heldColumns?.[index];
-  if (heldColumn === undefined) return null;
+  const pinnedColumn = pinnedColumns?.[index];
+  if (pinnedColumn === undefined) return null;
   const isValidColumn =
-    Number.isInteger(heldColumn) && heldColumn >= 0 && heldColumn < columnCount;
-  return isValidColumn ? heldColumn : null;
+    Number.isInteger(pinnedColumn) &&
+    pinnedColumn >= 0 &&
+    pinnedColumn < columnCount;
+  return isValidColumn ? pinnedColumn : null;
 }
 
 /**
@@ -82,7 +85,7 @@ function heldColumnFor(
  * one should paint at.
  *
  * Every regular card goes to whichever column's next slot is currently
- * lowest, or to its held column when `heldColumns` gives it one. Full-width
+ * lowest, or to its pinned column when `pinnedColumns` gives it one. Full-width
  * rows keep the original rule (the tallest column's next slot), since they
  * already sit below every column in play.
  */
@@ -91,7 +94,7 @@ export function planMasonry({
   fullWidth,
   columnCount,
   gap,
-  heldColumns,
+  pinnedColumns,
 }: MasonryPlanInput): MasonryPlanResult {
   const columnNextTops: number[] = Array.from({ length: columnCount }, () => 0);
   const columns: number[] = [];
@@ -108,7 +111,7 @@ export function planMasonry({
       top = Math.max(...columnNextTops);
     } else {
       columnIndex =
-        heldColumnFor(heldColumns, index, columnCount) ??
+        pinnedColumnFor(pinnedColumns, index, columnCount) ??
         indexOfShortestColumn(columnNextTops);
       top = columnNextTops[columnIndex] ?? 0;
     }

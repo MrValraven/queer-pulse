@@ -433,8 +433,9 @@ export function FeedPage() {
                       {/* Masonry card grid (FeedMasonryGrid + useMasonryLayout):
                           at desktop width each card drops into the shorter of two
                           columns, directly under the card above it, so a tall
-                          card leaves no hole beside a short one; a phone gets a
-                          single column. The DOM stays in feed order, so Tab and
+                          card leaves no hole beside a short one, and a card the
+                          reader has seen keeps its column when another one
+                          folds; a phone gets a single column. The DOM stays in feed order, so Tab and
                           screen readers follow the feed. `data-masonry-full`
                           marks the empty/error panels and the pager row below,
                           which span the full width. */}

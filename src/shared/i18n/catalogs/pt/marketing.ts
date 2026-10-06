@@ -3269,6 +3269,10 @@ export const marketing: Catalog = {
     "Quem chegou, agrupado pela semana em que se juntou",
   "changelog.entries.new-members-grouped-by-week.body":
     "Cada semana tem o seu cartão no separador Tudo, e Ver todas abre-se com suavidade.",
+  "changelog.entries.feed-cards-keep-their-column.title":
+    "Os cartões do feed ficam no lugar quando um se abre",
+  "changelog.entries.feed-cards-keep-their-column.body":
+    "Abrir um cartão só desliza os que estão por baixo, e os que já viste mantêm a coluna.",
   "changelog.entries.dropdown-escape-keeps-dialog-open.title":
     "Escape numa lista fecha só a lista",
   "changelog.entries.dropdown-escape-keeps-dialog-open.body":
@@ -11768,6 +11772,10 @@ export const marketing: Catalog = {
     "Tenta outra vez quando uma página não carrega",
   "changelog.entries.retry-when-loading-fails.body":
     "Comentários, secções da revista, biblioteca e avaliações de empregadores oferecem Tentar de novo e mantêm o que já carregou.",
+  "changelog.entries.finance-losses-in-red.title":
+    "Despesas e perdas aparecem a vermelho",
+  "changelog.entries.finance-losses-in-red.body":
+    "No editor de finanças, as despesas e um saldo negativo passam a ler-se a vermelho num relance.",
   "changelog.entries.sharper-staff-tools.title":
     "Ferramentas mais afinadas para a equipa",
   "changelog.entries.sharper-staff-tools.body":

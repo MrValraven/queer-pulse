@@ -11,3 +11,11 @@ export function rowClass(isChanged: boolean, isDisabled = false): string {
     .filter(Boolean)
     .join(" ");
 }
+
+/** Spending and negative figures read in red (`.amountLoss`). */
+export function lossClass(
+  baseClass: string | undefined,
+  isLoss: boolean,
+): string | undefined {
+  return isLoss ? `${baseClass} ${styles.amountLoss}` : baseClass;
+}

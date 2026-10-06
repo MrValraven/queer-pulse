@@ -289,6 +289,13 @@
   font-variant-numeric: tabular-nums;
   color: var(--jade-ink);
 }
+/* Money going out (spending) and any negative figure (a loss) read in red,
+   in the stored column, the typed value, the ledger sum and the surplus. */
+.amountLoss,
+.amountInput.amountLoss,
+.table tfoot .amountLoss {
+  color: var(--danger-ink);
+}
 .reason {
   max-width: 720px;
   min-height: 72px;

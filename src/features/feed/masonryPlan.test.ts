@@ -11,6 +11,8 @@ import { planMasonry } from "./masonryPlan";
  * focus order matches reading order), because only the column a card was just
  * placed in can grow between two cards, so the lowest slot on offer to the
  * next card can never be smaller than the top the previous card was given.
+ * With `pinnedColumns`, a card the reader has seen keeps its column, so a
+ * card growing above it only slides the cards below it in its own column.
  */
 describe("planMasonry", () => {
   it("tops never decrease in DOM order with plain shortest-column packing", () => {
@@ -78,5 +80,35 @@ describe("planMasonry", () => {
     // Every column continues underneath it: the next card lands at the row's
     // bottom (110 + 20 + gap).
     expect(result.tops[3]).toBe(140);
+  });
+
+  it("pinned cards keep their columns and stay contiguous when a card above grows", () => {
+    const heights = [100, 60, 80, 40, 120, 50];
+    const fullWidth = heights.map(() => false);
+    const columnCount = 2;
+    const gap = 10;
+
+    const firstPass = planMasonry({ heights, fullWidth, columnCount, gap });
+
+    // The first card folds open. Free packing would now send the fourth and
+    // fifth cards to the other column; pinned, every card keeps its column.
+    const grownHeights = [300, ...heights.slice(1)];
+    const grownPass = planMasonry({
+      heights: grownHeights,
+      fullWidth,
+      columnCount,
+      gap,
+      pinnedColumns: firstPass.columns,
+    });
+
+    expect(grownPass.columns).toEqual(firstPass.columns);
+
+    // Each card sits exactly one gap below the card before it in its column.
+    const columnNextTops = Array.from({ length: columnCount }, () => 0);
+    grownPass.columns.forEach((columnIndex, index) => {
+      expect(grownPass.tops[index]).toBe(columnNextTops[columnIndex]);
+      columnNextTops[columnIndex] =
+        (grownPass.tops[index] ?? 0) + (grownHeights[index] ?? 0) + gap;
+    });
   });
 });

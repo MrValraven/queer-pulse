@@ -63,6 +63,19 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "feed-cards-keep-their-column",
+        category: "fix",
+        date: "6 Oct 2026",
+        ...entryKeys("feed-cards-keep-their-column"),
+        tag: { labelKey: "marketing:changelog.tag.feed", to: routes.feed },
+      },
+      {
+        id: "finance-losses-in-red",
+        category: "improvement",
+        date: "6 Oct 2026",
+        ...entryKeys("finance-losses-in-red"),
+      },
+      {
         id: "co-author-credit-notice",
         category: "improvement",
         date: "6 Oct 2026",

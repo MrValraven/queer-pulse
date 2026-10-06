@@ -3,7 +3,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import { AmountInput } from "./AdminGovernanceFinancesEditCells";
-import { rowClass } from "./adminGovernanceFinancesEditRow";
+import { lossClass, rowClass } from "./adminGovernanceFinancesEditRow";
 import {
   SCALAR_KEYS,
   SCALAR_UNIT,
@@ -67,6 +67,7 @@ export function HeadlineTable({
           <tbody>
             {SCALAR_KEYS.map((key) => {
               const label = t(`admin:governance.finances.edit.field.${key}`);
+              const isSpending = key === "expenseTotal";
               return (
                 <tr
                   key={key}
@@ -78,7 +79,10 @@ export function HeadlineTable({
                   <td data-label={columns.source}>
                     <FinanceSourceBadge source={latest.sources[key]} />
                   </td>
-                  <td data-label={columns.current} className={styles.colNumber}>
+                  <td
+                    data-label={columns.current}
+                    className={lossClass(styles.colNumber, isSpending)}
+                  >
                     {formatCurrent(key)}
                   </td>
                   <td data-label={columns.newValue}>
@@ -90,6 +94,7 @@ export function HeadlineTable({
                       value={scalars[key]}
                       isBlankAllowed
                       unit={SCALAR_UNIT[key]}
+                      isLoss={isSpending}
                       onChange={(value) => onChange(key, value)}
                     />
                   </td>
@@ -108,11 +113,19 @@ export function HeadlineTable({
               <td data-label={columns.source}>
                 <FinanceSourceBadge source="computed" />
               </td>
-              <td data-label={columns.current} className={styles.colNumber}>
+              <td
+                data-label={columns.current}
+                className={lossClass(styles.colNumber, latest.surplus < 0)}
+              >
                 {fmt.currency(latest.surplus, "EUR")}
               </td>
               <td data-label={columns.newValue}>
-                <output className={styles.surplusPreview}>
+                <output
+                  className={lossClass(
+                    styles.surplusPreview,
+                    surplusPreview < 0,
+                  )}
+                >
                   <RollingNumber
                     value={fmt.currency(surplusPreview, "EUR")}
                     numericValue={surplusPreview}

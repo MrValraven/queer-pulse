@@ -21,6 +21,7 @@ export function AmountInput({
   isBlankAllowed,
   disabled = false,
   unit,
+  isLoss = false,
 }: {
   ariaLabel: string;
   value: string;
@@ -28,6 +29,8 @@ export function AmountInput({
   isBlankAllowed: boolean;
   disabled?: boolean;
   unit: AmountUnit;
+  /** Spending or a negative figure: the typed value reads in red. */
+  isLoss?: boolean;
 }) {
   const { t } = useTranslation();
   const errorId = useId();
@@ -55,7 +58,9 @@ export function AmountInput({
           type="text"
           inputMode="decimal"
           autoComplete="off"
-          className={styles.amountInput}
+          className={[styles.amountInput, isLoss && styles.amountLoss]
+            .filter(Boolean)
+            .join(" ")}
           aria-label={ariaLabel}
           aria-invalid={isRejected || undefined}
           aria-describedby={isRejected ? errorId : undefined}

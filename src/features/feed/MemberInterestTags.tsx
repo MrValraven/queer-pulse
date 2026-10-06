@@ -220,8 +220,6 @@ export function MemberInterestTags({
           .filter(Boolean)
           .join(" ")}
         data-folding={isFolding ? foldPhase : undefined}
-        // Keeps the feed's masonry columns still while the row folds.
-        data-masonry-hold={isFolding ? "" : undefined}
       >
         {visibleChips.map((chip, chipIndex) =>
           renderChip(chip, false, chipIndex),

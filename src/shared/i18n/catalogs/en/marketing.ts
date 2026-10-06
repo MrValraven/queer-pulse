@@ -3193,6 +3193,10 @@ export const marketing: Catalog = {
     "Newcomers grouped by the week they joined",
   "changelog.entries.new-members-grouped-by-week.body":
     "Each week gets its own card on the All tab, and Show all now unfolds smoothly.",
+  "changelog.entries.feed-cards-keep-their-column.title":
+    "Feed cards stay put when one expands",
+  "changelog.entries.feed-cards-keep-their-column.body":
+    "Opening a card only slides the cards below it, and the ones you have seen keep their column.",
   "changelog.entries.dropdown-escape-keeps-dialog-open.title":
     "Escape in a dropdown closes just the dropdown",
   "changelog.entries.dropdown-escape-keeps-dialog-open.body":
@@ -11629,6 +11633,10 @@ export const marketing: Catalog = {
     "Retry when a page fails to load",
   "changelog.entries.retry-when-loading-fails.body":
     "Comments, magazine sections, the library and employer reviews offer Retry and keep what already loaded.",
+  "changelog.entries.finance-losses-in-red.title":
+    "Spending and losses show in red",
+  "changelog.entries.finance-losses-in-red.body":
+    "In the finance editor, spending figures and a negative surplus now read in red at a glance.",
   "changelog.entries.sharper-staff-tools.title": "Sharper tools for the team",
   "changelog.entries.sharper-staff-tools.body":
     "Moderators see housing evidence, safety inquiries get their own queue, and guides edit section by section.",

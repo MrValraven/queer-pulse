@@ -6,10 +6,9 @@ import styles from "./FeedPage.module.css";
  * The feed's card container, packed as a masonry by useMasonryLayout: two
  * columns at desktop feed width (three when the sidebar folds away under
  * `--wide`), one on a phone. Children keep feed order in the DOM; mark a
- * full-width row (empty/error panel, pager) with `data-masonry-full`, and
- * any part of a card that is animating its own height with
- * `data-masonry-hold` for as long as it moves, so the cards keep their
- * columns until it settles.
+ * full-width row (empty/error panel, pager) with `data-masonry-full`. A card
+ * the reader has seen keeps its column, so a card folding open or shut only
+ * slides the cards below it in its own column.
  *
  * Its own component on purpose. React runs a child's layout effects before its
  * parent's, so the first masonry pass (which gives the container its height)

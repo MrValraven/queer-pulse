@@ -207,8 +207,6 @@ export function ExpandableText({
         data-folding={
           isAnimating ? (isExpanded ? "open" : "closed") : undefined
         }
-        // Keeps a masonry layout around the text still while it folds.
-        data-masonry-hold={isAnimating ? "" : undefined}
         style={
           {
             "--expandable-text-lines": lines,

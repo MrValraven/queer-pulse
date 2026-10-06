@@ -151,6 +151,7 @@ export function AdminGovernanceFinancesEdit({
           titleKey="governance.finances.edit.section.spend"
           lines={expense}
           original={latest.expense}
+          isSpending
           onChange={(index, patch) => patchLine(setExpense, index, patch)}
           onAdd={() => setExpense((prev) => [...prev, emptyLineDraft()])}
         />

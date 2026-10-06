@@ -15,10 +15,10 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   { highlights: string[]; pushes?: number }
 > = {
   "6 Oct 2026": {
-    // 52 entries, so three highlights, features first: Funding &
+    // 53 entries, so three highlights, features first: Funding &
     // Grants leads as the largest build, then real gatherings for visitors,
-    // then a language that follows you. Second push of the day.
-    pushes: 2,
+    // then a language that follows you. Third push of the day.
+    pushes: 3,
     highlights: [
       "funding-grants-forum",
       "homepage-shows-real-gatherings",

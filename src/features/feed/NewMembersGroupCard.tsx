@@ -78,9 +78,6 @@ export function NewMembersGroupCard({
         className={styles.list}
         aria-labelledby={titleId}
         data-folding={isFolding ? foldPhase : undefined}
-        // Asks the feed's masonry to keep the cards in their columns while
-        // the height moves.
-        data-masonry-hold={isFolding ? "" : undefined}
       >
         {visibleMembers.map((member, memberIndex) => (
           <NewMembersGroupRow
